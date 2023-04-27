@@ -3,12 +3,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon, Spacer} from '../components'
+import {Icon, NftImageGallery, SkeletonGallery, Spacer} from '../components'
 import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useNfts} from '../yoroi-wallets'
 import {filterNfts} from './filterNfts'
-import {ImageGallery, SkeletonGallery} from './ImageGallery'
 import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
 
@@ -20,6 +19,7 @@ export const Nfts = () => {
   useSearchOnNavBar({
     title: strings.title,
     placeholder: strings.search,
+    noBack: true,
   })
 
   const wallet = useSelectedWallet()
@@ -108,7 +108,7 @@ export const Nfts = () => {
           </>
         )}
 
-        <ImageGallery
+        <NftImageGallery
           nfts={nftsSearchResult}
           onSelect={navigateTo.nftDetails}
           onRefresh={onRefresh}

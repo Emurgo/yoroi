@@ -1,21 +1,16 @@
 import {FlashList, FlashListProps} from '@shopify/flash-list'
 import React from 'react'
-import {Dimensions, GestureResponderEvent, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Dimensions, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import {Icon, Spacer, Text} from '../../components'
-import {NftPreview} from '../../components/NftPreview/NftPreview'
 import {features} from '../../features'
+import {useModeratedNftImage} from '../../Nfts/hooks'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {TokenInfo} from '../../yoroi-wallets/types'
-import {useModeratedNftImage} from '../hooks'
-
-type Props = {
-  nfts: TokenInfo<'nft'>[]
-  onSelect: (id: string) => void
-  onRefresh: () => void
-  isRefreshing: boolean
-}
+import {TokenInfo} from '../../yoroi-wallets'
+import {Icon} from '../Icon'
+import {NftPreview} from '../NftPreview'
+import {Spacer} from '../Spacer'
+import {Text} from '../Text'
 
 const TEXT_SIZE = 20
 
@@ -25,37 +20,56 @@ export const SkeletonGallery = ({amount}: {amount: number}) => {
   return <GalleryList data={placeholders} renderItem={() => <SkeletonImagePlaceholder />} />
 }
 
-export const ImageGallery = ({nfts = [], onSelect, onRefresh, isRefreshing}: Props) => {
+type Props = {
+  nfts: TokenInfo<'nft'>[]
+  onSelect: (id: string) => void
+  onRefresh: () => void
+  isRefreshing: boolean
+  bounces?: FlashListProps<TokenInfo<'nft'>>['bounces']
+  ListEmptyComponent?: FlashListProps<TokenInfo<'nft'>>['ListEmptyComponent']
+  withVerticalPadding?: boolean
+  readOnly?: boolean
+}
+export const NftImageGallery = ({
+  nfts = [],
+  onSelect,
+  onRefresh,
+  isRefreshing,
+  readOnly,
+  bounces = false,
+  ListEmptyComponent = undefined,
+  withVerticalPadding = undefined,
+}: Props) => {
   return (
     <GalleryList
       data={nfts}
       onRefresh={onRefresh}
       refreshing={isRefreshing}
+      bounces={bounces}
+      ListEmptyComponent={ListEmptyComponent}
+      withVerticalPadding={withVerticalPadding}
       renderItem={(nft) =>
         features.moderatingNftsEnabled ? (
-          <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} />
+          <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} disabled={readOnly} />
         ) : (
-          <UnModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} />
+          <UnModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} disabled={readOnly} />
         )
       }
     />
   )
 }
 
-interface ModeratedImageProps {
-  onPress?(event: GestureResponderEvent): void
+type ModeratedImageProps = TouchableOpacityProps & {
   nft: TokenInfo<'nft'>
 }
-
-const UnModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
+const UnModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity {...props}>
       <ApprovedNft nft={nft} />
     </TouchableOpacity>
   )
 }
-
-const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
+const ModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
   const {name: text, fingerprint} = nft
   const wallet = useSelectedWallet()
   const {isError, status, isLoading} = useModeratedNftImage({wallet, fingerprint})
@@ -71,7 +85,7 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 
   if (showSkeleton) {
     return (
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity {...props}>
         <SkeletonImagePlaceholder text={text} />
       </TouchableOpacity>
     )
@@ -79,23 +93,21 @@ const ModeratedImage = ({onPress, nft}: ModeratedImageProps) => {
 
   if (isError) {
     return (
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity {...props}>
         <BlockedNft nft={nft} />
       </TouchableOpacity>
     )
   }
 
   return (
-    <TouchableOpacity onPress={onPress}>
-      {isImageApproved ? (
-        <ApprovedNft nft={nft} />
-      ) : isImageWithConsent ? (
-        <RequiresConsentNft nft={nft} />
-      ) : isImageBlocked ? (
-        <BlockedNft nft={nft} />
-      ) : isPendingManualReview ? (
-        <ManualReviewNft nft={nft} />
-      ) : null}
+    <TouchableOpacity {...props}>
+      {isImageApproved && <ApprovedNft nft={nft} />}
+
+      {isImageWithConsent && <RequiresConsentNft nft={nft} />}
+
+      {isImageBlocked && <BlockedNft nft={nft} />}
+
+      {isPendingManualReview && <ManualReviewNft nft={nft} />}
     </TouchableOpacity>
   )
 }
@@ -238,13 +250,18 @@ const IMAGE_PADDING = 8
 const ROW_SPACING = 14
 const NUMBER_OF_COLUMNS = 2
 const CONTAINER_HORIZONTAL_PADDING = 16
+const CONTAINER_VERTICAL_PADDING = 16
 const SPACE_BETWEEN_COLUMNS = CONTAINER_HORIZONTAL_PADDING
 const DIMENSIONS = Dimensions.get('window')
 const MIN_SIZE = Math.min(DIMENSIONS.width, DIMENSIONS.height)
 const IMAGE_HORIZONTAL_PADDING = SPACE_BETWEEN_COLUMNS / NUMBER_OF_COLUMNS
 const IMAGE_SIZE = (MIN_SIZE - CONTAINER_HORIZONTAL_PADDING * 2) / NUMBER_OF_COLUMNS - IMAGE_HORIZONTAL_PADDING
 
-function GalleryList<T>({renderItem, ...rest}: FlashListProps<T> & {renderItem: (item: T) => React.ReactElement}) {
+function GalleryList<T>({
+  renderItem,
+  withVerticalPadding = false,
+  ...rest
+}: FlashListProps<T> & {renderItem: (item: T) => React.ReactElement; withVerticalPadding?: boolean}) {
   return (
     <FlashList
       {...rest}
@@ -258,7 +275,10 @@ function GalleryList<T>({renderItem, ...rest}: FlashListProps<T> & {renderItem: 
           <Spacer height={ROW_SPACING} />
         </View>
       )}
-      contentContainerStyle={{paddingHorizontal: CONTAINER_HORIZONTAL_PADDING}}
+      contentContainerStyle={{
+        paddingHorizontal: CONTAINER_HORIZONTAL_PADDING,
+        paddingVertical: withVerticalPadding ? CONTAINER_VERTICAL_PADDING : undefined,
+      }}
       keyExtractor={(placeholder, index) => index + ''}
       horizontal={false}
       estimatedItemSize={IMAGE_SIZE + IMAGE_PADDING + TEXT_SIZE + ROW_SPACING}

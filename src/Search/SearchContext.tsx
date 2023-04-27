@@ -8,10 +8,14 @@ import {defaultStackNavigationOptionsV2} from '../navigation'
 
 type SearchState = {
   search: string
+  visible: boolean
 }
 type SearchActions = {
   searchChanged: (search: string) => void
   clearSearch: () => void
+  closeSearch: () => void
+  showSearch: () => void
+  hideSearch: () => void
 }
 
 const SearchContext = createContext<undefined | (SearchState & SearchActions)>(undefined)
@@ -34,7 +38,10 @@ export const SearchProvider = ({
   const [state, dispatch] = useReducer(searchReducer, {...defaultState, ...initialState})
   const actions = React.useRef<SearchActions>({
     clearSearch: () => dispatch({type: 'clear'}),
+    closeSearch: () => dispatch({type: 'close'}),
     searchChanged: (search: string) => dispatch({type: 'searchChanged', search}),
+    showSearch: () => dispatch({type: 'showSearch'}),
+    hideSearch: () => dispatch({type: 'hideSearch'}),
   }).current
 
   const context = React.useMemo(() => ({...state, ...actions}), [state, actions])
@@ -42,12 +49,20 @@ export const SearchProvider = ({
   return <SearchContext.Provider value={context}>{children}</SearchContext.Provider>
 }
 
-type SearchAction = {type: 'clear'} | {type: 'searchChanged'; search: string}
+type SearchAction =
+  | {type: 'clear'}
+  | {type: 'close'}
+  | {type: 'searchChanged'; search: string}
+  | {type: 'showSearch'}
+  | {type: 'hideSearch'}
 
 function searchReducer(state: SearchState, action: SearchAction) {
   switch (action.type) {
     case 'clear':
       return {...state, search: ''}
+
+    case 'close':
+      return {...state, search: '', visible: false}
 
     case 'searchChanged':
       return {
@@ -55,12 +70,24 @@ function searchReducer(state: SearchState, action: SearchAction) {
         search: action.search,
       }
 
+    case 'showSearch':
+      return {
+        ...state,
+        visible: true,
+      }
+
+    case 'hideSearch':
+      return {
+        ...state,
+        visible: false,
+      }
+
     default:
       throw new Error(`searchReducer invalid action`)
   }
 }
 
-const defaultState: SearchState = Object.freeze({search: ''})
+const defaultState: SearchState = Object.freeze({search: '', visible: false})
 
 export const useSearchOnNavBar = ({
   placeholder,
@@ -73,22 +100,26 @@ export const useSearchOnNavBar = ({
 }) => {
   const navigation = useNavigation()
 
-  const [visible, setVisible] = React.useState(false)
-  const {clearSearch} = useSearch()
+  const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
 
-  const handleSearchClose = () => {
-    setVisible(false)
+  const handleCloseSearch = () => {
+    hideSearch()
     clearSearch()
   }
   const handleGoBack = () => {
-    handleSearchClose()
-    navigation.goBack()
+    handleCloseSearch()
+    /*
+     * goBack button has two actions:
+     *   1) go back when the search input is not visible
+     *   2) close the search input when the search input is visible
+     */
+    if (!visible) navigation.goBack()
   }
 
   const withSearchInput: StackNavigationOptions = {
     ...defaultStackNavigationOptionsV2,
     headerTitle: () => <InputSearch placeholder={placeholder} />,
-    headerRight: () => <EraseButton onPress={handleSearchClose} />,
+    headerRight: () => (search.length > 0 ? <EraseButton onPress={handleCloseSearch} /> : null),
     headerLeft: () => <BackButton onPress={handleGoBack} />,
     headerTitleAlign: 'left',
     headerTitleContainerStyle: {
@@ -100,8 +131,7 @@ export const useSearchOnNavBar = ({
   const withSearchButton: StackNavigationOptions = {
     ...defaultStackNavigationOptionsV2,
     headerTitle: title,
-    headerTitleAlign: 'center',
-    headerRight: () => <SearchButton onPress={() => setVisible(true)} />,
+    headerRight: () => <SearchButton onPress={() => showSearch()} />,
     ...(noBack ? {headerLeft: () => null} : {}),
     headerBackTitleVisible: false,
   }
@@ -123,19 +153,20 @@ const InputSearch = ({placeholder}: Props) => {
       value={search}
       placeholder={placeholder}
       onChangeText={(search) => searchChanged(search)}
+      autoCapitalize="none"
       style={{flex: 1}}
     />
   )
 }
 
 const SearchButton = (props: TouchableOpacityProps) => (
-  <TouchableOpacity {...props} hitSlop={{top: 100, left: 100, right: 100, bottom: 100}}>
+  <TouchableOpacity {...props}>
     <Icon.Magnify size={26} />
   </TouchableOpacity>
 )
 
 const EraseButton = (props: TouchableOpacityProps) => (
-  <TouchableOpacity {...props} hitSlop={{top: 100, left: 100, right: 100, bottom: 100}}>
+  <TouchableOpacity {...props}>
     <Icon.Cross size={20} />
   </TouchableOpacity>
 )
