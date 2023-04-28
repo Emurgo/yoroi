@@ -296,3 +296,5 @@ export function genToRealTime(
     return new Date(time)
   }
 }
+
+export const delay = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))

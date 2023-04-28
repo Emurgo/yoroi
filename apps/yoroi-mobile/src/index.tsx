@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import bluebird from 'bluebird'
 import React from 'react'
 import {createIntl, createIntlCache} from 'react-intl'
 import {LogBox, StyleSheet} from 'react-native'
@@ -24,12 +23,6 @@ import {walletManager} from './yoroi-wallets/walletManager'
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
-bluebird.config({
-  longStackTraces: false,
-  warnings: false,
-  cancellation: true,
-})
-
 LogBox.ignoreLogs([
   // react navigation didn't port everything
   "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
@@ -38,15 +31,6 @@ LogBox.ignoreLogs([
   // react navigation fix old params
   'Non-serializable values were found in the navigation state.',
 ])
-
-/*
-  Warning(ppershing): DO NOT EVER REMOVE FOLLOWING LINE!
-  React-native promise implementation is totally broken, see
-  https://github.com/facebook/react-native/issues/19490
-  https://github.com/facebook/react-native/issues/17972
-*/
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-global.Promise = bluebird as any
 
 const cache = createIntlCache()
 const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cache)

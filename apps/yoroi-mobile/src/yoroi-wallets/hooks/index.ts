@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
-import {delay} from 'bluebird'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {
@@ -35,8 +34,9 @@ import {
   YoroiUnsignedTx,
 } from '../types'
 import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus, WalletImplementationId} from '../types/other'
-import {Amounts, Utxos} from '../utils'
 import {parseBoolean} from '../utils/parsing'
+import {delay} from '../utils/timeUtils'
+import {Amounts, Utxos} from '../utils/utils'
 import {WalletManager, WalletMeta} from '../walletManager'
 
 const crashReportsStorageKey = 'sendCrashReports'

@@ -260,7 +260,6 @@ describe('migrateWalletMetas()', () => {
         const walletMetas = [meta]
 
         try {
-          // bluebird coverage issue
           await migrateWalletMetas(walletMetas)
         } catch (_e) {
           assert.rejects(() => migrateWalletMetas(walletMetas))
@@ -282,7 +281,6 @@ describe('migrateWalletMetas()', () => {
         await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
         try {
-          // bluebird coverage issue
           // @ts-expect-error test
           await migrateWalletMetas(walletMetas)
         } catch (_e) {
