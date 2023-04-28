@@ -160,6 +160,7 @@ const useFlashAndScroll = () => {
 
   return scrollViewRef
 }
+
 const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
