@@ -4,14 +4,14 @@
     "defaultMessage": "!!!My read-only wallet",
     "file": "src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 128,
+      "line": 130,
       "column": 21,
-      "index": 3623
+      "index": 3721
     },
     "end": {
-      "line": 131,
+      "line": 133,
       "column": 3,
-      "index": 3750
+      "index": 3848
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Checksum label",
     "file": "src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 132,
+      "line": 134,
       "column": 17,
-      "index": 3769
+      "index": 3867
     },
     "end": {
-      "line": 135,
+      "line": 137,
       "column": 3,
-      "index": 3883
+      "index": 3981
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Wallet Address(es):",
     "file": "src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 136,
+      "line": 138,
       "column": 22,
-      "index": 3907
+      "index": 4005
     },
     "end": {
-      "line": 139,
+      "line": 141,
       "column": 3,
-      "index": 4031
+      "index": 4129
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Key:",
     "file": "src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 140,
+      "line": 142,
       "column": 7,
-      "index": 4040
+      "index": 4138
     },
     "end": {
-      "line": 143,
+      "line": 145,
       "column": 3,
-      "index": 4138
+      "index": 4236
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Derivation path:",
     "file": "src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
     "start": {
-      "line": 144,
+      "line": 146,
       "column": 18,
-      "index": 4158
+      "index": 4256
     },
     "end": {
-      "line": 147,
+      "line": 149,
       "column": 3,
-      "index": 4279
+      "index": 4377
     }
   }
 ]

@@ -173,7 +173,6 @@ const useHideScreenInAppSwitcher = () => {
       const isBlurred = (appState: AppStateStatus) => appState === 'inactive' || appState === 'background'
 
       if (isBlurred(appStateRef.current) && isFocused(nextAppState)) RNBootSplash.hide({fade: true})
-      if (isFocused(appStateRef.current) && isBlurred(nextAppState)) RNBootSplash.show({fade: true})
 
       appStateRef.current = nextAppState
     })

@@ -169,6 +169,9 @@ dependencies {
     // For WebP support, without animations
     implementation 'com.facebook.fresco:webpsupport:2.5.0'
 
+    // react-native-bootsplash
+    implementation("androidx.core:core-splashscreen:1.0.0")
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
         exclude group:'com.squareup.okhttp3', module:'okhttp'
