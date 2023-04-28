@@ -5,7 +5,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {features} from '../../features'
 import {useModeratedNftImage} from '../../Nfts/hooks'
-import {useSelectedWallet} from '../../SelectedWallet'
+import {useSelectedWallet} from '../../SelectedWallet/Context'
 import {YoroiNft} from '../../yoroi-wallets/types'
 import {Icon} from '../Icon'
 import {NftPreview} from '../NftPreview'
