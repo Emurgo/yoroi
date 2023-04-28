@@ -168,6 +168,8 @@ export type TxHistoryRoutes = {
   'send-start-tx': undefined
   'send-read-qr-code': undefined
   'send-confirm-tx': undefined
+  'send-signed-tx': undefined
+  'send-failed-tx': undefined
   'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
   'send-select-token-from-list': undefined

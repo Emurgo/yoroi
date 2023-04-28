@@ -51,6 +51,12 @@ export const useStrings = () => {
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
     unknownAsset: intl.formatMessage(messages.unknownAsset),
     youHave: intl.formatMessage(messages.youHave),
+    signedTxTitle: intl.formatMessage(messages.signedTxTitle),
+    signedTxText: intl.formatMessage(messages.signedTxText),
+    signedTxButton: intl.formatMessage(messages.signedTxButton),
+    failedTxTitle: intl.formatMessage(messages.failedTxTitle),
+    failedTxText: intl.formatMessage(messages.failedTxText),
+    failedTxButton: intl.formatMessage(messages.failedTxButton),
   }
 }
 
@@ -215,6 +221,30 @@ export const messages = defineMessages({
   errorBannerPendingOutgoingTransaction: {
     id: 'components.send.sendscreen.errorBannerPendingOutgoingTransaction',
     defaultMessage: '!!!You cannot send a new transaction while an existing one is still pending',
+  },
+  signedTxTitle: {
+    id: 'components.send.sendscreen.signedTxTitle',
+    defaultMessage: '!!!Transaction Signed',
+  },
+  signedTxText: {
+    id: 'components.send.sendscreen.signedTxText',
+    defaultMessage: '!!!Check this transaction in the list of wallet transactions',
+  },
+  signedTxButton: {
+    id: 'components.send.sendscreen.signedTxButton',
+    defaultMessage: '!!!Go to transactions',
+  },
+  failedTxTitle: {
+    id: 'components.send.sendscreen.failedTxTitle',
+    defaultMessage: '!!!Transaction failed',
+  },
+  failedTxText: {
+    id: 'components.send.sendscreen.failedTxText',
+    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues',
+  },
+  failedTxButton: {
+    id: 'components.send.sendscreen.failedTxButton',
+    defaultMessage: '!!!Try again',
   },
   asset: {
     id: 'global.assets.assetLabel',
