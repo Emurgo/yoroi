@@ -15,6 +15,7 @@ module.exports = {
     }),
   },
   resolver: {
+    resolverMainFields: ['sbmodern', 'react-native', 'browser', 'main'],
     sourceExts: ['js', 'jsx', 'ts', 'tsx'],
     assetExts: ['png', 'md', 'json'],
     extraNodeModules: {
