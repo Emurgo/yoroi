@@ -1,7 +1,7 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
-import Markdown from 'react-native-easy-markdown'
+import Markdown from 'react-native-markdown-display'
 
 import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../components'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
@@ -79,15 +79,18 @@ export const WithdrawalTxForm = ({
         testID: 'deregisterButton',
       }}
     >
-      <Markdown style={styles.paragraph}>{strings.explanation1}</Markdown>
+      {/* @ts-expect-error old react */}
+      <Markdown markdownStyle={styles.paragraph}>{strings.explanation1}</Markdown>
 
       <Spacer height={8} />
 
-      <Markdown style={styles.paragraph}>{strings.explanation2}</Markdown>
+      {/* @ts-expect-error old react */}
+      <Markdown markdownStyle={styles.paragraph}>{strings.explanation2}</Markdown>
 
       <Spacer height={8} />
 
-      <Markdown style={styles.paragraph}>{strings.explanation3}</Markdown>
+      {/* @ts-expect-error old react */}
+      <Markdown markdownStyle={styles.paragraph}>{strings.explanation3}</Markdown>
     </DangerousAction>
   )
 }

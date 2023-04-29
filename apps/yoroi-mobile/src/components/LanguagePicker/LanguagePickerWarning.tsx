@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import Markdown from 'react-native-easy-markdown'
+import Markdown from 'react-native-markdown-display'
 
 import {Icon} from '../Icon'
 
@@ -21,6 +21,7 @@ export const LanguagePickerWarning = ({enabled}: {enabled: boolean}) => {
           </TouchableOpacity>
         </View>
 
+        {/* @ts-expect-error old react */}
         <Markdown markdownStyles={{text: styles.markdownText}}>
           {strings.contributors !== '_' ? `${strings.warning}: **${strings.contributors}**` : `${strings.warning}.`}
         </Markdown>

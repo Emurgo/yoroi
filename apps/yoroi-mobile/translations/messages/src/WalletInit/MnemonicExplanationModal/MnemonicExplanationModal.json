@@ -4,14 +4,14 @@
     "defaultMessage": "!!!On the following screen, you will see a set of 15 random words. This is your **wallet recovery phrase**. It can be entered in any version of Yoroi in order to back up or restore your wallet`s funds and private key.",
     "file": "src/WalletInit/MnemonicExplanationModal/MnemonicExplanationModal.tsx",
     "start": {
-      "line": 39,
+      "line": 41,
       "column": 14,
-      "index": 1090
+      "index": 1180
     },
     "end": {
-      "line": 45,
+      "line": 47,
       "column": 3,
-      "index": 1446
+      "index": 1536
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Make sure **nobody looks into your screen** unless you want them to have access to your funds.",
     "file": "src/WalletInit/MnemonicExplanationModal/MnemonicExplanationModal.tsx",
     "start": {
-      "line": 46,
+      "line": 48,
       "column": 14,
-      "index": 1462
+      "index": 1552
     },
     "end": {
-      "line": 49,
+      "line": 51,
       "column": 3,
-      "index": 1670
+      "index": 1760
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!I understand",
     "file": "src/WalletInit/MnemonicExplanationModal/MnemonicExplanationModal.tsx",
     "start": {
-      "line": 50,
+      "line": 52,
       "column": 14,
-      "index": 1686
+      "index": 1776
     },
     "end": {
-      "line": 53,
+      "line": 55,
       "column": 3,
-      "index": 1812
+      "index": 1902
     }
   }
 ]

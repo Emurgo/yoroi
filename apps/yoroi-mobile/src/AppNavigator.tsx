@@ -1,6 +1,6 @@
 import {NavigationContainer, NavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import React, {useEffect} from 'react'
+import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
@@ -103,8 +103,6 @@ export const AppNavigator = () => {
   )
 }
 
-export default AppNavigator
-
 const CreatePinScreenWrapper = () => {
   const {login} = useAuth()
 
@@ -165,7 +163,7 @@ const useAutoLogout = () => {
 const useHideScreenInAppSwitcher = () => {
   const appStateRef = React.useRef(AppState.currentState)
 
-  useEffect(() => {
+  React.useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState: AppStateStatus) => {
       if (Platform.OS !== 'ios') return
 

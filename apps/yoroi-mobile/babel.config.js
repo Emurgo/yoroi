@@ -1,6 +1,8 @@
-module.exports = {
-  presets: ['module:metro-react-native-babel-preset'],
-  plugins: [
+module.exports = (api) => {
+  api.cache(true)
+
+  const presets = ['module:metro-react-native-babel-preset']
+  const plugins = [
     [
       'react-intl',
       {
@@ -15,5 +17,15 @@ module.exports = {
         relativeSourceLocation: true,
       },
     ],
-  ],
+    [
+      'babel-plugin-inline-import',
+      {
+        extensions: ['.md'],
+      },
+    ],
+  ]
+  return {
+    presets,
+    plugins,
+  }
 }

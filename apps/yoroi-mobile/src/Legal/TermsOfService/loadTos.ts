@@ -49,5 +49,10 @@ const tosByCode = {
 }
 
 export const loadTOS = (languageCode: string): string => {
+  console.log('------------------------------')
+  console.log(languageCode)
+  // fetch(HU_HU_TOS).then((response) => response.text()).then((text) => console.log(text))
+  console.log(tosByCode[languageCode])
+  console.log('------------------------------')
   return tosByCode[languageCode]
 }

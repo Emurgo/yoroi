@@ -1,7 +1,7 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, StyleSheet, View} from 'react-native'
-import Markdown from 'react-native-easy-markdown'
+import Markdown from 'react-native-markdown-display'
 
 import image from '../../assets/img/mnemonic_explanation.png'
 import {Button, Modal} from '../../components'
@@ -23,10 +23,12 @@ export const MnemonicExplanationModal = ({onConfirm, onRequestClose, visible}: P
       </View>
 
       <View style={styles.paragraph}>
+        {/* @ts-expect-error old react */}
         <Markdown>{strings.paragraph1}</Markdown>
       </View>
 
       <View style={styles.paragraph}>
+        {/* @ts-expect-error old reactl */}
         <Markdown>{strings.paragraph2}</Markdown>
       </View>
 
