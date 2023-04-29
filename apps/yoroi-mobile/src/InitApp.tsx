@@ -1,14 +1,10 @@
 import React, {useEffect} from 'react'
 import {Platform, UIManager} from 'react-native'
-import * as RNP from 'react-native-paper'
-import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {enableScreens} from 'react-native-screens'
 import uuid from 'uuid'
 
-import AppNavigator from './AppNavigator'
-import {AuthProvider} from './auth/AuthProvider'
+import {AppNavigator} from './AppNavigator'
 import crashReporting from './crashReporting'
-import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet'
 import {getCrashReportsEnabled} from './yoroi-wallets/hooks'
 import {useStorage, YoroiStorage} from './yoroi-wallets/storage'
 import {walletManager} from './yoroi-wallets/walletManager'
@@ -21,24 +17,12 @@ if (Platform.OS === 'android') {
   }
 }
 
-const App = () => {
+export const InitApp = () => {
   const loaded = useInitApp()
 
   if (!loaded) return null
 
-  return (
-    <SafeAreaProvider>
-      <RNP.Provider>
-        <AuthProvider>
-          <SelectedWalletMetaProvider>
-            <SelectedWalletProvider>
-              <AppNavigator />
-            </SelectedWalletProvider>
-          </SelectedWalletMetaProvider>
-        </AuthProvider>
-      </RNP.Provider>
-    </SafeAreaProvider>
-  )
+  return <AppNavigator />
 }
 
 const useInitApp = () => {
@@ -56,8 +40,6 @@ const useInitApp = () => {
 
   return loaded
 }
-
-export default App
 
 const initInstallationId = async (storage: YoroiStorage) => {
   const installationId = await storage.join('appSettings/').getItem('installationId', (data) => data) // LEGACY: installationId is not serialized

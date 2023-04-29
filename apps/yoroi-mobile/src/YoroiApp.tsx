@@ -1,25 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
-import {createIntl, createIntlCache} from 'react-intl'
-import {LogBox, StyleSheet} from 'react-native'
+import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
+import * as RNP from 'react-native-paper'
+import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {enableScreens} from 'react-native-screens'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
-import App from './App'
+import {AuthProvider} from './auth/AuthProvider'
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
-import {handleGeneralError} from './dialogs'
 import {LanguageProvider} from './i18n'
-import translations from './i18n/translations'
+import {InitApp} from './InitApp'
 import {CONFIG} from './legacy/config'
-import {Logger, setLogLevel} from './legacy/logging'
+import {setLogLevel} from './legacy/logging'
+import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet/Context'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
 import {ThemeProvider} from './theme'
-import {isEmptyString} from './utils/utils'
 import {WalletManagerProvider} from './WalletManager'
-import {ApiError, NetworkError} from './yoroi-wallets/cardano/errors'
 import {useMigrations} from './yoroi-wallets/migrations'
 import {storage, StorageProvider} from './yoroi-wallets/storage'
 import {walletManager} from './yoroi-wallets/walletManager'
+
+enableScreens()
+
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental != null) {
+    UIManager.setLayoutAnimationEnabledExperimental(true)
+  }
+}
 
 setLogLevel(CONFIG.LOG_LEVEL)
 
@@ -31,16 +39,6 @@ LogBox.ignoreLogs([
   // react navigation fix old params
   'Non-serializable values were found in the navigation state.',
 ])
-
-const cache = createIntlCache()
-const intl = createIntl({locale: 'en-US', messages: translations['en-US']}, cache)
-global.onunhandledrejection = (error: any) => {
-  Logger.error(`${error}`)
-  if (error instanceof NetworkError) return
-  if (error instanceof ApiError) return
-  if (isEmptyString(error?.message)) return
-  handleGeneralError(error.message, intl)
-}
 
 const queryClient = new QueryClient()
 
@@ -57,7 +55,17 @@ export const YoroiApp = () => {
               <ThemeProvider>
                 <LanguageProvider>
                   <CurrencyProvider>
-                    <App />
+                    <SafeAreaProvider>
+                      <RNP.Provider>
+                        <AuthProvider>
+                          <SelectedWalletMetaProvider>
+                            <SelectedWalletProvider>
+                              <InitApp />
+                            </SelectedWalletProvider>
+                          </SelectedWalletMetaProvider>
+                        </AuthProvider>
+                      </RNP.Provider>
+                    </SafeAreaProvider>
                   </CurrencyProvider>
                 </LanguageProvider>
               </ThemeProvider>

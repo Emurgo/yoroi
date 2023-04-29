@@ -7,7 +7,9 @@ import './src/i18n/polyfills' // https://formatjs.io/docs/polyfills
 import * as React from 'react'
 import {AppRegistry} from 'react-native'
 
-import appName from './app.json'
-import {YoroiApp} from './src/index'
+import {name} from './app.json'
+import {YoroiApp} from './src/YoroiApp'
 
-AppRegistry.registerComponent('yoroi', () => YoroiApp)
+console.log(YoroiApp)
+
+AppRegistry.registerComponent(name, () => YoroiApp)
