@@ -4,8 +4,6 @@ import {enableScreens} from 'react-native-screens'
 import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
-import crashReporting from './crashReporting'
-import {getCrashReportsEnabled} from './yoroi-wallets/hooks'
 import {useStorage, YoroiStorage} from './yoroi-wallets/storage'
 import {walletManager} from './yoroi-wallets/walletManager'
 
@@ -47,17 +45,9 @@ const initInstallationId = async (storage: YoroiStorage) => {
 
   const newInstallationId = uuid.v4()
   await storage.setItem('appSettings/installationId', newInstallationId, () => newInstallationId) // LEGACY: installationId is not serialized
-  return newInstallationId
 }
 
 export const initApp = async (storage: YoroiStorage) => {
-  const installationId = await initInstallationId(storage)
-
-  const crashReportsEnabled = await getCrashReportsEnabled()
-  if (crashReportsEnabled) {
-    crashReporting.setUserId(installationId)
-    crashReporting.enable()
-  }
-
+  await initInstallationId(storage)
   await walletManager.initialize()
 }

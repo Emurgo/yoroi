@@ -23,7 +23,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSApplicationCategoryType</key>
-	<string></string>
+	<string/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -40,9 +40,28 @@
 	<key>NSCameraUsageDescription</key>
 	<string>The $(PRODUCT_NAME) uses your camera to read QR codes, this makes simpler to input big wallet addresses.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>The $(PRODUCT_NAME) uses your location along with your bluetooth, this is required to integrate with some hardware wallets</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>The $(PRODUCT_NAME) uses the microphone so you can leverage voice commands.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Rubik-Black.ttf</string>
+		<string>Rubik-BlackItalic.ttf</string>
+		<string>Rubik-Bold.ttf</string>
+		<string>Rubik-BoldItalic.ttf</string>
+		<string>Rubik-ExtraBold.ttf</string>
+		<string>Rubik-ExtraBoldItalic.ttf</string>
+		<string>Rubik-Italic-VariableFont_wght.ttf</string>
+		<string>Rubik-Italic.ttf</string>
+		<string>Rubik-Light.ttf</string>
+		<string>Rubik-LightItalic.ttf</string>
+		<string>Rubik-Medium.ttf</string>
+		<string>Rubik-MediumItalic.ttf</string>
+		<string>Rubik-Regular.ttf</string>
+		<string>Rubik-SemiBold.ttf</string>
+		<string>Rubik-SemiBoldItalic.ttf</string>
+		<string>Rubik-VariableFont_wght.ttf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
