@@ -36,7 +36,7 @@ import {
 import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus, WalletImplementationId} from '../types/other'
 import {parseBoolean} from '../utils/parsing'
 import {delay} from '../utils/timeUtils'
-import {Amounts, Utxos} from '../utils/utils'
+import {Amounts, Quantities, Utxos} from '../utils/utils'
 import {WalletManager, WalletMeta} from '../walletManager'
 
 const crashReportsStorageKey = 'sendCrashReports'
@@ -924,4 +924,9 @@ export const useNft = (wallet: YoroiWallet, {id}: {id: string}): YoroiNft => {
     throw new Error(`Invalid id used "${id}" to get NFT`)
   }
   return result
+}
+
+export const useIsWalletEmpty = (wallet: YoroiWallet) => {
+  const balances = useBalances(wallet)
+  return Amounts.toArray(balances).every(({quantity}) => Quantities.isZero(quantity))
 }
