@@ -1,5 +1,5 @@
 import {DefaultAsset, TokenInfo} from '../../../types'
-import {COIN_TYPE, KEY_DEPOSIT, LINEAR_FEE, MINIMUM_UTXO_VAL, POOL_DEPOSIT} from '../common'
+import {COINS_PER_UTXO_WORD, COIN_TYPE, KEY_DEPOSIT, LINEAR_FEE, MINIMUM_UTXO_VAL, POOL_DEPOSIT} from '../common'
 
 export * from '../common'
 
@@ -67,6 +67,7 @@ export const NETWORK_CONFIG = {
   PER_EPOCH_PERCENTAGE_REWARD: 69344,
   POOL_DEPOSIT,
   PROVIDER_ID: 300,
+  COINS_PER_UTXO_WORD,
 } as const
 
 export const PRIMARY_TOKEN_INFO: TokenInfo = {

@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js'
 import {Token, YoroiAmounts} from '../types'
 import {Amounts, asQuantity, Quantities} from '../utils'
 import {CardanoMobile} from '../wallets'
-import {MINIMUM_UTXO_VAL} from './constants/common'
+import {COINS_PER_UTXO_WORD} from './constants/common'
 import {MultiToken} from './MultiToken'
 import {cardanoValueFromMultiToken} from './utils'
 
@@ -31,12 +31,12 @@ export const getMinAmounts = async (amounts: YoroiAmounts, primaryToken: Token) 
     {defaultNetworkId: primaryToken.networkId, defaultIdentifier: primaryToken.identifier},
   )
 
-  const [value, minUtxoVal] = await Promise.all([
+  const [value, coinsPerUtxoWord] = await Promise.all([
     cardanoValueFromMultiToken(multiToken),
-    CardanoMobile.BigNum.fromStr(MINIMUM_UTXO_VAL),
+    CardanoMobile.BigNum.fromStr(COINS_PER_UTXO_WORD),
   ])
 
-  const minAda = await CardanoMobile.minAdaRequired(value, minUtxoVal)
+  const minAda = await CardanoMobile.minAdaRequired(value, false, coinsPerUtxoWord)
     .then((minAda: BigNum) => minAda.toStr())
     .then(asQuantity)
 

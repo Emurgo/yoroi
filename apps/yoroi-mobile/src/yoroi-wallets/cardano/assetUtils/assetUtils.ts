@@ -7,12 +7,12 @@ import {cardanoValueFromRemoteFormat} from '../utils'
 
 export async function calcLockedDeposit(utxos: RawUtxo[], networkId: NetworkId) {
   const networkConfig = getCardanoNetworkConfigById(networkId)
-  const minUtxoValue = await CardanoMobile.BigNum.fromStr(networkConfig.MINIMUM_UTXO_VAL)
+  const coinsPerUtxoWord = await CardanoMobile.BigNum.fromStr(networkConfig.COINS_PER_UTXO_WORD)
   const utxosWithAssets = utxos.filter((u) => u.assets.length > 0)
 
   const promises = utxosWithAssets.map((u) => {
     return cardanoValueFromRemoteFormat(u)
-      .then((v) => CardanoMobile.minAdaRequired(v, minUtxoValue))
+      .then((v) => CardanoMobile.minAdaRequired(v, false, coinsPerUtxoWord))
       .then((v) => v.toStr())
   })
   const results = await Promise.all(promises)

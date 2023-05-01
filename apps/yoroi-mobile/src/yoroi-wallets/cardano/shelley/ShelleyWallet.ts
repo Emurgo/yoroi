@@ -119,6 +119,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     STAKING_KEY_PATH,
     TOKEN_INFO_SERVICE,
     WALLET_IMPLEMENTATION_ID,
+    COINS_PER_UTXO_WORD,
   } = constants
 
   const addressChains = {
@@ -605,6 +606,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
               constant: LINEAR_FEE.CONSTANT,
             },
             minimumUtxoVal: MINIMUM_UTXO_VAL,
+            coinsPerUtxoWord: COINS_PER_UTXO_WORD,
             poolDeposit: POOL_DEPOSIT,
             networkId: NETWORK_ID,
           },
@@ -687,6 +689,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
             coefficient: LINEAR_FEE.COEFFICIENT,
           },
           minimumUtxoVal: MINIMUM_UTXO_VAL,
+          coinsPerUtxoWord: COINS_PER_UTXO_WORD,
           poolDeposit: POOL_DEPOSIT,
           networkId: NETWORK_ID,
         },
@@ -726,6 +729,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
             constant: LINEAR_FEE.CONSTANT,
           },
           minimumUtxoVal: MINIMUM_UTXO_VAL,
+          coinsPerUtxoWord: COINS_PER_UTXO_WORD,
           poolDeposit: POOL_DEPOSIT,
           networkId: NETWORK_ID,
         }
@@ -808,6 +812,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
             constant: LINEAR_FEE.CONSTANT,
           },
           minimumUtxoVal: MINIMUM_UTXO_VAL,
+          coinsPerUtxoWord: COINS_PER_UTXO_WORD,
           poolDeposit: POOL_DEPOSIT,
           keyDeposit: KEY_DEPOSIT,
           networkId: NETWORK_ID,
