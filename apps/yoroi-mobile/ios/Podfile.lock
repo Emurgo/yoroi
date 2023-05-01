@@ -373,8 +373,10 @@ PODS:
   - react-native-ble-plx (2.0.3):
     - MultiplatformBleAdapter (= 0.1.9)
     - React-Core
-  - react-native-config (0.12.0):
-    - React
+  - react-native-config (1.5.0):
+    - react-native-config/App (= 1.5.0)
+  - react-native-config/App (1.5.0):
+    - React-Core
   - react-native-haskell-shelley (5.0.1-beta.1):
     - React
   - react-native-pager-view (6.2.0):
@@ -855,7 +857,7 @@ SPEC CHECKSUMS:
   React-logger: 9332c3e7b4ef007a0211c0a9868253aac3e1da82
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
-  react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
+  react-native-config: 5330c8258265c1e5fdb8c009d2cabd6badd96727
   react-native-haskell-shelley: 684ca47b5cb37f8acd21af2b8da1fa39c61e9914
   react-native-pager-view: 0ccb8bf60e2ebd38b1f3669fa3650ecce81db2df
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
@@ -895,4 +897,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 3e5ee98af499ec91626f36686e888d4f8f227906
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3
