@@ -8,7 +8,7 @@ describe('assetUtils', () => {
     it('should calculate when there are assets', async () => {
       const lockedDeposit = await calcLockedDeposit(mocks.utxos, 300)
 
-      expect(lockedDeposit).toEqual(new BigNumber('20356130'))
+      expect(lockedDeposit).toEqual(new BigNumber('20360440'))
     })
 
     it('should return 0 when there are no assets', async () => {

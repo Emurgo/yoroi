@@ -13,7 +13,6 @@ Logger.setLogLevel(LogLevel.Warn)
 jest.mock('react-native-device-info', () => ({getVersion: () => '1.5.1'}))
 jest.mock('react-native-randombytes', () => require('crypto').randomBytes)
 jest.mock('react-native-background-timer', () => {})
-jest.mock('@sentry/react-native', () => ({init: () => jest.fn()}))
 jest.mock('@ledgerhq/react-native-hw-transport-ble', () => ({}))
 jest.mock('react-native-ble-plx', () => ({}))
 jest.mock('@react-native-async-storage/async-storage', () =>
