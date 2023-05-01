@@ -4187,7 +4187,7 @@
     fs-extra "^11.1.1"
     param-case "^3.0.0"
 
-"@wdio/cli@^7.16.8":
+"@wdio/cli@<8.0.0":
   version "7.31.1"
   resolved "https://registry.yarnpkg.com/@wdio/cli/-/cli-7.31.1.tgz#c6d3905a64ebb31973940bf3cbe660c566632724"
   integrity sha512-LEBZ6+a+ptfete6QjBnuFV2FWawilTQGzTeK7zWLc6sgCFxSV2+ifOHvw19p531WhVknm9ZX4s/GelurMhB/6w==
