@@ -114,7 +114,7 @@ export const DeveloperScreen = () => {
           style={styles.button}
           onPress={() =>
             createWallet({
-              mnemonicPhrase: config['WALLET_1_MNEMONIC'],
+              mnemonicPhrase: config['WALLET_1_MNEMONIC'] ?? '',
               name: 'Wallet 1',
               networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
@@ -129,7 +129,7 @@ export const DeveloperScreen = () => {
           style={styles.button}
           onPress={() =>
             createWallet({
-              mnemonicPhrase: config['WALLET_2_MNEMONIC'],
+              mnemonicPhrase: config['WALLET_2_MNEMONIC'] ?? '',
               name: 'Wallet 2',
               networkId: Number(config['WALLET_2_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',

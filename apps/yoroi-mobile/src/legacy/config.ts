@@ -9,7 +9,7 @@ const SENTRY = {
   DSN: env.getString('SENTRY'),
   ENABLE: __DEV__ || BUILD_VARIANT === 'NIGHTLY',
 }
-const _COMMIT = env.getString('COMMIT')
+const _COMMIT = env.getString('COMMIT') ?? ''
 
 const _LOG_LEVEL = __DEV__ ? LogLevel.Debug : LogLevel.Warn
 

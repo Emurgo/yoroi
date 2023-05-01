@@ -1,5 +1,5 @@
 import {DefaultAsset, TokenInfo} from '../../../types'
-import {COINS_PER_UTXO_WORD, COIN_TYPE, KEY_DEPOSIT, LINEAR_FEE, MINIMUM_UTXO_VAL, POOL_DEPOSIT} from '../common'
+import {COIN_TYPE, COINS_PER_UTXO_WORD, KEY_DEPOSIT, LINEAR_FEE, MINIMUM_UTXO_VAL, POOL_DEPOSIT} from '../common'
 
 export * from '../common'
 
