@@ -25,3 +25,14 @@ jobs:
         working-directory: ./apps/yoroi-mobile
       - run: yarn install
       - run: yarn test --ci --bail --silent
+  tsc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.10.0'
+          cache: 'yarn'
+        working-directory: ./apps/yoroi-mobile
+      - run: yarn install
+      - run: yarn tsc 
