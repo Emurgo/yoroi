@@ -11217,7 +11217,7 @@ linkify-it@^2.0.0:
   dependencies:
     uc.micro "^1.0.1"
 
-lint-staged@>=10:
+lint-staged@^13.2.2:
   version "13.2.2"
   resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-13.2.2.tgz#5e711d3139c234f73402177be2f8dd312e6508ca"
   integrity sha512-71gSwXKy649VrSU09s10uAT0rWCcY3aewhMaHyl2N84oBk4Xs9HgxvUp3AYu+bNsK4NrOYYxvSgg7FyGJ+jGcA==
@@ -13517,7 +13517,7 @@ pretty-ms@^7.0.0:
   dependencies:
     parse-ms "^2.1.0"
 
-prettylint@1.0.0:
+prettylint@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/prettylint/-/prettylint-1.0.0.tgz#b71720ad9733e098fdd8ebea90c61cda33371aa1"
   integrity sha512-IjIAoGeIve8NQR6WbslnMs5rcnEVbJkZN/IXm302wNlSEo+3pIyxroy+3bkEFLP14prz1Aq1GGlKsX0UXHXuEQ==
