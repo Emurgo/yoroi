@@ -2,7 +2,6 @@
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 
-import {Logger} from '../../logging'
 import {
   BaseAsset,
   CERTIFICATE_KIND,
@@ -164,9 +163,6 @@ export const processTxHistoryData = (
 
   if (isMultiParty && !_multiPartyWarningCache[tx.id]) {
     _multiPartyWarningCache[tx.id] = true
-    Logger.warn('I see a multi-party transaction (only some of the inputs are mine)')
-    Logger.warn('This probably means broken address discovery!')
-    Logger.warn(`Transaction: ${tx.id}`)
   }
 
   /*
