@@ -139,7 +139,6 @@
     "react-native-tab-view": "^3.1.1",
     "react-native-webview": "^11.25.0",
     "react-query": "^3.34.14",
-    "remove": "^0.1.5",
     "reselect": "^4.0.0",
     "safe-buffer": "^5.2.1",
     "stream-browserify": "3.0.0",
