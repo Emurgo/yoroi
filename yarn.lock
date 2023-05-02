@@ -13774,12 +13774,19 @@ minimalistic-crypto-utils@^1.0.1:
   resolved "https://registry.yarnpkg.com/minimalistic-crypto-utils/-/minimalistic-crypto-utils-1.0.1.tgz#f6c00c1c0b082246e5c4d99dfb8c7c083b2b582a"
   integrity sha1-9sAMHAsIIkblxNmd+4x8CDsrWCo=
 
-"minimatch@2 || 3", minimatch@3, minimatch@3.0.4, minimatch@^3.0.2, minimatch@^3.0.4, minimatch@~3.0.2:
+"minimatch@2 || 3", minimatch@3.0.4, minimatch@^3.0.2, minimatch@^3.0.4, minimatch@~3.0.2:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
   integrity sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
   dependencies:
     brace-expansion "^1.1.7"
+
+"minimatch@3 || 4 || 5 || 6 || 7":
+  version "7.4.6"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-7.4.6.tgz#845d6f254d8f4a5e4fd6baf44d5f10c8448365fb"
+  integrity sha512-sBz8G/YjVniEz6lKPNpKxXwazJe4c19fEfV2GDMX6AjFz+MX9uDWIZW8XreVhkFW3fkIdTv/gxWr/Kks5FFAVw==
+  dependencies:
+    brace-expansion "^2.0.1"
 
 minimatch@5.0.1:
   version "5.0.1"
@@ -18239,13 +18246,13 @@ type-check@~0.3.2:
   dependencies:
     prelude-ls "~1.1.2"
 
-type-coverage-core@^2.17.2:
-  version "2.18.3"
-  resolved "https://registry.yarnpkg.com/type-coverage-core/-/type-coverage-core-2.18.3.tgz#a4eb33d36c309e8ace8b70bfb0ae3ef32e19ab50"
-  integrity sha512-abuqXETGrArQJ8jAhW+LI/8nPZMUSItJMui+dk0DpexPye/nmycy20Ww4hXorFfeEwbvzILaJyu+0LNO0Zq0BQ==
+type-coverage-core@^2.23.0:
+  version "2.25.0"
+  resolved "https://registry.yarnpkg.com/type-coverage-core/-/type-coverage-core-2.25.0.tgz#87c1697fdcbc6f3e35b808da7d1f3b252fa6b13d"
+  integrity sha512-+ROv68mmveRCpYKq4kLEPDerCqj2YGzR8tSPXH2LLMxY5xk3zJM23Ztv/cAGoHEge4CI3S4xrcTJoWlwlhEKYA==
   dependencies:
     fast-glob "3"
-    minimatch "3"
+    minimatch "3 || 4 || 5 || 6 || 7"
     normalize-path "3"
     tslib "1 || 2"
     tsutils "3"
@@ -18324,10 +18331,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-typescript-coverage-report@^0.6.4:
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/typescript-coverage-report/-/typescript-coverage-report-0.6.4.tgz#3a7a7724c0f27de50d2a0708c7b7b7088bed2055"
-  integrity sha512-G+0OFYxwN5oRbORlU1nKYtO00G567lcl4+nbg3MU3Y9ayFnh677dMHmAL4JGP/4Cb1IBN5h/DUQDr/z9X+9lag==
+typescript-coverage-report@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/typescript-coverage-report/-/typescript-coverage-report-0.7.0.tgz#ed3898d9f196478945520f7110fab1f6bc109e03"
+  integrity sha512-ODeA510qAN2C76NjDCoZj2wcGGkkuaf2FQJElyJS9ABmGbpkgrhtoWOfiKkoeaPHkvysqOfhFEVUWNrOUlww7w==
   dependencies:
     chalk "^4.0.0"
     cli-table3 "^0.6.1"
@@ -18337,7 +18344,7 @@ typescript-coverage-report@^0.6.4:
     react-dom "^16.13.1"
     rimraf "^3.0.2"
     semantic-ui-react "^0.88.2"
-    type-coverage-core "^2.17.2"
+    type-coverage-core "^2.23.0"
 
 typescript@^4.5.3:
   version "4.5.3"
