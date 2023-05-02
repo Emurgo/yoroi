@@ -5,6 +5,7 @@ import {isYoroiWallet} from '../cardano/types'
 import {parseSafe} from '../utils/parsing'
 import {WalletManager} from './walletManager'
 
+// ! Actually hitting the API
 describe('walletMananger', () => {
   beforeEach(() => AsyncStorage.clear())
 
