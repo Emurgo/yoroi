@@ -1,5 +1,9 @@
-name: Trigger Gitlab jobs
-on: [push]
+name: wallet-mobile-gitlab
+
+on: 
+  push:
+    paths:
+      - 'apps/wallet-mobile/**'
 
 jobs:
   Build_Request:
