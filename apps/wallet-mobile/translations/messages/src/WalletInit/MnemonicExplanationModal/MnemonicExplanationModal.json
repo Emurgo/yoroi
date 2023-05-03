@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.walletinit.createwallet.mnemonicexplanationmodal.paragraph1",
+    "defaultMessage": "!!!On the following screen, you will see a set of 15 random words. This is your **wallet recovery phrase**. It can be entered in any version of Yoroi in order to back up or restore your wallet`s funds and private key.",
+    "file": "src/WalletInit/MnemonicExplanationModal/MnemonicExplanationModal.tsx",
+    "start": {
+      "line": 41,
+      "column": 14,
+      "index": 1180
+    },
+    "end": {
+      "line": 47,
+      "column": 3,
+      "index": 1536
+    }
+  },
+  {
+    "id": "components.walletinit.createwallet.mnemonicexplanationmodal.paragraph2",
+    "defaultMessage": "!!!Make sure **nobody looks into your screen** unless you want them to have access to your funds.",
+    "file": "src/WalletInit/MnemonicExplanationModal/MnemonicExplanationModal.tsx",
+    "start": {
+      "line": 48,
+      "column": 14,
+      "index": 1552
+    },
+    "end": {
+      "line": 51,
+      "column": 3,
+      "index": 1760
+    }
+  },
+  {
+    "id": "components.walletinit.createwallet.mnemonicexplanationmodal.nextButton",
+    "defaultMessage": "!!!I understand",
+    "file": "src/WalletInit/MnemonicExplanationModal/MnemonicExplanationModal.tsx",
+    "start": {
+      "line": 52,
+      "column": 14,
+      "index": 1776
+    },
+    "end": {
+      "line": 55,
+      "column": 3,
+      "index": 1902
+    }
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "id": "components.txhistory.txhistorylistitem.fee",
+    "defaultMessage": "!!!Fee",
+    "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
+    "start": {
+      "line": 160,
+      "column": 7,
+      "index": 5501
+    },
+    "end": {
+      "line": 163,
+      "column": 3,
+      "index": 5590
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.transactionTypeSent",
+    "defaultMessage": "!!!ADA sent",
+    "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
+    "start": {
+      "line": 164,
+      "column": 23,
+      "index": 5615
+    },
+    "end": {
+      "line": 167,
+      "column": 3,
+      "index": 5725
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.transactionTypeReceived",
+    "defaultMessage": "!!!ADA received",
+    "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
+    "start": {
+      "line": 168,
+      "column": 27,
+      "index": 5754
+    },
+    "end": {
+      "line": 171,
+      "column": 3,
+      "index": 5872
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.transactionTypeSelf",
+    "defaultMessage": "!!!Intrawallet",
+    "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
+    "start": {
+      "line": 172,
+      "column": 23,
+      "index": 5897
+    },
+    "end": {
+      "line": 175,
+      "column": 3,
+      "index": 6010
+    }
+  },
+  {
+    "id": "components.txhistory.txhistorylistitem.transactionTypeMulti",
+    "defaultMessage": "!!!Multiparty",
+    "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
+    "start": {
+      "line": 176,
+      "column": 24,
+      "index": 6036
+    },
+    "end": {
+      "line": 179,
+      "column": 3,
+      "index": 6149
+    }
+  },
+  {
+    "id": "global.txLabels.assets",
+    "description": "The number of assets different assets, not the amount",
+    "defaultMessage": "!!!{cnt} assets",
+    "file": "src/TxHistory/TxHistoryList/TxHistoryListItem.tsx",
+    "start": {
+      "line": 180,
+      "column": 10,
+      "index": 6161
+    },
+    "end": {
+      "line": 184,
+      "column": 3,
+      "index": 6313
+    }
+  }
+]

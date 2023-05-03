@@ -1,0 +1,62 @@
+[
+  {
+    "id": "components.login.custompinlogin.title",
+    "defaultMessage": "!!!Enter PIN",
+    "file": "src/AppNavigator.tsx",
+    "start": {
+      "line": 124,
+      "column": 17,
+      "index": 4036
+    },
+    "end": {
+      "line": 127,
+      "column": 3,
+      "index": 4126
+    }
+  },
+  {
+    "id": "components.firstrun.custompinscreen.title",
+    "defaultMessage": "!!!Set PIN",
+    "file": "src/AppNavigator.tsx",
+    "start": {
+      "line": 128,
+      "column": 18,
+      "index": 4146
+    },
+    "end": {
+      "line": 131,
+      "column": 3,
+      "index": 4238
+    }
+  },
+  {
+    "id": "global.actions.dialogs.walletKeysInvalidated.title",
+    "defaultMessage": "!!!Auth with OS changes",
+    "file": "src/AppNavigator.tsx",
+    "start": {
+      "line": 132,
+      "column": 25,
+      "index": 4265
+    },
+    "end": {
+      "line": 135,
+      "column": 3,
+      "index": 4379
+    }
+  },
+  {
+    "id": "global.actions.dialogs.biometricsChange.message",
+    "defaultMessage": "!!!Auth with OS changed detected",
+    "file": "src/AppNavigator.tsx",
+    "start": {
+      "line": 136,
+      "column": 27,
+      "index": 4408
+    },
+    "end": {
+      "line": 139,
+      "column": 3,
+      "index": 4529
+    }
+  }
+]

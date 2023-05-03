@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.catalyst.step3.subTitle",
+    "defaultMessage": "!!!Enter PIN",
+    "file": "src/Catalyst/ConfirmPin.tsx",
+    "start": {
+      "line": 77,
+      "column": 12,
+      "index": 2199
+    },
+    "end": {
+      "line": 80,
+      "column": 3,
+      "index": 2286
+    }
+  },
+  {
+    "id": "components.catalyst.step3.description",
+    "defaultMessage": "!!!Please enter the PIN as you will need it every time you want to access the Catalyst Voting app",
+    "file": "src/Catalyst/ConfirmPin.tsx",
+    "start": {
+      "line": 81,
+      "column": 15,
+      "index": 2303
+    },
+    "end": {
+      "line": 84,
+      "column": 3,
+      "index": 2478
+    }
+  }
+]

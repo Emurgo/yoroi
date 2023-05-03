@@ -1,0 +1,62 @@
+[
+  {
+    "id": "components.walletinit.restorewallet.upgradeconfirmmodal.fromLabel",
+    "defaultMessage": "!!!From",
+    "file": "src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.tsx",
+    "start": {
+      "line": 165,
+      "column": 13,
+      "index": 5303
+    },
+    "end": {
+      "line": 168,
+      "column": 3,
+      "index": 5416
+    }
+  },
+  {
+    "id": "components.walletinit.restorewallet.upgradeconfirmmodal.balanceLabel",
+    "defaultMessage": "!!!Recovered balance",
+    "file": "src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.tsx",
+    "start": {
+      "line": 169,
+      "column": 16,
+      "index": 5434
+    },
+    "end": {
+      "line": 172,
+      "column": 3,
+      "index": 5563
+    }
+  },
+  {
+    "id": "components.walletinit.restorewallet.upgradeconfirmmodal.finalBalanceLabel",
+    "defaultMessage": "!!!Final balance",
+    "file": "src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.tsx",
+    "start": {
+      "line": 173,
+      "column": 21,
+      "index": 5586
+    },
+    "end": {
+      "line": 176,
+      "column": 3,
+      "index": 5716
+    }
+  },
+  {
+    "id": "components.transfer.transfersummarymodal.unregisterExplanation",
+    "defaultMessage": "!!!This transaction will unregister one or more staking keys, giving you back your {refundAmount} from your deposit",
+    "file": "src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.tsx",
+    "start": {
+      "line": 177,
+      "column": 25,
+      "index": 5743
+    },
+    "end": {
+      "line": 182,
+      "column": 3,
+      "index": 5978
+    }
+  }
+]

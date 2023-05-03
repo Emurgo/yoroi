@@ -1,0 +1,107 @@
+[
+  {
+    "id": "components.receive.addressmodal.walletAddress",
+    "defaultMessage": "!!!Your wallet address",
+    "file": "src/Receive/AddressModal.tsx",
+    "start": {
+      "line": 147,
+      "column": 17,
+      "index": 3742
+    },
+    "end": {
+      "line": 150,
+      "column": 3,
+      "index": 3850
+    }
+  },
+  {
+    "id": "components.receive.addressmodal.BIP32path",
+    "defaultMessage": "!!!BIP32 path:",
+    "file": "src/Receive/AddressModal.tsx",
+    "start": {
+      "line": 151,
+      "column": 13,
+      "index": 3865
+    },
+    "end": {
+      "line": 154,
+      "column": 3,
+      "index": 3961
+    }
+  },
+  {
+    "id": "components.receive.addressmodal.copyLabel",
+    "defaultMessage": "!!!Copy address",
+    "file": "src/Receive/AddressModal.tsx",
+    "start": {
+      "line": 155,
+      "column": 13,
+      "index": 3976
+    },
+    "end": {
+      "line": 158,
+      "column": 3,
+      "index": 4073
+    }
+  },
+  {
+    "id": "components.receive.addressmodal.spendingKeyHash",
+    "defaultMessage": "!!!Spending",
+    "file": "src/Receive/AddressModal.tsx",
+    "start": {
+      "line": 159,
+      "column": 12,
+      "index": 4087
+    },
+    "end": {
+      "line": 162,
+      "column": 3,
+      "index": 4186
+    }
+  },
+  {
+    "id": "components.receive.addressmodal.stakingKeyHash",
+    "defaultMessage": "!!!Staking",
+    "file": "src/Receive/AddressModal.tsx",
+    "start": {
+      "line": 163,
+      "column": 11,
+      "index": 4199
+    },
+    "end": {
+      "line": 166,
+      "column": 3,
+      "index": 4296
+    }
+  },
+  {
+    "id": "components.receive.addressmodal.title",
+    "defaultMessage": "!!!Title",
+    "file": "src/Receive/AddressModal.tsx",
+    "start": {
+      "line": 167,
+      "column": 9,
+      "index": 4307
+    },
+    "end": {
+      "line": 170,
+      "column": 3,
+      "index": 4393
+    }
+  },
+  {
+    "id": "components.receive.addressverifymodal.title",
+    "defaultMessage": "!!!Verify Address on Ledger",
+    "file": "src/Receive/AddressModal.tsx",
+    "start": {
+      "line": 171,
+      "column": 15,
+      "index": 4410
+    },
+    "end": {
+      "line": 174,
+      "column": 3,
+      "index": 4521
+    }
+  }
+]

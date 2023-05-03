@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.firstrun.custompinscreen.pinInputTitle",
+    "defaultMessage": "!!!Enter the PIN",
+    "file": "src/auth/CreatePinInput/CreatePinInput.tsx",
+    "start": {
+      "line": 76,
+      "column": 17,
+      "index": 2292
+    },
+    "end": {
+      "line": 79,
+      "column": 3,
+      "index": 2398
+    }
+  },
+  {
+    "id": "components.firstrun.custompinscreen.pinInputSubtitle",
+    "defaultMessage": "!!!Choose new PIN for quick access to wallet.",
+    "file": "src/auth/CreatePinInput/CreatePinInput.tsx",
+    "start": {
+      "line": 80,
+      "column": 20,
+      "index": 2420
+    },
+    "end": {
+      "line": 83,
+      "column": 3,
+      "index": 2558
+    }
+  },
+  {
+    "id": "components.firstrun.custompinscreen.pinConfirmationTitle",
+    "defaultMessage": "!!!Repeat PIN",
+    "file": "src/auth/CreatePinInput/CreatePinInput.tsx",
+    "start": {
+      "line": 84,
+      "column": 29,
+      "index": 2589
+    },
+    "end": {
+      "line": 87,
+      "column": 3,
+      "index": 2699
+    }
+  }
+]

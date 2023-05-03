@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.settings.changecustompinscreen.CurrentPinInput.title",
+    "defaultMessage": "!!!Enter PIN",
+    "file": "src/auth/CheckPinInput/CheckPinInput.tsx",
+    "start": {
+      "line": 50,
+      "column": 9,
+      "index": 1341
+    },
+    "end": {
+      "line": 53,
+      "column": 3,
+      "index": 1457
+    }
+  },
+  {
+    "id": "components.settings.changecustompinscreen.CurrentPinInput.subtitle",
+    "defaultMessage": "!!!Enter your current PIN",
+    "file": "src/auth/CheckPinInput/CheckPinInput.tsx",
+    "start": {
+      "line": 54,
+      "column": 12,
+      "index": 1471
+    },
+    "end": {
+      "line": 57,
+      "column": 3,
+      "index": 1603
+    }
+  }
+]

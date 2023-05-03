@@ -1,0 +1,92 @@
+[
+  {
+    "id": "components.settings.settingsscreen.faqLabel",
+    "defaultMessage": "!!!See frequently asked questions",
+    "file": "src/Settings/Support/SupportScreen.tsx",
+    "start": {
+      "line": 54,
+      "column": 12,
+      "index": 1375
+    },
+    "end": {
+      "line": 57,
+      "column": 3,
+      "index": 1492
+    }
+  },
+  {
+    "id": "components.settings.settingsscreen.faqDescription",
+    "defaultMessage": "!!!If you are experiencing issues, please see the FAQ on Yoroi website for quidance on known issues.",
+    "file": "src/Settings/Support/SupportScreen.tsx",
+    "start": {
+      "line": 58,
+      "column": 18,
+      "index": 1512
+    },
+    "end": {
+      "line": 62,
+      "column": 3,
+      "index": 1708
+    }
+  },
+  {
+    "id": "components.settings.settingsscreen.faqUrl",
+    "defaultMessage": "!!!https://yoroi-wallet.com/faq/",
+    "file": "src/Settings/Support/SupportScreen.tsx",
+    "start": {
+      "line": 63,
+      "column": 10,
+      "index": 1720
+    },
+    "end": {
+      "line": 66,
+      "column": 3,
+      "index": 1834
+    }
+  },
+  {
+    "id": "components.settings.settingsscreen.reportLabel",
+    "defaultMessage": "!!!Report a problem",
+    "file": "src/Settings/Support/SupportScreen.tsx",
+    "start": {
+      "line": 67,
+      "column": 15,
+      "index": 1851
+    },
+    "end": {
+      "line": 70,
+      "column": 3,
+      "index": 1957
+    }
+  },
+  {
+    "id": "components.settings.settingsscreen.reportDescription",
+    "defaultMessage": "!!!If the FAQ does not solve the issue you are experiencing, please use our Support request feature.",
+    "file": "src/Settings/Support/SupportScreen.tsx",
+    "start": {
+      "line": 71,
+      "column": 21,
+      "index": 1980
+    },
+    "end": {
+      "line": 75,
+      "column": 3,
+      "index": 2179
+    }
+  },
+  {
+    "id": "components.settings.settingsscreen.reportUrl",
+    "defaultMessage": "!!!https://yoroi-wallet.com/support/",
+    "file": "src/Settings/Support/SupportScreen.tsx",
+    "start": {
+      "line": 76,
+      "column": 13,
+      "index": 2194
+    },
+    "end": {
+      "line": 79,
+      "column": 3,
+      "index": 2315
+    }
+  }
+]

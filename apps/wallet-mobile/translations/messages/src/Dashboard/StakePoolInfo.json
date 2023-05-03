@@ -1,0 +1,77 @@
+[
+  {
+    "id": "components.delegationsummary.delegatedStakepoolInfo.title",
+    "defaultMessage": "!!!Stake pool delegated",
+    "file": "src/Dashboard/StakePoolInfo.tsx",
+    "start": {
+      "line": 126,
+      "column": 9,
+      "index": 3379
+    },
+    "end": {
+      "line": 129,
+      "column": 3,
+      "index": 3500
+    }
+  },
+  {
+    "id": "components.delegationsummary.delegatedStakepoolInfo.warning",
+    "defaultMessage": "!!!If you just delegated to a new stake pool it may  take a couple of minutes for the network to process your request.",
+    "file": "src/Dashboard/StakePoolInfo.tsx",
+    "start": {
+      "line": 130,
+      "column": 11,
+      "index": 3513
+    },
+    "end": {
+      "line": 135,
+      "column": 3,
+      "index": 3748
+    }
+  },
+  {
+    "id": "components.delegationsummary.delegatedStakepoolInfo.fullDescriptionButtonLabel",
+    "defaultMessage": "!!!Go to website",
+    "file": "src/Dashboard/StakePoolInfo.tsx",
+    "start": {
+      "line": 136,
+      "column": 26,
+      "index": 3776
+    },
+    "end": {
+      "line": 139,
+      "column": 3,
+      "index": 3911
+    }
+  },
+  {
+    "id": "components.delegationsummary.delegatedStakepoolInfo.copied",
+    "defaultMessage": "!!!Copied!",
+    "file": "src/Dashboard/StakePoolInfo.tsx",
+    "start": {
+      "line": 140,
+      "column": 10,
+      "index": 3923
+    },
+    "end": {
+      "line": 143,
+      "column": 3,
+      "index": 4032
+    }
+  },
+  {
+    "id": "components.delegationsummary.delegatedStakepoolInfo.unknownPool",
+    "defaultMessage": "!!!Unknown pool",
+    "file": "src/Dashboard/StakePoolInfo.tsx",
+    "start": {
+      "line": 144,
+      "column": 15,
+      "index": 4049
+    },
+    "end": {
+      "line": 147,
+      "column": 3,
+      "index": 4168
+    }
+  }
+]

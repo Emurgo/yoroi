@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.send.assetselectorscreen.unknownAsset",
+    "defaultMessage": "!!!Unknown asset",
+    "file": "src/TxHistory/AssetList/AssetList.tsx",
+    "start": {
+      "line": 95,
+      "column": 16,
+      "index": 3178
+    },
+    "end": {
+      "line": 98,
+      "column": 3,
+      "index": 3283
+    }
+  }
+]

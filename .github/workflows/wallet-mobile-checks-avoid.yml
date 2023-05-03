@@ -1,0 +1,20 @@
+name: wallet-mobile-checks
+
+on: 
+  push:
+    paths-ignore:
+      - 'apps/wallet-mobile/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No lint required"'
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No test required"'
+  tsc:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No tsc required"'

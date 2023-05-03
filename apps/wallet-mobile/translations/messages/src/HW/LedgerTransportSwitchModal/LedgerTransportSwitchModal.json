@@ -1,0 +1,122 @@
+[
+  {
+    "id": "components.ledger.ledgertransportswitchmodal.title",
+    "defaultMessage": "!!!Choose Connection Method",
+    "file": "src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
+    "start": {
+      "line": 99,
+      "column": 9,
+      "index": 2822
+    },
+    "end": {
+      "line": 102,
+      "column": 3,
+      "index": 2940
+    }
+  },
+  {
+    "id": "components.ledger.ledgertransportswitchmodal.usbExplanation",
+    "defaultMessage": "!!!Choose this option if you want to connect to a Ledger Nano model X or S using an on-the-go USB cable adaptor:",
+    "file": "src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
+    "start": {
+      "line": 103,
+      "column": 18,
+      "index": 2960
+    },
+    "end": {
+      "line": 108,
+      "column": 3,
+      "index": 3189
+    }
+  },
+  {
+    "id": "components.ledger.ledgertransportswitchmodal.usbButton",
+    "defaultMessage": "!!!Connect with USB",
+    "file": "src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
+    "start": {
+      "line": 109,
+      "column": 13,
+      "index": 3204
+    },
+    "end": {
+      "line": 112,
+      "column": 3,
+      "index": 3318
+    }
+  },
+  {
+    "id": "components.ledger.ledgertransportswitchmodal.usbButtonNotSupported",
+    "defaultMessage": "!!!Connect with USB\n(Not supported)",
+    "file": "src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
+    "start": {
+      "line": 113,
+      "column": 25,
+      "index": 3345
+    },
+    "end": {
+      "line": 116,
+      "column": 3,
+      "index": 3488
+    }
+  },
+  {
+    "id": "components.ledger.ledgertransportswitchmodal.usbButtonDisabled",
+    "defaultMessage": "!!!Connect with USB\n(Blocked by Apple for iOS)",
+    "file": "src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
+    "start": {
+      "line": 117,
+      "column": 21,
+      "index": 3511
+    },
+    "end": {
+      "line": 120,
+      "column": 3,
+      "index": 3661
+    }
+  },
+  {
+    "id": "components.ledger.ledgertransportswitchmodal.bluetoothExplanation",
+    "defaultMessage": "!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:",
+    "file": "src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
+    "start": {
+      "line": 121,
+      "column": 24,
+      "index": 3687
+    },
+    "end": {
+      "line": 124,
+      "column": 3,
+      "index": 3881
+    }
+  },
+  {
+    "id": "components.ledger.ledgertransportswitchmodal.bluetoothButton",
+    "defaultMessage": "!!!Connect with Bluetooth",
+    "file": "src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
+    "start": {
+      "line": 125,
+      "column": 19,
+      "index": 3902
+    },
+    "end": {
+      "line": 128,
+      "column": 3,
+      "index": 4028
+    }
+  },
+  {
+    "id": "global.ledgerMessages.bluetoothDisabledError",
+    "defaultMessage": "!!!Connect with Bluetooth",
+    "file": "src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.tsx",
+    "start": {
+      "line": 129,
+      "column": 18,
+      "index": 4048
+    },
+    "end": {
+      "line": 132,
+      "column": 3,
+      "index": 4158
+    }
+  }
+]
