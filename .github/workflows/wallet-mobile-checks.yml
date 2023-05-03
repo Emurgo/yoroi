@@ -7,36 +7,24 @@ on:
 
 defaults:
   run:
-    working-directory: ./apps/wallet-mobile
+    working-directory: apps/wallet-mobile
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '16.10.0'
-          cache: 'yarn'
-      - run: yarn install
+      - uses: ./.github/actions/wallet-mobile
       - run: yarn lint
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '16.10.0'
-          cache: 'yarn'
-      - run: yarn install
+      - uses: ./.github/actions/wallet-mobile
       - run: yarn test --ci --bail --silent
   tsc:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '16.10.0'
-          cache: 'yarn'
-      - run: yarn install
+      - uses: ./.github/actions/wallet-mobile
       - run: yarn tsc 
