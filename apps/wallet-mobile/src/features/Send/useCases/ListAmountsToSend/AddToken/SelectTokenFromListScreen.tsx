@@ -12,7 +12,7 @@ import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedW
 import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
-import {useBalances, useIsWalletEmpty, useNfts, useTokenInfos} from '../../../../../yoroi-wallets/hooks'
+import {useAllTokenInfos, useBalances, useIsWalletEmpty, useNfts} from '../../../../../yoroi-wallets/hooks'
 import {TokenInfo, YoroiNft} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../common/filterByFungibility'
@@ -88,7 +88,7 @@ const NftList = ({canAddAmount}: {canAddAmount: boolean}) => {
   const {tokenSelectedChanged, amountChanged, targets, selectedTargetIndex} = useSend()
   const {closeSearch} = useSearch()
   const balances = useBalances(wallet)
-
+  const strings = useStrings()
   const {nfts} = useNfts(wallet)
   const amountsSelected = Object.keys(targets[selectedTargetIndex].entry.amounts)
   const filteredAndSorted = nfts.filter(filterOutSelected(amountsSelected)).sort((a, b) => sortNfts(a.name, b.name))
@@ -111,8 +111,10 @@ const NftList = ({canAddAmount}: {canAddAmount: boolean}) => {
         onSelect={onSelect}
         readOnly={!canAddAmount}
         isRefreshing={false}
-        withVerticalPadding={nfts.length > 0} // to keep consistency between tabs when the list is not empty
-        ListEmptyComponent={<ListEmptyComponent fungibilityFilter="nft" />}
+        withVerticalPadding={filteredAndSorted.length > 0} // to keep consistency between tabs when the list is not empty
+        ListEmptyComponent={
+          filteredAndSorted.length === 0 ? <NoAssetsYet text={strings.noAssetsAddedYet(strings.nfts(2))} /> : null
+        }
       />
 
       <Counter fungibilityFilter="nft" counter={counter} />
@@ -126,7 +128,8 @@ type AssetListProps = {
 }
 const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
   const wallet = useSelectedWallet()
-  const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter})
+  const tokenInfos = useAllTokenInfos({wallet})
+  const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter, tokenInfos})
 
   return (
     <View style={styles.list}>
@@ -146,7 +149,7 @@ const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
         keyExtractor={(_, index) => index.toString()}
         testID="assetsList"
         estimatedItemSize={78}
-        ListEmptyComponent={<ListEmptyComponent fungibilityFilter={fungibilityFilter} />}
+        ListEmptyComponent={<ListEmptyComponent filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
       />
 
       <Counter fungibilityFilter={fungibilityFilter} counter={filteredTokenInfos.length} />
@@ -216,22 +219,25 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
   )
 }
 
-const ListEmptyComponent = ({fungibilityFilter}: {fungibilityFilter: FungibilityFilter}) => {
+const ListEmptyComponent = ({
+  filteredTokenInfos,
+  allTokenInfos,
+}: {
+  filteredTokenInfos: Array<TokenInfo>
+  allTokenInfos: Array<TokenInfo>
+}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const wallet = useSelectedWallet()
-  const {nfts} = useNfts(wallet)
-  const filteredTokenInfos = useFilteredTokenInfos({fungibilityFilter})
+  const {targets, selectedTargetIndex} = useSend()
+  const selectedTokenIds = Object.keys(targets[selectedTargetIndex].entry.amounts)
+  const isSelectTokenFromListEmpty = areAllTokensSelected(selectedTokenIds, allTokenInfos)
   const strings = useStrings()
-
   const isWalletEmpty = useIsWalletEmpty(wallet)
 
   if (isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) return <EmptySearchResult />
 
-  if (fungibilityFilter === 'ft' && isWalletEmpty && !isSearching)
+  if ((isWalletEmpty || isSelectTokenFromListEmpty) && !isSearching)
     return <NoAssetsYet text={strings.noAssetsAddedYet(strings.tokens(2))} />
-
-  if (fungibilityFilter === 'nft' && nfts.length === 0)
-    return <NoAssetsYet text={strings.noAssetsAddedYet(strings.nfts(2))} />
 
   return null
 }
@@ -314,18 +320,18 @@ const Counter = ({fungibilityFilter, counter}: {fungibilityFilter: FungibilityFi
 }
 
 // filteredTokenInfos has primary token when the search term and the wallet are empty and the ft/all tab is selected
-const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: FungibilityFilter}) => {
+const useFilteredTokenInfos = ({
+  fungibilityFilter,
+  tokenInfos,
+}: {
+  fungibilityFilter: FungibilityFilter
+  tokenInfos: Array<TokenInfo>
+}) => {
   const wallet = useSelectedWallet()
   const {nfts} = useNfts(wallet)
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const balances = useBalances(wallet)
   const {targets, selectedTargetIndex} = useSend()
   const isWalletEmpty = useIsWalletEmpty(wallet)
-
-  const tokenInfos = useTokenInfos({
-    wallet,
-    tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
-  })
 
   /*
    * to show the empty list component:
@@ -333,12 +339,12 @@ const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: Fungibil
    *    - "ft" tab has to have primary token hidden when wallet is empty and to show the empty list component
    *    - "all" tab has to display the primary token and not to show the empty list component
    */
-  if (fungibilityFilter === 'ft' && isWalletEmpty && assetSearchTerm.length === 0 && !isSearching) return []
+  if (fungibilityFilter === 'ft' && isWalletEmpty && !isSearching) return []
 
-  const amountsSelected = Object.keys(targets[selectedTargetIndex].entry.amounts)
+  const selectedTokenIds = Object.keys(targets[selectedTargetIndex].entry.amounts)
 
   const filteredTokenInfos = tokenInfos
-    .filter(filterOutSelected(amountsSelected))
+    .filter(filterOutSelected(selectedTokenIds))
     .filter(filterBySearch(assetSearchTerm))
     .filter(
       filterByFungibility({
@@ -353,9 +359,10 @@ const useFilteredTokenInfos = ({fungibilityFilter}: {fungibilityFilter: Fungibil
   })
 }
 
-const filterOutSelected = (selectedTokensIds: Array<string>) => (token: YoroiNft | TokenInfo) =>
-  !selectedTokensIds.includes(token.id)
-
+const areAllTokensSelected = (selectedTokenIds: Array<string>, tokenInfos): boolean =>
+  tokenInfos.every((tokenInfo) => selectedTokenIds.includes(tokenInfo.id))
+const filterOutSelected = (selectedTokenIds: Array<string>) => (token: YoroiNft | TokenInfo) =>
+  !selectedTokenIds.includes(token.id)
 const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 
 const styles = StyleSheet.create({
