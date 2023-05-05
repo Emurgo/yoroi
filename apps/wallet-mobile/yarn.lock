@@ -1372,10 +1372,10 @@
   dependencies:
     react-native-svg "13.8.0"
 
-"@emurgo/react-native-haskell-shelley@5.0.1-beta.1":
-  version "5.0.1-beta.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-5.0.1-beta.1.tgz#2e0d36692bb27561af80f6c8e9fb69a9835c93cb"
-  integrity sha512-v6cNbJ+TTGy9EcnNXH1hIOpsy8b5aJHR3LdiTWWf+of8Ftqfd0tawVZnZYclJb1KuypgrmMaTVvQubeT2k7XMQ==
+"@emurgo/react-native-haskell-shelley@5.0.1-beta.2":
+  version "5.0.1-beta.2"
+  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-5.0.1-beta.2.tgz#bb159cf1f8ff803f2a5203455336ab8793ad707d"
+  integrity sha512-HTN7+Pu+FJHGCs4iwofOAbqp6ItQbLdDqxR5q0CRPaFRuTGwYpumwWWiCB4iSgIGFrMcl22GFkMDzYXb/aCVZg==
   dependencies:
     base-64 "0.1.0"
 
