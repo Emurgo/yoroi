@@ -1,3 +1,4 @@
+import {TokenInfo} from '../../types'
 import {TokenRegistryEntry} from './api'
 import {
   asciiToHex,
@@ -10,7 +11,6 @@ import {
   toTokenId,
   toTokenSubject,
 } from './utils'
-import {TokenInfo} from '../../types'
 
 describe('api utils', () => {
   it('toPolicyId, toAssetName', () => {
