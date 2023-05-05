@@ -3,6 +3,6 @@ import React from 'react'
 
 import {SubmittedTxScreen} from './SubmittedTxScreen'
 
-storiesOf('Signed Tx Screen', module).add('initial', () => {
+storiesOf('Submitted Tx Screen', module).add('initial', () => {
   return <SubmittedTxScreen />
 })
