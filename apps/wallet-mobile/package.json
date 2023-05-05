@@ -75,7 +75,7 @@
     "@emurgo/cip4-js": "1.0.7",
     "@emurgo/cross-csl-mobile": "^2.2.0",
     "@emurgo/react-native-blockies-svg": "^0.0.2",
-    "@emurgo/react-native-haskell-shelley": "5.0.1-beta.2",
+    "@emurgo/react-native-haskell-shelley": "5.0.2",
     "@emurgo/react-native-hid": "^5.15.6",
     "@emurgo/yoroi-lib": "^0.4.0",
     "@formatjs/intl-datetimeformat": "^6.7.0",
