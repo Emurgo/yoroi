@@ -38,7 +38,7 @@ export const ConfirmTxScreen = () => {
   }, [])
 
   const onSuccess = (signedTx) => {
-    navigateTo.signedTx()
+    navigateTo.submittedTx()
 
     if (memo.length > 0) {
       saveMemo({txId: signedTx.signedTx.id, memo})
@@ -165,7 +165,7 @@ const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
   return {
-    signedTx: () => navigation.navigate('send-signed-tx'),
+    submittedTx: () => navigation.navigate('send-submitted-tx'),
     failedTx: () => navigation.navigate('send-failed-tx'),
   }
 }

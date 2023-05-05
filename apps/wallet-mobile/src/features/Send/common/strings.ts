@@ -51,9 +51,9 @@ export const useStrings = () => {
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
     unknownAsset: intl.formatMessage(messages.unknownAsset),
     youHave: intl.formatMessage(messages.youHave),
-    signedTxTitle: intl.formatMessage(messages.signedTxTitle),
-    signedTxText: intl.formatMessage(messages.signedTxText),
-    signedTxButton: intl.formatMessage(messages.signedTxButton),
+    submittedTxTitle: intl.formatMessage(messages.submittedTxTitle),
+    submittedTxText: intl.formatMessage(messages.submittedTxText),
+    submittedTxButton: intl.formatMessage(messages.submittedTxButton),
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
@@ -222,16 +222,16 @@ export const messages = defineMessages({
     id: 'components.send.sendscreen.errorBannerPendingOutgoingTransaction',
     defaultMessage: '!!!You cannot send a new transaction while an existing one is still pending',
   },
-  signedTxTitle: {
-    id: 'components.send.sendscreen.signedTxTitle',
-    defaultMessage: '!!!Transaction Signed',
+  submittedTxTitle: {
+    id: 'components.send.sendscreen.submittedTxTitle',
+    defaultMessage: '!!!Transaction submitted',
   },
-  signedTxText: {
-    id: 'components.send.sendscreen.signedTxText',
+  submittedTxText: {
+    id: 'components.send.sendscreen.submittedTxText',
     defaultMessage: '!!!Check this transaction in the list of wallet transactions',
   },
-  signedTxButton: {
-    id: 'components.send.sendscreen.signedTxButton',
+  submittedTxButton: {
+    id: 'components.send.sendscreen.submittedTxButton',
     defaultMessage: '!!!Go to transactions',
   },
   failedTxTitle: {

@@ -5,23 +5,23 @@ import {Button, Spacer, Text} from '../../../../components'
 import {useWalletNavigation} from '../../../../navigation'
 import {COLORS} from '../../../../theme'
 import {useStrings} from '../../common/strings'
-import {SignedTxImage} from './SignedTxImage'
+import {SubmittedTxImage} from './SubmittedTxImage'
 
-export const SignedTxScreen = () => {
+export const SubmittedTxScreen = () => {
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
 
   return (
     <View style={styles.container}>
-      <SignedTxImage />
+      <SubmittedTxImage />
 
-      <Text style={styles.title}>{strings.signedTxTitle}</Text>
+      <Text style={styles.title}>{strings.submittedTxTitle}</Text>
 
-      <Text style={styles.text}>{strings.signedTxText}</Text>
+      <Text style={styles.text}>{strings.submittedTxText}</Text>
 
       <Spacer height={22} />
 
-      <Button onPress={resetToTxHistory} title={strings.signedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={resetToTxHistory} title={strings.submittedTxButton} style={styles.button} shelleyTheme />
     </View>
   )
 }

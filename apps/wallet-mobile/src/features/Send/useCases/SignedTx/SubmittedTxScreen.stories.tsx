@@ -1,8 +1,8 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {SignedTxScreen} from './SignedTxScreen'
+import {SubmittedTxScreen} from './SubmittedTxScreen'
 
 storiesOf('Signed Tx Screen', module).add('initial', () => {
-  return <SignedTxScreen />
+  return <SubmittedTxScreen />
 })

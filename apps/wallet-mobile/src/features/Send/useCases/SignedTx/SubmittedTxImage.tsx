@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Defs, G, LinearGradient, Path, Stop} from 'react-native-svg'
 
-export const SignedTxImage = (props) => {
+export const SubmittedTxImage = (props) => {
   return (
     <Svg width={255} height={192} viewBox="0 0 255 192" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <G opacity={0.2} stroke="#1D45BA" strokeWidth={0.5}>
