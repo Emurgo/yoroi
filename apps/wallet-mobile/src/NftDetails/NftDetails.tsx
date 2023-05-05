@@ -15,7 +15,7 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils'
 import {useNft} from '../yoroi-wallets/hooks'
-import {YoroiNft} from '../yoroi-wallets/types'
+import {TokenInfo} from '../yoroi-wallets/types'
 
 export const NftDetails = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
@@ -59,7 +59,7 @@ export const NftDetails = () => {
   )
 }
 
-const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
+const UnModeratedNftImage = ({nft}: {nft: TokenInfo<'nft'>}) => {
   const navigateTo = useNavigateTo()
   return (
     <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
@@ -68,7 +68,7 @@ const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   )
 }
 
-const ModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
+const ModeratedNftImage = ({nft}: {nft: TokenInfo<'nft'>}) => {
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const {status} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
@@ -105,7 +105,7 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
   )
 }
 
-const NftOverview = ({nft}: {nft: YoroiNft}) => {
+const NftOverview = ({nft}: {nft: TokenInfo<'nft'>}) => {
   const strings = useStrings()
 
   return (
@@ -182,7 +182,7 @@ const HR = () => (
   />
 )
 
-const NftMetadata = ({nft}: {nft: YoroiNft}) => {
+const NftMetadata = ({nft}: {nft: TokenInfo<'nft'>}) => {
   const strings = useStrings()
   const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
 

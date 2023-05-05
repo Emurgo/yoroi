@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {HWDeviceInfo} from '../../../../hw'
 import {EncryptedStorage, EncryptedStorageKeys, storage} from '../../../../storage'
+import {DefaultAsset, TokenInfo} from '../../../../types'
 import {WalletMeta} from '../../../../walletManager'
 import {ShelleyAddressGeneratorJSON} from '../../../chain'
 import {YoroiWallet} from '../../../types'
@@ -85,7 +86,7 @@ describe('ShelleyWallet', () => {
 
     await expect(getRewardAddress(wallet)).resolves.toBe('stake1u8q3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcr25kkv')
 
-    expect(wallet.primaryToken).toEqual({
+    expect(wallet.primaryToken).toEqual<DefaultAsset>({
       identifier: '',
       isDefault: true,
       metadata: {
@@ -99,17 +100,20 @@ describe('ShelleyWallet', () => {
       },
       networkId: 1,
     })
-    expect(wallet.primaryTokenInfo).toEqual({
-      decimals: 6,
+    expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
+      kind: 'ft',
       description: 'Cardano',
       id: '',
       name: 'ADA',
-      symbol: '₳',
-      ticker: 'ADA',
-      group: '',
-      url: '',
-      logo: '',
       fingerprint: '',
+      metadata: {
+        decimals: 6,
+        symbol: '₳',
+        ticker: 'ADA',
+        group: '',
+        url: '',
+        logo: '',
+      },
     })
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk158gpk02jqrsxa58aw2e4f0ww6fffu7p2qsflenapdz7a3r5lxx4sn9nx84',
@@ -194,7 +198,7 @@ describe('ShelleyWallet', () => {
 
     await expect(getRewardAddress(wallet)).resolves.toBe('stake1u8q3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcr25kkv')
 
-    expect(wallet.primaryToken).toEqual({
+    expect(wallet.primaryToken).toEqual<DefaultAsset>({
       identifier: '',
       isDefault: true,
       metadata: {
@@ -208,17 +212,20 @@ describe('ShelleyWallet', () => {
       },
       networkId: 1,
     })
-    expect(wallet.primaryTokenInfo).toEqual({
-      decimals: 6,
-      description: 'Cardano',
+    expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
+      kind: 'ft',
       id: '',
       name: 'ADA',
-      symbol: '₳',
-      ticker: 'ADA',
-      group: '',
-      url: '',
-      logo: '',
       fingerprint: '',
+      description: 'Cardano',
+      metadata: {
+        decimals: 6,
+        symbol: '₳',
+        ticker: 'ADA',
+        group: '',
+        url: '',
+        logo: '',
+      },
     })
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk158gpk02jqrsxa58aw2e4f0ww6fffu7p2qsflenapdz7a3r5lxx4sn9nx84',
@@ -292,7 +299,7 @@ describe('ShelleyWallet', () => {
 
     await expect(getRewardAddress(wallet)).resolves.toBe('stake1uxdr3c77jn9px6c6srafp4ekpmqluk5dhsndgfllanj5acsqkljgd')
 
-    expect(wallet.primaryToken).toEqual({
+    expect(wallet.primaryToken).toEqual<DefaultAsset>({
       identifier: '',
       isDefault: true,
       metadata: {
@@ -306,17 +313,20 @@ describe('ShelleyWallet', () => {
       },
       networkId: 1,
     })
-    expect(wallet.primaryTokenInfo).toEqual({
-      decimals: 6,
+    expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
+      kind: 'ft',
       description: 'Cardano',
       id: '',
       name: 'ADA',
-      symbol: '₳',
-      ticker: 'ADA',
-      group: '',
-      url: '',
-      logo: '',
       fingerprint: '',
+      metadata: {
+        decimals: 6,
+        symbol: '₳',
+        ticker: 'ADA',
+        group: '',
+        url: '',
+        logo: '',
+      },
     })
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk1su9gfd9nkxw0uchht47cluxus3lqlf50mruvvuv2pqpph9qgmhzq08a7zq',

@@ -1,5 +1,3 @@
-import {LegacyToken, TokenInfo} from '../../types'
-import {YoroiWallet} from '../types'
 import {TokenRegistryEntry} from './api'
 import {
   asciiToHex,
@@ -8,12 +6,11 @@ import {
   toAssetName,
   tokenInfo,
   toPolicyId,
-  toToken,
   toTokenFingerprint,
   toTokenId,
-  toTokenInfo,
   toTokenSubject,
 } from './utils'
+import {TokenInfo} from '../../types'
 
 describe('api utils', () => {
   it('toPolicyId, toAssetName', () => {
@@ -151,16 +148,20 @@ describe('api utils', () => {
         },
       }
 
-      expect(tokenInfo(entry)).toEqual({
+      expect(tokenInfo(entry)).toEqual<TokenInfo>({
+        kind: 'ft',
         id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65',
         name: 'assetName',
-        group: '11111111111111111111111111111111111111111111111111111111',
-        decimals: 6,
         description: 'description',
         fingerprint: 'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x',
-        logo: 'logo',
-        ticker: 'ticker',
-        url: 'url',
+        metadata: {
+          group: '11111111111111111111111111111111111111111111111111111111',
+          decimals: 6,
+          logo: 'logo',
+          ticker: 'ticker',
+          url: 'url',
+          symbol: undefined,
+        },
       })
     })
 
@@ -179,84 +180,57 @@ describe('api utils', () => {
         },
       }
 
-      expect(tokenInfo(entry)).toEqual({
+      expect(tokenInfo(entry)).toEqual<TokenInfo>({
+        kind: 'ft',
         id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65',
         name: 'assetName',
-        group: '11111111111111111111111111111111111111111111111111111111',
-        decimals: 0,
         description: 'description',
         fingerprint: 'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x',
-        logo: undefined,
-        ticker: undefined,
-        url: undefined,
+        metadata: {
+          group: '11111111111111111111111111111111111111111111111111111111',
+          decimals: 0,
+          logo: undefined,
+          ticker: undefined,
+          url: undefined,
+          symbol: undefined,
+        },
       })
     })
 
     it('fallback', () => {
-      expect(fallbackTokenInfo('11111111111111111111111111111111111111111111111111111111')).toEqual({
+      expect(fallbackTokenInfo('11111111111111111111111111111111111111111111111111111111')).toEqual<TokenInfo>({
+        kind: 'ft',
         id: '11111111111111111111111111111111111111111111111111111111.',
-        group: '11111111111111111111111111111111111111111111111111111111',
-        decimals: 0,
         fingerprint: 'asset17jfppv3h7hnsjfqq5lyp52dyhwstfv9e4uauga',
-
         name: undefined,
         description: undefined,
-        logo: undefined,
-        ticker: undefined,
-        url: undefined,
+        metadata: {
+          group: '11111111111111111111111111111111111111111111111111111111',
+          decimals: 0,
+          logo: undefined,
+          ticker: undefined,
+          url: undefined,
+          symbol: undefined,
+        },
       })
 
-      expect(fallbackTokenInfo('1111111111111111111111111111111111111111111111111111111161737365744e616d65')).toEqual({
+      expect(
+        fallbackTokenInfo('1111111111111111111111111111111111111111111111111111111161737365744e616d65'),
+      ).toEqual<TokenInfo>({
+        kind: 'ft',
         id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65',
-        group: '11111111111111111111111111111111111111111111111111111111',
-        decimals: 0,
         fingerprint: 'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x',
-
         name: 'assetName',
         description: undefined,
-        logo: undefined,
-        ticker: undefined,
-        url: undefined,
+        metadata: {
+          group: '11111111111111111111111111111111111111111111111111111111',
+          decimals: 0,
+          logo: undefined,
+          ticker: undefined,
+          url: undefined,
+          symbol: undefined,
+        },
       })
     })
-  })
-
-  it('toToken/toTokenInfo', () => {
-    const wallet = {
-      networkId: 300,
-      primaryTokenInfo: {id: ''},
-    } as YoroiWallet
-
-    const tokenInfo: TokenInfo = {
-      id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65',
-      group: '11111111111111111111111111111111111111111111111111111111',
-      decimals: 0,
-      fingerprint: 'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x',
-
-      name: 'assetName',
-      description: 'description',
-      symbol: undefined,
-      logo: undefined,
-      ticker: undefined,
-      url: undefined,
-    }
-
-    const token: LegacyToken = {
-      identifier: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65',
-      isDefault: false,
-      networkId: 300,
-      metadata: {
-        type: 'Cardano',
-        policyId: '11111111111111111111111111111111111111111111111111111111',
-        assetName: '61737365744e616d65',
-        numberOfDecimals: 0,
-        longName: 'description',
-        maxSupply: null,
-        ticker: null,
-      },
-    }
-
-    expect(toToken({wallet, tokenInfo})).toEqual(token)
-    expect(toTokenInfo(token)).toEqual(tokenInfo)
   })
 })

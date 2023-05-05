@@ -2,33 +2,39 @@ import {TokenInfo} from '../../../yoroi-wallets/types'
 import {filterBySearch} from './filterBySearch'
 
 describe('filterBySearch', () => {
-  const fakeToken1: TokenInfo = {
+  const fakeToken1: TokenInfo<'ft'> = {
     id: '',
+    kind: 'ft',
     name: 'TADANAME',
-    decimals: 6,
     description: 'Cardano',
-    ticker: undefined,
-    symbol: '₳',
-    logo: '',
-    url: '',
     fingerprint: '',
-    group: '',
+    metadata: {
+      decimals: 6,
+      ticker: undefined,
+      symbol: '₳',
+      logo: '',
+      url: '',
+      group: '',
+    },
   } as const
 
-  const fakeToken2: TokenInfo = {
-    decimals: 0,
-    description: '',
-    fingerprint: 'asset1nvcwnq60jnm27efjm87xnhqt6alsv024tdyxjm',
-    group: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d',
+  const fakeToken2: TokenInfo<'ft'> = {
+    kind: 'ft',
     id: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
-    logo: undefined,
+    fingerprint: 'asset1nvcwnq60jnm27efjm87xnhqt6alsv024tdyxjm',
     name: undefined,
-    symbol: undefined,
-    ticker: 'TADATICKER',
-    url: undefined,
+    description: '',
+    metadata: {
+      decimals: 0,
+      group: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d',
+      logo: undefined,
+      symbol: undefined,
+      ticker: 'TADATICKER',
+      url: undefined,
+    },
   }
 
-  const tokenInfos: TokenInfo[] = [fakeToken1, fakeToken2]
+  const tokenInfos: TokenInfo<'ft'>[] = [fakeToken1, fakeToken2]
 
   it('should return all tokenInfos if searchTerm is empty', () => {
     const searchTerm = ''

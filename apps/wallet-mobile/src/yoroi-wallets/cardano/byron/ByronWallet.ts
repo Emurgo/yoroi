@@ -33,7 +33,6 @@ import {
   WALLET_IMPLEMENTATION_REGISTRY,
   WalletImplementationId,
   YoroiEntry,
-  YoroiNft,
   YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
@@ -126,7 +125,7 @@ const implementationId = WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 export default ByronWallet
 export class ByronWallet implements YoroiWallet {
   readonly primaryToken: DefaultAsset
-  readonly primaryTokenInfo: TokenInfo
+  readonly primaryTokenInfo: TokenInfo<'ft'>
   readonly id: string
   readonly networkId: NetworkId
   readonly walletImplementationId: WalletImplementationId
@@ -977,15 +976,22 @@ export class ByronWallet implements YoroiWallet {
     return api.getPoolInfo(request, this.getBackendConfig())
   }
 
-  fetchTokenInfo(tokenId: string) {
+  async fetchTokenInfo(tokenId: string) {
     const apiUrl = this.getBackendConfig().TOKEN_INFO_SERVICE
     if (!apiUrl) throw new Error('invalid wallet')
 
-    return (tokenId === '' || tokenId === 'ADA') && this.networkId === 1
-      ? Promise.resolve(primaryTokenInfo.mainnet)
-      : (tokenId === '' || tokenId === 'ADA' || tokenId === 'TADA') && this.networkId === 300
-      ? Promise.resolve(primaryTokenInfo.testnet)
-      : api.getTokenInfo(tokenId, `${apiUrl}/metadata`)
+    const isMainnet = this.networkId === 1
+    const isTestnet = this.networkId === 300
+
+    if ((tokenId === '' || tokenId === 'ADA') && isMainnet) {
+      return primaryTokenInfo.mainnet
+    }
+
+    if ((tokenId === '' || tokenId === 'ADA' || tokenId === 'TADA') && isTestnet) {
+      return primaryTokenInfo.testnet
+    }
+
+    return api.getTokenInfo(tokenId, `${apiUrl}/metadata`, this.getBackendConfig())
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {
@@ -1002,11 +1008,6 @@ export class ByronWallet implements YoroiWallet {
 
   async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
     return api.fetchCurrentPrice(symbol, this.getBackendConfig())
-  }
-
-  // TODO: caching
-  fetchNfts(ids): Promise<YoroiNft[]> {
-    return api.getNFTs(ids, this.getBackendConfig())
   }
 
   // TODO: caching
@@ -1298,23 +1299,37 @@ const keys: Array<keyof WalletJSON> = [
   'lastGeneratedAddressIndex',
 ]
 
-export const primaryTokenInfo = {
+export const primaryTokenInfo: Record<'mainnet' | 'testnet', TokenInfo<'ft'>> = {
   mainnet: {
     id: '',
     name: 'ADA',
-    decimals: 6,
     description: 'Cardano',
-    ticker: 'ADA',
-    symbol: '₳',
-  } as TokenInfo,
+    kind: 'ft',
+    fingerprint: '',
+    metadata: {
+      decimals: 6,
+      ticker: 'ADA',
+      symbol: '₳',
+      group: '',
+      url: undefined,
+      logo: undefined,
+    },
+  },
   testnet: {
+    kind: 'ft',
     id: '',
     name: 'TADA',
-    decimals: 6,
     description: 'Cardano',
-    ticker: 'TADA',
-    symbol: '₳',
-  } as TokenInfo,
+    fingerprint: '',
+    metadata: {
+      decimals: 6,
+      ticker: 'TADA',
+      symbol: '₳',
+      group: '',
+      url: undefined,
+      logo: undefined,
+    },
+  },
 }
 
 const encryptAndSaveRootKey = (wallet: YoroiWallet, rootKey: string, password: string) =>

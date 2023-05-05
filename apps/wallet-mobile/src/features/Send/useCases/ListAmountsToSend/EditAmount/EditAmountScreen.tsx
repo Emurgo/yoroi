@@ -17,11 +17,12 @@ import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {PairedBalance} from '../../../../../TxHistory/PairedBalance'
+import {selectFtOrThrow} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../yoroi-wallets/logging'
 import {Quantity} from '../../../../../yoroi-wallets/types'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
-import {editedFormatter, pastedFormatter} from '../../../../../yoroi-wallets/utils/amountUtils'
+import {editedFormatter, pastedFormatter} from '../../../../../yoroi-wallets/utils'
 import {useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {NoBalance} from './ShowError/NoBalance'
@@ -34,12 +35,12 @@ export const EditAmountScreen = () => {
   const {available, spendable, initialQuantity} = useTokenQuantities(selectedTokenId)
 
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenId})
+  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenId}, {select: selectFtOrThrow})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const [quantity, setQuantity] = React.useState<Quantity>(initialQuantity)
   const [inputQuantity, setInputQuantity] = React.useState<string>(
-    Quantities.denominated(initialQuantity, tokenInfo.decimals),
+    Quantities.denominated(initialQuantity, tokenInfo.metadata.decimals),
   )
 
   const hasBalance = !Quantities.isGreaterThan(quantity, available)
@@ -50,13 +51,13 @@ export const EditAmountScreen = () => {
     try {
       const quantity = asQuantity(text)
       setInputQuantity(text)
-      setQuantity(Quantities.integer(quantity, tokenInfo.decimals))
+      setQuantity(Quantities.integer(quantity, tokenInfo.metadata.decimals))
     } catch (error) {
       Logger.error('EditAmountScreen::onChangeQuantity', error)
     }
   }
   const onMaxBalance = () => {
-    setInputQuantity(Quantities.denominated(spendable, tokenInfo.decimals))
+    setInputQuantity(Quantities.denominated(spendable, tokenInfo.metadata.decimals))
     setQuantity(spendable)
   }
   const onApply = () => {
@@ -78,7 +79,7 @@ export const EditAmountScreen = () => {
 
           <Spacer height={40} />
 
-          <AmountInput onChange={onChangeQuantity} value={inputQuantity} ticker={tokenInfo.ticker} />
+          <AmountInput onChange={onChangeQuantity} value={inputQuantity} ticker={tokenInfo.metadata.ticker} />
 
           <Center>
             {isPrimary && <PairedBalance amount={{tokenId: tokenInfo.id, quantity}} />}

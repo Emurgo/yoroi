@@ -13,7 +13,7 @@ import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
 import {useAllTokenInfos, useBalances, useIsWalletEmpty, useNfts} from '../../../../../yoroi-wallets/hooks'
-import {TokenInfo, YoroiNft} from '../../../../../yoroi-wallets/types'
+import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../common/filterByFungibility'
 import {filterBySearch} from '../../../common/filterBySearch'
@@ -91,7 +91,9 @@ const NftList = ({canAddAmount}: {canAddAmount: boolean}) => {
   const strings = useStrings()
   const {nfts} = useNfts(wallet)
   const amountsSelected = Object.keys(targets[selectedTargetIndex].entry.amounts)
-  const filteredAndSorted = nfts.filter(filterOutSelected(amountsSelected)).sort((a, b) => sortNfts(a.name, b.name))
+  const filteredAndSorted = nfts
+    .filter(filterOutSelected(amountsSelected))
+    .sort((a, b) => sortNfts(a.name ?? '', b.name ?? ''))
   const counter = filteredAndSorted.length
 
   const onSelect = (nftId) => {
@@ -191,6 +193,7 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
   const {tokenSelectedChanged, amountChanged} = useSend()
   const {spendable} = useTokenQuantities(tokenInfo.id)
   const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const balances = useBalances(wallet)
 
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
@@ -199,8 +202,12 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
     closeSearch()
 
     // if the balance is atomic there is no need to edit the amount
-    if (Quantities.isAtomic(spendable, tokenInfo.decimals)) {
+    if (tokenInfo.kind === 'ft' && Quantities.isAtomic(spendable, tokenInfo.metadata.decimals)) {
       amountChanged(spendable)
+      navigation.navigate('send-list-amounts-to-send')
+    } else if (tokenInfo.kind === 'nft') {
+      const quantity = Amounts.getAmount(balances, tokenInfo.id).quantity
+      amountChanged(quantity)
       navigation.navigate('send-list-amounts-to-send')
     } else {
       navigation.navigate('send-edit-amount')
@@ -328,7 +335,6 @@ const useFilteredTokenInfos = ({
   tokenInfos: Array<TokenInfo>
 }) => {
   const wallet = useSelectedWallet()
-  const {nfts} = useNfts(wallet)
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const {targets, selectedTargetIndex} = useSend()
   const isWalletEmpty = useIsWalletEmpty(wallet)
@@ -348,7 +354,6 @@ const useFilteredTokenInfos = ({
     .filter(filterBySearch(assetSearchTerm))
     .filter(
       filterByFungibility({
-        nfts,
         fungibilityFilter: isSearching ? 'all' : fungibilityFilter, // all assets must be available when searching
       }),
     )
@@ -361,7 +366,7 @@ const useFilteredTokenInfos = ({
 
 const areAllTokensSelected = (selectedTokenIds: Array<string>, tokenInfos): boolean =>
   tokenInfos.every((tokenInfo) => selectedTokenIds.includes(tokenInfo.id))
-const filterOutSelected = (selectedTokenIds: Array<string>) => (token: YoroiNft | TokenInfo) =>
+const filterOutSelected = (selectedTokenIds: Array<string>) => (token: TokenInfo) =>
   !selectedTokenIds.includes(token.id)
 const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 
