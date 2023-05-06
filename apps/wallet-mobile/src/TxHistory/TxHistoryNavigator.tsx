@@ -10,9 +10,9 @@ import {FailedTxScreen} from '../features/Send/useCases/FailedTx/FailedTxScreen'
 import {ListAmountsToSendScreen} from '../features/Send/useCases/ListAmountsToSend'
 import {SelectTokenFromListScreen} from '../features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
-import {SubmittedTxScreen} from '../features/Send/useCases/SignedTx/SubmittedTxScreen'
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
+import {SubmittedTxScreen} from '../features/Send/useCases/SubmittedTx/SubmittedTxScreen'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
