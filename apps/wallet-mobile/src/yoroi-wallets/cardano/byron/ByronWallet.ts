@@ -124,6 +124,7 @@ export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 const networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
 const implementationId = WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 
+// @ts-expect-error declare before use
 export default ByronWallet
 export class ByronWallet implements YoroiWallet {
   readonly primaryToken: DefaultAsset

@@ -76,3 +76,6 @@ tests/artifacts
 
 coverage/
 .jest/
+
+# .vscode
+**/extensions.json

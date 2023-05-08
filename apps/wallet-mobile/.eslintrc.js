@@ -81,13 +81,10 @@ module.exports = {
     Symbol: false,
     Uint8Array: false,
     TextEncoder: false,
-    $Call: false,
-    $Values: false,
     test: false,
     expect: false,
     describe: false,
     it: false,
     beforeEach: false,
-    React$Node: false,
   },
 }
