@@ -1,7 +1,15 @@
 import {asciiToHex} from '../cardano/api/utils'
 import {PRIMARY_TOKEN} from '../cardano/constants/testnet/constants'
 import {NETWORKS} from '../cardano/networks'
-import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
+import {
+  hasProperties,
+  InvalidAssetAmount,
+  isArrayOfType,
+  isNonNullable,
+  isRecord,
+  isString,
+  parseAmountDecimal,
+} from './parsing'
 
 describe('parseAdaDecimal', () => {
   // recall: tests run on mainnet (default network)
@@ -39,5 +47,89 @@ describe('asciiToHex', () => {
     const ascii = ''
     const hex = asciiToHex(ascii)
     expect(hex).toEqual('')
+  })
+})
+
+describe('isArrayOfType', () => {
+  it('returns true if array is empty', () => {
+    expect(isArrayOfType([], isString)).toEqual(true)
+  })
+
+  it('returns true if array contains only elements of given type', () => {
+    expect(isArrayOfType(['a', 'b', 'c'], isString)).toEqual(true)
+  })
+
+  it('returns false if array contains elements of different type', () => {
+    expect(isArrayOfType(['a', 'b', 1], isString)).toEqual(false)
+  })
+})
+
+describe('isString', () => {
+  it('returns true if string', () => {
+    expect(isString('hello')).toEqual(true)
+  })
+
+  it('returns false if not string', () => {
+    expect(isString(123)).toEqual(false)
+    expect(isString({})).toEqual(false)
+    expect(isString([])).toEqual(false)
+    expect(isString(null)).toEqual(false)
+    expect(isString(undefined)).toEqual(false)
+    expect(isString(true)).toEqual(false)
+  })
+})
+
+describe('isRecord', () => {
+  it('returns true if is an object', () => {
+    expect(isRecord({})).toEqual(true)
+  })
+
+  it('returns false if is not an object or its array or its null', () => {
+    expect(isRecord([])).toEqual(false)
+    expect(isRecord(null)).toEqual(false)
+    expect(isRecord(undefined)).toEqual(false)
+    expect(isRecord(123)).toEqual(false)
+    expect(isRecord('hello')).toEqual(false)
+    expect(isRecord(true)).toEqual(false)
+  })
+})
+
+describe('hasProperties', () => {
+  it('returns true if object has all properties', () => {
+    expect(hasProperties({a: 1, b: 2}, ['a', 'b'])).toEqual(true)
+  })
+
+  it('returns true if object has all properties and more', () => {
+    expect(hasProperties({a: 1, b: 2, c: 3}, ['a', 'b'])).toEqual(true)
+  })
+
+  it('returns true if checking for empty properties', () => {
+    expect(hasProperties({a: 1, b: 2}, [])).toEqual(true)
+  })
+
+  it('returns false if object does not have all properties', () => {
+    expect(hasProperties({a: 1, b: 2}, ['a', 'b', 'c'])).toEqual(false)
+  })
+
+  it('returns false if object has no properties', () => {
+    expect(hasProperties({}, ['a', 'b'])).toEqual(false)
+  })
+})
+
+describe('isNonNullable', () => {
+  it('returns true if value is not null nor undefined', () => {
+    expect(isNonNullable(1)).toEqual(true)
+    expect(isNonNullable('hello')).toEqual(true)
+    expect(isNonNullable({})).toEqual(true)
+    expect(isNonNullable([])).toEqual(true)
+    expect(isNonNullable(false)).toEqual(true)
+    expect(isNonNullable(true)).toEqual(true)
+    expect(isNonNullable(0)).toEqual(true)
+    expect(isNonNullable('')).toEqual(true)
+  })
+
+  it('returns false if null or undefined', () => {
+    expect(isNonNullable(null)).toEqual(false)
+    expect(isNonNullable(undefined)).toEqual(false)
   })
 })
