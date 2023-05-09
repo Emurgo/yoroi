@@ -2,9 +2,9 @@ import {LegacyToken, TokenInfo} from '../../types'
 import {YoroiWallet} from '../types'
 import {TokenRegistryEntry} from './api'
 import {
-  asciiToHex,
+  utf8ToHex,
   fallbackTokenInfo,
-  hexToAscii,
+  hexToUtf8,
   toAssetName,
   tokenInfo,
   toPolicyId,
@@ -19,7 +19,7 @@ describe('api utils', () => {
   it('toPolicyId, toAssetName', () => {
     const policyId = '1'.repeat(56)
     const assetName = 'assetName'
-    const assetNameHex = asciiToHex('assetName')
+    const assetNameHex = utf8ToHex('assetName')
 
     const tokenIndentifier = policyId + '.' + assetNameHex
     expect(toPolicyId(tokenIndentifier)).toEqual(policyId)
@@ -33,14 +33,14 @@ describe('api utils', () => {
     expect(toAssetName(noName)).toEqual(undefined)
 
     const longName = '1'.repeat(128)
-    expect(toAssetName(policyId + '.' + asciiToHex(longName))).toEqual('1'.repeat(32))
+    expect(toAssetName(policyId + '.' + utf8ToHex(longName))).toEqual('1'.repeat(32))
   })
 
   describe('toTokenSubject', () => {
     it('with asset name', () => {
       const policyId = '1'.repeat(56)
       const assetName = 'assetName'
-      const assetNameHex = asciiToHex(assetName)
+      const assetNameHex = utf8ToHex(assetName)
 
       const tokenIdentifier = policyId + '.' + assetNameHex
       const tokenSubject = toTokenSubject(tokenIdentifier)
@@ -64,7 +64,7 @@ describe('api utils', () => {
     it('with asset name', () => {
       const policyId = '1'.repeat(56)
       const assetName = 'assetName'
-      const assetNameHex = asciiToHex(assetName)
+      const assetNameHex = utf8ToHex(assetName)
 
       const tokenIdentifier = policyId + '.' + assetNameHex
       expect(toTokenId(tokenIdentifier)).toBe(
@@ -91,14 +91,14 @@ describe('api utils', () => {
   it('hexToAscii/asciiToHex', () => {
     const hex = '61737365744e616d65'
     const ascii = 'assetName'
-    expect(hexToAscii(hex)).toBe(ascii)
-    expect(asciiToHex(ascii)).toBe(hex)
+    expect(hexToUtf8(hex)).toBe(ascii)
+    expect(utf8ToHex(ascii)).toBe(hex)
   })
 
   it('toTokenFingerprint', () => {
     const policyId = '1'.repeat(56)
     const assetName = 'assetName'
-    const assetNameHex = asciiToHex(assetName)
+    const assetNameHex = utf8ToHex(assetName)
 
     expect(
       toTokenFingerprint({

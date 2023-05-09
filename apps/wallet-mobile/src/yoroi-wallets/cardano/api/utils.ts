@@ -3,6 +3,7 @@ import AssetFingerprint from '@emurgo/cip14-js'
 import {LegacyToken, TokenInfo} from '../../types'
 import {YoroiWallet} from '../types'
 import {TokenRegistryEntry} from './api'
+import {Buffer} from 'memfs/lib/internal/buffer'
 
 export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
   const policyId = toPolicyId(entry.subject)
@@ -14,7 +15,7 @@ export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
     decimals: entry.decimals?.value ?? 0,
     fingerprint: toTokenFingerprint({
       policyId,
-      assetNameHex: assetName ? asciiToHex(assetName) : undefined,
+      assetNameHex: assetName ? utf8ToHex(assetName) : undefined,
     }),
 
     // optional values
@@ -38,7 +39,7 @@ export const fallbackTokenInfo = (tokenId: string): TokenInfo => {
     decimals: 0,
     fingerprint: toTokenFingerprint({
       policyId,
-      assetNameHex: assetName ? asciiToHex(assetName) : undefined,
+      assetNameHex: assetName ? utf8ToHex(assetName) : undefined,
     }),
     description: undefined,
     logo: undefined,
@@ -52,11 +53,11 @@ export const toPolicyId = (tokenIdentifier: string) => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
   return tokenSubject.slice(0, 56)
 }
-export const toAssetName = (tokenIdentifier: string) => {
-  return hexToAscii(toAssetNameHex(tokenIdentifier)) || undefined
+export const toAssetName = (tokenIdentifier: string): string | undefined => {
+  return hexToUtf8(toAssetNameHex(tokenIdentifier)) || undefined
 }
 
-export const toAssetNameHex = (tokenIdentifier: string) => {
+export const toAssetNameHex = (tokenIdentifier: string): string => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
   const maxAssetNameLengthInBytes = 32
   return tokenSubject.slice(56, 56 + maxAssetNameLengthInBytes * 2)
@@ -68,20 +69,12 @@ export const toTokenId = (tokenIdentifier: string) => {
   return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdentifier)}`
 }
 
-export const hexToAscii = (hex: string) => Buffer.from(hex, 'hex').toLocaleString()
-export const asciiToHex = (ascii: string) => {
-  const result: Array<string> = []
-  for (let n = 0, l = ascii.length; n < l; n++) {
-    const hex = Number(ascii.charCodeAt(n)).toString(16)
-    result.push(hex)
-  }
-
-  return result.join('')
-}
+export const hexToUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
+export const utf8ToHex = (ascii: string) => Buffer.from(ascii, 'utf-8').toString('hex')
 
 export const toToken = ({wallet, tokenInfo}: {wallet: YoroiWallet; tokenInfo: TokenInfo}): LegacyToken => {
   if (tokenInfo.id === wallet.primaryTokenInfo.id) return wallet.primaryToken
-  const assetNameHex = tokenInfo.name ? asciiToHex(tokenInfo.name) : ''
+  const assetNameHex = tokenInfo.name ? utf8ToHex(tokenInfo.name) : ''
 
   return {
     identifier: `${tokenInfo.group}.${assetNameHex}`,

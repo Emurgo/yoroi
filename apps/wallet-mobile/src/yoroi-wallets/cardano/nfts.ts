@@ -2,7 +2,7 @@ import {features} from '../../features'
 import {getAssetFingerprint} from '../../legacy/format'
 import {NftMetadata, YoroiNft} from '../types'
 import {isString} from '../utils'
-import {asciiToHex} from './api/utils'
+import {utf8ToHex} from './api/utils'
 
 export const convertNft = (options: {
   metadata?: NftMetadata
@@ -11,7 +11,7 @@ export const convertNft = (options: {
   shortName: string
 }): YoroiNft => {
   const {metadata, storageUrl, policyId, shortName} = options
-  const assetNameHex = asciiToHex(shortName)
+  const assetNameHex = utf8ToHex(shortName)
   const fingerprint = getAssetFingerprint(policyId, assetNameHex)
   const description = normalizeProperty(metadata?.description)
   const originalImage = normalizeProperty(metadata?.image)

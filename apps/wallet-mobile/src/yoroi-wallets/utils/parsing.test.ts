@@ -1,4 +1,4 @@
-import {asciiToHex} from '../cardano/api/utils'
+import {utf8ToHex} from '../cardano/api/utils'
 import {PRIMARY_TOKEN} from '../cardano/constants/testnet/constants'
 import {NETWORKS} from '../cardano/networks'
 import {InvalidAssetAmount, parseAmountDecimal} from './parsing'
@@ -31,13 +31,13 @@ describe('parseAdaDecimal', () => {
 describe('asciiToHex', () => {
   it('converts "hello" to hex', () => {
     const ascii = 'hello'
-    const hex = asciiToHex(ascii)
+    const hex = utf8ToHex(ascii)
     expect(hex).toEqual('68656c6c6f')
   })
 
   it('converts empty string to empty string', () => {
     const ascii = ''
-    const hex = asciiToHex(ascii)
+    const hex = utf8ToHex(ascii)
     expect(hex).toEqual('')
   })
 })
