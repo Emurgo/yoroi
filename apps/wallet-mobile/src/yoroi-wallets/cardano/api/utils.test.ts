@@ -2,7 +2,6 @@ import {LegacyToken, TokenInfo} from '../../types'
 import {YoroiWallet} from '../types'
 import {TokenRegistryEntry} from './api'
 import {
-  utf8ToHex,
   fallbackTokenInfo,
   hexToUtf8,
   toAssetName,
@@ -13,6 +12,7 @@ import {
   toTokenId,
   toTokenInfo,
   toTokenSubject,
+  utf8ToHex,
 } from './utils'
 
 describe('api utils', () => {

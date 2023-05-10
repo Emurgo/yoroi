@@ -4,7 +4,7 @@ import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
 import {getTokenFingerprint} from '../../legacy/format'
-import {utf8ToHex, fallbackTokenInfo, toTokenInfo} from '../cardano/api/utils'
+import {fallbackTokenInfo, toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import * as HASKELL_SHELLEY_TESTNET from '../cardano/constants/testnet/constants'
 import {PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../cardano/constants/testnet/constants'
 import {PRIMARY_ASSET_CONSTANTS} from '../cardano/networks'

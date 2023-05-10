@@ -1,9 +1,9 @@
 import AssetFingerprint from '@emurgo/cip14-js'
+import {Buffer} from 'memfs/lib/internal/buffer'
 
 import {LegacyToken, TokenInfo} from '../../types'
 import {YoroiWallet} from '../types'
 import {TokenRegistryEntry} from './api'
-import {Buffer} from 'memfs/lib/internal/buffer'
 
 export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
   const policyId = toPolicyId(entry.subject)
