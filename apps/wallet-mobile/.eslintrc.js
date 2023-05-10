@@ -75,6 +75,8 @@ module.exports = {
     '@typescript-eslint/require-await': 'error',
     '@typescript-eslint/await-thenable': 'error',
     'formatjs/no-offset': 'error',
+    semi: 'off',
+    '@typescript-eslint/semi': 'off',
   },
   globals: {
     Buffer: false,

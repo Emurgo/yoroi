@@ -1,5 +1,6 @@
 import {NavigationContainer, NavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
+import {Metrics} from '@yoroi/metrics'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, Platform} from 'react-native'
@@ -21,6 +22,7 @@ const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamL
 
 export const AppNavigator = () => {
   const strings = useStrings()
+  Metrics.track()
 
   useHideScreenInAppSwitcher()
   useAutoLogout()
