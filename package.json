@@ -5,6 +5,7 @@
   "author": "EMURGO",
   "private": true,
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ]
 }
