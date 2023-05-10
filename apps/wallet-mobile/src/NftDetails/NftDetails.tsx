@@ -3,6 +3,7 @@ import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
+import {isRecord, isString} from 'src/yoroi-wallets/utils'
 
 import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
 import {NftPreview} from '../components/NftPreview'
@@ -13,7 +14,6 @@ import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {isEmptyString} from '../utils'
 import {useNft} from '../yoroi-wallets/hooks'
 import {YoroiNft} from '../yoroi-wallets/types'
 
@@ -122,9 +122,11 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
 
       <HR />
 
-      <MetadataRow title={strings.author}>
-        <Text secondary>{normalizeMetadataString(nft.metadata.originalMetadata?.author)}</Text>
-      </MetadataRow>
+      {isRecord(nft.metadata.originalMetadata) && (
+        <MetadataRow title={strings.author}>
+          <Text secondary>{normalizeMetadataString(nft.metadata.originalMetadata.author)}</Text>
+        </MetadataRow>
+      )}
 
       <HR />
 
@@ -169,8 +171,8 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
   )
 }
 
-const normalizeMetadataString = (content?: string): string => {
-  return isEmptyString(content) || content.length === 0 ? '-' : content
+const normalizeMetadataString = (content?: unknown): string => {
+  return !isString(content) || content.length === 0 ? '-' : content
 }
 
 const HR = () => (
