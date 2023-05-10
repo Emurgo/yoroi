@@ -3,7 +3,6 @@ import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {isRecord, isString} from 'src/yoroi-wallets/utils'
 
 import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
 import {NftPreview} from '../components/NftPreview'
@@ -16,6 +15,7 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useNft} from '../yoroi-wallets/hooks'
 import {YoroiNft} from '../yoroi-wallets/types'
+import {isRecord, isString} from '../yoroi-wallets/utils'
 
 export const NftDetails = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
