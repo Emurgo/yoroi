@@ -57,7 +57,7 @@ export const toAssetName = (tokenIdentifier: string) => {
   return hexToUtf8(toAssetNameHex(tokenIdentifier)) || undefined
 }
 
-export const toAssetNameHex = (tokenIdentifier: string): string => {
+export const toAssetNameHex = (tokenIdentifier: string) => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
   const maxAssetNameLengthInBytes = 32
   return tokenSubject.slice(56, 56 + maxAssetNameLengthInBytes * 2)
