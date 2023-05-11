@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {getMetricsFactory, makeMetricsStorage, MetricsProvider} from '@yoroi/metrics'
 import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
 import Config from 'react-native-config'
@@ -36,6 +37,8 @@ setLogLevel(CONFIG.LOG_LEVEL)
 if (Boolean(Config.DISABLE_LOGBOX)) LogBox.ignoreAllLogs()
 
 const queryClient = new QueryClient()
+const amplitudeClient = getMetricsFactory('amplitude')({apiKey: Config.AMPLITUDE_API_KEY ?? ''})
+const metricsStorage = makeMetricsStorage()
 
 export const YoroiApp = () => {
   const migrated = useMigrations(storage)
@@ -43,31 +46,33 @@ export const YoroiApp = () => {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   return migrated ? (
     <StorageProvider>
-      <WalletManagerProvider walletManager={walletManager}>
-        <ErrorBoundary>
-          <QueryClientProvider client={queryClient}>
-            <LoadingBoundary style={StyleSheet.absoluteFill}>
-              <ThemeProvider>
-                <LanguageProvider>
-                  <CurrencyProvider>
-                    <SafeAreaProvider>
-                      <RNP.Provider>
-                        <AuthProvider>
-                          <SelectedWalletMetaProvider>
-                            <SelectedWalletProvider>
-                              <InitApp />
-                            </SelectedWalletProvider>
-                          </SelectedWalletMetaProvider>
-                        </AuthProvider>
-                      </RNP.Provider>
-                    </SafeAreaProvider>
-                  </CurrencyProvider>
-                </LanguageProvider>
-              </ThemeProvider>
-            </LoadingBoundary>
-          </QueryClientProvider>
-        </ErrorBoundary>
-      </WalletManagerProvider>
+      <MetricsProvider metrics={amplitudeClient} storage={metricsStorage}>
+        <WalletManagerProvider walletManager={walletManager}>
+          <ErrorBoundary>
+            <QueryClientProvider client={queryClient}>
+              <LoadingBoundary style={StyleSheet.absoluteFill}>
+                <ThemeProvider>
+                  <LanguageProvider>
+                    <CurrencyProvider>
+                      <SafeAreaProvider>
+                        <RNP.Provider>
+                          <AuthProvider>
+                            <SelectedWalletMetaProvider>
+                              <SelectedWalletProvider>
+                                <InitApp />
+                              </SelectedWalletProvider>
+                            </SelectedWalletMetaProvider>
+                          </AuthProvider>
+                        </RNP.Provider>
+                      </SafeAreaProvider>
+                    </CurrencyProvider>
+                  </LanguageProvider>
+                </ThemeProvider>
+              </LoadingBoundary>
+            </QueryClientProvider>
+          </ErrorBoundary>
+        </WalletManagerProvider>
+      </MetricsProvider>
     </StorageProvider>
   ) : null
 }
