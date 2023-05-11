@@ -70,7 +70,7 @@ export const toTokenId = (tokenIdentifier: string) => {
 }
 
 export const hexToUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
-export const utf8ToHex = (ascii: string) => Buffer.from(ascii, 'utf-8').toString('hex')
+export const utf8ToHex = (text: string) => Buffer.from(text, 'utf-8').toString('hex')
 
 export const toToken = ({wallet, tokenInfo}: {wallet: YoroiWallet; tokenInfo: TokenInfo}): LegacyToken => {
   if (tokenInfo.id === wallet.primaryTokenInfo.id) return wallet.primaryToken
