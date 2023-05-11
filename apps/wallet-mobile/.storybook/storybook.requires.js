@@ -97,6 +97,8 @@ const getStories = () => {
     "./src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.stories.tsx": require("../src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.stories.tsx"),
     "./src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.stories.tsx": require("../src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.stories.tsx"),
     "./src/features/Send/useCases/ConfirmTx/ConfirmTxScreen.stories.tsx": require("../src/features/Send/useCases/ConfirmTx/ConfirmTxScreen.stories.tsx"),
+    "./src/features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen.stories.tsx": require("../src/features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen.stories.tsx"),
+    "./src/features/Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen.stories.tsx": require("../src/features/Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/AddToken/AddToken.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/AddToken/AddToken.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/AddToken/Show/MaxAmountsPerTx.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/AddToken/Show/MaxAmountsPerTx.stories.tsx"),
