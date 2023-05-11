@@ -98,7 +98,7 @@
     "@react-navigation/stack": "^6.3.16",
     "@shopify/flash-list": "^1.4.1",
     "@unstoppabledomains/resolution": "6.0.3",
-    "@yoroi/metrics": "1.0.0",
+    "@yoroi/metrics": "*",
     "add": "2.0.6",
     "assert": "^2.0.0",
     "base-64": "^1.0.0",
