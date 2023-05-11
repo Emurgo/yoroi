@@ -13,9 +13,9 @@ import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {isEmptyString} from '../utils'
 import {useNft} from '../yoroi-wallets/hooks'
 import {TokenInfo} from '../yoroi-wallets/types'
+import {isRecord, isString} from '../yoroi-wallets/utils'
 
 export const NftDetails = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
@@ -122,9 +122,11 @@ const NftOverview = ({nft}: {nft: TokenInfo<'nft'>}) => {
 
       <HR />
 
-      <MetadataRow title={strings.author}>
-        <Text secondary>{normalizeMetadataString(nft.metadata.originalMetadata?.author)}</Text>
-      </MetadataRow>
+      {isRecord(nft.metadata.originalMetadata) && (
+        <MetadataRow title={strings.author}>
+          <Text secondary>{normalizeMetadataString(nft.metadata.originalMetadata.author)}</Text>
+        </MetadataRow>
+      )}
 
       <HR />
 
@@ -169,8 +171,8 @@ const NftOverview = ({nft}: {nft: TokenInfo<'nft'>}) => {
   )
 }
 
-const normalizeMetadataString = (content?: string): string => {
-  return isEmptyString(content) || content.length === 0 ? '-' : content
+const normalizeMetadataString = (content?: unknown): string => {
+  return !isString(content) || content.length === 0 ? '-' : content
 }
 
 const HR = () => (

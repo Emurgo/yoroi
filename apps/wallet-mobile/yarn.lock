@@ -1335,10 +1335,10 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/cross-csl-core@2.2.0", "@emurgo/cross-csl-core@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-2.2.0.tgz#dc5ab43f3b1b35b1f775f2060f9e73beb3528fcc"
-  integrity sha512-ParvRLEuZjobsPcvijJX4G2qt+ftqRzOHHLfNG2OAW6VUHMYz/iOY0GdpJuYeHGGC8S5BstqJTF87USCUzxvSw==
+"@emurgo/cross-csl-core@2.3.0", "@emurgo/cross-csl-core@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-2.3.0.tgz#a88d358faf3a3c3e87775655b355a40db7599900"
+  integrity sha512-l6mh8WmmstqG2JBllPp/giq2frh4WyPqhtCQJWA6THjomaNiON76qWLmME+jzBWJT7SAOgKv7pg01XN4c9rV5w==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
     "@types/mocha" "^9.1.1"
@@ -1349,21 +1349,28 @@
     hash-wasm "^4.9.0"
     mocha "^10.0.0"
 
-"@emurgo/cross-csl-mobile@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-2.2.0.tgz#9b9372b8dfabf9a677be779405efa4ff93efdd9e"
-  integrity sha512-8QhUSnKl2PI+L5JP2DaEMNh10/5oKb4FdVGSaf9ODZWV4BN7ZJo5uonebTu0jOFuQzLqoXneKfEE30rkSnQrcw==
+"@emurgo/cross-csl-mobile@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-2.3.0.tgz#aded9bede289da6a553cc01ddb641cabf7a70ed6"
+  integrity sha512-rz9r7WURn38ESvIgDw9x5OYhbV/VoHYqY88H4kC2ONnrQl4FXVS5biruXwPQFbAL7OhW1gBwHEwY0XMraSgwUg==
   dependencies:
-    "@emurgo/cross-csl-core" "2.2.0"
-    "@emurgo/react-native-haskell-shelley" "^5.0.0"
+    "@emurgo/cross-csl-core" "2.3.0"
+    "@emurgo/csl-mobile-bridge" "^5.1.0"
 
-"@emurgo/cross-csl-nodejs@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-2.2.0.tgz#b112c6f70ed052debda6c33c635cebd7a1565783"
-  integrity sha512-+iCNQVW5OoATXFrSlkR+B6hGk9HqRwCOqpcC0+j70dqvh5n8LgHkkgc037ti/R6ivD65IH4C8QhPIjeLs/Zgtw==
+"@emurgo/cross-csl-nodejs@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-2.3.0.tgz#30bec81dde6cb8e8252e05ea322c9703b03288f4"
+  integrity sha512-WliZvDJ+r/peM5o+1vmQwNkhi2lfQpiC2s5+5eKa+tCmnzstN5ZW8jjWnGJLVnAfeXHILQsgcXXtkqGkN1wt5g==
   dependencies:
     "@emurgo/cardano-serialization-lib-nodejs" "11.3.0"
-    "@emurgo/cross-csl-core" "2.2.0"
+    "@emurgo/cross-csl-core" "2.3.0"
+
+"@emurgo/csl-mobile-bridge@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-5.1.0.tgz#18c2995c36a390999d015339c6aa46199465e3d3"
+  integrity sha512-83YoShdqGhGbJIvIuU1xVvKLSMjEOlm6zTODRxk/DgmEGyoJtlZfpdpBQqDrhAJovbyH5gtBYtGrmsbOH+I3GQ==
+  dependencies:
+    base-64 "0.1.0"
 
 "@emurgo/react-native-blockies-svg@^0.0.2":
   version "0.0.2"
@@ -1371,20 +1378,6 @@
   integrity sha512-9/NO9k8N26deQmnqzynfxQz3Nd6XguU0f7onf6z5/Jq2nJdpvJ3mOV9HQUemUQR5DbI0RyU9/uVKL87KF8nQUQ==
   dependencies:
     react-native-svg "13.8.0"
-
-"@emurgo/react-native-haskell-shelley@5.0.1-beta.1":
-  version "5.0.1-beta.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-5.0.1-beta.1.tgz#2e0d36692bb27561af80f6c8e9fb69a9835c93cb"
-  integrity sha512-v6cNbJ+TTGy9EcnNXH1hIOpsy8b5aJHR3LdiTWWf+of8Ftqfd0tawVZnZYclJb1KuypgrmMaTVvQubeT2k7XMQ==
-  dependencies:
-    base-64 "0.1.0"
-
-"@emurgo/react-native-haskell-shelley@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/react-native-haskell-shelley/-/react-native-haskell-shelley-5.0.0.tgz#220968e1eb1fb353518081d147c2337728453793"
-  integrity sha512-jOtc/xZMKvxTX9MElj61DhOYOBbfGWPp7q/nIUYXJ0iyNjuBEHzEJ4qkYSlTh3JHObNSV+Qv1VO008oCf0cg5w==
-  dependencies:
-    base-64 "0.1.0"
 
 "@emurgo/react-native-hid@^5.15.6":
   version "5.15.6"
@@ -1397,13 +1390,13 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.4.0.tgz#b01a1fe9549800e586d59692591664e75a1c3404"
-  integrity sha512-npwWkc+BlDFAWcOCmhQf7UDiNfgCeCEZXPqJlI4SwG450iFgtA+dspxdxWBPjxZERPSz3s30EuN+Q4/Wj21xrA==
+"@emurgo/yoroi-lib@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.5.1.tgz#a554efb7b5fdf24a13152b29f743edaf3fa12f99"
+  integrity sha512-pPfPdJ/x11XZspNWp26YZl5+rVBuHscifsKCXRxKipqPhHpjUKCJvM9nizbcGL0Rfx+I/F7KLIcT7YwIfJvJEQ==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^6.0.0"
-    "@emurgo/cross-csl-core" "^2.2.0"
+    "@emurgo/cross-csl-core" "^2.3.0"
     axios "^0.24.0"
     bech32 "^2.0.0"
     bignumber.js "^9.0.1"

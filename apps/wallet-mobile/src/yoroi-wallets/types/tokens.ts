@@ -48,22 +48,8 @@ export type LegacyToken = {
   metadata: TokenMetadata
 }
 
-export type NftMetadata = {
-  name: string
-  image: string | Array<string>
-  mediaType?: string
-  description?: string | Array<string>
-  authors?: string
-  author?: string
-  files?: Array<{
-    name?: string
-    mediaType?: string
-    src?: string | Array<string>
-  }>
-}
-
 export type AssetMetadata = {
-  [policyID: string]: {[assetNameHex: string]: NftMetadata | undefined} | undefined
+  [policyID: string]: {[assetNameHex: string]: unknown} | undefined
 }
 
 export type NFTAsset = {
@@ -85,7 +71,7 @@ type TokenInfoNFT = TokeInfoCommon & {
     thumbnail?: string
     policyId: string
     assetNameHex: string
-    originalMetadata?: NftMetadata
+    originalMetadata?: unknown
   }
 }
 

@@ -31,3 +31,22 @@ storiesOf('NftPreview', module)
       height={200}
     />
   ))
+  .add('Showing NFT with incorrect metadata files field', () => (
+    <NftPreview
+      nft={{
+        ...nft,
+        metadata: {
+          ...nft.metadata,
+          originalMetadata: {
+            name: 'NFT 0',
+            description: 'NFT 0 description',
+            files: {
+              ipfs: 'QmZ89agib39odneyezeyxp2ekXPLqm86NHCgEXZy9PJ1Gs',
+            },
+          },
+        },
+      }}
+      width={200}
+      height={200}
+    />
+  ))
