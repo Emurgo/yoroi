@@ -3,11 +3,11 @@ import {ErrorBoundary} from 'react-error-boundary'
 import {Image, ImageResizeMode, ImageStyle, StyleProp, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {SvgUri} from 'react-native-svg'
-import {getNftFilenameMediaType, isSvgMediaType} from 'src/yoroi-wallets/cardano/nfts'
-import {isRecord, isString} from 'src/yoroi-wallets/utils'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
+import {getNftFilenameMediaType, isSvgMediaType} from '../../yoroi-wallets/cardano/nfts'
 import {YoroiNft} from '../../yoroi-wallets/types'
+import {isRecord, isString} from '../../yoroi-wallets/utils'
 
 export const NftPreview = ({
   nft,
