@@ -30,6 +30,7 @@ import type {
 } from '../../types'
 import {Quantity, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
 import {Quantities} from '../../utils'
+import {harden} from '../../utils/addresses'
 import {parseSafe} from '../../utils/parsing'
 import {validatePassword} from '../../utils/validators'
 import {WalletMeta} from '../../walletManager'
@@ -65,7 +66,6 @@ import {yoroiUnsignedTx} from '../unsignedTx'
 import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {makeKeys} from './makeKeys'
-import {harden} from '../../utils/addresses'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
