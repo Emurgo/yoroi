@@ -39,7 +39,6 @@ import {
   YoroiUnsignedTx,
 } from '../../types'
 import {Quantities} from '../../utils'
-import {harden} from '../../utils/addresses'
 import {parseSafe} from '../../utils/parsing'
 import {genTimeToSlot} from '../../utils/timeUtils'
 import {validatePassword} from '../../utils/validators'
@@ -54,6 +53,7 @@ import {
   MAX_GENERATED_UNUSED,
   PRIMARY_TOKEN,
   PRIMARY_TOKEN_INFO,
+  VOTING_KEY_PATH,
 } from '../constants/mainnet/constants'
 import {CardanoError, InvalidState} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
@@ -830,7 +830,6 @@ export class ByronWallet implements YoroiWallet {
       const addressedUtxos = await this.getAddressedUtxos()
 
       const paymentAddress = Buffer.from(await stakingPublicKey.asBytes()).toString('hex')
-      const votingKeyPath = [harden(1694), harden(1815), harden(0), 0, 0]
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
@@ -845,7 +844,7 @@ export class ByronWallet implements YoroiWallet {
         nonce,
         chainNetworkConfig,
         paymentAddress,
-        votingKeyPath,
+        VOTING_KEY_PATH,
       )
 
       const votingRegistration: {
