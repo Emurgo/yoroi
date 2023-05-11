@@ -16,7 +16,7 @@ const {FlagSecure} = NativeModules
 
 export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; votingKeyEncrypted: string}) => {
   useBlockGoBack()
-  useAllowScreenshot()
+  // useAllowScreenshot()
   const strings = useStrings()
 
   const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)

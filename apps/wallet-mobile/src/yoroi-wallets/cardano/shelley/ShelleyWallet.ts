@@ -65,6 +65,7 @@ import {yoroiUnsignedTx} from '../unsignedTx'
 import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {makeKeys} from './makeKeys'
+import {harden} from '../../utils/addresses'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -738,6 +739,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
         const addressedUtxos = await this.getAddressedUtxos()
 
+        const paymentAddress = Buffer.from(await stakingPublicKey.asBytes()).toString('hex')
+        const votingKeyPath = [harden(1694), harden(1815), harden(0), 0, 0]
         const unsignedTx = await Cardano.createUnsignedVotingTx(
           absSlotNumber,
           PRIMARY_TOKEN,
@@ -750,6 +753,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           txOptions,
           nonce,
           CHAIN_NETWORK_ID,
+          paymentAddress,
+          votingKeyPath,
         )
 
         const votingRegistration: {
