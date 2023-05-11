@@ -8,6 +8,8 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
 import com.zoontek.rnbootsplash.RNBootSplash;
 import expo.modules.ReactActivityDelegateWrapper;
+import android.view.WindowManager;
+
 
 public class MainActivity extends ReactActivity {
 
@@ -25,6 +27,7 @@ public class MainActivity extends ReactActivity {
   protected void onCreate(Bundle savedInstanceState) {
     RNBootSplash.init(this);
     super.onCreate(savedInstanceState); // or super.onCreate(null) with react-native-screens
+    getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
   }
 
   /**
