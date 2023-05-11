@@ -9,6 +9,7 @@ import {NftImageGallery} from '../../../../../components/NftImageGallery'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedWalletContext'
+import {COLORS} from '../../../../../theme'
 import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
@@ -178,7 +179,7 @@ const Tab = ({onPress, active, tab, label}: TabProps) => (
       style={[
         styles.tab,
         {
-          color: active === tab ? '#3154CB' : '#6B7384',
+          color: active === tab ? COLORS.SHELLEY_BLUE : COLORS.TEXT_INPUT,
         },
       ]}
     >
@@ -382,7 +383,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   borderBottom: {
-    borderBottomColor: '#DCE0E9',
+    borderBottomColor: COLORS.BORDER_GRAY,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   panel: {
@@ -395,7 +396,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabContainerActive: {
-    borderBottomColor: '#3154CB',
+    borderBottomColor: COLORS.SHELLEY_BLUE,
     borderBottomWidth: 2,
   },
   tab: {
@@ -433,10 +434,10 @@ const styles = StyleSheet.create({
   },
   counterText: {
     fontWeight: '400',
-    color: '#3154CB',
+    color: COLORS.SHELLEY_BLUE,
   },
   counterTextBold: {
     fontWeight: 'bold',
-    color: '#3154CB',
+    color: COLORS.SHELLEY_BLUE,
   },
 })

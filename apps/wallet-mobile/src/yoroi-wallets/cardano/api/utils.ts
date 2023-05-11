@@ -1,4 +1,5 @@
 import AssetFingerprint from '@emurgo/cip14-js'
+import {Buffer} from 'memfs/lib/internal/buffer'
 
 import {LegacyToken, TokenInfo} from '../../types'
 import {TokenRegistryEntry} from './api'
@@ -14,7 +15,7 @@ export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo<'ft'> => {
     id: toTokenId(entry.subject),
     fingerprint: toTokenFingerprint({
       policyId,
-      assetNameHex: assetName ? asciiToHex(assetName) : undefined,
+      assetNameHex: assetName ? utf8ToHex(assetName) : undefined,
     }),
     metadata: {
       group: policyId,
@@ -37,7 +38,7 @@ export const fallbackTokenInfo = (tokenId: string): TokenInfo<'ft'> => {
     name: assetName,
     fingerprint: toTokenFingerprint({
       policyId,
-      assetNameHex: assetName ? asciiToHex(assetName) : undefined,
+      assetNameHex: assetName ? utf8ToHex(assetName) : undefined,
     }),
     description: undefined,
     metadata: {
@@ -56,7 +57,7 @@ export const toPolicyId = (tokenIdentifier: string) => {
   return tokenSubject.slice(0, 56)
 }
 export const toAssetName = (tokenIdentifier: string) => {
-  return hexToAscii(toAssetNameHex(tokenIdentifier)) || undefined
+  return hexToUtf8(toAssetNameHex(tokenIdentifier)) || undefined
 }
 
 export const toAssetNameHex = (tokenIdentifier: string) => {
@@ -71,16 +72,8 @@ export const toTokenId = (tokenIdentifier: string) => {
   return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdentifier)}`
 }
 
-export const hexToAscii = (hex: string) => Buffer.from(hex, 'hex').toLocaleString()
-export const asciiToHex = (ascii: string) => {
-  const result: Array<string> = []
-  for (let n = 0, l = ascii.length; n < l; n++) {
-    const hex = Number(ascii.charCodeAt(n)).toString(16)
-    result.push(hex)
-  }
-
-  return result.join('')
-}
+export const hexToUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
+export const utf8ToHex = (text: string) => Buffer.from(text, 'utf-8').toString('hex')
 
 export const toTokenInfo = (token: LegacyToken): TokenInfo<'ft'> => {
   const policyId = toPolicyId(token.identifier)

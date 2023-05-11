@@ -4,7 +4,7 @@ import {action} from '@storybook/addon-actions'
 import BigNumber from 'bignumber.js'
 
 import {getTokenFingerprint} from '../../legacy/format'
-import {asciiToHex, fallbackTokenInfo, toTokenInfo} from '../cardano/api/utils'
+import {fallbackTokenInfo, toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import * as HASKELL_SHELLEY_TESTNET from '../cardano/constants/testnet/constants'
 import {PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../cardano/constants/testnet/constants'
 import {PRIMARY_ASSET_CONSTANTS} from '../cardano/networks'
@@ -297,8 +297,8 @@ export const generateManyNfts = (): TokenInfo<'nft'>[] => {
       ...nft,
       name: 'NFT ' + index,
       id: index + '',
-      fingerprint: getTokenFingerprint({policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)}),
-      metadata: {...nft.metadata, policyId: nft.metadata.policyId, assetNameHex: asciiToHex('NFT ' + index)},
+      fingerprint: getTokenFingerprint({policyId: nft.metadata.policyId, assetNameHex: utf8ToHex('NFT ' + index)}),
+      metadata: {...nft.metadata, policyId: nft.metadata.policyId, assetNameHex: utf8ToHex('NFT ' + index)},
     }))
 }
 
@@ -815,18 +815,18 @@ const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
 
 export const nft: TokenInfo<'nft'> = {
   kind: 'nft',
-  id: `8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.${asciiToHex('NFT 0')}`,
+  id: `8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.${utf8ToHex('NFT 0')}`,
   name: 'NFT 0',
   description: 'NFT 0 description',
   fingerprint: getTokenFingerprint({
     policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-    assetNameHex: asciiToHex('NFT 0'),
+    assetNameHex: utf8ToHex('NFT 0'),
   }),
   metadata: {
     image: 'https://fibo-validated-nft-images.s3.amazonaws.com/asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
     thumbnail: 'https://fibo-validated-nft-images.s3.amazonaws.com/p_asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3.jpeg',
     policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-    assetNameHex: asciiToHex('NFT 0'),
+    assetNameHex: utf8ToHex('NFT 0'),
     originalMetadata: {
       name: 'NFT 0',
       description: 'NFT 0 description',

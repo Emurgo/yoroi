@@ -6,6 +6,8 @@ import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-n
 import {Boundary, Icon} from '../components'
 import {SendProvider} from '../features/Send/common/SendContext'
 import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
+import {FailedTxScreen} from '../features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
+import {SubmittedTxScreen} from '../features/Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen'
 import {ListAmountsToSendScreen} from '../features/Send/useCases/ListAmountsToSend'
 import {SelectTokenFromListScreen} from '../features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
@@ -149,6 +151,10 @@ export const TxHistoryNavigator = () => {
             ...sendOptions,
           }}
         />
+
+        <Stack.Screen name="send-submitted-tx" component={SubmittedTxScreen} options={{headerShown: false}} />
+
+        <Stack.Screen name="send-failed-tx" component={FailedTxScreen} options={{headerShown: false}} />
       </Stack.Navigator>
 
       <ModalInfo hideModalInfo={hideModalInfo} visible={modalInfoState}>
