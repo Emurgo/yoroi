@@ -2,10 +2,10 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Spacer, Text} from '../../../../components'
-import {TxHistoryRouteNavigation} from '../../../../navigation'
-import {COLORS} from '../../../../theme'
-import {useStrings} from '../../common/strings'
+import {Button, Spacer, Text} from '../../../../../components'
+import {TxHistoryRouteNavigation} from '../../../../../navigation'
+import {COLORS} from '../../../../../theme'
+import {useStrings} from '../../../common/strings'
 import {FailedTxImage} from './FailedTxImage'
 
 export const FailedTxScreen = () => {
