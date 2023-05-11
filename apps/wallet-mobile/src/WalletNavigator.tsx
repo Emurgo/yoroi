@@ -71,6 +71,13 @@ const WalletTabNavigator = () => {
               tabBarLabel: strings.nftsTabBarLabel,
               tabBarTestID: 'nftsTabBarButton',
             }}
+           listeners={() => {
+              return {
+                tabPress: e => {
+                  console.debug('tabPress', e)
+                },
+              }
+           }}
           >
             {() => (
               <SearchProvider>
