@@ -23,6 +23,7 @@ const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamL
 export const AppNavigator = () => {
   const strings = useStrings()
   Metrics.track()
+  Metrics.init({apiKey: '1', identity: 'id1'})
 
   useHideScreenInAppSwitcher()
   useAutoLogout()
