@@ -1380,6 +1380,13 @@
   dependencies:
     base-64 "0.1.0"
 
+"@emurgo/csl-mobile-bridge@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-5.1.1.tgz#8e5201a3c996e241ae573e7b8f6ed30e1e7ee1cb"
+  integrity sha512-DXYy5tgxnxD6DLm1/M23mGJRjEgN6SIJLqjAI6QrbeMGaxmn8bS4F1fPN+hw2HyTN5vLpHq9Lwg+JA/xL10Kpw==
+  dependencies:
+    base-64 "0.1.0"
+
 "@emurgo/react-native-blockies-svg@^0.0.2":
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@emurgo/react-native-blockies-svg/-/react-native-blockies-svg-0.0.2.tgz#afe2ce2776b0c6430ce3bc9a94ceb4f9fcb302f9"
