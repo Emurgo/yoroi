@@ -29,7 +29,7 @@ export const useParams = <Params, >(guard: Guard<Params>): Params => {
 type Guard<Params> = (params: Params | object) => params is Params
 
 // OPTIONS
-const WIDTH = Dimensions.get('window').width;
+const WIDTH = Dimensions.get('window').width
 export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
   headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
   headerStyle: {
