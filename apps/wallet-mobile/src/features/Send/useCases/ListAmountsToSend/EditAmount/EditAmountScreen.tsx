@@ -78,7 +78,7 @@ export const EditAmountScreen = () => {
 
           <Spacer height={40} />
 
-          <AmountInput onChange={onChangeQuantity} value={inputQuantity} ticker={tokenInfo.ticker} />
+          <AmountInput onChange={onChangeQuantity} quantity={inputQuantity} ticker={tokenInfo.ticker} />
 
           <Center>
             {isPrimary && <PairedBalance amount={{tokenId: tokenInfo.id, quantity}} />}
@@ -124,20 +124,23 @@ const MaxBalanceButton = ({onPress}: {onPress(): void}) => {
 }
 
 type AmountInputProps = {
-  value: string
+  quantity: string
   onChange(value: string): void
   ticker: string | undefined
 }
-const AmountInput = ({value, onChange, ticker}: AmountInputProps) => {
+const AmountInput = ({quantity, onChange, ticker}: AmountInputProps) => {
+  const [value, setValue] = React.useState('0')
+
   const onChangeText = (text: string) => {
-    const shorterStringLength = Math.min(text.length, value.length)
+    const shorterStringLength = Math.min(text.length, quantity.length)
     const wasPasted =
-      Math.abs(value.length - text.length) > 1 ||
-      value.substring(0, shorterStringLength) !== text.substring(0, shorterStringLength)
+      Math.abs(quantity.length - text.length) > 1 ||
+      quantity.substring(0, shorterStringLength) !== text.substring(0, shorterStringLength)
 
     const formatter = wasPasted ? pastedFormatter : editedFormatter
 
-    onChange(formatter(text))
+    onChange(formatter(text.length > 0 ? text : '0'))
+    setValue(text)
   }
 
   return (
