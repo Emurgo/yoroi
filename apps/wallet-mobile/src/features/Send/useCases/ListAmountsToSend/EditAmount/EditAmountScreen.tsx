@@ -38,9 +38,6 @@ export const EditAmountScreen = () => {
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const [quantity, setQuantity] = React.useState<Quantity>(initialQuantity)
-  const [inputQuantity, setInputQuantity] = React.useState<string>(
-    Quantities.denominated(initialQuantity, tokenInfo.decimals),
-  )
 
   const hasBalance = !Quantities.isGreaterThan(quantity, available)
   const isUnableToSpend = isPrimary && Quantities.isGreaterThan(quantity, spendable)
@@ -49,14 +46,12 @@ export const EditAmountScreen = () => {
   const onChangeQuantity = (text: string) => {
     try {
       const quantity = asQuantity(text)
-      setInputQuantity(text)
       setQuantity(Quantities.integer(quantity, tokenInfo.decimals))
     } catch (error) {
       Logger.error('EditAmountScreen::onChangeQuantity', error)
     }
   }
   const onMaxBalance = () => {
-    setInputQuantity(Quantities.denominated(spendable, tokenInfo.decimals))
     setQuantity(spendable)
   }
   const onApply = () => {
@@ -78,7 +73,7 @@ export const EditAmountScreen = () => {
 
           <Spacer height={40} />
 
-          <AmountInput onChange={onChangeQuantity} quantity={inputQuantity} ticker={tokenInfo.ticker} />
+          <AmountInput onChange={onChangeQuantity} ticker={tokenInfo.ticker} />
 
           <Center>
             {isPrimary && <PairedBalance amount={{tokenId: tokenInfo.id, quantity}} />}
@@ -124,18 +119,17 @@ const MaxBalanceButton = ({onPress}: {onPress(): void}) => {
 }
 
 type AmountInputProps = {
-  quantity: string
   onChange(value: string): void
   ticker: string | undefined
 }
-const AmountInput = ({quantity, onChange, ticker}: AmountInputProps) => {
+const AmountInput = ({onChange, ticker}: AmountInputProps) => {
   const [value, setValue] = React.useState('0')
 
   const onChangeText = (text: string) => {
-    const shorterStringLength = Math.min(text.length, quantity.length)
+    const shorterStringLength = Math.min(text.length, value.length)
     const wasPasted =
-      Math.abs(quantity.length - text.length) > 1 ||
-      quantity.substring(0, shorterStringLength) !== text.substring(0, shorterStringLength)
+      Math.abs(value.length - text.length) > 1 ||
+      value.substring(0, shorterStringLength) !== text.substring(0, shorterStringLength)
 
     const formatter = wasPasted ? pastedFormatter : editedFormatter
 
