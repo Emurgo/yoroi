@@ -133,8 +133,8 @@ const AmountInput = ({onChange, ticker}: AmountInputProps) => {
 
     const formatter = wasPasted ? pastedFormatter : editedFormatter
 
-    onChange(formatter(text.length > 0 ? text : '0'))
-    setValue(text)
+    onChange(formatter(text.length > 0 ? text : '0')) // setting 0 instead empty string
+    setValue(formatter(text))
   }
 
   return (
