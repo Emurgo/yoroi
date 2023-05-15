@@ -38,6 +38,9 @@ export const EditAmountScreen = () => {
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const [quantity, setQuantity] = React.useState<Quantity>(initialQuantity)
+  const [inputValue, setInputValue] = React.useState<string>(
+    Quantities.denominated(initialQuantity, tokenInfo.decimals),
+  )
 
   const hasBalance = !Quantities.isGreaterThan(quantity, available)
   const isUnableToSpend = isPrimary && Quantities.isGreaterThan(quantity, spendable)
@@ -45,13 +48,15 @@ export const EditAmountScreen = () => {
 
   const onChangeQuantity = (text: string) => {
     try {
-      const quantity = asQuantity(text)
+      const quantity = asQuantity(text.length > 0 ? text : '0')
+      setInputValue(text)
       setQuantity(Quantities.integer(quantity, tokenInfo.decimals))
     } catch (error) {
       Logger.error('EditAmountScreen::onChangeQuantity', error)
     }
   }
   const onMaxBalance = () => {
+    setInputValue(Quantities.denominated(spendable, tokenInfo.decimals))
     setQuantity(spendable)
   }
   const onApply = () => {
@@ -73,7 +78,7 @@ export const EditAmountScreen = () => {
 
           <Spacer height={40} />
 
-          <AmountInput onChange={onChangeQuantity} ticker={tokenInfo.ticker} />
+          <AmountInput onChange={onChangeQuantity} value={inputValue} ticker={tokenInfo.ticker} />
 
           <Center>
             {isPrimary && <PairedBalance amount={{tokenId: tokenInfo.id, quantity}} />}
@@ -119,12 +124,11 @@ const MaxBalanceButton = ({onPress}: {onPress(): void}) => {
 }
 
 type AmountInputProps = {
+  value: string
   onChange(value: string): void
   ticker: string | undefined
 }
-const AmountInput = ({onChange, ticker}: AmountInputProps) => {
-  const [value, setValue] = React.useState('0')
-
+const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
   const onChangeText = (text: string) => {
     const shorterStringLength = Math.min(text.length, value.length)
     const wasPasted =
@@ -133,8 +137,7 @@ const AmountInput = ({onChange, ticker}: AmountInputProps) => {
 
     const formatter = wasPasted ? pastedFormatter : editedFormatter
 
-    onChange(formatter(text.length > 0 ? text : '0')) // setting 0 instead empty string
-    setValue(formatter(text))
+    onChange(formatter(text))
   }
 
   return (
