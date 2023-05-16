@@ -26,3 +26,12 @@ buildscript {
         classpath "org.mozilla.rust-android-gradle:plugin:0.9.3"
     }
 }
+
+allprojects {
+    repositories {
+        maven {
+            // expo-camera bundles a custom com.google.android:cameraview
+            url "$rootDir/../node_modules/expo-camera/android/maven"
+        }
+    }
+}
