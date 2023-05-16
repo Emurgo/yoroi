@@ -147,17 +147,16 @@ const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
       mode="flat"
       autoComplete="off"
       value={value}
-      placeholder={value}
+      placeholder="0"
       onChangeText={onChangeText}
-      focusable
-      selectTextOnFocus
+      selectTextOnAutoFocus
       allowFontScaling
-      autoFocus
       selectionColor={COLORS.TRANSPARENT_BLACK}
       right={<Ticker ticker={ticker} />}
       style={styles.amount}
       underlineColor="transparent"
       underlineColorAndroid="transparent"
+      onFocus={() => console.log('testst')}
     />
   )
 }
