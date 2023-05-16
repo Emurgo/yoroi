@@ -60,7 +60,7 @@ export type NFTAsset = {
 type TokeInfoCommon = {
   id: string
   fingerprint: string
-  name?: string
+  name: string
   description?: string
 }
 

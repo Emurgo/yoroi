@@ -57,7 +57,7 @@ export const toPolicyId = (tokenIdentifier: string) => {
   return tokenSubject.slice(0, 56)
 }
 export const toAssetName = (tokenIdentifier: string) => {
-  return hexToUtf8(toAssetNameHex(tokenIdentifier)) || undefined
+  return hexToUtf8(toAssetNameHex(tokenIdentifier))
 }
 
 export const toAssetNameHex = (tokenIdentifier: string) => {

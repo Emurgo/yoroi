@@ -6,6 +6,7 @@ import {Boundary} from '../../components'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {isEmptyString} from '../../utils'
 import {CardanoTypes} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
 import {asQuantity} from '../../yoroi-wallets/utils'
@@ -59,12 +60,12 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const primaryTicker = wallet.primaryTokenInfo.metadata.ticker
 
+  const name = isEmptyString(tokenInfo.name) ? intl.formatMessage(messages.unknownAssetName) : tokenInfo.name
+
   const item = (
     <>
       <View style={styles.tokenMetaView}>
-        <Text style={styles.assetName}>
-          {isPrimary ? primaryTicker : tokenInfo.name ?? intl.formatMessage(messages.unknownAssetName)}
-        </Text>
+        <Text style={styles.assetName}>{isPrimary ? primaryTicker : name}</Text>
 
         <Text style={styles.assetMeta} ellipsizeMode="middle" numberOfLines={1}>
           {isPrimary ? '' : tokenInfo.fingerprint}

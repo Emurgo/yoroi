@@ -92,9 +92,7 @@ const NftList = ({canAddAmount}: {canAddAmount: boolean}) => {
   const strings = useStrings()
   const {nfts} = useNfts(wallet)
   const amountsSelected = Object.keys(targets[selectedTargetIndex].entry.amounts)
-  const filteredAndSorted = nfts
-    .filter(filterOutSelected(amountsSelected))
-    .sort((a, b) => sortNfts(a.name ?? '', b.name ?? ''))
+  const filteredAndSorted = nfts.filter(filterOutSelected(amountsSelected)).sort((a, b) => sortNfts(a.name, b.name))
   const counter = filteredAndSorted.length
 
   const onSelect = (nftId) => {

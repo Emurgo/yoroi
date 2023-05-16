@@ -22,7 +22,7 @@ describe('filterBySearch', () => {
     kind: 'ft',
     id: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
     fingerprint: 'asset1nvcwnq60jnm27efjm87xnhqt6alsv024tdyxjm',
-    name: undefined,
+    name: '',
     description: '',
     metadata: {
       decimals: 0,

@@ -37,7 +37,7 @@ const getSymbol = (token: TokenInfo | DefaultAsset) => {
 
 const getName = (token: TokenInfo | DefaultAsset) => {
   if (isTokenInfo(token)) {
-    return token.name ?? (token.kind === 'ft' && token.metadata.ticker) ?? token.fingerprint ?? undefined
+    return token.name || (token.kind === 'ft' && token.metadata.ticker) || token.fingerprint || ''
   }
   return (
     token.metadata.longName ||
@@ -46,7 +46,7 @@ const getName = (token: TokenInfo | DefaultAsset) => {
       policyId: token.metadata.policyId,
       assetNameHex: token.metadata.assetName,
     }) ||
-    undefined
+    ''
   )
 }
 
@@ -90,10 +90,10 @@ export const formatTokenWithText = (amount: Quantity, token: TokenInfo | Default
   if (isTokenInfo(token)) {
     switch (token.kind) {
       case 'nft':
-        return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${token.name ?? token.fingerprint}`
+        return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${token.name || token.fingerprint}`
       case 'ft':
         return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${
-          token.metadata.ticker ?? token.name ?? token.fingerprint
+          token.metadata.ticker || token.name || token.fingerprint
         }`
     }
   }

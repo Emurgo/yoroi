@@ -27,7 +27,7 @@ describe('api utils', () => {
 
     const noName = policyId
     expect(toPolicyId(noName)).toEqual(policyId)
-    expect(toAssetName(noName)).toEqual(undefined)
+    expect(toAssetName(noName)).toEqual('')
 
     const longName = '1'.repeat(128)
     expect(toAssetName(policyId + '.' + utf8ToHex(longName))).toEqual('1'.repeat(32))
@@ -202,7 +202,7 @@ describe('api utils', () => {
         kind: 'ft',
         id: '11111111111111111111111111111111111111111111111111111111.',
         fingerprint: 'asset17jfppv3h7hnsjfqq5lyp52dyhwstfv9e4uauga',
-        name: undefined,
+        name: '',
         description: undefined,
         metadata: {
           group: '11111111111111111111111111111111111111111111111111111111',
