@@ -156,7 +156,6 @@ const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
       style={styles.amount}
       underlineColor="transparent"
       underlineColorAndroid="transparent"
-      onFocus={() => console.log('testst')}
     />
   )
 }
