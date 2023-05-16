@@ -38,7 +38,7 @@ export const EditAmountScreen = () => {
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const [quantity, setQuantity] = React.useState<Quantity>(initialQuantity)
-  const [inputQuantity, setInputQuantity] = React.useState<string>(
+  const [inputValue, setInputValue] = React.useState<string>(
     Quantities.denominated(initialQuantity, tokenInfo.decimals),
   )
 
@@ -48,15 +48,15 @@ export const EditAmountScreen = () => {
 
   const onChangeQuantity = (text: string) => {
     try {
-      const quantity = asQuantity(text)
-      setInputQuantity(text)
+      const quantity = asQuantity(text.length > 0 ? text : '0')
+      setInputValue(text)
       setQuantity(Quantities.integer(quantity, tokenInfo.decimals))
     } catch (error) {
       Logger.error('EditAmountScreen::onChangeQuantity', error)
     }
   }
   const onMaxBalance = () => {
-    setInputQuantity(Quantities.denominated(spendable, tokenInfo.decimals))
+    setInputValue(Quantities.denominated(spendable, tokenInfo.decimals))
     setQuantity(spendable)
   }
   const onApply = () => {
@@ -78,7 +78,7 @@ export const EditAmountScreen = () => {
 
           <Spacer height={40} />
 
-          <AmountInput onChange={onChangeQuantity} value={inputQuantity} ticker={tokenInfo.ticker} />
+          <AmountInput onChange={onChangeQuantity} value={inputValue} ticker={tokenInfo.ticker} />
 
           <Center>
             {isPrimary && <PairedBalance amount={{tokenId: tokenInfo.id, quantity}} />}
@@ -128,7 +128,7 @@ type AmountInputProps = {
   onChange(value: string): void
   ticker: string | undefined
 }
-const AmountInput = ({value, onChange, ticker}: AmountInputProps) => {
+const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
   const onChangeText = (text: string) => {
     const shorterStringLength = Math.min(text.length, value.length)
     const wasPasted =
@@ -147,12 +147,10 @@ const AmountInput = ({value, onChange, ticker}: AmountInputProps) => {
       mode="flat"
       autoComplete="off"
       value={value}
-      placeholder={value}
+      placeholder="0"
       onChangeText={onChangeText}
-      focusable
-      selectTextOnFocus
+      selectTextOnAutoFocus
       allowFontScaling
-      autoFocus
       selectionColor={COLORS.TRANSPARENT_BLACK}
       right={<Ticker ticker={ticker} />}
       style={styles.amount}
