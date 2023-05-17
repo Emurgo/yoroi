@@ -167,7 +167,7 @@ describe('api utils', () => {
             url: 'url',
             decimals: 6,
             version: '1',
-            desc: 'description',
+            description: 'description',
           },
         },
       })
@@ -207,7 +207,7 @@ describe('api utils', () => {
             url: undefined,
             decimals: 0,
             version: '1',
-            desc: 'description',
+            description: 'description',
           },
         },
       })

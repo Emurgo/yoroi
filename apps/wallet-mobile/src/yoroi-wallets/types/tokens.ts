@@ -73,7 +73,7 @@ export type TokenInfo = {
 }
 
 type FtMetadata = {
-  desc: string | Array<string> | undefined
+  description: string | Array<string> | undefined
   icon: string | Array<string> | undefined
   decimals: number | undefined
   ticker: string | undefined

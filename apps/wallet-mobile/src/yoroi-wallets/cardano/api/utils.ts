@@ -26,7 +26,7 @@ export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
     metadatas: {
       mintFt: {
         icon: entry.logo?.value,
-        desc: entry.description?.value,
+        description: entry.description?.value,
         version: '1',
         decimals: entry.decimals?.value ?? 0,
         ticker: entry.ticker?.value,
@@ -98,7 +98,7 @@ export const toTokenInfo = (token: LegacyToken): TokenInfo => {
     metadatas: {
       mintFt: {
         icon: undefined,
-        desc: token.metadata.longName ?? undefined,
+        description: token.metadata.longName ?? undefined,
         ticker: token.metadata.ticker ?? undefined,
         url: undefined,
         version: '1',
