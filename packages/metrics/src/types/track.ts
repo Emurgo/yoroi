@@ -4,5 +4,5 @@ export type Track<
   Properties = {},
 > = {
   event: EventName
-  metadata: Properties
+  metadata?: Properties
 }

@@ -30,10 +30,11 @@ export function makeMockMetricsStorage(): MetricsStorage {
     enabled: {
       read: async () => {
         console.debug('[metrics] makeMockMetricsStorage enabled read')
-        return true
+        return Promise.resolve(true)
       },
       remove: async () => {
         console.debug('[metrics] makeMockMetricsStorage enabled remove')
+        return Promise.resolve()
       },
       save: async (enabled: boolean) => {
         console.debug('[metrics] makeMockMetricsStorage enabled save', enabled)

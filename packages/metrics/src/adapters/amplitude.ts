@@ -9,6 +9,8 @@ export function makeAmplitudeMetrics(
   {apiKey}: Readonly<MetricsFactoryOptions>,
   deps = initialDeps,
 ): Metrics {
+  deps.analytics.init(apiKey)
+
   return {
     init: () => {
       deps.analytics.init(apiKey)
