@@ -30,8 +30,7 @@
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepack": "bob build",
-    "postpack": ". ./scripts/flowgen.sh",
+    "prepack": "bob build && . ./scripts/flowgen.sh",
     "release": "release-it",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn install"
