@@ -4473,10 +4473,19 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@16 || 17 || 18", "@types/react@17.0.21", "@types/react@18.2.0", "@types/react@>=16.0.0", "@types/react@~17.0.21":
+"@types/react@*", "@types/react@16 || 17 || 18", "@types/react@>=16.0.0", "@types/react@~17.0.21":
   version "17.0.21"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.21.tgz#069c43177cd419afaab5ce26bb4e9056549f7ea6"
   integrity sha512-GzzXCpOthOjXvrAUFQwU/svyxu658cwu00Q9ugujS4qc1zXgLFaO0kS2SLOaMWLt2Jik781yuHCWB7UcYdGAeQ==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/react@^16.8.8":
+  version "16.14.41"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.14.41.tgz#55c4e7ebb736ca4e2379e97a4e0c1803150ed8d4"
+  integrity sha512-h+joCKF2r5rdECoM1U8WCEIHBp5/0TSR5Nyq8gtnnYY1n2WqGuj3indYqTjMb2/b5g2rfxJV6u4jUFq95lbT6Q==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
