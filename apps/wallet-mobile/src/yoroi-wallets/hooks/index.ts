@@ -240,7 +240,7 @@ export const useNftImageModerated = ({
   const nft = useNft(wallet, {id: nftId})
   const fingerprint = nft.fingerprint
   const {status} = useNftModerationStatus({wallet, fingerprint})
-  return useMemo(() => (status ? {image: nft.metadata.image, status} : null), [nft, status])
+  return useMemo(() => (status ? {image: nft.image, status} : null), [nft, status])
 }
 
 export const useToken = (
@@ -895,7 +895,7 @@ export const useSaveMemo = (
 export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<TokenInfo[], Error> = {}) => {
   const assetIds = useAssetIds(wallet)
   const results = useTokenInfosDetailed({wallet, tokenIds: assetIds}, {suspense: options.suspense})
-  const nfts = results.map((r) => r.data).filter((t): t is TokenInfo<'nft'> => t?.kind === 'nft')
+  const nfts = results.map((r) => r.data).filter((t): t is TokenInfo => t?.kind === 'nft')
   const isLoading = results.some((r) => r.isLoading)
   const isError = results.some((r) => r.isError)
   const error = results.find((r) => r.isError)?.error
@@ -903,7 +903,7 @@ export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<TokenInfo[
   return {nfts, refetch, error, isLoading, isError}
 }
 
-export const useNft = (wallet: YoroiWallet, {id}: {id: string}): TokenInfo<'nft'> => {
+export const useNft = (wallet: YoroiWallet, {id}: {id: string}): TokenInfo => {
   const tokenInfo = useTokenInfo({wallet, tokenId: id}, {suspense: true})
 
   if (tokenInfo.kind !== 'nft') {

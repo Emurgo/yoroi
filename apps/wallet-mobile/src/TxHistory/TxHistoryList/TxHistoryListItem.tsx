@@ -122,7 +122,7 @@ const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: Transa
         <Text small>{formatTokenFractional(asQuantity(amount), wallet.primaryToken)}</Text>
       </Text>
 
-      <Text style={style}>{`${utfSymbols.NBSP}${wallet.primaryTokenInfo.metadata.symbol}`}</Text>
+      <Text style={style}>{`${utfSymbols.NBSP}${wallet.primaryTokenInfo.symbol}`}</Text>
     </View>
   )
 }

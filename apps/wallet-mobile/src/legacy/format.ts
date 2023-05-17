@@ -26,7 +26,7 @@ export const decodeHexAscii = (text: string) => {
 
 const getTicker = (token: TokenInfo | DefaultAsset) => {
   if (isTokenInfo(token)) {
-    return token.kind === 'ft' ? token.metadata.ticker : undefined
+    return token.kind === 'ft' ? token.ticker : undefined
   }
   return token.metadata.ticker
 }
@@ -37,7 +37,7 @@ const getSymbol = (token: TokenInfo | DefaultAsset) => {
 
 const getName = (token: TokenInfo | DefaultAsset) => {
   if (isTokenInfo(token)) {
-    return token.name || (token.kind === 'ft' && token.metadata.ticker) || token.fingerprint || ''
+    return token.name || token.ticker || token.fingerprint || ''
   }
   return (
     token.metadata.longName ||
@@ -52,13 +52,13 @@ const getName = (token: TokenInfo | DefaultAsset) => {
 
 export const getDecimals = (token: TokenInfo | DefaultAsset) => {
   if (isTokenInfo(token)) {
-    return token.kind === 'nft' ? 0 : token.metadata.decimals
+    return token.kind === 'nft' ? 0 : token.decimals
   }
   return token.metadata.numberOfDecimals
 }
 
 export const normalizeTokenAmount = (amount: Quantity, token: TokenInfo | DefaultAsset): BigNumber => {
-  const decimals = getDecimals(token)
+  const decimals = getDecimals(token) ?? 0
   const normalizationFactor = Math.pow(10, decimals)
   return new BigNumber(amount).dividedBy(normalizationFactor).decimalPlaces(decimals)
 }
@@ -92,9 +92,7 @@ export const formatTokenWithText = (amount: Quantity, token: TokenInfo | Default
       case 'nft':
         return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${token.name || token.fingerprint}`
       case 'ft':
-        return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${
-          token.metadata.ticker || token.name || token.fingerprint
-        }`
+        return `${formatTokenAmount(amount, token)}${utfSymbols.NBSP}${token.ticker || token.name || token.fingerprint}`
     }
   }
 

@@ -91,7 +91,7 @@ export type YoroiWallet = {
   hwDeviceInfo: null | HWDeviceInfo
   isReadOnly: boolean
   primaryToken: Readonly<DefaultAsset>
-  primaryTokenInfo: Readonly<TokenInfo<'ft'>>
+  primaryTokenInfo: Readonly<TokenInfo>
 
   // Sending
   createUnsignedTx(entry: YoroiEntry, metadata?: Array<CardanoTypes.TxMetadata>): Promise<YoroiUnsignedTx>

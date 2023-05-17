@@ -300,7 +300,7 @@ export const isTokenInfo = (token: TokenInfo | DefaultAsset): token is TokenInfo
   return !!(token as TokenInfo).kind
 }
 
-export const selectFtOrThrow = (token: TokenInfo): TokenInfo<'ft'> => {
+export const selectFtOrThrow = (token: TokenInfo): TokenInfo => {
   if (token.kind === 'ft') {
     return token
   }

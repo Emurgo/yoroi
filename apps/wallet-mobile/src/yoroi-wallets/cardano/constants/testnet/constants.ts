@@ -70,20 +70,19 @@ export const NETWORK_CONFIG = {
   COINS_PER_UTXO_WORD,
 } as const
 
-export const PRIMARY_TOKEN_INFO: TokenInfo<'ft'> = {
+export const PRIMARY_TOKEN_INFO: TokenInfo = {
   id: '',
   name: 'TADA',
   description: 'Cardano',
   fingerprint: '',
   kind: 'ft',
-  metadata: {
-    decimals: 6,
-    ticker: 'TADA',
-    symbol: '₳',
-    logo: '',
-    url: '',
-    group: '',
-  },
+  group: '',
+  icon: '',
+  ticker: 'TADA',
+  image: '',
+  decimals: 6,
+  symbol: '₳',
+  metadatas: {},
 } as const
 
 export const PRIMARY_TOKEN: DefaultAsset = {

@@ -57,39 +57,28 @@ export type NFTAsset = {
   metadata: AssetMetadata
 }
 
-type TokeInfoCommon = {
+export type TokenInfo = {
+  kind: 'ft' | 'nft'
   id: string
+  group: string
   fingerprint: string
+  image: string | undefined
+  icon: string | undefined
+  decimals: number | undefined
+  symbol: string | undefined
   name: string
-  description?: string
+  description: string | undefined
+  ticker: string | undefined
+  metadatas: {mintNft?: NftMetadata; mintFt?: FtMetadata; tokenRegistry?: FtMetadata}
 }
 
-type TokenInfoNFT = TokeInfoCommon & {
-  kind: 'nft'
-  metadata: {
-    image?: string
-    thumbnail?: string
-    policyId: string
-    assetNameHex: string
-    originalMetadata?: unknown
-  }
+type FtMetadata = {
+  desc: string | Array<string> | undefined
+  icon: string | Array<string> | undefined
+  decimals: number | undefined
+  ticker: string | undefined
+  url: string | undefined
+  version: string | undefined
 }
 
-type TokenInfoFT = TokeInfoCommon & {
-  kind: 'ft'
-  metadata: {
-    group: string // policyId
-    decimals: number // default to 0
-
-    ticker: string | undefined
-    symbol: string | undefined
-    url: string | undefined
-    logo: string | undefined
-  }
-}
-
-export type TokenInfo<T extends 'ft' | 'nft' | 'all' = 'all'> = {
-  ft: TokenInfoFT
-  nft: TokenInfoNFT
-  all: TokenInfoFT | TokenInfoNFT
-}[T]
+export type NftMetadata = unknown

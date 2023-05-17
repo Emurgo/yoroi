@@ -154,13 +154,21 @@ describe('api utils', () => {
         name: 'assetName',
         description: 'description',
         fingerprint: 'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x',
-        metadata: {
-          group: '11111111111111111111111111111111111111111111111111111111',
-          decimals: 6,
-          logo: 'logo',
-          ticker: 'ticker',
-          url: 'url',
-          symbol: undefined,
+        decimals: 6,
+        ticker: 'ticker',
+        image: 'logo',
+        group: '11111111111111111111111111111111111111111111111111111111',
+        icon: 'logo',
+        symbol: undefined,
+        metadatas: {
+          mintFt: {
+            icon: 'logo',
+            ticker: 'ticker',
+            url: 'url',
+            decimals: 6,
+            version: '1',
+            desc: 'description',
+          },
         },
       })
     })
@@ -186,13 +194,21 @@ describe('api utils', () => {
         name: 'assetName',
         description: 'description',
         fingerprint: 'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x',
-        metadata: {
-          group: '11111111111111111111111111111111111111111111111111111111',
-          decimals: 0,
-          logo: undefined,
-          ticker: undefined,
-          url: undefined,
-          symbol: undefined,
+        decimals: 0,
+        ticker: undefined,
+        image: undefined,
+        group: '11111111111111111111111111111111111111111111111111111111',
+        icon: undefined,
+        symbol: undefined,
+        metadatas: {
+          mintFt: {
+            icon: undefined,
+            ticker: undefined,
+            url: undefined,
+            decimals: 0,
+            version: '1',
+            desc: 'description',
+          },
         },
       })
     })
@@ -204,14 +220,13 @@ describe('api utils', () => {
         fingerprint: 'asset17jfppv3h7hnsjfqq5lyp52dyhwstfv9e4uauga',
         name: '',
         description: undefined,
-        metadata: {
-          group: '11111111111111111111111111111111111111111111111111111111',
-          decimals: 0,
-          logo: undefined,
-          ticker: undefined,
-          url: undefined,
-          symbol: undefined,
-        },
+        ticker: undefined,
+        icon: undefined,
+        group: '11111111111111111111111111111111111111111111111111111111',
+        decimals: 0,
+        image: undefined,
+        symbol: undefined,
+        metadatas: {},
       })
 
       expect(
@@ -222,14 +237,13 @@ describe('api utils', () => {
         fingerprint: 'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x',
         name: 'assetName',
         description: undefined,
-        metadata: {
-          group: '11111111111111111111111111111111111111111111111111111111',
-          decimals: 0,
-          logo: undefined,
-          ticker: undefined,
-          url: undefined,
-          symbol: undefined,
-        },
+        ticker: undefined,
+        icon: undefined,
+        group: '11111111111111111111111111111111111111111111111111111111',
+        decimals: 0,
+        image: undefined,
+        symbol: undefined,
+        metadatas: {},
       })
     })
   })

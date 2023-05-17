@@ -7,7 +7,7 @@ export const sortTokenInfos = ({wallet, tokenInfos}: {wallet: YoroiWallet; token
       alpha((tokenInfo) => {
         switch (tokenInfo.kind) {
           case 'ft':
-            return tokenInfo.metadata.ticker?.toLocaleLowerCase() ?? tokenInfo.name?.toLocaleLowerCase() ?? ''
+            return tokenInfo.ticker?.toLocaleLowerCase() ?? tokenInfo.name?.toLocaleLowerCase() ?? ''
           case 'nft':
             return tokenInfo.name?.toLocaleLowerCase() ?? ''
         }
@@ -17,7 +17,7 @@ export const sortTokenInfos = ({wallet, tokenInfos}: {wallet: YoroiWallet; token
       toEnd((tokenInfo) => {
         switch (tokenInfo.kind) {
           case 'ft':
-            return !tokenInfo.metadata.ticker && !tokenInfo.name
+            return !tokenInfo.ticker && !tokenInfo.name
           case 'nft':
             return !tokenInfo.name
         }

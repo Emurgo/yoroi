@@ -108,14 +108,13 @@ describe('ShelleyWalletTestnet', () => {
       name: 'TADA',
       description: 'Cardano',
       fingerprint: '',
-      metadata: {
-        group: '',
-        logo: '',
-        url: '',
-        decimals: 6,
-        symbol: '₳',
-        ticker: 'TADA',
-      },
+      decimals: 6,
+      ticker: 'TADA',
+      image: '',
+      icon: '',
+      group: '',
+      symbol: '₳',
+      metadatas: {},
     })
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk158gpk02jqrsxa58aw2e4f0ww6fffu7p2qsflenapdz7a3r5lxx4sn9nx84',
@@ -218,18 +217,17 @@ describe('ShelleyWalletTestnet', () => {
     })
     expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
       kind: 'ft',
-      name: 'TADA',
-      fingerprint: '',
-      description: 'Cardano',
       id: '',
-      metadata: {
-        group: '',
-        logo: '',
-        url: '',
-        decimals: 6,
-        symbol: '₳',
-        ticker: 'TADA',
-      },
+      name: 'TADA',
+      description: 'Cardano',
+      fingerprint: '',
+      decimals: 6,
+      ticker: 'TADA',
+      image: '',
+      icon: '',
+      group: '',
+      symbol: '₳',
+      metadatas: {},
     })
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk158gpk02jqrsxa58aw2e4f0ww6fffu7p2qsflenapdz7a3r5lxx4sn9nx84',
@@ -321,18 +319,17 @@ describe('ShelleyWalletTestnet', () => {
     })
     expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
       kind: 'ft',
-      fingerprint: '',
-      description: 'Cardano',
       id: '',
       name: 'TADA',
-      metadata: {
-        group: '',
-        logo: '',
-        url: '',
-        decimals: 6,
-        symbol: '₳',
-        ticker: 'TADA',
-      },
+      description: 'Cardano',
+      fingerprint: '',
+      decimals: 6,
+      ticker: 'TADA',
+      image: '',
+      icon: '',
+      group: '',
+      symbol: '₳',
+      metadatas: {},
     })
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk1su9gfd9nkxw0uchht47cluxus3lqlf50mruvvuv2pqpph9qgmhzq08a7zq',

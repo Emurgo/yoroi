@@ -16,8 +16,8 @@ export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: stri
 
   if (isPrimary) return <PrimaryIcon />
   if (tokenInfo.kind === 'ft') {
-    if (isString(tokenInfo.metadata.logo) && tokenInfo.metadata.logo.length > 0 && isBase64(tokenInfo.metadata.logo)) {
-      return <Image source={{uri: `data:image/png;base64,${tokenInfo.metadata.logo}`}} style={styles.icon} />
+    if (isString(tokenInfo.icon) && tokenInfo.icon.length > 0 && isBase64(tokenInfo.icon)) {
+      return <Image source={{uri: `data:image/png;base64,${tokenInfo.icon}`}} style={styles.icon} />
     }
   }
 

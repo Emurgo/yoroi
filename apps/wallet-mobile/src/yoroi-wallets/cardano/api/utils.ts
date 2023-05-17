@@ -4,31 +4,39 @@ import {Buffer} from 'memfs/lib/internal/buffer'
 import {LegacyToken, TokenInfo} from '../../types'
 import {TokenRegistryEntry} from './api'
 
-export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo<'ft'> => {
+export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
   const policyId = toPolicyId(entry.subject)
   const assetName = toAssetName(entry.subject)
 
   return {
     kind: 'ft',
     name: assetName,
+    group: policyId,
+    decimals: entry.decimals?.value ?? 0,
+    ticker: entry.ticker?.value,
+    icon: entry.logo?.value,
+    image: entry.logo?.value,
     description: entry.description?.value,
     id: toTokenId(entry.subject),
     fingerprint: toTokenFingerprint({
       policyId,
       assetNameHex: assetName ? utf8ToHex(assetName) : undefined,
     }),
-    metadata: {
-      group: policyId,
-      decimals: entry.decimals?.value ?? 0,
-      symbol: undefined,
-      ticker: entry.ticker?.value,
-      url: entry.url?.value,
-      logo: entry.logo?.value,
+    symbol: undefined,
+    metadatas: {
+      mintFt: {
+        icon: entry.logo?.value,
+        desc: entry.description?.value,
+        version: '1',
+        decimals: entry.decimals?.value ?? 0,
+        ticker: entry.ticker?.value,
+        url: entry.url?.value,
+      },
     },
   }
 }
 
-export const fallbackTokenInfo = (tokenId: string): TokenInfo<'ft'> => {
+export const fallbackTokenInfo = (tokenId: string): TokenInfo => {
   const policyId = toPolicyId(tokenId)
   const assetName = toAssetName(tokenId)
 
@@ -36,19 +44,15 @@ export const fallbackTokenInfo = (tokenId: string): TokenInfo<'ft'> => {
     kind: 'ft',
     id: toTokenId(tokenId),
     name: assetName,
-    fingerprint: toTokenFingerprint({
-      policyId,
-      assetNameHex: assetName ? utf8ToHex(assetName) : undefined,
-    }),
+    fingerprint: toTokenFingerprint({policyId, assetNameHex: assetName ? utf8ToHex(assetName) : undefined}),
     description: undefined,
-    metadata: {
-      group: policyId,
-      decimals: 0,
-      logo: undefined,
-      symbol: undefined,
-      ticker: undefined,
-      url: undefined,
-    },
+    group: policyId,
+    decimals: 0,
+    image: undefined,
+    icon: undefined,
+    ticker: undefined,
+    symbol: undefined,
+    metadatas: {},
   }
 }
 
@@ -75,7 +79,7 @@ export const toTokenId = (tokenIdentifier: string) => {
 export const hexToUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
 export const utf8ToHex = (text: string) => Buffer.from(text, 'utf-8').toString('hex')
 
-export const toTokenInfo = (token: LegacyToken): TokenInfo<'ft'> => {
+export const toTokenInfo = (token: LegacyToken): TokenInfo => {
   const policyId = toPolicyId(token.identifier)
   const assetName = toAssetName(token.identifier)
 
@@ -85,13 +89,21 @@ export const toTokenInfo = (token: LegacyToken): TokenInfo<'ft'> => {
     name: assetName,
     fingerprint: toTokenFingerprint({policyId: token.metadata.policyId, assetNameHex: token.metadata.assetName}),
     description: token.metadata.longName ?? undefined,
-    metadata: {
-      group: policyId,
-      decimals: token.metadata.numberOfDecimals,
-      symbol: undefined,
-      url: undefined,
-      logo: undefined,
-      ticker: token.metadata?.ticker ?? undefined,
+    ticker: token.metadata.ticker ?? assetName,
+    icon: undefined,
+    image: undefined,
+    group: policyId,
+    decimals: token.metadata.numberOfDecimals,
+    symbol: undefined,
+    metadatas: {
+      mintFt: {
+        icon: undefined,
+        desc: token.metadata.longName ?? undefined,
+        ticker: token.metadata.ticker ?? undefined,
+        url: undefined,
+        version: '1',
+        decimals: token.metadata.numberOfDecimals,
+      },
     },
   }
 }

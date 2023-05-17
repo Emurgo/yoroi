@@ -6,8 +6,10 @@ export const filterBySearch = (searchTerm: string) => {
 
   return (tokenInfo: TokenInfo) => {
     if (tokenInfo.kind === 'ft') {
-      const name = tokenInfo.metadata.ticker?.toLocaleLowerCase() ?? tokenInfo.name?.toLocaleLowerCase() ?? null
-      if (name) return name.toLowerCase().includes(searchTermLowerCase)
+      return (
+        tokenInfo.ticker?.toLocaleLowerCase()?.includes(searchTermLowerCase) ||
+        tokenInfo.name?.toLocaleLowerCase()?.includes(searchTermLowerCase)
+      )
     }
 
     if (tokenInfo.kind === 'nft') {

@@ -152,7 +152,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
   return class ShelleyWallet implements YoroiWallet {
     readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
-    readonly primaryTokenInfo: TokenInfo<'ft'> = PRIMARY_TOKEN_INFO
+    readonly primaryTokenInfo: TokenInfo = PRIMARY_TOKEN_INFO
     readonly walletImplementationId = WALLET_IMPLEMENTATION_ID
     readonly networkId = NETWORK_ID
     readonly id: string

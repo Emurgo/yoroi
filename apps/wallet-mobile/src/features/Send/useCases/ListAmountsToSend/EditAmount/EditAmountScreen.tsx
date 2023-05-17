@@ -40,7 +40,7 @@ export const EditAmountScreen = () => {
 
   const [quantity, setQuantity] = React.useState<Quantity>(initialQuantity)
   const [inputQuantity, setInputQuantity] = React.useState<string>(
-    Quantities.denominated(initialQuantity, tokenInfo.metadata.decimals),
+    Quantities.denominated(initialQuantity, tokenInfo.decimals ?? 0),
   )
 
   const hasBalance = !Quantities.isGreaterThan(quantity, available)
@@ -51,13 +51,13 @@ export const EditAmountScreen = () => {
     try {
       const quantity = asQuantity(text)
       setInputQuantity(text)
-      setQuantity(Quantities.integer(quantity, tokenInfo.metadata.decimals))
+      setQuantity(Quantities.integer(quantity, tokenInfo.decimals ?? 0))
     } catch (error) {
       Logger.error('EditAmountScreen::onChangeQuantity', error)
     }
   }
   const onMaxBalance = () => {
-    setInputQuantity(Quantities.denominated(spendable, tokenInfo.metadata.decimals))
+    setInputQuantity(Quantities.denominated(spendable, tokenInfo.decimals ?? 0))
     setQuantity(spendable)
   }
   const onApply = () => {
@@ -79,7 +79,7 @@ export const EditAmountScreen = () => {
 
           <Spacer height={40} />
 
-          <AmountInput onChange={onChangeQuantity} value={inputQuantity} ticker={tokenInfo.metadata.ticker} />
+          <AmountInput onChange={onChangeQuantity} value={inputQuantity} ticker={tokenInfo.ticker} />
 
           <Center>
             {isPrimary && <PairedBalance amount={{tokenId: tokenInfo.id, quantity}} />}

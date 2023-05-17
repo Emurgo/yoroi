@@ -9,7 +9,7 @@ export const convertNft = (options: {
   storageUrl: string
   policyId: string
   shortName: string
-}): TokenInfo<'nft'> => {
+}): TokenInfo => {
   const {metadata, storageUrl, policyId, shortName} = options
   const assetNameHex = utf8ToHex(shortName)
   const fingerprint = getAssetFingerprint(policyId, assetNameHex)
@@ -29,13 +29,13 @@ export const convertNft = (options: {
     fingerprint,
     name,
     description,
-    metadata: {
-      policyId,
-      assetNameHex,
-      originalMetadata: metadata,
-      thumbnail,
-      image,
-    },
+    group: policyId,
+    decimals: undefined,
+    ticker: shortName,
+    icon: thumbnail,
+    image,
+    symbol: undefined,
+    metadatas: {mintNft: metadata},
   }
 }
 
@@ -48,8 +48,8 @@ export const isSvgMediaType = (mediaType: unknown): boolean => {
   return mediaType === 'image/svg+xml'
 }
 
-export const getNftFilenameMediaType = (nft: TokenInfo<'nft'>, filename: string): string | undefined => {
-  const originalMetadata = isRecord(nft.metadata.originalMetadata) ? nft.metadata.originalMetadata : undefined
+export const getNftFilenameMediaType = (nft: TokenInfo, filename: string): string | undefined => {
+  const originalMetadata = isRecord(nft.metadatas.mintNft) ? nft.metadatas.mintNft : undefined
   const files = originalMetadata?.files ?? []
   if (!isArray(files)) return undefined
 

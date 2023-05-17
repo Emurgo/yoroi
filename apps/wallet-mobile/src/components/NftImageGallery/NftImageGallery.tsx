@@ -21,12 +21,12 @@ export const SkeletonGallery = ({amount}: {amount: number}) => {
 }
 
 type Props = {
-  nfts: TokenInfo<'nft'>[]
+  nfts: TokenInfo[]
   onSelect: (id: string) => void
   onRefresh: () => void
   isRefreshing: boolean
-  bounces?: FlashListProps<TokenInfo<'nft'>>['bounces']
-  ListEmptyComponent?: FlashListProps<TokenInfo<'nft'>>['ListEmptyComponent']
+  bounces?: FlashListProps<TokenInfo>['bounces']
+  ListEmptyComponent?: FlashListProps<TokenInfo>['ListEmptyComponent']
   withVerticalPadding?: boolean
   readOnly?: boolean
 }
@@ -60,7 +60,7 @@ export const NftImageGallery = ({
 }
 
 type ModeratedImageProps = TouchableOpacityProps & {
-  nft: TokenInfo<'nft'>
+  nft: TokenInfo
 }
 const UnModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
   return (
@@ -112,11 +112,11 @@ const ModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
   )
 }
 
-function BlockedNft({nft}: {nft: TokenInfo<'nft'>}) {
+function BlockedNft({nft}: {nft: TokenInfo}) {
   return <PlaceholderNft nft={nft} />
 }
 
-function PlaceholderNft({nft}: {nft: TokenInfo<'nft'>}) {
+function PlaceholderNft({nft}: {nft: TokenInfo}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
@@ -137,11 +137,11 @@ function PlaceholderNft({nft}: {nft: TokenInfo<'nft'>}) {
   )
 }
 
-function ManualReviewNft({nft}: {nft: TokenInfo<'nft'>}) {
+function ManualReviewNft({nft}: {nft: TokenInfo}) {
   return <PlaceholderNft nft={nft} />
 }
 
-function RequiresConsentNft({nft}: {nft: TokenInfo<'nft'>}) {
+function RequiresConsentNft({nft}: {nft: TokenInfo}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
@@ -166,7 +166,7 @@ function RequiresConsentNft({nft}: {nft: TokenInfo<'nft'>}) {
   )
 }
 
-function ApprovedNft({nft}: {nft: TokenInfo<'nft'>}) {
+function ApprovedNft({nft}: {nft: TokenInfo}) {
   return (
     <View>
       <View style={styles.imageWrapper}>

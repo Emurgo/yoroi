@@ -58,7 +58,7 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
-  const primaryTicker = wallet.primaryTokenInfo.metadata.ticker
+  const primaryTicker = wallet.primaryTokenInfo.ticker
 
   const name = isEmptyString(tokenInfo.name) ? intl.formatMessage(messages.unknownAssetName) : tokenInfo.name
 

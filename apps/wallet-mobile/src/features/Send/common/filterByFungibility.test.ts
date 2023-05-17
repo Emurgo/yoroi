@@ -3,74 +3,64 @@ import {FungibilityFilter} from '../useCases/ListAmountsToSend/AddToken/SelectTo
 import {filterByFungibility} from './filterByFungibility'
 
 describe('filterByFungibility', () => {
-  const fakeToken1: TokenInfo<'ft'> = {
+  const fakeToken1: TokenInfo = {
     kind: 'ft',
     id: 'fake-token-1',
+    fingerprint: 'fake-fingerprint-1',
     name: '',
     description: '',
-    fingerprint: 'fake-fingerprint-1',
-    metadata: {
-      decimals: 0,
-      ticker: undefined,
-      symbol: '',
-      logo: '',
-      url: '',
-      group: '',
-    },
+    image: '',
+    group: '',
+    metadatas: {},
+    icon: '',
+    ticker: '',
+    decimals: 0,
+    symbol: undefined,
   } as const
 
-  const fakeToken2: TokenInfo<'ft'> = {
+  const fakeToken2: TokenInfo = {
     kind: 'ft',
     id: 'fake-token-2',
+    fingerprint: 'fake-fingerprint-2',
     name: '',
     description: '',
-    fingerprint: 'fake-fingerprint-2',
-    metadata: {
-      decimals: 0,
-      ticker: undefined,
-      symbol: '',
-      logo: '',
-      url: '',
-      group: '',
-    },
+    image: '',
+    group: '',
+    metadatas: {},
+    icon: '',
+    ticker: '',
+    decimals: 0,
+    symbol: undefined,
   } as const
 
-  const nft1: TokenInfo<'nft'> = {
+  const nft1: TokenInfo = {
     kind: 'nft',
     id: 'fake-token-3',
     fingerprint: 'fake-fingerprint-3',
     name: '',
     description: '',
-    metadata: {
-      image: '',
-      thumbnail: '',
-      policyId: '',
-      assetNameHex: '',
-      originalMetadata: {
-        name: '',
-        description: '',
-        image: '',
-      },
-    },
+    image: '',
+    group: '',
+    metadatas: {},
+    icon: '',
+    ticker: '',
+    decimals: 0,
+    symbol: undefined,
   } as const
 
-  const nft2: TokenInfo<'nft'> = {
+  const nft2: TokenInfo = {
     kind: 'nft',
     id: 'fake-token-4',
     fingerprint: 'fake-fingerprint-4',
     name: '',
     description: '',
-    metadata: {
-      image: '',
-      thumbnail: '',
-      policyId: '',
-      assetNameHex: '',
-      originalMetadata: {
-        name: '',
-        description: '',
-        image: '',
-      },
-    },
+    image: '',
+    group: '',
+    metadatas: {},
+    icon: '',
+    ticker: '',
+    decimals: 0,
+    symbol: undefined,
   } as const
 
   const allTokenInfos: TokenInfo[] = [fakeToken1, fakeToken2, nft1, nft2]

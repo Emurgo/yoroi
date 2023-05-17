@@ -126,7 +126,7 @@ const implementationId = WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 export default ByronWallet
 export class ByronWallet implements YoroiWallet {
   readonly primaryToken: DefaultAsset
-  readonly primaryTokenInfo: TokenInfo<'ft'>
+  readonly primaryTokenInfo: TokenInfo
   readonly id: string
   readonly networkId: NetworkId
   readonly walletImplementationId: WalletImplementationId
@@ -1304,21 +1304,20 @@ const keys: Array<keyof WalletJSON> = [
   'lastGeneratedAddressIndex',
 ]
 
-export const primaryTokenInfo: Record<'mainnet' | 'testnet', TokenInfo<'ft'>> = {
+export const primaryTokenInfo: Record<'mainnet' | 'testnet', TokenInfo> = {
   mainnet: {
     id: '',
     name: 'ADA',
     description: 'Cardano',
     kind: 'ft',
     fingerprint: '',
-    metadata: {
-      decimals: 6,
-      ticker: 'ADA',
-      symbol: '₳',
-      group: '',
-      url: undefined,
-      logo: undefined,
-    },
+    group: '',
+    image: undefined,
+    icon: undefined,
+    ticker: 'ADA',
+    decimals: 6,
+    symbol: '₳',
+    metadatas: {},
   },
   testnet: {
     kind: 'ft',
@@ -1326,14 +1325,13 @@ export const primaryTokenInfo: Record<'mainnet' | 'testnet', TokenInfo<'ft'>> = 
     name: 'TADA',
     description: 'Cardano',
     fingerprint: '',
-    metadata: {
-      decimals: 6,
-      ticker: 'TADA',
-      symbol: '₳',
-      group: '',
-      url: undefined,
-      logo: undefined,
-    },
+    group: '',
+    image: undefined,
+    icon: undefined,
+    ticker: 'TADA',
+    decimals: 6,
+    symbol: '₳',
+    metadatas: {},
   },
 }
 

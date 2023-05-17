@@ -19,7 +19,7 @@ export const NftPreview = ({
   resizeMode,
   blurRadius,
 }: {
-  nft: TokenInfo<'nft'>
+  nft: TokenInfo
   showPlaceholder?: boolean
   style?: StyleProp<ImageStyle>
   showThumbnail?: boolean
@@ -30,11 +30,11 @@ export const NftPreview = ({
 }) => {
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(true)
-  const uri = showThumbnail ? nft.metadata.thumbnail : nft.metadata.image
+  const uri = showThumbnail ? nft.icon : nft.image
   const isUriSvg =
     isString(uri) &&
     (uri.toLowerCase().endsWith('.svg') ||
-      (isRecord(nft.metadata.originalMetadata) && isSvgMediaType(nft.metadata.originalMetadata?.mediaType)) ||
+      (isRecord(nft.metadatas.mintNft) && isSvgMediaType(nft.metadatas.mintNft?.mediaType)) ||
       isSvgMediaType(getNftFilenameMediaType(nft, uri)))
   const shouldShowPlaceholder = !isString(uri) || showPlaceholder || (isUriSvg && blurRadius !== undefined) || error
 

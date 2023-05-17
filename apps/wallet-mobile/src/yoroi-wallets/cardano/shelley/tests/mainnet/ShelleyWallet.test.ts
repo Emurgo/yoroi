@@ -106,14 +106,13 @@ describe('ShelleyWallet', () => {
       id: '',
       name: 'ADA',
       fingerprint: '',
-      metadata: {
-        decimals: 6,
-        symbol: '₳',
-        ticker: 'ADA',
-        group: '',
-        url: '',
-        logo: '',
-      },
+      ticker: 'ADA',
+      group: '',
+      image: '',
+      icon: '',
+      decimals: 6,
+      symbol: '₳',
+      metadatas: {},
     })
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk158gpk02jqrsxa58aw2e4f0ww6fffu7p2qsflenapdz7a3r5lxx4sn9nx84',
@@ -214,19 +213,19 @@ describe('ShelleyWallet', () => {
     })
     expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
       kind: 'ft',
+      description: 'Cardano',
       id: '',
       name: 'ADA',
       fingerprint: '',
-      description: 'Cardano',
-      metadata: {
-        decimals: 6,
-        symbol: '₳',
-        ticker: 'ADA',
-        group: '',
-        url: '',
-        logo: '',
-      },
+      ticker: 'ADA',
+      group: '',
+      image: '',
+      icon: '',
+      decimals: 6,
+      symbol: '₳',
+      metadatas: {},
     })
+
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk158gpk02jqrsxa58aw2e4f0ww6fffu7p2qsflenapdz7a3r5lxx4sn9nx84',
     )
@@ -319,14 +318,13 @@ describe('ShelleyWallet', () => {
       id: '',
       name: 'ADA',
       fingerprint: '',
-      metadata: {
-        decimals: 6,
-        symbol: '₳',
-        ticker: 'ADA',
-        group: '',
-        url: '',
-        logo: '',
-      },
+      ticker: 'ADA',
+      group: '',
+      image: '',
+      icon: '',
+      decimals: 6,
+      symbol: '₳',
+      metadatas: {},
     })
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk1su9gfd9nkxw0uchht47cluxus3lqlf50mruvvuv2pqpph9qgmhzq08a7zq',
