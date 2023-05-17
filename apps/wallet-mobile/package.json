@@ -239,6 +239,7 @@
     "react-devtools-core": "4.26.1",
     "react-dom": "16.8.3",
     "react-intl-translations-manager": "^5.0.3",
+    "react-native-paper": "^5.8.0",
     "react-native-schemes-manager": "^1.0.5",
     "react-native-typescript-transformer": "^1.2.13",
     "react-test-renderer": "18.2.0",
