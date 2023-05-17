@@ -23,12 +23,10 @@ export const MnemonicExplanationModal = ({onConfirm, onRequestClose, visible}: P
       </View>
 
       <View style={styles.paragraph}>
-        {/* @ts-expect-error old react */}
         <Markdown>{strings.paragraph1}</Markdown>
       </View>
 
       <View style={styles.paragraph}>
-        {/* @ts-expect-error old reactl */}
         <Markdown>{strings.paragraph2}</Markdown>
       </View>
 

@@ -9,7 +9,7 @@ import {Amounts} from '../../../yoroi-wallets/utils/utils'
 import {mocks as sendMocks} from './mocks'
 import {initialState, SendProvider, useSelectedSecondaryAmountsCounter, useSend} from './SendContext'
 
-const wrapper: React.FC<React.PropsWithChildren> = ({children}) => <SendProvider>{children}</SendProvider>
+const wrapper: React.FC<React.PropsWithChildren<React.ReactNode>> = ({children}) => <SendProvider>{children}</SendProvider>
 
 describe('SendContext :: ui', () => {
   test('resetForm', () => {
