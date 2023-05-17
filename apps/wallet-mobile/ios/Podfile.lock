@@ -22,7 +22,7 @@ PODS:
   - EXImageLoader (4.1.1):
     - ExpoModulesCore
     - React-Core
-  - Expo (48.0.16):
+  - Expo (48.0.17):
     - ExpoModulesCore
   - ExpoKeepAwake (12.0.1):
     - ExpoModulesCore
@@ -375,9 +375,9 @@ PODS:
   - react-native-ble-plx (2.0.3):
     - MultiplatformBleAdapter (= 0.1.9)
     - React-Core
-  - react-native-config (1.5.0):
-    - react-native-config/App (= 1.5.0)
-  - react-native-config/App (1.5.0):
+  - react-native-config (1.5.1):
+    - react-native-config/App (= 1.5.1)
+  - react-native-config/App (1.5.1):
     - React-Core
   - react-native-haskell-shelley (5.1.1):
     - React
@@ -387,14 +387,14 @@ PODS:
     - React-Core
   - react-native-randombytes (3.6.0):
     - React-Core
-  - react-native-safe-area-context (4.5.2):
+  - react-native-safe-area-context (4.5.3):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
-  - react-native-slider (3.0.3):
-    - React
+  - react-native-slider (4.4.2):
+    - React-Core
   - react-native-webview (11.26.1):
     - React-Core
   - React-perflogger (0.71.6)
@@ -489,13 +489,13 @@ PODS:
     - React-Core
   - RNCMaskedView (0.2.9):
     - React-Core
-  - RNDateTimePicker (3.5.2):
+  - RNDateTimePicker (7.1.0):
     - React-Core
   - RNDeviceInfo (6.0.1):
     - React
   - RNFlashList (1.4.3):
     - React-Core
-  - RNGestureHandler (2.9.0):
+  - RNGestureHandler (2.10.0):
     - React-Core
   - RNKeychain (7.0.0):
     - React-Core
@@ -826,7 +826,7 @@ SPEC CHECKSUMS:
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
   EXFont: 6ea3800df746be7233208d80fe379b8ed74f4272
   EXImageLoader: fd053169a8ee932dd83bf1fe5487a50c26d27c2b
-  Expo: b1457fbd549c00d17b62c402bc98c8229aace6d8
+  Expo: d351b4546895fb99ae4e5a1bc39df770ab9dc7d1
   ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
   ExpoModulesCore: 653958063a301098b541ae4dfed1ac0b98db607b
   FBLazyVector: a83ceaa8a8581003a623facdb3c44f6d4f342ac5
@@ -868,13 +868,13 @@ SPEC CHECKSUMS:
   React-logger: 9332c3e7b4ef007a0211c0a9868253aac3e1da82
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
-  react-native-config: 5330c8258265c1e5fdb8c009d2cabd6badd96727
+  react-native-config: 86038147314e2e6d10ea9972022aa171e6b1d4d8
   react-native-haskell-shelley: 40844eb4a867fe45f4b252bf64a489f6a31da2cc
   react-native-pager-view: 0ccb8bf60e2ebd38b1f3669fa3650ecce81db2df
   react-native-quick-base64: 62290829c619fbabca4c41cfec75ae759d08fc1c
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
-  react-native-safe-area-context: 1d596539b05a78f2b346e954e7c577f6f9be7544
-  react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168
+  react-native-safe-area-context: b8979f5eda6ed5903d4dbc885be3846ea3daa753
+  react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
   react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
   React-perflogger: 43392072a5b867a504e2b4857606f8fc5a403d7f
   React-RCTActionSheet: c7b67c125bebeda9fb19fc7b200d85cb9d6899c4
@@ -893,10 +893,10 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: b90b71f45b8b97be43bc4284e71a6af48ac9f547
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
-  RNDateTimePicker: 7658208086d86d09e1627b5c34ba0cf237c60140
+  RNDateTimePicker: 7ecd54a97fc3749f38c3c89a171f6cbd52f3c142
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
   RNFlashList: ade81b4e928ebd585dd492014d40fb8d0e848aab
-  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
+  RNGestureHandler: e145476da655f3dbc48ef2f0a08cf7a34338c02b
   RNKeychain: f75b8c8b2f17d3b2aa1f25b4a0ac5b83d947ff8f
   RNPermissions: 215c54462104b3925b412b0fb3c9c497b21c358b
   RNReanimated: 7afddd5ab0590339f3e83d7bb52f43a73443b862
@@ -909,4 +909,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 87674b208d408b67fc1eaf05b1fc5029c3bb2e46
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3

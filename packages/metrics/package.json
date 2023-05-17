@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/metrics",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "test",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -51,8 +51,11 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
+    "@amplitude/analytics-browser": "^1.10.3",
+    "@amplitude/analytics-react-native": "^1.1.7",
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.2.2",
+    "@react-native-async-storage/async-storage": "^1.18.1",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
     "@testing-library/react-hooks": "^8.0.1",
@@ -64,21 +67,21 @@
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "flowgen": "^1.21.0",
     "jest": "^28.1.1",
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
     "react": "18.2.0",
     "react-native": "0.71.6",
     "react-native-builder-bob": "^0.20.4",
+    "react-query": "^3.39.3",
     "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",
     "typescript": "^4.5.2"
   },
-  "resolutions": {
-    "@types/react": "17.0.21"
-  },
   "peerDependencies": {
-    "react": "*"
+    "react": ">=16.8.0",
+    "react-query": ">4"
   },
   "engines": {
     "node": ">= 16.19.0"
@@ -167,9 +170,6 @@
     ]
   },
   "dependencies": {
-    "@amplitude/analytics-react-native": "^1.1.7",
-    "@react-native-async-storage/async-storage": "^1.18.1",
-    "flowgen": "^1.21.0",
-    "react-query": "^3.39.3"
+    "@react-native-async-storage/async-storage": "^1.18.1"
   }
 }

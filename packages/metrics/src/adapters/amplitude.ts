@@ -1,4 +1,4 @@
-import * as Amplitude from '@amplitude/analytics-react-native'
+import * as Amplitude from '../proxies/amplitude-client'
 
 import {TrackProperties} from '../features/all'
 import {MetricsFactoryOptions, Metrics} from '../types/metrics'

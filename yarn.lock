@@ -7,6 +7,19 @@
   resolved "https://registry.yarnpkg.com/@0no-co/graphql.web/-/graphql.web-1.0.1.tgz#db3da0d2cd41548b50f0583c0d2f4743c767e56b"
   integrity sha512-6Yaxyv6rOwRkLIvFaL0NrLDgfNqC/Ng9QOPmTmlqW4mORXMEKmh5NYGkIvvt5Yw8fZesnMAqkj8cIqTj8f40cQ==
 
+"@amplitude/analytics-browser@^1.10.3":
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-browser/-/analytics-browser-1.10.3.tgz#0abfa2eb424c00fb3ecfdf448509ec89587914a3"
+  integrity sha512-u9xnHVLMtoWawZssZDC1wYR7GjuXF9DWL09fCdxf5j0Gp9CtRurzt+kUx9KC8IzrBmNSYZ7jG8xhwUWCbIFodg==
+  dependencies:
+    "@amplitude/analytics-client-common" "^0.7.0"
+    "@amplitude/analytics-core" "^0.13.3"
+    "@amplitude/analytics-types" "^0.20.0"
+    "@amplitude/plugin-page-view-tracking-browser" "^0.8.0"
+    "@amplitude/plugin-web-attribution-browser" "^0.7.0"
+    "@amplitude/ua-parser-js" "^0.7.31"
+    tslib "^2.4.1"
+
 "@amplitude/analytics-client-common@^0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@amplitude/analytics-client-common/-/analytics-client-common-0.7.0.tgz#b099a97853d8622cdb371329d5e70afc6d9dca10"
@@ -46,6 +59,24 @@
   version "0.20.0"
   resolved "https://registry.yarnpkg.com/@amplitude/analytics-types/-/analytics-types-0.20.0.tgz#9efc83b758fdbf3929f0b00a8ba3e5a7262e1c7a"
   integrity sha512-OYoUrf7QUl5sL4mqcQJBu+0GuSar7ga5prJv0HDtPT4LGu7Adv8S3AWljGiEJuTS/YaOMzvTe2qyKZbwyiNrMw==
+
+"@amplitude/plugin-page-view-tracking-browser@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@amplitude/plugin-page-view-tracking-browser/-/plugin-page-view-tracking-browser-0.8.0.tgz#e3bd74ee699276377bd20992fde0d0b10bce033e"
+  integrity sha512-Bun7aGo7woxsnupDEY1YugLQyAXDRtFhQsXnJKKCIkyeeRCq4qsuaAz0wI8w1QV+3IhaAf0lBuSqSuBIhPFDLQ==
+  dependencies:
+    "@amplitude/analytics-client-common" "^0.7.0"
+    "@amplitude/analytics-types" "^0.20.0"
+    tslib "^2.4.1"
+
+"@amplitude/plugin-web-attribution-browser@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@amplitude/plugin-web-attribution-browser/-/plugin-web-attribution-browser-0.7.0.tgz#0e2baeefce6d90e481a095df1efa1a79b6283297"
+  integrity sha512-PKC6SHIVGXvxhxO4CZQOYidoo+aKApLRFGBbRfDEVdSxEDY1b1wTHtqTJomxodqvw4pLocSDiuwC1s7B0p4zAQ==
+  dependencies:
+    "@amplitude/analytics-client-common" "^0.7.0"
+    "@amplitude/analytics-types" "^0.20.0"
+    tslib "^2.4.1"
 
 "@amplitude/ua-parser-js@^0.7.31":
   version "0.7.33"
@@ -4473,10 +4504,19 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@16 || 17 || 18", "@types/react@17.0.21", "@types/react@18.2.0", "@types/react@>=16.0.0", "@types/react@~17.0.21":
+"@types/react@*", "@types/react@16 || 17 || 18", "@types/react@>=16.0.0", "@types/react@~17.0.21":
   version "17.0.21"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.21.tgz#069c43177cd419afaab5ce26bb4e9056549f7ea6"
   integrity sha512-GzzXCpOthOjXvrAUFQwU/svyxu658cwu00Q9ugujS4qc1zXgLFaO0kS2SLOaMWLt2Jik781yuHCWB7UcYdGAeQ==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/react@18.2.0":
+  version "18.2.0"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.0.tgz#15cda145354accfc09a18d2f2305f9fc099ada21"
+  integrity sha512-0FLj93y5USLHdnhIhABk83rm8XEGA7kH3cr+YUlvxoUGp1xNt/DINUMvqPxLyOQMzLmZe8i4RTHbvb8MC7NmrA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
