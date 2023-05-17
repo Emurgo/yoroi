@@ -27,6 +27,7 @@ export type TextInputProps = RNTextInputProps &
     dense?: boolean
     faded?: boolean
     showErrorOnBlur?: boolean
+    selectTextOnAutoFocus?: boolean
   }
 
 const useDebounced = (callback, value, delay = 1000) => {
@@ -61,6 +62,9 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
     faded,
     showErrorOnBlur,
     autoComplete = 'off',
+    onFocus,
+    autoFocus,
+    selectTextOnAutoFocus,
     ...restProps
   } = props
 
@@ -82,6 +86,15 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
         autoCorrect={false}
         autoComplete={autoComplete}
         autoCapitalize="none"
+        autoFocus={selectTextOnAutoFocus || autoFocus}
+        onFocus={(event) => {
+          // selectTextOnFocus + autoFocus doesn't work as expected
+          // also there is a bug on ios for selectTextOnFocus: https://github.com/facebook/react-native/issues/30585
+          // note: selectTextOnFocus is not equal to selectTextOnAutoFocus
+          if (selectTextOnAutoFocus) event.currentTarget.setSelection(0, value?.length)
+
+          if (onFocus) onFocus(event)
+        }}
         onBlur={() => {
           if (showErrorOnBlur && !errorTextEnabled && !isEmptyString(errorText)) {
             setErrorTextEnabled(true)

@@ -1,7 +1,9 @@
 import {useNavigation} from '@react-navigation/native'
 import {BarCodeScanner} from 'expo-barcode-scanner'
+import {Camera} from 'expo-camera'
 import * as React from 'react'
-import {Text} from 'react-native'
+import {StyleSheet} from 'react-native'
+import {TxHistoryRouteNavigation} from 'src/navigation'
 
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {Quantity} from '../../../../../yoroi-wallets/types'
@@ -9,7 +11,7 @@ import {pastedFormatter} from '../../../../../yoroi-wallets/utils'
 import {useSend} from '../../../common/SendContext'
 
 export const ReadQRCodeScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const wallet = useSelectedWallet()
   const {receiverChanged, amountChanged, tokenSelectedChanged} = useSend()
 
@@ -32,7 +34,7 @@ export const ReadQRCodeScreen = () => {
     } else {
       receiverChanged(qrData ?? '')
     }
-    navigation.goBack()
+    navigation.navigate('send-start-tx')
   }
 
   return <QRCodeScanner onRead={handleOnRead} />
@@ -49,32 +51,19 @@ const getParams = (params: string) => {
 }
 
 const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => void}) => {
-  const [hasPermission, setHasPermission] = React.useState(false)
-  const [scanned, setScanned] = React.useState(false)
-
-  React.useEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const {status} = await BarCodeScanner.requestPermissionsAsync()
-      setHasPermission(status === 'granted')
-    }
-
-    getBarCodeScannerPermissions()
-  }, [])
-
-  console.log('hasPermission', hasPermission, 'scanned', scanned)
-
-  const handleBarCodeScanned = ({type, data}) => {
-    setScanned(true)
+  const handleBarCodeScanned = ({data}) => {
     onRead({data})
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`)
   }
 
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>
-  }
-
-  return <BarCodeScanner onBarCodeScanned={handleBarCodeScanned} />
+  return (
+    // expo-barcode-scanner issue in android https://github.com/expo/expo/issues/5212
+    <Camera
+      style={StyleSheet.absoluteFill}
+      ratio="16:9"
+      barCodeScannerSettings={{
+        barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+      }}
+      onBarCodeScanned={handleBarCodeScanned}
+    />
+  )
 }
