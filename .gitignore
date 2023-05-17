@@ -69,6 +69,7 @@ coverage-ts
 
 # Logs/tmp
 *.log
+*.tgz
 
 #Test's data
 tests/app
