@@ -1,5 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createStackNavigator} from '@react-navigation/stack'
+import {useMetrics} from '@yoroi/metrics'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
@@ -23,6 +24,7 @@ const WalletTabNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
+  const {track} = useMetrics()
 
   return (
     <>
@@ -71,13 +73,15 @@ const WalletTabNavigator = () => {
               tabBarLabel: strings.nftsTabBarLabel,
               tabBarTestID: 'nftsTabBarButton',
             }}
-           listeners={() => {
+            listeners={() => {
               return {
-                tabPress: e => {
-                  console.debug('tabPress', e)
+                focus: () => {
+                  track({
+                    event: 'nft_click_navigate',
+                  })
                 },
               }
-           }}
+            }}
           >
             {() => (
               <SearchProvider>
