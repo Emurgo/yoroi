@@ -31,6 +31,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepack": "bob build",
+    "postpack": ". ./scripts/flowgen.sh",
     "release": "release-it",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn install"
@@ -169,6 +170,7 @@
   "dependencies": {
     "@amplitude/analytics-react-native": "^1.1.7",
     "@react-native-async-storage/async-storage": "^1.18.1",
+    "flowgen": "^1.21.0",
     "react-query": "^3.39.3"
   }
 }
