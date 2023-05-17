@@ -1,6 +1,7 @@
 {
   "name": "yoroi",
   "version": "1.0.0",
+  "private": true,
   "repository": "git@github.com:Emurgo/yoroi.git",
   "author": "EMURGO",
   "workspaces": [
