@@ -1,6 +1,6 @@
 import {LegacyToken, TokenInfo} from '../../types'
 import {YoroiWallet} from '../types'
-import {TokenRegistryEntry} from './api'
+import {TokenRegistryEntry} from './tokenRegistry'
 import {
   fallbackTokenInfo,
   hexToUtf8,

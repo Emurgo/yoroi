@@ -3,7 +3,7 @@ import {Buffer} from 'memfs/lib/internal/buffer'
 
 import {LegacyToken, TokenInfo} from '../../types'
 import {YoroiWallet} from '../types'
-import {TokenRegistryEntry} from './api'
+import {TokenRegistryEntry} from './tokenRegistry'
 
 export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
   const policyId = toPolicyId(entry.subject)

@@ -1,15 +1,7 @@
 import {utf8ToHex} from '../cardano/api/utils'
 import {PRIMARY_TOKEN} from '../cardano/constants/testnet/constants'
 import {NETWORKS} from '../cardano/networks'
-import {
-  hasProperties,
-  InvalidAssetAmount,
-  isArrayOfType,
-  isNonNullable,
-  isRecord,
-  isString,
-  parseAmountDecimal,
-} from './parsing'
+import {InvalidAssetAmount, isArrayOfType, isNonNullable, isRecord, isString, parseAmountDecimal} from './parsing'
 
 describe('parseAdaDecimal', () => {
   // recall: tests run on mainnet (default network)
@@ -91,28 +83,6 @@ describe('isRecord', () => {
     expect(isRecord(123)).toEqual(false)
     expect(isRecord('hello')).toEqual(false)
     expect(isRecord(true)).toEqual(false)
-  })
-})
-
-describe('hasProperties', () => {
-  it('returns true if object has all properties', () => {
-    expect(hasProperties({a: 1, b: 2}, ['a', 'b'])).toEqual(true)
-  })
-
-  it('returns true if object has all properties and more', () => {
-    expect(hasProperties({a: 1, b: 2, c: 3}, ['a', 'b'])).toEqual(true)
-  })
-
-  it('returns true if checking for empty properties', () => {
-    expect(hasProperties({a: 1, b: 2}, [])).toEqual(true)
-  })
-
-  it('returns false if object does not have all properties', () => {
-    expect(hasProperties({a: 1, b: 2}, ['a', 'b', 'c'])).toEqual(false)
-  })
-
-  it('returns false if object has no properties', () => {
-    expect(hasProperties({}, ['a', 'b'])).toEqual(false)
   })
 })
 

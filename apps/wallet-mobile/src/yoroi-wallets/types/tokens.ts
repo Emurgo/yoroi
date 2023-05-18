@@ -62,15 +62,7 @@ export type LegacyToken = {
   metadata: TokenMetadata
 }
 
-export type AssetMetadata = {
-  [policyID: string]:
-    | {
-        [assetNameHex: string]: unknown
-      }
-    | undefined
-}
-
 export type NFTAsset = {
   key: '721'
-  metadata: AssetMetadata
+  metadata?: unknown
 }
