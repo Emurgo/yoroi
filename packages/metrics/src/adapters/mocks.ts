@@ -1,7 +1,7 @@
 import {TrackProperties} from '../features/all'
 import {MetricsFactoryOptions, Metrics, MetricsStorage} from '../types/metrics'
 
-export function makeMockMetrics({apiKey}: MetricsFactoryOptions): Metrics {
+export function makeMockMetrics({apiKey}: MetricsFactoryOptions<any>): Metrics {
   console.debug(apiKey)
   return {
     init: () => {
@@ -15,6 +15,9 @@ export function makeMockMetrics({apiKey}: MetricsFactoryOptions): Metrics {
     },
     enable: () => {
       console.debug('[metrics] makeMockMetrics enable')
+    },
+    setUserId: (userId: string) => {
+      console.debug('[metrics] makeMockMetrics setUserId', userId)
     },
     setDeviceId: (deviceId: string) => {
       console.debug('[metrics] makeMockMetrics setDeviceId', deviceId)

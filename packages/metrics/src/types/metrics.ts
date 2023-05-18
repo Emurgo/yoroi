@@ -1,7 +1,9 @@
 import {TrackProperties} from '../features/all'
 
-export type MetricsFactoryOptions = {
+export type MetricsFactoryOptions<T> = {
   apiKey: string
+  initialUserId?: string
+  options?: T
 }
 
 export type Metrics = {
@@ -9,11 +11,12 @@ export type Metrics = {
   track(args: TrackProperties): void
   disable(): void
   enable(): void
+  setUserId(userId: string): void
   setDeviceId(deviceId: string): void
   setSessionId(sessionId: number): void
 }
 
-export type MetricsFactory = (options: MetricsFactoryOptions) => Metrics
+export type MetricsFactory = <T>(options: MetricsFactoryOptions<T>) => Metrics
 
 export type MetricsStorage = {
   enabled: {
