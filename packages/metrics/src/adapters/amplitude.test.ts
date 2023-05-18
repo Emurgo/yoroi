@@ -10,6 +10,7 @@ const mockedAmplitude = Amplitude as jest.Mocked<typeof Amplitude>
 describe('makeAmplitudeMetrics', () => {
   const apiKey = 'test-api-key'
   const deviceId = 'test-device-id'
+  const userId = 'test-user-id'
   const sessionId = 123456
 
   let amplitudeMetrics: Metrics
@@ -19,6 +20,7 @@ describe('makeAmplitudeMetrics', () => {
     mockedAmplitude.init.mockClear()
     mockedAmplitude.track.mockClear()
     mockedAmplitude.setOptOut.mockClear()
+    mockedAmplitude.setUserId.mockClear()
     mockedAmplitude.setDeviceId.mockClear()
     mockedAmplitude.setSessionId.mockClear()
 
@@ -26,7 +28,7 @@ describe('makeAmplitudeMetrics', () => {
 
     trackProperties = {
       event: 'nft_click_navigate',
-      metadata: {test: 'test-metadata'},
+      properties: {test: 'test-metadata'},
     }
   })
 
@@ -38,7 +40,7 @@ describe('makeAmplitudeMetrics', () => {
     amplitudeMetrics.track(trackProperties)
     expect(mockedAmplitude.track).toHaveBeenCalledWith(
       trackProperties.event,
-      trackProperties.metadata,
+      trackProperties.properties,
     )
   })
 
@@ -55,6 +57,11 @@ describe('makeAmplitudeMetrics', () => {
   it('should set the device ID', () => {
     amplitudeMetrics.setDeviceId(deviceId)
     expect(mockedAmplitude.setDeviceId).toHaveBeenCalledWith(deviceId)
+  })
+
+  it('should set the user ID', () => {
+    amplitudeMetrics.setUserId(userId)
+    expect(mockedAmplitude.setUserId).toHaveBeenCalledWith(userId)
   })
 
   it('should set the session ID', () => {
