@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AssetFingerprint from '@emurgo/cip14-js'
 import {BigNumber} from 'bignumber.js'
-import moment from 'moment'
 import type {IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 
@@ -129,25 +128,37 @@ export const formatAdaWithText = (amount: Quantity, defaultAsset: DefaultAsset) 
   return `${formatAda(amount, defaultAsset)}${utfSymbols.NBSP}${defaultAssetMeta.ticker}`
 }
 
-export const formatTimeToSeconds = (ts: string | any) => {
-  return moment(ts).format((moment(0) as any)._locale._format.timeToSeconds)
+export const formatTime = (timestamp: string, intl: IntlShape) => {
+  return intl.formatTime(new Date(timestamp), {
+    timeStyle: 'medium',
+  })
 }
 
-export const formatDateToSeconds = (ts: string | any) => {
-  return moment(ts).format((moment(0) as any)._locale._format.dateToSeconds)
+export const formatDateAndTime = (timestamp: string, intl: IntlShape) => {
+  return intl.formatDate(new Date(timestamp), {
+    dateStyle: 'long',
+    timeStyle: 'medium',
+  })
 }
 
 export const formatDateRelative = (ts: string | any, intl: IntlShape) => {
-  const config = {
-    sameDay: `[${intl.formatMessage(messages.today)}]`,
-    lastDay: `[${intl.formatMessage(messages.yesterday)}]`,
-    nextDay: 'L',
-    // we don't really have dates in future
-    lastWeek: 'L',
-    nextWeek: 'L',
-    sameElse: 'L',
+  const inputDateString = new Date(ts).toDateString()
+  const today = new Date().toDateString()
+  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString()
+
+  if (inputDateString === today) {
+    return intl.formatMessage(messages.today)
   }
-  return moment(ts).calendar(null, config)
+
+  if (inputDateString === yesterday) {
+    return intl.formatMessage(messages.yesterday)
+  }
+
+  return intl.formatDate(new Date(ts), {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  })
 }
 
 const messages = defineMessages({

@@ -9,7 +9,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, StatusBar, Text} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {formatDateToSeconds, formatTokenWithSymbol} from '../../legacy/format'
+import {formatDateAndTime, formatTokenWithSymbol} from '../../legacy/format'
 import AddressModal from '../../Receive/AddressModal'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {brand, COLORS} from '../../theme'
@@ -19,7 +19,7 @@ import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {CardanoTypes, YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTipStatus, useTransactionInfos} from '../../yoroi-wallets/hooks'
 import {NetworkId, TransactionInfo} from '../../yoroi-wallets/types'
-import {asQuantity} from '../../yoroi-wallets/utils'
+import {asQuantity, isNonNullable} from '../../yoroi-wallets/utils'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
 
@@ -37,7 +37,7 @@ export const TxDetails = () => {
   const transaction = transactions[id]
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
-  useTitle(formatDateToSeconds(transaction.submittedAt))
+  useTitle(isNonNullable(transaction.submittedAt) ? formatDateAndTime(transaction.submittedAt, intl) : '')
 
   const {fromFiltered, toFiltered, cntOmittedTo} = getShownAddresses(
     intl,
