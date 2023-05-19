@@ -19,7 +19,7 @@ export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: stri
     return <Image source={{uri: `data:image/png;base64,${tokenInfo.logo}`}} style={styles.icon} />
   }
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (isTokenNft && features.showNftGallery) {
+  if (isTokenNft) {
     return (
       <Boundary loading={{fallback: <Placeholder />}}>
         <NftIcon tokenId={tokenId} wallet={wallet} />
