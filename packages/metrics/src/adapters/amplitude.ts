@@ -1,4 +1,4 @@
-import * as Amplitude from '../proxies/amplitude-client'
+import * as Amplitude from '../proxies/amplitude-client.web'
 
 import {TrackProperties} from '../features/all'
 import {MetricsFactoryOptions, Metrics} from '../types/metrics'
@@ -6,7 +6,10 @@ import {MetricsFactoryOptions, Metrics} from '../types/metrics'
 const initialDeps = {analytics: Amplitude} as const
 
 export function makeAmplitudeMetrics<
-  T extends Amplitude.Types.ReactNativeOptions | Amplitude.Types.BrowserOptions,
+  T extends
+    | Amplitude.Types.ReactNativeOptions
+    | Amplitude.Types.BrowserOptions
+    | Amplitude.Types.NodeOptions,
 >(
   {apiKey, initialUserId, options}: Readonly<MetricsFactoryOptions<T>>,
   deps = initialDeps,

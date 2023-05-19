@@ -1,1 +1,1 @@
-export * from '@amplitude/analytics-browser'
+export * from '@amplitude/analytics-node'
