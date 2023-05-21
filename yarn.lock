@@ -5135,13 +5135,6 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@yoroi/metrics@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@yoroi/metrics/-/metrics-1.0.3.tgz#b34a8c990c690fed42b80c27789675ac32ad4682"
-  integrity sha512-PbDAdw9KjrqFSkxwu240fqsjVsbyHUdqLO/XXV2GrgObhcgeLBNUnpqVEyd5lVd8z10TkpC62gPrpQouBIGOOg==
-  dependencies:
-    "@react-native-async-storage/async-storage" "^1.18.1"
-
 JSONStream@^1.0.4:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.5.tgz#3208c1f08d3a4d99261ab64f92302bc15e111ca0"

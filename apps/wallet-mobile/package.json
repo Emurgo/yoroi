@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
-    "babel": "babel src",
     "e2e:appium-test-android": "./node_modules/.bin/wdio tests/config/wdio.android.local.conf.ts --suite happyPathTx",
     "e2e:appium-test-android-ledger": "./node_modules/.bin/wdio tests/config/wdio.android.local.conf.ts --suite ledger",
     "e2e:build-android": "detox build -c android.emu.mainnet.release",
@@ -28,7 +27,8 @@
     "start": "react-native start",
     "storybook:watch": "sb-rn-watcher",
     "test": "jest src",
-    "tsc:cover": "yarn typescript-coverage-report -i '**/*.test.*' -i '**/*.stories*' -t html --threshold=100"
+    "tsc:cover": "yarn typescript-coverage-report -i '**/*.test.*' -i '**/*.stories*' -t html --threshold=100",
+    "typecheck": "tsc --noEmit"
   },
   "lint-staged": {
     "./src/**/*.{ts,tsx}": [
@@ -98,7 +98,7 @@
     "@react-navigation/stack": "^6.3.16",
     "@shopify/flash-list": "^1.4.1",
     "@unstoppabledomains/resolution": "6.0.3",
-    "@yoroi/metrics": "1.0.3",
+    "@yoroi/metrics-react-native": "1.0.0",
     "add": "2.0.6",
     "assert": "^2.0.0",
     "base-64": "^1.0.0",

@@ -1,6 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createStackNavigator} from '@react-navigation/stack'
-import {useMetrics} from '@yoroi/metrics'
+import {useMetrics} from '@yoroi/metrics-react-native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {getMetricsFactory, makeMetricsStorage, MetricsProvider} from '@yoroi/metrics'
+import {getMetricsFactory, makeMetricsStorage, MetricsProvider} from '@yoroi/metrics-react-native'
 import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
 import Config from 'react-native-config'

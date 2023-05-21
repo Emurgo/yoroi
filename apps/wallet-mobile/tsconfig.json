@@ -18,9 +18,6 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@yoroi/metrics": [
-        "../../packages/metrics/src"
-      ],
       "*.md": [
         "text-loader"
       ]

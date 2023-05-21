@@ -5,9 +5,9 @@
   "author": "EMURGO",
   "private": true,
   "scripts": {
-    "run-all": "run-p w:lint w:tsc w:test",
+    "run-all": "run-p w:lint w:typecheck w:test",
     "w:lint": "yarn workspaces run lint",
-    "w:tsc": "yarn workspaces run tsc",
+    "w:typecheck": "yarn workspaces run typecheck",
     "w:test": "yarn workspaces run test"
   },
   "workspaces": [
