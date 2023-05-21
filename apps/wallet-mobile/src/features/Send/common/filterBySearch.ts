@@ -7,14 +7,14 @@ export const filterBySearch = (searchTerm: string) => {
   return (tokenInfo: TokenInfo) => {
     if (tokenInfo.kind === 'ft') {
       return (
-        tokenInfo.ticker?.toLocaleLowerCase()?.includes(searchTermLowerCase) ||
-        tokenInfo.name?.toLocaleLowerCase()?.includes(searchTermLowerCase)
+        (tokenInfo.ticker?.toLocaleLowerCase()?.includes(searchTermLowerCase) ||
+          tokenInfo.name?.toLocaleLowerCase()?.includes(searchTermLowerCase)) ??
+        false
       )
     }
 
     if (tokenInfo.kind === 'nft') {
-      const name = tokenInfo.name?.toLocaleLowerCase() ?? null
-      if (name) return name.toLowerCase().includes(searchTermLowerCase)
+      return tokenInfo.name?.toLocaleLowerCase().includes(searchTermLowerCase) ?? false
     }
     return false
   }

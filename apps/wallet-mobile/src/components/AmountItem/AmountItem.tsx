@@ -22,6 +22,7 @@ export const AmountItem = ({wallet, style, amount}: AmountItemProps) => {
 
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const name = tokenInfo.ticker ?? tokenInfo.name
+  const nameLabel = isEmptyString(name) ? '-' : name
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
   const denominatedQuantity = tokenInfo.kind === 'nft' ? '1' : Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
   return (
@@ -34,7 +35,7 @@ export const AmountItem = ({wallet, style, amount}: AmountItemProps) => {
 
       <Middle>
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
-          {isEmptyString(name) ? '-' : name}
+          {nameLabel}
         </Text>
 
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.detail} testID="tokenFingerprintText">
