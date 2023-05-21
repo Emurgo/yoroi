@@ -21,7 +21,7 @@ export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: stri
     }
   }
 
-  if (tokenInfo.kind === 'nft' && features.showNftGallery) {
+  if (tokenInfo.kind === 'nft') {
     return (
       <Boundary loading={{fallback: <Placeholder />}}>
         <NftIcon tokenId={tokenId} wallet={wallet} />

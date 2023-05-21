@@ -12,7 +12,6 @@ export const features = {
   startWithIndexScreen: __DEV__ ? false : false,
   prefillWalletInfo: __DEV__ ? false : false,
   showProdPoolsInDev: __DEV__ ? false : false,
-  showNftGallery: __DEV__ ? true : true,
   moderatingNftsEnabled: __DEV__ ? false : false,
 }
 
