@@ -23,7 +23,7 @@ To build the application on MacOS it is necessary to make some preparation.
 - First of all it is necessary to install [`brew`](https://brew.sh/). It will help a lot further.
 - Install Xcode
 - Install the stable version of Xcode command line tools through the web site or run the command `xcode-select --install`
-- Install `nvm` to that run the command `brew install nvm`. The node version `v16.8.0` is reqired.
+- Install `nvm` to that run the command `brew install nvm`. The node version `v16.19.0` is required.
 - Select the node version `v16.19.0` -> `nvm use v16.19.0`
 - Install `yarn` globally. To do that run the command `npm install -g yarn`
 - Install `rust` if it is necessary. To install rust run the command `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
