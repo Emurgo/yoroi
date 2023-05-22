@@ -1,6 +1,6 @@
-import {Track} from './track'
+import {MetricsTrackProperties} from './properties'
 
-export type NftEvent =
+export type MetricsNftEvent =
   | 'nft_click_navigate'
   | 'nft_list_load'
   | 'nft_list_click_grid_big'
@@ -20,56 +20,96 @@ export type NftEvent =
   | 'nft_details_click_image'
   | 'nft_image_zoom'
 
-type NftClickNavigate = Track<NftEvent, 'nft_click_navigate'>
-type NftListLoad = Track<NftEvent, 'nft_list_load'>
-type NftListClickGridBig = Track<NftEvent, 'nft_list_click_grid_big'>
-type NftListClickGridSmall = Track<NftEvent, 'nft_list_click_grid_small'>
-type NftListClickSearch = Track<NftEvent, 'nft_list_click_search'>
-type NftListSearch = Track<NftEvent, 'nft_list_search', {searchTerm: string}>
-type NftDetailsLoad = Track<NftEvent, 'nft_details_load'>
-type NftDetailsClickOverview = Track<NftEvent, 'nft_details_click_overview'>
-type NftDetailsClickMetadata = Track<NftEvent, 'nft_details_click_metadata'>
-type NftDetailsOverviewScroll = Track<NftEvent, 'nft_details_overview_scroll'>
-type NftDetailsOverviewCopyFingerprint = Track<
-  NftEvent,
+type MetricsNftClickNavigate = MetricsTrackProperties<
+  MetricsNftEvent,
+  'nft_click_navigate'
+>
+type MetricsNftListLoad = MetricsTrackProperties<
+  MetricsNftEvent,
+  'nft_list_load'
+>
+type MetricsNftListClickGridBig = MetricsTrackProperties<
+  MetricsNftEvent,
+  'nft_list_click_grid_big'
+>
+type MetricsNftListClickGridSmall = MetricsTrackProperties<
+  MetricsNftEvent,
+  'nft_list_click_grid_small'
+>
+type MetricsNftListClickSearch = MetricsTrackProperties<
+  MetricsNftEvent,
+  'nft_list_click_search'
+>
+type MetricsNftListSearch = MetricsTrackProperties<
+  MetricsNftEvent,
+  'nft_list_search',
+  {searchTerm: string}
+>
+type MetricsNftDetailsLoad = MetricsTrackProperties<
+  MetricsNftEvent,
+  'nft_details_load'
+>
+type MetricsNftDetailsClickOverview = MetricsTrackProperties<
+  MetricsNftEvent,
+  'nft_details_click_overview'
+>
+type MetricsNftDetailsClickMetadata = MetricsTrackProperties<
+  MetricsNftEvent,
+  'nft_details_click_metadata'
+>
+type MetricsNftDetailsOverviewScroll = MetricsTrackProperties<
+  MetricsNftEvent,
+  'nft_details_overview_scroll'
+>
+type MetricsNftDetailsOverviewCopyFingerprint = MetricsTrackProperties<
+  MetricsNftEvent,
   'nft_details_overview_copy_fingerprint'
 >
-type NftDetailsOverviewCopyPolicyId = Track<
-  NftEvent,
+type MetricsNftDetailsOverviewCopyPolicyId = MetricsTrackProperties<
+  MetricsNftEvent,
   'nft_details_overview_copy_policyId'
 >
-type NftDetailsOverviewExploreCardanoScan = Track<
-  NftEvent,
+type MetricsNftDetailsOverviewExploreCardanoScan = MetricsTrackProperties<
+  MetricsNftEvent,
   'nft_details_overview_explore_cardanoScan'
 >
-type NftDetailsOverviewExploreCExplorer = Track<
-  NftEvent,
+type MetricsNftDetailsOverviewExploreCExplorer = MetricsTrackProperties<
+  MetricsNftEvent,
   'nft_details_overview_explore_cExplorer'
 >
-type NftDetailsMetadataScroll = Track<NftEvent, 'nft_details_metadata_scroll'>
-type NftDetailsMetadataCopyMetadata = Track<
-  NftEvent,
+type MetricsNftDetailsMetadataScroll = MetricsTrackProperties<
+  MetricsNftEvent,
+  'nft_details_metadata_scroll'
+>
+type MetricsNftDetailsMetadataCopyMetadata = MetricsTrackProperties<
+  MetricsNftEvent,
   'nft_details_metadata_copy_metadata'
 >
-type NftDetailsClickImage = Track<NftEvent, 'nft_details_click_image'>
-type NftImageZoom = Track<NftEvent, 'nft_image_zoom'>
+type MetricsNftDetailsClickImage = MetricsTrackProperties<
+  MetricsNftEvent,
+  'nft_details_click_image'
+>
+type MetricsNftImageZoom = MetricsTrackProperties<
+  MetricsNftEvent,
+  'nft_image_zoom'
+>
 
-export type NftTrack =
-  | NftClickNavigate
-  | NftListLoad
-  | NftListClickGridBig
-  | NftListClickGridSmall
-  | NftListClickSearch
-  | NftListSearch
-  | NftDetailsLoad
-  | NftDetailsClickOverview
-  | NftDetailsClickMetadata
-  | NftDetailsOverviewScroll
-  | NftDetailsOverviewCopyFingerprint
-  | NftDetailsOverviewCopyPolicyId
-  | NftDetailsOverviewExploreCardanoScan
-  | NftDetailsOverviewExploreCExplorer
-  | NftDetailsMetadataScroll
-  | NftDetailsMetadataCopyMetadata
-  | NftDetailsClickImage
-  | NftImageZoom
+export type MetricsNftTrack =
+  | MetricsNftClickNavigate
+  | MetricsNftListLoad
+  | MetricsNftListClickGridBig
+  | MetricsNftListClickGridSmall
+  | MetricsNftListClickSearch
+  | MetricsNftListSearch
+  | MetricsNftDetailsLoad
+  | MetricsNftDetailsClickOverview
+  | MetricsNftDetailsClickMetadata
+  | MetricsNftDetailsOverviewScroll
+  | MetricsNftDetailsOverviewCopyFingerprint
+  | MetricsNftDetailsOverviewCopyPolicyId
+  | MetricsNftDetailsOverviewExploreCardanoScan
+  | MetricsNftDetailsOverviewExploreCExplorer
+  | MetricsNftDetailsMetadataScroll
+  | MetricsNftDetailsMetadataCopyMetadata
+  | MetricsNftDetailsClickImage
+  | MetricsNftImageZoom

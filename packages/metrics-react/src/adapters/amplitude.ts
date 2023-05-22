@@ -1,5 +1,5 @@
 import * as Amplitude from '@amplitude/analytics-browser'
-import {Metrics, MetricsFactoryOptions, TrackProperties} from '@yoroi/types'
+import {Metrics} from '@yoroi/types'
 
 const initialDeps = {analytics: Amplitude} as const
 
@@ -8,14 +8,14 @@ export function makeAmplitudeMetrics(
     apiKey,
     initialUserId,
     options,
-  }: Readonly<MetricsFactoryOptions<Amplitude.Types.BrowserOptions>>,
+  }: Readonly<Metrics.FactoryOptions<Amplitude.Types.BrowserOptions>>,
   deps = initialDeps,
-): Metrics {
+): Readonly<Metrics.Module<Amplitude.Types.EventOptions>> {
   deps.analytics.init(apiKey, initialUserId, options)
 
   return {
-    track: ({event, properties}: TrackProperties) => {
-      deps.analytics.track(event, properties)
+    track: ({event, properties, options: eventOptions}) => {
+      deps.analytics.track(event, properties, eventOptions)
     },
     disable: () => {
       deps.analytics.setOptOut(true)
@@ -32,5 +32,5 @@ export function makeAmplitudeMetrics(
     setSessionId: (sessionId: number) => {
       deps.analytics.setSessionId(sessionId)
     },
-  } as const
+  } as const as Metrics.Module<Amplitude.Types.EventOptions>
 }

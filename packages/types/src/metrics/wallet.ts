@@ -1,14 +1,30 @@
-import {Track} from './track'
+import {MetricsTrackProperties} from './properties'
 
-export type WalletEvent =
+export type MetricsWalletEvent =
   | 'wallet_list'
   | 'wallet_select'
   | 'wallet_close'
   | 'wallet_remove'
 
-type WalletList = Track<WalletEvent, 'wallet_list'>
-type WalletSelect = Track<WalletEvent, 'wallet_select'>
-type WalletClose = Track<WalletEvent, 'wallet_close'>
-type WalletRemove = Track<WalletEvent, 'wallet_remove'>
+type MetricsWalletList = MetricsTrackProperties<
+  MetricsWalletEvent,
+  'wallet_list'
+>
+type MetricsWalletSelect = MetricsTrackProperties<
+  MetricsWalletEvent,
+  'wallet_select'
+>
+type MetricsWalletClose = MetricsTrackProperties<
+  MetricsWalletEvent,
+  'wallet_close'
+>
+type MetricsWalletRemove = MetricsTrackProperties<
+  MetricsWalletEvent,
+  'wallet_remove'
+>
 
-export type WalletTrack = WalletList | WalletSelect | WalletClose | WalletRemove
+export type MetricsWalletTrack =
+  | MetricsWalletList
+  | MetricsWalletSelect
+  | MetricsWalletClose
+  | MetricsWalletRemove

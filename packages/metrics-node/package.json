@@ -1,10 +1,8 @@
 {
   "name": "@yoroi/metrics-node",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "The Metrics package of Yoroi SDK for node",
-  "main": "lib/commonjs/index",
-  "module": "lib/module/index",
-  "types": "lib/typescript/index.d.ts",
+  "main": "lib/index",
   "source": "src/index",
   "files": [
     "src",
@@ -16,9 +14,12 @@
   ],
   "scripts": {
     "test": "jest",
-    "typecheck": "tsc --noEmit",
+    "tsc": "tsc --noEmit",
+    "clean": "del-cli lib",
+    "flow": ". ./scripts/flowgen.sh",
+    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && tsc --project tsconfig.build.json && yarn flow",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepack": "bob build && . ./scripts/flowgen.sh",
+    "prepack": "yarn build",
     "release": "release-it"
   },
   "keywords": [
@@ -47,15 +48,17 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@yoroi/types": "1.0.0",
-    "@amplitude/analytics-node": "^1.1.6"
+    "@amplitude/analytics-node": "^1.1.6",
+    "@yoroi/types": "1.0.4"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.21.5",
+    "@babel/preset-typescript": "^7.21.5",
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.2.2",
-    "@react-native-community/eslint-config": "^3.0.2",
+    "@jest/globals": "^29.5.0",
     "@release-it/conventional-changelog": "^5.0.0",
-    "@testing-library/react-hooks": "^8.0.1",
+    "@types/jest": "^29.5.1",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "eslint": "^8.4.1",
@@ -63,21 +66,16 @@
     "eslint-plugin-prettier": "^4.0.0",
     "flowgen": "^1.21.0",
     "jest": "^28.1.1",
-    "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
-    "react-native-builder-bob": "^0.20.4",
     "release-it": "^15.0.0",
+    "ts-jest": "^29.1.0",
     "typescript": "^4.5.2"
   },
-    "engines": {
+  "engines": {
     "node": ">= 16.19.0"
   },
   "packageManager": "^yarn@1.22.15",
   "jest": {
-    "preset": "react-native",
-    "setupFiles": [
-      "<rootDir>/jest.setup.js"
-    ],
     "modulePathIgnorePatterns": [
       "<rootDir>/lib/"
     ]
@@ -139,19 +137,5 @@
     "trailingComma": "all",
     "useTabs": false,
     "semi": false
-  },
-  "react-native-builder-bob": {
-    "source": "src",
-    "output": "lib",
-    "targets": [
-      "commonjs",
-      "module",
-      [
-        "typescript",
-        {
-          "project": "tsconfig.build.json"
-        }
-      ]
-    ]
   }
 }

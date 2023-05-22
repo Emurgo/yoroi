@@ -1,17 +1,12 @@
-import {
-  Metrics,
-  MetricsFactoryOptions,
-  MetricsStorage,
-  TrackProperties,
-} from '@yoroi/types'
+import {Metrics} from '@yoroi/types'
 
 export function makeMockMetrics({
   apiKey,
   options,
-}: MetricsFactoryOptions<any>): Metrics {
-  console.debug('[metrics-node] mock ', apiKey, options)
+}: Metrics.FactoryOptions<any>): Metrics.Module<any> {
+  console.debug('[metrics-node] mock', apiKey, options)
   return {
-    track: (args: TrackProperties) => {
+    track: (args: Metrics.Track<any>) => {
       console.debug('[metrics-node] makeMockMetrics track', args)
     },
     disable: () => {
@@ -32,7 +27,7 @@ export function makeMockMetrics({
   }
 }
 
-export function makeMockMetricsStorage(): MetricsStorage {
+export function makeMockMetricsStorage(): Metrics.Storage {
   return {
     enabled: {
       read: async () => {

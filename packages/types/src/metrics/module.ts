@@ -1,4 +1,4 @@
-import {TrackProperties} from './properties'
+import {MetricsTrack} from './track'
 
 export type MetricsFactoryOptions<T> = {
   apiKey: string
@@ -6,13 +6,11 @@ export type MetricsFactoryOptions<T> = {
   options?: T
 }
 
-export type Metrics = {
-  track(args: TrackProperties): void
+export type MetricsModule<EventOptions> = {
+  track(args: MetricsTrack<EventOptions>): void
   disable(): void
   enable(): void
   setUserId(userId: string): void
   setDeviceId(deviceId: string): void
   setSessionId(sessionId: number): void
 }
-
-export type MetricsFactory = <T>(options: MetricsFactoryOptions<T>) => Metrics

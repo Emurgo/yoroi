@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Metrics, MetricsStorage} from '@yoroi/types'
+import {Metrics} from '@yoroi/types'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import TestRenderer from 'react-test-renderer'
 
@@ -10,8 +10,10 @@ const {act: componentAct} = TestRenderer
 
 describe('MetricsProvider', () => {
   it('provides metrics context', () => {
-    const metrics: Metrics = makeMockMetrics({apiKey: 'test-api-key'})
-    const storage: MetricsStorage = makeMockMetricsStorage()
+    const metrics: Metrics.Module<any> = makeMockMetrics({
+      apiKey: 'test-api-key',
+    })
+    const storage: Metrics.Storage = makeMockMetricsStorage()
 
     const TestComponent = () => {
       metricsContext = useMetrics()

@@ -1,9 +1,9 @@
 import * as Amplitude from '@amplitude/analytics-browser'
-import {Metrics, TrackProperties} from '@yoroi/types'
+import {Metrics} from '@yoroi/types'
 
 import {makeAmplitudeMetrics} from './amplitude'
 
-jest.mock('@amplitude/analytics-react-native')
+jest.mock('@amplitude/analytics-browser')
 
 const mockedAmplitude = Amplitude as jest.Mocked<typeof Amplitude>
 
@@ -13,8 +13,8 @@ describe('makeAmplitudeMetrics', () => {
   const userId = 'test-user-id'
   const sessionId = 123456
 
-  let amplitudeMetrics: Metrics
-  let trackProperties: TrackProperties
+  let amplitudeMetrics: Metrics.Module<any>
+  let trackProperties: Metrics.Track<any>
 
   beforeEach(() => {
     mockedAmplitude.init.mockClear()
@@ -33,7 +33,11 @@ describe('makeAmplitudeMetrics', () => {
   })
 
   it('should initialize Amplitude', () => {
-    expect(mockedAmplitude.init).toHaveBeenCalledWith(apiKey)
+    expect(mockedAmplitude.init).toHaveBeenCalledWith(
+      apiKey,
+      undefined,
+      undefined,
+    )
   })
 
   it('should track events', () => {
@@ -41,6 +45,7 @@ describe('makeAmplitudeMetrics', () => {
     expect(mockedAmplitude.track).toHaveBeenCalledWith(
       trackProperties.event,
       trackProperties.properties,
+      undefined,
     )
   })
 

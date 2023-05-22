@@ -1,8 +1,9 @@
 {
   "name": "@yoroi/types",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "The Yoroi Types package of Yoroi SDK",
   "main": "src/index",
+  "browser": "lib/index",
   "source": "src/index",
   "files": [
     "src",
@@ -13,10 +14,13 @@
     "!**/.*"
   ],
   "scripts": {
-    "test": "jest",
-    "typecheck": "tsc --noEmit",
+    "test": "jest --passWithNoTests",
+    "tsc": "tsc --noEmit",
+    "clean": "del-cli lib",
+    "flow": ". ./scripts/flowgen.sh",
+    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && tsc --project tsconfig.build.json && yarn flow",
+    "prepack": "yarn build",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepack": "build && . ./scripts/flowgen.sh",
     "release": "release-it"
   },
   "keywords": [

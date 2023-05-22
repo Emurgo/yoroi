@@ -1,5 +1,5 @@
 import * as Amplitude from '@amplitude/analytics-node'
-import {MetricsFactoryOptions, Metrics, TrackProperties} from '@yoroi/types'
+import {Metrics} from '@yoroi/types'
 
 const initialDeps = {analytics: Amplitude} as const
 
@@ -8,15 +8,15 @@ export function makeAmplitudeMetrics(
     apiKey,
     options,
   }: Readonly<
-    Omit<MetricsFactoryOptions<Amplitude.Types.NodeOptions>, 'initialUserId'>
+    Omit<Metrics.FactoryOptions<Amplitude.Types.NodeOptions>, 'initialUserId'>
   >,
   deps = initialDeps,
-): Metrics {
+): Readonly<Metrics.Module<Amplitude.Types.EventOptions>> {
   deps.analytics.init(apiKey, options)
 
   return {
-    track: ({event, properties}: TrackProperties) => {
-      deps.analytics.track(event, properties)
+    track: ({event, properties, options: eventOptions}) => {
+      deps.analytics.track(event, properties, eventOptions)
     },
     disable: () => {
       deps.analytics.setOptOut(true)
@@ -24,14 +24,14 @@ export function makeAmplitudeMetrics(
     enable: () => {
       deps.analytics.setOptOut(false)
     },
-    setUserId: (_: string) => {
+    setUserId: () => {
       throw new Error('Not supported for amplitude-node')
     },
-    setDeviceId: (_: string) => {
+    setDeviceId: () => {
       throw new Error('Not supported for amplitude-node')
     },
-    setSessionId: (_: number) => {
+    setSessionId: () => {
       throw new Error('Not supported for amplitude-node')
     },
-  } as const
+  } as const as Metrics.Module<Amplitude.Types.EventOptions>
 }

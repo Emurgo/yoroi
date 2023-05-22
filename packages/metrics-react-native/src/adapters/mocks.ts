@@ -1,18 +1,13 @@
-import {
-  MetricsFactoryOptions,
-  Metrics,
-  TrackProperties,
-  MetricsStorage,
-} from '@yoroi/types'
+import {Metrics} from '@yoroi/types'
 
 export function makeMockMetrics({
   apiKey,
   initialUserId,
   options,
-}: MetricsFactoryOptions<any>): Metrics {
-  console.debug('[metrics-react-native] mock ', apiKey, initialUserId, options)
+}: Metrics.FactoryOptions<any>): Metrics.Module<any> {
+  console.debug('[metrics-react-native] mock', apiKey, initialUserId, options)
   return {
-    track: (args: TrackProperties) => {
+    track: (args: Metrics.Track<any>) => {
       console.debug('[metrics-react-native] makeMockMetrics track', args)
     },
     disable: () => {
@@ -39,7 +34,7 @@ export function makeMockMetrics({
   }
 }
 
-export function makeMockMetricsStorage(): MetricsStorage {
+export function makeMockMetricsStorage(): Metrics.Storage {
   return {
     enabled: {
       read: async () => {

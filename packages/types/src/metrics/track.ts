@@ -1,13 +1,6 @@
-export type Track<
-  EventNames extends string,
-  EventName extends EventNames,
-  Properties = {} | undefined,
-> = Properties extends undefined
-  ? {
-      event: EventName
-      properties?: never
-    }
-  : {
-      event: EventName
-      properties: Properties
-    }
+import {MetricsNftTrack} from './nft'
+import {MetricsWalletTrack} from './wallet'
+
+export type MetricsTrack<T> = (MetricsNftTrack | MetricsWalletTrack) & {
+  options?: T
+}

@@ -1,14 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {MetricsStorage} from '@yoroi/types'
+import {Metrics} from '@yoroi/types'
 
 const initialDeps = {storage: AsyncStorage} as const
 
 export function makeMetricsStorage(
   deps = initialDeps,
-): Readonly<MetricsStorage> {
+): Readonly<Metrics.Storage> {
   return {
     enabled: {
-      save: (enabled: boolean) =>
+      save: (enabled) =>
         deps.storage.setItem(metricsStorageEnabledKey, JSON.stringify(enabled)),
       read: () =>
         deps.storage
@@ -16,7 +16,7 @@ export function makeMetricsStorage(
           .then((value) => parseBoolean(value) ?? false),
       remove: () => deps.storage.removeItem(metricsStorageEnabledKey),
     },
-  } as const
+  } as const as Metrics.Storage
 }
 
 export const metricsStorageEnabledKey = 'metrics-enabled'

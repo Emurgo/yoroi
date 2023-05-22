@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {MetricsStorage} from '@yoroi/types'
+import {Metrics} from '@yoroi/types'
 
 import {makeMetricsStorage, metricsStorageEnabledKey} from './storage'
 
@@ -8,7 +8,7 @@ jest.mock('@react-native-async-storage/async-storage')
 const mockedAsyncStorage = AsyncStorage as jest.Mocked<typeof AsyncStorage>
 
 describe('makeMetricsStorage', () => {
-  let metricsStorage: MetricsStorage
+  let metricsStorage: Metrics.Storage
 
   beforeEach(() => {
     metricsStorage = makeMetricsStorage()

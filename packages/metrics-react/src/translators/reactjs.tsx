@@ -6,7 +6,8 @@ import {
   useQueryClient,
   useMutation,
 } from 'react-query'
-import {Metrics, MetricsStorage} from '@yoroi/types'
+import {Metrics} from '@yoroi/types'
+import * as Amplitude from '@amplitude/analytics-browser'
 
 import {makeMockMetrics, makeMockMetricsStorage} from '../adapters/mocks'
 import {metricsStorageEnabledKey} from '../adapters/storage'
@@ -19,7 +20,10 @@ type MetricsActions = {
 }
 
 type MetricsProvider = React.PropsWithChildren<
-  MetricsState & MetricsActions & Metrics & MetricsStorage
+  MetricsState &
+    MetricsActions &
+    Metrics.Module<Amplitude.Types.EventOptions> &
+    Metrics.Storage
 >
 
 const defaultState: MetricsState = {
@@ -27,12 +31,13 @@ const defaultState: MetricsState = {
 } as const
 const defaultActions: MetricsActions = {
   sessionIdChanged: (_sessionId: number) =>
-    console.error('[metrics] missing initialization'),
+    console.error('[metrics-react] missing initialization'),
 } as const
-const defaultMetrics: Metrics = makeMockMetrics({
-  apiKey: 'mocked-api-key',
-})
-const defaultStorage: MetricsStorage = makeMockMetricsStorage()
+const defaultMetrics: Metrics.Module<Amplitude.Types.EventOptions> =
+  makeMockMetrics({
+    apiKey: 'mocked-api-key',
+  })
+const defaultStorage: Metrics.Storage = makeMockMetricsStorage()
 const initialMetricsProvider: MetricsProvider = {
   ...defaultState,
   ...defaultActions,
@@ -48,7 +53,7 @@ export const useMetrics = () => {
   const value = React.useContext(MetricsContext)
   if (!value) {
     throw new Error(
-      '[metrics] useMetrics must be used within a MetricsProvider',
+      '[metrics-react] useMetrics must be used within a MetricsProvider',
     )
   }
   return value
@@ -61,8 +66,8 @@ export const MetricsProvider = ({
   initialState,
 }: {
   children: React.ReactNode
-  metrics: Readonly<Metrics>
-  storage: Readonly<MetricsStorage>
+  metrics: Readonly<Metrics.Module<Amplitude.Types.EventOptions>>
+  storage: Readonly<Metrics.Storage>
   initialState?: Readonly<Partial<MetricsState>>
 }) => {
   const [state, dispatch] = React.useReducer(metricsReducer, {
@@ -97,13 +102,13 @@ function metricsReducer(state: MetricsState, action: MetricsAction) {
       return {...state, sessionId}
 
     default:
-      throw new Error('[metrics] metricsReducer invalid action')
+      throw new Error('[metrics-react] metricsReducer invalid action')
   }
 }
 
 // * === SETTINGS ===
 // * NOTE maybe it should be moved as part of wallet settings package
-export const useSendMetricsEnabled = (storage: MetricsStorage) => {
+export const useSendMetricsEnabled = (storage: Metrics.Storage) => {
   const query = useQuery({
     suspense: true,
     queryKey: [metricsStorageEnabledKey],
@@ -111,13 +116,13 @@ export const useSendMetricsEnabled = (storage: MetricsStorage) => {
   })
 
   if (query.data == null)
-    throw new Error('[metrics] useCrashReportsEnabled invalid state')
+    throw new Error('[metrics-react] useCrashReportsEnabled invalid state')
 
   return query.data
 }
 
 export const useSetSendMetricsEnabled = (
-  storage: MetricsStorage,
+  storage: Metrics.Storage,
   options?: UseMutationOptions<void, Error, boolean>,
 ) => {
   const mutation = useMutationWithInvalidations<void, Error, boolean>({
@@ -131,7 +136,7 @@ export const useSetSendMetricsEnabled = (
 }
 
 // * NOTE it should be changed to consume the storage from the hooks package
-export const useMetricsSettings = (storage: MetricsStorage) => {
+export const useMetricsSettings = (storage: Metrics.Storage) => {
   const set = useSetSendMetricsEnabled(storage)
   const enabled = useSendMetricsEnabled(storage)
   const metrics = useMetrics()
