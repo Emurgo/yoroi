@@ -124,7 +124,6 @@ export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 const networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
 const implementationId = WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 
-export default ByronWallet
 export class ByronWallet implements YoroiWallet {
   readonly primaryToken: DefaultAsset
   readonly primaryTokenInfo: TokenInfo

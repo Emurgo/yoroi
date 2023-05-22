@@ -1,8 +1,10 @@
 import React from 'react'
-import {ActivityIndicator} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import Markdown from 'react-native-markdown-display'
 import {useQuery} from 'react-query'
 
+import {Spacer} from '../../components'
+import {theme} from '../../theme'
 import {loadTOS} from './loadTos'
 
 export const useTos = ({languageCode}: {languageCode: string}) => {
@@ -16,6 +18,33 @@ export const useTos = ({languageCode}: {languageCode: string}) => {
 
 export const TermsOfService = ({languageCode}: {languageCode: string}) => {
   const tos = useTos({languageCode})
-  // @ts-expect-error old react
-  return tos != null ? <Markdown>{tos}</Markdown> : <ActivityIndicator size="large" color="black" />
+
+  return tos != null ? (
+    <View>
+      <Spacer height={16} />
+
+      {/* @ts-expect-error old react */}
+      <Markdown style={styles}>{tos}</Markdown>
+    </View>
+  ) : (
+    <ActivityIndicator size="large" color="black" />
+  )
 }
+
+const styles = StyleSheet.create({
+  paragraph: {
+    ...theme.text,
+  },
+  heading1: {
+    ...theme.text,
+    fontSize: 20,
+    lineHeight: 24,
+    fontWeight: 'bold',
+  },
+  heading2: {
+    ...theme.text,
+    fontSize: 16,
+    lineHeight: 20,
+    fontWeight: 'bold',
+  },
+})
