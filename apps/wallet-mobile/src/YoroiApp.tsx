@@ -11,6 +11,7 @@ import {QueryClient, QueryClientProvider} from 'react-query'
 import {AuthProvider} from './auth/AuthProvider'
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
+import {features} from './features'
 import {LanguageProvider} from './i18n'
 import {InitApp} from './InitApp'
 import {CONFIG} from './legacy/config'
@@ -37,7 +38,9 @@ setLogLevel(CONFIG.LOG_LEVEL)
 if (Boolean(Config.DISABLE_LOGBOX)) LogBox.ignoreAllLogs()
 
 const queryClient = new QueryClient()
-const amplitudeClient = getMetricsFactory('amplitude')({apiKey: Config.AMPLITUDE_API_KEY ?? ''})
+const amplitudeClient = getMetricsFactory(features.analytics ? 'amplitude' : 'mock')({
+  apiKey: Config.AMPLITUDE_API_KEY ?? '',
+})
 const metricsStorage = makeMetricsStorage()
 
 export const YoroiApp = () => {
