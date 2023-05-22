@@ -1,6 +1,6 @@
 import {features} from '../../features'
 import {getAssetFingerprint} from '../../legacy/format'
-import {YoroiNft} from '../types'
+import {TokenInfo} from '../types'
 import {hasProperties, isArray, isArrayOfType, isRecord, isString} from '../utils'
 import {utf8ToHex} from './api/utils'
 
@@ -9,7 +9,7 @@ export const convertNft = (options: {
   storageUrl: string
   policyId: string
   shortName: string
-}): YoroiNft => {
+}): TokenInfo => {
   const {metadata, storageUrl, policyId, shortName} = options
   const assetNameHex = utf8ToHex(shortName)
   const fingerprint = getAssetFingerprint(policyId, assetNameHex)
@@ -20,19 +20,22 @@ export const convertNft = (options: {
 
   const id = `${policyId}.${assetNameHex}`
   const name = isRecord(metadata) && isString(metadata.name) ? metadata.name : shortName
+  const image = features.moderatingNftsEnabled ? `${storageUrl}/${fingerprint}.jpeg` : convertedImage
+  const thumbnail = features.moderatingNftsEnabled ? `${storageUrl}/p_${fingerprint}.jpeg` : convertedImage
 
   return {
+    kind: 'nft',
     id,
     fingerprint,
     name,
     description,
-    thumbnail: features.moderatingNftsEnabled ? `${storageUrl}/p_${fingerprint}.jpeg` : convertedImage,
-    logo: features.moderatingNftsEnabled ? `${storageUrl}/${fingerprint}.jpeg` : convertedImage,
-    metadata: {
-      policyId,
-      assetNameHex,
-      originalMetadata: metadata,
-    },
+    group: policyId,
+    decimals: undefined,
+    ticker: shortName,
+    icon: thumbnail,
+    image,
+    symbol: undefined,
+    metadatas: {mintNft: metadata},
   }
 }
 
@@ -45,8 +48,8 @@ export const isSvgMediaType = (mediaType: unknown): boolean => {
   return mediaType === 'image/svg+xml'
 }
 
-export const getNftFilenameMediaType = (nft: YoroiNft, filename: string): string | undefined => {
-  const originalMetadata = isRecord(nft.metadata.originalMetadata) ? nft.metadata.originalMetadata : undefined
+export const getNftFilenameMediaType = (nft: TokenInfo, filename: string): string | undefined => {
+  const originalMetadata = isRecord(nft.metadatas.mintNft) ? nft.metadatas.mintNft : undefined
   const files = originalMetadata?.files ?? []
   if (!isArray(files)) return undefined
 

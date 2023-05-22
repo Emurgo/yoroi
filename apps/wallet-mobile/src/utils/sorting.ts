@@ -1,10 +1,28 @@
 import {YoroiWallet} from '../yoroi-wallets/cardano/types'
 import {TokenInfo} from '../yoroi-wallets/types'
 
-export const sortTokenInfos = ({wallet, tokenInfos}: {wallet: YoroiWallet; tokenInfos: Array<TokenInfo>}) =>
+export const sortTokenInfos = ({wallet, tokenInfos}: {wallet: YoroiWallet; tokenInfos: TokenInfo[]}): TokenInfo[] =>
   tokenInfos
-    .sort(alpha((tokenInfo) => tokenInfo.ticker?.toLocaleLowerCase() ?? tokenInfo.name?.toLocaleLowerCase() ?? ''))
-    .sort(toEnd((tokenInfo) => !tokenInfo.name && !tokenInfo.ticker))
+    .sort(
+      alpha((tokenInfo) => {
+        switch (tokenInfo.kind) {
+          case 'ft':
+            return tokenInfo.ticker?.toLocaleLowerCase() ?? tokenInfo.name?.toLocaleLowerCase() ?? ''
+          case 'nft':
+            return tokenInfo.name?.toLocaleLowerCase() ?? ''
+        }
+      }),
+    )
+    .sort(
+      toEnd((tokenInfo) => {
+        switch (tokenInfo.kind) {
+          case 'ft':
+            return !tokenInfo.ticker && !tokenInfo.name
+          case 'nft':
+            return !tokenInfo.name
+        }
+      }),
+    )
     .sort(toStart((tokenInfo) => tokenInfo.id === wallet.primaryTokenInfo.id))
 
 // prettier-ignore

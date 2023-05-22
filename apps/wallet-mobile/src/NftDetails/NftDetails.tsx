@@ -14,7 +14,7 @@ import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useNft} from '../yoroi-wallets/hooks'
-import {YoroiNft} from '../yoroi-wallets/types'
+import {TokenInfo} from '../yoroi-wallets/types'
 import {isRecord, isString} from '../yoroi-wallets/utils'
 
 export const NftDetails = () => {
@@ -59,7 +59,7 @@ export const NftDetails = () => {
   )
 }
 
-const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
+const UnModeratedNftImage = ({nft}: {nft: TokenInfo}) => {
   const navigateTo = useNavigateTo()
   return (
     <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
@@ -68,7 +68,7 @@ const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   )
 }
 
-const ModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
+const ModeratedNftImage = ({nft}: {nft: TokenInfo}) => {
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const {status} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
@@ -105,7 +105,7 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
   )
 }
 
-const NftOverview = ({nft}: {nft: YoroiNft}) => {
+const NftOverview = ({nft}: {nft: TokenInfo}) => {
   const strings = useStrings()
 
   return (
@@ -122,9 +122,9 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
 
       <HR />
 
-      {isRecord(nft.metadata.originalMetadata) && (
+      {isRecord(nft.metadatas.mintNft) && (
         <MetadataRow title={strings.author}>
-          <Text secondary>{normalizeMetadataString(nft.metadata.originalMetadata.author)}</Text>
+          <Text secondary>{normalizeMetadataString(nft.metadatas.mintNft.author)}</Text>
         </MetadataRow>
       )}
 
@@ -136,8 +136,8 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
 
       <HR />
 
-      <MetadataRow title={strings.policyId} copyText={nft.metadata.policyId}>
-        <Text secondary>{nft.metadata.policyId}</Text>
+      <MetadataRow title={strings.policyId} copyText={nft.group}>
+        <Text secondary>{nft.group}</Text>
       </MetadataRow>
 
       <HR />
@@ -184,9 +184,9 @@ const HR = () => (
   />
 )
 
-const NftMetadata = ({nft}: {nft: YoroiNft}) => {
+const NftMetadata = ({nft}: {nft: TokenInfo}) => {
   const strings = useStrings()
-  const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
+  const stringifiedMetadata = JSON.stringify(nft.metadatas.mintNft, undefined, 2)
 
   return (
     <View>
