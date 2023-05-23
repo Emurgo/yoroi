@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AssetFingerprint from '@emurgo/cip14-js'
 import {BigNumber} from 'bignumber.js'
-import moment from 'moment'
 import type {IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
 
@@ -147,25 +146,60 @@ export const formatAdaWithText = (amount: Quantity, defaultAsset: DefaultAsset) 
   return `${formatAda(amount, defaultAsset)}${utfSymbols.NBSP}${defaultAssetMeta.ticker}`
 }
 
-export const formatTimeToSeconds = (ts: string | any) => {
-  return moment(ts).format((moment(0) as any)._locale._format.timeToSeconds)
-}
-
-export const formatDateToSeconds = (ts: string | any) => {
-  return moment(ts).format((moment(0) as any)._locale._format.dateToSeconds)
-}
-
-export const formatDateRelative = (ts: string | any, intl: IntlShape) => {
-  const config = {
-    sameDay: `[${intl.formatMessage(messages.today)}]`,
-    lastDay: `[${intl.formatMessage(messages.yesterday)}]`,
-    nextDay: 'L',
-    // we don't really have dates in future
-    lastWeek: 'L',
-    nextWeek: 'L',
-    sameElse: 'L',
+export const formatTime = (timestamp: string, intl: IntlShape) => {
+  if (timestamp.length === 0) {
+    return ''
   }
-  return moment(ts).calendar(null, config)
+  return intl.formatTime(new Date(timestamp), {
+    timeStyle: 'medium',
+  })
+}
+
+export const formatDateAndTime = (timestamp: string, intl: IntlShape) => {
+  if (timestamp.length === 0) {
+    return ''
+  }
+  return intl.formatDate(new Date(timestamp), {
+    dateStyle: 'long',
+    timeStyle: 'medium',
+  })
+}
+
+export const formatDateRelative = (timestamp: string, intl: IntlShape) => {
+  if (timestamp.length === 0) {
+    return ''
+  }
+  const inputDateString = getDateString(new Date(timestamp))
+  const today = getToday()
+  const yesterday = getYesterday()
+
+  if (inputDateString === today) {
+    return intl.formatMessage(messages.today)
+  }
+
+  if (inputDateString === yesterday) {
+    return intl.formatMessage(messages.yesterday)
+  }
+
+  return intl.formatDate(new Date(timestamp), {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  })
+}
+
+function getDateString(date: Date) {
+  return date.toISOString().split('T')[0]
+}
+
+function getYesterday() {
+  const date = new Date()
+  date.setDate(date.getDate() - 1)
+  return getDateString(date)
+}
+
+function getToday() {
+  return getDateString(new Date())
 }
 
 const messages = defineMessages({
