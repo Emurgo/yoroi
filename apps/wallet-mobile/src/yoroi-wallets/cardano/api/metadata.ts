@@ -1,17 +1,19 @@
 import {z} from 'zod'
 
-import {BackendConfig, NFTAsset, YoroiNft} from '../../types'
+import {BackendConfig, NFTAsset, TokenInfo} from '../../types'
 import {createTypeGuardFromSchema, isArray, isNonNullable, isRecord} from '../../utils'
 import {convertNft} from '../nfts'
 import {fetchTokensSupplies} from './assetSuply'
 import fetchDefault from './fetch'
+import {toAssetNameHex, toPolicyId} from './utils'
 
-export const getNFTs = async (ids: string[], config: BackendConfig): Promise<YoroiNft[]> => {
+export const getNFTs = async (ids: string[], config: BackendConfig): Promise<TokenInfo[]> => {
   if (ids.length === 0) {
     return []
   }
   const assets = ids.map((id) => {
-    const [policy, nameHex] = id.split('.')
+    const policy = toPolicyId(id)
+    const nameHex = toAssetNameHex(id)
     return {policy, nameHex}
   })
 
@@ -23,18 +25,22 @@ export const getNFTs = async (ids: string[], config: BackendConfig): Promise<Yor
   ])
 
   const possibleNfts = parseNFTs(assetMetadatas, config.NFT_STORAGE_URL)
-
   return possibleNfts.filter((nft) => assetSupplies[nft.id] === 1)
 }
 
-export const parseNFTs = (value: unknown, storageUrl: string): YoroiNft[] => {
+export const getNFT = async (id: string, config: BackendConfig): Promise<TokenInfo | null> => {
+  const [nft] = await getNFTs([id], config)
+  return nft || null
+}
+
+export const parseNFTs = (value: unknown, storageUrl: string): TokenInfo[] => {
   if (!isRecord(value)) {
     throw new Error('Invalid response. Expected to receive object when parsing NFTs')
   }
 
   const identifiers = Object.keys(value)
 
-  const tokens: Array<YoroiNft | null> = identifiers.map((id) => {
+  const tokens: Array<TokenInfo | null> = identifiers.map((id) => {
     const assets = value[id]
     if (!isArray(assets)) {
       return null

@@ -5,8 +5,17 @@ export const filterBySearch = (searchTerm: string) => {
   if (searchTermLowerCase.length === 0) return () => true
 
   return (tokenInfo: TokenInfo) => {
-    const name = tokenInfo.ticker?.toLocaleLowerCase() ?? tokenInfo.name?.toLocaleLowerCase() ?? null
-    if (name !== null) return name.toLowerCase().includes(searchTermLowerCase)
+    if (tokenInfo.kind === 'ft') {
+      return (
+        (tokenInfo.ticker?.toLocaleLowerCase()?.includes(searchTermLowerCase) ||
+          tokenInfo.name?.toLocaleLowerCase()?.includes(searchTermLowerCase)) ??
+        false
+      )
+    }
+
+    if (tokenInfo.kind === 'nft') {
+      return tokenInfo.name?.toLocaleLowerCase().includes(searchTermLowerCase) ?? false
+    }
     return false
   }
 }

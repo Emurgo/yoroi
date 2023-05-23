@@ -4,28 +4,32 @@ import {filterBySearch} from './filterBySearch'
 describe('filterBySearch', () => {
   const fakeToken1: TokenInfo = {
     id: '',
+    kind: 'ft',
     name: 'TADANAME',
-    decimals: 6,
     description: 'Cardano',
-    ticker: undefined,
-    symbol: '₳',
-    logo: '',
-    url: '',
     fingerprint: '',
+    image: '',
     group: '',
+    icon: '',
+    ticker: '',
+    decimals: 6,
+    symbol: undefined,
+    metadatas: {},
   } as const
 
   const fakeToken2: TokenInfo = {
-    decimals: 0,
-    description: '',
-    fingerprint: 'asset1nvcwnq60jnm27efjm87xnhqt6alsv024tdyxjm',
-    group: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d',
+    kind: 'ft',
     id: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
-    logo: undefined,
-    name: undefined,
-    symbol: undefined,
+    fingerprint: 'asset1nvcwnq60jnm27efjm87xnhqt6alsv024tdyxjm',
+    name: '',
+    description: '',
+    decimals: 0,
     ticker: 'TADATICKER',
-    url: undefined,
+    icon: '',
+    group: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d',
+    image: '',
+    symbol: undefined,
+    metadatas: {},
   }
 
   const tokenInfos: TokenInfo[] = [fakeToken1, fakeToken2]

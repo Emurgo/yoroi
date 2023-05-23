@@ -9,11 +9,11 @@ storiesOf('NftPreview', module)
   .add('Showing a placeholder', () => <NftPreview nft={nft} showPlaceholder width={200} height={200} />)
   .add('Blurred image except SVG', () => <NftPreview nft={nft} width={200} height={200} blurRadius={20} />)
   .add('Showing an SVG', () => (
-    <NftPreview nft={{...nft, logo: 'https://www.svgrepo.com/show/501883/ice-cream.svg'}} width={200} height={200} />
+    <NftPreview nft={{...nft, image: 'https://www.svgrepo.com/show/501883/ice-cream.svg'}} width={200} height={200} />
   ))
   .add('Showing an SVG with blur radius enabled', () => (
     <NftPreview
-      nft={{...nft, logo: 'https://www.svgrepo.com/show/501883/ice-cream.svg'}}
+      nft={{...nft, image: 'https://www.svgrepo.com/show/501883/ice-cream.svg'}}
       width={200}
       height={200}
       blurRadius={5}
@@ -21,7 +21,7 @@ storiesOf('NftPreview', module)
   ))
   .add('Showing NFT thumbnail', () => (
     <NftPreview
-      nft={{...nft, thumbnail: 'https://www.svgrepo.com/show/501883/ice-cream.svg'}}
+      nft={{...nft, icon: 'https://www.svgrepo.com/show/501883/ice-cream.svg'}}
       showThumbnail
       width={200}
       height={200}
@@ -31,9 +31,8 @@ storiesOf('NftPreview', module)
     <NftPreview
       nft={{
         ...nft,
-        metadata: {
-          ...nft.metadata,
-          originalMetadata: {
+        metadatas: {
+          mintNft: {
             name: 'NFT 0',
             description: 'NFT 0 description',
             files: {

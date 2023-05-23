@@ -6,7 +6,7 @@ import {SvgUri} from 'react-native-svg'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
 import {getNftFilenameMediaType, getNftMainImageMediaType, isSvgMediaType} from '../../yoroi-wallets/cardano/nfts'
-import {YoroiNft} from '../../yoroi-wallets/types'
+import {TokenInfo} from '../../yoroi-wallets/types'
 import {isString} from '../../yoroi-wallets/utils'
 
 export const NftPreview = ({
@@ -19,7 +19,7 @@ export const NftPreview = ({
   resizeMode,
   blurRadius,
 }: {
-  nft: YoroiNft
+  nft: TokenInfo
   showPlaceholder?: boolean
   style?: StyleProp<ImageStyle>
   showThumbnail?: boolean
@@ -30,7 +30,7 @@ export const NftPreview = ({
 }) => {
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(true)
-  const uri = showThumbnail ? nft.thumbnail : nft.logo
+  const uri = showThumbnail ? nft.icon : nft.image
   const isUriSvg =
     isString(uri) &&
     (uri.toLowerCase().endsWith('.svg') ||

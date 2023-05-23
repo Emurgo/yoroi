@@ -1,24 +1,36 @@
 import {z} from 'zod'
 
-import {Logger} from '../../logging'
+import {promiseAny} from '../../../utils'
+import {BackendConfig, TokenInfo} from '../../types'
 import {createTypeGuardFromSchema} from '../../utils'
 import {checkedFetch} from './fetch'
+import {getNFT} from './metadata'
 import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
 
-export const getTokenInfo = async (tokenId: string, apiUrl: string) => {
-  const response = await checkedFetch({
+export const getTokenInfo = async (tokenId: string, apiUrl: string, config: BackendConfig): Promise<TokenInfo> => {
+  const nftPromise = getNFT(tokenId, config).then((nft) => {
+    if (!nft) throw new Error('NFT not found')
+    return nft
+  })
+
+  const tokenPromise = checkedFetch({
     endpoint: `${apiUrl}/${toTokenSubject(tokenId)}`,
     method: 'GET',
     payload: undefined,
-  }).catch((error) => {
-    Logger.error(error)
-
-    return undefined
   })
+    .then((response) => (response ? parseTokenRegistryEntry(response) : null))
+    .then((entry) => (entry ? tokenInfo(entry) : null))
+    .then((token) => {
+      if (!token) throw new Error('Token not found')
+      return token
+    })
 
-  const entry = parseTokenRegistryEntry(response)
-
-  return entry ? tokenInfo(entry) : fallbackTokenInfo(tokenId)
+  try {
+    const result = await promiseAny<TokenInfo>([nftPromise, tokenPromise])
+    return result ?? fallbackTokenInfo(tokenId)
+  } catch (e) {
+    return fallbackTokenInfo(tokenId)
+  }
 }
 
 const parseTokenRegistryEntry = (data: unknown) => {
