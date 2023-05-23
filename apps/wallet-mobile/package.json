@@ -150,7 +150,8 @@
     "url": "^0.11.0",
     "util": "0.12.4",
     "uuid": "^3.3.2",
-    "vm-browserify": "1.1.2"
+    "vm-browserify": "1.1.2",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.15.7",

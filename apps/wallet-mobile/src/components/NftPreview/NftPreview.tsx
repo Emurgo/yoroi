@@ -5,9 +5,9 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {SvgUri} from 'react-native-svg'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
-import {getNftFilenameMediaType, isSvgMediaType} from '../../yoroi-wallets/cardano/nfts'
+import {getNftFilenameMediaType, getNftMainImageMediaType, isSvgMediaType} from '../../yoroi-wallets/cardano/nfts'
 import {TokenInfo} from '../../yoroi-wallets/types'
-import {isRecord, isString} from '../../yoroi-wallets/utils'
+import {isString} from '../../yoroi-wallets/utils'
 
 export const NftPreview = ({
   nft,
@@ -34,8 +34,9 @@ export const NftPreview = ({
   const isUriSvg =
     isString(uri) &&
     (uri.toLowerCase().endsWith('.svg') ||
-      (isRecord(nft.metadatas.mintNft) && isSvgMediaType(nft.metadatas.mintNft?.mediaType)) ||
+      isSvgMediaType(getNftMainImageMediaType(nft)) ||
       isSvgMediaType(getNftFilenameMediaType(nft, uri)))
+
   const shouldShowPlaceholder = !isString(uri) || showPlaceholder || (isUriSvg && blurRadius !== undefined) || error
 
   useEffect(() => {
