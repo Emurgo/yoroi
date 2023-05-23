@@ -165,8 +165,8 @@ export const formatDateAndTime = (timestamp: string, intl: IntlShape) => {
   })
 }
 
-export const formatDateRelative = (ts: string | any, intl: IntlShape) => {
-  const inputDateString = getDateString(new Date(ts))
+export const formatDateRelative = (timestamp: string, intl: IntlShape) => {
+  const inputDateString = getDateString(new Date(timestamp))
   const today = getToday()
   const yesterday = getYesterday()
 
@@ -178,7 +178,7 @@ export const formatDateRelative = (ts: string | any, intl: IntlShape) => {
     return intl.formatMessage(messages.yesterday)
   }
 
-  return intl.formatDate(new Date(ts), {
+  return intl.formatDate(new Date(timestamp), {
     year: 'numeric',
     month: 'numeric',
     day: 'numeric',
