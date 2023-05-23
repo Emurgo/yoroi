@@ -166,9 +166,9 @@ export const formatDateAndTime = (timestamp: string, intl: IntlShape) => {
 }
 
 export const formatDateRelative = (ts: string | any, intl: IntlShape) => {
-  const inputDateString = new Date(ts).toDateString()
-  const today = new Date().toDateString()
-  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString()
+  const inputDateString = getDateString(new Date(ts))
+  const today = getToday()
+  const yesterday = getYesterday()
 
   if (inputDateString === today) {
     return intl.formatMessage(messages.today)
@@ -183,6 +183,20 @@ export const formatDateRelative = (ts: string | any, intl: IntlShape) => {
     month: 'numeric',
     day: 'numeric',
   })
+}
+
+function getDateString(date: Date) {
+  return date.toISOString().split('T')[0]
+}
+
+function getYesterday() {
+  const date = new Date()
+  date.setDate(date.getDate() - 1)
+  return getDateString(date)
+}
+
+function getToday() {
+  return getDateString(new Date())
 }
 
 const messages = defineMessages({
