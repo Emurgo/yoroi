@@ -1,5 +1,5 @@
 import {nft} from '../yoroi-wallets/mocks'
-import {YoroiNft} from '../yoroi-wallets/types'
+import {TokenInfo} from '../yoroi-wallets/types'
 import {filterNfts} from './filterNfts'
 
 describe('filterNfts', () => {
@@ -7,7 +7,7 @@ describe('filterNfts', () => {
   const boredMonkey = {...nft, id: '1', fingerprint: 'fakefingerprint2', name: 'Bored Monkey #4567'}
   const appleBlocks = {...nft, id: '2', fingerprint: 'fakefingerprint3', name: 'Apple Blocks #7890'}
 
-  const nfts: YoroiNft[] = [cryptoWolf, boredMonkey, appleBlocks]
+  const nfts: TokenInfo[] = [cryptoWolf, boredMonkey, appleBlocks]
 
   it('filters NFTs correctly with case-insensitive search term', () => {
     const filteredNfts = filterNfts('APple bLOcks', nfts)

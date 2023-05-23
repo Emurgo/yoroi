@@ -41,20 +41,6 @@ export type DefaultAsset = Token & {
   metadata: DefaultAssetMetadata
 }
 
-export type TokenInfo = {
-  id: string
-  group: string // policyId
-  decimals: number // default to 0
-  fingerprint: string
-
-  name: string | undefined // derived from token subject
-  description: string | undefined
-  ticker: string | undefined
-  symbol: string | undefined
-  url: string | undefined
-  logo: string | undefined
-}
-
 export type LegacyToken = {
   networkId: NetworkId
   isDefault: boolean
@@ -63,14 +49,36 @@ export type LegacyToken = {
 }
 
 export type AssetMetadata = {
-  [policyID: string]:
-    | {
-        [assetNameHex: string]: unknown
-      }
-    | undefined
+  [policyID: string]: {[assetNameHex: string]: unknown} | undefined
 }
 
 export type NFTAsset = {
   key: '721'
   metadata: AssetMetadata
 }
+
+export type TokenInfo = {
+  kind: 'ft' | 'nft'
+  id: string
+  group: string
+  fingerprint: string
+  image: string | undefined
+  icon: string | undefined
+  decimals: number | undefined
+  symbol: string | undefined
+  name: string
+  description: string | undefined
+  ticker: string | undefined
+  metadatas: {mintNft?: NftMetadata; mintFt?: FtMetadata; tokenRegistry?: FtMetadata}
+}
+
+type FtMetadata = {
+  description: string | Array<string> | undefined
+  icon: string | Array<string> | undefined
+  decimals: number | undefined
+  ticker: string | undefined
+  url: string | undefined
+  version: string | undefined
+}
+
+export type NftMetadata = unknown

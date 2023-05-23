@@ -25,7 +25,6 @@ import type {
   TxStatusRequest,
   TxStatusResponse,
   YoroiEntry,
-  YoroiNft,
   YoroiNftModerationStatus,
 } from '../../types'
 import {Quantity, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
@@ -890,7 +889,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     fetchTokenInfo(tokenId: string) {
       return tokenId === '' || tokenId === 'ADA'
         ? Promise.resolve(PRIMARY_TOKEN_INFO)
-        : api.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`)
+        : api.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`, BACKEND)
     }
 
     async fetchFundInfo(): Promise<FundInfoResponse> {
@@ -907,11 +906,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
       return api.fetchCurrentPrice(symbol, BACKEND)
-    }
-
-    // TODO: caching
-    fetchNfts(ids): Promise<YoroiNft[]> {
-      return api.getNFTs(ids, BACKEND)
     }
 
     // TODO: caching
