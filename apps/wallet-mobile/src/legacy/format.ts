@@ -129,12 +129,18 @@ export const formatAdaWithText = (amount: Quantity, defaultAsset: DefaultAsset) 
 }
 
 export const formatTime = (timestamp: string, intl: IntlShape) => {
+  if (timestamp.length === 0) {
+    return ''
+  }
   return intl.formatTime(new Date(timestamp), {
     timeStyle: 'medium',
   })
 }
 
 export const formatDateAndTime = (timestamp: string, intl: IntlShape) => {
+  if (timestamp.length === 0) {
+    return ''
+  }
   return intl.formatDate(new Date(timestamp), {
     dateStyle: 'long',
     timeStyle: 'medium',
