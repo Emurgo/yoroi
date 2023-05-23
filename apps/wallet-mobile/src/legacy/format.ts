@@ -166,6 +166,9 @@ export const formatDateAndTime = (timestamp: string, intl: IntlShape) => {
 }
 
 export const formatDateRelative = (timestamp: string, intl: IntlShape) => {
+  if (timestamp.length === 0) {
+    return ''
+  }
   const inputDateString = getDateString(new Date(timestamp))
   const today = getToday()
   const yesterday = getYesterday()
