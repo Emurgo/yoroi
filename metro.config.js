@@ -13,7 +13,6 @@ module.exports = {
     sourceExts: ["js", "jsx", "ts", "tsx", "json", "md"],
     assetExts: ["png", "jpg", "jpeg", "ttf", "otf", "woff", "woff2"],
     extraNodeModules: {
-      buffer: require.resolve("@craftzdog/react-native-buffer"),
       crypto: require.resolve("react-native-crypto"),
       stream: require.resolve("stream-browserify"),
       url: require.resolve("url"),
