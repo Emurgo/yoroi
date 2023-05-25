@@ -1,13 +1,12 @@
-import {useNavigation} from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
 import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Button, Spacer} from '../../../../components'
-import {TxHistoryRouteNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
+import {useNavigateTo} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
 import {useStrings} from '../../common/strings'
 import {InputMemo, maxMemoLength} from './InputMemo'
@@ -24,7 +23,7 @@ export const StartMultiTokenTxScreen = () => {
 
   const {targets, selectedTargetIndex, receiverChanged, memo, memoChanged, addressChanged} = useSend()
   const {address, amounts} = targets[selectedTargetIndex].entry
-  const shouldOpenSelectToken = Object.keys(amounts).length === 0
+  const shouldOpenAddToken = Object.keys(amounts).length === 0
   const receiver = targets[selectedTargetIndex].receiver
   const {error, isLoading} = useReceiver(
     {wallet, receiver},
@@ -42,8 +41,11 @@ export const StartMultiTokenTxScreen = () => {
   const isValid = isOnline && !hasPendingTx && _.isEmpty(error) && memo.length <= maxMemoLength && address.length > 0
 
   const onNext = () => {
-    navigateTo.selectedTokens()
-    if (shouldOpenSelectToken) navigateTo.addToken()
+    if (shouldOpenAddToken) {
+      navigateTo.addToken()
+    } else {
+      navigateTo.selectedTokens()
+    }
   }
 
   return (
@@ -86,15 +88,6 @@ export const StartMultiTokenTxScreen = () => {
 }
 
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
-
-const useNavigateTo = () => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-
-  return {
-    selectedTokens: () => navigation.navigate('send-list-amounts-to-send'),
-    addToken: () => navigation.navigate('send-select-token-from-list'),
-  }
-}
 
 const styles = StyleSheet.create({
   container: {
