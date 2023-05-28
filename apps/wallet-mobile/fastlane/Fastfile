@@ -31,6 +31,7 @@ platform :ios do
       plist_path: PLIST, # Path to info plist file, relative to xcodeproj
       app_identifier: NIGHTLY_BUNDLE_ID # The bundle identifier of your app 
     )
+
     update_info_plist(
       xcodeproj: XC_PROJECT,
       plist_path: PLIST,
@@ -62,11 +63,7 @@ platform :ios do
         output_name: "yoroi.ipa",
         export_options: {
           method: "app-store",
-          signingStyle: "automatic",
-          # signingStyle: "manual",
-          # provisioningProfiles: {
-          #     APP_ID => MY_PROFILE
-          # }
+          signingStyle: "automatic"
         },
       )
     rescue => e
@@ -76,7 +73,7 @@ platform :ios do
 
       raise 'Xcode build failed.'
     end
-    # build_app(workspace: "./yoroi.xcworkspace", scheme: "yoroi")
-    # upload_to_testflight(api_key: api_key, app_identifier: "com.emurgo.yoroi-nightly")
+
+    upload_to_testflight(api_key: api_key, app_identifier: "com.emurgo.yoroi-nightly")
   end
 end

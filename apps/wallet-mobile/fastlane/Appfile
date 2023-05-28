@@ -1,4 +1,3 @@
-app_identifier("org.reactjs.native.example.yoroi") # The bundle identifier of your app
 apple_id("tool-apple@anzens.com") # Your Apple Developer Portal username
 
 itc_team_id("119491519") # App Store Connect Team ID
