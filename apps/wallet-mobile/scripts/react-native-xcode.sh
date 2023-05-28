@@ -56,11 +56,13 @@ case "$CONFIGURATION" in
     ;;
 esac
 
-# Path to react-native folder inside node_modules
-REACT_NATIVE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # The project should be located next to where react-native is installed
 # in node_modules.
-PROJECT_ROOT=${PROJECT_ROOT:-"$REACT_NATIVE_DIR/../.."}${PACKAGE_DIR:-""}
+PROJECT_ROOT="$(pwd)/.."
+echo "======== PROJECT_ROOT $PROJECT_ROOT"
+# Path to react-native folder inside node_modules
+REACT_NATIVE_DIR="$(cd ../../../node_modules/react-native && pwd)"
+echo "======== REACT_NATIVE_DIR $REACT_NATIVE_DIR"
 
 cd "$PROJECT_ROOT" || exit
 
