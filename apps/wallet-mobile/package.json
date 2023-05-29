@@ -20,11 +20,10 @@
     "manage-translations": "node ./translations/translation-runner.js",
     "prettify": "prettier --write ./src ./e2e ./storybook ./translations --config .prettierrc",
     "purge-translations": "rimraf ./translations/messages",
-    "setup_configs": "react-native-schemes-manager all",
     "stag-android": "react-native run-android --variant=devDebug --appIdSuffix=staging",
     "stag-ios": "react-native run-ios --scheme=emurgo-staging --configuration=Debug",
     "prestart": "sb-rn-get-stories",
-    "start": "react-native start",
+    "start": "react-native start --reset-cache --verbose",
     "storybook:watch": "sb-rn-watcher",
     "test": "jest src",
     "tsc": "tsc --noEmit",
@@ -238,7 +237,6 @@
     "react-devtools-core": "4.26.1",
     "react-dom": "16.8.3",
     "react-intl-translations-manager": "^5.0.3",
-    "react-native-schemes-manager": "^1.0.5",
     "react-native-typescript-transformer": "^1.2.13",
     "react-test-renderer": "18.2.0",
     "sinon": "^13.0.1",
@@ -254,7 +252,7 @@
     "configurations": {
       "ios.release": {
         "binaryPath": "./ios/build/Build/Products/Release-iphonesimulator/emurgo.app",
-        "build": "xcodebuild -workspace ios/emurgo.xcworkspace -configuration release -scheme emurgo -sdk iphonesimulator -derivedDataPath ios/build",
+        "build": "xcodebuild -workspace ios/emurgo.xcworkspace -mode Release -scheme emurgo -sdk iphonesimulator -derivedDataPath ios/build",
         "type": "ios.simulator",
         "name": "iPhone 11"
       },
@@ -277,25 +275,12 @@
     }
   },
   "engine": {
-    "node": "~16.5.0",
+    "node": "~16.19.0",
     "npm": "~7.19.1"
   },
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs"
-    }
-  },
-  "xcodeSchemes": {
-    "Debug": [
-      "Staging.Debug"
-    ],
-    "Release": [
-      "Staging.Release"
-    ],
-    "settings": {
-      "fix-script": {
-        "nodeCommand": "$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli react-native xcode"
-      }
     }
   }
 }
