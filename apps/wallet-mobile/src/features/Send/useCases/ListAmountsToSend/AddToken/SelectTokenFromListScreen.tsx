@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
-import React from 'react'
+import React, {useCallback} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Boundary, Spacer, Text} from '../../../../../components'
@@ -34,13 +34,14 @@ export const SelectTokenFromListScreen = () => {
   const {amounts} = targets[selectedTargetIndex].entry
   const hasTokensSelected = Object.keys(amounts).length > 0
 
-  const navigateBack = () => {
+  const navigateBack = useCallback(() => {
     if (hasTokensSelected) {
       navigateTo.selectedTokens()
-    } else {
-      navigateTo.startTx()
+      return true
     }
-  }
+    navigateTo.startTx()
+    return true
+  }, [hasTokensSelected, navigateTo])
 
   // use case: search listed tokens
   useSearchOnNavBar({

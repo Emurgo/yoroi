@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import {StackNavigationOptions} from '@react-navigation/stack'
-import React, {createContext, ReactNode, useContext, useReducer} from 'react'
-import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
+import React, {createContext, ReactNode, useContext, useEffect, useReducer} from 'react'
+import {BackHandler, TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Icon} from '../components/Icon'
 import {defaultStackNavigationOptionsV2} from '../navigation'
@@ -98,11 +98,17 @@ export const useSearchOnNavBar = ({
   placeholder: string
   title: string
   noBack?: boolean
-  navigateBack?(): void
+  navigateBack?(): boolean
 }) => {
   const navigation = useNavigation()
 
   const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
+
+  useEffect(() => {
+    if (!navigateBack) return
+    const subscription = BackHandler.addEventListener('hardwareBackPress', navigateBack)
+    return () => subscription.remove()
+  }, [navigateBack])
 
   const handleCloseSearch = () => {
     hideSearch()
@@ -140,6 +146,7 @@ export const useSearchOnNavBar = ({
     ...defaultStackNavigationOptionsV2,
     headerTitle: title,
     headerRight: () => <SearchButton onPress={() => showSearch()} />,
+    headerLeft: () => <BackButton onPress={handleGoBack} />,
     ...(noBack ? {headerLeft: () => null} : {}),
     headerBackTitleVisible: false,
   }
@@ -162,7 +169,7 @@ const InputSearch = ({placeholder}: Props) => {
       placeholder={placeholder}
       onChangeText={(search) => searchChanged(search)}
       autoCapitalize="none"
-      style={{flex: 1}}
+      style={{flex: 1, color: '#000000'}}
     />
   )
 }
