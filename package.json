@@ -4,6 +4,9 @@
   "repository": "git@github.com:Emurgo/yoroi.git",
   "author": "EMURGO",
   "private": true,
+  "scripts": {
+    "reset": "yarn workspaces run rimraf node_modules && yarn rimraf node_modules"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
