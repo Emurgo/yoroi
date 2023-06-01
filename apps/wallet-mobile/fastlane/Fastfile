@@ -21,6 +21,9 @@ PLIST="yoroi/Info.plist"
 NIGHTLY_BUNDLE_ID="com.emurgo.yoroi-nightly"
 NIGHTLY_APP_NAME="Yoroi Nightly"
 
+PROD_BUNDLE_ID="com.emurgo.yoroi"
+PROD_APP_NAME="Yoroi"
+
 default_platform(:ios)
 
 platform :ios do
@@ -74,6 +77,66 @@ platform :ios do
       raise 'Xcode build failed.'
     end
 
-    upload_to_testflight(api_key: api_key, app_identifier: "com.emurgo.yoroi-nightly")
+    upload_to_testflight(api_key: api_key, app_identifier: "com.emurgo.yoroi-nightly", skip_waiting_for_build_processing: true)
   end
+
+  desc "Push a Production Build to App Store"
+  lane :ios_prod do
+    update_app_identifier(
+      xcodeproj: XC_PROJECT, # Optional path to xcodeproj, will use the first .xcodeproj if not set
+      plist_path: PLIST, # Path to info plist file, relative to xcodeproj
+      app_identifier: PROD_BUNDLE_ID # The bundle identifier of your app 
+    )
+
+    update_info_plist(
+      xcodeproj: XC_PROJECT,
+      plist_path: PLIST,
+      display_name: PROD_APP_NAME,
+    )
+
+    match(app_identifier: PROD_BUNDLE_ID, type: "appstore")
+
+    api_key = app_store_connect_api_key(
+      key_id: "PH9Z89M567",
+      issuer_id: "feff08c0-5259-4e9a-bdbe-26cdb046e1d5",
+      key_filepath: "~/AuthKey_PH9Z89M567.p8",
+      duration: 1200, 
+      in_house: false
+    )
+
+    increment_build_number(xcodeproj: XC_PROJECT)
+    
+    begin
+      gym(
+        scheme: "yoroi", 
+        workspace: XC_WORKSPACE,
+        silent: true,
+        include_bitcode: false,
+        include_symbols: true,
+        clean: true,
+        xcargs: `-UseNewBuildSystem=YES`,
+        output_directory: "./ios",
+        output_name: "yoroi.ipa",
+        export_options: {
+          method: "app-store",
+          signingStyle: "automatic"
+        },
+      )
+    rescue => e
+      xcode_log_path = '~/Library/Logs/gym/yoroi-yoroi.log'
+      p "Xcode build failed -> #{xcode_log_path}"
+      sh "cat #{xcode_log_path}"
+
+      raise 'Xcode build failed.'
+    end
+
+    # pilot(
+    #   api_key: api_key, 
+    #   app_identifier: "com.emurgo.yoroi", 
+    #   skip_waiting_for_build_processing: true
+    #   ipa: IPA_DIRECTORY
+    # )
+
+  end
+
 end
