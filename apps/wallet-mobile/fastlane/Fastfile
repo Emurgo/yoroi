@@ -130,12 +130,12 @@ platform :ios do
       raise 'Xcode build failed.'
     end
 
-    # pilot(
-    #   api_key: api_key, 
-    #   app_identifier: "com.emurgo.yoroi", 
-    #   skip_waiting_for_build_processing: true
-    #   ipa: IPA_DIRECTORY
-    # )
+    pilot(
+      api_key: api_key, 
+      app_identifier: "com.emurgo.yoroi", 
+      skip_waiting_for_build_processing: true
+      ipa: IPA_DIRECTORY
+    )
 
   end
 
