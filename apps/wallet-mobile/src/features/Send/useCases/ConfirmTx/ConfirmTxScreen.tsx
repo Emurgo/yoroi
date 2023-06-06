@@ -41,7 +41,7 @@ export const ConfirmTxScreen = () => {
     navigateTo.submittedTx()
 
     if (memo.length > 0) {
-      saveMemo({txId: signedTx.signedTx.id, memo})
+      saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})
     }
   }
 
