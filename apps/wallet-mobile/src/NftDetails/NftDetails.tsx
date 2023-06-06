@@ -1,10 +1,10 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Dimensions, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
+import {CopyButton, FadeIn, Icon, Spacer, Text} from '../components'
 import {NftPreview} from '../components/NftPreview'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {features} from '../features'
@@ -13,6 +13,7 @@ import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {getNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {useNft} from '../yoroi-wallets/hooks'
 import {TokenInfo} from '../yoroi-wallets/types'
 import {isRecord, isString} from '../yoroi-wallets/utils'
@@ -107,6 +108,8 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
 
 const NftOverview = ({nft}: {nft: TokenInfo}) => {
   const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const config = getNetworkConfigById(wallet.networkId)
 
   return (
     <View>
@@ -143,7 +146,7 @@ const NftOverview = ({nft}: {nft: TokenInfo}) => {
       <HR />
 
       <MetadataRow title={strings.detailsLinks}>
-        <Link url={`https://cardanoscan.io/token/${nft.fingerprint}`}>
+        <TouchableOpacity onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(nft.id))}>
           <View style={styles.linkContent}>
             <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
 
@@ -151,9 +154,9 @@ const NftOverview = ({nft}: {nft: TokenInfo}) => {
 
             <Text style={styles.linkText}>Cardanoscan</Text>
           </View>
-        </Link>
+        </TouchableOpacity>
 
-        <Link url={`https://cexplorer.io/asset/${nft.fingerprint}`}>
+        <TouchableOpacity onPress={() => Linking.openURL(config.CEXPLORER_URL_FOR_TOKEN(nft.id))}>
           <View style={styles.linkContent}>
             <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
 
@@ -161,7 +164,7 @@ const NftOverview = ({nft}: {nft: TokenInfo}) => {
 
             <Text style={styles.linkText}>Cexplorer</Text>
           </View>
-        </Link>
+        </TouchableOpacity>
       </MetadataRow>
 
       <HR />
