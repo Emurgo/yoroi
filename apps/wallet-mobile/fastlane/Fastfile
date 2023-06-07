@@ -13,6 +13,7 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+# iOS
 XC_PROJECT="./ios/yoroi.xcodeproj"
 XC_WORKSPACE="./ios/yoroi.xcworkspace"
 
@@ -24,11 +25,17 @@ NIGHTLY_APP_NAME="Yoroi Nightly"
 PROD_BUNDLE_ID="com.emurgo.yoroi"
 PROD_APP_NAME="Yoroi"
 
+# Android
+NIGHTLY_PACKAGE_NAME="com.emurgo.nightly"
+
 default_platform(:ios)
 
 platform :ios do
-  desc "Push a new beta build to TestFlight"
+
+  desc "iOS Nightly"
+
   lane :ios_nightly do
+
     update_app_identifier(
       xcodeproj: XC_PROJECT, # Optional path to xcodeproj, will use the first .xcodeproj if not set
       plist_path: PLIST, # Path to info plist file, relative to xcodeproj
@@ -80,8 +87,10 @@ platform :ios do
     upload_to_testflight(api_key: api_key, app_identifier: NIGHTLY_BUNDLE_ID, skip_waiting_for_build_processing: true)
   end
 
-  desc "Push a Production Build to App Store"
+  desc "iOS Production Build"
+
   lane :ios_prod do
+
     update_app_identifier(
       xcodeproj: XC_PROJECT, # Optional path to xcodeproj, will use the first .xcodeproj if not set
       plist_path: PLIST, # Path to info plist file, relative to xcodeproj
@@ -137,29 +146,36 @@ platform :ios do
 end
 
 platform :android do
-  desc "Push nightly to Android store"
-  lane :android_nightly do |options|
-    type = options.fetch(:type, "Release")
-    task = options[:apk] ? "assemble" : "bundle"
 
-    gradle(task: "clean", project_dir: 'android/')
+  desc "Android nightly build"
+  
+  lane :android_nightly do
+
     gradle(
-      task: task,
-      build_type: type,
-      print_command: false,
-      properties: {
-        "android.injected.signing.store.file" => "/Users/administrator/.google/nightly.keystore",
-        "android.injected.signing.store.password" => ENV["ANDROID_KEYSTORE_PASS"],
-        "android.injected.signing.key.alias" => "my-key-alias",
-        "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASS"],
-      },
-      project_dir: 'android/'
+      task: "clean",
+      project_dir: "android/"
     )
-    # upload_to_play_store(
-    #   track: 'Nightly' : "internal",
-    #   package_name: "com.emurgo.nightly",
-    #   json_key: ENV["ANDROID_SERVICE_KEY_PATH"],
-    # )
+
+    gradle(
+      task: "assemble",
+      build_type: "Release",
+      print_command: false,
+      print_command_output: false,
+      properties: {
+        "android.injected.signing.store.file" => ENV["ANDROID_NIGHTLY_KEYSTORE_FILE"],
+        "android.injected.signing.store.password" => ENV["ANDROID_NIGHTLY_KEYSTORE_PASS"],
+        "android.injected.signing.key.alias" => "my-key-alias",
+        "android.injected.signing.key.password" => ENV["ANDROID_NIGHTLY_KEY_PASS"],
+      },
+      project_dir: "android/"
+    )
+
+    upload_to_play_store(
+      track: "Open Testing",
+      package_name: NIGHTLY_PACKAGE_NAME,
+      json_key: ENV["ANDROID_SERVICE_KEY_PATH"],
+    )
 
   end
+
 end
