@@ -1,10 +1,10 @@
 fastlane_require 'dotenv'
 
+# iOS
 XC_PROJECT="./ios/yoroi.xcodeproj"
 XC_WORKSPACE="./ios/yoroi.xcworkspace"
 PLIST="yoroi/Info.plist"
 
-default_platform(:ios)
 before_all do |lane|
   Dotenv.overload '../.env'
   environment = lane_context[SharedValues::ENVIRONMENT]
@@ -15,8 +15,10 @@ before_all do |lane|
 end
 
 platform :ios do
-  desc "Push a new beta build to TestFlight"
+  desc "iOS"
+
   lane :ios do
+
     update_app_identifier(
       xcodeproj: XC_PROJECT, 
       plist_path: PLIST, 
@@ -26,7 +28,7 @@ platform :ios do
     update_info_plist(
       xcodeproj: XC_PROJECT,
       plist_path: PLIST,
-      display_name: ENV["APP_STORE_APP_NAME"],
+      display_name: ENV["APP_NAME"],
     )
 
     match(app_identifier: ENV["APP_STORE_BUNDLE_ID"], type: "appstore")
@@ -58,10 +60,10 @@ platform :ios do
       )
     rescue => e
       xcode_log_path = '~/Library/Logs/gym/yoroi-yoroi.log'
-      p "Xcode build failed -> #{xcode_log_path}"
+      p "iOS build failed -> #{xcode_log_path}"
       sh "cat #{xcode_log_path}"
 
-      raise 'Xcode build failed.'
+      raise 'iOS build failed.'
     end
 
     upload_to_testflight(api_key: api_key, app_identifier: ENV["APP_STORE_BUNDLE_ID"], skip_waiting_for_build_processing: true)
@@ -70,29 +72,36 @@ platform :ios do
 end
 
 platform :android do
-  desc "Push to Android store"
-  lane :android do |options|
-    type = options.fetch(:type, "Release")
-    task = options[:apk] ? "assemble" : "bundle"
 
-    gradle(task: "clean", project_dir: 'android/')
+  desc "Android"
+  
+  lane :android do
+
     gradle(
-      task: task,
-      build_type: type,
-      print_command: false,
+      task: "clean",
+      project_dir: "android/"
+    )
+
+    gradle(
+      task: "assemble",
+      build_type: "Release",
+      print_command: ENV["DEBUG"],
+      print_command_output: ENV["DEBUG"],
       properties: {
         "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_PATH"],
         "android.injected.signing.store.password" => ENV["ANDROID_KEYSTORE_PASS"],
-        "android.injected.signing.key.alias" => ENV["ANDROID_KEYSTORE_ALIAS"],
         "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASS"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_KEYSTORE_ALIAS"],
       },
       project_dir: 'android/'
     )
-    # upload_to_play_store(
-    #   track: ENV["ANDROID_TRACK"],
-    #   package_name: ENV["ANDROID_PACKAGE_NAME"],
-    #   json_key: ENV["ANDROID_SERVICE_KEY_PATH"],
-    # )
+
+    upload_to_play_store(
+      track: ENV["ANDROID_TRACK"],
+      package_name: ENV["ANDROID_PACKAGE_NAME"],
+      json_key: ENV["ANDROID_SERVICE_KEY_PATH"],
+    )
 
   end
+
 end
