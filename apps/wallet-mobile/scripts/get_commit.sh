@@ -1,7 +1,5 @@
 #!/bin/bash
 
-BASE_DIR="$(dirname ${BASH_SOURCE[0]})"
-cd $BASE_DIR
 DEV_ENV_FILE=".env"
 PROD_ENV_FILE=".env.production"
 NIGHTLY_ENV_FILE=".env.nightly"
