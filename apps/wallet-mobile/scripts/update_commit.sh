@@ -1,13 +1,11 @@
 #!/bin/bash
 
-BASE_DIR="$(dirname ${BASH_SOURCE[0]})"
-cd $BASE_DIR
+DEV_ENV=".env"
 PROD_ENV_FILE=".env.production"
 NIGHTLY_ENV_FILE=".env.nightly"
 STAGING_ENV_FILE=".env.staging"
-STORYBOOK_ENV_FILE=".env.storybook"
 
-declare -a FILES=($PROD_ENV_FILE $NIGHTLY_ENV_FILE $STAGING_ENV_FILE $STORYBOOK_ENV_FILE)
+declare -a FILES=($DEV_ENV $PROD_ENV_FILE $NIGHTLY_ENV_FILE $STAGING_ENV_FILE $STORYBOOK_ENV_FILE)
 LAST_COMMIT=$(git rev-parse --short HEAD)
 if [ -z "$LAST_COMMIT" ]; then
   echo "ERROR: Couldn't get last commit hash"
