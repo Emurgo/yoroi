@@ -15,34 +15,26 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## iOS
 
-### ios ios_nightly
+### ios ios
 
 ```sh
-[bundle exec] fastlane ios ios_nightly
+[bundle exec] fastlane ios ios
 ```
 
 Push a new beta build to TestFlight
-
-### ios ios_prod
-
-```sh
-[bundle exec] fastlane ios ios_prod
-```
-
-Push a Production Build to App Store
 
 ----
 
 
 ## Android
 
-### android android_nightly
+### android android
 
 ```sh
-[bundle exec] fastlane android android_nightly
+[bundle exec] fastlane android android
 ```
 
-Push nightly to Android store
+Push to Android store
 
 ----
 
