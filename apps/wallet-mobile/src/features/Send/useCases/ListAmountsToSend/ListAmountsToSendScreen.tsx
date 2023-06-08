@@ -105,7 +105,7 @@ const ActionableAmount = ({amount, onRemove, onEdit}: ActionableAmountProps) => 
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
   const handleRemove = () => onRemove(tokenId)
-  const handleEdit = () => tokenInfo.kind === 'nft' ? null : onEdit(tokenId)
+  const handleEdit = () => (tokenInfo.kind === 'nft' ? null : onEdit(tokenId))
 
   return (
     <View style={styles.amountItem} testID="amountItem">
