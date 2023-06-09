@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/wallet-mobile",
-  "version": "0.0.1",
+  "version": "4.10.3",
   "private": true,
   "scripts": {
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
@@ -23,10 +23,22 @@
     "stag-android": "react-native run-android --variant=devDebug --appIdSuffix=staging",
     "stag-ios": "react-native run-ios --scheme=emurgo-staging --configuration=Debug",
     "prestart": "sb-rn-get-stories",
-    "start": "react-native start --reset-cache --verbose",
+    "start": "ENVFILE=./.env react-native start --reset-cache --verbose",
+    "staging": "ENVFILE=./.env.staging react-native start --reset-cache --verbose",
+    "nightly": "ENVFILE=./.env.nightly react-native start --reset-cache --verbose",
     "storybook:watch": "sb-rn-watcher",
     "test": "jest src",
     "tsc": "tsc --noEmit",
+    "dry-run:on": "source ./scripts/dry-run-on.sh",
+    "dry-run:off": "source ./scripts/dry-run-off.sh",
+    "preandroid:nightly": "bundle install && ./scripts/update-commit.sh && source ./scripts/export-android-pass.sh ~/.yoroi/android/nightly.pass",
+    "android:nightly": "bundle exec fastlane android release --env nightly",
+    "preandroid:production": "bundle install && ./scripts/update-commit.sh && source ./scripts/export-android-pass.sh ~/.yoroi/android/production.pass",
+    "android:production": "bundle exec fastlane android release --env production",
+    "preios:nightly": "bundle install && ./scripts/update-commit.sh && npx pod-install",
+    "ios:nightly": "bundle exec fastlane ios release --env nightly",
+    "preios:production": "bundle install && ./scripts/update-commit.sh && npx pod-install",
+    "ios:production": "bundle exec fastlane ios release --env production",
     "tsc:cover": "yarn typescript-coverage-report -i '**/*.test.*' -i '**/*.stories*' -t html --threshold=100"
   },
   "lint-staged": {

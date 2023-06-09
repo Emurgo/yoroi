@@ -1,23 +1,39 @@
-fastlane_require 'dotenv'
+fastlane_require "dotenv"
+fastlane_require "semver"
+
+package = load_json(json_path: "./package.json")
+package_version = package['version']
 
 # iOS
 XC_PROJECT="./ios/yoroi.xcodeproj"
 XC_WORKSPACE="./ios/yoroi.xcworkspace"
 PLIST="yoroi/Info.plist"
 
+# Android
+GRADLE_FILE="android/app/build.gradle"
+
 before_all do |lane|
-  Dotenv.overload '../.env'
   environment = lane_context[SharedValues::ENVIRONMENT]
   unless environment.nil?
-      puts "Load .env file of #{environment}"
+      puts "Load .env.#{environment}"
       Dotenv.overload '../.env.' + environment
   end
+end
+
+def update_app_name_android(app_name)
+  strings_file_path = File.expand_path("../android/app/src/main/res/values/strings.xml")
+
+  strings_content = File.read(strings_file_path)
+
+  updated_content = strings_content.gsub(/<string name="app_name">.*<\/string>/, "<string name=\"app_name\">#{app_name}<\/string>")
+  
+  File.open(strings_file_path, 'w') { |file| file.write(updated_content) }
 end
 
 platform :ios do
   desc "iOS"
 
-  lane :ios do
+  lane :release do
 
     update_app_identifier(
       xcodeproj: XC_PROJECT, 
@@ -39,8 +55,6 @@ platform :ios do
       duration: 1200, 
       in_house: false
     )
-
-    increment_build_number(xcodeproj: XC_PROJECT)
     
     begin
       gym(
@@ -66,7 +80,12 @@ platform :ios do
       raise 'iOS build failed.'
     end
 
-    upload_to_testflight(api_key: api_key, app_identifier: ENV["APP_STORE_BUNDLE_ID"], skip_waiting_for_build_processing: true)
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to App Store")
+    else
+      upload_to_testflight(api_key: api_key, app_identifier: ENV["APP_STORE_BUNDLE_ID"], skip_waiting_for_build_processing: true)
+   end
+
   end
 
 end
@@ -75,12 +94,14 @@ platform :android do
 
   desc "Android"
   
-  lane :android do
+  lane :release do
 
     gradle(
       task: "clean",
       project_dir: "android/"
     )
+
+    update_app_name_android(ENV["APP_NAME"])
 
     gradle(
       task: "assemble",
@@ -96,12 +117,40 @@ platform :android do
       project_dir: 'android/'
     )
 
-    upload_to_play_store(
-      track: ENV["ANDROID_TRACK"],
-      package_name: ENV["ANDROID_PACKAGE_NAME"],
-      json_key: ENV["ANDROID_SERVICE_KEY_PATH"],
-    )
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to Play Store")
+    else
+      upload_to_play_store(
+        track: ENV["ANDROID_TRACK"],
+        package_name: ENV["ANDROID_PACKAGE_NAME"],
+        json_key: ENV["ANDROID_SERVICE_KEY_PATH"],
+      )
+    end
 
   end
 
+end
+
+lane :set_version_as_package do
+  increment_version_number(
+      xcodeproj: XC_PROJECT,
+      version_number: package_version
+  )
+  UI.success("iOS app version updated to #{package_version}")
+
+  android_set_version_name(
+    gradle_file: GRADLE_FILE,
+    version_name: package_version
+  )
+  UI.success("Android app version updated to #{package_version}")
+end
+
+lane :bump_build_ios do
+  increment_build_number(xcodeproj: XC_PROJECT)
+end
+
+lane :bump_build_android do
+  current_version = android_get_version_code(gradle_file: GRADLE_FILE)
+  new_version = current_version.to_i + 1
+  android_set_version_code(gradle_file: GRADLE_FILE, version_code: new_version)
 end
