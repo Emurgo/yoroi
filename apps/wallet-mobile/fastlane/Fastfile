@@ -14,18 +14,20 @@ GRADLE_FILE="android/app/build.gradle"
 
 before_all do |lane|
   environment = lane_context[SharedValues::ENVIRONMENT]
-  unless environment.nil?
-      puts "Load .env.#{environment}"
-      Dotenv.overload '../.env.' + environment
-  end
 end
 
 platform :ios do
   desc "iOS"
 
   lane :release do
+    environment = lane_context[SharedValues::ENVIRONMENT]
+    scheme = environment == "nightly" ? "nightly" : "yoroi"
 
     match(app_identifier: ENV["APP_STORE_BUNDLE_ID"], type: "appstore")
+
+    set_version_ios
+    bump_build_ios
+
     api_key = app_store_connect_api_key(
       key_id: ENV["APP_STORE_KEY_ID"],
       issuer_id: ENV["APP_STORE_ISSUER_ID"],
@@ -36,7 +38,7 @@ platform :ios do
     
     begin
       gym(
-        scheme: "yoroi", 
+        scheme: scheme, 
         workspace: XC_WORKSPACE,
         silent: true,
         include_bitcode: false,

@@ -1,6 +1,7 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
+import Config from 'react-native-config'
 import DeviceInfo from 'react-native-device-info'
 
 import {StatusBar} from '../../components'
@@ -79,7 +80,7 @@ export const ApplicationSettingsScreen = () => {
       <SettingsSection title="About">
         <SettingsBuildItem label={strings.version} value={version} />
 
-        <SettingsBuildItem label={strings.commit} value={CONFIG.COMMIT} />
+        <SettingsBuildItem label={strings.commit} value={`${CONFIG.COMMIT} (${Config.BUILD_VARIANT})`} />
       </SettingsSection>
     </ScrollView>
   )
