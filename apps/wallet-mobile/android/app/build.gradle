@@ -1,6 +1,14 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
 
+project.ext.envConfigFiles = [
+  devdebug: '.env',
+  productionrelease: '.env.production',
+  productiondebug: '.env.production',
+  nightlyrelease: '.env.nightly',
+  nightlydebug: '.env.nightly',
+]
+
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 import com.android.build.OutputFile
@@ -100,7 +108,7 @@ android {
         applicationId "com.emurgo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 501
+        versionCode 515
         versionName "4.10.3"
     }
 

@@ -13,10 +13,18 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-### set_version_as_package
+### set_version_ios
 
 ```sh
-[bundle exec] fastlane set_version_as_package
+[bundle exec] fastlane set_version_ios
+```
+
+
+
+### set_version_android
+
+```sh
+[bundle exec] fastlane set_version_android
 ```
 
 
