@@ -95,9 +95,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.yoroi"
+    namespace "com.emurgo"
     defaultConfig {
-        applicationId "com.yoroi"
+        applicationId "com.emurgo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 501
@@ -112,6 +112,7 @@ android {
             include (*reactNativeArchitectures())
         }
     }
+
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -119,7 +120,9 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        // production managed by fastlane
     }
+
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
@@ -130,6 +133,25 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    // Specifies one flavor dimension.
+    flavorDimensions "version"
+    productFlavors {
+        production {
+            dimension "version"
+            resValue "string", "build_config_package", "com.emurgo"
+        }
+        dev {
+            dimension "version"
+            applicationIdSuffix ".dev"
+            resValue "string", "build_config_package", "com.emurgo"
+        }
+        nightly {
+            dimension "version"
+            applicationIdSuffix ".nightly"
+            resValue "string", "build_config_package", "com.emurgo"
         }
     }
 

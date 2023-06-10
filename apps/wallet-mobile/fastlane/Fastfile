@@ -20,32 +20,10 @@ before_all do |lane|
   end
 end
 
-def update_app_name_android(app_name)
-  strings_file_path = File.expand_path("../android/app/src/main/res/values/strings.xml")
-
-  strings_content = File.read(strings_file_path)
-
-  updated_content = strings_content.gsub(/<string name="app_name">.*<\/string>/, "<string name=\"app_name\">#{app_name}<\/string>")
-  
-  File.open(strings_file_path, 'w') { |file| file.write(updated_content) }
-end
-
 platform :ios do
   desc "iOS"
 
   lane :release do
-
-    update_app_identifier(
-      xcodeproj: XC_PROJECT, 
-      plist_path: PLIST, 
-      app_identifier: ENV["APP_STORE_BUNDLE_ID"] 
-    )
-
-    update_info_plist(
-      xcodeproj: XC_PROJECT,
-      plist_path: PLIST,
-      display_name: ENV["APP_NAME"],
-    )
 
     match(app_identifier: ENV["APP_STORE_BUNDLE_ID"], type: "appstore")
     api_key = app_store_connect_api_key(
@@ -97,19 +75,12 @@ platform :android do
   lane :release do
 
     gradle(
-      task: "clean",
-      project_dir: "android/"
-    )
-
-    update_app_name_android(ENV["APP_NAME"])
-
-    gradle(
-      task: "assemble",
+      tasks: ["clean", "assemble"],
       build_type: "Release",
       print_command: ENV["DEBUG"],
       print_command_output: ENV["DEBUG"],
       properties: {
-        "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_PATH"],
+        "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_FILE"],
         "android.injected.signing.store.password" => ENV["ANDROID_KEYSTORE_PASS"],
         "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASS"],
         "android.injected.signing.key.alias" => ENV["ANDROID_KEYSTORE_ALIAS"],
@@ -123,7 +94,7 @@ platform :android do
       upload_to_play_store(
         track: ENV["ANDROID_TRACK"],
         package_name: ENV["ANDROID_PACKAGE_NAME"],
-        json_key: ENV["ANDROID_SERVICE_KEY_PATH"],
+        json_key: ENV["ANDROID_SA_FILE"],
       )
     end
 
