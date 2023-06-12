@@ -1,61 +1,44 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
+fastlane_require "dotenv"
+fastlane_require "semver"
 
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
+package = load_json(json_path: "./package.json")
+package_version = package['version']
 
+# iOS
 XC_PROJECT="./ios/yoroi.xcodeproj"
 XC_WORKSPACE="./ios/yoroi.xcworkspace"
-
 PLIST="yoroi/Info.plist"
 
-NIGHTLY_BUNDLE_ID="com.emurgo.yoroi-nightly"
-NIGHTLY_APP_NAME="Yoroi Nightly"
+# Android
+GRADLE_FILE="android/app/build.gradle"
 
-PROD_BUNDLE_ID="com.emurgo.yoroi"
-PROD_APP_NAME="Yoroi"
-
-default_platform(:ios)
+before_all do |lane|
+  environment = lane_context[SharedValues::ENVIRONMENT]
+end
 
 platform :ios do
-  desc "Push a new beta build to TestFlight"
-  lane :ios_nightly do
-    update_app_identifier(
-      xcodeproj: XC_PROJECT, # Optional path to xcodeproj, will use the first .xcodeproj if not set
-      plist_path: PLIST, # Path to info plist file, relative to xcodeproj
-      app_identifier: NIGHTLY_BUNDLE_ID # The bundle identifier of your app 
-    )
+  desc "iOS"
 
-    update_info_plist(
-      xcodeproj: XC_PROJECT,
-      plist_path: PLIST,
-      display_name: NIGHTLY_APP_NAME,
-    )
+  lane :release do
+    environment = lane_context[SharedValues::ENVIRONMENT]
+    scheme = environment == "nightly" ? "nightly" : "yoroi"
 
-    match(app_identifier: NIGHTLY_BUNDLE_ID, type: "appstore")
+    match(app_identifier: ENV["APP_STORE_BUNDLE_ID"], type: "appstore")
+
+    set_version_ios
+    bump_build_ios
 
     api_key = app_store_connect_api_key(
-      key_id: "PH9Z89M567",
-      issuer_id: "feff08c0-5259-4e9a-bdbe-26cdb046e1d5",
-      key_filepath: "~/AuthKey_PH9Z89M567.p8",
+      key_id: ENV["APP_STORE_KEY_ID"],
+      issuer_id: ENV["APP_STORE_ISSUER_ID"],
+      key_filepath: ENV["APP_STORE_KEY_PATH"],
       duration: 1200, 
       in_house: false
     )
-
-    increment_build_number(xcodeproj: XC_PROJECT)
     
     begin
       gym(
-        scheme: "yoroi", 
+        scheme: scheme, 
         workspace: XC_WORKSPACE,
         silent: true,
         include_bitcode: false,
@@ -71,72 +54,85 @@ platform :ios do
       )
     rescue => e
       xcode_log_path = '~/Library/Logs/gym/yoroi-yoroi.log'
-      p "Xcode build failed -> #{xcode_log_path}"
+      p "iOS build failed -> #{xcode_log_path}"
       sh "cat #{xcode_log_path}"
 
-      raise 'Xcode build failed.'
+      raise 'iOS build failed.'
     end
 
-    upload_to_testflight(api_key: api_key, app_identifier: "com.emurgo.yoroi-nightly", skip_waiting_for_build_processing: true)
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to App Store")
+    else
+      upload_to_testflight(api_key: api_key, app_identifier: ENV["APP_STORE_BUNDLE_ID"], skip_waiting_for_build_processing: true)
+   end
+
   end
 
-  desc "Push a Production Build to App Store"
-  lane :ios_prod do
-    update_app_identifier(
-      xcodeproj: XC_PROJECT, # Optional path to xcodeproj, will use the first .xcodeproj if not set
-      plist_path: PLIST, # Path to info plist file, relative to xcodeproj
-      app_identifier: PROD_BUNDLE_ID # The bundle identifier of your app 
+end
+
+platform :android do
+
+  desc "Android"
+  
+  lane :release do
+    environment = lane_context[SharedValues::ENVIRONMENT]
+    build_type = environment == "nightly" ? "Nightly" : "Production"
+
+    gradle(task: "clean", project_dir: 'android/')
+
+    bump_build_android
+    set_version_android
+
+    gradle(
+      task: "assemble" + build_type,
+      build_type: "Release",
+      print_command: ENV["DEBUG"],
+      print_command_output: ENV["DEBUG"],
+      properties: {
+        "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_FILE"],
+        "android.injected.signing.store.password" => ENV["ANDROID_KEYSTORE_PASS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASS"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_KEYSTORE_ALIAS"],
+      },
+      project_dir: 'android/'
     )
 
-    update_info_plist(
-      xcodeproj: XC_PROJECT,
-      plist_path: PLIST,
-      display_name: PROD_APP_NAME,
-    )
-
-    match(app_identifier: PROD_BUNDLE_ID, type: "appstore")
-
-    api_key = app_store_connect_api_key(
-      key_id: "PH9Z89M567",
-      issuer_id: "feff08c0-5259-4e9a-bdbe-26cdb046e1d5",
-      key_filepath: "~/AuthKey_PH9Z89M567.p8",
-      duration: 1200, 
-      in_house: false
-    )
-
-    increment_build_number(xcodeproj: XC_PROJECT)
-    
-    begin
-      gym(
-        scheme: "yoroi", 
-        workspace: XC_WORKSPACE,
-        silent: true,
-        include_bitcode: false,
-        include_symbols: true,
-        clean: true,
-        xcargs: `-UseNewBuildSystem=YES`,
-        output_directory: "./ios",
-        output_name: "yoroi.ipa",
-        export_options: {
-          method: "app-store",
-          signingStyle: "automatic"
-        },
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to Play Store")
+    else
+      upload_to_play_store(
+        track: ENV["ANDROID_TRACK"],
+        package_name: ENV["ANDROID_PACKAGE_NAME"],
+        json_key: ENV["ANDROID_SA_FILE"],
       )
-    rescue => e
-      xcode_log_path = '~/Library/Logs/gym/yoroi-yoroi.log'
-      p "Xcode build failed -> #{xcode_log_path}"
-      sh "cat #{xcode_log_path}"
-
-      raise 'Xcode build failed.'
     end
-
-    pilot(
-      api_key: api_key, 
-      app_identifier: "com.emurgo.yoroi", 
-      skip_waiting_for_build_processing: true
-      ipa: IPA_DIRECTORY
-    )
 
   end
 
+end
+
+lane :set_version_ios do
+  increment_version_number(
+      xcodeproj: XC_PROJECT,
+      version_number: package_version
+  )
+  UI.success("iOS app version updated to #{package_version}")
+end
+
+lane :set_version_android do
+  android_set_version_name(
+    gradle_file: GRADLE_FILE,
+    version_name: package_version
+  )
+  UI.success("Android app version updated to #{package_version}")
+end
+
+lane :bump_build_ios do
+  increment_build_number(xcodeproj: XC_PROJECT)
+end
+
+lane :bump_build_android do
+  current_version = android_get_version_code(gradle_file: GRADLE_FILE)
+  new_version = current_version.to_i + 1
+  android_set_version_code(gradle_file: GRADLE_FILE, version_code: new_version)
 end

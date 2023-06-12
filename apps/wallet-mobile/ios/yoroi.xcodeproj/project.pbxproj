@@ -11,7 +11,6 @@
 		018832E913FC47AEBA8A941C /* Rubik-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B4FF531EA86A409487D4A26C /* Rubik-BlackItalic.ttf */; };
 		078E86AA2E484A88A3C2AA23 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2DFE5F7A6A83432C99DAED17 /* Rubik-Bold.ttf */; };
 		0AFE15A3776640D0843F4D8C /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 183DAFBF738C4364ACB10DDD /* Rubik-MediumItalic.ttf */; };
-		0C80B921A6F3F58F76C31292 /* libPods-yoroi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-yoroi.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -20,14 +19,38 @@
 		450D3A0FF27C46F6A51EF2DA /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9A17D1FE4D734EC2A996EA26 /* Rubik-Medium.ttf */; };
 		51713C0ADE02456D9577258E /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3921B43846F4C8CA253D195 /* Rubik-Light.ttf */; };
 		51FDC63F286F4A698ED04B20 /* Rubik-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4EA1326FAF2A4309BBC6E8CD /* Rubik-Black.ttf */; };
+		5428ABB29983244EAC57FEAB /* libPods-yoroi-nightly.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7607D2E968DCC894DEFCD61A /* libPods-yoroi-nightly.a */; };
 		57DDD8F82C7040D68F99A505 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 49514077C0DA44DB8D83777A /* OFL.txt */; };
-		58BA17BB3191E37D672761F0 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09964E02413B96DECAA1B752 /* ExpoModulesProvider.swift */; };
 		649CE2EDC81749B097D05F56 /* Rubik-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FBD00939BBA949C5920F11AA /* Rubik-ExtraBoldItalic.ttf */; };
 		70CA15E187024A1FB5FF271D /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB3A2C3F18EB451488B7075E /* Rubik-SemiBold.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-yoroi-yoroiTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-yoroi-yoroiTests.a */; };
 		98A03C120CA349D88BE10884 /* Rubik-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7024FF43523D439BB47462E7 /* Rubik-ExtraBold.ttf */; };
 		A608B7143FA94C7CAA81F276 /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 454771C13D0F4F38BD2C9F99 /* Rubik-Italic.ttf */; };
+		BD60BE662A34B13000EFF020 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
+		BD60BE672A34B13000EFF020 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		BD60BE6C2A34B13000EFF020 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD825DEA29FB507600E19149 /* BootSplash.storyboard */; };
+		BD60BE6D2A34B13000EFF020 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		BD60BE6E2A34B13000EFF020 /* Rubik-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4EA1326FAF2A4309BBC6E8CD /* Rubik-Black.ttf */; };
+		BD60BE6F2A34B13000EFF020 /* Rubik-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B4FF531EA86A409487D4A26C /* Rubik-BlackItalic.ttf */; };
+		BD60BE702A34B13000EFF020 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2DFE5F7A6A83432C99DAED17 /* Rubik-Bold.ttf */; };
+		BD60BE712A34B13000EFF020 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD3754BBE4894C1A89A9D7BD /* Rubik-BoldItalic.ttf */; };
+		BD60BE722A34B13000EFF020 /* Rubik-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7024FF43523D439BB47462E7 /* Rubik-ExtraBold.ttf */; };
+		BD60BE732A34B13000EFF020 /* Rubik-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FBD00939BBA949C5920F11AA /* Rubik-ExtraBoldItalic.ttf */; };
+		BD60BE742A34B13000EFF020 /* Rubik-Italic-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A230DBE7EEBA4B38AD9006D2 /* Rubik-Italic-VariableFont_wght.ttf */; };
+		BD60BE752A34B13000EFF020 /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 454771C13D0F4F38BD2C9F99 /* Rubik-Italic.ttf */; };
+		BD60BE762A34B13000EFF020 /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3921B43846F4C8CA253D195 /* Rubik-Light.ttf */; };
+		BD60BE772A34B13000EFF020 /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2FBB8B0248AF4D6ABF4DD03F /* Rubik-LightItalic.ttf */; };
+		BD60BE782A34B13000EFF020 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9A17D1FE4D734EC2A996EA26 /* Rubik-Medium.ttf */; };
+		BD60BE792A34B13000EFF020 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 183DAFBF738C4364ACB10DDD /* Rubik-MediumItalic.ttf */; };
+		BD60BE7A2A34B13000EFF020 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4209EA0B03EE4D98A76DB22E /* Rubik-Regular.ttf */; };
+		BD60BE7B2A34B13000EFF020 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB3A2C3F18EB451488B7075E /* Rubik-SemiBold.ttf */; };
+		BD60BE7C2A34B13000EFF020 /* Rubik-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 50BDC11B44F146E29B6B82C0 /* Rubik-SemiBoldItalic.ttf */; };
+		BD60BE7D2A34B13000EFF020 /* Rubik-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 30E6D4F14F9A452789628CDB /* Rubik-VariableFont_wght.ttf */; };
+		BD60BE7E2A34B13000EFF020 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 49514077C0DA44DB8D83777A /* OFL.txt */; };
 		BD825DEB29FB507600E19149 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD825DEA29FB507600E19149 /* BootSplash.storyboard */; };
+		BDDB26B62A34E2C80090E17D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09964E02413B96DECAA1B752 /* ExpoModulesProvider.swift */; };
+		BDDB26B72A34E2DE0090E17D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18A3D046779D24DE475BB552 /* ExpoModulesProvider.swift */; };
+		CFD34A0207E6636EEBFCDADC /* libPods-yoroi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88DA2B423A59B13DBACA6F79 /* libPods-yoroi.a */; };
 		D67B823AFD232F314FB45E58 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBB28ACFDA8D28C80D2C0F0 /* ExpoModulesProvider.swift */; };
 		D85EE67699FF4ADBA94008F6 /* Rubik-Italic-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A230DBE7EEBA4B38AD9006D2 /* Rubik-Italic-VariableFont_wght.ttf */; };
 		E118DDC509114B02B7F7A610 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD3754BBE4894C1A89A9D7BD /* Rubik-BoldItalic.ttf */; };
@@ -50,6 +73,7 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* yoroiTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = yoroiTests.m; sourceTree = "<group>"; };
 		09964E02413B96DECAA1B752 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-yoroi/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		09C4694C59B3001B1758D375 /* Pods-yoroi-nightly.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yoroi-nightly.debug.xcconfig"; path = "Target Support Files/Pods-yoroi-nightly/Pods-yoroi-nightly.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* yoroi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yoroi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = yoroi/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = yoroi/AppDelegate.mm; sourceTree = "<group>"; };
@@ -57,6 +81,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = yoroi/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = yoroi/main.m; sourceTree = "<group>"; };
 		183DAFBF738C4364ACB10DDD /* Rubik-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-MediumItalic.ttf"; path = "../src/assets/fonts/Rubik-MediumItalic.ttf"; sourceTree = "<group>"; };
+		18A3D046779D24DE475BB552 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-yoroi-nightly/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-yoroi-yoroiTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-yoroi-yoroiTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DFE5F7A6A83432C99DAED17 /* Rubik-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Bold.ttf"; path = "../src/assets/fonts/Rubik-Bold.ttf"; sourceTree = "<group>"; };
 		2FBB8B0248AF4D6ABF4DD03F /* Rubik-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-LightItalic.ttf"; path = "../src/assets/fonts/Rubik-LightItalic.ttf"; sourceTree = "<group>"; };
@@ -69,17 +94,21 @@
 		50BDC11B44F146E29B6B82C0 /* Rubik-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Rubik-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-yoroi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yoroi.release.xcconfig"; path = "Target Support Files/Pods-yoroi/Pods-yoroi.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-yoroi-yoroiTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yoroi-yoroiTests.debug.xcconfig"; path = "Target Support Files/Pods-yoroi-yoroiTests/Pods-yoroi-yoroiTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-yoroi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-yoroi.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7024FF43523D439BB47462E7 /* Rubik-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-ExtraBold.ttf"; path = "../src/assets/fonts/Rubik-ExtraBold.ttf"; sourceTree = "<group>"; };
+		7607D2E968DCC894DEFCD61A /* libPods-yoroi-nightly.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-yoroi-nightly.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		88DA2B423A59B13DBACA6F79 /* libPods-yoroi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-yoroi.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-yoroi-yoroiTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yoroi-yoroiTests.release.xcconfig"; path = "Target Support Files/Pods-yoroi-yoroiTests/Pods-yoroi-yoroiTests.release.xcconfig"; sourceTree = "<group>"; };
 		8CBB28ACFDA8D28C80D2C0F0 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-yoroi-yoroiTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		9A17D1FE4D734EC2A996EA26 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../src/assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
 		A230DBE7EEBA4B38AD9006D2 /* Rubik-Italic-VariableFont_wght.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Italic-VariableFont_wght.ttf"; path = "../src/assets/fonts/Rubik-Italic-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		B4FF531EA86A409487D4A26C /* Rubik-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BlackItalic.ttf"; path = "../src/assets/fonts/Rubik-BlackItalic.ttf"; sourceTree = "<group>"; };
+		BD60BE852A34B13000EFF020 /* nightly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nightly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD825DEA29FB507600E19149 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = yoroi/BootSplash.storyboard; sourceTree = "<group>"; };
+		BDD74A382A34B82A003591A8 /* nightly.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = nightly.plist; sourceTree = "<group>"; };
 		D3921B43846F4C8CA253D195 /* Rubik-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Light.ttf"; path = "../src/assets/fonts/Rubik-Light.ttf"; sourceTree = "<group>"; };
 		DB3A2C3F18EB451488B7075E /* Rubik-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-SemiBold.ttf"; path = "../src/assets/fonts/Rubik-SemiBold.ttf"; sourceTree = "<group>"; };
 		DD3754BBE4894C1A89A9D7BD /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BoldItalic.ttf"; path = "../src/assets/fonts/Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
+		E42D01422FD2697C623181C6 /* Pods-yoroi-nightly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yoroi-nightly.release.xcconfig"; path = "Target Support Files/Pods-yoroi-nightly/Pods-yoroi-nightly.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FBD00939BBA949C5920F11AA /* Rubik-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Rubik-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -97,7 +126,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* libPods-yoroi.a in Frameworks */,
+				CFD34A0207E6636EEBFCDADC /* libPods-yoroi.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BD60BE692A34B13000EFF020 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5428ABB29983244EAC57FEAB /* libPods-yoroi-nightly.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,6 +161,7 @@
 		13B07FAE1A68108700A75B9A /* yoroi */ = {
 			isa = PBXGroup;
 			children = (
+				BDD74A382A34B82A003591A8 /* nightly.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -138,8 +176,9 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-yoroi.a */,
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-yoroi-yoroiTests.a */,
+				7607D2E968DCC894DEFCD61A /* libPods-yoroi-nightly.a */,
+				88DA2B423A59B13DBACA6F79 /* libPods-yoroi.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -173,8 +212,17 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* yoroi.app */,
 				00E356EE1AD99517003FC87E /* yoroiTests.xctest */,
+				BD60BE852A34B13000EFF020 /* nightly.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		97BD2B9C886A0D3D6196B35D /* nightly */ = {
+			isa = PBXGroup;
+			children = (
+				18A3D046779D24DE475BB552 /* ExpoModulesProvider.swift */,
+			);
+			name = nightly;
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
@@ -184,6 +232,8 @@
 				5709B34CF0A7D63546082F79 /* Pods-yoroi.release.xcconfig */,
 				5B7EB9410499542E8C5724F5 /* Pods-yoroi-yoroiTests.debug.xcconfig */,
 				89C6BE57DB24E9ADA2F236DE /* Pods-yoroi-yoroiTests.release.xcconfig */,
+				09C4694C59B3001B1758D375 /* Pods-yoroi-nightly.debug.xcconfig */,
+				E42D01422FD2697C623181C6 /* Pods-yoroi-nightly.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -193,6 +243,7 @@
 			children = (
 				DE3BDEF52B59EE74D9901242 /* yoroi */,
 				D9888ED12AF32B02F70094F1 /* yoroiTests */,
+				97BD2B9C886A0D3D6196B35D /* nightly */,
 			);
 			name = ExpoModulesProviders;
 			sourceTree = "<group>";
@@ -283,6 +334,28 @@
 			productReference = 13B07F961A680F5B00A75B9A /* yoroi.app */;
 			productType = "com.apple.product-type.application";
 		};
+		BD60BE622A34B13000EFF020 /* nightly */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BD60BE822A34B13000EFF020 /* Build configuration list for PBXNativeTarget "nightly" */;
+			buildPhases = (
+				BD60BE632A34B13000EFF020 /* [CP] Check Pods Manifest.lock */,
+				BD60BE642A34B13000EFF020 /* Start Packager */,
+				BD60BE652A34B13000EFF020 /* Sources */,
+				BD60BE692A34B13000EFF020 /* Frameworks */,
+				BD60BE6B2A34B13000EFF020 /* Resources */,
+				BD60BE7F2A34B13000EFF020 /* Bundle React Native code and images */,
+				BD60BE802A34B13000EFF020 /* [CP] Embed Pods Frameworks */,
+				BD60BE812A34B13000EFF020 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = nightly;
+			productName = yoroi;
+			productReference = BD60BE852A34B13000EFF020 /* nightly.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -315,6 +388,7 @@
 			targets = (
 				13B07F861A680F5B00A75B9A /* yoroi */,
 				00E356ED1AD99517003FC87E /* yoroiTests */,
+				BD60BE622A34B13000EFF020 /* nightly */,
 			);
 		};
 /* End PBXProject section */
@@ -350,6 +424,32 @@
 				18D1E9FF820C4D5AB38A243C /* Rubik-SemiBoldItalic.ttf in Resources */,
 				210BFBEC638C46A69C4AA18A /* Rubik-VariableFont_wght.ttf in Resources */,
 				57DDD8F82C7040D68F99A505 /* OFL.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BD60BE6B2A34B13000EFF020 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD60BE6C2A34B13000EFF020 /* BootSplash.storyboard in Resources */,
+				BD60BE6D2A34B13000EFF020 /* Images.xcassets in Resources */,
+				BD60BE6E2A34B13000EFF020 /* Rubik-Black.ttf in Resources */,
+				BD60BE6F2A34B13000EFF020 /* Rubik-BlackItalic.ttf in Resources */,
+				BD60BE702A34B13000EFF020 /* Rubik-Bold.ttf in Resources */,
+				BD60BE712A34B13000EFF020 /* Rubik-BoldItalic.ttf in Resources */,
+				BD60BE722A34B13000EFF020 /* Rubik-ExtraBold.ttf in Resources */,
+				BD60BE732A34B13000EFF020 /* Rubik-ExtraBoldItalic.ttf in Resources */,
+				BD60BE742A34B13000EFF020 /* Rubik-Italic-VariableFont_wght.ttf in Resources */,
+				BD60BE752A34B13000EFF020 /* Rubik-Italic.ttf in Resources */,
+				BD60BE762A34B13000EFF020 /* Rubik-Light.ttf in Resources */,
+				BD60BE772A34B13000EFF020 /* Rubik-LightItalic.ttf in Resources */,
+				BD60BE782A34B13000EFF020 /* Rubik-Medium.ttf in Resources */,
+				BD60BE792A34B13000EFF020 /* Rubik-MediumItalic.ttf in Resources */,
+				BD60BE7A2A34B13000EFF020 /* Rubik-Regular.ttf in Resources */,
+				BD60BE7B2A34B13000EFF020 /* Rubik-SemiBold.ttf in Resources */,
+				BD60BE7C2A34B13000EFF020 /* Rubik-SemiBoldItalic.ttf in Resources */,
+				BD60BE7D2A34B13000EFF020 /* Rubik-VariableFont_wght.ttf in Resources */,
+				BD60BE7E2A34B13000EFF020 /* OFL.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,6 +509,97 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BD60BE632A34B13000EFF020 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-yoroi-nightly-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BD60BE642A34B13000EFF020 /* Start Packager */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Start Packager";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		BD60BE7F2A34B13000EFF020 /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.xcode.env.local",
+				"$(SRCROOT)/.xcode.env",
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nexport PACKAGE_DIR=\"apps/wallet-mobile\"\n\nWITH_ENVIRONMENT=\"../../../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+		};
+		BD60BE802A34B13000EFF020 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-yoroi-nightly/Pods-yoroi-nightly-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-yoroi-nightly/Pods-yoroi-nightly-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-yoroi-nightly/Pods-yoroi-nightly-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BD60BE812A34B13000EFF020 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-yoroi-nightly/Pods-yoroi-nightly-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-yoroi-nightly/Pods-yoroi-nightly-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-yoroi-nightly/Pods-yoroi-nightly-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
@@ -521,7 +712,17 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				58BA17BB3191E37D672761F0 /* ExpoModulesProvider.swift in Sources */,
+				BDDB26B62A34E2C80090E17D /* ExpoModulesProvider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BD60BE652A34B13000EFF020 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD60BE662A34B13000EFF020 /* AppDelegate.mm in Sources */,
+				BD60BE672A34B13000EFF020 /* main.m in Sources */,
+				BDDB26B72A34E2DE0090E17D /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -540,8 +741,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-yoroi-yoroiTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENVFILE = "$(PODS_ROOT)/../../.env";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -577,9 +780,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-yoroi-yoroiTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENVFILE = "$(PODS_ROOT)/../../.env";
 				INFOPLIST_FILE = yoroiTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -613,10 +818,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 451;
+				CURRENT_PROJECT_VERSION = 464;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
 				ENABLE_BITCODE = NO;
+				ENVFILE = "$(PODS_ROOT)/../../.env";
 				INFOPLIST_FILE = yoroi/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Yoroi;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -632,7 +839,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
+				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = yoroi;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -650,9 +857,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 451;
+				CURRENT_PROJECT_VERSION = 464;
 				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENVFILE = "$(PODS_ROOT)/../../.env.production";
 				INFOPLIST_FILE = yoroi/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Yoroi;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -668,7 +877,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
+				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
 				PRODUCT_NAME = yoroi;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -816,6 +1025,82 @@
 			};
 			name = Release;
 		};
+		BD60BE832A34B13000EFF020 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 09C4694C59B3001B1758D375 /* Pods-yoroi-nightly.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
+				CLANG_ENABLE_MODULES = YES;
+				CURRENT_PROJECT_VERSION = 464;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				ENVFILE = "$(PODS_ROOT)/../../.env.nightly";
+				INFOPLIST_FILE = nightly.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Yoroi Nightly";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/lib/swift",
+					"$(inherited)",
+				);
+				MARKETING_VERSION = 4.10.2;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		BD60BE842A34B13000EFF020 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E42D01422FD2697C623181C6 /* Pods-yoroi-nightly.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
+				CLANG_ENABLE_MODULES = YES;
+				CURRENT_PROJECT_VERSION = 464;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENVFILE = "$(PODS_ROOT)/../../.env.nightly";
+				INFOPLIST_FILE = nightly.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Yoroi Nightly";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/lib/swift",
+					"$(inherited)",
+				);
+				MARKETING_VERSION = 4.10.2;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -842,6 +1127,15 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BD60BE822A34B13000EFF020 /* Build configuration list for PBXNativeTarget "nightly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BD60BE832A34B13000EFF020 /* Debug */,
+				BD60BE842A34B13000EFF020 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
