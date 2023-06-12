@@ -1,6 +1,7 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {IntlProvider} from 'react-intl'
 import {NativeModules, Platform, Text} from 'react-native'
+import {getTimeZone} from 'react-native-localize'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {useStorage} from '../yoroi-wallets/storage'
@@ -12,14 +13,24 @@ const LanguageContext = React.createContext<undefined | LanguageContext>(undefin
 export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
   const languageCode = useLanguageCode()
   const selectLanguageCode = useSaveLanguageCode()
+  const timeZone = useTimezone()
 
   return (
     <LanguageContext.Provider value={{languageCode, selectLanguageCode, supportedLanguages}}>
-      <IntlProvider locale={languageCode} messages={translations[languageCode]} textComponent={Text}>
+      <IntlProvider
+        timeZone={timeZone}
+        locale={languageCode}
+        messages={translations[languageCode]}
+        textComponent={Text}
+      >
         {children}
       </IntlProvider>
     </LanguageContext.Provider>
   )
+}
+
+const useTimezone = () => {
+  return useMemo(() => getTimeZone(), [])
 }
 
 export const useLanguage = () => React.useContext(LanguageContext) || missingProvider()
