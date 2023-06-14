@@ -23,7 +23,7 @@ jobs:
           version: latest
 
       - name: Create Archive 
-        run: tar -czf /tmp/yoroi.tar.gz $(pwd)
+        run: tar czvf /tmp/yoroi.tar.gz -C $(pwd) . 
 
       - name: Move package file 
         run: mv "/tmp/yoroi.tar.gz" yoroi.${{ steps.package-version.outputs.current-version}}.tar.gz
