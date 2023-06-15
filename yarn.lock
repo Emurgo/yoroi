@@ -1731,10 +1731,17 @@
     "@emurgo/cardano-serialization-lib-nodejs" "11.3.0"
     "@emurgo/cross-csl-core" "2.3.0"
 
-"@emurgo/csl-mobile-bridge@^5.1.0", "@emurgo/csl-mobile-bridge@^5.1.1":
+"@emurgo/csl-mobile-bridge@^5.1.0":
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-5.1.1.tgz#8e5201a3c996e241ae573e7b8f6ed30e1e7ee1cb"
   integrity sha512-DXYy5tgxnxD6DLm1/M23mGJRjEgN6SIJLqjAI6QrbeMGaxmn8bS4F1fPN+hw2HyTN5vLpHq9Lwg+JA/xL10Kpw==
+  dependencies:
+    base-64 "0.1.0"
+
+"@emurgo/csl-mobile-bridge@^5.1.2":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-5.1.2.tgz#726282a490cf39326135b22c0f4acaeb73ae3d73"
+  integrity sha512-ZA1CAGWOhJByQE0HniLkcpV4tPTpM3YDm8wYq2BkCG746OIulExGVlCIP7AlH42YlvpSLmOGnY4Sv/hx80I2xg==
   dependencies:
     base-64 "0.1.0"
 
