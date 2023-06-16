@@ -24,7 +24,7 @@ export const AmountItem = ({wallet, style, amount}: AmountItemProps) => {
   const name = tokenInfo.ticker ?? tokenInfo.name
   const nameLabel = isEmptyString(name) ? '-' : name
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
-  const denominatedQuantity = tokenInfo.kind === 'nft' ? '1' : Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
+  const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
@@ -44,9 +44,11 @@ export const AmountItem = ({wallet, style, amount}: AmountItemProps) => {
       </Middle>
 
       <Right>
-        <Text style={styles.quantity} testID="tokenAmountText">
-          {denominatedQuantity}
-        </Text>
+        {tokenInfo.kind !== 'nft' && (
+          <Text style={styles.quantity} testID="tokenAmountText">
+            {denominatedQuantity}
+          </Text>
+        )}
 
         {isPrimary && <PairedBalance amount={{quantity, tokenId: tokenInfo.id}} />}
       </Right>

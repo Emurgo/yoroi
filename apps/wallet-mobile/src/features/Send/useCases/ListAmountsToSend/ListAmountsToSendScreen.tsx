@@ -14,7 +14,7 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {useTokenInfos} from '../../../../yoroi-wallets/hooks'
+import {useTokenInfo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {TokenInfo, YoroiAmount, YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useSend} from '../../common/SendContext'
@@ -48,6 +48,9 @@ export const ListAmountsToSendScreen = () => {
   )
 
   const onEdit = (tokenId: string) => {
+    const tokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === tokenId)
+    if (!tokenInfo || tokenInfo.kind === 'nft') return
+
     tokenSelectedChanged(tokenId)
     navigateTo.editAmount()
   }
@@ -102,9 +105,10 @@ type ActionableAmountProps = {
 const ActionableAmount = ({amount, onRemove, onEdit}: ActionableAmountProps) => {
   const wallet = useSelectedWallet()
   const {tokenId} = amount
+  const tokenInfo = useTokenInfo({wallet, tokenId})
 
   const handleRemove = () => onRemove(tokenId)
-  const handleEdit = () => onEdit(tokenId)
+  const handleEdit = () => (tokenInfo.kind === 'nft' ? null : onEdit(tokenId))
 
   return (
     <View style={styles.amountItem} testID="amountItem">
