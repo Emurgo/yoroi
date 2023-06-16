@@ -48,7 +48,7 @@ export const ListAmountsToSendScreen = () => {
   )
 
   const onEdit = (tokenId: string) => {
-    const tokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === tokenId)[0]
+    const tokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === tokenId)
     if (tokenInfo.kind === 'nft') return
 
     tokenSelectedChanged(tokenId)
