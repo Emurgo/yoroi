@@ -6,7 +6,6 @@ import {StyleSheet} from 'react-native'
 
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {useCameraPermissions} from '../../../../../yoroi-wallets/hooks'
 import {Quantity} from '../../../../../yoroi-wallets/types'
 import {pastedFormatter} from '../../../../../yoroi-wallets/utils'
 import {useSend} from '../../../common/SendContext'
@@ -52,14 +51,14 @@ const getParams = (params: string) => {
 }
 
 const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => void}) => {
-  const {cameraPermissionStatus, requestCameraPermissions} = useCameraPermissions()
-  const granted = cameraPermissionStatus && cameraPermissionStatus.granted
+  const [status, requestPermissions] = Camera.useCameraPermissions()
+  const granted = status && status.granted
 
   React.useEffect(() => {
     if (!granted) {
-      requestCameraPermissions()
+      requestPermissions()
     }
-  }, [granted, requestCameraPermissions])
+  }, [granted, requestPermissions])
 
   const handleBarCodeScanned = ({data}) => {
     onRead({data})

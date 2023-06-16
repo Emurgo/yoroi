@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
-import {Camera} from 'expo-camera'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {
@@ -916,19 +915,4 @@ export const useNft = (wallet: YoroiWallet, {id}: {id: string}): TokenInfo => {
 export const useIsWalletEmpty = (wallet: YoroiWallet) => {
   const balances = useBalances(wallet)
   return Amounts.toArray(balances).every(({quantity}) => Quantities.isZero(quantity))
-}
-
-export const useCameraPermissions = (options: UseMutationOptions = {}) => {
-  const [status, requestPermissions] = Camera.useCameraPermissions()
-
-  const mutation = useMutation({
-    ...options,
-    mutationFn: requestPermissions,
-  })
-
-  return {
-    cameraPermissionStatus: status,
-    requestCameraPermissions: mutation.mutate,
-    ...mutation,
-  }
 }
