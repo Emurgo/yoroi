@@ -51,19 +51,13 @@ const getParams = (params: string) => {
 }
 
 const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => void}) => {
-  const [status, requestPermissions] = Camera.useCameraPermissions()
-  const granted = status && status.granted
-
-  React.useEffect(() => {
-    if (!granted) {
-      requestPermissions()
-    }
-  }, [granted, requestPermissions])
+  const [status] = Camera.useCameraPermissions()
 
   const handleBarCodeScanned = ({data}) => {
     onRead({data})
   }
 
+  const granted = status && status.granted
   if (!granted) {
     return null
   }
