@@ -3,9 +3,10 @@ import {BarCodeScanner} from 'expo-barcode-scanner'
 import {Camera} from 'expo-camera'
 import * as React from 'react'
 import {StyleSheet} from 'react-native'
-import {TxHistoryRouteNavigation} from 'src/navigation'
 
+import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
+import {useCameraPermissions} from '../../../../../yoroi-wallets/hooks'
 import {Quantity} from '../../../../../yoroi-wallets/types'
 import {pastedFormatter} from '../../../../../yoroi-wallets/utils'
 import {useSend} from '../../../common/SendContext'
@@ -51,8 +52,21 @@ const getParams = (params: string) => {
 }
 
 const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => void}) => {
+  const {cameraPermissionStatus, requestCameraPermissions} = useCameraPermissions()
+  const granted = cameraPermissionStatus && cameraPermissionStatus.granted
+
+  React.useEffect(() => {
+    if (!granted) {
+      requestCameraPermissions()
+    }
+  }, [granted, requestCameraPermissions])
+
   const handleBarCodeScanned = ({data}) => {
     onRead({data})
+  }
+
+  if (!granted) {
+    return null
   }
 
   return (
