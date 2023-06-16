@@ -5,12 +5,19 @@ import {StyleSheet, View} from 'react-native'
 import {Button, Spacer, Text} from '../../../../../components'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {COLORS} from '../../../../../theme'
+import {useSend} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {FailedTxImage} from './FailedTxImage'
 
 export const FailedTxScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
+  const {resetForm} = useSend()
+
+  const onPress = () => {
+    resetForm()
+    navigateTo.startTx()
+  }
 
   return (
     <View style={styles.container}>
@@ -22,7 +29,7 @@ export const FailedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={navigateTo.startTx} title={strings.failedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={onPress} title={strings.failedTxButton} style={styles.button} shelleyTheme />
     </View>
   )
 }

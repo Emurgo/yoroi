@@ -11,6 +11,10 @@ export const SubmittedTxScreen = () => {
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
 
+  const onPress = () => {
+    resetToTxHistory()
+  }
+
   return (
     <View style={styles.container}>
       <SubmittedTxImage />
@@ -21,7 +25,7 @@ export const SubmittedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={resetToTxHistory} title={strings.submittedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={onPress} title={strings.submittedTxButton} style={styles.button} shelleyTheme />
     </View>
   )
 }
