@@ -4,18 +4,15 @@ import {StyleSheet, View} from 'react-native'
 import {Button, Spacer, Text} from '../../../../../components'
 import {useWalletNavigation} from '../../../../../navigation'
 import {COLORS} from '../../../../../theme'
-import {useSend} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
 
 export const SubmittedTxScreen = () => {
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
-  const {resetForm} = useSend()
 
   const onPress = () => {
     resetToTxHistory()
-    resetForm()
   }
 
   return (
