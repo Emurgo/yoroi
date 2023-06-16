@@ -1,4 +1,3 @@
-import {Camera} from 'expo-camera'
 import React from 'react'
 import {TouchableOpacity} from 'react-native'
 
@@ -10,18 +9,10 @@ type Props = {
   onPress: () => void
 }
 export const ScannerButton = ({disabled, onPress}: Props) => {
-  const [status, requestPermissions] = Camera.useCameraPermissions()
   const color = disabled ? COLORS.TEXT_INPUT : 'black'
 
-  const handleOnPress = () => {
-    if (status && !status.granted) {
-      requestPermissions()
-    }
-    onPress()
-  }
-
   return (
-    <TouchableOpacity onPress={handleOnPress} disabled={disabled}>
+    <TouchableOpacity onPress={onPress} disabled={disabled}>
       <Icon.Qr color={color} size={30} />
     </TouchableOpacity>
   )
