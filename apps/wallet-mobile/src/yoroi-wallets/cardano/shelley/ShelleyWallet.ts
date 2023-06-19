@@ -837,7 +837,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const ledgerPayload = await Cardano.buildLedgerPayload(
         unsignedTx.unsignedTx,
         CHAIN_NETWORK_ID,
-        PROTOCOL_MAGIC,
+        1,
         STAKING_KEY_PATH,
       )
 
