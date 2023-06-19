@@ -890,7 +890,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       console.log('signedTx.id, signedLedgerTx.txHashHex')
       console.log(signedTx.id, signedLedgerTx.txHashHex)
 
-      // return {signedTx: signedTx}
+      if (signedTx.id !== signedLedgerTx.txHashHex) {
+        console.log('Tx hash mismatch')
+      }
+
       const result = yoroiSignedTx({
         unsignedTx,
         signedTx,
@@ -1351,7 +1354,7 @@ async function buildLedgerSignedTx(
   // TODO: handle script witnesses
   const signedTx = await Cardano.Wasm.Transaction.new(newTx, witSet, auxData)
   console.log('signedTx', signedTx)
-  console.log('signed tx body json', signedTx.wasm.to_json())
+  console.log('signed tx body json', await signedTx.wasm.to_json())
 
   // return signedTx
 
