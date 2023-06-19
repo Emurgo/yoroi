@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {SignTransactionResponse} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import {Bip32PublicKey, BootstrapWitness, Vkeywitness, WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {Addressing, Bip44DerivationLevels, CatalystLabels, MetadataJsonSchema, UnsignedTx} from '@emurgo/yoroi-lib'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -45,6 +48,7 @@ import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
 import {withMinAmounts} from '../getMinAmounts'
 import {getTime} from '../getTime'
 import {signTxWithLedger} from '../hw'
+import {NUMBERS} from '../numbers'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
@@ -62,7 +66,7 @@ import {
   YoroiWallet,
 } from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
-import {deriveRewardAddressHex, toSendTokenList} from '../utils'
+import {deriveRewardAddressHex, isByron, isHaskellShelley, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {makeKeys} from './makeKeys'
 
@@ -112,7 +116,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     POOL_DEPOSIT,
     PRIMARY_TOKEN,
     PRIMARY_TOKEN_INFO,
-    PROTOCOL_MAGIC,
     PURPOSE,
     REWARD_ADDRESS_ADDRESSING,
     STAKING_KEY_INDEX,
@@ -831,6 +834,31 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       })
     }
 
+    private getPurpose(): number {
+      if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
+
+      if (isByron(this.walletImplementationId)) {
+        return NUMBERS.WALLET_TYPE_PURPOSE.BIP44
+      } else if (isHaskellShelley(this.walletImplementationId)) {
+        return NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+      } else {
+        throw new Error('CardanoWallet::_getPurpose: invalid wallet impl. id')
+      }
+    }
+
+    private getRewardAddressAddressing() {
+      return {
+        path: [
+          this.getPurpose(),
+          NUMBERS.COIN_TYPES.CARDANO,
+          NUMBERS.ACCOUNT_INDEX + NUMBERS.HARD_DERIVATION_START,
+          NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
+          NUMBERS.STAKING_KEY_INDEX,
+        ],
+        startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
+      }
+    }
+
     async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
       if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
 
@@ -841,18 +869,39 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         STAKING_KEY_PATH,
       )
 
+      console.log('ledgerPayload', ledgerPayload)
       const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
-      const signedTx = await Cardano.buildLedgerSignedTx(
-        unsignedTx.unsignedTx,
-        signedLedgerTx,
-        PURPOSE,
-        this.publicKeyHex,
-      )
+      const key = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.publicKeyHex, 'hex'))
+      // const addressing = (await this.getAddressedChangeAddress()).addressing
+      const addressing = {
+        path: [
+          PURPOSE,
+          2147485463, // CARDANO
+          2147483648,
+        ],
+        startLevel: 1,
+      }
+      const signedTx = await buildLedgerSignedTx(unsignedTx.unsignedTx, signedLedgerTx, {
+        key,
+        // addressing: (await this.getAddressedChangeAddress()).addressing,
+        addressing,
+      })
 
-      return yoroiSignedTx({
+      console.log('signedTx.id, signedLedgerTx.txHashHex')
+      console.log(signedTx.id, signedLedgerTx.txHashHex)
+
+      // return {signedTx: signedTx}
+      const result = yoroiSignedTx({
         unsignedTx,
         signedTx,
       })
+      return {
+        ...result,
+        signedTx: {
+          id: signedTx.id,
+          encodedTx: signedTx.encodedTx,
+        },
+      }
     }
 
     // =================== backend API =================== //
@@ -1154,3 +1203,239 @@ const keys: Array<keyof WalletJSON> = [
 
 const encryptAndSaveRootKey = (wallet: YoroiWallet, rootKey: string, password: string) =>
   wallet.encryptedStorage.rootKey.write(rootKey, password)
+
+const ChainDerivations = Object.freeze({
+  EXTERNAL: 0,
+  INTERNAL: 1,
+  CHIMERIC_ACCOUNT: 2,
+})
+
+async function buildLedgerSignedTx(
+  unsignedTx: UnsignedTx,
+  signedLedgerTx: SignTransactionResponse,
+  publicKey: {addressing: Addressing; key: Bip32PublicKey},
+) {
+  const isSameArray = (array1: Array<number>, array2: Array<number>) =>
+    array1.length === array2.length && array1.every((value, index) => value === array2[index])
+
+  const findWitness = (path: Array<number>) => {
+    for (const witness of signedLedgerTx.witnesses) {
+      if (isSameArray(witness.path, path)) {
+        return witness.witnessSignatureHex
+      }
+    }
+
+    throw new Error(`buildSignedTransaction no witness for ${JSON.stringify(path)}`)
+  }
+
+  const keyLevel = publicKey.addressing.startLevel + publicKey.addressing.path.length - 1
+  const witSet = await Cardano.Wasm.TransactionWitnessSet.new()
+  const bootstrapWitnesses: Array<BootstrapWitness> = []
+  const vkeys: Array<Vkeywitness> = []
+
+  // Note: Ledger removes duplicate witnesses
+  // but there may be a one-to-many relationship
+  // ex: same witness is used in both a bootstrap witness and a vkey witness
+  const seenVKeyWit = new Set<string>()
+  const seenBootstrapWit = new Set<string>()
+
+  for (const utxo of unsignedTx.senderUtxos) {
+    verifyFromBip44Root(utxo.addressing)
+    const witness = findWitness(utxo.addressing.path)
+    const addressKey = await derivePublicByAddressing(utxo.addressing, {
+      level: keyLevel,
+      key: publicKey.key,
+    })
+
+    if (await Cardano.Wasm.ByronAddress.isValid(utxo.receiver)) {
+      const byronAddr = await Cardano.Wasm.ByronAddress.fromBase58(utxo.receiver)
+      const bootstrapWit = await Cardano.Wasm.BootstrapWitness.new(
+        await Cardano.Wasm.Vkey.new(await addressKey.toRawKey()),
+        await Cardano.Wasm.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
+        await addressKey.chaincode(),
+        await byronAddr.attributes(),
+      )
+      const asString = Buffer.from(await bootstrapWit.toBytes()).toString('hex')
+
+      if (seenBootstrapWit.has(asString)) {
+        continue
+      }
+
+      seenBootstrapWit.add(asString)
+      bootstrapWitnesses.push(bootstrapWit)
+      continue
+    }
+
+    const vkeyWit = await Cardano.Wasm.Vkeywitness.new(
+      await Cardano.Wasm.Vkey.new(await addressKey.toRawKey()),
+      await Cardano.Wasm.Ed25519Signature.fromBytes(Buffer.from(witness, 'hex')),
+    )
+    const asString = Buffer.from(await vkeyWit.toBytes()).toString('hex')
+
+    if (seenVKeyWit.has(asString)) {
+      continue
+    }
+
+    seenVKeyWit.add(asString)
+    vkeys.push(vkeyWit)
+  }
+
+  // add any staking key needed
+  for (const witness of signedLedgerTx.witnesses) {
+    const addressing = {
+      path: witness.path,
+      startLevel: 1,
+    }
+    verifyFromBip44Root(addressing)
+
+    if (witness.path[Bip44DerivationLevels.CHAIN.level - 1] === ChainDerivations.CHIMERIC_ACCOUNT) {
+      // TODO: what is this?
+      const stakingKey = await derivePublicByAddressing(addressing, {
+        level: keyLevel,
+        key: publicKey.key,
+      })
+      const vkeyWit = await Cardano.Wasm.Vkeywitness.new(
+        await Cardano.Wasm.Vkey.new(await stakingKey.toRawKey()),
+        await Cardano.Wasm.Ed25519Signature.fromBytes(Buffer.from(witness.witnessSignatureHex, 'hex')),
+      )
+      const asString = Buffer.from(await vkeyWit.toBytes()).toString('hex')
+
+      if (seenVKeyWit.has(asString)) {
+        continue
+      }
+
+      seenVKeyWit.add(asString)
+      vkeys.push(vkeyWit)
+    }
+  }
+
+  if (bootstrapWitnesses.length > 0) {
+    const bootstrapWitWasm = await Cardano.Wasm.BootstrapWitnesses.new()
+
+    for (const bootstrapWit of bootstrapWitnesses) {
+      await bootstrapWitWasm.add(bootstrapWit)
+    }
+
+    await witSet.setBootstraps(bootstrapWitWasm)
+  }
+
+  if (vkeys.length > 0) {
+    const vkeyWitWasm = await Cardano.Wasm.Vkeywitnesses.new()
+
+    for (const vkey of vkeys) {
+      await vkeyWitWasm.add(vkey)
+    }
+
+    await witSet.setVkeys(vkeyWitWasm)
+  }
+
+  let auxData = unsignedTx.auxiliaryData
+  if (unsignedTx.catalystRegistrationData) {
+    console.log('adding catalyst registration data')
+    auxData = await generateRegistrationMetadata(
+      Cardano.Wasm,
+      unsignedTx.catalystRegistrationData.votingPublicKeyHex,
+      unsignedTx.catalystRegistrationData.stakingPublicKeyHex,
+      unsignedTx.catalystRegistrationData.paymentAddress,
+      unsignedTx.catalystRegistrationData.nonce,
+      () => Promise.resolve(signedLedgerTx.auxiliaryDataSupplement?.cip36VoteRegistrationSignatureHex ?? ''),
+    )
+  }
+
+  if (auxData) {
+    await unsignedTx.txBuilder.setAuxiliaryData(auxData)
+  }
+
+  const newTx = await unsignedTx.txBuilder.build()
+
+  // TODO: handle script witnesses
+  const signedTx = await Cardano.Wasm.Transaction.new(newTx, witSet, auxData)
+  console.log('signedTx', signedTx)
+  console.log('signed tx body json', signedTx.wasm.to_json())
+
+  // return signedTx
+
+  const id = await signedTx
+    .body()
+    .then((txBody) => Cardano.Wasm.hashTransaction(txBody))
+    .then((hash) => hash.toBytes())
+    .then((bytes) => Buffer.from(bytes).toString('hex'))
+  const encodedTx = await signedTx.toBytes()
+
+  return {
+    id,
+    encodedTx,
+  }
+}
+
+const verifyFromBip44Root = (addressing: CardanoTypes.Addressing): void => {
+  const accountPosition = addressing.startLevel
+  if (accountPosition !== Bip44DerivationLevels.PURPOSE.level) {
+    throw new Error(`verifyFromBip44Root addressing does not start from root`)
+  }
+  const lastLevelSpecified = addressing.startLevel + addressing.path.length - 1
+  if (lastLevelSpecified !== Bip44DerivationLevels.ADDRESS.level) {
+    throw new Error(`verifyFromBip44Root incorrect addressing size`)
+  }
+}
+
+const derivePublicByAddressing = async (
+  addressing: CardanoTypes.Addressing,
+  startingFrom: {
+    key: CardanoTypes.Bip32PublicKey
+    level: number
+  },
+) => {
+  if (startingFrom.level + 1 < addressing.startLevel) {
+    throw new Error('derivePublicByAddressing: keyLevel < startLevel')
+  }
+
+  let derivedKey = startingFrom.key
+
+  for (let i = startingFrom.level - addressing.startLevel + 1; i < addressing.path.length; i++) {
+    derivedKey = await derivedKey.derive(addressing.path[i])
+  }
+
+  return derivedKey
+}
+
+const generateRegistrationMetadata = async (
+  wasm: WasmModuleProxy,
+  votingPublicKeyHex: string,
+  stakingPublicKeyHex: string,
+  paymentAddress: string,
+  nonce: number,
+  signer: (hashedMetadata: Buffer) => Promise<string>,
+) => {
+  const registrationData = await wasm.encodeJsonStrToMetadatum(
+    JSON.stringify({
+      '1': [[`0x${votingPublicKeyHex}`, 1]],
+      '2': `0x${stakingPublicKeyHex}`,
+      '3': `0x${paymentAddress}`,
+      '4': nonce,
+      '5': 0,
+    }),
+    MetadataJsonSchema.BasicConversions,
+  )
+
+  const generalMetadata = await wasm.GeneralTransactionMetadata.new()
+  await generalMetadata.insert(await wasm.BigNum.fromStr(CatalystLabels.DATA.toString()), registrationData)
+
+  const signedMetadata = await signer(Buffer.from([]))
+
+  await generalMetadata.insert(
+    await wasm.BigNum.fromStr(CatalystLabels.SIG.toString()),
+    await wasm.encodeJsonStrToMetadatum(
+      JSON.stringify({
+        '1': `0x${signedMetadata}`,
+      }),
+      MetadataJsonSchema.BasicConversions,
+    ),
+  )
+
+  const metadataList = await wasm.MetadataList.new()
+  await metadataList.add(await wasm.TransactionMetadatum.fromBytes(await generalMetadata.toBytes()))
+  await metadataList.add(await wasm.TransactionMetadatum.newList(await wasm.MetadataList.new()))
+
+  return wasm.AuxiliaryData.fromBytes(await metadataList.toBytes())
+}
