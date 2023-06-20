@@ -154,17 +154,9 @@ export const TxHistoryNavigator = () => {
           }}
         />
 
-        <Stack.Screen
-          name="send-submitted-tx"
-          component={SubmittedTxScreen}
-          options={{headerShown: false, gestureEnabled: false}}
-        />
+        <Stack.Screen name="send-submitted-tx" component={SubmittedTxScreen} options={{headerShown: false}} />
 
-        <Stack.Screen
-          name="send-failed-tx"
-          component={FailedTxScreen}
-          options={{headerShown: false, gestureEnabled: false}}
-        />
+        <Stack.Screen name="send-failed-tx" component={FailedTxScreen} options={{headerShown: false}} />
       </Stack.Navigator>
 
       <ModalInfo hideModalInfo={hideModalInfo} visible={modalInfoState}>
