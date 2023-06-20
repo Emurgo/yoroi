@@ -47,8 +47,8 @@ import * as api from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
+import {BYRON_VOTING_KEY_PATH} from '../constants/common'
 import {
-  HARD_DERIVATION_START,
   HISTORY_REFRESH_TIME,
   MAX_GENERATED_UNUSED,
   PRIMARY_TOKEN,
@@ -828,7 +828,6 @@ export class ByronWallet implements YoroiWallet {
       const addressedUtxos = await this.getAddressedUtxos()
 
       const externalAddress = this.externalAddresses[0]
-      const path = [44 + HARD_DERIVATION_START, 1815 + HARD_DERIVATION_START, 0 + HARD_DERIVATION_START, 0, 0]
       const addr = await Cardano.Wasm.Address.fromBech32(externalAddress)
       const baseAddr = await Cardano.Wasm.BaseAddress.fromAddress(addr)
       const paymentAddress = await baseAddr
@@ -849,7 +848,7 @@ export class ByronWallet implements YoroiWallet {
         nonce,
         chainNetworkConfig,
         paymentAddress,
-        path,
+        BYRON_VOTING_KEY_PATH,
       )
 
       const votingRegistration: {

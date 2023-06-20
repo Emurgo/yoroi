@@ -38,6 +38,7 @@ import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
 import * as MAINNET from '../constants/mainnet/constants'
+import {SHELLEY_VOTING_KEY_PATH} from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
@@ -738,7 +739,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         const addressedUtxos = await this.getAddressedUtxos()
 
         const externalAddress = this.externalAddresses[0]
-        const path = [1852 + HARD_DERIVATION_START, 1815 + HARD_DERIVATION_START, 0 + HARD_DERIVATION_START, 0, 0]
         const addr = await Cardano.Wasm.Address.fromBech32(externalAddress)
         const baseAddr = await Cardano.Wasm.BaseAddress.fromAddress(addr)
         const paymentAddress = await baseAddr
@@ -759,7 +759,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           nonce,
           CHAIN_NETWORK_ID,
           paymentAddress,
-          path,
+          SHELLEY_VOTING_KEY_PATH,
         )
 
         const votingRegistration: {
