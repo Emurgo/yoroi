@@ -52,7 +52,6 @@ import {
   MAX_GENERATED_UNUSED,
   PRIMARY_TOKEN,
   PRIMARY_TOKEN_INFO,
-  VOTING_KEY_PATH,
 } from '../constants/mainnet/constants'
 import {CardanoError, InvalidState} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
@@ -827,7 +826,17 @@ export class ByronWallet implements YoroiWallet {
 
       const addressedUtxos = await this.getAddressedUtxos()
 
-      const paymentAddress = Buffer.from(await stakingPublicKey.asBytes()).toString('hex')
+      if (addressedUtxos.length === 0) {
+        throw new Error('No available addressed UTXOs to complete transaction')
+      }
+
+      const path = addressedUtxos[0].addressing.path
+      const addr = await Cardano.Wasm.Address.fromBech32(addressedUtxos[0].receiver)
+      const baseAddr = await Cardano.Wasm.BaseAddress.fromAddress(addr)
+      const paymentAddress = await baseAddr
+        .toAddress()
+        .then((a) => a.toBytes())
+        .then((b) => Buffer.from(b).toString('hex'))
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
@@ -842,7 +851,7 @@ export class ByronWallet implements YoroiWallet {
         nonce,
         chainNetworkConfig,
         paymentAddress,
-        VOTING_KEY_PATH,
+        path,
       )
 
       const votingRegistration: {
@@ -853,7 +862,7 @@ export class ByronWallet implements YoroiWallet {
       } = {
         votingPublicKey: await votingPublicKey.toBech32(),
         stakingPublicKey: await stakingPublicKey.toBech32(),
-        rewardAddress: await this.getRewardAddress().then((address) => address.toBech32()),
+        rewardAddress: await baseAddr.toAddress().then((address) => address.toBech32()),
         nonce,
       }
 
