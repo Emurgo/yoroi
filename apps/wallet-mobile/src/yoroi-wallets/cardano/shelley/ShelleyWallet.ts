@@ -704,8 +704,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     async createVotingRegTx(pin: string) {
       Logger.debug('CardanoWallet::createVotingRegTx called')
 
-      const catalystPrivateKey = await generatePrivateKeyForCatalyst()
-      const bytes = await catalystPrivateKey.toRawKey().then((key) => key.asBytes())
+      const bytes = await generatePrivateKeyForCatalyst()
+        .then((key) => key.toRawKey())
+        .then((key) => key.asBytes())
 
       const catalystKeyHex = Buffer.from(bytes).toString('hex')
 
@@ -736,8 +737,11 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
         const addressedUtxos = await this.getAddressedUtxos()
 
-        const addr = await Cardano.Wasm.Address.fromBech32(addressedUtxos[0].receiver)
+        if (addressedUtxos.length === 0) {
+          throw new Error('No available addressed UTXOs to complete transaction')
+        }
 
+        const addr = await Cardano.Wasm.Address.fromBech32(addressedUtxos[0].receiver)
         const baseAddr = await Cardano.Wasm.BaseAddress.fromAddress(addr)
         const paymentAddress = await baseAddr
           .toAddress()
