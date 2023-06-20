@@ -42,13 +42,13 @@ import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
 import * as MAINNET from '../constants/mainnet/constants'
-import {VOTING_KEY_PATH} from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
 import {withMinAmounts} from '../getMinAmounts'
 import {getTime} from '../getTime'
 import {signTxWithLedger} from '../hw'
+import {CardanoHaskellShelleyNetwork, getCardanoNetworkConfigById} from '../networks'
 import {NUMBERS} from '../numbers'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
@@ -706,12 +706,16 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       })
     }
 
+    private getNetworkConfig(): CardanoHaskellShelleyNetwork {
+      return getCardanoNetworkConfigById(this.networkId)
+    }
+
     async createVotingRegTx(pin: string) {
       Logger.debug('CardanoWallet::createVotingRegTx called')
+      const networkConfig = this.getNetworkConfig()
 
-      const bytes = await generatePrivateKeyForCatalyst()
-        .then((key) => key.toRawKey())
-        .then((key) => key.asBytes())
+      const catalystPrivateKey = await generatePrivateKeyForCatalyst()
+      const bytes = await catalystPrivateKey.toRawKey().then((key) => key.asBytes())
 
       const catalystKeyHex = Buffer.from(bytes).toString('hex')
 
@@ -742,7 +746,15 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
         const addressedUtxos = await this.getAddressedUtxos()
 
-        const paymentAddress = this.rewardAddressHex
+        const addr = await Cardano.Wasm.Address.fromBech32(addressedUtxos[0].receiver)
+        // addressedUtxos[0].addressing.path
+
+        const baseAddr = await Cardano.Wasm.BaseAddress.fromAddress(addr)
+        const paymentAddress = await baseAddr
+          .toAddress()
+          .then((a) => a.toBytes())
+          .then((b) => Buffer.from(b).toString('hex'))
+        // const stakingPublicKey = await stakingKey.toPublic()
 
         const unsignedTx = await Cardano.createUnsignedVotingTx(
           absSlotNumber,
@@ -757,7 +769,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           nonce,
           CHAIN_NETWORK_ID,
           paymentAddress,
-          VOTING_KEY_PATH,
+          addressedUtxos[0].addressing.path,
         )
 
         const votingRegistration: {
@@ -768,7 +780,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         } = {
           votingPublicKey: await votingPublicKey.toBech32(),
           stakingPublicKey: await stakingPublicKey.toBech32(),
-          rewardAddress: await this.getRewardAddress().then((address) => address.toBech32()),
+          rewardAddress: await baseAddr.toAddress().then((address) => address.toBech32()),
           nonce,
         }
 
@@ -779,7 +791,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           votingKeyEncrypted: catalystKeyEncrypted,
           votingRegTx: await yoroiUnsignedTx({
             unsignedTx,
-            networkConfig: NETWORK_CONFIG,
+            networkConfig,
             votingRegistration,
             addressedUtxos,
           }),
@@ -870,7 +882,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         STAKING_KEY_PATH,
       )
 
-      console.log('ledgerPayload', ledgerPayload)
+      console.log('ledgerPayload', JSON.stringify(ledgerPayload, null, 2))
       const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
       const key = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.publicKeyHex, 'hex'))
       // const addressing = (await this.getAddressedChangeAddress()).addressing
@@ -1354,6 +1366,13 @@ async function buildLedgerSignedTx(
 
   // TODO: handle script witnesses
   const signedTx = await Cardano.Wasm.Transaction.new(newTx, witSet, auxData)
+  console.log(
+    'aux data hash hex',
+    await signedTx
+      .body()
+      .then((txBody) => txBody.wasm.auxiliary_data_hash())
+      .then((h) => h.to_hex()),
+  )
   console.log('signedTx', signedTx)
   console.log('signed tx body json', await signedTx.wasm.to_json())
 
@@ -1441,5 +1460,7 @@ const generateRegistrationMetadata = async (
   await metadataList.add(await wasm.TransactionMetadatum.fromBytes(await generalMetadata.toBytes()))
   await metadataList.add(await wasm.TransactionMetadatum.newList(await wasm.MetadataList.new()))
 
-  return wasm.AuxiliaryData.fromBytes(await metadataList.toBytes())
+  const auxData = await wasm.AuxiliaryData.fromBytes(await metadataList.toBytes())
+
+  return auxData
 }
