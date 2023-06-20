@@ -4,6 +4,7 @@ import {Bip32PublicKey, BootstrapWitness, Vkeywitness, WasmModuleProxy} from '@e
 import {Addressing, Bip44DerivationLevels, CatalystLabels, MetadataJsonSchema, UnsignedTx} from '@emurgo/yoroi-lib'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
+import {Buffer} from 'buffer'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
@@ -741,7 +742,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
         const addressedUtxos = await this.getAddressedUtxos()
 
-        const paymentAddress = Buffer.from(await stakingPublicKey.asBytes()).toString('hex')
+        const paymentAddress = this.rewardAddressHex
 
         const unsignedTx = await Cardano.createUnsignedVotingTx(
           absSlotNumber,
