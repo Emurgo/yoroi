@@ -18,7 +18,7 @@ export const useCanVote = (wallet: YoroiWallet) => {
 }
 
 export const useCountdown = () => {
-  const [countdown, setCountdown] = useState(0)
+  const [countdown, setCountdown] = useState(5)
 
   useEffect(() => {
     let timeout: NodeJS.Timeout

@@ -747,14 +747,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         const addressedUtxos = await this.getAddressedUtxos()
 
         const addr = await Cardano.Wasm.Address.fromBech32(addressedUtxos[0].receiver)
-        // addressedUtxos[0].addressing.path
 
         const baseAddr = await Cardano.Wasm.BaseAddress.fromAddress(addr)
         const paymentAddress = await baseAddr
           .toAddress()
           .then((a) => a.toBytes())
           .then((b) => Buffer.from(b).toString('hex'))
-        // const stakingPublicKey = await stakingKey.toPublic()
 
         const unsignedTx = await Cardano.createUnsignedVotingTx(
           absSlotNumber,
