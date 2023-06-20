@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
+import {useBlockGoBack} from '../../../../../navigation'
 import {COLORS} from '../../../../../theme'
 import {useNavigateTo} from '../../../common/navigation'
 import {useSend} from '../../../common/SendContext'
@@ -9,6 +10,7 @@ import {useStrings} from '../../../common/strings'
 import {FailedTxImage} from './FailedTxImage'
 
 export const FailedTxScreen = () => {
+  useBlockGoBack()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const {resetForm} = useSend()

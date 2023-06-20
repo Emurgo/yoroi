@@ -1,9 +1,10 @@
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import React, {useEffect, useState} from 'react'
+import {useFocusEffect} from '@react-navigation/native'
+import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {NativeModules, Platform, ScrollView, StyleSheet, View} from 'react-native'
 import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useBlockGoBack} from 'src/navigation'
 
 import {Button, CopyButton, ProgressStep, Spacer, Text} from '../components'
 import {confirmationMessages} from '../i18n/global-messages'
@@ -88,19 +89,6 @@ const QRCode = ({text}: {text: string}) => (
   </View>
 )
 const SecretCodeBox = (props) => <View {...props} style={styles.secretCodeBox} />
-
-const useBlockGoBack = () => {
-  const navigation = useNavigation()
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-      if (e.data.action.type !== 'RESET') {
-        e.preventDefault()
-      }
-    })
-    return () => unsubscribe()
-  }, [navigation])
-}
 
 const messages = defineMessages({
   subTitle: {
