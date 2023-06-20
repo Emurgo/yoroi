@@ -45,7 +45,6 @@ import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
 import {withMinAmounts} from '../getMinAmounts'
 import {getTime} from '../getTime'
 import {signTxWithLedger} from '../hw'
-import {CardanoHaskellShelleyNetwork, getCardanoNetworkConfigById} from '../networks'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
@@ -702,13 +701,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       })
     }
 
-    private getNetworkConfig(): CardanoHaskellShelleyNetwork {
-      return getCardanoNetworkConfigById(this.networkId)
-    }
-
     async createVotingRegTx(pin: string) {
       Logger.debug('CardanoWallet::createVotingRegTx called')
-      const networkConfig = this.getNetworkConfig()
 
       const catalystPrivateKey = await generatePrivateKeyForCatalyst()
       const bytes = await catalystPrivateKey.toRawKey().then((key) => key.asBytes())
@@ -785,7 +779,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           votingKeyEncrypted: catalystKeyEncrypted,
           votingRegTx: await yoroiUnsignedTx({
             unsignedTx,
-            networkConfig,
+            networkConfig: NETWORK_CONFIG,
             votingRegistration,
             addressedUtxos,
           }),
@@ -860,17 +854,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         this.publicKeyHex,
       )
 
-      const result = yoroiSignedTx({
+      return yoroiSignedTx({
         unsignedTx,
         signedTx,
       })
-      return {
-        ...result,
-        signedTx: {
-          id: signedTx.id,
-          encodedTx: signedTx.encodedTx,
-        },
-      }
     }
 
     // =================== backend API =================== //
