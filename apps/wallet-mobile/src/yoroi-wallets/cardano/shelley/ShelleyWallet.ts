@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
-import {Buffer} from 'buffer'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
@@ -112,6 +111,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     POOL_DEPOSIT,
     PRIMARY_TOKEN,
     PRIMARY_TOKEN_INFO,
+    PROTOCOL_MAGIC,
     PURPOSE,
     REWARD_ADDRESS_ADDRESSING,
     STAKING_KEY_INDEX,
@@ -841,7 +841,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const ledgerPayload = await Cardano.buildLedgerPayload(
         unsignedTx.unsignedTx,
         CHAIN_NETWORK_ID,
-        1,
+        PROTOCOL_MAGIC,
         STAKING_KEY_PATH,
       )
 
