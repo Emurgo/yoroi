@@ -49,7 +49,6 @@ import {withMinAmounts} from '../getMinAmounts'
 import {getTime} from '../getTime'
 import {signTxWithLedger} from '../hw'
 import {CardanoHaskellShelleyNetwork, getCardanoNetworkConfigById} from '../networks'
-import {NUMBERS} from '../numbers'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
@@ -67,7 +66,7 @@ import {
   YoroiWallet,
 } from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
-import {deriveRewardAddressHex, isByron, isHaskellShelley, toSendTokenList} from '../utils'
+import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {makeKeys} from './makeKeys'
 
@@ -845,31 +844,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       })
     }
 
-    private getPurpose(): number {
-      if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
-
-      if (isByron(this.walletImplementationId)) {
-        return NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-      } else if (isHaskellShelley(this.walletImplementationId)) {
-        return NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-      } else {
-        throw new Error('CardanoWallet::_getPurpose: invalid wallet impl. id')
-      }
-    }
-
-    private getRewardAddressAddressing() {
-      return {
-        path: [
-          this.getPurpose(),
-          NUMBERS.COIN_TYPES.CARDANO,
-          NUMBERS.ACCOUNT_INDEX + NUMBERS.HARD_DERIVATION_START,
-          NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
-          NUMBERS.STAKING_KEY_INDEX,
-        ],
-        startLevel: NUMBERS.BIP44_DERIVATION_LEVELS.PURPOSE,
-      }
-    }
-
     async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
       if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
 
@@ -880,10 +854,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         STAKING_KEY_PATH,
       )
 
-      console.log('ledgerPayload', JSON.stringify(ledgerPayload, null, 2))
       const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
       const key = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.publicKeyHex, 'hex'))
-      // const addressing = (await this.getAddressedChangeAddress()).addressing
+
       const addressing = {
         path: [
           PURPOSE,
@@ -894,16 +867,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       }
       const signedTx = await buildLedgerSignedTx(unsignedTx.unsignedTx, signedLedgerTx, {
         key,
-        // addressing: (await this.getAddressedChangeAddress()).addressing,
         addressing,
       })
-
-      console.log('signedTx.id, signedLedgerTx.txHashHex')
-      console.log(signedTx.id, signedLedgerTx.txHashHex)
-
-      if (signedTx.id !== signedLedgerTx.txHashHex) {
-        console.log('Tx hash mismatch')
-      }
 
       const result = yoroiSignedTx({
         unsignedTx,
