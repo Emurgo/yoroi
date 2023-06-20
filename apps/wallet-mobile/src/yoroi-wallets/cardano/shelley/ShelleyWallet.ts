@@ -741,6 +741,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           throw new Error('No available addressed UTXOs to complete transaction')
         }
 
+        const path = addressedUtxos[0].addressing.path
         const addr = await Cardano.Wasm.Address.fromBech32(addressedUtxos[0].receiver)
         const baseAddr = await Cardano.Wasm.BaseAddress.fromAddress(addr)
         const paymentAddress = await baseAddr
@@ -761,7 +762,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           nonce,
           CHAIN_NETWORK_ID,
           paymentAddress,
-          addressedUtxos[0].addressing.path,
+          path,
         )
 
         const votingRegistration: {
