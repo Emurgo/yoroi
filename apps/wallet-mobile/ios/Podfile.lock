@@ -497,13 +497,13 @@ PODS:
     - React
   - RNFlashList (1.4.3):
     - React-Core
-  - RNGestureHandler (2.9.0):
+  - RNGestureHandler (2.11.0):
     - React-Core
   - RNKeychain (7.0.0):
     - React-Core
   - RNPermissions (3.8.0):
     - React-Core
-  - RNReanimated (3.1.0):
+  - RNReanimated (3.2.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -902,10 +902,10 @@ SPEC CHECKSUMS:
   RNDateTimePicker: 7ecd54a97fc3749f38c3c89a171f6cbd52f3c142
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
   RNFlashList: ade81b4e928ebd585dd492014d40fb8d0e848aab
-  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
+  RNGestureHandler: 026038a97d4c8649ce397a22e162ca58b4e6c230
   RNKeychain: f75b8c8b2f17d3b2aa1f25b4a0ac5b83d947ff8f
   RNPermissions: 215c54462104b3925b412b0fb3c9c497b21c358b
-  RNReanimated: 7afddd5ab0590339f3e83d7bb52f43a73443b862
+  RNReanimated: b066ca8c871dc6cd654b10f942d35b5394492512
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
