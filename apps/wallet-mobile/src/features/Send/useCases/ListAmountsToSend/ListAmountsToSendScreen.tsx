@@ -1,8 +1,8 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {useCallback, useEffect, useLayoutEffect} from 'react'
+import {useCallback, useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {BackHandler, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {useQuery, UseQueryOptions} from 'react-query'
 
@@ -14,6 +14,7 @@ import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
+import {useOverrideBackNavigate} from '../../../../utils/navigation'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {TokenInfo, YoroiAmount, YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
@@ -33,10 +34,7 @@ export const ListAmountsToSendScreen = () => {
     return true
   }, [navigateTo])
 
-  useEffect(() => {
-    const subscription = BackHandler.addEventListener('hardwareBackPress', navigateBack)
-    return () => subscription.remove()
-  }, [navigateBack])
+  useOverrideBackNavigate(navigateBack)
 
   useLayoutEffect(() => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})

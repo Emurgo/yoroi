@@ -1,10 +1,11 @@
 import {useNavigation} from '@react-navigation/native'
 import {StackNavigationOptions} from '@react-navigation/stack'
-import React, {createContext, ReactNode, useContext, useEffect, useReducer} from 'react'
-import {BackHandler, TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
+import React, {createContext, ReactNode, useCallback, useContext, useReducer} from 'react'
+import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Icon} from '../components/Icon'
 import {defaultStackNavigationOptionsV2} from '../navigation'
+import {useOverrideBackNavigate} from '../utils/navigation'
 
 type SearchState = {
   search: string
@@ -104,31 +105,30 @@ export const useSearchOnNavBar = ({
 
   const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
 
-  useEffect(() => {
-    if (!navigateBack) return
-    const subscription = BackHandler.addEventListener('hardwareBackPress', navigateBack)
-    return () => subscription.remove()
-  }, [navigateBack])
-
-  const handleCloseSearch = () => {
+  const handleCloseSearch = useCallback(() => {
     hideSearch()
     clearSearch()
-  }
-  const handleGoBack = () => {
+  }, [hideSearch, clearSearch])
+
+  const handleGoBack = useCallback(() => {
     handleCloseSearch()
     /*
-     * goBack button has two actions:
+     * goBack has two actions:
      *   1) go back when the search input is not visible
      *   2) close the search input when the search input is visible
      */
-    if (visible) return
+    if (visible) return true
 
     if (navigateBack) {
       navigateBack()
     } else {
       navigation.goBack()
     }
-  }
+
+    return true
+  }, [navigateBack, navigation, visible, handleCloseSearch])
+
+  useOverrideBackNavigate(handleGoBack)
 
   const withSearchInput: StackNavigationOptions = {
     ...defaultStackNavigationOptionsV2,
