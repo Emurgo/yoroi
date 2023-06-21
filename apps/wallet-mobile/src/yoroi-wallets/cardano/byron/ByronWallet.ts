@@ -788,6 +788,12 @@ export class ByronWallet implements YoroiWallet {
     })
   }
 
+  async getFirstPaymentAddress() {
+    const externalAddress = this.externalAddresses[0]
+    const addr = await Cardano.Wasm.Address.fromBech32(externalAddress)
+    return Cardano.Wasm.BaseAddress.fromAddress(addr)
+  }
+
   async createVotingRegTx(pin: string) {
     Logger.debug('CardanoWallet::createVotingRegTx called')
 
@@ -827,9 +833,7 @@ export class ByronWallet implements YoroiWallet {
 
       const addressedUtxos = await this.getAddressedUtxos()
 
-      const externalAddress = this.externalAddresses[0]
-      const addr = await Cardano.Wasm.Address.fromBech32(externalAddress)
-      const baseAddr = await Cardano.Wasm.BaseAddress.fromAddress(addr)
+      const baseAddr = await this.getFirstPaymentAddress()
       const paymentAddress = await baseAddr
         .toAddress()
         .then((a) => a.toBytes())

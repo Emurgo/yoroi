@@ -139,6 +139,9 @@ const wallet: YoroiWallet = {
   submitTransaction: () => {
     throw new Error('Not implemented: submitTransaction')
   },
+  getFirstPaymentAddress: () => {
+    throw new Error('Not implemented: getFirstPaymentAddress')
+  },
   createVotingRegTx: () => {
     throw new Error('Not implemented: createVotingRegTx')
   },
