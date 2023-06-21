@@ -1,11 +1,12 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
+import {useCallback, useEffect, useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {BackHandler, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Boundary, Button, Spacer} from '../../../../components'
+import {Boundary, Button, Icon, Spacer} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import globalMessages from '../../../../i18n/global-messages'
 import {TxHistoryRouteNavigation} from '../../../../navigation'
@@ -25,6 +26,21 @@ export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
   const strings = useStrings()
   const {clearSearch} = useSearch()
+  const navigation = useNavigation()
+
+  const navigateBack = useCallback(() => {
+    navigateTo.startTx()
+    return true
+  }, [navigateTo])
+
+  useEffect(() => {
+    const subscription = BackHandler.addEventListener('hardwareBackPress', navigateBack)
+    return () => subscription.remove()
+  }, [navigateBack])
+
+  useLayoutEffect(() => {
+    navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
+  }, [navigation])
 
   const {targets, selectedTargetIndex, tokenSelectedChanged, amountRemoved, yoroiUnsignedTxChanged} = useSend()
   const {amounts} = targets[selectedTargetIndex].entry
@@ -189,6 +205,7 @@ const useNavigateTo = () => {
     addToken: () => navigation.navigate('send-select-token-from-list'),
     editAmount: () => navigation.navigate('send-edit-amount'),
     confirmTx: () => navigation.navigate('send-confirm-tx'),
+    startTx: () => navigation.navigate('send-start-tx'),
   }
 }
 
@@ -214,3 +231,12 @@ const styles = StyleSheet.create({
 
 const NextButton = Button
 const AmountsList = FlatList
+
+const ListAmountsNavigateBackButton = () => {
+  const navigation = useNavigateTo()
+  return (
+    <TouchableOpacity onPress={() => navigation.startTx()}>
+      <Icon.Chevron direction="left" color="#000000" />
+    </TouchableOpacity>
+  )
+}
