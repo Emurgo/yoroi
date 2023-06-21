@@ -65,7 +65,7 @@ export const WalletNameForm = ({
           autoFocus
           label={strings.walletNameInputLabel}
           value={name}
-          onChangeText={(walletName: string) => setName(walletName.trim())}
+          onChangeText={(walletName: string) => setName(walletName)}
           errorText={walletNameErrorText}
           disabled={isWaiting}
           autoComplete="off"
@@ -78,7 +78,7 @@ export const WalletNameForm = ({
       <View style={styles.buttonContainer}>
         <Button
           block
-          onPress={() => onSubmit({name})}
+          onPress={() => onSubmit({name: name.trim()})}
           title={strings.save}
           style={[styles.button, buttonStyle]}
           disabled={hasErrors || isWaiting}
