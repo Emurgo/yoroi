@@ -11,7 +11,7 @@ export const SubmittedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
-  
+
   useBlockGoBack(resetToTxHistory)
 
   return (
