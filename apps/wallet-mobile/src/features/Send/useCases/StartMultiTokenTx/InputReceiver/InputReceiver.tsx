@@ -1,10 +1,8 @@
-import {useNavigation} from '@react-navigation/native'
-import _ from 'lodash'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 
 import {TextInput, TextInputProps} from '../../../../../components'
-import {TxHistoryRouteNavigation} from '../../../../../navigation'
+import {useNavigateTo} from '../../../common/navigation'
 import {ScannerButton} from '../../../common/ScannerButton'
 import {useStrings} from '../../../common/strings'
 
@@ -36,11 +34,3 @@ const styles = StyleSheet.create({
     height: 120,
   },
 })
-
-const useNavigateTo = () => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-
-  return {
-    reader: () => navigation.navigate('send-read-qr-code'),
-  }
-}
