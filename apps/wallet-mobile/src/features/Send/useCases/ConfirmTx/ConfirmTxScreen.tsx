@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useNavigation} from '@react-navigation/native'
 import React, {useEffect, useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -7,11 +6,11 @@ import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
-import {TxHistoryRouteNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
 import {debugWalletInfo, features} from '../../..'
+import {useNavigateTo} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
 import {BalanceAfter} from './Summary/BalanceAfter'
 import {CurrentBalance} from './Summary/CurrentBalance'
@@ -159,13 +158,4 @@ const useFlashAndScroll = () => {
   }, [])
 
   return scrollViewRef
-}
-
-const useNavigateTo = () => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-
-  return {
-    submittedTx: () => navigation.navigate('send-submitted-tx'),
-    failedTx: () => navigation.navigate('send-failed-tx'),
-  }
 }
