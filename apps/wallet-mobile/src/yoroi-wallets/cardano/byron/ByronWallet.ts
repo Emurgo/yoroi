@@ -47,7 +47,6 @@ import * as api from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
-import {BYRON_VOTING_KEY_PATH} from '../constants/common'
 import {
   HISTORY_REFRESH_TIME,
   MAX_GENERATED_UNUSED,
@@ -839,6 +838,8 @@ export class ByronWallet implements YoroiWallet {
         .then((a) => a.toBytes())
         .then((b) => Buffer.from(b).toString('hex'))
 
+      const addressing = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32()))
+
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
         this.primaryToken,
@@ -852,7 +853,7 @@ export class ByronWallet implements YoroiWallet {
         nonce,
         chainNetworkConfig,
         paymentAddress,
-        BYRON_VOTING_KEY_PATH,
+        addressing.path,
       )
 
       const votingRegistration: {
