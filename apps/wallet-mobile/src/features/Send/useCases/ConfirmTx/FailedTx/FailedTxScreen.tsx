@@ -32,7 +32,7 @@ export const FailedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={onPress} title={strings.failedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={goToStart} title={strings.failedTxButton} style={styles.button} shelleyTheme />
     </View>
   )
 }
