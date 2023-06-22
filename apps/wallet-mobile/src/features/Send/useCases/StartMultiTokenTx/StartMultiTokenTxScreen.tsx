@@ -6,6 +6,7 @@ import {Button, Spacer} from '../../../../components'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
+import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
 import {useStrings} from '../../common/strings'
@@ -23,7 +24,7 @@ export const StartMultiTokenTxScreen = () => {
 
   const {targets, selectedTargetIndex, receiverChanged, memo, memoChanged, addressChanged} = useSend()
   const {address, amounts} = targets[selectedTargetIndex].entry
-  const shouldOpenAddToken = Object.keys(amounts).length === 0
+  const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
   const receiver = targets[selectedTargetIndex].receiver
   const {error, isLoading} = useReceiver(
     {wallet, receiver},

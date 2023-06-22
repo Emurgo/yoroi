@@ -9,7 +9,6 @@ import {useQuery, UseQueryOptions} from 'react-query'
 import {Boundary, Button, Icon, Spacer} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import globalMessages from '../../../../i18n/global-messages'
-import {TxHistoryRouteNavigation} from '../../../../navigation'
 import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
@@ -19,6 +18,7 @@ import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {TokenInfo, YoroiAmount, YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
+import {useNavigateTo} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
 import {AddTokenButton} from './AddToken/AddToken'
 import {RemoveAmountButton} from './RemoveAmount'
@@ -195,17 +195,6 @@ const messages = defineMessages({
     defaultMessage: '!!!Add token',
   },
 })
-
-const useNavigateTo = () => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-
-  return {
-    addToken: () => navigation.navigate('send-select-token-from-list'),
-    editAmount: () => navigation.navigate('send-edit-amount'),
-    confirmTx: () => navigation.navigate('send-confirm-tx'),
-    startTx: () => navigation.navigate('send-start-tx'),
-  }
-}
 
 const styles = StyleSheet.create({
   row: {

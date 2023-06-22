@@ -1,10 +1,9 @@
-import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
-import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {COLORS} from '../../../../../theme'
+import {useNavigateTo} from '../../../common/navigation'
 import {useSend} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {FailedTxImage} from './FailedTxImage'
@@ -32,14 +31,6 @@ export const FailedTxScreen = () => {
       <Button onPress={onPress} title={strings.failedTxButton} style={styles.button} shelleyTheme />
     </View>
   )
-}
-
-const useNavigateTo = () => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-
-  return {
-    startTx: () => navigation.navigate('send-start-tx'),
-  }
 }
 
 const styles = StyleSheet.create({
