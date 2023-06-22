@@ -11,10 +11,8 @@ export const SubmittedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
-
-  const onPress = () => {
-    resetToTxHistory()
-  }
+  
+  useBlockGoBack(resetToTxHistory)
 
   return (
     <View style={styles.container}>
@@ -26,7 +24,7 @@ export const SubmittedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={onPress} title={strings.submittedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={resetToTxHistory} title={strings.submittedTxButton} style={styles.button} shelleyTheme />
     </View>
   )
 }

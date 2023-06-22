@@ -14,12 +14,14 @@ export const FailedTxScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const {resetForm} = useSend()
-
-  const onPress = () => {
+  
+  const goToStart = () => {
     resetForm()
     navigateTo.startTx()
   }
-
+  
+  useBlockGoBack(goToStart)
+  
   return (
     <View style={styles.container}>
       <FailedTxImage />
