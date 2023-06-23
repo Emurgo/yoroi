@@ -4,14 +4,14 @@
     "defaultMessage": "!!!My wallets",
     "file": "src/SelectedWallet/WalletSelection/WalletSelectionScreen.tsx",
     "start": {
-      "line": 103,
+      "line": 100,
       "column": 10,
-      "index": 3972
+      "index": 3876
     },
     "end": {
-      "line": 106,
+      "line": 103,
       "column": 3,
-      "index": 4081
+      "index": 3985
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Add wallet",
     "file": "src/SelectedWallet/WalletSelection/WalletSelectionScreen.tsx",
     "start": {
-      "line": 107,
+      "line": 104,
       "column": 19,
-      "index": 4102
+      "index": 4006
     },
     "end": {
-      "line": 110,
+      "line": 107,
       "column": 3,
-      "index": 4220
+      "index": 4124
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Add wallet (Jormungandr ITN)",
     "file": "src/SelectedWallet/WalletSelection/WalletSelectionScreen.tsx",
     "start": {
-      "line": 111,
+      "line": 108,
       "column": 28,
-      "index": 4250
+      "index": 4154
     },
     "end": {
-      "line": 114,
+      "line": 111,
       "column": 3,
-      "index": 4395
+      "index": 4299
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Loading wallet",
     "file": "src/SelectedWallet/WalletSelection/WalletSelectionScreen.tsx",
     "start": {
-      "line": 115,
+      "line": 112,
       "column": 17,
-      "index": 4414
+      "index": 4318
     },
     "end": {
-      "line": 118,
+      "line": 115,
       "column": 3,
-      "index": 4534
+      "index": 4438
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Ask our support team",
     "file": "src/SelectedWallet/WalletSelection/WalletSelectionScreen.tsx",
     "start": {
-      "line": 119,
+      "line": 116,
       "column": 21,
-      "index": 4557
+      "index": 4461
     },
     "end": {
-      "line": 122,
+      "line": 119,
       "column": 3,
-      "index": 4687
+      "index": 4591
     }
   }
 ]
