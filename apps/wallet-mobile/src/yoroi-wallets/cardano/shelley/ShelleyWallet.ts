@@ -38,7 +38,6 @@ import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
 import * as MAINNET from '../constants/mainnet/constants'
-import {VOTING_KEY_PATH} from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
@@ -435,11 +434,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     private getAddressedChangeAddress(): Promise<{address: string; addressing: CardanoTypes.Addressing}> {
       const changeAddr = this.getChangeAddress()
       const addressing = this.getAddressing(changeAddr)
-
-      return Promise.resolve({
+      const result = {
         address: changeAddr,
         addressing,
-      })
+      }
+
+      return Promise.resolve(result)
     }
 
     private async getStakingKey() {
@@ -702,6 +702,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       })
     }
 
+    async getFirstPaymentAddress() {
+      const externalAddress = this.externalAddresses[0]
+      const addr = await Cardano.Wasm.Address.fromBech32(externalAddress)
+      return Cardano.Wasm.BaseAddress.fromAddress(addr)
+    }
+
     async createVotingRegTx(pin: string) {
       Logger.debug('CardanoWallet::createVotingRegTx called')
 
@@ -738,7 +744,13 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
         const addressedUtxos = await this.getAddressedUtxos()
 
-        const paymentAddress = Buffer.from(await stakingPublicKey.asBytes()).toString('hex')
+        const baseAddr = await this.getFirstPaymentAddress()
+        const paymentAddress = await baseAddr
+          .toAddress()
+          .then((a) => a.toBytes())
+          .then((b) => Buffer.from(b).toString('hex'))
+
+        const addressing = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32()))
 
         const unsignedTx = await Cardano.createUnsignedVotingTx(
           absSlotNumber,
@@ -753,7 +765,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           nonce,
           CHAIN_NETWORK_ID,
           paymentAddress,
-          VOTING_KEY_PATH,
+          addressing.path,
         )
 
         const votingRegistration: {
@@ -764,7 +776,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         } = {
           votingPublicKey: await votingPublicKey.toBech32(),
           stakingPublicKey: await stakingPublicKey.toBech32(),
-          rewardAddress: await this.getRewardAddress().then((address) => address.toBech32()),
+          rewardAddress: await baseAddr.toAddress().then((address) => address.toBech32()),
           nonce,
         }
 
@@ -842,6 +854,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       )
 
       const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
+
       const signedTx = await Cardano.buildLedgerSignedTx(
         unsignedTx.unsignedTx,
         signedLedgerTx,

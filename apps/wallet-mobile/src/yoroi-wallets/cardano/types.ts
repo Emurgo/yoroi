@@ -1,5 +1,6 @@
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
+import {BaseAddress} from '@emurgo/cross-csl-core'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
@@ -160,6 +161,9 @@ export type YoroiWallet = {
   subscribeOnTxHistoryUpdate(handler: () => void): () => void
   checkServerStatus(): Promise<ServerStatus>
   utxos: Array<RawUtxo>
+
+  // CIP36 Payment Address
+  getFirstPaymentAddress(): Promise<BaseAddress>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
