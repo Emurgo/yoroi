@@ -16419,6 +16419,11 @@ react-native-tab-view@^3.1.1:
   dependencies:
     use-latest-callback "^0.1.5"
 
+react-native-timezone@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-timezone/-/react-native-timezone-2.3.0.tgz#acb4666e9d35c5b5a38fc710d50de2e2859dd8d2"
+  integrity sha512-C3IGVR7bjZVG6oU8/hTghQfRvjTmKzh9ZiAO5w6yOnZrn+LXEDOYecUtQWJboNTd/Vdh6FlllMnW3rWEiC3MdQ==
+
 react-native-typescript-transformer@^1.2.13:
   version "1.2.13"
   resolved "https://registry.yarnpkg.com/react-native-typescript-transformer/-/react-native-typescript-transformer-1.2.13.tgz#be92a3d110dbb2cf2f4aebe60a935be124cfb7ed"

@@ -1,6 +1,7 @@
 import React from 'react'
 import {IntlProvider} from 'react-intl'
 import {NativeModules, Platform, Text} from 'react-native'
+import TimeZone from 'react-native-timezone'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {useStorage} from '../yoroi-wallets/storage'
@@ -12,14 +13,36 @@ const LanguageContext = React.createContext<undefined | LanguageContext>(undefin
 export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
   const languageCode = useLanguageCode()
   const selectLanguageCode = useSaveLanguageCode()
-
+  const timeZone = useTimezone()
   return (
     <LanguageContext.Provider value={{languageCode, selectLanguageCode, supportedLanguages}}>
-      <IntlProvider locale={languageCode} messages={translations[languageCode]} textComponent={Text}>
+      <IntlProvider
+        timeZone={timeZone}
+        locale={languageCode}
+        messages={translations[languageCode]}
+        textComponent={Text}
+      >
         {children}
       </IntlProvider>
     </LanguageContext.Provider>
   )
+}
+
+const useTimezone = () => {
+  const query = useQuery({
+    queryKey: ['timeZone'],
+    queryFn: async () => {
+      const defaultTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+      const timeZone = await TimeZone.getTimeZone()
+      return timeZone ?? defaultTimeZone
+    },
+    suspense: true,
+  })
+
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (!query.data) throw new Error('Invalid state')
+
+  return query.data
 }
 
 export const useLanguage = () => React.useContext(LanguageContext) || missingProvider()
