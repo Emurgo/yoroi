@@ -4,6 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Boundary, Icon} from '../components'
+import {useNavigateTo} from '../features/Send/common/navigation'
 import {SendProvider} from '../features/Send/common/SendContext'
 import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
 import {FailedTxScreen} from '../features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
@@ -125,6 +126,7 @@ export const TxHistoryNavigator = () => {
           options={{
             title: strings.editAmountTitle,
             ...sendOptions,
+            headerLeft: () => <SendEditAmountBackButton />,
           }}
         >
           {() => (
@@ -161,6 +163,15 @@ export const TxHistoryNavigator = () => {
         <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
       </ModalInfo>
     </SendProvider>
+  )
+}
+
+const SendEditAmountBackButton = () => {
+  const navigateTo = useNavigateTo()
+  return (
+    <TouchableOpacity onPress={() => navigateTo.selectedTokens()}>
+      <Icon.Chevron direction="left" color="#000000" />
+    </TouchableOpacity>
   )
 }
 
