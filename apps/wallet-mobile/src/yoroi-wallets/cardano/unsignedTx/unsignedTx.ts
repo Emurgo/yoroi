@@ -133,7 +133,7 @@ const Staking = {
 
   toDeregistrations: ({
     deregistrations,
-    networkConfig: {NETWORK_ID, KEY_DEPOSIT},
+    networkConfig: {CHAIN_NETWORK_ID, KEY_DEPOSIT},
   }: {
     deregistrations: CardanoTypes.UnsignedTx['deregistrations']
     networkConfig: CardanoHaskellShelleyNetwork
@@ -141,7 +141,12 @@ const Staking = {
     deregistrations.reduce(async (result, current) => {
       const address = await current
         .stakeCredential()
-        .then((stakeCredential) => CardanoMobile.RewardAddress.new(NETWORK_ID, stakeCredential))
+        .then((stakeCredential) =>
+          CardanoMobile.RewardAddress.new(
+            Number(CHAIN_NETWORK_ID) /* API NETWORK_ID is equivalent to CHAIN_NETWORK_ID here */,
+            stakeCredential,
+          ),
+        )
         .then((rewardAddress) => rewardAddress.toAddress())
         .then((address) => address.toBytes())
         .then((bytes) => Buffer.from(bytes).toString('hex'))
@@ -154,7 +159,7 @@ const Staking = {
 
   toRegistrations: ({
     registrations,
-    networkConfig: {NETWORK_ID, KEY_DEPOSIT},
+    networkConfig: {CHAIN_NETWORK_ID, KEY_DEPOSIT},
   }: {
     registrations: CardanoTypes.UnsignedTx['registrations']
     networkConfig: CardanoHaskellShelleyNetwork
@@ -162,7 +167,12 @@ const Staking = {
     registrations.reduce(async (result, current) => {
       const address = await current
         .stakeCredential()
-        .then((stakeCredential) => CardanoMobile.RewardAddress.new(NETWORK_ID, stakeCredential))
+        .then((stakeCredential) =>
+          CardanoMobile.RewardAddress.new(
+            Number(CHAIN_NETWORK_ID) /* API NETWORK_ID is equivalent to CHAIN_NETWORK_ID here */,
+            stakeCredential,
+          ),
+        )
         .then((rewardAddress) => rewardAddress.toAddress())
         .then((address) => address.toBytes())
         .then((bytes) => Buffer.from(bytes).toString('hex'))
