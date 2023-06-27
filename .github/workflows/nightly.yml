@@ -1,0 +1,66 @@
+on:
+  push:
+    branches:
+      - "release/**"
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: ruby/setup-ruby@v1
+        with:
+            ruby-version: '2.7.6'
+            bundler-cache: true
+
+      - uses: maierj/fastlane-action@v3.0.0
+        with:
+            lane: 'bump_build_android'
+
+      - uses: maierj/fastlane-action@v3.0.0
+        with:
+            lane: 'bump_build_ios'
+    
+      - name: Install Octopus CLI
+        uses: OctopusDeploy/install-octopus-cli-action@v1.1.8
+        with:
+          version: latest
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+            author_name: ci-bot
+            author_email: support@emurgo.io
+            message: 'chore(release): nightly'
+            add: '.'
+  
+      - name: Create Archive 
+        run: tar czvf /tmp/yoroi.tar.gz -C $(pwd) . 
+
+      - name: Move package file 
+        run: | 
+            mv /tmp/yoroi.tar.gz yoroi.${{ github.event.workflow_run.head_sha }}-nightly.tar.gz
+            echo "::set-output name=version::${{ github.event.workflow_run.head_sha }}"
+
+
+    #   - name: Push package to Octopus Deploy 
+    #     uses: OctopusDeploy/push-package-action@v1.0.1
+    #     with:
+    #       packages: 'yoroi.${{ steps.check.outputs.version }}-nightly.tar.gz'
+    #       server: https://emurgo.octopus.app
+    #       api_key: ${{ secrets.OCTOPUS_API_KEY }}
+
+    #   - name: Create release for Nightly
+    #     uses: OctopusDeploy/create-release-action@v1.1.3
+    #     with:
+    #       server: https://emurgo.octopus.app
+    #       api_key: ${{ secrets.OCTOPUS_API_KEY }}
+    #       project: 'yoroi'
+    #       channel: 'Nightly'
+    #       packages: 'yoroi:${{ steps.check.outputs.version }}-nightly'
+    #       release_number: '${{ steps.check.outputs.version }}-nightly'
+          
