@@ -72,20 +72,18 @@ export const StakingCenter = () => {
       )}
 
       {(config.IS_MAINNET || features.showProdPoolsInDev) && (
-        <>
-          <View style={{flex: 1, backgroundColor: '#fff'}}>
-            <Spacer height={8} />
+        <View style={{flex: 1, backgroundColor: '#fff'}}>
+          <Spacer height={8} />
 
-            <WebView
-              androidLayerType="software"
-              source={{uri: prepareStakingURL(languageCode)}}
-              onMessage={(event) => handleOnMessage(event)}
-            />
-          </View>
-
-          <PleaseWaitModal title="" spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={isLoading} />
-        </>
+          <WebView
+            androidLayerType="software"
+            source={{uri: prepareStakingURL(languageCode)}}
+            onMessage={(event) => handleOnMessage(event)}
+          />
+        </View>
       )}
+
+      <PleaseWaitModal title="" spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={isLoading} />
     </>
   )
 }
