@@ -1,10 +1,9 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
-import {BarCodeScanner} from 'expo-barcode-scanner'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
 
-import {BulletPointItem, Spacer, Text} from '../../components'
+import {BulletPointItem, QRCodeScanner, Spacer, Text} from '../../components'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {Logger} from '../../legacy/logging'
@@ -18,7 +17,6 @@ export const ImportReadOnlyWalletScreen = () => {
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'import-read-only'>>()
   const {networkId, walletImplementationId} = route.params
-  // const scannerRef = React.useRef<typeof QRCodeScanner | null>(null)
 
   const onRead = async (event: {data: string}) => {
     try {
@@ -32,18 +30,14 @@ export const ImportReadOnlyWalletScreen = () => {
     } catch (error) {
       Logger.debug('ImportReadOnlyWalletScreen::onRead::error', error)
       await showErrorDialog(errorMessages.invalidQRCode, intl)
-      // scannerRef.current?.reactivate()
     }
   }
-
-  // useFocusEffect(React.useCallback(() => scannerRef.current?.reactivate(), []))
 
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
 
       <View style={styles.cameraContainer}>
-        {/* <QRCodeScanner ref={scannerRef} fadeIn onRead={onRead} showMarker customMarker={<CameraOverlay />} /> */}
         <QRCodeScanner onRead={onRead} />
       </View>
 
@@ -136,35 +130,4 @@ const parseReadOnlyWalletKey = async (text: string): Promise<{publicKeyHex: stri
   }
 
   return {publicKeyHex, path}
-}
-
-const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => void}) => {
-  const [hasPermission, setHasPermission] = React.useState(false)
-  const [scanned, setScanned] = React.useState(false)
-
-  React.useEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const {status} = await BarCodeScanner.requestPermissionsAsync()
-      setHasPermission(status === 'granted')
-    }
-
-    getBarCodeScannerPermissions()
-  }, [])
-
-  console.log('hasPermission', hasPermission, 'scanned', scanned)
-
-  const handleBarCodeScanned = ({type, data}) => {
-    setScanned(true)
-    onRead({data})
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`)
-  }
-
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>
-  }
-
-  return <BarCodeScanner onBarCodeScanned={handleBarCodeScanned} />
 }
