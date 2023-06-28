@@ -47,6 +47,8 @@ const Wrapper = () => {
         <Text>{`granted: ${status?.granted}`}</Text>
 
         <Text>{`expires: ${status?.expires}`}</Text>
+
+        <Text>{`canAskAgain: ${status?.canAskAgain}`}</Text>
       </View>
     </View>
   )
