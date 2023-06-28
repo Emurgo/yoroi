@@ -13,8 +13,8 @@ export const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => voi
     }
   }, [granted, requestPermissions])
 
-  const handleBarCodeScanned = (data) => {
-    onRead(data)
+  const handleBarCodeScanned = (event) => {
+    onRead(event)
   }
 
   if (!granted) {
