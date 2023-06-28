@@ -1715,6 +1715,20 @@
     hash-wasm "^4.9.0"
     mocha "^10.0.0"
 
+"@emurgo/cross-csl-core@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-2.3.1.tgz#64d1b6c34014be11a02aa68f08ef8464fefb2e84"
+  integrity sha512-18Yby4tXvIdNItVjsrRuKwNNdxNx7faXmFR6e8GAaFjDJkhPGUakfIbZ2H4QmM6UjzsIU9Da7QcF+pLsY4x81w==
+  dependencies:
+    "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
+    "@types/mocha" "^9.1.1"
+    axios "^0.24.0"
+    bech32 "^2.0.0"
+    bignumber.js "^9.0.1"
+    blake2b "^2.1.4"
+    hash-wasm "^4.9.0"
+    mocha "^10.0.0"
+
 "@emurgo/cross-csl-mobile@^2.3.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-2.3.0.tgz#aded9bede289da6a553cc01ddb641cabf7a70ed6"
@@ -1763,13 +1777,13 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.5.1.tgz#a554efb7b5fdf24a13152b29f743edaf3fa12f99"
-  integrity sha512-pPfPdJ/x11XZspNWp26YZl5+rVBuHscifsKCXRxKipqPhHpjUKCJvM9nizbcGL0Rfx+I/F7KLIcT7YwIfJvJEQ==
+"@emurgo/yoroi-lib@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.5.2.tgz#55cd2c8a272dfd90b3a540f6132202d1c1945d9e"
+  integrity sha512-gKWWVUQ2evzAMQBqQt6waG07BNG/TDxWJTRBfk2wGLJN8jXrW7Slf+/DsFzLtym63YRqJntmQH2yTDpjKj1Jfw==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^6.0.0"
-    "@emurgo/cross-csl-core" "^2.3.0"
+    "@emurgo/cross-csl-core" "^2.3.1"
     axios "^0.24.0"
     bech32 "^2.0.0"
     bignumber.js "^9.0.1"
