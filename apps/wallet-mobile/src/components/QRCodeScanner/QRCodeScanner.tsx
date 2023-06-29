@@ -19,12 +19,13 @@ export const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => voi
     setQrScanned(true)
   }
 
-  if (!granted || qrScanned) {
+  if (!granted || qrScanned /* to stop the scanning loop: https://github.com/expo/expo/issues/345 */) {
     return null
   }
 
   return (
     // expo-barcode-scanner issue in android https://github.com/expo/expo/issues/5212
+    // so expo-camera is used
     <Camera
       style={StyleSheet.absoluteFill}
       ratio="16:9"
