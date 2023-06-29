@@ -2,7 +2,7 @@
 import {useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
-import {Platform, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
 import {debugWalletInfo, features} from '../../features'
 import {confirmationMessages, errorMessages, txLabels} from '../../i18n/global-messages'
@@ -14,7 +14,7 @@ import {useAuthOsWithEasyConfirmation} from '../../yoroi-wallets/auth'
 import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
 import {CardanoTypes} from '../../yoroi-wallets/cardano/types'
 import {useSubmitTx} from '../../yoroi-wallets/hooks'
-import {DeviceId, DeviceObj, HARDWARE_WALLETS, withBLE, withUSB} from '../../yoroi-wallets/hw'
+import {DeviceId, DeviceObj, withBLE, withUSB} from '../../yoroi-wallets/hw'
 import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {delay} from '../../yoroi-wallets/utils/timeUtils'
 import {walletManager} from '../../yoroi-wallets/walletManager'
@@ -198,12 +198,7 @@ export const ConfirmTx = ({
   const {authWithOs} = useAuthOsWithEasyConfirmation({id: wallet.id}, {onSuccess: onConfirm})
 
   const _onConfirm = React.useCallback(async () => {
-    if (
-      wallet.isHW &&
-      Platform.OS === 'android' &&
-      HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
-      chooseTransportOnConfirmation
-    ) {
+    if (wallet.isHW && chooseTransportOnConfirmation) {
       setDialogStep(DialogStep.ChooseTransport)
     } else if (wallet.isEasyConfirmationEnabled) {
       return authWithOs()
@@ -221,12 +216,7 @@ export const ConfirmTx = ({
   }, [autoSignIfEasyConfirmation, wallet.isEasyConfirmationEnabled, _onConfirm])
 
   useEffect(() => {
-    if (
-      wallet.isHW &&
-      Platform.OS === 'android' &&
-      HARDWARE_WALLETS.LEDGER_NANO.ENABLE_USB_TRANSPORT &&
-      !chooseTransportOnConfirmation
-    ) {
+    if (wallet.isHW && !chooseTransportOnConfirmation) {
       setDialogStep(DialogStep.ChooseTransport)
     }
   }, [chooseTransportOnConfirmation, wallet.isHW])
