@@ -199,7 +199,9 @@ const styles = StyleSheet.create({
     ios: {
       marginTop: ROW_HEIGHT,
     },
-    default: {},
+    default: {
+      marginTop: 3.5,
+    },
   }),
   menuContent: {
     backgroundColor: COLORS.BACKGROUND,
