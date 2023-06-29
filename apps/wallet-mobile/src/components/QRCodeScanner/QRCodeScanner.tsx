@@ -5,6 +5,7 @@ import {StyleSheet} from 'react-native'
 
 export const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => void}) => {
   const [status, requestPermissions] = Camera.useCameraPermissions()
+  const [qrScanned, setQrScanned] = React.useState(false)
   const granted = status && status.granted
 
   React.useEffect(() => {
@@ -15,14 +16,16 @@ export const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => voi
 
   const handleBarCodeScanned = (event) => {
     onRead(event)
+    setQrScanned(true)
   }
 
-  if (!granted) {
+  if (!granted || qrScanned /* to stop the scanning loop: https://github.com/expo/expo/issues/345 */) {
     return null
   }
 
   return (
     // expo-barcode-scanner issue in android https://github.com/expo/expo/issues/5212
+    // so expo-camera is used
     <Camera
       style={StyleSheet.absoluteFill}
       ratio="16:9"
