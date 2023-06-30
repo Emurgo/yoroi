@@ -30,10 +30,10 @@ export const ImportReadOnlyWalletScreen = () => {
     } catch (error) {
       Logger.debug('ImportReadOnlyWalletScreen::onRead::error', error)
       await showErrorDialog(errorMessages.invalidQRCode, intl)
-      return true
+      return Promise.resolve(true)
     }
 
-    return false
+    return Promise.resolve(false)
   }
 
   return (
