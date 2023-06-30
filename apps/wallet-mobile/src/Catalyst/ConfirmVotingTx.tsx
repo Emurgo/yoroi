@@ -87,6 +87,7 @@ export const ConfirmVotingTx = ({
           useUSB={useUSB}
           yoroiUnsignedTx={votingRegTx}
           biometricInstructions={[strings.authOsInstructions]}
+          chooseTransportOnConfirmation
         />
       </Actions>
     </SafeAreaView>

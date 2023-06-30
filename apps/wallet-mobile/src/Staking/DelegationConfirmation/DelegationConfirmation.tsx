@@ -111,6 +111,7 @@ export const DelegationConfirmation = () => {
           setUseUSB={setUseUSB}
           useUSB={useUSB}
           yoroiUnsignedTx={yoroiUnsignedTx}
+          chooseTransportOnConfirmation
         />
       </Actions>
     </View>
