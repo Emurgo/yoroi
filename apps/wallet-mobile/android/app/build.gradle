@@ -108,7 +108,7 @@ android {
         applicationId "com.emurgo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 526
+        versionCode 527
         versionName "4.12.0"
     }
 
