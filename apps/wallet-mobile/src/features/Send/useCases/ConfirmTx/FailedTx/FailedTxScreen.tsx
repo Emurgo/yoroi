@@ -10,7 +10,6 @@ import {useStrings} from '../../../common/strings'
 import {FailedTxImage} from './FailedTxImage'
 
 export const FailedTxScreen = () => {
-  useBlockGoBack()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const {resetForm} = useSend()

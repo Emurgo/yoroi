@@ -44,6 +44,7 @@ export const TxHistoryNavigator = () => {
         screenOptions={{
           ...defaultStackNavigationOptions,
           detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+          gestureEnabled: false,
         }}
       >
         <Stack.Screen
@@ -154,9 +155,17 @@ export const TxHistoryNavigator = () => {
           }}
         />
 
-        <Stack.Screen name="send-submitted-tx" component={SubmittedTxScreen} options={{headerShown: false}} />
+        <Stack.Screen
+          name="send-submitted-tx"
+          component={SubmittedTxScreen}
+          options={{headerShown: false, gestureEnabled: false}}
+        />
 
-        <Stack.Screen name="send-failed-tx" component={FailedTxScreen} options={{headerShown: false}} />
+        <Stack.Screen
+          name="send-failed-tx"
+          component={FailedTxScreen}
+          options={{headerShown: false, gestureEnabled: false}}
+        />
       </Stack.Navigator>
 
       <ModalInfo hideModalInfo={hideModalInfo} visible={modalInfoState}>
