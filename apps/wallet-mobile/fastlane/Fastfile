@@ -25,9 +25,6 @@ platform :ios do
 
     match(app_identifier: ENV["APP_STORE_BUNDLE_ID"], type: "appstore")
 
-    set_version_ios
-    bump_build_ios
-
     api_key = app_store_connect_api_key(
       key_id: ENV["APP_STORE_KEY_ID"],
       issuer_id: ENV["APP_STORE_ISSUER_ID"],
@@ -79,9 +76,6 @@ platform :android do
     build_type = environment == "nightly" ? "Nightly" : "Production"
 
     gradle(task: "clean", project_dir: 'android/')
-
-    bump_build_android
-    set_version_android
 
     gradle(
       task: "assemble" + build_type,
