@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
+import {useBlockGoBack} from '../../../../../navigation'
 import {COLORS} from '../../../../../theme'
 import {useNavigateTo} from '../../../common/navigation'
 import {useSend} from '../../../common/SendContext'
@@ -9,11 +10,12 @@ import {useStrings} from '../../../common/strings'
 import {FailedTxImage} from './FailedTxImage'
 
 export const FailedTxScreen = () => {
+  useBlockGoBack()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const {resetForm} = useSend()
 
-  const onPress = () => {
+  const goToStart = () => {
     resetForm()
     navigateTo.startTx()
   }
@@ -28,7 +30,7 @@ export const FailedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={onPress} title={strings.failedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={goToStart} title={strings.failedTxButton} style={styles.button} shelleyTheme />
     </View>
   )
 }

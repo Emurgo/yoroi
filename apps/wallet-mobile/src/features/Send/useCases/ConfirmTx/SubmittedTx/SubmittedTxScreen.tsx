@@ -2,18 +2,15 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
-import {useWalletNavigation} from '../../../../../navigation'
+import {useBlockGoBack, useWalletNavigation} from '../../../../../navigation'
 import {COLORS} from '../../../../../theme'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
 
 export const SubmittedTxScreen = () => {
+  useBlockGoBack()
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
-
-  const onPress = () => {
-    resetToTxHistory()
-  }
 
   return (
     <View style={styles.container}>
@@ -25,7 +22,7 @@ export const SubmittedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={onPress} title={strings.submittedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={resetToTxHistory} title={strings.submittedTxButton} style={styles.button} shelleyTheme />
     </View>
   )
 }
