@@ -10,7 +10,7 @@ import {SubmittedTxImage} from './SubmittedTxImage'
 export const SubmittedTxScreen = () => {
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
-  
+
   useBlockGoBack(resetToTxHistory)
 
   return (
