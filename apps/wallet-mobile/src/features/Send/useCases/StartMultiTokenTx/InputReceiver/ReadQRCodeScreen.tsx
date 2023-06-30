@@ -33,6 +33,7 @@ export const ReadQRCodeScreen = () => {
       receiverChanged(qrData ?? '')
     }
     navigation.navigate('send-start-tx')
+    return Promise.resolve(false)
   }
 
   return <QRCodeScanner onRead={handleOnRead} />

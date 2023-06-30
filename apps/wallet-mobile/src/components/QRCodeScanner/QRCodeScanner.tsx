@@ -3,7 +3,7 @@ import {Camera} from 'expo-camera'
 import * as React from 'react'
 import {StyleSheet} from 'react-native'
 
-export const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => void}) => {
+export const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => Promise<boolean>}) => {
   const [status, requestPermissions] = Camera.useCameraPermissions()
   const [qrScanned, setQrScanned] = React.useState(false)
   const granted = status && status.granted
@@ -14,12 +14,18 @@ export const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => voi
     }
   }, [granted, requestPermissions])
 
-  const handleBarCodeScanned = (event) => {
-    onRead(event)
-    setQrScanned(true)
+  const handleBarCodeScanned = async (event) => {
+    if (!qrScanned) {
+      setQrScanned(true)
+      const error = await onRead(event)
+
+      if (error) {
+        setQrScanned(false)
+      }
+    }
   }
 
-  if (!granted || qrScanned /* to stop the scanning loop: https://github.com/expo/expo/issues/345 */) {
+  if (!granted) {
     return null
   }
 
