@@ -18,7 +18,7 @@ export const ImportReadOnlyWalletScreen = () => {
   const route = useRoute<RouteProp<WalletInitRoutes, 'import-read-only'>>()
   const {networkId, walletImplementationId} = route.params
 
-  const onRead = async (event: {data: string}) => {
+  const onRead = async (event: {data: string}): Promise<boolean> => {
     try {
       const {publicKeyHex, path} = await parseReadOnlyWalletKey(event.data)
       navigation.navigate('save-read-only', {
@@ -30,7 +30,10 @@ export const ImportReadOnlyWalletScreen = () => {
     } catch (error) {
       Logger.debug('ImportReadOnlyWalletScreen::onRead::error', error)
       await showErrorDialog(errorMessages.invalidQRCode, intl)
+      return Promise.resolve(true)
     }
+
+    return Promise.resolve(false)
   }
 
   return (

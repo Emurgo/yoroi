@@ -14,11 +14,12 @@ const Wrapper = () => {
   const [publicKeyHex, setPublicKeyHex] = React.useState(null)
   const [path, setPath] = React.useState(null)
 
-  const handleOnRead = ({data}) => {
+  const handleOnRead = async ({data}) => {
     const parsedData = JSON.parse(data)
     setPublicKeyHex(parsedData.publicKeyHex)
     setPath(parsedData.path)
     action('onRead')
+    return Promise.resolve(false)
   }
 
   return (
