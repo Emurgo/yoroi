@@ -39,7 +39,7 @@
     "start": "yarn react-native start --reset-cache --verbose",
     "storybook:watch": "sb-rn-watcher",
     "test": "jest src",
-    "tsc": "tsc --noEmit",
+    "tsc": "tsc --noEmit -p tsconfig.json",
     "tsc:cover": "yarn typescript-coverage-report -i '**/*.test.*' -i '**/*.stories*' -t html --threshold=100"
   },
   "lint-staged": {

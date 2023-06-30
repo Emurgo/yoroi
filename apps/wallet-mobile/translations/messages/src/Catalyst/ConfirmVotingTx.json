@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Confirm Registration",
     "file": "src/Catalyst/ConfirmVotingTx.tsx",
     "start": {
-      "line": 97,
+      "line": 98,
       "column": 12,
-      "index": 3001
+      "index": 3041
     },
     "end": {
-      "line": 100,
+      "line": 101,
       "column": 3,
-      "index": 3099
+      "index": 3139
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Please enter your spending password again to confirm your voting registration and submit the certificate generated in the previous step.",
     "file": "src/Catalyst/ConfirmVotingTx.tsx",
     "start": {
-      "line": 101,
+      "line": 102,
       "column": 15,
-      "index": 3116
+      "index": 3156
     },
     "end": {
-      "line": 107,
+      "line": 108,
       "column": 3,
-      "index": 3361
+      "index": 3401
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Please authenticate so that Yoroi can generate the required certificate for voting",
     "file": "src/Catalyst/ConfirmVotingTx.tsx",
     "start": {
-      "line": 108,
+      "line": 109,
       "column": 22,
-      "index": 3385
+      "index": 3425
     },
     "end": {
-      "line": 111,
+      "line": 112,
       "column": 3,
-      "index": 3556
+      "index": 3596
     }
   }
 ]

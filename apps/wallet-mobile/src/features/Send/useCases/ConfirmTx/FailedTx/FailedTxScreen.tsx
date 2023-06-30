@@ -10,6 +10,7 @@ import {useStrings} from '../../../common/strings'
 import {FailedTxImage} from './FailedTxImage'
 
 export const FailedTxScreen = () => {
+  useBlockGoBack()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const {resetForm} = useSend()
@@ -18,8 +19,6 @@ export const FailedTxScreen = () => {
     resetForm()
     navigateTo.startTx()
   }
-
-  useBlockGoBack(goToStart)
 
   return (
     <View style={styles.container}>

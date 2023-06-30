@@ -8,10 +8,9 @@ import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
 
 export const SubmittedTxScreen = () => {
+  useBlockGoBack()
   const strings = useStrings()
   const {resetToTxHistory} = useWalletNavigation()
-
-  useBlockGoBack(resetToTxHistory)
 
   return (
     <View style={styles.container}>

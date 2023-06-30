@@ -270,18 +270,17 @@ declare global {
   }
 }
 
-export const useBlockGoBack = (callback?: () => unknown) => {
+export const useBlockGoBack = () => {
   const navigation = useNavigation()
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       if (e.data.action.type !== 'RESET') {
         e.preventDefault()
-        if (callback) callback()
       }
     })
     return () => unsubscribe()
-  }, [navigation, callback])
+  }, [navigation])
 }
 
 export const useWalletNavigation = () => {
