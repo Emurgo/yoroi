@@ -1,0 +1,92 @@
+module.exports = {
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    tsconfigRootDir: __dirname,
+    project: ['./tsconfig.json'],
+  },
+  overrides: [
+    {
+      files: ['*.tsx'],
+      rules: {
+        '@typescript-eslint/strict-boolean-expressions': [
+          'error',
+          {allowString: false, allowNumber: false, allowNullableBoolean: true},
+        ],
+      },
+    },
+    {
+      files: ['*.stories.tsx'],
+      rules: {
+        '@typescript-eslint/require-await': 'off',
+      },
+    },
+    {
+      files: ['*.test.ts'],
+      rules: {
+        '@typescript-eslint/require-await': 'off',
+      },
+    },
+  ],
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-prefer-function-component/recommended',
+    'prettier', // keep this last
+  ],
+  plugins: [
+    'react',
+    'react-native',
+    '@typescript-eslint',
+    'react-prefer-function-component',
+    'eslint-plugin-simple-import-sort',
+    'formatjs',
+  ],
+  env: {'react-native/react-native': true},
+  settings: {
+    'import/resolver': {node: {extensions: ['.js', '.android.js', '.ios.js', '.json']}},
+    react: {version: 'detect'},
+  },
+  rules: {
+    'react/prop-types': 'off',
+    'array-callback-return': 2,
+    'lines-between-class-members': [1, 'always', {exceptAfterSingleLine: true}],
+    'no-multiple-empty-lines': ['warn', {max: 2, maxEOF: 0}],
+    'react-native/no-raw-text': ['error', {skip: ['Markdown']}],
+    'react-native/no-unused-styles': 2,
+    'react-native/split-platform-components': 0,
+    'react/display-name': 0,
+    'react/jsx-newline': ['warn', {prevent: false}],
+    'react/no-access-state-in-setstate': 2,
+    'react/no-typos': 2,
+    'react/sort-comp': [2, {order: ['instance-variables', 'lifecycle', 'everything-else', 'render']}],
+    'simple-import-sort/exports': 'error',
+    'simple-import-sort/imports': 'error',
+    'spaced-comment': 1,
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_', varsIgnorePattern: '^_'}],
+    'react/jsx-curly-brace-presence': ['warn', {props: 'never', children: 'never'}],
+    'no-return-await': 'error',
+    'no-template-curly-in-string': 'error',
+    'require-await': 'off',
+    '@typescript-eslint/require-await': 'error',
+    '@typescript-eslint/await-thenable': 'error',
+    'formatjs/no-offset': 'error',
+    semi: 'off',
+    '@typescript-eslint/semi': 'off',
+  },
+  globals: {
+    Buffer: false,
+    Symbol: false,
+    Uint8Array: false,
+    TextEncoder: false,
+    test: false,
+    expect: false,
+    describe: false,
+    it: false,
+    beforeEach: false,
+  },
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.walletinit.walletform.walletNameInputLabel",
+    "defaultMessage": "!!!Wallet name",
+    "file": "src/WalletInit/WalletNameForm/WalletNameForm.tsx",
+    "start": {
+      "line": 120,
+      "column": 24,
+      "index": 3376
+    },
+    "end": {
+      "line": 123,
+      "column": 3,
+      "index": 3484
+    }
+  },
+  {
+    "id": "components.walletinit.connectnanox.savenanoxscreen.save",
+    "defaultMessage": "!!!Save",
+    "file": "src/WalletInit/WalletNameForm/WalletNameForm.tsx",
+    "start": {
+      "line": 124,
+      "column": 8,
+      "index": 3494
+    },
+    "end": {
+      "line": 127,
+      "column": 3,
+      "index": 3597
+    }
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.send.addToken",
+    "defaultMessage": "!!!Add token",
+    "file": "src/features/Send/useCases/ListAmountsToSend/ListAmountsToSendScreen.tsx",
+    "start": {
+      "line": 193,
+      "column": 12,
+      "index": 6080
+    },
+    "end": {
+      "line": 196,
+      "column": 3,
+      "index": 6157
+    }
+  }
+]

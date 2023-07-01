@@ -1,0 +1,73 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/OFL.txt",
+      "sha1": "6c0ecf267e5c993d914a9bec39a276b55f2d9075"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-Black.ttf",
+      "sha1": "a685f92f9648575cdc5c31c730f5aa6dfaf6ea6a"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-BlackItalic.ttf",
+      "sha1": "8fa05e61611b54c326df9343f3a922b392b1c014"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-Bold.ttf",
+      "sha1": "e83448c17a27cce73d30a86a17d11b1179635164"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-BoldItalic.ttf",
+      "sha1": "9cac9f3be4643eb38a70bfd074ffafb57ede0adb"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-ExtraBold.ttf",
+      "sha1": "c187508637ef2d1ef97895b949bcdc041afb9147"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-ExtraBoldItalic.ttf",
+      "sha1": "89b8610cb2b3a7b988db05881632bd00d0cb746e"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-Italic-VariableFont_wght.ttf",
+      "sha1": "645a687a5a95e2f1f4eaa682b2953aee3751453c"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-Italic.ttf",
+      "sha1": "2ec3d413524d5c7169bff1e7e7702dce3c7a8078"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-Light.ttf",
+      "sha1": "22c6e45ad2e052c56b9aa73fe768dffe04e9d4af"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-LightItalic.ttf",
+      "sha1": "a6d35106943cf7c7e365f70e6dc4113da2d7efcc"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-Medium.ttf",
+      "sha1": "d734c149587c12d9083c03bc90009c84b52aec78"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-MediumItalic.ttf",
+      "sha1": "e67c3a0aa78749f747063b741165b608d5306bb0"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-Regular.ttf",
+      "sha1": "3c3cc1631fd313531bc4b44dcb66e7c41e6bcf07"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-SemiBold.ttf",
+      "sha1": "2fafa132c1cde5a0e4681f60db64c9111ff176ce"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-SemiBoldItalic.ttf",
+      "sha1": "6a8ffebd4702be10b6e3fc980eace615b16634d9"
+    },
+    {
+      "path": "src/assets/fonts/Rubik-VariableFont_wght.ttf",
+      "sha1": "00217a0c0295c3eed9a8e69eef86570ea876ccef"
+    }
+  ]
+}

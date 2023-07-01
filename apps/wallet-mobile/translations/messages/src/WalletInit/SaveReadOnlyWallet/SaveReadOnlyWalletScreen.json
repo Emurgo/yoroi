@@ -1,0 +1,77 @@
+[
+  {
+    "id": "components.walletinit.savereadonlywalletscreen.defaultWalletName",
+    "defaultMessage": "!!!My read-only wallet",
+    "file": "src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
+    "start": {
+      "line": 130,
+      "column": 21,
+      "index": 3721
+    },
+    "end": {
+      "line": 133,
+      "column": 3,
+      "index": 3848
+    }
+  },
+  {
+    "id": "components.walletinit.verifyrestoredwallet.checksumLabel",
+    "defaultMessage": "!!!Checksum label",
+    "file": "src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
+    "start": {
+      "line": 134,
+      "column": 17,
+      "index": 3867
+    },
+    "end": {
+      "line": 137,
+      "column": 3,
+      "index": 3981
+    }
+  },
+  {
+    "id": "components.walletinit.verifyrestoredwallet.walletAddressLabel",
+    "defaultMessage": "!!!Wallet Address(es):",
+    "file": "src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
+    "start": {
+      "line": 138,
+      "column": 22,
+      "index": 4005
+    },
+    "end": {
+      "line": 141,
+      "column": 3,
+      "index": 4129
+    }
+  },
+  {
+    "id": "components.walletinit.savereadonlywalletscreen.key",
+    "defaultMessage": "!!!Key:",
+    "file": "src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
+    "start": {
+      "line": 142,
+      "column": 7,
+      "index": 4138
+    },
+    "end": {
+      "line": 145,
+      "column": 3,
+      "index": 4236
+    }
+  },
+  {
+    "id": "components.walletinit.savereadonlywalletscreen.derivationPath",
+    "defaultMessage": "!!!Derivation path:",
+    "file": "src/WalletInit/SaveReadOnlyWallet/SaveReadOnlyWalletScreen.tsx",
+    "start": {
+      "line": 146,
+      "column": 18,
+      "index": 4256
+    },
+    "end": {
+      "line": 149,
+      "column": 3,
+      "index": 4377
+    }
+  }
+]

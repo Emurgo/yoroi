@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.walletinit.connectnanox.checknanoxscreen.introline",
+    "defaultMessage": "!!!Before continuing, please make sure that:",
+    "file": "src/WalletInit/CheckNanoX/CheckNanoXScreen.tsx",
+    "start": {
+      "line": 62,
+      "column": 13,
+      "index": 2359
+    },
+    "end": {
+      "line": 65,
+      "column": 3,
+      "index": 2505
+    }
+  }
+]

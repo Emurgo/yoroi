@@ -1,0 +1,2204 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00E356F31AD99517003FC87E /* emurgoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* emurgoTests.m */; };
+		0364225EA79340159305AC26 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB1534F401F64DFEB4584FD0 /* Rubik-MediumItalic.ttf */; };
+		087D95DB98A155D2B096DE3C /* libPods-emurgo-emurgo-nightly.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF71CA34AD7B12440AFCE21 /* libPods-emurgo-emurgo-nightly.a */; };
+		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
+		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		237BDF69DA4AC362D0191EEE /* libPods-emurgo-emurgoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5D1D2320FE78AA7F5D9691D /* libPods-emurgo-emurgoTests.a */; };
+		2E3E7CD82298ACEA00D5C487 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
+		2E3E7CD92298ACEA00D5C487 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		2E3E7CF72298ACEA00D5C487 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		2E3E7CF82298ACEA00D5C487 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
+		2EBA2AD022EA877F00BF8A5B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
+		30DB4190BE9641A9B41AF165 /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00B690C22674DAA96AAB2EA /* Rubik-Italic.ttf */; };
+		3F14C44BF84249A49B2D0753 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 35C201FCE37B4D5FA50878D8 /* Rubik-BoldItalic.ttf */; };
+		4F6EF78F0F96BF89BCE30BF4 /* libPods-emurgo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ACE00EEA1CFF0F233A7856D /* libPods-emurgo.a */; };
+		4FA268266BFA4DABB83358FA /* Rubik-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD9F47B99BD74F5D9DFBEC2E /* Rubik-SemiBoldItalic.ttf */; };
+		84CE4FB9FCD740688BE3A3B4 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C22B71BA107474D92284901 /* Rubik-Regular.ttf */; };
+		A1231BEBC967468B9B15BDD4 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 03A9EED2823C4B07AD012E95 /* Rubik-Bold.ttf */; };
+		B3F0A669C9435000F769DE49 /* libPods-emurgo-emurgo-staging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 326E332CB478B869587486FE /* libPods-emurgo-emurgo-staging.a */; };
+		BA3D0647FB29475CA53128CF /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BAD3D7933540D184340C1B /* libresolv.tbd */; };
+		CF57D4BA7BB647F589D16741 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3E804F8BFF4453CA534F039 /* Rubik-Medium.ttf */; };
+		CFA75AC3F695456B81D36593 /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2B49C39674D431A862F0FA9 /* Rubik-LightItalic.ttf */; };
+		E2FC0BF821C7F02200DA195B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
+		E693D5BD96704D11BAF6C3F3 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2AA69FA7E098481FA0E71F88 /* Rubik-SemiBold.ttf */; };
+		E9204856261D020F00AF9D45 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9204855261D020F00AF9D45 /* LaunchScreen.storyboard */; };
+		E9204857261D020F00AF9D45 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9204855261D020F00AF9D45 /* LaunchScreen.storyboard */; };
+		E9204858261D020F00AF9D45 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9204855261D020F00AF9D45 /* LaunchScreen.storyboard */; };
+		E99D542D2629F2AA008C6667 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 03A9EED2823C4B07AD012E95 /* Rubik-Bold.ttf */; };
+		E99D542E2629F2AA008C6667 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 35C201FCE37B4D5FA50878D8 /* Rubik-BoldItalic.ttf */; };
+		E99D542F2629F2AA008C6667 /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00B690C22674DAA96AAB2EA /* Rubik-Italic.ttf */; };
+		E99D54302629F2AA008C6667 /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5C9822288434E3D98A446D7 /* Rubik-Light.ttf */; };
+		E99D54312629F2AA008C6667 /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2B49C39674D431A862F0FA9 /* Rubik-LightItalic.ttf */; };
+		E99D54322629F2AA008C6667 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3E804F8BFF4453CA534F039 /* Rubik-Medium.ttf */; };
+		E99D54332629F2AA008C6667 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB1534F401F64DFEB4584FD0 /* Rubik-MediumItalic.ttf */; };
+		E99D54342629F2AA008C6667 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C22B71BA107474D92284901 /* Rubik-Regular.ttf */; };
+		E99D54352629F2AA008C6667 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2AA69FA7E098481FA0E71F88 /* Rubik-SemiBold.ttf */; };
+		E99D54362629F2AA008C6667 /* Rubik-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD9F47B99BD74F5D9DFBEC2E /* Rubik-SemiBoldItalic.ttf */; };
+		E99D54372629F2B5008C6667 /* Rubik-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 03A9EED2823C4B07AD012E95 /* Rubik-Bold.ttf */; };
+		E99D54382629F2B5008C6667 /* Rubik-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 35C201FCE37B4D5FA50878D8 /* Rubik-BoldItalic.ttf */; };
+		E99D54392629F2B5008C6667 /* Rubik-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00B690C22674DAA96AAB2EA /* Rubik-Italic.ttf */; };
+		E99D543A2629F2B5008C6667 /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5C9822288434E3D98A446D7 /* Rubik-Light.ttf */; };
+		E99D543B2629F2B5008C6667 /* Rubik-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E2B49C39674D431A862F0FA9 /* Rubik-LightItalic.ttf */; };
+		E99D543C2629F2B5008C6667 /* Rubik-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3E804F8BFF4453CA534F039 /* Rubik-Medium.ttf */; };
+		E99D543D2629F2B5008C6667 /* Rubik-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB1534F401F64DFEB4584FD0 /* Rubik-MediumItalic.ttf */; };
+		E99D543E2629F2B5008C6667 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C22B71BA107474D92284901 /* Rubik-Regular.ttf */; };
+		E99D543F2629F2B5008C6667 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2AA69FA7E098481FA0E71F88 /* Rubik-SemiBold.ttf */; };
+		E99D54402629F2B5008C6667 /* Rubik-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD9F47B99BD74F5D9DFBEC2E /* Rubik-SemiBoldItalic.ttf */; };
+		E9A1C7DC24185CCA00151CFA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
+		E9A1C7DD24185CCA00151CFA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		E9A1C7E124185CCA00151CFA /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
+		E9A1C7FC24185CCA00151CFA /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 16BAD3D7933540D184340C1B /* libresolv.tbd */; };
+		E9A1C80024185CCA00151CFA /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		E9A1C80124185CCA00151CFA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */; };
+		E9EACF88245B42C40062ED1D /* dummy_ble.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EACF87245B42C40062ED1D /* dummy_ble.swift */; };
+		E9EACF89245B42C40062ED1D /* dummy_ble.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EACF87245B42C40062ED1D /* dummy_ble.swift */; };
+		E9EACF8A245B42C40062ED1D /* dummy_ble.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EACF87245B42C40062ED1D /* dummy_ble.swift */; };
+		EA86609D5C6A43D284D28AEC /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5C9822288434E3D98A446D7 /* Rubik-Light.ttf */; };
+		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
+		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
+		FD40A530273610A800F751C1 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A520273610A800F751C1 /* Fontisto.ttf */; };
+		FD40A532273610A800F751C1 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A520273610A800F751C1 /* Fontisto.ttf */; };
+		FD40A533273610A800F751C1 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A520273610A800F751C1 /* Fontisto.ttf */; };
+		FD40A534273610A800F751C1 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A521273610A800F751C1 /* Octicons.ttf */; };
+		FD40A536273610A800F751C1 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A521273610A800F751C1 /* Octicons.ttf */; };
+		FD40A537273610A800F751C1 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A521273610A800F751C1 /* Octicons.ttf */; };
+		FD40A538273610A800F751C1 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A522273610A800F751C1 /* Feather.ttf */; };
+		FD40A53A273610A800F751C1 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A522273610A800F751C1 /* Feather.ttf */; };
+		FD40A53B273610A800F751C1 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A522273610A800F751C1 /* Feather.ttf */; };
+		FD40A53C273610A800F751C1 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A523273610A800F751C1 /* Entypo.ttf */; };
+		FD40A53E273610A800F751C1 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A523273610A800F751C1 /* Entypo.ttf */; };
+		FD40A53F273610A800F751C1 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A523273610A800F751C1 /* Entypo.ttf */; };
+		FD40A540273610A800F751C1 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A524273610A800F751C1 /* FontAwesome5_Brands.ttf */; };
+		FD40A542273610A800F751C1 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A524273610A800F751C1 /* FontAwesome5_Brands.ttf */; };
+		FD40A543273610A800F751C1 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A524273610A800F751C1 /* FontAwesome5_Brands.ttf */; };
+		FD40A544273610A800F751C1 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A525273610A800F751C1 /* MaterialCommunityIcons.ttf */; };
+		FD40A546273610A800F751C1 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A525273610A800F751C1 /* MaterialCommunityIcons.ttf */; };
+		FD40A547273610A800F751C1 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A525273610A800F751C1 /* MaterialCommunityIcons.ttf */; };
+		FD40A548273610A800F751C1 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A526273610A800F751C1 /* AntDesign.ttf */; };
+		FD40A54A273610A800F751C1 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A526273610A800F751C1 /* AntDesign.ttf */; };
+		FD40A54B273610A800F751C1 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A526273610A800F751C1 /* AntDesign.ttf */; };
+		FD40A54C273610A800F751C1 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A527273610A800F751C1 /* Foundation.ttf */; };
+		FD40A54E273610A800F751C1 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A527273610A800F751C1 /* Foundation.ttf */; };
+		FD40A54F273610A800F751C1 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A527273610A800F751C1 /* Foundation.ttf */; };
+		FD40A550273610A800F751C1 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A528273610A800F751C1 /* Ionicons.ttf */; };
+		FD40A552273610A800F751C1 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A528273610A800F751C1 /* Ionicons.ttf */; };
+		FD40A553273610A800F751C1 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A528273610A800F751C1 /* Ionicons.ttf */; };
+		FD40A554273610A800F751C1 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A529273610A800F751C1 /* FontAwesome5_Solid.ttf */; };
+		FD40A556273610A800F751C1 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A529273610A800F751C1 /* FontAwesome5_Solid.ttf */; };
+		FD40A557273610A800F751C1 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A529273610A800F751C1 /* FontAwesome5_Solid.ttf */; };
+		FD40A558273610A800F751C1 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52A273610A800F751C1 /* FontAwesome5_Regular.ttf */; };
+		FD40A55A273610A800F751C1 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52A273610A800F751C1 /* FontAwesome5_Regular.ttf */; };
+		FD40A55B273610A800F751C1 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52A273610A800F751C1 /* FontAwesome5_Regular.ttf */; };
+		FD40A55C273610A800F751C1 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52B273610A800F751C1 /* FontAwesome.ttf */; };
+		FD40A55E273610A800F751C1 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52B273610A800F751C1 /* FontAwesome.ttf */; };
+		FD40A55F273610A800F751C1 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52B273610A800F751C1 /* FontAwesome.ttf */; };
+		FD40A560273610A800F751C1 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52C273610A800F751C1 /* Zocial.ttf */; };
+		FD40A562273610A900F751C1 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52C273610A800F751C1 /* Zocial.ttf */; };
+		FD40A563273610A900F751C1 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52C273610A800F751C1 /* Zocial.ttf */; };
+		FD40A564273610A900F751C1 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52D273610A800F751C1 /* EvilIcons.ttf */; };
+		FD40A566273610A900F751C1 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52D273610A800F751C1 /* EvilIcons.ttf */; };
+		FD40A567273610A900F751C1 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52D273610A800F751C1 /* EvilIcons.ttf */; };
+		FD40A568273610A900F751C1 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52E273610A800F751C1 /* SimpleLineIcons.ttf */; };
+		FD40A56A273610A900F751C1 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52E273610A800F751C1 /* SimpleLineIcons.ttf */; };
+		FD40A56B273610A900F751C1 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52E273610A800F751C1 /* SimpleLineIcons.ttf */; };
+		FD40A56C273610A900F751C1 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52F273610A800F751C1 /* MaterialIcons.ttf */; };
+		FD40A56E273610A900F751C1 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52F273610A800F751C1 /* MaterialIcons.ttf */; };
+		FD40A56F273610A900F751C1 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FD40A52F273610A800F751C1 /* MaterialIcons.ttf */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		00E356F41AD99517003FC87E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
+			remoteInfo = emurgo;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		00E356EE1AD99517003FC87E /* emurgoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = emurgoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* emurgoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = emurgoTests.m; sourceTree = "<group>"; };
+		03A9EED2823C4B07AD012E95 /* Rubik-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Bold.ttf"; path = "../src/assets/fonts/Rubik-Bold.ttf"; sourceTree = "<group>"; };
+		09D460C9C03E41CB9D785437 /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNBackgroundTimer.a; sourceTree = "<group>"; };
+		0C22B71BA107474D92284901 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Regular.ttf"; path = "../src/assets/fonts/Rubik-Regular.ttf"; sourceTree = "<group>"; };
+		10088553D6FEF53AA098E448 /* Pods-emurgo-emurgoTests.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgoTests.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgoTests/Pods-emurgo-emurgoTests.staging.debug.xcconfig"; sourceTree = "<group>"; };
+		1103DA1A18D54C3EA133F4DC /* libRNCardano.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCardano.a; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* emurgo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = emurgo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = emurgo/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = emurgo/AppDelegate.m; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = emurgo/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = emurgo/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = emurgo/main.m; sourceTree = "<group>"; };
+		16BAD3D7933540D184340C1B /* libresolv.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
+		29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCamera.a; sourceTree = "<group>"; };
+		2AA69FA7E098481FA0E71F88 /* Rubik-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-SemiBold.ttf"; path = "../src/assets/fonts/Rubik-SemiBold.ttf"; sourceTree = "<group>"; };
+		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E3E7D012298ACEA00D5C487 /* emurgo-staging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "emurgo-staging.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E5B414122A8B26500BE1FC1 /* Staging-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Staging-Info.plist"; sourceTree = "<group>"; };
+		2EF1204722795CAD007BE6F5 /* libSentry.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentry.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EF1204922795CAD007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EF1208322795DE3007BE6F5 /* libSentryReactNative.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libSentryReactNative.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		326E332CB478B869587486FE /* libPods-emurgo-emurgo-staging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo-emurgo-staging.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		359687B3464F4A7C89D45AF9 /* libRNRandomBytes-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNRandomBytes-tvOS.a"; sourceTree = "<group>"; };
+		35C201FCE37B4D5FA50878D8 /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BoldItalic.ttf"; path = "../src/assets/fonts/Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
+		5DBE1771E1614BCAB6A3665D /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
+		5DBF6642BF3B4B119153FD14 /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
+		5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNRandomBytes.a; sourceTree = "<group>"; };
+		746923B3D658412D94D241BD /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; };
+		75787FFA6A7907D568DCE0A5 /* Pods-emurgo-emurgo-staging.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.staging.debug.xcconfig"; sourceTree = "<group>"; };
+		80CA5BC96447A41916506249 /* Pods-emurgo-emurgo-staging.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.staging.release.xcconfig"; sourceTree = "<group>"; };
+		8306E0AE63AA483DBF7F6BF0 /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
+		84D0E245B86E495693516CD7 /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
+		866D5D886891EA72E3947230 /* Pods-emurgo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.release.xcconfig"; path = "Target Support Files/Pods-emurgo/Pods-emurgo.release.xcconfig"; sourceTree = "<group>"; };
+		8ACE00EEA1CFF0F233A7856D /* libPods-emurgo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C22E0982ABC181F5DF24F91 /* Pods-emurgo-emurgo-staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.debug.xcconfig"; sourceTree = "<group>"; };
+		8F0ED5EF0FEA115291B286EE /* Pods-emurgo-emurgo-nightly.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.debug.xcconfig"; sourceTree = "<group>"; };
+		96DD03473FCE8A759879174E /* Pods-emurgo-emurgo-nightly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.release.xcconfig"; sourceTree = "<group>"; };
+		A00B690C22674DAA96AAB2EA /* Rubik-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Italic.ttf"; path = "../src/assets/fonts/Rubik-Italic.ttf"; sourceTree = "<group>"; };
+		A5C9822288434E3D98A446D7 /* Rubik-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Light.ttf"; path = "../src/assets/fonts/Rubik-Light.ttf"; sourceTree = "<group>"; };
+		A97CBBC591AAD434B2585E0D /* Pods-emurgo.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo/Pods-emurgo.staging.debug.xcconfig"; sourceTree = "<group>"; };
+		AABB2274214D12BF1ABB0CD6 /* Pods-emurgo-emurgo-nightly.staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.staging.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.staging.debug.xcconfig"; sourceTree = "<group>"; };
+		AAF71CA34AD7B12440AFCE21 /* libPods-emurgo-emurgo-nightly.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo-emurgo-nightly.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD9F47B99BD74F5D9DFBEC2E /* Rubik-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Rubik-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		C584A65CAD3229697BE3EBD1 /* Pods-emurgo-emurgoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgoTests.debug.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgoTests/Pods-emurgo-emurgoTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C8259C93DE584FDAAFB4E9FF /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
+		C8E2B9EE858538451AC3DB34 /* Pods-emurgo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.debug.xcconfig"; path = "Target Support Files/Pods-emurgo/Pods-emurgo.debug.xcconfig"; sourceTree = "<group>"; };
+		C9443C3481304C079FB7BE23 /* libRNSVG.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSVG.a; sourceTree = "<group>"; };
+		CA438BD4EC0FAD9BC7C20459 /* Pods-emurgo-emurgoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgoTests.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgoTests/Pods-emurgo-emurgoTests.release.xcconfig"; sourceTree = "<group>"; };
+		CE22E15CEF06F8A33CE57512 /* Pods-emurgo-emurgo-nightly.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-nightly.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly.staging.release.xcconfig"; sourceTree = "<group>"; };
+		D4A65590CBB22514BACD29C8 /* Pods-emurgo.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo/Pods-emurgo.staging.release.xcconfig"; sourceTree = "<group>"; };
+		DA9C2C759F984A23843777A9 /* libRNKeychain.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNKeychain.a; sourceTree = "<group>"; };
+		DB1534F401F64DFEB4584FD0 /* Rubik-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-MediumItalic.ttf"; path = "../src/assets/fonts/Rubik-MediumItalic.ttf"; sourceTree = "<group>"; };
+		E126233CC166877EE24730D5 /* Pods-emurgo-emurgoTests.staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgoTests.staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgoTests/Pods-emurgo-emurgoTests.staging.release.xcconfig"; sourceTree = "<group>"; };
+		E2B49C39674D431A862F0FA9 /* Rubik-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-LightItalic.ttf"; path = "../src/assets/fonts/Rubik-LightItalic.ttf"; sourceTree = "<group>"; };
+		E2FC0BF921C7F02200DA195B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E2FC0C3421C7F26C00DA195B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E2FC0C3621C7F29200DA195B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E2FC0C3821C7F2D600DA195B /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E2FC0C3A21C7F30300DA195B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		E2FC0C3C21C7F32300DA195B /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		E3E804F8BFF4453CA534F039 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../src/assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
+		E532A9572A34655080361779 /* Pods-emurgo-emurgo-staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emurgo-emurgo-staging.release.xcconfig"; path = "Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging.release.xcconfig"; sourceTree = "<group>"; };
+		E5D1D2320FE78AA7F5D9691D /* libPods-emurgo-emurgoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-emurgo-emurgoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9204855261D020F00AF9D45 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = emurgo/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E9A1C80A24185CCA00151CFA /* Yoroi Nightly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Yoroi Nightly.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9EACF84245B42C40062ED1D /* emurgo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "emurgo-Bridging-Header.h"; sourceTree = "<group>"; };
+		E9EACF85245B42C40062ED1D /* emurgo-staging-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "emurgo-staging-Bridging-Header.h"; sourceTree = "<group>"; };
+		E9EACF86245B42C40062ED1D /* emurgo-nightly-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "emurgo-nightly-Bridging-Header.h"; sourceTree = "<group>"; };
+		E9EACF87245B42C40062ED1D /* dummy_ble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy_ble.swift; sourceTree = "<group>"; };
+		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		FD40A520273610A800F751C1 /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
+		FD40A521273610A800F751C1 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
+		FD40A522273610A800F751C1 /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
+		FD40A523273610A800F751C1 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Entypo.ttf; sourceTree = "<group>"; };
+		FD40A524273610A800F751C1 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Brands.ttf; sourceTree = "<group>"; };
+		FD40A525273610A800F751C1 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
+		FD40A526273610A800F751C1 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AntDesign.ttf; sourceTree = "<group>"; };
+		FD40A527273610A800F751C1 /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Foundation.ttf; sourceTree = "<group>"; };
+		FD40A528273610A800F751C1 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ionicons.ttf; sourceTree = "<group>"; };
+		FD40A529273610A800F751C1 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Solid.ttf; sourceTree = "<group>"; };
+		FD40A52A273610A800F751C1 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Regular.ttf; sourceTree = "<group>"; };
+		FD40A52B273610A800F751C1 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
+		FD40A52C273610A800F751C1 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zocial.ttf; sourceTree = "<group>"; };
+		FD40A52D273610A800F751C1 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
+		FD40A52E273610A800F751C1 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
+		FD40A52F273610A800F751C1 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		00E356EB1AD99517003FC87E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
+				237BDF69DA4AC362D0191EEE /* libPods-emurgo-emurgoTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */,
+				BA3D0647FB29475CA53128CF /* libresolv.tbd in Frameworks */,
+				4F6EF78F0F96BF89BCE30BF4 /* libPods-emurgo.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E3E7CDA2298ACEA00D5C487 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2EBA2AD022EA877F00BF8A5B /* JavaScriptCore.framework in Frameworks */,
+				B3F0A669C9435000F769DE49 /* libPods-emurgo-emurgo-staging.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9A1C7DE24185CCA00151CFA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9A1C7E124185CCA00151CFA /* JavaScriptCore.framework in Frameworks */,
+				E9A1C7FC24185CCA00151CFA /* libresolv.tbd in Frameworks */,
+				087D95DB98A155D2B096DE3C /* libPods-emurgo-emurgo-nightly.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		00E356EF1AD99517003FC87E /* emurgoTests */ = {
+			isa = PBXGroup;
+			children = (
+				00E356F21AD99517003FC87E /* emurgoTests.m */,
+				00E356F01AD99517003FC87E /* Supporting Files */,
+			);
+			path = emurgoTests;
+			sourceTree = "<group>";
+		};
+		00E356F01AD99517003FC87E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				00E356F11AD99517003FC87E /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		13B07FAE1A68108700A75B9A /* emurgo */ = {
+			isa = PBXGroup;
+			children = (
+				E9204855261D020F00AF9D45 /* LaunchScreen.storyboard */,
+				E9EACF87245B42C40062ED1D /* dummy_ble.swift */,
+				2E5B414122A8B26500BE1FC1 /* Staging-Info.plist */,
+				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
+				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
+				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				13B07FB61A68108700A75B9A /* Info.plist */,
+				13B07FB71A68108700A75B9A /* main.m */,
+				E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */,
+			);
+			name = emurgo;
+			sourceTree = "<group>";
+		};
+		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
+				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
+				2EF1208322795DE3007BE6F5 /* libSentryReactNative.a */,
+				2EF1204722795CAD007BE6F5 /* libSentry.a */,
+				2EF1204922795CAD007BE6F5 /* libSentryReactNative.a */,
+				2D16E6891FA4F8E400B85C8A /* libReact.a */,
+				16BAD3D7933540D184340C1B /* libresolv.tbd */,
+				8ACE00EEA1CFF0F233A7856D /* libPods-emurgo.a */,
+				AAF71CA34AD7B12440AFCE21 /* libPods-emurgo-emurgo-nightly.a */,
+				326E332CB478B869587486FE /* libPods-emurgo-emurgo-staging.a */,
+				E5D1D2320FE78AA7F5D9691D /* libPods-emurgo-emurgoTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4F13037E48544473B2104BB3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				03A9EED2823C4B07AD012E95 /* Rubik-Bold.ttf */,
+				35C201FCE37B4D5FA50878D8 /* Rubik-BoldItalic.ttf */,
+				A00B690C22674DAA96AAB2EA /* Rubik-Italic.ttf */,
+				A5C9822288434E3D98A446D7 /* Rubik-Light.ttf */,
+				E2B49C39674D431A862F0FA9 /* Rubik-LightItalic.ttf */,
+				E3E804F8BFF4453CA534F039 /* Rubik-Medium.ttf */,
+				DB1534F401F64DFEB4584FD0 /* Rubik-MediumItalic.ttf */,
+				0C22B71BA107474D92284901 /* Rubik-Regular.ttf */,
+				2AA69FA7E098481FA0E71F88 /* Rubik-SemiBold.ttf */,
+				BD9F47B99BD74F5D9DFBEC2E /* Rubik-SemiBoldItalic.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		83CBB9F61A601CBA00E9B192 = {
+			isa = PBXGroup;
+			children = (
+				FD40A51F273610A800F751C1 /* Fonts */,
+				13B07FAE1A68108700A75B9A /* emurgo */,
+				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				00E356EF1AD99517003FC87E /* emurgoTests */,
+				83CBBA001A601CBA00E9B192 /* Products */,
+				2D16E6871FA4F8E400B85C8A /* Frameworks */,
+				F7FBD967219C5A6D003FE9E2 /* Recovered References */,
+				E9EACF84245B42C40062ED1D /* emurgo-Bridging-Header.h */,
+				E9EACF85245B42C40062ED1D /* emurgo-staging-Bridging-Header.h */,
+				E9EACF86245B42C40062ED1D /* emurgo-nightly-Bridging-Header.h */,
+				F6D0FE86B0BF1DC5E2A3BF13 /* Pods */,
+				4F13037E48544473B2104BB3 /* Resources */,
+			);
+			indentWidth = 2;
+			sourceTree = "<group>";
+			tabWidth = 2;
+			usesTabs = 0;
+		};
+		83CBBA001A601CBA00E9B192 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				13B07F961A680F5B00A75B9A /* emurgo.app */,
+				00E356EE1AD99517003FC87E /* emurgoTests.xctest */,
+				2E3E7D012298ACEA00D5C487 /* emurgo-staging.app */,
+				E9A1C80A24185CCA00151CFA /* Yoroi Nightly.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F6D0FE86B0BF1DC5E2A3BF13 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C8E2B9EE858538451AC3DB34 /* Pods-emurgo.debug.xcconfig */,
+				A97CBBC591AAD434B2585E0D /* Pods-emurgo.staging.debug.xcconfig */,
+				866D5D886891EA72E3947230 /* Pods-emurgo.release.xcconfig */,
+				D4A65590CBB22514BACD29C8 /* Pods-emurgo.staging.release.xcconfig */,
+				8F0ED5EF0FEA115291B286EE /* Pods-emurgo-emurgo-nightly.debug.xcconfig */,
+				AABB2274214D12BF1ABB0CD6 /* Pods-emurgo-emurgo-nightly.staging.debug.xcconfig */,
+				96DD03473FCE8A759879174E /* Pods-emurgo-emurgo-nightly.release.xcconfig */,
+				CE22E15CEF06F8A33CE57512 /* Pods-emurgo-emurgo-nightly.staging.release.xcconfig */,
+				8C22E0982ABC181F5DF24F91 /* Pods-emurgo-emurgo-staging.debug.xcconfig */,
+				75787FFA6A7907D568DCE0A5 /* Pods-emurgo-emurgo-staging.staging.debug.xcconfig */,
+				E532A9572A34655080361779 /* Pods-emurgo-emurgo-staging.release.xcconfig */,
+				80CA5BC96447A41916506249 /* Pods-emurgo-emurgo-staging.staging.release.xcconfig */,
+				C584A65CAD3229697BE3EBD1 /* Pods-emurgo-emurgoTests.debug.xcconfig */,
+				10088553D6FEF53AA098E448 /* Pods-emurgo-emurgoTests.staging.debug.xcconfig */,
+				CA438BD4EC0FAD9BC7C20459 /* Pods-emurgo-emurgoTests.release.xcconfig */,
+				E126233CC166877EE24730D5 /* Pods-emurgo-emurgoTests.staging.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		F7FBD967219C5A6D003FE9E2 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				C9443C3481304C079FB7BE23 /* libRNSVG.a */,
+				84D0E245B86E495693516CD7 /* libBVLinearGradient.a */,
+				8306E0AE63AA483DBF7F6BF0 /* libRNFS.a */,
+				5F9F4B6BEEFC4DF6A66C1383 /* libRNRandomBytes.a */,
+				29CDBB4B7FB64C0086FF65C6 /* libRNCamera.a */,
+				C8259C93DE584FDAAFB4E9FF /* libReactNativePermissions.a */,
+				DA9C2C759F984A23843777A9 /* libRNKeychain.a */,
+				746923B3D658412D94D241BD /* libRNSVG-tvOS.a */,
+				359687B3464F4A7C89D45AF9 /* libRNRandomBytes-tvOS.a */,
+				09D460C9C03E41CB9D785437 /* libRNBackgroundTimer.a */,
+				5DBE1771E1614BCAB6A3665D /* libSplashScreen.a */,
+				5DBF6642BF3B4B119153FD14 /* libRNFirebase.a */,
+				1103DA1A18D54C3EA133F4DC /* libRNCardano.a */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		FD40A51F273610A800F751C1 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				FD40A520273610A800F751C1 /* Fontisto.ttf */,
+				FD40A521273610A800F751C1 /* Octicons.ttf */,
+				FD40A522273610A800F751C1 /* Feather.ttf */,
+				FD40A523273610A800F751C1 /* Entypo.ttf */,
+				FD40A524273610A800F751C1 /* FontAwesome5_Brands.ttf */,
+				FD40A525273610A800F751C1 /* MaterialCommunityIcons.ttf */,
+				FD40A526273610A800F751C1 /* AntDesign.ttf */,
+				FD40A527273610A800F751C1 /* Foundation.ttf */,
+				FD40A528273610A800F751C1 /* Ionicons.ttf */,
+				FD40A529273610A800F751C1 /* FontAwesome5_Solid.ttf */,
+				FD40A52A273610A800F751C1 /* FontAwesome5_Regular.ttf */,
+				FD40A52B273610A800F751C1 /* FontAwesome.ttf */,
+				FD40A52C273610A800F751C1 /* Zocial.ttf */,
+				FD40A52D273610A800F751C1 /* EvilIcons.ttf */,
+				FD40A52E273610A800F751C1 /* SimpleLineIcons.ttf */,
+				FD40A52F273610A800F751C1 /* MaterialIcons.ttf */,
+			);
+			name = Fonts;
+			path = "../node_modules/react-native-vector-icons/Fonts";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		00E356ED1AD99517003FC87E /* emurgoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "emurgoTests" */;
+			buildPhases = (
+				B3981E8E2551DCBB929727B9 /* [CP] Check Pods Manifest.lock */,
+				00E356EA1AD99517003FC87E /* Sources */,
+				00E356EB1AD99517003FC87E /* Frameworks */,
+				00E356EC1AD99517003FC87E /* Resources */,
+				226AFA2910D45B200EB23E8C /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				00E356F51AD99517003FC87E /* PBXTargetDependency */,
+			);
+			name = emurgoTests;
+			productName = emurgoTests;
+			productReference = 00E356EE1AD99517003FC87E /* emurgoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		13B07F861A680F5B00A75B9A /* emurgo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "emurgo" */;
+			buildPhases = (
+				4D59A1AA27CEEE4D58B8191F /* [CP] Check Pods Manifest.lock */,
+				E911CC5C23FB1F2E00D560F8 /* Check env variables */,
+				13B07F871A680F5B00A75B9A /* Sources */,
+				13B07F8C1A680F5B00A75B9A /* Frameworks */,
+				13B07F8E1A680F5B00A75B9A /* Resources */,
+				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				DCD26C7DDA9C48ADAC5D4E1E /* Upload Debug Symbols to Sentry */,
+				9005554C4D7324327799B832 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = emurgo;
+			productName = "Hello World";
+			productReference = 13B07F961A680F5B00A75B9A /* emurgo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2E3E7CD52298ACEA00D5C487 /* emurgo-staging */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E3E7CFC2298ACEA00D5C487 /* Build configuration list for PBXNativeTarget "emurgo-staging" */;
+			buildPhases = (
+				E62509B1261FB2681DB4DE91 /* [CP] Check Pods Manifest.lock */,
+				2E3E7CD72298ACEA00D5C487 /* Sources */,
+				2E3E7CDA2298ACEA00D5C487 /* Frameworks */,
+				2E3E7CF62298ACEA00D5C487 /* Resources */,
+				2E3E7CFA2298ACEA00D5C487 /* Bundle React Native code and images */,
+				43965AA0A5088B5CB3E68D00 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "emurgo-staging";
+			productName = "Hello World";
+			productReference = 2E3E7D012298ACEA00D5C487 /* emurgo-staging.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E9A1C7D824185CCA00151CFA /* emurgo-nightly */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E9A1C80524185CCA00151CFA /* Build configuration list for PBXNativeTarget "emurgo-nightly" */;
+			buildPhases = (
+				FB9A6D54274640E039D9DBF6 /* [CP] Check Pods Manifest.lock */,
+				E9A1C7DA24185CCA00151CFA /* Check env variables */,
+				E9A1C7DB24185CCA00151CFA /* Sources */,
+				E9A1C7DE24185CCA00151CFA /* Frameworks */,
+				E9A1C7FF24185CCA00151CFA /* Resources */,
+				E9A1C80324185CCA00151CFA /* Bundle React Native code and images */,
+				EDA2533F12CEB073CB734C81 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "emurgo-nightly";
+			productName = "Hello World";
+			productReference = E9A1C80A24185CCA00151CFA /* Yoroi Nightly.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		83CBB9F71A601CBA00E9B192 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1240;
+				ORGANIZATIONNAME = Emurgo;
+				TargetAttributes = {
+					00E356ED1AD99517003FC87E = {
+						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = F8NVT2G2L4;
+						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = F8NVT2G2L4;
+						LastSwiftMigration = 1130;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+						};
+					};
+					2E3E7CD52298ACEA00D5C487 = {
+						DevelopmentTeam = F8NVT2G2L4;
+						LastSwiftMigration = 1130;
+					};
+					E9A1C7D824185CCA00151CFA = {
+						DevelopmentTeam = F8NVT2G2L4;
+						LastSwiftMigration = 1130;
+					};
+				};
+			};
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "emurgo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				en,
+				Base,
+				ja,
+				ru,
+				ko,
+				"zh-Hans",
+				"zh-Hant",
+			);
+			mainGroup = 83CBB9F61A601CBA00E9B192;
+			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				13B07F861A680F5B00A75B9A /* emurgo */,
+				2E3E7CD52298ACEA00D5C487 /* emurgo-staging */,
+				E9A1C7D824185CCA00151CFA /* emurgo-nightly */,
+				00E356ED1AD99517003FC87E /* emurgoTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		00E356EC1AD99517003FC87E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FD40A537273610A800F751C1 /* Octicons.ttf in Resources */,
+				FD40A54F273610A800F751C1 /* Foundation.ttf in Resources */,
+				FD40A56B273610A900F751C1 /* SimpleLineIcons.ttf in Resources */,
+				FD40A553273610A800F751C1 /* Ionicons.ttf in Resources */,
+				FD40A567273610A900F751C1 /* EvilIcons.ttf in Resources */,
+				FD40A55B273610A800F751C1 /* FontAwesome5_Regular.ttf in Resources */,
+				FD40A563273610A900F751C1 /* Zocial.ttf in Resources */,
+				FD40A53F273610A800F751C1 /* Entypo.ttf in Resources */,
+				FD40A56F273610A900F751C1 /* MaterialIcons.ttf in Resources */,
+				FD40A54B273610A800F751C1 /* AntDesign.ttf in Resources */,
+				FD40A557273610A800F751C1 /* FontAwesome5_Solid.ttf in Resources */,
+				FD40A533273610A800F751C1 /* Fontisto.ttf in Resources */,
+				FD40A53B273610A800F751C1 /* Feather.ttf in Resources */,
+				FD40A547273610A800F751C1 /* MaterialCommunityIcons.ttf in Resources */,
+				FD40A543273610A800F751C1 /* FontAwesome5_Brands.ttf in Resources */,
+				FD40A55F273610A800F751C1 /* FontAwesome.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		13B07F8E1A680F5B00A75B9A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9204856261D020F00AF9D45 /* LaunchScreen.storyboard in Resources */,
+				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				FD40A554273610A800F751C1 /* FontAwesome5_Solid.ttf in Resources */,
+				FD40A550273610A800F751C1 /* Ionicons.ttf in Resources */,
+				FD40A560273610A800F751C1 /* Zocial.ttf in Resources */,
+				FD40A568273610A900F751C1 /* SimpleLineIcons.ttf in Resources */,
+				E2FC0BF821C7F02200DA195B /* InfoPlist.strings in Resources */,
+				FD40A540273610A800F751C1 /* FontAwesome5_Brands.ttf in Resources */,
+				FD40A564273610A900F751C1 /* EvilIcons.ttf in Resources */,
+				A1231BEBC967468B9B15BDD4 /* Rubik-Bold.ttf in Resources */,
+				3F14C44BF84249A49B2D0753 /* Rubik-BoldItalic.ttf in Resources */,
+				30DB4190BE9641A9B41AF165 /* Rubik-Italic.ttf in Resources */,
+				FD40A538273610A800F751C1 /* Feather.ttf in Resources */,
+				FD40A530273610A800F751C1 /* Fontisto.ttf in Resources */,
+				EA86609D5C6A43D284D28AEC /* Rubik-Light.ttf in Resources */,
+				CFA75AC3F695456B81D36593 /* Rubik-LightItalic.ttf in Resources */,
+				CF57D4BA7BB647F589D16741 /* Rubik-Medium.ttf in Resources */,
+				FD40A534273610A800F751C1 /* Octicons.ttf in Resources */,
+				FD40A56C273610A900F751C1 /* MaterialIcons.ttf in Resources */,
+				0364225EA79340159305AC26 /* Rubik-MediumItalic.ttf in Resources */,
+				FD40A55C273610A800F751C1 /* FontAwesome.ttf in Resources */,
+				FD40A548273610A800F751C1 /* AntDesign.ttf in Resources */,
+				FD40A54C273610A800F751C1 /* Foundation.ttf in Resources */,
+				FD40A558273610A800F751C1 /* FontAwesome5_Regular.ttf in Resources */,
+				84CE4FB9FCD740688BE3A3B4 /* Rubik-Regular.ttf in Resources */,
+				FD40A544273610A800F751C1 /* MaterialCommunityIcons.ttf in Resources */,
+				E693D5BD96704D11BAF6C3F3 /* Rubik-SemiBold.ttf in Resources */,
+				FD40A53C273610A800F751C1 /* Entypo.ttf in Resources */,
+				4FA268266BFA4DABB83358FA /* Rubik-SemiBoldItalic.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E3E7CF62298ACEA00D5C487 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E99D542D2629F2AA008C6667 /* Rubik-Bold.ttf in Resources */,
+				E99D542E2629F2AA008C6667 /* Rubik-BoldItalic.ttf in Resources */,
+				E99D542F2629F2AA008C6667 /* Rubik-Italic.ttf in Resources */,
+				E99D54302629F2AA008C6667 /* Rubik-Light.ttf in Resources */,
+				E99D54312629F2AA008C6667 /* Rubik-LightItalic.ttf in Resources */,
+				E99D54322629F2AA008C6667 /* Rubik-Medium.ttf in Resources */,
+				E99D54332629F2AA008C6667 /* Rubik-MediumItalic.ttf in Resources */,
+				E99D54342629F2AA008C6667 /* Rubik-Regular.ttf in Resources */,
+				E99D54352629F2AA008C6667 /* Rubik-SemiBold.ttf in Resources */,
+				E99D54362629F2AA008C6667 /* Rubik-SemiBoldItalic.ttf in Resources */,
+				E9204857261D020F00AF9D45 /* LaunchScreen.storyboard in Resources */,
+				2E3E7CF72298ACEA00D5C487 /* Images.xcassets in Resources */,
+				2E3E7CF82298ACEA00D5C487 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9A1C7FF24185CCA00151CFA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E99D54372629F2B5008C6667 /* Rubik-Bold.ttf in Resources */,
+				E99D54382629F2B5008C6667 /* Rubik-BoldItalic.ttf in Resources */,
+				FD40A556273610A800F751C1 /* FontAwesome5_Solid.ttf in Resources */,
+				FD40A552273610A800F751C1 /* Ionicons.ttf in Resources */,
+				FD40A562273610A900F751C1 /* Zocial.ttf in Resources */,
+				FD40A56A273610A900F751C1 /* SimpleLineIcons.ttf in Resources */,
+				E99D54392629F2B5008C6667 /* Rubik-Italic.ttf in Resources */,
+				FD40A542273610A800F751C1 /* FontAwesome5_Brands.ttf in Resources */,
+				FD40A566273610A900F751C1 /* EvilIcons.ttf in Resources */,
+				E99D543A2629F2B5008C6667 /* Rubik-Light.ttf in Resources */,
+				E99D543B2629F2B5008C6667 /* Rubik-LightItalic.ttf in Resources */,
+				E99D543C2629F2B5008C6667 /* Rubik-Medium.ttf in Resources */,
+				FD40A53A273610A800F751C1 /* Feather.ttf in Resources */,
+				FD40A532273610A800F751C1 /* Fontisto.ttf in Resources */,
+				E99D543D2629F2B5008C6667 /* Rubik-MediumItalic.ttf in Resources */,
+				E99D543E2629F2B5008C6667 /* Rubik-Regular.ttf in Resources */,
+				E99D543F2629F2B5008C6667 /* Rubik-SemiBold.ttf in Resources */,
+				FD40A536273610A800F751C1 /* Octicons.ttf in Resources */,
+				FD40A56E273610A900F751C1 /* MaterialIcons.ttf in Resources */,
+				E99D54402629F2B5008C6667 /* Rubik-SemiBoldItalic.ttf in Resources */,
+				FD40A55E273610A800F751C1 /* FontAwesome.ttf in Resources */,
+				FD40A54A273610A800F751C1 /* AntDesign.ttf in Resources */,
+				FD40A54E273610A800F751C1 /* Foundation.ttf in Resources */,
+				FD40A55A273610A800F751C1 /* FontAwesome5_Regular.ttf in Resources */,
+				E9204858261D020F00AF9D45 /* LaunchScreen.storyboard in Resources */,
+				FD40A546273610A800F751C1 /* MaterialCommunityIcons.ttf in Resources */,
+				E9A1C80024185CCA00151CFA /* Images.xcassets in Resources */,
+				FD40A53E273610A800F751C1 /* Entypo.ttf in Resources */,
+				E9A1C80124185CCA00151CFA /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export EXTRA_PACKAGER_ARGS=\"--sourcemap-output $DERIVED_FILE_DIR/main.jsbundle.map\"\nexport SENTRY_PROPERTIES=../sentry.properties\n\nexport DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh index.ts\n";
+		};
+		226AFA2910D45B200EB23E8C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-emurgo-emurgoTests/Pods-emurgo-emurgoTests-resources.sh",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Feather.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Foundation.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Feather.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Brands.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Regular.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Solid.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fontisto.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Foundation.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Ionicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCommunityIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-emurgo-emurgoTests/Pods-emurgo-emurgoTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2E3E7CFA2298ACEA00D5C487 /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export EXTRA_PACKAGER_ARGS=\"--sourcemap-output $DERIVED_FILE_DIR/main.jsbundle.map\"\nexport SENTRY_PROPERTIES=../sentry.properties\n\nexport DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh index.ts\n";
+		};
+		43965AA0A5088B5CB3E68D00 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging-resources.sh",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Feather.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Foundation.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Feather.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Brands.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Regular.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Solid.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fontisto.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Foundation.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Ionicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCommunityIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-emurgo-emurgo-staging/Pods-emurgo-emurgo-staging-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4D59A1AA27CEEE4D58B8191F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-emurgo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9005554C4D7324327799B832 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-emurgo/Pods-emurgo-resources.sh",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Feather.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Foundation.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Feather.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Brands.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Regular.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Solid.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fontisto.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Foundation.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Ionicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCommunityIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-emurgo/Pods-emurgo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B3981E8E2551DCBB929727B9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-emurgo-emurgoTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DCD26C7DDA9C48ADAC5D4E1E /* Upload Debug Symbols to Sentry */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Upload Debug Symbols to Sentry";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export SENTRY_PROPERTIES=sentry.properties\n../node_modules/@sentry/cli/bin/sentry-cli upload-dsym\n";
+		};
+		E62509B1261FB2681DB4DE91 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-emurgo-emurgo-staging-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E911CC5C23FB1F2E00D560F8 /* Check env variables */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Check env variables";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# check env variables\n${PROJECT_DIR}/../check_env_variables.sh \".env.production\"\n";
+		};
+		E9A1C7DA24185CCA00151CFA /* Check env variables */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Check env variables";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# check env variables\n${PROJECT_DIR}/../check_env_variables.sh \".env.nightly\"\n";
+		};
+		E9A1C80324185CCA00151CFA /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export EXTRA_PACKAGER_ARGS=\"--sourcemap-output $DERIVED_FILE_DIR/main.jsbundle.map\"\nexport SENTRY_PROPERTIES=../sentry.properties\n\nexport DEVELOPMENT_BUILD_CONFIGURATIONS=\"+(Staging.Debug|Debug)\"\nexport NODE_BINARY=node\n\n../node_modules/react-native-schemes-manager/lib/react-native-xcode.sh index.ts\n";
+		};
+		EDA2533F12CEB073CB734C81 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly-resources.sh",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Feather.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Foundation.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Feather.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Brands.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Regular.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Solid.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fontisto.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Foundation.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Ionicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCommunityIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-emurgo-emurgo-nightly/Pods-emurgo-emurgo-nightly-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FB9A6D54274640E039D9DBF6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-emurgo-emurgo-nightly-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		00E356EA1AD99517003FC87E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00E356F31AD99517003FC87E /* emurgoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		13B07F871A680F5B00A75B9A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				E9EACF88245B42C40062ED1D /* dummy_ble.swift in Sources */,
+				13B07FC11A68108700A75B9A /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2E3E7CD72298ACEA00D5C487 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E3E7CD82298ACEA00D5C487 /* AppDelegate.m in Sources */,
+				E9EACF89245B42C40062ED1D /* dummy_ble.swift in Sources */,
+				2E3E7CD92298ACEA00D5C487 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9A1C7DB24185CCA00151CFA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E9A1C7DC24185CCA00151CFA /* AppDelegate.m in Sources */,
+				E9EACF8A245B42C40062ED1D /* dummy_ble.swift in Sources */,
+				E9A1C7DD24185CCA00151CFA /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 13B07F861A680F5B00A75B9A /* emurgo */;
+			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		E2FC0BFA21C7F02200DA195B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E2FC0BF921C7F02200DA195B /* en */,
+				E2FC0C3421C7F26C00DA195B /* ja */,
+				E2FC0C3621C7F29200DA195B /* ru */,
+				E2FC0C3821C7F2D600DA195B /* ko */,
+				E2FC0C3A21C7F30300DA195B /* zh-Hans */,
+				E2FC0C3C21C7F32300DA195B /* zh-Hant */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		00E356F61AD99517003FC87E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C584A65CAD3229697BE3EBD1 /* Pods-emurgo-emurgoTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = emurgoTests/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "-com.emurgo.yoroi";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/emurgo.app/emurgo";
+			};
+			name = Debug;
+		};
+		00E356F71AD99517003FC87E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA438BD4EC0FAD9BC7C20459 /* Pods-emurgo-emurgoTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = emurgoTests/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "-com.emurgo.yoroi";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/emurgo.app/emurgo";
+			};
+			name = Release;
+		};
+		13B07F941A680F5B00A75B9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C8E2B9EE858538451AC3DB34 /* Pods-emurgo.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = Yoroi;
+				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 443;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = emurgo/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 4.10.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
+				PRODUCT_NAME = emurgo;
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emurgo.yoroi";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		13B07F951A680F5B00A75B9A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 866D5D886891EA72E3947230 /* Pods-emurgo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = Yoroi;
+				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 443;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = emurgo/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 4.10.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
+				PRODUCT_NAME = emurgo;
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emurgo.yoroi";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		2E3E7CFD2298ACEA00D5C487 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8C22E0982ABC181F5DF24F91 /* Pods-emurgo-emurgo-staging.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = Yoroi;
+				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
+				CURRENT_PROJECT_VERSION = 443;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "Staging-Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				MARKETING_VERSION = 4.10.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-staging-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		2E3E7CFE2298ACEA00D5C487 /* Staging.Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 75787FFA6A7907D568DCE0A5 /* Pods-emurgo-emurgo-staging.staging.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
+				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
+				CURRENT_PROJECT_VERSION = 443;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "Staging-Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				MARKETING_VERSION = 4.10.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-staging-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Staging.Debug;
+		};
+		2E3E7CFF2298ACEA00D5C487 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E532A9572A34655080361779 /* Pods-emurgo-emurgo-staging.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = Yoroi;
+				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 443;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "Staging-Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				MARKETING_VERSION = 4.10.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-staging-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		2E3E7D002298ACEA00D5C487 /* Staging.Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 80CA5BC96447A41916506249 /* Pods-emurgo-emurgo-staging.staging.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
+				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
+				CURRENT_PROJECT_VERSION = 443;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "Staging-Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				MARKETING_VERSION = 4.10.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-stag";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-staging-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Staging.Release;
+		};
+		83CBBA201A601CBA00E9B192 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
+				INFOPLIST_PREPROCESS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+					"$(inherited)",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		83CBBA211A601CBA00E9B192 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
+				INFOPLIST_PREPROCESS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+					"$(inherited)",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E2373CB321CA4BB40003317D /* Staging.Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
+				INFOPLIST_PREPROCESS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+					"$(inherited)",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Staging.Debug;
+		};
+		E2373CB421CA4BB40003317D /* Staging.Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A97CBBC591AAD434B2585E0D /* Pods-emurgo.staging.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
+				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 443;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = emurgo/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 4.10.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
+				PRODUCT_NAME = emurgo;
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emurgo.yoroi";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Staging.Debug;
+		};
+		E2373CB521CA4BB40003317D /* Staging.Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 10088553D6FEF53AA098E448 /* Pods-emurgo-emurgoTests.staging.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = emurgoTests/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "-com.emurgo.yoroi";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/emurgo.app/emurgo";
+			};
+			name = Staging.Debug;
+		};
+		E2373CF021CA4BDC0003317D /* Staging.Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = "${BUILD_DIR}/GeneratedInfoPlistDotEnv.h";
+				INFOPLIST_PREPROCESS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+					"$(inherited)",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Staging.Release;
+		};
+		E2373CF121CA4BDC0003317D /* Staging.Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D4A65590CBB22514BACD29C8 /* Pods-emurgo.staging.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
+				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 443;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = emurgo/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 4.10.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.emurgo.yoroi;
+				PRODUCT_NAME = emurgo;
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emurgo.yoroi";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Staging.Release;
+		};
+		E2373CF221CA4BDC0003317D /* Staging.Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E126233CC166877EE24730D5 /* Pods-emurgo-emurgoTests.staging.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = emurgoTests/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "-com.emurgo.yoroi";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/emurgo.app/emurgo";
+			};
+			name = Staging.Release;
+		};
+		E9A1C80624185CCA00151CFA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8F0ED5EF0FEA115291B286EE /* Pods-emurgo-emurgo-nightly.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
+				BUNDLE_DISPLAY_NAME = Yoroi;
+				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 443;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "Nightly-Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 4.10.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
+				PRODUCT_NAME = "Yoroi Nightly";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emurgo.yoroi-nightly";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-nightly-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		E9A1C80724185CCA00151CFA /* Staging.Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AABB2274214D12BF1ABB0CD6 /* Pods-emurgo-emurgo-nightly.staging.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
+				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
+				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 443;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "Nightly-Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 4.10.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
+				PRODUCT_NAME = "Yoroi Nightly";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emurgo.yoroi-nightly";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-nightly-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Staging.Debug;
+		};
+		E9A1C80824185CCA00151CFA /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 96DD03473FCE8A759879174E /* Pods-emurgo-emurgo-nightly.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
+				BUNDLE_DISPLAY_NAME = Yoroi;
+				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 443;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "Nightly-Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 4.10.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
+				PRODUCT_NAME = "Yoroi Nightly";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emurgo.yoroi-nightly";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-nightly-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		E9A1C80924185CCA00151CFA /* Staging.Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE22E15CEF06F8A33CE57512 /* Pods-emurgo-emurgo-nightly.staging.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-nightly";
+				BUNDLE_DISPLAY_NAME = "Yoroi Staging";
+				BUNDLE_ID_SUFFIX = .staging;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 443;
+				DEVELOPMENT_TEAM = F8NVT2G2L4;
+				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-fs/**",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-keychain/RNKeychainManager",
+					"$(SRCROOT)/../node_modules/react-native-background-timer/ios",
+					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
+					"$(SRCROOT)/../node_modules/react-native-cardano/ios/**",
+				);
+				INFOPLIST_FILE = "Nightly-Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 4.10.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.emurgo.yoroi-nightly";
+				PRODUCT_NAME = "Yoroi Nightly";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.emurgo.yoroi-nightly";
+				SWIFT_OBJC_BRIDGING_HEADER = "emurgo-nightly-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Staging.Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "emurgoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00E356F61AD99517003FC87E /* Debug */,
+				E2373CB521CA4BB40003317D /* Staging.Debug */,
+				00E356F71AD99517003FC87E /* Release */,
+				E2373CF221CA4BDC0003317D /* Staging.Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "emurgo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				13B07F941A680F5B00A75B9A /* Debug */,
+				E2373CB421CA4BB40003317D /* Staging.Debug */,
+				13B07F951A680F5B00A75B9A /* Release */,
+				E2373CF121CA4BDC0003317D /* Staging.Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2E3E7CFC2298ACEA00D5C487 /* Build configuration list for PBXNativeTarget "emurgo-staging" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E3E7CFD2298ACEA00D5C487 /* Debug */,
+				2E3E7CFE2298ACEA00D5C487 /* Staging.Debug */,
+				2E3E7CFF2298ACEA00D5C487 /* Release */,
+				2E3E7D002298ACEA00D5C487 /* Staging.Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "emurgo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83CBBA201A601CBA00E9B192 /* Debug */,
+				E2373CB321CA4BB40003317D /* Staging.Debug */,
+				83CBBA211A601CBA00E9B192 /* Release */,
+				E2373CF021CA4BDC0003317D /* Staging.Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E9A1C80524185CCA00151CFA /* Build configuration list for PBXNativeTarget "emurgo-nightly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E9A1C80624185CCA00151CFA /* Debug */,
+				E9A1C80724185CCA00151CFA /* Staging.Debug */,
+				E9A1C80824185CCA00151CFA /* Release */,
+				E9A1C80924185CCA00151CFA /* Staging.Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
+}

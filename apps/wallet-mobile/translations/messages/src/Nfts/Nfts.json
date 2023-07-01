@@ -1,0 +1,122 @@
+[
+  {
+    "id": "nft.gallery.nftCount",
+    "defaultMessage": "!!!NFT count",
+    "file": "src/Nfts/Nfts.tsx",
+    "start": {
+      "line": 236,
+      "column": 12,
+      "index": 5666
+    },
+    "end": {
+      "line": 239,
+      "column": 3,
+      "index": 5739
+    }
+  },
+  {
+    "id": "nft.gallery.errorTitle",
+    "defaultMessage": "!!!Oops!",
+    "file": "src/Nfts/Nfts.tsx",
+    "start": {
+      "line": 240,
+      "column": 14,
+      "index": 5755
+    },
+    "end": {
+      "line": 243,
+      "column": 3,
+      "index": 5826
+    }
+  },
+  {
+    "id": "nft.gallery.errorDescription",
+    "defaultMessage": "!!!Something went wrong.",
+    "file": "src/Nfts/Nfts.tsx",
+    "start": {
+      "line": 244,
+      "column": 20,
+      "index": 5848
+    },
+    "end": {
+      "line": 247,
+      "column": 3,
+      "index": 5941
+    }
+  },
+  {
+    "id": "nft.gallery.reloadApp",
+    "defaultMessage": "!!!Try to restart the app.",
+    "file": "src/Nfts/Nfts.tsx",
+    "start": {
+      "line": 248,
+      "column": 13,
+      "index": 5956
+    },
+    "end": {
+      "line": 251,
+      "column": 3,
+      "index": 6044
+    }
+  },
+  {
+    "id": "nft.gallery.noNftsFound",
+    "defaultMessage": "!!!No NFTs found",
+    "file": "src/Nfts/Nfts.tsx",
+    "start": {
+      "line": 252,
+      "column": 15,
+      "index": 6061
+    },
+    "end": {
+      "line": 255,
+      "column": 3,
+      "index": 6141
+    }
+  },
+  {
+    "id": "nft.gallery.noNftsInWallet",
+    "defaultMessage": "!!!No NFTs added to your wallet yet",
+    "file": "src/Nfts/Nfts.tsx",
+    "start": {
+      "line": 256,
+      "column": 18,
+      "index": 6161
+    },
+    "end": {
+      "line": 259,
+      "column": 3,
+      "index": 6263
+    }
+  },
+  {
+    "id": "nft.navigation.title",
+    "defaultMessage": "!!!NFT Gallery",
+    "file": "src/Nfts/Nfts.tsx",
+    "start": {
+      "line": 260,
+      "column": 9,
+      "index": 6274
+    },
+    "end": {
+      "line": 263,
+      "column": 3,
+      "index": 6349
+    }
+  },
+  {
+    "id": "nft.navigation.search",
+    "defaultMessage": "!!!Search NFT",
+    "file": "src/Nfts/Nfts.tsx",
+    "start": {
+      "line": 264,
+      "column": 10,
+      "index": 6361
+    },
+    "end": {
+      "line": 267,
+      "column": 3,
+      "index": 6436
+    }
+  }
+]

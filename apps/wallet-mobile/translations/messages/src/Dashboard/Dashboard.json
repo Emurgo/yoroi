@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.delegation.delegationnavigationbuttons.stakingCenterButton",
+    "defaultMessage": "!!!Go to Staking Center",
+    "file": "src/Dashboard/Dashboard.tsx",
+    "start": {
+      "line": 219,
+      "column": 23,
+      "index": 6904
+    },
+    "end": {
+      "line": 222,
+      "column": 3,
+      "index": 7037
+    }
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "components.receive.receivescreen.title",
+    "defaultMessage": "!!!Receive",
+    "file": "src/TxHistory/TxHistoryNavigator.tsx",
+    "start": {
+      "line": 188,
+      "column": 16,
+      "index": 5905
+    },
+    "end": {
+      "line": 191,
+      "column": 3,
+      "index": 5994
+    }
+  },
+  {
+    "id": "components.send.sendscreen.title",
+    "defaultMessage": "!!!Send",
+    "file": "src/TxHistory/TxHistoryNavigator.tsx",
+    "start": {
+      "line": 192,
+      "column": 13,
+      "index": 6009
+    },
+    "end": {
+      "line": 195,
+      "column": 3,
+      "index": 6089
+    }
+  },
+  {
+    "id": "components.send.addressreaderqr.title",
+    "defaultMessage": "!!!Scan QR code address",
+    "file": "src/TxHistory/TxHistoryNavigator.tsx",
+    "start": {
+      "line": 196,
+      "column": 18,
+      "index": 6109
+    },
+    "end": {
+      "line": 199,
+      "column": 3,
+      "index": 6210
+    }
+  },
+  {
+    "id": "components.send.selectasset.title",
+    "defaultMessage": "!!!Select asset",
+    "file": "src/TxHistory/TxHistoryNavigator.tsx",
+    "start": {
+      "line": 200,
+      "column": 20,
+      "index": 6232
+    },
+    "end": {
+      "line": 203,
+      "column": 3,
+      "index": 6321
+    }
+  },
+  {
+    "id": "components.send.listamountstosendscreen.title",
+    "defaultMessage": "!!!Selected tokens",
+    "file": "src/TxHistory/TxHistoryNavigator.tsx",
+    "start": {
+      "line": 204,
+      "column": 26,
+      "index": 6349
+    },
+    "end": {
+      "line": 207,
+      "column": 3,
+      "index": 6453
+    }
+  },
+  {
+    "id": "components.send.editamountscreen.title",
+    "defaultMessage": "!!!Edit amount",
+    "file": "src/TxHistory/TxHistoryNavigator.tsx",
+    "start": {
+      "line": 208,
+      "column": 19,
+      "index": 6474
+    },
+    "end": {
+      "line": 211,
+      "column": 3,
+      "index": 6567
+    }
+  },
+  {
+    "id": "components.send.confirmscreen.title",
+    "defaultMessage": "!!!Confirm",
+    "file": "src/TxHistory/TxHistoryNavigator.tsx",
+    "start": {
+      "line": 212,
+      "column": 16,
+      "index": 6585
+    },
+    "end": {
+      "line": 215,
+      "column": 3,
+      "index": 6671
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.infoText",
+    "defaultMessage": "!!!Share this address to receive payments. To protect your privacy, new addresses are generated automatically once you use them.",
+    "file": "src/TxHistory/TxHistoryNavigator.tsx",
+    "start": {
+      "line": 216,
+      "column": 19,
+      "index": 6692
+    },
+    "end": {
+      "line": 222,
+      "column": 3,
+      "index": 6930
+    }
+  }
+]
