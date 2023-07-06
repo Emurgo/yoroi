@@ -13,8 +13,8 @@ const Wrapper = () => {
   const [status] = Camera.useCameraPermissions()
   const [publicKeyHex, setPublicKeyHex] = React.useState(null)
   const [path, setPath] = React.useState(null)
-  const {width, height} = useWindowDimensions()
-  const scannerBounds = getScannerBounds({deviceHeight: height, deviceWidth: width})
+  const {width: deviceWidth, height: deviceHeight} = useWindowDimensions()
+  const scannerBounds = getScannerBounds({deviceWidth, deviceHeight})
 
   const handleOnRead = async ({data}) => {
     const parsedData = JSON.parse(data)

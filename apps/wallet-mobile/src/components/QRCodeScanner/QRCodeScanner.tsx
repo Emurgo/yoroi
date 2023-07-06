@@ -19,12 +19,12 @@ export const QRCodeScanner = ({onRead}: {onRead: (event: BarCodeScannerResult) =
 
   const handleBarCodeScanned = async (event) => {
     const scaledQrBounds = getScaledQrBounds({bounds: event.bounds, deviceHeight, deviceWidth})
-    const isQrInside = isQrInsideScannerBounds({
+    const IsQrInsideScannerBounds = getIsQrInsideScannerBounds({
       qrBounds: scaledQrBounds,
       scannerBounds,
     })
 
-    if (!qrScanned && isQrInside) {
+    if (!qrScanned && IsQrInsideScannerBounds) {
       setQrScanned(true)
       const error = await onRead(event)
 
@@ -52,7 +52,7 @@ export const QRCodeScanner = ({onRead}: {onRead: (event: BarCodeScannerResult) =
   )
 }
 
-export const isQrInsideScannerBounds = ({qrBounds, scannerBounds}) => {
+export const getIsQrInsideScannerBounds = ({qrBounds, scannerBounds}) => {
   return (
     qrBounds.top < scannerBounds.top &&
     qrBounds.bottom > scannerBounds.bottom &&
