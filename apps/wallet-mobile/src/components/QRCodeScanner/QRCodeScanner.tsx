@@ -64,7 +64,7 @@ export const getIsQrInsideScannerBounds = ({qrBounds, scannerBounds}) => {
 export const getScannerBounds = ({deviceHeight, deviceWidth}) => {
   const QR_MAX_WIDTH = 300
   const QR_MAX_HEIGHT = 300
-  const top = deviceHeight / 2 - QR_MAX_WIDTH / 2
+  const top = deviceHeight / 2 - QR_MAX_HEIGHT / 2
   const bottom = top + QR_MAX_HEIGHT
   const left = deviceWidth / 2 - QR_MAX_WIDTH / 2
   const right = left + QR_MAX_WIDTH
