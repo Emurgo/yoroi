@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
+import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -14,7 +15,6 @@ import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
 import {useAllTokenInfos, useBalances, useIsWalletEmpty, useNfts} from '../../../../../yoroi-wallets/hooks'
-import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../common/filterByFungibility'
 import {filterBySearch} from '../../../common/filterBySearch'
@@ -142,7 +142,7 @@ const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
     <View style={styles.list}>
       <FlashList
         data={filteredTokenInfos}
-        renderItem={({item: tokenInfo}: {item: TokenInfo}) => (
+        renderItem={({item: tokenInfo}: {item: Balance.TokenInfo}) => (
           <Boundary>
             <SelectableAssetItem
               tokenInfo={tokenInfo}
@@ -192,7 +192,7 @@ const Tab = ({onPress, active, tab, label}: TabProps) => (
   </TouchableOpacity>
 )
 
-type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: TokenInfo; wallet: YoroiWallet}
+type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemProps) => {
   const {closeSearch} = useSearch()
   const {tokenSelectedChanged, amountChanged} = useSend()
@@ -235,8 +235,8 @@ const ListEmptyComponent = ({
   filteredTokenInfos,
   allTokenInfos,
 }: {
-  filteredTokenInfos: Array<TokenInfo>
-  allTokenInfos: Array<TokenInfo>
+  filteredTokenInfos: Array<Balance.TokenInfo>
+  allTokenInfos: Array<Balance.TokenInfo>
 }) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const wallet = useSelectedWallet()
@@ -337,7 +337,7 @@ const useFilteredTokenInfos = ({
   tokenInfos,
 }: {
   fungibilityFilter: FungibilityFilter
-  tokenInfos: Array<TokenInfo>
+  tokenInfos: Array<Balance.TokenInfo>
 }) => {
   const wallet = useSelectedWallet()
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
@@ -371,7 +371,7 @@ const useFilteredTokenInfos = ({
 
 const areAllTokensSelected = (selectedTokenIds: Array<string>, tokenInfos): boolean =>
   tokenInfos.every((tokenInfo) => selectedTokenIds.includes(tokenInfo.id))
-const filterOutSelected = (selectedTokenIds: Array<string>) => (token: TokenInfo) =>
+const filterOutSelected = (selectedTokenIds: Array<string>) => (token: Balance.TokenInfo) =>
   !selectedTokenIds.includes(token.id)
 const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 

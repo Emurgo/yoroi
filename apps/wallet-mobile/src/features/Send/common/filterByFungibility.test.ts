@@ -1,9 +1,10 @@
-import {TokenInfo} from '../../../yoroi-wallets/types'
+import {Balance} from '@yoroi/types'
+
 import {FungibilityFilter} from '../useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {filterByFungibility} from './filterByFungibility'
 
 describe('filterByFungibility', () => {
-  const fakeToken1: TokenInfo = {
+  const fakeToken1: Balance.TokenInfo = {
     kind: 'ft',
     id: 'fake-token-1',
     fingerprint: 'fake-fingerprint-1',
@@ -18,7 +19,7 @@ describe('filterByFungibility', () => {
     symbol: undefined,
   } as const
 
-  const fakeToken2: TokenInfo = {
+  const fakeToken2: Balance.TokenInfo = {
     kind: 'ft',
     id: 'fake-token-2',
     fingerprint: 'fake-fingerprint-2',
@@ -33,7 +34,7 @@ describe('filterByFungibility', () => {
     symbol: undefined,
   } as const
 
-  const nft1: TokenInfo = {
+  const nft1: Balance.TokenInfo = {
     kind: 'nft',
     id: 'fake-token-3',
     fingerprint: 'fake-fingerprint-3',
@@ -48,7 +49,7 @@ describe('filterByFungibility', () => {
     symbol: undefined,
   } as const
 
-  const nft2: TokenInfo = {
+  const nft2: Balance.TokenInfo = {
     kind: 'nft',
     id: 'fake-token-4',
     fingerprint: 'fake-fingerprint-4',
@@ -63,11 +64,11 @@ describe('filterByFungibility', () => {
     symbol: undefined,
   } as const
 
-  const allTokenInfos: TokenInfo[] = [fakeToken1, fakeToken2, nft1, nft2]
-  const nftTokenInfos: TokenInfo[] = [nft1, nft2]
-  const ftTokenInfos: TokenInfo[] = [fakeToken1, fakeToken2]
+  const allTokenInfos: Balance.TokenInfo[] = [fakeToken1, fakeToken2, nft1, nft2]
+  const nftTokenInfos: Balance.TokenInfo[] = [nft1, nft2]
+  const ftTokenInfos: Balance.TokenInfo[] = [fakeToken1, fakeToken2]
 
-  it.each<{fungibilityFilter: FungibilityFilter; result: TokenInfo[]}>([
+  it.each<{fungibilityFilter: FungibilityFilter; result: Balance.TokenInfo[]}>([
     {
       fungibilityFilter: 'all',
       result: allTokenInfos,

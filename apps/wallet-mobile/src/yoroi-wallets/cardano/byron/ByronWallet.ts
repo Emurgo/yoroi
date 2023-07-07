@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as yoroiLib from '@emurgo/yoroi-lib'
+import {Balance} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -22,11 +23,9 @@ import {
   NETWORK_REGISTRY,
   NetworkId,
   PoolInfoRequest,
-  Quantity,
   RawUtxo,
   StakingInfo,
   TipStatusResponse,
-  TokenInfo,
   Transaction,
   TxStatusRequest,
   TxStatusResponse,
@@ -124,7 +123,7 @@ const implementationId = WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 
 export class ByronWallet implements YoroiWallet {
   readonly primaryToken: DefaultAsset
-  readonly primaryTokenInfo: TokenInfo
+  readonly primaryTokenInfo: Balance.TokenInfo
   readonly id: string
   readonly networkId: NetworkId
   readonly walletImplementationId: WalletImplementationId
@@ -648,15 +647,15 @@ export class ByronWallet implements YoroiWallet {
 
     const stakingUtxos = await this.getAllUtxosForKey()
     const amount = Quantities.sum([
-      ...stakingUtxos.map((utxo) => utxo.amount as Quantity),
-      accountState.remainingAmount as Quantity,
+      ...stakingUtxos.map((utxo) => utxo.amount as Balance.Quantity),
+      accountState.remainingAmount as Balance.Quantity,
     ])
 
     return {
       status: 'staked',
       poolId: stakingStatus.poolKeyHash,
       amount,
-      rewards: accountState.remainingAmount as Quantity,
+      rewards: accountState.remainingAmount as Balance.Quantity,
     }
   }
 
@@ -1342,7 +1341,7 @@ const keys: Array<keyof WalletJSON> = [
   'lastGeneratedAddressIndex',
 ]
 
-export const primaryTokenInfo: Record<'mainnet' | 'testnet', TokenInfo> = {
+export const primaryTokenInfo: Record<'mainnet' | 'testnet', Balance.TokenInfo> = {
   mainnet: {
     id: '',
     name: 'ADA',

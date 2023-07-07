@@ -222,6 +222,7 @@
     "@wdio/mocha-framework": "^7.16.6",
     "@wdio/selenium-standalone-service": "^7.25.1",
     "@wdio/spec-reporter": "^7.16.4",
+    "@yoroi/types": "1.0.4",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^29.2.1",
     "babel-loader": "8.2.2",
