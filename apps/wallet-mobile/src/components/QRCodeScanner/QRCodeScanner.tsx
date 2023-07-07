@@ -18,10 +18,11 @@ export const QRCodeScanner = ({onRead}: {onRead: (event: BarCodeScannerResult) =
   }, [granted, requestPermissions])
 
   const handleBarCodeScanned = async (event) => {
-    const scaledQrBounds = getScaledQrBounds({bounds: event.bounds, deviceHeight, deviceWidth})
     const IsQrInsideScannerBounds = getIsQrInsideScannerBounds({
-      qrBounds: scaledQrBounds,
+      qrBounds: event.bounds,
       scannerBounds,
+      deviceHeight,
+      deviceWidth,
     })
 
     if (!qrScanned && IsQrInsideScannerBounds) {
@@ -52,19 +53,22 @@ export const QRCodeScanner = ({onRead}: {onRead: (event: BarCodeScannerResult) =
   )
 }
 
-export const getIsQrInsideScannerBounds = ({qrBounds, scannerBounds}) => {
+export const getIsQrInsideScannerBounds = ({qrBounds, scannerBounds, deviceHeight, deviceWidth}) => {
+  const scaledQrBounds = getScaledQrBounds({bounds: qrBounds, deviceHeight, deviceWidth})
   return (
-    qrBounds.top < scannerBounds.top &&
-    qrBounds.bottom > scannerBounds.bottom &&
-    qrBounds.left > scannerBounds.left &&
-    qrBounds.right < scannerBounds.right
+    scaledQrBounds.top < scannerBounds.top &&
+    scaledQrBounds.bottom > scannerBounds.bottom &&
+    scaledQrBounds.left > scannerBounds.left &&
+    scaledQrBounds.right < scannerBounds.right
   )
 }
 
+const HEIGHT_OFFSET = -50
+const QR_MAX_WIDTH = 300
+const QR_MAX_HEIGHT = 300
+
 export const getScannerBounds = ({deviceHeight, deviceWidth}) => {
-  const QR_MAX_WIDTH = 300
-  const QR_MAX_HEIGHT = 300
-  const top = deviceHeight / 2 - QR_MAX_HEIGHT / 2
+  const top = deviceHeight / 2 - QR_MAX_HEIGHT / 2 + HEIGHT_OFFSET
   const bottom = top + QR_MAX_HEIGHT
   const left = deviceWidth / 2 - QR_MAX_WIDTH / 2
   const right = left + QR_MAX_WIDTH
@@ -83,7 +87,7 @@ export const getScaledQrBounds = ({bounds, deviceHeight, deviceWidth}) => {
   const height = Number(bounds.size.height) * deviceHeight
   const width = Number(bounds.size.width) * deviceWidth
   const right = Number(bounds.origin.x) * deviceWidth
-  const top = Number(bounds.origin.y) * deviceHeight
+  const top = Number(bounds.origin.y) * deviceHeight + HEIGHT_OFFSET
   const bottom = top + height
   const left = right + width
 
