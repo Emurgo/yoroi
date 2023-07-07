@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {Balance} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -20,14 +21,13 @@ import type {
   PoolInfoRequest,
   RawUtxo,
   TipStatusResponse,
-  TokenInfo,
   Transaction,
   TxStatusRequest,
   TxStatusResponse,
   YoroiEntry,
   YoroiNftModerationStatus,
 } from '../../types'
-import {Quantity, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
+import {StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
 import {Quantities} from '../../utils'
 import {parseSafe} from '../../utils/parsing'
 import {validatePassword} from '../../utils/validators'
@@ -151,7 +151,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
   return class ShelleyWallet implements YoroiWallet {
     readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
-    readonly primaryTokenInfo: TokenInfo = PRIMARY_TOKEN_INFO
+    readonly primaryTokenInfo: Balance.TokenInfo = PRIMARY_TOKEN_INFO
     readonly walletImplementationId = WALLET_IMPLEMENTATION_ID
     readonly networkId = NETWORK_ID
     readonly id: string
@@ -568,15 +568,15 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       const stakingUtxos = await this.getAllUtxosForKey()
       const amount = Quantities.sum([
-        ...stakingUtxos.map((utxo) => utxo.amount as Quantity),
-        accountState.remainingAmount as Quantity,
+        ...stakingUtxos.map((utxo) => utxo.amount as Balance.Quantity),
+        accountState.remainingAmount as Balance.Quantity,
       ])
 
       return {
         status: 'staked',
         poolId: stakingStatus.poolKeyHash,
         amount,
-        rewards: accountState.remainingAmount as Quantity,
+        rewards: accountState.remainingAmount as Balance.Quantity,
       }
     }
 

@@ -1,4 +1,4 @@
-import {Quantity} from './yoroi'
+import {Balance} from '@yoroi/types'
 
 export type StakingInfo =
   | {status: 'not-registered'}
@@ -6,8 +6,8 @@ export type StakingInfo =
   | {
       status: 'staked'
       poolId: string
-      amount: Quantity
-      rewards: Quantity
+      amount: Balance.Quantity
+      rewards: Balance.Quantity
     }
 
 export type StakingStatus =

@@ -11,6 +11,7 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
+import {Balance} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {HWDeviceInfo} from '../hw'
@@ -38,7 +39,7 @@ import type {
   TxStatusResponse,
   WalletState,
 } from '../types/other'
-import {DefaultAsset, TokenInfo} from '../types/tokens'
+import {DefaultAsset} from '../types/tokens'
 import type {Addresses} from './chain'
 
 export type WalletEvent =
@@ -92,7 +93,7 @@ export type YoroiWallet = {
   hwDeviceInfo: null | HWDeviceInfo
   isReadOnly: boolean
   primaryToken: Readonly<DefaultAsset>
-  primaryTokenInfo: Readonly<TokenInfo>
+  primaryTokenInfo: Readonly<Balance.TokenInfo>
 
   // Sending
   createUnsignedTx(entry: YoroiEntry, metadata?: Array<CardanoTypes.TxMetadata>): Promise<YoroiUnsignedTx>
@@ -151,7 +152,7 @@ export type YoroiWallet = {
   get confirmationCounts(): Record<string, null | number>
   fetchTipStatus(): Promise<TipStatusResponse>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
-  fetchTokenInfo(tokenId: string): Promise<TokenInfo>
+  fetchTokenInfo(tokenId: string): Promise<Balance.TokenInfo>
 
   // Fiat
   fetchCurrentPrice(symbol: CurrencySymbol): Promise<number>

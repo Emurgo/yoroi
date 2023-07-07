@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {Balance} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -15,7 +16,6 @@ import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {NETWORKS} from '../../yoroi-wallets/cardano/networks'
 import {NUMBERS} from '../../yoroi-wallets/cardano/numbers'
-import {Quantity} from '../../yoroi-wallets/types'
 import {Amounts, Entries, Quantities} from '../../yoroi-wallets/utils'
 
 type Params = StakingCenterRoutes['delegation-confirmation']
@@ -167,10 +167,10 @@ const messages = defineMessages({
  * TODO: based on https://staking.cardano.org/en/calculator/
  *  needs to be update per-network
  */
-const approximateReward = (stakedQuantity: Quantity): Quantity => {
+const approximateReward = (stakedQuantity: Balance.Quantity): Balance.Quantity => {
   return Quantities.quotient(
     Quantities.product([stakedQuantity, `${NETWORKS.HASKELL_SHELLEY.PER_EPOCH_PERCENTAGE_REWARD}`]),
-    NUMBERS.EPOCH_REWARD_DENOMINATOR.toString() as Quantity,
+    NUMBERS.EPOCH_REWARD_DENOMINATOR.toString() as Balance.Quantity,
   )
 }
 

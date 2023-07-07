@@ -1,3 +1,4 @@
+import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
@@ -5,7 +6,7 @@ import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../SelectedWallet'
 import {YoroiWallet} from '../yoroi-wallets/cardano/types'
-import {Quantity, StakingInfo, YoroiUnsignedTx} from '../yoroi-wallets/types'
+import {StakingInfo, YoroiUnsignedTx} from '../yoroi-wallets/types'
 import {Quantities} from '../yoroi-wallets/utils'
 import {StakePoolInfo} from './StakePoolInfo'
 
@@ -93,8 +94,8 @@ export const useStakingTx = (
 
       const stakingUtxos = await wallet.getAllUtxosForKey()
       const amountToDelegate = Quantities.sum([
-        ...stakingUtxos.map((utxo) => utxo.amount as Quantity),
-        accountState.remainingAmount as Quantity,
+        ...stakingUtxos.map((utxo) => utxo.amount as Balance.Quantity),
+        accountState.remainingAmount as Balance.Quantity,
       ])
 
       return wallet.createDelegationTx(poolId, new BigNumber(amountToDelegate))

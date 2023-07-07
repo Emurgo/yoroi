@@ -1,3 +1,4 @@
+import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
@@ -6,13 +7,12 @@ import {PairedBalance} from '../../TxHistory/PairedBalance'
 import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
-import {YoroiAmount} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {Boundary, Placeholder, Text, TokenIcon} from '..'
 
 export type AmountItemProps = {
   wallet: YoroiWallet
-  amount: YoroiAmount
+  amount: Balance.Amount
   style?: ViewProps['style']
 }
 

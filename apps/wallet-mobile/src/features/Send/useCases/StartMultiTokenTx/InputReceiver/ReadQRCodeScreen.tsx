@@ -1,10 +1,10 @@
 import {useNavigation} from '@react-navigation/native'
+import {Balance} from '@yoroi/types'
 import * as React from 'react'
 
 import {QRCodeScanner} from '../../../../../components'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {Quantity} from '../../../../../yoroi-wallets/types'
 import {pastedFormatter} from '../../../../../yoroi-wallets/utils'
 import {useSend} from '../../../common/SendContext'
 
@@ -24,7 +24,7 @@ export const ReadQRCodeScreen = () => {
           receiverChanged(address ?? '')
           const amount = pastedFormatter(params?.amount ?? '')
           tokenSelectedChanged(wallet.primaryTokenInfo.id)
-          amountChanged(amount as Quantity)
+          amountChanged(amount as Balance.Quantity)
         }
       } else {
         receiverChanged(address ?? '')

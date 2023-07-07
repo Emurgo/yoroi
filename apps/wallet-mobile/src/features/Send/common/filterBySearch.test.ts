@@ -1,8 +1,9 @@
-import {TokenInfo} from '../../../yoroi-wallets/types'
+import {Balance} from '@yoroi/types'
+
 import {filterBySearch} from './filterBySearch'
 
 describe('filterBySearch', () => {
-  const fakeToken1: TokenInfo = {
+  const fakeToken1: Balance.TokenInfo = {
     id: '',
     kind: 'ft',
     name: 'TADANAME',
@@ -17,7 +18,7 @@ describe('filterBySearch', () => {
     metadatas: {},
   } as const
 
-  const fakeToken2: TokenInfo = {
+  const fakeToken2: Balance.TokenInfo = {
     kind: 'ft',
     id: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
     fingerprint: 'asset1nvcwnq60jnm27efjm87xnhqt6alsv024tdyxjm',
@@ -32,7 +33,7 @@ describe('filterBySearch', () => {
     metadatas: {},
   }
 
-  const tokenInfos: TokenInfo[] = [fakeToken1, fakeToken2]
+  const tokenInfos: Balance.TokenInfo[] = [fakeToken1, fakeToken2]
 
   it('should return all tokenInfos if searchTerm is empty', () => {
     const searchTerm = ''
