@@ -6,9 +6,9 @@ import {StyleSheet, useWindowDimensions} from 'react-native'
 export const QRCodeScanner = ({onRead}: {onRead: (event: BarCodeScannerResult) => Promise<boolean>}) => {
   const [status, requestPermissions] = Camera.useCameraPermissions()
   const {height: deviceHeight, width: deviceWidth} = useWindowDimensions()
-  const scannerBounds = getScannerBounds({deviceHeight, deviceWidth})
-
   const [qrScanned, setQrScanned] = React.useState(false)
+
+  const scannerBounds = getScannerBounds({deviceHeight, deviceWidth})
   const granted = status && status.granted
 
   React.useEffect(() => {
@@ -53,16 +53,6 @@ export const QRCodeScanner = ({onRead}: {onRead: (event: BarCodeScannerResult) =
   )
 }
 
-export const getIsQrInsideScannerBounds = ({qrBounds, scannerBounds, deviceHeight, deviceWidth}) => {
-  const scaledQrBounds = getScaledQrBounds({bounds: qrBounds, deviceHeight, deviceWidth})
-  return (
-    scaledQrBounds.top < scannerBounds.top &&
-    scaledQrBounds.bottom > scannerBounds.bottom &&
-    scaledQrBounds.left > scannerBounds.left &&
-    scaledQrBounds.right < scannerBounds.right
-  )
-}
-
 const HEIGHT_OFFSET = -50
 const QR_MAX_WIDTH = 300
 const QR_MAX_HEIGHT = 300
@@ -99,4 +89,14 @@ export const getScaledQrBounds = ({bounds, deviceHeight, deviceWidth}) => {
     bottom,
     left,
   }
+}
+
+export const getIsQrInsideScannerBounds = ({qrBounds, scannerBounds, deviceHeight, deviceWidth}) => {
+  const scaledQrBounds = getScaledQrBounds({bounds: qrBounds, deviceHeight, deviceWidth})
+  return (
+    scaledQrBounds.top < scannerBounds.top &&
+    scaledQrBounds.bottom > scannerBounds.bottom &&
+    scaledQrBounds.left > scannerBounds.left &&
+    scaledQrBounds.right < scannerBounds.right
+  )
 }
