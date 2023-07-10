@@ -11,6 +11,7 @@ import {formatDateRelative} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {useTransactionInfos} from '../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../yoroi-wallets/types'
+import {isString} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
 import {EmptyHistory} from './EmptyHistory'
 import {TxHistoryListItem} from './TxHistoryListItem'
@@ -86,7 +87,7 @@ const DayHeader = ({ts}: DayHeaderProps) => {
 
   return (
     <View style={styles.dayHeaderRoot}>
-      <Text testID="dayHeaderText">{formatDateRelative(ts, intl)}</Text>
+      <Text testID="dayHeaderText">{isString(ts) ? formatDateRelative(ts, intl) : ''}</Text>
     </View>
   )
 }

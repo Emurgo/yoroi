@@ -1,10 +1,9 @@
 {
   "name": "@yoroi/wallet-mobile",
-  "version": "0.0.1",
+  "version": "4.12.1",
   "private": true,
   "scripts": {
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
-    "babel": "babel src",
     "e2e:appium-test-android": "./node_modules/.bin/wdio tests/config/wdio.android.local.conf.ts --suite happyPathTx",
     "e2e:appium-test-android-ledger": "./node_modules/.bin/wdio tests/config/wdio.android.local.conf.ts --suite ledger",
     "e2e:build-android": "detox build -c android.emu.mainnet.release",
@@ -21,13 +20,26 @@
     "manage-translations": "node ./translations/translation-runner.js",
     "prettify": "prettier --write ./src ./e2e ./storybook ./translations --config .prettierrc",
     "purge-translations": "rimraf ./translations/messages",
-    "setup_configs": "react-native-schemes-manager all",
-    "stag-android": "react-native run-android --variant=devDebug --appIdSuffix=staging",
+    "prerelease:android:nightly": "bundle install && ./scripts/update-commit.sh",
+    "release:android:nightly": "bundle exec fastlane android release --env nightly",
+    "prerelease:android:production": "bundle install && ./scripts/update-commit.sh",
+    "release:android:production": "bundle exec fastlane android release --env production",
+    "prerelease:ios:nightly": "bundle install && ./scripts/update-commit.sh && npx pod-install",
+    "release:ios:nightly": "bundle exec fastlane ios release --env nightly",
+    "prerelease:ios:production": "bundle install && ./scripts/update-commit.sh && npx pod-install",
+    "release:ios:production": "bundle exec fastlane ios release --env production",
+    "run:android:dev:debug": "ENVFILE=.env react-native run-android --mode=devDebug --appIdSuffix=dev --verbose",
+    "run:android:nightly:debug": "ENVFILE=.env.nightly react-native run-android --mode=nightlyDebug --appIdSuffix=nightly --verbose",
+    "run:android:nightly:release": "ENVFILE=.env.nightly react-native run-android --mode=nightlyRelease --appIdSuffix=nightly --verbose",
+    "run:ios:dev:debug": "ENVFILE=.env react-native run-ios --mode=Debug --scheme=yoroi --verbose",
+    "run:ios:nightly:debug": "ENVFILE=.env.nightly react-native run-ios --mode=Debug --scheme=nightly --verbose",
+    "run:ios:nightly:release": "ENVFILE=.env.nightly react-native run-ios --mode=Release --scheme=nightly --verbose",
     "stag-ios": "react-native run-ios --scheme=emurgo-staging --configuration=Debug",
     "prestart": "sb-rn-get-stories",
-    "start": "react-native start",
+    "start": "yarn react-native start --reset-cache --verbose",
     "storybook:watch": "sb-rn-watcher",
     "test": "jest src",
+    "tsc": "tsc --noEmit -p tsconfig.json",
     "tsc:cover": "yarn typescript-coverage-report -i '**/*.test.*' -i '**/*.stories*' -t html --threshold=100"
   },
   "lint-staged": {
@@ -71,14 +83,13 @@
   },
   "dependencies": {
     "@cardano-foundation/ledgerjs-hw-app-cardano": "^6.0.0",
-    "@craftzdog/react-native-buffer": "^6.0.5",
     "@emurgo/cip14-js": "^3.0.1",
     "@emurgo/cip4-js": "1.0.7",
     "@emurgo/cross-csl-mobile": "^2.3.0",
-    "@emurgo/csl-mobile-bridge": "^5.1.1",
+    "@emurgo/csl-mobile-bridge": "^5.1.2",
     "@emurgo/react-native-blockies-svg": "^0.0.2",
     "@emurgo/react-native-hid": "^5.15.6",
-    "@emurgo/yoroi-lib": "^0.5.1",
+    "@emurgo/yoroi-lib": "^0.5.2",
     "@formatjs/intl-datetimeformat": "^6.7.0",
     "@formatjs/intl-getcanonicallocales": "^2.1.0",
     "@formatjs/intl-locale": "^3.2.1",
@@ -98,7 +109,7 @@
     "@react-navigation/stack": "^6.3.16",
     "@shopify/flash-list": "^1.4.1",
     "@unstoppabledomains/resolution": "6.0.3",
-    "@yoroi/metrics": "1.0.3",
+    "@yoroi/metrics-react-native": "1.0.0",
     "add": "2.0.6",
     "assert": "^2.0.0",
     "base-64": "^1.0.0",
@@ -106,6 +117,7 @@
     "bip39": "2.5.0",
     "blake2b": "2.1.3",
     "bs58": "^4.0.1",
+    "buffer": "^6.0.3",
     "chacha": "2.1.0",
     "crypto-random-string": "3.3.0",
     "es6-error": "^4.1.1",
@@ -115,7 +127,6 @@
     "expo-camera": "^13.2.1",
     "jsc-android": "241213.1.0",
     "lodash": "^4.17.21",
-    "moment": "2.29.1",
     "react": "18.2.0",
     "react-error-boundary": "^3.1.4",
     "react-intl": "^6.4.1",
@@ -143,6 +154,7 @@
     "react-native-skeleton-placeholder": "^5.2.0",
     "react-native-svg": "13.8.0",
     "react-native-tab-view": "^3.1.1",
+    "react-native-timezone": "^2.3.0",
     "react-native-webview": "^11.25.0",
     "react-query": "^3.39.3",
     "reselect": "^4.0.0",
@@ -151,7 +163,8 @@
     "url": "^0.11.0",
     "util": "0.12.4",
     "uuid": "^3.3.2",
-    "vm-browserify": "1.1.2"
+    "vm-browserify": "1.1.2",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.15.7",
@@ -238,7 +251,6 @@
     "react-devtools-core": "4.26.1",
     "react-dom": "16.8.3",
     "react-intl-translations-manager": "^5.0.3",
-    "react-native-schemes-manager": "^1.0.5",
     "react-native-typescript-transformer": "^1.2.13",
     "react-test-renderer": "18.2.0",
     "sinon": "^13.0.1",
@@ -254,7 +266,7 @@
     "configurations": {
       "ios.release": {
         "binaryPath": "./ios/build/Build/Products/Release-iphonesimulator/emurgo.app",
-        "build": "xcodebuild -workspace ios/emurgo.xcworkspace -configuration release -scheme emurgo -sdk iphonesimulator -derivedDataPath ios/build",
+        "build": "xcodebuild -workspace ios/emurgo.xcworkspace -mode Release -scheme emurgo -sdk iphonesimulator -derivedDataPath ios/build",
         "type": "ios.simulator",
         "name": "iPhone 11"
       },
@@ -277,25 +289,12 @@
     }
   },
   "engine": {
-    "node": "~16.5.0",
+    "node": "~16.19.0",
     "npm": "~7.19.1"
   },
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs"
-    }
-  },
-  "xcodeSchemes": {
-    "Debug": [
-      "Staging.Debug"
-    ],
-    "Release": [
-      "Staging.Release"
-    ],
-    "settings": {
-      "fix-script": {
-        "nodeCommand": "$NODE_BINARY ../node_modules/@sentry/cli/bin/sentry-cli react-native xcode"
-      }
     }
   }
 }

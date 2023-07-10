@@ -20,7 +20,7 @@ export const InputMemo = ({onChangeText, memo}: Props) => {
     <View style={styles.container}>
       <TextInput
         value={memo}
-        onChangeText={(memo) => onChangeText(memo.trim())}
+        onChangeText={(memo) => onChangeText(memo)}
         label={strings.label}
         autoComplete="off"
         testID="memoFieldInput"

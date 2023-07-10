@@ -58,6 +58,8 @@ export const NETWORK_CONFIG = {
   EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://cardanoscan.io/address/${address}`,
   EXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
     fingerprint.length > 0 ? `https://cardanoscan.io/token/${fingerprint}` : `https://cardanoscan.io/tokens`,
+  CEXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
+    fingerprint.length > 0 ? `https://cexplorer.io/asset/${fingerprint}` : `https://cexplorer.io/asset`,
   EXPLORER_URL_FOR_TX: (txid: string) => `https://cardanoscan.io/transaction/${txid}`,
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
   IS_MAINNET,
@@ -73,16 +75,18 @@ export const NETWORK_CONFIG = {
 } as const
 
 export const PRIMARY_TOKEN_INFO: TokenInfo = {
+  kind: 'ft',
   id: '',
   name: 'ADA',
-  decimals: 6,
   description: 'Cardano',
-  ticker: 'ADA',
-  symbol: '₳',
-  logo: '',
-  url: '',
-  fingerprint: '',
+  icon: '',
   group: '',
+  ticker: 'ADA',
+  fingerprint: '',
+  decimals: 6,
+  image: '',
+  symbol: '₳',
+  metadatas: {},
 } as const
 
 export const PRIMARY_TOKEN: DefaultAsset = {

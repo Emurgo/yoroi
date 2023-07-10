@@ -8,7 +8,7 @@ import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {Spacer, Text} from '../../components'
 import {Icon} from '../../components/Icon'
-import {formatTimeToSeconds, formatTokenFractional, formatTokenInteger} from '../../legacy/format'
+import {formatTime, formatTokenFractional, formatTokenInteger} from '../../legacy/format'
 import utfSymbols from '../../legacy/utfSymbols'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -17,7 +17,7 @@ import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
-import {asQuantity} from '../../yoroi-wallets/utils'
+import {asQuantity, isNonNullable} from '../../yoroi-wallets/utils'
 
 type Props = {
   transaction: TransactionInfo
@@ -28,9 +28,10 @@ export const TxHistoryListItem = ({transaction}: Props) => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
   const wallet = useSelectedWallet()
+  const intl = useIntl()
 
   const showDetails = () => navigation.navigate('history-details', {id: transaction.id})
-  const submittedAt = formatTimeToSeconds(transaction.submittedAt)
+  const submittedAt = isNonNullable(transaction.submittedAt) ? formatTime(transaction.submittedAt, intl) : ''
 
   const isPending = transaction.assurance === 'PENDING'
   const isReceived = transaction.direction === 'RECEIVED'

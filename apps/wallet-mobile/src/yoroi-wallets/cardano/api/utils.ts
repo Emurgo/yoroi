@@ -2,29 +2,37 @@ import AssetFingerprint from '@emurgo/cip14-js'
 import {Buffer} from 'memfs/lib/internal/buffer'
 
 import {LegacyToken, TokenInfo} from '../../types'
-import {YoroiWallet} from '../types'
-import {TokenRegistryEntry} from './api'
+import {TokenRegistryEntry} from './tokenRegistry'
 
 export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
   const policyId = toPolicyId(entry.subject)
   const assetName = toAssetName(entry.subject)
 
   return {
-    id: toTokenId(entry.subject),
+    kind: 'ft',
+    name: assetName,
     group: policyId,
     decimals: entry.decimals?.value ?? 0,
+    ticker: entry.ticker?.value,
+    icon: entry.logo?.value,
+    image: entry.logo?.value,
+    description: entry.description?.value,
+    id: toTokenId(entry.subject),
     fingerprint: toTokenFingerprint({
       policyId,
       assetNameHex: assetName ? utf8ToHex(assetName) : undefined,
     }),
-
-    // optional values
-    name: assetName,
-    description: entry.description?.value,
     symbol: undefined,
-    ticker: entry.ticker?.value,
-    url: entry.url?.value,
-    logo: entry.logo?.value,
+    metadatas: {
+      mintFt: {
+        icon: entry.logo?.value,
+        description: entry.description?.value,
+        version: '1',
+        decimals: entry.decimals?.value ?? 0,
+        ticker: entry.ticker?.value,
+        url: entry.url?.value,
+      },
+    },
   }
 }
 
@@ -33,19 +41,18 @@ export const fallbackTokenInfo = (tokenId: string): TokenInfo => {
   const assetName = toAssetName(tokenId)
 
   return {
+    kind: 'ft',
     id: toTokenId(tokenId),
     name: assetName,
+    fingerprint: toTokenFingerprint({policyId, assetNameHex: assetName ? utf8ToHex(assetName) : undefined}),
+    description: undefined,
     group: policyId,
     decimals: 0,
-    fingerprint: toTokenFingerprint({
-      policyId,
-      assetNameHex: assetName ? utf8ToHex(assetName) : undefined,
-    }),
-    description: undefined,
-    logo: undefined,
-    symbol: undefined,
+    image: undefined,
+    icon: undefined,
     ticker: undefined,
-    url: undefined,
+    symbol: undefined,
+    metadatas: {},
   }
 }
 
@@ -54,7 +61,7 @@ export const toPolicyId = (tokenIdentifier: string) => {
   return tokenSubject.slice(0, 56)
 }
 export const toAssetName = (tokenIdentifier: string) => {
-  return hexToUtf8(toAssetNameHex(tokenIdentifier)) || undefined
+  return hexToUtf8(toAssetNameHex(tokenIdentifier))
 }
 
 export const toAssetNameHex = (tokenIdentifier: string) => {
@@ -72,41 +79,32 @@ export const toTokenId = (tokenIdentifier: string) => {
 export const hexToUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
 export const utf8ToHex = (text: string) => Buffer.from(text, 'utf-8').toString('hex')
 
-export const toToken = ({wallet, tokenInfo}: {wallet: YoroiWallet; tokenInfo: TokenInfo}): LegacyToken => {
-  if (tokenInfo.id === wallet.primaryTokenInfo.id) return wallet.primaryToken
-  const assetNameHex = tokenInfo.name ? utf8ToHex(tokenInfo.name) : ''
-
-  return {
-    identifier: `${tokenInfo.group}.${assetNameHex}`,
-    networkId: wallet.networkId,
-    isDefault: tokenInfo.id === wallet.primaryTokenInfo.id,
-    metadata: {
-      type: 'Cardano',
-      policyId: tokenInfo.group,
-      assetName: assetNameHex,
-      numberOfDecimals: tokenInfo.decimals,
-      ticker: tokenInfo.ticker ?? null,
-      longName: tokenInfo.description ?? null,
-      maxSupply: null,
-    },
-  }
-}
-
 export const toTokenInfo = (token: LegacyToken): TokenInfo => {
   const policyId = toPolicyId(token.identifier)
   const assetName = toAssetName(token.identifier)
 
   return {
+    kind: 'ft',
     id: toTokenId(token.identifier),
-    group: policyId,
     name: assetName,
-    decimals: token.metadata.numberOfDecimals,
     fingerprint: toTokenFingerprint({policyId: token.metadata.policyId, assetNameHex: token.metadata.assetName}),
     description: token.metadata.longName ?? undefined,
+    ticker: token.metadata.ticker ?? assetName,
+    icon: undefined,
+    image: undefined,
+    group: policyId,
+    decimals: token.metadata.numberOfDecimals,
     symbol: undefined,
-    url: undefined,
-    logo: undefined,
-    ticker: token.metadata?.ticker ?? undefined,
+    metadatas: {
+      mintFt: {
+        icon: undefined,
+        description: token.metadata.longName ?? undefined,
+        ticker: token.metadata.ticker ?? undefined,
+        url: undefined,
+        version: '1',
+        decimals: token.metadata.numberOfDecimals,
+      },
+    },
   }
 }
 

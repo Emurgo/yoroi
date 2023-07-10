@@ -1,13 +1,12 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createStackNavigator} from '@react-navigation/stack'
-import {useMetrics} from '@yoroi/metrics'
+import {useMetrics} from '@yoroi/metrics-react-native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
-import {features} from './features'
 import {MenuNavigator} from './Menu'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
@@ -60,36 +59,34 @@ const WalletTabNavigator = () => {
           )}
         </Tab.Screen>
 
-        {features.showNftGallery && (
-          <Tab.Screen
-            name="nfts"
-            options={{
-              tabBarIcon: ({focused}) => (
-                <Icon.Image
-                  size={28}
-                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-                />
-              ),
-              tabBarLabel: strings.nftsTabBarLabel,
-              tabBarTestID: 'nftsTabBarButton',
-            }}
-            listeners={() => {
-              return {
-                focus: () => {
-                  track({
-                    event: 'nft_click_navigate',
-                  })
-                },
-              }
-            }}
-          >
-            {() => (
-              <SearchProvider>
-                <NftsNavigator />
-              </SearchProvider>
-            )}
-          </Tab.Screen>
-        )}
+        <Tab.Screen
+          name="nfts"
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon.Image
+                size={28}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
+            tabBarLabel: strings.nftsTabBarLabel,
+            tabBarTestID: 'nftsTabBarButton',
+          }}
+          listeners={() => {
+            return {
+              focus: () => {
+                track({
+                  event: 'nft_click_navigate',
+                })
+              },
+            }
+          }}
+        >
+          {() => (
+            <SearchProvider>
+              <NftsNavigator />
+            </SearchProvider>
+          )}
+        </Tab.Screen>
 
         {isHaskellShelley(wallet.walletImplementationId) && (
           <Tab.Screen
@@ -134,7 +131,7 @@ export const WalletNavigator = () => (
 
     <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
 
-    {features.showNftGallery && <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />}
+    <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />
 
     <Stack.Screen name="settings" component={SettingsScreenNavigator} />
 

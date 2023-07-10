@@ -12,7 +12,7 @@ import {
   WALLET_IMPLEMENTATION_REGISTRY,
   WalletImplementationId,
 } from '../types/other'
-import {Token} from '../types/tokens'
+import {DefaultAsset, Token, TokenInfo} from '../types/tokens'
 import {YoroiAmount, YoroiAmounts} from '../types/yoroi'
 import {Amounts} from '../utils'
 import {CardanoMobile} from '../wallets'
@@ -295,3 +295,14 @@ export const toSendToken =
       shouldSendAll: false,
     }
   }
+
+export const isTokenInfo = (token: TokenInfo | DefaultAsset): token is TokenInfo => {
+  return !!(token as TokenInfo).kind
+}
+
+export const selectFtOrThrow = (token: TokenInfo): TokenInfo => {
+  if (token.kind === 'ft') {
+    return token
+  }
+  throw new Error(`Token type "${token.kind}" is not a fungible token`)
+}

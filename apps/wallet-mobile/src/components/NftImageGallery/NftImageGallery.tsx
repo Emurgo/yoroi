@@ -6,7 +6,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {features} from '../../features'
 import {useModeratedNftImage} from '../../Nfts/hooks'
 import {useSelectedWallet} from '../../SelectedWallet/Context'
-import {YoroiNft} from '../../yoroi-wallets/types'
+import {TokenInfo} from '../../yoroi-wallets/types'
 import {Icon} from '../Icon'
 import {NftPreview} from '../NftPreview'
 import {Spacer} from '../Spacer'
@@ -21,12 +21,12 @@ export const SkeletonGallery = ({amount}: {amount: number}) => {
 }
 
 type Props = {
-  nfts: YoroiNft[]
+  nfts: TokenInfo[]
   onSelect: (id: string) => void
   onRefresh: () => void
   isRefreshing: boolean
-  bounces?: FlashListProps<YoroiNft>['bounces']
-  ListEmptyComponent?: FlashListProps<YoroiNft>['ListEmptyComponent']
+  bounces?: FlashListProps<TokenInfo>['bounces']
+  ListEmptyComponent?: FlashListProps<TokenInfo>['ListEmptyComponent']
   withVerticalPadding?: boolean
   readOnly?: boolean
 }
@@ -60,7 +60,7 @@ export const NftImageGallery = ({
 }
 
 type ModeratedImageProps = TouchableOpacityProps & {
-  nft: YoroiNft
+  nft: TokenInfo
 }
 const UnModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
   return (
@@ -112,11 +112,11 @@ const ModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
   )
 }
 
-function BlockedNft({nft}: {nft: YoroiNft}) {
+function BlockedNft({nft}: {nft: TokenInfo}) {
   return <PlaceholderNft nft={nft} />
 }
 
-function PlaceholderNft({nft}: {nft: YoroiNft}) {
+function PlaceholderNft({nft}: {nft: TokenInfo}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
@@ -137,11 +137,11 @@ function PlaceholderNft({nft}: {nft: YoroiNft}) {
   )
 }
 
-function ManualReviewNft({nft}: {nft: YoroiNft}) {
+function ManualReviewNft({nft}: {nft: TokenInfo}) {
   return <PlaceholderNft nft={nft} />
 }
 
-function RequiresConsentNft({nft}: {nft: YoroiNft}) {
+function RequiresConsentNft({nft}: {nft: TokenInfo}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
@@ -166,7 +166,7 @@ function RequiresConsentNft({nft}: {nft: YoroiNft}) {
   )
 }
 
-function ApprovedNft({nft}: {nft: YoroiNft}) {
+function ApprovedNft({nft}: {nft: TokenInfo}) {
   return (
     <View>
       <View style={styles.imageWrapper}>

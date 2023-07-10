@@ -33,6 +33,7 @@ export const BYRON_MAINNET = {
   IS_MAINNET: true,
   EXPLORER_URL_FOR_ADDRESS: (_addr: string) => '',
   EXPLORER_URL_FOR_TOKEN: (_addr: string) => '',
+  CEXPLORER_URL_FOR_TOKEN: (_addr: string) => '',
   EXPLORER_URL_FOR_TX: (_addr: string) => '',
   PROTOCOL_MAGIC: 764824073,
   GENESIS_DATE: '1506203091000',
@@ -52,6 +53,8 @@ const HASKELL_SHELLEY = {
   EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://cardanoscan.io/address/${address}`,
   EXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
     fingerprint.length > 0 ? `https://cardanoscan.io/token/${fingerprint}` : `https://cardanoscan.io/tokens`,
+  CEXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
+    fingerprint.length > 0 ? `https://cexplorer.io/asset/${fingerprint}` : `https://cexplorer.io/asset`,
   EXPLORER_URL_FOR_TX: (txid: string) => `https://cardanoscan.io/transaction/${txid}`,
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
 
@@ -102,6 +105,8 @@ const HASKELL_SHELLEY_TESTNET = {
     fingerprint.length > 0
       ? `https://preprod.cardanoscan.io/token/${fingerprint}`
       : `https://preprod.cardanoscan.io/tokens`,
+  CEXPLORER_URL_FOR_TOKEN: (fingerprint: string) =>
+    fingerprint.length > 0 ? `https://preprod.cexplorer.io/asset/${fingerprint}` : `https://preprod.cexplorer.io/asset`,
   EXPLORER_URL_FOR_TX: (txid: string) => `https://preprod.cardanoscan.io/transaction/${txid}`,
   POOL_EXPLORER: 'https://adapools.yoroiwallet.com/?source=mobile',
 
@@ -154,6 +159,9 @@ const JORMUNGANDR = {
     `https://testnet.seiza-website.emurgo.io/staking-simple/list?sortBy=RANDOM&searchText=&performance[]=0&performance[]=100&source=mobile&userAda=${ADA}`,
   EXPLORER_URL_FOR_ADDRESS: (address: string) => `https://shelleyexplorer.cardano.org/address/?id=${address}`,
   EXPLORER_URL_FOR_TOKEN: (_addr: string) => {
+    throw new Error('Deprecated network')
+  },
+  CEXPLORER_URL_FOR_TOKEN: (_addr: string) => {
     throw new Error('Deprecated network')
   },
   EXPLORER_URL_FOR_TX: (_tx: string) => {

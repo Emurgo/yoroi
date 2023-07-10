@@ -33,7 +33,6 @@ import {
   WALLET_IMPLEMENTATION_REGISTRY,
   WalletImplementationId,
   YoroiEntry,
-  YoroiNft,
   YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
@@ -53,7 +52,6 @@ import {
   MAX_GENERATED_UNUSED,
   PRIMARY_TOKEN,
   PRIMARY_TOKEN_INFO,
-  VOTING_KEY_PATH,
 } from '../constants/mainnet/constants'
 import {CardanoError, InvalidState} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
@@ -124,8 +122,6 @@ export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 const networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
 const implementationId = WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 
-// @ts-expect-error declare before use
-export default ByronWallet
 export class ByronWallet implements YoroiWallet {
   readonly primaryToken: DefaultAsset
   readonly primaryTokenInfo: TokenInfo
@@ -791,6 +787,12 @@ export class ByronWallet implements YoroiWallet {
     })
   }
 
+  async getFirstPaymentAddress() {
+    const externalAddress = this.externalAddresses[0]
+    const addr = await Cardano.Wasm.Address.fromBech32(externalAddress)
+    return Cardano.Wasm.BaseAddress.fromAddress(addr)
+  }
+
   async createVotingRegTx(pin: string) {
     Logger.debug('CardanoWallet::createVotingRegTx called')
 
@@ -830,7 +832,13 @@ export class ByronWallet implements YoroiWallet {
 
       const addressedUtxos = await this.getAddressedUtxos()
 
-      const paymentAddress = Buffer.from(await stakingPublicKey.asBytes()).toString('hex')
+      const baseAddr = await this.getFirstPaymentAddress()
+      const paymentAddress = await baseAddr
+        .toAddress()
+        .then((a) => a.toBytes())
+        .then((b) => Buffer.from(b).toString('hex'))
+
+      const addressing = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32()))
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
@@ -845,7 +853,7 @@ export class ByronWallet implements YoroiWallet {
         nonce,
         chainNetworkConfig,
         paymentAddress,
-        VOTING_KEY_PATH,
+        addressing.path,
       )
 
       const votingRegistration: {
@@ -856,7 +864,7 @@ export class ByronWallet implements YoroiWallet {
       } = {
         votingPublicKey: await votingPublicKey.toBech32(),
         stakingPublicKey: await stakingPublicKey.toBech32(),
-        rewardAddress: await this.getRewardAddress().then((address) => address.toBech32()),
+        rewardAddress: await baseAddr.toAddress().then((address) => address.toBech32()),
         nonce,
       }
 
@@ -983,15 +991,22 @@ export class ByronWallet implements YoroiWallet {
     return api.getPoolInfo(request, this.getBackendConfig())
   }
 
-  fetchTokenInfo(tokenId: string) {
+  async fetchTokenInfo(tokenId: string) {
     const apiUrl = this.getBackendConfig().TOKEN_INFO_SERVICE
     if (!apiUrl) throw new Error('invalid wallet')
 
-    return (tokenId === '' || tokenId === 'ADA') && this.networkId === 1
-      ? Promise.resolve(primaryTokenInfo.mainnet)
-      : (tokenId === '' || tokenId === 'ADA' || tokenId === 'TADA') && this.networkId === 300
-      ? Promise.resolve(primaryTokenInfo.testnet)
-      : api.getTokenInfo(tokenId, `${apiUrl}/metadata`)
+    const isMainnet = this.networkId === 1
+    const isTestnet = this.networkId === 300
+
+    if ((tokenId === '' || tokenId === 'ADA') && isMainnet) {
+      return primaryTokenInfo.mainnet
+    }
+
+    if ((tokenId === '' || tokenId === 'ADA' || tokenId === 'TADA') && isTestnet) {
+      return primaryTokenInfo.testnet
+    }
+
+    return api.getTokenInfo(tokenId, `${apiUrl}/metadata`, this.getBackendConfig())
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {
@@ -1008,11 +1023,6 @@ export class ByronWallet implements YoroiWallet {
 
   async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
     return api.fetchCurrentPrice(symbol, this.getBackendConfig())
-  }
-
-  // TODO: caching
-  fetchNfts(ids): Promise<YoroiNft[]> {
-    return api.getNFTs(ids, this.getBackendConfig())
   }
 
   // TODO: caching
@@ -1304,23 +1314,35 @@ const keys: Array<keyof WalletJSON> = [
   'lastGeneratedAddressIndex',
 ]
 
-export const primaryTokenInfo = {
+export const primaryTokenInfo: Record<'mainnet' | 'testnet', TokenInfo> = {
   mainnet: {
     id: '',
     name: 'ADA',
-    decimals: 6,
     description: 'Cardano',
+    kind: 'ft',
+    fingerprint: '',
+    group: '',
+    image: undefined,
+    icon: undefined,
     ticker: 'ADA',
+    decimals: 6,
     symbol: '₳',
-  } as TokenInfo,
+    metadatas: {},
+  },
   testnet: {
+    kind: 'ft',
     id: '',
     name: 'TADA',
-    decimals: 6,
     description: 'Cardano',
+    fingerprint: '',
+    group: '',
+    image: undefined,
+    icon: undefined,
     ticker: 'TADA',
+    decimals: 6,
     symbol: '₳',
-  } as TokenInfo,
+    metadatas: {},
+  },
 }
 
 const encryptAndSaveRootKey = (wallet: YoroiWallet, rootKey: string, password: string) =>

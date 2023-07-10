@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {HWDeviceInfo} from '../../../../hw'
 import {EncryptedStorage, EncryptedStorageKeys, storage} from '../../../../storage'
+import {DefaultAsset, TokenInfo} from '../../../../types'
 import {WalletMeta} from '../../../../walletManager'
 import {ShelleyAddressGeneratorJSON} from '../../../chain'
 import {YoroiWallet} from '../../../types'
@@ -10,7 +11,10 @@ import {WalletJSON} from '../../ShelleyWallet'
 import {ShelleyWalletMainnet} from '../../wallets'
 
 describe('ShelleyWallet', () => {
-  afterEach(() => AsyncStorage.clear())
+  afterEach(() => {
+    AsyncStorage.clear()
+    jest.resetModules()
+  })
 
   it('create', async () => {
     const mnemonic =
@@ -85,7 +89,7 @@ describe('ShelleyWallet', () => {
 
     await expect(getRewardAddress(wallet)).resolves.toBe('stake1u8q3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcr25kkv')
 
-    expect(wallet.primaryToken).toEqual({
+    expect(wallet.primaryToken).toEqual<DefaultAsset>({
       identifier: '',
       isDefault: true,
       metadata: {
@@ -99,17 +103,19 @@ describe('ShelleyWallet', () => {
       },
       networkId: 1,
     })
-    expect(wallet.primaryTokenInfo).toEqual({
-      decimals: 6,
+    expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
+      kind: 'ft',
       description: 'Cardano',
       id: '',
       name: 'ADA',
-      symbol: '₳',
+      fingerprint: '',
       ticker: 'ADA',
       group: '',
-      url: '',
-      logo: '',
-      fingerprint: '',
+      image: '',
+      icon: '',
+      decimals: 6,
+      symbol: '₳',
+      metadatas: {},
     })
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk158gpk02jqrsxa58aw2e4f0ww6fffu7p2qsflenapdz7a3r5lxx4sn9nx84',
@@ -194,7 +200,7 @@ describe('ShelleyWallet', () => {
 
     await expect(getRewardAddress(wallet)).resolves.toBe('stake1u8q3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcr25kkv')
 
-    expect(wallet.primaryToken).toEqual({
+    expect(wallet.primaryToken).toEqual<DefaultAsset>({
       identifier: '',
       isDefault: true,
       metadata: {
@@ -208,18 +214,21 @@ describe('ShelleyWallet', () => {
       },
       networkId: 1,
     })
-    expect(wallet.primaryTokenInfo).toEqual({
-      decimals: 6,
+    expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
+      kind: 'ft',
       description: 'Cardano',
       id: '',
       name: 'ADA',
-      symbol: '₳',
+      fingerprint: '',
       ticker: 'ADA',
       group: '',
-      url: '',
-      logo: '',
-      fingerprint: '',
+      image: '',
+      icon: '',
+      decimals: 6,
+      symbol: '₳',
+      metadatas: {},
     })
+
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk158gpk02jqrsxa58aw2e4f0ww6fffu7p2qsflenapdz7a3r5lxx4sn9nx84',
     )
@@ -292,7 +301,7 @@ describe('ShelleyWallet', () => {
 
     await expect(getRewardAddress(wallet)).resolves.toBe('stake1uxdr3c77jn9px6c6srafp4ekpmqluk5dhsndgfllanj5acsqkljgd')
 
-    expect(wallet.primaryToken).toEqual({
+    expect(wallet.primaryToken).toEqual<DefaultAsset>({
       identifier: '',
       isDefault: true,
       metadata: {
@@ -306,23 +315,81 @@ describe('ShelleyWallet', () => {
       },
       networkId: 1,
     })
-    expect(wallet.primaryTokenInfo).toEqual({
-      decimals: 6,
+    expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
+      kind: 'ft',
       description: 'Cardano',
       id: '',
       name: 'ADA',
-      symbol: '₳',
+      fingerprint: '',
       ticker: 'ADA',
       group: '',
-      url: '',
-      logo: '',
-      fingerprint: '',
+      image: '',
+      icon: '',
+      decimals: 6,
+      symbol: '₳',
+      metadatas: {},
     })
     await expect(getStakingKey(wallet)).resolves.toBe(
       'ed25519_pk1su9gfd9nkxw0uchht47cluxus3lqlf50mruvvuv2pqpph9qgmhzq08a7zq',
     )
 
     await expect(getWalletData(wallet)).resolves.toMatchSnapshot()
+  })
+
+  it('createVotingRegTx', async () => {
+    const accountPubKeyHex =
+      '1a2c26dee1bceff0dc681d218ea8ee6278c8b28c6a99a20d65d6e1720dbb22dc8ee1f1ee98092de1ad27b350d20c6e1ea0684b04e5aef03737e71b7d3cc3f39b'
+    const hwDeviceInfo: HWDeviceInfo = {
+      bip44AccountPublic: accountPubKeyHex,
+      hwFeatures: {
+        deviceId: 'DE:F1:F3:14:AE:93',
+        deviceObj: null,
+        model: 'Nano',
+        serialHex: '3af9018bbe99bb',
+        vendor: 'ledger.com',
+      },
+    }
+    const isReadOnly = false
+
+    const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletMainnet.createBip44({
+      id: walletMeta.id,
+      accountPubKeyHex,
+      storage: storage.join(`${walletMeta.id}/`),
+      hwDeviceInfo,
+      isReadOnly,
+    })
+    wallet._utxos = [
+      {
+        utxo_id: 'b8e5b87009f38904476d844cd28858fb2974729e6153266c55d79ebacdd436ef:0',
+        tx_hash: 'b8e5b87009f38904476d844cd28858fb2974729e6153266c55d79ebacdd436ef',
+        tx_index: 0,
+        amount: '10000000',
+        receiver:
+          'addr_test1qrc9hzr4jp5d9608aww2u0a2342t2hdu3s6rs6c8tnwaxl0vnvq4r4es9alr4n79ey2kh9j4cq0tt3tm5tyekwxymytqslgys2',
+        assets: [],
+      },
+    ]
+    wallet.externalChain = {
+      getIndexOfAddress: () => 0,
+      isMyAddress: () => true,
+      addresses: [
+        'addr_test1qrc9hzr4jp5d9608aww2u0a2342t2hdu3s6rs6c8tnwaxl0vnvq4r4es9alr4n79ey2kh9j4cq0tt3tm5tyekwxymytqslgys2',
+      ],
+    }
+
+    const tx = await wallet.createVotingRegTx('1111')
+    expect(tx.votingRegTx.voting.registration?.votingPublicKey).toMatch(/ed25519/)
+    expect(tx.votingRegTx.voting.registration?.stakingPublicKey).toEqual(
+      'ed25519_pk1n924uy8z37svs59hprukk9s38j0ctuqudgcmkadrgq8wam6mjvrqfhtxte',
+    )
+    expect(tx.votingRegTx.voting.registration?.rewardAddress).toEqual(
+      'addr_test1qrc9hzr4jp5d9608aww2u0a2342t2hdu3s6rs6c8tnwaxl0vnvq4r4es9alr4n79ey2kh9j4cq0tt3tm5tyekwxymytqslgys2',
+    )
+    expect(tx.votingRegTx.change).toEqual({
+      addr1q9zh4tvj9gx2j65t6zuj76x5csvxpv9wlm99zlj64gs56t0vnvq4r4es9alr4n79ey2kh9j4cq0tt3tm5tyekwxymytqplyqfc: {
+        '': '9823411',
+      },
+    })
   })
 })
 

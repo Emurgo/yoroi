@@ -1,7 +1,7 @@
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import React from 'react'
-import {Platform, TouchableOpacity} from 'react-native'
+import {Dimensions, Platform, TouchableOpacity} from 'react-native'
 
 import {Icon} from './components'
 import {COLORS} from './theme'
@@ -29,6 +29,7 @@ export const useParams = <Params, >(guard: Guard<Params>): Params => {
 type Guard<Params> = (params: Params | object) => params is Params
 
 // OPTIONS
+const WIDTH = Dimensions.get('window').width
 export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
   headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
   headerStyle: {
@@ -38,6 +39,8 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
   headerTitleStyle: {
     fontSize: 16,
     fontFamily: 'Rubik-Medium',
+    width: WIDTH - 75,
+    textAlign: 'center',
   },
   headerTitleAlign: 'center',
   headerTitleContainerStyle: {
@@ -265,6 +268,19 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface RootParamList extends AppRoutes {}
   }
+}
+
+export const useBlockGoBack = () => {
+  const navigation = useNavigation()
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (e.data.action.type !== 'RESET') {
+        e.preventDefault()
+      }
+    })
+    return () => unsubscribe()
+  }, [navigation])
 }
 
 export const useWalletNavigation = () => {

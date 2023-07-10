@@ -4,7 +4,8 @@ import {Image, StyleSheet, View} from 'react-native'
 import {features} from '../../features'
 import {COLORS} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
-import {useIsTokenKnownNft, useNft, useNftImageModerated, useTokenInfo} from '../../yoroi-wallets/hooks'
+import {useNft, useNftImageModerated, useTokenInfo} from '../../yoroi-wallets/hooks'
+import {isString} from '../../yoroi-wallets/utils'
 import {Boundary} from '../Boundary'
 import {Icon} from '../Icon'
 import {ModeratedNftIcon} from './ModeratedNftIcon'
@@ -12,14 +13,15 @@ import {ModeratedNftIcon} from './ModeratedNftIcon'
 export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
-  const isTokenNft = useIsTokenKnownNft({wallet, fingerprint: tokenInfo.fingerprint})
 
   if (isPrimary) return <PrimaryIcon />
-  if (tokenInfo.logo != null && tokenInfo.logo.length > 0 && isBase64(tokenInfo.logo)) {
-    return <Image source={{uri: `data:image/png;base64,${tokenInfo.logo}`}} style={styles.icon} />
+  if (tokenInfo.kind === 'ft') {
+    if (isString(tokenInfo.icon) && tokenInfo.icon.length > 0 && isBase64(tokenInfo.icon)) {
+      return <Image source={{uri: `data:image/png;base64,${tokenInfo.icon}`}} style={styles.icon} />
+    }
   }
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (isTokenNft && features.showNftGallery) {
+
+  if (tokenInfo.kind === 'nft') {
     return (
       <Boundary loading={{fallback: <Placeholder />}}>
         <NftIcon tokenId={tokenId} wallet={wallet} />

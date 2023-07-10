@@ -5,7 +5,7 @@ import React from 'react'
 import {SendProvider} from '../../../common/SendContext'
 import {ReadQRCodeScreen} from './ReadQRCodeScreen'
 
-storiesOf('Read QRCode', module).add('initial', () => {
+storiesOf('Send Tx Read QRCode', module).add('initial', () => {
   const route = {
     key: 'key',
     name: 'name',

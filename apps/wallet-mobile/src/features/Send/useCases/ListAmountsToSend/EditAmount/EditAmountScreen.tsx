@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {
   KeyboardAvoidingView,
@@ -13,15 +12,16 @@ import {
 
 import {Button, Spacer, TextInput} from '../../../../../components'
 import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
-import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {PairedBalance} from '../../../../../TxHistory/PairedBalance'
+import {useOverrideBackNavigate} from '../../../../../utils/navigation'
+import {selectFtOrThrow} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../yoroi-wallets/logging'
 import {Quantity} from '../../../../../yoroi-wallets/types'
-import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
-import {editedFormatter, pastedFormatter} from '../../../../../yoroi-wallets/utils/amountUtils'
+import {asQuantity, editedFormatter, pastedFormatter, Quantities} from '../../../../../yoroi-wallets/utils'
+import {useNavigateTo} from '../../../common/navigation'
 import {useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {NoBalance} from './ShowError/NoBalance'
@@ -29,18 +29,23 @@ import {UnableToSpend} from './ShowError/UnableToSpend'
 
 export const EditAmountScreen = () => {
   const strings = useStrings()
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const navigateTo = useNavigateTo()
   const {selectedTokenId, amountChanged} = useSend()
   const {available, spendable, initialQuantity} = useTokenQuantities(selectedTokenId)
 
   const wallet = useSelectedWallet()
-  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenId})
+  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenId}, {select: selectFtOrThrow})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const [quantity, setQuantity] = React.useState<Quantity>(initialQuantity)
   const [inputValue, setInputValue] = React.useState<string>(
-    Quantities.denominated(initialQuantity, tokenInfo.decimals),
+    Quantities.denominated(initialQuantity, tokenInfo.decimals ?? 0),
   )
+
+  useOverrideBackNavigate(() => {
+    navigateTo.selectedTokens()
+    return true
+  })
 
   const hasBalance = !Quantities.isGreaterThan(quantity, available)
   const isUnableToSpend = isPrimary && Quantities.isGreaterThan(quantity, spendable)
@@ -50,18 +55,18 @@ export const EditAmountScreen = () => {
     try {
       const quantity = asQuantity(text.length > 0 ? text : '0')
       setInputValue(text)
-      setQuantity(Quantities.integer(quantity, tokenInfo.decimals))
+      setQuantity(Quantities.integer(quantity, tokenInfo.decimals ?? 0))
     } catch (error) {
       Logger.error('EditAmountScreen::onChangeQuantity', error)
     }
   }
   const onMaxBalance = () => {
-    setInputValue(Quantities.denominated(spendable, tokenInfo.decimals))
+    setInputValue(Quantities.denominated(spendable, tokenInfo.decimals ?? 0))
     setQuantity(spendable)
   }
   const onApply = () => {
     amountChanged(quantity)
-    navigation.navigate('send-list-amounts-to-send')
+    navigateTo.selectedTokens()
   }
 
   return (

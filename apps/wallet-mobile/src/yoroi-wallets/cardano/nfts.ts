@@ -1,7 +1,9 @@
+import {z} from 'zod'
+
 import {features} from '../../features'
 import {getAssetFingerprint} from '../../legacy/format'
-import {YoroiNft} from '../types'
-import {hasProperties, isArray, isArrayOfType, isRecord, isString} from '../utils'
+import {TokenInfo} from '../types'
+import {createTypeGuardFromSchema, isArrayOfType, isString} from '../utils'
 import {utf8ToHex} from './api/utils'
 
 export const convertNft = (options: {
@@ -9,52 +11,86 @@ export const convertNft = (options: {
   storageUrl: string
   policyId: string
   shortName: string
-}): YoroiNft => {
+}): TokenInfo => {
   const {metadata, storageUrl, policyId, shortName} = options
   const assetNameHex = utf8ToHex(shortName)
   const fingerprint = getAssetFingerprint(policyId, assetNameHex)
-  const description = isRecord(metadata) ? normalizeProperty(metadata.description) : undefined
-  const originalImage = isRecord(metadata) ? normalizeProperty(metadata.image) : undefined
+  const description = hasDescriptionProperty(metadata) ? normalizeProperty(metadata.description) : undefined
+  const originalImage = hasImageProperty(metadata) ? normalizeProperty(metadata.image) : undefined
   const isIpfsImage = !!originalImage?.startsWith('ipfs://')
   const convertedImage = isIpfsImage ? originalImage?.replace('ipfs://', `https://ipfs.io/ipfs/`) : originalImage
 
   const id = `${policyId}.${assetNameHex}`
-  const name = isRecord(metadata) && isString(metadata.name) ? metadata.name : shortName
+  const name = hasNameProperty(metadata) ? normalizeProperty(metadata.name) : shortName
+  const image = features.moderatingNftsEnabled ? `${storageUrl}/${fingerprint}.jpeg` : convertedImage
+  const thumbnail = features.moderatingNftsEnabled ? `${storageUrl}/p_${fingerprint}.jpeg` : convertedImage
 
   return {
+    kind: 'nft',
     id,
     fingerprint,
     name,
     description,
-    thumbnail: features.moderatingNftsEnabled ? `${storageUrl}/p_${fingerprint}.jpeg` : convertedImage,
-    logo: features.moderatingNftsEnabled ? `${storageUrl}/${fingerprint}.jpeg` : convertedImage,
-    metadata: {
-      policyId,
-      assetNameHex,
-      originalMetadata: metadata,
-    },
+    group: policyId,
+    decimals: undefined,
+    ticker: shortName,
+    icon: thumbnail,
+    image,
+    symbol: undefined,
+    metadatas: {mintNft: metadata},
   }
 }
 
-const normalizeProperty = (value: unknown): string | undefined => {
-  if (isString(value)) return value
+const normalizeProperty = (value: string | string[]): string => {
   if (isArrayOfType(value, isString)) return value.join('')
+  return value
 }
 
 export const isSvgMediaType = (mediaType: unknown): boolean => {
   return mediaType === 'image/svg+xml'
 }
 
-export const getNftFilenameMediaType = (nft: YoroiNft, filename: string): string | undefined => {
-  const originalMetadata = isRecord(nft.metadata.originalMetadata) ? nft.metadata.originalMetadata : undefined
-  const files = originalMetadata?.files ?? []
-  if (!isArray(files)) return undefined
-
-  const file = files.find((file) => {
-    if (isRecord(file) && hasProperties(file, ['src'])) {
-      return normalizeProperty(file.src) === filename
-    }
-    return false
-  })
-  return isRecord(file) && hasProperties(file, ['mediaType']) && isString(file.mediaType) ? file.mediaType : undefined
+export const getNftMainImageMediaType = (nft: TokenInfo): string | undefined => {
+  const originalMetadata = nft.metadatas.mintNft
+  return hasMediaTypeProperty(originalMetadata) ? normalizeProperty(originalMetadata.mediaType) : undefined
 }
+
+export const getNftFilenameMediaType = (nft: TokenInfo, filename: string): string | undefined => {
+  const originalMetadata = nft.metadatas.mintNft
+
+  if (!hasFilesProperty(originalMetadata)) {
+    return undefined
+  }
+
+  const files = originalMetadata.files ?? []
+  const file = files.find((file) => file.src && normalizeProperty(file.src) === filename)
+  return file?.mediaType
+}
+
+type NftMetadataFilesProperty = {
+  files?: Array<{src?: string | string[]; mediaType?: string}>
+}
+
+const StringOrArrayOfStringsSchema: z.ZodSchema<string | string[]> = z.union([z.string(), z.array(z.string())])
+
+export const hasNameProperty = createTypeGuardFromSchema<{name: string | string[]}>(
+  z.object({name: StringOrArrayOfStringsSchema}),
+)
+
+export const hasDescriptionProperty = createTypeGuardFromSchema<{description: string | string[]}>(
+  z.object({description: StringOrArrayOfStringsSchema}),
+)
+
+export const hasMediaTypeProperty = createTypeGuardFromSchema<{mediaType: string | string[]}>(
+  z.object({mediaType: StringOrArrayOfStringsSchema}),
+)
+
+export const hasImageProperty = createTypeGuardFromSchema<{image: string | string[]}>(
+  z.object({image: StringOrArrayOfStringsSchema}),
+)
+
+const NftMetadataFilesSchema: z.ZodSchema<NftMetadataFilesProperty> = z.object({
+  files: z.array(z.object({src: StringOrArrayOfStringsSchema.optional(), mediaType: z.string().optional()})).optional(),
+})
+
+export const hasFilesProperty = createTypeGuardFromSchema(NftMetadataFilesSchema)

@@ -1,10 +1,11 @@
 import {useNavigation} from '@react-navigation/native'
 import {StackNavigationOptions} from '@react-navigation/stack'
-import React, {createContext, ReactNode, useContext, useReducer} from 'react'
+import React, {createContext, ReactNode, useCallback, useContext, useReducer} from 'react'
 import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Icon} from '../components/Icon'
 import {defaultStackNavigationOptionsV2} from '../navigation'
+import {useOverrideBackNavigate} from '../utils/navigation'
 
 type SearchState = {
   search: string
@@ -93,28 +94,41 @@ export const useSearchOnNavBar = ({
   placeholder,
   title,
   noBack = false,
+  navigateBack,
 }: {
   placeholder: string
   title: string
   noBack?: boolean
+  navigateBack?(): boolean
 }) => {
   const navigation = useNavigation()
 
   const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
 
-  const handleCloseSearch = () => {
+  const handleCloseSearch = useCallback(() => {
     hideSearch()
     clearSearch()
-  }
-  const handleGoBack = () => {
+  }, [hideSearch, clearSearch])
+
+  const handleGoBack = useCallback(() => {
     handleCloseSearch()
     /*
-     * goBack button has two actions:
+     * goBack has two actions:
      *   1) go back when the search input is not visible
      *   2) close the search input when the search input is visible
      */
-    if (!visible) navigation.goBack()
-  }
+    if (visible) return true
+
+    if (navigateBack) {
+      navigateBack()
+    } else {
+      navigation.goBack()
+    }
+
+    return true
+  }, [navigateBack, navigation, visible, handleCloseSearch])
+
+  useOverrideBackNavigate(handleGoBack)
 
   const withSearchInput: StackNavigationOptions = {
     ...defaultStackNavigationOptionsV2,
@@ -132,6 +146,7 @@ export const useSearchOnNavBar = ({
     ...defaultStackNavigationOptionsV2,
     headerTitle: title,
     headerRight: () => <SearchButton onPress={() => showSearch()} />,
+    headerLeft: () => <BackButton onPress={handleGoBack} />,
     ...(noBack ? {headerLeft: () => null} : {}),
     headerBackTitleVisible: false,
   }
@@ -154,7 +169,7 @@ const InputSearch = ({placeholder}: Props) => {
       placeholder={placeholder}
       onChangeText={(search) => searchChanged(search)}
       autoCapitalize="none"
-      style={{flex: 1}}
+      style={{flex: 1, color: '#000000'}}
     />
   )
 }

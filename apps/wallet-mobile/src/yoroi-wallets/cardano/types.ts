@@ -1,5 +1,6 @@
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
+import {BaseAddress} from '@emurgo/cross-csl-core'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
@@ -23,7 +24,6 @@ import {
   StakingStatus,
   WalletImplementationId,
   YoroiEntry,
-  YoroiNft,
   YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
@@ -134,7 +134,6 @@ export type YoroiWallet = {
   generateNewReceiveAddressIfNeeded(): boolean
 
   // NFTs
-  fetchNfts(ids: string[]): Promise<YoroiNft[]>
   fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus>
 
   // Sync, Save
@@ -162,6 +161,9 @@ export type YoroiWallet = {
   subscribeOnTxHistoryUpdate(handler: () => void): () => void
   checkServerStatus(): Promise<ServerStatus>
   utxos: Array<RawUtxo>
+
+  // CIP36 Payment Address
+  getFirstPaymentAddress(): Promise<BaseAddress>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {
@@ -220,7 +222,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'generateNewReceiveAddressIfNeeded',
 
   // NFTs
-  'fetchNfts',
   'fetchNftModerationStatus',
 
   // Sync, Save

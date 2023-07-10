@@ -4,6 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Boundary, Icon} from '../components'
+import {useNavigateTo} from '../features/Send/common/navigation'
 import {SendProvider} from '../features/Send/common/SendContext'
 import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
 import {FailedTxScreen} from '../features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
@@ -43,6 +44,7 @@ export const TxHistoryNavigator = () => {
         screenOptions={{
           ...defaultStackNavigationOptions,
           detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+          gestureEnabled: false,
         }}
       >
         <Stack.Screen
@@ -125,6 +127,7 @@ export const TxHistoryNavigator = () => {
           options={{
             title: strings.editAmountTitle,
             ...sendOptions,
+            headerLeft: () => <SendEditAmountBackButton />,
           }}
         >
           {() => (
@@ -152,15 +155,32 @@ export const TxHistoryNavigator = () => {
           }}
         />
 
-        <Stack.Screen name="send-submitted-tx" component={SubmittedTxScreen} options={{headerShown: false}} />
+        <Stack.Screen
+          name="send-submitted-tx"
+          component={SubmittedTxScreen}
+          options={{headerShown: false, gestureEnabled: false}}
+        />
 
-        <Stack.Screen name="send-failed-tx" component={FailedTxScreen} options={{headerShown: false}} />
+        <Stack.Screen
+          name="send-failed-tx"
+          component={FailedTxScreen}
+          options={{headerShown: false, gestureEnabled: false}}
+        />
       </Stack.Navigator>
 
       <ModalInfo hideModalInfo={hideModalInfo} visible={modalInfoState}>
         <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
       </ModalInfo>
     </SendProvider>
+  )
+}
+
+const SendEditAmountBackButton = () => {
+  const navigateTo = useNavigateTo()
+  return (
+    <TouchableOpacity onPress={() => navigateTo.selectedTokens()}>
+      <Icon.Chevron direction="left" color="#000000" />
+    </TouchableOpacity>
   )
 }
 

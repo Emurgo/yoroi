@@ -59,7 +59,7 @@ export const WalletForm = ({onSubmit}: Props) => {
           autoFocus
           label={strings.walletNameInputLabel}
           value={name}
-          onChangeText={(walletName: string) => setName(walletName.trim())}
+          onChangeText={(walletName: string) => setName(walletName)}
           errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
           errorDelay={0}
           returnKeyType="next"
@@ -112,7 +112,7 @@ export const WalletForm = ({onSubmit}: Props) => {
 
       <Actions>
         <Button
-          onPress={() => onSubmit({name, password})}
+          onPress={() => onSubmit({name: name.trim(), password})}
           disabled={Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
           title={strings.continueButton}
           testID="walletFormContinueButton"

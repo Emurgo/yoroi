@@ -5,9 +5,9 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {SvgUri} from 'react-native-svg'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
-import {getNftFilenameMediaType, isSvgMediaType} from '../../yoroi-wallets/cardano/nfts'
-import {YoroiNft} from '../../yoroi-wallets/types'
-import {isRecord, isString} from '../../yoroi-wallets/utils'
+import {getNftFilenameMediaType, getNftMainImageMediaType, isSvgMediaType} from '../../yoroi-wallets/cardano/nfts'
+import {TokenInfo} from '../../yoroi-wallets/types'
+import {isString} from '../../yoroi-wallets/utils'
 
 export const NftPreview = ({
   nft,
@@ -19,7 +19,7 @@ export const NftPreview = ({
   resizeMode,
   blurRadius,
 }: {
-  nft: YoroiNft
+  nft: TokenInfo
   showPlaceholder?: boolean
   style?: StyleProp<ImageStyle>
   showThumbnail?: boolean
@@ -30,12 +30,13 @@ export const NftPreview = ({
 }) => {
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(true)
-  const uri = showThumbnail ? nft.thumbnail : nft.logo
+  const uri = showThumbnail ? nft.icon : nft.image
   const isUriSvg =
     isString(uri) &&
     (uri.toLowerCase().endsWith('.svg') ||
-      (isRecord(nft.metadata.originalMetadata) && isSvgMediaType(nft.metadata.originalMetadata?.mediaType)) ||
+      isSvgMediaType(getNftMainImageMediaType(nft)) ||
       isSvgMediaType(getNftFilenameMediaType(nft, uri)))
+
   const shouldShowPlaceholder = !isString(uri) || showPlaceholder || (isUriSvg && blurRadius !== undefined) || error
 
   useEffect(() => {

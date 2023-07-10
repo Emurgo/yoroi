@@ -1,0 +1,140 @@
+{
+  "name": "@yoroi/metrics-node",
+  "version": "1.0.4",
+  "description": "The Metrics package of Yoroi SDK for node",
+  "main": "lib/index",
+  "source": "src/index",
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/.*"
+  ],
+  "scripts": {
+    "test": "jest",
+    "tsc": "tsc --noEmit",
+    "clean": "del-cli lib",
+    "flow": ". ./scripts/flowgen.sh",
+    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && tsc --project tsconfig.build.json && yarn flow",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "prepack": "yarn build",
+    "release": "release-it"
+  },
+  "keywords": [
+    "yoroi",
+    "cardano",
+    "metrics"
+  ],
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/Emurgo/yoroi.git",
+    "directory": "packages/metrics-node"
+  },
+  "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",
+  "contributors": [
+    {
+      "name": "Juliano Lazzarotto",
+      "email": "juliano@stackchain.dev"
+    }
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Emurgo/yoroi/issues"
+  },
+  "homepage": "https://github.com/Emurgo/yoroi/packages/metrics-node#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "@amplitude/analytics-node": "^1.1.6",
+    "@yoroi/types": "1.0.4"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.21.5",
+    "@babel/preset-typescript": "^7.21.5",
+    "@commitlint/config-conventional": "^17.0.2",
+    "@jest/globals": "^29.5.0",
+    "@release-it/conventional-changelog": "^5.0.0",
+    "@types/jest": "^29.5.1",
+    "commitlint": "^17.0.2",
+    "del-cli": "^5.0.0",
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "flowgen": "^1.21.0",
+    "jest": "^28.1.1",
+    "prettier": "^2.0.5",
+    "release-it": "^15.0.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^4.5.2"
+  },
+  "engines": {
+    "node": ">= 16.19.0"
+  },
+  "packageManager": "^yarn@1.22.15",
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "<rootDir>/lib/"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release ${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": false
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular"
+      }
+    }
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@react-native-community",
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "quoteProps": "consistent",
+          "bracketSpacing": false,
+          "singleQuote": true,
+          "tabWidth": 2,
+          "trailingComma": "all",
+          "useTabs": false,
+          "semi": false
+        }
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "lib/",
+    "babel.config.js",
+    "jest.setup.js"
+  ],
+  "prettier": {
+    "quoteProps": "consistent",
+    "bracketSpacing": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "useTabs": false,
+    "semi": false
+  }
+}

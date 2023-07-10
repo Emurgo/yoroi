@@ -1,10 +1,8 @@
 import {useNavigation} from '@react-navigation/native'
-import {BarCodeScanner} from 'expo-barcode-scanner'
-import {Camera} from 'expo-camera'
 import * as React from 'react'
-import {StyleSheet} from 'react-native'
-import {TxHistoryRouteNavigation} from 'src/navigation'
 
+import {QRCodeScanner} from '../../../../../components'
+import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {Quantity} from '../../../../../yoroi-wallets/types'
 import {pastedFormatter} from '../../../../../yoroi-wallets/utils'
@@ -35,6 +33,7 @@ export const ReadQRCodeScreen = () => {
       receiverChanged(qrData ?? '')
     }
     navigation.navigate('send-start-tx')
+    return Promise.resolve(false)
   }
 
   return <QRCodeScanner onRead={handleOnRead} />
@@ -48,22 +47,4 @@ const getParams = (params: string) => {
     result[item[0]] = decodeURIComponent(item[1])
   })
   return result
-}
-
-const QRCodeScanner = ({onRead}: {onRead: ({data}: {data: string}) => void}) => {
-  const handleBarCodeScanned = ({data}) => {
-    onRead({data})
-  }
-
-  return (
-    // expo-barcode-scanner issue in android https://github.com/expo/expo/issues/5212
-    <Camera
-      style={StyleSheet.absoluteFill}
-      ratio="16:9"
-      barCodeScannerSettings={{
-        barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
-      }}
-      onBarCodeScanned={handleBarCodeScanned}
-    />
-  )
 }

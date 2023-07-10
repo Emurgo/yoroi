@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
+import {z} from 'zod'
 
 import {isHaskellShelleyNetwork, NETWORKS} from '../cardano/networks'
 import {Token} from '../types'
@@ -22,6 +23,12 @@ export class InvalidAssetAmount extends ExtendableError {
     ;(this as any).errorCode = errorCode
   }
 }
+
+export const createTypeGuardFromSchema =
+  <T>(schema: z.ZodType<T>) =>
+  (data: unknown): data is T => {
+    return schema.safeParse(data).success
+  }
 
 // expects an amount in regular currency units (eg ADA, not Lovelace)
 export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
@@ -78,28 +85,12 @@ export const parseString = (data: unknown) => {
   return isString(parsed) ? parsed : undefined
 }
 
-export const isObject = (data: unknown): data is object => {
-  return typeof data === 'object' && data !== null && !Array.isArray(data)
-}
-
-export function isArray(data: unknown): data is Array<unknown> {
-  return Array.isArray(data)
-}
-
 export function isArrayOfType<T>(data: unknown, predicate: (data: unknown) => data is T): data is Array<T> {
   return isArray(data) && data.every(predicate)
 }
 
-export function isRecord(data: unknown): data is Record<string, unknown> {
-  return isObject(data)
-}
-
-export const hasProperties = <T extends object, K extends string>(
-  obj: T,
-  keys: K[],
-): obj is T & {[J in K]: unknown} => {
-  return !!obj && keys.every((key) => Object.prototype.hasOwnProperty.call(obj, key))
-}
+export const isRecord = createTypeGuardFromSchema<Record<string, unknown>>(z.record(z.unknown()))
+export const isArray = createTypeGuardFromSchema<unknown[]>(z.array(z.unknown()))
 
 export const parseSafe = (text: any) => {
   try {

@@ -19,7 +19,6 @@ import * as HASKELL_SHELLEY_TESTNET from '../../yoroi-wallets/cardano/constants/
 import {InvalidState, NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {isJormungandr} from '../../yoroi-wallets/cardano/networks'
 import {useOpenWallet, useWalletMetas} from '../../yoroi-wallets/hooks'
-import {WALLET_IMPLEMENTATION_REGISTRY} from '../../yoroi-wallets/types'
 import {WalletMeta} from '../../yoroi-wallets/walletManager'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../Context'
 import {WalletListItem} from './WalletListItem'
@@ -89,8 +88,6 @@ export const WalletSelectionScreen = () => {
       <ShelleyButton />
 
       <OnlyNightlyShelleyTestnetButton />
-
-      <ByronButton />
 
       <OnlyDevButton />
 
@@ -178,7 +175,7 @@ const OnlyNightlyShelleyTestnetButton = () => {
   const navigation = useNavigation()
   const strings = useStrings()
 
-  if (!isNightly()) return null
+  if (!isNightly() && !__DEV__) return null
 
   return (
     <Button
@@ -193,29 +190,7 @@ const OnlyNightlyShelleyTestnetButton = () => {
           },
         })
       }
-      title={`${strings.addWalletButton} on TESTNET (Shelley-era)`}
-      style={styles.button}
-    />
-  )
-}
-
-const ByronButton = () => {
-  const navigation = useNavigation()
-  const strings = useStrings()
-
-  return (
-    <Button
-      outline
-      onPress={() =>
-        navigation.navigate('new-wallet', {
-          screen: 'choose-create-restore',
-          params: {
-            networkId: HASKELL_SHELLEY.NETWORK_ID,
-            walletImplementationId: WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON,
-          },
-        })
-      }
-      title={`${strings.addWalletButton} (Byron-era - ${strings.deprecated})`}
+      title={`${strings.addWalletButton} (preprod)`}
       style={styles.button}
     />
   )

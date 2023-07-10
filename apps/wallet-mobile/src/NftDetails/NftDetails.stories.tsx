@@ -10,7 +10,7 @@ storiesOf('NFT/Details', module)
   .add('Default', () => {
     const loadedWallet = {
       ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success.many,
+      fetchTokenInfo: mocks.fetchTokenInfo.success.nft,
       fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
     }
     return (
@@ -23,10 +23,10 @@ storiesOf('NFT/Details', module)
       </RouteProvider>
     )
   })
-  .add('NFT not found in the wallet and loading details', () => {
+  .add('Loading NFT', () => {
     const wallet = {
       ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success.emptyAndLaterPending,
+      fetchTokenInfo: mocks.fetchTokenInfo.loading,
       fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
     }
     return (
@@ -39,42 +39,10 @@ storiesOf('NFT/Details', module)
       </RouteProvider>
     )
   })
-  .add('NFT not found in the wallet and loaded successfully', () => {
+  .add('Error loading NFT', () => {
     const wallet = {
       ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success.emptyAndLaterFound,
-      fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
-    }
-    return (
-      <RouteProvider params={{id: nft.id}}>
-        <QueryProvider>
-          <SelectedWalletProvider wallet={wallet}>
-            <NftDetails />
-          </SelectedWalletProvider>
-        </QueryProvider>
-      </RouteProvider>
-    )
-  })
-  .add('NFT not found in the wallet and metadata not found', () => {
-    const wallet = {
-      ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success.emptyAndLaterNotFound,
-      fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
-    }
-    return (
-      <RouteProvider params={{id: nft.id}}>
-        <QueryProvider>
-          <SelectedWalletProvider wallet={wallet}>
-            <NftDetails />
-          </SelectedWalletProvider>
-        </QueryProvider>
-      </RouteProvider>
-    )
-  })
-  .add('NFT not found in the wallet and error loading metadata', () => {
-    const wallet = {
-      ...mocks.wallet,
-      fetchNfts: mocks.fetchNfts.success.emptyAndLaterError,
+      fetchTokenInfo: mocks.fetchTokenInfo.error,
       fetchNftModerationStatus: mocks.fetchNftModerationStatus.success.approved,
     }
     return (

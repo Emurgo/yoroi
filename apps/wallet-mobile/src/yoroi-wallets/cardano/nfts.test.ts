@@ -1,5 +1,5 @@
 import {nft} from '../mocks'
-import {YoroiNft} from '../types'
+import {TokenInfo} from '../types'
 import {convertNft, getNftFilenameMediaType} from './nfts'
 
 describe('convertNft', () => {
@@ -94,8 +94,8 @@ describe('convertNft', () => {
         shortName: '1',
       })
 
-      expect(nft.thumbnail).toEqual('https://ipfs.io/ipfs/QmZ89agib39odneyezeyxp2ekXPLqm86NHCgEXZy9PJ1Gs')
-      expect(nft.logo).toEqual('https://ipfs.io/ipfs/QmZ89agib39odneyezeyxp2ekXPLqm86NHCgEXZy9PJ1Gs')
+      expect(nft.icon).toEqual('https://ipfs.io/ipfs/QmZ89agib39odneyezeyxp2ekXPLqm86NHCgEXZy9PJ1Gs')
+      expect(nft.image).toEqual('https://ipfs.io/ipfs/QmZ89agib39odneyezeyxp2ekXPLqm86NHCgEXZy9PJ1Gs')
     })
 
     it('supports non-ipfs images', () => {
@@ -108,8 +108,8 @@ describe('convertNft', () => {
         shortName: '1',
       })
 
-      expect(nft.thumbnail).toEqual('https://example.com/image.jpeg')
-      expect(nft.logo).toEqual('https://example.com/image.jpeg')
+      expect(nft.icon).toEqual('https://example.com/image.jpeg')
+      expect(nft.image).toEqual('https://example.com/image.jpeg')
     })
 
     it('supports images as an array of strings', () => {
@@ -122,8 +122,8 @@ describe('convertNft', () => {
         shortName: '1',
       })
 
-      expect(nft.thumbnail).toEqual('https://example.com/image.jpeg')
-      expect(nft.logo).toEqual('https://example.com/image.jpeg')
+      expect(nft.icon).toEqual('https://example.com/image.jpeg')
+      expect(nft.image).toEqual('https://example.com/image.jpeg')
     })
   })
 
@@ -136,20 +136,7 @@ describe('convertNft', () => {
         shortName: '1',
       })
 
-      expect(nft.metadata.policyId).toEqual('8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4')
-    })
-  })
-
-  describe('metadata.assetNameHex', () => {
-    it('puts assetNameHex into metadata from shortName', () => {
-      const nft = convertNft({
-        metadata: {},
-        storageUrl: '',
-        policyId: '',
-        shortName: '1',
-      })
-
-      expect(nft.metadata.assetNameHex).toEqual('31')
+      expect(nft.group).toEqual('8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4')
     })
   })
 
@@ -166,7 +153,7 @@ describe('convertNft', () => {
         shortName: '1',
       })
 
-      expect(nft.metadata.originalMetadata).toEqual({
+      expect(nft.metadatas.mintNft).toEqual({
         name: 'Name',
         description: 'Description',
         image: 'https://example.com/image.jpeg',
@@ -278,10 +265,7 @@ describe('getNftFilenameMediaType', () => {
   })
 })
 
-const getNftWithCustomOriginalMetadata = (originalMetadata: unknown): YoroiNft => ({
+const getNftWithCustomOriginalMetadata = (metadata: unknown): TokenInfo => ({
   ...nft,
-  metadata: {
-    ...nft.metadata,
-    originalMetadata,
-  },
+  metadatas: {mintNft: metadata},
 })

@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
-import React from 'react'
+import React, {useCallback} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Boundary, Spacer, Text} from '../../../../../components'
@@ -14,10 +14,11 @@ import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
 import {useAllTokenInfos, useBalances, useIsWalletEmpty, useNfts} from '../../../../../yoroi-wallets/hooks'
-import {TokenInfo, YoroiNft} from '../../../../../yoroi-wallets/types'
+import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../common/filterByFungibility'
 import {filterBySearch} from '../../../common/filterBySearch'
+import {useNavigateTo} from '../../../common/navigation'
 import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
 import {useSelectedSecondaryAmountsCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
@@ -28,11 +29,25 @@ export type FungibilityFilter = 'all' | 'ft' | 'nft'
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
   const [fungibilityFilter, setFungibilityFilter] = React.useState<FungibilityFilter>('all')
+  const {targets, selectedTargetIndex} = useSend()
+  const navigateTo = useNavigateTo()
+  const {amounts} = targets[selectedTargetIndex].entry
+  const hasTokensSelected = Object.keys(amounts).length > 0
+
+  const navigateBack = useCallback(() => {
+    if (hasTokensSelected) {
+      navigateTo.selectedTokens()
+      return true
+    }
+    navigateTo.startTx()
+    return true
+  }, [hasTokensSelected, navigateTo])
 
   // use case: search listed tokens
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
     title: strings.selecteAssetTitle,
+    navigateBack,
   })
 
   const wallet = useSelectedWallet()
@@ -192,6 +207,7 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
   const {tokenSelectedChanged, amountChanged} = useSend()
   const {spendable} = useTokenQuantities(tokenInfo.id)
   const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const balances = useBalances(wallet)
 
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
@@ -200,8 +216,12 @@ const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemP
     closeSearch()
 
     // if the balance is atomic there is no need to edit the amount
-    if (Quantities.isAtomic(spendable, tokenInfo.decimals)) {
+    if (tokenInfo.kind === 'ft' && Quantities.isAtomic(spendable, tokenInfo.decimals ?? 0)) {
       amountChanged(spendable)
+      navigation.navigate('send-list-amounts-to-send')
+    } else if (tokenInfo.kind === 'nft') {
+      const quantity = Amounts.getAmount(balances, tokenInfo.id).quantity
+      amountChanged(quantity)
       navigation.navigate('send-list-amounts-to-send')
     } else {
       navigation.navigate('send-edit-amount')
@@ -329,7 +349,6 @@ const useFilteredTokenInfos = ({
   tokenInfos: Array<TokenInfo>
 }) => {
   const wallet = useSelectedWallet()
-  const {nfts} = useNfts(wallet)
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const {targets, selectedTargetIndex} = useSend()
   const isWalletEmpty = useIsWalletEmpty(wallet)
@@ -349,7 +368,6 @@ const useFilteredTokenInfos = ({
     .filter(filterBySearch(assetSearchTerm))
     .filter(
       filterByFungibility({
-        nfts,
         fungibilityFilter: isSearching ? 'all' : fungibilityFilter, // all assets must be available when searching
       }),
     )
@@ -362,7 +380,7 @@ const useFilteredTokenInfos = ({
 
 const areAllTokensSelected = (selectedTokenIds: Array<string>, tokenInfos): boolean =>
   tokenInfos.every((tokenInfo) => selectedTokenIds.includes(tokenInfo.id))
-const filterOutSelected = (selectedTokenIds: Array<string>) => (token: YoroiNft | TokenInfo) =>
+const filterOutSelected = (selectedTokenIds: Array<string>) => (token: TokenInfo) =>
   !selectedTokenIds.includes(token.id)
 const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 

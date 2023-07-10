@@ -1,6 +1,14 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
 
+project.ext.envConfigFiles = [
+  devdebug: '.env',
+  productionrelease: '.env.production',
+  productiondebug: '.env.production',
+  nightlyrelease: '.env.nightly',
+  nightlydebug: '.env.nightly',
+]
+
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 import com.android.build.OutputFile
@@ -12,7 +20,7 @@ import com.android.build.OutputFile
 react {
     /* Folders */
     //   The root of your project, i.e. where "package.json" lives. Default is '..'
-    root = file("../../../../")
+    root = file("../../")
     //   The folder where the react-native NPM package is. Default is ../node_modules/react-native
     reactNativeDir = file("../../../../node_modules/react-native")
     //   The folder where the react-native Codegen package is. Default is ../node_modules/react-native-codegen
@@ -40,7 +48,7 @@ react {
     // bundleAssetName = "MyApplication.android.bundle"
     //
     //   The entry file for bundle generation. Default is 'index.android.js' or 'index.js'
-    // entryFile = file("../js/MyApplication.android.js")
+    entryFile = file("../../index.js")
     //
     //   A list of extra flags to pass to the 'bundle' commands.
     //   See https://github.com/react-native-community/cli/blob/main/docs/commands.md#bundle
@@ -48,7 +56,7 @@ react {
 
     /* Hermes Commands */
     //   The hermes compiler command to run. By default it is 'hermesc'
-    // hermesCommand = "$rootDir/my-custom-hermesc/bin/hermesc"
+    hermesCommand = file("../../../../node_modules/react-native/sdks/hermesc/%OS-BIN%/hermesc").toString()
     //
     //   The list of flags to pass to the Hermes compiler. By default is "-O", "-output-source-map"
     // hermesFlags = ["-O", "-output-source-map"]
@@ -95,13 +103,13 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.yoroi"
+    namespace "com.emurgo"
     defaultConfig {
-        applicationId "com.yoroi"
+        applicationId "com.emurgo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 527
+        versionName "4.12.1"
     }
 
     splits {
@@ -112,6 +120,7 @@ android {
             include (*reactNativeArchitectures())
         }
     }
+
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -119,7 +128,9 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        // production managed by fastlane
     }
+
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
@@ -130,6 +141,25 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    // Specifies one flavor dimension.
+    flavorDimensions "version"
+    productFlavors {
+        production {
+            dimension "version"
+            resValue "string", "build_config_package", "com.emurgo"
+        }
+        dev {
+            dimension "version"
+            applicationIdSuffix ".dev"
+            resValue "string", "build_config_package", "com.emurgo"
+        }
+        nightly {
+            dimension "version"
+            applicationIdSuffix ".nightly"
+            resValue "string", "build_config_package", "com.emurgo"
         }
     }
 

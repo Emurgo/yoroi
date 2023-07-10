@@ -1,10 +1,10 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Dimensions, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {CopyButton, FadeIn, Icon, Link, Spacer, Text} from '../components'
+import {CopyButton, FadeIn, Icon, Spacer, Text} from '../components'
 import {NftPreview} from '../components/NftPreview'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {features} from '../features'
@@ -13,8 +13,9 @@ import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {getNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {useNft} from '../yoroi-wallets/hooks'
-import {YoroiNft} from '../yoroi-wallets/types'
+import {TokenInfo} from '../yoroi-wallets/types'
 import {isRecord, isString} from '../yoroi-wallets/utils'
 
 export const NftDetails = () => {
@@ -59,7 +60,7 @@ export const NftDetails = () => {
   )
 }
 
-const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
+const UnModeratedNftImage = ({nft}: {nft: TokenInfo}) => {
   const navigateTo = useNavigateTo()
   return (
     <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
@@ -68,7 +69,7 @@ const UnModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
   )
 }
 
-const ModeratedNftImage = ({nft}: {nft: YoroiNft}) => {
+const ModeratedNftImage = ({nft}: {nft: TokenInfo}) => {
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const {status} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
@@ -105,8 +106,10 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
   )
 }
 
-const NftOverview = ({nft}: {nft: YoroiNft}) => {
+const NftOverview = ({nft}: {nft: TokenInfo}) => {
   const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const config = getNetworkConfigById(wallet.networkId)
 
   return (
     <View>
@@ -122,9 +125,9 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
 
       <HR />
 
-      {isRecord(nft.metadata.originalMetadata) && (
+      {isRecord(nft.metadatas.mintNft) && (
         <MetadataRow title={strings.author}>
-          <Text secondary>{normalizeMetadataString(nft.metadata.originalMetadata.author)}</Text>
+          <Text secondary>{normalizeMetadataString(nft.metadatas.mintNft.author)}</Text>
         </MetadataRow>
       )}
 
@@ -136,14 +139,14 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
 
       <HR />
 
-      <MetadataRow title={strings.policyId} copyText={nft.metadata.policyId}>
-        <Text secondary>{nft.metadata.policyId}</Text>
+      <MetadataRow title={strings.policyId} copyText={nft.group}>
+        <Text secondary>{nft.group}</Text>
       </MetadataRow>
 
       <HR />
 
       <MetadataRow title={strings.detailsLinks}>
-        <Link url={`https://cardanoscan.io/token/${nft.fingerprint}`}>
+        <TouchableOpacity onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(nft.id))}>
           <View style={styles.linkContent}>
             <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
 
@@ -151,9 +154,9 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
 
             <Text style={styles.linkText}>Cardanoscan</Text>
           </View>
-        </Link>
+        </TouchableOpacity>
 
-        <Link url={`https://cexplorer.io/asset/${nft.fingerprint}`}>
+        <TouchableOpacity onPress={() => Linking.openURL(config.CEXPLORER_URL_FOR_TOKEN(nft.id))}>
           <View style={styles.linkContent}>
             <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
 
@@ -161,7 +164,7 @@ const NftOverview = ({nft}: {nft: YoroiNft}) => {
 
             <Text style={styles.linkText}>Cexplorer</Text>
           </View>
-        </Link>
+        </TouchableOpacity>
       </MetadataRow>
 
       <HR />
@@ -184,9 +187,9 @@ const HR = () => (
   />
 )
 
-const NftMetadata = ({nft}: {nft: YoroiNft}) => {
+const NftMetadata = ({nft}: {nft: TokenInfo}) => {
   const strings = useStrings()
-  const stringifiedMetadata = JSON.stringify(nft, undefined, 2)
+  const stringifiedMetadata = JSON.stringify(nft.metadatas.mintNft, undefined, 2)
 
   return (
     <View>

@@ -4,7 +4,8 @@ module.exports = {
   projectRoot: path.resolve(__dirname, "apps/wallet-mobile"),
   watchFolders: [
     path.resolve(__dirname, "apps/wallet-mobile"),
-    path.resolve(__dirname, "packages/metrics/src"),
+    path.resolve(__dirname, "packages/metrics-react-native/src"),
+    path.resolve(__dirname, "packages/types/src"),
     path.resolve(__dirname, "node_modules"),
   ],
   resolver: {
@@ -12,13 +13,15 @@ module.exports = {
     sourceExts: ["js", "jsx", "ts", "tsx", "json", "md"],
     assetExts: ["png", "jpg", "jpeg", "ttf", "otf", "woff", "woff2"],
     extraNodeModules: {
-      buffer: require.resolve('@craftzdog/react-native-buffer'),
       crypto: require.resolve("react-native-crypto"),
       stream: require.resolve("stream-browserify"),
       url: require.resolve("url"),
       util: require.resolve("util"),
       vm: require.resolve("vm-browserify"),
-      '@yoroi/metrics': path.resolve(__dirname, 'packages/metrics/src'),
+      "@yoroi/metrics-react-native": path.resolve(
+        __dirname,
+        "packages/metrics-react-native/src"
+      ),
     },
   },
   transformer: {

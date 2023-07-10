@@ -197,6 +197,10 @@ const styles = StyleSheet.create({
   },
   checkmarkContainer: {
     paddingRight: 16,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flexDirection: 'column',
+    paddingBottom: 16,
   },
   secureTextEntryToggleContainer: {
     paddingRight: 16,
