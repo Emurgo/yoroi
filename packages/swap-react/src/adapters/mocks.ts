@@ -16,6 +16,7 @@ export function makeMockSwapStorage(): Swap.Storage {
           '[swap-react] makeMockSwapStorage slippage save',
           slippage,
         )
+        return Promise.resolve()
       },
     },
   }
