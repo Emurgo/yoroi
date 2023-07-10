@@ -2,10 +2,10 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import {Camera} from 'expo-camera'
 import React from 'react'
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
+import {Text, View} from 'react-native'
 
 import {Spacer} from '../Spacer'
-import {getScannerBounds, QRCodeScanner} from './QRCodeScanner'
+import {QRCodeScanner} from './QRCodeScanner'
 
 storiesOf('QRCodeScanner', module).add('Default', () => <Wrapper />)
 
@@ -13,8 +13,6 @@ const Wrapper = () => {
   const [status] = Camera.useCameraPermissions()
   const [publicKeyHex, setPublicKeyHex] = React.useState(null)
   const [path, setPath] = React.useState(null)
-  const {width: deviceWidth, height: deviceHeight} = useWindowDimensions()
-  const scannerBounds = getScannerBounds({deviceWidth, deviceHeight})
 
   const handleOnRead = async ({data}) => {
     const parsedData = JSON.parse(data)
@@ -29,18 +27,6 @@ const Wrapper = () => {
   return (
     <View style={{justifyContent: 'space-between', flex: 1}}>
       <QRCodeScanner onRead={handleOnRead} />
-
-      <View style={[StyleSheet.absoluteFill, {alignItems: 'center'}]}>
-        <View
-          style={{
-            top: scannerBounds.top,
-            width: scannerBounds.width,
-            height: scannerBounds.height,
-            borderColor: 'red',
-            borderWidth: StyleSheet.hairlineWidth,
-          }}
-        />
-      </View>
 
       <View style={{padding: 10}}>
         <Text>QR DATA</Text>
