@@ -38,12 +38,13 @@ import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
 import * as MAINNET from '../constants/mainnet/constants'
+import {VOTING_KEY_PATH} from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
 import {withMinAmounts} from '../getMinAmounts'
 import {getTime} from '../getTime'
-import {signTxWithLedger} from '../hw'
+import {getCardanoAppMajorVersion, signTxWithLedger, signTxWithLedgerV5} from '../hw'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
@@ -64,6 +65,7 @@ import {yoroiUnsignedTx} from '../unsignedTx'
 import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {makeKeys} from './makeKeys'
+import {SignTransactionRequest as SignTransactionRequestV5} from '@cardano-foundation/ledgerjs-hw-app-cardanoV5'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -744,13 +746,18 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
         const addressedUtxos = await this.getAddressedUtxos()
 
+        Logger.debug('hw device info', this.hwDeviceInfo)
+        const CIP36_ENABLED = false // 176589 when true, 175137 when false
+
         const baseAddr = await this.getFirstPaymentAddress()
-        const paymentAddress = await baseAddr
+        const paymentAddress = Buffer.from(await stakingPublicKey.asBytes()).toString('hex')
+
+        const paymentAddressCIP36 = await baseAddr
           .toAddress()
           .then((a) => a.toBytes())
           .then((b) => Buffer.from(b).toString('hex'))
 
-        const addressing = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32()))
+        const addressingCIP36 = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32()))
 
         const unsignedTx = await Cardano.createUnsignedVotingTx(
           absSlotNumber,
@@ -764,10 +771,15 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           txOptions,
           nonce,
           CHAIN_NETWORK_ID,
-          paymentAddress,
-          addressing.path,
+          CIP36_ENABLED ? paymentAddressCIP36 : paymentAddress,
+          CIP36_ENABLED ? addressingCIP36.path : VOTING_KEY_PATH,
+          // @ts-ignore
+          CIP36_ENABLED,
         )
 
+        const rewardAddress = CIP36_ENABLED
+          ? await baseAddr.toAddress().then((address) => address.toBech32())
+          : await this.getRewardAddress().then((address) => address.toBech32())
         const votingRegistration: {
           votingPublicKey: string
           stakingPublicKey: string
@@ -776,7 +788,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         } = {
           votingPublicKey: await votingPublicKey.toBech32(),
           stakingPublicKey: await stakingPublicKey.toBech32(),
-          rewardAddress: await baseAddr.toAddress().then((address) => address.toBech32()),
+          rewardAddress,
           nonce,
         }
 
@@ -846,6 +858,32 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
       if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
 
+      const appAdaVersion = await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB)
+
+      if (appAdaVersion <= 5 && unsignedTx.voting.registration) {
+        Logger.info('CardanoWallet::signTxWithLedger: Ledger app version <= 5')
+        const ledgerPayload: SignTransactionRequestV5 = await Cardano.buildVotingLedgerPayloadV5(
+          unsignedTx.unsignedTx,
+          CHAIN_NETWORK_ID,
+          PROTOCOL_MAGIC,
+          STAKING_KEY_PATH,
+        )
+
+        const signedLedgerTx = await signTxWithLedgerV5(ledgerPayload, this.hwDeviceInfo, useUSB)
+
+        const signedTx = await Cardano.buildLedgerSignedTx(
+          unsignedTx.unsignedTx,
+          signedLedgerTx,
+          PURPOSE,
+          this.publicKeyHex,
+          false,
+        )
+
+        return yoroiSignedTx({unsignedTx, signedTx})
+      }
+
+      Logger.info('CardanoWallet::signTxWithLedger: Ledger app version > 5, using CIP-36')
+
       const ledgerPayload = await Cardano.buildLedgerPayload(
         unsignedTx.unsignedTx,
         CHAIN_NETWORK_ID,
@@ -860,12 +898,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         signedLedgerTx,
         PURPOSE,
         this.publicKeyHex,
+        true,
       )
 
-      return yoroiSignedTx({
-        unsignedTx,
-        signedTx,
-      })
+      return yoroiSignedTx({unsignedTx, signedTx})
     }
 
     // =================== backend API =================== //

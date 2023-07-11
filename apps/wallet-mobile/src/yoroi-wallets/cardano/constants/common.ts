@@ -73,3 +73,11 @@ export const BYRON_VOTING_KEY_PATH = [
   0,
   0,
 ]
+
+export const VOTING_KEY_PATH = [
+  1694 + HARD_DERIVATION_START,
+  1815 + HARD_DERIVATION_START,
+  0 + HARD_DERIVATION_START,
+  0,
+  0,
+]
