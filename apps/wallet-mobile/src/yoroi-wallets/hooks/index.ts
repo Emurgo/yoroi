@@ -335,17 +335,22 @@ export type VotingRegTxAndEncryptedKey = {
 }
 
 export const useVotingRegTx = (
-  {wallet, pin}: {wallet: YoroiWallet; pin: string},
+  {wallet, pin, supportsCIP36}: {wallet: YoroiWallet; pin: string; supportsCIP36: boolean},
 
-  options?: UseQueryOptions<VotingRegTxAndEncryptedKey, Error, VotingRegTxAndEncryptedKey, [string, 'voting-reg-tx']>,
+  options?: UseQueryOptions<
+    VotingRegTxAndEncryptedKey,
+    Error,
+    VotingRegTxAndEncryptedKey,
+    [string, 'voting-reg-tx', string]
+  >,
 ) => {
   const query = useQuery({
     ...options,
     retry: false,
     cacheTime: 0,
     suspense: true,
-    queryKey: [wallet.id, 'voting-reg-tx'],
-    queryFn: () => wallet.createVotingRegTx(pin),
+    queryKey: [wallet.id, 'voting-reg-tx', JSON.stringify({supportsCIP36})],
+    queryFn: () => wallet.createVotingRegTx(pin, supportsCIP36),
   })
 
   if (!query.data) throw new Error('invalid state')

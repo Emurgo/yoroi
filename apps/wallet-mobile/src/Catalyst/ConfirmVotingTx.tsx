@@ -25,14 +25,20 @@ export const ConfirmVotingTx = ({
   onNext: () => void
   pin: string
 }) => {
+  const [supportsCIP36, setSupportsCIP36] = useState<boolean>(true)
+
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const votingRegTx = useVotingRegTx(
-    {wallet, pin}, //
+    {wallet, pin, supportsCIP36}, //
     {onSuccess: ({votingKeyEncrypted}) => onSuccess(votingKeyEncrypted)},
   )
   const [password, setPassword] = useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
   const [useUSB, setUseUSB] = useState<boolean>(false)
+
+  const handleCIP36SupportChange = (supportsCIP36: boolean) => {
+    setSupportsCIP36(supportsCIP36)
+  }
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -88,6 +94,8 @@ export const ConfirmVotingTx = ({
           yoroiUnsignedTx={votingRegTx}
           biometricInstructions={[strings.authOsInstructions]}
           chooseTransportOnConfirmation
+          onCIP36SupportChange={handleCIP36SupportChange}
+          autoConfirm={!supportsCIP36}
         />
       </Actions>
     </SafeAreaView>
