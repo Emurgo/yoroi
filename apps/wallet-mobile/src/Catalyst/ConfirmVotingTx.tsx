@@ -96,6 +96,7 @@ export const ConfirmVotingTx = ({
           chooseTransportOnConfirmation
           onCIP36SupportChange={handleCIP36SupportChange}
           autoConfirm={!supportsCIP36}
+          supportsCIP36={supportsCIP36}
         />
       </Actions>
     </SafeAreaView>
