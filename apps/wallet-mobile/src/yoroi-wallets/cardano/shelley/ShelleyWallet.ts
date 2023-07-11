@@ -710,7 +710,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       return Cardano.Wasm.BaseAddress.fromAddress(addr)
     }
 
-    async createVotingRegTx(pin: string) {
+    async createVotingRegTx(pin: string, supportsCIP36: boolean) {
       Logger.debug('CardanoWallet::createVotingRegTx called')
 
       const bytes = await generatePrivateKeyForCatalyst()
@@ -747,7 +747,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         const addressedUtxos = await this.getAddressedUtxos()
 
         Logger.debug('hw device info', this.hwDeviceInfo)
-        const CIP36_ENABLED = false // 176589 when true, 175137 when false
 
         const baseAddr = await this.getFirstPaymentAddress()
         const paymentAddress = Buffer.from(await stakingPublicKey.asBytes()).toString('hex')
@@ -771,13 +770,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           txOptions,
           nonce,
           CHAIN_NETWORK_ID,
-          CIP36_ENABLED ? paymentAddressCIP36 : paymentAddress,
-          CIP36_ENABLED ? addressingCIP36.path : VOTING_KEY_PATH,
-          // @ts-ignore
-          CIP36_ENABLED,
+          supportsCIP36 ? paymentAddressCIP36 : paymentAddress,
+          supportsCIP36 ? addressingCIP36.path : VOTING_KEY_PATH,
+          supportsCIP36,
         )
 
-        const rewardAddress = CIP36_ENABLED
+        const rewardAddress = supportsCIP36
           ? await baseAddr.toAddress().then((address) => address.toBech32())
           : await this.getRewardAddress().then((address) => address.toBech32())
         const votingRegistration: {
@@ -853,6 +851,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         networkConfig: NETWORK_CONFIG,
         addressedUtxos,
       })
+    }
+
+    async ledgerSupportsCIP36(useUSB): Promise<boolean> {
+      if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
+      const appAdaVersion = await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB)
+      return appAdaVersion >= 6
     }
 
     async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
