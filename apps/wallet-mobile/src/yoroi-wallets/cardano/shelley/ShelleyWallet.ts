@@ -44,7 +44,7 @@ import {CardanoError} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
 import {withMinAmounts} from '../getMinAmounts'
 import {getTime} from '../getTime'
-import {getCardanoAppMajorVersion, signTxWithLedger, signTxWithLedgerV5} from '../hw'
+import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger, signTxWithLedgerV5} from '../hw'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
@@ -455,7 +455,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       return stakingKey
     }
 
-    private async getRewardAddress() {
+    private async getRewardAddress({supportsCIP36}: {supportsCIP36: boolean}) {
+      if (supportsCIP36) {
+        const baseAddr = await this.getFirstPaymentAddress()
+        return baseAddr.toAddress()
+      }
+
       const stakingKey = await this.getStakingKey()
       const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
       const rewardAddr = await CardanoMobile.RewardAddress.new(CHAIN_NETWORK_ID, credential)
@@ -746,8 +751,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
         const addressedUtxos = await this.getAddressedUtxos()
 
-        Logger.debug('hw device info', this.hwDeviceInfo)
-
         const baseAddr = await this.getFirstPaymentAddress()
         const paymentAddress = Buffer.from(await stakingPublicKey.asBytes()).toString('hex')
 
@@ -775,9 +778,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           supportsCIP36,
         )
 
-        const rewardAddress = supportsCIP36
-          ? await baseAddr.toAddress().then((address) => address.toBech32())
-          : await this.getRewardAddress().then((address) => address.toBech32())
+        const rewardAddress = await this.getRewardAddress({supportsCIP36}).then((address) => address.toBech32())
         const votingRegistration: {
           votingPublicKey: string
           stakingPublicKey: string
@@ -855,8 +856,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     async ledgerSupportsCIP36(useUSB): Promise<boolean> {
       if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
-      const appAdaVersion = await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB)
-      return appAdaVersion >= 6
+      return doesCardanoAppVersionSupportCIP36(await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB))
     }
 
     async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
@@ -864,7 +864,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       const appAdaVersion = await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB)
 
-      if (appAdaVersion <= 5 && unsignedTx.voting.registration) {
+      if (!doesCardanoAppVersionSupportCIP36(appAdaVersion) && unsignedTx.voting.registration) {
         Logger.info('CardanoWallet::signTxWithLedger: Ledger app version <= 5')
         const ledgerPayload: SignTransactionRequestV5 = await Cardano.buildVotingLedgerPayloadV5(
           unsignedTx.unsignedTx,

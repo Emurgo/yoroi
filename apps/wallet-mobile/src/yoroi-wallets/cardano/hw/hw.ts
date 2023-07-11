@@ -31,6 +31,7 @@ import {NUMBERS} from '../numbers'
 import {isByron, isHaskellShelley} from '../utils'
 
 const MIN_ADA_APP_VERSION = '2.2.1'
+const MIN_ADA_APP_VERSION_SUPPORTING_CIP36 = 6
 
 export type WalletType = 'BIP44' | 'CIP1852'
 
@@ -287,6 +288,10 @@ export const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInf
       serialHex,
     },
   }
+}
+
+export const doesCardanoAppVersionSupportCIP36 = (majorVersion: number) => {
+  return majorVersion >= MIN_ADA_APP_VERSION_SUPPORTING_CIP36
 }
 
 //
