@@ -15,6 +15,7 @@ import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/Edit
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {
+  BackButton,
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
   TxHistoryRoutes,
@@ -141,8 +142,11 @@ export const TxHistoryNavigator = () => {
           name="send-read-qr-code"
           component={ReadQRCodeScreen}
           options={{
-            title: strings.qrScannerTitle,
             ...sendOptions,
+            headerTransparent: true,
+            title: strings.qrScannerTitle,
+            headerTintColor: '#fff',
+            headerLeft: (props) => <BackButton color="#fff" {...props} />,
           }}
         />
 

@@ -28,6 +28,12 @@ export const useParams = <Params, >(guard: Guard<Params>): Params => {
 
 type Guard<Params> = (params: Params | object) => params is Params
 
+export const BackButton = (props) => (
+  <TouchableOpacity {...props}>
+    <Icon.Chevron direction="left" color={props.color ?? '#000000'} />
+  </TouchableOpacity>
+)
+
 // OPTIONS
 const WIDTH = Dimensions.get('window').width
 export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
@@ -54,11 +60,7 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
   headerRightContainerStyle: {
     paddingRight: 10,
   },
-  headerLeft: (props) => (
-    <TouchableOpacity {...props}>
-      <Icon.Chevron direction="left" color="#000000" />
-    </TouchableOpacity>
-  ),
+  headerLeft: (props) => <BackButton {...props} />,
 }
 
 export const defaultStackNavigationOptions: StackNavigationOptions = {

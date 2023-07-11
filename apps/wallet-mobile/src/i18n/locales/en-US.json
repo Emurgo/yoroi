@@ -131,6 +131,7 @@
   "components.send.assetselectorscreen.youHave": "You have",
   "components.send.assetselectorscreen.noAssetsAddedYet": "No {fungible} added yet",
   "components.send.addressreaderqr.title": "Scan QR code address",
+  "components.send.addressreaderqr.text": "Scan recipients QR code to add a crypto address",
   "components.send.amountfield.label": "Amount",
   "components.send.editamountscreen.title": "Asset amount",
   "components.send.memofield.label": "Memo",

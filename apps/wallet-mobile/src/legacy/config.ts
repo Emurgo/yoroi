@@ -7,7 +7,7 @@ export const isNightly = () => BUILD_VARIANT === 'NIGHTLY'
 // TODO(v-almonacid): consider adding 'ENABLE' as an env variable
 const SENTRY = {
   DSN: env.getString('SENTRY'),
-  ENABLE: false,
+  ENABLE: __DEV__ || BUILD_VARIANT === 'NIGHTLY',
 }
 const _COMMIT = env.getString('COMMIT') ?? ''
 

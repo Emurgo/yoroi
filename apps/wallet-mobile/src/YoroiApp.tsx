@@ -39,7 +39,7 @@ if (Boolean(Config.DISABLE_LOGBOX)) LogBox.ignoreAllLogs()
 
 const queryClient = new QueryClient()
 const amplitudeClient = getMetricsFactory(features.analytics ? 'amplitude' : 'mock')({
-  apiKey: '',
+  apiKey: Config.AMPLITUDE_API_KEY ?? '',
 })
 const metricsStorage = makeMetricsStorage()
 

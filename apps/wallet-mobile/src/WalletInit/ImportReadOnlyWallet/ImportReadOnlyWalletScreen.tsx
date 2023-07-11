@@ -41,7 +41,7 @@ export const ImportReadOnlyWalletScreen = () => {
       <StatusBar translucent backgroundColor="transparent" />
 
       <View style={styles.cameraContainer}>
-        <QRCodeScanner onRead={onRead} />
+        <QRCodeScanner onRead={onRead} enableMask={false} />
       </View>
 
       <ScrollView style={styles.scrollView}>
