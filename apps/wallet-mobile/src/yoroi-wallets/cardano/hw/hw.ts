@@ -8,6 +8,8 @@ import type {
   SignTransactionResponse,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import AppAda, {DeviceStatusCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+import type {SignTransactionRequest as SignTransactionRequestV5} from '@cardano-foundation/ledgerjs-hw-app-cardanoV5'
+import AppAdaV5, {GetVersionResponse as GetVersionResponseV5} from '@cardano-foundation/ledgerjs-hw-app-cardanoV5'
 import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import {BleError} from 'react-native-ble-plx'
@@ -128,7 +130,7 @@ const makeCardanoAccountBIP44Path: (walletType: WalletType, account: number) => 
   path: [WALLET_TYPE_PURPOSE[walletType], COIN_TYPE, HARDENED + account],
 })
 
-export const checkDeviceVersion = (versionResponse: GetVersionResponse): void => {
+export const checkDeviceVersion = (versionResponse: GetVersionResponse | GetVersionResponseV5): void => {
   if (
     versionResponse.version.major == null ||
     versionResponse.version.minor == null ||
@@ -189,6 +191,34 @@ const connectionHandler = async (
 
   const appAda = new AppAda(transport)
   const versionResp: GetVersionResponse = await appAda.getVersion()
+  Logger.debug('ledgerUtils::connectionHandler: AppAda version', versionResp)
+  checkDeviceVersion(versionResp)
+  return appAda
+}
+
+const connectionHandlerV5 = async (
+  deviceId: DeviceId | null | undefined,
+  deviceObj: DeviceObj | null | undefined,
+  useUSB = false,
+): Promise<AppAdaV5> => {
+  let transport
+
+  if (useUSB) {
+    if (deviceObj == null) {
+      throw new Error('ledgerUtils::connectionHandler deviceObj is null')
+    }
+
+    transport = await TransportHID.open(deviceObj)
+  } else {
+    if (deviceId == null) {
+      throw new Error('ledgerUtils::connectionHandler deviceId is null')
+    }
+
+    transport = await TransportBLE.open(deviceId)
+  }
+
+  const appAda = new AppAdaV5(transport)
+  const versionResp: GetVersionResponseV5 = await appAda.getVersion()
   Logger.debug('ledgerUtils::connectionHandler: AppAda version', versionResp)
   checkDeviceVersion(versionResp)
   return appAda
@@ -263,17 +293,48 @@ export const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInf
 // ============== transaction logic ==================
 //
 
+export const getCardanoAppMajorVersion = async (hwDeviceInfo: HWDeviceInfo, useUSB: boolean) => {
+  const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
+  const {version} = await appAda.getVersion()
+  Logger.debug('ledgerUtils::getCardanoAppMajorVersion', version.major)
+  return version.major
+}
+
 export const signTxWithLedger = async (
   signRequest: SignTransactionRequest,
   hwDeviceInfo: HWDeviceInfo,
   useUSB: boolean,
-): Promise<SignTransactionResponse> => {
+) => {
   try {
     Logger.debug('ledgerUtils::signTxWithLedger called')
     const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
+    Logger.debug('ledgerUtils::signTxWithLedger appAda version', await appAda.getVersion())
     Logger.debug('ledgerUtils::signTxWithLedger inputs', signRequest.tx.inputs)
     Logger.debug('ledgerUtils::signTxWithLedger outputs', signRequest.tx.outputs)
     const ledgerSignature: SignTransactionResponse = await appAda.signTransaction(signRequest)
+    await appAda.transport.close()
+    Logger.debug('ledgerUtils::ledgerSignature', JSON.stringify(ledgerSignature))
+    return ledgerSignature
+  } catch (e) {
+    throw mapLedgerError(e)
+  }
+}
+
+export const signTxWithLedgerV5 = async (
+  signRequest: SignTransactionRequestV5,
+  hwDeviceInfo: HWDeviceInfo,
+  useUSB: boolean,
+) => {
+  try {
+    Logger.debug('ledgerUtils::signTxWithLedger called')
+    const appAda = await connectionHandlerV5(
+      hwDeviceInfo.hwFeatures.deviceId,
+      hwDeviceInfo.hwFeatures.deviceObj,
+      useUSB,
+    )
+    Logger.debug('ledgerUtils::signTxWithLedger inputs', signRequest.tx.inputs)
+    Logger.debug('ledgerUtils::signTxWithLedger outputs', signRequest.tx.outputs)
+    const ledgerSignature = await appAda.signTransaction(signRequest)
     await appAda.transport.close()
     Logger.debug('ledgerUtils::ledgerSignature', JSON.stringify(ledgerSignature))
     return ledgerSignature
