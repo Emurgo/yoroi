@@ -236,9 +236,9 @@ export const ConfirmTx = ({
   }, [autoSignIfEasyConfirmation, wallet.isEasyConfirmationEnabled, _onConfirm])
 
   useEffect(() => {
-    if (!autoConfirm) return
+    if (!autoConfirm || isProcessing) return
     onConfirm()
-  }, [autoConfirm, onConfirm])
+  }, [autoConfirm, onConfirm, isProcessing])
 
   useEffect(() => {
     if (wallet.isHW && !chooseTransportOnConfirmation) {
