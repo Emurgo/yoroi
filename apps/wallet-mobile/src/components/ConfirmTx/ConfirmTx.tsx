@@ -68,6 +68,7 @@ export const ConfirmTx = ({
   const {mutateAsync: submitTx} = useSubmitTx({wallet})
 
   const [password, setPassword] = useState('')
+  const [isProcessed, setIsProcessed] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [dialogStep, setDialogStep] = useState(DialogStep.Closed)
   const [errorData, setErrorData] = useState<ErrorData>({
@@ -209,6 +210,7 @@ export const ConfirmTx = ({
           })
         }
       } finally {
+        setIsProcessed(true)
         setIsProcessing(false)
       }
     },
@@ -236,9 +238,9 @@ export const ConfirmTx = ({
   }, [autoSignIfEasyConfirmation, wallet.isEasyConfirmationEnabled, _onConfirm])
 
   useEffect(() => {
-    if (!autoConfirm || isProcessing) return
+    if (!autoConfirm || isProcessing || isProcessed) return
     onConfirm()
-  }, [autoConfirm, onConfirm, isProcessing])
+  }, [autoConfirm, onConfirm, isProcessing, isProcessed])
 
   useEffect(() => {
     if (wallet.isHW && !chooseTransportOnConfirmation) {
