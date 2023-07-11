@@ -1,17 +1,16 @@
 import {BarCodeBounds, BarCodeScanner, BarCodeScannerResult} from 'expo-barcode-scanner'
 import {Camera} from 'expo-camera'
 import * as React from 'react'
-import {Platform} from 'react-native'
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {Path, Svg} from 'react-native-svg'
 
 export const QRCodeScanner = ({
   onRead,
-  enableMask = true,
+  maskEnabled = true,
   maskText = '',
 }: {
   onRead: (event: BarCodeScannerResult) => Promise<boolean>
-  enableMask?: boolean
+  maskEnabled?: boolean
   maskText?: string
 }) => {
   const [status, requestPermissions] = Camera.useCameraPermissions()
@@ -28,7 +27,7 @@ export const QRCodeScanner = ({
   }, [granted, requestPermissions])
 
   const handleBarCodeScanned = async (event) => {
-    const isQrInsideScannerBounds = enableMask
+    const isQrInsideScannerBounds = maskEnabled
       ? getIsQrInsideScannerBounds({
           qrBounds: event.bounds,
           scannerBounds,
@@ -65,7 +64,7 @@ export const QRCodeScanner = ({
         }}
         onBarCodeScanned={handleBarCodeScanned}
       >
-        {enableMask && <Mask maskText={maskText} />}
+        {maskEnabled && <Mask maskText={maskText} />}
       </Camera>
     </>
   )
@@ -98,45 +97,28 @@ const Mask = ({maskText}: {maskText: string}) => (
     </View>
 
     <View style={styles.layerBottom}>
-      <Text
-        style={{
-          color: '#fff',
-          fontWeight: 'bold',
-          lineHeight: 24,
-          fontSize: 16,
-          maxWidth: 240,
-          textAlign: 'center',
-          paddingTop: 20,
-        }}
-      >
-        {maskText}
-      </Text>
+      <Text style={styles.text}>{maskText}</Text>
     </View>
   </>
 )
 
 const Corner = ({style}) => {
-  return (
-    <View style={styles.corner}>
-      <Triangle style={{position: 'absolute', ...style}} />
-
-      <ArcSvg style={{position: 'absolute', ...style}} />
-    </View>
-  )
+  return <ArcSvg style={{position: 'absolute', ...style}} />
 }
-
-const Triangle = ({style}) => (
-  <View
-    style={{
-      ...style,
-      ...styles.triangle,
-    }}
-  />
-)
 
 const ArcSvg = (props) => {
   return (
-    <Svg width={43} height={43} viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <Svg
+      width={42}
+      height={42}
+      viewBox="0 0 42 42"
+      preserveAspectRatio="xMidYMid slice"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <Path d="M0 0h15L5.5 6 0 16V0z" fill="#000" fillOpacity={0.7} />
+
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -209,9 +191,9 @@ export const getIsQrInsideScannerBounds = ({
   )
 }
 
-const QR_MAX_WIDTH = 300
-const QR_MAX_HEIGHT = 300
-const opacity = 'rgba(0, 0, 0, .5)'
+const QR_MAX_WIDTH = 310 // divisible number. Pixel ratio issue on low end android devices
+const QR_MAX_HEIGHT = 310 // divisible number. Pixel ratio issue on low end android devices
+const opacity = 'rgba(0, 0, 0, .7)'
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -220,13 +202,16 @@ const styles = StyleSheet.create({
   layerTop: {
     flex: 1,
     backgroundColor: opacity,
+    marginBottom: 0,
   },
   layerCenter: {
     flexDirection: 'row',
+    borderWidth: 0,
   },
   layerLeft: {
     flex: 1,
     backgroundColor: opacity,
+    borderWidth: 0,
   },
   focused: {
     height: QR_MAX_HEIGHT,
@@ -254,12 +239,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  corner: {
-    flex: 1,
-    width: QR_MAX_WIDTH / 3,
-    height: QR_MAX_HEIGHT / 3,
-    position: 'relative',
-  },
   topLeftCorner: {
     top: 0,
     left: 0,
@@ -272,8 +251,8 @@ const styles = StyleSheet.create({
     transform: [{rotate: '90deg'}],
   },
   bottomLeftCorner: {
-    bottom: Platform.OS === 'android' ? -1 : 0,
-    left: Platform.OS === 'android' ? 0.5 : 0,
+    bottom: 0,
+    left: 0,
     transform: [{rotate: '270deg'}],
   },
   bottomRightCorner: {
@@ -281,15 +260,13 @@ const styles = StyleSheet.create({
     right: 0,
     transform: [{rotate: '180deg'}],
   },
-  triangle: {
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderRightWidth: 13,
-    borderTopWidth: 13,
-    borderRightColor: 'transparent',
-    borderTopColor: 'black',
-    opacity: 0.5,
+  text: {
+    color: '#fff',
+    fontWeight: 'bold',
+    lineHeight: 24,
+    fontSize: 16,
+    maxWidth: 240,
+    textAlign: 'center',
+    paddingTop: 20,
   },
 })
