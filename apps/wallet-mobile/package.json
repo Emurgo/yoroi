@@ -182,6 +182,7 @@
     "@babel/preset-env": "^7.20.0",
     "@babel/preset-react": "^7.16.7",
     "@babel/runtime": "^7.20.0",
+    "@config-plugins/detox": "^5.0.1",
     "@emurgo/cardano-serialization-lib-nodejs": "^9.1.4",
     "@emurgo/cross-csl-core": "^2.3.0",
     "@emurgo/cross-csl-nodejs": "^2.3.0",
@@ -230,7 +231,7 @@
     "babel-plugin-require-context-hook": "^1.0.0",
     "chai": "^4.3.7",
     "dependency-cruiser": "^12.10.0",
-    "detox": "16.7.2",
+    "detox": "^20.11.0",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-formatjs": "^4.10.0",
@@ -242,7 +243,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "extract-react-intl-messages": "^0.14.0",
     "i18n-unused": "^0.8.0",
-    "jest": "^29.2.1",
+    "jest": "^29",
     "jest-circus": "^29.5.0",
     "lint-staged": "^13.2.2",
     "metro-react-native-babel-preset": "0.73.9",
@@ -264,33 +265,6 @@
     "typescript-coverage-report": "^0.6.4"
   },
   "engineStrict": true,
-  "detox": {
-    "test-runner": "jest",
-    "configurations": {
-      "ios.release": {
-        "binaryPath": "./ios/build/Build/Products/Release-iphonesimulator/emurgo.app",
-        "build": "xcodebuild -workspace ios/emurgo.xcworkspace -mode Release -scheme emurgo -sdk iphonesimulator -derivedDataPath ios/build",
-        "type": "ios.simulator",
-        "name": "iPhone 11"
-      },
-      "android.emu.mainnet.debug": {
-        "binaryPath": "android/app/build/outputs/apk/mainnet/debug/app-mainnet-debug.apk",
-        "build": "cd android && ENVFILE=.env.e2e ./gradlew assembleMainnetDebug assembleMainnetDebugAndroidTest -DtestBuildType=debug && cd ..",
-        "type": "android.emulator",
-        "device": {
-          "avdName": "Nexus_6_API_28_2_e2e_"
-        }
-      },
-      "android.emu.mainnet.release": {
-        "binaryPath": "android/app/build/outputs/apk/mainnet/release/app-mainnet-release.apk",
-        "build": "cd android && ENVFILE=.env.e2e ./gradlew assembleMainnetRelease assembleMainnetReleaseAndroidTest -DtestBuildType=release && cd ..",
-        "type": "android.emulator",
-        "device": {
-          "avdName": "Nexus_6_API_28_2_e2e_"
-        }
-      }
-    }
-  },
   "engine": {
     "node": "~16.19.0",
     "npm": "~7.19.1"
