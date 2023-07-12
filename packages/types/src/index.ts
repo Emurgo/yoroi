@@ -8,7 +8,13 @@ import {
 import {MetricsModule, MetricsFactoryOptions} from './metrics/module'
 import {MetricsStorage} from './metrics/storage'
 import {MetricsTrack} from './metrics/track'
-import {SwapOrderType, SwapProtocol, SwapSlippageOptions} from './swap/module'
+import {
+  SwapFactoryOptions,
+  SwapOrderCreateData,
+  SwapOrderType,
+  SwapProtocol,
+  SwapSlippageOptions,
+} from './swap/module'
 import {SwapStorage} from './swap/storage'
 
 export namespace Metrics {
@@ -21,8 +27,11 @@ export namespace Metrics {
 }
 
 export namespace Swap {
-  export type OrderType = SwapOrderType
+  export type FactoryOptions = SwapFactoryOptions
   export type SlippageOptions = SwapSlippageOptions
+
+  export type CreateOrderData = SwapOrderCreateData
+  export type OrderType = SwapOrderType
   export type Protocol = SwapProtocol
 
   export type Storage = SwapStorage
