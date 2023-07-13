@@ -28,19 +28,20 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlinVersion"
 
-        
+        // required by cardano rust bindings
+        //classpath 'gradle.plugin.org.mozilla.rust-android-gradle:plugin:0.8.3'
     }
 }
-def REACT_NATIVE_VERSION = new File(['node', '--print',"JSON.parse(require('fs').readFileSync(require.resolve('react-native/package.json'), 'utf-8')).version"].execute(null, rootDir).text.trim())
+//def REACT_NATIVE_VERSION = new File(['node', '--print',"JSON.parse(require('fs').readFileSync(require.resolve('react-native/package.json'), 'utf-8')).version"].execute(null, rootDir).text.trim())
 
 allprojects {
 
      // https://github.com/facebook/react-native/issues/35210
-    configurations.all {
-        resolutionStrategy {
-            force "com.facebook.react:react-native:" + REACT_NATIVE_VERSION
-        }
-    }
+    // configurations.all {
+    //     resolutionStrategy {
+    //         force "com.facebook.react:react-native:" + REACT_NATIVE_VERSION
+    //     }
+    // }
 
     repositories {
 
