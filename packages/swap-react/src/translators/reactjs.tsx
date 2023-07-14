@@ -11,22 +11,19 @@ import {Balance, Swap} from '@yoroi/types'
 import {makeMockSwapStorage} from '../adapters/mocks'
 import {swapStorageSlippageKey} from '../adapters/storage'
 
-type SwapState = {
-  order: {
+type SwapState = Readonly<{
+  createOrder: {
     type: Swap.OrderType
-    amountFrom: Balance.Amount
-    amountTo: Balance.Amount
-    protocol: Swap.Protocol
-    slippage: number
-  }
+  } & Omit<Swap.CreateOrderData, 'address'>
 
   yoroiUnsignedTx: any | undefined
-}
-type SwapOrderActions = {
+}>
+type SwapCreateOrderActions = {
   typeChanged: (orderType: Swap.OrderType) => void
   amountFromChanged: (amountFrom: Balance.Amount) => void
   amountToChanged: (amountTo: Balance.Amount) => void
   protocolChanged: (protocol: Swap.Protocol) => void
+  poolIdChanged: (poolId: string) => void
   slippageChanged: (slippage: number) => void
 }
 type SwapOrderAction =
@@ -34,6 +31,7 @@ type SwapOrderAction =
   | {type: 'amountFromChanged'; amountFrom: Balance.Amount}
   | {type: 'amountToChanged'; amountTo: Balance.Amount}
   | {type: 'protocolChanged'; protocol: Swap.Protocol}
+  | {type: 'poolIdChanged'; poolId: string}
   | {type: 'slippageChanged'; slippage: number}
 
 type SwapActions = {
@@ -52,7 +50,7 @@ const combinedReducers = (
     ...swapReducer(
       {
         ...state,
-        ...orderReducer(state, action as SwapOrderAction),
+        ...createOrderReducer(state, action as SwapOrderAction),
       },
       action as SwapAction,
     ),
@@ -60,22 +58,25 @@ const combinedReducers = (
 }
 
 const defaultState: SwapState = {
-  order: {
+  createOrder: {
     type: 'limit',
-    amountFrom: {
-      quantity: '0',
-      tokenId: '',
+    amounts: {
+      sell: {
+        quantity: '0',
+        tokenId: '',
+      },
+      buy: {
+        quantity: '0',
+        tokenId: '',
+      },
     },
-    amountTo: {
-      quantity: '0',
-      tokenId: '',
-    },
-    protocol: 'muesliswap',
     slippage: 0.1,
+    protocol: 'muesliswap',
+    poolId: '',
   },
   yoroiUnsignedTx: undefined,
 } as const
-const defaultSwapOrderActions: SwapOrderActions = {
+const defaultSwapOrderActions: SwapCreateOrderActions = {
   typeChanged: (_orderType: Swap.OrderType) =>
     console.error('[swap-react] missing initialization'),
   amountFromChanged: (_amountFrom: Balance.Amount) =>
@@ -85,6 +86,8 @@ const defaultSwapOrderActions: SwapOrderActions = {
   protocolChanged: (_protocol: Swap.Protocol) =>
     console.error('[swap-react] missing initialization'),
   slippageChanged: (_slippage: number) =>
+    console.error('[swap-react] missing initialization'),
+  poolIdChanged: (_poolId: string) =>
     console.error('[swap-react] missing initialization'),
 } as const
 const defaultSwapActions: SwapActions = {
@@ -97,10 +100,6 @@ const defaultActions = {
   ...defaultSwapOrderActions,
   ...defaultSwapActions,
 } as const
-// const defaultMetrics: Swap.Module<Amplitude.Types.EventOptions> =
-//   makeMockMetrics({
-//     apiKey: 'mocked-api-key',
-//   })
 const defaultStorage: Swap.Storage = makeMockSwapStorage()
 const initialSwapProvider: SwapProvider = {
   ...defaultState,
@@ -110,17 +109,15 @@ const initialSwapProvider: SwapProvider = {
 }
 
 type SwapProvider = React.PropsWithChildren<
-  SwapState & SwapOrderActions & SwapActions & Swap.Storage
+  SwapState & SwapCreateOrderActions & SwapActions & Swap.Storage
 >
 const SwapContext = React.createContext<SwapProvider>(initialSwapProvider)
 export const SwapProvider = ({
   children,
-  // swap,
   storage,
   initialState,
 }: {
   children: React.ReactNode
-  // swap: Readonly<Swap.Module<Amplitude.Types.EventOptions>>
   storage: Readonly<Swap.Storage>
   initialState?: Readonly<Partial<SwapState>>
 }) => {
@@ -128,7 +125,7 @@ export const SwapProvider = ({
     ...defaultState,
     ...initialState,
   })
-  const actions = React.useRef<SwapActions & SwapOrderActions>({
+  const actions = React.useRef<SwapActions & SwapCreateOrderActions>({
     typeChanged: (orderType: Swap.OrderType) => {
       dispatch({type: 'typeChanged', orderType})
     },
@@ -140,6 +137,9 @@ export const SwapProvider = ({
     },
     protocolChanged: (protocol: Swap.Protocol) => {
       dispatch({type: 'protocolChanged', protocol})
+    },
+    poolIdChanged: (poolId: string) => {
+      dispatch({type: 'poolIdChanged', poolId})
     },
     slippageChanged: (slippage: number) => {
       dispatch({type: 'slippageChanged', slippage})
@@ -160,46 +160,56 @@ export const SwapProvider = ({
   return <SwapContext.Provider value={context}>{children}</SwapContext.Provider>
 }
 
-function orderReducer(state: SwapState, action: SwapOrderAction) {
+function createOrderReducer(state: SwapState, action: SwapOrderAction): SwapState['createOrder'] {
   switch (action.type) {
     case 'typeChanged':
       return {
-        order: {
-          ...state.order,
+        createOrder: {
+          ...state.createOrder,
           type: action.orderType,
         },
       }
     case 'amountFromChanged':
       return {
-        order: {
+        createOrder: {
           ...state.order,
-          amountFrom: action.amountFrom,
+          amounts: {
+            ...state.order.amounts,
+            sell: action.amountFrom,
+          },
         },
       }
     case 'amountToChanged':
       return {
-        order: {
+        createOrder: {
           ...state.order,
           amountTo: action.amountTo,
         },
       }
     case 'protocolChanged':
       return {
-        order: {
+        createOrder: {
           ...state.order,
           protocol: action.protocol,
         },
       }
+    case 'poolIdChanged':
+      return {
+        createOrder: {
+          ...state.order,
+          poolId: action.poolId,
+        },
+      }
     case 'slippageChanged':
       return {
-        order: {
+        createOrder: {
           ...state.order,
           slippage: action.slippage,
         },
       }
     default:
       return {
-        order: {
+        createOrder: {
           ...state.order,
         },
       }
