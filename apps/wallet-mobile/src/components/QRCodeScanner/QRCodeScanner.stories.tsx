@@ -36,7 +36,7 @@ const Wrapper = () => {
         <Spacer height={5} />
 
         <Info text={`publicKeyHex: ${publicKeyHex}`} />
-        
+
         <Info text={`path: ${path}`} />
 
         <Spacer height={20} />
