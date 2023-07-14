@@ -38,7 +38,7 @@ export const ReadQRCodeScreen = () => {
     return Promise.resolve(false)
   }
 
-  return <QRCodeScanner onRead={handleOnRead} maskText={strings.addressReaderQrText} />
+  return <QRCodeScanner onRead={handleOnRead} withMask maskText={strings.addressReaderQrText} />
 }
 
 const getParams = (params: string) => {

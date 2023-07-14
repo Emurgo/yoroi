@@ -14,7 +14,7 @@ const Wrapper = () => {
   const [status] = Camera.useCameraPermissions()
   const [publicKeyHex, setPublicKeyHex] = React.useState(null)
   const [path, setPath] = React.useState(null)
-  const [maskEnabled, setMaskEnabled] = React.useState(true)
+  const [withMask, setMaskEnabled] = React.useState(true)
 
   const handleOnRead = async ({data}) => {
     const parsedData = JSON.parse(data)
@@ -28,35 +28,37 @@ const Wrapper = () => {
 
   return (
     <View style={{justifyContent: 'space-between', flex: 1}}>
-      <QRCodeScanner onRead={handleOnRead} maskEnabled />
+      <QRCodeScanner onRead={handleOnRead} withMask={withMask} />
 
       <View style={{padding: 10}}>
-        <Text style={{color: 'white'}}>QR DATA</Text>
+        <Info text="QR DATA" />
 
         <Spacer height={5} />
 
-        <Text style={{color: 'white'}}>{`publicKeyHex: ${publicKeyHex}`}</Text>
-
-        <Text style={{color: 'white'}}>{`path: ${path}`}</Text>
+        <Info text={`publicKeyHex: ${publicKeyHex}`} />
+        
+        <Info text={`path: ${path}`} />
 
         <Spacer height={20} />
 
-        <Text style={{color: 'white'}}>PREMISSIONS STATUS</Text>
+        <Info text="PREMISSIONS STATUS" />
 
-        <Text style={{color: 'white'}}>NOTE: To reset permissions, reinstall the app</Text>
+        <Info text="NOTE: To reset permissions, reinstall the app" />
 
         <Spacer height={5} />
 
-        <Text style={{color: 'white'}}>{`status: ${status?.status}`}</Text>
+        <Info text={`status: ${status?.status}`} />
 
-        <Text style={{color: 'white'}}>{`granted: ${status?.granted}`}</Text>
+        <Info text={`granted: ${status?.granted}`} />
 
-        <Text style={{color: 'white'}}>{`expires: ${status?.expires}`}</Text>
+        <Info text={`expires: ${status?.expires}`} />
 
-        <Text style={{color: 'white'}}>{`canAskAgain: ${status?.canAskAgain}`}</Text>
+        <Info text={`canAskAgain: ${status?.canAskAgain}`} />
       </View>
 
-      <Button title={maskEnabled ? 'Remove Mask' : 'Add Mask'} onPress={() => setMaskEnabled(!maskEnabled)} />
+      <Button title={withMask ? 'Remove Mask' : 'Add Mask'} onPress={() => setMaskEnabled(!withMask)} />
     </View>
   )
 }
+
+const Info = ({text}) => <Text style={{color: 'white'}}>{text}</Text>

@@ -10,7 +10,7 @@ export const QRCodeScanner = ({
   maskText = '',
 }: {
   onRead: (event: BarCodeScannerResult) => Promise<boolean>
-  maskEnabled?: boolean
+  withMask?: boolean
   maskText?: string
 }) => {
   const [status, requestPermissions] = Camera.useCameraPermissions()
@@ -30,6 +30,7 @@ export const QRCodeScanner = ({
     const isQrInsideScannerBounds = withMask
       ? getIsQrInsideScannerBounds({
           qrBounds: event.bounds,
+          qrBoundingBox: event.boundingBox,
           scannerBounds,
           deviceHeight,
           deviceWidth,
@@ -71,36 +72,62 @@ export const QRCodeScanner = ({
 }
 
 const Mask = ({maskText}: {maskText: string}) => (
-  <>
-    <View style={styles.layerTop} />
+  <View style={styles.maskContainer}>
+    <LayerTop />
 
-    <View style={styles.layerCenter}>
-      <View style={styles.layerLeft} />
+    <LayerCenter>
+      <LayerCenterLeft />
 
-      <View style={styles.focused}>
-        <View style={styles.innerFocusedTop}>
-          <Corner style={styles.topLeftCorner} />
+      <LayerFocused>
+        <InnerLayerFocusedTop>
+          <TopLeftCorner />
 
-          <Corner style={styles.topRightCorner} />
-        </View>
+          <TopRightCorner />
+        </InnerLayerFocusedTop>
 
-        <View style={styles.innerFocusedCenter} />
+        <InnerLyerFocusedCenter />
 
-        <View style={styles.innerFocusedBottom}>
-          <Corner style={styles.bottomLeftCorner} />
+        <InnerLyerFocusedBottom>
+          <BottomRightCorner />
 
-          <Corner style={styles.bottomRightCorner} />
-        </View>
-      </View>
+          <BottomLeftCorner />
+        </InnerLyerFocusedBottom>
+      </LayerFocused>
 
-      <View style={styles.layerRight} />
-    </View>
+      <LayerCenterRight />
+    </LayerCenter>
 
-    <View style={styles.layerBottom}>
-      <Text style={styles.text}>{maskText}</Text>
-    </View>
-  </>
+    <LayerBottom>
+      <MaskText>{maskText}</MaskText>
+    </LayerBottom>
+  </View>
 )
+
+const LayerTop = ({children}: {children?: React.ReactNode}) => <View style={styles.layerTop}>{children}</View>
+const LayerCenter = ({children}: {children?: React.ReactNode}) => <View style={styles.layerCenter}>{children}</View>
+const LayerCenterLeft = ({children}: {children?: React.ReactNode}) => (
+  <View style={styles.layerCenterLeft}>{children}</View>
+)
+const LayerCenterRight = ({children}: {children?: React.ReactNode}) => (
+  <View style={styles.layerCenterRight}>{children}</View>
+)
+const LayerBottom = ({children}: {children?: React.ReactNode}) => <View style={styles.layerBottom}>{children}</View>
+const LayerFocused = ({children}: {children?: React.ReactNode}) => <View style={styles.layerFocused}>{children}</View>
+const InnerLayerFocusedTop = ({children}: {children?: React.ReactNode}) => (
+  <View style={styles.innerLayerFocusedTop}>{children}</View>
+)
+const InnerLyerFocusedCenter = ({children}: {children?: React.ReactNode}) => (
+  <View style={styles.innerLyerFocusedCenter}>{children}</View>
+)
+const InnerLyerFocusedBottom = ({children}: {children?: React.ReactNode}) => (
+  <View style={styles.innerLayerFocusedBottom}>{children}</View>
+)
+const TopLeftCorner = () => <Corner style={styles.topLeftCorner} />
+const TopRightCorner = () => <Corner style={styles.topRightCorner} />
+const BottomRightCorner = () => <Corner style={styles.bottomRightCorner} />
+const BottomLeftCorner = () => <Corner style={styles.bottomLeftCorner} />
+
+const MaskText = ({children}: {children?: React.ReactNode}) => <Text style={styles.text}>{children}</Text>
 
 const Corner = ({style}) => {
   return <ArcSvg style={{position: 'absolute', ...style}} />
@@ -147,19 +174,22 @@ export const getScannerBounds = ({deviceHeight, deviceWidth}: {deviceHeight: num
 
 export const getScaledQrBounds = ({
   qrBounds,
+  qrBoundingBox,
   deviceHeight,
   deviceWidth,
 }: {
   qrBounds: BarCodeBounds
+  qrBoundingBox: BarCodeBounds
   deviceHeight: number
   deviceWidth: number
 }) => {
-  const height = Number(qrBounds.size.height) * deviceHeight
-  const width = Number(qrBounds.size.width) * deviceWidth
-  const right = Number(qrBounds.origin.x) * deviceWidth
-  const top = Number(qrBounds.origin.y) * deviceHeight
+  // qr bounds values are inversely proportioned + issues in some android devices https://github.com/expo/expo/issues/17795
+  const height = qrBoundingBox !== undefined ? qrBoundingBox.size.width : Number(qrBounds.size.width) * deviceHeight
+  const width = qrBoundingBox !== undefined ? qrBoundingBox.size.height : Number(qrBounds.size.height) * deviceWidth
+  const left = qrBoundingBox !== undefined ? qrBoundingBox.origin.y : Number(qrBounds.origin.y) * deviceWidth
+  const top = qrBoundingBox !== undefined ? qrBoundingBox.origin.x : Number(qrBounds.origin.x) * deviceHeight
   const bottom = top + height
-  const left = right + width
+  const right = left + width
 
   return {
     height,
@@ -173,19 +203,22 @@ export const getScaledQrBounds = ({
 
 export const getIsQrInsideScannerBounds = ({
   qrBounds,
+  qrBoundingBox,
   scannerBounds,
   deviceHeight,
   deviceWidth,
 }: {
   qrBounds: BarCodeBounds
+  qrBoundingBox: BarCodeBounds
   scannerBounds: ReturnType<typeof getScannerBounds>
   deviceHeight: number
   deviceWidth: number
 }) => {
-  const scaledQrBounds = getScaledQrBounds({qrBounds, deviceHeight, deviceWidth})
+  const scaledQrBounds = getScaledQrBounds({qrBounds, qrBoundingBox, deviceHeight, deviceWidth})
+
   return (
-    scaledQrBounds.top < scannerBounds.top &&
-    scaledQrBounds.bottom > scannerBounds.bottom &&
+    scaledQrBounds.top > scannerBounds.top &&
+    scaledQrBounds.bottom < scannerBounds.bottom &&
     scaledQrBounds.left > scannerBounds.left &&
     scaledQrBounds.right < scannerBounds.right
   )
@@ -199,6 +232,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
   },
+  maskContainer: {
+    flex: 1,
+  },
   layerTop: {
     flex: 1,
     backgroundColor: opacity,
@@ -208,16 +244,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderWidth: 0,
   },
-  layerLeft: {
+  layerCenterLeft: {
     flex: 1,
     backgroundColor: opacity,
     borderWidth: 0,
   },
-  focused: {
+  layerFocused: {
     height: QR_MAX_HEIGHT,
     width: QR_MAX_WIDTH,
   },
-  layerRight: {
+  layerCenterRight: {
     flex: 1,
     backgroundColor: opacity,
   },
@@ -226,18 +262,20 @@ const styles = StyleSheet.create({
     backgroundColor: opacity,
     alignItems: 'center',
   },
-  innerFocusedTop: {
+  innerLayerFocusedTop: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    position: 'relative',
   },
-  innerFocusedCenter: {
+  innerLyerFocusedCenter: {
     flex: 1,
   },
-  innerFocusedBottom: {
+  innerLayerFocusedBottom: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    position: 'relative',
   },
   topLeftCorner: {
     top: 0,
