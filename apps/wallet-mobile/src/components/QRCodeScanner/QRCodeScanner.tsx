@@ -27,15 +27,16 @@ export const QRCodeScanner = ({
   }, [granted, requestPermissions])
 
   const handleBarCodeScanned = async (event) => {
-    const isQrInsideScannerBounds = withMask
-      ? getIsQrInsideScannerBounds({
-          qrBounds: event.bounds,
-          qrBoundingBox: event.boundingBox,
-          scannerBounds,
-          deviceHeight,
-          deviceWidth,
-        })
-      : true
+    const isQrInsideScannerBounds =
+      withMask && (event.bounds !== undefined || event.boundingBox !== undefined)
+        ? getIsQrInsideScannerBounds({
+            qrBounds: event.bounds,
+            qrBoundingBox: event.boundingBox,
+            scannerBounds,
+            deviceHeight,
+            deviceWidth,
+          })
+        : true
 
     if (!qrScanned && isQrInsideScannerBounds) {
       setQrScanned(true)
