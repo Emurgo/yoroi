@@ -78,21 +78,21 @@ const Mask = ({maskText}: {maskText: string}) => (
     <LayerCenter>
       <LayerCenterLeft />
 
-      <LayerFocused>
-        <InnerLayerFocusedTop>
+      <CameraOpening>
+        <InnerCameraOpeningTop>
           <TopLeftCorner />
 
           <TopRightCorner />
-        </InnerLayerFocusedTop>
+        </InnerCameraOpeningTop>
 
-        <InnerLyerFocusedCenter />
+        <InnerCameraOpeningCenter />
 
-        <InnerLyerFocusedBottom>
+        <InnerCameraOpeningBottom>
           <BottomRightCorner />
 
           <BottomLeftCorner />
-        </InnerLyerFocusedBottom>
-      </LayerFocused>
+        </InnerCameraOpeningBottom>
+      </CameraOpening>
 
       <LayerCenterRight />
     </LayerCenter>
@@ -112,15 +112,15 @@ const LayerCenterRight = ({children}: {children?: React.ReactNode}) => (
   <View style={styles.layerCenterRight}>{children}</View>
 )
 const LayerBottom = ({children}: {children?: React.ReactNode}) => <View style={styles.layerBottom}>{children}</View>
-const LayerFocused = ({children}: {children?: React.ReactNode}) => <View style={styles.layerFocused}>{children}</View>
-const InnerLayerFocusedTop = ({children}: {children?: React.ReactNode}) => (
-  <View style={styles.innerLayerFocusedTop}>{children}</View>
+const CameraOpening = ({children}: {children?: React.ReactNode}) => <View style={styles.cameraOpening}>{children}</View>
+const InnerCameraOpeningTop = ({children}: {children?: React.ReactNode}) => (
+  <View style={styles.innerCameraOpeningTop}>{children}</View>
 )
-const InnerLyerFocusedCenter = ({children}: {children?: React.ReactNode}) => (
-  <View style={styles.innerLyerFocusedCenter}>{children}</View>
+const InnerCameraOpeningCenter = ({children}: {children?: React.ReactNode}) => (
+  <View style={styles.innerCameraOpeningCenter}>{children}</View>
 )
-const InnerLyerFocusedBottom = ({children}: {children?: React.ReactNode}) => (
-  <View style={styles.innerLayerFocusedBottom}>{children}</View>
+const InnerCameraOpeningBottom = ({children}: {children?: React.ReactNode}) => (
+  <View style={styles.innerCameraOpeningBottom}>{children}</View>
 )
 const TopLeftCorner = () => <Corner style={styles.topLeftCorner} />
 const TopRightCorner = () => <Corner style={styles.topRightCorner} />
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     backgroundColor: opacity,
     borderWidth: 0,
   },
-  layerFocused: {
+  cameraOpening: {
     height: QR_MAX_HEIGHT,
     width: QR_MAX_WIDTH,
   },
@@ -262,16 +262,16 @@ const styles = StyleSheet.create({
     backgroundColor: opacity,
     alignItems: 'center',
   },
-  innerLayerFocusedTop: {
+  innerCameraOpeningTop: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     position: 'relative',
   },
-  innerLyerFocusedCenter: {
+  innerCameraOpeningCenter: {
     flex: 1,
   },
-  innerLayerFocusedBottom: {
+  innerCameraOpeningBottom: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
