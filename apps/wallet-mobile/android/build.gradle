@@ -58,7 +58,7 @@ allprojects {
         }
         maven {
             // All of Detox' artifacts are provided via the npm module
-            url("$rootDir/../node_modules/detox/Detox-android")
+           url("$rootDir/../../../node_modules/detox/Detox-android")
         }
         mavenCentral {
             // We don't want to fetch react-native from Maven Central as there are
