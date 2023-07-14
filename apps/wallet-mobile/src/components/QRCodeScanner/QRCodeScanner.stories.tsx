@@ -28,7 +28,7 @@ const Wrapper = () => {
 
   return (
     <View style={{justifyContent: 'space-between', flex: 1}}>
-      <QRCodeScanner onRead={handleOnRead} maskEnabled={maskEnabled} />
+      <QRCodeScanner onRead={handleOnRead} maskEnabled />
 
       <View style={{padding: 10}}>
         <Text style={{color: 'white'}}>QR DATA</Text>
