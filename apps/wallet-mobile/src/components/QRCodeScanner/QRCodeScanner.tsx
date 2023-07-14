@@ -6,7 +6,7 @@ import {Path, Svg} from 'react-native-svg'
 
 export const QRCodeScanner = ({
   onRead,
-  maskEnabled = true,
+  withMask,
   maskText = '',
 }: {
   onRead: (event: BarCodeScannerResult) => Promise<boolean>
