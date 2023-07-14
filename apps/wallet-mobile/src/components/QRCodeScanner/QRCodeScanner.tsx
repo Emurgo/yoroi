@@ -64,7 +64,7 @@ export const QRCodeScanner = ({
         }}
         onBarCodeScanned={handleBarCodeScanned}
       >
-        {maskEnabled && <Mask maskText={maskText} />}
+        {withMask && <Mask maskText={maskText} />}
       </Camera>
     </>
   )
