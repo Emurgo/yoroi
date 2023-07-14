@@ -58,6 +58,23 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
           </View>
 
+          {features.showSwapButton && <Spacer width={32} />}
+
+          {features.showSwapButton && (
+            <View style={styles.centralized}>
+              <TouchableOpacity
+                style={styles.actionIcon}
+                onPress={navigateTo.swap}
+                testID="receiveButton"
+                disabled={disabled}
+              >
+                <Icon.Received {...ACTION_PROPS} />
+              </TouchableOpacity>
+
+              <Text style={styles.actionLabel}>SWAP</Text>
+            </View>
+          )}
+
           {features.walletHero.buy && <Spacer width={32} />}
 
           {features.walletHero.buy && (
@@ -139,6 +156,7 @@ const useNavigateTo = () => {
   return {
     send: () => navigation.navigate('send-start-tx'),
     receive: () => navigation.navigate('receive'),
+    swap: () => navigation.navigate('swap-start'),
     buy: () => Alert.alert(strings.messageBuy, strings.messageBuy),
   }
 }

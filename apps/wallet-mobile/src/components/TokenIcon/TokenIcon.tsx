@@ -10,14 +10,27 @@ import {Boundary} from '../Boundary'
 import {Icon} from '../Icon'
 import {ModeratedNftIcon} from './ModeratedNftIcon'
 
-export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
+export const TokenIcon = ({
+  wallet,
+  tokenId,
+  size,
+}: {
+  wallet: YoroiWallet
+  tokenId: string
+  size?: 'small' | 'medium' | 'large'
+}) => {
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
-  if (isPrimary) return <PrimaryIcon />
+  if (isPrimary) return <PrimaryIcon size={size} />
   if (tokenInfo.kind === 'ft') {
     if (isString(tokenInfo.icon) && tokenInfo.icon.length > 0 && isBase64(tokenInfo.icon)) {
-      return <Image source={{uri: `data:image/png;base64,${tokenInfo.icon}`}} style={styles.icon} />
+      return (
+        <Image
+          source={{uri: `data:image/png;base64,${tokenInfo.icon}`}}
+          style={[size === 'small' ? styles.iconSmall : styles.icon]}
+        />
+      )
     }
   }
 
@@ -31,9 +44,13 @@ export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: stri
   return <Placeholder />
 }
 
-const PrimaryIcon = () => (
-  <View style={[styles.icon, styles.primary]}>
-    <Icon.Cardano color="white" height={35} width={35} />
+type PrimaryIconProps = {
+  size?: 'small' | 'medium' | 'large'
+}
+
+const PrimaryIcon = ({size}: PrimaryIconProps) => (
+  <View style={[size === 'small' ? styles.iconSmall : styles.icon, styles.primary]}>
+    <Icon.Cardano color="white" height={size === 'small' ? 20 : 35} width={size === 'small' ? 20 : 35} />
   </View>
 )
 
@@ -88,6 +105,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     width: 40,
     height: 40,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconSmall: {
+    backgroundColor: 'transparent',
+    width: 24,
+    height: 24,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',

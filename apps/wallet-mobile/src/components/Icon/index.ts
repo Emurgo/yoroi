@@ -54,6 +54,7 @@ import {PlusCircle} from './PlusCircle'
 import {Qr} from './Qr'
 import {QuestionMark} from './QuestionMark'
 import {Received} from './Received'
+import {Refresh} from './Refresh'
 import {RewardManuallyPayout} from './RewardManuallyPayout'
 import {RewardWithdrawn} from './RewardWithdrawn'
 import {Sandbox} from './Sandbox'
@@ -176,4 +177,5 @@ export const Icon = {
   Wallets,
   YoroiNightly,
   YoroiWallet,
+  Refresh
 }

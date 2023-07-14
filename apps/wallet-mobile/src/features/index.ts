@@ -14,6 +14,7 @@ export const features = {
   showProdPoolsInDev: __DEV__ ? false : false,
   moderatingNftsEnabled: __DEV__ ? false : false,
   analytics: __DEV__ ? true : false,
+  showSwapButton: __DEV__ ? true : false,
 }
 
 export const debugWalletInfo = {

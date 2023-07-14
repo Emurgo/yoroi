@@ -1,0 +1,32 @@
+[
+  {
+    "id": "swap.swapScreen.tokenSwapTab",
+    "defaultMessage": "!!!Token Swap",
+    "file": "src/features/Swap/useCases/StartSwapScreen/StartSwapScreen.tsx",
+    "start": {
+      "line": 92,
+      "column": 13,
+      "index": 2764
+    },
+    "end": {
+      "line": 95,
+      "column": 3,
+      "index": 2846
+    }
+  },
+  {
+    "id": "swap.swapScreen.ordersSwapTab",
+    "defaultMessage": "!!!Orders",
+    "file": "src/features/Swap/useCases/StartSwapScreen/StartSwapScreen.tsx",
+    "start": {
+      "line": 96,
+      "column": 10,
+      "index": 2858
+    },
+    "end": {
+      "line": 99,
+      "column": 3,
+      "index": 2937
+    }
+  }
+]

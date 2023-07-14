@@ -1,0 +1,32 @@
+[
+  {
+    "id": "swap.swapScreen.marketButton",
+    "defaultMessage": "!!!Market Button",
+    "file": "src/features/Swap/useCases/StartSwapTokensScreen.tsx/StartSwapTokensScreen.tsx",
+    "start": {
+      "line": 94,
+      "column": 16,
+      "index": 3302
+    },
+    "end": {
+      "line": 97,
+      "column": 3,
+      "index": 3387
+    }
+  },
+  {
+    "id": "swap.swapScreen.limitButton",
+    "defaultMessage": "!!!Limit Button",
+    "file": "src/features/Swap/useCases/StartSwapTokensScreen.tsx/StartSwapTokensScreen.tsx",
+    "start": {
+      "line": 98,
+      "column": 15,
+      "index": 3404
+    },
+    "end": {
+      "line": 101,
+      "column": 3,
+      "index": 3487
+    }
+  }
+]

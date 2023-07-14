@@ -176,8 +176,18 @@ export type TxHistoryRoutes = {
   'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
   'send-select-token-from-list': undefined
+  'swap-start': undefined
+  'swap-select-tokens': undefined
+  'swap-select-token-from-to': undefined
 }
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
+
+export type SwapTokenRoutes = {
+  'swap-start': undefined
+  'swap-select-tokens': undefined
+  'swap-select-token-from-to': undefined
+}
+export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 
 export type StakingCenterRoutes = {
   'staking-center-main': undefined
