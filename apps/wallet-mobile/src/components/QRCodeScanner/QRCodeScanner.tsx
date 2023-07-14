@@ -10,7 +10,7 @@ export const QRCodeScanner = ({
   maskText = '',
 }: {
   onRead: (event: BarCodeScannerResult) => Promise<boolean>
-  withMask?: boolean
+  withMask: boolean
   maskText?: string
 }) => {
   const [status, requestPermissions] = Camera.useCameraPermissions()
