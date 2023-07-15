@@ -1,4 +1,11 @@
-import { AssetName, Assets, BigNum, MultiAsset, ScriptHash, Value } from "@emurgo/cross-csl-core";
+import {
+  AssetName,
+  Assets,
+  BigNum,
+  MultiAsset,
+  ScriptHash,
+  Value,
+} from "@emurgo/cross-csl-core";
 import { TokenAmount } from "../dex";
 
 export const toScripthash = (hex: string) => {
@@ -27,14 +34,14 @@ export const fromUint8Array = (bytes: Uint8Array) => {
   const hex = new Array<string>(bytes.length);
 
   for (let i = 0; i < bytes.length; i++) {
-    hex.push(bytes[i].toString(16).padStart(2, '0'));
+    hex.push(bytes[i].toString(16).padStart(2, "0"));
   }
 
-  return hex.join('');
+  return hex.join("");
 };
 
 export const buildValue = async (token: TokenAmount) => {
-  if (token.address.policyId === '' && token.address.assetName === '') {
+  if (token.address.policyId === "" && token.address.assetName === "") {
     return await Value.new(await BigNum.fromStr(token.amount));
   }
 
@@ -42,9 +49,9 @@ export const buildValue = async (token: TokenAmount) => {
   const assets = await Assets.new();
   await assets.insert(
     await AssetName.new(toUint8Array(token.address.assetName)),
-    await BigNum.fromStr(token.amount),
+    await BigNum.fromStr(token.amount)
   );
-  const value = await Value.new(await BigNum.fromStr('0'));
+  const value = await Value.new(await BigNum.fromStr("0"));
   await multiasset.insert(await toScripthash(token.address.policyId), assets);
   await value.setMultiasset(multiasset);
   return value;
