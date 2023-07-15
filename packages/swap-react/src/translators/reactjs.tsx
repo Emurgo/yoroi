@@ -20,12 +20,12 @@ type SwapState = Readonly<{
 }>
 
 type SwapCreateOrderActions = {
-  typeChanged: (orderType: Swap.OrderType) => void
-  amountFromChanged: (amountFrom: Balance.Amount) => void
-  amountToChanged: (amountTo: Balance.Amount) => void
-  protocolChanged: (protocol: Swap.Protocol) => void
-  poolIdChanged: (poolId: string) => void
-  slippageChanged: (slippage: number) => void
+  updateOrderType: (orderType: Swap.OrderType) => void
+  updateFromAmount: (fromAmount: Balance.Amount) => void
+  updateToAmount: (toAmount: Balance.Amount) => void
+  updateProtocol: (protocol: Swap.Protocol) => void
+  updatePoolId: (poolId: string) => void
+  updateSlippage: (slippage: number) => void
 }
 
 export enum SwapOrderActionType {
@@ -39,20 +39,28 @@ export enum SwapOrderActionType {
 
 type SwapOrderAction =
   | {type: SwapOrderActionType.ChangeOrderType; orderType: Swap.OrderType}
-  | {type: SwapOrderActionType.ChangeAmountFrom; amountFrom: Balance.Amount}
-  | {type: SwapOrderActionType.ChangeAmountTo; amountTo: Balance.Amount}
+  | {type: SwapOrderActionType.ChangeAmountFrom; fromAmount: Balance.Amount}
+  | {type: SwapOrderActionType.ChangeAmountTo; toAmount: Balance.Amount}
   | {type: SwapOrderActionType.ChangeProtocol; protocol: Swap.Protocol}
   | {type: SwapOrderActionType.ChangePoolId; poolId: string}
   | {type: SwapOrderActionType.ChangeSlippage; slippage: number}
 
 type SwapActions = {
-  yoroiUnsignedTxChanged: (yoroiUnsignedTx: any | undefined) => void
-  resetForm: () => void
+  updateSwapUnsignedTx: (swapUnsignedTx: any | undefined) => void
+  reset: () => void
+}
+
+enum SwapActionType {
+  UpdateSwapUnsignedTx = 'updateSwapUnsignedTx',
+  Reset = 'reset',
 }
 
 type SwapAction =
-  | {type: 'yoroiUnsignedTxChanged'; yoroiUnsignedTx: any | undefined}
-  | {type: 'resetForm'}
+  | {
+      type: SwapActionType.UpdateSwapUnsignedTx
+      unsignedTx: any | undefined
+    }
+  | {type: SwapActionType.Reset}
 
 const combinedReducers = (
   state: SwapState,
@@ -90,24 +98,24 @@ const defaultState: SwapState = {
 } as const
 
 const defaultSwapOrderActions: SwapCreateOrderActions = {
-  typeChanged: (_orderType: Swap.OrderType) =>
+  updateOrderType: (_orderType: Swap.OrderType) =>
     console.error('[swap-react] missing initialization'),
-  amountFromChanged: (_amountFrom: Balance.Amount) =>
+  updateFromAmount: (_fromAmount: Balance.Amount) =>
     console.error('[swap-react] missing initialization'),
-  amountToChanged: (_amountTo: Balance.Amount) =>
+  updateToAmount: (_toAmount: Balance.Amount) =>
     console.error('[swap-react] missing initialization'),
-  protocolChanged: (_protocol: Swap.Protocol) =>
+  updateProtocol: (_protocol: Swap.Protocol) =>
     console.error('[swap-react] missing initialization'),
-  slippageChanged: (_slippage: number) =>
+  updateSlippage: (_slippage: number) =>
     console.error('[swap-react] missing initialization'),
-  poolIdChanged: (_poolId: string) =>
+  updatePoolId: (_poolId: string) =>
     console.error('[swap-react] missing initialization'),
 } as const
 
 const defaultSwapActions: SwapActions = {
-  yoroiUnsignedTxChanged: (_yoroiUnsignedTx: any | undefined) =>
+  updateSwapUnsignedTx: (_swapUnsignedTx: any | undefined) =>
     console.error('[swap-react] missing initialization'),
-  resetForm: () => console.error('[swap-react] missing initialization'),
+  reset: () => console.error('[swap-react] missing initialization'),
 } as const
 
 const defaultActions = {
@@ -143,29 +151,32 @@ export const SwapProvider = ({
     ...initialState,
   })
   const actions = React.useRef<SwapActions & SwapCreateOrderActions>({
-    typeChanged: (orderType: Swap.OrderType) => {
+    updateOrderType: (orderType: Swap.OrderType) => {
       dispatch({type: SwapOrderActionType.ChangeOrderType, orderType})
     },
-    amountFromChanged: (amountFrom: Balance.Amount) => {
-      dispatch({type: SwapOrderActionType.ChangeAmountFrom, amountFrom})
+    updateFromAmount: (fromAmount: Balance.Amount) => {
+      dispatch({type: SwapOrderActionType.ChangeAmountFrom, fromAmount})
     },
-    amountToChanged: (amountTo: Balance.Amount) => {
-      dispatch({type: SwapOrderActionType.ChangeAmountTo, amountTo})
+    updateToAmount: (toAmount: Balance.Amount) => {
+      dispatch({type: SwapOrderActionType.ChangeAmountTo, toAmount})
     },
-    protocolChanged: (protocol: Swap.Protocol) => {
+    updateProtocol: (protocol: Swap.Protocol) => {
       dispatch({type: SwapOrderActionType.ChangeProtocol, protocol})
     },
-    poolIdChanged: (poolId: string) => {
+    updatePoolId: (poolId: string) => {
       dispatch({type: SwapOrderActionType.ChangePoolId, poolId})
     },
-    slippageChanged: (slippage: number) => {
+    updateSlippage: (slippage: number) => {
       dispatch({type: SwapOrderActionType.ChangeSlippage, slippage})
     },
-    yoroiUnsignedTxChanged: (yoroiUnsignedTx: any | undefined) => {
-      dispatch({type: 'yoroiUnsignedTxChanged', yoroiUnsignedTx})
+    updateSwapUnsignedTx: (unsignedTx: any | undefined) => {
+      dispatch({
+        type: SwapActionType.UpdateSwapUnsignedTx,
+        unsignedTx: unsignedTx,
+      })
     },
-    resetForm: () => {
-      dispatch({type: 'resetForm'})
+    reset: () => {
+      dispatch({type: SwapActionType.Reset})
     },
   }).current
 
@@ -188,11 +199,11 @@ function createOrderReducer(
       })
     case SwapOrderActionType.ChangeAmountFrom:
       return produce(state.createOrder, (draft) => {
-        draft.amounts.sell = action.amountFrom
+        draft.amounts.sell = action.fromAmount
       })
     case SwapOrderActionType.ChangeAmountTo:
       return produce(state.createOrder, (draft) => {
-        draft.amounts.buy = action.amountTo
+        draft.amounts.buy = action.toAmount
       })
     case SwapOrderActionType.ChangeProtocol:
       return produce(state.createOrder, (draft) => {
@@ -212,15 +223,15 @@ function createOrderReducer(
 }
 const swapReducer = (state: SwapState, action: SwapAction) => {
   switch (action.type) {
-    case 'yoroiUnsignedTxChanged':
-      return {
-        ...state,
-        yoroiUnsignedTx: action.yoroiUnsignedTx,
-      }
-    case 'resetForm':
-      return {...defaultState}
+    case SwapActionType.UpdateSwapUnsignedTx:
+      return produce(
+        state,
+        (draft) => (draft.yoroiUnsignedTx = action.unsignedTx),
+      )
+    case SwapActionType.Reset:
+      return produce(defaultState, () => {})
     default:
-      return {...state}
+      return produce(state, () => {})
   }
 }
 

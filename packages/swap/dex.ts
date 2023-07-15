@@ -4,8 +4,8 @@ import {
   getOrders,
   getPools,
   getTokens,
-} from "./openswap";
-import type { Protocol, Token } from "./openswap";
+} from './openswap';
+import type { Protocol, Token } from './openswap';
 
 export type OrderDetails = {
   protocol: Protocol;
@@ -54,15 +54,15 @@ export const getOpenOrders = async (stakeKeyHash: string) =>
     utxo: order.utxo,
     send: {
       address: {
-        policyId: order.from.token.split(".")[0],
-        assetName: order.from.token.split(".")[1],
+        policyId: order.from.token.split('.')[0],
+        assetName: order.from.token.split('.')[1],
       },
       amount: order.from.amount,
     },
     receive: {
       address: {
-        policyId: order.to.token.split(".")[0],
-        assetName: order.to.token.split(".")[1],
+        policyId: order.to.token.split('.')[0],
+        assetName: order.to.token.split('.')[1],
       },
       amount: order.to.amount,
     },
@@ -74,7 +74,9 @@ export const getCancelOrderTx = async (
   walletAddress: string
 ) => await cancelOrder(orderUTxO, collateralUTxOs, walletAddress);
 
-export const getOrderDatum = async (order: OrderDetails): Promise<OrderDatum> => {
+export const getOrderDatum = async (
+  order: OrderDetails
+): Promise<OrderDatum> => {
   const { address, hash, datum } = await createOrder({
     address: order.walletAddress,
     protocol: order.protocol,
@@ -110,8 +112,8 @@ export const getTokenPairPools = async (
     protocol: pool.provider as Protocol,
     lpToken: pool.lpToken && {
       address: {
-        policyId: pool.lpToken.token.split(".")[0],
-        assetName: pool.lpToken.token.split(".")[1],
+        policyId: pool.lpToken.token.split('.')[0],
+        assetName: pool.lpToken.token.split('.')[1],
       },
       amount: pool.lpToken.amount,
     },
@@ -119,15 +121,15 @@ export const getTokenPairPools = async (
     lvlDeposit: pool.deposit.toString(),
     tokenA: {
       address: {
-        policyId: pool.tokenA.token.split(".")[0],
-        assetName: pool.tokenA.token.split(".")[1],
+        policyId: pool.tokenA.token.split('.')[0],
+        assetName: pool.tokenA.token.split('.')[1],
       },
       amount: pool.tokenA.amount,
     },
     tokenB: {
       address: {
-        policyId: pool.tokenB.token.split(".")[0],
-        assetName: pool.tokenB.token.split(".")[1],
+        policyId: pool.tokenB.token.split('.')[0],
+        assetName: pool.tokenB.token.split('.')[1],
       },
       amount: pool.tokenB.amount,
     },

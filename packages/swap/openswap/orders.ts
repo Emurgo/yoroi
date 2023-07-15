@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 
-export type Protocol = "minswap" | "sundaeswap" | "wingriders" | "muesliswap";
+export type Protocol = 'minswap' | 'sundaeswap' | 'wingriders' | 'muesliswap';
 
 export type Order = {
   address: string;
@@ -33,10 +33,10 @@ export type OpenOrder = {
 };
 
 const client = axios.create({
-  baseURL: "https://aggregator.muesliswap.com",
+  baseURL: 'https://aggregator.muesliswap.com',
   headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
   },
 });
 
@@ -56,7 +56,7 @@ export const cancelOrder = async (
   );
 
   if (response.status !== 200) {
-    throw new Error("Failed to construct cancel swap transaction", {
+    throw new Error('Failed to construct cancel swap transaction', {
       cause: response.data,
     });
   }
@@ -76,7 +76,9 @@ export const createOrder = async (order: Order) => {
   );
 
   if (response.status !== 200) {
-    throw new Error("Failed to construct swap datum", { cause: response.data });
+    throw new Error('Failed to construct swap datum', {
+      cause: response.data,
+    });
   }
 
   return {
@@ -92,7 +94,7 @@ export const createOrder = async (order: Order) => {
  */
 export const getOrders = async (stakeKeyHash: string): Promise<OpenOrder[]> => {
   const response = await client.get(`/all?stake-key-hash=${stakeKeyHash}`, {
-    baseURL: "https://onchain2.muesliswap.com/orders",
+    baseURL: 'https://onchain2.muesliswap.com/orders',
   });
 
   if (response.status !== 200) {

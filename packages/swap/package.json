@@ -1,18 +1,18 @@
 {
   "name": "@yoroi/swap",
   "version": "0.0.1",
-  "main": "dist/index.js",
-  "source": "index",
   "repository": {
     "type": "github",
     "url": "https://github.com/Emurgo/yoroi.git",
     "directory": "packages/swap"
   },
-  "author": "EMURGO",
   "license": "Apache-2.0",
+  "author": "EMURGO",
+  "main": "dist/index.js",
+  "source": "index",
   "scripts": {
-    "clean": "rm -rf dist",
     "build": "tsc",
+    "clean": "rm -rf dist",
     "test": "vitest"
   },
   "dependencies": {
