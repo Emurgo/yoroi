@@ -53,22 +53,20 @@ export const QRCodeScanner = ({
   }
 
   return (
-    <>
-      {/*
-       * expo-barcode-scanner issue in android https://github.com/expo/expo/issues/5212
-       * so expo-camera is used
-       */}
-      <Camera
-        style={[StyleSheet.absoluteFill, styles.container]}
-        ratio="16:9"
-        barCodeScannerSettings={{
-          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
-        }}
-        onBarCodeScanned={handleBarCodeScanned}
-      >
-        {withMask && <Mask maskText={maskText} />}
-      </Camera>
-    </>
+    /*
+     * expo-barcode-scanner issue in android https://github.com/expo/expo/issues/5212
+     * so expo-camera is used
+     */
+    <Camera
+      style={[StyleSheet.absoluteFill, styles.container]}
+      ratio="16:9"
+      barCodeScannerSettings={{
+        barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+      }}
+      onBarCodeScanned={handleBarCodeScanned}
+    >
+      {withMask && <Mask maskText={maskText} />}
+    </Camera>
   )
 }
 
