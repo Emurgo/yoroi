@@ -7,11 +7,13 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {Quantity} from '../../../../../yoroi-wallets/types'
 import {pastedFormatter} from '../../../../../yoroi-wallets/utils'
 import {useSend} from '../../../common/SendContext'
+import {useStrings} from '../../../common/strings'
 
 export const ReadQRCodeScreen = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const wallet = useSelectedWallet()
   const {receiverChanged, amountChanged, tokenSelectedChanged} = useSend()
+  const strings = useStrings()
 
   const handleOnRead = ({data: qrData}) => {
     const regex = /(cardano):([a-zA-Z1-9]\w+)\??/
@@ -36,7 +38,7 @@ export const ReadQRCodeScreen = () => {
     return Promise.resolve(false)
   }
 
-  return <QRCodeScanner onRead={handleOnRead} />
+  return <QRCodeScanner onRead={handleOnRead} withMask maskText={strings.addressReaderQrText} />
 }
 
 const getParams = (params: string) => {
