@@ -79,7 +79,9 @@ export const SwapProvider = ({children, ...props}: {initialState?: Partial<SwapS
   const actions = React.useRef<SwapActions>({
     resetInputsForm: () => dispatch({type: 'resetInputsForm'}),
 
-    tokenFromSelectedChanged: (tokenId: string) => dispatch({type: 'tokenFromSelectedChanged', tokenId}),
+    tokenFromSelectedChanged: (tokenId: string) => {
+      return dispatch({type: 'tokenFromSelectedChanged', tokenId})
+    },
 
     tokenToSelectedChanged: (tokenId: string) => dispatch({type: 'tokenToSelectedChanged', tokenId}),
 

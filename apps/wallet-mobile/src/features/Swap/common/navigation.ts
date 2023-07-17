@@ -8,5 +8,6 @@ export const useNavigateTo = () => {
 
   return useRef({
     selectedSwapTokens: () => navigation.navigate('swap-select-token-from-to'),
+    swapTokens: () => navigation.navigate('swap-select-tokens'),
   }).current
 }

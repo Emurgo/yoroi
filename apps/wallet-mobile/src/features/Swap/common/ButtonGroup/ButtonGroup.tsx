@@ -1,17 +1,17 @@
 import React, {useState} from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 interface ButtonGroupProps {
   buttons: string[]
-  onButtonPress: (event: any) => void
+  onButtonPress: (event: GestureResponderEvent, id: number) => void
 }
 
 export const ButtonGroup: React.FC<ButtonGroupProps> = ({buttons, onButtonPress}) => {
   const [clickedId, setClickedId] = useState(0)
 
-  const handleClick = (event: any, id: number) => {
+  const handleClick = (event: GestureResponderEvent, id: number) => {
     setClickedId(id)
-    onButtonPress(event)
+    onButtonPress(event, id)
   }
 
   return (

@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {} from '@yoroi/swap-react'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -16,6 +17,7 @@ import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils'
 import ButtonGroup from '../../common/ButtonGroup/ButtonGroup'
 import {useSwap, useTokenQuantities} from '../../common/SwapContext'
 import {SwapCard} from '../../SwapCard/SwapCard'
+import {SwitchAndClear} from '../SwitchAndClear/SwitchAndClear'
 
 export const StartSwapTokensScreen = () => {
   const navigate = useNavigateTo()
@@ -69,6 +71,10 @@ export const StartSwapTokensScreen = () => {
           hasError={Number(quantity) > 0 ? !canSpend : false}
           navigateTo={navigate.swapTokensFromList}
         />
+
+        <Spacer height={16} />
+
+        <SwitchAndClear />
 
         <Spacer height={16} />
 

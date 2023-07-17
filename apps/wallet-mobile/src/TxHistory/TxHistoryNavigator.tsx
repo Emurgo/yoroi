@@ -10,11 +10,12 @@ import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScre
 import {FailedTxScreen} from '../features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
 import {SubmittedTxScreen} from '../features/Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen'
 import {ListAmountsToSendScreen} from '../features/Send/useCases/ListAmountsToSend'
+import {SelectTokenFromListScreen} from '../features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {SwapProvider} from '../features/Swap/common/SwapContext'
-import {SelectTokenFromListScreen} from '../features/Swap/useCases/AddTokensFromSwap/SelectTokenFromListScreen'
+import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/AddTokensFromSwap/SelectTokenFromListScreen'
 import {StartSwapScreen} from '../features/Swap/useCases/StartSwapScreen/StartSwapScreen'
 import {StartSwapTokensScreen} from '../features/Swap/useCases/StartSwapTokensScreen.tsx/StartSwapTokensScreen'
 import {
@@ -89,7 +90,7 @@ export const TxHistoryNavigator = () => {
 
           <Stack.Screen
             name="swap-select-token-from-to"
-            component={SelectTokenFromListScreen}
+            component={SwapSelectTokenFromListScreen}
             options={{
               ...defaultStackNavigationOptionsV2,
               title: strings.swapTitle,

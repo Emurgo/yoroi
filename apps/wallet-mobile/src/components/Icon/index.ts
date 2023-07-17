@@ -68,6 +68,7 @@ import {StakingKeyRegistered} from './StakingKeyRegistered'
 import {StarFilled} from './StarFilled'
 import {StarOutlined} from './StarOutlined'
 import {Support} from './Support'
+import {Switch} from './Switch'
 import {Table} from './Table'
 import {TabStaking} from './TabStaking'
 import {TabWallet} from './TabWallet'
@@ -177,5 +178,6 @@ export const Icon = {
   Wallets,
   YoroiNightly,
   YoroiWallet,
-  Refresh
+  Refresh,
+  Switch
 }

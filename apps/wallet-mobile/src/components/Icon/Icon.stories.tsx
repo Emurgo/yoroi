@@ -210,6 +210,8 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.ExternalLink size={40} />} title="External link" />
 
         <Item icon={<Icon.Refresh size={40} />} title="Refresh" />
+
+        <Item icon={<Icon.Switch size={40} />} title="Switch" />
       </ScrollView>
     </FilterProvider>
   )

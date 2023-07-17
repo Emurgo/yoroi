@@ -20,11 +20,14 @@ export const useStrings = () => {
     marketPrice: intl.formatMessage(messages.marketPrice),
     slippageTolerance: intl.formatMessage(messages.slippageTolerance),
     swapButton: intl.formatMessage(messages.swapButton),
-
+    
     // search
     searchTokens: intl.formatMessage(messages.searchTokens),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
+    found: intl.formatMessage(messages.found),
+    youHave: intl.formatMessage(messages.youHave),
+    assets: (qty: number) => intl.formatMessage(globalMessages.assets, {qty}),
 
   }
 }
@@ -86,9 +89,24 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.swapButton',
     defaultMessage: '!!!Swap',
   },
+  asset: {
+    id: 'global.assets.assetLabel',
+    defaultMessage: '!!!Asset',
+  },
+  // TODO check this and change if necessary 
 
-
- // TODO check this and change if necessary 
+  youHave: {
+    id: 'components.send.assetselectorscreen.youHave',
+    defaultMessage: '!!!You have',
+  },
+  noAssets: {
+    id: 'components.send.assetselectorscreen.noAssets',
+    defaultMessage: '!!!No assets found',
+  },
+  found: {
+    id: 'components.send.assetselectorscreen.found',
+    defaultMessage: '!!!found',
+  },
   searchTokens: {
     id: 'components.send.sendscreen.searchTokens',
     defaultMessage: '!!!Search tokens',

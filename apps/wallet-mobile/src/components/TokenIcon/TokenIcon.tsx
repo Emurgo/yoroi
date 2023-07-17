@@ -41,7 +41,7 @@ export const TokenIcon = ({
       </Boundary>
     )
   }
-  return <Placeholder />
+  return <Placeholder size={size} />
 }
 
 type PrimaryIconProps = {
@@ -76,8 +76,12 @@ const UnModeratedNftIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: st
   return <ModeratedNftIcon status="approved" nft={nft} />
 }
 
-export const Placeholder = () => (
-  <View style={[styles.icon, styles.placeholder]}>
+type PlaceholderProps = {
+  size?: 'small' | 'medium' | 'large'
+}
+
+export const Placeholder = ({size}: PlaceholderProps) => (
+  <View style={[styles.icon, styles.placeholder, size === 'small' && styles.placeholderSmall]}>
     <Icon.Tokens color={COLORS.TEXT_INPUT} size={35} />
   </View>
 )
@@ -119,5 +123,9 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     backgroundColor: COLORS.BACKGROUND_GRAY,
+  },
+  placeholderSmall: {
+    width: 24,
+    height: 24,
   },
 })
