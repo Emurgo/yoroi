@@ -863,7 +863,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           PROTOCOL_MAGIC,
           STAKING_KEY_PATH,
         )
-        console.log('payload', ledgerPayload)
 
         const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
 

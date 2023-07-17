@@ -283,7 +283,6 @@ export const signTxWithLedger = async (
   try {
     Logger.debug('ledgerUtils::signTxWithLedger called')
     const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
-    Logger.debug('ledgerUtils::signTxWithLedger appAda version', await appAda.getVersion())
     Logger.debug('ledgerUtils::signTxWithLedger inputs', signRequest.tx.inputs)
     Logger.debug('ledgerUtils::signTxWithLedger outputs', signRequest.tx.outputs)
     const ledgerSignature: SignTransactionResponse = await appAda.signTransaction(signRequest)

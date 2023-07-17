@@ -954,7 +954,6 @@ export class ByronWallet implements YoroiWallet {
         (this.getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
         this.stakingKeyPath,
       )
-      Logger.info('CardanoWallet::signTxWithLedger: payload', ledgerPayload)
 
       const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
 
@@ -977,8 +976,6 @@ export class ByronWallet implements YoroiWallet {
       (this.getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
       this.stakingKeyPath,
     )
-
-    Logger.info('CardanoWallet::signTxWithLedger: payload', ledgerPayload)
 
     const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
     const signedTx = await Cardano.buildLedgerSignedTx(
