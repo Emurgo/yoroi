@@ -253,6 +253,6 @@ export const messages = defineMessages({
   },
   addressReaderQrText: {
     id: 'components.send.addressreaderqr.text',
-    defaultMessage: '!!!Scan recipients QR code to add a crypto address',
+    defaultMessage: '!!!Scan recipients QR code to add a wallet address',
   },
 })
