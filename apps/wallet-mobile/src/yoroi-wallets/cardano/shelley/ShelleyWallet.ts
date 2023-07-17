@@ -453,16 +453,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       return stakingKey
     }
 
-    private async getRewardAddress({supportsCIP36}: {supportsCIP36: boolean}) {
-      if (supportsCIP36 || true) {
-        const baseAddr = await this.getFirstPaymentAddress()
-        return baseAddr.toAddress()
-      }
-
-      const stakingKey = await this.getStakingKey()
-      const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
-      const rewardAddr = await CardanoMobile.RewardAddress.new(CHAIN_NETWORK_ID, credential)
-      return rewardAddr.toAddress()
+    private async getRewardAddress() {
+      const baseAddr = await this.getFirstPaymentAddress()
+      return baseAddr.toAddress()
     }
 
     async getAllUtxosForKey() {
@@ -771,12 +764,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           txOptions,
           nonce,
           CHAIN_NETWORK_ID,
-          supportsCIP36 ? paymentAddressCIP36 : paymentAddressCIP36,
-          supportsCIP36 ? addressingCIP36.path : addressingCIP36.path,
+          paymentAddressCIP36,
+          addressingCIP36.path,
           supportsCIP36,
         )
 
-        const rewardAddress = await this.getRewardAddress({supportsCIP36}).then((address) => address.toBech32())
+        const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32())
         const votingRegistration: {
           votingPublicKey: string
           stakingPublicKey: string

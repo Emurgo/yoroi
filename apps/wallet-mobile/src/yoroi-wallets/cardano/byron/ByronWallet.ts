@@ -52,7 +52,6 @@ import {
   MAX_GENERATED_UNUSED,
   PRIMARY_TOKEN,
   PRIMARY_TOKEN_INFO,
-  VOTING_KEY_PATH,
 } from '../constants/mainnet/constants'
 import {CardanoError, InvalidState} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
@@ -519,19 +518,11 @@ export class ByronWallet implements YoroiWallet {
     return stakingKey
   }
 
-  private async getRewardAddress({supportsCIP36}: {supportsCIP36: boolean}) {
+  private async getRewardAddress() {
     if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
 
-    if (supportsCIP36) {
-      const baseAddr = await this.getFirstPaymentAddress()
-      return baseAddr.toAddress()
-    }
-
-    assert(isHaskellShelley(this.walletImplementationId), 'cannot get reward address from a byron-era wallet')
-    const stakingKey = await this.getStakingKey()
-    const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
-    const rewardAddr = await CardanoMobile.RewardAddress.new(Number.parseInt(this.getChainNetworkId(), 10), credential)
-    return rewardAddr.toAddress()
+    const baseAddr = await this.getFirstPaymentAddress()
+    return baseAddr.toAddress()
   }
 
   private getRewardAddressAddressing() {
@@ -844,7 +835,6 @@ export class ByronWallet implements YoroiWallet {
       const addressedUtxos = await this.getAddressedUtxos()
 
       const baseAddr = await this.getFirstPaymentAddress()
-      const paymentAddress = Buffer.from(await stakingPublicKey.asBytes()).toString('hex')
       const paymentAddressCIP36 = await baseAddr
         .toAddress()
         .then((a) => a.toBytes())
@@ -864,12 +854,12 @@ export class ByronWallet implements YoroiWallet {
         txOptions,
         nonce,
         chainNetworkConfig,
-        supportsCIP36 ? paymentAddressCIP36 : paymentAddress,
-        supportsCIP36 ? addressingCIP36.path : VOTING_KEY_PATH,
+        paymentAddressCIP36,
+        addressingCIP36.path,
         supportsCIP36,
       )
 
-      const rewardAddress = await this.getRewardAddress({supportsCIP36}).then((address) => address.toBech32())
+      const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32())
 
       const votingRegistration: {
         votingPublicKey: string

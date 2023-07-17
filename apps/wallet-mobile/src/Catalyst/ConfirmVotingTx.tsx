@@ -30,7 +30,7 @@ export const ConfirmVotingTx = ({
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const votingRegTx = useVotingRegTx(
-    {wallet, pin, supportsCIP36}, //
+    {wallet, pin, supportsCIP36},
     {onSuccess: ({votingKeyEncrypted}) => onSuccess(votingKeyEncrypted)},
   )
   const [password, setPassword] = useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
