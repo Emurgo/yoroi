@@ -51,13 +51,7 @@ const WalletTabNavigator = () => {
             ),
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
-            tabBarStyle: (({route}) => {
-              const routeName = getFocusedRouteNameFromRoute(route) ?? ''
-              if (routeName === 'send-read-qr-code') {
-                return {display: 'none'}
-              }
-              return
-            })(route),
+            tabBarStyle: getFocusedRouteNameFromRoute(route.route) === 'send-read-qr-code' ? {display: 'none'} : {},
           })}
         >
           {() => (
