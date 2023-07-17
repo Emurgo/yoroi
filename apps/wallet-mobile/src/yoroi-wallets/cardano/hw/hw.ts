@@ -8,7 +8,6 @@ import type {
   SignTransactionResponse,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import AppAda, {DeviceStatusCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
-import type {SignTransactionRequest as SignTransactionRequestV5} from '@cardano-foundation/ledgerjs-hw-app-cardanoV5'
 import AppAdaV5, {GetVersionResponse as GetVersionResponseV5} from '@cardano-foundation/ledgerjs-hw-app-cardanoV5'
 import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
@@ -326,7 +325,7 @@ export const signTxWithLedger = async (
 }
 
 export const signTxWithLedgerV5 = async (
-  signRequest: SignTransactionRequestV5,
+  signRequest: SignTransactionRequest,
   hwDeviceInfo: HWDeviceInfo,
   useUSB: boolean,
 ) => {

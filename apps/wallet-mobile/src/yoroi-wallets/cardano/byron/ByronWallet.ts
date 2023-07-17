@@ -57,7 +57,7 @@ import {
 import {CardanoError, InvalidState} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
 import {withMinAmounts} from '../getMinAmounts'
-import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger, signTxWithLedgerV5} from '../hw'
+import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
 import {
   CardanoHaskellShelleyNetwork,
   getCardanoNetworkConfigById,
@@ -964,8 +964,9 @@ export class ByronWallet implements YoroiWallet {
         (this.getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
         this.stakingKeyPath,
       )
+      Logger.info('CardanoWallet::signTxWithLedger: payload', ledgerPayload)
 
-      const signedLedgerTx = await signTxWithLedgerV5(ledgerPayload, this.hwDeviceInfo, useUSB)
+      const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
 
       const signedTx = await Cardano.buildLedgerSignedTx(
         unsignedTx.unsignedTx,
@@ -986,6 +987,8 @@ export class ByronWallet implements YoroiWallet {
       (this.getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
       this.stakingKeyPath,
     )
+
+    Logger.info('CardanoWallet::signTxWithLedger: payload', ledgerPayload)
 
     const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
     const signedTx = await Cardano.buildLedgerSignedTx(

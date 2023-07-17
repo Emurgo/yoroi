@@ -38,13 +38,12 @@ import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
 import * as MAINNET from '../constants/mainnet/constants'
-import {VOTING_KEY_PATH} from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
 import {withMinAmounts} from '../getMinAmounts'
 import {getTime} from '../getTime'
-import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger, signTxWithLedgerV5} from '../hw'
+import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
@@ -65,7 +64,6 @@ import {yoroiUnsignedTx} from '../unsignedTx'
 import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {makeKeys} from './makeKeys'
-import {SignTransactionRequest as SignTransactionRequestV5} from '@cardano-foundation/ledgerjs-hw-app-cardanoV5'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -456,7 +454,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     }
 
     private async getRewardAddress({supportsCIP36}: {supportsCIP36: boolean}) {
-      if (supportsCIP36) {
+      if (supportsCIP36 || true) {
         const baseAddr = await this.getFirstPaymentAddress()
         return baseAddr.toAddress()
       }
@@ -773,8 +771,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           txOptions,
           nonce,
           CHAIN_NETWORK_ID,
-          supportsCIP36 ? paymentAddressCIP36 : paymentAddress,
-          supportsCIP36 ? addressingCIP36.path : VOTING_KEY_PATH,
+          supportsCIP36 ? paymentAddressCIP36 : paymentAddressCIP36,
+          supportsCIP36 ? addressingCIP36.path : addressingCIP36.path,
           supportsCIP36,
         )
 
@@ -866,14 +864,15 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       if (!doesCardanoAppVersionSupportCIP36(appAdaVersion) && unsignedTx.voting.registration) {
         Logger.info('CardanoWallet::signTxWithLedger: Ledger app version <= 5')
-        const ledgerPayload: SignTransactionRequestV5 = await Cardano.buildVotingLedgerPayloadV5(
+        const ledgerPayload = await Cardano.buildVotingLedgerPayloadV5(
           unsignedTx.unsignedTx,
           CHAIN_NETWORK_ID,
           PROTOCOL_MAGIC,
           STAKING_KEY_PATH,
         )
+        console.log('payload', ledgerPayload)
 
-        const signedLedgerTx = await signTxWithLedgerV5(ledgerPayload, this.hwDeviceInfo, useUSB)
+        const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
 
         const signedTx = await Cardano.buildLedgerSignedTx(
           unsignedTx.unsignedTx,
