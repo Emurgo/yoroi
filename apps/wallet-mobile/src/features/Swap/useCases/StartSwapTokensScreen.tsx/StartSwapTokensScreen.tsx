@@ -1,49 +1,22 @@
-import {useNavigation} from '@react-navigation/native'
-import {} from '@yoroi/swap-react'
-import {Balance} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native'
+import {GestureResponderEvent, KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
-import {SwapTokenRouteseNavigation} from 'src/navigation'
 
-import {useTokenInfo} from '../../../../../src/yoroi-wallets/hooks'
-import {Icon, Spacer} from '../../../../components'
-import {useSelectedWallet} from '../../../../SelectedWallet'
+import {Button, Icon, Spacer} from '../../../../components'
 import {COLORS} from '../../../../theme'
-import {selectFtOrThrow} from '../../../../yoroi-wallets/cardano/utils'
-import {Logger} from '../../../../yoroi-wallets/logging'
-import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils'
 import ButtonGroup from '../../common/ButtonGroup/ButtonGroup'
-import {useSwap, useTokenQuantities} from '../../common/SwapContext'
-import {SwapCard} from '../../SwapCard/SwapCard'
+import {MarketPrice} from '../../common/MarketPriceCard'
+import {SelectPoolCard} from '../../common/SelectPoolCard'
+import {SlippageTolerance} from '../../common/SlippageTolerance'
+import {AddTokenFromCard} from '../AddTokensFromSwap/AddTokenFromCard'
+import {AddTokenToCard} from '../AddTokensFromSwap/AddTokenToCard'
 import {SwitchAndClear} from '../SwitchAndClear/SwitchAndClear'
 
 export const StartSwapTokensScreen = () => {
-  const navigate = useNavigateTo()
-  const wallet = useSelectedWallet()
-  const {selectedTokenFromId} = useSwap()
-  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenFromId}, {select: selectFtOrThrow})
   const strings = useStrings()
 
-  const {spendable} = useTokenQuantities(selectedTokenFromId)
-
-  const [quantity, setQuantity] = React.useState<Balance.Quantity>('0')
-  const [inputValue, setInputValue] = React.useState<string>()
-
-  const canSpend = Number(quantity) > 0 && Number(quantity) < Number(spendable)
-
-  const onChangeQuantity = (text: string) => {
-    try {
-      const quantity = asQuantity(text.length > 0 ? text : '0')
-      setInputValue(text)
-      setQuantity(Quantities.integer(quantity, tokenInfo.decimals ?? 0))
-    } catch (error) {
-      Logger.error('EditAmountScreen::onChangeQuantity', error)
-    }
-  }
-
-  const handleButtonClick = (event: string) => {
+  const handleButtonClick = (event: GestureResponderEvent) => {
     console.log('Button clicked!', event)
   }
 
@@ -62,15 +35,7 @@ export const StartSwapTokensScreen = () => {
           </TouchableOpacity>
         </View>
 
-        <SwapCard
-          label="Swap from"
-          onChange={onChangeQuantity}
-          value={inputValue}
-          amount={{tokenId: tokenInfo.id, quantity: spendable}}
-          wallet={wallet}
-          hasError={Number(quantity) > 0 ? !canSpend : false}
-          navigateTo={navigate.swapTokensFromList}
-        />
+        <AddTokenFromCard />
 
         <Spacer height={16} />
 
@@ -78,23 +43,25 @@ export const StartSwapTokensScreen = () => {
 
         <Spacer height={16} />
 
-        {/* <Actions>
-          <NextButton testID="nextButton" shelleyTheme />
-        </Actions> */}
+        <AddTokenToCard />
+
+        <Spacer height={20} />
+
+        <MarketPrice disabled={true} />
+
+        <SlippageTolerance />
+
+        <SelectPoolCard />
+
+        <Actions>
+          <Button testID="swapButton" shelleyTheme title={strings.swap} />
+        </Actions>
       </KeyboardAvoidingView>
     </View>
   )
 }
 
-// const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
-
-const useNavigateTo = () => {
-  const navigation = useNavigation<SwapTokenRouteseNavigation>()
-
-  return {
-    swapTokensFromList: () => navigation.navigate('swap-select-token-from-to'),
-  }
-}
+const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
 
 const messages = defineMessages({
   marketButton: {
@@ -105,6 +72,10 @@ const messages = defineMessages({
     id: 'swap.swapScreen.limitButton',
     defaultMessage: '!!!Limit Button',
   },
+  swap: {
+    id: 'swap.swapScreen.swapTitle',
+    defaultMessage: '!!!Swap',
+  },
 })
 
 const useStrings = () => {
@@ -112,6 +83,7 @@ const useStrings = () => {
   return {
     marketButton: intl.formatMessage(messages.marketButton),
     limitButton: intl.formatMessage(messages.limitButton),
+    swap: intl.formatMessage(messages.swap),
   }
 }
 
@@ -129,5 +101,8 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
+  },
+  actions: {
+    paddingVertical: 16,
   },
 })

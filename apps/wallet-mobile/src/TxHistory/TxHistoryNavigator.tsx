@@ -16,6 +16,7 @@ import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/Inpu
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {SwapProvider} from '../features/Swap/common/SwapContext'
 import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/AddTokensFromSwap/SelectTokenFromListScreen'
+import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/AddTokensFromSwap/SelectTokenToListScreen'
 import {StartSwapScreen} from '../features/Swap/useCases/StartSwapScreen/StartSwapScreen'
 import {StartSwapTokensScreen} from '../features/Swap/useCases/StartSwapTokensScreen.tsx/StartSwapTokensScreen'
 import {
@@ -89,11 +90,20 @@ export const TxHistoryNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-select-token-from-to"
+            name="swap-select-token-from"
             component={SwapSelectTokenFromListScreen}
             options={{
               ...defaultStackNavigationOptionsV2,
-              title: strings.swapTitle,
+              title: strings.swapFromTitle,
+            }}
+          />
+
+          <Stack.Screen
+            name="swap-select-token-to"
+            component={SwapSelectTokenToListScreen}
+            options={{
+              ...defaultStackNavigationOptionsV2,
+              title: strings.swapToTitle,
             }}
           />
 
@@ -226,6 +236,14 @@ const messages = defineMessages({
     id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
   },
+  swapFromTitle: {
+    id: 'swap.swapScreen.swapFrom',
+    defaultMessage: '!!!Swap from',
+  },
+  swapToTitle: {
+    id: 'swap.swapScreen.swapTo',
+    defaultMessage: '!!!Swap to',
+  },
   sendTitle: {
     id: 'components.send.sendscreen.title',
     defaultMessage: '!!!Send',
@@ -265,6 +283,8 @@ const useStrings = () => {
   return {
     receiveTitle: intl.formatMessage(messages.receiveTitle),
     swapTitle: intl.formatMessage(messages.swapTitle),
+    swapFromTitle: intl.formatMessage(messages.swapFromTitle),
+    swapToTitle: intl.formatMessage(messages.swapToTitle),
     sendTitle: intl.formatMessage(messages.sendTitle),
     qrScannerTitle: intl.formatMessage(messages.qrScannerTitle),
     selectAssetTitle: intl.formatMessage(messages.selectAssetTitle),

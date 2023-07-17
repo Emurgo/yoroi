@@ -2,6 +2,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 
 import {Spacer, StatusBar, Text} from '../../../../components'
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -28,39 +29,41 @@ export const StartSwapScreen = () => {
     <View style={styles.scrollView}>
       <StatusBar type="light" />
 
-      <View style={styles.container}>
-        <Tabs>
-          <Tab
-            onPress={() => {
-              onSelectTab('tokenSwap')
-            }}
-            label={strings.tokenSwap}
-            active={activeTab === 'tokenSwap'}
-            testID="tokenSwapTabButton"
-          />
+      <ScrollView>
+        <View style={styles.container}>
+          <Tabs>
+            <Tab
+              onPress={() => {
+                onSelectTab('tokenSwap')
+              }}
+              label={strings.tokenSwap}
+              active={activeTab === 'tokenSwap'}
+              testID="tokenSwapTabButton"
+            />
 
-          <Tab //
-            onPress={() => {
-              onSelectTab('orders')
-            }}
-            label={strings.orders}
-            active={activeTab === 'orders'}
-            testID="ordersTabButton"
-          />
-        </Tabs>
+            <Tab //
+              onPress={() => {
+                onSelectTab('orders')
+              }}
+              label={strings.orders}
+              active={activeTab === 'orders'}
+              testID="ordersTabButton"
+            />
+          </Tabs>
 
-        <TabPanels>
-          <Spacer height={4} />
+          <TabPanels>
+            <Spacer height={4} />
 
-          <TabPanel active={activeTab === 'tokenSwap'}>
-            <StartSwapTokensScreen />
-          </TabPanel>
+            <TabPanel active={activeTab === 'tokenSwap'}>
+              <StartSwapTokensScreen />
+            </TabPanel>
 
-          <TabPanel active={activeTab === 'orders'}>
-            <Text>Orders Here TODO</Text>
-          </TabPanel>
-        </TabPanels>
-      </View>
+            <TabPanel active={activeTab === 'orders'}>
+              <Text>Orders Here TODO</Text>
+            </TabPanel>
+          </TabPanels>
+        </View>
+      </ScrollView>
     </View>
   )
 }

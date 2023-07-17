@@ -23,6 +23,7 @@ import {DigitalAsset} from './DigitalAsset'
 import {Direction} from './Direction'
 import {Document} from './Document'
 import {Drag} from './Drag'
+import {Edit} from './Edit'
 import {Emurgo} from './Emurgo'
 import {Export} from './Export'
 import {ExternalLink} from './ExternalLink'
@@ -179,5 +180,6 @@ export const Icon = {
   YoroiNightly,
   YoroiWallet,
   Refresh,
-  Switch
+  Switch,
+  Edit
 }

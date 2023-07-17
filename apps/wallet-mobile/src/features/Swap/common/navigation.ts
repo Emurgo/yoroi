@@ -7,7 +7,8 @@ export const useNavigateTo = () => {
   const navigation = useNavigation<SwapTokenRouteseNavigation>()
 
   return useRef({
-    selectedSwapTokens: () => navigation.navigate('swap-select-token-from-to'),
-    swapTokens: () => navigation.navigate('swap-select-tokens'),
+    selectedSwapFromTokens: () => navigation.navigate('swap-select-token-from'),
+    selectedSwapToTokens: () => navigation.navigate('swap-select-token-to'),
+    swapTokens: () => navigation.navigate('swap-start'),
   }).current
 }

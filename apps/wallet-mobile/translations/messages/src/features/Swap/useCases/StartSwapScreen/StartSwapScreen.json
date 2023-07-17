@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Token Swap",
     "file": "src/features/Swap/useCases/StartSwapScreen/StartSwapScreen.tsx",
     "start": {
-      "line": 92,
+      "line": 95,
       "column": 13,
-      "index": 2764
+      "index": 2917
     },
     "end": {
-      "line": 95,
+      "line": 98,
       "column": 3,
-      "index": 2846
+      "index": 2999
     }
   },
   {
@@ -19,14 +19,29 @@
     "defaultMessage": "!!!Orders",
     "file": "src/features/Swap/useCases/StartSwapScreen/StartSwapScreen.tsx",
     "start": {
-      "line": 96,
+      "line": 99,
       "column": 10,
-      "index": 2858
+      "index": 3011
     },
     "end": {
-      "line": 99,
+      "line": 102,
       "column": 3,
-      "index": 2937
+      "index": 3090
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapTitle",
+    "defaultMessage": "!!!Swap",
+    "file": "src/features/Swap/useCases/StartSwapScreen/StartSwapScreen.tsx",
+    "start": {
+      "line": 103,
+      "column": 8,
+      "index": 3100
+    },
+    "end": {
+      "line": 106,
+      "column": 3,
+      "index": 3173
     }
   }
 ]

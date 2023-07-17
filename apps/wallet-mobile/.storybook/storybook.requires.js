@@ -108,6 +108,7 @@ const getStories = () => {
     "./src/features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen.stories.tsx": require("../src/features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen.stories.tsx"),
     "./src/features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen.stories.tsx": require("../src/features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen.stories.tsx"),
     "./src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx": require("../src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx"),
+    "./src/features/Swap/common/SelectPoolCard/ExpandableInfoCard.stories.tsx": require("../src/features/Swap/common/SelectPoolCard/ExpandableInfoCard.stories.tsx"),
     "./src/features/Swap/SwapCard/SwapCard.stories.tsx": require("../src/features/Swap/SwapCard/SwapCard.stories.tsx"),
     "./src/features/Swap/useCases/AddTokensFromSwap/SelectTokenFromListScreen.stories.tsx": require("../src/features/Swap/useCases/AddTokensFromSwap/SelectTokenFromListScreen.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapTokensScreen.tsx/StartSwapTokensScreen.stories.tsx": require("../src/features/Swap/useCases/StartSwapTokensScreen.tsx/StartSwapTokensScreen.stories.tsx"),

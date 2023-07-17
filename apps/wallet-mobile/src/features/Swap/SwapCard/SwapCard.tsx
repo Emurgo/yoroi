@@ -9,7 +9,6 @@ import {COLORS} from '../../../theme'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../yoroi-wallets/utils'
-import {useSwap} from '../common/SwapContext'
 
 type SwapCardProp = {
   label?: string | null
@@ -19,14 +18,17 @@ type SwapCardProp = {
   value?: string
   hasError?: boolean
   navigateTo: () => void
+  tokenId: string
+  noDefaultSelection?: boolean
 }
 
-export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, hasError}: SwapCardProp) => {
-  const {quantity, tokenId} = amount
+export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, hasError, tokenId}: SwapCardProp) => {
+  const {quantity} = amount
   const focusRef = useRef<TextInput>(null)
 
-  const {selectedTokenFromId} = useSwap()
-  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenFromId !== undefined ? selectedTokenFromId : tokenId})
+  const tokenInfo = useTokenInfo({wallet, tokenId})
+
+  console.log('tokenInfo', tokenInfo)
 
   const name = tokenInfo.ticker ?? tokenInfo.name
   const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)

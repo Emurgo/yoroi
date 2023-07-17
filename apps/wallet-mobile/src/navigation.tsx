@@ -178,14 +178,16 @@ export type TxHistoryRoutes = {
   'send-select-token-from-list': undefined
   'swap-start': undefined
   'swap-select-tokens': undefined
-  'swap-select-token-from-to': undefined
+  'swap-select-token-from': undefined
+  'swap-select-token-to': undefined
 }
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 export type SwapTokenRoutes = {
   'swap-start': undefined
   'swap-select-tokens': undefined
-  'swap-select-token-from-to': undefined
+  'swap-select-token-from': undefined
+  'swap-select-token-to': undefined
 }
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 
