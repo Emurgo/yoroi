@@ -1,7 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {useMetrics} from '@yoroi/metrics-react-native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
@@ -9,6 +8,7 @@ import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
 import {MenuNavigator} from './Menu'
+import {metrics} from './metrics'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
@@ -24,7 +24,6 @@ const WalletTabNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
-  const {track} = useMetrics()
 
   return (
     <>
@@ -76,9 +75,7 @@ const WalletTabNavigator = () => {
           listeners={() => {
             return {
               focus: () => {
-                track({
-                  event: 'nft_click_navigate',
-                })
+                metrics.nftGalleryDetailsNavigation({nft_navigation: 'Next'})
               },
             }
           }}
