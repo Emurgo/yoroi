@@ -142,6 +142,7 @@ export const TxHistoryNavigator = () => {
           name="send-read-qr-code"
           component={ReadQRCodeScreen}
           options={{
+            // tabs removed from this screen route in wallet tab navigator
             ...sendOptions,
             headerTransparent: true,
             title: strings.qrScannerTitle,

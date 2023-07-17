@@ -1,4 +1,5 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useMetrics} from '@yoroi/metrics-react-native'
 import React from 'react'
@@ -41,7 +42,7 @@ const WalletTabNavigator = () => {
       >
         <Tab.Screen
           name="history"
-          options={{
+          options={(route) => ({
             tabBarIcon: ({focused}) => (
               <Icon.TabWallet
                 size={24}
@@ -50,7 +51,14 @@ const WalletTabNavigator = () => {
             ),
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
-          }}
+            tabBarStyle: (({route}) => {
+              const routeName = getFocusedRouteNameFromRoute(route) ?? ''
+              if (routeName === 'send-read-qr-code') {
+                return {display: 'none'}
+              }
+              return
+            })(route),
+          })}
         >
           {() => (
             <SearchProvider>
