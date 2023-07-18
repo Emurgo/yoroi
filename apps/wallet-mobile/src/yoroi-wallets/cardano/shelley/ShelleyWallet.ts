@@ -743,7 +743,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         const addressedUtxos = await this.getAddressedUtxos()
 
         const baseAddr = await this.getFirstPaymentAddress()
-        const paymentAddress = Buffer.from(await stakingPublicKey.asBytes()).toString('hex')
 
         const paymentAddressCIP36 = await baseAddr
           .toAddress()
