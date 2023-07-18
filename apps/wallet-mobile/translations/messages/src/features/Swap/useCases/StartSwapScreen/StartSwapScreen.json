@@ -6,12 +6,12 @@
     "start": {
       "line": 95,
       "column": 13,
-      "index": 2917
+      "index": 2891
     },
     "end": {
       "line": 98,
       "column": 3,
-      "index": 2999
+      "index": 2973
     }
   },
   {
@@ -21,27 +21,12 @@
     "start": {
       "line": 99,
       "column": 10,
-      "index": 3011
+      "index": 2985
     },
     "end": {
       "line": 102,
       "column": 3,
-      "index": 3090
-    }
-  },
-  {
-    "id": "swap.swapScreen.swapTitle",
-    "defaultMessage": "!!!Swap",
-    "file": "src/features/Swap/useCases/StartSwapScreen/StartSwapScreen.tsx",
-    "start": {
-      "line": 103,
-      "column": 8,
-      "index": 3100
-    },
-    "end": {
-      "line": 106,
-      "column": 3,
-      "index": 3173
+      "index": 3064
     }
   }
 ]

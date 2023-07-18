@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {COLORS} from '../../../../theme'
 
 interface ButtonGroupProps {
   buttons: string[]
@@ -40,10 +41,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   activeButton: {
-    backgroundColor: '#DCE0E9',
+    backgroundColor: COLORS.BORDER_GRAY,
   },
   buttonText: {
-    color: '#000',
+    color: COLORS.BLACK,
   },
 })
 

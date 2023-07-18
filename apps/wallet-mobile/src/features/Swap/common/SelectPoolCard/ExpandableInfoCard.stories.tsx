@@ -1,7 +1,6 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {StyleSheet} from 'react-native'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
 import {ExpandableInfoCard} from './ExpandableInfoCard'
 
@@ -11,8 +10,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
 })
-
-storiesOf('Expandle Info Card', module)
+storiesOf('Expandable Info Card', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('with inital data', () => (
     <ExpandableInfoCard

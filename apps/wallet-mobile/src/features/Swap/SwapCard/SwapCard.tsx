@@ -11,24 +11,21 @@ import {useTokenInfo} from '../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../yoroi-wallets/utils'
 
 type SwapCardProp = {
-  label?: string | null
+  label?: string
   wallet: YoroiWallet
   amount: Balance.Amount
   onChange(value: string): void
   value?: string
   hasError?: boolean
-  navigateTo: () => void
-  tokenId: string
+  navigateTo?: () => void
   noDefaultSelection?: boolean
 }
 
-export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, hasError, tokenId}: SwapCardProp) => {
-  const {quantity} = amount
+export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, hasError}: SwapCardProp) => {
+  const {quantity, tokenId} = amount
   const focusRef = useRef<TextInput>(null)
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
-
-  console.log('tokenInfo', tokenInfo)
 
   const name = tokenInfo.ticker ?? tokenInfo.name
   const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
@@ -51,7 +48,7 @@ export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, ha
           <Spacer width={7} />
 
           <View style={styles.rightSection}>
-            <TouchableOpacity onPress={() => navigateTo()}>
+            <TouchableOpacity onPress={() => navigateTo && navigateTo()}>
               <View style={styles.sectionContainer}>
                 <Boundary loading={{fallback: <Placeholder />}} error={{fallback: () => <Placeholder />}}>
                   <TokenIcon wallet={wallet} tokenId={tokenInfo.id} size="small" />
@@ -98,16 +95,13 @@ const AmountInput = ({onChange, value, inputRef}: AmountInputProps) => {
     <TextInput
       returnKeyType="done"
       keyboardType="numeric"
-      mode="flat"
       autoComplete="off"
       value={value}
       placeholder="0"
       onChangeText={onChangeText}
-      selectTextOnAutoFocus
       allowFontScaling
       selectionColor={COLORS.TRANSPARENT_BLACK}
       style={styles.amountInput}
-      underlineColor="transparent"
       underlineColorAndroid="tra2sparent"
       ref={inputRef}
     />
@@ -118,7 +112,7 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#A7AFC0',
+    borderColor: COLORS.TEXT_GRAY3,
     paddingTop: 16,
     paddingBottom: 16,
     paddingLeft: 16,
@@ -128,19 +122,19 @@ const styles = StyleSheet.create({
     height: 86,
   },
   borderError: {
-    borderColor: '#FF1351',
+    borderColor: COLORS.ALERT_TEXT_COLOR,
   },
   label: {
     position: 'absolute',
     top: -7,
     left: 10,
-    backgroundColor: 'white',
+    backgroundColor: COLORS.WHITE,
     paddingHorizontal: 5,
     fontSize: 12,
-    color: '#242838',
+    color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
   labelError: {
-    color: '#FF1351',
+    color: COLORS.ALERT_TEXT_COLOR,
   },
   content: {
     display: 'flex',
@@ -171,10 +165,10 @@ const styles = StyleSheet.create({
   },
   balanceText: {
     fontSize: 12,
-    color: '#6B7384',
+    color: COLORS.TEXT_INPUT,
   },
   errorText: {
-    color: '#FF1351',
+    color: COLORS.ALERT_TEXT_COLOR,
     fontSize: 12,
   },
 })

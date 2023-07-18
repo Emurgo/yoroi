@@ -38,11 +38,10 @@ export const AddTokenToCard = () => {
       label="Swap to"
       onChange={onChangeQuantity}
       value={inputValue}
-      amount={{tokenId: tokenInfo.id, quantity: spendable}}
+      amount={{tokenId: selectedTokenToId, quantity: spendable}}
       wallet={wallet}
       hasError={Number(quantity) > 0 ? !canSpend : false}
       navigateTo={navigate.selectedSwapToTokens}
-      tokenId={selectedTokenToId}
       noDefaultSelection
     />
   )

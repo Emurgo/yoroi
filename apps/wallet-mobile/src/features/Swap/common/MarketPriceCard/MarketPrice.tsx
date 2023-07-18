@@ -6,11 +6,11 @@ import {COLORS} from '../../../../theme'
 import {useStrings} from '../strings'
 
 type MarketPriceProp = {
-  disabled: boolean
+  disabled?: boolean
   value?: string
 }
 
-export const MarketPrice = ({value, disabled}: MarketPriceProp) => {
+export const MarketPrice = ({value, disabled = true}: MarketPriceProp) => {
   const strings = useStrings()
 
   return (
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#A7AFC0',
+    borderColor: COLORS.TEXT_GRAY3,
     paddingTop: 16,
     paddingBottom: 16,
     paddingLeft: 16,
@@ -88,10 +88,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -7,
     left: 10,
-    backgroundColor: 'white',
+    backgroundColor: COLORS.WHITE,
     paddingHorizontal: 5,
     fontSize: 12,
-    color: '#242838',
+    color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
 
   amountInput: {
@@ -105,6 +105,6 @@ const styles = StyleSheet.create({
 
   text: {
     fontSize: 16,
-    color: '#6B7384',
+    color: COLORS.TEXT_INPUT,
   },
 })

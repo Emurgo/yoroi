@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#A7AFC0',
+    borderColor: COLORS.TEXT_GRAY3,
     padding: 16,
     width: '100%',
     height: 'auto',

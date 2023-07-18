@@ -8,7 +8,7 @@ import {Spacer, StatusBar, Text} from '../../../../components'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useSync} from '../../../../yoroi-wallets/hooks'
-import {StartSwapTokensScreen} from '../StartSwapTokensScreen.tsx/StartSwapTokensScreen'
+import {StartSwapTokensScreen} from '../StartSwapTokensScreen'
 
 type Tab = 'tokenSwap' | 'orders'
 
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   tabNavigatorRoot: {
     flex: 1,
     paddingTop: 8,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.WHITE,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
   },

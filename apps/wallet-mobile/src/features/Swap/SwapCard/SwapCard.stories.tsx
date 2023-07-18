@@ -1,8 +1,8 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {StyleSheet} from 'react-native'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
+import {mocks} from '../../../yoroi-wallets/mocks/wallet'
 import {SwapCard} from './SwapCard'
 
 const styles = StyleSheet.create({
@@ -14,4 +14,28 @@ const styles = StyleSheet.create({
 
 storiesOf('Swap Card', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
-  .add('with label', () => <SwapCard label="Swap from" />)
+  .add('with label', () => (
+    <SwapCard
+      label="Swap from"
+      amount={{quantity: '2222', tokenId: ''}}
+      wallet={mocks.wallet}
+      onChange={function (value: string): void {
+        console.log('VALUE', value)
+      }}
+    />
+  ))
+
+storiesOf('Swap Card', module)
+  .addDecorator((story) => <View style={styles.container}>{story()}</View>)
+  .add('with error', () => (
+    <SwapCard
+      label="Swap from"
+      amount={{quantity: '22222222', tokenId: ''}}
+      wallet={mocks.wallet}
+      onChange={function (value: string): void {
+        console.log('VALUE', value)
+      }}
+      value="2223"
+      hasError
+    />
+  ))
