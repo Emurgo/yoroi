@@ -39,13 +39,15 @@ export const enterRecoveryPhrase = async (phraseArray: string[]): Promise<void> 
 }
 
 export const prepareApp = async (): Promise<void> => {
-  await expect(prepareScreens.chooseLanguageButton()).toBeVisible()
-  await prepareScreens.chooseLanguageButton().tap()
+  await expect(element(by.text('Select Language'))).toBeVisible()
+  await expect(prepareScreens.btn_selectLanguageEnglish()).toBeVisible() 
+  await prepareScreens.btn_Next().tap()
 
-  await expect(prepareScreens.acceptTosCheckbox()).toBeVisible()
-  await prepareScreens.acceptTosCheckbox().tap()
-  await expect(prepareScreens.acceptTosButton()).toBeVisible()
-  await prepareScreens.acceptTosButton().tap()
+
+  await expect(prepareScreens.chkbox_acceptTos()).toBeVisible()
+  await prepareScreens.chkbox_acceptTos().tap()
+  await expect(prepareScreens.btn_accept()).toBeVisible()
+  await prepareScreens.btn_accept().tap()
 
   await expect(pinKeyButton('1')).toBeVisible()
   await enterPIN(VALID_PIN)
