@@ -4,17 +4,16 @@ import React from 'react'
 import {SearchProvider} from '../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
-import {SendProvider} from '../../../Send/common/SendContext'
-// import {SendProvider} from '../../../common/SendContext'
-import {SelectTokenFromListScreen} from './SelectTokenFromListScreen'
+import {SwapProvider} from '../../common/SwapContext'
+import {SelectTokenToListScreen} from './SelectTokenToListScreen'
 
-storiesOf('Swap Select Token From List', module).add('initial', () => {
+storiesOf('Swap Select Token To List', module).add('initial', () => {
   return (
     <SelectedWalletProvider wallet={mocks.wallet}>
       <SearchProvider>
-        <SendProvider>
-          <SelectTokenFromListScreen />
-        </SendProvider>
+        <SwapProvider>
+          <SelectTokenToListScreen />
+        </SwapProvider>
       </SearchProvider>
     </SelectedWalletProvider>
   )

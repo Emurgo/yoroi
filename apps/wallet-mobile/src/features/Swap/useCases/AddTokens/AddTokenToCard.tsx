@@ -1,22 +1,26 @@
 import {Balance} from '@yoroi/types'
-import React from 'react'
+import React, {useEffect} from 'react'
 
-import {useTokenInfo} from '../../../../../src/yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {selectFtOrThrow} from '../../../../yoroi-wallets/cardano/utils'
+import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../yoroi-wallets/logging'
 import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../common/navigation'
 import {useSwap, useTokenQuantities} from '../../common/SwapContext'
 import {SwapCard} from '../../SwapCard/SwapCard'
 
-export const AddTokenFromCard = () => {
+export const AddTokenToCard = () => {
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
-  const {selectedTokenFromId} = useSwap()
-  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenFromId}, {select: selectFtOrThrow})
+  const {selectedTokenToId, tokenToSelectedChanged} = useSwap()
+  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenToId}, {select: selectFtOrThrow})
 
-  const {spendable} = useTokenQuantities(selectedTokenFromId)
+  useEffect(() => {
+    tokenToSelectedChanged('noTokenSelected')
+  }, [tokenToSelectedChanged, wallet])
+
+  const {spendable} = useTokenQuantities(selectedTokenToId)
 
   const [quantity, setQuantity] = React.useState<Balance.Quantity>('0')
   const [inputValue, setInputValue] = React.useState<string>()
@@ -35,13 +39,13 @@ export const AddTokenFromCard = () => {
 
   return (
     <SwapCard
-      label="Swap from"
+      label="Swap to"
       onChange={onChangeQuantity}
       value={inputValue}
-      amount={{tokenId: selectedTokenFromId, quantity: spendable}}
+      amount={{tokenId: selectedTokenToId, quantity: spendable}}
       wallet={wallet}
       hasError={Number(quantity) > 0 ? !canSpend : false}
-      navigateTo={navigate.selectedSwapFromTokens}
+      navigateTo={navigate.selectedSwapToTokens}
     />
   )
 }

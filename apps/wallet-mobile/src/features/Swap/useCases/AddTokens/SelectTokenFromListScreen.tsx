@@ -4,21 +4,20 @@ import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {sortTokenInfos} from '../../../../../src/utils'
 import {Boundary, Text} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
+import {sortTokenInfos} from '../../../../utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useAllTokenInfos, useIsWalletEmpty} from '../../../../yoroi-wallets/hooks'
-import {useTokenQuantities} from '../../../Send/common/SendContext'
 import {filterBySearch} from '../../common/filterBySearch'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
-import {useSwap} from '../../common/SwapContext'
+import {useSwap, useTokenQuantities} from '../../common/SwapContext'
 
-export const SelectTokenToListScreen = () => {
+export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
 
   useSearchOnNavBar({
@@ -36,15 +35,7 @@ export const SelectTokenToListScreen = () => {
 }
 
 const List = () => {
-  return (
-    <View>
-      <Text>Verified by MuesliSwap </Text>
-
-      <Text>This assets is in my portfolio </Text>
-
-      <AssetList />
-    </View>
-  )
+  return <AssetList />
 }
 
 const AssetList = () => {
@@ -81,13 +72,13 @@ const AssetList = () => {
 type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableAssetItem = ({tokenInfo, wallet}: SelectableAssetItemProps) => {
   const {closeSearch} = useSearch()
-  const {tokenToSelectedChanged} = useSwap()
+  const {tokenFromSelectedChanged} = useSwap() // TODO CHANGE THIS
   const {spendable} = useTokenQuantities(tokenInfo.id)
   const navigateTo = useNavigateTo()
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const onSelect = () => {
-    tokenToSelectedChanged(tokenInfo.id)
+    tokenFromSelectedChanged(tokenInfo.id)
     navigateTo.swapTokens()
     closeSearch()
   }

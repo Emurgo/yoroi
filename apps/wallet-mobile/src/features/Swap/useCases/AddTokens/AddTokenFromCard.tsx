@@ -1,22 +1,24 @@
 import {Balance} from '@yoroi/types'
 import React from 'react'
 
-import {useTokenInfo} from '../../../../../src/yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {selectFtOrThrow} from '../../../../yoroi-wallets/cardano/utils'
+import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../yoroi-wallets/logging'
 import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../common/navigation'
+import {useStrings} from '../../common/strings'
 import {useSwap, useTokenQuantities} from '../../common/SwapContext'
 import {SwapCard} from '../../SwapCard/SwapCard'
 
-export const AddTokenToCard = () => {
+export const AddTokenFromCard = () => {
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
-  const {selectedTokenToId} = useSwap()
-  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenToId}, {select: selectFtOrThrow})
+  const {selectedTokenFromId} = useSwap()
+  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenFromId}, {select: selectFtOrThrow})
+  const strings = useStrings()
 
-  const {spendable} = useTokenQuantities(selectedTokenToId)
+  const {spendable} = useTokenQuantities(selectedTokenFromId)
 
   const [quantity, setQuantity] = React.useState<Balance.Quantity>('0')
   const [inputValue, setInputValue] = React.useState<string>()
@@ -35,14 +37,13 @@ export const AddTokenToCard = () => {
 
   return (
     <SwapCard
-      label="Swap to"
+      label={strings.swapFrom}
       onChange={onChangeQuantity}
       value={inputValue}
-      amount={{tokenId: selectedTokenToId, quantity: spendable}}
+      amount={{tokenId: selectedTokenFromId, quantity: spendable}}
       wallet={wallet}
       hasError={Number(quantity) > 0 ? !canSpend : false}
-      navigateTo={navigate.selectedSwapToTokens}
-      noDefaultSelection
+      navigateTo={navigate.selectedSwapFromTokens}
     />
   )
 }

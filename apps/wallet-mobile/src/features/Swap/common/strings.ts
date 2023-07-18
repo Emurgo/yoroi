@@ -1,4 +1,4 @@
-import {defineMessages, useIntl} from 'react-intl'
+import { defineMessages, useIntl } from 'react-intl'
 
 import globalMessages from '../../../i18n/global-messages'
 
@@ -20,6 +20,8 @@ export const useStrings = () => {
     marketPrice: intl.formatMessage(messages.marketPrice),
     slippageTolerance: intl.formatMessage(messages.slippageTolerance),
     swapButton: intl.formatMessage(messages.swapButton),
+    verifiedBy: intl.formatMessage(messages.verifiedBy),
+    assetsIn: intl.formatMessage(messages.assetsIn),
     
     // search
     searchTokens: intl.formatMessage(messages.searchTokens),
@@ -88,6 +90,14 @@ export const messages = defineMessages({
   swapButton: {
     id: 'swap.swapScreen.swapButton',
     defaultMessage: '!!!Swap',
+  },
+  verifiedBy: {
+    id: 'swap.swapScreen.verifiedBy',
+    defaultMessage: '!!!Verified by MuesliSwap',
+  },
+  assetsIn: {
+    id: 'swap.swapScreen.assetsIn',
+    defaultMessage: '!!!This assets is in my portfolio',
   },
   asset: {
     id: 'global.assets.assetLabel',

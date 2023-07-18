@@ -9,8 +9,8 @@ import ButtonGroup from '../../common/ButtonGroup/ButtonGroup'
 import {MarketPrice} from '../../common/MarketPriceCard'
 import {SelectPoolCard} from '../../common/SelectPoolCard'
 import {SlippageTolerance} from '../../common/SlippageTolerance'
-import {AddTokenFromCard} from '../AddTokensFromSwap/AddTokenFromCard'
-import {AddTokenToCard} from '../AddTokensFromSwap/AddTokenToCard'
+import {AddTokenFromCard} from '../AddTokens/AddTokenFromCard'
+import {AddTokenToCard} from '../AddTokens/AddTokenToCard'
 import {SwitchAndClear} from '../SwitchAndClear/SwitchAndClear'
 
 export const StartSwapTokensScreen = () => {

@@ -115,6 +115,8 @@
   "swap.swapScreen.marketPrice": "Market price",
   "swap.swapScreen.slippageTolerance": "Slippage tolerance",
   "swap.swapScreen.swapButton": "SWAP",
+  "swap.swapScreen.verifiedBy": "Verified by MuesliSwap",
+  "swap.swapScreen.assetsIn": "This assets is in my portfolio",
   "components.common.navigation.nftGallery": "NFT Gallery",
   "components.receive.addressmodal.BIP32path": "Derivation path",
   "components.receive.addressmodal.copiedLabel": "Copied",

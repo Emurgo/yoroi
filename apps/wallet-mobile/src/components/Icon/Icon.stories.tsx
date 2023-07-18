@@ -2,8 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {ColorSchemeName, ScrollView, Text, TextInput, View} from 'react-native'
 
-import {mockTransactionInfo} from '../../yoroi-wallets/mocks'
 import {Icon} from '..'
+import {mockTransactionInfo} from '../../yoroi-wallets/mocks'
 
 storiesOf('Icon', module).add('Gallery', () => {
   return (
@@ -214,6 +214,8 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.Switch size={40} />} title="Switch" />
 
         <Item icon={<Icon.Edit size={40} />} title="Edit" />
+
+        <Item icon={<Icon.Portfolio size={40} />} title="Portfolio" />
       </ScrollView>
     </FilterProvider>
   )

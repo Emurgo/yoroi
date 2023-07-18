@@ -1,10 +1,11 @@
 import {Ionicons} from '@expo/vector-icons'
 import {Balance} from '@yoroi/types'
 import React, {useRef} from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Boundary, Placeholder, Spacer, TokenIcon} from '../../../components'
+import {Boundary, Icon, Placeholder, Spacer, TokenIcon} from '../../../components'
 import {COLORS} from '../../../theme'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../yoroi-wallets/hooks'
@@ -18,14 +19,15 @@ type SwapCardProp = {
   value?: string
   hasError?: boolean
   navigateTo?: () => void
-  noDefaultSelection?: boolean
 }
 
 export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, hasError}: SwapCardProp) => {
+  const strings = useStrings()
   const {quantity, tokenId} = amount
   const focusRef = useRef<TextInput>(null)
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
+  const noTokenSelected = tokenId === 'noTokenSelected'
 
   const name = tokenInfo.ticker ?? tokenInfo.name
   const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
@@ -51,12 +53,16 @@ export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, ha
             <TouchableOpacity onPress={() => navigateTo && navigateTo()}>
               <View style={styles.sectionContainer}>
                 <Boundary loading={{fallback: <Placeholder />}} error={{fallback: () => <Placeholder />}}>
-                  <TokenIcon wallet={wallet} tokenId={tokenInfo.id} size="small" />
+                  {noTokenSelected ? (
+                    <Icon.Coins size={24} color={COLORS.TEXT_GRAY3} />
+                  ) : (
+                    <TokenIcon wallet={wallet} tokenId={tokenInfo.id} size="small" />
+                  )}
                 </Boundary>
 
                 <Spacer width={8} />
 
-                <Text style={styles.adaText}>{name}</Text>
+                <Text style={styles.coinName}>{noTokenSelected ? strings.selectToken : name}</Text>
 
                 <Ionicons name="chevron-forward-outline" size={20} color="black" />
               </View>
@@ -106,6 +112,20 @@ const AmountInput = ({onChange, value, inputRef}: AmountInputProps) => {
       ref={inputRef}
     />
   )
+}
+
+const messages = defineMessages({
+  selectToken: {
+    id: 'swap.swapScreen.selectToken',
+    defaultMessage: '!!!Select token',
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+  return {
+    selectToken: intl.formatMessage(messages.selectToken),
+  }
 }
 
 const styles = StyleSheet.create({
@@ -159,7 +179,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     alignItems: 'center',
   },
-  adaText: {
+  coinName: {
     fontSize: 16,
     fontWeight: '400',
   },

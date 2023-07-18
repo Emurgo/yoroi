@@ -16,8 +16,8 @@ import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/Edit
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {SwapProvider} from '../features/Swap/common/SwapContext'
-import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/AddTokensFromSwap/SelectTokenFromListScreen'
-import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/AddTokensFromSwap/SelectTokenToListScreen'
+import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/AddTokens/SelectTokenFromListScreen'
+import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/AddTokens/SelectTokenToListScreen'
 import {StartSwapScreen} from '../features/Swap/useCases/StartSwapScreen'
 import {StartSwapTokensScreen} from '../features/Swap/useCases/StartSwapTokensScreen/StartSwapTokensScreen'
 import {

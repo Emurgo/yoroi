@@ -3,22 +3,22 @@ import {FlashList} from '@shopify/flash-list'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Switch} from 'react-native-paper'
 
-import {sortTokenInfos} from '../../../../../src/utils'
-import {Boundary, Text} from '../../../../components'
+import {Boundary, Icon, Spacer, Text} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {useSearch, useSearchOnNavBar} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
+import {sortTokenInfos} from '../../../../utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useAllTokenInfos, useIsWalletEmpty} from '../../../../yoroi-wallets/hooks'
-import {useTokenQuantities} from '../../../Send/common/SendContext'
 import {filterBySearch} from '../../common/filterBySearch'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
-import {useSwap} from '../../common/SwapContext'
+import {useSwap, useTokenQuantities} from '../../common/SwapContext'
 
-export const SelectTokenFromListScreen = () => {
+export const SelectTokenToListScreen = () => {
   const strings = useStrings()
 
   useSearchOnNavBar({
@@ -36,7 +36,39 @@ export const SelectTokenFromListScreen = () => {
 }
 
 const List = () => {
-  return <AssetList />
+  const strings = useStrings()
+
+  return (
+    <View>
+      <Spacer height={12} />
+
+      <View style={[styles.flex]}>
+        <View style={styles.row}>
+          <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
+
+          <Text style={styles.topText}>{strings.verifiedBy}</Text>
+
+          <Spacer width={8} />
+
+          <Icon.Info size={24} />
+        </View>
+
+        <Switch />
+      </View>
+
+      <Spacer height={15} />
+
+      <View style={[styles.row]}>
+        <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
+
+        <Spacer width={8} />
+
+        <Text style={styles.topText}>{strings.assetsIn}</Text>
+      </View>
+
+      <AssetList />
+    </View>
+  )
 }
 
 const AssetList = () => {
@@ -73,13 +105,13 @@ const AssetList = () => {
 type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableAssetItem = ({tokenInfo, wallet}: SelectableAssetItemProps) => {
   const {closeSearch} = useSearch()
-  const {tokenFromSelectedChanged} = useSwap() // TODO CHANGE THIS
+  const {tokenToSelectedChanged} = useSwap()
   const {spendable} = useTokenQuantities(tokenInfo.id)
   const navigateTo = useNavigateTo()
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const onSelect = () => {
-    tokenFromSelectedChanged(tokenInfo.id)
+    tokenToSelectedChanged(tokenInfo.id)
     navigateTo.swapTokens()
     closeSearch()
   }
@@ -146,6 +178,7 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: 'white',
+    paddingHorizontal: 16,
   },
   subheader: {
     paddingHorizontal: 16,
@@ -175,5 +208,16 @@ const styles = StyleSheet.create({
   counterTextBold: {
     fontWeight: 'bold',
     color: COLORS.SHELLEY_BLUE,
+  },
+  flex: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  topText: {
+    fontSize: 16,
   },
 })

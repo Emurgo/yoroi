@@ -7,7 +7,7 @@ type Props = {
 }
 
 export const CheckFilled = ({size = 40, color}: Props) => (
-  <Svg width={size} height={size} viewBox="-2 -2 28 28">
+  <Svg width={size} height={size} viewBox="2 -2 28 28">
     <Path
       fillRule="evenodd"
       clipRule="evenodd"
