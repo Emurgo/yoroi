@@ -182,7 +182,7 @@ export const getScaledQrBounds = ({
   deviceHeight: number
   deviceWidth: number
 }) => {
-  // qr bounds values are inversely proportioned + issues in some android devices https://github.com/expo/expo/issues/17795
+  // qr bounds values are inversely proportioned
   const height = qrBoundingBox !== undefined ? qrBoundingBox.size.width : Number(qrBounds.size.width) * deviceHeight
   const width = qrBoundingBox !== undefined ? qrBoundingBox.size.height : Number(qrBounds.size.height) * deviceWidth
   const left = qrBoundingBox !== undefined ? qrBoundingBox.origin.y : Number(qrBounds.origin.y) * deviceWidth
