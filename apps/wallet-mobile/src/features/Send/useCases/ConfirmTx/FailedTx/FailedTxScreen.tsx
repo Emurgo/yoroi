@@ -11,8 +11,7 @@ import {FailedTxImage} from './FailedTxImage'
 export const FailedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
-
-  const resetAndGoToStart = useResetAndGoToStartTx()
+  const resetAndGoToStartTx = useResetAndGoToStartTx()
 
   return (
     <View style={styles.container}>
@@ -24,14 +23,14 @@ export const FailedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={resetAndGoToStart} title={strings.failedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={resetAndGoToStartTx} title={strings.failedTxButton} style={styles.button} shelleyTheme />
     </View>
   )
 }
 
 const useResetAndGoToStartTx = () => {
   const navigation = useNavigation()
-  const resetAndGoToStart = () =>
+  const resetAndGoToStartTx = () =>
     navigation.reset({
       index: 0,
       routes: [
@@ -59,7 +58,7 @@ const useResetAndGoToStartTx = () => {
       ],
     })
 
-  return resetAndGoToStart
+  return resetAndGoToStartTx
 }
 
 const styles = StyleSheet.create({
