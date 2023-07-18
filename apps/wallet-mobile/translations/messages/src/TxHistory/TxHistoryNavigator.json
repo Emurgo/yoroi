@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Receive",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 231,
+      "line": 234,
       "column": 16,
-      "index": 7741
+      "index": 8216
     },
     "end": {
-      "line": 234,
+      "line": 237,
       "column": 3,
-      "index": 7830
+      "index": 8305
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Swap",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 235,
+      "line": 238,
       "column": 13,
-      "index": 7845
+      "index": 8320
     },
     "end": {
-      "line": 238,
+      "line": 241,
       "column": 3,
-      "index": 7918
+      "index": 8393
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Swap from",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 239,
+      "line": 242,
       "column": 17,
-      "index": 7937
+      "index": 8412
     },
     "end": {
-      "line": 242,
+      "line": 245,
       "column": 3,
-      "index": 8014
+      "index": 8489
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Swap to",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 243,
+      "line": 246,
       "column": 15,
-      "index": 8031
+      "index": 8506
     },
     "end": {
-      "line": 246,
+      "line": 249,
       "column": 3,
-      "index": 8104
+      "index": 8579
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Send",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 247,
+      "line": 250,
       "column": 13,
-      "index": 8119
+      "index": 8594
     },
     "end": {
-      "line": 250,
+      "line": 253,
       "column": 3,
-      "index": 8199
+      "index": 8674
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Scan QR code address",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 251,
+      "line": 254,
       "column": 18,
-      "index": 8219
+      "index": 8694
     },
     "end": {
-      "line": 254,
+      "line": 257,
       "column": 3,
-      "index": 8320
+      "index": 8795
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Select asset",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 255,
+      "line": 258,
       "column": 20,
-      "index": 8342
+      "index": 8817
     },
     "end": {
-      "line": 258,
+      "line": 261,
       "column": 3,
-      "index": 8431
+      "index": 8906
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Selected tokens",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 259,
+      "line": 262,
       "column": 26,
-      "index": 8459
+      "index": 8934
     },
     "end": {
-      "line": 262,
+      "line": 265,
       "column": 3,
-      "index": 8563
+      "index": 9038
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Edit amount",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 263,
+      "line": 266,
       "column": 19,
-      "index": 8584
+      "index": 9059
     },
     "end": {
-      "line": 266,
+      "line": 269,
       "column": 3,
-      "index": 8677
+      "index": 9152
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Confirm",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 267,
+      "line": 270,
       "column": 16,
-      "index": 8695
+      "index": 9170
     },
     "end": {
-      "line": 270,
+      "line": 273,
       "column": 3,
-      "index": 8781
+      "index": 9256
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Share this address to receive payments. To protect your privacy, new addresses are generated automatically once you use them.",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 271,
+      "line": 274,
       "column": 19,
-      "index": 8802
+      "index": 9277
     },
     "end": {
-      "line": 277,
+      "line": 280,
       "column": 3,
-      "index": 9040
+      "index": 9515
     }
   }
 ]

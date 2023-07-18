@@ -1,4 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
+// import {makeSwapStorage, SwapProvider as RealSwapProvider} from '@yoroi/swap-react/src'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
@@ -45,6 +46,7 @@ export const TxHistoryNavigator = () => {
 
   return (
     <SendProvider key={wallet.id}>
+      {/* <RealSwapProvider storage={makeSwapStorage()}> */}
       <SwapProvider key={wallet.id}>
         <Stack.Navigator
           screenOptions={{
@@ -214,6 +216,8 @@ export const TxHistoryNavigator = () => {
           <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
         </ModalInfo>
       </SwapProvider>
+
+      {/* </RealSwapProvider> */}
     </SendProvider>
   )
 }
