@@ -2,6 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import {metrics} from '../metrics'
 import {defaultStackNavigationOptionsV2, NftRoutes} from '../navigation'
 import {NftDetails} from './NftDetails'
 import {NftDetailsImage} from './NftDetailsImage'
@@ -24,6 +25,13 @@ export const NftDetailsNavigator = () => {
         name="nft-details"
         options={{title: strings.title, headerTitleAlign: 'center'}}
         component={NftDetails}
+        listeners={() => {
+          return {
+            focus: () => {
+              metrics.nftGalleryDetailsPageViewed()
+            },
+          }
+        }}
       />
 
       <Stack.Screen name="image-zoom" options={{headerTitle: () => null}} component={NftDetailsImage} />

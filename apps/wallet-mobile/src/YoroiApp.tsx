@@ -13,7 +13,7 @@ import {LanguageProvider} from './i18n'
 import {InitApp} from './InitApp'
 import {CONFIG} from './legacy/config'
 import {setLogLevel} from './legacy/logging'
-import {initMetrics} from './metrics'
+import {useInitMetrics} from './metrics'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet/Context'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
 import {ThemeProvider} from './theme'
@@ -31,7 +31,6 @@ if (Platform.OS === 'android') {
 }
 
 setLogLevel(CONFIG.LOG_LEVEL)
-initMetrics()
 
 // eslint-disable-next-line no-extra-boolean-cast
 if (Boolean(Config.DISABLE_LOGBOX)) LogBox.ignoreAllLogs()
@@ -40,9 +39,10 @@ const queryClient = new QueryClient()
 
 export const YoroiApp = () => {
   const migrated = useMigrations(storage)
+  const metrics = useInitMetrics()
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  return migrated ? (
+  return migrated && metrics ? (
     <StorageProvider>
       <WalletManagerProvider walletManager={walletManager}>
         <ErrorBoundary>

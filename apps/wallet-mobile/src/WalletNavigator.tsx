@@ -75,7 +75,7 @@ const WalletTabNavigator = () => {
           listeners={() => {
             return {
               focus: () => {
-                metrics.nftGalleryDetailsNavigation({nft_navigation: 'Next'})
+                metrics.nftGalleryPageViewed({nft_count: 0})
               },
             }
           }}
