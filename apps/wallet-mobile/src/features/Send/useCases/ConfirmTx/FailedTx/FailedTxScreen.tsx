@@ -1,17 +1,17 @@
-import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
 import {useBlockGoBack} from '../../../../../navigation'
 import {COLORS} from '../../../../../theme'
+import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {FailedTxImage} from './FailedTxImage'
 
 export const FailedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
-  const resetAndGoToStartTx = useResetAndGoToStartTx()
+  const navigateTo = useNavigateTo()
 
   return (
     <View style={styles.container}>
@@ -23,42 +23,9 @@ export const FailedTxScreen = () => {
 
       <Spacer height={22} />
 
-      <Button onPress={resetAndGoToStartTx} title={strings.failedTxButton} style={styles.button} shelleyTheme />
+      <Button onPress={navigateTo.startTxAfterReset} title={strings.failedTxButton} style={styles.button} shelleyTheme />
     </View>
   )
-}
-
-const useResetAndGoToStartTx = () => {
-  const navigation = useNavigation()
-  const resetAndGoToStartTx = () =>
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: 'app-root',
-          state: {
-            routes: [
-              {name: 'wallet-selection'},
-              {
-                name: 'main-wallet-routes',
-                state: {
-                  routes: [
-                    {
-                      name: 'history',
-                      state: {
-                        routes: [{name: 'send-start-tx'}],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      ],
-    })
-
-  return resetAndGoToStartTx
 }
 
 const styles = StyleSheet.create({
