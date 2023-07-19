@@ -20,7 +20,7 @@ describe('Creating a wallet', () => {
         await myWalletsScreen.addWalletTestnetButton().tap()
         await myWalletsScreen.createWalletButton().tap()
 
-        await expect(createWalletFlow.walletNameInput()).toBeVisible()
+        await expect(createWalletFlow.credentialsView()).toBeVisible();
         await createWalletFlow.walletNameInput().typeText(WALLET_NAME)
         await device.disableSynchronization()
         await createWalletFlow.spendingPasswordInput().typeText(SPENDING_PASSWORD)

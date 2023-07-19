@@ -1,5 +1,6 @@
 import { by, element } from 'detox'
 
+export const credentialsView = () => element(by.id('credentialsView'))
 export const walletNameInput = () => element(by.id('walletNameInput'))
 export const spendingPasswordInput = () => element(by.id('walletPasswordInput'))
 export const repeatSpendingPasswordInput = () => element(by.id('walletRepeatPasswordInput'))
