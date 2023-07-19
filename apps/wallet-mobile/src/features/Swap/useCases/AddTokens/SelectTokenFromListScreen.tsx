@@ -22,7 +22,7 @@ export const SelectTokenFromListScreen = () => {
 
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
-    title: strings.selecteAssetTitle,
+    title: strings.swapFrom,
   })
 
   return (
@@ -61,7 +61,6 @@ const AssetList = () => {
         keyExtractor={(_, index) => index.toString()}
         testID="assetsList"
         estimatedItemSize={78}
-        // ListEmptyComponent={<ListEmptyComponent filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
       />
 
       <Counter counter={filteredTokenInfos.length} />

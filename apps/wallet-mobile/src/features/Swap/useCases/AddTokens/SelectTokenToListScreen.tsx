@@ -23,7 +23,7 @@ export const SelectTokenToListScreen = () => {
 
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
-    title: strings.selecteAssetTitle,
+    title: strings.swapTo,
   })
 
   return (
@@ -36,38 +36,45 @@ export const SelectTokenToListScreen = () => {
 }
 
 const List = () => {
+  const [isSwitchOn, setIsSwitchOn] = React.useState(true)
   const strings = useStrings()
 
+  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn)
+
   return (
-    <View>
-      <Spacer height={12} />
+    <>
+      <View>
+        <Spacer height={12} />
 
-      <View style={[styles.flex]}>
-        <View style={styles.row}>
-          <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
+        <View style={[styles.flex]}>
+          <View style={styles.row}>
+            <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
 
-          <Text style={styles.topText}>{strings.verifiedBy}</Text>
+            <Text style={styles.topText}>{strings.verifiedBy}</Text>
+
+            <Spacer width={8} />
+
+            <Icon.Info size={24} />
+          </View>
+
+          <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color={COLORS.SHELLEY_BLUE} />
+        </View>
+
+        <Spacer height={15} />
+
+        <View style={[styles.row]}>
+          <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
 
           <Spacer width={8} />
 
-          <Icon.Info size={24} />
+          <Text style={styles.topText}>{strings.assetsIn}</Text>
         </View>
-
-        <Switch />
       </View>
 
-      <Spacer height={15} />
-
-      <View style={[styles.row]}>
-        <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
-
-        <Spacer width={8} />
-
-        <Text style={styles.topText}>{strings.assetsIn}</Text>
-      </View>
+      <Spacer height={24} />
 
       <AssetList />
-    </View>
+    </>
   )
 }
 
@@ -90,11 +97,9 @@ const AssetList = () => {
           </Boundary>
         )}
         bounces={false}
-        contentContainerStyle={styles.assetListContent}
         keyExtractor={(_, index) => index.toString()}
         testID="assetsList"
         estimatedItemSize={78}
-        // ListEmptyComponent={<ListEmptyComponent filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
       />
 
       <Counter counter={filteredTokenInfos.length} />
@@ -122,7 +127,7 @@ const SelectableAssetItem = ({tokenInfo, wallet}: SelectableAssetItemProps) => {
       onPress={onSelect}
       testID="selectTokenButton"
     >
-      <AmountItem amount={{tokenId: tokenInfo.id, quantity: spendable}} wallet={wallet} />
+      <AmountItem amount={{tokenId: tokenInfo.id, quantity: spendable}} wallet={wallet} variant="swap" />
     </TouchableOpacity>
   )
 }
@@ -193,9 +198,7 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
   },
-  assetListContent: {
-    paddingHorizontal: 16,
-  },
+
   counter: {
     padding: 16,
     justifyContent: 'center',

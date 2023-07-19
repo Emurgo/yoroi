@@ -2,22 +2,23 @@ import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {COLORS} from '../../theme'
+import {Boundary, Icon, Placeholder, Spacer, Text, TokenIcon} from '..'
 import {PairedBalance} from '../../TxHistory/PairedBalance'
+import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
 import {Quantities} from '../../yoroi-wallets/utils'
-import {Boundary, Placeholder, Text, TokenIcon} from '..'
 
 export type AmountItemProps = {
   wallet: YoroiWallet
   amount: Balance.Amount
   style?: ViewProps['style']
   tokenIconSize?: 'small' | 'medium' | 'large'
+  variant?: 'swap'
 }
 
-export const AmountItem = ({wallet, style, amount, tokenIconSize}: AmountItemProps) => {
+export const AmountItem = ({wallet, style, amount, tokenIconSize, variant}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -26,6 +27,8 @@ export const AmountItem = ({wallet, style, amount, tokenIconSize}: AmountItemPro
   const nameLabel = isEmptyString(name) ? '-' : name
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
   const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
+  const showSwapDetails = !isPrimary && variant === 'swap'
+
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
@@ -35,9 +38,19 @@ export const AmountItem = ({wallet, style, amount, tokenIconSize}: AmountItemPro
       </Left>
 
       <Middle>
-        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
-          {nameLabel}
-        </Text>
+        <View style={styles.flex}>
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+            {nameLabel}
+          </Text>
+
+          {showSwapDetails && (
+            <>
+              <Spacer width={4} />
+
+              <Icon.CheckFilled size={22} color={COLORS.SHELLEY_BLUE} />
+            </>
+          )}
+        </View>
 
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.detail} testID="tokenFingerprintText">
           {detail}
@@ -85,5 +98,9 @@ const styles = StyleSheet.create({
   quantity: {
     color: COLORS.DARK_TEXT,
     textAlign: 'right',
+  },
+  flex: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })
