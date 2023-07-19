@@ -53,7 +53,7 @@ module.exports = {
     emulator: {
       type: 'android.emulator',
       device: {
-        avdName: 'test'
+        avdName: 'Pixel_3_e2e'
       }
     }
   },
