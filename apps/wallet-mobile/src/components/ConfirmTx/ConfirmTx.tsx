@@ -119,36 +119,39 @@ export const ConfirmTx = ({
   const onConnectUSB = async (deviceObj: DeviceObj) => {
     await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
 
-    await wallet.ledgerSupportsCIP36(useUSB).then(async (isCIP36Supported) => {
+    if (yoroiUnsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
+      const isCIP36Supported = await wallet.ledgerSupportsCIP36(useUSB)
       if (supportsCIP36 !== isCIP36Supported) {
-        onCIP36SupportChange?.(isCIP36Supported)
+        onCIP36SupportChange(isCIP36Supported)
         return
       }
-      if (chooseTransportOnConfirmation) {
-        await delay(1000)
-        onConfirm()
-      } else {
-        setDialogStep(DialogStep.Closed)
-      }
-    })
+    }
+
+    if (chooseTransportOnConfirmation) {
+      await delay(1000)
+      onConfirm()
+    } else {
+      setDialogStep(DialogStep.Closed)
+    }
   }
 
   const onConnectBLE = async (deviceId: DeviceId) => {
     await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
 
-    await wallet.ledgerSupportsCIP36(useUSB).then(async (isCIP36Supported) => {
+    if (yoroiUnsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
+      const isCIP36Supported = await wallet.ledgerSupportsCIP36(useUSB)
       if (supportsCIP36 !== isCIP36Supported) {
-        onCIP36SupportChange?.(isCIP36Supported)
+        onCIP36SupportChange(isCIP36Supported)
         return
       }
+    }
 
-      if (chooseTransportOnConfirmation) {
-        await delay(1000)
-        onConfirm()
-      } else {
-        setDialogStep(DialogStep.Closed)
-      }
-    })
+    if (chooseTransportOnConfirmation) {
+      await delay(1000)
+      onConfirm()
+    } else {
+      setDialogStep(DialogStep.Closed)
+    }
   }
 
   const onConfirm = React.useCallback(
