@@ -113,6 +113,7 @@ const getStories = () => {
     "./src/features/Swap/SwapCard/SwapCard.stories.tsx": require("../src/features/Swap/SwapCard/SwapCard.stories.tsx"),
     "./src/features/Swap/useCases/AddTokens/SelectTokenFromListScreen.stories.tsx": require("../src/features/Swap/useCases/AddTokens/SelectTokenFromListScreen.stories.tsx"),
     "./src/features/Swap/useCases/AddTokens/SelectTokenToListScreen.stories.tsx": require("../src/features/Swap/useCases/AddTokens/SelectTokenToListScreen.stories.tsx"),
+    "./src/features/Swap/useCases/InputSlippageToleranceScreen/InputSlippageToleranceScreen.stories.tsx": require("../src/features/Swap/useCases/InputSlippageToleranceScreen/InputSlippageToleranceScreen.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapTokensScreen/StartSwapTokensScreen.stories.tsx": require("../src/features/Swap/useCases/StartSwapTokensScreen/StartSwapTokensScreen.stories.tsx"),
     "./src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories.tsx": require("../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories.tsx"),
     "./src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories.tsx": require("../src/FirstRun/TermsOfServiceScreen/TermsOfServiceScreen.stories.tsx"),

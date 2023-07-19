@@ -1,12 +1,13 @@
-import {useNavigation} from '@react-navigation/native'
-import {useRef} from 'react'
+import { useNavigation } from '@react-navigation/native'
+import { useRef } from 'react'
 
-import {SwapTokenRouteseNavigation} from '../../../navigation'
+import { SwapTokenRouteseNavigation } from '../../../navigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<SwapTokenRouteseNavigation>()
 
   return useRef({
+    slippageToleranceInput: () => navigation.navigate('swap-slippage-tolerance-input'),
     selectedSwapFromTokens: () => navigation.navigate('swap-select-token-from'),
     selectedSwapToTokens: () => navigation.navigate('swap-select-token-to'),
     swapTokens: () => navigation.navigate('swap-start'),

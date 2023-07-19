@@ -18,6 +18,7 @@ import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiToken
 import {SwapProvider} from '../features/Swap/common/SwapContext'
 import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/AddTokens/SelectTokenFromListScreen'
 import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/AddTokens/SelectTokenToListScreen'
+import {InputSlippageToleranceScreen} from '../features/Swap/useCases/InputSlippageToleranceScreen'
 import {StartSwapScreen} from '../features/Swap/useCases/StartSwapScreen'
 import {StartSwapTokensScreen} from '../features/Swap/useCases/StartSwapTokensScreen/StartSwapTokensScreen'
 import {
@@ -106,6 +107,15 @@ export const TxHistoryNavigator = () => {
             options={{
               ...defaultStackNavigationOptionsV2,
               title: strings.swapToTitle,
+            }}
+          />
+
+          <Stack.Screen
+            name="swap-slippage-tolerance-input"
+            component={InputSlippageToleranceScreen}
+            options={{
+              ...defaultStackNavigationOptionsV2,
+              title: strings.slippageTolerance,
             }}
           />
 
@@ -248,6 +258,10 @@ const messages = defineMessages({
     id: 'swap.swapScreen.swapTo',
     defaultMessage: '!!!Swap to',
   },
+  slippageTolerance: {
+    id: 'swap.swapScreen.slippageTolerance',
+    defaultMessage: '!!!Slippage Tolerance',
+  },
   sendTitle: {
     id: 'components.send.sendscreen.title',
     defaultMessage: '!!!Send',
@@ -289,6 +303,7 @@ const useStrings = () => {
     swapTitle: intl.formatMessage(messages.swapTitle),
     swapFromTitle: intl.formatMessage(messages.swapFromTitle),
     swapToTitle: intl.formatMessage(messages.swapToTitle),
+    slippageTolerance: intl.formatMessage(messages.slippageTolerance),
     sendTitle: intl.formatMessage(messages.sendTitle),
     qrScannerTitle: intl.formatMessage(messages.qrScannerTitle),
     selectAssetTitle: intl.formatMessage(messages.selectAssetTitle),

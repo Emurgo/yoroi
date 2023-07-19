@@ -1,12 +1,15 @@
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {COLORS} from '../../../../../src/theme'
 import {Icon, Spacer} from '../../../../components'
+import {useNavigateTo} from '../navigation'
 import {useStrings} from '../strings'
 
 export const SlippageTolerance = () => {
   const strings = useStrings()
+  const navigate = useNavigateTo()
 
   return (
     <View style={[styles.container]}>
@@ -23,7 +26,9 @@ export const SlippageTolerance = () => {
 
         <Spacer width={4} />
 
-        <Icon.Edit size={24} />
+        <TouchableOpacity onPress={() => navigate.slippageToleranceInput()}>
+          <Icon.Edit size={24} />
+        </TouchableOpacity>
       </View>
     </View>
   )

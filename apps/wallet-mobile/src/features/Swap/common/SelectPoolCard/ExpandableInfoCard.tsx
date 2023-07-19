@@ -34,7 +34,7 @@ export const ExpandableInfoCard = ({label, mainInfo, secondaryInfo}: SelectPoolC
         <View>
           {secondaryInfo.map((item, index) => {
             return (
-              <>
+              <View key={item.label}>
                 <Spacer height={8} />
 
                 <View key={index} style={styles.flexBetween}>
@@ -48,7 +48,7 @@ export const ExpandableInfoCard = ({label, mainInfo, secondaryInfo}: SelectPoolC
 
                   <Text style={styles.text}>{item.value}</Text>
                 </View>
-              </>
+              </View>
             )
           })}
         </View>

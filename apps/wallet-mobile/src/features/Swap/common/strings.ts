@@ -22,11 +22,15 @@ export const useStrings = () => {
     swapButton: intl.formatMessage(messages.swapButton),
     verifiedBy: intl.formatMessage(messages.verifiedBy),
     assetsIn: intl.formatMessage(messages.assetsIn),
+    defaultSlippage: intl.formatMessage(messages.defaultSlippage),
+    slippageInfo: intl.formatMessage(messages.slippageInfo),
+    enterSlippage: intl.formatMessage(messages.enterSlippage),
     
     // search
     searchTokens: intl.formatMessage(messages.searchTokens),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
+    apply: intl.formatMessage(globalMessages.apply),
     found: intl.formatMessage(messages.found),
     youHave: intl.formatMessage(messages.youHave),
     assets: (qty: number) => intl.formatMessage(globalMessages.assets, {qty}),
@@ -98,6 +102,18 @@ export const messages = defineMessages({
   assetsIn: {
     id: 'swap.swapScreen.assetsIn',
     defaultMessage: '!!!This assets is in my portfolio',
+  },
+  defaultSlippage: {
+    id: 'swap.swapScreen.defaultSlippage',
+    defaultMessage: '!!!Default Slippage Tolerance',
+  },
+  slippageInfo: {
+    id: 'swap.swapScreen.slippageInfo',
+    defaultMessage: '!!!Slippage tolerance is set as a percentage of the total swap value.'
+  },
+  enterSlippage: {
+    id: 'swap.swapScreen.enterSlippage',
+    defaultMessage: '!!!Enter a value from 0% to 100%. You can also enter up to 1 decimal'
   },
   asset: {
     id: 'global.assets.assetLabel',
