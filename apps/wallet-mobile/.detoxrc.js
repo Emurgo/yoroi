@@ -23,15 +23,18 @@ module.exports = {
     'android.debug': {
       type: 'android.apk',
       binaryPath: 'android/app/build/outputs/apk/dev/debug/app-dev-debug.apk',
-      build: 'cd android && ./gradlew assembleDevDebug assembleDevDebugAndroidTest -DtestBuildType=debug',
+      build: 'ENVFILE=.env cd android && ./gradlew assembleDevDebug assembleDevDebugAndroidTest -DtestBuildType=debug',
       reversePorts: [
         8081
       ]
     },
-    'android.release': {
+    'android.nightly.release': {
       type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/release/app-release.apk',
-      build: 'cd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release'
+      binaryPath: 'android/app/build/outputs/apk/nightly/release/app-nightly-release.apk',
+      build: 'ENVFILE=.env.nightly cd android && ./gradlew assembleNightlyRelease assembleNightlyReleaseAndroidTest -DtestBuildType=release',
+      reversePorts: [
+        8081
+      ]
     }
   },
   devices: {
@@ -50,7 +53,7 @@ module.exports = {
     emulator: {
       type: 'android.emulator',
       device: {
-        avdName: 'Nexus_6_API_34'
+        avdName: 'test'
       }
     }
   },
@@ -78,6 +81,14 @@ module.exports = {
     'android.emu.release': {
       device: 'emulator',
       app: 'android.release'
+    },
+    'android.emu.nightly.release': {
+      device: 'emulator',
+      app: 'android.nightly.release'
+    },
+    'android.att.nightly.release': {
+      device: 'attached',
+      app: 'android.nightly.release'
     }
   }
 };
