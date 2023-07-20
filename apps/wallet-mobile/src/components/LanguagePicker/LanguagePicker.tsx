@@ -12,14 +12,18 @@ const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 export const LanguagePicker = () => {
   const language = useLanguage()
   const {languageCode, selectLanguageCode, supportedLanguages} = language
-  
+
   return (
     <View style={styles.languagePicker}>
       <FlatList
         data={supportedLanguages}
         contentContainerStyle={styles.languageList}
         renderItem={({item: {label, code}}) => (
-          <TouchableOpacity style={styles.item} onPress={() => selectLanguageCode(code)} testID={`languageSelect_${code}`}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => selectLanguageCode(code)}
+            testID={`languageSelect_${code}`}
+          >
             <Text style={styles.itemText}>{label}</Text>
 
             {languageCode === code && <Icon.Check size={24} color={COLORS.SHELLEY_BLUE} />}
