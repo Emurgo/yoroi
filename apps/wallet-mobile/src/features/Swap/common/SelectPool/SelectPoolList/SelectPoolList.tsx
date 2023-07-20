@@ -19,7 +19,7 @@ type Card = {
 type Props = {
   data: Card[]
 }
-export const SelectPoolCard = ({data}: Props) => {
+export const SelectPoolList = ({data}: Props) => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(0)
 
   const handleCardSelect = (index: number) => {

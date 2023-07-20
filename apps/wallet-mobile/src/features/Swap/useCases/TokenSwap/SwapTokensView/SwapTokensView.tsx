@@ -3,17 +3,17 @@ import {defineMessages, useIntl} from 'react-intl'
 import {GestureResponderEvent, KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Button, Icon, Spacer} from '../../../../components'
-import {COLORS} from '../../../../theme'
-import ButtonGroup from '../../common/ButtonGroup/ButtonGroup'
-import {MarketPrice} from '../../common/MarketPriceCard'
-import {ChoosePoolSection} from '../../common/SelectPool'
-import {SlippageTolerance} from '../../common/SlippageTolerance'
+import {Button, Icon, Spacer} from '../../../../../components'
+import {COLORS} from '../../../../../theme'
+import ButtonGroup from '../../../common/ButtonGroup/ButtonGroup'
+import {MarketPrice} from '../../../common/MarketPriceCard'
+import {ChoosePoolSection} from '../../../common/SelectPool'
+import {SlippageTolerance} from '../../../common/SlippageTolerance'
 import {AddTokenFromCard} from '../AddTokens/AddTokenFromCard'
 import {AddTokenToCard} from '../AddTokens/AddTokenToCard'
 import {SwitchAndClear} from '../SwitchAndClear/SwitchAndClear'
 
-export const StartSwapTokensScreen = () => {
+export const SwapTokensView = () => {
   const strings = useStrings()
 
   const handleButtonClick = (event: GestureResponderEvent) => {

@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
-import {SelectPoolCard} from './index'
+import {SelectPoolList} from './index'
 
 const styles = StyleSheet.create({
   container: {
@@ -12,10 +12,10 @@ const styles = StyleSheet.create({
     padding: 16,
   },
 })
-storiesOf('Expandable Info Card', module)
+storiesOf('Swap List Pool', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
-  .add('with inital data', () => (
-    <SelectPoolCard
+  .add('initial', () => (
+    <SelectPoolList
       data={[
         {
           icon: <Icon.YoroiNightly size={40} color={COLORS.SHELLEY_BLUE} />,

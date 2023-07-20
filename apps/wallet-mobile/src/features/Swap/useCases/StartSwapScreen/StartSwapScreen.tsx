@@ -8,7 +8,8 @@ import {Spacer, StatusBar, Text} from '../../../../components'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useSync} from '../../../../yoroi-wallets/hooks'
-import {StartSwapTokensScreen} from '../StartSwapTokensScreen'
+import {OrdersView} from '../OrdersView/OrdersView'
+import {SwapTokensView} from '../TokenSwap/SwapTokensView'
 
 type Tab = 'tokenSwap' | 'orders'
 
@@ -55,11 +56,11 @@ export const StartSwapScreen = () => {
             <Spacer height={4} />
 
             <TabPanel active={activeTab === 'tokenSwap'}>
-              <StartSwapTokensScreen />
+              <SwapTokensView />
             </TabPanel>
 
             <TabPanel active={activeTab === 'orders'}>
-              <Text>Orders Here TODO</Text>
+              <OrdersView />
             </TabPanel>
           </TabPanels>
         </View>

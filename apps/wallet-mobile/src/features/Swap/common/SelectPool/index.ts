@@ -1,1 +1,1 @@
-export * from './ChoosePoolSection';
+export * from '../../useCases/TokenSwap/ChoosePoolSection/ChoosePoolSection';

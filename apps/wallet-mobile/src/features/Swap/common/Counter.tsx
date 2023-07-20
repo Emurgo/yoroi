@@ -2,11 +2,11 @@ export type FungibilityFilter = 'all' | 'ft' | 'nft'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Text} from '../../../../components'
-import {COLORS} from '../../../../theme'
-import {useStrings} from '../strings'
+import {Text} from '../../../components'
+import {COLORS} from '../../../theme'
+import {useStrings} from './strings'
 
-export const PoolCounter = ({length}: {length: number}) => {
+export const Counter = ({length}: {length: number}) => {
   const strings = useStrings()
   return (
     <View style={styles.counter}>

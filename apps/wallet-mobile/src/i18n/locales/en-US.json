@@ -105,6 +105,8 @@
   "swap.swapScreen.swapTitle": "Swap",
   "swap.swapScreen.tokenSwapTab": "Token swap",
   "swap.swapScreen.ordersSwapTab": "Orders",
+  "swap.swapScreen.openOrders": "Open orders",
+  "swap.swapScreen.completedOrders": "Completed orders",
   "swap.swapScreen.marketButton": "Market",
   "swap.swapScreen.limitButton": "Limit",
   "swap.swapScreen.swapFrom": "Swap from",

@@ -16,12 +16,11 @@ import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/Edit
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {SwapProvider} from '../features/Swap/common/SwapContext'
-import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/AddTokens/SelectTokenFromListScreen'
-import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/AddTokens/SelectTokenToListScreen'
+import {StartSwapScreen} from '../features/Swap/useCases'
 import {InputSlippageToleranceScreen} from '../features/Swap/useCases/InputSlippageToleranceScreen'
 import {SelectPoolScreen} from '../features/Swap/useCases/SelectPoolScreen/SelectPoolScreen'
-import {StartSwapScreen} from '../features/Swap/useCases/StartSwapScreen'
-import {StartSwapTokensScreen} from '../features/Swap/useCases/StartSwapTokensScreen/StartSwapTokensScreen'
+import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/TokenSwap/AddTokens/SelectTokenFromListScreen'
+import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/TokenSwap/AddTokens/SelectTokenToListScreen'
 import {
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
@@ -74,15 +73,6 @@ export const TxHistoryNavigator = () => {
               </Boundary>
             )}
           </Stack.Screen>
-
-          <Stack.Screen
-            name="swap-select-tokens"
-            component={StartSwapTokensScreen}
-            options={{
-              ...defaultStackNavigationOptionsV2,
-              title: strings.swapTitle,
-            }}
-          />
 
           <Stack.Screen
             name="swap-start"

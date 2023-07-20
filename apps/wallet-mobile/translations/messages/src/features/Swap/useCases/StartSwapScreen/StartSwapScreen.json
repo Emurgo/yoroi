@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Token Swap",
     "file": "src/features/Swap/useCases/StartSwapScreen/StartSwapScreen.tsx",
     "start": {
-      "line": 95,
+      "line": 96,
       "column": 13,
-      "index": 2891
+      "index": 2917
     },
     "end": {
-      "line": 98,
+      "line": 99,
       "column": 3,
-      "index": 2973
+      "index": 2999
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Orders",
     "file": "src/features/Swap/useCases/StartSwapScreen/StartSwapScreen.tsx",
     "start": {
-      "line": 99,
+      "line": 100,
       "column": 10,
-      "index": 2985
+      "index": 3011
     },
     "end": {
-      "line": 102,
+      "line": 103,
       "column": 3,
-      "index": 3064
+      "index": 3090
     }
   }
 ]

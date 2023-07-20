@@ -3,8 +3,8 @@ import {ScrollView} from 'react-native'
 
 import {Icon} from '../../../../components'
 import {COLORS} from '../../../../theme'
-import {PoolCounter} from '../../common/SelectPool/PoolCounter'
-import {SelectPoolCard} from '../../common/SelectPool/SelectPoolCard/'
+import {Counter} from '../../common/Counter'
+import {SelectPoolList} from '../../common/SelectPool/SelectPoolList'
 
 export const SelectPoolScreen = () => {
   const cardData = [
@@ -42,9 +42,9 @@ export const SelectPoolScreen = () => {
 
   return (
     <ScrollView>
-      <SelectPoolCard data={cardData} />
+      <SelectPoolList data={cardData} />
 
-      <PoolCounter length={cardData?.length} />
+      <Counter length={cardData?.length} />
     </ScrollView>
   )
 }

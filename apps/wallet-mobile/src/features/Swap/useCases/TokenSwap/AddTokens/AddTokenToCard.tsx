@@ -1,14 +1,14 @@
 import {Balance} from '@yoroi/types'
 import React, {useEffect} from 'react'
 
-import {useSelectedWallet} from '../../../../SelectedWallet'
-import {selectFtOrThrow} from '../../../../yoroi-wallets/cardano/utils'
-import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {Logger} from '../../../../yoroi-wallets/logging'
-import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils'
-import {useNavigateTo} from '../../common/navigation'
-import {useSwap, useTokenQuantities} from '../../common/SwapContext'
-import {SwapCard} from '../../SwapCard/SwapCard'
+import {useSelectedWallet} from '../../../../../SelectedWallet'
+import {selectFtOrThrow} from '../../../../../yoroi-wallets/cardano/utils'
+import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {Logger} from '../../../../../yoroi-wallets/logging'
+import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
+import {useNavigateTo} from '../../../common/navigation'
+import {useSwap, useTokenQuantities} from '../../../common/SwapContext'
+import {SwapCard} from '../../../SwapCard/SwapCard'
 
 export const AddTokenToCard = () => {
   const navigate = useNavigateTo()

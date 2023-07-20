@@ -2,9 +2,9 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Icon} from '../../../../../src/components/Icon'
-import {COLORS} from '../../../../../src/theme'
-import {useStrings} from '../../common/strings'
+import {Icon} from '../../../../../components/Icon'
+import {COLORS} from '../../../../../theme'
+import {useStrings} from '../../../common/strings'
 
 export const SwitchAndClear = () => {
   const strings = useStrings()

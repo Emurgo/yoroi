@@ -1,7 +1,7 @@
 import React from 'react'
 
-import {useNavigateTo} from '../../common/navigation'
-import {ExpandableInfoCard} from './ExpendableCard'
+import {useNavigateTo} from '../../../common/navigation'
+import {ExpandableInfoCard} from '../../../common/SelectPool/ExpendableCard'
 
 export const ChoosePoolSection = () => {
   const navigate = useNavigateTo()
@@ -10,7 +10,7 @@ export const ChoosePoolSection = () => {
       label="Minswap (Auto)"
       mainInfo={{label: 'Total', value: '11 ADA'}}
       navigateTo={() => navigate.selectPool()}
-      secondaryInfo={[
+      hiddenInfo={[
         {
           label: 'Min ADA',
           value: '2 ADA',

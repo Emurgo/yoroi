@@ -1,0 +1,32 @@
+[
+  {
+    "id": "swap.swapScreen.openOrders",
+    "defaultMessage": "!!!Open orders",
+    "file": "src/features/Swap/useCases/OrdersView/OrdersView.tsx",
+    "start": {
+      "line": 31,
+      "column": 14,
+      "index": 934
+    },
+    "end": {
+      "line": 34,
+      "column": 3,
+      "index": 1015
+    }
+  },
+  {
+    "id": "swap.swapScreen.completedOrders",
+    "defaultMessage": "!!!Completed orders",
+    "file": "src/features/Swap/useCases/OrdersView/OrdersView.tsx",
+    "start": {
+      "line": 35,
+      "column": 19,
+      "index": 1036
+    },
+    "end": {
+      "line": 38,
+      "column": 3,
+      "index": 1127
+    }
+  }
+]

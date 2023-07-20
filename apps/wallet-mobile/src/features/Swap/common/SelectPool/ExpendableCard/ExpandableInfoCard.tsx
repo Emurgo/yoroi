@@ -1,19 +1,28 @@
 import React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {Pressable, StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon, Spacer} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
 
 type SelectPoolCardProps = {
-  label: string | null
-  mainInfo: {value: string; label: string}
-  secondaryInfo: Array<{label: string; value: string}>
+  label: string | React.ReactNode | null
+  mainInfo: Array<{value?: string; label: string}>
+  hiddenInfo: Array<{label: string; value: string}>
   navigateTo?: () => void
+  buttonAction?: () => void
+  buttonText?: string
 }
 
-export const ExpandableInfoCard = ({label, mainInfo, secondaryInfo, navigateTo}: SelectPoolCardProps) => {
-  const [showSecondaryInfo, setShowSecondaryInfo] = React.useState(false)
+export const ExpandableInfoCard = ({
+  label,
+  mainInfo,
+  hiddenInfo,
+  navigateTo,
+  buttonText,
+  buttonAction,
+}: SelectPoolCardProps) => {
+  const [showHiddenInfo, setShowHiddenInfo] = React.useState(false)
 
   return (
     <View style={[styles.container]}>
@@ -22,20 +31,36 @@ export const ExpandableInfoCard = ({label, mainInfo, secondaryInfo, navigateTo}:
           <Text style={[styles.label]}>{label}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => setShowSecondaryInfo(!showSecondaryInfo)}>
-          {showSecondaryInfo ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
+        <TouchableOpacity onPress={() => setShowHiddenInfo(!showHiddenInfo)}>
+          {showHiddenInfo ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
         </TouchableOpacity>
       </View>
 
       <Spacer height={8} />
 
       <View>
-        <Text style={styles.text}>{`${mainInfo.label} ${mainInfo.value}`}</Text>
+        {mainInfo.map((item, index) => (
+          <>
+            <View key={index} style={styles.flexBetween}>
+              <Text style={styles.gray}>{`${item.label}`}</Text>
+
+              {item?.value != null && <Text style={styles.text}>{`${item?.value}`}</Text>}
+            </View>
+
+            {index !== mainInfo.length - 1 && <Spacer height={8} />}
+          </>
+        ))}
       </View>
 
-      {showSecondaryInfo && (
+      {buttonText != null && (
+        <Pressable style={styles.button} onPress={buttonAction}>
+          <Text style={styles.buttonText}>{buttonText}</Text>
+        </Pressable>
+      )}
+
+      {showHiddenInfo && (
         <View>
-          {secondaryInfo.map((item, index) => {
+          {hiddenInfo.map((item, index) => {
             return (
               <View key={item.label}>
                 <Spacer height={8} />
@@ -88,5 +113,13 @@ const styles = StyleSheet.create({
   },
   gray: {
     color: COLORS.GRAY,
+  },
+  button: {
+    width: 111,
+  },
+  buttonText: {
+    fontSize: 14,
+    paddingTop: 13,
+    fontWeight: '500',
   },
 })
