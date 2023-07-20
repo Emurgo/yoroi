@@ -14,6 +14,7 @@ export const enterPIN = async (pin: string): Promise<void> => {
 }
 
 export const getSeedPhrase = async (): Promise<Array<string>> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const allWords: Array<string|any> = []
   for (let i = 0; i < 15; i++) {
     const elementAttrs = await mnemonicByIndexText(i).getAttributes()
@@ -40,14 +41,14 @@ export const enterRecoveryPhrase = async (phraseArray: string[]): Promise<void> 
 
 export const prepareApp = async (): Promise<void> => {
   await expect(element(by.text('Select Language'))).toBeVisible()
-  await expect(prepareScreens.btn_selectLanguageEnglish()).toBeVisible() 
+  await expect(prepareScreens.btn_SelectLanguageEnglish()).toBeVisible() 
   await prepareScreens.btn_Next().tap()
 
 
-  await expect(prepareScreens.chkbox_acceptTos()).toBeVisible()
-  await prepareScreens.chkbox_acceptTos().tap()
-  await expect(prepareScreens.btn_accept()).toBeVisible()
-  await prepareScreens.btn_accept().tap()
+  await expect(prepareScreens.chkbox_AcceptTos()).toBeVisible()
+  await prepareScreens.chkbox_AcceptTos().tap()
+  await expect(prepareScreens.btn_Accept()).toBeVisible()
+  await prepareScreens.btn_Accept().tap()
 
   await expect(pinKeyButton('1')).toBeVisible()
   await enterPIN(VALID_PIN)
