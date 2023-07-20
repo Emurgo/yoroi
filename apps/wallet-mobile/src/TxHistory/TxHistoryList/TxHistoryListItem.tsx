@@ -120,10 +120,10 @@ const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: Transa
   return (
     <View style={styles.amount} testID="transactionAmount">
       <Text style={style} secondary={transaction.assurance === 'PENDING'}>
-        <Text>{privacyMode === 'HIDDEN' ? '**' : formatTokenInteger(asQuantity(amount), wallet.primaryToken)}</Text>
+        <Text>{privacyMode === 'HIDDEN' ? '*' : formatTokenInteger(asQuantity(amount), wallet.primaryToken)}</Text>
 
         <Text small>
-          {privacyMode === 'HIDDEN' ? '******' : formatTokenFractional(asQuantity(amount), wallet.primaryToken)}
+          {privacyMode === 'HIDDEN' ? '.******' : formatTokenFractional(asQuantity(amount), wallet.primaryToken)}
         </Text>
       </Text>
 
