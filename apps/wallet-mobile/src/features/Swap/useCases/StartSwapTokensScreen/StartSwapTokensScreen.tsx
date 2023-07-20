@@ -7,7 +7,7 @@ import {Button, Icon, Spacer} from '../../../../components'
 import {COLORS} from '../../../../theme'
 import ButtonGroup from '../../common/ButtonGroup/ButtonGroup'
 import {MarketPrice} from '../../common/MarketPriceCard'
-import {SelectPoolCard} from '../../common/SelectPoolCard'
+import {ChoosePoolSection} from '../../common/SelectPool'
 import {SlippageTolerance} from '../../common/SlippageTolerance'
 import {AddTokenFromCard} from '../AddTokens/AddTokenFromCard'
 import {AddTokenToCard} from '../AddTokens/AddTokenToCard'
@@ -51,7 +51,7 @@ export const StartSwapTokensScreen = () => {
 
         <SlippageTolerance />
 
-        <SelectPoolCard />
+        <ChoosePoolSection />
 
         <Actions>
           <Button testID="swapButton" shelleyTheme title={strings.swap} />

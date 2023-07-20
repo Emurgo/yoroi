@@ -1,6 +1,6 @@
-import {defineMessages} from 'react-intl'
+import { defineMessages } from 'react-intl'
 
-import {supportedCurrencies} from '../yoroi-wallets/types/other'
+import { supportedCurrencies } from '../yoroi-wallets/types/other'
 
 /*
  * Some messages need to be used in multiple components
@@ -660,6 +660,10 @@ export default defineMessages({
   assets: {
     id: 'global.assets',
     defaultMessage: '!!! Assets',
+  },
+  pools: {
+    id: 'global.pools',
+    defaultMessage: '!!! Pools',
   },
   all: {
     id: 'global.all',

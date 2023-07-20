@@ -181,6 +181,7 @@ export type TxHistoryRoutes = {
   'swap-select-token-from': undefined
   'swap-select-token-to': undefined
   'swap-slippage-tolerance-input': undefined
+  'swap-select-pool': undefined
 }
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
@@ -190,6 +191,7 @@ export type SwapTokenRoutes = {
   'swap-select-token-from': undefined
   'swap-select-token-to': undefined
   'swap-slippage-tolerance-input': undefined
+  'swap-select-pool': undefined
 }
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 

@@ -19,6 +19,7 @@ import {SwapProvider} from '../features/Swap/common/SwapContext'
 import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/AddTokens/SelectTokenFromListScreen'
 import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/AddTokens/SelectTokenToListScreen'
 import {InputSlippageToleranceScreen} from '../features/Swap/useCases/InputSlippageToleranceScreen'
+import {SelectPoolScreen} from '../features/Swap/useCases/SelectPoolScreen/SelectPoolScreen'
 import {StartSwapScreen} from '../features/Swap/useCases/StartSwapScreen'
 import {StartSwapTokensScreen} from '../features/Swap/useCases/StartSwapTokensScreen/StartSwapTokensScreen'
 import {
@@ -116,6 +117,15 @@ export const TxHistoryNavigator = () => {
             options={{
               ...defaultStackNavigationOptionsV2,
               title: strings.slippageTolerance,
+            }}
+          />
+
+          <Stack.Screen
+            name="swap-select-pool"
+            component={SelectPoolScreen}
+            options={{
+              ...defaultStackNavigationOptionsV2,
+              title: strings.selectPool,
             }}
           />
 
@@ -262,6 +272,10 @@ const messages = defineMessages({
     id: 'swap.swapScreen.slippageTolerance',
     defaultMessage: '!!!Slippage Tolerance',
   },
+  selectPool: {
+    id: 'swap.swapScreen.selectPool',
+    defaultMessage: '!!!Select pool',
+  },
   sendTitle: {
     id: 'components.send.sendscreen.title',
     defaultMessage: '!!!Send',
@@ -304,6 +318,7 @@ const useStrings = () => {
     swapFromTitle: intl.formatMessage(messages.swapFromTitle),
     swapToTitle: intl.formatMessage(messages.swapToTitle),
     slippageTolerance: intl.formatMessage(messages.slippageTolerance),
+    selectPool: intl.formatMessage(messages.selectPool),
     sendTitle: intl.formatMessage(messages.sendTitle),
     qrScannerTitle: intl.formatMessage(messages.qrScannerTitle),
     selectAssetTitle: intl.formatMessage(messages.selectAssetTitle),

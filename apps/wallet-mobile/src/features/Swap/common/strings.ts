@@ -25,6 +25,7 @@ export const useStrings = () => {
     defaultSlippage: intl.formatMessage(messages.defaultSlippage),
     slippageInfo: intl.formatMessage(messages.slippageInfo),
     enterSlippage: intl.formatMessage(messages.enterSlippage),
+    pools: (qty: number) => intl.formatMessage(globalMessages.pools, {qty}),
     
     // search
     searchTokens: intl.formatMessage(messages.searchTokens),

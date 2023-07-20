@@ -2,22 +2,25 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Icon, Spacer} from '../../../../../src/components'
-import {COLORS} from '../../../../../src/theme'
+import {Icon, Spacer} from '../../../../../components'
+import {COLORS} from '../../../../../theme'
 
 type SelectPoolCardProps = {
   label: string | null
   mainInfo: {value: string; label: string}
   secondaryInfo: Array<{label: string; value: string}>
+  navigateTo?: () => void
 }
 
-export const ExpandableInfoCard = ({label, mainInfo, secondaryInfo}: SelectPoolCardProps) => {
+export const ExpandableInfoCard = ({label, mainInfo, secondaryInfo, navigateTo}: SelectPoolCardProps) => {
   const [showSecondaryInfo, setShowSecondaryInfo] = React.useState(false)
 
   return (
     <View style={[styles.container]}>
       <View style={styles.flexBetween}>
-        <Text style={[styles.label]}>{label}</Text>
+        <TouchableOpacity onPress={() => navigateTo && navigateTo()}>
+          <Text style={[styles.label]}>{label}</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={() => setShowSecondaryInfo(!showSecondaryInfo)}>
           {showSecondaryInfo ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
