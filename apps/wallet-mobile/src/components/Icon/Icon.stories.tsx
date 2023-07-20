@@ -2,8 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {ColorSchemeName, ScrollView, Text, TextInput, View} from 'react-native'
 
-import {Icon} from '..'
 import {mockTransactionInfo} from '../../yoroi-wallets/mocks'
+import {Icon} from '..'
 
 storiesOf('Icon', module).add('Gallery', () => {
   return (
