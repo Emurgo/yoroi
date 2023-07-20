@@ -55,7 +55,7 @@ storiesOf('PairedBalance', module)
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{borderWidth: 1}}>
-              <PairedBalance amount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} privacy />
+              <PairedBalance amount={{quantity: '2', tokenId: mocks.wallet.primaryTokenInfo.id}} privacyMode="HIDDEN" />
             </View>
           </View>
         </SelectedWalletProvider>
