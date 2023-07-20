@@ -2,6 +2,44 @@ import {BalanceAmount, BalanceToken} from '../balance/token'
 
 export type SwapOrderType = 'market' | 'limit'
 
+export type SwapProtocol =
+  | 'minswap'
+  | 'sundaeswap'
+  | 'wingriders'
+  | 'muesliswap'
+
+export type SwapOrder = {
+  address: string
+  protocol: SwapProtocol
+  poolId?: string // Only required for SundaeSwap trades.
+  sell: {
+    policyId: string
+    assetName: string // Hexadecimal representation of token, i.e. "" for lovelace, "4d494c4b" for MILK.
+    amount: string
+  }
+  buy: {
+    policyId: string
+    assetName: string
+    amount: string
+  }
+}
+
+export type SwapOpenOrder = {
+  provider: SwapProtocol
+  from: {
+    amount: string
+    token: string
+  }
+  to: {
+    amount: string
+    token: string
+  }
+  deposit: string
+  utxo: string
+}
+
+export type SwapNetwork = 'mainnet' | 'preprod'
+
 export type SwapSlippageOptions =
   | '0'
   | '0.1'
@@ -10,12 +48,6 @@ export type SwapSlippageOptions =
   | '2'
   | '3'
   | 'Manual'
-
-export type SwapProtocol =
-  | 'minswap'
-  | 'sundaeswap'
-  | 'wingriders'
-  | 'muesliswap'
 
 export type SwapFactoryOptions = {
   apiUrl: string
@@ -40,15 +72,6 @@ export type SwapOrderCreateData = {
     }
 )
 
-export type SwapOrder = Omit<SwapOrderCreateData, 'address'> & {
-  deposit: string
-  utxo: string
-  // check wallet address
-  // check fields
-  createdAt: Date
-  txHash: string
-}
-
 export type SwapOrderCancelData = {
   utxos: {
     order: string
@@ -64,20 +87,35 @@ export type SwapOrderDatum = {
 }
 
 export type SwapPool = {
-  protocol: SwapProtocol
-  id: string | undefined
-  minDeposit: string
-  fees: {
-    batcher: string
-    pool: string
+  provider:
+    | 'minswap'
+    | 'sundaeswap'
+    | 'wingriders'
+    | 'muesliswap_v1'
+    | 'muesliswap_v2'
+    | 'muesliswap_v3'
+  fee: string // % pool liquidity provider fee, usually 0.3.
+  tokenA: {
+    amount: string // amount of tokenA in the pool, without decimals.
+    token: string // hexadecimal representation of tokenA, i.e. "." for lovelace, "8a1cfae21368b8bebbbed9800fec304e95cce39a2a57dc35e2e3ebaa.4d494c4b" for MILK.
   }
-  tokens: {
-    a: BalanceToken
-    b: BalanceToken
-    lp: BalanceToken
+  tokenB: {
+    amount: string // amount of tokenB in the pool, without decimals.
+    token: string // hexadecimal representation of tokenB, i.e. "." for lovelace, "8a1cfae21368b8bebbbed9800fec304e95cce39a2a57dc35e2e3ebaa.4d494c4b" for MILK.
   }
-  price: number
-  lastUpdate: Date
+  price: number // float, current price in tokenA / tokenB according to the pool, NOT SUITABLE for price calculations, just for display purposes, i.e. 0.9097362621640215.
+  batcherFee: {
+    amount: string // amount of fee taken by protocol batchers, in lovelace.
+    token: '.'
+  }
+  deposit: number // amount of deposit / minUTxO required by protocol, returned to user, in lovelace.
+  utxo: string // txhash#txindex of latest transaction involving this pool.
+  poolId: string // identifier of the pool across platforms.
+  timestamp: string // latest update of this pool in UTC, i.e. 2023-05-23 06:13:26.
+  lpToken: {
+    amount: string // amount of lpToken minted by the pool, without decimals.
+    token: string // hexadecimal representation of lpToken,
+  }
 }
 
 export type SwapModule = {

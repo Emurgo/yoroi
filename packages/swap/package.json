@@ -1,0 +1,26 @@
+{
+  "name": "@yoroi/swap",
+  "version": "0.0.1",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/Emurgo/yoroi.git",
+    "directory": "packages/swap"
+  },
+  "license": "Apache-2.0",
+  "author": "EMURGO",
+  "main": "dist/index.js",
+  "source": "index",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@emurgo/cross-csl-core": "2.2.0",
+    "axios": "1.4.0"
+  },
+  "devDependencies": {
+    "typescript": "5.0.4",
+    "vitest": "0.31.1"
+  }
+}
