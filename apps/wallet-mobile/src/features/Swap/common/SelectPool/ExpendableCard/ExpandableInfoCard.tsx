@@ -5,9 +5,9 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {Icon, Spacer} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
 
-type SelectPoolCardProps = {
+type ExpandableInfoCardProps = {
   label: string | React.ReactNode | null
-  mainInfo: Array<{value?: string; label: string}>
+  mainInfo: Array<{label: string; value?: string}>
   hiddenInfo: Array<{label: string; value: string}>
   navigateTo?: () => void
   buttonAction?: () => void
@@ -21,9 +21,8 @@ export const ExpandableInfoCard = ({
   navigateTo,
   buttonText,
   buttonAction,
-}: SelectPoolCardProps) => {
+}: ExpandableInfoCardProps) => {
   const [showHiddenInfo, setShowHiddenInfo] = React.useState(false)
-
   return (
     <View style={[styles.container]}>
       <View style={styles.flexBetween}>
@@ -39,21 +38,21 @@ export const ExpandableInfoCard = ({
       <Spacer height={8} />
 
       <View>
-        {mainInfo.map((item, index) => (
+        {mainInfo?.map((item, index) => (
           <>
             <View key={index} style={styles.flexBetween}>
               <Text style={styles.gray}>{`${item.label}`}</Text>
 
-              {item?.value != null && <Text style={styles.text}>{`${item?.value}`}</Text>}
+              {item?.value !== undefined && <Text style={styles.text}>{`${item?.value}`}</Text>}
             </View>
 
-            {index !== mainInfo.length - 1 && <Spacer height={8} />}
+            {index !== mainInfo?.length - 1 && <Spacer height={8} />}
           </>
         ))}
       </View>
 
       {buttonText != null && (
-        <Pressable style={styles.button} onPress={buttonAction}>
+        <Pressable style={styles.button} onPress={buttonAction && buttonAction}>
           <Text style={styles.buttonText}>{buttonText}</Text>
         </Pressable>
       )}

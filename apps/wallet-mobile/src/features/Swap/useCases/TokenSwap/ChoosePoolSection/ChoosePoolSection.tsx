@@ -8,7 +8,7 @@ export const ChoosePoolSection = () => {
   return (
     <ExpandableInfoCard
       label="Minswap (Auto)"
-      mainInfo={{label: 'Total', value: '11 ADA'}}
+      mainInfo={[{label: 'Total 11 ADA'}]}
       navigateTo={() => navigate.selectPool()}
       hiddenInfo={[
         {
