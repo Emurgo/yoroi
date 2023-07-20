@@ -33,12 +33,15 @@ type Props = {
   yoroiUnsignedTx: YoroiUnsignedTx
   useUSB: boolean
   setUseUSB: (useUSB: boolean) => void
+  supportsCIP36?: boolean
+  onCIP36SupportChange?: (isSupported: boolean) => void
   isProvidingPassword?: boolean
   providedPassword?: string
   disabled?: boolean
   autoSignIfEasyConfirmation?: boolean
   chooseTransportOnConfirmation?: boolean
   biometricInstructions?: Array<string>
+  autoConfirm?: boolean
 }
 
 export const ConfirmTx = ({
@@ -53,6 +56,9 @@ export const ConfirmTx = ({
   disabled,
   autoSignIfEasyConfirmation,
   chooseTransportOnConfirmation,
+  supportsCIP36,
+  onCIP36SupportChange,
+  autoConfirm,
 }: Props) => {
   const strings = useStrings()
   const navigation = useNavigation()
@@ -62,6 +68,7 @@ export const ConfirmTx = ({
   const {mutateAsync: submitTx} = useSubmitTx({wallet})
 
   const [password, setPassword] = useState('')
+  const [isProcessed, setIsProcessed] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [dialogStep, setDialogStep] = useState(DialogStep.Closed)
   const [errorData, setErrorData] = useState<ErrorData>({
@@ -92,16 +99,17 @@ export const ConfirmTx = ({
   const onConfirmationChooseTransport = (useUSB: boolean) => {
     if (!wallet.hwDeviceInfo) throw new Error('No device info')
     setUseUSB(useUSB)
+
     setDialogStep(DialogStep.LedgerConnect)
   }
 
   const onMountChooseTransport = (useUSB: boolean) => {
     if (!wallet.hwDeviceInfo) throw new Error('No device info')
     setUseUSB(useUSB)
-    if (
-      (useUSB && wallet.hwDeviceInfo.hwFeatures.deviceObj == null) ||
-      (!useUSB && wallet.hwDeviceInfo.hwFeatures.deviceId == null)
-    ) {
+
+    const hwFeatures = wallet.hwDeviceInfo.hwFeatures
+
+    if ((useUSB && hwFeatures.deviceObj == null) || (!useUSB && hwFeatures.deviceId == null)) {
       setDialogStep(DialogStep.LedgerConnect)
     } else {
       setDialogStep(DialogStep.Closed)
@@ -110,6 +118,14 @@ export const ConfirmTx = ({
 
   const onConnectUSB = async (deviceObj: DeviceObj) => {
     await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
+
+    if (yoroiUnsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
+      const isCIP36Supported = await wallet.ledgerSupportsCIP36(useUSB)
+      if (supportsCIP36 !== isCIP36Supported) {
+        onCIP36SupportChange(isCIP36Supported)
+        return
+      }
+    }
 
     if (chooseTransportOnConfirmation) {
       await delay(1000)
@@ -121,6 +137,14 @@ export const ConfirmTx = ({
 
   const onConnectBLE = async (deviceId: DeviceId) => {
     await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
+
+    if (yoroiUnsignedTx.unsignedTx.catalystRegistrationData && onCIP36SupportChange) {
+      const isCIP36Supported = await wallet.ledgerSupportsCIP36(useUSB)
+      if (supportsCIP36 !== isCIP36Supported) {
+        onCIP36SupportChange(isCIP36Supported)
+        return
+      }
+    }
 
     if (chooseTransportOnConfirmation) {
       await delay(1000)
@@ -189,6 +213,7 @@ export const ConfirmTx = ({
           })
         }
       } finally {
+        setIsProcessed(true)
         setIsProcessing(false)
       }
     },
@@ -214,6 +239,11 @@ export const ConfirmTx = ({
       _onConfirm()
     }
   }, [autoSignIfEasyConfirmation, wallet.isEasyConfirmationEnabled, _onConfirm])
+
+  useEffect(() => {
+    if (!autoConfirm || isProcessing || isProcessed) return
+    onConfirm()
+  }, [autoConfirm, onConfirm, isProcessing, isProcessed])
 
   useEffect(() => {
     if (wallet.isHW && !chooseTransportOnConfirmation) {
