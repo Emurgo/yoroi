@@ -3,16 +3,20 @@ import React from 'react'
 import Config from 'react-native-config'
 
 import {features} from '../features'
+import {Logger} from '../yoroi-wallets/logging'
 import {parseBoolean} from '../yoroi-wallets/utils'
 import {ampli} from './ampli'
 
 const featureFlag = features.analytics
 
-const environment = __DEV__
-  ? 'development'
-  : ({NIGHTLY: 'production', PROD: 'production', STAGING: 'staging', DEV: 'development'} as const)[
-      Config.BUILD_VARIANT ?? 'DEV'
-    ] ?? 'development'
+const environmentMap = {
+  DEV: 'development',
+  PROD: 'production',
+  STAGING: 'staging',
+  NIGHTLY: 'production',
+} as const
+
+const environment = __DEV__ ? 'development' : environmentMap[Config.BUILD_VARIANT ?? 'DEV'] ?? 'development'
 
 export const metrics = new Proxy(ampli, {
   get(target, prop) {
@@ -20,7 +24,7 @@ export const metrics = new Proxy(ampli, {
     if (typeof original !== 'function' || prop === 'track' || prop === 'isInitializedAndEnabled') return original
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (this: any, ...args: any[]) {
-      if (__DEV__ || !featureFlag) console.debug('[metrics-react-native] ', prop, ...args)
+      if (__DEV__ || !featureFlag) Logger.info('[metrics-react-native] ', prop, ...args)
       if (featureFlag) original.call(this, ...args)
     }
   },

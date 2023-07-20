@@ -13,7 +13,6 @@ import {LanguageProvider} from './i18n'
 import {InitApp} from './InitApp'
 import {CONFIG} from './legacy/config'
 import {setLogLevel} from './legacy/logging'
-import {useInitMetrics} from './metrics'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet/Context'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
 import {ThemeProvider} from './theme'
@@ -39,10 +38,9 @@ const queryClient = new QueryClient()
 
 export const YoroiApp = () => {
   const migrated = useMigrations(storage)
-  const metrics = useInitMetrics()
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  return migrated && metrics ? (
+  return migrated ? (
     <StorageProvider>
       <WalletManagerProvider walletManager={walletManager}>
         <ErrorBoundary>
