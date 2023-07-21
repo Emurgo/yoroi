@@ -33,7 +33,7 @@ export const useSetPrivacyMode = ({...options}: UseMutationOptions<void, Error, 
   return mutation.mutate
 }
 
-type PrivacyMode = 'SHOWN' | 'HIDDEN'
+export type PrivacyMode = 'SHOWN' | 'HIDDEN'
 const defaultPrivacyMode: PrivacyMode = 'SHOWN'
 
 const parsePrivacyMode = (data: unknown) => {

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Receive",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 188,
+      "line": 192,
       "column": 16,
-      "index": 5905
+      "index": 6068
     },
     "end": {
-      "line": 191,
+      "line": 195,
       "column": 3,
-      "index": 5994
+      "index": 6157
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Send",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 192,
+      "line": 196,
       "column": 13,
-      "index": 6009
+      "index": 6172
     },
     "end": {
-      "line": 195,
+      "line": 199,
       "column": 3,
-      "index": 6089
+      "index": 6252
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Scan QR code address",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 196,
+      "line": 200,
       "column": 18,
-      "index": 6109
+      "index": 6272
     },
     "end": {
-      "line": 199,
+      "line": 203,
       "column": 3,
-      "index": 6210
+      "index": 6373
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Select asset",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 200,
+      "line": 204,
       "column": 20,
-      "index": 6232
+      "index": 6395
     },
     "end": {
-      "line": 203,
+      "line": 207,
       "column": 3,
-      "index": 6321
+      "index": 6484
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Selected tokens",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 204,
+      "line": 208,
       "column": 26,
-      "index": 6349
+      "index": 6512
     },
     "end": {
-      "line": 207,
+      "line": 211,
       "column": 3,
-      "index": 6453
+      "index": 6616
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Edit amount",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 208,
+      "line": 212,
       "column": 19,
-      "index": 6474
+      "index": 6637
     },
     "end": {
-      "line": 211,
+      "line": 215,
       "column": 3,
-      "index": 6567
+      "index": 6730
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Confirm",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 212,
+      "line": 216,
       "column": 16,
-      "index": 6585
+      "index": 6748
     },
     "end": {
-      "line": 215,
+      "line": 219,
       "column": 3,
-      "index": 6671
+      "index": 6834
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Share this address to receive payments. To protect your privacy, new addresses are generated automatically once you use them.",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
-      "line": 216,
+      "line": 220,
       "column": 19,
-      "index": 6692
+      "index": 6855
     },
     "end": {
-      "line": 222,
+      "line": 226,
       "column": 3,
-      "index": 6930
+      "index": 7093
     }
   }
 ]

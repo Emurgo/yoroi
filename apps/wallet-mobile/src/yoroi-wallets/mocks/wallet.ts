@@ -62,7 +62,9 @@ const wallet: YoroiWallet = {
     throw new Error('not implemented: getStakingInfo')
   },
   encryptedStorage: mockEncryptedStorage,
-
+  ledgerSupportsCIP36: async () => {
+    return true
+  },
   createUnsignedTx: () => {
     throw new Error('not implemented: createUnsignedTx')
   },
