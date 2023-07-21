@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@0no-co/graphql.web/-/graphql.web-1.0.4.tgz#9606eb651955499525d068ce0ad8bea596286ce2"
   integrity sha512-W3ezhHGfO0MS1PtGloaTpg0PbaT8aZSmmaerL7idtU5F7oCI+uu25k+MsMS31BVFlp4aMkHSrNRxiD72IlK8TA==
 
-"@amplitude/ampli@^1.31.5":
-  version "1.31.5"
-  resolved "https://registry.yarnpkg.com/@amplitude/ampli/-/ampli-1.31.5.tgz#9354a46de50a109437ce5fd89c73f238f65a671a"
-  integrity sha512-rHqsTQOrjYvewD9rX+iwKWg34KwwCVacjWIrCyLqZJnKl8yCixfwgdzbDpVtVPXOzy4DgsKiCHoaqly9XGrjgA==
+"@amplitude/ampli@^1.32.0":
+  version "1.32.0"
+  resolved "https://registry.yarnpkg.com/@amplitude/ampli/-/ampli-1.32.0.tgz#f0175c3f6e5423609b0dab92a748f6ceac1d9381"
+  integrity sha512-mpSB0AP2xJbcGrJiOSRS9pq6sEXd9pn0coCv3toHItvcgzv7SY/8FaUDF67cSo9II5Y4tlHWhC0ZEEMT9Pzy+w==
   dependencies:
     "@amplitude/identify" "^1.10.0"
     "@amplitude/node" "^1.10.0"

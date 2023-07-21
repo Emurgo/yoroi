@@ -7,6 +7,8 @@ Metrics feature uses Amplitude service to send analytics of the app.
 To update the metrics with new Amplitude events, run script `metrics-pull`.
 To check if all events are implemented in the codebase, run script `metrics-status`.
 
+**The status script does static analysis of the code, so it needs the usage to be `ampli.XXX`**
+
 If prompted which region to use, select `us`.
 
 These scripts use an Amplitude provided wrapper called [ampli]('https://www.docs.developers.amplitude.com/data/sdks/ampli-overview'). Configuration of the wrapper can be found in `ampli.json`.
@@ -21,9 +23,9 @@ When you run the scripts for the first time, it will ask you to login the cli wi
 Track or identify operations are done using the `metrics` object, and come with their typed methods from Amplitude definition:
 
 ```tsx
-import {metrics} from './metrics'
+import {ampli} from './metrics'
 
-metrics.nftGalleryDetailsNavigation({nft_navigation: 'Next'})
+ampli.nftGalleryDetailsNavigation({nft_navigation: 'Next'})
 ```
 
 ## Enable/disable and mock

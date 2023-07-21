@@ -1,4 +1,5 @@
 /* tslint:disable */
+/* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
 // @ts-nocheck
 /**
@@ -60,17 +61,6 @@ export type LoadOptionsWithClientInstance = LoadOptionsBase & { client: { instan
 
 export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance;
 
-export interface NftGalleryDetailsNavigationProperties {
-  /**
-   * Describe the navigation buttons on the NFT details view
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Enum Values | Next, Previous |
-   */
-  nft_navigation: "Next" | "Previous";
-}
-
 export interface NftGalleryDetailsTabProperties {
   /**
    * | Rule | Value |
@@ -78,17 +68,6 @@ export interface NftGalleryDetailsTabProperties {
    * | Enum Values | Overview, Metadata |
    */
   nft_tab: "Overview" | "Metadata";
-}
-
-export interface NftGalleryGridViewSelectedProperties {
-  /**
-   * Describe what type of grid is using the NFT gallery
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Enum Values | 4_rows, 6_rows |
-   */
-  nft_grid_view?: "4_rows" | "6_rows";
 }
 
 export interface NftGalleryPageViewedProperties {
@@ -103,6 +82,14 @@ export interface NftGalleryPageViewedProperties {
 }
 
 export interface NftGallerySearchActivatedProperties {
+  /**
+   * The total number of NFT's that an user have
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  nft_count: number;
   /**
    * What user is looking to search on NFT gallery page
    */
@@ -751,16 +738,6 @@ export interface SwapProperties {
   to_asset: string;
 }
 
-export class NftGalleryDetailsNavigation implements BaseEvent {
-  event_type = 'NFT Gallery Details Navigation';
-
-  constructor(
-    public event_properties: NftGalleryDetailsNavigationProperties,
-  ) {
-    this.event_properties = event_properties;
-  }
-}
-
 export class NftGalleryDetailsPageViewed implements BaseEvent {
   event_type = 'NFT Gallery Details Page Viewed';
 }
@@ -770,16 +747,6 @@ export class NftGalleryDetailsTab implements BaseEvent {
 
   constructor(
     public event_properties: NftGalleryDetailsTabProperties,
-  ) {
-    this.event_properties = event_properties;
-  }
-}
-
-export class NftGalleryGridViewSelected implements BaseEvent {
-  event_type = 'NFT Gallery Grid View Selected';
-
-  constructor(
-    public event_properties?: NftGalleryGridViewSelectedProperties,
   ) {
     this.event_properties = event_properties;
   }
@@ -1063,23 +1030,6 @@ export class Ampli {
   }
 
   /**
-   * NFT Gallery Details Navigation
-   *
-   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/NFT%20Gallery%20Details%20Navigation)
-   *
-   * Event has no description in tracking plan.
-   *
-   * @param properties The event's properties (e.g. nft_navigation)
-   * @param options Amplitude event options.
-   */
-  nftGalleryDetailsNavigation(
-    properties: NftGalleryDetailsNavigationProperties,
-    options?: EventOptions,
-  ) {
-    return this.track(new NftGalleryDetailsNavigation(properties), options);
-  }
-
-  /**
    * NFT Gallery Details Page Viewed
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/NFT%20Gallery%20Details%20Page%20Viewed)
@@ -1112,28 +1062,11 @@ export class Ampli {
   }
 
   /**
-   * NFT Gallery Grid View Selected
-   *
-   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/NFT%20Gallery%20Grid%20View%20Selected)
-   *
-   * Event has no description in tracking plan.
-   *
-   * @param properties The event's properties (e.g. nft_grid_view)
-   * @param options Amplitude event options.
-   */
-  nftGalleryGridViewSelected(
-    properties?: NftGalleryGridViewSelectedProperties,
-    options?: EventOptions,
-  ) {
-    return this.track(new NftGalleryGridViewSelected(properties), options);
-  }
-
-  /**
    * NFT Gallery Page Viewed
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/NFT%20Gallery%20Page%20Viewed)
    *
-   * This event tracks when the NFT gallery it has loaded all nfts, having at least the placeholder image loaded.
+   * This event tracks when the NFT gallery it has loaded all nfts metadata
    *
    * @param properties The event's properties (e.g. nft_count)
    * @param options Amplitude event options.
@@ -1150,9 +1083,9 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/NFT%20Gallery%20Search%20Activated)
    *
-   * Event has no description in tracking plan.
+   * User activates and starts a search in the NFT gallery. Delay of 0.5 seconds.
    *
-   * @param properties The event's properties (e.g. nft_search_term)
+   * @param properties The event's properties (e.g. nft_count)
    * @param options Amplitude event options.
    */
   nftGallerySearchActivated(

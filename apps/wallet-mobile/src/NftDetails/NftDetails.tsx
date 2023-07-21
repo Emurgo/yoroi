@@ -8,6 +8,7 @@ import {CopyButton, FadeIn, Icon, Spacer, Text} from '../components'
 import {NftPreview} from '../components/NftPreview'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {features} from '../features'
+import {ampli} from '../metrics'
 import {NftRoutes} from '../navigation'
 import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
@@ -32,14 +33,20 @@ export const NftDetails = () => {
 
         <Tabs>
           <Tab
-            onPress={() => setActiveTab('overview')}
+            onPress={() => {
+              setActiveTab('overview')
+              ampli.nftGalleryDetailsTab({nft_tab: 'Overview'})
+            }}
             label={strings.overview}
             active={activeTab === 'overview'}
             testID="overview"
           />
 
           <Tab
-            onPress={() => setActiveTab('metadata')}
+            onPress={() => {
+              setActiveTab('metadata')
+              ampli.nftGalleryDetailsTab({nft_tab: 'Metadata'})
+            }}
             label={strings.metadata}
             active={activeTab === 'metadata'}
             testID="metadata"

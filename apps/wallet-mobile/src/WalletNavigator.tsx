@@ -8,7 +8,6 @@ import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
 import {MenuNavigator} from './Menu'
-import {metrics} from './metrics'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
@@ -71,13 +70,6 @@ const WalletTabNavigator = () => {
             ),
             tabBarLabel: strings.nftsTabBarLabel,
             tabBarTestID: 'nftsTabBarButton',
-          }}
-          listeners={() => {
-            return {
-              focus: () => {
-                metrics.nftGalleryPageViewed({nft_count: 0})
-              },
-            }
           }}
         >
           {() => (

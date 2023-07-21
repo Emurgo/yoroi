@@ -2,7 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {metrics} from '../metrics'
+import {ampli} from '../metrics'
 import {defaultStackNavigationOptionsV2, NftRoutes} from '../navigation'
 import {NftDetails} from './NftDetails'
 import {NftDetailsImage} from './NftDetailsImage'
@@ -28,7 +28,7 @@ export const NftDetailsNavigator = () => {
         listeners={() => {
           return {
             focus: () => {
-              metrics.nftGalleryDetailsPageViewed()
+              ampli.nftGalleryDetailsPageViewed()
             },
           }
         }}

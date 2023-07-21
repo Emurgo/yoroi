@@ -5,7 +5,7 @@ import Config from 'react-native-config'
 import {features} from '../features'
 import {Logger} from '../yoroi-wallets/logging'
 import {parseBoolean} from '../yoroi-wallets/utils'
-import {ampli} from './ampli'
+import {ampli as originalAmpli} from './ampli'
 
 const featureFlag = features.analytics
 
@@ -18,22 +18,22 @@ const environmentMap = {
 
 const environment = __DEV__ ? 'development' : environmentMap[Config.BUILD_VARIANT ?? 'DEV'] ?? 'development'
 
-export const metrics = new Proxy(ampli, {
+export const ampli = new Proxy(originalAmpli, {
   get(target, prop) {
     const original = target[prop]
     if (typeof original !== 'function' || prop === 'track' || prop === 'isInitializedAndEnabled') return original
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function (this: any, ...args: any[]) {
-      if (__DEV__ || !featureFlag) Logger.info('[metrics-react-native] ', prop, ...args)
+      if (__DEV__) Logger.info('[metrics-react-native] ', prop, ...args)
       if (featureFlag) original.call(this, ...args)
     }
   },
 })
 
 const initMetrics = async () => {
-  if (metrics.isLoaded) return
+  if (ampli.isLoaded) return
   const enabled = await isMetricsEnabled()
-  metrics.load({environment, client: {configuration: {optOut: !enabled, flushIntervalMillis: 5000}}})
+  ampli.load({environment, client: {configuration: {optOut: !enabled, flushIntervalMillis: 5000}}})
 }
 
 const metricsStorageEnabledKey = 'metrics-enabled'
@@ -48,9 +48,9 @@ export const isMetricsEnabled = async () => {
 export const setMetricsEnabled = async (enabled: boolean) => {
   try {
     await AsyncStorage.setItem(metricsStorageEnabledKey, JSON.stringify(enabled))
-    metrics.client.setOptOut(!enabled)
+    ampli.client.setOptOut(!enabled)
   } catch (e) {
-    metrics.client.setOptOut(true)
+    ampli.client.setOptOut(true)
   }
 }
 

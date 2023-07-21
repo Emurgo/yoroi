@@ -4,10 +4,12 @@ import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, NftImageGallery, SkeletonGallery, Spacer} from '../components'
+import {ampli} from '../metrics'
 import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useNfts} from '../yoroi-wallets/hooks'
-import {filterNfts} from './filterNfts'
+import {TokenInfo} from '../yoroi-wallets/types'
+import {filterNfts, filterNftsMetrics} from './filterNfts'
 import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
 
@@ -27,14 +29,21 @@ export const Nfts = () => {
 
   const {isLoading, nfts, refetch, isError} = useNfts(wallet, {
     onSettled: () => {
-      if (isManualRefreshing) setIsManualRefreshing(false)
+      if (isManualRefreshing) setIsManualRefreshing(false)      
     },
   })
 
+  React.useEffect(() => {
+    if (isLoading || isError) return
+    ampli.nftGalleryPageViewed({nft_count: nfts.length})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError, isLoading])
+
+  const sortedNfts = React.useMemo(() => nfts.sort(sortNfts), [nfts])
+
   const {search: nftsSearchTerm} = useSearch()
-  const filteredNfts = filterNfts(nftsSearchTerm, nfts)
-  const sortedNfts = filteredNfts.sort((NftA, NftB) => sortNfts(NftA.name, NftB.name))
   const nftsSearchResult = filterNfts(nftsSearchTerm, sortedNfts)
+  filterNftsMetrics(nftsSearchTerm, nftsSearchResult.length)
 
   const hasEmptySearchResult = nftsSearchTerm.length > 0 && nftsSearchResult.length === 0
   const hasNotNfts = nftsSearchResult.length === 0
@@ -185,7 +194,7 @@ const LoadingScreen = ({nftsCount}: {nftsCount: number}) => {
   )
 }
 
-const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
+const sortNfts = ({name: A}: TokenInfo, {name: B}: TokenInfo) => A.localeCompare(B)
 
 const styles = StyleSheet.create({
   safeAreaView: {
