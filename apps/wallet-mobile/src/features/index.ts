@@ -13,7 +13,7 @@ export const features = {
   prefillWalletInfo: __DEV__ ? false : false,
   showProdPoolsInDev: __DEV__ ? false : false,
   moderatingNftsEnabled: __DEV__ ? false : false,
-  analytics: __DEV__ ? false : false,
+  analytics: __DEV__ ? true : false,
 }
 
 export const debugWalletInfo = {
