@@ -13,10 +13,11 @@ export const filterNfts = (searchTerm: string, nfts: TokenInfo[]): TokenInfo[] =
 export const useTrackNftGallerySearchActivated = (searchTerm: string, resultCount: number) => {
   React.useEffect(() => {
     if (!searchTerm) return
-    
-    const timeoutId = setTimeout(() =>
-      ampli.nftGallerySearchActivated({nft_search_term: searchTerm, nft_count: resultCount}),
-    500)
+
+    const timeoutId = setTimeout(
+      () => ampli.nftGallerySearchActivated({nft_search_term: searchTerm, nft_count: resultCount}),
+      500,
+    )
 
     return () => clearTimeout(timeoutId)
   }, [searchTerm, resultCount])

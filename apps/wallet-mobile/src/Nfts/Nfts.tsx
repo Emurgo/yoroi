@@ -29,14 +29,14 @@ export const Nfts = () => {
 
   const {isLoading, nfts, refetch, isError} = useNfts(wallet, {
     onSettled: () => {
-      if (isManualRefreshing) setIsManualRefreshing(false)      
+      if (isManualRefreshing) setIsManualRefreshing(false)
     },
   })
 
   React.useEffect(() => {
     if (isLoading || isError) return
     ampli.nftGalleryPageViewed({nft_count: nfts.length})
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError, isLoading])
 
   const sortedNfts = React.useMemo(() => nfts.sort(sortNfts), [nfts])
