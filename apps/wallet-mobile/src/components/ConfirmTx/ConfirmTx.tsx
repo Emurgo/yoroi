@@ -212,6 +212,7 @@ export const ConfirmTx = ({
             errorLogs: (err as any).message,
           })
         }
+        onError?.(err as Error)
       } finally {
         setIsProcessed(true)
         setIsProcessing(false)
