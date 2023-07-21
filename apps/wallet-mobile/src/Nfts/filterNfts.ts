@@ -1,3 +1,5 @@
+import React from 'react'
+
 import {ampli} from '../metrics'
 import {TokenInfo} from '../yoroi-wallets/types'
 
@@ -8,15 +10,14 @@ export const filterNfts = (searchTerm: string, nfts: TokenInfo[]): TokenInfo[] =
   return filteredNfts
 }
 
-let timeoutId: ReturnType<typeof setTimeout>
-let lastSearch = ''
-export const filterNftsMetrics = (searchTerm: string, resultCount: number) => {
-  if (searchTerm === lastSearch) return
-  lastSearch = searchTerm
-  clearTimeout(timeoutId)
-  timeoutId = setTimeout(() => {
-    if (searchTerm) {
-      ampli.nftGallerySearchActivated({nft_search_term: searchTerm, nft_count: resultCount})
-    }
-  }, 500)
+export const useTrackNftGallerySearchActivated = (searchTerm: string, resultCount: number) => {
+  React.useEffect(() => {
+    if (!searchTerm) return
+    
+    const timeoutId = setTimeout(() =>
+      ampli.nftGallerySearchActivated({nft_search_term: searchTerm, nft_count: resultCount}),
+    500)
+
+    return () => clearTimeout(timeoutId)
+  }, [searchTerm, resultCount])
 }

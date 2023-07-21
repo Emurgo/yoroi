@@ -9,7 +9,7 @@ import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useNfts} from '../yoroi-wallets/hooks'
 import {TokenInfo} from '../yoroi-wallets/types'
-import {filterNfts, filterNftsMetrics} from './filterNfts'
+import {filterNfts, useTrackNftGallerySearchActivated} from './filterNfts'
 import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
 
@@ -43,7 +43,7 @@ export const Nfts = () => {
 
   const {search: nftsSearchTerm} = useSearch()
   const nftsSearchResult = filterNfts(nftsSearchTerm, sortedNfts)
-  filterNftsMetrics(nftsSearchTerm, nftsSearchResult.length)
+  useTrackNftGallerySearchActivated(nftsSearchTerm, nftsSearchResult.length)
 
   const hasEmptySearchResult = nftsSearchTerm.length > 0 && nftsSearchResult.length === 0
   const hasNotNfts = nftsSearchResult.length === 0
