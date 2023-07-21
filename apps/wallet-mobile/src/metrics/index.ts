@@ -1,9 +1,11 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
 import Config from 'react-native-config'
+import {useQuery} from 'react-query'
 
 import {features} from '../features'
+import {useMutationWithInvalidations} from '../yoroi-wallets/hooks'
 import {Logger} from '../yoroi-wallets/logging'
+import {useStorage} from '../yoroi-wallets/storage'
 import {parseBoolean} from '../yoroi-wallets/utils'
 import {ampli as originalAmpli} from './ampli'
 
@@ -30,39 +32,41 @@ export const ampli = new Proxy(originalAmpli, {
   },
 })
 
-const initMetrics = async () => {
+const initMetrics = (enabled: boolean) => {
   if (ampli.isLoaded) return
-  const enabled = await isMetricsEnabled()
   ampli.load({environment, client: {configuration: {optOut: !enabled, flushIntervalMillis: 5000}}})
 }
 
-const metricsStorageEnabledKey = 'metrics-enabled'
-export const isMetricsEnabled = async () => {
-  try {
-    return parseBoolean(await AsyncStorage.getItem(metricsStorageEnabledKey)) ?? __DEV__
-  } catch (e) {
-    return __DEV__
-  }
-}
+const metricsEnabledKey = 'metrics-enabled'
+export const useMetricsEnabled = () => {
+  const storage = useStorage()
 
-export const setMetricsEnabled = async (enabled: boolean) => {
-  try {
-    await AsyncStorage.setItem(metricsStorageEnabledKey, JSON.stringify(enabled))
-    ampli.client.setOptOut(!enabled)
-  } catch (e) {
-    ampli.client.setOptOut(true)
-  }
+  const mutation = useMutationWithInvalidations<void, Error, boolean>({
+    mutationFn: async (enabled) => {
+      ampli.client.setOptOut(!enabled)
+      return storage.join('appSettings/').setItem(metricsEnabledKey, enabled)
+    },
+    invalidateQueries: [metricsEnabledKey],
+  })
+
+  const query = useQuery<boolean, Error>({
+    queryKey: [metricsEnabledKey],
+    queryFn: async () => (await storage.join('appSettings/').getItem(metricsEnabledKey, parseBoolean)) ?? false,
+    suspense: true,
+  })
+
+  return {enabled: query.data, setEnabled: mutation.mutate}
 }
 
 export const useInitMetrics = () => {
   const [done, setDone] = React.useState(false)
+  const {enabled} = useMetricsEnabled()
   React.useLayoutEffect(() => {
-    const run = async () => {
-      await initMetrics()
+    if (enabled !== undefined) {
+      initMetrics(enabled)
       setDone(true)
     }
-    run()
-  }, [])
+  }, [enabled])
 
   return done
 }

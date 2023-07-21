@@ -15,6 +15,8 @@ export const filterNftsMetrics = (searchTerm: string, resultCount: number) => {
   lastSearch = searchTerm
   clearTimeout(timeoutId)
   timeoutId = setTimeout(() => {
-    ampli.nftGallerySearchActivated({nft_search_term: searchTerm, nft_count: resultCount})
+    if (searchTerm) {
+      ampli.nftGallerySearchActivated({nft_search_term: searchTerm, nft_count: resultCount})
+    }
   }, 500)
 }
