@@ -2,7 +2,8 @@ import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {useCallback, useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {FlatList} from 'react-native-gesture-handler'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Boundary, Button, Icon, Spacer} from '../../../../components'
@@ -61,7 +62,6 @@ export const ListAmountsToSendScreen = () => {
   )
 
   const onEdit = (tokenId: string) => {
-    console.log('onEdit', tokenId)
     const tokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === tokenId)
     if (!tokenInfo || tokenInfo.kind === 'nft') return
 
