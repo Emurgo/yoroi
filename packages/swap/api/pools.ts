@@ -1,9 +1,9 @@
 import { Swap } from '@yoroi/types';
 import { AxiosInstance } from 'axios';
 import axios from 'axios';
-import { SWAP_API_ENDPOINTS } from './config';
+import { SWAP_API_ENDPOINTS } from './api/config';
 
-export class SwapPools {
+export class SwapPoolsApi {
   private readonly apiUrl: string;
 
   constructor(public readonly network: Swap.Netowrk) {
