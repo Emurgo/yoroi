@@ -4,7 +4,7 @@ import { SWAP_API_ENDPOINTS, axiosClient } from './config';
 export class SwapTokensApi {
   private readonly apiUrl: string;
 
-  constructor(netwok: Swap.Netowrk) {
+  constructor(public readonly netwok: Swap.Netowrk) {
     this.apiUrl = SWAP_API_ENDPOINTS[netwok].getTokens;
   }
 
@@ -12,12 +12,15 @@ export class SwapTokensApi {
     policyId = '',
     assetName = ''
   ): Promise<Swap.TokenInfo[]> {
-    const response = await axiosClient.get<Swap.TokenInfo[]>(
-      `/?base-policy-id=${policyId}&base-tokenname=${assetName}`,
-      {
-        baseURL: this.apiUrl,
-      }
-    );
+    if (this.netwok === 'preprod') return [];
+
+    const response = await axiosClient.get<Swap.TokenInfo[]>('', {
+      baseURL: this.apiUrl,
+      params: {
+        'base-policy-id': policyId,
+        'base-tokenname': assetName,
+      },
+    });
 
     if (response.status !== 200) {
       throw new Error('Failed to fetch tokens', { cause: response.data });
