@@ -3,7 +3,7 @@ import { SwapOrdersApi } from './orders';
 import axios from 'axios';
 import { axiosClient } from './config';
 
-vi.mock('../api/config');
+vi.mock('./config');
 
 const ADA_TOKEN = {
   policyId: '',
@@ -48,15 +48,15 @@ describe('SwapOrdersApi', () => {
       mockAxios.get.mockImplementationOnce(() =>
         Promise.resolve({
           status: 200,
-          data: mockedOrder,
+          data: mockedCreateOrderResult,
         })
       );
 
       const order = await api.createOrder(createOrderParams);
 
-      expect(order.contractAddress).to.eq(mockedOrder.address);
-      expect(order.datum).to.eq(mockedOrder.datum);
-      expect(order.datumHash).to.eq(mockedOrder.hash);
+      expect(order.contractAddress).to.eq(mockedCreateOrderResult.address);
+      expect(order.datum).to.eq(mockedCreateOrderResult.datum);
+      expect(order.datumHash).to.eq(mockedCreateOrderResult.hash);
     });
 
     it('should throw error for invalid order', async () => {
@@ -112,39 +112,7 @@ describe('SwapOrdersApi', () => {
       }).rejects.toThrow('Failed to cancel swap transaction');
     });
   });
-
-  // it('should throw error for invalid ');
-
-  // const order = await api.createOrder({
-  //   address:
-  //     'addr1qy0556dz9jssrrnhv0g3ga98uczdd465cut9jjs5a4k5qy3yl52kwxsh5wfx3darrc4xwql43ylj2n29dpq3xg46a6mska8vfz',
-  //   protocol: 'sundaeswap',
-  //   poolId: '14',
-  //   sell: {
-  //     policyId: '',
-  //     assetName: '',
-  //     amount: '25000000',
-  //   },
-  //   buy: {
-  //     policyId: 'dda5fdb1002f7389b33e036b6afee82a8189becb6cba852e8b79b4fb',
-  //     assetName: '0014df1047454e53',
-  //     amount: '50000000',
-  //   },
-  // });
-
-  // console.log({ order });
 });
-
-// vi.mock('../api/config', async () => {
-//   const actual = await vi.importActual('../api/config');
-
-//   return {
-//     ...(actual as {}),
-//     axiosClient: {
-//     get: () => Promise.resolve({ data: [], status: 200 }),
-//     },
-//   };
-// });
 
 const mockedOrders = [
   {
@@ -182,7 +150,7 @@ const mockedOrders = [
   },
 ];
 
-const mockedOrder = {
+const mockedCreateOrderResult = {
   status: 'success',
   datum:
     'd8799fd8799fd8799fd8799f581c353b8bc29a15603f0b73eac44653d1bd944d92e0e0dcd5eb185164a2ffd8799fd8799fd8799f581cda22c532206a75a628778eebaf63826f9d93fbe9b4ac69a7f8e4cd78ffffffff581c353b8bc29a15603f0b73eac44653d1bd944d92e0e0dcd5eb185164a21b00000188f2408726d8799fd8799f4040ffd8799f581cdda5fdb1002f7389b33e036b6afee82a8189becb6cba852e8b79b4fb480014df1047454e53ffffffd8799fd879801a0006517affff',

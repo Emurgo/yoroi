@@ -1,7 +1,10 @@
 import { Swap } from '@yoroi/types';
-import { AxiosInstance } from 'axios';
-import axios from 'axios';
-import { SWAP_API_ENDPOINTS } from './config';
+import { SWAP_API_ENDPOINTS, axiosClient } from './config';
+import fs from 'node:fs';
+
+type BaseTokenInfo =
+  | { policyId: string; assetName: string }
+  | { policyId: string; assetNameHex: string };
 
 export class SwapPoolsApi {
   private readonly apiUrl: string;
@@ -16,19 +19,27 @@ export class SwapPoolsApi {
    * @returns a list of pools for the given token pair.
    */
   public async getPools(
-    tokenA: { policyId: string; assetName: string },
-    tokenB: { policyId: string; assetName: string }
+    tokenA: BaseTokenInfo,
+    tokenB: BaseTokenInfo
   ): Promise<Swap.Pool[]> {
-    const response = await axios.get(
-      `/?policy-id1=${tokenA.policyId}&tokenname1=${tokenA.assetName}&policy-id2=${tokenB.policyId}&tokenname-hex2=${tokenB.assetName}`,
-      {
-        baseURL: this.apiUrl,
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const params: { [key: string]: string } = {
+      'policy-id1': tokenA.policyId,
+      'policy-id2': tokenB.policyId,
+    };
+
+    if ('assetName' in tokenA) params['tokenname1'] = tokenA.assetName;
+    if ('assetName' in tokenB) params['tokenname2'] = tokenB.assetName;
+
+    // note: {tokenname-hex} will overwrites {tokenname}
+    if ('assetNameHex' in tokenA)
+      params['tokenname-hex1'] = tokenA.assetNameHex;
+    if ('assetNameHex' in tokenB)
+      params['tokenname-hex2'] = tokenB.assetNameHex;
+
+    const response = await axiosClient.get('', {
+      baseURL: this.apiUrl,
+      params,
+    });
 
     if (response.status !== 200) {
       throw new Error('Failed to fetch pools for token pair', {
