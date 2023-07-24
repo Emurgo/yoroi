@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
-import React, {useCallback} from 'react'
+import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Boundary, Spacer, Text} from '../../../../../components'
@@ -18,11 +18,11 @@ import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../common/filterByFungibility'
 import {filterBySearch} from '../../../common/filterBySearch'
-import {useNavigateTo} from '../../../common/navigation'
 import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
 import {useSelectedSecondaryAmountsCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
+import {useOverridePreviousRoute} from '../../../../../utils/navigation'
 
 export type FungibilityFilter = 'all' | 'ft' | 'nft'
 
@@ -30,24 +30,21 @@ export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
   const [fungibilityFilter, setFungibilityFilter] = React.useState<FungibilityFilter>('all')
   const {targets, selectedTargetIndex} = useSend()
-  const navigateTo = useNavigateTo()
   const {amounts} = targets[selectedTargetIndex].entry
   const hasTokensSelected = Object.keys(amounts).length > 0
 
-  const navigateBack = useCallback(() => {
-    if (hasTokensSelected) {
-      navigateTo.selectedTokens()
-      return true
-    }
-    navigateTo.startTx()
-    return true
-  }, [hasTokensSelected, navigateTo])
+  // useKeepRoutesInHistory(
+  //   hasTokensSelected
+  //     ? ['history-list', 'send-start-tx', 'send-list-amounts-to-send', 'send-select-token-from-list']
+  //     : ['history-list', 'send-start-tx', 'send-select-token-from-list'],
+  // )
+
+  useOverridePreviousRoute(hasTokensSelected ? 'send-list-amounts-to-send' : 'send-start-tx')
 
   // use case: search listed tokens
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
     title: strings.selecteAssetTitle,
-    navigateBack,
   })
 
   const wallet = useSelectedWallet()

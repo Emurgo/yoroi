@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {useCallback, useLayoutEffect} from 'react'
+import {useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
@@ -13,7 +13,6 @@ import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
-import {useOverrideBackNavigate} from '../../../../utils/navigation'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {TokenInfo, YoroiAmount, YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
@@ -22,6 +21,7 @@ import {useNavigateTo} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
 import {AddTokenButton} from './AddToken/AddToken'
 import {RemoveAmountButton} from './RemoveAmount'
+import {useOverridePreviousRoute} from '../../../../utils/navigation'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
@@ -29,12 +29,8 @@ export const ListAmountsToSendScreen = () => {
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
 
-  const navigateBack = useCallback(() => {
-    navigateTo.startTx()
-    return true
-  }, [navigateTo])
-
-  useOverrideBackNavigate(navigateBack)
+  // useKeepRoutesInHistory(['history-list', 'send-start-tx', 'send-list-amounts-to-send'])
+  useOverridePreviousRoute('send-start-tx')
 
   useLayoutEffect(() => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})

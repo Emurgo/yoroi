@@ -15,7 +15,6 @@ import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {PairedBalance} from '../../../../../TxHistory/PairedBalance'
-import {useOverrideBackNavigate} from '../../../../../utils/navigation'
 import {selectFtOrThrow} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../yoroi-wallets/logging'
@@ -26,10 +25,14 @@ import {useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {NoBalance} from './ShowError/NoBalance'
 import {UnableToSpend} from './ShowError/UnableToSpend'
+import {useNavigation} from '@react-navigation/native'
+import {AppRouteNavigation, TxHistoryRouteNavigation} from '../../../../../navigation'
+import {useOverridePreviousRoute} from '../../../../../utils/navigation'
 
 export const EditAmountScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
+  const navigation = useNavigation<AppRouteNavigation & TxHistoryRouteNavigation>()
   const {selectedTokenId, amountChanged} = useSend()
   const {available, spendable, initialQuantity} = useTokenQuantities(selectedTokenId)
 
@@ -41,11 +44,25 @@ export const EditAmountScreen = () => {
   const [inputValue, setInputValue] = React.useState<string>(
     Quantities.denominated(initialQuantity, tokenInfo.decimals ?? 0),
   )
+  console.log('state', navigation.getState())
 
-  useOverrideBackNavigate(() => {
-    navigateTo.selectedTokens()
-    return true
-  })
+  // adding new one
+  // adding first one
+  // editing existing one
+  // useKeepRoutesInHistory(
+  //   parseInt(initialQuantity, 10) > 0
+  //     ? ['history-list', 'send-start-tx', 'send-list-amounts-to-send', 'send-edit-amount']
+  //     : ['history-list', 'send-start-tx', 'send-select-token-from-list', 'send-edit-amount'],
+  // )
+
+  useOverridePreviousRoute(
+    parseInt(initialQuantity, 10) > 0 ? 'send-list-amounts-to-send' : 'send-select-token-from-list',
+  )
+  // useOverrideBackNavigate(() => {
+  // if has no items, go to select token
+  // navigateTo.selectedTokens()
+  //   return true
+  // })
 
   const hasBalance = !Quantities.isGreaterThan(quantity, available)
   const isUnableToSpend = isPrimary && Quantities.isGreaterThan(quantity, spendable)
