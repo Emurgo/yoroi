@@ -1,5 +1,5 @@
 import { Swap } from '@yoroi/types';
-import { SWAP_API_ENDPOINTS, axiosClient } from './api/config';
+import { SWAP_API_ENDPOINTS, axiosClient } from './config';
 
 export class SwapTokensApi {
   private readonly apiUrl: string;
