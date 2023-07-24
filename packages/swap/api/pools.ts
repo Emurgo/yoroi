@@ -1,7 +1,7 @@
 import { Swap } from '@yoroi/types';
 import { AxiosInstance } from 'axios';
 import axios from 'axios';
-import { SWAP_API_ENDPOINTS } from './api/config';
+import { SWAP_API_ENDPOINTS } from './config';
 
 export class SwapPoolsApi {
   private readonly apiUrl: string;

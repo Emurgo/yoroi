@@ -22,11 +22,24 @@ export class SwapOrdersApi {
    */
   public async createOrder(
     order: Swap.Order
-  ): Promise<Record<'hash' | 'datum' | 'address', string>> {
-    const response = await axiosClient.get(
-      `/?walletAddr=${order.address}&protocol=${order.protocol}&poolId=${order.poolId}&sellTokenPolicyID=${order.sell.policyId}&sellTokenNameHex=${order.sell.assetName}&sellAmount=${order.sell.amount}&buyTokenPolicyID=${order.buy.policyId}&buyTokenNameHex=${order.buy.assetName}&buyAmount=${order.buy.amount}`,
-      { baseURL: this.constructSwapDatumApiUrl }
-    );
+  ): Promise<Record<'datumHash' | 'datum' | 'contractAddress', string>> {
+    const response = await axiosClient.get<
+      | { status: 'failed'; reason?: string }
+      | { status: 'success'; hash: string; datum: string; address: string }
+    >('/', {
+      baseURL: this.constructSwapDatumApiUrl,
+      params: {
+        walletAddr: order.address,
+        protocol: order.protocol,
+        poolId: order.poolId,
+        sellTokenPolicyID: order.sell.policyId,
+        sellTokenNameHex: order.sell.assetName,
+        sellAmount: order.sell.amount,
+        buyTokenPolicyID: order.buy.policyId,
+        buyTokenNameHex: order.buy.assetName,
+        buyAmount: order.buy.amount,
+      },
+    });
 
     if (response.status !== 200) {
       throw new Error('Failed to construct swap datum', {
@@ -34,10 +47,14 @@ export class SwapOrdersApi {
       });
     }
 
+    if (response.data.status === 'failed') {
+      throw new Error(response.data.reason || 'Unexpected error occurred');
+    }
+
     return {
-      hash: response.data.hash,
+      datumHash: response.data.hash,
       datum: response.data.datum,
-      address: response.data.address,
+      contractAddress: response.data.address,
     };
   }
 
@@ -49,16 +66,20 @@ export class SwapOrdersApi {
    */
   public async cancelOrder(
     orderUTxO: string,
-    collateralUTxOs: string,
+    collateralUTxO: string,
     walletAddress: string
   ): Promise<string> {
-    const response = await axiosClient.get(
-      `/?wallet=${walletAddress}&utxo=${orderUTxO}&collateralUtxo=${collateralUTxOs}`,
-      { baseURL: this.cancelSwapTransactionApiUrl }
-    );
+    const response = await axiosClient.get('/', {
+      baseURL: this.cancelSwapTransactionApiUrl,
+      params: {
+        wallet: walletAddress,
+        utxo: orderUTxO,
+        collateralUTxO,
+      },
+    });
 
     if (response.status !== 200) {
-      throw new Error('Failed to construct cancel swap transaction', {
+      throw new Error('Failed to cancel swap transaction', {
         cause: response.data,
       });
     }
@@ -71,12 +92,12 @@ export class SwapOrdersApi {
    * @returns all unfufilled orders for the given stake key hash.
    */
   public async getOrders(stakeKeyHash: string): Promise<Swap.OpenOrder[]> {
-    const response = await axiosClient.get<Swap.OpenOrder[]>(
-      `/all?stake-key-hash=${stakeKeyHash}`,
-      {
-        baseURL: this.getOrdersApiUrl,
-      }
-    );
+    const response = await axiosClient.get<Swap.OpenOrder[]>('/', {
+      baseURL: this.getOrdersApiUrl,
+      params: {
+        'stake-key-hash': stakeKeyHash,
+      },
+    });
 
     if (response.status !== 200) {
       throw new Error(`Failed to get orders for ${stakeKeyHash}`, {
