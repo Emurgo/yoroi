@@ -1387,6 +1387,7 @@
     hoist-non-react-statics "^3.3.0"
 
 "@cardano-foundation/ledgerjs-hw-app-cardano@^5.0.0":
+  name "@cardano-foundation/ledgerjs-hw-app-cardanoV5"
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/@cardano-foundation/ledgerjs-hw-app-cardano/-/ledgerjs-hw-app-cardano-5.1.0.tgz#69b94f7c5055bdb19aa719ff277fa5f683d11067"
   integrity sha512-ucuz/XbS/0ZD0Bal/GI/kiTm9jDIl8J+A7ypEqcAcBDGicFsyWmtPotOTwuDovTsiM8+eA/5OGTFX0oRqzxstQ==
@@ -1796,10 +1797,10 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.5.2.tgz#55cd2c8a272dfd90b3a540f6132202d1c1945d9e"
-  integrity sha512-gKWWVUQ2evzAMQBqQt6waG07BNG/TDxWJTRBfk2wGLJN8jXrW7Slf+/DsFzLtym63YRqJntmQH2yTDpjKj1Jfw==
+"@emurgo/yoroi-lib@0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.5.3.tgz#a2ad2a3bfd67bf9da18a10ced21e23aa64468788"
+  integrity sha512-JzEbvj1f+XEYLmUR8TvQteXXR+AuUGqFAvFk+331pGHvWlnVdpkoEXjr+u1Sye3x1X0ecGDPq+pZpEd1EeOgCw==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^6.0.0"
     "@emurgo/cross-csl-core" "^2.3.1"

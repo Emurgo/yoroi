@@ -12,6 +12,7 @@ import {formatTime, formatTokenFractional, formatTokenInteger} from '../../legac
 import utfSymbols from '../../legacy/utfSymbols'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
@@ -105,6 +106,7 @@ const Middle = ({style, ...props}: ViewProps) => (
 )
 const Right = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
 const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: TransactionInfo}) => {
+  const privacyMode = usePrivacyMode()
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
   const fee = transaction.fee ? transaction.fee[0] : null
@@ -118,9 +120,11 @@ const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: Transa
   return (
     <View style={styles.amount} testID="transactionAmount">
       <Text style={style} secondary={transaction.assurance === 'PENDING'}>
-        <Text>{formatTokenInteger(asQuantity(amount), wallet.primaryToken)}</Text>
+        <Text>{privacyMode === 'HIDDEN' ? '*' : formatTokenInteger(asQuantity(amount), wallet.primaryToken)}</Text>
 
-        <Text small>{formatTokenFractional(asQuantity(amount), wallet.primaryToken)}</Text>
+        <Text small>
+          {privacyMode === 'HIDDEN' ? '.******' : formatTokenFractional(asQuantity(amount), wallet.primaryToken)}
+        </Text>
       </Text>
 
       <Text style={style}>{`${utfSymbols.NBSP}${wallet.primaryTokenInfo.symbol}`}</Text>
