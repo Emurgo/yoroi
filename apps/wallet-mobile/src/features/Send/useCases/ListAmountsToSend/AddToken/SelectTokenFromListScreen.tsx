@@ -33,12 +33,6 @@ export const SelectTokenFromListScreen = () => {
   const {amounts} = targets[selectedTargetIndex].entry
   const hasTokensSelected = Object.keys(amounts).length > 0
 
-  // useKeepRoutesInHistory(
-  //   hasTokensSelected
-  //     ? ['history-list', 'send-start-tx', 'send-list-amounts-to-send', 'send-select-token-from-list']
-  //     : ['history-list', 'send-start-tx', 'send-select-token-from-list'],
-  // )
-
   useOverridePreviousRoute(hasTokensSelected ? 'send-list-amounts-to-send' : 'send-start-tx')
 
   // use case: search listed tokens

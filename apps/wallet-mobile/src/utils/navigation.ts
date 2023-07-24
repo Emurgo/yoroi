@@ -2,7 +2,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native'
 import {useEffect, useState} from 'react'
 import {InteractionManager} from 'react-native'
 
-export function useKeepRoutesInHistory(routesToKeep: string[]) {
+function useKeepRoutesInHistory(routesToKeep: string[]) {
   const navigation = useNavigation()
   const [initialRouteId] = useState(() => getNavigationRouteId(navigation))
 

@@ -29,7 +29,6 @@ export const ListAmountsToSendScreen = () => {
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
 
-  // useKeepRoutesInHistory(['history-list', 'send-start-tx', 'send-list-amounts-to-send'])
   useOverridePreviousRoute('send-start-tx')
 
   useLayoutEffect(() => {
