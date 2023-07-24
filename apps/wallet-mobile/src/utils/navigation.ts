@@ -25,7 +25,8 @@ function useKeepRoutesInHistory(routesToKeep: string[]) {
     })
 
     return () => task.cancel()
-  }, [navigation])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation, initialRouteId, ...routesToKeep])
 }
 
 export function useOverridePreviousRoute(previousRouteName: string) {

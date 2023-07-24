@@ -15,6 +15,7 @@ import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {PairedBalance} from '../../../../../TxHistory/PairedBalance'
+import {useOverridePreviousRoute} from '../../../../../utils/navigation'
 import {selectFtOrThrow} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../yoroi-wallets/logging'
@@ -25,7 +26,6 @@ import {useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {NoBalance} from './ShowError/NoBalance'
 import {UnableToSpend} from './ShowError/UnableToSpend'
-import {useOverridePreviousRoute} from '../../../../../utils/navigation'
 
 export const EditAmountScreen = () => {
   const strings = useStrings()

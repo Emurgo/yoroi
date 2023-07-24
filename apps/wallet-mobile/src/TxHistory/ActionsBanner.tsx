@@ -7,9 +7,9 @@ import {Icon, Spacer} from '../components'
 import {features} from '../features'
 import {useSend} from '../features/Send/common/SendContext'
 import {actionMessages} from '../i18n/global-messages'
+import {AppRouteNavigation, TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {AppRouteNavigation, TxHistoryRouteNavigation} from '../navigation'
 
 const ACTION_PROPS = {
   size: 32,

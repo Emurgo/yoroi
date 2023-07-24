@@ -13,6 +13,7 @@ import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
+import {useOverridePreviousRoute} from '../../../../utils/navigation'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {TokenInfo, YoroiAmount, YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
@@ -21,7 +22,6 @@ import {useNavigateTo} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
 import {AddTokenButton} from './AddToken/AddToken'
 import {RemoveAmountButton} from './RemoveAmount'
-import {useOverridePreviousRoute} from '../../../../utils/navigation'
 
 export const ListAmountsToSendScreen = () => {
   const navigateTo = useNavigateTo()
