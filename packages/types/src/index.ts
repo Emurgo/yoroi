@@ -18,6 +18,7 @@ import {
   SwapNetwork,
   SwapOrder,
   SwapPool,
+  SwapTokenInfo,
 } from './swap/module'
 import {SwapStorage} from './swap/storage'
 
@@ -41,6 +42,7 @@ export namespace Swap {
   export type Order = SwapOrder
   export type OpenOrder = SwapOpenOrder
   export type Pool = SwapPool
+  export type TokenInfo = SwapTokenInfo
 
   export type Storage = SwapStorage
 }

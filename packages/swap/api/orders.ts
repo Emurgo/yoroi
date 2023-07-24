@@ -3,7 +3,7 @@ import { SWAP_API_ENDPOINTS, axiosClient } from './config';
 
 // todo: use axios params
 
-export class SwapOrders {
+export class SwapOrdersApi {
   private readonly constructSwapDatumApiUrl: string;
   private readonly cancelSwapTransactionApiUrl: string;
   private readonly getOrdersApiUrl: string;
