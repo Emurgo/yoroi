@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, Mocked } from 'vitest';
-import { SwapOrdersApi } from './orders';
+import { createOrder, cancelOrder, getOrders } from './orders';
 import axios from 'axios';
 import { axiosClient } from './config';
 
@@ -18,16 +18,6 @@ const GENS_TOKEN = {
 const mockAxios = axiosClient as Mocked<typeof axios>;
 
 describe('SwapOrdersApi', () => {
-  const api: SwapOrdersApi = new SwapOrdersApi('mainnet');
-
-  it('should be initialized for mainnet or testnet', () => {
-    const mainnet = new SwapOrdersApi('mainnet');
-    expect(mainnet.network).to.eq('mainnet');
-
-    const preprod = new SwapOrdersApi('preprod');
-    expect(preprod.network).to.eq('preprod');
-  });
-
   describe('getOrders', () => {
     it('Should return orders list using staking key hash', async () => {
       mockAxios.get.mockImplementationOnce(() =>
@@ -36,7 +26,8 @@ describe('SwapOrdersApi', () => {
           status: 200,
         })
       );
-      const result = await api.getOrders(
+      const result = await getOrders(
+        'preprod',
         '24fd15671a17a39268b7a31e2a6703f5893f254d4568411322baeeb7'
       );
       expect(result).to.have.lengthOf(1);
@@ -52,7 +43,7 @@ describe('SwapOrdersApi', () => {
         })
       );
 
-      const order = await api.createOrder(createOrderParams);
+      const order = await createOrder('mainnet', createOrderParams);
 
       expect(order.contractAddress).to.eq(mockedCreateOrderResult.address);
       expect(order.datum).to.eq(mockedCreateOrderResult.datum);
@@ -67,7 +58,7 @@ describe('SwapOrdersApi', () => {
             data: { status: 'failed', reason: 'error_message' },
           })
         );
-        await api.createOrder(createOrderParams);
+        await createOrder('preprod', createOrderParams);
       }).rejects.toThrowError(/^error_message$/);
     });
 
@@ -76,7 +67,7 @@ describe('SwapOrdersApi', () => {
         mockAxios.get.mockImplementationOnce(() =>
           Promise.resolve({ status: 400 })
         );
-        await api.createOrder(createOrderParams);
+        await createOrder('mainnet', createOrderParams);
       }).rejects.toThrow('Failed to construct swap datum');
     });
   });
@@ -90,7 +81,8 @@ describe('SwapOrdersApi', () => {
         })
       );
 
-      const txCbor = await api.cancelOrder(
+      const txCbor = await cancelOrder(
+        'mainnet',
         'orderUtxo',
         'collateralUtxo',
         'addr1'
@@ -104,7 +96,8 @@ describe('SwapOrdersApi', () => {
         mockAxios.get.mockImplementationOnce(() =>
           Promise.resolve({ status: 400 })
         );
-        await api.cancelOrder(
+        await cancelOrder(
+          'mainnet',
           cancelOrderParams.utxo,
           cancelOrderParams.collateralUTxOs,
           cancelOrderParams.address

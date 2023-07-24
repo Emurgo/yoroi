@@ -1,12 +1,11 @@
 import { describe, expect, it, vi, Mocked } from 'vitest';
-import { SwapPoolsApi } from './pools';
+import { getPools } from './pools';
 import { axiosClient } from './config';
 
 vi.mock('./config.ts');
 const mockAxios = axiosClient as Mocked<typeof axiosClient>;
 
 describe('SwapPoolsApi', () => {
-  const api = new SwapPoolsApi('preprod');
   it('should get pools list for a given token pair', async () => {
     mockAxios.get.mockImplementationOnce(() =>
       Promise.resolve({
@@ -15,7 +14,11 @@ describe('SwapPoolsApi', () => {
       })
     );
 
-    const result = await api.getPools(getPoolsParams.sell, getPoolsParams.buy);
+    const result = await getPools(
+      'mainnet',
+      getPoolsParams.sell,
+      getPoolsParams.buy
+    );
     expect(result).to.be.of.lengthOf(1);
   });
 
@@ -24,7 +27,7 @@ describe('SwapPoolsApi', () => {
       mockAxios.get.mockImplementationOnce(() =>
         Promise.resolve({ status: 500 })
       );
-      await api.getPools(getPoolsParams.sell, getPoolsParams.buy);
+      await getPools('preprod', getPoolsParams.sell, getPoolsParams.buy);
     }).rejects.toThrow('Failed to fetch pools for token pair');
   });
 });
