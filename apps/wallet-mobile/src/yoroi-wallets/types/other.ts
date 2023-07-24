@@ -282,7 +282,6 @@ export type TxStatusResponse = {
 // Pricing api
 export const supportedCurrencies = Object.freeze({
   ADA: 'ADA',
-  TADA: 'TADA',
   BRL: 'BRL',
   BTC: 'BTC',
   CNY: 'CNY',
@@ -296,10 +295,6 @@ export type CurrencySymbol = keyof typeof supportedCurrencies
 export type ConfigCurrencies = typeof configCurrencies
 export const configCurrencies = {
   [supportedCurrencies.ADA]: {
-    decimals: 6,
-    nativeName: 'Cardano',
-  },
-  [supportedCurrencies.TADA]: {
     decimals: 6,
     nativeName: 'Cardano',
   },

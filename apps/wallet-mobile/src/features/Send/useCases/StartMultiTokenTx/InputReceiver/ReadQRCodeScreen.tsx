@@ -26,7 +26,7 @@ export const ReadQRCodeScreen = () => {
           receiverChanged(address ?? '')
           const amount = pastedFormatter(params?.amount ?? '')
           tokenSelectedChanged(wallet.primaryTokenInfo.id)
-          amountChanged(Quantities.integer(asQuantity(amount), configCurrencies[supportedCurrencies.TADA].decimals))
+          amountChanged(Quantities.integer(asQuantity(amount), configCurrencies[supportedCurrencies.ADA].decimals))
         }
       } else {
         receiverChanged(address ?? '')
