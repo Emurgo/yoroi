@@ -8,7 +8,7 @@ export type SwapProtocol =
   | 'wingriders'
   | 'muesliswap'
 
-export type SwapOrder = {
+export type SwapCreateOrderData = {
   address: string
   protocol: SwapProtocol
   poolId?: string // Only required for SundaeSwap trades.
@@ -24,6 +24,12 @@ export type SwapOrder = {
   }
 }
 
+export type SwapCreateOrderResponse = Record<
+  'datumHash' | 'datum' | 'contractAddress',
+  string
+>
+
+// todo: add full type def.
 export type SwapOpenOrder = {
   provider: SwapProtocol
   from: {
@@ -158,13 +164,33 @@ export type SwapTokenInfo = {
   }
 }
 
+// todo: choose better name
+export type SwapBaseTokenInfo =
+  | {policyId: string; assetName: string}
+  | {policyId: string; assetNameHex: string}
+
+export interface SwapApi {
+  createOrder(order: SwapCreateOrderData): Promise<SwapCreateOrderResponse>
+  cancelOrder(
+    orderUTxO: string,
+    collateralUTxO: string,
+    walletAddress: string,
+  ): Promise<string>
+  getOrders(stakeKeyHash: string): Promise<SwapOpenOrder[]>
+  getPools(
+    tokenA: SwapBaseTokenInfo,
+    tokenB: SwapBaseTokenInfo,
+  ): Promise<SwapPool[]>
+  getTokens(policyId?: string, assetName?: string): Promise<SwapTokenInfo[]>
+}
+
 export type SwapModule = {
   orders: {
     prepare: (order: SwapOrderCreateData) => Promise<SwapOrderDatum>
     create: (order: SwapOrderCreateData) => Promise<SwapOrderDatum>
     cancel: (order: SwapOrderCancelData) => Promise<string>
     list: {
-      byStatusOpen: () => Promise<Array<SwapOrder>>
+      byStatusOpen: () => Promise<Array<any>>
     }
   }
   pairs: {

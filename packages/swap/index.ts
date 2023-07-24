@@ -1,1 +1,1 @@
-export * from './dex';
+export * from './api/index';
