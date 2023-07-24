@@ -1,7 +1,8 @@
 import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
-import {AppRouteNavigation, TxHistoryRouteNavigation} from '../../../navigation'
+import {AppRouteNavigation, TxHistoryRouteNavigation, TxHistoryRoutes} from '../../../navigation'
+import {useOverridePreviousRoute} from '../../../utils/navigation'
 
 export const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation & AppRouteNavigation>()
@@ -43,4 +44,8 @@ export const useNavigateTo = () => {
         ],
       }),
   }).current
+}
+
+export const useOverridePreviousSendTxRoute = (routeName: keyof TxHistoryRoutes) => {
+  useOverridePreviousRoute(routeName)
 }

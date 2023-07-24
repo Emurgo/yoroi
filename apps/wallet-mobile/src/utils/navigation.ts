@@ -29,7 +29,7 @@ function useKeepRoutesInHistory(routesToKeep: string[]) {
   }, [navigation, initialRouteId, ...routesToKeep])
 }
 
-export function useOverridePreviousRoute(previousRouteName: string) {
+export function useOverridePreviousRoute<RouteName extends string>(previousRouteName: RouteName) {
   const navigation = useNavigation()
   const [initialRouteName] = useState(() => getNavigationRouteName(navigation))
   const allRouteNames: string[] = navigation.getState().routes.map((route) => route.name)

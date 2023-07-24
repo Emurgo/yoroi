@@ -11,7 +11,6 @@ import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedWalletContext'
 import {COLORS} from '../../../../../theme'
 import {sortTokenInfos} from '../../../../../utils'
-import {useOverridePreviousRoute} from '../../../../../utils/navigation'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
 import {useAllTokenInfos, useBalances, useIsWalletEmpty, useNfts} from '../../../../../yoroi-wallets/hooks'
@@ -19,6 +18,7 @@ import {TokenInfo} from '../../../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../common/filterByFungibility'
 import {filterBySearch} from '../../../common/filterBySearch'
+import {useOverridePreviousSendTxRoute} from '../../../common/navigation'
 import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
 import {useSelectedSecondaryAmountsCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
@@ -33,7 +33,7 @@ export const SelectTokenFromListScreen = () => {
   const {amounts} = targets[selectedTargetIndex].entry
   const hasTokensSelected = Object.keys(amounts).length > 0
 
-  useOverridePreviousRoute(hasTokensSelected ? 'send-list-amounts-to-send' : 'send-start-tx')
+  useOverridePreviousSendTxRoute(hasTokensSelected ? 'send-list-amounts-to-send' : 'send-start-tx')
 
   // use case: search listed tokens
   useSearchOnNavBar({
