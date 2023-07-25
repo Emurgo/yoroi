@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
 
 storiesOf('Market Price Input', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
-  .add('disabled', () => <MarketPrice />)
+  .add('inital', () => <MarketPrice />)
 
 storiesOf('Market Price Input', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
-  .add('disabled', () => <MarketPrice disabled={false} />)
+  .add('disabled', () => <MarketPrice disabled />)

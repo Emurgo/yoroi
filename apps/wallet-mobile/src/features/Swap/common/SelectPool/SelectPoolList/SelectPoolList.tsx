@@ -10,14 +10,14 @@ type CardInfo = {
   value: string
 }
 
-type Card = {
+type CardList = {
   icon: React.ReactNode
   label: string
   info: CardInfo[]
 }
 
 type Props = {
-  data: Card[]
+  data: CardList[]
 }
 export const SelectPoolList = ({data}: Props) => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(0)

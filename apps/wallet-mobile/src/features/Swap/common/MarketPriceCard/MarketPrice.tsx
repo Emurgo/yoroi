@@ -10,7 +10,7 @@ type MarketPriceProp = {
   value?: string
 }
 
-export const MarketPrice = ({value, disabled = true}: MarketPriceProp) => {
+export const MarketPrice = ({value, disabled = false}: MarketPriceProp) => {
   const strings = useStrings()
 
   return (
