@@ -129,8 +129,8 @@ const defaultState: MetricsState = {
   isEnabled: false,
 } as const
 const defaultActions: MetricsActions = {
-  isLoadedChanged: (_loaded: boolean) => console.error('[metrics-react] missing initialization'),
-  isEnabledChanged: (_enabled: boolean) => console.error('[metrics-react] missing initialization'),
+  isLoadedChanged: (_loaded: boolean) => Logger.error('[metrics-react] missing initialization'),
+  isEnabledChanged: (_enabled: boolean) => Logger.error('[metrics-react] missing initialization'),
 } as const
 const defaultManager: MetricsManager = mockMetricsManager()
 const MetricsContext = React.createContext<MetricsContextType>({
