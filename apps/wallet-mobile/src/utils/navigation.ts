@@ -2,6 +2,8 @@ import {NavigationProp, useNavigation} from '@react-navigation/native'
 import {useEffect, useState} from 'react'
 import {InteractionManager} from 'react-native'
 
+import {compareArrays} from '../yoroi-wallets/utils'
+
 function useKeepRoutesInHistory(routesToKeep: string[]) {
   const navigation = useNavigation()
   const [initialRouteId] = useState(() => getNavigationRouteId(navigation))
@@ -13,6 +15,12 @@ function useKeepRoutesInHistory(routesToKeep: string[]) {
       return
     }
     const {routes} = navigation.getState()
+    const currentRouteNames = routes.map((r) => r.name)
+
+    if (compareArrays(currentRouteNames, routesToKeep)) {
+      return
+    }
+
     const newRoutes = routes.filter((r) => routesToKeep.includes(r.name))
 
     const task = InteractionManager.runAfterInteractions(() => {
@@ -25,8 +33,7 @@ function useKeepRoutesInHistory(routesToKeep: string[]) {
     })
 
     return () => task.cancel()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation, initialRouteId, ...routesToKeep])
+  }, [navigation, initialRouteId, routesToKeep])
 }
 
 export function useOverridePreviousRoute<RouteName extends string>(previousRouteName: RouteName) {

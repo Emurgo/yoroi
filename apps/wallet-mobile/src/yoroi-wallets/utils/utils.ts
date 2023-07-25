@@ -164,3 +164,8 @@ export const Utxos = {
     )
   },
 }
+
+export const compareArrays = <T>(array1: Array<T>, array2: Array<T>) => {
+  if (array1.length !== array2.length) return false
+  return array1.every((item, index) => item === array2[index])
+}

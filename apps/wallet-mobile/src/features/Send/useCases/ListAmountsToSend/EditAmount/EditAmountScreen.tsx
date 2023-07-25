@@ -42,7 +42,7 @@ export const EditAmountScreen = () => {
   )
 
   useOverridePreviousSendTxRoute(
-    Quantities.isZero(initialQuantity) ? 'send-list-amounts-to-send' : 'send-select-token-from-list',
+    Quantities.isZero(initialQuantity) ? 'send-select-token-from-list' : 'send-list-amounts-to-send',
   )
 
   const hasBalance = !Quantities.isGreaterThan(quantity, available)
