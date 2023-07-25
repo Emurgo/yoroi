@@ -1,4 +1,3 @@
-import {Ionicons} from '@expo/vector-icons'
 import {Balance} from '@yoroi/types'
 import React, {useRef} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -24,7 +23,7 @@ type SwapCardProp = {
 export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, hasError}: SwapCardProp) => {
   const strings = useStrings()
   const {quantity, tokenId} = amount
-  const focusRef = useRef<TextInput>(null)
+  const amountInputRef = useRef<TextInput>(null)
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const noTokenSelected = tokenId === 'noTokenSelected'
@@ -33,8 +32,8 @@ export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, ha
   const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
 
   const focusInput = () => {
-    if (focusRef?.current) {
-      focusRef.current.focus()
+    if (amountInputRef?.current) {
+      amountInputRef.current.focus()
     }
   }
   return (
@@ -44,7 +43,7 @@ export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, ha
 
         <View style={styles.content}>
           <Pressable style={styles.amountWrapper} onPress={focusInput}>
-            <AmountInput onChange={onChange} value={value} inputRef={focusRef} />
+            <AmountInput onChange={onChange} value={value} inputRef={amountInputRef} />
           </Pressable>
 
           <Spacer width={7} />
