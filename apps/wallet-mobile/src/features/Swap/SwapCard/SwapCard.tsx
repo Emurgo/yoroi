@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     height: 64,
   },
   amountInput: {
-    naxWidth: 100,
+    maxWidth: 100,
     height: 34,
     fontSize: 16,
   },
