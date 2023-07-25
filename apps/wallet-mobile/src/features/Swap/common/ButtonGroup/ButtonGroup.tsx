@@ -19,13 +19,14 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({buttons, onButtonPress}
   return (
     <View style={styles.container}>
       {buttons.map((buttonLabel, i) => (
-        <TouchableOpacity
-          key={i}
-          onPress={(event) => handleClick(event, i)}
-          style={[styles.customButton, i === clickedId && styles.activeButton]}
-        >
-          <Text style={styles.buttonText}>{buttonLabel}</Text>
-        </TouchableOpacity>
+        <View key={i} style={styles.buttonWrapper}>
+          <TouchableOpacity
+            onPress={(event) => handleClick(event, i)}
+            style={[styles.customButton, i === clickedId && styles.activeButton]}
+          >
+            <Text style={styles.buttonText}>{buttonLabel}</Text>
+          </TouchableOpacity>
+        </View>
       ))}
     </View>
   )
@@ -35,11 +36,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
   },
+  buttonWrapper: {
+    paddingRight: 8,
+  },
   customButton: {
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 4,
-    marginHorizontal: 4,
   },
   activeButton: {
     backgroundColor: COLORS.BORDER_GRAY,
