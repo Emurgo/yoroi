@@ -45,6 +45,11 @@ export const EditAmountScreen = () => {
     Quantities.isZero(initialQuantity) ? 'send-select-token-from-list' : 'send-list-amounts-to-send',
   )
 
+  React.useEffect(() => {
+    setQuantity(initialQuantity)
+    setInputValue(Quantities.denominated(initialQuantity, tokenInfo.decimals ?? 0))
+  }, [initialQuantity, tokenInfo.decimals])
+
   const hasBalance = !Quantities.isGreaterThan(quantity, available)
   const isUnableToSpend = isPrimary && Quantities.isGreaterThan(quantity, spendable)
   const isZero = Quantities.isZero(quantity)
