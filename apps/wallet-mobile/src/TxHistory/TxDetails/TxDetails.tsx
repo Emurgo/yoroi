@@ -22,6 +22,7 @@ import {NetworkId, TransactionInfo} from '../../yoroi-wallets/types'
 import {asQuantity, isNonNullable} from '../../yoroi-wallets/utils'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
+import {PrivacyMode, usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 
 export const TxDetails = () => {
   const strings = useStrings()
@@ -35,6 +36,7 @@ export const TxDetails = () => {
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transactions = useTransactionInfos(wallet)
   const transaction = transactions[id]
+  const privacyMode = usePrivacyMode()
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
   useTitle(isNonNullable(transaction.submittedAt) ? formatDateAndTime(transaction.submittedAt, intl) : '')
@@ -66,7 +68,7 @@ export const TxDetails = () => {
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Banner label={strings[transaction.direction]}>
           <Boundary>
-            <AdaAmount amount={amount} />
+            <AdaAmount amount={amount} privacyMode={privacyMode} />
 
             {txFee && <Fee amount={txFee} />}
           </Boundary>
@@ -184,9 +186,14 @@ const Confirmations = ({transaction, wallet}: {transaction: TransactionInfo; wal
 
 const Label = ({children}: {children: string}) => <Text style={styles.label}>{children}</Text>
 
-const AdaAmount = ({amount}: {amount: BigNumber}) => {
+const AdaAmount = ({amount, privacyMode}: {amount: BigNumber; privacyMode?: PrivacyMode}) => {
+  // here
   const wallet = useSelectedWallet()
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
+
+  if (privacyMode === 'HIDDEN') {
+    return <Text style={amountStyle}>*.*******</Text>
+  }
 
   return <Text style={amountStyle}>{formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}</Text>
 }

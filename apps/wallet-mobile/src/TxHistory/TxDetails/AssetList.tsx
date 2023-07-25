@@ -13,6 +13,7 @@ import {asQuantity} from '../../yoroi-wallets/utils'
 import assetListSendStyle from './AssetListSend.style'
 import assetListTransactionStyle from './AssetListTransaction.style'
 import baseStyle from './Base.style'
+import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 
 type AssetListProps = {
   assets: Array<CardanoTypes.TokenEntry>
@@ -59,6 +60,7 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const primaryTicker = wallet.primaryTokenInfo.ticker
+  const privacyMode = usePrivacyMode()
 
   const name = isEmptyString(tokenInfo.name) ? intl.formatMessage(messages.unknownAssetName) : tokenInfo.name
 
@@ -73,7 +75,9 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
       </View>
 
       <View style={styles.assetBalanceView}>
-        <Text style={styles.assetBalance}>{formatTokenAmount(asQuantity(entry.amount), tokenInfo)}</Text>
+        <Text style={styles.assetBalance}>
+          {privacyMode === 'HIDDEN' ? '*.****' : formatTokenAmount(asQuantity(entry.amount), tokenInfo)}
+        </Text>
       </View>
     </>
   )
