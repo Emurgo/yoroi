@@ -24,9 +24,6 @@ storiesOf('Swap Card', module)
       }}
     />
   ))
-
-storiesOf('Swap Card', module)
-  .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('with error', () => (
     <SwapCard
       label="Swap from"
