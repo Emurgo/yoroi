@@ -32,7 +32,7 @@ export const useNavigateTo = () => {
                       {
                         name: 'history',
                         state: {
-                          routes: [{name: 'send-start-tx'}],
+                          routes: [{name: 'history-list'}, {name: 'send-start-tx'}],
                         },
                       },
                     ],
