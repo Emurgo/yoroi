@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon, Spacer} from '../../../../../components'
@@ -12,6 +12,7 @@ type ExpandableInfoCardProps = {
   navigateTo?: () => void
   buttonAction?: () => void
   buttonText?: string
+  withBoxShadow?: boolean
 }
 
 export const ExpandableInfoCard = ({
@@ -21,65 +22,70 @@ export const ExpandableInfoCard = ({
   navigateTo,
   buttonText,
   buttonAction,
+  withBoxShadow,
 }: ExpandableInfoCardProps) => {
   const [showHiddenInfo, setShowHiddenInfo] = React.useState(false)
   return (
-    <View style={[styles.container]}>
-      <View style={styles.flexBetween}>
-        <TouchableOpacity onPress={() => navigateTo?.()}>
-          <Text style={[styles.label]}>{label}</Text>
-        </TouchableOpacity>
+    <View style={{padding: 5}}>
+      <View style={[styles.container, withBoxShadow && styles.shadowProp]}>
+        <View style={styles.flexBetween}>
+          <TouchableOpacity onPress={() => navigateTo?.()}>
+            <Text style={[styles.label]}>{label}</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => setShowHiddenInfo(!showHiddenInfo)}>
-          {showHiddenInfo ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
-        </TouchableOpacity>
-      </View>
-
-      <Spacer height={8} />
-
-      <View>
-        {mainInfo?.map((item, index) => (
-          <>
-            <View key={index} style={styles.flexBetween}>
-              <Text style={styles.gray}>{`${item.label}`}</Text>
-
-              {item?.value !== undefined && <Text style={styles.text}>{`${item?.value}`}</Text>}
-            </View>
-
-            {index !== mainInfo?.length - 1 && <Spacer height={8} />}
-          </>
-        ))}
-      </View>
-
-      {buttonText != null && (
-        <Pressable style={styles.button} onPress={buttonAction && buttonAction}>
-          <Text style={styles.buttonText}>{buttonText}</Text>
-        </Pressable>
-      )}
-
-      {showHiddenInfo && (
-        <View>
-          {hiddenInfo.map((item, index) => {
-            return (
-              <View key={item.label}>
-                <Spacer height={8} />
-
-                <View key={index} style={styles.flexBetween}>
-                  <View style={styles.flex}>
-                    <Text style={[styles.text, styles.gray]}>{item.label}</Text>
-
-                    <Spacer width={8} />
-
-                    <Icon.Info size={24} />
-                  </View>
-
-                  <Text style={styles.text}>{item.value}</Text>
-                </View>
-              </View>
-            )
-          })}
+          <TouchableOpacity onPress={() => setShowHiddenInfo(!showHiddenInfo)}>
+            {showHiddenInfo ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
+          </TouchableOpacity>
         </View>
-      )}
+
+        <Spacer height={8} />
+
+        <View>
+          {mainInfo?.map((item, index) => (
+            <View key={index}>
+              <View style={styles.flexBetween}>
+                <Text style={styles.gray}>{`${item.label}`}</Text>
+
+                {item?.value !== undefined && <Text style={styles.text}>{`${item?.value}`}</Text>}
+              </View>
+
+              {index !== mainInfo?.length - 1 && <Spacer height={8} />}
+            </View>
+          ))}
+        </View>
+
+        {showHiddenInfo && (
+          <View>
+            {hiddenInfo.map((item, index) => {
+              return (
+                <View key={item.label}>
+                  <Spacer height={8} />
+
+                  <View key={index} style={styles.flexBetween}>
+                    <View style={styles.flex}>
+                      <Text style={[styles.text, styles.gray]}>{item.label}</Text>
+
+                      <Spacer width={8} />
+
+                      <Icon.Info size={24} />
+                    </View>
+
+                    <Text style={styles.text}>{item.value}</Text>
+                  </View>
+                </View>
+              )
+            })}
+          </View>
+        )}
+
+        {buttonText != null && (
+          <TouchableOpacity style={styles.button} onPress={buttonAction && buttonAction}>
+            <Text style={styles.buttonText}>{buttonText}</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
+      <Spacer height={16} />
     </View>
   )
 }
@@ -92,6 +98,19 @@ const styles = StyleSheet.create({
     padding: 16,
     width: '100%',
     height: 'auto',
+  },
+  shadowProp: {
+    backgroundColor: COLORS.WHITE,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+    borderWidth: 0,
   },
   flexBetween: {
     flexDirection: 'row',

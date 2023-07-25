@@ -1,19 +1,19 @@
 import React, {useState} from 'react'
-import {GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {COLORS} from '../../../../theme'
 
 interface ButtonGroupProps {
   buttons: string[]
-  onButtonPress: (event: GestureResponderEvent, id: number) => void
+  onButtonPress: (event: string, id: number) => void
 }
 
 export const ButtonGroup: React.FC<ButtonGroupProps> = ({buttons, onButtonPress}) => {
   const [clickedId, setClickedId] = useState(0)
 
-  const handleClick = (event: GestureResponderEvent, id: number) => {
+  const handleClick = (buttonLabel: string, id: number) => {
     setClickedId(id)
-    onButtonPress(event, id)
+    onButtonPress(buttonLabel, id)
   }
 
   return (
@@ -21,7 +21,7 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({buttons, onButtonPress}
       {buttons.map((buttonLabel, i) => (
         <View key={i} style={styles.buttonWrapper}>
           <TouchableOpacity
-            onPress={(event) => handleClick(event, i)}
+            onPress={() => handleClick(buttonLabel, i)}
             style={[styles.customButton, i === clickedId && styles.activeButton]}
           >
             <Text style={styles.buttonText}>{buttonLabel}</Text>

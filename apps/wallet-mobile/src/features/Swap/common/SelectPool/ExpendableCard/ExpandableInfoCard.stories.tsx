@@ -113,5 +113,6 @@ storiesOf('Expandable Info Card', module)
         console.log('button pressed')
       }}
       buttonText="CANCEL ORDER"
+      withBoxShadow
     />
   ))
