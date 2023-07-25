@@ -7,6 +7,7 @@ import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../yoroi-wallets/logging'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../common/navigation'
+import {useStrings} from '../../../common/strings'
 import {useSwap, useTokenQuantities} from '../../../common/SwapContext'
 import {SwapCard} from '../../../SwapCard/SwapCard'
 
@@ -15,6 +16,7 @@ export const AddTokenToCard = () => {
   const wallet = useSelectedWallet()
   const {selectedTokenToId, tokenToSelectedChanged} = useSwap()
   const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenToId}, {select: selectFtOrThrow})
+  const strings = useStrings()
 
   useEffect(() => {
     tokenToSelectedChanged('noTokenSelected')
@@ -39,7 +41,7 @@ export const AddTokenToCard = () => {
 
   return (
     <SwapCard
-      label="Swap to"
+      label={strings.swapTo}
       onChange={onChangeQuantity}
       value={inputValue}
       amount={{tokenId: selectedTokenToId, quantity: spendable}}

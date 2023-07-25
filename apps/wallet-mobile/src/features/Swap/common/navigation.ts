@@ -8,9 +8,9 @@ export const useNavigateTo = () => {
 
   return useRef({
     selectPool: () => navigation.navigate('swap-select-pool'),
-    slippageToleranceInput: () => navigation.navigate('swap-slippage-tolerance-input'),
+    slippageToleranceInput: () => navigation.navigate('swap-set-slippage'),
     selectedSwapFromTokens: () => navigation.navigate('swap-select-token-from'),
     selectedSwapToTokens: () => navigation.navigate('swap-select-token-to'),
-    swapTokens: () => navigation.navigate('swap-start'),
+    swapTokens: () => navigation.navigate('swap-start-order'),
   }).current
 }

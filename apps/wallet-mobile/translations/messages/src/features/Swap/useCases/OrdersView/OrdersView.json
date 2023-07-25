@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Open orders",
     "file": "src/features/Swap/useCases/OrdersView/OrdersView.tsx",
     "start": {
-      "line": 31,
+      "line": 32,
       "column": 14,
-      "index": 934
+      "index": 982
     },
     "end": {
-      "line": 34,
+      "line": 35,
       "column": 3,
-      "index": 1015
+      "index": 1063
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Completed orders",
     "file": "src/features/Swap/useCases/OrdersView/OrdersView.tsx",
     "start": {
-      "line": 35,
+      "line": 36,
       "column": 19,
-      "index": 1036
+      "index": 1084
     },
     "end": {
-      "line": 38,
+      "line": 39,
       "column": 3,
-      "index": 1127
+      "index": 1175
     }
   }
 ]

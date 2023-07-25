@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   card: {
     height: 200,
     padding: 16,
-    marginHorizontal: 8,
+    paddingHorizontal: 20,
     borderRadius: 20,
   },
   shadowProp: {
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    paddingBottom: 8,
     fontWeight: '500',
     fontSize: '16',
   },

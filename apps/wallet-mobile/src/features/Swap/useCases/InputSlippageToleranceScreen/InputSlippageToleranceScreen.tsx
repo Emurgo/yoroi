@@ -78,7 +78,9 @@ export const InputSlippageToleranceScreen = () => {
           />
         </View>
 
-        {selectedChoice === 'Manual' && <Text style={styles.textInfo}>{strings.enterSlippage}</Text>}
+        {selectedChoice === 'Manual' && (
+          <Text style={[styles.textInfo, styles.bottomText]}>{strings.enterSlippage}</Text>
+        )}
       </View>
 
       <Button testID="applyButton" shelleyTheme title={strings.apply} />
@@ -90,9 +92,9 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     justifyContent: 'space-between',
-    height: '100%',
+    flex: 1,
     backgroundColor: COLORS.WHITE,
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     paddingTop: 13,
   },
   header: {
@@ -103,6 +105,9 @@ const styles = StyleSheet.create({
   textInfo: {
     fontSize: 12,
     color: COLORS.TEXT_INPUT,
+  },
+  bottomText: {
+    paddingTop: 16,
   },
   choicesContainer: {
     flexDirection: 'row',
@@ -116,7 +121,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   choiceLabel: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '500',
     color: COLORS.BLACK,
   },
@@ -127,8 +132,6 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: '#C4CAD7',
-    marginBottom: 10,
-    width: '100%',
     padding: 16,
   },
   label: {
@@ -141,7 +144,7 @@ const styles = StyleSheet.create({
     color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
   disabledInput: {
-    color: '#6B7384',
+    color: COLORS.TEXT_INPUT,
   },
   disabledInputContainer: {
     backgroundColor: '#F0F3F5',

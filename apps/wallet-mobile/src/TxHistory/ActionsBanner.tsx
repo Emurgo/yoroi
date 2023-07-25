@@ -58,14 +58,14 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
           </View>
 
-          {features.showSwapButton && <Spacer width={32} />}
+          {Boolean(features.showSwapButton) && <Spacer width={32} />}
 
-          {features.showSwapButton && (
+          {Boolean(features.showSwapButton) && (
             <View style={styles.centralized}>
               <TouchableOpacity
                 style={styles.actionIcon}
                 onPress={navigateTo.swap}
-                testID="receiveButton"
+                testID="swapButton"
                 disabled={disabled}
               >
                 <Icon.Received {...ACTION_PROPS} />
@@ -157,7 +157,7 @@ const useNavigateTo = () => {
   return {
     send: () => navigation.navigate('send-start-tx'),
     receive: () => navigation.navigate('receive'),
-    swap: () => navigation.navigate('swap-start'),
+    swap: () => navigation.navigate('swap-start-order'),
     buy: () => Alert.alert(strings.messageBuy, strings.messageBuy),
   }
 }

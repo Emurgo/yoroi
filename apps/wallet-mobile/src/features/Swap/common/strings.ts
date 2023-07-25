@@ -26,6 +26,8 @@ export const useStrings = () => {
     slippageInfo: intl.formatMessage(messages.slippageInfo),
     enterSlippage: intl.formatMessage(messages.enterSlippage),
     pools: (qty: number) => intl.formatMessage(globalMessages.pools, {qty}),
+    openOrders: intl.formatMessage(messages.openOrders),
+    completedOrders: intl.formatMessage(messages.completedOrders),
     
     // search
     searchTokens: intl.formatMessage(messages.searchTokens),
@@ -76,10 +78,6 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.currentBalance',
     defaultMessage: '!!!Current Balance',
   },
-  clear: {
-    id: 'swap.swapScreen.clear',
-    defaultMessage: '!!!Clear',
-  },
   selectToken: {
     id: 'swap.swapScreen.selectToken',
     defaultMessage: '!!!Select Token',
@@ -91,10 +89,6 @@ export const messages = defineMessages({
   slippageTolerance: {
     id: 'swap.swapScreen.slippageTolerance',
     defaultMessage: '!!!Slippage Tolerance',
-  },
-  swapButton: {
-    id: 'swap.swapScreen.swapButton',
-    defaultMessage: '!!!Swap',
   },
   verifiedBy: {
     id: 'swap.swapScreen.verifiedBy',
@@ -116,9 +110,25 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.enterSlippage',
     defaultMessage: '!!!Enter a value from 0% to 100%. You can also enter up to 1 decimal'
   },
+  openOrders: {
+    id: 'swap.swapScreen.openOrders',
+    defaultMessage: '!!!Open orders',
+  },
+  completedOrders: {
+    id: 'swap.swapScreen.completedOrders',
+    defaultMessage: '!!!Completed orders',
+  },
   asset: {
     id: 'global.assets.assetLabel',
     defaultMessage: '!!!Asset',
+  },
+  clear: {
+    id: 'global.clear',
+    defaultMessage: '!!!Clear',
+  },
+  swapButton: {
+    id: 'global.swap',
+    defaultMessage: '!!!Swap',
   },
   // TODO check this and change if necessary 
 

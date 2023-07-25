@@ -1,6 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
 import React, {useState} from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
@@ -8,6 +7,7 @@ import {Spacer, StatusBar, Text} from '../../../../components'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useSync} from '../../../../yoroi-wallets/hooks'
+import {useStrings} from '../../common/strings'
 import {OrdersView} from '../OrdersView/OrdersView'
 import {SwapTokensView} from '../TokenSwap/SwapTokensView'
 
@@ -42,11 +42,11 @@ export const StartSwapScreen = () => {
               testID="tokenSwapTabButton"
             />
 
-            <Tab //
+            <Tab
               onPress={() => {
                 onSelectTab('orders')
               }}
-              label={strings.orders}
+              label={strings.orderSwap}
               active={activeTab === 'orders'}
               testID="ordersTabButton"
             />
@@ -91,25 +91,6 @@ const Tab = ({
 )
 const TabPanels = ({children}: {children: React.ReactNode}) => <View style={styles.tabNavigatorRoot}>{children}</View>
 const TabPanel = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
-
-const messages = defineMessages({
-  tokenSwap: {
-    id: 'swap.swapScreen.tokenSwapTab',
-    defaultMessage: '!!!Token Swap',
-  },
-  orders: {
-    id: 'swap.swapScreen.ordersSwapTab',
-    defaultMessage: '!!!Orders',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-  return {
-    tokenSwap: intl.formatMessage(messages.tokenSwap),
-    orders: intl.formatMessage(messages.orders),
-  }
-}
 
 const styles = StyleSheet.create({
   scrollView: {

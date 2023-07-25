@@ -75,7 +75,7 @@ export const TxHistoryNavigator = () => {
           </Stack.Screen>
 
           <Stack.Screen
-            name="swap-start"
+            name="swap-start-order"
             component={StartSwapScreen}
             options={{
               ...defaultStackNavigationOptionsV2,
@@ -102,7 +102,7 @@ export const TxHistoryNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-slippage-tolerance-input"
+            name="swap-set-slippage"
             component={InputSlippageToleranceScreen}
             options={{
               ...defaultStackNavigationOptionsV2,

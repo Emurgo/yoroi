@@ -1,14 +1,14 @@
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {GestureResponderEvent, KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Button, Icon, Spacer} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
-import ButtonGroup from '../../../common/ButtonGroup/ButtonGroup'
+import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {MarketPrice} from '../../../common/MarketPriceCard'
 import {ChoosePoolSection} from '../../../common/SelectPool'
 import {SlippageTolerance} from '../../../common/SlippageTolerance'
+import {useStrings} from '../../../common/strings'
 import {AddTokenFromCard} from '../AddTokens/AddTokenFromCard'
 import {AddTokenToCard} from '../AddTokens/AddTokenToCard'
 import {SwitchAndClear} from '../SwitchAndClear/SwitchAndClear'
@@ -54,7 +54,7 @@ export const SwapTokensView = () => {
         <ChoosePoolSection />
 
         <Actions>
-          <Button testID="swapButton" shelleyTheme title={strings.swap} />
+          <Button testID="swapButton" shelleyTheme title={strings.swapTitle} />
         </Actions>
       </KeyboardAvoidingView>
     </View>
@@ -62,30 +62,6 @@ export const SwapTokensView = () => {
 }
 
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
-
-const messages = defineMessages({
-  marketButton: {
-    id: 'swap.swapScreen.marketButton',
-    defaultMessage: '!!!Market Button',
-  },
-  limitButton: {
-    id: 'swap.swapScreen.limitButton',
-    defaultMessage: '!!!Limit Button',
-  },
-  swap: {
-    id: 'swap.swapScreen.swapTitle',
-    defaultMessage: '!!!Swap',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-  return {
-    marketButton: intl.formatMessage(messages.marketButton),
-    limitButton: intl.formatMessage(messages.limitButton),
-    swap: intl.formatMessage(messages.swap),
-  }
-}
 
 const styles = StyleSheet.create({
   container: {
