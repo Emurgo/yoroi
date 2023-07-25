@@ -43,6 +43,7 @@ export const EditAmountScreen = () => {
   )
 
   React.useEffect(() => {
+    setQuantity(initialQuantity)
     setInputValue(Quantities.denominated(initialQuantity, tokenInfo.decimals ?? 0))
   }, [initialQuantity, tokenInfo.decimals])
 
