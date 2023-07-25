@@ -42,6 +42,11 @@ export const EditAmountScreen = () => {
     Quantities.denominated(initialQuantity, tokenInfo.decimals ?? 0),
   )
 
+  React.useEffect(() => {
+    setQuantity(initialQuantity)
+    setInputValue(Quantities.denominated(initialQuantity, tokenInfo.decimals ?? 0))
+  }, [initialQuantity, tokenInfo.decimals])
+
   useOverrideBackNavigate(() => {
     navigateTo.selectedTokens()
     return true
