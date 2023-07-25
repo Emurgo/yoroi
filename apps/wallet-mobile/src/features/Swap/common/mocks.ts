@@ -10,9 +10,8 @@ export const mocks = {
   editingAmount: {
     adding: {
       ...initialState,
-    // selectedTokenFromId: secondaryTokenId,
+      // selectedTokenFromId: secondaryTokenId,
       selectedTokenFromId: walletMocks.wallet.primaryTokenInfo.id,
     },
   },
-
 }

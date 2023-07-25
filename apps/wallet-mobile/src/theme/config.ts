@@ -1,4 +1,4 @@
-import { Platform } from 'react-native'
+import {Platform} from 'react-native'
 
 // TODO: need to homogenise the code style here. Only use upper case for color
 // constants. The rest should follow typical js object naming conventions.
@@ -50,7 +50,7 @@ export const COLORS = {
   BLUE_LIGHTER: '#164FD6',
   GREY_6: '#A7AFC0',
   ACTION_GRAY: '#8A92A3',
-  LIGHT_GREEN:"#08C29D"
+  LIGHT_GREEN: '#08C29D',
 }
 
 // TODO: use lowercase for key names. Eg navigationActive

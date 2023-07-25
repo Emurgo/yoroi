@@ -1,1 +1,1 @@
-export * from './ExpandableInfoCard';
+export * from './ExpandableInfoCard'

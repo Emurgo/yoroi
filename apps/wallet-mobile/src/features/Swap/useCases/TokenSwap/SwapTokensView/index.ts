@@ -1,1 +1,1 @@
-export * from './SwapTokensView';
+export * from './SwapTokensView'

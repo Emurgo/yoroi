@@ -1,1 +1,1 @@
-export * from './InputSlippageToleranceScreen';
+export * from './InputSlippageToleranceScreen'

@@ -1,7 +1,6 @@
-import { defineMessages, useIntl } from 'react-intl'
+import {defineMessages, useIntl} from 'react-intl'
 
 import globalMessages from '../../../i18n/global-messages'
-
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -28,7 +27,7 @@ export const useStrings = () => {
     pools: (qty: number) => intl.formatMessage(globalMessages.pools, {qty}),
     openOrders: intl.formatMessage(messages.openOrders),
     completedOrders: intl.formatMessage(messages.completedOrders),
-    
+
     // search
     searchTokens: intl.formatMessage(messages.searchTokens),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
@@ -37,13 +36,10 @@ export const useStrings = () => {
     found: intl.formatMessage(messages.found),
     youHave: intl.formatMessage(messages.youHave),
     assets: (qty: number) => intl.formatMessage(globalMessages.assets, {qty}),
-
   }
 }
 
-export const amountInputErrorMessages = defineMessages({
-
-})
+export const amountInputErrorMessages = defineMessages({})
 
 export const messages = defineMessages({
   swapTitle: {
@@ -104,11 +100,11 @@ export const messages = defineMessages({
   },
   slippageInfo: {
     id: 'swap.swapScreen.slippageInfo',
-    defaultMessage: '!!!Slippage tolerance is set as a percentage of the total swap value.'
+    defaultMessage: '!!!Slippage tolerance is set as a percentage of the total swap value.',
   },
   enterSlippage: {
     id: 'swap.swapScreen.enterSlippage',
-    defaultMessage: '!!!Enter a value from 0% to 100%. You can also enter up to 1 decimal'
+    defaultMessage: '!!!Enter a value from 0% to 100%. You can also enter up to 1 decimal',
   },
   openOrders: {
     id: 'swap.swapScreen.openOrders',
@@ -130,7 +126,7 @@ export const messages = defineMessages({
     id: 'global.swap',
     defaultMessage: '!!!Swap',
   },
-  // TODO check this and change if necessary 
+  // TODO check this and change if necessary
 
   youHave: {
     id: 'components.send.assetselectorscreen.youHave',
@@ -152,5 +148,4 @@ export const messages = defineMessages({
     id: 'components.send.selectasset.title',
     defaultMessage: '!!!Select asset',
   },
-
 })

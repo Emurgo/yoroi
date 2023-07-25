@@ -1,1 +1,1 @@
-export * from './SelectPoolScreen';
+export * from './SelectPoolScreen'

@@ -3,7 +3,7 @@ import {Balance} from '@yoroi/types'
 export const filterBySearch = (searchTerm: string) => {
   const searchTermLowerCase = searchTerm.toLocaleLowerCase()
   if (searchTermLowerCase.length === 0) return () => true
-  
+
   return (tokenInfo: Balance.TokenInfo) => {
     if (tokenInfo.kind === 'ft') {
       return (
