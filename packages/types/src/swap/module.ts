@@ -8,7 +8,7 @@ export type SwapProtocol =
   | 'wingriders'
   | 'muesliswap'
 
-export type SwapOrder = {
+export type SwapCreateOrderData = {
   address: string
   protocol: SwapProtocol
   poolId?: string // Only required for SundaeSwap trades.
@@ -24,6 +24,12 @@ export type SwapOrder = {
   }
 }
 
+export type SwapCreateOrderResponse = Record<
+  'datumHash' | 'datum' | 'contractAddress',
+  string
+>
+
+// todo: add full type def.
 export type SwapOpenOrder = {
   provider: SwapProtocol
   from: {
@@ -118,13 +124,73 @@ export type SwapPool = {
   }
 }
 
+export type SwapTokenInfo = {
+  info: {
+    supply: {
+      total: string // total circulating supply of the token, without decimals.
+      circulating: string | null // if set the circulating supply of the token, if null the amount in circulation is unknown.
+    }
+    status: 'verified' | 'unverified' | 'scam' | 'outdated'
+    address: {
+      policyId: string // policy id of the token.
+      name: string // hexadecimal representation of token name.
+    }
+    symbol: string // shorthand token symbol.
+    image?: string // http link to the token image.
+    website: string
+    description: string
+    decimalPlaces: number // number of decimal places of the token, i.e. 6 for ADA and 0 for MILK.
+    categories: string[] // encoding categories as ids.
+  }
+  price: {
+    volume: {
+      base: number // float, trading volume 24h in base currency (e.g. ADA).
+      quote: number // float, trading volume 24h in quote currency.
+    }
+    volumeChange: {
+      base: number // float, percent change of trading volume in comparison to previous 24h.
+      quote: number // float, percent change of trading volume in comparison to previous 24h.
+    }
+    price: number // live trading price in base currency (e.g. ADA).
+    askPrice: number // lowest ask price in base currency (e.g. ADA).
+    bidPrice: number // highest bid price in base currency (e.g. ADA).
+    priceChange: {
+      '24h': number // float, price change last 24 hours.
+      '7d': number // float, price change last 7 days.
+    }
+    quoteDecimalPlaces: number // decimal places of quote token.
+    baseDecimalPlaces: number // decimal places of base token.
+    price10d: number[] //float, prices of this tokens averaged for the last 10 days, in chronological order i.e.oldest first.
+  }
+}
+
+// todo: choose better name
+export type SwapBaseTokenInfo =
+  | {policyId: string; assetName: string}
+  | {policyId: string; assetNameHex: string}
+
+export interface SwapApi {
+  createOrder(order: SwapCreateOrderData): Promise<SwapCreateOrderResponse>
+  cancelOrder(
+    orderUTxO: string,
+    collateralUTxO: string,
+    walletAddress: string,
+  ): Promise<string>
+  getOrders(stakeKeyHash: string): Promise<SwapOpenOrder[]>
+  getPools(
+    tokenA: SwapBaseTokenInfo,
+    tokenB: SwapBaseTokenInfo,
+  ): Promise<SwapPool[]>
+  getTokens(policyId?: string, assetName?: string): Promise<SwapTokenInfo[]>
+}
+
 export type SwapModule = {
   orders: {
     prepare: (order: SwapOrderCreateData) => Promise<SwapOrderDatum>
     create: (order: SwapOrderCreateData) => Promise<SwapOrderDatum>
     cancel: (order: SwapOrderCancelData) => Promise<string>
     list: {
-      byStatusOpen: () => Promise<Array<SwapOrder>>
+      byStatusOpen: () => Promise<Array<any>>
     }
   }
   pairs: {
