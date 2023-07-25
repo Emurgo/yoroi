@@ -10,7 +10,7 @@ import {useTokenInfo} from '../../yoroi-wallets/hooks'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {Boundary, Icon, Placeholder, Spacer, Text, TokenIcon} from '..'
 
-type AmountItemProps = {
+export type AmountItemProps = {
   wallet: YoroiWallet
   amount: Balance.Amount
   style?: ViewProps['style']
@@ -26,6 +26,7 @@ export const AmountItem = ({wallet, style, amount, tokenIconSize, variant}: Amou
   const name = tokenInfo.ticker ?? tokenInfo.name
   const nameLabel = isEmptyString(name) ? '-' : name
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
+
   const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
   const showSwapDetails = !isPrimary && variant === 'swap'
 

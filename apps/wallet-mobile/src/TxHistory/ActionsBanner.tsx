@@ -71,7 +71,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
                 <Icon.Received {...ACTION_PROPS} />
               </TouchableOpacity>
 
-              <Text style={styles.actionLabel}>SWAP</Text>
+              <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
             </View>
           )}
 
@@ -145,6 +145,7 @@ const useStrings = () => {
     sendLabel: intl.formatMessage(actionMessages.send),
     receiveLabel: intl.formatMessage(actionMessages.receive),
     buyLabel: intl.formatMessage(actionMessages.buy),
+    swapLabel: intl.formatMessage(actionMessages.swap),
     messageBuy: intl.formatMessage(actionMessages.soon),
   }
 }

@@ -584,6 +584,7 @@
   "global.pleaseWait": "please wait ...",
   "global.receive": "Receive",
   "global.send": "Send",
+  "global.swap": "Swap",
   "global.staking": "Staking",
   "global.staking.epochLabel": "Epoch",
   "global.staking.stakePoolName": "Stake pool name",
