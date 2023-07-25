@@ -152,19 +152,20 @@ export const MetricsProvider = ({
     ...initialState,
   })
   const {disable: managerDisable, enable: managerEnable} = metricsManager
-  const disable = React.useCallback(() => {
-    dispatch({type: 'isEnabledChanged', isEnabled: false})
-    managerDisable()
-  }, [managerDisable])
-  const enable = React.useCallback(() => {
-    dispatch({type: 'isEnabledChanged', isEnabled: true})
-    managerEnable()
-  }, [managerEnable])
 
   const actions = React.useRef<MetricsActions>({
     isLoadedChanged: (isLoaded) => dispatch({type: 'isLoadedChanged', isLoaded}),
     isEnabledChanged: (isEnabled) => dispatch({type: 'isEnabledChanged', isEnabled}),
   }).current
+
+  const disable = React.useCallback(() => {
+    actions.isEnabledChanged(false)
+    managerDisable()
+  }, [actions, managerDisable])
+  const enable = React.useCallback(() => {
+    actions.isEnabledChanged(true)
+    managerEnable()
+  }, [actions, managerEnable])
 
   React.useEffect(() => {
     Promise.all([metricsManager.init(), metricsManager.enabled()]).then(([_, enabled]) => {
