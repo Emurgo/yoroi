@@ -38,7 +38,7 @@ export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, ha
     }
   }
   return (
-    <>
+    <View>
       <View style={[styles.container, hasError && styles.borderError]}>
         {label != null && <Text style={[styles.label, hasError && styles.labelError]}>{label}</Text>}
 
@@ -64,7 +64,7 @@ export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, ha
 
                 <Text style={styles.coinName}>{noTokenSelected ? strings.selectToken : name}</Text>
 
-                <Ionicons name="chevron-forward-outline" size={20} color="black" />
+                <Icon.Chevron direction="right" size={20} color="black" />
               </View>
             </TouchableOpacity>
 
@@ -82,7 +82,7 @@ export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, ha
           <Text style={styles.errorText}>Not enough balance</Text>
         </>
       )}
-    </>
+    </View>
   )
 }
 

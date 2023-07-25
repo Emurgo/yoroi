@@ -488,7 +488,7 @@ export const actionMessages = defineMessages({
     defaultMessage: '!!!Buy',
   },
   swap: {
-    id: 'global.buy',
+    id: 'global.swap',
     defaultMessage: '!!!Swap',
   },
   soon: {
