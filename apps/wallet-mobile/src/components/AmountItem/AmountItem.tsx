@@ -39,7 +39,7 @@ export const AmountItem = ({wallet, style, amount, tokenIconSize, variant}: Amou
       </Left>
 
       <Middle>
-        <View style={styles.flex}>
+        <View style={styles.row}>
           <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
             {nameLabel}
           </Text>
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     color: COLORS.DARK_TEXT,
     textAlign: 'right',
   },
-  flex: {
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
   },
