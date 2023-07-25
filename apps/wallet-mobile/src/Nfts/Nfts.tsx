@@ -4,7 +4,7 @@ import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, NftImageGallery, SkeletonGallery, Spacer} from '../components'
-import {ampli} from '../metrics'
+import {useMetrics} from '../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useNfts} from '../yoroi-wallets/hooks'
@@ -16,6 +16,7 @@ import {NoNftsScreen} from './NoNftsScreen'
 export const Nfts = () => {
   const navigateTo = useNavigateTo()
   const strings = useStrings()
+  const {track} = useMetrics()
 
   // use case: search nfts
   useSearchOnNavBar({
@@ -35,11 +36,11 @@ export const Nfts = () => {
 
   React.useEffect(() => {
     if (isLoading || isError) return
-    ampli.nftGalleryPageViewed({nft_count: nfts.length})
+    track.nftGalleryPageViewed({nft_count: nfts.length})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError, isLoading])
 
-  const sortedNfts = React.useMemo(() => nfts.sort(sortNfts), [nfts])
+  const sortedNfts = React.useMemo(() => nfts.sort(byName), [nfts])
 
   const {search: nftsSearchTerm} = useSearch()
   const nftsSearchResult = filterNfts(nftsSearchTerm, sortedNfts)
@@ -194,7 +195,7 @@ const LoadingScreen = ({nftsCount}: {nftsCount: number}) => {
   )
 }
 
-const sortNfts = ({name: A}: TokenInfo, {name: B}: TokenInfo) => A.localeCompare(B)
+const byName = ({name: A}: TokenInfo, {name: B}: TokenInfo) => A.localeCompare(B)
 
 const styles = StyleSheet.create({
   safeAreaView: {

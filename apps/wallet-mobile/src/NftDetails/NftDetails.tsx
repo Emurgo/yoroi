@@ -8,7 +8,7 @@ import {CopyButton, FadeIn, Icon, Spacer, Text} from '../components'
 import {NftPreview} from '../components/NftPreview'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {features} from '../features'
-import {ampli} from '../metrics'
+import {useMetrics} from '../metrics/metricsManager'
 import {NftRoutes} from '../navigation'
 import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
@@ -25,6 +25,7 @@ export const NftDetails = () => {
   const wallet = useSelectedWallet()
   const nft = useNft(wallet, {id})
   const [activeTab, setActiveTab] = useState<'overview' | 'metadata'>('overview')
+  const {track} = useMetrics()
 
   return (
     <FadeIn style={styles.container}>
@@ -35,7 +36,7 @@ export const NftDetails = () => {
           <Tab
             onPress={() => {
               setActiveTab('overview')
-              ampli.nftGalleryDetailsTab({nft_tab: 'Overview'})
+              track.nftGalleryDetailsTab({nft_tab: 'Overview'})
             }}
             label={strings.overview}
             active={activeTab === 'overview'}
@@ -45,7 +46,7 @@ export const NftDetails = () => {
           <Tab
             onPress={() => {
               setActiveTab('metadata')
-              ampli.nftGalleryDetailsTab({nft_tab: 'Metadata'})
+              track.nftGalleryDetailsTab({nft_tab: 'Metadata'})
             }}
             label={strings.metadata}
             active={activeTab === 'metadata'}

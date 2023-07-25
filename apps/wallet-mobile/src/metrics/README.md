@@ -18,17 +18,27 @@ When you run the scripts for the first time, it will ask you to login the cli wi
 
 ## Usage
 
-`initMetrics` must be called on app startup (`YoroiApp.tsx`) via the `useInitMetrics` hook to make it syncronous.
+`YoroiApp.tsx` must be wrapped within the (`MetricsProvider`).
 
-Track or identify operations are done using the `metrics` object, and come with their typed methods from Amplitude definition:
+Track operations are done using the `track` object that is an adapter for the typed methods from Amplitude definition:
 
-```tsx
-import {ampli} from './metrics'
-
-ampli.nftGalleryDetailsNavigation({nft_navigation: 'Next'})
+```jsx
+import {useMetrics} from './metricsManager'
+const Component = () => (
+    const {track} = useMetrics()
+    const handleX = () => track.nftGalleryDetailsNavigation({nft_navigation: 'Next'})
+    <>
+        ...
+    </>
+)
 ```
-
 ## Enable/disable and mock
 
 Metrics can be enabled/disabled by the user (disabled by default until accepted via UI), with the current preference persisted on device.
-Metrics can also be mocked via feature flag, for example to run in Storybook.
+Metrics can also be mocked via `./mocks` for Storybooks and Tests
+Metrics for are behind a feature flag
+
+## Updating
+
+Manager is responsible to adapt the analytics module into Yoroi, whenever there are new events it needs to be mapped 1:1 in the module.
+Also if a method from `ampli` needs to be exposed it should be wrapped withing the manager as well i.e. `Identify`

@@ -4,7 +4,6 @@ import {enableScreens} from 'react-native-screens'
 import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
-import {useInitMetrics} from './metrics'
 import {useStorage, YoroiStorage} from './yoroi-wallets/storage'
 import {walletManager} from './yoroi-wallets/walletManager'
 
@@ -18,9 +17,7 @@ if (Platform.OS === 'android') {
 
 export const InitApp = () => {
   const loaded = useInitApp()
-  const metrics = useInitMetrics()
-
-  if (!loaded || !metrics) return null
+  if (!loaded) return null
 
   return <AppNavigator />
 }
