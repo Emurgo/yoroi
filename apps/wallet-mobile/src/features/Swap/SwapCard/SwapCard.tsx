@@ -49,7 +49,7 @@ export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, ha
           <Spacer width={7} />
 
           <View style={styles.rightSection}>
-            <TouchableOpacity onPress={() => navigateTo && navigateTo()}>
+            <TouchableOpacity onPress={() => navigateTo?.()}>
               <View style={styles.sectionContainer}>
                 <Boundary loading={{fallback: <Placeholder />}} error={{fallback: () => <Placeholder />}}>
                   {noTokenSelected ? (
@@ -107,7 +107,7 @@ const AmountInput = ({onChange, value, inputRef}: AmountInputProps) => {
       allowFontScaling
       selectionColor={COLORS.TRANSPARENT_BLACK}
       style={styles.amountInput}
-      underlineColorAndroid="tra2sparent"
+      underlineColorAndroid="transparent"
       ref={inputRef}
     />
   )

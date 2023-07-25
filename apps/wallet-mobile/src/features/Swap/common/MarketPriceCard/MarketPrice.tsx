@@ -60,7 +60,7 @@ const AmountInput = ({onChange, value, disabled}: AmountInputProps) => {
       allowFontScaling
       selectionColor={COLORS.TRANSPARENT_BLACK}
       style={styles.amountInput}
-      underlineColorAndroid="tra2sparent"
+      underlineColorAndroid="transparent"
       editable={!disabled}
     />
   )

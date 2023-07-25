@@ -6,11 +6,11 @@ import {Text} from '../../../components'
 import {COLORS} from '../../../theme'
 import {useStrings} from './strings'
 
-export const Counter = ({length}: {length: number}) => {
+export const Counter = ({counter}: {counter: number}) => {
   const strings = useStrings()
   return (
     <View style={styles.counter}>
-      <Text style={styles.counterTextBold}>{`${length} ${strings.pools(length)} `}</Text>
+      <Text style={styles.counterTextBold}>{`${counter} ${strings.pools(counter)} `}</Text>
     </View>
   )
 }

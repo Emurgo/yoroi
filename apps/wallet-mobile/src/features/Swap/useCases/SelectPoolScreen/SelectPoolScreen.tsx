@@ -44,7 +44,7 @@ export const SelectPoolScreen = () => {
     <ScrollView>
       <SelectPoolList data={cardData} />
 
-      <Counter length={cardData?.length} />
+      <Counter counter={cardData?.length} />
     </ScrollView>
   )
 }

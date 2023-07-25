@@ -26,7 +26,7 @@ export const ExpandableInfoCard = ({
   return (
     <View style={[styles.container]}>
       <View style={styles.flexBetween}>
-        <TouchableOpacity onPress={() => navigateTo && navigateTo()}>
+        <TouchableOpacity onPress={() => navigateTo?.()}>
           <Text style={[styles.label]}>{label}</Text>
         </TouchableOpacity>
 
