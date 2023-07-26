@@ -1,2 +1,0 @@
-"NSFaceIDUsageDescription" = "Enabling Face ID allows you quick and secure access to your account.";
-"NSCameraUsageDescription" = "Yoroi Mobile will only use camera when user requests to scan a QR-code with a blockchain address, instead of typing the address in manually.";
