@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../../components'
+// import {BottomSheet} from '../../../../../components/BottomSheet'
 import {COLORS} from '../../../../../theme'
 import {ExpandableInfoCard} from '../../../common/SelectPool/ExpendableCard'
 import {OpenOrderListType} from '../OrdersView'
@@ -47,7 +48,6 @@ const mockOpenOrders: OpenOrderListType = [
     buttonAction: () => {
       console.log('button pressed')
     },
-    buttonText: 'CANCEL ORDER',
   },
   {
     label: (
@@ -89,13 +89,14 @@ const mockOpenOrders: OpenOrderListType = [
     buttonAction: () => {
       console.log('button pressed')
     },
-    buttonText: 'CANCEL ORDER',
   },
 ]
 
-export const OpenOrders = () => {
+export const ClosedOrders = () => {
   return (
     <View style={styles.container}>
+      {/* <BottomSheet /> */}
+
       <View style={styles.flex}>
         {mockOpenOrders.map((order, index) => (
           <ExpandableInfoCard
@@ -104,7 +105,6 @@ export const OpenOrders = () => {
             mainInfo={order.mainInfo}
             hiddenInfo={order.hiddenInfo}
             buttonAction={order.buttonAction}
-            buttonText={order.buttonText}
             withBoxShadow
           />
         ))}

@@ -1,11 +1,26 @@
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {Text} from '../../../../components'
 import {COLORS} from '../../../../theme'
 import {ButtonGroup} from '../../common/ButtonGroup'
 import {useStrings} from '../../common/strings'
+import {ClosedOrders} from './ClosedOrders/ClosedOrders'
 import {OpenOrders} from './OpenOrders'
+
+type Item = {
+  label: string
+  value: string
+}
+
+type SwapOrder = {
+  label: JSX.Element
+  mainInfo: Item[]
+  hiddenInfo: Item[]
+  buttonAction: () => void
+  buttonText?: string
+}
+
+export type OpenOrderListType = SwapOrder[]
 
 export const OrdersView = () => {
   const [orderView, setOrderView] = useState<string>('Open orders')
@@ -23,7 +38,7 @@ export const OrdersView = () => {
           <ButtonGroup buttons={[strings.openOrders, strings.completedOrders]} onButtonPress={handleButtonClick} />
         </View>
 
-        <View>{orderView === 'Open orders' ? <OpenOrders /> : <Text>CLosed Orders</Text>}</View>
+        <View>{orderView === 'Open orders' ? <OpenOrders /> : <ClosedOrders />}</View>
       </ScrollView>
     </View>
   )
