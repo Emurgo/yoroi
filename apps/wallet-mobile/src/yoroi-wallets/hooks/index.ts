@@ -897,9 +897,9 @@ export const useSaveMemo = (
   }
 }
 
-export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<TokenInfo[], Error> = {}) => {
+export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<TokenInfo, Error> = {}) => {
   const assetIds = useAssetIds(wallet)
-  const results = useTokenInfosDetailed({wallet, tokenIds: assetIds}, {suspense: options.suspense})
+  const results = useTokenInfosDetailed({wallet, tokenIds: assetIds}, options)
   const nfts = results.map((r) => r.data).filter((t): t is TokenInfo => t?.kind === 'nft')
   const isLoading = results.some((r) => r.isLoading)
   const isError = results.some((r) => r.isError)
