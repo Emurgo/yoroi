@@ -4,8 +4,8 @@ Metrics feature uses Amplitude service to send analytics of the app.
 
 ## Preparation
 
-To update the metrics with new Amplitude events, run script `metrics-pull`.
-To check if all events are implemented in the codebase, run script `metrics-status`.
+To update the metrics with new Amplitude events, run script `metrics:pull`.
+To check if all events are implemented in the codebase, run script `metrics:status`.
 
 **The status script does static analysis of the code, so it needs the usage to be `ampli.XXX`**
 
@@ -32,6 +32,7 @@ const Component = () => (
     </>
 )
 ```
+
 ## Enable/disable and mock
 
 Metrics can be enabled/disabled by the user (disabled by default until accepted via UI), with the current preference persisted on device.

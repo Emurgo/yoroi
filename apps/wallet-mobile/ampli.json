@@ -10,5 +10,6 @@
   "Platform": "React Native",
   "Language": "TypeScript",
   "SDK": "@amplitude/analytics-react-native@^1.0",
-  "Path": "./src/metrics/ampli"
+  "Path": "./src/metrics/ampli",
+  "InstanceNames": ["track"]
 }
