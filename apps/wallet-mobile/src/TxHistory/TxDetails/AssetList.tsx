@@ -6,6 +6,7 @@ import {Boundary} from '../../components'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {PrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {isEmptyString} from '../../utils'
 import {CardanoTypes} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
@@ -18,8 +19,9 @@ type AssetListProps = {
   assets: Array<CardanoTypes.TokenEntry>
   styles: NodeStyle
   onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
+  privacyMode?: PrivacyMode
 }
-export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
+export const AssetList = ({assets, styles, onSelect, privacyMode}: AssetListProps) => {
   const intl = useIntl()
   const colors = [styles.rowColor1, styles.rowColor2]
 
@@ -37,7 +39,13 @@ export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
           keyExtractor={(item) => item.identifier}
           renderItem={({item: entry, index}) => (
             <Boundary loading={{size: 'small', style: {padding: 16}}}>
-              <AssetRow entry={entry} styles={styles} backColor={colors[index % colors.length]} onSelect={onSelect} />
+              <AssetRow
+                privacyMode={privacyMode}
+                entry={entry}
+                styles={styles}
+                backColor={colors[index % colors.length]}
+                onSelect={onSelect}
+              />
             </Boundary>
           )}
         />
@@ -52,8 +60,9 @@ type AssetRowProps = {
   entry: CardanoTypes.TokenEntry
   backColor: {backgroundColor: string}
   onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
+  privacyMode?: PrivacyMode
 }
-const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
+const AssetRow = ({styles, entry, backColor, onSelect, privacyMode}: AssetRowProps) => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
@@ -73,7 +82,9 @@ const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
       </View>
 
       <View style={styles.assetBalanceView}>
-        <Text style={styles.assetBalance}>{formatTokenAmount(asQuantity(entry.amount), tokenInfo)}</Text>
+        <Text style={styles.assetBalance}>
+          {privacyMode === 'HIDDEN' ? '*.****' : formatTokenAmount(asQuantity(entry.amount), tokenInfo)}
+        </Text>
       </View>
     </>
   )
