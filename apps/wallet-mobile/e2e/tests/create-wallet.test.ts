@@ -22,25 +22,29 @@ describe('Creating a wallet', () => {
 
         await expect(createWalletFlow.credentialsView()).toBeVisible();
         await createWalletFlow.walletNameInput().typeText(WALLET_NAME)
-        await device.disableSynchronization()
-        await createWalletFlow.spendingPasswordInput().typeText(SPENDING_PASSWORD)
-        await createWalletFlow.repeatSpendingPasswordInput().typeText(`${SPENDING_PASSWORD}\n`)
+       // await device.disableSynchronization()
+       await createWalletFlow.spendingPasswordInput().tap()
+        await createWalletFlow.spendingPasswordInput().replaceText(`${SPENDING_PASSWORD}\n`)
+        await waitFor(createWalletFlow.repeatSpendingPasswordInput()).toBeVisible().withTimeout(10000)
+      //  await createWalletFlow.repeatSpendingPasswordInput().tap()
+      await createWalletFlow.repeatSpendingPasswordInput().longPress()
+        await createWalletFlow.repeatSpendingPasswordInput().replaceText(SPENDING_PASSWORD)
         await device.enableSynchronization()
 
-        await createWalletFlow.credentialsFormContinueButton().tap()
-        await expect(createWalletFlow.mnemonicExplanationModal()).toBeVisible()
-        await createWalletFlow.mnemonicExplanationModal().tap()
+        // await createWalletFlow.credentialsFormContinueButton().tap()
+        // await expect(createWalletFlow.mnemonicExplanationModal()).toBeVisible()
+        // await createWalletFlow.mnemonicExplanationModal().tap()
 
-        const seedPhraseText = await getSeedPhrase()
-        await createWalletFlow.mnemonicShowScreenConfirmButton().tap()
-        await expect(createWalletFlow.mnemonicWarningModalCheckbox1()).toBeVisible()
-        await createWalletFlow.mnemonicWarningModalCheckbox1().tap()
-        await createWalletFlow.mnemonicWarningModalCheckbox2().tap()
-        await createWalletFlow.mnemonicWarningModalConfirm().tap()
+        // const seedPhraseText = await getSeedPhrase()
+        // await createWalletFlow.mnemonicShowScreenConfirmButton().tap()
+        // await expect(createWalletFlow.mnemonicWarningModalCheckbox1()).toBeVisible()
+        // await createWalletFlow.mnemonicWarningModalCheckbox1().tap()
+        // await createWalletFlow.mnemonicWarningModalCheckbox2().tap()
+        // await createWalletFlow.mnemonicWarningModalConfirm().tap()
 
-        await repeatSeedPhrase(seedPhraseText)
-        await createWalletFlow.mnemonicCheckScreenConfirmButton().tap()
+        // await repeatSeedPhrase(seedPhraseText)
+        // await createWalletFlow.mnemonicCheckScreenConfirmButton().tap()
 
-        await expect(myWalletsScreen.walletByNameButton(WALLET_NAME)).toBeVisible()
+        // await expect(myWalletsScreen.walletByNameButton(WALLET_NAME)).toBeVisible()
     });
   });

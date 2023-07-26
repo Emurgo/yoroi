@@ -8,17 +8,22 @@ module.exports = {
     jest: {
       setupTimeout: 120000
     }
-  },
+  },  
   apps: {
-    'ios.debug': {
+    'ios.yoroi.debug': {
       type: 'ios.app',
       binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/yoroi.app',
-      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme yoroi -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme yoroi -configuration Debug -sdk iphonesimulator16.4 -derivedDataPath ios/build'
     },
-    'ios.release': {
+    'ios.nightly.debug': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/yoroi.app',
-      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme yoroi -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
+      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/nightly.app',
+      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme nightly -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+    },
+    'ios.nightly.release': {
+      type: 'ios.app',
+      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/nightly.app',
+      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme nightly -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'android.dev.debug': {
       type: 'android.apk',
@@ -58,13 +63,17 @@ module.exports = {
     }
   },
   configurations: {
-    'ios.sim.debug': {
+    'ios.sim.yoroi.debug': {
       device: 'simulator',
-      app: 'ios.debug'
+      app: 'ios.yoroi.debug'
     },
-    'ios.sim.release': {
+    'ios.sim.nightly.debug': {
       device: 'simulator',
-      app: 'ios.release'
+      app: 'ios.nightly.debug'
+    },
+    'ios.sim.nightly.release': {
+      device: 'simulator',
+      app: 'ios.nightly.release'
     },
     'android.att.debug': {
       device: 'attached',
