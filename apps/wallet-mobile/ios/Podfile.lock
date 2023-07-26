@@ -1,4 +1,6 @@
 PODS:
+  - amplitude-react-native (1.3.1):
+    - React-Core
   - boost (1.76.0)
   - BVLinearGradient (2.5.6):
     - React
@@ -485,7 +487,7 @@ PODS:
     - React-perflogger (= 0.71.6)
   - RNBootSplash (4.7.2):
     - React-Core
-  - RNCAsyncStorage (1.18.2):
+  - RNCAsyncStorage (1.19.1):
     - React-Core
   - RNCClipboard (1.5.1):
     - React-Core
@@ -546,6 +548,7 @@ PODS:
     - ZXingObjC/Core
 
 DEPENDENCIES:
+  - "amplitude-react-native (from `../../../node_modules/@amplitude/analytics-react-native`)"
   - boost (from `../../../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../../../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
@@ -668,6 +671,8 @@ SPEC REPOS:
     - ZXingObjC
 
 EXTERNAL SOURCES:
+  amplitude-react-native:
+    :path: "../../../node_modules/@amplitude/analytics-react-native"
   boost:
     :podspec: "../../../node_modules/react-native/third-party-podspecs/boost.podspec"
   BVLinearGradient:
@@ -820,6 +825,7 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  amplitude-react-native: 1ea3d5e1f80ccc357dd178c55c29e51c89f1cd11
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
@@ -896,7 +902,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 8692ac548bec648fa121980ccb4304afd136d584
   ReactCommon: 0c43eaeaaee231d7d8dc24fc5a6e4cf2b75bf196
   RNBootSplash: c9b258d28eb97032adc676b1e3bc353f1c59e6f1
-  RNCAsyncStorage: ddc4ee162bfd41b0d2c68bf2d95acd81dd7f1f93
+  RNCAsyncStorage: f47fe18526970a69c34b548883e1aeceb115e3e1
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNDateTimePicker: 7ecd54a97fc3749f38c3c89a171f6cbd52f3c142
