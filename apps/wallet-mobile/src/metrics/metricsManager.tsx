@@ -1,3 +1,4 @@
+import {EnrichmentPlugin, Event, PluginType} from '@amplitude/analytics-types'
 import * as React from 'react'
 import Config from 'react-native-config'
 
@@ -18,6 +19,16 @@ const currentBuildVariant = Config.BUILD_VARIANT ?? 'DEV'
 const environment: MetricsEnv = Object.keys(buildVariants).includes(currentBuildVariant)
   ? buildVariants[currentBuildVariant]
   : buildVariants.DEV
+
+const infoPlugin: EnrichmentPlugin = {
+  name: 'info-plugin',
+  type: PluginType.ENRICHMENT,
+  setup: async () => Promise.resolve(),
+  execute: async (event: Event) => {
+    Logger.info('[metrics-react-native]', event.event_type, event.event_properties)
+    return Promise.resolve(event)
+  },
+}
 
 export const makeMetricsStorage = (yoroiStorage: YoroiStorage = storage) => {
   const enabledKey = 'metrics-enabled'
@@ -48,13 +59,27 @@ export const makeMetricsManager = (
 
   const init = () =>
     enabled()
-      .then(
-        (isEnabled) =>
-          metricsModule.load({
-            environment,
-            client: {configuration: {optOut: !isEnabled, flushIntervalMillis: flushIntervalMs}},
-          }).promise,
+      .then((isEnabled) =>
+        !metricsModule.isLoaded
+          ? metricsModule.load({
+              environment,
+              client: {
+                configuration: {
+                  optOut: !isEnabled,
+                  flushIntervalMillis: flushIntervalMs,
+                  trackingOptions: {
+                    ipAddress: false,
+                  },
+                },
+              },
+            }).promise
+          : Promise.resolve(null),
       )
+      .then(() => {
+        if (environment === buildVariants.STAGING) {
+          metricsModule.client.add(infoPlugin)
+        }
+      })
       .catch((e) => {
         Logger.error(`[metrics-react-native] metrics.load failed:`, e)
       })
@@ -66,14 +91,11 @@ export const makeMetricsManager = (
     nftGalleryDetailsPageViewed: metricsModule.nftGalleryDetailsPageViewed.bind(metricsModule),
 
     sendInitiated: metricsModule.sendInitiated.bind(metricsModule),
-    sendAmountUpdated: metricsModule.sendAmountUpdated.bind(metricsModule),
-    sendAmountSelected: metricsModule.sendAmountSelected.bind(metricsModule),
-    sendAmountPageViewed: metricsModule.sendAmountPageViewed.bind(metricsModule),
-    sendConfirmedPageViewed: metricsModule.sendConfirmedPageViewed.bind(metricsModule),
-    sendAmountPreviewSettled: metricsModule.sendAmountPreviewSettled.bind(metricsModule),
-    sendAmountPreviewRequested: metricsModule.sendAmountPreviewRequested.bind(metricsModule),
-    sendAmountPreviewSubmitted: metricsModule.sendAmountPreviewSubmitted.bind(metricsModule),
-    sendAmountPreviewPageViewed: metricsModule.sendAmountPreviewPageViewed.bind(metricsModule),
+    sendSelectAssetPageViewed: metricsModule.sendSelectAssetPageViewed.bind(metricsModule),
+    sendSelectAssetSelected: metricsModule.sendSelectAssetSelected.bind(metricsModule),
+    sendSelectAssetUpdated: metricsModule.sendSelectAssetUpdated.bind(metricsModule),
+    sendSummaryPageViewed: metricsModule.sendSummaryPageViewed.bind(metricsModule),
+    sendSummarySubmitted: metricsModule.sendSummarySubmitted.bind(metricsModule),
 
     swapInitiated: metricsModule.swapInitiated.bind(metricsModule),
     swapPoolChanged: metricsModule.swapPoolChanged.bind(metricsModule),

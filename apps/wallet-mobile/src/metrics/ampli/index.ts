@@ -95,191 +95,13 @@ export interface NftGallerySearchActivatedProperties {
   nft_search_term: string;
 }
 
-export interface SendAmountPreviewPageViewedProperties {
-  /**
-   * ```
-   * nfts: [
-   *      {
-   *         nft_name: Bored Ape,
-   *
-   *       },
-   *       {
-   *         nft_name: Crypto Cats,
-   *        }
-   * ]
-   * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
-   */
-  nfts: string[];
-  /**
-   * ```
-   * Tokens: [
-   *      {
-   *         token_name: Ado,
-   *         token_amount: '133',
-   *       },
-   *       {
-   *         token_name: Ada,
-   *         token_amount: '5',
-   *        }
-   * ]
-   * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
-   */
-  tokens: string[];
+export interface SendSelectAssetSelectedProperties {
   /**
    * | Rule | Value |
    * |---|---|
    * | Type | number |
    */
-  tokens_count: number;
-}
-
-export interface SendAmountPreviewRequestedProperties {
-  /**
-   * ```
-   * nfts: [
-   *      {
-   *         nft_name: Bored Ape,
-   *
-   *       },
-   *       {
-   *         nft_name: Crypto Cats,
-   *        }
-   * ]
-   * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
-   */
-  nfts: string[];
-  /**
-   * ```
-   * Tokens: [
-   *      {
-   *         token_name: Ado,
-   *         token_amount: '133',
-   *       },
-   *       {
-   *         token_name: Ada,
-   *         token_amount: '5',
-   *        }
-   * ]
-   * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
-   */
-  tokens: string[];
-  /**
-   * | Rule | Value |
-   * |---|---|
-   * | Type | number |
-   */
-  tokens_count: number;
-}
-
-export interface SendAmountPreviewSettledProperties {
-  /**
-   * ```
-   * nfts: [
-   *      {
-   *         nft_name: Bored Ape,
-   *
-   *       },
-   *       {
-   *         nft_name: Crypto Cats,
-   *        }
-   * ]
-   * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
-   */
-  nfts: string[];
-  /**
-   * ```
-   * Tokens: [
-   *      {
-   *         token_name: Ado,
-   *         token_amount: '133',
-   *       },
-   *       {
-   *         token_name: Ada,
-   *         token_amount: '5',
-   *        }
-   * ]
-   * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
-   */
-  tokens: string[];
-  /**
-   * | Rule | Value |
-   * |---|---|
-   * | Type | number |
-   */
-  tokens_count: number;
-}
-
-export interface SendAmountPreviewSubmittedProperties {
-  /**
-   * ```
-   * nfts: [
-   *      {
-   *         nft_name: Bored Ape,
-   *
-   *       },
-   *       {
-   *         nft_name: Crypto Cats,
-   *        }
-   * ]
-   * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
-   */
-  nfts: string[];
-  /**
-   * ```
-   * Tokens: [
-   *      {
-   *         token_name: Ado,
-   *         token_amount: '133',
-   *       },
-   *       {
-   *         token_name: Ada,
-   *         token_amount: '5',
-   *        }
-   * ]
-   * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
-   */
-  tokens: string[];
-  /**
-   * | Rule | Value |
-   * |---|---|
-   * | Type | number |
-   */
-  tokens_count: number;
-}
-
-export interface SendAmountSelectedProperties {
+  asset_count: number;
   /**
    * ```
    * nfts: [
@@ -317,15 +139,15 @@ export interface SendAmountSelectedProperties {
    * | Item Type | string |
    */
   tokens?: string[];
+}
+
+export interface SendSelectAssetUpdatedProperties {
   /**
    * | Rule | Value |
    * |---|---|
    * | Type | number |
    */
-  tokens_count: number;
-}
-
-export interface SendAmountUpdatedProperties {
+  asset_count: number;
   /**
    * ```
    * nfts: [
@@ -363,12 +185,98 @@ export interface SendAmountUpdatedProperties {
    * | Item Type | string |
    */
   tokens: string[];
+}
+
+export interface SendSummaryPageViewedProperties {
   /**
    * | Rule | Value |
    * |---|---|
    * | Type | number |
    */
-  tokens_count: number;
+  asset_count: number;
+  /**
+   * ```
+   * nfts: [
+   *      {
+   *         nft_name: Bored Ape,
+   *
+   *       },
+   *       {
+   *         nft_name: Crypto Cats,
+   *        }
+   * ]
+   * ```
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | string |
+   */
+  nfts: string[];
+  /**
+   * ```
+   * Tokens: [
+   *      {
+   *         token_name: Ado,
+   *         token_amount: '133',
+   *       },
+   *       {
+   *         token_name: Ada,
+   *         token_amount: '5',
+   *        }
+   * ]
+   * ```
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | string |
+   */
+  tokens: string[];
+}
+
+export interface SendSummarySubmittedProperties {
+  /**
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
+   */
+  asset_count: number;
+  /**
+   * ```
+   * nfts: [
+   *      {
+   *         nft_name: Bored Ape,
+   *
+   *       },
+   *       {
+   *         nft_name: Crypto Cats,
+   *        }
+   * ]
+   * ```
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | string |
+   */
+  nfts: string[];
+  /**
+   * ```
+   * Tokens: [
+   *      {
+   *         token_name: Ado,
+   *         token_amount: '133',
+   *       },
+   *       {
+   *         token_name: Ada,
+   *         token_amount: '5',
+   *        }
+   * ]
+   * ```
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | string |
+   */
+  tokens: string[];
 }
 
 export interface SwapAssetFromChangedProperties {
@@ -630,6 +538,12 @@ export interface SwapSlippageChangedProperties {
 
 export interface SendProperties {
   /**
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
+   */
+  asset_count: number;
+  /**
    * ```
    * nfts: [
    *      {
@@ -666,12 +580,6 @@ export interface SendProperties {
    * | Item Type | string |
    */
   tokens?: string[];
-  /**
-   * | Rule | Value |
-   * |---|---|
-   * | Type | number |
-   */
-  tokens_count: number;
 }
 
 export interface SwapProperties {
@@ -771,76 +679,52 @@ export class NftGallerySearchActivated implements BaseEvent {
   }
 }
 
-export class SendAmountPageViewed implements BaseEvent {
-  event_type = 'Send Amount Page Viewed';
-}
-
-export class SendAmountPreviewPageViewed implements BaseEvent {
-  event_type = 'Send Amount Preview Page Viewed';
-
-  constructor(
-    public event_properties: SendAmountPreviewPageViewedProperties,
-  ) {
-    this.event_properties = event_properties;
-  }
-}
-
-export class SendAmountPreviewRequested implements BaseEvent {
-  event_type = 'Send Amount Preview Requested';
-
-  constructor(
-    public event_properties: SendAmountPreviewRequestedProperties,
-  ) {
-    this.event_properties = event_properties;
-  }
-}
-
-export class SendAmountPreviewSettled implements BaseEvent {
-  event_type = 'Send Amount Preview Settled';
-
-  constructor(
-    public event_properties: SendAmountPreviewSettledProperties,
-  ) {
-    this.event_properties = event_properties;
-  }
-}
-
-export class SendAmountPreviewSubmitted implements BaseEvent {
-  event_type = 'Send Amount Preview Submitted';
-
-  constructor(
-    public event_properties: SendAmountPreviewSubmittedProperties,
-  ) {
-    this.event_properties = event_properties;
-  }
-}
-
-export class SendAmountSelected implements BaseEvent {
-  event_type = 'Send Amount Selected';
-
-  constructor(
-    public event_properties: SendAmountSelectedProperties,
-  ) {
-    this.event_properties = event_properties;
-  }
-}
-
-export class SendAmountUpdated implements BaseEvent {
-  event_type = 'Send Amount Updated';
-
-  constructor(
-    public event_properties: SendAmountUpdatedProperties,
-  ) {
-    this.event_properties = event_properties;
-  }
-}
-
-export class SendConfirmedPageViewed implements BaseEvent {
-  event_type = 'Send Confirmed Page Viewed';
-}
-
 export class SendInitiated implements BaseEvent {
   event_type = 'Send Initiated';
+}
+
+export class SendSelectAssetPageViewed implements BaseEvent {
+  event_type = 'Send Select Asset Page Viewed';
+}
+
+export class SendSelectAssetSelected implements BaseEvent {
+  event_type = 'Send Select Asset Selected';
+
+  constructor(
+    public event_properties: SendSelectAssetSelectedProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SendSelectAssetUpdated implements BaseEvent {
+  event_type = 'Send Select Asset Updated';
+
+  constructor(
+    public event_properties: SendSelectAssetUpdatedProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SendSummaryPageViewed implements BaseEvent {
+  event_type = 'Send Summary Page Viewed';
+
+  constructor(
+    public event_properties: SendSummaryPageViewedProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SendSummarySubmitted implements BaseEvent {
+  event_type = 'Send Summary Submitted';
+
+  constructor(
+    public event_properties: SendSummarySubmittedProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
 }
 
 export class SwapAssetFromChanged implements BaseEvent {
@@ -1095,147 +979,11 @@ export class Ampli {
   }
 
   /**
-   * Send Amount Page Viewed
-   *
-   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Amount%20Page%20Viewed)
-   *
-   * This event tracks when a user views the "Amount" page in the send flow.
-   *
-   * @param options Amplitude event options.
-   */
-  sendAmountPageViewed(
-    options?: EventOptions,
-  ) {
-    return this.track(new SendAmountPageViewed(), options);
-  }
-
-  /**
-   * Send Amount Preview Page Viewed
-   *
-   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Amount%20Preview%20Page%20Viewed)
-   *
-   * When a user loads the Preview page (Could be called comfirmation too) on the send flow.
-   *
-   * @param properties The event's properties (e.g. nfts)
-   * @param options Amplitude event options.
-   */
-  sendAmountPreviewPageViewed(
-    properties: SendAmountPreviewPageViewedProperties,
-    options?: EventOptions,
-  ) {
-    return this.track(new SendAmountPreviewPageViewed(properties), options);
-  }
-
-  /**
-   * Send Amount Preview Requested
-   *
-   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Amount%20Preview%20Requested)
-   *
-   * When the backend recieve the petition of send a transaction
-   *
-   * @param properties The event's properties (e.g. nfts)
-   * @param options Amplitude event options.
-   */
-  sendAmountPreviewRequested(
-    properties: SendAmountPreviewRequestedProperties,
-    options?: EventOptions,
-  ) {
-    return this.track(new SendAmountPreviewRequested(properties), options);
-  }
-
-  /**
-   * Send Amount Preview Settled
-   *
-   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Amount%20Preview%20Settled)
-   *
-   * When the transaction is succesfully done on the chain. 
-   *  Note: review with developers
-   *
-   * @param properties The event's properties (e.g. nfts)
-   * @param options Amplitude event options.
-   */
-  sendAmountPreviewSettled(
-    properties: SendAmountPreviewSettledProperties,
-    options?: EventOptions,
-  ) {
-    return this.track(new SendAmountPreviewSettled(properties), options);
-  }
-
-  /**
-   * Send Amount Preview Submitted
-   *
-   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Amount%20Preview%20Submitted)
-   *
-   * When a user click "send" on the "Preview" step on the send flow.
-   *
-   * @param properties The event's properties (e.g. nfts)
-   * @param options Amplitude event options.
-   */
-  sendAmountPreviewSubmitted(
-    properties: SendAmountPreviewSubmittedProperties,
-    options?: EventOptions,
-  ) {
-    return this.track(new SendAmountPreviewSubmitted(properties), options);
-  }
-
-  /**
-   * Send Amount Selected
-   *
-   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Amount%20Selected)
-   *
-   * When a user click "next" on the "Amount" step on the send flow.
-   *
-   * @param properties The event's properties (e.g. nfts)
-   * @param options Amplitude event options.
-   */
-  sendAmountSelected(
-    properties: SendAmountSelectedProperties,
-    options?: EventOptions,
-  ) {
-    return this.track(new SendAmountSelected(properties), options);
-  }
-
-  /**
-   * Send Amount Updated
-   *
-   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Amount%20Updated)
-   *
-   * When an user update the tokens selection on "amount" step: 
-   *  \- Add 
-   *  \- Remove 
-   *  \- Updated
-   *
-   * @param properties The event's properties (e.g. nfts)
-   * @param options Amplitude event options.
-   */
-  sendAmountUpdated(
-    properties: SendAmountUpdatedProperties,
-    options?: EventOptions,
-  ) {
-    return this.track(new SendAmountUpdated(properties), options);
-  }
-
-  /**
-   * Send Confirmed Page Viewed
-   *
-   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Confirmed%20Page%20Viewed)
-   *
-   * This event is triggered when a user views the preview or confirmation page before submitting the operation.
-   *
-   * @param options Amplitude event options.
-   */
-  sendConfirmedPageViewed(
-    options?: EventOptions,
-  ) {
-    return this.track(new SendConfirmedPageViewed(), options);
-  }
-
-  /**
    * Send Initiated
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Initiated)
    *
-   * This event tracks when a user loads the default state of the first step of the multiasset transaction flow.
+   * This event tracks when a user loads the default state of the first step of the multiasset transaction flow. That screen shows receiver address and optional memo
    *
    * @param options Amplitude event options.
    */
@@ -1243,6 +991,92 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SendInitiated(), options);
+  }
+
+  /**
+   * Send Select Asset Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Select%20Asset%20Page%20Viewed)
+   *
+   * This event tracks when a user views the "Amount" page in the send flow.
+   *
+   * @param options Amplitude event options.
+   */
+  sendSelectAssetPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new SendSelectAssetPageViewed(), options);
+  }
+
+  /**
+   * Send Select Asset Selected
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Select%20Asset%20Selected)
+   *
+   * When a user click "next" on the send flow: "Amount" step on extension / "Assets added" in mobile
+   *
+   * @param properties The event's properties (e.g. asset_count)
+   * @param options Amplitude event options.
+   */
+  sendSelectAssetSelected(
+    properties: SendSelectAssetSelectedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SendSelectAssetSelected(properties), options);
+  }
+
+  /**
+   * Send Select Asset Updated
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Select%20Asset%20Updated)
+   *
+   * When an user update the tokens selection on "amount" step: 
+   *  \- Add 
+   *  \- Remove 
+   *  \- Updated
+   *
+   * @param properties The event's properties (e.g. asset_count)
+   * @param options Amplitude event options.
+   */
+  sendSelectAssetUpdated(
+    properties: SendSelectAssetUpdatedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SendSelectAssetUpdated(properties), options);
+  }
+
+  /**
+   * Send Summary Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Summary%20Page%20Viewed)
+   *
+   * When a user loads the Preview page (Could be called comfirmation too) on the send flow.
+   *
+   * @param properties The event's properties (e.g. asset_count)
+   * @param options Amplitude event options.
+   */
+  sendSummaryPageViewed(
+    properties: SendSummaryPageViewedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SendSummaryPageViewed(properties), options);
+  }
+
+  /**
+   * Send Summary Submitted
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Send%20Summary%20Submitted)
+   *
+   * When a user click "send" on the "Preview" step on the send flow.
+   *
+   * @param properties The event's properties (e.g. asset_count)
+   * @param options Amplitude event options.
+   */
+  sendSummarySubmitted(
+    properties: SendSummarySubmittedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SendSummarySubmitted(properties), options);
   }
 
   /**
