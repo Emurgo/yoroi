@@ -46,6 +46,7 @@ const mockAmpli = {
     setOptOut: jest.fn(),
   },
   flush: jest.fn().mockReturnValue({promise: Promise.resolve()}),
+  isLoaded: false,
 
   nftGalleryDetailsTab: jest.fn(),
   nftGalleryPageViewed: jest.fn(),
@@ -94,6 +95,16 @@ describe('makeMetricsManager', () => {
         configuration: {optOut: false, flushIntervalMillis: expect.any(Number), trackingOptions: {ipAddress: false}},
       },
     })
+  })
+
+  test('init should do nothing if it was loaded already', async () => {
+    const mockAmpliLoaded = {...mockAmpli, isLoaded: true} as unknown as Ampli
+    const metricsManager = makeMetricsManager(mockMetricsStorage, mockAmpliLoaded)
+
+    expect(await metricsManager.enabled()).toBe(true)
+    await metricsManager.init()
+
+    expect(mockAmpliLoaded.load).toHaveBeenCalledTimes(0)
   })
 
   test('track should call the appropriate metricsModule methods', () => {
