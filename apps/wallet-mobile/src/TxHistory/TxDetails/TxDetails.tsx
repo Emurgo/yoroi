@@ -195,7 +195,6 @@ const Confirmations = ({transaction, wallet}: {transaction: TransactionInfo; wal
 const Label = ({children}: {children: string}) => <Text style={styles.label}>{children}</Text>
 
 const AdaAmount = ({amount, privacyMode}: {amount: BigNumber; privacyMode?: PrivacyMode}) => {
-  // here
   const wallet = useSelectedWallet()
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
 
