@@ -12,6 +12,7 @@ import globalMessages from '../../i18n/global-messages'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../legacy/format'
 import AddressModal from '../../Receive/AddressModal'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {PrivacyMode, usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {brand, COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
@@ -35,6 +36,7 @@ export const TxDetails = () => {
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transactions = useTransactionInfos(wallet)
   const transaction = transactions[id]
+  const privacyMode = usePrivacyMode()
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
   useTitle(isNonNullable(transaction.submittedAt) ? formatDateAndTime(transaction.submittedAt, intl) : '')
@@ -66,7 +68,7 @@ export const TxDetails = () => {
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Banner label={strings[transaction.direction]}>
           <Boundary>
-            <AdaAmount amount={amount} />
+            <AdaAmount amount={amount} privacyMode={privacyMode} />
 
             {txFee && <Fee amount={txFee} />}
           </Boundary>
@@ -102,7 +104,11 @@ export const TxDetails = () => {
               </TouchableOpacity>
             )}
 
-            <ExpandableAssetList expanded={expandedInItemId === item.id} assets={item.assets} />
+            <ExpandableAssetList
+              privacyMode={privacyMode}
+              expanded={expandedInItemId === item.id}
+              assets={item.assets}
+            />
           </View>
         ))}
 
@@ -130,7 +136,11 @@ export const TxDetails = () => {
               </TouchableOpacity>
             )}
 
-            <ExpandableAssetList expanded={expandedOutItemId === item.id} assets={item.assets} />
+            <ExpandableAssetList
+              privacyMode={privacyMode}
+              expanded={expandedOutItemId === item.id}
+              assets={item.assets}
+            />
           </View>
         ))}
 
@@ -184,9 +194,13 @@ const Confirmations = ({transaction, wallet}: {transaction: TransactionInfo; wal
 
 const Label = ({children}: {children: string}) => <Text style={styles.label}>{children}</Text>
 
-const AdaAmount = ({amount}: {amount: BigNumber}) => {
+const AdaAmount = ({amount, privacyMode}: {amount: BigNumber; privacyMode?: PrivacyMode}) => {
   const wallet = useSelectedWallet()
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
+
+  if (privacyMode === 'HIDDEN') {
+    return <Text style={amountStyle}>*.******</Text>
+  }
 
   return <Text style={amountStyle}>{formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}</Text>
 }
@@ -199,17 +213,15 @@ const Fee = ({amount}: {amount: BigNumber}) => {
   return <Text small>{text}</Text>
 }
 
-const ExpandableAssetList: React.VFC<{expanded: boolean; assets: CardanoTypes.TokenEntry[]}> = ({
-  expanded,
-  assets,
-}: {
+const ExpandableAssetList: React.VFC<{
   expanded: boolean
   assets: CardanoTypes.TokenEntry[]
-}) => (
+  privacyMode?: PrivacyMode
+}> = ({expanded, assets, privacyMode}) => (
   <View style={{borderWidth: 1, borderColor: 'transparent'}}>
     {/* ↑↑↑ View wrapper fixes bug ↑↑↑ */}
 
-    {expanded && <AssetList styles={assetListStyle} assets={assets} />}
+    {expanded && <AssetList privacyMode={privacyMode} styles={assetListStyle} assets={assets} />}
 
     {/* ↓↓↓ View wrapper fixes bug ↓↓↓ */}
   </View>
