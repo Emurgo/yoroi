@@ -1,1 +1,0 @@
-Yoroi is a Light Wallet for Cardano. Secure, Fast and Simple.
