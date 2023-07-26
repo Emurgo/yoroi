@@ -487,7 +487,7 @@ PODS:
     - React-perflogger (= 0.71.6)
   - RNBootSplash (4.7.2):
     - React-Core
-  - RNCAsyncStorage (1.19.0):
+  - RNCAsyncStorage (1.19.1):
     - React-Core
   - RNCClipboard (1.5.1):
     - React-Core
@@ -902,7 +902,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 8692ac548bec648fa121980ccb4304afd136d584
   ReactCommon: 0c43eaeaaee231d7d8dc24fc5a6e4cf2b75bf196
   RNBootSplash: c9b258d28eb97032adc676b1e3bc353f1c59e6f1
-  RNCAsyncStorage: 4b98ac3c64efa4e35c1197cb0c5ca5e9f5d4c666
+  RNCAsyncStorage: f47fe18526970a69c34b548883e1aeceb115e3e1
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNDateTimePicker: 7ecd54a97fc3749f38c3c89a171f6cbd52f3c142
