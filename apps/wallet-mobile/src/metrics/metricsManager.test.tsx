@@ -131,6 +131,8 @@ describe('makeMetricsManager', () => {
     const metricsManager = makeMetricsManager(mockMetricsStorageDisabled, mockAmpli)
     await metricsManager.disable()
     expect(await metricsManager.enabled()).toBe(false)
+    expect(mockMetricsStorageDisabled.enabled.write).toHaveBeenCalledWith(false)
     expect(mockAmpli.client.setOptOut).toHaveBeenCalledWith(true)
+    expect(mockAmpli.flush).toHaveBeenCalled()
   })
 })
