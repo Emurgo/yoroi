@@ -11,7 +11,7 @@ import {mockMetricsManager} from './mocks'
 const buildVariants = {
   NIGHTLY: 'production',
   PROD: 'production',
-  STAGING: 'staging',
+  STAGING: 'development',
   DEV: 'development',
 } as const
 type MetricsEnv = (typeof buildVariants)[keyof typeof buildVariants]
