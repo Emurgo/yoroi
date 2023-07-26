@@ -211,8 +211,8 @@ export const ConfirmTx = ({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             errorLogs: (err as any).message,
           })
+          onError?.(err as Error)
         }
-        onError?.(err as Error)
       } finally {
         setIsProcessed(true)
         setIsProcessing(false)
