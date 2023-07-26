@@ -53,14 +53,11 @@ const mockAmpli = {
   nftGalleryDetailsPageViewed: jest.fn(),
 
   sendInitiated: jest.fn(),
-  sendAmountUpdated: jest.fn(),
-  sendAmountSelected: jest.fn(),
-  sendAmountPageViewed: jest.fn(),
-  sendConfirmedPageViewed: jest.fn(),
-  sendAmountPreviewSettled: jest.fn(),
-  sendAmountPreviewRequested: jest.fn(),
-  sendAmountPreviewSubmitted: jest.fn(),
-  sendAmountPreviewPageViewed: jest.fn(),
+  sendSelectAssetPageViewed: jest.fn(),
+  sendSelectAssetSelected: jest.fn(),
+  sendSelectAssetUpdated: jest.fn(),
+  sendSummaryPageViewed: jest.fn(),
+  sendSummarySubmitted: jest.fn(),
 
   swapInitiated: jest.fn(),
   swapPoolChanged: jest.fn(),
@@ -94,23 +91,38 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.load).toHaveBeenCalledWith({
       environment: 'development',
       client: {
-        configuration: {optOut: false, flushIntervalMillis: expect.any(Number)},
+        configuration: {optOut: false, flushIntervalMillis: expect.any(Number), trackingOptions: {ipAddress: false}},
       },
     })
   })
 
   test('track should call the appropriate metricsModule methods', () => {
     const metricsManager = makeMetricsManager(mockMetricsStorage, mockAmpli)
+    const mockSendPayload = {asset_count: 10, nfts: [], tokens: []}
 
     metricsManager.track.nftGalleryDetailsTab({nft_tab: 'Metadata'})
     metricsManager.track.nftGalleryPageViewed({nft_count: 10})
     metricsManager.track.nftGallerySearchActivated({nft_search_term: 'test', nft_count: 10})
     metricsManager.track.nftGalleryDetailsPageViewed()
 
+    metricsManager.track.sendInitiated()
+    metricsManager.track.sendSelectAssetPageViewed()
+    metricsManager.track.sendSelectAssetSelected(mockSendPayload)
+    metricsManager.track.sendSelectAssetUpdated(mockSendPayload)
+    metricsManager.track.sendSummaryPageViewed(mockSendPayload)
+    metricsManager.track.sendSummarySubmitted(mockSendPayload)
+
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
     expect(mockAmpli.nftGallerySearchActivated).toHaveBeenCalledWith({nft_search_term: 'test', nft_count: 10})
     expect(mockAmpli.nftGalleryDetailsPageViewed).toHaveBeenCalled()
+
+    expect(mockAmpli.sendInitiated).toHaveBeenCalled()
+    expect(mockAmpli.sendSelectAssetPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.sendSelectAssetSelected).toHaveBeenCalledWith(mockSendPayload)
+    expect(mockAmpli.sendSelectAssetUpdated).toHaveBeenCalledWith(mockSendPayload)
+    expect(mockAmpli.sendSummaryPageViewed).toHaveBeenCalledWith(mockSendPayload)
+    expect(mockAmpli.sendSummarySubmitted).toHaveBeenCalledWith(mockSendPayload)
   })
 
   test('enable should set metrics enabled to true', async () => {
