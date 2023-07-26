@@ -6,6 +6,7 @@ import {Boundary} from '../../components'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {PrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {isEmptyString} from '../../utils'
 import {CardanoTypes} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
@@ -13,7 +14,6 @@ import {asQuantity} from '../../yoroi-wallets/utils'
 import assetListSendStyle from './AssetListSend.style'
 import assetListTransactionStyle from './AssetListTransaction.style'
 import baseStyle from './Base.style'
-import {PrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 
 type AssetListProps = {
   assets: Array<CardanoTypes.TokenEntry>

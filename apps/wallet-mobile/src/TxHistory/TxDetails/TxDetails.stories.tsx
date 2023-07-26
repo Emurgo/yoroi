@@ -4,8 +4,8 @@ import React from 'react'
 import {QueryProvider, RouteProvider} from '../../../.storybook/decorators'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {mocks} from '../../yoroi-wallets/mocks'
-import {TxDetails} from './TxDetails'
 import {storage, StorageProvider} from '../../yoroi-wallets/storage'
+import {TxDetails} from './TxDetails'
 
 storiesOf('TxDetails', module)
   .add('Default', () => (

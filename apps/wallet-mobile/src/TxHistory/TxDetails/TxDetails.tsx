@@ -12,6 +12,7 @@ import globalMessages from '../../i18n/global-messages'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../legacy/format'
 import AddressModal from '../../Receive/AddressModal'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {PrivacyMode, usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {brand, COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
@@ -22,7 +23,6 @@ import {NetworkId, TransactionInfo} from '../../yoroi-wallets/types'
 import {asQuantity, isNonNullable} from '../../yoroi-wallets/utils'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
-import {PrivacyMode, usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 
 export const TxDetails = () => {
   const strings = useStrings()
