@@ -104,7 +104,11 @@ export const TxDetails = () => {
               </TouchableOpacity>
             )}
 
-            <ExpandableAssetList expanded={expandedInItemId === item.id} assets={item.assets} />
+            <ExpandableAssetList
+              privacyMode={privacyMode}
+              expanded={expandedInItemId === item.id}
+              assets={item.assets}
+            />
           </View>
         ))}
 
@@ -132,7 +136,11 @@ export const TxDetails = () => {
               </TouchableOpacity>
             )}
 
-            <ExpandableAssetList expanded={expandedOutItemId === item.id} assets={item.assets} />
+            <ExpandableAssetList
+              privacyMode={privacyMode}
+              expanded={expandedOutItemId === item.id}
+              assets={item.assets}
+            />
           </View>
         ))}
 
@@ -192,7 +200,7 @@ const AdaAmount = ({amount, privacyMode}: {amount: BigNumber; privacyMode?: Priv
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
 
   if (privacyMode === 'HIDDEN') {
-    return <Text style={amountStyle}>*.*******</Text>
+    return <Text style={amountStyle}>*.******</Text>
   }
 
   return <Text style={amountStyle}>{formatTokenWithSymbol(asQuantity(amount), wallet.primaryToken)}</Text>
@@ -206,17 +214,15 @@ const Fee = ({amount}: {amount: BigNumber}) => {
   return <Text small>{text}</Text>
 }
 
-const ExpandableAssetList: React.VFC<{expanded: boolean; assets: CardanoTypes.TokenEntry[]}> = ({
-  expanded,
-  assets,
-}: {
+const ExpandableAssetList: React.VFC<{
   expanded: boolean
   assets: CardanoTypes.TokenEntry[]
-}) => (
+  privacyMode?: PrivacyMode
+}> = ({expanded, assets, privacyMode}) => (
   <View style={{borderWidth: 1, borderColor: 'transparent'}}>
     {/* ↑↑↑ View wrapper fixes bug ↑↑↑ */}
 
-    {expanded && <AssetList styles={assetListStyle} assets={assets} />}
+    {expanded && <AssetList privacyMode={privacyMode} styles={assetListStyle} assets={assets} />}
 
     {/* ↓↓↓ View wrapper fixes bug ↓↓↓ */}
   </View>

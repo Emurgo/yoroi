@@ -13,14 +13,15 @@ import {asQuantity} from '../../yoroi-wallets/utils'
 import assetListSendStyle from './AssetListSend.style'
 import assetListTransactionStyle from './AssetListTransaction.style'
 import baseStyle from './Base.style'
-import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
+import {PrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 
 type AssetListProps = {
   assets: Array<CardanoTypes.TokenEntry>
   styles: NodeStyle
   onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
+  privacyMode?: PrivacyMode
 }
-export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
+export const AssetList = ({assets, styles, onSelect, privacyMode}: AssetListProps) => {
   const intl = useIntl()
   const colors = [styles.rowColor1, styles.rowColor2]
 
@@ -38,7 +39,13 @@ export const AssetList = ({assets, styles, onSelect}: AssetListProps) => {
           keyExtractor={(item) => item.identifier}
           renderItem={({item: entry, index}) => (
             <Boundary loading={{size: 'small', style: {padding: 16}}}>
-              <AssetRow entry={entry} styles={styles} backColor={colors[index % colors.length]} onSelect={onSelect} />
+              <AssetRow
+                privacyMode={privacyMode}
+                entry={entry}
+                styles={styles}
+                backColor={colors[index % colors.length]}
+                onSelect={onSelect}
+              />
             </Boundary>
           )}
         />
@@ -53,14 +60,14 @@ type AssetRowProps = {
   entry: CardanoTypes.TokenEntry
   backColor: {backgroundColor: string}
   onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
+  privacyMode?: PrivacyMode
 }
-const AssetRow = ({styles, entry, backColor, onSelect}: AssetRowProps) => {
+const AssetRow = ({styles, entry, backColor, onSelect, privacyMode}: AssetRowProps) => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const primaryTicker = wallet.primaryTokenInfo.ticker
-  const privacyMode = usePrivacyMode()
 
   const name = isEmptyString(tokenInfo.name) ? intl.formatMessage(messages.unknownAssetName) : tokenInfo.name
 
