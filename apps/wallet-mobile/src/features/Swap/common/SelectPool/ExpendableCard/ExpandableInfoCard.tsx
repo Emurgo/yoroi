@@ -3,12 +3,13 @@ import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon, Spacer} from '../../../../../components'
+import {BottomSheetModal} from '../../../../../components/BottomSheet'
 import {COLORS} from '../../../../../theme'
 
 type ExpandableInfoCardProps = {
   label: string | React.ReactNode | null
   mainInfo: Array<{label: string; value?: string}>
-  hiddenInfo: Array<{label: string; value: string}>
+  hiddenInfo: Array<{label: string; value: string; info?: string}>
   navigateTo?: () => void
   buttonAction?: () => void
   buttonText?: string
@@ -24,7 +25,13 @@ export const ExpandableInfoCard = ({
   buttonAction,
   withBoxShadow,
 }: ExpandableInfoCardProps) => {
+  const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
+    isOpen: false,
+    title: '',
+    content: '',
+  })
   const [showHiddenInfo, setShowHiddenInfo] = React.useState(false)
+
   return (
     <View style={{padding: 5}}>
       <View style={[styles.container, withBoxShadow && styles.shadowProp]}>
@@ -67,7 +74,17 @@ export const ExpandableInfoCard = ({
 
                       <Spacer width={8} />
 
-                      <Icon.Info size={24} />
+                      <TouchableOpacity
+                        onPress={() => {
+                          setBottomSheetSate({
+                            isOpen: true,
+                            title: item.label,
+                            content: item?.info,
+                          })
+                        }}
+                      >
+                        <Icon.Info size={24} />
+                      </TouchableOpacity>
                     </View>
 
                     <Text style={styles.text}>{item.value}</Text>
@@ -86,6 +103,15 @@ export const ExpandableInfoCard = ({
       </View>
 
       <Spacer height={16} />
+
+      <BottomSheetModal
+        isOpen={bottomSheetState.isOpen}
+        title={bottomSheetState.title}
+        content={<Text style={styles.text}>{bottomSheetState.content}</Text>}
+        onClose={() => {
+          setBottomSheetSate({isOpen: false, title: '', content: ''})
+        }}
+      />
     </View>
   )
 }

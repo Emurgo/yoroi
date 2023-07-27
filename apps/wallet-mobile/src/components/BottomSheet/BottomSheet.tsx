@@ -31,7 +31,6 @@ export const BottomSheetModal = ({title, content, isOpen = false, onClose}: Bott
     if (!isOpen) {
       bottomSheetRef.current?.close()
       setShowBackdropComp(false)
-      onClose?.()
     } else {
       setShowBackdropComp(true)
     }

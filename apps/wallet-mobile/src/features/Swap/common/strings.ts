@@ -24,6 +24,9 @@ export const useStrings = () => {
     assetsIn: intl.formatMessage(messages.assetsIn),
     defaultSlippage: intl.formatMessage(messages.defaultSlippage),
     slippageInfo: intl.formatMessage(messages.slippageInfo),
+    swapMinAda: intl.formatMessage(messages.swapMinAda),
+    swapMinReceived: intl.formatMessage(messages.swapMinReceived),
+    swapFees: intl.formatMessage(messages.swapFees),
     enterSlippage: intl.formatMessage(messages.enterSlippage),
     pools: (qty: number) => intl.formatMessage(globalMessages.pools, {qty}),
     openOrders: intl.formatMessage(messages.openOrders),
@@ -106,6 +109,22 @@ export const messages = defineMessages({
   slippageInfo: {
     id: 'swap.swapScreen.slippageInfo',
     defaultMessage: '!!!Slippage tolerance is set as a percentage of the total swap value.',
+  },
+  swapMinAda: {
+    id: 'swap.swapScreen.swapMinAda',
+    defaultMessage:
+      '!!!Min-ADA is the minimum ADA amount required to be contained when holding or sending Cardano native tokens.',
+  },
+  swapFees: {
+    id: 'swap.swapScreen.swapFees',
+    defaultMessage: `!!!Swap fees include the following:
+   • Matchmaker Fee
+   • Frontend Fee
+   • Liquidity Provider Fee`,
+  },
+  swapMinReceived: {
+    id: 'swap.swapScreen.swapMinReceived',
+    defaultMessage: '!!!Minimum amount of tokens you can get because of the slippage tolerance.',
   },
   enterSlippage: {
     id: 'swap.swapScreen.enterSlippage',
