@@ -113,7 +113,6 @@
     "@react-navigation/stack": "^6.3.16",
     "@shopify/flash-list": "^1.4.1",
     "@unstoppabledomains/resolution": "6.0.3",
-    "@yoroi/metrics-react-native": "1.0.0",
     "@yoroi/swap-react": "1.0.0",
     "add": "2.0.6",
     "assert": "^2.0.0",
