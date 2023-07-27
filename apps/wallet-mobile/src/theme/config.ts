@@ -16,6 +16,7 @@ export const COLORS = {
   DARK_GRAY: '#4a4a4a',
   LIGHT_GRAY: '#eee',
   GRAY: '#777',
+  INFO_GRAY: '#4A5065',
   WHITE: '#fff',
   BLACK: '#000',
   TRANSPARENT_BLACK: '#00000077',

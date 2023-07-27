@@ -8,6 +8,7 @@ import {AmountItem, AmountItemProps} from '../../components/AmountItem/AmountIte
 import {Spacer} from '../../components/Spacer'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {sortTokenInfos} from '../../utils'
 import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {useBalances, useTokenInfos} from '../../yoroi-wallets/hooks'
@@ -69,9 +70,10 @@ type ExplorableAssetItemProps = AmountItemProps & {
   onPress(): void
 }
 const ExplorableAssetItem = ({wallet, amount, onPress}: ExplorableAssetItemProps) => {
+  const privacyMode = usePrivacyMode()
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} testID="assetSelectorItem">
-      <AmountItem wallet={wallet} amount={amount} />
+      <AmountItem privacyMode={privacyMode} wallet={wallet} amount={amount} />
     </TouchableOpacity>
   )
 }

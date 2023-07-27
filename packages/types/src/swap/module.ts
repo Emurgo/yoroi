@@ -46,17 +46,8 @@ export type SwapOpenOrder = {
 
 export type SwapNetwork = 'mainnet' | 'preprod'
 
-export type SwapSlippageOptions =
-  | '0'
-  | '0.1'
-  | '0.5'
-  | '1'
-  | '2'
-  | '3'
-  | 'Manual'
-
 export type SwapFactoryOptions = {
-  apiUrl: string
+  network: SwapNetwork
   stakingKey: string
 }
 

@@ -102,8 +102,14 @@ export type YoroiWallet = {
   submitTransaction(signedTx: string): Promise<[]>
 
   // Voting
-  createVotingRegTx(pin: string): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
+  createVotingRegTx(
+    pin: string,
+    supportsCIP36: boolean,
+  ): Promise<{votingRegTx: YoroiUnsignedTx; votingKeyEncrypted: string}>
   fetchFundInfo(): Promise<FundInfoResponse>
+
+  // CIP36
+  ledgerSupportsCIP36(useUSB: boolean): Promise<boolean>
 
   // Staking
   rewardAddressHex: string

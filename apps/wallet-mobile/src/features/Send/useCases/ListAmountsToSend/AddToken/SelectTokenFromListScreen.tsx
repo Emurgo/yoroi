@@ -1,28 +1,29 @@
-import {useNavigation} from '@react-navigation/native'
-import {FlashList} from '@shopify/flash-list'
-import {Balance} from '@yoroi/types'
-import React, {useCallback} from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import { FlashList } from '@shopify/flash-list'
+import { Balance } from '@yoroi/types'
+import React from 'react'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
-import {Boundary, Spacer, Text} from '../../../../../components'
-import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
-import {NftImageGallery} from '../../../../../components/NftImageGallery'
-import {TxHistoryRouteNavigation} from '../../../../../navigation'
-import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedWalletContext'
-import {COLORS} from '../../../../../theme'
-import {sortTokenInfos} from '../../../../../utils'
-import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {limitOfSecondaryAmountsPerTx} from '../../../../../yoroi-wallets/contants'
-import {useAllTokenInfos, useBalances, useIsWalletEmpty, useNfts} from '../../../../../yoroi-wallets/hooks'
-import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
-import {filterByFungibility} from '../../../common/filterByFungibility'
-import {filterBySearch} from '../../../common/filterBySearch'
-import {useNavigateTo} from '../../../common/navigation'
-import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
-import {useSelectedSecondaryAmountsCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
-import {useStrings} from '../../../common/strings'
-import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
+import { Boundary, Spacer, Text } from '../../../../../components'
+import { AmountItem } from '../../../../../components/AmountItem/AmountItem'
+import { NftImageGallery } from '../../../../../components/NftImageGallery'
+import { useMetrics } from '../../../../../metrics/metricsManager'
+import { TxHistoryRouteNavigation } from '../../../../../navigation'
+import { useSearch, useSearchOnNavBar } from '../../../../../Search/SearchContext'
+import { useSelectedWallet } from '../../../../../SelectedWallet/Context/SelectedWalletContext'
+import { COLORS } from '../../../../../theme'
+import { sortTokenInfos } from '../../../../../utils'
+import { YoroiWallet } from '../../../../../yoroi-wallets/cardano/types'
+import { limitOfSecondaryAmountsPerTx } from '../../../../../yoroi-wallets/contants'
+import { useAllTokenInfos, useBalances, useIsWalletEmpty, useNfts } from '../../../../../yoroi-wallets/hooks'
+import { Amounts, Quantities } from '../../../../../yoroi-wallets/utils'
+import { filterByFungibility } from '../../../common/filterByFungibility'
+import { filterBySearch } from '../../../common/filterBySearch'
+import { useOverridePreviousSendTxRoute } from '../../../common/navigation'
+import { NoAssetFoundImage } from '../../../common/NoAssetFoundImage'
+import { useSelectedSecondaryAmountsCounter, useSend, useTokenQuantities } from '../../../common/SendContext'
+import { useStrings } from '../../../common/strings'
+import { MaxAmountsPerTx } from './Show/MaxAmountsPerTx'
 
 export type FungibilityFilter = 'all' | 'ft' | 'nft'
 
@@ -30,24 +31,19 @@ export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
   const [fungibilityFilter, setFungibilityFilter] = React.useState<FungibilityFilter>('all')
   const {targets, selectedTargetIndex} = useSend()
-  const navigateTo = useNavigateTo()
+  const {track} = useMetrics()
+  React.useEffect(() => {
+    track.sendSelectAssetPageViewed()
+  }, [track])
   const {amounts} = targets[selectedTargetIndex].entry
   const hasTokensSelected = Object.keys(amounts).length > 0
 
-  const navigateBack = useCallback(() => {
-    if (hasTokensSelected) {
-      navigateTo.selectedTokens()
-      return true
-    }
-    navigateTo.startTx()
-    return true
-  }, [hasTokensSelected, navigateTo])
+  useOverridePreviousSendTxRoute(hasTokensSelected ? 'send-list-amounts-to-send' : 'send-start-tx')
 
   // use case: search listed tokens
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
     title: strings.selecteAssetTitle,
-    navigateBack,
   })
 
   const wallet = useSelectedWallet()

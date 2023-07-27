@@ -2,6 +2,7 @@ import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
+import {PrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {COLORS} from '../../theme'
 import {PairedBalance} from '../../TxHistory/PairedBalance'
 import {isEmptyString} from '../../utils'
@@ -16,9 +17,10 @@ export type AmountItemProps = {
   style?: ViewProps['style']
   tokenIconSize?: 'small' | 'medium' | 'large'
   variant?: 'swap'
+  privacyMode?: PrivacyMode
 }
 
-export const AmountItem = ({wallet, style, amount, tokenIconSize, variant}: AmountItemProps) => {
+export const AmountItem = ({wallet, style, amount, tokenIconSize, variant, privacyMode}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -61,11 +63,11 @@ export const AmountItem = ({wallet, style, amount, tokenIconSize, variant}: Amou
       <Right>
         {tokenInfo.kind !== 'nft' && (
           <Text style={styles.quantity} testID="tokenAmountText">
-            {denominatedQuantity}
+            {privacyMode === 'HIDDEN' ? '**.*******' : denominatedQuantity}
           </Text>
         )}
 
-        {isPrimary && <PairedBalance amount={{quantity, tokenId: tokenInfo.id}} />}
+        {isPrimary && <PairedBalance privacyMode={privacyMode} amount={{quantity, tokenId: tokenInfo.id}} />}
       </Right>
     </View>
   )

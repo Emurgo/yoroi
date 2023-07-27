@@ -1,21 +1,22 @@
-import {Balance} from '@yoroi/types'
+import { Balance } from '@yoroi/types'
 import * as React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Text} from 'react-native'
+import { defineMessages, useIntl } from 'react-intl'
+import { StyleSheet, Text } from 'react-native'
+import { PrivacyMode } from 'src/Settings/PrivacyMode/PrivacyMode'
 
-import {Boundary, ResetError, ResetErrorRef} from '../components'
-import {useSelectedWallet} from '../SelectedWallet'
-import {useCurrencyContext} from '../Settings/Currency'
-import {COLORS} from '../theme'
-import {useExchangeRate} from '../yoroi-wallets/hooks'
-import {CurrencySymbol} from '../yoroi-wallets/types'
-import {Quantities} from '../yoroi-wallets/utils'
+import { Boundary, ResetError, ResetErrorRef } from '../components'
+import { useSelectedWallet } from '../SelectedWallet'
+import { useCurrencyContext } from '../Settings/Currency'
+import { COLORS } from '../theme'
+import { useExchangeRate } from '../yoroi-wallets/hooks'
+import { CurrencySymbol } from '../yoroi-wallets/types'
+import { Quantities } from '../yoroi-wallets/utils'
 
 type Props = {
-  privacy?: boolean
+  privacyMode?: PrivacyMode
   amount: Balance.Amount
 }
-export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacy, amount}, ref) => {
+export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacyMode, amount}, ref) => {
   const {currency} = useCurrencyContext()
 
   return (
@@ -30,13 +31,13 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacy, a
         ),
       }}
     >
-      <PrimaryBalance privacy={privacy} amount={amount} />
+      <PairedAmount privacyMode={privacyMode} amount={amount} />
     </Boundary>
   )
 })
 
 const hiddenPairedTotal = '*.**'
-const PrimaryBalance = ({privacy, amount}: Props) => {
+const PairedAmount = ({privacyMode, amount}: Props) => {
   const wallet = useSelectedWallet()
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
@@ -62,7 +63,7 @@ const PrimaryBalance = ({privacy, amount}: Props) => {
     Quantities.product([primaryExchangeQuantity, `${rate}`]),
     config.decimals,
   )
-  const pairedTotal = privacy ? hiddenPairedTotal : secondaryExchangeQuantity
+  const pairedTotal = privacyMode === 'HIDDEN' ? hiddenPairedTotal : secondaryExchangeQuantity
   return (
     <Text style={styles.pairedBalanceText} testID="pairedTotalText">
       {`${pairedTotal} ${currency}`}

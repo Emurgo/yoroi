@@ -3,12 +3,10 @@ import { cancelOrder, createOrder, getOrders } from './orders';
 import { getPools } from './pools';
 import { getTokens } from './tokens';
 
-export class SwapApi implements Swap.ISwapApi {
-  constructor(public readonly network: Swap.Netowrk) {}
+export class SwapApi implements Swap.Api {
+  constructor(public readonly network: Swap.Network) {}
 
-  public async createOrder(
-    order: Swap.CreateOrderData
-  ): ReturnType<typeof createOrder> {
+  public async createOrder(order: Swap.CreateOrderData) {
     return createOrder(this.network, order);
   }
 
@@ -16,25 +14,22 @@ export class SwapApi implements Swap.ISwapApi {
     orderUTxO: string,
     collateralUTxO: string,
     walletAddress: string
-  ): ReturnType<typeof cancelOrder> {
+  ) {
     return cancelOrder(this.network, orderUTxO, collateralUTxO, walletAddress);
   }
 
-  public async getOrders(stakeKeyHash: string): ReturnType<typeof getOrders> {
+  public async getOrders(stakeKeyHash: string) {
     return getOrders(this.network, stakeKeyHash);
   }
 
   public async getPools(
     tokenA: Swap.BaseTokenInfo,
     tokenB: Swap.BaseTokenInfo
-  ): ReturnType<typeof getPools> {
+  ) {
     return getPools(this.network, tokenA, tokenB);
   }
 
-  public getTokens(
-    policyId = '',
-    assetName = ''
-  ): ReturnType<typeof getTokens> {
+  public getTokens(policyId = '', assetName = '') {
     return getTokens(this.network, policyId, assetName);
   }
 }

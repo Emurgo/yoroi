@@ -12,7 +12,6 @@ import {
   SwapFactoryOptions,
   SwapOrderType,
   SwapProtocol,
-  SwapSlippageOptions,
   SwapOpenOrder,
   SwapNetwork,
   SwapPool,
@@ -35,18 +34,17 @@ export namespace Metrics {
 
 export namespace Swap {
   export type FactoryOptions = SwapFactoryOptions
-  export type SlippageOptions = SwapSlippageOptions
 
   export type CreateOrderData = SwapCreateOrderData
   export type CreateOrderResponse = SwapCreateOrderResponse
   export type OrderType = SwapOrderType
   export type Protocol = SwapProtocol
-  export type Netowrk = SwapNetwork
+  export type Network = SwapNetwork
   export type OpenOrder = SwapOpenOrder
   export type Pool = SwapPool
   export type TokenInfo = SwapTokenInfo
   export type BaseTokenInfo = SwapBaseTokenInfo
-  export interface ISwapApi extends SwapApi {}
+  export interface Api extends SwapApi {}
 
   export type Storage = SwapStorage
 }

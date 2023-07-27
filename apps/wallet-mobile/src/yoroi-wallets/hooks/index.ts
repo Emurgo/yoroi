@@ -334,17 +334,22 @@ export type VotingRegTxAndEncryptedKey = {
 }
 
 export const useVotingRegTx = (
-  {wallet, pin}: {wallet: YoroiWallet; pin: string},
+  {wallet, pin, supportsCIP36}: {wallet: YoroiWallet; pin: string; supportsCIP36: boolean},
 
-  options?: UseQueryOptions<VotingRegTxAndEncryptedKey, Error, VotingRegTxAndEncryptedKey, [string, 'voting-reg-tx']>,
+  options?: UseQueryOptions<
+    VotingRegTxAndEncryptedKey,
+    Error,
+    VotingRegTxAndEncryptedKey,
+    [string, 'voting-reg-tx', string]
+  >,
 ) => {
   const query = useQuery({
     ...options,
     retry: false,
     cacheTime: 0,
     suspense: true,
-    queryKey: [wallet.id, 'voting-reg-tx'],
-    queryFn: () => wallet.createVotingRegTx(pin),
+    queryKey: [wallet.id, 'voting-reg-tx', JSON.stringify({supportsCIP36})],
+    queryFn: () => wallet.createVotingRegTx(pin, supportsCIP36),
   })
 
   if (!query.data) throw new Error('invalid state')
@@ -891,9 +896,9 @@ export const useSaveMemo = (
   }
 }
 
-export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<Balance.TokenInfo[], Error> = {}) => {
+export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<Balance.TokenInfo, Error> = {}) => {
   const assetIds = useAssetIds(wallet)
-  const results = useTokenInfosDetailed({wallet, tokenIds: assetIds}, {suspense: options.suspense})
+  const results = useTokenInfosDetailed({wallet, tokenIds: assetIds}, options)
   const nfts = results.map((r) => r.data).filter((t): t is Balance.TokenInfo => t?.kind === 'nft')
   const isLoading = results.some((r) => r.isLoading)
   const isError = results.some((r) => r.isError)

@@ -88,7 +88,9 @@ describe('ShelleyWallet', () => {
       'addr1q90qj49u70m8xa9v0f6d2frtvv33v5x4gwckvxllv6regw7prmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9sv69ppj',
     )
 
-    await expect(getRewardAddress(wallet)).resolves.toBe('stake1u8q3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcr25kkv')
+    await expect(getRewardAddress(wallet)).resolves.toBe(
+      'addr1qxddgtdqxmsvn0rqp0ltdfpddudvf76qs3esyn3zqf44drkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9suclpck',
+    )
 
     expect(wallet.primaryToken).toEqual<DefaultAsset>({
       identifier: '',
@@ -199,7 +201,9 @@ describe('ShelleyWallet', () => {
       'addr1q90qj49u70m8xa9v0f6d2frtvv33v5x4gwckvxllv6regw7prmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9sv69ppj',
     )
 
-    await expect(getRewardAddress(wallet)).resolves.toBe('stake1u8q3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcr25kkv')
+    await expect(getRewardAddress(wallet)).resolves.toBe(
+      'addr1qxddgtdqxmsvn0rqp0ltdfpddudvf76qs3esyn3zqf44drkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9suclpck',
+    )
 
     expect(wallet.primaryToken).toEqual<DefaultAsset>({
       identifier: '',
@@ -300,7 +304,9 @@ describe('ShelleyWallet', () => {
       'addr1qyeacjehv4qpyr68hszxdxrsx4whts8ctkeez4s0e0an6qy68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3q85yacp',
     )
 
-    await expect(getRewardAddress(wallet)).resolves.toBe('stake1uxdr3c77jn9px6c6srafp4ekpmqluk5dhsndgfllanj5acsqkljgd')
+    await expect(getRewardAddress(wallet)).resolves.toBe(
+      'addr1q9yz4c9m9ak7y6nzg8qdgz8u5ulyyjkdz853cr98hyu69yy68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3q8rhh6l',
+    )
 
     expect(wallet.primaryToken).toEqual<DefaultAsset>({
       identifier: '',
@@ -378,7 +384,7 @@ describe('ShelleyWallet', () => {
       ],
     }
 
-    const tx = await wallet.createVotingRegTx('1111')
+    const tx = await wallet.createVotingRegTx('1111', true)
     expect(tx.votingRegTx.voting.registration?.votingPublicKey).toMatch(/ed25519/)
     expect(tx.votingRegTx.voting.registration?.stakingPublicKey).toEqual(
       'ed25519_pk1n924uy8z37svs59hprukk9s38j0ctuqudgcmkadrgq8wam6mjvrqfhtxte',

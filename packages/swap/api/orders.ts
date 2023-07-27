@@ -2,7 +2,7 @@ import { Swap } from '@yoroi/types';
 import { SWAP_API_ENDPOINTS, axiosClient } from './config';
 
 export async function createOrder(
-  network: Swap.Netowrk,
+  network: Swap.Network,
   order: Swap.CreateOrderData
 ): Promise<Swap.CreateOrderResponse> {
   const apiUrl = SWAP_API_ENDPOINTS[network].constructSwapDatum;
@@ -48,7 +48,7 @@ export async function createOrder(
  * @returns an unsigned transaction to cancel the order.
  */
 export async function cancelOrder(
-  network: Swap.Netowrk,
+  network: Swap.Network,
   orderUTxO: string,
   collateralUTxO: string,
   walletAddress: string
@@ -73,7 +73,7 @@ export async function cancelOrder(
 }
 
 export async function getOrders(
-  network: Swap.Netowrk,
+  network: Swap.Network,
   stakeKeyHash: string
 ): Promise<Swap.OpenOrder[]> {
   const apiUrl = SWAP_API_ENDPOINTS[network].getPools;

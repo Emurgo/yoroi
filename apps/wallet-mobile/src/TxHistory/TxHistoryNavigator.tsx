@@ -1,11 +1,9 @@
 import {createStackNavigator} from '@react-navigation/stack'
-// import {makeSwapStorage, SwapProvider as RealSwapProvider} from '@yoroi/swap-react/src'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Boundary, Icon} from '../components'
-import {useNavigateTo} from '../features/Send/common/navigation'
 import {SendProvider} from '../features/Send/common/SendContext'
 import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
 import {FailedTxScreen} from '../features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
@@ -17,11 +15,10 @@ import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/Inpu
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {SwapProvider} from '../features/Swap/common/SwapContext'
 import {StartSwapScreen} from '../features/Swap/useCases'
-import {InputSlippageToleranceScreen} from '../features/Swap/useCases/InputSlippageToleranceScreen'
-import {SelectPoolScreen} from '../features/Swap/useCases/SelectPoolScreen/SelectPoolScreen'
 import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/TokenSwap/AddTokens/SelectTokenFromListScreen'
 import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/TokenSwap/AddTokens/SelectTokenToListScreen'
 import {
+  BackButton,
   defaultStackNavigationOptions,
   defaultStackNavigationOptionsV2,
   TxHistoryRoutes,
@@ -47,13 +44,13 @@ export const TxHistoryNavigator = () => {
 
   return (
     <SendProvider key={wallet.id}>
-      {/* <RealSwapProvider storage={makeSwapStorage()}> */}
       <SwapProvider key={wallet.id}>
         <Stack.Navigator
+          screenListeners={{}}
           screenOptions={{
             ...defaultStackNavigationOptions,
             detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-            gestureEnabled: false,
+            gestureEnabled: true,
           }}
         >
           <Stack.Screen
@@ -73,6 +70,22 @@ export const TxHistoryNavigator = () => {
               </Boundary>
             )}
           </Stack.Screen>
+
+          <Stack.Screen
+            name="receive"
+            component={ReceiveScreen}
+            options={{
+              ...defaultStackNavigationOptionsV2,
+              title: strings.receiveTitle,
+
+              headerRight: () => <ModalInfoIconButton onPress={showModalInfo} />,
+              headerStyle: {
+                elevation: 0,
+                shadowOpacity: 0,
+                backgroundColor: '#fff',
+              },
+            }}
+          />
 
           <Stack.Screen
             name="swap-start-order"
@@ -98,39 +111,6 @@ export const TxHistoryNavigator = () => {
             options={{
               ...defaultStackNavigationOptionsV2,
               title: strings.swapToTitle,
-            }}
-          />
-
-          <Stack.Screen
-            name="swap-set-slippage"
-            component={InputSlippageToleranceScreen}
-            options={{
-              ...defaultStackNavigationOptionsV2,
-              title: strings.slippageTolerance,
-            }}
-          />
-
-          <Stack.Screen
-            name="swap-select-pool"
-            component={SelectPoolScreen}
-            options={{
-              ...defaultStackNavigationOptionsV2,
-              title: strings.selectPool,
-            }}
-          />
-
-          <Stack.Screen
-            name="receive"
-            component={ReceiveScreen}
-            options={{
-              ...defaultStackNavigationOptionsV2,
-              title: strings.receiveTitle,
-              headerRight: () => <ModalInfoIconButton onPress={showModalInfo} />,
-              headerStyle: {
-                elevation: 0,
-                shadowOpacity: 0,
-                backgroundColor: '#fff',
-              },
             }}
           />
 
@@ -162,7 +142,7 @@ export const TxHistoryNavigator = () => {
             )}
           </Stack.Screen>
 
-          <Stack.Screen
+          <Stack.Screen //
             name="send-list-amounts-to-send"
             options={{
               title: strings.listAmountsToSendTitle,
@@ -181,7 +161,6 @@ export const TxHistoryNavigator = () => {
             options={{
               title: strings.editAmountTitle,
               ...sendOptions,
-              headerLeft: () => <SendEditAmountBackButton />,
             }}
           >
             {() => (
@@ -191,12 +170,15 @@ export const TxHistoryNavigator = () => {
             )}
           </Stack.Screen>
 
-          <Stack.Screen
+          <Stack.Screen //
             name="send-read-qr-code"
             component={ReadQRCodeScreen}
             options={{
-              title: strings.qrScannerTitle,
               ...sendOptions,
+              headerTransparent: true,
+              title: strings.qrScannerTitle,
+              headerTintColor: '#fff',
+              headerLeft: (props) => <BackButton color="#fff" {...props} />,
             }}
           />
 
@@ -226,18 +208,7 @@ export const TxHistoryNavigator = () => {
           <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
         </ModalInfo>
       </SwapProvider>
-
-      {/* </RealSwapProvider> */}
     </SendProvider>
-  )
-}
-
-const SendEditAmountBackButton = () => {
-  const navigateTo = useNavigateTo()
-  return (
-    <TouchableOpacity onPress={() => navigateTo.selectedTokens()}>
-      <Icon.Chevron direction="left" color="#000000" />
-    </TouchableOpacity>
   )
 }
 

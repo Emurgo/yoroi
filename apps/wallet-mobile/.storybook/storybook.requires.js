@@ -124,6 +124,7 @@ const getStories = () => {
     "./src/HW/LedgerConnect/LedgerConnect.stories.tsx": require("../src/HW/LedgerConnect/LedgerConnect.stories.tsx"),
     "./src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories.tsx": require("../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories.tsx"),
     "./src/Menu/Menu.stories.tsx": require("../src/Menu/Menu.stories.tsx"),
+    "./src/metrics/metrics.stories.tsx": require("../src/metrics/metrics.stories.tsx"),
     "./src/NftDetails/NftDetails.stories.tsx": require("../src/NftDetails/NftDetails.stories.tsx"),
     "./src/NftDetails/NftDetailsImage.stories.tsx": require("../src/NftDetails/NftDetailsImage.stories.tsx"),
     "./src/Nfts/Nfts.stories.tsx": require("../src/Nfts/Nfts.stories.tsx"),

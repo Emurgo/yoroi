@@ -57,6 +57,7 @@ export const useStrings = () => {
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
+    addressReaderQrText: intl.formatMessage(messages.addressReaderQrText),
   }
 }
 
@@ -249,5 +250,9 @@ export const messages = defineMessages({
   asset: {
     id: 'global.assets.assetLabel',
     defaultMessage: '!!!Asset',
+  },
+  addressReaderQrText: {
+    id: 'components.send.addressreaderqr.text',
+    defaultMessage: '!!!Scan recipients QR code to add a wallet address',
   },
 })

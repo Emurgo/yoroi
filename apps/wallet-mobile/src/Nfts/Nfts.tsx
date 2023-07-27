@@ -1,19 +1,22 @@
+import {Balance} from '@yoroi/types'
 import React, {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, NftImageGallery, SkeletonGallery, Spacer} from '../components'
+import {useMetrics} from '../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useNfts} from '../yoroi-wallets/hooks'
-import {filterNfts} from './filterNfts'
+import {filterNfts, useTrackNftGallerySearchActivated} from './filterNfts'
 import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
 
 export const Nfts = () => {
   const navigateTo = useNavigateTo()
   const strings = useStrings()
+  const {track} = useMetrics()
 
   // use case: search nfts
   useSearchOnNavBar({
@@ -31,10 +34,17 @@ export const Nfts = () => {
     },
   })
 
+  React.useEffect(() => {
+    if (isLoading || isError) return
+    track.nftGalleryPageViewed({nft_count: nfts.length})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError, isLoading])
+
+  const sortedNfts = React.useMemo(() => nfts.sort(byName), [nfts])
+
   const {search: nftsSearchTerm} = useSearch()
-  const filteredNfts = filterNfts(nftsSearchTerm, nfts)
-  const sortedNfts = filteredNfts.sort((NftA, NftB) => sortNfts(NftA.name, NftB.name))
   const nftsSearchResult = filterNfts(nftsSearchTerm, sortedNfts)
+  useTrackNftGallerySearchActivated(nftsSearchTerm, nftsSearchResult.length)
 
   const hasEmptySearchResult = nftsSearchTerm.length > 0 && nftsSearchResult.length === 0
   const hasNotNfts = nftsSearchResult.length === 0
@@ -185,7 +195,7 @@ const LoadingScreen = ({nftsCount}: {nftsCount: number}) => {
   )
 }
 
-const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
+const byName = ({name: A}: Balance.TokenInfo, {name: B}: Balance.TokenInfo) => A.localeCompare(B)
 
 const styles = StyleSheet.create({
   safeAreaView: {
