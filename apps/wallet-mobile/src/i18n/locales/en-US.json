@@ -115,6 +115,7 @@
   "swap.swapScreen.selectToken": "Select token",
   "swap.swapScreen.marketPrice": "Market price",
   "swap.swapScreen.slippageTolerance": "Slippage tolerance",
+  "swap.swapScreen.slippageToleranceInfo": "Slippage tolerance is set as a percentage of the total swap value. Your transactions will not be executed if the price moves by more than this amount",
   "swap.swapScreen.selectPool": "Select pool",
   "swap.swapScreen.verifiedBy": "Verified by MuesliSwap",
   "swap.swapScreen.assetsIn": "This assets is in my portfolio",

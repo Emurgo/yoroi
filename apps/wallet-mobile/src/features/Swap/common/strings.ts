@@ -18,6 +18,7 @@ export const useStrings = () => {
     selectToken: intl.formatMessage(messages.selectToken),
     marketPrice: intl.formatMessage(messages.marketPrice),
     slippageTolerance: intl.formatMessage(messages.slippageTolerance),
+    slippageToleranceInfo: intl.formatMessage(messages.slippageToleranceInfo),
     swapButton: intl.formatMessage(messages.swapButton),
     verifiedBy: intl.formatMessage(messages.verifiedBy),
     assetsIn: intl.formatMessage(messages.assetsIn),
@@ -85,6 +86,10 @@ export const messages = defineMessages({
   slippageTolerance: {
     id: 'swap.swapScreen.slippageTolerance',
     defaultMessage: '!!!Slippage Tolerance',
+  },
+  slippageToleranceInfo: {
+    id: 'swap.swapScreen.slippageToleranceInfo',
+    defaultMessage: '!!!Slippage Tolerance Info',
   },
   verifiedBy: {
     id: 'swap.swapScreen.verifiedBy',

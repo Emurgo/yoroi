@@ -1,5 +1,5 @@
 import React from 'react'
-import {GestureResponderEvent, KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
+import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Button, Icon, Spacer} from '../../../../../components'
@@ -16,47 +16,49 @@ import {SwitchAndClear} from '../SwitchAndClear/SwitchAndClear'
 export const SwapTokensView = () => {
   const strings = useStrings()
 
-  const handleButtonClick = (event: GestureResponderEvent) => {
+  const handleButtonClick = (event: string) => {
     console.log('Button clicked!', event)
   }
 
   return (
-    <View style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={86}
-      >
-        <View style={styles.buttonsGroup}>
-          <ButtonGroup buttons={[strings.marketButton, strings.limitButton]} onButtonPress={handleButtonClick} />
+    <View>
+      <View style={styles.container}>
+        <KeyboardAvoidingView
+          style={styles.flex}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={86}
+        >
+          <View style={styles.buttonsGroup}>
+            <ButtonGroup buttons={[strings.marketButton, strings.limitButton]} onButtonPress={handleButtonClick} />
 
-          <TouchableOpacity>
-            <Icon.Refresh size={24} />
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity>
+              <Icon.Refresh size={24} />
+            </TouchableOpacity>
+          </View>
 
-        <AddTokenFromCard />
+          <AddTokenFromCard />
 
-        <Spacer height={16} />
+          <Spacer height={16} />
 
-        <SwitchAndClear />
+          <SwitchAndClear />
 
-        <Spacer height={16} />
+          <Spacer height={16} />
 
-        <AddTokenToCard />
+          <AddTokenToCard />
 
-        <Spacer height={20} />
+          <Spacer height={20} />
 
-        <MarketPrice disabled={true} />
+          <MarketPrice disabled={true} />
 
-        <SlippageTolerance />
+          <SlippageTolerance />
 
-        <ChoosePoolSection />
+          <ChoosePoolSection />
 
-        <Actions>
-          <Button testID="swapButton" shelleyTheme title={strings.swapTitle} />
-        </Actions>
-      </KeyboardAvoidingView>
+          <Actions>
+            <Button testID="swapButton" shelleyTheme title={strings.swapTitle} />
+          </Actions>
+        </KeyboardAvoidingView>
+      </View>
     </View>
   )
 }

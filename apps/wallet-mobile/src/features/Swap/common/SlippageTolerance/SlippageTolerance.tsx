@@ -4,10 +4,12 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {COLORS} from '../../../../../src/theme'
 import {Icon, Spacer} from '../../../../components'
+import {BottomSheetModal} from '../../../../components/BottomSheet'
 import {useNavigateTo} from '../navigation'
 import {useStrings} from '../strings'
 
 export const SlippageTolerance = () => {
+  const [showInfoModal, setShowInfoModal] = React.useState(false)
   const strings = useStrings()
   const navigate = useNavigateTo()
 
@@ -18,7 +20,13 @@ export const SlippageTolerance = () => {
 
         <Spacer width={4} />
 
-        <Icon.Info size={24} />
+        <TouchableOpacity
+          onPress={() => {
+            setShowInfoModal(true)
+          }}
+        >
+          <Icon.Info size={24} />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.row}>
@@ -30,6 +38,13 @@ export const SlippageTolerance = () => {
           <Icon.Edit size={24} />
         </TouchableOpacity>
       </View>
+
+      <BottomSheetModal
+        title={strings.slippageTolerance}
+        content={<Text style={styles.sheetContent}>{strings.slippageToleranceInfo}</Text>}
+        isOpen={showInfoModal}
+        onClose={() => setShowInfoModal(false)}
+      />
     </View>
   )
 }
@@ -49,5 +64,9 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     color: COLORS.TEXT_INPUT,
+  },
+  sheetContent: {
+    fontSize: 16,
+    color: '#242838',
   },
 })
