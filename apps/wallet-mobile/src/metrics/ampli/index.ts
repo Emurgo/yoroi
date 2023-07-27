@@ -114,12 +114,8 @@ export interface SendSelectAssetSelectedProperties {
    *        }
    * ]
    * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
    */
-  nfts?: string[];
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -133,12 +129,8 @@ export interface SendSelectAssetSelectedProperties {
    *        }
    * ]
    * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
    */
-  tokens?: string[];
+  tokens?: any[];
 }
 
 export interface SendSelectAssetUpdatedProperties {
@@ -160,12 +152,8 @@ export interface SendSelectAssetUpdatedProperties {
    *        }
    * ]
    * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
    */
-  nfts: string[];
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -179,12 +167,8 @@ export interface SendSelectAssetUpdatedProperties {
    *        }
    * ]
    * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
    */
-  tokens: string[];
+  tokens?: any[];
 }
 
 export interface SendSummaryPageViewedProperties {
@@ -206,12 +190,8 @@ export interface SendSummaryPageViewedProperties {
    *        }
    * ]
    * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
    */
-  nfts: string[];
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -225,12 +205,8 @@ export interface SendSummaryPageViewedProperties {
    *        }
    * ]
    * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
    */
-  tokens: string[];
+  tokens?: any[];
 }
 
 export interface SendSummarySubmittedProperties {
@@ -252,12 +228,8 @@ export interface SendSummarySubmittedProperties {
    *        }
    * ]
    * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
    */
-  nfts: string[];
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -271,12 +243,8 @@ export interface SendSummarySubmittedProperties {
    *        }
    * ]
    * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
    */
-  tokens: string[];
+  tokens?: any[];
 }
 
 export interface SwapAssetFromChangedProperties {
@@ -555,12 +523,8 @@ export interface SendProperties {
    *        }
    * ]
    * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
    */
-  nfts?: string[];
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -574,12 +538,8 @@ export interface SendProperties {
    *        }
    * ]
    * ```
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Item Type | string |
    */
-  tokens?: string[];
+  tokens?: any[];
 }
 
 export interface SwapProperties {

@@ -10,6 +10,8 @@ import {useQuery, UseQueryOptions} from 'react-query'
 import {Boundary, Button, Icon, Spacer} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import globalMessages from '../../../../i18n/global-messages'
+import {assetsToSendProperties} from '../../../../metrics/helpers'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
@@ -28,6 +30,7 @@ export const ListAmountsToSendScreen = () => {
   const strings = useStrings()
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
+  const {track} = useMetrics()
 
   useOverridePreviousSendTxRoute('send-start-tx')
 
@@ -56,6 +59,11 @@ export const ListAmountsToSendScreen = () => {
     },
   )
 
+  React.useEffect(() => {
+    track.sendSelectAssetUpdated(assetsToSendProperties({tokens, amounts}))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amounts.length, tokens.length, track])
+
   const onEdit = (tokenId: string) => {
     const tokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === tokenId)
     if (tokenInfo?.kind === 'nft') return
@@ -71,7 +79,10 @@ export const ListAmountsToSendScreen = () => {
     }
     amountRemoved(tokenId)
   }
-  const onNext = () => refetch()
+  const onNext = () => {
+    track.sendSelectAssetSelected(assetsToSendProperties({tokens, amounts}))
+    refetch()
+  }
   const onAdd = () => {
     clearSearch()
     navigateTo.addToken()
