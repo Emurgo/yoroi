@@ -6,6 +6,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Boundary, Spacer, Text} from '../../../../../components'
 import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
 import {NftImageGallery} from '../../../../../components/NftImageGallery'
+import {useMetrics} from '../../../../../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedWalletContext'
@@ -30,6 +31,10 @@ export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
   const [fungibilityFilter, setFungibilityFilter] = React.useState<FungibilityFilter>('all')
   const {targets, selectedTargetIndex} = useSend()
+  const {track} = useMetrics()
+  React.useEffect(() => {
+    track.sendSelectAssetPageViewed()
+  }, [track])
   const {amounts} = targets[selectedTargetIndex].entry
   const hasTokensSelected = Object.keys(amounts).length > 0
 
