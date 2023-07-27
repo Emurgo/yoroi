@@ -1,31 +1,32 @@
+import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
-import {Quantity, YoroiAmount, YoroiAmounts, YoroiEntries, YoroiEntry} from '../types'
+import {YoroiEntries, YoroiEntry} from '../types'
 import {RawUtxo} from '../types/other'
 import {Amounts, asQuantity, Entries, Quantities, Utxos} from './utils'
 
 describe('Quantities', () => {
   it('sum', () => {
-    expect(Quantities.sum(['1', '2'])).toEqual('3' as Quantity)
-    expect(Quantities.sum(['1', '2', '3'])).toEqual('6' as Quantity)
+    expect(Quantities.sum(['1', '2'])).toEqual('3' as Balance.Quantity)
+    expect(Quantities.sum(['1', '2', '3'])).toEqual('6' as Balance.Quantity)
   })
 
   it('diff', () => {
-    expect(Quantities.diff('1', '2')).toEqual('-1' as Quantity)
-    expect(Quantities.diff('3', '2')).toEqual('1' as Quantity)
+    expect(Quantities.diff('1', '2')).toEqual('-1' as Balance.Quantity)
+    expect(Quantities.diff('3', '2')).toEqual('1' as Balance.Quantity)
   })
 
   it('negated', () => {
-    expect(Quantities.negated('1')).toEqual('-1' as Quantity)
-    expect(Quantities.negated('-1')).toEqual('1' as Quantity)
+    expect(Quantities.negated('1')).toEqual('-1' as Balance.Quantity)
+    expect(Quantities.negated('-1')).toEqual('1' as Balance.Quantity)
   })
   it('product', () => {
-    expect(Quantities.product(['1', '2'])).toEqual('2' as Quantity)
-    expect(Quantities.product(['2', '3'])).toEqual('6' as Quantity)
+    expect(Quantities.product(['1', '2'])).toEqual('2' as Balance.Quantity)
+    expect(Quantities.product(['2', '3'])).toEqual('6' as Balance.Quantity)
   })
   it('quotient', () => {
-    expect(Quantities.quotient('1', '2')).toEqual('0.5' as Quantity)
-    expect(Quantities.quotient('2', '1')).toEqual('2' as Quantity)
+    expect(Quantities.quotient('1', '2')).toEqual('0.5' as Balance.Quantity)
+    expect(Quantities.quotient('2', '1')).toEqual('2' as Balance.Quantity)
   })
   it('isGreaterThan', () => {
     expect(Quantities.isGreaterThan('1', '2')).toBe(false)
@@ -86,13 +87,13 @@ describe('Quantities', () => {
 })
 
 describe('Amounts', () => {
-  it('sums multiple YoroiAmounts into a single YoroiAmounts', () => {
-    const amounts1: YoroiAmounts = {
+  it('sums multiple Balance.Amounts into a single Balance.Amounts', () => {
+    const amounts1: Balance.Amounts = {
       '': '1',
       token123: '2',
       token567: '-2',
     }
-    const amounts2: YoroiAmounts = {
+    const amounts2: Balance.Amounts = {
       '': '3',
       token456: '4',
     }
@@ -102,16 +103,16 @@ describe('Amounts', () => {
       token123: '2',
       token456: '4',
       token567: '-2',
-    } as YoroiAmounts)
+    } as Balance.Amounts)
   })
 
-  it('diffs 2 YoroiAmounts into a single YoroiAmounts', () => {
-    const amounts1: YoroiAmounts = {
+  it('diffs 2 Balance.Amounts into a single Balance.Amounts', () => {
+    const amounts1: Balance.Amounts = {
       '': '1',
       token123: '2',
       token567: '-2',
     }
-    const amounts2: YoroiAmounts = {
+    const amounts2: Balance.Amounts = {
       '': '3',
       token456: '4',
     }
@@ -121,11 +122,11 @@ describe('Amounts', () => {
       token123: '2',
       token456: '-4',
       token567: '-2',
-    } as YoroiAmounts)
+    } as Balance.Amounts)
   })
 
-  it('negate YoroiAmounts', () => {
-    const amounts1: YoroiAmounts = {
+  it('negate Balance.Amounts', () => {
+    const amounts1: Balance.Amounts = {
       '': '1',
       token123: '2',
       token567: '-2',
@@ -135,11 +136,11 @@ describe('Amounts', () => {
       '': '-1',
       token123: '-2',
       token567: '2',
-    } as YoroiAmounts)
+    } as Balance.Amounts)
   })
 
   it('getAmount', () => {
-    const amounts: YoroiAmounts = {
+    const amounts: Balance.Amounts = {
       '': '1',
       token123: '2',
       token567: '-2',
@@ -149,12 +150,12 @@ describe('Amounts', () => {
       expect(Amounts.getAmount(amounts, tokenId)).toEqual({
         tokenId,
         quantity,
-      } as YoroiAmount),
+      } as Balance.Amount),
     )
   })
 
   it('includes', () => {
-    const amounts: YoroiAmounts = {
+    const amounts: Balance.Amounts = {
       '': '1',
       token123: '2',
       token567: '-2',
@@ -166,7 +167,7 @@ describe('Amounts', () => {
   })
 
   it('remove', () => {
-    const amounts: YoroiAmounts = {
+    const amounts: Balance.Amounts = {
       '': '123',
       token123: '456',
       token567: '-789',
@@ -175,11 +176,11 @@ describe('Amounts', () => {
     expect(Amounts.remove(amounts, ['token123'])).toEqual({
       '': '123',
       token567: '-789',
-    } as YoroiAmounts)
+    } as Balance.Amounts)
   })
 
   it('toArray', () => {
-    const amounts: YoroiAmounts = {
+    const amounts: Balance.Amounts = {
       '': '123',
       token123: '456',
       token567: '-789',
@@ -189,11 +190,11 @@ describe('Amounts', () => {
       {tokenId: '', quantity: '123'},
       {tokenId: 'token123', quantity: '456'},
       {tokenId: 'token567', quantity: '-789'},
-    ] as Array<YoroiAmount>)
+    ] as Array<Balance.Amount>)
   })
 
   it('from Array', () => {
-    const amounts: Array<YoroiAmount> = [
+    const amounts: Array<Balance.Amount> = [
       {tokenId: '', quantity: '123'},
       {tokenId: 'SUN', quantity: '456'},
       {tokenId: 'QWE', quantity: '789'},
@@ -203,11 +204,11 @@ describe('Amounts', () => {
       '': '123',
       SUN: '456',
       QWE: '789',
-    } as YoroiAmounts)
+    } as Balance.Amounts)
   })
 
   it('map', () => {
-    const amounts: YoroiAmounts = {
+    const amounts: Balance.Amounts = {
       '': '1',
       SUN: '4',
       QWE: '7',
@@ -222,15 +223,15 @@ describe('Amounts', () => {
       '': '2',
       SUN: '5',
       QWE: '8',
-    } as YoroiAmounts)
+    } as Balance.Amounts)
   })
 
   describe('save', () => {
     it('updating when already exists', () => {
-      const amounts: YoroiAmounts = {
+      const amounts: Balance.Amounts = {
         updateToken: '456',
       }
-      const updateAmount: YoroiAmount = {
+      const updateAmount: Balance.Amount = {
         tokenId: 'updateToken',
         quantity: '321',
       }
@@ -241,10 +242,10 @@ describe('Amounts', () => {
     })
 
     it('adding when it doesnt exist', () => {
-      const amounts: YoroiAmounts = {
+      const amounts: Balance.Amounts = {
         updateToken: '456',
       }
-      const addAmount: YoroiAmount = {
+      const addAmount: Balance.Amount = {
         tokenId: 'addToken',
         quantity: '789',
       }
@@ -360,7 +361,7 @@ describe('Entries', () => {
       '': '3',
       token123: '6',
       token567: '-6',
-    } as YoroiAmounts)
+    } as Balance.Amounts)
   })
 })
 
@@ -372,7 +373,7 @@ describe('Utxos', () => {
 
       expect(Utxos.toAmounts(utxos, primaryTokenId)).toEqual({
         primaryTokenId: '0',
-      } as YoroiAmounts)
+      } as Balance.Amounts)
     })
 
     it('Utxos without tokens', () => {
@@ -415,7 +416,7 @@ describe('Utxos', () => {
 
       expect(Utxos.toAmounts(utxos, primaryTokenId)).toEqual({
         primaryTokenId: '627690',
-      } as YoroiAmounts)
+      } as Balance.Amounts)
     })
 
     it('Utxos with tokens', () => {
@@ -463,7 +464,7 @@ describe('Utxos', () => {
         primaryTokenId: '67905',
         token123: '15',
         token567: '8',
-      } as YoroiAmounts)
+      } as Balance.Amounts)
     })
   })
 })

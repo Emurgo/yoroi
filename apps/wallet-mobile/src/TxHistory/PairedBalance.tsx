@@ -1,3 +1,4 @@
+import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text} from 'react-native'
@@ -8,12 +9,12 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {useCurrencyContext} from '../Settings/Currency'
 import {COLORS} from '../theme'
 import {useExchangeRate} from '../yoroi-wallets/hooks'
-import {CurrencySymbol, YoroiAmount} from '../yoroi-wallets/types'
+import {CurrencySymbol} from '../yoroi-wallets/types'
 import {Quantities} from '../yoroi-wallets/utils'
 
 type Props = {
   privacyMode?: PrivacyMode
-  amount: YoroiAmount
+  amount: Balance.Amount
 }
 export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacyMode, amount}, ref) => {
   const {currency} = useCurrencyContext()
@@ -30,13 +31,13 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacyMod
         ),
       }}
     >
-      <Balance privacyMode={privacyMode} amount={amount} />
+      <PairedAmount privacyMode={privacyMode} amount={amount} />
     </Boundary>
   )
 })
 
 const hiddenPairedTotal = '*.**'
-const Balance = ({privacyMode, amount}: Props) => {
+const PairedAmount = ({privacyMode, amount}: Props) => {
   const wallet = useSelectedWallet()
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
