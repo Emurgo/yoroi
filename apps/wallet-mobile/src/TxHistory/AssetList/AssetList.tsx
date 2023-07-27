@@ -1,4 +1,5 @@
 import {FlashList, FlashListProps} from '@shopify/flash-list'
+import {Balance} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -11,11 +12,10 @@ import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {sortTokenInfos} from '../../utils'
 import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {useBalances, useTokenInfos} from '../../yoroi-wallets/hooks'
-import {TokenInfo} from '../../yoroi-wallets/types'
 import {Amounts} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
 
-type ListProps = FlashListProps<TokenInfo>
+type ListProps = FlashListProps<Balance.TokenInfo>
 type Props = Partial<ListProps> & {
   onScroll: ListProps['onScroll']
   refreshing: boolean

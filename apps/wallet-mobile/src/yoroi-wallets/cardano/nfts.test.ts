@@ -1,5 +1,6 @@
+import {Balance} from '@yoroi/types'
+
 import {nft} from '../mocks'
-import {TokenInfo} from '../types'
 import {convertNft, getNftFilenameMediaType} from './nfts'
 
 describe('convertNft', () => {
@@ -265,7 +266,7 @@ describe('getNftFilenameMediaType', () => {
   })
 })
 
-const getNftWithCustomOriginalMetadata = (metadata: unknown): TokenInfo => ({
+const getNftWithCustomOriginalMetadata = (metadata: unknown): Balance.TokenInfo => ({
   ...nft,
   metadatas: {mintNft: metadata},
 })

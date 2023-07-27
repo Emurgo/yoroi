@@ -1,3 +1,4 @@
+import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {
   KeyboardAvoidingView,
@@ -18,7 +19,6 @@ import {PairedBalance} from '../../../../../TxHistory/PairedBalance'
 import {selectFtOrThrow} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../yoroi-wallets/logging'
-import {Quantity} from '../../../../../yoroi-wallets/types'
 import {asQuantity, editedFormatter, pastedFormatter, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../../common/navigation'
 import {useSend, useTokenQuantities} from '../../../common/SendContext'
@@ -36,7 +36,7 @@ export const EditAmountScreen = () => {
   const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenId}, {select: selectFtOrThrow})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
-  const [quantity, setQuantity] = React.useState<Quantity>(initialQuantity)
+  const [quantity, setQuantity] = React.useState<Balance.Quantity>(initialQuantity)
   const [inputValue, setInputValue] = React.useState<string>(
     Quantities.denominated(initialQuantity, tokenInfo.decimals ?? 0),
   )

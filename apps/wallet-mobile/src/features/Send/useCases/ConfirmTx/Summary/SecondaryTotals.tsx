@@ -1,3 +1,4 @@
+import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
@@ -8,7 +9,7 @@ import {useSelectedWallet} from '../../../../../SelectedWallet/Context/SelectedW
 import {COLORS} from '../../../../../theme/config'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {useToken} from '../../../../../yoroi-wallets/hooks'
-import {YoroiAmount, YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
+import {YoroiUnsignedTx} from '../../../../../yoroi-wallets/types/yoroi'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils/utils'
 
 export const SecondaryTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
@@ -29,7 +30,7 @@ export const SecondaryTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsign
   )
 }
 
-const Amount = ({amount, wallet}: {amount: YoroiAmount; wallet: YoroiWallet}) => {
+const Amount = ({amount, wallet}: {amount: Balance.Amount; wallet: YoroiWallet}) => {
   const token = useToken({wallet, tokenId: amount.tokenId})
 
   return <Text style={styles.amount}>{formatTokenWithText(amount.quantity, token)}</Text>
