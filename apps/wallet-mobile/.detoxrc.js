@@ -13,7 +13,7 @@ module.exports = {
     'ios.yoroi.debug': {
       type: 'ios.app',
       binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/yoroi.app',
-      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme yoroi -configuration Debug -sdk iphonesimulator16.4 -derivedDataPath ios/build'
+      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme yoroi -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'ios.nightly.debug': {
       type: 'ios.app',

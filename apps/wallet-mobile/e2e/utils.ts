@@ -1,4 +1,5 @@
 import { expect } from 'detox'
+import yargs from 'yargs/yargs'
 
 import { VALID_PIN } from './constants'
 import { mnemonicBadgeByWord,mnemonicByIndexText } from './screens/createWalletFlow.screen'
@@ -32,9 +33,9 @@ export const repeatSeedPhrase = async (phraseArray: string[]): Promise<void> => 
   }
 }
 
-export const enterRecoveryPhrase = async (phraseArray: string[]): Promise<void> => {
+export const enterRecoveryPhrase = async (phraseArray: string[], platform: string): Promise<void> => {
   for (let wordIndex = 0; wordIndex < phraseArray.length; wordIndex++) {
-    const wordElementInput = mnemonicByIndexInput(wordIndex);
+    const wordElementInput = mnemonicByIndexInput(wordIndex, platform);
     await wordElementInput.typeText(`${phraseArray[wordIndex]}\n`);
   }
 }
@@ -56,3 +57,20 @@ export const prepareApp = async (): Promise<void> => {
 
   await expect(myWalletsScreen.pageTitle()).toBeVisible()
 }
+
+export const delay = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds))
+
+// deciding  from the args of the script (example  - e2e:test:android:nightly:release) 
+// checking the e2e path (example -  $npm_package_e2ePath_android) and decide if the test platform is android or iOS based on the folder path
+export const initialize = async():Promise<object> => {
+  const argv = await parser.argv
+  const platform =  argv._[0].includes('android')?'android':'ios'
+  console.log("Platform Name :", platform)
+  return {platform}
+}
+
+// utility to parse the arguments in the script of package.json
+// For detox script the '_' holds the test folder path (example - ./e2e/tests/_android) passed in the script as (example  - e2e:test:android:nightly:release) 
+export const parser = yargs(process.argv.slice(2)).options({
+  _: {type: 'string', default: 'ios'},
+});
