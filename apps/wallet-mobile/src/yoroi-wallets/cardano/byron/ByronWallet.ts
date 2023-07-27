@@ -728,6 +728,7 @@ export class ByronWallet implements YoroiWallet {
       accountPrivateKeyHex,
       new Set<string>(),
       stakingKeys,
+      stakingPrivateKey,
     )
 
     return yoroiSignedTx({
