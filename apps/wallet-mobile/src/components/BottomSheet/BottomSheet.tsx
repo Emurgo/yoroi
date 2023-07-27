@@ -19,13 +19,16 @@ export const BottomSheetModal = ({title, content, isOpen = false, onClose}: Bott
 
   const snapPoints = ['1%', '50%']
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index)
-    if (index === 0) {
-      setShowBackdropComp(false)
-      onClose?.()
-    }
-  }, [])
+  const handleSheetChanges = useCallback(
+    (index: number) => {
+      console.log('handleSheetChanges', index)
+      if (index === 0) {
+        setShowBackdropComp(false)
+        onClose?.()
+      }
+    },
+    [onClose],
+  )
 
   useEffect(() => {
     if (!isOpen) {
