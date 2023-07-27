@@ -1,3 +1,4 @@
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet} from 'react-native'
@@ -15,10 +16,5 @@ const styles = StyleSheet.create({
 storiesOf('Button Group', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('with label', () => (
-    <ButtonGroup
-      buttons={['Button1', 'Button2']}
-      onButtonPress={(event) => {
-        console.log(event)
-      }}
-    />
+    <ButtonGroup buttons={['Button1', 'Button2']} onButtonPress={() => action('onButtonPress')} />
   ))
