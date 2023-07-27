@@ -2,7 +2,7 @@ import { Swap } from '@yoroi/types';
 import { SWAP_API_ENDPOINTS, axiosClient } from './config';
 
 export async function getTokens(
-  network: Swap.Netowrk,
+  network: Swap.Network,
   policyId = '',
   assetName = ''
 ): Promise<Swap.TokenInfo[]> {
