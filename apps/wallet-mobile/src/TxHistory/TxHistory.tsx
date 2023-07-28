@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {LayoutAnimation, SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
 import {Boundary, ResetErrorRef, Spacer, StatusBar, Text} from '../components'
@@ -48,7 +48,7 @@ export const TxHistory = () => {
   }
 
   return (
-    <SafeAreaView style={styles.scrollView}>
+    <View style={styles.scrollView}>
       <StatusBar type="dark" />
 
       <View style={styles.container}>
@@ -112,7 +112,7 @@ export const TxHistory = () => {
           </TabPanel>
         </TabPanels>
       </View>
-    </SafeAreaView>
+    </View>
   )
 }
 
