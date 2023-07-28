@@ -1,7 +1,7 @@
-import React from 'react'
-import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import React, {useEffect} from 'react'
+import {StyleSheet, TextInput as RNTextInput, TouchableOpacity, View, ViewProps} from 'react-native'
 
-import {Button, Icon, Spacer, Text} from '../../../../components'
+import {Button, Icon, Spacer, Text, TextInput} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {BottomSheetModal} from '../../../../components/BottomSheet'
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -9,6 +9,18 @@ import {COLORS} from '../../../../theme'
 import {useStrings} from '../../common/strings'
 
 export const ConfirmationOrderScreen = () => {
+  const spendingPasswordRef = React.useRef<RNTextInput>(null)
+  const [bottomSheetState, setBottomSheetSate] = React.useState<{
+    isOpen: boolean
+    title: string
+    content?: string | React.ReactNode
+  }>({
+    isOpen: false,
+    title: '',
+    content: '',
+  })
+
+  const [spendingPassword, setSpendingPassword] = React.useState('')
   const strings = useStrings()
   const wallet = useSelectedWallet()
 
@@ -29,12 +41,6 @@ export const ConfirmationOrderScreen = () => {
       info: strings.swapFees,
     },
   ]
-
-  const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
-    isOpen: false,
-    title: '',
-    content: '',
-  })
 
   return (
     <View style={styles.container}>
@@ -97,7 +103,36 @@ export const ConfirmationOrderScreen = () => {
       </View>
 
       <Actions>
-        <Button testID="swapButton" shelleyTheme title={strings.confirm} />
+        <Button
+          testID="swapButton"
+          shelleyTheme
+          title={strings.confirm}
+          onPress={() => {
+            setBottomSheetSate({
+              isOpen: true,
+              title: strings.signTransaction,
+              content: (
+                <View style={styles.modalContent}>
+                  <View>
+                    <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+
+                    <TextInput
+                      secureTextEntry
+                      ref={spendingPasswordRef}
+                      enablesReturnKeyAutomatically
+                      label={strings.spendingPassword}
+                      value={spendingPassword}
+                      onChangeText={setSpendingPassword}
+                      autoComplete="off"
+                    />
+                  </View>
+
+                  <Button testID="swapButton" shelleyTheme title={strings.sign} />
+                </View>
+              ),
+            })
+          }}
+        />
       </Actions>
 
       <BottomSheetModal
@@ -165,5 +200,15 @@ const styles = StyleSheet.create({
   },
   actions: {
     paddingVertical: 16,
+  },
+  modalContent: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    height: 300,
+  },
+  modalText: {
+    paddingHorizontal: 70,
+    textAlign: 'center',
+    paddingBottom: 8,
   },
 })

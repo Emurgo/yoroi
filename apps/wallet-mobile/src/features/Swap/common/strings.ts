@@ -31,8 +31,11 @@ export const useStrings = () => {
     pools: (qty: number) => intl.formatMessage(globalMessages.pools, {qty}),
     openOrders: intl.formatMessage(messages.openOrders),
     completedOrders: intl.formatMessage(messages.completedOrders),
+    signTransaction: intl.formatMessage(messages.signTransaction),
+    enterSpendingPassword: intl.formatMessage(messages.enterSpendingPassword),
+    spendingPassword: intl.formatMessage(messages.spendingPassword),
+    sign: intl.formatMessage(messages.sign),
 
-    // search
     searchTokens: intl.formatMessage(messages.searchTokens),
     confirm: intl.formatMessage(messages.confirm),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
@@ -146,6 +149,22 @@ export const messages = defineMessages({
   clear: {
     id: 'global.clear',
     defaultMessage: '!!!Clear',
+  },
+  signTransaction: {
+    id: 'global.signTransaction',
+    defaultMessage: '!!!Sign transaction',
+  },
+  spendingPassword: {
+    id: 'global.spendingPassword',
+    defaultMessage: '!!!Spending Password',
+  },
+  enterSpendingPassword: {
+    id: 'global.enterSpendingPassword',
+    defaultMessage: '!!!Enter spending password to sign this transaction',
+  },
+  sign: {
+    id: 'global.sign',
+    defaultMessage: '!!!Sign',
   },
   swapButton: {
     id: 'global.swap',
