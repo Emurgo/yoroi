@@ -1,9 +1,0 @@
-/*
-  InfoPlist.strings
-  emurgo
-
-  Created by Jan Ferko on 17/12/2018.
-  Copyright © 2018 Facebook. All rights reserved.
-*/
-"NSFaceIDUsageDescription" = "<zh-Hans Enabling Face ID allows you quick and secure access to your account. >";
-"NSCameraUsageDescription" = "<zh-Hans Yoroi Mobile will only use camera when user requests to scan a QR-code with a blockchain address, instead of typing the address in manually.>";

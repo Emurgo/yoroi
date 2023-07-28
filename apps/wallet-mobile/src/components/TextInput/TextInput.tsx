@@ -158,6 +158,7 @@ export const HelperText = ({
         placeholder: faded ? COLORS.GREY_6 : COLORS.TEXT_INPUT,
         primary: faded ? COLORS.GREY_6 : COLORS.BLACK,
         error: COLORS.ERROR_TEXT_COLOR,
+        text: COLORS.INFO_GRAY,
       },
     }}
     type={type}

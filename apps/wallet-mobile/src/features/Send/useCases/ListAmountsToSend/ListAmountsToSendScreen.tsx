@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {useCallback, useLayoutEffect} from 'react'
+import {useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
@@ -9,16 +9,17 @@ import {useQuery, UseQueryOptions} from 'react-query'
 import {Boundary, Button, Icon, Spacer} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import globalMessages from '../../../../i18n/global-messages'
+import {assetsToSendProperties} from '../../../../metrics/helpers'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
-import {useOverrideBackNavigate} from '../../../../utils/navigation'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {TokenInfo, YoroiAmount, YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
-import {useNavigateTo} from '../../common/navigation'
+import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
 import {AddTokenButton} from './AddToken/AddToken'
 import {RemoveAmountButton} from './RemoveAmount'
@@ -28,13 +29,9 @@ export const ListAmountsToSendScreen = () => {
   const strings = useStrings()
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
+  const {track} = useMetrics()
 
-  const navigateBack = useCallback(() => {
-    navigateTo.startTx()
-    return true
-  }, [navigateTo])
-
-  useOverrideBackNavigate(navigateBack)
+  useOverridePreviousSendTxRoute('send-start-tx')
 
   useLayoutEffect(() => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
@@ -61,6 +58,11 @@ export const ListAmountsToSendScreen = () => {
     },
   )
 
+  React.useEffect(() => {
+    track.sendSelectAssetUpdated(assetsToSendProperties({tokens, amounts}))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amounts.length, tokens.length, track])
+
   const onEdit = (tokenId: string) => {
     const tokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === tokenId)
     if (!tokenInfo || tokenInfo.kind === 'nft') return
@@ -76,7 +78,10 @@ export const ListAmountsToSendScreen = () => {
     }
     amountRemoved(tokenId)
   }
-  const onNext = () => refetch()
+  const onNext = () => {
+    track.sendSelectAssetSelected(assetsToSendProperties({tokens, amounts}))
+    refetch()
+  }
   const onAdd = () => {
     clearSearch()
     navigateTo.addToken()

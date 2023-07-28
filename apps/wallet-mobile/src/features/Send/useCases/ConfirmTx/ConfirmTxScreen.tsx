@@ -6,9 +6,13 @@ import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
+import {assetsToSendProperties} from '../../../../metrics/helpers'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
-import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
+import {sortTokenInfos} from '../../../../utils'
+import {useSaveMemo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
+import {Amounts} from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
 import {useNavigateTo} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
@@ -25,8 +29,15 @@ export const ConfirmTxScreen = () => {
   const navigateTo = useNavigateTo()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
+  const {track} = useMetrics()
 
-  const {memo, yoroiUnsignedTx, targets} = useSend()
+  const {memo, selectedTargetIndex, yoroiUnsignedTx, targets} = useSend()
+  const {amounts} = targets[selectedTargetIndex].entry
+  const tokenInfos = useTokenInfos({
+    wallet,
+    tokenIds: Amounts.toArray(amounts).map(({tokenId}) => tokenId),
+  })
+  const tokens = sortTokenInfos({wallet, tokenInfos})
 
   const {saveMemo} = useSaveMemo({wallet})
 
@@ -36,7 +47,13 @@ export const ConfirmTxScreen = () => {
     }
   }, [])
 
+  useEffect(() => {
+    track.sendSummaryPageViewed(assetsToSendProperties({tokens, amounts}))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const onSuccess = (signedTx) => {
+    track.sendSummarySubmitted(assetsToSendProperties({tokens, amounts}))
     navigateTo.submittedTx()
 
     if (memo.length > 0) {

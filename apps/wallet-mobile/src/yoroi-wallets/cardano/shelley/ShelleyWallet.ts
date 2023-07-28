@@ -644,6 +644,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         accountPrivateKeyHex,
         new Set<string>(),
         stakingKeys,
+        stakingPrivateKey,
       )
 
       return yoroiSignedTx({

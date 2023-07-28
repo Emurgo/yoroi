@@ -15,13 +15,12 @@ import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {PairedBalance} from '../../../../../TxHistory/PairedBalance'
-import {useOverrideBackNavigate} from '../../../../../utils/navigation'
 import {selectFtOrThrow} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../yoroi-wallets/logging'
 import {Quantity} from '../../../../../yoroi-wallets/types'
 import {asQuantity, editedFormatter, pastedFormatter, Quantities} from '../../../../../yoroi-wallets/utils'
-import {useNavigateTo} from '../../../common/navigation'
+import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../../common/navigation'
 import {useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 import {NoBalance} from './ShowError/NoBalance'
@@ -42,10 +41,14 @@ export const EditAmountScreen = () => {
     Quantities.denominated(initialQuantity, tokenInfo.decimals ?? 0),
   )
 
-  useOverrideBackNavigate(() => {
-    navigateTo.selectedTokens()
-    return true
-  })
+  useOverridePreviousSendTxRoute(
+    Quantities.isZero(initialQuantity) ? 'send-select-token-from-list' : 'send-list-amounts-to-send',
+  )
+
+  React.useEffect(() => {
+    setQuantity(initialQuantity)
+    setInputValue(Quantities.denominated(initialQuantity, tokenInfo.decimals ?? 0))
+  }, [initialQuantity, tokenInfo.decimals])
 
   const hasBalance = !Quantities.isGreaterThan(quantity, available)
   const isUnableToSpend = isPrimary && Quantities.isGreaterThan(quantity, spendable)

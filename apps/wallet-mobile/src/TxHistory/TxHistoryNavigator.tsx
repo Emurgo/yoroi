@@ -4,7 +4,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Boundary, Icon} from '../components'
-import {useNavigateTo} from '../features/Send/common/navigation'
 import {SendProvider} from '../features/Send/common/SendContext'
 import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
 import {FailedTxScreen} from '../features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
@@ -42,10 +41,11 @@ export const TxHistoryNavigator = () => {
   return (
     <SendProvider key={wallet.id}>
       <Stack.Navigator
+        screenListeners={{}}
         screenOptions={{
           ...defaultStackNavigationOptions,
           detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-          gestureEnabled: false,
+          gestureEnabled: true,
         }}
       >
         <Stack.Screen
@@ -72,6 +72,7 @@ export const TxHistoryNavigator = () => {
           options={{
             ...defaultStackNavigationOptionsV2,
             title: strings.receiveTitle,
+
             headerRight: () => <ModalInfoIconButton onPress={showModalInfo} />,
             headerStyle: {
               elevation: 0,
@@ -128,7 +129,6 @@ export const TxHistoryNavigator = () => {
           options={{
             title: strings.editAmountTitle,
             ...sendOptions,
-            headerLeft: () => <SendEditAmountBackButton />,
           }}
         >
           {() => (
@@ -176,15 +176,6 @@ export const TxHistoryNavigator = () => {
         <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
       </ModalInfo>
     </SendProvider>
-  )
-}
-
-const SendEditAmountBackButton = () => {
-  const navigateTo = useNavigateTo()
-  return (
-    <TouchableOpacity onPress={() => navigateTo.selectedTokens()}>
-      <Icon.Chevron direction="left" color="#000000" />
-    </TouchableOpacity>
   )
 }
 

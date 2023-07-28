@@ -3,6 +3,7 @@ import React from 'react'
 import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Button, Spacer} from '../../../../components'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
@@ -18,6 +19,11 @@ export const StartMultiTokenTxScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
+  const {track} = useMetrics()
+
+  React.useEffect(() => {
+    track.sendInitiated()
+  }, [track])
 
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)
