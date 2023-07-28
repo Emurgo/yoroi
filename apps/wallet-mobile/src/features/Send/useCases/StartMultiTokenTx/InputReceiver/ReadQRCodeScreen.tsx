@@ -1,12 +1,12 @@
-import { useNavigation } from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
-import { QRCodeScanner } from '../../../../../components'
-import { TxHistoryRouteNavigation } from '../../../../../navigation'
-import { useSelectedWallet } from '../../../../../SelectedWallet'
-import { asQuantity, pastedFormatter, Quantities } from '../../../../../yoroi-wallets/utils'
-import { useSend } from '../../../common/SendContext'
-import { useStrings } from '../../../common/strings'
+import {QRCodeScanner} from '../../../../../components'
+import {TxHistoryRouteNavigation} from '../../../../../navigation'
+import {useSelectedWallet} from '../../../../../SelectedWallet'
+import {asQuantity, pastedFormatter, Quantities} from '../../../../../yoroi-wallets/utils'
+import {useSend} from '../../../common/SendContext'
+import {useStrings} from '../../../common/strings'
 
 export const ReadQRCodeScreen = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
