@@ -10,25 +10,17 @@ import {Boundary} from '../Boundary'
 import {Icon} from '../Icon'
 import {ModeratedNftIcon} from './ModeratedNftIcon'
 
-export const TokenIcon = ({
-  wallet,
-  tokenId,
-  size,
-}: {
-  wallet: YoroiWallet
-  tokenId: string
-  size?: 'small' | 'medium' | 'large'
-}) => {
+export const TokenIcon = ({wallet, tokenId, variant}: {wallet: YoroiWallet; tokenId: string; variant?: 'swap'}) => {
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
-  if (isPrimary) return <PrimaryIcon size={size} />
+  if (isPrimary) return <PrimaryIcon variant={variant} />
   if (tokenInfo.kind === 'ft') {
     if (isString(tokenInfo.icon) && tokenInfo.icon.length > 0 && isBase64(tokenInfo.icon)) {
       return (
         <Image
           source={{uri: `data:image/png;base64,${tokenInfo.icon}`}}
-          style={[size === 'small' ? styles.iconSmall : styles.icon]}
+          style={[variant === 'swap' ? styles.iconSmall : styles.icon]}
         />
       )
     }
@@ -41,16 +33,16 @@ export const TokenIcon = ({
       </Boundary>
     )
   }
-  return <Placeholder size={size} />
+  return <Placeholder variant={variant} />
 }
 
 type PrimaryIconProps = {
-  size?: 'small' | 'medium' | 'large'
+  variant?: 'swap'
 }
 
-const PrimaryIcon = ({size}: PrimaryIconProps) => (
-  <View style={[size === 'small' ? styles.iconSmall : styles.icon, styles.primary]}>
-    <Icon.Cardano color="white" height={size === 'small' ? 20 : 35} width={size === 'small' ? 20 : 35} />
+const PrimaryIcon = ({variant}: PrimaryIconProps) => (
+  <View style={[variant === 'swap' ? styles.iconSmall : styles.icon, styles.primary]}>
+    <Icon.Cardano color="white" height={variant === 'swap' ? 20 : 35} width={variant === 'swap' ? 20 : 35} />
   </View>
 )
 
@@ -77,11 +69,11 @@ const UnModeratedNftIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: st
 }
 
 type PlaceholderProps = {
-  size?: 'small' | 'medium' | 'large'
+  variant?: 'swap'
 }
 
-export const Placeholder = ({size}: PlaceholderProps) => (
-  <View style={[styles.icon, styles.placeholder, size === 'small' && styles.placeholderSmall]}>
+export const Placeholder = ({variant}: PlaceholderProps) => (
+  <View style={[styles.icon, styles.placeholder, variant === 'swap' && styles.placeholderSmall]}>
     <Icon.Tokens color={COLORS.TEXT_INPUT} size={35} />
   </View>
 )

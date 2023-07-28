@@ -15,12 +15,11 @@ export type AmountItemProps = {
   wallet: YoroiWallet
   amount: Balance.Amount
   style?: ViewProps['style']
-  tokenIconSize?: 'small' | 'medium' | 'large'
   variant?: 'swap'
   privacyMode?: PrivacyMode
 }
 
-export const AmountItem = ({wallet, style, amount, tokenIconSize, variant, privacyMode}: AmountItemProps) => {
+export const AmountItem = ({wallet, style, amount, variant, privacyMode}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -36,7 +35,7 @@ export const AmountItem = ({wallet, style, amount, tokenIconSize, variant, priva
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
         <Boundary loading={{fallback: <Placeholder />}} error={{fallback: () => <Placeholder />}}>
-          <TokenIcon wallet={wallet} tokenId={tokenInfo.id} size={tokenIconSize} />
+          <TokenIcon wallet={wallet} tokenId={tokenInfo.id} variant={variant} />
         </Boundary>
       </Left>
 

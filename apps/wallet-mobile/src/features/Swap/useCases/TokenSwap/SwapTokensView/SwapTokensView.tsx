@@ -6,6 +6,7 @@ import {Button, Icon, Spacer} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {MarketPrice} from '../../../common/MarketPriceCard'
+import {useNavigateTo} from '../../../common/navigation'
 import {ChoosePoolSection} from '../../../common/SelectPool'
 import {SlippageTolerance} from '../../../common/SlippageTolerance'
 import {useStrings} from '../../../common/strings'
@@ -15,6 +16,7 @@ import {SwitchAndClear} from '../SwitchAndClear/SwitchAndClear'
 
 export const SwapTokensView = () => {
   const strings = useStrings()
+  const navigation = useNavigateTo()
 
   const handleButtonClick = (event: string) => {
     console.log('Button clicked!', event)
@@ -55,7 +57,12 @@ export const SwapTokensView = () => {
           <ChoosePoolSection />
 
           <Actions>
-            <Button testID="swapButton" shelleyTheme title={strings.swapTitle} />
+            <Button
+              testID="swapButton"
+              shelleyTheme
+              title={strings.swapTitle}
+              onPress={() => navigation.confirmationOrder()}
+            />
           </Actions>
         </KeyboardAvoidingView>
       </View>

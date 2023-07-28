@@ -34,6 +34,7 @@ export const useStrings = () => {
 
     // search
     searchTokens: intl.formatMessage(messages.searchTokens),
+    confirm: intl.formatMessage(messages.confirm),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
     apply: intl.formatMessage(globalMessages.apply),
@@ -171,5 +172,9 @@ export const messages = defineMessages({
   selectAssetTitle: {
     id: 'components.send.selectasset.title',
     defaultMessage: '!!!Select asset',
+  },
+  confirm: {
+    id: 'components.send.confirmscreen.confirmButton',
+    defaultMessage: '!!!Confirm',
   },
 })

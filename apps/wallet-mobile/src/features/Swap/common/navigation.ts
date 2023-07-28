@@ -12,5 +12,6 @@ export const useNavigateTo = () => {
     selectedSwapFromTokens: () => navigation.navigate('swap-select-token-from'),
     selectedSwapToTokens: () => navigation.navigate('swap-select-token-to'),
     swapTokens: () => navigation.navigate('swap-start-order'),
+    confirmationOrder: () => navigation.navigate('swap-confirmation-order'),
   }).current
 }

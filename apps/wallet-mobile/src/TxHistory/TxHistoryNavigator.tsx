@@ -14,7 +14,9 @@ import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/Edit
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {SwapProvider} from '../features/Swap/common/SwapContext'
-import {StartSwapScreen} from '../features/Swap/useCases'
+import {ConfirmationOrderScreen, StartSwapScreen} from '../features/Swap/useCases'
+import {InputSlippageToleranceScreen} from '../features/Swap/useCases/InputSlippageToleranceScreen'
+import {SelectPoolScreen} from '../features/Swap/useCases/SelectPoolScreen'
 import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/TokenSwap/AddTokens/SelectTokenFromListScreen'
 import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/TokenSwap/AddTokens/SelectTokenToListScreen'
 import {
@@ -97,6 +99,15 @@ export const TxHistoryNavigator = () => {
           />
 
           <Stack.Screen
+            name="swap-confirmation-order"
+            component={ConfirmationOrderScreen}
+            options={{
+              ...defaultStackNavigationOptionsV2,
+              title: strings.confirmationTransaction,
+            }}
+          />
+
+          <Stack.Screen
             name="swap-select-token-from"
             component={SwapSelectTokenFromListScreen}
             options={{
@@ -111,6 +122,24 @@ export const TxHistoryNavigator = () => {
             options={{
               ...defaultStackNavigationOptionsV2,
               title: strings.swapToTitle,
+            }}
+          />
+
+          <Stack.Screen
+            name="swap-set-slippage"
+            component={InputSlippageToleranceScreen}
+            options={{
+              ...defaultStackNavigationOptionsV2,
+              title: strings.slippageTolerance,
+            }}
+          />
+
+          <Stack.Screen
+            name="swap-select-pool"
+            component={SelectPoolScreen}
+            options={{
+              ...defaultStackNavigationOptionsV2,
+              title: strings.selectPool,
             }}
           />
 
@@ -268,6 +297,10 @@ const messages = defineMessages({
       'To protect your privacy, new addresses are ' +
       'generated automatically once you use them.',
   },
+  confirmationTransaction: {
+    id: 'global.confirmationTransaction',
+    defaultMessage: '!!!Confirmation transaction',
+  },
 })
 
 const useStrings = () => {
@@ -287,6 +320,7 @@ const useStrings = () => {
     receiveInfoText: intl.formatMessage(messages.receiveInfoText),
     editAmountTitle: intl.formatMessage(messages.editAmountTitle),
     listAmountsToSendTitle: intl.formatMessage(messages.listAmountsToSendTitle),
+    confirmationTransaction: intl.formatMessage(messages.confirmationTransaction),
   }
 }
 

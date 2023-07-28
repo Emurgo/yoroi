@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flex: 1,
     backgroundColor: COLORS.WHITE,
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
     paddingTop: 13,
   },
   header: {

@@ -55,7 +55,7 @@ export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, ha
                   {noTokenSelected ? (
                     <Icon.Coins size={24} color={COLORS.TEXT_GRAY3} />
                   ) : (
-                    <TokenIcon wallet={wallet} tokenId={tokenInfo.id} size="small" />
+                    <TokenIcon wallet={wallet} tokenId={tokenInfo.id} variant="swap" />
                   )}
                 </Boundary>
 

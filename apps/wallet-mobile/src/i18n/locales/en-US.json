@@ -536,6 +536,7 @@
   "global.cancel": "Cancel",
   "global.close": "close",
   "global.clear": "clear",
+  "global.confirmationTransaction": "Confirmation transaction",
   "global.comingSoon": "Coming soon",
   "global.currency": "Currency",
   "global.currency.ADA": "Cardano",
