@@ -1,19 +1,14 @@
 import { device, expect } from 'detox'
 
-import { SPENDING_PASSWORD, VALID_PIN,WALLET_NAME } from '../../constants'
+import { SPENDING_PASSWORD,WALLET_NAME } from '../../constants'
 import * as createWalletFlow from '../../screens/createWalletFlow.screen'
 import * as myWalletsScreen from '../../screens/myWallets.screen'
-import { enterPIN, getSeedPhrase, prepareApp,repeatSeedPhrase } from '../../utils'
+import {getSeedPhrase, prepareApp,repeatSeedPhrase } from '../../utils'
 
 describe('Creating a wallet', () => {
     beforeAll(async () => {
         await device.launchApp({ newInstance: true })
         await prepareApp()
-    });
-  
-    beforeEach(async () => {
-        await device.reloadReactNative()
-        await enterPIN(VALID_PIN)
     });
 
     it('add shelley-era wallet', async () => {
@@ -25,11 +20,11 @@ describe('Creating a wallet', () => {
    
         await createWalletFlow.spendingPasswordInput().tap()
         await createWalletFlow.spendingPasswordInput().typeText(`${SPENDING_PASSWORD}\n`)
-        await device.enableSynchronization()
+       // await device.enableSynchronization()
         await waitFor(createWalletFlow.repeatSpendingPasswordInput()).toBeVisible().withTimeout(10000)
         await createWalletFlow.repeatSpendingPasswordInput().tap()
         await createWalletFlow.repeatSpendingPasswordInput().typeText(SPENDING_PASSWORD)
-        await device.enableSynchronization()
+       // await device.enableSynchronization()
 
         await createWalletFlow.credentialsFormContinueButton().tap()
         await expect(createWalletFlow.mnemonicExplanationModal()).toBeVisible()

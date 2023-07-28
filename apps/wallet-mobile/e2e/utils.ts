@@ -74,3 +74,13 @@ export const initialize = async():Promise<object> => {
 export const parser = yargs(process.argv.slice(2)).options({
   _: {type: 'string', default: 'ios'},
 });
+
+// wrap device.disableSynchronization for android only
+export const disableDeviceSync = async (platform: string) => {
+  platform === 'android' && await device.disableSynchronization()
+}
+
+// wrap device.enableSynchronization for android only
+export const enableDeviceSync = async (platform: string) => {
+  platform === 'android' && await device.enableSynchronization()
+}

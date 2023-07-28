@@ -1,6 +1,6 @@
 import { device, expect } from 'detox'
 
-import { NORMAL_15_WORD_WALLET, SPENDING_PASSWORD, VALID_PIN } from '../../constants'
+import { NORMAL_15_WORD_WALLET, SPENDING_PASSWORD } from '../../constants'
 import * as myWalletsScreen from '../../screens/myWallets.screen'
 import * as restoreWalletFlow from '../../screens/restoreWalletFlow.screen'
 import * as utils from '../../utils'
@@ -15,11 +15,6 @@ describe('Restore a wallet', () => {
         await utils.prepareApp()
     });
   
-    beforeEach(async () => {
-        await device.reloadReactNative()
-        await utils.enterPIN(VALID_PIN)
-    });
-
     it('15-word shelley wallet', async () => {
         await myWalletsScreen.addWalletTestnetButton().tap();
         await myWalletsScreen.restoreWalletButton().tap();
@@ -34,17 +29,15 @@ describe('Restore a wallet', () => {
 
         await expect(restoreWalletFlow.credentialsView()).toBeVisible();
         await restoreWalletFlow.walletNameInput().typeText(NORMAL_15_WORD_WALLET.name);
-        await device.enableSynchronization()
+       // await device.enableSynchronization()
         await restoreWalletFlow.spendingPasswordInput().tap()
         await restoreWalletFlow.spendingPasswordInput().typeText(`${SPENDING_PASSWORD}\n`);
-        await device.enableSynchronization()
-
+       // await device.enableSynchronization()
         await waitFor(restoreWalletFlow.repeatSpendingPasswordInput()).toBeVisible(50).withTimeout(10000)
-        
        // await delay(15000)
         await restoreWalletFlow.repeatSpendingPasswordInput().tap()
         await restoreWalletFlow.repeatSpendingPasswordInput().typeText(SPENDING_PASSWORD);
-        await device.enableSynchronization();
+      //  await device.enableSynchronization();
         await restoreWalletFlow.credentialsContinueButton().tap();
 
         await expect(myWalletsScreen.pageTitle()).toBeVisible();
