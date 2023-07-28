@@ -125,6 +125,7 @@
     "expo": ">=48.0.0-0 <49.0.0",
     "expo-barcode-scanner": "~12.3.2",
     "expo-camera": "^13.2.1",
+    "expo-status-bar": "~1.4.4",
     "jsc-android": "241213.1.0",
     "lodash": "^4.17.21",
     "react": "18.2.0",
