@@ -30,49 +30,53 @@ export function makeMockSwapStorage(): Readonly<Swap.Storage> {
   } as const
 }
 
-export function makeMockSwapApiClient(options: Swap.FactoryOptions) {
-  console.debug('[swap-react] makeMockSwapApiClient', options)
-  return {
-    getOpenOrders: (stakeKeyHash: string) => {
-      console.debug(
-        '[swap-react] makeMockSwapApiClient getOpenOrders',
-        stakeKeyHash,
-      )
-      return Promise.resolve([])
-    },
-    getCancelOrderTx: (
-      orderUTxO: string,
-      collateralUTxOs: string,
-      walletAddress: string,
-    ) => {
-      console.debug(
-        '[swap-react] makeMockSwapApiClient getCancelOrderTx',
-        orderUTxO,
-        collateralUTxOs,
-        walletAddress,
-      )
-      return Promise.resolve({})
-    },
-    getOrderDatum: (order: any) => {
-      console.debug('[swap-react] makeMockSwapApiClient getOrderDatum', order)
-      return Promise.resolve({})
-    },
-    getSupportedTokens: (baseToken: string) => {
-      console.debug(
-        '[swap-react] makeMockSwapApiClient getSupportedTokens',
-        baseToken,
-      )
-      return Promise.resolve([])
-    },
-    getTokenPairPools: (sendToken: string, receiveToken: string) => {
-      console.debug(
-        '[swap-react] makeMockSwapApiClient getTokenPairPools',
-        sendToken,
-        receiveToken,
-      )
-      return Promise.resolve([])
-    },
-  } as const
+export class MockSwapApi implements Swap.Api {
+  async createOrder(
+    order: Swap.CreateOrderData,
+  ): Promise<Swap.CreateOrderResponse> {
+    console.debug('[swap-react] MockSwapApi.createOrder', order)
+    return {
+      datum: '',
+      datumHash: '',
+      contractAddress: '',
+    }
+  }
+
+  async cancelOrder(
+    orderUTxO: string,
+    collateralUTxO: string,
+    walletAddress: string,
+  ): Promise<string> {
+    console.debug(
+      '[swap-react] MockSwapApi.cancelOrder',
+      orderUTxO,
+      collateralUTxO,
+      walletAddress,
+    )
+
+    return ''
+  }
+
+  async getOrders(stakeKeyHash: string): Promise<Swap.OpenOrder[]> {
+    console.debug('[swap-react] MockSwapApi.getOrders', stakeKeyHash)
+    return []
+  }
+
+  async getTokens(
+    policyId?: string | undefined,
+    assetName?: string | undefined,
+  ): Promise<Swap.TokenInfo[]> {
+    console.debug('[swap-react] MockSwapApi.getTokens', policyId, assetName)
+    return []
+  }
+
+  async getPools(
+    tokenA: Swap.BaseTokenInfo,
+    tokenB: Swap.BaseTokenInfo,
+  ): Promise<Swap.Pool[]> {
+    console.debug('[swap-react] MockSwapApi.getPools', tokenA, tokenB)
+    return []
+  }
 }
 
 export const swapApiBaseUrls = {

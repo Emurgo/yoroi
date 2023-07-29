@@ -1,4 +1,4 @@
-import {BalanceAmount, BalanceToken} from '../balance/token'
+import {BalanceAmount} from '../balance/token'
 
 export type SwapOrderType = 'market' | 'limit'
 
@@ -173,33 +173,4 @@ export interface SwapApi {
     tokenB: SwapBaseTokenInfo,
   ): Promise<SwapPool[]>
   getTokens(policyId?: string, assetName?: string): Promise<SwapTokenInfo[]>
-}
-
-export type SwapModule = {
-  orders: {
-    prepare: (order: SwapOrderCreateData) => Promise<SwapOrderDatum>
-    create: (order: SwapOrderCreateData) => Promise<SwapOrderDatum>
-    cancel: (order: SwapOrderCancelData) => Promise<string>
-    list: {
-      byStatusOpen: () => Promise<Array<any>>
-    }
-  }
-  pairs: {
-    list: {
-      byToken: (
-        baseTokenId: BalanceToken['info']['id'],
-      ) => Promise<Array<BalanceToken>>
-    }
-  }
-  pools: {
-    list: {
-      byPair: ({
-        from,
-        to,
-      }: {
-        from: BalanceToken['info']['id']
-        to: BalanceToken['info']['id']
-      }) => Promise<Array<SwapPool>>
-    }
-  }
 }
