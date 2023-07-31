@@ -87,14 +87,6 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
               <Text style={styles.label}>{strings.delegatedLabel}:</Text>
 
               <Text bold style={styles.value} testID="userSummaryDelegatedText">
-                {totalDelegated != null
-                  ? privacyMode === 'HIDDEN'
-                    ? '**.******'
-                    : formatAdaWithText(asQuantity(totalDelegated), wallet.primaryToken)
-                  : '-'}
-              </Text>
-
-              <Text bold style={styles.value} testID="userSummaryDelegatedText">
                 {privacyMode !== 'HIDDEN'
                   ? totalDelegated != null
                     ? formatAdaWithText(asQuantity(totalDelegated), wallet.primaryToken)
