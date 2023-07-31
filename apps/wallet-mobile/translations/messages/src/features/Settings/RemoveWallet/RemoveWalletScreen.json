@@ -1,0 +1,107 @@
+[
+  {
+    "id": "components.settings.removewalletscreen.descriptionParagraph1",
+    "defaultMessage": "!!!If you really wish to permanently delete the wallet make sure you have written down the mnemonic.",
+    "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
+    "start": {
+      "line": 90,
+      "column": 25,
+      "index": 3068
+    },
+    "end": {
+      "line": 94,
+      "column": 3,
+      "index": 3275
+    }
+  },
+  {
+    "id": "components.settings.removewalletscreen.descriptionParagraph2",
+    "defaultMessage": "!!!To confirm this operation type the wallet name below.",
+    "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
+    "start": {
+      "line": 95,
+      "column": 25,
+      "index": 3302
+    },
+    "end": {
+      "line": 98,
+      "column": 3,
+      "index": 3459
+    }
+  },
+  {
+    "id": "components.settings.removewalletscreen.walletName",
+    "defaultMessage": "!!!Wallet name",
+    "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
+    "start": {
+      "line": 99,
+      "column": 14,
+      "index": 3475
+    },
+    "end": {
+      "line": 102,
+      "column": 3,
+      "index": 3579
+    }
+  },
+  {
+    "id": "components.settings.removewalletscreen.walletNameInput",
+    "defaultMessage": "!!!Wallet name",
+    "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
+    "start": {
+      "line": 103,
+      "column": 19,
+      "index": 3600
+    },
+    "end": {
+      "line": 106,
+      "column": 3,
+      "index": 3709
+    }
+  },
+  {
+    "id": "components.settings.removewalletscreen.walletNameMismatchError",
+    "defaultMessage": "!!!Wallet name does not match",
+    "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
+    "start": {
+      "line": 107,
+      "column": 27,
+      "index": 3738
+    },
+    "end": {
+      "line": 110,
+      "column": 3,
+      "index": 3870
+    }
+  },
+  {
+    "id": "components.settings.removewalletscreen.remove",
+    "defaultMessage": "!!!Remove wallet",
+    "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
+    "start": {
+      "line": 111,
+      "column": 10,
+      "index": 3882
+    },
+    "end": {
+      "line": 114,
+      "column": 3,
+      "index": 3984
+    }
+  },
+  {
+    "id": "components.settings.removewalletscreen.hasWrittenDownMnemonic",
+    "defaultMessage": "!!!I have written down mnemonic of this wallet and understand that I cannot recover the wallet without it.",
+    "file": "src/features/Settings/RemoveWallet/RemoveWalletScreen.tsx",
+    "start": {
+      "line": 115,
+      "column": 26,
+      "index": 4012
+    },
+    "end": {
+      "line": 119,
+      "column": 3,
+      "index": 4226
+    }
+  }
+]

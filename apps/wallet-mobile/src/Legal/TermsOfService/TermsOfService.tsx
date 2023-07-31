@@ -4,7 +4,7 @@ import Markdown from 'react-native-markdown-display'
 import {useQuery} from 'react-query'
 
 import {Spacer} from '../../components'
-import {theme} from '../../theme'
+import {lightPalette} from '../../theme'
 import {loadTOS} from './loadTos'
 
 export const useTos = ({languageCode}: {languageCode: string}) => {
@@ -24,7 +24,7 @@ export const TermsOfService = ({languageCode}: {languageCode: string}) => {
       <Spacer height={16} />
 
       {/* @ts-expect-error old react */}
-      <Markdown style={styles}>{tos}</Markdown>
+      <Markdown markdownStyles={{...styles}}>{tos}</Markdown>
     </View>
   ) : (
     <ActivityIndicator size="large" color="black" />
@@ -32,19 +32,24 @@ export const TermsOfService = ({languageCode}: {languageCode: string}) => {
 }
 
 const styles = StyleSheet.create({
-  paragraph: {
-    ...theme.text,
-  },
-  heading1: {
-    ...theme.text,
-    fontSize: 20,
-    lineHeight: 24,
-    fontWeight: 'bold',
-  },
-  heading2: {
-    ...theme.text,
+  text: {
+    fontFamily: 'Rubik-Regular',
     fontSize: 16,
+    lineHeight: 24,
+    color: lightPalette.gray['900'],
+    paddingVertical: 8,
+  },
+  h2: {
+    fontFamily: 'Rubik-Medium',
+    lineHeight: 24,
+    color: lightPalette.gray['900'],
+    paddingVertical: 8,
+  },
+  h1: {
+    fontFamily: 'Rubik-Medium',
+    fontSize: 20,
     lineHeight: 20,
-    fontWeight: 'bold',
+    color: lightPalette.gray['900'],
+    paddingVertical: 10,
   },
 })

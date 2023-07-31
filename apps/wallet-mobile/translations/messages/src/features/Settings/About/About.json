@@ -1,0 +1,107 @@
+[
+  {
+    "id": "global.currentVersion",
+    "defaultMessage": "!!!Current Version",
+    "file": "src/features/Settings/About/About.tsx",
+    "start": {
+      "line": 99,
+      "column": 18,
+      "index": 2736
+    },
+    "end": {
+      "line": 102,
+      "column": 3,
+      "index": 2816
+    }
+  },
+  {
+    "id": "global.commit",
+    "defaultMessage": "!!!Commit",
+    "file": "src/features/Settings/About/About.tsx",
+    "start": {
+      "line": 103,
+      "column": 10,
+      "index": 2828
+    },
+    "end": {
+      "line": 106,
+      "column": 3,
+      "index": 2891
+    }
+  },
+  {
+    "id": "global.network",
+    "defaultMessage": "!!!Network",
+    "file": "src/features/Settings/About/About.tsx",
+    "start": {
+      "line": 107,
+      "column": 11,
+      "index": 2904
+    },
+    "end": {
+      "line": 110,
+      "column": 3,
+      "index": 2969
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.walletType",
+    "defaultMessage": "!!!Wallet type",
+    "file": "src/features/Settings/About/About.tsx",
+    "start": {
+      "line": 111,
+      "column": 14,
+      "index": 2985
+    },
+    "end": {
+      "line": 114,
+      "column": 3,
+      "index": 3096
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.byronWallet",
+    "defaultMessage": "!!!Byron-era wallet",
+    "file": "src/features/Settings/About/About.tsx",
+    "start": {
+      "line": 115,
+      "column": 15,
+      "index": 3113
+    },
+    "end": {
+      "line": 118,
+      "column": 3,
+      "index": 3224
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.shelleyWallet",
+    "defaultMessage": "!!!Shelley-era wallet",
+    "file": "src/features/Settings/About/About.tsx",
+    "start": {
+      "line": 119,
+      "column": 17,
+      "index": 3243
+    },
+    "end": {
+      "line": 122,
+      "column": 3,
+      "index": 3358
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.unknownWalletType",
+    "defaultMessage": "!!!Unknown Wallet Type",
+    "file": "src/features/Settings/About/About.tsx",
+    "start": {
+      "line": 123,
+      "column": 21,
+      "index": 3381
+    },
+    "end": {
+      "line": 126,
+      "column": 3,
+      "index": 3501
+    }
+  }
+]

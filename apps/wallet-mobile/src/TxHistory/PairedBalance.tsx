@@ -1,11 +1,11 @@
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text} from 'react-native'
-import {PrivacyMode} from 'src/Settings/PrivacyMode/PrivacyMode'
 
 import {Boundary, ResetError, ResetErrorRef} from '../components'
+import {useCurrencyContext} from '../features/Settings/Currency'
+import {PrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useCurrencyContext} from '../Settings/Currency'
 import {COLORS} from '../theme'
 import {useExchangeRate} from '../yoroi-wallets/hooks'
 import {CurrencySymbol, YoroiAmount} from '../yoroi-wallets/types'

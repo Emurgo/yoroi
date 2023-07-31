@@ -8,11 +8,11 @@ import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {Spacer, Text} from '../../components'
 import {Icon} from '../../components/Icon'
+import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {formatTime, formatTokenFractional, formatTokenInteger} from '../../legacy/format'
 import utfSymbols from '../../legacy/utfSymbols'
 import {TxHistoryRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
@@ -106,7 +106,7 @@ const Middle = ({style, ...props}: ViewProps) => (
 )
 const Right = ({style, ...props}: ViewProps) => <View style={[style, {padding: 4}]} {...props} />
 const Amount = ({wallet, transaction}: {wallet: YoroiWallet; transaction: TransactionInfo}) => {
-  const privacyMode = usePrivacyMode()
+  const {privacyMode} = usePrivacyMode()
   const amountAsMT = MultiToken.fromArray(transaction.amount)
   const amount: BigNumber = amountAsMT.getDefault()
   const fee = transaction.fee ? transaction.fee[0] : null

@@ -8,11 +8,11 @@ import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View, ViewProps}
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, StatusBar, Text} from '../../components'
+import {PrivacyMode, usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import globalMessages from '../../i18n/global-messages'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../legacy/format'
 import AddressModal from '../../Receive/AddressModal'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {PrivacyMode, usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {brand, COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
@@ -36,7 +36,7 @@ export const TxDetails = () => {
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transactions = useTransactionInfos(wallet)
   const transaction = transactions[id]
-  const privacyMode = usePrivacyMode()
+  const {privacyMode} = usePrivacyMode()
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
   useTitle(isNonNullable(transaction.submittedAt) ? formatDateAndTime(transaction.submittedAt, intl) : '')

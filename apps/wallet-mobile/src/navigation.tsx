@@ -196,7 +196,9 @@ export type SettingsTabRoutes = {
 }
 
 export type SettingsStackRoutes = {
-  'settings-main': undefined
+  about: undefined
+  'app-settings': undefined
+  'main-settings': undefined
   'change-wallet-name': undefined
   'terms-of-use': undefined
   support: undefined
@@ -335,7 +337,7 @@ export const useWalletNavigation = () => {
     navigation.navigate('app-root', {
       screen: 'settings',
       params: {
-        screen: 'settings-main',
+        screen: 'main-settings',
       },
     })
   }
@@ -364,6 +366,15 @@ export const useWalletNavigation = () => {
     })
   }
 
+  const navigateToAppSettings = () => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'app-settings',
+      },
+    })
+  }
+
   return {
     navigation,
     resetToTxHistory,
@@ -371,5 +382,6 @@ export const useWalletNavigation = () => {
     navigateToSettings,
     navigateToTxHistory,
     navigateToNftGallery,
+    navigateToAppSettings,
   }
 }
