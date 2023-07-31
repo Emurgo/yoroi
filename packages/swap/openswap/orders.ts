@@ -1,9 +1,10 @@
 import { Swap } from '@yoroi/types';
 import { SWAP_API_ENDPOINTS, axiosClient } from './config';
+import type { CancelOrderRequest, CreateOrderRequest, Order } from './types';
 
 export async function createOrder(
   network: Swap.Network,
-  order: Swap.CreateOrderData
+  request: CreateOrderRequest
 ): Promise<Swap.CreateOrderResponse> {
   const apiUrl = SWAP_API_ENDPOINTS[network].constructSwapDatum;
   const response = await axiosClient.get<
@@ -12,15 +13,15 @@ export async function createOrder(
   >('/', {
     baseURL: apiUrl,
     params: {
-      walletAddr: order.address,
-      protocol: order.protocol,
-      poolId: order.poolId,
-      sellTokenPolicyID: order.sell.policyId,
-      sellTokenNameHex: order.sell.assetName,
-      sellAmount: order.sell.amount,
-      buyTokenPolicyID: order.buy.policyId,
-      buyTokenNameHex: order.buy.assetName,
-      buyAmount: order.buy.amount,
+      walletAddr: request.address,
+      protocol: request.protocol,
+      poolId: request.poolId,
+      sellTokenPolicyID: request.sell.policyId,
+      sellTokenNameHex: request.sell.assetName,
+      sellAmount: request.sell.amount,
+      buyTokenPolicyID: request.buy.policyId,
+      buyTokenNameHex: request.buy.assetName,
+      buyAmount: request.buy.amount,
     },
   });
 
@@ -35,31 +36,23 @@ export async function createOrder(
   }
 
   return {
-    datumHash: response.data.hash,
     datum: response.data.datum,
+    datumHash: response.data.hash,
     contractAddress: response.data.address,
   };
 }
 
-/**
- * @param orderUTxO order UTxO from the smart contract to cancel. e.g. "txhash#0"
- * @param collateralUTxOs collateral UTxOs to use for canceling the order in cbor format.
- * @param walletAddress address of the wallet that owns the order in cbor format.
- * @returns an unsigned transaction to cancel the order.
- */
 export async function cancelOrder(
   network: Swap.Network,
-  orderUTxO: string,
-  collateralUTxO: string,
-  walletAddress: string
+  request: CancelOrderRequest,
 ): Promise<string> {
   const apiUrl = SWAP_API_ENDPOINTS[network].cancelSwapTransaction;
   const response = await axiosClient.get('/', {
     baseURL: apiUrl,
     params: {
-      wallet: walletAddress,
-      utxo: orderUTxO,
-      collateralUTxO,
+      wallet: request.walletAddress,
+      utxo: request.orderUTxO,
+      collateralUTxO: request.collateralUTxO,
     },
   });
 
@@ -75,9 +68,9 @@ export async function cancelOrder(
 export async function getOrders(
   network: Swap.Network,
   stakeKeyHash: string
-): Promise<Swap.OpenOrder[]> {
+): Promise<Order[]> {
   const apiUrl = SWAP_API_ENDPOINTS[network].getPools;
-  const response = await axiosClient.get<Swap.OpenOrder[]>('/', {
+  const response = await axiosClient.get<Order[]>('/', {
     baseURL: apiUrl,
     params: {
       'stake-key-hash': stakeKeyHash,

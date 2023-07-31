@@ -1,11 +1,12 @@
 import { Swap } from '@yoroi/types';
 import { SWAP_API_ENDPOINTS, axiosClient } from './config';
+import type { Pool, TokenAddress } from './types';
 
 export async function getPools(
   network: Swap.Network,
-  tokenA: Swap.BaseTokenInfo,
-  tokenB: Swap.BaseTokenInfo
-): Promise<Swap.Pool[]> {
+  tokenA: TokenAddress,
+  tokenB: TokenAddress,
+): Promise<Pool[]> {
   const params: { [key: string]: string } = {
     'policy-id1': tokenA.policyId,
     'policy-id2': tokenB.policyId,
