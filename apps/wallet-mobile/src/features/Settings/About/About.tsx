@@ -41,7 +41,7 @@ export const About = () => {
 
       <Row>
         <LabelText>{strings.walletType}</LabelText>
-        
+
         <ValueText>{walletType}</ValueText>
       </Row>
     </View>
