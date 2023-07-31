@@ -165,7 +165,7 @@ const ShelleyButton = () => {
           },
         })
       }
-      title={`${strings.addWalletButton}`}
+      title={strings.addWalletButton}
       style={styles.topButton}
     />
   )
