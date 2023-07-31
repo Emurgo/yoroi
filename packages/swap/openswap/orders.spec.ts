@@ -81,12 +81,11 @@ describe('SwapOrdersApi', () => {
         })
       );
 
-      const txCbor = await cancelOrder(
-        'mainnet',
-        'orderUtxo',
-        'collateralUtxo',
-        'addr1'
-      );
+      const txCbor = await cancelOrder('mainnet', {
+        orderUTxO: 'orderUtxo',
+        collateralUTxO: 'collateralUtxo',
+        walletAddress: 'addr1',
+      });
 
       expect(txCbor).to.eq('tx_cbor');
     });
@@ -96,12 +95,11 @@ describe('SwapOrdersApi', () => {
         mockAxios.get.mockImplementationOnce(() =>
           Promise.resolve({ status: 400 })
         );
-        await cancelOrder(
-          'mainnet',
-          cancelOrderParams.utxo,
-          cancelOrderParams.collateralUTxOs,
-          cancelOrderParams.address
-        );
+        await cancelOrder('mainnet', {
+          orderUTxO: cancelOrderParams.utxo,
+          collateralUTxO: cancelOrderParams.collateralUTxOs,
+          walletAddress: cancelOrderParams.address
+        });
       }).rejects.toThrow('Failed to cancel swap transaction');
     });
   });
