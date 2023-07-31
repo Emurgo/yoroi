@@ -1,6 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {useMetrics} from '@yoroi/metrics-react-native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
@@ -23,7 +23,6 @@ const WalletTabNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
-  const {track} = useMetrics()
 
   return (
     <>
@@ -41,7 +40,7 @@ const WalletTabNavigator = () => {
       >
         <Tab.Screen
           name="history"
-          options={{
+          options={(route) => ({
             tabBarIcon: ({focused}) => (
               <Icon.TabWallet
                 size={24}
@@ -50,7 +49,8 @@ const WalletTabNavigator = () => {
             ),
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
-          }}
+            tabBarStyle: getFocusedRouteNameFromRoute(route.route) === 'send-read-qr-code' ? {display: 'none'} : {},
+          })}
         >
           {() => (
             <SearchProvider>
@@ -70,15 +70,6 @@ const WalletTabNavigator = () => {
             ),
             tabBarLabel: strings.nftsTabBarLabel,
             tabBarTestID: 'nftsTabBarButton',
-          }}
-          listeners={() => {
-            return {
-              focus: () => {
-                track({
-                  event: 'nft_click_navigate',
-                })
-              },
-            }
           }}
         >
           {() => (

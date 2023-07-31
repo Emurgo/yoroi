@@ -29,6 +29,7 @@ import {NUMBERS} from '../numbers'
 import {isByron, isHaskellShelley} from '../utils'
 
 const MIN_ADA_APP_VERSION = '2.2.1'
+const MIN_ADA_APP_VERSION_SUPPORTING_CIP36 = 6
 
 export type WalletType = 'BIP44' | 'CIP1852'
 
@@ -259,15 +260,26 @@ export const normalizeHWResponse = (resp: LedgerConnectionResponse): HWDeviceInf
   }
 }
 
+export const doesCardanoAppVersionSupportCIP36 = (majorVersion: number) => {
+  return majorVersion >= MIN_ADA_APP_VERSION_SUPPORTING_CIP36
+}
+
 //
 // ============== transaction logic ==================
 //
+
+export const getCardanoAppMajorVersion = async (hwDeviceInfo: HWDeviceInfo, useUSB: boolean) => {
+  const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)
+  const {version} = await appAda.getVersion()
+  Logger.debug('ledgerUtils::getCardanoAppMajorVersion', version.major)
+  return version.major
+}
 
 export const signTxWithLedger = async (
   signRequest: SignTransactionRequest,
   hwDeviceInfo: HWDeviceInfo,
   useUSB: boolean,
-): Promise<SignTransactionResponse> => {
+) => {
   try {
     Logger.debug('ledgerUtils::signTxWithLedger called')
     const appAda = await connectionHandler(hwDeviceInfo.hwFeatures.deviceId, hwDeviceInfo.hwFeatures.deviceObj, useUSB)

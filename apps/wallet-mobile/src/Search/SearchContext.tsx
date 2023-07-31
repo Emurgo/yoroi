@@ -5,7 +5,6 @@ import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Icon} from '../components/Icon'
 import {defaultStackNavigationOptionsV2} from '../navigation'
-import {useOverrideBackNavigate} from '../utils/navigation'
 
 type SearchState = {
   search: string
@@ -94,12 +93,10 @@ export const useSearchOnNavBar = ({
   placeholder,
   title,
   noBack = false,
-  navigateBack,
 }: {
   placeholder: string
   title: string
   noBack?: boolean
-  navigateBack?(): boolean
 }) => {
   const navigation = useNavigation()
 
@@ -119,16 +116,10 @@ export const useSearchOnNavBar = ({
      */
     if (visible) return true
 
-    if (navigateBack) {
-      navigateBack()
-    } else {
-      navigation.goBack()
-    }
+    navigation.goBack()
 
     return true
-  }, [navigateBack, navigation, visible, handleCloseSearch])
-
-  useOverrideBackNavigate(handleGoBack)
+  }, [navigation, visible, handleCloseSearch])
 
   const withSearchInput: StackNavigationOptions = {
     ...defaultStackNavigationOptionsV2,

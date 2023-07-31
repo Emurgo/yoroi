@@ -56,7 +56,7 @@ import {
 import {CardanoError, InvalidState} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
 import {withMinAmounts} from '../getMinAmounts'
-import {signTxWithLedger} from '../hw'
+import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
 import {
   CardanoHaskellShelleyNetwork,
   getCardanoNetworkConfigById,
@@ -521,11 +521,8 @@ export class ByronWallet implements YoroiWallet {
   private async getRewardAddress() {
     if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
 
-    assert(isHaskellShelley(this.walletImplementationId), 'cannot get reward address from a byron-era wallet')
-    const stakingKey = await this.getStakingKey()
-    const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
-    const rewardAddr = await CardanoMobile.RewardAddress.new(Number.parseInt(this.getChainNetworkId(), 10), credential)
-    return rewardAddr.toAddress()
+    const baseAddr = await this.getFirstPaymentAddress()
+    return baseAddr.toAddress()
   }
 
   private getRewardAddressAddressing() {
@@ -731,6 +728,7 @@ export class ByronWallet implements YoroiWallet {
       accountPrivateKeyHex,
       new Set<string>(),
       stakingKeys,
+      stakingPrivateKey,
     )
 
     return yoroiSignedTx({
@@ -793,7 +791,12 @@ export class ByronWallet implements YoroiWallet {
     return Cardano.Wasm.BaseAddress.fromAddress(addr)
   }
 
-  async createVotingRegTx(pin: string) {
+  async ledgerSupportsCIP36(useUSB): Promise<boolean> {
+    if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
+    return doesCardanoAppVersionSupportCIP36(await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB))
+  }
+
+  async createVotingRegTx(pin: string, supportsCIP36: boolean) {
     Logger.debug('CardanoWallet::createVotingRegTx called')
 
     const bytes = await generatePrivateKeyForCatalyst()
@@ -833,12 +836,12 @@ export class ByronWallet implements YoroiWallet {
       const addressedUtxos = await this.getAddressedUtxos()
 
       const baseAddr = await this.getFirstPaymentAddress()
-      const paymentAddress = await baseAddr
+      const paymentAddressCIP36 = await baseAddr
         .toAddress()
         .then((a) => a.toBytes())
         .then((b) => Buffer.from(b).toString('hex'))
 
-      const addressing = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32()))
+      const addressingCIP36 = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32()))
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
@@ -852,9 +855,12 @@ export class ByronWallet implements YoroiWallet {
         txOptions,
         nonce,
         chainNetworkConfig,
-        paymentAddress,
-        addressing.path,
+        paymentAddressCIP36,
+        addressingCIP36.path,
+        supportsCIP36,
       )
+
+      const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32())
 
       const votingRegistration: {
         votingPublicKey: string
@@ -864,7 +870,7 @@ export class ByronWallet implements YoroiWallet {
       } = {
         votingPublicKey: await votingPublicKey.toBech32(),
         stakingPublicKey: await stakingPublicKey.toBech32(),
-        rewardAddress: await baseAddr.toAddress().then((address) => address.toBech32()),
+        rewardAddress,
         nonce,
       }
 
@@ -939,6 +945,32 @@ export class ByronWallet implements YoroiWallet {
   async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
     if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
 
+    const appAdaVersion = await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB)
+
+    if (!doesCardanoAppVersionSupportCIP36(appAdaVersion) && unsignedTx.voting.registration) {
+      Logger.info('CardanoWallet::signTxWithLedger: Ledger app version <= 5')
+      const ledgerPayload = await Cardano.buildVotingLedgerPayloadV5(
+        unsignedTx.unsignedTx,
+        Number.parseInt(this.getChainNetworkId(), 10),
+        (this.getBaseNetworkConfig() as any).PROTOCOL_MAGIC,
+        this.stakingKeyPath,
+      )
+
+      const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
+
+      const signedTx = await Cardano.buildLedgerSignedTx(
+        unsignedTx.unsignedTx,
+        signedLedgerTx,
+        this.getPurpose(),
+        this.publicKeyHex,
+        false,
+      )
+
+      return yoroiSignedTx({unsignedTx, signedTx})
+    }
+
+    Logger.info('CardanoWallet::signTxWithLedger: Ledger app version > 5, using CIP-36')
+
     const ledgerPayload = await Cardano.buildLedgerPayload(
       unsignedTx.unsignedTx,
       Number.parseInt(this.getChainNetworkId(), 10),
@@ -954,10 +986,7 @@ export class ByronWallet implements YoroiWallet {
       this.publicKeyHex,
     )
 
-    return yoroiSignedTx({
-      unsignedTx,
-      signedTx,
-    })
+    return yoroiSignedTx({unsignedTx, signedTx})
   }
 
   // =================== backend API =================== //

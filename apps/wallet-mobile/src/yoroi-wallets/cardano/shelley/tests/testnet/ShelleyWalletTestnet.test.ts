@@ -85,7 +85,7 @@ describe('ShelleyWalletTestnet', () => {
     )
 
     await expect(getRewardAddress(wallet)).resolves.toBe(
-      'stake_test1urq3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcyq75j3',
+      'addr_test1qzddgtdqxmsvn0rqp0ltdfpddudvf76qs3esyn3zqf44drkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9slwzp5f',
     )
 
     expect(wallet.primaryToken).toEqual<DefaultAsset>({
@@ -198,7 +198,7 @@ describe('ShelleyWalletTestnet', () => {
     )
 
     await expect(getRewardAddress(wallet)).resolves.toBe(
-      'stake_test1urq3auyvgnekzzm72m2xuzrtjqvxcyhf568s2gdhcnrjujcyq75j3',
+      'addr_test1qpyz4c9m9ak7y6nzg8qdgz8u5ulyyjkdz853cr98hyu69yy68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3qy42hkq',
     )
 
     expect(wallet.primaryToken).toEqual<DefaultAsset>({
@@ -300,7 +300,7 @@ describe('ShelleyWalletTestnet', () => {
     )
 
     await expect(getRewardAddress(wallet)).resolves.toBe(
-      'stake_test1uzdr3c77jn9px6c6srafp4ekpmqluk5dhsndgfllanj5acs8u4svs',
+      'addr_test1qpyz4c9m9ak7y6nzg8qdgz8u5ulyyjkdz853cr98hyu69yy68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3qy42hkq',
     )
 
     expect(wallet.primaryToken).toEqual<DefaultAsset>({
@@ -424,7 +424,7 @@ const data: WalletJSON = {
     gapLimit: 20,
     blockSize: 50,
     addresses: [
-      'addr_test1qxddgtdqxmsvn0rqp0ltdfpddudvf76qs3esyn3zqf44drkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9suclpck',
+      'addr_test1qpyz4c9m9ak7y6nzg8qdgz8u5ulyyjkdz853cr98hyu69yy68r3aa9x2zd434q86jrtnvrkpledgm0px6snllm89fm3qy42hkq',
       'addr_test1qyxg9e0wj478cd6ckvgwgxj075q6hxz2aeepgf6uxv8ju0kprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9s7yq5yx',
       'addr_test1qxkpmv5pzle28wv52v9p0gpsuw90r35wyj903ay99ehpcwkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9snaf0vm',
       'addr_test1q9fzmrqgzs4hwrelsckyc4d7hwe4flns7ctdfe2v3p2m8mkprmcgc38nvy9hu4k5dcyxhyqcdsfwnf50q5sm03x89e9sgsalrm',

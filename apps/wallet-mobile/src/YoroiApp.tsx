@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {getMetricsFactory, makeMetricsStorage, MetricsProvider} from '@yoroi/metrics-react-native'
 import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
 import Config from 'react-native-config'
@@ -16,6 +14,8 @@ import {LanguageProvider} from './i18n'
 import {InitApp} from './InitApp'
 import {CONFIG} from './legacy/config'
 import {setLogLevel} from './legacy/logging'
+import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
+import {mockMetricsManager} from './metrics/mocks'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet/Context'
 import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
 import {ThemeProvider} from './theme'
@@ -38,10 +38,8 @@ setLogLevel(CONFIG.LOG_LEVEL)
 if (Boolean(Config.DISABLE_LOGBOX)) LogBox.ignoreAllLogs()
 
 const queryClient = new QueryClient()
-const amplitudeClient = getMetricsFactory(features.analytics ? 'amplitude' : 'mock')({
-  apiKey: Config.AMPLITUDE_API_KEY ?? '',
-})
-const metricsStorage = makeMetricsStorage()
+
+const metricsManager = features.analytics ? makeMetricsManager() : mockMetricsManager()
 
 export const YoroiApp = () => {
   const migrated = useMigrations(storage)
@@ -49,7 +47,7 @@ export const YoroiApp = () => {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   return migrated ? (
     <StorageProvider>
-      <MetricsProvider metrics={amplitudeClient} storage={metricsStorage}>
+      <MetricsProvider metricsManager={metricsManager}>
         <WalletManagerProvider walletManager={walletManager}>
           <ErrorBoundary>
             <QueryClientProvider client={queryClient}>

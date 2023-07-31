@@ -4,6 +4,7 @@ import {Camera} from 'expo-camera'
 import React from 'react'
 import {Text, View} from 'react-native'
 
+import {Button} from '../Button'
 import {Spacer} from '../Spacer'
 import {QRCodeScanner} from './QRCodeScanner'
 
@@ -13,44 +14,51 @@ const Wrapper = () => {
   const [status] = Camera.useCameraPermissions()
   const [publicKeyHex, setPublicKeyHex] = React.useState(null)
   const [path, setPath] = React.useState(null)
+  const [withMask, setMaskEnabled] = React.useState(true)
 
   const handleOnRead = async ({data}) => {
     const parsedData = JSON.parse(data)
+
     setPublicKeyHex(parsedData.publicKeyHex)
     setPath(parsedData.path)
     action('onRead')
-    return Promise.resolve(false)
+
+    return Promise.resolve(true)
   }
 
   return (
     <View style={{justifyContent: 'space-between', flex: 1}}>
-      <QRCodeScanner onRead={handleOnRead} />
+      <QRCodeScanner onRead={handleOnRead} withMask={withMask} />
 
-      <View style={{padding: 30, justifyContent: 'center'}}>
-        <Text>QR DATA</Text>
+      <View style={{padding: 10}}>
+        <Info text="QR DATA" />
 
         <Spacer height={5} />
 
-        <Text>{`publicKeyHex: ${publicKeyHex}`}</Text>
+        <Info text={`publicKeyHex: ${publicKeyHex}`} />
 
-        <Text>{`path: ${path}`}</Text>
+        <Info text={`path: ${path}`} />
 
         <Spacer height={20} />
 
-        <Text>PREMISSIONS STATUS</Text>
+        <Info text="PREMISSIONS STATUS" />
 
-        <Text>NOTE: To reset permissions, reinstall the app</Text>
+        <Info text="NOTE: To reset permissions, reinstall the app" />
 
         <Spacer height={5} />
 
-        <Text>{`status: ${status?.status}`}</Text>
+        <Info text={`status: ${status?.status}`} />
 
-        <Text>{`granted: ${status?.granted}`}</Text>
+        <Info text={`granted: ${status?.granted}`} />
 
-        <Text>{`expires: ${status?.expires}`}</Text>
+        <Info text={`expires: ${status?.expires}`} />
 
-        <Text>{`canAskAgain: ${status?.canAskAgain}`}</Text>
+        <Info text={`canAskAgain: ${status?.canAskAgain}`} />
       </View>
+
+      <Button title={withMask ? 'Remove Mask' : 'Add Mask'} onPress={() => setMaskEnabled(!withMask)} />
     </View>
   )
 }
+
+const Info = ({text}) => <Text style={{color: 'white'}}>{text}</Text>
