@@ -35,8 +35,10 @@ export const NftDetails = () => {
         <Tabs>
           <Tab
             onPress={() => {
-              setActiveTab('overview')
-              track.nftGalleryDetailsTab({nft_tab: 'Overview'})
+              if (activeTab !== 'overview') {
+                setActiveTab('overview')
+                track.nftGalleryDetailsTab({nft_tab: 'Overview'})
+              }
             }}
             label={strings.overview}
             active={activeTab === 'overview'}
@@ -45,8 +47,10 @@ export const NftDetails = () => {
 
           <Tab
             onPress={() => {
-              setActiveTab('metadata')
-              track.nftGalleryDetailsTab({nft_tab: 'Metadata'})
+              if (activeTab !== 'metadata') {
+                setActiveTab('metadata')
+                track.nftGalleryDetailsTab({nft_tab: 'Metadata'})
+              }
             }}
             label={strings.metadata}
             active={activeTab === 'metadata'}

@@ -7,6 +7,7 @@ import {Button, Icon, Text, TitledCard} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {formatAdaWithText} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
+import {usePrivacyMode} from '../Settings/PrivacyMode/PrivacyMode'
 import {COLORS} from '../theme'
 import {asQuantity} from '../yoroi-wallets/utils'
 
@@ -23,6 +24,7 @@ type Props = {
 export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdraw, disableWithdraw}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const privacyMode = usePrivacyMode()
 
   return (
     <View style={styles.wrapper}>
@@ -37,7 +39,11 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
               <Text style={styles.label}>{strings.availableFunds}:</Text>
 
               <Text bold style={styles.value} testID="userSummaryAvailableFundsText">
-                {totalAdaSum != null ? formatAdaWithText(asQuantity(totalAdaSum), wallet.primaryToken) : '-'}
+                {privacyMode === 'SHOWN'
+                  ? totalAdaSum != null
+                    ? formatAdaWithText(asQuantity(totalAdaSum), wallet.primaryToken)
+                    : '-'
+                  : '**.******'}
               </Text>
             </View>
           </View>
@@ -51,7 +57,11 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
               <Text style={styles.label}>{strings.rewardsLabel}:</Text>
 
               <Text bold style={styles.value} testID="userSummaryRewardsText">
-                {totalRewards != null ? formatAdaWithText(asQuantity(totalRewards), wallet.primaryToken) : '-'}
+                {privacyMode === 'SHOWN'
+                  ? totalRewards != null
+                    ? formatAdaWithText(asQuantity(totalRewards), wallet.primaryToken)
+                    : '-'
+                  : '**.******'}
               </Text>
             </View>
 
@@ -77,7 +87,11 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
               <Text style={styles.label}>{strings.delegatedLabel}:</Text>
 
               <Text bold style={styles.value} testID="userSummaryDelegatedText">
-                {totalDelegated != null ? formatAdaWithText(asQuantity(totalDelegated), wallet.primaryToken) : '-'}
+                {privacyMode === 'SHOWN'
+                  ? totalDelegated != null
+                    ? formatAdaWithText(asQuantity(totalDelegated), wallet.primaryToken)
+                    : '-'
+                  : '**.******'}
               </Text>
             </View>
           </View>
