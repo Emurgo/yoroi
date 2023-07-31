@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {PrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
+import {PrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {COLORS} from '../../theme'
 import {PairedBalance} from '../../TxHistory/PairedBalance'
 import {isEmptyString} from '../../utils'

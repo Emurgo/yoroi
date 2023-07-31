@@ -22,7 +22,7 @@ const iconProps = {
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
   const {languageCode, supportedLanguages} = useLanguage()
-  const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? 'en-US'
+  const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? supportedLanguages['en-US']
 
   const {privacyMode, togglePrivacyMode} = usePrivacyMode()
 
