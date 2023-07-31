@@ -39,11 +39,11 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
               <Text style={styles.label}>{strings.availableFunds}:</Text>
 
               <Text bold style={styles.value} testID="userSummaryAvailableFundsText">
-                {totalAdaSum != null
-                  ? privacyMode === 'HIDDEN'
-                    ? '**.******'
-                    : formatAdaWithText(asQuantity(totalAdaSum), wallet.primaryToken)
-                  : '-'}
+                {privacyMode !== 'HIDDEN'
+                  ? totalAdaSum != null
+                    ? formatAdaWithText(asQuantity(totalAdaSum), wallet.primaryToken)
+                    : '-'
+                  : '**.******'}
               </Text>
             </View>
           </View>
@@ -57,11 +57,11 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
               <Text style={styles.label}>{strings.rewardsLabel}:</Text>
 
               <Text bold style={styles.value} testID="userSummaryRewardsText">
-                {totalRewards != null
-                  ? privacyMode === 'HIDDEN'
-                    ? '**.******'
-                    : formatAdaWithText(asQuantity(totalRewards), wallet.primaryToken)
-                  : '-'}
+                {privacyMode !== 'HIDDEN'
+                  ? totalRewards != null
+                    ? formatAdaWithText(asQuantity(totalRewards), wallet.primaryToken)
+                    : '-'
+                  : '**.******'}
               </Text>
             </View>
 
@@ -92,6 +92,14 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
                     ? '**.******'
                     : formatAdaWithText(asQuantity(totalDelegated), wallet.primaryToken)
                   : '-'}
+              </Text>
+
+              <Text bold style={styles.value} testID="userSummaryDelegatedText">
+                {privacyMode !== 'HIDDEN'
+                  ? totalDelegated != null
+                    ? formatAdaWithText(asQuantity(totalDelegated), wallet.primaryToken)
+                    : '-'
+                  : '**.******'}
               </Text>
             </View>
           </View>
