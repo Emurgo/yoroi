@@ -37,8 +37,7 @@ export const Nfts = () => {
   React.useEffect(() => {
     if (isLoading || isError) return
     track.nftGalleryPageViewed({nft_count: nfts.length})
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isError, isLoading])
+  }, [isError, isLoading, nfts.length, track])
 
   const sortedNfts = React.useMemo(() => nfts.sort(byName), [nfts])
 
