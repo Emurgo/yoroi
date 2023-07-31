@@ -1,13 +1,12 @@
 import {useNavigation} from '@react-navigation/native'
 import _ from 'lodash'
 import React, {ReactElement} from 'react'
-import {Image, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Hr, Icon, Spacer, Text} from '../../components'
 import {SettingsRouteNavigation, SettingsStackRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {lightPalette} from '../../theme'
-// import chevronRight from '../assets/img/chevron_right.png'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 
@@ -96,7 +95,7 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
         </>
       )}
     </View>
-    
+
     <Hr />
   </View>
 )
@@ -167,7 +166,7 @@ type PressableSettingsItemProps = {
 export const PressableSettingsItem = ({label, onPress, disabled}: PressableSettingsItemProps) => (
   <Touchable onPress={onPress} disabled={disabled}>
     <SettingsItem label={label}>
-     {/*  <Image source={chevronRight} /> */}
+      <Icon.Chevron direction="right" size={28} color={lightPalette.gray['600']} />
     </SettingsItem>
   </Touchable>
 )
