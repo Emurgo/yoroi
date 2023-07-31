@@ -19,7 +19,6 @@ import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
 import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
 import {EnableLoginWithOsScreen} from './EnableLoginWithOs'
 import {RemoveWalletScreen} from './RemoveWallet'
-import {SupportScreen} from './Support'
 import {TermsOfServiceScreen} from './TermsOfService'
 import {WalletSettingsScreen} from './WalletSettings'
 
@@ -58,12 +57,6 @@ export const SettingsScreenNavigator = () => {
         name="terms-of-use"
         component={TermsOfServiceScreen}
         options={{title: strings.termsOfServiceTitle}}
-      />
-
-      <Stack.Screen //
-        name="support"
-        component={SupportScreen}
-        options={{title: strings.supportTitle}}
       />
 
       <Stack.Screen //
