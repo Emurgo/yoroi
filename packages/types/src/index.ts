@@ -15,8 +15,6 @@ import {
   SwapOpenOrder,
   SwapNetwork,
   SwapPool,
-  SwapTokenInfo,
-  SwapBaseTokenInfo,
   SwapCreateOrderResponse,
   SwapCreateOrderData,
   SwapApi,
@@ -42,8 +40,6 @@ export namespace Swap {
   export type Network = SwapNetwork
   export type OpenOrder = SwapOpenOrder
   export type Pool = SwapPool
-  export type TokenInfo = SwapTokenInfo
-  export type BaseTokenInfo = SwapBaseTokenInfo
   export interface Api extends SwapApi {}
 
   export type Storage = SwapStorage
@@ -53,6 +49,8 @@ export namespace Balance {
   export type Token = BalanceToken
   export type TokenInfo = BalanceToken['info']
   export type TokenPrice = BalanceToken['price']
+  export type TokenSupply = BalanceToken['supply']
+  export type TokenStatus = BalanceToken['status']
 
   export type CardanoMetadatas = BalanceCardanoMetadatas
 

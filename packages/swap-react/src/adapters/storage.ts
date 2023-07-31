@@ -14,7 +14,7 @@ export function makeSwapStorage(deps = initialDeps): Readonly<Swap.Storage> {
           .then((value) => parseNumber(value) ?? 0),
       remove: () => deps.storage.removeItem(swapStorageSlippageKey),
     },
-  } as const as Swap.Storage
+  } as const
 }
 
 export const swapStorageSlippageKey = 'swap-slippage'

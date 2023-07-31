@@ -56,9 +56,20 @@ type BalanceTokenPrice = {
   price10d: number[] //float, prices of this tokens averaged for the last 10 days, in chronological order i.e.oldest first.
 }
 
+type BalanceTokenSupply = {
+  supply: {
+    total: string // total circulating supply of the token, without decimals.
+    circulating: string | null // if set the circulating supply of the token, if null the amount in circulation is unknown.
+  }
+}
+
+type BalanceTokenStatus = 'verified' | 'unverified' | 'scam' | 'outdated'
+
 export type BalanceToken = {
   info: BalanceTokenInfo
   price: BalanceTokenPrice
+  supply: BalanceTokenSupply
+  status: BalanceTokenStatus
 }
 
 export type BalanceQuantity = `${number}`

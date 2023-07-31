@@ -3,7 +3,7 @@ import { cancelOrder, createOrder, getOrders } from './orders';
 import { getPools } from './pools';
 import { getTokens } from './tokens';
 
-export class SwapApi implements Swap.Api {
+export class OpenSwapApi {
   constructor(public readonly network: Swap.Network) {}
 
   public async createOrder(
