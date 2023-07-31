@@ -6,16 +6,18 @@ import {Boundary, Spacer, Text} from '../components'
 import globalMessages from '../i18n/global-messages'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
-import {usePrivacyMode} from '../Settings/PrivacyMode/PrivacyMode'
 import {useLockedAmount} from '../yoroi-wallets/hooks'
 
-export const LockedDeposit = () => {
-  const privacyMode = usePrivacyMode()
+type Props = {
+  privacyMode?: boolean
+}
+
+export const LockedDeposit = ({privacyMode}: Props) => {
   const wallet = useSelectedWallet()
   const loadingAmount = formatTokenWithTextWhenHidden('...', wallet.primaryToken)
   const hiddenAmount = formatTokenWithTextWhenHidden('*.******', wallet.primaryToken)
 
-  if (privacyMode === 'HIDDEN') return <FormattedAmount amount={hiddenAmount} />
+  if (privacyMode) return <FormattedAmount amount={hiddenAmount} />
 
   return (
     <Boundary

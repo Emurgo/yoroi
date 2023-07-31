@@ -1,5 +1,5 @@
-import {StatusBar as NativeStatusBar} from 'expo-status-bar'
 import React from 'react'
+import {StatusBar as NativeStatusBar} from 'react-native'
 
 import {COLORS} from '../theme'
 
@@ -9,6 +9,7 @@ type Props = {
 
 export const StatusBar = ({type}: Props) => {
   const backgroundColor = type === 'dark' ? COLORS.BACKGROUND_BLUE : COLORS.WHITE
+  const barStyle = type === 'dark' ? 'light-content' : 'dark-content'
 
-  return <NativeStatusBar style={type} backgroundColor={backgroundColor} />
+  return <NativeStatusBar barStyle={barStyle} backgroundColor={backgroundColor} />
 }

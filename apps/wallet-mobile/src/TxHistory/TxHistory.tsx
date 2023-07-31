@@ -49,7 +49,7 @@ export const TxHistory = () => {
 
   return (
     <View style={styles.scrollView}>
-      <StatusBar type="dark" />
+      <StatusBar type="light" />
 
       <View style={styles.container}>
         <CollapsibleHeader expanded={expanded}>

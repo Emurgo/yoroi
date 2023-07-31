@@ -62,7 +62,6 @@ export const ConfirmTxScreen = () => {
   }
 
   const onError = () => {
-    track.sendSummarySubmitted(assetsToSendProperties({tokens, amounts}))
     navigateTo.failedTx()
   }
 

@@ -192,7 +192,6 @@ const OnlyNightlyShelleyTestnetButton = () => {
       }
       title={`${strings.addWalletButton} (preprod)`}
       style={styles.button}
-      testID="addWalletPreprodShelleyButton"
     />
   )
 }
