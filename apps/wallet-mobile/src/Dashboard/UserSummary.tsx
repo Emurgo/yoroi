@@ -39,7 +39,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
               <Text style={styles.label}>{strings.availableFunds}:</Text>
 
               <Text bold style={styles.value} testID="userSummaryAvailableFundsText">
-                {privacyMode !== 'HIDDEN'
+                {privacyMode === 'SHOWN'
                   ? totalAdaSum != null
                     ? formatAdaWithText(asQuantity(totalAdaSum), wallet.primaryToken)
                     : '-'
@@ -57,7 +57,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
               <Text style={styles.label}>{strings.rewardsLabel}:</Text>
 
               <Text bold style={styles.value} testID="userSummaryRewardsText">
-                {privacyMode !== 'HIDDEN'
+                {privacyMode === 'SHOWN'
                   ? totalRewards != null
                     ? formatAdaWithText(asQuantity(totalRewards), wallet.primaryToken)
                     : '-'
@@ -87,7 +87,7 @@ export const UserSummary = ({totalAdaSum, totalRewards, totalDelegated, onWithdr
               <Text style={styles.label}>{strings.delegatedLabel}:</Text>
 
               <Text bold style={styles.value} testID="userSummaryDelegatedText">
-                {privacyMode !== 'HIDDEN'
+                {privacyMode === 'SHOWN'
                   ? totalDelegated != null
                     ? formatAdaWithText(asQuantity(totalDelegated), wallet.primaryToken)
                     : '-'
