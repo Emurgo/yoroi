@@ -1,7 +1,6 @@
 import { expect } from 'detox'
 import yargs from 'yargs/yargs'
 
-import { VALID_PIN } from './constants'
 import { mnemonicBadgeByWord,mnemonicByIndexText } from './screens/createWalletFlow.screen'
 import * as myWalletsScreen from './screens/myWallets.screen'
 import { pinKeyButton } from './screens/pinCode.screen'
@@ -40,7 +39,7 @@ export const enterRecoveryPhrase = async (phraseArray: string[], platform: strin
   }
 }
 
-export const prepareApp = async (): Promise<void> => {
+export const prepareApp = async (pin:string): Promise<void> => {
   await expect(element(by.text('Select Language'))).toBeVisible()
   await expect(prepareScreens.btn_SelectLanguageEnglish()).toBeVisible() 
   await prepareScreens.btn_Next().tap()
@@ -52,8 +51,8 @@ export const prepareApp = async (): Promise<void> => {
   await prepareScreens.btn_Accept().tap()
 
   await expect(pinKeyButton('1')).toBeVisible()
-  await enterPIN(VALID_PIN)
-  await enterPIN(VALID_PIN)
+  await enterPIN(pin)
+  await enterPIN(pin)
 
   await expect(myWalletsScreen.pageTitle()).toBeVisible()
 }

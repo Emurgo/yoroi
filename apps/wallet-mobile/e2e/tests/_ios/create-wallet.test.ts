@@ -1,45 +1,48 @@
 import { device, expect } from 'detox'
 
-import { SPENDING_PASSWORD,WALLET_NAME } from '../../constants'
+import * as constants from '../../constants'
 import * as createWalletFlow from '../../screens/createWalletFlow.screen'
 import * as myWalletsScreen from '../../screens/myWallets.screen'
 import {getSeedPhrase, prepareApp,repeatSeedPhrase } from '../../utils'
 
-describe('Creating a wallet', () => {
+describe('Create a wallet', () => {
+    let seedPhraseText: string[]
     beforeAll(async () => {
         await device.launchApp({ newInstance: true })
-        await prepareApp()
+        await prepareApp(constants.valid_Pin)
     });
 
-    it('add shelley-era wallet', async () => {
+    it('should be able to initiate the "create wallet" process form the home screen', async () => {
         await myWalletsScreen.addWalletTestnetButton().tap()
         await myWalletsScreen.createWalletButton().tap()
+    })    
 
+    it('should be able to set the spending password', async() => {
         await expect(createWalletFlow.credentialsView()).toBeVisible();
-        await createWalletFlow.walletNameInput().typeText(WALLET_NAME)
-   
+        await createWalletFlow.walletNameInput().typeText(constants.wallet_Name)
         await createWalletFlow.spendingPasswordInput().tap()
-        await createWalletFlow.spendingPasswordInput().typeText(`${SPENDING_PASSWORD}\n`)
-       // await device.enableSynchronization()
+        await createWalletFlow.spendingPasswordInput().typeText(`${constants.spending_Password}\n`)
         await waitFor(createWalletFlow.repeatSpendingPasswordInput()).toBeVisible().withTimeout(10000)
         await createWalletFlow.repeatSpendingPasswordInput().tap()
-        await createWalletFlow.repeatSpendingPasswordInput().typeText(SPENDING_PASSWORD)
-       // await device.enableSynchronization()
-
+        await createWalletFlow.repeatSpendingPasswordInput().typeText(constants.spending_Password)
+        
         await createWalletFlow.credentialsFormContinueButton().tap()
         await expect(createWalletFlow.mnemonicExplanationModal()).toBeVisible()
         await createWalletFlow.mnemonicExplanationModal().tap()
+    })
 
-        const seedPhraseText = await getSeedPhrase()
+    it('should be able to set the spending password', async() => {    
+        seedPhraseText = await getSeedPhrase()
         await createWalletFlow.mnemonicShowScreenConfirmButton().tap()
         await expect(createWalletFlow.mnemonicWarningModalCheckbox1()).toBeVisible()
         await createWalletFlow.mnemonicWarningModalCheckbox1().tap()
         await createWalletFlow.mnemonicWarningModalCheckbox2().tap()
         await createWalletFlow.mnemonicWarningModalConfirm().tap()
-
+    })
+    
+    it('should be able to enter and verify the stored mnemonic', async() => {   
         await repeatSeedPhrase(seedPhraseText)
         await createWalletFlow.mnemonicCheckScreenConfirmButton().tap()
-
-        await expect(myWalletsScreen.walletByNameButton(WALLET_NAME)).toBeVisible()
+        await expect(myWalletsScreen.walletByNameButton(constants.wallet_Name)).toBeVisible()
     });
   });

@@ -32,6 +32,14 @@ module.exports = {
       reversePorts: [
         8081
       ]
+    },    
+    'android.nightly.debug': {
+      type: 'android.apk',
+      binaryPath: 'android/app/build/outputs/apk/nightly/debug/app-nightly-debug.apk',
+      build: 'ENVFILE=.env.nightly cd android && ./gradlew assembleNightlyDebug assembleNightlyDebugAndroidTest -DtestBuildType=debug',
+      reversePorts: [
+        8081
+      ]
     },
     'android.nightly.release': {
       type: 'android.apk',
@@ -90,6 +98,10 @@ module.exports = {
     'android.emu.release': {
       device: 'emulator',
       app: 'android.release'
+    },
+    'android.emu.nightly.debug': {
+      device: 'emulator',
+      app: 'android.nightly.debug'
     },
     'android.emu.nightly.release': {
       device: 'emulator',

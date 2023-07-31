@@ -16,16 +16,16 @@ type RestoredWallet = {
   type: WalletType
 }
 
-export const VALID_PIN = '123456'
-export const WALLET_NAME = 'New Test Wallet'
-export const LEDGER_WALLET_NAME = 'Test Ledger'
-export const SPENDING_PASSWORD = '1234567890'
-export const ADA_TOKEN = 'ADA'
-export const TADA_TOKEN = 'TADA'
-export const STAKE_POOL_ID = 'fe662c24cf56fb98626161f76d231ac50ab7b47dd83986a30c1d4796'
-export const APP_ID = 'com.emurgo.nightly'
-export const APP_ID_PARENT = 'com.emurgo.*'
-export const NORMAL_15_WORD_WALLET: RestoredWallet = {
+export const valid_Pin = '123456'
+export const wallet_Name = 'New Test Wallet'
+export const ledger_Wallet_Name = 'Test Ledger'
+export const spending_Password = '1234567890'
+export const ada_Token = 'ADA'
+export const tada_Token = 'TADA'
+export const stake_Pool_Id = 'fe662c24cf56fb98626161f76d231ac50ab7b47dd83986a30c1d4796'
+export const app_Id = 'com.emurgo.nightly'
+export const app_Id_Parent = 'com.emurgo.*'
+export const normal_15_Word_Wallet: RestoredWallet = {
   checksum: 'CONL-2085',
   name: 'RTW-15-word',
   phrase: [
@@ -47,7 +47,7 @@ export const NORMAL_15_WORD_WALLET: RestoredWallet = {
   ],
   type: WalletType.NormalWallet,
 }
-export const NORMAL_24_WORD_WALLET: RestoredWallet = {
+export const normal_24_Word_Wallet: RestoredWallet = {
   name: 'RTW-24-word',
   checksum: 'CCPL-3231',
   phrase: [
@@ -79,6 +79,6 @@ export const NORMAL_24_WORD_WALLET: RestoredWallet = {
   type: WalletType.DaedalusWallet,
 }
 export const RESTORED_WALLETS: RestoredWallet[] = [
-  NORMAL_15_WORD_WALLET,
-  NORMAL_24_WORD_WALLET,
+  normal_15_Word_Wallet,
+  normal_24_Word_Wallet,
 ]
