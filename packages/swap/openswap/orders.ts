@@ -1,27 +1,33 @@
-import { Swap } from '@yoroi/types';
-import { SWAP_API_ENDPOINTS, axiosClient } from './config';
-import type { CancelOrderRequest, CreateOrderRequest, Order } from './types';
+import { SWAP_API_ENDPOINTS } from './config';
+import type {
+  ApiDeps,
+  CancelOrderRequest,
+  CreateOrderRequest,
+  CreateOrderResponse,
+  Order,
+} from './types';
 
 export async function createOrder(
-  network: Swap.Network,
-  request: CreateOrderRequest
-): Promise<Swap.CreateOrderResponse> {
+  deps: ApiDeps,
+  args: CreateOrderRequest
+): Promise<CreateOrderResponse> {
+  const { network, client } = deps;
   const apiUrl = SWAP_API_ENDPOINTS[network].constructSwapDatum;
-  const response = await axiosClient.get<
+  const response = await client.get<
     | { status: 'failed'; reason?: string }
     | { status: 'success'; hash: string; datum: string; address: string }
   >('/', {
     baseURL: apiUrl,
     params: {
-      walletAddr: request.address,
-      protocol: request.protocol,
-      poolId: request.poolId,
-      sellTokenPolicyID: request.sell.policyId,
-      sellTokenNameHex: request.sell.assetName,
-      sellAmount: request.sell.amount,
-      buyTokenPolicyID: request.buy.policyId,
-      buyTokenNameHex: request.buy.assetName,
-      buyAmount: request.buy.amount,
+      walletAddr: args.walletAddress,
+      protocol: args.protocol,
+      poolId: args.poolId,
+      sellTokenPolicyID: args.sell.policyId,
+      sellTokenNameHex: args.sell.assetName,
+      sellAmount: args.sell.amount,
+      buyTokenPolicyID: args.buy.policyId,
+      buyTokenNameHex: args.buy.assetName,
+      buyAmount: args.buy.amount,
     },
   });
 
@@ -32,27 +38,24 @@ export async function createOrder(
   }
 
   if (response.data.status === 'failed') {
-    throw new Error(response.data.reason || 'Unexpected error occurred');
+    throw new Error(response.data.reason ?? 'Unexpected error occurred');
   }
 
-  return {
-    datum: response.data.datum,
-    datumHash: response.data.hash,
-    contractAddress: response.data.address,
-  };
+  return response.data;
 }
 
 export async function cancelOrder(
-  network: Swap.Network,
-  request: CancelOrderRequest,
+  deps: ApiDeps,
+  args: CancelOrderRequest
 ): Promise<string> {
+  const { network, client } = deps;
   const apiUrl = SWAP_API_ENDPOINTS[network].cancelSwapTransaction;
-  const response = await axiosClient.get('/', {
+  const response = await client.get('/', {
     baseURL: apiUrl,
     params: {
-      wallet: request.walletAddress,
-      utxo: request.orderUTxO,
-      collateralUTxO: request.collateralUTxO,
+      wallet: args.walletAddress,
+      utxo: args.orderUTxO,
+      collateralUTxO: args.collateralUTxO,
     },
   });
 
@@ -66,11 +69,13 @@ export async function cancelOrder(
 }
 
 export async function getOrders(
-  network: Swap.Network,
-  stakeKeyHash: string
+  deps: ApiDeps,
+  args: { stakeKeyHash: string }
 ): Promise<Order[]> {
+  const { network, client } = deps;
+  const { stakeKeyHash } = args;
   const apiUrl = SWAP_API_ENDPOINTS[network].getPools;
-  const response = await axiosClient.get<Order[]>('/', {
+  const response = await client.get<Order[]>('/', {
     baseURL: apiUrl,
     params: {
       'stake-key-hash': stakeKeyHash,

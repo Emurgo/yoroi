@@ -1,3 +1,5 @@
+import { AxiosInstance } from 'axios';
+
 export type CancelOrderRequest = {
   orderUTxO: string; // order UTxO from the smart contract to cancel. e.g. "txhash#0".
   collateralUTxO: string; // collateral UTxOs to use for canceling the order in cbor format.
@@ -5,7 +7,7 @@ export type CancelOrderRequest = {
 };
 
 export type CreateOrderRequest = {
-  address: string;
+  walletAddress: string;
   protocol: Protocol;
   poolId?: string; // only required for SundaeSwap trades.
   sell: {
@@ -19,6 +21,10 @@ export type CreateOrderRequest = {
     amount: string;
   };
 };
+
+export type CreateOrderResponse =
+  | { status: 'failed'; reason?: string }
+  | { status: 'success'; hash: string; datum: string; address: string };
 
 export type Order = {
   provider: Protocol;
@@ -35,9 +41,16 @@ export type Order = {
 };
 
 export type Protocol = 'minswap' | 'sundaeswap' | 'wingriders' | 'muesliswap';
+export type Network = 'mainnet' | 'preprod';
 
 export type Pool = {
-  provider: 'minswap' | 'sundaeswap' | 'wingriders' | 'muesliswap_v1' | 'muesliswap_v2' | 'muesliswap_v3';
+  provider:
+    | 'minswap'
+    | 'sundaeswap'
+    | 'wingriders'
+    | 'muesliswap_v1'
+    | 'muesliswap_v2'
+    | 'muesliswap_v3';
   fee: string; // % pool liquidity provider fee, usually 0.3.
   tokenA: {
     amount: string; // amount of tokenA in the pool, without decimals.
@@ -94,18 +107,25 @@ export type Token = {
     bidPrice: number; // highest bid price in base currency (e.g. ADA).
     priceChange: {
       '24h': number; // float, price change last 24 hours.
-      '7d': number;// float, price change last 7 days.
+      '7d': number; // float, price change last 7 days.
     };
     quoteDecimalPlaces: number; // decimal places of quote token.
     baseDecimalPlaces: number; // decimal places of base token.
     price10d: number[]; //float, prices of this tokens averaged for the last 10 days, in chronological order i.e.oldest first.
-  }
+  };
 };
 
-export type TokenAddress = {
-  policyId: string;
-  assetName: string;
-} | {
-  policyId: string;
-  assetNameHex: string;
+export type TokenAddress =
+  | {
+      policyId: string;
+      assetName: string;
+    }
+  | {
+      policyId: string;
+      assetNameHex: string;
+    };
+
+export type ApiDeps = {
+  network: Network;
+  client: AxiosInstance;
 };

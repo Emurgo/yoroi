@@ -3,28 +3,35 @@ import { getTokens } from './tokens';
 import { axiosClient } from './config';
 
 vi.mock('./config.ts');
-const mockAxios = axiosClient as Mocked<typeof axiosClient>;
 
 describe('SwapTokensApi', () => {
   it('should get all supported tokens list', async () => {
+    const mockAxios = axiosClient as Mocked<typeof axiosClient>;
     mockAxios.get.mockImplementationOnce(() =>
       Promise.resolve({ status: 200, data: mockedGetTokensRes })
     );
-    const result = await getTokens('mainnet');
+
+    const result = await getTokens({ network: 'mainnet', client: mockAxios });
+
     expect(result).to.be.lengthOf(1);
   });
 
   it('should return empty list on preprod network', async () => {
-    expect(await getTokens('preprod')).to.be.empty;
+    const mockAxios = axiosClient as Mocked<typeof axiosClient>;
+
+    const result = await getTokens({ network: 'preprod', client: mockAxios });
+
+    expect(result).to.be.empty;
   });
 
   it('should throw error for invalid response', async () => {
-    await expect(async () => {
-      mockAxios.get.mockImplementationOnce(() =>
-        Promise.resolve({ status: 500 })
-      );
-      await getTokens('mainnet');
-    }).rejects.toThrow('Failed to fetch tokens');
+    const mockAxios = axiosClient as Mocked<typeof axiosClient>;
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.resolve({ status: 500 })
+    );
+    expect(() =>
+      getTokens({ network: 'mainnet', client: mockAxios })
+    ).rejects.toThrow('Failed to fetch tokens');
   });
 });
 

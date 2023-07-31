@@ -3,10 +3,10 @@ import { getPools } from './pools';
 import { axiosClient } from './config';
 
 vi.mock('./config.ts');
-const mockAxios = axiosClient as Mocked<typeof axiosClient>;
 
 describe('SwapPoolsApi', () => {
   it('should get pools list for a given token pair', async () => {
+    const mockAxios = axiosClient as Mocked<typeof axiosClient>;
     mockAxios.get.mockImplementationOnce(() =>
       Promise.resolve({
         status: 200,
@@ -15,19 +15,22 @@ describe('SwapPoolsApi', () => {
     );
 
     const result = await getPools(
-      'mainnet',
-      getPoolsParams.sell,
-      getPoolsParams.buy
+      { network: 'mainnet', client: mockAxios },
+      { tokenA: getPoolsParams.sell, tokenB: getPoolsParams.buy }
     );
     expect(result).to.be.of.lengthOf(1);
   });
 
   it('should throw error for invalid response', async () => {
+    const mockAxios = axiosClient as Mocked<typeof axiosClient>;
     await expect(async () => {
       mockAxios.get.mockImplementationOnce(() =>
         Promise.resolve({ status: 500 })
       );
-      await getPools('preprod', getPoolsParams.sell, getPoolsParams.buy);
+      await getPools(
+        { network: 'preprod', client: mockAxios },
+        { tokenA: getPoolsParams.sell, tokenB: getPoolsParams.buy }
+      );
     }).rejects.toThrow('Failed to fetch pools for token pair');
   });
 });

@@ -1,4 +1,4 @@
-import { Swap } from '@yoroi/types';
+import { AxiosInstance } from 'axios';
 import {
   cancelOrder, // returns an unsigned transaction to cancel the order.
   createOrder, // returns a datum and a contract address to create the order transaction.
@@ -6,36 +6,59 @@ import {
 } from './orders';
 import { getPools } from './pools';
 import { getTokens } from './tokens';
+import { CancelOrderRequest, CreateOrderRequest, Network } from './types';
+import { axiosClient } from './config';
 
 export class OpenSwapApi {
-  constructor(public readonly network: Swap.Network) {}
-
-  public async createOrder(
-    order: Swap.CreateOrderData
+  constructor(
+    public readonly network: Network,
+    private readonly client: AxiosInstance = axiosClient
   ) {
-    // return createOrder(this.network, order);
+    if (!supportedNetworks.includes(network)) {
+      throw new Error(`Supported networks are ${supportedNetworks.join(', ')}, got ${network}`);
+    }
   }
 
-  public async cancelOrder(
-    orderUTxO: string,
-    collateralUTxO: string,
-    walletAddress: string
-  ) {
-    return cancelOrder(this.network, {orderUTxO, collateralUTxO, walletAddress});
+  public async createOrder(orderData: CreateOrderRequest) {
+    return createOrder(
+      { network: this.network, client: this.client },
+      orderData
+    );
+  }
+
+  public async cancelOrder(orderData: CancelOrderRequest) {
+    return cancelOrder(
+      { network: this.network, client: this.client },
+      orderData
+    );
   }
 
   public async getOrders(stakeKeyHash: string) {
-    return getOrders(this.network, stakeKeyHash);
+    return getOrders(
+      { network: this.network, client: this.client },
+      { stakeKeyHash }
+    );
   }
 
-  public async getPools(
-    tokenA: { policyId: string; assetName: string; },
-    tokenB: { policyId: string; assetName: string; },
-  ) {
-    return getPools(this.network, tokenA, tokenB);
+  public async getPools({
+    tokenA,
+    tokenB,
+  }: {
+    tokenA: { policyId: string; assetName: string };
+    tokenB: { policyId: string; assetName: string };
+  }) {
+    return getPools(
+      { network: this.network, client: this.client },
+      { tokenA, tokenB }
+    );
   }
 
-  public getTokens(policyId = '', assetName = '') {
-    return getTokens(this.network, policyId, assetName);
+  public getTokens({ policyId = '', assetName = '' } = {}) {
+    return getTokens(
+      { network: this.network, client: this.client },
+      { policyId, assetName }
+    );
   }
 }
+
+const supportedNetworks: Network[] = ['mainnet', 'preprod'];
