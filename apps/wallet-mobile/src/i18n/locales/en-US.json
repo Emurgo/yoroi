@@ -216,6 +216,7 @@
   "components.settings.applicationsettingsscreen.crashReporting": "Send crash report to Emurgo",
   "components.settings.applicationsettingsscreen.appSettingsTitle": "App settings",
   "components.settings.applicationsettingsscreen.walletType": "Wallet type",
+  "components.settings.applicationsettingsscreen.analytics": "Analytics",
   "components.send.sendscreen.submittedTxTitle": "Transaction submitted",
   "components.send.sendscreen.submittedTxText": "Check this transaction in the list of wallet transactions",
   "components.send.sendscreen.submittedTxButton": "Go to transactions",

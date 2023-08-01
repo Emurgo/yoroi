@@ -6,7 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {ChangePinScreen} from '../../auth'
 import {EnableLoginWithPin} from '../../auth/EnableLoginWithPin'
-import {Boundary} from '../../components'
+import {Analytics, Boundary} from '../../components'
 import globalMessages from '../../i18n/global-messages'
 import {defaultStackNavigationOptions, SettingsStackRoutes, SettingsTabRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
@@ -117,6 +117,10 @@ export const SettingsScreenNavigator = () => {
         options={{title: strings.customPinTitle}}
         component={EnableLoginWithPinWrapper}
       />
+
+      <Stack.Screen name="analytics" options={{title: strings.analytics}}>
+        {() => <Analytics type="settings" />}
+      </Stack.Screen>
     </Stack.Navigator>
   )
 }
@@ -222,6 +226,10 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.about',
     defaultMessage: '!!!About',
   },
+  analytics: {
+    id: 'components.settings.applicationsettingsscreen.analytics',
+    defaultMessage: '!!!Analytics',
+  },
 })
 
 const useStrings = () => {
@@ -244,5 +252,6 @@ const useStrings = () => {
     currency: intl.formatMessage(globalMessages.currency),
     aboutTitle: intl.formatMessage(messages.aboutTitle),
     appSettingsTitle: intl.formatMessage(messages.appSettingsTitle),
+    analytics: intl.formatMessage(messages.analytics),
   }
 }
