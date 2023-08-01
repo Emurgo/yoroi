@@ -1,11 +1,11 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, ScrollView, StyleSheet, Switch, View} from 'react-native'
+import {ScrollView, StyleSheet, Switch, View} from 'react-native'
 
-import image from '../../assets/img/analytics.png'
 import {Button, Text} from '../../components'
 import {useMetrics} from '../../metrics/metricsManager'
 import {spacing} from '../../theme'
+import {AnalyticsImage} from './AnalyticsImage'
 
 type Props = {
   type: 'notice' | 'settings'
@@ -13,55 +13,33 @@ type Props = {
 }
 
 export const Analytics = ({type, onClose}: Props) => {
-  const intl = useIntl()
+  const strings = useStrings()
   const metrics = useMetrics()
 
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.content}>
         <View style={styles.heading}>
-          <Text style={styles.title}>{intl.formatMessage(messages.title)}</Text>
+          <Text style={styles.title}>{strings.title}</Text>
 
-          <Image source={image} />
+          <AnalyticsImage />
         </View>
 
-        <Text style={styles.paragraph}>{intl.formatMessage(messages.header)}</Text>
+        <Text style={styles.paragraph}>{strings.header}</Text>
 
-        <Text style={styles.paragraph}>{intl.formatMessage(messages.description)}</Text>
+        <Text style={styles.paragraph}>{strings.description}</Text>
 
         <View style={styles.list}>
-          <Text style={styles.text}>
-            <Text style={styles.tick}>✓</Text>
+          {list.map(({style, icon, key}) => (
+            <Text style={styles.text} key={key}>
+              <Text style={style}>{icon}</Text>
 
-            {intl.formatMessage(messages.anonymous, bold)}
-          </Text>
-
-          <Text style={styles.text}>
-            <Text style={styles.tick}>✓</Text>
-
-            {intl.formatMessage(messages.optout, bold)}
-          </Text>
-
-          <Text style={styles.text}>
-            <Text style={styles.cross}>✕</Text>
-
-            {intl.formatMessage(messages.private, bold)}
-          </Text>
-
-          <Text style={styles.text}>
-            <Text style={styles.cross}>✕</Text>
-
-            {intl.formatMessage(messages.noip, bold)}
-          </Text>
-
-          <Text style={styles.text}>
-            <Text style={styles.cross}>✕</Text>
-
-            {intl.formatMessage(messages.nosell, bold)}
-          </Text>
+              {strings[key]}
+            </Text>
+          ))}
         </View>
 
-        <Text>{intl.formatMessage(messages.more)}</Text>
+        <Text>{strings.more}</Text>
       </View>
 
       {type === 'notice' && (
@@ -73,7 +51,7 @@ export const Analytics = ({type, onClose}: Props) => {
               metrics.disable()
               onClose?.()
             }}
-            title={intl.formatMessage(messages.skip)}
+            title={strings.skip}
             style={styles.button}
           />
 
@@ -84,7 +62,7 @@ export const Analytics = ({type, onClose}: Props) => {
               metrics.enable()
               onClose?.()
             }}
-            title={intl.formatMessage(messages.accept)}
+            title={strings.accept}
             style={styles.button}
           />
         </View>
@@ -92,7 +70,7 @@ export const Analytics = ({type, onClose}: Props) => {
 
       {type === 'settings' && (
         <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-          <Text bold>{intl.formatMessage(messages.toggle)}</Text>
+          <Text bold>{strings.toggle}</Text>
 
           <Switch
             value={metrics.isEnabled}
@@ -103,8 +81,6 @@ export const Analytics = ({type, onClose}: Props) => {
     </ScrollView>
   )
 }
-
-const bold = {b: (text) => <Text bold>{text}</Text>}
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -153,6 +129,34 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
 })
+
+const list = [
+  {style: styles.tick, icon: '✓', key: 'anonymous'},
+  {style: styles.tick, icon: '✓', key: 'optout'},
+  {style: styles.cross, icon: '✕', key: 'private'},
+  {style: styles.cross, icon: '✕', key: 'noip'},
+  {style: styles.cross, icon: '✕', key: 'nosell'},
+] as const
+
+const bold = {b: (text) => <Text bold>{text}</Text>}
+
+const useStrings = () => {
+  const intl = useIntl()
+  return {
+    title: intl.formatMessage(messages.title),
+    header: intl.formatMessage(messages.header),
+    description: intl.formatMessage(messages.description),
+    anonymous: intl.formatMessage(messages.anonymous),
+    optout: intl.formatMessage(messages.optout),
+    private: intl.formatMessage(messages.private, bold),
+    noip: intl.formatMessage(messages.noip, bold),
+    nosell: intl.formatMessage(messages.nosell, bold),
+    more: intl.formatMessage(messages.more),
+    skip: intl.formatMessage(messages.skip),
+    accept: intl.formatMessage(messages.accept),
+    toggle: intl.formatMessage(messages.toggle),
+  }
+}
 
 const messages = defineMessages({
   title: {
