@@ -3,19 +3,19 @@ import {useIntl} from 'react-intl'
 import {View} from 'react-native'
 
 import {Boundary, Spacer, Text} from '../components'
+import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import globalMessages from '../i18n/global-messages'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
-import {usePrivacyMode} from '../Settings/PrivacyMode/PrivacyMode'
 import {useLockedAmount} from '../yoroi-wallets/hooks'
 
 export const LockedDeposit = () => {
-  const privacyMode = usePrivacyMode()
+  const {isPrivacyOff} = usePrivacyMode()
   const wallet = useSelectedWallet()
   const loadingAmount = formatTokenWithTextWhenHidden('...', wallet.primaryToken)
   const hiddenAmount = formatTokenWithTextWhenHidden('*.******', wallet.primaryToken)
 
-  if (privacyMode === 'HIDDEN') return <FormattedAmount amount={hiddenAmount} />
+  if (isPrivacyOff) return <FormattedAmount amount={hiddenAmount} />
 
   return (
     <Boundary

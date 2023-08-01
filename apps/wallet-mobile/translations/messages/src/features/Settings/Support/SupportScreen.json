@@ -1,0 +1,92 @@
+[
+  {
+    "id": "components.settings.settingsscreen.faqLabel",
+    "defaultMessage": "!!!See frequently asked questions",
+    "file": "src/features/Settings/Support/SupportScreen.tsx",
+    "start": {
+      "line": 53,
+      "column": 12,
+      "index": 1328
+    },
+    "end": {
+      "line": 56,
+      "column": 3,
+      "index": 1445
+    }
+  },
+  {
+    "id": "components.settings.settingsscreen.faqDescription",
+    "defaultMessage": "!!!If you are experiencing issues, please see the FAQ on Yoroi website for quidance on known issues.",
+    "file": "src/features/Settings/Support/SupportScreen.tsx",
+    "start": {
+      "line": 57,
+      "column": 18,
+      "index": 1465
+    },
+    "end": {
+      "line": 61,
+      "column": 3,
+      "index": 1661
+    }
+  },
+  {
+    "id": "components.settings.settingsscreen.faqUrl",
+    "defaultMessage": "!!!https://yoroi-wallet.com/faq/",
+    "file": "src/features/Settings/Support/SupportScreen.tsx",
+    "start": {
+      "line": 62,
+      "column": 10,
+      "index": 1673
+    },
+    "end": {
+      "line": 65,
+      "column": 3,
+      "index": 1787
+    }
+  },
+  {
+    "id": "components.settings.settingsscreen.reportLabel",
+    "defaultMessage": "!!!Report a problem",
+    "file": "src/features/Settings/Support/SupportScreen.tsx",
+    "start": {
+      "line": 66,
+      "column": 15,
+      "index": 1804
+    },
+    "end": {
+      "line": 69,
+      "column": 3,
+      "index": 1910
+    }
+  },
+  {
+    "id": "components.settings.settingsscreen.reportDescription",
+    "defaultMessage": "!!!If the FAQ does not solve the issue you are experiencing, please use our Support request feature.",
+    "file": "src/features/Settings/Support/SupportScreen.tsx",
+    "start": {
+      "line": 70,
+      "column": 21,
+      "index": 1933
+    },
+    "end": {
+      "line": 74,
+      "column": 3,
+      "index": 2132
+    }
+  },
+  {
+    "id": "components.settings.settingsscreen.reportUrl",
+    "defaultMessage": "!!!https://yoroi-wallet.com/support/",
+    "file": "src/features/Settings/Support/SupportScreen.tsx",
+    "start": {
+      "line": 75,
+      "column": 13,
+      "index": 2147
+    },
+    "end": {
+      "line": 78,
+      "column": 3,
+      "index": 2268
+    }
+  }
+]
