@@ -25,7 +25,11 @@ export const Analytics = ({type, onClose}: Props) => {
       </View>
 
       <View style={styles.centered}>
-        {type === 'settings' && <Text style={styles.paragraph} bold>{strings.header}</Text>}
+        {type === 'settings' && (
+          <Text style={styles.paragraph} bold>
+            {strings.header}
+          </Text>
+        )}
 
         <Text style={styles.paragraph} bold={type === 'notice'}>
           {strings.description}
