@@ -43,7 +43,7 @@
     "run:android:dev:debug": "ENVFILE=.env react-native run-android --mode=devDebug --appIdSuffix=dev --verbose",
     "run:android:nightly:debug": "ENVFILE=.env.nightly react-native run-android --mode=nightlyDebug --appIdSuffix=nightly --verbose",
     "run:android:nightly:release": "ENVFILE=.env.nightly react-native run-android --mode=nightlyRelease --appIdSuffix=nightly --verbose",
-    "run:ios:yoroi:debug": "ENVFILE=.env react-native run-ios --mode=Debug --scheme=yoroi --verbose",
+    "run:ios:dev:debug": "ENVFILE=.env react-native run-ios --mode=Debug --scheme=yoroi --verbose",
     "run:ios:nightly:debug": "ENVFILE=.env.nightly react-native run-ios --mode=Debug --scheme=nightly --verbose",
     "run:ios:nightly:release": "ENVFILE=.env.nightly react-native run-ios --mode=Release --scheme=nightly --verbose",
     "stag-ios": "react-native run-ios --scheme=emurgo-staging --configuration=Debug",
