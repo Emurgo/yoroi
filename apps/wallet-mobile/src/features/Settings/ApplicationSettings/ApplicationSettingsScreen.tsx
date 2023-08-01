@@ -117,12 +117,6 @@ export const ApplicationSettingsScreen = () => {
               disabled={isNightly() || isTogglePrivacyModeLoading}
             />
           </SettingsItem>
-
-          <NavigatedSettingsItem
-            icon={<Icon.Pin {...iconProps} />}
-            label={strings.changePin}
-            navigateTo="change-custom-pin"
-          />
         </SettingsSection>
       </ScrollView>
     </SafeAreaView>
