@@ -1,10 +1,10 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, Switch, View} from 'react-native'
+import {Linking, ScrollView, StyleSheet, Switch, TouchableOpacity, View} from 'react-native'
 
 import {Button, Text} from '../../components'
 import {useMetrics} from '../../metrics/metricsManager'
-import {spacing} from '../../theme'
+import {COLORS, spacing} from '../../theme'
 import {AnalyticsImage} from './AnalyticsImage'
 
 type Props = {
@@ -18,29 +18,33 @@ export const Analytics = ({type, onClose}: Props) => {
 
   return (
     <ScrollView style={styles.scrollView}>
-      <View style={styles.content}>
-        <View style={styles.heading}>
-          <Text style={styles.title}>{strings.title}</Text>
+      <View style={styles.centered}>
+        {type === 'notice' && <Text style={styles.title}>{strings.header}</Text>}
 
-          <AnalyticsImage />
-        </View>
-
-        <Text style={styles.paragraph}>{strings.header}</Text>
-
-        <Text style={styles.paragraph}>{strings.description}</Text>
-
-        <View style={styles.list}>
-          {list.map(({style, icon, key}) => (
-            <Text style={styles.text} key={key}>
-              <Text style={style}>{icon}</Text>
-
-              {strings[key]}
-            </Text>
-          ))}
-        </View>
-
-        <Text>{strings.more}</Text>
+        <AnalyticsImage />
       </View>
+
+      <View style={styles.centered}>
+        {type === 'settings' && <Text style={styles.paragraph} bold>{strings.header}</Text>}
+
+        <Text style={styles.paragraph} bold={type === 'notice'}>
+          {strings.description}
+        </Text>
+      </View>
+
+      <View style={styles.list}>
+        {list.map(({style, icon, key}) => (
+          <View key={key} style={styles.item}>
+            <Text style={style}>{icon}</Text>
+
+            <Text style={styles.text}>{strings[key]}</Text>
+          </View>
+        ))}
+      </View>
+
+      <TouchableOpacity onPress={() => Linking.openURL('')}>
+        <Text style={styles.link}>{strings.more}</Text>
+      </TouchableOpacity>
 
       {type === 'notice' && (
         <View style={styles.buttons}>
@@ -52,7 +56,7 @@ export const Analytics = ({type, onClose}: Props) => {
               onClose?.()
             }}
             title={strings.skip}
-            style={styles.button}
+            style={styles.skip}
           />
 
           <Button
@@ -63,7 +67,6 @@ export const Analytics = ({type, onClose}: Props) => {
               onClose?.()
             }}
             title={strings.accept}
-            style={styles.button}
           />
         </View>
       )}
@@ -84,7 +87,7 @@ export const Analytics = ({type, onClose}: Props) => {
 
 const styles = StyleSheet.create({
   scrollView: {
-    paddingRight: 10,
+    marginHorizontal: 10,
   },
   text: {
     fontSize: 14,
@@ -93,16 +96,23 @@ const styles = StyleSheet.create({
   list: {
     marginBottom: spacing.paragraphBottomMargin,
   },
+  item: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
   paragraph: {
     marginBottom: spacing.paragraphBottomMargin,
     fontSize: 14,
     lineHeight: 22,
+    textAlign: 'center',
   },
-  content: {
-    flex: 1,
-    marginBottom: 24,
+  link: {
+    color: COLORS.BLUE_LIGHTER,
+    textAlign: 'center',
+    marginBottom: spacing.paragraphBottomMargin,
   },
-  heading: {
+  centered: {
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.paragraphBottomMargin,
@@ -115,18 +125,19 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flexDirection: 'column',
+    gap: 8,
     marginTop: 12,
   },
-  button: {
-    marginHorizontal: 10,
+  skip: {
+    borderWidth: 0,
   },
   tick: {
-    color: 'blue',
-    marginRight: 12,
+    color: COLORS.DARK_BLUE,
+    marginRight: 8,
   },
   cross: {
-    color: 'red',
-    marginRight: 12,
+    color: COLORS.RED,
+    marginRight: 8,
   },
 })
 
@@ -143,7 +154,6 @@ const bold = {b: (text) => <Text bold>{text}</Text>}
 const useStrings = () => {
   const intl = useIntl()
   return {
-    title: intl.formatMessage(messages.title),
     header: intl.formatMessage(messages.header),
     description: intl.formatMessage(messages.description),
     anonymous: intl.formatMessage(messages.anonymous),
@@ -159,10 +169,6 @@ const useStrings = () => {
 }
 
 const messages = defineMessages({
-  title: {
-    id: 'components.analytics.title',
-    defaultMessage: '!!!User insights',
-  },
   header: {
     id: 'components.analytics.header',
     defaultMessage: '!!!Join the journey to improve Yoroi',
