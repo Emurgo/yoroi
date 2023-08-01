@@ -82,7 +82,9 @@ export const asYoroiPool = (openswapPool: Pool): Swap.Pool => {
     tokenA,
     tokenB,
     timestamp,
-    ...rest
+    provider,
+    price,
+    poolId,
   } = openswapPool
   const pool: Swap.Pool = {
     batcherFee: asYoroiAmount(batcherFee),
@@ -92,7 +94,9 @@ export const asYoroiPool = (openswapPool: Pool): Swap.Pool => {
     tokenA: asYoroiAmount(tokenA),
     tokenB: asYoroiAmount(tokenB),
     lastUpdate: timestamp,
-    ...rest,
+    provider,
+    price,
+    poolId,
   }
   return pool
 }
