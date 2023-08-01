@@ -24,7 +24,7 @@ export const ApplicationSettingsScreen = () => {
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? supportedLanguages['en-US']
 
-  const {isPrivacyOff, togglePrivacyMode, isTogglePrivacyModeLoading} = usePrivacyMode()
+  const {isTogglePrivacyModeLoading} = usePrivacyMode()
 
   const {navigation} = useWalletNavigation()
   const {currency} = useCurrencyContext()
@@ -45,10 +45,6 @@ export const ApplicationSettingsScreen = () => {
         },
       })
     }
-  }
-
-  const onTogglePrivacyMode = () => {
-    togglePrivacyMode()
   }
 
   return (
@@ -94,7 +90,7 @@ export const ApplicationSettingsScreen = () => {
             label={strings.privacyMode}
             info={strings.privacyModeInfo}
           >
-            <Switch value={isPrivacyOff} onValueChange={onTogglePrivacyMode} disabled={isTogglePrivacyModeLoading} />
+            <PrivacyModeSwitch />
           </SettingsItem>
 
           <SettingsItem
@@ -125,6 +121,22 @@ export const ApplicationSettingsScreen = () => {
       </ScrollView>
     </SafeAreaView>
   )
+}
+
+const PrivacyModeSwitch = () => {
+  const {isPrivacyOff, togglePrivacyMode, isTogglePrivacyModeLoading} = usePrivacyMode()
+  const [isLocalPrivacyOff, setIsLocalPrivacyOff] = React.useState(isPrivacyOff)
+
+  const onTogglePrivacyMode = (switchValue) => {
+    setIsLocalPrivacyOff(switchValue)
+    togglePrivacyMode()
+  }
+
+  React.useEffect(() => {
+    setIsLocalPrivacyOff(isPrivacyOff)
+  }, [isPrivacyOff])
+
+  return <Switch value={isLocalPrivacyOff} onValueChange={onTogglePrivacyMode} disabled={isTogglePrivacyModeLoading} />
 }
 
 const useStrings = () => {
