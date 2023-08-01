@@ -123,6 +123,8 @@ export const ApplicationSettingsScreen = () => {
   )
 }
 
+
+// to avoid switch jumps
 const PrivacyModeSwitch = () => {
   const {isPrivacyOff, togglePrivacyMode, isTogglePrivacyModeLoading} = usePrivacyMode()
   const [isLocalPrivacyOff, setIsLocalPrivacyOff] = React.useState(isPrivacyOff)
@@ -133,7 +135,10 @@ const PrivacyModeSwitch = () => {
   }
 
   React.useEffect(() => {
-    setIsLocalPrivacyOff(isPrivacyOff)
+    if (isLocalPrivacyOff !== isPrivacyOff) {
+      setIsLocalPrivacyOff(isPrivacyOff)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPrivacyOff])
 
   return <Switch value={isLocalPrivacyOff} onValueChange={onTogglePrivacyMode} disabled={isTogglePrivacyModeLoading} />
