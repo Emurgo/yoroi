@@ -8,17 +8,16 @@ import {
 import {MetricsModule, MetricsFactoryOptions} from './metrics/module'
 import {MetricsStorage} from './metrics/storage'
 import {MetricsTrack} from './metrics/track'
+import {SwapApi} from './swap/api'
+import {SwapFactoryOptions, SwapProtocol} from './swap/module'
 import {
-  SwapFactoryOptions,
-  SwapOrderType,
-  SwapProtocol,
-  SwapOpenOrder,
-  SwapNetwork,
-  SwapPool,
-  SwapCreateOrderResponse,
+  SwapCancelOrderData,
   SwapCreateOrderData,
-  SwapApi,
-} from './swap/module'
+  SwapCreateOrderResponse,
+  SwapOpenOrder,
+  SwapOrderType,
+} from './swap/order'
+import {SwapPool} from './swap/pool'
 import {SwapStorage} from './swap/storage'
 
 export namespace Metrics {
@@ -35,9 +34,9 @@ export namespace Swap {
 
   export type CreateOrderData = SwapCreateOrderData
   export type CreateOrderResponse = SwapCreateOrderResponse
+  export type CancelOrderData = SwapCancelOrderData
   export type OrderType = SwapOrderType
   export type Protocol = SwapProtocol
-  export type Network = SwapNetwork
   export type OpenOrder = SwapOpenOrder
   export type Pool = SwapPool
   export interface Api extends SwapApi {}

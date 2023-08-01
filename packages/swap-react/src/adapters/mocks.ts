@@ -21,7 +21,7 @@ export function makeMockSwapStorage(): Readonly<Swap.Storage> {
 
   const reset: Swap.Storage['reset'] = () => {
     console.debug('[swap-react] makeMockSwapStorage reset')
-    return Promise.all([slippage.remove])
+    return Promise.all([slippage.remove()])
   }
 
   return {

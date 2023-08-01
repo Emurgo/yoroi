@@ -14,6 +14,7 @@ export function makeSwapStorage(deps = initialDeps): Readonly<Swap.Storage> {
           .then((value) => parseNumber(value) ?? 0),
       remove: () => deps.storage.removeItem(swapStorageSlippageKey),
     },
+    reset: () => Promise.all([deps.storage.removeItem(swapStorageSlippageKey)]),
   } as const
 }
 

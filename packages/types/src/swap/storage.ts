@@ -5,5 +5,5 @@ export type SwapStorage = {
     save(slippage: number): Promise<void>
   }
 
-  reset(): Promise<[() => Promise<void>]>
+  reset(): Promise<void[]>
 }

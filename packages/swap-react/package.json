@@ -59,6 +59,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
+    "@emurgo/cip14-js": "^3.0.1",
+    "@yoroi/swap": "0.0.1",
     "@yoroi/types": "1.0.4",
     "immer": "^10.0.2"
   },
