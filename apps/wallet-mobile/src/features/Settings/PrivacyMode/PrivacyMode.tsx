@@ -33,6 +33,23 @@ export const useWritePrivacyMode = ({...options}: UseMutationOptions<void, Error
   return mutation.mutate
 }
 
+export const useTooglePrivacyMode = ({...options}: UseMutationOptions<void, Error, void> = {}) => {
+  const storage = useStorage()
+  const privacyMode = useReadPrivacyMode()
+
+  const mutation = useMutationWithInvalidations({
+    mutationFn: async () =>
+      storage.join('appSettings/').setItem('privacyMode', privacyMode === 'SHOWN' ? 'HIDDEN' : 'SHOWN'),
+    invalidateQueries: [['privacyMode']],
+    ...options,
+  })
+
+  return {
+    togglePrivacyMode: mutation.mutate,
+    isTogglePrivacyModeLoading: mutation.isLoading,
+  }
+}
+
 export type PrivacyMode = 'SHOWN' | 'HIDDEN'
 const defaultPrivacyMode: PrivacyMode = 'SHOWN'
 
@@ -43,16 +60,18 @@ const parsePrivacyMode = (data: unknown) => {
   return isPrivacyMode(parsed) ? parsed : undefined
 }
 
-export const useTogglePrivacyMode = () => {
-  const privacyMode = useReadPrivacyMode()
-  const writePrivacyMode = useWritePrivacyMode()
-  return () => writePrivacyMode(privacyMode === 'SHOWN' ? 'HIDDEN' : 'SHOWN')
-}
-
 export const usePrivacyMode = () => {
+  const privacyMode = useReadPrivacyMode()
+  const {togglePrivacyMode, isTogglePrivacyModeLoading} = useTooglePrivacyMode()
+  const writePrivacyMode = useWritePrivacyMode()
+
   return {
-    privacyMode: useReadPrivacyMode(),
-    writePrivacyMode: useWritePrivacyMode(),
-    togglePrivacyMode: useTogglePrivacyMode(),
+    isPrivacyOff: privacyMode === 'HIDDEN',
+    isPrivacyOn: privacyMode === 'SHOWN',
+    privacyMode,
+    togglePrivacyMode,
+    isTogglePrivacyModeLoading,
+    setPrivacyModeOff: () => writePrivacyMode('HIDDEN'),
+    setPrivacyModeOn: () => writePrivacyMode('SHOWN'),
   }
 }

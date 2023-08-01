@@ -24,7 +24,7 @@ export const ApplicationSettingsScreen = () => {
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? supportedLanguages['en-US']
 
-  const {privacyMode, togglePrivacyMode} = usePrivacyMode()
+  const {isPrivacyOff, togglePrivacyMode, isTogglePrivacyModeLoading} = usePrivacyMode()
 
   const {navigation} = useWalletNavigation()
   const {currency} = useCurrencyContext()
@@ -45,6 +45,10 @@ export const ApplicationSettingsScreen = () => {
         },
       })
     }
+  }
+
+  const onTogglePrivacyMode = () => {
+    togglePrivacyMode()
   }
 
   return (
@@ -90,7 +94,7 @@ export const ApplicationSettingsScreen = () => {
             label={strings.privacyMode}
             info={strings.privacyModeInfo}
           >
-            <Switch value={privacyMode === 'HIDDEN'} onValueChange={togglePrivacyMode} />
+            <Switch value={isPrivacyOff} onValueChange={onTogglePrivacyMode} disabled={isTogglePrivacyModeLoading} />
           </SettingsItem>
 
           <SettingsItem
@@ -99,7 +103,11 @@ export const ApplicationSettingsScreen = () => {
             info={strings.biometricsSignInInfo}
             disabled={!authOsEnabled}
           >
-            <Switch value={authSetting === 'os'} onValueChange={onToggleAuthWithOs} disabled={!authOsEnabled} />
+            <Switch
+              value={authSetting === 'os'}
+              onValueChange={onToggleAuthWithOs}
+              disabled={!authOsEnabled || isTogglePrivacyModeLoading}
+            />
           </SettingsItem>
 
           <SettingsItem
@@ -110,7 +118,7 @@ export const ApplicationSettingsScreen = () => {
             <Switch
               value={crashReports.enabled}
               onValueChange={crashReports.enabled ? crashReports.disable : crashReports.enable}
-              disabled={isNightly()}
+              disabled={isNightly() || isTogglePrivacyModeLoading}
             />
           </SettingsItem>
         </SettingsSection>

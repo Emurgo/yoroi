@@ -3,7 +3,6 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import {Boundary} from '../../components'
-import {PrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import globalMessages, {txLabels} from '../../i18n/global-messages'
 import {formatTokenAmount} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
@@ -19,9 +18,9 @@ type AssetListProps = {
   assets: Array<CardanoTypes.TokenEntry>
   styles: NodeStyle
   onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
-  privacyMode?: PrivacyMode
+  isPrivacyOff?: boolean
 }
-export const AssetList = ({assets, styles, onSelect, privacyMode}: AssetListProps) => {
+export const AssetList = ({assets, styles, onSelect, isPrivacyOff}: AssetListProps) => {
   const intl = useIntl()
   const colors = [styles.rowColor1, styles.rowColor2]
 
@@ -40,7 +39,7 @@ export const AssetList = ({assets, styles, onSelect, privacyMode}: AssetListProp
           renderItem={({item: entry, index}) => (
             <Boundary loading={{size: 'small', style: {padding: 16}}}>
               <AssetRow
-                privacyMode={privacyMode}
+                isPrivacyOff={isPrivacyOff}
                 entry={entry}
                 styles={styles}
                 backColor={colors[index % colors.length]}
@@ -60,9 +59,9 @@ type AssetRowProps = {
   entry: CardanoTypes.TokenEntry
   backColor: {backgroundColor: string}
   onSelect?: (tokenEntry: CardanoTypes.TokenEntry) => void
-  privacyMode?: PrivacyMode
+  isPrivacyOff?: boolean
 }
-const AssetRow = ({styles, entry, backColor, onSelect, privacyMode}: AssetRowProps) => {
+const AssetRow = ({styles, entry, backColor, onSelect, isPrivacyOff}: AssetRowProps) => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const tokenInfo = useTokenInfo({wallet, tokenId: entry.identifier})
@@ -83,7 +82,7 @@ const AssetRow = ({styles, entry, backColor, onSelect, privacyMode}: AssetRowPro
 
       <View style={styles.assetBalanceView}>
         <Text style={styles.assetBalance}>
-          {privacyMode === 'HIDDEN' ? '*.****' : formatTokenAmount(asQuantity(entry.amount), tokenInfo)}
+          {isPrivacyOff ? '*.****' : formatTokenAmount(asQuantity(entry.amount), tokenInfo)}
         </Text>
       </View>
     </>

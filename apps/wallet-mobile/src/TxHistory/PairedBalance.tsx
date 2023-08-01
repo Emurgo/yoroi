@@ -4,7 +4,6 @@ import {StyleSheet, Text} from 'react-native'
 
 import {Boundary, ResetError, ResetErrorRef} from '../components'
 import {useCurrencyContext} from '../features/Settings/Currency'
-import {PrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useExchangeRate} from '../yoroi-wallets/hooks'
@@ -12,10 +11,10 @@ import {CurrencySymbol, YoroiAmount} from '../yoroi-wallets/types'
 import {Quantities} from '../yoroi-wallets/utils'
 
 type Props = {
-  privacyMode?: PrivacyMode
+  isPrivacyOff?: boolean
   amount: YoroiAmount
 }
-export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacyMode, amount}, ref) => {
+export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({isPrivacyOff, amount}, ref) => {
   const {currency} = useCurrencyContext()
 
   return (
@@ -30,13 +29,13 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacyMod
         ),
       }}
     >
-      <Balance privacyMode={privacyMode} amount={amount} />
+      <Balance isPrivacyOff={isPrivacyOff} amount={amount} />
     </Boundary>
   )
 })
 
 const hiddenPairedTotal = '*.**'
-const Balance = ({privacyMode, amount}: Props) => {
+const Balance = ({isPrivacyOff, amount}: Props) => {
   const wallet = useSelectedWallet()
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
@@ -62,7 +61,7 @@ const Balance = ({privacyMode, amount}: Props) => {
     Quantities.product([primaryExchangeQuantity, `${rate}`]),
     config.decimals,
   )
-  const pairedTotal = privacyMode === 'HIDDEN' ? hiddenPairedTotal : secondaryExchangeQuantity
+  const pairedTotal = isPrivacyOff ? hiddenPairedTotal : secondaryExchangeQuantity
   return (
     <Text style={styles.pairedBalanceText} testID="pairedTotalText">
       {`${pairedTotal} ${currency}`}

@@ -70,10 +70,10 @@ type ExplorableAssetItemProps = AmountItemProps & {
   onPress(): void
 }
 const ExplorableAssetItem = ({wallet, amount, onPress}: ExplorableAssetItemProps) => {
-  const {privacyMode} = usePrivacyMode()
+  const {isPrivacyOff} = usePrivacyMode()
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} testID="assetSelectorItem">
-      <AmountItem privacyMode={privacyMode} wallet={wallet} amount={amount} />
+      <AmountItem isPrivacyOff={isPrivacyOff} wallet={wallet} amount={amount} />
     </TouchableOpacity>
   )
 }

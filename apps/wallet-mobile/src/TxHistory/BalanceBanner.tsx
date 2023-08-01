@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Boundary, ResetErrorRef, Spacer} from '../components'
 import {Icon} from '../components/Icon'
-import {PrivacyMode, usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
@@ -15,7 +15,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
-  const {privacyMode, togglePrivacyMode} = usePrivacyMode()
+  const {isPrivacyOff, togglePrivacyMode} = usePrivacyMode()
 
   return (
     <View style={styles.banner}>
@@ -30,12 +30,12 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
       <TouchableOpacity onPress={() => togglePrivacyMode()} style={styles.button}>
         <Row>
           <Boundary loading={{size: 'small'}} error={{size: 'inline'}}>
-            <Balance privacyMode={privacyMode} />
+            <Balance isPrivacyOff={isPrivacyOff} />
           </Boundary>
         </Row>
 
         <Row>
-          <PairedBalance privacyMode={privacyMode} amount={primaryAmount} ref={ref} />
+          <PairedBalance isPrivacyOff={isPrivacyOff} amount={primaryAmount} ref={ref} />
         </Row>
       </TouchableOpacity>
     </View>
@@ -43,14 +43,13 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
 })
 
 const hiddenBalance = '*.******'
-const Balance = ({privacyMode}: {privacyMode: PrivacyMode}) => {
+const Balance = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
 
-  const balance =
-    privacyMode === 'HIDDEN'
-      ? formatTokenWithTextWhenHidden(hiddenBalance, wallet.primaryToken)
-      : formatTokenWithText(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity, wallet.primaryToken)
+  const balance = isPrivacyOff
+    ? formatTokenWithTextWhenHidden(hiddenBalance, wallet.primaryToken)
+    : formatTokenWithText(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity, wallet.primaryToken)
 
   return (
     <Row>

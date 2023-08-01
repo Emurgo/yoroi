@@ -117,7 +117,6 @@ const getStories = () => {
     "./src/features/Settings/EasyConfirmation/EasyConfirmationScreen.stories.tsx": require("../src/features/Settings/EasyConfirmation/EasyConfirmationScreen.stories.tsx"),
     "./src/features/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.stories.tsx": require("../src/features/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.stories.tsx"),
     "./src/features/Settings/RemoveWallet/RemoveWalletScreen.stories.tsx": require("../src/features/Settings/RemoveWallet/RemoveWalletScreen.stories.tsx"),
-    "./src/features/Settings/Support/SupportScreen.stories.tsx": require("../src/features/Settings/Support/SupportScreen.stories.tsx"),
     "./src/features/Settings/TermsOfService/TermsOfServiceScreen.stories.tsx": require("../src/features/Settings/TermsOfService/TermsOfServiceScreen.stories.tsx"),
     "./src/features/Settings/WalletSettings/WalletSettingsScreen.stories.tsx": require("../src/features/Settings/WalletSettings/WalletSettingsScreen.stories.tsx"),
     "./src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories.tsx": require("../src/FirstRun/LanguagePickerScreen/LanguagePickerScreen.stories.tsx"),

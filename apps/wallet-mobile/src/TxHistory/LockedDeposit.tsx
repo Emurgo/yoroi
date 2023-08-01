@@ -10,12 +10,12 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {useLockedAmount} from '../yoroi-wallets/hooks'
 
 export const LockedDeposit = () => {
-  const {privacyMode} = usePrivacyMode()
+  const {isPrivacyOff} = usePrivacyMode()
   const wallet = useSelectedWallet()
   const loadingAmount = formatTokenWithTextWhenHidden('...', wallet.primaryToken)
   const hiddenAmount = formatTokenWithTextWhenHidden('*.******', wallet.primaryToken)
 
-  if (privacyMode === 'HIDDEN') return <FormattedAmount amount={hiddenAmount} />
+  if (isPrivacyOff) return <FormattedAmount amount={hiddenAmount} />
 
   return (
     <Boundary
