@@ -56,7 +56,7 @@ User agrees to indemnify, hold harmless and defend the Company, its shareholders
 
 ## 9. Intellectual Property
 
-The Company retains all right, title, and interest in and to all of the Company's brands, logos, and trademarks, including, but not limited to EMURGO,, Yoroi, Yoroi Cryptocurrency Wallet, Yoroi Wallet, Yoroi App, and variations of the wording of the aforementioned brands, logos, and trademarks.
+The Company retains all right, title, and interest in and to all of the Company's brands, logos, and trademarks, including, but not limited to EMURGO, Yoroi, Yoroi Cryptocurrency Wallet, Yoroi Wallet, Yoroi App, and variations of the wording of the aforementioned brands, logos, and trademarks.
 
 ## 10. Warnings
 
