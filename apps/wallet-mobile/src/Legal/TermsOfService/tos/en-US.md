@@ -70,7 +70,7 @@ User agrees that User should never share User's certificate with any natural or 
 
 User acknowledges and agrees that by redeeming ADA in the testnet, User redeems test-ADA only, and that in order to redeem actual ADA, User must repeat the procedure in the mainnet, once released.
 
-User acknowledges and agrees that by redeeming ADA in the testnet, User redeems test-ADA only, and that in order to redeem actual ADA, User must repeat the procedure in the mainnet, once released.
+By using the Software, User acknowledges and agrees: (i) that the Company is not responsible for the operation of the underlying protocols and that the Company makes no guarantee of their functionality, security, or availability; and (ii) that the underlying protocols are subject to sudden main-chain changes in operating rules ("forks"), and that such forks may materially affect the value, and/or function of the ADA or any other cryptocurrency that User stores on the Software. In the event of a fork, User agrees that the Company may temporarily suspend the Software operations (with or without notice to User) and that the Company may, in its sole discretion, (a) configure or reconfigure its systems or (b) decide not to support (or cease supporting) the forked protocol entirely, provided, however, that User will have an opportunity to withdraw funds from the Software. User acknowledges and agrees that the Company assumes absolutely no responsibility whatsoever in respect of an unsupported branch of a forked protocol.
 
 ## 11. Miscellaneous
 
