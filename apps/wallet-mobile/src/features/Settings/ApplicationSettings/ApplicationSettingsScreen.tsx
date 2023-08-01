@@ -117,6 +117,12 @@ export const ApplicationSettingsScreen = () => {
               disabled={isNightly() || isTogglePrivacyModeLoading}
             />
           </SettingsItem>
+
+          <NavigatedSettingsItem
+            icon={<Icon.Pin {...iconProps} />}
+            label={strings.changePin}
+            navigateTo="change-custom-pin"
+          />
         </SettingsSection>
       </ScrollView>
     </SafeAreaView>
@@ -139,10 +145,6 @@ const PrivacyModeSwitch = () => {
       return !prevState
     })
   }
-
-  React.useEffect(() => {
-    setIsLocalPrivacyOff(isPrivacyOff)
-  }, [isPrivacyOff])
 
   return <Switch value={isLocalPrivacyOff} onValueChange={onTogglePrivacyMode} disabled={isTogglePrivacyModeLoading} />
 }
