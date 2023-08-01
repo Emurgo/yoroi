@@ -76,7 +76,7 @@ export const Analytics = ({type, onClose}: Props) => {
       )}
 
       {type === 'settings' && (
-        <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+        <View style={styles.toggle}>
           <Text bold>{strings.toggle}</Text>
 
           <Switch
@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     color: COLORS.RED,
     marginRight: 8,
   },
+  toggle: {display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'},
 })
 
 const list = [
