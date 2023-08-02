@@ -16,7 +16,7 @@ export const AnalyticsNotice = ({invisible}: Props) => {
 
   return (
     <Modal visible={!isConsentRequested} onRequestClose={requestConsent}>
-      <Analytics type="notice" onClose={requestConsent}/>
+      <Analytics type="notice" onClose={requestConsent} />
     </Modal>
   )
 }
