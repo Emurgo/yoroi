@@ -34,6 +34,7 @@ export const useStrings = () => {
     enterSlippage: intl.formatMessage(messages.enterSlippage),
     pools: (qty: number) => intl.formatMessage(globalMessages.pools, {qty}),
     openOrders: intl.formatMessage(messages.openOrders),
+    noAssetsFound: intl.formatMessage(messages.noAssetsFound),
     completedOrders: intl.formatMessage(messages.completedOrders),
     signTransaction: intl.formatMessage(messages.signTransaction),
     enterSpendingPassword: intl.formatMessage(messages.enterSpendingPassword),
@@ -145,6 +146,10 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.poolVerificationInfo',
     defaultMessage:
       '!!!Cardano projects that list their own tokens can apply for an additional {pool} verification. This verification is a manual validation that {pool} team performs with the help of Cardano Foundation.',
+  },
+  noAssetsFound: {
+    id: 'swap.swapScreen.noAssetsFound',
+    defaultMessage: '!!!No assets found for this pair',
   },
   eachVerifiedToken: {
     id: 'swap.swapScreen.eachVerifiedToken',

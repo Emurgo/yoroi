@@ -18,6 +18,7 @@ import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {useSwap, useTokenQuantities} from '../../../common/SwapContext'
 import {BottomSheetModal} from '../../../../../components/BottomSheet'
+import {NoAssetFoundImage} from '../../../../Send/common/NoAssetFoundImage'
 
 export const SelectTokenToListScreen = () => {
   const [showInfoModal, setShowInfoModal] = React.useState(false)
@@ -122,6 +123,7 @@ const AssetList = () => {
         keyExtractor={(_, index) => index.toString()}
         testID="assetsList"
         estimatedItemSize={78}
+        ListEmptyComponent={<ListEmptyComponent filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
       />
 
       <Counter counter={filteredTokenInfos.length} />
@@ -201,6 +203,33 @@ const useFilteredTokenInfos = ({tokenInfos}: {tokenInfos: Array<Balance.TokenInf
   })
 }
 
+const ListEmptyComponent = ({
+  filteredTokenInfos,
+  allTokenInfos,
+}: {
+  filteredTokenInfos: Array<Balance.TokenInfo>
+  allTokenInfos: Array<Balance.TokenInfo>
+}) => {
+  const {search: assetSearchTerm, visible: isSearching} = useSearch()
+
+  if (isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) return <EmptySearchResult />
+}
+
+const EmptySearchResult = () => {
+  const strings = useStrings()
+  return (
+    <View style={styles.imageContainer}>
+      <Spacer height={50} />
+
+      <NoAssetFoundImage style={styles.image} />
+
+      <Spacer height={25} />
+
+      <Text style={styles.contentText}>{strings.noAssetsFound}</Text>
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
   root: {
     flex: 1,
@@ -249,5 +278,23 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 20,
     color: '#242838',
+  },
+  image: {
+    flex: 1,
+    alignSelf: 'center',
+    width: 200,
+    height: 228,
+  },
+  imageContainer: {
+    flex: 1,
+    textAlign: 'center',
+  },
+  contentText: {
+    flex: 1,
+    textAlign: 'center',
+    fontWeight: '500',
+    fontSize: 20,
+    color: '#000',
+    paddingTop: 4,
   },
 })
