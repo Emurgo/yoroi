@@ -1,6 +1,6 @@
-import {TokenInfo} from '../../types'
-import {parseNFTs} from './metadata'
+import {Balance} from '@yoroi/types'
 
+import {parseNFTs} from './metadata'
 const storageUrl = 'https://example.com'
 describe('parseNFTs', () => {
   it('throws when given a value that is not an object', () => {
@@ -30,7 +30,7 @@ describe('parseNFTs', () => {
 
   it('resolves with placeholder data if key 721 is present and metadata is not', () => {
     const result = parseNFTs({'8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.0': [{key: '721'}]}, storageUrl)
-    const expectedValue: Partial<TokenInfo> = {
+    const expectedValue: Partial<Balance.TokenInfo> = {
       id: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.30',
       name: '0',
     }
@@ -46,7 +46,7 @@ describe('parseNFTs', () => {
       },
       storageUrl,
     )
-    const expectedValue: Partial<TokenInfo> = {
+    const expectedValue: Partial<Balance.TokenInfo> = {
       id: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.30',
       name: 'Name',
     }

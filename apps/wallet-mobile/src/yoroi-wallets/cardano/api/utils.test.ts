@@ -1,4 +1,5 @@
-import {TokenInfo} from '../../types'
+import {Balance} from '@yoroi/types'
+
 import {TokenRegistryEntry} from './tokenRegistry'
 import {
   fallbackTokenInfo,
@@ -148,7 +149,7 @@ describe('api utils', () => {
         },
       }
 
-      expect(tokenInfo(entry)).toEqual<TokenInfo>({
+      expect(tokenInfo(entry)).toEqual<Balance.TokenInfo>({
         kind: 'ft',
         id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65',
         name: 'assetName',
@@ -188,7 +189,7 @@ describe('api utils', () => {
         },
       }
 
-      expect(tokenInfo(entry)).toEqual<TokenInfo>({
+      expect(tokenInfo(entry)).toEqual<Balance.TokenInfo>({
         kind: 'ft',
         id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65',
         name: 'assetName',
@@ -214,7 +215,7 @@ describe('api utils', () => {
     })
 
     it('fallback', () => {
-      expect(fallbackTokenInfo('11111111111111111111111111111111111111111111111111111111')).toEqual<TokenInfo>({
+      expect(fallbackTokenInfo('11111111111111111111111111111111111111111111111111111111')).toEqual<Balance.TokenInfo>({
         kind: 'ft',
         id: '11111111111111111111111111111111111111111111111111111111.',
         fingerprint: 'asset17jfppv3h7hnsjfqq5lyp52dyhwstfv9e4uauga',
@@ -231,7 +232,7 @@ describe('api utils', () => {
 
       expect(
         fallbackTokenInfo('1111111111111111111111111111111111111111111111111111111161737365744e616d65'),
-      ).toEqual<TokenInfo>({
+      ).toEqual<Balance.TokenInfo>({
         kind: 'ft',
         id: '11111111111111111111111111111111111111111111111111111111.61737365744e616d65',
         fingerprint: 'asset1rafllrcpcurgdkesxy9vsvh40cgz2vrndle80x',

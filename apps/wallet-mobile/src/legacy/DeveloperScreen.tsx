@@ -14,6 +14,7 @@ import {useAuth} from '../auth/AuthProvider'
 import {Button, StatusBar, Text, TextInput} from '../components'
 import {showErrorDialog} from '../dialogs'
 import {errorMessages} from '../i18n/global-messages'
+import {useMetrics} from '../metrics/metricsManager'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
@@ -30,6 +31,7 @@ const routes: Array<{label: string; path: keyof AppRoutes}> = [
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
+    paddingTop: 50,
   },
   container: {
     flex: 1,
@@ -69,6 +71,7 @@ export const DeveloperScreen = () => {
   })
   const [wallet] = useSelectedWalletContext()
   const [addresses, setAddresses] = React.useState('')
+  const {resetConsent, isConsentRequested} = useMetrics()
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -106,6 +109,14 @@ export const DeveloperScreen = () => {
           onPress={() => {
             logout()
             navigation.goBack()
+          }}
+        />
+
+        <Button
+          title={`Reset Analytics Consent (${isConsentRequested})`}
+          style={styles.button}
+          onPress={() => {
+            resetConsent()
           }}
         />
 

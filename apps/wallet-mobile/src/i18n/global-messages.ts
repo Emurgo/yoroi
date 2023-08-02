@@ -487,6 +487,10 @@ export const actionMessages = defineMessages({
     id: 'global.buy',
     defaultMessage: '!!!Buy',
   },
+  swap: {
+    id: 'global.swap',
+    defaultMessage: '!!!Swap',
+  },
   soon: {
     id: 'global.comingSoon',
     defaultMessage: '!!!Coming soon',
@@ -660,6 +664,10 @@ export default defineMessages({
   assets: {
     id: 'global.assets',
     defaultMessage: '!!! Assets',
+  },
+  pools: {
+    id: 'global.pools',
+    defaultMessage: '!!! Pools',
   },
   all: {
     id: 'global.all',

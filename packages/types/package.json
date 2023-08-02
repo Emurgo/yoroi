@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "test": "jest --passWithNoTests",
-    "tsc": "tsc --noEmit",
+    "tsc": "tsc --noEmit -p tsconfig.json",
     "clean": "del-cli lib",
     "flow": ". ./scripts/flowgen.sh",
     "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && tsc --project tsconfig.build.json && yarn flow",

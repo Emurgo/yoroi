@@ -3,15 +3,14 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {usePrivacyMode, useSetPrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {Button, Spacer, Text} from '..'
 import {HideableText} from './HideableText'
 
 storiesOf('HideableText', module).add('Default', () => <HideableTextTest />)
 
 const HideableTextTest = () => {
-  const privacyMode = usePrivacyMode()
-  const setPrivacyMode = useSetPrivacyMode()
+  const {privacyMode, togglePrivacyMode} = usePrivacyMode()
 
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.mainColumn}>
@@ -23,10 +22,7 @@ const HideableTextTest = () => {
 
       <Spacer height={20} />
 
-      <Button
-        onPress={() => setPrivacyMode(privacyMode === 'SHOWN' ? 'HIDDEN' : 'SHOWN')}
-        title="Change Privacy Mode"
-      />
+      <Button onPress={() => togglePrivacyMode()} title="Change Privacy Mode" />
     </SafeAreaView>
   )
 }

@@ -1,24 +1,24 @@
+import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {PrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {COLORS} from '../../theme'
 import {PairedBalance} from '../../TxHistory/PairedBalance'
 import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
-import {YoroiAmount} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
-import {Boundary, Placeholder, Text, TokenIcon} from '..'
+import {Boundary, Icon, Placeholder, Spacer, Text, TokenIcon} from '..'
 
 export type AmountItemProps = {
   wallet: YoroiWallet
-  amount: YoroiAmount
+  amount: Balance.Amount
   style?: ViewProps['style']
-  privacyMode?: PrivacyMode
+  isPrivacyOff?: boolean
+  variant?: 'swap'
 }
 
-export const AmountItem = ({privacyMode, wallet, style, amount}: AmountItemProps) => {
+export const AmountItem = ({isPrivacyOff, wallet, style, amount, variant}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -26,19 +26,32 @@ export const AmountItem = ({privacyMode, wallet, style, amount}: AmountItemProps
   const name = tokenInfo.ticker ?? tokenInfo.name
   const nameLabel = isEmptyString(name) ? '-' : name
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
+
   const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
+  const showSwapDetails = !isPrimary && variant === 'swap'
+
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
         <Boundary loading={{fallback: <Placeholder />}} error={{fallback: () => <Placeholder />}}>
-          <TokenIcon wallet={wallet} tokenId={tokenInfo.id} />
+          <TokenIcon wallet={wallet} tokenId={tokenInfo.id} variant={variant} />
         </Boundary>
       </Left>
 
       <Middle>
-        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
-          {nameLabel}
-        </Text>
+        <View style={styles.row}>
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+            {nameLabel}
+          </Text>
+
+          {showSwapDetails && (
+            <>
+              <Spacer width={4} />
+
+              <Icon.CheckFilled size={22} color={COLORS.SHELLEY_BLUE} />
+            </>
+          )}
+        </View>
 
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.detail} testID="tokenFingerprintText">
           {detail}
@@ -48,11 +61,11 @@ export const AmountItem = ({privacyMode, wallet, style, amount}: AmountItemProps
       <Right>
         {tokenInfo.kind !== 'nft' && (
           <Text style={styles.quantity} testID="tokenAmountText">
-            {privacyMode === 'HIDDEN' ? '**.*******' : denominatedQuantity}
+            {isPrivacyOff ? '**.*******' : denominatedQuantity}
           </Text>
         )}
 
-        {isPrimary && <PairedBalance privacyMode={privacyMode} amount={{quantity, tokenId: tokenInfo.id}} />}
+        {isPrimary && <PairedBalance isPrivacyOff={isPrivacyOff} amount={{quantity, tokenId: tokenInfo.id}} />}
       </Right>
     </View>
   )
@@ -86,5 +99,9 @@ const styles = StyleSheet.create({
   quantity: {
     color: COLORS.DARK_TEXT,
     textAlign: 'right',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })
