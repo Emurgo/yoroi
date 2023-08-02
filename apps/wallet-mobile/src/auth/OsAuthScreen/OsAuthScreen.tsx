@@ -1,13 +1,11 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
-import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import fingerprintImage from '../../assets/img/fingerprint.png'
 import {Icon, ScreenBackground, StatusBar, Text} from '../../components'
 import {COLORS} from '../../theme'
-import {FINGERPRINT_OVERLAY_MIN_SDK} from '../constants'
 import {supportsAndroidFingerprintOverlay} from '../biometrics'
 
 type Props = {

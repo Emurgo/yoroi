@@ -15,8 +15,6 @@ import {AppRoutes} from './navigation'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 import {AuthSetting, useAuthOsEnabled, useAuthSetting, useAuthWithOs} from './yoroi-wallets/auth'
-import DeviceInfo from 'react-native-device-info'
-import {FINGERPRINT_OVERLAY_MIN_SDK} from './auth/constants'
 import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 
 const Stack = createStackNavigator<AppRoutes>()
