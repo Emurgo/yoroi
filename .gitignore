@@ -80,3 +80,5 @@ coverage/
 
 # .vscode
 **/extensions.json
+
+apps/test/

@@ -1,22 +1,21 @@
 {
-  "name": "@yoroi/swap",
+  "name": "@yoroi/api-openswap",
   "version": "0.0.1",
-  "main": "dist/index.js",
-  "source": "index",
   "repository": {
     "type": "github",
     "url": "https://github.com/Emurgo/yoroi.git",
-    "directory": "packages/swap"
+    "directory": "packages/api-openswap"
   },
-  "author": "EMURGO",
   "license": "Apache-2.0",
+  "author": "EMURGO",
+  "main": "dist/index.js",
+  "source": "index",
   "scripts": {
-    "clean": "rm -rf dist",
     "build": "tsc",
+    "clean": "rm -rf dist",
     "test": "vitest"
   },
   "dependencies": {
-    "@emurgo/cross-csl-core": "2.2.0",
     "axios": "1.4.0"
   },
   "devDependencies": {

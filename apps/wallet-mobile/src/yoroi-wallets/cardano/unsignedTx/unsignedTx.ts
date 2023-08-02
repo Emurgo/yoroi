@@ -1,4 +1,6 @@
-import {Quantity, YoroiAmounts, YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../../types'
+import {Balance} from '@yoroi/types'
+
+import {YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../../types'
 import {Amounts, Entries, Quantities} from '../../utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import {CardanoHaskellShelleyNetwork} from '../networks'
@@ -85,10 +87,10 @@ export const toAmounts = (values: Array<CardanoTypes.TokenEntry>) =>
       ...result,
       [current.identifier]: Quantities.sum([
         Amounts.getAmount(result, current.identifier).quantity || '0',
-        current.amount.toString() as Quantity,
+        current.amount.toString() as Balance.Quantity,
       ]),
     }),
-    {} as YoroiAmounts,
+    {} as Balance.Amounts,
   )
 
 export const toMetadata = (metadata: ReadonlyArray<CardanoTypes.TxMetadata>) =>
@@ -119,7 +121,7 @@ const Staking = {
 
     for (let i = 0; i < length; i++) {
       const rewardAddress = await rewardAddresses.get(i)
-      const amount = (await withdrawals.get(rewardAddress).then((x) => x.toStr())) as Quantity
+      const amount = (await withdrawals.get(rewardAddress).then((x) => x.toStr())) as Balance.Quantity
       const address = await rewardAddress
         .toAddress()
         .then((address) => address.toBytes())
@@ -153,7 +155,7 @@ const Staking = {
 
       return {
         ...(await result),
-        [address]: {'': KEY_DEPOSIT as Quantity},
+        [address]: {'': KEY_DEPOSIT as Balance.Quantity},
       }
     }, Promise.resolve({} as YoroiEntries)),
 
@@ -179,7 +181,7 @@ const Staking = {
 
       return {
         ...(await result),
-        [address]: {'': KEY_DEPOSIT as Quantity},
+        [address]: {'': KEY_DEPOSIT as Balance.Quantity},
       }
     }, Promise.resolve({} as YoroiEntries)),
 
@@ -189,11 +191,11 @@ const Staking = {
   }: {
     balances: CardanoTypes.StakingKeyBalances
     fee: YoroiUnsignedTx['fee']
-  }): {[poolId: string]: YoroiAmounts} =>
+  }): {[poolId: string]: Balance.Amounts} =>
     Object.entries(balances).reduce(
       (result, [poolId, quantity]) => ({
         ...result,
-        [poolId]: Amounts.diff({'': quantity} as YoroiAmounts, fee),
+        [poolId]: Amounts.diff({'': quantity} as Balance.Amounts, fee),
       }),
       {},
     ),

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {Balance} from '@yoroi/types'
 
 import {HWDeviceInfo} from '../../../../hw'
 import {EncryptedStorage, EncryptedStorageKeys, storage} from '../../../../storage'
-import {DefaultAsset, TokenInfo} from '../../../../types'
+import {DefaultAsset} from '../../../../types'
 import {WalletMeta} from '../../../../walletManager'
 import {ShelleyAddressGeneratorJSON} from '../../../chain'
 import {WalletJSON} from '../../../shelley/ShelleyWallet'
@@ -102,7 +103,7 @@ describe('ShelleyWalletTestnet', () => {
       },
       networkId: 300,
     })
-    expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
+    expect(wallet.primaryTokenInfo).toEqual<Balance.TokenInfo>({
       kind: 'ft',
       id: '',
       name: 'TADA',
@@ -215,7 +216,7 @@ describe('ShelleyWalletTestnet', () => {
       },
       networkId: 300,
     })
-    expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
+    expect(wallet.primaryTokenInfo).toEqual<Balance.TokenInfo>({
       kind: 'ft',
       id: '',
       name: 'TADA',
@@ -317,7 +318,7 @@ describe('ShelleyWalletTestnet', () => {
       },
       networkId: 300,
     })
-    expect(wallet.primaryTokenInfo).toEqual<TokenInfo>({
+    expect(wallet.primaryTokenInfo).toEqual<Balance.TokenInfo>({
       kind: 'ft',
       id: '',
       name: 'TADA',

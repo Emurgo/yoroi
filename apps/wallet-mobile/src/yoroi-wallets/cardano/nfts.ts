@@ -1,8 +1,8 @@
+import {Balance} from '@yoroi/types'
 import {z} from 'zod'
 
 import {features} from '../../features'
 import {getAssetFingerprint} from '../../legacy/format'
-import {TokenInfo} from '../types'
 import {createTypeGuardFromSchema, isArrayOfType, isString} from '../utils'
 import {utf8ToHex} from './api/utils'
 
@@ -11,7 +11,7 @@ export const convertNft = (options: {
   storageUrl: string
   policyId: string
   shortName: string
-}): TokenInfo => {
+}): Balance.TokenInfo => {
   const {metadata, storageUrl, policyId, shortName} = options
   const assetNameHex = utf8ToHex(shortName)
   const fingerprint = getAssetFingerprint(policyId, assetNameHex)
@@ -50,12 +50,12 @@ export const isSvgMediaType = (mediaType: unknown): boolean => {
   return mediaType === 'image/svg+xml'
 }
 
-export const getNftMainImageMediaType = (nft: TokenInfo): string | undefined => {
+export const getNftMainImageMediaType = (nft: Balance.TokenInfo): string | undefined => {
   const originalMetadata = nft.metadatas.mintNft
   return hasMediaTypeProperty(originalMetadata) ? normalizeProperty(originalMetadata.mediaType) : undefined
 }
 
-export const getNftFilenameMediaType = (nft: TokenInfo, filename: string): string | undefined => {
+export const getNftFilenameMediaType = (nft: Balance.TokenInfo, filename: string): string | undefined => {
   const originalMetadata = nft.metadatas.mintNft
 
   if (!hasFilesProperty(originalMetadata)) {

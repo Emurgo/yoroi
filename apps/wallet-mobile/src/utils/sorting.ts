@@ -1,7 +1,14 @@
-import {YoroiWallet} from '../yoroi-wallets/cardano/types'
-import {TokenInfo} from '../yoroi-wallets/types'
+import {Balance} from '@yoroi/types'
 
-export const sortTokenInfos = ({wallet, tokenInfos}: {wallet: YoroiWallet; tokenInfos: TokenInfo[]}): TokenInfo[] =>
+import {YoroiWallet} from '../yoroi-wallets/cardano/types'
+
+export const sortTokenInfos = ({
+  wallet,
+  tokenInfos,
+}: {
+  wallet: YoroiWallet
+  tokenInfos: Balance.TokenInfo[]
+}): Balance.TokenInfo[] =>
   tokenInfos
     .sort(
       alpha((tokenInfo) => {

@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import type {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -17,7 +18,7 @@ import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
-import {TokenInfo, YoroiAmount, YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
@@ -65,7 +66,7 @@ export const ListAmountsToSendScreen = () => {
 
   const onEdit = (tokenId: string) => {
     const tokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === tokenId)
-    if (!tokenInfo || tokenInfo.kind === 'nft') return
+    if (tokenInfo?.kind === 'nft') return
 
     tokenSelectedChanged(tokenId)
     navigateTo.editAmount()
@@ -91,7 +92,7 @@ export const ListAmountsToSendScreen = () => {
     <View style={styles.container}>
       <AmountsList
         data={tokens}
-        renderItem={({item: {id}}: {item: TokenInfo}) => (
+        renderItem={({item: {id}}: {item: Balance.TokenInfo}) => (
           <Boundary>
             <ActionableAmount amount={Amounts.getAmount(amounts, id)} onRemove={onRemove} onEdit={onEdit} />
           </Boundary>
@@ -117,7 +118,7 @@ export const ListAmountsToSendScreen = () => {
 }
 
 type ActionableAmountProps = {
-  amount: YoroiAmount
+  amount: Balance.Amount
   onEdit(tokenId: string): void
   onRemove(tokenId: string): void
 }

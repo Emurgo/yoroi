@@ -1,3 +1,5 @@
+import {Balance} from '@yoroi/types'
+
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
 import {YoroiStorage} from '../storage'
@@ -13,8 +15,8 @@ export type YoroiSignedTx = YoroiTxInfo & {
 
 export type YoroiTxInfo = {
   entries: YoroiEntries
-  amounts: YoroiAmounts
-  fee: YoroiAmounts
+  amounts: Balance.Amounts
+  fee: Balance.Amounts
   change: YoroiEntries
   metadata: YoroiMetadata
   staking: YoroiStaking
@@ -38,23 +40,13 @@ export type YoroiVoting = {
 }
 
 export type Address = string
-export type Quantity = `${number}`
 export type TokenId = string
 
-export type YoroiEntries = Record<string, YoroiAmounts>
+export type YoroiEntries = Record<string, Balance.Amounts>
 
 export type YoroiEntry = {
   address: Address
-  amounts: YoroiAmounts
-}
-
-export type YoroiAmounts = {
-  [tokenId: TokenId]: Quantity
-}
-
-export type YoroiAmount = {
-  tokenId: TokenId
-  quantity: Quantity
+  amounts: Balance.Amounts
 }
 
 export type YoroiMetadata = {

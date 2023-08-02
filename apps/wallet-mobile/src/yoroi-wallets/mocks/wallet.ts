@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {action} from '@storybook/addon-actions'
+import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {getTokenFingerprint} from '../../legacy/format'
@@ -14,9 +15,7 @@ import {
   StakePoolInfosAndHistories,
   StakingInfo,
   StakingStatus,
-  TokenInfo,
   TransactionInfo,
-  YoroiAmounts,
   YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
@@ -295,7 +294,7 @@ const fetchPoolInfo = {
   },
 }
 
-export const generateManyNfts = (): TokenInfo[] => {
+export const generateManyNfts = (): Balance.TokenInfo[] => {
   return Array(30)
     .fill(undefined)
     .map((_, index) => ({
@@ -515,16 +514,16 @@ const fetchCurrentPrice = {
 
 const fetchTokenInfo = {
   success: {
-    nft: async (...args): Promise<TokenInfo> => {
+    nft: async (...args): Promise<Balance.TokenInfo> => {
       action('fetchTokenInfo')(...args)
       return nft
     },
-    randomNft: async (...args): Promise<TokenInfo> => {
+    randomNft: async (...args): Promise<Balance.TokenInfo> => {
       action('fetchTokenInfo')(...args)
       const allNfts = generateManyNfts()
       return allNfts[Math.floor(Math.random() * allNfts.length)]
     },
-    ft: async (...args): Promise<TokenInfo> => {
+    ft: async (...args): Promise<Balance.TokenInfo> => {
       action('fetchTokenInfo')(...args)
       return {
         kind: 'ft',
@@ -550,7 +549,7 @@ const fetchTokenInfo = {
         },
       }
     },
-    ftNoImage: async (...args): Promise<TokenInfo> => {
+    ftNoImage: async (...args): Promise<Balance.TokenInfo> => {
       action('fetchTokenInfo')(...args)
       return {
         kind: 'ft',
@@ -579,7 +578,7 @@ const fetchTokenInfo = {
   },
   loading: async (...args) => {
     action('fetchTokenInfo')(...args)
-    return new Promise(() => null) as unknown as TokenInfo
+    return new Promise(() => null) as unknown as Balance.TokenInfo
   },
   error: async (...args) => {
     action('fetchTokenInfo')(...args)
@@ -620,7 +619,7 @@ const tokenEntries: Array<CardanoTypes.TokenEntry> = [
   },
 ]
 
-const balances: YoroiAmounts = {
+const balances: Balance.Amounts = {
   [PRIMARY_ASSET_CONSTANTS.CARDANO]: '2727363743849',
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': '12344',
   '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '215410',
@@ -632,7 +631,7 @@ const balances: YoroiAmounts = {
   '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c55': '100000000000000000020',
 }
 
-const tokenInfos: Record<string, TokenInfo> = {
+const tokenInfos: Record<string, Balance.TokenInfo> = {
   '': HASKELL_SHELLEY_TESTNET.PRIMARY_TOKEN_INFO,
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950': toTokenInfo({
     networkId: 300,
@@ -841,7 +840,7 @@ const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
   mock: true,
 }
 
-export const nft: TokenInfo = {
+export const nft: Balance.TokenInfo = {
   kind: 'nft',
   id: `8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.${utf8ToHex('NFT 0')}`,
   group: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
