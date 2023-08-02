@@ -2,9 +2,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, ScrollView, StyleSheet, Switch, TouchableOpacity, View} from 'react-native'
 
-import {Button, Text} from '../../components'
+import {Button, Spacer, Text} from '../../components'
 import {useMetrics} from '../../metrics/metricsManager'
-import {COLORS, spacing} from '../../theme'
+import {COLORS} from '../../theme'
 import {AnalyticsImage} from './AnalyticsImage'
 
 type Props = {
@@ -19,24 +19,40 @@ export const Analytics = ({type, onClose}: Props) => {
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.centered}>
-        {type === 'notice' && <Text style={styles.title}>{strings.header}</Text>}
+        {type === 'notice' && (
+          <>
+            <Text style={styles.title}>{strings.header}</Text>
+
+            <Spacer height={12} />
+          </>
+        )}
 
         <AnalyticsImage />
       </View>
 
+      <Spacer height={12} />
+
       <View style={styles.centered}>
         {type === 'settings' && (
-          <Text style={styles.paragraph} bold>
-            {strings.header}
-          </Text>
+          <>
+            <Text style={styles.paragraph} bold>
+              {strings.header}
+            </Text>
+
+            <Spacer height={12} />
+          </>
         )}
 
         <Text style={styles.paragraph} bold={type === 'notice'}>
           {strings.description}
         </Text>
+
+        <Spacer height={12} />
       </View>
 
-      <View style={styles.list}>
+      <Spacer height={12} />
+
+      <View>
         {list.map(({style, icon, key}) => (
           <View key={key} style={styles.item}>
             <Text style={style}>{icon}</Text>
@@ -46,33 +62,41 @@ export const Analytics = ({type, onClose}: Props) => {
         ))}
       </View>
 
+      <Spacer height={12} />
+
       <TouchableOpacity onPress={() => Linking.openURL('')}>
         <Text style={styles.link}>{strings.more}</Text>
       </TouchableOpacity>
 
-      {type === 'notice' && (
-        <View style={styles.buttons}>
-          <Button
-            block
-            outlineShelley
-            onPress={() => {
-              metrics.disable()
-              onClose?.()
-            }}
-            title={strings.skip}
-            style={styles.skip}
-          />
+      <Spacer height={12} />
 
-          <Button
-            block
-            shelleyTheme
-            onPress={() => {
-              metrics.enable()
-              onClose?.()
-            }}
-            title={strings.accept}
-          />
-        </View>
+      {type === 'notice' && (
+        <>
+          <Spacer height={12} />
+
+          <View style={styles.buttons}>
+            <Button
+              block
+              outlineShelley
+              onPress={() => {
+                metrics.disable()
+                onClose?.()
+              }}
+              title={strings.skip}
+              style={styles.skip}
+            />
+
+            <Button
+              block
+              shelleyTheme
+              onPress={() => {
+                metrics.enable()
+                onClose?.()
+              }}
+              title={strings.accept}
+            />
+          </View>
+        </>
       )}
 
       {type === 'settings' && (
@@ -91,14 +115,11 @@ export const Analytics = ({type, onClose}: Props) => {
 
 const styles = StyleSheet.create({
   scrollView: {
-    marginHorizontal: 10,
+    paddingHorizontal: 10,
   },
   text: {
     fontSize: 14,
     lineHeight: 22,
-  },
-  list: {
-    marginBottom: spacing.paragraphBottomMargin,
   },
   item: {
     display: 'flex',
@@ -106,7 +127,6 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
   },
   paragraph: {
-    marginBottom: spacing.paragraphBottomMargin,
     fontSize: 14,
     lineHeight: 22,
     textAlign: 'center',
@@ -114,34 +134,30 @@ const styles = StyleSheet.create({
   link: {
     color: COLORS.BLUE_LIGHTER,
     textAlign: 'center',
-    marginBottom: spacing.paragraphBottomMargin,
   },
   centered: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: spacing.paragraphBottomMargin,
   },
   title: {
     fontSize: 20,
     lineHeight: 22,
     fontWeight: 'bold',
-    marginBottom: spacing.paragraphBottomMargin,
   },
   buttons: {
     flexDirection: 'column',
     gap: 8,
-    marginTop: 12,
   },
   skip: {
     borderWidth: 0,
   },
   tick: {
     color: COLORS.DARK_BLUE,
-    marginRight: 8,
+    paddingRight: 8,
   },
   cross: {
     color: COLORS.RED,
-    marginRight: 8,
+    paddingRight: 8,
   },
   toggle: {display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'},
 })
