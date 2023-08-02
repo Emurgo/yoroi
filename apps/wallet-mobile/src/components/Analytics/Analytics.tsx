@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 22,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   buttons: {
     flexDirection: 'column',
