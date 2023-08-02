@@ -2,7 +2,7 @@ import {NavigationContainer, NavigationContainerRef} from '@react-navigation/nat
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert, AppState, AppStateStatus, Platform} from 'react-native'
+import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 
 import StorybookScreen from '../.storybook'
@@ -15,6 +15,9 @@ import {AppRoutes} from './navigation'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 import {AuthSetting, useAuthOsEnabled, useAuthSetting, useAuthWithOs} from './yoroi-wallets/auth'
+import DeviceInfo from 'react-native-device-info'
+import {FINGERPRINT_OVERLAY_MIN_SDK} from './auth/constants'
+import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -37,6 +40,18 @@ export const AppNavigator = () => {
 
     // try first OS auth before navigating to os login screen
     if (authAction === 'auth-with-os') {
+      if (Platform.OS === 'android') {
+        supportsAndroidFingerprintOverlay().then((isOverlaySupported) => {
+          if (!isOverlaySupported) {
+            RNBootSplash.hide({fade: true})
+          }
+          InteractionManager.runAfterInteractions(() => {
+            authWithOs()
+          })
+        })
+        return
+      }
+
       authWithOs()
     } else {
       RNBootSplash.hide({fade: true})
