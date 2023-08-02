@@ -1,39 +1,37 @@
-import { describe, expect, it, vi, Mocked } from 'vitest';
-import { getPools } from './pools';
-import { axiosClient } from './config';
+import {describe, expect, it, vi, Mocked} from 'vitest'
+import {getPools} from './pools'
+import {axiosClient} from './config'
 
-vi.mock('./config.ts');
+vi.mock('./config.ts')
 
 describe('SwapPoolsApi', () => {
   it('should get pools list for a given token pair', async () => {
-    const mockAxios = axiosClient as Mocked<typeof axiosClient>;
+    const mockAxios = axiosClient as Mocked<typeof axiosClient>
     mockAxios.get.mockImplementationOnce(() =>
       Promise.resolve({
         status: 200,
         data: mockedPoolRes,
-      })
-    );
+      }),
+    )
 
     const result = await getPools(
-      { network: 'mainnet', client: mockAxios },
-      { tokenA: getPoolsParams.sell, tokenB: getPoolsParams.buy }
-    );
-    expect(result).to.be.of.lengthOf(1);
-  });
+      {network: 'mainnet', client: mockAxios},
+      {tokenA: getPoolsParams.sell, tokenB: getPoolsParams.buy},
+    )
+    expect(result).to.be.of.lengthOf(1)
+  })
 
   it('should throw error for invalid response', async () => {
-    const mockAxios = axiosClient as Mocked<typeof axiosClient>;
+    const mockAxios = axiosClient as Mocked<typeof axiosClient>
     await expect(async () => {
-      mockAxios.get.mockImplementationOnce(() =>
-        Promise.resolve({ status: 500 })
-      );
+      mockAxios.get.mockImplementationOnce(() => Promise.resolve({status: 500}))
       await getPools(
-        { network: 'preprod', client: mockAxios },
-        { tokenA: getPoolsParams.sell, tokenB: getPoolsParams.buy }
-      );
-    }).rejects.toThrow('Failed to fetch pools for token pair');
-  });
-});
+        {network: 'preprod', client: mockAxios},
+        {tokenA: getPoolsParams.sell, tokenB: getPoolsParams.buy},
+      )
+    }).rejects.toThrow('Failed to fetch pools for token pair')
+  })
+})
 
 const mockedPoolRes = [
   {
@@ -68,7 +66,7 @@ const mockedPoolRes = [
         'e4214b7cce62ac6fbba385d164df48e157eae5863521b4b67ca71d86.7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
     },
   },
-];
+]
 
 const getPoolsParams = {
   sell: {
@@ -79,4 +77,4 @@ const getPoolsParams = {
     policyId: 'e16c2dc8ae937e8d3790c7fd7168d7b994621ba14ca11415f39fed72',
     assetNameHex: '43414b45',
   },
-} as const;
+} as const

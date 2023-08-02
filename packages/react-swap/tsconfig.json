@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "declaration": true,
     "baseUrl": "./src",
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

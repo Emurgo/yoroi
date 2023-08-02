@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'
 
 export const SWAP_API_ENDPOINTS = {
   mainnet: {
@@ -18,11 +18,11 @@ export const SWAP_API_ENDPOINTS = {
     cancelSwapTransaction:
       'https://aggregator.muesliswap.com/cancelTestnetSwapTransaction',
   },
-} as const;
+} as const
 
 export const axiosClient = axios.create({
   headers: {
-    Accept: 'application/json',
+    'Accept': 'application/json',
     'Content-Type': 'application/json',
   },
-});
+})
