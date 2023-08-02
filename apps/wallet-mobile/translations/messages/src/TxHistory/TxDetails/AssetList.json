@@ -4,14 +4,14 @@
     "defaultMessage": "!!![Unknown asset name]",
     "file": "src/TxHistory/TxDetails/AssetList.tsx",
     "start": {
-      "line": 104,
+      "line": 103,
       "column": 20,
-      "index": 3687
+      "index": 3597
     },
     "end": {
-      "line": 107,
+      "line": 106,
       "column": 3,
-      "index": 3780
+      "index": 3690
     }
   }
 ]
