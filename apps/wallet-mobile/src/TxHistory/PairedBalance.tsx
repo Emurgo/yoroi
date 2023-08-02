@@ -30,13 +30,13 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({isPrivacyO
         ),
       }}
     >
-      <Balance isPrivacyOff={isPrivacyOff} amount={amount} />
+      <Amount isPrivacyOff={isPrivacyOff} amount={amount} />
     </Boundary>
   )
 })
 
 const hiddenPairedTotal = '*.**'
-const Balance = ({isPrivacyOff, amount}: Props) => {
+const Amount = ({isPrivacyOff, amount}: Props) => {
   const wallet = useSelectedWallet()
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
