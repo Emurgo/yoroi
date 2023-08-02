@@ -9,7 +9,7 @@ import {AnalyticsImage} from './AnalyticsImage'
 
 type Props = {
   type: 'notice' | 'settings'
-  onClose?: () => null
+  onClose?: () => void
 }
 
 export const Analytics = ({type, onClose}: Props) => {
