@@ -8,7 +8,12 @@ import {ChangePinScreen} from '../../auth'
 import {EnableLoginWithPin} from '../../auth/EnableLoginWithPin'
 import {Analytics, Boundary} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {defaultStackNavigationOptions, SettingsStackRoutes, SettingsTabRoutes} from '../../navigation'
+import {
+  defaultStackNavigationOptions,
+  defaultStackNavigationOptionsV2,
+  SettingsStackRoutes,
+  SettingsTabRoutes,
+} from '../../navigation'
 import {COLORS} from '../../theme'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
@@ -118,7 +123,7 @@ export const SettingsScreenNavigator = () => {
         component={EnableLoginWithPinWrapper}
       />
 
-      <Stack.Screen name="analytics" options={{title: strings.analytics}}>
+      <Stack.Screen name="analytics" options={{...defaultStackNavigationOptionsV2, title: strings.userInsights}}>
         {() => <Analytics type="settings" />}
       </Stack.Screen>
     </Stack.Navigator>
@@ -226,9 +231,9 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.about',
     defaultMessage: '!!!About',
   },
-  analytics: {
-    id: 'components.settings.applicationsettingsscreen.analytics',
-    defaultMessage: '!!!Analytics',
+  userInsights: {
+    id: 'components.settings.applicationsettingsscreen.analyticsTitle',
+    defaultMessage: '!!!User Insights',
   },
 })
 
@@ -252,6 +257,6 @@ const useStrings = () => {
     currency: intl.formatMessage(globalMessages.currency),
     aboutTitle: intl.formatMessage(messages.aboutTitle),
     appSettingsTitle: intl.formatMessage(messages.appSettingsTitle),
-    analytics: intl.formatMessage(messages.analytics),
+    userInsights: intl.formatMessage(messages.userInsights),
   }
 }
