@@ -8,16 +8,17 @@ import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
 import {Quantities} from '../../yoroi-wallets/utils'
-import {Boundary, Placeholder, Text, TokenIcon} from '..'
+import {Boundary, Icon, Placeholder, Spacer, Text, TokenIcon} from '..'
 
 export type AmountItemProps = {
   wallet: YoroiWallet
   amount: Balance.Amount
   style?: ViewProps['style']
   isPrivacyOff?: boolean
+  variant?: 'swap'
 }
 
-export const AmountItem = ({isPrivacyOff, wallet, style, amount}: AmountItemProps) => {
+export const AmountItem = ({isPrivacyOff, wallet, style, amount, variant}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -25,19 +26,32 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount}: AmountItemProp
   const name = tokenInfo.ticker ?? tokenInfo.name
   const nameLabel = isEmptyString(name) ? '-' : name
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
+
   const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
+  const showSwapDetails = !isPrimary && variant === 'swap'
+
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
         <Boundary loading={{fallback: <Placeholder />}} error={{fallback: () => <Placeholder />}}>
-          <TokenIcon wallet={wallet} tokenId={tokenInfo.id} />
+          <TokenIcon wallet={wallet} tokenId={tokenInfo.id} variant={variant} />
         </Boundary>
       </Left>
 
       <Middle>
-        <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
-          {nameLabel}
-        </Text>
+        <View style={styles.row}>
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+            {nameLabel}
+          </Text>
+
+          {showSwapDetails && (
+            <>
+              <Spacer width={4} />
+
+              <Icon.CheckFilled size={22} color={COLORS.SHELLEY_BLUE} />
+            </>
+          )}
+        </View>
 
         <Text numberOfLines={1} ellipsizeMode="middle" style={styles.detail} testID="tokenFingerprintText">
           {detail}
@@ -85,5 +99,9 @@ const styles = StyleSheet.create({
   quantity: {
     color: COLORS.DARK_TEXT,
     textAlign: 'right',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })

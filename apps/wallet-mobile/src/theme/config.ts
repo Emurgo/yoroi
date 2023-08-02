@@ -51,6 +51,7 @@ export const COLORS = {
   BLUE_LIGHTER: '#164FD6',
   GREY_6: '#A7AFC0',
   ACTION_GRAY: '#8A92A3',
+  LIGHT_GREEN: '#08C29D',
 }
 
 // TODO: use lowercase for key names. Eg navigationActive
