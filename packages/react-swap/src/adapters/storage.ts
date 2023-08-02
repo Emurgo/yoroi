@@ -4,17 +4,24 @@ import type {Swap} from '@yoroi/types'
 const initialDeps = {storage: AsyncStorage} as const
 
 export function makeSwapStorage(deps = initialDeps): Readonly<Swap.Storage> {
+  const {storage} = deps
+
+  const slippage: Readonly<Swap.Storage['slippage']> = {
+    save: (newSlippage) =>
+      storage.setItem(swapStorageSlippageKey, JSON.stringify(newSlippage)),
+    read: () =>
+      storage
+        .getItem(swapStorageSlippageKey)
+        .then((value) => parseNumber(value) ?? 0),
+    remove: () => storage.removeItem(swapStorageSlippageKey),
+    key: swapStorageSlippageKey,
+  } as const
+
+  const clear = () => Promise.all([storage.removeItem(swapStorageSlippageKey)])
+
   return {
-    slippage: {
-      save: (slippage) =>
-        deps.storage.setItem(swapStorageSlippageKey, JSON.stringify(slippage)),
-      read: () =>
-        deps.storage
-          .getItem(swapStorageSlippageKey)
-          .then((value) => parseNumber(value) ?? 0),
-      remove: () => deps.storage.removeItem(swapStorageSlippageKey),
-    },
-    reset: () => Promise.all([deps.storage.removeItem(swapStorageSlippageKey)]),
+    slippage,
+    clear,
   } as const
 }
 

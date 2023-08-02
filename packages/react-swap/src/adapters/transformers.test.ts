@@ -6,7 +6,7 @@ import {
   asYoroiPool,
   asYoroiTokenId,
 } from './transformers'
-import {Order, Pool, Token} from '@yoroi/swap'
+import {Order, Pool, Token} from '../../../api-openswap/dist'
 
 describe('asOpenswapAmount', () => {
   it('should return the correct result when a valid yoroiAmount is provided', () => {

@@ -1,10 +1,11 @@
 import {Swap, Balance} from '@yoroi/types'
-import {OpenSwapApi, CreateOrderRequest} from '@yoroi/swap'
+import {OpenSwapApi, CreateOrderRequest} from '../../../api-openswap/dist'
 import {
   asOpenswapAmount,
   asOpenswapTokenId,
   asYoroiBalanceTokens,
   asYoroiOrders,
+  asYoroiPools,
 } from './transformers'
 
 export const makeSwapApi = (
@@ -68,7 +69,7 @@ export const makeSwapApi = (
         tokenA: asOpenswapTokenId(tokenA),
         tokenB: asOpenswapTokenId(tokenB),
       })
-      .then((pools) => pools)
+      .then(asYoroiPools)
 
   return {getOrders, cancelOrder, createOrder, getTokens, getPools} as Swap.Api
 }

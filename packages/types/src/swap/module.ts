@@ -3,8 +3,3 @@ export type SwapProtocol =
   | 'sundaeswap'
   | 'wingriders'
   | 'muesliswap'
-
-export type SwapFactoryOptions = {
-  network: any
-  stakingKey: string
-}

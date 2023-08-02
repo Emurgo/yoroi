@@ -1,6 +1,6 @@
 import AssetFingerprint from '@emurgo/cip14-js'
 import {Swap, Balance} from '@yoroi/types'
-import {Order, Pool, Token} from '@yoroi/swap'
+import {Order, Pool, Token} from '../../../api-openswap/dist'
 
 export const asOpenswapTokenId = (yoroiTokenId: string) => {
   const [policyId = '', assetName = ''] = yoroiTokenId.split('.')
@@ -52,7 +52,7 @@ export const asYoroiBalanceToken = (openswapToken: Token): Balance.Token => {
         policyId: info.address.policyId,
         assetNameHex: info.address.name,
       }),
-      name: toAssetNameUtf8(info.address.name),
+      name: asUtf8(info.address.name),
       decimals: info.decimalPlaces,
       description: info.description,
       image: info.image,
@@ -101,13 +101,6 @@ export const asYoroiPool = (openswapPool: Pool): Swap.Pool => {
   return pool
 }
 
-export const asYoroiBalanceTokens = (
-  openswapTokens: Token[],
-): Balance.Token[] => openswapTokens.map(asYoroiBalanceToken)
-
-export const asYoroiOrders = (openswapOrders: Order[]): Swap.OpenOrder[] =>
-  openswapOrders.map(asYoroiOrder)
-
 export const asYoroiAmount = (openswapAmount: {
   amount: string
   token: string
@@ -120,6 +113,16 @@ export const asYoroiAmount = (openswapAmount: {
     tokenId: subject.length === 1 ? '' : subject,
   } as const
 }
+
+export const asYoroiPools = (openswapPools: Pool[]): Swap.Pool[] =>
+  openswapPools.map(asYoroiPool)
+
+export const asYoroiBalanceTokens = (
+  openswapTokens: Token[],
+): Balance.Token[] => openswapTokens.map(asYoroiBalanceToken)
+
+export const asYoroiOrders = (openswapOrders: Order[]): Swap.OpenOrder[] =>
+  openswapOrders.map(asYoroiOrder)
 
 // TODO: later replace for @yoroi/utils
 export const asTokenFingerprint = ({
@@ -136,5 +139,4 @@ export const asTokenFingerprint = ({
   return assetFingerprint.fingerprint()
 }
 
-export const toAssetNameUtf8 = (hex: string) =>
-  Buffer.from(hex, 'hex').toString('utf-8')
+export const asUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
