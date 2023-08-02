@@ -4,6 +4,7 @@ import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer, StatusBar} from '../../../components'
+import {features} from '../../../features'
 import {useLanguage} from '../../../i18n'
 import {isNightly} from '../../../legacy/config'
 import {useWalletNavigation} from '../../../navigation'
@@ -74,6 +75,14 @@ export const ApplicationSettingsScreen = () => {
             label={strings.termsOfservice}
             navigateTo="terms-of-use"
           />
+
+          {features.analytics && (
+            <NavigatedSettingsItem
+              icon={<Icon.Analytics {...iconProps} />}
+              label={strings.analytics}
+              navigateTo="analytics"
+            />
+          )}
         </SettingsSection>
 
         <Spacer height={24} />
@@ -164,16 +173,9 @@ const useStrings = () => {
     termsOfservice: intl.formatMessage(messages.termsOfservice),
     crashReporting: intl.formatMessage(messages.crashReporting),
     crashReportingInfo: intl.formatMessage(messages.crashReportingInfo),
+    analytics: intl.formatMessage(messages.analytics),
   }
 }
-
-const styles = StyleSheet.create({
-  settings: {
-    flex: 1,
-    paddingTop: 16,
-    backgroundColor: '#fff',
-  },
-})
 
 const messages = defineMessages({
   general: {
@@ -227,5 +229,17 @@ const messages = defineMessages({
   crashReportingInfo: {
     id: 'components.settings.applicationsettingsscreen.crashReportingInfo',
     defaultMessage: '!!!Changes to this option will be reflected after restarting the application',
+  },
+  analytics: {
+    id: 'components.settings.applicationsettingsscreen.analytics',
+    defaultMessage: '!!!Analytics',
+  },
+})
+
+const styles = StyleSheet.create({
+  settings: {
+    flex: 1,
+    paddingTop: 16,
+    backgroundColor: '#fff',
   },
 })

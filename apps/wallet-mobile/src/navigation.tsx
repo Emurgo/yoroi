@@ -202,6 +202,7 @@ export type SettingsStackRoutes = {
   'change-wallet-name': undefined
   'terms-of-use': undefined
   support: undefined
+  analytics: undefined
   'enable-login-with-os': undefined
   'remove-wallet': undefined
   'change-language': undefined
