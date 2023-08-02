@@ -4,6 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {AnalyticsNotice} from '../../components/Analytics/AnalyticsNotice'
 import {Button} from '../../components/Button'
 import {Icon} from '../../components/Icon'
 import {PleaseWaitModal} from '../../components/PleaseWaitModal'
@@ -92,6 +93,8 @@ export const WalletSelectionScreen = () => {
       <OnlyDevButton />
 
       <PleaseWaitModal title={strings.loadingWallet} spinnerText={strings.pleaseWait} visible={isLoading} />
+
+      <AnalyticsNotice invisible={isLoading} />
     </SafeAreaView>
   )
 }

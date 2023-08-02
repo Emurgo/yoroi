@@ -67,6 +67,7 @@ const getStories = () => {
     "./src/Catalyst/VotingBanner.stories.tsx": require("../src/Catalyst/VotingBanner.stories.tsx"),
     "./src/Catalyst/VotingRegistration.stories.tsx": require("../src/Catalyst/VotingRegistration.stories.tsx"),
     "./src/components/AmountItem/AmountItem.stories.tsx": require("../src/components/AmountItem/AmountItem.stories.tsx"),
+    "./src/components/Analytics/Analytics.stories.tsx": require("../src/components/Analytics/Analytics.stories.tsx"),
     "./src/components/Boundary/Boundary.stories.tsx": require("../src/components/Boundary/Boundary.stories.tsx"),
     "./src/components/Button/Button.stories.tsx": require("../src/components/Button/Button.stories.tsx"),
     "./src/components/Checkbox/Checkbox.stories.tsx": require("../src/components/Checkbox/Checkbox.stories.tsx"),
