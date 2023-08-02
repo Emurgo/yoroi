@@ -8,22 +8,35 @@ module.exports = {
     jest: {
       setupTimeout: 120000
     }
-  },
+  },  
   apps: {
-    'ios.debug': {
+    'ios.yoroi.debug': {
       type: 'ios.app',
       binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/yoroi.app',
       build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme yoroi -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
     },
-    'ios.release': {
+    'ios.nightly.debug': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/yoroi.app',
-      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme yoroi -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
+      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/nightly.app',
+      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme nightly -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+    },
+    'ios.nightly.release': {
+      type: 'ios.app',
+      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/nightly.app',
+      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme nightly -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'android.dev.debug': {
       type: 'android.apk',
       binaryPath: 'android/app/build/outputs/apk/dev/debug/app-dev-debug.apk',
       build: 'ENVFILE=.env cd android && ./gradlew assembleDevDebug assembleDevDebugAndroidTest -DtestBuildType=debug',
+      reversePorts: [
+        8081
+      ]
+    },    
+    'android.nightly.debug': {
+      type: 'android.apk',
+      binaryPath: 'android/app/build/outputs/apk/nightly/debug/app-nightly-debug.apk',
+      build: 'ENVFILE=.env.nightly cd android && ./gradlew assembleNightlyDebug assembleNightlyDebugAndroidTest -DtestBuildType=debug',
       reversePorts: [
         8081
       ]
@@ -58,13 +71,17 @@ module.exports = {
     }
   },
   configurations: {
-    'ios.sim.debug': {
+    'ios.sim.yoroi.debug': {
       device: 'simulator',
-      app: 'ios.debug'
+      app: 'ios.yoroi.debug'
     },
-    'ios.sim.release': {
+    'ios.sim.nightly.debug': {
       device: 'simulator',
-      app: 'ios.release'
+      app: 'ios.nightly.debug'
+    },
+    'ios.sim.nightly.release': {
+      device: 'simulator',
+      app: 'ios.nightly.release'
     },
     'android.att.debug': {
       device: 'attached',
@@ -81,6 +98,10 @@ module.exports = {
     'android.emu.release': {
       device: 'emulator',
       app: 'android.release'
+    },
+    'android.emu.nightly.debug': {
+      device: 'emulator',
+      app: 'android.nightly.debug'
     },
     'android.emu.nightly.release': {
       device: 'emulator',
