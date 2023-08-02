@@ -20,13 +20,17 @@ export const useStrings = () => {
     slippageTolerance: intl.formatMessage(messages.slippageTolerance),
     slippageToleranceInfo: intl.formatMessage(messages.slippageToleranceInfo),
     swapButton: intl.formatMessage(messages.swapButton),
-    verifiedBy: intl.formatMessage(messages.verifiedBy),
+    verifiedBy: (pool: string) => intl.formatMessage(messages.verifiedBy, {pool}),
     assetsIn: intl.formatMessage(messages.assetsIn),
     defaultSlippage: intl.formatMessage(messages.defaultSlippage),
     slippageInfo: intl.formatMessage(messages.slippageInfo),
     swapMinAda: intl.formatMessage(messages.swapMinAda),
     swapMinReceived: intl.formatMessage(messages.swapMinReceived),
     swapFees: intl.formatMessage(messages.swapFees),
+    poolVerification: (pool: string) => intl.formatMessage(messages.poolVerification, {pool}),
+    poolVerificationInfo: (pool: string) => intl.formatMessage(messages.poolVerificationInfo, {pool}),
+    eachVerifiedToken: intl.formatMessage(messages.eachVerifiedToken),
+    verifiedBadge: intl.formatMessage(messages.verifiedBadge),
     enterSlippage: intl.formatMessage(messages.enterSlippage),
     pools: (qty: number) => intl.formatMessage(globalMessages.pools, {qty}),
     openOrders: intl.formatMessage(messages.openOrders),
@@ -35,7 +39,6 @@ export const useStrings = () => {
     enterSpendingPassword: intl.formatMessage(messages.enterSpendingPassword),
     spendingPassword: intl.formatMessage(messages.spendingPassword),
     sign: intl.formatMessage(messages.sign),
-
     searchTokens: intl.formatMessage(messages.searchTokens),
     confirm: intl.formatMessage(messages.confirm),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
@@ -100,7 +103,7 @@ export const messages = defineMessages({
   },
   verifiedBy: {
     id: 'swap.swapScreen.verifiedBy',
-    defaultMessage: '!!!Verified by MuesliSwap',
+    defaultMessage: '!!!Verified by {pool}',
   },
   assetsIn: {
     id: 'swap.swapScreen.assetsIn',
@@ -133,6 +136,23 @@ export const messages = defineMessages({
   enterSlippage: {
     id: 'swap.swapScreen.enterSlippage',
     defaultMessage: '!!!Enter a value from 0% to 100%. You can also enter up to 1 decimal',
+  },
+  poolVerification: {
+    id: 'swap.swapScreen.poolVerification',
+    defaultMessage: '!!!{pool} verification',
+  },
+  poolVerificationInfo: {
+    id: 'swap.swapScreen.poolVerificationInfo',
+    defaultMessage:
+      '!!!Cardano projects that list their own tokens can apply for an additional {pool} verification. This verification is a manual validation that {pool} team performs with the help of Cardano Foundation.',
+  },
+  eachVerifiedToken: {
+    id: 'swap.swapScreen.eachVerifiedToken',
+    defaultMessage: '!!!Each verified tokens gets',
+  },
+  verifiedBadge: {
+    id: 'swap.swapScreen.verifiedBadge',
+    defaultMessage: '!!!verified badge',
   },
   openOrders: {
     id: 'swap.swapScreen.openOrders',

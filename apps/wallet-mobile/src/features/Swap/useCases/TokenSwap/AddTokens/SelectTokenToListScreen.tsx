@@ -17,9 +17,14 @@ import {filterBySearch} from '../../../common/filterBySearch'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {useSwap, useTokenQuantities} from '../../../common/SwapContext'
+import {BottomSheetModal} from '../../../../../components/BottomSheet'
 
 export const SelectTokenToListScreen = () => {
+  const [showInfoModal, setShowInfoModal] = React.useState(false)
+  const [isSwitchOn, setIsSwitchOn] = React.useState(true)
+
   const strings = useStrings()
+  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn)
 
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
@@ -30,36 +35,53 @@ export const SelectTokenToListScreen = () => {
     <View style={styles.root}>
       <View style={styles.subheader}></View>
 
+      <Spacer height={12} />
+
+      <View style={[styles.flex]}>
+        <View style={styles.row}>
+          <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
+
+          <Text style={styles.topText}>{strings.verifiedBy('MuseliSwap')}</Text>
+
+          <Spacer width={8} />
+
+          <TouchableOpacity onPress={() => setShowInfoModal(true)}>
+            <Icon.Info size={24} />
+          </TouchableOpacity>
+        </View>
+
+        <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color={COLORS.SHELLEY_BLUE} />
+      </View>
+
       <List />
+
+      <BottomSheetModal
+        title={strings.poolVerification('MuesliSwap')}
+        content={
+          <View>
+            <Text style={styles.modalText}>{strings.poolVerificationInfo('MuesliSwap')}</Text>
+            <Spacer height={12} />
+            <Text>
+              <Text style={styles.modalText}>{strings.eachVerifiedToken}</Text>
+              <Spacer width={8} />
+              <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
+              <Text style={styles.modalText}>{strings.verifiedBadge}</Text>
+            </Text>
+          </View>
+        }
+        isOpen={showInfoModal}
+        onClose={() => setShowInfoModal(false)}
+      />
     </View>
   )
 }
 
 const List = () => {
-  const [isSwitchOn, setIsSwitchOn] = React.useState(true)
   const strings = useStrings()
-
-  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn)
 
   return (
     <>
       <View>
-        <Spacer height={12} />
-
-        <View style={[styles.flex]}>
-          <View style={styles.row}>
-            <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
-
-            <Text style={styles.topText}>{strings.verifiedBy}</Text>
-
-            <Spacer width={8} />
-
-            <Icon.Info size={24} />
-          </View>
-
-          <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color={COLORS.SHELLEY_BLUE} />
-        </View>
-
         <Spacer height={15} />
 
         <View style={[styles.row]}>
@@ -222,5 +244,10 @@ const styles = StyleSheet.create({
   },
   topText: {
     fontSize: 16,
+  },
+  modalText: {
+    fontWeight: '400',
+    lineHeight: 20,
+    color: '#242838',
   },
 })

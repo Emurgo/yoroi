@@ -33,7 +33,7 @@ export const ExpandableInfoCard = ({
   const [showHiddenInfo, setShowHiddenInfo] = React.useState(false)
 
   return (
-    <View style={{padding: 5}}>
+    <View>
       <View style={[styles.container, withBoxShadow && styles.shadowProp]}>
         <View style={styles.flexBetween}>
           <TouchableOpacity onPress={() => navigateTo?.()}>
