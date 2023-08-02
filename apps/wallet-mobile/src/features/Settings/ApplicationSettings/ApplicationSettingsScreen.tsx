@@ -4,6 +4,7 @@ import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer, StatusBar} from '../../../components'
+import {features} from '../../../features'
 import {useLanguage} from '../../../i18n'
 import {isNightly} from '../../../legacy/config'
 import {useWalletNavigation} from '../../../navigation'
@@ -75,11 +76,13 @@ export const ApplicationSettingsScreen = () => {
             navigateTo="terms-of-use"
           />
 
-          <NavigatedSettingsItem
-            icon={<Icon.Analytics {...iconProps} />}
-            label={strings.analytics}
-            navigateTo="analytics"
-          />
+          {features.analytics && (
+            <NavigatedSettingsItem
+              icon={<Icon.Analytics {...iconProps} />}
+              label={strings.analytics}
+              navigateTo="analytics"
+            />
+          )}
         </SettingsSection>
 
         <Spacer height={24} />
