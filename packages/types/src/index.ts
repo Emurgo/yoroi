@@ -5,9 +5,6 @@ import {
   BalanceQuantity,
   BalanceToken,
 } from './balance/token'
-import {MetricsModule, MetricsFactoryOptions} from './metrics/module'
-import {MetricsStorage} from './metrics/storage'
-import {MetricsTrack} from './metrics/track'
 import {SwapApi} from './swap/api'
 import {SwapProtocol} from './swap/protocol'
 import {
@@ -20,15 +17,6 @@ import {
 import {SwapPool} from './swap/pool'
 import {SwapStorage} from './swap/storage'
 import {SwapManager} from './swap/manager'
-
-export namespace Metrics {
-  export type Module<EventOptions> = MetricsModule<EventOptions>
-  export type FactoryOptions<InitOptions> = MetricsFactoryOptions<InitOptions>
-
-  export type Track<Properties> = MetricsTrack<Properties>
-
-  export type Storage = MetricsStorage
-}
 
 export namespace Swap {
   export type CreateOrderData = SwapCreateOrderData
