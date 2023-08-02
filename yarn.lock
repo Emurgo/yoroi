@@ -1933,20 +1933,6 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/cross-csl-core@2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-2.2.0.tgz#dc5ab43f3b1b35b1f775f2060f9e73beb3528fcc"
-  integrity sha512-ParvRLEuZjobsPcvijJX4G2qt+ftqRzOHHLfNG2OAW6VUHMYz/iOY0GdpJuYeHGGC8S5BstqJTF87USCUzxvSw==
-  dependencies:
-    "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
-    "@types/mocha" "^9.1.1"
-    axios "^0.24.0"
-    bech32 "^2.0.0"
-    bignumber.js "^9.0.1"
-    blake2b "^2.1.4"
-    hash-wasm "^4.9.0"
-    mocha "^10.0.0"
-
 "@emurgo/cross-csl-core@^2.3.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-2.3.0.tgz#a88d358faf3a3c3e87775655b355a40db7599900"

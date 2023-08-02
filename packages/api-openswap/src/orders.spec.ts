@@ -15,11 +15,10 @@ const GENS_TOKEN = {
   assetName: '0014df1047454e53',
 };
 
-const mockAxios = axiosClient as Mocked<typeof axios>;
-
 describe('SwapOrdersApi', () => {
   describe('getOrders', () => {
     it('Should return orders list using staking key hash', async () => {
+      const mockAxios = axiosClient as Mocked<typeof axios>;
       mockAxios.get.mockImplementationOnce(() =>
         Promise.resolve({
           data: mockedOrders,
@@ -27,8 +26,11 @@ describe('SwapOrdersApi', () => {
         })
       );
       const result = await getOrders(
-        'preprod',
-        '24fd15671a17a39268b7a31e2a6703f5893f254d4568411322baeeb7'
+        { network: 'preprod', client: mockAxios },
+        {
+          stakeKeyHash:
+            '24fd15671a17a39268b7a31e2a6703f5893f254d4568411322baeeb7',
+        }
       );
       expect(result).to.have.lengthOf(1);
     });
@@ -36,6 +38,7 @@ describe('SwapOrdersApi', () => {
 
   describe('createOrder', () => {
     it('should create order and return datum, datumHash, and contract address', async () => {
+      const mockAxios = axiosClient as Mocked<typeof axios>;
       mockAxios.get.mockImplementationOnce(() =>
         Promise.resolve({
           status: 200,
@@ -43,37 +46,47 @@ describe('SwapOrdersApi', () => {
         })
       );
 
-      const order = await createOrder('mainnet', createOrderParams);
+      const order = await createOrder(
+        { network: 'mainnet', client: mockAxios },
+        createOrderParams
+      );
 
-      expect(order.contractAddress).to.eq(mockedCreateOrderResult.address);
-      expect(order.datum).to.eq(mockedCreateOrderResult.datum);
-      expect(order.datumHash).to.eq(mockedCreateOrderResult.hash);
+      expect(order).to.be.equals(mockedCreateOrderResult);
     });
 
     it('should throw error for invalid order', async () => {
-      await expect(async () => {
-        mockAxios.get.mockImplementationOnce(() =>
-          Promise.resolve({
-            status: 200,
-            data: { status: 'failed', reason: 'error_message' },
-          })
-        );
-        await createOrder('preprod', createOrderParams);
-      }).rejects.toThrowError(/^error_message$/);
+      const mockAxios = axiosClient as Mocked<typeof axios>;
+      mockAxios.get.mockImplementationOnce(() =>
+        Promise.resolve({
+          status: 200,
+          data: { status: 'failed', reason: 'error_message' },
+        })
+      );
+      expect(() =>
+        createOrder(
+          { network: 'preprod', client: mockAxios },
+          createOrderParams
+        )
+      ).rejects.toThrowError(/^error_message$/);
     });
 
     it('should throw generic error for invalid response', async () => {
+      const mockAxios = axiosClient as Mocked<typeof axios>;
       await expect(async () => {
         mockAxios.get.mockImplementationOnce(() =>
           Promise.resolve({ status: 400 })
         );
-        await createOrder('mainnet', createOrderParams);
+        await createOrder(
+          { network: 'mainnet', client: mockAxios },
+          createOrderParams
+        );
       }).rejects.toThrow('Failed to construct swap datum');
     });
   });
 
   describe('cancelOrder', () => {
     it('should cancel pending orders', async () => {
+      const mockAxios = axiosClient as Mocked<typeof axios>;
       mockAxios.get.mockImplementationOnce(() =>
         Promise.resolve({
           status: 200,
@@ -82,27 +95,32 @@ describe('SwapOrdersApi', () => {
       );
 
       const txCbor = await cancelOrder(
-        'mainnet',
-        'orderUtxo',
-        'collateralUtxo',
-        'addr1'
+        { network: 'mainnet', client: mockAxios },
+        {
+          orderUTxO: 'orderUtxo',
+          collateralUTxO: 'collateralUtxo',
+          walletAddress: 'addr1',
+        }
       );
 
       expect(txCbor).to.eq('tx_cbor');
     });
 
     it('should throw generic error for invalid response', async () => {
-      await expect(async () => {
-        mockAxios.get.mockImplementationOnce(() =>
-          Promise.resolve({ status: 400 })
-        );
-        await cancelOrder(
-          'mainnet',
-          cancelOrderParams.utxo,
-          cancelOrderParams.collateralUTxOs,
-          cancelOrderParams.address
-        );
-      }).rejects.toThrow('Failed to cancel swap transaction');
+      const mockAxios = axiosClient as Mocked<typeof axios>;
+      mockAxios.get.mockImplementationOnce(() =>
+        Promise.resolve({ status: 400 })
+      );
+      expect(() =>
+        cancelOrder(
+          { network: 'mainnet', client: mockAxios },
+          {
+            orderUTxO: cancelOrderParams.utxo,
+            collateralUTxO: cancelOrderParams.collateralUTxOs,
+            walletAddress: cancelOrderParams.address,
+          }
+        )
+      ).rejects.toThrow('Failed to cancel swap transaction');
     });
   });
 });
@@ -152,7 +170,7 @@ const mockedCreateOrderResult = {
 };
 
 const createOrderParams = {
-  address:
+  walletAddress:
     'addr1qy0556dz9jssrrnhv0g3ga98uczdd465cut9jjs5a4k5qy3yl52kwxsh5wfx3darrc4xwql43ylj2n29dpq3xg46a6mska8vfz',
   protocol: 'sundaeswap',
   poolId: '14',

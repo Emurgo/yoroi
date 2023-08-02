@@ -3,7 +3,8 @@ export type SwapStorage = {
     read(): Promise<number>
     remove(): Promise<void>
     save(slippage: number): Promise<void>
+    key: string
   }
 
-  reset(): Promise<[() => Promise<void>]>
+  clear(): Promise<void>
 }
