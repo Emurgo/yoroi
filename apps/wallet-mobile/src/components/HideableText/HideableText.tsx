@@ -1,7 +1,7 @@
 import React from 'react'
 import {TextProps} from 'react-native'
 
-import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
+import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import {Text} from '..'
 
 type Props = TextProps &
@@ -10,8 +10,8 @@ type Props = TextProps &
   }
 
 export const HideableText = ({text, ...props}: Props) => {
-  const privacyMode = usePrivacyMode()
-  const children = privacyMode === 'SHOWN' ? text : text?.replaceAll(/./g, '\u25CF')
+  const {isPrivacyOn} = usePrivacyMode()
+  const children = isPrivacyOn ? text : text?.replaceAll(/./g, '\u25CF')
 
   return <Text {...props}>{children}</Text>
 }

@@ -62,7 +62,7 @@ export const ListAmountsToSendScreen = () => {
   React.useEffect(() => {
     track.sendSelectAssetUpdated(assetsToSendProperties({tokens, amounts}))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [amounts.length, tokens.length, track])
+  }, [amounts, tokens.length, track])
 
   const onEdit = (tokenId: string) => {
     const tokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === tokenId)
