@@ -6,6 +6,9 @@ export const mockMetricsManager = (): MetricsManager => {
   const disable = () => Promise.resolve()
   const enable = () => Promise.resolve()
   const enabled = () => Promise.resolve(true)
+  const consentRequested = () => Promise.resolve(false)
+  const requestConsent = () => Promise.resolve()
+  const resetConsent = () => Promise.resolve()
 
   const init = () => Promise.resolve()
   const track = {
@@ -38,6 +41,9 @@ export const mockMetricsManager = (): MetricsManager => {
     enable,
     disable,
     enabled,
+    consentRequested,
+    requestConsent,
+    resetConsent,
   } as const
 }
 
