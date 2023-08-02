@@ -1,4 +1,3 @@
-export type FungibilityFilter = 'all' | 'ft' | 'nft'
 import {FlashList} from '@shopify/flash-list'
 import {Balance} from '@yoroi/types'
 import React from 'react'
@@ -7,18 +6,20 @@ import {Switch} from 'react-native-paper'
 
 import {Boundary, Icon, Spacer, Text} from '../../../../../components'
 import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
+import {BottomSheetModal} from '../../../../../components/BottomSheet'
 import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {useAllTokenInfos, useIsWalletEmpty} from '../../../../../yoroi-wallets/hooks'
+import {NoAssetFoundImage} from '../../../../Send/common/NoAssetFoundImage'
 import {filterBySearch} from '../../../common/filterBySearch'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {useSwap, useTokenQuantities} from '../../../common/SwapContext'
-import {BottomSheetModal} from '../../../../../components/BottomSheet'
-import {NoAssetFoundImage} from '../../../../Send/common/NoAssetFoundImage'
+
+export type FungibilityFilter = 'all' | 'ft' | 'nft'
 
 export const SelectTokenToListScreen = () => {
   const [showInfoModal, setShowInfoModal] = React.useState(false)
@@ -61,11 +62,16 @@ export const SelectTokenToListScreen = () => {
         content={
           <View>
             <Text style={styles.modalText}>{strings.poolVerificationInfo('MuesliSwap')}</Text>
+
             <Spacer height={12} />
+
             <Text>
               <Text style={styles.modalText}>{strings.eachVerifiedToken}</Text>
+
               <Spacer width={8} />
+
               <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
+
               <Text style={styles.modalText}>{strings.verifiedBadge}</Text>
             </Text>
           </View>
@@ -212,7 +218,10 @@ const ListEmptyComponent = ({
 }) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
 
-  if (isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) return <EmptySearchResult />
+  if ((isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) || allTokenInfos.length === 0)
+    return <EmptySearchResult />
+
+  return null
 }
 
 const EmptySearchResult = () => {

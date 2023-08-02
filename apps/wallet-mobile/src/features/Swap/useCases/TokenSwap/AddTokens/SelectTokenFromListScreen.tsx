@@ -1,4 +1,3 @@
-export type FungibilityFilter = 'all' | 'ft' | 'nft'
 import {FlashList} from '@shopify/flash-list'
 import {Balance} from '@yoroi/types'
 import React from 'react'
@@ -12,11 +11,13 @@ import {COLORS} from '../../../../../theme'
 import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {useAllTokenInfos, useIsWalletEmpty} from '../../../../../yoroi-wallets/hooks'
+import {NoAssetFoundImage} from '../../../../Send/common/NoAssetFoundImage'
 import {filterBySearch} from '../../../common/filterBySearch'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {useSwap, useTokenQuantities} from '../../../common/SwapContext'
-import {NoAssetFoundImage} from '../../../../Send/common/NoAssetFoundImage'
+
+export type FungibilityFilter = 'all' | 'ft' | 'nft'
 
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
@@ -151,7 +152,10 @@ const ListEmptyComponent = ({
 }) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
 
-  if (isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) return <EmptySearchResult />
+  if ((isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) || allTokenInfos.length === 0)
+    return <EmptySearchResult />
+
+  return null
 }
 
 const EmptySearchResult = () => {
