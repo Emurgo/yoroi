@@ -1,7 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+yarn workspaces run build
 yarn workspace @yoroi/wallet-mobile run lint-staged
-yarn workspaces run lint
-yarn workspaces run tsc
-yarn workspaces run test

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "build": "yarn lint && yarn tsc && yarn test",
     "e2e:build:android:dev:debug": "detox build --configuration android.emu.dev.debug",
     "e2e:build:android:nightly:release": "detox build --configuration android.emu.nightly.release",
     "e2e:build:ios:dev:debug": "detox build --configuration ios.sim.debug",

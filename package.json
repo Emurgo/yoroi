@@ -8,7 +8,9 @@
     "reset": "yarn workspaces run rimraf node_modules && yarn rimraf node_modules"
   },
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "packages/types",
+    "packages/api-openswap",
+    "packages/*",
+    "apps/*"
   ]
 }

@@ -12,7 +12,7 @@
   "source": "src/index",
   "scripts": {
     "flow": ". ./scripts/flowgen.sh",
-    "build": "yarn clean && tsc",
+    "build": "yarn tsc && yarn lint && yarn test && yarn clean && tsc --project tsconfig.json",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "tsc": "tsc --noEmit -p tsconfig.json",
     "clean": "rm -rf dist",
