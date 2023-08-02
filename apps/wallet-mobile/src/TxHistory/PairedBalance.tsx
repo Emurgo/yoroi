@@ -2,21 +2,20 @@ import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text} from 'react-native'
-import {PrivacyMode} from 'src/Settings/PrivacyMode/PrivacyMode'
 
 import {Boundary, ResetError, ResetErrorRef} from '../components'
+import {useCurrencyContext} from '../features/Settings/Currency'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useCurrencyContext} from '../Settings/Currency'
 import {COLORS} from '../theme'
 import {useExchangeRate} from '../yoroi-wallets/hooks'
 import {CurrencySymbol} from '../yoroi-wallets/types'
 import {Quantities} from '../yoroi-wallets/utils'
 
 type Props = {
-  privacyMode?: PrivacyMode
   amount: Balance.Amount
+  isPrivacyOff?: boolean
 }
-export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacyMode, amount}, ref) => {
+export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({isPrivacyOff, amount}, ref) => {
   const {currency} = useCurrencyContext()
 
   return (
@@ -31,13 +30,13 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({privacyMod
         ),
       }}
     >
-      <PairedAmount privacyMode={privacyMode} amount={amount} />
+      <Balance isPrivacyOff={isPrivacyOff} amount={amount} />
     </Boundary>
   )
 })
 
 const hiddenPairedTotal = '*.**'
-const PairedAmount = ({privacyMode, amount}: Props) => {
+const Balance = ({isPrivacyOff, amount}: Props) => {
   const wallet = useSelectedWallet()
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
@@ -63,7 +62,7 @@ const PairedAmount = ({privacyMode, amount}: Props) => {
     Quantities.product([primaryExchangeQuantity, `${rate}`]),
     config.decimals,
   )
-  const pairedTotal = privacyMode === 'HIDDEN' ? hiddenPairedTotal : secondaryExchangeQuantity
+  const pairedTotal = isPrivacyOff ? hiddenPairedTotal : secondaryExchangeQuantity
   return (
     <Text style={styles.pairedBalanceText} testID="pairedTotalText">
       {`${pairedTotal} ${currency}`}

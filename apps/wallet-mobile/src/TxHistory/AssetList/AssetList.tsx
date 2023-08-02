@@ -6,9 +6,9 @@ import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {AmountItem, AmountItemProps} from '../../components/AmountItem/AmountItem'
 import {Spacer} from '../../components/Spacer'
+import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {sortTokenInfos} from '../../utils'
 import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {useBalances, useTokenInfos} from '../../yoroi-wallets/hooks'
@@ -70,10 +70,10 @@ type ExplorableAssetItemProps = AmountItemProps & {
   onPress(): void
 }
 const ExplorableAssetItem = ({wallet, amount, onPress}: ExplorableAssetItemProps) => {
-  const privacyMode = usePrivacyMode()
+  const {isPrivacyOff} = usePrivacyMode()
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} testID="assetSelectorItem">
-      <AmountItem privacyMode={privacyMode} wallet={wallet} amount={amount} />
+      <AmountItem isPrivacyOff={isPrivacyOff} wallet={wallet} amount={amount} />
     </TouchableOpacity>
   )
 }
