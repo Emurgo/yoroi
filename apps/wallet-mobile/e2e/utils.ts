@@ -1,4 +1,6 @@
 import { expect } from 'detox'
+import fs from 'fs/promises'
+import {addAttach, addMsg} from 'jest-html-reporters/helper'
 import yargs from 'yargs/yargs'
 
 import { mnemonicBadgeByWord,mnemonicByIndexText } from './screens/createWalletFlow.screen'
@@ -82,4 +84,27 @@ export const disableDeviceSync = async (platform: string) => {
 // wrap device.enableSynchronization for android only
 export const enableDeviceSync = async (platform: string) => {
   platform === 'android' && await device.enableSynchronization()
+}
+
+export const takeScreenshot = async (description:string) => {
+  const tmpPath = await device.takeScreenshot(description)
+  const imgBuff =  await toBase64('png', tmpPath)
+  await addAttach({
+    attach: imgBuff,
+    description: description,
+    context: '',
+    bufferFormat: 'png',
+  })
+}
+
+export const addMsgToReport = async  (msg: string) =>{
+  await addMsg({message: msg, context: null});
+}
+
+export const toBase64 = async(fileType: string, filePath: string)  =>{
+    const base64String = await fs.readFile(filePath, {
+      encoding: 'base64',
+    })
+    const withPrefix = `data:image/${fileType};base64,` + base64String;
+    return withPrefix
 }

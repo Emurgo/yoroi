@@ -6,7 +6,19 @@ module.exports = {
   maxWorkers: 1,
   globalSetup: 'detox/runners/jest/globalSetup',
   globalTeardown: 'detox/runners/jest/globalTeardown',
-  reporters: ['detox/runners/jest/reporter'],
+  reporters: [
+    "default",
+    [
+      "jest-html-reporters",
+      {
+        "publicPath": "./html-report",
+        "filename": "report.html",
+        "includeConsoleLog": true,      
+        "openReport": true,
+        "pageTitle": "YOMO e2e Test Results"
+      }
+    ]
+  ],
   testEnvironment: 'detox/runners/jest/testEnvironment',
   verbose: true,
 };

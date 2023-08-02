@@ -80,3 +80,7 @@ coverage/
 
 # .vscode
 **/extensions.json
+
+#e2e
+artifacts/
+html-report/
