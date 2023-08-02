@@ -8,6 +8,7 @@ import RNBootSplash from 'react-native-bootsplash'
 import StorybookScreen from '../.storybook'
 import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
+import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
@@ -15,7 +16,6 @@ import {AppRoutes} from './navigation'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 import {AuthSetting, useAuthOsEnabled, useAuthSetting, useAuthWithOs} from './yoroi-wallets/auth'
-import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
