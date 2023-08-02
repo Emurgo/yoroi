@@ -3,7 +3,7 @@ import {Swap} from '@yoroi/types'
 export const makeSwapManager = (
   swapStorage: Swap.Storage,
   swapApi: Swap.Api,
-) => {
+): Readonly<Swap.Manager> => {
   const {clear: clearStorage, slippage} = swapStorage
   const {getPools, getOrders, getTokens, cancelOrder, createOrder} = swapApi
 
@@ -35,5 +35,3 @@ export const makeSwapManager = (
     pools,
   } as const
 }
-
-export type SwapManager = ReturnType<typeof makeSwapManager>

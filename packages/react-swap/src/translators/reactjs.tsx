@@ -7,7 +7,6 @@ import {
   useMutation,
 } from 'react-query'
 import {Balance, Swap} from '@yoroi/types'
-import {makeMockSwapStorage} from '../adapters/mocks'
 import {swapStorageSlippageKey} from '../adapters/storage'
 import {
   SwapActionType,
@@ -19,28 +18,30 @@ import {
   defaultSwapActions,
   defaultSwapState,
 } from './swapState'
+import {mockSwapManagerDefault} from './swapManager.mocks'
 
-const defaultStorage: Swap.Storage = makeMockSwapStorage()
+const defaultSwapManager: Swap.Manager = mockSwapManagerDefault
 
-const initialSwapProvider: SwapProvider = {
-  ...defaultSwapState,
-  ...defaultSwapActions,
-  ...defaultStorage,
-}
-
-type SwapProvider = React.PropsWithChildren<
-  SwapState & SwapCreateOrderActions & SwapActions & Swap.Storage
+type SwapProviderContext = React.PropsWithChildren<
+  SwapState & SwapCreateOrderActions & SwapActions & Swap.Manager
 >
 
-const SwapContext = React.createContext<SwapProvider>(initialSwapProvider)
+const initialSwapProvider: SwapProviderContext = {
+  ...defaultSwapState,
+  ...defaultSwapActions,
+  ...defaultSwapManager,
+}
+
+const SwapContext =
+  React.createContext<SwapProviderContext>(initialSwapProvider)
 
 export const SwapProvider = ({
   children,
-  storage,
+  swapManager,
   initialState,
 }: {
   children: React.ReactNode
-  storage: Readonly<Swap.Storage>
+  swapManager: Readonly<Swap.Manager>
   initialState?: Readonly<Partial<SwapState>>
 }) => {
   const [state, dispatch] = React.useReducer(combinedSwapReducers, {
@@ -78,8 +79,8 @@ export const SwapProvider = ({
   }).current
 
   const context = React.useMemo(
-    () => ({...state, ...actions, ...storage}),
-    [state, actions, storage],
+    () => ({...state, ...actions, ...swapManager}),
+    [state, actions, swapManager],
   )
 
   return <SwapContext.Provider value={context}>{children}</SwapContext.Provider>

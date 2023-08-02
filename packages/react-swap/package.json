@@ -1,5 +1,5 @@
 {
-  "name": "@yoroi/swap-react",
+  "name": "@yoroi/react-swap",
   "version": "1.0.0",
   "description": "The Swap package of Yoroi SDK for react and browser",
   "main": "lib/commonjs/index",
@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@emurgo/cip14-js": "^3.0.1",
-    "@yoroi/swap": "0.0.1",
+    "@yoroi/api-openswap": "0.0.1",
     "@yoroi/types": "1.0.4",
     "immer": "^10.0.2"
   },

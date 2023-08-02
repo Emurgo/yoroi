@@ -9,7 +9,7 @@ import {MetricsModule, MetricsFactoryOptions} from './metrics/module'
 import {MetricsStorage} from './metrics/storage'
 import {MetricsTrack} from './metrics/track'
 import {SwapApi} from './swap/api'
-import {SwapFactoryOptions, SwapProtocol} from './swap/module'
+import {SwapProtocol} from './swap/protocol'
 import {
   SwapCancelOrderData,
   SwapCreateOrderData,
@@ -19,6 +19,7 @@ import {
 } from './swap/order'
 import {SwapPool} from './swap/pool'
 import {SwapStorage} from './swap/storage'
+import {SwapManager} from './swap/manager'
 
 export namespace Metrics {
   export type Module<EventOptions> = MetricsModule<EventOptions>
@@ -30,8 +31,6 @@ export namespace Metrics {
 }
 
 export namespace Swap {
-  export type FactoryOptions = SwapFactoryOptions
-
   export type CreateOrderData = SwapCreateOrderData
   export type CreateOrderResponse = SwapCreateOrderResponse
   export type CancelOrderData = SwapCancelOrderData
@@ -40,6 +39,7 @@ export namespace Swap {
   export type OpenOrder = SwapOpenOrder
   export type Pool = SwapPool
   export interface Api extends SwapApi {}
+  export type Manager = SwapManager
 
   export type Storage = SwapStorage
 }

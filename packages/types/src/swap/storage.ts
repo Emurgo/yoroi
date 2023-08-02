@@ -6,5 +6,5 @@ export type SwapStorage = {
     key: string
   }
 
-  clear(): Promise<void[]>
+  clear(): Promise<void>
 }

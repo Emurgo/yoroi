@@ -17,7 +17,9 @@ export function makeSwapStorage(deps = initialDeps): Readonly<Swap.Storage> {
     key: swapStorageSlippageKey,
   } as const
 
-  const clear = () => Promise.all([storage.removeItem(swapStorageSlippageKey)])
+  const clear = async () => {
+    await Promise.all([storage.removeItem(swapStorageSlippageKey)])
+  }
 
   return {
     slippage,

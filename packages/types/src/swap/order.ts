@@ -1,5 +1,5 @@
 import {BalanceAmount} from '../balance/token'
-import {SwapProtocol} from './module'
+import {SwapProtocol} from './protocol'
 
 export type SwapOrderType = 'market' | 'limit'
 
