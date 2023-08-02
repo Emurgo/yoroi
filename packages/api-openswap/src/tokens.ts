@@ -1,15 +1,15 @@
-import { Swap } from '@yoroi/types';
-import { SWAP_API_ENDPOINTS, axiosClient } from './config';
+import { SWAP_API_ENDPOINTS } from './config';
+import type { ApiDeps, Token } from './types';
 
 export async function getTokens(
-  network: Swap.Network,
-  policyId = '',
-  assetName = ''
-): Promise<Swap.TokenInfo[]> {
+  deps: ApiDeps,
+  { policyId = '', assetName = '' } = {}
+): Promise<Token[]> {
+  const { network, client } = deps;
   if (network === 'preprod') return [];
 
   const apiUrl = SWAP_API_ENDPOINTS[network].getTokens;
-  const response = await axiosClient.get<Swap.TokenInfo[]>('', {
+  const response = await client.get<Token[]>('', {
     baseURL: apiUrl,
     params: {
       'base-policy-id': policyId,

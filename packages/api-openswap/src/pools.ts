@@ -1,11 +1,12 @@
-import { Swap } from '@yoroi/types';
-import { SWAP_API_ENDPOINTS, axiosClient } from './config';
+import { SWAP_API_ENDPOINTS } from './config';
+import type { ApiDeps, Pool, TokenAddress } from './types';
 
 export async function getPools(
-  network: Swap.Network,
-  tokenA: Swap.BaseTokenInfo,
-  tokenB: Swap.BaseTokenInfo
-): Promise<Swap.Pool[]> {
+  deps: ApiDeps,
+  args: { tokenA: TokenAddress; tokenB: TokenAddress }
+): Promise<Pool[]> {
+  const { tokenA, tokenB } = args;
+  const { network, client } = deps;
   const params: { [key: string]: string } = {
     'policy-id1': tokenA.policyId,
     'policy-id2': tokenB.policyId,
@@ -19,7 +20,7 @@ export async function getPools(
   if ('assetNameHex' in tokenB) params['tokenname-hex2'] = tokenB.assetNameHex;
 
   const apiUrl = SWAP_API_ENDPOINTS[network].getPools;
-  const response = await axiosClient.get('', {
+  const response = await client.get('', {
     baseURL: apiUrl,
     params,
   });
