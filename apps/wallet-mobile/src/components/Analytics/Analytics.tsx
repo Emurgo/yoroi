@@ -175,47 +175,47 @@ const useStrings = () => {
 
 const messages = defineMessages({
   header: {
-    id: 'components.analytics.header',
+    id: 'analytics.header',
     defaultMessage: '!!!Join the journey to improve Yoroi',
   },
   description: {
-    id: 'components.analytics.description',
+    id: 'analytics.description',
     defaultMessage: '!!!Share user insights to help us fine tune Yoroi to better serve your needs.',
   },
   anonymous: {
-    id: 'components.analytics.anonymous',
+    id: 'analytics.anonymous',
     defaultMessage: '!!!Anonymous analytics data',
   },
   optout: {
-    id: 'components.analytics.optout',
+    id: 'analytics.optout',
     defaultMessage: '!!!You can always opt-out via Settings',
   },
   private: {
-    id: 'components.analytics.private',
+    id: 'analytics.private',
     defaultMessage: '!!!We <b>cannot</b> access private keys',
   },
   noip: {
-    id: 'components.analytics.noip',
+    id: 'analytics.noip',
     defaultMessage: '!!!We <b>are not</b> recording IP addresses',
   },
   nosell: {
-    id: 'components.analytics.nosell',
+    id: 'analytics.nosell',
     defaultMessage: '!!!We <b>do not</b> sell data',
   },
   more: {
-    id: 'components.analytics.more',
+    id: 'analytics.more',
     defaultMessage: '!!!Learn more about user insights',
   },
   skip: {
-    id: 'components.analytics.skip',
+    id: 'analytics.skip',
     defaultMessage: '!!!Skip',
   },
   accept: {
-    id: 'components.analytics.accept',
+    id: 'analytics.accept',
     defaultMessage: '!!!Accept',
   },
   toggle: {
-    id: 'components.analytics.toggle',
+    id: 'analytics.toggle',
     defaultMessage: '!!!Allow Yoroi analytics',
   },
 })
