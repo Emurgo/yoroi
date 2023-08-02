@@ -9,7 +9,7 @@ import {AnalyticsImage} from './AnalyticsImage'
 
 type Props = {
   type: 'notice' | 'settings'
-  onClose?: () => null
+  onClose?: () => void
 }
 
 export const Analytics = ({type, onClose}: Props) => {
@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 22,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   buttons: {
     flexDirection: 'column',
