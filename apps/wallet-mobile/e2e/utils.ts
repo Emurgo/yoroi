@@ -88,9 +88,8 @@ export const enableDeviceSync = async (platform: string) => {
 
 export const takeScreenshot = async (description:string) => {
   const tmpPath = await device.takeScreenshot(description)
-  const imgBuff =  await toBase64('png', tmpPath)
   await addAttach({
-    attach: imgBuff,
+    attach: await fs.readFile(tmpPath),
     description: description,
     context: '',
     bufferFormat: 'png',
