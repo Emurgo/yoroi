@@ -10,15 +10,7 @@ import {useStrings} from '../../common/strings'
 
 export const ConfirmationOrderScreen = () => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
-  const [bottomSheetState, setBottomSheetSate] = React.useState<{
-    isOpen: boolean
-    title: string
-    content?: string | React.ReactNode
-  }>({
-    isOpen: false,
-    title: '',
-    content: '',
-  })
+  const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false)
 
   const [spendingPassword, setSpendingPassword] = React.useState('')
   const strings = useStrings()
@@ -72,11 +64,7 @@ export const ConfirmationOrderScreen = () => {
 
                   <TouchableOpacity
                     onPress={() => {
-                      setBottomSheetSate({
-                        isOpen: true,
-                        title: item.label,
-                        content: item?.info,
-                      })
+                      setConfirmationModal(true)
                     }}
                   >
                     <Icon.Info size={24} />
@@ -108,39 +96,35 @@ export const ConfirmationOrderScreen = () => {
           shelleyTheme
           title={strings.confirm}
           onPress={() => {
-            setBottomSheetSate({
-              isOpen: true,
-              title: strings.signTransaction,
-              content: (
-                <View style={styles.modalContent}>
-                  <View>
-                    <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
-
-                    <TextInput
-                      secureTextEntry
-                      ref={spendingPasswordRef}
-                      enablesReturnKeyAutomatically
-                      label={strings.spendingPassword}
-                      value={spendingPassword}
-                      onChangeText={setSpendingPassword}
-                      autoComplete="off"
-                    />
-                  </View>
-
-                  <Button testID="swapButton" shelleyTheme title={strings.sign} />
-                </View>
-              ),
-            })
+            setConfirmationModal(true)
           }}
         />
       </Actions>
 
       <BottomSheetModal
-        isOpen={bottomSheetState.isOpen}
-        title={bottomSheetState.title}
-        content={<Text style={styles.text}>{bottomSheetState.content}</Text>}
+        isOpen={confirmationModal}
+        title={strings.signTransaction}
+        content={
+          <View style={styles.modalContent}>
+            <View>
+              <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+
+              <TextInput
+                secureTextEntry
+                ref={spendingPasswordRef}
+                enablesReturnKeyAutomatically
+                label={strings.spendingPassword}
+                value={spendingPassword}
+                onChangeText={setSpendingPassword}
+                autoComplete="off"
+              />
+            </View>
+
+            <Button testID="swapButton" shelleyTheme title={strings.sign} />
+          </View>
+        }
         onClose={() => {
-          setBottomSheetSate({isOpen: false, title: '', content: ''})
+          setConfirmationModal(false)
         }}
       />
     </View>
@@ -204,7 +188,7 @@ const styles = StyleSheet.create({
   modalContent: {
     flexDirection: 'column',
     justifyContent: 'space-between',
-    height: 300,
+    height: 220,
   },
   modalText: {
     paddingHorizontal: 70,
