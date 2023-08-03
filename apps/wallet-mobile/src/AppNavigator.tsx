@@ -2,12 +2,13 @@ import {NavigationContainer, NavigationContainerRef} from '@react-navigation/nat
 import {createStackNavigator} from '@react-navigation/stack'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Alert, AppState, AppStateStatus, Platform} from 'react-native'
+import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'react-native'
 import RNBootSplash from 'react-native-bootsplash'
 
 import StorybookScreen from '../.storybook'
 import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
+import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
@@ -37,6 +38,18 @@ export const AppNavigator = () => {
 
     // try first OS auth before navigating to os login screen
     if (authAction === 'auth-with-os') {
+      if (Platform.OS === 'android') {
+        supportsAndroidFingerprintOverlay().then((isOverlaySupported) => {
+          if (!isOverlaySupported) {
+            RNBootSplash.hide({fade: true})
+          }
+          InteractionManager.runAfterInteractions(() => {
+            authWithOs()
+          })
+        })
+        return
+      }
+
       authWithOs()
     } else {
       RNBootSplash.hide({fade: true})

@@ -1,12 +1,12 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Image, Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
-import DeviceInfo from 'react-native-device-info'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import fingerprintImage from '../../assets/img/fingerprint.png'
 import {Icon, ScreenBackground, StatusBar, Text} from '../../components'
 import {COLORS} from '../../theme'
+import {supportsAndroidFingerprintOverlay} from '../biometrics'
 
 type Props = {
   headings: Array<string>
@@ -31,9 +31,14 @@ export const OsAuthScreen = ({
   const [showImage, setShowImage] = React.useState(showFingerPlaceholder)
 
   React.useEffect(() => {
-    DeviceInfo.getApiLevel().then((sdk) => {
-      setShowImage((Platform.OS === 'android' && sdk < 28) || showFingerPlaceholder)
-    })
+    if (Platform.OS === 'android') {
+      supportsAndroidFingerprintOverlay().then((isSupported) => {
+        setShowImage(!isSupported || showFingerPlaceholder)
+      })
+      return
+    }
+
+    setShowImage(showFingerPlaceholder)
   }, [showFingerPlaceholder])
 
   return (

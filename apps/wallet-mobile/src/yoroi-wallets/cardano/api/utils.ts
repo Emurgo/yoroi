@@ -1,10 +1,11 @@
 import AssetFingerprint from '@emurgo/cip14-js'
+import {Balance} from '@yoroi/types'
 import {Buffer} from 'memfs/lib/internal/buffer'
 
-import {LegacyToken, TokenInfo} from '../../types'
+import {LegacyToken} from '../../types'
 import {TokenRegistryEntry} from './tokenRegistry'
 
-export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
+export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
   const policyId = toPolicyId(entry.subject)
   const assetName = toAssetName(entry.subject)
 
@@ -36,7 +37,7 @@ export const tokenInfo = (entry: TokenRegistryEntry): TokenInfo => {
   }
 }
 
-export const fallbackTokenInfo = (tokenId: string): TokenInfo => {
+export const fallbackTokenInfo = (tokenId: string): Balance.TokenInfo => {
   const policyId = toPolicyId(tokenId)
   const assetName = toAssetName(tokenId)
 
@@ -79,7 +80,7 @@ export const toTokenId = (tokenIdentifier: string) => {
 export const hexToUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
 export const utf8ToHex = (text: string) => Buffer.from(text, 'utf-8').toString('hex')
 
-export const toTokenInfo = (token: LegacyToken): TokenInfo => {
+export const toTokenInfo = (token: LegacyToken): Balance.TokenInfo => {
   const policyId = toPolicyId(token.identifier)
   const assetName = toAssetName(token.identifier)
 

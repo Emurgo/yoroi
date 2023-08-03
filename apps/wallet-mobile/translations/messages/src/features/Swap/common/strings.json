@@ -1,0 +1,602 @@
+[
+  {
+    "id": "swap.swapScreen.swapTitle",
+    "defaultMessage": "!!!Swap",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 57,
+      "column": 13,
+      "index": 2979
+    },
+    "end": {
+      "line": 60,
+      "column": 3,
+      "index": 3052
+    }
+  },
+  {
+    "id": "swap.swapScreen.tokenSwapTab",
+    "defaultMessage": "!!!Token swap",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 61,
+      "column": 13,
+      "index": 3067
+    },
+    "end": {
+      "line": 64,
+      "column": 3,
+      "index": 3149
+    }
+  },
+  {
+    "id": "swap.swapScreen.ordersSwapTab",
+    "defaultMessage": "!!!Orders",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 65,
+      "column": 13,
+      "index": 3164
+    },
+    "end": {
+      "line": 68,
+      "column": 3,
+      "index": 3243
+    }
+  },
+  {
+    "id": "swap.swapScreen.marketButton",
+    "defaultMessage": "!!!Market Button",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 69,
+      "column": 16,
+      "index": 3261
+    },
+    "end": {
+      "line": 72,
+      "column": 3,
+      "index": 3346
+    }
+  },
+  {
+    "id": "swap.swapScreen.limitButton",
+    "defaultMessage": "!!!Limit",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 73,
+      "column": 15,
+      "index": 3363
+    },
+    "end": {
+      "line": 76,
+      "column": 3,
+      "index": 3439
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapFrom",
+    "defaultMessage": "!!!Swap from",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 77,
+      "column": 12,
+      "index": 3453
+    },
+    "end": {
+      "line": 80,
+      "column": 3,
+      "index": 3530
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapTo",
+    "defaultMessage": "!!!Swap to",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 81,
+      "column": 10,
+      "index": 3542
+    },
+    "end": {
+      "line": 84,
+      "column": 3,
+      "index": 3615
+    }
+  },
+  {
+    "id": "swap.swapScreen.currentBalance",
+    "defaultMessage": "!!!Current Balance",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 85,
+      "column": 18,
+      "index": 3635
+    },
+    "end": {
+      "line": 88,
+      "column": 3,
+      "index": 3724
+    }
+  },
+  {
+    "id": "swap.swapScreen.selectToken",
+    "defaultMessage": "!!!Select Token",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 89,
+      "column": 15,
+      "index": 3741
+    },
+    "end": {
+      "line": 92,
+      "column": 3,
+      "index": 3824
+    }
+  },
+  {
+    "id": "swap.swapScreen.marketPrice",
+    "defaultMessage": "!!!Market Price",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 93,
+      "column": 15,
+      "index": 3841
+    },
+    "end": {
+      "line": 96,
+      "column": 3,
+      "index": 3924
+    }
+  },
+  {
+    "id": "swap.swapScreen.slippageTolerance",
+    "defaultMessage": "!!!Slippage Tolerance",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 97,
+      "column": 21,
+      "index": 3947
+    },
+    "end": {
+      "line": 100,
+      "column": 3,
+      "index": 4042
+    }
+  },
+  {
+    "id": "swap.swapScreen.slippageToleranceInfo",
+    "defaultMessage": "!!!Slippage Tolerance Info",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 101,
+      "column": 25,
+      "index": 4069
+    },
+    "end": {
+      "line": 104,
+      "column": 3,
+      "index": 4173
+    }
+  },
+  {
+    "id": "swap.swapScreen.verifiedBy",
+    "defaultMessage": "!!!Verified by {pool}",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 105,
+      "column": 14,
+      "index": 4189
+    },
+    "end": {
+      "line": 108,
+      "column": 3,
+      "index": 4277
+    }
+  },
+  {
+    "id": "swap.swapScreen.assetsIn",
+    "defaultMessage": "!!!This assets is in my portfolio",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 109,
+      "column": 12,
+      "index": 4291
+    },
+    "end": {
+      "line": 112,
+      "column": 3,
+      "index": 4389
+    }
+  },
+  {
+    "id": "swap.swapScreen.defaultSlippage",
+    "defaultMessage": "!!!Default Slippage Tolerance",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 113,
+      "column": 19,
+      "index": 4410
+    },
+    "end": {
+      "line": 116,
+      "column": 3,
+      "index": 4511
+    }
+  },
+  {
+    "id": "swap.swapScreen.slippageInfo",
+    "defaultMessage": "!!!Slippage tolerance is set as a percentage of the total swap value.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 117,
+      "column": 16,
+      "index": 4529
+    },
+    "end": {
+      "line": 120,
+      "column": 3,
+      "index": 4667
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapMinAda",
+    "defaultMessage": "!!!Min-ADA is the minimum ADA amount required to be contained when holding or sending Cardano native tokens.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 121,
+      "column": 14,
+      "index": 4683
+    },
+    "end": {
+      "line": 125,
+      "column": 3,
+      "index": 4864
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapFees",
+    "defaultMessage": "!!!Swap fees include the following:\n   • Matchmaker Fee\n   • Frontend Fee\n   • Liquidity Provider Fee",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 126,
+      "column": 12,
+      "index": 4878
+    },
+    "end": {
+      "line": 132,
+      "column": 3,
+      "index": 5044
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapMinReceived",
+    "defaultMessage": "!!!Minimum amount of tokens you can get because of the slippage tolerance.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 133,
+      "column": 19,
+      "index": 5065
+    },
+    "end": {
+      "line": 136,
+      "column": 3,
+      "index": 5211
+    }
+  },
+  {
+    "id": "swap.swapScreen.enterSlippage",
+    "defaultMessage": "!!!Enter a value from 0% to 100%. You can also enter up to 1 decimal",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 137,
+      "column": 17,
+      "index": 5230
+    },
+    "end": {
+      "line": 140,
+      "column": 3,
+      "index": 5368
+    }
+  },
+  {
+    "id": "swap.swapScreen.poolVerification",
+    "defaultMessage": "!!!{pool} verification",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 141,
+      "column": 20,
+      "index": 5390
+    },
+    "end": {
+      "line": 144,
+      "column": 3,
+      "index": 5485
+    }
+  },
+  {
+    "id": "swap.swapScreen.poolVerificationInfo",
+    "defaultMessage": "!!!Cardano projects that list their own tokens can apply for an additional {pool} verification. This verification is a manual validation that {pool} team performs with the help of Cardano Foundation.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 145,
+      "column": 24,
+      "index": 5511
+    },
+    "end": {
+      "line": 149,
+      "column": 3,
+      "index": 5793
+    }
+  },
+  {
+    "id": "swap.swapScreen.noAssetsFound",
+    "defaultMessage": "!!!No assets found for this pair",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 150,
+      "column": 17,
+      "index": 5812
+    },
+    "end": {
+      "line": 153,
+      "column": 3,
+      "index": 5914
+    }
+  },
+  {
+    "id": "swap.swapScreen.eachVerifiedToken",
+    "defaultMessage": "!!!Each verified tokens gets",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 154,
+      "column": 21,
+      "index": 5937
+    },
+    "end": {
+      "line": 157,
+      "column": 3,
+      "index": 6039
+    }
+  },
+  {
+    "id": "swap.swapScreen.verifiedBadge",
+    "defaultMessage": "!!!verified badge",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 158,
+      "column": 17,
+      "index": 6058
+    },
+    "end": {
+      "line": 161,
+      "column": 3,
+      "index": 6145
+    }
+  },
+  {
+    "id": "swap.swapScreen.openOrders",
+    "defaultMessage": "!!!Open orders",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 162,
+      "column": 14,
+      "index": 6161
+    },
+    "end": {
+      "line": 165,
+      "column": 3,
+      "index": 6242
+    }
+  },
+  {
+    "id": "swap.swapScreen.completedOrders",
+    "defaultMessage": "!!!Completed orders",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 166,
+      "column": 19,
+      "index": 6263
+    },
+    "end": {
+      "line": 169,
+      "column": 3,
+      "index": 6354
+    }
+  },
+  {
+    "id": "global.assets.assetLabel",
+    "defaultMessage": "!!!Asset",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 170,
+      "column": 9,
+      "index": 6365
+    },
+    "end": {
+      "line": 173,
+      "column": 3,
+      "index": 6438
+    }
+  },
+  {
+    "id": "global.clear",
+    "defaultMessage": "!!!Clear",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 174,
+      "column": 9,
+      "index": 6449
+    },
+    "end": {
+      "line": 177,
+      "column": 3,
+      "index": 6510
+    }
+  },
+  {
+    "id": "global.signTransaction",
+    "defaultMessage": "!!!Sign transaction",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 178,
+      "column": 19,
+      "index": 6531
+    },
+    "end": {
+      "line": 181,
+      "column": 3,
+      "index": 6613
+    }
+  },
+  {
+    "id": "global.spendingPassword",
+    "defaultMessage": "!!!Spending Password",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 182,
+      "column": 20,
+      "index": 6635
+    },
+    "end": {
+      "line": 185,
+      "column": 3,
+      "index": 6719
+    }
+  },
+  {
+    "id": "global.enterSpendingPassword",
+    "defaultMessage": "!!!Enter spending password to sign this transaction",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 186,
+      "column": 25,
+      "index": 6746
+    },
+    "end": {
+      "line": 189,
+      "column": 3,
+      "index": 6866
+    }
+  },
+  {
+    "id": "global.sign",
+    "defaultMessage": "!!!Sign",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 190,
+      "column": 8,
+      "index": 6876
+    },
+    "end": {
+      "line": 193,
+      "column": 3,
+      "index": 6935
+    }
+  },
+  {
+    "id": "global.swap",
+    "defaultMessage": "!!!Swap",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 194,
+      "column": 14,
+      "index": 6951
+    },
+    "end": {
+      "line": 197,
+      "column": 3,
+      "index": 7010
+    }
+  },
+  {
+    "id": "components.send.assetselectorscreen.youHave",
+    "defaultMessage": "!!!You have",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 200,
+      "column": 11,
+      "index": 7069
+    },
+    "end": {
+      "line": 203,
+      "column": 3,
+      "index": 7164
+    }
+  },
+  {
+    "id": "components.send.assetselectorscreen.noAssets",
+    "defaultMessage": "!!!No assets found",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 204,
+      "column": 12,
+      "index": 7178
+    },
+    "end": {
+      "line": 207,
+      "column": 3,
+      "index": 7281
+    }
+  },
+  {
+    "id": "components.send.assetselectorscreen.found",
+    "defaultMessage": "!!!found",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 208,
+      "column": 9,
+      "index": 7292
+    },
+    "end": {
+      "line": 211,
+      "column": 3,
+      "index": 7382
+    }
+  },
+  {
+    "id": "components.send.sendscreen.searchTokens",
+    "defaultMessage": "!!!Search tokens",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 212,
+      "column": 16,
+      "index": 7400
+    },
+    "end": {
+      "line": 215,
+      "column": 3,
+      "index": 7496
+    }
+  },
+  {
+    "id": "components.send.selectasset.title",
+    "defaultMessage": "!!!Select asset",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 216,
+      "column": 20,
+      "index": 7518
+    },
+    "end": {
+      "line": 219,
+      "column": 3,
+      "index": 7607
+    }
+  },
+  {
+    "id": "components.send.confirmscreen.confirmButton",
+    "defaultMessage": "!!!Confirm",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 220,
+      "column": 11,
+      "index": 7620
+    },
+    "end": {
+      "line": 223,
+      "column": 3,
+      "index": 7714
+    }
+  }
+]

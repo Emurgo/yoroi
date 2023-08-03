@@ -1,13 +1,18 @@
+import {Balance} from '@yoroi/types'
 import {z} from 'zod'
 
 import {promiseAny} from '../../../utils'
-import {BackendConfig, TokenInfo} from '../../types'
+import {BackendConfig} from '../../types'
 import {createTypeGuardFromSchema} from '../../utils'
 import {checkedFetch} from './fetch'
 import {getNFT} from './metadata'
 import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'
 
-export const getTokenInfo = async (tokenId: string, apiUrl: string, config: BackendConfig): Promise<TokenInfo> => {
+export const getTokenInfo = async (
+  tokenId: string,
+  apiUrl: string,
+  config: BackendConfig,
+): Promise<Balance.TokenInfo> => {
   const nftPromise = getNFT(tokenId, config).then((nft) => {
     if (!nft) throw new Error('NFT not found')
     return nft
@@ -26,7 +31,7 @@ export const getTokenInfo = async (tokenId: string, apiUrl: string, config: Back
     })
 
   try {
-    const result = await promiseAny<TokenInfo>([nftPromise, tokenPromise])
+    const result = await promiseAny<Balance.TokenInfo>([nftPromise, tokenPromise])
     return result ?? fallbackTokenInfo(tokenId)
   } catch (e) {
     return fallbackTokenInfo(tokenId)

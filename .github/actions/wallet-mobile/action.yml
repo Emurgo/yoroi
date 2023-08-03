@@ -1,12 +1,11 @@
 name: wallet-mobile-actions
+description: "Wallet mobile actions"
 
 inputs:
   node-version:
+    description: "Node.js version to use"
     required: true
     default: "16.19.0"
-  working-directory:
-    required: false
-    default: "apps/wallet-mobile"
 
 runs:
   using: "composite"
@@ -19,7 +18,6 @@ runs:
       id: yarn-cache-dir-path
       run: echo "::set-output name=dir::$(yarn cache dir)"
       shell: bash
-      working-directory: ${{ inputs.working-directory }}
     - uses: actions/cache@v2
       with:
         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -28,4 +26,3 @@ runs:
           ${{ runner.os }}-yarn-
     - run: yarn install --frozen-lockfile
       shell: bash
-      working-directory: ${{ inputs.working-directory }}

@@ -1,7 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-cd apps/wallet-mobile
-npx lint-staged
-yarn tsc
-yarn test --ci --bail --silent
+yarn workspaces run build
+yarn workspace @yoroi/wallet-mobile run lint-staged

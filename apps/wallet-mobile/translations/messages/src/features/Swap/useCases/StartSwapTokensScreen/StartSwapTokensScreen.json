@@ -1,0 +1,47 @@
+[
+  {
+    "id": "swap.swapScreen.marketButton",
+    "defaultMessage": "!!!Market Button",
+    "file": "src/features/Swap/useCases/StartSwapTokensScreen/StartSwapTokensScreen.tsx",
+    "start": {
+      "line": 67,
+      "column": 16,
+      "index": 2054
+    },
+    "end": {
+      "line": 70,
+      "column": 3,
+      "index": 2139
+    }
+  },
+  {
+    "id": "swap.swapScreen.limitButton",
+    "defaultMessage": "!!!Limit Button",
+    "file": "src/features/Swap/useCases/StartSwapTokensScreen/StartSwapTokensScreen.tsx",
+    "start": {
+      "line": 71,
+      "column": 15,
+      "index": 2156
+    },
+    "end": {
+      "line": 74,
+      "column": 3,
+      "index": 2239
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapTitle",
+    "defaultMessage": "!!!Swap",
+    "file": "src/features/Swap/useCases/StartSwapTokensScreen/StartSwapTokensScreen.tsx",
+    "start": {
+      "line": 75,
+      "column": 8,
+      "index": 2249
+    },
+    "end": {
+      "line": 78,
+      "column": 3,
+      "index": 2322
+    }
+  }
+]

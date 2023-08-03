@@ -1,4 +1,5 @@
 import {FlashList, FlashListProps} from '@shopify/flash-list'
+import {Balance} from '@yoroi/types'
 import React from 'react'
 import {Dimensions, StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
@@ -6,7 +7,6 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {features} from '../../features'
 import {useModeratedNftImage} from '../../Nfts/hooks'
 import {useSelectedWallet} from '../../SelectedWallet/Context'
-import {TokenInfo} from '../../yoroi-wallets/types'
 import {Icon} from '../Icon'
 import {NftPreview} from '../NftPreview'
 import {Spacer} from '../Spacer'
@@ -21,12 +21,12 @@ export const SkeletonGallery = ({amount}: {amount: number}) => {
 }
 
 type Props = {
-  nfts: TokenInfo[]
+  nfts: Balance.TokenInfo[]
   onSelect: (id: string) => void
   onRefresh: () => void
   isRefreshing: boolean
-  bounces?: FlashListProps<TokenInfo>['bounces']
-  ListEmptyComponent?: FlashListProps<TokenInfo>['ListEmptyComponent']
+  bounces?: FlashListProps<Balance.TokenInfo>['bounces']
+  ListEmptyComponent?: FlashListProps<Balance.TokenInfo>['ListEmptyComponent']
   withVerticalPadding?: boolean
   readOnly?: boolean
 }
@@ -60,7 +60,7 @@ export const NftImageGallery = ({
 }
 
 type ModeratedImageProps = TouchableOpacityProps & {
-  nft: TokenInfo
+  nft: Balance.TokenInfo
 }
 const UnModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
   return (
@@ -112,11 +112,11 @@ const ModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
   )
 }
 
-function BlockedNft({nft}: {nft: TokenInfo}) {
+function BlockedNft({nft}: {nft: Balance.TokenInfo}) {
   return <PlaceholderNft nft={nft} />
 }
 
-function PlaceholderNft({nft}: {nft: TokenInfo}) {
+function PlaceholderNft({nft}: {nft: Balance.TokenInfo}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
@@ -137,11 +137,11 @@ function PlaceholderNft({nft}: {nft: TokenInfo}) {
   )
 }
 
-function ManualReviewNft({nft}: {nft: TokenInfo}) {
+function ManualReviewNft({nft}: {nft: Balance.TokenInfo}) {
   return <PlaceholderNft nft={nft} />
 }
 
-function RequiresConsentNft({nft}: {nft: TokenInfo}) {
+function RequiresConsentNft({nft}: {nft: Balance.TokenInfo}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
@@ -166,7 +166,7 @@ function RequiresConsentNft({nft}: {nft: TokenInfo}) {
   )
 }
 
-function ApprovedNft({nft}: {nft: TokenInfo}) {
+function ApprovedNft({nft}: {nft: Balance.TokenInfo}) {
   return (
     <View>
       <View style={styles.imageWrapper}>

@@ -1,4 +1,5 @@
 import {Ada} from './Ada'
+import {Analytics} from './Analytics'
 import {Assets} from './Assets'
 import {Bio} from './Bio'
 import {Bug} from './Bug'
@@ -23,6 +24,7 @@ import {DigitalAsset} from './DigitalAsset'
 import {Direction} from './Direction'
 import {Document} from './Document'
 import {Drag} from './Drag'
+import {Edit} from './Edit'
 import {Emurgo} from './Emurgo'
 import {Export} from './Export'
 import {ExternalLink} from './ExternalLink'
@@ -51,9 +53,11 @@ import {Placeholder} from './Placeholder'
 import {PlateNumber} from './PlateNumber'
 import {Plus} from './Plus'
 import {PlusCircle} from './PlusCircle'
+import {Portfolio} from './Portfolio'
 import {Qr} from './Qr'
 import {QuestionMark} from './QuestionMark'
 import {Received} from './Received'
+import {Refresh} from './Refresh'
 import {RewardManuallyPayout} from './RewardManuallyPayout'
 import {RewardWithdrawn} from './RewardWithdrawn'
 import {Sandbox} from './Sandbox'
@@ -67,6 +71,7 @@ import {StakingKeyRegistered} from './StakingKeyRegistered'
 import {StarFilled} from './StarFilled'
 import {StarOutlined} from './StarOutlined'
 import {Support} from './Support'
+import {Switch} from './Switch'
 import {Table} from './Table'
 import {TabStaking} from './TabStaking'
 import {TabWallet} from './TabWallet'
@@ -89,6 +94,7 @@ import {YoroiWallet} from './YoroiWallet'
 
 export const Icon = {
   Ada,
+  Analytics,
   Assets,
   Bio,
   Bug,
@@ -176,4 +182,8 @@ export const Icon = {
   Wallets,
   YoroiNightly,
   YoroiWallet,
+  Refresh,
+  Switch,
+  Edit,
+  Portfolio,
 }

@@ -76,6 +76,10 @@ const mockMetricsStorage = {
     read: jest.fn().mockResolvedValue(true),
     write: jest.fn().mockResolvedValue(undefined),
   },
+  consentRequested: {
+    read: jest.fn().mockResolvedValue(false),
+    write: jest.fn().mockResolvedValue(undefined),
+  },
 }
 
 describe('makeMetricsManager', () => {
@@ -147,6 +151,10 @@ describe('makeMetricsManager', () => {
   test('disable should set metrics enabled to false', async () => {
     const mockMetricsStorageDisabled = {
       enabled: {
+        read: jest.fn().mockResolvedValue(false),
+        write: jest.fn().mockResolvedValue(undefined),
+      },
+      consentRequested: {
         read: jest.fn().mockResolvedValue(false),
         write: jest.fn().mockResolvedValue(undefined),
       },

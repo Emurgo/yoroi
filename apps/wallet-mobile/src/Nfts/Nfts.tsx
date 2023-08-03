@@ -1,3 +1,4 @@
+import {Balance} from '@yoroi/types'
 import React, {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
@@ -8,7 +9,6 @@ import {useMetrics} from '../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
 import {useNfts} from '../yoroi-wallets/hooks'
-import {TokenInfo} from '../yoroi-wallets/types'
 import {filterNfts, useTrackNftGallerySearchActivated} from './filterNfts'
 import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
@@ -194,7 +194,7 @@ const LoadingScreen = ({nftsCount}: {nftsCount: number}) => {
   )
 }
 
-const byName = ({name: A}: TokenInfo, {name: B}: TokenInfo) => A.localeCompare(B)
+const byName = ({name: A}: Balance.TokenInfo, {name: B}: Balance.TokenInfo) => A.localeCompare(B)
 
 const styles = StyleSheet.create({
   safeAreaView: {

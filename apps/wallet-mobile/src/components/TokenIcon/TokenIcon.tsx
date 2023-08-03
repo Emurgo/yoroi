@@ -10,14 +10,19 @@ import {Boundary} from '../Boundary'
 import {Icon} from '../Icon'
 import {ModeratedNftIcon} from './ModeratedNftIcon'
 
-export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
+export const TokenIcon = ({wallet, tokenId, variant}: {wallet: YoroiWallet; tokenId: string; variant?: 'swap'}) => {
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
-  if (isPrimary) return <PrimaryIcon />
+  if (isPrimary) return <PrimaryIcon variant={variant} />
   if (tokenInfo.kind === 'ft') {
     if (isString(tokenInfo.icon) && tokenInfo.icon.length > 0 && isBase64(tokenInfo.icon)) {
-      return <Image source={{uri: `data:image/png;base64,${tokenInfo.icon}`}} style={styles.icon} />
+      return (
+        <Image
+          source={{uri: `data:image/png;base64,${tokenInfo.icon}`}}
+          style={[variant === 'swap' ? styles.iconSmall : styles.icon]}
+        />
+      )
     }
   }
 
@@ -28,12 +33,16 @@ export const TokenIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: stri
       </Boundary>
     )
   }
-  return <Placeholder />
+  return <Placeholder variant={variant} />
 }
 
-const PrimaryIcon = () => (
-  <View style={[styles.icon, styles.primary]}>
-    <Icon.Cardano color="white" height={35} width={35} />
+type PrimaryIconProps = {
+  variant?: 'swap'
+}
+
+const PrimaryIcon = ({variant}: PrimaryIconProps) => (
+  <View style={[variant === 'swap' ? styles.iconSmall : styles.icon, styles.primary]}>
+    <Icon.Cardano color="white" height={variant === 'swap' ? 20 : 35} width={variant === 'swap' ? 20 : 35} />
   </View>
 )
 
@@ -59,8 +68,12 @@ const UnModeratedNftIcon = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: st
   return <ModeratedNftIcon status="approved" nft={nft} />
 }
 
-export const Placeholder = () => (
-  <View style={[styles.icon, styles.placeholder]}>
+type PlaceholderProps = {
+  variant?: 'swap'
+}
+
+export const Placeholder = ({variant}: PlaceholderProps) => (
+  <View style={[styles.icon, styles.placeholder, variant === 'swap' && styles.placeholderSmall]}>
     <Icon.Tokens color={COLORS.TEXT_INPUT} size={35} />
   </View>
 )
@@ -92,7 +105,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  iconSmall: {
+    backgroundColor: 'transparent',
+    width: 24,
+    height: 24,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   placeholder: {
     backgroundColor: COLORS.BACKGROUND_GRAY,
+  },
+  placeholderSmall: {
+    width: 24,
+    height: 24,
   },
 })
