@@ -1,4 +1,6 @@
 import { expect } from 'detox'
+import fs from 'fs/promises'
+import {addAttach, addMsg} from 'jest-html-reporters/helper'
 import yargs from 'yargs/yargs'
 
 import { mnemonicBadgeByWord,mnemonicByIndexText } from './screens/createWalletFlow.screen'
@@ -6,6 +8,7 @@ import * as myWalletsScreen from './screens/myWallets.screen'
 import { pinKeyButton } from './screens/pinCode.screen'
 import * as prepareScreens from './screens/prepareApp.screen'
 import { mnemonicByIndexInput } from './screens/restoreWalletFlow.screen'
+import * as userInsightScreen from './screens/shareUserInsights.screen'
 
 export const enterPIN = async (pin: string): Promise<void> => {
   for (const pinNumber of pin) {
@@ -53,6 +56,9 @@ export const prepareApp = async (pin:string): Promise<void> => {
   await expect(pinKeyButton('1')).toBeVisible()
   await enterPIN(pin)
   await enterPIN(pin)
+  await expect(userInsightScreen.txt_PageTitle()).toBeVisible()
+  await takeScreenshot('User consent screen for sharing insights')
+  await userInsightScreen.btn_Skip().tap()
 
   await expect(myWalletsScreen.pageTitle()).toBeVisible()
 }
@@ -82,4 +88,26 @@ export const disableDeviceSync = async (platform: string) => {
 // wrap device.enableSynchronization for android only
 export const enableDeviceSync = async (platform: string) => {
   platform === 'android' && await device.enableSynchronization()
+}
+
+export const takeScreenshot = async (description:string) => {
+  const tmpPath = await device.takeScreenshot(description)
+  await addAttach({
+    attach: await fs.readFile(tmpPath),
+    description: description,
+    context: '',
+    bufferFormat: 'png',
+  })
+}
+
+export const addMsgToReport = async  (msg: string) =>{
+  await addMsg({message: msg, context: null});
+}
+
+export const toBase64 = async(fileType: string, filePath: string)  =>{
+    const base64String = await fs.readFile(filePath, {
+      encoding: 'base64',
+    })
+    const withPrefix = `data:image/${fileType};base64,` + base64String;
+    return withPrefix
 }
