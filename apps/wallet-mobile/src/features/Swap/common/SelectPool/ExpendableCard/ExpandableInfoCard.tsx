@@ -51,9 +51,9 @@ export const ExpandableInfoCard = ({
           {mainInfo?.map((item, index) => (
             <View key={index}>
               <View style={styles.flexBetween}>
-                <Text style={styles.gray}>{`${item.label}`}</Text>
+                <Text style={styles.gray}>{item.label}</Text>
 
-                {item?.value !== undefined && <Text style={styles.text}>{`${item?.value}`}</Text>}
+                {item?.value !== undefined && <Text style={styles.text}>{item?.value}</Text>}
               </View>
 
               {index !== mainInfo?.length - 1 && <Spacer height={8} />}
