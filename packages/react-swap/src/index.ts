@@ -1,5 +1,6 @@
 export {makeSwapStorage} from './adapters/storage'
 export {makeSwapManager} from './translators/swapManager'
+export {makeSwapApi} from './adapters/api'
 export {mockSwapStorage, mockSwapStorageDefault} from './adapters/storage.mocks'
 export {
   mockSwapManager,
