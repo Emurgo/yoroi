@@ -18,6 +18,8 @@
     "tsc": "tsc --noEmit -p tsconfig.json",
     "clean": "del-cli lib",
     "flow": ". ./scripts/flowgen.sh",
+    "publish:beta": "yarn build && npm publish --scope yoroi --tag beta --access beta",
+    "publish:prod": "yarn build && npm publish --scope yoroi --access public",
     "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && tsc --project tsconfig.build.json && yarn flow",
     "prepack": "yarn build",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
