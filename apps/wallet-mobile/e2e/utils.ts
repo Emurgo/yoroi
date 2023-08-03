@@ -8,6 +8,7 @@ import * as myWalletsScreen from './screens/myWallets.screen'
 import { pinKeyButton } from './screens/pinCode.screen'
 import * as prepareScreens from './screens/prepareApp.screen'
 import { mnemonicByIndexInput } from './screens/restoreWalletFlow.screen'
+import * as userInsightScreen from './screens/shareUserInsights.screen'
 
 export const enterPIN = async (pin: string): Promise<void> => {
   for (const pinNumber of pin) {
@@ -55,6 +56,9 @@ export const prepareApp = async (pin:string): Promise<void> => {
   await expect(pinKeyButton('1')).toBeVisible()
   await enterPIN(pin)
   await enterPIN(pin)
+  await expect(userInsightScreen.txt_PageTitle()).toBeVisible()
+  await takeScreenshot('User consent screen for sharing insights')
+  await userInsightScreen.btn_Skip().tap()
 
   await expect(myWalletsScreen.pageTitle()).toBeVisible()
 }
