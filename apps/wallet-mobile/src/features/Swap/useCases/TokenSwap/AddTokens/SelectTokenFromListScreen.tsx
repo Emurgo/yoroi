@@ -81,7 +81,6 @@ const SelectableAssetItem = ({tokenInfo, wallet}: SelectableAssetItemProps) => {
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
 
   const onSelect = () => {
-    console.log('!!!!!!!!!! TOKEN TO BE SELL WAS ADDED SELECTED', {tokenId: tokenInfo.id, quantity: balanceAvailable})
     fromAmountChanged({tokenId: tokenInfo.id, quantity: balanceAvailable})
     navigateTo.swapTokens()
     closeSearch()

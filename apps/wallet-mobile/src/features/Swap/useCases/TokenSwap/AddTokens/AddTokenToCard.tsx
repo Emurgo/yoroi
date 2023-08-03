@@ -14,13 +14,13 @@ import {SwapCard} from '../../../SwapCard/SwapCard'
 export const AddTokenToCard = () => {
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
-  const {createOrder, toAmountChanged} = useSwap()
-  const tokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId}, {select: selectFtOrThrow})
+  const {amounts, toAmountChanged} = useSwap()
+  const tokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId}, {select: selectFtOrThrow})
   const strings = useStrings()
 
   useEffect(() => {
-    toAmountChanged({tokenId: 'noTokenSelected', quantity: createOrder.amounts.buy.quantity})
-  }, [createOrder.amounts.buy.quantity, toAmountChanged, wallet])
+    toAmountChanged({tokenId: 'noTokenSelected', quantity: amounts.buy.quantity})
+  }, [])
 
   const [quantity, setQuantity] = React.useState<Balance.Quantity>('0')
   const [inputValue, setInputValue] = React.useState<string>()
@@ -42,7 +42,7 @@ export const AddTokenToCard = () => {
       label={strings.swapTo}
       onChange={onChangeQuantity}
       value={inputValue}
-      amount={{tokenId: '', quantity: '222'}}
+      amount={{tokenId: amounts.buy.tokenId, quantity: amounts.buy.quantity}}
       wallet={wallet}
       hasError={Number(quantity) > 0 ? !canSpend : false}
       navigateTo={navigate.selectedSwapToTokens}
