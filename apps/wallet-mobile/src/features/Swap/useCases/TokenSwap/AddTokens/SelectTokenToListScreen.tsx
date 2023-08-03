@@ -1,4 +1,5 @@
 import {FlashList} from '@shopify/flash-list'
+import {useSwap} from '@yoroi/react-swap'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -12,12 +13,11 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {useAllTokenInfos, useIsWalletEmpty} from '../../../../../yoroi-wallets/hooks'
+import {useAllTokenInfos, useBalance, useIsWalletEmpty} from '../../../../../yoroi-wallets/hooks'
 import {NoAssetFoundImage} from '../../../../Send/common/NoAssetFoundImage'
 import {filterBySearch} from '../../../common/filterBySearch'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
-import {useSwap, useTokenQuantities} from '../../../common/SwapContext'
 
 export type FungibilityFilter = 'all' | 'ft' | 'nft'
 
@@ -140,13 +140,13 @@ const AssetList = () => {
 type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableAssetItem = ({tokenInfo, wallet}: SelectableAssetItemProps) => {
   const {closeSearch} = useSearch()
-  const {tokenToSelectedChanged} = useSwap()
-  const {spendable} = useTokenQuantities(tokenInfo.id)
+  const {toAmountChanged} = useSwap()
   const navigateTo = useNavigateTo()
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
+  const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
 
   const onSelect = () => {
-    tokenToSelectedChanged(tokenInfo.id)
+    toAmountChanged({tokenId: tokenInfo.id, quantity: balanceAvailable})
     navigateTo.swapTokens()
     closeSearch()
   }
@@ -157,7 +157,7 @@ const SelectableAssetItem = ({tokenInfo, wallet}: SelectableAssetItemProps) => {
       onPress={onSelect}
       testID="selectTokenButton"
     >
-      <AmountItem amount={{tokenId: tokenInfo.id, quantity: spendable}} wallet={wallet} variant="swap" />
+      <AmountItem amount={{tokenId: tokenInfo.id, quantity: balanceAvailable}} wallet={wallet} variant="swap" />
     </TouchableOpacity>
   )
 }

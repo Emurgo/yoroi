@@ -1,3 +1,4 @@
+import {useSwap} from '@yoroi/react-swap'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 
@@ -8,22 +9,19 @@ import {Logger} from '../../../../../yoroi-wallets/logging'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
-import {useSwap, useTokenQuantities} from '../../../common/SwapContext'
 import {SwapCard} from '../../../SwapCard/SwapCard'
 
 export const AddTokenFromCard = () => {
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
-  const {selectedTokenFromId} = useSwap()
-  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenFromId}, {select: selectFtOrThrow})
+  const {amounts} = useSwap()
+  const tokenInfo = useTokenInfo({wallet, tokenId: amounts?.sell.tokenId}, {select: selectFtOrThrow})
   const strings = useStrings()
-
-  const {spendable} = useTokenQuantities(selectedTokenFromId)
 
   const [quantity, setQuantity] = React.useState<Balance.Quantity>('0')
   const [inputValue, setInputValue] = React.useState<string>()
 
-  const canSpend = Number(quantity) > 0 && Number(quantity) < Number(spendable)
+  const canSpend = Number(quantity) > 0 && Number(quantity) < Number(amounts?.sell.quantity)
 
   const onChangeQuantity = (text: string) => {
     try {
@@ -40,7 +38,7 @@ export const AddTokenFromCard = () => {
       label={strings.swapFrom}
       onChange={onChangeQuantity}
       value={inputValue}
-      amount={{tokenId: selectedTokenFromId, quantity: spendable}}
+      amount={{tokenId: amounts?.sell.tokenId, quantity: amounts?.sell.quantity}}
       wallet={wallet}
       hasError={Number(quantity) > 0 ? !canSpend : false}
       navigateTo={navigate.selectedSwapFromTokens}

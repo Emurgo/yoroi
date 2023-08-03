@@ -1,3 +1,4 @@
+import {useSwap} from '@yoroi/react-swap'
 import {Balance} from '@yoroi/types'
 import React, {useEffect} from 'react'
 
@@ -8,26 +9,23 @@ import {Logger} from '../../../../../yoroi-wallets/logging'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
-import {useSwap, useTokenQuantities} from '../../../common/SwapContext'
 import {SwapCard} from '../../../SwapCard/SwapCard'
 
 export const AddTokenToCard = () => {
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
-  const {selectedTokenToId, tokenToSelectedChanged} = useSwap()
-  const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenToId}, {select: selectFtOrThrow})
+  const {createOrder, toAmountChanged} = useSwap()
+  const tokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId}, {select: selectFtOrThrow})
   const strings = useStrings()
 
   useEffect(() => {
-    tokenToSelectedChanged('noTokenSelected')
-  }, [tokenToSelectedChanged, wallet])
-
-  const {spendable} = useTokenQuantities(selectedTokenToId)
+    toAmountChanged({tokenId: 'noTokenSelected', quantity: createOrder.amounts.buy.quantity})
+  }, [createOrder.amounts.buy.quantity, toAmountChanged, wallet])
 
   const [quantity, setQuantity] = React.useState<Balance.Quantity>('0')
   const [inputValue, setInputValue] = React.useState<string>()
 
-  const canSpend = Number(quantity) > 0 && Number(quantity) < Number(spendable)
+  const canSpend = Number(quantity) > 0 && Number(quantity) < Number(222)
 
   const onChangeQuantity = (text: string) => {
     try {
@@ -44,7 +42,7 @@ export const AddTokenToCard = () => {
       label={strings.swapTo}
       onChange={onChangeQuantity}
       value={inputValue}
-      amount={{tokenId: selectedTokenToId, quantity: spendable}}
+      amount={{tokenId: '', quantity: '222'}}
       wallet={wallet}
       hasError={Number(quantity) > 0 ? !canSpend : false}
       navigateTo={navigate.selectedSwapToTokens}

@@ -1,4 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
+import {makeSwapApi, makeSwapManager, makeSwapStorage, SwapProvider} from '@yoroi/react-swap'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
@@ -13,7 +14,6 @@ import {SelectTokenFromListScreen} from '../features/Send/useCases/ListAmountsTo
 import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
-import {SwapProvider} from '../features/Swap/common/SwapContext'
 import {ConfirmationOrderScreen, StartSwapScreen} from '../features/Swap/useCases'
 import {InputSlippageToleranceScreen} from '../features/Swap/useCases/InputSlippageToleranceScreen'
 import {SelectPoolScreen} from '../features/Swap/useCases/SelectPoolScreen'
@@ -39,14 +39,20 @@ export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
 
+  console.log('WALLET NETWORD', wallet.networkId)
+
   const walletName = useWalletName(wallet)
   const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
 
+  const swapStorage = makeSwapStorage()
+  const swapAPI = makeSwapApi({network: 0, stakingKey: '2222'})
+  const swapManager = makeSwapManager(swapStorage, swapAPI)
+
   return (
     <SendProvider key={wallet.id}>
-      <SwapProvider key={wallet.id}>
+      <SwapProvider key={wallet.id} swapManager={swapManager}>
         <Stack.Navigator
           screenListeners={{}}
           screenOptions={{
