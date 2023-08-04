@@ -14,6 +14,7 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
+import {CONFIG} from '../../legacy/config'
 import {useWalletManager} from '../../WalletManager'
 import {calcLockedDeposit} from '../cardano/assetUtils'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
@@ -38,6 +39,7 @@ const crashReportsStorageKey = 'sendCrashReports'
 
 export const getCrashReportsEnabled = async (storage: AsyncStorageStatic = AsyncStorage) => {
   const data = await storage.getItem(crashReportsStorageKey)
+  if (CONFIG.FORCE_CRASH_REPORTS) return true
   return parseBoolean(data) ?? false
 }
 

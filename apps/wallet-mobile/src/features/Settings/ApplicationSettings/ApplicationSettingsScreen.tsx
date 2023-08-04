@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Icon, Spacer, StatusBar} from '../../../components'
 import {features} from '../../../features'
 import {useLanguage} from '../../../i18n'
+import {CONFIG} from '../../../legacy/config'
 import {useWalletNavigation} from '../../../navigation'
 import {lightPalette} from '../../../theme'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
@@ -168,7 +169,7 @@ const CrashReportsSwitch = () => {
     setIsLocalEnabled(enabled)
   }, [enabled, setIsLocalEnabled])
 
-  return <Switch value={isLocalEnabled} onValueChange={onToggleCrashReports} />
+  return <Switch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={CONFIG.FORCE_CRASH_REPORTS} />
 }
 
 const useStrings = () => {

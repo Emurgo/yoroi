@@ -5,7 +5,7 @@ import * as Sentry from 'sentry-expo'
 import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
-import {CONFIG} from './legacy/config'
+import {CONFIG, isProduction} from './legacy/config'
 import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
 import {useStorage, YoroiStorage} from './yoroi-wallets/storage'
 import {isString} from './yoroi-wallets/utils'
@@ -63,12 +63,12 @@ const useInitSentry = (options: {enabled: boolean}) => {
   ref.current = options.enabled
 
   useEffect(() => {
-    if (!CONFIG.SENTRY.ENABLE || !isString(CONFIG.SENTRY.DSN)) return
+    if (!isString(CONFIG.SENTRY.DSN)) return
     Sentry.init({
       dsn: CONFIG.SENTRY.DSN,
       patchGlobalPromise: true,
-      enableInExpoDevelopment: false,
-      tracesSampleRate: 1.0,
+      enableInExpoDevelopment: true,
+      tracesSampleRate: isProduction() ? 0.25 : 1,
       beforeSend(event) {
         // https://github.com/getsentry/sentry-javascript/issues/2039
         const isEnabled = ref.current
