@@ -14,7 +14,6 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {isNightly} from '../../legacy/config'
 import {useWalletManager} from '../../WalletManager'
 import {calcLockedDeposit} from '../cardano/assetUtils'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
@@ -58,7 +57,6 @@ export const useSetCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncSto
   const mutation = useMutationWithInvalidations<void, Error, boolean>({
     useErrorBoundary: true,
     mutationFn: (enabled) => {
-      console.log('set crash reports enabled', enabled)
       return storage.setItem(crashReportsStorageKey, JSON.stringify(enabled))
     },
     invalidateQueries: [[crashReportsStorageKey]],
@@ -67,7 +65,6 @@ export const useSetCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncSto
   return mutation.mutate
 }
 
-// here
 export const useCrashReports = () => {
   const set = useSetCrashReportsEnabled()
 

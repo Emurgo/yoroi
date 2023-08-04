@@ -1,15 +1,15 @@
 import React, {useEffect, useRef} from 'react'
 import {Platform, UIManager} from 'react-native'
 import {enableScreens} from 'react-native-screens'
+import * as Sentry from 'sentry-expo'
 import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
-import {useStorage, YoroiStorage} from './yoroi-wallets/storage'
-import {walletManager} from './yoroi-wallets/walletManager'
-import * as Sentry from 'sentry-expo'
 import {CONFIG} from './legacy/config'
 import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
+import {useStorage, YoroiStorage} from './yoroi-wallets/storage'
 import {isString} from './yoroi-wallets/utils'
+import {walletManager} from './yoroi-wallets/walletManager'
 
 enableScreens()
 

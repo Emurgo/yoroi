@@ -23,7 +23,6 @@ import {useOpenWallet, useWalletMetas} from '../../yoroi-wallets/hooks'
 import {WalletMeta} from '../../yoroi-wallets/walletManager'
 import {useSetSelectedWallet, useSetSelectedWalletMeta} from '../Context'
 import {WalletListItem} from './WalletListItem'
-import * as Sentry from '@sentry/react-native'
 
 export const WalletSelectionScreen = () => {
   const strings = useStrings()
@@ -204,20 +203,9 @@ const OnlyNightlyShelleyTestnetButton = () => {
 const OnlyDevButton = () => {
   const navigation = useNavigation()
 
-  const crash = () => {
-    Promise.reject(new Error('Test error'))
-    // Sentry.captureException(new Error('Test error'))
-    // Sentry
-  }
-
   if (!__DEV__) return null
 
-  return (
-    <>
-      <Button onPress={() => navigation.navigate('developer')} title="Dev options" style={styles.button} />
-      <Button title="Crash" onPress={() => crash()} style={styles.button} />
-    </>
-  )
+  return <Button onPress={() => navigation.navigate('developer')} title="Dev options" style={styles.button} />
 }
 
 const styles = StyleSheet.create({
