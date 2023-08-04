@@ -12,3 +12,9 @@ export {
   useSwap,
   useOrderByStatusOpen,
 } from './translators/reactjs'
+export {
+  getReceiveAmountbyChangingSell,
+  getSellAmountByChangingReceive,
+  makePossibleMarketOrder,
+  makeLimitOrder,
+} from './helpers/order'
