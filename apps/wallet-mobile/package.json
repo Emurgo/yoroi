@@ -5,6 +5,7 @@
   "scripts": {
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "build": "yarn lint && yarn tsc && yarn test",
+    "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "e2e:build:android:dev:debug": "detox build --configuration android.emu.dev.debug",
     "e2e:build:android:nightly:debug": "detox build --configuration android.emu.nightly.debug",
     "e2e:build:android:nightly:release": "detox build --configuration android.emu.nightly.release",
@@ -240,7 +241,7 @@
     "babel-plugin-react-intl": "^3.0.1",
     "babel-plugin-require-context-hook": "^1.0.0",
     "chai": "^4.3.7",
-    "dependency-cruiser": "^12.10.0",
+    "dependency-cruiser": "^13.1.1",
     "detox": "^20.11.0",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "8.3.0",

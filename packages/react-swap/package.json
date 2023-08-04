@@ -2,11 +2,35 @@
   "name": "@yoroi/react-swap",
   "version": "1.0.0",
   "description": "The Swap package of Yoroi SDK for react and browser",
+  "keywords": [
+    "yoroi",
+    "cardano",
+    "swap",
+    "browser",
+    "react"
+  ],
+  "homepage": "https://github.com/Emurgo/yoroi/packages/metrics-react#readme",
+  "bugs": {
+    "url": "https://github.com/Emurgo/yoroi/issues"
+  },
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/Emurgo/yoroi.git",
+    "directory": "packages/swap-react"
+  },
+  "license": "Apache-2.0",
+  "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",
+  "contributors": [
+    {
+      "name": "Juliano Lazzarotto",
+      "email": "juliano@stackchain.dev"
+    }
+  ],
   "main": "lib/commonjs/index",
-  "browser": "lib/module/index",
   "module": "lib/module/index",
-  "types": "lib/typescript/index.d.ts",
   "source": "src/index",
+  "browser": "lib/module/index",
+  "types": "lib/typescript/index.d.ts",
   "files": [
     "src",
     "lib",
@@ -22,55 +46,73 @@
     "!**/.*"
   ],
   "scripts": {
-    "test": "jest",
-    "tsc": "tsc --noEmit -p tsconfig.json",
-    "flow": ". ./scripts/flowgen.sh",
+    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build && yarn flow",
     "clean": "del-cli lib",
+    "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
+    "flow": ". ./scripts/flowgen.sh",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "prepack": "yarn build",
     "publish:beta": "yarn build && npm publish --scope yoroi --tag beta --access beta",
     "publish:prod": "yarn build && npm publish --scope yoroi --access public",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build && yarn flow",
-    "prepack": "yarn build",
-    "release": "release-it"
+    "release": "release-it",
+    "test": "jest",
+    "tsc": "tsc --noEmit -p tsconfig.json"
   },
-  "keywords": [
-    "yoroi",
-    "cardano",
-    "swap",
-    "browser",
-    "react"
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "prettier": {
+    "bracketSpacing": false,
+    "quoteProps": "consistent",
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "useTabs": false
+  },
+  "eslintConfig": {
+    "extends": [
+      "@react-native-community",
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "quoteProps": "consistent",
+          "bracketSpacing": false,
+          "singleQuote": true,
+          "tabWidth": 2,
+          "trailingComma": "all",
+          "useTabs": false,
+          "semi": false
+        }
+      ]
+    },
+    "root": true
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "lib/",
+    "babel.config.js",
+    "jest.setup.js"
   ],
-  "repository": {
-    "type": "github",
-    "url": "https://github.com/Emurgo/yoroi.git",
-    "directory": "packages/swap-react"
-  },
-  "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",
-  "contributors": [
-    {
-      "name": "Juliano Lazzarotto",
-      "email": "juliano@stackchain.dev"
-    }
-  ],
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/Emurgo/yoroi/issues"
-  },
-  "homepage": "https://github.com/Emurgo/yoroi/packages/metrics-react#readme",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
+      "<rootDir>/lib/"
+    ],
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ]
   },
   "dependencies": {
     "@emurgo/cip14-js": "^3.0.1",
     "@yoroi/api-openswap": "0.0.1",
     "immer": "^10.0.2"
-  },
-  "peerDependencies": {
-    "react": ">= 16.8.0 <= 19.0.0",
-    "react-query": "^3.39.3"
-  },
-  "optionalDependencies": {
-    "@react-native-async-storage/async-storage": "^1.18.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
@@ -84,6 +126,7 @@
     "@yoroi/types": "1.0.4",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
+    "dependency-cruiser": "^13.1.1",
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-ft-flow": "^3.0.0",
@@ -100,23 +143,33 @@
     "release-it": "^15.0.0",
     "typescript": "^4.5.2"
   },
+  "peerDependencies": {
+    "react": ">= 16.8.0 <= 19.0.0",
+    "react-query": "^3.39.3"
+  },
+  "optionalDependencies": {
+    "@react-native-async-storage/async-storage": "^1.18.1"
+  },
+  "packageManager": "^yarn@1.22.15",
   "engines": {
     "node": ">= 16.19.0"
   },
-  "packageManager": "^yarn@1.22.15",
-  "jest": {
-    "preset": "react-native",
-    "setupFiles": [
-      "<rootDir>/jest.setup.js"
-    ],
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
-      "<rootDir>/lib/"
-    ]
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json",
+          "tsc": "./node_modules/.bin/tsc"
+        }
+      ]
     ]
   },
   "release-it": {
@@ -135,56 +188,5 @@
         "preset": "angular"
       }
     }
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@react-native-community",
-      "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "quoteProps": "consistent",
-          "bracketSpacing": false,
-          "singleQuote": true,
-          "tabWidth": 2,
-          "trailingComma": "all",
-          "useTabs": false,
-          "semi": false
-        }
-      ]
-    }
-  },
-  "eslintIgnore": [
-    "node_modules/",
-    "lib/",
-    "babel.config.js",
-    "jest.setup.js"
-  ],
-  "prettier": {
-    "quoteProps": "consistent",
-    "bracketSpacing": false,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "all",
-    "useTabs": false,
-    "semi": false
-  },
-  "react-native-builder-bob": {
-    "source": "src",
-    "output": "lib",
-    "targets": [
-      "commonjs",
-      "module",
-      [
-        "typescript",
-        {
-          "project": "tsconfig.build.json",
-          "tsc": "./node_modules/.bin/tsc"
-        }
-      ]
-    ]
   }
 }
