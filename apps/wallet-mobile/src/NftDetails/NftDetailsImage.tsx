@@ -1,4 +1,3 @@
-import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {Dimensions, StyleSheet, View} from 'react-native'
 import ViewTransformer from 'react-native-easy-view-transformer'
@@ -6,20 +5,25 @@ import ViewTransformer from 'react-native-easy-view-transformer'
 import {FadeIn} from '../components'
 import {NftPreview} from '../components/NftPreview'
 import {useMetrics} from '../metrics/metricsManager'
-import {NftRoutes} from '../navigation'
+import {NftRoutes, useParams} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
+import {isEmptyString} from '../utils/utils'
 import {useNft} from '../yoroi-wallets/hooks'
 
+type Params = NftRoutes['nft-details']
+
+const isParams = (params?: Params | object | undefined): params is Params => {
+  return !!params && 'id' in params && !isEmptyString(params.id)
+}
+
 export const NftDetailsImage = () => {
-  const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
+  const {id} = useParams<Params>(isParams)
   const wallet = useSelectedWallet()
   const nft = useNft(wallet, {id})
   const {track} = useMetrics()
 
   React.useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (!nft?.id) return
-    track.nftGalleryDetailsImageViewed()
+    if (!isEmptyString(nft?.id)) track.nftGalleryDetailsImageViewed()
   }, [nft?.id, track])
 
   const dimensions = Dimensions.get('window')
