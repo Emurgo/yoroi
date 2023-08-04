@@ -6,7 +6,7 @@ import uuid from 'uuid'
 import {AppNavigator} from './AppNavigator'
 import {useStorage, YoroiStorage} from './yoroi-wallets/storage'
 import {walletManager} from './yoroi-wallets/walletManager'
-import * as Sentry from '@sentry/react-native'
+import * as Sentry from 'sentry-expo'
 import {CONFIG} from './legacy/config'
 import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
 import {isString} from './yoroi-wallets/utils'
@@ -23,10 +23,8 @@ export const InitApp = () => {
   const loaded = useInitApp()
   if (!loaded) return null
 
-  return <A />
+  return <AppNavigator />
 }
-
-const A = Sentry.wrap(() => <AppNavigator />)
 
 const useInitApp = () => {
   const [loaded, setLoaded] = React.useState(false)
@@ -63,19 +61,18 @@ export const initApp = async (storage: YoroiStorage) => {
 const useInitSentry = (options: {enabled: boolean}) => {
   const ref = useRef(options.enabled)
   ref.current = options.enabled
+
   useEffect(() => {
     if (!CONFIG.SENTRY.ENABLE || !isString(CONFIG.SENTRY.DSN)) return
-    console.log('init sentry')
     Sentry.init({
       dsn: CONFIG.SENTRY.DSN,
       patchGlobalPromise: true,
+      enableInExpoDevelopment: false,
       tracesSampleRate: 1.0,
       beforeSend(event) {
         // https://github.com/getsentry/sentry-javascript/issues/2039
         const isEnabled = ref.current
-        console.log('Sentry: isEnabled', isEnabled, event)
-        return null
-        // return isEnabled ? event : null
+        return isEnabled ? event : null
       },
     })
   }, [])
