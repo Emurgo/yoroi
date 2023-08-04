@@ -58,7 +58,7 @@ export const prepareApp = async (pin:string): Promise<void> => {
   await enterPIN(pin)
   await expect(userInsightScreen.txt_PageTitle()).toBeVisible()
   await takeScreenshot('User consent screen for sharing insights')
-  await userInsightScreen.btn_Skip().tap()
+  await userInsightScreen.btn_Accept().tap()
 
   await expect(myWalletsScreen.pageTitle()).toBeVisible()
 }
