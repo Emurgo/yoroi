@@ -63,9 +63,9 @@ const useInitSentry = (options: {enabled: boolean}) => {
   ref.current = options.enabled
 
   useEffect(() => {
-    if (!isString(CONFIG.SENTRY.DSN)) return
+    if (!isString(CONFIG.SENTRY_DSN)) return
     Sentry.init({
-      dsn: CONFIG.SENTRY.DSN,
+      dsn: CONFIG.SENTRY_DSN,
       patchGlobalPromise: true,
       enableInExpoDevelopment: true,
       tracesSampleRate: isProduction() ? 0.25 : 1,
