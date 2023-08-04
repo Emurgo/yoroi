@@ -8,3 +8,7 @@ export const walletByNameButton = (walletName: string) => element(by.text(wallet
 export const createWalletButton = () => element(by.id('createWalletButton'))
 export const restoreWalletButton = () => element(by.id('restoreWalletButton'))
 export const connectLedgerWalletButton = () => element(by.id('createLedgerWalletButton'))
+export const buttonDeveloperOptions = () => element(by.id('btnDevOptions'))
+
+
+export const tabWallet = (walletName: string) => element(by.label(walletName))

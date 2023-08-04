@@ -110,6 +110,7 @@ export const DeveloperScreen = () => {
             logout()
             navigation.goBack()
           }}
+          testID="btnLogout"
         />
 
         <Button
@@ -118,6 +119,7 @@ export const DeveloperScreen = () => {
           onPress={() => {
             resetConsent()
           }}
+          testID="btnResetAnalyticsConsent"
         />
 
         <Button
@@ -132,6 +134,7 @@ export const DeveloperScreen = () => {
               walletImplementationId: 'haskell-shelley',
             })
           }
+          testID="btnRestoreWallet1"
           title="Restore Wallet 1"
         />
 
@@ -147,6 +150,7 @@ export const DeveloperScreen = () => {
               walletImplementationId: 'haskell-shelley',
             })
           }
+          testID="btnRestoreWallet2"
           title="Restore Wallet 2"
         />
 

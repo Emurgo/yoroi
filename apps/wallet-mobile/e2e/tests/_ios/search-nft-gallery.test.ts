@@ -1,0 +1,48 @@
+import { device, expect } from 'detox'
+
+import * as constants from '../../constants'
+import * as devOptionsScreen from '../../screens/devOptionsScreen.screen'
+import * as myWalletsScreen from '../../screens/myWallets.screen'
+import * as nftGalleryScreen from '../../screens/nftGallery.screen'
+import * as walletMenuScreen from '../../screens/walletMenuItems.screen'
+import * as utils from '../../utils'
+
+describe('Open an NFT from gallery and verify', () => {
+   
+    beforeAll(async () => {
+        await device.launchApp({ newInstance: true })
+        await utils.prepareApp(constants.valid_Pin)
+    });
+
+    it('should be able to add the "default Wallet 2" from dev options', async () => {
+        await utils.takeScreenshot('My Wallets')
+        await myWalletsScreen.buttonDeveloperOptions().tap()
+        await expect(devOptionsScreen.buttonRestoreWallet2()).toBeVisible()
+        await devOptionsScreen.buttonRestoreWallet2().tap()
+        await waitFor(myWalletsScreen.pageTitle()).toBeVisible().withTimeout(5000)
+        await waitFor(myWalletsScreen.tabWallet('Wallet 2')).toBeVisible().withTimeout(10000)
+        await utils.takeScreenshot('Wallet 2 is added')
+    })    
+
+    it('should be able to open "Wallet 2"', async () => {
+        await myWalletsScreen.tabWallet('Wallet 2').tap()
+        await expect(walletMenuScreen.menuNFTGallery()).toBeVisible()
+        await utils.takeScreenshot('Wallet 2 Home screen')
+        
+    })    
+
+    it('should be open "NFT Gallery"', async () => {
+        await walletMenuScreen.menuNFTGallery().tap()
+        await waitFor(nftGalleryScreen.iconSearch()).toBeVisible().withTimeout(10000)
+        await utils.takeScreenshot('NFT Gallery')
+        await nftGalleryScreen.iconSearch().tap()
+    })    
+
+    it('should be able to seaarch for sample test NFT', async () => {
+        await nftGalleryScreen.inputSearch().tap()
+        await nftGalleryScreen.inputSearch().typeText('bmw')
+        await utils.takeScreenshot('Searched NFT found')
+    })
+   
+  })
+  
