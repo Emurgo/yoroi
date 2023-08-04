@@ -38,8 +38,6 @@ import {WalletManager, WalletMeta} from '../walletManager'
 const crashReportsStorageKey = 'sendCrashReports'
 
 export const getCrashReportsEnabled = async (storage: AsyncStorageStatic = AsyncStorage) => {
-  if (isNightly()) return true
-
   const data = await storage.getItem(crashReportsStorageKey)
   return parseBoolean(data) ?? false
 }
@@ -59,13 +57,17 @@ export const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorag
 export const useSetCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
   const mutation = useMutationWithInvalidations<void, Error, boolean>({
     useErrorBoundary: true,
-    mutationFn: (enabled) => storage.setItem(crashReportsStorageKey, JSON.stringify(enabled)),
+    mutationFn: (enabled) => {
+      console.log('set crash reports enabled', enabled)
+      return storage.setItem(crashReportsStorageKey, JSON.stringify(enabled))
+    },
     invalidateQueries: [[crashReportsStorageKey]],
   })
 
   return mutation.mutate
 }
 
+// here
 export const useCrashReports = () => {
   const set = useSetCrashReportsEnabled()
 

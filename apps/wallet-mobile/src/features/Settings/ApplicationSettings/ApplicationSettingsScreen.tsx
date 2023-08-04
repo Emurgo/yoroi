@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -6,7 +6,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Icon, Spacer, StatusBar} from '../../../components'
 import {features} from '../../../features'
 import {useLanguage} from '../../../i18n'
-import {isNightly} from '../../../legacy/config'
 import {useWalletNavigation} from '../../../navigation'
 import {lightPalette} from '../../../theme'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
@@ -29,7 +28,6 @@ export const ApplicationSettingsScreen = () => {
 
   const {navigation} = useWalletNavigation()
   const {currency} = useCurrencyContext()
-  const crashReports = useCrashReports()
 
   const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
@@ -120,11 +118,7 @@ export const ApplicationSettingsScreen = () => {
             label={strings.crashReporting}
             info={strings.crashReportingInfo}
           >
-            <Switch
-              value={crashReports.enabled}
-              onValueChange={crashReports.enabled ? crashReports.disable : crashReports.enable}
-              disabled={isNightly() || isTogglePrivacyModeLoading}
-            />
+            <CrashReportsSwitch />
           </SettingsItem>
         </SettingsSection>
       </ScrollView>
@@ -154,6 +148,27 @@ const PrivacyModeSwitch = () => {
   }, [isPrivacyOff])
 
   return <Switch value={isLocalPrivacyOff} onValueChange={onTogglePrivacyMode} disabled={isTogglePrivacyModeLoading} />
+}
+
+const CrashReportsSwitch = () => {
+  const {enabled, enable, disable} = useCrashReports()
+  const [isLocalEnabled, setIsLocalEnabled] = useState(enabled)
+
+  const onToggleCrashReports = (newEnabled: boolean) => {
+    if (newEnabled) {
+      enable()
+    } else {
+      disable()
+    }
+
+    setIsLocalEnabled(newEnabled)
+  }
+
+  useEffect(() => {
+    setIsLocalEnabled(enabled)
+  }, [enabled, setIsLocalEnabled])
+
+  return <Switch value={isLocalEnabled} onValueChange={onToggleCrashReports} />
 }
 
 const useStrings = () => {
