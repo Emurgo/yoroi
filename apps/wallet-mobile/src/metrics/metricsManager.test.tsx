@@ -52,6 +52,7 @@ const mockAmpli = {
   nftGalleryPageViewed: jest.fn(),
   nftGallerySearchActivated: jest.fn(),
   nftGalleryDetailsPageViewed: jest.fn(),
+  nftGalleryDetailsImageViewed: jest.fn(),
 
   sendInitiated: jest.fn(),
   sendSelectAssetPageViewed: jest.fn(),
@@ -119,6 +120,7 @@ describe('makeMetricsManager', () => {
     metricsManager.track.nftGalleryPageViewed({nft_count: 10})
     metricsManager.track.nftGallerySearchActivated({nft_search_term: 'test', nft_count: 10})
     metricsManager.track.nftGalleryDetailsPageViewed()
+    metricsManager.track.nftGalleryDetailsImageViewed()
 
     metricsManager.track.sendInitiated()
     metricsManager.track.sendSelectAssetPageViewed()
@@ -131,6 +133,7 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
     expect(mockAmpli.nftGallerySearchActivated).toHaveBeenCalledWith({nft_search_term: 'test', nft_count: 10})
     expect(mockAmpli.nftGalleryDetailsPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.nftGalleryDetailsImageViewed).toHaveBeenCalled()
 
     expect(mockAmpli.sendInitiated).toHaveBeenCalled()
     expect(mockAmpli.sendSelectAssetPageViewed).toHaveBeenCalled()
