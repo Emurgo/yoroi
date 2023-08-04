@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
+import {Boundary} from '../../../../components'
 import {COLORS} from '../../../../theme'
 import {ButtonGroup} from '../../common/ButtonGroup'
 import {useStrings} from '../../common/strings'
@@ -38,7 +39,7 @@ export const OrdersView = () => {
           <ButtonGroup buttons={[strings.openOrders, strings.completedOrders]} onButtonPress={handleButtonClick} />
         </View>
 
-        <View>{orderView === 'Open orders' ? <OpenOrders /> : <ClosedOrders />}</View>
+        <Boundary>{orderView === 'Open orders' ? <OpenOrders /> : <ClosedOrders />}</Boundary>
       </ScrollView>
     </View>
   )

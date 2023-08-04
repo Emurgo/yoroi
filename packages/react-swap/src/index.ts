@@ -7,4 +7,8 @@ export {
   mockSwapManagerDefault,
   swapManagerMocks,
 } from './translators/swapManager.mocks'
-export {SwapProvider, useSwap} from './translators/reactjs'
+export {
+  SwapProvider,
+  useSwap,
+  useOrderByStatusOpen,
+} from './translators/reactjs'

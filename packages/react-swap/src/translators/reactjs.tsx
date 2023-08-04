@@ -5,6 +5,7 @@ import {
   useQuery,
   useQueryClient,
   useMutation,
+  UseQueryOptions,
 } from 'react-query'
 import {Balance, Swap} from '@yoroi/types'
 import {swapStorageSlippageKey} from '../adapters/storage'
@@ -107,6 +108,22 @@ export const useSwapSlippage = () => {
 
   if (query.data == null)
     throw new Error('[swap-react] useSwapSlippage invalid state')
+
+  return query.data
+}
+export const useOrderByStatusOpen = (
+  options: UseQueryOptions<Swap.OpenOrder[], Error>,
+) => {
+  const {order} = useSwap()
+  const query = useQuery({
+    suspense: true,
+    queryKey: [],
+    queryFn: order.list.byStatusOpen,
+    ...options,
+  })
+
+  if (query.data == null)
+    throw new Error('[swap-react] useOrderByStatusOpen invalid state')
 
   return query.data
 }

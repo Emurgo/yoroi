@@ -126,6 +126,7 @@ const getStories = () => {
     "./src/features/Swap/common/SelectPool/SelectPoolList/SelectPoolList.stories.tsx": require("../src/features/Swap/common/SelectPool/SelectPoolList/SelectPoolList.stories.tsx"),
     "./src/features/Swap/SwapCard/SwapCard.stories.tsx": require("../src/features/Swap/SwapCard/SwapCard.stories.tsx"),
     "./src/features/Swap/useCases/InputSlippageToleranceScreen/InputSlippageToleranceScreen.stories.tsx": require("../src/features/Swap/useCases/InputSlippageToleranceScreen/InputSlippageToleranceScreen.stories.tsx"),
+    "./src/features/Swap/useCases/OrdersView/OpenOrders/OpenOrders.stories.tsx": require("../src/features/Swap/useCases/OrdersView/OpenOrders/OpenOrders.stories.tsx"),
     "./src/features/Swap/useCases/SelectPoolScreen/SelectPoolScreen.stories.tsx": require("../src/features/Swap/useCases/SelectPoolScreen/SelectPoolScreen.stories.tsx"),
     "./src/features/Swap/useCases/TokenSwap/AddTokens/SelectTokenFromListScreen.stories.tsx": require("../src/features/Swap/useCases/TokenSwap/AddTokens/SelectTokenFromListScreen.stories.tsx"),
     "./src/features/Swap/useCases/TokenSwap/AddTokens/SelectTokenToListScreen.stories.tsx": require("../src/features/Swap/useCases/TokenSwap/AddTokens/SelectTokenToListScreen.stories.tsx"),

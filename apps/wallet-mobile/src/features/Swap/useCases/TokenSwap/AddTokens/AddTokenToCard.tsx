@@ -14,18 +14,23 @@ import {SwapCard} from '../../../SwapCard/SwapCard'
 export const AddTokenToCard = () => {
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
-  const {amounts, toAmountChanged} = useSwap()
-  const tokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId}, {select: selectFtOrThrow})
+  const {amounts, createOrder, toAmountChanged} = useSwap()
+
+  const tokenInfo = useTokenInfo(
+    {wallet, tokenId: amounts?.buy?.tokenId ?? 'noTokenSelected'},
+    {select: selectFtOrThrow},
+  )
   const strings = useStrings()
 
   useEffect(() => {
-    toAmountChanged({tokenId: 'noTokenSelected', quantity: amounts.buy.quantity})
+    toAmountChanged({tokenId: 'noTokenSelected', quantity: amounts?.buy.quantity ?? '0'})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const [quantity, setQuantity] = React.useState<Balance.Quantity>('0')
   const [inputValue, setInputValue] = React.useState<string>()
 
-  const canSpend = Number(quantity) > 0 && Number(quantity) < Number(222)
+  const canSpend = Number(quantity) > 0 && Number(quantity) < Number(amounts?.buy.quantity)
 
   const onChangeQuantity = (text: string) => {
     try {
@@ -33,7 +38,7 @@ export const AddTokenToCard = () => {
       setInputValue(text)
       setQuantity(Quantities.integer(quantity, tokenInfo.decimals ?? 0))
     } catch (error) {
-      Logger.error('EditAmountScreen::onChangeQuantity', error)
+      Logger.error('SwapAmountScreen::onChangeQuantity', error)
     }
   }
 
@@ -42,7 +47,7 @@ export const AddTokenToCard = () => {
       label={strings.swapTo}
       onChange={onChangeQuantity}
       value={inputValue}
-      amount={{tokenId: amounts.buy.tokenId, quantity: amounts.buy.quantity}}
+      amount={{tokenId: amounts?.buy.tokenId, quantity: amounts?.buy.quantity}}
       wallet={wallet}
       hasError={Number(quantity) > 0 ? !canSpend : false}
       navigateTo={navigate.selectedSwapToTokens}

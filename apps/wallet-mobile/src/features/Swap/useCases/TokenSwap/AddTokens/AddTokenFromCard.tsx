@@ -4,7 +4,7 @@ import React from 'react'
 
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {selectFtOrThrow} from '../../../../../yoroi-wallets/cardano/utils'
-import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {useBalance, useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../yoroi-wallets/logging'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../common/navigation'
@@ -20,6 +20,7 @@ export const AddTokenFromCard = () => {
 
   const [quantity, setQuantity] = React.useState<Balance.Quantity>('0')
   const [inputValue, setInputValue] = React.useState<string>()
+  const initialBalanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
 
   const canSpend = Number(quantity) > 0 && Number(quantity) < Number(amounts?.sell.quantity)
 
@@ -29,7 +30,7 @@ export const AddTokenFromCard = () => {
       setInputValue(text)
       setQuantity(Quantities.integer(quantity, tokenInfo.decimals ?? 0))
     } catch (error) {
-      Logger.error('EditAmountScreen::onChangeQuantity', error)
+      Logger.error('SwapAmountScreen::onChangeQuantity', error)
     }
   }
 
@@ -38,7 +39,7 @@ export const AddTokenFromCard = () => {
       label={strings.swapFrom}
       onChange={onChangeQuantity}
       value={inputValue}
-      amount={{tokenId: amounts?.sell.tokenId, quantity: amounts?.sell.quantity}}
+      amount={{tokenId: amounts?.sell.tokenId, quantity: initialBalanceAvailable}}
       wallet={wallet}
       hasError={Number(quantity) > 0 ? !canSpend : false}
       navigateTo={navigate.selectedSwapFromTokens}
