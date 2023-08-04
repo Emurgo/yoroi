@@ -56,9 +56,7 @@ export const useCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorag
 export const useSetCrashReportsEnabled = (storage: AsyncStorageStatic = AsyncStorage) => {
   const mutation = useMutationWithInvalidations<void, Error, boolean>({
     useErrorBoundary: true,
-    mutationFn: (enabled) => {
-      return storage.setItem(crashReportsStorageKey, JSON.stringify(enabled))
-    },
+    mutationFn: (enabled) => storage.setItem(crashReportsStorageKey, JSON.stringify(enabled)),
     invalidateQueries: [[crashReportsStorageKey]],
   })
 
