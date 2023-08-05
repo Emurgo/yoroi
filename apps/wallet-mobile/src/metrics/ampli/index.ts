@@ -605,6 +605,10 @@ export interface SwapProperties {
   to_asset: string;
 }
 
+export class NftGalleryDetailsImageViewed implements BaseEvent {
+  event_type = 'NFT Gallery Details Image Viewed';
+}
+
 export class NftGalleryDetailsPageViewed implements BaseEvent {
   event_type = 'NFT Gallery Details Page Viewed';
 }
@@ -870,6 +874,21 @@ export class Ampli {
     }
 
     return this.amplitude!.flush();
+  }
+
+  /**
+   * NFT Gallery Details Image Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/NFT%20Gallery%20Details%20Image%20Viewed)
+   *
+   * This event tracks when a user views the NFT image at full screen
+   *
+   * @param options Amplitude event options.
+   */
+  nftGalleryDetailsImageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new NftGalleryDetailsImageViewed(), options);
   }
 
   /**
