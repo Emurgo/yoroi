@@ -64,7 +64,7 @@ type ModeratedImageProps = TouchableOpacityProps & {
 }
 const UnModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
   return (
-    <TouchableOpacity {...props}>
+    <TouchableOpacity  {...props} testID={`card_nft_${nft.name}`}>
       <ApprovedNft nft={nft} />
     </TouchableOpacity>
   )
@@ -85,7 +85,7 @@ const ModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
 
   if (showSkeleton) {
     return (
-      <TouchableOpacity {...props}>
+      <TouchableOpacity {...props} testID={`card_nft_${nft.name}`}>
         <SkeletonImagePlaceholder text={text} />
       </TouchableOpacity>
     )
@@ -93,14 +93,14 @@ const ModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
 
   if (isError) {
     return (
-      <TouchableOpacity {...props}>
+      <TouchableOpacity {...props} testID={`card_nft_${nft.name}`}>
         <BlockedNft nft={nft} />
       </TouchableOpacity>
     )
   }
 
   return (
-    <TouchableOpacity {...props}>
+    <TouchableOpacity {...props} testID={`card_nft_${nft.name}`}>
       {isImageApproved && <ApprovedNft nft={nft} />}
 
       {isImageWithConsent && <RequiresConsentNft nft={nft} />}
