@@ -64,7 +64,7 @@ type ModeratedImageProps = TouchableOpacityProps & {
 }
 const UnModeratedImage = ({nft, ...props}: ModeratedImageProps) => {
   return (
-    <TouchableOpacity  {...props} testID={`card_nft_${nft.name}`}>
+    <TouchableOpacity {...props} testID={`card_nft_${nft.name}`}>
       <ApprovedNft nft={nft} />
     </TouchableOpacity>
   )
