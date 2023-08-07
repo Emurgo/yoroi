@@ -100,6 +100,7 @@ export const makeMetricsManager = (
     nftGalleryPageViewed: metricsModule.nftGalleryPageViewed.bind(metricsModule),
     nftGallerySearchActivated: metricsModule.nftGallerySearchActivated.bind(metricsModule),
     nftGalleryDetailsPageViewed: metricsModule.nftGalleryDetailsPageViewed.bind(metricsModule),
+    nftGalleryDetailsImageViewed: metricsModule.nftGalleryDetailsImageViewed.bind(metricsModule),
 
     sendInitiated: metricsModule.sendInitiated.bind(metricsModule),
     sendSelectAssetPageViewed: metricsModule.sendSelectAssetPageViewed.bind(metricsModule),

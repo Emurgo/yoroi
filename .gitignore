@@ -83,6 +83,9 @@ coverage/
 
 apps/test/
 
-#e2e
+# e2e
 artifacts/
 html-report/
+
+# dependency cruiser
+dependency-graph.svg

@@ -1,42 +1,52 @@
 {
-  "name": "@yoroi/types",
-  "version": "1.0.4",
-  "description": "The Yoroi Types package of Yoroi SDK",
+  "name": "@yoroi/swap",
+  "version": "1.0.0",
+  "description": "The Swap package of Yoroi SDK",
   "keywords": [
     "yoroi",
     "cardano",
-    "types"
+    "swap",
+    "browser",
+    "react"
   ],
-  "homepage": "https://github.com/Emurgo/yoroi/packages/types#readme",
+  "homepage": "https://github.com/Emurgo/yoroi/packages/swap#readme",
   "bugs": {
     "url": "https://github.com/Emurgo/yoroi/issues"
   },
   "repository": {
     "type": "github",
     "url": "https://github.com/Emurgo/yoroi.git",
-    "directory": "packages/types"
+    "directory": "packages/swap"
   },
   "license": "Apache-2.0",
   "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",
   "contributors": [
     {
       "name": "Juliano Lazzarotto",
-      "email": "juliano@stackchain.dev"
+      "email": "30806844+stackchain@users.noreply.github.com"
     }
   ],
-  "main": "src/index",
+  "main": "lib/commonjs/index",
+  "module": "lib/module/index",
   "source": "src/index",
-  "browser": "lib/index",
+  "browser": "lib/module/index",
+  "types": "lib/typescript/index.d.ts",
   "files": [
     "src",
     "lib",
+    "!ios/build",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
     "!**/.*"
   ],
   "scripts": {
-    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && tsc --project tsconfig.build.json && yarn flow",
+    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build && yarn flow",
     "clean": "del-cli lib",
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "flow": ". ./scripts/flowgen.sh",
@@ -45,7 +55,7 @@
     "publish:beta": "yarn build && npm publish --scope yoroi --tag beta --access beta",
     "publish:prod": "yarn build && npm publish --scope yoroi --access public",
     "release": "release-it",
-    "test": "jest --passWithNoTests",
+    "test": "jest",
     "tsc": "tsc --noEmit -p tsconfig.json"
   },
   "commitlint": {
@@ -89,21 +99,56 @@
     "babel.config.js",
     "jest.setup.js"
   ],
+  "jest": {
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
+      "<rootDir>/lib/"
+    ],
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ]
+  },
+  "dependencies": {
+    "@emurgo/cip14-js": "^3.0.1",
+    "@yoroi/api-openswap": "0.0.1",
+    "immer": "^10.0.2"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
+    "@react-native-async-storage/async-storage": "^1.18.1",
+    "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
     "@testing-library/react-hooks": "^8.0.1",
+    "@types/jest": "^28.1.2",
+    "@types/react": "18.2.0",
+    "@types/react-native": "0.71.6",
+    "@yoroi/types": "1.0.4",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-ft-flow": "^3.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "flowgen": "^1.21.0",
     "jest": "^28.1.1",
+    "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
+    "react": "18.2.0",
+    "react-native": "0.71.6",
+    "react-native-builder-bob": "^0.20.4",
+    "react-query": "^3.39.3",
+    "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",
     "typescript": "^4.5.2"
+  },
+  "peerDependencies": {
+    "react": ">= 16.8.0 <= 19.0.0",
+    "react-query": "^3.39.3"
+  },
+  "optionalDependencies": {
+    "@react-native-async-storage/async-storage": "^1.18.1"
   },
   "packageManager": "^yarn@1.22.15",
   "engines": {
@@ -111,6 +156,21 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json",
+          "tsc": "./node_modules/.bin/tsc"
+        }
+      ]
+    ]
   },
   "release-it": {
     "git": {
@@ -121,7 +181,7 @@
       "publish": true
     },
     "github": {
-      "release": true
+      "release": false
     },
     "plugins": {
       "@release-it/conventional-changelog": {

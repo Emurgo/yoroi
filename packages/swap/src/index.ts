@@ -8,3 +8,9 @@ export {
   swapManagerMocks,
 } from './translators/swapManager.mocks'
 export {SwapProvider, useSwap} from './translators/reactjs'
+export {
+  getReceiveAmountbyChangingSell,
+  getSellAmountByChangingReceive,
+  makePossibleMarketOrder,
+  makeLimitOrder,
+} from './helpers/order'

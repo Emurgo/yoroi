@@ -16,6 +16,7 @@ export const mockMetricsManager = (): MetricsManager => {
     nftGalleryPageViewed: e,
     nftGallerySearchActivated: e,
     nftGalleryDetailsPageViewed: e,
+    nftGalleryDetailsImageViewed: e,
 
     sendInitiated: e,
     sendSelectAssetPageViewed: e,
