@@ -1,4 +1,5 @@
 import { device, expect } from 'detox'
+import jestExpect from 'expect'
 
 import * as constants from '../../constants'
 import * as devOptionsScreen from '../../screens/devOptionsScreen.screen'
@@ -35,15 +36,19 @@ describe('Search for an NFT from gallery and verify', () => {
     it('should be open "NFT Gallery"', async () => {
         await walletMenuScreen.menuNFTGallery().tap()
         await waitFor(nftGalleryScreen.iconSearch()).toBeVisible().withTimeout(10000)
-        await utils.takeScreenshot(`NFT Gallery !!` )
+       
+        const nftCount =await nftGalleryScreen.countNftsDisplayedIos()
+        await utils.takeScreenshot(`NFT Gallery !! Total number of NFTs : ${nftCount}` )
     })    
 
-    it('should be able to seaarch for sample test NFT', async () => {
+    it('should be able to search for sample test NFT', async () => {
         await nftGalleryScreen.iconSearch().tap()
         await nftGalleryScreen.inputSearch().tap()
         await nftGalleryScreen.inputSearch().typeText(nftToSearch)
+        jestExpect (await nftGalleryScreen.countNftsDisplayedIos()).toBe(1)
         await expect(nftGalleryScreen.cardNFT(nftToSearch)).toBeVisible()
         await utils.takeScreenshot(`Searched NFT found : ${nftToSearch}`)
     })
    
   })
+
