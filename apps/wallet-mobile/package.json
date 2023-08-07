@@ -121,7 +121,7 @@
     "@sentry/react-native": "^5.8.0",
     "@shopify/flash-list": "^1.4.1",
     "@unstoppabledomains/resolution": "6.0.3",
-    "@yoroi/react-swap": "^1.0.0",
+    "@yoroi/swap": "1.0.0",
     "add": "2.0.6",
     "assert": "^2.0.0",
     "base-64": "^1.0.0",

@@ -1,7 +1,7 @@
 {
-  "name": "@yoroi/react-swap",
+  "name": "@yoroi/swap",
   "version": "1.0.0",
-  "description": "The Swap package of Yoroi SDK for react and browser",
+  "description": "The Swap package of Yoroi SDK",
   "keywords": [
     "yoroi",
     "cardano",
@@ -9,21 +9,21 @@
     "browser",
     "react"
   ],
-  "homepage": "https://github.com/Emurgo/yoroi/packages/metrics-react#readme",
+  "homepage": "https://github.com/Emurgo/yoroi/packages/swap#readme",
   "bugs": {
     "url": "https://github.com/Emurgo/yoroi/issues"
   },
   "repository": {
     "type": "github",
     "url": "https://github.com/Emurgo/yoroi.git",
-    "directory": "packages/swap-react"
+    "directory": "packages/swap"
   },
   "license": "Apache-2.0",
   "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",
   "contributors": [
     {
       "name": "Juliano Lazzarotto",
-      "email": "juliano@stackchain.dev"
+      "email": "30806844+stackchain@users.noreply.github.com"
     }
   ],
   "main": "lib/commonjs/index",
