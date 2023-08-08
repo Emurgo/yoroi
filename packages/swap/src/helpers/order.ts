@@ -6,7 +6,7 @@ type AmountPair = {
 }
 
 export const getReceiveAmountbyChangingSell = (
-  pool: Swap.Pool,
+  pool: Swap.PoolPair,
   sell: Balance.Amount,
 ): AmountPair => {
   const poolA = BigInt(pool.tokenA.quantity)
@@ -38,12 +38,12 @@ export const getReceiveAmountbyChangingSell = (
           quantity: getReceiveAmount(poolB, poolA) as Balance.Quantity,
           tokenId: pool.tokenA.tokenId,
         }
-  
+
   return {sell, buy}
 }
 
 export const getSellAmountByChangingReceive = (
-  pool: Swap.Pool,
+  pool: Swap.PoolPair,
   buy: Balance.Amount,
 ): AmountPair => {
   const poolA = BigInt(pool.tokenA.quantity)
@@ -81,7 +81,7 @@ export const getSellAmountByChangingReceive = (
 export const makeLimitOrder = (
   sell: Balance.Amount,
   buy: Balance.Amount,
-  pool: Swap.Pool,
+  pool: Swap.PoolPair,
   slippage: number,
   address: string,
 ): Swap.CreateOrderData => {
@@ -108,7 +108,7 @@ export const makeLimitOrder = (
 export const makePossibleMarketOrder = (
   sell: Balance.Amount,
   buy: Balance.Amount,
-  pools: Swap.Pool[],
+  pools: Swap.PoolPair[],
   slippage: number,
   address: string,
 ): Swap.CreateOrderData | undefined => {
@@ -118,7 +118,7 @@ export const makePossibleMarketOrder = (
 
   const findBestOrder = (
     order: Swap.CreateOrderData | undefined,
-    pool: Swap.Pool,
+    pool: Swap.PoolPair,
   ): Swap.CreateOrderData => {
     const amountPair = getReceiveAmountbyChangingSell(pool, sell)
 

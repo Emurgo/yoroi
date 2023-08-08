@@ -12,7 +12,7 @@ export const makeSwapApi = (
   // FIX: network Yoroi type need to bring from the wallet // chain Id
   {network, stakingKey}: {network: 1 | 0 | 300; stakingKey: string},
   deps?: {openswap?: OpenSwapApi},
-): Swap.Api => {
+): Readonly<Swap.Api> => {
   const api =
     deps?.openswap ?? new OpenSwapApi(network === 0 ? 'mainnet' : 'preprod')
 
@@ -60,10 +60,10 @@ export const makeSwapApi = (
   ): Promise<Balance.Token[]> =>
     api.getTokens(asOpenswapTokenId(token)).then(asYoroiBalanceTokens)
 
-  const getPools: Swap.Api['getPools'] = async ({
+  const getPoolPairs: Swap.Api['getPoolPairs'] = async ({
     tokenA,
     tokenB,
-  }): Promise<Swap.Pool[]> =>
+  }): Promise<Swap.PoolPair[]> =>
     api
       .getPools({
         tokenA: asOpenswapTokenId(tokenA),
@@ -71,5 +71,11 @@ export const makeSwapApi = (
       })
       .then(asYoroiPools)
 
-  return {getOrders, cancelOrder, createOrder, getTokens, getPools} as Swap.Api
+  return {
+    getOrders,
+    cancelOrder,
+    createOrder,
+    getTokens,
+    getPoolPairs,
+  } as const
 }

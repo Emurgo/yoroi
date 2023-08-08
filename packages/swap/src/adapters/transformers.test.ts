@@ -122,9 +122,9 @@ describe('asYoroiPool', () => {
 
     const result = asYoroiPool(openswapPool)
 
-    expect(result).toEqual<Swap.Pool>({
+    expect(result).toEqual<Swap.PoolPair>({
       batcherFee: {quantity: '100', tokenId: ''},
-      fee: {quantity: '200', tokenId: ''},
+      fee: '200',
       deposit: {quantity: '300', tokenId: ''},
       lpToken: {quantity: '400', tokenId: 'policyId.assetNameHex'},
       tokenA: {quantity: '500', tokenId: 'policyId.'},

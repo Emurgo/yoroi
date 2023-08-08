@@ -73,7 +73,7 @@ export const asYoroiBalanceToken = (openswapToken: Token): Balance.Token => {
   return balanceToken
 }
 
-export const asYoroiPool = (openswapPool: Pool): Swap.Pool => {
+export const asYoroiPool = (openswapPool: Pool): Swap.PoolPair => {
   const {
     batcherFee,
     fee,
@@ -86,17 +86,17 @@ export const asYoroiPool = (openswapPool: Pool): Swap.Pool => {
     price,
     poolId,
   } = openswapPool
-  const pool: Swap.Pool = {
-    batcherFee: asYoroiAmount(batcherFee),
-    fee: asYoroiAmount({amount: fee.toString(), token: ''}),
-    deposit: asYoroiAmount({amount: deposit.toString(), token: ''}),
-    lpToken: asYoroiAmount(lpToken),
+  const pool: Swap.PoolPair = {
     tokenA: asYoroiAmount(tokenA),
     tokenB: asYoroiAmount(tokenB),
+    deposit: asYoroiAmount({amount: deposit.toString(), token: ''}),
+    lpToken: asYoroiAmount(lpToken),
+    batcherFee: asYoroiAmount(batcherFee),
     lastUpdate: timestamp,
-    provider,
+    fee,
     price,
     poolId,
+    provider,
   }
   return pool
 }
@@ -114,7 +114,7 @@ export const asYoroiAmount = (openswapAmount: {
   } as const
 }
 
-export const asYoroiPools = (openswapPools: Pool[]): Swap.Pool[] =>
+export const asYoroiPools = (openswapPools: Pool[]): Swap.PoolPair[] =>
   openswapPools.map(asYoroiPool)
 
 export const asYoroiBalanceTokens = (

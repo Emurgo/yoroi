@@ -14,7 +14,7 @@ import {
   SwapOpenOrder,
   SwapOrderType,
 } from './swap/order'
-import {SwapPool} from './swap/pool'
+import {SwapPoolPair} from './swap/pool'
 import {SwapStorage} from './swap/storage'
 import {SwapManager} from './swap/manager'
 
@@ -25,7 +25,7 @@ export namespace Swap {
   export type OrderType = SwapOrderType
   export type Protocol = SwapProtocol
   export type OpenOrder = SwapOpenOrder
-  export type Pool = SwapPool
+  export type PoolPair = SwapPoolPair
   export interface Api extends SwapApi {}
   export type Manager = SwapManager
 

@@ -4,7 +4,7 @@ export const mockSwapStorage = (): Readonly<Swap.Storage> => {
   const slippage: Swap.Storage['slippage'] = {
     read: () => Promise.resolve(0.1),
     remove: () => Promise.resolve(),
-    save: (_newSlippage) => Promise.resolve(),
+    save: () => Promise.resolve(),
     key: 'mock-swap-slippage',
   }
 

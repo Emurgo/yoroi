@@ -24,7 +24,9 @@
       "email": "juliano@stackchain.dev"
     }
   ],
-  "main": "src/index",
+  "main": "lib/index",
+  "module": "lib/index",
+  "types": "lib/index.d.ts",
   "source": "src/index",
   "browser": "lib/index",
   "files": [

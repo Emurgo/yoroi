@@ -57,7 +57,7 @@ describe('getReceiveAmountbyChangingSell', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
+    } as Swap.PoolPair
     const sell = {
       quantity: '100' as Balance.Quantity,
       tokenId: 'tokenA',
@@ -85,7 +85,7 @@ describe('getSellAmountByChangingReceive', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
+    } as Swap.PoolPair
     const buy = {
       quantity: '100' as Balance.Quantity,
       tokenId: 'tokenA',
@@ -107,7 +107,7 @@ describe('makeLimitOrder', () => {
       quantity: '200' as Balance.Quantity,
       tokenId: 'tokenB',
     }
-    const pool: Swap.Pool = {
+    const pool: Swap.PoolPair = {
       tokenA: {quantity: '4500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
       fee: '0.3',
@@ -150,7 +150,7 @@ describe('makePossibleMarketOrder', () => {
       quantity: '177' as const, // the expected buy quantity becsause makePossibleMarketOrder will ignore the buy quantity
       tokenId: 'tokenB',
     }
-    const pool1: Swap.Pool = {
+    const pool1: Swap.PoolPair = {
       tokenA: {quantity: '4500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
       fee: '0.3',
@@ -165,7 +165,7 @@ describe('makePossibleMarketOrder', () => {
         tokenId: '0',
       },
     }
-    const pool2: Swap.Pool = {
+    const pool2: Swap.PoolPair = {
       tokenA: {quantity: '5500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
       fee: '0.3',
@@ -202,7 +202,7 @@ describe('makePossibleMarketOrder', () => {
       quantity: '200' as Balance.Quantity,
       tokenId: 'tokenB',
     }
-    const pools: Swap.Pool[] = []
+    const pools: Swap.PoolPair[] = []
     const slippage = 10
     const address = '0xAddressHere'
 
