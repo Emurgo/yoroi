@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import {makeSwapApi, makeSwapManager, makeSwapStorage, SwapProvider} from '@yoroi/react-swap'
+import {makeSwapApi, makeSwapManager, makeSwapStorage, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'

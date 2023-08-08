@@ -1,4 +1,4 @@
-import {useSwap} from '@yoroi/react-swap'
+import {useSwap} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 
@@ -15,6 +15,7 @@ export const AddTokenFromCard = () => {
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
   const {amounts} = useSwap()
+
   const tokenInfo = useTokenInfo({wallet, tokenId: amounts?.sell.tokenId}, {select: selectFtOrThrow})
   const strings = useStrings()
 
@@ -22,7 +23,7 @@ export const AddTokenFromCard = () => {
   const [inputValue, setInputValue] = React.useState<string>()
   const initialBalanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
 
-  const canSpend = Number(quantity) > 0 && Number(quantity) < Number(amounts?.sell.quantity)
+  const canSpend = Number(quantity) > 0 && Number(quantity) < Number(initialBalanceAvailable)
 
   const onChangeQuantity = (text: string) => {
     try {

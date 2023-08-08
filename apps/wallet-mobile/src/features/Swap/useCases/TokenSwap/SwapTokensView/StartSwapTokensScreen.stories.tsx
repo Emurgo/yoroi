@@ -1,5 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
-import {makeSwapApi, makeSwapManager, makeSwapStorage, SwapProvider} from '@yoroi/react-swap'
+import {makeSwapApi, makeSwapManager, makeSwapStorage, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'

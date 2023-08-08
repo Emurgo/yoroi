@@ -1,4 +1,4 @@
-import {useOrderByStatusOpen} from '@yoroi/react-swap'
+import {useOrderByStatusOpen} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 

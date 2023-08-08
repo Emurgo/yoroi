@@ -1,4 +1,4 @@
-import {useSwap} from '@yoroi/react-swap'
+import {useSwap} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React, {useEffect} from 'react'
 

@@ -1,5 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
-import {mockSwapManager, swapManagerMocks, SwapProvider} from '@yoroi/react-swap'
+import {mockSwapManager, swapManagerMocks, SwapProvider} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import React from 'react'
 
