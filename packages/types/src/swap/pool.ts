@@ -8,7 +8,7 @@ export type SwapPool = {
     | 'muesliswap_v1'
     | 'muesliswap_v2'
     | 'muesliswap_v3'
-  fee: BalanceAmount
+  fee: string // % pool liquidity provider fee, usually 0.3.
   tokenA: BalanceAmount
   tokenB: BalanceAmount
   price: number // float, current price in tokenA / tokenB according to the pool, NOT SUITABLE for price calculations, just for display purposes, i.e. 0.9097362621640215.
