@@ -10,6 +10,7 @@ import * as utils from '../../utils'
 
 describe('Search for an NFT from gallery and verify', () => {
     const nftToSearch = 'bmw'
+    const searchNftLimit = 10
    
     beforeAll(async () => {
         await device.launchApp({ newInstance: true })
@@ -37,15 +38,16 @@ describe('Search for an NFT from gallery and verify', () => {
         await walletMenuScreen.menuNFTGallery().tap()
         await waitFor(nftGalleryScreen.iconSearch()).toBeVisible().withTimeout(10000)
        
-        const nftCount =await nftGalleryScreen.countNftsDisplayed()
+        const nftCount =await nftGalleryScreen.countNftsDisplayedAndroid(searchNftLimit)
         await utils.takeScreenshot(`NFT Gallery !! Total number of NFTs : ${nftCount}` )
     })    
 
-    it('should be able to seaarch for sample test NFT', async () => {
+    it('should be able to search for sample test NFT', async () => {
         await nftGalleryScreen.iconSearch().tap()
         await nftGalleryScreen.inputSearch().tap()
         await nftGalleryScreen.inputSearch().typeText(nftToSearch)
-        jestExpect (await nftGalleryScreen.countNftsDisplayed()).toBe(1)
+        jestExpect (await nftGalleryScreen.countNftsDisplayedAndroid(searchNftLimit)).toBe(1)
+        jestExpect (await nftGalleryScreen.checkAttributeNFTAndroid(searchNftLimit, nftToSearch)).toBe(true)
         await expect(nftGalleryScreen.cardNFT(nftToSearch)).toBeVisible()
         await utils.takeScreenshot(`Searched NFT found : ${nftToSearch}`)
     })
