@@ -16,7 +16,7 @@ export const getReceiveAmountbyChangingSell = (
   const fromAmount = BigInt(sell.quantity)
 
   const poolFee = ceilDivision(
-    BigInt(Number(pool.fee.quantity) * 1000) * fromAmount,
+    BigInt(Number(pool.fee) * 1000) * fromAmount,
     BigInt(100 * 1000),
   )
 
@@ -38,7 +38,7 @@ export const getReceiveAmountbyChangingSell = (
           quantity: getReceiveAmount(poolB, poolA) as Balance.Quantity,
           tokenId: pool.tokenA.tokenId,
         }
-
+  
   return {sell, buy}
 }
 
@@ -52,7 +52,7 @@ export const getSellAmountByChangingReceive = (
 
   const toAmount = BigInt(buy.quantity)
 
-  const poolFee = BigInt(100 * 1000) - BigInt(Number(pool.fee.quantity) * 1000)
+  const poolFee = BigInt(100 * 1000) - BigInt(Number(pool.fee) * 1000)
 
   const getSendAmount = (poolA_: bigint, poolB_: bigint) => {
     const newPoolA =
@@ -152,7 +152,6 @@ export const makePossibleMarketOrder = (
     return order
   }
 
-  // TODO: i think it should filter for the tokenA/B here
   return pools.reduce(findBestOrder, undefined)
 }
 
