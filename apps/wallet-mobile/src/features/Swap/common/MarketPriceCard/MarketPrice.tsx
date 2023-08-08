@@ -1,8 +1,12 @@
+/* eslint-disable react/jsx-newline */
+import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
 import {Spacer} from '../../../../components'
+import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
+import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {useStrings} from '../strings'
 
 type MarketPriceProp = {
@@ -12,6 +16,15 @@ type MarketPriceProp = {
 
 export const MarketPrice = ({value, disabled = false}: MarketPriceProp) => {
   const strings = useStrings()
+
+  const wallet = useSelectedWallet()
+
+  const {createOrder} = useSwap()
+
+  const tokenToSellInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
+  const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name
+  const tokenToBuyInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
+  const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name
 
   return (
     <>
@@ -31,7 +44,9 @@ export const MarketPrice = ({value, disabled = false}: MarketPriceProp) => {
 
           <Spacer width={7} />
 
-          <Text style={styles.text}>TADA/MOCK</Text>
+          <Text style={styles.text}>
+            {tokenToSellName}/{tokenToBuyName}
+          </Text>
         </View>
       </View>
     </>

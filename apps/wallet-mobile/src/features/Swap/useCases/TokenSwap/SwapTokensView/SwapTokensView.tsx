@@ -1,3 +1,4 @@
+import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -17,6 +18,10 @@ import {SwitchAndClear} from '../SwitchAndClear/SwitchAndClear'
 export const SwapTokensView = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
+
+  const state = useSwap()
+
+  console.log('[DEBUG: ALL SEWAP STATE]', state)
 
   const handleButtonClick = (event: string) => {
     console.log('Button clicked!', event)

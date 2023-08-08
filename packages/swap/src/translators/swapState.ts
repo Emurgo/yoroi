@@ -18,6 +18,7 @@ export type SwapCreateOrderActions = Readonly<{
   poolIdChanged: (poolId: string) => void
   slippageChanged: (slippage: number) => void
   txPayloadChanged: (txPayload: Swap.CreateOrderResponse) => void
+  switchTokens: () => void
 }>
 
 export enum SwapCreateOrderActionType {
@@ -28,6 +29,7 @@ export enum SwapCreateOrderActionType {
   PoolIdChanged = 'poolIdChanged',
   SlippageChanged = 'slippageChanged',
   TxPayloadChanged = 'txPayloadChanged',
+  SwitchTokens = 'switchTokens',
 }
 
 type SwapCreateOrderAction =
@@ -47,6 +49,7 @@ type SwapCreateOrderAction =
       type: SwapCreateOrderActionType.TxPayloadChanged
       txPayload: Swap.CreateOrderResponse
     }
+  | {type: SwapCreateOrderActionType.SwitchTokens}
 
 export type SwapActions = Readonly<{
   unsignedTxChanged: (unsignedTx: any | undefined) => void
@@ -118,6 +121,7 @@ const defaultSwapCreateOrderActions: SwapCreateOrderActions = {
     console.error('[swap-react] missing initialization'),
   txPayloadChanged: (_txPayload: Swap.CreateOrderResponse) =>
     console.error('[swap-react] missing initialization'),
+  switchTokens: () => console.error('[swap-react] missing initialization'),
 } as const
 
 const defaultStateActions: SwapActions = {
@@ -134,20 +138,40 @@ export const defaultSwapActions = {
 const createOrderReducer = (
   state: SwapState,
   action: SwapCreateOrderAction,
-): SwapState['createOrder'] => {
+): any => {
   switch (action.type) {
     case SwapCreateOrderActionType.OrderTypeChanged:
       return produce(state.createOrder, (draft) => {
         draft.type = action.orderType
       })
     case SwapCreateOrderActionType.FromAmountChanged:
-      return produce(state.createOrder, (draft) => {
-        draft.amounts.sell = action.fromAmount
-      })
+      return {
+        ...state,
+        createOrder: {
+          ...state.createOrder,
+          amounts: {
+            ...state.createOrder.amounts,
+            sell: action.fromAmount,
+          },
+        },
+      }
+    // return produce(state.createOrder, (draft) => {
+    //   draft.amounts.sell = action.fromAmount
+    // })
     case SwapCreateOrderActionType.ToAmountChanged:
-      return produce(state.createOrder, (draft) => {
-        draft.amounts.buy = action.toAmount
-      })
+      return {
+        ...state,
+        createOrder: {
+          ...state.createOrder,
+          amounts: {
+            ...state.createOrder.amounts,
+            buy: action.toAmount,
+          },
+        },
+      }
+    // return produce(state.createOrder, (draft) => {
+    //   draft.amounts.buy = action.toAmount
+    // })
     case SwapCreateOrderActionType.ProtocolChanged:
       return produce(state.createOrder, (draft) => {
         draft.protocol = action.protocol
@@ -166,6 +190,17 @@ const createOrderReducer = (
         draft.datumHash = action.txPayload.datumHash
         draft.address = action.txPayload.contractAddress
       })
+    case SwapCreateOrderActionType.SwitchTokens:
+      return {
+        ...state,
+        createOrder: {
+          ...state.createOrder,
+          amounts: {
+            sell: state.createOrder.amounts.buy,
+            buy: state.createOrder.amounts.sell,
+          },
+        },
+      }
     default:
       return produce(state.createOrder, () => {})
   }

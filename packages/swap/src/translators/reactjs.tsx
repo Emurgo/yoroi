@@ -77,6 +77,9 @@ export const SwapProvider = ({
     resetState: () => {
       dispatch({type: SwapActionType.ResetState})
     },
+    switchTokens: () => {
+      dispatch({type: SwapCreateOrderActionType.SwitchTokens})
+    },
   }).current
 
   const context = React.useMemo(

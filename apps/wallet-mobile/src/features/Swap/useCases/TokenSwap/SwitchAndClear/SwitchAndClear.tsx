@@ -1,3 +1,4 @@
+import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -8,11 +9,24 @@ import {useStrings} from '../../../common/strings'
 
 export const SwitchAndClear = () => {
   const strings = useStrings()
+  const {resetState, switchTokens, toAmountChanged} = useSwap()
+
   return (
     <View style={[styles.container]}>
-      <Icon.Switch size={24} />
+      <TouchableOpacity
+        onPress={() => {
+          switchTokens()
+        }}
+      >
+        <Icon.Switch size={24} />
+      </TouchableOpacity>
 
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          resetState()
+          toAmountChanged({tokenId: 'noTokenSelected', quantity: '0'})
+        }}
+      >
         <Text style={styles.text}>{strings.clear}</Text>
       </TouchableOpacity>
     </View>
