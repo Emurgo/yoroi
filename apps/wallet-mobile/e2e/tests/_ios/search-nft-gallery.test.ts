@@ -51,4 +51,3 @@ describe('Search for an NFT from gallery and verify', () => {
     })
    
   })
-
