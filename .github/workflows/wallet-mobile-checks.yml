@@ -1,9 +1,6 @@
 name: wallet-mobile-checks
 
-on: 
-  push:
-    paths:
-      - 'apps/wallet-mobile/**'
+on: push
 
 defaults:
   run:

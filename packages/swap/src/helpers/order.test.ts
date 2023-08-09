@@ -44,9 +44,9 @@ describe('getQuantityWithSlippage', () => {
 describe('getReceiveAmountbyChangingSell', () => {
   it('should calculate the correct receive amount when selling tokenA', () => {
     const pool = {
-      tokenA: {quantity: '1', tokenId: 'tokenA'},
-      tokenB: {quantity: '1000', tokenId: 'tokenB'},
-      fee: {quantity: '10', tokenId: ''},
+      tokenA: {quantity: '4500000', tokenId: 'tokenA'},
+      tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+      fee: '0.3', // 0.3%
       provider: 'minswap',
       price: 2,
       batcherFee: {quantity: '1', tokenId: ''},
@@ -64,7 +64,7 @@ describe('getReceiveAmountbyChangingSell', () => {
     }
     const result = getReceiveAmountbyChangingSell(pool, sell)
     expect(result.sell).toEqual(sell)
-    expect(result.buy.quantity).toBe('989')
+    expect(result.buy.quantity).toBe('197')
     expect(result.buy.tokenId).toBe('tokenB')
   })
 })
@@ -72,9 +72,9 @@ describe('getReceiveAmountbyChangingSell', () => {
 describe('getSellAmountByChangingReceive', () => {
   it('should calculate the correct sell amount when buying tokenA', () => {
     const pool = {
-      tokenA: {quantity: '10', tokenId: 'tokenA'},
-      tokenB: {quantity: '1000', tokenId: 'tokenB'},
-      fee: {quantity: '10', tokenId: ''},
+      tokenA: {quantity: '4500000', tokenId: 'tokenA'},
+      tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+      fee: '0.5', // 0.5%
       provider: 'minswap',
       price: 2,
       batcherFee: {quantity: '1', tokenId: ''},
@@ -87,12 +87,12 @@ describe('getSellAmountByChangingReceive', () => {
       },
     } as Swap.Pool
     const buy = {
-      quantity: '1' as Balance.Quantity,
+      quantity: '100' as Balance.Quantity,
       tokenId: 'tokenA',
     }
     const result = getSellAmountByChangingReceive(pool, buy)
     expect(result.buy).toEqual(buy)
-    expect(result.sell.quantity).toBe('126')
+    expect(result.sell.quantity).toBe('204')
     expect(result.sell.tokenId).toBe('tokenB')
   })
 })
@@ -108,9 +108,9 @@ describe('makeLimitOrder', () => {
       tokenId: 'tokenB',
     }
     const pool: Swap.Pool = {
-      tokenA: {quantity: '10', tokenId: 'tokenA'},
-      tokenB: {quantity: '1000', tokenId: 'tokenB'},
-      fee: {quantity: '10', tokenId: ''},
+      tokenA: {quantity: '4500000', tokenId: 'tokenA'},
+      tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+      fee: '0.3',
       provider: 'minswap',
       price: 2,
       batcherFee: {quantity: '1', tokenId: ''},
@@ -143,17 +143,17 @@ describe('makeLimitOrder', () => {
 describe('makePossibleMarketOrder', () => {
   it('should create a possible market order with the best pool', () => {
     const sell = {
-      quantity: '100' as Balance.Quantity,
+      quantity: '100' as const,
       tokenId: 'tokenA',
     }
     const buy = {
-      quantity: '200' as Balance.Quantity,
+      quantity: '177' as const, // the expected buy quantity becsause makePossibleMarketOrder will ignore the buy quantity
       tokenId: 'tokenB',
     }
     const pool1: Swap.Pool = {
-      tokenA: {quantity: '10', tokenId: 'tokenA'},
-      tokenB: {quantity: '1000', tokenId: 'tokenB'},
-      fee: {quantity: '10', tokenId: ''},
+      tokenA: {quantity: '4500000', tokenId: 'tokenA'},
+      tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+      fee: '0.3',
       provider: 'minswap',
       price: 2,
       batcherFee: {quantity: '1', tokenId: ''},
@@ -166,9 +166,9 @@ describe('makePossibleMarketOrder', () => {
       },
     }
     const pool2: Swap.Pool = {
-      tokenA: {quantity: '10', tokenId: 'tokenA'},
-      tokenB: {quantity: '100', tokenId: 'tokenB'},
-      fee: {quantity: '10', tokenId: ''},
+      tokenA: {quantity: '5500000', tokenId: 'tokenA'},
+      tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+      fee: '0.3',
       provider: 'sundaeswap',
       price: 2,
       batcherFee: {quantity: '10', tokenId: ''},
@@ -190,7 +190,7 @@ describe('makePossibleMarketOrder', () => {
     expect(result?.poolId).toEqual('0')
     expect(result?.slippage).toEqual(slippage)
     expect(result?.address).toEqual(address)
-    expect(result?.amounts.sell).toEqual(sell)
+    expect(result?.amounts.buy.quantity).toEqual(buy.quantity)
   })
 
   it('should return undefined if no pools are provided', () => {
