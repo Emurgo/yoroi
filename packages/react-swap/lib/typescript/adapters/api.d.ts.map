@@ -1,1 +1,0 @@
-{"version":3,"file":"api.d.ts","sourceRoot":"","sources":["../../../src/adapters/api.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,IAAI,EAAU,MAAM,cAAc,CAAA;AAC1C,OAAO,EAAC,WAAW,EAAqB,MAAM,qBAAqB,CAAA;AASnE,eAAO,MAAM,WAAW;aAEW,CAAC,GAAG,CAAC,GAAG,GAAG;gBAAc,MAAM;;;kBAE/D,IAAI,CAAC,GA4DP,CAAA"}
