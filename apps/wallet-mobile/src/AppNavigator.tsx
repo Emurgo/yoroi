@@ -10,13 +10,17 @@ import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
+import {TermsOfServiceAgreement, useTermsOfServiceAgreement} from './features/Initialization/common/terms'
 import {InititalizationNavigator} from './features/Initialization/InitializationNavigator'
+import {TermsOfServiceChangedScreen} from './features/Initialization/TermsOfServiceChangedScreen/TermsOfServiceChangedScreen'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
-import {AppRoutes} from './navigation'
+import {AppRoutes, defaultStackNavigationOptionsV2} from './navigation'
 import {SearchProvider} from './Search/SearchContext'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 import {AuthSetting, useAuthOsEnabled, useAuthSetting, useAuthWithOs} from './yoroi-wallets/auth'
+import {TermsOfServiceScreen} from './features/Initialization/TermsOfServiceScreen'
+import {CONFIG} from './legacy/config'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -87,6 +91,17 @@ export const AppNavigator = () => {
               />
             )}
 
+            {authAction === 'terms-changed-notice' && (
+              <>
+                <Stack.Screen name="terms-changed-notice" component={TermsOfServiceChangedScreen} />
+                <Stack.Screen
+                  name="accept-terms-of-service"
+                  component={TermsOfServiceScreen}
+                  options={{...defaultStackNavigationOptionsV2, headerShown: true, title: strings.acceptTermsTitle}}
+                />
+              </>
+            )}
+
             {authAction === 'auth-with-os' && (
               <Stack.Screen name="bio-auth-initial" component={OsLoginScreen} options={{headerShown: false}} />
             )}
@@ -139,6 +154,7 @@ const useStrings = () => {
     loginPinTitle: intl.formatMessage(messages.pinLoginTitle),
     authWithOsChangeTitle: intl.formatMessage(messages.authWithOsChangeTitle),
     authWithOsChangeMessage: intl.formatMessage(messages.authWithOsChangeMessage),
+    acceptTermsTitle: intl.formatMessage(messages.acceptTermsTitle),
   }
 }
 
@@ -158,6 +174,10 @@ const messages = defineMessages({
   authWithOsChangeMessage: {
     id: 'global.actions.dialogs.biometricsChange.message',
     defaultMessage: '!!!Auth with OS changed detected ',
+  },
+  acceptTermsTitle: {
+    id: 'components.initialization.acepttermsofservicescreen.title',
+    defaultMessage: '!!!Terms of Service Agreement',
   },
 })
 
@@ -201,17 +221,28 @@ const useHideScreenInAppSwitcher = () => {
   }, [])
 }
 
-type AuthAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run'
-const getAuthAction = (authOsEnabled: boolean, authSetting: AuthSetting): AuthAction => {
-  if (authSetting === 'pin') return 'auth-with-pin'
-  if (authSetting === 'os' && authOsEnabled) return 'auth-with-os'
-  if (authSetting === 'os' && !authOsEnabled) return 'request-new-pin'
-  return 'first-run' // setup not completed
+type AuthAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run' | 'terms-changed-notice'
+const getAuthAction = (
+  authOsEnabled: boolean,
+  authSetting: AuthSetting,
+  terms: TermsOfServiceAgreement | undefined,
+): AuthAction => {
+  const hasAcceptedLatestTerms = terms?.version === CONFIG.LATEST_TERMS_AND_CONDITIONS_VERSION
+
+  if (authSetting === 'pin' && hasAcceptedLatestTerms) return 'auth-with-pin'
+  if (authSetting === 'os' && authOsEnabled && hasAcceptedLatestTerms) return 'auth-with-os'
+  if (authSetting === 'os' && !authOsEnabled && hasAcceptedLatestTerms) return 'request-new-pin'
+
+  if (authSetting && !hasAcceptedLatestTerms) return 'terms-changed-notice'
+
+  // setup not completed
+  return 'first-run'
 }
 
 const useAuthAction = () => {
   const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
+  const terms = useTermsOfServiceAgreement()
 
-  return getAuthAction(authOsEnabled, authSetting)
+  return getAuthAction(authOsEnabled, authSetting, terms)
 }

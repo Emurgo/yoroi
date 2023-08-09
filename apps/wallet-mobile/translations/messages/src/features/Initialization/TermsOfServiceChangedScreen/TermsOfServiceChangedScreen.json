@@ -1,0 +1,62 @@
+[
+  {
+    "id": "termsOfService.agreementUpdateTitle",
+    "defaultMessage": "!!!Terms of Service Agreement update",
+    "file": "src/features/Initialization/TermsOfServiceChangedScreen/TermsOfServiceChangedScreen.tsx",
+    "start": {
+      "line": 101,
+      "column": 9,
+      "index": 2583
+    },
+    "end": {
+      "line": 104,
+      "column": 3,
+      "index": 2695
+    }
+  },
+  {
+    "id": "termsOfService.agreementUpdateDescription",
+    "defaultMessage": "!!!We have updated our Terms of Service Agreement to enhance your experience. Please review and accept them to keep enjoying Yoroi.",
+    "file": "src/features/Initialization/TermsOfServiceChangedScreen/TermsOfServiceChangedScreen.tsx",
+    "start": {
+      "line": 105,
+      "column": 15,
+      "index": 2712
+    },
+    "end": {
+      "line": 109,
+      "column": 3,
+      "index": 2931
+    }
+  },
+  {
+    "id": "termsOfService.tosIAgreeWith",
+    "defaultMessage": "!!!I agree with",
+    "file": "src/features/Initialization/TermsOfServiceChangedScreen/TermsOfServiceChangedScreen.tsx",
+    "start": {
+      "line": 110,
+      "column": 17,
+      "index": 2950
+    },
+    "end": {
+      "line": 113,
+      "column": 3,
+      "index": 3034
+    }
+  },
+  {
+    "id": "termsOfService.tosAgreement",
+    "defaultMessage": "!!!Terms Of Service Agreement",
+    "file": "src/features/Initialization/TermsOfServiceChangedScreen/TermsOfServiceChangedScreen.tsx",
+    "start": {
+      "line": 114,
+      "column": 16,
+      "index": 3052
+    },
+    "end": {
+      "line": 117,
+      "column": 3,
+      "index": 3149
+    }
+  }
+]
