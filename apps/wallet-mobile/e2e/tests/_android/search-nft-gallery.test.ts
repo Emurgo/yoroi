@@ -33,7 +33,7 @@ describe('Search for an NFT from gallery and verify', () => {
         
     })    
 
-    it('should be open "NFT Gallery"', async () => {
+    it('should be able to open "NFT Gallery" and verify the total count of NFTs displayed', async () => {
         await walletMenuScreen.menuNFTGallery().tap()
         await waitFor(nftGalleryScreen.iconSearch()).toBeVisible().withTimeout(10000)
        
