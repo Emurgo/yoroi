@@ -41,7 +41,7 @@ export const makeMetricsStorage = (yoroiStorage: YoroiStorage = storage) => {
     enabled: boolean
     consentRequested: boolean
     version: number
-    dateConfigured: string
+    dateConsentRequested: string
   }
 
   const readConfig = async () => {
@@ -64,7 +64,7 @@ export const makeMetricsStorage = (yoroiStorage: YoroiStorage = storage) => {
         enabled: config?.enabled ?? defaultEnabled,
         consentRequested,
         version: CONFIG.LATEST_ANALYTICS_AGREEMENT_VERSION,
-        dateConfigured: new Date().toISOString(),
+        dateConsentRequested: new Date().toISOString(),
       })
     },
   } as const
@@ -79,7 +79,7 @@ export const makeMetricsStorage = (yoroiStorage: YoroiStorage = storage) => {
         enabled,
         consentRequested: true,
         version: CONFIG.LATEST_ANALYTICS_AGREEMENT_VERSION,
-        dateConfigured: new Date().toISOString(),
+        dateConsentRequested: new Date().toISOString(),
       })
     },
   } as const
