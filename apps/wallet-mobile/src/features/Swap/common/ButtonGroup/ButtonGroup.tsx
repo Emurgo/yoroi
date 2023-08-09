@@ -5,24 +5,24 @@ import {COLORS} from '../../../../theme'
 
 interface ButtonGroupProps {
   buttons: string[]
-  onButtonPress: (event: string, id: number) => void
+  onPress: (index: number) => void
 }
 
-export const ButtonGroup: React.FC<ButtonGroupProps> = ({buttons, onButtonPress}) => {
-  const [clickedId, setClickedId] = useState(0)
+export const ButtonGroup: React.FC<ButtonGroupProps> = ({buttons, onPress}) => {
+  const [selectedIndex, setSelectedIndex] = useState(0)
 
-  const handleClick = (buttonLabel: string, id: number) => {
-    setClickedId(id)
-    onButtonPress(buttonLabel, id)
+  const handleClick = (index: number) => {
+    setSelectedIndex(index)
+    onPress(index)
   }
 
   return (
     <View style={styles.container}>
-      {buttons.map((buttonLabel, i) => (
-        <View key={i} style={styles.buttonWrapper}>
+      {buttons.map((buttonLabel, index) => (
+        <View key={buttonLabel} style={styles.buttonWrapper}>
           <TouchableOpacity
-            onPress={() => handleClick(buttonLabel, i)}
-            style={[styles.customButton, i === clickedId && styles.activeButton]}
+            onPress={() => handleClick(index)}
+            style={[styles.customButton, index === selectedIndex && styles.activeButton]}
           >
             <Text style={styles.buttonText}>{buttonLabel}</Text>
           </TouchableOpacity>

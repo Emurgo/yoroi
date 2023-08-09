@@ -1,11 +1,11 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Icon, Spacer, Text} from '../../../../../../components'
+import {Icon, Spacer, Text} from '../../../../../components'
 // import {BottomSheet} from '../../../../../components/BottomSheet'
-import {COLORS} from '../../../../../../theme'
-import {ExpandableInfoCard} from '../../../../common/SelectPool/ExpendableCard'
-import {OpenOrderListType} from '../ListOrders/ListOrders'
+import {COLORS} from '../../../../../theme'
+import {ExpandableInfoCard} from '../../../common/SelectPool/ExpendableCard'
+import {OpenOrderListType} from './ListOrders'
 
 const mockOpenOrders: OpenOrderListType = [
   {

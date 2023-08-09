@@ -141,8 +141,8 @@ const createOrderReducer = (
 ): any => {
   switch (action.type) {
     case SwapCreateOrderActionType.OrderTypeChanged:
-      return produce(state.createOrder, (draft) => {
-        draft.type = action.orderType
+      return produce(state, (draft) => {
+        draft.createOrder.type = action.orderType
       })
     case SwapCreateOrderActionType.FromAmountChanged:
       return {

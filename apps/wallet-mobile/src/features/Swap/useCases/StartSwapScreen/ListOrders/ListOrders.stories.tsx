@@ -1,12 +1,12 @@
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {Boundary} from '../../../../../../components'
-import {COLORS} from '../../../../../../theme'
-import {ButtonGroup} from '../../../../common/ButtonGroup'
-import {useStrings} from '../../../../common/strings'
-import {ClosedOrders} from '../ClosedOrders/ClosedOrders'
-import {OpenOrders} from '../OpenOrders/OpenOrders'
+import {Boundary} from '../../../../../components'
+import {COLORS} from '../../../../../theme'
+import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
+import {useStrings} from '../../../common/strings'
+import {ClosedOrders} from './ClosedOrders'
+import {OpenOrders} from './OpenOrders'
 
 type Item = {
   label: string
@@ -14,7 +14,7 @@ type Item = {
 }
 
 type SwapOrder = {
-  label: JSX.Element
+  label: React.ReactNode
   mainInfo: Item[]
   hiddenInfo: Item[]
   buttonAction: () => void
@@ -36,7 +36,7 @@ export const ListOrders = () => {
     <View style={styles.container}>
       <ScrollView style={styles.keyboard}>
         <View style={styles.buttonsGroup}>
-          <ButtonGroup buttons={[strings.openOrders, strings.completedOrders]} onButtonPress={handleButtonClick} />
+          <ButtonGroup buttons={[strings.openOrders, strings.completedOrders]} onPress={handleButtonClick} />
         </View>
 
         <Boundary>{orderView === 'Open orders' ? <OpenOrders /> : <ClosedOrders />}</Boundary>

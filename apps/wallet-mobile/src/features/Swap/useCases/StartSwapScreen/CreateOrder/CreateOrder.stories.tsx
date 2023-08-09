@@ -6,12 +6,12 @@ import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
 import {CreateOrder} from './CreateOrder'
 
-storiesOf('Swap Tokens View', module) //
-  .add('adding: initial state', () => {
-    return <Adding />
+storiesOf('Swap Create Order', module) //
+  .add('initial state', () => {
+    return <Initial />
   })
 
-const Adding = () => {
+const Initial = () => {
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager}>

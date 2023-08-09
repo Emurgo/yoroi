@@ -6,7 +6,7 @@ import {Spacer, StatusBar, Text} from '../../../../components'
 import {COLORS} from '../../../../theme'
 import {useStrings} from '../../common/strings'
 import {CreateOrder} from './CreateOrder/CreateOrder'
-import {ListOrders} from './ListOrders/ListOrders/ListOrders'
+import {ListOrders} from './ListOrders/ListOrders'
 
 type TabOptions = 'createOrder' | 'listOrders'
 

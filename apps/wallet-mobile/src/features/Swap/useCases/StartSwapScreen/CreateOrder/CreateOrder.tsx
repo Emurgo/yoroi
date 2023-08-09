@@ -18,59 +18,56 @@ import {SwitchAndClear} from './SwitchAndClear'
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
+  const {orderTypeChanged} = useSwap()
+  const orderTypes = [strings.marketButton, strings.limitButton]
 
-  const state = useSwap()
-
-  console.log('[DEBUG: ALL SEWAP STATE]', state)
-
-  const handleButtonClick = (event: string) => {
-    console.log('Button clicked!', event)
+  const handlePressOrderType = (index: number) => {
+    orderTypeChanged(index === 0 ? 'market' : 'limit')
   }
 
   return (
-    <View>
-      <View style={styles.container}>
-        <KeyboardAvoidingView
-          style={styles.flex}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={86}
-        >
-          <View style={styles.buttonsGroup}>
-            <ButtonGroup buttons={[strings.marketButton, strings.limitButton]} onButtonPress={handleButtonClick} />
+    <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={86}
+      >
+        <View style={styles.buttonsGroup}>
+          {/* TODO: add the initial state / index initial */}
+          <ButtonGroup buttons={orderTypes} onPress={handlePressOrderType} />
 
-            <TouchableOpacity>
-              <Icon.Refresh size={24} />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity>
+            <Icon.Refresh size={24} />
+          </TouchableOpacity>
+        </View>
 
-          <AddTokenFromCard />
+        <AddTokenFromCard />
 
-          <Spacer height={16} />
+        <Spacer height={16} />
 
-          <SwitchAndClear />
+        <SwitchAndClear />
 
-          <Spacer height={16} />
+        <Spacer height={16} />
 
-          <AddTokenToCard />
+        <AddTokenToCard />
 
-          <Spacer height={20} />
+        <Spacer height={20} />
 
-          <MarketPrice disabled={true} />
+        <MarketPrice disabled={true} />
 
-          <SlippageTolerance />
+        <SlippageTolerance />
 
-          <ChoosePoolSection />
+        <ChoosePoolSection />
 
-          <Actions>
-            <Button
-              testID="swapButton"
-              shelleyTheme
-              title={strings.swapTitle}
-              onPress={() => navigation.confirmationOrder()}
-            />
-          </Actions>
-        </KeyboardAvoidingView>
-      </View>
+        <Actions>
+          <Button
+            testID="swapButton"
+            shelleyTheme
+            title={strings.swapTitle}
+            onPress={() => navigation.confirmationOrder()}
+          />
+        </Actions>
+      </KeyboardAvoidingView>
     </View>
   )
 }
