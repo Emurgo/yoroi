@@ -1,3 +1,4 @@
+import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -12,6 +13,7 @@ export const SlippageTolerance = () => {
   const [showInfoModal, setShowInfoModal] = React.useState(false)
   const strings = useStrings()
   const navigate = useNavigateTo()
+  const {createOrder} = useSwap()
 
   return (
     <View style={[styles.container]}>
@@ -30,7 +32,7 @@ export const SlippageTolerance = () => {
       </View>
 
       <View style={styles.row}>
-        <Text>1%</Text>
+        <Text>{`${createOrder.slippage} %`}</Text>
 
         <Spacer width={4} />
 

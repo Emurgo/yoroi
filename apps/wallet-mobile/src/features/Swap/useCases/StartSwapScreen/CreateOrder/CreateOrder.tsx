@@ -18,7 +18,7 @@ import {SwitchAndClear} from './SwitchAndClear'
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
-  const {orderTypeChanged} = useSwap()
+  const {orderTypeChanged, createOrder} = useSwap()
   const orderTypes = [strings.marketButton, strings.limitButton]
 
   const handlePressOrderType = (index: number) => {
@@ -53,7 +53,7 @@ export const CreateOrder = () => {
 
         <Spacer height={20} />
 
-        <MarketPrice disabled={true} />
+        <MarketPrice disabled={createOrder.type === 'market'} />
 
         <SlippageTolerance />
 

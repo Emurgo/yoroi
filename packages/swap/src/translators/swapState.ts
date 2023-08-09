@@ -85,7 +85,7 @@ export const combinedSwapReducers = (
 
 export const defaultSwapState: SwapState = {
   createOrder: {
-    type: 'limit',
+    type: 'market',
     address: '',
     datum: '',
     datumHash: '',
@@ -99,7 +99,7 @@ export const defaultSwapState: SwapState = {
         tokenId: '',
       },
     },
-    slippage: 0.1,
+    slippage: 1,
     protocol: 'muesliswap',
     poolId: '',
   },
@@ -181,8 +181,8 @@ const createOrderReducer = (
         draft.poolId = action.poolId
       })
     case SwapCreateOrderActionType.SlippageChanged:
-      return produce(state.createOrder, (draft) => {
-        draft.slippage = action.slippage
+      return produce(state, (draft) => {
+        draft.createOrder.slippage = action.slippage
       })
     case SwapCreateOrderActionType.TxPayloadChanged:
       return produce(state.createOrder, (draft) => {

@@ -1,8 +1,10 @@
+import {useSwap} from '@yoroi/swap'
 import React, {useEffect, useRef, useState} from 'react'
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 
 import {Button} from '../../../../components'
 import {COLORS} from '../../../../theme'
+import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 
 interface Choice {
@@ -22,13 +24,15 @@ const Choices: Choice[] = [
 
 export const InputSlippageToleranceScreen = () => {
   const [selectedChoice, setSelectedChoice] = useState('1%')
-  const [inputValue, setInputValue] = useState('1%')
+  const [inputValue, setInputValue] = useState('1')
   const inputRef = useRef<TextInput | null>(null)
+  const navigate = useNavigateTo()
   const strings = useStrings()
+  const {slippageChanged} = useSwap()
 
   const handleChoicePress = (choice: Choice) => {
     setSelectedChoice(choice.label)
-    setInputValue(choice.label === 'Manual' ? '' : choice.label)
+    setInputValue(choice.label === 'Manual' ? '' : String(choice.value))
   }
 
   const handleInputChange = (text: string) => {
@@ -83,7 +87,15 @@ export const InputSlippageToleranceScreen = () => {
         )}
       </View>
 
-      <Button testID="applyButton" shelleyTheme title={strings.apply} />
+      <Button
+        testID="applyButton"
+        shelleyTheme
+        title={strings.apply}
+        onPress={() => {
+          slippageChanged(Number(inputValue))
+          navigate.swapTokens()
+        }}
+      />
     </View>
   )
 }
