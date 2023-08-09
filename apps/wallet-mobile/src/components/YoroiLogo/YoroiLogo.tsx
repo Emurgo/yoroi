@@ -81,7 +81,7 @@ const useStrings = () => {
 
 const messages = defineMessages({
   text: {
-    id: 'yoroilogo.text',
+    id: 'components.yoroiLogo',
     defaultMessage: '!!!Light wallet for Cardano assets',
   },
 })
