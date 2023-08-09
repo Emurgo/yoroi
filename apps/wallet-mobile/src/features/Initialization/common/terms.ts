@@ -15,9 +15,7 @@ export const useTermsOfServiceAgreement = () => {
   const storage = useStorage()
   const query = useQuery({
     queryKey: [queryKey],
-    queryFn: async () => {
-      return storage.join('appSettings/').getItem<TermsOfServiceAgreement>(queryKey)
-    },
+    queryFn: async () => storage.join('appSettings/').getItem<TermsOfServiceAgreement>(queryKey),
     suspense: true,
   })
 

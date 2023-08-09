@@ -11,17 +11,18 @@ import {AnalyticsImage} from './AnalyticsImage'
 type Props = {
   type: 'notice' | 'settings'
   onClose?: () => void
+  onReadMore?: () => void
 }
 
-export const Analytics = ({type, onClose}: Props) => {
+export const Analytics = ({type, onClose, onReadMore}: Props) => {
   if (type === 'settings') {
-    return <Settings />
+    return <Settings onReadMore={onReadMore} />
   }
 
-  return <Notice onClose={onClose} />
+  return <Notice onClose={onClose} onReadMore={onReadMore} />
 }
 
-const Notice = ({onClose}: {onClose?: () => void}) => {
+const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () => void}) => {
   const strings = useStrings()
   const metrics = useMetrics()
 
@@ -29,7 +30,7 @@ const Notice = ({onClose}: {onClose?: () => void}) => {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.content}>
-          <CommonContent />
+          <CommonContent onReadMore={onReadMore} />
 
           <Button
             block
@@ -59,7 +60,7 @@ const Notice = ({onClose}: {onClose?: () => void}) => {
   )
 }
 
-const Settings = () => {
+const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
   const strings = useStrings()
   const metrics = useMetrics()
 
@@ -67,7 +68,7 @@ const Settings = () => {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.content}>
-          <CommonContent />
+          <CommonContent onReadMore={onReadMore} />
 
           <View style={styles.toggle}>
             <Text bold>{strings.toggle}</Text>
@@ -85,7 +86,7 @@ const Settings = () => {
   )
 }
 
-const CommonContent = () => {
+const CommonContent = ({onReadMore}: {onReadMore?: () => void}) => {
   const strings = useStrings()
   return (
     <>
@@ -115,7 +116,7 @@ const CommonContent = () => {
 
       <Spacer height={20} />
 
-      <TouchableOpacity onPress={() => Linking.openURL('')}>
+      <TouchableOpacity onPress={onReadMore}>
         <Text style={styles.link}>{strings.more}</Text>
       </TouchableOpacity>
 

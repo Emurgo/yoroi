@@ -260,7 +260,6 @@ export type InititalizationRoutes = {
   'accept-terms-of-service': undefined
   'enable-login-with-pin': undefined
   analytics: undefined
-  'terms-changed-notice': undefined
 }
 export type InititalizationNavigation = StackNavigationProp<InititalizationRoutes>
 
@@ -291,8 +290,9 @@ export type AppRoutes = {
   'custom-pin-auth': undefined
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
-  'terms-changed-notice': undefined
+  'terms-of-service-changed-notice': undefined
   'accept-terms-of-service': undefined
+  'analytics-agreement-changed-notice': undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 
