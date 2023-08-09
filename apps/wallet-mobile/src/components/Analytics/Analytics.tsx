@@ -1,8 +1,9 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Linking, ScrollView, StyleSheet, Switch, TouchableOpacity, View} from 'react-native'
+import {Linking, StyleSheet, Switch, TouchableOpacity, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, Spacer, Text} from '../../components'
+import {Button, Spacer, Text, YoroiLogo} from '../../components'
 import {useMetrics} from '../../metrics/metricsManager'
 import {COLORS} from '../../theme'
 import {AnalyticsImage} from './AnalyticsImage'
@@ -17,64 +18,42 @@ export const Analytics = ({type, onClose}: Props) => {
   const metrics = useMetrics()
 
   return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.centered}>
-        {type === 'notice' && (
-          <>
-            <Text style={styles.title}>{strings.header}</Text>
-
-            <Spacer height={12} />
-          </>
-        )}
-
-        <AnalyticsImage />
-      </View>
-
-      <Spacer height={12} />
-
-      <View style={styles.centered}>
-        {type === 'settings' && (
-          <>
-            <Text style={styles.paragraph} bold>
-              {strings.header}
-            </Text>
-
-            <Spacer height={12} />
-          </>
-        )}
-
-        <Text style={styles.paragraph} bold={type === 'notice'}>
-          {strings.description}
-        </Text>
-
-        <Spacer height={12} />
-      </View>
-
-      <Spacer height={12} />
-
-      <View>
-        {list.map(({style, icon, key}) => (
-          <View key={key} style={styles.item}>
-            <Text style={style}>{icon}</Text>
-
-            <Text style={styles.text}>{strings[key]}</Text>
-          </View>
-        ))}
-      </View>
-
-      <Spacer height={12} />
-
-      <TouchableOpacity onPress={() => Linking.openURL('')}>
-        <Text style={styles.link}>{strings.more}</Text>
-      </TouchableOpacity>
-
-      <Spacer height={12} />
-
-      {type === 'notice' && (
-        <>
+    <View style={styles.container}>
+      <ScrollView>
+        <View style={styles.content}>
           <Spacer height={12} />
 
-          <View style={styles.buttons}>
+          <YoroiLogo />
+
+          <Spacer height={12} />
+
+          <AnalyticsImage />
+
+          <Spacer height={12} />
+
+          <Text style={styles.title}>{strings.header}</Text>
+
+          <Spacer height={12} />
+
+          <View>
+            {list.map(({style, icon, key}) => (
+              <View key={key} style={styles.item}>
+                <Text style={style}>{icon}</Text>
+
+                <Text style={styles.text}>{strings[key]}</Text>
+              </View>
+            ))}
+          </View>
+
+          <Spacer height={20} />
+
+          <TouchableOpacity onPress={() => Linking.openURL('')}>
+            <Text style={styles.link}>{strings.more}</Text>
+          </TouchableOpacity>
+
+          <Spacer height={20} />
+
+          {type === 'notice' && (
             <Button
               block
               outlineShelley
@@ -85,37 +64,49 @@ export const Analytics = ({type, onClose}: Props) => {
               title={strings.skip}
               style={styles.skip}
             />
+          )}
 
-            <Button
-              block
-              shelleyTheme
-              onPress={() => {
-                metrics.enable()
-                onClose?.()
-              }}
-              title={strings.accept}
-            />
-          </View>
-        </>
-      )}
+          {type === 'settings' && (
+            <View style={styles.toggle}>
+              <Text bold>{strings.toggle}</Text>
 
-      {type === 'settings' && (
-        <View style={styles.toggle}>
-          <Text bold>{strings.toggle}</Text>
+              <Spacer fill />
 
-          <Switch
-            value={metrics.isEnabled}
-            onValueChange={() => (metrics.isEnabled ? metrics.disable() : metrics.enable())}
+              <Switch
+                value={metrics.isEnabled}
+                onValueChange={() => (metrics.isEnabled ? metrics.disable() : metrics.enable())}
+              />
+            </View>
+          )}
+        </View>
+      </ScrollView>
+
+      {type === 'notice' && (
+        <View style={{paddingVertical: 50}}>
+          <Button
+            block
+            shelleyTheme
+            onPress={() => {
+              metrics.enable()
+              onClose?.()
+            }}
+            title={strings.accept}
           />
         </View>
       )}
-    </ScrollView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    paddingHorizontal: 10,
+  container: {
+    backgroundColor: '#fff',
+    flex: 1,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+  },
+  content: {
+    alignItems: 'center',
   },
   text: {
     fontSize: 14,
@@ -126,28 +117,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'baseline',
   },
-  paragraph: {
-    fontSize: 14,
-    lineHeight: 22,
-    textAlign: 'center',
-  },
   link: {
     color: COLORS.BLUE_LIGHTER,
     textAlign: 'center',
-  },
-  centered: {
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   title: {
     fontSize: 20,
     lineHeight: 22,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  buttons: {
-    flexDirection: 'column',
-    gap: 8,
   },
   skip: {
     borderWidth: 0,
@@ -160,7 +138,10 @@ const styles = StyleSheet.create({
     color: COLORS.RED,
     paddingRight: 8,
   },
-  toggle: {display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'},
+  toggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 })
 
 const list = [

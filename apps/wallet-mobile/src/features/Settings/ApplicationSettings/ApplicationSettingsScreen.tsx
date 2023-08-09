@@ -215,7 +215,7 @@ const messages = defineMessages({
     defaultMessage: '!!!About',
   },
   termsOfservice: {
-    id: 'components.firstrun.acepttermsofservicescreen.title',
+    id: 'components.initialization.acepttermsofservicescreen.title',
     defaultMessage: '!!!Terms of Service Agreement',
   },
   changePin: {

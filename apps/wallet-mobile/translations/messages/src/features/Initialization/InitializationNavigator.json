@@ -2,31 +2,31 @@
   {
     "id": "components.initialization.acepttermsofservicescreen.title",
     "defaultMessage": "!!!Terms of Service Agreement",
-    "file": "src/FirstRun/FirstRunNavigator.tsx",
+    "file": "src/features/Initialization/InitializationNavigator.tsx",
     "start": {
-      "line": 51,
+      "line": 60,
       "column": 20,
-      "index": 1515
+      "index": 1853
     },
     "end": {
-      "line": 54,
+      "line": 63,
       "column": 3,
-      "index": 1642
+      "index": 1980
     }
   },
   {
     "id": "components.initialization.languagepicker.title",
     "defaultMessage": "!!!Select Language",
-    "file": "src/FirstRun/FirstRunNavigator.tsx",
+    "file": "src/features/Initialization/InitializationNavigator.tsx",
     "start": {
-      "line": 55,
+      "line": 64,
       "column": 23,
-      "index": 1667
+      "index": 2005
     },
     "end": {
-      "line": 58,
+      "line": 67,
       "column": 3,
-      "index": 1772
+      "index": 2110
     }
   }
 ]

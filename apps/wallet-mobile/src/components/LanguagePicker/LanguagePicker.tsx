@@ -1,7 +1,9 @@
 import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 
 import {useLanguage} from '../../i18n'
+import {useSearch, useSearchOnNavBar} from '../../Search/SearchContext'
 import {COLORS} from '../../theme'
 import {Icon} from '../Icon'
 import {Text} from '../Text'
@@ -12,11 +14,20 @@ const INCLUDED_LANGUAGE_CODES = ['en-US', 'ja-JP']
 export const LanguagePicker = () => {
   const language = useLanguage()
   const {languageCode, selectLanguageCode, supportedLanguages} = language
+  const strings = useStrings()
+
+  useSearchOnNavBar({
+    title: strings.languagepickerTitle,
+    placeholder: strings.languagepickerSearch,
+  })
+
+  const {search} = useSearch()
+  const data = supportedLanguages.filter((lang) => lang.code.includes(search) || lang.label.includes(search))
 
   return (
     <View style={styles.languagePicker}>
       <FlatList
-        data={supportedLanguages}
+        data={data}
         contentContainerStyle={styles.languageList}
         renderItem={({item: {label, code}}) => (
           <TouchableOpacity
@@ -62,5 +73,25 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 16,
     lineHeight: 24,
+  },
+})
+
+const useStrings = () => {
+  const intl = useIntl()
+
+  return {
+    languagepickerTitle: intl.formatMessage(messages.languagepickerTitle),
+    languagepickerSearch: intl.formatMessage(messages.languagepickerSearch),
+  }
+}
+
+const messages = defineMessages({
+  languagepickerTitle: {
+    id: 'languagepicker.title',
+    defaultMessage: '!!!Language',
+  },
+  languagepickerSearch: {
+    id: 'languagepicker.search',
+    defaultMessage: '!!!Search',
   },
 })

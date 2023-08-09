@@ -1,0 +1,47 @@
+[
+  {
+    "id": "analytics.selectLanguage",
+    "defaultMessage": "!!!Select Language",
+    "file": "src/features/Initialization/common/strings.tsx",
+    "start": {
+      "line": 14,
+      "column": 18,
+      "index": 371
+    },
+    "end": {
+      "line": 17,
+      "column": 3,
+      "index": 454
+    }
+  },
+  {
+    "id": "analytics.tosIAgreeWith",
+    "defaultMessage": "!!!I agree with",
+    "file": "src/features/Initialization/common/strings.tsx",
+    "start": {
+      "line": 18,
+      "column": 17,
+      "index": 473
+    },
+    "end": {
+      "line": 21,
+      "column": 3,
+      "index": 552
+    }
+  },
+  {
+    "id": "analytics.tosAgreement",
+    "defaultMessage": "!!!Terms Of Service Agreement",
+    "file": "src/features/Initialization/common/strings.tsx",
+    "start": {
+      "line": 22,
+      "column": 16,
+      "index": 570
+    },
+    "end": {
+      "line": 25,
+      "column": 3,
+      "index": 662
+    }
+  }
+]

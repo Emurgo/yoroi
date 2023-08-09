@@ -212,7 +212,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Easy confirmation',
   },
   customPinTitle: {
-    id: 'components.firstrun.custompinscreen.title',
+    id: 'components.initialization.custompinscreen.title',
     defaultMessage: '!!!Set PIN',
   },
   settingsTitle: {

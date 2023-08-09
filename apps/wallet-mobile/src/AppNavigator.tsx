@@ -10,9 +10,10 @@ import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
-import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
+import {InititalizationNavigator} from './features/Initialization/InitializationNavigator'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
+import {SearchProvider} from './Search/SearchContext'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 import {AuthSetting, useAuthOsEnabled, useAuthSetting, useAuthWithOs} from './yoroi-wallets/auth'
@@ -68,7 +69,15 @@ export const AppNavigator = () => {
 
         {isLoggedOut && (
           <Stack.Group>
-            {authAction === 'first-run' && <Stack.Screen name="first-run" component={FirstRunNavigator} />}
+            {authAction === 'first-run' && (
+              <Stack.Screen name="first-run">
+                {() => (
+                  <SearchProvider>
+                    <InititalizationNavigator />
+                  </SearchProvider>
+                )}
+              </Stack.Screen>
+            )}
 
             {authAction === 'auth-with-pin' && (
               <Stack.Screen
@@ -139,7 +148,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Enter PIN',
   },
   customPinTitle: {
-    id: 'components.firstrun.custompinscreen.title',
+    id: 'components.initialization.custompinscreen.title',
     defaultMessage: '!!!Set PIN',
   },
   authWithOsChangeTitle: {

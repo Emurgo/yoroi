@@ -1,0 +1,32 @@
+[
+  {
+    "id": "languagepicker.title",
+    "defaultMessage": "!!!Language",
+    "file": "src/components/LanguagePicker/LanguagePicker.tsx",
+    "start": {
+      "line": 89,
+      "column": 23,
+      "index": 2463
+    },
+    "end": {
+      "line": 92,
+      "column": 3,
+      "index": 2535
+    }
+  },
+  {
+    "id": "languagepicker.search",
+    "defaultMessage": "!!!Search",
+    "file": "src/components/LanguagePicker/LanguagePicker.tsx",
+    "start": {
+      "line": 93,
+      "column": 24,
+      "index": 2561
+    },
+    "end": {
+      "line": 96,
+      "column": 3,
+      "index": 2632
+    }
+  }
+]

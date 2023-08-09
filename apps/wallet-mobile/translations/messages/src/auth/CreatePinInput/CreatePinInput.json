@@ -1,6 +1,6 @@
 [
   {
-    "id": "components.firstrun.custompinscreen.pinInputTitle",
+    "id": "components.initialization.custompinscreen.pinInputTitle",
     "defaultMessage": "!!!Enter the PIN",
     "file": "src/auth/CreatePinInput/CreatePinInput.tsx",
     "start": {
@@ -11,37 +11,37 @@
     "end": {
       "line": 79,
       "column": 3,
-      "index": 2398
+      "index": 2404
     }
   },
   {
-    "id": "components.firstrun.custompinscreen.pinInputSubtitle",
+    "id": "components.initialization.custompinscreen.pinInputSubtitle",
     "defaultMessage": "!!!Choose new PIN for quick access to wallet.",
     "file": "src/auth/CreatePinInput/CreatePinInput.tsx",
     "start": {
       "line": 80,
       "column": 20,
-      "index": 2420
+      "index": 2426
     },
     "end": {
       "line": 83,
       "column": 3,
-      "index": 2558
+      "index": 2570
     }
   },
   {
-    "id": "components.firstrun.custompinscreen.pinConfirmationTitle",
+    "id": "components.initialization.custompinscreen.pinConfirmationTitle",
     "defaultMessage": "!!!Repeat PIN",
     "file": "src/auth/CreatePinInput/CreatePinInput.tsx",
     "start": {
       "line": 84,
       "column": 29,
-      "index": 2589
+      "index": 2601
     },
     "end": {
       "line": 87,
       "column": 3,
-      "index": 2699
+      "index": 2717
     }
   }
 ]

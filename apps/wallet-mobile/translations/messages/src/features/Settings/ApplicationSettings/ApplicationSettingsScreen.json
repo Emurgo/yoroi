@@ -75,7 +75,7 @@
     }
   },
   {
-    "id": "components.firstrun.acepttermsofservicescreen.title",
+    "id": "components.initialization.acepttermsofservicescreen.title",
     "defaultMessage": "!!!Terms of Service Agreement",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
@@ -86,7 +86,7 @@
     "end": {
       "line": 220,
       "column": 3,
-      "index": 7246
+      "index": 7252
     }
   },
   {
@@ -96,12 +96,12 @@
     "start": {
       "line": 221,
       "column": 13,
-      "index": 7261
+      "index": 7267
     },
     "end": {
       "line": 224,
       "column": 3,
-      "index": 7370
+      "index": 7376
     }
   },
   {
@@ -111,12 +111,12 @@
     "start": {
       "line": 225,
       "column": 15,
-      "index": 7387
+      "index": 7393
     },
     "end": {
       "line": 228,
       "column": 3,
-      "index": 7500
+      "index": 7506
     }
   },
   {
@@ -126,12 +126,12 @@
     "start": {
       "line": 229,
       "column": 19,
-      "index": 7521
+      "index": 7527
     },
     "end": {
       "line": 232,
       "column": 3,
-      "index": 7682
+      "index": 7688
     }
   },
   {
@@ -141,12 +141,12 @@
     "start": {
       "line": 233,
       "column": 20,
-      "index": 7704
+      "index": 7710
     },
     "end": {
       "line": 236,
       "column": 3,
-      "index": 7838
+      "index": 7844
     }
   },
   {
@@ -156,12 +156,12 @@
     "start": {
       "line": 237,
       "column": 24,
-      "index": 7864
+      "index": 7870
     },
     "end": {
       "line": 240,
       "column": 3,
-      "index": 8047
+      "index": 8053
     }
   },
   {
@@ -171,12 +171,12 @@
     "start": {
       "line": 241,
       "column": 18,
-      "index": 8067
+      "index": 8073
     },
     "end": {
       "line": 244,
       "column": 3,
-      "index": 8198
+      "index": 8204
     }
   },
   {
@@ -186,12 +186,12 @@
     "start": {
       "line": 245,
       "column": 22,
-      "index": 8222
+      "index": 8228
     },
     "end": {
       "line": 248,
       "column": 3,
-      "index": 8403
+      "index": 8409
     }
   },
   {
@@ -201,12 +201,12 @@
     "start": {
       "line": 249,
       "column": 13,
-      "index": 8418
+      "index": 8424
     },
     "end": {
       "line": 252,
       "column": 3,
-      "index": 8526
+      "index": 8532
     }
   }
 ]

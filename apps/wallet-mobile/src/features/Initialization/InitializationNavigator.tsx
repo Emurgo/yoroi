@@ -2,28 +2,31 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {useAuth} from '../auth/AuthProvider'
-import {EnableLoginWithPin} from '../auth/EnableLoginWithPin'
-import {defaultStackNavigationOptions, FirstRunRoutes} from '../navigation'
+import {useAuth} from '../../auth/AuthProvider'
+import {EnableLoginWithPin} from '../../auth/EnableLoginWithPin'
+import {defaultStackNavigationOptionsV2, InititalizationRoutes} from '../../navigation'
+import {AnalyticsNoticeScreen} from './AnalyticsNoticeScreen'
+import {InitialScreen} from './InitialScreen/InitialScreen'
 import {LanguagePickerScreen} from './LanguagePickerScreen'
 import {TermsOfServiceScreen} from './TermsOfServiceScreen'
 
-const Stack = createStackNavigator<FirstRunRoutes>()
-export const FirstRunNavigator = () => {
+const Stack = createStackNavigator<InititalizationRoutes>()
+export const InititalizationNavigator = () => {
   const strings = useStrings()
 
   return (
     <Stack.Navigator
       screenOptions={{
-        cardStyle: {backgroundColor: 'transparent'},
-        ...defaultStackNavigationOptions,
+        ...defaultStackNavigationOptionsV2,
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
+      <Stack.Screen name="initial" component={InitialScreen} options={{headerShown: false}} />
+
       <Stack.Screen //
         name="language-pick"
-        component={LanguagePickerScreen}
         options={{title: strings.languagePickerTitle}}
+        component={LanguagePickerScreen}
       />
 
       <Stack.Screen
@@ -37,6 +40,12 @@ export const FirstRunNavigator = () => {
         options={{headerShown: false}}
         component={CreatePinScreenWrapper}
       />
+
+      <Stack.Screen //
+        name="analytics"
+        options={{headerShown: false}}
+        component={AnalyticsNoticeScreen}
+      />
     </Stack.Navigator>
   )
 }
@@ -49,11 +58,11 @@ const CreatePinScreenWrapper = () => {
 
 const messages = defineMessages({
   acceptTermsTitle: {
-    id: 'components.firstrun.acepttermsofservicescreen.title',
+    id: 'components.initialization.acepttermsofservicescreen.title',
     defaultMessage: '!!!Terms of Service Agreement',
   },
   languagePickerTitle: {
-    id: 'components.firstrun.languagepicker.title',
+    id: 'components.initialization.languagepicker.title',
     defaultMessage: '!!!Select Language',
   },
 })

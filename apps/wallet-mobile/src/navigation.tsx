@@ -41,6 +41,7 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,
+    backgroundColor: '#fff',
   },
   headerTitleStyle: {
     fontSize: 16,
@@ -252,6 +253,15 @@ export type VotingRegistrationRoutes = {
   'qr-code': undefined
 }
 export type VotingRegistrationRouteNavigation = StackNavigationProp<VotingRegistrationRoutes>
+
+export type InititalizationRoutes = {
+  initial: undefined
+  'language-pick': undefined
+  'accept-terms-of-service': undefined
+  'enable-login-with-pin': undefined
+  analytics: undefined
+}
+export type InititalizationNavigation = StackNavigationProp<InititalizationRoutes>
 
 export type FirstRunRoutes = {
   'language-pick': undefined
