@@ -100,6 +100,7 @@ const getStories = () => {
     "./src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithPassword.stories.tsx": require("../src/Dashboard/WithdrawStakingRewards/ConfirmTx/ConfirmTxWithPassword.stories.tsx"),
     "./src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.stories.tsx": require("../src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.stories.tsx"),
     "./src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.stories.tsx": require("../src/Dashboard/WithdrawStakingRewards/WithdrawStakingRewards.stories.tsx"),
+    "./src/features/Initialization/AnalyticsChangedScreen/AnalyticsChangedScreen.stories.tsx": require("../src/features/Initialization/AnalyticsChangedScreen/AnalyticsChangedScreen.stories.tsx"),
     "./src/features/Initialization/InitialScreen/InitialScreen.stories.tsx": require("../src/features/Initialization/InitialScreen/InitialScreen.stories.tsx"),
     "./src/features/Initialization/LanguagePickerScreen/LanguagePickerScreen.stories.tsx": require("../src/features/Initialization/LanguagePickerScreen/LanguagePickerScreen.stories.tsx"),
     "./src/features/Initialization/TermsOfServiceChangedScreen/TermsOfServiceChangedScreen.stories.tsx": require("../src/features/Initialization/TermsOfServiceChangedScreen/TermsOfServiceChangedScreen.stories.tsx"),

@@ -1,13 +1,12 @@
 import * as React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, YoroiLogo} from '../../../components'
-import {BlueCheckbox} from '../../../components/BlueCheckbox/BlueCheckbox'
+import {BlueCheckbox} from '../../../components/BlueCheckbox'
 import {COLORS} from '../../../theme'
-import {useNavigateTo} from '../common/navigation'
-import {useAgreeWithTermsOfService} from '../common/terms'
-import {defineMessages, useIntl} from 'react-intl'
+import {useAgreeWithTermsOfService,useNavigateTo} from '../common'
 
 export const TermsOfServiceChangedScreen = () => {
   const [tosAccepted, setTosAccepted] = React.useState(false)

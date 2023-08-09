@@ -1,7 +1,8 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {BlueCheckbox} from './BlueCheckbox'
 import {Text} from 'react-native'
+
+import {BlueCheckbox} from './BlueCheckbox'
 
 storiesOf('BlueCheckbox', module)
   .add('Disabled', () => (

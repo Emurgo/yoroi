@@ -1,15 +1,12 @@
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {ClipPath, Defs, G, Path, Rect, Svg} from 'react-native-svg'
 
 import {Button, Icon, Spacer, TextInput, YoroiLogo} from '../../../components'
+import {BlueCheckbox} from '../../../components/BlueCheckbox'
 import {useLanguage} from '../../../i18n'
 import {COLORS, lightPalette} from '../../../theme'
-import {useNavigateTo} from '../common/navigation'
-import {useStrings} from '../common/strings'
-import {useAgreeWithTermsOfService} from '../common/terms'
-import {BlueCheckbox} from '../../../components/BlueCheckbox'
+import {useAgreeWithTermsOfService,useNavigateTo, useStrings} from '../common'
 
 export const InitialScreen = () => {
   const strings = useStrings()

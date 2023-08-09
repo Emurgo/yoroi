@@ -2,12 +2,11 @@ import {EnrichmentPlugin, Event, PluginType} from '@amplitude/analytics-types'
 import * as React from 'react'
 import Config from 'react-native-config'
 
+import {CONFIG} from '../legacy/config'
 import {Logger} from '../yoroi-wallets/logging'
 import {storage, YoroiStorage} from '../yoroi-wallets/storage'
-import {parseBoolean} from '../yoroi-wallets/utils'
 import {Ampli, ampli} from './ampli'
 import {mockMetricsManager} from './mocks'
-import {CONFIG} from '../legacy/config'
 
 const buildVariants = {
   NIGHTLY: 'production',

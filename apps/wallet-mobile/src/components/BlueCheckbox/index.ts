@@ -1,1 +1,1 @@
-export {BlueCheckbox, type BlueCheckboxProps} from './BlueCheckbox'
+export {type BlueCheckboxProps, BlueCheckbox} from './BlueCheckbox'

@@ -1,8 +1,8 @@
 import {useCallback} from 'react'
 import {useMutation, useQuery, useQueryClient} from 'react-query'
 
-import {useStorage} from '../../../yoroi-wallets/storage'
 import {CONFIG} from '../../../legacy/config'
+import {useStorage} from '../../../yoroi-wallets/storage'
 
 export type TermsOfServiceAgreement = {
   version: number

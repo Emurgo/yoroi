@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Analytics} from '../../../components'
-import {useNavigateTo} from '../common/navigation'
+import {useNavigateTo} from '../common'
 
 export const AnalyticsNoticeScreen = () => {
   const navigateTo = useNavigateTo()
