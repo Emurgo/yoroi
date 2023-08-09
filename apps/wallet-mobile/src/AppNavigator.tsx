@@ -86,7 +86,7 @@ export const AppNavigator = () => {
               </Stack.Screen>
             )}
 
-            {authAction === 'terms-of-service-changed-notice' && (
+            {authAction === 'show-terms-of-service-changed-notice' && (
               <>
                 <Stack.Screen name="terms-of-service-changed-notice" component={TermsOfServiceChangedScreen} />
 
@@ -98,7 +98,7 @@ export const AppNavigator = () => {
               </>
             )}
 
-            {authAction === 'analytics-agreement-changed-notice' && (
+            {authAction === 'show-analytics-agreement-changed-notice' && (
               <>
                 <Stack.Screen name="analytics-agreement-changed-notice" component={AnalyticsChangedScreen} />
 
@@ -238,8 +238,8 @@ type AuthAction =
   | 'auth-with-os'
   | 'request-new-pin'
   | 'first-run'
-  | 'terms-of-service-changed-notice'
-  | 'analytics-agreement-changed-notice'
+  | 'show-terms-of-service-changed-notice'
+  | 'show-analytics-agreement-changed-notice'
 const getAuthAction = (
   authOsEnabled: boolean,
   authSetting: AuthSetting,
@@ -248,15 +248,14 @@ const getAuthAction = (
 ): AuthAction => {
   const hasAcceptedLatestTermsOfService = terms?.version === CONFIG.LATEST_TERMS_AND_CONDITIONS_VERSION
 
-  if (isString(authSetting) && !hasAcceptedLatestTermsOfService) return 'terms-of-service-changed-notice'
-  if (isString(authSetting) && !hasAcceptedAnalytics) return 'analytics-agreement-changed-notice'
+  if (isString(authSetting) && !hasAcceptedLatestTermsOfService) return 'show-terms-of-service-changed-notice'
+  if (isString(authSetting) && !hasAcceptedAnalytics) return 'show-analytics-agreement-changed-notice'
 
   if (authSetting === 'pin') return 'auth-with-pin'
   if (authSetting === 'os' && authOsEnabled) return 'auth-with-os'
   if (authSetting === 'os' && !authOsEnabled) return 'request-new-pin'
 
-  // setup not completed
-  return 'first-run'
+  return 'first-run' // setup not completed
 }
 
 const useAuthAction = () => {
