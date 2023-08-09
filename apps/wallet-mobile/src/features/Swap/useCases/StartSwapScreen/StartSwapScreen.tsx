@@ -1,30 +1,23 @@
-import {useFocusEffect} from '@react-navigation/native'
 import React, {useState} from 'react'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Spacer, StatusBar, Text} from '../../../../components'
-import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
-import {useSync} from '../../../../yoroi-wallets/hooks'
 import {useStrings} from '../../common/strings'
-import {OrdersView} from '../OrdersView/OrdersView'
-import {SwapTokensView} from '../TokenSwap/SwapTokensView'
+import {CreateOrder} from './CreateOrder/CreateOrder'
+import {ListOrders} from './ListOrders/ListOrders/ListOrders'
 
-type Tab = 'tokenSwap' | 'orders'
+type TabOptions = 'createOrder' | 'listOrders'
 
 export const StartSwapScreen = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
 
-  const [activeTab, setActiveTab] = useState<Tab>('tokenSwap')
-  const onSelectTab = (tab: Tab) => {
+  const [activeTab, setActiveTab] = useState<TabOptions>('createOrder')
+  const onSelectTab = (tab: TabOptions) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setActiveTab(tab)
   }
-
-  const {sync} = useSync(wallet)
-  useFocusEffect(React.useCallback(() => sync(), [sync]))
 
   return (
     <View style={styles.scrollView}>
@@ -34,33 +27,29 @@ export const StartSwapScreen = () => {
         <View style={styles.container}>
           <Tabs>
             <Tab
-              onPress={() => {
-                onSelectTab('tokenSwap')
-              }}
+              onPress={() => onSelectTab('createOrder')}
               label={strings.tokenSwap}
-              active={activeTab === 'tokenSwap'}
-              testID="tokenSwapTabButton"
+              active={activeTab === 'createOrder'}
+              testID="createOrderTabButton"
             />
 
             <Tab
-              onPress={() => {
-                onSelectTab('orders')
-              }}
+              onPress={() => onSelectTab('listOrders')}
               label={strings.orderSwap}
-              active={activeTab === 'orders'}
-              testID="ordersTabButton"
+              active={activeTab === 'listOrders'}
+              testID="listOrdersTabButton"
             />
           </Tabs>
 
           <TabPanels>
             <Spacer height={4} />
 
-            <TabPanel active={activeTab === 'tokenSwap'}>
-              <SwapTokensView />
+            <TabPanel active={activeTab === 'createOrder'}>
+              <CreateOrder />
             </TabPanel>
 
-            <TabPanel active={activeTab === 'orders'}>
-              <OrdersView />
+            <TabPanel active={activeTab === 'listOrders'}>
+              <ListOrders />
             </TabPanel>
           </TabPanels>
         </View>

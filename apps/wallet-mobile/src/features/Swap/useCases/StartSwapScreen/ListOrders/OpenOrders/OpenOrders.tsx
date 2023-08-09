@@ -2,10 +2,10 @@ import {useOrderByStatusOpen} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Icon, Spacer, Text} from '../../../../../components'
-import {COLORS} from '../../../../../theme'
-import {ExpandableInfoCard} from '../../../common/SelectPool/ExpendableCard'
-import {OpenOrderListType} from '../OrdersView'
+import {Icon, Spacer, Text} from '../../../../../../components'
+import {COLORS} from '../../../../../../theme'
+import {ExpandableInfoCard} from '../../../../common/SelectPool/ExpendableCard'
+import {OpenOrderListType} from '../ListOrders/ListOrders'
 
 const mockOpenOrders: OpenOrderListType = [
   {

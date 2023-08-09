@@ -3,9 +3,9 @@ import {mockSwapManager, swapManagerMocks, SwapProvider} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import React from 'react'
 
-import {SearchProvider} from '../../../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../../../SelectedWallet'
-import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
+import {SearchProvider} from '../../../../../../Search/SearchContext'
+import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
+import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
 import {OpenOrders} from './OpenOrders'
 
 storiesOf('Swap Open orders', module)

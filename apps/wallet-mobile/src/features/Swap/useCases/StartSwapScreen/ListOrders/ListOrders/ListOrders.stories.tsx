@@ -1,12 +1,12 @@
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {Boundary} from '../../../../components'
-import {COLORS} from '../../../../theme'
-import {ButtonGroup} from '../../common/ButtonGroup'
-import {useStrings} from '../../common/strings'
-import {ClosedOrders} from './ClosedOrders/ClosedOrders'
-import {OpenOrders} from './OpenOrders'
+import {Boundary} from '../../../../../../components'
+import {COLORS} from '../../../../../../theme'
+import {ButtonGroup} from '../../../../common/ButtonGroup'
+import {useStrings} from '../../../../common/strings'
+import {ClosedOrders} from '../ClosedOrders/ClosedOrders'
+import {OpenOrders} from '../OpenOrders/OpenOrders'
 
 type Item = {
   label: string
@@ -14,7 +14,7 @@ type Item = {
 }
 
 type SwapOrder = {
-  label: JSX.Element
+  label: React.ReactNode
   mainInfo: Item[]
   hiddenInfo: Item[]
   buttonAction: () => void
@@ -23,7 +23,7 @@ type SwapOrder = {
 
 export type OpenOrderListType = SwapOrder[]
 
-export const OrdersView = () => {
+export const ListOrders = () => {
   const [orderView, setOrderView] = useState<string>('Open orders')
   const strings = useStrings()
 

@@ -4,7 +4,7 @@ import React from 'react'
 
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
-import {SwapTokensView} from './SwapTokensView'
+import {CreateOrder} from './CreateOrder'
 
 storiesOf('Swap Tokens View', module) //
   .add('adding: initial state', () => {
@@ -15,7 +15,7 @@ const Adding = () => {
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager}>
-        <SwapTokensView />
+        <CreateOrder />
       </SwapProvider>
     </SelectedWalletProvider>
   )

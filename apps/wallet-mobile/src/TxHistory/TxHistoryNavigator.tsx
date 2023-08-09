@@ -17,8 +17,8 @@ import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiToken
 import {ConfirmationOrderScreen, StartSwapScreen} from '../features/Swap/useCases'
 import {InputSlippageToleranceScreen} from '../features/Swap/useCases/InputSlippageToleranceScreen'
 import {SelectPoolScreen} from '../features/Swap/useCases/SelectPoolScreen'
-import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/TokenSwap/AddTokens/SelectTokenFromListScreen'
-import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/TokenSwap/AddTokens/SelectTokenToListScreen'
+import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/SelectTokenFromListScreen'
+import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/SelectTokenToListScreen'
 import {
   BackButton,
   defaultStackNavigationOptions,

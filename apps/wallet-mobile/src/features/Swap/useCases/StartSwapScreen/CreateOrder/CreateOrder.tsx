@@ -11,11 +11,11 @@ import {useNavigateTo} from '../../../common/navigation'
 import {ChoosePoolSection} from '../../../common/SelectPool'
 import {SlippageTolerance} from '../../../common/SlippageTolerance'
 import {useStrings} from '../../../common/strings'
-import {AddTokenFromCard} from '../AddTokens/AddTokenFromCard'
-import {AddTokenToCard} from '../AddTokens/AddTokenToCard'
-import {SwitchAndClear} from '../SwitchAndClear/SwitchAndClear'
+import {AddTokenFromCard} from './AddTokenFromCard'
+import {AddTokenToCard} from './AddTokenToCard'
+import {SwitchAndClear} from './SwitchAndClear'
 
-export const SwapTokensView = () => {
+export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
 
