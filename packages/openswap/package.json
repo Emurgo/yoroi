@@ -1,10 +1,10 @@
 {
-  "name": "@yoroi/api-openswap",
+  "name": "@yoroi/openswap",
   "version": "0.0.1",
   "repository": {
     "type": "github",
     "url": "https://github.com/Emurgo/yoroi.git",
-    "directory": "packages/api-openswap"
+    "directory": "packages/openswap"
   },
   "license": "Apache-2.0",
   "author": "EMURGO",
@@ -22,7 +22,6 @@
     "test": "vitest --run"
   },
   "dependencies": {
-    "@yoroi/api-openswap": "0.0.1",
     "axios": "1.4.0"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 import {Swap, Balance} from '@yoroi/types'
-import {OpenSwapApi, CreateOrderRequest} from '@yoroi/api-openswap'
+import {OpenSwapApi, CreateOrderRequest} from '@yoroi/openswap'
 import {
   asOpenswapAmount,
   asOpenswapTokenId,

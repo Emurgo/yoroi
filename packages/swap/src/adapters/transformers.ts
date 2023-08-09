@@ -1,6 +1,6 @@
 import AssetFingerprint from '@emurgo/cip14-js'
 import {Swap, Balance} from '@yoroi/types'
-import {Order, Pool, Token} from '@yoroi/api-openswap'
+import {Order, Pool, Token} from '@yoroi/openswap'
 
 export const asOpenswapTokenId = (yoroiTokenId: string) => {
   const [policyId = '', assetName = ''] = yoroiTokenId.split('.')

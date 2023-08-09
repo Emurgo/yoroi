@@ -9,7 +9,7 @@
   },
   "workspaces": [
     "packages/types",
-    "packages/api-openswap",
+    "packages/openswap",
     "packages/*",
     "apps/*"
   ]
