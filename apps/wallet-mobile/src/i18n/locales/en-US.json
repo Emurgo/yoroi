@@ -656,7 +656,7 @@
   "global.network": "Network",
   "global.commit": "Commit",
   "global.currentVersion": "Current Version",
-  "languagepicker.title": "Language",
-  "languagepicker.search": "Search",
+  "global.title": "Language",
+  "global.search": "Search",
   "yoroilogo.text": "Light wallet for Cardano assets"
 }

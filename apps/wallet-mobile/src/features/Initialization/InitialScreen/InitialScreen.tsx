@@ -12,6 +12,7 @@ import {useStrings} from '../common/strings'
 export const InitialScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
+  const {addSubscription} = useLanguage()
   const [tosAccepted, setTosAccepted] = React.useState(false)
 
   const onPressContinue = () => {
@@ -25,6 +26,10 @@ export const InitialScreen = () => {
   const onPressTosCheckbox = () => {
     setTosAccepted((checked) => !checked)
   }
+
+  React.useEffect(() => {
+    addSubscription(() => setTosAccepted(false))
+  }, [addSubscription])
 
   return (
     <SafeAreaView style={styles.container}>

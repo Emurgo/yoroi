@@ -12,10 +12,21 @@ import translations from './translations'
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)
 export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
   const languageCode = useLanguageCode()
-  const selectLanguageCode = useSaveLanguageCode()
+  const saveLanguageCode = useSaveLanguageCode()
   const timeZone = useTimezone()
+
+  const subscriptions: (() => void)[] = []
+  const addSubscription = (subscription: () => void) => {
+    subscriptions.push(subscription)
+  }
+
+  const selectLanguageCode = (languageCode) => {
+    saveLanguageCode(languageCode)
+    subscriptions.forEach((subscription) => subscription())
+  }
+
   return (
-    <LanguageContext.Provider value={{languageCode, selectLanguageCode, supportedLanguages}}>
+    <LanguageContext.Provider value={{languageCode, selectLanguageCode, supportedLanguages, addSubscription}}>
       <IntlProvider
         timeZone={timeZone}
         locale={languageCode}
@@ -97,6 +108,7 @@ type LanguageContext = {
   languageCode: LanguageCode
   selectLanguageCode: SaveLanguageCode
   supportedLanguages: SupportedLanguages
+  addSubscription: (subscription: () => void) => void
 }
 
 const systemLanguageCode = Platform.select({

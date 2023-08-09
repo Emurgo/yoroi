@@ -14,6 +14,14 @@ type Props = {
 }
 
 export const Analytics = ({type, onClose}: Props) => {
+  if (type === 'settings') {
+    return <Settings />
+  }
+
+  return <Notice onClose={onClose} />
+}
+
+const Notice = ({onClose}: {onClose?: () => void}) => {
   const strings = useStrings()
   const metrics = useMetrics()
 
@@ -21,80 +29,98 @@ export const Analytics = ({type, onClose}: Props) => {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.content}>
-          <Spacer height={12} />
+          <CommonContent />
 
-          <YoroiLogo />
-
-          <Spacer height={12} />
-
-          <AnalyticsImage />
-
-          <Spacer height={12} />
-
-          <Text style={styles.title}>{strings.header}</Text>
-
-          <Spacer height={12} />
-
-          <View>
-            {list.map(({style, icon, key}) => (
-              <View key={key} style={styles.item}>
-                <Text style={style}>{icon}</Text>
-
-                <Text style={styles.text}>{strings[key]}</Text>
-              </View>
-            ))}
-          </View>
-
-          <Spacer height={20} />
-
-          <TouchableOpacity onPress={() => Linking.openURL('')}>
-            <Text style={styles.link}>{strings.more}</Text>
-          </TouchableOpacity>
-
-          <Spacer height={20} />
-
-          {type === 'notice' && (
-            <Button
-              block
-              outlineShelley
-              onPress={() => {
-                metrics.disable()
-                onClose?.()
-              }}
-              title={strings.skip}
-              style={styles.skip}
-            />
-          )}
-
-          {type === 'settings' && (
-            <View style={styles.toggle}>
-              <Text bold>{strings.toggle}</Text>
-
-              <Spacer fill />
-
-              <Switch
-                value={metrics.isEnabled}
-                onValueChange={() => (metrics.isEnabled ? metrics.disable() : metrics.enable())}
-              />
-            </View>
-          )}
+          <Button
+            block
+            outlineShelley
+            onPress={() => {
+              metrics.disable()
+              onClose?.()
+            }}
+            title={strings.skip}
+            style={styles.skip}
+          />
         </View>
       </ScrollView>
 
-      {type === 'notice' && (
-        <View style={{paddingVertical: 50}}>
-          <Button
-            block
-            shelleyTheme
-            onPress={() => {
-              metrics.enable()
-              onClose?.()
-            }}
-            title={strings.accept}
-          />
-        </View>
-      )}
+      <View style={styles.buttonRow}>
+        <Button
+          block
+          shelleyTheme
+          onPress={() => {
+            metrics.enable()
+            onClose?.()
+          }}
+          title={strings.accept}
+        />
+      </View>
     </View>
+  )
+}
+
+const Settings = () => {
+  const strings = useStrings()
+  const metrics = useMetrics()
+
+  return (
+    <View style={styles.container}>
+      <ScrollView>
+        <View style={styles.content}>
+          <CommonContent />
+
+          <View style={styles.toggle}>
+            <Text bold>{strings.toggle}</Text>
+
+            <Spacer fill />
+
+            <Switch
+              value={metrics.isEnabled}
+              onValueChange={() => (metrics.isEnabled ? metrics.disable() : metrics.enable())}
+            />
+          </View>
+        </View>
+      </ScrollView>
+    </View>
+  )
+}
+
+const CommonContent = () => {
+  const strings = useStrings()
+  return (
+    <>
+      <Spacer height={12} />
+
+      <YoroiLogo />
+
+      <Spacer height={12} />
+
+      <AnalyticsImage />
+
+      <Spacer height={12} />
+
+      <Text style={styles.title}>{strings.header}</Text>
+
+      <Spacer height={12} />
+
+      <View>
+        {list.map(({style, icon, key}) => (
+          <View key={key} style={styles.item}>
+            <Text style={style}>{icon}</Text>
+
+            <Text style={styles.text}>{strings[key]}</Text>
+          </View>
+        ))}
+      </View>
+
+      <Spacer height={20} />
+
+      <TouchableOpacity onPress={() => Linking.openURL('')}>
+        <Text style={styles.link}>{strings.more}</Text>
+      </TouchableOpacity>
+
+      <Spacer height={20} />
+    </>
   )
 }
 
@@ -141,6 +167,9 @@ const styles = StyleSheet.create({
   toggle: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  buttonRow: {
+    paddingVertical: 50,
   },
 })
 

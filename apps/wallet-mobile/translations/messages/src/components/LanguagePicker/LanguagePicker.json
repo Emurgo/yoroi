@@ -1,32 +1,32 @@
 [
   {
-    "id": "languagepicker.title",
+    "id": "global.title",
     "defaultMessage": "!!!Language",
     "file": "src/components/LanguagePicker/LanguagePicker.tsx",
     "start": {
-      "line": 89,
+      "line": 91,
       "column": 23,
-      "index": 2463
+      "index": 2498
     },
     "end": {
-      "line": 92,
+      "line": 94,
       "column": 3,
-      "index": 2535
+      "index": 2562
     }
   },
   {
-    "id": "languagepicker.search",
+    "id": "global.search",
     "defaultMessage": "!!!Search",
     "file": "src/components/LanguagePicker/LanguagePicker.tsx",
     "start": {
-      "line": 93,
+      "line": 95,
       "column": 24,
-      "index": 2561
+      "index": 2588
     },
     "end": {
-      "line": 96,
+      "line": 98,
       "column": 3,
-      "index": 2632
+      "index": 2651
     }
   }
 ]
