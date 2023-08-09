@@ -658,5 +658,5 @@
   "global.currentVersion": "Current Version",
   "global.title": "Language",
   "global.search": "Search",
-  "yoroilogo.text": "Light wallet for Cardano assets"
+  "components.yoroiLogo": "Light wallet for Cardano assets"
 }
