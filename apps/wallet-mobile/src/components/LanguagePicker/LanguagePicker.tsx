@@ -17,17 +17,19 @@ export const LanguagePicker = () => {
   const strings = useStrings()
 
   useSearchOnNavBar({
-    title: strings.languagepickerTitle,
-    placeholder: strings.languagepickerSearch,
+    title: strings.languagePickerTitle,
+    placeholder: strings.languagePickerSearch,
   })
 
   const {search} = useSearch()
-  const data = supportedLanguages.filter((lang) => lang.code.includes(search) || lang.label.includes(search))
+  const filteredLanguages = supportedLanguages.filter(
+    (lang) => lang.code.includes(search) || lang.label.includes(search),
+  )
 
   return (
     <View style={styles.languagePicker}>
       <FlatList
-        data={data}
+        data={filteredLanguages}
         contentContainerStyle={styles.languageList}
         renderItem={({item: {label, code}}) => (
           <TouchableOpacity
@@ -80,18 +82,18 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    languagepickerTitle: intl.formatMessage(messages.languagepickerTitle),
-    languagepickerSearch: intl.formatMessage(messages.languagepickerSearch),
+    languagePickerTitle: intl.formatMessage(messages.languagePickerTitle),
+    languagePickerSearch: intl.formatMessage(messages.languagePickerSearch),
   }
 }
 
 const messages = defineMessages({
-  languagepickerTitle: {
-    id: 'languagepicker.title',
+  languagePickerTitle: {
+    id: 'global.title',
     defaultMessage: '!!!Language',
   },
-  languagepickerSearch: {
-    id: 'languagepicker.search',
+  languagePickerSearch: {
+    id: 'global.search',
     defaultMessage: '!!!Search',
   },
 })
