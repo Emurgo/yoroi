@@ -124,7 +124,7 @@ describe('asYoroiPool', () => {
 
     expect(result).toEqual<Swap.PoolPair>({
       batcherFee: {quantity: '100', tokenId: ''},
-      fee: '200',
+      fee: '0.3',
       deposit: {quantity: '300', tokenId: ''},
       lpToken: {quantity: '400', tokenId: 'policyId.assetNameHex'},
       tokenA: {quantity: '500', tokenId: 'policyId.'},

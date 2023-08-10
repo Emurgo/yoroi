@@ -19,9 +19,10 @@ export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
   const {orderTypeChanged, createOrder} = useSwap()
-  const orderTypes = [strings.marketButton, strings.limitButton]
 
-  const handlePressOrderType = (index: number) => {
+  const orderTypeLabels = [strings.marketButton, strings.limitButton]
+  const orderTypeIndex = createOrder.type === 'market' ? 0 : 1
+  const handleSelectOrderType = (index: number) => {
     orderTypeChanged(index === 0 ? 'market' : 'limit')
   }
 
@@ -34,7 +35,7 @@ export const CreateOrder = () => {
       >
         <View style={styles.buttonsGroup}>
           {/* TODO: add the initial state / index initial */}
-          <ButtonGroup buttons={orderTypes} onPress={handlePressOrderType} />
+          <ButtonGroup labels={orderTypeLabels} onSelect={handleSelectOrderType} selected={orderTypeIndex} />
 
           <TouchableOpacity>
             <Icon.Refresh size={24} />

@@ -14,7 +14,7 @@ type Item = {
 }
 
 type SwapOrder = {
-  label: JSX.Element
+  label: React.ReactNode
   mainInfo: Item[]
   hiddenInfo: Item[]
   buttonAction: () => void
@@ -24,22 +24,23 @@ type SwapOrder = {
 export type OpenOrderListType = SwapOrder[]
 
 export const ListOrders = () => {
-  const [orderView, setOrderView] = useState<string>('Open orders')
   const strings = useStrings()
 
-  const handleButtonClick = (label: string) => {
-    console.log('Button clicked!', label)
-    setOrderView(label)
+  const [orderStatusIndex, setOrderStatusIndex] = useState<number>(0)
+  // TODO: @SorinC6: is it completed or closed orders?
+  const orderStatusLabels = [strings.openOrders, strings.completedOrders]
+  const handleSelectOrderStatus = (index: number) => {
+    setOrderStatusIndex(index)
   }
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.keyboard}>
         <View style={styles.buttonsGroup}>
-          <ButtonGroup buttons={[strings.openOrders, strings.completedOrders]} onPress={handleButtonClick} />
+          <ButtonGroup labels={orderStatusLabels} onSelect={handleSelectOrderStatus} selected={orderStatusIndex} />
         </View>
 
-        <Boundary>{orderView === 'Open orders' ? <OpenOrders /> : <ClosedOrders />}</Boundary>
+        <Boundary>{orderStatusIndex === 0 ? <OpenOrders /> : <ClosedOrders />}</Boundary>
       </ScrollView>
     </View>
   )

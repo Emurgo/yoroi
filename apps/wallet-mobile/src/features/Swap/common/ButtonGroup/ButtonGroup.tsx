@@ -1,30 +1,26 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {COLORS} from '../../../../theme'
 
 interface ButtonGroupProps {
-  buttons: string[]
-  onPress: (index: number) => void
+  labels: string[]
+  onSelect: (index: number) => void
+  selected: number
 }
 
-export const ButtonGroup: React.FC<ButtonGroupProps> = ({buttons, onPress}) => {
-  const [selectedIndex, setSelectedIndex] = useState(0)
-
-  const handleClick = (index: number) => {
-    setSelectedIndex(index)
-    onPress(index)
-  }
+export const ButtonGroup: React.FC<ButtonGroupProps> = ({labels, onSelect, selected}) => {
+  const handleOnPress = (index: number) => onSelect(index)
 
   return (
     <View style={styles.container}>
-      {buttons.map((buttonLabel, index) => (
+      {labels.map((buttonLabel, index) => (
         <View key={buttonLabel} style={styles.buttonWrapper}>
           <TouchableOpacity
-            onPress={() => handleClick(index)}
-            style={[styles.customButton, index === selectedIndex && styles.activeButton]}
+            onPress={() => handleOnPress(index)}
+            style={[styles.button, index === selected && styles.selected]}
           >
-            <Text style={styles.buttonText}>{buttonLabel}</Text>
+            <Text style={styles.label}>{buttonLabel}</Text>
           </TouchableOpacity>
         </View>
       ))}
@@ -39,15 +35,15 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     paddingRight: 8,
   },
-  customButton: {
+  button: {
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 4,
   },
-  activeButton: {
+  selected: {
     backgroundColor: COLORS.BORDER_GRAY,
   },
-  buttonText: {
+  label: {
     color: COLORS.BLACK,
   },
 })
