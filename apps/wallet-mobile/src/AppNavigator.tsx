@@ -264,5 +264,5 @@ const useAuthAction = () => {
   const terms = useTermsOfServiceAgreement()
   const {isConsentRequested} = useMetrics()
 
-  return getAuthAction(authOsEnabled, authSetting, terms, isConsentRequested)
+  return getFirstAction(authOsEnabled, authSetting, terms, isConsentRequested)
 }
