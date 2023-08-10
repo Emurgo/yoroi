@@ -2,7 +2,15 @@ import React from 'react'
 import {IntlProvider} from 'react-intl'
 import {NativeModules, Platform, Text} from 'react-native'
 import TimeZone from 'react-native-timezone'
-import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
+import {
+  QueryKey,
+  QueryObserver,
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from 'react-query'
 
 import {useStorage} from '../yoroi-wallets/storage'
 import {parseSafe} from '../yoroi-wallets/utils'
@@ -12,21 +20,13 @@ import translations from './translations'
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)
 export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
   const languageCode = useLanguageCode()
-  const saveLanguageCode = useSaveLanguageCode()
+  const selectLanguageCode = useSaveLanguageCode()
   const timeZone = useTimezone()
-
-  const subscriptions: (() => void)[] = []
-  const addSubscription = (subscription: () => void) => {
-    subscriptions.push(subscription)
-  }
-
-  const selectLanguageCode = (languageCode) => {
-    saveLanguageCode(languageCode)
-    subscriptions.forEach((subscription) => subscription())
-  }
+  const queryClient = useQueryClient()
+  const observer = new QueryObserver<LanguageCode>(queryClient, {queryKey: 'languageCode'})
 
   return (
-    <LanguageContext.Provider value={{languageCode, selectLanguageCode, supportedLanguages, addSubscription}}>
+    <LanguageContext.Provider value={{languageCode, selectLanguageCode, supportedLanguages, observer}}>
       <IntlProvider
         timeZone={timeZone}
         locale={languageCode}
@@ -56,7 +56,18 @@ const useTimezone = () => {
   return query.data
 }
 
-export const useLanguage = () => React.useContext(LanguageContext) || missingProvider()
+export const useLanguage = ({onChange}: {onChange?: (languageCode: LanguageCode) => void} = {}) => {
+  const value = React.useContext(LanguageContext) || missingProvider()
+
+  React.useEffect(() => {
+    if (onChange) {
+      return value.observer.subscribe((result) => {
+        onChange?.(result.data ?? defaultLanguageCode)
+      })
+    }
+  }, [onChange, value.observer])
+  return value
+}
 
 const missingProvider = () => {
   throw new Error('LanguageProvider is missing')
@@ -108,7 +119,7 @@ type LanguageContext = {
   languageCode: LanguageCode
   selectLanguageCode: SaveLanguageCode
   supportedLanguages: SupportedLanguages
-  addSubscription: (subscription: () => void) => void
+  observer: QueryObserver<LanguageCode, unknown, LanguageCode, LanguageCode, QueryKey>
 }
 
 const systemLanguageCode = Platform.select({
