@@ -78,7 +78,4 @@ export const normal_24_Word_Wallet: RestoredWallet = {
   ],
   type: WalletType.DaedalusWallet,
 }
-export const RESTORED_WALLETS: RestoredWallet[] = [
-  normal_15_Word_Wallet,
-  normal_24_Word_Wallet,
-]
+export const RESTORED_WALLETS: RestoredWallet[] = [normal_15_Word_Wallet, normal_24_Word_Wallet]
