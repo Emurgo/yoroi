@@ -1,11 +1,11 @@
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 
 import {useAuth} from '../../auth/AuthProvider'
 import {EnableLoginWithPin} from '../../auth/EnableLoginWithPin'
 import {defaultStackNavigationOptionsV2, InititalizationRoutes} from '../../navigation'
 import {AnalyticsNoticeScreen} from './AnalyticsNoticeScreen'
+import {useStrings} from './common'
 import {InitialScreen} from './InitialScreen/InitialScreen'
 import {LanguagePickerScreen} from './LanguagePickerScreen'
 import {TermsOfServiceScreen} from './TermsOfServiceScreen'
@@ -54,24 +54,4 @@ const CreatePinScreenWrapper = () => {
   const {login} = useAuth()
 
   return <EnableLoginWithPin onDone={login} />
-}
-
-const messages = defineMessages({
-  acceptTermsTitle: {
-    id: 'components.initialization.acepttermsofservicescreen.title',
-    defaultMessage: '!!!Terms of Service Agreement',
-  },
-  languagePickerTitle: {
-    id: 'components.initialization.languagepicker.title',
-    defaultMessage: '!!!Select Language',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    acceptTermsTitle: intl.formatMessage(messages.acceptTermsTitle),
-    languagePickerTitle: intl.formatMessage(messages.languagePickerTitle),
-  }
 }

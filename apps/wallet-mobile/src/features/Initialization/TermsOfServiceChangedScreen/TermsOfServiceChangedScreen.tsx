@@ -1,12 +1,11 @@
 import * as React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, YoroiLogo} from '../../../components'
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
 import {COLORS} from '../../../theme'
-import {useAgreeWithTermsOfService,useNavigateTo} from '../common'
+import {useAgreeWithTermsOfService, useNavigateTo, useStrings} from '../common'
 
 export const TermsOfServiceChangedScreen = () => {
   const [tosAccepted, setTosAccepted] = React.useState(false)
@@ -51,7 +50,7 @@ export const TermsOfServiceChangedScreen = () => {
 
       <Spacer fill />
 
-      <Button title="continue" shelleyTheme disabled={!tosAccepted} onPress={onPressContinue} />
+      <Button title={strings.continue} shelleyTheme disabled={!tosAccepted} onPress={onPressContinue} />
     </SafeAreaView>
   )
 }
@@ -83,35 +82,5 @@ const styles = StyleSheet.create({
   checkboxLink: {
     color: COLORS.DARK_BLUE,
     textDecorationLine: 'underline',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-  return {
-    tosIAgreeWith: intl.formatMessage(messages.tosIAgreeWith),
-    tosAgreement: intl.formatMessage(messages.tosAgreement),
-    title: intl.formatMessage(messages.title),
-    description: intl.formatMessage(messages.description),
-  }
-}
-
-const messages = defineMessages({
-  title: {
-    id: 'termsOfService.agreementUpdateTitle',
-    defaultMessage: '!!!Terms of Service Agreement update',
-  },
-  description: {
-    id: 'termsOfService.agreementUpdateDescription',
-    defaultMessage:
-      '!!!We have updated our Terms of Service Agreement to enhance your experience. Please review and accept them to keep enjoying Yoroi.',
-  },
-  tosIAgreeWith: {
-    id: 'termsOfService.tosIAgreeWith',
-    defaultMessage: '!!!I agree with',
-  },
-  tosAgreement: {
-    id: 'termsOfService.tosAgreement',
-    defaultMessage: '!!!Terms Of Service Agreement',
   },
 })
