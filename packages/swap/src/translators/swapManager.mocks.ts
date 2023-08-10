@@ -61,10 +61,7 @@ const listPoolsByPairResponse: Swap.Pool[] = [
       quantity: '0',
       tokenId: '',
     },
-    fee: {
-      quantity: '0',
-      tokenId: '',
-    },
+    fee: '0.3',
     lpToken: {
       quantity: '0',
       tokenId: '',

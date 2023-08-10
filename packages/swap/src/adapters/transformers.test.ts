@@ -108,7 +108,7 @@ describe('asYoroiPool', () => {
   it('should correctly convert the openswap pool to yoroi pool format', () => {
     const openswapPool: Pool = {
       batcherFee: {amount: '100', token: '.'},
-      fee: '200',
+      fee: '0.3',
       deposit: 300,
       lpToken: {amount: '400', token: 'policyId.assetNameHex'},
       tokenA: {amount: '500', token: 'policyId'},
@@ -124,7 +124,7 @@ describe('asYoroiPool', () => {
 
     expect(result).toEqual<Swap.Pool>({
       batcherFee: {quantity: '100', tokenId: ''},
-      fee: {quantity: '200', tokenId: ''},
+      fee: '0.3',
       deposit: {quantity: '300', tokenId: ''},
       lpToken: {quantity: '400', tokenId: 'policyId.assetNameHex'},
       tokenA: {quantity: '500', tokenId: 'policyId.'},
