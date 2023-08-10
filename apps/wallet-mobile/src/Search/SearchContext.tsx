@@ -161,12 +161,13 @@ const InputSearch = ({placeholder}: Props) => {
       onChangeText={(search) => searchChanged(search)}
       autoCapitalize="none"
       style={{flex: 1, color: '#000000'}}
+      testID="inputSearch"
     />
   )
 }
 
 const SearchButton = (props: TouchableOpacityProps) => (
-  <TouchableOpacity {...props}>
+  <TouchableOpacity testID="iconSearch" {...props}>
     <Icon.Magnify size={26} />
   </TouchableOpacity>
 )

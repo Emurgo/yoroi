@@ -202,7 +202,14 @@ const OnlyDevButton = () => {
 
   if (!__DEV__) return null
 
-  return <Button onPress={() => navigation.navigate('developer')} title="Dev options" style={styles.button} />
+  return (
+    <Button
+      testID="btnDevOptions"
+      onPress={() => navigation.navigate('developer')}
+      title="Dev options"
+      style={styles.button}
+    />
+  )
 }
 
 const styles = StyleSheet.create({
