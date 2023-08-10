@@ -137,14 +137,14 @@ export const usePairListByToken = (
     Balance.Token[],
     Error,
     Balance.Token[],
-    ['persist:', 'usePairListByToken', string]
+    ['usePairListByToken', string]
   >,
 ) => {
   const {pairs} = useSwap()
   const query = useQuery({
     suspense: true,
     ...options,
-    queryKey: ['persist:', 'usePairListByToken', tokenIdBase],
+    queryKey: ['usePairListByToken', tokenIdBase],
     queryFn: () => pairs.list.byToken(tokenIdBase),
   })
 
