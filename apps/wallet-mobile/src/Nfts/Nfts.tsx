@@ -176,7 +176,7 @@ const NftCount = ({count}: {count?: number | string}) => {
   const strings = useStrings()
 
   return (
-    <View style={styles.countBar}>
+    <View style={styles.countBar} testID="txtNftCount">
       <Text style={styles.count}>{`${strings.nftCount}: ${count ?? '-'}`}</Text>
     </View>
   )
