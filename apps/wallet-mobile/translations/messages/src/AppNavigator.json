@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Enter PIN",
     "file": "src/AppNavigator.tsx",
     "start": {
-      "line": 146,
+      "line": 174,
       "column": 17,
-      "index": 4736
+      "index": 6164
     },
     "end": {
-      "line": 149,
+      "line": 177,
       "column": 3,
-      "index": 4826
+      "index": 6254
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Set PIN",
     "file": "src/AppNavigator.tsx",
     "start": {
-      "line": 150,
+      "line": 178,
       "column": 18,
-      "index": 4846
+      "index": 6274
     },
     "end": {
-      "line": 153,
+      "line": 181,
       "column": 3,
-      "index": 4944
+      "index": 6372
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Auth with OS changes",
     "file": "src/AppNavigator.tsx",
     "start": {
-      "line": 154,
+      "line": 182,
       "column": 25,
-      "index": 4971
+      "index": 6399
     },
     "end": {
-      "line": 157,
+      "line": 185,
       "column": 3,
-      "index": 5085
+      "index": 6513
     }
   },
   {
@@ -49,14 +49,29 @@
     "defaultMessage": "!!!Auth with OS changed detected",
     "file": "src/AppNavigator.tsx",
     "start": {
-      "line": 158,
+      "line": 186,
       "column": 27,
-      "index": 5114
+      "index": 6542
     },
     "end": {
-      "line": 161,
+      "line": 189,
       "column": 3,
-      "index": 5235
+      "index": 6663
+    }
+  },
+  {
+    "id": "components.initialization.acepttermsofservicescreen.title",
+    "defaultMessage": "!!!Terms of Service Agreement",
+    "file": "src/AppNavigator.tsx",
+    "start": {
+      "line": 190,
+      "column": 20,
+      "index": 6685
+    },
+    "end": {
+      "line": 193,
+      "column": 3,
+      "index": 6812
     }
   }
 ]

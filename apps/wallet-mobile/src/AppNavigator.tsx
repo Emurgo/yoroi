@@ -10,13 +10,20 @@ import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
+import {AnalyticsChangedScreen} from './features/Initialization/AnalyticsChangedScreen'
+import {TermsOfServiceAgreement, useTermsOfServiceAgreement} from './features/Initialization/common'
 import {InititalizationNavigator} from './features/Initialization/InitializationNavigator'
+import {TermsOfServiceChangedScreen} from './features/Initialization/TermsOfServiceChangedScreen'
+import {TermsOfServiceScreen} from './features/Initialization/TermsOfServiceScreen'
+import {CONFIG} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
-import {AppRoutes} from './navigation'
+import {useMetrics} from './metrics/metricsManager'
+import {AppRoutes, defaultStackNavigationOptionsV2} from './navigation'
 import {SearchProvider} from './Search/SearchContext'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 import {AuthSetting, useAuthOsEnabled, useAuthSetting, useAuthWithOs} from './yoroi-wallets/auth'
+import {isString} from './yoroi-wallets/utils'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -79,6 +86,26 @@ export const AppNavigator = () => {
               </Stack.Screen>
             )}
 
+            {authAction === 'show-terms-of-service-changed-notice' && (
+              <>
+                <Stack.Screen name="terms-of-service-changed-notice" component={TermsOfServiceChangedScreen} />
+
+                <Stack.Screen
+                  name="accept-terms-of-service"
+                  component={TermsOfServiceScreen}
+                  options={{...defaultStackNavigationOptionsV2, headerShown: true, title: strings.acceptTermsTitle}}
+                />
+              </>
+            )}
+
+            {authAction === 'show-analytics-agreement-changed-notice' && (
+              <>
+                <Stack.Screen name="analytics-agreement-changed-notice" component={AnalyticsChangedScreen} />
+
+                {/*  TODO: Add screen to read the new analytics agreement */}
+              </>
+            )}
+
             {authAction === 'auth-with-pin' && (
               <Stack.Screen
                 name="custom-pin-auth"
@@ -139,6 +166,7 @@ const useStrings = () => {
     loginPinTitle: intl.formatMessage(messages.pinLoginTitle),
     authWithOsChangeTitle: intl.formatMessage(messages.authWithOsChangeTitle),
     authWithOsChangeMessage: intl.formatMessage(messages.authWithOsChangeMessage),
+    acceptTermsTitle: intl.formatMessage(messages.acceptTermsTitle),
   }
 }
 
@@ -158,6 +186,10 @@ const messages = defineMessages({
   authWithOsChangeMessage: {
     id: 'global.actions.dialogs.biometricsChange.message',
     defaultMessage: '!!!Auth with OS changed detected ',
+  },
+  acceptTermsTitle: {
+    id: 'components.initialization.acepttermsofservicescreen.title',
+    defaultMessage: '!!!Terms of Service Agreement',
   },
 })
 
@@ -201,17 +233,36 @@ const useHideScreenInAppSwitcher = () => {
   }, [])
 }
 
-type AuthAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run'
-const getAuthAction = (authOsEnabled: boolean, authSetting: AuthSetting): AuthAction => {
+type FirstAction =
+  | 'auth-with-pin'
+  | 'auth-with-os'
+  | 'request-new-pin'
+  | 'first-run'
+  | 'show-terms-of-service-changed-notice'
+  | 'show-analytics-agreement-changed-notice'
+const getFirstAction = (
+  authOsEnabled: boolean,
+  authSetting: AuthSetting,
+  terms: TermsOfServiceAgreement | undefined,
+  hasAcceptedAnalytics: boolean,
+): AuthAction => {
+  const hasAcceptedLatestTermsOfService = terms?.version === CONFIG.LATEST_TERMS_AND_CONDITIONS_VERSION
+
+  if (isString(authSetting) && !hasAcceptedLatestTermsOfService) return 'show-terms-of-service-changed-notice'
+  if (isString(authSetting) && !hasAcceptedAnalytics) return 'show-analytics-agreement-changed-notice'
+
   if (authSetting === 'pin') return 'auth-with-pin'
   if (authSetting === 'os' && authOsEnabled) return 'auth-with-os'
   if (authSetting === 'os' && !authOsEnabled) return 'request-new-pin'
+
   return 'first-run' // setup not completed
 }
 
-const useAuthAction = () => {
+const useFirstAction = () => {
   const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
+  const terms = useTermsOfServiceAgreement()
+  const {isConsentRequested} = useMetrics()
 
-  return getAuthAction(authOsEnabled, authSetting)
+  return getFirstAction(authOsEnabled, authSetting, terms, isConsentRequested)
 }
