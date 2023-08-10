@@ -108,7 +108,7 @@ describe('asYoroiPool', () => {
   it('should correctly convert the openswap pool to yoroi pool format', () => {
     const openswapPool: Pool = {
       batcherFee: {amount: '100', token: '.'},
-      fee: '200',
+      fee: '0.3',
       deposit: 300,
       lpToken: {amount: '400', token: 'policyId.assetNameHex'},
       tokenA: {amount: '500', token: 'policyId'},
