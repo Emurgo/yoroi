@@ -38,7 +38,7 @@ export const getReceiveAmountbyChangingSell = (
           quantity: getReceiveAmount(poolB, poolA) as Balance.Quantity,
           tokenId: pool.tokenA.tokenId,
         }
-  
+
   return {sell, buy}
 }
 

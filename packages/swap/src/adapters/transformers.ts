@@ -88,7 +88,7 @@ export const asYoroiPool = (openswapPool: Pool): Swap.Pool => {
   } = openswapPool
   const pool: Swap.Pool = {
     batcherFee: asYoroiAmount(batcherFee),
-    fee: asYoroiAmount({amount: fee.toString(), token: ''}),
+    fee,
     deposit: asYoroiAmount({amount: deposit.toString(), token: ''}),
     lpToken: asYoroiAmount(lpToken),
     tokenA: asYoroiAmount(tokenA),
