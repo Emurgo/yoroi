@@ -6,7 +6,7 @@ import {ClipPath, Defs, G, Path, Rect, Svg} from 'react-native-svg'
 import {Spacer} from '../Spacer'
 
 export type BlueCheckboxProps = {
-  checked: boolean
+  checked?: boolean
   onPress?: () => void
   children?: ReactNode
 }
