@@ -6,7 +6,7 @@ import {Button, Icon, Spacer, TextInput, YoroiLogo} from '../../../components'
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
 import {useLanguage} from '../../../i18n'
 import {COLORS, lightPalette} from '../../../theme'
-import {useAgreeWithTermsOfService,useNavigateTo, useStrings} from '../common'
+import {useAgreeWithTermsOfService, useNavigateTo, useStrings} from '../common'
 
 export const InitialScreen = () => {
   const strings = useStrings()
@@ -61,7 +61,7 @@ export const InitialScreen = () => {
 
       <Spacer fill />
 
-      <Button title="continue" shelleyTheme disabled={!tosAccepted} onPress={onPressContinue} />
+      <Button title={strings.continue} shelleyTheme disabled={!tosAccepted} onPress={onPressContinue} />
     </SafeAreaView>
   )
 }

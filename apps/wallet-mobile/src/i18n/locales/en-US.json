@@ -658,6 +658,7 @@
   "global.currentVersion": "Current Version",
   "global.title": "Language",
   "global.search": "Search",
+  "global.continue": "Continue",
   "components.yoroiLogo": "Light wallet for Cardano assets",
   "termsOfService.agreementUpdateTitle": "Terms of Service Agreement Update",
   "termsOfService.agreementUpdateDescription": "We have updated our Terms of Service Agreement to enhance your experience. Please review and accept them to keep enjoying Yoroi.",
