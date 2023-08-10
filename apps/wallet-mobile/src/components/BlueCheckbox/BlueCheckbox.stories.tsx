@@ -11,7 +11,7 @@ storiesOf('BlueCheckbox', module)
     </BlueCheckbox>
   ))
   .add('Enabled', () => (
-    <BlueCheckbox checked={true}>
+    <BlueCheckbox checked>
       <Text>Click Me</Text>
     </BlueCheckbox>
   ))
