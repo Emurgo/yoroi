@@ -2,7 +2,7 @@ import * as React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Analytics} from '../../../components'
+import {Analytics, StatusBar} from '../../../components'
 import {useNavigateTo} from '../common'
 
 export const AnalyticsNoticeScreen = () => {
@@ -14,6 +14,8 @@ export const AnalyticsNoticeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar type="dark" />
+
       <Analytics type="notice" onClose={onClose} />
     </SafeAreaView>
   )

@@ -2,11 +2,13 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {LanguagePicker} from '../../../components'
+import {LanguagePicker, StatusBar} from '../../../components'
 
 export const LanguagePickerScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+      <StatusBar type="dark" />
+
       <LanguagePicker />
     </SafeAreaView>
   )

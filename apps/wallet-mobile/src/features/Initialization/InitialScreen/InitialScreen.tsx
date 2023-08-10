@@ -2,7 +2,7 @@ import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Icon, Spacer, TextInput, YoroiLogo} from '../../../components'
+import {Button, Icon, Spacer, StatusBar, TextInput, YoroiLogo} from '../../../components'
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
 import {useLanguage} from '../../../i18n'
 import {COLORS, lightPalette} from '../../../theme'
@@ -39,6 +39,8 @@ export const InitialScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar type="dark" />
+
       <YoroiLogo />
 
       <Spacer height={80} />

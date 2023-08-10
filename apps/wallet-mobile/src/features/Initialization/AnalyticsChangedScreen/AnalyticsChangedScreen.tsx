@@ -2,7 +2,7 @@ import * as React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Analytics} from '../../../components'
+import {Analytics, StatusBar} from '../../../components'
 
 export const AnalyticsChangedScreen = () => {
   const onReadMore = () => {
@@ -11,6 +11,8 @@ export const AnalyticsChangedScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar type="dark" />
+
       <Analytics type="notice" onReadMore={onReadMore} />
     </SafeAreaView>
   )

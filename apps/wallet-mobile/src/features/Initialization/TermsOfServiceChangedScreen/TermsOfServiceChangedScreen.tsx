@@ -2,7 +2,7 @@ import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, YoroiLogo} from '../../../components'
+import {Button, Spacer, StatusBar, YoroiLogo} from '../../../components'
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
 import {COLORS} from '../../../theme'
 import {useAgreeWithTermsOfService, useNavigateTo, useStrings} from '../common'
@@ -28,6 +28,8 @@ export const TermsOfServiceChangedScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar type="dark" />
+
       <YoroiLogo />
 
       <Spacer height={80} />
