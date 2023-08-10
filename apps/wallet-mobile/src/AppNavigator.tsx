@@ -258,7 +258,7 @@ const getAuthAction = (
   return 'first-run' // setup not completed
 }
 
-const useAuthAction = () => {
+const useFirstAction = () => {
   const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
   const terms = useTermsOfServiceAgreement()
