@@ -33,7 +33,7 @@ import {SwapCard} from '../../../SwapCard/SwapCard'
 // lastUpdate: string // latest update of this pool in UTC, i.e. 2023-05-23 06:13:26.
 // lpToken: BalanceAmount
 
-export const AddTokenToCard = () => {
+export const AddTokenToSellInput = () => {
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
   const {createOrder, toAmountChanged} = useSwap()

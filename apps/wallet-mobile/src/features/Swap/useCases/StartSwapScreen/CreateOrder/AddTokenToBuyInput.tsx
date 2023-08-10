@@ -10,7 +10,7 @@ import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {SwapCard} from '../../../SwapCard/SwapCard'
 
-export const AddTokenFromCard = () => {
+export const AddTokenToBuyInput = () => {
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
   const {createOrder} = useSwap()

@@ -7,18 +7,13 @@ import {Icon} from '../../../../../components/Icon'
 import {COLORS} from '../../../../../theme'
 import {useStrings} from '../../../common/strings'
 
-// TODO: we need to define if the switch is a helper from useSwap it should be built in the package/swap
 export const SwitchAndClear = () => {
   const strings = useStrings()
-  const {resetState, toAmountChanged} = useSwap()
+  const {resetState, toAmountChanged, switchTokens} = useSwap()
 
   return (
     <View style={[styles.container]}>
-      <TouchableOpacity
-        onPress={() => {
-          // switchTokens()
-        }}
-      >
+      <TouchableOpacity onPress={() => switchTokens()}>
         <Icon.Switch size={24} />
       </TouchableOpacity>
 

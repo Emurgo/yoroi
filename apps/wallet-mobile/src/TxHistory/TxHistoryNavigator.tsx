@@ -39,8 +39,6 @@ export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
 
-  console.log('WALLET NETWORD', wallet.networkId)
-
   const walletName = useWalletName(wallet)
   const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)

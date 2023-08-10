@@ -18,7 +18,6 @@ export type SwapCreateOrderActions = Readonly<{
   poolIdChanged: (poolId: string) => void
   slippageChanged: (slippage: number) => void
   txPayloadChanged: (txPayload: Swap.CreateOrderResponse) => void
-  switchTokens: () => void
 }>
 
 export enum SwapCreateOrderActionType {
@@ -29,7 +28,6 @@ export enum SwapCreateOrderActionType {
   PoolIdChanged = 'poolIdChanged',
   SlippageChanged = 'slippageChanged',
   TxPayloadChanged = 'txPayloadChanged',
-  SwitchTokens = 'switchTokens',
 }
 
 type SwapCreateOrderAction =
@@ -49,16 +47,17 @@ type SwapCreateOrderAction =
       type: SwapCreateOrderActionType.TxPayloadChanged
       txPayload: Swap.CreateOrderResponse
     }
-  | {type: SwapCreateOrderActionType.SwitchTokens}
 
 export type SwapActions = Readonly<{
   unsignedTxChanged: (unsignedTx: any | undefined) => void
   resetState: () => void
+  switchTokens: () => void
 }>
 
 export enum SwapActionType {
   UnsignedTxChanged = 'unsignedTxChanged',
   ResetState = 'resetState',
+  SwitchTokens = 'switchTokens',
 }
 
 type SwapAction =
@@ -67,6 +66,7 @@ type SwapAction =
       unsignedTx: any | undefined
     }
   | {type: SwapActionType.ResetState}
+  | {type: SwapActionType.SwitchTokens}
 
 export const combinedSwapReducers = (
   state: SwapState,
@@ -121,13 +121,13 @@ const defaultSwapCreateOrderActions: SwapCreateOrderActions = {
     console.error('[swap-react] missing initialization'),
   txPayloadChanged: (_txPayload: Swap.CreateOrderResponse) =>
     console.error('[swap-react] missing initialization'),
-  switchTokens: () => console.error('[swap-react] missing initialization'),
 } as const
 
 const defaultStateActions: SwapActions = {
   unsignedTxChanged: (_unsignedTx: any | undefined) =>
     console.error('[swap-react] missing initialization'),
   resetState: () => console.error('[swap-react] missing initialization'),
+  switchTokens: () => console.error('[swap-react] missing initialization'),
 } as const
 
 export const defaultSwapActions = {
@@ -190,17 +190,7 @@ const createOrderReducer = (
         draft.datumHash = action.txPayload.datumHash
         draft.address = action.txPayload.contractAddress
       })
-    case SwapCreateOrderActionType.SwitchTokens:
-      return {
-        ...state,
-        createOrder: {
-          ...state.createOrder,
-          amounts: {
-            sell: state.createOrder.amounts.buy,
-            buy: state.createOrder.amounts.sell,
-          },
-        },
-      }
+
     default:
       return produce(state.createOrder, () => {})
   }
@@ -213,6 +203,17 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
       })
     case SwapActionType.ResetState:
       return produce(defaultSwapState, () => {})
+    case SwapActionType.SwitchTokens:
+      return {
+        ...state,
+        createOrder: {
+          ...state.createOrder,
+          amounts: {
+            sell: state.createOrder.amounts.buy,
+            buy: state.createOrder.amounts.sell,
+          },
+        },
+      }
     default:
       return produce(state, () => {})
   }

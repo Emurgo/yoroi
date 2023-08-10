@@ -11,8 +11,8 @@ import {useNavigateTo} from '../../../common/navigation'
 import {ChoosePoolSection} from '../../../common/SelectPool'
 import {SlippageTolerance} from '../../../common/SlippageTolerance'
 import {useStrings} from '../../../common/strings'
-import {AddTokenFromCard} from './AddTokenFromCard'
-import {AddTokenToCard} from './AddTokenToCard'
+import {AddTokenToBuyInput} from './AddTokenToBuyInput'
+import {AddTokenToSellInput} from './AddTokenToSellInput'
 import {SwitchAndClear} from './SwitchAndClear'
 
 export const CreateOrder = () => {
@@ -41,7 +41,7 @@ export const CreateOrder = () => {
           </TouchableOpacity>
         </View>
 
-        <AddTokenFromCard />
+        <AddTokenToBuyInput />
 
         <Spacer height={16} />
 
@@ -49,7 +49,7 @@ export const CreateOrder = () => {
 
         <Spacer height={16} />
 
-        <AddTokenToCard />
+        <AddTokenToSellInput />
 
         <Spacer height={20} />
 

@@ -78,7 +78,7 @@ export const SwapProvider = ({
       dispatch({type: SwapActionType.ResetState})
     },
     switchTokens: () => {
-      dispatch({type: SwapCreateOrderActionType.SwitchTokens})
+      dispatch({type: SwapActionType.SwitchTokens})
     },
   }).current
 
