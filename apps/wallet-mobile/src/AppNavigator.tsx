@@ -240,7 +240,7 @@ type FirstAction =
   | 'first-run'
   | 'show-terms-of-service-changed-notice'
   | 'show-analytics-agreement-changed-notice'
-const getAuthAction = (
+const getFirstAction = (
   authOsEnabled: boolean,
   authSetting: AuthSetting,
   terms: TermsOfServiceAgreement | undefined,
