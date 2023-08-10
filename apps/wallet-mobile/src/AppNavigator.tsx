@@ -233,7 +233,7 @@ const useHideScreenInAppSwitcher = () => {
   }, [])
 }
 
-type AuthAction =
+type FirstAction =
   | 'auth-with-pin'
   | 'auth-with-os'
   | 'request-new-pin'
