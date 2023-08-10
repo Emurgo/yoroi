@@ -40,12 +40,12 @@ export const AppNavigator = () => {
     onSettled: () => RNBootSplash.hide({fade: true}),
   })
 
-  const authAction = useFirstAction()
+  const firstAction = useFirstAction()
   const onReady = () => {
     if (isLoggedIn) return
 
     // try first OS auth before navigating to os login screen
-    if (authAction === 'auth-with-os') {
+    if (firstAction === 'auth-with-os') {
       if (Platform.OS === 'android') {
         supportsAndroidFingerprintOverlay().then((isOverlaySupported) => {
           if (!isOverlaySupported) {
@@ -76,7 +76,7 @@ export const AppNavigator = () => {
 
         {isLoggedOut && (
           <Stack.Group>
-            {authAction === 'first-run' && (
+            {firstAction === 'first-run' && (
               <Stack.Screen name="first-run">
                 {() => (
                   <SearchProvider>
@@ -86,7 +86,7 @@ export const AppNavigator = () => {
               </Stack.Screen>
             )}
 
-            {authAction === 'show-terms-of-service-changed-notice' && (
+            {firstAction === 'show-terms-of-service-changed-notice' && (
               <>
                 <Stack.Screen name="terms-of-service-changed-notice" component={TermsOfServiceChangedScreen} />
 
@@ -98,7 +98,7 @@ export const AppNavigator = () => {
               </>
             )}
 
-            {authAction === 'show-analytics-agreement-changed-notice' && (
+            {firstAction === 'show-analytics-agreement-changed-notice' && (
               <>
                 <Stack.Screen name="analytics-agreement-changed-notice" component={AnalyticsChangedScreen} />
 
@@ -106,7 +106,7 @@ export const AppNavigator = () => {
               </>
             )}
 
-            {authAction === 'auth-with-pin' && (
+            {firstAction === 'auth-with-pin' && (
               <Stack.Screen
                 name="custom-pin-auth"
                 component={PinLoginScreen}
@@ -114,11 +114,11 @@ export const AppNavigator = () => {
               />
             )}
 
-            {authAction === 'auth-with-os' && (
+            {firstAction === 'auth-with-os' && (
               <Stack.Screen name="bio-auth-initial" component={OsLoginScreen} options={{headerShown: false}} />
             )}
 
-            {authAction === 'request-new-pin' && (
+            {firstAction === 'request-new-pin' && (
               <Stack.Screen //
                 name="enable-login-with-pin"
                 component={CreatePinScreenWrapper}
