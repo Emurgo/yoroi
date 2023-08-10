@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {IntlProvider} from 'react-intl'
 import {NativeModules, Platform, Text} from 'react-native'
 import TimeZone from 'react-native-timezone'
@@ -23,7 +23,10 @@ export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
   const selectLanguageCode = useSaveLanguageCode()
   const timeZone = useTimezone()
   const queryClient = useQueryClient()
-  const observer = new QueryObserver<LanguageCode>(queryClient, {queryKey: 'languageCode'})
+  const observer = useMemo(
+    () => new QueryObserver<LanguageCode>(queryClient, {queryKey: 'languageCode'}),
+    [queryClient],
+  )
 
   return (
     <LanguageContext.Provider value={{languageCode, selectLanguageCode, supportedLanguages, observer}}>
@@ -62,7 +65,7 @@ export const useLanguage = ({onChange}: {onChange?: (languageCode: LanguageCode)
   React.useEffect(() => {
     if (onChange) {
       return value.observer.subscribe((result) => {
-        onChange?.(result.data ?? defaultLanguageCode)
+        onChange(result.data ?? defaultLanguageCode)
       })
     }
   }, [onChange, value.observer])

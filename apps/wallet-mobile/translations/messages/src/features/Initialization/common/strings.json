@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Select Language",
     "file": "src/features/Initialization/common/strings.tsx",
     "start": {
-      "line": 14,
+      "line": 19,
       "column": 18,
-      "index": 371
+      "index": 674
     },
     "end": {
-      "line": 17,
+      "line": 22,
       "column": 3,
-      "index": 454
+      "index": 757
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!I agree with",
     "file": "src/features/Initialization/common/strings.tsx",
     "start": {
-      "line": 18,
+      "line": 23,
       "column": 17,
-      "index": 473
+      "index": 776
     },
     "end": {
-      "line": 21,
+      "line": 26,
       "column": 3,
-      "index": 552
+      "index": 855
     }
   },
   {
@@ -34,14 +34,89 @@
     "defaultMessage": "!!!Terms Of Service Agreement",
     "file": "src/features/Initialization/common/strings.tsx",
     "start": {
-      "line": 22,
+      "line": 27,
       "column": 16,
-      "index": 570
+      "index": 873
     },
     "end": {
-      "line": 25,
+      "line": 30,
       "column": 3,
-      "index": 662
+      "index": 965
+    }
+  },
+  {
+    "id": "global.continue",
+    "defaultMessage": "!!!Continue",
+    "file": "src/features/Initialization/common/strings.tsx",
+    "start": {
+      "line": 31,
+      "column": 12,
+      "index": 979
+    },
+    "end": {
+      "line": 34,
+      "column": 3,
+      "index": 1046
+    }
+  },
+  {
+    "id": "termsOfService.agreementUpdateTitle",
+    "defaultMessage": "!!!Terms of Service Agreement update",
+    "file": "src/features/Initialization/common/strings.tsx",
+    "start": {
+      "line": 35,
+      "column": 9,
+      "index": 1057
+    },
+    "end": {
+      "line": 38,
+      "column": 3,
+      "index": 1169
+    }
+  },
+  {
+    "id": "termsOfService.agreementUpdateDescription",
+    "defaultMessage": "!!!We have updated our Terms of Service Agreement to enhance your experience. Please review and accept them to keep enjoying Yoroi.",
+    "file": "src/features/Initialization/common/strings.tsx",
+    "start": {
+      "line": 39,
+      "column": 15,
+      "index": 1186
+    },
+    "end": {
+      "line": 43,
+      "column": 3,
+      "index": 1405
+    }
+  },
+  {
+    "id": "components.initialization.acepttermsofservicescreen.title",
+    "defaultMessage": "!!!Terms of Service Agreement",
+    "file": "src/features/Initialization/common/strings.tsx",
+    "start": {
+      "line": 44,
+      "column": 20,
+      "index": 1427
+    },
+    "end": {
+      "line": 47,
+      "column": 3,
+      "index": 1554
+    }
+  },
+  {
+    "id": "components.initialization.languagepicker.title",
+    "defaultMessage": "!!!Select Language",
+    "file": "src/features/Initialization/common/strings.tsx",
+    "start": {
+      "line": 48,
+      "column": 23,
+      "index": 1579
+    },
+    "end": {
+      "line": 51,
+      "column": 3,
+      "index": 1684
     }
   }
 ]
