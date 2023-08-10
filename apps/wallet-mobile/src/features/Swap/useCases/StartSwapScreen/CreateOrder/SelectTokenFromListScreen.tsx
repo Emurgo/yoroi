@@ -12,6 +12,7 @@ import {COLORS} from '../../../../../theme'
 import {sortTokenInfos} from '../../../../../utils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {useAllTokenInfos, useBalance, useIsWalletEmpty} from '../../../../../yoroi-wallets/hooks'
+import {filterByFungibility} from '../../../../Send/common/filterByFungibility'
 import {NoAssetFoundImage} from '../../../../Send/common/NoAssetFoundImage'
 import {filterBySearch} from '../../../common/filterBySearch'
 import {useNavigateTo} from '../../../common/navigation'
@@ -129,14 +130,13 @@ const useFilteredTokenInfos = ({tokenInfos}: {tokenInfos: Array<Balance.TokenInf
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const isWalletEmpty = useIsWalletEmpty(wallet)
 
-  /*
-   * to show the empty list component:
-   *    - filteredTokenInfos has primary token when the search term and the wallet are empty and the ft or all tab are selected
-   */
-
   if (isWalletEmpty && !isSearching && tokenInfos?.length === 0) return []
-  // swap-select-tokens
-  const filteredTokenInfos = tokenInfos.filter(filterBySearch(assetSearchTerm))
+
+  const filteredTokenInfos = tokenInfos.filter(filterBySearch(assetSearchTerm)).filter(
+    filterByFungibility({
+      fungibilityFilter: 'ft',
+    }),
+  )
 
   return sortTokenInfos({
     wallet,
