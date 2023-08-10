@@ -123,7 +123,7 @@ const getStories = () => {
     "./src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx": require("../src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx"),
     "./src/features/Swap/common/SelectPool/ExpendableCard/ExpandableInfoCard.stories.tsx": require("../src/features/Swap/common/SelectPool/ExpendableCard/ExpandableInfoCard.stories.tsx"),
     "./src/features/Swap/common/SelectPool/SelectPoolList/SelectPoolList.stories.tsx": require("../src/features/Swap/common/SelectPool/SelectPoolList/SelectPoolList.stories.tsx"),
-    "./src/features/Swap/SwapCard/SwapCard.stories.tsx": require("../src/features/Swap/SwapCard/SwapCard.stories.tsx"),
+    "./src/features/Swap/common/SwapCard/SwapCard.stories.tsx": require("../src/features/Swap/common/SwapCard/SwapCard.stories.tsx"),
     "./src/features/Swap/useCases/InputSlippageToleranceScreen/InputSlippageToleranceScreen.stories.tsx": require("../src/features/Swap/useCases/InputSlippageToleranceScreen/InputSlippageToleranceScreen.stories.tsx"),
     "./src/features/Swap/useCases/SelectPoolScreen/SelectPoolScreen.stories.tsx": require("../src/features/Swap/useCases/SelectPoolScreen/SelectPoolScreen.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/AddTokenToBuyInput.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/AddTokenToBuyInput.stories.tsx"),

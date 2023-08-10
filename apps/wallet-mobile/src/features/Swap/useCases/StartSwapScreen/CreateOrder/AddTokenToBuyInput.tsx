@@ -8,7 +8,7 @@ import {Logger} from '../../../../../yoroi-wallets/logging'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
-import {SwapCard} from '../../../SwapCard/SwapCard'
+import {SwapCard} from '../../../common/SwapCard/SwapCard'
 
 export const AddTokenToBuyInput = () => {
   const navigate = useNavigateTo()

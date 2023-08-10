@@ -8,7 +8,7 @@ import {Logger} from '../../../../../yoroi-wallets/logging'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
-import {SwapCard} from '../../../SwapCard/SwapCard'
+import {SwapCard} from '../../../common/SwapCard/SwapCard'
 
 // Everytime swapTo input value is changing - need to call getSellAmountByChangingReceive helper function and recalculate the sell amount basend on the new buy input
 // getSellAmountByChangingReceive is taking the buy balance and the pool

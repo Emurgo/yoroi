@@ -4,11 +4,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Boundary, Icon, Placeholder, Spacer, TokenIcon} from '../../../components'
-import {COLORS} from '../../../theme'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {useTokenInfo} from '../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../yoroi-wallets/utils'
+import {Boundary, Icon, Placeholder, Spacer, TokenIcon} from '../../../../components'
+import {COLORS} from '../../../../theme'
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
+import {Quantities} from '../../../../yoroi-wallets/utils'
 
 type SwapCardProp = {
   label?: string
