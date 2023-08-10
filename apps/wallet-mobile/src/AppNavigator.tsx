@@ -132,7 +132,13 @@ export const AppNavigator = () => {
 
         {isLoggedIn && (
           <Stack.Group>
-            <Stack.Screen name="app-root" component={WalletNavigator} />
+            <Stack.Screen name="app-root">
+              {() => (
+                <SearchProvider>
+                  <WalletNavigator />
+                </SearchProvider>
+              )}
+            </Stack.Screen>
 
             <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
           </Stack.Group>
