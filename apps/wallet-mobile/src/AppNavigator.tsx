@@ -233,7 +233,7 @@ const useHideScreenInAppSwitcher = () => {
   }, [])
 }
 
-type AuthAction =
+type FirstAction =
   | 'auth-with-pin'
   | 'auth-with-os'
   | 'request-new-pin'
@@ -245,7 +245,7 @@ const getFirstAction = (
   authSetting: AuthSetting,
   terms: TermsOfServiceAgreement | undefined,
   hasAcceptedAnalytics: boolean,
-): AuthAction => {
+): FirstAction => {
   const hasAcceptedLatestTermsOfService = terms?.version === CONFIG.LATEST_TERMS_AND_CONDITIONS_VERSION
 
   if (isString(authSetting) && !hasAcceptedLatestTermsOfService) return 'show-terms-of-service-changed-notice'
