@@ -15,5 +15,5 @@ export interface SwapApi {
     tokenA: BalanceToken['info']['id']
     tokenB: BalanceToken['info']['id']
   }): Promise<SwapPoolPair[]>
-  getTokens(tokenBase: BalanceToken['info']['id']): Promise<BalanceToken[]>
+  getTokens(tokenIdBase: BalanceToken['info']['id']): Promise<BalanceToken[]>
 }

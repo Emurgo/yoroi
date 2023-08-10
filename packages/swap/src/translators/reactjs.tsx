@@ -131,6 +131,29 @@ export const useOrderByStatusOpen = (
   return query.data
 }
 
+export const usePairListByToken = (
+  tokenIdBase: Balance.Token['info']['id'],
+  options: UseQueryOptions<
+    Balance.Token[],
+    Error,
+    Balance.Token[],
+    ['persist:', 'usePairListByToken', string]
+  >,
+) => {
+  const {pairs} = useSwap()
+  const query = useQuery({
+    suspense: true,
+    ...options,
+    queryKey: ['persist:', 'usePairListByToken', tokenIdBase],
+    queryFn: () => pairs.list.byToken(tokenIdBase),
+  })
+
+  return {
+    ...query,
+    pairsByToken: query.data,
+  }
+}
+
 export const useSwapSetSlippage = (
   options?: UseMutationOptions<void, Error, number>,
 ) => {
