@@ -83,7 +83,7 @@ export const combinedSwapReducers = (
   } as const
 }
 
-export const defaultSwapState: SwapState = {
+export const defaultSwapState: Readonly<SwapState> = {
   createOrder: {
     type: 'market',
     address: '',

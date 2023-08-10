@@ -7,6 +7,7 @@ export {
   mockSwapManagerDefault,
   swapManagerMocks,
 } from './translators/swapManager.mocks'
+export {mockSwapStateDefault} from './translators/swapState.mocks'
 export {
   SwapProvider,
   useSwap,

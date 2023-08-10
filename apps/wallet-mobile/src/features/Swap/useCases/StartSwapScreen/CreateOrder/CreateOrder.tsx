@@ -34,7 +34,6 @@ export const CreateOrder = () => {
         keyboardVerticalOffset={86}
       >
         <View style={styles.buttonsGroup}>
-          {/* TODO: add the initial state / index initial */}
           <ButtonGroup labels={orderTypeLabels} onSelect={handleSelectOrderType} selected={orderTypeIndex} />
 
           <TouchableOpacity>
