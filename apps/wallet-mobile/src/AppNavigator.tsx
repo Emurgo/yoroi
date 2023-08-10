@@ -40,7 +40,7 @@ export const AppNavigator = () => {
     onSettled: () => RNBootSplash.hide({fade: true}),
   })
 
-  const authAction = useAuthAction()
+  const authAction = useFirstAction()
   const onReady = () => {
     if (isLoggedIn) return
 
@@ -233,7 +233,7 @@ const useHideScreenInAppSwitcher = () => {
   }, [])
 }
 
-type FirstAction =
+type AuthAction =
   | 'auth-with-pin'
   | 'auth-with-os'
   | 'request-new-pin'
