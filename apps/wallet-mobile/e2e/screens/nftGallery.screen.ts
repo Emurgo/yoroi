@@ -11,14 +11,12 @@ export const txtNftCount = () => element(by.id('txtNftCount'))
 
 export const countNftsDisplayedAndroid = async (max = 10) => {
    let i = 0
-   let exit = false
-
-   while (!exit && i < max) {
+   while (i < max) {
       try {
          await expect(element(by.id(/^card_nft_[a-zA-Z0-9_ ]+$/)).atIndex(i)).toExist()
          i++
-      } catch (e) { // stop checking for any matches on all failures
-         exit = true
+      } catch (e) {
+         break
       }
    }
    await utils.addMsgToReport(`Total Number of NFTs counted: ${i}`)
@@ -28,18 +26,14 @@ export const countNftsDisplayedAndroid = async (max = 10) => {
 export const checkAttributeNFTAndroid = async (nftLabel: string, max = 10) => {
    let i = 0
 
-   /** @type {Detox.ElementAttributes} */
-   let nftAttributes
-
    while (i < max) {
       try {
          await expect(element(by.id(/^card_nft_[a-zA-Z0-9_ ]+$/)).atIndex(i)).toExist()
-         nftAttributes = await element(by.id(/^card_nft_[a-zA-Z0-9_ ]+$/)).atIndex(i).getAttributes()
-         if (nftAttributes.label === nftLabel) {
+         const nftAttributes = await element(by.id(/^card_nft_[a-zA-Z0-9_ ]+$/)).atIndex(i).getAttributes()
+         if ('label' in nftAttributes && nftAttributes.label === nftLabel)
             return true
-         }
          i++
-      } catch (e) { // stop checking for any matches on all failures
+      } catch (e) {
          return false
       }
    }
@@ -76,14 +70,11 @@ export const getElementAttributes = async (ele: Detox.IndexableNativeElement) =>
 
 export const verifyNftCount = async (ele: Detox.IndexableNativeElement, nftCountExp: number) => {
    const attributes = await ele.getAttributes()
-
-   if (!('elements' in attributes)) {
-      if (attributes.label){
-        await utils.addMsgToReport(`NFT count displayed : ${attributes.label}`)  
-        await utils.addMsgToReport(`NFT count expected :  ${nftCountExp}`)
-         if (attributes.label.includes(nftCountExp.toString())) {
-            return true
-         }
+   if (('label' in attributes)) {
+      await utils.addMsgToReport(`NFT count displayed : ${attributes.label}`)
+      await utils.addMsgToReport(`NFT count expected :  ${nftCountExp}`)
+      if (attributes.label?.includes(nftCountExp.toString())) {
+         return true
       }
    }
    return false
