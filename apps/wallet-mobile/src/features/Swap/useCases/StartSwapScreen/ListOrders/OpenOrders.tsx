@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
-import {ExpandableInfoCard} from '../../../common/SelectPool/ExpendableCard'
+import {ExpandableInfoCard} from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {OpenOrderListType} from './ListOrders'
 
 const mockOpenOrders: OpenOrderListType = [

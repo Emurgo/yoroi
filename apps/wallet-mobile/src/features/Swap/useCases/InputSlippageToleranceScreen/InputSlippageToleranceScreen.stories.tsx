@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {InputSlippageToleranceScreen} from './index'
+import {InputSlippageToleranceScreen} from './InputSlippageToleranceScreen'
 
 const styles = StyleSheet.create({
   container: {

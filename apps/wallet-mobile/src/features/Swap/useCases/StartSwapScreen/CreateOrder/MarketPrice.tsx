@@ -3,11 +3,11 @@ import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {Spacer} from '../../../../components'
-import {useSelectedWallet} from '../../../../SelectedWallet'
-import {COLORS} from '../../../../theme'
-import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {useStrings} from '../strings'
+import {Spacer} from '../../../../../components'
+import {useSelectedWallet} from '../../../../../SelectedWallet'
+import {COLORS} from '../../../../../theme'
+import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {useStrings} from '../../../common/strings'
 
 type MarketPriceProp = {
   disabled?: boolean

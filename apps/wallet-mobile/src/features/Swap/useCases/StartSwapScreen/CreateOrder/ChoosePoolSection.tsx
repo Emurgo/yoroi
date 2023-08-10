@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {useNavigateTo} from '../../../common/navigation'
-import {ExpandableInfoCard} from '../../../common/SelectPool/ExpendableCard'
+import {ExpandableInfoCard} from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {useStrings} from '../../../common/strings'
 
 export const ChoosePoolSection = () => {

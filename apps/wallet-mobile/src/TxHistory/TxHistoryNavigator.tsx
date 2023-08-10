@@ -14,9 +14,12 @@ import {SelectTokenFromListScreen} from '../features/Send/useCases/ListAmountsTo
 import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
-import {ConfirmationOrderScreen, StartSwapScreen} from '../features/Swap/useCases'
-import {InputSlippageToleranceScreen} from '../features/Swap/useCases/InputSlippageToleranceScreen'
-import {SelectPoolScreen} from '../features/Swap/useCases/SelectPoolScreen'
+import {
+  ConfirmationOrderScreen,
+  InputSlippageToleranceScreen,
+  SelectPoolScreen,
+  StartSwapScreen,
+} from '../features/Swap/useCases'
 import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/SelectTokenFromListScreen'
 import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/SelectTokenToListScreen'
 import {

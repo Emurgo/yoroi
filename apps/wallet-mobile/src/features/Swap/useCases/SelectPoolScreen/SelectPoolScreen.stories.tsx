@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {SelectPoolScreen} from './index'
+import {SelectPoolScreen} from './SelectPoolScreen'
 
 const styles = StyleSheet.create({
   container: {

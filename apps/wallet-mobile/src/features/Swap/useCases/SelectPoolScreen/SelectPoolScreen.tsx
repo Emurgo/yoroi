@@ -4,7 +4,7 @@ import {ScrollView} from 'react-native'
 import {Icon} from '../../../../components'
 import {COLORS} from '../../../../theme'
 import {Counter} from '../../common/Counter'
-import {SelectPoolList} from '../../common/SelectPool/SelectPoolList'
+import {SelectPoolList} from '../../common/SelectPool/SelectPoolList/SelectPoolList'
 
 export const SelectPoolScreen = () => {
   const cardData = [

@@ -3,11 +3,11 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {COLORS} from '../../../../../src/theme'
-import {Icon, Spacer} from '../../../../components'
-import {BottomSheetModal} from '../../../../components/BottomSheet'
-import {useNavigateTo} from '../navigation'
-import {useStrings} from '../strings'
+import {Icon, Spacer} from '../../../../../components'
+import {BottomSheetModal} from '../../../../../components/BottomSheet'
+import {COLORS} from '../../../../../theme'
+import {useNavigateTo} from '../../../common/navigation'
+import {useStrings} from '../../../common/strings'
 
 export const SlippageTolerance = () => {
   const [showInfoModal, setShowInfoModal] = React.useState(false)

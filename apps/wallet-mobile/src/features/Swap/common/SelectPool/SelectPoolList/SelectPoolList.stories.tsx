@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
-import {SelectPoolList} from './index'
+import {SelectPoolList} from './SelectPoolList'
 
 const styles = StyleSheet.create({
   container: {
