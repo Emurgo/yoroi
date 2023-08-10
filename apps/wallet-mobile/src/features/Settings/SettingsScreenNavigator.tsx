@@ -6,7 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 
 import {ChangePinScreen} from '../../auth'
 import {EnableLoginWithPin} from '../../auth/EnableLoginWithPin'
-import {Analytics, Boundary} from '../../components'
+import {Boundary} from '../../components'
 import globalMessages from '../../i18n/global-messages'
 import {
   defaultStackNavigationOptions,
@@ -16,6 +16,7 @@ import {
 } from '../../navigation'
 import {COLORS} from '../../theme'
 import {About} from './About'
+import {AnalyticsScreen} from './Analytics/Analytics'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'
 import {ChangePasswordScreen} from './ChangePassword'
@@ -123,9 +124,11 @@ export const SettingsScreenNavigator = () => {
         component={EnableLoginWithPinWrapper}
       />
 
-      <Stack.Screen name="analytics" options={{...defaultStackNavigationOptionsV2, title: strings.userInsights}}>
-        {() => <Analytics type="settings" />}
-      </Stack.Screen>
+      <Stack.Screen
+        name="analytics"
+        component={AnalyticsScreen}
+        options={{...defaultStackNavigationOptionsV2, title: strings.userInsights}}
+      />
     </Stack.Navigator>
   )
 }
