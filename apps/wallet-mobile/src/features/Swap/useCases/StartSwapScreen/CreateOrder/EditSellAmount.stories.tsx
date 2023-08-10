@@ -6,15 +6,15 @@ import {StyleSheet, View} from 'react-native'
 import {SearchProvider} from '../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {AddTokenToBuyInput} from './AddTokenToBuyInput'
+import {EditSellAmount} from './EditSellAmount'
 
-storiesOf('Swap Token to Buy Input', module).add('initial', () => {
+storiesOf('Swap Edit Sell Amount', module).add('initial', () => {
   return (
     <SelectedWalletProvider wallet={mocks.wallet}>
       <SearchProvider>
         <SwapProvider swapManager={mockSwapManager}>
           <View style={styles.container}>
-            <AddTokenToBuyInput />
+            <EditSellAmount />
           </View>
         </SwapProvider>
       </SearchProvider>

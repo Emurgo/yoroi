@@ -53,11 +53,11 @@ export const SwapProvider = ({
     orderTypeChanged: (orderType: Swap.OrderType) => {
       dispatch({type: SwapCreateOrderActionType.OrderTypeChanged, orderType})
     },
-    fromAmountChanged: (fromAmount: Balance.Amount) => {
-      dispatch({type: SwapCreateOrderActionType.FromAmountChanged, fromAmount})
+    sellAmountChanged: (amount: Balance.Amount) => {
+      dispatch({type: SwapCreateOrderActionType.SellAmountChanged, amount})
     },
-    toAmountChanged: (toAmount: Balance.Amount) => {
-      dispatch({type: SwapCreateOrderActionType.ToAmountChanged, toAmount})
+    buyAmountChanged: (amount: Balance.Amount) => {
+      dispatch({type: SwapCreateOrderActionType.BuyAmountChanged, amount})
     },
     protocolChanged: (protocol: Swap.Protocol) => {
       dispatch({type: SwapCreateOrderActionType.ProtocolChanged, protocol})

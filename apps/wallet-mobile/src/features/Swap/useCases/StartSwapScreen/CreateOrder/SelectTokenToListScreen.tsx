@@ -140,13 +140,13 @@ const AssetList = () => {
 type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableAssetItem = ({tokenInfo, wallet}: SelectableAssetItemProps) => {
   const {closeSearch} = useSearch()
-  const {toAmountChanged} = useSwap()
+  const {buyAmountChanged} = useSwap()
   const navigateTo = useNavigateTo()
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
 
   const onSelect = () => {
-    toAmountChanged({tokenId: tokenInfo.id, quantity: balanceAvailable})
+    buyAmountChanged({tokenId: tokenInfo.id, quantity: balanceAvailable})
     navigateTo.swapTokens()
     closeSearch()
   }

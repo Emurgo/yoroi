@@ -12,8 +12,8 @@ export type SwapState = Readonly<{
 
 export type SwapCreateOrderActions = Readonly<{
   orderTypeChanged: (orderType: Swap.OrderType) => void
-  fromAmountChanged: (fromAmount: Balance.Amount) => void
-  toAmountChanged: (toAmount: Balance.Amount) => void
+  sellAmountChanged: (sellAmount: Balance.Amount) => void
+  buyAmountChanged: (buyAmount: Balance.Amount) => void
   protocolChanged: (protocol: Swap.Protocol) => void
   poolIdChanged: (poolId: string) => void
   slippageChanged: (slippage: number) => void
@@ -22,8 +22,8 @@ export type SwapCreateOrderActions = Readonly<{
 
 export enum SwapCreateOrderActionType {
   OrderTypeChanged = 'orderTypeChanged',
-  FromAmountChanged = 'fromAmountChanged',
-  ToAmountChanged = 'toAmountChanged',
+  SellAmountChanged = 'sellAmountChanged',
+  BuyAmountChanged = 'buyAmountChanged',
   ProtocolChanged = 'protocolChanged',
   PoolIdChanged = 'poolIdChanged',
   SlippageChanged = 'slippageChanged',
@@ -36,10 +36,10 @@ type SwapCreateOrderAction =
       orderType: Swap.OrderType
     }
   | {
-      type: SwapCreateOrderActionType.FromAmountChanged
-      fromAmount: Balance.Amount
+      type: SwapCreateOrderActionType.SellAmountChanged
+      amount: Balance.Amount
     }
-  | {type: SwapCreateOrderActionType.ToAmountChanged; toAmount: Balance.Amount}
+  | {type: SwapCreateOrderActionType.BuyAmountChanged; amount: Balance.Amount}
   | {type: SwapCreateOrderActionType.ProtocolChanged; protocol: Swap.Protocol}
   | {type: SwapCreateOrderActionType.PoolIdChanged; poolId: string}
   | {type: SwapCreateOrderActionType.SlippageChanged; slippage: number}
@@ -109,9 +109,9 @@ export const defaultSwapState: Readonly<SwapState> = {
 const defaultSwapCreateOrderActions: SwapCreateOrderActions = {
   orderTypeChanged: (_orderType: Swap.OrderType) =>
     console.error('[swap-react] missing initialization'),
-  fromAmountChanged: (_fromAmount: Balance.Amount) =>
+  sellAmountChanged: (_sellAmount: Balance.Amount) =>
     console.error('[swap-react] missing initialization'),
-  toAmountChanged: (_toAmount: Balance.Amount) =>
+  buyAmountChanged: (_buyAmount: Balance.Amount) =>
     console.error('[swap-react] missing initialization'),
   protocolChanged: (_protocol: Swap.Protocol) =>
     console.error('[swap-react] missing initialization'),
@@ -144,51 +144,31 @@ const createOrderReducer = (
       return produce(state, (draft) => {
         draft.createOrder.type = action.orderType
       })
-    case SwapCreateOrderActionType.FromAmountChanged:
-      return {
-        ...state,
-        createOrder: {
-          ...state.createOrder,
-          amounts: {
-            ...state.createOrder.amounts,
-            sell: action.fromAmount,
-          },
-        },
-      }
-    // return produce(state.createOrder, (draft) => {
-    //   draft.amounts.sell = action.fromAmount
-    // })
-    case SwapCreateOrderActionType.ToAmountChanged:
-      return {
-        ...state,
-        createOrder: {
-          ...state.createOrder,
-          amounts: {
-            ...state.createOrder.amounts,
-            buy: action.toAmount,
-          },
-        },
-      }
-    // return produce(state.createOrder, (draft) => {
-    //   draft.amounts.buy = action.toAmount
-    // })
+    case SwapCreateOrderActionType.SellAmountChanged:
+      return produce(state, (draft) => {
+        draft.createOrder.amounts.sell = action.amount
+      })
+    case SwapCreateOrderActionType.BuyAmountChanged:
+      return produce(state, (draft) => {
+        draft.createOrder.amounts.buy = action.amount
+      })
     case SwapCreateOrderActionType.ProtocolChanged:
-      return produce(state.createOrder, (draft) => {
-        draft.protocol = action.protocol
+      return produce(state, (draft) => {
+        draft.createOrder.protocol = action.protocol
       })
     case SwapCreateOrderActionType.PoolIdChanged:
-      return produce(state.createOrder, (draft) => {
-        draft.poolId = action.poolId
+      return produce(state, (draft) => {
+        draft.createOrder.poolId = action.poolId
       })
     case SwapCreateOrderActionType.SlippageChanged:
       return produce(state, (draft) => {
         draft.createOrder.slippage = action.slippage
       })
     case SwapCreateOrderActionType.TxPayloadChanged:
-      return produce(state.createOrder, (draft) => {
-        draft.datum = action.txPayload.datum
-        draft.datumHash = action.txPayload.datumHash
-        draft.address = action.txPayload.contractAddress
+      return produce(state, (draft) => {
+        draft.createOrder.datum = action.txPayload.datum
+        draft.createOrder.datumHash = action.txPayload.datumHash
+        draft.createOrder.address = action.txPayload.contractAddress
       })
 
     default:

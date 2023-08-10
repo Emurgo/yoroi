@@ -10,7 +10,7 @@ import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 
-type SwapCardProp = {
+type Props = {
   label?: string
   wallet: YoroiWallet
   amount: Balance.Amount
@@ -20,7 +20,7 @@ type SwapCardProp = {
   navigateTo?: () => void
 }
 
-export const SwapCard = ({label, onChange, value, wallet, amount, navigateTo, hasError}: SwapCardProp) => {
+export const AmountCard = ({label, onChange, value, wallet, amount, navigateTo, hasError}: Props) => {
   const strings = useStrings()
   const {quantity, tokenId} = amount
   const amountInputRef = useRef<TextInput>(null)

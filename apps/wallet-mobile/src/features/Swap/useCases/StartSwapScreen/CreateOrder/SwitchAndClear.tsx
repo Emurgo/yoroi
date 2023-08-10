@@ -9,7 +9,7 @@ import {useStrings} from '../../../common/strings'
 
 export const SwitchAndClear = () => {
   const strings = useStrings()
-  const {resetState, toAmountChanged, switchTokens} = useSwap()
+  const {resetState, switchTokens} = useSwap()
 
   return (
     <View style={[styles.container]}>
@@ -20,7 +20,7 @@ export const SwitchAndClear = () => {
       <TouchableOpacity
         onPress={() => {
           resetState()
-          toAmountChanged({tokenId: 'noTokenSelected', quantity: '0'})
+          // toAmountChanged({tokenId: 'noTokenSelected', quantity: '0'})
         }}
       >
         <Text style={styles.text}>{strings.clear}</Text>

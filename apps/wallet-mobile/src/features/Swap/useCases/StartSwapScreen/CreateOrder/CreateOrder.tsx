@@ -8,9 +8,9 @@ import {COLORS} from '../../../../../theme'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
-import {AddTokenToBuyInput} from './AddTokenToBuyInput'
-import {AddTokenToSellInput} from './AddTokenToSellInput'
 import {ChoosePoolSection} from './ChoosePoolSection'
+import {EditBuyAmount} from './EditBuyAmount'
+import {EditSellAmount} from './EditSellAmount'
 import {MarketPrice} from './MarketPrice'
 import {SlippageTolerance} from './SlippageTolerance'
 import {SwitchAndClear} from './SwitchAndClear'
@@ -41,7 +41,7 @@ export const CreateOrder = () => {
           </TouchableOpacity>
         </View>
 
-        <AddTokenToBuyInput />
+        <EditSellAmount />
 
         <Spacer height={16} />
 
@@ -49,7 +49,7 @@ export const CreateOrder = () => {
 
         <Spacer height={16} />
 
-        <AddTokenToSellInput />
+        <EditBuyAmount />
 
         <Spacer height={20} />
 

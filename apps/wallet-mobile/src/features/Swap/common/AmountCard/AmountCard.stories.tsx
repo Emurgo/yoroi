@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
-import {SwapCard} from './SwapCard'
+import {AmountCard} from './AmountCard'
 
 const styles = StyleSheet.create({
   container: {
@@ -12,10 +12,10 @@ const styles = StyleSheet.create({
   },
 })
 
-storiesOf('Swap Card', module)
+storiesOf('Amount Card', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('with label', () => (
-    <SwapCard
+    <AmountCard
       label="Swap from"
       amount={{quantity: '2222', tokenId: ''}}
       wallet={mocks.wallet}
@@ -25,7 +25,7 @@ storiesOf('Swap Card', module)
     />
   ))
   .add('with error', () => (
-    <SwapCard
+    <AmountCard
       label="Swap from"
       amount={{quantity: '22222222', tokenId: ''}}
       wallet={mocks.wallet}
