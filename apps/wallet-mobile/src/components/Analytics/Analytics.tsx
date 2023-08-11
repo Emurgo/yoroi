@@ -114,13 +114,13 @@ const CommonContent = ({onReadMore}: {onReadMore?: () => void}) => {
         ))}
       </View>
 
-      <Spacer height={20} />
+      <Spacer height={12} />
 
       <TouchableOpacity onPress={onReadMore}>
         <Text style={styles.link}>{strings.more}</Text>
       </TouchableOpacity>
 
-      <Spacer height={20} />
+      <Spacer height={12} />
     </>
   )
 }
@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
     paddingRight: 8,
   },
   toggle: {
+    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
   },
