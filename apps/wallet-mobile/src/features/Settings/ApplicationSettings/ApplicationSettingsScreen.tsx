@@ -50,7 +50,7 @@ export const ApplicationSettingsScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.settings}>
       <ScrollView bounces={false}>
-        <StatusBar type="light" />
+        <StatusBar type="dark" />
 
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem

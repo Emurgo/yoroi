@@ -18,7 +18,7 @@ import {TermsOfServiceScreen} from './features/Initialization/TermsOfServiceScre
 import {CONFIG} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {useMetrics} from './metrics/metricsManager'
-import {AppRoutes, defaultStackNavigationOptionsV2} from './navigation'
+import {AppRoutes, defaultStackNavigationOptions} from './navigation'
 import {SearchProvider} from './Search/SearchContext'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
@@ -93,7 +93,7 @@ export const AppNavigator = () => {
                 <Stack.Screen
                   name="accept-terms-of-service"
                   component={TermsOfServiceScreen}
-                  options={{...defaultStackNavigationOptionsV2, headerShown: true, title: strings.acceptTermsTitle}}
+                  options={{...defaultStackNavigationOptions, headerShown: true, title: strings.acceptTermsTitle}}
                 />
               </>
             )}

@@ -3,7 +3,7 @@ import React from 'react'
 
 import {useAuth} from '../../auth/AuthProvider'
 import {EnableLoginWithPin} from '../../auth/EnableLoginWithPin'
-import {defaultStackNavigationOptionsV2, InititalizationRoutes} from '../../navigation'
+import {defaultStackNavigationOptions, InititalizationRoutes} from '../../navigation'
 import {AnalyticsNoticeScreen} from './AnalyticsNoticeScreen'
 import {useStrings} from './common'
 import {InitialScreen} from './InitialScreen/InitialScreen'
@@ -17,7 +17,7 @@ export const InititalizationNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptionsV2,
+        ...defaultStackNavigationOptions,
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >

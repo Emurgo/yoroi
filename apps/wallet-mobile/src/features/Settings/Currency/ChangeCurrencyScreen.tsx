@@ -8,7 +8,7 @@ import {CurrencyPickerList} from './CurrencyPickerList'
 export const ChangeCurrencyScreen = () => {
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.safeAreaView}>
-      <StatusBar type="light" />
+      <StatusBar type="dark" />
 
       <Boundary>
         <CurrencyPickerList />
