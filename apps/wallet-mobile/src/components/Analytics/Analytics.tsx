@@ -58,7 +58,7 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
         >
           <CommonContent onReadMore={onReadMore} />
 
-          <Button
+          <Button // skip button
             block
             outlineShelley
             onPress={() => {
@@ -86,7 +86,7 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
           },
         ]}
       >
-        <Button
+        <Button // accept button
           block
           shelleyTheme
           onPress={() => {
