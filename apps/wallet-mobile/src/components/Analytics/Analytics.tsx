@@ -1,6 +1,6 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Switch, TouchableOpacity, View} from 'react-native'
+import {Dimensions, StyleSheet, Switch, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer, Text, YoroiLogo} from '../../components'
@@ -22,6 +22,10 @@ export const Analytics = ({type, onClose, onReadMore}: Props) => {
   return <Notice onClose={onClose} onReadMore={onReadMore} />
 }
 
+// to display a border top in the button row
+const NOTICE_COMPONENT_HEIGHT = 700
+const BOTTOM_BUTTON_ROW_HEIGHT = 80
+
 const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () => void}) => {
   const strings = useStrings()
   const metrics = useMetrics()
@@ -38,7 +42,13 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
 
   return (
     <View style={styles.container}>
-      <ScrollView ref={scrollViewRef} persistentScrollbar={true} showsVerticalScrollIndicator={true}>
+      <ScrollView
+        bounces={false}
+        style={{flex: 1}}
+        ref={scrollViewRef}
+        persistentScrollbar={true}
+        showsVerticalScrollIndicator={true}
+      >
         <View style={styles.content}>
           <CommonContent onReadMore={onReadMore} />
 
@@ -54,6 +64,9 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
           />
         </View>
       </ScrollView>
+
+      {/* To fill  bottom button space */}
+      <Spacer height={BOTTOM_BUTTON_ROW_HEIGHT} />
 
       <View style={styles.buttonRow}>
         <Button
@@ -86,7 +99,7 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView ref={scrollViewRef} persistentScrollbar={true} showsVerticalScrollIndicator={true}>
+      <ScrollView bounces={false} ref={scrollViewRef} persistentScrollbar={true} showsVerticalScrollIndicator={true}>
         <View style={styles.content}>
           <CommonContent onReadMore={onReadMore} />
 
@@ -147,9 +160,8 @@ const CommonContent = ({onReadMore}: {onReadMore?: () => void}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     flex: 1,
-    justifyContent: 'space-between',
+    backgroundColor: '#fff',
   },
   content: {
     alignItems: 'center',
@@ -190,9 +202,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonRow: {
-    paddingBottom: 65,
-    paddingTop: 16,
-    paddingHorizontal: 16,
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
+    backgroundColor: '#fff',
+    height: BOTTOM_BUTTON_ROW_HEIGHT,
+    padding: 16,
+    ...(Dimensions.get('window').height < NOTICE_COMPONENT_HEIGHT && {
+      borderTopWidth: 1,
+      borderTopColor: '#DCE0E9',
+    }),
   },
 })
 
