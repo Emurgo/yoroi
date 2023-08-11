@@ -75,7 +75,7 @@ const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <TextInput
-        style={{color: lightPalette.gray['600'], fontWeight: '400', paddingLeft: 8}}
+        style={styles.input}
         value={language.label}
         right={<Icon.Chevron size={34} direction="down" />}
         pointerEvents="none"
@@ -96,6 +96,16 @@ const styles = StyleSheet.create({
     fontFamily: 'Rubik',
     lineHeight: 30,
     textAlign: 'center',
+    color: '#242838',
+  },
+  input: {
+    color: '#6B7384',
+    fontWeight: '400',
+    paddingLeft: 8,
+    borderColor: '#A7AFC0',
+    borderWidth: 1,
+    borderRadius: 10,
+    justifyContent: 'center',
   },
   checkboxText: {
     fontFamily: 'Rubik',
