@@ -29,9 +29,11 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
   const scrollViewRef = React.useRef<ScrollView | null>(null)
 
   React.useEffect(() => {
-    setTimeout(function () {
+    const timeout = setTimeout(function () {
       scrollViewRef.current?.flashScrollIndicators()
     }, 500)
+
+    return () => clearTimeout(timeout)
   }, [])
 
   return (
