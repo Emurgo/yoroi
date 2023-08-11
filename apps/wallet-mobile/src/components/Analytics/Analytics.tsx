@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     paddingBottom: 60,
+    paddingVertical: 50,
   },
 })
 
