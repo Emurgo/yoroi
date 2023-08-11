@@ -22,7 +22,6 @@ export const Analytics = ({type, onClose, onReadMore}: Props) => {
   return <Notice onClose={onClose} onReadMore={onReadMore} />
 }
 
-// to display a border top in the button row
 const BOTTOM_BUTTON_ROW_HEIGHT = 80
 
 const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () => void}) => {
