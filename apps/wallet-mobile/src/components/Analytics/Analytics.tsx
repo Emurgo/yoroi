@@ -26,9 +26,17 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
   const strings = useStrings()
   const metrics = useMetrics()
 
+  const scrollViewRef = React.useRef<ScrollView | null>(null)
+
+  React.useEffect(() => {
+    setTimeout(function () {
+      scrollViewRef.current?.flashScrollIndicators()
+    }, 500)
+  }, [])
+
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView ref={scrollViewRef} persistentScrollbar={true} showsVerticalScrollIndicator={true}>
         <View style={styles.content}>
           <CommonContent onReadMore={onReadMore} />
 
