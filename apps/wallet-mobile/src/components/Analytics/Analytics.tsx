@@ -1,6 +1,6 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Dimensions, StyleSheet, Switch, TouchableOpacity, View} from 'react-native'
+import {Dimensions, StyleSheet, Switch, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer, Text, YoroiLogo} from '../../components'
@@ -28,6 +28,7 @@ const BOTTOM_BUTTON_ROW_HEIGHT = 80
 const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () => void}) => {
   const strings = useStrings()
   const metrics = useMetrics()
+  const {height: deviceHeight} = useWindowDimensions()
   const [contentHeight, setContentHeight] = React.useState(0)
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
@@ -79,7 +80,7 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
           styles.buttonRow,
           {
             // only show border top if the content is scrollable
-            ...(Dimensions.get('window').height < contentHeight && {
+            ...(deviceHeight < contentHeight && {
               borderTopWidth: 1,
               borderTopColor: '#DCE0E9',
             }),
