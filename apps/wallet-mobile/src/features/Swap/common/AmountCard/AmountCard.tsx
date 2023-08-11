@@ -5,10 +5,10 @@ import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Boundary, Icon, Placeholder, Spacer, TokenIcon} from '../../../../components'
+import {formatTokenWithText} from '../../../../legacy/format'
 import {COLORS} from '../../../../theme'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../yoroi-wallets/utils'
 
 type Props = {
   label?: string
@@ -29,7 +29,8 @@ export const AmountCard = ({label, onChange, value, wallet, amount, navigateTo, 
   const noTokenSelected = tokenId === 'noTokenSelected'
 
   const name = tokenInfo.ticker ?? tokenInfo.name
-  const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
+  const formattedAmount = formatTokenWithText(quantity, tokenInfo, 18)
+  const fallback = React.useCallback(() => <Placeholder />, [])
 
   const focusInput = () => {
     if (amountInputRef?.current) {
@@ -51,7 +52,7 @@ export const AmountCard = ({label, onChange, value, wallet, amount, navigateTo, 
           <View style={styles.rightSection}>
             <TouchableOpacity onPress={() => navigateTo?.()}>
               <View style={styles.sectionContainer}>
-                <Boundary loading={{fallback: <Placeholder />}} error={{fallback: () => <Placeholder />}}>
+                <Boundary loading={{fallback: <Placeholder />}} error={{fallback}}>
                   {noTokenSelected ? (
                     <Icon.Coins size={24} color={COLORS.TEXT_GRAY3} />
                   ) : (
@@ -69,17 +70,17 @@ export const AmountCard = ({label, onChange, value, wallet, amount, navigateTo, 
 
             <Spacer width={8} />
 
-            <Text style={styles.balanceText}>{`Current balance: ${denominatedQuantity} ADA`}</Text>
+            <Text ellipsizeMode='middle' style={styles.balanceText}>{`Current balance: ${formattedAmount}`}</Text>
           </View>
         </View>
       </View>
 
       {hasError && (
-        <>
+        <View>
           <Spacer height={4} />
 
           <Text style={styles.errorText}>Not enough balance</Text>
-        </>
+        </View>
       )}
     </View>
   )
