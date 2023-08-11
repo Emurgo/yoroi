@@ -1,6 +1,6 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Dimensions, StyleSheet, Switch, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {StyleSheet, Switch, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer, Text, YoroiLogo} from '../../components'
