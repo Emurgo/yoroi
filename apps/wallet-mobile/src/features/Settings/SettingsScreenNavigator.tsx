@@ -135,19 +135,16 @@ const SettingsTabNavigator = () => {
 
   return (
     <Tab.Navigator
-      screenOptions={({route}) => {
-        console.log(route)
-        return {
-          tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,
-          tabBarStyle: {backgroundColor: COLORS.WHITE, elevation: 0, shadowOpacity: 0},
-          tabBarIndicatorStyle: {backgroundColor: COLORS.SHELLEY_BLUE, height: 2},
-          tabBarLabelStyle: {
-            fontWeight: 'bold',
-          },
-          tabBarActiveTintColor: COLORS.SHELLEY_BLUE,
-          tabBarInactiveTintColor: COLORS.NOT_SELECTED_TAB_TEXT,
-        }
-      }}
+      screenOptions={({route}) => ({
+        tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,
+        tabBarStyle: {backgroundColor: COLORS.WHITE, elevation: 0, shadowOpacity: 0},
+        tabBarIndicatorStyle: {backgroundColor: COLORS.SHELLEY_BLUE, height: 2},
+        tabBarLabelStyle: {
+          fontWeight: 'bold',
+        },
+        tabBarActiveTintColor: COLORS.SHELLEY_BLUE,
+        tabBarInactiveTintColor: COLORS.NOT_SELECTED_TAB_TEXT,
+      })}
     >
       <Tab.Screen name="wallet-settings" component={WalletSettingsScreen} />
 
