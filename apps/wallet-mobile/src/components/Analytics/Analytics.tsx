@@ -130,7 +130,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     flex: 1,
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
   },
   content: {
     alignItems: 'center',
@@ -170,7 +169,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonRow: {
-    paddingVertical: 50,
+    paddingBottom: 60,
   },
 })
 
