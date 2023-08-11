@@ -23,12 +23,12 @@ export const Analytics = ({type, onClose, onReadMore}: Props) => {
 }
 
 // to display a border top in the button row
-const NOTICE_COMPONENT_HEIGHT = 700
 const BOTTOM_BUTTON_ROW_HEIGHT = 80
 
 const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () => void}) => {
   const strings = useStrings()
   const metrics = useMetrics()
+  const [contentHeight, setContentHeight] = React.useState(0)
 
   const scrollViewRef = React.useRef<ScrollView | null>(null)
 
@@ -49,7 +49,13 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
         persistentScrollbar={true}
         showsVerticalScrollIndicator={true}
       >
-        <View style={styles.content}>
+        <View
+          style={styles.content}
+          onLayout={(event) => {
+            const {height} = event.nativeEvent.layout
+            setContentHeight(height + BOTTOM_BUTTON_ROW_HEIGHT)
+          }}
+        >
           <CommonContent onReadMore={onReadMore} />
 
           <Button
@@ -68,7 +74,18 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
       {/* To fill  bottom button space */}
       <Spacer height={BOTTOM_BUTTON_ROW_HEIGHT} />
 
-      <View style={styles.buttonRow}>
+      <View
+        style={[
+          styles.buttonRow,
+          {
+            // only show border top if the content is scrollable
+            ...(Dimensions.get('window').height < contentHeight && {
+              borderTopWidth: 1,
+              borderTopColor: '#DCE0E9',
+            }),
+          },
+        ]}
+      >
         <Button
           block
           shelleyTheme
@@ -208,10 +225,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     height: BOTTOM_BUTTON_ROW_HEIGHT,
     padding: 16,
-    ...(Dimensions.get('window').height < NOTICE_COMPONENT_HEIGHT && {
-      borderTopWidth: 1,
-      borderTopColor: '#DCE0E9',
-    }),
   },
 })
 
