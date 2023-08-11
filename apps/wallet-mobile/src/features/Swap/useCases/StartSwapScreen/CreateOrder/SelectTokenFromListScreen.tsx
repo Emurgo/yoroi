@@ -1,5 +1,5 @@
 import {FlashList} from '@shopify/flash-list'
-import {useSwap} from '@yoroi/swap'
+import {usePairListByToken, useSwap} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -45,6 +45,7 @@ const AssetList = () => {
   const wallet = useSelectedWallet()
   const tokenInfos = useAllTokenInfos({wallet})
   const filteredTokenInfos = useFilteredTokenInfos({tokenInfos})
+  // const pairTokens = useFilterTokensByPair()
 
   return (
     <View style={styles.list}>
@@ -125,11 +126,19 @@ const Counter = ({counter}: {counter: number}) => {
   return null
 }
 
+// will add this once we mock the request for testnet
+// const useFilterTokensByPair = () => {
+//   const {pairsByToken} = usePairListByToken(
+//     '8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd61.446a65644d6963726f555344',
+//   )
+//   return pairsByToken
+// }
+
 const useFilteredTokenInfos = ({tokenInfos}: {tokenInfos: Array<Balance.TokenInfo>}) => {
   const wallet = useSelectedWallet()
+
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const isWalletEmpty = useIsWalletEmpty(wallet)
-
   if (isWalletEmpty && !isSearching && tokenInfos?.length === 0) return []
 
   const filteredTokenInfos = tokenInfos.filter(filterBySearch(assetSearchTerm)).filter(

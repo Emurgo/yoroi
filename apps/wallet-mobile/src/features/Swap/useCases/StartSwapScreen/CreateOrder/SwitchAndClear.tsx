@@ -7,9 +7,13 @@ import {Icon} from '../../../../../components/Icon'
 import {COLORS} from '../../../../../theme'
 import {useStrings} from '../../../common/strings'
 
-export const SwitchAndClear = () => {
+type SwitchAndClearProps = {
+  onClear: () => void
+}
+
+export const SwitchAndClear = ({onClear}: SwitchAndClearProps) => {
   const strings = useStrings()
-  const {resetState, switchTokens} = useSwap()
+  const {switchTokens} = useSwap()
 
   return (
     <View style={[styles.container]}>
@@ -19,8 +23,7 @@ export const SwitchAndClear = () => {
 
       <TouchableOpacity
         onPress={() => {
-          resetState()
-          // toAmountChanged({tokenId: 'noTokenSelected', quantity: '0'})
+          onClear()
         }}
       >
         <Text style={styles.text}>{strings.clear}</Text>

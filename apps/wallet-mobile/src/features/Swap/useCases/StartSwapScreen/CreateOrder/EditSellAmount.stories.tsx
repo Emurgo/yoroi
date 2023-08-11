@@ -31,7 +31,6 @@ const mockWallet = produce(mocks.wallet, (draft) => {
           name: '',
           amount: '1000',
         },
-
       ],
     },
   ]
@@ -46,6 +45,11 @@ const mockSwapStateUnamedSell = produce(mockSwapStateDefault, (draft) => {
   draft.createOrder.amounts.sell.tokenId = '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.'
 })
 
+const EditSellAmountWrapper = () => {
+  const [inputSellValue, setInputSellValue] = React.useState<string>('')
+  return <EditSellAmount inputValue={inputSellValue} setInputValue={setInputSellValue} />
+}
+
 storiesOf('Swap Edit Sell Amount', module)
   .add('initial primary token', () => {
     return (
@@ -53,7 +57,7 @@ storiesOf('Swap Edit Sell Amount', module)
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
             <View style={styles.container}>
-              <EditSellAmount />
+              <EditSellAmountWrapper />
             </View>
           </SwapProvider>
         </SearchProvider>
@@ -66,7 +70,7 @@ storiesOf('Swap Edit Sell Amount', module)
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
             <View style={styles.container}>
-              <EditSellAmount />
+              <EditSellAmountWrapper />
             </View>
           </SwapProvider>
         </SearchProvider>
@@ -79,7 +83,7 @@ storiesOf('Swap Edit Sell Amount', module)
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateNoBalance}>
             <View style={styles.container}>
-              <EditSellAmount />
+              <EditSellAmountWrapper />
             </View>
           </SwapProvider>
         </SearchProvider>
@@ -92,19 +96,20 @@ storiesOf('Swap Edit Sell Amount', module)
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateSecodarySell}>
             <View style={styles.container}>
-              <EditSellAmount />
+              <EditSellAmountWrapper />
             </View>
           </SwapProvider>
         </SearchProvider>
       </SelectedWalletProvider>
     )
-  })  .add('secondary unamed token', () => {
+  })
+  .add('secondary unamed token', () => {
     return (
       <SelectedWalletProvider wallet={mockWallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateUnamedSell}>
             <View style={styles.container}>
-              <EditSellAmount />
+              <EditSellAmountWrapper />
             </View>
           </SwapProvider>
         </SearchProvider>

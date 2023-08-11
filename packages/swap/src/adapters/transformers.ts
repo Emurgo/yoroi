@@ -114,8 +114,10 @@ export const asYoroiAmount = (openswapAmount: {
   } as const
 }
 
-export const asYoroiPools = (openswapPools: Pool[]): Swap.PoolPair[] =>
-  openswapPools.map(asYoroiPool)
+export const asYoroiPools = (openswapPools: Pool[]): Swap.PoolPair[] => {
+  console.log('[openswapPools arg]', openswapPools)
+  return openswapPools.map(asYoroiPool)
+}
 
 export const asYoroiBalanceTokens = (
   openswapTokens: Token[],

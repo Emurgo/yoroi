@@ -20,6 +20,8 @@ import {
   defaultSwapState,
 } from './swapState'
 import {mockSwapManagerDefault} from './swapManager.mocks'
+import {BalanceToken} from '@yoroi/types/lib/balance/token'
+import {SwapPoolPair} from '@yoroi/types/lib/swap/pool'
 
 const defaultSwapManager: Swap.Manager = mockSwapManagerDefault
 
@@ -133,7 +135,7 @@ export const useOrderByStatusOpen = (
 
 export const usePairListByToken = (
   tokenIdBase: Balance.Token['info']['id'],
-  options: UseQueryOptions<
+  options?: UseQueryOptions<
     Balance.Token[],
     Error,
     Balance.Token[],
@@ -151,6 +153,39 @@ export const usePairListByToken = (
   return {
     ...query,
     pairsByToken: query.data,
+  }
+}
+
+export const usePoolList = (
+  tokenPair: {
+    tokenA: BalanceToken['info']['id']
+    tokenB: BalanceToken['info']['id']
+  },
+  options?: UseQueryOptions<
+    SwapPoolPair[],
+    Error,
+    SwapPoolPair[],
+    [
+      'usePoolList',
+      {
+        tokenA: BalanceToken['info']['id']
+        tokenB: BalanceToken['info']['id']
+      },
+    ]
+  >,
+) => {
+  console.log('usePoolList tokenPair', tokenPair)
+  const {pools} = useSwap()
+  const query = useQuery({
+    suspense: true,
+    ...options,
+    queryKey: ['usePoolList', tokenPair],
+    queryFn: () => pools.list.byPair(tokenPair),
+  })
+
+  return {
+    ...query,
+    poolList: query.data,
   }
 }
 

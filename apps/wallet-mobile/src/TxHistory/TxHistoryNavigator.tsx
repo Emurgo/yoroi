@@ -48,7 +48,10 @@ export const TxHistoryNavigator = () => {
   const hideModalInfo = () => setModalInfoState(false)
 
   const swapStorage = makeSwapStorage()
-  const swapAPI = makeSwapApi({network: 0, stakingKey: '2222'})
+  const swapAPI = makeSwapApi({
+    network: 0,
+    stakingKey: wallet.rewardAddressHex,
+  })
   const swapManager = makeSwapManager(swapStorage, swapAPI)
 
   return (

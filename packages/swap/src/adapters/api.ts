@@ -57,19 +57,26 @@ export const makeSwapApi = (
   // TODO: it should be abstracted by our own backend after our native assets have all data
   const getTokens: Swap.Api['getTokens'] = async (
     token,
-  ): Promise<Balance.Token[]> =>
-    api.getTokens(asOpenswapTokenId(token)).then(asYoroiBalanceTokens)
+  ): Promise<Balance.Token[]> => {
+    console.log('[@@@@@@@ getTokens args:]', asOpenswapTokenId(token))
+    return api.getTokens(asOpenswapTokenId(token)).then(asYoroiBalanceTokens)
+  }
 
   const getPoolPairs: Swap.Api['getPoolPairs'] = async ({
     tokenA,
     tokenB,
-  }): Promise<Swap.PoolPair[]> =>
-    api
+  }): Promise<Swap.PoolPair[]> => {
+    console.log('[@@@@@@@ getPoolPairs args:]', {
+      tokenA: asOpenswapTokenId(tokenA),
+      tokenB: asOpenswapTokenId(tokenB),
+    })
+    return api
       .getPools({
         tokenA: asOpenswapTokenId(tokenA),
         tokenB: asOpenswapTokenId(tokenB),
       })
       .then(asYoroiPools)
+  }
 
   return {
     getOrders,
