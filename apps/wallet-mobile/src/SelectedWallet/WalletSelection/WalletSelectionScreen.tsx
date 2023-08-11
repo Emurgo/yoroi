@@ -70,7 +70,7 @@ export const WalletSelectionScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <StatusBar type="dark" />
+      <StatusBar type="light" />
 
       <Text style={styles.title}>{strings.header}</Text>
 
