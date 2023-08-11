@@ -36,7 +36,7 @@ export const BackButton = (props) => (
 
 // OPTIONS
 const WIDTH = Dimensions.get('window').width
-export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
+export const defaultStackNavigationOptions: StackNavigationOptions = {
   headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
   headerStyle: {
     elevation: 0,
@@ -64,7 +64,7 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
   headerLeft: (props) => <BackButton {...props} />,
 }
 
-export const defaultStackNavigationOptions: StackNavigationOptions = {
+export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {
   headerStyle: {
     backgroundColor: COLORS.BACKGROUND_BLUE,
     elevation: 0,
@@ -76,6 +76,7 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
   headerLeftContainerStyle: {
     paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
   },
+  headerLeft: (props) => <BackButton color="#fff" {...props} />,
 }
 
 // ROUTES

@@ -10,7 +10,7 @@ import {Boundary} from '../../components'
 import globalMessages from '../../i18n/global-messages'
 import {
   defaultStackNavigationOptions,
-  defaultStackNavigationOptionsV2,
+  DEPRECATED_defaultStackNavigationOptions,
   SettingsStackRoutes,
   SettingsTabRoutes,
 } from '../../navigation'
@@ -112,8 +112,8 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen //
         name="change-custom-pin"
         options={{
+          ...DEPRECATED_defaultStackNavigationOptions,
           title: strings.changeCustomPinTitle,
-          headerStyle: defaultStackNavigationOptions.headerStyle,
         }}
         component={ChangePinScreenWrapper}
       />
@@ -124,11 +124,7 @@ export const SettingsScreenNavigator = () => {
         component={EnableLoginWithPinWrapper}
       />
 
-      <Stack.Screen
-        name="analytics"
-        component={AnalyticsScreen}
-        options={{...defaultStackNavigationOptionsV2, title: strings.userInsights}}
-      />
+      <Stack.Screen name="analytics" component={AnalyticsScreen} options={{title: strings.userInsights}} />
     </Stack.Navigator>
   )
 }
@@ -139,12 +135,19 @@ const SettingsTabNavigator = () => {
 
   return (
     <Tab.Navigator
-      screenOptions={({route}) => ({
-        tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,
-        tabBarStyle: {backgroundColor: COLORS.BACKGROUND_BLUE, elevation: 0, shadowOpacity: 0},
-        tabBarIndicatorStyle: {backgroundColor: '#fff', height: 2},
-        tabBarLabelStyle: {color: COLORS.WHITE},
-      })}
+      screenOptions={({route}) => {
+        console.log(route)
+        return {
+          tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,
+          tabBarStyle: {backgroundColor: COLORS.WHITE, elevation: 0, shadowOpacity: 0},
+          tabBarIndicatorStyle: {backgroundColor: COLORS.SHELLEY_BLUE, height: 2},
+          tabBarLabelStyle: {
+            fontWeight: 'bold',
+          },
+          tabBarActiveTintColor: COLORS.SHELLEY_BLUE,
+          tabBarInactiveTintColor: COLORS.NOT_SELECTED_TAB_TEXT,
+        }
+      }}
     >
       <Tab.Screen name="wallet-settings" component={WalletSettingsScreen} />
 
