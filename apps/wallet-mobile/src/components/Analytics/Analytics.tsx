@@ -1,6 +1,6 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Switch, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Switch, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer, Text, YoroiLogo} from '../../components'
@@ -22,17 +22,43 @@ export const Analytics = ({type, onClose, onReadMore}: Props) => {
   return <Notice onClose={onClose} onReadMore={onReadMore} />
 }
 
+const BOTTOM_BUTTON_ROW_HEIGHT = 80
+
 const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () => void}) => {
   const strings = useStrings()
   const metrics = useMetrics()
+  const {height: deviceHeight} = useWindowDimensions()
+  const [contentHeight, setContentHeight] = React.useState(0)
+
+  const scrollViewRef = React.useRef<ScrollView | null>(null)
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      scrollViewRef.current?.flashScrollIndicators()
+    }, 500)
+
+    return () => clearTimeout(timeout)
+  }, [])
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <View style={styles.content}>
+      <ScrollView
+        bounces={false}
+        style={{flex: 1}}
+        ref={scrollViewRef}
+        persistentScrollbar={true}
+        showsVerticalScrollIndicator={true}
+      >
+        <View
+          style={styles.content}
+          onLayout={(event) => {
+            const {height} = event.nativeEvent.layout
+            setContentHeight(height + BOTTOM_BUTTON_ROW_HEIGHT)
+          }}
+        >
           <CommonContent onReadMore={onReadMore} />
 
-          <Button
+          <Button // skip button
             block
             outlineShelley
             onPress={() => {
@@ -45,8 +71,22 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
         </View>
       </ScrollView>
 
-      <View style={styles.buttonRow}>
-        <Button
+      {/* To fill  bottom button space */}
+      <Spacer height={BOTTOM_BUTTON_ROW_HEIGHT} />
+
+      <View
+        style={[
+          styles.buttonRow,
+          {
+            // only show border top if the content is scrollable
+            ...(deviceHeight < contentHeight && {
+              borderTopWidth: 1,
+              borderTopColor: '#DCE0E9',
+            }),
+          },
+        ]}
+      >
+        <Button // accept button
           block
           shelleyTheme
           onPress={() => {
@@ -64,9 +104,19 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
   const strings = useStrings()
   const metrics = useMetrics()
 
+  const scrollViewRef = React.useRef<ScrollView | null>(null)
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      scrollViewRef.current?.flashScrollIndicators()
+    }, 500)
+
+    return () => clearTimeout(timeout)
+  }, [])
+
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView bounces={false} ref={scrollViewRef} persistentScrollbar={true} showsVerticalScrollIndicator={true}>
         <View style={styles.content}>
           <CommonContent onReadMore={onReadMore} />
 
@@ -127,9 +177,8 @@ const CommonContent = ({onReadMore}: {onReadMore?: () => void}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     flex: 1,
-    justifyContent: 'space-between',
+    backgroundColor: '#fff',
   },
   content: {
     alignItems: 'center',
@@ -170,9 +219,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonRow: {
-    paddingBottom: 65,
-    paddingTop: 16,
-    paddingHorizontal: 16,
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
+    backgroundColor: '#fff',
+    height: BOTTOM_BUTTON_ROW_HEIGHT,
+    padding: 16,
   },
 })
 
