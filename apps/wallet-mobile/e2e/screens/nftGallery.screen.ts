@@ -1,13 +1,14 @@
-import {by, element, expect} from 'detox'
+import { by, element, expect } from 'detox'
 import jestExpect from 'expect'
 
 import * as utils from '../utils'
 
 export const iconSearch = () => element(by.id('iconSearch'))
 export const inputSearch = () => element(by.id('inputSearch'))
-
+export const buttonBack = () => element(by.id('buttonBack'))
 export const cardNFT = (nftName: string) => element(by.id(`card_nft_${nftName}`))
 export const txtNftCount = () => element(by.id('txtNftCount'))
+export const txtNoNftFound = () => element(by.text('No NFTs found'))
 
 export const countNftsDisplayedAndroid = async (max = 10) => {
   let i = 0
@@ -23,7 +24,7 @@ export const countNftsDisplayedAndroid = async (max = 10) => {
   return i
 }
 
-export const checkAttributeNFTAndroid = async (nftLabel: string, max = 10) => {
+export const checkAttributeNftAndroid = async (nftLabel: string, max = 10) => {
   let i = 0
 
   while (i < max) {
@@ -32,7 +33,7 @@ export const checkAttributeNFTAndroid = async (nftLabel: string, max = 10) => {
       const nftAttributes = await element(by.id(/^card_nft_[a-zA-Z0-9_ ]+$/))
         .atIndex(i)
         .getAttributes()
-      if ('label' in nftAttributes && nftAttributes.label === nftLabel) return true
+      if ('label' in nftAttributes && nftAttributes.label?.toLowerCase().includes(nftLabel.toLowerCase())) return true
       i++
     } catch (e) {
       return false
@@ -65,7 +66,7 @@ export const getElementAttributes = async (ele: Detox.IndexableNativeElement) =>
     attributes = result
   }
   return {
-    attributes,
+    attributes
   }
 }
 
@@ -78,5 +79,21 @@ export const verifyNftCount = async (ele: Detox.IndexableNativeElement, nftCount
       return true
     }
   }
+  return false
+}
+
+export const checkAttributeOfNftIos = async (labelToCheck: string) => {
+  let attributes: Detox.ElementAttributes | Detox.ElementAttributes[]
+
+  const result = await element(by.id(/^card_nft_[a-zA-Z0-9_ ]+$/)).getAttributes()
+  if ('elements' in result) {
+    attributes = result.elements
+    const matchingNFTs = attributes.filter((nft) => { return nft.label?.toLowerCase().includes(labelToCheck.toLowerCase()) })
+    if (matchingNFTs.length > 0) return true
+  } else {
+    attributes = result
+    if (attributes.label?.includes(labelToCheck)) return true
+  }
+
   return false
 }
