@@ -1,4 +1,4 @@
-import { by, element } from 'detox'
+import {by, element} from 'detox'
 
 export const btn_SelectLanguageEnglish = () => element(by.id('languageSelect_en-US'))
 export const btn_Next = () => element(by.id('chooseLangButton'))

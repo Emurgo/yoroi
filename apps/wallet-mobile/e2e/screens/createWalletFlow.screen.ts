@@ -1,4 +1,4 @@
-import { by, element } from 'detox'
+import {by, element} from 'detox'
 
 export const credentialsView = () => element(by.id('credentialsView'))
 export const walletNameInput = () => element(by.id('walletNameInput'))
