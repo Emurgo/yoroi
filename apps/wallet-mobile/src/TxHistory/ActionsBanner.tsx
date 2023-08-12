@@ -157,7 +157,7 @@ const useNavigateTo = () => {
   return {
     send: () => navigation.navigate('send-start-tx'),
     receive: () => navigation.navigate('receive'),
-    swap: () => navigation.navigate('swap-start-order'),
+    swap: () => navigation.navigate('swap-start-swap'),
     buy: () => Alert.alert(strings.messageBuy, strings.messageBuy),
   }
 }

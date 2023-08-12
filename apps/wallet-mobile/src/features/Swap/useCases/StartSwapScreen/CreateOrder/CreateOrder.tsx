@@ -13,7 +13,7 @@ import {EditBuyAmount} from './EditBuyAmount'
 import {EditSellAmount} from './EditSellAmount'
 import {MarketPrice} from './MarketPrice'
 import {SlippageTolerance} from './SlippageTolerance'
-import {SwitchAndClear} from './SwitchAndClear'
+import {SwitchOrClear} from './SwitchOrClear'
 
 export const CreateOrder = () => {
   const strings = useStrings()
@@ -45,7 +45,7 @@ export const CreateOrder = () => {
 
         <Spacer height={16} />
 
-        <SwitchAndClear />
+        <SwitchOrClear />
 
         <Spacer height={16} />
 
@@ -60,12 +60,7 @@ export const CreateOrder = () => {
         <ChoosePoolSection />
 
         <Actions>
-          <Button
-            testID="swapButton"
-            shelleyTheme
-            title={strings.swapTitle}
-            onPress={() => navigation.confirmationOrder()}
-          />
+          <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={() => navigation.confirmTx()} />
         </Actions>
       </KeyboardAvoidingView>
     </View>

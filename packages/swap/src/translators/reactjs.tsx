@@ -73,14 +73,17 @@ export const SwapProvider = ({
     txPayloadChanged: (txPayload: Swap.CreateOrderResponse) => {
       dispatch({type: SwapCreateOrderActionType.TxPayloadChanged, txPayload})
     },
+    switchTokens: () => {
+      dispatch({type: SwapCreateOrderActionType.SwitchTokens})
+    },
+    resetQuantities: () => {
+      dispatch({type: SwapCreateOrderActionType.ResetQuantities})
+    },
     unsignedTxChanged: (unsignedTx: any) => {
       dispatch({type: SwapActionType.UnsignedTxChanged, unsignedTx})
     },
     resetState: () => {
       dispatch({type: SwapActionType.ResetState})
-    },
-    switchTokens: () => {
-      dispatch({type: SwapActionType.SwitchTokens})
     },
   }).current
 
@@ -97,7 +100,7 @@ export const useSwap = () =>
 
 const invalidSwapContext = () => {
   throw new Error(
-    '[swap-react] useSwapState must be used within a SwapProvider',
+    '[@yoroi/swap] useSwapState must be used within a SwapProvider',
   )
 }
 
@@ -112,7 +115,7 @@ export const useSwapSlippage = () => {
   })
 
   if (query.data == null)
-    throw new Error('[swap-react] useSwapSlippage invalid state')
+    throw new Error('[@yoroi/swap] useSwapSlippage invalid state')
 
   return query.data
 }
@@ -128,7 +131,7 @@ export const useOrderByStatusOpen = (
   })
 
   if (query.data == null)
-    throw new Error('[swap-react] useOrderByStatusOpen invalid state')
+    throw new Error('[@yoroi/swap] useOrderByStatusOpen invalid state')
 
   return query.data
 }

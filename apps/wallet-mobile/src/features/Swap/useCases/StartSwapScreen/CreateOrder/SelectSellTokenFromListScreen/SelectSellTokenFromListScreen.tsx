@@ -3,24 +3,23 @@ import {useSwap} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary, Spacer, Text} from '../../../../../components'
-import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
-import {useSearch, useSearchOnNavBar} from '../../../../../Search/SearchContext'
-import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {COLORS} from '../../../../../theme'
-import {sortTokenInfos} from '../../../../../utils'
-import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {useAllTokenInfos, useBalance, useIsWalletEmpty} from '../../../../../yoroi-wallets/hooks'
-import {filterByFungibility} from '../../../../Send/common/filterByFungibility'
-import {NoAssetFoundImage} from '../../../../Send/common/NoAssetFoundImage'
-import {filterBySearch} from '../../../common/filterBySearch'
-import {useNavigateTo} from '../../../common/navigation'
-import {useStrings} from '../../../common/strings'
+import {Boundary, Spacer, Text} from '../../../../../../components'
+import {AmountItem} from '../../../../../../components/AmountItem/AmountItem'
+import {useSearch, useSearchOnNavBar} from '../../../../../../Search/SearchContext'
+import {useSelectedWallet} from '../../../../../../SelectedWallet'
+import {COLORS} from '../../../../../../theme'
+import {sortTokenInfos} from '../../../../../../utils'
+import {YoroiWallet} from '../../../../../../yoroi-wallets/cardano/types'
+import {useAllTokenInfos, useBalance, useIsWalletEmpty} from '../../../../../../yoroi-wallets/hooks'
+import {filterByFungibility} from '../../../../../Send/common/filterByFungibility'
+import {NoAssetFoundImage} from '../../../../../Send/common/NoAssetFoundImage'
+import {filterBySearch} from '../../../../common/filterBySearch'
+import {useNavigateTo} from '../../../../common/navigation'
+import {useStrings} from '../../../../common/strings'
 
-export type FungibilityFilter = 'all' | 'ft' | 'nft'
-
-export const SelectTokenFromListScreen = () => {
+export const SelectSellTokenFromListScreen = () => {
   const strings = useStrings()
 
   useSearchOnNavBar({
@@ -29,19 +28,17 @@ export const SelectTokenFromListScreen = () => {
   })
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.subheader}></View>
 
-      <List />
-    </View>
+      <Boundary>
+        <TokenList />
+      </Boundary>
+    </SafeAreaView>
   )
 }
 
-const List = () => {
-  return <AssetList />
-}
-
-const AssetList = () => {
+const TokenList = () => {
   const wallet = useSelectedWallet()
   const tokenInfos = useAllTokenInfos({wallet})
   const filteredTokenInfos = useFilteredTokenInfos({tokenInfos})
@@ -53,7 +50,7 @@ const AssetList = () => {
         data={filteredTokenInfos}
         renderItem={({item: tokenInfo}: {item: Balance.TokenInfo}) => (
           <Boundary>
-            <SelectableAssetItem
+            <SelectableToken
               tokenInfo={tokenInfo}
               disabled={tokenInfo.id !== wallet.primaryTokenInfo.id}
               wallet={wallet}
@@ -62,10 +59,10 @@ const AssetList = () => {
         )}
         bounces={false}
         contentContainerStyle={styles.assetListContent}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={({id}) => id}
         testID="assetsList"
         estimatedItemSize={78}
-        ListEmptyComponent={<ListEmptyComponent filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
+        ListEmptyComponent={<EmptyList filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
       />
 
       <Counter counter={filteredTokenInfos.length} />
@@ -73,8 +70,8 @@ const AssetList = () => {
   )
 }
 
-type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
-const SelectableAssetItem = ({tokenInfo, wallet}: SelectableAssetItemProps) => {
+type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
+const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
   const {sellAmountChanged} = useSwap()
   const navigateTo = useNavigateTo()
@@ -84,7 +81,7 @@ const SelectableAssetItem = ({tokenInfo, wallet}: SelectableAssetItemProps) => {
 
   const onSelect = () => {
     sellAmountChanged({tokenId: tokenInfo.id, quantity: balanceAvailable})
-    navigateTo.swapTokens()
+    navigateTo.startSwap()
     closeSearch()
   }
 
@@ -153,7 +150,7 @@ const useFilteredTokenInfos = ({tokenInfos}: {tokenInfos: Array<Balance.TokenInf
   })
 }
 
-const ListEmptyComponent = ({
+const EmptyList = ({
   filteredTokenInfos,
   allTokenInfos,
 }: {
@@ -184,7 +181,7 @@ const EmptySearchResult = () => {
 }
 
 const styles = StyleSheet.create({
-  root: {
+  container: {
     flex: 1,
     backgroundColor: 'white',
   },

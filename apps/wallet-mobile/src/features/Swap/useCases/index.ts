@@ -1,4 +1,4 @@
-export * from './ConfirmationOrderScreen/ConfirmationOrderScreen'
-export * from './InputSlippageToleranceScreen/InputSlippageToleranceScreen'
+export * from './ConfirmTxScreen/ConfirmTxScreen'
+export * from './EditSlippageScreen/EditSlippageScreen'
 export * from './SelectPoolScreen/SelectPoolScreen'
 export * from './StartSwapScreen'

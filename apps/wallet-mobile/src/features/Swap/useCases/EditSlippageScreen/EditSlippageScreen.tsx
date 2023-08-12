@@ -22,7 +22,7 @@ const Choices: Choice[] = [
   {label: 'Manual', value: ''},
 ]
 
-export const InputSlippageToleranceScreen = () => {
+export const EditSlippageScreen = () => {
   const [selectedChoice, setSelectedChoice] = useState('1%')
   const [inputValue, setInputValue] = useState('1')
   const inputRef = useRef<TextInput | null>(null)
@@ -93,7 +93,7 @@ export const InputSlippageToleranceScreen = () => {
         title={strings.apply}
         onPress={() => {
           slippageChanged(Number(inputValue))
-          navigate.swapTokens()
+          navigate.startSwap()
         }}
       />
     </View>

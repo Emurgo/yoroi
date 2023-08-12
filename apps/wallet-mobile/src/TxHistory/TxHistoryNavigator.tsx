@@ -15,13 +15,13 @@ import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/Edit
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {
-  ConfirmationOrderScreen,
-  InputSlippageToleranceScreen,
+  ConfirmTxScreen as ConfirmTxSwapScreen,
+  EditSlippageScreen,
   SelectPoolScreen,
   StartSwapScreen,
 } from '../features/Swap/useCases'
-import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/SelectTokenFromListScreen'
-import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/SelectTokenToListScreen'
+import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
+import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
 import {
   BackButton,
   defaultStackNavigationOptions,
@@ -100,7 +100,7 @@ export const TxHistoryNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-start-order"
+            name="swap-start-swap"
             component={StartSwapScreen}
             options={{
               ...defaultStackNavigationOptionsV2,
@@ -109,8 +109,8 @@ export const TxHistoryNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-confirmation-order"
-            component={ConfirmationOrderScreen}
+            name="swap-confirm-tx"
+            component={ConfirmTxSwapScreen}
             options={{
               ...defaultStackNavigationOptionsV2,
               title: strings.confirmationTransaction,
@@ -118,8 +118,8 @@ export const TxHistoryNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-select-token-from"
-            component={SwapSelectTokenFromListScreen}
+            name="swap-select-sell-token"
+            component={SelectSellTokenFromListScreen}
             options={{
               ...defaultStackNavigationOptionsV2,
               title: strings.swapFromTitle,
@@ -127,8 +127,8 @@ export const TxHistoryNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-select-token-to"
-            component={SwapSelectTokenToListScreen}
+            name="swap-select-buy-token"
+            component={SelectBuyTokenFromListScreen}
             options={{
               ...defaultStackNavigationOptionsV2,
               title: strings.swapToTitle,
@@ -136,8 +136,8 @@ export const TxHistoryNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-set-slippage"
-            component={InputSlippageToleranceScreen}
+            name="swap-edit-slippage"
+            component={EditSlippageScreen}
             options={{
               ...defaultStackNavigationOptionsV2,
               title: strings.slippageTolerance,

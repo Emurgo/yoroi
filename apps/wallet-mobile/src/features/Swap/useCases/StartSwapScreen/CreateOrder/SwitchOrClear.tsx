@@ -7,21 +7,17 @@ import {Icon} from '../../../../../components/Icon'
 import {COLORS} from '../../../../../theme'
 import {useStrings} from '../../../common/strings'
 
-export const SwitchAndClear = () => {
+export const SwitchOrClear = () => {
   const strings = useStrings()
-  const {switchTokens} = useSwap()
+  const {switchTokens, resetQuantities} = useSwap()
 
   return (
-    <View style={[styles.container]}>
-      <TouchableOpacity onPress={() => switchTokens()}>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={switchTokens}>
         <Icon.Switch size={24} />
       </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => {
-          console.log('clear')
-        }}
-      >
+      <TouchableOpacity onPress={resetQuantities}>
         <Text style={styles.text}>{strings.clear}</Text>
       </TouchableOpacity>
     </View>

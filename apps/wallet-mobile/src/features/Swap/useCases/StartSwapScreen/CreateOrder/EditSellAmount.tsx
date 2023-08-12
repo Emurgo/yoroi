@@ -26,6 +26,10 @@ export const EditSellAmount = () => {
   const hasBalance = !Quantities.isGreaterThan(quantity, balance)
   const showError = !Quantities.isZero(quantity) && !hasBalance
 
+  React.useEffect(() => {
+    setInputValue(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
+  }, [quantity, tokenInfo.decimals])
+
   const onChangeQuantity = (text: string) => {
     try {
       setInputValue(text)
@@ -46,7 +50,7 @@ export const EditSellAmount = () => {
       amount={{tokenId, quantity: balance}}
       wallet={wallet}
       hasError={showError}
-      navigateTo={navigate.selectedSwapFromTokens}
+      navigateTo={navigate.selectSellToken}
     />
   )
 }

@@ -18,6 +18,8 @@ export type SwapCreateOrderActions = Readonly<{
   poolIdChanged: (poolId: string) => void
   slippageChanged: (slippage: number) => void
   txPayloadChanged: (txPayload: Swap.CreateOrderResponse) => void
+  switchTokens: () => void
+  resetQuantities: () => void
 }>
 
 export enum SwapCreateOrderActionType {
@@ -28,6 +30,8 @@ export enum SwapCreateOrderActionType {
   PoolIdChanged = 'poolIdChanged',
   SlippageChanged = 'slippageChanged',
   TxPayloadChanged = 'txPayloadChanged',
+  SwitchTokens = 'switchTokens',
+  ResetQuantities = 'resetQuantities',
 }
 
 type SwapCreateOrderAction =
@@ -47,17 +51,17 @@ type SwapCreateOrderAction =
       type: SwapCreateOrderActionType.TxPayloadChanged
       txPayload: Swap.CreateOrderResponse
     }
+  | {type: SwapCreateOrderActionType.SwitchTokens}
+  | {type: SwapCreateOrderActionType.ResetQuantities}
 
 export type SwapActions = Readonly<{
   unsignedTxChanged: (unsignedTx: any | undefined) => void
   resetState: () => void
-  switchTokens: () => void
 }>
 
 export enum SwapActionType {
   UnsignedTxChanged = 'unsignedTxChanged',
   ResetState = 'resetState',
-  SwitchTokens = 'switchTokens',
 }
 
 type SwapAction =
@@ -66,7 +70,6 @@ type SwapAction =
       unsignedTx: any | undefined
     }
   | {type: SwapActionType.ResetState}
-  | {type: SwapActionType.SwitchTokens}
 
 export const combinedSwapReducers = (
   state: SwapState,
@@ -108,26 +111,27 @@ export const defaultSwapState: Readonly<SwapState> = {
 
 const defaultSwapCreateOrderActions: SwapCreateOrderActions = {
   orderTypeChanged: (_orderType: Swap.OrderType) =>
-    console.error('[swap-react] missing initialization'),
+    console.error('[@yoroi/swap] missing initialization'),
   sellAmountChanged: (_sellAmount: Balance.Amount) =>
-    console.error('[swap-react] missing initialization'),
+    console.error('[@yoroi/swap] missing initialization'),
   buyAmountChanged: (_buyAmount: Balance.Amount) =>
-    console.error('[swap-react] missing initialization'),
+    console.error('[@yoroi/swap] missing initialization'),
   protocolChanged: (_protocol: Swap.Protocol) =>
-    console.error('[swap-react] missing initialization'),
+    console.error('[@yoroi/swap] missing initialization'),
   poolIdChanged: (_poolId: string) =>
-    console.error('[swap-react] missing initialization'),
+    console.error('[@yoroi/swap] missing initialization'),
   slippageChanged: (_slippage: number) =>
-    console.error('[swap-react] missing initialization'),
+    console.error('[@yoroi/swap] missing initialization'),
   txPayloadChanged: (_txPayload: Swap.CreateOrderResponse) =>
-    console.error('[swap-react] missing initialization'),
+    console.error('[@yoroi/swap] missing initialization'),
+  switchTokens: () => console.error('[@yoroi/swap] missing initialization'),
+  resetQuantities: () => console.error('[@yoroi/swap] missing initialization'),
 } as const
 
 const defaultStateActions: SwapActions = {
   unsignedTxChanged: (_unsignedTx: any | undefined) =>
-    console.error('[swap-react] missing initialization'),
-  resetState: () => console.error('[swap-react] missing initialization'),
-  switchTokens: () => console.error('[swap-react] missing initialization'),
+    console.error('[@yoroi/swap] missing initialization'),
+  resetState: () => console.error('[@yoroi/swap] missing initialization'),
 } as const
 
 export const defaultSwapActions = {
@@ -170,6 +174,26 @@ const createOrderReducer = (
         draft.createOrder.datumHash = action.txPayload.datumHash
         draft.createOrder.address = action.txPayload.contractAddress
       })
+    case SwapCreateOrderActionType.SwitchTokens:
+      return produce(state, (draft) => {
+        draft.createOrder.amounts = {
+          sell: state.createOrder.amounts.buy,
+          buy: state.createOrder.amounts.sell,
+        }
+      })
+    case SwapCreateOrderActionType.ResetQuantities:
+      return produce(state, (draft) => {
+        draft.createOrder.amounts = {
+          sell: {
+            quantity: '0',
+            tokenId: state.createOrder.amounts.sell.tokenId,
+          },
+          buy: {
+            quantity: '0',
+            tokenId: state.createOrder.amounts.buy.tokenId,
+          },
+        }
+      })
 
     default:
       return produce(state.createOrder, () => {})
@@ -183,17 +207,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
       })
     case SwapActionType.ResetState:
       return produce(defaultSwapState, () => {})
-    case SwapActionType.SwitchTokens:
-      return {
-        ...state,
-        createOrder: {
-          ...state.createOrder,
-          amounts: {
-            sell: state.createOrder.amounts.buy,
-            buy: state.createOrder.amounts.sell,
-          },
-        },
-      }
+
     default:
       return produce(state, () => {})
   }

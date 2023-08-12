@@ -36,7 +36,7 @@ export const SlippageTolerance = () => {
 
         <Spacer width={4} />
 
-        <TouchableOpacity onPress={() => navigate.slippageToleranceInput()}>
+        <TouchableOpacity onPress={() => navigate.editSlippage()}>
           <Icon.Edit size={24} />
         </TouchableOpacity>
       </View>
