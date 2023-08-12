@@ -1,4 +1,4 @@
-import { device, expect } from 'detox'
+import {device, expect} from 'detox'
 import jestExpect from 'expect'
 
 import * as constants from '../../constants'
@@ -13,7 +13,7 @@ describe('Search for an NFT from gallery and verify', () => {
   let expectedCountMatchingNFT: number
 
   beforeAll(async () => {
-    await device.launchApp({ newInstance: true })
+    await device.launchApp({newInstance: true})
     await utils.prepareApp(constants.valid_Pin)
   })
 

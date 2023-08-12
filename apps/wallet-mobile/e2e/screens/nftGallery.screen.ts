@@ -1,4 +1,4 @@
-import { by, element, expect } from 'detox'
+import {by, element, expect} from 'detox'
 import jestExpect from 'expect'
 
 import * as utils from '../utils'
@@ -66,7 +66,7 @@ export const getElementAttributes = async (ele: Detox.IndexableNativeElement) =>
     attributes = result
   }
   return {
-    attributes
+    attributes,
   }
 }
 
@@ -88,7 +88,9 @@ export const checkAttributeOfNftIos = async (labelToCheck: string) => {
   const result = await element(by.id(/^card_nft_[a-zA-Z0-9_ ]+$/)).getAttributes()
   if ('elements' in result) {
     attributes = result.elements
-    const matchingNFTs = attributes.filter((nft) => { return nft.label?.toLowerCase().includes(labelToCheck.toLowerCase()) })
+    const matchingNFTs = attributes.filter((nft) => {
+      return nft.label?.toLowerCase().includes(labelToCheck.toLowerCase())
+    })
     if (matchingNFTs.length > 0) return true
   } else {
     attributes = result
