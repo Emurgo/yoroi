@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet, TextInput as RNTextInput, TouchableOpacity, View, ViewProps} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, Spacer, Text, TextInput} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
@@ -35,7 +36,7 @@ export const ConfirmTxScreen = () => {
   ]
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View>
         <View style={styles.card}>
           <Text style={styles.cardText}>Total</Text>
@@ -51,14 +52,14 @@ export const ConfirmTxScreen = () => {
 
         <Spacer height={24} />
 
-        {orderInfo.map((item, index) => {
+        {orderInfo.map((orderInfo) => {
           return (
-            <View key={item.label}>
+            <View key={orderInfo.label}>
               <Spacer height={8} />
 
-              <View key={index} style={styles.flexBetween}>
+              <View style={styles.flexBetween}>
                 <View style={styles.flex}>
-                  <Text style={[styles.text, styles.gray]}>{item.label}</Text>
+                  <Text style={[styles.text, styles.gray]}>{orderInfo.label}</Text>
 
                   <Spacer width={8} />
 
@@ -71,7 +72,7 @@ export const ConfirmTxScreen = () => {
                   </TouchableOpacity>
                 </View>
 
-                <Text style={styles.text}>{item.value}</Text>
+                <Text style={styles.text}>{orderInfo.value}</Text>
               </View>
             </View>
           )
@@ -127,7 +128,7 @@ export const ConfirmTxScreen = () => {
           setConfirmationModal(false)
         }}
       />
-    </View>
+    </SafeAreaView>
   )
 }
 

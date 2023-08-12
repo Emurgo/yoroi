@@ -22,11 +22,10 @@ import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
 
 export const SelectBuyTokenFromListScreen = () => {
-  const [showInfoModal, setShowInfoModal] = React.useState(false)
-  const [isSwitchOn, setIsSwitchOn] = React.useState(true)
+  const [isOnlyVerifiedTokens, setIsOnlyVerifiedTokens] = React.useState(true)
 
   const strings = useStrings()
-  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn)
+  const handleToogleIsOnlyVerified = () => setIsOnlyVerifiedTokens(!isOnlyVerifiedTokens)
 
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
@@ -35,75 +34,87 @@ export const SelectBuyTokenFromListScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.subheader}></View>
-
       <Spacer height={12} />
 
-      <View style={[styles.flex]}>
-        <View style={styles.row}>
-          <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
+      <VerifiedTokensToogle onToogle={handleToogleIsOnlyVerified} isToogled={isOnlyVerifiedTokens} />
 
-          <Text style={styles.topText}>{strings.verifiedBy('MuseliSwap')}</Text>
+      <Spacer height={15} />
 
-          <Spacer width={8} />
+      <MyPortfolioCaption />
 
-          <TouchableOpacity onPress={() => setShowInfoModal(true)}>
-            <Icon.Info size={24} />
-          </TouchableOpacity>
-        </View>
+      <Spacer height={24} />
 
-        <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color={COLORS.SHELLEY_BLUE} />
-      </View>
-
-      <List />
-
-      <BottomSheetModal
-        title={strings.poolVerification('MuesliSwap')}
-        content={
-          <View>
-            <Text style={styles.modalText}>{strings.poolVerificationInfo('MuesliSwap')}</Text>
-
-            <Spacer height={12} />
-
-            <Text>
-              <Text style={styles.modalText}>{strings.eachVerifiedToken}</Text>
-
-              <Spacer width={8} />
-
-              <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
-
-              <Text style={styles.modalText}>{strings.verifiedBadge}</Text>
-            </Text>
-          </View>
-        }
-        isOpen={showInfoModal}
-        onClose={() => setShowInfoModal(false)}
-      />
+      <Boundary>
+        <TokenList />
+      </Boundary>
     </SafeAreaView>
   )
 }
 
-const List = () => {
+const VerifiedTokensToogle = ({onToogle, isToogled}: {onToogle: () => void; isToogled: boolean}) => {
+  const strings = useStrings()
+  const [showVerifiedTokenInfo, setShowVerifiedTokenInfo] = React.useState(false)
+
+  return (
+    <View style={styles.flex}>
+      <View style={styles.row}>
+        <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
+
+        <Text style={styles.topText}>{strings.verifiedBy('MuseliSwap')}</Text>
+
+        <Spacer width={8} />
+
+        <TouchableOpacity onPress={() => setShowVerifiedTokenInfo(true)}>
+          <Icon.Info size={24} />
+        </TouchableOpacity>
+      </View>
+
+      <Switch value={isToogled} onValueChange={onToogle} color={COLORS.SHELLEY_BLUE} />
+
+      <BottomSheetModal
+        title={strings.poolVerification('MuesliSwap')}
+        content={<VerifiedTokenInfo />}
+        isOpen={showVerifiedTokenInfo}
+        onClose={() => setShowVerifiedTokenInfo(false)}
+      />
+    </View>
+  )
+}
+
+const VerifiedTokenInfo = () => {
+  const strings = useStrings()
+  return (
+    <View>
+      <Text style={styles.modalText}>{strings.poolVerificationInfo('MuesliSwap')}</Text>
+
+      <Spacer height={12} />
+
+      <Text>
+        <Text style={styles.modalText}>{strings.eachVerifiedToken}</Text>
+
+        <Spacer width={8} />
+
+        <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
+
+        <Text style={styles.modalText}>{strings.verifiedBadge}</Text>
+      </Text>
+    </View>
+  )
+}
+
+const MyPortfolioCaption = () => {
   const strings = useStrings()
 
   return (
-    <>
-      <View>
-        <Spacer height={15} />
+    <View>
+      <View style={[styles.row]}>
+        <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
 
-        <View style={[styles.row]}>
-          <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
+        <Spacer width={8} />
 
-          <Spacer width={8} />
-
-          <Text style={styles.topText}>{strings.assetsIn}</Text>
-        </View>
+        <Text style={styles.topText}>{strings.assetsIn}</Text>
       </View>
-
-      <Spacer height={24} />
-
-      <TokenList />
-    </>
+    </View>
   )
 }
 
@@ -242,9 +253,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    paddingHorizontal: 16,
-  },
-  subheader: {
     paddingHorizontal: 16,
   },
   item: {
