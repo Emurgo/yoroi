@@ -1,5 +1,5 @@
 import {FlashList} from '@shopify/flash-list'
-import {usePairListByToken, useSwap} from '@yoroi/swap'
+import {useSwap} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'

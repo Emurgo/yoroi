@@ -7,11 +7,7 @@ import {Icon} from '../../../../../components/Icon'
 import {COLORS} from '../../../../../theme'
 import {useStrings} from '../../../common/strings'
 
-type SwitchAndClearProps = {
-  onClear: () => void
-}
-
-export const SwitchAndClear = ({onClear}: SwitchAndClearProps) => {
+export const SwitchAndClear = () => {
   const strings = useStrings()
   const {switchTokens} = useSwap()
 
@@ -23,7 +19,7 @@ export const SwitchAndClear = ({onClear}: SwitchAndClearProps) => {
 
       <TouchableOpacity
         onPress={() => {
-          onClear()
+          console.log('clear')
         }}
       >
         <Text style={styles.text}>{strings.clear}</Text>

@@ -1,5 +1,5 @@
 import {useSwap} from '@yoroi/swap'
-import React, {useEffect} from 'react'
+import * as React from 'react'
 
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useBalance, useTokenInfo} from '../../../../../yoroi-wallets/hooks'
@@ -9,12 +9,7 @@ import {AmountCard} from '../../../common/AmountCard/AmountCard'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 
-type EditBuyAmountProps = {
-  inputValue: string
-  setInputValue: (val: string) => void
-}
-
-export const EditBuyAmount = ({inputValue, setInputValue}: EditBuyAmountProps) => {
+export const EditBuyAmount = () => {
   const strings = useStrings()
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
@@ -26,8 +21,7 @@ export const EditBuyAmount = ({inputValue, setInputValue}: EditBuyAmountProps) =
   const {decimals} = tokenInfo
   const balance = useBalance({wallet, tokenId})
 
-  const hasBalance = !Quantities.isGreaterThan(quantity, balance)
-  const showError = Number(inputValue) > 0 && !Quantities.isZero(quantity) && !hasBalance
+  const [inputValue, setInputValue] = React.useState<string>(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
 
   const onChangeQuantity = (text: string) => {
     try {
@@ -41,10 +35,6 @@ export const EditBuyAmount = ({inputValue, setInputValue}: EditBuyAmountProps) =
     }
   }
 
-  useEffect(() => {
-    setInputValue('')
-  }, [setInputValue, tokenId])
-
   return (
     <AmountCard
       label={strings.swapTo}
@@ -52,7 +42,6 @@ export const EditBuyAmount = ({inputValue, setInputValue}: EditBuyAmountProps) =
       value={inputValue}
       amount={{tokenId, quantity: balance}}
       wallet={wallet}
-      hasError={showError}
       navigateTo={navigate.selectedSwapToTokens}
     />
   )

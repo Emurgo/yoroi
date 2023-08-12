@@ -70,7 +70,7 @@ export const AmountCard = ({label, onChange, value, wallet, amount, navigateTo, 
 
             <Spacer width={8} />
 
-            <Text ellipsizeMode='middle' style={styles.balanceText}>{`Current balance: ${formattedAmount}`}</Text>
+            <Text ellipsizeMode="middle" style={styles.balanceText}>{`Current balance: ${formattedAmount}`}</Text>
           </View>
         </View>
       </View>
@@ -162,7 +162,8 @@ const styles = StyleSheet.create({
     height: 64,
   },
   amountInput: {
-    maxWidth: 100,
+    minWidth: 120,
+    maxWidth: 200,
     height: 34,
     fontSize: 16,
   },

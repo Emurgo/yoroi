@@ -31,6 +31,12 @@ const mockWallet = produce(mocks.wallet, (draft) => {
           name: '',
           amount: '1000',
         },
+        {
+          assetId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53',
+          policyId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e',
+          name: '74484f444c53',
+          amount: '1234567800000000',
+        },
       ],
     },
   ]
@@ -38,17 +44,18 @@ const mockWallet = produce(mocks.wallet, (draft) => {
 const mockSwapStateNoBalance = produce(mockSwapStateDefault, (draft) => {
   draft.createOrder.amounts.sell.quantity = '3000000'
 })
-const mockSwapStateSecodarySell = produce(mockSwapStateDefault, (draft) => {
+const mockSwapStateSecodaryToken = produce(mockSwapStateDefault, (draft) => {
   draft.createOrder.amounts.sell.tokenId = '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.444444'
 })
-const mockSwapStateUnamedSell = produce(mockSwapStateDefault, (draft) => {
+const mockSwapStateUnamedToken = produce(mockSwapStateDefault, (draft) => {
   draft.createOrder.amounts.sell.tokenId = '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.'
 })
-
-const EditSellAmountWrapper = () => {
-  const [inputSellValue, setInputSellValue] = React.useState<string>('')
-  return <EditSellAmount inputValue={inputSellValue} setInputValue={setInputSellValue} />
-}
+const mockSwapStateWithIconBigDecimals = produce(mockSwapStateDefault, (draft) => {
+  draft.createOrder.amounts.sell = {
+    tokenId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53',
+    quantity: '12301234567',
+  }
+})
 
 storiesOf('Swap Edit Sell Amount', module)
   .add('initial primary token', () => {
@@ -57,7 +64,7 @@ storiesOf('Swap Edit Sell Amount', module)
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
             <View style={styles.container}>
-              <EditSellAmountWrapper />
+              <EditSellAmount />
             </View>
           </SwapProvider>
         </SearchProvider>
@@ -70,20 +77,20 @@ storiesOf('Swap Edit Sell Amount', module)
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
             <View style={styles.container}>
-              <EditSellAmountWrapper />
+              <EditSellAmount />
             </View>
           </SwapProvider>
         </SearchProvider>
       </SelectedWalletProvider>
     )
   })
-  .add('without balance', () => {
+  .add('without balance error', () => {
     return (
       <SelectedWalletProvider wallet={mockWallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateNoBalance}>
             <View style={styles.container}>
-              <EditSellAmountWrapper />
+              <EditSellAmount />
             </View>
           </SwapProvider>
         </SearchProvider>
@@ -94,9 +101,9 @@ storiesOf('Swap Edit Sell Amount', module)
     return (
       <SelectedWalletProvider wallet={mockWallet}>
         <SearchProvider>
-          <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateSecodarySell}>
+          <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateSecodaryToken}>
             <View style={styles.container}>
-              <EditSellAmountWrapper />
+              <EditSellAmount />
             </View>
           </SwapProvider>
         </SearchProvider>
@@ -107,9 +114,22 @@ storiesOf('Swap Edit Sell Amount', module)
     return (
       <SelectedWalletProvider wallet={mockWallet}>
         <SearchProvider>
-          <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateUnamedSell}>
+          <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateUnamedToken}>
             <View style={styles.container}>
-              <EditSellAmountWrapper />
+              <EditSellAmount />
+            </View>
+          </SwapProvider>
+        </SearchProvider>
+      </SelectedWalletProvider>
+    )
+  })
+  .add('icon + big decimals', () => {
+    return (
+      <SelectedWalletProvider wallet={mockWallet}>
+        <SearchProvider>
+          <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateWithIconBigDecimals}>
+            <View style={styles.container}>
+              <EditSellAmount />
             </View>
           </SwapProvider>
         </SearchProvider>

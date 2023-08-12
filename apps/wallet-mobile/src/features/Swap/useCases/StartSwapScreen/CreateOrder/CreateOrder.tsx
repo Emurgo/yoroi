@@ -20,18 +20,10 @@ export const CreateOrder = () => {
   const navigation = useNavigateTo()
   const {orderTypeChanged, createOrder} = useSwap()
 
-  const [inputSellValue, setInputSellValue] = React.useState<string>('')
-  const [inputBuyValue, setInputBuyValue] = React.useState<string>('')
-
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
   const orderTypeIndex = createOrder.type === 'market' ? 0 : 1
   const handleSelectOrderType = (index: number) => {
     orderTypeChanged(index === 0 ? 'market' : 'limit')
-  }
-
-  const clearFormInputs = () => {
-    setInputSellValue('0')
-    setInputBuyValue('0')
   }
 
   return (
@@ -49,15 +41,15 @@ export const CreateOrder = () => {
           </TouchableOpacity>
         </View>
 
-        <EditSellAmount inputValue={inputSellValue} setInputValue={setInputSellValue} />
+        <EditSellAmount />
 
         <Spacer height={16} />
 
-        <SwitchAndClear onClear={clearFormInputs} />
+        <SwitchAndClear />
 
         <Spacer height={16} />
 
-        <EditBuyAmount inputValue={inputBuyValue} setInputValue={setInputBuyValue} />
+        <EditBuyAmount />
 
         <Spacer height={20} />
 
