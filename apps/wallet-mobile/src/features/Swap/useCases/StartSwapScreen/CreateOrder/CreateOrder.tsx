@@ -8,12 +8,12 @@ import {COLORS} from '../../../../../theme'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
-import {ChoosePoolSection} from './ChoosePoolSection'
-import {EditBuyAmount} from './EditBuyAmount'
-import {EditSellAmount} from './EditSellAmount'
-import {MarketPrice} from './MarketPrice'
-import {SlippageTolerance} from './SlippageTolerance'
-import {SwitchOrClear} from './SwitchOrClear'
+import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
+import {EditMarketPrice} from './EditMarketPrice'
+import {ShowPoolActions} from './EditPool/ShowPoolActions'
+import {EditSellAmount} from './EditSellAmount/EditSellAmount'
+import {EditSlippage} from './EditSlippage/EditSlippage'
+import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
 
 export const CreateOrder = () => {
   const strings = useStrings()
@@ -45,7 +45,7 @@ export const CreateOrder = () => {
 
         <Spacer height={16} />
 
-        <SwitchOrClear />
+        <ShowTokenActions />
 
         <Spacer height={16} />
 
@@ -53,14 +53,14 @@ export const CreateOrder = () => {
 
         <Spacer height={20} />
 
-        <MarketPrice disabled={createOrder.type === 'market'} />
+        <EditMarketPrice disabled={createOrder.type === 'market'} />
 
-        <SlippageTolerance />
+        <EditSlippage />
 
-        <ChoosePoolSection />
+        <ShowPoolActions />
 
         <Actions>
-          <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={() => navigation.confirmTx()} />
+          <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={navigation.confirmTx} />
         </Actions>
       </KeyboardAvoidingView>
     </View>

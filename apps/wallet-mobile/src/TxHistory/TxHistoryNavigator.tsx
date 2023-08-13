@@ -17,11 +17,11 @@ import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiToken
 import {
   ConfirmTxScreen as ConfirmTxSwapScreen,
   EditSlippageScreen,
-  SelectPoolScreen,
+  SelectPoolFromListScreen,
   StartSwapScreen,
 } from '../features/Swap/useCases'
-import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
-import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
+import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
+import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
 import {
   BackButton,
   defaultStackNavigationOptions,
@@ -146,7 +146,7 @@ export const TxHistoryNavigator = () => {
 
           <Stack.Screen
             name="swap-select-pool"
-            component={SelectPoolScreen}
+            component={SelectPoolFromListScreen}
             options={{
               ...defaultStackNavigationOptionsV2,
               title: strings.selectPool,
