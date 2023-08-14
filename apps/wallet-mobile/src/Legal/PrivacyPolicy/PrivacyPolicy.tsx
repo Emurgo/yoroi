@@ -6,8 +6,9 @@ import {useQuery} from 'react-query'
 import {Spacer} from '../../components'
 import {lightPalette} from '../../theme'
 import {loadPrivacyPolicy} from './loadPrivacyPolicy'
+import {LanguageCode} from '../../i18n/languages'
 
-export const usePrivacyPolicy = ({languageCode}: {languageCode: string}) => {
+export const usePrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
   const query = useQuery({
     queryKey: ['privacyPolicy', languageCode],
     queryFn: () => loadPrivacyPolicy(languageCode),
@@ -16,7 +17,7 @@ export const usePrivacyPolicy = ({languageCode}: {languageCode: string}) => {
   return query.data
 }
 
-export const PrivacyPolicy = ({languageCode}: {languageCode: string}) => {
+export const PrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
   const privacyPolicy = usePrivacyPolicy({languageCode})
 
   return privacyPolicy != null ? (

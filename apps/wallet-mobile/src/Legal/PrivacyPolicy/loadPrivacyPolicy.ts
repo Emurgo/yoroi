@@ -21,6 +21,7 @@ import SW_KE_PRIVACY_POLICY from './privacyPolicy/sw-KE.md'
 import UK_UA_PRIVACY_POLICY from './privacyPolicy/uk-UA.md'
 import VI_VN_PRIVACY_POLICY from './privacyPolicy/vi-VN.md'
 import ZH_CN_PRIVACY_POLICY from './privacyPolicy/zh-Hans.md'
+import {LanguageCode} from '../../i18n/languages'
 
 const codes = {
   'bn-BD': BN_BD_PRIVACY_POLICY,
@@ -48,6 +49,6 @@ const codes = {
   'zh-Hans': ZH_CN_PRIVACY_POLICY,
 }
 
-export const loadPrivacyPolicy = (languageCode: string): string => {
+export const loadPrivacyPolicy = (languageCode: LanguageCode): string => {
   return codes[languageCode]
 }
