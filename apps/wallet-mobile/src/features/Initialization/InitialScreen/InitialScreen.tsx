@@ -55,7 +55,7 @@ export const InitialScreen = () => {
 
       <Spacer height={8} />
 
-      <BlueCheckbox checked={tosAccepted} onPress={onPressTosCheckbox}>
+      <BlueCheckbox checked={tosAccepted} onPress={onPressTosCheckbox} style={styles.checkbox}>
         <View style={styles.checkboxRow}>
           <Text style={styles.checkboxText}>{`${strings.tosIAgreeWith} `}</Text>
 
