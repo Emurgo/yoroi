@@ -17,14 +17,14 @@ export const usePrivacyPolicy = ({languageCode}: {languageCode: string}) => {
 }
 
 export const PrivacyPolicy = ({languageCode}: {languageCode: string}) => {
-  const tos = usePrivacyPolicy({languageCode})
+  const privacyPolicy = usePrivacyPolicy({languageCode})
 
-  return tos != null ? (
+  return privacyPolicy != null ? (
     <View>
       <Spacer height={16} />
 
       {/* @ts-expect-error old react */}
-      <Markdown markdownStyles={{...styles}}>{tos}</Markdown>
+      <Markdown markdownStyles={{...styles}}>{privacyPolicy}</Markdown>
     </View>
   ) : (
     <ActivityIndicator size="large" color="black" />
