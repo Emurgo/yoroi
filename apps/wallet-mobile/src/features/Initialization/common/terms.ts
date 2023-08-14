@@ -8,7 +8,7 @@ export type LegalAgreement = {
   latestAcceptedAgreementsDate: number
 }
 
-const queryKey = 'legalAgreement' as const
+const queryKey = 'legalAgreement'
 
 export const useLegalAgreement = () => {
   const storage = useStorage()
