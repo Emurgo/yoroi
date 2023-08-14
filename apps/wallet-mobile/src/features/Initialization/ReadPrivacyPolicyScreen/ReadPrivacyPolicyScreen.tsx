@@ -4,7 +4,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
-import {TermsOfService} from '../../../Legal'
+import {PrivacyPolicy} from '../../../Legal'
 
 export const ReadPrivacyPolicyScreen = () => {
   const {languageCode} = useLanguage()
@@ -15,7 +15,7 @@ export const ReadPrivacyPolicyScreen = () => {
       <StatusBar type="dark" />
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <TermsOfService languageCode={languageCode} />
+        <PrivacyPolicy languageCode={languageCode} />
       </ScrollView>
     </SafeAreaView>
   )
