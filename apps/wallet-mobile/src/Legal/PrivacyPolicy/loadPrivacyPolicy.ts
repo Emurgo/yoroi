@@ -22,7 +22,7 @@ import UK_UA_PRIVACY_POLICY from './privacyPolicy/uk-UA.md'
 import VI_VN_PRIVACY_POLICY from './privacyPolicy/vi-VN.md'
 import ZH_CN_PRIVACY_POLICY from './privacyPolicy/zh-Hans.md'
 
-const tosByCode = {
+const codes = {
   'bn-BD': BN_BD_PRIVACY_POLICY,
   'cs-CZ': CS_CZ_PRIVACY_POLICY,
   'de-DE': DE_DE_PRIVACY_POLICY,
@@ -49,5 +49,5 @@ const tosByCode = {
 }
 
 export const loadPrivacyPolicy = (languageCode: string): string => {
-  return tosByCode[languageCode]
+  return codes[languageCode]
 }
