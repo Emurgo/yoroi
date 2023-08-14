@@ -1,3 +1,4 @@
+import {LanguageCode} from '../../i18n/languages'
 import BN_BD_PRIVACY_POLICY from './privacyPolicy/bn-BD.md'
 import CS_CZ_PRIVACY_POLICY from './privacyPolicy/cs-CZ.md'
 import DE_DE_PRIVACY_POLICY from './privacyPolicy/de-DE.md'
@@ -21,7 +22,6 @@ import SW_KE_PRIVACY_POLICY from './privacyPolicy/sw-KE.md'
 import UK_UA_PRIVACY_POLICY from './privacyPolicy/uk-UA.md'
 import VI_VN_PRIVACY_POLICY from './privacyPolicy/vi-VN.md'
 import ZH_CN_PRIVACY_POLICY from './privacyPolicy/zh-Hans.md'
-import {LanguageCode} from '../../i18n/languages'
 
 const codes = {
   'bn-BD': BN_BD_PRIVACY_POLICY,
