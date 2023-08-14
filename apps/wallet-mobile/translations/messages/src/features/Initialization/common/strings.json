@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Select Language",
     "file": "src/features/Initialization/common/strings.tsx",
     "start": {
-      "line": 19,
+      "line": 22,
       "column": 18,
-      "index": 674
+      "index": 871
     },
     "end": {
-      "line": 22,
+      "line": 25,
       "column": 3,
-      "index": 757
+      "index": 954
     }
   },
   {
@@ -19,14 +19,44 @@
     "defaultMessage": "!!!I agree with",
     "file": "src/features/Initialization/common/strings.tsx",
     "start": {
-      "line": 23,
+      "line": 26,
       "column": 17,
-      "index": 776
+      "index": 973
     },
     "end": {
-      "line": 26,
+      "line": 29,
       "column": 3,
-      "index": 855
+      "index": 1052
+    }
+  },
+  {
+    "id": "analytics.tosAnd",
+    "defaultMessage": "!!!and",
+    "file": "src/features/Initialization/common/strings.tsx",
+    "start": {
+      "line": 30,
+      "column": 10,
+      "index": 1064
+    },
+    "end": {
+      "line": 33,
+      "column": 3,
+      "index": 1127
+    }
+  },
+  {
+    "id": "analytics.privacyPolicy",
+    "defaultMessage": "!!!Privacy Policy",
+    "file": "src/features/Initialization/common/strings.tsx",
+    "start": {
+      "line": 34,
+      "column": 17,
+      "index": 1146
+    },
+    "end": {
+      "line": 37,
+      "column": 3,
+      "index": 1227
     }
   },
   {
@@ -34,14 +64,14 @@
     "defaultMessage": "!!!Terms Of Service Agreement",
     "file": "src/features/Initialization/common/strings.tsx",
     "start": {
-      "line": 27,
+      "line": 38,
       "column": 16,
-      "index": 873
+      "index": 1245
     },
     "end": {
-      "line": 30,
+      "line": 41,
       "column": 3,
-      "index": 965
+      "index": 1337
     }
   },
   {
@@ -49,14 +79,14 @@
     "defaultMessage": "!!!Continue",
     "file": "src/features/Initialization/common/strings.tsx",
     "start": {
-      "line": 31,
+      "line": 42,
       "column": 12,
-      "index": 979
+      "index": 1351
     },
     "end": {
-      "line": 34,
+      "line": 45,
       "column": 3,
-      "index": 1046
+      "index": 1418
     }
   },
   {
@@ -64,14 +94,14 @@
     "defaultMessage": "!!!Terms of Service Agreement update",
     "file": "src/features/Initialization/common/strings.tsx",
     "start": {
-      "line": 35,
+      "line": 46,
       "column": 9,
-      "index": 1057
+      "index": 1429
     },
     "end": {
-      "line": 38,
+      "line": 49,
       "column": 3,
-      "index": 1169
+      "index": 1541
     }
   },
   {
@@ -79,14 +109,14 @@
     "defaultMessage": "!!!We have updated our Terms of Service Agreement to enhance your experience. Please review and accept them to keep enjoying Yoroi.",
     "file": "src/features/Initialization/common/strings.tsx",
     "start": {
-      "line": 39,
+      "line": 50,
       "column": 15,
-      "index": 1186
+      "index": 1558
     },
     "end": {
-      "line": 43,
+      "line": 54,
       "column": 3,
-      "index": 1405
+      "index": 1777
     }
   },
   {
@@ -94,14 +124,29 @@
     "defaultMessage": "!!!Terms of Service Agreement",
     "file": "src/features/Initialization/common/strings.tsx",
     "start": {
-      "line": 44,
+      "line": 55,
       "column": 20,
-      "index": 1427
+      "index": 1799
     },
     "end": {
-      "line": 47,
+      "line": 58,
       "column": 3,
-      "index": 1554
+      "index": 1926
+    }
+  },
+  {
+    "id": "termsOfService.privacyPolicyTitle",
+    "defaultMessage": "!!!Privacy Policy",
+    "file": "src/features/Initialization/common/strings.tsx",
+    "start": {
+      "line": 59,
+      "column": 28,
+      "index": 1956
+    },
+    "end": {
+      "line": 62,
+      "column": 3,
+      "index": 2047
     }
   },
   {
@@ -109,14 +154,14 @@
     "defaultMessage": "!!!Select Language",
     "file": "src/features/Initialization/common/strings.tsx",
     "start": {
-      "line": 48,
+      "line": 63,
       "column": 23,
-      "index": 1579
+      "index": 2072
     },
     "end": {
-      "line": 51,
+      "line": 66,
       "column": 3,
-      "index": 1684
+      "index": 2177
     }
   }
 ]

@@ -10,6 +10,9 @@ export const useNavigateTo = () => {
     analytics: () => navigation.navigate('analytics'),
     languagePick: () => navigation.navigate('language-pick'),
     enableLogingWithPin: () => navigation.navigate('enable-login-with-pin'),
-    accepTos: () => navigation.navigate('accept-terms-of-service'),
+    readTermsOfService: () => navigation.navigate('read-terms-of-service'),
+    readPrivacyPolicy: () => navigation.navigate('read-privacy-policy'),
+    termsOfServiceChanged: () => navigation.navigate('terms-of-service-changed'),
+    analyticsChanged: () => navigation.navigate('analytics-changed'),
   }).current
 }

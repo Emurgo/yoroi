@@ -2,9 +2,9 @@ import {EnrichmentPlugin, Event, PluginType} from '@amplitude/analytics-types'
 import * as React from 'react'
 import Config from 'react-native-config'
 
-import {CONFIG} from '../legacy/config'
 import {Logger} from '../yoroi-wallets/logging'
 import {storage, YoroiStorage} from '../yoroi-wallets/storage'
+import {parseBoolean} from '../yoroi-wallets/utils'
 import {Ampli, ampli} from './ampli'
 import {mockMetricsManager} from './mocks'
 
@@ -31,57 +31,18 @@ const infoPlugin: EnrichmentPlugin = {
 }
 
 export const makeMetricsStorage = (yoroiStorage: YoroiStorage = storage) => {
-  const consentRequestedKey = 'metrics'
+  const enabledKey = 'metrics-enabled'
+  const consentRequestedKey = 'metrics-consentRequested'
   const settingsStorage = yoroiStorage.join('appSettings/')
 
-  const defaultConsentRequested = false
-  const defaultEnabled = __DEV__
-
-  type MetricsStorageValue = {
-    enabled: boolean
-    consentRequested: boolean
-    version: number
-    dateConsentRequested: string
-  }
-
-  const readConfig = async () => {
-    const value = await settingsStorage.getItem<MetricsStorageValue>(consentRequestedKey)
-    return value?.version === CONFIG.LATEST_ANALYTICS_AGREEMENT_VERSION ? value : null
-  }
-
-  const setConfig = async (value: MetricsStorageValue) => {
-    await settingsStorage.setItem(consentRequestedKey, value)
-  }
-
-  const consentRequested = {
-    read: async () => {
-      const config = await readConfig()
-      return config?.consentRequested ?? defaultConsentRequested
-    },
-    write: async (consentRequested: boolean) => {
-      const config = await readConfig()
-      await setConfig({
-        enabled: config?.enabled ?? defaultEnabled,
-        consentRequested,
-        version: CONFIG.LATEST_ANALYTICS_AGREEMENT_VERSION,
-        dateConsentRequested: new Date().toISOString(),
-      })
-    },
+  const enabled = {
+    read: () => settingsStorage.getItem(enabledKey).then((value) => parseBoolean(value) ?? __DEV__),
+    write: (enable: boolean) => settingsStorage.setItem(enabledKey, JSON.stringify(enable)),
   } as const
 
-  const enabled = {
-    read: async () => {
-      const config = await readConfig()
-      return (config?.consentRequested && config?.enabled) ?? defaultEnabled
-    },
-    write: async (enabled: boolean) => {
-      await setConfig({
-        enabled,
-        consentRequested: true,
-        version: CONFIG.LATEST_ANALYTICS_AGREEMENT_VERSION,
-        dateConsentRequested: new Date().toISOString(),
-      })
-    },
+  const consentRequested = {
+    read: () => settingsStorage.getItem(consentRequestedKey).then((value) => parseBoolean(value) ?? false),
+    write: (req: boolean) => settingsStorage.setItem(consentRequestedKey, JSON.stringify(req)),
   } as const
 
   return {
@@ -252,12 +213,10 @@ export const MetricsProvider = ({
 
   const disable = React.useCallback(() => {
     actions.isEnabledChanged(false)
-    actions.isConsentRequestedChanged(true)
     managerDisable()
   }, [actions, managerDisable])
   const enable = React.useCallback(() => {
     actions.isEnabledChanged(true)
-    actions.isConsentRequestedChanged(true)
     managerEnable()
   }, [actions, managerEnable])
   const requestConsent = React.useCallback(() => {

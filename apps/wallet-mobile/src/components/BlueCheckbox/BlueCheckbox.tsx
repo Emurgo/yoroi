@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {ReactNode} from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle} from 'react-native'
 import {ClipPath, Defs, G, Path, Rect, Svg} from 'react-native-svg'
 
 import {Spacer} from '../Spacer'
@@ -9,11 +9,12 @@ export type BlueCheckboxProps = {
   checked?: boolean
   onPress?: () => void
   children?: ReactNode
+  style?: StyleProp<ViewStyle>
 }
 
-export const BlueCheckbox = ({checked, onPress, children}: BlueCheckboxProps) => {
+export const BlueCheckbox = ({checked, onPress, children, style}: BlueCheckboxProps) => {
   return (
-    <TouchableOpacity style={styles.checkboxRow} onPress={onPress}>
+    <TouchableOpacity style={[styles.checkboxRow, style]} onPress={onPress}>
       {checked ? <CheckboxChecked /> : <CheckboxNotChecked />}
 
       <Spacer width={15} />
