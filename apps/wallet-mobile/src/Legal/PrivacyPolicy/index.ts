@@ -1,1 +1,1 @@
-export {PrivacyPolicy,usePrivacyPolicy} from './PrivacyPolicy'
+export {PrivacyPolicy, usePrivacyPolicy} from './PrivacyPolicy'

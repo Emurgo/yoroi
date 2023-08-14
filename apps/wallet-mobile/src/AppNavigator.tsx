@@ -152,8 +152,6 @@ const useStrings = () => {
     loginPinTitle: intl.formatMessage(messages.pinLoginTitle),
     authWithOsChangeTitle: intl.formatMessage(messages.authWithOsChangeTitle),
     authWithOsChangeMessage: intl.formatMessage(messages.authWithOsChangeMessage),
-    acceptTermsTitle: intl.formatMessage(messages.acceptTermsTitle),
-    acceptPrivacyPolicyTitle: intl.formatMessage(messages.acceptPrivacyPolicyTitle),
   }
 }
 
@@ -173,14 +171,6 @@ const messages = defineMessages({
   authWithOsChangeMessage: {
     id: 'global.actions.dialogs.biometricsChange.message',
     defaultMessage: '!!!Auth with OS changed detected ',
-  },
-  acceptTermsTitle: {
-    id: 'components.initialization.acepttermsofservicescreen.title',
-    defaultMessage: '!!!Terms of Service Agreement',
-  },
-  acceptPrivacyPolicyTitle: {
-    id: 'components.initialization.aceptprivacypolicyscreen.title',
-    defaultMessage: '!!!Privacy Policy',
   },
 })
 

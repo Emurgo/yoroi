@@ -1,51 +1,51 @@
-import BN_BD_TOS from './tos/bn-BD.md'
-import CS_CZ_TOS from './tos/cs-CZ.md'
-import DE_DE_TOS from './tos/de-DE.md'
-import EN_US_TOS from './tos/en-US.md'
-import ES_ES_TOS from './tos/es-ES.md'
-import FIL_PH_TOS from './tos/fil-PH.md'
-import FR_FR_TOS from './tos/fr-FR.md'
-import HU_HU_TOS from './tos/hu-HU.md'
-import ID_ID_TOS from './tos/id-ID.md'
-import IT_IT_TOS from './tos/it-IT.md'
-import JA_JP_TOS from './tos/ja-JP.md'
-import KO_KR_TOS from './tos/ko-KR.md'
-import NL_NL_TOS from './tos/nl-NL.md'
-import PL_PL_TOS from './tos/pl-PL.md'
-import PT_BR_TOS from './tos/pt-BR.md'
-import RU_RU_TOS from './tos/ru-RU.md'
-import SK_SK_TOS from './tos/sk-SK.md'
-import SL_SI_TOS from './tos/sl-SI.md'
-import SV_SE_TOS from './tos/sv-SE.md'
-import SW_KE_TOS from './tos/sw-KE.md'
-import UK_UA_TOS from './tos/uk-UA.md'
-import VI_VN_TOS from './tos/vi-VN.md'
-import ZH_CN_TOS from './tos/zh-Hans.md'
+import BN_BD_PRIVACY_POLICY from './privacyPolicy/bn-BD.md'
+import CS_CZ_PRIVACY_POLICY from './privacyPolicy/cs-CZ.md'
+import DE_DE_PRIVACY_POLICY from './privacyPolicy/de-DE.md'
+import EN_US_PRIVACY_POLICY from './privacyPolicy/en-US.md'
+import ES_ES_PRIVACY_POLICY from './privacyPolicy/es-ES.md'
+import FIL_PH_PRIVACY_POLICY from './privacyPolicy/fil-PH.md'
+import FR_FR_PRIVACY_POLICY from './privacyPolicy/fr-FR.md'
+import HU_HU_PRIVACY_POLICY from './privacyPolicy/hu-HU.md'
+import ID_ID_PRIVACY_POLICY from './privacyPolicy/id-ID.md'
+import IT_IT_PRIVACY_POLICY from './privacyPolicy/it-IT.md'
+import JA_JP_PRIVACY_POLICY from './privacyPolicy/ja-JP.md'
+import KO_KR_PRIVACY_POLICY from './privacyPolicy/ko-KR.md'
+import NL_NL_PRIVACY_POLICY from './privacyPolicy/nl-NL.md'
+import PL_PL_PRIVACY_POLICY from './privacyPolicy/pl-PL.md'
+import PT_BR_PRIVACY_POLICY from './privacyPolicy/pt-BR.md'
+import RU_RU_PRIVACY_POLICY from './privacyPolicy/ru-RU.md'
+import SK_SK_PRIVACY_POLICY from './privacyPolicy/sk-SK.md'
+import SL_SI_PRIVACY_POLICY from './privacyPolicy/sl-SI.md'
+import SV_SE_PRIVACY_POLICY from './privacyPolicy/sv-SE.md'
+import SW_KE_PRIVACY_POLICY from './privacyPolicy/sw-KE.md'
+import UK_UA_PRIVACY_POLICY from './privacyPolicy/uk-UA.md'
+import VI_VN_PRIVACY_POLICY from './privacyPolicy/vi-VN.md'
+import ZH_CN_PRIVACY_POLICY from './privacyPolicy/zh-Hans.md'
 
 const tosByCode = {
-  'bn-BD': BN_BD_TOS,
-  'cs-CZ': CS_CZ_TOS,
-  'de-DE': DE_DE_TOS,
-  'en-US': EN_US_TOS,
-  'es-ES': ES_ES_TOS,
-  'fil-PH': FIL_PH_TOS,
-  'fr-FR': FR_FR_TOS,
-  'hu-HU': HU_HU_TOS,
-  'id-ID': ID_ID_TOS,
-  'it-IT': IT_IT_TOS,
-  'ja-JP': JA_JP_TOS,
-  'ko-KR': KO_KR_TOS,
-  'nl-NL': NL_NL_TOS,
-  'pl-PL': PL_PL_TOS,
-  'pt-BR': PT_BR_TOS,
-  'ru-RU': RU_RU_TOS,
-  'sk-SK': SK_SK_TOS,
-  'sl-SI': SL_SI_TOS,
-  'sv-SE': SV_SE_TOS,
-  'sw-KE': SW_KE_TOS,
-  'uk-UA': UK_UA_TOS,
-  'vi-VN': VI_VN_TOS,
-  'zh-Hans': ZH_CN_TOS,
+  'bn-BD': BN_BD_PRIVACY_POLICY,
+  'cs-CZ': CS_CZ_PRIVACY_POLICY,
+  'de-DE': DE_DE_PRIVACY_POLICY,
+  'en-US': EN_US_PRIVACY_POLICY,
+  'es-ES': ES_ES_PRIVACY_POLICY,
+  'fil-PH': FIL_PH_PRIVACY_POLICY,
+  'fr-FR': FR_FR_PRIVACY_POLICY,
+  'hu-HU': HU_HU_PRIVACY_POLICY,
+  'id-ID': ID_ID_PRIVACY_POLICY,
+  'it-IT': IT_IT_PRIVACY_POLICY,
+  'ja-JP': JA_JP_PRIVACY_POLICY,
+  'ko-KR': KO_KR_PRIVACY_POLICY,
+  'nl-NL': NL_NL_PRIVACY_POLICY,
+  'pl-PL': PL_PL_PRIVACY_POLICY,
+  'pt-BR': PT_BR_PRIVACY_POLICY,
+  'ru-RU': RU_RU_PRIVACY_POLICY,
+  'sk-SK': SK_SK_PRIVACY_POLICY,
+  'sl-SI': SL_SI_PRIVACY_POLICY,
+  'sv-SE': SV_SE_PRIVACY_POLICY,
+  'sw-KE': SW_KE_PRIVACY_POLICY,
+  'uk-UA': UK_UA_PRIVACY_POLICY,
+  'vi-VN': VI_VN_PRIVACY_POLICY,
+  'zh-Hans': ZH_CN_PRIVACY_POLICY,
 }
 
 export const loadPrivacyPolicy = (languageCode: string): string => {

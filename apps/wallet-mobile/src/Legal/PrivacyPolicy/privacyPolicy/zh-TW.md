@@ -98,6 +98,6 @@ We may update this Policy from time to time to reflect changes in legal or regul
 
 ## 11. Contact Us
 
-If you have any questions, concerns, or requests regarding this Policy or our privacy practices, please contact us on [![](https://yoroi-wallet.com/assets/favicon.ico)Yoroi - Light Wallet for Cardano](https://yoroi-wallet.com/#/support)
+If you have any questions, concerns, or requests regarding this Policy or our privacy practices, please contact us on https://yoroi-wallet.com/#/support
 
 By using or accessing the Software, you acknowledge that you have read and understood this Privacy Policy and consent to the collection, use, and disclosure of your Personal Data as described herein.

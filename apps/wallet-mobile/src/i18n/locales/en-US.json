@@ -663,5 +663,7 @@
   "termsOfService.agreementUpdateTitle": "Terms of Service Agreement Update",
   "termsOfService.agreementUpdateDescription": "We have updated our Terms of Service Agreement to enhance your experience. Please review and accept them to keep enjoying Yoroi.",
   "termsOfService.tosIAgreeWith": "I agree with",
-  "termsOfService.tosAgreement": "Terms Of Service Agreement"
+  "termsOfService.tosAgreement": "Terms Of Service Agreement",
+  "termsOfService.privacyPolicyTitle": "Privacy Policy",
+  "analytics.privacyPolicy": "Privacy Policy"
 }
