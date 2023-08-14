@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {Analytics, StatusBar} from '../../components'
 
-export const ToggleAnalyticsSettings = () => {
+export const ToggleAnalyticsSettingsScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
       <StatusBar type="dark" />

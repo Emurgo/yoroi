@@ -1,5 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {ToggleAnalyticsSettings} from './ToggleAnalyticsSettings'
+import {ToggleAnalyticsSettingsScreen} from './ToggleAnalyticsSettingsScreen'
 
-storiesOf('ToggleAnalyticsSettings', module).add('Default', () => <ToggleAnalyticsSettings />)
+storiesOf('ToggleAnalyticsSettingsScreen', module).add('Default', () => <ToggleAnalyticsSettingsScreen />)

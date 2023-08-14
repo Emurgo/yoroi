@@ -1,5 +1,5 @@
 import {defaultStackNavigationOptions, ToggleAnalyticsSettingsRoutes} from '../../navigation'
-import {ToggleAnalyticsSettings} from './ToggleAnalyticsSettings'
+import {ToggleAnalyticsSettingsScreen} from './ToggleAnalyticsSettingsScreen'
 import {defineMessages, useIntl} from 'react-intl'
 import {createStackNavigator} from '@react-navigation/stack'
 
@@ -16,7 +16,7 @@ export const ToggleAnalyticsSettingsNavigator = () => {
     >
       <Stack.Screen
         name="settings"
-        component={ToggleAnalyticsSettings}
+        component={ToggleAnalyticsSettingsScreen}
         options={{title: strings.toggleAnalyticsSettingsTitle}}
       />
     </Stack.Navigator>
