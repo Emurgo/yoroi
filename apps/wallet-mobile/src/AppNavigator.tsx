@@ -10,15 +10,11 @@ import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
-import {AnalyticsChangedScreen} from './features/Initialization/AnalyticsChangedScreen'
-import {TermsOfServiceAgreement, useTermsOfServiceAgreement} from './features/Initialization/common'
-import {InititalizationNavigator} from './features/Initialization/InitializationNavigator'
-import {TermsOfServiceChangedScreen} from './features/Initialization/TermsOfServiceChangedScreen'
-import {TermsOfServiceScreen} from './features/Initialization/TermsOfServiceScreen'
+import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
+import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
 import {CONFIG} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
-import {useMetrics} from './metrics/metricsManager'
-import {AppRoutes, defaultStackNavigationOptions} from './navigation'
+import {AppRoutes} from './navigation'
 import {SearchProvider} from './Search/SearchContext'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
@@ -80,30 +76,14 @@ export const AppNavigator = () => {
               <Stack.Screen name="first-run">
                 {() => (
                   <SearchProvider>
-                    <InititalizationNavigator />
+                    <InitializationNavigator />
                   </SearchProvider>
                 )}
               </Stack.Screen>
             )}
 
-            {firstAction === 'show-terms-of-service-changed-notice' && (
-              <>
-                <Stack.Screen name="terms-of-service-changed-notice" component={TermsOfServiceChangedScreen} />
-
-                <Stack.Screen
-                  name="accept-terms-of-service"
-                  component={TermsOfServiceScreen}
-                  options={{...defaultStackNavigationOptions, headerShown: true, title: strings.acceptTermsTitle}}
-                />
-              </>
-            )}
-
-            {firstAction === 'show-analytics-agreement-changed-notice' && (
-              <>
-                <Stack.Screen name="analytics-agreement-changed-notice" component={AnalyticsChangedScreen} />
-
-                {/*  TODO: Add screen to read the new analytics agreement */}
-              </>
+            {firstAction === 'show-agreement-changed-notice' && (
+              <Stack.Screen name="agreement-changed-notice">{() => <AgreementChangedNavigator />}</Stack.Screen>
             )}
 
             {firstAction === 'auth-with-pin' && (
@@ -173,6 +153,7 @@ const useStrings = () => {
     authWithOsChangeTitle: intl.formatMessage(messages.authWithOsChangeTitle),
     authWithOsChangeMessage: intl.formatMessage(messages.authWithOsChangeMessage),
     acceptTermsTitle: intl.formatMessage(messages.acceptTermsTitle),
+    acceptPrivacyPolicyTitle: intl.formatMessage(messages.acceptPrivacyPolicyTitle),
   }
 }
 
@@ -196,6 +177,10 @@ const messages = defineMessages({
   acceptTermsTitle: {
     id: 'components.initialization.acepttermsofservicescreen.title',
     defaultMessage: '!!!Terms of Service Agreement',
+  },
+  acceptPrivacyPolicyTitle: {
+    id: 'components.initialization.aceptprivacypolicyscreen.title',
+    defaultMessage: '!!!Privacy Policy',
   },
 })
 
@@ -239,23 +224,15 @@ const useHideScreenInAppSwitcher = () => {
   }, [])
 }
 
-type FirstAction =
-  | 'auth-with-pin'
-  | 'auth-with-os'
-  | 'request-new-pin'
-  | 'first-run'
-  | 'show-terms-of-service-changed-notice'
-  | 'show-analytics-agreement-changed-notice'
+type FirstAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run' | 'show-agreement-changed-notice'
 const getFirstAction = (
   authOsEnabled: boolean,
   authSetting: AuthSetting,
-  terms: TermsOfServiceAgreement | undefined,
-  hasAcceptedAnalytics: boolean,
+  agreement: LegalAgreement | undefined,
 ): FirstAction => {
-  const hasAcceptedLatestTermsOfService = terms?.version === CONFIG.LATEST_TERMS_AND_CONDITIONS_VERSION
+  const hasAccepted = agreement?.latestAcceptedAgreementsDate === CONFIG.AGREEMENT_DATE
 
-  if (isString(authSetting) && !hasAcceptedLatestTermsOfService) return 'show-terms-of-service-changed-notice'
-  if (isString(authSetting) && !hasAcceptedAnalytics) return 'show-analytics-agreement-changed-notice'
+  if (isString(authSetting) && !hasAccepted) return 'show-agreement-changed-notice'
 
   if (authSetting === 'pin') return 'auth-with-pin'
   if (authSetting === 'os' && authOsEnabled) return 'auth-with-os'
@@ -267,8 +244,7 @@ const getFirstAction = (
 const useFirstAction = () => {
   const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
-  const terms = useTermsOfServiceAgreement()
-  const {isConsentRequested} = useMetrics()
+  const terms = useLegalAgreement()
 
-  return getFirstAction(authOsEnabled, authSetting, terms, isConsentRequested)
+  return getFirstAction(authOsEnabled, authSetting, terms)
 }

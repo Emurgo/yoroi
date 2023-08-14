@@ -6,8 +6,9 @@ import {StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
 import {TermsOfService} from '../../../Legal'
 
-export const TermsOfServiceScreen = () => {
+export const ReadPrivacyPolicyScreen = () => {
   const {languageCode} = useLanguage()
+  // TODO: use privacy policy and not ToS
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>

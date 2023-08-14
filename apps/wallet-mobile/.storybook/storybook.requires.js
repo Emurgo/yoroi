@@ -104,7 +104,6 @@ const getStories = () => {
     "./src/features/Initialization/InitialScreen/InitialScreen.stories.tsx": require("../src/features/Initialization/InitialScreen/InitialScreen.stories.tsx"),
     "./src/features/Initialization/LanguagePickerScreen/LanguagePickerScreen.stories.tsx": require("../src/features/Initialization/LanguagePickerScreen/LanguagePickerScreen.stories.tsx"),
     "./src/features/Initialization/TermsOfServiceChangedScreen/TermsOfServiceChangedScreen.stories.tsx": require("../src/features/Initialization/TermsOfServiceChangedScreen/TermsOfServiceChangedScreen.stories.tsx"),
-    "./src/features/Initialization/TermsOfServiceScreen/TermsOfServiceScreen.stories.tsx": require("../src/features/Initialization/TermsOfServiceScreen/TermsOfServiceScreen.stories.tsx"),
     "./src/features/Menu/Menu.stories.tsx": require("../src/features/Menu/Menu.stories.tsx"),
     "./src/features/Send/useCases/ConfirmTx/ConfirmTxScreen.stories.tsx": require("../src/features/Send/useCases/ConfirmTx/ConfirmTxScreen.stories.tsx"),
     "./src/features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen.stories.tsx": require("../src/features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen.stories.tsx"),

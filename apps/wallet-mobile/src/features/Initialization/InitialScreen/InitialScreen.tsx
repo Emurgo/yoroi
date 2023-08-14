@@ -6,16 +6,15 @@ import {Button, Icon, Spacer, StatusBar, TextInput, YoroiLogo} from '../../../co
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
 import {useLanguage} from '../../../i18n'
 import {COLORS} from '../../../theme'
-import {useAgreeWithTermsOfService, useNavigateTo, useStrings} from '../common'
+import {useNavigateTo, useStrings} from '../common'
 
 export const InitialScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const [tosAccepted, setTosAccepted] = React.useState(false)
-  const {agree} = useAgreeWithTermsOfService()
 
   const onPressLink = () => {
-    navigateTo.accepTos()
+    navigateTo.readTermsOfService()
   }
 
   const onLanguageChange = React.useCallback(() => setTosAccepted(false), [setTosAccepted])
@@ -25,7 +24,6 @@ export const InitialScreen = () => {
   })
 
   const onPressContinue = () => {
-    agree()
     navigateTo.analytics()
   }
 
