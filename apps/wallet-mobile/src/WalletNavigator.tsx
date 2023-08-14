@@ -17,6 +17,7 @@ import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {theme} from './theme'
 import {TxHistoryNavigator} from './TxHistory'
 import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
+import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
@@ -127,6 +128,8 @@ export const WalletNavigator = () => (
     <Stack.Screen name="settings" component={SettingsScreenNavigator} />
 
     <Stack.Screen name="voting-registration" component={VotingRegistration} />
+
+    <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
   </Stack.Navigator>
 )
 
