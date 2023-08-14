@@ -8,7 +8,6 @@ import {PrivacyPolicy} from '../../../Legal'
 
 export const ReadPrivacyPolicyScreen = () => {
   const {languageCode} = useLanguage()
-  // TODO: use privacy policy and not ToS
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
