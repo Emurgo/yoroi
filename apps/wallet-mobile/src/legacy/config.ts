@@ -13,10 +13,13 @@ const _LOG_LEVEL = __DEV__ ? LogLevel.Debug : LogLevel.Warn
 
 const FORCE_CRASH_REPORTS = isNightly()
 
+const AGREEMENT_DATE = 2
+
 export const CONFIG = {
   SENTRY_DSN,
   PIN_LENGTH: 6,
   LOG_LEVEL: _LOG_LEVEL,
   COMMIT: _COMMIT,
   FORCE_CRASH_REPORTS,
+  AGREEMENT_DATE,
 }

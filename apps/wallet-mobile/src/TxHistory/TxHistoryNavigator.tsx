@@ -22,13 +22,7 @@ import {
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
-import {
-  BackButton,
-  defaultStackNavigationOptions,
-  defaultStackNavigationOptionsV2,
-  TxHistoryRoutes,
-  useWalletNavigation,
-} from '../navigation'
+import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes, useWalletNavigation} from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
@@ -69,7 +63,6 @@ export const TxHistoryNavigator = () => {
             name="history-list"
             component={TxHistory}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: walletName ?? '',
               headerRight: () => <HeaderRightHistory />,
             }}
@@ -87,7 +80,6 @@ export const TxHistoryNavigator = () => {
             name="receive"
             component={ReceiveScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.receiveTitle,
 
               headerRight: () => <ModalInfoIconButton onPress={showModalInfo} />,
@@ -103,7 +95,6 @@ export const TxHistoryNavigator = () => {
             name="swap-start-swap"
             component={StartSwapScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.swapTitle,
             }}
           />
@@ -112,7 +103,6 @@ export const TxHistoryNavigator = () => {
             name="swap-confirm-tx"
             component={ConfirmTxSwapScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.confirmationTransaction,
             }}
           />
@@ -121,7 +111,6 @@ export const TxHistoryNavigator = () => {
             name="swap-select-sell-token"
             component={SelectSellTokenFromListScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.swapFromTitle,
             }}
           />
@@ -130,7 +119,6 @@ export const TxHistoryNavigator = () => {
             name="swap-select-buy-token"
             component={SelectBuyTokenFromListScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.swapToTitle,
             }}
           />
@@ -139,7 +127,6 @@ export const TxHistoryNavigator = () => {
             name="swap-edit-slippage"
             component={EditSlippageScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.slippageTolerance,
             }}
           />
@@ -148,7 +135,6 @@ export const TxHistoryNavigator = () => {
             name="swap-select-pool"
             component={SelectPoolFromListScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.selectPool,
             }}
           />
@@ -367,7 +353,7 @@ const styles = StyleSheet.create({
 })
 
 const sendOptions = {
-  ...defaultStackNavigationOptionsV2,
+  ...defaultStackNavigationOptions,
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,

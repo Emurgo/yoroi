@@ -10,12 +10,16 @@ import {OsLoginScreen, PinLoginScreen, useBackgroundTimeout} from './auth'
 import {useAuth} from './auth/AuthProvider'
 import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
-import {FirstRunNavigator} from './FirstRun/FirstRunNavigator'
+import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
+import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
+import {CONFIG} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
+import {SearchProvider} from './Search/SearchContext'
 import {WalletInitNavigator} from './WalletInit/WalletInitNavigator'
 import {WalletNavigator} from './WalletNavigator'
 import {AuthSetting, useAuthOsEnabled, useAuthSetting, useAuthWithOs} from './yoroi-wallets/auth'
+import {isString} from './yoroi-wallets/utils'
 
 const Stack = createStackNavigator<AppRoutes>()
 const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamList>>()
@@ -32,12 +36,12 @@ export const AppNavigator = () => {
     onSettled: () => RNBootSplash.hide({fade: true}),
   })
 
-  const authAction = useAuthAction()
+  const firstAction = useFirstAction()
   const onReady = () => {
     if (isLoggedIn) return
 
     // try first OS auth before navigating to os login screen
-    if (authAction === 'auth-with-os') {
+    if (firstAction === 'auth-with-os') {
       if (Platform.OS === 'android') {
         supportsAndroidFingerprintOverlay().then((isOverlaySupported) => {
           if (!isOverlaySupported) {
@@ -68,9 +72,21 @@ export const AppNavigator = () => {
 
         {isLoggedOut && (
           <Stack.Group>
-            {authAction === 'first-run' && <Stack.Screen name="first-run" component={FirstRunNavigator} />}
+            {firstAction === 'first-run' && (
+              <Stack.Screen name="first-run">
+                {() => (
+                  <SearchProvider>
+                    <InitializationNavigator />
+                  </SearchProvider>
+                )}
+              </Stack.Screen>
+            )}
 
-            {authAction === 'auth-with-pin' && (
+            {firstAction === 'show-agreement-changed-notice' && (
+              <Stack.Screen name="agreement-changed-notice">{() => <AgreementChangedNavigator />}</Stack.Screen>
+            )}
+
+            {firstAction === 'auth-with-pin' && (
               <Stack.Screen
                 name="custom-pin-auth"
                 component={PinLoginScreen}
@@ -78,11 +94,11 @@ export const AppNavigator = () => {
               />
             )}
 
-            {authAction === 'auth-with-os' && (
+            {firstAction === 'auth-with-os' && (
               <Stack.Screen name="bio-auth-initial" component={OsLoginScreen} options={{headerShown: false}} />
             )}
 
-            {authAction === 'request-new-pin' && (
+            {firstAction === 'request-new-pin' && (
               <Stack.Screen //
                 name="enable-login-with-pin"
                 component={CreatePinScreenWrapper}
@@ -96,7 +112,13 @@ export const AppNavigator = () => {
 
         {isLoggedIn && (
           <Stack.Group>
-            <Stack.Screen name="app-root" component={WalletNavigator} />
+            <Stack.Screen name="app-root">
+              {() => (
+                <SearchProvider>
+                  <WalletNavigator />
+                </SearchProvider>
+              )}
+            </Stack.Screen>
 
             <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
           </Stack.Group>
@@ -139,7 +161,7 @@ const messages = defineMessages({
     defaultMessage: '!!!Enter PIN',
   },
   customPinTitle: {
-    id: 'components.firstrun.custompinscreen.title',
+    id: 'components.initialization.custompinscreen.title',
     defaultMessage: '!!!Set PIN',
   },
   authWithOsChangeTitle: {
@@ -192,17 +214,27 @@ const useHideScreenInAppSwitcher = () => {
   }, [])
 }
 
-type AuthAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run'
-const getAuthAction = (authOsEnabled: boolean, authSetting: AuthSetting): AuthAction => {
+type FirstAction = 'auth-with-pin' | 'auth-with-os' | 'request-new-pin' | 'first-run' | 'show-agreement-changed-notice'
+const getFirstAction = (
+  authOsEnabled: boolean,
+  authSetting: AuthSetting,
+  agreement: LegalAgreement | undefined,
+): FirstAction => {
+  const hasAccepted = agreement?.latestAcceptedAgreementsDate === CONFIG.AGREEMENT_DATE
+
+  if (isString(authSetting) && !hasAccepted) return 'show-agreement-changed-notice'
+
   if (authSetting === 'pin') return 'auth-with-pin'
   if (authSetting === 'os' && authOsEnabled) return 'auth-with-os'
   if (authSetting === 'os' && !authOsEnabled) return 'request-new-pin'
+
   return 'first-run' // setup not completed
 }
 
-const useAuthAction = () => {
+const useFirstAction = () => {
   const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
+  const terms = useLegalAgreement()
 
-  return getAuthAction(authOsEnabled, authSetting)
+  return getFirstAction(authOsEnabled, authSetting, terms)
 }

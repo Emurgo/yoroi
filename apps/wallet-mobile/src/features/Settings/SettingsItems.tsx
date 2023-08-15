@@ -1,27 +1,12 @@
-import {useNavigation} from '@react-navigation/native'
 import _ from 'lodash'
 import React, {ReactElement} from 'react'
 import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Hr, Icon, Spacer, Text} from '../../components'
-import {SettingsRouteNavigation, SettingsStackRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {lightPalette} from '../../theme'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
-
-type NavigateToProps = {
-  to: keyof SettingsStackRoutes
-  navigation: SettingsRouteNavigation
-  children: React.ReactNode
-  disabled?: boolean
-}
-
-const NavigateTo = ({navigation, to, ...props}: NavigateToProps) => {
-  // https://github.com/react-navigation/react-navigation/issues/10802
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return <Touchable onPress={() => navigation.navigate(to as any)} {...props} />
-}
 
 type SettingsSectionProps = {
   title?: string
@@ -99,40 +84,17 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
     <Hr />
   </View>
 )
-
-type SettingsBuildItemProps = {
-  label: string
-  value: string
-}
-
-export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
-  <SettingsItem label={label}>
-    <Text
-      style={{
-        fontFamily: 'Rubik-Regular',
-        color: lightPalette.secondary['400'],
-        fontSize: 12,
-        lineHeight: 18,
-      }}
-    >
-      {value}
-    </Text>
-  </SettingsItem>
-)
-
 type NavigatedSettingsItemProps = {
   label: string
-  navigateTo: keyof SettingsStackRoutes
+  onNavigate: () => void
   icon?: ReactElement
   disabled?: boolean
   selected?: string
 }
 
-export const NavigatedSettingsItem = ({label, navigateTo, icon, disabled, selected}: NavigatedSettingsItemProps) => {
-  const navigation = useNavigation<SettingsRouteNavigation>()
-
+export const NavigatedSettingsItem = ({label, onNavigate, icon, disabled, selected}: NavigatedSettingsItemProps) => {
   return (
-    <NavigateTo to={navigateTo} navigation={navigation} disabled={disabled}>
+    <Touchable onPress={onNavigate} disabled={disabled}>
       <SettingsItem icon={icon} label={label} disabled={disabled}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {!_.isNil(selected) && (
@@ -153,23 +115,9 @@ export const NavigatedSettingsItem = ({label, navigateTo, icon, disabled, select
           <Icon.Chevron direction="right" size={28} color={lightPalette.gray['600']} />
         </View>
       </SettingsItem>
-    </NavigateTo>
+    </Touchable>
   )
 }
-
-type PressableSettingsItemProps = {
-  label: string
-  onPress: () => void
-  disabled?: boolean
-}
-
-export const PressableSettingsItem = ({label, onPress, disabled}: PressableSettingsItemProps) => (
-  <Touchable onPress={onPress} disabled={disabled}>
-    <SettingsItem label={label}>
-      <Icon.Chevron direction="right" size={28} color={lightPalette.gray['600']} />
-    </SettingsItem>
-  </Touchable>
-)
 
 const styles = StyleSheet.create({
   itemInner: {

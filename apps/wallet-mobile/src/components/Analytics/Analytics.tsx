@@ -1,8 +1,9 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Linking, ScrollView, StyleSheet, Switch, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Switch, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, Spacer, Text} from '../../components'
+import {Button, Spacer, Text, YoroiLogo} from '../../components'
 import {useMetrics} from '../../metrics/metricsManager'
 import {COLORS} from '../../theme'
 import {AnalyticsImage} from './AnalyticsImage'
@@ -10,45 +11,146 @@ import {AnalyticsImage} from './AnalyticsImage'
 type Props = {
   type: 'notice' | 'settings'
   onClose?: () => void
+  onReadMore?: () => void
 }
 
-export const Analytics = ({type, onClose}: Props) => {
+export const Analytics = ({type, onClose, onReadMore}: Props) => {
+  if (type === 'settings') {
+    return <Settings onReadMore={onReadMore} />
+  }
+
+  return <Notice onClose={onClose} onReadMore={onReadMore} />
+}
+
+const BOTTOM_BUTTON_ROW_HEIGHT = 80
+
+const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () => void}) => {
+  const strings = useStrings()
+  const metrics = useMetrics()
+  const {height: deviceHeight} = useWindowDimensions()
+  const [contentHeight, setContentHeight] = React.useState(0)
+
+  const scrollViewRef = React.useRef<ScrollView | null>(null)
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      scrollViewRef.current?.flashScrollIndicators()
+    }, 500)
+
+    return () => clearTimeout(timeout)
+  }, [])
+
+  return (
+    <View style={styles.container}>
+      <ScrollView
+        bounces={false}
+        style={{flex: 1}}
+        ref={scrollViewRef}
+        persistentScrollbar={true}
+        showsVerticalScrollIndicator={true}
+      >
+        <View
+          style={styles.content}
+          onLayout={(event) => {
+            const {height} = event.nativeEvent.layout
+            setContentHeight(height + BOTTOM_BUTTON_ROW_HEIGHT)
+          }}
+        >
+          <CommonContent onReadMore={onReadMore} />
+
+          <Button // skip button
+            block
+            outlineShelley
+            onPress={() => {
+              metrics.disable()
+              onClose?.()
+            }}
+            title={strings.skip}
+            style={styles.skip}
+          />
+        </View>
+      </ScrollView>
+
+      {/* To fill  bottom button space */}
+      <Spacer height={BOTTOM_BUTTON_ROW_HEIGHT} />
+
+      <View
+        style={[
+          styles.buttonRow,
+          {
+            // only show border top if the content is scrollable
+            ...(deviceHeight < contentHeight && {
+              borderTopWidth: 1,
+              borderTopColor: '#DCE0E9',
+            }),
+          },
+        ]}
+      >
+        <Button // accept button
+          block
+          shelleyTheme
+          onPress={() => {
+            metrics.enable()
+            onClose?.()
+          }}
+          title={strings.accept}
+        />
+      </View>
+    </View>
+  )
+}
+
+const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
   const strings = useStrings()
   const metrics = useMetrics()
 
+  const scrollViewRef = React.useRef<ScrollView | null>(null)
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      scrollViewRef.current?.flashScrollIndicators()
+    }, 500)
+
+    return () => clearTimeout(timeout)
+  }, [])
+
   return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.centered}>
-        {type === 'notice' && (
-          <>
-            <Text style={styles.title}>{strings.header}</Text>
+    <View style={styles.container}>
+      <ScrollView bounces={false} ref={scrollViewRef} persistentScrollbar={true} showsVerticalScrollIndicator={true}>
+        <View style={styles.content}>
+          <CommonContent onReadMore={onReadMore} />
 
-            <Spacer height={12} />
-          </>
-        )}
+          <View style={styles.toggle}>
+            <Text bold>{strings.toggle}</Text>
 
-        <AnalyticsImage />
-      </View>
+            <Spacer fill />
+
+            <Switch
+              value={metrics.isEnabled}
+              onValueChange={() => (metrics.isEnabled ? metrics.disable() : metrics.enable())}
+            />
+          </View>
+        </View>
+      </ScrollView>
+    </View>
+  )
+}
+
+const CommonContent = ({onReadMore}: {onReadMore?: () => void}) => {
+  const strings = useStrings()
+  return (
+    <>
+      <Spacer height={12} />
+
+      <YoroiLogo />
 
       <Spacer height={12} />
 
-      <View style={styles.centered}>
-        {type === 'settings' && (
-          <>
-            <Text style={styles.paragraph} bold>
-              {strings.header}
-            </Text>
+      <AnalyticsImage />
 
-            <Spacer height={12} />
-          </>
-        )}
+      <Spacer height={12} />
 
-        <Text style={styles.paragraph} bold={type === 'notice'}>
-          {strings.description}
-        </Text>
-
-        <Spacer height={12} />
-      </View>
+      <Text style={styles.title}>{strings.header}</Text>
 
       <Spacer height={12} />
 
@@ -64,58 +166,22 @@ export const Analytics = ({type, onClose}: Props) => {
 
       <Spacer height={12} />
 
-      <TouchableOpacity onPress={() => Linking.openURL('')}>
+      <TouchableOpacity onPress={onReadMore}>
         <Text style={styles.link}>{strings.more}</Text>
       </TouchableOpacity>
 
       <Spacer height={12} />
-
-      {type === 'notice' && (
-        <>
-          <Spacer height={12} />
-
-          <View style={styles.buttons}>
-            <Button
-              block
-              outlineShelley
-              onPress={() => {
-                metrics.disable()
-                onClose?.()
-              }}
-              title={strings.skip}
-              style={styles.skip}
-            />
-
-            <Button
-              block
-              shelleyTheme
-              onPress={() => {
-                metrics.enable()
-                onClose?.()
-              }}
-              title={strings.accept}
-            />
-          </View>
-        </>
-      )}
-
-      {type === 'settings' && (
-        <View style={styles.toggle}>
-          <Text bold>{strings.toggle}</Text>
-
-          <Switch
-            value={metrics.isEnabled}
-            onValueChange={() => (metrics.isEnabled ? metrics.disable() : metrics.enable())}
-          />
-        </View>
-      )}
-    </ScrollView>
+    </>
   )
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    paddingHorizontal: 10,
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  content: {
+    alignItems: 'center',
   },
   text: {
     fontSize: 14,
@@ -126,28 +192,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'baseline',
   },
-  paragraph: {
-    fontSize: 14,
-    lineHeight: 22,
-    textAlign: 'center',
-  },
   link: {
     color: COLORS.BLUE_LIGHTER,
     textAlign: 'center',
-  },
-  centered: {
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   title: {
     fontSize: 20,
     lineHeight: 22,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-  buttons: {
-    flexDirection: 'column',
-    gap: 8,
   },
   skip: {
     borderWidth: 0,
@@ -160,7 +213,19 @@ const styles = StyleSheet.create({
     color: COLORS.RED,
     paddingRight: 8,
   },
-  toggle: {display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'},
+  toggle: {
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  buttonRow: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
+    backgroundColor: '#fff',
+    height: BOTTOM_BUTTON_ROW_HEIGHT,
+    padding: 16,
+  },
 })
 
 const list = [

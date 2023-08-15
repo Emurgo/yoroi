@@ -75,7 +75,7 @@ export const DeveloperScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <StatusBar type="light" />
+      <StatusBar type="dark" />
 
       <ScrollView style={styles.container}>
         {routes.map((route) => (

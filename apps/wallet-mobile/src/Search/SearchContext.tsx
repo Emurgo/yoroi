@@ -4,7 +4,7 @@ import React, {createContext, ReactNode, useCallback, useContext, useReducer} fr
 import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Icon} from '../components/Icon'
-import {defaultStackNavigationOptionsV2} from '../navigation'
+import {defaultStackNavigationOptions} from '../navigation'
 
 type SearchState = {
   search: string
@@ -122,7 +122,7 @@ export const useSearchOnNavBar = ({
   }, [navigation, visible, handleCloseSearch])
 
   const withSearchInput: StackNavigationOptions = {
-    ...defaultStackNavigationOptionsV2,
+    ...defaultStackNavigationOptions,
     headerTitle: () => <InputSearch placeholder={placeholder} />,
     headerRight: () => (search.length > 0 ? <EraseButton onPress={handleCloseSearch} /> : null),
     headerLeft: () => <BackButton onPress={handleGoBack} />,
@@ -134,7 +134,7 @@ export const useSearchOnNavBar = ({
   }
 
   const withSearchButton: StackNavigationOptions = {
-    ...defaultStackNavigationOptionsV2,
+    ...defaultStackNavigationOptions,
     headerTitle: title,
     headerRight: () => <SearchButton onPress={() => showSearch()} />,
     headerLeft: () => <BackButton onPress={handleGoBack} />,
