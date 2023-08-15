@@ -63,12 +63,12 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
           {Boolean(features.showSwapButton) && (
             <View style={styles.centralized}>
               <TouchableOpacity
-                style={styles.actionIconNoBackground}
+                style={styles.actionIcon}
                 onPress={navigateTo.swap}
                 testID="swapButton"
                 disabled={disabled}
               >
-                <Icon.Swap />
+                <Icon.Swap color={ACTION_PROPS.color} />
               </TouchableOpacity>
 
               <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
@@ -118,13 +118,6 @@ const styles = StyleSheet.create({
     width: 42,
     borderRadius: 20,
     backgroundColor: '#3154CB',
-  },
-  actionIconNoBackground: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 42,
-    width: 42,
-    borderRadius: 20,
   },
   actionLabel: {
     paddingTop: 8,
