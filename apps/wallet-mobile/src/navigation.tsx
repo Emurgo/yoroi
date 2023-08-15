@@ -264,15 +264,19 @@ export type VotingRegistrationRouteNavigation = StackNavigationProp<VotingRegist
 export type InititalizationRoutes = {
   initial: undefined
   'language-pick': undefined
-  'accept-terms-of-service': undefined
   'enable-login-with-pin': undefined
   analytics: undefined
+  'terms-of-service-changed': undefined
+  'analytics-changed': undefined
+  'read-terms-of-service': undefined
+  'read-privacy-policy': undefined
 }
 export type InititalizationNavigation = StackNavigationProp<InititalizationRoutes>
 
 export type FirstRunRoutes = {
   'language-pick': undefined
   'accept-terms-of-service': undefined
+  'accept-privacy-policy': undefined
   'enable-login-with-pin': undefined
 }
 export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
@@ -297,9 +301,7 @@ export type AppRoutes = {
   'custom-pin-auth': undefined
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
-  'terms-of-service-changed-notice': undefined
-  'accept-terms-of-service': undefined
-  'analytics-agreement-changed-notice': undefined
+  'agreement-changed-notice': undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 

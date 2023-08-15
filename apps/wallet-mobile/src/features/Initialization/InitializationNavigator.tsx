@@ -8,10 +8,11 @@ import {AnalyticsNoticeScreen} from './AnalyticsNoticeScreen'
 import {useStrings} from './common'
 import {InitialScreen} from './InitialScreen/InitialScreen'
 import {LanguagePickerScreen} from './LanguagePickerScreen'
-import {TermsOfServiceScreen} from './TermsOfServiceScreen'
+import {ReadPrivacyPolicyScreen} from './ReadPrivacyPolicyScreen'
+import {ReadTermsOfServiceScreen} from './ReadTermsOfServiceScreen'
 
 const Stack = createStackNavigator<InititalizationRoutes>()
-export const InititalizationNavigator = () => {
+export const InitializationNavigator = () => {
   const strings = useStrings()
 
   return (
@@ -30,9 +31,15 @@ export const InititalizationNavigator = () => {
       />
 
       <Stack.Screen
-        name="accept-terms-of-service"
-        component={TermsOfServiceScreen}
+        name="read-terms-of-service"
+        component={ReadTermsOfServiceScreen}
         options={{title: strings.acceptTermsTitle}}
+      />
+
+      <Stack.Screen
+        name="read-privacy-policy"
+        component={ReadPrivacyPolicyScreen}
+        options={{title: strings.acceptPrivacyPolicyTitle}}
       />
 
       <Stack.Screen //

@@ -11,7 +11,10 @@ export const useStrings = () => {
     tosAgreement: intl.formatMessage(messages.tosAgreement),
     continue: intl.formatMessage(messages.continue),
     acceptTermsTitle: intl.formatMessage(messages.acceptTermsTitle),
+    acceptPrivacyPolicyTitle: intl.formatMessage(messages.acceptPrivacyPolicyTitle),
     languagePickerTitle: intl.formatMessage(messages.languagePickerTitle),
+    tosAnd: intl.formatMessage(messages.tosAnd),
+    privacyPolicy: intl.formatMessage(messages.privacyPolicy),
   }
 }
 
@@ -23,6 +26,14 @@ const messages = defineMessages({
   tosIAgreeWith: {
     id: 'analytics.tosIAgreeWith',
     defaultMessage: '!!!I agree with',
+  },
+  tosAnd: {
+    id: 'analytics.tosAnd',
+    defaultMessage: '!!!and',
+  },
+  privacyPolicy: {
+    id: 'analytics.privacyPolicy',
+    defaultMessage: '!!!Privacy Policy',
   },
   tosAgreement: {
     id: 'analytics.tosAgreement',
@@ -44,6 +55,10 @@ const messages = defineMessages({
   acceptTermsTitle: {
     id: 'components.initialization.acepttermsofservicescreen.title',
     defaultMessage: '!!!Terms of Service Agreement',
+  },
+  acceptPrivacyPolicyTitle: {
+    id: 'termsOfService.privacyPolicyTitle',
+    defaultMessage: '!!!Privacy Policy',
   },
   languagePickerTitle: {
     id: 'components.initialization.languagepicker.title',

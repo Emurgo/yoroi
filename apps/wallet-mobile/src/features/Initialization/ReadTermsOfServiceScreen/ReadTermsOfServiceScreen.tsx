@@ -6,7 +6,7 @@ import {StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
 import {TermsOfService} from '../../../Legal'
 
-export const TermsOfServiceScreen = () => {
+export const ReadTermsOfServiceScreen = () => {
   const {languageCode} = useLanguage()
 
   return (

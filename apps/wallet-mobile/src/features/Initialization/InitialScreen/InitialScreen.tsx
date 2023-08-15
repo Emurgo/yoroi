@@ -1,21 +1,24 @@
 import * as React from 'react'
-import {Platform, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, Spacer, StatusBar, TextInput, YoroiLogo} from '../../../components'
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
 import {useLanguage} from '../../../i18n'
 import {COLORS} from '../../../theme'
-import {useAgreeWithTermsOfService, useNavigateTo, useStrings} from '../common'
+import {useNavigateTo, useStrings} from '../common'
 
 export const InitialScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const [tosAccepted, setTosAccepted] = React.useState(false)
-  const {agree} = useAgreeWithTermsOfService()
 
-  const onPressLink = () => {
-    navigateTo.accepTos()
+  const onTosLinkPress = () => {
+    navigateTo.readTermsOfService()
+  }
+
+  const onPrivacyLinkPress = () => {
+    navigateTo.readPrivacyPolicy()
   }
 
   const onLanguageChange = React.useCallback(() => setTosAccepted(false), [setTosAccepted])
@@ -25,7 +28,6 @@ export const InitialScreen = () => {
   })
 
   const onPressContinue = () => {
-    agree()
     navigateTo.analytics()
   }
 
@@ -53,12 +55,20 @@ export const InitialScreen = () => {
 
       <Spacer height={8} />
 
-      <BlueCheckbox checked={tosAccepted} onPress={onPressTosCheckbox}>
-        <Text style={styles.checkboxText}>{`${strings.tosIAgreeWith} `}</Text>
+      <BlueCheckbox checked={tosAccepted} onPress={onPressTosCheckbox} style={styles.checkbox}>
+        <View style={styles.checkboxRow}>
+          <Text style={styles.checkboxText}>{`${strings.tosIAgreeWith} `}</Text>
 
-        <TouchableOpacity onPress={onPressLink}>
-          <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.tosAgreement}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={onTosLinkPress}>
+            <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.tosAgreement}</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.checkboxText}>{` ${strings.tosAnd} `}</Text>
+
+          <TouchableOpacity onPress={onPrivacyLinkPress}>
+            <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.privacyPolicy}</Text>
+          </TouchableOpacity>
+        </View>
       </BlueCheckbox>
 
       <Spacer fill />
@@ -115,7 +125,6 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
   }),
-
   checkboxText: {
     fontFamily: 'Rubik',
     fontSize: 16,
@@ -123,5 +132,13 @@ const styles = StyleSheet.create({
   checkboxLink: {
     color: COLORS.DARK_BLUE,
     textDecorationLine: 'underline',
+  },
+  checkbox: {
+    alignItems: 'flex-start',
+  },
+  checkboxRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
 })
