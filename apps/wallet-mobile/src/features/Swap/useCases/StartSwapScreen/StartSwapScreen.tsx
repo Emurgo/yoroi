@@ -28,7 +28,7 @@ export const StartSwapScreen = () => {
 
   return (
     <View style={styles.scrollView}>
-      <StatusBar type="light" />
+      <StatusBar type="dark" />
 
       <ScrollView>
         <View style={styles.container}>

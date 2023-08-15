@@ -19,13 +19,7 @@ import {InputSlippageToleranceScreen} from '../features/Swap/useCases/InputSlipp
 import {SelectPoolScreen} from '../features/Swap/useCases/SelectPoolScreen'
 import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/TokenSwap/AddTokens/SelectTokenFromListScreen'
 import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/TokenSwap/AddTokens/SelectTokenToListScreen'
-import {
-  BackButton,
-  defaultStackNavigationOptions,
-  defaultStackNavigationOptionsV2,
-  TxHistoryRoutes,
-  useWalletNavigation,
-} from '../navigation'
+import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes, useWalletNavigation} from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
@@ -59,7 +53,6 @@ export const TxHistoryNavigator = () => {
             name="history-list"
             component={TxHistory}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: walletName ?? '',
               headerRight: () => <HeaderRightHistory />,
             }}
@@ -77,7 +70,6 @@ export const TxHistoryNavigator = () => {
             name="receive"
             component={ReceiveScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.receiveTitle,
 
               headerRight: () => <ModalInfoIconButton onPress={showModalInfo} />,
@@ -93,7 +85,6 @@ export const TxHistoryNavigator = () => {
             name="swap-start-order"
             component={StartSwapScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.swapTitle,
             }}
           />
@@ -102,7 +93,6 @@ export const TxHistoryNavigator = () => {
             name="swap-confirmation-order"
             component={ConfirmationOrderScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.confirmationTransaction,
             }}
           />
@@ -111,7 +101,6 @@ export const TxHistoryNavigator = () => {
             name="swap-select-token-from"
             component={SwapSelectTokenFromListScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.swapFromTitle,
             }}
           />
@@ -120,7 +109,6 @@ export const TxHistoryNavigator = () => {
             name="swap-select-token-to"
             component={SwapSelectTokenToListScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.swapToTitle,
             }}
           />
@@ -129,7 +117,6 @@ export const TxHistoryNavigator = () => {
             name="swap-set-slippage"
             component={InputSlippageToleranceScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.slippageTolerance,
             }}
           />
@@ -138,7 +125,6 @@ export const TxHistoryNavigator = () => {
             name="swap-select-pool"
             component={SelectPoolScreen}
             options={{
-              ...defaultStackNavigationOptionsV2,
               title: strings.selectPool,
             }}
           />
@@ -357,7 +343,7 @@ const styles = StyleSheet.create({
 })
 
 const sendOptions = {
-  ...defaultStackNavigationOptionsV2,
+  ...defaultStackNavigationOptions,
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,

@@ -8,7 +8,7 @@ type Props = {
 }
 
 export const StatusBar = ({type}: Props) => {
-  const backgroundColor = type === 'dark' ? COLORS.BACKGROUND_BLUE : COLORS.WHITE
+  const backgroundColor = type === 'dark' ? COLORS.WHITE : COLORS.BACKGROUND_BLUE
 
   return <NativeStatusBar style={type} backgroundColor={backgroundColor} />
 }

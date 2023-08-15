@@ -36,11 +36,12 @@ export const BackButton = (props) => (
 
 // OPTIONS
 const WIDTH = Dimensions.get('window').width
-export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
+export const defaultStackNavigationOptions: StackNavigationOptions = {
   headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,
+    backgroundColor: '#fff',
   },
   headerTitleStyle: {
     fontSize: 16,
@@ -63,7 +64,7 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
   headerLeft: (props) => <BackButton {...props} />,
 }
 
-export const defaultStackNavigationOptions: StackNavigationOptions = {
+export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {
   headerStyle: {
     backgroundColor: COLORS.BACKGROUND_BLUE,
     elevation: 0,
@@ -75,6 +76,7 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
   headerLeftContainerStyle: {
     paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
   },
+  headerLeft: (props) => <BackButton color="#fff" {...props} />,
 }
 
 // ROUTES
@@ -91,6 +93,7 @@ export type WalletStackRoutes = {
   'nft-details-routes': NavigatorScreenParams<NftRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
+  'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
@@ -231,6 +234,11 @@ export type SettingsStackRoutes = {
     onSuccess: () => void | Promise<void>
   }
 }
+
+export type ToggleAnalyticsSettingsRoutes = {
+  settings: undefined
+}
+
 export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
 export type SendConfirmParams = {
@@ -253,9 +261,22 @@ export type VotingRegistrationRoutes = {
 }
 export type VotingRegistrationRouteNavigation = StackNavigationProp<VotingRegistrationRoutes>
 
+export type InititalizationRoutes = {
+  initial: undefined
+  'language-pick': undefined
+  'enable-login-with-pin': undefined
+  analytics: undefined
+  'terms-of-service-changed': undefined
+  'analytics-changed': undefined
+  'read-terms-of-service': undefined
+  'read-privacy-policy': undefined
+}
+export type InititalizationNavigation = StackNavigationProp<InititalizationRoutes>
+
 export type FirstRunRoutes = {
   'language-pick': undefined
   'accept-terms-of-service': undefined
+  'accept-privacy-policy': undefined
   'enable-login-with-pin': undefined
 }
 export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
@@ -280,6 +301,7 @@ export type AppRoutes = {
   'custom-pin-auth': undefined
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
+  'agreement-changed-notice': undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 
@@ -392,6 +414,15 @@ export const useWalletNavigation = () => {
     })
   }
 
+  const navigateToAnalyticsSettings = () => {
+    navigation.navigate('app-root', {
+      screen: 'toggle-analytics-settings',
+      params: {
+        screen: 'settings',
+      },
+    })
+  }
+
   return {
     navigation,
     resetToTxHistory,
@@ -400,5 +431,6 @@ export const useWalletNavigation = () => {
     navigateToTxHistory,
     navigateToNftGallery,
     navigateToAppSettings,
+    navigateToAnalyticsSettings,
   }
 }

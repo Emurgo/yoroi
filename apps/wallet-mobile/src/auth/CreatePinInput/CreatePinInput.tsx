@@ -74,15 +74,15 @@ const useStrings = () => {
 
 const messages = defineMessages({
   pinInputTitle: {
-    id: 'components.firstrun.custompinscreen.pinInputTitle',
+    id: 'components.initialization.custompinscreen.pinInputTitle',
     defaultMessage: '!!!Enter the PIN',
   },
   pinInputSubtitle: {
-    id: 'components.firstrun.custompinscreen.pinInputSubtitle',
+    id: 'components.initialization.custompinscreen.pinInputSubtitle',
     defaultMessage: '!!!Choose new PIN for quick access to wallet.',
   },
   pinInputConfirmationTitle: {
-    id: 'components.firstrun.custompinscreen.pinConfirmationTitle',
+    id: 'components.initialization.custompinscreen.pinConfirmationTitle',
     defaultMessage: '!!!Repeat PIN',
   },
 })

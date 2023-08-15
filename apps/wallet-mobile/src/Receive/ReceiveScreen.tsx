@@ -24,7 +24,7 @@ export const ReceiveScreen = () => {
 
   return (
     <View style={styles.root}>
-      <StatusBar type="light" />
+      <StatusBar type="dark" />
 
       <ScrollView>
         <Spacer height={24} />
