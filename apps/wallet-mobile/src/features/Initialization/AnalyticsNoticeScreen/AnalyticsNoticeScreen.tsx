@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {StyleSheet} from 'react-native'
+import {Linking, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Analytics, StatusBar} from '../../../components'
@@ -14,11 +14,15 @@ export const AnalyticsNoticeScreen = () => {
     navigateTo.enableLogingWithPin()
   }
 
+  const onReadMore = () => {
+    Linking.openURL('https://emurgohelpdesk.zendesk.com/hc/en-us/articles/7594394140303-What-s-user-insights-')
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar type="dark" />
 
-      <Analytics type="notice" onClose={onClose} />
+      <Analytics type="notice" onClose={onClose} onReadMore={onReadMore} />
     </SafeAreaView>
   )
 }
