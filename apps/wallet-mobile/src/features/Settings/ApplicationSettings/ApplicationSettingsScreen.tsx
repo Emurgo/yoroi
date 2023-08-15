@@ -87,13 +87,11 @@ export const ApplicationSettingsScreen = () => {
             onNavigate={() => settingsNavigation.navigate('privacy-policy')}
           />
 
-          {features.analytics && (
-            <NavigatedSettingsItem
-              icon={<Icon.Analytics {...iconProps} />}
-              label={strings.analytics}
-              onNavigate={() => walletNavigation.navigateToAnalyticsSettings()}
-            />
-          )}
+          <NavigatedSettingsItem
+            icon={<Icon.Analytics {...iconProps} />}
+            label={strings.analytics}
+            onNavigate={() => walletNavigation.navigateToAnalyticsSettings()}
+          />
         </SettingsSection>
 
         <Spacer height={24} />
