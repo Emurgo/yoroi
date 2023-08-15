@@ -142,12 +142,12 @@ const CommonContent = ({onReadMore, showLogo}: {onReadMore?: () => void; showLog
     <>
       <Spacer height={12} />
 
-      {showLogo ? (
+      {showLogo && (
         <>
           <YoroiLogo />
           <Spacer height={12} />
         </>
-      ) : null}
+      )}
 
       <AnalyticsImage />
 
