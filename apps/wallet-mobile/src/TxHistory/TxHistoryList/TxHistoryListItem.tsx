@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   positiveAmount: {
-    color: COLORS.POSITIVE_AMOUNT,
+    color: '#3154CB',
   },
   negativeAmount: {
     color: COLORS.BLACK,
