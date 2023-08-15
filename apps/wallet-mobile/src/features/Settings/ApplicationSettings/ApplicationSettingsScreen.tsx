@@ -5,7 +5,6 @@ import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer, StatusBar} from '../../../components'
-import {features} from '../../../features'
 import {useLanguage} from '../../../i18n'
 import {CONFIG} from '../../../legacy/config'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
