@@ -1,7 +1,7 @@
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import React from 'react'
-import {Dimensions, TouchableOpacity} from 'react-native'
+import {Dimensions, Platform, TouchableOpacity} from 'react-native'
 
 import {Icon} from './components'
 import {COLORS} from './theme'
@@ -62,6 +62,21 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
     paddingRight: 10,
   },
   headerLeft: (props) => <BackButton {...props} />,
+}
+
+export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {
+  headerStyle: {
+    backgroundColor: COLORS.BACKGROUND_BLUE,
+    elevation: 0,
+    shadowOpacity: 0,
+  },
+  headerTintColor: '#fff',
+  headerBackTitleVisible: false,
+  headerTitleAlign: 'center',
+  headerLeftContainerStyle: {
+    paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
+  },
+  headerLeft: (props) => <BackButton color="#fff" {...props} />,
 }
 
 // ROUTES
