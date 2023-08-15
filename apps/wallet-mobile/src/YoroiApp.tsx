@@ -39,7 +39,7 @@ if (Boolean(Config.DISABLE_LOGBOX)) LogBox.ignoreAllLogs()
 
 const queryClient = new QueryClient()
 
-const metricsManager = features.analytics ? makeMetricsManager() : mockMetricsManager()
+const metricsManager = makeMetricsManager()
 
 export const YoroiApp = () => {
   const migrated = useMigrations(storage)
