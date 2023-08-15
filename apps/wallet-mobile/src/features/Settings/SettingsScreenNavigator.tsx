@@ -8,12 +8,7 @@ import {ChangePinScreen} from '../../auth'
 import {EnableLoginWithPin} from '../../auth/EnableLoginWithPin'
 import {Boundary} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {
-  defaultStackNavigationOptions,
-  DEPRECATED_defaultStackNavigationOptions,
-  SettingsStackRoutes,
-  SettingsTabRoutes,
-} from '../../navigation'
+import {defaultStackNavigationOptions, SettingsStackRoutes, SettingsTabRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
@@ -111,7 +106,6 @@ export const SettingsScreenNavigator = () => {
       <Stack.Screen //
         name="change-custom-pin"
         options={{
-          ...DEPRECATED_defaultStackNavigationOptions,
           title: strings.changeCustomPinTitle,
         }}
         component={ChangePinScreenWrapper}
