@@ -166,7 +166,11 @@ export const TxDetails = () => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={() => openInExplorer(transaction, wallet.networkId)} title={strings.openInExplorer} shelleyTheme />
+        <Button
+          onPress={() => openInExplorer(transaction, wallet.networkId)}
+          title={strings.openInExplorer}
+          shelleyTheme
+        />
       </Actions>
 
       {!isEmptyString(addressDetail) && (
