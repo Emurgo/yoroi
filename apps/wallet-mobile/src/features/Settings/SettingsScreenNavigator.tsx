@@ -21,7 +21,7 @@ import {EnableLoginWithOsScreen} from './EnableLoginWithOs'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {TermsOfServiceScreen} from './TermsOfService'
 import {WalletSettingsScreen} from './WalletSettings'
-import {PrivacyPolicyScreen} from './PrivacyPolicy/PrivacyPolicyScreen'
+import {PrivacyPolicyScreen} from './PrivacyPolicy'
 
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
