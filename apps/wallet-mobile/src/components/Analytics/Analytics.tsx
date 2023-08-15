@@ -145,6 +145,7 @@ const CommonContent = ({onReadMore, showLogo}: {onReadMore?: () => void; showLog
       {showLogo && (
         <>
           <YoroiLogo />
+
           <Spacer height={12} />
         </>
       )}
