@@ -68,7 +68,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
                 testID="swapButton"
                 disabled={disabled}
               >
-                <Icon.Swap />
+                <Icon.Swap color={ACTION_PROPS.color} />
               </TouchableOpacity>
 
               <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
