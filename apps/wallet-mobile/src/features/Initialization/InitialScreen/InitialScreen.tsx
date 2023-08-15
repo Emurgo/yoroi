@@ -108,23 +108,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#242838',
   },
-  input: Platform.select({
-    android: {
-      color: '#6B7384',
-      fontWeight: '400',
-      paddingLeft: 8,
-      justifyContent: 'center',
-      borderColor: '#A7AFC0',
-      borderWidth: 1,
-      borderRadius: 10,
-    },
-    default: {
-      color: '#6B7384',
-      fontWeight: '400',
-      paddingLeft: 8,
-      justifyContent: 'center',
-    },
-  }),
+  input: {
+    color: '#6B7384',
+    fontWeight: '400',
+    paddingLeft: 8,
+    justifyContent: 'center',
+  },
   checkboxText: {
     fontFamily: 'Rubik',
     fontSize: 16,
