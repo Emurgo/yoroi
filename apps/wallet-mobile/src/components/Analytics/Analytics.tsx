@@ -56,7 +56,7 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
             setContentHeight(height + BOTTOM_BUTTON_ROW_HEIGHT)
           }}
         >
-          <CommonContent onReadMore={onReadMore} />
+          <CommonContent onReadMore={onReadMore} showLogo />
 
           <Button // skip button
             block
@@ -136,15 +136,19 @@ const Settings = ({onReadMore}: {onReadMore?: () => void}) => {
   )
 }
 
-const CommonContent = ({onReadMore}: {onReadMore?: () => void}) => {
+const CommonContent = ({onReadMore, showLogo}: {onReadMore?: () => void; showLogo?: boolean}) => {
   const strings = useStrings()
   return (
     <>
       <Spacer height={12} />
 
-      <YoroiLogo />
+      {showLogo && (
+        <>
+          <YoroiLogo />
 
-      <Spacer height={12} />
+          <Spacer height={12} />
+        </>
+      )}
 
       <AnalyticsImage />
 
