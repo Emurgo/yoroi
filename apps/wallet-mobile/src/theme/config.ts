@@ -57,7 +57,7 @@ export const COLORS = {
 
 // TODO: use lowercase for key names. Eg navigationActive
 export const defaultColors = {
-  NAVIGATION_ACTIVE: COLORS.LIGHT_POSITIVE_GREEN,
+  NAVIGATION_ACTIVE: '#3154CB',
   NAVIGATION_INACTIVE: COLORS.SECONDARY_TEXT,
   BACKGROUND: COLORS.WHITE,
   backgroundAlert: COLORS.BACKGROUND_LIGHT_RED, // follow this style

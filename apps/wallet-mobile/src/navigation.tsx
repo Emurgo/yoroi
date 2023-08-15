@@ -209,6 +209,7 @@ export type SettingsStackRoutes = {
   'disable-easy-confirmation': undefined
   'change-password': undefined
   'change-custom-pin': undefined
+  'privacy-policy': undefined
   'enable-login-with-pin': {
     onSuccess: () => void | Promise<void>
   }

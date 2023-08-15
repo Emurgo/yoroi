@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     height: 42,
     width: 42,
     borderRadius: 20,
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
+    backgroundColor: '#3154CB',
   },
   buyButton: {
     textAlignVertical: 'center',

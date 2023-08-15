@@ -123,6 +123,7 @@ const getStories = () => {
     "./src/features/Settings/Currency/ChangeCurrencyScreen.stories.tsx": require("../src/features/Settings/Currency/ChangeCurrencyScreen.stories.tsx"),
     "./src/features/Settings/EasyConfirmation/EasyConfirmationScreen.stories.tsx": require("../src/features/Settings/EasyConfirmation/EasyConfirmationScreen.stories.tsx"),
     "./src/features/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.stories.tsx": require("../src/features/Settings/EnableLoginWithOs/EnableLoginWithOsScreen.stories.tsx"),
+    "./src/features/Settings/PrivacyPolicy/PrivacyPolicyScreen.stories.tsx": require("../src/features/Settings/PrivacyPolicy/PrivacyPolicyScreen.stories.tsx"),
     "./src/features/Settings/RemoveWallet/RemoveWalletScreen.stories.tsx": require("../src/features/Settings/RemoveWallet/RemoveWalletScreen.stories.tsx"),
     "./src/features/Settings/TermsOfService/TermsOfServiceScreen.stories.tsx": require("../src/features/Settings/TermsOfService/TermsOfServiceScreen.stories.tsx"),
     "./src/features/Settings/WalletSettings/WalletSettingsScreen.stories.tsx": require("../src/features/Settings/WalletSettings/WalletSettingsScreen.stories.tsx"),

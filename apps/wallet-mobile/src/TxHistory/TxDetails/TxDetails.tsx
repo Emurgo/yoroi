@@ -166,7 +166,11 @@ export const TxDetails = () => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={() => openInExplorer(transaction, wallet.networkId)} title={strings.openInExplorer} />
+        <Button
+          onPress={() => openInExplorer(transaction, wallet.networkId)}
+          title={strings.openInExplorer}
+          shelleyTheme
+        />
       </Actions>
 
       {!isEmptyString(addressDetail) && (
@@ -429,7 +433,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   positiveAmount: {
-    color: COLORS.POSITIVE_AMOUNT,
+    color: '#3154CB',
     fontWeight: '500',
   },
   negativeAmount: {

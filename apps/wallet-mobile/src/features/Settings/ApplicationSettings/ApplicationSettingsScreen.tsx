@@ -81,6 +81,12 @@ export const ApplicationSettingsScreen = () => {
             onNavigate={() => settingsNavigation.navigate('terms-of-use')}
           />
 
+          <NavigatedSettingsItem
+            icon={<Icon.TermsOfUse {...iconProps} />}
+            label={strings.privacyPolicy}
+            onNavigate={() => settingsNavigation.navigate('privacy-policy')}
+          />
+
           {features.analytics && (
             <NavigatedSettingsItem
               icon={<Icon.Analytics {...iconProps} />}
@@ -196,6 +202,7 @@ const useStrings = () => {
     crashReporting: intl.formatMessage(messages.crashReporting),
     crashReportingInfo: intl.formatMessage(messages.crashReportingInfo),
     analytics: intl.formatMessage(messages.analytics),
+    privacyPolicy: intl.formatMessage(messages.privacyPolicy),
   }
 }
 
@@ -255,6 +262,10 @@ const messages = defineMessages({
   analytics: {
     id: 'components.settings.applicationsettingsscreen.analytics',
     defaultMessage: '!!!Analytics',
+  },
+  privacyPolicy: {
+    id: 'components.settings.applicationsettingsscreen.privacyPolicy',
+    defaultMessage: '!!!Privacy Policy',
   },
 })
 

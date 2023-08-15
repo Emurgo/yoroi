@@ -49,8 +49,8 @@ const colorsMap: Record<ThemeStatus, {background: string; icon: string}> = {
     icon: '#6B7384',
   },
   DIRECT_CREDIT: {
-    background: 'rgba(23, 209, 170, 0.1)',
-    icon: '#17D1AA',
+    background: 'rgba(48, 84, 203, 0.1)',
+    icon: '#3154CB',
   },
 }
 
