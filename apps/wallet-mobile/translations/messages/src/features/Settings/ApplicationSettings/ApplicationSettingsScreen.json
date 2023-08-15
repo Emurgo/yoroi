@@ -4,14 +4,14 @@
     "defaultMessage": "!!!General",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 210,
+      "line": 207,
       "column": 11,
-      "index": 7195
+      "index": 7094
     },
     "end": {
-      "line": 213,
+      "line": 210,
       "column": 3,
-      "index": 7305
+      "index": 7204
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Security & Reporting",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 214,
+      "line": 211,
       "column": 21,
-      "index": 7328
+      "index": 7227
     },
     "end": {
-      "line": 217,
+      "line": 214,
       "column": 3,
-      "index": 7461
+      "index": 7360
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Language",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 218,
+      "line": 215,
       "column": 18,
-      "index": 7481
+      "index": 7380
     },
     "end": {
-      "line": 221,
+      "line": 218,
       "column": 3,
-      "index": 7593
+      "index": 7492
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Fiat Currency",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 222,
+      "line": 219,
       "column": 22,
-      "index": 7617
+      "index": 7516
     },
     "end": {
-      "line": 225,
+      "line": 222,
       "column": 3,
-      "index": 7738
+      "index": 7637
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!About",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 226,
+      "line": 223,
       "column": 9,
-      "index": 7749
+      "index": 7648
     },
     "end": {
-      "line": 229,
+      "line": 226,
       "column": 3,
-      "index": 7849
+      "index": 7748
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Terms of Service Agreement",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 230,
+      "line": 227,
       "column": 18,
-      "index": 7869
+      "index": 7768
     },
     "end": {
-      "line": 233,
+      "line": 230,
       "column": 3,
-      "index": 7996
+      "index": 7895
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Change PIN",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 234,
+      "line": 231,
       "column": 13,
-      "index": 8011
+      "index": 7910
     },
     "end": {
-      "line": 237,
+      "line": 234,
       "column": 3,
-      "index": 8120
+      "index": 8019
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Hide balance",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 238,
+      "line": 235,
       "column": 15,
-      "index": 8137
+      "index": 8036
     },
     "end": {
-      "line": 241,
+      "line": 238,
       "column": 3,
-      "index": 8250
+      "index": 8149
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!This function will be applied to all wallets in your app",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 242,
+      "line": 239,
       "column": 19,
-      "index": 8271
+      "index": 8170
     },
     "end": {
-      "line": 245,
+      "line": 242,
       "column": 3,
-      "index": 8432
+      "index": 8331
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Sign in with your biometrics",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 246,
+      "line": 243,
       "column": 20,
-      "index": 8454
+      "index": 8353
     },
     "end": {
-      "line": 249,
+      "line": 246,
       "column": 3,
-      "index": 8588
+      "index": 8487
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Changes to this option will be reflected after restarting the application",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 250,
+      "line": 247,
       "column": 24,
-      "index": 8614
+      "index": 8513
     },
     "end": {
-      "line": 253,
+      "line": 250,
       "column": 3,
-      "index": 8797
+      "index": 8696
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Send crash report to Emurgo",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 254,
+      "line": 251,
       "column": 18,
-      "index": 8817
+      "index": 8716
     },
     "end": {
-      "line": 257,
+      "line": 254,
       "column": 3,
-      "index": 8948
+      "index": 8847
     }
   },
   {
@@ -184,14 +184,14 @@
     "defaultMessage": "!!!Changes to this option will be reflected after restarting the application",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 258,
+      "line": 255,
       "column": 22,
-      "index": 8972
+      "index": 8871
     },
     "end": {
-      "line": 261,
+      "line": 258,
       "column": 3,
-      "index": 9153
+      "index": 9052
     }
   },
   {
@@ -199,14 +199,14 @@
     "defaultMessage": "!!!Analytics",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 262,
+      "line": 259,
       "column": 13,
-      "index": 9168
+      "index": 9067
     },
     "end": {
-      "line": 265,
+      "line": 262,
       "column": 3,
-      "index": 9276
+      "index": 9175
     }
   },
   {
@@ -214,14 +214,14 @@
     "defaultMessage": "!!!Privacy Policy",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 266,
+      "line": 263,
       "column": 17,
-      "index": 9295
+      "index": 9194
     },
     "end": {
-      "line": 269,
+      "line": 266,
       "column": 3,
-      "index": 9412
+      "index": 9311
     }
   }
 ]
