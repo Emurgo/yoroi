@@ -1,7 +1,9 @@
+import {createStackNavigator} from '@react-navigation/stack'
+import React from 'react'
+import {defineMessages, useIntl} from 'react-intl'
+
 import {defaultStackNavigationOptions, ToggleAnalyticsSettingsRoutes} from '../../navigation'
 import {ToggleAnalyticsSettingsScreen} from './ToggleAnalyticsSettingsScreen'
-import {defineMessages, useIntl} from 'react-intl'
-import {createStackNavigator} from '@react-navigation/stack'
 
 const Stack = createStackNavigator<ToggleAnalyticsSettingsRoutes>()
 

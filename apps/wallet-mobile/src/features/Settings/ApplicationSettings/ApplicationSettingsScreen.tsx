@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
@@ -14,7 +15,6 @@ import {useCrashReports} from '../../../yoroi-wallets/hooks'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
-import {useNavigation} from '@react-navigation/native'
 
 const iconProps = {
   color: lightPalette.gray['600'],
