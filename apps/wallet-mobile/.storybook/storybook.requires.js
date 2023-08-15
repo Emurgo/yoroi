@@ -136,6 +136,7 @@ const getStories = () => {
     "./src/features/Swap/useCases/TokenSwap/AddTokens/SelectTokenFromListScreen.stories.tsx": require("../src/features/Swap/useCases/TokenSwap/AddTokens/SelectTokenFromListScreen.stories.tsx"),
     "./src/features/Swap/useCases/TokenSwap/AddTokens/SelectTokenToListScreen.stories.tsx": require("../src/features/Swap/useCases/TokenSwap/AddTokens/SelectTokenToListScreen.stories.tsx"),
     "./src/features/Swap/useCases/TokenSwap/SwapTokensView/StartSwapTokensScreen.stories.tsx": require("../src/features/Swap/useCases/TokenSwap/SwapTokensView/StartSwapTokensScreen.stories.tsx"),
+    "./src/features/ToggleAnalyticsSettings/ToggleAnalyticsSettings.stories.tsx": require("../src/features/ToggleAnalyticsSettings/ToggleAnalyticsSettings.stories.tsx"),
     "./src/HW/Instructions/Instructions.stories.tsx": require("../src/HW/Instructions/Instructions.stories.tsx"),
     "./src/HW/LedgerConnect/DeviceItem/DeviceItem.stories.tsx": require("../src/HW/LedgerConnect/DeviceItem/DeviceItem.stories.tsx"),
     "./src/HW/LedgerConnect/LedgerConnect.stories.tsx": require("../src/HW/LedgerConnect/LedgerConnect.stories.tsx"),

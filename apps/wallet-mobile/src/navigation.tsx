@@ -93,6 +93,7 @@ export type WalletStackRoutes = {
   'nft-details-routes': NavigatorScreenParams<NftRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
+  'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
@@ -233,6 +234,11 @@ export type SettingsStackRoutes = {
     onSuccess: () => void | Promise<void>
   }
 }
+
+export type ToggleAnalyticsSettingsRoutes = {
+  settings: undefined
+}
+
 export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
 export type SendConfirmParams = {
@@ -408,6 +414,15 @@ export const useWalletNavigation = () => {
     })
   }
 
+  const navigateToAnalyticsSettings = () => {
+    navigation.navigate('app-root', {
+      screen: 'toggle-analytics-settings',
+      params: {
+        screen: 'settings',
+      },
+    })
+  }
+
   return {
     navigation,
     resetToTxHistory,
@@ -416,5 +431,6 @@ export const useWalletNavigation = () => {
     navigateToTxHistory,
     navigateToNftGallery,
     navigateToAppSettings,
+    navigateToAnalyticsSettings,
   }
 }

@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
@@ -7,7 +8,7 @@ import {Icon, Spacer, StatusBar} from '../../../components'
 import {features} from '../../../features'
 import {useLanguage} from '../../../i18n'
 import {CONFIG} from '../../../legacy/config'
-import {useWalletNavigation} from '../../../navigation'
+import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
 import {lightPalette} from '../../../theme'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
@@ -27,18 +28,19 @@ export const ApplicationSettingsScreen = () => {
 
   const {isTogglePrivacyModeLoading} = usePrivacyMode()
 
-  const {navigation} = useWalletNavigation()
+  const walletNavigation = useWalletNavigation()
   const {currency} = useCurrencyContext()
+  const settingsNavigation = useNavigation<SettingsRouteNavigation>()
 
   const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
-  const {authWithOs} = useAuthWithOs({onSuccess: () => navigation.navigate('enable-login-with-pin')})
+  const {authWithOs} = useAuthWithOs({onSuccess: () => walletNavigation.navigation.navigate('enable-login-with-pin')})
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
       authWithOs()
     } else {
-      navigation.navigate('app-root', {
+      walletNavigation.navigation.navigate('app-root', {
         screen: 'settings',
         params: {
           screen: 'enable-login-with-os',
@@ -56,7 +58,7 @@ export const ApplicationSettingsScreen = () => {
           <NavigatedSettingsItem
             icon={<Icon.Globe {...iconProps} />}
             label={strings.selectLanguage}
-            navigateTo="change-language"
+            onNavigate={() => settingsNavigation.navigate('change-language')}
             selected={language.label}
           />
 
@@ -64,22 +66,26 @@ export const ApplicationSettingsScreen = () => {
             icon={<Icon.Coins {...iconProps} />}
             label={strings.selectFiatCurrency}
             selected={currency}
-            navigateTo="change-currency"
+            onNavigate={() => settingsNavigation.navigate('change-currency')}
           />
 
-          <NavigatedSettingsItem icon={<Icon.Info {...iconProps} />} label={strings.about} navigateTo="about" />
+          <NavigatedSettingsItem
+            icon={<Icon.Info {...iconProps} />}
+            label={strings.about}
+            onNavigate={() => settingsNavigation.navigate('about')}
+          />
 
           <NavigatedSettingsItem
             icon={<Icon.TermsOfUse {...iconProps} />}
             label={strings.termsOfservice}
-            navigateTo="terms-of-use"
+            onNavigate={() => settingsNavigation.navigate('terms-of-use')}
           />
 
           {features.analytics && (
             <NavigatedSettingsItem
               icon={<Icon.Analytics {...iconProps} />}
               label={strings.analytics}
-              navigateTo="analytics"
+              onNavigate={() => walletNavigation.navigateToAnalyticsSettings()}
             />
           )}
         </SettingsSection>
@@ -90,7 +96,7 @@ export const ApplicationSettingsScreen = () => {
           <NavigatedSettingsItem
             icon={<Icon.Pin {...iconProps} />}
             label={strings.changePin}
-            navigateTo="change-custom-pin"
+            onNavigate={() => settingsNavigation.navigate('change-custom-pin')}
           />
 
           <SettingsItem
