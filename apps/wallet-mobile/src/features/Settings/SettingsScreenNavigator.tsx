@@ -21,6 +21,7 @@ import {EnableLoginWithOsScreen} from './EnableLoginWithOs'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {TermsOfServiceScreen} from './TermsOfService'
 import {WalletSettingsScreen} from './WalletSettings'
+import {PrivacyPolicyScreen} from './PrivacyPolicy/PrivacyPolicyScreen'
 
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
@@ -57,6 +58,12 @@ export const SettingsScreenNavigator = () => {
         name="terms-of-use"
         component={TermsOfServiceScreen}
         options={{title: strings.termsOfServiceTitle}}
+      />
+
+      <Stack.Screen
+        name="privacy-policy"
+        component={PrivacyPolicyScreen}
+        options={{title: strings.privacyPolicyTitle}}
       />
 
       <Stack.Screen //
@@ -225,6 +232,10 @@ const messages = defineMessages({
     id: 'components.settings.applicationsettingsscreen.about',
     defaultMessage: '!!!About',
   },
+  privacyPolicyTitle: {
+    id: 'components.settings.privacypolicyscreen.title',
+    defaultMessage: '!!!Privacy Policy',
+  },
 })
 
 const useStrings = () => {
@@ -247,5 +258,6 @@ const useStrings = () => {
     currency: intl.formatMessage(globalMessages.currency),
     aboutTitle: intl.formatMessage(messages.aboutTitle),
     appSettingsTitle: intl.formatMessage(messages.appSettingsTitle),
+    privacyPolicyTitle: intl.formatMessage(messages.privacyPolicyTitle),
   }
 }
