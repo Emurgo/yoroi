@@ -27,7 +27,7 @@ export const WalletInitScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <StatusBar type="dark" />
+      <StatusBar type="light" />
 
       <ScreenBackground>
         <View style={styles.container}>
