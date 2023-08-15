@@ -179,7 +179,7 @@ const EraseButton = (props: TouchableOpacityProps) => (
 )
 
 const BackButton = (props: TouchableOpacityProps) => (
-  <TouchableOpacity {...props}>
+  <TouchableOpacity testID="buttonBack" {...props}>
     <Icon.Chevron direction="left" color="#000000" />
   </TouchableOpacity>
 )
