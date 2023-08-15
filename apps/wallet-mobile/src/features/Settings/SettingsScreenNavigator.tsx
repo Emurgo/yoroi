@@ -18,10 +18,10 @@ import {ChangeWalletName} from './ChangeWalletName'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
 import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
 import {EnableLoginWithOsScreen} from './EnableLoginWithOs'
+import {PrivacyPolicyScreen} from './PrivacyPolicy'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {TermsOfServiceScreen} from './TermsOfService'
 import {WalletSettingsScreen} from './WalletSettings'
-import {PrivacyPolicyScreen} from './PrivacyPolicy'
 
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {

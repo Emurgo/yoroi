@@ -1,9 +1,10 @@
-import {useLanguage} from '../../../i18n'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {StatusBar} from '../../../components'
-import {ScrollView, StyleSheet} from 'react-native'
-import {PrivacyPolicy} from '../../../Legal'
 import React from 'react'
+import {ScrollView, StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
+
+import {StatusBar} from '../../../components'
+import {useLanguage} from '../../../i18n'
+import {PrivacyPolicy} from '../../../Legal'
 
 export const PrivacyPolicyScreen = () => {
   const {languageCode} = useLanguage()
