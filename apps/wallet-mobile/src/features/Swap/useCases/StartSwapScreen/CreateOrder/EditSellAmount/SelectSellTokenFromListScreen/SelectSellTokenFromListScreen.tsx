@@ -73,14 +73,16 @@ const TokenList = () => {
 type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
-  const {sellAmountChanged} = useSwap()
+  const {sellAmountChanged, createOrder} = useSwap()
   const navigateTo = useNavigateTo()
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
+  // use case if the user has changed the current selected token to sell it's updated to 0
+  const quantity = createOrder.amounts.sell.tokenId === tokenInfo.id ? createOrder.amounts.sell.quantity : '0'
 
   const onSelect = () => {
-    sellAmountChanged({tokenId: tokenInfo.id, quantity: balanceAvailable})
+    sellAmountChanged({tokenId: tokenInfo.id, quantity})
     navigateTo.startSwap()
     closeSearch()
   }
