@@ -669,5 +669,7 @@
   "termsOfService.tosAgreement": "Acordo de Termos de Serviço",
   "toggleAnalyticsSettings.analyticsTitle": "Percepções do Usuário",
   "termsOfService.privacyPolicyTitle": "Política de Privacidade",
-  "analytics.privacyPolicy": "Política de Privacidade"
+  "analytics.privacyPolicy": "Política de Privacidade",
+  "analytics.privacyNotice": "Privacy Notice",
+  "analytics.tosAnd": "and"
 }
