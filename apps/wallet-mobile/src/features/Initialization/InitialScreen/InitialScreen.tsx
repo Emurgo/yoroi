@@ -88,7 +88,7 @@ const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <TextInput style={styles.input} value={language.label} pointerEvents="none" />
+      <TextInput style={styles.input} value={language.label} pointerEvents="none" editable={false} />
 
       <View style={styles.inputIcon}>
         <Icon.Chevron size={34} direction="down" />
