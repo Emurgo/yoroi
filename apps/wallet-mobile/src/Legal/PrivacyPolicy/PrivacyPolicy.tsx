@@ -5,7 +5,6 @@ import {useQuery} from 'react-query'
 
 import {Spacer} from '../../components'
 import {LanguageCode} from '../../i18n/languages'
-import {lightPalette} from '../../theme'
 import {loadPrivacyPolicy} from './loadPrivacyPolicy'
 
 export const usePrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {

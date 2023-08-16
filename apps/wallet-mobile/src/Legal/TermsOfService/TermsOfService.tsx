@@ -4,7 +4,6 @@ import Markdown from 'react-native-markdown-display'
 import {useQuery} from 'react-query'
 
 import {Spacer} from '../../components'
-import {lightPalette} from '../../theme'
 import {loadTOS} from './loadTos'
 
 export const useTos = ({languageCode}: {languageCode: string}) => {
