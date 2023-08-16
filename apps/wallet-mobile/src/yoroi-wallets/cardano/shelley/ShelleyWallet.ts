@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Balance} from '@yoroi/types'
+import {App, Balance} from '@yoroi/types'
+import {parseSafe} from '@yoroi/wallets'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -11,7 +12,7 @@ import LocalizableError from '../../../i18n/LocalizableError'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
-import {makeWalletEncryptedStorage, WalletEncryptedStorage, YoroiStorage} from '../../storage'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
 import {Keychain} from '../../storage/Keychain'
 import type {
   AccountStateResponse,
@@ -29,7 +30,6 @@ import type {
 } from '../../types'
 import {StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
 import {Quantities} from '../../utils'
-import {parseSafe} from '../../utils/parsing'
 import {validatePassword} from '../../utils/validators'
 import {WalletMeta} from '../../walletManager'
 import {Cardano, CardanoMobile} from '../../wallets'
@@ -168,7 +168,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     isEasyConfirmationEnabled = false
 
     private _utxos: RawUtxo[]
-    private readonly storage: YoroiStorage
+    private readonly storage: App.Storage
     private readonly utxoManager: UtxoManager
     private readonly transactionManager: TransactionManager
     private readonly memosManager: MemosManager
@@ -182,7 +182,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       password,
     }: {
       id: string
-      storage: YoroiStorage
+      storage: App.Storage
       mnemonic: string
       password: string
     }): Promise<YoroiWallet> {
@@ -216,7 +216,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       hwDeviceInfo: HWDeviceInfo | null
       id: string
       isReadOnly: boolean
-      storage: YoroiStorage
+      storage: App.Storage
     }): Promise<YoroiWallet> {
       const {internalChain, externalChain} = await addressChains.create({accountPubKeyHex})
 
@@ -232,7 +232,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       })
     }
 
-    static async restore({walletMeta, storage}: {storage: YoroiStorage; walletMeta: WalletMeta}) {
+    static async restore({walletMeta, storage}: {storage: App.Storage; walletMeta: WalletMeta}) {
       const data = await storage.getItem('data', parseWalletJSON)
       if (!data) throw new Error('Cannot read saved data')
       Logger.debug('openWallet::data', data)
@@ -269,7 +269,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       accountPubKeyHex: string
       hwDeviceInfo: HWDeviceInfo | null
       id: string
-      storage: YoroiStorage
+      storage: App.Storage
       internalChain: AddressChain
       externalChain: AddressChain
       isReadOnly: boolean
@@ -322,7 +322,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       transactionManager,
       memosManager,
     }: {
-      storage: YoroiStorage
+      storage: App.Storage
       id: string
       utxoManager: UtxoManager
       hwDeviceInfo: HWDeviceInfo | null

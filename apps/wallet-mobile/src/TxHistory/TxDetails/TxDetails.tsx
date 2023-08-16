@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation, useRoute} from '@react-navigation/native'
+import {isNonNullable} from '@yoroi/wallets'
 import {BigNumber} from 'bignumber.js'
 import {fromPairs} from 'lodash'
 import React, {useEffect, useState} from 'react'
@@ -20,7 +21,7 @@ import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {CardanoTypes, YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTipStatus, useTransactionInfos} from '../../yoroi-wallets/hooks'
 import {NetworkId, TransactionInfo} from '../../yoroi-wallets/types'
-import {asQuantity, isNonNullable} from '../../yoroi-wallets/utils'
+import {asQuantity} from '../../yoroi-wallets/utils'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
 

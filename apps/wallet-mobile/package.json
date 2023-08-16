@@ -38,6 +38,9 @@
     "release:ios:nightly": "bundle exec fastlane ios release --env nightly",
     "prerelease:ios:production": "bundle install && ./scripts/update-commit.sh && npx pod-install",
     "release:ios:production": "bundle exec fastlane ios release --env production",
+    "reset:android": "cd android && ./gradlew clean && cd ..",
+    "reset:ios": "yarn pod-install",
+    "reset": "yarn reset:android && yarn reset:ios",
     "run:android:dev:debug": "ENVFILE=.env react-native run-android --mode=devDebug --appIdSuffix=dev --verbose",
     "run:android:nightly:debug": "ENVFILE=.env.nightly react-native run-android --mode=nightlyDebug --appIdSuffix=nightly --verbose",
     "run:android:nightly:release": "ENVFILE=.env.nightly react-native run-android --mode=nightlyRelease --appIdSuffix=nightly --verbose",
@@ -123,6 +126,7 @@
     "@shopify/flash-list": "^1.4.1",
     "@unstoppabledomains/resolution": "6.0.3",
     "@yoroi/swap": "1.0.0",
+    "@yoroi/wallets": "1.0.0",
     "add": "2.0.6",
     "assert": "^2.0.0",
     "base-64": "^1.0.0",
@@ -180,7 +184,7 @@
     "util": "0.12.4",
     "uuid": "^3.3.2",
     "vm-browserify": "1.1.2",
-    "zod": "^3.21.4"
+    "zod": "^3.22.1"
   },
   "devDependencies": {
     "@amplitude/ampli": "^1.32.0",
@@ -264,6 +268,7 @@
     "lint-staged": "^13.2.2",
     "metro-react-native-babel-preset": "0.73.9",
     "node-fetch": "<3",
+    "pod-install": "^0.1.38",
     "prettier": "^2.4.1",
     "prettier-plugin-packagejson": "^2.2.11",
     "prettylint": "^1.0.0",

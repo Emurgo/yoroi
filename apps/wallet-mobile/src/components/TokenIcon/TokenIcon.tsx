@@ -1,3 +1,4 @@
+import {isString} from '@yoroi/wallets'
 import React from 'react'
 import {Image, StyleSheet, View} from 'react-native'
 
@@ -5,7 +6,6 @@ import {features} from '../../features'
 import {COLORS} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useNft, useNftImageModerated, useTokenInfo} from '../../yoroi-wallets/hooks'
-import {isString} from '../../yoroi-wallets/utils'
 import {Boundary} from '../Boundary'
 import {Icon} from '../Icon'
 import {ModeratedNftIcon} from './ModeratedNftIcon'

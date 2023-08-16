@@ -1,12 +1,12 @@
 import {initUtxo, UtxoModels, UtxoStorage} from '@emurgo/yoroi-lib'
 import {Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from '@emurgo/yoroi-lib/dist/utxo/models'
+import {App} from '@yoroi/types'
+import {parseSafe} from '@yoroi/wallets'
 import {parseInt} from 'lodash'
 
-import {YoroiStorage} from '../../storage'
 import {RawUtxo} from '../../types'
-import {parseSafe} from '../../utils/parsing'
 
-export const makeUtxoManager = async ({storage, apiUrl}: {storage: YoroiStorage; apiUrl: string}) => {
+export const makeUtxoManager = async ({storage, apiUrl}: {storage: App.Storage; apiUrl: string}) => {
   const managerStorage = makeUtxoManagerStorage(storage)
   const serviceStorage = makeUtxoStorage(storage.join('utxos/'))
   const service = initUtxo(serviceStorage, `${apiUrl}/`)
@@ -40,7 +40,7 @@ export const makeUtxoManager = async ({storage, apiUrl}: {storage: YoroiStorage;
   } as const
 }
 
-export const makeUtxoManagerStorage = (storage: YoroiStorage) => {
+export const makeUtxoManagerStorage = (storage: App.Storage) => {
   const addrCounterKey = 'addrCounter'
 
   return {
@@ -66,7 +66,7 @@ export type UtxoManager = Awaited<ReturnType<typeof makeUtxoManager>>
 const diffPath = 'diff'
 const safePointPath = 'safe-point'
 
-export const makeUtxoStorage = (storage: YoroiStorage) => {
+export const makeUtxoStorage = (storage: App.Storage) => {
   const getUtxoDiffToBestBlock = () => storage.getItem(diffPath, parseDiff).then((diff) => diff ?? [])
   const setUtxoDiffToBestBlock = (utxoDiffToBestBlock: UtxoDiffToBestBlock[]) =>
     storage.setItem(diffPath, utxoDiffToBestBlock)

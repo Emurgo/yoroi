@@ -1,13 +1,13 @@
 import {Balance} from '@yoroi/types'
+import {createTypeGuardFromSchema, isArrayOfType, isString} from '@yoroi/wallets'
 import {z} from 'zod'
 
 import {features} from '../../features'
 import {getAssetFingerprint} from '../../legacy/format'
-import {createTypeGuardFromSchema, isArrayOfType, isString} from '../utils'
 import {utf8ToHex} from './api/utils'
-
 export const convertNft = (options: {
-  metadata?: unknown
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  metadata?: any
   storageUrl: string
   policyId: string
   shortName: string

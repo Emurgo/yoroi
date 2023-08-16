@@ -1,8 +1,7 @@
-import {Balance} from '@yoroi/types'
+import {App, Balance} from '@yoroi/types'
 
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
-import {YoroiStorage} from '../storage'
 import {WalletMeta} from '../walletManager'
 
 export type YoroiUnsignedTx = YoroiTxInfo & {
@@ -68,7 +67,7 @@ export type WalletFactory = {
     password,
   }: {
     id: string
-    storage: YoroiStorage
+    storage: App.Storage
     mnemonic: string
     password: string
   }): Promise<YoroiWallet>
@@ -84,8 +83,8 @@ export type WalletFactory = {
     hwDeviceInfo: HWDeviceInfo | null
     id: string
     isReadOnly: boolean
-    storage: YoroiStorage
+    storage: App.Storage
   }): Promise<YoroiWallet>
 
-  restore({walletMeta, storage}: {storage: YoroiStorage; walletMeta: WalletMeta}): Promise<YoroiWallet>
+  restore({walletMeta, storage}: {storage: App.Storage; walletMeta: WalletMeta}): Promise<YoroiWallet>
 }

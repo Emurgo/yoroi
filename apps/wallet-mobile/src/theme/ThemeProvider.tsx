@@ -1,9 +1,8 @@
+import {parseSafe, useStorage} from '@yoroi/wallets'
 import React from 'react'
 import {useColorScheme} from 'react-native'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
-import {useStorage} from '../yoroi-wallets/storage'
-import {parseSafe} from '../yoroi-wallets/utils'
 import {darkTheme} from './darkTheme'
 import {lightTheme} from './lightTheme'
 import {Theme} from './types'

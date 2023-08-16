@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {App} from '@yoroi/types'
+import {parseSafe, rootStorage} from '@yoroi/wallets'
 import ExtendableError from 'es6-error'
 import uuid from 'uuid'
 
@@ -7,10 +9,9 @@ import {CardanoTypes, isYoroiWallet, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
 import {Logger} from '../logging'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../migrations/walletMeta'
-import {makeWalletEncryptedStorage, storage, YoroiStorage} from '../storage'
+import {makeWalletEncryptedStorage} from '../storage'
 import {Keychain} from '../storage/Keychain'
 import {NetworkId, WalletImplementationId} from '../types'
-import {parseSafe} from '../utils'
 
 export class WalletClosed extends ExtendableError {}
 
@@ -34,10 +35,10 @@ export type WalletManagerSubscription = (event: WalletManagerEvent) => void
 
 export class WalletManager {
   private subscriptions: Array<WalletManagerSubscription> = []
-  storage: YoroiStorage
+  storage: App.Storage
 
   constructor() {
-    this.storage = storage.join('wallet/')
+    this.storage = rootStorage.join('wallet/')
   }
 
   async listWallets() {

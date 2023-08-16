@@ -17,7 +17,12 @@ import {
 import {SwapPool} from './swap/pool'
 import {SwapStorage} from './swap/storage'
 import {SwapManager} from './swap/manager'
+import {AppStorage, AppStorageFolderName} from './app/storage'
 
+export namespace App {
+  export interface Storage extends AppStorage {}
+  export type StorageFolderName = AppStorageFolderName
+}
 export namespace Swap {
   export type CreateOrderData = SwapCreateOrderData
   export type CreateOrderResponse = SwapCreateOrderResponse

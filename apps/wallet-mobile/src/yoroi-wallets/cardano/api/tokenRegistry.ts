@@ -1,9 +1,9 @@
 import {Balance} from '@yoroi/types'
+import {createTypeGuardFromSchema} from '@yoroi/wallets'
 import {z} from 'zod'
 
 import {promiseAny} from '../../../utils'
 import {BackendConfig} from '../../types'
-import {createTypeGuardFromSchema} from '../../utils'
 import {checkedFetch} from './fetch'
 import {getNFT} from './metadata'
 import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'

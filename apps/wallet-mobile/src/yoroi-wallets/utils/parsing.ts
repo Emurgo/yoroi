@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
-import {z} from 'zod'
 
 import {isHaskellShelleyNetwork, NETWORKS} from '../cardano/networks'
 import {Token} from '../types'
@@ -23,12 +22,6 @@ export class InvalidAssetAmount extends ExtendableError {
     ;(this as any).errorCode = errorCode
   }
 }
-
-export const createTypeGuardFromSchema =
-  <T>(schema: z.ZodType<T>) =>
-  (data: unknown): data is T => {
-    return schema.safeParse(data).success
-  }
 
 // expects an amount in regular currency units (eg ADA, not Lovelace)
 export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
@@ -75,33 +68,3 @@ export const parseAmountDecimal = (amount: string, token: Token): BigNumber => {
 
   return value
 }
-
-export const parseBoolean = (data: unknown) => {
-  const parsed = parseSafe(data)
-  return isBoolean(parsed) ? parsed : undefined
-}
-export const parseString = (data: unknown) => {
-  const parsed = parseSafe(data)
-  return isString(parsed) ? parsed : undefined
-}
-
-export function isArrayOfType<T>(data: unknown, predicate: (data: unknown) => data is T): data is Array<T> {
-  return isArray(data) && data.every(predicate)
-}
-
-export const isRecord = createTypeGuardFromSchema<Record<string, unknown>>(z.record(z.unknown()))
-export const isArray = createTypeGuardFromSchema<unknown[]>(z.array(z.unknown()))
-
-export const parseSafe = (text: any) => {
-  try {
-    return JSON.parse(text) as unknown
-  } catch (_) {
-    return undefined
-  }
-}
-
-export const isBoolean = (data: unknown): data is boolean => typeof data === 'boolean'
-export const isString = (data: unknown): data is string => typeof data === 'string'
-export const isNonNullable = <T>(data: T | null | undefined): data is T => data !== null && data !== undefined
-export const isNumber = (data: unknown): data is number =>
-  typeof data === 'number' && !Number.isNaN(data) && Number.isFinite(data)
