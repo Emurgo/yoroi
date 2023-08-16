@@ -106,6 +106,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 22,
     color: lightPalette.gray['600'],
+    maxWidth: 320,
+    textAlign: 'center',
   },
   pinContainer: {
     flexDirection: 'row',
