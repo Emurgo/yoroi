@@ -62,6 +62,6 @@ const messages = defineMessages({
   },
   languagePickerTitle: {
     id: 'components.initialization.languagepicker.title',
-    defaultMessage: '!!!Select Language',
+    defaultMessage: '!!!Select language',
   },
 })
