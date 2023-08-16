@@ -26,8 +26,9 @@ export const makeSwapApi = (
   ): Promise<Swap.CreateOrderResponse> => {
     const orderRequest: CreateOrderRequest = {
       walletAddress: orderData.address,
-      protocol: orderData.protocol as CreateOrderRequest['protocol'],
-      poolId: orderData.poolId,
+      protocol: orderData.selectedPool
+        .provider as CreateOrderRequest['protocol'],
+      poolId: orderData.selectedPool.poolId,
       sell: asOpenswapAmount(orderData.amounts.sell),
       buy: asOpenswapAmount(orderData.amounts.buy),
     }

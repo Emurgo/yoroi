@@ -14,8 +14,7 @@ export type SwapCreateOrderActions = Readonly<{
   orderTypeChanged: (orderType: Swap.OrderType) => void
   sellAmountChanged: (sellAmount: Balance.Amount) => void
   buyAmountChanged: (buyAmount: Balance.Amount) => void
-  protocolChanged: (protocol: Swap.Protocol) => void
-  poolIdChanged: (poolId: string) => void
+  selectedPoolChanged: (pool: Swap.PoolPair) => void
   slippageChanged: (slippage: number) => void
   txPayloadChanged: (txPayload: Swap.CreateOrderResponse) => void
   switchTokens: () => void
@@ -27,7 +26,7 @@ export enum SwapCreateOrderActionType {
   SellAmountChanged = 'sellAmountChanged',
   BuyAmountChanged = 'buyAmountChanged',
   ProtocolChanged = 'protocolChanged',
-  PoolIdChanged = 'poolIdChanged',
+  SelectedPoolChanged = 'selectedPoolChanged',
   SlippageChanged = 'slippageChanged',
   TxPayloadChanged = 'txPayloadChanged',
   SwitchTokens = 'switchTokens',
@@ -45,7 +44,7 @@ type SwapCreateOrderAction =
     }
   | {type: SwapCreateOrderActionType.BuyAmountChanged; amount: Balance.Amount}
   | {type: SwapCreateOrderActionType.ProtocolChanged; protocol: Swap.Protocol}
-  | {type: SwapCreateOrderActionType.PoolIdChanged; poolId: string}
+  | {type: SwapCreateOrderActionType.SelectedPoolChanged; pool: Swap.PoolPair}
   | {type: SwapCreateOrderActionType.SlippageChanged; slippage: number}
   | {
       type: SwapCreateOrderActionType.TxPayloadChanged
@@ -103,8 +102,18 @@ export const defaultSwapState: Readonly<SwapState> = {
       },
     },
     slippage: 1,
-    protocol: 'muesliswap',
-    poolId: '',
+    selectedPool: {
+      provider: 'minswap',
+      fee: '',
+      tokenA: {tokenId: '', quantity: '0'},
+      tokenB: {tokenId: '', quantity: '0'},
+      price: 0,
+      batcherFee: {tokenId: '', quantity: '0'},
+      deposit: {tokenId: '', quantity: '0'},
+      poolId: '',
+      lastUpdate: '',
+      lpToken: {tokenId: '', quantity: '0'},
+    },
   },
   unsignedTx: undefined,
 } as const
@@ -116,9 +125,7 @@ const defaultSwapCreateOrderActions: SwapCreateOrderActions = {
     console.error('[@yoroi/swap] missing initialization'),
   buyAmountChanged: (_buyAmount: Balance.Amount) =>
     console.error('[@yoroi/swap] missing initialization'),
-  protocolChanged: (_protocol: Swap.Protocol) =>
-    console.error('[@yoroi/swap] missing initialization'),
-  poolIdChanged: (_poolId: string) =>
+  selectedPoolChanged: (_pool: Swap.PoolPair) =>
     console.error('[@yoroi/swap] missing initialization'),
   slippageChanged: (_slippage: number) =>
     console.error('[@yoroi/swap] missing initialization'),
@@ -156,13 +163,9 @@ const createOrderReducer = (
       return produce(state, (draft) => {
         draft.createOrder.amounts.buy = action.amount
       })
-    case SwapCreateOrderActionType.ProtocolChanged:
+    case SwapCreateOrderActionType.SelectedPoolChanged:
       return produce(state, (draft) => {
-        draft.createOrder.protocol = action.protocol
-      })
-    case SwapCreateOrderActionType.PoolIdChanged:
-      return produce(state, (draft) => {
-        draft.createOrder.poolId = action.poolId
+        draft.createOrder.selectedPool = action.pool
       })
     case SwapCreateOrderActionType.SlippageChanged:
       return produce(state, (draft) => {

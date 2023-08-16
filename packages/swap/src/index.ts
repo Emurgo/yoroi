@@ -13,7 +13,7 @@ export {
   useSwap,
   useOrderByStatusOpen,
   usePairListByToken,
-  usePoolList,
+  usePoolsByPair,
 } from './translators/reactjs'
 export {
   getReceiveAmountbyChangingSell,

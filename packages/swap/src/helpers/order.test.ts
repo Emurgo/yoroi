@@ -128,10 +128,9 @@ describe('makeLimitOrder', () => {
     const expectedBuyQuantity = '180'
 
     const result = makeLimitOrder(sell, buy, pool, slippage, address)
-    expect(result.protocol).toEqual(pool.provider)
+    expect(result.selectedPool).toEqual(pool)
     expect(result.address).toEqual(address)
     expect(result.slippage).toEqual(slippage)
-    expect(result.poolId).toEqual(pool.poolId)
     expect(result.amounts.sell).toEqual(sell)
     expect(result.amounts.buy.tokenId).toEqual(buy.tokenId)
     expect(result.amounts.buy.quantity).toEqual(
@@ -186,8 +185,7 @@ describe('makePossibleMarketOrder', () => {
 
     const result = makePossibleMarketOrder(sell, buy, pools, slippage, address)
 
-    expect(result?.protocol).toEqual('minswap')
-    expect(result?.poolId).toEqual('0')
+    expect(result?.selectedPool).toEqual(pool1)
     expect(result?.slippage).toEqual(slippage)
     expect(result?.address).toEqual(address)
     expect(result?.amounts.buy.quantity).toEqual(buy.quantity)

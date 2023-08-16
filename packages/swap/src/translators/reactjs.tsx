@@ -61,11 +61,8 @@ export const SwapProvider = ({
     buyAmountChanged: (amount: Balance.Amount) => {
       dispatch({type: SwapCreateOrderActionType.BuyAmountChanged, amount})
     },
-    protocolChanged: (protocol: Swap.Protocol) => {
-      dispatch({type: SwapCreateOrderActionType.ProtocolChanged, protocol})
-    },
-    poolIdChanged: (poolId: string) => {
-      dispatch({type: SwapCreateOrderActionType.PoolIdChanged, poolId})
+    selectedPoolChanged: (pool: Swap.PoolPair) => {
+      dispatch({type: SwapCreateOrderActionType.SelectedPoolChanged, pool})
     },
     slippageChanged: (slippage: number) => {
       dispatch({type: SwapCreateOrderActionType.SlippageChanged, slippage})
@@ -159,7 +156,7 @@ export const usePairListByToken = (
   }
 }
 
-export const usePoolList = (
+export const usePoolsByPair = (
   tokenPair: {
     tokenA: BalanceToken['info']['id']
     tokenB: BalanceToken['info']['id']
@@ -169,7 +166,7 @@ export const usePoolList = (
     Error,
     SwapPoolPair[],
     [
-      'usePoolList',
+      'usePoolsByPair',
       {
         tokenA: BalanceToken['info']['id']
         tokenB: BalanceToken['info']['id']
@@ -177,12 +174,12 @@ export const usePoolList = (
     ]
   >,
 ) => {
-  console.log('usePoolList tokenPair', tokenPair)
+  console.log('usePoolsByPair tokenPair', tokenPair)
   const {pools} = useSwap()
   const query = useQuery({
     suspense: true,
     ...options,
-    queryKey: ['usePoolList', tokenPair],
+    queryKey: ['usePoolsByPair', tokenPair],
     queryFn: () => pools.list.byPair(tokenPair),
   })
 

@@ -1,5 +1,5 @@
 import {useSwap} from '@yoroi/swap'
-import React from 'react'
+import React, {useEffect} from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
@@ -25,6 +25,13 @@ export const CreateOrder = () => {
   const handleSelectOrderType = (index: number) => {
     orderTypeChanged(index === 0 ? 'market' : 'limit')
   }
+
+  useEffect(() => {
+    if (createOrder.amounts.buy.tokenId !== undefined && createOrder.amounts.sell.tokenId !== undefined) {
+      // request pool data
+      // set default pool in provider
+    }
+  }, [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId])
 
   return (
     <View style={styles.container}>

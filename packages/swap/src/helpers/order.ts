@@ -91,10 +91,9 @@ export const makeLimitOrder = (
   )
 
   return {
-    protocol: pool.provider,
+    selectedPool: pool,
     address,
     slippage,
-    poolId: pool.poolId,
     amounts: {
       sell,
       buy: {
@@ -129,8 +128,7 @@ export const makePossibleMarketOrder = (
     )
 
     const newOrder: Swap.CreateOrderData = {
-      protocol: pool.provider,
-      poolId: pool.poolId,
+      selectedPool: pool,
       slippage,
       amounts: {
         sell: amountPair.sell,
