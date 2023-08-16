@@ -88,9 +88,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: '500',
-    fontFamily: 'Rubik',
+    fontFamily: 'Rubik-Bold',
     lineHeight: 30,
     textAlign: 'center',
+    color: '#242838',
   },
   description: {
     fontSize: 16,
@@ -98,11 +99,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Rubik',
     lineHeight: 24,
     textAlign: 'center',
+    color: '#383E54',
   },
   checkboxText: {
     fontFamily: 'Rubik',
     fontSize: 16,
     lineHeight: 18,
+    color: '#000000',
   },
   checkboxLink: {
     color: COLORS.DARK_BLUE,

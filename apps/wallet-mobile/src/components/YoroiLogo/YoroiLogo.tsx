@@ -61,13 +61,14 @@ const styles = StyleSheet.create({
     color: COLORS.SHELLEY_BLUE,
     fontSize: 30,
     fontWeight: '500',
-    fontFamily: 'Rubik',
+    fontFamily: 'Rubik-Bold',
   },
   yoroiLogoText: {
     fontSize: 14,
     fontWeight: '400',
     fontFamily: 'Rubik',
     lineHeight: 22,
+    color: '#000000',
   },
 })
 
