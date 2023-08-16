@@ -1,5 +1,5 @@
 import {usePoolsByPair, useSwap} from '@yoroi/swap'
-import React, {useEffect} from 'react'
+import React from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
@@ -64,7 +64,7 @@ export const CreateOrder = () => {
 
         <EditSlippage />
 
-        <ShowPoolActions pool={poolsPairList[0]} />
+        <ShowPoolActions />
 
         <Actions>
           <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={navigation.confirmTx} />
