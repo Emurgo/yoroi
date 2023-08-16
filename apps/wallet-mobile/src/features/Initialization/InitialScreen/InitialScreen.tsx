@@ -1,8 +1,8 @@
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Icon, Spacer, StatusBar, TextInput, YoroiLogo} from '../../../components'
+import {Button, Icon, Spacer, StatusBar, YoroiLogo} from '../../../components'
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
 import {useLanguage} from '../../../i18n'
 import {COLORS} from '../../../theme'
@@ -47,13 +47,13 @@ export const InitialScreen = () => {
 
       <Spacer height={80} />
 
-      <Text style={styles.title}>{strings.selectLanguage}</Text>
+      <Text style={styles.title}>{strings.languagePickerTitle}</Text>
 
-      <Spacer height={24} />
+      <Spacer height={35} />
 
       <LanguagePickRow onPress={onPressLanguagePick} />
 
-      <Spacer height={8} />
+      <Spacer height={30} />
 
       <BlueCheckbox checked={tosAccepted} spacing={8} onPress={onPressTosCheckbox} style={styles.checkbox}>
         <View style={styles.checkboxRow}>
@@ -88,13 +88,11 @@ const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <TextInput
-        style={styles.input}
-        value={language.label}
-        right={<Icon.Chevron size={34} direction="down" />}
-        pointerEvents="none"
-        disabled
-      />
+      <TextInput style={styles.input} value={language.label} pointerEvents="none" />
+
+      <View style={{position: 'absolute', right: 0, paddingRight: 16, paddingTop: 8}}>
+        <Icon.Chevron size={34} direction="down" />
+      </View>
     </TouchableOpacity>
   )
 }
@@ -115,12 +113,18 @@ const styles = StyleSheet.create({
   input: {
     color: '#6B7384',
     fontWeight: '400',
-    paddingLeft: 8,
+    paddingLeft: 16,
     justifyContent: 'center',
+    borderColor: '#A7AFC0',
+    borderWidth: 1,
+    borderRadius: 8,
+    height: 56,
+    fontSize: 16,
   },
   checkboxText: {
     fontFamily: 'Rubik',
     fontSize: 16,
+    color: '#000000',
   },
   checkboxLink: {
     color: COLORS.DARK_BLUE,
