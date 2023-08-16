@@ -67,6 +67,7 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
             }}
             title={strings.skip}
             style={styles.skip}
+            textStyles={styles.skipText}
           />
         </View>
       </ScrollView>
@@ -158,7 +159,7 @@ const CommonContent = ({onReadMore, showLogo}: {onReadMore?: () => void; showLog
 
       <Spacer height={12} />
 
-      <View>
+      <View style={styles.list}>
         {list.map(({style, icon, key}) => (
           <View key={key} style={styles.item}>
             <Text style={style}>{icon}</Text>
@@ -186,10 +187,16 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
+    paddingHorizontal: 16,
   },
   text: {
-    fontSize: 14,
+    fontSize: 16,
     lineHeight: 22,
+  },
+  list: {
+    flex: 1,
+    flexGrow: 1,
+    alignSelf: 'flex-start',
   },
   item: {
     display: 'flex',
@@ -209,13 +216,18 @@ const styles = StyleSheet.create({
   skip: {
     borderWidth: 0,
   },
+  skipText: {
+    color: '#242838',
+  },
   tick: {
     color: COLORS.DARK_BLUE,
     paddingRight: 8,
+    fontSize: 16,
   },
   cross: {
     color: COLORS.RED,
     paddingRight: 8,
+    fontSize: 16,
   },
   toggle: {
     padding: 16,
