@@ -32,8 +32,8 @@ const messages = defineMessages({
     defaultMessage: '!!!and',
   },
   privacyPolicy: {
-    id: 'analytics.privacyPolicy',
-    defaultMessage: '!!!Privacy Policy',
+    id: 'analytics.privacyNotice',
+    defaultMessage: '!!!Privacy Notice',
   },
   tosAgreement: {
     id: 'analytics.tosAgreement',

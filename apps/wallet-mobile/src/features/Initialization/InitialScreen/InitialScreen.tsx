@@ -55,7 +55,7 @@ export const InitialScreen = () => {
 
       <Spacer height={8} />
 
-      <BlueCheckbox checked={tosAccepted} onPress={onPressTosCheckbox} style={styles.checkbox}>
+      <BlueCheckbox checked={tosAccepted} spacing={8} onPress={onPressTosCheckbox} style={styles.checkbox}>
         <View style={styles.checkboxRow}>
           <Text style={styles.checkboxText}>{`${strings.tosIAgreeWith} `}</Text>
 
@@ -63,7 +63,11 @@ export const InitialScreen = () => {
             <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.tosAgreement}</Text>
           </TouchableOpacity>
 
-          <Text style={styles.checkboxText}>{` ${strings.tosAnd} `}</Text>
+          <Text style={styles.checkboxText}>{` `}</Text>
+
+          <Text style={styles.checkboxText}>{strings.tosAnd}</Text>
+
+          <Text style={styles.checkboxText}>{` `}</Text>
 
           <TouchableOpacity onPress={onPrivacyLinkPress}>
             <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.privacyPolicy}</Text>
@@ -103,7 +107,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: '500',
-    fontFamily: 'Rubik',
+    fontFamily: 'Rubik-Bold',
     lineHeight: 30,
     textAlign: 'center',
     color: '#242838',
