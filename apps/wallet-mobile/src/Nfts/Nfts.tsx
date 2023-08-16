@@ -1,4 +1,3 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {Balance} from '@yoroi/types'
 import React, {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -35,12 +34,10 @@ export const Nfts = () => {
     },
   })
 
-  useFocusEffect(
-    React.useCallback(() => {
-      if (isLoading || isError) return
-      track.nftGalleryPageViewed({nft_count: nfts.length})
-    }, [isError, isLoading, nfts.length, track]),
-  )
+  React.useEffect(() => {
+    if (isLoading || isError) return
+    track.nftGalleryPageViewed({nft_count: nfts.length})
+  }, [isError, isLoading, nfts.length, track])
 
   const sortedNfts = React.useMemo(() => nfts.sort(byName), [nfts])
 
