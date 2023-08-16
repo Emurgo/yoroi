@@ -670,6 +670,6 @@
   "toggleAnalyticsSettings.analyticsTitle": "Информация о пользователях",
   "termsOfService.privacyPolicyTitle": "Политика конфиденциальности",
   "analytics.privacyPolicy": "Политика конфиденциальности",
-  "analytics.privacyNotice": "Privacy Notice",
-  "analytics.tosAnd": "and"
+  "analytics.privacyNotice": "Уведомление о конфиденциальности",
+  "analytics.tosAnd": "и"
 }
