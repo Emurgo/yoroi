@@ -53,7 +53,9 @@ export const TermsOfServiceChangedScreen = () => {
           </TouchableOpacity>
 
           <Text style={styles.checkboxText}>{` `}</Text>
+
           <Text style={styles.checkboxText}>{strings.tosAnd}</Text>
+
           <Text style={styles.checkboxText}>{` `}</Text>
 
           <TouchableOpacity onPress={onPrivacyLinkPress}>
