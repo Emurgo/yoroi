@@ -16,7 +16,7 @@ export type AmountItemProps = {
   style?: ViewProps['style']
   isPrivacyOff?: boolean
   status?: string
-  inWallet: boolean
+  inWallet?: boolean
   variant?: 'swap'
 }
 
