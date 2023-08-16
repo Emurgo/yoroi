@@ -7,6 +7,7 @@ import {
   asYoroiOrders,
   asYoroiPools,
 } from './transformers'
+import {getTokensMock} from '../helpers/tokens.mocks'
 
 export const makeSwapApi = (
   // FIX: network Yoroi type need to bring from the wallet // chain Id
@@ -58,8 +59,11 @@ export const makeSwapApi = (
   const getTokens: Swap.Api['getTokens'] = async (
     token,
   ): Promise<Balance.Token[]> => {
-    console.log('[@@@@@@@ getTokens args:]', asOpenswapTokenId(token))
-    return api.getTokens(asOpenswapTokenId(token)).then(asYoroiBalanceTokens)
+    if (network === 0) {
+      return getTokensMock as Balance.Token[]
+    } else {
+      return api.getTokens(asOpenswapTokenId(token)).then(asYoroiBalanceTokens)
+    }
   }
 
   const getPoolPairs: Swap.Api['getPoolPairs'] = async ({

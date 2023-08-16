@@ -1,5 +1,5 @@
 import {FlashList} from '@shopify/flash-list'
-import {useSwap} from '@yoroi/swap'
+import {usePairListByToken, useSwap} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -20,6 +20,23 @@ import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage
 import {filterBySearch} from '../../../../../common/filterBySearch'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
+
+type TransformedObject = {
+  decimals: number | undefined
+  description: string | undefined
+  fingerprint: string
+  group: string
+  icon: string | undefined
+  id: string
+  image: string | undefined
+  kind: string
+  name: string
+  symbol: string | undefined
+  ticker: string | undefined
+  status: string
+  supply: {total: string; circulating: string | null}
+  inUserWallet: boolean
+}
 
 export const SelectBuyTokenFromListScreen = () => {
   const [isOnlyVerifiedTokens, setIsOnlyVerifiedTokens] = React.useState(true)
@@ -45,7 +62,7 @@ export const SelectBuyTokenFromListScreen = () => {
       <Spacer height={24} />
 
       <Boundary>
-        <TokenList />
+        <TokenList showOnlyVerifiedTokens={isOnlyVerifiedTokens} />
       </Boundary>
     </SafeAreaView>
   )
@@ -118,16 +135,49 @@ const MyPortfolioCaption = () => {
   )
 }
 
-const TokenList = () => {
+type TokenListProps = {
+  showOnlyVerifiedTokens: boolean
+}
+
+const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
   const wallet = useSelectedWallet()
   const tokenInfos = useAllTokenInfos({wallet})
-  const filteredTokenInfos = useFilteredTokenInfos({tokenInfos})
+  const walletTokenInfos = useFilteredTokenInfos({tokenInfos})
+  const {pairsByToken} = usePairListByToken('')
+
+  const secondArray = walletTokenInfos
+
+  const transformedArray: TransformedObject[] =
+    pairsByToken !== undefined
+      ? pairsByToken
+          .map((item) => {
+            const matchingSecondItem = secondArray.find((secondItem) => secondItem.id === item.info.id)
+            return {
+              decimals: item.info.decimals,
+              description: item.info.description,
+              fingerprint: item.info.fingerprint,
+              group: item.info.group,
+              icon: item.info.icon,
+              id: item.info.id,
+              image: item.info.image,
+              kind: item.info.kind,
+              metadatas: item.info.metadatas,
+              name: item.info.name,
+              symbol: item.info.symbol,
+              ticker: item.info.ticker,
+              status: item.status,
+              supply: item.supply,
+              inUserWallet: !!matchingSecondItem,
+            }
+          })
+          .filter((item) => (showOnlyVerifiedTokens ? item.status === 'verified' : item))
+      : []
 
   return (
     <View style={styles.list}>
       <FlashList
-        data={filteredTokenInfos}
-        renderItem={({item: tokenInfo}: {item: Balance.TokenInfo}) => (
+        data={transformedArray}
+        renderItem={({item: tokenInfo}: {item: TransformedObject}) => (
           <Boundary>
             <SelectableToken
               tokenInfo={tokenInfo}
@@ -140,15 +190,15 @@ const TokenList = () => {
         keyExtractor={({id}) => id}
         testID="assetsList"
         estimatedItemSize={78}
-        ListEmptyComponent={<EmptyList filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
+        ListEmptyComponent={<EmptyList filteredTokenInfos={transformedArray} allTokenInfos={tokenInfos} />}
       />
 
-      <Counter counter={filteredTokenInfos.length} />
+      <Counter counter={transformedArray.length} />
     </View>
   )
 }
 
-type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
+type SelectableTokenProps = {disabled?: boolean; tokenInfo: TransformedObject; wallet: YoroiWallet}
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
   const {buyAmountChanged} = useSwap()
@@ -168,7 +218,13 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
       onPress={onSelect}
       testID="selectTokenButton"
     >
-      <AmountItem amount={{tokenId: tokenInfo.id, quantity: balanceAvailable}} wallet={wallet} variant="swap" />
+      <AmountItem
+        amount={{tokenId: tokenInfo.id, quantity: balanceAvailable}}
+        wallet={wallet}
+        status={tokenInfo.status}
+        inWallet={tokenInfo.inUserWallet}
+        variant="swap"
+      />
     </TouchableOpacity>
   )
 }
@@ -223,7 +279,7 @@ const EmptyList = ({
   filteredTokenInfos,
   allTokenInfos,
 }: {
-  filteredTokenInfos: Array<Balance.TokenInfo>
+  filteredTokenInfos: Array<TransformedObject>
   allTokenInfos: Array<Balance.TokenInfo>
 }) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()

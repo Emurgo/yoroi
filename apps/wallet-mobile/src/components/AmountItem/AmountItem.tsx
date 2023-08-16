@@ -15,10 +15,12 @@ export type AmountItemProps = {
   amount: Balance.Amount
   style?: ViewProps['style']
   isPrivacyOff?: boolean
+  status?: string
+  inWallet: boolean
   variant?: 'swap'
 }
 
-export const AmountItem = ({isPrivacyOff, wallet, style, amount, variant}: AmountItemProps) => {
+export const AmountItem = ({isPrivacyOff, wallet, style, amount, status, inWallet, variant}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -48,7 +50,9 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, variant}: Amoun
             <>
               <Spacer width={4} />
 
-              <Icon.CheckFilled size={22} color={COLORS.SHELLEY_BLUE} />
+              {status === 'verified' && <Icon.CheckFilled size={22} color={COLORS.SHELLEY_BLUE} />}
+
+              {inWallet && <Icon.Portfolio size={22} color={COLORS.LIGHT_GREEN} />}
             </>
           )}
         </View>
