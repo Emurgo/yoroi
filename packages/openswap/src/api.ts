@@ -51,11 +51,13 @@ export class OpenSwapApi {
     )
   }
 
-  public getTokens({policyId = '', assetName = ''} = {}) {
-    return getTokens(
+  public async getTokens({policyId = '', assetName = ''} = {}) {
+    const tokens = await getTokens(
       {network: this.network, client: this.client},
       {policyId, assetName},
     )
+
+    return tokens.filter((token) => token.info.status === 'verified')
   }
 }
 
