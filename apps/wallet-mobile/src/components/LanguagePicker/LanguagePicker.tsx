@@ -75,6 +75,9 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 16,
     lineHeight: 24,
+    color: '#242838',
+    fontWeight: '500',
+    fontFamily: 'Rubik-SemiBold',
   },
 })
 
