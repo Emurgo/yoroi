@@ -44,7 +44,7 @@ export const TermsOfServiceChangedScreen = () => {
 
       <Spacer height={24} />
 
-      <BlueCheckbox checked={accepted} onPress={onPressCheckbox} style={styles.checkbox}>
+      <BlueCheckbox checked={accepted} spacing={8} onPress={onPressCheckbox} style={styles.checkbox}>
         <View style={styles.checkboxRow}>
           <Text style={styles.checkboxText}>{`${strings.tosIAgreeWith} `}</Text>
 
@@ -52,7 +52,9 @@ export const TermsOfServiceChangedScreen = () => {
             <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.tosAgreement}</Text>
           </TouchableOpacity>
 
-          <Text style={styles.checkboxText}>{` ${strings.tosAnd} `}</Text>
+          <Text style={styles.checkboxText}>{` `}</Text>
+          <Text style={styles.checkboxText}>{strings.tosAnd}</Text>
+          <Text style={styles.checkboxText}>{` `}</Text>
 
           <TouchableOpacity onPress={onPrivacyLinkPress}>
             <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.privacyPolicy}</Text>
