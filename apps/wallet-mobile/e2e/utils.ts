@@ -43,7 +43,7 @@ export const enterRecoveryPhrase = async (phraseArray: string[], platform: strin
 }
 
 export const prepareApp = async (pin: string): Promise<void> => {
-  await expect(element(by.text('Select Language'))).toBeVisible()
+  await expect(element(by.text('Select language'))).toBeVisible()
   await expect(initialScreen.dropDownLanguagePicker()).toBeVisible()
   await initialScreen.dropDownLanguagePicker().tap()
 
