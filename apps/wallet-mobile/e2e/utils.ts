@@ -61,8 +61,8 @@ export const prepareApp = async (pin: string): Promise<void> => {
   await initialScreen.linkToS().tap()
   await expect(element(by.text('1. Rights and Obligations'))).toBeVisible()
   await initialScreen.buttonBack2().tap()
-  await initialScreen.checkboxSelect().tap({x:5, y:10})
-  
+  await initialScreen.checkboxSelect().tap({x: 5, y: 10})
+
   await initialScreen.buttonContinue().tap()
 
   await takeScreenshot('User consent screen for sharing insights')
@@ -72,7 +72,7 @@ export const prepareApp = async (pin: string): Promise<void> => {
   await expect(pinKeyButton('1')).toBeVisible()
   await enterPIN(pin)
   await enterPIN(pin)
-  
+
   await expect(myWalletsScreen.pageTitle()).toBeVisible()
 }
 
