@@ -45,34 +45,16 @@ export const enterRecoveryPhrase = async (phraseArray: string[], platform: strin
 export const prepareApp = async (pin: string): Promise<void> => {
   await expect(element(by.text('Select language'))).toBeVisible()
   await expect(initialScreen.dropDownLanguagePicker()).toBeVisible()
-  await initialScreen.dropDownLanguagePicker().tap()
-
-  await initialScreen.buttonSelectLanguageItalian().tap()
-  await initialScreen.buttonSelectLanguageEnglish().tap()
-
-  await initialScreen.buttonBack().tap()
-
-  await expect(initialScreen.linkPrivacyPolicy()).toBeVisible()
-  await initialScreen.linkPrivacyPolicy().tap()
-  await expect(element(by.text('3. Collection of Personal Data'))).toBeVisible()
-  await initialScreen.buttonBack2().tap()
-
-  await expect(initialScreen.linkToS()).toBeVisible()
-  await initialScreen.linkToS().tap()
-  await expect(element(by.text('1. Rights and Obligations'))).toBeVisible()
-  await initialScreen.buttonBack2().tap()
+  await takeScreenshot('Initial screen for first time user')
   await initialScreen.checkboxSelect().tap({x: 5, y: 10})
-
   await initialScreen.buttonContinue().tap()
 
-  await takeScreenshot('User consent screen for sharing insights')
   await expect(userInsightScreen.txt_PageTitle()).toBeVisible()
   await userInsightScreen.btn_Accept().tap()
 
   await expect(pinKeyButton('1')).toBeVisible()
   await enterPIN(pin)
   await enterPIN(pin)
-
   await expect(myWalletsScreen.pageTitle()).toBeVisible()
 }
 
