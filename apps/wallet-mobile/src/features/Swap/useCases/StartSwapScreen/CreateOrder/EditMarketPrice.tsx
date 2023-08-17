@@ -11,10 +11,9 @@ import {useStrings} from '../../../common/strings'
 
 type Props = {
   disabled?: boolean
-  value?: string
 }
 
-export const EditMarketPrice = ({value, disabled = false}: Props) => {
+export const EditMarketPrice = ({disabled = false}: Props) => {
   const strings = useStrings()
 
   const wallet = useSelectedWallet()
@@ -37,7 +36,7 @@ export const EditMarketPrice = ({value, disabled = false}: Props) => {
               onChange={(value) => {
                 console.log(value)
               }}
-              value={value}
+              value={String(createOrder.selectedPool.price)}
               disabled={disabled}
             />
           </View>

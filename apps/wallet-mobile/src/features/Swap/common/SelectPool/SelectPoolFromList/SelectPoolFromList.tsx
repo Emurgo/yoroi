@@ -1,61 +1,90 @@
+import {useSwap} from '@yoroi/swap'
+import {Swap} from '@yoroi/types'
 import React, {useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Spacer} from '../../../../../components'
+import {Icon, Spacer} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
-
-type CardInfo = {
-  label: string
-  value: string
-}
-
-type CardList = {
-  icon: React.ReactNode
-  label: string
-  info: CardInfo[]
-}
+import {useNavigateTo} from '../../navigation'
 
 type Props = {
-  data: CardList[]
+  data?: Swap.PoolPair[]
 }
 export const SelectPoolFromList = ({data}: Props) => {
-  const [selectedCardIndex, setSelectedCardIndex] = useState(0)
+  const {selectedPoolChanged, createOrder} = useSwap()
+  const [selectedCardIndex, setSelectedCardIndex] = useState(createOrder.selectedPool?.poolId)
+  const navigate = useNavigateTo()
 
-  const handleCardSelect = (index: number) => {
-    setSelectedCardIndex(index)
+  const handleCardSelect = (pool: Swap.PoolPair) => {
+    selectedPoolChanged(pool)
+    setSelectedCardIndex(pool.poolId)
+    navigate.startSwap()
   }
+
+  const protocolCapitalize = (protocol: string): string => protocol[0].toUpperCase() + protocol.substring(1)
 
   return (
     <View style={styles.container}>
-      {data.map((card, index) => (
-        <View key={card.label}>
+      {data?.map((pool) => (
+        <View key={pool.provider}>
           <Spacer height={16} />
 
           <View style={[styles.shadowProp]}>
             <LinearGradient
-              colors={index === selectedCardIndex ? ['#E4E8F7', '#C6F7F7'] : [COLORS.WHITE, COLORS.WHITE]}
+              colors={pool.poolId === selectedCardIndex ? ['#E4E8F7', '#C6F7F7'] : [COLORS.WHITE, COLORS.WHITE]}
               style={styles.linearGradient}
             >
-              <TouchableOpacity key={index} onPress={() => handleCardSelect(index)} style={[styles.card]}>
+              <TouchableOpacity key={pool.poolId} onPress={() => handleCardSelect(pool)} style={[styles.card]}>
                 <View style={styles.cardHeader}>
-                  <Text style={styles.icon}>{card.icon}</Text>
+                  {/* TODO add icons for each pool and change it depending on name */}
+                  <View style={styles.icon}>
+                    <Icon.YoroiNightly size={40} color={COLORS.SHELLEY_BLUE} />
+                  </View>
 
-                  <Text style={styles.label}>{card.label}</Text>
+                  <Text style={styles.label}>{protocolCapitalize(pool.provider)}</Text>
                 </View>
 
                 <View style={styles.infoContainer}>
-                  {card.info.map((infoItem, infoIndex) => (
-                    <View key={infoItem.label}>
-                      <Spacer height={8} />
+                  <View>
+                    <Spacer height={8} />
 
-                      <View key={infoIndex} style={styles.info}>
-                        <Text style={styles.infoLabel}>{infoItem.label}</Text>
+                    <View style={styles.info}>
+                      <Text style={styles.infoLabel}>Price, ADA</Text>
 
-                        <Text style={styles.infoValue}>{infoItem.value}</Text>
-                      </View>
+                      <Text style={styles.infoValue}>{pool.price} ADA</Text>
                     </View>
-                  ))}
+                  </View>
+
+                  <View>
+                    <Spacer height={8} />
+
+                    <View style={styles.info}>
+                      <Text style={styles.infoLabel}>TVL, ADA</Text>
+
+                      <Text style={styles.infoValue}>?</Text>
+                    </View>
+                  </View>
+
+                  <View>
+                    <Spacer height={8} />
+
+                    <View style={styles.info}>
+                      <Text style={styles.infoLabel}>Pool fee, %</Text>
+
+                      <Text style={styles.infoValue}>{pool.fee}%</Text>
+                    </View>
+                  </View>
+
+                  <View>
+                    <Spacer height={8} />
+
+                    <View style={styles.info}>
+                      <Text style={styles.infoLabel}>Batcher fee, ADA</Text>
+
+                      <Text style={styles.infoValue}>{pool.batcherFee.quantity}</Text>
+                    </View>
+                  </View>
                 </View>
               </TouchableOpacity>
             </LinearGradient>

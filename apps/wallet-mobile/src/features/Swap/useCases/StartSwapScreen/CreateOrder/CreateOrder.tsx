@@ -1,5 +1,5 @@
 import {usePoolsByPair, useSwap} from '@yoroi/swap'
-import React from 'react'
+import React, {useEffect} from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
@@ -18,14 +18,18 @@ import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
-  const {orderTypeChanged, createOrder} = useSwap()
+  const {orderTypeChanged, createOrder, selectedPoolChanged} = useSwap()
 
-  const poolsPairList = usePoolsByPair({
+  const {poolList} = usePoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId,
     tokenB: createOrder.amounts.buy.tokenId,
   })
 
-  console.log('[poolsPairList]', poolsPairList)
+  useEffect(() => {
+    poolList !== undefined && selectedPoolChanged(poolList[0])
+  }, [poolList, selectedPoolChanged])
+
+  console.log('[poolsPairList]', poolList)
 
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
   const orderTypeIndex = createOrder.type === 'market' ? 0 : 1

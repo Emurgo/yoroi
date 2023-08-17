@@ -8,6 +8,7 @@ import {
   asYoroiPools,
 } from './transformers'
 import {getTokensMock} from '../helpers/tokens.mocks'
+import {getPoolsMock} from '../helpers/pools.mocks'
 
 export const makeSwapApi = (
   // FIX: network Yoroi type need to bring from the wallet // chain Id
@@ -75,12 +76,17 @@ export const makeSwapApi = (
       tokenA: asOpenswapTokenId(tokenA),
       tokenB: asOpenswapTokenId(tokenB),
     })
-    return api
-      .getPools({
-        tokenA: asOpenswapTokenId(tokenA),
-        tokenB: asOpenswapTokenId(tokenB),
-      })
-      .then(asYoroiPools)
+
+    if (network === 0) {
+      return getPoolsMock as Swap.PoolPair[]
+    } else {
+      return api
+        .getPools({
+          tokenA: asOpenswapTokenId(tokenA),
+          tokenB: asOpenswapTokenId(tokenB),
+        })
+        .then(asYoroiPools)
+    }
   }
 
   return {

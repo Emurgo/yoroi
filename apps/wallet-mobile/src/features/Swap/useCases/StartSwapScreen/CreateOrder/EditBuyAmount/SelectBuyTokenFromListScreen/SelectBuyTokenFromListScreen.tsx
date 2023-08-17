@@ -223,6 +223,7 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
         wallet={wallet}
         status={tokenInfo.status}
         inWallet={tokenInfo.inUserWallet}
+        supply={tokenInfo?.supply.total}
         variant="swap"
       />
     </TouchableOpacity>

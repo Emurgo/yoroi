@@ -17,10 +17,20 @@ export type AmountItemProps = {
   isPrivacyOff?: boolean
   status?: string
   inWallet?: boolean
+  supply?: string
   variant?: 'swap'
 }
 
-export const AmountItem = ({isPrivacyOff, wallet, style, amount, status, inWallet, variant}: AmountItemProps) => {
+export const AmountItem = ({
+  isPrivacyOff,
+  wallet,
+  style,
+  amount,
+  status,
+  inWallet,
+  supply,
+  variant,
+}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -29,7 +39,9 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, status, inWalle
   const nameLabel = isEmptyString(name) ? '-' : name
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
 
+  const formatedSupply = `${supply} ADA`
   const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
+
   const showSwapDetails = !isPrimary && variant === 'swap'
 
   return (
@@ -65,7 +77,7 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, status, inWalle
       <Right>
         {tokenInfo.kind !== 'nft' && (
           <Text style={styles.quantity} testID="tokenAmountText">
-            {isPrivacyOff ? '**.*******' : denominatedQuantity}
+            {isPrivacyOff ? '**.*******' : variant === 'swap' ? formatedSupply : denominatedQuantity}
           </Text>
         )}
 
