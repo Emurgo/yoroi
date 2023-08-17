@@ -77,7 +77,13 @@ export const InitialScreen = () => {
 
       <Spacer fill />
 
-      <Button title={strings.continue} shelleyTheme disabled={!tosAccepted} onPress={onPressContinue} testID="buttonContinue"/>
+      <Button
+        title={strings.continue}
+        shelleyTheme
+        disabled={!tosAccepted}
+        onPress={onPressContinue}
+        testID="buttonContinue"
+      />
     </SafeAreaView>
   )
 }

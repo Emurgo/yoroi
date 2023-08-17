@@ -29,7 +29,7 @@ export const useParams = <Params, >(guard: Guard<Params>): Params => {
 type Guard<Params> = (params: Params | object) => params is Params
 
 export const BackButton = (props) => (
-  <TouchableOpacity  {...props} testID="buttonBack2">
+  <TouchableOpacity {...props} testID="buttonBack2">
     <Icon.Chevron direction="left" color={props.color ?? '#000000'} />
   </TouchableOpacity>
 )
