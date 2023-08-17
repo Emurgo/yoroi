@@ -15,7 +15,7 @@ export type BlueCheckboxProps = {
 
 export const BlueCheckbox = ({checked, onPress, children, style, spacing = 15}: BlueCheckboxProps) => {
   return (
-    <TouchableOpacity style={[styles.checkboxRow, style]} onPress={onPress}>
+    <TouchableOpacity style={[styles.checkboxRow, style]} onPress={onPress} testID="checkboxSelect">
       {checked ? <CheckboxChecked /> : <CheckboxNotChecked />}
 
       <Spacer width={spacing} />

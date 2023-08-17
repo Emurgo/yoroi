@@ -4,9 +4,9 @@ import {addAttach, addMsg} from 'jest-html-reporters/helper'
 import yargs from 'yargs/yargs'
 
 import {mnemonicBadgeByWord, mnemonicByIndexText} from './screens/createWalletFlow.screen'
+import * as initialScreen from './screens/initialScreen.screen'
 import * as myWalletsScreen from './screens/myWallets.screen'
 import {pinKeyButton} from './screens/pinCode.screen'
-import * as prepareScreens from './screens/prepareApp.screen'
 import {mnemonicByIndexInput} from './screens/restoreWalletFlow.screen'
 import * as userInsightScreen from './screens/shareUserInsights.screen'
 
@@ -44,21 +44,35 @@ export const enterRecoveryPhrase = async (phraseArray: string[], platform: strin
 
 export const prepareApp = async (pin: string): Promise<void> => {
   await expect(element(by.text('Select Language'))).toBeVisible()
-  await expect(prepareScreens.btn_SelectLanguageEnglish()).toBeVisible()
-  await prepareScreens.btn_Next().tap()
+  await expect(initialScreen.dropDownLanguagePicker()).toBeVisible()
+  await initialScreen.dropDownLanguagePicker().tap()
 
-  await expect(prepareScreens.chkbox_AcceptTos()).toBeVisible()
-  await prepareScreens.chkbox_AcceptTos().tap()
-  await expect(prepareScreens.btn_Accept()).toBeVisible()
-  await prepareScreens.btn_Accept().tap()
+  await initialScreen.buttonSelectLanguageItalian().tap()
+  await initialScreen.buttonSelectLanguageEnglish().tap()
+
+  await initialScreen.buttonBack().tap()
+
+  await expect(initialScreen.linkPrivacyPolicy()).toBeVisible()
+  await initialScreen.linkPrivacyPolicy().tap()
+  await expect(element(by.text('3. Collection of Personal Data'))).toBeVisible()
+  await initialScreen.buttonBack2().tap()
+
+  await expect(initialScreen.linkToS()).toBeVisible()
+  await initialScreen.linkToS().tap()
+  await expect(element(by.text('1. Rights and Obligations'))).toBeVisible()
+  await initialScreen.buttonBack2().tap()
+  await initialScreen.checkboxSelect().tap({x:5, y:10})
+  
+  await initialScreen.buttonContinue().tap()
+
+  await takeScreenshot('User consent screen for sharing insights')
+  await expect(userInsightScreen.txt_PageTitle()).toBeVisible()
+  await userInsightScreen.btn_Accept().tap()
 
   await expect(pinKeyButton('1')).toBeVisible()
   await enterPIN(pin)
   await enterPIN(pin)
-  await expect(userInsightScreen.txt_PageTitle()).toBeVisible()
-  await takeScreenshot('User consent screen for sharing insights')
-  await userInsightScreen.btn_Accept().tap()
-
+  
   await expect(myWalletsScreen.pageTitle()).toBeVisible()
 }
 
