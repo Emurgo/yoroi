@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontFamily: 'Rubik',
     lineHeight: 22,
-    color: '#000000',
+    color: '#242838',
   },
 })
 

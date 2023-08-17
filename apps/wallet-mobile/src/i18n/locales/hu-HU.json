@@ -88,7 +88,7 @@
   "components.firstrun.custompinscreen.pinInputConfirmationSubTitle": "Repeat a new PIN to quickly access your wallet",
   "components.initialization.custompinscreen.pinInputTitle": "PIN megadása",
   "components.initialization.custompinscreen.title": "PIN beállítás",
-  "components.initialization.languagepicker.title": "Select Language",
+  "components.initialization.languagepicker.title": "Select language",
   "components.ledger.ledgerconnect.usbDeviceReady": "Az USB eszköz készen áll, a folytatáshoz éritsd meg a Megerősítés gombot. ",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Bluetooth-csatlakozás",
   "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:",
@@ -669,5 +669,7 @@
   "termsOfService.tosAgreement": "Terms Of Service Agreement",
   "toggleAnalyticsSettings.analyticsTitle": "User Insights",
   "termsOfService.privacyPolicyTitle": "Privacy Policy",
-  "analytics.privacyPolicy": "Privacy Policy"
+  "analytics.privacyPolicy": "Privacy Policy",
+  "analytics.privacyNotice": "Privacy Notice",
+  "analytics.tosAnd": "and"
 }

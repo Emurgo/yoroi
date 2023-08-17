@@ -88,7 +88,7 @@
   "components.firstrun.custompinscreen.pinInputConfirmationSubTitle": "Repeat a new PIN to quickly access your wallet",
   "components.initialization.custompinscreen.pinInputTitle": "Ingresa tu PIN",
   "components.initialization.custompinscreen.title": "Establece un PIN",
-  "components.initialization.languagepicker.title": "Seleccionar idioma",
+  "components.initialization.languagepicker.title": "Select language",
   "components.ledger.ledgerconnect.usbDeviceReady": "El dispositivo USB está listo, por favor pulse en Confirmar para continuar.",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Conectar mediante Bluetooth",
   "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Elige esta opción si quieres conectarte a un Ledger Nano modelo X usando bluetooth:",
@@ -669,5 +669,7 @@
   "termsOfService.tosAgreement": "Terms Of Service Agreement",
   "toggleAnalyticsSettings.analyticsTitle": "User Insights",
   "termsOfService.privacyPolicyTitle": "Privacy Policy",
-  "analytics.privacyPolicy": "Privacy Policy"
+  "analytics.privacyPolicy": "Privacy Policy",
+  "analytics.privacyNotice": "Privacy Notice",
+  "analytics.tosAnd": "and"
 }

@@ -88,7 +88,7 @@
   "components.firstrun.custompinscreen.pinInputConfirmationSubTitle": "Repeat a new PIN to quickly access your wallet",
   "components.initialization.custompinscreen.pinInputTitle": "Zadajte PIN",
   "components.initialization.custompinscreen.title": "Nastaviť PIN",
-  "components.initialization.languagepicker.title": "Select Language",
+  "components.initialization.languagepicker.title": "Select language",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB zariadenie je pripravené, kliknite na Potvrdiť k pokračovaniu.",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Pripojiť cez Bluetooth",
   "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Vyberte túto možnosť, ak chcete pripojiť Ledger Nano X pomocou Bluetooth:",
@@ -669,5 +669,7 @@
   "termsOfService.tosAgreement": "Terms Of Service Agreement",
   "toggleAnalyticsSettings.analyticsTitle": "User Insights",
   "termsOfService.privacyPolicyTitle": "Privacy Policy",
-  "analytics.privacyPolicy": "Privacy Policy"
+  "analytics.privacyPolicy": "Privacy Policy",
+  "analytics.privacyNotice": "Privacy Notice",
+  "analytics.tosAnd": "and"
 }
