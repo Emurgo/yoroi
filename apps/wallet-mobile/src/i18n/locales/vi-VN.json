@@ -88,7 +88,7 @@
   "components.firstrun.custompinscreen.pinInputConfirmationSubTitle": "Repeat a new PIN to quickly access your wallet",
   "components.initialization.custompinscreen.pinInputTitle": "Nhập mã PIN",
   "components.initialization.custompinscreen.title": "Đặt mã PIN",
-  "components.initialization.languagepicker.title": "Chọn ngôn ngữ",
+  "components.initialization.languagepicker.title": "Select language",
   "components.ledger.ledgerconnect.usbDeviceReady": "Thiết bị USB đã sẵn sàng, vui lòng nhấn vào Xác nhận để tiếp tục.",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Kết nối với Bluetooth",
   "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Chọn tùy chọn này nếu bạn muốn kết nối với Ledger Nano model X qua Bluetooth:",
@@ -669,5 +669,7 @@
   "termsOfService.tosAgreement": "Terms Of Service Agreement",
   "toggleAnalyticsSettings.analyticsTitle": "User Insights",
   "termsOfService.privacyPolicyTitle": "Privacy Policy",
-  "analytics.privacyPolicy": "Privacy Policy"
+  "analytics.privacyPolicy": "Privacy Policy",
+  "analytics.privacyNotice": "Privacy Notice",
+  "analytics.tosAnd": "and"
 }

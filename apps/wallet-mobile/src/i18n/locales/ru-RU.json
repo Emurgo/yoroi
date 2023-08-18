@@ -669,5 +669,7 @@
   "termsOfService.tosAgreement": "Соглашение о предоставлении услуг",
   "toggleAnalyticsSettings.analyticsTitle": "Информация о пользователях",
   "termsOfService.privacyPolicyTitle": "Политика конфиденциальности",
-  "analytics.privacyPolicy": "Политика конфиденциальности"
+  "analytics.privacyPolicy": "Политика конфиденциальности",
+  "analytics.privacyNotice": "Уведомление о конфиденциальности",
+  "analytics.tosAnd": "и"
 }

@@ -5,7 +5,6 @@ import {useQuery} from 'react-query'
 
 import {Spacer} from '../../components'
 import {LanguageCode} from '../../i18n/languages'
-import {lightPalette} from '../../theme'
 import {loadPrivacyPolicy} from './loadPrivacyPolicy'
 
 export const usePrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
@@ -25,7 +24,7 @@ export const PrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
       <Spacer height={16} />
 
       {/* @ts-expect-error old react */}
-      <Markdown markdownStyles={{...styles}}>{privacyPolicy}</Markdown>
+      <Markdown style={styles}>{privacyPolicy}</Markdown>
     </View>
   ) : (
     <ActivityIndicator size="large" color="black" />
@@ -33,24 +32,25 @@ export const PrivacyPolicy = ({languageCode}: {languageCode: LanguageCode}) => {
 }
 
 const styles = StyleSheet.create({
-  text: {
+  body: {
     fontFamily: 'Rubik-Regular',
     fontSize: 16,
     lineHeight: 24,
-    color: lightPalette.gray['900'],
+    color: '#000000',
     paddingVertical: 8,
   },
-  h2: {
+  heading2: {
     fontFamily: 'Rubik-Medium',
     lineHeight: 24,
-    color: lightPalette.gray['900'],
+    fontSize: 16,
+    color: '#000000',
     paddingVertical: 8,
   },
-  h1: {
-    fontFamily: 'Rubik-Medium',
+  heading1: {
+    fontFamily: 'Rubik-Bold',
     fontSize: 20,
-    lineHeight: 20,
-    color: lightPalette.gray['900'],
+    lineHeight: 30,
+    color: '#000000',
     paddingVertical: 10,
   },
 })

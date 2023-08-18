@@ -45,8 +45,8 @@
     }
   },
   {
-    "id": "analytics.privacyPolicy",
-    "defaultMessage": "!!!Privacy Policy",
+    "id": "analytics.privacyNotice",
+    "defaultMessage": "!!!Privacy Notice",
     "file": "src/features/Initialization/common/strings.tsx",
     "start": {
       "line": 34,

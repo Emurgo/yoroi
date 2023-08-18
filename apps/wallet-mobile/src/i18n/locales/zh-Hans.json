@@ -88,7 +88,7 @@
   "components.firstrun.custompinscreen.pinInputConfirmationSubTitle": "Repeat a new PIN to quickly access your wallet",
   "components.initialization.custompinscreen.pinInputTitle": "输入PIN码",
   "components.initialization.custompinscreen.title": "设置PIN码",
-  "components.initialization.languagepicker.title": "请选择语言",
+  "components.initialization.languagepicker.title": "Select language",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB设备已准备就绪，请点击“确认”以继续。",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "蓝牙连接",
   "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "如果你想通过蓝牙连接Ledger Nano model X，请选择该选项",
@@ -669,5 +669,7 @@
   "termsOfService.tosAgreement": "Terms Of Service Agreement",
   "toggleAnalyticsSettings.analyticsTitle": "User Insights",
   "termsOfService.privacyPolicyTitle": "Privacy Policy",
-  "analytics.privacyPolicy": "Privacy Policy"
+  "analytics.privacyPolicy": "Privacy Policy",
+  "analytics.privacyNotice": "Privacy Notice",
+  "analytics.tosAnd": "and"
 }

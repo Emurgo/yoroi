@@ -10,16 +10,17 @@ export type BlueCheckboxProps = {
   onPress?: () => void
   children?: ReactNode
   style?: StyleProp<ViewStyle>
+  spacing?: number
 }
 
-export const BlueCheckbox = ({checked, onPress, children, style}: BlueCheckboxProps) => {
+export const BlueCheckbox = ({checked, onPress, children, style, spacing = 15}: BlueCheckboxProps) => {
   return (
     <TouchableOpacity style={[styles.checkboxRow, style]} onPress={onPress}>
       {checked ? <CheckboxChecked /> : <CheckboxNotChecked />}
 
-      <Spacer width={15} />
+      <Spacer width={spacing} />
 
-      <View style={{flexDirection: 'row'}}>{children}</View>
+      <View style={styles.textRow}>{children}</View>
     </TouchableOpacity>
   )
 }
@@ -72,5 +73,12 @@ const styles = StyleSheet.create({
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  textRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
 })
