@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {rootStorage} from '../adapters/asyncStorage'
+import {rootStorage} from '../storage'
 import {App} from '@yoroi/types'
 import {invalid} from '../helpers'
 

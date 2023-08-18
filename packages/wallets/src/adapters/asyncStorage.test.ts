@@ -2,7 +2,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {parseSafe} from '../parsers'
-import {rootStorage} from './asyncStorage'
+import {rootStorage} from '../storage'
+import {mountMultiStorage} from './asyncStorage'
+import {App} from '@yoroi/types'
 
 describe('prefixed storage', () => {
   beforeEach(() => AsyncStorage.clear())
@@ -235,8 +237,63 @@ describe('prefixed storage', () => {
   })
 })
 
+describe('multi storage', () => {
+  beforeEach(() => AsyncStorage.clear())
+
+  it('save, read, keys, remove providing the serializers', async () => {
+    const storage = mountMultiStorage(options)
+    await storage.save([item3, item4])
+
+    const readItems = await storage.read()
+    expect(readItems).toEqual([
+      ['1', item3],
+      ['2', item4],
+    ])
+
+    const keys = await storage.keys()
+    expect(keys).toEqual(['1', '2'])
+
+    await storage.remove()
+
+    const emptyKeys = await storage.keys()
+    expect(emptyKeys).toEqual([])
+  })
+  it('save, read, keys, remove default serializers / key as extractor', async () => {
+    const storage = mountMultiStorage({
+      storage: rootStorage.join('multiStorage/'),
+      dataFolder: 'dataFolder/',
+      keyExtractor: 'id',
+    })
+    await storage.save([item3, item4])
+
+    const readItems = await storage.read()
+    expect(readItems).toEqual([
+      ['1', item3],
+      ['2', item4],
+    ])
+
+    const keys = await storage.keys()
+    expect(keys).toEqual(['1', '2'])
+
+    await storage.remove()
+
+    const emptyKeys = await storage.keys()
+    expect(emptyKeys).toEqual([])
+  })
+})
+
+const options: App.MultiStorageOptions<any> = {
+  storage: rootStorage.join('multiStorage/'),
+  dataFolder: 'dataFolder/',
+  keyExtractor: (item: any) => item.id,
+  serializer: JSON.stringify,
+  deserializer: (data) => JSON.parse(data as string),
+}
+
 const item1 = {a: 123, b: 234}
 const item2 = {c: 123, d: 234}
+const item3 = {id: 1, a: 123, b: 234}
+const item4 = {id: '2', c: 123, d: 234}
 
 const snapshot = async () => {
   const keys = await AsyncStorage.getAllKeys()

@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {App} from '@yoroi/types'
+import {App, Nullable} from '@yoroi/types'
 
 import {parseSafe} from '../parsers'
 
 // -------
 // ADAPTER + "FACTORY"
-const mountStorage = (path: App.StorageFolderName): App.Storage => {
+export const mountStorage = (path: App.StorageFolderName): App.Storage => {
   const withPath = (key: string) =>
     `${path}${key}` as `${App.StorageFolderName}${string}`
   const withoutPath = (value: string) => value.slice(path.length)
@@ -92,13 +92,52 @@ const mountStorage = (path: App.StorageFolderName): App.Storage => {
   } as const
 }
 
+export const mountMultiStorage = <T = unknown>(
+  options: App.MultiStorageOptions<T>,
+): App.MultiStorage<T> => {
+  const {
+    storage,
+    dataFolder,
+    keyExtractor,
+    serializer = JSON.stringify,
+    deserializer = parseSafe as (item: string | null) => Nullable<T>,
+  } = options
+  const dataStorage = storage.join(dataFolder)
+
+  const keys = () => dataStorage.getAllKeys()
+  const remove = () => storage.removeFolder(dataFolder)
+  const save = (items: NonNullable<T>[]) => {
+    const entries: [string, T][] = items.map((record) => {
+      if (typeof keyExtractor === 'function') {
+        return [keyExtractor(record), record]
+      }
+      return [String(record[keyExtractor]), record]
+    })
+    const entriesWithKeys = entries.filter(([key]) => key != null && key !== '')
+    return dataStorage.multiSet(
+      entriesWithKeys,
+      serializer as (record: unknown) => string,
+    )
+  }
+  const read = () => {
+    return dataStorage
+      .getAllKeys()
+      .then((readKeys) =>
+        dataStorage.multiGet<Nullable<T>>(readKeys, deserializer),
+      )
+  }
+
+  return {
+    keys,
+    remove,
+    save,
+    read,
+  }
+}
+
 // -------
-// FILTERS
+// HELPERS
 const isFileKey = ({key, path}: {key: string; path: string}) =>
   !key.slice(path.length).includes('/')
 const isFolderKey = ({key, path}: {key: string; path: string}) =>
   !isFileKey({key, path})
-
-// ----
-// ROOT
-export const rootStorage = mountStorage('/')

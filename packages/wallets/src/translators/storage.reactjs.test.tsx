@@ -1,7 +1,7 @@
 import React from 'react'
 import renderer from 'react-test-renderer'
 import {StorageProvider, useStorage} from './storage.reactjs' // Update with the actual module path
-import {rootStorage} from '../adapters/asyncStorage'
+import {rootStorage} from '../storage'
 
 describe('StorageProvider and useStorage Tests', () => {
   test('StorageProvider provides storage context', () => {
