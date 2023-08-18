@@ -26,24 +26,21 @@ export const EditSellAmount = () => {
   const hasBalance = !Quantities.isGreaterThan(quantity, balance)
   const showError = !Quantities.isZero(quantity) && !hasBalance
 
-  const {buy} = getReceiveAmountbyChangingSell(createOrder?.selectedPool, {
-    quantity: quantity,
-    tokenId: createOrder.amounts.sell.tokenId,
-  })
+  const recalculateBuyValue = (sellQuantity) => {
+    const {buy} = getReceiveAmountbyChangingSell(createOrder?.selectedPool, {
+      quantity: sellQuantity,
+      tokenId: tokenId,
+    })
 
-  console.log('[getReceiveAmountbyChangingSell]', buy)
-
-  const recalculate = React.useCallback(() => {
     buyAmountChanged({
-      quantity: Quantities.integer(buy?.quantity, decimals ?? 0),
+      quantity: buy?.quantity,
       tokenId: createOrder.amounts.buy.tokenId,
     })
-  }, [buy?.quantity, buyAmountChanged, createOrder.amounts.buy.tokenId, decimals])
+  }
 
   React.useEffect(() => {
     setInputValue(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
-    recalculate()
-  }, [quantity, recalculate, tokenInfo.decimals])
+  }, [quantity, tokenInfo.decimals])
 
   const onChangeQuantity = (text: string) => {
     try {
@@ -52,6 +49,7 @@ export const EditSellAmount = () => {
       const inputQuantity = asQuantity(text.length > 0 ? text : '0')
       const quantity = Quantities.integer(inputQuantity, decimals ?? 0)
       sellAmountChanged({tokenId, quantity})
+      recalculateBuyValue(quantity)
     } catch (error) {
       Logger.error('SwapAmountScreen::onChangeQuantity', error)
     }

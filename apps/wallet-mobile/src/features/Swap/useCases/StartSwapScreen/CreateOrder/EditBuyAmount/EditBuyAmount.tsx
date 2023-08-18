@@ -14,30 +14,28 @@ export const EditBuyAmount = () => {
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
 
-  const {createOrder, buyAmountChanged} = useSwap()
+  const {createOrder, buyAmountChanged, sellAmountChanged} = useSwap()
   const {tokenId, quantity} = createOrder.amounts.buy
-
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const {decimals} = tokenInfo
   const balance = useBalance({wallet, tokenId})
 
   const [inputValue, setInputValue] = React.useState<string>(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
 
-  const {sell} = getSellAmountByChangingReceive(createOrder?.selectedPool, {
-    quantity: quantity,
-    tokenId: createOrder.amounts.buy.tokenId,
-  })
-
-  console.log('[getSellAmountByChangingReceive]', sell)
-
-  // const recalculate = React.useCallback(() => {
-  //   sellAmountChanged({quantity: sell.quantity, tokenId: createOrder.amounts.sell.tokenId})
-  // }, [createOrder.amounts.sell.tokenId, sell.quantity, sellAmountChanged])
-
   React.useEffect(() => {
     setInputValue(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
-    // recalculate()
   }, [quantity, tokenInfo.decimals])
+
+  const recalculateSellValue = (buyQuantity) => {
+    const {sell} = getSellAmountByChangingReceive(createOrder?.selectedPool, {
+      quantity: buyQuantity,
+      tokenId: tokenId,
+    })
+    sellAmountChanged({
+      quantity: sell?.quantity,
+      tokenId: createOrder.amounts.sell.tokenId,
+    })
+  }
 
   const onChangeQuantity = (text: string) => {
     try {
@@ -46,6 +44,7 @@ export const EditBuyAmount = () => {
       const inputQuantity = asQuantity(text.length > 0 ? text : '0')
       const quantity = Quantities.integer(inputQuantity, decimals ?? 0)
       buyAmountChanged({tokenId, quantity})
+      recalculateSellValue(quantity)
     } catch (error) {
       Logger.error('SwapAmountScreen::onChangeQuantity', error)
     }
