@@ -1,4 +1,4 @@
-import { useFocusEffect } from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
 import {BarCodeBounds, BarCodeScanner, BarCodeScannerResult} from 'expo-barcode-scanner'
 import {Camera} from 'expo-camera'
 import * as React from 'react'
@@ -24,7 +24,7 @@ export const QRCodeScanner = ({
   useFocusEffect(
     React.useCallback(() => {
       if (qrScanned) setQrScanned(false)
-    }, [qrScanned])
+    }, [qrScanned]),
   )
 
   React.useEffect(() => {
