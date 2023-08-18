@@ -97,6 +97,7 @@ export const ApplicationSettingsScreen = () => {
 
         <SettingsSection title={strings.securityReporting}>
           <NavigatedSettingsItem
+            disabled={authSetting === 'os'}
             icon={<Icon.Pin {...iconProps} />}
             label={strings.changePin}
             onNavigate={() => settingsNavigation.navigate('change-custom-pin')}
