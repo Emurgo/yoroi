@@ -9,6 +9,12 @@ export const getReceiveAmountbyChangingSell = (
   pool: Swap.PoolPair,
   sell: Balance.Amount,
 ): AmountPair => {
+  if (!pool) {
+    return {
+      sell: {quantity: '0', tokenId: ''},
+      buy: {quantity: '0', tokenId: ''},
+    }
+  }
   const poolA = BigInt(pool.tokenA.quantity)
   const poolB = BigInt(pool.tokenB.quantity)
   const poolsProduct = poolA * poolB // fee is part of tokens sent -> this means the constant product increases after the swap!
@@ -46,6 +52,13 @@ export const getSellAmountByChangingReceive = (
   pool: Swap.PoolPair,
   buy: Balance.Amount,
 ): AmountPair => {
+  if (!pool) {
+    return {
+      sell: {quantity: '0', tokenId: ''},
+      buy: {quantity: '0', tokenId: ''},
+    }
+  }
+
   const poolA = BigInt(pool.tokenA.quantity)
   const poolB = BigInt(pool.tokenB.quantity)
   const poolsProduct = poolA * poolB // fee is part of tokens sent -> this means the constant product increases after the swap!

@@ -61,23 +61,19 @@ export const makeSwapApi = (
   const getTokens: Swap.Api['getTokens'] = async (
     token,
   ): Promise<Balance.Token[]> => {
-    if (network === 0) {
+    if (network === 1) {
       return getTokensMock as Balance.Token[]
     } else {
-      return api.getTokens(asOpenswapTokenId(token)).then(asYoroiBalanceTokens)
     }
+    return api.getTokens(asOpenswapTokenId(token)).then(asYoroiBalanceTokens)
   }
 
   const getPoolPairs: Swap.Api['getPoolPairs'] = async ({
     tokenA,
     tokenB,
   }): Promise<Swap.PoolPair[]> => {
-    console.log('[@@@@@@@ getPoolPairs args:]', {
-      tokenA: asOpenswapTokenId(tokenA),
-      tokenB: asOpenswapTokenId(tokenB),
-    })
-
-    if (network === 0) {
+    // right now we always get empty array from the api response, until resolving the isssue will return mock data
+    if (network === 1 || network === 0) {
       return getPoolsMock as Swap.PoolPair[]
     } else {
       return api

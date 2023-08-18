@@ -1,4 +1,4 @@
-import {useSwap} from '@yoroi/swap'
+import {getReceiveAmountbyChangingSell, useSwap} from '@yoroi/swap'
 import * as React from 'react'
 
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
@@ -14,7 +14,7 @@ export const EditSellAmount = () => {
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
 
-  const {createOrder, sellAmountChanged} = useSwap()
+  const {createOrder, sellAmountChanged, buyAmountChanged} = useSwap()
   const {tokenId, quantity} = createOrder.amounts.sell
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
@@ -26,9 +26,24 @@ export const EditSellAmount = () => {
   const hasBalance = !Quantities.isGreaterThan(quantity, balance)
   const showError = !Quantities.isZero(quantity) && !hasBalance
 
+  const {buy} = getReceiveAmountbyChangingSell(createOrder?.selectedPool, {
+    quantity: quantity,
+    tokenId: createOrder.amounts.sell.tokenId,
+  })
+
+  console.log('[getReceiveAmountbyChangingSell]', buy)
+
+  const recalculate = React.useCallback(() => {
+    buyAmountChanged({
+      quantity: Quantities.integer(buy?.quantity, decimals ?? 0),
+      tokenId: createOrder.amounts.buy.tokenId,
+    })
+  }, [buy?.quantity, buyAmountChanged, createOrder.amounts.buy.tokenId, decimals])
+
   React.useEffect(() => {
     setInputValue(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
-  }, [quantity, tokenInfo.decimals])
+    recalculate()
+  }, [quantity, recalculate, tokenInfo.decimals])
 
   const onChangeQuantity = (text: string) => {
     try {

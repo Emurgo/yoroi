@@ -1,4 +1,4 @@
-import {useSwap} from '@yoroi/swap'
+import {getSellAmountByChangingReceive, useSwap} from '@yoroi/swap'
 import * as React from 'react'
 
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
@@ -23,8 +23,20 @@ export const EditBuyAmount = () => {
 
   const [inputValue, setInputValue] = React.useState<string>(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
 
+  const {sell} = getSellAmountByChangingReceive(createOrder?.selectedPool, {
+    quantity: quantity,
+    tokenId: createOrder.amounts.buy.tokenId,
+  })
+
+  console.log('[getSellAmountByChangingReceive]', sell)
+
+  // const recalculate = React.useCallback(() => {
+  //   sellAmountChanged({quantity: sell.quantity, tokenId: createOrder.amounts.sell.tokenId})
+  // }, [createOrder.amounts.sell.tokenId, sell.quantity, sellAmountChanged])
+
   React.useEffect(() => {
     setInputValue(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
+    // recalculate()
   }, [quantity, tokenInfo.decimals])
 
   const onChangeQuantity = (text: string) => {

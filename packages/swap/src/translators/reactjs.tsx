@@ -174,7 +174,6 @@ export const usePoolsByPair = (
     ]
   >,
 ) => {
-  console.log('usePoolsByPair tokenPair', tokenPair)
   const {pools} = useSwap()
   const query = useQuery({
     suspense: true,

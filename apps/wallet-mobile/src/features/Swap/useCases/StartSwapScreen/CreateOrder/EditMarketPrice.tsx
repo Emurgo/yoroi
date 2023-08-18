@@ -36,7 +36,7 @@ export const EditMarketPrice = ({disabled = false}: Props) => {
               onChange={(value) => {
                 console.log(value)
               }}
-              value={String(createOrder.selectedPool.price)}
+              value={String(createOrder.selectedPool?.price)}
               disabled={disabled}
             />
           </View>

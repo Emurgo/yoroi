@@ -177,7 +177,7 @@ export const getTokensMock = [
       volumeTotal: {base: 0, quote: 0},
     },
     status: 'unverified',
-    supply: {circulating: null, total: '2'},
+    supply: {circulating: null, total: '200000'},
   },
   {
     info: {
@@ -216,7 +216,7 @@ export const getTokensMock = [
       volumeTotal: {base: 0, quote: 0},
     },
     status: 'unverified',
-    supply: {circulating: null, total: '1000000'},
+    supply: {circulating: null, total: '100000'},
   },
   {
     info: {

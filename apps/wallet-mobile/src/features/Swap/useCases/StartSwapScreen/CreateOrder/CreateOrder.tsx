@@ -29,8 +29,6 @@ export const CreateOrder = () => {
     poolList !== undefined && selectedPoolChanged(poolList[0])
   }, [poolList, selectedPoolChanged])
 
-  console.log('[poolsPairList]', poolList)
-
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
   const orderTypeIndex = createOrder.type === 'market' ? 0 : 1
   const handleSelectOrderType = (index: number) => {

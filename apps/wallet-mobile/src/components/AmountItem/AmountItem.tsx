@@ -39,7 +39,6 @@ export const AmountItem = ({
   const nameLabel = isEmptyString(name) ? '-' : name
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
 
-  const formatedSupply = `${supply} ADA`
   const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
 
   const showSwapDetails = !isPrimary && variant === 'swap'
@@ -77,7 +76,7 @@ export const AmountItem = ({
       <Right>
         {tokenInfo.kind !== 'nft' && (
           <Text style={styles.quantity} testID="tokenAmountText">
-            {isPrivacyOff ? '**.*******' : variant === 'swap' ? formatedSupply : denominatedQuantity}
+            {isPrivacyOff ? '**.*******' : variant === 'swap' ? `${supply} ADA` : denominatedQuantity}
           </Text>
         )}
 

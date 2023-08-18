@@ -12,12 +12,11 @@ import {BottomSheetModal} from '../../../../../../../components/BottomSheet'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../../theme'
-import {sortTokenInfos} from '../../../../../../../utils'
 import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
-import {useAllTokenInfos, useBalance, useIsWalletEmpty} from '../../../../../../../yoroi-wallets/hooks'
+import {useAllTokenInfos, useBalance} from '../../../../../../../yoroi-wallets/hooks'
+import {Quantities} from '../../../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../../../../Send/common/filterByFungibility'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
-import {filterBySearch} from '../../../../../common/filterBySearch'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
 
@@ -34,7 +33,7 @@ type TransformedObject = {
   symbol: string | undefined
   ticker: string | undefined
   status: string
-  supply: {total: string; circulating: string | null}
+  supply: string
   inUserWallet: boolean
 }
 
@@ -142,9 +141,13 @@ type TokenListProps = {
 const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
   const wallet = useSelectedWallet()
   const tokenInfos = useAllTokenInfos({wallet})
-  const walletTokenInfos = useFilteredTokenInfos({tokenInfos})
   const {pairsByToken} = usePairListByToken('')
-
+  const walletTokenInfos = tokenInfos.filter(
+    filterByFungibility({
+      fungibilityFilter: 'ft',
+    }),
+  )
+  const {search: assetSearchTerm} = useSearch()
   const secondArray = walletTokenInfos
 
   const transformedArray: TransformedObject[] =
@@ -166,17 +169,19 @@ const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
               symbol: item.info.symbol,
               ticker: item.info.ticker,
               status: item.status,
-              supply: item.supply,
+              supply: Quantities.denominated(`${Number(item.supply.total)}`, item.info.decimals ?? 0),
               inUserWallet: !!matchingSecondItem,
             }
           })
           .filter((item) => (showOnlyVerifiedTokens ? item.status === 'verified' : item))
       : []
 
+  const filteredTransformedList = transformedArray.filter(filterTokensPairBySearch(assetSearchTerm))
+
   return (
     <View style={styles.list}>
       <FlashList
-        data={transformedArray}
+        data={filteredTransformedList}
         renderItem={({item: tokenInfo}: {item: TransformedObject}) => (
           <Boundary>
             <SelectableToken
@@ -190,10 +195,10 @@ const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
         keyExtractor={({id}) => id}
         testID="assetsList"
         estimatedItemSize={78}
-        ListEmptyComponent={<EmptyList filteredTokenInfos={transformedArray} allTokenInfos={tokenInfos} />}
+        ListEmptyComponent={<EmptyList filteredTokenInfos={filteredTransformedList} allTokenInfos={tokenInfos} />}
       />
 
-      <Counter counter={transformedArray.length} />
+      <Counter counter={filteredTransformedList.length} />
     </View>
   )
 }
@@ -223,7 +228,7 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
         wallet={wallet}
         status={tokenInfo.status}
         inWallet={tokenInfo.inUserWallet}
-        supply={tokenInfo?.supply.total}
+        supply={tokenInfo?.supply}
         variant="swap"
       />
     </TouchableOpacity>
@@ -257,25 +262,6 @@ const Counter = ({counter}: {counter: number}) => {
   return null
 }
 
-const useFilteredTokenInfos = ({tokenInfos}: {tokenInfos: Array<Balance.TokenInfo>}) => {
-  const wallet = useSelectedWallet()
-  const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const isWalletEmpty = useIsWalletEmpty(wallet)
-
-  if (isWalletEmpty && !isSearching && tokenInfos?.length === 0) return []
-
-  const filteredTokenInfos = tokenInfos.filter(filterBySearch(assetSearchTerm)).filter(
-    filterByFungibility({
-      fungibilityFilter: 'ft',
-    }),
-  )
-
-  return sortTokenInfos({
-    wallet,
-    tokenInfos: filteredTokenInfos,
-  })
-}
-
 const EmptyList = ({
   filteredTokenInfos,
   allTokenInfos,
@@ -304,6 +290,15 @@ const EmptySearchResult = () => {
       <Text style={styles.contentText}>{strings.noAssetsFound}</Text>
     </View>
   )
+}
+
+export const filterTokensPairBySearch = (searchTerm: string) => {
+  const searchTermLowerCase = searchTerm.toLocaleLowerCase()
+  if (searchTermLowerCase.length === 0) return () => true
+
+  return (tokenInfo: TransformedObject) => {
+    return tokenInfo.name?.toLocaleLowerCase().includes(searchTermLowerCase) ?? false
+  }
 }
 
 const styles = StyleSheet.create({
