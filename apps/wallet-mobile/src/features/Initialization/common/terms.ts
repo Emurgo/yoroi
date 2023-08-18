@@ -40,3 +40,20 @@ export const useAgreeWithLegal = () => {
     agree: mutation.mutate,
   }
 }
+export const useResetLegalAgreement = () => {
+  const storage = useStorage()
+  const queryClient = useQueryClient()
+
+  const mutationFn = useCallback(async () => {
+    await storage.join('appSettings/').removeItem(queryKey)
+  }, [storage])
+
+  const mutation = useMutation({
+    mutationFn,
+    onSuccess: () => queryClient.invalidateQueries([queryKey]),
+  })
+  return {
+    ...mutation,
+    reset: mutation.mutate,
+  }
+}
