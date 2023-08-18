@@ -38,13 +38,13 @@ describe('General checks', () => {
     await initialScreen.buttonBack2().tap()
   })
 
-  it(' should be able to select checkbox and proceed', async () => {
+  it('should be able to select checkbox and proceed', async () => {
     await initialScreen.checkboxSelect().tap({x: 5, y: 10})
     await initialScreen.buttonContinue().tap()
     await utils.takeScreenshot('User consent screen for sharing insights')
   })
 
-  it(' should be able to skip consent for analytics and proceed', async () => {
+  it('should be able to skip consent for analytics and proceed', async () => {
     await expect(analyticsScreen.txt_PageTitle()).toBeVisible()
     await analyticsScreen.btn_Skip().tap()
     await expect(element(by.text('Enter PIN'))).toBeVisible()
