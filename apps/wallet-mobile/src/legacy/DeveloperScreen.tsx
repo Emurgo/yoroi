@@ -13,8 +13,8 @@ import * as Keychain from 'react-native-keychain'
 import {useAuth} from '../auth/AuthProvider'
 import {Button, StatusBar, Text, TextInput} from '../components'
 import {showErrorDialog} from '../dialogs'
+import {useLegalAgreement, useResetLegalAgreement} from '../features/Initialization/common'
 import {errorMessages} from '../i18n/global-messages'
-import {useMetrics} from '../metrics/metricsManager'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
@@ -22,6 +22,7 @@ import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
 import {useCreateWallet} from '../yoroi-wallets/hooks'
 import {NetworkId} from '../yoroi-wallets/types'
+import {CONFIG} from './config'
 
 const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Storybook', path: 'storybook'},
@@ -71,7 +72,9 @@ export const DeveloperScreen = () => {
   })
   const [wallet] = useSelectedWalletContext()
   const [addresses, setAddresses] = React.useState('')
-  const {resetConsent, isConsentRequested} = useMetrics()
+  const agreement = useLegalAgreement()
+  const {reset: resetLegalAgreement} = useResetLegalAgreement()
+  const agreedToLegal = agreement?.latestAcceptedAgreementsDate === CONFIG.AGREEMENT_DATE
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -114,10 +117,10 @@ export const DeveloperScreen = () => {
         />
 
         <Button
-          title={`Reset Analytics Consent (${isConsentRequested})`}
+          title={`Reset Legal Agreement (Agreed: ${agreedToLegal})`}
           style={styles.button}
           onPress={() => {
-            resetConsent()
+            resetLegalAgreement()
           }}
           testID="btnResetAnalyticsConsent"
         />

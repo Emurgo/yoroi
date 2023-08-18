@@ -151,7 +151,7 @@
   },
   {
     "id": "components.initialization.languagepicker.title",
-    "defaultMessage": "!!!Select Language",
+    "defaultMessage": "!!!Select language",
     "file": "src/features/Initialization/common/strings.tsx",
     "start": {
       "line": 63,
