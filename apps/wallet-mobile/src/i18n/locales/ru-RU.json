@@ -88,7 +88,7 @@
   "components.firstrun.custompinscreen.pinInputConfirmationSubTitle": "Повторите новый PIN для быстрого доступа к вашему кошельку",
   "components.initialization.custompinscreen.pinInputTitle": "Ввести PIN",
   "components.initialization.custompinscreen.title": "Установить PIN",
-  "components.initialization.languagepicker.title": "Select language",
+  "components.initialization.languagepicker.title": "Выберите язык",
   "components.ledger.ledgerconnect.usbDeviceReady": "USB устройство готово, пожалуйста, нажмите Подтвердить, чтобы продолжить.",
   "components.ledger.ledgertransportswitchmodal.bluetoothButton": "Подключить по Bluetooth",
   "components.ledger.ledgertransportswitchmodal.bluetoothExplanation": "Выберите этот вариант если вы хотите подключить Ledger Nano модель X по Bluetooth",
