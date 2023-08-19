@@ -1,7 +1,7 @@
 import {validateMnemonic, wordlists} from 'bip39'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard, Platform, ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
+import {Keyboard, ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
 import {Menu, TextInput, useScrollView} from '../../components'
 import {COLORS} from '../../theme'
@@ -195,14 +195,9 @@ const useStrings = () => {
 
 const ROW_HEIGHT = 48
 const styles = StyleSheet.create({
-  menu: Platform.select({
-    ios: {
-      marginTop: ROW_HEIGHT,
-    },
-    default: {
-      marginTop: 3.5,
-    },
-  }),
+  menu: {
+    marginTop: ROW_HEIGHT,
+  },
   menuContent: {
     backgroundColor: COLORS.BACKGROUND,
   },
