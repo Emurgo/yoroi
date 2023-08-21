@@ -1,8 +1,8 @@
 import {Balance} from '@yoroi/types'
+import {createTypeGuardFromSchema, isArray, isNonNullable, isRecord} from '@yoroi/wallets'
 import {z} from 'zod'
 
 import {BackendConfig, NFTAsset} from '../../types'
-import {createTypeGuardFromSchema, isArray, isNonNullable, isRecord} from '../../utils'
 import {convertNft} from '../nfts'
 import {fetchTokensSupplies} from './assetSuply'
 import fetchDefault from './fetch'

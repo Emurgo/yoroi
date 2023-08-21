@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {storiesOf} from '@storybook/react-native'
+import {rootStorage, StorageProvider} from '@yoroi/wallets'
 import React from 'react'
 
-import {storage, StorageProvider} from '../../yoroi-wallets/storage'
 import {PinLoginScreen} from './PinLoginScreen'
 
 storiesOf('PinLoginScreen', module).add('Default', () => (
   <StorageProvider
     storage={{
-      ...storage,
-      getItem: async () => {
+      ...rootStorage,
+      getItem: async (): Promise<any> => {
         return encryptedKeyHash
       },
     }}

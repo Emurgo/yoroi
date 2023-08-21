@@ -1,7 +1,7 @@
+import {createTypeGuardFromSchema} from '@yoroi/wallets'
 import {z} from 'zod'
 
 import {BackendConfig} from '../../types'
-import {createTypeGuardFromSchema} from '../../utils'
 import fetchDefault from './fetch'
 import {toAssetName, toPolicyId} from './utils'
 

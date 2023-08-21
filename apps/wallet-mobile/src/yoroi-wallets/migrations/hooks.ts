@@ -1,9 +1,9 @@
+import {App} from '@yoroi/types'
 import * as React from 'react'
 
-import {YoroiStorage} from '../storage'
 import {to4_9_0} from './4_9_0'
 
-export const useMigrations = (storage: YoroiStorage) => {
+export const useMigrations = (storage: App.Storage) => {
   const [done, setDone] = React.useState(false)
   React.useEffect(() => {
     const runMigrations = async () => {
