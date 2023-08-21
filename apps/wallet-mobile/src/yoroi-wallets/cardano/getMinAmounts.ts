@@ -7,7 +7,7 @@ import {Amounts, asQuantity, Quantities} from '../utils'
 import {CardanoMobile} from '../wallets'
 import {COINS_PER_UTXO_BYTE} from './constants/common'
 import {MultiToken} from './MultiToken'
-import {cardanoValueFromMultiToken} from './utils'
+import {cardanoValueFromMultiToken, normalizeToAddress} from './utils'
 
 export const withMinAmounts = async (
   address: Address,
@@ -23,7 +23,7 @@ export const withMinAmounts = async (
   }))
 }
 
-export const getMinAmounts = async (_address: Address, amounts: Balance.Amounts, primaryToken: Token) => {
+export const getMinAmounts = async (address: Address, amounts: Balance.Amounts, primaryToken: Token) => {
   const multiToken = new MultiToken(
     [
       {identifier: primaryToken.identifier, networkId: primaryToken.networkId, amount: new BigNumber('0')},
@@ -36,16 +36,16 @@ export const getMinAmounts = async (_address: Address, amounts: Balance.Amounts,
     {defaultNetworkId: primaryToken.networkId, defaultIdentifier: primaryToken.identifier},
   )
 
-  const [value, coinsPerUtxoByte, address] = await Promise.all([
+  const [value, coinsPerUtxoByte, normalizedAddress] = await Promise.all([
     cardanoValueFromMultiToken(multiToken),
     CardanoMobile.BigNum.fromStr(COINS_PER_UTXO_BYTE),
-    (await CardanoMobile.ByronAddress.isValid(_address))
-      ? await (await CardanoMobile.ByronAddress.fromBase58(_address)).toAddress()
-      : await CardanoMobile.Address.fromBech32(_address),
+    normalizeToAddress(address),
   ])
 
+  if (normalizedAddress === undefined) throw new Error('getMinAmounts::Error not a valid address')
+
   const [txOutput, dataCost] = await Promise.all([
-    CardanoMobile.TransactionOutput.new(address, value),
+    CardanoMobile.TransactionOutput.new(normalizedAddress, value),
     CardanoMobile.DataCost.newCoinsPerByte(coinsPerUtxoByte),
   ])
 
@@ -58,7 +58,7 @@ export const getMinAmounts = async (_address: Address, amounts: Balance.Amounts,
   } as Balance.Amounts
 }
 
-const withPrimaryToken = (amounts: Balance.Amounts, primaryToken: Token): Balance.Amounts => {
+export const withPrimaryToken = (amounts: Balance.Amounts, primaryToken: Token): Balance.Amounts => {
   if (Amounts.includes(amounts, primaryToken.identifier)) return amounts
 
   return {
