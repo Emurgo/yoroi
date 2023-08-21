@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {Address} from '@emurgo/cross-csl-core'
 import {Balance} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
@@ -588,7 +589,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
-      const amounts = await withMinAmounts(entry.amounts, this.primaryToken)
+      const amounts = await withMinAmounts(entry.address as unknown as Address, entry.amounts, this.primaryToken)
 
       try {
         const unsignedTx = await Cardano.createUnsignedTx(
