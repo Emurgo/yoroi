@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Address, App, Balance} from '@yoroi/types'
+import {App, Balance} from '@yoroi/types'
 import {parseSafe} from '@yoroi/wallets'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'

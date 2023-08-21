@@ -1990,7 +1990,7 @@
     hash-wasm "^4.9.0"
     mocha "^10.0.0"
 
-"@emurgo/cross-csl-mobile@2.6.0":
+"@emurgo/cross-csl-mobile@^2.6.0":
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-2.6.0.tgz#b2d8102ec3228c316c2a393d78b4873a99457017"
   integrity sha512-WpJTiDhbGfXYt8ZxAgHfqJ2y7NqnyqsZksc0O67tQS2gDrEB7obyxycic5BZWejShp6TKQqaZwd4lp8fzJj+gQ==

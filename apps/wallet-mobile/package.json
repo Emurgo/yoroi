@@ -202,7 +202,7 @@
     "@babel/runtime": "^7.20.0",
     "@config-plugins/detox": "^5.0.1",
     "@emurgo/cardano-serialization-lib-nodejs": "^9.1.4",
-    "@emurgo/cross-csl-core": "^2.5.0",
+    "@emurgo/cross-csl-core": "^2.6.0",
     "@emurgo/cross-csl-nodejs": "^2.5.0",
     "@formatjs/cli": "^6.1.0",
     "@formatjs/ts-transformer": "^3.13.0",
