@@ -1,7 +1,7 @@
+import {createTypeGuardFromSchema} from '@yoroi/wallets'
 import {z} from 'zod'
 
 import {BackendConfig, YoroiNftModerationStatus} from '../../types'
-import {createTypeGuardFromSchema} from '../../utils'
 import fetchDefault from './fetch'
 
 export const getNFTModerationStatus = async (

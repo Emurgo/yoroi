@@ -1,13 +1,16 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {parseSafe} from '../utils/parsing'
-import {storage as yoroiStorage} from './storage'
+import {parseSafe} from '../parsers'
+import {rootStorage} from '../storage'
+import {mountMultiStorage} from './asyncStorage'
+import {App} from '@yoroi/types'
 
 describe('prefixed storage', () => {
   beforeEach(() => AsyncStorage.clear())
 
   it('getAllKeys, setItem, getItem, removeItem, clear', async () => {
-    const storage = yoroiStorage
+    const storage = rootStorage
     await storage.getAllKeys().then((keys) => expect(keys).toEqual([]))
 
     await storage.setItem('item1', item1)
@@ -26,7 +29,7 @@ describe('prefixed storage', () => {
   })
 
   it('getAllKeys, setItem, getItem, removeItem, clear, with prefix', async () => {
-    const storage = yoroiStorage.join('prefix/')
+    const storage = rootStorage.join('prefix/')
     expect(await storage.getAllKeys()).toEqual([])
 
     await storage.setItem('item1', item1)
@@ -45,7 +48,7 @@ describe('prefixed storage', () => {
   })
 
   it('getAllKeys, multiSet, multiGet, multiRemove', async () => {
-    const storage = yoroiStorage.join('prefix/')
+    const storage = rootStorage.join('prefix/')
 
     await storage.multiSet([
       ['item1', item1],
@@ -71,19 +74,19 @@ describe('prefixed storage', () => {
   })
 
   it('getAllKeys', async () => {
-    const storage1 = yoroiStorage.join('prefix/1/')
+    const storage1 = rootStorage.join('prefix/1/')
     expect(await storage1.getAllKeys()).toEqual([])
     await storage1.setItem('key1', item1)
     await storage1.setItem('key2', item2)
     expect(await storage1.getAllKeys()).toEqual(['key1', 'key2'])
 
-    const storage2 = yoroiStorage.join('prefix/2/3/')
+    const storage2 = rootStorage.join('prefix/2/3/')
     expect(await storage2.getAllKeys()).toEqual([])
     await storage2.setItem('key1', item1)
     await storage2.setItem('key2', item2)
     expect(await storage2.getAllKeys()).toEqual(['key1', 'key2'])
 
-    const storage = yoroiStorage.join('prefix/')
+    const storage = rootStorage.join('prefix/')
     expect(await storage.getAllKeys()).toEqual([])
     await storage.setItem('key1', item1)
     await storage.setItem('key2', item2)
@@ -91,7 +94,7 @@ describe('prefixed storage', () => {
   })
 
   it('join', async () => {
-    const root = yoroiStorage.join('/')
+    const root = rootStorage.join('/')
     await root.setItem('key1', item1)
     await root.setItem('key2', item2)
     expect(await root.getAllKeys()).toEqual(['key1', 'key2'])
@@ -116,7 +119,7 @@ describe('prefixed storage', () => {
 
   describe('stringify/parse', () => {
     it('getItem, setItem', async () => {
-      const storage = yoroiStorage
+      const storage = rootStorage
       const item = 'text'
       const storedItem = 'item123'
 
@@ -134,7 +137,7 @@ describe('prefixed storage', () => {
     })
 
     it('multiGet, multiSet', async () => {
-      const storage = yoroiStorage
+      const storage = rootStorage
       const item1 = 'item1'
       const storedItem1 = `${item1}-modified`
       const item2 = 'item2'
@@ -149,22 +152,25 @@ describe('prefixed storage', () => {
         return `${data}-modified`
       }) // overrides JSON.stringify
 
-      const parsedResult = await storage.multiGet(['item1', 'item2'], (data) => {
-        expect([storedItem1, storedItem2]).toContain(data)
-        return data?.slice(0, 5)
-      }) // overrides JSON.parse
+      const parsedResult = await storage.multiGet(
+        ['item1', 'item2'],
+        (data) => {
+          expect([storedItem1, storedItem2]).toContain(data)
+          return data?.slice(0, 5)
+        },
+      ) // overrides JSON.parse
 
       expect(parsedResult).toEqual(tuples)
     })
   })
 
   it('clears sub-storage', async () => {
-    const storage1 = yoroiStorage.join('1/')
+    const storage1 = rootStorage.join('1/')
     const storage2 = storage1.join('2/')
     const storage3 = storage2.join('3/')
 
-    await yoroiStorage.setItem('a', '000')
-    await yoroiStorage.setItem('1', '000')
+    await rootStorage.setItem('a', '000')
+    await rootStorage.setItem('1', '000')
     await storage1.setItem('b', 111)
     await storage2.setItem('c', 222)
     await storage3.setItem('d', 333)
@@ -191,12 +197,12 @@ describe('prefixed storage', () => {
   })
 
   it('removeFolder', async () => {
-    const storage1 = yoroiStorage.join('1/')
+    const storage1 = rootStorage.join('1/')
     const storage2 = storage1.join('2/')
     const storage3 = storage2.join('3/')
 
-    await yoroiStorage.setItem('a', '000')
-    await yoroiStorage.setItem('1', '000')
+    await rootStorage.setItem('a', '000')
+    await rootStorage.setItem('1', '000')
     await storage1.setItem('b', 111)
     await storage2.setItem('c', 222)
     await storage3.setItem('d', 333)
@@ -222,7 +228,7 @@ describe('prefixed storage', () => {
       '/a': '000',
     })
 
-    await yoroiStorage.removeFolder('1/')
+    await rootStorage.removeFolder('1/')
 
     expect(await snapshot()).toEqual({
       '/1': '000',
@@ -231,8 +237,63 @@ describe('prefixed storage', () => {
   })
 })
 
+describe('multi storage', () => {
+  beforeEach(() => AsyncStorage.clear())
+
+  it('save, read, keys, remove providing the serializers', async () => {
+    const storage = mountMultiStorage(options)
+    await storage.save([item3, item4])
+
+    const readItems = await storage.read()
+    expect(readItems).toEqual([
+      ['1', item3],
+      ['2', item4],
+    ])
+
+    const keys = await storage.keys()
+    expect(keys).toEqual(['1', '2'])
+
+    await storage.remove()
+
+    const emptyKeys = await storage.keys()
+    expect(emptyKeys).toEqual([])
+  })
+  it('save, read, keys, remove default serializers / key as extractor', async () => {
+    const storage = mountMultiStorage({
+      storage: rootStorage.join('multiStorage/'),
+      dataFolder: 'dataFolder/',
+      keyExtractor: 'id',
+    })
+    await storage.save([item3, item4])
+
+    const readItems = await storage.read()
+    expect(readItems).toEqual([
+      ['1', item3],
+      ['2', item4],
+    ])
+
+    const keys = await storage.keys()
+    expect(keys).toEqual(['1', '2'])
+
+    await storage.remove()
+
+    const emptyKeys = await storage.keys()
+    expect(emptyKeys).toEqual([])
+  })
+})
+
+const options: App.MultiStorageOptions<any> = {
+  storage: rootStorage.join('multiStorage/'),
+  dataFolder: 'dataFolder/',
+  keyExtractor: (item: any) => item.id,
+  serializer: JSON.stringify,
+  deserializer: (data) => JSON.parse(data as string),
+}
+
 const item1 = {a: 123, b: 234}
 const item2 = {c: 123, d: 234}
+const item3 = {id: 1, a: 123, b: 234}
+const item4 = {id: '2', c: 123, d: 234}
 
 const snapshot = async () => {
   const keys = await AsyncStorage.getAllKeys()

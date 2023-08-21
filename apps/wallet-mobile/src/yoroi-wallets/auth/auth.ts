@@ -1,3 +1,5 @@
+import {App} from '@yoroi/types'
+import {parseSafe, parseString, useStorage} from '@yoroi/wallets'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, Platform} from 'react-native'
@@ -11,8 +13,7 @@ import {YoroiWallet} from '../cardano/types'
 import {decryptData, encryptData} from '../encryption'
 import {useMutationWithInvalidations} from '../hooks'
 import {parseWalletMeta} from '../migrations'
-import {AuthenticationPrompt, Keychain, useStorage, YoroiStorage} from '../storage'
-import {parseSafe, parseString} from '../utils'
+import {AuthenticationPrompt, Keychain} from '../storage'
 
 export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {
   const queryClient = useQueryClient()
@@ -53,7 +54,7 @@ export const useEnableAuthWithOs = (options?: UseMutationOptions<void, Error>) =
   return {...mutation, enableAuthWithOs: enable}
 }
 
-export const enableAuthWithOs = async (storage: YoroiStorage) => {
+export const enableAuthWithOs = async (storage: App.Storage) => {
   const settingsStorage = storage.join('appSettings/')
   await settingsStorage.setItem('auth', AUTH_WITH_OS)
 
@@ -149,7 +150,7 @@ export const useDisableAllEasyConfirmation = (
   }
 }
 
-export const disableAllEasyConfirmation = async (storage: YoroiStorage) => {
+export const disableAllEasyConfirmation = async (storage: App.Storage) => {
   const walletStorage = storage.join('wallet/')
   const walletIds = await walletStorage.getAllKeys()
 
@@ -227,7 +228,7 @@ export const useAuthSetting = (options?: UseQueryOptions<AuthSetting, Error>) =>
   return query.data
 }
 
-export const getAuthSetting = async (storage: YoroiStorage) =>
+export const getAuthSetting = async (storage: App.Storage) =>
   storage.join('appSettings/').getItem('auth', parseAuthSetting)
 
 const parseAuthSetting = (data: unknown) => {

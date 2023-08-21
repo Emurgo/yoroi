@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import {parseSafe, rootStorage} from '@yoroi/wallets'
+
 import {Logger} from '../../legacy/logging'
 import {CardanoTypes, legacyWalletChecksum, walletChecksum} from '../cardano/types'
 import {WALLETS} from '../cardano/utils'
-import {storage} from '../storage'
 import type {NetworkId, WalletImplementationId} from '../types/other'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../types/other'
-import {parseSafe} from '../utils/parsing'
 import {WalletMeta} from '../walletManager'
 
 async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Promise<WalletMeta> {
   if (!currentWalletMeta.id) throw new Error(`Wallet meta stored is corrupted. ${JSON.stringify(currentWalletMeta)}`)
-  const walletData: any = await storage.join('wallet/').join(`${currentWalletMeta.id}/`).getItem('data')
+  const walletData: any = await rootStorage.join('wallet/').join(`${currentWalletMeta.id}/`).getItem('data')
   const walletMetaUpdate: Partial<WalletMeta> = {...currentWalletMeta}
 
   // new fields added over time
@@ -103,7 +103,7 @@ function migrateAttribute(attr: keyof WalletMeta, walletMetaUpdated: Partial<Wal
   const id = walletMetaUpdated?.id
   if (id == null) throw new Error('invalid wallet id')
   Logger.warn(`migrateAttribute::${attr} of wallet ${id}`)
-  return storage.join('wallet/').setItem(id, walletMetaUpdated)
+  return rootStorage.join('wallet/').setItem(id, walletMetaUpdated)
 }
 
 export const parseWalletMeta = (data: unknown) => {

@@ -1,5 +1,3 @@
 export * from './EncryptedStorage'
 export * from './Keychain'
 export * from './KeychainStorage'
-export * from './storage'
-export * from './StorageProvider'

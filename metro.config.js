@@ -4,8 +4,9 @@ module.exports = {
   projectRoot: path.resolve(__dirname, "apps/wallet-mobile"),
   watchFolders: [
     path.resolve(__dirname, "node_modules"),
-    path.resolve(__dirname, "packages/types"),
     path.resolve(__dirname, "packages/api-openswap"),
+    path.resolve(__dirname, "packages/types"),
+    path.resolve(__dirname, "packages/wallets"),
     path.resolve(__dirname, "packages/swap"),
     path.resolve(__dirname, "apps/wallet-mobile"),
   ],

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
+import {isNonNullable} from '@yoroi/wallets'
 import {BigNumber} from 'bignumber.js'
 import _, {fromPairs} from 'lodash'
 import React from 'react'
@@ -18,7 +19,7 @@ import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {IOData, TransactionAssurance, TransactionDirection, TransactionInfo} from '../../yoroi-wallets/types'
-import {asQuantity, isNonNullable} from '../../yoroi-wallets/utils'
+import {asQuantity} from '../../yoroi-wallets/utils'
 
 type Props = {
   transaction: TransactionInfo
