@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {Balance} from '@yoroi/types'
+import {parseBoolean, useStorage} from '@yoroi/wallets'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {
@@ -21,7 +22,6 @@ import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
 import {parseWalletMeta} from '../migrations/walletMeta'
-import {useStorage} from '../storage'
 import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
@@ -30,7 +30,6 @@ import {
   YoroiUnsignedTx,
 } from '../types'
 import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus, WalletImplementationId} from '../types/other'
-import {parseBoolean} from '../utils/parsing'
 import {delay} from '../utils/timeUtils'
 import {Amounts, Quantities, Utxos} from '../utils/utils'
 import {WalletManager, WalletMeta} from '../walletManager'

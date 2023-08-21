@@ -1,7 +1,7 @@
-import {YoroiStorage} from '../storage'
-import {isString, parseString} from '../utils/parsing'
+import {App} from '@yoroi/types'
+import {isString, parseString} from '@yoroi/wallets'
 
-export const makeMemosManager = async (storage: YoroiStorage) => {
+export const makeMemosManager = async (storage: App.Storage) => {
   const getMemos = () =>
     storage
       .getAllKeys()

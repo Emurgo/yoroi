@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {rootStorage} from '@yoroi/wallets'
 import assert from 'assert'
 import {expect} from 'chai'
 
 import {WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../cardano/constants/mainnet/constants'
 import {WALLETS} from '../cardano/utils'
-import {storage} from '../storage'
 import {NETWORK_REGISTRY} from '../types'
 import {WalletMeta} from '../walletManager'
 import {migrateWalletMetas} from './walletMeta'
@@ -16,8 +16,8 @@ describe('migrateWalletMetas()', () => {
     describe('when networkId is missing and isShelley is present', () => {
       it('should set networkId and walletImplementationId as JORMUNGANDR if isShelley is true', async () => {
         const {networkId: _, ...meta} = mockedWalletMeta
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
         const expected = [
           {
@@ -34,8 +34,8 @@ describe('migrateWalletMetas()', () => {
 
       it('should set networkId and walletImplementationId as HASKELL_SHELLEY if isShelley is false', async () => {
         const {networkId: _, ...meta} = {...mockedWalletMeta, isShelley: false}
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
         const expected = [
           {
@@ -55,8 +55,8 @@ describe('migrateWalletMetas()', () => {
     describe('when networkId is present or isShelley is missing', () => {
       it('should keep walletImplementationId if it is not null', async () => {
         const meta = mockedWalletMeta
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
         const expected = [mockedWalletMeta]
 
@@ -67,8 +67,8 @@ describe('migrateWalletMetas()', () => {
 
       it('should set walletImplementationId as BYRON if it is null', async () => {
         const {walletImplementationId: _, ...meta} = mockedWalletMeta
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
         const expected = [{...mockedWalletMeta, walletImplementationId: WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID}]
 
@@ -79,8 +79,8 @@ describe('migrateWalletMetas()', () => {
 
       it('should set networkId as HASKELL_SHELLEY if it is null', async () => {
         const {networkId: _networkId, isShelley: _isShelley, ...meta} = mockedWalletMeta
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
         const expectedWalletMeta = {...mockedWalletMeta, networkId: NETWORK_REGISTRY.HASKELL_SHELLEY}
         delete expectedWalletMeta.isShelley
@@ -93,8 +93,8 @@ describe('migrateWalletMetas()', () => {
 
       it('should set networkId as HASKELL_SHELLEY if it is BYRON_MAINNET', async () => {
         const {isShelley: _isShelley, ...meta} = mockedWalletMeta
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
         const expectedWalletMeta = {...mockedWalletMeta, networkId: NETWORK_REGISTRY.HASKELL_SHELLEY}
         delete expectedWalletMeta.isShelley
@@ -108,8 +108,8 @@ describe('migrateWalletMetas()', () => {
       it('should keep networkId if it is not BYRON_MAINNET and not NULL', async () => {
         const meta = {...mockedWalletMeta, networkId: NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET}
         delete meta.isShelley
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
         const expectedWalletMeta = {...mockedWalletMeta, networkId: NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET}
         delete expectedWalletMeta.isShelley
@@ -125,8 +125,8 @@ describe('migrateWalletMetas()', () => {
       it('should set checksum with data when the addressGenerator is present in the wallet/data HASKELL', async () => {
         const {checksum: _, ...meta} = mockedWalletMeta
 
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
         const expectedWalletMeta = mockedWalletMeta
         const expected = [expectedWalletMeta]
@@ -142,8 +142,8 @@ describe('migrateWalletMetas()', () => {
           walletImplementationId: WALLETS.HASKELL_BYRON.WALLET_IMPLEMENTATION_ID,
         }
 
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
         const expectedWalletMeta = {
           ...mockedWalletMeta,
@@ -166,8 +166,8 @@ describe('migrateWalletMetas()', () => {
           ...mockedWalletMeta,
           walletImplementationId: WALLETS.JORMUNGANDR_ITN.WALLET_IMPLEMENTATION_ID,
         }
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
         const expectedWalletMeta = {
           ...mockedWalletMeta,
@@ -190,8 +190,8 @@ describe('migrateWalletMetas()', () => {
         const {checksum: _, ...meta} = mockedWalletMeta
         const data = {...mockedWalletData, externalChain: {}}
 
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', data)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', data)
         const walletMetas = [meta]
         const expectedWalletMeta = {
           ...mockedWalletMeta,
@@ -212,8 +212,8 @@ describe('migrateWalletMetas()', () => {
       it('should set isHW according to the wallet/data when false', async () => {
         const {isHW: _, ...meta} = mockedWalletMeta
         const data = {...mockedWalletData, isHW: false}
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', data)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', data)
         const walletMetas = [meta]
         const expectedWalletMeta = {...mockedWalletMeta, isHW: false}
         const expected = [expectedWalletMeta]
@@ -226,8 +226,8 @@ describe('migrateWalletMetas()', () => {
       it('should set isHW according to the wallet/data when true', async () => {
         const {isHW: _, ...meta} = mockedWalletMeta
         const data = {...mockedWalletData, isHW: true}
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', data)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', data)
         const walletMetas = [meta]
         const expectedWalletMeta = {...mockedWalletMeta, isHW: true}
         const expected = [expectedWalletMeta]
@@ -240,8 +240,8 @@ describe('migrateWalletMetas()', () => {
       it('should set isHW to false when it is not present in wallet/data', async () => {
         const {isHW: _, ...meta} = mockedWalletMeta
         const data = {...mockedWalletData, isHW: null}
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', data)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', data)
         const walletMetas = [meta]
         const expectedWalletMeta = {...mockedWalletMeta, isHW: false}
         const expected = [expectedWalletMeta]
@@ -255,8 +255,8 @@ describe('migrateWalletMetas()', () => {
     describe('wallet meta type check', () => {
       it('should throw when there is no id', async () => {
         const {id: _, ...meta} = mockedWalletMeta
-        await storage.join('wallet/').setItem(mockedWalletMeta.id, meta)
-        await storage.join('wallet/').join(`${mockedWalletMeta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(mockedWalletMeta.id, meta)
+        await rootStorage.join('wallet/').join(`${mockedWalletMeta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
 
         try {
@@ -268,8 +268,8 @@ describe('migrateWalletMetas()', () => {
 
       it('should not throw when optional fields are not present', async () => {
         const {isShelley: _isShelley, ...meta} = mockedWalletMeta
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
 
         assert.doesNotReject(() => migrateWalletMetas(walletMetas))
@@ -277,8 +277,8 @@ describe('migrateWalletMetas()', () => {
 
       it('should throw when safeguard fails', async () => {
         const {isShelley: _isShelley, ...meta} = {...mockedWalletMeta, walletImplementationId: 'invalid'}
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
         try {
           // @ts-expect-error test
@@ -293,8 +293,8 @@ describe('migrateWalletMetas()', () => {
     describe('when isEasyConfirmationEnabled is missing', () => {
       it('should set isEasyConfirmationEnabled to false', async () => {
         const {isEasyConfirmationEnabled: _, ...meta} = mockedWalletMeta
-        await storage.join('wallet/').setItem(meta.id, meta)
-        await storage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        await rootStorage.join('wallet/').join(`${meta.id}/`).setItem('data', mockedWalletData)
         const walletMetas = [meta]
         const expectedWalletMeta = {...mockedWalletMeta, isEasyConfirmationEnabled: false}
         const expected = [expectedWalletMeta]

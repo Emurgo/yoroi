@@ -17,7 +17,15 @@ import {
 import {SwapPoolPair} from './swap/pool'
 import {SwapStorage} from './swap/storage'
 import {SwapManager} from './swap/manager'
+import {AppStorage, AppStorageFolderName} from './app/storage'
+import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
 
+export namespace App {
+  export interface Storage extends AppStorage {}
+  export type StorageFolderName = AppStorageFolderName
+  export interface MultiStorage<T> extends AppMultiStorage<T> {}
+  export type MultiStorageOptions<T> = AppMultiStorageOptions<T>
+}
 export namespace Swap {
   export type CreateOrderData = SwapCreateOrderData
   export type CreateOrderResponse = SwapCreateOrderResponse
@@ -45,3 +53,5 @@ export namespace Balance {
   export type Amount = BalanceAmount
   export type Amounts = BalanceAmounts
 }
+
+export * from './helpers/types'

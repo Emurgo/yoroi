@@ -5,6 +5,7 @@ module.exports = {
   watchFolders: [
     path.resolve(__dirname, "node_modules"),
     path.resolve(__dirname, "packages/types"),
+    path.resolve(__dirname, "packages/wallets"),
     path.resolve(__dirname, "packages/openswap"),
     path.resolve(__dirname, "packages/swap"),
     path.resolve(__dirname, "apps/wallet-mobile"),
