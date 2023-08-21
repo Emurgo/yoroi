@@ -6,7 +6,7 @@ import {
 } from './orders'
 import {getPools} from './pools'
 import {getTokens} from './tokens'
-import {CancelOrderRequest, CreateOrderRequest, Network} from './types'
+import {CancelOrderRequest, CreateOrderRequest, Network, TokenAddress} from './types'
 import {axiosClient} from './config'
 
 export class OpenSwapApi {
@@ -42,8 +42,8 @@ export class OpenSwapApi {
     tokenA,
     tokenB,
   }: {
-    tokenA: {policyId: string; assetName: string}
-    tokenB: {policyId: string; assetName: string}
+    tokenA: TokenAddress
+    tokenB: TokenAddress
   }) {
     return getPools(
       {network: this.network, client: this.client},
