@@ -4,9 +4,9 @@ import {addAttach, addMsg} from 'jest-html-reporters/helper'
 import yargs from 'yargs/yargs'
 
 import {mnemonicBadgeByWord, mnemonicByIndexText} from './screens/createWalletFlow.screen'
+import * as initialScreen from './screens/initialScreen.screen'
 import * as myWalletsScreen from './screens/myWallets.screen'
 import {pinKeyButton} from './screens/pinCode.screen'
-import * as prepareScreens from './screens/prepareApp.screen'
 import {mnemonicByIndexInput} from './screens/restoreWalletFlow.screen'
 import * as userInsightScreen from './screens/shareUserInsights.screen'
 
@@ -43,22 +43,18 @@ export const enterRecoveryPhrase = async (phraseArray: string[], platform: strin
 }
 
 export const prepareApp = async (pin: string): Promise<void> => {
-  await expect(element(by.text('Select Language'))).toBeVisible()
-  await expect(prepareScreens.btn_SelectLanguageEnglish()).toBeVisible()
-  await prepareScreens.btn_Next().tap()
+  await expect(element(by.text('Select language'))).toBeVisible()
+  await expect(initialScreen.dropDownLanguagePicker()).toBeVisible()
+  await takeScreenshot('Initial screen for first time user')
+  await initialScreen.checkboxSelect().tap({x: 5, y: 10})
+  await initialScreen.buttonContinue().tap()
 
-  await expect(prepareScreens.chkbox_AcceptTos()).toBeVisible()
-  await prepareScreens.chkbox_AcceptTos().tap()
-  await expect(prepareScreens.btn_Accept()).toBeVisible()
-  await prepareScreens.btn_Accept().tap()
+  await expect(userInsightScreen.txt_PageTitle()).toBeVisible()
+  await userInsightScreen.btn_Accept().tap()
 
   await expect(pinKeyButton('1')).toBeVisible()
   await enterPIN(pin)
   await enterPIN(pin)
-  await expect(userInsightScreen.txt_PageTitle()).toBeVisible()
-  await takeScreenshot('User consent screen for sharing insights')
-  await userInsightScreen.btn_Accept().tap()
-
   await expect(myWalletsScreen.pageTitle()).toBeVisible()
 }
 

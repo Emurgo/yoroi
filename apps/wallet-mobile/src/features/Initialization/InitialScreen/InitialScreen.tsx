@@ -59,7 +59,7 @@ export const InitialScreen = () => {
         <View style={styles.checkboxRow}>
           <Text style={styles.checkboxText}>{`${strings.tosIAgreeWith} `}</Text>
 
-          <TouchableOpacity onPress={onTosLinkPress}>
+          <TouchableOpacity onPress={onTosLinkPress} testID="linkToS">
             <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.tosAgreement}</Text>
           </TouchableOpacity>
 
@@ -69,7 +69,7 @@ export const InitialScreen = () => {
 
           <Text style={styles.checkboxText}>{` `}</Text>
 
-          <TouchableOpacity onPress={onPrivacyLinkPress}>
+          <TouchableOpacity onPress={onPrivacyLinkPress} testID="linkPrivacyPolicy">
             <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.privacyPolicy}</Text>
           </TouchableOpacity>
         </View>
@@ -77,7 +77,13 @@ export const InitialScreen = () => {
 
       <Spacer fill />
 
-      <Button title={strings.continue} shelleyTheme disabled={!tosAccepted} onPress={onPressContinue} />
+      <Button
+        title={strings.continue}
+        shelleyTheme
+        disabled={!tosAccepted}
+        onPress={onPressContinue}
+        testID="buttonContinue"
+      />
     </SafeAreaView>
   )
 }
@@ -87,7 +93,7 @@ const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? supportedLanguages['en-US']
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} testID="dropDownLanguagePicker">
       <TextInput style={styles.input} value={language.label} pointerEvents="none" editable={false} />
 
       <View style={styles.inputIcon}>
