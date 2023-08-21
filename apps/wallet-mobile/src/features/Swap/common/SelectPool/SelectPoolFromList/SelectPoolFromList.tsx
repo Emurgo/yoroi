@@ -9,7 +9,9 @@ import {COLORS} from '../../../../../theme'
 import {useNavigateTo} from '../../navigation'
 
 type Props = {
-  data?: Swap.PoolPair[]
+  // TODO: fix
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: Swap.PoolPair[] | any
 }
 export const SelectPoolFromList = ({data}: Props) => {
   const {selectedPoolChanged, createOrder} = useSwap()
