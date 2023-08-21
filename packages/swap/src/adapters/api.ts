@@ -1,5 +1,5 @@
 import {Swap, Balance} from '@yoroi/types'
-import {OpenSwapApi, CreateOrderRequest} from '@yoroi/api-openswap'
+import {OpenSwapApi, CreateOrderRequest} from '@yoroi/openswap'
 import {
   asOpenswapAmount,
   asOpenswapTokenId,
@@ -7,12 +7,14 @@ import {
   asYoroiOrders,
   asYoroiPools,
 } from './transformers'
+import {getTokensMock} from '../helpers/tokens.mocks'
+import {getPoolsMock} from '../helpers/pools.mocks'
 
 export const makeSwapApi = (
   // FIX: network Yoroi type need to bring from the wallet // chain Id
   {network, stakingKey}: {network: 1 | 0 | 300; stakingKey: string},
   deps?: {openswap?: OpenSwapApi},
-): Swap.Api => {
+): Readonly<Swap.Api> => {
   const api =
     deps?.openswap ?? new OpenSwapApi(network === 0 ? 'mainnet' : 'preprod')
 
@@ -25,8 +27,9 @@ export const makeSwapApi = (
   ): Promise<Swap.CreateOrderResponse> => {
     const orderRequest: CreateOrderRequest = {
       walletAddress: orderData.address,
-      protocol: orderData.protocol as CreateOrderRequest['protocol'],
-      poolId: orderData.poolId,
+      protocol: orderData.selectedPool
+        .provider as CreateOrderRequest['protocol'],
+      poolId: orderData.selectedPool.poolId,
       sell: asOpenswapAmount(orderData.amounts.sell),
       buy: asOpenswapAmount(orderData.amounts.buy),
     }
@@ -57,19 +60,36 @@ export const makeSwapApi = (
   // TODO: it should be abstracted by our own backend after our native assets have all data
   const getTokens: Swap.Api['getTokens'] = async (
     token,
-  ): Promise<Balance.Token[]> =>
-    api.getTokens(asOpenswapTokenId(token)).then(asYoroiBalanceTokens)
+  ): Promise<Balance.Token[]> => {
+    if (network === 1) {
+      return getTokensMock as Balance.Token[]
+    } else {
+    }
+    return api.getTokens(asOpenswapTokenId(token)).then(asYoroiBalanceTokens)
+  }
 
-  const getPools: Swap.Api['getPools'] = async ({
+  const getPoolPairs: Swap.Api['getPoolPairs'] = async ({
     tokenA,
     tokenB,
-  }): Promise<Swap.Pool[]> =>
-    api
-      .getPools({
-        tokenA: asOpenswapTokenId(tokenA),
-        tokenB: asOpenswapTokenId(tokenB),
-      })
-      .then(asYoroiPools)
+  }): Promise<Swap.PoolPair[]> => {
+    // right now we always get empty array from the api response, until resolving the isssue will return mock data
+    if (network === 1 || network === 0) {
+      return getPoolsMock as Swap.PoolPair[]
+    } else {
+      return api
+        .getPools({
+          tokenA: asOpenswapTokenId(tokenA),
+          tokenB: asOpenswapTokenId(tokenB),
+        })
+        .then(asYoroiPools)
+    }
+  }
 
-  return {getOrders, cancelOrder, createOrder, getTokens, getPools} as Swap.Api
+  return {
+    getOrders,
+    cancelOrder,
+    createOrder,
+    getTokens,
+    getPoolPairs,
+  } as const
 }

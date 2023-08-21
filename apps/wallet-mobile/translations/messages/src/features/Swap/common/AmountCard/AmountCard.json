@@ -1,0 +1,17 @@
+[
+  {
+    "id": "swap.swapScreen.selectToken",
+    "defaultMessage": "!!!Select token",
+    "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
+    "start": {
+      "line": 118,
+      "column": 15,
+      "index": 3714
+    },
+    "end": {
+      "line": 121,
+      "column": 3,
+      "index": 3797
+    }
+  }
+]

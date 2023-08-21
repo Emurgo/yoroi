@@ -7,7 +7,14 @@ export {
   mockSwapManagerDefault,
   swapManagerMocks,
 } from './translators/swapManager.mocks'
-export {SwapProvider, useSwap} from './translators/reactjs'
+export {mockSwapStateDefault} from './translators/swapState.mocks'
+export {
+  SwapProvider,
+  useSwap,
+  useOrderByStatusOpen,
+  usePairListByToken,
+  usePoolsByPair,
+} from './translators/reactjs'
 export {
   getReceiveAmountbyChangingSell,
   getSellAmountByChangingReceive,

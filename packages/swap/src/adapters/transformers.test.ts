@@ -6,7 +6,7 @@ import {
   asYoroiPool,
   asYoroiTokenId,
 } from './transformers'
-import {Order, Pool, Token} from '@yoroi/api-openswap'
+import {Order, Pool, Token} from '@yoroi/openswap'
 
 describe('asOpenswapAmount', () => {
   it('should return the correct result when a valid yoroiAmount is provided', () => {
@@ -122,7 +122,7 @@ describe('asYoroiPool', () => {
 
     const result = asYoroiPool(openswapPool)
 
-    expect(result).toEqual<Swap.Pool>({
+    expect(result).toEqual<Swap.PoolPair>({
       batcherFee: {quantity: '100', tokenId: ''},
       fee: '0.3',
       deposit: {quantity: '300', tokenId: ''},

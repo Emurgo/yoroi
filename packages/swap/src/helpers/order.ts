@@ -6,9 +6,15 @@ type AmountPair = {
 }
 
 export const getReceiveAmountbyChangingSell = (
-  pool: Swap.Pool,
+  pool: Swap.PoolPair,
   sell: Balance.Amount,
 ): AmountPair => {
+  if (!pool) {
+    return {
+      sell: {quantity: '0', tokenId: ''},
+      buy: {quantity: '0', tokenId: ''},
+    }
+  }
   const poolA = BigInt(pool.tokenA.quantity)
   const poolB = BigInt(pool.tokenB.quantity)
   const poolsProduct = poolA * poolB // fee is part of tokens sent -> this means the constant product increases after the swap!
@@ -43,9 +49,16 @@ export const getReceiveAmountbyChangingSell = (
 }
 
 export const getSellAmountByChangingReceive = (
-  pool: Swap.Pool,
+  pool: Swap.PoolPair,
   buy: Balance.Amount,
 ): AmountPair => {
+  if (!pool) {
+    return {
+      sell: {quantity: '0', tokenId: ''},
+      buy: {quantity: '0', tokenId: ''},
+    }
+  }
+
   const poolA = BigInt(pool.tokenA.quantity)
   const poolB = BigInt(pool.tokenB.quantity)
   const poolsProduct = poolA * poolB // fee is part of tokens sent -> this means the constant product increases after the swap!
@@ -81,7 +94,7 @@ export const getSellAmountByChangingReceive = (
 export const makeLimitOrder = (
   sell: Balance.Amount,
   buy: Balance.Amount,
-  pool: Swap.Pool,
+  pool: Swap.PoolPair,
   slippage: number,
   address: string,
 ): Swap.CreateOrderData => {
@@ -91,10 +104,9 @@ export const makeLimitOrder = (
   )
 
   return {
-    protocol: pool.provider,
+    selectedPool: pool,
     address,
     slippage,
-    poolId: pool.poolId,
     amounts: {
       sell,
       buy: {
@@ -108,7 +120,7 @@ export const makeLimitOrder = (
 export const makePossibleMarketOrder = (
   sell: Balance.Amount,
   buy: Balance.Amount,
-  pools: Swap.Pool[],
+  pools: Swap.PoolPair[],
   slippage: number,
   address: string,
 ): Swap.CreateOrderData | undefined => {
@@ -118,7 +130,7 @@ export const makePossibleMarketOrder = (
 
   const findBestOrder = (
     order: Swap.CreateOrderData | undefined,
-    pool: Swap.Pool,
+    pool: Swap.PoolPair,
   ): Swap.CreateOrderData => {
     const amountPair = getReceiveAmountbyChangingSell(pool, sell)
 
@@ -129,8 +141,7 @@ export const makePossibleMarketOrder = (
     )
 
     const newOrder: Swap.CreateOrderData = {
-      protocol: pool.provider,
-      poolId: pool.poolId,
+      selectedPool: pool,
       slippage,
       amounts: {
         sell: amountPair.sell,

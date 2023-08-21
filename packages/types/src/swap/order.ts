@@ -1,4 +1,5 @@
 import {BalanceAmount} from '../balance/token'
+import {SwapPoolPair} from './pool'
 import {SwapProtocol} from './protocol'
 
 export type SwapOrderType = 'market' | 'limit'
@@ -10,16 +11,8 @@ export type SwapCreateOrderData = {
   }
   address: string
   slippage: number
-} & (
-  | {
-      protocol: Omit<SwapProtocol, 'sundaeswap'>
-      poolId: string | undefined // only required for SundaeSwap trades.
-    }
-  | {
-      protocol: 'sundaeswap'
-      poolId: string
-    }
-)
+  selectedPool: SwapPoolPair
+}
 
 export type SwapCancelOrderData = {
   utxos: {

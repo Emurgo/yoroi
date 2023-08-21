@@ -8,10 +8,10 @@ export const useNavigateTo = () => {
 
   return useRef({
     selectPool: () => navigation.navigate('swap-select-pool'),
-    slippageToleranceInput: () => navigation.navigate('swap-set-slippage'),
-    selectedSwapFromTokens: () => navigation.navigate('swap-select-token-from'),
-    selectedSwapToTokens: () => navigation.navigate('swap-select-token-to'),
-    swapTokens: () => navigation.navigate('swap-start-order'),
-    confirmationOrder: () => navigation.navigate('swap-confirmation-order'),
+    editSlippage: () => navigation.navigate('swap-edit-slippage'),
+    selectBuyToken: () => navigation.navigate('swap-select-buy-token'),
+    selectSellToken: () => navigation.navigate('swap-select-sell-token'),
+    startSwap: () => navigation.navigate('swap-start-swap'),
+    confirmTx: () => navigation.navigate('swap-confirm-tx'),
   }).current
 }

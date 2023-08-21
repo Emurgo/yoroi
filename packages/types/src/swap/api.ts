@@ -5,15 +5,15 @@ import {
   SwapCreateOrderResponse,
   SwapOpenOrder,
 } from './order'
-import {SwapPool} from './pool'
+import {SwapPoolPair} from './pool'
 
 export interface SwapApi {
   createOrder(orderData: SwapCreateOrderData): Promise<SwapCreateOrderResponse>
   cancelOrder(orderData: SwapCancelOrderData): Promise<string>
   getOrders(): Promise<SwapOpenOrder[]>
-  getPools(args: {
+  getPoolPairs(args: {
     tokenA: BalanceToken['info']['id']
     tokenB: BalanceToken['info']['id']
-  }): Promise<SwapPool[]>
-  getTokens(tokenBase: BalanceToken['info']['id']): Promise<BalanceToken[]>
+  }): Promise<SwapPoolPair[]>
+  getTokens(tokenIdBase: BalanceToken['info']['id']): Promise<BalanceToken[]>
 }
