@@ -5,6 +5,7 @@ import {
   useQuery,
   useQueryClient,
   useMutation,
+  UseQueryOptions,
 } from 'react-query'
 import {Balance, Swap} from '@yoroi/types'
 import {swapStorageSlippageKey} from '../adapters/storage'
@@ -19,6 +20,8 @@ import {
   defaultSwapState,
 } from './swapState'
 import {mockSwapManagerDefault} from './swapManager.mocks'
+import {BalanceToken} from '@yoroi/types/lib/balance/token'
+import {SwapPoolPair} from '@yoroi/types/lib/swap/pool'
 
 const defaultSwapManager: Swap.Manager = mockSwapManagerDefault
 
@@ -52,23 +55,26 @@ export const SwapProvider = ({
     orderTypeChanged: (orderType: Swap.OrderType) => {
       dispatch({type: SwapCreateOrderActionType.OrderTypeChanged, orderType})
     },
-    fromAmountChanged: (fromAmount: Balance.Amount) => {
-      dispatch({type: SwapCreateOrderActionType.FromAmountChanged, fromAmount})
+    sellAmountChanged: (amount: Balance.Amount) => {
+      dispatch({type: SwapCreateOrderActionType.SellAmountChanged, amount})
     },
-    toAmountChanged: (toAmount: Balance.Amount) => {
-      dispatch({type: SwapCreateOrderActionType.ToAmountChanged, toAmount})
+    buyAmountChanged: (amount: Balance.Amount) => {
+      dispatch({type: SwapCreateOrderActionType.BuyAmountChanged, amount})
     },
-    protocolChanged: (protocol: Swap.Protocol) => {
-      dispatch({type: SwapCreateOrderActionType.ProtocolChanged, protocol})
-    },
-    poolIdChanged: (poolId: string) => {
-      dispatch({type: SwapCreateOrderActionType.PoolIdChanged, poolId})
+    selectedPoolChanged: (pool: Swap.PoolPair) => {
+      dispatch({type: SwapCreateOrderActionType.SelectedPoolChanged, pool})
     },
     slippageChanged: (slippage: number) => {
       dispatch({type: SwapCreateOrderActionType.SlippageChanged, slippage})
     },
     txPayloadChanged: (txPayload: Swap.CreateOrderResponse) => {
       dispatch({type: SwapCreateOrderActionType.TxPayloadChanged, txPayload})
+    },
+    switchTokens: () => {
+      dispatch({type: SwapCreateOrderActionType.SwitchTokens})
+    },
+    resetQuantities: () => {
+      dispatch({type: SwapCreateOrderActionType.ResetQuantities})
     },
     unsignedTxChanged: (unsignedTx: any) => {
       dispatch({type: SwapActionType.UnsignedTxChanged, unsignedTx})
@@ -91,7 +97,7 @@ export const useSwap = () =>
 
 const invalidSwapContext = () => {
   throw new Error(
-    '[swap-react] useSwapState must be used within a SwapProvider',
+    '[@yoroi/swap] useSwapState must be used within a SwapProvider',
   )
 }
 
@@ -106,9 +112,80 @@ export const useSwapSlippage = () => {
   })
 
   if (query.data == null)
-    throw new Error('[swap-react] useSwapSlippage invalid state')
+    throw new Error('[@yoroi/swap] useSwapSlippage invalid state')
 
   return query.data
+}
+export const useOrderByStatusOpen = (
+  options: UseQueryOptions<Swap.OpenOrder[], Error>,
+) => {
+  const {order} = useSwap()
+  const query = useQuery({
+    suspense: true,
+    queryKey: [],
+    queryFn: order.list.byStatusOpen,
+    ...options,
+  })
+
+  if (query.data == null)
+    throw new Error('[@yoroi/swap] useOrderByStatusOpen invalid state')
+
+  return query.data
+}
+
+export const usePairListByToken = (
+  tokenIdBase: Balance.Token['info']['id'],
+  options?: UseQueryOptions<
+    Balance.Token[],
+    Error,
+    Balance.Token[],
+    ['usePairListByToken', string]
+  >,
+) => {
+  const {pairs} = useSwap()
+  const query = useQuery({
+    suspense: true,
+    ...options,
+    queryKey: ['usePairListByToken', tokenIdBase],
+    queryFn: () => pairs.list.byToken(tokenIdBase),
+  })
+
+  return {
+    ...query,
+    pairsByToken: query.data,
+  }
+}
+
+export const usePoolsByPair = (
+  tokenPair: {
+    tokenA: BalanceToken['info']['id']
+    tokenB: BalanceToken['info']['id']
+  },
+  options?: UseQueryOptions<
+    SwapPoolPair[],
+    Error,
+    SwapPoolPair[],
+    [
+      'usePoolsByPair',
+      {
+        tokenA: BalanceToken['info']['id']
+        tokenB: BalanceToken['info']['id']
+      },
+    ]
+  >,
+) => {
+  const {pools} = useSwap()
+  const query = useQuery({
+    suspense: true,
+    ...options,
+    queryKey: ['usePoolsByPair', tokenPair],
+    queryFn: () => pools.list.byPair(tokenPair),
+  })
+
+  return {
+    ...query,
+    poolList: query.data,
+  }
 }
 
 export const useSwapSetSlippage = (

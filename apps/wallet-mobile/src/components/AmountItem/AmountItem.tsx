@@ -15,10 +15,22 @@ export type AmountItemProps = {
   amount: Balance.Amount
   style?: ViewProps['style']
   isPrivacyOff?: boolean
+  status?: string
+  inWallet?: boolean
+  supply?: string
   variant?: 'swap'
 }
 
-export const AmountItem = ({isPrivacyOff, wallet, style, amount, variant}: AmountItemProps) => {
+export const AmountItem = ({
+  isPrivacyOff,
+  wallet,
+  style,
+  amount,
+  status,
+  inWallet,
+  supply,
+  variant,
+}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -28,6 +40,7 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, variant}: Amoun
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
 
   const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
+
   const showSwapDetails = !isPrimary && variant === 'swap'
 
   return (
@@ -48,7 +61,9 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, variant}: Amoun
             <>
               <Spacer width={4} />
 
-              <Icon.CheckFilled size={22} color={COLORS.SHELLEY_BLUE} />
+              {status === 'verified' && <Icon.CheckFilled size={22} color={COLORS.SHELLEY_BLUE} />}
+
+              {inWallet && <Icon.Portfolio size={22} color={COLORS.LIGHT_GREEN} />}
             </>
           )}
         </View>
@@ -61,7 +76,7 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, variant}: Amoun
       <Right>
         {tokenInfo.kind !== 'nft' && (
           <Text style={styles.quantity} testID="tokenAmountText">
-            {isPrivacyOff ? '**.*******' : denominatedQuantity}
+            {isPrivacyOff ? '**.*******' : variant === 'swap' ? `${supply} ADA` : denominatedQuantity}
           </Text>
         )}
 

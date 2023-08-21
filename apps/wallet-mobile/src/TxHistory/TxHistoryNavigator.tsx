@@ -1,4 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
+import {makeSwapApi, makeSwapManager, makeSwapStorage, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
@@ -13,12 +14,14 @@ import {SelectTokenFromListScreen} from '../features/Send/useCases/ListAmountsTo
 import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
-import {SwapProvider} from '../features/Swap/common/SwapContext'
-import {ConfirmationOrderScreen, StartSwapScreen} from '../features/Swap/useCases'
-import {InputSlippageToleranceScreen} from '../features/Swap/useCases/InputSlippageToleranceScreen'
-import {SelectPoolScreen} from '../features/Swap/useCases/SelectPoolScreen'
-import {SelectTokenFromListScreen as SwapSelectTokenFromListScreen} from '../features/Swap/useCases/TokenSwap/AddTokens/SelectTokenFromListScreen'
-import {SelectTokenToListScreen as SwapSelectTokenToListScreen} from '../features/Swap/useCases/TokenSwap/AddTokens/SelectTokenToListScreen'
+import {
+  ConfirmTxScreen as ConfirmTxSwapScreen,
+  EditSlippageScreen,
+  SelectPoolFromListScreen,
+  StartSwapScreen,
+} from '../features/Swap/useCases'
+import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
+import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
 import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes, useWalletNavigation} from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -38,9 +41,16 @@ export const TxHistoryNavigator = () => {
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
 
+  const swapStorage = makeSwapStorage()
+  const swapAPI = makeSwapApi({
+    network: 0,
+    stakingKey: wallet.rewardAddressHex,
+  })
+  const swapManager = makeSwapManager(swapStorage, swapAPI)
+
   return (
     <SendProvider key={wallet.id}>
-      <SwapProvider key={wallet.id}>
+      <SwapProvider key={wallet.id} swapManager={swapManager}>
         <Stack.Navigator
           screenListeners={{}}
           screenOptions={{
@@ -82,7 +92,7 @@ export const TxHistoryNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-start-order"
+            name="swap-start-swap"
             component={StartSwapScreen}
             options={{
               title: strings.swapTitle,
@@ -90,32 +100,32 @@ export const TxHistoryNavigator = () => {
           />
 
           <Stack.Screen
-            name="swap-confirmation-order"
-            component={ConfirmationOrderScreen}
+            name="swap-confirm-tx"
+            component={ConfirmTxSwapScreen}
             options={{
               title: strings.confirmationTransaction,
             }}
           />
 
           <Stack.Screen
-            name="swap-select-token-from"
-            component={SwapSelectTokenFromListScreen}
+            name="swap-select-sell-token"
+            component={SelectSellTokenFromListScreen}
             options={{
               title: strings.swapFromTitle,
             }}
           />
 
           <Stack.Screen
-            name="swap-select-token-to"
-            component={SwapSelectTokenToListScreen}
+            name="swap-select-buy-token"
+            component={SelectBuyTokenFromListScreen}
             options={{
               title: strings.swapToTitle,
             }}
           />
 
           <Stack.Screen
-            name="swap-set-slippage"
-            component={InputSlippageToleranceScreen}
+            name="swap-edit-slippage"
+            component={EditSlippageScreen}
             options={{
               title: strings.slippageTolerance,
             }}
@@ -123,7 +133,7 @@ export const TxHistoryNavigator = () => {
 
           <Stack.Screen
             name="swap-select-pool"
-            component={SelectPoolScreen}
+            component={SelectPoolFromListScreen}
             options={{
               title: strings.selectPool,
             }}

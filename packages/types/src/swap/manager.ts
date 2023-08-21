@@ -18,7 +18,7 @@ export type SwapManager = Readonly<{
   }
   pools: {
     list: {
-      byPair: SwapApi['getPools']
+      byPair: SwapApi['getPoolPairs']
     }
   }
 }>

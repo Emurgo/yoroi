@@ -39,7 +39,7 @@ const listOrdersByStatusOpenResponse: Swap.OpenOrder[] = [
   },
 ]
 
-const listPoolsByPairResponse: Swap.Pool[] = [
+const listPoolsByPairResponse: Swap.PoolPair[] = [
   {
     poolId: 'pool-id',
     tokenA: {
@@ -61,7 +61,7 @@ const listPoolsByPairResponse: Swap.Pool[] = [
       quantity: '0',
       tokenId: '',
     },
-    fee: '0.3',
+    fee: '0.1',
     lpToken: {
       quantity: '0',
       tokenId: '',

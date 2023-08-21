@@ -181,21 +181,15 @@ export type TxHistoryRoutes = {
   'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
   'send-select-token-from-list': undefined
-  'swap-start-order': undefined
-  'swap-confirmation-order': undefined
-  'swap-select-token-from': undefined
-  'swap-select-token-to': undefined
-  'swap-set-slippage': undefined
-  'swap-select-pool': undefined
-}
+} & SwapTokenRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 export type SwapTokenRoutes = {
-  'swap-start-order': undefined
-  'swap-confirmation-order': undefined
-  'swap-select-token-from': undefined
-  'swap-select-token-to': undefined
-  'swap-set-slippage': undefined
+  'swap-start-swap': undefined
+  'swap-confirm-tx': undefined
+  'swap-select-sell-token': undefined
+  'swap-select-buy-token': undefined
+  'swap-edit-slippage': undefined
   'swap-select-pool': undefined
 }
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
