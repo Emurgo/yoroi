@@ -1,8 +1,8 @@
-import {Address, BigNum} from '@emurgo/cross-csl-core'
+import {BigNum} from '@emurgo/cross-csl-core'
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
-import {Token} from '../types'
+import {Address, Token} from '../types'
 import {Amounts, asQuantity, Quantities} from '../utils'
 import {CardanoMobile} from '../wallets'
 import {COINS_PER_UTXO_BYTE} from './constants/common'
@@ -36,13 +36,16 @@ export const getMinAmounts = async (address: Address, amounts: Balance.Amounts, 
     {defaultNetworkId: primaryToken.networkId, defaultIdentifier: primaryToken.identifier},
   )
 
-  const [value, coinsPerUtxoByte] = await Promise.all([
+  const [value, coinsPerUtxoByte, bech32Aaddress] = await Promise.all([
     cardanoValueFromMultiToken(multiToken),
     CardanoMobile.BigNum.fromStr(COINS_PER_UTXO_BYTE),
+    (await CardanoMobile.ByronAddress.isValid(address))
+      ? await (await CardanoMobile.ByronAddress.fromBase58(address)).toAddress()
+      : await CardanoMobile.Address.fromBech32(address),
   ])
 
   const [txOutput, dataCost] = await Promise.all([
-    CardanoMobile.TransactionOutput.new(address, value),
+    CardanoMobile.TransactionOutput.new(bech32Aaddress, value),
     CardanoMobile.DataCost.newCoinsPerByte(coinsPerUtxoByte),
   ])
 
