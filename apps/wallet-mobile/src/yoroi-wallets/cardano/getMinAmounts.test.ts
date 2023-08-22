@@ -6,8 +6,6 @@ import {mocks as walletMocks} from '../mocks'
 import {getMinAmounts, withMinAmounts, withPrimaryToken} from './getMinAmounts'
 
 describe('withMinAmounts()', () => {
-  beforeEach(jest.resetAllMocks)
-
   it('should returns the min amount quantity', async () => {
     const address =
       'addr_test1qrrdv3uxj8shu27ea9djvnn3rl4w3lvh3cyck6yc36mvf6ctlqxj9g0azvpycncr9u600p6t556qhc3psk06uzzw6saq4kvdpq'
@@ -63,8 +61,6 @@ describe('withPrimaryToken()', () => {
 })
 
 describe('getMinAmounts()', () => {
-  beforeEach(jest.resetAllMocks)
-
   it('should return the mocked min amount', async () => {
     const amounts: Balance.Amounts = {
       [walletMocks.wallet.primaryToken.identifier]: '123',
@@ -86,7 +82,7 @@ describe('getMinAmounts()', () => {
       '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e': '55',
     }
 
-    const address = 'really-bad-address' 
+    const address = 'really-bad-address'
 
     const primaryToken = walletMocks.wallet.primaryToken
 
