@@ -34,6 +34,7 @@ export const CreateOrder = () => {
   const handleSelectOrderType = (index: number) => {
     orderTypeChanged(index === 0 ? 'market' : 'limit')
   }
+  const disabled = createOrder.amounts.buy.quantity === '0' || createOrder.amounts.sell.quantity === '0'
 
   return (
     <View style={styles.container}>
@@ -69,7 +70,7 @@ export const CreateOrder = () => {
         <ShowPoolActions />
 
         <Actions>
-          <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={navigation.confirmTx} />
+          <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={navigation.confirmTx} disabled={disabled}/>
         </Actions>
       </KeyboardAvoidingView>
     </View>
