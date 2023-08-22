@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 import {Balance} from '@yoroi/types'
 
 import {mocks as walletMocks} from '../mocks'
