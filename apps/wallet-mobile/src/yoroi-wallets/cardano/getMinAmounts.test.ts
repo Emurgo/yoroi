@@ -3,9 +3,7 @@
 import {Balance} from '@yoroi/types'
 
 import {mocks as walletMocks} from '../mocks'
-import {CardanoMobile} from '../wallets'
 import {getMinAmounts, withMinAmounts, withPrimaryToken} from './getMinAmounts'
-import {cardanoValueFromMultiToken, normalizeToAddress} from './utils'
 
 describe('withMinAmounts()', () => {
   beforeEach(jest.resetAllMocks)
