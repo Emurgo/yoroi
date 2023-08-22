@@ -22,4 +22,4 @@ const Loading = () => {
   )
 }
 
-storiesOf('LoadingOverlay', module).add('Loading', () => <Loading />)
+storiesOf('LoadingOverlay Legacy', module).add('Loading', () => <Loading />)
