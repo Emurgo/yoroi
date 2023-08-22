@@ -4,8 +4,9 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
+import {WebViewProgressEvent} from 'react-native-webview/lib/WebViewTypes'
 
-import {PleaseWaitModal, Spacer} from '../../components'
+import {LoadingOverlay, PleaseWaitModal, Spacer} from '../../components'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {showErrorDialog} from '../../dialogs'
 import {features} from '../../features'
@@ -27,6 +28,8 @@ export const StakingCenter = () => {
   const wallet = useSelectedWallet()
 
   const [selectedPoolId, setSelectedPoolId] = React.useState<string>()
+  const [isTimeout, setIsTimeout] = React.useState(false)
+  const [isLoadingWebview, setIsLoadingWebView] = React.useState(false)
 
   const {isLoading} = useStakingTx(
     {wallet, poolId: selectedPoolId},
@@ -61,6 +64,28 @@ export const StakingCenter = () => {
     setSelectedPoolId(selectedPoolHashes[0])
   }
 
+  React.useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setIsTimeout(true)
+      showErrorDialog(errorMessages.networkError, intl)
+    }, 1000 * 60)
+    return () => clearTimeout(timeoutId)
+  }, [intl])
+
+  const onLoadProgress = (event: WebViewProgressEvent) => {
+    const {progress} = event.nativeEvent
+
+    if (progress < 1 && !isTimeout && !isLoadingWebview) {
+      setIsLoadingWebView(true)
+      return
+    }
+
+    if (progress === 1) {
+      setIsLoadingWebView(false)
+      return
+    }
+  }
+
   const config = getNetworkConfigById(wallet.networkId)
 
   return (
@@ -78,12 +103,16 @@ export const StakingCenter = () => {
           <WebView
             androidLayerType="software"
             source={{uri: prepareStakingURL(languageCode)}}
-            onMessage={(event) => handleOnMessage(event)}
+            onMessage={handleOnMessage}
+            onLoadProgress={onLoadProgress}
+            onError={() => showErrorDialog(errorMessages.networkError, intl)}
           />
         </View>
       )}
 
       <PleaseWaitModal title="" spinnerText={intl.formatMessage(globalMessages.pleaseWait)} visible={isLoading} />
+
+      <LoadingOverlay loading={isLoadingWebview && !isTimeout} />
     </>
   )
 }

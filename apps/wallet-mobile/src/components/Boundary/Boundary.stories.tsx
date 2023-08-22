@@ -13,7 +13,7 @@ storiesOf('Boundary', module)
   .add('Loading default', () => {
     return (
       <QueryProvider>
-        <Boundary debug>
+        <Boundary>
           <IsLoading />
         </Boundary>
       </QueryProvider>
