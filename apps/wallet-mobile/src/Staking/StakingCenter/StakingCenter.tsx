@@ -80,8 +80,8 @@ export const StakingCenter = () => {
       return
     }
 
-    if (progress === 1) {
-      setIsLoadingWebView(false)
+    if (progress === 1 || isTimeout) {
+      if (isLoadingWebview) setIsLoadingWebView(false)
       return
     }
   }
