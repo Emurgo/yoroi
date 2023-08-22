@@ -1976,21 +1976,35 @@
     hash-wasm "^4.9.0"
     mocha "^10.0.0"
 
-"@emurgo/cross-csl-mobile@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-2.5.0.tgz#b26d5a22a71821b713f6f1591e835ebaefde852f"
-  integrity sha512-a6UmqAa5aGHQcmsUJlzRZADu4GRlTMiHLeDgHNzUD8QAg7YT81psoqodQ1rddt62PUvpc8JwxkJC1xbn1Gx9oA==
+"@emurgo/cross-csl-core@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-2.6.0.tgz#40d6063cd50de510bb1cb78d8c49843e9a2be351"
+  integrity sha512-P64mp7626fW8o3+XqyZwzZ+rJh7pVKLzTA0oZ1fHfIZPbayYTT657RSk8xv2ZkTQPHtFmaPl/mVq3T+dctCJ0A==
   dependencies:
-    "@emurgo/cross-csl-core" "^2.5.0"
+    "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
+    "@types/mocha" "^9.1.1"
+    axios "^0.24.0"
+    bech32 "^2.0.0"
+    bignumber.js "^9.0.1"
+    blake2b "^2.1.4"
+    hash-wasm "^4.9.0"
+    mocha "^10.0.0"
+
+"@emurgo/cross-csl-mobile@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-2.6.0.tgz#b2d8102ec3228c316c2a393d78b4873a99457017"
+  integrity sha512-WpJTiDhbGfXYt8ZxAgHfqJ2y7NqnyqsZksc0O67tQS2gDrEB7obyxycic5BZWejShp6TKQqaZwd4lp8fzJj+gQ==
+  dependencies:
+    "@emurgo/cross-csl-core" "^2.6.0"
     "@emurgo/csl-mobile-bridge" "^5.1.2"
 
-"@emurgo/cross-csl-nodejs@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-2.5.0.tgz#1d2b033930a97b97e5cd2ca0eeb8908482003e0a"
-  integrity sha512-a8Y++aYzwjSbi/+p2Mqd3eRmPTvJOf+MdA/CotKYMl/uGMhmyQMJyH2EagDLDgS7PjBSBIZHiQN9RsMewZa/gA==
+"@emurgo/cross-csl-nodejs@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-2.6.0.tgz#7b2548783c2d79afe9c09b9ae7750c7268371fbf"
+  integrity sha512-reh5VCgsrzMvPwUt6pn1/UxRKJ+PohpD+Orzn05QALmPf4iwCIrsfClfx9Q7VSQgwbjSJv00+MzDqfOZSCU7vQ==
   dependencies:
     "@emurgo/cardano-serialization-lib-nodejs" "11.3.0"
-    "@emurgo/cross-csl-core" "^2.5.0"
+    "@emurgo/cross-csl-core" "^2.6.0"
 
 "@emurgo/csl-mobile-bridge@^5.1.2":
   version "5.1.2"

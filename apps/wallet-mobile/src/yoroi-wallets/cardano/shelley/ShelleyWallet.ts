@@ -588,7 +588,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
-      const amounts = await withMinAmounts(entry.amounts, this.primaryToken)
+      const amounts = await withMinAmounts(entry.address, entry.amounts, this.primaryToken)
 
       try {
         const unsignedTx = await Cardano.createUnsignedTx(

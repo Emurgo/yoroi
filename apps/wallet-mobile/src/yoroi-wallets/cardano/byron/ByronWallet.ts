@@ -671,7 +671,7 @@ export class ByronWallet implements YoroiWallet {
     const changeAddr = await this.getAddressedChangeAddress()
     const addressedUtxos = await this.getAddressedUtxos()
     const networkConfig = this.getNetworkConfig()
-    const amounts = await withMinAmounts(entry.amounts, this.primaryToken)
+    const amounts = await withMinAmounts(entry.address, entry.amounts, this.primaryToken)
 
     try {
       const unsignedTx = await Cardano.createUnsignedTx(
