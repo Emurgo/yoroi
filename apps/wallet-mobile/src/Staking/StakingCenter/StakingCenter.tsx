@@ -75,15 +75,8 @@ export const StakingCenter = () => {
   const onLoadProgress = (event: WebViewProgressEvent) => {
     const {progress} = event.nativeEvent
 
-    if (progress < 1 && !isTimeout && !isLoadingWebview) {
-      setIsLoadingWebView(true)
-      return
-    }
-
-    if ((progress === 1 || isTimeout) && isLoadingWebview) {
-      setIsLoadingWebView(false)
-      return
-    }
+    if (progress < 1 && !isTimeout && !isLoadingWebview) setIsLoadingWebView(true)
+    else if ((progress === 1 || isTimeout) && isLoadingWebview) setIsLoadingWebView(false)
   }
 
   const config = getNetworkConfigById(wallet.networkId)
