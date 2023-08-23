@@ -20,6 +20,8 @@ import {getNetworkConfigById, NETWORKS} from '../../yoroi-wallets/cardano/networ
 import {NotEnoughMoneyToSendError} from '../../yoroi-wallets/cardano/types'
 import {PoolDetailScreen} from '../PoolDetails'
 
+const LOADING_WEBVIEW_TIMEOUT = 1000 * 60 // 1 minute
+
 export const StakingCenter = () => {
   const intl = useIntl()
   const navigation = useNavigation<StakingCenterRouteNavigation>()
@@ -68,7 +70,7 @@ export const StakingCenter = () => {
     const timeoutId = setTimeout(() => {
       setIsTimeout(true)
       showErrorDialog(errorMessages.networkError, intl)
-    }, 1000 * 60)
+    }, LOADING_WEBVIEW_TIMEOUT)
     return () => clearTimeout(timeoutId)
   }, [intl])
 
