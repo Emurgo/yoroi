@@ -50,3 +50,6 @@ try {
     }
 }
 ```
+
+### Running on mobile
+To use this module on a `react-native` application it is required to polyfill the URL object by using modules such as `react-native-url-polyfill`

@@ -4,6 +4,7 @@ import {banxaDomainProduction, banxaDomainSandbox} from './domains'
 import {BanxaFiatType} from '../helpers/fiat-types'
 import {handleZodErrors} from '../adapters/zod-errors'
 import {BanxaUrlReferralQueryStringParamsSchema} from '../adapters/zod-schema'
+import {BanxaBlockchainCode} from '../helpers/blockchain-code'
 
 // -------
 // FACTORY
@@ -78,7 +79,7 @@ export type BanxaReferralUrlQueryStringParams = {
   coinAmount?: number
 
   /** It defaults to the blockchain configured for the coinType selected, e.g., ADA -> Cardano. */
-  blockchain?: string
+  blockchain?: BanxaBlockchainCode
 
   /** Customer’s wallet address. */
   walletAddress: string
