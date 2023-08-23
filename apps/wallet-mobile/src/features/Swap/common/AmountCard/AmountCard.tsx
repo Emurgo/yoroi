@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
     height: 64,
   },
   amountInput: {
+    paddingVertical: 0,
     minWidth: 120,
     maxWidth: 200,
     height: 34,

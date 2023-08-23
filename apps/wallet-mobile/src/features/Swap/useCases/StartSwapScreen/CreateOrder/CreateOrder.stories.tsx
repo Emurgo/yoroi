@@ -8,13 +8,27 @@ import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
 import {CreateOrder} from './CreateOrder'
 
 storiesOf('Swap Create Order', module) //
-  .add('Limit Order', () => <LimitOrder />)
+  .add('Initial', () => <Initial />)
   .add('Market Order', () => <MarketOrder />)
+  .add('Limit Order', () => <LimitOrder />)
 
-const MarketOrder = () => {
+const Initial = () => {
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager}>
+        <CreateOrder />
+      </SwapProvider>
+    </SelectedWalletProvider>
+  )
+}
+
+const MarketOrder = () => {
+  const initialState = produce(mockSwapStateDefault, (draft) => {
+    draft.createOrder.type = 'market'
+  })
+  return (
+    <SelectedWalletProvider wallet={walletMocks.wallet}>
+      <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
         <CreateOrder />
       </SwapProvider>
     </SelectedWalletProvider>
