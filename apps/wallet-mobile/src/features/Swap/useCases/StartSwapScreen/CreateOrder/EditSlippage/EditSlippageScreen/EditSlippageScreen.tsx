@@ -1,6 +1,7 @@
 import {useSwap} from '@yoroi/swap'
 import React, {useEffect, useRef, useState} from 'react'
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {useMetrics} from 'src/metrics/metricsManager'
 
 import {Button} from '../../../../../../../components'
 import {COLORS} from '../../../../../../../theme'
@@ -29,14 +30,23 @@ export const EditSlippageScreen = () => {
   const navigate = useNavigateTo()
   const strings = useStrings()
   const {slippageChanged} = useSwap()
+  const {track} = useMetrics()
 
-  const handleChoicePress = (choice: Choice) => {
+  const onChoicePress = (choice: Choice) => {
     setSelectedChoice(choice.label)
     setInputValue(choice.label === 'Manual' ? '' : String(choice.value))
   }
 
-  const handleInputChange = (text: string) => {
+  const onInputChangeText = (text: string) => {
     setInputValue(text)
+  }
+
+  const onApplyButtonPress = () => {
+    const slippage = Number(inputValue)
+
+    track.swapSlippageChanged({slippage_tolerance: slippage})
+    slippageChanged(slippage)
+    navigate.startSwap()
   }
 
   useEffect(() => {
@@ -59,7 +69,7 @@ export const EditSlippageScreen = () => {
             <TouchableOpacity
               key={index}
               style={[styles.choiceButton, selectedChoice === choice.label && styles.selectedChoiceButton]}
-              onPress={() => handleChoicePress(choice)}
+              onPress={() => onChoicePress(choice)}
             >
               <Text style={[styles.choiceLabel, selectedChoice === choice.label && styles.selectedChoiceLabel]}>
                 {choice.label}
@@ -74,7 +84,7 @@ export const EditSlippageScreen = () => {
           <TextInput
             ref={inputRef}
             value={inputValue}
-            onChangeText={handleInputChange}
+            onChangeText={onInputChangeText}
             editable={isInputEnabled}
             selectTextOnFocus={isInputEnabled}
             autoFocus={isInputEnabled}
@@ -87,15 +97,7 @@ export const EditSlippageScreen = () => {
         )}
       </View>
 
-      <Button
-        testID="applyButton"
-        shelleyTheme
-        title={strings.apply}
-        onPress={() => {
-          slippageChanged(Number(inputValue))
-          navigate.startSwap()
-        }}
-      />
+      <Button testID="applyButton" shelleyTheme title={strings.apply} onPress={onApplyButtonPress} />
     </View>
   )
 }
