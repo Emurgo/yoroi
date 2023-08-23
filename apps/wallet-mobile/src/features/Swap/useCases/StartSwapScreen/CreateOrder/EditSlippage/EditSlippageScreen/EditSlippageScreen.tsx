@@ -32,16 +32,16 @@ export const EditSlippageScreen = () => {
   const {slippageChanged} = useSwap()
   const {track} = useMetrics()
 
-  const onChoicePress = (choice: Choice) => {
+  const onPressChoice = (choice: Choice) => {
     setSelectedChoice(choice.label)
     setInputValue(choice.label === 'Manual' ? '' : String(choice.value))
   }
 
-  const onInputChangeText = (text: string) => {
+  const onChangeInputText = (text: string) => {
     setInputValue(text)
   }
 
-  const onApplyButtonPress = () => {
+  const onPressApply = () => {
     const slippage = Number(inputValue)
 
     track.swapSlippageChanged({slippage_tolerance: slippage})
@@ -69,7 +69,7 @@ export const EditSlippageScreen = () => {
             <TouchableOpacity
               key={index}
               style={[styles.choiceButton, selectedChoice === choice.label && styles.selectedChoiceButton]}
-              onPress={() => onChoicePress(choice)}
+              onPress={() => onPressChoice(choice)}
             >
               <Text style={[styles.choiceLabel, selectedChoice === choice.label && styles.selectedChoiceLabel]}>
                 {choice.label}
@@ -84,7 +84,7 @@ export const EditSlippageScreen = () => {
           <TextInput
             ref={inputRef}
             value={inputValue}
-            onChangeText={onInputChangeText}
+            onChangeText={onChangeInputText}
             editable={isInputEnabled}
             selectTextOnFocus={isInputEnabled}
             autoFocus={isInputEnabled}
@@ -97,7 +97,7 @@ export const EditSlippageScreen = () => {
         )}
       </View>
 
-      <Button testID="applyButton" shelleyTheme title={strings.apply} onPress={onApplyButtonPress} />
+      <Button testID="applyButton" shelleyTheme title={strings.apply} onPress={onPressApply} />
     </View>
   )
 }
