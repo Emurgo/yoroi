@@ -2,8 +2,8 @@ import {useSwap} from '@yoroi/swap'
 import React, {useEffect, useRef, useState} from 'react'
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 
-import {useMetrics} from '../../../../../../..//metrics/metricsManager'
 import {Button} from '../../../../../../../components'
+import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {COLORS} from '../../../../../../../theme'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
@@ -32,16 +32,16 @@ export const EditSlippageScreen = () => {
   const {slippageChanged} = useSwap()
   const {track} = useMetrics()
 
-  const onPressChoice = (choice: Choice) => {
+  const handleChoicePress = (choice: Choice) => {
     setSelectedChoice(choice.label)
     setInputValue(choice.label === 'Manual' ? '' : String(choice.value))
   }
 
-  const onChangeInputText = (text: string) => {
+  const handleInputChange = (text: string) => {
     setInputValue(text)
   }
 
-  const onPressApply = () => {
+  const handleApplyPress = () => {
     const slippage = Number(inputValue)
 
     track.swapSlippageChanged({slippage_tolerance: slippage})
@@ -69,7 +69,7 @@ export const EditSlippageScreen = () => {
             <TouchableOpacity
               key={index}
               style={[styles.choiceButton, selectedChoice === choice.label && styles.selectedChoiceButton]}
-              onPress={() => onPressChoice(choice)}
+              onPress={() => handleChoicePress(choice)}
             >
               <Text style={[styles.choiceLabel, selectedChoice === choice.label && styles.selectedChoiceLabel]}>
                 {choice.label}
@@ -84,7 +84,7 @@ export const EditSlippageScreen = () => {
           <TextInput
             ref={inputRef}
             value={inputValue}
-            onChangeText={onChangeInputText}
+            onChangeText={handleInputChange}
             editable={isInputEnabled}
             selectTextOnFocus={isInputEnabled}
             autoFocus={isInputEnabled}
@@ -97,7 +97,7 @@ export const EditSlippageScreen = () => {
         )}
       </View>
 
-      <Button testID="applyButton" shelleyTheme title={strings.apply} onPress={onPressApply} />
+      <Button testID="applyButton" shelleyTheme title={strings.apply} onPress={handleApplyPress} />
     </View>
   )
 }

@@ -4,7 +4,10 @@ import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Button, Icon, Spacer} from '../../../../../components'
+import {useMetrics} from '../../../../../metrics/metricsManager'
+import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
+import {useTokenInfos} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useNavigateTo} from '../../../common/navigation'
@@ -20,6 +23,12 @@ export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
   const {orderTypeChanged, createOrder, selectedPoolChanged} = useSwap()
+  const wallet = useSelectedWallet()
+  const {track} = useMetrics()
+  const tokenInfos = useTokenInfos({
+    wallet,
+    tokenIds: [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId],
+  })
 
   const {poolList} = usePoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId,
@@ -37,6 +46,22 @@ export const CreateOrder = () => {
   }
   const disabled =
     Quantities.isZero(createOrder.amounts.buy.quantity) || Quantities.isZero(createOrder.amounts.sell.quantity)
+
+  const handleSwapPress = () => {
+    const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
+    const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
+
+    track.swapInitiated({
+      from_asset: [
+        {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
+      ],
+      to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
+      order_type: createOrder.type,
+      slippage_tolerance: createOrder.slippage,
+    })
+
+    navigation.confirmTx()
+  }
 
   return (
     <View style={styles.container}>
@@ -76,7 +101,7 @@ export const CreateOrder = () => {
             testID="swapButton"
             shelleyTheme
             title={strings.swapTitle}
-            onPress={navigation.confirmTx}
+            onPress={handleSwapPress}
             disabled={disabled}
           />
         </Actions>
