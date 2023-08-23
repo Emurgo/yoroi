@@ -1,8 +1,8 @@
 import {useSwap} from '@yoroi/swap'
 import React, {useEffect, useRef, useState} from 'react'
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
-import {useMetrics} from 'src/metrics/metricsManager'
 
+import {useMetrics} from '../../../../../../..//metrics/metricsManager'
 import {Button} from '../../../../../../../components'
 import {COLORS} from '../../../../../../../theme'
 import {useNavigateTo} from '../../../../../common/navigation'
