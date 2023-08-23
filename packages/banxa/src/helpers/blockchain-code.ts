@@ -1,6 +1,8 @@
 export type BanxaBlockchainCode = 'ADA'
 
-const banxaSupportedBlockchainCodes: BanxaBlockchainCode[] = ['ADA']
+const banxaSupportedBlockchainCodes: Readonly<BanxaBlockchainCode[]> = [
+  'ADA',
+] as const
 
 export function banxaIsBlockchainCode(
   value: any,
