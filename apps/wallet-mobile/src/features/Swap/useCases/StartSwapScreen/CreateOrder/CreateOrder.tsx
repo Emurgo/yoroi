@@ -5,6 +5,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Button, Icon, Spacer} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
+import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
@@ -34,6 +35,8 @@ export const CreateOrder = () => {
   const handleSelectOrderType = (index: number) => {
     orderTypeChanged(index === 0 ? 'market' : 'limit')
   }
+  const disabled =
+    Quantities.isZero(createOrder.amounts.buy.quantity) || Quantities.isZero(createOrder.amounts.sell.quantity)
 
   return (
     <View style={styles.container}>
@@ -69,7 +72,13 @@ export const CreateOrder = () => {
         <ShowPoolActions />
 
         <Actions>
-          <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={navigation.confirmTx} />
+          <Button
+            testID="swapButton"
+            shelleyTheme
+            title={strings.swapTitle}
+            onPress={navigation.confirmTx}
+            disabled={disabled}
+          />
         </Actions>
       </KeyboardAvoidingView>
     </View>

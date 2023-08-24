@@ -1,7 +1,8 @@
 import {useNavigation} from '@react-navigation/native'
+import {banxaModuleMaker} from '@yoroi/banxa'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer} from '../components'
 import {features} from '../features'
@@ -22,7 +23,20 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const wallet = useSelectedWallet()
   const {resetForm} = useSend()
 
-  const onSend = () => {
+  const handleOnBuy = () => {
+    const isMainnetWallet = wallet.networkId === 1
+    const walletAddress = wallet.externalAddresses[0]
+    const banxa = banxaModuleMaker({isProduction: isMainnetWallet, partner: 'emurgo'})
+    const url = banxa.createReferralUrl({
+      coinType: 'ADA',
+      fiatType: 'USD',
+      blockchain: 'ADA',
+      walletAddress,
+    })
+    Linking.openURL(url.toString())
+  }
+
+  const handleOnSend = () => {
     navigateTo.send()
     resetForm()
   }
@@ -35,7 +49,12 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
         <View style={[styles.row, disabled && styles.disabled]}>
           {!wallet.isReadOnly && (
             <View style={styles.centralized}>
-              <TouchableOpacity style={styles.actionIcon} onPress={onSend} testID="sendButton" disabled={disabled}>
+              <TouchableOpacity
+                style={styles.actionIcon}
+                onPress={handleOnSend}
+                testID="sendButton"
+                disabled={disabled}
+              >
                 <Icon.Send {...ACTION_PROPS} />
               </TouchableOpacity>
 
@@ -79,12 +98,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
           {features.walletHero.buy && (
             <View style={styles.centralized}>
-              <TouchableOpacity
-                style={styles.actionIcon}
-                onPress={navigateTo.buy}
-                testID="buyButton"
-                disabled={disabled}
-              >
+              <TouchableOpacity style={styles.actionIcon} onPress={handleOnBuy} testID="buyButton" disabled={disabled}>
                 <Icon.PlusCircle {...ACTION_PROPS} />
               </TouchableOpacity>
 
@@ -146,12 +160,10 @@ const useStrings = () => {
 
 const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const strings = useStrings()
 
   return {
     send: () => navigation.navigate('send-start-tx'),
     receive: () => navigation.navigate('receive'),
     swap: () => navigation.navigate('swap-start-swap'),
-    buy: () => Alert.alert(strings.messageBuy, strings.messageBuy),
   }
 }
