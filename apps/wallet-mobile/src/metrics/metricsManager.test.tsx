@@ -129,6 +129,33 @@ describe('makeMetricsManager', () => {
     metricsManager.track.sendSummaryPageViewed(mockSendPayload)
     metricsManager.track.sendSummarySubmitted(mockSendPayload)
 
+    metricsManager.track.swapInitiated({
+      from_asset: [{asset_name: 'ADA', asset_ticker: 'ADA', policy_id: '12345'}],
+      to_asset: [{asset_name: 'DOGE', asset_ticker: 'DOGE', policy_id: '65432'}],
+      order_type: 'limit',
+      slippage_tolerance: 1,
+    })
+    metricsManager.track.swapSlippageChanged({
+      slippage_tolerance: 1,
+    })
+    metricsManager.track.swapPoolChanged()
+    metricsManager.track.swapOrderSelected({
+      from_asset: [{asset_name: 'ADA', asset_ticker: 'ADA', policy_id: '12345'}],
+      to_asset: [{asset_name: 'DOGE', asset_ticker: 'DOGE', policy_id: '65432'}],
+      order_type: 'limit',
+      slippage_tolerance: 1,
+      from_amount: 12,
+      to_amount: 31,
+      pool_source: 'fake-pool',
+      swap_fees: 1,
+    })
+    metricsManager.track.swapAssetFromChanged({
+      from_asset: [{asset_name: 'ADA', asset_ticker: 'ADA', policy_id: '12345'}],
+    })
+    metricsManager.track.swapAssetToChanged({
+      to_asset: [{asset_name: 'DOGE', asset_ticker: 'DOGE', policy_id: '65432'}],
+    })
+
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
     expect(mockAmpli.nftGallerySearchActivated).toHaveBeenCalledWith({nft_search_term: 'test', nft_count: 10})
@@ -141,6 +168,33 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.sendSelectAssetUpdated).toHaveBeenCalledWith(mockSendPayload)
     expect(mockAmpli.sendSummaryPageViewed).toHaveBeenCalledWith(mockSendPayload)
     expect(mockAmpli.sendSummarySubmitted).toHaveBeenCalledWith(mockSendPayload)
+
+    expect(mockAmpli.swapInitiated).toHaveBeenCalledWith({
+      from_asset: [{asset_name: 'ADA', asset_ticker: 'ADA', policy_id: '12345'}],
+      to_asset: [{asset_name: 'DOGE', asset_ticker: 'DOGE', policy_id: '65432'}],
+      order_type: 'limit',
+      slippage_tolerance: 1,
+    })
+    expect(mockAmpli.swapSlippageChanged).toHaveBeenCalledWith({
+      slippage_tolerance: 1,
+    })
+    expect(mockAmpli.swapPoolChanged).toHaveBeenCalled()
+    expect(mockAmpli.swapOrderSelected).toHaveBeenCalledWith({
+      from_asset: [{asset_name: 'ADA', asset_ticker: 'ADA', policy_id: '12345'}],
+      to_asset: [{asset_name: 'DOGE', asset_ticker: 'DOGE', policy_id: '65432'}],
+      order_type: 'limit',
+      slippage_tolerance: 1,
+      from_amount: 12,
+      to_amount: 31,
+      pool_source: 'fake-pool',
+      swap_fees: 1,
+    })
+    expect(mockAmpli.swapAssetFromChanged).toHaveBeenCalledWith({
+      from_asset: [{asset_name: 'ADA', asset_ticker: 'ADA', policy_id: '12345'}],
+    })
+    expect(mockAmpli.swapAssetToChanged).toHaveBeenCalledWith({
+      to_asset: [{asset_name: 'DOGE', asset_ticker: 'DOGE', policy_id: '65432'}],
+    })
   })
 
   test('enable should set metrics enabled to true', async () => {

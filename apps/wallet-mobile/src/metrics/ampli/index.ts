@@ -8,7 +8,7 @@
  * To update run 'ampli pull mobile'
  *
  * Required dependencies: @amplitude/analytics-react-native@^0.4.0, @react-native-async-storage/async-storage@^1.17.9
- * Tracking Plan Version: 1
+ * Tracking Plan Version: 7
  * Build: 1.0.0
  * Runtime: react-native:typescript-ampli-v2
  *
@@ -39,10 +39,10 @@ export const ApiKey: Record<Environment, string> = {
  */
 export const DefaultConfiguration: ReactNativeOptions = {
   plan: {
-    version: '1',
+    version: '7',
     branch: 'main',
     source: 'mobile',
-    versionId: 'ce2da771-0fdc-498c-b5eb-e45fe69831fd'
+    versionId: 'a0985241-d0c0-4bda-bc6d-271830af0067'
   },
   ...{
     ingestionMetadata: {
@@ -97,6 +97,8 @@ export interface NftGallerySearchActivatedProperties {
 
 export interface SendSelectAssetSelectedProperties {
   /**
+   * Total numbers of assets to be send
+   *
    * | Rule | Value |
    * |---|---|
    * | Type | number |
@@ -251,11 +253,16 @@ export interface SwapAssetFromChangedProperties {
   /**
    * Displaying the asset that the user chose to trade with.
    *
-   * Asset Name
-   * Asset Ticker
-   * Policy ID
+   * Asset Name Asset Ticker Policy ID
+   *  \[
+   *   {
+   *     asset_name: 'ADA',
+   *     asset_ticker: 'ADA',
+   *     policy_id: '123456789'
+   *   },
+   * \]
    */
-  from_asset: string;
+  from_asset: any[];
 }
 
 export interface SwapAssetToChangedProperties {
@@ -266,7 +273,7 @@ export interface SwapAssetToChangedProperties {
    * Asset Ticker
    * Policy ID
    */
-  to_asset: string;
+  to_asset: any[];
 }
 
 export interface SwapCancelationSubmittedProperties {
@@ -281,11 +288,21 @@ export interface SwapCancelationSubmittedProperties {
   /**
    * Displaying the asset that the user chose to trade with.
    *
-   * Asset Name
-   * Asset Ticker
-   * Policy ID
+   * Asset Name Asset Ticker Policy ID
+   *  \[
+   *   {
+   *     asset_name: 'ADA',
+   *     asset_ticker: 'ADA',
+   *     policy_id: '123456789'
+   *   },
+   * \]
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Unique Items | null |
+   * | Item Type | string |
    */
-  from_asset: string;
+  from_asset: string[];
   /**
    * The type of order selected on a given transaction
    *
@@ -303,9 +320,9 @@ export interface SwapCancelationSubmittedProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | null |
    */
-  slippage_tolerance: number;
+  slippage_tolerance: any;
   /**
    * The amount of fees charged on the transaction. The value is in ADA.
    *
@@ -328,19 +345,33 @@ export interface SwapCancelationSubmittedProperties {
    * Asset Name
    * Asset Ticker
    * Policy ID
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Unique Items | null |
+   * | Item Type | string |
    */
-  to_asset: string;
+  to_asset: string[];
 }
 
 export interface SwapInitiatedProperties {
   /**
    * Displaying the asset that the user chose to trade with.
    *
-   * Asset Name
-   * Asset Ticker
-   * Policy ID
+   * Asset Name Asset Ticker Policy ID
+   *  \[
+   *   {
+   *     asset_name: 'ADA',
+   *     asset_ticker: 'ADA',
+   *     policy_id: '123456789'
+   *   },
+   * \]
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Unique Items | null |
    */
-  from_asset: string;
+  from_asset: any[];
   /**
    * The type of order selected on a given transaction
    *
@@ -354,17 +385,21 @@ export interface SwapInitiatedProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | null |
    */
-  slippage_tolerance: number;
+  slippage_tolerance: any;
   /**
    * Displaying the asset that the user chose to trade to
    *
    * Asset Name
    * Asset Ticker
    * Policy ID
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Unique Items | null |
    */
-  to_asset: string;
+  to_asset: any[];
 }
 
 export interface SwapOrderSelectedProperties {
@@ -379,11 +414,16 @@ export interface SwapOrderSelectedProperties {
   /**
    * Displaying the asset that the user chose to trade with.
    *
-   * Asset Name
-   * Asset Ticker
-   * Policy ID
+   * Asset Name Asset Ticker Policy ID
+   *  \[
+   *   {
+   *     asset_name: 'ADA',
+   *     asset_ticker: 'ADA',
+   *     policy_id: '123456789'
+   *   },
+   * \]
    */
-  from_asset: string;
+  from_asset: any[];
   /**
    * The type of order selected on a given transaction
    *
@@ -427,7 +467,7 @@ export interface SwapOrderSelectedProperties {
    * Asset Ticker
    * Policy ID
    */
-  to_asset: string;
+  to_asset: any[];
 }
 
 export interface SwapOrderSubmittedProperties {
@@ -442,11 +482,16 @@ export interface SwapOrderSubmittedProperties {
   /**
    * Displaying the asset that the user chose to trade with.
    *
-   * Asset Name
-   * Asset Ticker
-   * Policy ID
+   * Asset Name Asset Ticker Policy ID
+   *  \[
+   *   {
+   *     asset_name: 'ADA',
+   *     asset_ticker: 'ADA',
+   *     policy_id: '123456789'
+   *   },
+   * \]
    */
-  from_asset: string;
+  from_asset: any[];
   /**
    * The type of order selected on a given transaction
    *
@@ -490,7 +535,7 @@ export interface SwapOrderSubmittedProperties {
    * Asset Ticker
    * Policy ID
    */
-  to_asset: string;
+  to_asset: any[];
 }
 
 export interface SwapSlippageChangedProperties {
@@ -499,13 +544,15 @@ export interface SwapSlippageChangedProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | number |
+   * | Type | null |
    */
-  slippage_tolerance: number;
+  slippage_tolerance: any;
 }
 
 export interface SendProperties {
   /**
+   * Total numbers of assets to be send
+   *
    * | Rule | Value |
    * |---|---|
    * | Type | number |
@@ -554,11 +601,16 @@ export interface SwapProperties {
   /**
    * Displaying the asset that the user chose to trade with.
    *
-   * Asset Name
-   * Asset Ticker
-   * Policy ID
+   * Asset Name Asset Ticker Policy ID
+   *  \[
+   *   {
+   *     asset_name: 'ADA',
+   *     asset_ticker: 'ADA',
+   *     policy_id: '123456789'
+   *   },
+   * \]
    */
-  from_asset: string;
+  from_asset: any[];
   /**
    * The type of order selected on a given transaction
    *
@@ -602,7 +654,15 @@ export interface SwapProperties {
    * Asset Ticker
    * Policy ID
    */
-  to_asset: string;
+  to_asset: any[];
+}
+
+export class AllWalletsPageViewed implements BaseEvent {
+  event_type = 'All Wallets Page Viewed';
+}
+
+export class MenuPageViewed implements BaseEvent {
+  event_type = 'Menu Page Viewed';
 }
 
 export class NftGalleryDetailsImageViewed implements BaseEvent {
@@ -641,6 +701,10 @@ export class NftGallerySearchActivated implements BaseEvent {
   ) {
     this.event_properties = event_properties;
   }
+}
+
+export class ReceivePageViewed implements BaseEvent {
+  event_type = 'Receive Page Viewed';
 }
 
 export class SendInitiated implements BaseEvent {
@@ -689,6 +753,18 @@ export class SendSummarySubmitted implements BaseEvent {
   ) {
     this.event_properties = event_properties;
   }
+}
+
+export class SettingsPageViewed implements BaseEvent {
+  event_type = 'Settings Page Viewed';
+}
+
+export class StakingCenterPageViewed implements BaseEvent {
+  event_type = 'Staking Center Page Viewed';
+}
+
+export class StakingPageViewed implements BaseEvent {
+  event_type = 'Staking Page Viewed';
 }
 
 export class SwapAssetFromChanged implements BaseEvent {
@@ -767,6 +843,14 @@ export class SwapSlippageChanged implements BaseEvent {
   ) {
     this.event_properties = event_properties;
   }
+}
+
+export class TransactionsPageViewed implements BaseEvent {
+  event_type = 'Transactions Page Viewed';
+}
+
+export class VotingPageViewed implements BaseEvent {
+  event_type = 'Voting Page Viewed';
 }
 
 export type PromiseResult<T> = { promise: Promise<T | void> };
@@ -877,6 +961,36 @@ export class Ampli {
   }
 
   /**
+   * All Wallets Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/All%20Wallets%20Page%20Viewed)
+   *
+   * This event tracks when a user views the All Wallets page on Menu. Note: only available on Yoroi Mobile.
+   *
+   * @param options Amplitude event options.
+   */
+  allWalletsPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new AllWalletsPageViewed(), options);
+  }
+
+  /**
+   * Menu Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Menu%20Page%20Viewed)
+   *
+   * This event is triggered when a user views the menu page within the application
+   *
+   * @param options Amplitude event options.
+   */
+  menuPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new MenuPageViewed(), options);
+  }
+
+  /**
    * NFT Gallery Details Image Viewed
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/NFT%20Gallery%20Details%20Image%20Viewed)
@@ -955,6 +1069,21 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new NftGallerySearchActivated(properties), options);
+  }
+
+  /**
+   * Receive Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Receive%20Page%20Viewed)
+   *
+   * This event tracks when a user views the Receive page of the Wallet menu.
+   *
+   * @param options Amplitude event options.
+   */
+  receivePageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new ReceivePageViewed(), options);
   }
 
   /**
@@ -1056,6 +1185,51 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SendSummarySubmitted(properties), options);
+  }
+
+  /**
+   * Settings Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Settings%20Page%20Viewed)
+   *
+   * This event tracks when a user views the settings page within the application.
+   *
+   * @param options Amplitude event options.
+   */
+  settingsPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new SettingsPageViewed(), options);
+  }
+
+  /**
+   * Staking Center Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Staking%20Center%20Page%20Viewed)
+   *
+   * This event tracks when a user views the Staking Center page on Staking menu.
+   *
+   * @param options Amplitude event options.
+   */
+  stakingCenterPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new StakingCenterPageViewed(), options);
+  }
+
+  /**
+   * Staking Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Staking%20Page%20Viewed)
+   *
+   * This event tracks when a user views the Staking page.
+   *
+   * @param options Amplitude event options.
+   */
+  stakingPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new StakingPageViewed(), options);
   }
 
   /**
@@ -1223,6 +1397,36 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SwapSlippageChanged(properties), options);
+  }
+
+  /**
+   * Transactions Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Transactions%20Page%20Viewed)
+   *
+   * This event tracks when a user views the transactions page within the wallet.
+   *
+   * @param options Amplitude event options.
+   */
+  transactionsPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new TransactionsPageViewed(), options);
+  }
+
+  /**
+   * Voting Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Voting%20Page%20Viewed)
+   *
+   * This event tracks when a user views the Voting page.
+   *
+   * @param options Amplitude event options.
+   */
+  votingPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new VotingPageViewed(), options);
   }
 }
 
