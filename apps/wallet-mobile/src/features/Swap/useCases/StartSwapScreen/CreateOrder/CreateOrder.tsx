@@ -44,6 +44,7 @@ export const CreateOrder = () => {
   const handleSelectOrderType = (index: number) => {
     orderTypeChanged(index === 0 ? 'market' : 'limit')
   }
+
   const disabled =
     Quantities.isZero(createOrder.amounts.buy.quantity) || Quantities.isZero(createOrder.amounts.sell.quantity)
 
@@ -51,13 +52,17 @@ export const CreateOrder = () => {
     const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
     const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
 
-    track.swapInitiated({
+    track.swapOrderSelected({
       from_asset: [
         {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
       ],
       to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
       order_type: createOrder.type,
       slippage_tolerance: createOrder.slippage,
+      from_amount: Number(createOrder.amounts.sell.quantity),
+      to_amount: Number(createOrder.amounts.buy.quantity),
+      pool_source: createOrder.selectedPool.provider,
+      swap_fees: Number(createOrder.selectedPool.fee),
     })
 
     navigation.confirmTx()
