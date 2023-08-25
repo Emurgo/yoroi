@@ -41,6 +41,7 @@ export const EditSlippageScreen = () => {
   const defaultInputValue = defaultSelectedChoice.label === 'Manual' ? createOrder.slippage.toString() : ''
   const [selectedChoiceLabel, setSelectedChoiceLabel] = useState<ChoiceKind>(defaultSelectedChoice.label)
   const [inputValue, setInputValue] = useState(defaultInputValue)
+  const [isFocused, setIsFocused] = useState(false)
   const inputRef = useRef<TextInput | null>(null)
   const navigate = useNavigateTo()
   const strings = useStrings()
@@ -102,11 +103,14 @@ export const EditSlippageScreen = () => {
               styles.inputContainer,
               !isInputEnabled && styles.disabledInputContainer,
               hasError && styles.errorInput,
+              isInputEnabled && !hasError && isFocused && styles.inputFocused,
             ]}
           >
             <Text style={[styles.label, hasError && styles.errorText]}>{strings.slippageTolerance}</Text>
 
             <TextInput
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
               ref={inputRef}
               value={isInputEnabled ? inputValue : selectedChoice.value.toString()}
               onChangeText={handleInputChange}
@@ -117,7 +121,7 @@ export const EditSlippageScreen = () => {
               style={[!isInputEnabled && styles.disabledInput, styles.input]}
             />
 
-            <Text style={[styles.percentLabel]}>%</Text>
+            <Text style={[styles.percentLabel, isInputEnabled && styles.darkColor]}>%</Text>
           </View>
 
           {isSelectedChoiceManual && !hasError && (
@@ -232,6 +236,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Rubik-Regular',
   },
+  inputFocused: {
+    borderColor: '#242838',
+  },
   percentLabel: {
     lineHeight: 24,
     fontFamily: 'Rubik-Regular',
@@ -242,6 +249,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     right: 0,
     top: 0,
+  },
+  darkColor: {
+    color: '#242838',
   },
 })
 
