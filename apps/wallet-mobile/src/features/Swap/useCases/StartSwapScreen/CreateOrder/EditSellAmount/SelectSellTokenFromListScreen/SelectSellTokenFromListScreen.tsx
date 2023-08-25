@@ -18,7 +18,7 @@ import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage
 import {filterBySearch} from '../../../../../common/filterBySearch'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
-import { useSwapTouched } from '../../TouchedContext'
+import {useSwapTouched} from '../../TouchedContext'
 
 export const SelectSellTokenFromListScreen = () => {
   const strings = useStrings()

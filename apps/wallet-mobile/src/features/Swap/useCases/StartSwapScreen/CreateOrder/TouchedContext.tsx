@@ -1,4 +1,4 @@
-import React, {createContext, ReactNode,  useContext, useReducer} from 'react'
+import React, {createContext, ReactNode, useContext, useReducer} from 'react'
 
 type TouchedState = {
   isSellTouched: boolean
@@ -39,10 +39,7 @@ export const SwapTouchedProvider = ({
   return <TouchedContext.Provider value={context}>{children}</TouchedContext.Provider>
 }
 
-type TouchedAction =
-  | {type: 'sellTouched'}
-  | {type: 'buyTouched'}
-  | {type: 'switchTouched'}
+type TouchedAction = {type: 'sellTouched'} | {type: 'buyTouched'} | {type: 'switchTouched'}
 
 function touchedReducer(state: TouchedState, action: TouchedAction) {
   switch (action.type) {
