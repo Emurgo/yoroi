@@ -74,9 +74,12 @@ export const SwapProvider = ({
     selectedPoolChanged: (pool: Swap.PoolPair) => {
       dispatch({type: SwapCreateOrderActionType.SelectedPoolChanged, pool})
     },
-    slippageChanged: (slippage: number) => {
-      setSlippage(slippage)
-      dispatch({type: SwapCreateOrderActionType.SlippageChanged, slippage})
+    slippageChanged: (newSlippage: number) => {
+      setSlippage(newSlippage)
+      dispatch({
+        type: SwapCreateOrderActionType.SlippageChanged,
+        slippage: newSlippage,
+      })
     },
     txPayloadChanged: (txPayload: Swap.CreateOrderResponse) => {
       dispatch({type: SwapCreateOrderActionType.TxPayloadChanged, txPayload})
