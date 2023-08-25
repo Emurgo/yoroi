@@ -6,6 +6,7 @@ import {StyleSheet, View} from 'react-native'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
+import {SwapTouchedProvider} from '../TouchedContext'
 import {ShowTokenActions} from './ShowTokenActions'
 
 storiesOf('Swap Switch or Clear', module).add('initial', () => {
@@ -13,9 +14,11 @@ storiesOf('Swap Switch or Clear', module).add('initial', () => {
     <SelectedWalletProvider wallet={mocks.wallet}>
       <SearchProvider>
         <SwapProvider swapManager={mockSwapManager}>
-          <View style={styles.container}>
-            <ShowTokenActions />
-          </View>
+          <SwapTouchedProvider>
+            <View style={styles.container}>
+              <ShowTokenActions />
+            </View>
+          </SwapTouchedProvider>
         </SwapProvider>
       </SearchProvider>
     </SelectedWalletProvider>

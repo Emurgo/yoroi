@@ -15,12 +15,13 @@ import {ShowPoolActions} from './EditPool/ShowPoolActions'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
+import {useSwapTouched} from './TouchedContext'
 
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
   const {orderTypeChanged, createOrder, selectedPoolChanged} = useSwap()
-
+  const {isBuyTouched, isSellTouched} = useSwapTouched()
   const {poolList} = usePoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId,
     tokenB: createOrder.amounts.buy.tokenId,
@@ -36,7 +37,10 @@ export const CreateOrder = () => {
     orderTypeChanged(index === 0 ? 'market' : 'limit')
   }
   const disabled =
-    Quantities.isZero(createOrder.amounts.buy.quantity) || Quantities.isZero(createOrder.amounts.sell.quantity)
+    !isBuyTouched ||
+    !isSellTouched ||
+    Quantities.isZero(createOrder.amounts.buy.quantity) ||
+    Quantities.isZero(createOrder.amounts.sell.quantity)
 
   return (
     <View style={styles.container}>
@@ -45,41 +49,41 @@ export const CreateOrder = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={86}
       >
-        <View style={styles.buttonsGroup}>
-          <ButtonGroup labels={orderTypeLabels} onSelect={handleSelectOrderType} selected={orderTypeIndex} />
+          <View style={styles.buttonsGroup}>
+            <ButtonGroup labels={orderTypeLabels} onSelect={handleSelectOrderType} selected={orderTypeIndex} />
 
-          <TouchableOpacity>
-            <Icon.Refresh size={24} />
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity>
+              <Icon.Refresh size={24} />
+            </TouchableOpacity>
+          </View>
 
-        <EditSellAmount />
+          <EditSellAmount />
 
-        <Spacer height={16} />
+          <Spacer height={16} />
 
-        <ShowTokenActions />
+          <ShowTokenActions />
 
-        <Spacer height={16} />
+          <Spacer height={16} />
 
-        <EditBuyAmount />
+          <EditBuyAmount />
 
-        <Spacer height={20} />
+          <Spacer height={20} />
 
-        <EditMarketPrice disabled={createOrder.type === 'market'} />
+          <EditMarketPrice disabled={createOrder.type === 'market'} />
 
-        <EditSlippage />
+          <EditSlippage />
 
-        <ShowPoolActions />
+          <ShowPoolActions />
 
-        <Actions>
-          <Button
-            testID="swapButton"
-            shelleyTheme
-            title={strings.swapTitle}
-            onPress={navigation.confirmTx}
-            disabled={disabled}
-          />
-        </Actions>
+          <Actions>
+            <Button
+              testID="swapButton"
+              shelleyTheme
+              title={strings.swapTitle}
+              onPress={navigation.confirmTx}
+              disabled={disabled}
+            />
+          </Actions>
       </KeyboardAvoidingView>
     </View>
   )

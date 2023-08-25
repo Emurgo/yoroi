@@ -6,6 +6,7 @@ import React from 'react'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
+import {SwapTouchedProvider} from '../TouchedContext'
 import {EditSlippage} from './EditSlippage'
 
 storiesOf('Swap Edit Slippage', module)
@@ -14,7 +15,9 @@ storiesOf('Swap Edit Slippage', module)
       <SelectedWalletProvider wallet={mocks.wallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
-            <EditSlippage />
+            <SwapTouchedProvider>
+              <EditSlippage />
+            </SwapTouchedProvider>
           </SwapProvider>
         </SearchProvider>
       </SelectedWalletProvider>
@@ -28,7 +31,9 @@ storiesOf('Swap Edit Slippage', module)
       <SelectedWalletProvider wallet={mocks.wallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateBigSlippage}>
-            <EditSlippage />
+            <SwapTouchedProvider>
+              <EditSlippage />
+            </SwapTouchedProvider>
           </SwapProvider>
         </SearchProvider>
       </SelectedWalletProvider>

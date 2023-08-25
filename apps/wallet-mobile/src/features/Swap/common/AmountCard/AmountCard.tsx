@@ -18,18 +18,19 @@ type Props = {
   value?: string
   hasError?: boolean
   navigateTo?: () => void
+  touched: boolean
 }
 
-export const AmountCard = ({label, onChange, value, wallet, amount, navigateTo, hasError}: Props) => {
+export const AmountCard = ({label, onChange, value, wallet, amount, navigateTo, hasError, touched}: Props) => {
   const strings = useStrings()
   const {quantity, tokenId} = amount
   const amountInputRef = useRef<TextInput>(null)
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
-  const noTokenSelected = tokenId === 'noTokenSelected'
+  const noTokenSelected = !touched
 
   const name = tokenInfo.ticker ?? tokenInfo.name
-  const formattedAmount = formatTokenWithText(quantity, tokenInfo, 18)
+  const formattedAmount = noTokenSelected ? '0' : formatTokenWithText(quantity, tokenInfo, 18)
   const fallback = React.useCallback(() => <Placeholder />, [])
 
   const focusInput = () => {
@@ -70,7 +71,9 @@ export const AmountCard = ({label, onChange, value, wallet, amount, navigateTo, 
 
             <Spacer width={8} />
 
-            <Text ellipsizeMode="middle" style={styles.balanceText}>{`Current balance: ${formattedAmount}`}</Text>
+            <View style={styles.sectionContainer}>
+              <Text ellipsizeMode="middle" style={styles.balanceText}>{`Current balance: ${formattedAmount}`}</Text>
+            </View>
           </View>
         </View>
       </View>

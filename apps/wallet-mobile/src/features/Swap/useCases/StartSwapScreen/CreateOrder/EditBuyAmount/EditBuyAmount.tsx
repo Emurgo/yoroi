@@ -8,6 +8,7 @@ import {asQuantity, Quantities} from '../../../../../../yoroi-wallets/utils'
 import {AmountCard} from '../../../../common/AmountCard/AmountCard'
 import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
+import {useSwapTouched} from '../TouchedContext'
 
 export const EditBuyAmount = () => {
   const strings = useStrings()
@@ -15,6 +16,7 @@ export const EditBuyAmount = () => {
   const wallet = useSelectedWallet()
 
   const {createOrder, buyAmountChanged, sellAmountChanged} = useSwap()
+  const {isBuyTouched} = useSwapTouched()
   const {tokenId, quantity} = createOrder.amounts.buy
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const {decimals} = tokenInfo
@@ -58,6 +60,7 @@ export const EditBuyAmount = () => {
       amount={{tokenId, quantity: balance}}
       wallet={wallet}
       navigateTo={navigate.selectBuyToken}
+      touched={isBuyTouched}
     />
   )
 }
