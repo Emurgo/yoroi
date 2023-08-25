@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native'
 
-import {Button, KeyboardSpacer} from '../../../../../../../components'
+import {Button} from '../../../../../../../components'
 import {COLORS} from '../../../../../../../theme'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
