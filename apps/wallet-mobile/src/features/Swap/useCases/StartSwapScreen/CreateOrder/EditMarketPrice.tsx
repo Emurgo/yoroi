@@ -22,23 +22,21 @@ export const EditMarketPrice = () => {
   const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name
 
   return (
-    <>
-      <View style={styles.container}>
-        <Text style={styles.label}>{strings.marketPrice}</Text>
+    <View style={styles.container}>
+      <Text style={styles.label}>{strings.marketPrice}</Text>
 
-        <View style={styles.content}>
-          <View style={styles.amountInput}>
-            <AmountInput value={String(createOrder.selectedPool?.price)} />
-          </View>
-
-          <Spacer width={7} />
-
-          <Text style={styles.text}>
-            {tokenToSellName}/{tokenToBuyName}
-          </Text>
+      <View style={styles.content}>
+        <View style={styles.amountInput}>
+          <AmountInput value={String(createOrder.selectedPool?.price)} />
         </View>
+
+        <Spacer width={7} />
+
+        <Text style={styles.text}>
+          {tokenToSellName}/{tokenToBuyName}
+        </Text>
       </View>
-    </>
+    </View>
   )
 }
 

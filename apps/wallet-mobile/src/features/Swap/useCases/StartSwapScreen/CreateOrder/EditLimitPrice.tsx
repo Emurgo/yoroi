@@ -23,23 +23,21 @@ export const EditLimitPrice = () => {
   const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name
 
   return (
-    <>
-      <View style={styles.container}>
-        <Text style={styles.label}>{strings.limitPrice}</Text>
+    <View style={styles.container}>
+      <Text style={styles.label}>{strings.limitPrice}</Text>
 
-        <View style={styles.content}>
-          <View style={styles.amountInput}>
-            <AmountInput onChange={setInputValue} value={inputValue} />
-          </View>
-
-          <Spacer width={7} />
-
-          <Text style={styles.text}>
-            {tokenToSellName}/{tokenToBuyName}
-          </Text>
+      <View style={styles.content}>
+        <View style={styles.amountInput}>
+          <AmountInput onChange={setInputValue} value={inputValue} />
         </View>
+
+        <Spacer width={7} />
+
+        <Text style={styles.text}>
+          {tokenToSellName}/{tokenToBuyName}
+        </Text>
       </View>
-    </>
+    </View>
   )
 }
 
