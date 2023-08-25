@@ -32,6 +32,7 @@ export const useStrings = () => {
     eachVerifiedToken: intl.formatMessage(messages.eachVerifiedToken),
     verifiedBadge: intl.formatMessage(messages.verifiedBadge),
     enterSlippage: intl.formatMessage(messages.enterSlippage),
+    slippageToleranceError: intl.formatMessage(messages.slippageToleranceError),
     pools: (qty: number) => intl.formatMessage(globalMessages.pools, {qty}),
     openOrders: intl.formatMessage(messages.openOrders),
     noAssetsFound: intl.formatMessage(messages.noAssetsFound),
@@ -97,6 +98,10 @@ export const messages = defineMessages({
   slippageTolerance: {
     id: 'swap.swapScreen.slippageTolerance',
     defaultMessage: '!!!Slippage Tolerance',
+  },
+  slippageToleranceError: {
+    id: 'swap.swapScreen.slippageToleranceError',
+    defaultMessage: '!!!Slippage must be a number between 0 and 100 and have up to 1 decimal',
   },
   slippageToleranceInfo: {
     id: 'swap.swapScreen.slippageToleranceInfo',
