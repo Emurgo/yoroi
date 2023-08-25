@@ -116,16 +116,19 @@ export const EditSlippageScreen = () => {
               autoFocus={isInputEnabled}
               style={[!isInputEnabled && styles.disabledInput, styles.input]}
             />
+
             <Text style={[styles.percentLabel]}>%</Text>
           </View>
 
           {isSelectedChoiceManual && !hasError && (
             <Text style={[styles.textInfo, styles.bottomText]}>{strings.enterSlippage}</Text>
           )}
+
           {isSelectedChoiceManual && hasError && (
             <Text style={[styles.bottomText, styles.errorText]}>{strings.slippageToleranceError}</Text>
           )}
         </ScrollView>
+
         <Button
           testID="applyButton"
           shelleyTheme
