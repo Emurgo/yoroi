@@ -1,20 +1,29 @@
 import {useSwap} from '@yoroi/swap'
 import React, {useEffect, useRef, useState} from 'react'
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 
-import {Button} from '../../../../../../../components'
+import {Button, KeyboardSpacer} from '../../../../../../../components'
 import {COLORS} from '../../../../../../../theme'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
+
+type ChoiceKind = '0%' | '0.1%' | '0.5%' | '1%' | '2%' | '3%' | 'Manual'
 
 interface Choice {
   label: ChoiceKind
   value: string | number
 }
 
-type ChoiceKind = '0%' | '0.1%' | '0.5%' | '1%' | '2%' | '3%' | 'Manual'
-
-const Choices: Choice[] = [
+const CHOICES: Choice[] = [
   {label: '0%', value: 0},
   {label: '0.1%', value: 0.1},
   {label: '0.5%', value: 0.5},
@@ -26,128 +35,147 @@ const Choices: Choice[] = [
 
 const MAX_DECIMALS = 1
 
-const getSelectedChoiceBySlippage = (slippage: number) => {
-  return Choices.find((choice) => choice.value === slippage) ?? {label: 'Manual', value: slippage}
-}
-
 export const EditSlippageScreen = () => {
   const {slippageChanged, createOrder} = useSwap()
-  const defaultSelectedChoice = getSelectedChoiceBySlippage(createOrder.slippage)
+  const defaultSelectedChoice = getChoiceBySlippage(createOrder.slippage)
   const defaultInputValue = defaultSelectedChoice.label === 'Manual' ? createOrder.slippage.toString() : ''
-  const [selectedChoice, setSelectedChoice] = useState<ChoiceKind>(defaultSelectedChoice.label)
+  const [selectedChoiceLabel, setSelectedChoiceLabel] = useState<ChoiceKind>(defaultSelectedChoice.label)
   const [inputValue, setInputValue] = useState(defaultInputValue)
   const inputRef = useRef<TextInput | null>(null)
   const navigate = useNavigateTo()
   const strings = useStrings()
 
-  const choice = Choices.find((choice) => choice.label === selectedChoice)!
+  const selectedChoice = getChoiceByLabel(selectedChoiceLabel)
+  const isSelectedChoiceManual = selectedChoiceLabel === 'Manual'
 
-  const handleChoicePress = (choice: Choice) => {
-    setSelectedChoice(choice.label)
+  const handleChoicePress = (kind: ChoiceKind) => {
+    setSelectedChoiceLabel(kind)
   }
 
   const handleInputChange = (text: string) => {
-    const normalizedText = (text || '0').replace(',', '.').replace(/^0+(?=\d)/, '')
-    setInputValue(normalizedText)
+    setInputValue(normalizeInputValue(text))
+  }
+
+  const onSubmit = () => {
+    slippageChanged(isSelectedChoiceManual ? Number(inputValue) : Number(selectedChoice.value))
+    navigate.startSwap()
   }
 
   useEffect(() => {
-    if (selectedChoice === 'Manual' && inputRef.current) {
+    if (isSelectedChoiceManual && inputRef.current) {
       inputRef.current.focus()
     }
-  }, [selectedChoice])
+  }, [isSelectedChoiceManual])
 
-  const isInputEnabled = selectedChoice === 'Manual'
-  const hasError = selectedChoice === 'Manual' && !validateSlippage(inputValue)
+  const isInputEnabled = isSelectedChoiceManual
+  const hasError = isSelectedChoiceManual && !validateSlippage(inputValue)
+  const isButtonDisabled = hasError || (isSelectedChoiceManual && inputValue.length === 0)
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.header}>{strings.defaultSlippage}</Text>
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={102}
+      >
+        <ScrollView bounces={false} style={styles.flex}>
+          <Text style={styles.header}>{strings.defaultSlippage}</Text>
 
-        <Text style={styles.textInfo}>{strings.slippageInfo}</Text>
+          <Text style={styles.description}>{strings.slippageInfo}</Text>
 
-        <View style={styles.choicesContainer}>
-          {Choices.map((choice, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[styles.choiceButton, selectedChoice === choice.label && styles.selectedChoiceButton]}
-              onPress={() => handleChoicePress(choice)}
-            >
-              <Text style={[styles.choiceLabel, selectedChoice === choice.label && styles.selectedChoiceLabel]}>
-                {choice.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+          <View style={styles.choicesContainer}>
+            {CHOICES.map((choice, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[styles.choiceButton, selectedChoiceLabel === choice.label && styles.selectedChoiceButton]}
+                onPress={() => handleChoicePress(choice.label)}
+              >
+                <Text style={[styles.choiceLabel, selectedChoiceLabel === choice.label && styles.selectedChoiceLabel]}>
+                  {choice.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
 
-        <View
-          style={[
-            styles.inputContainer,
-            !isInputEnabled && styles.disabledInputContainer,
-            hasError && styles.errorInput,
-          ]}
-        >
-          <Text style={[styles.label, hasError && styles.errorText]}>{strings.slippageTolerance}</Text>
+          <View
+            style={[
+              styles.inputContainer,
+              !isInputEnabled && styles.disabledInputContainer,
+              hasError && styles.errorInput,
+            ]}
+          >
+            <Text style={[styles.label, hasError && styles.errorText]}>{strings.slippageTolerance}</Text>
 
-          <TextInput
-            ref={inputRef}
-            value={isInputEnabled ? inputValue : choice.value.toString()}
-            onChangeText={handleInputChange}
-            editable={isInputEnabled}
-            key={isInputEnabled ? 'enabled' : 'disabled'}
-            selectTextOnFocus={isInputEnabled}
-            autoFocus={isInputEnabled}
-            style={[!isInputEnabled && styles.disabledInput]}
-          />
-        </View>
+            <TextInput
+              ref={inputRef}
+              value={isInputEnabled ? inputValue : selectedChoice.value.toString()}
+              onChangeText={handleInputChange}
+              editable={isInputEnabled}
+              key={isInputEnabled ? 'enabled' : 'disabled'}
+              selectTextOnFocus={isInputEnabled}
+              autoFocus={isInputEnabled}
+              style={[!isInputEnabled && styles.disabledInput, styles.input]}
+            />
+            <Text style={[styles.percentLabel]}>%</Text>
+          </View>
 
-        {selectedChoice === 'Manual' && !hasError && (
-          <Text style={[styles.textInfo, styles.bottomText]}>{strings.enterSlippage}</Text>
-        )}
-        {selectedChoice === 'Manual' && hasError && (
-          <Text style={[styles.bottomText, styles.errorText]}>{strings.slippageToleranceError}</Text>
-        )}
-      </View>
-
-      <Button
-        testID="applyButton"
-        shelleyTheme
-        title={strings.apply}
-        disabled={hasError || (selectedChoice === 'Manual' && !inputValue)}
-        onPress={() => {
-          slippageChanged(selectedChoice === 'Manual' ? Number(inputValue) : Number(choice.value))
-          navigate.startSwap()
-        }}
-      />
+          {isSelectedChoiceManual && !hasError && (
+            <Text style={[styles.textInfo, styles.bottomText]}>{strings.enterSlippage}</Text>
+          )}
+          {isSelectedChoiceManual && hasError && (
+            <Text style={[styles.bottomText, styles.errorText]}>{strings.slippageToleranceError}</Text>
+          )}
+        </ScrollView>
+        <Button
+          testID="applyButton"
+          shelleyTheme
+          title={strings.apply}
+          disabled={isButtonDisabled}
+          onPress={onSubmit}
+        />
+      </KeyboardAvoidingView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
   container: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
     flex: 1,
     backgroundColor: COLORS.WHITE,
     paddingHorizontal: 16,
-    paddingTop: 13,
+    paddingBottom: 16,
   },
   header: {
     fontSize: 16,
     fontWeight: '500',
     paddingVertical: 12,
+    fontFamily: 'Rubik-Medium',
+    color: '#242838',
   },
   textInfo: {
     fontSize: 12,
     color: COLORS.TEXT_INPUT,
   },
+  description: {
+    fontSize: 12,
+    lineHeight: 18,
+    fontFamily: 'Rubik-Regular',
+    color: '#6B7384',
+  },
   bottomText: {
     paddingTop: 16,
+    color: '#4A5065',
+    lineHeight: 16,
+    fontSize: 12,
+    fontFamily: 'Rubik-Regular',
   },
   choicesContainer: {
     flexDirection: 'row',
     paddingVertical: 16,
+    flexWrap: 'wrap',
   },
   choiceButton: {
     padding: 8,
@@ -160,6 +188,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     color: COLORS.BLACK,
+    fontFamily: 'Rubik-Medium',
   },
   selectedChoiceLabel: {
     color: COLORS.BLACK,
@@ -169,6 +198,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#C4CAD7',
     padding: 16,
+    position: 'relative',
   },
   label: {
     position: 'absolute',
@@ -178,6 +208,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     fontSize: 12,
     color: COLORS.ERROR_TEXT_COLOR_DARK,
+    fontFamily: 'Rubik-Regular',
   },
   disabledInput: {
     color: COLORS.TEXT_INPUT,
@@ -192,15 +223,43 @@ const styles = StyleSheet.create({
   errorInput: {
     borderColor: COLORS.ALERT_TEXT_COLOR,
   },
+  input: {
+    height: 24,
+    padding: 0,
+    fontSize: 16,
+    fontFamily: 'Rubik-Regular',
+  },
+  percentLabel: {
+    lineHeight: 24,
+    fontFamily: 'Rubik-Regular',
+    fontWeight: '400',
+    color: '#6B7384',
+    position: 'absolute',
+    padding: 16,
+    fontSize: 16,
+    right: 0,
+    top: 0,
+  },
 })
 
-function validateSlippage(slippage: string) {
+const validateSlippage = (slippage: string) => {
   const slippageNumber = Number(slippage)
-  console.log(slippageNumber)
   return (
+    !isNaN(slippageNumber) &&
     slippageNumber >= 0 &&
     slippageNumber <= 100 &&
-    (slippageNumber * 10 ** MAX_DECIMALS) % 1 === 0 &&
-    !isNaN(slippageNumber)
+    (slippageNumber * 10 ** MAX_DECIMALS) % 1 === 0
   )
+}
+
+const getChoiceBySlippage = (slippage: number): Choice => {
+  return CHOICES.find((choice) => choice.value === slippage) ?? {label: 'Manual', value: slippage}
+}
+
+const getChoiceByLabel = (label: ChoiceKind): Choice => {
+  return CHOICES.find((choice) => choice.label === label) ?? {label: 'Manual', value: ''}
+}
+
+const normalizeInputValue = (value: string) => {
+  return value.length === 0 ? '0' : value.replace(',', '.').replace(/^0+(?=\d)/, '')
 }
