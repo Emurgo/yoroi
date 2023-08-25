@@ -17,6 +17,7 @@ export const useStrings = () => {
     clear: intl.formatMessage(messages.clear),
     selectToken: intl.formatMessage(messages.selectToken),
     marketPrice: intl.formatMessage(messages.marketPrice),
+    limitPrice: intl.formatMessage(messages.limitPrice),
     slippageTolerance: intl.formatMessage(messages.slippageTolerance),
     slippageToleranceInfo: intl.formatMessage(messages.slippageToleranceInfo),
     swapButton: intl.formatMessage(messages.swapButton),
@@ -93,6 +94,10 @@ export const messages = defineMessages({
   marketPrice: {
     id: 'swap.swapScreen.marketPrice',
     defaultMessage: '!!!Market Price',
+  },
+  limitPrice: {
+    id: 'swap.swapScreen.limitPrice',
+    defaultMessage: '!!!Limit Price',
   },
   slippageTolerance: {
     id: 'swap.swapScreen.slippageTolerance',

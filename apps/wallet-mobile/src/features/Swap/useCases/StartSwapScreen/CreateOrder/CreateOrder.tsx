@@ -10,6 +10,7 @@ import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
+import {EditLimitPrice} from './EditLimitPrice'
 import {EditMarketPrice} from './EditMarketPrice'
 import {ShowPoolActions} from './EditPool/ShowPoolActions'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
@@ -65,7 +66,7 @@ export const CreateOrder = () => {
 
         <Spacer height={20} />
 
-        <EditMarketPrice disabled={createOrder.type === 'market'} />
+        {createOrder.type === 'market' ? <EditMarketPrice /> : <EditLimitPrice />}
 
         <EditSlippage />
 

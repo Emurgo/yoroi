@@ -9,12 +9,13 @@ import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {useStrings} from '../../../common/strings'
 
-export const EditMarketPrice = () => {
+export const EditLimitPrice = () => {
   const strings = useStrings()
 
   const wallet = useSelectedWallet()
 
   const {createOrder} = useSwap()
+  const [inputValue, setInputValue] = React.useState(String(createOrder.selectedPool?.price))
 
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
   const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name
@@ -24,11 +25,11 @@ export const EditMarketPrice = () => {
   return (
     <>
       <View style={styles.container}>
-        <Text style={styles.label}>{strings.marketPrice}</Text>
+        <Text style={styles.label}>{strings.limitPrice}</Text>
 
         <View style={styles.content}>
           <View style={styles.amountInput}>
-            <AmountInput value={String(createOrder.selectedPool?.price)} />
+            <AmountInput onChange={setInputValue} value={inputValue} />
           </View>
 
           <Spacer width={7} />
@@ -44,8 +45,14 @@ export const EditMarketPrice = () => {
 
 type AmountInputProps = {
   value?: string
+  onChange(value: string): void
 }
-const AmountInput = ({value}: AmountInputProps) => {
+const AmountInput = ({onChange, value}: AmountInputProps) => {
+  // TODO add more formatting if is the case
+  const onChangeText = (text: string) => {
+    onChange(text)
+  }
+
   return (
     <TextInput
       returnKeyType="done"
@@ -53,11 +60,11 @@ const AmountInput = ({value}: AmountInputProps) => {
       autoComplete="off"
       value={value}
       placeholder="0"
+      onChangeText={onChangeText}
       allowFontScaling
       selectionColor={COLORS.TRANSPARENT_BLACK}
       style={styles.amountInput}
       underlineColorAndroid="transparent"
-      editable={false}
     />
   )
 }
@@ -74,9 +81,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '100%',
     height: 56,
-    backgroundColor: COLORS.BANNER_GREY,
   },
-
   label: {
     position: 'absolute',
     top: -7,
@@ -86,7 +91,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
-
   amountInput: {
     flex: 1,
   },
@@ -95,7 +99,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-
   text: {
     fontSize: 16,
     color: COLORS.TEXT_INPUT,
