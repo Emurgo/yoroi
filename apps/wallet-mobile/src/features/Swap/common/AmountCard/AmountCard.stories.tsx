@@ -22,6 +22,7 @@ storiesOf('Amount Card', module)
       onChange={function (value: string): void {
         console.log('VALUE', value)
       }}
+      touched
     />
   ))
   .add('with error', () => (
@@ -34,5 +35,6 @@ storiesOf('Amount Card', module)
       }}
       value="2223"
       hasError
+      touched
     />
   ))

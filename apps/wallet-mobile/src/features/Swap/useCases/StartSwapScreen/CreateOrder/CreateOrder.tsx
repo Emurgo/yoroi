@@ -15,12 +15,13 @@ import {ShowPoolActions} from './EditPool/ShowPoolActions'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
+import {useSwapTouched} from './TouchedContext'
 
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
   const {orderTypeChanged, createOrder, selectedPoolChanged} = useSwap()
-
+  const {isBuyTouched, isSellTouched} = useSwapTouched()
   const {poolList} = usePoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId,
     tokenB: createOrder.amounts.buy.tokenId,
@@ -36,7 +37,10 @@ export const CreateOrder = () => {
     orderTypeChanged(index === 0 ? 'market' : 'limit')
   }
   const disabled =
-    Quantities.isZero(createOrder.amounts.buy.quantity) || Quantities.isZero(createOrder.amounts.sell.quantity)
+    !isBuyTouched ||
+    !isSellTouched ||
+    Quantities.isZero(createOrder.amounts.buy.quantity) ||
+    Quantities.isZero(createOrder.amounts.sell.quantity)
 
   return (
     <View style={styles.container}>
