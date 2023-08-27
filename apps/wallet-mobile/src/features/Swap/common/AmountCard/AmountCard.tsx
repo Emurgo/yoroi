@@ -18,7 +18,7 @@ type Props = {
   value?: string
   hasError?: boolean
   navigateTo?: () => void
-  touched: boolean
+  touched?: boolean
 }
 
 export const AmountCard = ({label, onChange, value, wallet, amount, navigateTo, hasError, touched}: Props) => {
