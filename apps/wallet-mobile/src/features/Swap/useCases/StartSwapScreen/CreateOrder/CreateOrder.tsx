@@ -13,10 +13,11 @@ import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
-import {EditMarketPrice} from './EditMarketPrice'
+import {EditLimitPrice} from './EditLimitPrice'
 import {ShowPoolActions} from './EditPool/ShowPoolActions'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
+import {ShowMarketPrice} from './ShowMarketPrice'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
 import {useSwapTouched} from './TouchedContext'
 
@@ -100,7 +101,7 @@ export const CreateOrder = () => {
 
         <Spacer height={20} />
 
-        <EditMarketPrice disabled={createOrder.type === 'market'} />
+        {createOrder.type === 'market' ? <ShowMarketPrice /> : <EditLimitPrice />}
 
         <EditSlippage />
 
