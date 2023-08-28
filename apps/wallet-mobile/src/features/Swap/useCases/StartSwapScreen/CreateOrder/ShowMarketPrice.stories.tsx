@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   },
 })
 
-storiesOf('Swap Edit Market Price', module)
+storiesOf('Swap Show Market Price', module)
   .addDecorator((story) => (
     <SelectedWalletProvider wallet={mocks.wallet}>
       <View style={styles.container}>{story()}</View>
