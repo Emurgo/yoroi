@@ -101,7 +101,7 @@ export const CreateOrder = () => {
 
         <Spacer height={20} />
 
-        {createOrder.type === 'market' ? <EditMarketPrice /> : <EditLimitPrice />}
+        {createOrder.type === 'market' ? <ShowMarketPrice /> : <EditLimitPrice />}
 
         <EditSlippage />
 
