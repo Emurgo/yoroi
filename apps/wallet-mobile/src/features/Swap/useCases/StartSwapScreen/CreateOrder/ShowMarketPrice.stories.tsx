@@ -19,4 +19,4 @@ storiesOf('Swap Show Market Price', module)
       <View style={styles.container}>{story()}</View>
     </SelectedWalletProvider>
   ))
-  .add('Default', () => <EditMarketPrice />)
+  .add('Default', () => <ShowMarketPrice />)
