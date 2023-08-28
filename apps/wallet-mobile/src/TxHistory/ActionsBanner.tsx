@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {banxaModuleMaker} from '@yoroi/banxa'
+import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
@@ -8,9 +9,11 @@ import {Icon, Spacer} from '../components'
 import {features} from '../features'
 import {useSend} from '../features/Send/common/SendContext'
 import {actionMessages} from '../i18n/global-messages'
+import {useMetrics} from '../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
+import {useTokenInfos} from '../yoroi-wallets/hooks'
 
 const ACTION_PROPS = {
   size: 32,
@@ -22,6 +25,14 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {resetForm} = useSend()
+  const {createOrder} = useSwap()
+  const {track} = useMetrics()
+  const tokenInfos = useTokenInfos({
+    wallet,
+    tokenIds: [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId],
+  })
+  const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
+  const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
 
   const handleOnBuy = () => {
     const isMainnetWallet = wallet.networkId === 1
@@ -39,6 +50,19 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const handleOnSend = () => {
     navigateTo.send()
     resetForm()
+  }
+
+  const handleOnSwap = () => {
+    track.swapInitiated({
+      from_asset: [
+        {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
+      ],
+      to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
+      order_type: createOrder.type,
+      slippage_tolerance: createOrder.slippage,
+    })
+
+    navigateTo.swap()
   }
 
   return (
@@ -83,7 +107,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             <View style={styles.centralized}>
               <TouchableOpacity
                 style={styles.actionIcon}
-                onPress={navigateTo.swap}
+                onPress={handleOnSwap}
                 testID="swapButton"
                 disabled={disabled}
               >

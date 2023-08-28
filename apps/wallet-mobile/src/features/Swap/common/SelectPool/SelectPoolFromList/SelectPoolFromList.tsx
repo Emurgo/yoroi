@@ -5,6 +5,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer} from '../../../../../components'
+import {useMetrics} from '../../../../../metrics/metricsManager'
 import {COLORS} from '../../../../../theme'
 import {useNavigateTo} from '../../navigation'
 
@@ -17,8 +18,10 @@ export const SelectPoolFromList = ({data}: Props) => {
   const {selectedPoolChanged, createOrder} = useSwap()
   const [selectedCardIndex, setSelectedCardIndex] = useState(createOrder.selectedPool?.poolId)
   const navigate = useNavigateTo()
+  const {track} = useMetrics()
 
   const handleCardSelect = (pool: Swap.PoolPair) => {
+    track.swapPoolChanged()
     selectedPoolChanged(pool)
     setSelectedCardIndex(pool.poolId)
     navigate.startSwap()
