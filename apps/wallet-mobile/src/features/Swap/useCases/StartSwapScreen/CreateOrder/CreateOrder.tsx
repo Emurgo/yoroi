@@ -17,7 +17,7 @@ import {EditLimitPrice} from './EditLimitPrice'
 import {ShowPoolActions} from './EditPool/ShowPoolActions'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
-import {EditMarketPrice} from './ShowMarketPrice'
+import {ShowMarketPrice} from './ShowMarketPrice'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
 import {useSwapTouched} from './TouchedContext'
 
