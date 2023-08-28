@@ -10,7 +10,7 @@ import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from './TouchedContext'
 
-export const EditMarketPrice = () => {
+export const ShowMarketPrice = () => {
   const strings = useStrings()
 
   const wallet = useSelectedWallet()
