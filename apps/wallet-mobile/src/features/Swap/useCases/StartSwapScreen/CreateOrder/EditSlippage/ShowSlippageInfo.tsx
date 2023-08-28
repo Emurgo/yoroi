@@ -47,5 +47,7 @@ const styles = StyleSheet.create({
   sheetContent: {
     fontSize: 16,
     color: '#242838',
+    lineHeight: 24,
+    fontWeight: '400',
   },
 })

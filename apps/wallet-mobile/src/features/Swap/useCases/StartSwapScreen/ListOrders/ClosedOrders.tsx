@@ -1,13 +1,18 @@
+import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../../components'
+import {useSelectedWallet} from '../../../../../SelectedWallet'
 // import {BottomSheet} from '../../../../../components/BottomSheet'
 import {COLORS} from '../../../../../theme'
+import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {ExpandableInfoCard} from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
+import {useStrings} from '../../../common/strings'
 import {OpenOrderListType} from './ListOrders'
 
-const mockOpenOrders: OpenOrderListType = [
+const getMockOpenOrder: (strings, poolFee) => OpenOrderListType = (strings, poolFee) => [
   {
     label: (
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -33,16 +38,19 @@ const mockOpenOrders: OpenOrderListType = [
     ],
     hiddenInfo: [
       {
-        label: 'Min ADA',
-        value: '2 ADA',
+        label: strings.swapMinAdaTitle,
+        value: '2 ADA', // TODO add real value
+        info: strings.swapMinAda,
       },
       {
-        label: 'Min Received',
-        value: '2.99 USDA',
+        label: strings.swapMinReceivedTitle,
+        value: '2.99 USDA', // TODO add real value
+        info: strings.swapMinReceived,
       },
       {
-        label: 'Fees',
-        value: '2 ADA',
+        label: strings.swapFeesTitle,
+        value: String(poolFee),
+        info: strings.swapFees,
       },
     ],
     buttonAction: () => {
@@ -74,16 +82,19 @@ const mockOpenOrders: OpenOrderListType = [
     ],
     hiddenInfo: [
       {
-        label: 'Min ADA',
+        label: strings.swapMinAdaTitle,
         value: '2 ADA',
+        info: strings.swapMinAda,
       },
       {
-        label: 'Min Received',
-        value: '2.99 USDA',
+        label: strings.swapMinReceivedTitle,
+        value: '2.99 USDA', // TODO add real value
+        info: strings.swapMinReceived,
       },
       {
-        label: 'Fees',
-        value: '2 ADA',
+        label: strings.swapFeesTitle,
+        value: String(poolFee),
+        info: strings.swapFees,
       },
     ],
     buttonAction: () => {
@@ -93,6 +104,15 @@ const mockOpenOrders: OpenOrderListType = [
 ]
 
 export const ClosedOrders = () => {
+  const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const {createOrder} = useSwap()
+  const {selectedPool, amounts} = createOrder
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
+  const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrder.amounts.sell.quantity)
+  const poolFee = Quantities.denominated(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
+  const mockOpenOrders = getMockOpenOrder(strings, poolFee)
+
   return (
     <View style={styles.container}>
       {/* <BottomSheet /> */}

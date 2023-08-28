@@ -153,7 +153,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
+    textAlign: 'left',
     fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '400',
+    color: '#242838',
   },
   gray: {
     color: COLORS.GRAY,

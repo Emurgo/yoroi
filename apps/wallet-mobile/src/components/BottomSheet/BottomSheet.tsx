@@ -1,25 +1,29 @@
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet'
 import {useNavigation} from '@react-navigation/native'
-import React, {useCallback, useEffect, useRef, useState} from 'react'
-import {Modal as RNModal, StyleSheet, Text, View} from 'react-native'
+import React from 'react'
+import {Modal as RNModal, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
+
+import {Icon} from '../Icon'
+import {Spacer} from '../Spacer'
 
 type BottomSheetProps = {
   title: string
   content: string | React.ReactNode
   isOpen: boolean
   onClose?: () => void
+  containerStyle?: ViewStyle
 }
 
-export const BottomSheetModal = ({title, content, isOpen = false, onClose}: BottomSheetProps) => {
+export const BottomSheetModal = ({title, content, isOpen = false, onClose, containerStyle}: BottomSheetProps) => {
   const navigation = useNavigation()
 
-  const [showBackdropComp, setShowBackdropComp] = useState(true)
+  const [showBackdropComp, setShowBackdropComp] = React.useState(true)
 
-  const bottomSheetRef = useRef<BottomSheet>(null)
+  const bottomSheetRef = React.useRef<BottomSheet>(null)
 
   const snapPoints = ['1%', '50%']
 
-  const handleSheetChanges = useCallback(
+  const handleSheetChanges = React.useCallback(
     (index: number) => {
       console.log('handleSheetChanges', index)
       if (index === 0) {
@@ -30,7 +34,7 @@ export const BottomSheetModal = ({title, content, isOpen = false, onClose}: Bott
     [onClose],
   )
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isOpen) {
       bottomSheetRef.current?.close()
       setShowBackdropComp(false)
@@ -38,6 +42,11 @@ export const BottomSheetModal = ({title, content, isOpen = false, onClose}: Bott
       setShowBackdropComp(true)
     }
   }, [isOpen, onClose])
+
+  const handleOnClose = () => {
+    setShowBackdropComp(false)
+    onClose?.()
+  }
 
   return (
     <RNModal
@@ -64,19 +73,26 @@ export const BottomSheetModal = ({title, content, isOpen = false, onClose}: Bott
               appearsOnIndex={0}
               disappearsOnIndex={-1}
               style={[{backgroundColor: 'rgba(0, 0, 0, 1)'}, StyleSheet.absoluteFillObject]}
-              onPress={() => {
-                setShowBackdropComp(false)
-                onClose?.()
-              }}
+              onPress={handleOnClose}
             />
           )
         }
         onChange={handleSheetChanges}
       >
-        <View style={styles.container}>
-          <Text style={styles.sheetTitle}>{title}</Text>
+        <View style={[styles.container, containerStyle]}>
+          <View style={styles.header}>
+            <View style={styles.empty} />
 
-          <View style={styles.sheetContent}>{content}</View>
+            <Text style={styles.sheetTitle}>{title}</Text>
+
+            <TouchableOpacity style={styles.close} onPress={handleOnClose}>
+              <Icon.CrossCircle size={28} />
+            </TouchableOpacity>
+          </View>
+
+          <Spacer height={35} />
+
+          {content}
         </View>
       </BottomSheet>
     </RNModal>
@@ -86,13 +102,24 @@ export const BottomSheetModal = ({title, content, isOpen = false, onClose}: Bott
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    padding: 16,
+  },
+  header: {
+    flexDirection: 'row',
+  },
+  close: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   sheetTitle: {
+    flex: 3,
     fontSize: 20,
-    paddingBottom: 24,
+    fontWeight: 'bold',
+    color: '#242838',
+    textAlign: 'center',
   },
-  sheetContent: {
-    paddingHorizontal: 16,
+  empty: {
+    flex: 1,
   },
 })
