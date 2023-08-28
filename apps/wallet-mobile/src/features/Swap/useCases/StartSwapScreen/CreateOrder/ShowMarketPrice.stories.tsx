@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
-import {EditMarketPrice} from './EditMarketPrice'
+import {EditMarketPrice} from './ShowMarketPrice'
 
 const styles = StyleSheet.create({
   container: {
