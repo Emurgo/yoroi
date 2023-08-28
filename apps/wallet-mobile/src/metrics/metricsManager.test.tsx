@@ -144,8 +144,8 @@ describe('makeMetricsManager', () => {
       to_asset: [{asset_name: 'DOGE', asset_ticker: 'DOGE', policy_id: '65432'}],
       order_type: 'limit',
       slippage_tolerance: 1,
-      from_amount: 12,
-      to_amount: 31,
+      from_amount: '12',
+      to_amount: '31',
       pool_source: 'fake-pool',
       swap_fees: 1,
     })
@@ -184,8 +184,8 @@ describe('makeMetricsManager', () => {
       to_asset: [{asset_name: 'DOGE', asset_ticker: 'DOGE', policy_id: '65432'}],
       order_type: 'limit',
       slippage_tolerance: 1,
-      from_amount: 12,
-      to_amount: 31,
+      from_amount: '12',
+      to_amount: '31',
       pool_source: 'fake-pool',
       swap_fees: 1,
     })

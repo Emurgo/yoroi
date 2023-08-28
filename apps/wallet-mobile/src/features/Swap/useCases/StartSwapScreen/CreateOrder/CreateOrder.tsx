@@ -59,8 +59,8 @@ export const CreateOrder = () => {
       to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
       order_type: createOrder.type,
       slippage_tolerance: createOrder.slippage,
-      from_amount: Number(createOrder.amounts.sell.quantity),
-      to_amount: Number(createOrder.amounts.buy.quantity),
+      from_amount: createOrder.amounts.sell.quantity.toString(),
+      to_amount: createOrder.amounts.buy.quantity.toString(),
       pool_source: createOrder.selectedPool.provider,
       swap_fees: Number(createOrder.selectedPool.fee),
     })

@@ -1,4 +1,5 @@
 /* tslint:disable */
+/* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
 // @ts-nocheck
 /**
@@ -405,12 +406,8 @@ export interface SwapInitiatedProperties {
 export interface SwapOrderSelectedProperties {
   /**
    * The amount of asset that the user is swapping from
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Type | number |
    */
-  from_amount: number;
+  from_amount: string;
   /**
    * Displaying the asset that the user chose to trade with.
    *
@@ -454,12 +451,8 @@ export interface SwapOrderSelectedProperties {
   swap_fees: number;
   /**
    * The amount of asset that the user is swapping to
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Type | number |
    */
-  to_amount: number;
+  to_amount: string;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -473,12 +466,8 @@ export interface SwapOrderSelectedProperties {
 export interface SwapOrderSubmittedProperties {
   /**
    * The amount of asset that the user is swapping from
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Type | number |
    */
-  from_amount: number;
+  from_amount: string;
   /**
    * Displaying the asset that the user chose to trade with.
    *
@@ -522,12 +511,8 @@ export interface SwapOrderSubmittedProperties {
   swap_fees: number;
   /**
    * The amount of asset that the user is swapping to
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Type | number |
    */
-  to_amount: number;
+  to_amount: string;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -592,12 +577,8 @@ export interface SendProperties {
 export interface SwapProperties {
   /**
    * The amount of asset that the user is swapping from
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Type | number |
    */
-  from_amount: number;
+  from_amount: string;
   /**
    * Displaying the asset that the user chose to trade with.
    *
@@ -641,12 +622,8 @@ export interface SwapProperties {
   swap_fees: number;
   /**
    * The amount of asset that the user is swapping to
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Type | number |
    */
-  to_amount: number;
+  to_amount: string;
   /**
    * Displaying the asset that the user chose to trade to
    *
