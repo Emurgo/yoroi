@@ -41,5 +41,5 @@ Metrics for are behind a feature flag
 
 ## Updating
 
-Manager is responsible to adapt the analytics module into Yoroi, whenever there are new events it needs to be mapped 1:1 in the module.
-Also if a method from `ampli` needs to be exposed it should be wrapped withing the manager as well i.e. `Identify`
+Manager is responsible for adapting the analytics module into Yoroi, whenever there are new events it needs to be mapped 1:1 in the module.
+Also if a method from `ampli` needs to be exposed it should be wrapped within the manager as well i.e. `Identify`

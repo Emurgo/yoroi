@@ -4,7 +4,7 @@ The instruction is suitable for MacOS and Ubuntu (with some tweaks).
 
 ## Preparation
 
-- Install last version of [Android Studio](https://developer.android.com/studio) and install the latest version of Android SDK Command-line tools and Android SDK Platform-Tools. It can be done from `Android Studio -> Appareance & Behavior -> System Settings -> Android SDK -> "SDK Tools" tab` after activating in this section `Show Package Details`
+- Install last version of [Android Studio](https://developer.android.com/studio) and install the latest version of Android SDK Command-line tools and Android SDK Platform-Tools. It can be done from `Android Studio -> Appearance & Behavior -> System Settings -> Android SDK -> "SDK Tools" tab` after activating in this section `Show Package Details`
 
 - Add these lines to your .bashrc/.zshrc file:
 

@@ -5,6 +5,7 @@ import React from 'react'
 import {SearchProvider} from '../../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../../SelectedWallet'
 import {mocks} from '../../../../../../../yoroi-wallets/mocks/wallet'
+import {SwapTouchedProvider} from '../../TouchedContext'
 import {SelectBuyTokenFromListScreen} from './SelectBuyTokenFromListScreen'
 
 storiesOf('Swap Select Token To Buy', module).add('initial', () => {
@@ -12,7 +13,9 @@ storiesOf('Swap Select Token To Buy', module).add('initial', () => {
     <SelectedWalletProvider wallet={mocks.wallet}>
       <SearchProvider>
         <SwapProvider swapManager={mockSwapManager}>
-          <SelectBuyTokenFromListScreen />
+          <SwapTouchedProvider>
+            <SelectBuyTokenFromListScreen />
+          </SwapTouchedProvider>
         </SwapProvider>
       </SearchProvider>
     </SelectedWalletProvider>

@@ -19,6 +19,7 @@ import {filterByFungibility} from '../../../../../../Send/common/filterByFungibi
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
+import {useSwapTouched} from '../../TouchedContext'
 
 type TransformedObject = {
   decimals: number | undefined
@@ -207,11 +208,14 @@ type SelectableTokenProps = {disabled?: boolean; tokenInfo: TransformedObject; w
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
   const {buyAmountChanged} = useSwap()
+  const {buyTouched} = useSwapTouched()
+
   const navigateTo = useNavigateTo()
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
 
   const onSelect = () => {
+    buyTouched()
     buyAmountChanged({tokenId: tokenInfo.id, quantity: balanceAvailable})
     navigateTo.startSwap()
     closeSearch()

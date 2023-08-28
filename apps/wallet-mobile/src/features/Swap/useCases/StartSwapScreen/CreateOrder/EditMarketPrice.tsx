@@ -8,6 +8,7 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {useStrings} from '../../../common/strings'
+import {useSwapTouched} from './TouchedContext'
 
 export const EditMarketPrice = () => {
   const strings = useStrings()
@@ -15,11 +16,12 @@ export const EditMarketPrice = () => {
   const wallet = useSelectedWallet()
 
   const {createOrder} = useSwap()
+  const {isBuyTouched, isSellTouched} = useSwapTouched()
 
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
-  const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name
+  const tokenToSellName = isSellTouched ? tokenToSellInfo.ticker ?? tokenToSellInfo.name : '-'
   const tokenToBuyInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
-  const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name
+  const tokenToBuyName = isBuyTouched ? tokenToBuyInfo.ticker ?? tokenToBuyInfo.name : '-'
 
   return (
     <View style={styles.container}>
