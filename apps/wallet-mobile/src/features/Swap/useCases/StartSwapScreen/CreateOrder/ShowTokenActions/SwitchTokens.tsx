@@ -1,22 +1,22 @@
 import {useSwap} from '@yoroi/swap'
 import React from 'react'
-import {StyleSheet, Text} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {COLORS} from '../../../../../../theme'
-import {useStrings} from '../../../../common/strings'
+import {Icon} from '../../../../../../components/Icon'
+import {useSwapTouched} from '../TouchedContext'
 
 export const SwitchTokens = () => {
-  const strings = useStrings()
-  const {resetQuantities} = useSwap()
+  const {switchTokens} = useSwap()
+  const {switchTouched} = useSwapTouched()
+
+  const handleSwitch = () => {
+    switchTokens()
+    switchTouched()
+  }
 
   return (
-    <TouchableOpacity onPress={resetQuantities}>
-      <Text style={styles.text}>{strings.clear}</Text>
+    <TouchableOpacity onPress={handleSwitch}>
+      <Icon.Switch size={24} />
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  text: {color: COLORS.SHELLEY_BLUE, fontWeight: '500'},
-})

@@ -2,9 +2,9 @@
 
 There is description how to prepare the project and build the mobile application from the code of the repo.
 
-Here you can find instruction how build the application on MacOS. It is not so big difference between Ubuntu and MacOS (except that you can't build iOS app on Ubuntu), so the instruction should be suitable for Ubuntu also.
+Here you can find instructions on how to build the application on MacOS. There isn't a significant difference between Ubuntu and MacOS (except that you can't build the iOS app on Ubuntu), so the instructions should be suitable for Ubuntu as well.
 
-The instruction how to build android version of the app will be presented later.
+The instructions on how to build the Android version of the app will be presented later.
 
 ## MacOS
 

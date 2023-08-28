@@ -18,6 +18,7 @@ import {ShowPoolActions} from './EditPool/ShowPoolActions'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
+import {useSwapTouched} from './TouchedContext'
 
 export const CreateOrder = () => {
   const strings = useStrings()
@@ -30,6 +31,7 @@ export const CreateOrder = () => {
     tokenIds: [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId],
   })
 
+  const {isBuyTouched, isSellTouched} = useSwapTouched()
   const {poolList} = usePoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId,
     tokenB: createOrder.amounts.buy.tokenId,
@@ -46,7 +48,10 @@ export const CreateOrder = () => {
   }
 
   const disabled =
-    Quantities.isZero(createOrder.amounts.buy.quantity) || Quantities.isZero(createOrder.amounts.sell.quantity)
+    !isBuyTouched ||
+    !isSellTouched ||
+    Quantities.isZero(createOrder.amounts.buy.quantity) ||
+    Quantities.isZero(createOrder.amounts.sell.quantity)
 
   const handleSwapPress = () => {
     const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
