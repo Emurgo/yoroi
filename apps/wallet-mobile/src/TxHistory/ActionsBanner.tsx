@@ -31,6 +31,8 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     wallet,
     tokenIds: [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId],
   })
+  const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
+  const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
 
   const handleOnBuy = () => {
     const isMainnetWallet = wallet.networkId === 1
@@ -51,9 +53,6 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   const handleOnSwap = () => {
-    const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
-    const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
-
     track.swapInitiated({
       from_asset: [
         {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
