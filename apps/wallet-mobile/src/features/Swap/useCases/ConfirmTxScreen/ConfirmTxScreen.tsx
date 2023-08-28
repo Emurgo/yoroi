@@ -4,7 +4,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, Spacer, Text, TextInput} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
-import {BottomSheetModal} from '../../../../components/BottomSheet'
+import {BottomSheetModal} from '../../../../components/BottomSheetModal'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useStrings} from '../../common/strings'

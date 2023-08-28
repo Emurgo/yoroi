@@ -21,14 +21,17 @@ storiesOf('Expandable Info Card', module)
         {
           label: 'Min ADA',
           value: '2 ADA',
+          info: 'Fake content',
         },
         {
           label: 'Min Received',
           value: '2.99 USDA',
+          info: 'Fake content',
         },
         {
           label: 'Fees',
           value: '2 ADA',
+          info: 'Fake content',
         },
       ]}
     />
@@ -60,14 +63,17 @@ storiesOf('Expandable Info Card', module)
         {
           label: 'Min ADA',
           value: '2 ADA',
+          info: 'Fake content',
         },
         {
           label: 'Min Received',
           value: '2.99 USDA',
+          info: 'Fake content',
         },
         {
           label: 'Fees',
           value: '2 ADA',
+          info: 'Fake content',
         },
       ]}
     />
@@ -99,14 +105,17 @@ storiesOf('Expandable Info Card', module)
         {
           label: 'Min ADA',
           value: '2 ADA',
+          info: 'Fake content',
         },
         {
           label: 'Min Received',
           value: '2.99 USDA',
+          info: 'Fake content',
         },
         {
           label: 'Fees',
           value: '2 ADA',
+          info: 'Fake content',
         },
       ]}
       buttonAction={() => {

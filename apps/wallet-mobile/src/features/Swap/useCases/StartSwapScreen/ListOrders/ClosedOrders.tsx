@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-// import {BottomSheet} from '../../../../../components/BottomSheet'
+// import {BottomSheetModal} from '../../../../../components/BottomSheetModal'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
@@ -115,7 +115,7 @@ export const ClosedOrders = () => {
 
   return (
     <View style={styles.container}>
-      {/* <BottomSheet /> */}
+      {/* <BottomSheetModal /> */}
 
       <View style={styles.flex}>
         {mockOpenOrders.map((order, index) => (
