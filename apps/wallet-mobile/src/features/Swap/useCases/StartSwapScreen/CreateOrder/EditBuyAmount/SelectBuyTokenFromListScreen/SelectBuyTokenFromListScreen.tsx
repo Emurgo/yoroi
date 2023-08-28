@@ -9,6 +9,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Boundary, Icon, Spacer, Text} from '../../../../../../../components'
 import {AmountItem} from '../../../../../../../components/AmountItem/AmountItem'
 import {BottomSheetModal} from '../../../../../../../components/BottomSheet'
+import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../../theme'
@@ -213,8 +214,12 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const navigateTo = useNavigateTo()
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
+  const {track} = useMetrics()
 
   const onSelect = () => {
+    track.swapAssetToChanged({
+      to_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
+    })
     buyTouched()
     buyAmountChanged({tokenId: tokenInfo.id, quantity: balanceAvailable})
     navigateTo.startSwap()

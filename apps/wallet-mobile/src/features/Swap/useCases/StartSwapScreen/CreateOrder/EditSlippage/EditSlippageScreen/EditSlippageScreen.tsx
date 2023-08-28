@@ -3,6 +3,7 @@ import React, {useEffect, useRef, useState} from 'react'
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 
 import {Button} from '../../../../../../../components'
+import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {COLORS} from '../../../../../../../theme'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
@@ -29,6 +30,7 @@ export const EditSlippageScreen = () => {
   const navigate = useNavigateTo()
   const strings = useStrings()
   const {slippageChanged} = useSwap()
+  const {track} = useMetrics()
 
   const handleChoicePress = (choice: Choice) => {
     setSelectedChoice(choice.label)
@@ -37,6 +39,14 @@ export const EditSlippageScreen = () => {
 
   const handleInputChange = (text: string) => {
     setInputValue(text)
+  }
+
+  const handleApplyPress = () => {
+    const slippage = Number(inputValue)
+
+    track.swapSlippageChanged({slippage_tolerance: slippage})
+    slippageChanged(slippage)
+    navigate.startSwap()
   }
 
   useEffect(() => {
@@ -87,15 +97,7 @@ export const EditSlippageScreen = () => {
         )}
       </View>
 
-      <Button
-        testID="applyButton"
-        shelleyTheme
-        title={strings.apply}
-        onPress={() => {
-          slippageChanged(Number(inputValue))
-          navigate.startSwap()
-        }}
-      />
+      <Button testID="applyButton" shelleyTheme title={strings.apply} onPress={handleApplyPress} />
     </View>
   )
 }
