@@ -6,7 +6,7 @@ import {Modal as RNModal, StyleSheet, Text, TouchableOpacity, View, ViewStyle} f
 import {Icon} from '../Icon'
 import {Spacer} from '../Spacer'
 
-type BottomSheetProps = {
+type BottomSheetModalProps = {
   title: string
   content: string | React.ReactNode
   isOpen: boolean
