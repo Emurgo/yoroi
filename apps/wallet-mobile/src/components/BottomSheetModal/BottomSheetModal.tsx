@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   sheetTitle: {
-    flex: 3,
+    flex: 4,
     fontSize: 20,
     fontWeight: 'bold',
     color: '#242838',
