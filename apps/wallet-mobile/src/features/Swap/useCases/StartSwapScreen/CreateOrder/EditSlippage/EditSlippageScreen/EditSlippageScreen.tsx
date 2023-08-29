@@ -16,6 +16,7 @@ import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {COLORS} from '../../../../../../../theme'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
+import BigNumber from 'bignumber.js'
 
 type ChoiceKind = '0%' | '0.1%' | '0.5%' | '1%' | '2%' | '3%' | 'Manual'
 
@@ -60,7 +61,8 @@ export const EditSlippageScreen = () => {
   }
 
   const onSubmit = () => {
-    const slippage = isSelectedChoiceManual ? Number(inputValue) : Number(selectedChoice.value)
+    const parsedNumber = selectedChoice ? BigNumber(inputValue, 10) : BigNumber(selectedChoice.value, 10)
+    const slippage = parsedNumber.toNumber()
     track.swapSlippageChanged({slippage_tolerance: slippage})
     slippageChanged(slippage)
     navigate.startSwap()
@@ -278,5 +280,5 @@ const getChoiceByLabel = (label: ChoiceKind): Choice => {
 }
 
 const normalizeInputValue = (value: string) => {
-  return value.length === 0 ? '0' : value.replace(',', '.').replace(/^0+(?=\d)/, '')
+  return value.length === 0 ? '0' : value
 }
