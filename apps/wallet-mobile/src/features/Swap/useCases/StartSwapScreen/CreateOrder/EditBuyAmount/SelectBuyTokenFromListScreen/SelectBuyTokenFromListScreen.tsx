@@ -115,7 +115,7 @@ const VerifiedTokenInfo = () => {
     <View>
       <Text style={styles.modalText}>{strings.poolVerificationInfo('MuesliSwap')}</Text>
 
-      <Spacer height={12} />
+      <Spacer height={28} />
 
       <Text>
         <Text style={styles.modalText}>{strings.eachVerifiedToken}</Text>
@@ -377,6 +377,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 20,
     color: '#242838',
+    fontFamily: 'Rubik',
+    fontSize: 15,
   },
   image: {
     flex: 1,
