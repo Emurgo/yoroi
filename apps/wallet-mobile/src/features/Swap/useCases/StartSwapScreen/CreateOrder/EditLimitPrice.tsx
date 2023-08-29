@@ -8,6 +8,7 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {useStrings} from '../../../common/strings'
+const BORDER_SIZE = 1
 
 export const EditLimitPrice = () => {
   const strings = useStrings()
@@ -27,15 +28,13 @@ export const EditLimitPrice = () => {
       <Text style={styles.label}>{strings.limitPrice}</Text>
 
       <View style={styles.content}>
-        <View style={styles.amountInput}>
-          <AmountInput onChange={setInputValue} value={inputValue} />
+        <AmountInput onChange={setInputValue} value={inputValue} />
+
+        <View style={styles.textWrapper}>
+          <Text style={styles.text}>
+            {tokenToSellName}/{tokenToBuyName}
+          </Text>
         </View>
-
-        <Spacer width={7} />
-
-        <Text style={styles.text}>
-          {tokenToSellName}/{tokenToBuyName}
-        </Text>
       </View>
     </View>
   )
@@ -70,13 +69,8 @@ const AmountInput = ({onChange, value}: AmountInputProps) => {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
-    borderWidth: 1,
+    borderWidth: BORDER_SIZE,
     borderColor: COLORS.TEXT_GRAY3,
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingLeft: 16,
-    paddingRight: 16,
-    padding: 10,
     width: '100%',
     height: 56,
   },
@@ -89,16 +83,34 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
-  amountInput: {
+  flex: {
     flex: 1,
   },
   content: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    position: 'relative',
+  },
+  amountInput: {
+    fontSize: 16,
+    height: 56,
+    padding: 8,
   },
   text: {
     fontSize: 16,
-    color: COLORS.TEXT_INPUT,
+    color: '#000000',
+    fontFamily: 'Rubik-Regular',
+  },
+  textWrapper: {
+    position: 'absolute',
+    top: 0,
+    right: 8,
+    paddingLeft: 8,
+    backgroundColor: '#FFFFFF',
+    height: 56 - BORDER_SIZE * 2,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
