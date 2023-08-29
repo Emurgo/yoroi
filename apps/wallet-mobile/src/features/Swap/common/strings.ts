@@ -1,7 +1,6 @@
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {currencyNames} from '../../../i18n/global-messages'
-import {supportedCurrencies} from '../../../yoroi-wallets/types'
+import globalMessages from '../../../i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
