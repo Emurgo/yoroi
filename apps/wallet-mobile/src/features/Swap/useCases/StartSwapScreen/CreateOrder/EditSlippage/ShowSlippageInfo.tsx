@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon, Spacer} from '../../../../../../components'
-import {BottomSheetModal} from '../../../../../../components/BottomSheet'
+import {BottomSheetModal} from '../../../../../../components/BottomSheetModal'
 import {COLORS} from '../../../../../../theme'
 import {useStrings} from '../../../../common/strings'
 
@@ -47,5 +47,7 @@ const styles = StyleSheet.create({
   sheetContent: {
     fontSize: 16,
     color: '#242838',
+    lineHeight: 24,
+    fontWeight: '400',
   },
 })

@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon, Spacer} from '../../../../../components'
-import {BottomSheetModal} from '../../../../../components/BottomSheet'
+import {BottomSheetModal} from '../../../../../components/BottomSheetModal'
 import {COLORS} from '../../../../../theme'
 
 type ExpandableInfoCardProps = {
@@ -11,7 +11,7 @@ type ExpandableInfoCardProps = {
   mainInfo: Array<{label: string; value?: string}>
   hiddenInfo: Array<{label: string; value: string; info?: string}>
   navigateTo?: () => void
-  buttonAction?: () => void
+  onPress?: () => void
   buttonText?: string
   withBoxShadow?: boolean
 }
@@ -22,7 +22,7 @@ export const ExpandableInfoCard = ({
   hiddenInfo,
   navigateTo,
   buttonText,
-  buttonAction,
+  onPress,
   withBoxShadow,
 }: ExpandableInfoCardProps) => {
   const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
@@ -96,7 +96,7 @@ export const ExpandableInfoCard = ({
         )}
 
         {buttonText != null && (
-          <TouchableOpacity style={styles.button} onPress={buttonAction && buttonAction}>
+          <TouchableOpacity style={styles.button} onPress={onPress && onPress}>
             <Text style={styles.buttonText}>{buttonText}</Text>
           </TouchableOpacity>
         )}
@@ -153,7 +153,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
+    textAlign: 'left',
     fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '400',
+    color: '#242838',
   },
   gray: {
     color: COLORS.GRAY,

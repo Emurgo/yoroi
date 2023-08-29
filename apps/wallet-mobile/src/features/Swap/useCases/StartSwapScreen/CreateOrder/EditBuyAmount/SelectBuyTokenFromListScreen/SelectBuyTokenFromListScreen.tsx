@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Spacer, Text} from '../../../../../../../components'
 import {AmountItem} from '../../../../../../../components/AmountItem/AmountItem'
-import {BottomSheetModal} from '../../../../../../../components/BottomSheet'
+import {BottomSheetModal} from '../../../../../../../components/BottomSheetModal'
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'

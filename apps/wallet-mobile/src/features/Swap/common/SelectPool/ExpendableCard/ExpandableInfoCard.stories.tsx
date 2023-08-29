@@ -1,3 +1,4 @@
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
@@ -21,14 +22,17 @@ storiesOf('Expandable Info Card', module)
         {
           label: 'Min ADA',
           value: '2 ADA',
+          info: 'Fake content',
         },
         {
           label: 'Min Received',
           value: '2.99 USDA',
+          info: 'Fake content',
         },
         {
           label: 'Fees',
           value: '2 ADA',
+          info: 'Fake content',
         },
       ]}
     />
@@ -60,14 +64,17 @@ storiesOf('Expandable Info Card', module)
         {
           label: 'Min ADA',
           value: '2 ADA',
+          info: 'Fake content',
         },
         {
           label: 'Min Received',
           value: '2.99 USDA',
+          info: 'Fake content',
         },
         {
           label: 'Fees',
           value: '2 ADA',
+          info: 'Fake content',
         },
       ]}
     />
@@ -99,18 +106,21 @@ storiesOf('Expandable Info Card', module)
         {
           label: 'Min ADA',
           value: '2 ADA',
+          info: 'Fake content',
         },
         {
           label: 'Min Received',
           value: '2.99 USDA',
+          info: 'Fake content',
         },
         {
           label: 'Fees',
           value: '2 ADA',
+          info: 'Fake content',
         },
       ]}
-      buttonAction={() => {
-        console.log('button pressed')
+      onPress={() => {
+        action('onClose')
       }}
       buttonText="CANCEL ORDER"
       withBoxShadow

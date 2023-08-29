@@ -34,18 +34,19 @@ export const ShowPoolActions = () => {
       navigateTo={() => navigate.selectPool()}
       hiddenInfo={[
         {
-          label: 'Min ADA',
+          label: strings.swapMinAdaTitle,
           value: '2 ADA',
           info: strings.swapMinAda,
         },
         {
-          label: 'Min Received ?',
+          label: strings.swapMinReceivedTitle,
           value: '2.99 USDA', // TODO add real value
           info: strings.swapMinReceived,
         },
         {
-          label: 'Fees',
+          label: strings.swapFeesTitle,
           value: String(poolFee),
+          info: strings.swapFees,
         },
       ]}
     />

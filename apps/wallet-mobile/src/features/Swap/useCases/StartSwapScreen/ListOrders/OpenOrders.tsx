@@ -111,7 +111,7 @@ export const OpenOrders = () => {
             label={order.label}
             mainInfo={order.mainInfo}
             hiddenInfo={order.hiddenInfo}
-            buttonAction={order.buttonAction}
+            onPress={order.buttonAction}
             buttonText="CANCEL ORDER"
             withBoxShadow
           />

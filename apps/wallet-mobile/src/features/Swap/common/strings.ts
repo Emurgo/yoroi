@@ -26,7 +26,10 @@ export const useStrings = () => {
     defaultSlippage: intl.formatMessage(messages.defaultSlippage),
     slippageInfo: intl.formatMessage(messages.slippageInfo),
     swapMinAda: intl.formatMessage(messages.swapMinAda),
+    swapMinAdaTitle: intl.formatMessage(messages.swapMinAdaTitle),
     swapMinReceived: intl.formatMessage(messages.swapMinReceived),
+    swapMinReceivedTitle: intl.formatMessage(messages.swapMinReceivedTitle),
+    swapFeesTitle: intl.formatMessage(messages.swapFeesTitle),
     swapFees: intl.formatMessage(messages.swapFees),
     poolVerification: (pool: string) => intl.formatMessage(messages.poolVerification, {pool}),
     poolVerificationInfo: (pool: string) => intl.formatMessage(messages.poolVerificationInfo, {pool}),
@@ -128,16 +131,25 @@ export const messages = defineMessages({
     defaultMessage:
       '!!!Min-ADA is the minimum ADA amount required to be contained when holding or sending Cardano native tokens.',
   },
+  swapMinAdaTitle: {
+    id: 'swap.swapScreen.swapMinAdaTitle',
+    defaultMessage: '!!!Min ADA',
+  },
   swapFees: {
     id: 'swap.swapScreen.swapFees',
-    defaultMessage: `!!!Swap fees include the following:
-   • Matchmaker Fee
-   • Frontend Fee
-   • Liquidity Provider Fee`,
+    defaultMessage: `!!!Swap fees include the following:\n • Matchmaker Fee\n • Frontend Fee\n • Liquidity Provider Fee`,
+  },
+  swapFeesTitle: {
+    id: 'swap.swapScreen.swapFeesTitle',
+    defaultMessage: `!!!Fee`,
   },
   swapMinReceived: {
     id: 'swap.swapScreen.swapMinReceived',
     defaultMessage: '!!!Minimum amount of tokens you can get because of the slippage tolerance.',
+  },
+  swapMinReceivedTitle: {
+    id: 'swap.swapScreen.swapMinReceivedTitle',
+    defaultMessage: '!!!Min Received',
   },
   enterSlippage: {
     id: 'swap.swapScreen.enterSlippage',
