@@ -153,6 +153,7 @@
   "swap.swapScreen.swapMinReceivedTitle": "Min Received",
   "swap.swapScreen.enterSlippage": "Enter a value from 0% to 100%. You can also enter up to 1 decimal",
   "swap.swapScreen.poolVerification": "{pool} verification",
+  "swap.swapScreen.volume": "Volume, 24h",
   "swap.swapScreen.tvl": " TVL",
   "components.common.navigation.nftGallery": "NFT Gallery",
   "components.receive.addressmodal.BIP32path": "Ableitungspfad",
