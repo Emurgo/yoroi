@@ -1,7 +1,7 @@
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
-import {NumberLocale} from 'src/i18n/languages'
 
+import {NumberLocale} from '../../i18n/languages'
 import {RawUtxo, TokenId, YoroiEntries, YoroiEntry} from '../types'
 
 export const Entries = {

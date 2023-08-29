@@ -84,6 +84,24 @@ describe('Quantities', () => {
     expect(Quantities.max('3', '2', '1')).toEqual('3')
     expect(Quantities.max('1', '1')).toEqual('1')
   })
+  it('fromInput', () => {
+    const en = {
+      prefix: '',
+      decimalSeparator: '.',
+      groupSeparator: ',',
+      groupSize: 3,
+      secondaryGroupSize: 0,
+      fractionGroupSize: 0,
+      fractionGroupSeparator: ' ',
+      suffix: '',
+    }
+
+    expect(Quantities.fromInput('', 3, en)).toBe('0')
+    expect(Quantities.fromInput('1', 3, en)).toBe('1')
+    expect(Quantities.fromInput('123.55', 3, en)).toBe('123.55')
+    expect(Quantities.fromInput('1234.6666', 3, en)).toBe('1234.666')
+    expect(Quantities.fromInput('55.', 3, en)).toBe('55.')
+  })
 })
 
 describe('Amounts', () => {
