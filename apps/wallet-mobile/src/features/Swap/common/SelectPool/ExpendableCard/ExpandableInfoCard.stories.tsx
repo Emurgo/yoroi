@@ -1,3 +1,4 @@
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
@@ -118,8 +119,8 @@ storiesOf('Expandable Info Card', module)
           info: 'Fake content',
         },
       ]}
-      buttonAction={() => {
-        console.log('button pressed')
+      onPress={() => {
+        action('onClose')
       }}
       buttonText="CANCEL ORDER"
       withBoxShadow

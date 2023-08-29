@@ -11,7 +11,7 @@ type ExpandableInfoCardProps = {
   mainInfo: Array<{label: string; value?: string}>
   hiddenInfo: Array<{label: string; value: string; info?: string}>
   navigateTo?: () => void
-  buttonAction?: () => void
+  onPress?: () => void
   buttonText?: string
   withBoxShadow?: boolean
 }
@@ -22,7 +22,7 @@ export const ExpandableInfoCard = ({
   hiddenInfo,
   navigateTo,
   buttonText,
-  buttonAction,
+  onPress,
   withBoxShadow,
 }: ExpandableInfoCardProps) => {
   const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
@@ -96,7 +96,7 @@ export const ExpandableInfoCard = ({
         )}
 
         {buttonText != null && (
-          <TouchableOpacity style={styles.button} onPress={buttonAction && buttonAction}>
+          <TouchableOpacity style={styles.button} onPress={onPress && onPress}>
             <Text style={styles.buttonText}>{buttonText}</Text>
           </TouchableOpacity>
         )}

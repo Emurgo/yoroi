@@ -124,7 +124,7 @@ export const ClosedOrders = () => {
             label={order.label}
             mainInfo={order.mainInfo}
             hiddenInfo={order.hiddenInfo}
-            buttonAction={order.buttonAction}
+            onPress={order.buttonAction}
             withBoxShadow
           />
         ))}

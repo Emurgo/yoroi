@@ -1,6 +1,7 @@
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
-import {Alert, Text, View} from 'react-native'
+import {Text, View} from 'react-native'
 
 import {BottomSheetModal} from './BottomSheetModal'
 
@@ -13,7 +14,7 @@ storiesOf('BottomSheetModal', module).add('Default', () => (
     }
     title="Fake Title"
     onClose={() => {
-      Alert.alert('on Close clicked')
+      action('onClose')
     }}
     isOpen
   />
