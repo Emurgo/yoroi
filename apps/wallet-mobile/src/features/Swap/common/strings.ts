@@ -52,6 +52,8 @@ export const useStrings = () => {
     found: intl.formatMessage(messages.found),
     youHave: intl.formatMessage(messages.youHave),
     assets: (qty: number) => intl.formatMessage(globalMessages.assets, {qty}),
+    asset: intl.formatMessage(messages.asset),
+    volume: intl.formatMessage(messages.volume),
   }
 }
 
@@ -158,6 +160,10 @@ export const messages = defineMessages({
   poolVerification: {
     id: 'swap.swapScreen.poolVerification',
     defaultMessage: '!!!{pool} verification',
+  },
+  volume: {
+    id: 'swap.swapScreen.volume',
+    defaultMessage: '!!!Volume, 24h',
   },
   poolVerificationInfo: {
     id: 'swap.swapScreen.poolVerificationInfo',
