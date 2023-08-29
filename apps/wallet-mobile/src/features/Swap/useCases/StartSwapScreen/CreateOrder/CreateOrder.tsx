@@ -4,23 +4,35 @@ import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Button, Icon, Spacer} from '../../../../../components'
+import {useMetrics} from '../../../../../metrics/metricsManager'
+import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
+import {useTokenInfos} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
-import {EditMarketPrice} from './EditMarketPrice'
+import {EditLimitPrice} from './EditLimitPrice'
 import {ShowPoolActions} from './EditPool/ShowPoolActions'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
+import {ShowMarketPrice} from './ShowMarketPrice'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
+import {useSwapTouched} from './TouchedContext'
 
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
   const {orderTypeChanged, createOrder, selectedPoolChanged} = useSwap()
+  const wallet = useSelectedWallet()
+  const {track} = useMetrics()
+  const tokenInfos = useTokenInfos({
+    wallet,
+    tokenIds: [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId],
+  })
 
+  const {isBuyTouched, isSellTouched} = useSwapTouched()
   const {poolList} = usePoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId,
     tokenB: createOrder.amounts.buy.tokenId,
@@ -35,8 +47,32 @@ export const CreateOrder = () => {
   const handleSelectOrderType = (index: number) => {
     orderTypeChanged(index === 0 ? 'market' : 'limit')
   }
+
   const disabled =
-    Quantities.isZero(createOrder.amounts.buy.quantity) || Quantities.isZero(createOrder.amounts.sell.quantity)
+    !isBuyTouched ||
+    !isSellTouched ||
+    Quantities.isZero(createOrder.amounts.buy.quantity) ||
+    Quantities.isZero(createOrder.amounts.sell.quantity)
+
+  const handleSwapPress = () => {
+    const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
+    const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
+
+    track.swapOrderSelected({
+      from_asset: [
+        {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
+      ],
+      to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
+      order_type: createOrder.type,
+      slippage_tolerance: createOrder.slippage,
+      from_amount: createOrder.amounts.sell.quantity,
+      to_amount: createOrder.amounts.buy.quantity,
+      pool_source: createOrder.selectedPool.provider,
+      swap_fees: Number(createOrder.selectedPool.fee),
+    })
+
+    navigation.confirmTx()
+  }
 
   return (
     <View style={styles.container}>
@@ -65,7 +101,7 @@ export const CreateOrder = () => {
 
         <Spacer height={20} />
 
-        <EditMarketPrice disabled={createOrder.type === 'market'} />
+        {createOrder.type === 'market' ? <ShowMarketPrice /> : <EditLimitPrice />}
 
         <EditSlippage />
 
@@ -76,7 +112,7 @@ export const CreateOrder = () => {
             testID="swapButton"
             shelleyTheme
             title={strings.swapTitle}
-            onPress={navigation.confirmTx}
+            onPress={handleSwapPress}
             disabled={disabled}
           />
         </Actions>

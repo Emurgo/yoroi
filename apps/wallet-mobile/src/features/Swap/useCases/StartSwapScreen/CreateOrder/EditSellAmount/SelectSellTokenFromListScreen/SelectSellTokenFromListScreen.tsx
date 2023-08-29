@@ -7,6 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Spacer, Text} from '../../../../../../../components'
 import {AmountItem} from '../../../../../../../components/AmountItem/AmountItem'
+import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../../theme'
@@ -18,6 +19,7 @@ import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage
 import {filterBySearch} from '../../../../../common/filterBySearch'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
+import {useSwapTouched} from '../../TouchedContext'
 
 export const SelectSellTokenFromListScreen = () => {
   const strings = useStrings()
@@ -73,7 +75,9 @@ type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; w
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
   const {sellAmountChanged, createOrder} = useSwap()
+  const {sellTouched} = useSwapTouched()
   const navigateTo = useNavigateTo()
+  const {track} = useMetrics()
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
@@ -81,6 +85,10 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const quantity = createOrder.amounts.sell.tokenId === tokenInfo.id ? createOrder.amounts.sell.quantity : '0'
 
   const onSelect = () => {
+    track.swapAssetFromChanged({
+      from_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
+    })
+    sellTouched()
     sellAmountChanged({tokenId: tokenInfo.id, quantity})
     navigateTo.startSwap()
     closeSearch()

@@ -8,7 +8,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Spacer, Text} from '../../../../../../../components'
 import {AmountItem} from '../../../../../../../components/AmountItem/AmountItem'
-import {BottomSheetModal} from '../../../../../../../components/BottomSheet'
+import {BottomSheetModal} from '../../../../../../../components/BottomSheetModal'
+import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../../theme'
@@ -19,6 +20,7 @@ import {filterByFungibility} from '../../../../../../Send/common/filterByFungibi
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
+import {useSwapTouched} from '../../TouchedContext'
 
 type TransformedObject = {
   decimals: number | undefined
@@ -207,11 +209,18 @@ type SelectableTokenProps = {disabled?: boolean; tokenInfo: TransformedObject; w
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
   const {buyAmountChanged} = useSwap()
+  const {buyTouched} = useSwapTouched()
+
   const navigateTo = useNavigateTo()
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
+  const {track} = useMetrics()
 
   const onSelect = () => {
+    track.swapAssetToChanged({
+      to_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
+    })
+    buyTouched()
     buyAmountChanged({tokenId: tokenInfo.id, quantity: balanceAvailable})
     navigateTo.startSwap()
     closeSearch()

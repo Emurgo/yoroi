@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 
 import {Button} from '../../../../../../../components'
+import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {COLORS} from '../../../../../../../theme'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
@@ -45,6 +46,8 @@ export const EditSlippageScreen = () => {
   const inputRef = useRef<TextInput | null>(null)
   const navigate = useNavigateTo()
   const strings = useStrings()
+  const {slippageChanged} = useSwap()
+  const {track} = useMetrics()
 
   const selectedChoice = getChoiceByLabel(selectedChoiceLabel)
   const isSelectedChoiceManual = selectedChoiceLabel === 'Manual'
@@ -58,7 +61,9 @@ export const EditSlippageScreen = () => {
   }
 
   const onSubmit = () => {
-    slippageChanged(isSelectedChoiceManual ? Number(inputValue) : Number(selectedChoice.value))
+    const slippage = isSelectedChoiceManual ? Number(inputValue) : Number(selectedChoice.value);
+    track.swapSlippageChanged({slippage_tolerance: slippage})
+    slippageChanged(slippage)
     navigate.startSwap()
   }
 

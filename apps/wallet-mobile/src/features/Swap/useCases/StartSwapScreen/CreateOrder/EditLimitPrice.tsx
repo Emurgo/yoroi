@@ -9,16 +9,13 @@ import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {useStrings} from '../../../common/strings'
 
-type Props = {
-  disabled?: boolean
-}
-
-export const EditMarketPrice = ({disabled = false}: Props) => {
+export const EditLimitPrice = () => {
   const strings = useStrings()
 
   const wallet = useSelectedWallet()
 
   const {createOrder} = useSwap()
+  const [inputValue, setInputValue] = React.useState(String(createOrder.selectedPool?.price))
 
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
   const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name
@@ -26,38 +23,29 @@ export const EditMarketPrice = ({disabled = false}: Props) => {
   const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name
 
   return (
-    <>
-      <View style={[styles.container, disabled && styles.disabled]}>
-        <Text style={[styles.label]}>{strings.marketPrice}</Text>
+    <View style={styles.container}>
+      <Text style={styles.label}>{strings.limitPrice}</Text>
 
-        <View style={styles.content}>
-          <View style={styles.amountInput}>
-            <AmountInput
-              onChange={(value) => {
-                console.log(value)
-              }}
-              value={String(createOrder.selectedPool?.price)}
-              disabled={disabled}
-            />
-          </View>
-
-          <Spacer width={7} />
-
-          <Text style={styles.text}>
-            {tokenToSellName}/{tokenToBuyName}
-          </Text>
+      <View style={styles.content}>
+        <View style={styles.amountInput}>
+          <AmountInput onChange={setInputValue} value={inputValue} />
         </View>
+
+        <Spacer width={7} />
+
+        <Text style={styles.text}>
+          {tokenToSellName}/{tokenToBuyName}
+        </Text>
       </View>
-    </>
+    </View>
   )
 }
 
 type AmountInputProps = {
   value?: string
   onChange(value: string): void
-  disabled: boolean
 }
-const AmountInput = ({onChange, value, disabled}: AmountInputProps) => {
+const AmountInput = ({onChange, value}: AmountInputProps) => {
   // TODO add more formatting if is the case
   const onChangeText = (text: string) => {
     onChange(text)
@@ -75,7 +63,6 @@ const AmountInput = ({onChange, value, disabled}: AmountInputProps) => {
       selectionColor={COLORS.TRANSPARENT_BLACK}
       style={styles.amountInput}
       underlineColorAndroid="transparent"
-      editable={!disabled}
     />
   )
 }
@@ -93,11 +80,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 56,
   },
-
-  disabled: {
-    backgroundColor: COLORS.BANNER_GREY,
-  },
-
   label: {
     position: 'absolute',
     top: -7,
@@ -107,7 +89,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
-
   amountInput: {
     flex: 1,
   },
@@ -116,7 +97,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-
   text: {
     fontSize: 16,
     color: COLORS.TEXT_INPUT,

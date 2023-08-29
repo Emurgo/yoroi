@@ -4,7 +4,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, Spacer, Text, TextInput} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
-import {BottomSheetModal} from '../../../../components/BottomSheet'
+import {BottomSheetModal} from '../../../../components/BottomSheetModal'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useStrings} from '../../common/strings'
@@ -12,6 +12,11 @@ import {useStrings} from '../../common/strings'
 export const ConfirmTxScreen = () => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false)
+  const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
+    isOpen: false,
+    title: '',
+    content: '',
+  })
 
   const [spendingPassword, setSpendingPassword] = React.useState('')
   const strings = useStrings()
@@ -19,17 +24,17 @@ export const ConfirmTxScreen = () => {
 
   const orderInfo = [
     {
-      label: 'Min ADA',
+      label: strings.swapMinAdaTitle,
       value: '2 ADA', // TODO add real value
       info: strings.swapMinAda,
     },
     {
-      label: 'Min Received',
+      label: strings.swapMinReceivedTitle,
       value: '2.99 USDA', // TODO add real value
       info: strings.swapMinReceived,
     },
     {
-      label: 'Fees',
+      label: strings.swapFeesTitle,
       value: '2 ADA', // TODO add real value
       info: strings.swapFees,
     },
@@ -65,7 +70,11 @@ export const ConfirmTxScreen = () => {
 
                   <TouchableOpacity
                     onPress={() => {
-                      setConfirmationModal(true)
+                      setBottomSheetSate({
+                        isOpen: true,
+                        title: orderInfo.label,
+                        content: orderInfo.info,
+                      })
                     }}
                   >
                     <Icon.Info size={24} />
@@ -106,26 +115,36 @@ export const ConfirmTxScreen = () => {
         isOpen={confirmationModal}
         title={strings.signTransaction}
         content={
-          <View style={styles.modalContent}>
-            <View>
-              <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+          <>
+            <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
 
-              <TextInput
-                secureTextEntry
-                ref={spendingPasswordRef}
-                enablesReturnKeyAutomatically
-                label={strings.spendingPassword}
-                value={spendingPassword}
-                onChangeText={setSpendingPassword}
-                autoComplete="off"
-              />
-            </View>
+            <TextInput
+              secureTextEntry
+              ref={spendingPasswordRef}
+              enablesReturnKeyAutomatically
+              label={strings.spendingPassword}
+              value={spendingPassword}
+              onChangeText={setSpendingPassword}
+              autoComplete="off"
+            />
+
+            <Spacer fill />
 
             <Button testID="swapButton" shelleyTheme title={strings.sign} />
-          </View>
+          </>
         }
         onClose={() => {
           setConfirmationModal(false)
+        }}
+        containerStyle={{justifyContent: 'space-between'}}
+      />
+
+      <BottomSheetModal
+        isOpen={bottomSheetState.isOpen}
+        title={bottomSheetState.title}
+        content={<Text style={styles.text}>{bottomSheetState.content}</Text>}
+        onClose={() => {
+          setBottomSheetSate({isOpen: false, title: '', content: ''})
         }}
       />
     </SafeAreaView>
@@ -173,7 +192,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
+    textAlign: 'left',
     fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '400',
+    color: '#242838',
   },
   gray: {
     color: COLORS.GRAY,
@@ -185,11 +208,6 @@ const styles = StyleSheet.create({
   },
   actions: {
     paddingVertical: 16,
-  },
-  modalContent: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    height: 220,
   },
   modalText: {
     paddingHorizontal: 70,
