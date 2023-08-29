@@ -8,6 +8,7 @@ import {Icon, Spacer} from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {COLORS} from '../../../../../theme'
 import {useNavigateTo} from '../../navigation'
+import {useStrings} from '../../strings'
 
 type Props = {
   // TODO: fix
@@ -15,6 +16,7 @@ type Props = {
   data?: Swap.PoolPair[] | any
 }
 export const SelectPoolFromList = ({data}: Props) => {
+  const strings = useStrings()
   const {selectedPoolChanged, createOrder} = useSwap()
   const [selectedCardIndex, setSelectedCardIndex] = useState(createOrder.selectedPool?.poolId)
   const navigate = useNavigateTo()
@@ -55,7 +57,7 @@ export const SelectPoolFromList = ({data}: Props) => {
                     <Spacer height={8} />
 
                     <View style={styles.info}>
-                      <Text style={styles.infoLabel}>Price, ADA</Text>
+                      <Text style={styles.infoLabel}>{strings.price}</Text>
 
                       <Text style={styles.infoValue}>{pool.price} ADA</Text>
                     </View>
@@ -65,9 +67,9 @@ export const SelectPoolFromList = ({data}: Props) => {
                     <Spacer height={8} />
 
                     <View style={styles.info}>
-                      <Text style={styles.infoLabel}>TVL, ADA</Text>
+                      <Text style={styles.infoLabel}>{strings.tvl}, ADA</Text>
 
-                      <Text style={styles.infoValue}>?</Text>
+                      <Text style={styles.infoValue}>{pool.deposit.quantity}</Text>
                     </View>
                   </View>
 
@@ -75,7 +77,7 @@ export const SelectPoolFromList = ({data}: Props) => {
                     <Spacer height={8} />
 
                     <View style={styles.info}>
-                      <Text style={styles.infoLabel}>Pool fee, %</Text>
+                      <Text style={styles.infoLabel}>{strings.poolFee}, %</Text>
 
                       <Text style={styles.infoValue}>{pool.fee}%</Text>
                     </View>
@@ -85,7 +87,7 @@ export const SelectPoolFromList = ({data}: Props) => {
                     <Spacer height={8} />
 
                     <View style={styles.info}>
-                      <Text style={styles.infoLabel}>Batcher fee, ADA</Text>
+                      <Text style={styles.infoLabel}>{strings.batcherFee}, ADA</Text>
 
                       <Text style={styles.infoValue}>{pool.batcherFee.quantity}</Text>
                     </View>
