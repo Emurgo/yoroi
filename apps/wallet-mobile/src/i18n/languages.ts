@@ -126,7 +126,18 @@ moment.updateLocale('en', {
   },
 })
 
-const defaultNumberFmt = {
+export type NumberLocale = {
+  prefix: string
+  decimalSeparator: string
+  groupSeparator: string
+  groupSize: number
+  secondaryGroupSize: number
+  fractionGroupSize: number
+  fractionGroupSeparator: string
+  suffix: string
+}
+
+const defaultNumberFmt: NumberLocale = {
   prefix: '',
   decimalSeparator: '.',
   groupSeparator: ',',
@@ -154,7 +165,7 @@ const spanishNumberFmt = {
   groupSeparator: '.',
 }
 
-const numberLocales = {
+export const numberLocales = {
   [LANGUAGES.BENGALI]: defaultCommaDecimalSeparatorFmt,
   [LANGUAGES.BRAZILIAN]: defaultCommaDecimalSeparatorFmt,
   [LANGUAGES.CHINESE_SIMPLIFIED]: defaultNumberFmt,
