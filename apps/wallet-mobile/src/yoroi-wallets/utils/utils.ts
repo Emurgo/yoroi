@@ -131,7 +131,7 @@ export const Quantities = {
 
     return absoluteQuantity.isEqualTo(minimalFractionalPart)
   },
-  fromInput: (quantity: Balance.Quantity | string, precision: number, format: NumberLocale) => {
+  fromInput: (quantity: string, precision: number, format: NumberLocale) => {
     const {decimalSeparator} = format
     const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
     const ungrouped = quantity === '' ? '0' : quantity.replaceAll(invalid, '')
