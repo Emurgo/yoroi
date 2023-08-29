@@ -1,5 +1,6 @@
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
+import {NumberLocale} from 'src/i18n/languages'
 
 import {RawUtxo, TokenId, YoroiEntries, YoroiEntry} from '../types'
 
@@ -130,6 +131,19 @@ export const Quantities = {
 
     return absoluteQuantity.isEqualTo(minimalFractionalPart)
   },
+  fromInput: (quantity: Balance.Quantity | string, precision: number, format: NumberLocale) => {
+    const {decimalSeparator} = format
+    const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
+    const ungrouped = quantity === '' ? '0' : quantity.replaceAll(invalid, '')
+    const parts = ungrouped.split(decimalSeparator)
+
+    const valid = parts.length > 2 ? `${parts[0]}${decimalSeparator}${parts[1]}` : ungrouped
+
+    if (valid.slice(-1) === decimalSeparator) return valid as Balance.Quantity
+
+    return new BigNumber(valid).decimalPlaces(precision, BigNumber.ROUND_DOWN).toString(10) as Balance.Quantity
+  },
+  format: (quantity: Balance.Quantity) => new BigNumber(quantity).toFormat(),
 }
 
 export const asQuantity = (value: BigNumber | number | string) => {
