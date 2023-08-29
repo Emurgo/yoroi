@@ -14,7 +14,7 @@ type BottomSheetProps = {
   containerStyle?: ViewStyle
 }
 
-export const BottomSheetModal = ({title, content, isOpen = false, onClose, containerStyle}: BottomSheetProps) => {
+export const BottomSheetModal = ({title, content, isOpen = false, onClose, containerStyle}: BottomSheetModalProps) => {
   const navigation = useNavigation()
 
   const [showBackdropComp, setShowBackdropComp] = React.useState(true)
