@@ -10,6 +10,14 @@ export const asOpenswapTokenId = (yoroiTokenId: string) => {
   }
 }
 
+export const asOpenswapTokenIdHex = (yoroiTokenId: string) => {
+  const [policyId = '', assetName = ''] = yoroiTokenId.split('.')
+  return {
+    policyId,
+    assetNameHex: assetName,
+  }
+}
+
 export const asYoroiTokenId = ({
   policyId,
   name,
@@ -109,13 +117,12 @@ export const asYoroiAmount = (openswapAmount: {
   const [assetName = '', policyId = ''] = token.split('.')
   const subject = `${assetName}.${policyId}`
   return {
-    quantity: amount as Balance.Quantity,
+    quantity: amount ? (amount as Balance.Quantity) : '0',
     tokenId: subject.length === 1 ? '' : subject,
   } as const
 }
 
 export const asYoroiPools = (openswapPools: Pool[]): Swap.PoolPair[] => {
-  console.log('[openswapPools arg]', openswapPools)
   return openswapPools.map(asYoroiPool)
 }
 

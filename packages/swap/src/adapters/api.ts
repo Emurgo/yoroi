@@ -3,6 +3,7 @@ import {OpenSwapApi, CreateOrderRequest} from '@yoroi/openswap'
 import {
   asOpenswapAmount,
   asOpenswapTokenId,
+  asOpenswapTokenIdHex,
   asYoroiBalanceTokens,
   asYoroiOrders,
   asYoroiPools,
@@ -72,14 +73,13 @@ export const makeSwapApi = (
     tokenA,
     tokenB,
   }): Promise<Swap.PoolPair[]> => {
-    // right now we always get empty array from the api response, until resolving the isssue will return mock data
-    if (network === 1 || network === 0) {
+    if (network === 1) {
       return getPoolsMock as Swap.PoolPair[]
     } else {
       return api
         .getPools({
-          tokenA: asOpenswapTokenId(tokenA),
-          tokenB: asOpenswapTokenId(tokenB),
+          tokenA: asOpenswapTokenIdHex(tokenA),
+          tokenB: asOpenswapTokenIdHex(tokenB),
         })
         .then(asYoroiPools)
     }
