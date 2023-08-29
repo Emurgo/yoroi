@@ -1,3 +1,4 @@
+import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, TextInput as RNTextInput, TouchableOpacity, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -7,6 +8,8 @@ import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {BottomSheetModal} from '../../../../components/BottomSheetModal'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
+import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
+import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useStrings} from '../../common/strings'
 
 export const ConfirmTxScreen = () => {
@@ -22,20 +25,29 @@ export const ConfirmTxScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
 
+  const {createOrder} = useSwap()
+  const {selectedPool, amounts} = createOrder
+  const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
+  const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
+
+  const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrder.amounts.sell.quantity)
+  const poolFee = Quantities.denominated(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
+
   const orderInfo = [
     {
       label: strings.swapMinAdaTitle,
-      value: '2 ADA', // TODO add real value
+      value: '2 ADA',
       info: strings.swapMinAda,
     },
     {
       label: strings.swapMinReceivedTitle,
-      value: '2.99 USDA', // TODO add real value
+      value: '?', // TODO add real value
       info: strings.swapMinReceived,
     },
     {
       label: strings.swapFeesTitle,
-      value: '2 ADA', // TODO add real value
+      value: `${poolFee} ADA`,
       info: strings.swapFees,
     },
   ]
@@ -44,14 +56,14 @@ export const ConfirmTxScreen = () => {
     <SafeAreaView style={styles.container}>
       <View>
         <View style={styles.card}>
-          <Text style={styles.cardText}>Total</Text>
+          <Text style={styles.cardText}>{strings.total}</Text>
 
           <View>
-            <Text style={[styles.cardText, styles.cardTextValue]}>11 ADA</Text>
+            <Text style={[styles.cardText, styles.cardTextValue]}>{`${amounts.buy.quantity} ${tokenToBuyName}`}</Text>
 
             <Spacer height={6} />
 
-            <Text style={styles.cardTextUSD}>3.75 USD</Text>
+            <Text style={styles.cardTextUSD}></Text>
           </View>
         </View>
 
@@ -91,13 +103,13 @@ export const ConfirmTxScreen = () => {
 
         <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
 
-        <AmountItem wallet={wallet} amount={{tokenId: '', quantity: '222'}} />
+        <AmountItem wallet={wallet} amount={{tokenId: amounts.sell.tokenId, quantity: amounts.sell.quantity}} />
 
         <Spacer height={16} />
 
         <Text style={styles.amountItemLabel}>{strings.swapTo}</Text>
 
-        <AmountItem wallet={wallet} amount={{tokenId: '', quantity: '222'}} />
+        <AmountItem wallet={wallet} amount={{tokenId: amounts.buy.tokenId, quantity: amounts.buy.quantity}} />
       </View>
 
       <Actions>
