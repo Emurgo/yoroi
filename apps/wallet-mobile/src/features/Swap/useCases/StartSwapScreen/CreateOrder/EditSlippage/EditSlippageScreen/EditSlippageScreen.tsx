@@ -1,4 +1,5 @@
 import {useSwap} from '@yoroi/swap'
+import BigNumber from 'bignumber.js'
 import React, {useEffect, useRef, useState} from 'react'
 import {
   KeyboardAvoidingView,
@@ -16,7 +17,6 @@ import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {COLORS} from '../../../../../../../theme'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
-import BigNumber from 'bignumber.js'
 
 type ChoiceKind = '0%' | '0.1%' | '0.5%' | '1%' | '2%' | '3%' | 'Manual'
 
@@ -61,7 +61,7 @@ export const EditSlippageScreen = () => {
   }
 
   const onSubmit = () => {
-    const parsedNumber = selectedChoice ? BigNumber(inputValue, 10) : BigNumber(selectedChoice.value, 10)
+    const parsedNumber = isSelectedChoiceManual ? BigNumber(inputValue, 10) : BigNumber(selectedChoice.value, 10)
     const slippage = parsedNumber.toNumber()
     track.swapSlippageChanged({slippage_tolerance: slippage})
     slippageChanged(slippage)
