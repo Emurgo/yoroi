@@ -131,7 +131,7 @@ export const Quantities = {
 
     return absoluteQuantity.isEqualTo(minimalFractionalPart)
   },
-  fromInput: (input: string, precision: number, format: NumberLocale) => {
+  formatFromText: (input: string, precision: number, format: NumberLocale) => {
     const {decimalSeparator} = format
     const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
     const sanitized = input === '' ? '0' : input.replaceAll(invalid, '')
