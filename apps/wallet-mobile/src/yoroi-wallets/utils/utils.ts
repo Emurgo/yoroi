@@ -131,19 +131,22 @@ export const Quantities = {
 
     return absoluteQuantity.isEqualTo(minimalFractionalPart)
   },
-  fromInput: (quantity: string, precision: number, format: NumberLocale) => {
+  fromInput: (input: string, precision: number, format: NumberLocale) => {
     const {decimalSeparator} = format
     const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
-    const ungrouped = quantity === '' ? '0' : quantity.replaceAll(invalid, '')
-    const parts = ungrouped.split(decimalSeparator)
+    const sanitized = input === '' ? '0' : input.replaceAll(invalid, '')
+    const parts = sanitized.split(decimalSeparator)
 
-    const valid = parts.length > 2 ? `${parts[0]}${decimalSeparator}${parts[1]}` : ungrouped
+    const valid = parts.length >= 2 ? `${parts[0]}${decimalSeparator}${parts[1].slice(0, precision)}` : sanitized
 
-    if (valid.slice(-1) === decimalSeparator) return valid as Balance.Quantity
+    const trailing = valid.slice(-1) === decimalSeparator
 
-    return new BigNumber(valid).decimalPlaces(precision, BigNumber.ROUND_DOWN).toString(10) as Balance.Quantity
+    const quantity = new BigNumber(valid.replace(format.decimalSeparator, '.')).toString(10)
+
+    const formatted = `${new BigNumber(quantity).toFormat()}${trailing ? decimalSeparator : ''}`
+
+    return [formatted, quantity] as [string, Balance.Quantity]
   },
-  format: (quantity: Balance.Quantity) => new BigNumber(quantity).toFormat(),
 }
 
 export const asQuantity = (value: BigNumber | number | string) => {

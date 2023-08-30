@@ -43,15 +43,11 @@ export const EditSellAmount = () => {
     })
   }
 
-  React.useEffect(() => {
-    setInputValue(Quantities.format(Quantities.denominated(quantity, tokenInfo.decimals ?? 0)))
-  }, [quantity, tokenInfo.decimals])
-
   const onChangeQuantity = (text: string) => {
     try {
-      const inputQuantity = Quantities.fromInput(text, decimals ?? 0, numberLocale)
-      setInputValue(inputQuantity)
+      const [formatted, inputQuantity] = Quantities.fromInput(text, decimals ?? 0, numberLocale)
       const quantity = Quantities.integer(inputQuantity, decimals ?? 0)
+      setInputValue(formatted)
       sellAmountChanged({tokenId, quantity})
       recalculateBuyValue(quantity)
     } catch (error) {

@@ -85,7 +85,7 @@ describe('Quantities', () => {
     expect(Quantities.max('1', '1')).toEqual('1')
   })
   it('fromInput', () => {
-    const en = {
+    const english = {
       prefix: '',
       decimalSeparator: '.',
       groupSeparator: ',',
@@ -96,11 +96,35 @@ describe('Quantities', () => {
       suffix: '',
     }
 
-    expect(Quantities.fromInput('', 3, en)).toBe('0')
-    expect(Quantities.fromInput('1', 3, en)).toBe('1')
-    expect(Quantities.fromInput('123.55', 3, en)).toBe('123.55')
-    expect(Quantities.fromInput('1234.6666', 3, en)).toBe('1234.666')
-    expect(Quantities.fromInput('55.', 3, en)).toBe('55.')
+    const italian = {
+      ...english,
+      decimalSeparator: ',',
+      groupSeparator: ' ',
+    }
+
+    BigNumber.config({
+      FORMAT: italian,
+    })
+
+    expect(Quantities.fromInput('', 3, italian)).toEqual(['0', '0'])
+    expect(Quantities.fromInput('1', 3, italian)).toEqual(['1', '1'])
+    expect(Quantities.fromInput('123,55', 3, italian)).toEqual(['123,55', '123.55'])
+    expect(Quantities.fromInput('1234,6666', 3, italian)).toEqual(['1 234,666', '1234.666'])
+    expect(Quantities.fromInput('55,', 3, italian)).toEqual(['55,', '55'])
+
+    expect(Quantities.fromInput('ab1.5c,6.5', 3, italian)).toEqual(['15,65', '15.65'])
+
+    BigNumber.config({
+      FORMAT: english,
+    })
+
+    expect(Quantities.fromInput('', 3, english)).toEqual(['0', '0'])
+    expect(Quantities.fromInput('1', 3, english)).toEqual(['1', '1'])
+    expect(Quantities.fromInput('123.55', 3, english)).toEqual(['123.55', '123.55'])
+    expect(Quantities.fromInput('1234.6666', 3, english)).toEqual(['1,234.666', '1234.666'])
+    expect(Quantities.fromInput('55.', 3, english)).toEqual(['55.', '55'])
+
+    expect(Quantities.fromInput('ab1.5c,6.5', 3, english)).toEqual(['1.56', '1.56'])
   })
 })
 

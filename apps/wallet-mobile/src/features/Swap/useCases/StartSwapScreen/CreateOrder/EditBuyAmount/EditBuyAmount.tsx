@@ -1,10 +1,11 @@
 import {getSellAmountByChangingReceive, useSwap} from '@yoroi/swap'
 import * as React from 'react'
 
+import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useBalance, useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../../yoroi-wallets/logging'
-import {asQuantity, Quantities} from '../../../../../../yoroi-wallets/utils'
+import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {AmountCard} from '../../../../common/AmountCard/AmountCard'
 import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
@@ -14,6 +15,7 @@ export const EditBuyAmount = () => {
   const strings = useStrings()
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
+  const {numberLocale} = useLanguage()
 
   const {createOrder, buyAmountChanged, sellAmountChanged} = useSwap()
   const {isBuyTouched} = useSwapTouched()
@@ -23,10 +25,6 @@ export const EditBuyAmount = () => {
   const balance = useBalance({wallet, tokenId})
 
   const [inputValue, setInputValue] = React.useState<string>(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
-
-  React.useEffect(() => {
-    setInputValue(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
-  }, [quantity, tokenInfo.decimals])
 
   const recalculateSellValue = (buyQuantity) => {
     const {sell} = getSellAmountByChangingReceive(createOrder?.selectedPool, {
@@ -41,10 +39,9 @@ export const EditBuyAmount = () => {
 
   const onChangeQuantity = (text: string) => {
     try {
-      setInputValue(text)
-
-      const inputQuantity = asQuantity(text.length > 0 ? text : '0')
+      const [formatted, inputQuantity] = Quantities.fromInput(text, decimals ?? 0, numberLocale)
       const quantity = Quantities.integer(inputQuantity, decimals ?? 0)
+      setInputValue(formatted)
       buyAmountChanged({tokenId, quantity})
       recalculateSellValue(quantity)
     } catch (error) {
