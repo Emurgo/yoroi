@@ -130,6 +130,7 @@
   "swap.swapScreen.swapFrom": "Swap from",
   "swap.swapScreen.swapTo": "Swap to",
   "swap.swapScreen.currentBalance": "Current balance",
+  "swap.swapScreen.balance": "Balance",
   "swap.swapScreen.selectToken": "Select token",
   "swap.swapScreen.marketPrice": "Market price",
   "swap.swapScreen.limitPrice": "Preço limite",
