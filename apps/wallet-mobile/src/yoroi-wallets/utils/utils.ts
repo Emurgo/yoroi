@@ -141,9 +141,11 @@ export const Quantities = {
 
     const trailing = valid.slice(-1) === decimalSeparator
 
-    const quantity = new BigNumber(valid.replace(format.decimalSeparator, '.')).toString(10)
+    const value = new BigNumber(valid.replace(format.decimalSeparator, '.'))
 
-    const formatted = `${new BigNumber(quantity).toFormat()}${trailing ? decimalSeparator : ''}`
+    const formatted = `${new BigNumber(value).toFormat()}${trailing ? decimalSeparator : ''}`
+
+    const quantity = new BigNumber(value).decimalPlaces(precision).shiftedBy(precision).toString(10)
 
     return [formatted, quantity] as [string, Balance.Quantity]
   },

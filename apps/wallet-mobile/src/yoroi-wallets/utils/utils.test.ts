@@ -107,24 +107,24 @@ describe('Quantities', () => {
     })
 
     expect(Quantities.formatFromText('', 3, italian)).toEqual(['0', '0'])
-    expect(Quantities.formatFromText('1', 3, italian)).toEqual(['1', '1'])
-    expect(Quantities.formatFromText('123,55', 3, italian)).toEqual(['123,55', '123.55'])
-    expect(Quantities.formatFromText('1234,6666', 3, italian)).toEqual(['1 234,666', '1234.666'])
-    expect(Quantities.formatFromText('55,', 3, italian)).toEqual(['55,', '55'])
+    expect(Quantities.formatFromText('1', 3, italian)).toEqual(['1', '1000'])
+    expect(Quantities.formatFromText('123,55', 3, italian)).toEqual(['123,55', '123550'])
+    expect(Quantities.formatFromText('1234,6666', 3, italian)).toEqual(['1 234,666', '1234666'])
+    expect(Quantities.formatFromText('55,', 3, italian)).toEqual(['55,', '55000'])
 
-    expect(Quantities.formatFromText('ab1.5c,6.5', 3, italian)).toEqual(['15,65', '15.65'])
+    expect(Quantities.formatFromText('ab1.5c,6.5', 3, italian)).toEqual(['15,65', '15650'])
 
     BigNumber.config({
       FORMAT: english,
     })
 
     expect(Quantities.formatFromText('', 3, english)).toEqual(['0', '0'])
-    expect(Quantities.formatFromText('1', 3, english)).toEqual(['1', '1'])
-    expect(Quantities.formatFromText('123.55', 3, english)).toEqual(['123.55', '123.55'])
-    expect(Quantities.formatFromText('1234.6666', 3, english)).toEqual(['1,234.666', '1234.666'])
-    expect(Quantities.formatFromText('55.', 3, english)).toEqual(['55.', '55'])
+    expect(Quantities.formatFromText('1', 3, english)).toEqual(['1', '1000'])
+    expect(Quantities.formatFromText('123.55', 3, english)).toEqual(['123.55', '123550'])
+    expect(Quantities.formatFromText('1234.6666', 3, english)).toEqual(['1,234.666', '1234666'])
+    expect(Quantities.formatFromText('55.', 3, english)).toEqual(['55.', '55000'])
 
-    expect(Quantities.formatFromText('ab1.5c,6.5', 3, english)).toEqual(['1.56', '1.56'])
+    expect(Quantities.formatFromText('ab1.5c,6.5', 3, english)).toEqual(['1.56', '1560'])
   })
 })
 
