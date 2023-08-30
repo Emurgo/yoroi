@@ -277,8 +277,7 @@ const styles = StyleSheet.create({
 
 const validateSlippage = (text: string, format: NumberLocale) => {
   const slippage = parseNumber(text, format)
-  console.log('slippage', slippage)
-  return !isNaN(slippage) && slippage >= 0 && slippage <= 100 && (slippage * 10 ** MAX_DECIMALS) % 1 === 0
+  return !isNaN(slippage) && slippage >= 0 && slippage <= 100
 }
 
 const parseNumber = (text: string, format: NumberLocale) => {
