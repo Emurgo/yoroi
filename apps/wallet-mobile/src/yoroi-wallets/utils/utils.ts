@@ -131,10 +131,10 @@ export const Quantities = {
 
     return absoluteQuantity.isEqualTo(minimalFractionalPart)
   },
-  formatFromText: (input: string, precision: number, format: NumberLocale) => {
+  parseFromText: (text: string, precision: number, format: NumberLocale) => {
     const {decimalSeparator} = format
     const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
-    const sanitized = input === '' ? '0' : input.replaceAll(invalid, '')
+    const sanitized = text === '' ? '0' : text.replaceAll(invalid, '')
     const parts = sanitized.split(decimalSeparator)
 
     const valid = parts.length >= 2 ? `${parts[0]}${decimalSeparator}${parts[1].slice(0, precision)}` : sanitized
@@ -143,11 +143,11 @@ export const Quantities = {
 
     const value = new BigNumber(valid.replace(format.decimalSeparator, '.'))
 
-    const formatted = `${new BigNumber(value).toFormat()}${trailing ? decimalSeparator : ''}`
+    const input = `${new BigNumber(value).toFormat()}${trailing ? decimalSeparator : ''}`
 
     const quantity = new BigNumber(value).decimalPlaces(precision).shiftedBy(precision).toString(10)
 
-    return [formatted, quantity] as [string, Balance.Quantity]
+    return [input, quantity] as [string, Balance.Quantity]
   },
 }
 

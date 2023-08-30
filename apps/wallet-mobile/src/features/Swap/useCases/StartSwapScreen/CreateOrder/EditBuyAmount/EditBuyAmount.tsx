@@ -39,8 +39,8 @@ export const EditBuyAmount = () => {
 
   const onChangeQuantity = (text: string) => {
     try {
-      const [formatted, quantity] = Quantities.formatFromText(text, decimals ?? 0, numberLocale)
-      setInputValue(formatted)
+      const [input, quantity] = Quantities.parseFromText(text, decimals ?? 0, numberLocale)
+      setInputValue(input)
       buyAmountChanged({tokenId, quantity})
       recalculateSellValue(quantity)
     } catch (error) {
