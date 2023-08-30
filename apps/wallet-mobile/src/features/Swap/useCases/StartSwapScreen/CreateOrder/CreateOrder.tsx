@@ -121,7 +121,7 @@ export const CreateOrder = () => {
           disabled={disabled}
         />
       </Actions>
-    </>
+    </View>
   )
 }
 
