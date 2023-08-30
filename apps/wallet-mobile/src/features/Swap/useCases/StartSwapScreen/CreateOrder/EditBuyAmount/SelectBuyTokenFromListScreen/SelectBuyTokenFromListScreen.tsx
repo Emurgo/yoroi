@@ -346,8 +346,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   line: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#DCE0E9',
+    height: 1,
+    backgroundColor: COLORS.BORDER_GRAY,
   },
   counter: {
     padding: 16,
