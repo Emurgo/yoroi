@@ -75,8 +75,7 @@ export const EditSlippageScreen = () => {
   }
 
   const onSubmit = () => {
-    const slippage: number =
-      selectedChoice.label === 'Manual' ? parseNumber(inputValue, numberLocale) : selectedChoice.value
+    const slippage = selectedChoice.label === 'Manual' ? parseNumber(inputValue, numberLocale) : selectedChoice.value
     track.swapSlippageChanged({slippage_tolerance: slippage})
     slippageChanged(slippage)
     navigate.startSwap()
