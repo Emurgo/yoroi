@@ -146,6 +146,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderTopWidth: 1,
-    borderTopColor: '#DCE0E9',
+    borderTopColor: COLORS.ACTION_GRAY,
   },
 })
