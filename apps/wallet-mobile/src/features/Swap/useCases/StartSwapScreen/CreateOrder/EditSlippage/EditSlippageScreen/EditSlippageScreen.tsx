@@ -51,7 +51,7 @@ export const EditSlippageScreen = () => {
   const {numberLocale} = useLanguage()
 
   const {slippageChanged, createOrder} = useSwap()
-  const defaultSelectedChoice = getChoiceBySlippage(createOrder.slippage)
+  const defaultSelectedChoice = getChoiceBySlippage(createOrder.slippage, numberLocale)
   const defaultInputValue =
     defaultSelectedChoice.label === 'Manual' ? BigNumber(createOrder.slippage).toFormat(numberLocale) : ''
 
@@ -286,8 +286,13 @@ const parseNumber = (text: string, format: NumberLocale) => {
   return Number(quantity) / 10 ** MAX_DECIMALS
 }
 
-const getChoiceBySlippage = (slippage: number): Choice => {
-  return CHOICES.find((choice) => choice.value === slippage) ?? {label: 'Manual', value: slippage.toString()}
+const getChoiceBySlippage = (slippage: number, format: NumberLocale): Choice => {
+  return (
+    CHOICES.find((choice) => choice.value === slippage) ?? {
+      label: 'Manual',
+      value: BigNumber(slippage).toFormat(format),
+    }
+  )
 }
 
 const getChoiceByLabel = (label: ChoiceKind): Choice => {
