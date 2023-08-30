@@ -54,9 +54,11 @@ const WalletTabNavigator = () => {
           })}
         >
           {() => (
-            <SearchProvider>
-              <TxHistoryNavigator />
-            </SearchProvider>
+            <>
+              <SearchProvider>
+                <TxHistoryNavigator />
+              </SearchProvider>
+            </>
           )}
         </Tab.Screen>
 

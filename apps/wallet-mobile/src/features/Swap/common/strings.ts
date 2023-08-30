@@ -170,7 +170,7 @@ export const messages = defineMessages({
       '!!!Cardano projects that list their own tokens can apply for an additional {pool} verification. This verification is a manual validation that {pool} team performs with the help of Cardano Foundation.',
   },
   price: {
-    id: 'global,price',
+    id: 'global.price',
     defaultMessage: '!!! Price',
   },
   noAssetsFound: {

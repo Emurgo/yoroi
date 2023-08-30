@@ -18,5 +18,5 @@ export const ClearQuantities = () => {
 }
 
 const styles = StyleSheet.create({
-  text: {color: COLORS.SHELLEY_BLUE, fontWeight: '500', textTransform: 'uppercase'},
+  text: {color: COLORS.SHELLEY_BLUE, fontWeight: '600', textTransform: 'uppercase'},
 })
