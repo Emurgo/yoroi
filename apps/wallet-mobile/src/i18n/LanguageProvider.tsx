@@ -13,7 +13,7 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {LanguageCode, supportedLanguages, updateLanguageSettings} from './languages'
+import {LanguageCode, NumberLocale, numberLocales, supportedLanguages, updateLanguageSettings} from './languages'
 import translations from './translations'
 
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)
@@ -28,7 +28,15 @@ export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
   )
 
   return (
-    <LanguageContext.Provider value={{languageCode, selectLanguageCode, supportedLanguages, observer}}>
+    <LanguageContext.Provider
+      value={{
+        numberLocale: numberLocales[languageCode],
+        languageCode,
+        selectLanguageCode,
+        supportedLanguages,
+        observer,
+      }}
+    >
       <IntlProvider
         timeZone={timeZone}
         locale={languageCode}
@@ -118,6 +126,7 @@ const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, E
 type SaveLanguageCode = ReturnType<typeof useSaveLanguageCode>
 type SupportedLanguages = typeof supportedLanguages
 type LanguageContext = {
+  numberLocale: NumberLocale
   languageCode: LanguageCode
   selectLanguageCode: SaveLanguageCode
   supportedLanguages: SupportedLanguages
