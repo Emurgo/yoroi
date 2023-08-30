@@ -283,7 +283,7 @@ const validateSlippage = (text: string, format: NumberLocale) => {
 
 const parseNumber = (text: string, format: NumberLocale) => {
   const [, quantity] = Quantities.parseFromText(text, MAX_DECIMALS, format)
-  return Number(quantity) / 10 ** MAX_DECIMALS
+  return Number(Quantities.denominated(quantity, MAX_DECIMALS))
 }
 
 const getChoiceBySlippage = (slippage: number, format: NumberLocale): Choice => {
