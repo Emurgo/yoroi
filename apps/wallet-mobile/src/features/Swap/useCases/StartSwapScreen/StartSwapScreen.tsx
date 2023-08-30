@@ -1,9 +1,9 @@
 import React, {useState} from 'react'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler'
 
 import {Spacer, StatusBar, Text} from '../../../../components'
 import {COLORS} from '../../../../theme'
+import {useHideBottomTabBar} from '../../../../yoroi-wallets/hooks'
 import {useStrings} from '../../common/strings'
 import {CreateOrder} from './CreateOrder/CreateOrder'
 import {ListOrders} from './ListOrders/ListOrders'
@@ -11,8 +11,9 @@ import {ListOrders} from './ListOrders/ListOrders'
 type TabOptions = 'createOrder' | 'listOrders'
 
 export const StartSwapScreen = () => {
-  const strings = useStrings()
+  useHideBottomTabBar()
 
+  const strings = useStrings()
   const [activeTab, setActiveTab] = useState<TabOptions>('createOrder')
   const onSelectTab = (tab: TabOptions) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -23,37 +24,37 @@ export const StartSwapScreen = () => {
     <View style={styles.scrollView}>
       <StatusBar type="dark" />
 
-      <ScrollView>
-        <View style={styles.container}>
-          <Tabs>
-            <Tab
-              onPress={() => onSelectTab('createOrder')}
-              label={strings.tokenSwap}
-              active={activeTab === 'createOrder'}
-              testID="createOrderTabButton"
-            />
+      <View style={styles.container}>
+        <Tabs>
+          <Tab
+            onPress={() => onSelectTab('createOrder')}
+            label={strings.tokenSwap}
+            active={activeTab === 'createOrder'}
+            testID="createOrderTabButton"
+          />
 
-            <Tab
-              onPress={() => onSelectTab('listOrders')}
-              label={strings.orderSwap}
-              active={activeTab === 'listOrders'}
-              testID="listOrdersTabButton"
-            />
-          </Tabs>
+          <Tab
+            onPress={() => onSelectTab('listOrders')}
+            label={strings.orderSwap}
+            active={activeTab === 'listOrders'}
+            testID="listOrdersTabButton"
+          />
+        </Tabs>
 
-          <TabPanels>
-            <Spacer height={4} />
+        <Spacer height={2} />
 
-            <TabPanel active={activeTab === 'createOrder'}>
-              <CreateOrder />
-            </TabPanel>
+        <TabPanels>
+          <Spacer height={4} />
 
-            <TabPanel active={activeTab === 'listOrders'}>
-              <ListOrders />
-            </TabPanel>
-          </TabPanels>
-        </View>
-      </ScrollView>
+          <TabPanel active={activeTab === 'createOrder'}>
+            <CreateOrder />
+          </TabPanel>
+
+          <TabPanel active={activeTab === 'listOrders'}>
+            <ListOrders />
+          </TabPanel>
+        </TabPanels>
+      </View>
     </View>
   )
 }
@@ -89,6 +90,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     flex: 1,
+    overflow: 'hidden',
   },
 
   centered: {
@@ -97,6 +99,13 @@ const styles = StyleSheet.create({
   },
   tabs: {
     flexDirection: 'row',
+    backgroundColor: '#fff',
+    width: '100%',
+    shadowColor: '#000000',
+    shadowOffset: {width: 0.1, height: 0.1},
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
   tab: {
     alignItems: 'center',

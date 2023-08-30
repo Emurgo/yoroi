@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
+import {useNavigation} from '@react-navigation/native'
 import {Balance} from '@yoroi/types'
 import {parseBoolean, useStorage} from '@yoroi/wallets'
 import * as React from 'react'
@@ -917,4 +918,12 @@ export const useNft = (wallet: YoroiWallet, {id}: {id: string}): Balance.TokenIn
 export const useIsWalletEmpty = (wallet: YoroiWallet) => {
   const balances = useBalances(wallet)
   return Amounts.toArray(balances).every(({quantity}) => Quantities.isZero(quantity))
+}
+export function useHideBottomTabBar() {
+  const navigation = useNavigation()
+
+  React.useLayoutEffect(() => {
+    navigation.getParent()?.setOptions({tabBarStyle: {display: 'none'}, tabBarVisible: false})
+    return () => navigation.getParent()?.setOptions({tabBarStyle: true, tabBarVisible: undefined})
+  }, [navigation])
 }

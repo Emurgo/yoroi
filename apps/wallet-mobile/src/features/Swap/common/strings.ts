@@ -14,6 +14,7 @@ export const useStrings = () => {
     swapFrom: intl.formatMessage(messages.swapFrom),
     swapTo: intl.formatMessage(messages.swapTo),
     currentBalance: intl.formatMessage(messages.currentBalance),
+    balance: intl.formatMessage(messages.balance),
     clear: intl.formatMessage(messages.clear),
     selectToken: intl.formatMessage(messages.selectToken),
     marketPrice: intl.formatMessage(messages.marketPrice),
@@ -98,6 +99,10 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.currentBalance',
     defaultMessage: '!!!Current Balance',
   },
+  balance: {
+    id: 'swap.swapScreen.balance',
+    defaultMessage: '!!!Balance',
+  },
   selectToken: {
     id: 'swap.swapScreen.selectToken',
     defaultMessage: '!!!Select Token',
@@ -181,7 +186,7 @@ export const messages = defineMessages({
       '!!!Cardano projects that list their own tokens can apply for an additional {pool} verification. This verification is a manual validation that {pool} team performs with the help of Cardano Foundation.',
   },
   price: {
-    id: 'global,price',
+    id: 'global.price',
     defaultMessage: '!!! Price',
   },
   noAssetsFound: {
