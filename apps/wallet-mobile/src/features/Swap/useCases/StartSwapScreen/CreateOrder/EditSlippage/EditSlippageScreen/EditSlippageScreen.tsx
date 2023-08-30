@@ -13,13 +13,13 @@ import {
 } from 'react-native'
 
 import {Button} from '../../../../../../../components'
-import {useMetrics} from '../../../../../../../metrics/metricsManager'
-import {COLORS} from '../../../../../../../theme'
-import {useNavigateTo} from '../../../../../common/navigation'
-import {useStrings} from '../../../../../common/strings'
-import {Quantities} from '../../../../../../../yoroi-wallets/utils'
 import {useLanguage} from '../../../../../../../i18n'
 import {NumberLocale} from '../../../../../../../i18n/languages'
+import {useMetrics} from '../../../../../../../metrics/metricsManager'
+import {COLORS} from '../../../../../../../theme'
+import {Quantities} from '../../../../../../../yoroi-wallets/utils'
+import {useNavigateTo} from '../../../../../common/navigation'
+import {useStrings} from '../../../../../common/strings'
 
 type ManualChoice = {
   label: 'Manual'
