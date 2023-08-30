@@ -17,15 +17,25 @@ import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {COLORS} from '../../../../../../../theme'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
+import {Quantities} from '../../../../../../../yoroi-wallets/utils'
+import {useLanguage} from '../../../../../../../i18n'
+import {NumberLocale} from '../../../../../../../i18n/languages'
 
-type ChoiceKind = '0%' | '0.1%' | '0.5%' | '1%' | '2%' | '3%' | 'Manual'
-
-interface Choice {
-  label: ChoiceKind
-  value: string | number
+type ManualChoice = {
+  label: 'Manual'
+  value: string
 }
 
-const CHOICES: Choice[] = [
+type GivenChoice = {
+  label: '0%' | '0.1%' | '0.5%' | '1%' | '2%' | '3%'
+  value: number
+}
+
+type Choice = ManualChoice | GivenChoice
+
+type ChoiceKind = Choice['label']
+
+const CHOICES: Readonly<Choice[]> = [
   {label: '0%', value: 0},
   {label: '0.1%', value: 0.1},
   {label: '0.5%', value: 0.5},
@@ -33,7 +43,7 @@ const CHOICES: Choice[] = [
   {label: '2%', value: 2},
   {label: '3%', value: 3},
   {label: 'Manual', value: ''},
-]
+] as const
 
 const MAX_DECIMALS = 1
 
@@ -41,13 +51,16 @@ export const EditSlippageScreen = () => {
   const {slippageChanged, createOrder} = useSwap()
   const defaultSelectedChoice = getChoiceBySlippage(createOrder.slippage)
   const defaultInputValue = defaultSelectedChoice.label === 'Manual' ? createOrder.slippage.toString() : ''
+
   const [selectedChoiceLabel, setSelectedChoiceLabel] = useState<ChoiceKind>(defaultSelectedChoice.label)
   const [inputValue, setInputValue] = useState(defaultInputValue)
+
   const [isFocused, setIsFocused] = useState(false)
   const inputRef = useRef<TextInput | null>(null)
   const navigate = useNavigateTo()
   const strings = useStrings()
   const {track} = useMetrics()
+  const {numberLocale} = useLanguage()
 
   const selectedChoice = getChoiceByLabel(selectedChoiceLabel)
   const isSelectedChoiceManual = selectedChoiceLabel === 'Manual'
@@ -57,12 +70,13 @@ export const EditSlippageScreen = () => {
   }
 
   const handleInputChange = (text: string) => {
-    setInputValue(normalizeInputValue(text))
+    const [value] = Quantities.parseFromText(text, MAX_DECIMALS, numberLocale)
+    setInputValue(value)
   }
 
   const onSubmit = () => {
-    const parsedNumber = isSelectedChoiceManual ? BigNumber(inputValue, 10) : BigNumber(selectedChoice.value, 10)
-    const slippage = parsedNumber.toNumber()
+    const slippage: number =
+      selectedChoice.label === 'Manual' ? parseNumber(inputValue, numberLocale) : selectedChoice.value
     track.swapSlippageChanged({slippage_tolerance: slippage})
     slippageChanged(slippage)
     navigate.startSwap()
@@ -75,7 +89,7 @@ export const EditSlippageScreen = () => {
   }, [isSelectedChoiceManual])
 
   const isInputEnabled = isSelectedChoiceManual
-  const hasError = isSelectedChoiceManual && !validateSlippage(inputValue)
+  const hasError = isSelectedChoiceManual && !validateSlippage(inputValue, numberLocale)
   const isButtonDisabled = hasError || (isSelectedChoiceManual && inputValue.length === 0)
 
   return (
@@ -118,7 +132,7 @@ export const EditSlippageScreen = () => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               ref={inputRef}
-              value={isInputEnabled ? inputValue : selectedChoice.value.toString()}
+              value={isInputEnabled ? inputValue : BigNumber(selectedChoice.value).toFormat(numberLocale)}
               onChangeText={handleInputChange}
               editable={isInputEnabled}
               key={isInputEnabled ? 'enabled' : 'disabled'}
@@ -261,24 +275,21 @@ const styles = StyleSheet.create({
   },
 })
 
-const validateSlippage = (slippage: string) => {
-  const slippageNumber = Number(slippage)
-  return (
-    !isNaN(slippageNumber) &&
-    slippageNumber >= 0 &&
-    slippageNumber <= 100 &&
-    (slippageNumber * 10 ** MAX_DECIMALS) % 1 === 0
-  )
+const validateSlippage = (text: string, format: NumberLocale) => {
+  const slippage = parseNumber(text, format)
+  console.log('slippage', slippage)
+  return !isNaN(slippage) && slippage >= 0 && slippage <= 100 && (slippage * 10 ** MAX_DECIMALS) % 1 === 0
+}
+
+const parseNumber = (text: string, format: NumberLocale) => {
+  const [, quantity] = Quantities.parseFromText(text, MAX_DECIMALS, format)
+  return Number(quantity) / 10 ** MAX_DECIMALS
 }
 
 const getChoiceBySlippage = (slippage: number): Choice => {
-  return CHOICES.find((choice) => choice.value === slippage) ?? {label: 'Manual', value: slippage}
+  return CHOICES.find((choice) => choice.value === slippage) ?? {label: 'Manual', value: slippage.toString()}
 }
 
 const getChoiceByLabel = (label: ChoiceKind): Choice => {
   return CHOICES.find((choice) => choice.label === label) ?? {label: 'Manual', value: ''}
-}
-
-const normalizeInputValue = (value: string) => {
-  return value.length === 0 ? '0' : value
 }
