@@ -390,7 +390,7 @@
     }
   },
   {
-    "id": "global.price",
+    "id": "global,price",
     "defaultMessage": "!!! Price",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
