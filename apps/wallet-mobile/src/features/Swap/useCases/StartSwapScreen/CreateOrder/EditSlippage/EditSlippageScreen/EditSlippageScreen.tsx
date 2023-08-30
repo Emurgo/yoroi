@@ -48,9 +48,12 @@ const CHOICES: Readonly<Choice[]> = [
 const MAX_DECIMALS = 1
 
 export const EditSlippageScreen = () => {
+  const {numberLocale} = useLanguage()
+
   const {slippageChanged, createOrder} = useSwap()
   const defaultSelectedChoice = getChoiceBySlippage(createOrder.slippage)
-  const defaultInputValue = defaultSelectedChoice.label === 'Manual' ? createOrder.slippage.toString() : ''
+  const defaultInputValue =
+    defaultSelectedChoice.label === 'Manual' ? BigNumber(createOrder.slippage).toFormat(numberLocale) : ''
 
   const [selectedChoiceLabel, setSelectedChoiceLabel] = useState<ChoiceKind>(defaultSelectedChoice.label)
   const [inputValue, setInputValue] = useState(defaultInputValue)
@@ -60,7 +63,6 @@ export const EditSlippageScreen = () => {
   const navigate = useNavigateTo()
   const strings = useStrings()
   const {track} = useMetrics()
-  const {numberLocale} = useLanguage()
 
   const selectedChoice = getChoiceByLabel(selectedChoiceLabel)
   const isSelectedChoiceManual = selectedChoiceLabel === 'Manual'
