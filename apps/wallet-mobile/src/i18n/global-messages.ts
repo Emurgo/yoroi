@@ -669,6 +669,10 @@ export default defineMessages({
     id: 'global.pools',
     defaultMessage: '!!! Pools',
   },
+  price: {
+    id: 'global.price',
+    defaultMessage: '!!! Price',
+  },
   all: {
     id: 'global.all',
     defaultMessage: '!!!All',

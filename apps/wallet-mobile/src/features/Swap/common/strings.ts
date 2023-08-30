@@ -52,7 +52,14 @@ export const useStrings = () => {
     apply: intl.formatMessage(globalMessages.apply),
     found: intl.formatMessage(messages.found),
     youHave: intl.formatMessage(messages.youHave),
+    price: intl.formatMessage(messages.price),
+    tvl: intl.formatMessage(messages.tvl),
+    poolFee: intl.formatMessage(messages.poolFee),
+    batcherFee: intl.formatMessage(messages.batcherFee),
     assets: (qty: number) => intl.formatMessage(globalMessages.assets, {qty}),
+    asset: intl.formatMessage(messages.asset),
+    volume: intl.formatMessage(messages.volume),
+    total: intl.formatMessage(globalMessages.total),
   }
 }
 
@@ -164,10 +171,18 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.poolVerification',
     defaultMessage: '!!!{pool} verification',
   },
+  volume: {
+    id: 'swap.swapScreen.volume',
+    defaultMessage: '!!!Volume, 24h',
+  },
   poolVerificationInfo: {
     id: 'swap.swapScreen.poolVerificationInfo',
     defaultMessage:
       '!!!Cardano projects that list their own tokens can apply for an additional {pool} verification. This verification is a manual validation that {pool} team performs with the help of Cardano Foundation.',
+  },
+  price: {
+    id: 'global,price',
+    defaultMessage: '!!! Price',
   },
   noAssetsFound: {
     id: 'swap.swapScreen.noAssetsFound',
@@ -188,6 +203,18 @@ export const messages = defineMessages({
   completedOrders: {
     id: 'swap.swapScreen.completedOrders',
     defaultMessage: '!!!Completed orders',
+  },
+  tvl: {
+    id: 'swap.swapScreen.tvl',
+    defaultMessage: '!!!TVL',
+  },
+  poolFee: {
+    id: 'swap.swapScreen.poolFee',
+    defaultMessage: '!!! Pool Fee',
+  },
+  batcherFee: {
+    id: 'swap.swapScreen.batcherFee',
+    defaultMessage: '!!! Batcher Fee',
   },
   asset: {
     id: 'global.assets.assetLabel',
