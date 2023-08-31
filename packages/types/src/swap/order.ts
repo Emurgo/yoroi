@@ -1,4 +1,4 @@
-import {BalanceAmount} from '../balance/token'
+import {BalanceAmount, BalanceQuantity} from '../balance/token'
 import {SwapPoolPair} from './pool'
 import {SwapProtocol} from './protocol'
 
@@ -9,6 +9,7 @@ export type SwapCreateOrderData = {
     sell: BalanceAmount
     buy: BalanceAmount
   }
+  limitPrice?: BalanceQuantity
   address: string
   slippage: number
   selectedPool: SwapPoolPair

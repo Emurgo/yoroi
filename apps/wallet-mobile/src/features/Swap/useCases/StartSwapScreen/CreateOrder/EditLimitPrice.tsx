@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-newline */
 import {useSwap} from '@yoroi/swap'
 import BigNumber from 'bignumber.js'
-import React from 'react'
+import React, {useState} from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
@@ -12,7 +12,9 @@ import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from './TouchedContext'
+import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
 const BORDER_SIZE = 1
+const PRECISION = 6
 
 export const EditLimitPrice = () => {
   const strings = useStrings()
@@ -20,14 +22,12 @@ export const EditLimitPrice = () => {
 
   const wallet = useSelectedWallet()
 
-  const {createOrder} = useSwap()
-  // TODO: limitChanged should be defined in useSwap
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const limitChanged = (_todo: any) => null
+  const {createOrder, limitPriceChanged} = useSwap()
+  const limitChanged = (limitPrice: BalanceQuantity) => limitPriceChanged(limitPrice)
 
   const {isBuyTouched, isSellTouched} = useSwapTouched()
 
-  const price =
+  const defaultPrice =
     isBuyTouched &&
     isSellTouched &&
     createOrder.selectedPool?.price !== undefined &&
@@ -35,9 +35,7 @@ export const EditLimitPrice = () => {
       ? createOrder.selectedPool.price
       : 0
 
-  const formattedPrice = new BigNumber(price).decimalPlaces(6).toString(10)
-
-  const [inputValue, setInputValue] = React.useState(formattedPrice)
+  const limitPrice = createOrder.limitPrice ? BigNumber(createOrder.limitPrice).toNumber() : defaultPrice
 
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
   const tokenToSellName = isSellTouched ? tokenToSellInfo.ticker ?? tokenToSellInfo.name : '-'
@@ -45,10 +43,9 @@ export const EditLimitPrice = () => {
   const tokenToBuyName = isBuyTouched ? tokenToBuyInfo.ticker ?? tokenToBuyInfo.name : '-'
 
   const onChange = (text: string) => {
-    const [input, quantity] = Quantities.parseFromText(text, 6, numberLocale)
-    setInputValue(input)
-    // TODO: Use a parseFromText that doesn't return quantity, as we just need a number
-    limitChanged(quantity)
+    const [, quantity] = Quantities.parseFromText(text, PRECISION, numberLocale)
+    const value = Quantities.denominated(quantity, PRECISION)
+    limitChanged(value)
   }
 
   return (
@@ -56,7 +53,7 @@ export const EditLimitPrice = () => {
       <Text style={styles.label}>{strings.limitPrice}</Text>
 
       <View style={styles.content}>
-        <AmountInput onChange={onChange} value={inputValue} />
+        <AmountInput onChange={onChange} value={BigNumber(limitPrice).toFormat(PRECISION, numberLocale)} editable />
 
         <View style={styles.textWrapper}>
           <Text style={styles.text}>

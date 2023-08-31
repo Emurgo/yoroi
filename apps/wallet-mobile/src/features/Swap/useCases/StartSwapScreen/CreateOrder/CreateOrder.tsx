@@ -52,7 +52,8 @@ export const CreateOrder = () => {
     !isBuyTouched ||
     !isSellTouched ||
     Quantities.isZero(createOrder.amounts.buy.quantity) ||
-    Quantities.isZero(createOrder.amounts.sell.quantity)
+    Quantities.isZero(createOrder.amounts.sell.quantity) ||
+    (createOrder.type === 'limit' && createOrder.limitPrice !== undefined && Quantities.isZero(createOrder.limitPrice))
 
   const handleSwapPress = () => {
     const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
