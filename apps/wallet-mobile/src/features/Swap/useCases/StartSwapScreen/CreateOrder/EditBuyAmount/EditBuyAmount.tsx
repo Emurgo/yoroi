@@ -1,5 +1,6 @@
 import {getSellAmountByChangingReceive, useSwap} from '@yoroi/swap'
 import * as React from 'react'
+import {TextInput} from 'react-native'
 
 import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
@@ -16,6 +17,7 @@ export const EditBuyAmount = () => {
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
   const {numberLocale} = useLanguage()
+  const inputRef = React.useRef<TextInput>(null)
 
   const {createOrder, buyAmountChanged, sellAmountChanged} = useSwap()
   const {isBuyTouched} = useSwapTouched()
@@ -25,6 +27,12 @@ export const EditBuyAmount = () => {
   const balance = useBalance({wallet, tokenId})
 
   const [inputValue, setInputValue] = React.useState<string>(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
+
+  React.useEffect(() => {
+    if (isBuyTouched && !inputRef?.current?.isFocused()) {
+      setInputValue(Quantities.format(quantity, tokenInfo.decimals ?? 0))
+    }
+  }, [isBuyTouched, quantity, tokenInfo.decimals])
 
   const recalculateSellValue = (buyQuantity) => {
     const {sell} = getSellAmountByChangingReceive(createOrder?.selectedPool, {
@@ -57,6 +65,8 @@ export const EditBuyAmount = () => {
       wallet={wallet}
       navigateTo={navigate.selectBuyToken}
       touched={isBuyTouched}
+      inputRef={inputRef}
+      inputEditable={isBuyTouched}
     />
   )
 }

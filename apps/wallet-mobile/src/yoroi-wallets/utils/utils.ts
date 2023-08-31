@@ -149,6 +149,9 @@ export const Quantities = {
 
     return [input, quantity] as [string, Balance.Quantity]
   },
+  format: (quantity: Balance.Quantity, denomination: number) => {
+    return new BigNumber(Quantities.denominated(quantity, denomination)).toFormat()
+  },
 }
 
 export const asQuantity = (value: BigNumber | number | string) => {

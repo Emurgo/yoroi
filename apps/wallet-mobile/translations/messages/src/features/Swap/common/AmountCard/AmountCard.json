@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Select token",
     "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
     "start": {
-      "line": 121,
+      "line": 136,
       "column": 15,
-      "index": 3819
+      "index": 4042
     },
     "end": {
-      "line": 124,
+      "line": 139,
       "column": 3,
-      "index": 3902
+      "index": 4125
     }
   }
 ]
