@@ -19,12 +19,25 @@ type Props = {
   hasError?: boolean
   navigateTo?: () => void
   touched?: boolean
+  inputRef?: React.RefObject<TextInput>
+  inputEditable?: boolean
 }
 
-export const AmountCard = ({label, onChange, value, wallet, amount, navigateTo, hasError, touched}: Props) => {
+export const AmountCard = ({
+  label,
+  onChange,
+  value,
+  wallet,
+  amount,
+  navigateTo,
+  hasError,
+  touched,
+  inputRef,
+  inputEditable = true,
+}: Props) => {
   const strings = useStrings()
   const {quantity, tokenId} = amount
-  const amountInputRef = useRef<TextInput>(null)
+  const amountInputRef = useRef<TextInput>(inputRef?.current ?? null)
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const noTokenSelected = !touched
@@ -45,7 +58,7 @@ export const AmountCard = ({label, onChange, value, wallet, amount, navigateTo, 
 
         <View style={styles.content}>
           <Pressable style={styles.amountWrapper} onPress={focusInput}>
-            <AmountInput onChange={onChange} value={value} inputRef={amountInputRef} />
+            <AmountInput onChange={onChange} value={value} inputRef={amountInputRef} editable={inputEditable} />
           </Pressable>
 
           <Spacer width={7} />
@@ -93,8 +106,9 @@ type AmountInputProps = {
   value?: string
   onChange(value: string): void
   inputRef?: React.RefObject<TextInput>
+  editable: boolean
 }
-const AmountInput = ({onChange, value, inputRef}: AmountInputProps) => {
+const AmountInput = ({onChange, value, inputRef, editable}: AmountInputProps) => {
   // TODO add more formatting if is the case
   const onChangeText = (text: string) => {
     onChange(text)
@@ -112,6 +126,7 @@ const AmountInput = ({onChange, value, inputRef}: AmountInputProps) => {
       style={styles.amountInput}
       underlineColorAndroid="transparent"
       ref={inputRef}
+      editable={editable}
     />
   )
 }

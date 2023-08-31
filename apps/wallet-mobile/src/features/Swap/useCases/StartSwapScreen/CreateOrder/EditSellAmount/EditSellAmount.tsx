@@ -1,5 +1,6 @@
 import {getReceiveAmountbyChangingSell, useSwap} from '@yoroi/swap'
 import * as React from 'react'
+import {TextInput} from 'react-native'
 
 import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
@@ -16,23 +17,29 @@ export const EditSellAmount = () => {
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
   const {numberLocale} = useLanguage()
+  const inputRef = React.useRef<TextInput>(null)
 
   const {createOrder, sellAmountChanged, buyAmountChanged} = useSwap()
   const {isSellTouched} = useSwapTouched()
+
   const {tokenId, quantity} = createOrder.amounts.sell
+
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const {decimals} = tokenInfo
   const balance = useBalance({wallet, tokenId})
-  const hasBalance = !Quantities.isGreaterThan(quantity, balance)
-  const showError = !Quantities.isZero(quantity) && !hasBalance
 
   const [inputValue, setInputValue] = React.useState<string>(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
 
   React.useEffect(() => {
-    setInputValue(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
-  }, [quantity, tokenInfo.decimals])
+    if (isSellTouched && !inputRef?.current?.isFocused()) {
+      setInputValue(Quantities.format(quantity, tokenInfo.decimals ?? 0))
+    }
+  }, [isSellTouched, quantity, tokenInfo.decimals])
 
-  const recalculateBuyValue = (sellQuantity: string) => {
+  const hasBalance = !Quantities.isGreaterThan(quantity, balance)
+  const showError = !Quantities.isZero(quantity) && !hasBalance
+
+  const recalculateBuyValue = (sellQuantity) => {
     const {buy} = getReceiveAmountbyChangingSell(createOrder?.selectedPool, {
       quantity: sellQuantity,
       tokenId: tokenId,
@@ -65,6 +72,8 @@ export const EditSellAmount = () => {
       hasError={showError}
       navigateTo={navigate.selectSellToken}
       touched={isSellTouched}
+      inputRef={inputRef}
+      inputEditable={isSellTouched}
     />
   )
 }
