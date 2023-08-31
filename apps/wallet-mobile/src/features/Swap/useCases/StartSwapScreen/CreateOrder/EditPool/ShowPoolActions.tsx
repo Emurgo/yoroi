@@ -7,18 +7,20 @@ import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../../common/navigation'
 import {ExpandableInfoCard} from '../../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {useStrings} from '../../../../common/strings'
+import {useSwapTouched} from '../TouchedContext'
 
 export const ShowPoolActions = () => {
   const navigate = useNavigateTo()
   const strings = useStrings()
   const {createOrder} = useSwap()
+  const {isBuyTouched, isSellTouched} = useSwapTouched()
   const {selectedPool, amounts} = createOrder
   const wallet = useSelectedWallet()
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const tokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
 
-  if (selectedPool === undefined) {
+  if (!isBuyTouched || !isSellTouched || selectedPool === undefined) {
     return <></>
   }
 

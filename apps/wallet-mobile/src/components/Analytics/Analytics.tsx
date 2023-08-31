@@ -82,7 +82,7 @@ const Notice = ({onClose, onReadMore}: {onClose?: () => void; onReadMore?: () =>
             // only show border top if the content is scrollable
             ...(deviceHeight < contentHeight && {
               borderTopWidth: 1,
-              borderTopColor: '#DCE0E9',
+              borderTopColor: COLORS.ACTION_GRAY,
             }),
           },
         ]}

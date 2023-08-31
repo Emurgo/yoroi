@@ -1,6 +1,7 @@
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
+import {NumberLocale} from '../../i18n/languages'
 import {RawUtxo, TokenId, YoroiEntries, YoroiEntry} from '../types'
 
 export const Entries = {
@@ -129,6 +130,27 @@ export const Quantities = {
     const minimalFractionalPart = new BigNumber(10).pow(new BigNumber(denomination).negated())
 
     return absoluteQuantity.isEqualTo(minimalFractionalPart)
+  },
+  parseFromText: (text: string, precision: number, format: NumberLocale) => {
+    const {decimalSeparator} = format
+    const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
+    const sanitized = text === '' ? '0' : text.replaceAll(invalid, '')
+    const parts = sanitized.split(decimalSeparator)
+
+    const valid = parts.length >= 2 ? `${parts[0]}${decimalSeparator}${parts[1].slice(0, precision)}` : sanitized
+
+    const trailing = valid.slice(-1) === decimalSeparator
+
+    const value = new BigNumber(valid.replace(decimalSeparator, '.'))
+
+    const input = `${new BigNumber(value).toFormat()}${trailing ? decimalSeparator : ''}`
+
+    const quantity = new BigNumber(value).decimalPlaces(precision).shiftedBy(precision).toString(10)
+
+    return [input, quantity] as [string, Balance.Quantity]
+  },
+  format: (quantity: Balance.Quantity, denomination: number) => {
+    return new BigNumber(Quantities.denominated(quantity, denomination)).toFormat()
   },
 }
 

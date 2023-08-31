@@ -33,6 +33,16 @@ export const SelectSellTokenFromListScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.subheader}></View>
 
+      <View style={styles.labels}>
+        <Text style={styles.label}>{strings.asset}</Text>
+
+        <Text style={styles.label}>{strings.balance}</Text>
+      </View>
+
+      <Spacer height={16} />
+
+      <View style={styles.line} />
+
       <Boundary>
         <TokenList />
       </Boundary>
@@ -59,7 +69,6 @@ const TokenList = () => {
           </Boundary>
         )}
         bounces={false}
-        contentContainerStyle={styles.assetListContent}
         keyExtractor={({id}) => id}
         testID="assetsList"
         estimatedItemSize={78}
@@ -78,7 +87,6 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {sellTouched} = useSwapTouched()
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
-  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
   // use case if the user has changed the current selected token to sell it's updated to 0
@@ -95,11 +103,7 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   }
 
   return (
-    <TouchableOpacity
-      style={[styles.item, isPrimary && styles.borderBottom]}
-      onPress={onSelect}
-      testID="selectTokenButton"
-    >
+    <TouchableOpacity style={[styles.item]} onPress={onSelect} testID="selectTokenButton">
       <AmountItem amount={{tokenId: tokenInfo.id, quantity: balanceAvailable}} wallet={wallet} />
     </TouchableOpacity>
   )
@@ -182,9 +186,21 @@ const EmptySearchResult = () => {
 }
 
 const styles = StyleSheet.create({
+  label: {
+    fontFamily: 'Rubik',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 18,
+  },
+  labels: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',
+    paddingHorizontal: 16,
   },
   subheader: {
     paddingHorizontal: 16,
@@ -192,15 +208,12 @@ const styles = StyleSheet.create({
   item: {
     paddingVertical: 14,
   },
-  borderBottom: {
-    borderBottomColor: COLORS.BORDER_GRAY,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+  line: {
+    height: 1,
+    backgroundColor: COLORS.BORDER_GRAY,
   },
   list: {
     flex: 1,
-  },
-  assetListContent: {
-    paddingHorizontal: 16,
   },
   counter: {
     padding: 16,

@@ -60,7 +60,17 @@ export const SelectBuyTokenFromListScreen = () => {
 
       <MyPortfolioCaption />
 
-      <Spacer height={24} />
+      <Spacer height={16} />
+
+      <View style={styles.labels}>
+        <Text style={styles.label}>{strings.asset}</Text>
+
+        <Text style={styles.label}>{strings.volume}</Text>
+      </View>
+
+      <Spacer height={16} />
+
+      <View style={styles.line} />
 
       <Boundary>
         <TokenList showOnlyVerifiedTokens={isOnlyVerifiedTokens} />
@@ -83,7 +93,7 @@ const VerifiedTokensToogle = ({onToogle, isToogled}: {onToogle: () => void; isTo
         <Spacer width={8} />
 
         <TouchableOpacity onPress={() => setShowVerifiedTokenInfo(true)}>
-          <Icon.Info size={24} />
+          <Icon.Info size={28} />
         </TouchableOpacity>
       </View>
 
@@ -105,7 +115,7 @@ const VerifiedTokenInfo = () => {
     <View>
       <Text style={styles.modalText}>{strings.poolVerificationInfo('MuesliSwap')}</Text>
 
-      <Spacer height={12} />
+      <Spacer height={28} />
 
       <Text>
         <Text style={styles.modalText}>{strings.eachVerifiedToken}</Text>
@@ -124,14 +134,12 @@ const MyPortfolioCaption = () => {
   const strings = useStrings()
 
   return (
-    <View>
-      <View style={[styles.row]}>
-        <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
+    <View style={[styles.row]}>
+      <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
 
-        <Spacer width={8} />
+      <Spacer width={8} />
 
-        <Text style={styles.topText}>{strings.assetsIn}</Text>
-      </View>
+      <Text style={styles.topText}>{strings.assetsIn}</Text>
     </View>
   )
 }
@@ -319,6 +327,17 @@ const styles = StyleSheet.create({
   item: {
     paddingVertical: 14,
   },
+  label: {
+    fontFamily: 'Rubik',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 18,
+  },
+  labels: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   borderBottom: {
     borderBottomColor: COLORS.BORDER_GRAY,
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -326,7 +345,10 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
   },
-
+  line: {
+    height: 1,
+    backgroundColor: COLORS.BORDER_GRAY,
+  },
   counter: {
     padding: 16,
     justifyContent: 'center',
@@ -355,6 +377,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 20,
     color: '#242838',
+    fontFamily: 'Rubik',
+    fontSize: 15,
   },
   image: {
     flex: 1,

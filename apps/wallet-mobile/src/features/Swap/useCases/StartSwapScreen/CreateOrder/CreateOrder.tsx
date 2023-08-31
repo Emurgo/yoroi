@@ -1,7 +1,7 @@
 import {usePoolsByPair, useSwap} from '@yoroi/swap'
 import React, {useEffect} from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Button, Icon, Spacer} from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
@@ -75,49 +75,53 @@ export const CreateOrder = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={86}
-      >
-        <View style={styles.buttonsGroup}>
-          <ButtonGroup labels={orderTypeLabels} onSelect={handleSelectOrderType} selected={orderTypeIndex} />
+    <>
+      <ScrollView>
+        <View style={styles.container}>
+          <KeyboardAvoidingView
+            style={styles.flex}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={86}
+          >
+            <View style={styles.buttonsGroup}>
+              <ButtonGroup labels={orderTypeLabels} onSelect={handleSelectOrderType} selected={orderTypeIndex} />
 
-          <TouchableOpacity>
-            <Icon.Refresh size={24} />
-          </TouchableOpacity>
+              <TouchableOpacity>
+                <Icon.Refresh size={24} />
+              </TouchableOpacity>
+            </View>
+
+            <EditSellAmount />
+
+            <Spacer height={16} />
+
+            <ShowTokenActions />
+
+            <Spacer height={16} />
+
+            <EditBuyAmount />
+
+            <Spacer height={20} />
+
+            {createOrder.type === 'market' ? <ShowMarketPrice /> : <EditLimitPrice />}
+
+            <EditSlippage />
+
+            <ShowPoolActions />
+          </KeyboardAvoidingView>
         </View>
+      </ScrollView>
 
-        <EditSellAmount />
-
-        <Spacer height={16} />
-
-        <ShowTokenActions />
-
-        <Spacer height={16} />
-
-        <EditBuyAmount />
-
-        <Spacer height={20} />
-
-        {createOrder.type === 'market' ? <ShowMarketPrice /> : <EditLimitPrice />}
-
-        <EditSlippage />
-
-        <ShowPoolActions />
-
-        <Actions>
-          <Button
-            testID="swapButton"
-            shelleyTheme
-            title={strings.swapTitle}
-            onPress={handleSwapPress}
-            disabled={disabled}
-          />
-        </Actions>
-      </KeyboardAvoidingView>
-    </View>
+      <Actions>
+        <Button
+          testID="swapButton"
+          shelleyTheme
+          title={strings.swapTitle}
+          onPress={handleSwapPress}
+          disabled={disabled}
+        />
+      </Actions>
+    </>
   )
 }
 
@@ -140,5 +144,8 @@ const styles = StyleSheet.create({
   },
   actions: {
     paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.ACTION_GRAY,
   },
 })

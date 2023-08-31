@@ -1,10 +1,12 @@
 import {getReceiveAmountbyChangingSell, useSwap} from '@yoroi/swap'
 import * as React from 'react'
+import {TextInput} from 'react-native'
 
+import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useBalance, useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../../yoroi-wallets/logging'
-import {asQuantity, Quantities} from '../../../../../../yoroi-wallets/utils'
+import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {AmountCard} from '../../../../common/AmountCard/AmountCard'
 import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
@@ -14,6 +16,8 @@ export const EditSellAmount = () => {
   const strings = useStrings()
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
+  const {numberLocale} = useLanguage()
+  const inputRef = React.useRef<TextInput>(null)
 
   const {createOrder, sellAmountChanged, buyAmountChanged} = useSwap()
   const {isSellTouched} = useSwapTouched()
@@ -25,6 +29,12 @@ export const EditSellAmount = () => {
   const balance = useBalance({wallet, tokenId})
 
   const [inputValue, setInputValue] = React.useState<string>(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
+
+  React.useEffect(() => {
+    if (isSellTouched && !inputRef?.current?.isFocused()) {
+      setInputValue(Quantities.format(quantity, tokenInfo.decimals ?? 0))
+    }
+  }, [isSellTouched, quantity, tokenInfo.decimals])
 
   const hasBalance = !Quantities.isGreaterThan(quantity, balance)
   const showError = !Quantities.isZero(quantity) && !hasBalance
@@ -41,16 +51,10 @@ export const EditSellAmount = () => {
     })
   }
 
-  React.useEffect(() => {
-    setInputValue(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
-  }, [quantity, tokenInfo.decimals])
-
   const onChangeQuantity = (text: string) => {
     try {
-      setInputValue(text)
-
-      const inputQuantity = asQuantity(text.length > 0 ? text : '0')
-      const quantity = Quantities.integer(inputQuantity, decimals ?? 0)
+      const [input, quantity] = Quantities.parseFromText(text, decimals ?? 0, numberLocale)
+      setInputValue(input)
       sellAmountChanged({tokenId, quantity})
       recalculateBuyValue(quantity)
     } catch (error) {
@@ -68,6 +72,8 @@ export const EditSellAmount = () => {
       hasError={showError}
       navigateTo={navigate.selectSellToken}
       touched={isSellTouched}
+      inputRef={inputRef}
+      inputEditable={isSellTouched}
     />
   )
 }
