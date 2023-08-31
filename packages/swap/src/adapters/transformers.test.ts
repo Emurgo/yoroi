@@ -60,7 +60,7 @@ describe('asYoroiOrder', () => {
   it('should handle empty/filled tokenId correctly', () => {
     const openswapOrder: Order = {
       from: {token: '', amount: '75'},
-      to: {token: 'tokenE.656565', amount: '150'},
+      to: {token: '656565.tokenE', amount: '150'},
       deposit: '100',
       utxo: 'utxo',
       provider: 'minswap',
@@ -75,7 +75,7 @@ describe('asYoroiOrder', () => {
       },
       to: {
         quantity: '150',
-        tokenId: 'tokenE.656565',
+        tokenId: '656565.tokenE',
       },
       deposit: {
         quantity: '100',
