@@ -75,7 +75,7 @@ export const CreateOrder = () => {
   }
 
   return (
-    <View>
+    <>
       <ScrollView>
         <View style={styles.container}>
           <KeyboardAvoidingView
@@ -121,7 +121,7 @@ export const CreateOrder = () => {
           disabled={disabled}
         />
       </Actions>
-    </View>
+    </>
   )
 }
 

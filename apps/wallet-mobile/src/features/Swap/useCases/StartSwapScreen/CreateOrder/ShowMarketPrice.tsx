@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-newline */
 import {useSwap} from '@yoroi/swap'
+import BigNumber from 'bignumber.js'
 import React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
@@ -23,13 +24,23 @@ export const ShowMarketPrice = () => {
   const tokenToBuyInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
   const tokenToBuyName = isBuyTouched ? tokenToBuyInfo.ticker ?? tokenToBuyInfo.name : '-'
 
+  const price =
+    isBuyTouched &&
+    isSellTouched &&
+    createOrder.selectedPool?.price !== undefined &&
+    !Number.isNaN(createOrder.selectedPool.price)
+      ? createOrder.selectedPool.price
+      : 0
+
+  const formattedPrice = new BigNumber(price).decimalPlaces(6).toString(10)
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{strings.marketPrice}</Text>
 
       <View style={styles.content}>
         <View style={styles.amountInput}>
-          <AmountInput value={String(createOrder.selectedPool?.price)} />
+          <AmountInput value={formattedPrice} />
         </View>
 
         <Spacer width={7} />
@@ -89,6 +100,7 @@ const styles = StyleSheet.create({
 
   amountInput: {
     flex: 1,
+    paddingVertical: 0,
   },
   content: {
     display: 'flex',
