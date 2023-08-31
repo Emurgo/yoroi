@@ -116,7 +116,7 @@ export const asYoroiAmount = (openswapAmount: {
   if (openswapAmount?.amount) {
     const {amount, token} = openswapAmount
     const [assetName = '', policyId = ''] = token.split('.')
-    const subject = `${assetName}.${policyId}`
+    const subject = `${policyId}.${assetName}`
     return {
       quantity: amount ? (amount as Balance.Quantity) : '0',
       tokenId: subject.length === 1 ? '' : subject,
