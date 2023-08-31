@@ -228,7 +228,6 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
     track.swapAssetToChanged({
       to_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
     })
-    console.log('@@@tokenInfo', tokenInfo)
     buyTouched()
     buyAmountChanged({tokenId: tokenInfo.id, quantity: balanceAvailable})
     navigateTo.startSwap()
