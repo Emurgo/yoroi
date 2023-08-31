@@ -26,6 +26,10 @@ export const EditBuyAmount = () => {
 
   const [inputValue, setInputValue] = React.useState<string>(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
 
+  React.useEffect(() => {
+    setInputValue(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
+  }, [quantity, tokenInfo.decimals])
+
   const recalculateSellValue = (buyQuantity) => {
     const {sell} = getSellAmountByChangingReceive(createOrder?.selectedPool, {
       quantity: buyQuantity,

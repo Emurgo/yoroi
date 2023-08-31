@@ -183,7 +183,7 @@ const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
               inUserWallet: !!matchingSecondItem,
             }
           })
-          .filter((item) => (showOnlyVerifiedTokens ? item.status === 'verified' : item))
+          .filter((item) => showOnlyVerifiedTokens && item.status === 'verified')
       : []
 
   const filteredTransformedList = transformedArray.filter(filterTokensPairBySearch(assetSearchTerm))
@@ -228,6 +228,7 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
     track.swapAssetToChanged({
       to_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
     })
+    console.log('@@@tokenInfo', tokenInfo)
     buyTouched()
     buyAmountChanged({tokenId: tokenInfo.id, quantity: balanceAvailable})
     navigateTo.startSwap()

@@ -19,19 +19,20 @@ export const EditSellAmount = () => {
 
   const {createOrder, sellAmountChanged, buyAmountChanged} = useSwap()
   const {isSellTouched} = useSwapTouched()
-
   const {tokenId, quantity} = createOrder.amounts.sell
-
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const {decimals} = tokenInfo
   const balance = useBalance({wallet, tokenId})
-
-  const [inputValue, setInputValue] = React.useState<string>(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
-
   const hasBalance = !Quantities.isGreaterThan(quantity, balance)
   const showError = !Quantities.isZero(quantity) && !hasBalance
 
-  const recalculateBuyValue = (sellQuantity) => {
+  const [inputValue, setInputValue] = React.useState<string>(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
+
+  React.useEffect(() => {
+    setInputValue(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
+  }, [quantity, tokenInfo.decimals])
+
+  const recalculateBuyValue = (sellQuantity: string) => {
     const {buy} = getReceiveAmountbyChangingSell(createOrder?.selectedPool, {
       quantity: sellQuantity,
       tokenId: tokenId,

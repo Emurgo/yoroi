@@ -113,13 +113,16 @@ export const asYoroiAmount = (openswapAmount: {
   amount: string
   token: string
 }): Balance.Amount => {
-  const {amount, token} = openswapAmount
-  const [assetName = '', policyId = ''] = token.split('.')
-  const subject = `${assetName}.${policyId}`
-  return {
-    quantity: amount ? (amount as Balance.Quantity) : '0',
-    tokenId: subject.length === 1 ? '' : subject,
-  } as const
+  if (openswapAmount?.amount) {
+    const {amount, token} = openswapAmount
+    const [assetName = '', policyId = ''] = token.split('.')
+    const subject = `${assetName}.${policyId}`
+    return {
+      quantity: amount ? (amount as Balance.Quantity) : '0',
+      tokenId: subject.length === 1 ? '' : subject,
+    } as const
+  }
+  return {quantity: '0', tokenId: ''}
 }
 
 export const asYoroiPools = (openswapPools: Pool[]): Swap.PoolPair[] => {
