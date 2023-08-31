@@ -141,7 +141,7 @@ export const Quantities = {
 
     const trailing = valid.slice(-1) === decimalSeparator
 
-    const value = new BigNumber(valid.replace(format.decimalSeparator, '.'))
+    const value = new BigNumber(valid.replace(decimalSeparator, '.'))
 
     const input = `${new BigNumber(value).toFormat()}${trailing ? decimalSeparator : ''}`
 
