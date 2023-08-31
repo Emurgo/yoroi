@@ -116,7 +116,6 @@ const AmountInput = ({onChange, value, inputRef, editable}: AmountInputProps) =>
 
   return (
     <TextInput
-      returnKeyType="done"
       keyboardType="numeric"
       autoComplete="off"
       value={value}

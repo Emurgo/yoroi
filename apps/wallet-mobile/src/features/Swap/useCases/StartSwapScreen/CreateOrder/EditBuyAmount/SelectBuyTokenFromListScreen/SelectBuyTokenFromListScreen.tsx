@@ -183,7 +183,7 @@ const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
               inUserWallet: !!matchingSecondItem,
             }
           })
-          .filter((item) => (showOnlyVerifiedTokens ? item.status === 'verified' : item))
+          .filter((item) => showOnlyVerifiedTokens && item.status === 'verified')
       : []
 
   const filteredTransformedList = transformedArray.filter(filterTokensPairBySearch(assetSearchTerm))

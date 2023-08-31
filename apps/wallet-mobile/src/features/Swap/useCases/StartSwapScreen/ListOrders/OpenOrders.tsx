@@ -1,4 +1,3 @@
-import {useOrderByStatusOpen} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
@@ -95,12 +94,12 @@ const mockOpenOrders: OpenOrderListType = [
 ]
 
 export const OpenOrders = () => {
-  const data = useOrderByStatusOpen({
-    onError: (err) => {
-      console.log(err)
-    },
-  })
-  console.log('[useOrderByStatusOpen DATA]', data)
+  // TODO
+  // const data = useOrderByStatusOpen({
+  //   onError: (err) => {
+  //     console.log(err)
+  //   },
+  // })
 
   return (
     <View style={styles.container}>
