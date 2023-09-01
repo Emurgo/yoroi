@@ -55,6 +55,7 @@ export const CreatePinInput = ({onDone}: Props) => {
       key="pinConfirmationInput"
       enabled={!isLoading}
       title={strings.pinInputConfirmationTitle}
+      subtitles={[strings.pinInputConfirmationSubTitle]}
       pinMaxLength={CONFIG.PIN_LENGTH}
       onDone={onPinConfirmation}
       onGoBack={() => setStep('pin')}
@@ -69,20 +70,25 @@ const useStrings = () => {
     pinInputTitle: intl.formatMessage(messages.pinInputTitle),
     pinInputSubtitle: intl.formatMessage(messages.pinInputSubtitle),
     pinInputConfirmationTitle: intl.formatMessage(messages.pinInputConfirmationTitle),
+    pinInputConfirmationSubTitle: intl.formatMessage(messages.pinInputConfirmationSubTitle),
   }
 }
 
 const messages = defineMessages({
   pinInputTitle: {
-    id: 'components.firstrun.custompinscreen.pinInputTitle',
-    defaultMessage: '!!!Enter the PIN',
+    id: 'components.initialization.custompinscreen.pinInputTitle',
+    defaultMessage: '!!!Enter PIN',
   },
   pinInputSubtitle: {
-    id: 'components.firstrun.custompinscreen.pinInputSubtitle',
-    defaultMessage: '!!!Choose new PIN for quick access to wallet.',
+    id: 'components.initialization.custompinscreen.pinInputSubtitle',
+    defaultMessage: '!!!Choose a new PIN to quickly access your wallet',
   },
   pinInputConfirmationTitle: {
-    id: 'components.firstrun.custompinscreen.pinConfirmationTitle',
+    id: 'components.initialization.custompinscreen.pinConfirmationTitle',
     defaultMessage: '!!!Repeat PIN',
+  },
+  pinInputConfirmationSubTitle: {
+    id: 'components.firstrun.custompinscreen.pinInputConfirmationSubTitle',
+    defaultMessage: '!!!Repeat a new PIN to quickly access your wallet',
   },
 })

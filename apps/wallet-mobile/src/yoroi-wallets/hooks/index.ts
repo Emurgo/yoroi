@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
+import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {
@@ -13,7 +14,7 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {isNightly} from '../../legacy/config'
+import {CONFIG} from '../../legacy/config'
 import {useWalletManager} from '../../WalletManager'
 import {calcLockedDeposit} from '../cardano/assetUtils'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
@@ -22,11 +23,8 @@ import {HWDeviceInfo} from '../hw'
 import {parseWalletMeta} from '../migrations/walletMeta'
 import {useStorage} from '../storage'
 import {
-  Quantity,
-  TokenInfo,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
-  YoroiAmounts,
   YoroiNftModerationStatus,
   YoroiSignedTx,
   YoroiUnsignedTx,
@@ -40,9 +38,8 @@ import {WalletManager, WalletMeta} from '../walletManager'
 const crashReportsStorageKey = 'sendCrashReports'
 
 export const getCrashReportsEnabled = async (storage: AsyncStorageStatic = AsyncStorage) => {
-  if (isNightly()) return true
-
   const data = await storage.getItem(crashReportsStorageKey)
+  if (CONFIG.FORCE_CRASH_REPORTS) return true
   return parseBoolean(data) ?? false
 }
 
@@ -130,13 +127,14 @@ export const useAssetIds = (wallet: YoroiWallet): string[] => {
  */
 export const useLockedAmount = (
   {wallet}: {wallet: YoroiWallet},
-  options?: UseQueryOptions<Quantity, Error, Quantity, [string, 'lockedAmount']>,
+  options?: UseQueryOptions<Balance.Quantity, Error, Balance.Quantity, [string, 'lockedAmount']>,
 ) => {
   const query = useQuery({
     ...options,
     suspense: true,
     queryKey: [wallet.id, 'lockedAmount'],
-    queryFn: () => calcLockedDeposit(wallet.utxos, wallet.networkId).then((amount) => amount.toString() as Quantity),
+    queryFn: () =>
+      calcLockedDeposit(wallet.utxos, wallet.networkId).then((amount) => amount.toString() as Balance.Quantity),
   })
 
   React.useEffect(() => {
@@ -198,9 +196,9 @@ export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOpt
   }
 }
 
-export const useTokenInfo = <T extends TokenInfo>(
+export const useTokenInfo = <T extends Balance.TokenInfo>(
   {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
-  options?: UseQueryOptions<TokenInfo, Error, T, [string, 'tokenInfo', string]>,
+  options?: UseQueryOptions<Balance.TokenInfo, Error, T, [string, 'tokenInfo', string]>,
 ) => {
   const query = useQuery({
     ...options,
@@ -245,7 +243,7 @@ export const useNftImageModerated = ({
 
 export const useToken = (
   {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
-  options?: UseQueryOptions<TokenInfo, Error, TokenInfo, [string, 'tokenInfo', string]>,
+  options?: UseQueryOptions<Balance.TokenInfo, Error, Balance.TokenInfo, [string, 'tokenInfo', string]>,
 ) => {
   const query = useQuery({
     ...options,
@@ -261,7 +259,7 @@ export const useToken = (
 
 export const useTokenInfosDetailed = (
   {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
-  options?: UseQueryOptions<TokenInfo, Error, TokenInfo, any>,
+  options?: UseQueryOptions<Balance.TokenInfo, Error, Balance.TokenInfo, any>,
 ) => {
   const queries = tokenIds.map((tokenId) => ({
     ...options,
@@ -274,10 +272,10 @@ export const useTokenInfosDetailed = (
 
 export const useTokenInfos = (
   {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
-  options?: UseQueryOptions<TokenInfo, Error, TokenInfo, any>,
+  options?: UseQueryOptions<Balance.TokenInfo, Error, Balance.TokenInfo, any>,
 ) => {
   const results = useTokenInfosDetailed({wallet, tokenIds}, options)
-  return results.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<TokenInfo>)
+  return results.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<Balance.TokenInfo>)
 }
 
 export const useAllTokenInfos = ({wallet}: {wallet: YoroiWallet}) => {
@@ -858,7 +856,7 @@ export const useExchangeRate = ({
   return query.data
 }
 
-export const useBalances = (wallet: YoroiWallet): YoroiAmounts => {
+export const useBalances = (wallet: YoroiWallet): Balance.Amounts => {
   const utxos = useUtxos(wallet)
 
   return Utxos.toAmounts(utxos, wallet.primaryTokenInfo.id)
@@ -897,10 +895,10 @@ export const useSaveMemo = (
   }
 }
 
-export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<TokenInfo, Error> = {}) => {
+export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<Balance.TokenInfo, Error> = {}) => {
   const assetIds = useAssetIds(wallet)
   const results = useTokenInfosDetailed({wallet, tokenIds: assetIds}, options)
-  const nfts = results.map((r) => r.data).filter((t): t is TokenInfo => t?.kind === 'nft')
+  const nfts = results.map((r) => r.data).filter((t): t is Balance.TokenInfo => t?.kind === 'nft')
   const isLoading = results.some((r) => r.isLoading)
   const isError = results.some((r) => r.isError)
   const error = results.find((r) => r.isError)?.error
@@ -908,7 +906,7 @@ export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<TokenInfo,
   return {nfts, refetch, error, isLoading, isError}
 }
 
-export const useNft = (wallet: YoroiWallet, {id}: {id: string}): TokenInfo => {
+export const useNft = (wallet: YoroiWallet, {id}: {id: string}): Balance.TokenInfo => {
   const tokenInfo = useTokenInfo({wallet, tokenId: id}, {suspense: true})
 
   if (tokenInfo.kind !== 'nft') {

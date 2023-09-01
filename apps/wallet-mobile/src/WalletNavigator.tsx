@@ -7,13 +7,14 @@ import {defineMessages, useIntl} from 'react-intl'
 import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
-import {MenuNavigator} from './Menu'
+import {MenuNavigator} from './features/Menu'
+import {SettingsScreenNavigator} from './features/Settings'
+import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
 import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
-import {SettingsScreenNavigator} from './Settings'
 import {theme} from './theme'
 import {TxHistoryNavigator} from './TxHistory'
 import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
@@ -127,6 +128,8 @@ export const WalletNavigator = () => (
     <Stack.Screen name="settings" component={SettingsScreenNavigator} />
 
     <Stack.Screen name="voting-registration" component={VotingRegistration} />
+
+    <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
   </Stack.Navigator>
 )
 

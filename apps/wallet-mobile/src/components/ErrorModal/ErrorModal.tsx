@@ -81,7 +81,7 @@ type Props = {
 }
 
 export const ErrorModal = ({visible, title, errorMessage, errorLogs, onRequestClose}: Props) => (
-  <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>
+  <Modal visible={visible} onRequestClose={onRequestClose}>
     <ErrorView title={title} errorMessage={errorMessage} errorLogs={errorLogs} onDismiss={onRequestClose} />
   </Modal>
 )

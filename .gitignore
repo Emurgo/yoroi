@@ -80,3 +80,12 @@ coverage/
 
 # .vscode
 **/extensions.json
+
+apps/test/
+
+# e2e
+artifacts/
+html-report/
+
+# dependency cruiser
+dependency-graph.svg

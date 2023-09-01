@@ -9,15 +9,13 @@ import {QueryClient, QueryClientProvider} from 'react-query'
 import {AuthProvider} from './auth/AuthProvider'
 import {LoadingBoundary} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
-import {features} from './features'
+import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
 import {LanguageProvider} from './i18n'
 import {InitApp} from './InitApp'
 import {CONFIG} from './legacy/config'
 import {setLogLevel} from './legacy/logging'
 import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
-import {mockMetricsManager} from './metrics/mocks'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet/Context'
-import {CurrencyProvider} from './Settings/Currency/CurrencyContext'
 import {ThemeProvider} from './theme'
 import {WalletManagerProvider} from './WalletManager'
 import {useMigrations} from './yoroi-wallets/migrations'
@@ -39,7 +37,7 @@ if (Boolean(Config.DISABLE_LOGBOX)) LogBox.ignoreAllLogs()
 
 const queryClient = new QueryClient()
 
-const metricsManager = features.analytics ? makeMetricsManager() : mockMetricsManager()
+const metricsManager = makeMetricsManager()
 
 export const YoroiApp = () => {
   const migrated = useMigrations(storage)

@@ -75,9 +75,12 @@ coverage-ts
 # Logs/tmp
 *.log
 
-#Test's data
+# Test's data
 tests/app
 tests/artifacts
 
 coverage/
 .jest/
+
+# Dependency cruiser
+dependency-graph.svg 

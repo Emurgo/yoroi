@@ -70,7 +70,7 @@ export const WalletSelectionScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <StatusBar type="dark" />
+      <StatusBar type="light" />
 
       <Text style={styles.title}>{strings.header}</Text>
 
@@ -165,7 +165,7 @@ const ShelleyButton = () => {
           },
         })
       }
-      title={`${strings.addWalletButton}`}
+      title={strings.addWalletButton}
       style={styles.topButton}
     />
   )
@@ -192,6 +192,7 @@ const OnlyNightlyShelleyTestnetButton = () => {
       }
       title={`${strings.addWalletButton} (preprod)`}
       style={styles.button}
+      testID="addWalletPreprodShelleyButton"
     />
   )
 }
@@ -201,7 +202,14 @@ const OnlyDevButton = () => {
 
   if (!__DEV__) return null
 
-  return <Button onPress={() => navigation.navigate('developer')} title="Dev options" style={styles.button} />
+  return (
+    <Button
+      testID="btnDevOptions"
+      onPress={() => navigation.navigate('developer')}
+      title="Dev options"
+      style={styles.button}
+    />
+  )
 }
 
 const styles = StyleSheet.create({

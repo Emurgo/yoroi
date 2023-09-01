@@ -2,9 +2,31 @@
   "name": "@yoroi/types",
   "version": "1.0.4",
   "description": "The Yoroi Types package of Yoroi SDK",
+  "keywords": [
+    "yoroi",
+    "cardano",
+    "types"
+  ],
+  "homepage": "https://github.com/Emurgo/yoroi/packages/types#readme",
+  "bugs": {
+    "url": "https://github.com/Emurgo/yoroi/issues"
+  },
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/Emurgo/yoroi.git",
+    "directory": "packages/types"
+  },
+  "license": "Apache-2.0",
+  "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",
+  "contributors": [
+    {
+      "name": "Juliano Lazzarotto",
+      "email": "juliano@stackchain.dev"
+    }
+  ],
   "main": "src/index",
-  "browser": "lib/index",
   "source": "src/index",
+  "browser": "lib/index",
   "files": [
     "src",
     "lib",
@@ -14,83 +36,33 @@
     "!**/.*"
   ],
   "scripts": {
-    "test": "jest --passWithNoTests",
-    "tsc": "tsc --noEmit",
-    "clean": "del-cli lib",
-    "flow": ". ./scripts/flowgen.sh",
     "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && tsc --project tsconfig.build.json && yarn flow",
-    "prepack": "yarn build",
+    "clean": "del-cli lib",
+    "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
+    "flow": ". ./scripts/flowgen.sh",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "release": "release-it"
+    "prepack": "yarn build",
+    "publish:beta": "yarn build && npm publish --scope yoroi --tag beta --access beta",
+    "publish:prod": "yarn build && npm publish --scope yoroi --access public",
+    "release": "release-it",
+    "test": "jest --passWithNoTests",
+    "tsc": "tsc --noEmit -p tsconfig.json"
   },
-  "keywords": [
-    "yoroi",
-    "cardano",
-    "types"
-  ],
-  "repository": {
-    "type": "github",
-    "url": "https://github.com/Emurgo/yoroi.git",
-    "directory": "packages/types"
-  },
-  "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",
-  "contributors": [
-    {
-      "name": "Juliano Lazzarotto",
-      "email": "juliano@stackchain.dev"
-    }
-  ],
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/Emurgo/yoroi/issues"
-  },
-  "homepage": "https://github.com/Emurgo/yoroi/packages/types#readme",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
-  "devDependencies": {
-    "@commitlint/config-conventional": "^17.0.2",
-    "@release-it/conventional-changelog": "^5.0.0",
-    "@testing-library/react-hooks": "^8.0.1",
-    "commitlint": "^17.0.2",
-    "del-cli": "^5.0.0",
-    "eslint": "^8.4.1",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "flowgen": "^1.21.0",
-    "jest": "^28.1.1",
-    "prettier": "^2.0.5",
-    "release-it": "^15.0.0",
-    "typescript": "^4.5.2"
-  },
-  "engines": {
-    "node": ">= 16.19.0"
-  },
-  "packageManager": "^yarn@1.22.15",
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
     ]
   },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release ${version}",
-      "tagName": "v${version}"
-    },
-    "npm": {
-      "publish": true
-    },
-    "github": {
-      "release": true
-    },
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "preset": "angular"
-      }
-    }
+  "prettier": {
+    "bracketSpacing": false,
+    "quoteProps": "consistent",
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "useTabs": false
   },
   "eslintConfig": {
-    "root": true,
     "extends": [
       "@react-native-community",
       "prettier"
@@ -108,7 +80,8 @@
           "semi": false
         }
       ]
-    }
+    },
+    "root": true
   },
   "eslintIgnore": [
     "node_modules/",
@@ -116,13 +89,44 @@
     "babel.config.js",
     "jest.setup.js"
   ],
-  "prettier": {
-    "quoteProps": "consistent",
-    "bracketSpacing": false,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "all",
-    "useTabs": false,
-    "semi": false
+  "devDependencies": {
+    "@commitlint/config-conventional": "^17.0.2",
+    "@release-it/conventional-changelog": "^5.0.0",
+    "@testing-library/react-hooks": "^8.0.1",
+    "commitlint": "^17.0.2",
+    "del-cli": "^5.0.0",
+    "dependency-cruiser": "^13.1.1",
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "flowgen": "^1.21.0",
+    "jest": "^28.1.1",
+    "prettier": "^2.0.5",
+    "release-it": "^15.0.0",
+    "typescript": "^4.5.2"
+  },
+  "packageManager": "^yarn@1.22.15",
+  "engines": {
+    "node": ">= 16.19.0"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release ${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular"
+      }
+    }
   }
 }

@@ -1,21 +1,21 @@
 import {FlashList, FlashListProps} from '@shopify/flash-list'
+import {Balance} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {AmountItem, AmountItemProps} from '../../components/AmountItem/AmountItem'
 import {Spacer} from '../../components/Spacer'
+import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {sortTokenInfos} from '../../utils'
 import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {useBalances, useTokenInfos} from '../../yoroi-wallets/hooks'
-import {TokenInfo} from '../../yoroi-wallets/types'
 import {Amounts} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
 
-type ListProps = FlashListProps<TokenInfo>
+type ListProps = FlashListProps<Balance.TokenInfo>
 type Props = Partial<ListProps> & {
   onScroll: ListProps['onScroll']
   refreshing: boolean
@@ -70,10 +70,10 @@ type ExplorableAssetItemProps = AmountItemProps & {
   onPress(): void
 }
 const ExplorableAssetItem = ({wallet, amount, onPress}: ExplorableAssetItemProps) => {
-  const privacyMode = usePrivacyMode()
+  const {isPrivacyOff} = usePrivacyMode()
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} testID="assetSelectorItem">
-      <AmountItem privacyMode={privacyMode} wallet={wallet} amount={amount} />
+      <AmountItem isPrivacyOff={isPrivacyOff} wallet={wallet} amount={amount} />
     </TouchableOpacity>
   )
 }

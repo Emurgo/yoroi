@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'center',
     padding: 24,
-    backgroundColor: 'rgba(74,74,74,.9)',
+    backgroundColor: 'rgba(0, 0, 0, .3)',
   },
   noPadding: {
     padding: 0,

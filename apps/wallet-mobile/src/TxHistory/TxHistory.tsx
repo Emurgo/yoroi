@@ -49,7 +49,7 @@ export const TxHistory = () => {
 
   return (
     <View style={styles.scrollView}>
-      <StatusBar type="light" />
+      <StatusBar type="dark" />
 
       <View style={styles.container}>
         <CollapsibleHeader expanded={expanded}>
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Rubik-Medium',
   },
   tabTextActive: {
-    color: COLORS.LIGHT_POSITIVE_GREEN,
+    color: '#3154CB',
   },
   tabTextInactive: {
     color: COLORS.TEXT_INPUT,
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderTopLeftRadius: 2,
     borderTopRightRadius: 2,
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
+    backgroundColor: '#3154CB',
   },
 
   tabNavigatorRoot: {

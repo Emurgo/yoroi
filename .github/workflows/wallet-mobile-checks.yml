@@ -1,30 +1,15 @@
 name: wallet-mobile-checks
 
-on: 
-  push:
-    paths:
-      - 'apps/wallet-mobile/**'
+on: push
 
 defaults:
   run:
     working-directory: apps/wallet-mobile
 
 jobs:
-  lint:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/wallet-mobile
-      - run: yarn lint
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/wallet-mobile
-      - run: yarn test --ci --bail --silent
-  tsc:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/wallet-mobile
-      - run: yarn tsc 
+      - run: yarn workspaces run build 

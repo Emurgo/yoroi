@@ -1,6 +1,6 @@
 [
   {
-    "id": "components.firstrun.acepttermsofservicescreen.title",
+    "id": "components.initialization.acepttermsofservicescreen.title",
     "defaultMessage": "!!!Terms of Service Agreement",
     "file": "src/FirstRun/FirstRunNavigator.tsx",
     "start": {
@@ -11,22 +11,22 @@
     "end": {
       "line": 54,
       "column": 3,
-      "index": 1636
+      "index": 1642
     }
   },
   {
-    "id": "components.firstrun.languagepicker.title",
+    "id": "components.initialization.languagepicker.title",
     "defaultMessage": "!!!Select Language",
     "file": "src/FirstRun/FirstRunNavigator.tsx",
     "start": {
       "line": 55,
       "column": 23,
-      "index": 1661
+      "index": 1667
     },
     "end": {
       "line": 58,
       "column": 3,
-      "index": 1760
+      "index": 1772
     }
   }
 ]

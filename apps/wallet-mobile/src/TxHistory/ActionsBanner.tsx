@@ -58,14 +58,34 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
           </View>
 
+          {Boolean(features.showSwapButton) && <Spacer width={32} />}
+
+          {Boolean(features.showSwapButton) && (
+            <View style={styles.centralized}>
+              <TouchableOpacity
+                style={styles.actionIcon}
+                onPress={navigateTo.swap}
+                testID="swapButton"
+                disabled={disabled}
+              >
+                <Icon.Swap color={ACTION_PROPS.color} />
+              </TouchableOpacity>
+
+              <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
+            </View>
+          )}
+
           {features.walletHero.buy && <Spacer width={32} />}
 
           {features.walletHero.buy && (
             <View style={styles.centralized}>
-              <TouchableOpacity style={[styles.actionIcon, styles.cta]} onPress={navigateTo.buy}>
-                {/* TODO: request buy icon to the design team */}
-
-                <Text style={styles.buyButton}>+</Text>
+              <TouchableOpacity
+                style={styles.actionIcon}
+                onPress={navigateTo.buy}
+                testID="buyButton"
+                disabled={disabled}
+              >
+                <Icon.PlusCircle {...ACTION_PROPS} />
               </TouchableOpacity>
 
               <Text style={styles.actionLabel}>{strings.buyLabel}</Text>
@@ -97,24 +117,15 @@ const styles = StyleSheet.create({
     height: 42,
     width: 42,
     borderRadius: 20,
-    backgroundColor: COLORS.LIGHT_POSITIVE_GREEN,
-  },
-  buyButton: {
-    textAlignVertical: 'center',
-    lineHeight: 40,
-    fontSize: 32,
-    color: COLORS.TEXT_GRAY2,
-  },
-  cta: {
-    borderWidth: 1,
-    borderColor: COLORS.BORDER_GRAY,
-    backgroundColor: COLORS.BACKGROUND_GRAY,
+    backgroundColor: '#3154CB',
   },
   actionLabel: {
     paddingTop: 8,
-    fontSize: 10,
-    color: COLORS.TEXT_GRAY3,
+    fontSize: 12,
+    color: '#000000',
     fontFamily: 'Rubik-Regular',
+    fontWeight: '500',
+    lineHeight: 18,
   },
   disabled: {
     opacity: 0.5,
@@ -128,6 +139,7 @@ const useStrings = () => {
     sendLabel: intl.formatMessage(actionMessages.send),
     receiveLabel: intl.formatMessage(actionMessages.receive),
     buyLabel: intl.formatMessage(actionMessages.buy),
+    swapLabel: intl.formatMessage(actionMessages.swap),
     messageBuy: intl.formatMessage(actionMessages.soon),
   }
 }
@@ -139,6 +151,7 @@ const useNavigateTo = () => {
   return {
     send: () => navigation.navigate('send-start-tx'),
     receive: () => navigation.navigate('receive'),
+    swap: () => navigation.navigate('swap-start-order'),
     buy: () => Alert.alert(strings.messageBuy, strings.messageBuy),
   }
 }

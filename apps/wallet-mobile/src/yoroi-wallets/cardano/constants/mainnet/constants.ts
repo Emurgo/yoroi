@@ -1,4 +1,6 @@
-import {DefaultAsset, TokenInfo} from '../../../types'
+import {Balance} from '@yoroi/types'
+
+import {DefaultAsset} from '../../../types'
 import {COIN_TYPE, COINS_PER_UTXO_WORD, KEY_DEPOSIT, LINEAR_FEE, MINIMUM_UTXO_VAL, POOL_DEPOSIT} from '../common'
 
 export * from '../common'
@@ -74,7 +76,7 @@ export const NETWORK_CONFIG = {
   COINS_PER_UTXO_WORD,
 } as const
 
-export const PRIMARY_TOKEN_INFO: TokenInfo = {
+export const PRIMARY_TOKEN_INFO: Balance.TokenInfo = {
   kind: 'ft',
   id: '',
   name: 'ADA',

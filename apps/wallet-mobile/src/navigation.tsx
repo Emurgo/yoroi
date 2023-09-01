@@ -29,18 +29,19 @@ export const useParams = <Params, >(guard: Guard<Params>): Params => {
 type Guard<Params> = (params: Params | object) => params is Params
 
 export const BackButton = (props) => (
-  <TouchableOpacity {...props}>
+  <TouchableOpacity {...props} testID="buttonBack2">
     <Icon.Chevron direction="left" color={props.color ?? '#000000'} />
   </TouchableOpacity>
 )
 
 // OPTIONS
 const WIDTH = Dimensions.get('window').width
-export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
+export const defaultStackNavigationOptions: StackNavigationOptions = {
   headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,
+    backgroundColor: '#fff',
   },
   headerTitleStyle: {
     fontSize: 16,
@@ -63,7 +64,7 @@ export const defaultStackNavigationOptionsV2: StackNavigationOptions = {
   headerLeft: (props) => <BackButton {...props} />,
 }
 
-export const defaultStackNavigationOptions: StackNavigationOptions = {
+export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {
   headerStyle: {
     backgroundColor: COLORS.BACKGROUND_BLUE,
     elevation: 0,
@@ -75,6 +76,7 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
   headerLeftContainerStyle: {
     paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
   },
+  headerLeft: (props) => <BackButton color="#fff" {...props} />,
 }
 
 // ROUTES
@@ -91,6 +93,7 @@ export type WalletStackRoutes = {
   'nft-details-routes': NavigatorScreenParams<NftRoutes>
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
+  'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
@@ -178,8 +181,24 @@ export type TxHistoryRoutes = {
   'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
   'send-select-token-from-list': undefined
+  'swap-start-order': undefined
+  'swap-confirmation-order': undefined
+  'swap-select-token-from': undefined
+  'swap-select-token-to': undefined
+  'swap-set-slippage': undefined
+  'swap-select-pool': undefined
 }
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
+
+export type SwapTokenRoutes = {
+  'swap-start-order': undefined
+  'swap-confirmation-order': undefined
+  'swap-select-token-from': undefined
+  'swap-select-token-to': undefined
+  'swap-set-slippage': undefined
+  'swap-select-pool': undefined
+}
+export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 
 export type StakingCenterRoutes = {
   'staking-center-main': undefined
@@ -196,10 +215,13 @@ export type SettingsTabRoutes = {
 }
 
 export type SettingsStackRoutes = {
-  'settings-main': undefined
+  about: undefined
+  'app-settings': undefined
+  'main-settings': undefined
   'change-wallet-name': undefined
   'terms-of-use': undefined
   support: undefined
+  analytics: undefined
   'enable-login-with-os': undefined
   'remove-wallet': undefined
   'change-language': undefined
@@ -208,10 +230,16 @@ export type SettingsStackRoutes = {
   'disable-easy-confirmation': undefined
   'change-password': undefined
   'change-custom-pin': undefined
+  'privacy-policy': undefined
   'enable-login-with-pin': {
     onSuccess: () => void | Promise<void>
   }
 }
+
+export type ToggleAnalyticsSettingsRoutes = {
+  settings: undefined
+}
+
 export type SettingsRouteNavigation = StackNavigationProp<SettingsStackRoutes>
 
 export type SendConfirmParams = {
@@ -234,9 +262,22 @@ export type VotingRegistrationRoutes = {
 }
 export type VotingRegistrationRouteNavigation = StackNavigationProp<VotingRegistrationRoutes>
 
+export type InititalizationRoutes = {
+  initial: undefined
+  'language-pick': undefined
+  'enable-login-with-pin': undefined
+  analytics: undefined
+  'terms-of-service-changed': undefined
+  'analytics-changed': undefined
+  'read-terms-of-service': undefined
+  'read-privacy-policy': undefined
+}
+export type InititalizationNavigation = StackNavigationProp<InititalizationRoutes>
+
 export type FirstRunRoutes = {
   'language-pick': undefined
   'accept-terms-of-service': undefined
+  'accept-privacy-policy': undefined
   'enable-login-with-pin': undefined
 }
 export type FirstRunRouteNavigation = StackNavigationProp<FirstRunRoutes>
@@ -261,6 +302,7 @@ export type AppRoutes = {
   'custom-pin-auth': undefined
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
+  'agreement-changed-notice': undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 
@@ -335,7 +377,7 @@ export const useWalletNavigation = () => {
     navigation.navigate('app-root', {
       screen: 'settings',
       params: {
-        screen: 'settings-main',
+        screen: 'main-settings',
       },
     })
   }
@@ -364,6 +406,24 @@ export const useWalletNavigation = () => {
     })
   }
 
+  const navigateToAppSettings = () => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'app-settings',
+      },
+    })
+  }
+
+  const navigateToAnalyticsSettings = () => {
+    navigation.navigate('app-root', {
+      screen: 'toggle-analytics-settings',
+      params: {
+        screen: 'settings',
+      },
+    })
+  }
+
   return {
     navigation,
     resetToTxHistory,
@@ -371,5 +431,7 @@ export const useWalletNavigation = () => {
     navigateToSettings,
     navigateToTxHistory,
     navigateToNftGallery,
+    navigateToAppSettings,
+    navigateToAnalyticsSettings,
   }
 }

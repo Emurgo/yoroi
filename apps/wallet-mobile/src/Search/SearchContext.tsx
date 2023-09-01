@@ -4,7 +4,7 @@ import React, {createContext, ReactNode, useCallback, useContext, useReducer} fr
 import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Icon} from '../components/Icon'
-import {defaultStackNavigationOptionsV2} from '../navigation'
+import {defaultStackNavigationOptions} from '../navigation'
 
 type SearchState = {
   search: string
@@ -122,7 +122,7 @@ export const useSearchOnNavBar = ({
   }, [navigation, visible, handleCloseSearch])
 
   const withSearchInput: StackNavigationOptions = {
-    ...defaultStackNavigationOptionsV2,
+    ...defaultStackNavigationOptions,
     headerTitle: () => <InputSearch placeholder={placeholder} />,
     headerRight: () => (search.length > 0 ? <EraseButton onPress={handleCloseSearch} /> : null),
     headerLeft: () => <BackButton onPress={handleGoBack} />,
@@ -134,7 +134,7 @@ export const useSearchOnNavBar = ({
   }
 
   const withSearchButton: StackNavigationOptions = {
-    ...defaultStackNavigationOptionsV2,
+    ...defaultStackNavigationOptions,
     headerTitle: title,
     headerRight: () => <SearchButton onPress={() => showSearch()} />,
     headerLeft: () => <BackButton onPress={handleGoBack} />,
@@ -161,12 +161,13 @@ const InputSearch = ({placeholder}: Props) => {
       onChangeText={(search) => searchChanged(search)}
       autoCapitalize="none"
       style={{flex: 1, color: '#000000'}}
+      testID="inputSearch"
     />
   )
 }
 
 const SearchButton = (props: TouchableOpacityProps) => (
-  <TouchableOpacity {...props}>
+  <TouchableOpacity testID="iconSearch" {...props}>
     <Icon.Magnify size={26} />
   </TouchableOpacity>
 )
@@ -178,7 +179,7 @@ const EraseButton = (props: TouchableOpacityProps) => (
 )
 
 const BackButton = (props: TouchableOpacityProps) => (
-  <TouchableOpacity {...props}>
+  <TouchableOpacity testID="buttonBack" {...props}>
     <Icon.Chevron direction="left" color="#000000" />
   </TouchableOpacity>
 )

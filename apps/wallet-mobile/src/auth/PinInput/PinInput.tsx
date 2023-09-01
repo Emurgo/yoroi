@@ -5,7 +5,7 @@ import {StyleSheet, View} from 'react-native'
 import {BACKSPACE, NumericKeyboard} from '../../components/NumericKeyboard'
 import {Spacer} from '../../components/Spacer'
 import {Text} from '../../components/Text'
-import {COLORS} from '../../theme'
+import {lightPalette} from '../../theme'
 
 type Props = {
   title?: string
@@ -49,9 +49,11 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
   }
 
   return (
-    <View style={styles.root}>
-      <View style={styles.infoContainer}>
+    <View style={styles.pinInput}>
+      <View style={styles.info}>
         <Text style={styles.title}>{title}</Text>
+
+        <Spacer height={4} />
 
         {subtitles.map((subtitle) => (
           <Text key={subtitle} style={styles.subtitle}>
@@ -59,7 +61,7 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
           </Text>
         ))}
 
-        <Spacer height={16} />
+        <Spacer height={24} />
 
         <View style={styles.pinContainer}>
           {_.range(0, pinMaxLength).map((index) => (
@@ -73,28 +75,38 @@ export const PinInput = React.forwardRef<PinInputRef, Props>((props, ref) => {
   )
 })
 
+type PinPlaceholderProps = {
+  isActive: boolean
+}
+
+const PinPlaceholder = ({isActive}: PinPlaceholderProps) => (
+  <View style={styles.pinElement}>
+    <View style={[styles.pinCircle, isActive ? styles.pinCircleActive : styles.pinCircleInactive]} />
+  </View>
+)
+
 const styles = StyleSheet.create({
-  root: {
+  pinInput: {
     flex: 1,
-    backgroundColor: COLORS.BACKGROUND_BLUE,
+    backgroundColor: 'white',
   },
-  infoContainer: {
+  info: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
-    color: 'white',
-    fontSize: 23,
-    lineHeight: 25,
+    fontFamily: 'Rubik-Medium',
+    fontSize: 20,
+    lineHeight: 30,
+    color: lightPalette.gray['max'],
   },
   subtitle: {
-    color: 'white',
+    fontFamily: 'Rubik-Regular',
     fontSize: 14,
-    marginVertical: 5,
-    maxWidth: '60%',
-    minHeight: 30,
-    flexWrap: 'wrap',
+    lineHeight: 22,
+    color: lightPalette.gray['600'],
+    maxWidth: 320,
     textAlign: 'center',
   },
   pinContainer: {
@@ -102,22 +114,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  pin: {
-    width: 12,
-    height: 12,
-    borderRadius: 10,
-    marginHorizontal: 15,
-    backgroundColor: 'white',
+  pinElement: {
+    paddingHorizontal: 8,
   },
-  pinInactive: {
-    opacity: 0.5,
+  pinCircle: {
+    width: 16,
+    height: 16,
+    borderRadius: 10,
+  },
+  pinCircleInactive: {
+    borderWidth: 2,
+    borderColor: '#3154CB',
+  },
+  pinCircleActive: {
+    backgroundColor: '#3154CB',
   },
 })
-
-type PinPlaceholderProps = {
-  isActive: boolean
-}
-
-const PinPlaceholder = ({isActive}: PinPlaceholderProps) => (
-  <View style={[styles.pin, !isActive && styles.pinInactive]} />
-)

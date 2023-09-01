@@ -8,11 +8,11 @@ import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View, ViewProps}
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, StatusBar, Text} from '../../components'
+import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import globalMessages from '../../i18n/global-messages'
 import {formatDateAndTime, formatTokenWithSymbol} from '../../legacy/format'
 import AddressModal from '../../Receive/AddressModal'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {PrivacyMode, usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {brand, COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
@@ -36,7 +36,7 @@ export const TxDetails = () => {
   const [addressDetail, setAddressDetail] = React.useState<null | string>(null)
   const transactions = useTransactionInfos(wallet)
   const transaction = transactions[id]
-  const privacyMode = usePrivacyMode()
+  const {isPrivacyOff} = usePrivacyMode()
   const memo = !isEmptyString(transaction.memo) ? transaction.memo : '-'
 
   useTitle(isNonNullable(transaction.submittedAt) ? formatDateAndTime(transaction.submittedAt, intl) : '')
@@ -68,7 +68,7 @@ export const TxDetails = () => {
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Banner label={strings[transaction.direction]}>
           <Boundary>
-            <AdaAmount amount={amount} privacyMode={privacyMode} />
+            <AdaAmount amount={amount} isPrivacyOff={isPrivacyOff} />
 
             {txFee && <Fee amount={txFee} />}
           </Boundary>
@@ -105,7 +105,7 @@ export const TxDetails = () => {
             )}
 
             <ExpandableAssetList
-              privacyMode={privacyMode}
+              isPrivacyOff={isPrivacyOff}
               expanded={expandedInItemId === item.id}
               assets={item.assets}
             />
@@ -137,7 +137,7 @@ export const TxDetails = () => {
             )}
 
             <ExpandableAssetList
-              privacyMode={privacyMode}
+              isPrivacyOff={isPrivacyOff}
               expanded={expandedOutItemId === item.id}
               assets={item.assets}
             />
@@ -166,7 +166,11 @@ export const TxDetails = () => {
       </ScrollView>
 
       <Actions>
-        <Button onPress={() => openInExplorer(transaction, wallet.networkId)} title={strings.openInExplorer} />
+        <Button
+          onPress={() => openInExplorer(transaction, wallet.networkId)}
+          title={strings.openInExplorer}
+          shelleyTheme
+        />
       </Actions>
 
       {!isEmptyString(addressDetail) && (
@@ -194,11 +198,11 @@ const Confirmations = ({transaction, wallet}: {transaction: TransactionInfo; wal
 
 const Label = ({children}: {children: string}) => <Text style={styles.label}>{children}</Text>
 
-const AdaAmount = ({amount, privacyMode}: {amount: BigNumber; privacyMode?: PrivacyMode}) => {
+const AdaAmount = ({amount, isPrivacyOff}: {amount: BigNumber; isPrivacyOff?: boolean}) => {
   const wallet = useSelectedWallet()
   const amountStyle = amount.gte(0) ? styles.positiveAmount : styles.negativeAmount
 
-  if (privacyMode === 'HIDDEN') {
+  if (isPrivacyOff) {
     return <Text style={amountStyle}>*.******</Text>
   }
 
@@ -216,12 +220,12 @@ const Fee = ({amount}: {amount: BigNumber}) => {
 const ExpandableAssetList: React.VFC<{
   expanded: boolean
   assets: CardanoTypes.TokenEntry[]
-  privacyMode?: PrivacyMode
-}> = ({expanded, assets, privacyMode}) => (
+  isPrivacyOff?: boolean
+}> = ({expanded, assets, isPrivacyOff}) => (
   <View style={{borderWidth: 1, borderColor: 'transparent'}}>
     {/* ↑↑↑ View wrapper fixes bug ↑↑↑ */}
 
-    {expanded && <AssetList privacyMode={privacyMode} styles={assetListStyle} assets={assets} />}
+    {expanded && <AssetList isPrivacyOff={isPrivacyOff} styles={assetListStyle} assets={assets} />}
 
     {/* ↓↓↓ View wrapper fixes bug ↓↓↓ */}
   </View>
@@ -429,7 +433,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   positiveAmount: {
-    color: COLORS.POSITIVE_AMOUNT,
+    color: '#3154CB',
     fontWeight: '500',
   },
   negativeAmount: {

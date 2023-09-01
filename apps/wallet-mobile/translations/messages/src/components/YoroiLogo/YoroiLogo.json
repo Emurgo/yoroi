@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.yoroiLogo",
+    "defaultMessage": "!!!Light wallet for Cardano assets",
+    "file": "src/components/YoroiLogo/YoroiLogo.tsx",
+    "start": {
+      "line": 84,
+      "column": 8,
+      "index": 2143
+    },
+    "end": {
+      "line": 87,
+      "column": 3,
+      "index": 2238
+    }
+  }
+]

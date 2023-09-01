@@ -1,8 +1,16 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {IntlProvider} from 'react-intl'
 import {NativeModules, Platform, Text} from 'react-native'
 import TimeZone from 'react-native-timezone'
-import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
+import {
+  QueryKey,
+  QueryObserver,
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from 'react-query'
 
 import {useStorage} from '../yoroi-wallets/storage'
 import {parseSafe} from '../yoroi-wallets/utils'
@@ -14,8 +22,14 @@ export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
   const languageCode = useLanguageCode()
   const selectLanguageCode = useSaveLanguageCode()
   const timeZone = useTimezone()
+  const queryClient = useQueryClient()
+  const observer = useMemo(
+    () => new QueryObserver<LanguageCode>(queryClient, {queryKey: 'languageCode'}),
+    [queryClient],
+  )
+
   return (
-    <LanguageContext.Provider value={{languageCode, selectLanguageCode, supportedLanguages}}>
+    <LanguageContext.Provider value={{languageCode, selectLanguageCode, supportedLanguages, observer}}>
       <IntlProvider
         timeZone={timeZone}
         locale={languageCode}
@@ -45,7 +59,18 @@ const useTimezone = () => {
   return query.data
 }
 
-export const useLanguage = () => React.useContext(LanguageContext) || missingProvider()
+export const useLanguage = ({onChange}: {onChange?: (languageCode: LanguageCode) => void} = {}) => {
+  const value = React.useContext(LanguageContext) || missingProvider()
+
+  React.useEffect(() => {
+    if (onChange) {
+      return value.observer.subscribe((result) => {
+        onChange(result.data ?? defaultLanguageCode)
+      })
+    }
+  }, [onChange, value.observer])
+  return value
+}
 
 const missingProvider = () => {
   throw new Error('LanguageProvider is missing')
@@ -97,6 +122,7 @@ type LanguageContext = {
   languageCode: LanguageCode
   selectLanguageCode: SaveLanguageCode
   supportedLanguages: SupportedLanguages
+  observer: QueryObserver<LanguageCode, unknown, LanguageCode, LanguageCode, QueryKey>
 }
 
 const systemLanguageCode = Platform.select({

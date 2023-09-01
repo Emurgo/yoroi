@@ -1,10 +1,7 @@
 name: wallet-mobile-gitlab
 
-on: 
-  push:
-    paths:
-      - 'apps/wallet-mobile/**'
-
+on: push
+      
 jobs:
   Build_Request:
     name: Request building the app
