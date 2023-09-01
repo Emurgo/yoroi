@@ -134,7 +134,7 @@ export const ConfirmTxScreen = () => {
               secureTextEntry
               ref={spendingPasswordRef}
               enablesReturnKeyAutomatically
-              label={strings.spendingPassword}
+              placeholder={strings.spendingPassword}
               value={spendingPassword}
               onChangeText={setSpendingPassword}
               autoComplete="off"
@@ -188,6 +188,7 @@ const styles = StyleSheet.create({
   },
   cardTextValue: {
     fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
   cardTextUSD: {
     fontSize: 14,
