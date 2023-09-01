@@ -13,7 +13,6 @@ import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from './TouchedContext'
 
 const BORDER_SIZE = 1
-const PRECISION = 10
 export const ShowMarketPrice = () => {
   const strings = useStrings()
 

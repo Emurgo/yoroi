@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-newline */
 import {useSwap} from '@yoroi/swap'
-import {getBuyQuantityForLimitOrder} from '@yoroi/swap/src'
 import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
@@ -10,6 +9,7 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {getBuyQuantityForLimitOrder} from '../../../common/helpers'
 import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from './TouchedContext'
 const BORDER_SIZE = 1

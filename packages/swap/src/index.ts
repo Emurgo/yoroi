@@ -20,5 +20,4 @@ export {
   getSellAmountByChangingReceive,
   makePossibleMarketOrder,
   makeLimitOrder,
-  getBuyQuantityForLimitOrder,
 } from './helpers/order'
