@@ -143,7 +143,7 @@
   "swap.swapScreen.verifiedBy": "Verified by {pool}",
   "swap.swapScreen.poolVerificationInfo": "Cardano projects that list their own tokens can apply for an additional {pool} verification. This verification is a manual validation that {pool} team performs with the help of Cardano Foundation.",
   "swap.swapScreen.poolFee": "Pool Fee",
-  "swap.swapScreen.assetsIn": "This assets is in my portfolio",
+  "swap.swapScreen.assetsIn": "This asset is in my portfolio",
   "swap.swapScreen.noAssetsFound": "No assets found for this pair",
   "swap.swapScreen.defaultSlippage": "Default Slippage Tolerance",
   "swap.swapScreen.slippageInfo": "Slippage tolerance is set as a percentage of the total swap value. Your transactions will not be executed if the price moves by more than this amount.",

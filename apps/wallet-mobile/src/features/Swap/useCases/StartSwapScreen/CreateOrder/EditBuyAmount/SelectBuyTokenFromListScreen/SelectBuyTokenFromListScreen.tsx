@@ -88,7 +88,7 @@ const VerifiedTokensToogle = ({onToogle, isToogled}: {onToogle: () => void; isTo
       <View style={styles.row}>
         <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
 
-        <Text style={styles.topText}>{strings.verifiedBy('MuseliSwap')}</Text>
+        <Text style={styles.topText}>{strings.verifiedBy('MuesliSwap')}</Text>
 
         <Spacer width={8} />
 
