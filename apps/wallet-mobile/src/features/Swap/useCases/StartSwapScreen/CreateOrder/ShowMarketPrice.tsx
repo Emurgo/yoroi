@@ -35,7 +35,7 @@ export const ShowMarketPrice = () => {
       ? createOrder.selectedPool.price
       : 0
 
-  const formattedValue = BigNumber(price).toFormat(PRECISION, numberLocale)
+  const formattedValue = BigNumber(price).toFormat(numberLocale)
 
   return (
     <View style={styles.container}>
