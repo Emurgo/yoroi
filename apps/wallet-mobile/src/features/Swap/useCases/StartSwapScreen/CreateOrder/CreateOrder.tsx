@@ -20,6 +20,10 @@ import {EditSlippage} from './EditSlippage/EditSlippage'
 import {ShowMarketPrice} from './ShowMarketPrice'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
 import {useSwapTouched} from './TouchedContext'
+import {BigNum} from '@emurgo/cross-csl-core'
+import BigNumber from 'bignumber.js'
+
+const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 
 export const CreateOrder = () => {
   const strings = useStrings()
@@ -56,6 +60,23 @@ export const CreateOrder = () => {
     (createOrder.type === 'limit' && createOrder.limitPrice !== undefined && Quantities.isZero(createOrder.limitPrice))
 
   const handleSwapPress = () => {
+    if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
+      const marketPrice = BigNumber(
+        isBuyTouched &&
+          isSellTouched &&
+          createOrder.selectedPool?.price !== undefined &&
+          !Number.isNaN(createOrder.selectedPool.price)
+          ? createOrder.selectedPool.price
+          : 0,
+      )
+      const limitPrice = BigNumber(createOrder.limitPrice)
+
+      if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
+        // TODO: Show alert
+        return
+      }
+    }
+
     const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
     const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
 

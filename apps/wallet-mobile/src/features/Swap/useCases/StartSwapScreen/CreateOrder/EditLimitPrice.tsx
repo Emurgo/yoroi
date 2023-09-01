@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-newline */
 import {useSwap} from '@yoroi/swap'
+import {getBuyQuantityForLimitOrder} from '@yoroi/swap/src'
 import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {Spacer} from '../../../../../components'
 import {useLanguage} from '../../../../../i18n'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
@@ -12,9 +12,8 @@ import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from './TouchedContext'
-import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
 const BORDER_SIZE = 1
-const PRECISION = 6
+const PRECISION = 10
 
 export const EditLimitPrice = () => {
   const strings = useStrings()
@@ -22,8 +21,9 @@ export const EditLimitPrice = () => {
 
   const wallet = useSelectedWallet()
 
-  const {createOrder, limitPriceChanged} = useSwap()
-  const limitChanged = (limitPrice: BalanceQuantity) => limitPriceChanged(limitPrice)
+  const {createOrder, limitPriceChanged, buyAmountChanged} = useSwap()
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
+  const buyTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
 
   const {isBuyTouched, isSellTouched} = useSwapTouched()
 
@@ -35,17 +35,30 @@ export const EditLimitPrice = () => {
       ? createOrder.selectedPool.price
       : 0
 
-  const limitPrice = createOrder.limitPrice ? BigNumber(createOrder.limitPrice).toNumber() : defaultPrice
+  const limitPrice = createOrder.limitPrice !== undefined ? BigNumber(createOrder.limitPrice).toNumber() : defaultPrice
 
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
-  const tokenToSellName = isSellTouched ? tokenToSellInfo.ticker ?? tokenToSellInfo.name : '-'
   const tokenToBuyInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
+
+  const tokenToSellName = isSellTouched ? tokenToSellInfo.ticker ?? tokenToSellInfo.name : '-'
   const tokenToBuyName = isBuyTouched ? tokenToBuyInfo.ticker ?? tokenToBuyInfo.name : '-'
+  const formattedValue = BigNumber(limitPrice).toFormat(numberLocale)
+
+  const [text, setText] = useState(formattedValue)
 
   const onChange = (text: string) => {
-    const [, quantity] = Quantities.parseFromText(text, PRECISION, numberLocale)
+    const [newText, quantity] = Quantities.parseFromText(text, PRECISION, numberLocale)
     const value = Quantities.denominated(quantity, PRECISION)
-    limitChanged(value)
+    const sellQuantityDenominated = Quantities.denominated(
+      createOrder.amounts.sell.quantity,
+      sellTokenInfo.decimals ?? 0,
+    )
+    limitPriceChanged(value)
+    setText(newText)
+    buyAmountChanged({
+      quantity: getBuyQuantityForLimitOrder(sellQuantityDenominated, value, buyTokenInfo),
+      tokenId: createOrder.amounts.buy.tokenId,
+    })
   }
 
   return (
@@ -53,7 +66,7 @@ export const EditLimitPrice = () => {
       <Text style={styles.label}>{strings.limitPrice}</Text>
 
       <View style={styles.content}>
-        <AmountInput onChange={onChange} value={BigNumber(limitPrice).toFormat(PRECISION, numberLocale)} editable />
+        <AmountInput onChange={onChange} value={text} editable={true} />
 
         <View style={styles.textWrapper}>
           <Text style={styles.text}>
@@ -95,6 +108,8 @@ const styles = StyleSheet.create({
     borderColor: COLORS.TEXT_GRAY3,
     width: '100%',
     height: 56,
+    paddingLeft: 16,
+    paddingRight: 8,
   },
   label: {
     position: 'absolute',
@@ -105,9 +120,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
-  flex: {
-    flex: 1,
-  },
   content: {
     display: 'flex',
     flexDirection: 'row',
@@ -117,7 +129,7 @@ const styles = StyleSheet.create({
   amountInput: {
     fontSize: 16,
     height: 56,
-    padding: 8,
+    paddingRight: 16,
   },
   text: {
     fontSize: 16,

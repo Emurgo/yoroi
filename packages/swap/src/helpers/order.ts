@@ -1,4 +1,7 @@
 import {Balance, Swap} from '@yoroi/types'
+import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
+import {Quantities} from '@yoroi/wallet-mobile/src/yoroi-wallets/utils'
+import BigNumber from 'bignumber.js'
 
 type AmountPair = {
   sell: Balance.Amount
@@ -89,6 +92,38 @@ export const getSellAmountByChangingReceive = (
         }
 
   return {buy, sell}
+}
+
+export const getBuyQuantityForLimitOrder = (
+  sellQuantityDenominated: BalanceQuantity,
+  limitPrice: BalanceQuantity,
+  buyTokenInfo: Balance.TokenInfo,
+): BalanceQuantity => {
+  if (Quantities.isZero(limitPrice)) {
+    return Quantities.zero
+  }
+
+  return Quantities.denominated(
+    Quantities.quotient(sellQuantityDenominated, limitPrice),
+    buyTokenInfo.decimals ?? 0,
+  ).toString() as BalanceQuantity
+}
+
+export const getSellQuantityForLimitOrder = (
+  buyQuantityDenominated: BalanceQuantity,
+  limitPrice: BalanceQuantity,
+  sellTokenInfo: Balance.TokenInfo,
+): BalanceQuantity => {
+  if (Quantities.isZero(limitPrice)) {
+    return Quantities.zero
+  }
+
+  return Quantities.integer(
+    BigNumber(buyQuantityDenominated)
+      .times(BigNumber(limitPrice))
+      .toString() as BalanceQuantity,
+    sellTokenInfo.decimals ?? 0,
+  ).toString() as BalanceQuantity
 }
 
 export const makeLimitOrder = (
