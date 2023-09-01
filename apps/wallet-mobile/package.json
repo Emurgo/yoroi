@@ -70,7 +70,13 @@
   "jest": {
     "cacheDirectory": ".jest/cache",
     "collectCoverageFrom": [
-      "src/**/*.{ts,tsx}"
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts"
+    ],
+    "collectCoverage": true,
+    "coverageReporters": [
+      "text-summary",
+      "html"
     ],
     "globals": {
       "ts-jest": {

@@ -1,39 +1,23 @@
 type BalanceTokenInfo<Meta = BalanceCardanoMetadatas> = {
   kind: 'ft' | 'nft'
 
-  id: string
+  id: string // TODO: is set based on rawUtxo if tokens don't contain `.` it will fail (empty name)
   fingerprint: string // fingerprint is temporary since we can't use it as id for now
   group: string // for cardano policy id
   name: string // for cardano asset name
 
-  description: string | undefined
-  image: string | undefined // link to image
-  icon: string | undefined // base64 encoded
+  description: string | null
+  image: string | null // link to image
+  icon: string | null // base64 encoded
+  mediaType: string | null // image mimetype (e.g. image/png)
 
-  decimals: number | undefined
-  symbol: string | undefined // shorthand as monetary i.e Ω
-  ticker: string | undefined // shorthand as token e.g. ADA
+  decimals: number | null // if null decimals are unknown
+  symbol: string | null // shorthand as monetary i.e Ω
+  ticker: string | null // shorthand as token e.g. ADA
 
   // metatada should be used only for NFT gallery
   metadatas: Meta
 }
-
-export type BalanceCardanoMetadatas = {
-  mintNft?: NftMetadata
-  mintFt?: FtMetadata
-  tokenRegistry?: FtMetadata
-}
-
-type FtMetadata = {
-  description: string | Array<string> | undefined
-  icon: string | Array<string> | undefined
-  decimals: number | undefined
-  ticker: string | undefined
-  url: string | undefined
-  version: string | undefined
-}
-
-type NftMetadata = unknown
 
 type BalanceTokenPrice = {
   volume: {
@@ -66,8 +50,9 @@ type BalanceTokenStatus = 'verified' | 'unverified' | 'scam' | 'outdated'
 export type BalanceToken = {
   info: BalanceTokenInfo
   price: BalanceTokenPrice
-  supply: BalanceTokenSupply
-  status: BalanceTokenStatus
+  supply: BalanceTokenSupply | null
+  status: BalanceTokenStatus | null
+  balance: BalanceQuantity
 }
 
 export type BalanceQuantity = `${number}`
@@ -79,4 +64,40 @@ export type BalanceAmounts = {
 export type BalanceAmount = {
   tokenId: string
   quantity: BalanceQuantity
+}
+
+export type BalanceCardanoMetadatas = {
+  mintNft?: CardanoNftMetadata
+  isValidMintNft?: boolean
+  mintFt?: CardanoFtMetadata
+  isValidMintFt?: boolean
+  tokenRegistry?: CardanoFtMetadata
+  isValidTokenRegistry?: boolean
+}
+
+type CardanoFtMetadata = {
+  name: string
+  description: string | Array<string> | null
+  icon: string | Array<string> | null
+  decimals: number | null
+  ticker: string | null
+  url: string | null
+  [key: string]: unknown
+}
+
+type CardanoNftMetadataFile = {
+  name?: string
+  mediaType?: string
+  src?: string | Array<string>
+  [key: string]: unknown
+}
+
+type CardanoNftMetadata = {
+  name: string
+  image: string | Array<string>
+  mediaType?: string
+  description?: string | Array<string>
+  // It adds support to files as object (some erroneous NFTs have this)
+  files?: Array<CardanoNftMetadataFile> | CardanoNftMetadataFile
+  [key: string]: unknown
 }

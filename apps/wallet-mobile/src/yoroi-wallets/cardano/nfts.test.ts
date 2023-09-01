@@ -268,5 +268,5 @@ describe('getNftFilenameMediaType', () => {
 
 const getNftWithCustomOriginalMetadata = (metadata: unknown): Balance.TokenInfo => ({
   ...nft,
-  metadatas: {mintNft: metadata},
+  metadatas: {mintNft: metadata} as Balance.TokenInfo['metadatas'],
 })

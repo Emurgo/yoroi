@@ -26,6 +26,7 @@ export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
     symbol: undefined,
     metadatas: {
       mintFt: {
+        name: entry.name?.value ?? '',
         icon: entry.logo?.value,
         description: entry.description?.value,
         version: '1',
@@ -98,6 +99,7 @@ export const toTokenInfo = (token: LegacyToken): Balance.TokenInfo => {
     symbol: undefined,
     metadatas: {
       mintFt: {
+        name: token.metadata.longName ?? '',
         icon: undefined,
         description: token.metadata.longName ?? undefined,
         ticker: token.metadata.ticker ?? undefined,

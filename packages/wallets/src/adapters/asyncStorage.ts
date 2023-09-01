@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {App, Nullable} from '@yoroi/types'
 
-import {parseSafe} from '../parsers'
+import {parseSafe} from '../helpers/parsers'
 
 // -------
 // ADAPTER + "FACTORY"
@@ -94,7 +94,7 @@ export const mountStorage = (path: App.StorageFolderName): App.Storage => {
 
 export const mountMultiStorage = <T = unknown>(
   options: App.MultiStorageOptions<T>,
-): App.MultiStorage<T> => {
+): Readonly<App.MultiStorage<T>> => {
   const {
     storage,
     dataFolder,
@@ -103,36 +103,35 @@ export const mountMultiStorage = <T = unknown>(
     deserializer = parseSafe as (item: string | null) => Nullable<T>,
   } = options
   const dataStorage = storage.join(dataFolder)
+  const {getAllKeys: getAllKeysStorage, multiSet, multiGet} = dataStorage
 
-  const keys = () => dataStorage.getAllKeys()
-  const remove = () => storage.removeFolder(dataFolder)
-  const save = (items: NonNullable<T>[]) => {
-    const entries: [string, T][] = items.map((record) => {
+  const clear = () => storage.removeFolder(dataFolder)
+  const saveMany = (items: NonNullable<T>[]) => {
+    const entries: [string, T][] = items.map((item) => {
       if (typeof keyExtractor === 'function') {
-        return [keyExtractor(record), record]
+        return [keyExtractor(item), item]
       }
-      return [String(record[keyExtractor]), record]
+      return [String(item[keyExtractor]), item]
     })
     const entriesWithKeys = entries.filter(([key]) => key != null && key !== '')
-    return dataStorage.multiSet(
-      entriesWithKeys,
-      serializer as (record: unknown) => string,
+    return multiSet(entriesWithKeys, serializer as (item: unknown) => string)
+  }
+  const readAll = () =>
+    getAllKeys().then((keysToRead) =>
+      multiGet<Nullable<T>>(keysToRead as string[], deserializer),
     )
-  }
-  const read = () => {
-    return dataStorage
-      .getAllKeys()
-      .then((readKeys) =>
-        dataStorage.multiGet<Nullable<T>>(readKeys, deserializer),
-      )
-  }
+  const readMany = (keysToRead: string[]) =>
+    dataStorage.multiGet<Nullable<T>>(keysToRead, deserializer)
+  const getAllKeys = () =>
+    getAllKeysStorage().then((keys) => keys as ReadonlyArray<string>)
 
   return {
-    keys,
-    remove,
-    save,
-    read,
-  }
+    getAllKeys,
+    clear,
+    readAll,
+    saveMany,
+    readMany,
+  } as const
 }
 
 // -------

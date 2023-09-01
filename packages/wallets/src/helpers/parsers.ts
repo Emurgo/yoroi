@@ -19,6 +19,11 @@ export const parseSafe = (text: any) => {
   }
 }
 
+export const parseNumber = (data: unknown) => {
+  const parsed = parseSafe(data)
+  return isNumber(parsed) ? parsed : undefined
+}
+
 // -----------
 // TYPE GUARDS
 export const isBoolean = (data: unknown): data is boolean =>
@@ -32,6 +37,16 @@ export const isNonNullable = <T>(data: T | null | undefined): data is T =>
 
 export const isNumber = (data: unknown): data is number =>
   typeof data === 'number' && !Number.isNaN(data) && Number.isFinite(data)
+
+export const isPositiveNumber = (data: unknown): data is number =>
+  isNumber(data) && data > 0
+
+export const isArrayOfString = (data: unknown): data is string[] =>
+  isArrayOfType(data, isString)
+
+export const isStringOrArrayOfString = (
+  data: unknown,
+): data is string | string[] => isString(data) || isArrayOfString(data)
 
 export const createTypeGuardFromSchema =
   <T>(schema: z.ZodType<T>) =>

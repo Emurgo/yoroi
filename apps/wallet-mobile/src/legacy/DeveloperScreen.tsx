@@ -8,7 +8,6 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, InteractionManager, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 import config from 'react-native-config'
-import * as Keychain from 'react-native-keychain'
 
 import {useAuth} from '../auth/AuthProvider'
 import {Button, StatusBar, Text, TextInput} from '../components'
@@ -18,16 +17,15 @@ import {errorMessages} from '../i18n/global-messages'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
+import {tokenManagerApiMaker} from '../yoroi-wallets/balance/adapters/api'
+import {BACKEND} from '../yoroi-wallets/cardano/constants/testnet/constants'
 import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
-import {useCreateWallet} from '../yoroi-wallets/hooks'
+import {useBalances, useCreateWallet} from '../yoroi-wallets/hooks'
 import {NetworkId} from '../yoroi-wallets/types'
 import {CONFIG} from './config'
 
-const routes: Array<{label: string; path: keyof AppRoutes}> = [
-  {label: 'Storybook', path: 'storybook'},
-  {label: 'Skip to wallet list', path: 'app-root'},
-]
+const routes: Array<{label: string; path: keyof AppRoutes}> = [{label: 'Storybook', path: 'storybook'}]
 
 const styles = StyleSheet.create({
   safeAreaView: {
@@ -71,6 +69,8 @@ export const DeveloperScreen = () => {
     },
   })
   const [wallet] = useSelectedWalletContext()
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const balances = useBalances(wallet!)
   const [addresses, setAddresses] = React.useState('')
   const agreement = useLegalAgreement()
   const {reset: resetLegalAgreement} = useResetLegalAgreement()
@@ -101,9 +101,17 @@ export const DeveloperScreen = () => {
         </TouchableOpacity>
 
         <Button
-          title="All kc"
+          title="Token Manager Tests"
           style={styles.button}
-          onPress={() => Keychain.getAllGenericPasswordServices().then(console.log)}
+          onPress={() => {
+            const tokenManager = tokenManagerApiMaker({
+              baseUrlApi: BACKEND.API_ROOT,
+              baseUrlTokenRegistry: BACKEND.TOKEN_INFO_SERVICE,
+            })
+            tokenManager
+              .tokens(Object.keys(balances).filter((v) => v != ''))
+              .catch((error) => console.log('tokenManager error', error))
+          }}
         />
 
         <Button

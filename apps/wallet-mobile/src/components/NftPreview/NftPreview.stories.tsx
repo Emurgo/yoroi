@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
@@ -38,7 +39,7 @@ storiesOf('NftPreview', module)
             files: {
               ipfs: 'QmZ89agib39odneyezeyxp2ekXPLqm86NHCgEXZy9PJ1Gs',
             },
-          },
+          } as any,
         },
       }}
       width={200}

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {parseSafe} from '../parsers'
+import {parseSafe} from '../helpers/parsers'
 import {rootStorage} from '../storage'
 import {mountMultiStorage} from './asyncStorage'
 import {App} from '@yoroi/types'
@@ -240,44 +240,50 @@ describe('prefixed storage', () => {
 describe('multi storage', () => {
   beforeEach(() => AsyncStorage.clear())
 
-  it('save, read, keys, remove providing the serializers', async () => {
+  it('saveMany, readAll, readMany, keys, and clear providing the serializers', async () => {
     const storage = mountMultiStorage(options)
-    await storage.save([item3, item4])
+    await storage.saveMany([item3, item4])
 
-    const readItems = await storage.read()
+    const readItems = await storage.readAll()
     expect(readItems).toEqual([
       ['1', item3],
       ['2', item4],
     ])
 
-    const keys = await storage.keys()
+    const readItem = await storage.readMany(['1'])
+    expect(readItem).toEqual([['1', item3]])
+
+    const keys = await storage.getAllKeys()
     expect(keys).toEqual(['1', '2'])
 
-    await storage.remove()
+    await storage.clear()
 
-    const emptyKeys = await storage.keys()
+    const emptyKeys = await storage.getAllKeys()
     expect(emptyKeys).toEqual([])
   })
-  it('save, read, keys, remove default serializers / key as extractor', async () => {
+  it('saveMany, readAll, readMany, keys, and clear default serializers / key as extractor', async () => {
     const storage = mountMultiStorage({
       storage: rootStorage.join('multiStorage/'),
       dataFolder: 'dataFolder/',
       keyExtractor: 'id',
     })
-    await storage.save([item3, item4])
+    await storage.saveMany([item3, item4])
 
-    const readItems = await storage.read()
+    const readItems = await storage.readAll()
     expect(readItems).toEqual([
       ['1', item3],
       ['2', item4],
     ])
 
-    const keys = await storage.keys()
+    const keys = await storage.getAllKeys()
     expect(keys).toEqual(['1', '2'])
 
-    await storage.remove()
+    const readItem = await storage.readMany(['1'])
+    expect(readItem).toEqual([['1', item3]])
 
-    const emptyKeys = await storage.keys()
+    await storage.clear()
+
+    const emptyKeys = await storage.getAllKeys()
     expect(emptyKeys).toEqual([])
   })
 })
@@ -287,7 +293,7 @@ const options: App.MultiStorageOptions<any> = {
   dataFolder: 'dataFolder/',
   keyExtractor: (item: any) => item.id,
   serializer: JSON.stringify,
-  deserializer: (data) => JSON.parse(data as string),
+  deserializer: (data: any) => JSON.parse(data as string),
 }
 
 const item1 = {a: 123, b: 234}

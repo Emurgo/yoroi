@@ -163,6 +163,7 @@ describe('api utils', () => {
         symbol: undefined,
         metadatas: {
           mintFt: {
+            name: 'assetName',
             icon: 'logo',
             ticker: 'ticker',
             url: 'url',
@@ -203,6 +204,7 @@ describe('api utils', () => {
         symbol: undefined,
         metadatas: {
           mintFt: {
+            name: 'assetName',
             icon: undefined,
             ticker: undefined,
             url: undefined,
