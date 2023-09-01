@@ -48,5 +48,6 @@ const styles = StyleSheet.create({
   counterTextBold: {
     fontWeight: '500',
     color: COLORS.SHELLEY_BLUE,
+    fontFamily: 'Rubik-Medium',
   },
 })

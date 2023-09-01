@@ -178,5 +178,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     paddingTop: 13,
     fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
 })
