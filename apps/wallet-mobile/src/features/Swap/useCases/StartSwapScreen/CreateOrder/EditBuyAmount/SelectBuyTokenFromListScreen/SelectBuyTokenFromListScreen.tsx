@@ -394,6 +394,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
     fontSize: 20,
     color: '#000',
     paddingTop: 4,

@@ -386,7 +386,7 @@ const styles = StyleSheet.create({
   },
   linkText: {
     color: '#4B6DDE',
-    fontFamily: 'Rubik',
+    fontFamily: 'Rubik-Medium',
     fontSize: 16,
     fontWeight: '500',
     lineHeight: 22,
