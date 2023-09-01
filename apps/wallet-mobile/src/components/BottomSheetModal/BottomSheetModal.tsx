@@ -11,7 +11,7 @@ type BottomSheetModalProps = {
   content: string | React.ReactNode
   isOpen: boolean
   onClose?: () => void
-  containerContentStyle?: ViewStyle
+  contentContainerStyle?: ViewStyle
 }
 
 export const BottomSheetModal = ({
@@ -19,7 +19,7 @@ export const BottomSheetModal = ({
   content,
   isOpen = false,
   onClose,
-  containerContentStyle,
+  contentContainerStyle,
 }: BottomSheetModalProps) => {
   const navigation = useNavigation()
 
@@ -84,7 +84,7 @@ export const BottomSheetModal = ({
         }
         onChange={handleSheetChanges}
       >
-        <View style={[styles.container, containerContentStyle]}>
+        <View style={[styles.container, contentContainerStyle]}>
           <View style={styles.header}>
             {Platform.OS === 'android' && <View style={styles.empty} />}
 

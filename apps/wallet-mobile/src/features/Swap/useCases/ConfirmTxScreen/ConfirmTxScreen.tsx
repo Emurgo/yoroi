@@ -148,7 +148,7 @@ export const ConfirmTxScreen = () => {
         onClose={() => {
           setConfirmationModal(false)
         }}
-        containerContentStyle={{justifyContent: 'space-between'}}
+        contentContainerStyle={{justifyContent: 'space-between'}}
       />
 
       <BottomSheetModal
