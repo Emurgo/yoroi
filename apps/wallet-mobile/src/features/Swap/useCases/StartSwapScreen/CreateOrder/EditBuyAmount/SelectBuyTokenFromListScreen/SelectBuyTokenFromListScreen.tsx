@@ -88,7 +88,7 @@ const VerifiedTokensToogle = ({onToogle, isToogled}: {onToogle: () => void; isTo
       <View style={styles.row}>
         <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
 
-        <Text style={styles.topText}>{strings.verifiedBy('MuseliSwap')}</Text>
+        <Text style={styles.topText}>{strings.verifiedBy('MuesliSwap')}</Text>
 
         <Spacer width={8} />
 
@@ -183,7 +183,7 @@ const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
               inUserWallet: !!matchingSecondItem,
             }
           })
-          .filter((item) => (showOnlyVerifiedTokens ? item.status === 'verified' : item))
+          .filter((item) => showOnlyVerifiedTokens && item.status === 'verified')
       : []
 
   const filteredTransformedList = transformedArray.filter(filterTokensPairBySearch(assetSearchTerm))

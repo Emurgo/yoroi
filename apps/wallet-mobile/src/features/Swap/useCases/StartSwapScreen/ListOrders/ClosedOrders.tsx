@@ -14,7 +14,7 @@ export const ClosedOrders = ({orders, loading = false}: {orders: Orders; loading
   const strings = useStrings()
 
   if (loading) {
-    return <CLosedOrdersSkeleton />
+    return <ClosedOrdersSkeleton />
   }
 
   return (
@@ -60,7 +60,7 @@ export const ClosedOrders = ({orders, loading = false}: {orders: Orders; loading
   )
 }
 
-const CLosedOrdersSkeleton = () => (
+const ClosedOrdersSkeleton = () => (
   <View style={styles.container}>
     <View style={styles.flex}>
       {[0, 1, 2, 3].map((index) => (

@@ -75,7 +75,7 @@ export const CreateOrder = () => {
   }
 
   return (
-    <View>
+    <>
       <ScrollView>
         <View style={styles.container}>
           <KeyboardAvoidingView
@@ -121,7 +121,7 @@ export const CreateOrder = () => {
           disabled={disabled}
         />
       </Actions>
-    </View>
+    </>
   )
 }
 
@@ -146,6 +146,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderTopWidth: 1,
-    borderTopColor: COLORS.ACTION_GRAY,
+    borderTopColor: COLORS.BORDER_GRAY,
   },
 })

@@ -47,9 +47,19 @@ export const SwapProvider = ({
   swapManager: Readonly<Swap.Manager>
   initialState?: Readonly<Partial<SwapState>>
 }) => {
+  const {slippage: defaultSlippage, setSlippage} = useSwapSettings(swapManager)
+  const slippage =
+    defaultSlippage ??
+    initialState?.createOrder?.slippage ??
+    defaultSwapState.createOrder.slippage
   const [state, dispatch] = React.useReducer(combinedSwapReducers, {
     ...defaultSwapState,
     ...initialState,
+    createOrder: {
+      ...defaultSwapState.createOrder,
+      ...initialState,
+      slippage,
+    },
   })
   const actions = React.useRef<SwapActions & SwapCreateOrderActions>({
     orderTypeChanged: (orderType: Swap.OrderType) => {
@@ -64,8 +74,12 @@ export const SwapProvider = ({
     selectedPoolChanged: (pool: Swap.PoolPair) => {
       dispatch({type: SwapCreateOrderActionType.SelectedPoolChanged, pool})
     },
-    slippageChanged: (slippage: number) => {
-      dispatch({type: SwapCreateOrderActionType.SlippageChanged, slippage})
+    slippageChanged: (newSlippage: number) => {
+      setSlippage(newSlippage)
+      dispatch({
+        type: SwapCreateOrderActionType.SlippageChanged,
+        slippage: newSlippage,
+      })
     },
     txPayloadChanged: (txPayload: Swap.CreateOrderResponse) => {
       dispatch({type: SwapCreateOrderActionType.TxPayloadChanged, txPayload})
@@ -103,12 +117,11 @@ const invalidSwapContext = () => {
 
 // * === SETTINGS ===
 // * NOTE maybe it should be moved as part of wallet settings package
-export const useSwapSlippage = () => {
-  const {slippage} = useSwap()
+export const useSwapSlippage = (swapManager: Readonly<Swap.Manager>) => {
   const query = useQuery({
     suspense: true,
     queryKey: [swapStorageSlippageKey],
-    queryFn: slippage.read,
+    queryFn: swapManager.slippage.read,
   })
 
   if (query.data == null)
@@ -189,22 +202,22 @@ export const usePoolsByPair = (
 }
 
 export const useSwapSetSlippage = (
+  swapManager: Readonly<Swap.Manager>,
   options?: UseMutationOptions<void, Error, number>,
 ) => {
-  const {slippage} = useSwap()
   const mutation = useMutationWithInvalidations<void, Error, number>({
     ...options,
     useErrorBoundary: true,
-    mutationFn: slippage.save,
+    mutationFn: swapManager.slippage.save,
     invalidateQueries: [[swapStorageSlippageKey]],
   })
 
   return mutation.mutate
 }
 
-export const useSwapSettings = () => {
-  const setSlippage = useSwapSetSlippage()
-  const slippage = useSwapSlippage()
+export const useSwapSettings = (swapManager: Readonly<Swap.Manager>) => {
+  const setSlippage = useSwapSetSlippage(swapManager)
+  const slippage = useSwapSlippage(swapManager)
 
   const memoizedSetSlippage = React.useCallback(
     (newSlippage: number) =>
