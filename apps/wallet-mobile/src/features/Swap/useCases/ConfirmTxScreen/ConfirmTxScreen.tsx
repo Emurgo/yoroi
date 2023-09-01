@@ -32,7 +32,7 @@ export const ConfirmTxScreen = () => {
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
 
   const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrder.amounts.sell.quantity)
-  const poolFee = Quantities.denominated(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
+  const poolFee = Quantities.format(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
 
   const orderInfo = [
     {
@@ -59,7 +59,10 @@ export const ConfirmTxScreen = () => {
           <Text style={styles.cardText}>{strings.total}</Text>
 
           <View>
-            <Text style={[styles.cardText, styles.cardTextValue]}>{`${amounts.buy.quantity} ${tokenToBuyName}`}</Text>
+            <Text style={[styles.cardText, styles.cardTextValue]}>{`${Quantities.format(
+              amounts.buy.quantity,
+              buyTokenInfo.decimals ?? 0,
+            )} ${tokenToBuyName}`}</Text>
 
             <Spacer height={6} />
 
@@ -134,7 +137,7 @@ export const ConfirmTxScreen = () => {
               secureTextEntry
               ref={spendingPasswordRef}
               enablesReturnKeyAutomatically
-              label={strings.spendingPassword}
+              placeholder={strings.spendingPassword}
               value={spendingPassword}
               onChangeText={setSpendingPassword}
               autoComplete="off"
