@@ -179,7 +179,7 @@ const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
               symbol: item.info.symbol,
               ticker: item.info.ticker,
               status: item.status,
-              supply: Quantities.denominated(`${Number(item.supply.total)}`, item.info.decimals ?? 0),
+              supply: Quantities.format(`${Number(item.supply.total)}`, item.info.decimals ?? 0),
               inUserWallet: !!matchingSecondItem,
             }
           })
