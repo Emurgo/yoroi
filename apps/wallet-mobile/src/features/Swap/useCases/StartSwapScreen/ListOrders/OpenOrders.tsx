@@ -10,7 +10,6 @@ import {
 import {useStrings} from '../../../common/strings'
 import {Orders} from './ListOrders'
 
-<<<<<<< HEAD
 export const OpenOrders = ({orders, loading = false}: {orders: Orders; loading?: boolean}) => {
   const [bottomSheetState, setBottomSheetState] = React.useState<{
     isOpen: boolean
@@ -28,102 +27,6 @@ export const OpenOrders = ({orders, loading = false}: {orders: Orders; loading?:
   if (loading) {
     return <OpenOrdersSkeleton />
   }
-=======
-const mockOpenOrders: OpenOrderListType = [
-  {
-    label: (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Icon.YoroiNightly size={24} />
-
-        <Spacer width={4} />
-
-        <Text>ADA/</Text>
-
-        <Spacer width={4} />
-
-        <Icon.Assets size={24} />
-
-        <Spacer width={4} />
-
-        <Text>USDA</Text>
-      </View>
-    ),
-
-    mainInfo: [
-      {label: 'Token price', value: '3 ADA'},
-      {label: 'Token amount', value: '3 USDA'},
-    ],
-    hiddenInfo: [
-      {
-        label: 'Min ADA',
-        value: '2 ADA',
-      },
-      {
-        label: 'Min Received',
-        value: '2.99 USDA',
-      },
-      {
-        label: 'Fees',
-        value: '2 ADA',
-      },
-    ],
-    buttonAction: () => {
-      console.log('button pressed')
-    },
-    buttonText: 'CANCEL ORDER',
-  },
-  {
-    label: (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Icon.YoroiNightly size={24} />
-
-        <Spacer width={4} />
-
-        <Text>ADA/</Text>
-
-        <Spacer width={4} />
-
-        <Icon.Assets size={24} />
-
-        <Spacer width={4} />
-
-        <Text>USDA</Text>
-      </View>
-    ),
-
-    mainInfo: [
-      {label: 'Token price', value: '3 ADA'},
-      {label: 'Token amount', value: '3 USDA'},
-    ],
-    hiddenInfo: [
-      {
-        label: 'Min ADA',
-        value: '2 ADA',
-      },
-      {
-        label: 'Min Received',
-        value: '2.99 USDA',
-      },
-      {
-        label: 'Fees',
-        value: '2 ADA',
-      },
-    ],
-    buttonAction: () => {
-      console.log('button pressed')
-    },
-    buttonText: 'CANCEL ORDER',
-  },
-]
-
-export const OpenOrders = () => {
-  // TODO
-  // const data = useOrderByStatusOpen({
-  //   onError: (err) => {
-  //     console.log(err)
-  //   },
-  // })
->>>>>>> develop
 
   return (
     <View style={styles.container}>
@@ -281,12 +184,12 @@ const Label = ({assetFromLabel, assetToLabel}: {assetFromLabel: string; assetToL
 const OpenOrdersSkeleton = () => (
   <View style={styles.container}>
     <View style={styles.flex}>
-      {[null, null, null, null].map(() => (
-        <>
+      {[0, 1, 2, 3].map((index) => (
+        <React.Fragment key={index}>
           <ExpandableInfoCardSkeleton />
 
           <Spacer height={20} />
-        </>
+        </React.Fragment>
       ))}
     </View>
   </View>
