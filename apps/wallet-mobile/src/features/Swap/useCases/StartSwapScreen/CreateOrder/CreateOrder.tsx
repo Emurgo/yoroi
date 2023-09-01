@@ -1,4 +1,5 @@
 import {usePoolsByPair, useSwap} from '@yoroi/swap'
+import BigNumber from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler'
@@ -17,11 +18,10 @@ import {EditLimitPrice} from './EditLimitPrice'
 import {ShowPoolActions} from './EditPool/ShowPoolActions'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
+import {LimitPriceWarning} from './LimitPriceWarning/LimitPriceWarning'
 import {ShowMarketPrice} from './ShowMarketPrice'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
 import {useSwapTouched} from './TouchedContext'
-import BigNumber from 'bignumber.js'
-import {LimitPriceWarning} from './LimitPriceWarning/LimitPriceWarning'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 

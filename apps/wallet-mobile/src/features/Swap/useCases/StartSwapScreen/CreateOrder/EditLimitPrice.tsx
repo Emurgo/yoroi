@@ -56,7 +56,7 @@ export const EditLimitPrice = () => {
     limitPriceChanged(value)
     setText(newText)
     buyAmountChanged({
-      quantity: getBuyQuantityForLimitOrder(sellQuantityDenominated, value, buyTokenInfo),
+      quantity: getBuyQuantityForLimitOrder(sellQuantityDenominated, value, buyTokenInfo.decimals ?? 0),
       tokenId: createOrder.amounts.buy.tokenId,
     })
   }

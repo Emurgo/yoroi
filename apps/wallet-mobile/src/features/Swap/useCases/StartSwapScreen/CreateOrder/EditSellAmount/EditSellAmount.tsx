@@ -46,7 +46,11 @@ export const EditSellAmount = () => {
     if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
       const sellQuantityDenominated = Quantities.denominated(sellQuantity, tokenInfo.decimals ?? 0)
       buyAmountChanged({
-        quantity: getBuyQuantityForLimitOrder(sellQuantityDenominated, createOrder.limitPrice, buyTokenInfo),
+        quantity: getBuyQuantityForLimitOrder(
+          sellQuantityDenominated,
+          createOrder.limitPrice,
+          buyTokenInfo.decimals ?? 0,
+        ),
         tokenId: createOrder.amounts.buy.tokenId,
       })
       return

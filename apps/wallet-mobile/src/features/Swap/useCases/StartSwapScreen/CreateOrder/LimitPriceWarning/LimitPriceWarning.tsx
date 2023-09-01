@@ -1,25 +1,26 @@
-import {Text, View, StyleSheet} from 'react-native'
+import {useSwap} from '@yoroi/swap'
+import BigNumber from 'bignumber.js'
+import React from 'react'
+import {StyleSheet, Text, View} from 'react-native'
+
 import {Button, Spacer} from '../../../../../../components'
 import {BottomSheetModal} from '../../../../../../components/BottomSheetModal'
-import React from 'react'
-import {useSwap} from '@yoroi/swap'
 import {useLanguage} from '../../../../../../i18n'
-import BigNumber from 'bignumber.js'
-import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
+import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {useStrings} from '../../../../common/strings'
 
 export interface LimitPriceWarningProps {
   open: boolean
-  onClose: () => void
-  onSubmit: () => void
+  onClose?: () => void
+  onSubmit?: () => void
 }
 
 export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningProps) => {
   const {createOrder} = useSwap()
   const {numberLocale} = useLanguage()
   const strings = useStrings()
-  const limitPrice = BigNumber(createOrder.limitPrice || 0).toFormat(numberLocale)
+  const limitPrice = BigNumber(createOrder.limitPrice ?? 0).toFormat(numberLocale)
   const marketPrice = BigNumber(
     createOrder.selectedPool?.price !== undefined && !Number.isNaN(createOrder.selectedPool.price)
       ? createOrder.selectedPool.price
@@ -42,18 +43,24 @@ export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningPr
         <View style={styles.container}>
           <View>
             <Text>{strings.limitPriceWarningDescription}</Text>
+
             <Spacer height={16} />
+
             <View style={styles.table}>
               <View style={styles.row}>
                 <Text style={styles.label}>{strings.limitPriceWarningYourPrice}</Text>
+
                 <Text style={styles.value}>{limitValue}</Text>
               </View>
+
               <View style={styles.row}>
                 <Text style={styles.label}>{strings.limitPriceWarningMarketPrice}</Text>
+
                 <Text style={styles.value}>{marketValue}</Text>
               </View>
             </View>
           </View>
+
           <View style={styles.buttonsWrapper}>
             <Button
               testID="swapCancelButton"
@@ -62,6 +69,7 @@ export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningPr
               onPress={onClose}
               containerStyle={styles.buttonContainer}
             />
+
             <Button
               testID="swapConfirmButton"
               shelleyTheme

@@ -97,22 +97,22 @@ export const getSellAmountByChangingReceive = (
 export const getBuyQuantityForLimitOrder = (
   sellQuantityDenominated: BalanceQuantity,
   limitPrice: BalanceQuantity,
-  buyTokenInfo: Balance.TokenInfo,
+  buyTokenDecimals: number,
 ): BalanceQuantity => {
   if (Quantities.isZero(limitPrice)) {
     return Quantities.zero
   }
 
-  return Quantities.denominated(
+  return Quantities.integer(
     Quantities.quotient(sellQuantityDenominated, limitPrice),
-    buyTokenInfo.decimals ?? 0,
+    buyTokenDecimals,
   ).toString() as BalanceQuantity
 }
 
 export const getSellQuantityForLimitOrder = (
   buyQuantityDenominated: BalanceQuantity,
   limitPrice: BalanceQuantity,
-  sellTokenInfo: Balance.TokenInfo,
+  sellTokenDecimals: number,
 ): BalanceQuantity => {
   if (Quantities.isZero(limitPrice)) {
     return Quantities.zero
@@ -122,7 +122,7 @@ export const getSellQuantityForLimitOrder = (
     BigNumber(buyQuantityDenominated)
       .times(BigNumber(limitPrice))
       .toString() as BalanceQuantity,
-    sellTokenInfo.decimals ?? 0,
+    sellTokenDecimals,
   ).toString() as BalanceQuantity
 }
 
