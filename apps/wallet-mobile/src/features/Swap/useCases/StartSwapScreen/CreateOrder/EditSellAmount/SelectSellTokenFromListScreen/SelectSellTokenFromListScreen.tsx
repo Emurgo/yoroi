@@ -16,6 +16,7 @@ import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
 import {useAllTokenInfos, useBalance, useIsWalletEmpty} from '../../../../../../../yoroi-wallets/hooks'
 import {filterByFungibility} from '../../../../../../Send/common/filterByFungibility'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
+import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
@@ -109,33 +110,6 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   )
 }
 
-const Counter = ({counter}: {counter: number}) => {
-  const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const strings = useStrings()
-
-  if (!isSearching) {
-    return (
-      <View style={styles.counter}>
-        <Text style={styles.counterText}>{strings.youHave}</Text>
-
-        <Text style={styles.counterTextBold}>{` ${counter} ${strings.tokens(counter)}`}</Text>
-      </View>
-    )
-  }
-
-  if (isSearching && assetSearchTerm.length > 0) {
-    return (
-      <View style={styles.counter}>
-        <Text style={styles.counterTextBold}>{`${counter} ${strings.assets(counter)} `}</Text>
-
-        <Text style={styles.counterText}>{strings.found}</Text>
-      </View>
-    )
-  }
-
-  return null
-}
-
 const useFilteredTokenInfos = ({tokenInfos}: {tokenInfos: Array<Balance.TokenInfo>}) => {
   const wallet = useSelectedWallet()
 
@@ -215,20 +189,6 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
   },
-  counter: {
-    padding: 16,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  counterText: {
-    fontWeight: '400',
-    color: COLORS.SHELLEY_BLUE,
-  },
-  counterTextBold: {
-    fontWeight: 'bold',
-    color: COLORS.SHELLEY_BLUE,
-  },
-
   image: {
     flex: 1,
     alignSelf: 'center',

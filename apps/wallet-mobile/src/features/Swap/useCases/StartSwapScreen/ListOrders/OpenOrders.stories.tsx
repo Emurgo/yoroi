@@ -1,22 +1,23 @@
 import {storiesOf} from '@storybook/react-native'
-import {mockSwapManager, swapManagerMocks, SwapProvider} from '@yoroi/swap'
-import {Swap} from '@yoroi/types'
+import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 
 import {SearchProvider} from '../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
 import {SwapTouchedProvider} from '../CreateOrder/TouchedContext'
+import {getMockOpenOrder} from './mocks'
 import {OpenOrders} from './OpenOrders'
 
 storiesOf('Swap Open orders', module)
   .add('initial', () => {
+    const orders = getMockOpenOrder()
     return (
       <SelectedWalletProvider wallet={mocks.wallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
             <SwapTouchedProvider>
-              <OpenOrders />
+              <OpenOrders orders={orders} loading={false} />
             </SwapTouchedProvider>
           </SwapProvider>
         </SearchProvider>
@@ -24,22 +25,13 @@ storiesOf('Swap Open orders', module)
     )
   })
   .add('loading', () => {
-    const loadingSwapManager = {
-      ...mockSwapManager,
-      order: {
-        ...mockSwapManager.order,
-        list: {
-          ...mockSwapManager.order.list,
-          byStatusOpen: swapManagerMocks.getOrders.loading,
-        },
-      },
-    }
+    const orders = getMockOpenOrder()
     return (
       <SelectedWalletProvider wallet={mocks.wallet}>
         <SearchProvider>
-          <SwapProvider swapManager={loadingSwapManager as Swap.Manager}>
+          <SwapProvider swapManager={mockSwapManager}>
             <SwapTouchedProvider>
-              <OpenOrders />
+              <OpenOrders orders={orders} loading={true} />
             </SwapTouchedProvider>
           </SwapProvider>
         </SearchProvider>

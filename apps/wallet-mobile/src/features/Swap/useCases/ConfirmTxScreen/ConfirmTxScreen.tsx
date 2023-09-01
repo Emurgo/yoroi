@@ -15,7 +15,7 @@ import {useStrings} from '../../common/strings'
 export const ConfirmTxScreen = () => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false)
-  const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
+  const [bottomSheetState, setBottomSheetState] = React.useState<{isOpen: boolean; title: string; content?: string}>({
     isOpen: false,
     title: '',
     content: '',
@@ -82,7 +82,7 @@ export const ConfirmTxScreen = () => {
 
                   <TouchableOpacity
                     onPress={() => {
-                      setBottomSheetSate({
+                      setBottomSheetState({
                         isOpen: true,
                         title: orderInfo.label,
                         content: orderInfo.info,
@@ -148,7 +148,7 @@ export const ConfirmTxScreen = () => {
         onClose={() => {
           setConfirmationModal(false)
         }}
-        containerStyle={{justifyContent: 'space-between'}}
+        containerContentStyle={{justifyContent: 'space-between'}}
       />
 
       <BottomSheetModal
@@ -156,7 +156,7 @@ export const ConfirmTxScreen = () => {
         title={bottomSheetState.title}
         content={<Text style={styles.text}>{bottomSheetState.content}</Text>}
         onClose={() => {
-          setBottomSheetSate({isOpen: false, title: '', content: ''})
+          setBottomSheetState({isOpen: false, title: '', content: ''})
         }}
       />
     </SafeAreaView>

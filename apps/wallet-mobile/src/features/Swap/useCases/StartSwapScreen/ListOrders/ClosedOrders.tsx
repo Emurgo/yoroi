@@ -1,134 +1,127 @@
-import {useSwap} from '@yoroi/swap'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../../components'
-import {useSelectedWallet} from '../../../../../SelectedWallet'
-// import {BottomSheetModal} from '../../../../../components/BottomSheetModal'
 import {COLORS} from '../../../../../theme'
-import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
-import {ExpandableInfoCard} from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
+import {
+  ExpandableInfoCard,
+  ExpandableInfoCardSkeleton,
+} from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {useStrings} from '../../../common/strings'
-import {OpenOrderListType} from './ListOrders'
+import {Orders} from './ListOrders'
 
-const getMockOpenOrder: (strings, poolFee) => OpenOrderListType = (strings, poolFee) => [
-  {
-    label: (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Icon.YoroiNightly size={24} />
-
-        <Spacer width={4} />
-
-        <Text>ADA/</Text>
-
-        <Spacer width={4} />
-
-        <Icon.Assets size={24} />
-
-        <Spacer width={4} />
-
-        <Text>USDA</Text>
-      </View>
-    ),
-
-    mainInfo: [
-      {label: 'Token price', value: '3 ADA'},
-      {label: 'Token amount', value: '3 USDA'},
-    ],
-    hiddenInfo: [
-      {
-        label: strings.swapMinAdaTitle,
-        value: '2 ADA', // TODO add real value
-        info: strings.swapMinAda,
-      },
-      {
-        label: strings.swapMinReceivedTitle,
-        value: '2.99 USDA', // TODO add real value
-        info: strings.swapMinReceived,
-      },
-      {
-        label: strings.swapFeesTitle,
-        value: String(poolFee),
-        info: strings.swapFees,
-      },
-    ],
-    buttonAction: () => {
-      console.log('button pressed')
-    },
-  },
-  {
-    label: (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Icon.YoroiNightly size={24} />
-
-        <Spacer width={4} />
-
-        <Text>ADA/</Text>
-
-        <Spacer width={4} />
-
-        <Icon.Assets size={24} />
-
-        <Spacer width={4} />
-
-        <Text>USDA</Text>
-      </View>
-    ),
-
-    mainInfo: [
-      {label: 'Token price', value: '3 ADA'},
-      {label: 'Token amount', value: '3 USDA'},
-    ],
-    hiddenInfo: [
-      {
-        label: strings.swapMinAdaTitle,
-        value: '2 ADA',
-        info: strings.swapMinAda,
-      },
-      {
-        label: strings.swapMinReceivedTitle,
-        value: '2.99 USDA', // TODO add real value
-        info: strings.swapMinReceived,
-      },
-      {
-        label: strings.swapFeesTitle,
-        value: String(poolFee),
-        info: strings.swapFees,
-      },
-    ],
-    buttonAction: () => {
-      console.log('button pressed')
-    },
-  },
-]
-
-export const ClosedOrders = () => {
+export const ClosedOrders = ({orders, loading = false}: {orders: Orders; loading?: boolean}) => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const {createOrder} = useSwap()
-  const {selectedPool, amounts} = createOrder
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
-  const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrder.amounts.sell.quantity)
-  const poolFee = Quantities.denominated(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
-  const mockOpenOrders = getMockOpenOrder(strings, poolFee)
+
+  if (loading) {
+    return <CLosedOrdersSkeleton />
+  }
 
   return (
     <View style={styles.container}>
-      {/* <BottomSheetModal /> */}
-
       <View style={styles.flex}>
-        {mockOpenOrders.map((order, index) => (
+        {orders.map((order) => (
           <ExpandableInfoCard
-            key={`${order.label}  ${index}`}
-            label={order.label}
-            mainInfo={order.mainInfo}
-            hiddenInfo={order.hiddenInfo}
-            onPress={order.buttonAction}
+            key={`${order.assetFromLabel}-${order.assetToLabel}-${order.date}`}
+            mainInfo={[
+              {label: strings.listOrdersSheetAssetPrice, value: order.tokenPrice},
+              {label: strings.listOrdersSheetAssetAmount, value: order.tokenAmount},
+            ]}
+            label={<Label assetFromLabel={order.assetFromLabel} assetToLabel={order.assetToLabel} />}
+            hiddenInfo={[
+              {
+                label: strings.listOrdersTotal,
+                value: order.total,
+              },
+              {
+                label: strings.listOrdersLiquidityPool,
+                value: (
+                  <LiquidityPool
+                    liquidityPoolIcon={order.liquidityPoolIcon}
+                    liquidityPoolName={order.liquidityPoolName}
+                    poolUrl={order.poolUrl}
+                  />
+                ),
+              },
+              {
+                label: strings.listOrdersTimeCreated,
+                value: order.date,
+              },
+              {
+                label: strings.listOrdersTxId,
+                value: <TxLink txId={order.txId} txLink={order.txLink} />,
+              },
+            ]}
             withBoxShadow
           />
         ))}
       </View>
+    </View>
+  )
+}
+
+const CLosedOrdersSkeleton = () => (
+  <View style={styles.container}>
+    <View style={styles.flex}>
+      {[0, 1, 2, 3].map((index) => (
+        <React.Fragment key={index}>
+          <ExpandableInfoCardSkeleton />
+
+          <Spacer height={20} />
+        </React.Fragment>
+      ))}
+    </View>
+  </View>
+)
+
+const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {
+  return (
+    <TouchableOpacity onPress={() => Linking.openURL(txLink)} style={styles.txLink}>
+      <Text style={styles.txLinkText}>{txId}</Text>
+    </TouchableOpacity>
+  )
+}
+
+const LiquidityPool = ({
+  liquidityPoolIcon,
+  liquidityPoolName,
+  poolUrl,
+}: {
+  liquidityPoolIcon: React.ReactNode
+  liquidityPoolName: string
+  poolUrl: string
+}) => {
+  return (
+    <View style={styles.liquidityPool}>
+      {liquidityPoolIcon}
+
+      <Spacer width={3} />
+
+      <TouchableOpacity onPress={() => Linking.openURL(poolUrl)} style={styles.liquidityPoolLink}>
+        <Text style={styles.liquidityPoolText}>{liquidityPoolName}</Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
+
+const Label = ({assetFromLabel, assetToLabel}: {assetFromLabel: string; assetToLabel: string}) => {
+  return (
+    <View style={styles.label}>
+      <Icon.YoroiNightly size={24} />
+
+      <Spacer width={4} />
+
+      <Text>{assetFromLabel}</Text>
+
+      <Text>/</Text>
+
+      <Spacer width={4} />
+
+      <Icon.Assets size={24} />
+
+      <Spacer width={4} />
+
+      <Text>{assetToLabel}</Text>
     </View>
   )
 }
@@ -141,5 +134,37 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
+  },
+  label: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  txLink: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  txLinkText: {
+    color: '#4B6DDE',
+    fontFamily: 'Rubik',
+    fontSize: 16,
+    fontWeight: '400',
+    lineHeight: 22,
+  },
+  liquidityPool: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  liquidityPoolLink: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  liquidityPoolText: {
+    color: '#4B6DDE',
+    fontFamily: 'Rubik',
+    fontSize: 16,
+    fontWeight: '400',
+    lineHeight: 22,
   },
 })

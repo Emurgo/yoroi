@@ -1,15 +1,16 @@
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Icon, Spacer} from '../../../../../components'
 import {BottomSheetModal} from '../../../../../components/BottomSheetModal'
 import {COLORS} from '../../../../../theme'
 
-type ExpandableInfoCardProps = {
+export type ExpandableInfoCardProps = {
   label: string | React.ReactNode | null
   mainInfo: Array<{label: string; value?: string}>
-  hiddenInfo: Array<{label: string; value: string; info?: string}>
+  hiddenInfo: Array<{label: string; value: string | React.ReactNode; info?: string}>
   navigateTo?: () => void
   onPress?: () => void
   buttonText?: string
@@ -25,7 +26,7 @@ export const ExpandableInfoCard = ({
   onPress,
   withBoxShadow,
 }: ExpandableInfoCardProps) => {
-  const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
+  const [bottomSheetState, setBottomSheetState] = React.useState<{isOpen: boolean; title: string; content?: string}>({
     isOpen: false,
     title: '',
     content: '',
@@ -47,19 +48,17 @@ export const ExpandableInfoCard = ({
 
         <Spacer height={8} />
 
-        <View>
-          {mainInfo?.map((item, index) => (
-            <View key={index}>
-              <View style={styles.flexBetween}>
-                <Text style={styles.gray}>{`${item.label}`}</Text>
+        {mainInfo?.map((item, index) => (
+          <View key={index}>
+            <View style={styles.flexBetween}>
+              <Text style={styles.gray}>{`${item.label}`}</Text>
 
-                {item?.value !== undefined && <Text style={styles.text}>{`${item?.value}`}</Text>}
-              </View>
-
-              {index !== mainInfo?.length - 1 && <Spacer height={8} />}
+              {item?.value !== undefined && <Text style={styles.text}>{`${item?.value}`}</Text>}
             </View>
-          ))}
-        </View>
+
+            {index !== mainInfo?.length - 1 && <Spacer height={8} />}
+          </View>
+        ))}
 
         {showHiddenInfo && (
           <View>
@@ -74,20 +73,22 @@ export const ExpandableInfoCard = ({
 
                       <Spacer width={8} />
 
-                      <TouchableOpacity
-                        onPress={() => {
-                          setBottomSheetSate({
-                            isOpen: true,
-                            title: item.label,
-                            content: item?.info,
-                          })
-                        }}
-                      >
-                        <Icon.Info size={24} />
-                      </TouchableOpacity>
+                      {item.info !== undefined && (
+                        <TouchableOpacity
+                          onPress={() => {
+                            setBottomSheetState({
+                              isOpen: true,
+                              title: item.label,
+                              content: item.info,
+                            })
+                          }}
+                        >
+                          <Icon.Info size={24} />
+                        </TouchableOpacity>
+                      )}
                     </View>
 
-                    <Text style={styles.text}>{item.value}</Text>
+                    {typeof item.value === 'string' ? <Text style={styles.text}>{item.value}</Text> : item.value}
                   </View>
                 </View>
               )
@@ -109,10 +110,18 @@ export const ExpandableInfoCard = ({
         title={bottomSheetState.title}
         content={<Text style={styles.text}>{bottomSheetState.content}</Text>}
         onClose={() => {
-          setBottomSheetSate({isOpen: false, title: '', content: ''})
+          setBottomSheetState({isOpen: false, title: '', content: ''})
         }}
       />
     </View>
+  )
+}
+
+export const ExpandableInfoCardSkeleton = () => {
+  return (
+    <SkeletonPlaceholder>
+      <View style={{height: 160, borderRadius: 8}}></View>
+    </SkeletonPlaceholder>
   )
 }
 
