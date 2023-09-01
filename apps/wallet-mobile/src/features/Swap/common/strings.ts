@@ -139,7 +139,7 @@ export const messages = defineMessages({
   },
   assetsIn: {
     id: 'swap.swapScreen.assetsIn',
-    defaultMessage: '!!!This assets is in my portfolio',
+    defaultMessage: '!!!This asset is in my portfolio',
   },
   defaultSlippage: {
     id: 'swap.swapScreen.defaultSlippage',

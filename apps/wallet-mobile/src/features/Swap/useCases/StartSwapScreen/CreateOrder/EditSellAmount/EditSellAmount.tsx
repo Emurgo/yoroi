@@ -31,7 +31,7 @@ export const EditSellAmount = () => {
   const {decimals} = tokenInfo
   const balance = useBalance({wallet, tokenId})
 
-  const [inputValue, setInputValue] = React.useState<string>(Quantities.denominated(quantity, tokenInfo.decimals ?? 0))
+  const [inputValue, setInputValue] = React.useState<string>(Quantities.format(quantity, tokenInfo.decimals ?? 0))
 
   React.useEffect(() => {
     if (isSellTouched && !inputRef?.current?.isFocused()) {
