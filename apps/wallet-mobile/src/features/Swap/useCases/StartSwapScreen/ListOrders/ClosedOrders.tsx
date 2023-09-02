@@ -110,7 +110,7 @@ export const ClosedOrders = () => {
   const {selectedPool, amounts} = createOrder
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrder.amounts.sell.quantity)
-  const poolFee = Quantities.denominated(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
+  const poolFee = Quantities.format(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
   const mockOpenOrders = getMockOpenOrder(strings, poolFee)
 
   return (

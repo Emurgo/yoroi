@@ -44,7 +44,8 @@ export const ConfirmTxScreen = () => {
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
 
   const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrderState.amounts.sell.quantity)
-  const poolFee = Quantities.denominated(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
+  const poolFee = Quantities.format(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
+
   const addresses = useAddresses()
 
   // TODO right create entry
@@ -85,7 +86,7 @@ export const ConfirmTxScreen = () => {
     {wallet, entry: createEntry()},
     {
       onSuccess: (yoroiUnsignedTx) => {
-        console.log('CREATE UNSIGNED TX SUCCESS: ')
+        console.log('CREATE UNSIGNED TX SUCCESS: ', yoroiUnsignedTx)
       },
     },
   )
@@ -161,7 +162,10 @@ export const ConfirmTxScreen = () => {
           <Text style={styles.cardText}>{strings.total}</Text>
 
           <View>
-            <Text style={[styles.cardText, styles.cardTextValue]}>{`${amounts.buy.quantity} ${tokenToBuyName}`}</Text>
+            <Text style={[styles.cardText, styles.cardTextValue]}>{`${Quantities.format(
+              amounts.buy.quantity,
+              buyTokenInfo.decimals ?? 0,
+            )} ${tokenToBuyName}`}</Text>
 
             <Spacer height={6} />
 
@@ -244,7 +248,7 @@ export const ConfirmTxScreen = () => {
               secureTextEntry
               ref={spendingPasswordRef}
               enablesReturnKeyAutomatically
-              label={strings.spendingPassword}
+              placeholder={strings.spendingPassword}
               value={spendingPassword}
               onChangeText={setSpendingPassword}
               autoComplete="off"
