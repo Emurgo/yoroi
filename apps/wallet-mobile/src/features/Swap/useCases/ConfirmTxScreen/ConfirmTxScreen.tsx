@@ -48,7 +48,7 @@ export const ConfirmTxScreen = () => {
 
   const addresses = useAddresses()
 
-  // TODO right create entry
+  // TODO create entry
   /* 
     Seliling ada:
     {
@@ -87,6 +87,7 @@ export const ConfirmTxScreen = () => {
     {
       onSuccess: (yoroiUnsignedTx) => {
         console.log('CREATE UNSIGNED TX SUCCESS: ', yoroiUnsignedTx)
+        setConfirmationModal(true)
       },
     },
   )
@@ -94,7 +95,6 @@ export const ConfirmTxScreen = () => {
   const {createOrder} = useCreateOrder({
     onSuccess: (data) => {
       console.log('create order success', data)
-      setConfirmationModal(true)
       // TODO: unsign TX
       refetch()
     },
