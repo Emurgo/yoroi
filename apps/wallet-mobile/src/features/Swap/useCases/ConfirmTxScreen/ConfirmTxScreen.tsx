@@ -277,7 +277,7 @@ const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, 
 
 export const useSwapTx = (
   {wallet, entry}: {wallet: YoroiWallet; entry: YoroiEntry},
-  options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'send-tx']>,
+  options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'swap-tx']>,
 ) => {
   console.log('SWAP ENTRY entry', entry)
   const query = useQuery({
@@ -289,7 +289,7 @@ export const useSwapTx = (
     retryOnMount: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
-    queryKey: [wallet.id, 'send-tx'],
+    queryKey: [wallet.id, 'swap-tx'],
     queryFn: () => wallet.createUnsignedTx(entry),
   })
 
