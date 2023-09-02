@@ -146,6 +146,27 @@ export const useOrderByStatusOpen = (
   return query.data
 }
 
+export const useCreateOrder = (
+  options?: UseMutationOptions<
+    Swap.CreateOrderResponse,
+    Error,
+    Swap.CreateOrderData
+  >,
+) => {
+  const {order} = useSwap()
+
+  const mutation = useMutationWithInvalidations({
+    mutationFn: (orderDetails) => order.create(orderDetails),
+    invalidateQueries: ['useCreateOrder'],
+    ...options,
+  })
+
+  return {
+    createOrder: mutation.mutate,
+    ...mutation,
+  }
+}
+
 export const usePairListByToken = (
   tokenIdBase: Balance.Token['info']['id'],
   options?: UseQueryOptions<

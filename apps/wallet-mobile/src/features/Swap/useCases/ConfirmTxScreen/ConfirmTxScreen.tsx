@@ -1,16 +1,21 @@
-import {useSwap} from '@yoroi/swap'
-import React from 'react'
+import {makeLimitOrder, makePossibleMarketOrder, useCreateOrder, usePoolsByPair, useSwap} from '@yoroi/swap'
+import {Swap} from '@yoroi/types'
+import React, {useEffect} from 'react'
 import {StyleSheet, TextInput as RNTextInput, TouchableOpacity, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, Icon, Spacer, Text, TextInput} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {BottomSheetModal} from '../../../../components/BottomSheetModal'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
+import {YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useStrings} from '../../common/strings'
+import {useAddresses} from '../../common/useAddresses'
 
 export const ConfirmTxScreen = () => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
@@ -20,19 +25,95 @@ export const ConfirmTxScreen = () => {
     title: '',
     content: '',
   })
+  const [orderDataFromHelper, setOrderDataFromHelper] = React.useState<Swap.CreateOrderData>()
 
   const [spendingPassword, setSpendingPassword] = React.useState('')
   const strings = useStrings()
   const wallet = useSelectedWallet()
 
-  const {createOrder} = useSwap()
-  const {selectedPool, amounts} = createOrder
+  const {createOrder: createOrderState} = useSwap()
+  const {selectedPool, amounts} = createOrderState
+
+  const {poolList} = usePoolsByPair({
+    tokenA: createOrderState.amounts.sell.tokenId,
+    tokenB: createOrderState.amounts.buy.tokenId,
+  })
+
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
 
-  const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrder.amounts.sell.quantity)
+  const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrderState.amounts.sell.quantity)
   const poolFee = Quantities.denominated(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
+  const addresses = useAddresses()
+
+  const createEntry = (): YoroiEntry => {
+    const amountEntry = {}
+    const tokenId = orderDataFromHelper?.amounts.sell.tokenId
+    if (tokenId != null) {
+      amountEntry[tokenId] = orderDataFromHelper?.amounts.sell.quantity
+    }
+
+    return {
+      address: orderDataFromHelper?.address !== undefined ? orderDataFromHelper.address : '',
+      amounts: amountEntry,
+    }
+  }
+
+  const {refetch} = useSwapTx(
+    {wallet, entry: createEntry()},
+    {
+      onSuccess: (yoroiUnsignedTx) => {
+        console.log('CREATE UNSIGNED TX SUCCESS: ')
+      },
+    },
+  )
+
+  const {createOrder} = useCreateOrder({
+    onSuccess: (data) => {
+      console.log('create order success', data)
+      setConfirmationModal(true)
+      // TODO: unsign TX
+      refetch()
+    },
+    onError: (error) => {
+      console.log('create order error', error)
+    },
+  })
+
+  useEffect(() => {
+    const orderDetails = {
+      sell: amounts.sell,
+      buy: amounts.sell,
+      pools: poolList,
+      selectedPool: createOrderState.selectedPool,
+      slippage: createOrderState.slippage,
+      address: addresses.used[0],
+    }
+    console.log('[orderDetails for helpers]', orderDetails)
+    if (createOrderState.type === 'market' && poolList !== undefined) {
+      const orderResult = makePossibleMarketOrder(
+        orderDetails.sell,
+        orderDetails.buy,
+        orderDetails?.pools as Swap.PoolPair[],
+        orderDetails.slippage,
+        orderDetails.address,
+      )
+      console.log('[makePossibleMarketOrder RESULT]', orderResult)
+      setOrderDataFromHelper(orderResult)
+    }
+    if (createOrderState.type === 'limit' && poolList !== undefined) {
+      const orderResult = makeLimitOrder(
+        orderDetails.sell,
+        orderDetails.buy,
+        orderDetails.selectedPool,
+        orderDetails.slippage,
+        orderDetails.address,
+      )
+      console.log('[makeLimitOrder RESULT]', orderResult)
+      setOrderDataFromHelper(orderResult)
+    }
+  }, [poolList])
 
   const orderInfo = [
     {
@@ -118,7 +199,15 @@ export const ConfirmTxScreen = () => {
           shelleyTheme
           title={strings.confirm}
           onPress={() => {
-            setConfirmationModal(true)
+            createOrder({
+              amounts: {
+                sell: orderDataFromHelper?.amounts.sell,
+                buy: orderDataFromHelper?.amounts.buy,
+              },
+              address: orderDataFromHelper?.address,
+              slippage: createOrderState.slippage,
+              selectedPool: orderDataFromHelper?.selectedPool,
+            })
           }}
         />
       </Actions>
@@ -164,6 +253,30 @@ export const ConfirmTxScreen = () => {
 }
 
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
+
+export const useSwapTx = (
+  {wallet, entry}: {wallet: YoroiWallet; entry: YoroiEntry},
+  options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'send-tx']>,
+) => {
+  console.log('SWAP ENTRY entry', entry)
+  const query = useQuery({
+    ...options,
+    cacheTime: 0,
+    suspense: true,
+    enabled: false,
+    retry: false,
+    retryOnMount: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    queryKey: [wallet.id, 'send-tx'],
+    queryFn: () => wallet.createUnsignedTx(entry),
+  })
+
+  return {
+    ...query,
+    unsignedTx: query.data,
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
