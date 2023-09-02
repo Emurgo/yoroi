@@ -167,7 +167,6 @@ export const useSendTx = (
   {wallet, entry}: {wallet: YoroiWallet; entry: YoroiEntry},
   options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'send-tx']>,
 ) => {
-  console.log('@@@@@@@@@SEND entry', entry)
   const query = useQuery({
     ...options,
     cacheTime: 0,

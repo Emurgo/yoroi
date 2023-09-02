@@ -47,6 +47,26 @@ export const ConfirmTxScreen = () => {
   const poolFee = Quantities.denominated(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
   const addresses = useAddresses()
 
+  // TODO right create entry
+  /* 
+    Seliling ada:
+    {
+      address: addr
+      amounts:{
+        "":amount-sending+deposit pairpool
+      }
+    }
+
+    Selling anyting else:
+    {
+      address: addr
+      amounts:{
+        "":deposit pairpool
+        "tokenId":'4343434'
+      }
+    }    
+  
+*/
   const createEntry = (): YoroiEntry => {
     const amountEntry = {}
     const tokenId = orderDataFromHelper?.amounts.sell.tokenId
@@ -61,6 +81,7 @@ export const ConfirmTxScreen = () => {
   }
 
   const {refetch} = useSwapTx(
+    // TODO add datum
     {wallet, entry: createEntry()},
     {
       onSuccess: (yoroiUnsignedTx) => {
