@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-newline */
 import {useSwap} from '@yoroi/swap'
 import BigNumber from 'bignumber.js'
-import React, {useState} from 'react'
+import * as React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
 import {useLanguage} from '../../../../../i18n'
