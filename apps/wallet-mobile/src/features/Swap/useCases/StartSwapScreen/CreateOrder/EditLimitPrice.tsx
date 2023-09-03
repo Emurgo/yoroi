@@ -44,7 +44,7 @@ export const EditLimitPrice = () => {
   const tokenToBuyName = isBuyTouched ? tokenToBuyInfo.ticker ?? tokenToBuyInfo.name : '-'
   const formattedValue = BigNumber(limitPrice).toFormat(numberLocale)
 
-  const [text, setText] = useState(formattedValue)
+  const [text, setText] = React.useState(formattedValue)
 
   const onChange = (text: string) => {
     const [newText, quantity] = Quantities.parseFromText(text, PRECISION, numberLocale)
