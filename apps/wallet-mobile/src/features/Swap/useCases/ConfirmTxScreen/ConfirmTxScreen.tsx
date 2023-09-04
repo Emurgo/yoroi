@@ -20,13 +20,7 @@ import {TransactionSummary} from './TransactionSummary'
 export const ConfirmTxScreen = () => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false)
-  const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
-    isOpen: false,
-    title: '',
-    content: '',
-  })
   const [orderDataFromHelper, setOrderDataFromHelper] = React.useState<Swap.CreateOrderData>()
-
   const [spendingPassword, setSpendingPassword] = React.useState('')
   const strings = useStrings()
   const wallet = useSelectedWallet()
@@ -214,15 +208,6 @@ export const ConfirmTxScreen = () => {
         }}
         containerStyle={{justifyContent: 'space-between'}}
       />
-
-      <BottomSheetModal
-        isOpen={bottomSheetState.isOpen}
-        title={bottomSheetState.title}
-        content={<Text style={styles.text}>{bottomSheetState.content}</Text>}
-        onClose={() => {
-          setBottomSheetSate({isOpen: false, title: '', content: ''})
-        }}
-      />
     </SafeAreaView>
   )
 }
@@ -261,13 +246,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     justifyContent: 'space-between',
   },
-  text: {
-    textAlign: 'left',
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '400',
-    color: '#242838',
-  },
+
   actions: {
     paddingVertical: 16,
   },
