@@ -19,7 +19,9 @@ import {TransactionSummary} from './TransactionSummary'
 
 export const ConfirmTxScreen = () => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
-  const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false)
+  const [screenState, setScreenState] = React.useState<
+    {modal: boolean; swapTx: undefined} | {modal: boolean; swapTx: YoroiUnsignedTx}
+  >({modal: false, swapTx: undefined})
   const [orderDataFromHelper, setOrderDataFromHelper] = React.useState<Swap.CreateOrderData>()
   const [spendingPassword, setSpendingPassword] = React.useState('')
   const strings = useStrings()
@@ -81,7 +83,7 @@ export const ConfirmTxScreen = () => {
     {
       onSuccess: (yoroiUnsignedTx) => {
         console.log('CREATE UNSIGNED TX SUCCESS: ', yoroiUnsignedTx)
-        setConfirmationModal(true)
+        setScreenState({...screenState, modal: true, swapTx: yoroiUnsignedTx})
       },
     },
   )
@@ -183,7 +185,7 @@ export const ConfirmTxScreen = () => {
       </Actions>
 
       <BottomSheetModal
-        isOpen={confirmationModal}
+        isOpen={screenState.modal}
         title={strings.signTransaction}
         content={
           <>
@@ -205,7 +207,7 @@ export const ConfirmTxScreen = () => {
           </>
         }
         onClose={() => {
-          setConfirmationModal(false)
+          setScreenState({...screenState, modal: false, swapTx: undefined})
         }}
         containerStyle={{justifyContent: 'space-between'}}
       />
