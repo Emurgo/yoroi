@@ -1,12 +1,11 @@
 import {makeLimitOrder, makePossibleMarketOrder, useCreateOrder, usePoolsByPair, useSwap} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import React, {useEffect} from 'react'
-import {StyleSheet, TextInput as RNTextInput, TouchableOpacity, View, ViewProps} from 'react-native'
+import {StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {Button, Icon, Spacer, Text, TextInput} from '../../../../components'
-import {AmountItem} from '../../../../components/AmountItem/AmountItem'
+import {Button, Spacer, Text, TextInput} from '../../../../components'
 import {BottomSheetModal} from '../../../../components/BottomSheetModal'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
@@ -16,6 +15,7 @@ import {YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useStrings} from '../../common/strings'
 import {useAddresses} from '../../common/useAddresses'
+import {TransactionSummary} from './TransactionSummary'
 
 export const ConfirmTxScreen = () => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
@@ -157,66 +157,16 @@ export const ConfirmTxScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <View style={styles.card}>
-          <Text style={styles.cardText}>{strings.total}</Text>
-
-          <View>
-            <Text style={[styles.cardText, styles.cardTextValue]}>{`${Quantities.format(
-              amounts.buy.quantity,
-              buyTokenInfo.decimals ?? 0,
-            )} ${tokenToBuyName}`}</Text>
-
-            <Spacer height={6} />
-
-            <Text style={styles.cardTextUSD}></Text>
-          </View>
-        </View>
-
-        <Spacer height={24} />
-
-        {orderInfo.map((orderInfo) => {
-          return (
-            <View key={orderInfo.label}>
-              <Spacer height={8} />
-
-              <View style={styles.flexBetween}>
-                <View style={styles.flex}>
-                  <Text style={[styles.text, styles.gray]}>{orderInfo.label}</Text>
-
-                  <Spacer width={8} />
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      setBottomSheetSate({
-                        isOpen: true,
-                        title: orderInfo.label,
-                        content: orderInfo.info,
-                      })
-                    }}
-                  >
-                    <Icon.Info size={24} />
-                  </TouchableOpacity>
-                </View>
-
-                <Text style={styles.text}>{orderInfo.value}</Text>
-              </View>
-            </View>
-          )
-        })}
-
-        <Spacer height={24} />
-
-        <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
-
-        <AmountItem wallet={wallet} amount={{tokenId: amounts.sell.tokenId, quantity: amounts.sell.quantity}} />
-
-        <Spacer height={16} />
-
-        <Text style={styles.amountItemLabel}>{strings.swapTo}</Text>
-
-        <AmountItem wallet={wallet} amount={{tokenId: amounts.buy.tokenId, quantity: amounts.buy.quantity}} />
-      </View>
+      <TransactionSummary
+        feesInfo={orderInfo}
+        buyToken={{
+          id: amounts.buy.tokenId,
+          quantity: amounts.buy.quantity,
+          name: tokenToBuyName,
+          decimals: buyTokenInfo.decimals,
+        }}
+        sellToken={{id: amounts.sell.tokenId, quantity: amounts.sell.quantity}}
+      />
 
       <Actions>
         <Button
@@ -308,38 +258,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     paddingHorizontal: 16,
-    paddingTop: 16,
     backgroundColor: COLORS.WHITE,
     justifyContent: 'space-between',
-  },
-  card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    backgroundColor: COLORS.SHELLEY_BLUE,
-    padding: 16,
-    borderRadius: 8,
-  },
-  cardText: {
-    fontSize: 18,
-    color: COLORS.WHITE,
-  },
-  cardTextValue: {
-    fontWeight: '500',
-  },
-  cardTextUSD: {
-    fontSize: 14,
-    color: COLORS.WHITE,
-    opacity: 0.5,
-  },
-  flexBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  flex: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   text: {
     textAlign: 'left',
@@ -347,14 +267,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontWeight: '400',
     color: '#242838',
-  },
-  gray: {
-    color: COLORS.GRAY,
-  },
-  amountItemLabel: {
-    fontSize: 12,
-    color: '#242838',
-    paddingBottom: 8,
   },
   actions: {
     paddingVertical: 16,
