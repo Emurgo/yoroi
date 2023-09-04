@@ -25,7 +25,7 @@ export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningPr
     createOrder.selectedPool?.price !== undefined && !Number.isNaN(createOrder.selectedPool.price)
       ? createOrder.selectedPool.price
       : 0,
-  ).toFormat(10, numberLocale)
+  ).toFormat(numberLocale)
   const wallet = useSelectedWallet()
 
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
@@ -33,8 +33,7 @@ export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningPr
   const tokenToBuyInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
   const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name ?? '-'
 
-  const limitValue = `${limitPrice} ${tokenToSellName}/${tokenToBuyName}`
-  const marketValue = `${marketPrice} ${tokenToSellName}/${tokenToBuyName}`
+  const name = `${tokenToSellName}/${tokenToBuyName}`
 
   return (
     <BottomSheetModal
@@ -50,13 +49,19 @@ export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningPr
               <View style={styles.row}>
                 <Text style={styles.label}>{strings.limitPriceWarningYourPrice}</Text>
 
-                <Text style={styles.value}>{limitValue}</Text>
+                <View style={styles.textWrapper}>
+                  <Text style={styles.value}>{limitPrice}</Text>
+                  <Text style={styles.value}>{name}</Text>
+                </View>
               </View>
 
               <View style={styles.row}>
                 <Text style={styles.label}>{strings.limitPriceWarningMarketPrice}</Text>
 
-                <Text style={styles.value}>{marketValue}</Text>
+                <View style={styles.textWrapper}>
+                  <Text style={styles.value}>{marketPrice}</Text>
+                  <Text style={styles.value}>{name}</Text>
+                </View>
               </View>
             </View>
           </View>
@@ -111,9 +116,15 @@ const styles = StyleSheet.create({
     color: '#000000',
     lineHeight: 24,
     fontFamily: 'Rubik-Regular',
-    flexWrap: 'wrap',
-    flex: 1,
     textAlign: 'right',
+  },
+  textWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    flex: 1,
+    flexWrap: 'wrap',
+    gap: 4,
   },
   table: {
     flexDirection: 'column',
