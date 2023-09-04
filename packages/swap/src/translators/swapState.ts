@@ -109,6 +109,7 @@ export const defaultSwapState: Readonly<SwapState> = {
       },
     },
     slippage: 1,
+    limitPrice: undefined,
     selectedPool: {
       provider: 'minswap',
       fee: '',
