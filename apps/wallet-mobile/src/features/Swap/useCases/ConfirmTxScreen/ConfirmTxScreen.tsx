@@ -129,6 +129,7 @@ export const ConfirmTxScreen = () => {
       console.log('[makeLimitOrder RESULT]', orderResult)
       setOrderDataFromHelper(orderResult)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolList])
 
   const orderInfo = [
