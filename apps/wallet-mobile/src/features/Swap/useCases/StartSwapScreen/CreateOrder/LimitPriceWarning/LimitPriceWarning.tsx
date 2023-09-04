@@ -51,6 +51,7 @@ export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningPr
 
                 <View style={styles.textWrapper}>
                   <Text style={styles.value}>{limitPrice}</Text>
+
                   <Text style={styles.value}>{name}</Text>
                 </View>
               </View>
@@ -60,6 +61,7 @@ export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningPr
 
                 <View style={styles.textWrapper}>
                   <Text style={styles.value}>{marketPrice}</Text>
+
                   <Text style={styles.value}>{name}</Text>
                 </View>
               </View>
