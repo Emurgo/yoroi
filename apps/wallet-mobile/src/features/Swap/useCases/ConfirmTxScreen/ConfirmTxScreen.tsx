@@ -19,10 +19,12 @@ import {TransactionSummary} from './TransactionSummary'
 
 export const ConfirmTxScreen = () => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
-  const [screenState, setScreenState] = React.useState<
-    | {modal: boolean; swapTx: undefined; datum: undefined; contractAddress: undefined}
-    | {modal: boolean; swapTx: YoroiUnsignedTx; datum: undefined; contractAddress: undefined}
-  >({modal: false, swapTx: undefined, datum: undefined, contractAddress: undefined})
+  const [screenState, setScreenState] = React.useState<{
+    modal: boolean
+    swapTx: YoroiUnsignedTx | undefined
+    datum: string | undefined
+    contractAddress: string | undefined
+  }>({modal: false, swapTx: undefined, datum: undefined, contractAddress: undefined})
 
   const [spendingPassword, setSpendingPassword] = React.useState('')
   const strings = useStrings()
@@ -69,7 +71,7 @@ export const ConfirmTxScreen = () => {
 
   const {createOrder} = useCreateOrder({
     onSuccess: (data) => {
-      setScreenState({...screenState, datum: data.datum, contractAddress: data.contractAddress})
+      setScreenState({...screenState, datum: data?.datum, contractAddress: data?.contractAddress})
       refetch()
     },
     onError: (error) => {
@@ -180,7 +182,7 @@ export const ConfirmTxScreen = () => {
           </>
         }
         onClose={() => {
-          setScreenState({...screenState, modal: false, swapTx: undefined})
+          setScreenState({...screenState, modal: false})
         }}
         containerStyle={{justifyContent: 'space-between'}}
       />
