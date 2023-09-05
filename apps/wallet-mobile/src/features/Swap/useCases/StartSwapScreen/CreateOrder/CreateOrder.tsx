@@ -109,7 +109,7 @@ export const CreateOrder = () => {
             open={showLimitPriceWarning}
             onClose={() => setShowLimitPriceWarning(false)}
             onSubmit={() => {
-              handleSwap()
+              swap()
               setShowLimitPriceWarning(false)
             }}
           />
