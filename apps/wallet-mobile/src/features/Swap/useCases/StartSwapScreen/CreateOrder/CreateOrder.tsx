@@ -149,13 +149,7 @@ export const CreateOrder = () => {
       </ScrollView>
 
       <Actions>
-        <Button
-          testID="swapButton"
-          shelleyTheme
-          title={strings.swapTitle}
-          onPress={handleSwapPress}
-          disabled={disabled}
-        />
+        <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
       </Actions>
     </>
   )
