@@ -1,5 +1,6 @@
 import {Balance, Swap} from '@yoroi/types'
 import {produce} from 'immer'
+import {BalanceQuantity} from '@yoroi/types/src/balance/token'
 
 export type SwapState = Readonly<{
   createOrder: Swap.CreateOrderData & {
@@ -19,6 +20,7 @@ export type SwapCreateOrderActions = Readonly<{
   txPayloadChanged: (txPayload: Swap.CreateOrderResponse) => void
   switchTokens: () => void
   resetQuantities: () => void
+  limitPriceChanged: (limitPrice: BalanceQuantity) => void
 }>
 
 export enum SwapCreateOrderActionType {
@@ -31,6 +33,7 @@ export enum SwapCreateOrderActionType {
   TxPayloadChanged = 'txPayloadChanged',
   SwitchTokens = 'switchTokens',
   ResetQuantities = 'resetQuantities',
+  LimitPriceChanged = 'limitPriceChanged',
 }
 
 type SwapCreateOrderAction =
@@ -52,6 +55,10 @@ type SwapCreateOrderAction =
     }
   | {type: SwapCreateOrderActionType.SwitchTokens}
   | {type: SwapCreateOrderActionType.ResetQuantities}
+  | {
+      type: SwapCreateOrderActionType.LimitPriceChanged
+      limitPrice: BalanceQuantity
+    }
 
 export type SwapActions = Readonly<{
   unsignedTxChanged: (unsignedTx: any | undefined) => void
@@ -102,6 +109,7 @@ export const defaultSwapState: Readonly<SwapState> = {
       },
     },
     slippage: 1,
+    limitPrice: undefined,
     selectedPool: {
       provider: 'minswap',
       fee: '',
@@ -133,6 +141,8 @@ const defaultSwapCreateOrderActions: SwapCreateOrderActions = {
     console.error('[@yoroi/swap] missing initialization'),
   switchTokens: () => console.error('[@yoroi/swap] missing initialization'),
   resetQuantities: () => console.error('[@yoroi/swap] missing initialization'),
+  limitPriceChanged: (_limitPrice: BalanceQuantity) =>
+    console.error('[@yoroi/swap] missing initialization'),
 } as const
 
 const defaultStateActions: SwapActions = {
@@ -196,6 +206,11 @@ const createOrderReducer = (
             tokenId: state.createOrder.amounts.buy.tokenId,
           },
         }
+        draft.createOrder.limitPrice = undefined
+      })
+    case SwapCreateOrderActionType.LimitPriceChanged:
+      return produce(state, (draft) => {
+        draft.createOrder.limitPrice = action.limitPrice
       })
 
     default:

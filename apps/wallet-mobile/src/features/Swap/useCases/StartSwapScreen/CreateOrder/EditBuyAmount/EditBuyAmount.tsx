@@ -1,4 +1,5 @@
 import {getSellAmountByChangingReceive, useSwap} from '@yoroi/swap'
+import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
 import * as React from 'react'
 import {TextInput} from 'react-native'
 
@@ -8,6 +9,7 @@ import {useBalance, useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../../yoroi-wallets/logging'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {AmountCard} from '../../../../common/AmountCard/AmountCard'
+import {getSellQuantityForLimitOrder} from '../../../../common/helpers'
 import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../TouchedContext'
@@ -23,6 +25,7 @@ export const EditBuyAmount = () => {
   const {isBuyTouched} = useSwapTouched()
   const {tokenId, quantity} = createOrder.amounts.buy
   const tokenInfo = useTokenInfo({wallet, tokenId})
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
   const {decimals} = tokenInfo
   const balance = useBalance({wallet, tokenId})
 
@@ -34,7 +37,20 @@ export const EditBuyAmount = () => {
     }
   }, [isBuyTouched, quantity, tokenInfo.decimals])
 
-  const recalculateSellValue = (buyQuantity) => {
+  const recalculateSellValue = (buyQuantity: BalanceQuantity) => {
+    if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
+      const buyQuantityDenominated = Quantities.denominated(buyQuantity, tokenInfo.decimals ?? 0)
+      sellAmountChanged({
+        quantity: getSellQuantityForLimitOrder(
+          buyQuantityDenominated,
+          createOrder.limitPrice,
+          sellTokenInfo.decimals ?? 0,
+        ),
+        tokenId: createOrder.amounts.sell.tokenId,
+      })
+      return
+    }
+
     const {sell} = getSellAmountByChangingReceive(createOrder?.selectedPool, {
       quantity: buyQuantity,
       tokenId: tokenId,

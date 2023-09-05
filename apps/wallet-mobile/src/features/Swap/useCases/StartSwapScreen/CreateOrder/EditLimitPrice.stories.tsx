@@ -5,6 +5,7 @@ import {StyleSheet, View} from 'react-native'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
 import {EditLimitPrice} from './EditLimitPrice'
+import {SwapTouchedProvider} from './TouchedContext'
 
 const styles = StyleSheet.create({
   container: {
@@ -16,7 +17,9 @@ const styles = StyleSheet.create({
 storiesOf('Swap Edit Limit Price', module)
   .addDecorator((story) => (
     <SelectedWalletProvider wallet={mocks.wallet}>
-      <View style={styles.container}>{story()}</View>
+      <SwapTouchedProvider>
+        <View style={styles.container}>{story()}</View>
+      </SwapTouchedProvider>
     </SelectedWalletProvider>
   ))
   .add('Default', () => <EditLimitPrice />)

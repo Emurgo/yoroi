@@ -61,6 +61,7 @@ export const useStrings = () => {
     asset: intl.formatMessage(messages.asset),
     volume: intl.formatMessage(messages.volume),
     total: intl.formatMessage(globalMessages.total),
+<<<<<<< HEAD
     listCompletedOrders: intl.formatMessage(messages.listCompletedOrders),
     listOpenOrders: intl.formatMessage(messages.listOpenOrders),
     listOrdersSheetTitle: intl.formatMessage(messages.listOrdersSheetTitle),
@@ -77,6 +78,14 @@ export const useStrings = () => {
     listOrdersLiquidityPool: intl.formatMessage(messages.listOrdersLiquidityPool),
     listOrdersTotal: intl.formatMessage(messages.listOrdersTotal),
     listOrdersTxId: intl.formatMessage(messages.listOrdersTxId),
+=======
+    limitPriceWarningTitle: intl.formatMessage(messages.limitPriceWarningTitle),
+    limitPriceWarningDescription: intl.formatMessage(messages.limitPriceWarningDescription),
+    limitPriceWarningYourPrice: intl.formatMessage(messages.limitPriceWarningYourPrice),
+    limitPriceWarningMarketPrice: intl.formatMessage(messages.limitPriceWarningMarketPrice),
+    limitPriceWarningBack: intl.formatMessage(messages.limitPriceWarningBack),
+    limitPriceWarningConfirm: intl.formatMessage(messages.limitPriceWarningConfirm),
+>>>>>>> origin/develop
   }
 }
 
@@ -236,6 +245,32 @@ export const messages = defineMessages({
   batcherFee: {
     id: 'swap.swapScreen.batcherFee',
     defaultMessage: '!!! Batcher Fee',
+  },
+  limitPriceWarningTitle: {
+    id: 'swap.swapScreen.limitPriceWarningTitle',
+    defaultMessage: '!!!Limit price',
+  },
+  limitPriceWarningDescription: {
+    id: 'swap.swapScreen.limitPriceWarningDescription',
+    defaultMessage:
+      '!!!Are you sure you want to proceed this order with the limit price that is 10% or more higher than the\n' +
+      'market price?',
+  },
+  limitPriceWarningYourPrice: {
+    id: 'swap.swapScreen.limitPriceWarningYourPrice',
+    defaultMessage: '!!!Your limit price',
+  },
+  limitPriceWarningMarketPrice: {
+    id: 'swap.swapScreen.limitPriceWarningMarketPrice',
+    defaultMessage: '!!!Market price',
+  },
+  limitPriceWarningBack: {
+    id: 'swap.swapScreen.limitPriceWarningBack',
+    defaultMessage: '!!!Back',
+  },
+  limitPriceWarningConfirm: {
+    id: 'swap.swapScreen.limitPriceWarningConfirm',
+    defaultMessage: '!!!Swap',
   },
   asset: {
     id: 'global.assets.assetLabel',

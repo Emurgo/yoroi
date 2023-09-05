@@ -1,17 +1,19 @@
 /* eslint-disable react/jsx-newline */
 import {useSwap} from '@yoroi/swap'
 import BigNumber from 'bignumber.js'
-import React from 'react'
+import * as React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {Spacer} from '../../../../../components'
 import {useLanguage} from '../../../../../i18n'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {getBuyQuantityForLimitOrder} from '../../../common/helpers'
 import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from './TouchedContext'
+const BORDER_SIZE = 1
+const PRECISION = 10
 
 export const EditLimitPrice = () => {
   const strings = useStrings()
@@ -19,14 +21,13 @@ export const EditLimitPrice = () => {
 
   const wallet = useSelectedWallet()
 
-  const {createOrder} = useSwap()
-  // TODO: limitChanged should be defined in useSwap
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const limitChanged = (_todo: any) => null
+  const {createOrder, limitPriceChanged, buyAmountChanged} = useSwap()
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
+  const buyTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
 
   const {isBuyTouched, isSellTouched} = useSwapTouched()
 
-  const price =
+  const defaultPrice =
     isBuyTouched &&
     isSellTouched &&
     createOrder.selectedPool?.price !== undefined &&
@@ -34,20 +35,30 @@ export const EditLimitPrice = () => {
       ? createOrder.selectedPool.price
       : 0
 
-  const formattedPrice = new BigNumber(price).decimalPlaces(6).toString(10)
-
-  const [inputValue, setInputValue] = React.useState(formattedPrice)
+  const limitPrice = createOrder.limitPrice !== undefined ? BigNumber(createOrder.limitPrice).toNumber() : defaultPrice
 
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
-  const tokenToSellName = isSellTouched ? tokenToSellInfo.ticker ?? tokenToSellInfo.name : '-'
   const tokenToBuyInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
+
+  const tokenToSellName = isSellTouched ? tokenToSellInfo.ticker ?? tokenToSellInfo.name : '-'
   const tokenToBuyName = isBuyTouched ? tokenToBuyInfo.ticker ?? tokenToBuyInfo.name : '-'
+  const formattedValue = BigNumber(limitPrice).toFormat(numberLocale)
+
+  const [text, setText] = React.useState(formattedValue)
 
   const onChange = (text: string) => {
-    const [input, quantity] = Quantities.parseFromText(text, 6, numberLocale)
-    setInputValue(input)
-    // TODO: Use a parseFromText that doesn't return quantity, as we just need a number
-    limitChanged(quantity)
+    const [newText, quantity] = Quantities.parseFromText(text, PRECISION, numberLocale)
+    const value = Quantities.denominated(quantity, PRECISION)
+    const sellQuantityDenominated = Quantities.denominated(
+      createOrder.amounts.sell.quantity,
+      sellTokenInfo.decimals ?? 0,
+    )
+    limitPriceChanged(value)
+    setText(newText)
+    buyAmountChanged({
+      quantity: getBuyQuantityForLimitOrder(sellQuantityDenominated, value, buyTokenInfo.decimals ?? 0),
+      tokenId: createOrder.amounts.buy.tokenId,
+    })
   }
 
   return (
@@ -55,15 +66,13 @@ export const EditLimitPrice = () => {
       <Text style={styles.label}>{strings.limitPrice}</Text>
 
       <View style={styles.content}>
-        <View style={styles.amountInput}>
-          <AmountInput onChange={onChange} value={inputValue} editable={isBuyTouched && isSellTouched} />
+        <AmountInput onChange={onChange} value={text} editable={true} />
+
+        <View style={styles.textWrapper}>
+          <Text style={styles.text}>
+            {tokenToSellName}/{tokenToBuyName}
+          </Text>
         </View>
-
-        <Spacer width={7} />
-
-        <Text style={styles.text}>
-          {tokenToSellName}/{tokenToBuyName}
-        </Text>
       </View>
     </View>
   )
@@ -95,15 +104,12 @@ const AmountInput = ({onChange, value, editable}: AmountInputProps) => {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
-    borderWidth: 1,
+    borderWidth: BORDER_SIZE,
     borderColor: COLORS.TEXT_GRAY3,
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingLeft: 16,
-    paddingRight: 16,
-    padding: 10,
     width: '100%',
     height: 56,
+    paddingLeft: 16,
+    paddingRight: 8,
   },
   label: {
     position: 'absolute',
@@ -114,17 +120,31 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
-  amountInput: {
-    flex: 1,
-    paddingVertical: 0,
-  },
   content: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    position: 'relative',
+  },
+  amountInput: {
+    fontSize: 16,
+    height: 56,
+    paddingRight: 16,
   },
   text: {
     fontSize: 16,
-    color: COLORS.TEXT_INPUT,
+    color: '#000000',
+    fontFamily: 'Rubik-Regular',
+  },
+  textWrapper: {
+    position: 'absolute',
+    top: 0,
+    right: 8,
+    paddingLeft: 8,
+    backgroundColor: '#FFFFFF',
+    height: 56 - BORDER_SIZE * 2,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
