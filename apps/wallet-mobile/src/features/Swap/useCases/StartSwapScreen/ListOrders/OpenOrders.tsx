@@ -8,9 +8,9 @@ import {
   ExpandableInfoCardSkeleton,
 } from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {useStrings} from '../../../common/strings'
-import {Orders} from './ListOrders'
+import {OrderProps} from './mapOrders'
 
-export const OpenOrders = ({orders, loading = false}: {orders: Orders; loading?: boolean}) => {
+export const OpenOrders = ({orders}: {orders: Array<OrderProps>}) => {
   const [bottomSheetState, setBottomSheetState] = React.useState<{
     isOpen: boolean
     title: string
@@ -23,10 +23,6 @@ export const OpenOrders = ({orders, loading = false}: {orders: Orders; loading?:
   const [confirmationModal, setConfirmationModal] = React.useState(false)
   const strings = useStrings()
   const [spendingPassword, setSpendingPassword] = React.useState('')
-
-  if (loading) {
-    return <OpenOrdersSkeleton />
-  }
 
   return (
     <View style={styles.container}>
@@ -181,7 +177,7 @@ const Label = ({assetFromLabel, assetToLabel}: {assetFromLabel: string; assetToL
   )
 }
 
-const OpenOrdersSkeleton = () => (
+export const OpenOrdersSkeleton = () => (
   <View style={styles.container}>
     <View style={styles.flex}>
       {[0, 1, 2, 3].map((index) => (

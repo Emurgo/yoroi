@@ -227,6 +227,7 @@ export const mockSwapManager: Readonly<Swap.Manager> = {
     cancel: cancelOrder.success,
     list: {
       byStatusOpen: getOrders.success,
+      byStatusCompleted: getOrders.success,
     },
   },
   pools: {
@@ -249,6 +250,7 @@ export const mockSwapManagerDefault: Readonly<Swap.Manager> = {
     cancel: cancelOrder.error.unknown,
     list: {
       byStatusOpen: getOrders.error.unknown,
+      byStatusCompleted: getOrders.error.unknown,
     },
   },
   pools: {

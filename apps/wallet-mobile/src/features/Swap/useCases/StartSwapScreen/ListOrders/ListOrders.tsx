@@ -1,3 +1,4 @@
+import {useOrderByStatusCompleted, useOrderByStatusOpen} from '@yoroi/swap'
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -8,31 +9,9 @@ import {COLORS} from '../../../../../theme'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {Counter} from '../../../common/Counter/Counter'
 import {useStrings} from '../../../common/strings'
-import {ClosedOrders} from './ClosedOrders'
-import {getMockOpenOrder} from './mocks'
-import {OpenOrders} from './OpenOrders'
-
-type Order = {
-  tokenPrice: string
-  tokenAmount: string
-  assetFromLabel: string
-  assetFromIcon: React.ReactNode
-  assetToLabel: string
-  assetToIcon: React.ReactNode
-  navigateTo?: () => void
-  onPress?: () => void
-  buttonText?: string
-  withBoxShadow?: boolean
-  date: string
-  liquidityPoolIcon: React.ReactNode
-  liquidityPoolName: string
-  txId: string
-  total: string
-  poolUrl: string
-  txLink: string
-}
-
-export type Orders = Array<Order>
+import {ClosedOrders, ClosedOrdersSkeleton} from './ClosedOrders'
+import {mapOrders} from './mapOrders'
+import {OpenOrders, OpenOrdersSkeleton} from './OpenOrders'
 
 export const ListOrders = () => {
   const strings = useStrings()
@@ -50,14 +29,32 @@ export const ListOrders = () => {
   })
 
   const {search} = useSearch()
-  // TODO: api data mapper
-  const mockOpenOrders = getMockOpenOrder()
 
-  const orders = mockOpenOrders.filter(
+  const openOrdersData = useOrderByStatusOpen({
+    onError: (err) => {
+      console.log(err)
+    },
+  })
+
+  const closedOrdersData = useOrderByStatusCompleted({
+    onError: (err) => {
+      console.log(err)
+    },
+  })
+
+  const openOrders = mapOrders(openOrdersData).filter(
     ({assetFromLabel, assetToLabel}) =>
       assetFromLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
       assetToLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
   )
+
+  const closedOrders = mapOrders(closedOrdersData).filter(
+    ({assetFromLabel, assetToLabel}) =>
+      assetFromLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+      assetToLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+  )
+
+  console.log('openOrders', openOrders)
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
@@ -66,14 +63,21 @@ export const ListOrders = () => {
           <ButtonGroup labels={orderStatusLabels} onSelect={handleSelectOrderStatus} selected={orderStatusIndex} />
         </View>
 
-        <Boundary>
-          {/* TODO: add loading prop */}
-          {orderStatusIndex === 0 ? <OpenOrders orders={orders} /> : <ClosedOrders orders={orders} />}
-        </Boundary>
+        <>
+          {orderStatusIndex === 0 ? (
+            <Boundary loading={{fallback: <OpenOrdersSkeleton />}}>
+              <OpenOrders orders={openOrders} />
+            </Boundary>
+          ) : (
+            <Boundary loading={{fallback: <ClosedOrdersSkeleton />}}>
+              <ClosedOrders orders={closedOrders} />
+            </Boundary>
+          )}
+        </>
       </ScrollView>
 
       <Counter
-        counter={orders.length}
+        counter={orderStatusIndex === 0 ? openOrders.length : closedOrders.length}
         customText={orderStatusIndex === 0 ? strings.listOpenOrders : strings.listCompletedOrders}
       />
     </SafeAreaView>

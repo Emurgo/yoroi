@@ -1,9 +1,9 @@
 import React from 'react'
 import {Defs, Image, Path, Pattern, Rect, Svg, Use} from 'react-native-svg'
 
-import {Orders} from './ListOrders'
+import {OrderProps} from './mapOrders'
 
-export const getMockOpenOrder: () => Orders = () => [
+export const getMockOpenOrder: () => Array<OrderProps> = () => [
   {
     assetFromLabel: 'ADA',
     tokenPrice: '3 ADA',

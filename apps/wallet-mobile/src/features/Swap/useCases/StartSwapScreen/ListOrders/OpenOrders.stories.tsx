@@ -9,32 +9,17 @@ import {SwapTouchedProvider} from '../CreateOrder/TouchedContext'
 import {getMockOpenOrder} from './mocks'
 import {OpenOrders} from './OpenOrders'
 
-storiesOf('Swap Open orders', module)
-  .add('initial', () => {
-    const orders = getMockOpenOrder()
-    return (
-      <SelectedWalletProvider wallet={mocks.wallet}>
-        <SearchProvider>
-          <SwapProvider swapManager={mockSwapManager}>
-            <SwapTouchedProvider>
-              <OpenOrders orders={orders} loading={false} />
-            </SwapTouchedProvider>
-          </SwapProvider>
-        </SearchProvider>
-      </SelectedWalletProvider>
-    )
-  })
-  .add('loading', () => {
-    const orders = getMockOpenOrder()
-    return (
-      <SelectedWalletProvider wallet={mocks.wallet}>
-        <SearchProvider>
-          <SwapProvider swapManager={mockSwapManager}>
-            <SwapTouchedProvider>
-              <OpenOrders orders={orders} loading={true} />
-            </SwapTouchedProvider>
-          </SwapProvider>
-        </SearchProvider>
-      </SelectedWalletProvider>
-    )
-  })
+storiesOf('Swap Open orders', module).add('initial', () => {
+  const orders = getMockOpenOrder()
+  return (
+    <SelectedWalletProvider wallet={mocks.wallet}>
+      <SearchProvider>
+        <SwapProvider swapManager={mockSwapManager}>
+          <SwapTouchedProvider>
+            <OpenOrders orders={orders} />
+          </SwapTouchedProvider>
+        </SwapProvider>
+      </SearchProvider>
+    </SelectedWalletProvider>
+  )
+})

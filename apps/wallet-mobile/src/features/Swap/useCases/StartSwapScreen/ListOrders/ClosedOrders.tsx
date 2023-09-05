@@ -8,14 +8,10 @@ import {
   ExpandableInfoCardSkeleton,
 } from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {useStrings} from '../../../common/strings'
-import {Orders} from './ListOrders'
+import {OrderProps} from './mapOrders'
 
-export const ClosedOrders = ({orders, loading = false}: {orders: Orders; loading?: boolean}) => {
+export const ClosedOrders = ({orders}: {orders: Array<OrderProps>}) => {
   const strings = useStrings()
-
-  if (loading) {
-    return <ClosedOrdersSkeleton />
-  }
 
   return (
     <View style={styles.container}>
@@ -60,7 +56,7 @@ export const ClosedOrders = ({orders, loading = false}: {orders: Orders; loading
   )
 }
 
-const ClosedOrdersSkeleton = () => (
+export const ClosedOrdersSkeleton = () => (
   <View style={styles.container}>
     <View style={styles.flex}>
       {[0, 1, 2, 3].map((index) => (

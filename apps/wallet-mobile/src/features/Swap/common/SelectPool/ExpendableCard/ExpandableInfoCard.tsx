@@ -48,17 +48,21 @@ export const ExpandableInfoCard = ({
 
         <Spacer height={8} />
 
-        {mainInfo?.map((item, index) => (
-          <View key={index}>
-            <View style={styles.flexBetween}>
-              <Text style={styles.gray}>{`${item.label}`}</Text>
+        {mainInfo?.map((item, index) => {
+          const isLast = index === mainInfo?.length - 1
 
-              {item?.value !== undefined && <Text style={styles.text}>{`${item?.value}`}</Text>}
+          return (
+            <View key={index}>
+              <View style={styles.flexBetween}>
+                <Text style={styles.gray}>{`${item.label}`}</Text>
+
+                {item?.value !== undefined && <Text style={styles.text}>{`${item?.value}`}</Text>}
+              </View>
+
+              {!isLast && <Spacer height={8} />}
             </View>
-
-            {index !== mainInfo?.length - 1 && <Spacer height={8} />}
-          </View>
-        ))}
+          )
+        })}
 
         {showHiddenInfo && (
           <View>
