@@ -98,7 +98,7 @@ export const CreateOrder = () => {
       }
     }
 
-    handleSwap()
+    swap()
   }
 
   return (
