@@ -16,6 +16,7 @@ export const mockSwapStateDefault: Readonly<SwapState> = {
         tokenId: '',
       },
     },
+    limitPrice: undefined,
     slippage: 1,
     selectedPool: {
       provider: 'minswap',

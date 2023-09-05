@@ -22,6 +22,7 @@ import {
 import {mockSwapManagerDefault} from './swapManager.mocks'
 import {BalanceToken} from '@yoroi/types/lib/balance/token'
 import {SwapPoolPair} from '@yoroi/types/lib/swap/pool'
+import {BalanceQuantity} from '@yoroi/types/src/balance/token'
 
 const defaultSwapManager: Swap.Manager = mockSwapManagerDefault
 
@@ -95,6 +96,9 @@ export const SwapProvider = ({
     },
     resetState: () => {
       dispatch({type: SwapActionType.ResetState})
+    },
+    limitPriceChanged: (limitPrice: BalanceQuantity) => {
+      dispatch({type: SwapCreateOrderActionType.LimitPriceChanged, limitPrice})
     },
   }).current
 

@@ -5,17 +5,19 @@ import React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
+import {useLanguage} from '../../../../../i18n'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from './TouchedContext'
 
+const BORDER_SIZE = 1
 export const ShowMarketPrice = () => {
   const strings = useStrings()
 
   const wallet = useSelectedWallet()
-
+  const {numberLocale} = useLanguage()
   const {createOrder} = useSwap()
   const {isBuyTouched, isSellTouched} = useSwapTouched()
 
@@ -32,22 +34,22 @@ export const ShowMarketPrice = () => {
       ? createOrder.selectedPool.price
       : 0
 
-  const formattedPrice = new BigNumber(price).decimalPlaces(6).toString(10)
+  const formattedValue = BigNumber(price).toFormat(numberLocale)
 
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{strings.marketPrice}</Text>
 
       <View style={styles.content}>
-        <View style={styles.amountInput}>
-          <AmountInput value={formattedPrice} />
-        </View>
+        <AmountInput value={formattedValue} />
 
         <Spacer width={7} />
 
-        <Text style={styles.text}>
-          {tokenToSellName}/{tokenToBuyName}
-        </Text>
+        <View style={styles.textWrapper}>
+          <Text style={styles.text}>
+            {tokenToSellName}/{tokenToBuyName}
+          </Text>
+        </View>
       </View>
     </View>
   )
@@ -76,18 +78,14 @@ const AmountInput = ({value}: AmountInputProps) => {
 const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
-    borderWidth: 1,
+    borderWidth: BORDER_SIZE,
     borderColor: COLORS.TEXT_GRAY3,
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingLeft: 16,
-    paddingRight: 16,
-    padding: 10,
     width: '100%',
     height: 56,
+    paddingLeft: 16,
+    paddingRight: 8,
     backgroundColor: COLORS.BANNER_GREY,
   },
-
   label: {
     position: 'absolute',
     top: -7,
@@ -97,19 +95,31 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.ERROR_TEXT_COLOR_DARK,
   },
-
   amountInput: {
-    flex: 1,
-    paddingVertical: 0,
+    fontSize: 16,
+    height: 56,
+    paddingRight: 16,
   },
   content: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    position: 'relative',
   },
-
   text: {
     fontSize: 16,
     color: COLORS.TEXT_INPUT,
+    fontFamily: 'Rubik-Regular',
+  },
+  textWrapper: {
+    position: 'absolute',
+    top: 0,
+    right: 8,
+    paddingLeft: 8,
+    height: 56 - BORDER_SIZE * 2,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.BANNER_GREY,
   },
 })
