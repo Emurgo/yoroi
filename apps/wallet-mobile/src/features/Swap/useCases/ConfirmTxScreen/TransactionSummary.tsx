@@ -1,14 +1,11 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Icon, Spacer, Text} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {BottomSheetModal} from '../../../../components/BottomSheetModal'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useStrings} from '../../common/strings'
 
@@ -94,30 +91,6 @@ export const TransactionSummary = ({feesInfo, buyToken, sellToken}) => {
       />
     </View>
   )
-}
-
-export const useSwapTx = (
-  {wallet, entry}: {wallet: YoroiWallet; entry: YoroiEntry},
-  options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'swap-tx']>,
-) => {
-  console.log('SWAP ENTRY entry', entry)
-  const query = useQuery({
-    ...options,
-    cacheTime: 0,
-    suspense: true,
-    enabled: false,
-    retry: false,
-    retryOnMount: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    queryKey: [wallet.id, 'swap-tx'],
-    queryFn: () => wallet.createUnsignedTx(entry),
-  })
-
-  return {
-    ...query,
-    unsignedTx: query.data,
-  }
 }
 
 const styles = StyleSheet.create({
