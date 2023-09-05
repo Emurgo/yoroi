@@ -1,6 +1,6 @@
 import {makeLimitOrder, makePossibleMarketOrder, useCreateOrder, usePoolsByPair, useSwap} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
-import React, {useEffect} from 'react'
+import React from 'react'
 import {StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {useQuery, UseQueryOptions} from 'react-query'
@@ -23,7 +23,7 @@ export const ConfirmTxScreen = () => {
     | {modal: boolean; swapTx: undefined; datum: undefined; contractAddress: undefined}
     | {modal: boolean; swapTx: YoroiUnsignedTx; datum: undefined; contractAddress: undefined}
   >({modal: false, swapTx: undefined, datum: undefined, contractAddress: undefined})
-  const [orderDataFromHelper, setOrderDataFromHelper] = React.useState<Swap.CreateOrderData>()
+
   const [spendingPassword, setSpendingPassword] = React.useState('')
   const strings = useStrings()
   const wallet = useSelectedWallet()
@@ -46,14 +46,13 @@ export const ConfirmTxScreen = () => {
 
   const createEntry = (): YoroiEntry => {
     const amountEntry = {}
-    const tokenId = orderDataFromHelper?.amounts.sell.tokenId
-    if (tokenId != null && orderDataFromHelper?.amounts.sell.quantity !== undefined) {
-      amountEntry[tokenId] = Quantities.sum([selectedPool.deposit.quantity, orderDataFromHelper?.amounts.sell.quantity])
+    const tokenId = createOrderState?.amounts.sell.tokenId
+    if (tokenId != null && createOrderState?.amounts.sell.quantity !== undefined) {
+      amountEntry[tokenId] = Quantities.sum([selectedPool.deposit.quantity, createOrderState?.amounts.sell.quantity])
     }
 
     return {
-      // address: screenState.contractAddress !== undefined ? screenState.contractAddress : '', // when using this contractAddress got an error
-      address: orderDataFromHelper?.address !== undefined ? orderDataFromHelper.address : '',
+      address: screenState.contractAddress !== undefined ? screenState.contractAddress : '', // when using this contractAddress got an error
       amounts: amountEntry,
     }
   }
@@ -78,7 +77,8 @@ export const ConfirmTxScreen = () => {
     },
   })
 
-  useEffect(() => {
+  const makeSwpOrder = () => {
+    let orderResult: Swap.CreateOrderData | undefined = undefined
     const orderDetails = {
       sell: amounts.sell,
       buy: amounts.sell,
@@ -88,29 +88,39 @@ export const ConfirmTxScreen = () => {
       address: addresses.used[0],
     }
     if (createOrderState.type === 'market' && poolList !== undefined) {
-      const orderResult = makePossibleMarketOrder(
+      orderResult = makePossibleMarketOrder(
         orderDetails.sell,
         orderDetails.buy,
         orderDetails?.pools as Swap.PoolPair[],
         orderDetails.slippage,
         orderDetails.address,
       )
-      console.log('[makePossibleMarketOrder RESULT]', orderResult)
-      setOrderDataFromHelper(orderResult)
+      orderResult && createSwapOrder(orderResult)
     }
     if (createOrderState.type === 'limit' && poolList !== undefined) {
-      const orderResult = makeLimitOrder(
+      orderResult = makeLimitOrder(
         orderDetails.sell,
         orderDetails.buy,
         orderDetails.selectedPool,
         orderDetails.slippage,
         orderDetails.address,
       )
-      console.log('[makeLimitOrder RESULT]', orderResult)
-      setOrderDataFromHelper(orderResult)
+      createSwapOrder(orderResult)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolList])
+  }
+
+  const createSwapOrder = (orderData: Swap.CreateOrderData) => {
+    console.log('[CreateOrderData]', orderData)
+    createOrder({
+      amounts: {
+        sell: orderData?.amounts.sell,
+        buy: orderData?.amounts.buy,
+      },
+      address: orderData?.address,
+      slippage: orderData.slippage,
+      selectedPool: orderData.selectedPool,
+    })
+  }
 
   const orderInfo = [
     {
@@ -144,22 +154,7 @@ export const ConfirmTxScreen = () => {
       />
 
       <Actions>
-        <Button
-          testID="swapButton"
-          shelleyTheme
-          title={strings.confirm}
-          onPress={() => {
-            createOrder({
-              amounts: {
-                sell: orderDataFromHelper?.amounts.sell,
-                buy: orderDataFromHelper?.amounts.buy,
-              },
-              address: orderDataFromHelper?.address,
-              slippage: createOrderState.slippage,
-              selectedPool: orderDataFromHelper?.selectedPool,
-            })
-          }}
-        />
+        <Button testID="swapButton" shelleyTheme title={strings.confirm} onPress={() => makeSwpOrder()} />
       </Actions>
 
       <BottomSheetModal
