@@ -60,7 +60,7 @@ export const CreateOrder = () => {
     Quantities.isZero(createOrder.amounts.sell.quantity) ||
     (createOrder.type === 'limit' && createOrder.limitPrice !== undefined && Quantities.isZero(createOrder.limitPrice))
 
-  const handleSwap = () => {
+  const swap = () => {
     const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
     const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
 
