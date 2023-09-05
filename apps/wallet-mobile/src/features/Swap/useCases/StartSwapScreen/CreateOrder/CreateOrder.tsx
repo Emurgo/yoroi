@@ -1,5 +1,6 @@
 import {usePoolsByPair, useSwap} from '@yoroi/swap'
-import React, {useEffect} from 'react'
+import BigNumber from 'bignumber.js'
+import React, {useEffect, useState} from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler'
 
@@ -17,9 +18,12 @@ import {EditLimitPrice} from './EditLimitPrice'
 import {ShowPoolActions} from './EditPool/ShowPoolActions'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
+import {LimitPriceWarning} from './LimitPriceWarning/LimitPriceWarning'
 import {ShowMarketPrice} from './ShowMarketPrice'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
 import {useSwapTouched} from './TouchedContext'
+
+const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 
 export const CreateOrder = () => {
   const strings = useStrings()
@@ -32,6 +36,7 @@ export const CreateOrder = () => {
     tokenIds: [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId],
   })
 
+  const [showLimitPriceWarning, setShowLimitPriceWarning] = useState(false)
   const {isBuyTouched, isSellTouched} = useSwapTouched()
   const {poolList} = usePoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId,
@@ -52,9 +57,10 @@ export const CreateOrder = () => {
     !isBuyTouched ||
     !isSellTouched ||
     Quantities.isZero(createOrder.amounts.buy.quantity) ||
-    Quantities.isZero(createOrder.amounts.sell.quantity)
+    Quantities.isZero(createOrder.amounts.sell.quantity) ||
+    (createOrder.type === 'limit' && createOrder.limitPrice !== undefined && Quantities.isZero(createOrder.limitPrice))
 
-  const handleSwapPress = () => {
+  const swap = () => {
     const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
     const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
 
@@ -74,10 +80,40 @@ export const CreateOrder = () => {
     navigation.confirmTx()
   }
 
+  const handleOnSwap = () => {
+    if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
+      const marketPrice = BigNumber(
+        isBuyTouched &&
+          isSellTouched &&
+          createOrder.selectedPool?.price !== undefined &&
+          !Number.isNaN(createOrder.selectedPool.price)
+          ? createOrder.selectedPool.price
+          : 0,
+      )
+      const limitPrice = BigNumber(createOrder.limitPrice)
+
+      if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
+        setShowLimitPriceWarning(true)
+        return
+      }
+    }
+
+    swap()
+  }
+
   return (
     <>
       <ScrollView>
         <View style={styles.container}>
+          <LimitPriceWarning
+            open={showLimitPriceWarning}
+            onClose={() => setShowLimitPriceWarning(false)}
+            onSubmit={() => {
+              swap()
+              setShowLimitPriceWarning(false)
+            }}
+          />
+
           <KeyboardAvoidingView
             style={styles.flex}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -113,13 +149,7 @@ export const CreateOrder = () => {
       </ScrollView>
 
       <Actions>
-        <Button
-          testID="swapButton"
-          shelleyTheme
-          title={strings.swapTitle}
-          onPress={handleSwapPress}
-          disabled={disabled}
-        />
+        <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
       </Actions>
     </>
   )

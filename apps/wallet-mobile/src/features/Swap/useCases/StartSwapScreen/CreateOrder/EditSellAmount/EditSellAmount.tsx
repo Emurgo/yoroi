@@ -1,4 +1,5 @@
 import {getReceiveAmountbyChangingSell, useSwap} from '@yoroi/swap'
+import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
 import * as React from 'react'
 import {TextInput} from 'react-native'
 
@@ -8,6 +9,7 @@ import {useBalance, useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../../yoroi-wallets/logging'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {AmountCard} from '../../../../common/AmountCard/AmountCard'
+import {getBuyQuantityForLimitOrder} from '../../../../common/helpers'
 import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../TouchedContext'
@@ -25,6 +27,7 @@ export const EditSellAmount = () => {
   const {tokenId, quantity} = createOrder.amounts.sell
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
+  const buyTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
   const {decimals} = tokenInfo
   const balance = useBalance({wallet, tokenId})
 
@@ -39,7 +42,20 @@ export const EditSellAmount = () => {
   const hasBalance = !Quantities.isGreaterThan(quantity, balance)
   const showError = !Quantities.isZero(quantity) && !hasBalance
 
-  const recalculateBuyValue = (sellQuantity) => {
+  const recalculateBuyValue = (sellQuantity: BalanceQuantity) => {
+    if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
+      const sellQuantityDenominated = Quantities.denominated(sellQuantity, tokenInfo.decimals ?? 0)
+      buyAmountChanged({
+        quantity: getBuyQuantityForLimitOrder(
+          sellQuantityDenominated,
+          createOrder.limitPrice,
+          buyTokenInfo.decimals ?? 0,
+        ),
+        tokenId: createOrder.amounts.buy.tokenId,
+      })
+      return
+    }
+
     const {buy} = getReceiveAmountbyChangingSell(createOrder?.selectedPool, {
       quantity: sellQuantity,
       tokenId: tokenId,
