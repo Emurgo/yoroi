@@ -80,7 +80,7 @@ export const CreateOrder = () => {
     navigation.confirmTx()
   }
 
-  const handleSwapPress = () => {
+  const handleOnSwap = () => {
     if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
       const marketPrice = BigNumber(
         isBuyTouched &&
