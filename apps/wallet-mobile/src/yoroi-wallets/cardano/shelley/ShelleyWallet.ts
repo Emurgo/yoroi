@@ -580,7 +580,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     // =================== tx building =================== //
 
-    async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
+    async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>, datum?: {hash: string}) {
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
@@ -610,6 +610,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           },
           PRIMARY_TOKEN,
           {metadata: auxiliaryData},
+          datum,
         )
 
         return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos})

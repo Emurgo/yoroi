@@ -20,12 +20,14 @@ import {TransactionSummary} from './TransactionSummary'
 export const ConfirmTxScreen = () => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [screenState, setScreenState] = React.useState<
-    {modal: boolean; swapTx: undefined} | {modal: boolean; swapTx: YoroiUnsignedTx}
-  >({modal: false, swapTx: undefined})
+    | {modal: boolean; swapTx: undefined; datum: undefined; contractAddress: undefined}
+    | {modal: boolean; swapTx: YoroiUnsignedTx; datum: undefined; contractAddress: undefined}
+  >({modal: false, swapTx: undefined, datum: undefined, contractAddress: undefined})
   const [orderDataFromHelper, setOrderDataFromHelper] = React.useState<Swap.CreateOrderData>()
   const [spendingPassword, setSpendingPassword] = React.useState('')
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const addresses = useAddresses()
 
   const {createOrder: createOrderState} = useSwap()
   const {selectedPool, amounts} = createOrderState
@@ -42,44 +44,22 @@ export const ConfirmTxScreen = () => {
   const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrderState.amounts.sell.quantity)
   const poolFee = Quantities.format(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
 
-  const addresses = useAddresses()
-
-  // TODO create entry
-  /* 
-    Seliling ada:
-    {
-      address: addr
-      amounts:{
-        "":amount-sending+deposit pairpool
-      }
-    }
-
-    Selling anyting else:
-    {
-      address: addr
-      amounts:{
-        "":deposit pairpool
-        "tokenId":'4343434'
-      }
-    }    
-  
-*/
   const createEntry = (): YoroiEntry => {
     const amountEntry = {}
     const tokenId = orderDataFromHelper?.amounts.sell.tokenId
-    if (tokenId != null) {
-      amountEntry[tokenId] = orderDataFromHelper?.amounts.sell.quantity
+    if (tokenId != null && orderDataFromHelper?.amounts.sell.quantity !== undefined) {
+      amountEntry[tokenId] = Quantities.sum([selectedPool.deposit.quantity, orderDataFromHelper?.amounts.sell.quantity])
     }
 
     return {
+      // address: screenState.contractAddress !== undefined ? screenState.contractAddress : '', // when using this contractAddress got an error
       address: orderDataFromHelper?.address !== undefined ? orderDataFromHelper.address : '',
       amounts: amountEntry,
     }
   }
 
   const {refetch} = useSwapTx(
-    // TODO add datum
-    {wallet, entry: createEntry()},
+    {wallet, entry: createEntry(), datum: {hash: screenState?.datum !== undefined ? screenState.datum : ''}},
     {
       onSuccess: (yoroiUnsignedTx) => {
         console.log('CREATE UNSIGNED TX SUCCESS: ', yoroiUnsignedTx)
@@ -90,12 +70,11 @@ export const ConfirmTxScreen = () => {
 
   const {createOrder} = useCreateOrder({
     onSuccess: (data) => {
-      console.log('create order success', data)
-      // TODO: unsign TX
+      setScreenState({...screenState, datum: data.datum, contractAddress: data.contractAddress})
       refetch()
     },
     onError: (error) => {
-      console.log('create order error', error)
+      console.log(error)
     },
   })
 
@@ -108,7 +87,6 @@ export const ConfirmTxScreen = () => {
       slippage: createOrderState.slippage,
       address: addresses.used[0],
     }
-    console.log('[orderDetails for helpers]', orderDetails)
     if (createOrderState.type === 'market' && poolList !== undefined) {
       const orderResult = makePossibleMarketOrder(
         orderDetails.sell,
@@ -218,10 +196,10 @@ export const ConfirmTxScreen = () => {
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
 
 export const useSwapTx = (
-  {wallet, entry}: {wallet: YoroiWallet; entry: YoroiEntry},
+  {wallet, entry, datum}: {wallet: YoroiWallet; entry: YoroiEntry; datum: {hash: string}},
   options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'swap-tx']>,
 ) => {
-  console.log('SWAP ENTRY entry', entry)
+  console.log('CREATE UNSIGNED TX PAYLOAD: ', {wallet, entry, datum})
   const query = useQuery({
     ...options,
     cacheTime: 0,
@@ -232,7 +210,7 @@ export const useSwapTx = (
     refetchOnMount: false,
     refetchOnReconnect: false,
     queryKey: [wallet.id, 'swap-tx'],
-    queryFn: () => wallet.createUnsignedTx(entry),
+    queryFn: () => wallet.createUnsignedTx(entry, undefined, datum),
   })
 
   return {
