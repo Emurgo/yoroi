@@ -29,27 +29,9 @@ export const SelectSellTokenFromListScreen = () => {
     title: strings.swapFrom,
   })
 
-  const loading = React.useMemo(
-    () => ({
-      fallback: (
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          {Array.from({length: 6}).map((_, i) => (
-            <AmountItemPlaceholder key={i} style={styles.item} />
-          ))}
-        </View>
-      ),
-    }),
-    [],
-  )
-
   return (
     <SafeAreaView style={styles.container}>
-      <Boundary loading={loading}>
+      <Boundary>
         <TokenList />
       </Boundary>
     </SafeAreaView>
@@ -197,7 +179,9 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
 
       <Spacer height={25} />
 
-      <Text style={styles.contentText}>{strings.noAssetsFoundFor(assetSearchTerm)}</Text>
+      <Text style={styles.contentText}>
+        {assetSearchTerm === '' ? strings.noAssetsFound : strings.noAssetsFoundFor(assetSearchTerm)}
+      </Text>
     </View>
   )
 }

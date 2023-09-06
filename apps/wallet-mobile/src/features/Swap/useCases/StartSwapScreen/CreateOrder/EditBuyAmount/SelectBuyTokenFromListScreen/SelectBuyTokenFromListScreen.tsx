@@ -335,7 +335,9 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
 
       <Spacer height={25} />
 
-      <Text style={styles.contentText}>{strings.noAssetsFoundFor(assetSearchTerm)}</Text>
+      <Text style={styles.contentText}>
+        {assetSearchTerm === '' ? strings.noAssetsFound : strings.noAssetsFoundFor(assetSearchTerm)}
+      </Text>
     </View>
   )
 }

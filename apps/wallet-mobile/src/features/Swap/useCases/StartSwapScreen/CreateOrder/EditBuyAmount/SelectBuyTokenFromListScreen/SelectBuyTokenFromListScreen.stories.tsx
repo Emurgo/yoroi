@@ -22,16 +22,13 @@ storiesOf('Swap Select Token To Buy', module)
       </SelectedWalletProvider>
     )
   })
-  .add('fetching', () => {
-    const fetching = {
+  .add('loading tokenInfo', () => {
+    const loading = {
       ...mocks.wallet,
-      fetchTokenInfo: async (tokenId: string) => {
-        await new Promise((r) => setTimeout(r, 5000))
-        return mocks.wallet.fetchTokenInfo(tokenId)
-      },
+      fetchTokenInfo: mocks.fetchTokenInfo.loading,
     }
     return (
-      <SelectedWalletProvider wallet={fetching}>
+      <SelectedWalletProvider wallet={loading}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
             <SwapTouchedProvider>
