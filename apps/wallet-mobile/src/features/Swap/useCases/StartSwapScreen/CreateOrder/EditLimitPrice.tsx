@@ -86,7 +86,6 @@ type AmountInputProps = {
 const AmountInput = ({onChange, value, editable}: AmountInputProps) => {
   return (
     <TextInput
-      returnKeyType="done"
       keyboardType="numeric"
       autoComplete="off"
       value={value}

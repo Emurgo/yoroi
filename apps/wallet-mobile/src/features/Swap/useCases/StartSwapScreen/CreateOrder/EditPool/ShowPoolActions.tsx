@@ -17,7 +17,6 @@ export const ShowPoolActions = () => {
   const {selectedPool, amounts} = createOrder
   const wallet = useSelectedWallet()
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const tokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
 
   if (!isBuyTouched || !isSellTouched || selectedPool === undefined) {
@@ -26,9 +25,6 @@ export const ShowPoolActions = () => {
 
   const totalAmount = Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)
   const protocolCapitalize = selectedPool.provider[0].toUpperCase() + selectedPool.provider.substring(1)
-  const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrder.amounts.sell.quantity)
-  const poolFee = Quantities.format(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
-
   return (
     <ExpandableInfoCard
       label={`${protocolCapitalize} (auto)`}
@@ -47,7 +43,7 @@ export const ShowPoolActions = () => {
         },
         {
           label: strings.swapFeesTitle,
-          value: String(poolFee),
+          value: String(selectedPool?.fee),
           info: strings.swapFees,
         },
       ]}

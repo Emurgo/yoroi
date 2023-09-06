@@ -1,6 +1,8 @@
+import {Swap} from '@yoroi/types'
 import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
 import BigNumber from 'bignumber.js'
 
+import {YoroiEntry} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
 
 export const getBuyQuantityForLimitOrder = (
@@ -31,4 +33,20 @@ export const getSellQuantityForLimitOrder = (
     BigNumber(buyQuantityDenominated).times(BigNumber(limitPrice)).toString() as BalanceQuantity,
     sellTokenDecimals,
   ).toString() as BalanceQuantity
+}
+
+export const createYoroiEntry = (createOrder: Swap.CreateOrderData, address: string): YoroiEntry => {
+  const amountEntry = {}
+  const tokenId = createOrder?.amounts?.sell.tokenId
+  if (tokenId != null && createOrder.amounts.sell.quantity !== undefined) {
+    amountEntry[tokenId] = Quantities.sum([
+      createOrder.selectedPool.deposit.quantity,
+      createOrder.amounts.sell.quantity,
+    ])
+  }
+
+  return {
+    address: address,
+    amounts: amountEntry,
+  }
 }

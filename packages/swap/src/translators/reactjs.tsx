@@ -160,13 +160,13 @@ export const useCreateOrder = (
   const {order} = useSwap()
 
   const mutation = useMutationWithInvalidations({
-    mutationFn: (orderDetails) => order.create(orderDetails),
+    mutationFn: (orderData) => order.create(orderData),
     invalidateQueries: ['useCreateOrder'],
     ...options,
   })
 
   return {
-    createOrder: mutation.mutate,
+    createOrderData: mutation.mutate,
     ...mutation,
   }
 }

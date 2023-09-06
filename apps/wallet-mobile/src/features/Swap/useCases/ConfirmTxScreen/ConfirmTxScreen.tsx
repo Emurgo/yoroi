@@ -1,128 +1,34 @@
-import {makeLimitOrder, makePossibleMarketOrder, useCreateOrder, usePoolsByPair, useSwap} from '@yoroi/swap'
-import {Swap} from '@yoroi/types'
+import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, Spacer, Text, TextInput} from '../../../../components'
 import {BottomSheetModal} from '../../../../components/BottomSheetModal'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useStrings} from '../../common/strings'
-import {useAddresses} from '../../common/useAddresses'
 import {TransactionSummary} from './TransactionSummary'
 
 export const ConfirmTxScreen = () => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
-  const [screenState, setScreenState] = React.useState<{
-    modal: boolean
-    swapTx: YoroiUnsignedTx | undefined
-    datum: string | undefined
-    contractAddress: string | undefined
-  }>({modal: false, swapTx: undefined, datum: undefined, contractAddress: undefined})
+  const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false)
 
   const [spendingPassword, setSpendingPassword] = React.useState('')
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const addresses = useAddresses()
 
-  const {createOrder: createOrderState} = useSwap()
-  const {selectedPool, amounts} = createOrderState
-
-  const {poolList} = usePoolsByPair({
-    tokenA: createOrderState.amounts.sell.tokenId,
-    tokenB: createOrderState.amounts.buy.tokenId,
-  })
-
+  const {createOrder, unsignedTx} = useSwap()
+  const {amounts} = createOrder
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
 
-  const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrderState.amounts.sell.quantity)
-  const poolFee = Quantities.format(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
-
-  const createEntry = (): YoroiEntry => {
-    const amountEntry = {}
-    const tokenId = createOrderState?.amounts.sell.tokenId
-    if (tokenId != null && createOrderState?.amounts.sell.quantity !== undefined) {
-      amountEntry[tokenId] = Quantities.sum([selectedPool.deposit.quantity, createOrderState?.amounts.sell.quantity])
-    }
-
-    return {
-      address: screenState.contractAddress !== undefined ? screenState.contractAddress : '', // when using this contractAddress got an error
-      amounts: amountEntry,
-    }
-  }
-
-  const {refetch} = useSwapTx(
-    {wallet, entry: createEntry(), datum: {hash: screenState?.datum !== undefined ? screenState.datum : ''}},
-    {
-      onSuccess: (yoroiUnsignedTx) => {
-        console.log('CREATE UNSIGNED TX SUCCESS: ', yoroiUnsignedTx)
-        setScreenState({...screenState, modal: true, swapTx: yoroiUnsignedTx})
-      },
-    },
+  const poolFee = Quantities.denominated(
+    `${Number(Object.values(unsignedTx?.fee))}`,
+    Number(wallet.primaryTokenInfo.decimals),
   )
-
-  const {createOrder} = useCreateOrder({
-    onSuccess: (data) => {
-      setScreenState({...screenState, datum: data?.datum, contractAddress: data?.contractAddress})
-      refetch()
-    },
-    onError: (error) => {
-      console.log(error)
-    },
-  })
-
-  const makeSwpOrder = () => {
-    let orderResult: Swap.CreateOrderData | undefined = undefined
-    const orderDetails = {
-      sell: amounts.sell,
-      buy: amounts.sell,
-      pools: poolList,
-      selectedPool: createOrderState.selectedPool,
-      slippage: createOrderState.slippage,
-      address: addresses.used[0],
-    }
-    if (createOrderState.type === 'market' && poolList !== undefined) {
-      orderResult = makePossibleMarketOrder(
-        orderDetails.sell,
-        orderDetails.buy,
-        orderDetails?.pools as Swap.PoolPair[],
-        orderDetails.slippage,
-        orderDetails.address,
-      )
-      orderResult && createSwapOrder(orderResult)
-    }
-    if (createOrderState.type === 'limit' && poolList !== undefined) {
-      orderResult = makeLimitOrder(
-        orderDetails.sell,
-        orderDetails.buy,
-        orderDetails.selectedPool,
-        orderDetails.slippage,
-        orderDetails.address,
-      )
-      createSwapOrder(orderResult)
-    }
-  }
-
-  const createSwapOrder = (orderData: Swap.CreateOrderData) => {
-    console.log('[CreateOrderData]', orderData)
-    createOrder({
-      amounts: {
-        sell: orderData?.amounts.sell,
-        buy: orderData?.amounts.buy,
-      },
-      address: orderData?.address,
-      slippage: orderData.slippage,
-      selectedPool: orderData.selectedPool,
-    })
-  }
 
   const orderInfo = [
     {
@@ -156,11 +62,18 @@ export const ConfirmTxScreen = () => {
       />
 
       <Actions>
-        <Button testID="swapButton" shelleyTheme title={strings.confirm} onPress={() => makeSwpOrder()} />
+        <Button
+          testID="swapButton"
+          shelleyTheme
+          title={strings.confirm}
+          onPress={() => {
+            setConfirmationModal(true)
+          }}
+        />
       </Actions>
 
       <BottomSheetModal
-        isOpen={screenState.modal}
+        isOpen={confirmationModal}
         title={strings.signTransaction}
         content={
           <>
@@ -182,7 +95,7 @@ export const ConfirmTxScreen = () => {
           </>
         }
         onClose={() => {
-          setScreenState({...screenState, modal: false})
+          setConfirmationModal(false)
         }}
         containerStyle={{justifyContent: 'space-between'}}
       />
@@ -191,30 +104,6 @@ export const ConfirmTxScreen = () => {
 }
 
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
-
-export const useSwapTx = (
-  {wallet, entry, datum}: {wallet: YoroiWallet; entry: YoroiEntry; datum: {hash: string}},
-  options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'swap-tx']>,
-) => {
-  console.log('CREATE UNSIGNED TX PAYLOAD: ', {wallet, entry, datum})
-  const query = useQuery({
-    ...options,
-    cacheTime: 0,
-    suspense: true,
-    enabled: false,
-    retry: false,
-    retryOnMount: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    queryKey: [wallet.id, 'swap-tx'],
-    queryFn: () => wallet.createUnsignedTx(entry, undefined, datum),
-  })
-
-  return {
-    ...query,
-    unsignedTx: query.data,
-  }
-}
 
 const styles = StyleSheet.create({
   container: {
