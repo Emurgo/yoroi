@@ -251,6 +251,7 @@ export const useToken = (
     suspense: true,
     queryKey: [wallet.id, 'tokenInfo', tokenId],
     queryFn: () => wallet.fetchTokenInfo(tokenId),
+    staleTime: 600_000,
   })
 
   if (!query.data) throw new Error('Invalid token id')
@@ -267,6 +268,7 @@ export const useTokenInfosDetailed = (
     suspense: true,
     queryKey: [wallet.id, 'tokenInfo', tokenId],
     queryFn: () => wallet.fetchTokenInfo(tokenId),
+    staleTime: 600_000,
   }))
   return useQueries(queries)
 }

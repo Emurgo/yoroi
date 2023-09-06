@@ -29,9 +29,27 @@ export const SelectSellTokenFromListScreen = () => {
     title: strings.swapFrom,
   })
 
+  const loading = React.useMemo(
+    () => ({
+      fallback: (
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {Array.from({length: 6}).map((_, i) => (
+            <AmountItemPlaceholder key={i} style={styles.item} />
+          ))}
+        </View>
+      ),
+    }),
+    [],
+  )
+
   return (
     <SafeAreaView style={styles.container}>
-      <Boundary>
+      <Boundary loading={loading}>
         <TokenList />
       </Boundary>
     </SafeAreaView>

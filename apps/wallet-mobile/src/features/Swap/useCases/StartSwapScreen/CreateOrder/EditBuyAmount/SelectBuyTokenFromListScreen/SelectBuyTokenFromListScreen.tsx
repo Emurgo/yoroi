@@ -50,6 +50,24 @@ export const SelectBuyTokenFromListScreen = () => {
     title: strings.swapTo,
   })
 
+  const loading = React.useMemo(
+    () => ({
+      fallback: (
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {Array.from({length: 6}).map((_, i) => (
+            <AmountItemPlaceholder key={i} style={styles.item} />
+          ))}
+        </View>
+      ),
+    }),
+    [],
+  )
+
   return (
     <SafeAreaView style={styles.container}>
       <Spacer height={12} />
@@ -60,7 +78,7 @@ export const SelectBuyTokenFromListScreen = () => {
 
       <MyPortfolioCaption />
 
-      <Boundary>
+      <Boundary loading={loading}>
         <TokenList showOnlyVerifiedTokens={isOnlyVerifiedTokens} />
       </Boundary>
     </SafeAreaView>
