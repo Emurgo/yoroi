@@ -111,6 +111,8 @@ describe('Quantities', () => {
     expect(Quantities.parseFromText('123,55', 3, italian)).toEqual(['123,55', '123550'])
     expect(Quantities.parseFromText('1234,6666', 3, italian)).toEqual(['1 234,666', '1234666'])
     expect(Quantities.parseFromText('55,', 3, italian)).toEqual(['55,', '55000'])
+    expect(Quantities.parseFromText('55,0', 3, italian)).toEqual(['55,0', '55000'])
+    expect(Quantities.parseFromText('55,10', 3, italian)).toEqual(['55,10', '55100'])
 
     expect(Quantities.parseFromText('ab1.5c,6.5', 3, italian)).toEqual(['15,65', '15650'])
 
@@ -123,6 +125,8 @@ describe('Quantities', () => {
     expect(Quantities.parseFromText('123.55', 3, english)).toEqual(['123.55', '123550'])
     expect(Quantities.parseFromText('1234.6666', 3, english)).toEqual(['1,234.666', '1234666'])
     expect(Quantities.parseFromText('55.', 3, english)).toEqual(['55.', '55000'])
+    expect(Quantities.parseFromText('55.0', 3, english)).toEqual(['55.0', '55000'])
+    expect(Quantities.parseFromText('55.10', 3, english)).toEqual(['55.10', '55100'])
 
     expect(Quantities.parseFromText('ab1.5c,6.5', 3, english)).toEqual(['1.56', '1560'])
   })
