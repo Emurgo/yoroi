@@ -9,6 +9,7 @@ import {Counter} from '../../../common/Counter/Counter'
 import {
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
+  HiddenInfoWrapper,
   MainInfoWrapper,
 } from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {useStrings} from '../../../common/strings'
@@ -16,8 +17,17 @@ import {mapOrders, OrderProps} from './mapOrders'
 
 export const CompletedOrders = () => {
   const strings = useStrings()
-
   const {search} = useSearch()
+  const [showHiddenInfo, setShowHiddenInfo] = React.useState(false)
+  const [bottomSheetState, setBottomSheetState] = React.useState<{
+    isOpen: boolean
+    title: string
+    content?: React.ReactNode
+  }>({
+    isOpen: false,
+    title: '',
+    content: '',
+  })
 
   const data = useOrderByStatusCompleted({
     onError: (err) => {
@@ -38,32 +48,13 @@ export const CompletedOrders = () => {
           {orders.map((order) => (
             <ExpandableInfoCard
               key={`${order.assetFromLabel}-${order.assetToLabel}-${order.date}`}
+              showHiddenInfo={showHiddenInfo}
+              setShowHiddenInfo={setShowHiddenInfo}
+              bottomSheetState={bottomSheetState}
+              setBottomSheetState={setBottomSheetState}
               mainInfo={<MainInfo order={order} />}
+              hiddenInfo={<HiddenInfo order={order} setBottomSheetState={setBottomSheetState} />}
               label={<Label assetFromLabel={order.assetFromLabel} assetToLabel={order.assetToLabel} />}
-              hiddenInfo={[
-                {
-                  label: strings.listOrdersTotal,
-                  value: order.total,
-                },
-                {
-                  label: strings.listOrdersLiquidityPool,
-                  value: (
-                    <LiquidityPool
-                      liquidityPoolIcon={order.liquidityPoolIcon}
-                      liquidityPoolName={order.liquidityPoolName}
-                      poolUrl={order.poolUrl}
-                    />
-                  ),
-                },
-                {
-                  label: strings.listOrdersTimeCreated,
-                  value: order.date,
-                },
-                {
-                  label: strings.listOrdersTxId,
-                  value: <TxLink txId={order.txId} txLink={order.txLink} />,
-                },
-              ]}
               withBoxShadow
             />
           ))}
@@ -73,6 +64,46 @@ export const CompletedOrders = () => {
       <Counter counter={orders?.length ?? 0} customText={strings.listCompletedOrders} />
     </>
   )
+}
+
+const HiddenInfo = ({order, setBottomSheetState}) => {
+  const strings = useStrings()
+  return [
+    {
+      label: strings.listOrdersTotal,
+      value: order.total,
+    },
+    {
+      label: strings.listOrdersLiquidityPool,
+      value: (
+        <LiquidityPool
+          liquidityPoolIcon={order.liquidityPoolIcon}
+          liquidityPoolName={order.liquidityPoolName}
+          poolUrl={order.poolUrl}
+        />
+      ),
+    },
+    {
+      label: strings.listOrdersTimeCreated,
+      value: order.date,
+    },
+    {
+      label: strings.listOrdersTxId,
+      value: <TxLink txId={order.txId} txLink={order.txLink} />,
+    },
+  ].map((item) => (
+    <HiddenInfoWrapper
+      key={item.label}
+      value={item.value}
+      label={item.label}
+      onPress={() => {
+        setBottomSheetState({
+          isOpen: true,
+          title: item.label,
+        })
+      }}
+    />
+  ))
 }
 
 const MainInfo = ({order}: {order: OrderProps}) => {

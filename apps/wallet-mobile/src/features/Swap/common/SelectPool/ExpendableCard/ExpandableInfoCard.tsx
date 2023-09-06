@@ -10,11 +10,15 @@ import {COLORS} from '../../../../../theme'
 export type ExpandableInfoCardProps = {
   label: string | React.ReactNode | null
   mainInfo: React.ReactNode
-  hiddenInfo: Array<{label: string; value: string | React.ReactNode; info?: string}>
+  hiddenInfo: React.ReactNode
   navigateTo?: () => void
   onPress?: () => void
   buttonLabel?: string
   withBoxShadow?: boolean
+  showHiddenInfo: boolean
+  setShowHiddenInfo: (showHiddenInfo: boolean) => void
+  bottomSheetState: {isOpen: boolean; title: string; content?: React.ReactNode}
+  setBottomSheetState: ({isOpen, title, content}: {isOpen: boolean; title: string; content?: React.ReactNode}) => void
 }
 
 export const ExpandableInfoCard = ({
@@ -25,14 +29,11 @@ export const ExpandableInfoCard = ({
   buttonLabel,
   onPress,
   withBoxShadow,
+  showHiddenInfo,
+  setShowHiddenInfo,
+  setBottomSheetState,
+  bottomSheetState,
 }: ExpandableInfoCardProps) => {
-  const [bottomSheetState, setBottomSheetState] = React.useState<{isOpen: boolean; title: string; content?: string}>({
-    isOpen: false,
-    title: '',
-    content: '',
-  })
-  const [showHiddenInfo, setShowHiddenInfo] = React.useState(false)
-
   return (
     <View>
       <View style={[styles.container, withBoxShadow && styles.shadowProp]}>
@@ -50,41 +51,7 @@ export const ExpandableInfoCard = ({
 
         {mainInfo}
 
-        {showHiddenInfo && (
-          <View>
-            {hiddenInfo.map((item, index) => {
-              return (
-                <View key={item.label}>
-                  <Spacer height={8} />
-
-                  <View key={index} style={styles.flexBetween}>
-                    <View style={styles.flex}>
-                      <Text style={[styles.text, styles.gray]}>{item.label}</Text>
-
-                      <Spacer width={8} />
-
-                      {item.info !== undefined && (
-                        <TouchableOpacity
-                          onPress={() => {
-                            setBottomSheetState({
-                              isOpen: true,
-                              title: item.label,
-                              content: item.info,
-                            })
-                          }}
-                        >
-                          <Icon.Info size={24} />
-                        </TouchableOpacity>
-                      )}
-                    </View>
-
-                    {typeof item.value === 'string' ? <Text style={styles.text}>{item.value}</Text> : item.value}
-                  </View>
-                </View>
-              )
-            })}
-          </View>
-        )}
+        {showHiddenInfo && hiddenInfo}
 
         {buttonLabel != null && (
           <TouchableOpacity style={styles.button} onPress={onPress && onPress}>
@@ -104,6 +71,40 @@ export const ExpandableInfoCard = ({
       >
         <Text style={styles.text}>{bottomSheetState.content}</Text>
       </BottomSheetModal>
+    </View>
+  )
+}
+
+export const HiddenInfoWrapper = ({
+  label,
+  info,
+  onPress,
+  value,
+}: {
+  label: string
+  info?: React.ReactNode
+  onPress
+  value: React.ReactNode
+}) => {
+  return (
+    <View>
+      <Spacer height={8} />
+
+      <View style={styles.flexBetween}>
+        <View style={styles.flex}>
+          <Text style={[styles.text, styles.gray]}>{label}</Text>
+
+          <Spacer width={8} />
+
+          {info !== undefined && (
+            <TouchableOpacity onPress={onPress}>
+              <Icon.Info size={24} />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {typeof value === 'string' ? <Text style={styles.text}>{value}</Text> : value}
+      </View>
     </View>
   )
 }
