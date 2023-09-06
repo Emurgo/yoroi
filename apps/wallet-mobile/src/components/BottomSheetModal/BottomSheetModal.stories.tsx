@@ -7,15 +7,15 @@ import {BottomSheetModal} from './BottomSheetModal'
 
 storiesOf('BottomSheetModal', module).add('Default', () => (
   <BottomSheetModal
-    content={
-      <View>
-        <Text>FAke content</Text>
-      </View>
-    }
     title="Fake Title"
     onClose={() => {
       action('onClose')
     }}
     isOpen
-  />
+  >
+    <View>
+        <Text>FAke content</Text>
+      </View>
+    }
+  </BottomSheetModal>
 ))

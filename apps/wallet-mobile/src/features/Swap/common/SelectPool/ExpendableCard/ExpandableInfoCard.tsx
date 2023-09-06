@@ -98,11 +98,12 @@ export const ExpandableInfoCard = ({
       <BottomSheetModal
         isOpen={bottomSheetState.isOpen}
         title={bottomSheetState.title}
-        content={<Text style={styles.text}>{bottomSheetState.content}</Text>}
         onClose={() => {
           setBottomSheetState({isOpen: false, title: '', content: ''})
         }}
-      />
+      >
+        <Text style={styles.text}>{bottomSheetState.content}</Text>
+      </BottomSheetModal>
     </View>
   )
 }

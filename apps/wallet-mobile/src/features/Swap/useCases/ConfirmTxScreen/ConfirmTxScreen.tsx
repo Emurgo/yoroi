@@ -129,39 +129,39 @@ export const ConfirmTxScreen = () => {
       <BottomSheetModal
         isOpen={confirmationModal}
         title={strings.signTransaction}
-        content={
-          <>
-            <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
-
-            <TextInput
-              secureTextEntry
-              ref={spendingPasswordRef}
-              enablesReturnKeyAutomatically
-              placeholder={strings.spendingPassword}
-              value={spendingPassword}
-              onChangeText={setSpendingPassword}
-              autoComplete="off"
-            />
-
-            <Spacer fill />
-
-            <Button testID="swapButton" shelleyTheme title={strings.sign} />
-          </>
-        }
         onClose={() => {
           setConfirmationModal(false)
         }}
         contentContainerStyle={{justifyContent: 'space-between'}}
-      />
+      >
+        <>
+          <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+
+          <TextInput
+            secureTextEntry
+            ref={spendingPasswordRef}
+            enablesReturnKeyAutomatically
+            placeholder={strings.spendingPassword}
+            value={spendingPassword}
+            onChangeText={setSpendingPassword}
+            autoComplete="off"
+          />
+
+          <Spacer fill />
+
+          <Button testID="swapButton" shelleyTheme title={strings.sign} />
+        </>
+      </BottomSheetModal>
 
       <BottomSheetModal
         isOpen={bottomSheetState.isOpen}
         title={bottomSheetState.title}
-        content={<Text style={styles.text}>{bottomSheetState.content}</Text>}
         onClose={() => {
           setBottomSheetState({isOpen: false, title: '', content: ''})
         }}
-      />
+      >
+        <Text style={styles.text}>{bottomSheetState.content}</Text>
+      </BottomSheetModal>
     </SafeAreaView>
   )
 }

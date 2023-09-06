@@ -101,10 +101,11 @@ const VerifiedTokensToogle = ({onToogle, isToogled}: {onToogle: () => void; isTo
 
       <BottomSheetModal
         title={strings.poolVerification('MuesliSwap')}
-        content={<VerifiedTokenInfo />}
         isOpen={showVerifiedTokenInfo}
         onClose={() => setShowVerifiedTokenInfo(false)}
-      />
+      >
+        <VerifiedTokenInfo />
+      </BottomSheetModal>
     </View>
   )
 }

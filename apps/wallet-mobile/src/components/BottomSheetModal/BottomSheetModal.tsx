@@ -8,18 +8,18 @@ import {Spacer} from '../Spacer'
 
 type BottomSheetModalProps = {
   title: string
-  content: string | React.ReactNode
   isOpen: boolean
   onClose?: () => void
   contentContainerStyle?: ViewStyle
+  children: React.ReactNode
 }
 
 export const BottomSheetModal = ({
   title,
-  content,
   isOpen = false,
   onClose,
   contentContainerStyle,
+  children,
 }: BottomSheetModalProps) => {
   const navigation = useNavigation()
 
@@ -99,7 +99,7 @@ export const BottomSheetModal = ({
 
           <Spacer height={25} />
 
-          {content}
+          {children}
         </View>
       </BottomSheet>
     </RNModal>

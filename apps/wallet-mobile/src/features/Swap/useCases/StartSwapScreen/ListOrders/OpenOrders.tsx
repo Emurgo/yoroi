@@ -106,37 +106,37 @@ export const OpenOrders = () => {
         <BottomSheetModal
           isOpen={bottomSheetState.isOpen}
           title={bottomSheetState.title}
-          content={bottomSheetState.content}
           onClose={() => {
             setBottomSheetState({isOpen: false, title: '', content: ''})
           }}
-        />
+        >
+          {bottomSheetState.content}
+        </BottomSheetModal>
 
         <BottomSheetModal
           isOpen={confirmationModal}
           title={strings.signTransaction}
-          content={
-            <>
-              <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
-
-              <TextInput
-                secureTextEntry
-                enablesReturnKeyAutomatically
-                placeholder={strings.spendingPassword}
-                value={spendingPassword}
-                onChangeText={setSpendingPassword}
-                autoComplete="off"
-              />
-
-              <Spacer fill />
-
-              <Button testID="swapButton" shelleyTheme title={strings.sign} />
-            </>
-          }
           onClose={() => {
             setConfirmationModal(false)
           }}
-        />
+        >
+          <>
+            <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+
+            <TextInput
+              secureTextEntry
+              enablesReturnKeyAutomatically
+              placeholder={strings.spendingPassword}
+              value={spendingPassword}
+              onChangeText={setSpendingPassword}
+              autoComplete="off"
+            />
+
+            <Spacer fill />
+
+            <Button testID="swapButton" shelleyTheme title={strings.sign} />
+          </>
+        </BottomSheetModal>
       </View>
 
       <Counter counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
