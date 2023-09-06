@@ -125,36 +125,40 @@ storiesOf('Expandable Info Card', module)
   })
 
 const HiddenInfo = ({setBottomSheetState}) => {
-  return [
-    {
-      label: 'Min ADA',
-      value: '2 ADA',
-      info: 'Fake content',
-    },
-    {
-      label: 'Min Received',
-      value: '2.99 USDA',
-      info: 'Fake content',
-    },
-    {
-      label: 'Fees',
-      value: '2 ADA',
-      info: 'Fake content',
-    },
-  ].map((item) => (
-    <HiddenInfoWrapper
-      key={item.label}
-      value={item.value}
-      label={item.label}
-      onPress={() => {
-        setBottomSheetState({
-          isOpen: true,
-          title: item.label,
-          content: item.info,
-        })
-      }}
-    />
-  ))
+  return (
+    <>
+      {[
+        {
+          label: 'Min ADA',
+          value: '2 ADA',
+          info: 'Fake content',
+        },
+        {
+          label: 'Min Received',
+          value: '2.99 USDA',
+          info: 'Fake content',
+        },
+        {
+          label: 'Fees',
+          value: '2 ADA',
+          info: 'Fake content',
+        },
+      ].map((item) => (
+        <HiddenInfoWrapper
+          key={item.label}
+          value={item.value}
+          label={item.label}
+          onPress={() => {
+            setBottomSheetState({
+              isOpen: true,
+              title: item.label,
+              content: item.info,
+            })
+          }}
+        />
+      ))}
+    </>
+  )
 }
 
 const MainInfo = () => {
