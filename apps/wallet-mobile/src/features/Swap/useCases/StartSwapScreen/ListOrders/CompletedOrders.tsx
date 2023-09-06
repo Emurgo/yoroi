@@ -22,11 +22,9 @@ export const CompletedOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<{
     isOpen: boolean
     title: string
-    content?: React.ReactNode
   }>({
     isOpen: false,
     title: '',
-    content: '',
   })
 
   const data = useOrderByStatusCompleted({
