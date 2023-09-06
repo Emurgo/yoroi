@@ -5,7 +5,7 @@ import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../../common/navigation'
-import {ExpandableInfoCard} from '../../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
+import {ExpandableInfoCard, MainInfoWrapper} from '../../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../TouchedContext'
 
@@ -32,7 +32,7 @@ export const ShowPoolActions = () => {
   return (
     <ExpandableInfoCard
       label={`${protocolCapitalize} (auto)`}
-      mainInfo={[{label: `Total ${totalAmount} ${tokenName} `}]}
+      mainInfo={<MainInfo totalAmount={totalAmount} tokenName={tokenName} />}
       navigateTo={() => navigate.selectPool()}
       hiddenInfo={[
         {
@@ -53,4 +53,10 @@ export const ShowPoolActions = () => {
       ]}
     />
   )
+}
+
+const MainInfo = ({totalAmount, tokenName}: {totalAmount: string; tokenName: string}) => {
+  return [{label: `Total ${totalAmount} ${tokenName} `}].map((item, index) => (
+    <MainInfoWrapper key={index} label={item.label} isLast={index === 0} />
+  ))
 }

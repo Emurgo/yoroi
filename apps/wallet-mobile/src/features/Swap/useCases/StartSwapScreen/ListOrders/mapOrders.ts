@@ -1,7 +1,7 @@
 import {SwapOpenOrder} from '@yoroi/types/lib/swap/order'
 import React from 'react'
 
-import {getMockOpenOrder} from './mocks'
+import {getMockOrders} from './mocks'
 
 export type OrderProps = {
   tokenPrice: string
@@ -25,5 +25,5 @@ export type OrderProps = {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const mapOrders = (orders: Array<SwapOpenOrder>): Array<OrderProps> => {
-  return getMockOpenOrder()
+  return getMockOrders()
 }

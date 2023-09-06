@@ -17,9 +17,9 @@ export const SelectPoolFromListScreen = () => {
   return (
     <SafeAreaView>
       <ScrollView>
-        <SelectPoolFromList data={poolList !== undefined ? poolList : undefined} />
+        <SelectPoolFromList data={poolList} />
 
-        <Counter counter={poolList !== undefined ? poolList.length : 0} />
+        <Counter counter={Array.isArray(poolList) ? poolList.length : 0} />
       </ScrollView>
     </SafeAreaView>
   )

@@ -150,7 +150,7 @@ const getStories = () => {
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowTokenActions/ClearQuantities.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowTokenActions/ClearQuantities.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowTokenActions/ShowTokenActions.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowTokenActions/ShowTokenActions.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowTokenActions/SwitchTokens.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowTokenActions/SwitchTokens.stories.tsx"),
-    "./src/features/Swap/useCases/StartSwapScreen/ListOrders/ClosedOrders.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/ListOrders/ClosedOrders.stories.tsx"),
+    "./src/features/Swap/useCases/StartSwapScreen/ListOrders/CompletedOrders.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/ListOrders/CompletedOrders.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/ListOrders/ListOrders.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/ListOrders/ListOrders.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/ListOrders/OpenOrders.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/ListOrders/OpenOrders.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/StartSwapScreen.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/StartSwapScreen.stories.tsx"),

@@ -1,16 +1,20 @@
+import {useOrderByStatusOpen} from '@yoroi/swap'
 import React from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {BottomSheetModal, Button, Icon, Spacer, Text, TextInput} from '../../../../../components'
+import {useSearch} from '../../../../../Search/SearchContext'
 import {COLORS} from '../../../../../theme'
+import {Counter} from '../../../common/Counter/Counter'
 import {
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
+  MainInfoWrapper,
 } from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {useStrings} from '../../../common/strings'
-import {OrderProps} from './mapOrders'
+import {mapOrders, OrderProps} from './mapOrders'
 
-export const OpenOrders = ({orders}: {orders: Array<OrderProps>}) => {
+export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<{
     isOpen: boolean
     title: string
@@ -24,105 +28,128 @@ export const OpenOrders = ({orders}: {orders: Array<OrderProps>}) => {
   const strings = useStrings()
   const [spendingPassword, setSpendingPassword] = React.useState('')
 
+  const {search} = useSearch()
+
+  const data = useOrderByStatusOpen({
+    onError: (err) => {
+      console.log(err)
+    },
+  })
+
+  const orders = mapOrders(data).filter(
+    ({assetFromLabel, assetToLabel}) =>
+      assetFromLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+      assetToLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+  )
+
   return (
-    <View style={styles.container}>
-      <View style={styles.flex}>
-        {orders.map((order) => (
-          <ExpandableInfoCard
-            key={`${order.assetFromLabel}-${order.assetToLabel}-${order.date}`}
-            label={<Label assetFromLabel={order.assetFromLabel} assetToLabel={order.assetToLabel} />}
-            hiddenInfo={[
-              {
-                label: strings.listOrdersTotal,
-                value: order.total,
-              },
-              {
-                label: strings.listOrdersLiquidityPool,
-                value: (
-                  <LiquidityPool
-                    liquidityPoolIcon={order.liquidityPoolIcon}
-                    liquidityPoolName={order.liquidityPoolName}
-                    poolUrl={order.poolUrl}
-                  />
-                ),
-              },
-              {
-                label: strings.listOrdersTimeCreated,
-                value: order.date,
-              },
-              {
-                label: strings.listOrdersTxId,
-                value: <TxLink txId={order.txId} txLink={order.txLink} />,
-              },
-            ]}
-            mainInfo={[
-              {label: strings.listOrdersSheetAssetPrice, value: order.tokenPrice},
-              {label: strings.listOrdersSheetAssetAmount, value: order.tokenAmount},
-            ]}
-            buttonText={strings.listOrdersSheetButtonText.toLocaleUpperCase()}
-            onPress={() => {
-              setBottomSheetState({
-                isOpen: true,
-                title: strings.listOrdersSheetTitle,
-                content: (
-                  <ModalContent
-                    assetFromIcon={order.assetFromIcon}
-                    assetToIcon={order.assetToIcon}
-                    confirmationModal={confirmationModal}
-                    onConfirm={() => {
-                      setBottomSheetState({isOpen: false, title: '', content: ''})
-                      setConfirmationModal(true)
-                    }}
-                    onBack={() => {
-                      setBottomSheetState({isOpen: false, title: '', content: ''})
-                    }}
-                    assetFromLabel={order.assetFromLabel}
-                    assetToLabel={order.assetToLabel}
-                  />
-                ),
-              })
-            }}
-            withBoxShadow
-          />
-        ))}
+    <>
+      <View style={styles.container}>
+        <View style={styles.flex}>
+          {orders.map((order) => (
+            <ExpandableInfoCard
+              key={`${order.assetFromLabel}-${order.assetToLabel}-${order.date}`}
+              label={<Label assetFromLabel={order.assetFromLabel} assetToLabel={order.assetToLabel} />}
+              hiddenInfo={[
+                {
+                  label: strings.listOrdersTotal,
+                  value: order.total,
+                },
+                {
+                  label: strings.listOrdersLiquidityPool,
+                  value: (
+                    <LiquidityPool
+                      liquidityPoolIcon={order.liquidityPoolIcon}
+                      liquidityPoolName={order.liquidityPoolName}
+                      poolUrl={order.poolUrl}
+                    />
+                  ),
+                },
+                {
+                  label: strings.listOrdersTimeCreated,
+                  value: order.date,
+                },
+                {
+                  label: strings.listOrdersTxId,
+                  value: <TxLink txId={order.txId} txLink={order.txLink} />,
+                },
+              ]}
+              mainInfo={<MainInfo order={order} />}
+              buttonLabel={strings.listOrdersSheetButtonText.toLocaleUpperCase()}
+              onPress={() => {
+                setBottomSheetState({
+                  isOpen: true,
+                  title: strings.listOrdersSheetTitle,
+                  content: (
+                    <ModalContent
+                      assetFromIcon={order.assetFromIcon}
+                      assetToIcon={order.assetToIcon}
+                      confirmationModal={confirmationModal}
+                      onConfirm={() => {
+                        setBottomSheetState({isOpen: false, title: '', content: ''})
+                        setConfirmationModal(true)
+                      }}
+                      onBack={() => {
+                        setBottomSheetState({isOpen: false, title: '', content: ''})
+                      }}
+                      assetFromLabel={order.assetFromLabel}
+                      assetToLabel={order.assetToLabel}
+                    />
+                  ),
+                })
+              }}
+              withBoxShadow
+            />
+          ))}
+        </View>
+
+        <BottomSheetModal
+          isOpen={bottomSheetState.isOpen}
+          title={bottomSheetState.title}
+          content={bottomSheetState.content}
+          onClose={() => {
+            setBottomSheetState({isOpen: false, title: '', content: ''})
+          }}
+        />
+
+        <BottomSheetModal
+          isOpen={confirmationModal}
+          title={strings.signTransaction}
+          content={
+            <>
+              <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+
+              <TextInput
+                secureTextEntry
+                enablesReturnKeyAutomatically
+                placeholder={strings.spendingPassword}
+                value={spendingPassword}
+                onChangeText={setSpendingPassword}
+                autoComplete="off"
+              />
+
+              <Spacer fill />
+
+              <Button testID="swapButton" shelleyTheme title={strings.sign} />
+            </>
+          }
+          onClose={() => {
+            setConfirmationModal(false)
+          }}
+        />
       </View>
 
-      <BottomSheetModal
-        isOpen={bottomSheetState.isOpen}
-        title={bottomSheetState.title}
-        content={bottomSheetState.content}
-        onClose={() => {
-          setBottomSheetState({isOpen: false, title: '', content: ''})
-        }}
-      />
-
-      <BottomSheetModal
-        isOpen={confirmationModal}
-        title={strings.signTransaction}
-        content={
-          <>
-            <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
-
-            <TextInput
-              secureTextEntry
-              enablesReturnKeyAutomatically
-              placeholder={strings.spendingPassword}
-              value={spendingPassword}
-              onChangeText={setSpendingPassword}
-              autoComplete="off"
-            />
-
-            <Spacer fill />
-
-            <Button testID="swapButton" shelleyTheme title={strings.sign} />
-          </>
-        }
-        onClose={() => {
-          setConfirmationModal(false)
-        }}
-      />
-    </View>
+      <Counter counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
+    </>
   )
+}
+
+const MainInfo = ({order}: {order: OrderProps}) => {
+  const strings = useStrings()
+  return [
+    {label: strings.listOrdersSheetAssetPrice, value: order.tokenPrice},
+    {label: strings.listOrdersSheetAssetAmount, value: order.tokenAmount},
+  ].map((item, index) => <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />)
 }
 
 const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {

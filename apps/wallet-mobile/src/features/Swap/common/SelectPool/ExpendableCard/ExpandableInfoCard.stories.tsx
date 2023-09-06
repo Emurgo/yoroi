@@ -4,7 +4,7 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Icon, Spacer} from '../../../../../components'
-import {ExpandableInfoCard} from './ExpandableInfoCard'
+import {ExpandableInfoCard, MainInfoWrapper} from './ExpandableInfoCard'
 
 const styles = StyleSheet.create({
   container: {
@@ -17,7 +17,7 @@ storiesOf('Expandable Info Card', module)
   .add('with inital data', () => (
     <ExpandableInfoCard
       label="Minswap (Auto)"
-      mainInfo={[{label: 'Total 11 ADA'}]}
+      mainInfo={<MainInfo />}
       hiddenInfo={[
         {
           label: 'Min ADA',
@@ -56,10 +56,7 @@ storiesOf('Expandable Info Card', module)
           <Text>USDA</Text>
         </View>
       }
-      mainInfo={[
-        {label: 'Token price', value: '3 ADA'},
-        {label: 'Token amount', value: '3 USDA'},
-      ]}
+      mainInfo={<MainInfo />}
       hiddenInfo={[
         {
           label: 'Min ADA',
@@ -98,10 +95,7 @@ storiesOf('Expandable Info Card', module)
           <Text>USDA</Text>
         </View>
       }
-      mainInfo={[
-        {label: 'Token price', value: '3 ADA'},
-        {label: 'Token amount', value: '3 USDA'},
-      ]}
+      mainInfo={<MainInfo />}
       hiddenInfo={[
         {
           label: 'Min ADA',
@@ -122,7 +116,14 @@ storiesOf('Expandable Info Card', module)
       onPress={() => {
         action('onClose')
       }}
-      buttonText="CANCEL ORDER"
+      buttonLabel="CANCEL ORDER"
       withBoxShadow
     />
   ))
+
+const MainInfo = () => {
+  return [
+    {label: 'Token price', value: '3 ADA'},
+    {label: 'Token amount', value: '3 USDA'},
+  ].map((item, index) => <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />)
+}

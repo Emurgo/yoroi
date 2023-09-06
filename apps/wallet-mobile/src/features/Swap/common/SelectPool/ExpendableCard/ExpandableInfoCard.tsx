@@ -9,11 +9,11 @@ import {COLORS} from '../../../../../theme'
 
 export type ExpandableInfoCardProps = {
   label: string | React.ReactNode | null
-  mainInfo: Array<{label: string; value?: string}>
+  mainInfo: React.ReactNode
   hiddenInfo: Array<{label: string; value: string | React.ReactNode; info?: string}>
   navigateTo?: () => void
   onPress?: () => void
-  buttonText?: string
+  buttonLabel?: string
   withBoxShadow?: boolean
 }
 
@@ -22,7 +22,7 @@ export const ExpandableInfoCard = ({
   mainInfo,
   hiddenInfo,
   navigateTo,
-  buttonText,
+  buttonLabel,
   onPress,
   withBoxShadow,
 }: ExpandableInfoCardProps) => {
@@ -48,21 +48,7 @@ export const ExpandableInfoCard = ({
 
         <Spacer height={8} />
 
-        {mainInfo?.map((item, index) => {
-          const isLast = index === mainInfo?.length - 1
-
-          return (
-            <View key={index}>
-              <View style={styles.flexBetween}>
-                <Text style={styles.gray}>{`${item.label}`}</Text>
-
-                {item?.value !== undefined && <Text style={styles.text}>{`${item?.value}`}</Text>}
-              </View>
-
-              {!isLast && <Spacer height={8} />}
-            </View>
-          )
-        })}
+        {mainInfo}
 
         {showHiddenInfo && (
           <View>
@@ -100,9 +86,9 @@ export const ExpandableInfoCard = ({
           </View>
         )}
 
-        {buttonText != null && (
+        {buttonLabel != null && (
           <TouchableOpacity style={styles.button} onPress={onPress && onPress}>
-            <Text style={styles.buttonText}>{buttonText}</Text>
+            <Text style={styles.buttonLabel}>{buttonLabel}</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -117,6 +103,20 @@ export const ExpandableInfoCard = ({
           setBottomSheetState({isOpen: false, title: '', content: ''})
         }}
       />
+    </View>
+  )
+}
+
+export const MainInfoWrapper = ({label, value, isLast = false}: {label: string; value?: string; isLast?: boolean}) => {
+  return (
+    <View>
+      <View style={styles.flexBetween}>
+        <Text style={styles.gray}>{`${label}`}</Text>
+
+        {value !== undefined && <Text style={styles.text}>{`${value}`}</Text>}
+      </View>
+
+      {!isLast && <Spacer height={8} />}
     </View>
   )
 }
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   button: {
     width: 111,
   },
-  buttonText: {
+  buttonLabel: {
     fontSize: 14,
     paddingTop: 13,
     fontWeight: '500',

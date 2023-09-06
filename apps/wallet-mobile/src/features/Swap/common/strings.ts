@@ -61,7 +61,6 @@ export const useStrings = () => {
     asset: intl.formatMessage(messages.asset),
     volume: intl.formatMessage(messages.volume),
     total: intl.formatMessage(globalMessages.total),
-<<<<<<< HEAD
     listCompletedOrders: intl.formatMessage(messages.listCompletedOrders),
     listOpenOrders: intl.formatMessage(messages.listOpenOrders),
     listOrdersSheetTitle: intl.formatMessage(messages.listOrdersSheetTitle),
@@ -78,14 +77,12 @@ export const useStrings = () => {
     listOrdersLiquidityPool: intl.formatMessage(messages.listOrdersLiquidityPool),
     listOrdersTotal: intl.formatMessage(messages.listOrdersTotal),
     listOrdersTxId: intl.formatMessage(messages.listOrdersTxId),
-=======
     limitPriceWarningTitle: intl.formatMessage(messages.limitPriceWarningTitle),
     limitPriceWarningDescription: intl.formatMessage(messages.limitPriceWarningDescription),
     limitPriceWarningYourPrice: intl.formatMessage(messages.limitPriceWarningYourPrice),
     limitPriceWarningMarketPrice: intl.formatMessage(messages.limitPriceWarningMarketPrice),
     limitPriceWarningBack: intl.formatMessage(messages.limitPriceWarningBack),
     limitPriceWarningConfirm: intl.formatMessage(messages.limitPriceWarningConfirm),
->>>>>>> origin/develop
   }
 }
 

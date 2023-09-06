@@ -1,62 +1,89 @@
+import {useOrderByStatusCompleted} from '@yoroi/swap'
 import React from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../../components'
+import {useSearch} from '../../../../../Search/SearchContext'
 import {COLORS} from '../../../../../theme'
+import {Counter} from '../../../common/Counter/Counter'
 import {
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
+  MainInfoWrapper,
 } from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {useStrings} from '../../../common/strings'
-import {OrderProps} from './mapOrders'
+import {mapOrders, OrderProps} from './mapOrders'
 
-export const ClosedOrders = ({orders}: {orders: Array<OrderProps>}) => {
+export const CompletedOrders = () => {
   const strings = useStrings()
 
+  const {search} = useSearch()
+
+  const data = useOrderByStatusCompleted({
+    onError: (err) => {
+      console.log(err)
+    },
+  })
+
+  const orders = mapOrders(data).filter(
+    ({assetFromLabel, assetToLabel}) =>
+      assetFromLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+      assetToLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+  )
+
   return (
-    <View style={styles.container}>
-      <View style={styles.flex}>
-        {orders.map((order) => (
-          <ExpandableInfoCard
-            key={`${order.assetFromLabel}-${order.assetToLabel}-${order.date}`}
-            mainInfo={[
-              {label: strings.listOrdersSheetAssetPrice, value: order.tokenPrice},
-              {label: strings.listOrdersSheetAssetAmount, value: order.tokenAmount},
-            ]}
-            label={<Label assetFromLabel={order.assetFromLabel} assetToLabel={order.assetToLabel} />}
-            hiddenInfo={[
-              {
-                label: strings.listOrdersTotal,
-                value: order.total,
-              },
-              {
-                label: strings.listOrdersLiquidityPool,
-                value: (
-                  <LiquidityPool
-                    liquidityPoolIcon={order.liquidityPoolIcon}
-                    liquidityPoolName={order.liquidityPoolName}
-                    poolUrl={order.poolUrl}
-                  />
-                ),
-              },
-              {
-                label: strings.listOrdersTimeCreated,
-                value: order.date,
-              },
-              {
-                label: strings.listOrdersTxId,
-                value: <TxLink txId={order.txId} txLink={order.txLink} />,
-              },
-            ]}
-            withBoxShadow
-          />
-        ))}
+    <>
+      <View style={styles.container}>
+        <View style={styles.flex}>
+          {orders.map((order) => (
+            <ExpandableInfoCard
+              key={`${order.assetFromLabel}-${order.assetToLabel}-${order.date}`}
+              mainInfo={<MainInfo order={order} />}
+              label={<Label assetFromLabel={order.assetFromLabel} assetToLabel={order.assetToLabel} />}
+              hiddenInfo={[
+                {
+                  label: strings.listOrdersTotal,
+                  value: order.total,
+                },
+                {
+                  label: strings.listOrdersLiquidityPool,
+                  value: (
+                    <LiquidityPool
+                      liquidityPoolIcon={order.liquidityPoolIcon}
+                      liquidityPoolName={order.liquidityPoolName}
+                      poolUrl={order.poolUrl}
+                    />
+                  ),
+                },
+                {
+                  label: strings.listOrdersTimeCreated,
+                  value: order.date,
+                },
+                {
+                  label: strings.listOrdersTxId,
+                  value: <TxLink txId={order.txId} txLink={order.txLink} />,
+                },
+              ]}
+              withBoxShadow
+            />
+          ))}
+        </View>
       </View>
-    </View>
+
+      <Counter counter={orders?.length ?? 0} customText={strings.listCompletedOrders} />
+    </>
   )
 }
 
-export const ClosedOrdersSkeleton = () => (
+const MainInfo = ({order}: {order: OrderProps}) => {
+  const strings = useStrings()
+  return [
+    {label: strings.listOrdersSheetAssetPrice, value: order.tokenPrice},
+    {label: strings.listOrdersSheetAssetAmount, value: order.tokenAmount},
+  ].map((item, index) => <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />)
+}
+
+export const CompletedOrdersSkeleton = () => (
   <View style={styles.container}>
     <View style={styles.flex}>
       {[0, 1, 2, 3].map((index) => (

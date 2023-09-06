@@ -3,7 +3,7 @@ import {Defs, Image, Path, Pattern, Rect, Svg, Use} from 'react-native-svg'
 
 import {OrderProps} from './mapOrders'
 
-export const getMockOpenOrder: () => Array<OrderProps> = () => [
+export const getMockOrders: () => Array<OrderProps> = () => [
   {
     assetFromLabel: 'ADA',
     tokenPrice: '3 ADA',

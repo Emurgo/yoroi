@@ -1,19 +1,19 @@
 export type FungibilityFilter = 'all' | 'ft' | 'nft'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {Text} from '../../../../components'
 import {useSearch} from '../../../../Search/SearchContext'
 import {COLORS} from '../../../../theme'
 import {useStrings} from '../strings'
 
-export const Counter = ({counter, customText}: {counter: number; customText?: string}) => {
+export const Counter = ({counter, customText, style}: {counter: number; customText?: string} & ViewProps) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const strings = useStrings()
 
   if (!isSearching) {
     return (
-      <View style={styles.counter}>
+      <View style={[styles.counter, style]}>
         <Text style={styles.counterText}>{strings.youHave}</Text>
 
         <Text style={styles.counterTextBold}>{` ${counter} ${customText ?? strings.assets(counter)}`}</Text>
@@ -23,7 +23,7 @@ export const Counter = ({counter, customText}: {counter: number; customText?: st
 
   if (isSearching && assetSearchTerm.length > 0) {
     return (
-      <View style={styles.counter}>
+      <View style={[styles.counter, style]}>
         <Text style={styles.counterTextBold}>{`${counter} ${customText ?? strings.assets(counter)} `}</Text>
 
         <Text style={styles.counterText}>{strings.found}</Text>

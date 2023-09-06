@@ -11,11 +11,9 @@ import {useNavigateTo} from '../../navigation'
 import {useStrings} from '../../strings'
 
 type Props = {
-  // TODO: fix
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data?: Swap.PoolPair[] | any
+  data?: Swap.PoolPair[]
 }
-export const SelectPoolFromList = ({data}: Props) => {
+export const SelectPoolFromList = ({data = []}: Props) => {
   const strings = useStrings()
   const {selectedPoolChanged, createOrder} = useSwap()
   const [selectedCardIndex, setSelectedCardIndex] = useState(createOrder.selectedPool?.poolId)
@@ -33,7 +31,7 @@ export const SelectPoolFromList = ({data}: Props) => {
 
   return (
     <View style={styles.container}>
-      {data?.map((pool) => (
+      {data.map((pool) => (
         <View key={pool.provider}>
           <Spacer height={16} />
 
