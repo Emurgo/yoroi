@@ -24,12 +24,12 @@ storiesOf('Expandable Info Card', module)
       title: '',
       content: '',
     })
-    const [showHiddenInfo, setShowHiddenInfo] = React.useState(false)
+    const [showHiddenInfo, setHiddenInfoOpenId] = React.useState(false)
 
     return (
       <ExpandableInfoCard
         showHiddenInfo={showHiddenInfo}
-        setShowHiddenInfo={setShowHiddenInfo}
+        setHiddenInfoOpenId={setHiddenInfoOpenId}
         bottomSheetState={bottomSheetState}
         setBottomSheetState={setBottomSheetState}
         label="Minswap (Auto)"
@@ -48,12 +48,12 @@ storiesOf('Expandable Info Card', module)
       title: '',
       content: '',
     })
-    const [showHiddenInfo, setShowHiddenInfo] = React.useState(false)
+    const [showHiddenInfo, setHiddenInfoOpenId] = React.useState(false)
 
     return (
       <ExpandableInfoCard
         showHiddenInfo={showHiddenInfo}
-        setShowHiddenInfo={setShowHiddenInfo}
+        setHiddenInfoOpenId={setHiddenInfoOpenId}
         bottomSheetState={bottomSheetState}
         setBottomSheetState={setBottomSheetState}
         label={
@@ -88,12 +88,12 @@ storiesOf('Expandable Info Card', module)
       title: '',
       content: '',
     })
-    const [showHiddenInfo, setShowHiddenInfo] = React.useState(false)
+    const [showHiddenInfo, setHiddenInfoOpenId] = React.useState(false)
 
     return (
       <ExpandableInfoCard
         showHiddenInfo={showHiddenInfo}
-        setShowHiddenInfo={setShowHiddenInfo}
+        setHiddenInfoOpenId={setHiddenInfoOpenId}
         bottomSheetState={bottomSheetState}
         setBottomSheetState={setBottomSheetState}
         label={

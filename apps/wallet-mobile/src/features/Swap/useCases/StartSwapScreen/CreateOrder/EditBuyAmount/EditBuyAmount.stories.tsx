@@ -7,7 +7,7 @@ import {StyleSheet, View} from 'react-native'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
-import {SwapTouchedProvider} from '../TouchedContext'
+import {SwapFormProvider} from '../TouchedContext'
 import {EditBuyAmount} from './EditBuyAmount'
 
 const mockWallet = produce(mocks.wallet, (draft) => {
@@ -88,11 +88,11 @@ storiesOf('Swap Edit Buy Amount', module)
       <SelectedWalletProvider wallet={mocks.wallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
-            <SwapTouchedProvider>
+            <SwapFormProvider>
               <View style={styles.container}>
                 <EditBuyAmount />
               </View>
-            </SwapTouchedProvider>
+            </SwapFormProvider>
           </SwapProvider>
         </SearchProvider>
       </SelectedWalletProvider>
@@ -103,11 +103,11 @@ storiesOf('Swap Edit Buy Amount', module)
       <SelectedWalletProvider wallet={mockWallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateOtherToken}>
-            <SwapTouchedProvider>
+            <SwapFormProvider>
               <View style={styles.container}>
                 <EditBuyAmount />
               </View>
-            </SwapTouchedProvider>
+            </SwapFormProvider>
           </SwapProvider>
         </SearchProvider>
       </SelectedWalletProvider>
@@ -118,11 +118,11 @@ storiesOf('Swap Edit Buy Amount', module)
       <SelectedWalletProvider wallet={mockWallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateSameToken}>
-            <SwapTouchedProvider>
+            <SwapFormProvider>
               <View style={styles.container}>
                 <EditBuyAmount />
               </View>
-            </SwapTouchedProvider>
+            </SwapFormProvider>
           </SwapProvider>
         </SearchProvider>
       </SelectedWalletProvider>
@@ -133,11 +133,11 @@ storiesOf('Swap Edit Buy Amount', module)
       <SelectedWalletProvider wallet={mockWallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateUnamedToken}>
-            <SwapTouchedProvider>
+            <SwapFormProvider>
               <View style={styles.container}>
                 <EditBuyAmount />
               </View>
-            </SwapTouchedProvider>
+            </SwapFormProvider>
           </SwapProvider>
         </SearchProvider>
       </SelectedWalletProvider>
@@ -148,11 +148,11 @@ storiesOf('Swap Edit Buy Amount', module)
       <SelectedWalletProvider wallet={mockWallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateWithIconBigDecimals}>
-            <SwapTouchedProvider>
+            <SwapFormProvider>
               <View style={styles.container}>
                 <EditBuyAmount />
               </View>
-            </SwapTouchedProvider>
+            </SwapFormProvider>
           </SwapProvider>
         </SearchProvider>
       </SelectedWalletProvider>

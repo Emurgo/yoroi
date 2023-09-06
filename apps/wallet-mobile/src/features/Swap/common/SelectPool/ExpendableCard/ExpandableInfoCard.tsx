@@ -7,21 +7,29 @@ import {Icon, Spacer} from '../../../../../components'
 import {BottomSheetModal} from '../../../../../components/BottomSheetModal'
 import {COLORS} from '../../../../../theme'
 
+export type BottomSheetState = {
+  openId: string | null
+  title: string
+  content?: React.ReactNode
+}
+
 export type ExpandableInfoCardProps = {
-  label: string | React.ReactNode | null
+  id: string
+  label: React.ReactNode | null
   mainInfo: React.ReactNode
   hiddenInfo: React.ReactNode
   navigateTo?: () => void
   onPress?: () => void
   buttonLabel?: string
   withBoxShadow?: boolean
-  showHiddenInfo: boolean
-  setShowHiddenInfo: (showHiddenInfo: boolean) => void
-  bottomSheetState: {isOpen: boolean; title: string; content?: React.ReactNode}
-  setBottomSheetState: ({isOpen, title, content}: {isOpen: boolean; title: string; content?: React.ReactNode}) => void
+  hiddenInfoOpenId: string | null
+  setHiddenInfoOpenId: (hiddenInfoOpenId: string | null) => void
+  bottomSheetState: BottomSheetState
+  setBottomSheetState: (state: BottomSheetState) => void
 }
 
 export const ExpandableInfoCard = ({
+  id,
   label,
   mainInfo,
   hiddenInfo,
@@ -29,11 +37,13 @@ export const ExpandableInfoCard = ({
   buttonLabel,
   onPress,
   withBoxShadow,
-  showHiddenInfo,
-  setShowHiddenInfo,
+  hiddenInfoOpenId,
+  setHiddenInfoOpenId,
   setBottomSheetState,
   bottomSheetState,
 }: ExpandableInfoCardProps) => {
+  console.log('id', id)
+  console.log('hiddenInfoOpenId', hiddenInfoOpenId)
   return (
     <View>
       <View style={[styles.container, withBoxShadow && styles.shadowProp]}>
@@ -42,8 +52,12 @@ export const ExpandableInfoCard = ({
             <Text style={[styles.label]}>{label}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => setShowHiddenInfo(!showHiddenInfo)}>
-            {showHiddenInfo ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
+          <TouchableOpacity onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}>
+            {hiddenInfoOpenId === id ? (
+              <Icon.Chevron direction="up" size={24} />
+            ) : (
+              <Icon.Chevron direction="down" size={24} />
+            )}
           </TouchableOpacity>
         </View>
 
@@ -51,7 +65,7 @@ export const ExpandableInfoCard = ({
 
         {mainInfo}
 
-        {showHiddenInfo && hiddenInfo}
+        {hiddenInfoOpenId === id && hiddenInfo}
 
         {buttonLabel != null && (
           <TouchableOpacity style={styles.button} onPress={onPress && onPress}>
@@ -63,10 +77,10 @@ export const ExpandableInfoCard = ({
       <Spacer height={16} />
 
       <BottomSheetModal
-        isOpen={bottomSheetState.isOpen}
+        isOpen={bottomSheetState.openId === id}
         title={bottomSheetState.title}
         onClose={() => {
-          setBottomSheetState({isOpen: false, title: '', content: ''})
+          setBottomSheetState({openId: null, title: '', content: ''})
         }}
       >
         <Text style={styles.text}>{bottomSheetState.content}</Text>
@@ -139,6 +153,7 @@ const styles = StyleSheet.create({
     padding: 16,
     width: '100%',
     height: 'auto',
+    backgroundColor: COLORS.WHITE,
   },
   shadowProp: {
     backgroundColor: COLORS.WHITE,

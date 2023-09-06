@@ -6,7 +6,7 @@ import {QueryProvider} from '../../../../../../.storybook/decorators'
 import {SearchProvider} from '../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {SwapTouchedProvider} from '../CreateOrder/TouchedContext'
+import {SwapFormProvider} from '../CreateOrder/TouchedContext'
 import {ListOrders} from './ListOrders'
 
 storiesOf('Swap List orders', module)
@@ -16,9 +16,9 @@ storiesOf('Swap List orders', module)
         <SelectedWalletProvider wallet={mocks.wallet}>
           <SearchProvider>
             <SwapProvider swapManager={mockSwapManager}>
-              <SwapTouchedProvider>
+              <SwapFormProvider>
                 <ListOrders />
-              </SwapTouchedProvider>
+              </SwapFormProvider>
             </SwapProvider>
           </SearchProvider>
         </SelectedWalletProvider>
@@ -43,9 +43,9 @@ storiesOf('Swap List orders', module)
                 },
               }}
             >
-              <SwapTouchedProvider>
+              <SwapFormProvider>
                 <ListOrders />
-              </SwapTouchedProvider>
+              </SwapFormProvider>
             </SwapProvider>
           </SearchProvider>
         </SelectedWalletProvider>

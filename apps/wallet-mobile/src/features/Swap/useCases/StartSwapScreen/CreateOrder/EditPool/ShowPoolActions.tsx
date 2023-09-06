@@ -1,11 +1,13 @@
 import {useSwap} from '@yoroi/swap'
 import React from 'react'
+import {View} from 'react-native'
 
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../../common/navigation'
 import {
+  BottomSheetState,
   ExpandableInfoCard,
   HiddenInfoWrapper,
   MainInfoWrapper,
@@ -22,16 +24,12 @@ export const ShowPoolActions = () => {
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const tokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
-  const [showHiddenInfo, setShowHiddenInfo] = React.useState(false)
-  const [bottomSheetState, setBottomSheetState] = React.useState<{
-    isOpen: boolean
-    title: string
-    content?: React.ReactNode
-  }>({
-    isOpen: false,
+  const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
+    openId: null,
     title: '',
     content: '',
   })
+  const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
   if (!isBuyTouched || !isSellTouched || selectedPool === undefined) {
     return <></>
@@ -42,30 +40,36 @@ export const ShowPoolActions = () => {
   const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrder.amounts.sell.quantity)
   const poolFee = Quantities.format(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
 
+  const id = selectedPool.poolId
+
   return (
     <ExpandableInfoCard
-      showHiddenInfo={showHiddenInfo}
-      setShowHiddenInfo={setShowHiddenInfo}
+      id={id}
+      key={id}
       bottomSheetState={bottomSheetState}
       setBottomSheetState={setBottomSheetState}
+      setHiddenInfoOpenId={setHiddenInfoOpenId}
+      hiddenInfoOpenId={hiddenInfoOpenId}
       label={`${protocolCapitalize} (auto)`}
       mainInfo={<MainInfo totalAmount={totalAmount} tokenName={tokenName} />}
       navigateTo={() => navigate.selectPool()}
-      hiddenInfo={<HiddenInfo poolFee={poolFee} setBottomSheetState={setBottomSheetState} />}
+      hiddenInfo={<HiddenInfo id={id} poolFee={poolFee} setBottomSheetState={setBottomSheetState} />}
     />
   )
 }
 
 const HiddenInfo = ({
+  id,
   poolFee,
   setBottomSheetState,
 }: {
+  id: string
   poolFee: string
-  setBottomSheetState: (bottomSheetState: {isOpen: boolean; title: string; content?: React.ReactNode}) => void
+  setBottomSheetState: (state: BottomSheetState) => void
 }) => {
   const strings = useStrings()
   return (
-    <>
+    <View>
       {[
         {
           label: strings.swapMinAdaTitle,
@@ -90,23 +94,23 @@ const HiddenInfo = ({
           info={item.info}
           onPress={() => {
             setBottomSheetState({
-              isOpen: true,
+              openId: id,
               title: item.label,
               content: item.info,
             })
           }}
         />
       ))}
-    </>
+    </View>
   )
 }
 
 const MainInfo = ({totalAmount, tokenName}: {totalAmount: string; tokenName: string}) => {
   return (
-    <>
+    <View>
       {[{label: `Total ${totalAmount} ${tokenName} `}].map((item, index) => (
         <MainInfoWrapper key={index} label={item.label} isLast={index === 0} />
       ))}
-    </>
+    </View>
   )
 }

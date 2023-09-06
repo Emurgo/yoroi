@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Spacer, StatusBar, Text} from '../../../../components'
 import {COLORS} from '../../../../theme'
@@ -21,7 +22,7 @@ export const StartSwapScreen = () => {
   }
 
   return (
-    <View style={styles.scrollView}>
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
       <StatusBar type="dark" />
 
       <View style={styles.container}>
@@ -55,7 +56,7 @@ export const StartSwapScreen = () => {
           </TabPanel>
         </TabPanels>
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -83,7 +84,7 @@ const TabPanels = ({children}: {children: React.ReactNode}) => <View style={styl
 const TabPanel = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
 
 const styles = StyleSheet.create({
-  scrollView: {
+  root: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
   },

@@ -1,12 +1,13 @@
 import {useOrderByStatusOpen} from '@yoroi/swap'
 import React from 'react'
-import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {BottomSheetModal, Button, Icon, Spacer, Text, TextInput} from '../../../../../components'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {COLORS} from '../../../../../theme'
 import {Counter} from '../../../common/Counter/Counter'
 import {
+  BottomSheetState,
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
   HiddenInfoWrapper,
@@ -16,17 +17,12 @@ import {useStrings} from '../../../common/strings'
 import {mapOrders, OrderProps} from './mapOrders'
 
 export const OpenOrders = () => {
-  const [bottomSheetState, setBottomSheetState] = React.useState<{
-    isOpen: boolean
-    title: string
-    content?: React.ReactNode
-  }>({
-    isOpen: false,
+  const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
+    openId: null,
     title: '',
     content: '',
   })
-
-  const [showHiddenInfo, setShowHiddenInfo] = React.useState(false)
+  const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const [confirmationModal, setConfirmationModal] = React.useState(false)
   const strings = useStrings()
   const [spendingPassword, setSpendingPassword] = React.useState('')
@@ -48,50 +44,54 @@ export const OpenOrders = () => {
   return (
     <>
       <View style={styles.container}>
-        <View style={styles.flex}>
-          {orders.map((order) => (
-            <ExpandableInfoCard
-              bottomSheetState={bottomSheetState}
-              setBottomSheetState={setBottomSheetState}
-              setShowHiddenInfo={setShowHiddenInfo}
-              showHiddenInfo={showHiddenInfo}
-              key={`${order.assetFromLabel}-${order.assetToLabel}-${order.date}`}
-              label={<Label assetFromLabel={order.assetFromLabel} assetToLabel={order.assetToLabel} />}
-              hiddenInfo={<HiddenInfo order={order} setBottomSheetState={setBottomSheetState} />}
-              mainInfo={<MainInfo order={order} />}
-              buttonLabel={strings.listOrdersSheetButtonText.toLocaleUpperCase()}
-              onPress={() => {
-                setBottomSheetState({
-                  isOpen: true,
-                  title: strings.listOrdersSheetTitle,
-                  content: (
-                    <ModalContent
-                      assetFromIcon={order.assetFromIcon}
-                      assetToIcon={order.assetToIcon}
-                      confirmationModal={confirmationModal}
-                      onConfirm={() => {
-                        setBottomSheetState({isOpen: false, title: '', content: ''})
-                        setConfirmationModal(true)
-                      }}
-                      onBack={() => {
-                        setBottomSheetState({isOpen: false, title: '', content: ''})
-                      }}
-                      assetFromLabel={order.assetFromLabel}
-                      assetToLabel={order.assetToLabel}
-                    />
-                  ),
-                })
-              }}
-              withBoxShadow
-            />
-          ))}
-        </View>
+        <ScrollView style={styles.flex}>
+          {orders.map((order) => {
+            const id = `${order.assetFromLabel}-${order.assetToLabel}-${order.date}`
+            return (
+              <ExpandableInfoCard
+                id={id}
+                key={id}
+                bottomSheetState={bottomSheetState}
+                setBottomSheetState={setBottomSheetState}
+                setHiddenInfoOpenId={setHiddenInfoOpenId}
+                hiddenInfoOpenId={hiddenInfoOpenId}
+                label={<Label assetFromLabel={order.assetFromLabel} assetToLabel={order.assetToLabel} />}
+                hiddenInfo={<HiddenInfo id={id} order={order} setBottomSheetState={setBottomSheetState} />}
+                mainInfo={<MainInfo order={order} />}
+                buttonLabel={strings.listOrdersSheetButtonText.toLocaleUpperCase()}
+                onPress={() => {
+                  setBottomSheetState({
+                    openId: id,
+                    title: strings.listOrdersSheetTitle,
+                    content: (
+                      <ModalContent
+                        assetFromIcon={order.assetFromIcon}
+                        assetToIcon={order.assetToIcon}
+                        confirmationModal={confirmationModal}
+                        onConfirm={() => {
+                          setBottomSheetState({openId: null, title: '', content: ''})
+                          setConfirmationModal(true)
+                        }}
+                        onBack={() => {
+                          setBottomSheetState({openId: null, title: '', content: ''})
+                        }}
+                        assetFromLabel={order.assetFromLabel}
+                        assetToLabel={order.assetToLabel}
+                      />
+                    ),
+                  })
+                }}
+                withBoxShadow
+              />
+            )
+          })}
+        </ScrollView>
 
         <BottomSheetModal
-          isOpen={bottomSheetState.isOpen}
+          isOpen={bottomSheetState.openId !== null}
           title={bottomSheetState.title}
           onClose={() => {
-            setBottomSheetState({isOpen: false, title: '', content: ''})
+            setBottomSheetState({openId: null, title: '', content: ''})
           }}
         >
           {bottomSheetState.content}
@@ -128,10 +128,18 @@ export const OpenOrders = () => {
   )
 }
 
-const HiddenInfo = ({order, setBottomSheetState}) => {
+const HiddenInfo = ({
+  id,
+  order,
+  setBottomSheetState,
+}: {
+  id: string
+  order: OrderProps
+  setBottomSheetState: (state: BottomSheetState) => void
+}) => {
   const strings = useStrings()
   return (
-    <>
+    <View>
       {[
         {
           label: strings.listOrdersTotal,
@@ -162,27 +170,27 @@ const HiddenInfo = ({order, setBottomSheetState}) => {
           label={item.label}
           onPress={() => {
             setBottomSheetState({
-              isOpen: true,
+              openId: id,
               title: item.label,
             })
           }}
         />
       ))}
-    </>
+    </View>
   )
 }
 
 const MainInfo = ({order}: {order: OrderProps}) => {
   const strings = useStrings()
   return (
-    <>
+    <View>
       {[
         {label: strings.listOrdersSheetAssetPrice, value: order.tokenPrice},
         {label: strings.listOrdersSheetAssetAmount, value: order.tokenAmount},
       ].map((item, index) => (
         <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />
       ))}
-    </>
+    </View>
   )
 }
 
