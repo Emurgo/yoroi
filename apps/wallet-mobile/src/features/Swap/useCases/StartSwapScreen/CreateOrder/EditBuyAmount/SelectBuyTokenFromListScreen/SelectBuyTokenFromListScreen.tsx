@@ -7,7 +7,7 @@ import {Switch} from 'react-native-paper'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Spacer, Text} from '../../../../../../../components'
-import {AmountItem} from '../../../../../../../components/AmountItem/AmountItem'
+import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components/AmountItem/AmountItem'
 import {BottomSheetModal} from '../../../../../../../components/BottomSheetModal'
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
@@ -50,6 +50,24 @@ export const SelectBuyTokenFromListScreen = () => {
     title: strings.swapTo,
   })
 
+  const loading = React.useMemo(
+    () => ({
+      fallback: (
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {Array.from({length: 6}).map((_, i) => (
+            <AmountItemPlaceholder key={i} style={styles.item} />
+          ))}
+        </View>
+      ),
+    }),
+    [],
+  )
+
   return (
     <SafeAreaView style={styles.container}>
       <Spacer height={12} />
@@ -60,19 +78,7 @@ export const SelectBuyTokenFromListScreen = () => {
 
       <MyPortfolioCaption />
 
-      <Spacer height={16} />
-
-      <View style={styles.labels}>
-        <Text style={styles.label}>{strings.asset}</Text>
-
-        <Text style={styles.label}>{strings.volume}</Text>
-      </View>
-
-      <Spacer height={16} />
-
-      <View style={styles.line} />
-
-      <Boundary>
+      <Boundary loading={loading}>
         <TokenList showOnlyVerifiedTokens={isOnlyVerifiedTokens} />
       </Boundary>
     </SafeAreaView>
@@ -149,51 +155,81 @@ type TokenListProps = {
 }
 
 const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
+  const strings = useStrings()
   const wallet = useSelectedWallet()
   const tokenInfos = useAllTokenInfos({wallet})
   const {pairsByToken} = usePairListByToken('')
-  const walletTokenInfos = tokenInfos.filter(
-    filterByFungibility({
-      fungibilityFilter: 'ft',
-    }),
+  const walletTokenInfos = React.useMemo(
+    () =>
+      tokenInfos.filter(
+        filterByFungibility({
+          fungibilityFilter: 'ft',
+        }),
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [tokenInfos?.length],
   )
+
   const {search: assetSearchTerm} = useSearch()
   const secondArray = walletTokenInfos
 
-  const transformedArray: TransformedObject[] =
-    pairsByToken !== undefined
-      ? pairsByToken
-          .map((item) => {
-            const matchingSecondItem = secondArray.find((secondItem) => secondItem.id === item.info.id)
-            return {
-              decimals: item.info.decimals,
-              description: item.info.description,
-              fingerprint: item.info.fingerprint,
-              group: item.info.group,
-              icon: item.info.icon,
-              id: item.info.id,
-              image: item.info.image,
-              kind: item.info.kind,
-              metadatas: item.info.metadatas,
-              name: item.info.name,
-              symbol: item.info.symbol,
-              ticker: item.info.ticker,
-              status: item.status,
-              supply: Quantities.format(`${Number(item.supply.total)}`, item.info.decimals ?? 0),
-              inUserWallet: !!matchingSecondItem,
-            }
-          })
-          .filter((item) => showOnlyVerifiedTokens && item.status === 'verified')
-      : []
+  const transformedArray: TransformedObject[] = React.useMemo(
+    () =>
+      pairsByToken !== undefined
+        ? pairsByToken
+            .map((item) => {
+              const matchingSecondItem = secondArray.find((secondItem) => secondItem.id === item.info.id)
+              return {
+                decimals: item.info.decimals,
+                description: item.info.description,
+                fingerprint: item.info.fingerprint,
+                group: item.info.group,
+                icon: item.info.icon,
+                id: item.info.id,
+                image: item.info.image,
+                kind: item.info.kind,
+                metadatas: item.info.metadatas,
+                name: item.info.name,
+                symbol: item.info.symbol,
+                ticker: item.info.ticker,
+                status: item.status,
+                supply: Quantities.format(`${Number(item.supply.total)}`, item.info.decimals ?? 0),
+                inUserWallet: !!matchingSecondItem,
+              }
+            })
+            .filter((item) => showOnlyVerifiedTokens && item.status === 'verified')
+        : [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pairsByToken?.length, secondArray?.length],
+  )
 
-  const filteredTransformedList = transformedArray.filter(filterTokensPairBySearch(assetSearchTerm))
+  const filteredTransformedList = React.useMemo(
+    () => transformedArray.filter(filterTokensPairBySearch(assetSearchTerm)),
+    [transformedArray, assetSearchTerm],
+  )
 
   return (
     <View style={styles.list}>
+      {filteredTransformedList?.length > 0 && (
+        <>
+          <Spacer height={16} />
+
+          <View style={styles.labels}>
+            <Text style={styles.label}>{strings.asset}</Text>
+
+            <Text style={styles.label}>{strings.volume}</Text>
+          </View>
+
+          <Spacer height={16} />
+
+          <View style={styles.line} />
+        </>
+      )}
+
       <FlashList
         data={filteredTransformedList}
         renderItem={({item: tokenInfo}: {item: TransformedObject}) => (
-          <Boundary>
+          <Boundary loading={{fallback: <AmountItemPlaceholder style={styles.item} />}}>
             <SelectableToken
               tokenInfo={tokenInfo}
               disabled={tokenInfo.id !== wallet.primaryTokenInfo.id}
@@ -202,9 +238,9 @@ const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
           </Boundary>
         )}
         bounces={false}
-        keyExtractor={({id}) => id}
+        keyExtractor={({id, name}) => `${name}-${id}`}
         testID="assetsList"
-        estimatedItemSize={78}
+        estimatedItemSize={72}
         ListEmptyComponent={<EmptyList filteredTokenInfos={filteredTransformedList} allTokenInfos={tokenInfos} />}
       />
 
@@ -220,7 +256,6 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {buyTouched} = useSwapTouched()
 
   const navigateTo = useNavigateTo()
-  const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
   const {track} = useMetrics()
 
@@ -235,11 +270,7 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   }
 
   return (
-    <TouchableOpacity
-      style={[styles.item, isPrimary && styles.borderBottom]}
-      onPress={onSelect}
-      testID="selectTokenButton"
-    >
+    <TouchableOpacity style={styles.item} onPress={onSelect} testID="selectTokenButton">
       <AmountItem
         amount={{tokenId: tokenInfo.id, quantity: balanceAvailable}}
         wallet={wallet}
@@ -289,12 +320,12 @@ const EmptyList = ({
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
 
   if ((isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) || allTokenInfos.length === 0)
-    return <EmptySearchResult />
+    return <EmptySearchResult assetSearchTerm={assetSearchTerm} />
 
   return null
 }
 
-const EmptySearchResult = () => {
+const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
   const strings = useStrings()
   return (
     <View style={styles.imageContainer}>
@@ -304,7 +335,9 @@ const EmptySearchResult = () => {
 
       <Spacer height={25} />
 
-      <Text style={styles.contentText}>{strings.noAssetsFound}</Text>
+      <Text style={styles.contentText}>
+        {assetSearchTerm === '' ? strings.noAssetsFound : strings.noAssetsFoundFor(assetSearchTerm)}
+      </Text>
     </View>
   )
 }
@@ -325,7 +358,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   item: {
-    paddingVertical: 14,
+    paddingVertical: 8,
   },
   label: {
     fontFamily: 'Rubik',
@@ -337,10 +370,6 @@ const styles = StyleSheet.create({
   labels: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  borderBottom: {
-    borderBottomColor: COLORS.BORDER_GRAY,
-    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   list: {
     flex: 1,

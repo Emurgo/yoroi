@@ -41,6 +41,7 @@ export const useStrings = () => {
     pools: (qty: number) => intl.formatMessage(globalMessages.pools, {qty}),
     openOrders: intl.formatMessage(messages.openOrders),
     noAssetsFound: intl.formatMessage(messages.noAssetsFound),
+    noAssetsFoundFor: (search: string) => intl.formatMessage(messages.noAssetsFoundFor, {search}),
     completedOrders: intl.formatMessage(messages.completedOrders),
     signTransaction: intl.formatMessage(messages.signTransaction),
     enterSpendingPassword: intl.formatMessage(messages.enterSpendingPassword),
@@ -198,6 +199,10 @@ export const messages = defineMessages({
   noAssetsFound: {
     id: 'swap.swapScreen.noAssetsFound',
     defaultMessage: '!!!No assets found for this pair',
+  },
+  noAssetsFoundFor: {
+    id: 'swap.swapScreen.noAssetsFoundFor',
+    defaultMessage: '!!!No assets found for "{search}"',
   },
   eachVerifiedToken: {
     id: 'swap.swapScreen.eachVerifiedToken',

@@ -136,16 +136,17 @@ export const Quantities = {
     const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
     const sanitized = text === '' ? '0' : text.replaceAll(invalid, '')
     const parts = sanitized.split(decimalSeparator)
+    const isDec = parts.length >= 2
 
-    const valid = parts.length >= 2 ? `${parts[0]}${decimalSeparator}${parts[1].slice(0, precision)}` : sanitized
+    const fullDecValue = isDec ? `${parts[0]}${decimalSeparator}${parts[1].slice(0, precision)}1` : sanitized
+    const fullDecFormat = new BigNumber(fullDecValue.replace(decimalSeparator, '.')).toFormat()
+    const input = isDec ? fullDecFormat.slice(0, -1) : fullDecFormat
 
-    const trailing = valid.slice(-1) === decimalSeparator
-
-    const value = new BigNumber(valid.replace(decimalSeparator, '.'))
-
-    const input = `${new BigNumber(value).toFormat()}${trailing ? decimalSeparator : ''}`
-
-    const quantity = new BigNumber(value).decimalPlaces(precision).shiftedBy(precision).toString(10)
+    const value = isDec ? `${parts[0]}${decimalSeparator}${parts[1].slice(0, precision)}` : sanitized
+    const quantity = new BigNumber(value.replace(decimalSeparator, '.'))
+      .decimalPlaces(precision)
+      .shiftedBy(precision)
+      .toString(10)
 
     return [input, quantity] as [string, Balance.Quantity]
   },
