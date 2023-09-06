@@ -8,7 +8,7 @@ import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
 import {Quantities} from '../../yoroi-wallets/utils'
-import {Boundary, Icon, Placeholder, Spacer, Text, TokenIcon} from '..'
+import {Boundary, Icon, Spacer, Text, TokenIcon, TokenIconPlaceholder} from '..'
 
 export type AmountItemProps = {
   wallet: YoroiWallet
@@ -46,7 +46,7 @@ export const AmountItem = ({
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
-        <Boundary loading={{fallback: <Placeholder />}} error={{fallback: () => <Placeholder />}}>
+        <Boundary loading={{fallback: <TokenIconPlaceholder />}} error={{fallback: () => <TokenIconPlaceholder />}}>
           <TokenIcon wallet={wallet} tokenId={tokenInfo.id} variant={variant} />
         </Boundary>
       </Left>
@@ -91,6 +91,36 @@ const Middle = ({style, ...props}: ViewProps) => (
   <View style={[style, {flex: 1, justifyContent: 'center', paddingHorizontal: 8}]} {...props} />
 )
 const Right = ({style, ...props}: ViewProps) => <View style={style} {...props} />
+
+export const AmountItemPlaceholder = ({style}: ViewProps) => (
+  <View
+    style={[
+      style,
+      {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 12,
+        height: 56,
+      },
+    ]}
+  >
+    <View
+      style={{
+        backgroundColor: COLORS.BACKGROUND_GRAY,
+        borderRadius: 8,
+        flexGrow: 3,
+      }}
+    />
+
+    <View
+      style={{
+        backgroundColor: COLORS.BACKGROUND_GRAY,
+        borderRadius: 8,
+        flexGrow: 1,
+      }}
+    />
+  </View>
+)
 
 const styles = StyleSheet.create({
   container: {

@@ -8,16 +8,34 @@ import {mocks} from '../../../../../../../yoroi-wallets/mocks/wallet'
 import {SwapTouchedProvider} from '../../TouchedContext'
 import {SelectSellTokenFromListScreen} from './SelectSellTokenFromListScreen'
 
-storiesOf('Swap Select Token To Sell', module).add('initial', () => {
-  return (
-    <SelectedWalletProvider wallet={mocks.wallet}>
-      <SearchProvider>
-        <SwapProvider swapManager={mockSwapManager}>
-          <SwapTouchedProvider>
-            <SelectSellTokenFromListScreen />
-          </SwapTouchedProvider>
-        </SwapProvider>
-      </SearchProvider>
-    </SelectedWalletProvider>
-  )
-})
+storiesOf('Swap Select Token To Sell', module)
+  .add('initial', () => {
+    return (
+      <SelectedWalletProvider wallet={mocks.wallet}>
+        <SearchProvider>
+          <SwapProvider swapManager={mockSwapManager}>
+            <SwapTouchedProvider>
+              <SelectSellTokenFromListScreen />
+            </SwapTouchedProvider>
+          </SwapProvider>
+        </SearchProvider>
+      </SelectedWalletProvider>
+    )
+  })
+  .add('loading tokenInfo', () => {
+    const loading = {
+      ...mocks.wallet,
+      fetchTokenInfo: mocks.fetchTokenInfo.loading,
+    }
+    return (
+      <SelectedWalletProvider wallet={loading}>
+        <SearchProvider>
+          <SwapProvider swapManager={mockSwapManager}>
+            <SwapTouchedProvider>
+              <SelectSellTokenFromListScreen />
+            </SwapTouchedProvider>
+          </SwapProvider>
+        </SearchProvider>
+      </SelectedWalletProvider>
+    )
+  })
