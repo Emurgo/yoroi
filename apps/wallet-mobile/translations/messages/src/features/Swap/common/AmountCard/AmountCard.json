@@ -4,14 +4,44 @@
     "defaultMessage": "!!!Select token",
     "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
     "start": {
-      "line": 135,
+      "line": 138,
       "column": 15,
-      "index": 4015
+      "index": 4107
     },
     "end": {
-      "line": 138,
+      "line": 141,
       "column": 3,
-      "index": 4098
+      "index": 4190
+    }
+  },
+  {
+    "id": "swap.swapScreen.currentBalance",
+    "defaultMessage": "!!!Current Balance",
+    "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
+    "start": {
+      "line": 142,
+      "column": 18,
+      "index": 4210
+    },
+    "end": {
+      "line": 145,
+      "column": 3,
+      "index": 4299
+    }
+  },
+  {
+    "id": "swap.swapScreen.notEnoughBalance",
+    "defaultMessage": "!!!Not enough balance",
+    "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
+    "start": {
+      "line": 146,
+      "column": 20,
+      "index": 4321
+    },
+    "end": {
+      "line": 149,
+      "column": 3,
+      "index": 4415
     }
   }
 ]

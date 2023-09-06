@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
-import {Boundary, Icon, Placeholder, Spacer, TokenIcon} from '../../../../components'
+import {Boundary, Icon, Spacer, TokenIcon, TokenIconPlaceholder} from '../../../../components'
 import {formatTokenWithText} from '../../../../legacy/format'
 import {COLORS} from '../../../../theme'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
@@ -44,7 +44,7 @@ export const AmountCard = ({
 
   const name = tokenInfo.ticker ?? tokenInfo.name
   const formattedAmount = noTokenSelected ? '0' : formatTokenWithText(quantity, tokenInfo, 18)
-  const fallback = React.useCallback(() => <Placeholder />, [])
+  const fallback = React.useCallback(() => <TokenIconPlaceholder />, [])
 
   const focusInput = () => {
     if (amountInputRef?.current) {
@@ -66,7 +66,7 @@ export const AmountCard = ({
           <View style={styles.rightSection}>
             <TouchableOpacity onPress={() => navigateTo?.()}>
               <View style={styles.sectionContainer}>
-                <Boundary loading={{fallback: <Placeholder />}} error={{fallback}}>
+                <Boundary loading={{fallback: <TokenIconPlaceholder />}} error={{fallback}}>
                   {noTokenSelected ? (
                     <Icon.Coins size={24} color={COLORS.TEXT_GRAY3} />
                   ) : (
@@ -85,7 +85,10 @@ export const AmountCard = ({
             <Spacer width={8} />
 
             <View style={styles.sectionContainer}>
-              <Text ellipsizeMode="middle" style={styles.balanceText}>{`Current balance: ${formattedAmount}`}</Text>
+              <Text
+                ellipsizeMode="middle"
+                style={styles.balanceText}
+              >{`${strings.currentBalance}: ${formattedAmount}`}</Text>
             </View>
           </View>
         </View>
@@ -95,7 +98,7 @@ export const AmountCard = ({
         <View>
           <Spacer height={4} />
 
-          <Text style={styles.errorText}>Not enough balance</Text>
+          <Text style={styles.errorText}>{strings.notEnoughBalance}</Text>
         </View>
       )}
     </View>
@@ -136,12 +139,22 @@ const messages = defineMessages({
     id: 'swap.swapScreen.selectToken',
     defaultMessage: '!!!Select token',
   },
+  currentBalance: {
+    id: 'swap.swapScreen.currentBalance',
+    defaultMessage: '!!!Current Balance',
+  },
+  notEnoughBalance: {
+    id: 'swap.swapScreen.notEnoughBalance',
+    defaultMessage: '!!!Not enough balance',
+  },
 })
 
 const useStrings = () => {
   const intl = useIntl()
   return {
     selectToken: intl.formatMessage(messages.selectToken),
+    currentBalance: intl.formatMessage(messages.currentBalance),
+    notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
   }
 }
 
