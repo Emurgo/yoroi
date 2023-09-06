@@ -14,8 +14,7 @@ storiesOf('BottomSheetModal', module).add('Default', () => (
     isOpen
   >
     <View>
-        <Text>FAke content</Text>
-      </View>
-    }
+      <Text>FAke content</Text>
+    </View>
   </BottomSheetModal>
 ))
