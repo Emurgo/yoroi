@@ -39,10 +39,15 @@ export const createYoroiEntry = (createOrder: Swap.CreateOrderData, address: str
   const amountEntry = {}
   const tokenId = createOrder?.amounts?.sell.tokenId
   if (tokenId != null && createOrder.amounts.sell.quantity !== undefined) {
-    amountEntry[tokenId] = Quantities.sum([
-      createOrder.selectedPool.deposit.quantity,
-      createOrder.amounts.sell.quantity,
-    ])
+    if (createOrder?.amounts?.sell.tokenId === '') {
+      amountEntry[tokenId] = Quantities.sum([
+        createOrder.selectedPool.deposit.quantity,
+        createOrder.amounts.sell.quantity,
+      ])
+    } else {
+      amountEntry[''] = createOrder.selectedPool.deposit.quantity
+      amountEntry[tokenId] = createOrder.amounts.sell.quantity
+    }
   }
 
   return {
