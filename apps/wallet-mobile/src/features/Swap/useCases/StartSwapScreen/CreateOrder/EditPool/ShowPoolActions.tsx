@@ -81,24 +81,27 @@ const HiddenInfo = ({
       info: strings.swapFees,
     },
   ].map((item) => (
-    <HiddenInfoWrapper
-      key={item.label}
-      value={item.value}
-      label={item.label}
-      info={item.info}
-      onPress={() => {
-        setBottomSheetState({
-          isOpen: true,
-          title: item.label,
-          content: item.info,
-        })
-      }}
-    />
+    <React.Fragment key={item.label}>
+      <HiddenInfoWrapper
+        value={item.value}
+        label={item.label}
+        info={item.info}
+        onPress={() => {
+          setBottomSheetState({
+            isOpen: true,
+            title: item.label,
+            content: item.info,
+          })
+        }}
+      />
+    </React.Fragment>
   ))
 }
 
 const MainInfo = ({totalAmount, tokenName}: {totalAmount: string; tokenName: string}) => {
   return [{label: `Total ${totalAmount} ${tokenName} `}].map((item, index) => (
-    <MainInfoWrapper key={index} label={item.label} isLast={index === 0} />
+    <React.Fragment key={index}>
+      <MainInfoWrapper label={item.label} isLast={index === 0} />
+    </React.Fragment>
   ))
 }

@@ -90,17 +90,18 @@ const HiddenInfo = ({order, setBottomSheetState}) => {
       value: <TxLink txId={order.txId} txLink={order.txLink} />,
     },
   ].map((item) => (
-    <HiddenInfoWrapper
-      key={item.label}
-      value={item.value}
-      label={item.label}
-      onPress={() => {
-        setBottomSheetState({
-          isOpen: true,
-          title: item.label,
-        })
-      }}
-    />
+    <React.Fragment key={item.label}>
+      <HiddenInfoWrapper
+        value={item.value}
+        label={item.label}
+        onPress={() => {
+          setBottomSheetState({
+            isOpen: true,
+            title: item.label,
+          })
+        }}
+      />
+    </React.Fragment>
   ))
 }
 
@@ -109,7 +110,11 @@ const MainInfo = ({order}: {order: OrderProps}) => {
   return [
     {label: strings.listOrdersSheetAssetPrice, value: order.tokenPrice},
     {label: strings.listOrdersSheetAssetAmount, value: order.tokenAmount},
-  ].map((item, index) => <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />)
+  ].map((item, index) => (
+    <React.Fragment key={index}>
+      <MainInfoWrapper label={item.label} value={item.value} isLast={index === 1} />
+    </React.Fragment>
+  ))
 }
 
 export const CompletedOrdersSkeleton = () => (
