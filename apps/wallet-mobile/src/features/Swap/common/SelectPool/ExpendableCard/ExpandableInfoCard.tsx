@@ -42,8 +42,6 @@ export const ExpandableInfoCard = ({
   setBottomSheetState,
   bottomSheetState,
 }: ExpandableInfoCardProps) => {
-  console.log('id', id)
-  console.log('hiddenInfoOpenId', hiddenInfoOpenId)
   return (
     <View>
       <View style={[styles.container, withBoxShadow && styles.shadowProp]}>
