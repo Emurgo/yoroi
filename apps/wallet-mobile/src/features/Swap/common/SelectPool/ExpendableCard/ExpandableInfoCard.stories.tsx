@@ -142,29 +142,30 @@ const HiddenInfo = ({setBottomSheetState}) => {
       info: 'Fake content',
     },
   ].map((item) => (
-    <React.Fragment key={item.label}>
-      <HiddenInfoWrapper
-        value={item.value}
-        label={item.label}
-        onPress={() => {
-          setBottomSheetState({
-            isOpen: true,
-            title: item.label,
-            content: item.info,
-          })
-        }}
-      />
-    </React.Fragment>
+    <HiddenInfoWrapper
+      key={item.label}
+      value={item.value}
+      label={item.label}
+      onPress={() => {
+        setBottomSheetState({
+          isOpen: true,
+          title: item.label,
+          content: item.info,
+        })
+      }}
+    />
   ))
 }
 
 const MainInfo = () => {
-  return [
-    {label: 'Token price', value: '3 ADA'},
-    {label: 'Token amount', value: '3 USDA'},
-  ].map((item, index) => (
-    <React.Fragment key={index}>
-      <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />
-    </React.Fragment>
-  ))
+  return (
+    <>
+      {[
+        {label: 'Token price', value: '3 ADA'},
+        {label: 'Token amount', value: '3 USDA'},
+      ].map((item, index) => (
+        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />
+      ))}
+    </>
+  )
 }

@@ -130,55 +130,60 @@ export const OpenOrders = () => {
 
 const HiddenInfo = ({order, setBottomSheetState}) => {
   const strings = useStrings()
-  return [
-    {
-      label: strings.listOrdersTotal,
-      value: order.total,
-    },
-    {
-      label: strings.listOrdersLiquidityPool,
-      value: (
-        <LiquidityPool
-          liquidityPoolIcon={order.liquidityPoolIcon}
-          liquidityPoolName={order.liquidityPoolName}
-          poolUrl={order.poolUrl}
+  return (
+    <>
+      {[
+        {
+          label: strings.listOrdersTotal,
+          value: order.total,
+        },
+        {
+          label: strings.listOrdersLiquidityPool,
+          value: (
+            <LiquidityPool
+              liquidityPoolIcon={order.liquidityPoolIcon}
+              liquidityPoolName={order.liquidityPoolName}
+              poolUrl={order.poolUrl}
+            />
+          ),
+        },
+        {
+          label: strings.listOrdersTimeCreated,
+          value: order.date,
+        },
+        {
+          label: strings.listOrdersTxId,
+          value: <TxLink txId={order.txId} txLink={order.txLink} />,
+        },
+      ].map((item) => (
+        <HiddenInfoWrapper
+          key={item.label}
+          value={item.value}
+          label={item.label}
+          onPress={() => {
+            setBottomSheetState({
+              isOpen: true,
+              title: item.label,
+            })
+          }}
         />
-      ),
-    },
-    {
-      label: strings.listOrdersTimeCreated,
-      value: order.date,
-    },
-    {
-      label: strings.listOrdersTxId,
-      value: <TxLink txId={order.txId} txLink={order.txLink} />,
-    },
-  ].map((item) => (
-    <React.Fragment key={item.label}>
-      <HiddenInfoWrapper
-        value={item.value}
-        label={item.label}
-        onPress={() => {
-          setBottomSheetState({
-            isOpen: true,
-            title: item.label,
-          })
-        }}
-      />
-    </React.Fragment>
-  ))
+      ))}
+    </>
+  )
 }
 
 const MainInfo = ({order}: {order: OrderProps}) => {
   const strings = useStrings()
-  return [
-    {label: strings.listOrdersSheetAssetPrice, value: order.tokenPrice},
-    {label: strings.listOrdersSheetAssetAmount, value: order.tokenAmount},
-  ].map((item, index) => (
-    <React.Fragment key={index}>
-      <MainInfoWrapper label={item.label} value={item.value} isLast={index === 1} />
-    </React.Fragment>
-  ))
+  return (
+    <>
+      {[
+        {label: strings.listOrdersSheetAssetPrice, value: order.tokenPrice},
+        {label: strings.listOrdersSheetAssetAmount, value: order.tokenAmount},
+      ].map((item, index) => (
+        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />
+      ))}
+    </>
+  )
 }
 
 const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {

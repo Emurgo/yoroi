@@ -64,44 +64,49 @@ const HiddenInfo = ({
   setBottomSheetState: (bottomSheetState: {isOpen: boolean; title: string; content?: React.ReactNode}) => void
 }) => {
   const strings = useStrings()
-  return [
-    {
-      label: strings.swapMinAdaTitle,
-      value: '2 ADA',
-      info: strings.swapMinAda,
-    },
-    {
-      label: strings.swapMinReceivedTitle,
-      value: '2.99 USDA', // TODO add real value
-      info: strings.swapMinReceived,
-    },
-    {
-      label: strings.swapFeesTitle,
-      value: String(poolFee),
-      info: strings.swapFees,
-    },
-  ].map((item) => (
-    <React.Fragment key={item.label}>
-      <HiddenInfoWrapper
-        value={item.value}
-        label={item.label}
-        info={item.info}
-        onPress={() => {
-          setBottomSheetState({
-            isOpen: true,
-            title: item.label,
-            content: item.info,
-          })
-        }}
-      />
-    </React.Fragment>
-  ))
+  return (
+    <>
+      {[
+        {
+          label: strings.swapMinAdaTitle,
+          value: '2 ADA',
+          info: strings.swapMinAda,
+        },
+        {
+          label: strings.swapMinReceivedTitle,
+          value: '2.99 USDA', // TODO add real value
+          info: strings.swapMinReceived,
+        },
+        {
+          label: strings.swapFeesTitle,
+          value: String(poolFee),
+          info: strings.swapFees,
+        },
+      ].map((item) => (
+        <HiddenInfoWrapper
+          key={item.label}
+          value={item.value}
+          label={item.label}
+          info={item.info}
+          onPress={() => {
+            setBottomSheetState({
+              isOpen: true,
+              title: item.label,
+              content: item.info,
+            })
+          }}
+        />
+      ))}
+    </>
+  )
 }
 
 const MainInfo = ({totalAmount, tokenName}: {totalAmount: string; tokenName: string}) => {
-  return [{label: `Total ${totalAmount} ${tokenName} `}].map((item, index) => (
-    <React.Fragment key={index}>
-      <MainInfoWrapper label={item.label} isLast={index === 0} />
-    </React.Fragment>
-  ))
+  return (
+    <>
+      {[{label: `Total ${totalAmount} ${tokenName} `}].map((item, index) => (
+        <MainInfoWrapper key={index} label={item.label} isLast={index === 0} />
+      ))}
+    </>
+  )
 }
