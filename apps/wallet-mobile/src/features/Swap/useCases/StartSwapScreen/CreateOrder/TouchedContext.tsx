@@ -15,12 +15,12 @@ const TouchedContext = createContext<undefined | (TouchedState & TouchedActions)
 export const useSwapTouched = () => {
   const value = useContext(TouchedContext)
   if (!value) {
-    throw new Error('useSwapTouched must be used within a SwapTouchedProvider')
+    throw new Error('useSwapTouched must be used within a SwapFormProvider')
   }
   return value
 }
 
-export const SwapTouchedProvider = ({
+export const SwapFormProvider = ({
   children,
   initialState,
 }: {

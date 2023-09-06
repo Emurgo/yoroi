@@ -23,7 +23,8 @@ export const makeSwapApi = (
   const getOrders: Swap.Api['getOrders'] = async (): Promise<
     Swap.OpenOrder[]
   > => {
-    setTimeout(() => {}, 500)
+    // return api.getOrders(stakingKey).then(asYoroiOrders)
+    await new Promise((r) => setTimeout(r, 500))
 
     return getOrdersMock
   }

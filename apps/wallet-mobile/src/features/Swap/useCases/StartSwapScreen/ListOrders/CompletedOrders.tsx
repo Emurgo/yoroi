@@ -1,12 +1,13 @@
 import {useOrderByStatusCompleted} from '@yoroi/swap'
 import React from 'react'
-import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../../components'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {COLORS} from '../../../../../theme'
 import {Counter} from '../../../common/Counter/Counter'
 import {
+  BottomSheetState,
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
   HiddenInfoWrapper,
@@ -18,14 +19,12 @@ import {mapOrders, OrderProps} from './mapOrders'
 export const CompletedOrders = () => {
   const strings = useStrings()
   const {search} = useSearch()
-  const [showHiddenInfo, setShowHiddenInfo] = React.useState(false)
-  const [bottomSheetState, setBottomSheetState] = React.useState<{
-    isOpen: boolean
-    title: string
-  }>({
-    isOpen: false,
+  const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
+    openId: null,
     title: '',
+    content: '',
   })
+  const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
   const data = useOrderByStatusCompleted({
     onError: (err) => {
@@ -41,33 +40,43 @@ export const CompletedOrders = () => {
 
   return (
     <>
-      <View style={styles.container}>
-        <View style={styles.flex}>
-          {orders.map((order) => (
+      <ScrollView style={styles.container}>
+        {orders.map((order) => {
+          const id = `${order.assetFromLabel}-${order.assetToLabel}-${order.date}`
+          return (
             <ExpandableInfoCard
+              id={id}
               key={`${order.assetFromLabel}-${order.assetToLabel}-${order.date}`}
-              showHiddenInfo={showHiddenInfo}
-              setShowHiddenInfo={setShowHiddenInfo}
               bottomSheetState={bottomSheetState}
               setBottomSheetState={setBottomSheetState}
+              setHiddenInfoOpenId={setHiddenInfoOpenId}
+              hiddenInfoOpenId={hiddenInfoOpenId}
               mainInfo={<MainInfo order={order} />}
-              hiddenInfo={<HiddenInfo order={order} setBottomSheetState={setBottomSheetState} />}
+              hiddenInfo={<HiddenInfo id={id} order={order} setBottomSheetState={setBottomSheetState} />}
               label={<Label assetFromLabel={order.assetFromLabel} assetToLabel={order.assetToLabel} />}
               withBoxShadow
             />
-          ))}
-        </View>
-      </View>
+          )
+        })}
+      </ScrollView>
 
       <Counter counter={orders?.length ?? 0} customText={strings.listCompletedOrders} />
     </>
   )
 }
 
-const HiddenInfo = ({order, setBottomSheetState}) => {
+const HiddenInfo = ({
+  id,
+  order,
+  setBottomSheetState,
+}: {
+  id: string
+  order: OrderProps
+  setBottomSheetState: (state: BottomSheetState) => void
+}) => {
   const strings = useStrings()
   return (
-    <>
+    <View>
       {[
         {
           label: strings.listOrdersTotal,
@@ -98,27 +107,27 @@ const HiddenInfo = ({order, setBottomSheetState}) => {
           label={item.label}
           onPress={() => {
             setBottomSheetState({
-              isOpen: true,
+              openId: id,
               title: item.label,
             })
           }}
         />
       ))}
-    </>
+    </View>
   )
 }
 
 const MainInfo = ({order}: {order: OrderProps}) => {
   const strings = useStrings()
   return (
-    <>
+    <View>
       {[
         {label: strings.listOrdersSheetAssetPrice, value: order.tokenPrice},
         {label: strings.listOrdersSheetAssetAmount, value: order.tokenAmount},
       ].map((item, index) => (
         <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />
       ))}
-    </>
+    </View>
   )
 }
 

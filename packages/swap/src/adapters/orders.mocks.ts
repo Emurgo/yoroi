@@ -1,6 +1,6 @@
-import {SwapOpenOrder} from '@yoroi/types/lib/swap/order'
+import {Swap} from '@yoroi/types'
 
-export const getOrdersMock: Array<SwapOpenOrder> = [
+export const getOrdersMock: Array<Swap.OpenOrder> = [
   {
     provider: 'minswap',
     from: {

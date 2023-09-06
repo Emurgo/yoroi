@@ -612,7 +612,7 @@
   "global.sign": "sign",
   "global.spendingPassword": "Spending Password",
   "global.enterSpendingPassword": "Enter spending password to sign this transaction",
-  "global.confirmationTransaction": "Confirmation transaction",
+  "global.confirmationTransaction": "Confirm transaction",
   "global.comingSoon": "Coming soon",
   "global.currency": "Currency",
   "global.currency.ADA": "Cardano",

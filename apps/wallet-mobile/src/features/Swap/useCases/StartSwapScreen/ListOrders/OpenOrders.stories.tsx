@@ -7,7 +7,7 @@ import {Boundary} from '../../../../../components'
 import {SearchProvider} from '../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {SwapTouchedProvider} from '../CreateOrder/TouchedContext'
+import {SwapFormProvider} from '../CreateOrder/TouchedContext'
 import {OpenOrders, OpenOrdersSkeleton} from './OpenOrders'
 
 storiesOf('Swap Open orders', module)
@@ -17,9 +17,9 @@ storiesOf('Swap Open orders', module)
         <SelectedWalletProvider wallet={mocks.wallet}>
           <SearchProvider>
             <SwapProvider swapManager={mockSwapManager}>
-              <SwapTouchedProvider>
+              <SwapFormProvider>
                 <OpenOrders />
-              </SwapTouchedProvider>
+              </SwapFormProvider>
             </SwapProvider>
           </SearchProvider>
         </SelectedWalletProvider>
@@ -43,11 +43,11 @@ storiesOf('Swap Open orders', module)
                 },
               }}
             >
-              <SwapTouchedProvider>
+              <SwapFormProvider>
                 <Boundary loading={{fallback: <OpenOrdersSkeleton />}}>
                   <OpenOrders />
                 </Boundary>
-              </SwapTouchedProvider>
+              </SwapFormProvider>
             </SwapProvider>
           </SearchProvider>
         </SelectedWalletProvider>
