@@ -1,22 +1,22 @@
 import {useSwap} from '@yoroi/swap'
 import React from 'react'
-import {StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
+import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, Text, TextInput} from '../../../../components'
+import {Button} from '../../../../components'
 import {BottomSheetModal} from '../../../../components/BottomSheetModal'
+import {useWalletNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useStrings} from '../../common/strings'
+import {ConfirmTx} from './ConfirmTx'
 import {TransactionSummary} from './TransactionSummary'
 
 export const ConfirmTxScreen = () => {
-  const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false)
 
-  const [spendingPassword, setSpendingPassword] = React.useState('')
   const strings = useStrings()
   const wallet = useSelectedWallet()
 
@@ -24,6 +24,8 @@ export const ConfirmTxScreen = () => {
   const {amounts} = createOrder
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
+
+  const {resetToTxHistory} = useWalletNavigation()
 
   const poolFee = Quantities.denominated(
     `${Number(Object.values(unsignedTx?.fee))}`,
@@ -77,21 +79,12 @@ export const ConfirmTxScreen = () => {
         title={strings.signTransaction}
         content={
           <>
-            <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
-
-            <TextInput
-              secureTextEntry
-              ref={spendingPasswordRef}
-              enablesReturnKeyAutomatically
-              placeholder={strings.spendingPassword}
-              value={spendingPassword}
-              onChangeText={setSpendingPassword}
-              autoComplete="off"
+            <ConfirmTx
+              wallet={wallet}
+              unsignedTx={unsignedTx}
+              onSuccess={() => resetToTxHistory()}
+              onCancel={() => setConfirmationModal(false)}
             />
-
-            <Spacer fill />
-
-            <Button testID="swapButton" shelleyTheme title={strings.sign} />
           </>
         }
         onClose={() => {
@@ -116,10 +109,5 @@ const styles = StyleSheet.create({
 
   actions: {
     paddingVertical: 16,
-  },
-  modalText: {
-    paddingHorizontal: 70,
-    textAlign: 'center',
-    paddingBottom: 8,
   },
 })
