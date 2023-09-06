@@ -24,7 +24,7 @@ export const makeSwapApi = (
     Swap.OpenOrder[]
   > => {
     // return api.getOrders(stakingKey).then(asYoroiOrders)
-    setTimeout(() => {}, 500)
+    await new Promise((r) => setTimeout(r, 500))
 
     return getOrdersMock
   }
