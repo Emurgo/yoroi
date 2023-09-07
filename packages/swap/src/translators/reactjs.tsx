@@ -133,6 +133,7 @@ export const useSwapSlippage = (swapManager: Readonly<Swap.Manager>) => {
 
   return query.data
 }
+
 export const useOrderByStatusOpen = (
   options: UseQueryOptions<Swap.OpenOrder[], Error>,
 ) => {
@@ -169,6 +170,23 @@ export const useCreateOrder = (
     createOrderData: mutation.mutate,
     ...mutation,
   }
+}
+
+export const useOrderByStatusCompleted = (
+  options: UseQueryOptions<Swap.OpenOrder[], Error>,
+) => {
+  const {order} = useSwap()
+  const query = useQuery({
+    suspense: true,
+    queryKey: [],
+    queryFn: order.list.byStatusCompleted,
+    ...options,
+  })
+
+  if (query.data == null)
+    throw new Error('[@yoroi/swap] useOrderByStatusOpen invalid state')
+
+  return query.data
 }
 
 export const usePairListByToken = (

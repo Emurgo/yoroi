@@ -101,11 +101,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff',
     width: '100%',
-    shadowColor: '#000000',
-    shadowOffset: {width: 0.1, height: 0.1},
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
   },
   tab: {
     alignItems: 'center',

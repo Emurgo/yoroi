@@ -1,48 +1,54 @@
 import {storiesOf} from '@storybook/react-native'
-import {mockSwapManager, swapManagerMocks, SwapProvider} from '@yoroi/swap'
-import {Swap} from '@yoroi/types'
+import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 
+import {QueryProvider} from '../../../../../../.storybook/decorators'
 import {SearchProvider} from '../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
 import {SwapTouchedProvider} from '../CreateOrder/TouchedContext'
-import {OpenOrders} from './OpenOrders'
+import {ListOrders} from './ListOrders'
 
-storiesOf('Swap Open orders', module)
-  .add('initial', () => {
+storiesOf('Swap List orders', module)
+  .add('Default', () => {
     return (
-      <SelectedWalletProvider wallet={mocks.wallet}>
-        <SearchProvider>
-          <SwapProvider swapManager={mockSwapManager}>
-            <SwapTouchedProvider>
-              <OpenOrders />
-            </SwapTouchedProvider>
-          </SwapProvider>
-        </SearchProvider>
-      </SelectedWalletProvider>
+      <QueryProvider>
+        <SelectedWalletProvider wallet={mocks.wallet}>
+          <SearchProvider>
+            <SwapProvider swapManager={mockSwapManager}>
+              <SwapTouchedProvider>
+                <ListOrders />
+              </SwapTouchedProvider>
+            </SwapProvider>
+          </SearchProvider>
+        </SelectedWalletProvider>
+      </QueryProvider>
     )
   })
-  .add('loading', () => {
-    const loadingSwapManager = {
-      ...mockSwapManager,
-      order: {
-        ...mockSwapManager.order,
-        list: {
-          ...mockSwapManager.order.list,
-          byStatusOpen: swapManagerMocks.getOrders.loading,
-        },
-      },
-    }
+  .add('Loading', () => {
     return (
-      <SelectedWalletProvider wallet={mocks.wallet}>
-        <SearchProvider>
-          <SwapProvider swapManager={loadingSwapManager as Swap.Manager}>
-            <SwapTouchedProvider>
-              <OpenOrders />
-            </SwapTouchedProvider>
-          </SwapProvider>
-        </SearchProvider>
-      </SelectedWalletProvider>
+      <QueryProvider>
+        <SelectedWalletProvider wallet={mocks.wallet}>
+          <SearchProvider>
+            <SwapProvider
+              swapManager={{
+                ...mockSwapManager,
+                order: {
+                  ...mockSwapManager.order,
+                  list: {
+                    ...mockSwapManager.order.list,
+                    byStatusOpen: () => new Promise(() => undefined),
+                    byStatusCompleted: () => new Promise(() => undefined),
+                  },
+                },
+              }}
+            >
+              <SwapTouchedProvider>
+                <ListOrders />
+              </SwapTouchedProvider>
+            </SwapProvider>
+          </SearchProvider>
+        </SelectedWalletProvider>
+      </QueryProvider>
     )
   })

@@ -1,20 +1,26 @@
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet'
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
-import {Modal as RNModal, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
+import {Modal as RNModal, Platform, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
 
 import {Icon} from '../Icon'
 import {Spacer} from '../Spacer'
 
 type BottomSheetModalProps = {
   title: string
-  content: string | React.ReactNode
   isOpen: boolean
   onClose?: () => void
-  containerStyle?: ViewStyle
+  contentContainerStyle?: ViewStyle
+  children: React.ReactNode
 }
 
-export const BottomSheetModal = ({title, content, isOpen = false, onClose, containerStyle}: BottomSheetModalProps) => {
+export const BottomSheetModal = ({
+  title,
+  isOpen = false,
+  onClose,
+  contentContainerStyle,
+  children,
+}: BottomSheetModalProps) => {
   const navigation = useNavigation()
 
   const [showBackdropComp, setShowBackdropComp] = React.useState(true)
@@ -54,7 +60,6 @@ export const BottomSheetModal = ({title, content, isOpen = false, onClose, conta
       animationType="fade"
       visible={showBackdropComp}
       onRequestClose={() => {
-        console.log('ON COLSE REQUEST MODAL ')
         navigation.goBack()
       }}
     >
@@ -79,20 +84,22 @@ export const BottomSheetModal = ({title, content, isOpen = false, onClose, conta
         }
         onChange={handleSheetChanges}
       >
-        <View style={[styles.container, containerStyle]}>
+        <View style={[styles.container, contentContainerStyle]}>
           <View style={styles.header}>
-            <View style={styles.empty} />
+            {Platform.OS === 'android' && <View style={styles.empty} />}
 
             <Text style={styles.sheetTitle}>{title}</Text>
 
-            <TouchableOpacity style={styles.close} onPress={handleOnClose}>
-              <Icon.CrossCircle size={28} />
-            </TouchableOpacity>
+            {Platform.OS === 'android' && (
+              <TouchableOpacity style={styles.close} onPress={handleOnClose}>
+                <Icon.CrossCircle size={28} />
+              </TouchableOpacity>
+            )}
           </View>
 
-          <Spacer height={35} />
+          <Spacer height={25} />
 
-          {content}
+          {children}
         </View>
       </BottomSheet>
     </RNModal>
@@ -106,6 +113,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   close: {
     flex: 1,
@@ -113,7 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   sheetTitle: {
-    flex: 4,
+    flex: 5,
     fontSize: 20,
     fontWeight: 'bold',
     color: '#242838',

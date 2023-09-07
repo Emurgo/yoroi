@@ -75,30 +75,29 @@ export const ConfirmTxScreen = () => {
       <BottomSheetModal
         isOpen={confirmationModal}
         title={strings.signTransaction}
-        content={
-          <>
-            <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
-
-            <TextInput
-              secureTextEntry
-              ref={spendingPasswordRef}
-              enablesReturnKeyAutomatically
-              placeholder={strings.spendingPassword}
-              value={spendingPassword}
-              onChangeText={setSpendingPassword}
-              autoComplete="off"
-            />
-
-            <Spacer fill />
-
-            <Button testID="swapButton" shelleyTheme title={strings.sign} />
-          </>
-        }
         onClose={() => {
           setConfirmationModal(false)
         }}
-        containerStyle={{justifyContent: 'space-between'}}
-      />
+        contentContainerStyle={{justifyContent: 'space-between'}}
+      >
+        <>
+          <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+
+          <TextInput
+            secureTextEntry
+            ref={spendingPasswordRef}
+            enablesReturnKeyAutomatically
+            placeholder={strings.spendingPassword}
+            value={spendingPassword}
+            onChangeText={setSpendingPassword}
+            autoComplete="off"
+          />
+
+          <Spacer fill />
+
+          <Button testID="swapButton" shelleyTheme title={strings.sign} />
+        </>
+      </BottomSheetModal>
     </SafeAreaView>
   )
 }
@@ -113,7 +112,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     justifyContent: 'space-between',
   },
-
   actions: {
     paddingVertical: 16,
   },

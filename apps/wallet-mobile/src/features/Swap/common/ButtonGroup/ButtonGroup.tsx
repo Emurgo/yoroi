@@ -39,6 +39,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 4,
+    fontFamily: 'Rubik-Medium',
+    fontWeight: '500',
   },
   selected: {
     backgroundColor: COLORS.BORDER_GRAY,

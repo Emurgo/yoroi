@@ -5,15 +5,16 @@ import {
   asOpenswapTokenId,
   asOpenswapTokenIdHex,
   asYoroiBalanceTokens,
-  asYoroiOrders,
+  // asYoroiOrders,
   asYoroiPools,
 } from './transformers'
-import {getTokensMock} from '../helpers/tokens.mocks'
-import {getPoolsMock} from '../helpers/pools.mocks'
+import {getTokensMock} from './tokens.mocks'
+import {getPoolsMock} from '../adapters/pools.mocks'
+import {getOrdersMock} from '../adapters/orders.mocks'
 
 export const makeSwapApi = (
   // FIX: network Yoroi type need to bring from the wallet // chain Id
-  {network, stakingKey}: {network: 1 | 0 | 300; stakingKey: string},
+  {network /* , stakingKey */}: {network: 1 | 0 | 300; stakingKey: string},
   deps?: {openswap?: OpenSwapApi},
 ): Readonly<Swap.Api> => {
   const api =
@@ -21,7 +22,11 @@ export const makeSwapApi = (
 
   const getOrders: Swap.Api['getOrders'] = async (): Promise<
     Swap.OpenOrder[]
-  > => api.getOrders(stakingKey).then(asYoroiOrders)
+  > => {
+    setTimeout(() => {}, 500)
+
+    return getOrdersMock
+  }
 
   const createOrder: Swap.Api['createOrder'] = async (
     orderData,

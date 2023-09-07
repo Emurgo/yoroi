@@ -25,12 +25,9 @@ export const ShowSlippageInfo = () => {
         <Icon.Info size={24} />
       </TouchableOpacity>
 
-      <BottomSheetModal
-        title={strings.slippageTolerance}
-        content={<Text style={styles.sheetContent}>{strings.slippageToleranceInfo}</Text>}
-        isOpen={showInfo}
-        onClose={() => setShowInfo(false)}
-      />
+      <BottomSheetModal title={strings.slippageTolerance} isOpen={showInfo} onClose={() => setShowInfo(false)}>
+        <Text style={styles.sheetContent}>{strings.slippageToleranceInfo}</Text>
+      </BottomSheetModal>
     </View>
   )
 }
