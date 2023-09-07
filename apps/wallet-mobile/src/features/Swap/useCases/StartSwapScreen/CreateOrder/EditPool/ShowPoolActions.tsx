@@ -16,7 +16,7 @@ import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../TouchedContext'
 
 export const ShowPoolActions = () => {
-  const navigate = useNavigateTo()
+  const navigateTo = useNavigateTo()
   const {createOrder} = useSwap()
   const {isBuyTouched, isSellTouched} = useSwapTouched()
   const {selectedPool, amounts} = createOrder
