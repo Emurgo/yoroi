@@ -23,10 +23,7 @@ const cancelOrderResponse: string = 'cbor'
 const listOrdersByStatusOpenResponse: Swap.OpenOrder[] = [
   {
     provider: 'minswap',
-    deposit: {
-      quantity: '0',
-      tokenId: '',
-    },
+    deposit: '0',
     from: {
       quantity: '0',
       tokenId: '',

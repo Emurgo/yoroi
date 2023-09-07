@@ -34,6 +34,7 @@ import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus, Wallet
 import {delay} from '../utils/timeUtils'
 import {Amounts, Quantities, Utxos} from '../utils/utils'
 import {WalletManager, WalletMeta} from '../walletManager'
+import {Buffer} from 'buffer'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
@@ -113,6 +114,18 @@ export const useUtxos = (wallet: YoroiWallet) => {
   useWallet(wallet, 'utxos')
 
   return wallet.utxos
+}
+
+export const useStakingKey = (wallet: YoroiWallet) => {
+  const getPublicKeyHex: () => Promise<string> = () =>
+    wallet
+      .getStakingKey()
+      .then((r) => r.hash())
+      .then((h) => h.toBytes())
+      .then((bytes) => Buffer.from(bytes).toString('hex'))
+  const result = useQuery([wallet.id, 'stakingKey'], getPublicKeyHex, {suspense: true})
+  if (!result.data) throw new Error('invalid state')
+  return result.data
 }
 
 export const useAssetIds = (wallet: YoroiWallet): string[] => {

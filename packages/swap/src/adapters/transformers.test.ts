@@ -77,10 +77,7 @@ describe('asYoroiOrder', () => {
         quantity: '150',
         tokenId: '656565.tokenE',
       },
-      deposit: {
-        quantity: '100',
-        tokenId: '',
-      },
+      deposit: '100',
       provider: 'minswap',
       utxo: 'utxo',
     })

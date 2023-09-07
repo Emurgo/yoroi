@@ -33,6 +33,16 @@ export type SwapOpenOrder = {
   provider: SwapProtocol
   from: BalanceAmount
   to: BalanceAmount
-  deposit: BalanceAmount
+  deposit: BalanceQuantity
   utxo: string
 }
+
+export type SwapCompletedOrder = {
+  provider: SwapProtocol
+  from: BalanceAmount
+  to: BalanceAmount
+  deposit: BalanceQuantity
+  utxo: string
+}
+
+export type SwapOrder = SwapOpenOrder | SwapCompletedOrder

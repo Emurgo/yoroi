@@ -5,28 +5,38 @@ import {
   asOpenswapTokenId,
   asOpenswapTokenIdHex,
   asYoroiBalanceTokens,
+  asYoroiOrders,
   // asYoroiOrders,
   asYoroiPools,
 } from './transformers'
 import {getTokensMock} from './tokens.mocks'
 import {getPoolsMock} from '../adapters/pools.mocks'
-import {getOrdersMock} from '../adapters/orders.mocks'
 
 export const makeSwapApi = (
   // FIX: network Yoroi type need to bring from the wallet // chain Id
-  {network /* , stakingKey */}: {network: 1 | 0 | 300; stakingKey: string},
+  {network, stakingKey}: {network: 1 | 0 | 300; stakingKey: string},
   deps?: {openswap?: OpenSwapApi},
 ): Readonly<Swap.Api> => {
   const api =
     deps?.openswap ?? new OpenSwapApi(network === 0 ? 'mainnet' : 'preprod')
 
-  const getOrders: Swap.Api['getOrders'] = async (): Promise<
-    Swap.OpenOrder[]
-  > => {
-    // return api.getOrders(stakingKey).then(asYoroiOrders)
-    await new Promise((r) => setTimeout(r, 500))
-
-    return getOrdersMock
+  const getOrders: Swap.Api['getOrders'] = async () => {
+    return api.getOrders(stakingKey).then(asYoroiOrders)
+    // return api.getOrders(stakingKey).then((response) => {
+    //   return response.map<Swap.Order>((order) => ({
+    //     from: {
+    //       tokenId: order.from.token,
+    //       quantity: order.from.amount as BalanceQuantity,
+    //     },
+    //     provider: order.provider,
+    //     utxo: order.utxo,
+    //     deposit: order.deposit as BalanceQuantity,
+    //     to: {
+    //       tokenId: order.to.token,
+    //       quantity: order.to.amount as BalanceQuantity,
+    //     },
+    //   }))
+    // })
   }
 
   const createOrder: Swap.Api['createOrder'] = async (
