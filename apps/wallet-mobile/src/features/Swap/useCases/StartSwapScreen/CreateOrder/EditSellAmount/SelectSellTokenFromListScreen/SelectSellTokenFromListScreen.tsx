@@ -6,7 +6,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Spacer, Text} from '../../../../../../../components'
-import {AmountItem} from '../../../../../../../components/AmountItem/AmountItem'
+import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components/AmountItem/AmountItem'
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'
@@ -16,6 +16,7 @@ import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
 import {useAllTokenInfos, useBalance, useIsWalletEmpty} from '../../../../../../../yoroi-wallets/hooks'
 import {filterByFungibility} from '../../../../../../Send/common/filterByFungibility'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
+import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
@@ -31,18 +32,6 @@ export const SelectSellTokenFromListScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.subheader}></View>
-
-      <View style={styles.labels}>
-        <Text style={styles.label}>{strings.asset}</Text>
-
-        <Text style={styles.label}>{strings.balance}</Text>
-      </View>
-
-      <Spacer height={16} />
-
-      <View style={styles.line} />
-
       <Boundary>
         <TokenList />
       </Boundary>
@@ -54,24 +43,35 @@ const TokenList = () => {
   const wallet = useSelectedWallet()
   const tokenInfos = useAllTokenInfos({wallet})
   const filteredTokenInfos = useFilteredTokenInfos({tokenInfos})
+  const strings = useStrings()
 
   return (
     <View style={styles.list}>
+      {filteredTokenInfos?.length > 0 && (
+        <>
+          <View style={styles.labels}>
+            <Text style={styles.label}>{strings.asset}</Text>
+
+            <Text style={styles.label}>{strings.balance}</Text>
+          </View>
+
+          <Spacer height={16} />
+
+          <View style={styles.line} />
+        </>
+      )}
+
       <FlashList
         data={filteredTokenInfos}
         renderItem={({item: tokenInfo}: {item: Balance.TokenInfo}) => (
-          <Boundary>
-            <SelectableToken
-              tokenInfo={tokenInfo}
-              disabled={tokenInfo.id !== wallet.primaryTokenInfo.id}
-              wallet={wallet}
-            />
+          <Boundary loading={{fallback: <AmountItemPlaceholder style={styles.item} />}}>
+            <SelectableToken tokenInfo={tokenInfo} wallet={wallet} />
           </Boundary>
         )}
         bounces={false}
-        keyExtractor={({id}) => id}
+        keyExtractor={({id, name}) => `${name}-${id}`}
         testID="assetsList"
-        estimatedItemSize={78}
+        estimatedItemSize={72}
         ListEmptyComponent={<EmptyList filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
       />
 
@@ -109,33 +109,6 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   )
 }
 
-const Counter = ({counter}: {counter: number}) => {
-  const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const strings = useStrings()
-
-  if (!isSearching) {
-    return (
-      <View style={styles.counter}>
-        <Text style={styles.counterText}>{strings.youHave}</Text>
-
-        <Text style={styles.counterTextBold}>{` ${counter} ${strings.tokens(counter)}`}</Text>
-      </View>
-    )
-  }
-
-  if (isSearching && assetSearchTerm.length > 0) {
-    return (
-      <View style={styles.counter}>
-        <Text style={styles.counterTextBold}>{`${counter} ${strings.assets(counter)} `}</Text>
-
-        <Text style={styles.counterText}>{strings.found}</Text>
-      </View>
-    )
-  }
-
-  return null
-}
-
 const useFilteredTokenInfos = ({tokenInfos}: {tokenInfos: Array<Balance.TokenInfo>}) => {
   const wallet = useSelectedWallet()
 
@@ -165,12 +138,12 @@ const EmptyList = ({
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
 
   if ((isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) || allTokenInfos.length === 0)
-    return <EmptySearchResult />
+    return <EmptySearchResult assetSearchTerm={assetSearchTerm} />
 
   return null
 }
 
-const EmptySearchResult = () => {
+const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
   const strings = useStrings()
   return (
     <View style={styles.imageContainer}>
@@ -180,7 +153,9 @@ const EmptySearchResult = () => {
 
       <Spacer height={25} />
 
-      <Text style={styles.contentText}>{strings.noAssetsFound}</Text>
+      <Text style={styles.contentText}>
+        {assetSearchTerm === '' ? strings.noAssetsFound : strings.noAssetsFoundFor(assetSearchTerm)}
+      </Text>
     </View>
   )
 }
@@ -202,11 +177,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: 16,
   },
-  subheader: {
-    paddingHorizontal: 16,
-  },
   item: {
-    paddingVertical: 14,
+    paddingVertical: 8,
   },
   line: {
     height: 1,
@@ -215,20 +187,6 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
   },
-  counter: {
-    padding: 16,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  counterText: {
-    fontWeight: '400',
-    color: COLORS.SHELLEY_BLUE,
-  },
-  counterTextBold: {
-    fontWeight: 'bold',
-    color: COLORS.SHELLEY_BLUE,
-  },
-
   image: {
     flex: 1,
     alignSelf: 'center',
@@ -243,6 +201,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
     fontSize: 20,
     color: '#000',
     paddingTop: 4,

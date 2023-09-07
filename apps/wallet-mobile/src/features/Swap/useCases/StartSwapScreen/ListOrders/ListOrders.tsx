@@ -1,58 +1,48 @@
-import React, {useState} from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
 
 import {Boundary} from '../../../../../components'
-import {COLORS} from '../../../../../theme'
+import {useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useStrings} from '../../../common/strings'
-import {ClosedOrders} from './ClosedOrders'
-import {OpenOrders} from './OpenOrders'
-
-type Item = {
-  label: string
-  value: string
-}
-
-type SwapOrder = {
-  label: React.ReactNode
-  mainInfo: Item[]
-  hiddenInfo: Item[]
-  buttonAction: () => void
-  buttonText?: string
-}
-
-export type OpenOrderListType = SwapOrder[]
+import {CompletedOrders, CompletedOrdersSkeleton} from './CompletedOrders'
+import {OpenOrders, OpenOrdersSkeleton} from './OpenOrders'
 
 export const ListOrders = () => {
+  const [orderStatusIndex, setOrderStatusIndex] = React.useState(0)
+
   const strings = useStrings()
 
-  const [orderStatusIndex, setOrderStatusIndex] = useState<number>(0)
-  // TODO: @SorinC6: is it completed or closed orders?
   const orderStatusLabels = [strings.openOrders, strings.completedOrders]
   const handleSelectOrderStatus = (index: number) => {
     setOrderStatusIndex(index)
   }
 
-  return (
-    <View style={styles.container}>
-      <ScrollView style={styles.keyboard}>
-        <View style={styles.buttonsGroup}>
-          <ButtonGroup labels={orderStatusLabels} onSelect={handleSelectOrderStatus} selected={orderStatusIndex} />
-        </View>
+  useSearchOnNavBar({
+    placeholder: strings.searchTokens,
+    title: strings.swapTitle,
+  })
 
-        <Boundary>{orderStatusIndex === 0 ? <OpenOrders /> : <ClosedOrders />}</Boundary>
-      </ScrollView>
+  return (
+    <View style={styles.keyboard}>
+      <View style={styles.buttonsGroup}>
+        <ButtonGroup labels={orderStatusLabels} onSelect={handleSelectOrderStatus} selected={orderStatusIndex} />
+      </View>
+
+      {orderStatusIndex === 0 ? (
+        <Boundary loading={{fallback: <OpenOrdersSkeleton />}}>
+          <OpenOrders />
+        </Boundary>
+      ) : (
+        <Boundary loading={{fallback: <CompletedOrdersSkeleton />}}>
+          <CompletedOrders />
+        </Boundary>
+      )}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-    paddingHorizontal: 16,
-    paddingTop: 10,
-  },
   buttonsGroup: {
     paddingBottom: 24,
     flexDirection: 'row',
@@ -60,5 +50,7 @@ const styles = StyleSheet.create({
   },
   keyboard: {
     flex: 1,
+    justifyContent: 'space-between',
+    padding: 16,
   },
 })

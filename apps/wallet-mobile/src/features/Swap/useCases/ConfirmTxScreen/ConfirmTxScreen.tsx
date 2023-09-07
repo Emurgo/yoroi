@@ -77,21 +77,18 @@ export const ConfirmTxScreen = () => {
       <BottomSheetModal
         isOpen={confirmationModal}
         title={strings.signTransaction}
-        content={
-          <>
-            <ConfirmTx
-              wallet={wallet}
-              unsignedTx={unsignedTx}
-              onSuccess={() => resetToTxHistory()}
-              onCancel={() => setConfirmationModal(false)}
-            />
-          </>
-        }
         onClose={() => {
           setConfirmationModal(false)
         }}
-        containerStyle={{justifyContent: 'space-between'}}
-      />
+        contentContainerStyle={{justifyContent: 'space-between'}}
+      >
+        <ConfirmTx
+          wallet={wallet}
+          unsignedTx={unsignedTx}
+          onSuccess={() => resetToTxHistory()}
+          onCancel={() => setConfirmationModal(false)}
+        />
+      </BottomSheetModal>
     </SafeAreaView>
   )
 }
@@ -106,7 +103,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     justifyContent: 'space-between',
   },
-
   actions: {
     paddingVertical: 16,
   },

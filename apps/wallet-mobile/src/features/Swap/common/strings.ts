@@ -41,6 +41,7 @@ export const useStrings = () => {
     pools: (qty: number) => intl.formatMessage(globalMessages.pools, {qty}),
     openOrders: intl.formatMessage(messages.openOrders),
     noAssetsFound: intl.formatMessage(messages.noAssetsFound),
+    noAssetsFoundFor: (search: string) => intl.formatMessage(messages.noAssetsFoundFor, {search}),
     completedOrders: intl.formatMessage(messages.completedOrders),
     signTransaction: intl.formatMessage(messages.signTransaction),
     enterSpendingPassword: intl.formatMessage(messages.enterSpendingPassword),
@@ -61,6 +62,22 @@ export const useStrings = () => {
     asset: intl.formatMessage(messages.asset),
     volume: intl.formatMessage(messages.volume),
     total: intl.formatMessage(globalMessages.total),
+    listCompletedOrders: intl.formatMessage(messages.listCompletedOrders),
+    listOpenOrders: intl.formatMessage(messages.listOpenOrders),
+    listOrdersSheetTitle: intl.formatMessage(messages.listOrdersSheetTitle),
+    listOrdersSheetButtonText: intl.formatMessage(messages.listOrdersSheetButtonText),
+    listOrdersSheetContentTitle: intl.formatMessage(messages.listOrdersSheetContentTitle),
+    listOrdersSheetLink: intl.formatMessage(messages.listOrdersSheetLink),
+    listOrdersSheetAssetPrice: intl.formatMessage(messages.listOrdersSheetAssetPrice),
+    listOrdersSheetAssetAmount: intl.formatMessage(messages.listOrdersSheetAssetAmount),
+    listOrdersSheetTotalReturned: intl.formatMessage(messages.listOrdersSheetTotalReturned),
+    listOrdersSheetCancellationFee: intl.formatMessage(messages.listOrdersSheetCancellationFee),
+    listOrdersSheetConfirm: intl.formatMessage(messages.listOrdersSheetConfirm),
+    listOrdersSheetBack: intl.formatMessage(messages.listOrdersSheetBack),
+    listOrdersTimeCreated: intl.formatMessage(messages.listOrdersTimeCreated),
+    listOrdersLiquidityPool: intl.formatMessage(messages.listOrdersLiquidityPool),
+    listOrdersTotal: intl.formatMessage(messages.listOrdersTotal),
+    listOrdersTxId: intl.formatMessage(messages.listOrdersTxId),
     limitPriceWarningTitle: intl.formatMessage(messages.limitPriceWarningTitle),
     limitPriceWarningDescription: intl.formatMessage(messages.limitPriceWarningDescription),
     limitPriceWarningYourPrice: intl.formatMessage(messages.limitPriceWarningYourPrice),
@@ -199,6 +216,10 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.noAssetsFound',
     defaultMessage: '!!!No assets found for this pair',
   },
+  noAssetsFoundFor: {
+    id: 'swap.swapScreen.noAssetsFoundFor',
+    defaultMessage: '!!!No assets found for "{search}"',
+  },
   eachVerifiedToken: {
     id: 'swap.swapScreen.eachVerifiedToken',
     defaultMessage: '!!!Each verified tokens gets',
@@ -280,6 +301,70 @@ export const messages = defineMessages({
   swapButton: {
     id: 'global.swap',
     defaultMessage: '!!!Swap',
+  },
+  listCompletedOrders: {
+    id: 'swap.listOrders.completed',
+    defaultMessage: '!!!completed orders',
+  },
+  listOpenOrders: {
+    id: 'swap.listOrders.open',
+    defaultMessage: '!!!open orders',
+  },
+  listOrdersSheetTitle: {
+    id: 'swap.listOrders.sheet.title',
+    defaultMessage: '!!!Confirm order cancelation',
+  },
+  listOrdersSheetButtonText: {
+    id: 'swap.listOrders.card.buttonText',
+    defaultMessage: '!!!Cancel order',
+  },
+  listOrdersSheetContentTitle: {
+    id: 'swap.listOrders.sheet.contentTitle',
+    defaultMessage: '!!!Are you sure you want to cancel this order?',
+  },
+  listOrdersSheetLink: {
+    id: 'swap.listOrders.sheet.link',
+    defaultMessage: '!!!Learn more about swap orders in Yoroi',
+  },
+  listOrdersSheetAssetPrice: {
+    id: 'swap.listOrders.sheet.assetPrice',
+    defaultMessage: '!!!Asset price',
+  },
+  listOrdersSheetAssetAmount: {
+    id: 'swap.listOrders.sheet.assetAmount',
+    defaultMessage: '!!!Asset amount',
+  },
+  listOrdersSheetTotalReturned: {
+    id: 'swap.listOrders.sheet.totalReturned',
+    defaultMessage: '!!!Total returned',
+  },
+  listOrdersSheetCancellationFee: {
+    id: 'swap.listOrders.sheet.cancellationFee',
+    defaultMessage: '!!!Cancellation Fee',
+  },
+  listOrdersSheetConfirm: {
+    id: 'swap.listOrders.sheet.confirm',
+    defaultMessage: '!!!Confirm',
+  },
+  listOrdersSheetBack: {
+    id: 'swap.listOrders.sheet.back',
+    defaultMessage: '!!!Back',
+  },
+  listOrdersTotal: {
+    id: 'swap.listOrders.total',
+    defaultMessage: '!!!Total',
+  },
+  listOrdersLiquidityPool: {
+    id: 'swap.listOrders.liquidityPool',
+    defaultMessage: '!!!Liquidity Pool',
+  },
+  listOrdersTimeCreated: {
+    id: 'swap.listOrders.timeCreated',
+    defaultMessage: '!!!Time Created',
+  },
+  listOrdersTxId: {
+    id: 'swap.listOrders.txId',
+    defaultMessage: '!!!Transaction ID',
   },
   // TODO check this and change if necessary
 

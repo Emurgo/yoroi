@@ -3,13 +3,14 @@ import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 
 import {QueryProvider} from '../../../../../../.storybook/decorators'
+import {Boundary} from '../../../../../components'
 import {SearchProvider} from '../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
 import {SwapFormProvider} from '../CreateOrder/TouchedContext'
-import {ListOrders} from './ListOrders'
+import {CompletedOrders, CompletedOrdersSkeleton} from './CompletedOrders'
 
-storiesOf('Swap List orders', module)
+storiesOf('Swap Completed orders', module)
   .add('Default', () => {
     return (
       <QueryProvider>
@@ -17,7 +18,7 @@ storiesOf('Swap List orders', module)
           <SearchProvider>
             <SwapProvider swapManager={mockSwapManager}>
               <SwapFormProvider>
-                <ListOrders />
+                <CompletedOrders />
               </SwapFormProvider>
             </SwapProvider>
           </SearchProvider>
@@ -37,14 +38,15 @@ storiesOf('Swap List orders', module)
                   ...mockSwapManager.order,
                   list: {
                     ...mockSwapManager.order.list,
-                    byStatusOpen: () => new Promise(() => undefined),
                     byStatusCompleted: () => new Promise(() => undefined),
                   },
                 },
               }}
             >
               <SwapFormProvider>
-                <ListOrders />
+                <Boundary loading={{fallback: <CompletedOrdersSkeleton />}}>
+                  <CompletedOrders />
+                </Boundary>
               </SwapFormProvider>
             </SwapProvider>
           </SearchProvider>

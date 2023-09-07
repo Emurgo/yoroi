@@ -28,12 +28,12 @@ export const TokenIcon = ({wallet, tokenId, variant}: {wallet: YoroiWallet; toke
 
   if (tokenInfo.kind === 'nft') {
     return (
-      <Boundary loading={{fallback: <Placeholder />}}>
+      <Boundary loading={{fallback: <TokenIconPlaceholder />}}>
         <NftIcon tokenId={tokenId} wallet={wallet} />
       </Boundary>
     )
   }
-  return <Placeholder variant={variant} />
+  return <TokenIconPlaceholder variant={variant} />
 }
 
 type PrimaryIconProps = {
@@ -72,7 +72,7 @@ type PlaceholderProps = {
   variant?: 'swap'
 }
 
-export const Placeholder = ({variant}: PlaceholderProps) => (
+export const TokenIconPlaceholder = ({variant}: PlaceholderProps) => (
   <View style={[styles.icon, styles.placeholder, variant === 'swap' && styles.placeholderSmall]}>
     <Icon.Tokens color={COLORS.TEXT_INPUT} size={35} />
   </View>

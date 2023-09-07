@@ -6,7 +6,7 @@ import React from 'react'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
 import {CreateOrder} from './CreateOrder'
-import {SwapTouchedProvider} from './TouchedContext'
+import {SwapFormProvider} from './TouchedContext'
 
 storiesOf('Swap Create Order', module) //
   .add('Initial', () => <Initial />)
@@ -17,9 +17,9 @@ const Initial = () => {
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager}>
-        <SwapTouchedProvider>
+        <SwapFormProvider>
           <CreateOrder />
-        </SwapTouchedProvider>
+        </SwapFormProvider>
       </SwapProvider>
     </SelectedWalletProvider>
   )
@@ -32,9 +32,9 @@ const MarketOrder = () => {
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
-        <SwapTouchedProvider>
+        <SwapFormProvider>
           <CreateOrder />
-        </SwapTouchedProvider>
+        </SwapFormProvider>
       </SwapProvider>
     </SelectedWalletProvider>
   )
@@ -47,9 +47,9 @@ const LimitOrder = () => {
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
-        <SwapTouchedProvider>
+        <SwapFormProvider>
           <CreateOrder />
-        </SwapTouchedProvider>
+        </SwapFormProvider>
       </SwapProvider>
     </SelectedWalletProvider>
   )

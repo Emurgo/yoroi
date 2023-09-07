@@ -5,7 +5,7 @@ import React from 'react'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
-import {SwapTouchedProvider} from '../TouchedContext'
+import {SwapFormProvider} from '../TouchedContext'
 import {ShowSlippageActions} from './ShowSlippageActions'
 
 storiesOf('Swap Slippage Actions', module).add('initial', () => {
@@ -13,9 +13,9 @@ storiesOf('Swap Slippage Actions', module).add('initial', () => {
     <SelectedWalletProvider wallet={mocks.wallet}>
       <SearchProvider>
         <SwapProvider swapManager={mockSwapManager}>
-          <SwapTouchedProvider>
+          <SwapFormProvider>
             <ShowSlippageActions />
-          </SwapTouchedProvider>
+          </SwapFormProvider>
         </SwapProvider>
       </SearchProvider>
     </SelectedWalletProvider>
