@@ -61,6 +61,11 @@ export const EditBuyAmount = () => {
     })
   }
 
+  React.useEffect(() => {
+    recalculateSellValue(quantity)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sellTokenInfo?.id])
+
   const onChangeQuantity = (text: string) => {
     try {
       const [input, quantity] = Quantities.parseFromText(text, decimals ?? 0, numberLocale)
