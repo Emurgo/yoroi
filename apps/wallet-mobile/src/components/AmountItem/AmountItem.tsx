@@ -76,7 +76,7 @@ export const AmountItem = ({
       <Right>
         {tokenInfo.kind !== 'nft' && (
           <Text style={styles.quantity} testID="tokenAmountText">
-            {isPrivacyOff ? '**.*******' : variant === 'swap' ? `${supply} ADA` : formattedQuantity}
+            {isPrivacyOff ? '**.*******' : variant === 'swap' ? `${supply}` : formattedQuantity}
           </Text>
         )}
 
