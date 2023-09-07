@@ -47,6 +47,7 @@ export const TxHistoryNavigator = () => {
   const swapAPI = makeSwapApi({
     network: 0,
     stakingKey,
+    primaryTokenId: wallet.primaryTokenInfo.id,
   })
   const swapManager = makeSwapManager(swapStorage, swapAPI)
 
