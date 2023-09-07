@@ -73,6 +73,9 @@ const wallet: YoroiWallet = {
   createWithdrawalTx: () => {
     throw new Error('not implemented: createWithdrawalTx')
   },
+  getStakingKey: () => {
+    throw new Error('not implemented: getStakingKey')
+  },
   getAllUtxosForKey: () => Promise.resolve([]),
   fetchTokenInfo: (tokenId: string) => {
     action('fetchTokenInfo')(tokenId)
