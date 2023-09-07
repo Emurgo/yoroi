@@ -7,6 +7,7 @@ import React from 'react'
 import {NumberLocale} from '../../../../../i18n/languages'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {SwapProtocol} from '@yoroi/types/lib/swap/protocol'
 
 export type OrderProps = {
   tokenPrice: string
@@ -66,7 +67,18 @@ export const mapOrders = (
       fromTokenInfo,
       toTokenInfo,
       provider: order.provider,
-      poolUrl: `https://google.com`, // TODO: get pool url from order.provider
+      poolUrl: getPoolUrl(order.provider),
     }
   })
+}
+
+const getPoolUrl = (provider: SwapProtocol) => {
+  return poolUrls[provider] ?? poolUrls.muesliswap
+}
+
+const poolUrls: Record<SwapProtocol, string> = {
+  minswap: 'https://minswap.org',
+  sundaeswap: 'https://sundae.fi',
+  wingriders: 'https://www.wingriders.com',
+  muesliswap: 'https://muesliswap.com',
 }
