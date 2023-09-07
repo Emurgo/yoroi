@@ -2,28 +2,25 @@ import {useOrderByStatusCompleted} from '@yoroi/swap'
 import React from 'react'
 import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Icon, Spacer, Text} from '../../../../../components'
+import {
+  ExpandableInfoCard,
+  ExpandableInfoCardSkeleton,
+  HeaderWrapper,
+  HiddenInfoWrapper,
+  Icon,
+  MainInfoWrapper,
+  Spacer,
+  Text,
+} from '../../../../../components'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {COLORS} from '../../../../../theme'
 import {Counter} from '../../../common/Counter/Counter'
-import {
-  BottomSheetState,
-  ExpandableInfoCard,
-  ExpandableInfoCardSkeleton,
-  HiddenInfoWrapper,
-  MainInfoWrapper,
-} from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {useStrings} from '../../../common/strings'
 import {mapOrders, OrderProps} from './mapOrders'
 
 export const CompletedOrders = () => {
   const strings = useStrings()
   const {search} = useSearch()
-  const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
-    openId: null,
-    title: '',
-    content: '',
-  })
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
   const data = useOrderByStatusCompleted({
@@ -43,19 +40,24 @@ export const CompletedOrders = () => {
       <ScrollView style={styles.container}>
         {orders.map((order) => {
           const id = `${order.assetFromLabel}-${order.assetToLabel}-${order.date}`
+          const extended = id === hiddenInfoOpenId
           return (
             <ExpandableInfoCard
-              id={id}
               key={`${order.assetFromLabel}-${order.assetToLabel}-${order.date}`}
-              bottomSheetState={bottomSheetState}
-              setBottomSheetState={setBottomSheetState}
-              setHiddenInfoOpenId={setHiddenInfoOpenId}
-              hiddenInfoOpenId={hiddenInfoOpenId}
-              mainInfo={<MainInfo order={order} />}
-              hiddenInfo={<HiddenInfo id={id} order={order} setBottomSheetState={setBottomSheetState} />}
-              label={<Label assetFromLabel={order.assetFromLabel} assetToLabel={order.assetToLabel} />}
+              adornment={<HiddenInfo id={id} order={order} />}
+              header={
+                <Header
+                  onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
+                  assetFromLabel={order.assetFromLabel}
+                  assetToLabel={order.assetToLabel}
+                  extended={extended}
+                />
+              }
+              extended={extended}
               withBoxShadow
-            />
+            >
+              <MainInfo order={order} />
+            </ExpandableInfoCard>
           )
         })}
       </ScrollView>
@@ -65,15 +67,41 @@ export const CompletedOrders = () => {
   )
 }
 
-const HiddenInfo = ({
-  id,
-  order,
-  setBottomSheetState,
+const Header = ({
+  assetFromLabel,
+  assetToLabel,
+  extended,
+  onPress,
 }: {
-  id: string
-  order: OrderProps
-  setBottomSheetState: (state: BottomSheetState) => void
+  assetFromLabel: string
+  assetToLabel: string
+  extended: boolean
+  onPress: () => void
 }) => {
+  return (
+    <HeaderWrapper extended={extended} onPress={onPress}>
+      <View style={styles.label}>
+        <Icon.YoroiNightly size={24} />
+
+        <Spacer width={4} />
+
+        <Text>{assetFromLabel}</Text>
+
+        <Text>/</Text>
+
+        <Spacer width={4} />
+
+        <Icon.Assets size={24} />
+
+        <Spacer width={4} />
+
+        <Text>{assetToLabel}</Text>
+      </View>
+    </HeaderWrapper>
+  )
+}
+
+const HiddenInfo = ({order}: {id: string; order: OrderProps}) => {
   const strings = useStrings()
   return (
     <View>
@@ -101,17 +129,7 @@ const HiddenInfo = ({
           value: <TxLink txId={order.txId} txLink={order.txLink} />,
         },
       ].map((item) => (
-        <HiddenInfoWrapper
-          key={item.label}
-          value={item.value}
-          label={item.label}
-          onPress={() => {
-            setBottomSheetState({
-              openId: id,
-              title: item.label,
-            })
-          }}
-        />
+        <HiddenInfoWrapper key={item.label} value={item.value} label={item.label} />
       ))}
     </View>
   )
@@ -175,28 +193,6 @@ const LiquidityPool = ({
   )
 }
 
-const Label = ({assetFromLabel, assetToLabel}: {assetFromLabel: string; assetToLabel: string}) => {
-  return (
-    <View style={styles.label}>
-      <Icon.YoroiNightly size={24} />
-
-      <Spacer width={4} />
-
-      <Text>{assetFromLabel}</Text>
-
-      <Text>/</Text>
-
-      <Spacer width={4} />
-
-      <Icon.Assets size={24} />
-
-      <Spacer width={4} />
-
-      <Text>{assetToLabel}</Text>
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -206,12 +202,7 @@ const styles = StyleSheet.create({
   flex: {
     flex: 1,
   },
-  label: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   txLink: {
-    paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -227,7 +218,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   liquidityPoolLink: {
-    paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -237,5 +227,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 22,
+  },
+  label: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })

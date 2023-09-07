@@ -2,17 +2,24 @@ import {useOrderByStatusOpen} from '@yoroi/swap'
 import React from 'react'
 import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {BottomSheetModal, Button, Icon, Spacer, Text, TextInput} from '../../../../../components'
+import {
+  BottomSheetModal,
+  BottomSheetState,
+  Button,
+  ExpandableInfoCard,
+  ExpandableInfoCardSkeleton,
+  Footer,
+  HeaderWrapper,
+  HiddenInfoWrapper,
+  Icon,
+  MainInfoWrapper,
+  Spacer,
+  Text,
+  TextInput,
+} from '../../../../../components'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {COLORS} from '../../../../../theme'
 import {Counter} from '../../../common/Counter/Counter'
-import {
-  BottomSheetState,
-  ExpandableInfoCard,
-  ExpandableInfoCardSkeleton,
-  HiddenInfoWrapper,
-  MainInfoWrapper,
-} from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {useStrings} from '../../../common/strings'
 import {mapOrders, OrderProps} from './mapOrders'
 
@@ -47,42 +54,51 @@ export const OpenOrders = () => {
         <ScrollView style={styles.flex}>
           {orders.map((order) => {
             const id = `${order.assetFromLabel}-${order.assetToLabel}-${order.date}`
+            const extended = id === hiddenInfoOpenId
             return (
               <ExpandableInfoCard
-                id={id}
                 key={id}
-                bottomSheetState={bottomSheetState}
-                setBottomSheetState={setBottomSheetState}
-                setHiddenInfoOpenId={setHiddenInfoOpenId}
-                hiddenInfoOpenId={hiddenInfoOpenId}
-                label={<Label assetFromLabel={order.assetFromLabel} assetToLabel={order.assetToLabel} />}
-                hiddenInfo={<HiddenInfo id={id} order={order} setBottomSheetState={setBottomSheetState} />}
-                mainInfo={<MainInfo order={order} />}
-                buttonLabel={strings.listOrdersSheetButtonText.toLocaleUpperCase()}
-                onPress={() => {
-                  setBottomSheetState({
-                    openId: id,
-                    title: strings.listOrdersSheetTitle,
-                    content: (
-                      <ModalContent
-                        assetFromIcon={order.assetFromIcon}
-                        assetToIcon={order.assetToIcon}
-                        confirmationModal={confirmationModal}
-                        onConfirm={() => {
-                          setBottomSheetState({openId: null, title: '', content: ''})
-                          setConfirmationModal(true)
-                        }}
-                        onBack={() => {
-                          setBottomSheetState({openId: null, title: '', content: ''})
-                        }}
-                        assetFromLabel={order.assetFromLabel}
-                        assetToLabel={order.assetToLabel}
-                      />
-                    ),
-                  })
-                }}
+                adornment={<HiddenInfo id={id} order={order} setBottomSheetState={setBottomSheetState} />}
+                extended={extended}
+                header={
+                  <Header
+                    onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
+                    assetFromLabel={order.assetFromLabel}
+                    assetToLabel={order.assetToLabel}
+                    extended={extended}
+                  />
+                }
+                footer={
+                  <Footer
+                    label={strings.listOrdersSheetButtonText.toLocaleUpperCase()}
+                    onPress={() => {
+                      setBottomSheetState({
+                        openId: id,
+                        title: strings.listOrdersSheetTitle,
+                        content: (
+                          <ModalContent
+                            assetFromIcon={order.assetFromIcon}
+                            assetToIcon={order.assetToIcon}
+                            confirmationModal={confirmationModal}
+                            onConfirm={() => {
+                              setBottomSheetState({openId: null, title: '', content: ''})
+                              setConfirmationModal(true)
+                            }}
+                            onBack={() => {
+                              setBottomSheetState({openId: null, title: '', content: ''})
+                            }}
+                            assetFromLabel={order.assetFromLabel}
+                            assetToLabel={order.assetToLabel}
+                          />
+                        ),
+                      })
+                    }}
+                  />
+                }
                 withBoxShadow
-              />
+              >
+                <MainInfo order={order} />
+              </ExpandableInfoCard>
             )
           })}
         </ScrollView>
@@ -121,10 +137,54 @@ export const OpenOrders = () => {
             <Button testID="swapButton" shelleyTheme title={strings.sign} />
           </>
         </BottomSheetModal>
+
+        <BottomSheetModal
+          isOpen={bottomSheetState.openId !== null}
+          title={bottomSheetState.title}
+          onClose={() => {
+            setBottomSheetState({openId: null, title: '', content: ''})
+          }}
+        >
+          <Text style={styles.text}>{bottomSheetState.content}</Text>
+        </BottomSheetModal>
       </View>
 
       <Counter counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
     </>
+  )
+}
+
+const Header = ({
+  assetFromLabel,
+  assetToLabel,
+  extended,
+  onPress,
+}: {
+  assetFromLabel: string
+  assetToLabel: string
+  extended: boolean
+  onPress: () => void
+}) => {
+  return (
+    <HeaderWrapper extended={extended} onPress={onPress}>
+      <View style={styles.label}>
+        <Icon.YoroiNightly size={24} />
+
+        <Spacer width={4} />
+
+        <Text>{assetFromLabel}</Text>
+
+        <Text>/</Text>
+
+        <Spacer width={4} />
+
+        <Icon.Assets size={24} />
+
+        <Spacer width={4} />
+
+        <Text>{assetToLabel}</Text>
+      </View>
+    </HeaderWrapper>
   )
 }
 
@@ -220,28 +280,6 @@ const LiquidityPool = ({
       <TouchableOpacity onPress={() => Linking.openURL(poolUrl)} style={styles.liquidityPoolLink}>
         <Text style={styles.liquidityPoolText}>{liquidityPoolName}</Text>
       </TouchableOpacity>
-    </View>
-  )
-}
-
-const Label = ({assetFromLabel, assetToLabel}: {assetFromLabel: string; assetToLabel: string}) => {
-  return (
-    <View style={styles.label}>
-      <Icon.YoroiNightly size={24} />
-
-      <Spacer width={4} />
-
-      <Text>{assetFromLabel}</Text>
-
-      <Text>/</Text>
-
-      <Spacer width={4} />
-
-      <Icon.Assets size={24} />
-
-      <Spacer width={4} />
-
-      <Text>{assetToLabel}</Text>
     </View>
   )
 }
@@ -445,7 +483,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   link: {
-    paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -460,12 +497,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  label: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   txLink: {
-    paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -481,7 +513,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   liquidityPoolLink: {
-    paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -491,5 +522,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 22,
+  },
+  text: {
+    textAlign: 'left',
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '400',
+    color: '#242838',
+  },
+  label: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })

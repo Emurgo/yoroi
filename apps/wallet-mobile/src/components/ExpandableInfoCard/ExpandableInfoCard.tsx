@@ -4,86 +4,75 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import {Icon, Spacer} from '../../../../../components'
-import {BottomSheetModal} from '../../../../../components/BottomSheetModal'
 import {COLORS} from '../../../../../theme'
 
-export type BottomSheetState = {
-  openId: string | null
-  title: string
-  content?: React.ReactNode
-}
-
 export type ExpandableInfoCardProps = {
-  id: string
-  label: React.ReactNode | null
-  mainInfo: React.ReactNode
-  hiddenInfo: React.ReactNode
-  navigateTo?: () => void
-  onPress?: () => void
-  buttonLabel?: string
+  adornment: React.ReactNode
+  extended: boolean
+  children: React.ReactNode
+  header: React.ReactNode
+  footer?: React.ReactNode
   withBoxShadow?: boolean
-  hiddenInfoOpenId: string | null
-  setHiddenInfoOpenId: (hiddenInfoOpenId: string | null) => void
-  bottomSheetState: BottomSheetState
-  setBottomSheetState: (state: BottomSheetState) => void
 }
 
 export const ExpandableInfoCard = ({
-  id,
-  label,
-  mainInfo,
-  hiddenInfo,
-  navigateTo,
-  buttonLabel,
-  onPress,
-  withBoxShadow,
-  hiddenInfoOpenId,
-  setHiddenInfoOpenId,
-  setBottomSheetState,
-  bottomSheetState,
+  children,
+  extended,
+  adornment,
+  header,
+  withBoxShadow = false,
+  footer = null,
 }: ExpandableInfoCardProps) => {
   return (
     <View>
-      <View style={[styles.container, withBoxShadow && styles.shadowProp]}>
-        <View style={styles.flexBetween}>
-          <TouchableOpacity onPress={() => navigateTo?.()}>
-            <Text style={[styles.label]}>{label}</Text>
-          </TouchableOpacity>
+      <Spacer height={8} />
 
-          <TouchableOpacity onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}>
-            {hiddenInfoOpenId === id ? (
-              <Icon.Chevron direction="up" size={24} />
-            ) : (
-              <Icon.Chevron direction="down" size={24} />
-            )}
-          </TouchableOpacity>
-        </View>
+      <View style={[styles.container, withBoxShadow && styles.shadowProp]}>
+        {header}
 
         <Spacer height={8} />
 
-        {mainInfo}
+        {children}
 
-        {hiddenInfoOpenId === id && hiddenInfo}
+        <Spacer height={8} />
 
-        {buttonLabel != null && (
-          <TouchableOpacity style={styles.button} onPress={onPress && onPress}>
-            <Text style={styles.buttonLabel}>{buttonLabel}</Text>
-          </TouchableOpacity>
-        )}
+        {extended && adornment}
+
+        {footer}
+
+        <Spacer height={8} />
       </View>
 
-      <Spacer height={16} />
-
-      <BottomSheetModal
-        isOpen={bottomSheetState.openId === id}
-        title={bottomSheetState.title}
-        onClose={() => {
-          setBottomSheetState({openId: null, title: '', content: ''})
-        }}
-      >
-        <Text style={styles.text}>{bottomSheetState.content}</Text>
-      </BottomSheetModal>
+      <Spacer height={8} />
     </View>
+  )
+}
+
+export const HeaderWrapper = ({
+  children,
+  extended,
+  onPress,
+}: {
+  children: React.ReactNode
+  extended: boolean
+  onPress: () => void
+}) => {
+  return (
+    <View style={styles.flexBetween}>
+      {children}
+
+      <TouchableOpacity onPress={onPress}>
+        {extended ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
+      </TouchableOpacity>
+    </View>
+  )
+}
+
+export const Footer = ({label, onPress}: {label: string; onPress: () => void}) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Text style={styles.buttonLabel}>{label}</Text>
+    </TouchableOpacity>
   )
 }
 
@@ -95,13 +84,11 @@ export const HiddenInfoWrapper = ({
 }: {
   label: string
   info?: React.ReactNode
-  onPress
+  onPress?: () => void
   value: React.ReactNode
 }) => {
   return (
     <View>
-      <Spacer height={8} />
-
       <View style={styles.flexBetween}>
         <View style={styles.flex}>
           <Text style={[styles.text, styles.gray]}>{label}</Text>
@@ -117,6 +104,8 @@ export const HiddenInfoWrapper = ({
 
         {typeof value === 'string' ? <Text style={styles.text}>{value}</Text> : value}
       </View>
+
+      <Spacer height={8} />
     </View>
   )
 }
@@ -171,11 +160,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  label: {
-    color: COLORS.SHELLEY_BLUE,
-    fontWeight: '500',
-    fontSize: 16,
-  },
   flex: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -188,10 +172,10 @@ const styles = StyleSheet.create({
     color: '#242838',
   },
   gray: {
-    color: COLORS.GRAY,
-  },
-  button: {
-    width: 111,
+    color: '#6B7384',
+    fontFamily: 'Rubik',
+    fontSize: 16,
+    fontWeight: '400',
   },
   buttonLabel: {
     fontSize: 14,
