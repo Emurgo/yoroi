@@ -3,6 +3,7 @@ import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/asyn
 import {useNavigation} from '@react-navigation/native'
 import {Balance} from '@yoroi/types'
 import {parseBoolean, useStorage} from '@yoroi/wallets'
+import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {
@@ -34,7 +35,6 @@ import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus, Wallet
 import {delay} from '../utils/timeUtils'
 import {Amounts, Quantities, Utxos} from '../utils/utils'
 import {WalletManager, WalletMeta} from '../walletManager'
-import {Buffer} from 'buffer'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
