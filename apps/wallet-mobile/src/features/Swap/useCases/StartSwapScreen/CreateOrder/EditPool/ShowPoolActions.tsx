@@ -52,7 +52,7 @@ export const ShowPoolActions = () => {
       hiddenInfoOpenId={hiddenInfoOpenId}
       label={`${protocolCapitalize} (auto)`}
       mainInfo={<MainInfo totalAmount={totalAmount} tokenName={tokenName} />}
-      navigateTo={() => navigate.selectPool()}
+      navigateTo={navigateTo.selectPool}
       hiddenInfo={<HiddenInfo id={id} poolFee={poolFee} setBottomSheetState={setBottomSheetState} />}
     />
   )
