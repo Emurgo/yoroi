@@ -22,21 +22,6 @@ export const makeSwapApi = (
 
   const getOrders: Swap.Api['getOrders'] = async () => {
     return api.getOrders(stakingKey).then(asYoroiOrders)
-    // return api.getOrders(stakingKey).then((response) => {
-    //   return response.map<Swap.Order>((order) => ({
-    //     from: {
-    //       tokenId: order.from.token,
-    //       quantity: order.from.amount as BalanceQuantity,
-    //     },
-    //     provider: order.provider,
-    //     utxo: order.utxo,
-    //     deposit: order.deposit as BalanceQuantity,
-    //     to: {
-    //       tokenId: order.to.token,
-    //       quantity: order.to.amount as BalanceQuantity,
-    //     },
-    //   }))
-    // })
   }
 
   const createOrder: Swap.Api['createOrder'] = async (
