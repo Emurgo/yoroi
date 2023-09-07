@@ -1,5 +1,5 @@
 import React from 'react'
-import Svg, {Defs, Path, Pattern, Use, Image} from 'react-native-svg'
+import Svg, {Defs, Image, Path, Pattern, Use} from 'react-native-svg'
 
 type Props = {
   size?: number
@@ -8,10 +8,12 @@ type Props = {
 export const SundaeSwap = ({size = 36}: Props) => (
   <Svg width={size} height={size} viewBox="0 0 32 32" fill="none">
     <Path fill="url(#pattern0)" d="M0 0H32V32H0z" />
+
     <Defs>
       <Pattern id="pattern0" patternContentUnits="objectBoundingBox" width={1} height={1}>
         <Use xlinkHref="#image0_5319_144328" transform="scale(.00444)" />
       </Pattern>
+
       <Image
         id="image0_5319_144328"
         width={225}

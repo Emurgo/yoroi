@@ -1,11 +1,10 @@
-import React, {FunctionComponent, ReactNode} from 'react'
+import {Pool} from '@yoroi/openswap'
+import React, {FunctionComponent} from 'react'
 
 import {Icon} from '../../../../components'
-import {Pool} from '@yoroi/openswap'
 
 export const PoolIcon = ({providerId, size}: {providerId: Pool['provider']; size: number}) => {
-  console.log('providerId', providerId)
-  const IconVariant = icons[providerId] || Icon.MuesliSwap
+  const IconVariant = icons[providerId]
   return <IconVariant size={size} />
 }
 
