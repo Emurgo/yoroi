@@ -84,11 +84,12 @@ export const TransactionSummary = ({feesInfo, buyToken, sellToken}) => {
       <BottomSheetModal
         isOpen={bottomSheetState.isOpen}
         title={bottomSheetState.title}
-        content={<Text style={styles.text}>{bottomSheetState.content}</Text>}
         onClose={() => {
           setBottomSheetSate({isOpen: false, title: '', content: ''})
         }}
-      />
+      >
+        <Text style={styles.text}>{bottomSheetState.content}</Text>
+      </BottomSheetModal>
     </View>
   )
 }
