@@ -25,6 +25,8 @@ export const ConfirmTxScreen = () => {
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
 
+  console.log('[unsignedTx]', unsignedTx)
+
   const {resetToTxHistory} = useWalletNavigation()
 
   const poolFee = Quantities.denominated(

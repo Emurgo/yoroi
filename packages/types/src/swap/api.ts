@@ -10,7 +10,7 @@ import {SwapPoolPair} from './pool'
 export interface SwapApi {
   createOrder(orderData: SwapCreateOrderData): Promise<SwapCreateOrderResponse>
   cancelOrder(orderData: SwapCancelOrderData): Promise<string>
-  getOrders(): Promise<SwapOpenOrder[]>
+  getOrders(args: {stakeKeyHash: string}): Promise<SwapOpenOrder[]>
   getPoolPairs(args: {
     tokenA: BalanceToken['info']['id']
     tokenB: BalanceToken['info']['id']

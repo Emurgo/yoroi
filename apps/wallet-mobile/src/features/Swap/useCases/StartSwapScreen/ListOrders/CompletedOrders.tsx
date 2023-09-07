@@ -4,6 +4,7 @@ import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-nat
 
 import {Icon, Spacer, Text} from '../../../../../components'
 import {useSearch} from '../../../../../Search/SearchContext'
+import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {Counter} from '../../../common/Counter/Counter'
 import {
@@ -25,11 +26,10 @@ export const CompletedOrders = () => {
     content: '',
   })
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
+  const wallet = useSelectedWallet()
 
   const data = useOrderByStatusCompleted({
-    onError: (err) => {
-      console.log(err)
-    },
+    stakeKeyHash: wallet.rewardAddressHex,
   })
 
   const orders = mapOrders(data).filter(

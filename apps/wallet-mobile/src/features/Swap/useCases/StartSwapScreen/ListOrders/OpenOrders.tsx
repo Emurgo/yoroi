@@ -4,6 +4,7 @@ import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-nat
 
 import {BottomSheetModal, Button, Icon, Spacer, Text, TextInput} from '../../../../../components'
 import {useSearch} from '../../../../../Search/SearchContext'
+import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {Counter} from '../../../common/Counter/Counter'
 import {
@@ -26,16 +27,15 @@ export const OpenOrders = () => {
   const [confirmationModal, setConfirmationModal] = React.useState(false)
   const strings = useStrings()
   const [spendingPassword, setSpendingPassword] = React.useState('')
+  const wallet = useSelectedWallet()
 
   const {search} = useSearch()
 
-  const data = useOrderByStatusOpen({
-    onError: (err) => {
-      console.log(err)
-    },
+  const {openOrders} = useOrderByStatusOpen({
+    stakeKeyHash: wallet.rewardAddressHex,
   })
 
-  const orders = mapOrders(data).filter(
+  const orders = mapOrders(openOrders).filter(
     ({assetFromLabel, assetToLabel}) =>
       assetFromLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
       assetToLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()),

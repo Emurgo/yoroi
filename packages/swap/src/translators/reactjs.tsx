@@ -135,20 +135,29 @@ export const useSwapSlippage = (swapManager: Readonly<Swap.Manager>) => {
 }
 
 export const useOrderByStatusOpen = (
-  options: UseQueryOptions<Swap.OpenOrder[], Error>,
+  args: {stakeKeyHash: string},
+  options?: UseQueryOptions<
+    Swap.OpenOrder[],
+    Error,
+    Swap.OpenOrder[],
+    ['useOrderByStatusOpen', any]
+  >,
 ) => {
   const {order} = useSwap()
   const query = useQuery({
     suspense: true,
-    queryKey: [],
-    queryFn: order.list.byStatusOpen,
+    queryKey: ['useOrderByStatusOpen', args],
+    queryFn: () => order.list.byStatusOpen(args),
     ...options,
   })
 
   if (query.data == null)
     throw new Error('[@yoroi/swap] useOrderByStatusOpen invalid state')
 
-  return query.data
+  return {
+    ...query,
+    openOrders: query.data,
+  }
 }
 
 export const useCreateOrder = (
@@ -173,13 +182,19 @@ export const useCreateOrder = (
 }
 
 export const useOrderByStatusCompleted = (
-  options: UseQueryOptions<Swap.OpenOrder[], Error>,
+  args: {stakeKeyHash: string},
+  options?: UseQueryOptions<
+    Swap.OpenOrder[],
+    Error,
+    Swap.OpenOrder[],
+    ['useOrderByStatusCompleted', any]
+  >,
 ) => {
   const {order} = useSwap()
   const query = useQuery({
     suspense: true,
-    queryKey: [],
-    queryFn: order.list.byStatusCompleted,
+    queryKey: ['useOrderByStatusCompleted', args],
+    queryFn: () => order.list.byStatusCompleted(args),
     ...options,
   })
 
