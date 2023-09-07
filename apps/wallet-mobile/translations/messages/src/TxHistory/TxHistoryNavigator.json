@@ -196,7 +196,7 @@
   },
   {
     "id": "global.confirmationTransaction",
-    "defaultMessage": "!!!Confirmation transaction",
+    "defaultMessage": "!!!Confirm transaction",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
       "line": 297,
