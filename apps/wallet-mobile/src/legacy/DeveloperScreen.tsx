@@ -17,11 +17,11 @@ import {errorMessages} from '../i18n/global-messages'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
-import {tokenManagerApiMaker} from '../yoroi-wallets/balance/adapters/api'
 import {BACKEND} from '../yoroi-wallets/cardano/constants/testnet/constants'
 import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
 import {useBalances, useCreateWallet} from '../yoroi-wallets/hooks'
+import {portfolioManagerApiMaker} from '../yoroi-wallets/portfolio/adapters/cardano-api'
 import {NetworkId} from '../yoroi-wallets/types'
 import {CONFIG} from './config'
 
@@ -104,12 +104,13 @@ export const DeveloperScreen = () => {
           title="Token Manager Tests"
           style={styles.button}
           onPress={() => {
-            const tokenManager = tokenManagerApiMaker({
+            const tokenManager = portfolioManagerApiMaker({
               baseUrlApi: BACKEND.API_ROOT,
               baseUrlTokenRegistry: BACKEND.TOKEN_INFO_SERVICE,
             })
             tokenManager
               .tokens(Object.keys(balances).filter((v) => v != ''))
+              .then(console.log)
               .catch((error) => console.log('tokenManager error', error))
           }}
         />

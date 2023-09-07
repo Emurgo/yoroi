@@ -1,9 +1,10 @@
 import {
   BalanceAmount,
   BalanceAmounts,
-  BalanceCardanoMetadatas,
   BalanceQuantity,
   BalanceToken,
+  BalanceTokenFile,
+  BalanceTokenRecords,
 } from './balance/token'
 import {SwapApi} from './swap/api'
 import {SwapProtocol} from './swap/protocol'
@@ -51,13 +52,15 @@ export namespace Swap {
 }
 
 export namespace Balance {
-  export type Token = BalanceToken
+  export type Token<M extends Record<string, unknown> = {}> = BalanceToken<M>
   export type TokenInfo = BalanceToken['info']
   export type TokenPrice = BalanceToken['price']
   export type TokenSupply = BalanceToken['supply']
   export type TokenStatus = BalanceToken['status']
-
-  export type CardanoMetadatas = BalanceCardanoMetadatas
+  export type TokenFiles = BalanceToken['files']
+  export type TokenFile = BalanceTokenFile
+  export type TokenRecords<M extends Record<string, unknown> = {}> =
+    BalanceTokenRecords<M>
 
   export type Quantity = BalanceQuantity
   export type Amount = BalanceAmount
