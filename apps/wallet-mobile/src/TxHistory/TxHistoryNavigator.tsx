@@ -298,7 +298,7 @@ const messages = defineMessages({
   },
   confirmationTransaction: {
     id: 'global.confirmationTransaction',
-    defaultMessage: '!!!Confirmation transaction',
+    defaultMessage: '!!!Confirm transaction',
   },
 })
 
