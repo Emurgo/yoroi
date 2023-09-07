@@ -12,6 +12,7 @@ export {
   SwapProvider,
   useSwap,
   useOrderByStatusOpen,
+  useOrderByStatusCompleted,
   usePairListByToken,
   usePoolsByPair,
 } from './translators/reactjs'

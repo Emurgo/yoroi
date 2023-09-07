@@ -107,10 +107,11 @@ const VerifiedTokensToogle = ({onToogle, isToogled}: {onToogle: () => void; isTo
 
       <BottomSheetModal
         title={strings.poolVerification('MuesliSwap')}
-        content={<VerifiedTokenInfo />}
         isOpen={showVerifiedTokenInfo}
         onClose={() => setShowVerifiedTokenInfo(false)}
-      />
+      >
+        <VerifiedTokenInfo />
+      </BottomSheetModal>
     </View>
   )
 }
@@ -423,6 +424,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
     fontSize: 20,
     color: '#000',
     paddingTop: 4,

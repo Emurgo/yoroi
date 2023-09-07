@@ -36,60 +36,55 @@ export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningPr
   const name = `${tokenToSellName}/${tokenToBuyName}`
 
   return (
-    <BottomSheetModal
-      title={strings.limitPriceWarningTitle}
-      content={
-        <View style={styles.container}>
-          <View>
-            <Text>{strings.limitPriceWarningDescription}</Text>
+    <BottomSheetModal title={strings.limitPriceWarningTitle} isOpen={open} onClose={onClose}>
+      <View style={styles.container}>
+        <View>
+          <Text>{strings.limitPriceWarningDescription}</Text>
 
-            <Spacer height={16} />
+          <Spacer height={16} />
 
-            <View style={styles.table}>
-              <View style={styles.row}>
-                <Text style={styles.label}>{strings.limitPriceWarningYourPrice}</Text>
+          <View style={styles.table}>
+            <View style={styles.row}>
+              <Text style={styles.label}>{strings.limitPriceWarningYourPrice}</Text>
 
-                <View style={styles.textWrapper}>
-                  <Text style={styles.value}>{limitPrice}</Text>
+              <View style={styles.textWrapper}>
+                <Text style={styles.value}>{limitPrice}</Text>
 
-                  <Text style={styles.value}>{name}</Text>
-                </View>
+                <Text style={styles.value}>{name}</Text>
               </View>
+            </View>
 
-              <View style={styles.row}>
-                <Text style={styles.label}>{strings.limitPriceWarningMarketPrice}</Text>
+            <View style={styles.row}>
+              <Text style={styles.label}>{strings.limitPriceWarningMarketPrice}</Text>
 
-                <View style={styles.textWrapper}>
-                  <Text style={styles.value}>{marketPrice}</Text>
+              <View style={styles.textWrapper}>
+                <Text style={styles.value}>{marketPrice}</Text>
 
-                  <Text style={styles.value}>{name}</Text>
-                </View>
+                <Text style={styles.value}>{name}</Text>
               </View>
             </View>
           </View>
-
-          <View style={styles.buttonsWrapper}>
-            <Button
-              testID="swapCancelButton"
-              outlineShelley
-              title={strings.limitPriceWarningBack}
-              onPress={onClose}
-              containerStyle={styles.buttonContainer}
-            />
-
-            <Button
-              testID="swapConfirmButton"
-              shelleyTheme
-              title={strings.limitPriceWarningConfirm}
-              onPress={onSubmit}
-              containerStyle={styles.buttonContainer}
-            />
-          </View>
         </View>
-      }
-      isOpen={open}
-      onClose={onClose}
-    />
+
+        <View style={styles.buttonsWrapper}>
+          <Button
+            testID="swapCancelButton"
+            outlineShelley
+            title={strings.limitPriceWarningBack}
+            onPress={onClose}
+            containerStyle={styles.buttonContainer}
+          />
+
+          <Button
+            testID="swapConfirmButton"
+            shelleyTheme
+            title={strings.limitPriceWarningConfirm}
+            onPress={onSubmit}
+            containerStyle={styles.buttonContainer}
+          />
+        </View>
+      </View>
+    </BottomSheetModal>
   )
 }
 

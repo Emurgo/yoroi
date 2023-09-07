@@ -22,7 +22,7 @@ import {
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
-import {SwapTouchedProvider} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/TouchedContext'
+import {SwapFormProvider} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/TouchedContext'
 import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes, useWalletNavigation} from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -52,7 +52,7 @@ export const TxHistoryNavigator = () => {
   return (
     <SendProvider key={wallet.id}>
       <SwapProvider key={wallet.id} swapManager={swapManager}>
-        <SwapTouchedProvider>
+        <SwapFormProvider>
           <Stack.Navigator
             screenListeners={{}}
             screenOptions={{
@@ -234,7 +234,7 @@ export const TxHistoryNavigator = () => {
           <ModalInfo hideModalInfo={hideModalInfo} visible={modalInfoState}>
             <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
           </ModalInfo>
-        </SwapTouchedProvider>
+        </SwapFormProvider>
       </SwapProvider>
     </SendProvider>
   )

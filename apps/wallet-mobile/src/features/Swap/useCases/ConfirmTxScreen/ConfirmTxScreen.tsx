@@ -15,7 +15,7 @@ import {useStrings} from '../../common/strings'
 export const ConfirmTxScreen = () => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false)
-  const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
+  const [bottomSheetState, setBottomSheetState] = React.useState<{isOpen: boolean; title: string; content?: string}>({
     isOpen: false,
     title: '',
     content: '',
@@ -85,7 +85,7 @@ export const ConfirmTxScreen = () => {
 
                   <TouchableOpacity
                     onPress={() => {
-                      setBottomSheetSate({
+                      setBottomSheetState({
                         isOpen: true,
                         title: orderInfo.label,
                         content: orderInfo.info,
@@ -129,39 +129,39 @@ export const ConfirmTxScreen = () => {
       <BottomSheetModal
         isOpen={confirmationModal}
         title={strings.signTransaction}
-        content={
-          <>
-            <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
-
-            <TextInput
-              secureTextEntry
-              ref={spendingPasswordRef}
-              enablesReturnKeyAutomatically
-              placeholder={strings.spendingPassword}
-              value={spendingPassword}
-              onChangeText={setSpendingPassword}
-              autoComplete="off"
-            />
-
-            <Spacer fill />
-
-            <Button testID="swapButton" shelleyTheme title={strings.sign} />
-          </>
-        }
         onClose={() => {
           setConfirmationModal(false)
         }}
-        containerStyle={{justifyContent: 'space-between'}}
-      />
+        contentContainerStyle={{justifyContent: 'space-between'}}
+      >
+        <>
+          <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+
+          <TextInput
+            secureTextEntry
+            ref={spendingPasswordRef}
+            enablesReturnKeyAutomatically
+            placeholder={strings.spendingPassword}
+            value={spendingPassword}
+            onChangeText={setSpendingPassword}
+            autoComplete="off"
+          />
+
+          <Spacer fill />
+
+          <Button testID="swapButton" shelleyTheme title={strings.sign} />
+        </>
+      </BottomSheetModal>
 
       <BottomSheetModal
         isOpen={bottomSheetState.isOpen}
         title={bottomSheetState.title}
-        content={<Text style={styles.text}>{bottomSheetState.content}</Text>}
         onClose={() => {
-          setBottomSheetSate({isOpen: false, title: '', content: ''})
+          setBottomSheetState({isOpen: false, title: '', content: ''})
         }}
-      />
+      >
+        <Text style={styles.text}>{bottomSheetState.content}</Text>
+      </BottomSheetModal>
     </SafeAreaView>
   )
 }
@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
   },
   cardTextValue: {
     fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
   cardTextUSD: {
     fontSize: 14,

@@ -1,121 +1,402 @@
+import {useOrderByStatusOpen} from '@yoroi/swap'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Icon, Spacer, Text} from '../../../../../components'
+import {BottomSheetModal, Button, Icon, Spacer, Text, TextInput} from '../../../../../components'
+import {useSearch} from '../../../../../Search/SearchContext'
 import {COLORS} from '../../../../../theme'
-import {ExpandableInfoCard} from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
-import {OpenOrderListType} from './ListOrders'
-
-const mockOpenOrders: OpenOrderListType = [
-  {
-    label: (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Icon.YoroiNightly size={24} />
-
-        <Spacer width={4} />
-
-        <Text>ADA/</Text>
-
-        <Spacer width={4} />
-
-        <Icon.Assets size={24} />
-
-        <Spacer width={4} />
-
-        <Text>USDA</Text>
-      </View>
-    ),
-
-    mainInfo: [
-      {label: 'Token price', value: '3 ADA'},
-      {label: 'Token amount', value: '3 USDA'},
-    ],
-    hiddenInfo: [
-      {
-        label: 'Min ADA',
-        value: '2 ADA',
-      },
-      {
-        label: 'Min Received',
-        value: '2.99 USDA',
-      },
-      {
-        label: 'Fees',
-        value: '2 ADA',
-      },
-    ],
-    buttonAction: () => {
-      console.log('button pressed')
-    },
-    buttonText: 'CANCEL ORDER',
-  },
-  {
-    label: (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Icon.YoroiNightly size={24} />
-
-        <Spacer width={4} />
-
-        <Text>ADA/</Text>
-
-        <Spacer width={4} />
-
-        <Icon.Assets size={24} />
-
-        <Spacer width={4} />
-
-        <Text>USDA</Text>
-      </View>
-    ),
-
-    mainInfo: [
-      {label: 'Token price', value: '3 ADA'},
-      {label: 'Token amount', value: '3 USDA'},
-    ],
-    hiddenInfo: [
-      {
-        label: 'Min ADA',
-        value: '2 ADA',
-      },
-      {
-        label: 'Min Received',
-        value: '2.99 USDA',
-      },
-      {
-        label: 'Fees',
-        value: '2 ADA',
-      },
-    ],
-    buttonAction: () => {
-      console.log('button pressed')
-    },
-    buttonText: 'CANCEL ORDER',
-  },
-]
+import {Counter} from '../../../common/Counter/Counter'
+import {
+  BottomSheetState,
+  ExpandableInfoCard,
+  ExpandableInfoCardSkeleton,
+  HiddenInfoWrapper,
+  MainInfoWrapper,
+} from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
+import {useStrings} from '../../../common/strings'
+import {mapOrders, OrderProps} from './mapOrders'
 
 export const OpenOrders = () => {
-  // TODO
-  // const data = useOrderByStatusOpen({
-  //   onError: (err) => {
-  //     console.log(err)
-  //   },
-  // })
+  const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
+    openId: null,
+    title: '',
+    content: '',
+  })
+  const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
+  const [confirmationModal, setConfirmationModal] = React.useState(false)
+  const strings = useStrings()
+  const [spendingPassword, setSpendingPassword] = React.useState('')
+
+  const {search} = useSearch()
+
+  const data = useOrderByStatusOpen({
+    onError: (err) => {
+      console.log(err)
+    },
+  })
+
+  const orders = mapOrders(data).filter(
+    ({assetFromLabel, assetToLabel}) =>
+      assetFromLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+      assetToLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+  )
 
   return (
-    <View style={styles.container}>
-      <View style={styles.flex}>
-        {mockOpenOrders.map((order, index) => (
-          <ExpandableInfoCard
-            key={`${order.label}  ${index}`}
-            label={order.label}
-            mainInfo={order.mainInfo}
-            hiddenInfo={order.hiddenInfo}
-            onPress={order.buttonAction}
-            buttonText="CANCEL ORDER"
-            withBoxShadow
-          />
-        ))}
+    <>
+      <View style={styles.container}>
+        <ScrollView style={styles.flex}>
+          {orders.map((order) => {
+            const id = `${order.assetFromLabel}-${order.assetToLabel}-${order.date}`
+            return (
+              <ExpandableInfoCard
+                id={id}
+                key={id}
+                bottomSheetState={bottomSheetState}
+                setBottomSheetState={setBottomSheetState}
+                setHiddenInfoOpenId={setHiddenInfoOpenId}
+                hiddenInfoOpenId={hiddenInfoOpenId}
+                label={<Label assetFromLabel={order.assetFromLabel} assetToLabel={order.assetToLabel} />}
+                hiddenInfo={<HiddenInfo id={id} order={order} setBottomSheetState={setBottomSheetState} />}
+                mainInfo={<MainInfo order={order} />}
+                buttonLabel={strings.listOrdersSheetButtonText.toLocaleUpperCase()}
+                onPress={() => {
+                  setBottomSheetState({
+                    openId: id,
+                    title: strings.listOrdersSheetTitle,
+                    content: (
+                      <ModalContent
+                        assetFromIcon={order.assetFromIcon}
+                        assetToIcon={order.assetToIcon}
+                        confirmationModal={confirmationModal}
+                        onConfirm={() => {
+                          setBottomSheetState({openId: null, title: '', content: ''})
+                          setConfirmationModal(true)
+                        }}
+                        onBack={() => {
+                          setBottomSheetState({openId: null, title: '', content: ''})
+                        }}
+                        assetFromLabel={order.assetFromLabel}
+                        assetToLabel={order.assetToLabel}
+                      />
+                    ),
+                  })
+                }}
+                withBoxShadow
+              />
+            )
+          })}
+        </ScrollView>
+
+        <BottomSheetModal
+          isOpen={bottomSheetState.openId !== null}
+          title={bottomSheetState.title}
+          onClose={() => {
+            setBottomSheetState({openId: null, title: '', content: ''})
+          }}
+        >
+          {bottomSheetState.content}
+        </BottomSheetModal>
+
+        <BottomSheetModal
+          isOpen={confirmationModal}
+          title={strings.signTransaction}
+          onClose={() => {
+            setConfirmationModal(false)
+          }}
+        >
+          <>
+            <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+
+            <TextInput
+              secureTextEntry
+              enablesReturnKeyAutomatically
+              placeholder={strings.spendingPassword}
+              value={spendingPassword}
+              onChangeText={setSpendingPassword}
+              autoComplete="off"
+            />
+
+            <Spacer fill />
+
+            <Button testID="swapButton" shelleyTheme title={strings.sign} />
+          </>
+        </BottomSheetModal>
       </View>
+
+      <Counter counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
+    </>
+  )
+}
+
+const HiddenInfo = ({
+  id,
+  order,
+  setBottomSheetState,
+}: {
+  id: string
+  order: OrderProps
+  setBottomSheetState: (state: BottomSheetState) => void
+}) => {
+  const strings = useStrings()
+  return (
+    <View>
+      {[
+        {
+          label: strings.listOrdersTotal,
+          value: order.total,
+        },
+        {
+          label: strings.listOrdersLiquidityPool,
+          value: (
+            <LiquidityPool
+              liquidityPoolIcon={order.liquidityPoolIcon}
+              liquidityPoolName={order.liquidityPoolName}
+              poolUrl={order.poolUrl}
+            />
+          ),
+        },
+        {
+          label: strings.listOrdersTimeCreated,
+          value: order.date,
+        },
+        {
+          label: strings.listOrdersTxId,
+          value: <TxLink txId={order.txId} txLink={order.txLink} />,
+        },
+      ].map((item) => (
+        <HiddenInfoWrapper
+          key={item.label}
+          value={item.value}
+          label={item.label}
+          onPress={() => {
+            setBottomSheetState({
+              openId: id,
+              title: item.label,
+            })
+          }}
+        />
+      ))}
+    </View>
+  )
+}
+
+const MainInfo = ({order}: {order: OrderProps}) => {
+  const strings = useStrings()
+  return (
+    <View>
+      {[
+        {label: strings.listOrdersSheetAssetPrice, value: order.tokenPrice},
+        {label: strings.listOrdersSheetAssetAmount, value: order.tokenAmount},
+      ].map((item, index) => (
+        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />
+      ))}
+    </View>
+  )
+}
+
+const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {
+  return (
+    <TouchableOpacity onPress={() => Linking.openURL(txLink)} style={styles.txLink}>
+      <Text style={styles.txLinkText}>{txId}</Text>
+    </TouchableOpacity>
+  )
+}
+
+const LiquidityPool = ({
+  liquidityPoolIcon,
+  liquidityPoolName,
+  poolUrl,
+}: {
+  liquidityPoolIcon: React.ReactNode
+  liquidityPoolName: string
+  poolUrl: string
+}) => {
+  return (
+    <View style={styles.liquidityPool}>
+      {liquidityPoolIcon}
+
+      <Spacer width={3} />
+
+      <TouchableOpacity onPress={() => Linking.openURL(poolUrl)} style={styles.liquidityPoolLink}>
+        <Text style={styles.liquidityPoolText}>{liquidityPoolName}</Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
+
+const Label = ({assetFromLabel, assetToLabel}: {assetFromLabel: string; assetToLabel: string}) => {
+  return (
+    <View style={styles.label}>
+      <Icon.YoroiNightly size={24} />
+
+      <Spacer width={4} />
+
+      <Text>{assetFromLabel}</Text>
+
+      <Text>/</Text>
+
+      <Spacer width={4} />
+
+      <Icon.Assets size={24} />
+
+      <Spacer width={4} />
+
+      <Text>{assetToLabel}</Text>
+    </View>
+  )
+}
+
+export const OpenOrdersSkeleton = () => (
+  <View style={styles.container}>
+    <View style={styles.flex}>
+      {[0, 1, 2, 3].map((index) => (
+        <React.Fragment key={index}>
+          <ExpandableInfoCardSkeleton />
+
+          <Spacer height={20} />
+        </React.Fragment>
+      ))}
+    </View>
+  </View>
+)
+
+const ModalContent = ({
+  onConfirm,
+  onBack,
+  assetFromIcon,
+  assetFromLabel,
+  assetToIcon,
+  assetToLabel,
+}: {
+  onConfirm: () => void
+  onBack: () => void
+  confirmationModal: boolean
+  assetFromIcon: React.ReactNode
+  assetFromLabel: string
+  assetToLabel: string
+  assetToIcon: React.ReactNode
+}) => {
+  const strings = useStrings()
+  return (
+    <View>
+      <ModalContentHeader
+        assetFromIcon={assetFromIcon}
+        assetFromLabel={assetFromLabel}
+        assetToIcon={assetToIcon}
+        assetToLabel={assetToLabel}
+      />
+
+      <Spacer height={10} />
+
+      {/* TODO: add real values */}
+      <ModalContentRow label={strings.listOrdersSheetAssetPrice} value="3 ADA" />
+
+      <Spacer height={10} />
+
+      {/* TODO: add real values */}
+      <ModalContentRow label={strings.listOrdersSheetAssetAmount} value="3 USDA" />
+
+      <Spacer height={10} />
+
+      {/* TODO: add real values */}
+      <ModalContentRow label={strings.listOrdersSheetTotalReturned} value="11 ADA" />
+
+      <Spacer height={10} />
+
+      {/* TODO: add real values */}
+      <ModalContentRow label={strings.listOrdersSheetCancellationFee} value="0.17 ADA" />
+
+      <ModalContentLink />
+
+      <Spacer height={10} />
+
+      <ModalContentButtons onConfirm={onConfirm} onBack={onBack} />
+    </View>
+  )
+}
+
+const ModalContentHeader = ({
+  assetFromIcon,
+  assetFromLabel,
+  assetToIcon,
+  assetToLabel,
+}: {
+  assetFromIcon: React.ReactNode
+  assetFromLabel: string
+  assetToIcon: React.ReactNode
+  assetToLabel: string
+}) => {
+  const strings = useStrings()
+  return (
+    <>
+      <Text style={styles.contentTitle}>{strings.listOrdersSheetContentTitle}</Text>
+
+      <Spacer height={10} />
+
+      <View style={styles.modalContentTitle}>
+        <View style={styles.modalContentTitle}>
+          {assetFromIcon}
+
+          <Spacer width={2} />
+
+          <Text>{assetFromLabel}</Text>
+        </View>
+
+        <Spacer width={5} />
+
+        <Text>/</Text>
+
+        <Spacer width={5} />
+
+        <View style={styles.modalContentTitle}>
+          {assetToIcon}
+
+          <Spacer width={2} />
+
+          <Text>{assetToLabel}</Text>
+        </View>
+      </View>
+    </>
+  )
+}
+
+const ModalContentRow = ({label, value}: {label: string; value: string}) => {
+  return (
+    <View style={styles.contentRow}>
+      <Text style={styles.contentLabel}>{label}</Text>
+
+      <Text style={styles.contentValue}>{value}</Text>
+    </View>
+  )
+}
+
+const ModalContentLink = () => {
+  const strings = useStrings()
+  return (
+    // TODO: add real link
+    <TouchableOpacity onPress={() => Linking.openURL('https://google.com')} style={styles.link}>
+      <Text style={styles.linkText}>{strings.listOrdersSheetLink}</Text>
+    </TouchableOpacity>
+  )
+}
+
+const ModalContentButtons = ({onBack, onConfirm}: {onBack: () => void; onConfirm: () => void}) => {
+  const strings = useStrings()
+  return (
+    <View style={styles.buttons}>
+      <Button
+        title={strings.listOrdersSheetBack}
+        style={{backgroundColor: 'transparent'}}
+        onPress={onBack}
+        block
+        withoutBackground
+        outlineShelley
+        shelleyTheme
+      />
+
+      <Spacer width={20} />
+
+      <Button title={strings.listOrdersSheetConfirm} onPress={onConfirm} style={{backgroundColor: '#FF1351'}} block />
     </View>
   )
 }
@@ -128,5 +409,87 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
+  },
+  contentRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  contentTitle: {
+    color: '#242838',
+    fontFamily: 'Rubik',
+    fontSize: 16,
+    fontWeight: '400',
+    lineHeight: 24,
+  },
+  contentLabel: {
+    color: '#6B7384',
+    fontFamily: 'Rubik',
+    fontSize: 16,
+    fontWeight: '400',
+    lineHeight: 24,
+  },
+  contentValue: {
+    color: '#000',
+    fontFamily: 'Rubik',
+    fontSize: 16,
+    fontWeight: '400',
+    lineHeight: 24,
+  },
+  modalText: {
+    paddingHorizontal: 70,
+    textAlign: 'center',
+    paddingBottom: 8,
+  },
+  modalContentTitle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  link: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  linkText: {
+    color: '#4B6DDE',
+    fontFamily: 'Rubik-Medium',
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: 22,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  label: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  txLink: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  txLinkText: {
+    color: '#4B6DDE',
+    fontFamily: 'Rubik',
+    fontSize: 16,
+    fontWeight: '400',
+    lineHeight: 22,
+  },
+  liquidityPool: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  liquidityPoolLink: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  liquidityPoolText: {
+    color: '#4B6DDE',
+    fontFamily: 'Rubik',
+    fontSize: 16,
+    fontWeight: '400',
+    lineHeight: 22,
   },
 })

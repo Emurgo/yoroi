@@ -12,6 +12,7 @@ export const makeSwapManager = (
     create: createOrder,
     list: {
       byStatusOpen: getOrders,
+      byStatusCompleted: getOrders,
     } as const,
   }
 
