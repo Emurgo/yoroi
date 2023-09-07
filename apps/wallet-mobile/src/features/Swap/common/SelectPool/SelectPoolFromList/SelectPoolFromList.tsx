@@ -44,7 +44,7 @@ export const SelectPoolFromList = ({data = []}: Props) => {
               <TouchableOpacity key={pool.poolId} onPress={() => handleCardSelect(pool)} style={[styles.card]}>
                 <View style={styles.cardHeader}>
                   <View style={styles.icon}>
-                    <PoolIcon size={40} providerId={pool.poolId} />
+                    <PoolIcon size={40} providerId={pool.provider} />
                   </View>
 
                   <Text style={styles.label}>{protocolCapitalize(pool.provider)}</Text>

@@ -92,6 +92,10 @@ import {Wallets} from './Wallets'
 import {WalletStack} from './WalletStack'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
+import {MinSwap} from './MinSwap'
+import {SundaeSwap} from './SundaeSwap'
+import {MuesliSwap} from './MuesliSwap'
+import {WingRiders} from './WingRiders'
 
 export const Icon = {
   Ada,
@@ -188,4 +192,8 @@ export const Icon = {
   Switch,
   Edit,
   Portfolio,
+  MinSwap,
+  SundaeSwap,
+  MuesliSwap,
+  WingRiders,
 }
