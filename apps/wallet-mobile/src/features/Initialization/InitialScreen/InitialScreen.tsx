@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Icon, Spacer, StatusBar, YoroiLogo} from '../../../components'
@@ -41,49 +41,51 @@ export const InitialScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar type="dark" />
+      <ScrollView>
+        <StatusBar type="dark" />
 
-      <YoroiLogo />
+        <YoroiLogo />
 
-      <Spacer height={80} />
+        <Spacer height={80} />
 
-      <Text style={styles.title}>{strings.languagePickerTitle}</Text>
+        <Text style={styles.title}>{strings.languagePickerTitle}</Text>
 
-      <Spacer height={35} />
+        <Spacer height={35} />
 
-      <LanguagePickRow onPress={onPressLanguagePick} />
+        <LanguagePickRow onPress={onPressLanguagePick} />
 
-      <Spacer height={30} />
+        <Spacer height={30} />
 
-      <BlueCheckbox checked={tosAccepted} spacing={8} onPress={onPressTosCheckbox} style={styles.checkbox}>
-        <View style={styles.checkboxRow}>
-          <Text style={styles.checkboxText}>{`${strings.tosIAgreeWith} `}</Text>
+        <BlueCheckbox checked={tosAccepted} spacing={8} onPress={onPressTosCheckbox} style={styles.checkbox}>
+          <View style={styles.checkboxRow}>
+            <Text style={styles.checkboxText}>{`${strings.tosIAgreeWith} `}</Text>
 
-          <TouchableOpacity onPress={onTosLinkPress} testID="linkToS">
-            <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.tosAgreement}</Text>
-          </TouchableOpacity>
+            <TouchableOpacity onPress={onTosLinkPress} testID="linkToS">
+              <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.tosAgreement}</Text>
+            </TouchableOpacity>
 
-          <Text style={styles.checkboxText}>{` `}</Text>
+            <Text style={styles.checkboxText}>{` `}</Text>
 
-          <Text style={styles.checkboxText}>{strings.tosAnd}</Text>
+            <Text style={styles.checkboxText}>{strings.tosAnd}</Text>
 
-          <Text style={styles.checkboxText}>{` `}</Text>
+            <Text style={styles.checkboxText}>{` `}</Text>
 
-          <TouchableOpacity onPress={onPrivacyLinkPress} testID="linkPrivacyPolicy">
-            <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.privacyPolicy}</Text>
-          </TouchableOpacity>
-        </View>
-      </BlueCheckbox>
+            <TouchableOpacity onPress={onPrivacyLinkPress} testID="linkPrivacyPolicy">
+              <Text style={[styles.checkboxText, styles.checkboxLink]}>{strings.privacyPolicy}</Text>
+            </TouchableOpacity>
+          </View>
+        </BlueCheckbox>
 
-      <Spacer fill />
+        <Spacer fill />
 
-      <Button
-        title={strings.continue}
-        shelleyTheme
-        disabled={!tosAccepted}
-        onPress={onPressContinue}
-        testID="buttonContinue"
-      />
+        <Button
+          title={strings.continue}
+          shelleyTheme
+          disabled={!tosAccepted}
+          onPress={onPressContinue}
+          testID="buttonContinue"
+        />
+      </ScrollView>
     </SafeAreaView>
   )
 }
