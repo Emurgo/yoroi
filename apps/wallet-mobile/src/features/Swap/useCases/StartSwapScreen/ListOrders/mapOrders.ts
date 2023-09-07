@@ -1,3 +1,4 @@
+import {Pool} from '@yoroi/openswap'
 import {Balance} from '@yoroi/types'
 import {SwapOrder} from '@yoroi/types/lib/swap/order'
 import {isString} from '@yoroi/wallets'
@@ -7,7 +8,6 @@ import React from 'react'
 import {NumberLocale} from '../../../../../i18n/languages'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
-import {SwapProtocol} from '@yoroi/types/lib/swap/protocol'
 
 export type OrderProps = {
   tokenPrice: string
@@ -72,13 +72,16 @@ export const mapOrders = (
   })
 }
 
-const getPoolUrl = (provider: SwapProtocol) => {
-  return poolUrls[provider] ?? poolUrls.muesliswap
+const getPoolUrl = (provider: Pool['provider']) => {
+  return poolUrls[provider] ?? poolUrls.muesliswap_v1
 }
 
-const poolUrls: Record<SwapProtocol, string> = {
+const poolUrls: Record<Pool['provider'], string> = {
   minswap: 'https://minswap.org',
   sundaeswap: 'https://sundae.fi',
   wingriders: 'https://www.wingriders.com',
-  muesliswap: 'https://muesliswap.com',
+  muesliswap_v1: 'https://muesliswap.com',
+  muesliswap_v2: 'https://muesliswap.com',
+  muesliswap_v3: 'https://muesliswap.com',
+  muesliswap_v4: 'https://muesliswap.com',
 }
