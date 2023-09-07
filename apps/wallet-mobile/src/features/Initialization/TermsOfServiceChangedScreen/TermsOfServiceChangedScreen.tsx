@@ -32,7 +32,7 @@ export const TermsOfServiceChangedScreen = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar type="dark" />
 
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollableContentContainer}>
         <YoroiLogo />
 
         <Spacer height={80} />
@@ -74,6 +74,9 @@ export const TermsOfServiceChangedScreen = () => {
 }
 
 const styles = StyleSheet.create({
+  scrollableContentContainer: {
+    flex: 1,
+  },
   checkbox: {
     alignItems: 'flex-start',
   },

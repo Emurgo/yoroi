@@ -41,7 +41,7 @@ export const InitialScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollableContentContainer}>
         <StatusBar type="dark" />
 
         <YoroiLogo />
@@ -105,6 +105,9 @@ const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
   )
 }
 const styles = StyleSheet.create({
+  scrollableContentContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     padding: 16,
