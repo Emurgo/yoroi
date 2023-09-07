@@ -18,6 +18,7 @@ const PRECISION = 10
 export const EditLimitPrice = () => {
   const strings = useStrings()
   const {numberLocale} = useLanguage()
+  const [text, setText] = React.useState('')
 
   const wallet = useSelectedWallet()
 
@@ -27,24 +28,32 @@ export const EditLimitPrice = () => {
 
   const {isBuyTouched, isSellTouched} = useSwapTouched()
 
-  const defaultPrice =
-    isBuyTouched &&
-    isSellTouched &&
-    createOrder.selectedPool?.price !== undefined &&
-    !Number.isNaN(createOrder.selectedPool.price)
-      ? createOrder.selectedPool.price
-      : 0
+  const tokenToSellName = isSellTouched ? sellTokenInfo.ticker ?? sellTokenInfo.name : '-'
+  const tokenToBuyName = isBuyTouched ? buyTokenInfo.ticker ?? buyTokenInfo.name : '-'
 
-  const limitPrice = createOrder.limitPrice !== undefined ? BigNumber(createOrder.limitPrice).toNumber() : defaultPrice
+  React.useEffect(() => {
+    const defaultPrice =
+      isBuyTouched &&
+      isSellTouched &&
+      createOrder?.selectedPool?.price !== undefined &&
+      !Number.isNaN(createOrder.selectedPool.price)
+        ? createOrder.selectedPool.price
+        : 0
 
-  const tokenToSellInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
-  const tokenToBuyInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
+    limitPriceChanged(`${defaultPrice}`)
+    const formattedValue = BigNumber(defaultPrice).toFormat(numberLocale)
+    setText(formattedValue)
 
-  const tokenToSellName = isSellTouched ? tokenToSellInfo.ticker ?? tokenToSellInfo.name : '-'
-  const tokenToBuyName = isBuyTouched ? tokenToBuyInfo.ticker ?? tokenToBuyInfo.name : '-'
-  const formattedValue = BigNumber(limitPrice).toFormat(numberLocale)
-
-  const [text, setText] = React.useState(formattedValue)
+    const sellQuantityDenominated = Quantities.denominated(
+      createOrder.amounts.sell.quantity,
+      sellTokenInfo.decimals ?? 0,
+    )
+    buyAmountChanged({
+      quantity: getBuyQuantityForLimitOrder(sellQuantityDenominated, `${defaultPrice}`, buyTokenInfo.decimals ?? 0),
+      tokenId: createOrder.amounts.buy.tokenId,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isBuyTouched, isSellTouched, sellTokenInfo.id, buyTokenInfo.id, createOrder?.selectedPool?.price, numberLocale])
 
   const onChange = (text: string) => {
     const [newText, quantity] = Quantities.parseFromText(text, PRECISION, numberLocale)

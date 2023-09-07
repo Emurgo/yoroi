@@ -48,7 +48,7 @@ const TokenList = () => {
   return (
     <View style={styles.list}>
       {filteredTokenInfos?.length > 0 && (
-        <>
+        <View style={styles.ph}>
           <View style={styles.labels}>
             <Text style={styles.label}>{strings.asset}</Text>
 
@@ -58,7 +58,7 @@ const TokenList = () => {
           <Spacer height={16} />
 
           <View style={styles.line} />
-        </>
+        </View>
       )}
 
       <FlashList
@@ -75,7 +75,7 @@ const TokenList = () => {
         ListEmptyComponent={<EmptyList filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
       />
 
-      <Counter counter={filteredTokenInfos.length} />
+      <Counter style={styles.ph} counter={filteredTokenInfos.length} />
     </View>
   )
 }
@@ -175,10 +175,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  ph: {
     paddingHorizontal: 16,
   },
   item: {
     paddingVertical: 8,
+    paddingHorizontal: 16,
   },
   line: {
     height: 1,
