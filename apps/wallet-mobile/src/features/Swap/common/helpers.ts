@@ -37,11 +37,13 @@ export const getSellQuantityForLimitOrder = (
 
 export const createYoroiEntry = (createOrder: Swap.CreateOrderData, address: string): YoroiEntry => {
   const amountEntry = {}
+
   const tokenId = createOrder?.amounts?.sell.tokenId
   if (tokenId != null && createOrder.amounts.sell.quantity !== undefined) {
     if (createOrder?.amounts?.sell.tokenId === '') {
       amountEntry[tokenId] = Quantities.sum([
         createOrder.selectedPool.deposit.quantity,
+        createOrder.selectedPool.batcherFee.quantity,
         createOrder.amounts.sell.quantity,
       ])
     } else {
@@ -49,7 +51,6 @@ export const createYoroiEntry = (createOrder: Swap.CreateOrderData, address: str
       amountEntry[tokenId] = createOrder.amounts.sell.quantity
     }
   }
-
   return {
     address: address,
     amounts: amountEntry,

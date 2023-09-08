@@ -34,7 +34,6 @@ export const ShowPoolActions = () => {
   if (!isBuyTouched || !isSellTouched || selectedPool === undefined) {
     return <></>
   }
-
   const totalAmount = Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)
   const protocolCapitalize = selectedPool.provider[0].toUpperCase() + selectedPool.provider.substring(1)
   const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrder.amounts.sell.quantity)

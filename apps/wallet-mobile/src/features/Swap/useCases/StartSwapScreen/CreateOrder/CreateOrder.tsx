@@ -75,7 +75,7 @@ export const CreateOrder = () => {
     onSuccess: (data) => {
       if (data?.contractAddress !== undefined) {
         const entry = createYoroiEntry(createOrder, data.contractAddress)
-        const datum = {hash: data.datumHex}
+        const datum = {hash: data.datumHash}
         createUnsignedTx({entry, datum})
       }
     },
