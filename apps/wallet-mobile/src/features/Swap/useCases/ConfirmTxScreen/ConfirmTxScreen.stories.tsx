@@ -8,13 +8,37 @@ import {mocks} from '../../common/mocks'
 import {SwapFormProvider} from '../StartSwapScreen/CreateOrder/TouchedContext'
 import {ConfirmTxScreen} from './ConfirmTxScreen'
 
-storiesOf('Swap ConfirmTxScreen', module).add('swap confirm tx: with password', () => {
-  return <ConfirmTx />
-})
+storiesOf('Swap ConfirmTxScreen', module) //
+  .add('swap confirm tx: with password', () => {
+    return <ConfirmTxWithPasswaordScreen />
+  })
+  .add('swap confirm tx: with os', () => {
+    return <ConfirmTxWithOSScreen />
+  })
 
-const ConfirmTx = () => {
+const ConfirmTxWithPasswaordScreen = () => {
   return (
-    <SelectedWalletProvider wallet={walletMocks.wallet}>
+    <SelectedWalletProvider wallet={{...walletMocks.wallet}}>
+      <SwapProvider
+        initialState={{
+          ...mockSwapStateDefault,
+          unsignedTx: walletMocks.yoroiUnsignedTx,
+          createOrder: {...mocks.confirmTx.createOrder},
+        }}
+        swapManager={{
+          ...mockSwapManager,
+        }}
+      >
+        <SwapFormProvider>
+          <ConfirmTxScreen />
+        </SwapFormProvider>
+      </SwapProvider>
+    </SelectedWalletProvider>
+  )
+}
+const ConfirmTxWithOSScreen = () => {
+  return (
+    <SelectedWalletProvider wallet={{...walletMocks.wallet, isEasyConfirmationEnabled: true}}>
       <SwapProvider
         initialState={{
           ...mockSwapStateDefault,

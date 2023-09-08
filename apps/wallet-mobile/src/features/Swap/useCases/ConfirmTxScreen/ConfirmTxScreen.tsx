@@ -5,11 +5,14 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../components'
 import {BottomSheetModal} from '../../../../components/BottomSheetModal'
+import {LoadingOverlay} from '../../../../components/LoadingOverlay'
 import {useWalletNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
-import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
+import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
+import {useSignAndSubmitTx, useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
+import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
 import {TransactionSummary} from './TransactionSummary'
@@ -19,13 +22,12 @@ export const ConfirmTxScreen = () => {
 
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const navigate = useNavigateTo()
 
   const {createOrder, unsignedTx} = useSwap()
   const {amounts} = createOrder
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
-  console.log('createOrder', createOrder)
-  console.log('[unsignedTx]', unsignedTx)
 
   const {resetToTxHistory} = useWalletNavigation()
 
@@ -33,6 +35,26 @@ export const ConfirmTxScreen = () => {
     `${Number(Object.values(unsignedTx?.fee))}`,
     Number(wallet.primaryTokenInfo.decimals),
   )
+
+  const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
+    {id: wallet.id},
+    {onSuccess: (rootKey) => signAndSubmitTx({unsignedTx, rootKey})},
+  )
+
+  const {signAndSubmitTx, isLoading: processingTx} = useSignAndSubmitTx(
+    {wallet},
+    {
+      signTx: {useErrorBoundary: true},
+      submitTx: {
+        onSuccess: () => {
+          navigate.startSwap()
+        },
+        useErrorBoundary: true,
+      },
+    },
+  )
+
+  const txIsLoading = authenticating || processingTx
 
   const orderInfo = [
     {
@@ -70,10 +92,15 @@ export const ConfirmTxScreen = () => {
 
       <Actions>
         <Button
+          disabled={txIsLoading}
           testID="swapButton"
           shelleyTheme
           title={strings.confirm}
           onPress={() => {
+            if (wallet.isEasyConfirmationEnabled) {
+              authWithOs()
+              return
+            }
             setConfirmationModal(true)
           }}
         />
@@ -94,6 +121,8 @@ export const ConfirmTxScreen = () => {
           onCancel={() => setConfirmationModal(false)}
         />
       </BottomSheetModal>
+
+      <LoadingOverlay loading={txIsLoading} />
     </SafeAreaView>
   )
 }
