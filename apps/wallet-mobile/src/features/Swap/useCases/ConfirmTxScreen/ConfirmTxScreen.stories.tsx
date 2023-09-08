@@ -8,10 +8,9 @@ import {mocks} from '../../common/mocks'
 import {SwapFormProvider} from '../StartSwapScreen/CreateOrder/TouchedContext'
 import {ConfirmTxScreen} from './ConfirmTxScreen'
 
-storiesOf('Swap ConfirmTxScreen', module) //
-  .add('swap confirm tx: with password', () => {
-    return <ConfirmTx />
-  })
+storiesOf('Swap ConfirmTxScreen', module).add('swap confirm tx: with password', () => {
+  return <ConfirmTx />
+})
 
 const ConfirmTx = () => {
   return (
