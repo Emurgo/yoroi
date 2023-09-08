@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Unused addresses",
     "file": "src/Receive/Addresses.tsx",
     "start": {
-      "line": 158,
+      "line": 157,
       "column": 19,
-      "index": 4365
+      "index": 4296
     },
     "end": {
-      "line": 161,
+      "line": 160,
       "column": 3,
-      "index": 4473
+      "index": 4404
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Used addresses",
     "file": "src/Receive/Addresses.tsx",
     "start": {
-      "line": 162,
+      "line": 161,
       "column": 17,
-      "index": 4492
+      "index": 4423
     },
     "end": {
-      "line": 165,
+      "line": 164,
       "column": 3,
-      "index": 4596
+      "index": 4527
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Verify address",
     "file": "src/Receive/Addresses.tsx",
     "start": {
-      "line": 166,
+      "line": 165,
       "column": 17,
-      "index": 4615
+      "index": 4546
     },
     "end": {
-      "line": 169,
+      "line": 168,
       "column": 3,
-      "index": 4719
+      "index": 4650
     }
   }
 ]

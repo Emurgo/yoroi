@@ -1,3 +1,4 @@
+import {useSwap} from '@yoroi/swap'
 import {UseMutationOptions} from 'react-query'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
@@ -7,10 +8,11 @@ import {YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 export const useSwapTx = (
   options?: UseMutationOptions<YoroiUnsignedTx, Error, {entry: YoroiEntry; datum: {hash: string}}>,
 ) => {
+  const {createOrder} = useSwap()
   const metadata = [
     {
-      label: 'Yoroi-Swap',
-      data: {msg: ['Yoroi: Swap B for A Order Request']},
+      label: '674',
+      data: {msg: [`${createOrder.selectedPool?.provider}: Swap B for A Order Request`]},
     },
   ]
   const wallet = useSelectedWallet()

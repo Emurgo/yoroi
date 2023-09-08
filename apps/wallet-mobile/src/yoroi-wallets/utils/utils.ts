@@ -2,6 +2,8 @@ import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {NumberLocale} from '../../i18n/languages'
+import {useSelectedWallet} from '../../SelectedWallet'
+import {useReceiveAddresses} from '../hooks'
 import {RawUtxo, TokenId, YoroiEntries, YoroiEntry} from '../types'
 
 export const Entries = {
@@ -194,4 +196,25 @@ export const Utxos = {
 export const compareArrays = <T>(array1: Array<T>, array2: Array<T>) => {
   if (array1.length !== array2.length) return false
   return array1.every((item, index) => item === array2[index])
+}
+
+type Addresses = {
+  used: string[]
+  unused: string[]
+}
+
+export const useAddresses = (): Addresses => {
+  const wallet = useSelectedWallet()
+  const receiveAddresses = useReceiveAddresses(wallet)
+  const isUsedAddressIndex = wallet.isUsedAddressIndex
+
+  return receiveAddresses.reduce(
+    (addresses, address) => {
+      isUsedAddressIndex[address]
+        ? (addresses.used = [...addresses.used, address])
+        : (addresses.unused = [...addresses.unused, address])
+      return addresses
+    },
+    {used: [], unused: []} as Addresses,
+  )
 }

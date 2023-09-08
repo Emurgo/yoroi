@@ -58,7 +58,10 @@ export const ConfirmTxScreen = () => {
           name: tokenToBuyName,
           decimals: buyTokenInfo.decimals,
         }}
-        sellToken={{id: amounts.sell.tokenId, quantity: amounts.sell.quantity}}
+        sellToken={{
+          id: amounts.sell.tokenId,
+          quantity: amounts.sell.quantity,
+        }}
       />
 
       <Actions>
