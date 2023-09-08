@@ -135,19 +135,13 @@ export const useSwapSlippage = (swapManager: Readonly<Swap.Manager>) => {
 }
 
 export const useOrderByStatusOpen = (
-  args: {stakeKeyHash: string},
-  options?: UseQueryOptions<
-    Swap.OpenOrder[],
-    Error,
-    Swap.OpenOrder[],
-    ['useOrderByStatusOpen', any]
-  >,
+  options?: UseQueryOptions<Swap.OpenOrder[]>,
 ) => {
   const {order} = useSwap()
   const query = useQuery({
     suspense: true,
-    queryKey: ['useOrderByStatusOpen', args],
-    queryFn: () => order.list.byStatusOpen(args),
+    queryKey: ['useOrderByStatusOpen'],
+    queryFn: () => order.list.byStatusOpen(),
     ...options,
   })
 
@@ -182,19 +176,13 @@ export const useCreateOrder = (
 }
 
 export const useOrderByStatusCompleted = (
-  args: {stakeKeyHash: string},
-  options?: UseQueryOptions<
-    Swap.OpenOrder[],
-    Error,
-    Swap.OpenOrder[],
-    ['useOrderByStatusCompleted', any]
-  >,
+  options?: UseQueryOptions<Swap.OpenOrder[], Error>,
 ) => {
   const {order} = useSwap()
   const query = useQuery({
     suspense: true,
-    queryKey: ['useOrderByStatusCompleted', args],
-    queryFn: () => order.list.byStatusCompleted(args),
+    queryKey: ['useOrderByStatusCompleted'],
+    queryFn: () => order.list.byStatusCompleted(),
     ...options,
   })
 
