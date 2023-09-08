@@ -40,7 +40,15 @@ export type Order = {
   utxo: string
 }
 
-export type Protocol = 'minswap' | 'sundaeswap' | 'wingriders' | 'muesliswap'
+export type Protocol =
+  | 'minswap'
+  | 'sundaeswap'
+  | 'wingriders'
+  | 'muesliswap_v1'
+  | 'muesliswap_v2'
+  | 'muesliswap_v3'
+  | 'muesliswap_v4'
+
 export type Network = 'mainnet' | 'preprod'
 
 export type Pool = {
@@ -51,6 +59,7 @@ export type Pool = {
     | 'muesliswap_v1'
     | 'muesliswap_v2'
     | 'muesliswap_v3'
+    | 'muesliswap_v4'
   fee: string // % pool liquidity provider fee, usually 0.3.
   tokenA: {
     amount: string // amount of tokenA in the pool, without decimals.
