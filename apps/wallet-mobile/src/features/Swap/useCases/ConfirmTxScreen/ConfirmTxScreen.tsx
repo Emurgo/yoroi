@@ -24,7 +24,7 @@ export const ConfirmTxScreen = () => {
   const {amounts} = createOrder
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
-
+  console.log('createOrder', createOrder)
   console.log('[unsignedTx]', unsignedTx)
 
   const {resetToTxHistory} = useWalletNavigation()
