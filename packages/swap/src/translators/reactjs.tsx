@@ -58,7 +58,7 @@ export const SwapProvider = ({
     ...initialState,
     createOrder: {
       ...defaultSwapState.createOrder,
-      ...initialState,
+      ...(initialState?.createOrder ?? {}),
       slippage,
     },
   })
