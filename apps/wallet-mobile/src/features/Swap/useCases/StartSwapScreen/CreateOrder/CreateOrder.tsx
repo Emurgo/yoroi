@@ -11,12 +11,11 @@ import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfos} from '../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {Quantities, useAddresses} from '../../../../../yoroi-wallets/utils'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {createYoroiEntry} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
-import {useAddresses} from '../../../common/useAddresses'
 import {useSwapTx} from '../../../common/useSwapTx'
 import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
 import {EditLimitPrice} from './EditLimitPrice'
@@ -72,9 +71,9 @@ export const CreateOrder = () => {
   })
 
   const {createOrderData} = useCreateOrder({
-    onSuccess: (data) => {
+    onSuccess: (data: Swap.CreateOrderResponse) => {
       if (data?.contractAddress !== undefined) {
-        const entry = createYoroiEntry(createOrder, data.contractAddress)
+        const entry = createYoroiEntry(createOrder, data.contractAddress, wallet)
         const datum = {hash: data.datumHash}
         createUnsignedTx({entry, datum})
       }

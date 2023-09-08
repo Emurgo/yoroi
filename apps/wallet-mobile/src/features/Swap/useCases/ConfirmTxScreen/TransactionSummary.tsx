@@ -9,12 +9,32 @@ import {COLORS} from '../../../../theme'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useStrings} from '../../common/strings'
 
-export const TransactionSummary = ({feesInfo, buyToken, sellToken}) => {
+type FeeInfoType = {
+  label: string
+  value: string
+  info: string
+}
+
+type TokenInfo = {
+  id: string
+  quantity: string
+  name?: string
+  decimals?: number
+}
+
+type TransactionSummaryProps = {
+  feesInfo: FeeInfoType[]
+  buyToken: TokenInfo
+  sellToken: TokenInfo
+}
+
+export const TransactionSummary = ({feesInfo, buyToken, sellToken}: TransactionSummaryProps) => {
   const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
     isOpen: false,
     title: '',
     content: '',
   })
+  const label = `${Quantities.format(buyToken.quantity, buyToken.decimals ?? 0)} ${buyToken.name}`
   const strings = useStrings()
   const wallet = useSelectedWallet()
 
@@ -25,10 +45,7 @@ export const TransactionSummary = ({feesInfo, buyToken, sellToken}) => {
           <Text style={styles.cardText}>{strings.total}</Text>
 
           <View>
-            <Text style={[styles.cardText, styles.cardTextValue]}>{`${Quantities.format(
-              buyToken.quantity,
-              buyToken.decimals ?? 0,
-            )} ${buyToken.name}`}</Text>
+            <Text style={[styles.cardText, styles.cardTextValue]}>{label}</Text>
 
             <Spacer height={6} />
 
