@@ -1,10 +1,24 @@
 import {useOrderByStatusOpen} from '@yoroi/swap'
-import {uniq} from 'lodash'
+import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {BottomSheetModal, Button, Spacer, Text, TextInput, TokenIcon} from '../../../../../components'
+import {
+  BottomSheetModal,
+  BottomSheetState,
+  Button,
+  ExpandableInfoCard,
+  ExpandableInfoCardSkeleton,
+  Footer,
+  HeaderWrapper,
+  HiddenInfoWrapper,
+  MainInfoWrapper,
+  Spacer,
+  Text,
+  TextInput,
+  TokenIcon,
+} from '../../../../../components'
 import {useLanguage} from '../../../../../i18n'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
@@ -12,13 +26,6 @@ import {COLORS} from '../../../../../theme'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
-import {
-  BottomSheetState,
-  ExpandableInfoCard,
-  ExpandableInfoCardSkeleton,
-  HiddenInfoWrapper,
-  MainInfoWrapper,
-} from '../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {useStrings} from '../../../common/strings'
 import {mapOrders} from './mapOrders'
 
@@ -28,22 +35,22 @@ export const OpenOrders = () => {
     title: '',
     content: '',
   })
-  const wallet = useSelectedWallet()
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const [confirmationModal, setConfirmationModal] = React.useState(false)
   const strings = useStrings()
   const [spendingPassword, setSpendingPassword] = React.useState('')
-  const {search} = useSearch()
-  const transactionsInfos = useTransactionInfos(wallet)
   const {numberLocale} = useLanguage()
   const intl = useIntl()
+  const wallet = useSelectedWallet()
+  const transactionsInfos = useTransactionInfos(wallet)
+  const {search} = useSearch()
 
   const orders = useOrderByStatusOpen({
     onError: (err) => {
       console.log(err)
     },
   })
-  const tokenIds = uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
+  const tokenIds = _.uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
 
   const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})
 
@@ -58,6 +65,28 @@ export const OpenOrders = () => {
     )
   })
 
+  const openBottomSheet = ({id, fromTokenInfoId, toTokenInfoId, assetFromLabel, assetToLabel}) => {
+    setBottomSheetState({
+      openId: id,
+      title: strings.listOrdersSheetTitle,
+      content: (
+        <ModalContent
+          assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfoId} variant="swap" />}
+          assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfoId} variant="swap" />}
+          confirmationModal={confirmationModal}
+          onConfirm={() => {
+            closeBottomSheet()
+            setConfirmationModal(true)
+          }}
+          onBack={closeBottomSheet}
+          assetFromLabel={assetFromLabel}
+          assetToLabel={assetToLabel}
+        />
+      ),
+    })
+  }
+  const closeBottomSheet = () => setBottomSheetState({openId: null, title: '', content: ''})
+
   return (
     <>
       <View style={styles.container}>
@@ -66,25 +95,12 @@ export const OpenOrders = () => {
             const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
             const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
             const liquidityPoolIcon = <PoolIcon size={32} providerId={order.provider} />
+            const extended = order.id === hiddenInfoOpenId
             return (
               <ExpandableInfoCard
-                id={order.id}
                 key={order.id}
-                bottomSheetState={bottomSheetState}
-                setBottomSheetState={setBottomSheetState}
-                setHiddenInfoOpenId={setHiddenInfoOpenId}
-                hiddenInfoOpenId={hiddenInfoOpenId}
-                label={
-                  <Label
-                    assetFromIcon={fromIcon}
-                    assetToIcon={toIcon}
-                    assetFromLabel={order.assetFromLabel}
-                    assetToLabel={order.assetToLabel}
-                  />
-                }
-                hiddenInfo={
+                adornment={
                   <HiddenInfo
-                    id={order.id}
                     txId={order.txId}
                     total={`${order.total} ${order.assetFromLabel}`}
                     txLink={order.txLink}
@@ -92,42 +108,41 @@ export const OpenOrders = () => {
                     liquidityPoolIcon={liquidityPoolIcon}
                     liquidityPoolName={order.provider}
                     poolUrl={order.poolUrl}
-                    setBottomSheetState={setBottomSheetState}
                   />
                 }
-                mainInfo={
-                  <MainInfo
-                    tokenAmount={`${order.tokenAmount} ${order.assetToLabel}`}
-                    tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
+                extended={extended}
+                header={
+                  <Header
+                    onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== order.id ? order.id : null)}
+                    assetFromLabel={order.assetFromLabel}
+                    assetToLabel={order.assetToLabel}
+                    assetFromIcon={fromIcon}
+                    assetToIcon={toIcon}
+                    extended={extended}
                   />
                 }
-                buttonLabel={strings.listOrdersSheetButtonText.toLocaleUpperCase()}
-                onPress={() => {
-                  setBottomSheetState({
-                    openId: order.id,
-                    title: strings.listOrdersSheetTitle,
-                    content: (
-                      <ModalContent
-                        assetFromIcon={
-                          <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
-                        }
-                        assetToIcon={<TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />}
-                        confirmationModal={confirmationModal}
-                        onConfirm={() => {
-                          setBottomSheetState({openId: null, title: '', content: ''})
-                          setConfirmationModal(true)
-                        }}
-                        onBack={() => {
-                          setBottomSheetState({openId: null, title: '', content: ''})
-                        }}
-                        assetFromLabel={order.assetFromLabel}
-                        assetToLabel={order.assetToLabel}
-                      />
-                    ),
-                  })
-                }}
+                footer={
+                  <Footer
+                    onPress={() => {
+                      openBottomSheet({
+                        id: order.id,
+                        fromTokenInfoId: order.fromTokenInfo?.id ?? '',
+                        toTokenInfoId: order.toTokenInfo?.id ?? '',
+                        assetFromLabel: order.assetFromLabel,
+                        assetToLabel: order.assetToLabel,
+                      })
+                    }}
+                  >
+                    {strings.listOrdersSheetButtonText.toLocaleUpperCase()}
+                  </Footer>
+                }
                 withBoxShadow
-              />
+              >
+                <MainInfo
+                  tokenAmount={`${order.tokenAmount} ${order.assetToLabel}`}
+                  tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
+                />
+              </ExpandableInfoCard>
             )
           })}
         </ScrollView>
@@ -135,9 +150,7 @@ export const OpenOrders = () => {
         <BottomSheetModal
           isOpen={bottomSheetState.openId !== null}
           title={bottomSheetState.title}
-          onClose={() => {
-            setBottomSheetState({openId: null, title: '', content: ''})
-          }}
+          onClose={closeBottomSheet}
         >
           {bottomSheetState.content}
         </BottomSheetModal>
@@ -166,6 +179,14 @@ export const OpenOrders = () => {
             <Button testID="swapButton" shelleyTheme title={strings.sign} />
           </>
         </BottomSheetModal>
+
+        <BottomSheetModal
+          isOpen={bottomSheetState.openId !== null}
+          title={bottomSheetState.title}
+          onClose={closeBottomSheet}
+        >
+          <Text style={styles.text}>{bottomSheetState.content}</Text>
+        </BottomSheetModal>
       </View>
 
       <Counter counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
@@ -173,9 +194,45 @@ export const OpenOrders = () => {
   )
 }
 
+const Header = ({
+  assetFromLabel,
+  assetToLabel,
+  assetFromIcon,
+  assetToIcon,
+  extended,
+  onPress,
+}: {
+  assetFromLabel: string
+  assetToLabel: string
+  assetFromIcon: React.ReactNode
+  assetToIcon: React.ReactNode
+  extended: boolean
+  onPress: () => void
+}) => {
+  return (
+    <HeaderWrapper extended={extended} onPress={onPress}>
+      <View style={styles.label}>
+        {assetFromIcon}
+
+        <Spacer width={4} />
+
+        <Text>{assetFromLabel}</Text>
+
+        <Text>/</Text>
+
+        <Spacer width={4} />
+
+        {assetToIcon}
+
+        <Spacer width={4} />
+
+        <Text>{assetToLabel}</Text>
+      </View>
+    </HeaderWrapper>
+  )
+}
+
 const HiddenInfo = ({
-  id,
-  setBottomSheetState,
   total,
   liquidityPoolIcon,
   liquidityPoolName,
@@ -184,7 +241,6 @@ const HiddenInfo = ({
   txId,
   txLink,
 }: {
-  id: string
   total: string
   liquidityPoolIcon: React.ReactNode
   liquidityPoolName: string
@@ -192,7 +248,6 @@ const HiddenInfo = ({
   date: string
   txId: string
   txLink: string
-  setBottomSheetState: (state: BottomSheetState) => void
 }) => {
   const shortenedTxId = `${txId.substring(0, 9)}...${txId.substring(txId.length - 4, txId.length)}`
   const strings = useStrings()
@@ -222,17 +277,7 @@ const HiddenInfo = ({
           value: <TxLink txId={shortenedTxId} txLink={txLink} />,
         },
       ].map((item) => (
-        <HiddenInfoWrapper
-          key={item.label}
-          value={item.value}
-          label={item.label}
-          onPress={() => {
-            setBottomSheetState({
-              openId: id,
-              title: item.label,
-            })
-          }}
-        />
+        <HiddenInfoWrapper key={item.label} value={item.value} label={item.label} />
       ))}
     </View>
   )
@@ -278,38 +323,6 @@ const LiquidityPool = ({
       <TouchableOpacity onPress={() => Linking.openURL(poolUrl)} style={styles.liquidityPoolLink}>
         <Text style={styles.liquidityPoolText}>{liquidityPoolName}</Text>
       </TouchableOpacity>
-    </View>
-  )
-}
-
-const Label = ({
-  assetFromLabel,
-  assetFromIcon,
-  assetToIcon,
-  assetToLabel,
-}: {
-  assetFromLabel: string
-  assetToLabel: string
-  assetFromIcon: React.ReactNode
-  assetToIcon: React.ReactNode
-}) => {
-  return (
-    <View style={styles.label}>
-      {assetFromIcon}
-
-      <Spacer width={4} />
-
-      <Text>{assetFromLabel}</Text>
-
-      <Text>/</Text>
-
-      <Spacer width={4} />
-
-      {assetToIcon}
-
-      <Spacer width={4} />
-
-      <Text>{assetToLabel}</Text>
     </View>
   )
 }
@@ -513,7 +526,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   link: {
-    paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -528,12 +540,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  label: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   txLink: {
-    paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -549,7 +556,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   liquidityPoolLink: {
-    paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -559,5 +565,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 22,
+  },
+  text: {
+    textAlign: 'left',
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '400',
+    color: '#242838',
+  },
+  label: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })

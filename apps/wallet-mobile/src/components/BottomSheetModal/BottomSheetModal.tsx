@@ -6,6 +6,12 @@ import {Modal as RNModal, Platform, StyleSheet, Text, TouchableOpacity, View, Vi
 import {Icon} from '../Icon'
 import {Spacer} from '../Spacer'
 
+export type BottomSheetState = {
+  openId: string | null
+  title: string
+  content?: React.ReactNode
+}
+
 type BottomSheetModalProps = {
   title: string
   isOpen: boolean
