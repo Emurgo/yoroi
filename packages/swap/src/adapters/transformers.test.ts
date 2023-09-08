@@ -66,7 +66,7 @@ describe('asYoroiOrder', () => {
       provider: 'minswap',
     }
 
-    const result = asYoroiOrder(openswapOrder)
+    const result = asYoroiOrder(openswapOrder, 'primaryTokenId.1')
 
     expect(result).toEqual<Swap.OpenOrder>({
       from: {
@@ -77,10 +77,7 @@ describe('asYoroiOrder', () => {
         quantity: '150',
         tokenId: '656565.tokenE',
       },
-      deposit: {
-        quantity: '100',
-        tokenId: '',
-      },
+      deposit: {quantity: '100', tokenId: 'primaryTokenId.1'},
       provider: 'minswap',
       utxo: 'utxo',
     })

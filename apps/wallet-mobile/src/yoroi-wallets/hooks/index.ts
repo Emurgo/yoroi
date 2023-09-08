@@ -3,6 +3,7 @@ import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/asyn
 import {useNavigation} from '@react-navigation/native'
 import {Balance} from '@yoroi/types'
 import {parseBoolean, useStorage} from '@yoroi/wallets'
+import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {
@@ -113,6 +114,18 @@ export const useUtxos = (wallet: YoroiWallet) => {
   useWallet(wallet, 'utxos')
 
   return wallet.utxos
+}
+
+export const useStakingKey = (wallet: YoroiWallet) => {
+  const getPublicKeyHex: () => Promise<string> = () =>
+    wallet
+      .getStakingKey()
+      .then((r) => r.hash())
+      .then((h) => h.toBytes())
+      .then((bytes) => Buffer.from(bytes).toString('hex'))
+  const result = useQuery([wallet.id, 'stakingKey'], getPublicKeyHex, {suspense: true})
+  if (!result.data) throw new Error('invalid state')
+  return result.data
 }
 
 export const useAssetIds = (wallet: YoroiWallet): string[] => {

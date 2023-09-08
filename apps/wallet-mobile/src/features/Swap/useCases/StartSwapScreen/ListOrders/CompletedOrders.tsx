@@ -1,4 +1,3 @@
-import {useOrderByStatusCompleted} from '@yoroi/swap'
 import React from 'react'
 import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -16,20 +15,15 @@ import {useSearch} from '../../../../../Search/SearchContext'
 import {COLORS} from '../../../../../theme'
 import {Counter} from '../../../common/Counter/Counter'
 import {useStrings} from '../../../common/strings'
-import {mapOrders, OrderProps} from './mapOrders'
+import {OrderProps} from './mapOrders'
+import {getMockOrders} from './mocks'
 
 export const CompletedOrders = () => {
   const strings = useStrings()
   const {search} = useSearch()
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
-  const data = useOrderByStatusCompleted({
-    onError: (err) => {
-      console.log(err)
-    },
-  })
-
-  const orders = mapOrders(data).filter(
+  const orders = getMockOrders().filter(
     ({assetFromLabel, assetToLabel}) =>
       assetFromLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
       assetToLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
