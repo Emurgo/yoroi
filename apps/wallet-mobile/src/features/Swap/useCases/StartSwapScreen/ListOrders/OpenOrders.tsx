@@ -65,6 +65,28 @@ export const OpenOrders = () => {
     )
   })
 
+  const openBottomSheet = ({id, fromTokenInfoId, toTokenInfoId, assetFromLabel, assetToLabel}) => {
+    setBottomSheetState({
+      openId: id,
+      title: strings.listOrdersSheetTitle,
+      content: (
+        <ModalContent
+          assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfoId} variant="swap" />}
+          assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfoId} variant="swap" />}
+          confirmationModal={confirmationModal}
+          onConfirm={() => {
+            closeBottomSheet()
+            setConfirmationModal(true)
+          }}
+          onBack={closeBottomSheet}
+          assetFromLabel={assetFromLabel}
+          assetToLabel={assetToLabel}
+        />
+      ),
+    })
+  }
+  const closeBottomSheet = () => setBottomSheetState({openId: null, title: '', content: ''})
+
   return (
     <>
       <View style={styles.container}>
@@ -79,7 +101,6 @@ export const OpenOrders = () => {
                 key={order.id}
                 adornment={
                   <HiddenInfo
-                    id={order.id}
                     txId={order.txId}
                     total={`${order.total} ${order.assetFromLabel}`}
                     txLink={order.txLink}
@@ -87,7 +108,6 @@ export const OpenOrders = () => {
                     liquidityPoolIcon={liquidityPoolIcon}
                     liquidityPoolName={order.provider}
                     poolUrl={order.poolUrl}
-                    setBottomSheetState={setBottomSheetState}
                   />
                 }
                 extended={extended}
@@ -103,34 +123,18 @@ export const OpenOrders = () => {
                 }
                 footer={
                   <Footer
-                    label={strings.listOrdersSheetButtonText.toLocaleUpperCase()}
                     onPress={() => {
-                      setBottomSheetState({
-                        openId: order.id,
-                        title: strings.listOrdersSheetTitle,
-                        content: (
-                          <ModalContent
-                            assetFromIcon={
-                              <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
-                            }
-                            assetToIcon={
-                              <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
-                            }
-                            confirmationModal={confirmationModal}
-                            onConfirm={() => {
-                              setBottomSheetState({openId: null, title: '', content: ''})
-                              setConfirmationModal(true)
-                            }}
-                            onBack={() => {
-                              setBottomSheetState({openId: null, title: '', content: ''})
-                            }}
-                            assetFromLabel={order.assetFromLabel}
-                            assetToLabel={order.assetToLabel}
-                          />
-                        ),
+                      openBottomSheet({
+                        id: order.id,
+                        fromTokenInfoId: order.fromTokenInfo?.id ?? '',
+                        toTokenInfoId: order.toTokenInfo?.id ?? '',
+                        assetFromLabel: order.assetFromLabel,
+                        assetToLabel: order.assetToLabel,
                       })
                     }}
-                  />
+                  >
+                    {strings.listOrdersSheetButtonText.toLocaleUpperCase()}
+                  </Footer>
                 }
                 withBoxShadow
               >
@@ -146,9 +150,7 @@ export const OpenOrders = () => {
         <BottomSheetModal
           isOpen={bottomSheetState.openId !== null}
           title={bottomSheetState.title}
-          onClose={() => {
-            setBottomSheetState({openId: null, title: '', content: ''})
-          }}
+          onClose={closeBottomSheet}
         >
           {bottomSheetState.content}
         </BottomSheetModal>
@@ -181,9 +183,7 @@ export const OpenOrders = () => {
         <BottomSheetModal
           isOpen={bottomSheetState.openId !== null}
           title={bottomSheetState.title}
-          onClose={() => {
-            setBottomSheetState({openId: null, title: '', content: ''})
-          }}
+          onClose={closeBottomSheet}
         >
           <Text style={styles.text}>{bottomSheetState.content}</Text>
         </BottomSheetModal>
@@ -233,8 +233,6 @@ const Header = ({
 }
 
 const HiddenInfo = ({
-  id,
-  setBottomSheetState,
   total,
   liquidityPoolIcon,
   liquidityPoolName,
@@ -243,7 +241,6 @@ const HiddenInfo = ({
   txId,
   txLink,
 }: {
-  id: string
   total: string
   liquidityPoolIcon: React.ReactNode
   liquidityPoolName: string
@@ -251,7 +248,6 @@ const HiddenInfo = ({
   date: string
   txId: string
   txLink: string
-  setBottomSheetState: (state: BottomSheetState) => void
 }) => {
   const shortenedTxId = `${txId.substring(0, 9)}...${txId.substring(txId.length - 4, txId.length)}`
   const strings = useStrings()
@@ -281,17 +277,7 @@ const HiddenInfo = ({
           value: <TxLink txId={shortenedTxId} txLink={txLink} />,
         },
       ].map((item) => (
-        <HiddenInfoWrapper
-          key={item.label}
-          value={item.value}
-          label={item.label}
-          onPress={() => {
-            setBottomSheetState({
-              openId: id,
-              title: item.label,
-            })
-          }}
-        />
+        <HiddenInfoWrapper key={item.label} value={item.value} label={item.label} />
       ))}
     </View>
   )

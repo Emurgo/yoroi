@@ -38,11 +38,12 @@ export const ShowPoolActions = () => {
       key={id}
       header={
         <Header
-          protocolCapitalize={protocolCapitalize}
           onPressArow={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
           onPressLabel={navigateTo.selectPool}
           extended={extended}
-        />
+        >
+          <Text>{`${protocolCapitalize} (auto)`}</Text>
+        </Header>
       }
       adornment={<HiddenInfo poolFee={poolFee} />}
       extended={extended}
@@ -53,21 +54,19 @@ export const ShowPoolActions = () => {
 }
 
 const Header = ({
-  protocolCapitalize,
+  children,
   extended,
   onPressArow,
   onPressLabel,
 }: {
-  protocolCapitalize: string
+  children: React.ReactNode
   extended: boolean
   onPressArow: () => void
   onPressLabel: () => void
 }) => {
   return (
     <HeaderWrapper extended={extended} onPress={onPressArow}>
-      <TouchableOpacity onPress={onPressLabel}>
-        <Text>{`${protocolCapitalize} (auto)`}</Text>
-      </TouchableOpacity>
+      <TouchableOpacity onPress={onPressLabel}>{children}</TouchableOpacity>
     </HeaderWrapper>
   )
 }

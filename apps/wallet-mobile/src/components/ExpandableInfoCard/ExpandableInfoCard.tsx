@@ -69,10 +69,10 @@ export const HeaderWrapper = ({
   )
 }
 
-export const Footer = ({label, onPress}: {label: string; onPress: () => void}) => {
+export const Footer = ({children, onPress}: {children: React.ReactNode; onPress: () => void}) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <Text style={styles.buttonLabel}>{label}</Text>
+      <Text style={styles.buttonLabel}>{children}</Text>
     </TouchableOpacity>
   )
 }

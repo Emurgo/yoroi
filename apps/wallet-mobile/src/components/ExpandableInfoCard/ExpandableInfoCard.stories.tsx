@@ -32,7 +32,11 @@ storiesOf('Expandable Info Card', module)
             onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== '1234' ? '1234' : null)}
           />
         }
-        footer={<Footer label="FOOTER LABEL" onPress={() => action('footer clicked')} />}
+        footer={
+          <Footer onPress={() => action('footer clicked')}>
+            <Text>FOOTER LABEL</Text>
+          </Footer>
+        }
         withBoxShadow
       >
         <MainInfo />
@@ -56,7 +60,11 @@ storiesOf('Expandable Info Card', module)
             onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== '1234' ? '1234' : null)}
           />
         }
-        footer={<Footer label="FOOTER LABEL" onPress={() => action('footer clicked')} />}
+        footer={
+          <Footer onPress={() => action('footer clicked')}>
+            <Text>FOOTER LABEL</Text>
+          </Footer>
+        }
       >
         <MainInfo />
       </ExpandableInfoCard>
