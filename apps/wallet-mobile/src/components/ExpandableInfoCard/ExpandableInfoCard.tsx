@@ -3,8 +3,9 @@ import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import {Icon, Spacer} from '../../../../../components'
-import {COLORS} from '../../../../../theme'
+import {COLORS} from '../../theme'
+import {Icon} from '../Icon'
+import {Spacer} from '../Spacer'
 
 export type ExpandableInfoCardProps = {
   adornment: React.ReactNode
