@@ -90,7 +90,7 @@ const VerifiedTokensToogle = ({onToogle, isToogled}: {onToogle: () => void; isTo
   const [showVerifiedTokenInfo, setShowVerifiedTokenInfo] = React.useState(false)
 
   return (
-    <View style={styles.flex}>
+    <View style={(styles.flex, styles.ph)}>
       <View style={styles.row}>
         <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
 
@@ -141,7 +141,7 @@ const MyPortfolioCaption = () => {
   const strings = useStrings()
 
   return (
-    <View style={[styles.row]}>
+    <View style={[styles.row, styles.ph]}>
       <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
 
       <Spacer width={8} />
@@ -204,15 +204,14 @@ const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
     [pairsByToken?.length, secondArray?.length],
   )
 
-  const filteredTransformedList = React.useMemo(
-    () => transformedArray.filter(filterTokensPairBySearch(assetSearchTerm)),
-    [transformedArray, assetSearchTerm],
-  )
+  const filteredTransformedList = React.useMemo(() => {
+    return transformedArray.filter(filterTokensPairBySearch(assetSearchTerm))
+  }, [transformedArray, assetSearchTerm])
 
   return (
     <View style={styles.list}>
       {filteredTransformedList?.length > 0 && (
-        <>
+        <View style={styles.ph}>
           <Spacer height={16} />
 
           <View style={styles.labels}>
@@ -224,7 +223,7 @@ const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
           <Spacer height={16} />
 
           <View style={styles.line} />
-        </>
+        </View>
       )}
 
       <FlashList
@@ -356,10 +355,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  ph: {
     paddingHorizontal: 16,
   },
   item: {
     paddingVertical: 8,
+    paddingHorizontal: 16,
   },
   label: {
     fontFamily: 'Rubik',

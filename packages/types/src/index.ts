@@ -9,6 +9,7 @@ import {SwapApi} from './swap/api'
 import {SwapProtocol} from './swap/protocol'
 import {
   SwapCancelOrderData,
+  SwapCompletedOrder,
   SwapCreateOrderData,
   SwapCreateOrderResponse,
   SwapOpenOrder,
@@ -33,6 +34,8 @@ export namespace Swap {
   export type OrderType = SwapOrderType
   export type Protocol = SwapProtocol
   export type OpenOrder = SwapOpenOrder
+  export type CompletedOrder = SwapCompletedOrder
+  export type Order = SwapOpenOrder | SwapCompletedOrder
   export type PoolPair = SwapPoolPair
   export interface Api extends SwapApi {}
   export type Manager = SwapManager

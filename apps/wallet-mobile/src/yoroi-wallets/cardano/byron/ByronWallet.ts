@@ -502,7 +502,7 @@ export class ByronWallet implements YoroiWallet {
     })
   }
 
-  private async getStakingKey() {
+  public async getStakingKey() {
     if (this.walletImplementationId == null) throw new Error('Invalid wallet: walletImplementationId')
 
     assert(isHaskellShelley(this.walletImplementationId), 'cannot get staking key from a byron-era wallet')

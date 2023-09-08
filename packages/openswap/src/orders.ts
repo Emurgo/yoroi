@@ -74,9 +74,8 @@ export async function getOrders(
 ): Promise<Order[]> {
   const {network, client} = deps
   const {stakeKeyHash} = args
-  const apiUrl = SWAP_API_ENDPOINTS[network].getPools
-  const response = await client.get<Order[]>('/', {
-    baseURL: apiUrl,
+  const apiUrl = SWAP_API_ENDPOINTS[network].getOrders
+  const response = await client.get<Order[]>(apiUrl, {
     params: {
       'stake-key-hash': stakeKeyHash,
     },

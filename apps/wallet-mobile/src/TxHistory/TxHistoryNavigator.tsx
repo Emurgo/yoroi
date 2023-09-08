@@ -27,7 +27,7 @@ import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes, useWalletNav
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {useWalletName} from '../yoroi-wallets/hooks'
+import {useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
@@ -41,11 +41,13 @@ export const TxHistoryNavigator = () => {
   const [modalInfoState, setModalInfoState] = React.useState(false)
   const showModalInfo = () => setModalInfoState(true)
   const hideModalInfo = () => setModalInfoState(false)
+  const stakingKey = useStakingKey(wallet)
 
   const swapStorage = makeSwapStorage()
   const swapAPI = makeSwapApi({
     network: 0,
-    stakingKey: wallet.rewardAddressHex,
+    stakingKey,
+    primaryTokenId: wallet.primaryTokenInfo.id,
   })
   const swapManager = makeSwapManager(swapStorage, swapAPI)
 

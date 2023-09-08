@@ -124,6 +124,7 @@ export type YoroiWallet = {
   getStakingInfo: () => Promise<StakingInfo>
   fetchAccountState(): Promise<AccountStates>
   fetchPoolInfo(request: StakePoolInfoRequest): Promise<StakePoolInfosAndHistories>
+  getStakingKey: () => Promise<CardanoTypes.PublicKey>
 
   // Password
   encryptedStorage: WalletEncryptedStorage
