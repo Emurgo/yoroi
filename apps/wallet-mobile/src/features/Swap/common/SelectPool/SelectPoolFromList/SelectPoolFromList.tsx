@@ -4,10 +4,11 @@ import React, {useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Icon, Spacer} from '../../../../../components'
+import {Spacer} from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {COLORS} from '../../../../../theme'
 import {useNavigateTo} from '../../navigation'
+import {PoolIcon} from '../../PoolIcon/PoolIcon'
 import {useStrings} from '../../strings'
 
 type Props = {
@@ -42,9 +43,8 @@ export const SelectPoolFromList = ({data = []}: Props) => {
             >
               <TouchableOpacity key={pool.poolId} onPress={() => handleCardSelect(pool)} style={[styles.card]}>
                 <View style={styles.cardHeader}>
-                  {/* TODO add icons for each pool and change it depending on name */}
                   <View style={styles.icon}>
-                    <Icon.YoroiNightly size={40} color={COLORS.SHELLEY_BLUE} />
+                    <PoolIcon size={40} providerId={pool.provider} />
                   </View>
 
                   <Text style={styles.label}>{protocolCapitalize(pool.provider)}</Text>

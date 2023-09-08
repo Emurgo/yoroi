@@ -442,7 +442,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       return Promise.resolve(result)
     }
 
-    private async getStakingKey() {
+    public async getStakingKey() {
       const accountPubKey = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.publicKeyHex, 'hex'))
       const stakingKey = await accountPubKey
         .derive(CHIMERIC_ACCOUNT)

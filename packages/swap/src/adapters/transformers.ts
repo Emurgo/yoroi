@@ -39,14 +39,13 @@ export const asOpenswapAmount = (yoroiAmount: Balance.Amount) => {
   } as const
 }
 
-export const asYoroiOrder = (openswapOrder: Order) => {
+export const asYoroiOrder = (openswapOrder: Order, primaryTokenId: string) => {
   const {from, to, deposit, ...rest} = openswapOrder
   return {
     ...rest,
     from: asYoroiAmount(from),
     to: asYoroiAmount(to),
-    // TODO: initialize the module with the primary token
-    deposit: asYoroiAmount({amount: deposit, token: ''}), // token = wallet.primaryTokenInfo['id']
+    deposit: asYoroiAmount({amount: deposit, token: primaryTokenId}),
   } as const
 }
 
@@ -133,8 +132,11 @@ export const asYoroiBalanceTokens = (
   openswapTokens: Token[],
 ): Balance.Token[] => openswapTokens.map(asYoroiBalanceToken)
 
-export const asYoroiOrders = (openswapOrders: Order[]): Swap.OpenOrder[] =>
-  openswapOrders.map(asYoroiOrder)
+export const asYoroiOrders = (
+  openswapOrders: Order[],
+  primaryTokenId: string,
+): Swap.Order[] =>
+  openswapOrders.map((order) => asYoroiOrder(order, primaryTokenId))
 
 // TODO: later replace for @yoroi/utils
 export const asTokenFingerprint = ({
