@@ -4,7 +4,8 @@ import type {
   CancelOrderRequest,
   CreateOrderRequest,
   CreateOrderResponse,
-  Order,
+  OpenOrder,
+  CompletedOrder,
   ApiV2Order,
 } from './types'
 
@@ -72,11 +73,11 @@ export async function cancelOrder(
 export async function getOrders(
   deps: ApiDeps,
   args: {stakeKeyHash: string},
-): Promise<Order[]> {
+): Promise<OpenOrder[]> {
   const {network, client} = deps
   const {stakeKeyHash} = args
   const apiUrl = SWAP_API_ENDPOINTS[network].getOrders
-  const response = await client.get<Order[]>(apiUrl, {
+  const response = await client.get<OpenOrder[]>(apiUrl, {
     params: {
       'stake-key-hash': stakeKeyHash,
     },
@@ -94,7 +95,7 @@ export async function getOrders(
 export async function getCompletedOrders(
   deps: ApiDeps,
   args: {stakeKeyHash: string},
-): Promise<Order[]> {
+): Promise<CompletedOrder[]> {
   const {network, client} = deps
   const {stakeKeyHash} = args
   const apiUrl = SWAP_API_ENDPOINTS[network].getCompletedOrders
@@ -116,8 +117,7 @@ export async function getCompletedOrders(
 
   return response.data
     .filter((order) => order.status === 'matched')
-    .map((order) => ({
-      provider: 'muesliswap_v4', // https://api.muesliswap.com/orders/v2 does not respond with the `provider` yet
+    .map<CompletedOrder>((order) => ({
       utxo: order.txHash,
       from: {
         amount: order.fromAmount,
@@ -127,6 +127,5 @@ export async function getCompletedOrders(
         amount: order.toAmount,
         token: `${order.toToken.address.policyId}.${order.toToken.address.name}`,
       },
-      deposit: '0', // https://api.muesliswap.com/orders/v2 does not respond with the `deposit` yet
     }))
 }

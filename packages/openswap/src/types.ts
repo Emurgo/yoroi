@@ -26,7 +26,7 @@ export type CreateOrderResponse =
   | {status: 'failed'; reason?: string}
   | {status: 'success'; hash: string; datum: string; address: string}
 
-export type Order = {
+export type OpenOrder = {
   provider: Protocol
   from: {
     amount: string
@@ -37,6 +37,18 @@ export type Order = {
     token: string
   }
   deposit: string
+  utxo: string
+}
+
+export type CompletedOrder = {
+  from: {
+    amount: string
+    token: string
+  }
+  to: {
+    amount: string
+    token: string
+  }
   utxo: string
 }
 

@@ -1,6 +1,6 @@
 import {Pool} from '@yoroi/openswap'
 import {Balance} from '@yoroi/types'
-import {SwapOrder} from '@yoroi/types/lib/swap/order'
+import {SwapCompletedOrder, SwapOpenOrder} from '@yoroi/types/lib/swap/order'
 import {isString} from '@yoroi/wallets'
 import BigNumber from 'bignumber.js'
 
@@ -11,7 +11,7 @@ import {Quantities} from '../../../../../yoroi-wallets/utils'
 const MAX_DECIMALS = 10
 
 export const mapOrders = (
-  orders: Array<SwapOrder>,
+  orders: Array<SwapOpenOrder | SwapCompletedOrder>,
   tokenInfos: Balance.TokenInfo[],
   numberLocale: NumberLocale,
   transactionInfos: TransactionInfo[],
@@ -55,8 +55,8 @@ export const mapOrders = (
       txLink,
       fromTokenInfo,
       toTokenInfo,
-      provider: order.provider,
-      poolUrl: getPoolUrl(order.provider),
+      provider: 'provider' in order ? order.provider : undefined,
+      poolUrl: 'provider' in order ? getPoolUrl(order.provider) : undefined,
     }
   })
 }

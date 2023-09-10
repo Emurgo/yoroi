@@ -9,7 +9,7 @@ export type SwapManager = Readonly<{
     create: SwapApi['createOrder']
     list: {
       byStatusOpen: SwapApi['getOrders']
-      byStatusCompleted: SwapApi['getOrders']
+      byStatusCompleted: SwapApi['getCompletedOrders']
     }
   }
   pairs: {

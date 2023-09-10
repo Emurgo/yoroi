@@ -2,11 +2,12 @@ import {Balance, Swap} from '@yoroi/types'
 import {
   asOpenswapAmount,
   asYoroiBalanceToken,
-  asYoroiOrder,
+  asYoroiCompletedOrder,
+  asYoroiOpenOrder,
   asYoroiPool,
   asYoroiTokenId,
 } from './transformers'
-import {Order, Pool, Token} from '@yoroi/openswap'
+import {CompletedOrder, OpenOrder, Pool, Token} from '@yoroi/openswap'
 
 describe('asOpenswapAmount', () => {
   it('should return the correct result when a valid yoroiAmount is provided', () => {
@@ -56,9 +57,9 @@ describe('asOpenswapAmount', () => {
   })
 })
 
-describe('asYoroiOrder', () => {
+describe('asYoroiOpenOrder', () => {
   it('should handle empty/filled tokenId correctly', () => {
-    const openswapOrder: Order = {
+    const openswapOrder: OpenOrder = {
       from: {token: '', amount: '75'},
       to: {token: '656565.tokenE', amount: '150'},
       deposit: '100',
@@ -66,7 +67,7 @@ describe('asYoroiOrder', () => {
       provider: 'minswap',
     }
 
-    const result = asYoroiOrder(openswapOrder, 'primaryTokenId.1')
+    const result = asYoroiOpenOrder(openswapOrder, 'primaryTokenId.1')
 
     expect(result).toEqual<Swap.OpenOrder>({
       from: {
@@ -79,6 +80,30 @@ describe('asYoroiOrder', () => {
       },
       deposit: {quantity: '100', tokenId: 'primaryTokenId.1'},
       provider: 'minswap',
+      utxo: 'utxo',
+    })
+  })
+})
+
+describe('asYoroiCompletedOrder', () => {
+  it('should populate amounts and quantities', () => {
+    const openswapOrder: CompletedOrder = {
+      from: {token: '', amount: '75'},
+      to: {token: '656565.tokenE', amount: '150'},
+      utxo: 'utxo',
+    }
+
+    const result = asYoroiCompletedOrder(openswapOrder)
+
+    expect(result).toEqual<Swap.CompletedOrder>({
+      from: {
+        quantity: '75',
+        tokenId: '',
+      },
+      to: {
+        quantity: '150',
+        tokenId: '656565.tokenE',
+      },
       utxo: 'utxo',
     })
   })

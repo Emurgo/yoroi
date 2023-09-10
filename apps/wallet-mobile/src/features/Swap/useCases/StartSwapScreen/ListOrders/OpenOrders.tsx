@@ -92,7 +92,8 @@ export const OpenOrders = () => {
           {filteredOrders.map((order) => {
             const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
             const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
-            const liquidityPoolIcon = <PoolIcon size={32} providerId={order.provider} />
+            const liquidityPoolIcon =
+              order.provider !== undefined ? <PoolIcon size={32} providerId={order.provider} /> : null
             const extended = order.id === hiddenInfoOpenId
             return (
               <ExpandableInfoCard
@@ -104,8 +105,8 @@ export const OpenOrders = () => {
                     txLink={order.txLink}
                     date={intl.formatDate(new Date(order.date), {dateStyle: 'short', timeStyle: 'short'})}
                     liquidityPoolIcon={liquidityPoolIcon}
-                    liquidityPoolName={order.provider}
-                    poolUrl={order.poolUrl}
+                    liquidityPoolName={order.provider ?? ''}
+                    poolUrl={order.poolUrl ?? ''}
                   />
                 }
                 extended={extended}
