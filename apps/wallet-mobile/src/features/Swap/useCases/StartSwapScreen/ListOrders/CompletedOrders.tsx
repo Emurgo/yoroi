@@ -20,7 +20,6 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {Counter} from '../../../common/Counter/Counter'
-import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {mapOrders} from './mapOrders'
 
@@ -61,7 +60,6 @@ export const CompletedOrders = () => {
         {filteredOrders.map((order) => {
           const id = `${order.assetFromLabel}-${order.assetToLabel}-${order.date}`
           const extended = id === hiddenInfoOpenId
-          const liquidityPoolIcon = <PoolIcon size={32} providerId={order.provider} />
           const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
           const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
           return (
@@ -73,9 +71,6 @@ export const CompletedOrders = () => {
                   total={`${order.total} ${order.assetFromLabel}`}
                   txLink={order.txLink}
                   date={intl.formatDate(new Date(order.date), {dateStyle: 'short', timeStyle: 'short'})}
-                  liquidityPoolIcon={liquidityPoolIcon}
-                  liquidityPoolName={order.provider}
-                  poolUrl={order.poolUrl}
                 />
               }
               header={
@@ -143,23 +138,8 @@ const Header = ({
   )
 }
 
-const HiddenInfo = ({
-  total,
-  liquidityPoolIcon,
-  liquidityPoolName,
-  poolUrl,
-  date,
-  txId,
-  txLink,
-}: {
-  total: string
-  liquidityPoolIcon: React.ReactNode
-  liquidityPoolName: string
-  poolUrl: string
-  date: string
-  txId: string
-  txLink: string
-}) => {
+const HiddenInfo = ({total, date, txId, txLink}: {total: string; date: string; txId: string; txLink: string}) => {
+  const shortenedTxId = `${txId.substring(0, 9)}...${txId.substring(txId.length - 4, txId.length)}`
   const strings = useStrings()
   return (
     <View>
@@ -168,23 +148,14 @@ const HiddenInfo = ({
           label: strings.listOrdersTotal,
           value: total,
         },
-        {
-          label: strings.listOrdersLiquidityPool,
-          value: (
-            <LiquidityPool
-              liquidityPoolIcon={liquidityPoolIcon}
-              liquidityPoolName={liquidityPoolName}
-              poolUrl={poolUrl}
-            />
-          ),
-        },
+
         {
           label: strings.listOrdersTimeCreated,
           value: date,
         },
         {
           label: strings.listOrdersTxId,
-          value: <TxLink txId={txId} txLink={txLink} />,
+          value: <TxLink txId={shortenedTxId} txLink={txLink} />,
         },
       ].map((item) => (
         <HiddenInfoWrapper key={item.label} value={item.value} label={item.label} />
@@ -229,28 +200,6 @@ const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {
   )
 }
 
-const LiquidityPool = ({
-  liquidityPoolIcon,
-  liquidityPoolName,
-  poolUrl,
-}: {
-  liquidityPoolIcon: React.ReactNode
-  liquidityPoolName: string
-  poolUrl: string
-}) => {
-  return (
-    <View style={styles.liquidityPool}>
-      {liquidityPoolIcon}
-
-      <Spacer width={3} />
-
-      <TouchableOpacity onPress={() => Linking.openURL(poolUrl)} style={styles.liquidityPoolLink}>
-        <Text style={styles.liquidityPoolText}>{liquidityPoolName}</Text>
-      </TouchableOpacity>
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -265,21 +214,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txLinkText: {
-    color: '#4B6DDE',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '400',
-    lineHeight: 22,
-  },
-  liquidityPool: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  liquidityPoolLink: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  liquidityPoolText: {
     color: '#4B6DDE',
     fontFamily: 'Rubik',
     fontSize: 16,
