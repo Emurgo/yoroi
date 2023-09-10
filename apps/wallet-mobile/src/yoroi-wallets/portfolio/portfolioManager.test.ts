@@ -24,7 +24,7 @@ describe('portfolioManagerMaker', () => {
     const portfolioManager = await portfolioManagerToInit()
 
     // Act
-    await portfolioManager.update(['token1', 'token2'])
+    await portfolioManager.tokens.fetch(['token1', 'token2'])
 
     // Assert
     expect(mockStorageGetAllKeys).toHaveBeenCalledTimes(2)
@@ -53,7 +53,7 @@ describe('portfolioManagerMaker', () => {
     const portfolioManager = await portfolioManagerToInit()
 
     // Act
-    await portfolioManager.update(['token1', 'token2'], true)
+    await portfolioManager.tokens.fetch(['token1', 'token2'], true)
 
     // Assert
     expect(mockStorageGetAllKeys).toHaveBeenCalledTimes(2)

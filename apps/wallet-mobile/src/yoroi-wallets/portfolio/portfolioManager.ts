@@ -1,21 +1,23 @@
 import {Balance, Writable} from '@yoroi/types'
 import {difference} from '@yoroi/wallets'
 
-import {BalanceTokenManagerOptions} from './types'
+import {PortfolioManagerOptions} from './types'
 
-export const portfolioManagerMaker = ({storage, api}: BalanceTokenManagerOptions) => {
+export const portfolioManagerMaker = ({storage, api}: PortfolioManagerOptions) => {
   const {tokens} = storage
   let knownTokenIds = new Set<Balance.Token['info']['id']>()
 
-  const update = async (ids: ReadonlyArray<Balance.Token['info']['id']>, avoidCache = false): Promise<void> => {
+  const fetch = async (ids: ReadonlyArray<Balance.Token['info']['id']>, avoidCache = false): Promise<void> => {
     if (avoidCache) {
-      const refreshedTokens = (await api.tokens(ids)) as Writable<Balance.Token>[]
-      await tokens.saveMany(refreshedTokens)
+      const refreshedTokens = await api.tokens(ids)
+      // storage api expects the data to be writable but it must not touch the original data
+      await tokens.saveMany(refreshedTokens as unknown as Writable<Balance.Token>[])
     } else {
       const idsNotCached = difference(ids, Array.from(knownTokenIds))
       if (idsNotCached.length > 0) {
-        const fetchedTokens = (await api.tokens(idsNotCached)) as Writable<Balance.Token>[]
-        await tokens.saveMany(fetchedTokens)
+        const fetchedTokens = await api.tokens(idsNotCached)
+        // storageh api expects the data to be writable but it must not touch the original data
+        await tokens.saveMany(fetchedTokens as unknown as Writable<Balance.Token>[])
       }
     }
     await hydrateKnownTokenIds()
@@ -30,9 +32,10 @@ export const portfolioManagerMaker = ({storage, api}: BalanceTokenManagerOptions
     await hydrateKnownTokenIds()
 
     return {
-      hydrateKnownTokenIds,
-      update,
-      tokens,
+      tokens: {
+        readMany: tokens.readMany,
+        fetch,
+      },
     } as const
   }
 }
