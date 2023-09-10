@@ -5,7 +5,8 @@ import {
   asOpenswapTokenId,
   asOpenswapTokenIdHex,
   asYoroiBalanceTokens,
-  asYoroiOrders,
+  asYoroiCompletedOrder,
+  asYoroiOpenOrder,
   asYoroiPools,
 } from './transformers'
 import {getTokensMock} from './tokens.mocks'
@@ -26,7 +27,13 @@ export const makeSwapApi = (
   const getOrders: Swap.Api['getOrders'] = async () => {
     return api
       .getOrders(stakingKey)
-      .then((orders) => asYoroiOrders(orders, primaryTokenId))
+      .then((orders) => orders.map((o) => asYoroiOpenOrder(o, primaryTokenId)))
+  }
+
+  const getCompletedOrders: Swap.Api['getCompletedOrders'] = async () => {
+    return api
+      .getCompletedOrders(stakingKey)
+      .then((orders) => orders.map((o) => asYoroiCompletedOrder(o)))
   }
 
   const createOrder: Swap.Api['createOrder'] = async (
@@ -97,5 +104,6 @@ export const makeSwapApi = (
     createOrder,
     getTokens,
     getPoolPairs,
+    getCompletedOrders,
   } as const
 }

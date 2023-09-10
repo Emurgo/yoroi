@@ -1,4 +1,7 @@
+import {useOrderByStatusCompleted} from '@yoroi/swap'
+import _ from 'lodash'
 import React from 'react'
+import {useIntl} from 'react-intl'
 import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {
@@ -6,51 +9,85 @@ import {
   ExpandableInfoCardSkeleton,
   HeaderWrapper,
   HiddenInfoWrapper,
-  Icon,
   MainInfoWrapper,
   Spacer,
   Text,
+  TokenIcon,
 } from '../../../../../components'
+import {useLanguage} from '../../../../../i18n'
 import {useSearch} from '../../../../../Search/SearchContext'
+import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
+import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {Counter} from '../../../common/Counter/Counter'
 import {useStrings} from '../../../common/strings'
-import {OrderProps} from './mapOrders'
-import {getMockOrders} from './mocks'
+import {mapOrders} from './mapOrders'
 
 export const CompletedOrders = () => {
   const strings = useStrings()
-  const {search} = useSearch()
+  const wallet = useSelectedWallet()
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
-  const orders = getMockOrders().filter(
-    ({assetFromLabel, assetToLabel}) =>
-      assetFromLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-      assetToLabel.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
-  )
+  const transactionsInfos = useTransactionInfos(wallet)
+  const {search} = useSearch()
+  const {numberLocale} = useLanguage()
+  const intl = useIntl()
+
+  const orders = useOrderByStatusCompleted({
+    queryKey: [wallet.id, 'completed-orders'],
+  })
+
+  const tokenIds = _.uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
+
+  const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})
+
+  const normalizedOrders = mapOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos))
+
+  const searchLower = search.toLocaleLowerCase()
+
+  const filteredOrders = normalizedOrders.filter((order) => {
+    return (
+      order.assetFromLabel.toLocaleLowerCase().includes(searchLower) ||
+      order.assetToLabel.toLocaleLowerCase().includes(searchLower)
+    )
+  })
 
   return (
     <>
       <ScrollView style={styles.container}>
-        {orders.map((order) => {
+        {filteredOrders.map((order) => {
           const id = `${order.assetFromLabel}-${order.assetToLabel}-${order.date}`
           const extended = id === hiddenInfoOpenId
+          const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
+          const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
           return (
             <ExpandableInfoCard
               key={`${order.assetFromLabel}-${order.assetToLabel}-${order.date}`}
-              adornment={<HiddenInfo id={id} order={order} />}
+              adornment={
+                <HiddenInfo
+                  txId={order.txId}
+                  total={`${order.total} ${order.assetFromLabel}`}
+                  txLink={order.txLink}
+                  date={intl.formatDate(new Date(order.date), {dateStyle: 'short', timeStyle: 'short'})}
+                />
+              }
               header={
                 <Header
                   onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
                   assetFromLabel={order.assetFromLabel}
                   assetToLabel={order.assetToLabel}
+                  assetFromIcon={fromIcon}
+                  assetToIcon={toIcon}
                   extended={extended}
                 />
               }
               extended={extended}
               withBoxShadow
             >
-              <MainInfo order={order} />
+              <MainInfo
+                tokenAmount={`${order.tokenAmount} ${order.assetToLabel}`}
+                tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
+              />
             </ExpandableInfoCard>
           )
         })}
@@ -64,18 +101,22 @@ export const CompletedOrders = () => {
 const Header = ({
   assetFromLabel,
   assetToLabel,
+  assetFromIcon,
+  assetToIcon,
   extended,
   onPress,
 }: {
   assetFromLabel: string
   assetToLabel: string
+  assetFromIcon: React.ReactNode
+  assetToIcon: React.ReactNode
   extended: boolean
   onPress: () => void
 }) => {
   return (
     <HeaderWrapper extended={extended} onPress={onPress}>
       <View style={styles.label}>
-        <Icon.YoroiNightly size={24} />
+        {assetFromIcon}
 
         <Spacer width={4} />
 
@@ -85,7 +126,7 @@ const Header = ({
 
         <Spacer width={4} />
 
-        <Icon.Assets size={24} />
+        {assetToIcon}
 
         <Spacer width={4} />
 
@@ -95,32 +136,24 @@ const Header = ({
   )
 }
 
-const HiddenInfo = ({order}: {id: string; order: OrderProps}) => {
+const HiddenInfo = ({total, date, txId, txLink}: {total: string; date: string; txId: string; txLink: string}) => {
+  const shortenedTxId = `${txId.substring(0, 9)}...${txId.substring(txId.length - 4, txId.length)}`
   const strings = useStrings()
   return (
     <View>
       {[
         {
           label: strings.listOrdersTotal,
-          value: order.total,
+          value: total,
         },
-        {
-          label: strings.listOrdersLiquidityPool,
-          value: (
-            <LiquidityPool
-              liquidityPoolIcon={order.liquidityPoolIcon}
-              liquidityPoolName={order.liquidityPoolName}
-              poolUrl={order.poolUrl}
-            />
-          ),
-        },
+
         {
           label: strings.listOrdersTimeCreated,
-          value: order.date,
+          value: date,
         },
         {
           label: strings.listOrdersTxId,
-          value: <TxLink txId={order.txId} txLink={order.txLink} />,
+          value: <TxLink txId={shortenedTxId} txLink={txLink} />,
         },
       ].map((item) => (
         <HiddenInfoWrapper key={item.label} value={item.value} label={item.label} />
@@ -129,13 +162,13 @@ const HiddenInfo = ({order}: {id: string; order: OrderProps}) => {
   )
 }
 
-const MainInfo = ({order}: {order: OrderProps}) => {
+const MainInfo = ({tokenPrice, tokenAmount}: {tokenPrice: string; tokenAmount: string}) => {
   const strings = useStrings()
   return (
     <View>
       {[
-        {label: strings.listOrdersSheetAssetPrice, value: order.tokenPrice},
-        {label: strings.listOrdersSheetAssetAmount, value: order.tokenAmount},
+        {label: strings.listOrdersSheetAssetPrice, value: tokenPrice},
+        {label: strings.listOrdersSheetAssetAmount, value: tokenAmount},
       ].map((item, index) => (
         <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />
       ))}
@@ -165,28 +198,6 @@ const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {
   )
 }
 
-const LiquidityPool = ({
-  liquidityPoolIcon,
-  liquidityPoolName,
-  poolUrl,
-}: {
-  liquidityPoolIcon: React.ReactNode
-  liquidityPoolName: string
-  poolUrl: string
-}) => {
-  return (
-    <View style={styles.liquidityPool}>
-      {liquidityPoolIcon}
-
-      <Spacer width={3} />
-
-      <TouchableOpacity onPress={() => Linking.openURL(poolUrl)} style={styles.liquidityPoolLink}>
-        <Text style={styles.liquidityPoolText}>{liquidityPoolName}</Text>
-      </TouchableOpacity>
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -201,21 +212,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txLinkText: {
-    color: '#4B6DDE',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '400',
-    lineHeight: 22,
-  },
-  liquidityPool: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  liquidityPoolLink: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  liquidityPoolText: {
     color: '#4B6DDE',
     fontFamily: 'Rubik',
     fontSize: 16,
