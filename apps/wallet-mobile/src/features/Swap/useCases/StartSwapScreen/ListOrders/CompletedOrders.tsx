@@ -35,10 +35,8 @@ export const CompletedOrders = () => {
 
   const orders = useOrderByStatusCompleted({
     queryKey: [wallet.id, 'completed-orders'],
-    onError: (err) => {
-      console.log(err)
-    },
   })
+
   const tokenIds = _.uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
 
   const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})

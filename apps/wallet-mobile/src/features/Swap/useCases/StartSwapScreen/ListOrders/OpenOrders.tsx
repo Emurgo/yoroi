@@ -47,9 +47,6 @@ export const OpenOrders = () => {
 
   const orders = useOrderByStatusOpen({
     queryKey: [wallet.id, 'open-orders'],
-    onError: (err) => {
-      console.log(err)
-    },
   })
   const tokenIds = _.uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
 
