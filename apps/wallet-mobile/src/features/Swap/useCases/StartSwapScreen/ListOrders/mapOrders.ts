@@ -3,27 +3,12 @@ import {Balance} from '@yoroi/types'
 import {SwapOrder} from '@yoroi/types/lib/swap/order'
 import {isString} from '@yoroi/wallets'
 import BigNumber from 'bignumber.js'
-import React from 'react'
 
 import {NumberLocale} from '../../../../../i18n/languages'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 
-export type OrderProps = {
-  tokenPrice: string
-  tokenAmount: string
-  assetFromLabel: string
-  assetFromIcon: React.ReactNode
-  assetToLabel: string
-  assetToIcon: React.ReactNode
-  date: string
-  liquidityPoolIcon: React.ReactNode
-  liquidityPoolName: string
-  txId: string
-  total: string
-  poolUrl: string
-  txLink: string
-}
+const MAX_DECIMALS = 10
 
 export const mapOrders = (
   orders: Array<SwapOrder>,
@@ -37,15 +22,19 @@ export const mapOrders = (
     const id = `${order.from.tokenId}-${order.to.tokenId}-${order.utxo}`
     const fromLabel = fromTokenInfo?.ticker ?? fromTokenInfo?.name ?? '-'
     const toLabel = toTokenInfo?.ticker ?? toTokenInfo?.name ?? '-'
-    const tokenAmount = BigNumber(Quantities.denominated(order.to.quantity, toTokenInfo?.decimals ?? 0)).toFormat(
-      numberLocale,
-    )
+    const tokenAmount = BigNumber(Quantities.denominated(order.to.quantity, toTokenInfo?.decimals ?? 0))
+      .decimalPlaces(MAX_DECIMALS)
+      .toFormat({
+        ...numberLocale,
+      })
     const tokenPrice = BigNumber(
       Quantities.quotient(
         Quantities.denominated(order.from.quantity, fromTokenInfo?.decimals ?? 0),
         Quantities.denominated(order.to.quantity, toTokenInfo?.decimals ?? 0),
       ),
-    ).toFormat(numberLocale)
+    )
+      .decimalPlaces(MAX_DECIMALS)
+      .toFormat(numberLocale)
     const txId = order.utxo.split('#')[0]
     const total = BigNumber(Quantities.denominated(order.from.quantity, fromTokenInfo?.decimals ?? 0)).toFormat(
       numberLocale,

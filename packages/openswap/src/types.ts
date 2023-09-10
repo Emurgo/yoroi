@@ -40,6 +40,34 @@ export type Order = {
   utxo: string
 }
 
+export type ApiV2Order = {
+  toToken: {
+    address: {
+      policyId: string
+      name: string
+    }
+  }
+  toAmount: string
+  fromToken: {
+    address: {
+      policyId: string
+      name: string
+    }
+  }
+  fromAmount: string
+  placedAt: number
+  status: string
+  receivedAmount: string
+  paidAmount: string
+  finalizedAt: any
+  txHash: string
+  outputIdx: number
+  attachedLvl: string
+  scriptVersion: string
+  pubKeyHash: string
+  feeField: number
+}
+
 export type Protocol =
   | 'minswap'
   | 'sundaeswap'

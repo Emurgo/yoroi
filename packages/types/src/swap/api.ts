@@ -11,6 +11,7 @@ export interface SwapApi {
   createOrder(orderData: SwapCreateOrderData): Promise<SwapCreateOrderResponse>
   cancelOrder(orderData: SwapCancelOrderData): Promise<string>
   getOrders(): Promise<SwapOrder[]>
+  getCompletedOrders(): Promise<SwapOrder[]>
   getPoolPairs(args: {
     tokenA: BalanceToken['info']['id']
     tokenB: BalanceToken['info']['id']

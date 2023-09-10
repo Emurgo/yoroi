@@ -29,6 +29,12 @@ export const makeSwapApi = (
       .then((orders) => asYoroiOrders(orders, primaryTokenId))
   }
 
+  const getCompletedOrders: Swap.Api['getCompletedOrders'] = async () => {
+    return api
+      .getCompletedOrders(stakingKey)
+      .then((orders) => asYoroiOrders(orders, primaryTokenId))
+  }
+
   const createOrder: Swap.Api['createOrder'] = async (
     orderData,
   ): Promise<Swap.CreateOrderResponse> => {
@@ -97,5 +103,6 @@ export const makeSwapApi = (
     createOrder,
     getTokens,
     getPoolPairs,
+    getCompletedOrders,
   } as const
 }

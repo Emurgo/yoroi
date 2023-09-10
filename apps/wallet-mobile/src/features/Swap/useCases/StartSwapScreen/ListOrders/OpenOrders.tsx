@@ -46,6 +46,7 @@ export const OpenOrders = () => {
   const {search} = useSearch()
 
   const orders = useOrderByStatusOpen({
+    queryKey: [wallet.id, 'open-orders'],
     onError: (err) => {
       console.log(err)
     },

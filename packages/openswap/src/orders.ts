@@ -5,6 +5,7 @@ import type {
   CreateOrderRequest,
   CreateOrderResponse,
   Order,
+  ApiV2Order,
 } from './types'
 
 export async function createOrder(
@@ -88,4 +89,44 @@ export async function getOrders(
   }
 
   return response.data
+}
+
+export async function getCompletedOrders(
+  deps: ApiDeps,
+  args: {stakeKeyHash: string},
+): Promise<Order[]> {
+  const {network, client} = deps
+  const {stakeKeyHash} = args
+  const apiUrl = SWAP_API_ENDPOINTS[network].getCompletedOrders
+  const response = await client.get<ApiV2Order[]>(apiUrl, {
+    params: {
+      'stake-key-hash': stakeKeyHash,
+      'canceled': 'n',
+      'open': 'n',
+      'matched': 'y',
+      'v2_only': 'y',
+    },
+  })
+
+  if (response.status !== 200) {
+    throw new Error(`Failed to get orders for ${stakeKeyHash}`, {
+      cause: response.data,
+    })
+  }
+
+  return response.data
+    .filter((order) => order.status === 'matched')
+    .map((order) => ({
+      provider: 'muesliswap_v4', // https://api.muesliswap.com/orders/v2 does not respond with the `provider` yet
+      utxo: order.txHash,
+      from: {
+        amount: order.fromAmount,
+        token: `${order.fromToken.address.policyId}.${order.fromToken.address.name}`,
+      },
+      to: {
+        amount: order.toAmount,
+        token: `${order.toToken.address.policyId}.${order.toToken.address.name}`,
+      },
+      deposit: '0', // https://api.muesliswap.com/orders/v2 does not respond with the `deposit` yet
+    }))
 }
