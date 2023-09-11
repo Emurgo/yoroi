@@ -8,7 +8,7 @@ import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
-import {useSwapTouched} from '../TouchedContext'
+import {useSwapTouched} from '../../../../common/SwapFormProvider'
 
 export const ShowPoolActions = () => {
   const navigateTo = useNavigateTo()
@@ -43,7 +43,7 @@ export const ShowPoolActions = () => {
           onPressLabel={navigateTo.selectPool}
           extended={extended}
         >
-          <Text>{`${protocolCapitalize}${isPoolTouched ? '' : strings.autoPool}`}</Text>
+          <Text>{`${protocolCapitalize}${isPoolTouched ? '' : ` ${strings.autoPool}`}`}</Text>
         </Header>
       }
       adornment={<HiddenInfo poolFee={poolFee} />}
