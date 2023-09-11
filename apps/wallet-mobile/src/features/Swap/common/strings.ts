@@ -85,10 +85,13 @@ export const useStrings = () => {
     limitPriceWarningMarketPrice: intl.formatMessage(messages.limitPriceWarningMarketPrice),
     limitPriceWarningBack: intl.formatMessage(messages.limitPriceWarningBack),
     limitPriceWarningConfirm: intl.formatMessage(messages.limitPriceWarningConfirm),
-    // bluetoothError: intl.formatMessage(messages.bluetoothError),
-    // bluetoothExplanation: intl.formatMessage(messages.bluetoothExplanation),
-    // bluetoothButton: intl.formatMessage(messages.bluetoothButton),
-    // error: intl.formatMessage(globalMessages.error),
+    error: intl.formatMessage(globalMessages.error),
+    usbExplanation: intl.formatMessage(messages.usbExplanation),
+    usbButton: intl.formatMessage(messages.usbButton),
+    usbConnectionIsBlocked: intl.formatMessage(messages.usbConnectionIsBlocked),
+    bluetoothExplanation: intl.formatMessage(messages.bluetoothExplanation),
+    bluetoothButton: intl.formatMessage(messages.bluetoothButton),
+    bluetoothError: intl.formatMessage(messages.bluetoothError),
   }
 }
 
@@ -371,21 +374,35 @@ export const messages = defineMessages({
     id: 'swap.listOrders.txId',
     defaultMessage: '!!!Transaction ID',
   },
-  // bluetoothError: {
-  //   id: 'global.ledgerMessages.bluetoothDisabledError',
-  //   defaultMessage: '!!!Connect with Bluetooth',
-  // },
-  // bluetoothExplanation: {
-  //   id: 'components.ledger.ledgertransportswitchmodal.bluetoothExplanation',
-  //   defaultMessage: '!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:',
-  // },
-  // bluetoothButton: {
-  //   id: 'components.ledger.ledgertransportswitchmodal.bluetoothButton',
-  //   defaultMessage: '!!!Connect with Bluetooth',
-  // },
   chooseConnectionMethod: {
     id: 'components.ledger.ledgertransportswitchmodal.title',
     defaultMessage: '!!!Choose Connection Method',
+  },
+  usbExplanation: {
+    id: 'components.ledger.ledgertransportswitchmodal.usbExplanation',
+    defaultMessage:
+      '!!!Choose this option if you want to connect to a Ledger Nano model X ' +
+      'or S using an on-the-go USB cable adaptor:',
+  },
+  usbButton: {
+    id: 'components.ledger.ledgertransportswitchmodal.usbButton',
+    defaultMessage: '!!!Connect with USB',
+  },
+  usbConnectionIsBlocked: {
+    id: 'components.ledger.ledgertransportswitchmodal.usbConnectionIsBlocked',
+    defaultMessage: '!!! USB connection is blocked by iOS devices',
+  },
+  bluetoothExplanation: {
+    id: 'components.ledger.ledgertransportswitchmodal.bluetoothExplanation',
+    defaultMessage: '!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:',
+  },
+  bluetoothButton: {
+    id: 'components.ledger.ledgertransportswitchmodal.bluetoothButton',
+    defaultMessage: '!!!Connect with Bluetooth',
+  },
+  bluetoothError: {
+    id: 'global.ledgerMessages.bluetoothDisabledError',
+    defaultMessage: '!!!Connect with Bluetooth',
   },
   // TODO check this and change if necessary
 

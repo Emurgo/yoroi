@@ -1,12 +1,11 @@
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {Alert, Platform, ScrollView, StyleSheet, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
 import {Button, Spacer, Text} from '../../../../components'
-import globalMessages from '../../../../i18n/global-messages'
 import {spacing} from '../../../../theme'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../../yoroi-wallets/hw'
+import {useStrings} from '../../common/strings'
 
 type Props = {
   onSelectUSB: () => void
@@ -64,54 +63,6 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
 }
 
 export const LedgerTransportSwitch = LedgerTransportSwitchView
-
-const messages = defineMessages({
-  usbExplanation: {
-    id: 'components.ledger.ledgertransportswitchmodal.usbExplanation',
-    defaultMessage:
-      '!!!Choose this option if you want to connect to a Ledger Nano model X ' +
-      'or S using an on-the-go USB cable adaptor:',
-  },
-  usbButton: {
-    id: 'components.ledger.ledgertransportswitchmodal.usbButton',
-    defaultMessage: '!!!Connect with USB',
-  },
-  usbButtonNotSupported: {
-    id: 'components.ledger.ledgertransportswitchmodal.usbButtonNotSupported',
-    defaultMessage: '!!!Connect with USB\n(Not supported)',
-  },
-  usbConnectionIsBlocked: {
-    id: 'components.ledger.ledgertransportswitchmodal.usbConnectionIsBlocked',
-    defaultMessage: '!!! USB connection is blocked by iOS devices',
-  },
-  bluetoothExplanation: {
-    id: 'components.ledger.ledgertransportswitchmodal.bluetoothExplanation',
-    defaultMessage: '!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:',
-  },
-  bluetoothButton: {
-    id: 'components.ledger.ledgertransportswitchmodal.bluetoothButton',
-    defaultMessage: '!!!Connect with Bluetooth',
-  },
-  bluetoothError: {
-    id: 'global.ledgerMessages.bluetoothDisabledError',
-    defaultMessage: '!!!Connect with Bluetooth',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    error: intl.formatMessage(globalMessages.error),
-    usbExplanation: intl.formatMessage(messages.usbExplanation),
-    usbButton: intl.formatMessage(messages.usbButton),
-    usbButtonNotSupported: intl.formatMessage(messages.usbButtonNotSupported),
-    usbConnectionIsBlocked: intl.formatMessage(messages.usbConnectionIsBlocked),
-    bluetoothExplanation: intl.formatMessage(messages.bluetoothExplanation),
-    bluetoothButton: intl.formatMessage(messages.bluetoothButton),
-    bluetoothError: intl.formatMessage(messages.bluetoothError),
-  }
-}
 
 const styles = StyleSheet.create({
   scrollView: {

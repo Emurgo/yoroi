@@ -30,33 +30,18 @@
     }
   },
   {
-    "id": "components.ledger.ledgertransportswitchmodal.usbButtonNotSupported",
-    "defaultMessage": "!!!Connect with USB\n(Not supported)",
-    "file": "src/features/Swap/useCases/ConfirmTxScreen/LedgerTransportSwitch.tsx",
-    "start": {
-      "line": 79,
-      "column": 25,
-      "index": 2455
-    },
-    "end": {
-      "line": 82,
-      "column": 3,
-      "index": 2598
-    }
-  },
-  {
     "id": "components.ledger.ledgertransportswitchmodal.usbConnectionIsBlocked",
     "defaultMessage": "!!! USB connection is blocked by iOS devices",
     "file": "src/features/Swap/useCases/ConfirmTxScreen/LedgerTransportSwitch.tsx",
     "start": {
-      "line": 83,
+      "line": 79,
       "column": 26,
-      "index": 2626
+      "index": 2456
     },
     "end": {
-      "line": 86,
+      "line": 82,
       "column": 3,
-      "index": 2778
+      "index": 2608
     }
   },
   {
@@ -64,14 +49,14 @@
     "defaultMessage": "!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:",
     "file": "src/features/Swap/useCases/ConfirmTxScreen/LedgerTransportSwitch.tsx",
     "start": {
-      "line": 87,
+      "line": 83,
       "column": 24,
-      "index": 2804
+      "index": 2634
     },
     "end": {
-      "line": 90,
+      "line": 86,
       "column": 3,
-      "index": 2998
+      "index": 2828
     }
   },
   {
@@ -79,14 +64,14 @@
     "defaultMessage": "!!!Connect with Bluetooth",
     "file": "src/features/Swap/useCases/ConfirmTxScreen/LedgerTransportSwitch.tsx",
     "start": {
-      "line": 91,
+      "line": 87,
       "column": 19,
-      "index": 3019
+      "index": 2849
     },
     "end": {
-      "line": 94,
+      "line": 90,
       "column": 3,
-      "index": 3145
+      "index": 2975
     }
   },
   {
@@ -94,14 +79,14 @@
     "defaultMessage": "!!!Connect with Bluetooth",
     "file": "src/features/Swap/useCases/ConfirmTxScreen/LedgerTransportSwitch.tsx",
     "start": {
-      "line": 95,
+      "line": 91,
       "column": 18,
-      "index": 3165
+      "index": 2995
     },
     "end": {
-      "line": 98,
+      "line": 94,
       "column": 3,
-      "index": 3275
+      "index": 3105
     }
   }
 ]
