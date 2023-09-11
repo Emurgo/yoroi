@@ -21,9 +21,6 @@ export const DashboardNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         ...defaultStackNavigationOptions,
-        cardStyle: {
-          backgroundColor: 'transparent',
-        },
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >

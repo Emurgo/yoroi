@@ -17,6 +17,7 @@ import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
+import {useNavigateTo} from '../common/navigation'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
 const iconProps = {
@@ -170,35 +171,17 @@ const useLogout = () => {
 
 // to avoid switch jumps
 const DisableEasyConfirmationSwitch = ({easyConfirmationEnabled}: {easyConfirmationEnabled: boolean}) => {
-  const {navigation} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const [isLocalEnabled, setIsLocalEnabled] = React.useState(easyConfirmationEnabled)
   const authSetting = useAuthSetting()
-
-  const onEnableEasyConfirmation = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'enable-easy-confirmation',
-      },
-    })
-  }
-
-  const onDisableEasyConfirmation = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'disable-easy-confirmation',
-      },
-    })
-  }
+  const navigateTo = useNavigateTo()
 
   const onToggleEasyConfirmation = () => {
     setIsLocalEnabled((prevState) => {
       if (prevState) {
-        onDisableEasyConfirmation()
+        navigateTo.disableEasyConfirmation()
       } else {
-        onEnableEasyConfirmation()
+        navigateTo.enableEasyConfirmation()
       }
 
       return !prevState
@@ -308,10 +291,10 @@ const useStrings = () => {
 const styles = StyleSheet.create({
   root: {
     height: '100%',
+    backgroundColor: '#fff',
   },
   settings: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
   },
 })

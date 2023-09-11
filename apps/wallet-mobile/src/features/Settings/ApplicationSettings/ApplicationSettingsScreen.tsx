@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
@@ -7,11 +6,11 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Icon, Spacer, StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
 import {CONFIG} from '../../../legacy/config'
-import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
 import {lightPalette} from '../../../theme'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
+import {useNavigateTo} from '../common/navigation'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
@@ -27,25 +26,19 @@ export const ApplicationSettingsScreen = () => {
 
   const {isTogglePrivacyModeLoading, isPrivacyOff} = usePrivacyMode()
 
-  const walletNavigation = useWalletNavigation()
   const {currency} = useCurrencyContext()
-  const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const {enabled: crashReportEnabled} = useCrashReports()
 
   const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
-  const {authWithOs} = useAuthWithOs({onSuccess: () => walletNavigation.navigation.navigate('enable-login-with-pin')})
+  const navigateTo = useNavigateTo()
+  const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
       authWithOs()
     } else {
-      walletNavigation.navigation.navigate('app-root', {
-        screen: 'settings',
-        params: {
-          screen: 'enable-login-with-os',
-        },
-      })
+      navigateTo.enableLoginWithOs()
     }
   }
 
@@ -58,7 +51,7 @@ export const ApplicationSettingsScreen = () => {
           <NavigatedSettingsItem
             icon={<Icon.Globe {...iconProps} />}
             label={strings.selectLanguage}
-            onNavigate={() => settingsNavigation.navigate('change-language')}
+            onNavigate={navigateTo.changeLanguage}
             selected={language.label}
           />
 
@@ -66,31 +59,31 @@ export const ApplicationSettingsScreen = () => {
             icon={<Icon.Coins {...iconProps} />}
             label={strings.selectFiatCurrency}
             selected={currency}
-            onNavigate={() => settingsNavigation.navigate('change-currency')}
+            onNavigate={navigateTo.changeCurrency}
           />
 
           <NavigatedSettingsItem
             icon={<Icon.Info {...iconProps} />}
             label={strings.about}
-            onNavigate={() => settingsNavigation.navigate('about')}
+            onNavigate={navigateTo.about}
           />
 
           <NavigatedSettingsItem
             icon={<Icon.TermsOfUse {...iconProps} />}
             label={strings.termsOfservice}
-            onNavigate={() => settingsNavigation.navigate('terms-of-use')}
+            onNavigate={navigateTo.termsOfUse}
           />
 
           <NavigatedSettingsItem
             icon={<Icon.TermsOfUse {...iconProps} />}
             label={strings.privacyPolicy}
-            onNavigate={() => settingsNavigation.navigate('privacy-policy')}
+            onNavigate={navigateTo.privacyPolicy}
           />
 
           <NavigatedSettingsItem
             icon={<Icon.Analytics {...iconProps} />}
             label={strings.analytics}
-            onNavigate={() => walletNavigation.navigateToAnalyticsSettings()}
+            onNavigate={navigateTo.analytics}
           />
         </SettingsSection>
 
@@ -101,7 +94,7 @@ export const ApplicationSettingsScreen = () => {
             disabled={authSetting === 'os'}
             icon={<Icon.Pin {...iconProps} />}
             label={strings.changePin}
-            onNavigate={() => settingsNavigation.navigate('change-custom-pin')}
+            onNavigate={navigateTo.changeCustomPin}
           />
 
           <SettingsItem
@@ -268,10 +261,10 @@ const messages = defineMessages({
 const styles = StyleSheet.create({
   root: {
     height: '100%',
+    backgroundColor: '#fff',
   },
   settings: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
   },
 })
