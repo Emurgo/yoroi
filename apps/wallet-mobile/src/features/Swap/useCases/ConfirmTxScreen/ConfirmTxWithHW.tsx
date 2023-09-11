@@ -1,4 +1,5 @@
 import React from 'react'
+import {ScrollView} from 'react-native'
 
 import {Boundary, TwoActionView} from '../../../../components'
 import {TransferSummary} from '../../../../Dashboard/WithdrawStakingRewards/TransferSummary'
@@ -8,12 +9,13 @@ import {useSignWithHwAndSubmitTx} from '../../../../yoroi-wallets/hooks'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {walletManager} from '../../../../yoroi-wallets/walletManager'
+import {useStrings} from '../../common/strings'
 import {LedgerTransportSwitch} from './LedgerTransportSwitch'
 
 type Props = {
   wallet: YoroiWallet
   unsignedTx: YoroiUnsignedTx
-  onCancel: () => void
+  onCancel?: () => void
   onSuccess: () => void
 }
 
@@ -49,7 +51,9 @@ export const ConfirmTxWithHW = (props: Props) => {
       </Route>
 
       <Route active={step === 'connect-transport'}>
-        <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} />
+        <ScrollView>
+          <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} />
+        </ScrollView>
       </Route>
 
       <Route active={step === 'confirm'}>
@@ -61,13 +65,8 @@ export const ConfirmTxWithHW = (props: Props) => {
   )
 }
 
-const Confirm = ({
-  wallet,
-  onSuccess,
-  onCancel,
-  unsignedTx,
-  transport: transportType,
-}: Props & {transport: TransportType}) => {
+const Confirm = ({wallet, onSuccess, unsignedTx, transport: transportType}: Props & {transport: TransportType}) => {
+  const strings = useStrings()
   const {signAndSubmitTx, isLoading} = useSignWithHwAndSubmitTx(
     {wallet}, //
     {signTx: {onSuccess}},
@@ -75,15 +74,11 @@ const Confirm = ({
 
   return (
     <TwoActionView
-      title="Test COnfirmTX"
+      title={strings.confirm}
       primaryButton={{
         disabled: isLoading,
-        label: 'COnfirmTTT',
+        label: strings.confirm,
         onPress: () => signAndSubmitTx({unsignedTx, useUSB: transportType === 'USB'}),
-      }}
-      secondaryButton={{
-        disabled: isLoading,
-        onPress: () => onCancel(),
       }}
     >
       <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />

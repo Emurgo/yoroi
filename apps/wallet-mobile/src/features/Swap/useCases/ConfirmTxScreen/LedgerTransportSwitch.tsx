@@ -81,5 +81,6 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     flex: 1,
     width: '100%',
+    color: '#6B7384',
   },
 })
