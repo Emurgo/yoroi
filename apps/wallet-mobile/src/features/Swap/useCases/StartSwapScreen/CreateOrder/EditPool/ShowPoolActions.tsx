@@ -1,17 +1,12 @@
 import {useSwap} from '@yoroi/swap'
 import React from 'react'
-import {View} from 'react-native'
+import {Text, TouchableOpacity, View} from 'react-native'
 
+import {ExpandableInfoCard, HeaderWrapper, HiddenInfoWrapper, MainInfoWrapper} from '../../../../../../components'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../../common/navigation'
-import {
-  BottomSheetState,
-  ExpandableInfoCard,
-  HiddenInfoWrapper,
-  MainInfoWrapper,
-} from '../../../../common/SelectPool/ExpendableCard/ExpandableInfoCard'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../TouchedContext'
 
@@ -24,11 +19,6 @@ export const ShowPoolActions = () => {
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const tokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
-  const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
-    openId: null,
-    title: '',
-    content: '',
-  })
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
   if (!isBuyTouched || !isSellTouched || selectedPool === undefined) {
@@ -40,32 +30,47 @@ export const ShowPoolActions = () => {
   const poolFee = Quantities.format(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
 
   const id = selectedPool.poolId
+  const extended = id === hiddenInfoOpenId
 
   return (
     <ExpandableInfoCard
-      id={id}
       key={id}
-      bottomSheetState={bottomSheetState}
-      setBottomSheetState={setBottomSheetState}
-      setHiddenInfoOpenId={setHiddenInfoOpenId}
-      hiddenInfoOpenId={hiddenInfoOpenId}
-      label={`${protocolCapitalize} (auto)`}
-      mainInfo={<MainInfo totalAmount={totalAmount} tokenName={tokenName} />}
-      navigateTo={navigateTo.selectPool}
-      hiddenInfo={<HiddenInfo id={id} poolFee={poolFee} setBottomSheetState={setBottomSheetState} />}
-    />
+      header={
+        <Header
+          onPressArow={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
+          onPressLabel={navigateTo.selectPool}
+          extended={extended}
+        >
+          <Text>{`${protocolCapitalize} (auto)`}</Text>
+        </Header>
+      }
+      adornment={<HiddenInfo poolFee={poolFee} />}
+      extended={extended}
+    >
+      <MainInfo totalAmount={totalAmount} tokenName={tokenName} />
+    </ExpandableInfoCard>
   )
 }
 
-const HiddenInfo = ({
-  id,
-  poolFee,
-  setBottomSheetState,
+const Header = ({
+  children,
+  extended,
+  onPressArow,
+  onPressLabel,
 }: {
-  id: string
-  poolFee: string
-  setBottomSheetState: (state: BottomSheetState) => void
+  children: React.ReactNode
+  extended: boolean
+  onPressArow: () => void
+  onPressLabel: () => void
 }) => {
+  return (
+    <HeaderWrapper extended={extended} onPress={onPressArow}>
+      <TouchableOpacity onPress={onPressLabel}>{children}</TouchableOpacity>
+    </HeaderWrapper>
+  )
+}
+
+const HiddenInfo = ({poolFee}: {poolFee: string}) => {
   const strings = useStrings()
   return (
     <View>
@@ -86,19 +91,7 @@ const HiddenInfo = ({
           info: strings.swapFees,
         },
       ].map((item) => (
-        <HiddenInfoWrapper
-          key={item.label}
-          value={item.value}
-          label={item.label}
-          info={item.info}
-          onPress={() => {
-            setBottomSheetState({
-              openId: id,
-              title: item.label,
-              content: item.info,
-            })
-          }}
-        />
+        <HiddenInfoWrapper key={item.label} value={item.value} label={item.label} info={item.info} />
       ))}
     </View>
   )

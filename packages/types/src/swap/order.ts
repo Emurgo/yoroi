@@ -37,11 +37,7 @@ export type SwapOpenOrder = {
 }
 
 export type SwapCompletedOrder = {
-  provider: SwapPoolPair['provider']
   from: BalanceAmount
   to: BalanceAmount
-  deposit: BalanceAmount
   utxo: string
 }
-
-export type SwapOrder = SwapOpenOrder | SwapCompletedOrder
