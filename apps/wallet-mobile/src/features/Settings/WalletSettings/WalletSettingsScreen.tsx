@@ -26,33 +26,15 @@ const iconProps = {
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const {navigation, resetToWalletSelection} = useWalletNavigation()
+  const {resetToWalletSelection} = useWalletNavigation()
   const wallet = useSelectedWallet()
-  const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
   const authSetting = useAuthSetting()
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
+  const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
 
   const onSwitchWallet = () => {
     resetToWalletSelection()
-  }
-
-  const onEnableEasyConfirmation = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'enable-easy-confirmation',
-      },
-    })
-  }
-
-  const onDisableEasyConfirmation = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'disable-easy-confirmation',
-      },
-    })
   }
 
   return (
@@ -89,11 +71,7 @@ export const WalletSettingsScreen = () => {
           label={strings.easyConfirmation}
           disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
         >
-          <Switch
-            value={easyConfirmationEnabled}
-            onValueChange={easyConfirmationEnabled ? onDisableEasyConfirmation : onEnableEasyConfirmation}
-            disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
-          />
+          <DisableEasyConfirmationSwitch easyConfirmationEnabled={easyConfirmationEnabled} />
         </SettingsItem>
       </SettingsSection>
 
@@ -183,6 +161,52 @@ const useLogout = () => {
       })
     }
   }
+}
+
+// to avoid switch jumps
+const DisableEasyConfirmationSwitch = ({easyConfirmationEnabled}: {easyConfirmationEnabled: boolean}) => {
+  const {navigation} = useWalletNavigation()
+  const wallet = useSelectedWallet()
+  const [isLocalEnabled, setIsLocalEnabled] = React.useState(easyConfirmationEnabled)
+  const authSetting = useAuthSetting()
+
+  const onEnableEasyConfirmation = () => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'enable-easy-confirmation',
+      },
+    })
+  }
+
+  const onDisableEasyConfirmation = () => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'disable-easy-confirmation',
+      },
+    })
+  }
+
+  const onToggleEasyConfirmation = () => {
+    setIsLocalEnabled((prevState) => {
+      if (prevState === true) {
+        onDisableEasyConfirmation()
+      } else {
+        onEnableEasyConfirmation()
+      }
+
+      return !prevState
+    })
+  }
+
+  return (
+    <Switch
+      value={isLocalEnabled}
+      onValueChange={onToggleEasyConfirmation}
+      disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
+    />
+  )
 }
 
 const messages = defineMessages({

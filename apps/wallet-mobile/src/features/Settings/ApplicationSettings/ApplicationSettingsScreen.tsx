@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -25,11 +25,12 @@ export const ApplicationSettingsScreen = () => {
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? supportedLanguages['en-US']
 
-  const {isTogglePrivacyModeLoading} = usePrivacyMode()
+  const {isTogglePrivacyModeLoading, isPrivacyOff} = usePrivacyMode()
 
   const walletNavigation = useWalletNavigation()
   const {currency} = useCurrencyContext()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
+  const {enabled} = useCrashReports()
 
   const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
@@ -108,7 +109,7 @@ export const ApplicationSettingsScreen = () => {
             label={strings.privacyMode}
             info={strings.privacyModeInfo}
           >
-            <PrivacyModeSwitch />
+            <PrivacyModeSwitch isPrivacyOff={isPrivacyOff} />
           </SettingsItem>
 
           <SettingsItem
@@ -129,7 +130,7 @@ export const ApplicationSettingsScreen = () => {
             label={strings.crashReporting}
             info={strings.crashReportingInfo}
           >
-            <CrashReportsSwitch />
+            <CrashReportsSwitch enabled={enabled} />
           </SettingsItem>
         </SettingsSection>
       </ScrollView>
@@ -138,8 +139,8 @@ export const ApplicationSettingsScreen = () => {
 }
 
 // to avoid switch jumps
-const PrivacyModeSwitch = () => {
-  const {setPrivacyModeOn, setPrivacyModeOff, isTogglePrivacyModeLoading, isPrivacyOff} = usePrivacyMode()
+const PrivacyModeSwitch = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
+  const {setPrivacyModeOn, setPrivacyModeOff, isTogglePrivacyModeLoading} = usePrivacyMode()
   const [isLocalPrivacyOff, setIsLocalPrivacyOff] = React.useState(isPrivacyOff)
 
   const onTogglePrivacyMode = () => {
@@ -154,30 +155,25 @@ const PrivacyModeSwitch = () => {
     })
   }
 
-  React.useEffect(() => {
-    setIsLocalPrivacyOff(isPrivacyOff)
-  }, [isPrivacyOff])
-
   return <Switch value={isLocalPrivacyOff} onValueChange={onTogglePrivacyMode} disabled={isTogglePrivacyModeLoading} />
 }
 
-const CrashReportsSwitch = () => {
-  const {enabled, enable, disable} = useCrashReports()
-  const [isLocalEnabled, setIsLocalEnabled] = useState(enabled)
+// to avoid switch jumps
+const CrashReportsSwitch = ({enabled}: {enabled: boolean}) => {
+  const {enable, disable} = useCrashReports()
+  const [isLocalEnabled, setIsLocalEnabled] = React.useState(enabled)
 
-  const onToggleCrashReports = (newEnabled: boolean) => {
-    if (newEnabled) {
-      enable()
-    } else {
-      disable()
-    }
+  const onToggleCrashReports = () => {
+    setIsLocalEnabled((prevState) => {
+      if (prevState === true) {
+        enable()
+      } else {
+        disable()
+      }
 
-    setIsLocalEnabled(newEnabled)
+      return !prevState
+    })
   }
-
-  useEffect(() => {
-    setIsLocalEnabled(enabled)
-  }, [enabled, setIsLocalEnabled])
 
   return <Switch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={CONFIG.FORCE_CRASH_REPORTS} />
 }
