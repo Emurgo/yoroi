@@ -3,6 +3,7 @@ import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '../../../auth/AuthProvider'
 import {Icon, Spacer, StatusBar} from '../../../components'
@@ -38,68 +39,70 @@ export const WalletSettingsScreen = () => {
   }
 
   return (
-    <ScrollView bounces={false} style={styles.settings}>
-      <StatusBar type="dark" />
+    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
+      <ScrollView bounces={false} style={styles.settings}>
+        <StatusBar type="dark" />
 
-      <SettingsSection title={strings.general}>
-        <NavigatedSettingsItem
-          icon={<Icon.WalletStack {...iconProps} />}
-          label={strings.switchWallet}
-          onNavigate={onSwitchWallet}
-        />
+        <SettingsSection title={strings.general}>
+          <NavigatedSettingsItem
+            icon={<Icon.WalletStack {...iconProps} />}
+            label={strings.switchWallet}
+            onNavigate={onSwitchWallet}
+          />
 
-        <NavigatedSettingsItem icon={<Icon.Logout {...iconProps} />} label={strings.logout} onNavigate={logout} />
+          <NavigatedSettingsItem icon={<Icon.Logout {...iconProps} />} label={strings.logout} onNavigate={logout} />
 
-        <NavigatedSettingsItem
-          icon={<Icon.Wallet {...iconProps} />}
-          label={strings.walletName}
-          onNavigate={() => settingsNavigation.navigate('change-wallet-name')}
-        />
-      </SettingsSection>
+          <NavigatedSettingsItem
+            icon={<Icon.Wallet {...iconProps} />}
+            label={strings.walletName}
+            onNavigate={() => settingsNavigation.navigate('change-wallet-name')}
+          />
+        </SettingsSection>
 
-      <Spacer height={24} />
+        <Spacer height={24} />
 
-      <SettingsSection title={strings.security}>
-        <NavigatedSettingsItem
-          icon={<Icon.Lock {...iconProps} />}
-          label={strings.changePassword}
-          onNavigate={() => settingsNavigation.navigate('change-password')}
-        />
+        <SettingsSection title={strings.security}>
+          <NavigatedSettingsItem
+            icon={<Icon.Lock {...iconProps} />}
+            label={strings.changePassword}
+            onNavigate={() => settingsNavigation.navigate('change-password')}
+          />
 
-        <SettingsItem
-          icon={<Icon.Bio {...iconProps} />}
-          label={strings.easyConfirmation}
-          disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
-        >
-          <DisableEasyConfirmationSwitch easyConfirmationEnabled={easyConfirmationEnabled} />
-        </SettingsItem>
-      </SettingsSection>
+          <SettingsItem
+            icon={<Icon.Bio {...iconProps} />}
+            label={strings.easyConfirmation}
+            disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
+          >
+            <DisableEasyConfirmationSwitch easyConfirmationEnabled={easyConfirmationEnabled} />
+          </SettingsItem>
+        </SettingsSection>
 
-      <Spacer height={24} />
+        <Spacer height={24} />
 
-      <SettingsSection title={strings.actions}>
-        <NavigatedSettingsItem
-          icon={<Icon.CrossCircle {...iconProps} />}
-          label={strings.removeWallet}
-          onNavigate={() => settingsNavigation.navigate('remove-wallet')}
-        />
+        <SettingsSection title={strings.actions}>
+          <NavigatedSettingsItem
+            icon={<Icon.CrossCircle {...iconProps} />}
+            label={strings.removeWallet}
+            onNavigate={() => settingsNavigation.navigate('remove-wallet')}
+          />
 
-        <ResyncButton />
-      </SettingsSection>
+          <ResyncButton />
+        </SettingsSection>
 
-      <Spacer height={24} />
+        <Spacer height={24} />
 
-      <SettingsSection title={strings.about}>
-        <SettingsBuildItem label={strings.network} value={getNetworkName(wallet.networkId)} />
+        <SettingsSection title={strings.about}>
+          <SettingsBuildItem label={strings.network} value={getNetworkName(wallet.networkId)} />
 
-        <SettingsBuildItem
-          label={strings.walletType}
-          value={intl.formatMessage(getWalletType(wallet.walletImplementationId))}
-        />
-      </SettingsSection>
+          <SettingsBuildItem
+            label={strings.walletType}
+            value={intl.formatMessage(getWalletType(wallet.walletImplementationId))}
+          />
+        </SettingsSection>
 
-      <Spacer height={24} />
-    </ScrollView>
+        <Spacer height={24} />
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
@@ -303,6 +306,9 @@ const useStrings = () => {
 }
 
 const styles = StyleSheet.create({
+  root: {
+    height: '100%',
+  },
   settings: {
     flex: 1,
     padding: 16,
