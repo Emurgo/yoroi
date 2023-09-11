@@ -2,8 +2,6 @@ import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {NumberLocale} from '../../i18n/languages'
-import {useSelectedWallet} from '../../SelectedWallet'
-import {useReceiveAddresses} from '../hooks'
 import {RawUtxo, TokenId, YoroiEntries, YoroiEntry} from '../types'
 
 export const Entries = {
