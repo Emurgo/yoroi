@@ -290,7 +290,7 @@ const useStrings = () => {
 
 const styles = StyleSheet.create({
   root: {
-    height: '100%',
+    flex: 1,
     backgroundColor: '#fff',
   },
   settings: {
