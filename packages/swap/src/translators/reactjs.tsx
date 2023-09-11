@@ -173,7 +173,7 @@ export const useCreateOrder = (
 }
 
 export const useOrderByStatusCompleted = (
-  options: UseQueryOptions<Swap.OpenOrder[], Error>,
+  options: UseQueryOptions<Swap.CompletedOrder[], Error>,
 ) => {
   const {order} = useSwap()
   const query = useQuery({

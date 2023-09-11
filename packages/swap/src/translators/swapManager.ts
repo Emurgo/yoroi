@@ -5,14 +5,21 @@ export const makeSwapManager = (
   swapApi: Swap.Api,
 ): Readonly<Swap.Manager> => {
   const {clear: clearStorage, slippage} = swapStorage
-  const {getPoolPairs, getOrders, getTokens, cancelOrder, createOrder} = swapApi
+  const {
+    getPoolPairs,
+    getOrders,
+    getCompletedOrders,
+    getTokens,
+    cancelOrder,
+    createOrder,
+  } = swapApi
 
   const order = {
     cancel: cancelOrder,
     create: createOrder,
     list: {
       byStatusOpen: getOrders,
-      byStatusCompleted: getOrders,
+      byStatusCompleted: getCompletedOrders,
     } as const,
   }
 
