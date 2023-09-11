@@ -35,7 +35,12 @@ export const DisableEasyConfirmationScreen = () => {
       </View>
 
       <View style={styles.actions}>
-        <Button title={strings.disableButton} onPress={() => disableEasyConfirmation()} disabled={isLoading} />
+        <Button
+          title={strings.disableButton}
+          onPress={() => disableEasyConfirmation()}
+          disabled={isLoading}
+          shelleyTheme
+        />
       </View>
 
       <LoadingOverlay loading={isLoading} />
