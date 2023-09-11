@@ -1,37 +1,35 @@
-import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
 
 import {useAuth} from '../../../auth/AuthProvider'
-import {Icon, Spacer, StatusBar} from '../../../components'
+import {StatusBar} from '../../../components'
 import {DIALOG_BUTTONS, showConfirmationDialog} from '../../../dialogs'
 import {confirmationMessages} from '../../../i18n/global-messages'
-import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
+import {
+  NavigatedSettingsItem,
+  PressableSettingsItem,
+  SettingsBuildItem,
+  SettingsItem,
+  SettingsSection,
+} from '../../../legacy/SettingItems'
+import {useWalletNavigation} from '../../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../SelectedWallet'
-import {lightPalette} from '../../../theme'
 import {useAuthSetting} from '../../../yoroi-wallets/auth'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
-import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
+import {useEasyConfirmationEnabled, useResync, useWalletName} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
-import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
-
-const iconProps = {
-  color: lightPalette.gray['600'],
-  size: 23,
-}
 
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const {navigation, resetToWalletSelection} = useWalletNavigation()
   const wallet = useSelectedWallet()
+  const walletName = useWalletName(wallet)
   const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
   const authSetting = useAuthSetting()
-  const logout = useLogout()
-  const settingsNavigation = useNavigation<SettingsRouteNavigation>()
 
   const onSwitchWallet = () => {
     resetToWalletSelection()
@@ -56,36 +54,27 @@ export const WalletSettingsScreen = () => {
   }
 
   return (
-    <ScrollView bounces={false} style={styles.settings}>
+    <ScrollView bounces={false} style={styles.scrollView}>
       <StatusBar type="dark" />
 
-      <SettingsSection title={strings.general}>
-        <NavigatedSettingsItem
-          icon={<Icon.WalletStack {...iconProps} />}
-          label={strings.switchWallet}
-          onNavigate={onSwitchWallet}
-        />
+      <SettingsSection>
+        <PressableSettingsItem label={strings.switchWallet} onPress={onSwitchWallet} />
 
-        <NavigatedSettingsItem icon={<Icon.Logout {...iconProps} />} label={strings.logout} onNavigate={logout} />
-
-        <NavigatedSettingsItem
-          icon={<Icon.Wallet {...iconProps} />}
-          label={strings.walletName}
-          onNavigate={() => settingsNavigation.navigate('change-wallet-name')}
-        />
+        <LogoutButton />
       </SettingsSection>
 
-      <Spacer height={24} />
+      <SettingsSection title={strings.walletName}>
+        <NavigatedSettingsItem label={walletName ?? ''} navigateTo="change-wallet-name" />
+      </SettingsSection>
 
       <SettingsSection title={strings.security}>
         <NavigatedSettingsItem
-          icon={<Icon.Lock {...iconProps} />}
           label={strings.changePassword}
-          onNavigate={() => settingsNavigation.navigate('change-password')}
+          navigateTo="change-password"
+          disabled={wallet.isHW || wallet.isReadOnly}
         />
 
         <SettingsItem
-          icon={<Icon.Bio {...iconProps} />}
           label={strings.easyConfirmation}
           disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
         >
@@ -97,19 +86,11 @@ export const WalletSettingsScreen = () => {
         </SettingsItem>
       </SettingsSection>
 
-      <Spacer height={24} />
-
-      <SettingsSection title={strings.actions}>
-        <NavigatedSettingsItem
-          icon={<Icon.CrossCircle {...iconProps} />}
-          label={strings.removeWallet}
-          onNavigate={() => settingsNavigation.navigate('remove-wallet')}
-        />
+      <SettingsSection>
+        <NavigatedSettingsItem label={strings.removeWallet} navigateTo="remove-wallet" />
 
         <ResyncButton />
       </SettingsSection>
-
-      <Spacer height={24} />
 
       <SettingsSection title={strings.about}>
         <SettingsBuildItem label={strings.network} value={getNetworkName(wallet.networkId)} />
@@ -140,6 +121,13 @@ const getWalletType = (implementationId: WalletImplementationId): MessageDescrip
   return messages.unknownWalletType
 }
 
+const LogoutButton = () => {
+  const strings = useStrings()
+  const logout = useLogout()
+
+  return <PressableSettingsItem label={strings.logout} onPress={logout} />
+}
+
 const ResyncButton = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
@@ -156,14 +144,7 @@ const ResyncButton = () => {
     }
   }
 
-  return (
-    <NavigatedSettingsItem
-      icon={<Icon.Resync {...iconProps} />}
-      label={strings.resync}
-      onNavigate={onResync}
-      disabled={isLoading}
-    />
-  )
+  return <PressableSettingsItem label={strings.resync} onPress={onResync} disabled={isLoading} />
 }
 
 const useLogout = () => {
@@ -186,14 +167,6 @@ const useLogout = () => {
 }
 
 const messages = defineMessages({
-  general: {
-    id: 'components.settings.walletsettingscreen.general',
-    defaultMessage: '!!!General',
-  },
-  actions: {
-    id: 'components.settings.walletsettingscreen.actions',
-    defaultMessage: '!!!Actions',
-  },
   switchWallet: {
     id: 'components.settings.walletsettingscreen.switchWallet',
     defaultMessage: '!!!Switch wallet',
@@ -257,8 +230,6 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    general: intl.formatMessage(messages.general),
-    actions: intl.formatMessage(messages.actions),
     switchWallet: intl.formatMessage(messages.switchWallet),
     logout: intl.formatMessage(messages.logout),
     walletName: intl.formatMessage(messages.walletName),
@@ -277,9 +248,7 @@ const useStrings = () => {
 }
 
 const styles = StyleSheet.create({
-  settings: {
-    flex: 1,
-    paddingTop: 16,
+  scrollView: {
     backgroundColor: '#fff',
   },
 })

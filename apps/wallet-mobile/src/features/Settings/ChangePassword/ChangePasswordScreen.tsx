@@ -95,6 +95,7 @@ export const ChangePasswordScreen = () => {
           onPress={() => changePassword({currentPassword, newPassword})}
           disabled={hasErrors}
           title={strings.continueButton}
+          shelleyTheme
         />
       </Actions>
     </SafeAreaView>

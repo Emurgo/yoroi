@@ -32,6 +32,8 @@ export const RemoveWalletScreen = () => {
         <Description>
           {!wallet.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
 
+          <Spacer height={24} />
+
           <Text style={styles.description}>{strings.descriptionParagraph2}</Text>
         </Description>
 
@@ -40,14 +42,13 @@ export const RemoveWalletScreen = () => {
         <WalletInfo>
           <Text style={styles.walletNameLabel}>{strings.walletName}</Text>
 
-          <Spacer height={8} />
+          <Spacer height={10} />
 
           <Text style={styles.walletName}>{walletName}</Text>
 
           <Spacer height={24} />
 
           <WalletNameInput
-            label={strings.walletNameInput}
             value={typedWalletName}
             onChangeText={setTypedWalletName}
             right={typedWalletName === walletName ? <Checkmark /> : undefined}
@@ -65,9 +66,17 @@ export const RemoveWalletScreen = () => {
           />
         )}
 
-        <Spacer height={16} />
+        <Spacer height={30} />
 
-        <Button onPress={() => removeWallet()} title={strings.remove} style={styles.removeButton} disabled={disabled} />
+        <View style={{paddingHorizontal: 16, paddingBottom: 36}}>
+          <Button
+            onPress={() => removeWallet()}
+            title={strings.remove}
+            style={styles.removeButton}
+            disabled={disabled}
+            block
+          />
+        </View>
       </Actions>
     </SafeAreaView>
   )
@@ -89,8 +98,7 @@ const Actions = (props) => {
 const messages = defineMessages({
   descriptionParagraph1: {
     id: 'components.settings.removewalletscreen.descriptionParagraph1',
-    defaultMessage:
-      '!!!If you really wish to permanently delete the wallet make sure you have written down the mnemonic.',
+    defaultMessage: '!!!If you wish to permanently delete the wallet make sure you have written down the mnemonic.',
   },
   descriptionParagraph2: {
     id: 'components.settings.removewalletscreen.descriptionParagraph2',
@@ -145,14 +153,14 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     lineHeight: 24,
-    textAlign: 'center',
   },
 
   walletNameLabel: {
     fontSize: 16,
+    fontFamily: 'Rubik',
+    fontWeight: '500',
   },
   walletName: {
-    color: COLORS.DISABLED,
     fontSize: 16,
   },
 
