@@ -190,7 +190,7 @@ const DisableEasyConfirmationSwitch = ({easyConfirmationEnabled}: {easyConfirmat
 
   const onToggleEasyConfirmation = () => {
     setIsLocalEnabled((prevState) => {
-      if (prevState === true) {
+      if (prevState) {
         onDisableEasyConfirmation()
       } else {
         onEnableEasyConfirmation()

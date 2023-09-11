@@ -145,7 +145,7 @@ const PrivacyModeSwitch = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
 
   const onTogglePrivacyMode = () => {
     setIsLocalPrivacyOff((prevState) => {
-      if (prevState === true) {
+      if (prevState) {
         setPrivacyModeOn()
       } else {
         setPrivacyModeOff()
@@ -165,7 +165,7 @@ const CrashReportsSwitch = ({enabled}: {enabled: boolean}) => {
 
   const onToggleCrashReports = () => {
     setIsLocalEnabled((prevState) => {
-      if (prevState === true) {
+      if (prevState) {
         enable()
       } else {
         disable()
