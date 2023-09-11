@@ -6,7 +6,7 @@ import {StyleSheet, View} from 'react-native'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
-import {SwapFormProvider} from '../TouchedContext'
+import {SwapFormProvider} from '../../../../common/SwapFormProvider'
 import {ShowTokenActions} from './ShowTokenActions'
 
 storiesOf('Swap Switch or Clear', module).add('initial', () => {

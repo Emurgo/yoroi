@@ -26,6 +26,7 @@ export const useStrings = () => {
     assetsIn: intl.formatMessage(messages.assetsIn),
     defaultSlippage: intl.formatMessage(messages.defaultSlippage),
     slippageInfo: intl.formatMessage(messages.slippageInfo),
+    autoPool: intl.formatMessage(messages.autoPool),
     swapMinAda: intl.formatMessage(messages.swapMinAda),
     swapMinAdaTitle: intl.formatMessage(messages.swapMinAdaTitle),
     swapMinReceived: intl.formatMessage(messages.swapMinReceived),
@@ -165,6 +166,10 @@ export const messages = defineMessages({
   slippageInfo: {
     id: 'swap.swapScreen.slippageInfo',
     defaultMessage: '!!!Slippage tolerance is set as a percentage of the total swap value.',
+  },
+  autoPool: {
+    id: 'swap.swapScreen.autoPool',
+    defaultMessage: '!!!(auto)',
   },
   swapMinAda: {
     id: 'swap.swapScreen.swapMinAda',

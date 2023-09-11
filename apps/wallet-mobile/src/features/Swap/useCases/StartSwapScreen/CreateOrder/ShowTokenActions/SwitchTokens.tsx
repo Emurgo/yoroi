@@ -3,7 +3,7 @@ import React from 'react'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon} from '../../../../../../components/Icon'
-import {useSwapTouched} from '../TouchedContext'
+import {useSwapTouched} from '../../../../common/SwapFormProvider'
 
 export const SwitchTokens = () => {
   const {switchTokens} = useSwap()
