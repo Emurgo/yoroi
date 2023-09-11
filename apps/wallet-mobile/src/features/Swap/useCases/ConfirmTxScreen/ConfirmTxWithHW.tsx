@@ -8,7 +8,6 @@ import {useSignWithHwAndSubmitTx} from '../../../../yoroi-wallets/hooks'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {walletManager} from '../../../../yoroi-wallets/walletManager'
-import {useStrings} from '../../common/strings'
 import {LedgerTransportSwitch} from './LedgerTransportSwitch'
 
 type Props = {
@@ -93,13 +92,3 @@ const Confirm = ({
 }
 
 const Route = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
-
-// const useStrings = () => {
-//   const intl = useIntl()
-
-//   return {
-//     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
-//     confirmTx: intl.formatMessage(txLabels.confirmTx),
-//     password: intl.formatMessage(txLabels.password),
-//   }
-// }

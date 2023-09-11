@@ -1,3 +1,4 @@
+import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -6,37 +7,47 @@ import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {BottomSheetModal} from '../../../../components/BottomSheetModal'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
+import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useStrings} from '../../common/strings'
 
-type FeeInfoType = {
-  label: string
-  value: string
-  info: string
-}
-
-type TokenInfo = {
-  id: string
-  quantity: string
-  name?: string
-  decimals?: number
-}
-
-type TransactionSummaryProps = {
-  feesInfo: FeeInfoType[]
-  buyToken: TokenInfo
-  sellToken: TokenInfo
-}
-
-export const TransactionSummary = ({feesInfo, buyToken, sellToken}: TransactionSummaryProps) => {
+export const TransactionSummary = () => {
   const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
     isOpen: false,
     title: '',
     content: '',
   })
-  const label = `${Quantities.format(buyToken.quantity, buyToken.decimals ?? 0)} ${buyToken.name}`
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const {createOrder, unsignedTx} = useSwap()
+  const {amounts} = createOrder
+
+  const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
+  const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
+  const label = `${Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)} ${tokenToBuyName}`
+
+  const poolFee = Quantities.denominated(
+    `${Number(Object.values(unsignedTx?.fee))}`,
+    Number(wallet.primaryTokenInfo.decimals),
+  )
+
+  const feesInfo = [
+    {
+      label: strings.swapMinAdaTitle,
+      value: '2 ADA',
+      info: strings.swapMinAda,
+    },
+    {
+      label: strings.swapMinReceivedTitle,
+      value: '?', // TODO add real value
+      info: strings.swapMinReceived,
+    },
+    {
+      label: strings.swapFeesTitle,
+      value: `${poolFee} ADA`,
+      info: strings.swapFees,
+    },
+  ]
 
   return (
     <View>
@@ -89,13 +100,13 @@ export const TransactionSummary = ({feesInfo, buyToken, sellToken}: TransactionS
 
         <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
 
-        <AmountItem wallet={wallet} amount={{tokenId: sellToken.id, quantity: sellToken.quantity}} />
+        <AmountItem wallet={wallet} amount={{tokenId: amounts.sell.tokenId, quantity: amounts.sell.quantity}} />
 
         <Spacer height={16} />
 
         <Text style={styles.amountItemLabel}>{strings.swapTo}</Text>
 
-        <AmountItem wallet={wallet} amount={{tokenId: buyToken.id, quantity: buyToken.quantity}} />
+        <AmountItem wallet={wallet} amount={{tokenId: amounts.buy.tokenId, quantity: amounts.buy.quantity}} />
       </View>
 
       <BottomSheetModal

@@ -10,8 +10,7 @@ import {useWalletNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
-import {useSignAndSubmitTx, useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../yoroi-wallets/utils'
+import {useSignAndSubmitTx} from '../../../../yoroi-wallets/hooks'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
@@ -24,17 +23,9 @@ export const ConfirmTxScreen = () => {
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
 
-  const {createOrder, unsignedTx} = useSwap()
-  const {amounts} = createOrder
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
-  const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
+  const {unsignedTx} = useSwap()
 
   const {resetToTxHistory} = useWalletNavigation()
-
-  const poolFee = Quantities.denominated(
-    `${Number(Object.values(unsignedTx?.fee))}`,
-    Number(wallet.primaryTokenInfo.decimals),
-  )
 
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
     {id: wallet.id},
@@ -56,39 +47,9 @@ export const ConfirmTxScreen = () => {
 
   const txIsLoading = authenticating || processingTx
 
-  const orderInfo = [
-    {
-      label: strings.swapMinAdaTitle,
-      value: '2 ADA',
-      info: strings.swapMinAda,
-    },
-    {
-      label: strings.swapMinReceivedTitle,
-      value: '?', // TODO add real value
-      info: strings.swapMinReceived,
-    },
-    {
-      label: strings.swapFeesTitle,
-      value: `${poolFee} ADA`,
-      info: strings.swapFees,
-    },
-  ]
-
   return (
     <SafeAreaView style={styles.container}>
-      <TransactionSummary
-        feesInfo={orderInfo}
-        buyToken={{
-          id: amounts.buy.tokenId,
-          quantity: amounts.buy.quantity,
-          name: tokenToBuyName,
-          decimals: buyTokenInfo.decimals,
-        }}
-        sellToken={{
-          id: amounts.sell.tokenId,
-          quantity: amounts.sell.quantity,
-        }}
-      />
+      <TransactionSummary />
 
       <Actions>
         <Button
