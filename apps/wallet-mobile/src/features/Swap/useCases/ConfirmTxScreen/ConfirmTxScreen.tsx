@@ -108,7 +108,7 @@ export const ConfirmTxScreen = () => {
 
       <BottomSheetModal
         isOpen={confirmationModal}
-        title={strings.signTransaction}
+        title={wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction}
         onClose={() => {
           setConfirmationModal(false)
         }}

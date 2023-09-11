@@ -15,6 +15,9 @@ storiesOf('Swap ConfirmTxScreen', module) //
   .add('swap confirm tx: with os', () => {
     return <ConfirmTxWithOSScreen />
   })
+  .add('swap confirm tx: with hw', () => {
+    return <ConfirmTxWithHWcreen />
+  })
 
 const ConfirmTxWithPasswaordScreen = () => {
   return (
@@ -39,6 +42,26 @@ const ConfirmTxWithPasswaordScreen = () => {
 const ConfirmTxWithOSScreen = () => {
   return (
     <SelectedWalletProvider wallet={{...walletMocks.wallet, isEasyConfirmationEnabled: true}}>
+      <SwapProvider
+        initialState={{
+          ...mockSwapStateDefault,
+          unsignedTx: walletMocks.yoroiUnsignedTx,
+          createOrder: {...mocks.confirmTx.createOrder},
+        }}
+        swapManager={{
+          ...mockSwapManager,
+        }}
+      >
+        <SwapFormProvider>
+          <ConfirmTxScreen />
+        </SwapFormProvider>
+      </SwapProvider>
+    </SelectedWalletProvider>
+  )
+}
+const ConfirmTxWithHWcreen = () => {
+  return (
+    <SelectedWalletProvider wallet={{...walletMocks.wallet, isHW: true}}>
       <SwapProvider
         initialState={{
           ...mockSwapStateDefault,

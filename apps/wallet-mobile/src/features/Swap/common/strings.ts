@@ -49,6 +49,7 @@ export const useStrings = () => {
     sign: intl.formatMessage(messages.sign),
     searchTokens: intl.formatMessage(messages.searchTokens),
     confirm: intl.formatMessage(messages.confirm),
+    chooseConnectionMethod: intl.formatMessage(messages.chooseConnectionMethod),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
     apply: intl.formatMessage(globalMessages.apply),
@@ -84,6 +85,10 @@ export const useStrings = () => {
     limitPriceWarningMarketPrice: intl.formatMessage(messages.limitPriceWarningMarketPrice),
     limitPriceWarningBack: intl.formatMessage(messages.limitPriceWarningBack),
     limitPriceWarningConfirm: intl.formatMessage(messages.limitPriceWarningConfirm),
+    // bluetoothError: intl.formatMessage(messages.bluetoothError),
+    // bluetoothExplanation: intl.formatMessage(messages.bluetoothExplanation),
+    // bluetoothButton: intl.formatMessage(messages.bluetoothButton),
+    // error: intl.formatMessage(globalMessages.error),
   }
 }
 
@@ -365,6 +370,22 @@ export const messages = defineMessages({
   listOrdersTxId: {
     id: 'swap.listOrders.txId',
     defaultMessage: '!!!Transaction ID',
+  },
+  // bluetoothError: {
+  //   id: 'global.ledgerMessages.bluetoothDisabledError',
+  //   defaultMessage: '!!!Connect with Bluetooth',
+  // },
+  // bluetoothExplanation: {
+  //   id: 'components.ledger.ledgertransportswitchmodal.bluetoothExplanation',
+  //   defaultMessage: '!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:',
+  // },
+  // bluetoothButton: {
+  //   id: 'components.ledger.ledgertransportswitchmodal.bluetoothButton',
+  //   defaultMessage: '!!!Connect with Bluetooth',
+  // },
+  chooseConnectionMethod: {
+    id: 'components.ledger.ledgertransportswitchmodal.title',
+    defaultMessage: '!!!Choose Connection Method',
   },
   // TODO check this and change if necessary
 
