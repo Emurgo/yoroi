@@ -30,7 +30,7 @@ export const ApplicationSettingsScreen = () => {
   const walletNavigation = useWalletNavigation()
   const {currency} = useCurrencyContext()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
-  const {enabled} = useCrashReports()
+  const {enabled: crashReportEnabled} = useCrashReports()
 
   const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
@@ -130,7 +130,7 @@ export const ApplicationSettingsScreen = () => {
             label={strings.crashReporting}
             info={strings.crashReportingInfo}
           >
-            <CrashReportsSwitch enabled={enabled} />
+            <CrashReportsSwitch crashReportEnabled={crashReportEnabled} />
           </SettingsItem>
         </SettingsSection>
       </ScrollView>
@@ -159,9 +159,9 @@ const PrivacyModeSwitch = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
 }
 
 // to avoid switch jumps
-const CrashReportsSwitch = ({enabled}: {enabled: boolean}) => {
+const CrashReportsSwitch = ({crashReportEnabled}: {crashReportEnabled: boolean}) => {
   const {enable, disable} = useCrashReports()
-  const [isLocalEnabled, setIsLocalEnabled] = React.useState(enabled)
+  const [isLocalEnabled, setIsLocalEnabled] = React.useState(crashReportEnabled)
 
   const onToggleCrashReports = () => {
     setIsLocalEnabled((prevState) => {
