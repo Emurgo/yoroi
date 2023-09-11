@@ -97,6 +97,8 @@ export const WalletSettingsScreen = () => {
           value={intl.formatMessage(getWalletType(wallet.walletImplementationId))}
         />
       </SettingsSection>
+
+      <Spacer height={24} />
     </ScrollView>
   )
 }
@@ -303,7 +305,7 @@ const useStrings = () => {
 const styles = StyleSheet.create({
   settings: {
     flex: 1,
-    paddingTop: 16,
+    padding: 16,
     backgroundColor: '#fff',
   },
 })
