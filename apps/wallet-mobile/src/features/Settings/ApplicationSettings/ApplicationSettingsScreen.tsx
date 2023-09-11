@@ -44,7 +44,7 @@ export const ApplicationSettingsScreen = () => {
 
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
-      <ScrollView bounces={false} contentContainerStyle={styles.settings}>
+      <ScrollView bounces={false} style={styles.settings}>
         <StatusBar type="dark" />
 
         <SettingsSection title={strings.general}>
@@ -260,7 +260,7 @@ const messages = defineMessages({
 
 const styles = StyleSheet.create({
   root: {
-    height: '100%',
+    flex: 1,
     backgroundColor: '#fff',
   },
   settings: {
