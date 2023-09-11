@@ -8,6 +8,7 @@ import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler'
 import {Button, Icon, Spacer} from '../../../../../components'
 import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../../metrics/metricsManager'
+import {useAddresses} from '../../../../../Receive/Addresses'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfos} from '../../../../../yoroi-wallets/hooks'
@@ -26,7 +27,6 @@ import {EditSlippage} from './EditSlippage/EditSlippage'
 import {LimitPriceWarning} from './LimitPriceWarning/LimitPriceWarning'
 import {ShowMarketPrice} from './ShowMarketPrice'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
-import {useAddresses} from '../../../../../Receive/Addresses'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 
