@@ -347,7 +347,9 @@ export const filterTokensPairBySearch = (searchTerm: string) => {
   if (searchTermLowerCase.length === 0) return () => true
 
   return (tokenInfo: TransformedObject) => {
-    return tokenInfo.name?.toLocaleLowerCase().includes(searchTermLowerCase) ?? false
+    return (
+      tokenInfo.name?.toLocaleLowerCase().replace(/\s/g, '').includes(searchTermLowerCase.replace(/\s/g, '')) ?? false
+    )
   }
 }
 
