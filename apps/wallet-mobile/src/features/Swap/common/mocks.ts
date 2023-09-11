@@ -5,8 +5,6 @@ import {mocks as walletMocks} from '../../../yoroi-wallets/mocks/wallet'
 type ProviderType = 'sundaeswap' | 'minswap' | 'wingriders' | 'muesliswap_v1' | 'muesliswap_v2' | 'muesliswap_v3'
 type Type = 'market' | 'limit'
 
-// const secondaryTokenId = '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950'
-
 export const mocks = {
   confirmTx: {
     ...mockSwapStateDefault,
