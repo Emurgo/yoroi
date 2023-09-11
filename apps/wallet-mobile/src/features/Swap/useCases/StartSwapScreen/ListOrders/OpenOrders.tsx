@@ -63,14 +63,19 @@ export const OpenOrders = () => {
     )
   })
 
-  const openBottomSheet = ({id, fromTokenInfoId, toTokenInfoId, assetFromLabel, assetToLabel}) => {
+  const openBottomSheet = (id: string) => {
+    const order = normalizedOrders.find((o) => o.id === id)
+    if (!order) return
+    const {assetFromLabel, assetToLabel} = order
+    const cancellationFee = '3 ADA' // TODO: use real value
+    const totalReturned = `${order.fromTokenAmount} ${order.fromTokenInfo?.ticker}`
     setBottomSheetState({
       openId: id,
       title: strings.listOrdersSheetTitle,
       content: (
         <ModalContent
-          assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfoId} variant="swap" />}
-          assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfoId} variant="swap" />}
+          assetFromIcon={<TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />}
+          assetToIcon={<TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />}
           confirmationModal={confirmationModal}
           onConfirm={() => {
             closeBottomSheet()
@@ -79,6 +84,10 @@ export const OpenOrders = () => {
           onBack={closeBottomSheet}
           assetFromLabel={assetFromLabel}
           assetToLabel={assetToLabel}
+          assetAmount={`${order.tokenAmount} ${order.assetToLabel}`}
+          assetPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
+          cancellationFee={cancellationFee}
+          totalReturned={totalReturned}
         />
       ),
     })
@@ -121,17 +130,7 @@ export const OpenOrders = () => {
                   />
                 }
                 footer={
-                  <Footer
-                    onPress={() => {
-                      openBottomSheet({
-                        id: order.id,
-                        fromTokenInfoId: order.fromTokenInfo?.id ?? '',
-                        toTokenInfoId: order.toTokenInfo?.id ?? '',
-                        assetFromLabel: order.assetFromLabel,
-                        assetToLabel: order.assetToLabel,
-                      })
-                    }}
-                  >
+                  <Footer onPress={() => openBottomSheet(order.id)}>
                     {strings.listOrdersSheetButtonText.toLocaleUpperCase()}
                   </Footer>
                 }
@@ -150,6 +149,7 @@ export const OpenOrders = () => {
           isOpen={bottomSheetState.openId !== null}
           title={bottomSheetState.title}
           onClose={closeBottomSheet}
+          snapPoints={['10%', '57%']}
         >
           {bottomSheetState.content}
         </BottomSheetModal>
@@ -175,7 +175,7 @@ export const OpenOrders = () => {
 
             <Spacer fill />
 
-            <Button testID="swapButton" shelleyTheme title={strings.sign} />
+            <Button testID="confirmPasswordButton" shelleyTheme title={strings.sign} />
           </>
         </BottomSheetModal>
 
@@ -347,6 +347,10 @@ const ModalContent = ({
   assetFromLabel,
   assetToIcon,
   assetToLabel,
+  assetPrice,
+  assetAmount,
+  totalReturned,
+  cancellationFee,
 }: {
   onConfirm: () => void
   onBack: () => void
@@ -355,6 +359,10 @@ const ModalContent = ({
   assetFromLabel: string
   assetToLabel: string
   assetToIcon: React.ReactNode
+  assetPrice: string
+  assetAmount: string
+  totalReturned: string
+  cancellationFee: string
 }) => {
   const strings = useStrings()
   return (
@@ -368,23 +376,19 @@ const ModalContent = ({
 
       <Spacer height={10} />
 
-      {/* TODO: add real values */}
-      <ModalContentRow label={strings.listOrdersSheetAssetPrice} value="3 ADA" />
+      <ModalContentRow label={strings.listOrdersSheetAssetPrice} value={assetPrice} />
 
       <Spacer height={10} />
 
-      {/* TODO: add real values */}
-      <ModalContentRow label={strings.listOrdersSheetAssetAmount} value="3 USDA" />
+      <ModalContentRow label={strings.listOrdersSheetAssetAmount} value={assetAmount} />
 
       <Spacer height={10} />
 
-      {/* TODO: add real values */}
-      <ModalContentRow label={strings.listOrdersSheetTotalReturned} value="11 ADA" />
+      <ModalContentRow label={strings.listOrdersSheetTotalReturned} value={totalReturned} />
 
       <Spacer height={10} />
 
-      {/* TODO: add real values */}
-      <ModalContentRow label={strings.listOrdersSheetCancellationFee} value="0.17 ADA" />
+      <ModalContentRow label={strings.listOrdersSheetCancellationFee} value={cancellationFee} />
 
       <ModalContentLink />
 

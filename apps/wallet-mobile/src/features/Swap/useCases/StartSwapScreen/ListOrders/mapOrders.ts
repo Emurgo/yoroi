@@ -57,6 +57,9 @@ export const mapOrders = (
       toTokenInfo,
       provider: 'provider' in order ? order.provider : undefined,
       poolUrl: 'provider' in order ? getPoolUrl(order.provider) : undefined,
+      fromTokenAmount: BigNumber(Quantities.denominated(order.from.quantity, fromTokenInfo?.decimals ?? 0)).toFormat(
+        numberLocale,
+      ),
     }
   })
 }
