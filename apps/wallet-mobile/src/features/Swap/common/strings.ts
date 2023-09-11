@@ -181,7 +181,7 @@ export const messages = defineMessages({
   },
   autoPool: {
     id: 'swap.swapScreen.autoPool',
-    defaultMessage: '!!!(auto)',
+    defaultMessage: '!!! (auto)',
   },
   swapMinAda: {
     id: 'swap.swapScreen.swapMinAda',
