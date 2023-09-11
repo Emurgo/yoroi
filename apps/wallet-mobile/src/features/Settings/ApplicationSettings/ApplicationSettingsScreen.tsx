@@ -2,7 +2,6 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer, StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
@@ -50,91 +49,87 @@ export const ApplicationSettingsScreen = () => {
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.settings}>
-      <ScrollView bounces={false}>
-        <StatusBar type="dark" />
+    <ScrollView bounces={false} style={styles.settings}>
+      <StatusBar type="dark" />
 
-        <SettingsSection title={strings.general}>
-          <NavigatedSettingsItem
-            icon={<Icon.Globe {...iconProps} />}
-            label={strings.selectLanguage}
-            onNavigate={() => settingsNavigation.navigate('change-language')}
-            selected={language.label}
+      <SettingsSection title={strings.general}>
+        <NavigatedSettingsItem
+          icon={<Icon.Globe {...iconProps} />}
+          label={strings.selectLanguage}
+          onNavigate={() => settingsNavigation.navigate('change-language')}
+          selected={language.label}
+        />
+
+        <NavigatedSettingsItem
+          icon={<Icon.Coins {...iconProps} />}
+          label={strings.selectFiatCurrency}
+          selected={currency}
+          onNavigate={() => settingsNavigation.navigate('change-currency')}
+        />
+
+        <NavigatedSettingsItem
+          icon={<Icon.Info {...iconProps} />}
+          label={strings.about}
+          onNavigate={() => settingsNavigation.navigate('about')}
+        />
+
+        <NavigatedSettingsItem
+          icon={<Icon.TermsOfUse {...iconProps} />}
+          label={strings.termsOfservice}
+          onNavigate={() => settingsNavigation.navigate('terms-of-use')}
+        />
+
+        <NavigatedSettingsItem
+          icon={<Icon.TermsOfUse {...iconProps} />}
+          label={strings.privacyPolicy}
+          onNavigate={() => settingsNavigation.navigate('privacy-policy')}
+        />
+
+        <NavigatedSettingsItem
+          icon={<Icon.Analytics {...iconProps} />}
+          label={strings.analytics}
+          onNavigate={() => walletNavigation.navigateToAnalyticsSettings()}
+        />
+      </SettingsSection>
+
+      <Spacer height={24} />
+
+      <SettingsSection title={strings.securityReporting}>
+        <NavigatedSettingsItem
+          disabled={authSetting === 'os'}
+          icon={<Icon.Pin {...iconProps} />}
+          label={strings.changePin}
+          onNavigate={() => settingsNavigation.navigate('change-custom-pin')}
+        />
+
+        <SettingsItem icon={<Icon.EyeOff {...iconProps} />} label={strings.privacyMode} info={strings.privacyModeInfo}>
+          <PrivacyModeSwitch isPrivacyOff={isPrivacyOff} />
+        </SettingsItem>
+
+        <SettingsItem
+          icon={<Icon.Bio {...iconProps} />}
+          label={strings.biometricsSignIn}
+          info={strings.biometricsSignInInfo}
+          disabled={!authOsEnabled}
+        >
+          <Switch
+            value={authSetting === 'os'}
+            onValueChange={onToggleAuthWithOs}
+            disabled={!authOsEnabled || isTogglePrivacyModeLoading}
           />
+        </SettingsItem>
 
-          <NavigatedSettingsItem
-            icon={<Icon.Coins {...iconProps} />}
-            label={strings.selectFiatCurrency}
-            selected={currency}
-            onNavigate={() => settingsNavigation.navigate('change-currency')}
-          />
+        <SettingsItem
+          icon={<Icon.Export {...iconProps} />}
+          label={strings.crashReporting}
+          info={strings.crashReportingInfo}
+        >
+          <CrashReportsSwitch crashReportEnabled={crashReportEnabled} />
+        </SettingsItem>
+      </SettingsSection>
 
-          <NavigatedSettingsItem
-            icon={<Icon.Info {...iconProps} />}
-            label={strings.about}
-            onNavigate={() => settingsNavigation.navigate('about')}
-          />
-
-          <NavigatedSettingsItem
-            icon={<Icon.TermsOfUse {...iconProps} />}
-            label={strings.termsOfservice}
-            onNavigate={() => settingsNavigation.navigate('terms-of-use')}
-          />
-
-          <NavigatedSettingsItem
-            icon={<Icon.TermsOfUse {...iconProps} />}
-            label={strings.privacyPolicy}
-            onNavigate={() => settingsNavigation.navigate('privacy-policy')}
-          />
-
-          <NavigatedSettingsItem
-            icon={<Icon.Analytics {...iconProps} />}
-            label={strings.analytics}
-            onNavigate={() => walletNavigation.navigateToAnalyticsSettings()}
-          />
-        </SettingsSection>
-
-        <Spacer height={24} />
-
-        <SettingsSection title={strings.securityReporting}>
-          <NavigatedSettingsItem
-            disabled={authSetting === 'os'}
-            icon={<Icon.Pin {...iconProps} />}
-            label={strings.changePin}
-            onNavigate={() => settingsNavigation.navigate('change-custom-pin')}
-          />
-
-          <SettingsItem
-            icon={<Icon.EyeOff {...iconProps} />}
-            label={strings.privacyMode}
-            info={strings.privacyModeInfo}
-          >
-            <PrivacyModeSwitch isPrivacyOff={isPrivacyOff} />
-          </SettingsItem>
-
-          <SettingsItem
-            icon={<Icon.Bio {...iconProps} />}
-            label={strings.biometricsSignIn}
-            info={strings.biometricsSignInInfo}
-            disabled={!authOsEnabled}
-          >
-            <Switch
-              value={authSetting === 'os'}
-              onValueChange={onToggleAuthWithOs}
-              disabled={!authOsEnabled || isTogglePrivacyModeLoading}
-            />
-          </SettingsItem>
-
-          <SettingsItem
-            icon={<Icon.Export {...iconProps} />}
-            label={strings.crashReporting}
-            info={strings.crashReportingInfo}
-          >
-            <CrashReportsSwitch crashReportEnabled={crashReportEnabled} />
-          </SettingsItem>
-        </SettingsSection>
-      </ScrollView>
-    </SafeAreaView>
+      <Spacer height={24} />
+    </ScrollView>
   )
 }
 
@@ -266,7 +261,7 @@ const messages = defineMessages({
 const styles = StyleSheet.create({
   settings: {
     flex: 1,
-    paddingTop: 16,
+    padding: 16,
     backgroundColor: '#fff',
   },
 })
