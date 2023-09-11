@@ -36,7 +36,7 @@ export const SelectPoolFromList = ({data = []}: Props) => {
   return (
     <View style={styles.container}>
       {data.map((pool) => (
-        <View key={pool.provider}>
+        <View key={pool.poolId}>
           <Spacer height={16} />
 
           <View style={[styles.shadowProp]}>
