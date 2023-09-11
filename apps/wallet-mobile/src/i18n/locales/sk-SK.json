@@ -149,6 +149,7 @@
   "swap.swapScreen.noAssetsFoundFor": "No assets found for \"{search}\"",
   "swap.swapScreen.defaultSlippage": "Default Slippage Tolerance",
   "swap.swapScreen.slippageInfo": "Slippage tolerance is set as a percentage of the total swap value. Your transactions will not be executed if the price moves by more than this amount.",
+  "swap.swapScreen.autoPool": "(auto)",
   "swap.swapScreen.swapMinAda": "Min-ADA is the minimum ADA amount required to be contained when holding or sending Cardano native tokens.",
   "swap.swapScreen.swapMinAdaTitle": "Min ADA",
   "swap.swapScreen.swapFees": "Swap fees include the following:\n • Matchmaker Fee\n • Frontend Fee\n • Liquidity Provider Fee",
