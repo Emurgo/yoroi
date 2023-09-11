@@ -92,6 +92,10 @@ export const useStrings = () => {
     bluetoothExplanation: intl.formatMessage(messages.bluetoothExplanation),
     bluetoothButton: intl.formatMessage(messages.bluetoothButton),
     bluetoothError: intl.formatMessage(messages.bluetoothError),
+    transactionSigned: intl.formatMessage(messages.transactionSigned),
+    transactionDisplay: intl.formatMessage(messages.transactionDisplay),
+    seeOnExplorer: intl.formatMessage(messages.seeOnExplorer),
+    goToOrders: intl.formatMessage(messages.goToOrders),
   }
 }
 
@@ -281,6 +285,22 @@ export const messages = defineMessages({
   limitPriceWarningConfirm: {
     id: 'swap.swapScreen.limitPriceWarningConfirm',
     defaultMessage: '!!!Swap',
+  },
+  transactionSigned: {
+    id: 'swap.swapScreen.transactionSigned',
+    defaultMessage: '!!!Transaction signed',
+  },
+  transactionDisplay: {
+    id: 'swap.swapScreen.transactionDisplay',
+    defaultMessage: '!!!Your transactions will be displayed both in the list of transaction and Open swap orders',
+  },
+  seeOnExplorer: {
+    id: 'swap.swapScreen.seeOnExplorer',
+    defaultMessage: '!!!see on explorer',
+  },
+  goToOrders: {
+    id: 'swap.swapScreen.goToOrders',
+    defaultMessage: '!!!GO to Orders',
   },
   asset: {
     id: 'global.assets.assetLabel',

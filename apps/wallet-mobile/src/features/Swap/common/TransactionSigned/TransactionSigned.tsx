@@ -1,24 +1,30 @@
 import React from 'react'
-import {Image, StyleSheet, Text, View} from 'react-native'
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import TxSuccess from '../../../../assets/img//transaction-success.png'
 import {Button} from '../../../../components'
-import {COLORS} from '../../../../theme'
-
-interface ButtonGroupProps {}
+import {useNavigateTo} from '../navigation'
+import {useStrings} from '../strings'
 
 export const TransactionSigned = () => {
+  const strings = useStrings()
+  const navigate = useNavigateTo()
+
   return (
     <View style={styles.container}>
-      <View style={styles.imageWrap} testID="notDelegatedInfo">
+      <View>
         <Image source={TxSuccess} />
       </View>
 
-      <Text>Transaction signed</Text>
+      <Text style={styles.title}>{strings.transactionSigned}</Text>
 
-      <Text>Your transactions will be displayed both in the list of transaction and Open swap orders</Text>
+      <Text style={styles.text}>{strings.transactionDisplay}</Text>
 
-      <Button title="GO TO Orders" />
+      <TouchableOpacity style={styles.button}>
+        <Text>{strings.seeOnExplorer}</Text>
+      </TouchableOpacity>
+
+      <Button shelleyTheme title={strings.goToOrders} onPress={() => navigate.startSwap()} />
     </View>
   )
 }
@@ -30,12 +36,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: '100%',
   },
-  imageWrap: {},
-  buttonWrapper: {
-    paddingRight: 8,
+  title: {
+    fontWeight: '500',
+    fontSize: 20,
+    paddingBottom: 4,
   },
-  button: {},
-  label: {
-    color: COLORS.BLACK,
+  text: {
+    color: '#6B7384',
+    fontSize: 16,
+  },
+  button: {
+    paddingVertical: 16,
   },
 })
