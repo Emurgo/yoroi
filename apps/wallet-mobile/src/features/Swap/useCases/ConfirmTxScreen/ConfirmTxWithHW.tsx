@@ -69,8 +69,6 @@ const Confirm = ({
   unsignedTx,
   transport: transportType,
 }: Props & {transport: TransportType}) => {
-  const strings = useStrings()
-
   const {signAndSubmitTx, isLoading} = useSignWithHwAndSubmitTx(
     {wallet}, //
     {signTx: {onSuccess}},
