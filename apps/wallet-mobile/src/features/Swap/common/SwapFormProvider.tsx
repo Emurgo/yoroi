@@ -10,6 +10,7 @@ type TouchedActions = {
   buyTouched: () => void
   switchTouched: () => void
   poolTouched: () => void
+  poolAuto: () => void
 }
 
 const TouchedContext = createContext<undefined | (TouchedState & TouchedActions)>(undefined)
@@ -35,6 +36,7 @@ export const SwapFormProvider = ({
     buyTouched: () => dispatch({type: 'buyTouched'}),
     switchTouched: () => dispatch({type: 'switchTouched'}),
     poolTouched: () => dispatch({type: 'poolTouched'}),
+    poolAuto: () => dispatch({type: 'poolAuto'}),
   }).current
 
   const context = React.useMemo(() => ({...state, ...actions}), [state, actions])
@@ -42,7 +44,12 @@ export const SwapFormProvider = ({
   return <TouchedContext.Provider value={context}>{children}</TouchedContext.Provider>
 }
 
-type TouchedAction = {type: 'sellTouched'} | {type: 'buyTouched'} | {type: 'switchTouched'} | {type: 'poolTouched'}
+type TouchedAction =
+  | {type: 'sellTouched'}
+  | {type: 'buyTouched'}
+  | {type: 'switchTouched'}
+  | {type: 'poolTouched'}
+  | {type: 'poolAuto'}
 
 function touchedReducer(state: TouchedState, action: TouchedAction) {
   switch (action.type) {
@@ -61,6 +68,9 @@ function touchedReducer(state: TouchedState, action: TouchedAction) {
 
     case 'poolTouched':
       return {...state, isPoolTouched: true}
+
+    case 'poolAuto':
+      return {...state, isPoolTouched: false}
 
     default:
       throw new Error(`touchedReducer invalid action`)

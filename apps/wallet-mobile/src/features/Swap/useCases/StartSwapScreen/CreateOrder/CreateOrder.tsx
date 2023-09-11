@@ -44,15 +44,18 @@ export const CreateOrder = () => {
   })
 
   const [showLimitPriceWarning, setShowLimitPriceWarning] = useState(false)
-  const {isBuyTouched, isSellTouched} = useSwapTouched()
+  const {isBuyTouched, isSellTouched, poolAuto} = useSwapTouched()
   const {poolList} = usePoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId,
     tokenB: createOrder.amounts.buy.tokenId,
   })
 
   useEffect(() => {
-    poolList !== undefined && selectedPoolChanged(poolList[0])
-  }, [poolList, selectedPoolChanged])
+    if (poolList !== undefined) {
+      selectedPoolChanged(poolList[0])
+      poolAuto()
+    }
+  }, [poolAuto, poolList, selectedPoolChanged])
 
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
   const orderTypeIndex = createOrder.type === 'market' ? 0 : 1
