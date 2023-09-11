@@ -16,7 +16,6 @@ type Props = {
 }
 
 export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx}: Props) => {
-  // new
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [spendingPassword, setSpendingPassword] = React.useState(
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',

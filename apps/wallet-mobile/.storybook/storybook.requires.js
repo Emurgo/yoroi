@@ -133,6 +133,7 @@ const getStories = () => {
     "./src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx": require("../src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx"),
     "./src/features/Swap/common/SelectPool/SelectPoolFromList/SelectPoolFromList.stories.tsx": require("../src/features/Swap/common/SelectPool/SelectPoolFromList/SelectPoolFromList.stories.tsx"),
     "./src/features/Swap/useCases/ConfirmTxScreen/ConfirmTxScreen.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/ConfirmTxScreen.stories.tsx"),
+    "./src/features/Swap/useCases/ConfirmTxScreen/TransactionSummary.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/TransactionSummary.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/CreateOrder.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/CreateOrder.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/EditBuyAmount.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/EditBuyAmount.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen.stories.tsx"),
