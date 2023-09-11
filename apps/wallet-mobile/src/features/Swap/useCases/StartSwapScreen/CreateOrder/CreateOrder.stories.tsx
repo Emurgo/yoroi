@@ -5,8 +5,8 @@ import React from 'react'
 
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
+import {SwapFormProvider} from '../../../common/SwapFormProvider'
 import {CreateOrder} from './CreateOrder'
-import {SwapFormProvider} from './TouchedContext'
 
 storiesOf('Swap Create Order', module) //
   .add('Initial', () => <Initial />)

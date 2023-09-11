@@ -13,6 +13,7 @@ import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
+import {useSwapTouched} from '../../../common/SwapFormProvider'
 import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
 import {EditLimitPrice} from './EditLimitPrice'
 import {ShowPoolActions} from './EditPool/ShowPoolActions'
@@ -21,7 +22,6 @@ import {EditSlippage} from './EditSlippage/EditSlippage'
 import {LimitPriceWarning} from './LimitPriceWarning/LimitPriceWarning'
 import {ShowMarketPrice} from './ShowMarketPrice'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
-import {useSwapTouched} from './TouchedContext'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 

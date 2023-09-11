@@ -8,12 +8,13 @@ import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
-import {useSwapTouched} from '../TouchedContext'
+import {useSwapTouched} from '../../../../common/SwapFormProvider'
 
 export const ShowPoolActions = () => {
   const navigateTo = useNavigateTo()
   const {createOrder} = useSwap()
-  const {isBuyTouched, isSellTouched} = useSwapTouched()
+  const strings = useStrings()
+  const {isBuyTouched, isSellTouched, isPoolTouched} = useSwapTouched()
   const {selectedPool, amounts} = createOrder
   const wallet = useSelectedWallet()
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
@@ -42,7 +43,7 @@ export const ShowPoolActions = () => {
           onPressLabel={navigateTo.selectPool}
           extended={extended}
         >
-          <Text>{`${protocolCapitalize} (auto)`}</Text>
+          <Text>{`${protocolCapitalize}${isPoolTouched ? '' : ` ${strings.autoPool}`}`}</Text>
         </Header>
       }
       adornment={<HiddenInfo poolFee={poolFee} />}
@@ -99,9 +100,11 @@ const HiddenInfo = ({poolFee}: {poolFee: string}) => {
 }
 
 const MainInfo = ({totalAmount, tokenName}: {totalAmount: string; tokenName: string}) => {
+  const strings = useStrings()
+
   return (
     <View>
-      {[{label: `Total ${totalAmount} ${tokenName} `}].map((item, index) => (
+      {[{label: `${strings.total} ${totalAmount} ${tokenName} `}].map((item, index) => (
         <MainInfoWrapper key={index} label={item.label} isLast={index === 0} />
       ))}
     </View>
