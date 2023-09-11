@@ -16,6 +16,7 @@ import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {createYoroiEntry} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
+import {useSwapTouched} from '../../../common/SwapFormProvider'
 import {useSwapTx} from '../../../common/useSwapTx'
 import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
 import {EditLimitPrice} from './EditLimitPrice'
@@ -25,7 +26,6 @@ import {EditSlippage} from './EditSlippage/EditSlippage'
 import {LimitPriceWarning} from './LimitPriceWarning/LimitPriceWarning'
 import {ShowMarketPrice} from './ShowMarketPrice'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
-import {useSwapTouched} from './TouchedContext'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 

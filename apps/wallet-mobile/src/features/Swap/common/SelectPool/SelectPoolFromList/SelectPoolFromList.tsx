@@ -7,10 +7,10 @@ import LinearGradient from 'react-native-linear-gradient'
 import {Spacer} from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {COLORS} from '../../../../../theme'
-import {useSwapTouched} from '../../../useCases/StartSwapScreen/CreateOrder/TouchedContext'
 import {useNavigateTo} from '../../navigation'
 import {PoolIcon} from '../../PoolIcon/PoolIcon'
 import {useStrings} from '../../strings'
+import {useSwapTouched} from '../../SwapFormProvider'
 
 type Props = {
   data?: Swap.PoolPair[]

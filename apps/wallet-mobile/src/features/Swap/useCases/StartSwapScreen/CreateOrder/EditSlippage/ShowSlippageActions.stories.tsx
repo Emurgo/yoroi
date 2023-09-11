@@ -5,7 +5,7 @@ import React from 'react'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
-import {SwapFormProvider} from '../TouchedContext'
+import {SwapFormProvider} from '../../../../common/SwapFormProvider'
 import {ShowSlippageActions} from './ShowSlippageActions'
 
 storiesOf('Swap Slippage Actions', module).add('initial', () => {

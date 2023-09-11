@@ -10,7 +10,7 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {useStrings} from '../../../common/strings'
-import {useSwapTouched} from './TouchedContext'
+import {useSwapTouched} from '../../../common/SwapFormProvider'
 
 const BORDER_SIZE = 1
 export const ShowMarketPrice = () => {
