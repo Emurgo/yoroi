@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Datum} from '@emurgo/yoroi-lib'
 import {App, Balance} from '@yoroi/types'
-import {parseSafe} from '@yoroi/wallets'
+import {parseSafe, rootStorage} from '@yoroi/wallets'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -13,6 +13,10 @@ import LocalizableError from '../../../i18n/LocalizableError'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
+import {portfolioManagerApiMaker} from '../../portfolio/adapters/cardano-api'
+import {portfolioManagerStorageMaker} from '../../portfolio/adapters/storage'
+import {portfolioManagerMaker} from '../../portfolio/portfolio-manager'
+import {PortfolioManager} from '../../portfolio/types'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
 import {Keychain} from '../../storage/Keychain'
 import type {
@@ -173,6 +177,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     private readonly utxoManager: UtxoManager
     private readonly transactionManager: TransactionManager
     private readonly memosManager: MemosManager
+    private readonly portfolioManager: PortfolioManager
 
     // =================== create =================== //
 
@@ -282,6 +287,13 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const transactionManager = await TransactionManager.create(storage.join('txs/'))
       const memosManager = await makeMemosManager(storage.join('memos/'))
 
+      // portfolio storage is shared so its mounted based at rootStorage
+      // this share the tokens between all wallets without hiting the network again
+      const portfolioStorage = portfolioManagerStorageMaker(rootStorage)
+      const portfolioApi = portfolioManagerApiMaker({baseUrlApi: API_ROOT, baseUrlTokenRegistry: TOKEN_INFO_SERVICE})
+      const portfolioManager = portfolioManagerMaker({storage: portfolioStorage, api: portfolioApi})
+      await portfolioManager.hydrate()
+
       const wallet = new ShelleyWallet({
         storage,
         id,
@@ -296,6 +308,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         lastGeneratedAddressIndex,
         transactionManager,
         memosManager,
+        portfolioManager,
       })
 
       await wallet.discoverAddresses()
@@ -322,6 +335,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       lastGeneratedAddressIndex,
       transactionManager,
       memosManager,
+      portfolioManager,
     }: {
       storage: App.Storage
       id: string
@@ -336,6 +350,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       lastGeneratedAddressIndex: number
       transactionManager: TransactionManager
       memosManager: MemosManager
+      portfolioManager: PortfolioManager
     }) {
       this.id = id
       this.storage = storage
@@ -350,6 +365,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       this.internalChain = internalChain
       this.externalChain = externalChain
       this.rewardAddressHex = rewardAddressHex
+      this.portfolioManager = portfolioManager
       this.publicKeyHex = accountPubKeyHex
       this.version = DeviceInfo.getVersion()
       this.checksum = walletChecksum(accountPubKeyHex)
@@ -401,6 +417,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     async clear() {
       await this.transactionManager.clear()
       await this.utxoManager.clear()
+      await this.portfolioManager.clear()
     }
 
     saveMemo(txId: string, memo: string): Promise<void> {
@@ -919,10 +936,31 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       await this.utxoManager.sync(addresses)
 
-      this._utxos = await this.utxoManager.getCachedUtxos()
+      const newUtxos = await this.utxoManager.getCachedUtxos()
 
-      // notifying always -> sync from lib need to flag if something has changed
-      this.notify({type: 'utxos', utxos: this.utxos})
+      if (this.areUtxosDifferent(this._utxos, newUtxos)) {
+        this._utxos = newUtxos
+        
+        await this.portfolioManager.updatePortfolio(this.utxos, {info: this.primaryTokenInfo})
+
+        this.notify({type: 'utxos', utxos: this.utxos})
+      }
+    }
+
+    private areUtxosDifferent(oldUtxos: RawUtxo[], newUtxos: RawUtxo[]): boolean {
+      if (oldUtxos.length !== newUtxos.length) {
+        return true
+      }
+
+      const oldUtxoIds = new Set(oldUtxos.map((utxo) => utxo.utxo_id))
+
+      for (const newUtxo of newUtxos) {
+        if (!oldUtxoIds.has(newUtxo.utxo_id)) {
+          return true
+        }
+      }
+
+      return false
     }
 
     async fetchAccountState(): Promise<AccountStateResponse> {

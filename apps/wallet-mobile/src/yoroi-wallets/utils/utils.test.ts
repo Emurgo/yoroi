@@ -272,6 +272,15 @@ describe('Amounts', () => {
     } as Balance.Amounts)
   })
 
+  it('ids', () => {
+    const amounts: Balance.Amounts = {
+      '': '123',
+      token567: '-789',
+    }
+
+    expect(Amounts.ids(amounts)).toEqual(['', 'token567'])
+  })
+
   describe('save', () => {
     it('updating when already exists', () => {
       const amounts: Balance.Amounts = {

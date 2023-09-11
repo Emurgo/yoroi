@@ -9,6 +9,8 @@ import {
   parseNumber,
 } from '@yoroi/wallets'
 
+import {RawUtxo} from '../../types'
+import {Amounts, asQuantity, Quantities} from '../../utils'
 import {CardanoToken} from '../types'
 
 export function asApiTokenId(tokenId: string): Cardano.Api.TokenId {
@@ -30,7 +32,7 @@ export const cardanoFutureTokenAsBalanceToken = (
       tokenId,
       metadata: onChain.mintNftRecordSelected,
       kind: 'nft',
-      originalMetadatas: futureToken,
+      cardanoFutureToken: futureToken,
     })
   }
 
@@ -39,7 +41,7 @@ export const cardanoFutureTokenAsBalanceToken = (
     return cardanoOffChainTokenRegistryEntryAsBalanceToken({
       tokenId,
       entry: offChain.tokenRegistry,
-      originalMetadatas: futureToken,
+      cardanoFutureToken: futureToken,
     })
   }
 
@@ -49,7 +51,7 @@ export const cardanoFutureTokenAsBalanceToken = (
       tokenId,
       metadata: onChain.mintFtRecordSelected,
       kind: 'ft',
-      originalMetadatas: futureToken,
+      cardanoFutureToken: futureToken,
     })
   }
 
@@ -58,7 +60,7 @@ export const cardanoFutureTokenAsBalanceToken = (
     tokenId,
     metadata: onChain.mintNftRecordSelected,
     kind: 'ft',
-    originalMetadatas: futureToken,
+    cardanoFutureToken: futureToken,
   })
 }
 
@@ -66,12 +68,12 @@ export const cardanoOnChainMetadataAsBalanceToken = ({
   tokenId,
   metadata,
   kind,
-  originalMetadatas,
+  cardanoFutureToken,
 }: {
   tokenId: Balance.Token['info']['id']
-  metadata: Cardano.Api.NftMetadata | Cardano.Api.FtMetadata | undefined
+  metadata?: Cardano.Api.NftMetadata | Cardano.Api.FtMetadata
   kind: Balance.TokenInfo['kind']
-  originalMetadatas: Cardano.Api.FutureToken
+  cardanoFutureToken?: Cardano.Api.FutureToken
 }): Readonly<CardanoToken> => {
   const {name: assetNameUtf8, policyId} = CardanoTokenId.getTokenIdentity(tokenId)
 
@@ -109,25 +111,26 @@ export const cardanoOnChainMetadataAsBalanceToken = ({
     website,
   }
 
-  const files = cardanoFilesAsBalanceTokenFiles(metadata?.files)
-
   const token: CardanoToken = {
     info,
-    files,
-    metadatas: originalMetadatas,
-  } as const
+  }
+  const files = cardanoFilesAsBalanceTokenFiles(metadata?.files)
+  if (files) token['files'] = files
+  if (cardanoFutureToken) token['metadatas'] = cardanoFutureToken
 
-  return token
+  const result = token as Readonly<CardanoToken>
+
+  return result
 }
 
 export const cardanoOffChainTokenRegistryEntryAsBalanceToken = ({
   tokenId,
   entry,
-  originalMetadatas,
+  cardanoFutureToken,
 }: {
   tokenId: Balance.Token['info']['id']
   entry: Cardano.Api.TokenRegistryEntry
-  originalMetadatas: Cardano.Api.FutureToken
+  cardanoFutureToken: Cardano.Api.FutureToken
 }): Readonly<CardanoToken> => {
   const {name: assetNameUtf8, policyId} = CardanoTokenId.getTokenIdentity(tokenId)
 
@@ -157,12 +160,15 @@ export const cardanoOffChainTokenRegistryEntryAsBalanceToken = ({
     image,
     website,
   }
+
   const token: CardanoToken = {
     info,
-    metadatas: originalMetadatas,
-  } as const
+  }
+  if (cardanoFutureToken) token['metadatas'] = cardanoFutureToken
 
-  return token
+  const result = token as Readonly<CardanoToken>
+
+  return result
 }
 
 export function cardanoFilesAsBalanceTokenFiles(metadataFiles: unknown): Balance.Token['files'] | undefined {
@@ -223,4 +229,30 @@ export function discoverImage(
 export function discoverIpfsLink(image: string) {
   const isIpfsImage = image.startsWith('ipfs://')
   return isIpfsImage ? image?.replace('ipfs://', `https://ipfs.io/ipfs/`) : image
+}
+
+export function rawUtxosAsAmounts(utxos: ReadonlyArray<RawUtxo>, primaryTokenId: Balance.Token['info']['id']) {
+  return utxos.reduce(
+    (previousAmounts, currentUtxo) => {
+      const amounts = {
+        ...previousAmounts,
+        [primaryTokenId]: Quantities.sum([previousAmounts[primaryTokenId], asQuantity(currentUtxo.amount)]),
+      }
+
+      if (currentUtxo.assets) {
+        return currentUtxo.assets.reduce((previousAmountsWithAssets, currentAsset) => {
+          return {
+            ...previousAmountsWithAssets,
+            [currentAsset.assetId]: Quantities.sum([
+              Amounts.getAmount(previousAmountsWithAssets, currentAsset.assetId).quantity,
+              currentAsset.amount as Balance.Quantity,
+            ]),
+          }
+        }, amounts)
+      }
+
+      return amounts
+    },
+    {[primaryTokenId]: Quantities.zero} as Balance.Amounts,
+  )
 }

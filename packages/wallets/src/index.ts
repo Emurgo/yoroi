@@ -6,6 +6,7 @@ export * from './storage/adapters/async-storage'
 export * from './storage/translators/storage-reactjs'
 export * from './storage/adapters/rootStorage'
 export * from './api/fetcher'
+export * from './observer/observer'
 
 import {
   isFtMetadata,

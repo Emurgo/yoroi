@@ -2,6 +2,7 @@
 import {Balance} from '@yoroi/types'
 import {Cardano} from '@yoroi/wallets'
 
+import {RawUtxo} from '../../types'
 import {
   asApiTokenId,
   cardanoFilesAsBalanceTokenFiles,
@@ -11,6 +12,7 @@ import {
   discoverImage,
   discoverIpfsLink,
   discoverWebsite,
+  rawUtxosAsAmounts,
 } from './transformers' // replace with the actual import
 
 describe('asApiTokenId', () => {
@@ -63,7 +65,7 @@ describe('cardanoOnChainMetadataAsBalanceToken', () => {
       tokenId: Cardano.Api.TokenId
       metadata: Cardano.Api.NftMetadata
       kind: Balance.TokenInfo['kind']
-      originalMetadatas: any
+      cardanoFutureToken: any
     } = {
       tokenId: '775f356c756b70ca6b8e65feec417c7da295179eee6c4bfe9ff33176.54657374696e6754657374496d6167653132',
       metadata: {
@@ -80,7 +82,7 @@ describe('cardanoOnChainMetadataAsBalanceToken', () => {
         ],
       },
       kind: 'nft',
-      originalMetadatas: {key: 'value'},
+      cardanoFutureToken: {key: 'value'},
     }
 
     const expectedOutput: Balance.Token = {
@@ -119,7 +121,7 @@ describe('cardanoOnChainMetadataAsBalanceToken', () => {
       tokenId: Cardano.Api.TokenId
       metadata: Cardano.Api.FtMetadata
       kind: Balance.TokenInfo['kind']
-      originalMetadatas: any
+      cardanoFutureToken: any
     } = {
       tokenId: '775f356c756b70ca6b8e65feec417c7da295179eee6c4bfe9ff33176.54657374696e6754657374496d6167653132',
       metadata: {
@@ -141,7 +143,7 @@ describe('cardanoOnChainMetadataAsBalanceToken', () => {
         ],
       },
       kind: 'ft',
-      originalMetadatas: {key: 'value'},
+      cardanoFutureToken: {key: 'value'},
     }
 
     const expectedOutput: Balance.Token = {
@@ -178,7 +180,7 @@ describe('cardanoOnChainMetadataAsBalanceToken', () => {
 
 describe('cardanoOffChainTokenRegistryEntryAsBalanceToken', () => {
   it('should populate all fields correctly', () => {
-    const input: {tokenId: Cardano.Api.TokenId; entry: Cardano.Api.TokenRegistryEntry; originalMetadatas: any} = {
+    const input: {tokenId: Cardano.Api.TokenId; entry: Cardano.Api.TokenRegistryEntry; cardanoFutureToken: any} = {
       tokenId: '775f356c756b70ca6b8e65feec417c7da295179eee6c4bfe9ff33176.54657374696e6754657374496d6167653132',
       entry: {
         subject: 'testSubject',
@@ -214,7 +216,7 @@ describe('cardanoOffChainTokenRegistryEntryAsBalanceToken', () => {
           signatures: [],
         },
       },
-      originalMetadatas: {key: 'value'},
+      cardanoFutureToken: {key: 'value'},
     }
 
     const expectedOutput: Balance.Token = {
@@ -337,7 +339,7 @@ describe('cardanoFilesAsBalanceTokenFiles', () => {
 
 describe('cardanoFutureTokenAsBalanceToken function', () => {
   it('should return fungible token when offChain.isValid is true', () => {
-    const tokenId = '775f356c756b70ca6b8e65feec417c7da295179eee6c4bfe9ff33176.54657374696e6754657374496d6167653132';
+    const tokenId = '775f356c756b70ca6b8e65feec417c7da295179eee6c4bfe9ff33176.54657374696e6754657374496d6167653132'
 
     const futureToken: Cardano.Api.FutureToken = {
       supply: 10,
@@ -358,7 +360,7 @@ describe('cardanoFutureTokenAsBalanceToken function', () => {
             value: 'ipfs://testImage',
             sequenceNumber: 1,
             signatures: [],
-          }, 
+          },
           decimals: {
             value: 1,
             sequenceNumber: 1,
@@ -373,10 +375,112 @@ describe('cardanoFutureTokenAsBalanceToken function', () => {
         mintNftMetadata: {},
         mintNftRecordSelected: undefined,
       },
-    };
+    }
 
-    const result = cardanoFutureTokenAsBalanceToken(tokenId, futureToken);
+    const result = cardanoFutureTokenAsBalanceToken(tokenId, futureToken)
 
-    expect(result).toHaveProperty('info.kind', 'ft');
-  });
-});
+    expect(result).toHaveProperty('info.kind', 'ft')
+  })
+})
+
+describe('rawUtxosAsAmounts', () => {
+  it('Empty Utxos', () => {
+    const utxos: RawUtxo[] = []
+    const primaryTokenId = 'primaryTokenId'
+
+    expect(rawUtxosAsAmounts(utxos, primaryTokenId)).toEqual({
+      primaryTokenId: '0',
+    } as Balance.Amounts)
+  })
+
+  it('Utxos without tokens', () => {
+    const utxos: RawUtxo[] = [
+      {
+        amount: '10132',
+        assets: [],
+        receiver: '',
+        tx_hash: '',
+        tx_index: 12,
+        utxo_id: '',
+      },
+      {
+        amount: '612413',
+        assets: [],
+        receiver: '',
+        tx_hash: '',
+        tx_index: 13,
+        utxo_id: '',
+      },
+      {
+        amount: '3212',
+        assets: [],
+        receiver: '',
+        tx_hash: '',
+        tx_index: 15,
+        utxo_id: '',
+      },
+      {
+        amount: '1933',
+        receiver: '',
+        tx_hash: '',
+        tx_index: 14,
+        utxo_id: '',
+        assets: [],
+      },
+    ]
+
+    const primaryTokenId = 'primaryTokenId'
+
+    expect(rawUtxosAsAmounts(utxos, primaryTokenId)).toEqual({
+      primaryTokenId: '627690',
+    } as Balance.Amounts)
+  })
+
+  it('Utxos with tokens', () => {
+    const utxos: RawUtxo[] = [
+      {
+        amount: '1024',
+        assets: [
+          {assetId: 'token123', amount: '10', policyId: '', name: ''},
+          {assetId: 'token567', amount: '6', policyId: '', name: ''},
+        ],
+        receiver: '',
+        tx_hash: '',
+        tx_index: 12,
+        utxo_id: '',
+      },
+      {
+        amount: '62314',
+        assets: [{assetId: 'token123', amount: '5', policyId: '', name: ''}],
+        receiver: '',
+        tx_hash: '',
+        tx_index: 13,
+        utxo_id: '',
+      },
+      {
+        amount: '332',
+        assets: [{assetId: 'token567', amount: '2', policyId: '', name: ''}],
+        receiver: '',
+        tx_hash: '',
+        tx_index: 15,
+        utxo_id: '',
+      },
+      {
+        amount: '4235',
+        receiver: '',
+        tx_hash: '',
+        tx_index: 14,
+        utxo_id: '',
+        assets: [],
+      },
+    ]
+
+    const primaryTokenId = 'primaryTokenId'
+
+    expect(rawUtxosAsAmounts(utxos, primaryTokenId)).toEqual({
+      primaryTokenId: '67905',
+      token123: '15',
+      token567: '8',
+    } as Balance.Amounts)
+  })
+})

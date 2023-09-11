@@ -1,7 +1,7 @@
 import {Balance, Nullable} from '@yoroi/types'
 
 import {mockDelayedResponse, mockLoading, mockMaker, mockMakerMutation, mockUnknownError} from '../utils/mockHelpers'
-import {PortfolioManagerOptions} from './types'
+import {PortfolioManager, PortfolioManagerOptions, PortfolioManagerState} from './types'
 
 // DATA
 const tokensResponse: Readonly<Balance.TokenRecords> = {
@@ -75,21 +75,60 @@ const mockPortfolioManagerOptionsError: PortfolioManagerOptions = {
   },
 }
 
+// MANAGER
+const hydrate = mockMakerMutation()
+const updatePortfolio = mockMakerMutation()
+const subscribe = () => () => undefined
+const destroy = () => undefined
+// TODO: fill data later
+const getTokens = mockMaker<Readonly<Balance.TokenRecords> | undefined>({}, undefined)
+
+const mockPortfolioManager: PortfolioManager = {
+  hydrate: hydrate.success,
+  getTokens: getTokens.success,
+  updatePortfolio: updatePortfolio.success,
+  getPortfolio: () => {
+    return {
+      primary: {
+        fts: {},
+        locked: {},
+        tokens: {},
+      },
+      secondary: {
+        fts: {},
+        nfts: {},
+        tokens: {},
+      },
+    } as PortfolioManagerState
+  },
+  subscribe,
+  destroy,
+}
+
 // MOCKS
-export const mockPortolioManager = {
-  tokensResponse,
+export const mocksPortolioManager = {
   emptyTokensResponse,
+  tokensResponse,
 
   allKeysResponse,
 
-  tokens,
   getAllKeys,
   saveMany,
-  readAll,
   readMany,
+  readAll,
+  tokens,
   clear,
 
-  mockPortfolioManagerOptions,
   mockPortfolioManagerOptionsEmpty,
   mockPortfolioManagerOptionsError,
+  mockPortfolioManagerOptions,
+
+  updatePortfolio,
+  getTokens,
+  hydrate,
+
+  subscribe,
+  destroy,
+
+  mockPortfolioManager,
 }

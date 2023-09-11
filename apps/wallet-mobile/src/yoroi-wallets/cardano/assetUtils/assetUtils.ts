@@ -5,7 +5,7 @@ import {CardanoMobile} from '../../wallets'
 import {getCardanoNetworkConfigById} from '../networks'
 import {cardanoValueFromRemoteFormat} from '../utils'
 
-export async function calcLockedDeposit(utxos: RawUtxo[], networkId: NetworkId) {
+export async function calcLockedDeposit(utxos: ReadonlyArray<RawUtxo>, networkId: NetworkId) {
   const networkConfig = getCardanoNetworkConfigById(networkId)
   const coinsPerUtxoWord = await CardanoMobile.BigNum.fromStr(networkConfig.COINS_PER_UTXO_WORD)
   const utxosWithAssets = utxos.filter((u) => u.assets.length > 0)

@@ -56,12 +56,12 @@ export const Amounts = {
 
     return Object.fromEntries(negatedEntries)
   },
-  remove: (amounts: Balance.Amounts, removeTokenIds: Array<TokenId>): Balance.Amounts => {
+  remove: (amounts: Readonly<Balance.Amounts>, removeTokenIds: ReadonlyArray<TokenId>): Balance.Amounts => {
     const filteredEntries = Object.entries(amounts).filter(([tokenId]) => !removeTokenIds.includes(tokenId))
 
     return Object.fromEntries(filteredEntries)
   },
-  getAmount: (amounts: Balance.Amounts, tokenId: string): Balance.Amount => {
+  getAmount: (amounts: Readonly<Balance.Amounts>, tokenId: string): Balance.Amount => {
     return {
       tokenId,
       quantity: amounts[tokenId] || Quantities.zero,
@@ -84,6 +84,7 @@ export const Amounts = {
     ),
   fromArray: (amounts: Array<Balance.Amount>) =>
     Object.fromEntries(amounts.map((amount) => [amount.tokenId, amount.quantity])),
+  ids: (amounts: Balance.Amounts): ReadonlyArray<string> => Object.keys(amounts),
 }
 
 export const Quantities = {

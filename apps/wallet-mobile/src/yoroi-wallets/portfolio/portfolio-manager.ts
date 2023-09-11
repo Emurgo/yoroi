@@ -1,0 +1,149 @@
+import {Balance} from '@yoroi/types'
+import {difference, Observer, observerMaker} from '@yoroi/wallets'
+import _ from 'lodash'
+
+import {RawUtxo} from '../types'
+import {Amounts, Quantities} from '../utils'
+import {calcLockedDeposit, cardanoFallbackTokenAsBalanceToken} from './adapters/cardano-helpers'
+import {rawUtxosAsAmounts} from './adapters/transformers'
+import {PortfolioManager, PortfolioManagerOptions, PortfolioManagerState} from './types'
+
+export const portfolioManagerMaker = (
+  {storage, api}: PortfolioManagerOptions,
+  observer: Observer<PortfolioManagerState> = observerMaker<PortfolioManagerState>(),
+): PortfolioManager => {
+  const {tokens} = storage
+  const {notify, subscribe, destroy} = observer
+
+  // QUEUE
+  const updatePortfolioQueue: Array<() => Promise<void>> = []
+  const processQueue = async () => {
+    while (updatePortfolioQueue.length > 0) {
+      const task = updatePortfolioQueue[0]
+      await task()
+      updatePortfolioQueue.shift()
+    }
+  }
+
+  // STATE
+  let knownTokenIds = new Set<Balance.Token['info']['id']>()
+  let portfolio: PortfolioManagerState = portfolioDefaultState 
+
+  // API
+  const getTokens = async (
+    ids: ReadonlyArray<Balance.Token['info']['id']>,
+    avoidCache = false,
+  ): Promise<Readonly<Balance.TokenRecords> | undefined> => {
+    if (avoidCache) {
+      const refreshedTokens = await api.tokens(ids)
+      await tokens.saveMany(Object.values(refreshedTokens))
+      await hydrate()
+      return refreshedTokens
+    } else {
+      const idsNotCached = difference(ids, Array.from(knownTokenIds))
+      if (idsNotCached.length > 0) {
+        const fetchedTokens = await api.tokens(idsNotCached)
+        await tokens.saveMany(Object.values(fetchedTokens))
+        await hydrate()
+        return fetchedTokens
+      }
+    }
+  }
+
+  const updatePortfolio = async (utxos: ReadonlyArray<RawUtxo>, primaryToken: Readonly<Balance.Token>) => {
+    const task = async () => {
+      const allAmounts = rawUtxosAsAmounts(utxos, primaryToken.info.id)
+      const primaryAmounts = {[primaryToken.info.id]: allAmounts[primaryToken.info.id] ?? Quantities.zero}
+
+      const secondaryAmounts = Amounts.remove(allAmounts, [primaryToken.info.id])
+      const secondaryIds = Amounts.ids(secondaryAmounts)
+      const fts: Balance.Amounts = {}
+      const nfts: Balance.Amounts = {}
+
+      const cachedSecondaryTokens = (await getTokens(secondaryIds)) ?? {}
+
+      const secondaryTokens: Balance.TokenRecords = {}
+
+      // there are 2 places that decide the kind of token
+      // during the api.tokens call and here if the token is missing
+      // it will fallback to fts
+      secondaryIds.forEach((tokenId) => {
+        const token = cachedSecondaryTokens[tokenId]
+        if (token?.info?.kind === 'ft') {
+          fts[tokenId] = secondaryAmounts[tokenId]
+        } else if (token?.info?.kind === 'nft') {
+          nfts[tokenId] = secondaryAmounts[tokenId]
+        } else {
+          fts[tokenId] = secondaryAmounts[tokenId]
+        }
+        // when token has no metadata - it should branch the flavor of token in the transformation
+        // falling back to unknown cardano token
+        secondaryTokens[tokenId] = token ?? cardanoFallbackTokenAsBalanceToken(tokenId)
+      })
+
+      const locked = await calcLockedDeposit(utxos)
+
+      portfolio = {
+        primary: {
+          fts: primaryAmounts,
+          locked: {[primaryToken.info.id]: locked},
+          tokens: {[primaryToken.info.id]: primaryToken},
+        },
+        secondary: {
+          fts,
+          nfts,
+          tokens: secondaryTokens,
+        },
+      }
+    }
+
+    // updates need to be processed in the arrived order
+    // otherwise if the previous request was hanging the new one would be processed first
+    // most importantly the state should reflect the latest request
+    updatePortfolioQueue.push(task)
+    await processQueue()
+
+    // notify after queue waiting so it avoid notifying with stale state
+    notify(portfolio)
+  }
+
+  const getPortfolio = () => _.cloneDeep(portfolio)
+
+  const clear = async () => {
+    await tokens.clear()
+    knownTokenIds = new Set()
+    portfolio = portfolioDefaultState
+  }
+
+  const hydrate = () =>
+    tokens.getAllKeys().then((keys) => {
+      knownTokenIds = new Set(keys)
+    })
+
+  return {
+    updatePortfolio,
+    getPortfolio,
+    getTokens,
+    hydrate,
+
+    clear,
+
+    subscribe,
+    destroy,
+  } as const
+}
+
+export const portfolioDefaultState: PortfolioManagerState = {
+  primary: {
+    fts: {},
+    locked: {},
+
+    tokens: {},
+  },
+  secondary: {
+    fts: {},
+    nfts: {},
+
+    tokens: {},
+  },
+} as const

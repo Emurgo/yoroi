@@ -1,6 +1,6 @@
 import {App, Balance} from '@yoroi/types'
 
-import {portfolioManagerMaker} from './portfolioManager' // Replace 'your-module' with the actual module path
+import {portfolioManagerMaker} from './portfolio-manager' // Replace 'your-module' with the actual module path
 
 describe('portfolioManagerMaker', () => {
   it('should refresh tokens without avoidCache', async () => {
@@ -20,14 +20,13 @@ describe('portfolioManagerMaker', () => {
       tokens: mockApiTokens,
     }
 
-    const portfolioManagerToInit = portfolioManagerMaker({storage: mockStorage, api: mockApi})
-    const portfolioManager = await portfolioManagerToInit()
+    const portfolioManager = portfolioManagerMaker({storage: mockStorage, api: mockApi})
+    await portfolioManager.hydrate()
 
     // Act
-    await portfolioManager.tokens.fetch(['token1', 'token2'])
+    await portfolioManager.getTokens(['token1', 'token2'])
 
     // Assert
-    expect(mockStorageGetAllKeys).toHaveBeenCalledTimes(2)
     expect(mockApiTokens).not.toHaveBeenCalled()
     expect(mockStorageSave).not.toHaveBeenCalledWith()
   })
@@ -49,11 +48,11 @@ describe('portfolioManagerMaker', () => {
       tokens: mockApiTokens,
     }
 
-    const portfolioManagerToInit = portfolioManagerMaker({storage: mockStorage, api: mockApi})
-    const portfolioManager = await portfolioManagerToInit()
+    const portfolioManager = portfolioManagerMaker({storage: mockStorage, api: mockApi})
+    await portfolioManager.hydrate()
 
     // Act
-    await portfolioManager.tokens.fetch(['token1', 'token2'], true)
+    await portfolioManager.getTokens(['token1', 'token2'], true)
 
     // Assert
     expect(mockStorageGetAllKeys).toHaveBeenCalledTimes(2)

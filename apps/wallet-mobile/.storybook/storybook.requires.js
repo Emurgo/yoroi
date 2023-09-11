@@ -206,6 +206,7 @@ const getStories = () => {
     "./src/WalletInit/WalletInit/ExpandableItem/ExpandableItem.stories.tsx": require("../src/WalletInit/WalletInit/ExpandableItem/ExpandableItem.stories.tsx"),
     "./src/WalletInit/WalletInit/WalletInitScreen.stories.tsx": require("../src/WalletInit/WalletInit/WalletInitScreen.stories.tsx"),
     "./src/WalletInit/WalletNameForm/WalletNameForm.stories.tsx": require("../src/WalletInit/WalletNameForm/WalletNameForm.stories.tsx"),
+    "./src/yoroi-wallets/portfolio/translators/portfolio-reactjs.stories.tsx": require("../src/yoroi-wallets/portfolio/translators/portfolio-reactjs.stories.tsx"),
   };
 };
 

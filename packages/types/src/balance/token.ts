@@ -59,7 +59,7 @@ export type BalanceToken<M extends Record<string, unknown> = {}> = {
   price?: BalanceTokenPrice
   supply?: BalanceTokenSupply
   status?: BalanceTokenStatus
-  metadatas: M
+  metadatas?: M
 }
 
 export type BalanceTokenRecords<M extends Record<string, unknown> = {}> = {

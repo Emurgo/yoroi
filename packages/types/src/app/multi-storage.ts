@@ -4,15 +4,17 @@ import {Nullable} from '../helpers/types'
 export interface AppMultiStorage<T> {
   getAllKeys: () => Promise<ReadonlyArray<string>>
   clear: () => Promise<void>
-  saveMany: (items: NonNullable<T>[]) => Promise<void>
-  readAll: () => Promise<[string, Nullable<T>][]>
-  readMany: (keys: string[]) => Promise<[string, Nullable<T>][]>
+  saveMany: (items: ReadonlyArray<NonNullable<T>>) => Promise<void>
+  readAll: () => Promise<ReadonlyArray<[string, Nullable<T>]>>
+  readMany: (
+    keys: ReadonlyArray<string>,
+  ) => Promise<ReadonlyArray<[string, Nullable<T>]>>
 }
 
 export type AppMultiStorageOptions<T> = {
   storage: AppStorage
   dataFolder: AppStorageFolderName
-  keyExtractor: keyof T | ((item: NonNullable<T>) => string)
-  serializer?: (item: NonNullable<T>) => string
-  deserializer?: (item: string | null) => Nullable<T>
+  keyExtractor: keyof T | ((item: Readonly<NonNullable<T>>) => string)
+  serializer?: (item: Readonly<NonNullable<T>>) => string
+  deserializer?: (item: string | null) => Readonly<Nullable<T>>
 }
