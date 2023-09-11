@@ -7,7 +7,7 @@ import {StyleSheet, View} from 'react-native'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
-import {SwapFormProvider} from '../TouchedContext'
+import {SwapFormProvider} from '../../../../common/SwapFormProvider'
 import {EditBuyAmount} from './EditBuyAmount'
 
 const mockWallet = produce(mocks.wallet, (draft) => {

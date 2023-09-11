@@ -20,7 +20,7 @@ import {filterByFungibility} from '../../../../../../Send/common/filterByFungibi
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
-import {useSwapTouched} from '../../TouchedContext'
+import {useSwapTouched} from '../../../../../common/SwapFormProvider'
 
 type TransformedObject = {
   decimals: number | undefined

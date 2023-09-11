@@ -20,7 +20,7 @@ import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
-import {useSwapTouched} from '../../TouchedContext'
+import {useSwapTouched} from '../../../../../common/SwapFormProvider'
 
 export const SelectSellTokenFromListScreen = () => {
   const strings = useStrings()
