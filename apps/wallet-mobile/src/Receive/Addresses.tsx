@@ -7,8 +7,8 @@ import {CopyButton, Icon, Spacer, Text} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils/utils'
-import AddressModal from './AddressModal'
 import {useReceiveAddresses} from '../yoroi-wallets/hooks'
+import AddressModal from './AddressModal'
 
 export const UnusedAddresses = () => {
   const strings = useStrings()
