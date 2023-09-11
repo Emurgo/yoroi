@@ -8,13 +8,7 @@ export const useNavigateTo = () => {
 
   return {
     enableLoginWithPin: () => walletNavigation.navigation.navigate('enable-login-with-pin'),
-    enableLoginWithOs: () =>
-      walletNavigation.navigation.navigate('app-root', {
-        screen: 'settings',
-        params: {
-          screen: 'enable-login-with-os',
-        },
-      }),
+    enableLoginWithOs: () => navigation.navigate('enable-login-with-os'),
     changeLanguage: () => navigation.navigate('change-language'),
     changeCurrency: () => navigation.navigate('change-currency'),
     about: () => navigation.navigate('about'),
