@@ -23,8 +23,8 @@ export const confirmationMessages = {
       defaultMessage: '!!!Yes',
     },
     noButton: {
-      id: 'global.actions.dialogs.logout.noButton',
-      defaultMessage: '!!!No',
+      id: 'global.cancel',
+      defaultMessage: '!!!Cancel',
     },
   }),
   resync: defineMessages({
@@ -41,8 +41,8 @@ export const confirmationMessages = {
       defaultMessage: '!!!Yes',
     },
     noButton: {
-      id: 'global.actions.dialogs.logout.noButton',
-      defaultMessage: '!!!No',
+      id: 'global.cancel',
+      defaultMessage: '!!!Cancel',
     },
   }),
   commonButtons: defineMessages({

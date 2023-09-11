@@ -63,6 +63,7 @@ export const ChangeWalletName = () => {
           }}
           title={strings.changeButton}
           disabled={hasErrors || isLoading}
+          shelleyTheme
         />
       </View>
     </SafeAreaView>

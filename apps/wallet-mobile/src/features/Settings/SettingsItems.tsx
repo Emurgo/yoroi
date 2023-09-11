@@ -14,17 +14,14 @@ type SettingsSectionProps = {
 }
 
 export const SettingsSection = ({title, children}: SettingsSectionProps) => (
-  <View style={styles.section}>
+  <View>
     {title != null && (
       <>
-        <Text
-          style={[
-            styles.sectionTitle,
-            {fontFamily: 'Rubik-Regular', color: lightPalette.gray['600'], fontSize: 14, lineHeight: 22},
-          ]}
-        >
+        <Text style={{fontFamily: 'Rubik-Regular', color: lightPalette.gray['600'], fontSize: 14, lineHeight: 22}}>
           {title}
         </Text>
+
+        <Spacer height={5} />
 
         <Hr />
       </>
@@ -119,6 +116,17 @@ export const NavigatedSettingsItem = ({label, onNavigate, icon, disabled, select
   )
 }
 
+type SettingsBuildItemProps = {
+  label: string
+  value: string
+}
+
+export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
+  <SettingsItem label={label}>
+    <Text secondary>{value}</Text>
+  </SettingsItem>
+)
+
 const styles = StyleSheet.create({
   itemInner: {
     paddingVertical: 16,
@@ -130,12 +138,6 @@ const styles = StyleSheet.create({
   },
   label: {
     flex: 1,
-  },
-  section: {
-    paddingHorizontal: 16,
-  },
-  sectionTitle: {
-    paddingBottom: 5,
   },
   disabled: {
     color: COLORS.DISABLED,

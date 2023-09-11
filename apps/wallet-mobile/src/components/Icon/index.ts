@@ -41,6 +41,7 @@ import {Launchpad} from './Launchpad'
 import {Lightning} from './Lightning'
 import {Link} from './Link'
 import {Lock} from './Lock'
+import {Logout} from './Logout'
 import {Magnify} from './Magnify'
 import {Megaphone} from './Megaphone'
 import {Menu} from './Menu'
@@ -60,6 +61,7 @@ import {Qr} from './Qr'
 import {QuestionMark} from './QuestionMark'
 import {Received} from './Received'
 import {Refresh} from './Refresh'
+import {Resync} from './Resync'
 import {RewardManuallyPayout} from './RewardManuallyPayout'
 import {RewardWithdrawn} from './RewardWithdrawn'
 import {Sandbox} from './Sandbox'
@@ -140,6 +142,7 @@ export const Icon = {
   Lightning,
   Link,
   Lock,
+  Logout,
   Magnify,
   Megaphone,
   Menu,
@@ -155,6 +158,7 @@ export const Icon = {
   Qr,
   QuestionMark,
   Received,
+  Resync,
   RewardManuallyPayout,
   RewardWithdrawn,
   Sandbox,

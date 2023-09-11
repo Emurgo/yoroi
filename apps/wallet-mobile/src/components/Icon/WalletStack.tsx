@@ -8,9 +8,9 @@ type Props = {
 
 export const WalletStack = ({size = 36, color = 'black'}: Props) => (
   <Svg width={size} height={size} viewBox="-2 -2 28 28">
-    <Path d="M8 2C6.89543 2 6 2.89543 6 4H18C18 2.89543 17.1046 2 16 2H8Z" fill="black" />
+    <Path d="M8 2C6.89543 2 6 2.89543 6 4H18C18 2.89543 17.1046 2 16 2H8Z" fill={color} />
 
-    <Path d="M4 7C4 5.89543 4.89543 5 6 5H18C19.1046 5 20 5.89543 20 7H4Z" fill="black" />
+    <Path d="M4 7C4 5.89543 4.89543 5 6 5H18C19.1046 5 20 5.89543 20 7H4Z" fill={color} />
 
     <Path
       fillRule="evenodd"
