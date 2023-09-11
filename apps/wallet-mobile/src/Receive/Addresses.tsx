@@ -7,8 +7,8 @@ import {CopyButton, Icon, Spacer, Text} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils/utils'
-import {useAddresses} from '../yoroi-wallets/utils'
 import AddressModal from './AddressModal'
+import {useReceiveAddresses} from '../yoroi-wallets/hooks'
 
 export const UnusedAddresses = () => {
   const strings = useStrings()
@@ -183,4 +183,25 @@ const useAddressIndex = (address: string) => {
   const index = fromPairs(wallet.externalAddresses.map((addr, i) => [addr, i]))[address]
 
   return index
+}
+
+type Addresses = {
+  used: string[]
+  unused: string[]
+}
+
+export const useAddresses = (): Addresses => {
+  const wallet = useSelectedWallet()
+  const receiveAddresses = useReceiveAddresses(wallet)
+  const isUsedAddressIndex = wallet.isUsedAddressIndex
+
+  return receiveAddresses.reduce(
+    (addresses, address) => {
+      isUsedAddressIndex[address]
+        ? (addresses.used = [...addresses.used, address])
+        : (addresses.unused = [...addresses.unused, address])
+      return addresses
+    },
+    {used: [], unused: []} as Addresses,
+  )
 }
