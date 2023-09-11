@@ -31,7 +31,6 @@ export const SettingsScreenNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         ...defaultStackNavigationOptions,
-        cardStyle: {backgroundColor: 'white'},
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >

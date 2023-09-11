@@ -61,6 +61,7 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
   headerRightContainerStyle: {
     paddingRight: 10,
   },
+  cardStyle: {backgroundColor: 'white'},
   headerLeft: (props) => <BackButton {...props} />,
 }
 
