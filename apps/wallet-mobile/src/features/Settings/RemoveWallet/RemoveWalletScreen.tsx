@@ -68,7 +68,7 @@ export const RemoveWalletScreen = () => {
 
         <Spacer height={30} />
 
-        <View style={{paddingHorizontal: 16, paddingBottom: 36}}>
+        <View style={styles.buttonContainer}>
           <Button
             onPress={() => removeWallet()}
             title={strings.remove}
@@ -173,5 +173,9 @@ const styles = StyleSheet.create({
   },
   removeButton: {
     backgroundColor: COLORS.RED,
+  },
+  buttonContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 36,
   },
 })
