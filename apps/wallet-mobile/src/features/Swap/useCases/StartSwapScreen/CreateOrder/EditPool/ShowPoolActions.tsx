@@ -42,7 +42,7 @@ export const ShowPoolActions = () => {
           onPressLabel={navigateTo.selectPool}
           extended={extended}
         >
-          <Text>{`${protocolCapitalize}${isPoolTouched ? '' : strings.autoPool}`}</Text>
+          <Text>{`${protocolCapitalize}${isPoolTouched ? '' : ` ${strings.autoPool}`}`}</Text>
         </Header>
       }
       adornment={<HiddenInfo poolFee={poolFee} />}
