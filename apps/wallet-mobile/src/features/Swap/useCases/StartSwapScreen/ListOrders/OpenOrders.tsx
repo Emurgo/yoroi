@@ -1,6 +1,6 @@
 import {useOrderByStatusOpen} from '@yoroi/swap'
 import _ from 'lodash'
-import React from 'react'
+import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -28,6 +28,9 @@ import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {mapOrders} from './mapOrders'
+import {useCancelOrderTx} from '../../../common/useCancelOrderTx'
+import {createSwapCancelEntry} from '../../../common/helpers'
+import BigNumber from 'bignumber.js'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
@@ -365,6 +368,15 @@ const ModalContent = ({
   cancellationFee: string
 }) => {
   const strings = useStrings()
+  const {createCancelOrderTx, data} = useCancelOrderTx()
+  const unsignedTx = data?.unsignedTx
+  const fees = unsignedTx?.fee?.values ?? []
+  const fee = BigNumber(fees[0]?.amount ?? 0)
+  useEffect(() => {
+    const entry = createSwapCancelEntry()
+    const datum = {}
+    createCancelOrderTx(entry, datum)
+  }, [])
   return (
     <View>
       <ModalContentHeader
@@ -388,7 +400,9 @@ const ModalContent = ({
 
       <Spacer height={10} />
 
-      <ModalContentRow label={strings.listOrdersSheetCancellationFee} value={cancellationFee} />
+      {!fee.isZero() ? (
+        <ModalContentRow label={strings.listOrdersSheetCancellationFee} value={cancellationFee} />
+      ) : null}
 
       <ModalContentLink />
 
