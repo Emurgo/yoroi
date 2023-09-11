@@ -96,7 +96,11 @@ export type YoroiWallet = {
   primaryTokenInfo: Readonly<Balance.TokenInfo>
 
   // Sending
-  createUnsignedTx(entry: YoroiEntry, metadata?: Array<CardanoTypes.TxMetadata>): Promise<YoroiUnsignedTx>
+  createUnsignedTx(
+    entry: YoroiEntry,
+    metadata?: Array<CardanoTypes.TxMetadata>,
+    datum?: {hash: string},
+  ): Promise<YoroiUnsignedTx>
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
   signTx(signRequest: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
   submitTransaction(signedTx: string): Promise<[]>

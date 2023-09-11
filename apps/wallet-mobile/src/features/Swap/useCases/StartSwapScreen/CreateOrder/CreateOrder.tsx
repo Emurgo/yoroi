@@ -1,19 +1,24 @@
-import {usePoolsByPair, useSwap} from '@yoroi/swap'
+import {makeLimitOrder, makePossibleMarketOrder, useCreateOrder, usePoolsByPair, useSwap} from '@yoroi/swap'
+import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Button, Icon, Spacer} from '../../../../../components'
+import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../../metrics/metricsManager'
+import {useAddresses} from '../../../../../Receive/Addresses'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfos} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
+import {createYoroiEntry} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from '../../../common/SwapFormProvider'
+import {useSwapTx} from '../../../common/useSwapTx'
 import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
 import {EditLimitPrice} from './EditLimitPrice'
 import {ShowPoolActions} from './EditPool/ShowPoolActions'
@@ -28,9 +33,11 @@ const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
-  const {orderTypeChanged, createOrder, selectedPoolChanged} = useSwap()
+  const {orderTypeChanged, createOrder, selectedPoolChanged, unsignedTxChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
+  const addresses = useAddresses()
+
   const tokenInfos = useTokenInfos({
     wallet,
     tokenIds: [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId],
@@ -55,6 +62,30 @@ export const CreateOrder = () => {
   const handleSelectOrderType = (index: number) => {
     orderTypeChanged(index === 0 ? 'market' : 'limit')
   }
+
+  const {createUnsignedTx, isLoading} = useSwapTx({
+    onSuccess: (yoroiUnsignedTx) => {
+      unsignedTxChanged(yoroiUnsignedTx)
+      swap()
+      setShowLimitPriceWarning(false)
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+
+  const {createOrderData} = useCreateOrder({
+    onSuccess: (data) => {
+      if (data?.contractAddress !== undefined) {
+        const entry = createYoroiEntry(createOrder, data.contractAddress)
+        const datum = {hash: data.datumHash}
+        createUnsignedTx({entry, datum})
+      }
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
 
   const disabled =
     !isBuyTouched ||
@@ -83,6 +114,50 @@ export const CreateOrder = () => {
     navigation.confirmTx()
   }
 
+  const createUnsignedSwapTx = () => {
+    const {amounts} = createOrder
+    const orderDetails = {
+      sell: amounts.sell,
+      buy: amounts.sell,
+      pools: poolList,
+      selectedPool: createOrder.selectedPool,
+      slippage: createOrder.slippage,
+      address: addresses.used[0],
+    }
+    if (createOrder.type === 'market' && poolList !== undefined) {
+      const orderResult: Swap.CreateOrderData | undefined = makePossibleMarketOrder(
+        orderDetails.sell,
+        orderDetails.buy,
+        orderDetails?.pools as Swap.PoolPair[],
+        orderDetails.slippage,
+        orderDetails.address,
+      )
+      orderResult && createSwapOrder(orderResult)
+    }
+    if (createOrder.type === 'limit' && poolList !== undefined) {
+      const orderResult = makeLimitOrder(
+        orderDetails.sell,
+        orderDetails.buy,
+        orderDetails.selectedPool,
+        orderDetails.slippage,
+        orderDetails.address,
+      )
+      createSwapOrder(orderResult)
+    }
+  }
+
+  const createSwapOrder = (orderData: Swap.CreateOrderData) => {
+    createOrderData({
+      amounts: {
+        sell: orderData.amounts.sell,
+        buy: orderData.amounts.buy,
+      },
+      address: orderData?.address,
+      slippage: orderData.slippage,
+      selectedPool: orderData.selectedPool,
+    })
+  }
+
   const handleOnSwap = () => {
     if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
       const marketPrice = BigNumber(
@@ -101,7 +176,7 @@ export const CreateOrder = () => {
       }
     }
 
-    swap()
+    createUnsignedSwapTx()
   }
 
   return (
@@ -112,8 +187,7 @@ export const CreateOrder = () => {
             open={showLimitPriceWarning}
             onClose={() => setShowLimitPriceWarning(false)}
             onSubmit={() => {
-              swap()
-              setShowLimitPriceWarning(false)
+              handleOnSwap()
             }}
           />
 
@@ -123,7 +197,11 @@ export const CreateOrder = () => {
             keyboardVerticalOffset={86}
           >
             <View style={styles.buttonsGroup}>
-              <ButtonGroup labels={orderTypeLabels} onSelect={handleSelectOrderType} selected={orderTypeIndex} />
+              <ButtonGroup
+                labels={orderTypeLabels}
+                onSelect={(index) => handleSelectOrderType(index)}
+                selected={orderTypeIndex}
+              />
 
               <TouchableOpacity>
                 <Icon.Refresh size={24} />
@@ -154,6 +232,8 @@ export const CreateOrder = () => {
       <Actions>
         <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
       </Actions>
+
+      <LoadingOverlay loading={isLoading} />
     </>
   )
 }
