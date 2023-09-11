@@ -31,6 +31,7 @@ export const SettingsScreenNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         ...defaultStackNavigationOptions,
+        cardStyle: {backgroundColor: 'white'},
         detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
       }}
     >
@@ -138,11 +139,15 @@ const SettingsTabNavigator = () => {
         tabBarStyle: {backgroundColor: COLORS.WHITE, elevation: 0, shadowOpacity: 0},
         tabBarIndicatorStyle: {backgroundColor: COLORS.SHELLEY_BLUE, height: 2},
         tabBarLabelStyle: {
-          fontWeight: 'bold',
+          textTransform: 'none',
+          fontFamily: 'Rubik',
+          fontSize: 16,
+          fontWeight: '500',
         },
         tabBarActiveTintColor: COLORS.SHELLEY_BLUE,
         tabBarInactiveTintColor: COLORS.NOT_SELECTED_TAB_TEXT,
       })}
+      style={{marginHorizontal: 16}}
     >
       <Tab.Screen name="wallet-settings" component={WalletSettingsScreen} />
 
