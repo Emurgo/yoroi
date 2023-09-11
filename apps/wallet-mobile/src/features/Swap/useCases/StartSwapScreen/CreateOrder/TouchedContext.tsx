@@ -3,11 +3,13 @@ import React, {createContext, ReactNode, useContext, useReducer} from 'react'
 type TouchedState = {
   isSellTouched: boolean
   isBuyTouched: boolean
+  isPoolTouched: boolean
 }
 type TouchedActions = {
   sellTouched: () => void
   buyTouched: () => void
   switchTouched: () => void
+  poolTouched: () => void
 }
 
 const TouchedContext = createContext<undefined | (TouchedState & TouchedActions)>(undefined)
@@ -32,6 +34,7 @@ export const SwapFormProvider = ({
     sellTouched: () => dispatch({type: 'sellTouched'}),
     buyTouched: () => dispatch({type: 'buyTouched'}),
     switchTouched: () => dispatch({type: 'switchTouched'}),
+    poolTouched: () => dispatch({type: 'poolTouched'}),
   }).current
 
   const context = React.useMemo(() => ({...state, ...actions}), [state, actions])
@@ -39,7 +42,7 @@ export const SwapFormProvider = ({
   return <TouchedContext.Provider value={context}>{children}</TouchedContext.Provider>
 }
 
-type TouchedAction = {type: 'sellTouched'} | {type: 'buyTouched'} | {type: 'switchTouched'}
+type TouchedAction = {type: 'sellTouched'} | {type: 'buyTouched'} | {type: 'switchTouched'} | {type: 'poolTouched'}
 
 function touchedReducer(state: TouchedState, action: TouchedAction) {
   switch (action.type) {
@@ -56,9 +59,12 @@ function touchedReducer(state: TouchedState, action: TouchedAction) {
         isBuyTouched: state.isSellTouched,
       }
 
+    case 'poolTouched':
+      return {...state, isPoolTouched: true}
+
     default:
       throw new Error(`touchedReducer invalid action`)
   }
 }
 
-const defaultState: TouchedState = Object.freeze({isSellTouched: true, isBuyTouched: false})
+const defaultState: TouchedState = Object.freeze({isSellTouched: true, isBuyTouched: false, isPoolTouched: false})
