@@ -13,7 +13,7 @@ type Props = {
   onSelectBLE: () => void
 }
 
-const useIsUsbSupported = () => {
+export const useIsUsbSupported = () => {
   const [isUSBSupported, setUSBSupported] = React.useState(false)
   React.useEffect(() => {
     DeviceInfo.getApiLevel().then((sdk) =>

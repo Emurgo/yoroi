@@ -1,8 +1,8 @@
 import React from 'react'
-import {Alert, Platform, ScrollView, StyleSheet, View} from 'react-native'
-import DeviceInfo from 'react-native-device-info'
+import {Alert, ScrollView, StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../components'
+import {useIsUsbSupported} from '../../../../HW'
 import {spacing} from '../../../../theme'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '../../../../yoroi-wallets/hw'
 import {useStrings} from '../../common/strings'
@@ -10,17 +10,6 @@ import {useStrings} from '../../common/strings'
 type Props = {
   onSelectUSB: () => void
   onSelectBLE: () => void
-}
-
-const useIsUsbSupported = () => {
-  const [isUSBSupported, setUSBSupported] = React.useState(false)
-  React.useEffect(() => {
-    DeviceInfo.getApiLevel().then((sdk) =>
-      setUSBSupported(Platform.OS === 'android' && sdk >= HARDWARE_WALLETS.LEDGER_NANO.USB_MIN_SDK),
-    )
-  }, [])
-
-  return isUSBSupported
 }
 
 export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => {

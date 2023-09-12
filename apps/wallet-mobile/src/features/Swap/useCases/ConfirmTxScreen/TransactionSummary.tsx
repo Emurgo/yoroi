@@ -20,7 +20,7 @@ export const TransactionSummary = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {createOrder, unsignedTx} = useSwap()
-  const {amounts} = createOrder
+  const {amounts, selectedPool} = createOrder
 
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
@@ -34,7 +34,7 @@ export const TransactionSummary = () => {
   const feesInfo = [
     {
       label: strings.swapMinAdaTitle,
-      value: '2 ADA',
+      value: `${Quantities.denominated(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))} ADA`,
       info: strings.swapMinAda,
     },
     {

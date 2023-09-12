@@ -51,15 +51,7 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx}: Props) =>
       />
 
       {isLoading && (
-        <View
-          style={{
-            position: 'absolute',
-            height: '100%',
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <View style={styles.loading}>
           <ActivityIndicator size="large" color="black" />
         </View>
       )}
@@ -72,5 +64,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 70,
     textAlign: 'center',
     paddingBottom: 8,
+  },
+  loading: {
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })

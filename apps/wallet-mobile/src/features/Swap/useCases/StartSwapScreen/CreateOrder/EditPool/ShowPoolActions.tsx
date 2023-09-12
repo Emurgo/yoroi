@@ -45,7 +45,12 @@ export const ShowPoolActions = () => {
           <Text>{`${protocolCapitalize}${isPoolTouched ? '' : ` ${strings.autoPool}`}`}</Text>
         </Header>
       }
-      adornment={<HiddenInfo poolFee={poolFee} />}
+      adornment={
+        <HiddenInfo
+          poolFee={poolFee}
+          deposit={Quantities.denominated(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))}
+        />
+      }
       extended={extended}
     >
       <MainInfo totalAmount={totalAmount} tokenName={tokenName} />
@@ -71,19 +76,19 @@ const Header = ({
   )
 }
 
-const HiddenInfo = ({poolFee}: {poolFee: string}) => {
+const HiddenInfo = ({poolFee, deposit}: {poolFee: string; deposit: string}) => {
   const strings = useStrings()
   return (
     <View>
       {[
         {
           label: strings.swapMinAdaTitle,
-          value: '2 ADA',
+          value: deposit,
           info: strings.swapMinAda,
         },
         {
           label: strings.swapMinReceivedTitle,
-          value: '2.99 USDA', // TODO add real value
+          value: '?', // TODO add real value
           info: strings.swapMinReceived,
         },
         {
