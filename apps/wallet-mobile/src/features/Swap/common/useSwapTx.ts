@@ -1,0 +1,27 @@
+import {UseMutationOptions} from 'react-query'
+
+import {useSelectedWallet} from '../../../SelectedWallet'
+import {useMutationWithInvalidations} from '../../../yoroi-wallets/hooks'
+import {YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+
+export const useSwapTx = (
+  options?: UseMutationOptions<YoroiUnsignedTx, Error, {entry: YoroiEntry; datum: {hash: string}}>,
+) => {
+  const metadata = [
+    {
+      label: 'Yoroi-Swap',
+      data: {msg: ['Yoroi: Swap B for A Order Request']},
+    },
+  ]
+  const wallet = useSelectedWallet()
+  const mutation = useMutationWithInvalidations({
+    mutationFn: (data) => wallet.createUnsignedTx(data.entry, metadata, data.datum),
+    invalidateQueries: ['useCreateOrder'],
+    ...options,
+  })
+
+  return {
+    createUnsignedTx: mutation.mutate,
+    ...mutation,
+  }
+}

@@ -12,7 +12,7 @@ import {AmountCard} from '../../../../common/AmountCard/AmountCard'
 import {getBuyQuantityForLimitOrder} from '../../../../common/helpers'
 import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
-import {useSwapTouched} from '../TouchedContext'
+import {useSwapTouched} from '../../../../common/SwapFormProvider'
 
 export const EditSellAmount = () => {
   const strings = useStrings()

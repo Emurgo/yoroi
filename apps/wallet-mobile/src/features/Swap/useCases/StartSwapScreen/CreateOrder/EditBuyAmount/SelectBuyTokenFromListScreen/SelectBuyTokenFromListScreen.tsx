@@ -20,7 +20,7 @@ import {filterByFungibility} from '../../../../../../Send/common/filterByFungibi
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
-import {useSwapTouched} from '../../TouchedContext'
+import {useSwapTouched} from '../../../../../common/SwapFormProvider'
 
 type TransformedObject = {
   decimals: number | undefined
@@ -347,7 +347,9 @@ export const filterTokensPairBySearch = (searchTerm: string) => {
   if (searchTermLowerCase.length === 0) return () => true
 
   return (tokenInfo: TransformedObject) => {
-    return tokenInfo.name?.toLocaleLowerCase().includes(searchTermLowerCase) ?? false
+    return (
+      tokenInfo.name?.toLocaleLowerCase().replace(/\s/g, '').includes(searchTermLowerCase.replace(/\s/g, '')) ?? false
+    )
   }
 }
 

@@ -8,7 +8,6 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {isEmptyString} from '../utils/utils'
 import {useReceiveAddresses} from '../yoroi-wallets/hooks'
-import {Address as AddressType} from '../yoroi-wallets/types'
 import AddressModal from './AddressModal'
 
 export const UnusedAddresses = () => {
@@ -187,11 +186,11 @@ const useAddressIndex = (address: string) => {
 }
 
 type Addresses = {
-  used: AddressType[]
-  unused: AddressType[]
+  used: string[]
+  unused: string[]
 }
 
-const useAddresses = (): Addresses => {
+export const useAddresses = (): Addresses => {
   const wallet = useSelectedWallet()
   const receiveAddresses = useReceiveAddresses(wallet)
   const isUsedAddressIndex = wallet.isUsedAddressIndex

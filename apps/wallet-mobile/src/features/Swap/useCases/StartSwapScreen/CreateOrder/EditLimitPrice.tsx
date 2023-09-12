@@ -11,7 +11,7 @@ import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {getBuyQuantityForLimitOrder} from '../../../common/helpers'
 import {useStrings} from '../../../common/strings'
-import {useSwapTouched} from './TouchedContext'
+import {useSwapTouched} from '../../../common/SwapFormProvider'
 const BORDER_SIZE = 1
 const PRECISION = 10
 
@@ -95,7 +95,6 @@ type AmountInputProps = {
 const AmountInput = ({onChange, value, editable}: AmountInputProps) => {
   return (
     <TextInput
-      returnKeyType="done"
       keyboardType="numeric"
       autoComplete="off"
       value={value}

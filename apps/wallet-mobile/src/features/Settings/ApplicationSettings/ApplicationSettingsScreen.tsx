@@ -1,5 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -7,11 +6,11 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Icon, Spacer, StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
 import {CONFIG} from '../../../legacy/config'
-import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
 import {lightPalette} from '../../../theme'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
+import {useNavigateTo} from '../common/navigation'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
@@ -25,39 +24,34 @@ export const ApplicationSettingsScreen = () => {
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? supportedLanguages['en-US']
 
-  const {isTogglePrivacyModeLoading} = usePrivacyMode()
+  const {isTogglePrivacyModeLoading, isPrivacyOff} = usePrivacyMode()
 
-  const walletNavigation = useWalletNavigation()
   const {currency} = useCurrencyContext()
-  const settingsNavigation = useNavigation<SettingsRouteNavigation>()
+  const {enabled: crashReportEnabled} = useCrashReports()
 
   const authSetting = useAuthSetting()
   const authOsEnabled = useAuthOsEnabled()
-  const {authWithOs} = useAuthWithOs({onSuccess: () => walletNavigation.navigation.navigate('enable-login-with-pin')})
+  const navigateTo = useNavigateTo()
+  const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
       authWithOs()
     } else {
-      walletNavigation.navigation.navigate('app-root', {
-        screen: 'settings',
-        params: {
-          screen: 'enable-login-with-os',
-        },
-      })
+      navigateTo.enableLoginWithOs()
     }
   }
 
   return (
-    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.settings}>
-      <ScrollView bounces={false}>
+    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
+      <ScrollView bounces={false} style={styles.settings}>
         <StatusBar type="dark" />
 
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem
             icon={<Icon.Globe {...iconProps} />}
             label={strings.selectLanguage}
-            onNavigate={() => settingsNavigation.navigate('change-language')}
+            onNavigate={navigateTo.changeLanguage}
             selected={language.label}
           />
 
@@ -65,31 +59,31 @@ export const ApplicationSettingsScreen = () => {
             icon={<Icon.Coins {...iconProps} />}
             label={strings.selectFiatCurrency}
             selected={currency}
-            onNavigate={() => settingsNavigation.navigate('change-currency')}
+            onNavigate={navigateTo.changeCurrency}
           />
 
           <NavigatedSettingsItem
             icon={<Icon.Info {...iconProps} />}
             label={strings.about}
-            onNavigate={() => settingsNavigation.navigate('about')}
+            onNavigate={navigateTo.about}
           />
 
           <NavigatedSettingsItem
             icon={<Icon.TermsOfUse {...iconProps} />}
             label={strings.termsOfservice}
-            onNavigate={() => settingsNavigation.navigate('terms-of-use')}
+            onNavigate={navigateTo.termsOfUse}
           />
 
           <NavigatedSettingsItem
             icon={<Icon.TermsOfUse {...iconProps} />}
             label={strings.privacyPolicy}
-            onNavigate={() => settingsNavigation.navigate('privacy-policy')}
+            onNavigate={navigateTo.privacyPolicy}
           />
 
           <NavigatedSettingsItem
             icon={<Icon.Analytics {...iconProps} />}
             label={strings.analytics}
-            onNavigate={() => walletNavigation.navigateToAnalyticsSettings()}
+            onNavigate={navigateTo.analytics}
           />
         </SettingsSection>
 
@@ -100,7 +94,7 @@ export const ApplicationSettingsScreen = () => {
             disabled={authSetting === 'os'}
             icon={<Icon.Pin {...iconProps} />}
             label={strings.changePin}
-            onNavigate={() => settingsNavigation.navigate('change-custom-pin')}
+            onNavigate={navigateTo.changeCustomPin}
           />
 
           <SettingsItem
@@ -108,7 +102,7 @@ export const ApplicationSettingsScreen = () => {
             label={strings.privacyMode}
             info={strings.privacyModeInfo}
           >
-            <PrivacyModeSwitch />
+            <PrivacyModeSwitch isPrivacyOff={isPrivacyOff} />
           </SettingsItem>
 
           <SettingsItem
@@ -129,22 +123,24 @@ export const ApplicationSettingsScreen = () => {
             label={strings.crashReporting}
             info={strings.crashReportingInfo}
           >
-            <CrashReportsSwitch />
+            <CrashReportsSwitch crashReportEnabled={crashReportEnabled} />
           </SettingsItem>
         </SettingsSection>
+
+        <Spacer height={24} />
       </ScrollView>
     </SafeAreaView>
   )
 }
 
 // to avoid switch jumps
-const PrivacyModeSwitch = () => {
-  const {setPrivacyModeOn, setPrivacyModeOff, isTogglePrivacyModeLoading, isPrivacyOff} = usePrivacyMode()
+const PrivacyModeSwitch = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
+  const {setPrivacyModeOn, setPrivacyModeOff, isTogglePrivacyModeLoading} = usePrivacyMode()
   const [isLocalPrivacyOff, setIsLocalPrivacyOff] = React.useState(isPrivacyOff)
 
   const onTogglePrivacyMode = () => {
     setIsLocalPrivacyOff((prevState) => {
-      if (prevState === true) {
+      if (prevState) {
         setPrivacyModeOn()
       } else {
         setPrivacyModeOff()
@@ -154,30 +150,25 @@ const PrivacyModeSwitch = () => {
     })
   }
 
-  React.useEffect(() => {
-    setIsLocalPrivacyOff(isPrivacyOff)
-  }, [isPrivacyOff])
-
   return <Switch value={isLocalPrivacyOff} onValueChange={onTogglePrivacyMode} disabled={isTogglePrivacyModeLoading} />
 }
 
-const CrashReportsSwitch = () => {
-  const {enabled, enable, disable} = useCrashReports()
-  const [isLocalEnabled, setIsLocalEnabled] = useState(enabled)
+// to avoid switch jumps
+const CrashReportsSwitch = ({crashReportEnabled}: {crashReportEnabled: boolean}) => {
+  const {enable, disable} = useCrashReports()
+  const [isLocalEnabled, setIsLocalEnabled] = React.useState(crashReportEnabled)
 
-  const onToggleCrashReports = (newEnabled: boolean) => {
-    if (newEnabled) {
-      enable()
-    } else {
-      disable()
-    }
+  const onToggleCrashReports = () => {
+    setIsLocalEnabled((prevState) => {
+      if (prevState) {
+        enable()
+      } else {
+        disable()
+      }
 
-    setIsLocalEnabled(newEnabled)
+      return !prevState
+    })
   }
-
-  useEffect(() => {
-    setIsLocalEnabled(enabled)
-  }, [enabled, setIsLocalEnabled])
 
   return <Switch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={CONFIG.FORCE_CRASH_REPORTS} />
 }
@@ -268,9 +259,12 @@ const messages = defineMessages({
 })
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   settings: {
     flex: 1,
-    paddingTop: 16,
-    backgroundColor: '#fff',
+    padding: 16,
   },
 })

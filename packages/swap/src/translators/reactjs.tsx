@@ -151,6 +151,27 @@ export const useOrderByStatusOpen = (
   return query.data
 }
 
+export const useCreateOrder = (
+  options?: UseMutationOptions<
+    Swap.CreateOrderResponse,
+    Error,
+    Swap.CreateOrderData
+  >,
+) => {
+  const {order} = useSwap()
+
+  const mutation = useMutationWithInvalidations({
+    mutationFn: (orderData) => order.create(orderData),
+    invalidateQueries: ['useCreateOrder'],
+    ...options,
+  })
+
+  return {
+    createOrderData: mutation.mutate,
+    ...mutation,
+  }
+}
+
 export const useOrderByStatusCompleted = (
   options: UseQueryOptions<Swap.CompletedOrder[], Error>,
 ) => {

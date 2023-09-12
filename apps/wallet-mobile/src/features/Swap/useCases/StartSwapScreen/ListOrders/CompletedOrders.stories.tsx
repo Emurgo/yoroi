@@ -7,7 +7,7 @@ import {Boundary} from '../../../../../components'
 import {SearchProvider} from '../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {SwapFormProvider} from '../CreateOrder/TouchedContext'
+import {SwapFormProvider} from '../../../common/SwapFormProvider'
 import {CompletedOrders, CompletedOrdersSkeleton} from './CompletedOrders'
 
 storiesOf('Swap Completed orders', module)

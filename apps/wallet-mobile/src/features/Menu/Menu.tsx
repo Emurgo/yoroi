@@ -41,7 +41,7 @@ export const Menu = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <ScrollView contentContainerStyle={styles.scrollViewContent} bounces={false}>
         <AppSettings //
-          label={strings.appSettings}
+          label={strings.settings}
           onPress={navigateTo.settings}
           left={<Icon.Gear size={24} color={lightPalette.gray['600']} />}
         />
@@ -194,7 +194,6 @@ const useStrings = () => {
     supportLink: intl.formatMessage(messages.supportLink),
     knowledgeBase: intl.formatMessage(messages.knowledgeBase),
     menu: intl.formatMessage(messages.menu),
-    appSettings: intl.formatMessage(messages.appSettings),
     releases: intl.formatMessage(messages.releases),
   }
 }
@@ -223,10 +222,6 @@ const messages = defineMessage({
   menu: {
     id: 'menu',
     defaultMessage: '!!!Menu',
-  },
-  appSettings: {
-    id: 'menu.appSettings',
-    defaultMessage: '!!!App Settings',
   },
   releases: {
     id: 'menu.releases',

@@ -4,7 +4,7 @@ import React from 'react'
 
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../../../yoroi-wallets/mocks'
-import {SwapFormProvider} from '../TouchedContext'
+import {SwapFormProvider} from '../../../../common/SwapFormProvider'
 import {LimitPriceWarning} from './LimitPriceWarning'
 
 storiesOf('LimitPriceWarning', module).add('Initial', () => <Initial />)

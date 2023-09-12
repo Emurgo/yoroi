@@ -3,6 +3,7 @@ import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
 import {InteractionManager, ScrollView, StyleSheet, Switch} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {useAuth} from '../../../auth/AuthProvider'
 import {Icon, Spacer, StatusBar} from '../../../components'
@@ -16,6 +17,7 @@ import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
+import {useNavigateTo} from '../common/navigation'
 import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
 const iconProps = {
@@ -26,100 +28,82 @@ const iconProps = {
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
-  const {navigation, resetToWalletSelection} = useWalletNavigation()
+  const {resetToWalletSelection} = useWalletNavigation()
   const wallet = useSelectedWallet()
-  const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
   const authSetting = useAuthSetting()
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
+  const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
 
   const onSwitchWallet = () => {
     resetToWalletSelection()
   }
 
-  const onEnableEasyConfirmation = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'enable-easy-confirmation',
-      },
-    })
-  }
-
-  const onDisableEasyConfirmation = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'disable-easy-confirmation',
-      },
-    })
-  }
-
   return (
-    <ScrollView bounces={false} style={styles.settings}>
-      <StatusBar type="dark" />
+    <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
+      <ScrollView bounces={false} style={styles.settings}>
+        <StatusBar type="dark" />
 
-      <SettingsSection title={strings.general}>
-        <NavigatedSettingsItem
-          icon={<Icon.WalletStack {...iconProps} />}
-          label={strings.switchWallet}
-          onNavigate={onSwitchWallet}
-        />
-
-        <NavigatedSettingsItem icon={<Icon.Logout {...iconProps} />} label={strings.logout} onNavigate={logout} />
-
-        <NavigatedSettingsItem
-          icon={<Icon.Wallet {...iconProps} />}
-          label={strings.walletName}
-          onNavigate={() => settingsNavigation.navigate('change-wallet-name')}
-        />
-      </SettingsSection>
-
-      <Spacer height={24} />
-
-      <SettingsSection title={strings.security}>
-        <NavigatedSettingsItem
-          icon={<Icon.Lock {...iconProps} />}
-          label={strings.changePassword}
-          onNavigate={() => settingsNavigation.navigate('change-password')}
-        />
-
-        <SettingsItem
-          icon={<Icon.Bio {...iconProps} />}
-          label={strings.easyConfirmation}
-          disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
-        >
-          <Switch
-            value={easyConfirmationEnabled}
-            onValueChange={easyConfirmationEnabled ? onDisableEasyConfirmation : onEnableEasyConfirmation}
-            disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
+        <SettingsSection title={strings.general}>
+          <NavigatedSettingsItem
+            icon={<Icon.WalletStack {...iconProps} />}
+            label={strings.switchWallet}
+            onNavigate={onSwitchWallet}
           />
-        </SettingsItem>
-      </SettingsSection>
 
-      <Spacer height={24} />
+          <NavigatedSettingsItem icon={<Icon.Logout {...iconProps} />} label={strings.logout} onNavigate={logout} />
 
-      <SettingsSection title={strings.actions}>
-        <NavigatedSettingsItem
-          icon={<Icon.CrossCircle {...iconProps} />}
-          label={strings.removeWallet}
-          onNavigate={() => settingsNavigation.navigate('remove-wallet')}
-        />
+          <NavigatedSettingsItem
+            icon={<Icon.Wallet {...iconProps} />}
+            label={strings.walletName}
+            onNavigate={() => settingsNavigation.navigate('change-wallet-name')}
+          />
+        </SettingsSection>
 
-        <ResyncButton />
-      </SettingsSection>
+        <Spacer height={24} />
 
-      <Spacer height={24} />
+        <SettingsSection title={strings.security}>
+          <NavigatedSettingsItem
+            icon={<Icon.Lock {...iconProps} />}
+            label={strings.changePassword}
+            onNavigate={() => settingsNavigation.navigate('change-password')}
+          />
 
-      <SettingsSection title={strings.about}>
-        <SettingsBuildItem label={strings.network} value={getNetworkName(wallet.networkId)} />
+          <SettingsItem
+            icon={<Icon.Bio {...iconProps} />}
+            label={strings.easyConfirmation}
+            disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
+          >
+            <DisableEasyConfirmationSwitch easyConfirmationEnabled={easyConfirmationEnabled} />
+          </SettingsItem>
+        </SettingsSection>
 
-        <SettingsBuildItem
-          label={strings.walletType}
-          value={intl.formatMessage(getWalletType(wallet.walletImplementationId))}
-        />
-      </SettingsSection>
-    </ScrollView>
+        <Spacer height={24} />
+
+        <SettingsSection title={strings.actions}>
+          <NavigatedSettingsItem
+            icon={<Icon.CrossCircle {...iconProps} />}
+            label={strings.removeWallet}
+            onNavigate={() => settingsNavigation.navigate('remove-wallet')}
+          />
+
+          <ResyncButton />
+        </SettingsSection>
+
+        <Spacer height={24} />
+
+        <SettingsSection title={strings.about}>
+          <SettingsBuildItem label={strings.network} value={getNetworkName(wallet.networkId)} />
+
+          <SettingsBuildItem
+            label={strings.walletType}
+            value={intl.formatMessage(getWalletType(wallet.walletImplementationId))}
+          />
+        </SettingsSection>
+
+        <Spacer height={24} />
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
@@ -183,6 +167,34 @@ const useLogout = () => {
       })
     }
   }
+}
+
+// to avoid switch jumps
+const DisableEasyConfirmationSwitch = ({easyConfirmationEnabled}: {easyConfirmationEnabled: boolean}) => {
+  const wallet = useSelectedWallet()
+  const [isLocalEnabled, setIsLocalEnabled] = React.useState(easyConfirmationEnabled)
+  const authSetting = useAuthSetting()
+  const navigateTo = useNavigateTo()
+
+  const onToggleEasyConfirmation = () => {
+    setIsLocalEnabled((prevState) => {
+      if (prevState) {
+        navigateTo.disableEasyConfirmation()
+      } else {
+        navigateTo.enableEasyConfirmation()
+      }
+
+      return !prevState
+    })
+  }
+
+  return (
+    <Switch
+      value={isLocalEnabled}
+      onValueChange={onToggleEasyConfirmation}
+      disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
+    />
+  )
 }
 
 const messages = defineMessages({
@@ -277,9 +289,12 @@ const useStrings = () => {
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   settings: {
     flex: 1,
-    paddingTop: 16,
-    backgroundColor: '#fff',
+    padding: 16,
   },
 })
