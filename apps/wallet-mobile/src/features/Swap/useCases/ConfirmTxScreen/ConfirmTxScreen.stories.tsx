@@ -5,7 +5,7 @@ import React from 'react'
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
 import {mocks} from '../../common/mocks'
-import {SwapFormProvider} from '../StartSwapScreen/CreateOrder/TouchedContext'
+import {SwapFormProvider} from '../../common/SwapFormProvider'
 import {ConfirmTxScreen} from './ConfirmTxScreen'
 
 storiesOf('Swap ConfirmTxScreen', module) //
