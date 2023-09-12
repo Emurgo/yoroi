@@ -237,6 +237,7 @@ export const usePoolsByPair = (
   const query = useQuery({
     suspense: true,
     ...options,
+    enabled: tokenPair?.tokenA !== undefined && tokenPair?.tokenB !== undefined,
     queryKey: ['usePoolsByPair', tokenPair],
     queryFn: () => pools.list.byPair(tokenPair),
   })
