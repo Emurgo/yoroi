@@ -45,14 +45,14 @@ export const OpenOrders = () => {
   const transactionsInfos = useTransactionInfos(wallet)
   const {search} = useSearch()
 
-  const orders = useOrderByStatusOpen({
+  const {openOrders} = useOrderByStatusOpen({
     queryKey: [wallet.id, 'open-orders'],
   })
-  const tokenIds = _.uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
+  const tokenIds = _.uniq(openOrders?.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
 
   const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})
 
-  const normalizedOrders = mapOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos))
+  const normalizedOrders = mapOrders(openOrders, tokenInfos, numberLocale, Object.values(transactionsInfos))
 
   const searchLower = search.toLocaleLowerCase()
 
@@ -188,7 +188,7 @@ export const OpenOrders = () => {
         </BottomSheetModal>
       </View>
 
-      <Counter counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
+      <Counter counter={openOrders?.length ?? 0} customText={strings.listOpenOrders} />
     </>
   )
 }
