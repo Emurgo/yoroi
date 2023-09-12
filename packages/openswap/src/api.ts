@@ -34,6 +34,7 @@ export class OpenSwapApi {
   }
 
   public async cancelOrder(orderData: CancelOrderRequest) {
+    console.log('swap api cancel order', orderData)
     return cancelOrder({network: this.network, client: this.client}, orderData)
   }
 

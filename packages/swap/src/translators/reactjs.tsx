@@ -23,6 +23,7 @@ import {mockSwapManagerDefault} from './swapManager.mocks'
 import {BalanceToken} from '@yoroi/types/lib/balance/token'
 import {SwapPoolPair} from '@yoroi/types/lib/swap/pool'
 import {BalanceQuantity} from '@yoroi/types/src/balance/token'
+import {SwapCancelOrderData} from '@yoroi/types/lib/swap/order'
 
 const defaultSwapManager: Swap.Manager = mockSwapManagerDefault
 
@@ -107,6 +108,7 @@ export const SwapProvider = ({
     [state, actions, swapManager],
   )
 
+  console.log('swapManager', swapManager.order.cancel.toString())
   return <SwapContext.Provider value={context}>{children}</SwapContext.Provider>
 }
 
@@ -187,6 +189,21 @@ export const useOrderByStatusCompleted = (
     throw new Error('[@yoroi/swap] useOrderByStatusOpen invalid state')
 
   return query.data
+}
+
+export const useCancelOrder = () => {
+  const {order} = useSwap()
+  const mutation = useMutationWithInvalidations({
+    mutationFn: async (data: SwapCancelOrderData) => {
+      console.log('mutation', data)
+      return await order.cancel(data)
+    },
+    invalidateQueries: ['useCancelOrder'],
+  })
+  return {
+    ...mutation,
+    cancelOrder: mutation.mutate,
+  }
 }
 
 export const usePairListByToken = (

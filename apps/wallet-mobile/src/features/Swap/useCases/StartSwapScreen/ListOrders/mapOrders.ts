@@ -44,6 +44,7 @@ export const mapOrders = (
     const txLink = `https://cardanoscan.io/transaction/${txId}`
     const date = isString(submittedAt) ? new Date(submittedAt).toISOString() : ''
     return {
+      utxo: order.utxo,
       tokenPrice,
       tokenAmount,
       id,

@@ -50,7 +50,7 @@ export const TxHistoryNavigator = () => {
     primaryTokenId: wallet.primaryTokenInfo.id,
   })
   const swapManager = makeSwapManager(swapStorage, swapAPI)
-
+  console.log('txhistoryswapmanager', swapManager.order.cancel.toString())
   return (
     <SendProvider key={wallet.id}>
       <SwapProvider key={wallet.id} swapManager={swapManager}>
