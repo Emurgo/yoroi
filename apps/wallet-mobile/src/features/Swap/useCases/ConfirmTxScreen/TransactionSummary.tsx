@@ -8,7 +8,7 @@ import {BottomSheetModal} from '../../../../components/BottomSheetModal'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils'
 import {useStrings} from '../../common/strings'
 
 export const TransactionSummary = () => {
@@ -27,7 +27,7 @@ export const TransactionSummary = () => {
   const label = `${Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)} ${tokenToBuyName}`
 
   const poolFee = Quantities.denominated(
-    `${Number(Object.values(unsignedTx?.fee))}`,
+    asQuantity(Number(Object.values(unsignedTx?.fee))),
     Number(wallet.primaryTokenInfo.decimals),
   )
 
