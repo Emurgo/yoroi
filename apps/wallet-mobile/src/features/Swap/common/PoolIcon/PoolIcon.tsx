@@ -4,7 +4,7 @@ import React, {FunctionComponent} from 'react'
 import {Icon} from '../../../../components'
 
 export const PoolIcon = ({providerId, size}: {providerId: Pool['provider']; size: number}) => {
-  const IconVariant = icons[providerId]
+  const IconVariant = icons[providerId] ?? Icon.Swap
   return <IconVariant size={size} />
 }
 
