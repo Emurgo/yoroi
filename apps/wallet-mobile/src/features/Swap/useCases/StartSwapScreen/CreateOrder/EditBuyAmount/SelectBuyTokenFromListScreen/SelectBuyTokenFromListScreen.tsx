@@ -18,10 +18,10 @@ import {useAllTokenInfos, useBalance} from '../../../../../../../yoroi-wallets/h
 import {Quantities} from '../../../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../../../../Send/common/filterByFungibility'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
+import {filterBySearch} from '../../../../../common/filterBySearch'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
 import {useSwapTouched} from '../../../../../common/SwapFormProvider'
-import {filterBySearch} from '../../../../../common/filterBySearch'
 
 type TransformedObject = {
   decimals: number | undefined
