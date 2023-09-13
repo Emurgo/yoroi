@@ -2,9 +2,9 @@ import {useOrderByStatusOpen, useSwap} from '@yoroi/swap'
 import {useCancelOrder} from '@yoroi/swap/src/translators/reactjs'
 import BigNumber from 'bignumber.js'
 import _ from 'lodash'
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
-import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {
   BottomSheetModal,
@@ -29,8 +29,10 @@ import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/h
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {useCancelOrderTx} from '../../../common/useCancelOrderTx'
 import {mapOrders} from './mapOrders'
+import {YoroiEntry, YoroiUnsignedTx} from '../../../../../yoroi-wallets/types'
+import {Amounts} from '../../../../../yoroi-wallets/utils'
+import {formatTokenWithText} from '../../../../../legacy/format'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
@@ -39,7 +41,7 @@ export const OpenOrders = () => {
     content: '',
   })
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
-  const [confirmationModal, setConfirmationModal] = React.useState(false)
+  const [showPasswordModal, setShowPasswordModal] = React.useState(false)
   const strings = useStrings()
   const [spendingPassword, setSpendingPassword] = React.useState('')
   const {numberLocale} = useLanguage()
@@ -47,7 +49,6 @@ export const OpenOrders = () => {
   const wallet = useSelectedWallet()
   const transactionsInfos = useTransactionInfos(wallet)
   const {search} = useSearch()
-  const {order: swapApiOrder} = useSwap()
 
   const orders = useOrderByStatusOpen({
     queryKey: [wallet.id, 'open-orders'],
@@ -66,31 +67,23 @@ export const OpenOrders = () => {
       order.assetToLabel.toLocaleLowerCase().includes(searchLower)
     )
   })
-  const {cancelOrder, error} = useCancelOrder()
 
-  console.log('orders', orders)
-
-  const onOrderCancelConfirm = (id: string) => {
+  const onOrderCancelConfirm = (id: string, unsignedTx: YoroiUnsignedTx) => {
     const order = normalizedOrders.find((o) => o.id === id)
     if (!order) return
-    // closeBottomSheet()
-    // setConfirmationModal(true)
-    const address =
-      'addr1q9l0qrhrvu3nq92ns23g2atns690ge4c325vgzqlg4vru9uym9vrnx7vuq6q9lv984p6feekdusp3yewttl5a65sg6fs9r9gw5' // o.owner
-    const orderUtxo = order.utxo
-    const collateralUtxo = 'caf06fa89e6e29aa1c351b7ba574499e39291b968f1d19aaaba08b368539ac70#0'
-    swapApiOrder.cancel({address, utxos: {order: orderUtxo, collateral: collateralUtxo}})
-    // Promise.resolve(cancelOrder({address, utxos: {order: utxo, collateral: utxo}})).catch((e) => {
-    //   console.log('error canceling order', e)
-    // })
+    closeBottomSheet()
+    setShowPasswordModal(true)
   }
 
   const openBottomSheet = (id: string) => {
     const order = normalizedOrders.find((o) => o.id === id)
     if (!order) return
     const {assetFromLabel, assetToLabel} = order
-    const cancellationFee = '3 ADA' // TODO: use real value
     const totalReturned = `${order.fromTokenAmount} ${order.fromTokenInfo?.ticker}`
+    const orderUtxo = order.utxo
+    const collateralUtxo = 'caf06fa89e6e29aa1c351b7ba574499e39291b968f1d19aaaba08b368539ac70' // TODO: Use real values
+    const address =
+      'addr1q9l0qrhrvu3nq92ns23g2atns690ge4c325vgzqlg4vru9uym9vrnx7vuq6q9lv984p6feekdusp3yewttl5a65sg6fs9r9gw5' // TODO: Contract address?
     setBottomSheetState({
       openId: id,
       title: strings.listOrdersSheetTitle,
@@ -98,15 +91,17 @@ export const OpenOrders = () => {
         <ModalContent
           assetFromIcon={<TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />}
           assetToIcon={<TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />}
-          confirmationModal={confirmationModal}
-          onConfirm={() => onOrderCancelConfirm(id)}
+          confirmationModal={showPasswordModal}
+          onConfirm={(unsignedTx) => onOrderCancelConfirm(id, unsignedTx)}
           onBack={closeBottomSheet}
           assetFromLabel={assetFromLabel}
           assetToLabel={assetToLabel}
           assetAmount={`${order.tokenAmount} ${order.assetToLabel}`}
           assetPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
-          cancellationFee={cancellationFee}
           totalReturned={totalReturned}
+          orderUtxo={orderUtxo}
+          collateralUtxo={collateralUtxo}
+          address={address}
         />
       ),
     })
@@ -174,11 +169,9 @@ export const OpenOrders = () => {
         </BottomSheetModal>
 
         <BottomSheetModal
-          isOpen={confirmationModal}
+          isOpen={showPasswordModal}
           title={strings.signTransaction}
-          onClose={() => {
-            setConfirmationModal(false)
-          }}
+          onClose={() => setShowPasswordModal(false)}
         >
           <>
             <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
@@ -369,9 +362,11 @@ const ModalContent = ({
   assetPrice,
   assetAmount,
   totalReturned,
-  cancellationFee,
+  orderUtxo,
+  collateralUtxo,
+  address,
 }: {
-  onConfirm: () => void
+  onConfirm: (unsignedTx: YoroiUnsignedTx) => void
   onBack: () => void
   confirmationModal: boolean
   assetFromIcon: React.ReactNode
@@ -381,18 +376,45 @@ const ModalContent = ({
   assetPrice: string
   assetAmount: string
   totalReturned: string
-  cancellationFee: string
+  orderUtxo: string
+  collateralUtxo: string
+  address: string
 }) => {
   const strings = useStrings()
-  const {data} = useCancelOrderTx()
-  const unsignedTx = data?.unsignedTx
-  const fees = unsignedTx?.fee?.values ?? []
-  const fee = BigNumber(fees[0]?.amount ?? 0)
-  // useEffect(() => {
-  //   const entry = createSwapCancelEntry()
-  //   const datum = {}
-  //   createCancelOrderTx(entry, datum)
-  // }, [])
+  const {order} = useSwap()
+  const wallet = useSelectedWallet()
+  const [unsignedTx, setUnsignedTx] = useState<YoroiUnsignedTx | null>(null)
+  useEffect(() => {
+    order.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address}).then(async (cbor) => {
+      const fakeEntry: YoroiEntry = {
+        // TODO: Use real values
+        address: await (await (await wallet.getFirstPaymentAddress()).toAddress()).toBech32(),
+        amounts: {
+          '': '1',
+        },
+      }
+      const unsignedTx = await wallet.createUnsignedTx(fakeEntry)
+      setUnsignedTx(unsignedTx)
+    })
+  }, [address, orderUtxo, collateralUtxo])
+
+  const feeAmount = unsignedTx
+    ? formatTokenWithText(
+        Amounts.getAmount(unsignedTx.fee, wallet.primaryToken.identifier).quantity,
+        wallet.primaryToken,
+      )
+    : null
+
+  if (feeAmount === null) {
+    // TODO: Use mutation to handle loading / error states
+    // TODO: Verify loading state designs
+    return (
+      <View>
+        <ActivityIndicator animating size="large" color="black" style={{padding: 20}} />
+      </View>
+    )
+  }
+
   return (
     <View>
       <ModalContentHeader
@@ -416,15 +438,13 @@ const ModalContent = ({
 
       <Spacer height={10} />
 
-      {!fee.isZero() ? (
-        <ModalContentRow label={strings.listOrdersSheetCancellationFee} value={cancellationFee} />
-      ) : null}
+      <ModalContentRow label={strings.listOrdersSheetCancellationFee} value={feeAmount} />
 
       <ModalContentLink />
 
       <Spacer height={10} />
 
-      <ModalContentButtons onConfirm={onConfirm} onBack={onBack} />
+      <ModalContentButtons onConfirm={() => (unsignedTx ? onConfirm(unsignedTx) : null)} onBack={onBack} />
     </View>
   )
 }
