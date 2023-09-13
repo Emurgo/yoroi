@@ -3,12 +3,10 @@ import {usePairListByToken, useSwap} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {Switch} from 'react-native-paper'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Spacer, Text} from '../../../../../../../components'
 import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components/AmountItem/AmountItem'
-import {BottomSheetModal} from '../../../../../../../components/BottomSheetModal'
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'
@@ -41,10 +39,7 @@ type TransformedObject = {
 }
 
 export const SelectBuyTokenFromListScreen = () => {
-  const [isOnlyVerifiedTokens, setIsOnlyVerifiedTokens] = React.useState(true)
-
   const strings = useStrings()
-  const handleToogleIsOnlyVerified = () => setIsOnlyVerifiedTokens(!isOnlyVerifiedTokens)
 
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
@@ -73,90 +68,22 @@ export const SelectBuyTokenFromListScreen = () => {
     <SafeAreaView style={styles.container}>
       <Spacer height={12} />
 
-      <VerifiedTokensToogle onToogle={handleToogleIsOnlyVerified} isToogled={isOnlyVerifiedTokens} />
+      <View style={[styles.row, styles.ph]}>
+        <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
 
-      <Spacer height={15} />
+        <Spacer width={8} />
 
-      <MyPortfolioCaption />
+        <Text style={styles.topText}>{strings.assetsIn}</Text>
+      </View>
 
       <Boundary loading={loading}>
-        <TokenList showOnlyVerifiedTokens={isOnlyVerifiedTokens} />
+        <TokenList />
       </Boundary>
     </SafeAreaView>
   )
 }
 
-const VerifiedTokensToogle = ({onToogle, isToogled}: {onToogle: () => void; isToogled: boolean}) => {
-  const strings = useStrings()
-  const [showVerifiedTokenInfo, setShowVerifiedTokenInfo] = React.useState(false)
-
-  return (
-    <View style={(styles.flex, styles.ph)}>
-      <View style={styles.row}>
-        <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
-
-        <Text style={styles.topText}>{strings.verifiedBy('MuesliSwap')}</Text>
-
-        <Spacer width={8} />
-
-        <TouchableOpacity onPress={() => setShowVerifiedTokenInfo(true)}>
-          <Icon.Info size={28} />
-        </TouchableOpacity>
-      </View>
-
-      <Switch value={isToogled} onValueChange={onToogle} color={COLORS.SHELLEY_BLUE} />
-
-      <BottomSheetModal
-        title={strings.poolVerification('MuesliSwap')}
-        isOpen={showVerifiedTokenInfo}
-        onClose={() => setShowVerifiedTokenInfo(false)}
-      >
-        <VerifiedTokenInfo />
-      </BottomSheetModal>
-    </View>
-  )
-}
-
-const VerifiedTokenInfo = () => {
-  const strings = useStrings()
-  return (
-    <View>
-      <Text style={styles.modalText}>{strings.poolVerificationInfo('MuesliSwap')}</Text>
-
-      <Spacer height={28} />
-
-      <Text>
-        <Text style={styles.modalText}>{strings.eachVerifiedToken}</Text>
-
-        <Spacer width={8} />
-
-        <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
-
-        <Text style={styles.modalText}>{strings.verifiedBadge}</Text>
-      </Text>
-    </View>
-  )
-}
-
-const MyPortfolioCaption = () => {
-  const strings = useStrings()
-
-  return (
-    <View style={[styles.row, styles.ph]}>
-      <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
-
-      <Spacer width={8} />
-
-      <Text style={styles.topText}>{strings.assetsIn}</Text>
-    </View>
-  )
-}
-
-type TokenListProps = {
-  showOnlyVerifiedTokens: boolean
-}
-
-const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
+const TokenList = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const tokenInfos = useAllTokenInfos({wallet})
@@ -179,7 +106,7 @@ const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
     () => {
       if (pairsByToken === undefined) return []
 
-      const list = pairsByToken.map((item) => {
+      return pairsByToken.map((item) => {
         const matchingSecondItem = secondArray.find((secondItem) => secondItem.id === item.info.id)
         return {
           decimals: item.info.decimals,
@@ -199,10 +126,9 @@ const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
           inUserWallet: !!matchingSecondItem,
         }
       })
-      return showOnlyVerifiedTokens ? list.filter((item) => item.status === 'verified') : list
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [pairsByToken?.length, secondArray?.length, showOnlyVerifiedTokens],
+    [pairsByToken?.length, secondArray?.length],
   )
 
   const filteredTransformedList = React.useMemo(() => {
@@ -386,23 +312,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.SHELLEY_BLUE,
   },
-  flex: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   topText: {
     fontSize: 16,
-  },
-  modalText: {
-    fontWeight: '400',
-    lineHeight: 20,
-    color: '#242838',
-    fontFamily: 'Rubik',
-    fontSize: 15,
   },
   image: {
     flex: 1,
