@@ -21,6 +21,7 @@ import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
 import {useSwapTouched} from '../../../../../common/SwapFormProvider'
+import {filterBySearch} from '../../../../../common/filterBySearch'
 
 type TransformedObject = {
   decimals: number | undefined
@@ -205,7 +206,7 @@ const TokenList = ({showOnlyVerifiedTokens}: TokenListProps) => {
   )
 
   const filteredTransformedList = React.useMemo(() => {
-    return transformedArray.filter(filterTokensPairBySearch(assetSearchTerm))
+    return transformedArray.filter(filterBySearch(assetSearchTerm))
   }, [transformedArray, assetSearchTerm])
 
   return (
@@ -340,17 +341,6 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
       </Text>
     </View>
   )
-}
-
-export const filterTokensPairBySearch = (searchTerm: string) => {
-  const searchTermLowerCase = searchTerm.toLocaleLowerCase()
-  if (searchTermLowerCase.length === 0) return () => true
-
-  return (tokenInfo: TransformedObject) => {
-    return (
-      tokenInfo.name?.toLocaleLowerCase().replace(/\s/g, '').includes(searchTermLowerCase.replace(/\s/g, '')) ?? false
-    )
-  }
 }
 
 const styles = StyleSheet.create({

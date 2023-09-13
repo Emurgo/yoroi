@@ -1,21 +1,13 @@
-import {Balance} from '@yoroi/types'
-
 export const filterBySearch = (searchTerm: string) => {
   const search = normalizeString(searchTerm)
   if (search.length === 0) return () => true
 
-  return (tokenInfo: Balance.TokenInfo) => {
-    if (tokenInfo.kind === 'ft') {
-      const ticker = normalizeString(tokenInfo.ticker ?? '')
-      const name = normalizeString(tokenInfo.name ?? '')
-      return ticker.includes(search) || name.includes(search)
-    }
+  return (asset: {ticker?: string; name?: string; symbol?: string}) => {
+    const name = normalizeString(asset.name ?? '')
+    const ticker = normalizeString(asset.ticker ?? '')
+    const symbol = normalizeString(asset.symbol ?? '')
 
-    if (tokenInfo.kind === 'nft') {
-      const name = normalizeString(tokenInfo.name ?? '')
-      return name.includes(search)
-    }
-    return false
+    return ticker.includes(search) || name.includes(search) || symbol.includes(search)
   }
 }
 
