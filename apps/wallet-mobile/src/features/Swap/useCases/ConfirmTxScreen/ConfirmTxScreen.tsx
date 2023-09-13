@@ -25,8 +25,6 @@ export const ConfirmTxScreen = () => {
 
   const {unsignedTx, createOrder} = useSwap()
 
-  console.log('TESTTSTSTSTR', {datum: createOrder.datum, datumHash: createOrder.datumHash})
-
   const {resetToTxHistory} = useWalletNavigation()
 
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(

@@ -585,7 +585,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
-      console.log('createUnsignedTx DATUMM', datum)
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
@@ -640,12 +639,16 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         unsignedTx.staking.withdrawals
           ? [stakingPrivateKey]
           : undefined
-      console.log('signTx DATUM', {datum, unsignedTx})
-      const signedTx = await unsignedTx.unsignedTx.sign(0, accountPrivateKeyHex, new Set<string>(), [], undefined, [
-        datum,
-      ])
 
-      console.log('@@@@@@@@@@@signedTx', signedTx)
+      console.log('[signTx DATUM]', datum)
+      const signedTx = await unsignedTx.unsignedTx.sign(
+        datum ? BIP44_DERIVATION_LEVELS.ACCOUNT : 0,
+        accountPrivateKeyHex,
+        new Set<string>(),
+        datum ? [] : stakingKeys,
+        datum ? undefined : stakingPrivateKey,
+        [datum],
+      )
 
       return yoroiSignedTx({
         unsignedTx,

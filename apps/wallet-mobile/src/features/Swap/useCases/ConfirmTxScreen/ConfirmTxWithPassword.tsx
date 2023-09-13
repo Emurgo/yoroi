@@ -1,3 +1,4 @@
+import {Datum} from '@emurgo/yoroi-lib'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
@@ -11,7 +12,7 @@ import {useStrings} from '../../common/strings'
 type Props = {
   wallet: YoroiWallet
   unsignedTx: YoroiUnsignedTx
-  datum: {data: string}
+  datum: Datum
   onSuccess: () => void
   onCancel?: () => void
 }
@@ -49,7 +50,6 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx, datum}: Pr
         shelleyTheme
         title={strings.sign}
         onPress={() => {
-          console.log('ConfirmTxWithPassword DATUM', datum)
           return signAndSubmitTx({unsignedTx, password: spendingPassword, datum})
         }}
       />
