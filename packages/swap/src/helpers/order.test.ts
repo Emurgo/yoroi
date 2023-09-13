@@ -1,4 +1,5 @@
 import {Balance, Swap} from '@yoroi/types'
+
 import {
   ceilDivision,
   getQuantityWithSlippage,
@@ -57,7 +58,7 @@ describe('getReceiveAmountbyChangingSell', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.PoolPair
+    } as Swap.Pool
     const sell = {
       quantity: '100' as Balance.Quantity,
       tokenId: 'tokenA',
@@ -67,10 +68,36 @@ describe('getReceiveAmountbyChangingSell', () => {
     expect(result.buy.quantity).toBe('197')
     expect(result.buy.tokenId).toBe('tokenB')
   })
+
+  it('should calculate the correct receive amount when selling tokenB', () => {
+    const pool = {
+      tokenA: {quantity: '4500000', tokenId: 'tokenA'},
+      tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+      fee: '0.3', // 0.3%
+      provider: 'minswap',
+      price: 2,
+      batcherFee: {quantity: '1', tokenId: ''},
+      deposit: {quantity: '1', tokenId: ''},
+      poolId: '0',
+      lastUpdate: '0',
+      lpToken: {
+        quantity: '0',
+        tokenId: '0',
+      },
+    } as Swap.Pool
+    const sell = {
+      quantity: '100' as Balance.Quantity,
+      tokenId: 'tokenB',
+    }
+    const result = getReceiveAmountbyChangingSell(pool, sell)
+    expect(result.sell).toEqual(sell)
+    expect(result.buy.quantity).toBe('49')
+    expect(result.buy.tokenId).toBe('tokenA')
+  })
 })
 
 describe('getSellAmountByChangingReceive', () => {
-  it('should calculate the correct sell amount when buying tokenA', () => {
+  it('should calculate the 0 when buying token more then the pool has', () => {
     const pool = {
       tokenA: {quantity: '4500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
@@ -85,14 +112,40 @@ describe('getSellAmountByChangingReceive', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.PoolPair
+    } as Swap.Pool
+    const buy = {
+      quantity: '4500000' as Balance.Quantity,
+      tokenId: 'tokenA',
+    }
+    const result = getSellAmountByChangingReceive(pool, buy)
+    expect(result.buy).toEqual(buy)
+    expect(result.sell.quantity).toBe('0')
+    expect(result.sell.tokenId).toBe('tokenB')
+  })
+
+  it('should calculate the correct sell amount when buying tokenB', () => {
+    const pool = {
+      tokenA: {quantity: '4500000', tokenId: 'tokenB'},
+      tokenB: {quantity: '9000000', tokenId: 'tokenA'},
+      fee: '0.5', // 0.5%
+      provider: 'minswap',
+      price: 2,
+      batcherFee: {quantity: '1', tokenId: ''},
+      deposit: {quantity: '1', tokenId: ''},
+      poolId: '0',
+      lastUpdate: '0',
+      lpToken: {
+        quantity: '0',
+        tokenId: '0',
+      },
+    } as Swap.Pool
     const buy = {
       quantity: '100' as Balance.Quantity,
       tokenId: 'tokenA',
     }
     const result = getSellAmountByChangingReceive(pool, buy)
     expect(result.buy).toEqual(buy)
-    expect(result.sell.quantity).toBe('204')
+    expect(result.sell.quantity).toBe('53')
     expect(result.sell.tokenId).toBe('tokenB')
   })
 })
@@ -107,7 +160,7 @@ describe('makeLimitOrder', () => {
       quantity: '200' as Balance.Quantity,
       tokenId: 'tokenB',
     }
-    const pool: Swap.PoolPair = {
+    const pool: Swap.Pool = {
       tokenA: {quantity: '4500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
       fee: '0.3',
@@ -149,7 +202,7 @@ describe('makePossibleMarketOrder', () => {
       quantity: '177' as const, // the expected buy quantity becsause makePossibleMarketOrder will ignore the buy quantity
       tokenId: 'tokenB',
     }
-    const pool1: Swap.PoolPair = {
+    const pool1: Swap.Pool = {
       tokenA: {quantity: '4500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
       fee: '0.3',
@@ -164,7 +217,7 @@ describe('makePossibleMarketOrder', () => {
         tokenId: '0',
       },
     }
-    const pool2: Swap.PoolPair = {
+    const pool2: Swap.Pool = {
       tokenA: {quantity: '5500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
       fee: '0.3',
@@ -200,7 +253,7 @@ describe('makePossibleMarketOrder', () => {
       quantity: '200' as Balance.Quantity,
       tokenId: 'tokenB',
     }
-    const pools: Swap.PoolPair[] = []
+    const pools: Swap.Pool[] = []
     const slippage = 10
     const address = '0xAddressHere'
 

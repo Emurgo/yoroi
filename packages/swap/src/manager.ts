@@ -1,13 +1,13 @@
 import {Swap} from '@yoroi/types'
 
-export const makeSwapManager = (
+export const swapManagerMaker = (
   swapStorage: Swap.Storage,
   swapApi: Swap.Api,
 ): Readonly<Swap.Manager> => {
   const {clear: clearStorage, slippage} = swapStorage
   const {
-    getPoolPairs,
-    getOrders,
+    getPools,
+    getOpenOrders,
     getCompletedOrders,
     getTokens,
     cancelOrder,
@@ -18,7 +18,7 @@ export const makeSwapManager = (
     cancel: cancelOrder,
     create: createOrder,
     list: {
-      byStatusOpen: getOrders,
+      byStatusOpen: getOpenOrders,
       byStatusCompleted: getCompletedOrders,
     } as const,
   }
@@ -31,7 +31,7 @@ export const makeSwapManager = (
 
   const pools = {
     list: {
-      byPair: getPoolPairs,
+      byPair: getPools,
     } as const,
   }
 

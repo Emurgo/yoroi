@@ -6,15 +6,9 @@ type AmountPair = {
 }
 
 export const getReceiveAmountbyChangingSell = (
-  pool: Swap.PoolPair,
+  pool: Swap.Pool,
   sell: Balance.Amount,
 ): AmountPair => {
-  if (!pool) {
-    return {
-      sell: {quantity: '0', tokenId: ''},
-      buy: {quantity: '0', tokenId: ''},
-    }
-  }
   const poolA = BigInt(pool.tokenA.quantity)
   const poolB = BigInt(pool.tokenB.quantity)
   const poolsProduct = poolA * poolB // fee is part of tokens sent -> this means the constant product increases after the swap!
@@ -49,16 +43,9 @@ export const getReceiveAmountbyChangingSell = (
 }
 
 export const getSellAmountByChangingReceive = (
-  pool: Swap.PoolPair,
+  pool: Swap.Pool,
   buy: Balance.Amount,
 ): AmountPair => {
-  if (!pool) {
-    return {
-      sell: {quantity: '0', tokenId: ''},
-      buy: {quantity: '0', tokenId: ''},
-    }
-  }
-
   const poolA = BigInt(pool.tokenA.quantity)
   const poolB = BigInt(pool.tokenB.quantity)
   const poolsProduct = poolA * poolB // fee is part of tokens sent -> this means the constant product increases after the swap!
@@ -94,7 +81,7 @@ export const getSellAmountByChangingReceive = (
 export const makeLimitOrder = (
   sell: Balance.Amount,
   buy: Balance.Amount,
-  pool: Swap.PoolPair,
+  pool: Swap.Pool,
   slippage: number,
   address: string,
 ): Swap.CreateOrderData => {
@@ -120,7 +107,7 @@ export const makeLimitOrder = (
 export const makePossibleMarketOrder = (
   sell: Balance.Amount,
   buy: Balance.Amount,
-  pools: Swap.PoolPair[],
+  pools: Swap.Pool[],
   slippage: number,
   address: string,
 ): Swap.CreateOrderData | undefined => {
@@ -130,7 +117,7 @@ export const makePossibleMarketOrder = (
 
   const findBestOrder = (
     order: Swap.CreateOrderData | undefined,
-    pool: Swap.PoolPair,
+    pool: Swap.Pool,
   ): Swap.CreateOrderData => {
     const amountPair = getReceiveAmountbyChangingSell(pool, sell)
 

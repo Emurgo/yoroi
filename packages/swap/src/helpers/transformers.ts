@@ -1,20 +1,15 @@
 import AssetFingerprint from '@emurgo/cip14-js'
 import {Swap, Balance} from '@yoroi/types'
-import {CompletedOrder, OpenOrder, Pool, Token} from '@yoroi/openswap'
+import {OpenSwap} from '@yoroi/openswap'
 
 export const asOpenswapTokenId = (yoroiTokenId: string) => {
-  const [policyId = '', assetName = ''] = yoroiTokenId.split('.')
+  const [policyId, assetName = ''] = yoroiTokenId.split('.') as [
+    string,
+    string?,
+  ]
   return {
     policyId,
     assetName,
-  }
-}
-
-export const asOpenswapTokenIdHex = (yoroiTokenId: string) => {
-  const [policyId = '', assetName = ''] = yoroiTokenId.split('.')
-  return {
-    policyId,
-    assetNameHex: assetName,
   }
 }
 
@@ -40,7 +35,7 @@ export const asOpenswapAmount = (yoroiAmount: Balance.Amount) => {
 }
 
 export const asYoroiOpenOrder = (
-  openswapOrder: OpenOrder,
+  openswapOrder: OpenSwap.OpenOrder,
   primaryTokenId: string,
 ) => {
   const {from, to, deposit, ...rest} = openswapOrder
@@ -52,16 +47,29 @@ export const asYoroiOpenOrder = (
   } as const
 }
 
-export const asYoroiCompletedOrder = (openswapOrder: CompletedOrder) => {
-  const {from, to, utxo} = openswapOrder
+export const asYoroiCompletedOrder = (
+  openswapOrder: OpenSwap.CompletedOrder,
+) => {
+  const {txHash, fromAmount, fromToken, toAmount, toToken} = openswapOrder
+  const from = {
+    amount: fromAmount,
+    token: `${fromToken.address.policyId}.${fromToken.address.name}`,
+  }
+  const to = {
+    amount: toAmount,
+    token: `${toToken.address.policyId}.${toToken.address.name}`,
+  }
+
   return {
-    utxo,
+    txHash: txHash,
     from: asYoroiAmount(from),
     to: asYoroiAmount(to),
   } as const
 }
 
-export const asYoroiBalanceToken = (openswapToken: Token): Balance.Token => {
+export const asYoroiBalanceToken = (
+  openswapToken: OpenSwap.Token,
+): Balance.Token => {
   const {info, price} = openswapToken
   const balanceToken: Balance.Token = {
     info: {
@@ -92,7 +100,7 @@ export const asYoroiBalanceToken = (openswapToken: Token): Balance.Token => {
   return balanceToken
 }
 
-export const asYoroiPool = (openswapPool: Pool): Swap.PoolPair => {
+export const asYoroiPool = (openswapPool: OpenSwap.Pool): Swap.Pool => {
   const {
     batcherFee,
     fee,
@@ -105,7 +113,7 @@ export const asYoroiPool = (openswapPool: Pool): Swap.PoolPair => {
     price,
     poolId,
   } = openswapPool
-  const pool: Swap.PoolPair = {
+  const pool: Swap.Pool = {
     tokenA: asYoroiAmount(tokenA),
     tokenB: asYoroiAmount(tokenB),
     deposit: asYoroiAmount({amount: deposit.toString(), token: ''}),
@@ -126,7 +134,7 @@ export const asYoroiAmount = (openswapAmount: {
 }): Balance.Amount => {
   if (openswapAmount !== null && openswapAmount?.amount !== null) {
     const {amount, token} = openswapAmount
-    const [policyId = '', assetName = ''] = token.split('.')
+    const [policyId, assetName = ''] = token.split('.') as [string, string?]
     const subject = `${policyId}.${assetName}`
     return {
       quantity: amount as Balance.Quantity,
@@ -136,15 +144,15 @@ export const asYoroiAmount = (openswapAmount: {
   return {quantity: '0', tokenId: ''}
 }
 
-export const asYoroiPools = (openswapPools: Pool[]): Swap.PoolPair[] => {
+export const asYoroiPools = (openswapPools: OpenSwap.Pool[]): Swap.Pool[] => {
   return openswapPools?.length > 0 ? openswapPools.map(asYoroiPool) : []
 }
 
 export const asYoroiBalanceTokens = (
-  openswapTokens: Token[],
+  openswapTokens: OpenSwap.Token[],
 ): Balance.Token[] => openswapTokens.map(asYoroiBalanceToken)
 
-// TODO: later replace for @yoroi/utils
+// TODO: later replace for @yoroi/wallets
 export const asTokenFingerprint = ({
   policyId,
   assetNameHex = '',

@@ -8,7 +8,7 @@ export type SwapManager = Readonly<{
     cancel: SwapApi['cancelOrder']
     create: SwapApi['createOrder']
     list: {
-      byStatusOpen: SwapApi['getOrders']
+      byStatusOpen: SwapApi['getOpenOrders']
       byStatusCompleted: SwapApi['getCompletedOrders']
     }
   }
@@ -19,7 +19,7 @@ export type SwapManager = Readonly<{
   }
   pools: {
     list: {
-      byPair: SwapApi['getPoolPairs']
+      byPair: SwapApi['getPools']
     }
   }
 }>

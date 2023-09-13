@@ -1,6 +1,6 @@
 import {BalanceAmount} from '../balance/token'
 
-export type SwapPoolPair = {
+export type SwapPool = {
   provider:
     | 'minswap'
     | 'sundaeswap'
