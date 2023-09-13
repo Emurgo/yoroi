@@ -375,7 +375,11 @@ export const useVotingRegTx = (
 export const useSignWithPasswordAndSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options?: {
-    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string}>
+    signTx?: UseMutationOptions<
+      YoroiSignedTx,
+      Error,
+      {unsignedTx: YoroiUnsignedTx; password: string; datum?: {data: string}}
+    >
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
   },
 ) => {
@@ -420,6 +424,7 @@ export const useSignWithHwAndSubmitTx = (
       ...options?.signTx,
       onSuccess: (signedTx, args, context) => {
         options?.signTx?.onSuccess?.(signedTx, args, context)
+        console.log('useSignWithHwAndSubmitTx', {signedTx, args, context})
         submitTx.mutate(signedTx)
       },
     },
@@ -491,13 +496,17 @@ export const useSignTx = (
 
 export const useSignTxWithPassword = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string}> = {},
+  options: UseMutationOptions<
+    YoroiSignedTx,
+    Error,
+    {unsignedTx: YoroiUnsignedTx; password: string; datum?: {data: string}}
+  > = {},
 ) => {
   const mutation = useMutation({
-    mutationFn: async ({unsignedTx, password}) => {
+    mutationFn: async ({unsignedTx, password, datum}) => {
       const rootKey = await wallet.encryptedStorage.rootKey.read(password)
-
-      return wallet.signTx(unsignedTx, rootKey)
+      console.log('useSignTxWithPassword', datum)
+      return wallet.signTx(unsignedTx, rootKey, datum)
     },
     retry: false,
     ...options,

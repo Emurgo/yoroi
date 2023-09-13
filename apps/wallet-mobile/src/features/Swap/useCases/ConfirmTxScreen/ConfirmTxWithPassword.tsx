@@ -11,11 +11,12 @@ import {useStrings} from '../../common/strings'
 type Props = {
   wallet: YoroiWallet
   unsignedTx: YoroiUnsignedTx
+  datum: {data: string}
   onSuccess: () => void
   onCancel?: () => void
 }
 
-export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx}: Props) => {
+export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx, datum}: Props) => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [spendingPassword, setSpendingPassword] = React.useState(
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
@@ -47,7 +48,10 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx}: Props) =>
         testID="swapButton"
         shelleyTheme
         title={strings.sign}
-        onPress={() => signAndSubmitTx({unsignedTx, password: spendingPassword})}
+        onPress={() => {
+          console.log('ConfirmTxWithPassword DATUM', datum)
+          return signAndSubmitTx({unsignedTx, password: spendingPassword, datum})
+        }}
       />
 
       {isLoading && (

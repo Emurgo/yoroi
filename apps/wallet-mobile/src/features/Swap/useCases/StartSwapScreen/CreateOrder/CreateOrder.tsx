@@ -33,7 +33,7 @@ const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
-  const {orderTypeChanged, createOrder, selectedPoolChanged, unsignedTxChanged} = useSwap()
+  const {orderTypeChanged, createOrder, selectedPoolChanged, unsignedTxChanged, txPayloadChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
   const addresses = useAddresses()
@@ -77,7 +77,8 @@ export const CreateOrder = () => {
     onSuccess: (data: Swap.CreateOrderResponse) => {
       if (data?.contractAddress !== undefined) {
         const entry = createYoroiEntry(createOrder, data.contractAddress, wallet)
-        const datum = {hash: data.datumHash}
+        const datum = {data: data.datum}
+        txPayloadChanged({datum: data.datum, datumHash: data.datumHash, contractAddress: data.contractAddress})
         createUnsignedTx({entry, datum})
       }
     },

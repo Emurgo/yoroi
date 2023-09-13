@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {Datum} from '@emurgo/yoroi-lib'
 import {App, Balance} from '@yoroi/types'
 import {parseSafe} from '@yoroi/wallets'
 import assert from 'assert'
@@ -580,11 +581,11 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     // =================== tx building =================== //
 
-    async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>, datum?: {hash: string}) {
+    async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>, datum?: Datum) {
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
-
+      console.log('createUnsignedTx DATUMM', datum)
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
@@ -621,7 +622,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       }
     }
 
-    async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
+    async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string, datum?: any) {
       const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
       const accountPrivateKey = await masterKey
         .derive(PURPOSE)
@@ -639,14 +640,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         unsignedTx.staking.withdrawals
           ? [stakingPrivateKey]
           : undefined
+      console.log('signTx DATUM', {datum, unsignedTx})
+      const signedTx = await unsignedTx.unsignedTx.sign(0, accountPrivateKeyHex, new Set<string>(), [], undefined, [
+        datum,
+      ])
 
-      const signedTx = await unsignedTx.unsignedTx.sign(
-        BIP44_DERIVATION_LEVELS.ACCOUNT,
-        accountPrivateKeyHex,
-        new Set<string>(),
-        stakingKeys,
-        stakingPrivateKey,
-      )
+      console.log('@@@@@@@@@@@signedTx', signedTx)
 
       return yoroiSignedTx({
         unsignedTx,
@@ -907,6 +906,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     }
 
     async submitTransaction(signedTx: string) {
+      console.log('submitTransaction signedTx', signedTx)
       const response: any = await api.submitTransaction(signedTx, BACKEND)
       Logger.info(response)
       return response as any

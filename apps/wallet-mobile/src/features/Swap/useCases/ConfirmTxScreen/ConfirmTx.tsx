@@ -1,3 +1,4 @@
+import {Datum} from '@emurgo/yoroi-lib'
 import React from 'react'
 
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
@@ -10,9 +11,10 @@ type Props = {
   unsignedTx: YoroiUnsignedTx
   onCancel: () => void
   onSuccess: () => void
+  datum: Datum
 }
 
-export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx}: Props) => {
+export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx, datum}: Props) => {
   return wallet.isHW ? (
     <ConfirmTxWithHW //
       wallet={wallet}
@@ -24,6 +26,7 @@ export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx}: Props) => {
     <ConfirmTxWithPassword //
       wallet={wallet}
       unsignedTx={unsignedTx}
+      datum={datum}
       onSuccess={onSuccess}
       onCancel={onCancel}
     />

@@ -6,7 +6,7 @@ import {useMutationWithInvalidations} from '../../../yoroi-wallets/hooks'
 import {YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 
 export const useSwapTx = (
-  options?: UseMutationOptions<YoroiUnsignedTx, Error, {entry: YoroiEntry; datum: {hash: string}}>,
+  options?: UseMutationOptions<YoroiUnsignedTx, Error, {entry: YoroiEntry; datum: {data: string}}>,
 ) => {
   const {createOrder} = useSwap()
   const metadata = [

@@ -23,7 +23,9 @@ export const ConfirmTxScreen = () => {
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
 
-  const {unsignedTx} = useSwap()
+  const {unsignedTx, createOrder} = useSwap()
+
+  console.log('TESTTSTSTSTR', {datum: createOrder.datum, datumHash: createOrder.datumHash})
 
   const {resetToTxHistory} = useWalletNavigation()
 
@@ -78,6 +80,7 @@ export const ConfirmTxScreen = () => {
         <ConfirmTx
           wallet={wallet}
           unsignedTx={unsignedTx}
+          datum={{data: createOrder.datum}}
           onSuccess={() => resetToTxHistory()}
           onCancel={() => setConfirmationModal(false)}
         />
