@@ -118,7 +118,7 @@ export const CreateOrder = () => {
     const {amounts} = createOrder
     const orderDetails = {
       sell: amounts.sell,
-      buy: amounts.sell,
+      buy: amounts.buy,
       pools: poolList,
       selectedPool: createOrder.selectedPool,
       slippage: createOrder.slippage,

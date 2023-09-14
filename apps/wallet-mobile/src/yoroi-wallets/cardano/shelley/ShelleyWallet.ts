@@ -601,7 +601,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
             keyDeposit: KEY_DEPOSIT,
             linearFee: {
               coefficient: LINEAR_FEE.COEFFICIENT,
-              constant: LINEAR_FEE.CONSTANT,
+              constant: datum ? String(BigInt(LINEAR_FEE.CONSTANT) * 2n) : LINEAR_FEE.CONSTANT,
             },
             minimumUtxoVal: MINIMUM_UTXO_VAL,
             coinsPerUtxoWord: COINS_PER_UTXO_WORD,
