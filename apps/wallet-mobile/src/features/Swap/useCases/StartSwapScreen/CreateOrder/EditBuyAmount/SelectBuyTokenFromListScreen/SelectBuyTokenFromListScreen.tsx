@@ -106,26 +106,28 @@ const TokenList = () => {
     () => {
       if (pairsByToken === undefined) return []
 
-      return pairsByToken.map((item) => {
-        const matchingSecondItem = secondArray.find((secondItem) => secondItem.id === item.info.id)
-        return {
-          decimals: item.info.decimals,
-          description: item.info.description,
-          fingerprint: item.info.fingerprint,
-          group: item.info.group,
-          icon: item.info.icon,
-          id: item.info.id,
-          image: item.info.image,
-          kind: item.info.kind,
-          metadatas: item.info.metadatas,
-          name: item.info.name,
-          symbol: item.info.symbol,
-          ticker: item.info.ticker,
-          status: item.status,
-          supply: Quantities.format(`${Number(item.supply.total)}`, item.info.decimals ?? 0),
-          inUserWallet: !!matchingSecondItem,
-        }
-      })
+      return pairsByToken
+        .map((item) => {
+          const matchingSecondItem = secondArray.find((secondItem) => secondItem.id === item.info.id)
+          return {
+            decimals: item.info.decimals,
+            description: item.info.description,
+            fingerprint: item.info.fingerprint,
+            group: item.info.group,
+            icon: item.info.icon,
+            id: item.info.id,
+            image: item.info.image,
+            kind: item.info.kind,
+            metadatas: item.info.metadatas,
+            name: item.info.name,
+            symbol: item.info.symbol,
+            ticker: item.info.ticker,
+            status: item.status,
+            supply: Quantities.format(`${Number(item.supply.total)}`, item.info.decimals ?? 0),
+            inUserWallet: !!matchingSecondItem,
+          }
+        })
+        .filter(({status}) => status === 'verified')
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [pairsByToken?.length, secondArray?.length],
