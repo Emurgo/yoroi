@@ -37,6 +37,9 @@ export const EditBuyAmount = () => {
     }
   }, [isBuyTouched, quantity, tokenInfo.decimals])
 
+  const hasSupply = !Quantities.isGreaterThan(quantity, createOrder?.selectedPool?.tokenB?.quantity ?? `0`)
+  const showError = !Quantities.isZero(quantity) && !hasSupply
+
   const recalculateSellValue = (buyQuantity: BalanceQuantity) => {
     if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
       const buyQuantityDenominated = Quantities.denominated(buyQuantity, tokenInfo.decimals ?? 0)
@@ -84,6 +87,7 @@ export const EditBuyAmount = () => {
       value={inputValue}
       amount={{tokenId, quantity: balance}}
       wallet={wallet}
+      hasError={showError}
       navigateTo={navigate.selectBuyToken}
       touched={isBuyTouched}
       inputRef={inputRef}
