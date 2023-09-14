@@ -1,21 +1,14 @@
-import {Balance} from '@yoroi/types'
-
 export const filterBySearch = (searchTerm: string) => {
-  const searchTermLowerCase = searchTerm.toLocaleLowerCase()
-  if (searchTermLowerCase.length === 0) return () => true
+  const search = normalizeString(searchTerm)
+  if (search.length === 0) return () => true
 
-  return (tokenInfo: Balance.TokenInfo) => {
-    if (tokenInfo.kind === 'ft') {
-      return (
-        (tokenInfo.ticker?.toLocaleLowerCase()?.includes(searchTermLowerCase) ||
-          tokenInfo.name?.toLocaleLowerCase()?.includes(searchTermLowerCase)) ??
-        false
-      )
-    }
+  return (asset: {ticker?: string; name?: string; symbol?: string}) => {
+    const name = normalizeString(asset.name ?? '')
+    const ticker = normalizeString(asset.ticker ?? '')
+    const symbol = normalizeString(asset.symbol ?? '')
 
-    if (tokenInfo.kind === 'nft') {
-      return tokenInfo.name?.toLocaleLowerCase().includes(searchTermLowerCase) ?? false
-    }
-    return false
+    return ticker.includes(search) || name.includes(search) || symbol.includes(search)
   }
 }
+
+const normalizeString = (str: string) => str.toLocaleLowerCase().replace(/\s/g, '')
