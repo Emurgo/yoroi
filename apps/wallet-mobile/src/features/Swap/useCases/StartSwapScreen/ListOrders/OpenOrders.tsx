@@ -393,8 +393,9 @@ const ModalContent = ({
   const wallet = useSelectedWallet()
   const [unsignedTx, setUnsignedTx] = useState<YoroiUnsignedTx | null>(null)
   useEffect(() => {
-    order.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address}).then(async (_cbor) => {
-      console.log('cbor', _cbor)
+    order.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address}).then(async (cbor) => {
+      const tx = await CardanoMobile.Transaction.fromBytes(Buffer.from(cbor, 'hex'))
+      console.log('cbor', cbor)
       const fakeEntry: YoroiEntry = {
         // TODO: Use real values
         address: await (await (await wallet.getFirstPaymentAddress()).toAddress()).toBech32(),
