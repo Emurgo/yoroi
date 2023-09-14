@@ -496,7 +496,7 @@ export const useSignTxWithPassword = (
   options: UseMutationOptions<
     YoroiSignedTx,
     Error,
-    {unsignedTx: YoroiUnsignedTx; password: string; datum?: {data: string}}
+    {unsignedTx: YoroiUnsignedTx; password: string; datum?: Datum}
   > = {},
 ) => {
   const mutation = useMutation({
