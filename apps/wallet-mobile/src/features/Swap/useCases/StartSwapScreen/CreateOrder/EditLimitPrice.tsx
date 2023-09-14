@@ -25,6 +25,7 @@ export const EditLimitPrice = () => {
   const {createOrder, limitPriceChanged, buyAmountChanged} = useSwap()
   const sellTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
+  const disabled = createOrder.type === 'market'
 
   const {isBuyTouched, isSellTouched} = useSwapTouched()
 
@@ -71,13 +72,13 @@ export const EditLimitPrice = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{strings.limitPrice}</Text>
+    <View style={[styles.container, disabled && styles.disabled]}>
+      <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
 
       <View style={styles.content}>
-        <AmountInput onChange={onChange} value={text} editable={true} />
+        <AmountInput onChange={onChange} value={text} editable={!disabled} />
 
-        <View style={styles.textWrapper}>
+        <View style={[styles.textWrapper, disabled && styles.disabled]}>
           <Text style={styles.text}>
             {tokenToSellName}/{tokenToBuyName}
           </Text>
@@ -118,6 +119,9 @@ const styles = StyleSheet.create({
     height: 56,
     paddingLeft: 16,
     paddingRight: 8,
+  },
+  disabled: {
+    backgroundColor: COLORS.BANNER_GREY,
   },
   label: {
     position: 'absolute',

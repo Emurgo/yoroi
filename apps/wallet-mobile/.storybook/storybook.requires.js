@@ -148,7 +148,6 @@ const getStories = () => {
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/EditSlippage/ShowSlippageActions.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/EditSlippage/ShowSlippageActions.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/EditSlippage/ShowSlippageInfo.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/EditSlippage/ShowSlippageInfo.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/LimitPriceWarning/LimitPriceWarning.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/LimitPriceWarning/LimitPriceWarning.stories.tsx"),
-    "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowMarketPrice.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowMarketPrice.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowTokenActions/ClearQuantities.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowTokenActions/ClearQuantities.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowTokenActions/ShowTokenActions.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowTokenActions/ShowTokenActions.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowTokenActions/SwitchTokens.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/ShowTokenActions/SwitchTokens.stories.tsx"),

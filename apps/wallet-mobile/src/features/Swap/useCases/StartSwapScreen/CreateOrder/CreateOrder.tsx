@@ -25,7 +25,6 @@ import {ShowPoolActions} from './EditPool/ShowPoolActions'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
 import {LimitPriceWarning} from './LimitPriceWarning/LimitPriceWarning'
-import {ShowMarketPrice} from './ShowMarketPrice'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
@@ -220,7 +219,7 @@ export const CreateOrder = () => {
 
             <Spacer height={20} />
 
-            {createOrder.type === 'market' ? <ShowMarketPrice /> : <EditLimitPrice />}
+            <EditLimitPrice />
 
             <EditSlippage />
 
