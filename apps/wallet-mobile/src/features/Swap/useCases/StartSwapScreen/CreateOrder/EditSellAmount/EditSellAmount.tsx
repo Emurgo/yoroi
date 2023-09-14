@@ -68,9 +68,9 @@ export const EditSellAmount = () => {
   }
 
   React.useEffect(() => {
-    setTimeout(() => recalculateBuyValue(quantity), 100)
+    recalculateBuyValue(quantity)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [buyTokenInfo?.id])
+  }, [buyTokenInfo?.id, createOrder?.selectedPool?.poolId])
 
   const onChangeQuantity = (text: string) => {
     try {
