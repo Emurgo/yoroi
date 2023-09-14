@@ -28,6 +28,7 @@ export type CreateOrderResponse =
 
 export type OpenOrder = {
   provider: Protocol
+  owner: string
   from: {
     amount: string
     token: string

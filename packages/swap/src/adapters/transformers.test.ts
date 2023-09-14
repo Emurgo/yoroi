@@ -65,6 +65,8 @@ describe('asYoroiOpenOrder', () => {
       deposit: '100',
       utxo: 'utxo',
       provider: 'minswap',
+      owner:
+        'addr1q9ndnrwz52yeex4j04kggp0ul5632qmxqx22ugtukkytjysw86pdygc6zarl2kks6fvg8um447uvv679sfdtzkwf2kuq673wke',
     }
 
     const result = asYoroiOpenOrder(openswapOrder, 'primaryTokenId.1')
@@ -81,6 +83,8 @@ describe('asYoroiOpenOrder', () => {
       deposit: {quantity: '100', tokenId: 'primaryTokenId.1'},
       provider: 'minswap',
       utxo: 'utxo',
+      owner:
+        'addr1q9ndnrwz52yeex4j04kggp0ul5632qmxqx22ugtukkytjysw86pdygc6zarl2kks6fvg8um447uvv679sfdtzkwf2kuq673wke',
     })
   })
 })

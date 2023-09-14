@@ -1,6 +1,5 @@
 import {useOrderByStatusOpen, useSwap} from '@yoroi/swap'
-import {useCancelOrder} from '@yoroi/swap/src/translators/reactjs'
-import BigNumber from 'bignumber.js'
+import {Buffer} from 'buffer'
 import _ from 'lodash'
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
@@ -22,17 +21,18 @@ import {
   TokenIcon,
 } from '../../../../../components'
 import {useLanguage} from '../../../../../i18n'
+import {formatTokenWithText} from '../../../../../legacy/format'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {YoroiEntry, YoroiUnsignedTx} from '../../../../../yoroi-wallets/types'
+import {Amounts} from '../../../../../yoroi-wallets/utils'
+import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {mapOrders} from './mapOrders'
-import {YoroiEntry, YoroiUnsignedTx} from '../../../../../yoroi-wallets/types'
-import {Amounts} from '../../../../../yoroi-wallets/utils'
-import {formatTokenWithText} from '../../../../../legacy/format'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
@@ -53,6 +53,8 @@ export const OpenOrders = () => {
   const orders = useOrderByStatusOpen({
     queryKey: [wallet.id, 'open-orders'],
   })
+
+  console.log('open orders', orders)
   const tokenIds: string[] = _.uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
 
   const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})
@@ -68,7 +70,7 @@ export const OpenOrders = () => {
     )
   })
 
-  const onOrderCancelConfirm = (id: string, unsignedTx: YoroiUnsignedTx) => {
+  const onOrderCancelConfirm = (id: string, _unsignedTx: YoroiUnsignedTx) => {
     const order = normalizedOrders.find((o) => o.id === id)
     if (!order) return
     closeBottomSheet()
@@ -77,33 +79,39 @@ export const OpenOrders = () => {
 
   const openBottomSheet = (id: string) => {
     const order = normalizedOrders.find((o) => o.id === id)
-    if (!order) return
+    if (!order || order.owner === undefined) return
     const {assetFromLabel, assetToLabel} = order
     const totalReturned = `${order.fromTokenAmount} ${order.fromTokenInfo?.ticker}`
     const orderUtxo = order.utxo
-    const collateralUtxo = 'caf06fa89e6e29aa1c351b7ba574499e39291b968f1d19aaaba08b368539ac70' // TODO: Use real values
-    const address =
-      'addr1q9l0qrhrvu3nq92ns23g2atns690ge4c325vgzqlg4vru9uym9vrnx7vuq6q9lv984p6feekdusp3yewttl5a65sg6fs9r9gw5' // TODO: Contract address?
-    setBottomSheetState({
-      openId: id,
-      title: strings.listOrdersSheetTitle,
-      content: (
-        <ModalContent
-          assetFromIcon={<TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />}
-          assetToIcon={<TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />}
-          confirmationModal={showPasswordModal}
-          onConfirm={(unsignedTx) => onOrderCancelConfirm(id, unsignedTx)}
-          onBack={closeBottomSheet}
-          assetFromLabel={assetFromLabel}
-          assetToLabel={assetToLabel}
-          assetAmount={`${order.tokenAmount} ${order.assetToLabel}`}
-          assetPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
-          totalReturned={totalReturned}
-          orderUtxo={orderUtxo}
-          collateralUtxo={collateralUtxo}
-          address={address}
-        />
-      ),
+    const collateralUtxo =
+      '8282582084bfdb864f8d0191b1a39289195d5a0d1b6eafe8eafd6d855ceea8a5c866ad6002825839017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea9046931a02cb6519' // TODO: Use real values
+
+    const addressBech32 = order.owner
+    CardanoMobile.Address.fromBech32(addressBech32).then(async (address) => {
+      const bytes = await address.toBytes()
+      const addressHex = new Buffer(bytes).toString('hex')
+
+      setBottomSheetState({
+        openId: id,
+        title: strings.listOrdersSheetTitle,
+        content: (
+          <ModalContent
+            assetFromIcon={<TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />}
+            assetToIcon={<TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />}
+            confirmationModal={showPasswordModal}
+            onConfirm={(unsignedTx) => onOrderCancelConfirm(id, unsignedTx)}
+            onBack={closeBottomSheet}
+            assetFromLabel={assetFromLabel}
+            assetToLabel={assetToLabel}
+            assetAmount={`${order.tokenAmount} ${order.assetToLabel}`}
+            assetPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
+            totalReturned={totalReturned}
+            orderUtxo={orderUtxo}
+            collateralUtxo={collateralUtxo}
+            address={addressHex}
+          />
+        ),
+      })
     })
   }
   const closeBottomSheet = () => setBottomSheetState({openId: null, title: '', content: ''})
@@ -385,7 +393,8 @@ const ModalContent = ({
   const wallet = useSelectedWallet()
   const [unsignedTx, setUnsignedTx] = useState<YoroiUnsignedTx | null>(null)
   useEffect(() => {
-    order.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address}).then(async (cbor) => {
+    order.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address}).then(async (_cbor) => {
+      console.log('cbor', _cbor)
       const fakeEntry: YoroiEntry = {
         // TODO: Use real values
         address: await (await (await wallet.getFirstPaymentAddress()).toAddress()).toBech32(),
@@ -396,7 +405,7 @@ const ModalContent = ({
       const unsignedTx = await wallet.createUnsignedTx(fakeEntry)
       setUnsignedTx(unsignedTx)
     })
-  }, [address, orderUtxo, collateralUtxo])
+  }, [address, orderUtxo, collateralUtxo, order, wallet])
 
   const feeAmount = unsignedTx
     ? formatTokenWithText(

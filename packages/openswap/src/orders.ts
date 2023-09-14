@@ -58,7 +58,7 @@ export async function cancelOrder(
     params: {
       wallet: args.walletAddress,
       utxo: args.orderUTxO,
-      collateralUTxO: args.collateralUTxO,
+      collateralUtxo: args.collateralUTxO,
     },
   })
 
