@@ -1,3 +1,4 @@
+import {useSwap} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React, {useRef} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -40,6 +41,10 @@ export const AmountCard = ({
   const amountInputRef = useRef<TextInput>(inputRef?.current ?? null)
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
+  const {createOrder} = useSwap()
+
+  const isSell = tokenId === createOrder.amounts.sell.tokenId
+
   const noTokenSelected = !touched
 
   const name = tokenInfo.ticker ?? tokenInfo.name
@@ -58,7 +63,19 @@ export const AmountCard = ({
 
         <View style={styles.content}>
           <Pressable style={styles.amountWrapper} onPress={focusInput}>
-            <AmountInput onChange={onChange} value={value} inputRef={amountInputRef} editable={inputEditable} />
+            <TextInput
+              keyboardType="numeric"
+              autoComplete="off"
+              value={value}
+              placeholder="0"
+              onChangeText={onChange}
+              allowFontScaling
+              selectionColor={COLORS.TRANSPARENT_BLACK}
+              style={styles.amountInput}
+              underlineColorAndroid="transparent"
+              ref={amountInputRef}
+              editable={inputEditable}
+            />
           </Pressable>
 
           <Spacer width={7} />
@@ -98,39 +115,10 @@ export const AmountCard = ({
         <View>
           <Spacer height={4} />
 
-          <Text style={styles.errorText}>{strings.notEnoughBalance}</Text>
+          <Text style={styles.errorText}>{isSell ? strings.notEnoughBalance : strings.notEnoughSupply}</Text>
         </View>
       )}
     </View>
-  )
-}
-
-type AmountInputProps = {
-  value?: string
-  onChange(value: string): void
-  inputRef?: React.RefObject<TextInput>
-  editable: boolean
-}
-const AmountInput = ({onChange, value, inputRef, editable}: AmountInputProps) => {
-  // TODO add more formatting if is the case
-  const onChangeText = (text: string) => {
-    onChange(text)
-  }
-
-  return (
-    <TextInput
-      keyboardType="numeric"
-      autoComplete="off"
-      value={value}
-      placeholder="0"
-      onChangeText={onChangeText}
-      allowFontScaling
-      selectionColor={COLORS.TRANSPARENT_BLACK}
-      style={styles.amountInput}
-      underlineColorAndroid="transparent"
-      ref={inputRef}
-      editable={editable}
-    />
   )
 }
 
@@ -147,6 +135,10 @@ const messages = defineMessages({
     id: 'swap.swapScreen.notEnoughBalance',
     defaultMessage: '!!!Not enough balance',
   },
+  notEnoughSupply: {
+    id: 'swap.swapScreen.notEnoughSupply',
+    defaultMessage: '!!!Not enough supply in the pool',
+  },
 })
 
 const useStrings = () => {
@@ -155,6 +147,7 @@ const useStrings = () => {
     selectToken: intl.formatMessage(messages.selectToken),
     currentBalance: intl.formatMessage(messages.currentBalance),
     notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
+    notEnoughSupply: intl.formatMessage(messages.notEnoughSupply),
   }
 }
 

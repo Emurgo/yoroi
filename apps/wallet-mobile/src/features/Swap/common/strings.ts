@@ -50,6 +50,7 @@ export const useStrings = () => {
     sign: intl.formatMessage(messages.sign),
     searchTokens: intl.formatMessage(messages.searchTokens),
     confirm: intl.formatMessage(messages.confirm),
+    chooseConnectionMethod: intl.formatMessage(messages.chooseConnectionMethod),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
     apply: intl.formatMessage(globalMessages.apply),
@@ -85,6 +86,17 @@ export const useStrings = () => {
     limitPriceWarningMarketPrice: intl.formatMessage(messages.limitPriceWarningMarketPrice),
     limitPriceWarningBack: intl.formatMessage(messages.limitPriceWarningBack),
     limitPriceWarningConfirm: intl.formatMessage(messages.limitPriceWarningConfirm),
+    error: intl.formatMessage(globalMessages.error),
+    usbExplanation: intl.formatMessage(messages.usbExplanation),
+    usbButton: intl.formatMessage(messages.usbButton),
+    usbConnectionIsBlocked: intl.formatMessage(messages.usbConnectionIsBlocked),
+    bluetoothExplanation: intl.formatMessage(messages.bluetoothExplanation),
+    bluetoothButton: intl.formatMessage(messages.bluetoothButton),
+    bluetoothError: intl.formatMessage(messages.bluetoothError),
+    transactionSigned: intl.formatMessage(messages.transactionSigned),
+    transactionDisplay: intl.formatMessage(messages.transactionDisplay),
+    seeOnExplorer: intl.formatMessage(messages.seeOnExplorer),
+    goToOrders: intl.formatMessage(messages.goToOrders),
   }
 }
 
@@ -279,6 +291,22 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.limitPriceWarningConfirm',
     defaultMessage: '!!!Swap',
   },
+  transactionSigned: {
+    id: 'swap.swapScreen.transactionSigned',
+    defaultMessage: '!!!Transaction signed',
+  },
+  transactionDisplay: {
+    id: 'swap.swapScreen.transactionDisplay',
+    defaultMessage: '!!!Your transactions will be displayed both in the list of transaction and Open swap orders',
+  },
+  seeOnExplorer: {
+    id: 'swap.swapScreen.seeOnExplorer',
+    defaultMessage: '!!!see on explorer',
+  },
+  goToOrders: {
+    id: 'swap.swapScreen.goToOrders',
+    defaultMessage: '!!!GO to Orders',
+  },
   asset: {
     id: 'global.assets.assetLabel',
     defaultMessage: '!!!Asset',
@@ -370,6 +398,36 @@ export const messages = defineMessages({
   listOrdersTxId: {
     id: 'swap.listOrders.txId',
     defaultMessage: '!!!Transaction ID',
+  },
+  chooseConnectionMethod: {
+    id: 'components.ledger.ledgertransportswitchmodal.title',
+    defaultMessage: '!!!Choose Connection Method',
+  },
+  usbExplanation: {
+    id: 'components.ledger.ledgertransportswitchmodal.usbExplanation',
+    defaultMessage:
+      '!!!Choose this option if you want to connect to a Ledger Nano model X ' +
+      'or S using an on-the-go USB cable adaptor:',
+  },
+  usbButton: {
+    id: 'components.ledger.ledgertransportswitchmodal.usbButton',
+    defaultMessage: '!!!Connect with USB',
+  },
+  usbConnectionIsBlocked: {
+    id: 'components.ledger.ledgertransportswitchmodal.usbConnectionIsBlocked',
+    defaultMessage: '!!! USB connection is blocked by iOS devices',
+  },
+  bluetoothExplanation: {
+    id: 'components.ledger.ledgertransportswitchmodal.bluetoothExplanation',
+    defaultMessage: '!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:',
+  },
+  bluetoothButton: {
+    id: 'components.ledger.ledgertransportswitchmodal.bluetoothButton',
+    defaultMessage: '!!!Connect with Bluetooth',
+  },
+  bluetoothError: {
+    id: 'global.ledgerMessages.bluetoothDisabledError',
+    defaultMessage: '!!!Connect with Bluetooth',
   },
   // TODO check this and change if necessary
 

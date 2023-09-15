@@ -59,7 +59,7 @@ export const SwapProvider = ({
     ...initialState,
     createOrder: {
       ...defaultSwapState.createOrder,
-      ...initialState,
+      ...(initialState?.createOrder ?? {}),
       slippage,
     },
   })
@@ -137,20 +137,23 @@ export const useSwapSlippage = (swapManager: Readonly<Swap.Manager>) => {
 }
 
 export const useOrderByStatusOpen = (
-  options: UseQueryOptions<Swap.OpenOrder[], Error>,
+  options?: UseQueryOptions<Swap.OpenOrder[]>,
 ) => {
   const {order} = useSwap()
   const query = useQuery({
     suspense: true,
-    queryKey: [],
-    queryFn: order.list.byStatusOpen,
+    queryKey: ['useOrderByStatusOpen'],
+    queryFn: () => order.list.byStatusOpen(),
     ...options,
   })
 
   if (query.data == null)
     throw new Error('[@yoroi/swap] useOrderByStatusOpen invalid state')
 
-  return query.data
+  return {
+    ...query,
+    openOrders: query.data,
+  }
 }
 
 export const useCreateOrder = (
@@ -180,8 +183,8 @@ export const useOrderByStatusCompleted = (
   const {order} = useSwap()
   const query = useQuery({
     suspense: true,
-    queryKey: [],
-    queryFn: order.list.byStatusCompleted,
+    queryKey: ['useOrderByStatusCompleted'],
+    queryFn: () => order.list.byStatusCompleted(),
     ...options,
   })
 
