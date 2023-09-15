@@ -45,11 +45,11 @@ export const createSwapCancelEntry = (createOrder: Swap.CancelOrderData, address
 }
 
 export const createYoroiEntry = (
-    createOrder: Swap.CreateOrderData,
-    address: string,
-    wallet: YoroiWallet,
+  createOrder: Swap.CreateOrderData,
+  address: string,
+  wallet: YoroiWallet,
 ): YoroiEntry => {
-    const amountEntry = {}
+  const amountEntry = {}
 
   const tokenId = createOrder?.amounts?.sell.tokenId
   if (tokenId != null && createOrder.amounts.sell.quantity !== undefined) {
