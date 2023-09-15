@@ -69,6 +69,7 @@ import {Send} from './Send'
 import {Settings} from './Settings'
 import {SliderSettings} from './SliderSettings'
 import {SortTable} from './SortTable'
+import {SpectrumSwap} from './SpectrumSwap'
 import {Staking} from './Staking'
 import {StakingKeyDeregistered} from './StakingKeyDeregistered'
 import {StakingKeyRegistered} from './StakingKeyRegistered'
@@ -202,4 +203,5 @@ export const Icon = {
   MuesliSwap,
   WingRiders,
   VyfiSwap,
+  SpectrumSwap,
 }
