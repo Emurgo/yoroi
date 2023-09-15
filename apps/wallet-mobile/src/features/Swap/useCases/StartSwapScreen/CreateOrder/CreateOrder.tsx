@@ -50,10 +50,11 @@ export const CreateOrder = () => {
 
   useEffect(() => {
     if (poolList !== undefined) {
-      selectedPoolChanged(poolList[0])
+      const bestPool = poolList.map((a) => a).sort((a, b) => a.price - b.price)[0]
+      selectedPoolChanged(bestPool)
       poolDefaulted()
     }
-  }, [poolDefaulted, selectedPoolChanged, createOrder.amounts, poolList])
+  }, [poolDefaulted, selectedPoolChanged, poolList])
 
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
   const orderTypeIndex = createOrder.type === 'market' ? 0 : 1
