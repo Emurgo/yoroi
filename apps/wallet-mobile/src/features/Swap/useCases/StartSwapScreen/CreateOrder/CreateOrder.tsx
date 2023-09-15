@@ -25,7 +25,6 @@ import {ShowPoolActions} from './EditPool/ShowPoolActions'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
 import {LimitPriceWarning} from './LimitPriceWarning/LimitPriceWarning'
-import {ShowMarketPrice} from './ShowMarketPrice'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
@@ -33,7 +32,7 @@ const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
-  const {orderTypeChanged, createOrder, selectedPoolChanged, unsignedTxChanged} = useSwap()
+  const {orderTypeChanged, createOrder, selectedPoolChanged, unsignedTxChanged, txPayloadChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
   const addresses = useAddresses()
@@ -74,10 +73,11 @@ export const CreateOrder = () => {
   })
 
   const {createOrderData} = useCreateOrder({
-    onSuccess: (data) => {
+    onSuccess: (data: Swap.CreateOrderResponse) => {
       if (data?.contractAddress !== undefined) {
-        const entry = createYoroiEntry(createOrder, data.contractAddress)
-        const datum = {hash: data.datumHash}
+        const entry = createYoroiEntry(createOrder, data.contractAddress, wallet)
+        const datum = {data: data.datum}
+        txPayloadChanged({datum: data.datum, datumHash: data.datumHash, contractAddress: data.contractAddress})
         createUnsignedTx({entry, datum})
       }
     },
@@ -117,7 +117,7 @@ export const CreateOrder = () => {
     const {amounts} = createOrder
     const orderDetails = {
       sell: amounts.sell,
-      buy: amounts.sell,
+      buy: amounts.buy,
       pools: poolList,
       selectedPool: createOrder.selectedPool,
       slippage: createOrder.slippage,
@@ -219,7 +219,7 @@ export const CreateOrder = () => {
 
             <Spacer height={20} />
 
-            {createOrder.type === 'market' ? <ShowMarketPrice /> : <EditLimitPrice />}
+            <EditLimitPrice />
 
             <EditSlippage />
 

@@ -4,6 +4,7 @@ import {BaseAddress} from '@emurgo/cross-csl-core'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
+  Datum,
   MultiTokenValue as MultiTokenValueType,
   SignedTx as SignedTxType,
   StakingKeyBalances as StakingKeyBalancesType,
@@ -99,10 +100,10 @@ export type YoroiWallet = {
   createUnsignedTx(
     entry: YoroiEntry,
     metadata?: Array<CardanoTypes.TxMetadata>,
-    datum?: {hash: string},
+    datum?: Datum,
   ): Promise<YoroiUnsignedTx>
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
-  signTx(signRequest: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
+  signTx(signRequest: YoroiUnsignedTx, rootKey: string, datum?: Datum): Promise<YoroiSignedTx>
   submitTransaction(signedTx: string): Promise<[]>
 
   // Voting

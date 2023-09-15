@@ -1,72 +1,67 @@
 import {useSwap} from '@yoroi/swap'
 import React from 'react'
-import {StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
+import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, Text, TextInput} from '../../../../components'
+import {Button} from '../../../../components'
 import {BottomSheetModal} from '../../../../components/BottomSheetModal'
+import {LoadingOverlay} from '../../../../components/LoadingOverlay'
+import {useWalletNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
-import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../yoroi-wallets/utils'
+import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
+import {useSignAndSubmitTx} from '../../../../yoroi-wallets/hooks'
+import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
+import {ConfirmTx} from './ConfirmTx'
 import {TransactionSummary} from './TransactionSummary'
 
 export const ConfirmTxScreen = () => {
-  const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false)
 
-  const [spendingPassword, setSpendingPassword] = React.useState('')
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const navigate = useNavigateTo()
 
-  const {createOrder, unsignedTx} = useSwap()
-  const {amounts} = createOrder
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
-  const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
+  const {unsignedTx, createOrder} = useSwap()
 
-  const poolFee = Quantities.denominated(
-    `${Number(Object.values(unsignedTx?.fee))}`,
-    Number(wallet.primaryTokenInfo.decimals),
+  const {resetToTxHistory} = useWalletNavigation()
+
+  const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
+    {id: wallet.id},
+    {onSuccess: (rootKey) => signAndSubmitTx({unsignedTx, rootKey})},
   )
 
-  const orderInfo = [
+  const {signAndSubmitTx, isLoading: processingTx} = useSignAndSubmitTx(
+    {wallet},
     {
-      label: strings.swapMinAdaTitle,
-      value: '2 ADA',
-      info: strings.swapMinAda,
+      signTx: {useErrorBoundary: true},
+      submitTx: {
+        onSuccess: () => {
+          navigate.startSwap()
+        },
+        useErrorBoundary: true,
+      },
     },
-    {
-      label: strings.swapMinReceivedTitle,
-      value: '?', // TODO add real value
-      info: strings.swapMinReceived,
-    },
-    {
-      label: strings.swapFeesTitle,
-      value: `${poolFee} ADA`,
-      info: strings.swapFees,
-    },
-  ]
+  )
+
+  const txIsLoading = authenticating || processingTx
 
   return (
     <SafeAreaView style={styles.container}>
-      <TransactionSummary
-        feesInfo={orderInfo}
-        buyToken={{
-          id: amounts.buy.tokenId,
-          quantity: amounts.buy.quantity,
-          name: tokenToBuyName,
-          decimals: buyTokenInfo.decimals,
-        }}
-        sellToken={{id: amounts.sell.tokenId, quantity: amounts.sell.quantity}}
-      />
+      <TransactionSummary />
 
       <Actions>
         <Button
+          disabled={txIsLoading}
           testID="swapButton"
           shelleyTheme
           title={strings.confirm}
           onPress={() => {
+            if (wallet.isEasyConfirmationEnabled) {
+              authWithOs()
+              return
+            }
             setConfirmationModal(true)
           }}
         />
@@ -74,30 +69,22 @@ export const ConfirmTxScreen = () => {
 
       <BottomSheetModal
         isOpen={confirmationModal}
-        title={strings.signTransaction}
+        title={wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction}
         onClose={() => {
           setConfirmationModal(false)
         }}
         contentContainerStyle={{justifyContent: 'space-between'}}
       >
-        <>
-          <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
-
-          <TextInput
-            secureTextEntry
-            ref={spendingPasswordRef}
-            enablesReturnKeyAutomatically
-            placeholder={strings.spendingPassword}
-            value={spendingPassword}
-            onChangeText={setSpendingPassword}
-            autoComplete="off"
-          />
-
-          <Spacer fill />
-
-          <Button testID="swapButton" shelleyTheme title={strings.sign} />
-        </>
+        <ConfirmTx
+          wallet={wallet}
+          unsignedTx={unsignedTx}
+          datum={{data: createOrder.datum}}
+          onSuccess={() => resetToTxHistory()}
+          onCancel={() => setConfirmationModal(false)}
+        />
       </BottomSheetModal>
+
+      <LoadingOverlay loading={txIsLoading} />
     </SafeAreaView>
   )
 }
@@ -114,10 +101,5 @@ const styles = StyleSheet.create({
   },
   actions: {
     paddingVertical: 16,
-  },
-  modalText: {
-    paddingHorizontal: 70,
-    textAlign: 'center',
-    paddingBottom: 8,
   },
 })

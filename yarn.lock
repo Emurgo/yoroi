@@ -1962,10 +1962,10 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/cross-csl-core@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-2.5.0.tgz#1849b05fb3b1dab004c9a067fcf7d75ef93ad073"
-  integrity sha512-7KZWeLIAgoRoDHfiITrdIDE0sanmNZi7bKkyaN0HHJhxIlLr3ISX+twj49FeeuU2UxUQa93pCFoRohMRZ2PeEQ==
+"@emurgo/cross-csl-core@^2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-2.7.0.tgz#67faff47b61d0c467b4cba35f789af43d89693b9"
+  integrity sha512-srX9GHMOyP1HrxgKucqs9SU8ryXD0PytCjcZ79AS0dV1L8Hraj3SZI0QmqbKUmYgmhb8wE2xL4bGYVs8OmgeCA==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
     "@types/mocha" "^9.1.1"
@@ -1976,35 +1976,21 @@
     hash-wasm "^4.9.0"
     mocha "^10.0.0"
 
-"@emurgo/cross-csl-core@^2.6.0":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-2.6.0.tgz#40d6063cd50de510bb1cb78d8c49843e9a2be351"
-  integrity sha512-P64mp7626fW8o3+XqyZwzZ+rJh7pVKLzTA0oZ1fHfIZPbayYTT657RSk8xv2ZkTQPHtFmaPl/mVq3T+dctCJ0A==
+"@emurgo/cross-csl-mobile@^2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-2.7.0.tgz#359472bbd1704ac53ceb0893e1195364e487a6f7"
+  integrity sha512-5c6srvkTOEuVt0/nQeeeu8p/KDNQ0GN1uHY21uW3jKBym4npyHjXSikvuOEFahlz4K6LG8hjwHppFu3fWcS6aQ==
   dependencies:
-    "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
-    "@types/mocha" "^9.1.1"
-    axios "^0.24.0"
-    bech32 "^2.0.0"
-    bignumber.js "^9.0.1"
-    blake2b "^2.1.4"
-    hash-wasm "^4.9.0"
-    mocha "^10.0.0"
-
-"@emurgo/cross-csl-mobile@^2.6.0":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-2.6.0.tgz#b2d8102ec3228c316c2a393d78b4873a99457017"
-  integrity sha512-WpJTiDhbGfXYt8ZxAgHfqJ2y7NqnyqsZksc0O67tQS2gDrEB7obyxycic5BZWejShp6TKQqaZwd4lp8fzJj+gQ==
-  dependencies:
-    "@emurgo/cross-csl-core" "^2.6.0"
+    "@emurgo/cross-csl-core" "^2.7.0"
     "@emurgo/csl-mobile-bridge" "^5.1.2"
 
-"@emurgo/cross-csl-nodejs@^2.6.0":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-2.6.0.tgz#7b2548783c2d79afe9c09b9ae7750c7268371fbf"
-  integrity sha512-reh5VCgsrzMvPwUt6pn1/UxRKJ+PohpD+Orzn05QALmPf4iwCIrsfClfx9Q7VSQgwbjSJv00+MzDqfOZSCU7vQ==
+"@emurgo/cross-csl-nodejs@^2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-2.7.0.tgz#0d1c9c4d9db4cf7aab8236808e003cd490db55fc"
+  integrity sha512-UII24nr/yqXm59OCOe77I6aHMCdkimrIdG3n8CaGiV+KfkIV+AUYT2PTsj8tCWLPDrcqEn1/t9MMtk6QQrO7bw==
   dependencies:
     "@emurgo/cardano-serialization-lib-nodejs" "11.3.0"
-    "@emurgo/cross-csl-core" "^2.6.0"
+    "@emurgo/cross-csl-core" "^2.7.0"
 
 "@emurgo/csl-mobile-bridge@^5.1.2":
   version "5.1.2"
@@ -2031,13 +2017,13 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.7.0.tgz#ca4005d82da715b7fc29008d014dfa848514d994"
-  integrity sha512-sis6dohCBRyjff4FSFlM3nVWy9v0Ej9ZY8lgQIsvwvRkl02KUz/rC97KPzkeK/AJ5bDC1k6scyo2rfa1LRmkMg==
+"@emurgo/yoroi-lib@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.8.0.tgz#e38708a9d81d70589a68f1ed78f6e776905ac8c5"
+  integrity sha512-KwFutoHDGGGVv6RZsqnnvsj4mPgS+nCT9nhH13SxV4Uwi7c850Ygf2nWLDnMyI2xCcSviiFGrst9hTkWCH4nTQ==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^6.0.0"
-    "@emurgo/cross-csl-core" "^2.5.0"
+    "@emurgo/cross-csl-core" "^2.7.0"
     axios "^0.24.0"
     bech32 "^2.0.0"
     bignumber.js "^9.0.1"

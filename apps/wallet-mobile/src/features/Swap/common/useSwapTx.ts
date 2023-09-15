@@ -1,16 +1,17 @@
+import {Datum} from '@emurgo/yoroi-lib'
+import {useSwap} from '@yoroi/swap'
 import {UseMutationOptions} from 'react-query'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {useMutationWithInvalidations} from '../../../yoroi-wallets/hooks'
 import {YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 
-export const useSwapTx = (
-  options?: UseMutationOptions<YoroiUnsignedTx, Error, {entry: YoroiEntry; datum: {hash: string}}>,
-) => {
+export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {entry: YoroiEntry; datum: Datum}>) => {
+  const {createOrder} = useSwap()
   const metadata = [
     {
-      label: 'Yoroi-Swap',
-      data: {msg: ['Yoroi: Swap B for A Order Request']},
+      label: '674',
+      data: {msg: [`${createOrder.selectedPool?.provider}: Swap B for A Order Request`]},
     },
   ]
   const wallet = useSelectedWallet()

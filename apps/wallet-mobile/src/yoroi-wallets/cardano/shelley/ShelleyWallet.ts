@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {Datum} from '@emurgo/yoroi-lib'
 import {App, Balance} from '@yoroi/types'
 import {parseSafe} from '@yoroi/wallets'
 import assert from 'assert'
@@ -580,11 +581,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     // =================== tx building =================== //
 
-    async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>, datum?: {hash: string}) {
+    async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>, datum?: Datum) {
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
-
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
@@ -601,7 +601,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
             keyDeposit: KEY_DEPOSIT,
             linearFee: {
               coefficient: LINEAR_FEE.COEFFICIENT,
-              constant: LINEAR_FEE.CONSTANT,
+              constant: datum ? String(BigInt(LINEAR_FEE.CONSTANT) * 2n) : LINEAR_FEE.CONSTANT,
             },
             minimumUtxoVal: MINIMUM_UTXO_VAL,
             coinsPerUtxoWord: COINS_PER_UTXO_WORD,
@@ -621,7 +621,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       }
     }
 
-    async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
+    async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string, datum?: {data: string}) {
       const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
       const accountPrivateKey = await masterKey
         .derive(PURPOSE)
@@ -640,12 +640,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           ? [stakingPrivateKey]
           : undefined
 
+      console.log('[signTx DATUM]', datum)
       const signedTx = await unsignedTx.unsignedTx.sign(
-        BIP44_DERIVATION_LEVELS.ACCOUNT,
+        datum ? BIP44_DERIVATION_LEVELS.ACCOUNT : 0,
         accountPrivateKeyHex,
         new Set<string>(),
-        stakingKeys,
-        stakingPrivateKey,
+        datum ? [] : stakingKeys,
+        datum ? undefined : stakingPrivateKey,
+        datum ? [datum] : undefined,
       )
 
       return yoroiSignedTx({
