@@ -51,7 +51,6 @@ export async function cancelOrder(
   args: CancelOrderRequest,
 ): Promise<string> {
   const {network, client} = deps
-  console.log('send request to cancel order')
   const apiUrl = SWAP_API_ENDPOINTS[network].cancelSwapTransaction
   const response = await client.get('/', {
     baseURL: apiUrl,

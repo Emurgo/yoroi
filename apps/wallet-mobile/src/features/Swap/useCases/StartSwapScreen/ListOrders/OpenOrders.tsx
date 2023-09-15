@@ -33,6 +33,9 @@ import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {mapOrders} from './mapOrders'
+import {useNavigateTo} from '../../../common/navigation'
+import {ConfirmTx} from '../../ConfirmTxScreen/ConfirmTx'
+import {useWalletNavigation} from '../../../../../navigation'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
@@ -41,19 +44,22 @@ export const OpenOrders = () => {
     content: '',
   })
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
-  const [showPasswordModal, setShowPasswordModal] = React.useState(false)
   const strings = useStrings()
-  const [spendingPassword, setSpendingPassword] = React.useState('')
   const {numberLocale} = useLanguage()
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const transactionsInfos = useTransactionInfos(wallet)
   const {search} = useSearch()
+  const [showCancelOrderModal, setShowCancelOrderModal] = useState(false)
+  const [cancellationUnsignedTx, setCancellationUnsignedTx] = useState<YoroiUnsignedTx | null>(null)
 
   const {openOrders} = useOrderByStatusOpen({
     queryKey: [wallet.id, 'open-orders'],
   })
-  console.log('openOrders', openOrders)
+
+  const {resetToTxHistory} = useWalletNavigation()
+  const datum = '' // TODO: Use real values
+
   const tokenIds = _.uniq(openOrders?.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
 
   const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})
@@ -69,11 +75,12 @@ export const OpenOrders = () => {
     )
   })
 
-  const onOrderCancelConfirm = (id: string, _unsignedTx: YoroiUnsignedTx) => {
+  const onOrderCancelConfirm = (id: string, unsignedTx: YoroiUnsignedTx) => {
     const order = normalizedOrders.find((o) => o.id === id)
     if (!order) return
     closeBottomSheet()
-    setShowPasswordModal(true)
+    setCancellationUnsignedTx(unsignedTx)
+    setShowCancelOrderModal(true)
   }
 
   const openBottomSheet = (id: string) => {
@@ -86,31 +93,26 @@ export const OpenOrders = () => {
       '8282582084bfdb864f8d0191b1a39289195d5a0d1b6eafe8eafd6d855ceea8a5c866ad6002825839017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea9046931a02cb6519' // TODO: Use real values
 
     const addressBech32 = order.owner
-    CardanoMobile.Address.fromBech32(addressBech32).then(async (address) => {
-      const bytes = await address.toBytes()
-      const addressHex = new Buffer(bytes).toString('hex')
 
-      setBottomSheetState({
-        openId: id,
-        title: strings.listOrdersSheetTitle,
-        content: (
-          <ModalContent
-            assetFromIcon={<TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />}
-            assetToIcon={<TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />}
-            confirmationModal={showPasswordModal}
-            onConfirm={(unsignedTx) => onOrderCancelConfirm(id, unsignedTx)}
-            onBack={closeBottomSheet}
-            assetFromLabel={assetFromLabel}
-            assetToLabel={assetToLabel}
-            assetAmount={`${order.tokenAmount} ${order.assetToLabel}`}
-            assetPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
-            totalReturned={totalReturned}
-            orderUtxo={orderUtxo}
-            collateralUtxo={collateralUtxo}
-            address={addressHex}
-          />
-        ),
-      })
+    setBottomSheetState({
+      openId: id,
+      title: strings.listOrdersSheetTitle,
+      content: (
+        <ModalContent
+          assetFromIcon={<TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />}
+          assetToIcon={<TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />}
+          onConfirm={(unsignedTx) => onOrderCancelConfirm(id, unsignedTx)}
+          onBack={closeBottomSheet}
+          assetFromLabel={assetFromLabel}
+          assetToLabel={assetToLabel}
+          assetAmount={`${order.tokenAmount} ${order.assetToLabel}`}
+          assetPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
+          totalReturned={totalReturned}
+          orderUtxo={orderUtxo}
+          collateralUtxo={collateralUtxo}
+          bech32Address={addressBech32}
+        />
+      ),
     })
   }
   const closeBottomSheet = () => setBottomSheetState({openId: null, title: '', content: ''})
@@ -118,6 +120,24 @@ export const OpenOrders = () => {
   return (
     <>
       <View style={styles.container}>
+        {cancellationUnsignedTx && (
+          <BottomSheetModal
+            isOpen={showCancelOrderModal}
+            title={wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction}
+            onClose={() => {
+              setShowCancelOrderModal(false)
+            }}
+            contentContainerStyle={{justifyContent: 'space-between'}}
+          >
+            <ConfirmTx
+              datum={{data: datum}}
+              wallet={wallet}
+              unsignedTx={cancellationUnsignedTx}
+              onSuccess={() => resetToTxHistory()}
+              onCancel={() => setShowCancelOrderModal(false)}
+            />
+          </BottomSheetModal>
+        )}
         <ScrollView style={styles.flex}>
           {filteredOrders.map((order) => {
             const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
@@ -173,29 +193,6 @@ export const OpenOrders = () => {
           snapPoints={['10%', '57%']}
         >
           {bottomSheetState.content}
-        </BottomSheetModal>
-
-        <BottomSheetModal
-          isOpen={showPasswordModal}
-          title={strings.signTransaction}
-          onClose={() => setShowPasswordModal(false)}
-        >
-          <>
-            <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
-
-            <TextInput
-              secureTextEntry
-              enablesReturnKeyAutomatically
-              placeholder={strings.spendingPassword}
-              value={spendingPassword}
-              onChangeText={setSpendingPassword}
-              autoComplete="off"
-            />
-
-            <Spacer fill />
-
-            <Button testID="confirmPasswordButton" shelleyTheme title={strings.sign} />
-          </>
         </BottomSheetModal>
 
         <BottomSheetModal
@@ -371,11 +368,10 @@ const ModalContent = ({
   totalReturned,
   orderUtxo,
   collateralUtxo,
-  address,
+  bech32Address,
 }: {
   onConfirm: (unsignedTx: YoroiUnsignedTx) => void
   onBack: () => void
-  confirmationModal: boolean
   assetFromIcon: React.ReactNode
   assetFromLabel: string
   assetToLabel: string
@@ -385,27 +381,33 @@ const ModalContent = ({
   totalReturned: string
   orderUtxo: string
   collateralUtxo: string
-  address: string
+  bech32Address: string
 }) => {
   const strings = useStrings()
-  const {order} = useSwap()
+
+  const {order, unsignedTxChanged} = useSwap()
   const wallet = useSelectedWallet()
   const [unsignedTx, setUnsignedTx] = useState<YoroiUnsignedTx | null>(null)
   useEffect(() => {
-    order.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address}).then(async (cbor) => {
-      // const tx = await CardanoMobile.Transaction.fromBytes(Buffer.from(cbor, 'hex'))
-      console.log('cbor', cbor)
+    CardanoMobile.Address.fromBech32(bech32Address).then(async (address) => {
+      const bytes = await address.toBytes()
+      const addressHex = new Buffer(bytes).toString('hex')
+      const cbor = await order.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address: addressHex})
+      const tx = await CardanoMobile.Transaction.fromBytes(Buffer.from(cbor, 'hex'))
+      console.log('tx json', await tx.wasm.to_json())
+
       const fakeEntry: YoroiEntry = {
         // TODO: Use real values
-        address: await (await (await wallet.getFirstPaymentAddress()).toAddress()).toBech32(),
+        address: bech32Address,
         amounts: {
           '': '1',
         },
       }
       const unsignedTx = await wallet.createUnsignedTx(fakeEntry)
+      unsignedTxChanged(unsignedTx)
       setUnsignedTx(unsignedTx)
     })
-  }, [address, orderUtxo, collateralUtxo, order, wallet])
+  }, [bech32Address, orderUtxo, collateralUtxo, order, wallet])
 
   const feeAmount = unsignedTx
     ? formatTokenWithText(
