@@ -10,12 +10,10 @@ export {
 export {mockSwapStateDefault} from './translators/reactjs/state/state.mocks'
 export {apiMocks} from './adapters/openswap-api/api.mocks'
 
-export {
-  getReceiveAmountbyChangingSell,
-  getSellAmountByChangingReceive,
-  makePossibleMarketOrder,
-  makeLimitOrder,
-} from './helpers/order'
+export {getBuyAmountbyChangingSell} from './helpers/orders/getBuyAmountByChangingSell'
+export {getSellAmountByChangingBuy} from './helpers/orders/getSellAmountByChangingBuy'
+export {makePossibleMarketOrder} from './helpers/orders/makePossibleMarketOrder'
+export {makeLimitOrder} from './helpers/orders/makeLimitOrder'
 
 export {SwapProvider} from './translators/reactjs/provider/SwapProvider'
 export {useSwapCreateOrder} from './translators/reactjs/hooks/useSwapCreateOrder'
@@ -28,6 +26,8 @@ export {useSwapTokensByPairToken} from './translators/reactjs/hooks/useSwapToken
 
 export {swapApiMaker} from './adapters/openswap-api/api'
 export {swapManagerMaker} from './manager'
+
+export {useSwap} from './translators/reactjs/hooks/useSwap'
 
 export {
   swapStorageMaker,
