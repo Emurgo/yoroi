@@ -8,7 +8,7 @@ export type SwapState = Readonly<{
     datum: string
     datumHash: string
   }
-  unsignedTx: Record<string, unknown> | undefined
+  unsignedTx: any
 }>
 
 export type SwapCreateOrderActions = Readonly<{

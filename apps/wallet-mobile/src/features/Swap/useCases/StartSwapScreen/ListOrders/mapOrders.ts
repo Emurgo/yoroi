@@ -1,4 +1,4 @@
-import {Pool} from '@yoroi/openswap'
+import {getPoolUrlByProvider} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import {SwapCompletedOrder, SwapOpenOrder} from '@yoroi/types/lib/swap/order'
 import {isString} from '@yoroi/wallets'
@@ -16,65 +16,54 @@ export const mapOrders = (
   numberLocale: NumberLocale,
   transactionInfos: TransactionInfo[],
 ) => {
-  return orders?.length > 0
-    ? orders.map((order) => {
-        const fromTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.from.tokenId)
-        const toTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.to.tokenId)
-        const id = `${order.from.tokenId}-${order.to.tokenId}-${order.utxo}`
-        const fromLabel = fromTokenInfo?.ticker ?? fromTokenInfo?.name ?? '-'
-        const toLabel = toTokenInfo?.ticker ?? toTokenInfo?.name ?? '-'
-        const tokenAmount = BigNumber(Quantities.denominated(order.to.quantity, toTokenInfo?.decimals ?? 0))
-          .decimalPlaces(MAX_DECIMALS)
-          .toFormat({
-            ...numberLocale,
-          })
-        const tokenPrice = BigNumber(
-          Quantities.quotient(
-            Quantities.denominated(order.from.quantity, fromTokenInfo?.decimals ?? 0),
-            Quantities.denominated(order.to.quantity, toTokenInfo?.decimals ?? 0),
-          ),
-        )
-          .decimalPlaces(MAX_DECIMALS)
-          .toFormat(numberLocale)
-        const txId = order.utxo.split('#')[0]
-        const total = BigNumber(Quantities.denominated(order?.from?.quantity, fromTokenInfo?.decimals ?? 0)).toFormat(
-          numberLocale,
-        )
-        const matchingTxInfo = transactionInfos.find((tx) => tx.id === txId)
-        const submittedAt = matchingTxInfo?.submittedAt
-        const txLink = `https://cardanoscan.io/transaction/${txId}`
-        const date = isString(submittedAt) ? new Date(submittedAt).toISOString() : ''
-        return {
-          tokenPrice,
-          tokenAmount,
-          id,
-          assetFromLabel: fromLabel,
-          assetToLabel: toLabel,
-          date,
-          txId,
-          total,
-          txLink,
-          fromTokenInfo,
-          toTokenInfo,
-          provider: 'provider' in order ? order.provider : undefined,
-          poolUrl: 'provider' in order ? getPoolUrl(order.provider) : undefined,
-        }
+  if (orders.length === 0) return []
+
+  return orders.map((order) => {
+    const {from, to} = order
+    const [txIdOpen] = 'utxo' in order ? order.utxo.split('#', 1) : [undefined]
+    const txIdComplete = 'txHash' in order ? order.txHash : undefined
+    const txId = txIdComplete ?? txIdOpen ?? ''
+    const id = `${from.tokenId}-${to.tokenId}-${txId}`
+    const txLink = `https://cardanoscan.io/transaction/${txId}` // FIX: this should come from the wallet (preprod/mainnet) explorers
+
+    const txInfo = transactionInfos.find((tx) => tx.id === txId)
+    const submittedAt = txInfo?.submittedAt
+    const date = isString(submittedAt) ? new Date(submittedAt).toISOString() : ''
+
+    const fromTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.from.tokenId)
+    const fromLabel = fromTokenInfo?.ticker ?? fromTokenInfo?.name ?? '-'
+    const total = BigNumber(Quantities.denominated(from.quantity, fromTokenInfo?.decimals ?? 0)).toFormat(numberLocale)
+
+    const toTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.to.tokenId)
+    const toLabel = toTokenInfo?.ticker ?? toTokenInfo?.name ?? '-'
+    const tokenAmount = BigNumber(Quantities.denominated(to.quantity, toTokenInfo?.decimals ?? 0))
+      .decimalPlaces(MAX_DECIMALS)
+      .toFormat({
+        ...numberLocale,
       })
-    : []
-}
+    const tokenPrice = BigNumber(
+      Quantities.quotient(
+        Quantities.denominated(from.quantity, fromTokenInfo?.decimals ?? 0),
+        Quantities.denominated(to.quantity, toTokenInfo?.decimals ?? 0),
+      ),
+    )
+      .decimalPlaces(MAX_DECIMALS)
+      .toFormat(numberLocale)
 
-const getPoolUrl = (provider: Pool['provider']) => {
-  return poolUrls[provider] ?? poolUrls.muesliswap_v1
-}
-
-const poolUrls: Record<Pool['provider'], string> = {
-  minswap: 'https://minswap.org',
-  sundaeswap: 'https://sundae.fi',
-  wingriders: 'https://www.wingriders.com',
-  muesliswap_v1: 'https://muesliswap.com',
-  muesliswap_v2: 'https://muesliswap.com',
-  muesliswap_v3: 'https://muesliswap.com',
-  muesliswap_v4: 'https://muesliswap.com',
-  vyfi: 'https://app.vyfi.io',
-  spectrum: 'https://app.spectrum.fi/cardano',
+    return {
+      tokenPrice,
+      tokenAmount,
+      id,
+      assetFromLabel: fromLabel,
+      assetToLabel: toLabel,
+      date,
+      txId,
+      total,
+      txLink,
+      fromTokenInfo,
+      toTokenInfo,
+      provider: 'provider' in order ? order.provider : undefined,
+      poolUrl: 'provider' in order ? getPoolUrlByProvider(order.provider) : undefined,
+    }
+  })
 }

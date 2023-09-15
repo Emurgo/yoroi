@@ -1,4 +1,4 @@
-import {useOrderByStatusCompleted} from '@yoroi/swap'
+import {useSwapOrdersByStatusCompleted} from '@yoroi/swap'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -33,24 +33,26 @@ export const CompletedOrders = () => {
   const {numberLocale} = useLanguage()
   const intl = useIntl()
 
-  const orders = useOrderByStatusCompleted({
-    queryKey: [wallet.id, 'completed-orders'],
-  })
+  const orders = useSwapOrdersByStatusCompleted()
 
-  const tokenIds = _.uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
+  const tokenIds = React.useMemo(() => _.uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId])), [orders])
+  const tokenInfos = useTokenInfos({wallet, tokenIds})
+  const normalizedOrders = React.useMemo(
+    () => mapOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos)),
+    [orders, tokenInfos, numberLocale, transactionsInfos],
+  )
 
-  const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})
-
-  const normalizedOrders = mapOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos))
-
-  const searchLower = search.toLocaleLowerCase()
-
-  const filteredOrders = normalizedOrders.filter((order) => {
-    return (
-      order.assetFromLabel.toLocaleLowerCase().includes(searchLower) ||
-      order.assetToLabel.toLocaleLowerCase().includes(searchLower)
-    )
-  })
+  const filteredOrders = React.useMemo(
+    () =>
+      normalizedOrders.filter((order) => {
+        const searchLower = search.toLocaleLowerCase()
+        return (
+          order.assetFromLabel.toLocaleLowerCase().includes(searchLower) ||
+          order.assetToLabel.toLocaleLowerCase().includes(searchLower)
+        )
+      }),
+    [normalizedOrders, search],
+  )
 
   return (
     <>

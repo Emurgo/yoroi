@@ -1,4 +1,4 @@
-import {usePoolsByPair, useSwap} from '@yoroi/swap'
+import {useSwap, useSwapPoolsByPair} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -13,16 +13,18 @@ import {useSwapTouched} from '../../../../common/SwapFormProvider'
 export const TopTokenActions = () => {
   const strings = useStrings()
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
+
   const {createOrder, orderTypeChanged} = useSwap()
+
   const {isBuyTouched, isSellTouched} = useSwapTouched()
-  const orderTypeIndex = createOrder.type === 'market' ? 0 : 1
   const isDisabled = !isBuyTouched || !isSellTouched || createOrder.selectedPool === undefined
 
+  const orderTypeIndex = createOrder.type === 'market' ? 0 : 1
   const handleSelectOrderType = (index: number) => {
     orderTypeChanged(index === 0 ? 'market' : 'limit')
   }
 
-  const {refetch, isLoading} = usePoolsByPair({
+  const {refetch, isLoading} = useSwapPoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId ?? '',
     tokenB: createOrder.amounts.buy.tokenId ?? '',
   })

@@ -1,4 +1,4 @@
-import {getReceiveAmountbyChangingSell, useSwap} from '@yoroi/swap'
+import {getBuyAmountbyChangingSell, useSwap} from '@yoroi/swap'
 import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
 import * as React from 'react'
 import {TextInput} from 'react-native'
@@ -56,13 +56,13 @@ export const EditSellAmount = () => {
       return
     }
 
-    const {buy} = getReceiveAmountbyChangingSell(createOrder?.selectedPool, {
+    const {buy} = getBuyAmountbyChangingSell(createOrder.selectedPool, {
       quantity: sellQuantity,
       tokenId: tokenId,
     })
 
     buyAmountChanged({
-      quantity: buy?.quantity,
+      quantity: buy.quantity,
       tokenId: createOrder.amounts.buy.tokenId,
     })
   }
@@ -70,7 +70,7 @@ export const EditSellAmount = () => {
   React.useEffect(() => {
     recalculateBuyValue(quantity)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [buyTokenInfo?.id, createOrder?.selectedPool?.poolId])
+  }, [buyTokenInfo.id, createOrder.selectedPool.poolId])
 
   const onChangeQuantity = (text: string) => {
     try {
