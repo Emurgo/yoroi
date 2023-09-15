@@ -2,6 +2,7 @@ import {Swap} from '@yoroi/types'
 import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
 import BigNumber from 'bignumber.js'
 
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {YoroiEntry} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
 
@@ -35,13 +36,19 @@ export const getSellQuantityForLimitOrder = (
   ).toString() as BalanceQuantity
 }
 
-export const createYoroiEntry = (createOrder: Swap.CreateOrderData, address: string): YoroiEntry => {
+export const createYoroiEntry = (
+  createOrder: Swap.CreateOrderData,
+  address: string,
+  wallet: YoroiWallet,
+): YoroiEntry => {
   const amountEntry = {}
+
   const tokenId = createOrder?.amounts?.sell.tokenId
   if (tokenId != null && createOrder.amounts.sell.quantity !== undefined) {
-    if (createOrder?.amounts?.sell.tokenId === '') {
+    if (tokenId === wallet.primaryTokenInfo.id) {
       amountEntry[tokenId] = Quantities.sum([
         createOrder.selectedPool.deposit.quantity,
+        createOrder.selectedPool.batcherFee.quantity,
         createOrder.amounts.sell.quantity,
       ])
     } else {
@@ -49,7 +56,6 @@ export const createYoroiEntry = (createOrder: Swap.CreateOrderData, address: str
       amountEntry[tokenId] = createOrder.amounts.sell.quantity
     }
   }
-
   return {
     address: address,
     amounts: amountEntry,

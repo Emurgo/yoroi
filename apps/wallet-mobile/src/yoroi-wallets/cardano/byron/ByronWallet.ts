@@ -661,7 +661,7 @@ export class ByronWallet implements YoroiWallet {
 
   // =================== tx building =================== //
 
-  async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>, datum?: {hash: string}) {
+  async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>, datum?: yoroiLib.Datum) {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
@@ -704,7 +704,7 @@ export class ByronWallet implements YoroiWallet {
     }
   }
 
-  async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
+  async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string, datum?: {data: string}) {
     const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
     const accountPrivateKey = await masterKey
       .derive(this.getPurpose())
@@ -729,6 +729,7 @@ export class ByronWallet implements YoroiWallet {
       new Set<string>(),
       stakingKeys,
       stakingPrivateKey,
+      datum ? [datum] : undefined,
     )
 
     return yoroiSignedTx({
