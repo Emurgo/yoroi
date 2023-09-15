@@ -3,9 +3,9 @@ import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler'
+import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, Icon, Spacer} from '../../../../../components'
+import {Button, Spacer} from '../../../../../components'
 import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useAddresses} from '../../../../../Receive/Addresses'
@@ -13,7 +13,6 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfos} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
-import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {createYoroiEntry} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
@@ -26,26 +25,27 @@ import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
 import {LimitPriceWarning} from './LimitPriceWarning/LimitPriceWarning'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
+import {TopTokenActions} from './ShowTokenActions/TopTokenActions'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
-  const {orderTypeChanged, createOrder, selectedPoolChanged, unsignedTxChanged, txPayloadChanged} = useSwap()
+  const {createOrder, selectedPoolChanged, unsignedTxChanged, txPayloadChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
   const addresses = useAddresses()
 
   const tokenInfos = useTokenInfos({
     wallet,
-    tokenIds: [createOrder.amounts?.buy.tokenId, createOrder.amounts?.sell.tokenId],
+    tokenIds: [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId],
   })
   const [showLimitPriceWarning, setShowLimitPriceWarning] = useState(false)
   const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
   const {poolList} = usePoolsByPair({
-    tokenA: createOrder.amounts?.sell.tokenId ?? '',
-    tokenB: createOrder.amounts?.buy.tokenId ?? '',
+    tokenA: createOrder.amounts.sell.tokenId ?? '',
+    tokenB: createOrder.amounts.buy.tokenId ?? '',
   })
 
   useEffect(() => {
@@ -55,12 +55,6 @@ export const CreateOrder = () => {
       poolDefaulted()
     }
   }, [poolDefaulted, selectedPoolChanged, poolList])
-
-  const orderTypeLabels = [strings.marketButton, strings.limitButton]
-  const orderTypeIndex = createOrder.type === 'market' ? 0 : 1
-  const handleSelectOrderType = (index: number) => {
-    orderTypeChanged(index === 0 ? 'market' : 'limit')
-  }
 
   const {createUnsignedTx, isLoading} = useSwapTx({
     onSuccess: (yoroiUnsignedTx) => {
@@ -196,17 +190,7 @@ export const CreateOrder = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             keyboardVerticalOffset={86}
           >
-            <View style={styles.buttonsGroup}>
-              <ButtonGroup
-                labels={orderTypeLabels}
-                onSelect={(index) => handleSelectOrderType(index)}
-                selected={orderTypeIndex}
-              />
-
-              <TouchableOpacity>
-                <Icon.Refresh size={24} />
-              </TouchableOpacity>
-            </View>
+            <TopTokenActions />
 
             <EditSellAmount />
 
@@ -246,11 +230,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     paddingHorizontal: 16,
     paddingTop: 10,
-  },
-  buttonsGroup: {
-    paddingBottom: 24,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   flex: {
     flex: 1,
