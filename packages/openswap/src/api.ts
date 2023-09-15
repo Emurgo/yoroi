@@ -70,7 +70,7 @@ export class OpenSwapApi {
       {policyId, assetName},
     )
 
-    return tokens.filter((token) => token.info.status === 'verified')
+    return tokens
   }
 }
 
