@@ -15,6 +15,8 @@ export {getSellAmountByChangingBuy} from './helpers/orders/getSellAmountByChangi
 export {makePossibleMarketOrder} from './helpers/orders/makePossibleMarketOrder'
 export {makeLimitOrder} from './helpers/orders/makeLimitOrder'
 
+export {getPoolUrlByProvider} from './helpers/pools/getPoolUrlByProvider'
+
 export {SwapProvider} from './translators/reactjs/provider/SwapProvider'
 export {useSwapCreateOrder} from './translators/reactjs/hooks/useSwapCreateOrder'
 export {useSwapOrdersByStatusCompleted} from './translators/reactjs/hooks/useSwapOrdersByStatusCompleted'

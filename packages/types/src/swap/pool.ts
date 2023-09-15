@@ -1,17 +1,18 @@
 import {BalanceAmount} from '../balance/token'
 
-export type SwapPool = {
-  provider:
-    | 'minswap'
-    | 'sundaeswap'
-    | 'wingriders'
-    | 'muesliswap_v1'
-    | 'muesliswap_v2'
-    | 'muesliswap_v3'
-    | 'muesliswap_v4'
-    | 'vyfi'
-    | 'spectrum'
+export type SwapPoolProvider =
+  | 'minswap'
+  | 'sundaeswap'
+  | 'wingriders'
+  | 'muesliswap_v1'
+  | 'muesliswap_v2'
+  | 'muesliswap_v3'
+  | 'muesliswap_v4'
+  | 'vyfi'
+  | 'spectrum'
 
+export type SwapPool = {
+  provider: SwapPoolProvider
   fee: string // % pool liquidity provider fee, usually 0.3.
   tokenA: BalanceAmount
   tokenB: BalanceAmount

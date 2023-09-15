@@ -8,7 +8,7 @@ import {mockSwapManager, swapManagerMocks} from '../../../manager.mocks'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 import {useSwapOrdersByStatusOpen} from './useSwapOrdersByStatusOpen'
 
-describe('useSwapOrderByStatusOpen', () => {
+describe('useSwapOrdersByStatusOpen', () => {
   let queryClient: QueryClient
 
   beforeEach(() => {
