@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#FFFFFF',
     flex: 1,
-    marginBottom: 60,
+    paddingBottom: 30,
   },
   linearGradient: {
     height: 200,
