@@ -43,7 +43,7 @@ export const createYoroiEntry = (
 ): YoroiEntry => {
   const amountEntry = {}
 
-  const tokenId = createOrder?.amounts?.sell.tokenId
+  const tokenId = createOrder.amounts.sell.tokenId
   if (tokenId != null && createOrder.amounts.sell.quantity !== undefined) {
     if (tokenId === wallet.primaryTokenInfo.id) {
       amountEntry[tokenId] = Quantities.sum([

@@ -16,4 +16,6 @@ const icons: Record<Pool['provider'], FunctionComponent<{size?: number}>> = {
   minswap: Icon.MinSwap,
   sundaeswap: Icon.SundaeSwap,
   wingriders: Icon.WingRiders,
+  vyfi: Icon.VyfiSwap,
+  spectrum: Icon.SpectrumSwap,
 }

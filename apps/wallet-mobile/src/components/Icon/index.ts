@@ -69,6 +69,7 @@ import {Send} from './Send'
 import {Settings} from './Settings'
 import {SliderSettings} from './SliderSettings'
 import {SortTable} from './SortTable'
+import {SpectrumSwap} from './SpectrumSwap'
 import {Staking} from './Staking'
 import {StakingKeyDeregistered} from './StakingKeyDeregistered'
 import {StakingKeyRegistered} from './StakingKeyRegistered'
@@ -91,6 +92,7 @@ import {TotalReward} from './TotalReward'
 import {Transaction} from './Transaction'
 import {Twitter} from './Twitter'
 import {Verify} from './Verify'
+import {VyfiSwap} from './VyfiSwap'
 import {Wallet} from './Wallet'
 import {WalletAccount} from './WalletAccount'
 import {Wallets} from './Wallets'
@@ -200,4 +202,6 @@ export const Icon = {
   SundaeSwap,
   MuesliSwap,
   WingRiders,
+  VyfiSwap,
+  SpectrumSwap,
 }
