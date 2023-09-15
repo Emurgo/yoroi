@@ -1,12 +1,19 @@
 import {useSwap} from '@yoroi/swap'
 import React from 'react'
-import {Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {ExpandableInfoCard, HeaderWrapper, HiddenInfoWrapper, MainInfoWrapper} from '../../../../../../components'
+import {
+  ExpandableInfoCard,
+  HeaderWrapper,
+  HiddenInfoWrapper,
+  MainInfoWrapper,
+  Spacer,
+} from '../../../../../../components'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../../common/navigation'
+import {PoolIcon} from '../../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../../../../common/SwapFormProvider'
 
@@ -42,7 +49,13 @@ export const ShowPoolActions = () => {
           onPressLabel={navigateTo.selectPool}
           extended={extended}
         >
-          <Text>{`${protocolCapitalize}${isPoolTouched ? '' : ` ${strings.autoPool}`}`}</Text>
+          <View style={styles.flex}>
+            <PoolIcon size={25} providerId={selectedPool.provider} />
+
+            <Spacer width={10} />
+
+            <Text>{`${protocolCapitalize}${isPoolTouched ? '' : ` ${strings.autoPool}`}`}</Text>
+          </View>
         </Header>
       }
       adornment={
@@ -114,3 +127,7 @@ const MainInfo = ({totalAmount, tokenName}: {totalAmount: string; tokenName: str
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  flex: {flexDirection: 'row', alignItems: 'center'},
+})
