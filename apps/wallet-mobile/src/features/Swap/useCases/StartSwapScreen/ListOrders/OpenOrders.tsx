@@ -17,11 +17,11 @@ import {
   MainInfoWrapper,
   Spacer,
   Text,
-  TextInput,
   TokenIcon,
 } from '../../../../../components'
 import {useLanguage} from '../../../../../i18n'
 import {formatTokenWithText} from '../../../../../legacy/format'
+import {useWalletNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
@@ -32,10 +32,8 @@ import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {mapOrders} from './mapOrders'
-import {useNavigateTo} from '../../../common/navigation'
 import {ConfirmTx} from '../../ConfirmTxScreen/ConfirmTx'
-import {useWalletNavigation} from '../../../../../navigation'
+import {mapOrders} from './mapOrders'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
@@ -138,6 +136,7 @@ export const OpenOrders = () => {
             />
           </BottomSheetModal>
         )}
+
         <ScrollView style={styles.flex}>
           {filteredOrders.map((order) => {
             const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
@@ -579,11 +578,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 24,
-  },
-  modalText: {
-    paddingHorizontal: 70,
-    textAlign: 'center',
-    paddingBottom: 8,
   },
   modalContentTitle: {
     flexDirection: 'row',
