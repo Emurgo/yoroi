@@ -421,7 +421,6 @@ export const useSignWithHwAndSubmitTx = (
       ...options?.signTx,
       onSuccess: (signedTx, args, context) => {
         options?.signTx?.onSuccess?.(signedTx, args, context)
-        console.log('useSignWithHwAndSubmitTx', {signedTx, args, context})
         submitTx.mutate(signedTx)
       },
     },

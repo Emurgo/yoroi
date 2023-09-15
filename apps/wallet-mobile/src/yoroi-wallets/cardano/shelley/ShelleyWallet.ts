@@ -621,7 +621,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       }
     }
 
-    async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string, datum?: any) {
+    async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string, datum?: {data: string}) {
       const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
       const accountPrivateKey = await masterKey
         .derive(PURPOSE)
@@ -647,7 +647,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         new Set<string>(),
         datum ? [] : stakingKeys,
         datum ? undefined : stakingPrivateKey,
-        [datum],
+        datum ? [datum] : undefined,
       )
 
       return yoroiSignedTx({
@@ -909,7 +909,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     }
 
     async submitTransaction(signedTx: string) {
-      console.log('submitTransaction signedTx', signedTx)
       const response: any = await api.submitTransaction(signedTx, BACKEND)
       Logger.info(response)
       return response as any
