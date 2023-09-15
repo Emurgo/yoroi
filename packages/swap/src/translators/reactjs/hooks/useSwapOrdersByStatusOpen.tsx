@@ -8,13 +8,13 @@ export const useSwapOrdersByStatusOpen = (
     Swap.OpenOrderResponse,
     Error,
     Swap.OpenOrderResponse,
-    ['useSwapOrdersByStatusOpen']
+    ['useSwapOrdersByStatusOpen', string]
   >,
 ) => {
-  const {order} = useSwap()
+  const {order, stakingKey} = useSwap()
   const query = useQuery({
     suspense: true,
-    queryKey: ['useSwapOrdersByStatusOpen'],
+    queryKey: ['useSwapOrdersByStatusOpen', stakingKey],
     ...options,
     queryFn: order.list.byStatusOpen,
   })

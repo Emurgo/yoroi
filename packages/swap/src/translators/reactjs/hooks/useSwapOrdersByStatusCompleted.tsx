@@ -8,14 +8,14 @@ export const useSwapOrdersByStatusCompleted = (
     Swap.CompletedOrderResponse,
     Error,
     Swap.CompletedOrderResponse,
-    ['useSwapOrdersByStatusCompleted']
+    ['useSwapOrdersByStatusCompleted', string]
   >,
 ) => {
-  const {order} = useSwap()
+  const {order, stakingKey} = useSwap()
 
   const query = useQuery({
     suspense: true,
-    queryKey: ['useSwapOrdersByStatusCompleted'],
+    queryKey: ['useSwapOrdersByStatusCompleted', stakingKey],
     ...options,
     queryFn: order.list.byStatusCompleted,
   })

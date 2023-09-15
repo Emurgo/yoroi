@@ -11,13 +11,13 @@ export const useSwapCreateOrder = (
     Swap.CreateOrderData
   >,
 ) => {
-  const {order} = useSwap()
+  const {order, stakingKey} = useSwap()
 
   const mutation = useMutationWithInvalidations({
     mutationFn: (orderData) => order.create(orderData),
     invalidateQueries: [
-      ['useSwapOrdersByStatusOpen'],
-      ['useSwapOrdersByStatusCompleted'],
+      ['useSwapOrdersByStatusOpen', stakingKey],
+      ['useSwapOrdersByStatusCompleted', stakingKey],
     ],
     useErrorBoundary: true,
     ...options,

@@ -1,3 +1,4 @@
+import {BalanceToken} from '../balance/token'
 import {SwapApi} from './api'
 import {SwapStorage} from './storage'
 
@@ -22,4 +23,6 @@ export type SwapManager = Readonly<{
       byPair: SwapApi['getPools']
     }
   }
+  stakingKey: string
+  primaryTokenId: BalanceToken['info']['id']
 }>

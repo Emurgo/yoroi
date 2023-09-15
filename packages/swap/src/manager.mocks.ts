@@ -170,6 +170,8 @@ export const mockSwapManager: Swap.Manager = {
   },
   slippage: slippage.success,
   clearStorage: clear.success,
+  primaryTokenId: '',
+  stakingKey: '',
 } as const
 
 export const mockSwapManagerDefault: Swap.Manager = {
@@ -193,4 +195,6 @@ export const mockSwapManagerDefault: Swap.Manager = {
   },
   slippage: slippage.error.unknown,
   clearStorage: clear.error.unknown,
+  primaryTokenId: '',
+  stakingKey: '',
 } as const
