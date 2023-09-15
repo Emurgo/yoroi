@@ -136,6 +136,7 @@ export type Token = {
     description: string
     decimalPlaces: number // number of decimal places of the token, i.e. 6 for ADA and 0 for MILK.
     categories: string[] // encoding categories as ids.
+    sign?: string // token sign, i.e. "₳" for ADA.
   }
   price: {
     volume: {

@@ -134,9 +134,9 @@ const getTokens: Balance.Token[] = [
       description: 'Eggscape Club Utility Token',
       image: 'ipfs://QmNYibJoiTWRiMmWn4yXwvoakEPgq9WmaukmRXHF1VGbAU',
       kind: 'ft',
-      symbol: 'EZY',
+      symbol: undefined,
       icon: undefined,
-      ticker: undefined,
+      ticker: 'EZY',
       metadatas: {},
     },
     price: {
@@ -169,9 +169,9 @@ const getTokens: Balance.Token[] = [
       image:
         'https://tokens.muesliswap.com/static/img/tokens/cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354.png',
       kind: 'ft',
-      symbol: 'CAST',
+      symbol: undefined,
       icon: undefined,
-      ticker: undefined,
+      ticker: 'CAST',
       metadatas: {},
     },
     price: {
@@ -205,9 +205,9 @@ const getTokens: Balance.Token[] = [
       image:
         'https://tokens.muesliswap.com/static/img/tokens/cd5b9dd91319edbb19477ad00cbef673a221e70a17ef043951fc6786.52656465656d61626c65.png',
       kind: 'ft',
-      symbol: 'RUSD',
+      symbol: undefined,
       icon: undefined,
-      ticker: undefined,
+      ticker: 'RUSD',
       metadatas: {},
     },
     price: {
@@ -235,9 +235,9 @@ const getTokens: Balance.Token[] = [
       image:
         'https://tokens.muesliswap.com/static/img/tokens/2d420236ffaada336c21e3f4520b799f6e246d8618f2fc89a4907da6.4564756c6164646572546f6b656e.png',
       kind: 'ft',
-      symbol: 'ELADR',
+      symbol: undefined,
       icon: undefined,
-      ticker: undefined,
+      ticker: 'ELADR',
       metadatas: {},
     },
     price: {

@@ -18,4 +18,6 @@ export interface SwapApi {
     tokenB: BalanceToken['info']['id']
   }): Promise<SwapPool[]>
   getTokens(tokenIdBase: BalanceToken['info']['id']): Promise<BalanceToken[]>
+  stakingKey: string
+  primaryTokenId: BalanceToken['info']['id']
 }
