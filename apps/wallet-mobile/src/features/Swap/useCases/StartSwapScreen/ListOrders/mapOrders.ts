@@ -73,4 +73,5 @@ const poolUrls: Record<Pool['provider'], string> = {
   muesliswap_v2: 'https://muesliswap.com',
   muesliswap_v3: 'https://muesliswap.com',
   muesliswap_v4: 'https://muesliswap.com',
+  vyfi: 'https://app.vyfi.io',
 }

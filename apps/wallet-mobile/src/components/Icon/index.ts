@@ -91,6 +91,7 @@ import {TotalReward} from './TotalReward'
 import {Transaction} from './Transaction'
 import {Twitter} from './Twitter'
 import {Verify} from './Verify'
+import {VyfiSwap} from './VyfiSwap'
 import {Wallet} from './Wallet'
 import {WalletAccount} from './WalletAccount'
 import {Wallets} from './Wallets'
@@ -200,4 +201,5 @@ export const Icon = {
   SundaeSwap,
   MuesliSwap,
   WingRiders,
+  VyfiSwap,
 }
