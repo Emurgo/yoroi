@@ -16,16 +16,14 @@ export const SelectPoolFromListScreen = () => {
     tokenA: createOrder.amounts.sell.tokenId,
     tokenB: createOrder.amounts.buy.tokenId,
   })
+  const poolListLength = Array.isArray(poolList) ? poolList.length : 0
 
   return (
     <SafeAreaView style={{backgroundColor: COLORS.WHITE, paddingBottom: 16}}>
       <ScrollView>
         <SelectPoolFromList data={poolList} />
 
-        <Counter
-          counter={Array.isArray(poolList) ? poolList.length : 0}
-          customText={strings.pools(Array.isArray(poolList) ? poolList.length : 0)}
-        />
+        <Counter counter={poolListLength} customText={strings.pools(poolListLength)} />
       </ScrollView>
     </SafeAreaView>
   )
