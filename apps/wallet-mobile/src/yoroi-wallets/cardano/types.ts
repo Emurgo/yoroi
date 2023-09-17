@@ -16,6 +16,7 @@ import {Balance} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {HWDeviceInfo} from '../hw'
+import {PortfolioManagerState} from '../portfolio/types'
 import {WalletEncryptedStorage} from '../storage'
 import {
   AccountStates,
@@ -162,6 +163,7 @@ export type YoroiWallet = {
   // Balances, TxDetails
   get transactions(): Record<string, TransactionInfo>
   get confirmationCounts(): Record<string, null | number>
+  get portfolio(): PortfolioManagerState
   fetchTipStatus(): Promise<TipStatusResponse>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
   fetchTokenInfo(tokenId: string): Promise<Balance.TokenInfo>
@@ -253,6 +255,7 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'fetchTipStatus',
   'fetchTxStatus',
   'fetchTokenInfo',
+  'portfolio',
 
   // Fiat
   'fetchCurrentPrice',

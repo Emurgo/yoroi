@@ -17,11 +17,11 @@ import {errorMessages} from '../i18n/global-messages'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
-import {BACKEND} from '../yoroi-wallets/cardano/constants/testnet/constants'
+// import {BACKEND} from '../yoroi-wallets/cardano/constants/testnet/constants'
 import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
-import {useBalances, useCreateWallet} from '../yoroi-wallets/hooks'
-import {portfolioManagerApiMaker} from '../yoroi-wallets/portfolio/adapters/cardano-api'
+import {useCreateWallet} from '../yoroi-wallets/hooks'
+// import {portfolioManagerApiMaker} from '../yoroi-wallets/portfolio/adapters/cardano-api'
 import {NetworkId} from '../yoroi-wallets/types'
 import {CONFIG} from './config'
 
@@ -70,7 +70,7 @@ export const DeveloperScreen = () => {
   })
   const [wallet] = useSelectedWalletContext()
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const balances = useBalances(wallet!)
+  // const balances = useBalances(wallet!)
   const [addresses, setAddresses] = React.useState('')
   const agreement = useLegalAgreement()
   const {reset: resetLegalAgreement} = useResetLegalAgreement()
@@ -104,14 +104,16 @@ export const DeveloperScreen = () => {
           title="Token Manager Tests"
           style={styles.button}
           onPress={() => {
-            const tokenManager = portfolioManagerApiMaker({
-              baseUrlApi: BACKEND.API_ROOT,
-              baseUrlTokenRegistry: BACKEND.TOKEN_INFO_SERVICE,
-            })
-            tokenManager
-              .tokens(Object.keys(balances).filter((v) => v != ''))
-              .then(console.log)
-              .catch((error) => console.log('tokenManager error', error))
+            debugAsyncStorage().then(() => console.log())
+            console.log(JSON.stringify(wallet?.portfolio, null, 2))
+            // const tokenManager = portfolioManagerApiMaker({
+            //   baseUrlApi: BACKEND.API_ROOT,
+            //   baseUrlTokenRegistry: BACKEND.TOKEN_INFO_SERVICE,
+            // })
+            // tokenManager
+            //   .tokens(Object.keys(balances).filter((v) => v != ''))
+            //   .then(console.log)
+            //   .catch((error) => console.log('tokenManager error', error))
           }}
         />
 
@@ -324,4 +326,29 @@ const storage = {
   remove,
   clearAll,
   keys,
+}
+
+const debugAsyncStorage = async () => {
+  try {
+    // Fetch all keys
+    const keys = await AsyncStorage.getAllKeys();
+
+    // Fetch all key-value pairs
+    const result = await AsyncStorage.multiGet(keys);
+
+    // Create a structured object to hold the key-value pairs
+    const storageData = {};
+
+    result.forEach(([key, value]) => {
+      storageData[key] = value;
+    });
+
+    // Log the structured object
+    console.log(new Array(100).fill('=').join(''))
+    console.log(JSON.stringify(storageData, null, 2))
+    console.log(new Array(100).fill('=').join(''))
+  } catch (e) {
+    // Log the error if something goes wrong
+    console.log('Failed to fetch Async Storage data:', e);
+  }
 }

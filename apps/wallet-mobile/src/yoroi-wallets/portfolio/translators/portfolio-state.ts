@@ -18,6 +18,11 @@ export type PortfolioState = Readonly<{
     fts: Balance.Amounts
     nfts: Balance.Amounts
   }
+  all: {
+    tokens: Balance.TokenRecords
+    fts: Balance.Amounts
+    nfts: Balance.Amounts
+  }
 }>
 
 export const defaultPortfolioState: Readonly<PortfolioState> = {
@@ -33,6 +38,12 @@ export const defaultPortfolioState: Readonly<PortfolioState> = {
   // secondary needs to be updated atomocally with amounts ft/nft
   // otherwise the UI can be momentarily in an inconsistent state
   secondary: {
+    tokens: {},
+    fts: {},
+    nfts: {},
+  },
+  // don'use use all tokens in the update blank id will throw on cardano-api
+  all: {
     tokens: {},
     fts: {},
     nfts: {},

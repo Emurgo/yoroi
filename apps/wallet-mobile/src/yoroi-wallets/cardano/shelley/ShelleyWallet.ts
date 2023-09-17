@@ -15,7 +15,7 @@ import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
 import {portfolioManagerApiMaker} from '../../portfolio/adapters/cardano-api'
 import {portfolioManagerStorageMaker} from '../../portfolio/adapters/storage'
-import {portfolioManagerMaker} from '../../portfolio/portfolio-manager'
+import {portfolioDefaultState, portfolioManagerMaker} from '../../portfolio/portfolio-manager'
 import {PortfolioManager} from '../../portfolio/types'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
 import {Keychain} from '../../storage/Keychain'
@@ -171,6 +171,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     readonly checksum: CardanoTypes.WalletChecksum
     readonly encryptedStorage: WalletEncryptedStorage
     isEasyConfirmationEnabled = false
+    portfolio = portfolioDefaultState 
 
     private _utxos: RawUtxo[]
     private readonly storage: App.Storage
@@ -289,7 +290,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       // portfolio storage is shared so its mounted based at rootStorage
       // this share the tokens between all wallets without hiting the network again
-      const portfolioStorage = portfolioManagerStorageMaker(rootStorage)
+      const cardanoSharedStorage = rootStorage.join('cardano/')
+      const portfolioStorage = portfolioManagerStorageMaker(cardanoSharedStorage)
       const portfolioApi = portfolioManagerApiMaker({baseUrlApi: API_ROOT, baseUrlTokenRegistry: TOKEN_INFO_SERVICE})
       const portfolioManager = portfolioManagerMaker({storage: portfolioStorage, api: portfolioApi})
       await portfolioManager.hydrate()
@@ -313,6 +315,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       await wallet.discoverAddresses()
       wallet.setupSubscriptions()
+
+      // init portfolio
+      const primaryToken: Balance.Token = {info: wallet.primaryTokenInfo}
+      await wallet.portfolioManager.updatePortfolio(wallet.utxos, primaryToken)
+      wallet.portfolio = wallet.portfolioManager.getPortfolio() 
+
       wallet.isInitialized = true
       wallet.save()
       wallet.notify({type: 'initialize'})
@@ -940,8 +948,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       if (this.areUtxosDifferent(this._utxos, newUtxos)) {
         this._utxos = newUtxos
-        
-        await this.portfolioManager.updatePortfolio(this.utxos, {info: this.primaryTokenInfo})
+
+        const primaryToken: Balance.Token = {info: this.primaryTokenInfo}
+        await this.portfolioManager.updatePortfolio(this.utxos, primaryToken)
+        this.portfolio = this.portfolioManager.getPortfolio()
 
         this.notify({type: 'utxos', utxos: this.utxos})
       }
