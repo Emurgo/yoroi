@@ -58,7 +58,7 @@ export const OpenOrders = () => {
   const {resetToTxHistory} = useWalletNavigation()
   const datum = '' // TODO: Use real values
 
-  const tokenIds = _.uniq(openOrders?.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
+  const tokenIds: string[] = _.uniq(openOrders?.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
 
   const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})
 
@@ -406,7 +406,7 @@ const ModalContent = ({
       unsignedTxChanged(unsignedTx)
       setUnsignedTx(unsignedTx)
     })
-  }, [bech32Address, orderUtxo, collateralUtxo, order, wallet])
+  }, [bech32Address, orderUtxo, collateralUtxo, order, wallet, unsignedTxChanged])
 
   const feeAmount = unsignedTx
     ? formatTokenWithText(
