@@ -1,11 +1,3 @@
-import {
-  BalanceAmount,
-  BalanceAmounts,
-  BalanceQuantity,
-  BalanceToken,
-  BalanceTokenFile,
-  BalanceTokenRecords,
-} from './balance/token'
 import {SwapApi} from './swap/api'
 import {SwapProtocol} from './swap/protocol'
 import {
@@ -21,6 +13,21 @@ import {SwapStorage} from './swap/storage'
 import {SwapManager} from './swap/manager'
 import {AppStorage, AppStorageFolderName} from './app/storage'
 import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
+import {PortfolioBalance, PortfolioBalanceRecords} from './portfolio/balance'
+import {
+  PortfolioToken,
+  PortfolioTokenRecords,
+  PortfolioTokenStatus,
+} from './portfolio/token'
+import {PortfolioTokenFile} from './portfolio/token-file'
+import {
+  PortfolioAmount,
+  PortfolioAmounts,
+  PortfolioQuantity,
+} from './portfolio/amount'
+import {PortfolioTokenSupply} from './portfolio/token-supply'
+import {PortfolioTokenInfo} from './portfolio/token-info'
+import {PortfolioTokenPrice} from './portfolio/token-price'
 
 export namespace App {
   export interface Storage extends AppStorage {}
@@ -51,20 +58,23 @@ export namespace Swap {
   export type Storage = SwapStorage
 }
 
-export namespace Balance {
-  export type Token<M extends Record<string, unknown> = {}> = BalanceToken<M>
-  export type TokenInfo = BalanceToken['info']
-  export type TokenPrice = BalanceToken['price']
-  export type TokenSupply = BalanceToken['supply']
-  export type TokenStatus = BalanceToken['status']
-  export type TokenFiles = BalanceToken['files']
-  export type TokenFile = BalanceTokenFile
+export namespace Portfolio {
+  export type Token<M extends Record<string, unknown> = {}> = PortfolioToken<M>
+  export type TokenInfo = PortfolioTokenInfo
+  export type TokenPrice = PortfolioTokenPrice
+  export type TokenSupply = PortfolioTokenSupply
+  export type TokenStatus = PortfolioTokenStatus
+  export type TokenFiles = Array<PortfolioToken>
+  export type TokenFile = PortfolioTokenFile
   export type TokenRecords<M extends Record<string, unknown> = {}> =
-    BalanceTokenRecords<M>
+    PortfolioTokenRecords<M>
 
-  export type Quantity = BalanceQuantity
-  export type Amount = BalanceAmount
-  export type Amounts = BalanceAmounts
+  export type Quantity = PortfolioQuantity
+  export type Amount = PortfolioAmount
+  export type Amounts = PortfolioAmounts
+
+  export type Balance = PortfolioBalance
+  export type BalanceRecords = PortfolioBalanceRecords
 }
 
 export * from './helpers/types'

@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {NumberLocale} from '../../i18n/languages'
@@ -25,7 +25,7 @@ export const Entries = {
   toAddresses: (entries: YoroiEntries): Array<string> => {
     return Object.keys(entries)
   },
-  toAmounts: (entries: YoroiEntries): Balance.Amounts => {
+  toAmounts: (entries: YoroiEntries): Portfolio.Amounts => {
     const amounts = Object.values(entries)
 
     return Amounts.sum(amounts)
@@ -33,7 +33,7 @@ export const Entries = {
 }
 
 export const Amounts = {
-  sum: (amounts: Array<Balance.Amounts>): Balance.Amounts => {
+  sum: (amounts: Array<Portfolio.Amounts>): Portfolio.Amounts => {
     const entries = amounts.map((amounts) => Object.entries(amounts)).flat()
 
     return entries.reduce(
@@ -41,33 +41,33 @@ export const Amounts = {
         ...result,
         [tokenId]: result[tokenId] ? Quantities.sum([result[tokenId], quantity]) : quantity,
       }),
-      {} as Balance.Amounts,
+      {} as Portfolio.Amounts,
     )
   },
-  diff: (amounts1: Balance.Amounts, amounts2: Balance.Amounts): Balance.Amounts => {
+  diff: (amounts1: Portfolio.Amounts, amounts2: Portfolio.Amounts): Portfolio.Amounts => {
     return Amounts.sum([amounts1, Amounts.negated(amounts2)])
   },
-  includes: (amounts: Balance.Amounts, tokenId: string): boolean => {
+  includes: (amounts: Portfolio.Amounts, tokenId: string): boolean => {
     return Object.keys(amounts).includes(tokenId)
   },
-  negated: (amounts: Balance.Amounts): Balance.Amounts => {
+  negated: (amounts: Portfolio.Amounts): Portfolio.Amounts => {
     const entries = Object.entries(amounts)
     const negatedEntries = entries.map(([tokenId, amount]) => [tokenId, Quantities.negated(amount)])
 
     return Object.fromEntries(negatedEntries)
   },
-  remove: (amounts: Readonly<Balance.Amounts>, removeTokenIds: ReadonlyArray<TokenId>): Balance.Amounts => {
+  remove: (amounts: Readonly<Portfolio.Amounts>, removeTokenIds: ReadonlyArray<TokenId>): Portfolio.Amounts => {
     const filteredEntries = Object.entries(amounts).filter(([tokenId]) => !removeTokenIds.includes(tokenId))
 
     return Object.fromEntries(filteredEntries)
   },
-  getAmount: (amounts: Readonly<Balance.Amounts>, tokenId: string): Balance.Amount => {
+  getAmount: (amounts: Readonly<Portfolio.Amounts>, tokenId: string): Portfolio.Amount => {
     return {
       tokenId,
       quantity: amounts[tokenId] || Quantities.zero,
     }
   },
-  save: (amounts: Balance.Amounts, amount: Balance.Amount): Balance.Amounts => {
+  save: (amounts: Portfolio.Amounts, amount: Portfolio.Amount): Portfolio.Amounts => {
     const {tokenId, quantity} = amount
 
     return {
@@ -75,58 +75,58 @@ export const Amounts = {
       [tokenId]: quantity,
     }
   },
-  map: (amounts: Balance.Amounts, fn: (amount: Balance.Amount) => Balance.Amount): Balance.Amounts =>
+  map: (amounts: Portfolio.Amounts, fn: (amount: Portfolio.Amount) => Portfolio.Amount): Portfolio.Amounts =>
     Amounts.fromArray(Amounts.toArray(amounts).map(fn)),
-  toArray: (amounts: Balance.Amounts) =>
+  toArray: (amounts: Portfolio.Amounts) =>
     Object.keys(amounts).reduce(
       (result, current) => [...result, Amounts.getAmount(amounts, current)],
-      [] as Array<Balance.Amount>,
+      [] as Array<Portfolio.Amount>,
     ),
-  fromArray: (amounts: Array<Balance.Amount>) =>
+  fromArray: (amounts: Array<Portfolio.Amount>) =>
     Object.fromEntries(amounts.map((amount) => [amount.tokenId, amount.quantity])),
-  ids: (amounts: Balance.Amounts): ReadonlyArray<string> => Object.keys(amounts),
+  ids: (amounts: Portfolio.Amounts): ReadonlyArray<string> => Object.keys(amounts),
 }
 
 export const Quantities = {
-  sum: (quantities: Array<Balance.Quantity>) => {
+  sum: (quantities: Array<Portfolio.Quantity>) => {
     return quantities
       .reduce((result, current) => result.plus(current), new BigNumber(0))
-      .toString(10) as Balance.Quantity
+      .toString(10) as Portfolio.Quantity
   },
-  max: (...quantities: Array<Balance.Quantity>) => {
-    return BigNumber.max(...quantities).toString(10) as Balance.Quantity
+  max: (...quantities: Array<Portfolio.Quantity>) => {
+    return BigNumber.max(...quantities).toString(10) as Portfolio.Quantity
   },
-  diff: (quantity1: Balance.Quantity, quantity2: Balance.Quantity) => {
-    return new BigNumber(quantity1).minus(new BigNumber(quantity2)).toString(10) as Balance.Quantity
+  diff: (quantity1: Portfolio.Quantity, quantity2: Portfolio.Quantity) => {
+    return new BigNumber(quantity1).minus(new BigNumber(quantity2)).toString(10) as Portfolio.Quantity
   },
-  negated: (quantity: Balance.Quantity) => {
-    return new BigNumber(quantity).negated().toString(10) as Balance.Quantity
+  negated: (quantity: Portfolio.Quantity) => {
+    return new BigNumber(quantity).negated().toString(10) as Portfolio.Quantity
   },
-  product: (quantities: Array<Balance.Quantity>) => {
+  product: (quantities: Array<Portfolio.Quantity>) => {
     return quantities.reduce((result, quantity) => {
       const x = new BigNumber(result).times(new BigNumber(quantity))
 
-      return x.toString(10) as Balance.Quantity
-    }, '1' as Balance.Quantity)
+      return x.toString(10) as Portfolio.Quantity
+    }, '1' as Portfolio.Quantity)
   },
-  quotient: (quantity1: Balance.Quantity, quantity2: Balance.Quantity) => {
-    return new BigNumber(quantity1).dividedBy(new BigNumber(quantity2)).toString(10) as Balance.Quantity
+  quotient: (quantity1: Portfolio.Quantity, quantity2: Portfolio.Quantity) => {
+    return new BigNumber(quantity1).dividedBy(new BigNumber(quantity2)).toString(10) as Portfolio.Quantity
   },
-  isGreaterThan: (quantity1: Balance.Quantity, quantity2: Balance.Quantity) => {
+  isGreaterThan: (quantity1: Portfolio.Quantity, quantity2: Portfolio.Quantity) => {
     return new BigNumber(quantity1).isGreaterThan(new BigNumber(quantity2))
   },
-  decimalPlaces: (quantity: Balance.Quantity, precision: number) => {
-    return new BigNumber(quantity).decimalPlaces(precision).toString(10) as Balance.Quantity
+  decimalPlaces: (quantity: Portfolio.Quantity, precision: number) => {
+    return new BigNumber(quantity).decimalPlaces(precision).toString(10) as Portfolio.Quantity
   },
-  denominated: (quantity: Balance.Quantity, denomination: number) => {
-    return Quantities.quotient(quantity, new BigNumber(10).pow(denomination).toString(10) as Balance.Quantity)
+  denominated: (quantity: Portfolio.Quantity, denomination: number) => {
+    return Quantities.quotient(quantity, new BigNumber(10).pow(denomination).toString(10) as Portfolio.Quantity)
   },
-  integer: (quantity: Balance.Quantity, denomination: number) => {
-    return new BigNumber(quantity).decimalPlaces(denomination).shiftedBy(denomination).toString(10) as Balance.Quantity
+  integer: (quantity: Portfolio.Quantity, denomination: number) => {
+    return new BigNumber(quantity).decimalPlaces(denomination).shiftedBy(denomination).toString(10) as Portfolio.Quantity
   },
-  zero: '0' as Balance.Quantity,
-  isZero: (quantity: Balance.Quantity) => new BigNumber(quantity).isZero(),
-  isAtomic: (quantity: Balance.Quantity, denomination: number) => {
+  zero: '0' as Portfolio.Quantity,
+  isZero: (quantity: Portfolio.Quantity) => new BigNumber(quantity).isZero(),
+  isAtomic: (quantity: Portfolio.Quantity, denomination: number) => {
     const absoluteQuantity = new BigNumber(quantity).decimalPlaces(denomination).abs()
     const minimalFractionalPart = new BigNumber(10).pow(new BigNumber(denomination).negated())
 
@@ -149,9 +149,9 @@ export const Quantities = {
       .shiftedBy(precision)
       .toString(10)
 
-    return [input, quantity] as [string, Balance.Quantity]
+    return [input, quantity] as [string, Portfolio.Quantity]
   },
-  format: (quantity: Balance.Quantity, denomination: number) => {
+  format: (quantity: Portfolio.Quantity, denomination: number) => {
     return new BigNumber(Quantities.denominated(quantity, denomination)).toFormat()
   },
 }
@@ -161,7 +161,7 @@ export const asQuantity = (value: BigNumber | number | string) => {
   if (bn.isNaN() || !bn.isFinite()) {
     throw new Error('Invalid quantity')
   }
-  return bn.toString(10) as Balance.Quantity
+  return bn.toString(10) as Portfolio.Quantity
 }
 
 export const Utxos = {
@@ -170,7 +170,7 @@ export const Utxos = {
       (previousAmounts, currentUtxo) => {
         const amounts = {
           ...previousAmounts,
-          [primaryTokenId]: Quantities.sum([previousAmounts[primaryTokenId], currentUtxo.amount as Balance.Quantity]),
+          [primaryTokenId]: Quantities.sum([previousAmounts[primaryTokenId], currentUtxo.amount as Portfolio.Quantity]),
         }
 
         if (currentUtxo.assets) {
@@ -179,7 +179,7 @@ export const Utxos = {
               ...previousAmountsWithAssets,
               [currentAsset.assetId]: Quantities.sum([
                 Amounts.getAmount(previousAmountsWithAssets, currentAsset.assetId).quantity,
-                currentAsset.amount as Balance.Quantity,
+                currentAsset.amount as Portfolio.Quantity,
               ]),
             }
           }, amounts)
@@ -187,7 +187,7 @@ export const Utxos = {
 
         return amounts
       },
-      {[primaryTokenId]: Quantities.zero} as Balance.Amounts,
+      {[primaryTokenId]: Quantities.zero} as Portfolio.Amounts,
     )
   },
 }

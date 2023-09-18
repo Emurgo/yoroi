@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {createTypeGuardFromSchema, isArray, isNonNullable, isRecord} from '@yoroi/wallets'
 import {z} from 'zod'
 
@@ -8,7 +8,7 @@ import {fetchTokensSupplies} from './assetSuply'
 import fetchDefault from './fetch'
 import {toAssetNameHex, toPolicyId} from './utils'
 
-export const getNFTs = async (ids: string[], config: BackendConfig): Promise<Balance.TokenInfo[]> => {
+export const getNFTs = async (ids: string[], config: BackendConfig): Promise<Portfolio.TokenInfo[]> => {
   if (ids.length === 0) {
     return []
   }
@@ -29,19 +29,19 @@ export const getNFTs = async (ids: string[], config: BackendConfig): Promise<Bal
   return possibleNfts.filter((nft) => assetSupplies[nft.id] === 1)
 }
 
-export const getNFT = async (id: string, config: BackendConfig): Promise<Balance.TokenInfo | null> => {
+export const getNFT = async (id: string, config: BackendConfig): Promise<Portfolio.TokenInfo | null> => {
   const [nft] = await getNFTs([id], config)
   return nft || null
 }
 
-export const parseNFTs = (value: unknown, storageUrl: string): Balance.TokenInfo[] => {
+export const parseNFTs = (value: unknown, storageUrl: string): Portfolio.TokenInfo[] => {
   if (!isRecord(value)) {
     throw new Error('Invalid response. Expected to receive object when parsing NFTs')
   }
 
   const identifiers = Object.keys(value)
 
-  const tokens: Array<Balance.TokenInfo | null> = identifiers.map((id) => {
+  const tokens: Array<Portfolio.TokenInfo | null> = identifiers.map((id) => {
     const assets = value[id]
     if (!isArray(assets)) {
       return null

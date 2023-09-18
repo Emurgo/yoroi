@@ -1,4 +1,4 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 import {apiMocks} from './adapters/openswap-api/api.mocks'
 
 const loading = () => new Promise(() => {})
@@ -26,7 +26,7 @@ const listOrdersByStatusOpenResponse: Swap.OpenOrderResponse =
 const listOrdersByStatusCompletedResponse: Swap.CompletedOrderResponse =
   apiMocks.getCompletedOrders
 const listPoolsByPairResponse: Swap.PoolResponse = apiMocks.getPools
-const listPairsByTokenResponse: Balance.Token[] = apiMocks.getTokens
+const listPairsByTokenResponse: Portfolio.Token[] = apiMocks.getTokens
 
 // API FUNCTIONS
 const createOrder = {

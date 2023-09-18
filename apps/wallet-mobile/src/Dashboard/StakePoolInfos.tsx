@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
@@ -94,8 +94,8 @@ export const useStakingTx = (
 
       const stakingUtxos = await wallet.getAllUtxosForKey()
       const amountToDelegate = Quantities.sum([
-        ...stakingUtxos.map((utxo) => utxo.amount as Balance.Quantity),
-        accountState.remainingAmount as Balance.Quantity,
+        ...stakingUtxos.map((utxo) => utxo.amount as Portfolio.Quantity),
+        accountState.remainingAmount as Portfolio.Quantity,
       ])
 
       return wallet.createDelegationTx(poolId, new BigNumber(amountToDelegate))

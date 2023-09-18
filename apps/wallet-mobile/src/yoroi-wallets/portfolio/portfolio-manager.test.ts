@@ -1,4 +1,4 @@
-import {App, Balance} from '@yoroi/types'
+import {App, Portfolio} from '@yoroi/types'
 
 import {portfolioManagerMaker} from './portfolio-manager' // Replace 'your-module' with the actual module path
 
@@ -13,7 +13,7 @@ describe('portfolioManagerMaker', () => {
       tokens: {
         saveMany: mockStorageSave,
         getAllKeys: mockStorageGetAllKeys,
-      } as unknown as App.MultiStorage<Balance.Token>,
+      } as unknown as App.MultiStorage<Portfolio.Token>,
     }
 
     const mockApi = {
@@ -41,7 +41,7 @@ describe('portfolioManagerMaker', () => {
       tokens: {
         saveMany: mockStorageSave,
         getAllKeys: mockStorageGetAllKeys,
-      } as unknown as App.MultiStorage<Balance.Token>,
+      } as unknown as App.MultiStorage<Portfolio.Token>,
     }
 
     const mockApi = {

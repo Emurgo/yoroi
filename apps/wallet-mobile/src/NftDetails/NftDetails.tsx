@@ -1,5 +1,5 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {isRecord, isString} from '@yoroi/wallets'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -72,7 +72,7 @@ export const NftDetails = () => {
   )
 }
 
-const UnModeratedNftImage = ({nft}: {nft: Balance.TokenInfo}) => {
+const UnModeratedNftImage = ({nft}: {nft: Portfolio.TokenInfo}) => {
   const navigateTo = useNavigateTo()
   return (
     <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
@@ -81,7 +81,7 @@ const UnModeratedNftImage = ({nft}: {nft: Balance.TokenInfo}) => {
   )
 }
 
-const ModeratedNftImage = ({nft}: {nft: Balance.TokenInfo}) => {
+const ModeratedNftImage = ({nft}: {nft: Portfolio.TokenInfo}) => {
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const {status} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
@@ -118,7 +118,7 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
   )
 }
 
-const NftOverview = ({nft}: {nft: Balance.TokenInfo}) => {
+const NftOverview = ({nft}: {nft: Portfolio.TokenInfo}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const config = getNetworkConfigById(wallet.networkId)
@@ -199,7 +199,7 @@ const HR = () => (
   />
 )
 
-const NftMetadata = ({nft}: {nft: Balance.TokenInfo}) => {
+const NftMetadata = ({nft}: {nft: Portfolio.TokenInfo}) => {
   const strings = useStrings()
   const stringifiedMetadata = JSON.stringify(nft.metadatas.mintNft, undefined, 2)
 

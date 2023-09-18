@@ -1,8 +1,8 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {Cardano, CardanoApi, fetcher} from '@yoroi/wallets'
 import {chunk} from 'lodash'
 
-import {BalanceTokenApi} from '../types'
+import {PortfolioManagerApi} from '../types'
 import {cardanoFutureTokenAsBalanceToken} from './transformers'
 
 // It's limiting due to off chain metadata every id is a request
@@ -16,7 +16,7 @@ export const portfolioManagerApiMaker = (
     getOnChainMetadatas = CardanoApi.getOnChainMetadatas,
     getOffChainMetadata = CardanoApi.getOffChainMetadata,
   }: ApiDeps = {},
-): Readonly<BalanceTokenApi> => {
+): Readonly<PortfolioManagerApi> => {
   const api = {
     tokenSupply: getTokenSupply(baseUrlApi, request),
     metadataOnChain: getOnChainMetadatas(baseUrlApi, request),
@@ -24,9 +24,9 @@ export const portfolioManagerApiMaker = (
   } as const
 
   // TODO: ids from rawUtxo check if `.` is always included, primary token should not be included in ids
-  const tokens = async (ids: Readonly<Array<Balance.Token['info']['id']>>): Promise<Readonly<Balance.TokenRecords>> => {
+  const tokens = async (ids: Readonly<Array<Portfolio.Token['info']['id']>>): Promise<Readonly<Portfolio.TokenRecords>> => {
     const idChunks = chunk(ids, MAX_TOKENS_PER_REQUEST)
-    const result: Balance.TokenRecords = {}
+    const result: Portfolio.TokenRecords = {}
 
     for (const ids of idChunks) {
       const [supplies, offChainMetadata, onChainMetadata] = await Promise.all([

@@ -1,4 +1,4 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {makePossibleMarketOrder} from './makePossibleMarketOrder'
 
@@ -56,11 +56,11 @@ describe('makePossibleMarketOrder', () => {
 
   it('should return undefined if no pools are provided', () => {
     const sell = {
-      quantity: '100' as Balance.Quantity,
+      quantity: '100' as Portfolio.Quantity,
       tokenId: 'tokenA',
     }
     const buy = {
-      quantity: '200' as Balance.Quantity,
+      quantity: '200' as Portfolio.Quantity,
       tokenId: 'tokenB',
     }
     const pools: Swap.Pool[] = []

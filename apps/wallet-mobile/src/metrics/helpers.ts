@@ -1,8 +1,8 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 
 type AssetList = {
-  tokens: Balance.TokenInfo[]
-  amounts: Balance.Amounts
+  tokens: Portfolio.TokenInfo[]
+  amounts: Portfolio.Amounts
 }
 
 export const assetsToSendProperties = ({tokens, amounts}: AssetList) => {

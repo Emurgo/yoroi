@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {Draft, produce} from 'immer'
 
 import {Quantities} from '../../utils'
@@ -8,20 +8,20 @@ export type PortfolioState = Readonly<{
   // locked = utxo cost to hold data (min-ada) cardano
   // committed = certificates costs cardano (2 delegation / proposal)
   primary: {
-    tokens: Balance.TokenRecords
-    amounts: Balance.Amounts
-    committed: Balance.Amounts
-    locked: Balance.Amounts
+    tokens: Portfolio.TokenRecords
+    amounts: Portfolio.Amounts
+    committed: Portfolio.Amounts
+    locked: Portfolio.Amounts
   }
   secondary: {
-    tokens: Balance.TokenRecords
-    fts: Balance.Amounts
-    nfts: Balance.Amounts
+    tokens: Portfolio.TokenRecords
+    fts: Portfolio.Amounts
+    nfts: Portfolio.Amounts
   }
   all: {
-    tokens: Balance.TokenRecords
-    fts: Balance.Amounts
-    nfts: Balance.Amounts
+    tokens: Portfolio.TokenRecords
+    fts: Portfolio.Amounts
+    nfts: Portfolio.Amounts
   }
 }>
 

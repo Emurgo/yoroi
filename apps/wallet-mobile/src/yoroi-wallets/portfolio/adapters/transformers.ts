@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {
   asConcatenedString,
   Cardano,
@@ -21,9 +21,9 @@ export function asApiTokenId(tokenId: string): Cardano.Api.TokenId {
 }
 
 export const cardanoFutureTokenAsBalanceToken = (
-  tokenId: Balance.Token['info']['id'],
+  tokenId: Portfolio.Token['info']['id'],
   futureToken: Cardano.Api.FutureToken,
-): Readonly<Balance.Token> => {
+): Readonly<Portfolio.Token> => {
   const {onChain, offChain, supply} = futureToken
 
   // Nft only if supply is 1 and has 721
@@ -70,9 +70,9 @@ export const cardanoOnChainMetadataAsBalanceToken = ({
   kind,
   cardanoFutureToken,
 }: {
-  tokenId: Balance.Token['info']['id']
+  tokenId: Portfolio.Token['info']['id']
   metadata?: Cardano.Api.NftMetadata | Cardano.Api.FtMetadata
-  kind: Balance.TokenInfo['kind']
+  kind: Portfolio.TokenInfo['kind']
   cardanoFutureToken?: Cardano.Api.FutureToken
 }): Readonly<CardanoToken> => {
   const {name: assetNameUtf8, policyId} = CardanoTokenId.getTokenIdentity(tokenId)
@@ -95,7 +95,7 @@ export const cardanoOnChainMetadataAsBalanceToken = ({
   const parsedDecimals = parseNumber(metadata?.decimals)
   const decimals = parsedDecimals
 
-  const info: Balance.TokenInfo = {
+  const info: Portfolio.TokenInfo = {
     kind,
     id,
     fingerprint,
@@ -128,7 +128,7 @@ export const cardanoOffChainTokenRegistryEntryAsBalanceToken = ({
   entry,
   cardanoFutureToken,
 }: {
-  tokenId: Balance.Token['info']['id']
+  tokenId: Portfolio.Token['info']['id']
   entry: Cardano.Api.TokenRegistryEntry
   cardanoFutureToken: Cardano.Api.FutureToken
 }): Readonly<CardanoToken> => {
@@ -147,7 +147,7 @@ export const cardanoOffChainTokenRegistryEntryAsBalanceToken = ({
   const image = entry.logo?.value ? discoverIpfsLink(entry.logo?.value) : undefined
   const icon = image
 
-  const info: Balance.TokenInfo = {
+  const info: Portfolio.TokenInfo = {
     kind: 'ft',
     id,
     fingerprint,
@@ -171,11 +171,11 @@ export const cardanoOffChainTokenRegistryEntryAsBalanceToken = ({
   return result
 }
 
-export function cardanoFilesAsBalanceTokenFiles(metadataFiles: unknown): Balance.Token['files'] | undefined {
+export function cardanoFilesAsBalanceTokenFiles(metadataFiles: unknown): Portfolio.Token['files'] | undefined {
   const possibleFiles = isArrayOfType(metadataFiles, CardanoApi.isMetadataFile) ? metadataFiles : undefined
   if (!possibleFiles) return
 
-  const files: Balance.Token['files'] = []
+  const files: Portfolio.Token['files'] = []
   for (const possibleFile of possibleFiles) {
     const {name: metaName, mediaType, src: metaSrc, ...rest} = possibleFile
     const name = asConcatenedString(metaName)
@@ -183,7 +183,7 @@ export function cardanoFilesAsBalanceTokenFiles(metadataFiles: unknown): Balance
 
     if (possibleSrc) {
       const src = discoverIpfsLink(possibleSrc)
-      const file: Balance.TokenFile = {
+      const file: Portfolio.TokenFile = {
         name,
         mediaType,
         src,
@@ -231,7 +231,7 @@ export function discoverIpfsLink(image: string) {
   return isIpfsImage ? image?.replace('ipfs://', `https://ipfs.io/ipfs/`) : image
 }
 
-export function rawUtxosAsAmounts(utxos: ReadonlyArray<RawUtxo>, primaryTokenId: Balance.Token['info']['id']) {
+export function rawUtxosAsAmounts(utxos: ReadonlyArray<RawUtxo>, primaryTokenId: Portfolio.Token['info']['id']) {
   return utxos.reduce(
     (previousAmounts, currentUtxo) => {
       const amounts = {
@@ -245,7 +245,7 @@ export function rawUtxosAsAmounts(utxos: ReadonlyArray<RawUtxo>, primaryTokenId:
             ...previousAmountsWithAssets,
             [currentAsset.assetId]: Quantities.sum([
               Amounts.getAmount(previousAmountsWithAssets, currentAsset.assetId).quantity,
-              currentAsset.amount as Balance.Quantity,
+              currentAsset.amount as Portfolio.Quantity,
             ]),
           }
         }, amounts)
@@ -253,6 +253,6 @@ export function rawUtxosAsAmounts(utxos: ReadonlyArray<RawUtxo>, primaryTokenId:
 
       return amounts
     },
-    {[primaryTokenId]: Quantities.zero} as Balance.Amounts,
+    {[primaryTokenId]: Quantities.zero} as Portfolio.Amounts,
   )
 }

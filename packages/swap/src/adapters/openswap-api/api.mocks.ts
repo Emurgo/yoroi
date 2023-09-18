@@ -1,4 +1,4 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 
 const getOpenOrders: Array<Swap.OpenOrder> = [
   {
@@ -123,7 +123,7 @@ const getPools: Swap.Pool[] = [
   },
 ]
 
-const getTokens: Balance.Token[] = [
+const getTokens: Portfolio.Token[] = [
   {
     info: {
       id: '1c1e38cfcc815d2015dbda6bee668b2e707ee3f9d038d96668fcf63c.4567677363617065436c75624561737465725a656e6e79',

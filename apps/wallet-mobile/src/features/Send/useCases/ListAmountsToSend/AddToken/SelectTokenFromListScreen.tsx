@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -147,7 +147,7 @@ const AssetList = ({canAddAmount, fungibilityFilter}: AssetListProps) => {
     <View style={styles.list}>
       <FlashList
         data={filteredTokenInfos}
-        renderItem={({item: tokenInfo}: {item: Balance.TokenInfo}) => (
+        renderItem={({item: tokenInfo}: {item: Portfolio.TokenInfo}) => (
           <Boundary>
             <SelectableAssetItem
               tokenInfo={tokenInfo}
@@ -197,7 +197,7 @@ const Tab = ({onPress, active, tab, label}: TabProps) => (
   </TouchableOpacity>
 )
 
-type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
+type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Portfolio.TokenInfo; wallet: YoroiWallet}
 const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemProps) => {
   const {closeSearch} = useSearch()
   const {tokenSelectedChanged, amountChanged} = useSend()
@@ -240,8 +240,8 @@ const ListEmptyComponent = ({
   filteredTokenInfos,
   allTokenInfos,
 }: {
-  filteredTokenInfos: Array<Balance.TokenInfo>
-  allTokenInfos: Array<Balance.TokenInfo>
+  filteredTokenInfos: Array<Portfolio.TokenInfo>
+  allTokenInfos: Array<Portfolio.TokenInfo>
 }) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const wallet = useSelectedWallet()
@@ -342,7 +342,7 @@ const useFilteredTokenInfos = ({
   tokenInfos,
 }: {
   fungibilityFilter: FungibilityFilter
-  tokenInfos: Array<Balance.TokenInfo>
+  tokenInfos: Array<Portfolio.TokenInfo>
 }) => {
   const wallet = useSelectedWallet()
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
@@ -376,7 +376,7 @@ const useFilteredTokenInfos = ({
 
 const areAllTokensSelected = (selectedTokenIds: Array<string>, tokenInfos): boolean =>
   tokenInfos.every((tokenInfo) => selectedTokenIds.includes(tokenInfo.id))
-const filterOutSelected = (selectedTokenIds: Array<string>) => (token: Balance.TokenInfo) =>
+const filterOutSelected = (selectedTokenIds: Array<string>) => (token: Portfolio.TokenInfo) =>
   !selectedTokenIds.includes(token.id)
 const sortNfts = (nftNameA: string, nftNameB: string): number => nftNameA.localeCompare(nftNameB)
 

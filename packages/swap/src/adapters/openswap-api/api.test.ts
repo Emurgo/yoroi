@@ -1,5 +1,5 @@
 import {OpenSwapApi} from '@yoroi/openswap'
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {swapApiMaker} from './api'
 import {openswapMocks} from './openswap.mocks'
@@ -225,7 +225,7 @@ describe('swapApiMaker', () => {
       const result = await api.getTokens('')
 
       expect(mockOpenSwapApi.getTokens).toHaveBeenCalledTimes(1)
-      expect(result).toEqual<Array<Balance.Token>>(apiMocks.getTokens)
+      expect(result).toEqual<Array<Portfolio.Token>>(apiMocks.getTokens)
     })
 
     it('preprod (mocked)', async () => {

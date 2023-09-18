@@ -92,7 +92,7 @@ export const ListAmountsToSendScreen = () => {
     <View style={styles.container}>
       <AmountsList
         data={tokens}
-        renderItem={({item: {id}}: {item: Balance.TokenInfo}) => (
+        renderItem={({item: {id}}: {item: Portfolio.TokenInfo}) => (
           <Boundary>
             <ActionableAmount amount={Amounts.getAmount(amounts, id)} onRemove={onRemove} onEdit={onEdit} />
           </Boundary>
@@ -118,7 +118,7 @@ export const ListAmountsToSendScreen = () => {
 }
 
 type ActionableAmountProps = {
-  amount: Balance.Amount
+  amount: Portfolio.Amount
   onEdit(tokenId: string): void
   onRemove(tokenId: string): void
 }

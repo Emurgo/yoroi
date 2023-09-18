@@ -1,9 +1,9 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 
 import {filterBySearch} from './filterBySearch'
 
 describe('filterBySearch', () => {
-  const fakeToken1: Balance.TokenInfo = {
+  const fakeToken1: Portfolio.TokenInfo = {
     id: '',
     kind: 'ft',
     name: 'TADANAME',
@@ -15,10 +15,9 @@ describe('filterBySearch', () => {
     ticker: '',
     decimals: 6,
     symbol: undefined,
-    metadatas: {},
   } as const
 
-  const fakeToken2: Balance.TokenInfo = {
+  const fakeToken2: Portfolio.TokenInfo = {
     kind: 'ft',
     id: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950',
     fingerprint: 'asset1nvcwnq60jnm27efjm87xnhqt6alsv024tdyxjm',
@@ -30,10 +29,9 @@ describe('filterBySearch', () => {
     group: '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d',
     image: '',
     symbol: undefined,
-    metadatas: {},
   }
 
-  const tokenInfos: Balance.TokenInfo[] = [fakeToken1, fakeToken2]
+  const tokenInfos: Portfolio.TokenInfo[] = [fakeToken1, fakeToken2]
 
   it('should return all tokenInfos if searchTerm is empty', () => {
     const searchTerm = ''

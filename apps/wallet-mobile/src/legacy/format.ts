@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AssetFingerprint from '@emurgo/cip14-js'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import type {IntlShape} from 'react-intl'
 import {defineMessages} from 'react-intl'
@@ -24,18 +24,18 @@ export const decodeHexAscii = (text: string) => {
   return isAscii ? String.fromCharCode(...bytes) : undefined
 }
 
-const getTicker = (token: Balance.TokenInfo | DefaultAsset) => {
+const getTicker = (token: Portfolio.TokenInfo | DefaultAsset) => {
   if (isTokenInfo(token)) {
     return token.kind === 'ft' ? token.ticker : undefined
   }
   return token.metadata.ticker
 }
-const getSymbol = (token: Balance.TokenInfo | DefaultAsset) => {
+const getSymbol = (token: Portfolio.TokenInfo | DefaultAsset) => {
   const ticker = getTicker(token)
   return (ticker && utfSymbols.CURRENCIES[ticker]) ?? ticker
 }
 
-const getName = (token: Balance.TokenInfo | DefaultAsset) => {
+const getName = (token: Portfolio.TokenInfo | DefaultAsset) => {
   if (isTokenInfo(token)) {
     return token.name || token.ticker || token.fingerprint || ''
   }
@@ -50,7 +50,7 @@ const getName = (token: Balance.TokenInfo | DefaultAsset) => {
   )
 }
 
-export const getDecimals = (token: Balance.TokenInfo | DefaultAsset) => {
+export const getDecimals = (token: Portfolio.TokenInfo | DefaultAsset) => {
   if (isTokenInfo(token)) {
     return token.kind === 'nft' ? 0 : token.decimals
   }
@@ -58,21 +58,21 @@ export const getDecimals = (token: Balance.TokenInfo | DefaultAsset) => {
 }
 
 export const normalizeTokenAmount = (
-  quantity: Balance.Quantity,
-  token: Balance.TokenInfo | DefaultAsset,
+  quantity: Portfolio.Quantity,
+  token: Portfolio.TokenInfo | DefaultAsset,
 ): BigNumber => {
   const decimals = getDecimals(token) ?? 0
   const normalizationFactor = Math.pow(10, decimals)
   return new BigNumber(quantity).dividedBy(normalizationFactor).decimalPlaces(decimals)
 }
 
-export const formatTokenAmount = (quantity: Balance.Quantity, token: Balance.TokenInfo | DefaultAsset): string => {
+export const formatTokenAmount = (quantity: Portfolio.Quantity, token: Portfolio.TokenInfo | DefaultAsset): string => {
   const decimals = getDecimals(token)
   const normalized = normalizeTokenAmount(quantity, token)
   return normalized.toFormat(decimals)
 }
 
-const getTokenV2Fingerprint = (token: Balance.TokenInfo | DefaultAsset): string => {
+const getTokenV2Fingerprint = (token: Portfolio.TokenInfo | DefaultAsset): string => {
   if (isTokenInfo(token)) {
     return token.fingerprint
   }
@@ -82,7 +82,7 @@ const getTokenV2Fingerprint = (token: Balance.TokenInfo | DefaultAsset): string 
   })
 }
 
-export const formatTokenWithSymbol = (quantity: Balance.Quantity, token: Balance.TokenInfo | DefaultAsset): string => {
+export const formatTokenWithSymbol = (quantity: Portfolio.Quantity, token: Portfolio.TokenInfo | DefaultAsset): string => {
   const denomination = getSymbol(token) ?? getTokenV2Fingerprint(token)
   return `${formatTokenAmount(quantity, token)}${utfSymbols.NBSP}${denomination}`
 }
@@ -90,8 +90,8 @@ export const formatTokenWithSymbol = (quantity: Balance.Quantity, token: Balance
 // to identifier
 
 export const formatTokenWithText = (
-  quantity: Balance.Quantity,
-  token: Balance.TokenInfo | DefaultAsset,
+  quantity: Portfolio.Quantity,
+  token: Portfolio.TokenInfo | DefaultAsset,
   maxLength = 128,
 ) => {
   if (isTokenInfo(token)) {
@@ -113,12 +113,12 @@ export const formatTokenWithText = (
   return `${formatTokenAmount(quantity, token)}${utfSymbols.NBSP}${tickerOrId}`
 }
 
-export const formatTokenWithTextWhenHidden = (text: string, token: Balance.TokenInfo | DefaultAsset) => {
+export const formatTokenWithTextWhenHidden = (text: string, token: Portfolio.TokenInfo | DefaultAsset) => {
   const tickerOrId = getTicker(token) || getName(token) || getTokenV2Fingerprint(token)
   return `${text}${utfSymbols.NBSP}${tickerOrId}`
 }
 
-export const formatTokenInteger = (amount: Balance.Quantity, token: Token | DefaultAsset) => {
+export const formatTokenInteger = (amount: Portfolio.Quantity, token: Token | DefaultAsset) => {
   const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
   const bigNumber = new BigNumber(amount)
   const num = bigNumber.dividedToIntegerBy(normalizationFactor)
@@ -131,7 +131,7 @@ export const formatTokenInteger = (amount: Balance.Quantity, token: Token | Defa
   }
 }
 
-export const formatTokenFractional = (quantity: Balance.Quantity, token: Token | DefaultAsset) => {
+export const formatTokenFractional = (quantity: Portfolio.Quantity, token: Token | DefaultAsset) => {
   const normalizationFactor = Math.pow(10, token.metadata.numberOfDecimals)
   const fractional = new BigNumber(quantity).abs().modulo(normalizationFactor).dividedBy(normalizationFactor)
   // remove leading '0'
@@ -148,14 +148,14 @@ export const truncateWithEllipsis = (s: string, n: number) => {
 
 // TODO(multi-asset): consider removing these
 
-const formatAda = (quantity: Balance.Quantity, defaultAsset: DefaultAsset) => {
+const formatAda = (quantity: Portfolio.Quantity, defaultAsset: DefaultAsset) => {
   const defaultAssetMeta = defaultAsset.metadata
   const normalizationFactor = Math.pow(10, defaultAssetMeta.numberOfDecimals)
   const num = new BigNumber(quantity).dividedBy(normalizationFactor)
   return num.toFormat(6)
 }
 
-export const formatAdaWithText = (quantity: Balance.Quantity, defaultAsset: DefaultAsset) => {
+export const formatAdaWithText = (quantity: Portfolio.Quantity, defaultAsset: DefaultAsset) => {
   const defaultAssetMeta = defaultAsset.metadata
   return `${formatAda(quantity, defaultAsset)}${utfSymbols.NBSP}${defaultAssetMeta.ticker}`
 }

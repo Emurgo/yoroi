@@ -1,8 +1,8 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 
 import {defaultPortfolioState, PortfolioAction, PortfolioActionType, portfolioReducer} from './portfolio-state'
 
-const token1: Balance.Token = {
+const token1: Portfolio.Token = {
   info: {
     id: 'policyId.assetName1',
     name: 'secondary token 1',
@@ -12,7 +12,7 @@ const token1: Balance.Token = {
   },
   metadatas: {},
 }
-const token2: Balance.Token = {
+const token2: Portfolio.Token = {
   info: {
     id: 'policyId.assetName2',
     name: 'secondary token 2',
@@ -23,7 +23,7 @@ const token2: Balance.Token = {
   },
   metadatas: {},
 }
-const primaryToken1: Balance.Token = {
+const primaryToken1: Portfolio.Token = {
   info: {
     id: '',
     name: 'primary token 1',

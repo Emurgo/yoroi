@@ -123,7 +123,7 @@ const implementationId = WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 
 export class ByronWallet implements YoroiWallet {
   readonly primaryToken: DefaultAsset
-  readonly primaryTokenInfo: Balance.TokenInfo
+  readonly primaryTokenInfo: Portfolio.TokenInfo
   readonly id: string
   readonly networkId: NetworkId
   readonly walletImplementationId: WalletImplementationId
@@ -647,15 +647,15 @@ export class ByronWallet implements YoroiWallet {
 
     const stakingUtxos = await this.getAllUtxosForKey()
     const amount = Quantities.sum([
-      ...stakingUtxos.map((utxo) => utxo.amount as Balance.Quantity),
-      accountState.remainingAmount as Balance.Quantity,
+      ...stakingUtxos.map((utxo) => utxo.amount as Portfolio.Quantity),
+      accountState.remainingAmount as Portfolio.Quantity,
     ])
 
     return {
       status: 'staked',
       poolId: stakingStatus.poolKeyHash,
       amount,
-      rewards: accountState.remainingAmount as Balance.Quantity,
+      rewards: accountState.remainingAmount as Portfolio.Quantity,
     }
   }
 
@@ -1362,7 +1362,7 @@ const keys: Array<keyof WalletJSON> = [
   'lastGeneratedAddressIndex',
 ]
 
-export const primaryTokenInfo: Record<'mainnet' | 'testnet', Balance.TokenInfo> = {
+export const primaryTokenInfo: Record<'mainnet' | 'testnet', Portfolio.TokenInfo> = {
   mainnet: {
     id: '',
     name: 'ADA',

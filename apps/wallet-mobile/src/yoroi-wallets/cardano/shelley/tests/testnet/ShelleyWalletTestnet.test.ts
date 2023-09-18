@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {rootStorage} from '@yoroi/wallets'
 
 import {HWDeviceInfo} from '../../../../hw'
@@ -104,7 +104,7 @@ describe('ShelleyWalletTestnet', () => {
       },
       networkId: 300,
     })
-    expect(wallet.primaryTokenInfo).toEqual<Balance.TokenInfo>({
+    expect(wallet.primaryTokenInfo).toEqual<Portfolio.TokenInfo>({
       kind: 'ft',
       id: '',
       name: 'TADA',
@@ -217,7 +217,7 @@ describe('ShelleyWalletTestnet', () => {
       },
       networkId: 300,
     })
-    expect(wallet.primaryTokenInfo).toEqual<Balance.TokenInfo>({
+    expect(wallet.primaryTokenInfo).toEqual<Portfolio.TokenInfo>({
       kind: 'ft',
       id: '',
       name: 'TADA',
@@ -319,7 +319,7 @@ describe('ShelleyWalletTestnet', () => {
       },
       networkId: 300,
     })
-    expect(wallet.primaryTokenInfo).toEqual<Balance.TokenInfo>({
+    expect(wallet.primaryTokenInfo).toEqual<Portfolio.TokenInfo>({
       kind: 'ft',
       id: '',
       name: 'TADA',

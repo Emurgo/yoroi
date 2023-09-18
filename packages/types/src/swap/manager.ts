@@ -1,4 +1,4 @@
-import {BalanceToken} from '../balance/token'
+import {PortfolioTokenInfo} from '../portfolio/token-info'
 import {SwapApi} from './api'
 import {SwapStorage} from './storage'
 
@@ -24,5 +24,5 @@ export type SwapManager = Readonly<{
     }
   }
   stakingKey: string
-  primaryTokenId: BalanceToken['info']['id']
+  primaryTokenId: PortfolioTokenInfo['id']
 }>

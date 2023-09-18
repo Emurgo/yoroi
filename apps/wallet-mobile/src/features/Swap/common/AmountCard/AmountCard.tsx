@@ -1,5 +1,5 @@
 import {useSwap} from '@yoroi/swap'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React, {useRef} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
@@ -14,7 +14,7 @@ import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 type Props = {
   label?: string
   wallet: YoroiWallet
-  amount: Balance.Amount
+  amount: Portfolio.Amount
   onChange(value: string): void
   value?: string
   hasError?: boolean

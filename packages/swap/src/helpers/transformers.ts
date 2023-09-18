@@ -1,9 +1,9 @@
 import AssetFingerprint from '@emurgo/cip14-js'
-import {Swap, Balance} from '@yoroi/types'
+import {Swap, Portfolio} from '@yoroi/types'
 import {OpenSwap} from '@yoroi/openswap'
 
 export const transformersMaker = (
-  primaryTokenId: Balance.Token['info']['id'],
+  primaryTokenId: Portfolio.Token['info']['id'],
 ) => {
   const asOpenswapTokenId = (yoroiTokenId: string) => {
     const [policyId, assetName = ''] = yoroiTokenId.split('.') as [
@@ -23,7 +23,7 @@ export const transformersMaker = (
   }: {
     policyId: string
     name: string
-  }): Balance.Token['info']['id'] => {
+  }): Portfolio.Token['info']['id'] => {
     const possibleTokenId = `${policyId}.${name}`
     // openswap is inconsistent about ADA
     // sometimes is '.', '' or 'lovelace'
@@ -33,7 +33,7 @@ export const transformersMaker = (
     return `${policyId}.${name}`
   }
 
-  const asOpenswapAmount = (yoroiAmount: Balance.Amount) => {
+  const asOpenswapAmount = (yoroiAmount: Portfolio.Amount) => {
     const {tokenId, quantity: amount} = yoroiAmount
     const {policyId, assetName} = asOpenswapTokenId(tokenId)
     return {
@@ -73,9 +73,9 @@ export const transformersMaker = (
 
   const asYoroiBalanceToken = (
     openswapToken: OpenSwap.Token,
-  ): Balance.Token => {
+  ): Portfolio.Token => {
     const {info, price} = openswapToken
-    const balanceToken: Balance.Token = {
+    const balanceToken: Portfolio.Token = {
       info: {
         id: asYoroiTokenId(info.address),
         group: info.address.policyId,
@@ -98,11 +98,11 @@ export const transformersMaker = (
       status: info.status,
     }
 
-    const supply: Balance.TokenSupply = {
+    const supply: Portfolio.TokenSupply = {
       circulating: info.supply.circulating
-        ? (info.supply.circulating as Balance.Quantity)
+        ? (info.supply.circulating as Portfolio.Quantity)
         : undefined,
-      total: info.supply.total as Balance.Quantity,
+      total: info.supply.total as Portfolio.Quantity,
     }
     balanceToken.supply = supply
 
@@ -140,14 +140,14 @@ export const transformersMaker = (
   const asYoroiAmount = (openswapAmount: {
     amount: string
     token: string
-  }): Balance.Amount => {
+  }): Portfolio.Amount => {
     if (openswapAmount !== null && openswapAmount?.amount !== null) {
       // openswap is inconsistent about ADA
       // sometimes is '.', '' or 'lovelace'
       const {amount, token} = openswapAmount
       const [policyId, name = ''] = token.split('.') as [string, string?]
       return {
-        quantity: amount as Balance.Quantity,
+        quantity: amount as Portfolio.Quantity,
         tokenId: asYoroiTokenId({policyId, name}),
       } as const
     }
@@ -160,7 +160,7 @@ export const transformersMaker = (
 
   const asYoroiBalanceTokens = (
     openswapTokens: OpenSwap.Token[],
-  ): Balance.Token[] => openswapTokens.map(asYoroiBalanceToken)
+  ): Portfolio.Token[] => openswapTokens.map(asYoroiBalanceToken)
 
   return {
     asOpenswapTokenId,

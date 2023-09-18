@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {YoroiEntries, YoroiMetadata} from '../../types'
@@ -6,7 +6,7 @@ import {CardanoTypes} from '../types'
 import {toAmounts, toDisplayAddress, toEntries, toMetadata} from './unsignedTx'
 
 describe('YoroiUnsignedTx', () => {
-  it('toAmounts converts TokenEntry[] to Balance.Amounts', () => {
+  it('toAmounts converts TokenEntry[] to Portfolio.Amounts', () => {
     const tokenEntries: Array<CardanoTypes.TokenEntry> = [
       {identifier: '', networkId: 1, amount: new BigNumber('1')},
       {identifier: '', networkId: 1, amount: new BigNumber('3')},
@@ -19,7 +19,7 @@ describe('YoroiUnsignedTx', () => {
       '': '4',
       token123: '2',
       token456: '2',
-    } as Balance.Amounts)
+    } as Portfolio.Amounts)
   })
 
   it('toMetadata converts UnsignedTx to YoroiMetadata', () => {

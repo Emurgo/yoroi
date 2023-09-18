@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 
 import {mocks} from '../../mocks'
 import {Quantities} from '../../utils'
@@ -22,7 +22,7 @@ describe('calcLockedDeposit()', () => {
 
 describe('cardanoFallbackTokenAsBalanceToken()', () => {
   it('should return a token with the correct id', () => {
-    const expectedOutput: Balance.Token = {
+    const expectedOutput: Portfolio.Token = {
       info: {
         kind: 'ft',
         id: '775f356c756b70ca6b8e65feec417c7da295179eee6c4bfe9ff33176.54657374696e6754657374496d6167653132',

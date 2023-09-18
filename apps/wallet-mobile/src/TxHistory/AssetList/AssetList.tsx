@@ -1,5 +1,5 @@
 import {FlashList, FlashListProps} from '@shopify/flash-list'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -15,7 +15,7 @@ import {Tokens} from '../../yoroi-wallets/portfolio/helpers/tokens'
 import {Amounts} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
 
-type ListProps = FlashListProps<Balance.TokenInfo>
+type ListProps = FlashListProps<Portfolio.TokenInfo>
 type Props = Partial<ListProps> & {
   onScroll: ListProps['onScroll']
   refreshing: boolean
@@ -24,6 +24,8 @@ type Props = Partial<ListProps> & {
 export const AssetList = (props: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+
+  const sortedTokens = wallet.sortedTokens
 
   const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
@@ -34,7 +36,7 @@ export const AssetList = (props: Props) => {
   return (
     <View style={styles.assetList} testID="assetList">
       <ActionsBanner
-        tokensLabel={strings.tokens(tokenInfos.length)}
+        tokensLabel={strings.tokens(sortedTokens.length)}
         nftsLabel={strings.nfts(0)}
         onPressNFTs={handleOnPressNFTs}
         onPressTokens={handleOnPressTokens}
@@ -43,12 +45,12 @@ export const AssetList = (props: Props) => {
 
       <FlashList
         {...props}
-        data={sortTokenInfos({wallet})}
-        renderItem={({item: tokenInfo}) => (
-          <ExplorableAssetItem
+        data={sortedTokens}
+        renderItem={({item: token}) => (
+          <ExplorableToken
             wallet={wallet}
-            amount={Amounts.getAmount(balances, tokenInfo.id)}
-            onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(tokenInfo.id))}
+            token={token}
+            onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(token.info.id))}
           />
         )}
         ItemSeparatorComponent={() => <Spacer height={16} />}
@@ -60,10 +62,10 @@ export const AssetList = (props: Props) => {
   )
 }
 
-type ExplorableAssetItemProps = AmountItemProps & {
+type ExplorableTokenProps = AmountItemProps & {
   onPress(): void
 }
-const ExplorableAssetItem = ({wallet, amount, onPress}: ExplorableAssetItemProps) => {
+const ExplorableToken = ({wallet, token, onPress}: ExplorableTokenProps) => {
   const {isPrivacyOff} = usePrivacyMode()
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} testID="assetSelectorItem">

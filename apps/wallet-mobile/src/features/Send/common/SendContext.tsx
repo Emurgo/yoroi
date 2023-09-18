@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 
 import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
@@ -18,7 +18,7 @@ export type SendState = {
 }
 
 type TargetActions = {
-  amountChanged: (quantity: Balance.Quantity) => void
+  amountChanged: (quantity: Portfolio.Quantity) => void
   amountRemoved: (tokenId: string) => void
   receiverChanged: (receiver: string) => void
   addressChanged: (address: Address) => void
@@ -60,7 +60,7 @@ export const SendProvider = ({children, ...props}: {initialState?: Partial<SendS
 
     yoroiUnsignedTxChanged: (yoroiUnsignedTx) => dispatch({type: 'yoroiUnsignedTxChanged', yoroiUnsignedTx}),
     tokenSelectedChanged: (tokenId: string) => dispatch({type: 'tokenSelectedChanged', tokenId}),
-    amountChanged: (quantity: Balance.Quantity) => dispatch({type: 'amountChanged', quantity}),
+    amountChanged: (quantity: Portfolio.Quantity) => dispatch({type: 'amountChanged', quantity}),
     amountRemoved: (tokenId: string) => dispatch({type: 'amountRemoved', tokenId}),
   }).current
 
@@ -129,7 +129,7 @@ export type TargetAction =
     }
   | {
       type: 'amountChanged'
-      quantity: Balance.Quantity
+      quantity: Portfolio.Quantity
     }
   | {
       type: 'amountRemoved'
@@ -287,5 +287,5 @@ export const useSelectedSecondaryAmountsCounter = (wallet: YoroiWallet) => {
 
 const isSecondaryAmountFilter =
   (wallet: YoroiWallet) =>
-  ({tokenId}: Balance.Amount) =>
+  ({tokenId}: Portfolio.Amount) =>
     tokenId !== wallet.primaryTokenInfo.id

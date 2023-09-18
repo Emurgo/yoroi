@@ -1,5 +1,5 @@
 import {getPoolUrlByProvider} from '@yoroi/swap'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {SwapCompletedOrder, SwapOpenOrder} from '@yoroi/types/lib/swap/order'
 import {isString} from '@yoroi/wallets'
 import BigNumber from 'bignumber.js'
@@ -12,7 +12,7 @@ const MAX_DECIMALS = 10
 
 export const mapOrders = (
   orders: Array<SwapOpenOrder | SwapCompletedOrder>,
-  tokenInfos: Balance.TokenInfo[],
+  tokenInfos: Portfolio.TokenInfo[],
   numberLocale: NumberLocale,
   transactionInfos: TransactionInfo[],
 ) => {

@@ -1,4 +1,4 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 import {produce} from 'immer'
 
 export type SwapState = Readonly<{
@@ -12,14 +12,14 @@ export type SwapState = Readonly<{
 
 export type SwapCreateOrderActions = Readonly<{
   orderTypeChanged: (orderType: Swap.OrderType) => void
-  sellAmountChanged: (sellAmount: Readonly<Balance.Amount>) => void
-  buyAmountChanged: (buyAmount: Readonly<Balance.Amount>) => void
+  sellAmountChanged: (sellAmount: Readonly<Portfolio.Amount>) => void
+  buyAmountChanged: (buyAmount: Readonly<Portfolio.Amount>) => void
   selectedPoolChanged: (pool: Readonly<Swap.Pool>) => void
   slippageChanged: (slippage: number) => void
   txPayloadChanged: (txPayload: Readonly<Swap.CreateOrderResponse>) => void
   switchTokens: () => void
   resetQuantities: () => void
-  limitPriceChanged: (limitPrice: Balance.Quantity) => void
+  limitPriceChanged: (limitPrice: Portfolio.Quantity) => void
 }>
 
 export enum SwapCreateOrderActionType {
@@ -42,11 +42,11 @@ export type SwapCreateOrderAction =
     }
   | {
       type: SwapCreateOrderActionType.SellAmountChanged
-      amount: Readonly<Balance.Amount>
+      amount: Readonly<Portfolio.Amount>
     }
   | {
       type: SwapCreateOrderActionType.BuyAmountChanged
-      amount: Readonly<Balance.Amount>
+      amount: Readonly<Portfolio.Amount>
     }
   | {
       type: SwapCreateOrderActionType.ProtocolChanged
@@ -66,7 +66,7 @@ export type SwapCreateOrderAction =
     }
   | {
       type: SwapCreateOrderActionType.LimitPriceChanged
-      limitPrice: Balance.Quantity
+      limitPrice: Portfolio.Quantity
     }
   | {type: SwapCreateOrderActionType.SwitchTokens}
   | {type: SwapCreateOrderActionType.ResetQuantities}

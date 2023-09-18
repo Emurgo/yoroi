@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {difference, Observer, observerMaker} from '@yoroi/wallets'
 import _ from 'lodash'
 
@@ -6,6 +6,7 @@ import {RawUtxo} from '../types'
 import {Amounts, Quantities} from '../utils'
 import {calcLockedDeposit, cardanoFallbackTokenAsBalanceToken} from './adapters/cardano-helpers'
 import {rawUtxosAsAmounts} from './adapters/transformers'
+import {Tokens} from './helpers/tokens'
 import {PortfolioManager, PortfolioManagerOptions, PortfolioManagerState} from './types'
 
 export const portfolioManagerMaker = (
@@ -26,14 +27,14 @@ export const portfolioManagerMaker = (
   }
 
   // STATE
-  let knownTokenIds = new Set<Balance.Token['info']['id']>()
+  let knownTokenIds = new Set<Portfolio.Token['info']['id']>()
   let portfolio: PortfolioManagerState = portfolioDefaultState
 
   // API
   const getTokens = async (
-    ids: ReadonlyArray<Balance.Token['info']['id']>,
+    ids: ReadonlyArray<Portfolio.Token['info']['id']>,
     avoidCache = false,
-  ): Promise<Readonly<Balance.TokenRecords> | undefined> => {
+  ): Promise<Readonly<Portfolio.TokenRecords> | undefined> => {
     if (avoidCache) {
       const refreshedTokens = await api.tokens(ids)
       await tokens.saveMany(Object.values(refreshedTokens))
@@ -50,9 +51,10 @@ export const portfolioManagerMaker = (
     }
   }
 
-  const updatePortfolio = async (utxos: ReadonlyArray<RawUtxo>, primaryToken: Readonly<Balance.Token>) => {
+  const updatePortfolio = async (utxos: ReadonlyArray<RawUtxo>, initialPrimaryToken: Readonly<Portfolio.Token>) => {
     const task = async () => {
-      const allAmounts = rawUtxosAsAmounts(utxos, primaryToken.info.id)
+      const primaryTokenId = initialPrimaryToken.info.id
+      const allAmounts = rawUtxosAsAmounts(utxos, primaryTokenId)
 
       // PRIMARY
       // primary token balance on cardano is scattered across utxo and account balances
@@ -62,35 +64,43 @@ export const portfolioManagerMaker = (
       // + ?? ADA collateral - locked to be able to submit script txs
       // + ?? ADA locked (to hold data) - min-ada (can change if the utxos get reorganized / params change)
       // + ?? ---- register as a drep ---- (to updated)
-      const primaryAmount = {[primaryToken.info.id]: allAmounts[primaryToken.info.id] ?? Quantities.zero}
+      const primaryAmount = {[primaryTokenId]: allAmounts[primaryTokenId] ?? Quantities.zero}
+      const primaryTokenBalance: Portfolio.Token = {
+        ...initialPrimaryToken,
+        balance: primaryAmount[primaryTokenId],
+        isPrimary: true,
+      }
+      const primaryTokenRecord = {[primaryTokenId]: primaryToken} as const
       const locked = await calcLockedDeposit(utxos)
-      const primaryTokenRecord = {[primaryToken.info.id]: primaryToken}
 
       // SECONDARY
-      const secondaryAmounts = Amounts.remove(allAmounts, [primaryToken.info.id])
+      const secondaryAmounts = Amounts.remove(allAmounts, [primaryTokenId])
       const secondaryIds = Amounts.ids(secondaryAmounts)
-      const fts: Balance.Amounts = {}
-      const nfts: Balance.Amounts = {}
+      const fts: Portfolio.Amounts = {}
+      const nfts: Portfolio.Amounts = {}
 
-      const cachedSecondaryTokens = (await getTokens(secondaryIds)) ?? {}
+      const secondaryTokens = (await getTokens(secondaryIds)) ?? {}
 
-      const secondaryTokenRecords: Balance.TokenRecords = {}
+      const secondaryTokenRecords: Portfolio.TokenRecords = {}
 
       // there are 2 places that decide the kind of token
       // during the api.tokens call and here if the token is missing
       // it will fallback to fts
       secondaryIds.forEach((tokenId) => {
-        const token = cachedSecondaryTokens[tokenId]
-        if (token?.info?.kind === 'ft') {
+        // when token has no metadata - it should branch the flavor of token in the transformation
+        // falling back to unknown cardano token
+        const token = secondaryTokens[tokenId] ?? cardanoFallbackTokenAsBalanceToken(tokenId)
+        const secondaryToken = {...token, balance: secondaryAmounts[tokenId], isPrimary: false} as const
+
+        if (token.info.kind === 'ft') {
           fts[tokenId] = secondaryAmounts[tokenId]
-        } else if (token?.info?.kind === 'nft') {
+        } else if (token.info.kind === 'nft') {
           nfts[tokenId] = secondaryAmounts[tokenId]
         } else {
           fts[tokenId] = secondaryAmounts[tokenId]
         }
-        // when token has no metadata - it should branch the flavor of token in the transformation
-        // falling back to unknown cardano token
-        secondaryTokenRecords[tokenId] = token ?? cardanoFallbackTokenAsBalanceToken(tokenId)
+
+        secondaryTokenRecords[tokenId] = secondaryToken
       })
 
       portfolio = {
@@ -107,7 +117,7 @@ export const portfolioManagerMaker = (
       } as const
     }
 
-    // updates need to be processed in the arrived order
+    // updates need to be processed in the arrival order
     // otherwise if the previous request was hanging the new one would be processed first
     // most importantly the state should reflect the latest request
     updatePortfolioQueue.push(task)

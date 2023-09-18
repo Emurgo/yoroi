@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {
   KeyboardAvoidingView,
@@ -36,7 +36,7 @@ export const EditAmountScreen = () => {
   const tokenInfo = useTokenInfo({wallet, tokenId: selectedTokenId}, {select: selectFtOrThrow})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
-  const [quantity, setQuantity] = React.useState<Balance.Quantity>(initialQuantity)
+  const [quantity, setQuantity] = React.useState<Portfolio.Quantity>(initialQuantity)
   const [inputValue, setInputValue] = React.useState<string>(
     Quantities.denominated(initialQuantity, tokenInfo.decimals ?? 0),
   )

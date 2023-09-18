@@ -69,7 +69,7 @@ export const PortfolioProvider = ({
 export const usePortfolio = () => React.useContext(PortfolioContext)
 
 // export const usePortfolioUpdate = (
-//   options: UseMutationOptions<void, Error, {amounts: Balance.Amounts; avoidCache: boolean}> = {},
+//   options: UseMutationOptions<void, Error, {amounts: Portfolio.Amounts; avoidCache: boolean}> = {},
 // ) => {
 //   const {update} = usePortfolio()
 //   const mutation = useMutation({

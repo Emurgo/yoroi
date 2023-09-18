@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
@@ -30,7 +30,7 @@ export const SecondaryTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsign
   )
 }
 
-const Amount = ({amount, wallet}: {amount: Balance.Amount; wallet: YoroiWallet}) => {
+const Amount = ({amount, wallet}: {amount: Portfolio.Amount; wallet: YoroiWallet}) => {
   const token = useToken({wallet, tokenId: amount.tokenId})
 
   return <Text style={styles.amount}>{formatTokenWithText(amount.quantity, token)}</Text>

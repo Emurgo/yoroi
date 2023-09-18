@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Datum} from '@emurgo/yoroi-lib'
-import {App, Balance} from '@yoroi/types'
+import {App, Portfolio} from '@yoroi/types'
 import {parseSafe, rootStorage} from '@yoroi/wallets'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
@@ -157,7 +157,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
   return class ShelleyWallet implements YoroiWallet {
     readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
-    readonly primaryTokenInfo: Balance.TokenInfo = PRIMARY_TOKEN_INFO
+    readonly primaryTokenInfo: Portfolio.TokenInfo = PRIMARY_TOKEN_INFO
     readonly walletImplementationId = WALLET_IMPLEMENTATION_ID
     readonly networkId = NETWORK_ID
     readonly id: string
@@ -173,7 +173,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     readonly encryptedStorage: WalletEncryptedStorage
     isEasyConfirmationEnabled = false
     portfolio: Readonly<PortfolioManagerState> = portfolioDefaultState
-    sortedTokens: ReadonlyArray<[Balance.TokenInfo['id'], Readonly<Balance.Token>]> = [] as const
+    sortedTokens: ReadonlyArray<[Portfolio.TokenInfo['id'], Readonly<Portfolio.Token>]> = [] as const
 
     private _utxos: RawUtxo[]
     private readonly storage: App.Storage
@@ -319,10 +319,13 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       wallet.setupSubscriptions()
 
       // init portfolio
-      const primaryToken: Balance.Token = {info: wallet.primaryTokenInfo}
+      const primaryToken: Portfolio.Token = {info: wallet.primaryTokenInfo}
       await wallet.portfolioManager.updatePortfolio(wallet.utxos, primaryToken)
       wallet.portfolio = wallet.portfolioManager.getPortfolio()
-      wallet.sortedTokens = Tokens.sort(wallet.portfolio.secondary.tokens)
+      wallet.sortedTokens = [
+        ...Tokens.sort(wallet.portfolio.primary.tokens), // primary always for first
+        ...Tokens.sort(wallet.portfolio.secondary.tokens),
+      ]
       wallet.save()
       wallet.notify({type: 'initialize'})
 
@@ -593,15 +596,15 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       const stakingUtxos = await this.getAllUtxosForKey()
       const amount = Quantities.sum([
-        ...stakingUtxos.map((utxo) => utxo.amount as Balance.Quantity),
-        accountState.remainingAmount as Balance.Quantity,
+        ...stakingUtxos.map((utxo) => utxo.amount as Portfolio.Quantity),
+        accountState.remainingAmount as Portfolio.Quantity,
       ])
 
       return {
         status: 'staked',
         poolId: stakingStatus.poolKeyHash,
         amount,
-        rewards: accountState.remainingAmount as Balance.Quantity,
+        rewards: accountState.remainingAmount as Portfolio.Quantity,
       }
     }
 
@@ -950,11 +953,13 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       if (this.areUtxosDifferent(this._utxos, newUtxos)) {
         this._utxos = newUtxos
 
-        const primaryToken: Balance.Token = {info: this.primaryTokenInfo}
+        const primaryToken: Portfolio.Token = {info: this.primaryTokenInfo}
         await this.portfolioManager.updatePortfolio(this.utxos, primaryToken)
         this.portfolio = this.portfolioManager.getPortfolio()
-        this.sortedTokens = Tokens.sort(this.portfolio.secondary.tokens)
-
+        this.sortedTokens = [
+          ...Tokens.sort(this.portfolio.primary.tokens), // primary always for first
+          ...Tokens.sort(this.portfolio.secondary.tokens),
+        ]
         this.notify({type: 'utxos', utxos: this.utxos})
       }
     }

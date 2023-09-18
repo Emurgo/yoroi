@@ -1,6 +1,6 @@
 /* eslint-disable no-empty */
 import {SendToken} from '@emurgo/yoroi-lib'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {
@@ -274,13 +274,13 @@ export const toCardanoNetworkId = (networkId: number) => {
   throw new Error('invalid network id')
 }
 
-export const toSendTokenList = (amounts: Balance.Amounts, primaryToken: Token): Array<SendToken> => {
+export const toSendTokenList = (amounts: Portfolio.Amounts, primaryToken: Token): Array<SendToken> => {
   return Amounts.toArray(amounts).map(toSendToken(primaryToken))
 }
 
 export const toSendToken =
   (primaryToken: Token) =>
-  (amount: Balance.Amount): SendToken => {
+  (amount: Portfolio.Amount): SendToken => {
     const {tokenId, quantity} = amount
     const isPrimary = tokenId === primaryToken.identifier
 
@@ -295,11 +295,11 @@ export const toSendToken =
     }
   }
 
-export const isTokenInfo = (token: Balance.TokenInfo | DefaultAsset): token is Balance.TokenInfo => {
-  return !!(token as Balance.TokenInfo).kind
+export const isTokenInfo = (token: Portfolio.TokenInfo | DefaultAsset): token is Portfolio.TokenInfo => {
+  return !!(token as Portfolio.TokenInfo).kind
 }
 
-export const selectFtOrThrow = (token: Balance.TokenInfo): Balance.TokenInfo => {
+export const selectFtOrThrow = (token: Portfolio.TokenInfo): Portfolio.TokenInfo => {
   if (token.kind === 'ft') {
     return token
   }

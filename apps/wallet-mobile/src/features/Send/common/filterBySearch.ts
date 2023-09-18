@@ -1,10 +1,10 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 
 export const filterBySearch = (searchTerm: string) => {
   const searchTermLowerCase = searchTerm.toLocaleLowerCase()
   if (searchTermLowerCase.length === 0) return () => true
 
-  return (tokenInfo: Balance.TokenInfo) => {
+  return (tokenInfo: Portfolio.TokenInfo) => {
     if (tokenInfo.kind === 'ft') {
       return (
         (tokenInfo.ticker?.toLocaleLowerCase()?.includes(searchTermLowerCase) ||

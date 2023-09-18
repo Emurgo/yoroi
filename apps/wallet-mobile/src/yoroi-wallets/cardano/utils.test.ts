@@ -1,5 +1,5 @@
 import {SendToken} from '@emurgo/yoroi-lib'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 
 import {Token} from '../types'
 import {PRIMARY_TOKEN} from './constants/mainnet/constants'
@@ -9,7 +9,7 @@ describe('toSendTokenList', () => {
   const asSendToken = toSendToken(PRIMARY_TOKEN)
 
   it('converts amounts to send token list for tx (lib)', async () => {
-    const amounts: Balance.Amounts = {
+    const amounts: Portfolio.Amounts = {
       [PRIMARY_TOKEN.identifier]: '123',
       [secondaryToken.identifier]: '456',
     }

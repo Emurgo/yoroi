@@ -1,62 +1,8 @@
 import AssetFingerprint from '@emurgo/cip14-js'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {Buffer} from 'memfs/lib/internal/buffer'
 
 import {LegacyToken} from '../../types'
-import {TokenRegistryEntry} from './tokenRegistry'
-
-export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
-  const policyId = toPolicyId(entry.subject)
-  const assetName = toAssetName(entry.subject)
-
-  return {
-    kind: 'ft',
-    name: assetName,
-    group: policyId,
-    decimals: entry.decimals?.value ?? 0,
-    ticker: entry.ticker?.value,
-    icon: entry.logo?.value,
-    image: entry.logo?.value,
-    description: entry.description?.value,
-    id: toTokenId(entry.subject),
-    fingerprint: toTokenFingerprint({
-      policyId,
-      assetNameHex: assetName ? utf8ToHex(assetName) : undefined,
-    }),
-    symbol: undefined,
-    metadatas: {
-      mintFt: {
-        name: entry.name?.value ?? '',
-        icon: entry.logo?.value,
-        description: entry.description?.value,
-        version: '1',
-        decimals: entry.decimals?.value ?? 0,
-        ticker: entry.ticker?.value,
-        url: entry.url?.value,
-      },
-    },
-  }
-}
-
-export const fallbackTokenInfo = (tokenId: string): Balance.TokenInfo => {
-  const policyId = toPolicyId(tokenId)
-  const assetName = toAssetName(tokenId)
-
-  return {
-    kind: 'ft',
-    id: toTokenId(tokenId),
-    name: assetName,
-    fingerprint: toTokenFingerprint({policyId, assetNameHex: assetName ? utf8ToHex(assetName) : undefined}),
-    description: undefined,
-    group: policyId,
-    decimals: 0,
-    image: undefined,
-    icon: undefined,
-    ticker: undefined,
-    symbol: undefined,
-    metadatas: {},
-  }
-}
 
 export const toPolicyId = (tokenIdentifier: string) => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
@@ -81,7 +27,7 @@ export const toTokenId = (tokenIdentifier: string) => {
 export const hexToUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
 export const utf8ToHex = (text: string) => Buffer.from(text, 'utf-8').toString('hex')
 
-export const toTokenInfo = (token: LegacyToken): Balance.TokenInfo => {
+export const toTokenInfo = (token: LegacyToken): Portfolio.TokenInfo => {
   const policyId = toPolicyId(token.identifier)
   const assetName = toAssetName(token.identifier)
 

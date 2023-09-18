@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {useEffect, useState} from 'react'
 
 import {YoroiWallet} from '../yoroi-wallets/cardano/types'
@@ -11,7 +11,7 @@ export const useCanVote = (wallet: YoroiWallet) => {
   const primaryAmount = Amounts.getAmount(balances, '')
   const sufficientFunds = Quantities.isGreaterThan(
     primaryAmount.quantity,
-    CATALYST.MIN_ADA.toString() as Balance.Quantity,
+    CATALYST.MIN_ADA.toString() as Portfolio.Quantity,
   )
 
   return {

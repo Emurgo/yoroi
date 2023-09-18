@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React, {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
@@ -197,7 +197,7 @@ const LoadingScreen = ({nftsCount}: {nftsCount: number}) => {
   )
 }
 
-const byName = ({name: A}: Balance.TokenInfo, {name: B}: Balance.TokenInfo) => A.localeCompare(B)
+const byName = ({name: A}: Portfolio.TokenInfo, {name: B}: Portfolio.TokenInfo) => A.localeCompare(B)
 
 const styles = StyleSheet.create({
   safeAreaView: {

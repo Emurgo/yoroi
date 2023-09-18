@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {
   SwapActionType,
@@ -45,10 +45,10 @@ export const SwapProvider = ({
     orderTypeChanged: (orderType: Swap.OrderType) => {
       dispatch({type: SwapCreateOrderActionType.OrderTypeChanged, orderType})
     },
-    sellAmountChanged: (amount: Balance.Amount) => {
+    sellAmountChanged: (amount: Portfolio.Amount) => {
       dispatch({type: SwapCreateOrderActionType.SellAmountChanged, amount})
     },
-    buyAmountChanged: (amount: Balance.Amount) => {
+    buyAmountChanged: (amount: Portfolio.Amount) => {
       dispatch({type: SwapCreateOrderActionType.BuyAmountChanged, amount})
     },
     selectedPoolChanged: (pool: Swap.Pool) => {
@@ -75,7 +75,7 @@ export const SwapProvider = ({
     resetState: () => {
       dispatch({type: SwapActionType.ResetState})
     },
-    limitPriceChanged: (limitPrice: Balance.Quantity) => {
+    limitPriceChanged: (limitPrice: Portfolio.Quantity) => {
       dispatch({type: SwapCreateOrderActionType.LimitPriceChanged, limitPrice})
     },
   }).current

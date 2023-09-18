@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -167,10 +167,10 @@ const messages = defineMessages({
  * TODO: based on https://staking.cardano.org/en/calculator/
  *  needs to be update per-network
  */
-const approximateReward = (stakedQuantity: Balance.Quantity): Balance.Quantity => {
+const approximateReward = (stakedQuantity: Portfolio.Quantity): Portfolio.Quantity => {
   return Quantities.quotient(
     Quantities.product([stakedQuantity, `${NETWORKS.HASKELL_SHELLEY.PER_EPOCH_PERCENTAGE_REWARD}`]),
-    NUMBERS.EPOCH_REWARD_DENOMINATOR.toString() as Balance.Quantity,
+    NUMBERS.EPOCH_REWARD_DENOMINATOR.toString() as Portfolio.Quantity,
   )
 }
 

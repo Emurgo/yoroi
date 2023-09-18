@@ -1,14 +1,14 @@
-import {BalanceAmount, BalanceQuantity} from '../balance/token'
+import {PortfolioAmount, PortfolioQuantity} from '../portfolio/amount'
 import {SwapPool} from './pool'
 
 export type SwapOrderType = 'market' | 'limit'
 
 export type SwapCreateOrderData = {
   amounts: {
-    sell: BalanceAmount
-    buy: BalanceAmount
+    sell: PortfolioAmount
+    buy: PortfolioAmount
   }
-  limitPrice?: BalanceQuantity
+  limitPrice?: PortfolioQuantity
   address: string
   slippage: number
   selectedPool: SwapPool
@@ -30,14 +30,14 @@ export type SwapCreateOrderResponse = {
 
 export type SwapOpenOrder = {
   provider: SwapPool['provider']
-  from: BalanceAmount
-  to: BalanceAmount
-  deposit: BalanceAmount
+  from: PortfolioAmount
+  to: PortfolioAmount
+  deposit: PortfolioAmount
   utxo: string
 }
 
 export type SwapCompletedOrder = {
-  from: BalanceAmount
-  to: BalanceAmount
+  from: PortfolioAmount
+  to: PortfolioAmount
   txHash: string
 }

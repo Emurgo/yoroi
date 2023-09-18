@@ -1,5 +1,5 @@
 import {getBuyAmountbyChangingSell, useSwap} from '@yoroi/swap'
-import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
+import {PortfolioQuantity} from '@yoroi/types/lib/balance/token'
 import * as React from 'react'
 import {TextInput} from 'react-native'
 
@@ -42,7 +42,7 @@ export const EditSellAmount = () => {
   const hasBalance = !Quantities.isGreaterThan(quantity, balance)
   const showError = !Quantities.isZero(quantity) && !hasBalance
 
-  const recalculateBuyValue = (sellQuantity: BalanceQuantity) => {
+  const recalculateBuyValue = (sellQuantity: PortfolioQuantity) => {
     if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
       const sellQuantityDenominated = Quantities.denominated(sellQuantity, tokenInfo.decimals ?? 0)
       buyAmountChanged({

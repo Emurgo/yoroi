@@ -1,4 +1,4 @@
-import {Swap, Balance} from '@yoroi/types'
+import {Swap, Portfolio} from '@yoroi/types'
 
 import {getBuyAmountbyChangingSell} from './getBuyAmountByChangingSell'
 
@@ -19,7 +19,7 @@ describe('getReceiveAmountbyChangingSell', () => {
         tokenId: '0',
       },
     } as Swap.Pool
-    const sell: Balance.Amount = {
+    const sell: Portfolio.Amount = {
       quantity: '100',
       tokenId: 'tokenA',
     }
@@ -45,7 +45,7 @@ describe('getReceiveAmountbyChangingSell', () => {
         tokenId: '0',
       },
     } as Swap.Pool
-    const sell: Balance.Amount = {
+    const sell: Portfolio.Amount = {
       quantity: '100',
       tokenId: 'tokenB',
     }

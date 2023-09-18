@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {Cardano} from '@yoroi/wallets'
 
 import {RawUtxo} from '../../types'
@@ -64,7 +64,7 @@ describe('cardanoOnChainMetadataAsBalanceToken', () => {
     const input: {
       tokenId: Cardano.Api.TokenId
       metadata: Cardano.Api.NftMetadata
-      kind: Balance.TokenInfo['kind']
+      kind: Portfolio.TokenInfo['kind']
       cardanoFutureToken: any
     } = {
       tokenId: '775f356c756b70ca6b8e65feec417c7da295179eee6c4bfe9ff33176.54657374696e6754657374496d6167653132',
@@ -85,7 +85,7 @@ describe('cardanoOnChainMetadataAsBalanceToken', () => {
       cardanoFutureToken: {key: 'value'},
     }
 
-    const expectedOutput: Balance.Token = {
+    const expectedOutput: Portfolio.Token = {
       info: {
         kind: 'nft',
         id: '775f356c756b70ca6b8e65feec417c7da295179eee6c4bfe9ff33176.54657374696e6754657374496d6167653132',
@@ -120,7 +120,7 @@ describe('cardanoOnChainMetadataAsBalanceToken', () => {
     const input: {
       tokenId: Cardano.Api.TokenId
       metadata: Cardano.Api.FtMetadata
-      kind: Balance.TokenInfo['kind']
+      kind: Portfolio.TokenInfo['kind']
       cardanoFutureToken: any
     } = {
       tokenId: '775f356c756b70ca6b8e65feec417c7da295179eee6c4bfe9ff33176.54657374696e6754657374496d6167653132',
@@ -146,7 +146,7 @@ describe('cardanoOnChainMetadataAsBalanceToken', () => {
       cardanoFutureToken: {key: 'value'},
     }
 
-    const expectedOutput: Balance.Token = {
+    const expectedOutput: Portfolio.Token = {
       info: {
         kind: 'ft',
         id: '775f356c756b70ca6b8e65feec417c7da295179eee6c4bfe9ff33176.54657374696e6754657374496d6167653132',
@@ -219,7 +219,7 @@ describe('cardanoOffChainTokenRegistryEntryAsBalanceToken', () => {
       cardanoFutureToken: {key: 'value'},
     }
 
-    const expectedOutput: Balance.Token = {
+    const expectedOutput: Portfolio.Token = {
       info: {
         kind: 'ft',
         id: '775f356c756b70ca6b8e65feec417c7da295179eee6c4bfe9ff33176.54657374696e6754657374496d6167653132',
@@ -390,7 +390,7 @@ describe('rawUtxosAsAmounts', () => {
 
     expect(rawUtxosAsAmounts(utxos, primaryTokenId)).toEqual({
       primaryTokenId: '0',
-    } as Balance.Amounts)
+    } as Portfolio.Amounts)
   })
 
   it('Utxos without tokens', () => {
@@ -433,7 +433,7 @@ describe('rawUtxosAsAmounts', () => {
 
     expect(rawUtxosAsAmounts(utxos, primaryTokenId)).toEqual({
       primaryTokenId: '627690',
-    } as Balance.Amounts)
+    } as Portfolio.Amounts)
   })
 
   it('Utxos with tokens', () => {
@@ -481,6 +481,6 @@ describe('rawUtxosAsAmounts', () => {
       primaryTokenId: '67905',
       token123: '15',
       token567: '8',
-    } as Balance.Amounts)
+    } as Portfolio.Amounts)
   })
 })

@@ -1,5 +1,4 @@
-import {Swap} from '@yoroi/types'
-import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
+import {Portfolio, Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
@@ -7,10 +6,10 @@ import {YoroiEntry} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
 
 export const getBuyQuantityForLimitOrder = (
-  sellQuantityDenominated: BalanceQuantity,
-  limitPrice: BalanceQuantity,
+  sellQuantityDenominated: Portfolio.Quantity,
+  limitPrice: Portfolio.Quantity,
   buyTokenDecimals: number,
-): BalanceQuantity => {
+): Portfolio.Quantity => {
   if (Quantities.isZero(limitPrice)) {
     return Quantities.zero
   }
@@ -18,22 +17,22 @@ export const getBuyQuantityForLimitOrder = (
   return Quantities.integer(
     Quantities.quotient(sellQuantityDenominated, limitPrice),
     buyTokenDecimals,
-  ).toString() as BalanceQuantity
+  ).toString() as Portfolio.Quantity
 }
 
 export const getSellQuantityForLimitOrder = (
-  buyQuantityDenominated: BalanceQuantity,
-  limitPrice: BalanceQuantity,
+  buyQuantityDenominated: Portfolio.Quantity,
+  limitPrice: Portfolio.Quantity,
   sellTokenDecimals: number,
-): BalanceQuantity => {
+): Portfolio.Quantity => {
   if (Quantities.isZero(limitPrice)) {
     return Quantities.zero
   }
 
   return Quantities.integer(
-    BigNumber(buyQuantityDenominated).times(BigNumber(limitPrice)).toString() as BalanceQuantity,
+    BigNumber(buyQuantityDenominated).times(BigNumber(limitPrice)).toString() as Portfolio.Quantity,
     sellTokenDecimals,
-  ).toString() as BalanceQuantity
+  ).toString() as Portfolio.Quantity
 }
 
 export const createYoroiEntry = (

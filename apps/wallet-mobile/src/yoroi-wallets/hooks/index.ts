@@ -2,7 +2,7 @@
 import {Datum} from '@emurgo/yoroi-lib'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import {parseBoolean, useStorage} from '@yoroi/wallets'
 import {Buffer} from 'buffer'
 import * as React from 'react'
@@ -160,14 +160,14 @@ export const useAssetIds = (wallet: YoroiWallet): string[] => {
  */
 export const useLockedAmount = (
   {wallet}: {wallet: YoroiWallet},
-  options?: UseQueryOptions<Balance.Quantity, Error, Balance.Quantity, [string, 'lockedAmount']>,
+  options?: UseQueryOptions<Portfolio.Quantity, Error, Portfolio.Quantity, [string, 'lockedAmount']>,
 ) => {
   const query = useQuery({
     ...options,
     suspense: true,
     queryKey: [wallet.id, 'lockedAmount'],
     queryFn: () =>
-      calcLockedDeposit(wallet.utxos, wallet.networkId).then((amount) => amount.toString() as Balance.Quantity),
+      calcLockedDeposit(wallet.utxos, wallet.networkId).then((amount) => amount.toString() as Portfolio.Quantity),
   })
 
   React.useEffect(() => {
@@ -229,9 +229,9 @@ export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOpt
   }
 }
 
-export const useTokenInfo = <T extends Balance.TokenInfo>(
+export const useTokenInfo = <T extends Portfolio.TokenInfo>(
   {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
-  options?: UseQueryOptions<Balance.TokenInfo, Error, T, [string, 'tokenInfo', string]>,
+  options?: UseQueryOptions<Portfolio.TokenInfo, Error, T, [string, 'tokenInfo', string]>,
 ) => {
   const query = useQuery({
     ...options,
@@ -277,7 +277,7 @@ export const useNftImageModerated = ({
 
 export const useToken = (
   {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
-  options?: UseQueryOptions<Balance.TokenInfo, Error, Balance.TokenInfo, [string, 'tokenInfo', string]>,
+  options?: UseQueryOptions<Portfolio.TokenInfo, Error, Portfolio.TokenInfo, [string, 'tokenInfo', string]>,
 ) => {
   const query = useQuery({
     ...options,
@@ -294,7 +294,7 @@ export const useToken = (
 
 export const useTokenInfosDetailed = (
   {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
-  options?: UseQueryOptions<Balance.TokenInfo, Error, Balance.TokenInfo, any>,
+  options?: UseQueryOptions<Portfolio.TokenInfo, Error, Portfolio.TokenInfo, any>,
 ) => {
   const queries = tokenIds.map((tokenId) => ({
     ...options,
@@ -308,10 +308,10 @@ export const useTokenInfosDetailed = (
 
 export const useTokenInfos = (
   {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
-  options?: UseQueryOptions<Balance.TokenInfo, Error, Balance.TokenInfo, any>,
+  options?: UseQueryOptions<Portfolio.TokenInfo, Error, Portfolio.TokenInfo, any>,
 ) => {
   const results = useTokenInfosDetailed({wallet, tokenIds}, options)
-  return results.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<Balance.TokenInfo>)
+  return results.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<Portfolio.TokenInfo>)
 }
 
 export const useAllTokenInfos = ({wallet}: {wallet: YoroiWallet}) => {
@@ -895,7 +895,7 @@ export const useExchangeRate = ({
   return query.data
 }
 
-export const useBalances = (wallet: YoroiWallet): Balance.Amounts => {
+export const useBalances = (wallet: YoroiWallet): Portfolio.Amounts => {
   const utxos = useUtxos(wallet)
 
   return Utxos.toAmounts(utxos, wallet.primaryTokenInfo.id)
@@ -934,10 +934,10 @@ export const useSaveMemo = (
   }
 }
 
-export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<Balance.TokenInfo, Error> = {}) => {
+export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<Portfolio.TokenInfo, Error> = {}) => {
   const assetIds = useAssetIds(wallet)
   const results = useTokenInfosDetailed({wallet, tokenIds: assetIds}, options)
-  const nfts = results.map((r) => r.data).filter((t): t is Balance.TokenInfo => t?.kind === 'nft')
+  const nfts = results.map((r) => r.data).filter((t): t is Portfolio.TokenInfo => t?.kind === 'nft')
   const isLoading = results.some((r) => r.isLoading)
   const isError = results.some((r) => r.isError)
   const error = results.find((r) => r.isError)?.error
@@ -945,7 +945,7 @@ export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<Balance.To
   return {nfts, refetch, error, isLoading, isError}
 }
 
-export const useNft = (wallet: YoroiWallet, {id}: {id: string}): Balance.TokenInfo => {
+export const useNft = (wallet: YoroiWallet, {id}: {id: string}): Portfolio.TokenInfo => {
   const tokenInfo = useTokenInfo({wallet, tokenId: id}, {suspense: true})
 
   if (tokenInfo.kind !== 'nft') {

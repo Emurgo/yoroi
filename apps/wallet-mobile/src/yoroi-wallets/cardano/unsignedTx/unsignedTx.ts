@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 
 import {YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../../types'
 import {Amounts, Entries, Quantities} from '../../utils'
@@ -87,10 +87,10 @@ export const toAmounts = (values: Array<CardanoTypes.TokenEntry>) =>
       ...result,
       [current.identifier]: Quantities.sum([
         Amounts.getAmount(result, current.identifier).quantity || '0',
-        current.amount.toString() as Balance.Quantity,
+        current.amount.toString() as Portfolio.Quantity,
       ]),
     }),
-    {} as Balance.Amounts,
+    {} as Portfolio.Amounts,
   )
 
 export const toMetadata = (metadata: ReadonlyArray<CardanoTypes.TxMetadata>) =>
@@ -121,7 +121,7 @@ const Staking = {
 
     for (let i = 0; i < length; i++) {
       const rewardAddress = await rewardAddresses.get(i)
-      const amount = (await withdrawals.get(rewardAddress).then((x) => x.toStr())) as Balance.Quantity
+      const amount = (await withdrawals.get(rewardAddress).then((x) => x.toStr())) as Portfolio.Quantity
       const address = await rewardAddress
         .toAddress()
         .then((address) => address.toBytes())
@@ -155,7 +155,7 @@ const Staking = {
 
       return {
         ...(await result),
-        [address]: {'': KEY_DEPOSIT as Balance.Quantity},
+        [address]: {'': KEY_DEPOSIT as Portfolio.Quantity},
       }
     }, Promise.resolve({} as YoroiEntries)),
 
@@ -181,7 +181,7 @@ const Staking = {
 
       return {
         ...(await result),
-        [address]: {'': KEY_DEPOSIT as Balance.Quantity},
+        [address]: {'': KEY_DEPOSIT as Portfolio.Quantity},
       }
     }, Promise.resolve({} as YoroiEntries)),
 
@@ -191,11 +191,11 @@ const Staking = {
   }: {
     balances: CardanoTypes.StakingKeyBalances
     fee: YoroiUnsignedTx['fee']
-  }): {[poolId: string]: Balance.Amounts} =>
+  }): {[poolId: string]: Portfolio.Amounts} =>
     Object.entries(balances).reduce(
       (result, [poolId, quantity]) => ({
         ...result,
-        [poolId]: Amounts.diff({'': quantity} as Balance.Amounts, fee),
+        [poolId]: Amounts.diff({'': quantity} as Portfolio.Amounts, fee),
       }),
       {},
     ),

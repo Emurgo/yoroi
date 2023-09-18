@@ -1,14 +1,14 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {makeLimitOrder} from './makeLimitOrder'
 
 describe('makeLimitOrder', () => {
   const sell = {
-    quantity: '100' as Balance.Quantity,
+    quantity: '100' as Portfolio.Quantity,
     tokenId: 'tokenA',
   }
   const buy = {
-    quantity: '200' as Balance.Quantity,
+    quantity: '200' as Portfolio.Quantity,
     tokenId: 'tokenB',
   }
   const pool: Swap.Pool = {
@@ -40,7 +40,7 @@ describe('makeLimitOrder', () => {
     expect(result.amounts.sell).toEqual(sell)
     expect(result.amounts.buy.tokenId).toEqual(buy.tokenId)
     expect(result.amounts.buy.quantity).toEqual(
-      expectedBuyQuantity as Balance.Quantity,
+      expectedBuyQuantity as Portfolio.Quantity,
     )
   })
 

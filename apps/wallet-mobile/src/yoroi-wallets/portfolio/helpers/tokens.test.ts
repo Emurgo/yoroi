@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 
 import {alpha, toEnd, Tokens, toStart} from './tokens'
 
@@ -10,7 +10,7 @@ describe('getId', () => {
       },
     }
 
-    const result = Tokens.getId(token as Balance.Token)
+    const result = Tokens.getId(token as Portfolio.Token)
 
     expect(result).toBe('token_id')
   })
@@ -70,7 +70,7 @@ describe('getInfo', () => {
         id: 'token_id',
         name: 'test',
       },
-    } as Balance.Token
+    } as Portfolio.Token
 
     const result = Tokens.getInfo(token)
     expect(result).toEqual({
@@ -80,7 +80,7 @@ describe('getInfo', () => {
   })
 
   it('should undefined if no info is present must not happen', () => {
-    const token = {} as Balance.Token
+    const token = {} as Portfolio.Token
     const result = Tokens.getInfo(token)
     expect(result).toBeUndefined()
   })
@@ -110,7 +110,7 @@ describe('getInfos', () => {
         },
       },
       token3: {info: {id: 'token.3', ticker: 'TKN3', kind: 'ft', fingerprint: 'fingerprint', group: 'g', name: ''}},
-    } as Balance.TokenRecords
+    } as Portfolio.TokenRecords
 
     const result = Tokens.getInfos(tokens)
     expect(result).toEqual([
@@ -135,7 +135,7 @@ describe('getInfos', () => {
   })
 
   it('should return an empty array if the record is empty', () => {
-    const tokens = {} as Balance.TokenRecords
+    const tokens = {} as Portfolio.TokenRecords
     const result = Tokens.getInfos(tokens)
     expect(result).toEqual([])
   })

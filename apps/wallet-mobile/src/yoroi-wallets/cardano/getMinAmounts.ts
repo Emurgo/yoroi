@@ -1,5 +1,5 @@
 import {BigNum} from '@emurgo/cross-csl-core'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {Address, Token} from '../types'
@@ -11,9 +11,9 @@ import {cardanoValueFromMultiToken, normalizeToAddress} from './utils'
 
 export const withMinAmounts = async (
   address: Address,
-  amounts: Balance.Amounts,
+  amounts: Portfolio.Amounts,
   primaryToken: Token,
-): Promise<Balance.Amounts> => {
+): Promise<Portfolio.Amounts> => {
   const amountsWithPrimaryToken = withPrimaryToken(amounts, primaryToken)
   const minAmounts = await getMinAmounts(address, amountsWithPrimaryToken, primaryToken)
 
@@ -23,7 +23,7 @@ export const withMinAmounts = async (
   }))
 }
 
-export const getMinAmounts = async (address: Address, amounts: Balance.Amounts, primaryToken: Token) => {
+export const getMinAmounts = async (address: Address, amounts: Portfolio.Amounts, primaryToken: Token) => {
   const multiToken = new MultiToken(
     [
       {identifier: primaryToken.identifier, networkId: primaryToken.networkId, amount: new BigNumber('0')},
@@ -55,10 +55,10 @@ export const getMinAmounts = async (address: Address, amounts: Balance.Amounts, 
 
   return {
     [primaryToken.identifier]: minAda,
-  } as Balance.Amounts
+  } as Portfolio.Amounts
 }
 
-export const withPrimaryToken = (amounts: Balance.Amounts, primaryToken: Token): Balance.Amounts => {
+export const withPrimaryToken = (amounts: Portfolio.Amounts, primaryToken: Token): Portfolio.Amounts => {
   if (Amounts.includes(amounts, primaryToken.identifier)) return amounts
 
   return {

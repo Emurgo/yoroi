@@ -1,6 +1,6 @@
 import {FlashList} from '@shopify/flash-list'
 import {useSwap} from '@yoroi/swap'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -63,7 +63,7 @@ const TokenList = () => {
 
       <FlashList
         data={filteredTokenInfos}
-        renderItem={({item: tokenInfo}: {item: Balance.TokenInfo}) => (
+        renderItem={({item: tokenInfo}: {item: Portfolio.TokenInfo}) => (
           <Boundary loading={{fallback: <AmountItemPlaceholder style={styles.item} />}}>
             <SelectableToken tokenInfo={tokenInfo} wallet={wallet} />
           </Boundary>
@@ -80,7 +80,7 @@ const TokenList = () => {
   )
 }
 
-type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
+type SelectableTokenProps = {disabled?: boolean; tokenInfo: Portfolio.TokenInfo; wallet: YoroiWallet}
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
   const {sellAmountChanged, createOrder} = useSwap()
@@ -109,7 +109,7 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   )
 }
 
-const useFilteredTokenInfos = ({tokenInfos}: {tokenInfos: Array<Balance.TokenInfo>}) => {
+const useFilteredTokenInfos = ({tokenInfos}: {tokenInfos: Array<Portfolio.TokenInfo>}) => {
   const wallet = useSelectedWallet()
 
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
@@ -132,8 +132,8 @@ const EmptyList = ({
   filteredTokenInfos,
   allTokenInfos,
 }: {
-  filteredTokenInfos: Array<Balance.TokenInfo>
-  allTokenInfos: Array<Balance.TokenInfo>
+  filteredTokenInfos: Array<Portfolio.TokenInfo>
+  allTokenInfos: Array<Portfolio.TokenInfo>
 }) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
 

@@ -1,14 +1,14 @@
-import {Balance, Nullable} from '@yoroi/types'
+import {Nullable, Portfolio} from '@yoroi/types'
 
 import {mockDelayedResponse, mockLoading, mockMaker, mockMakerMutation, mockUnknownError} from '../utils/mockHelpers'
 import {PortfolioManager, PortfolioManagerOptions, PortfolioManagerState} from './types'
 
 // DATA
-const tokensResponse: Readonly<Balance.TokenRecords> = {
+const tokensResponse: Readonly<Portfolio.TokenRecords> = {
   // TODO: fill later
 }
 const allKeysResponse: string[] = ['9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.6d616e795265636f726473']
-const emptyTokensResponse: Readonly<Balance.TokenRecords> = {}
+const emptyTokensResponse: Readonly<Portfolio.TokenRecords> = {}
 
 // API
 const tokens = {
@@ -26,8 +26,8 @@ const getAllKeys = mockMaker<readonly string[]>(allKeysResponse, [])
 const clear = mockMakerMutation()
 const saveMany = mockMakerMutation()
 // TODO: fill data later
-const readAll = mockMaker<[string, Nullable<Balance.Token>][]>([], [])
-const readMany = mockMaker<[string, Nullable<Balance.Token>][]>([], [])
+const readAll = mockMaker<[string, Nullable<Portfolio.Token>][]>([], [])
+const readMany = mockMaker<[string, Nullable<Portfolio.Token>][]>([], [])
 
 // OPTIONS
 const mockPortfolioManagerOptions: PortfolioManagerOptions = {
@@ -81,7 +81,7 @@ const updatePortfolio = mockMakerMutation()
 const subscribe = () => () => undefined
 const destroy = () => undefined
 // TODO: fill data later
-const getTokens = mockMaker<Readonly<Balance.TokenRecords> | undefined>({}, undefined)
+const getTokens = mockMaker<Readonly<Portfolio.TokenRecords> | undefined>({}, undefined)
 
 const mockPortfolioManager: PortfolioManager = {
   hydrate: hydrate.success,

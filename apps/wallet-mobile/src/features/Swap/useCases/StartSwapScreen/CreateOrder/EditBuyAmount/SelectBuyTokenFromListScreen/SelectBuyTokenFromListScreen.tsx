@@ -1,6 +1,6 @@
 import {FlashList} from '@shopify/flash-list'
 import {useSwap, useSwapTokensByPairToken} from '@yoroi/swap'
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -23,9 +23,9 @@ import {useStrings} from '../../../../../common/strings'
 import {useSwapTouched} from '../../../../../common/SwapFormProvider'
 
 type TokenForList = {
-  supply: Balance.TokenSupply['total']
-  status: Balance.TokenStatus
-} & Balance.TokenInfo & {
+  supply: Portfolio.TokenSupply['total']
+  status: Portfolio.TokenStatus
+} & Portfolio.TokenInfo & {
     inUserWallet: boolean
   }
 
@@ -142,7 +142,7 @@ const TokenList = () => {
       if (pairsByToken === undefined) return []
 
       const walletTokenIds = new Set(walletTokenInfos.map((walletToken) => walletToken.id))
-      const asTokenForList = (token: Balance.Token) => {
+      const asTokenForList = (token: Portfolio.Token) => {
         const {decimals, description, fingerprint, group, icon, id, image, kind, metadatas, name, symbol, ticker} =
           token.info
         const supplyFormatted = Quantities.format(asQuantity(token.supply?.total), decimals ?? 0)
@@ -287,7 +287,7 @@ const EmptyList = ({
   allTokenInfos,
 }: {
   filteredTokensForList: Array<TokenForList>
-  allTokenInfos: Array<Balance.TokenInfo>
+  allTokenInfos: Array<Portfolio.TokenInfo>
 }) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
 

@@ -1,9 +1,9 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import React from 'react'
 
 import {useMetrics} from '../metrics/metricsManager'
 
-export const filterNfts = (searchTerm: string, nfts: Balance.TokenInfo[]): Balance.TokenInfo[] => {
+export const filterNfts = (searchTerm: string, nfts: Portfolio.TokenInfo[]): Portfolio.TokenInfo[] => {
   const searchTermLowerCase = searchTerm.toLowerCase()
   const filteredNfts =
     searchTermLowerCase.length > 0 ? nfts.filter((nft) => nft.name?.toLowerCase().includes(searchTermLowerCase)) : nfts

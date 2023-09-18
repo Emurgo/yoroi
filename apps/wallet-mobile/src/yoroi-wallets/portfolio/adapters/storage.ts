@@ -1,7 +1,6 @@
-import {App, Balance} from '@yoroi/types'
+import {App, Portfolio} from '@yoroi/types'
 import {mountMultiStorage} from '@yoroi/wallets'
 
-import {Tokens} from '../helpers/tokens'
 import {PortfolioManagerStorage} from '../types'
 
 /**
@@ -15,9 +14,9 @@ import {PortfolioManagerStorage} from '../types'
 export const portfolioManagerStorageMaker = (storage: App.Storage): Readonly<PortfolioManagerStorage> => {
   const dataFolder = 'multi-tokens/'
 
-  const tokens = mountMultiStorage<Balance.Token>({
+  const tokens = mountMultiStorage<Portfolio.Token>({
     storage,
-    keyExtractor: Tokens.getId,
+    keyExtractor: (item) => item.info.id,
     dataFolder,
   })
 

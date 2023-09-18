@@ -1,4 +1,4 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 import {OpenSwap} from '@yoroi/openswap'
 
 import {asTokenFingerprint, transformersMaker} from './transformers'
@@ -10,7 +10,7 @@ const transformers = transformersMaker(primaryTokenId)
 
 describe('asOpenswapAmount', () => {
   it('success', () => {
-    const yoroiAmount: Balance.Amount = {
+    const yoroiAmount: Portfolio.Amount = {
       tokenId: 'policyid.assetname',
       quantity: '100',
     }
@@ -25,7 +25,7 @@ describe('asOpenswapAmount', () => {
   })
 
   it('success (empty token) primary token', () => {
-    const yoroiAmount: Balance.Amount = {
+    const yoroiAmount: Portfolio.Amount = {
       tokenId: '',
       quantity: '50',
     }
@@ -40,7 +40,7 @@ describe('asOpenswapAmount', () => {
   })
 
   it('success nameless token', () => {
-    const yoroiAmount: Balance.Amount = {
+    const yoroiAmount: Portfolio.Amount = {
       tokenId: 'policyId',
       quantity: '75',
     }
@@ -101,7 +101,7 @@ describe('asYoroiTokenId', () => {
 describe('asYoroiAmount', () => {
   it('empty when null', () => {
     const result = transformers.asYoroiAmount(null as any)
-    expect(result).toEqual<Balance.Amount>({quantity: '0', tokenId: ''})
+    expect(result).toEqual<Portfolio.Amount>({quantity: '0', tokenId: ''})
   })
 
   it('success', () => {
@@ -109,7 +109,7 @@ describe('asYoroiAmount', () => {
       amount: '100',
       token: 'c04f4200502a998e9eebafac0291a1f38008de3fe146d136946d8f4b.30',
     })
-    expect(result).toEqual<Balance.Amount>({
+    expect(result).toEqual<Portfolio.Amount>({
       quantity: '100',
       tokenId: 'c04f4200502a998e9eebafac0291a1f38008de3fe146d136946d8f4b.30',
     })
@@ -120,7 +120,7 @@ describe('asYoroiAmount', () => {
       amount: '1000000',
       token: 'lovelace',
     })
-    expect(result).toEqual<Balance.Amount>({quantity: '1000000', tokenId: ''})
+    expect(result).toEqual<Portfolio.Amount>({quantity: '1000000', tokenId: ''})
   })
 
   it('success (period) primary token', () => {
@@ -128,7 +128,7 @@ describe('asYoroiAmount', () => {
       amount: '1000000',
       token: '.',
     })
-    expect(result).toEqual<Balance.Amount>({quantity: '1000000', tokenId: ''})
+    expect(result).toEqual<Portfolio.Amount>({quantity: '1000000', tokenId: ''})
   })
 })
 
@@ -196,7 +196,7 @@ describe('asYoroiBalanceToken', () => {
   it('success', () => {
     const result = transformers.asYoroiBalanceToken(openswapMocks.getTokens[0]!)
 
-    expect(result).toEqual<Balance.Token>(apiMocks.getTokens[0]!)
+    expect(result).toEqual<Portfolio.Token>(apiMocks.getTokens[0]!)
   })
 })
 
@@ -204,6 +204,6 @@ describe('asYoroiBalanceTokens', () => {
   it('success', () => {
     const result = transformers.asYoroiBalanceTokens(openswapMocks.getTokens)
 
-    expect(result).toEqual<Array<Balance.Token>>(apiMocks.getTokens)
+    expect(result).toEqual<Array<Portfolio.Token>>(apiMocks.getTokens)
   })
 })

@@ -1,4 +1,4 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Portfolio, Swap} from '@yoroi/types'
 
 import {AmountPair} from './types'
 import {ceilDivision} from '../../utils/ceilDivision'
@@ -14,7 +14,7 @@ import {ceilDivision} from '../../utils/ceilDivision'
  */
 export const getBuyAmountbyChangingSell = (
   pool: Swap.Pool,
-  sell: Balance.Amount,
+  sell: Portfolio.Amount,
 ): AmountPair => {
   const initialPoolA = BigInt(pool.tokenA.quantity)
   const initialPoolB = BigInt(pool.tokenB.quantity)
@@ -48,7 +48,7 @@ export const getBuyAmountbyChangingSell = (
   return {
     sell,
     buy: {
-      quantity: receiveQuantity as Balance.Quantity,
+      quantity: receiveQuantity as Portfolio.Quantity,
       tokenId: receiveTokenId,
     },
   }

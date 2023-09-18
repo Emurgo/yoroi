@@ -1,4 +1,4 @@
-import {App, Balance} from '@yoroi/types'
+import {App, Portfolio} from '@yoroi/types'
 
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
@@ -14,8 +14,8 @@ export type YoroiSignedTx = YoroiTxInfo & {
 
 export type YoroiTxInfo = {
   entries: YoroiEntries
-  amounts: Balance.Amounts
-  fee: Balance.Amounts
+  amounts: Portfolio.Amounts
+  fee: Portfolio.Amounts
   change: YoroiEntries
   metadata: YoroiMetadata
   staking: YoroiStaking
@@ -41,11 +41,11 @@ export type YoroiVoting = {
 export type Address = string
 export type TokenId = string
 
-export type YoroiEntries = Record<string, Balance.Amounts>
+export type YoroiEntries = Record<string, Portfolio.Amounts>
 
 export type YoroiEntry = {
   address: Address
-  amounts: Balance.Amounts
+  amounts: Portfolio.Amounts
 }
 
 export type YoroiMetadata = {

@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
@@ -12,7 +12,7 @@ import {Boundary, Icon, Spacer, Text, TokenIcon, TokenIconPlaceholder} from '..'
 
 export type AmountItemProps = {
   wallet: YoroiWallet
-  amount: Balance.Amount
+  token: Portfolio.Token
   style?: ViewProps['style']
   isPrivacyOff?: boolean
   status?: string
@@ -25,13 +25,13 @@ export const AmountItem = ({
   isPrivacyOff,
   wallet,
   style,
-  amount,
+  token,
   status,
   inWallet,
   supply,
   variant,
 }: AmountItemProps) => {
-  const {quantity, tokenId} = amount
+  const {quantity, info, primary} = token 
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id

@@ -1,23 +1,28 @@
-import {Balance} from '@yoroi/types'
+import {Portfolio} from '@yoroi/types'
 
-export function getId(token: Balance.Token) {
-  return token.info.id
-}
-
-export function getInfo(token: Balance.Token) {
+function getInfo(token: Portfolio.Token) {
   return token.info
 }
 
-export function getInfos(tokens: Balance.TokenRecords) {
+export function getInfos(tokens: Portfolio.TokenRecords) {
   return Object.values(tokens).map(getInfo)
 }
 
+function getName(tokenInfo: Portfolio.TokenInfo) {
+  switch (tokenInfo.kind) {
+    case 'ft':
+      return tokenInfo.ticker?.toLocaleLowerCase() ?? tokenInfo.name?.toLocaleLowerCase() ?? ''
+    case 'nft':
+      return tokenInfo.name?.toLocaleLowerCase() ?? ''
+  }
+}
+
 export const sort = (
-  tokens: Readonly<Balance.TokenRecords>,
-): ReadonlyArray<[Balance.TokenInfo['id'], Readonly<Balance.Token>]> =>
+  tokens: Readonly<Portfolio.TokenRecords>,
+): ReadonlyArray<[Portfolio.TokenInfo['id'], Readonly<Portfolio.Token>]> =>
   Object.values(tokens)
     .map(getInfo)
-    .sort(alpha(getNameFromInfo))
+    .sort(alpha(getName))
     .sort(
       toEnd((tokenInfo) => {
         switch (tokenInfo.kind) {
@@ -43,38 +48,25 @@ export const toStart = <T>(predicate: (a: T) => boolean) => (a: T, b: T) => {
   return predicate(a) ? -1 : predicate(b) ? 1 : 0
 }
 
-const getNameFromInfo = (tokenInfo: Balance.TokenInfo) => {
-  switch (tokenInfo.kind) {
-    case 'ft':
-      return tokenInfo.ticker?.toLocaleLowerCase() ?? tokenInfo.name?.toLocaleLowerCase() ?? ''
-    case 'nft':
-      return tokenInfo.name?.toLocaleLowerCase() ?? ''
-  }
-}
-
 export function filterNftsEntries(
-  tokens: ReadonlyArray<[Balance.TokenInfo['id'], Balance.Token]>,
-): ReadonlyArray<[Balance.TokenInfo['id'], Balance.Token]> {
+  tokens: ReadonlyArray<[Portfolio.TokenInfo['id'], Portfolio.Token]>,
+): ReadonlyArray<[Portfolio.TokenInfo['id'], Portfolio.Token]> {
   return tokens.filter(([, token]) => token.info.kind === 'nft')
 }
 
 export function filterFtsEntries(
-  tokens: ReadonlyArray<[Balance.TokenInfo['id'], Balance.Token]>,
-): ReadonlyArray<[Balance.TokenInfo['id'], Balance.Token]> {
+  tokens: ReadonlyArray<[Portfolio.TokenInfo['id'], Portfolio.Token]>,
+): ReadonlyArray<[Portfolio.TokenInfo['id'], Portfolio.Token]> {
   return tokens.filter(([, token]) => token.info.kind === 'ft')
 }
 
-export function mergeRecords(
-  ...tokens: ReadonlyArray<Readonly<Balance.TokenRecords>> 
-) {
+export function mergeRecords(...tokens: ReadonlyArray<Readonly<Portfolio.TokenRecords>>) {
   return tokens.reduce((acc, tokens) => ({...acc, ...tokens}), {})
 }
 
 type Transform<T> = (a: T) => string
 
 export const Tokens = {
-  getId,
-  getInfo,
   getInfos,
   sort,
   filterFtsEntries,
