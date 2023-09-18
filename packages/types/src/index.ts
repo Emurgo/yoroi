@@ -15,7 +15,7 @@ import {
   SwapOpenOrder,
   SwapOrderType,
 } from './swap/order'
-import {SwapPoolPair} from './swap/pool'
+import {SwapPool, SwapPoolProvider} from './swap/pool'
 import {SwapStorage} from './swap/storage'
 import {SwapManager} from './swap/manager'
 import {AppStorage, AppStorageFolderName} from './app/storage'
@@ -28,17 +28,24 @@ export namespace App {
   export type MultiStorageOptions<T> = AppMultiStorageOptions<T>
 }
 export namespace Swap {
-  export type CreateOrderData = SwapCreateOrderData
-  export type CreateOrderResponse = SwapCreateOrderResponse
-  export type CancelOrderData = SwapCancelOrderData
-  export type OrderType = SwapOrderType
-  export type Protocol = SwapProtocol
-  export type OpenOrder = SwapOpenOrder
-  export type CompletedOrder = SwapCompletedOrder
-  export type Order = SwapOpenOrder | SwapCompletedOrder
-  export type PoolPair = SwapPoolPair
   export interface Api extends SwapApi {}
   export type Manager = SwapManager
+
+  export type OpenOrder = SwapOpenOrder
+  export type CompletedOrder = SwapCompletedOrder
+  export type CreateOrderData = SwapCreateOrderData
+  export type CancelOrderData = SwapCancelOrderData
+  export type Order = SwapOpenOrder | SwapCompletedOrder
+  export type CreateOrderResponse = SwapCreateOrderResponse
+  export type OpenOrderResponse = SwapOpenOrder[]
+  export type CompletedOrderResponse = SwapCompletedOrder[]
+  export type OrderType = SwapOrderType
+
+  export type Protocol = SwapProtocol
+
+  export type Pool = SwapPool
+  export type PoolResponse = SwapPool[]
+  export type PoolProvider = SwapPoolProvider
 
   export type Storage = SwapStorage
 }

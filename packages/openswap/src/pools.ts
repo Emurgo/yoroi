@@ -1,10 +1,10 @@
 import {SWAP_API_ENDPOINTS} from './config'
-import type {ApiDeps, Pool, TokenAddress} from './types'
+import type {ApiDeps, PoolResponse, TokenAddress} from './types'
 
 export async function getPools(
   deps: ApiDeps,
   args: {tokenA: TokenAddress; tokenB: TokenAddress},
-): Promise<Pool[]> {
+): Promise<PoolResponse> {
   const {tokenA, tokenB} = args
   const {network, client} = deps
   const params: {[key: string]: string} = {
@@ -20,7 +20,7 @@ export async function getPools(
   if ('assetNameHex' in tokenB) params['tokenname-hex2'] = tokenB.assetNameHex
 
   const apiUrl = SWAP_API_ENDPOINTS[network].getPools
-  const response = await client.get('', {
+  const response = await client.get<PoolResponse>('', {
     baseURL: apiUrl,
     params,
   })

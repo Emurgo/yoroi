@@ -1,4 +1,4 @@
-import {usePoolsByPair, useSwap} from '@yoroi/swap'
+import {useSwap, useSwapPoolsByPair} from '@yoroi/swap'
 import React from 'react'
 import {ScrollView} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -12,18 +12,18 @@ export const SelectPoolFromListScreen = () => {
   const strings = useStrings()
   const {createOrder} = useSwap()
 
-  const {poolList} = usePoolsByPair({
+  const {poolList} = useSwapPoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId,
     tokenB: createOrder.amounts.buy.tokenId,
   })
-  const poolListLength = Array.isArray(poolList) ? poolList.length : 0
+  const poolCounter = Array.isArray(poolList) ? poolList.length : 0
 
   return (
     <SafeAreaView style={{backgroundColor: COLORS.WHITE, paddingBottom: 16}}>
       <ScrollView>
         <SelectPoolFromList data={poolList} />
 
-        <Counter counter={poolListLength} customText={strings.pools(poolListLength)} />
+        <Counter counter={poolCounter} customText={strings.pools(poolCounter)} />
       </ScrollView>
     </SafeAreaView>
   )

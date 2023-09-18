@@ -13,7 +13,7 @@ import {useMetrics} from '../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {useTokenInfos} from '../yoroi-wallets/hooks'
+import {useTokenInfo} from '../yoroi-wallets/hooks'
 
 const ACTION_PROPS = {
   size: 32,
@@ -27,17 +27,19 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {resetForm} = useSend()
   const {createOrder} = useSwap()
   const {track} = useMetrics()
-  const tokenInfos = useTokenInfos({
+  const sellTokenInfo = useTokenInfo({
     wallet,
-    tokenIds: [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId],
+    tokenId: createOrder.amounts.sell.tokenId,
   })
-  const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
-  const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
+  const buyTokenInfo = useTokenInfo({
+    wallet,
+    tokenId: createOrder.amounts.buy.tokenId,
+  })
 
   const handleOnBuy = () => {
-    const isMainnetWallet = wallet.networkId === 1
+    const isMainnet = wallet.networkId !== 300
     const walletAddress = wallet.externalAddresses[0]
-    const banxa = banxaModuleMaker({isProduction: isMainnetWallet, partner: 'emurgo'})
+    const banxa = banxaModuleMaker({isProduction: isMainnet, partner: 'emurgo'})
     const url = banxa.createReferralUrl({
       coinType: 'ADA',
       fiatType: 'USD',

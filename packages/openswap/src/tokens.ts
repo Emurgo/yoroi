@@ -1,15 +1,15 @@
 import {SWAP_API_ENDPOINTS} from './config'
-import type {ApiDeps, Token} from './types'
+import type {ApiDeps, TokenResponse} from './types'
 
 export async function getTokens(
   deps: ApiDeps,
   {policyId = '', assetName = ''} = {},
-): Promise<Token[]> {
+): Promise<TokenResponse> {
   const {network, client} = deps
   if (network === 'preprod') return []
 
   const apiUrl = SWAP_API_ENDPOINTS[network].getTokens
-  const response = await client.get<Token[]>('', {
+  const response = await client.get<TokenResponse>('', {
     baseURL: apiUrl,
     params: {
       'base-policy-id': policyId,

@@ -1,6 +1,6 @@
-import {SwapState} from './swapState'
+import {SwapState} from './state'
 
-export const mockSwapStateDefault: Readonly<SwapState> = {
+export const mockSwapStateDefault: SwapState = {
   createOrder: {
     type: 'market',
     address: '',

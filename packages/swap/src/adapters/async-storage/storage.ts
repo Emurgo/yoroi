@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import type {Swap} from '@yoroi/types'
+import {Swap} from '@yoroi/types'
 
 const initialDeps = {storage: AsyncStorage} as const
 
-export function makeSwapStorage(deps = initialDeps): Readonly<Swap.Storage> {
+export function swapStorageMaker(deps = initialDeps): Readonly<Swap.Storage> {
   const {storage} = deps
 
   const slippage: Readonly<Swap.Storage['slippage']> = {
