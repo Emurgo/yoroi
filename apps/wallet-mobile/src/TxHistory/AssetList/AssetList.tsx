@@ -11,7 +11,7 @@ import globalMessages, {actionMessages} from '../../i18n/global-messages'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {sortTokenInfos} from '../../utils'
 import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
-import {useBalances, useTokenInfos} from '../../yoroi-wallets/hooks'
+import {Tokens} from '../../yoroi-wallets/portfolio/helpers/tokens'
 import {Amounts} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
 
@@ -24,18 +24,12 @@ type Props = Partial<ListProps> & {
 export const AssetList = (props: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const balances = useBalances(wallet)
 
   const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
 
   const config = getNetworkConfigById(wallet.networkId)
-
-  const tokenInfos = useTokenInfos({
-    wallet,
-    tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
-  })
 
   return (
     <View style={styles.assetList} testID="assetList">
@@ -49,7 +43,7 @@ export const AssetList = (props: Props) => {
 
       <FlashList
         {...props}
-        data={sortTokenInfos({wallet, tokenInfos})}
+        data={sortTokenInfos({wallet})}
         renderItem={({item: tokenInfo}) => (
           <ExplorableAssetItem
             wallet={wallet}

@@ -163,7 +163,9 @@ export type YoroiWallet = {
   // Balances, TxDetails
   get transactions(): Record<string, TransactionInfo>
   get confirmationCounts(): Record<string, null | number>
-  get portfolio(): PortfolioManagerState
+  portfolio: PortfolioManagerState
+  // Sorted
+  sortedTokens: ReadonlyArray<[Balance.TokenInfo['id'], Readonly<Balance.Token>]>
   fetchTipStatus(): Promise<TipStatusResponse>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
   fetchTokenInfo(tokenId: string): Promise<Balance.TokenInfo>

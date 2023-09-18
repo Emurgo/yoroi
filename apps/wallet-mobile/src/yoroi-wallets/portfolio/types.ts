@@ -19,11 +19,6 @@ export type PortfolioManagerState = Readonly<{
     nfts: Readonly<Balance.Amounts>
     tokens: Readonly<Balance.TokenRecords>
   }>
-  all: Readonly<{
-    fts: Readonly<Balance.Amounts>
-    nfts: Readonly<Balance.Amounts>
-    tokens: Readonly<Balance.TokenRecords>
-  }>
 }>
 
 export type PortfolioManager = Readonly<{

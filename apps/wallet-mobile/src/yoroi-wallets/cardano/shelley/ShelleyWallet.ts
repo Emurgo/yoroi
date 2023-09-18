@@ -15,8 +15,9 @@ import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
 import {portfolioManagerApiMaker} from '../../portfolio/adapters/cardano-api'
 import {portfolioManagerStorageMaker} from '../../portfolio/adapters/storage'
+import {Tokens} from '../../portfolio/helpers/tokens'
 import {portfolioDefaultState, portfolioManagerMaker} from '../../portfolio/portfolio-manager'
-import {PortfolioManager} from '../../portfolio/types'
+import {PortfolioManager, PortfolioManagerState} from '../../portfolio/types'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
 import {Keychain} from '../../storage/Keychain'
 import type {
@@ -171,7 +172,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     readonly checksum: CardanoTypes.WalletChecksum
     readonly encryptedStorage: WalletEncryptedStorage
     isEasyConfirmationEnabled = false
-    portfolio = portfolioDefaultState 
+    portfolio: Readonly<PortfolioManagerState> = portfolioDefaultState
+    sortedTokens: ReadonlyArray<[Balance.TokenInfo['id'], Readonly<Balance.Token>]> = [] as const
 
     private _utxos: RawUtxo[]
     private readonly storage: App.Storage
@@ -319,9 +321,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       // init portfolio
       const primaryToken: Balance.Token = {info: wallet.primaryTokenInfo}
       await wallet.portfolioManager.updatePortfolio(wallet.utxos, primaryToken)
-      wallet.portfolio = wallet.portfolioManager.getPortfolio() 
-
-      wallet.isInitialized = true
+      wallet.portfolio = wallet.portfolioManager.getPortfolio()
+      wallet.sortedTokens = Tokens.sort(wallet.portfolio.secondary.tokens)
       wallet.save()
       wallet.notify({type: 'initialize'})
 
@@ -952,6 +953,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         const primaryToken: Balance.Token = {info: this.primaryTokenInfo}
         await this.portfolioManager.updatePortfolio(this.utxos, primaryToken)
         this.portfolio = this.portfolioManager.getPortfolio()
+        this.sortedTokens = Tokens.sort(this.portfolio.secondary.tokens)
 
         this.notify({type: 'utxos', utxos: this.utxos})
       }

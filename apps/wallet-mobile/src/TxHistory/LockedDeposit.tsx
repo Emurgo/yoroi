@@ -7,7 +7,7 @@ import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import globalMessages from '../i18n/global-messages'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useLockedAmount} from '../yoroi-wallets/hooks'
+import {Amounts} from '../yoroi-wallets/utils'
 
 export const LockedDeposit = () => {
   const {isPrivacyOff} = usePrivacyMode()
@@ -31,8 +31,8 @@ export const LockedDeposit = () => {
 
 const LockedAmount = () => {
   const wallet = useSelectedWallet()
-  const lockedAmount = useLockedAmount({wallet})
-  const amount = formatTokenWithText(lockedAmount, wallet.primaryToken)
+  const lockedAmount = Amounts.getAmount(wallet.portfolio.primary.locked, wallet.primaryTokenInfo.id)
+  const amount = formatTokenWithText(lockedAmount.quantity, wallet.primaryToken)
   return <FormattedAmount amount={amount} />
 }
 

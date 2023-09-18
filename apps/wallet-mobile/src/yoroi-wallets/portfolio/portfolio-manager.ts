@@ -104,11 +104,6 @@ export const portfolioManagerMaker = (
           nfts,
           tokens: secondaryTokenRecords,
         },
-        all: {
-          fts: {...primaryAmount, ...fts},
-          nfts,
-          tokens: {...primaryTokenRecord, ...secondaryTokenRecords},
-        },
       } as const
     }
 
@@ -156,12 +151,6 @@ export const portfolioDefaultState: PortfolioManagerState = {
     tokens: {},
   },
   secondary: {
-    fts: {},
-    nfts: {},
-
-    tokens: {},
-  },
-  all: {
     fts: {},
     nfts: {},
 

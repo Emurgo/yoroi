@@ -36,6 +36,7 @@ import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus, Wallet
 import {delay} from '../utils/timeUtils'
 import {Amounts, Quantities, Utxos} from '../utils/utils'
 import {WalletManager, WalletMeta} from '../walletManager'
+import {Tokens} from '../portfolio/helpers/tokens'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
@@ -115,6 +116,24 @@ export const useUtxos = (wallet: YoroiWallet) => {
   useWallet(wallet, 'utxos')
 
   return wallet.utxos
+}
+
+export const usePortfolio = (wallet: YoroiWallet) => {
+  useWallet(wallet, 'utxos')
+
+  return React.useMemo(
+    () => {
+      const {portfolio} = wallet
+      const allTokens = Tokens.mergeRecords(portfolio.primary.tokens, portfolio.secondary.tokens)
+      const sortedTokens = Tokens.sort(allTokens)
+      return {
+        portfolio,
+        sortedTokens,
+      } as const
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [wallet, wallet.portfolio],
+  )
 }
 
 export const useStakingKey = (wallet: YoroiWallet) => {

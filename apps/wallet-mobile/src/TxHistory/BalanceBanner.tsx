@@ -7,14 +7,12 @@ import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {useBalances} from '../yoroi-wallets/hooks'
 import {Amounts} from '../yoroi-wallets/utils'
 import {PairedBalance} from './PairedBalance'
 
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const wallet = useSelectedWallet()
-  const balances = useBalances(wallet)
-  const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
+  const primaryAmount = Amounts.getAmount(wallet.portfolio.primary.fts, wallet.primaryTokenInfo.id)
   const {isPrivacyOff, togglePrivacyMode} = usePrivacyMode()
 
   return (
@@ -45,11 +43,13 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
 const hiddenBalance = '*.******'
 const Balance = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
   const wallet = useSelectedWallet()
-  const balances = useBalances(wallet)
 
   const balance = isPrivacyOff
     ? formatTokenWithTextWhenHidden(hiddenBalance, wallet.primaryToken)
-    : formatTokenWithText(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity, wallet.primaryToken)
+    : formatTokenWithText(
+        Amounts.getAmount(wallet.portfolio.primary.fts, wallet.primaryToken.identifier).quantity,
+        wallet.primaryToken,
+      )
 
   return (
     <Row>
