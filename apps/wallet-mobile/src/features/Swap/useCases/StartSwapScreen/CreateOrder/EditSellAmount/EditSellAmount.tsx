@@ -56,6 +56,8 @@ export const EditSellAmount = () => {
       return
     }
 
+    if (createOrder.selectedPool?.poolId === undefined) return
+
     const {buy} = getBuyAmountbyChangingSell(createOrder.selectedPool, {
       quantity: sellQuantity,
       tokenId: tokenId,
@@ -70,7 +72,7 @@ export const EditSellAmount = () => {
   React.useEffect(() => {
     recalculateBuyValue(quantity)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [buyTokenInfo.id, createOrder.selectedPool.poolId])
+  }, [buyTokenInfo.id, createOrder.selectedPool?.poolId])
 
   const onChangeQuantity = (text: string) => {
     try {
