@@ -91,16 +91,21 @@ export const transformersMaker = (
         symbol: info?.sign,
         icon: undefined,
         ticker: info.symbol,
-        metadatas: {},
       },
       price: {
         ...price,
       },
       status: info.status,
-      supply: {
-        ...info.supply,
-      },
     }
+
+    const supply: Balance.TokenSupply = {
+      circulating: info.supply.circulating
+        ? (info.supply.circulating as Balance.Quantity)
+        : undefined,
+      total: info.supply.total as Balance.Quantity,
+    }
+    balanceToken.supply = supply
+
     return balanceToken
   }
 

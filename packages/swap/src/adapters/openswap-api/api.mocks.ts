@@ -137,7 +137,6 @@ const getTokens: Balance.Token[] = [
       symbol: undefined,
       icon: undefined,
       ticker: 'EZY',
-      metadatas: {},
     },
     price: {
       volume: {base: '0', quote: '0'},
@@ -172,7 +171,6 @@ const getTokens: Balance.Token[] = [
       symbol: undefined,
       icon: undefined,
       ticker: 'CAST',
-      metadatas: {},
     },
     price: {
       volume: {base: '0', quote: '0'},
@@ -191,7 +189,7 @@ const getTokens: Balance.Token[] = [
       baseDecimalPlaces: 6,
     },
     status: 'verified',
-    supply: {total: '1500000000', circulating: null},
+    supply: {total: '1500000000', circulating: undefined},
   },
   {
     info: {
@@ -208,7 +206,6 @@ const getTokens: Balance.Token[] = [
       symbol: undefined,
       icon: undefined,
       ticker: 'RUSD',
-      metadatas: {},
     },
     price: {
       volume: {base: '0', quote: '0'},
@@ -222,7 +219,7 @@ const getTokens: Balance.Token[] = [
       baseDecimalPlaces: 6,
     },
     status: 'verified',
-    supply: {total: '387017195', circulating: null},
+    supply: {total: '387017195', circulating: undefined},
   },
   {
     info: {
@@ -238,7 +235,6 @@ const getTokens: Balance.Token[] = [
       symbol: undefined,
       icon: undefined,
       ticker: 'ELADR',
-      metadatas: {},
     },
     price: {
       volume: {base: '0', quote: '0'},
@@ -257,7 +253,7 @@ const getTokens: Balance.Token[] = [
       baseDecimalPlaces: 6,
     },
     status: 'verified',
-    supply: {total: '45000000003000000', circulating: null},
+    supply: {total: '45000000003000000', circulating: undefined},
   },
 ]
 
