@@ -124,7 +124,7 @@ const TokenList = () => {
           inUserWallet: walletTokenIds.has(id),
         }
       }
-      return pairsByToken.map(asTokenForList).filter((token) => token.status === 'verified') // TODO: check I think we can drop it
+      return pairsByToken.map(asTokenForList)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [pairsByToken?.length, walletTokenInfos?.length],
