@@ -9,6 +9,8 @@ export type SwapPoolPair = {
     | 'muesliswap_v2'
     | 'muesliswap_v3'
     | 'muesliswap_v4'
+    | 'vyfi'
+    | 'spectrum'
 
   fee: string // % pool liquidity provider fee, usually 0.3.
   tokenA: BalanceAmount

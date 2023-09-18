@@ -221,6 +221,10 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.MuesliSwap />} title="MuesliSwap" />
 
+        <Item icon={<Icon.SpectrumSwap />} title="SpectrumSwap" />
+
+        <Item icon={<Icon.VyfiSwap />} title="VyfiSwap" />
+
         <Item icon={<Icon.WingRiders />} title="WingRiders" />
 
         <Item icon={<Icon.Logout />} title="Logout" />

@@ -89,6 +89,8 @@ export type Protocol =
   | 'muesliswap_v2'
   | 'muesliswap_v3'
   | 'muesliswap_v4'
+  | 'vyfi'
+  | 'spectrum'
 
 export type Network = 'mainnet' | 'preprod'
 
@@ -101,6 +103,8 @@ export type Pool = {
     | 'muesliswap_v2'
     | 'muesliswap_v3'
     | 'muesliswap_v4'
+    | 'vyfi'
+    | 'spectrum'
   fee: string // % pool liquidity provider fee, usually 0.3.
   tokenA: {
     amount: string // amount of tokenA in the pool, without decimals.
