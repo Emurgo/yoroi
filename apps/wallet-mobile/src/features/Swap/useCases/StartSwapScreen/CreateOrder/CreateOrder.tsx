@@ -118,17 +118,20 @@ export const CreateOrder = () => {
       slippage: createOrder.slippage,
       address: addresses.used[0],
     }
-    if (createOrder.type === 'market' && poolList !== undefined) {
+
+    if (orderDetails.pools === undefined) return
+
+    if (createOrder.type === 'market') {
       const orderResult: Swap.CreateOrderData | undefined = makePossibleMarketOrder(
         orderDetails.sell,
         orderDetails.buy,
-        orderDetails?.pools as Swap.Pool[],
+        orderDetails.pools,
         orderDetails.slippage,
         orderDetails.address,
       )
-      orderResult && createSwapOrder(orderResult)
+      if (orderResult) createSwapOrder(orderResult)
     }
-    if (createOrder.type === 'limit' && poolList !== undefined) {
+    if (createOrder.type === 'limit') {
       const orderResult = makeLimitOrder(
         orderDetails.sell,
         orderDetails.buy,
