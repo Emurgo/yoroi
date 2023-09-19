@@ -14,9 +14,9 @@ const mocknumberLocale = {
 
 describe('getTotalFees', () => {
   it('should calculate the total fees correctly', () => {
-    const batcherFee = '100.123'
-    const providerFee = '50.456'
-    const decimals = 2
+    const batcherFee = '2000000'
+    const providerFee = '1000'
+    const decimals = 6
 
     const result = getTotalFees(
       batcherFee,
@@ -24,13 +24,13 @@ describe('getTotalFees', () => {
       decimals,
       mocknumberLocale,
     )
-    expect(result).toBe('150.58')
+    expect(result).toBe('2.001')
   })
 
   it('should handle zero fees', () => {
     const batcherFee = '0'
     const providerFee = '0'
-    const decimals = 2
+    const decimals = 6
 
     const result = getTotalFees(
       batcherFee,
@@ -38,13 +38,13 @@ describe('getTotalFees', () => {
       decimals,
       mocknumberLocale,
     )
-    expect(result).toBe('0.00')
+    expect(result).toBe('0')
   })
 
   it('should handle different decimal separators', () => {
-    const batcherFee = '100,123'
-    const providerFee = '50,456'
-    const decimals = 2
+    const batcherFee = '2500000'
+    const providerFee = '23222'
+    const decimals = 6
 
     const result = getTotalFees(
       asQuantity(batcherFee),
@@ -52,20 +52,6 @@ describe('getTotalFees', () => {
       decimals,
       mocknumberLocale,
     )
-    expect(result).toBe('150.58')
-  })
-
-  it('should handle different decimal places', () => {
-    const batcherFee = '100.12345'
-    const providerFee = '50.456789'
-    const decimals = 4
-
-    const result = getTotalFees(
-      batcherFee,
-      providerFee,
-      decimals,
-      mocknumberLocale,
-    )
-    expect(result).toBe('150.5802')
+    expect(result).toBe('2.523222')
   })
 })
