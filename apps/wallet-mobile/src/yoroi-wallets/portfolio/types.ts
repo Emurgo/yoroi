@@ -3,44 +3,42 @@ import {Cardano, Observer} from '@yoroi/wallets'
 
 import {RawUtxo} from '../types'
 
-export type PortfolioManagerOptions = Readonly<{
-  storage: PortfolioManagerStorage
-  api: PortfolioManagerApi
+// @yoroi/types | @yoroi/portfolio
+export type PortfolioManagerOptions<T extends Portfolio.Token> = Readonly<{
+  storage: PortfolioManagerStorage<T>
+  api: PortfolioManagerApi<T>
 }>
 
-export type PortfolioManagerState = Readonly<{
+export type PortfolioManagerState<T extends Portfolio.Token> = Readonly<{
   primary: Readonly<{
-    fts: Readonly<Portfolio.Amounts>
-    locked: Readonly<Portfolio.Amounts>
-    tokens: Readonly<Portfolio.TokenRecords>
+    locks: Readonly<Portfolio.TokenBalanceRecords<T>>
+    balances: Readonly<Portfolio.TokenBalanceRecords<T>>
   }>
   secondary: Readonly<{
-    fts: Readonly<Portfolio.Amounts>
-    nfts: Readonly<Portfolio.Amounts>
-    tokens: Readonly<Portfolio.TokenRecords>
+    balances: Readonly<Portfolio.TokenBalanceRecords<T>>
   }>
 }>
 
-export type PortfolioManager = Readonly<{
+export type PortfolioManager<T extends Portfolio.Token> = Readonly<{
   getTokens(
-    ids: ReadonlyArray<Portfolio.Token['info']['id']>,
+    ids: ReadonlyArray<Portfolio.TokenInfo['id']>,
     avoidCache?: boolean,
-  ): Promise<Readonly<Portfolio.TokenRecords> | undefined>
+  ): Promise<Portfolio.TokenRecords<T> | undefined>
   hydrate(): Promise<void>
   clear(): Promise<void>
-  updatePortfolio(utxos: ReadonlyArray<RawUtxo>, primaryToken: Readonly<Portfolio.Token>): Promise<void>
-  getPortfolio(): Readonly<PortfolioManagerState>
-  subscribe: Observer<PortfolioManagerState>['subscribe']
-  destroy: Observer<PortfolioManagerState>['destroy']
+  updatePortfolio(utxos: ReadonlyArray<RawUtxo>, primaryToken: T): Promise<void>
+  getPortfolio(): PortfolioManagerState<T>
+  subscribe: Observer<PortfolioManagerState<T>>['subscribe']
+  destroy: Observer<PortfolioManagerState<T>>['destroy']
 }>
 
-export type PortfolioManagerApi = Readonly<{
-  tokens(ids: Readonly<Array<Portfolio.Token['info']['id']>>): Promise<Readonly<Portfolio.TokenRecords>>
+export type PortfolioManagerApi<T extends Portfolio.Token> = Readonly<{
+  tokens(ids: ReadonlyArray<Portfolio.TokenInfo['id']>): Promise<Portfolio.TokenRecords<T>>
 }>
 
-export type PortfolioManagerStorage = Readonly<{
-  tokens: App.MultiStorage<Portfolio.Token>
+export type PortfolioManagerStorage<T extends Portfolio.Token> = Readonly<{
+  tokens: App.MultiStorage<T>
 }>
 
+// @yoroi/wallets
 export type CardanoToken = Portfolio.Token<Cardano.Api.FutureToken>
-export type CardanoTokens = Portfolio.TokenRecords<Cardano.Api.FutureToken>

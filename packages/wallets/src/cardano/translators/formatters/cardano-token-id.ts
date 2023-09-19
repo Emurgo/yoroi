@@ -7,11 +7,11 @@ import {Portfolio} from '@yoroi/types'
  * The function first calls `getTokenIdentity` to extract the `policyId` and `assetName`
  * from the provided `tokenId`. It then generates the asset fingerprint based on these values.
  *
- * @param {Portfolio.Token['info']['id']} tokenId - The token ID used to generate the fingerprint.
+ * @param {Portfolio.TokenInfo['id']} tokenId - The token ID used to generate the fingerprint.
  * @returns {Readonly<string>} The calculated fingerprint string.
  * @throws {Error} Throws an error if the policy ID extracted from `tokenId` is invalid or has incorrect length.
  */
-export function asFingerprint(tokenId: Portfolio.Token['info']['id']): string {
+export function asFingerprint(tokenId: Portfolio.TokenInfo['id']): string {
   const {policyId, assetName} = getTokenIdentity(tokenId)
 
   const assetFingerprint = AssetFingerprint.fromParts(
@@ -29,7 +29,7 @@ export function asFingerprint(tokenId: Portfolio.Token['info']['id']): string {
  *
  * The `tokenId` is expected to follow a specific format, usually `policyId.assetName`.
  *
- * @param {Portfolio.Token['info']['id']} tokenId - The tokenId string from which to extract information.
+ * @param {Portfolio.TokenInfo['id']} tokenId - The tokenId string from which to extract information.
  * @returns {Readonly<{policyId: string; name: string; assetName: string}>} An immutable object containing:
  *  - `policyId`: The policy ID of the token.
  *  - `name`: The human-readable name of the asset, derived from its hex-encoded `assetName`.
@@ -37,7 +37,7 @@ export function asFingerprint(tokenId: Portfolio.Token['info']['id']): string {
  * @throws {Error} Throws an error if the policy ID extracted from `tokenId` is invalid or has incorrect length.
  */
 export function getTokenIdentity(
-  tokenId: Portfolio.Token['info']['id'],
+  tokenId: Portfolio.TokenInfo['id'],
 ): Readonly<{policyId: string; name: string; assetName: string}> {
   const [policyId, assetName = ''] = tokenId.split('.')
 
@@ -51,9 +51,9 @@ export function getTokenIdentity(
 /**
  * Concatenates the policyId and assetName from a given token ID by removing the separating dot.
  *
- * @param {Portfolio.Token['info']['id']} tokenId - The token ID string containing policyId and assetName separated by a dot.
+ * @param {Portfolio.TokenInfo['id']} tokenId - The token ID string containing policyId and assetName separated by a dot.
  * @returns {string} A new string formed by removing the separating dot from the tokenId.
  */
-export function asSubject(tokenId: Portfolio.Token['info']['id']): string {
+export function asSubject(tokenId: Portfolio.TokenInfo['id']): string {
   return tokenId.replace('.', '')
 }

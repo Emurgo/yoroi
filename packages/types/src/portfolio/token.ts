@@ -9,15 +9,15 @@ export type PortfolioTokenStatus =
   | 'scam'
   | 'outdated'
 
-export type PortfolioToken<M extends Record<string, unknown> = {}> = {
+export type PortfolioToken<M extends Record<string, unknown> = {}> = Readonly<{
   info: PortfolioTokenInfo
-  files?: Array<PortfolioTokenFile>
+  files?: ReadonlyArray<PortfolioTokenFile>
   price?: PortfolioTokenPrice
   supply?: PortfolioTokenSupply
   status?: PortfolioTokenStatus
-  metadatas?: M
-}
+  metadatas?: Readonly<M>
+}>
 
-export type PortfolioTokenRecords<M extends Record<string, unknown> = {}> = {
-  [tokenId: PortfolioTokenInfo['id']]: PortfolioToken<M>
+export type PortfolioTokenRecords<T extends PortfolioToken> = {
+  [tokenId: PortfolioTokenInfo['id']]: T
 }

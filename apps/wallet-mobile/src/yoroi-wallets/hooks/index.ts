@@ -12,19 +12,20 @@ import {
   QueryKey,
   useMutation,
   UseMutationOptions,
-  useQueries,
   useQuery,
   useQueryClient,
   UseQueryOptions,
 } from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {useWalletManager} from '../../WalletManager'
 import {calcLockedDeposit} from '../cardano/assetUtils'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
 import {parseWalletMeta} from '../migrations/walletMeta'
+import {Tokens} from '../portfolio/helpers/tokens'
 import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
@@ -36,7 +37,6 @@ import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus, Wallet
 import {delay} from '../utils/timeUtils'
 import {Amounts, Quantities, Utxos} from '../utils/utils'
 import {WalletManager, WalletMeta} from '../walletManager'
-import {Tokens} from '../portfolio/helpers/tokens'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
@@ -229,22 +229,22 @@ export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOpt
   }
 }
 
-export const useTokenInfo = <T extends Portfolio.TokenInfo>(
-  {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
-  options?: UseQueryOptions<Portfolio.TokenInfo, Error, T, [string, 'tokenInfo', string]>,
-) => {
-  const query = useQuery({
-    ...options,
-    suspense: true,
-    queryKey: [wallet.id, 'tokenInfo', tokenId],
-    queryFn: () => wallet.fetchTokenInfo(tokenId),
-    staleTime: 600_000,
-  })
+// export const useTokenInfo = <T extends Portfolio.TokenInfo>(
+//   {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
+//   options?: UseQueryOptions<Portfolio.TokenInfo, Error, T, [string, 'tokenInfo', string]>,
+// ) => {
+//   const query = useQuery({
+//     ...options,
+//     suspense: true,
+//     queryKey: [wallet.id, 'tokenInfo', tokenId],
+//     queryFn: () => wallet.fetchTokenInfo(tokenId),
+//     staleTime: 600_000,
+//   })
 
-  if (!query.data) throw new Error('Invalid token id')
+//   if (!query.data) throw new Error('Invalid token id')
 
-  return query.data
-}
+//   return query.data
+// }
 
 export const useNftModerationStatus = (
   {wallet, fingerprint}: {wallet: YoroiWallet; fingerprint: string},
@@ -275,55 +275,55 @@ export const useNftImageModerated = ({
   return useMemo(() => (status ? {image: nft.image, status} : null), [nft, status])
 }
 
-export const useToken = (
-  {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
-  options?: UseQueryOptions<Portfolio.TokenInfo, Error, Portfolio.TokenInfo, [string, 'tokenInfo', string]>,
-) => {
-  const query = useQuery({
-    ...options,
-    suspense: true,
-    queryKey: [wallet.id, 'tokenInfo', tokenId],
-    queryFn: () => wallet.fetchTokenInfo(tokenId),
-    staleTime: 600_000,
-  })
+// export const useToken = (
+//   {wallet, tokenId}: {wallet: YoroiWallet; tokenId: string},
+//   options?: UseQueryOptions<Portfolio.TokenInfo, Error, Portfolio.TokenInfo, [string, 'tokenInfo', string]>,
+// ) => {
+//   const query = useQuery({
+//     ...options,
+//     suspense: true,
+//     queryKey: [wallet.id, 'tokenInfo', tokenId],
+//     queryFn: () => wallet.fetchTokenInfo(tokenId),
+//     staleTime: 600_000,
+//   })
 
-  if (!query.data) throw new Error('Invalid token id')
+//   if (!query.data) throw new Error('Invalid token id')
 
-  return useTokenInfos({wallet, tokenIds: [tokenId]}, options)[0]
-}
+//   return useTokenInfos({wallet, tokenIds: [tokenId]}, options)[0]
+// }
 
-export const useTokenInfosDetailed = (
-  {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
-  options?: UseQueryOptions<Portfolio.TokenInfo, Error, Portfolio.TokenInfo, any>,
-) => {
-  const queries = tokenIds.map((tokenId) => ({
-    ...options,
-    suspense: true,
-    queryKey: [wallet.id, 'tokenInfo', tokenId],
-    queryFn: () => wallet.fetchTokenInfo(tokenId),
-    staleTime: 600_000,
-  }))
-  return useQueries(queries)
-}
+// export const useTokenInfosDetailed = (
+//   {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
+//   options?: UseQueryOptions<Portfolio.TokenInfo, Error, Portfolio.TokenInfo, any>,
+// ) => {
+//   const queries = tokenIds.map((tokenId) => ({
+//     ...options,
+//     suspense: true,
+//     queryKey: [wallet.id, 'tokenInfo', tokenId],
+//     queryFn: () => wallet.fetchTokenInfo(tokenId),
+//     staleTime: 600_000,
+//   }))
+//   return useQueries(queries)
+// }
 
-export const useTokenInfos = (
-  {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
-  options?: UseQueryOptions<Portfolio.TokenInfo, Error, Portfolio.TokenInfo, any>,
-) => {
-  const results = useTokenInfosDetailed({wallet, tokenIds}, options)
-  return results.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<Portfolio.TokenInfo>)
-}
+// export const useTokenInfos = (
+//   {wallet, tokenIds}: {wallet: YoroiWallet; tokenIds: Array<string>},
+//   options?: UseQueryOptions<Portfolio.TokenInfo, Error, Portfolio.TokenInfo, any>,
+// ) => {
+//   const results = useTokenInfosDetailed({wallet, tokenIds}, options)
+//   return results.reduce((result, {data}) => (data ? [...result, data] : result), [] as Array<Portfolio.TokenInfo>)
+// }
 
-export const useAllTokenInfos = ({wallet}: {wallet: YoroiWallet}) => {
-  const balances = useBalances(wallet)
+// export const useAllTokenInfos = ({wallet}: {wallet: YoroiWallet}) => {
+//   const balances = useBalances(wallet)
 
-  const tokenInfos = useTokenInfos({
-    wallet,
-    tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
-  })
+//   const tokenInfos = useTokenInfos({
+//     wallet,
+//     tokenIds: Amounts.toArray(balances).map(({tokenId}) => tokenId),
+//   })
 
-  return tokenInfos
-}
+//   return tokenInfos
+// }
 
 export const usePlate = ({networkId, publicKeyHex}: {networkId: NetworkId; publicKeyHex: string}) => {
   const query = useQuery({
@@ -934,19 +934,9 @@ export const useSaveMemo = (
   }
 }
 
-export const useNfts = (wallet: YoroiWallet, options: UseQueryOptions<Portfolio.TokenInfo, Error> = {}) => {
-  const assetIds = useAssetIds(wallet)
-  const results = useTokenInfosDetailed({wallet, tokenIds: assetIds}, options)
-  const nfts = results.map((r) => r.data).filter((t): t is Portfolio.TokenInfo => t?.kind === 'nft')
-  const isLoading = results.some((r) => r.isLoading)
-  const isError = results.some((r) => r.isError)
-  const error = results.find((r) => r.isError)?.error
-  const refetch = () => results.forEach((r) => r.refetch())
-  return {nfts, refetch, error, isLoading, isError}
-}
+export const useTokenBalance = (id: Portfolio.TokenInfo['id']): Portfolio.TokenBalance => {
+  const wallet = useSelectedWallet()
 
-export const useNft = (wallet: YoroiWallet, {id}: {id: string}): Portfolio.TokenInfo => {
-  const tokenInfo = useTokenInfo({wallet, tokenId: id}, {suspense: true})
 
   if (tokenInfo.kind !== 'nft') {
     throw new Error(`Invalid id used "${id}" to get NFT`)

@@ -173,7 +173,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     readonly encryptedStorage: WalletEncryptedStorage
     isEasyConfirmationEnabled = false
     portfolio: Readonly<PortfolioManagerState> = portfolioDefaultState
-    sortedTokens: ReadonlyArray<[Portfolio.TokenInfo['id'], Readonly<Portfolio.Token>]> = [] as const
+    balances: ReadonlyArray<[Portfolio.TokenInfo['id'], Readonly<Portfolio.TokenBalance>]> = [] as const
 
     private _utxos: RawUtxo[]
     private readonly storage: App.Storage
@@ -322,9 +322,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const primaryToken: Portfolio.Token = {info: wallet.primaryTokenInfo}
       await wallet.portfolioManager.updatePortfolio(wallet.utxos, primaryToken)
       wallet.portfolio = wallet.portfolioManager.getPortfolio()
-      wallet.sortedTokens = [
-        ...Tokens.sort(wallet.portfolio.primary.tokens), // primary always for first
-        ...Tokens.sort(wallet.portfolio.secondary.tokens),
+      // store sorted
+      wallet.balances = [
+        ...Tokens.sort(wallet.portfolio.primary.balances), // primary always for first
+        ...Tokens.sort(wallet.portfolio.secondary.balances),
       ]
       wallet.save()
       wallet.notify({type: 'initialize'})

@@ -1,4 +1,4 @@
-export type PortfolioTokenInfo = {
+export type PortfolioTokenInfo = Readonly<{
   kind: 'ft' | 'nft'
 
   id: string // TODO: is set based on rawUtxo if tokens don't contain `.` it will fail (empty name)
@@ -16,4 +16,4 @@ export type PortfolioTokenInfo = {
   ticker?: string // shorthand as token e.g. ADA
 
   website?: string // link to website
-}
+}>

@@ -13,7 +13,10 @@ import {SwapStorage} from './swap/storage'
 import {SwapManager} from './swap/manager'
 import {AppStorage, AppStorageFolderName} from './app/storage'
 import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
-import {PortfolioBalance, PortfolioBalanceRecords} from './portfolio/balance'
+import {
+  PortfolioTokenBalance,
+  PortfolioTokenBalanceRecords,
+} from './portfolio/token-balance'
 import {
   PortfolioToken,
   PortfolioTokenRecords,
@@ -59,22 +62,22 @@ export namespace Swap {
 }
 
 export namespace Portfolio {
-  export type Token<M extends Record<string, unknown> = {}> = PortfolioToken<M>
   export type TokenInfo = PortfolioTokenInfo
   export type TokenPrice = PortfolioTokenPrice
   export type TokenSupply = PortfolioTokenSupply
   export type TokenStatus = PortfolioTokenStatus
   export type TokenFiles = Array<PortfolioToken>
   export type TokenFile = PortfolioTokenFile
-  export type TokenRecords<M extends Record<string, unknown> = {}> =
-    PortfolioTokenRecords<M>
+
+  export type Token<M extends Record<string, unknown> = {}> = PortfolioToken<M>
+  export type TokenRecords<T extends PortfolioToken> = PortfolioTokenRecords<T>
+  export type TokenBalance<T extends PortfolioToken> = PortfolioTokenBalance<T>
+  export type TokenBalanceRecords<T extends PortfolioToken> =
+    PortfolioTokenBalanceRecords<T>
 
   export type Quantity = PortfolioQuantity
   export type Amount = PortfolioAmount
   export type Amounts = PortfolioAmounts
-
-  export type Balance = PortfolioBalance
-  export type BalanceRecords = PortfolioBalanceRecords
 }
 
 export * from './helpers/types'

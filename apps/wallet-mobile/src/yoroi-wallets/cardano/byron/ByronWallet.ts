@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as yoroiLib from '@emurgo/yoroi-lib'
-import {App, Balance} from '@yoroi/types'
+import {App, Portfolio} from '@yoroi/types'
 import {parseSafe} from '@yoroi/wallets'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
@@ -138,6 +138,9 @@ export class ByronWallet implements YoroiWallet {
   readonly checksum: CardanoTypes.WalletChecksum
   readonly encryptedStorage: WalletEncryptedStorage
   isEasyConfirmationEnabled = false
+  portfolio = {} as any
+  sortedTokens = [] as any
+
 
   private _utxos: RawUtxo[]
   private readonly storage: App.Storage
@@ -1039,24 +1042,6 @@ export class ByronWallet implements YoroiWallet {
     return api.getPoolInfo(request, this.getBackendConfig())
   }
 
-  async fetchTokenInfo(tokenId: string) {
-    const apiUrl = this.getBackendConfig().TOKEN_INFO_SERVICE
-    if (!apiUrl) throw new Error('invalid wallet')
-
-    const isMainnet = this.networkId === 1
-    const isTestnet = this.networkId === 300
-
-    if ((tokenId === '' || tokenId === 'ADA') && isMainnet) {
-      return primaryTokenInfo.mainnet
-    }
-
-    if ((tokenId === '' || tokenId === 'ADA' || tokenId === 'TADA') && isTestnet) {
-      return primaryTokenInfo.testnet
-    }
-
-    return api.getTokenInfo(tokenId, `${apiUrl}/metadata`, this.getBackendConfig())
-  }
-
   async fetchFundInfo(): Promise<FundInfoResponse> {
     return api.getFundInfo(this.getBackendConfig(), this.getNetworkConfig().IS_MAINNET)
   }
@@ -1361,37 +1346,6 @@ const keys: Array<keyof WalletJSON> = [
   'isEasyConfirmationEnabled',
   'lastGeneratedAddressIndex',
 ]
-
-export const primaryTokenInfo: Record<'mainnet' | 'testnet', Portfolio.TokenInfo> = {
-  mainnet: {
-    id: '',
-    name: 'ADA',
-    description: 'Cardano',
-    kind: 'ft',
-    fingerprint: '',
-    group: '',
-    image: undefined,
-    icon: undefined,
-    ticker: 'ADA',
-    decimals: 6,
-    symbol: '₳',
-    metadatas: {},
-  },
-  testnet: {
-    kind: 'ft',
-    id: '',
-    name: 'TADA',
-    description: 'Cardano',
-    fingerprint: '',
-    group: '',
-    image: undefined,
-    icon: undefined,
-    ticker: 'TADA',
-    decimals: 6,
-    symbol: '₳',
-    metadatas: {},
-  },
-}
 
 const encryptAndSaveRootKey = (wallet: YoroiWallet, rootKey: string, password: string) =>
   wallet.encryptedStorage.rootKey.write(rootKey, password)

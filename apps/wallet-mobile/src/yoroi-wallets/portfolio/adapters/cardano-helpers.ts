@@ -25,8 +25,10 @@ export async function calcLockedDeposit(utxos: ReadonlyArray<RawUtxo>) {
   return asQuantity(totalLocked)
 }
 
-export const cardanoFallbackTokenAsBalanceToken = (tokenId: Portfolio.Token['info']['id']): Readonly<Portfolio.Token> =>
-  cardanoOnChainMetadataAsBalanceToken({
+export const cardanoFallbackTokenAsBalanceToken = <M extends Record<string, unknown>>(
+  tokenId: Portfolio.TokenInfo['id'],
+): Readonly<Portfolio.Token<M>> =>
+  cardanoOnChainMetadataAsBalanceToken<M>({
     tokenId,
     metadata: undefined,
     kind: 'ft',

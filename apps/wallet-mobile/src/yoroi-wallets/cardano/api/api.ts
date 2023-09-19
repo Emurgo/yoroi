@@ -24,9 +24,7 @@ import fetchDefault from './fetch'
 type Addresses = Array<string>
 
 export {fetchTokensSupplies} from './assetSuply'
-export {getNFTs} from './metadata'
 export {getNFTModerationStatus} from './nftModerationStatus'
-export {getTokenInfo} from './tokenRegistry'
 
 export const checkServerStatus = (config: BackendConfig): Promise<ServerStatus> =>
   fetchDefault('status', null, config, 'GET') as any

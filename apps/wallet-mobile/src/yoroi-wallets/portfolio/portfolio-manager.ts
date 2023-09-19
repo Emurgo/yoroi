@@ -1,4 +1,4 @@
-import {Portfolio} from '@yoroi/types'
+import {Portfolio, Writable} from '@yoroi/types'
 import {difference, Observer, observerMaker} from '@yoroi/wallets'
 import _ from 'lodash'
 
@@ -6,13 +6,12 @@ import {RawUtxo} from '../types'
 import {Amounts, Quantities} from '../utils'
 import {calcLockedDeposit, cardanoFallbackTokenAsBalanceToken} from './adapters/cardano-helpers'
 import {rawUtxosAsAmounts} from './adapters/transformers'
-import {Tokens} from './helpers/tokens'
 import {PortfolioManager, PortfolioManagerOptions, PortfolioManagerState} from './types'
 
-export const portfolioManagerMaker = (
-  {storage, api}: PortfolioManagerOptions,
-  observer: Observer<PortfolioManagerState> = observerMaker<PortfolioManagerState>(),
-): PortfolioManager => {
+export const portfolioManagerMaker = <T extends Portfolio.Token>(
+  {storage, api}: PortfolioManagerOptions<T>,
+  observer: Observer<PortfolioManagerState<T>> = observerMaker<PortfolioManagerState<T>>(),
+): PortfolioManager<T> => {
   const {tokens} = storage
   const {notify, subscribe, destroy} = observer
 
@@ -27,14 +26,14 @@ export const portfolioManagerMaker = (
   }
 
   // STATE
-  let knownTokenIds = new Set<Portfolio.Token['info']['id']>()
-  let portfolio: PortfolioManagerState = portfolioDefaultState
+  let knownTokenIds = new Set<Portfolio.TokenInfo['id']>()
+  let portfolio = portfolioManagerInitialState<T>()
 
   // API
   const getTokens = async (
-    ids: ReadonlyArray<Portfolio.Token['info']['id']>,
+    ids: ReadonlyArray<Portfolio.TokenInfo['id']>,
     avoidCache = false,
-  ): Promise<Readonly<Portfolio.TokenRecords> | undefined> => {
+  ): Promise<Readonly<Portfolio.TokenRecords<T>> | undefined> => {
     if (avoidCache) {
       const refreshedTokens = await api.tokens(ids)
       await tokens.saveMany(Object.values(refreshedTokens))
@@ -51,7 +50,7 @@ export const portfolioManagerMaker = (
     }
   }
 
-  const updatePortfolio = async (utxos: ReadonlyArray<RawUtxo>, initialPrimaryToken: Readonly<Portfolio.Token>) => {
+  const updatePortfolio = async (utxos: ReadonlyArray<RawUtxo>, initialPrimaryToken: T) => {
     const task = async () => {
       const primaryTokenId = initialPrimaryToken.info.id
       const allAmounts = rawUtxosAsAmounts(utxos, primaryTokenId)
@@ -65,54 +64,44 @@ export const portfolioManagerMaker = (
       // + ?? ADA locked (to hold data) - min-ada (can change if the utxos get reorganized / params change)
       // + ?? ---- register as a drep ---- (to updated)
       const primaryAmount = {[primaryTokenId]: allAmounts[primaryTokenId] ?? Quantities.zero}
-      const primaryTokenBalance: Portfolio.Token = {
+      const primaryBalance: Portfolio.TokenBalance<T> = {
         ...initialPrimaryToken,
         balance: primaryAmount[primaryTokenId],
         isPrimary: true,
       }
-      const primaryTokenRecord = {[primaryTokenId]: primaryToken} as const
-      const locked = await calcLockedDeposit(utxos)
+      const primaryBalanceRecords: Portfolio.TokenBalanceRecords<T> = {[primaryTokenId]: primaryBalance} as const
+      const primaryLockedBalance: Portfolio.TokenBalance<T> = {
+        ...initialPrimaryToken,
+        balance: await calcLockedDeposit(utxos),
+        isPrimary: true,
+      }
+      const primaryLockRecords = {[primaryTokenId]: primaryLockedBalance} as const
 
       // SECONDARY
       const secondaryAmounts = Amounts.remove(allAmounts, [primaryTokenId])
       const secondaryIds = Amounts.ids(secondaryAmounts)
-      const fts: Portfolio.Amounts = {}
-      const nfts: Portfolio.Amounts = {}
-
       const secondaryTokens = (await getTokens(secondaryIds)) ?? {}
-
-      const secondaryTokenRecords: Portfolio.TokenRecords = {}
+      const secondaryBalanceRecords: Writable<Portfolio.TokenBalanceRecords<T>> = {}
 
       // there are 2 places that decide the kind of token
       // during the api.tokens call and here if the token is missing
-      // it will fallback to fts
+      // it will fallback to ft
       secondaryIds.forEach((tokenId) => {
         // when token has no metadata - it should branch the flavor of token in the transformation
         // falling back to unknown cardano token
-        const token = secondaryTokens[tokenId] ?? cardanoFallbackTokenAsBalanceToken(tokenId)
-        const secondaryToken = {...token, balance: secondaryAmounts[tokenId], isPrimary: false} as const
+        const token = secondaryTokens[tokenId] ?? cardanoFallbackTokenAsBalanceToken<T>(tokenId)
+        const secondaryBalance = {...token, balance: secondaryAmounts[tokenId], isPrimary: false} as const
 
-        if (token.info.kind === 'ft') {
-          fts[tokenId] = secondaryAmounts[tokenId]
-        } else if (token.info.kind === 'nft') {
-          nfts[tokenId] = secondaryAmounts[tokenId]
-        } else {
-          fts[tokenId] = secondaryAmounts[tokenId]
-        }
-
-        secondaryTokenRecords[tokenId] = secondaryToken
+        secondaryBalanceRecords[tokenId] = secondaryBalance
       })
 
       portfolio = {
         primary: {
-          fts: primaryAmount,
-          locked: {[primaryToken.info.id]: locked},
-          tokens: primaryTokenRecord,
+          locks: primaryLockRecords,
+          balances: primaryBalanceRecords,
         },
         secondary: {
-          fts,
-          nfts,
-          tokens: secondaryTokenRecords,
+          balances: {...secondaryBalanceRecords} as const,
         },
       } as const
     }
@@ -132,7 +121,7 @@ export const portfolioManagerMaker = (
   const clear = async () => {
     await tokens.clear()
     knownTokenIds = new Set()
-    portfolio = portfolioDefaultState
+    portfolio = portfolioManagerInitialState<T>()
   }
 
   const hydrate = () =>
@@ -153,17 +142,14 @@ export const portfolioManagerMaker = (
   } as const
 }
 
-export const portfolioDefaultState: PortfolioManagerState = {
-  primary: {
-    fts: {},
-    locked: {},
-
-    tokens: {},
-  },
-  secondary: {
-    fts: {},
-    nfts: {},
-
-    tokens: {},
-  },
-} as const
+export function portfolioManagerInitialState<T extends Portfolio.Token>(): PortfolioManagerState<T> {
+  return {
+    primary: {
+      locks: {},
+      balances: {},
+    },
+    secondary: {
+      balances: {},
+    },
+  } as const
+}

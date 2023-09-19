@@ -1,14 +1,14 @@
 import {Portfolio} from '@yoroi/types'
 
-function getInfo(token: Portfolio.Token) {
+function getInfo(token: Readonly<Portfolio.Token>): Readonly<Portfolio.TokenInfo> {
   return token.info
 }
 
-export function getInfos(tokens: Portfolio.TokenRecords) {
+export function getInfos(tokens: Portfolio.TokenRecords): ReadonlyArray<Readonly<Portfolio.TokenInfo>> {
   return Object.values(tokens).map(getInfo)
 }
 
-function getName(tokenInfo: Portfolio.TokenInfo) {
+function getName(tokenInfo: Readonly<Portfolio.TokenInfo>) {
   switch (tokenInfo.kind) {
     case 'ft':
       return tokenInfo.ticker?.toLocaleLowerCase() ?? tokenInfo.name?.toLocaleLowerCase() ?? ''
@@ -17,23 +17,26 @@ function getName(tokenInfo: Portfolio.TokenInfo) {
   }
 }
 
-export const sort = (
-  tokens: Readonly<Portfolio.TokenRecords>,
-): ReadonlyArray<[Portfolio.TokenInfo['id'], Readonly<Portfolio.Token>]> =>
-  Object.values(tokens)
+// happens when the token has no assetName(only policyId) and no metadata
+function isNameless(tokenInfo: Readonly<Portfolio.TokenInfo>) {
+  switch (tokenInfo.kind) {
+    case 'ft':
+      return !tokenInfo.ticker && !tokenInfo.name
+    case 'nft':
+      return !tokenInfo.name
+    default:
+      return false
+  }
+}
+
+export const sortBalanceRecordsByName = <M extends Record<string, unknown>>(
+  balanceRecords: Portfolio.TokenBalanceRecords<M>,
+): ReadonlyArray<[Portfolio.TokenInfo['id'], Readonly<Portfolio.Token<M>>]> =>
+  Object.values(balanceRecords)
     .map(getInfo)
     .sort(alpha(getName))
-    .sort(
-      toEnd((tokenInfo) => {
-        switch (tokenInfo.kind) {
-          case 'ft':
-            return !tokenInfo.ticker && !tokenInfo.name
-          case 'nft':
-            return !tokenInfo.name
-        }
-      }),
-    )
-    .map(({id}) => [id, tokens[id]] as const)
+    .sort(toEnd(isNameless))
+    .map(({id}) => [id, balanceRecords[id]] as const)
 
 // prettier-ignore
 export const alpha = <T>(transform: Transform<T>)=>(a: T, b: T) => transform(a).localeCompare(transform(b))
@@ -49,13 +52,13 @@ export const toStart = <T>(predicate: (a: T) => boolean) => (a: T, b: T) => {
 }
 
 export function filterNftsEntries(
-  tokens: ReadonlyArray<[Portfolio.TokenInfo['id'], Portfolio.Token]>,
+  tokens: ReadonlyArray<[Portfolio.TokenInfo['id'], Portfolio.TokenBalance]>,
 ): ReadonlyArray<[Portfolio.TokenInfo['id'], Portfolio.Token]> {
   return tokens.filter(([, token]) => token.info.kind === 'nft')
 }
 
 export function filterFtsEntries(
-  tokens: ReadonlyArray<[Portfolio.TokenInfo['id'], Portfolio.Token]>,
+  tokens: ReadonlyArray<[Portfolio.TokenInfo['id'], Portfolio.TokenBalance]>,
 ): ReadonlyArray<[Portfolio.TokenInfo['id'], Portfolio.Token]> {
   return tokens.filter(([, token]) => token.info.kind === 'ft')
 }
@@ -68,7 +71,7 @@ type Transform<T> = (a: T) => string
 
 export const Tokens = {
   getInfos,
-  sort,
+  sortBalanceRecordsByName,
   filterFtsEntries,
   filterNftsEntries,
   mergeRecords,

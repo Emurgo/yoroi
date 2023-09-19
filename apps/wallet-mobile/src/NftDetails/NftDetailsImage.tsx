@@ -18,8 +18,7 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 
 export const NftDetailsImage = () => {
   const {id} = useParams<Params>(isParams)
-  const wallet = useSelectedWallet()
-  const nft = useNft(wallet, {id})
+  const nft = useNft(id)
   const {track} = useMetrics()
 
   React.useEffect(() => {

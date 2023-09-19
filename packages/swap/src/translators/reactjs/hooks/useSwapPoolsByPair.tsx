@@ -5,8 +5,8 @@ import {useSwap} from './useSwap'
 
 export const useSwapPoolsByPair = (
   tokenPair: {
-    tokenA: Portfolio.Token['info']['id']
-    tokenB: Portfolio.Token['info']['id']
+    tokenA: Portfolio.TokenInfo['id']
+    tokenB: Portfolio.TokenInfo['id']
   },
   options?: UseQueryOptions<
     Swap.Pool[],
@@ -15,8 +15,8 @@ export const useSwapPoolsByPair = (
     [
       'usePoolsByPair',
       {
-        tokenA: Portfolio.Token['info']['id']
-        tokenB: Portfolio.Token['info']['id']
+        tokenA: Portfolio.TokenInfo['id']
+        tokenB: Portfolio.TokenInfo['id']
       },
     ]
   >,

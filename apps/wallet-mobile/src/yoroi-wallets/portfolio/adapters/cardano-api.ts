@@ -24,7 +24,7 @@ export const portfolioManagerApiMaker = (
   } as const
 
   // TODO: ids from rawUtxo check if `.` is always included, primary token should not be included in ids
-  const tokens = async (ids: Readonly<Array<Portfolio.Token['info']['id']>>): Promise<Readonly<Portfolio.TokenRecords>> => {
+  const tokens = async (ids: Readonly<Array<Portfolio.TokenInfo['id']>>): Promise<Readonly<Portfolio.TokenRecords>> => {
     const idChunks = chunk(ids, MAX_TOKENS_PER_REQUEST)
     const result: Portfolio.TokenRecords = {}
 

@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Nullable, Portfolio} from '@yoroi/types'
 
 import {mockDelayedResponse, mockLoading, mockMaker, mockMakerMutation, mockUnknownError} from '../utils/mockHelpers'
-import {PortfolioManager, PortfolioManagerOptions, PortfolioManagerState} from './types'
+import {portfolioManagerInitialState} from './portfolio-manager'
+import {PortfolioManager, PortfolioManagerOptions} from './types'
 
 // DATA
 const tokensResponse: Readonly<Portfolio.TokenRecords> = {
@@ -30,7 +32,7 @@ const readAll = mockMaker<[string, Nullable<Portfolio.Token>][]>([], [])
 const readMany = mockMaker<[string, Nullable<Portfolio.Token>][]>([], [])
 
 // OPTIONS
-const mockPortfolioManagerOptions: PortfolioManagerOptions = {
+const mockPortfolioManagerOptions: PortfolioManagerOptions<any> = {
   api: {
     tokens: tokens.success,
   },
@@ -45,7 +47,7 @@ const mockPortfolioManagerOptions: PortfolioManagerOptions = {
   },
 }
 
-const mockPortfolioManagerOptionsEmpty: PortfolioManagerOptions = {
+const mockPortfolioManagerOptionsEmpty: PortfolioManagerOptions<any> = {
   api: {
     tokens: tokens.empty,
   },
@@ -60,7 +62,7 @@ const mockPortfolioManagerOptionsEmpty: PortfolioManagerOptions = {
   },
 }
 
-const mockPortfolioManagerOptionsError: PortfolioManagerOptions = {
+const mockPortfolioManagerOptionsError: PortfolioManagerOptions<any> = {
   api: {
     tokens: tokens.error.unknown,
   },
@@ -83,25 +85,13 @@ const destroy = () => undefined
 // TODO: fill data later
 const getTokens = mockMaker<Readonly<Portfolio.TokenRecords> | undefined>({}, undefined)
 
-const mockPortfolioManager: PortfolioManager = {
+const mockPortfolioManager: PortfolioManager<any> = {
   hydrate: hydrate.success,
   getTokens: getTokens.success,
   updatePortfolio: updatePortfolio.success,
-  getPortfolio: () => {
-    return {
-      primary: {
-        fts: {},
-        locked: {},
-        tokens: {},
-      },
-      secondary: {
-        fts: {},
-        nfts: {},
-        tokens: {},
-      },
-    } as PortfolioManagerState
-  },
+  getPortfolio: () => portfolioManagerInitialState<any>(),
   subscribe,
+  clear: clear.success,
   destroy,
 }
 

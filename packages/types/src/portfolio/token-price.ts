@@ -1,4 +1,4 @@
-export type PortfolioTokenPrice = {
+export type PortfolioTokenPrice = Readonly<{
   volume: {
     base: string // float, trading volume 24h in base currency (e.g. ADA).
     quote: string // float, trading volume 24h in quote currency.
@@ -17,4 +17,4 @@ export type PortfolioTokenPrice = {
   quoteDecimalPlaces: number // decimal places of quote token.
   baseDecimalPlaces: number // decimal places of base token.
   price10d: number[] //float, prices of this tokens averaged for the last 10 days, in chronological order i.e.oldest first.
-}
+}>

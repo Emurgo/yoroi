@@ -11,7 +11,6 @@ import {
 
 import {RawUtxo} from '../../types'
 import {Amounts, asQuantity, Quantities} from '../../utils'
-import {CardanoToken} from '../types'
 
 export function asApiTokenId(tokenId: string): Cardano.Api.TokenId {
   if (tokenId.includes('.')) {
@@ -21,14 +20,14 @@ export function asApiTokenId(tokenId: string): Cardano.Api.TokenId {
 }
 
 export const cardanoFutureTokenAsBalanceToken = (
-  tokenId: Portfolio.Token['info']['id'],
+  tokenId: Portfolio.TokenInfo['id'],
   futureToken: Cardano.Api.FutureToken,
-): Readonly<Portfolio.Token> => {
+): Readonly<Portfolio.Token<Cardano.Api.FutureToken>> => {
   const {onChain, offChain, supply} = futureToken
 
   // Nft only if supply is 1 and has 721
   if (supply === 1 && onChain.mintNftRecordSelected) {
-    return cardanoOnChainMetadataAsBalanceToken({
+    return cardanoOnChainMetadataAsBalanceToken<Cardano.Api.FutureToken>({
       tokenId,
       metadata: onChain.mintNftRecordSelected,
       kind: 'nft',
@@ -47,7 +46,7 @@ export const cardanoFutureTokenAsBalanceToken = (
 
   // Ft onchain third
   if (onChain.mintFtRecordSelected) {
-    return cardanoOnChainMetadataAsBalanceToken({
+    return cardanoOnChainMetadataAsBalanceToken<Cardano.Api.FutureToken>({
       tokenId,
       metadata: onChain.mintFtRecordSelected,
       kind: 'ft',
@@ -56,7 +55,7 @@ export const cardanoFutureTokenAsBalanceToken = (
   }
 
   // Otherwise ft fallback record
-  return cardanoOnChainMetadataAsBalanceToken({
+  return cardanoOnChainMetadataAsBalanceToken<Cardano.Api.FutureToken>({
     tokenId,
     metadata: onChain.mintNftRecordSelected,
     kind: 'ft',
@@ -64,17 +63,17 @@ export const cardanoFutureTokenAsBalanceToken = (
   })
 }
 
-export const cardanoOnChainMetadataAsBalanceToken = ({
+export const cardanoOnChainMetadataAsBalanceToken = <M extends Record<string, unknown>>({
   tokenId,
   metadata,
   kind,
   cardanoFutureToken,
 }: {
-  tokenId: Portfolio.Token['info']['id']
+  tokenId: Portfolio.TokenInfo['id']
   metadata?: Cardano.Api.NftMetadata | Cardano.Api.FtMetadata
   kind: Portfolio.TokenInfo['kind']
-  cardanoFutureToken?: Cardano.Api.FutureToken
-}): Readonly<CardanoToken> => {
+  cardanoFutureToken?: M
+}): Readonly<Portfolio.Token<M>> => {
   const {name: assetNameUtf8, policyId} = CardanoTokenId.getTokenIdentity(tokenId)
 
   const id = tokenId
@@ -111,27 +110,27 @@ export const cardanoOnChainMetadataAsBalanceToken = ({
     website,
   }
 
-  const token: CardanoToken = {
+  const token: Portfolio.Token<M> = {
     info,
   }
   const files = cardanoFilesAsBalanceTokenFiles(metadata?.files)
   if (files) token['files'] = files
   if (cardanoFutureToken) token['metadatas'] = cardanoFutureToken
 
-  const result = token as Readonly<CardanoToken>
+  const result: Readonly<Portfolio.Token<M>> = {...token} as const
 
   return result
 }
 
-export const cardanoOffChainTokenRegistryEntryAsBalanceToken = ({
+export const cardanoOffChainTokenRegistryEntryAsBalanceToken = <M extends Record<string, unknown>>({
   tokenId,
   entry,
   cardanoFutureToken,
 }: {
-  tokenId: Portfolio.Token['info']['id']
+  tokenId: Portfolio.TokenInfo['id']
   entry: Cardano.Api.TokenRegistryEntry
-  cardanoFutureToken: Cardano.Api.FutureToken
-}): Readonly<CardanoToken> => {
+  cardanoFutureToken: M
+}): Readonly<Portfolio.Token<M>> => {
   const {name: assetNameUtf8, policyId} = CardanoTokenId.getTokenIdentity(tokenId)
 
   const id = tokenId
@@ -161,12 +160,12 @@ export const cardanoOffChainTokenRegistryEntryAsBalanceToken = ({
     website,
   }
 
-  const token: CardanoToken = {
+  const token: Portfolio.Token<M> = {
     info,
   }
   if (cardanoFutureToken) token['metadatas'] = cardanoFutureToken
 
-  const result = token as Readonly<CardanoToken>
+  const result: Readonly<Portfolio.Token<M>> = {...token} as const
 
   return result
 }
@@ -231,7 +230,7 @@ export function discoverIpfsLink(image: string) {
   return isIpfsImage ? image?.replace('ipfs://', `https://ipfs.io/ipfs/`) : image
 }
 
-export function rawUtxosAsAmounts(utxos: ReadonlyArray<RawUtxo>, primaryTokenId: Portfolio.Token['info']['id']) {
+export function rawUtxosAsAmounts(utxos: ReadonlyArray<RawUtxo>, primaryTokenId: Portfolio.TokenInfo['id']) {
   return utxos.reduce(
     (previousAmounts, currentUtxo) => {
       const amounts = {

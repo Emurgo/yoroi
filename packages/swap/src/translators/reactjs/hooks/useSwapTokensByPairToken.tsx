@@ -4,7 +4,7 @@ import {UseQueryOptions, useQuery} from 'react-query'
 import {useSwap} from './useSwap'
 
 export const useSwapTokensByPairToken = (
-  tokenIdBase: Portfolio.Token['info']['id'],
+  tokenIdBase: Portfolio.TokenInfo['id'],
   options?: UseQueryOptions<
     Portfolio.Token[],
     Error,

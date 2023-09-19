@@ -3,7 +3,7 @@ import {Swap, Portfolio} from '@yoroi/types'
 import {OpenSwap} from '@yoroi/openswap'
 
 export const transformersMaker = (
-  primaryTokenId: Portfolio.Token['info']['id'],
+  primaryTokenId: Portfolio.TokenInfo['id'],
 ) => {
   const asOpenswapTokenId = (yoroiTokenId: string) => {
     const [policyId, assetName = ''] = yoroiTokenId.split('.') as [
@@ -23,7 +23,7 @@ export const transformersMaker = (
   }: {
     policyId: string
     name: string
-  }): Portfolio.Token['info']['id'] => {
+  }): Portfolio.TokenInfo['id'] => {
     const possibleTokenId = `${policyId}.${name}`
     // openswap is inconsistent about ADA
     // sometimes is '.', '' or 'lovelace'

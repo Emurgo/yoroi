@@ -2,20 +2,6 @@ import {Portfolio} from '@yoroi/types'
 
 import {alpha, toEnd, Tokens, toStart} from './tokens'
 
-describe('getId', () => {
-  it('should return the token info id', () => {
-    const token = {
-      info: {
-        id: 'token_id',
-      },
-    }
-
-    const result = Tokens.getId(token as Portfolio.Token)
-
-    expect(result).toBe('token_id')
-  })
-})
-
 describe('sort', () => {
   it('sorts alphabetically', () => {
     const sortedItems = [...items].sort(alpha((name) => name.toLocaleLowerCase()))
@@ -62,29 +48,6 @@ const items = [
   'b', 
   'a'
 ]
-
-describe('getInfo', () => {
-  it('should return the info property of a token object', () => {
-    const token = {
-      info: {
-        id: 'token_id',
-        name: 'test',
-      },
-    } as Portfolio.Token
-
-    const result = Tokens.getInfo(token)
-    expect(result).toEqual({
-      id: 'token_id',
-      name: 'test',
-    })
-  })
-
-  it('should undefined if no info is present must not happen', () => {
-    const token = {} as Portfolio.Token
-    const result = Tokens.getInfo(token)
-    expect(result).toBeUndefined()
-  })
-})
 
 describe('getInfos', () => {
   it('should return an array of info properties from a record of tokens', () => {
