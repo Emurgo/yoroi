@@ -62,31 +62,3 @@ export const createYoroiEntry = (
     amounts: amountEntry,
   }
 }
-
-export const calculateMinReceived = (
-  outputAmount: Balance.Quantity,
-  slippagePercentage: number,
-  decimals: number,
-  numberLocale: NumberLocale,
-): string => {
-  const slippageDecimal = slippagePercentage / 100
-  const result = Number(outputAmount) / (1 + slippageDecimal)
-  const [quantities] = Quantities.parseFromText(
-    Quantities.denominated(asQuantity(result), decimals ?? 0),
-    decimals,
-    numberLocale,
-  )
-  return quantities.slice(0, -1)
-}
-
-export const calculateTotalFeels = (
-  batcherFee: Balance.Quantity,
-  proiderFee: Balance.Quantity,
-  wallet: YoroiWallet,
-  numberLocale: NumberLocale,
-): string => {
-  const primaryTokenInfoDecimals = wallet.primaryTokenInfo.decimals
-  const result = Quantities.denominated(Quantities.sum([batcherFee, proiderFee]), primaryTokenInfoDecimals ?? 0)
-  const [quantities] = Quantities.parseFromText(result, primaryTokenInfoDecimals ?? 0, numberLocale)
-  return quantities
-}

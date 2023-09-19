@@ -1,4 +1,4 @@
-import {useSwap} from '@yoroi/swap'
+import {getMinAdaReceiveAfterSlippage, getTotalFees, useSwap} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
@@ -14,7 +14,6 @@ import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {asQuantity, Quantities} from '../../../../../../yoroi-wallets/utils'
-import {calculateMinReceived, calculateTotalFeels} from '../../../../common/helpers'
 import {useNavigateTo} from '../../../../common/navigation'
 import {PoolIcon} from '../../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../../common/strings'
@@ -64,13 +63,13 @@ export const ShowPoolActions = () => {
       }
       adornment={
         <HiddenInfo
-          totalFees={calculateTotalFeels(
+          totalFees={getTotalFees(
             selectedPool?.batcherFee.quantity,
             asQuantity(providerFee ?? 0),
-            wallet,
+            wallet.primaryTokenInfo.decimals ?? 0,
             numberLocale,
           )}
-          minReceived={calculateMinReceived(
+          minReceived={getMinAdaReceiveAfterSlippage(
             amounts.buy.quantity,
             createOrder.slippage,
             buyTokenInfo.decimals ?? 0,

@@ -1,4 +1,4 @@
-import {useSwap} from '@yoroi/swap'
+import {getMinAdaReceiveAfterSlippage, getTotalFees, useSwap} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -10,7 +10,6 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils'
-import {calculateMinReceived, calculateTotalFeels} from '../../common/helpers'
 import {useStrings} from '../../common/strings'
 
 export const TransactionSummary = () => {
@@ -42,7 +41,7 @@ export const TransactionSummary = () => {
     },
     {
       label: strings.swapMinReceivedTitle,
-      value: `${calculateMinReceived(
+      value: `${getMinAdaReceiveAfterSlippage(
         amounts.buy.quantity,
         createOrder.slippage,
         buyTokenInfo.decimals ?? 0,
@@ -52,7 +51,12 @@ export const TransactionSummary = () => {
     },
     {
       label: strings.swapFeesTitle,
-      value: `${calculateTotalFeels(selectedPool?.batcherFee.quantity, asQuantity(poolFee), wallet, numberLocale)} ADA`,
+      value: `${getTotalFees(
+        selectedPool?.batcherFee.quantity,
+        asQuantity(poolFee),
+        wallet.primaryTokenInfo.decimals ?? 0,
+        numberLocale,
+      )} ADA`,
       info: strings.swapFees,
     },
   ]
