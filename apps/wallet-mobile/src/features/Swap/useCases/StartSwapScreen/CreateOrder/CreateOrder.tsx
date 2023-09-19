@@ -180,8 +180,6 @@ export const CreateOrder = () => {
     <View style={styles.root}>
       <ScrollView>
         <View style={styles.container}>
-          <Spacer height={16} />
-
           <LimitPriceWarning
             open={showLimitPriceWarning}
             onClose={() => setShowLimitPriceWarning(false)}
