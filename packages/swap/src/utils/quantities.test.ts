@@ -1,5 +1,6 @@
 import {Quantities} from './quantities'
 import {asQuantity} from './asQuantity'
+import {Balance} from '@yoroi/types'
 
 describe('Quantities', () => {
   describe('sum', () => {
@@ -124,5 +125,17 @@ describe('Quantities', () => {
       const denomination = 2
       expect(Quantities.format(quantity, denomination)).toBe('0.0001')
     })
+  })
+
+  it('should find the maximum quantity from an array of quantities', () => {
+    const quantities: Array<Balance.Quantity> = [
+      asQuantity(100),
+      asQuantity(500),
+      asQuantity(300),
+      asQuantity(700),
+      asQuantity(200),
+    ]
+    const maxQuantity = Quantities.max(...quantities) // Convert strings to numbers
+    expect(maxQuantity).toBe('700')
   })
 })
