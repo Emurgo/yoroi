@@ -15,11 +15,11 @@ import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/Edit
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {SwapFormProvider} from '../features/Swap/common/SwapFormProvider'
+import {SwapTabNavigator} from '../features/Swap/SwapNavigator'
 import {
   ConfirmTxScreen as ConfirmTxSwapScreen,
   EditSlippageScreen,
   SelectPoolFromListScreen,
-  StartSwapScreen,
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
@@ -103,7 +103,7 @@ export const TxHistoryNavigator = () => {
 
             <Stack.Screen
               name="swap-start-swap"
-              component={StartSwapScreen}
+              component={SwapTabNavigator}
               options={{
                 title: strings.swapTitle,
               }}

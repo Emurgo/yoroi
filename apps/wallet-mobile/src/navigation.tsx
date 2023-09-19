@@ -1,3 +1,4 @@
+import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-tabs'
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import React from 'react'
@@ -78,6 +79,20 @@ export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = 
     paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
   },
   headerLeft: (props) => <BackButton color="#fff" {...props} />,
+}
+
+// TABS OPTIONS
+export const defaultMaterialTopTabNavigationOptions: MaterialTopTabNavigationOptions = {
+  tabBarStyle: {backgroundColor: COLORS.WHITE, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
+  tabBarIndicatorStyle: {backgroundColor: COLORS.SHELLEY_BLUE, height: 2},
+  tabBarLabelStyle: {
+    textTransform: 'none',
+    fontFamily: 'Rubik',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  tabBarActiveTintColor: COLORS.SHELLEY_BLUE,
+  tabBarInactiveTintColor: COLORS.NOT_SELECTED_TAB_TEXT,
 }
 
 // ROUTES
@@ -202,6 +217,12 @@ export type StakingCenterRoutes = {
     yoroiUnsignedTx: YoroiUnsignedTx
   }
 }
+
+export type SwapTabRoutes = {
+  'token-swap': undefined
+  orders: undefined
+}
+
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
 
 export type SettingsTabRoutes = {

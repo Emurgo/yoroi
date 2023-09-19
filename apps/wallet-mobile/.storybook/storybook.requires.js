@@ -155,7 +155,6 @@ const getStories = () => {
     "./src/features/Swap/useCases/StartSwapScreen/ListOrders/CompletedOrders.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/ListOrders/CompletedOrders.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/ListOrders/ListOrders.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/ListOrders/ListOrders.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/ListOrders/OpenOrders.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/ListOrders/OpenOrders.stories.tsx"),
-    "./src/features/Swap/useCases/StartSwapScreen/StartSwapScreen.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/StartSwapScreen.stories.tsx"),
     "./src/features/ToggleAnalyticsSettings/ToggleAnalyticsSettings.stories.tsx": require("../src/features/ToggleAnalyticsSettings/ToggleAnalyticsSettings.stories.tsx"),
     "./src/HW/Instructions/Instructions.stories.tsx": require("../src/HW/Instructions/Instructions.stories.tsx"),
     "./src/HW/LedgerConnect/DeviceItem/DeviceItem.stories.tsx": require("../src/HW/LedgerConnect/DeviceItem/DeviceItem.stories.tsx"),
