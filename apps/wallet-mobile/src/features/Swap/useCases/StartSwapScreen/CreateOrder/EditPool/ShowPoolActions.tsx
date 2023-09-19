@@ -3,15 +3,18 @@ import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {
+  BottomSheetModal,
   ExpandableInfoCard,
   HeaderWrapper,
   HiddenInfoWrapper,
   MainInfoWrapper,
   Spacer,
 } from '../../../../../../components'
+import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../../../../yoroi-wallets/utils'
+import {calculateMinReceived, calculateTotalFeels} from '../../../../common/helpers'
 import {useNavigateTo} from '../../../../common/navigation'
 import {PoolIcon} from '../../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../../common/strings'
@@ -19,6 +22,7 @@ import {useSwapTouched} from '../../../../common/SwapFormProvider'
 
 export const ShowPoolActions = () => {
   const navigateTo = useNavigateTo()
+  const {numberLocale} = useLanguage()
   const {createOrder} = useSwap()
   const strings = useStrings()
   const {isBuyTouched, isSellTouched, isPoolTouched} = useSwapTouched()
@@ -35,7 +39,7 @@ export const ShowPoolActions = () => {
   const totalAmount = Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)
   const protocolCapitalize = selectedPool.provider[0].toUpperCase() + selectedPool.provider.substring(1)
   const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrder.amounts.sell.quantity)
-  const poolFee = Quantities.format(`${calculatedFee}`, sellTokenInfo.decimals ?? 0)
+  const providerFee = Quantities.format(asQuantity(calculatedFee ?? 0), sellTokenInfo.decimals ?? 0)
 
   const id = selectedPool.poolId
   const extended = id === hiddenInfoOpenId
@@ -60,8 +64,20 @@ export const ShowPoolActions = () => {
       }
       adornment={
         <HiddenInfo
-          poolFee={poolFee}
-          deposit={Quantities.denominated(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))}
+          totalFees={calculateTotalFeels(
+            selectedPool?.batcherFee.quantity,
+            asQuantity(providerFee ?? 0),
+            wallet,
+            numberLocale,
+          )}
+          minReceived={calculateMinReceived(
+            amounts.buy.quantity,
+            createOrder.slippage,
+            buyTokenInfo.decimals ?? 0,
+            numberLocale,
+          )}
+          minAda={Quantities.denominated(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))}
+          buyTokenName={tokenName}
         />
       }
       extended={extended}
@@ -89,29 +105,66 @@ const Header = ({
   )
 }
 
-const HiddenInfo = ({poolFee, deposit}: {poolFee: string; deposit: string}) => {
+const HiddenInfo = ({
+  totalFees,
+  minAda,
+  minReceived,
+  buyTokenName,
+}: {
+  totalFees: string
+  minAda: string
+  minReceived: string
+  buyTokenName: string
+}) => {
+  const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
+    isOpen: false,
+    title: '',
+    content: '',
+  })
   const strings = useStrings()
   return (
     <View>
       {[
         {
           label: strings.swapMinAdaTitle,
-          value: deposit,
+          value: `${minAda} ADA`,
           info: strings.swapMinAda,
         },
         {
           label: strings.swapMinReceivedTitle,
-          value: '?', // TODO add real value
+          value: `${minReceived} ${buyTokenName}`,
           info: strings.swapMinReceived,
         },
         {
           label: strings.swapFeesTitle,
-          value: String(poolFee),
+          value: `${totalFees} ADA`,
           info: strings.swapFees,
         },
       ].map((item) => (
-        <HiddenInfoWrapper key={item.label} value={item.value} label={item.label} info={item.info} />
+        <HiddenInfoWrapper
+          key={item.label}
+          value={item.value}
+          label={item.label}
+          info={item.info}
+          onPress={() => {
+            setBottomSheetSate({
+              isOpen: true,
+              title: item.label,
+              content: item.info,
+            })
+          }}
+        />
       ))}
+
+      <BottomSheetModal
+        isOpen={bottomSheetState.isOpen}
+        title={bottomSheetState.title}
+        onClose={() => {
+          setBottomSheetSate({isOpen: false, title: '', content: ''})
+        }}
+      >
+        <Text style={styles.text}>{bottomSheetState.content}</Text>
+      </BottomSheetModal>
     </View>
   )
 }
@@ -130,4 +183,11 @@ const MainInfo = ({totalAmount, tokenName}: {totalAmount: string; tokenName: str
 
 const styles = StyleSheet.create({
   flex: {flexDirection: 'row', alignItems: 'center'},
+  text: {
+    textAlign: 'left',
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '400',
+    color: '#242838',
+  },
 })

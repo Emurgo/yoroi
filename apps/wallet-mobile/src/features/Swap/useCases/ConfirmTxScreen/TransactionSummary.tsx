@@ -5,10 +5,12 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Icon, Spacer, Text} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {BottomSheetModal} from '../../../../components/BottomSheetModal'
+import {useLanguage} from '../../../../i18n'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils'
+import {calculateMinReceived, calculateTotalFeels} from '../../common/helpers'
 import {useStrings} from '../../common/strings'
 
 export const TransactionSummary = () => {
@@ -19,6 +21,7 @@ export const TransactionSummary = () => {
   })
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const {numberLocale} = useLanguage()
   const {createOrder, unsignedTx} = useSwap()
   const {amounts, selectedPool} = createOrder
 
@@ -39,12 +42,17 @@ export const TransactionSummary = () => {
     },
     {
       label: strings.swapMinReceivedTitle,
-      value: '?', // TODO add real value
+      value: `${calculateMinReceived(
+        amounts.buy.quantity,
+        createOrder.slippage,
+        buyTokenInfo.decimals ?? 0,
+        numberLocale,
+      )} ${tokenToBuyName}`,
       info: strings.swapMinReceived,
     },
     {
       label: strings.swapFeesTitle,
-      value: `${poolFee} ADA`,
+      value: `${calculateTotalFeels(selectedPool?.batcherFee.quantity, asQuantity(poolFee), wallet, numberLocale)} ADA`,
       info: strings.swapFees,
     },
   ]

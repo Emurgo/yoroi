@@ -1,10 +1,11 @@
-import {Swap} from '@yoroi/types'
+import {Balance, Swap} from '@yoroi/types'
 import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
 import BigNumber from 'bignumber.js'
 
+import {NumberLocale} from '../../../i18n/languages'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {YoroiEntry} from '../../../yoroi-wallets/types'
-import {Quantities} from '../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../yoroi-wallets/utils'
 
 export const getBuyQuantityForLimitOrder = (
   sellQuantityDenominated: BalanceQuantity,
@@ -60,4 +61,32 @@ export const createYoroiEntry = (
     address: address,
     amounts: amountEntry,
   }
+}
+
+export const calculateMinReceived = (
+  outputAmount: Balance.Quantity,
+  slippagePercentage: number,
+  decimals: number,
+  numberLocale: NumberLocale,
+): string => {
+  const slippageDecimal = slippagePercentage / 100
+  const result = Number(outputAmount) / (1 + slippageDecimal)
+  const [quantities] = Quantities.parseFromText(
+    Quantities.denominated(asQuantity(result), decimals ?? 0),
+    decimals,
+    numberLocale,
+  )
+  return quantities.slice(0, -1)
+}
+
+export const calculateTotalFeels = (
+  batcherFee: Balance.Quantity,
+  proiderFee: Balance.Quantity,
+  wallet: YoroiWallet,
+  numberLocale: NumberLocale,
+): string => {
+  const primaryTokenInfoDecimals = wallet.primaryTokenInfo.decimals
+  const result = Quantities.denominated(Quantities.sum([batcherFee, proiderFee]), primaryTokenInfoDecimals ?? 0)
+  const [quantities] = Quantities.parseFromText(result, primaryTokenInfoDecimals ?? 0, numberLocale)
+  return quantities
 }

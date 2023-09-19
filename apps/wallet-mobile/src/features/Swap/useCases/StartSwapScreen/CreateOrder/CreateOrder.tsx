@@ -115,7 +115,7 @@ export const CreateOrder = () => {
       buy: amounts.buy,
       pools: poolList,
       selectedPool: createOrder.selectedPool,
-      slippage: createOrder.slippage,
+      slippage: createOrder.slippage * 100,
       address: addresses.used[0],
     }
     if (createOrder.type === 'market' && poolList !== undefined) {
@@ -177,6 +177,8 @@ export const CreateOrder = () => {
     <>
       <ScrollView>
         <View style={styles.container}>
+          <Spacer height={16} />
+
           <LimitPriceWarning
             open={showLimitPriceWarning}
             onClose={() => setShowLimitPriceWarning(false)}
