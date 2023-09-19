@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Datum} from '@emurgo/yoroi-lib'
 import {App, Portfolio} from '@yoroi/types'
-import {parseSafe, rootStorage} from '@yoroi/wallets'
+import {Cardano as CardanoWallets, parseSafe, rootStorage} from '@yoroi/wallets'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -15,9 +15,9 @@ import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
 import {portfolioManagerApiMaker} from '../../portfolio/adapters/cardano-api'
 import {portfolioManagerStorageMaker} from '../../portfolio/adapters/storage'
-import {Tokens} from '../../portfolio/helpers/tokens'
-import {portfolioDefaultState, portfolioManagerMaker} from '../../portfolio/portfolio-manager'
-import {PortfolioManager, PortfolioManagerState} from '../../portfolio/types'
+import {Balances} from '../../portfolio/helpers/balances'
+import {portfolioManagerInitialState, portfolioManagerMaker} from '../../portfolio/portfolio-manager'
+import {PortfolioManager} from '../../portfolio/types'
 import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
 import {Keychain} from '../../storage/Keychain'
 import type {
@@ -172,15 +172,17 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     readonly checksum: CardanoTypes.WalletChecksum
     readonly encryptedStorage: WalletEncryptedStorage
     isEasyConfirmationEnabled = false
-    portfolio: Readonly<PortfolioManagerState> = portfolioDefaultState
-    balances: ReadonlyArray<[Portfolio.TokenInfo['id'], Readonly<Portfolio.TokenBalance>]> = [] as const
+    portfolio = portfolioManagerInitialState<CardanoWallets.Yoroi.PortfolioToken>()
+    balances: ReadonlyArray<
+      [Portfolio.TokenInfo['id'], Readonly<Portfolio.TokenBalance<CardanoWallets.Yoroi.PortfolioToken>>]
+    > = [] as const
 
     private _utxos: RawUtxo[]
     private readonly storage: App.Storage
     private readonly utxoManager: UtxoManager
     private readonly transactionManager: TransactionManager
     private readonly memosManager: MemosManager
-    private readonly portfolioManager: PortfolioManager
+    private readonly portfolioManager: PortfolioManager<CardanoWallets.Yoroi.PortfolioToken>
 
     // =================== create =================== //
 
@@ -293,9 +295,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       // portfolio storage is shared so its mounted based at rootStorage
       // this share the tokens between all wallets without hiting the network again
       const cardanoSharedStorage = rootStorage.join('cardano/')
-      const portfolioStorage = portfolioManagerStorageMaker(cardanoSharedStorage)
+      const portfolioStorage = portfolioManagerStorageMaker<CardanoWallets.Yoroi.PortfolioToken>(cardanoSharedStorage)
       const portfolioApi = portfolioManagerApiMaker({baseUrlApi: API_ROOT, baseUrlTokenRegistry: TOKEN_INFO_SERVICE})
-      const portfolioManager = portfolioManagerMaker({storage: portfolioStorage, api: portfolioApi})
+      const portfolioManager = portfolioManagerMaker<CardanoWallets.Yoroi.PortfolioToken>({
+        storage: portfolioStorage,
+        api: portfolioApi,
+      })
       await portfolioManager.hydrate()
 
       const wallet = new ShelleyWallet({
@@ -319,14 +324,15 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       wallet.setupSubscriptions()
 
       // init portfolio
-      const primaryToken: Portfolio.Token = {info: wallet.primaryTokenInfo}
+      const primaryToken: CardanoWallets.Yoroi.PortfolioToken = {info: wallet.primaryTokenInfo}
       await wallet.portfolioManager.updatePortfolio(wallet.utxos, primaryToken)
       wallet.portfolio = wallet.portfolioManager.getPortfolio()
-      // store sorted
+      // balances are stored sorted
       wallet.balances = [
-        ...Tokens.sort(wallet.portfolio.primary.balances), // primary always for first
-        ...Tokens.sort(wallet.portfolio.secondary.balances),
+        ...Balances.sortByName<CardanoWallets.Yoroi.PortfolioToken>(wallet.portfolio.primary.balances), // primary always for first
+        ...Balances.sortByName<CardanoWallets.Yoroi.PortfolioToken>(wallet.portfolio.secondary.balances),
       ]
+
       wallet.save()
       wallet.notify({type: 'initialize'})
 
@@ -363,7 +369,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       lastGeneratedAddressIndex: number
       transactionManager: TransactionManager
       memosManager: MemosManager
-      portfolioManager: PortfolioManager
+      portfolioManager: PortfolioManager<CardanoWallets.Yoroi.PortfolioToken>
     }) {
       this.id = id
       this.storage = storage
@@ -670,7 +676,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           ? [stakingPrivateKey]
           : undefined
 
-      console.log('[signTx DATUM]', datum)
       const signedTx = await unsignedTx.unsignedTx.sign(
         datum ? BIP44_DERIVATION_LEVELS.ACCOUNT : 0,
         accountPrivateKeyHex,
@@ -954,12 +959,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       if (this.areUtxosDifferent(this._utxos, newUtxos)) {
         this._utxos = newUtxos
 
-        const primaryToken: Portfolio.Token = {info: this.primaryTokenInfo}
+        const primaryToken: CardanoWallets.Yoroi.PortfolioToken = {info: this.primaryTokenInfo}
         await this.portfolioManager.updatePortfolio(this.utxos, primaryToken)
         this.portfolio = this.portfolioManager.getPortfolio()
-        this.sortedTokens = [
-          ...Tokens.sort(this.portfolio.primary.tokens), // primary always for first
-          ...Tokens.sort(this.portfolio.secondary.tokens),
+        this.balances = [
+          ...Balances.sortByName(this.portfolio.primary.balances), // primary always for first
+          ...Balances.sortByName(this.portfolio.secondary.balances),
         ]
         this.notify({type: 'utxos', utxos: this.utxos})
       }
@@ -987,12 +992,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     async fetchPoolInfo(request: PoolInfoRequest) {
       return api.getPoolInfo(request, BACKEND)
-    }
-
-    fetchTokenInfo(tokenId: string) {
-      return tokenId === '' || tokenId === 'ADA'
-        ? Promise.resolve(PRIMARY_TOKEN_INFO)
-        : api.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`, BACKEND)
     }
 
     async fetchFundInfo(): Promise<FundInfoResponse> {

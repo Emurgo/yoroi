@@ -1,5 +1,5 @@
 import {App, Portfolio} from '@yoroi/types'
-import {Cardano, Observer} from '@yoroi/wallets'
+import {Observer} from '@yoroi/wallets'
 
 import {RawUtxo} from '../types'
 
@@ -39,6 +39,3 @@ export type PortfolioManagerApi<T extends Portfolio.Token> = Readonly<{
 export type PortfolioManagerStorage<T extends Portfolio.Token> = Readonly<{
   tokens: App.MultiStorage<T>
 }>
-
-// @yoroi/wallets
-export type CardanoToken = Portfolio.Token<Cardano.Api.FutureToken>

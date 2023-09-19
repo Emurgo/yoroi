@@ -1,6 +1,6 @@
 import {Portfolio} from '@yoroi/types'
 
-import {alpha, toEnd, Tokens, toStart} from './tokens'
+import {alpha, getInfos, toEnd, toStart} from './tokens'
 
 describe('sort', () => {
   it('sorts alphabetically', () => {
@@ -73,9 +73,9 @@ describe('getInfos', () => {
         },
       },
       token3: {info: {id: 'token.3', ticker: 'TKN3', kind: 'ft', fingerprint: 'fingerprint', group: 'g', name: ''}},
-    } as Portfolio.TokenRecords
+    } as Portfolio.TokenRecords<Portfolio.Token>
 
-    const result = Tokens.getInfos(tokens)
+    const result = getInfos(tokens)
     expect(result).toEqual([
       {
         id: 'token.1',
@@ -98,8 +98,8 @@ describe('getInfos', () => {
   })
 
   it('should return an empty array if the record is empty', () => {
-    const tokens = {} as Portfolio.TokenRecords
-    const result = Tokens.getInfos(tokens)
+    const tokens = {} as Portfolio.TokenRecords<Portfolio.Token>
+    const result = getInfos(tokens)
     expect(result).toEqual([])
   })
 })

@@ -1,14 +1,14 @@
+import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {Dimensions, StyleSheet, View} from 'react-native'
 import ViewTransformer from 'react-native-easy-view-transformer'
+import {useSelectedWallet} from 'src/SelectedWallet'
 
 import {FadeIn} from '../components'
 import {NftPreview} from '../components/NftPreview'
 import {useMetrics} from '../metrics/metricsManager'
 import {NftRoutes, useParams} from '../navigation'
-import {useSelectedWallet} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
-import {useNft} from '../yoroi-wallets/hooks'
 
 type Params = NftRoutes['nft-details']
 
@@ -17,13 +17,23 @@ const isParams = (params?: Params | object | undefined): params is Params => {
 }
 
 export const NftDetailsImage = () => {
+  const navigation = useNavigation()
   const {id} = useParams<Params>(isParams)
-  const nft = useNft(id)
   const {track} = useMetrics()
+  const wallet = useSelectedWallet()
+  // TODO: everything that access the balances by index
+  // means that the data can go away while the user is on screen 
+  const nft = wallet.balances[id] // TODO: create a fallback -> WoW is gone.
 
   React.useEffect(() => {
     if (!isEmptyString(nft?.id)) track.nftGalleryDetailsImageViewed()
   }, [nft?.id, track])
+
+  // TODO: remove after the fallback, for now navigating back
+  if (nft == null) {
+    navigation.goBack()
+    return null
+  }
 
   const dimensions = Dimensions.get('window')
   const imageSize = Math.min(dimensions.width, dimensions.height)

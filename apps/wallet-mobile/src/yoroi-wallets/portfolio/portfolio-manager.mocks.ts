@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Nullable, Portfolio} from '@yoroi/types'
+import {Cardano} from '@yoroi/wallets'
 
 import {mockDelayedResponse, mockLoading, mockMaker, mockMakerMutation, mockUnknownError} from '../utils/mockHelpers'
 import {portfolioManagerInitialState} from './portfolio-manager'
 import {PortfolioManager, PortfolioManagerOptions} from './types'
 
 // DATA
-const tokensResponse: Readonly<Portfolio.TokenRecords> = {
+const tokensResponse: Readonly<Portfolio.TokenRecords<Cardano.Yoroi.PortfolioToken>> = {
   // TODO: fill later
 }
 const allKeysResponse: string[] = ['9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.6d616e795265636f726473']
-const emptyTokensResponse: Readonly<Portfolio.TokenRecords> = {}
+const emptyTokensResponse: Readonly<Portfolio.TokenRecords<Cardano.Yoroi.PortfolioToken>> = {}
 
 // API
 const tokens = {
@@ -28,11 +29,11 @@ const getAllKeys = mockMaker<readonly string[]>(allKeysResponse, [])
 const clear = mockMakerMutation()
 const saveMany = mockMakerMutation()
 // TODO: fill data later
-const readAll = mockMaker<[string, Nullable<Portfolio.Token>][]>([], [])
-const readMany = mockMaker<[string, Nullable<Portfolio.Token>][]>([], [])
+const readAll = mockMaker<[string, Nullable<Cardano.Yoroi.PortfolioToken>][]>([], [])
+const readMany = mockMaker<[string, Nullable<Cardano.Yoroi.PortfolioToken>][]>([], [])
 
 // OPTIONS
-const mockPortfolioManagerOptions: PortfolioManagerOptions<any> = {
+const mockPortfolioManagerOptions: PortfolioManagerOptions<Cardano.Yoroi.PortfolioToken> = {
   api: {
     tokens: tokens.success,
   },
@@ -47,7 +48,7 @@ const mockPortfolioManagerOptions: PortfolioManagerOptions<any> = {
   },
 }
 
-const mockPortfolioManagerOptionsEmpty: PortfolioManagerOptions<any> = {
+const mockPortfolioManagerOptionsEmpty: PortfolioManagerOptions<Cardano.Yoroi.PortfolioToken> = {
   api: {
     tokens: tokens.empty,
   },
@@ -62,7 +63,7 @@ const mockPortfolioManagerOptionsEmpty: PortfolioManagerOptions<any> = {
   },
 }
 
-const mockPortfolioManagerOptionsError: PortfolioManagerOptions<any> = {
+const mockPortfolioManagerOptionsError: PortfolioManagerOptions<Cardano.Yoroi.PortfolioToken> = {
   api: {
     tokens: tokens.error.unknown,
   },
@@ -83,7 +84,7 @@ const updatePortfolio = mockMakerMutation()
 const subscribe = () => () => undefined
 const destroy = () => undefined
 // TODO: fill data later
-const getTokens = mockMaker<Readonly<Portfolio.TokenRecords> | undefined>({}, undefined)
+const getTokens = mockMaker<Readonly<Portfolio.TokenRecords<Cardano.Yoroi.PortfolioToken>> | undefined>({}, undefined)
 
 const mockPortfolioManager: PortfolioManager<any> = {
   hydrate: hydrate.success,

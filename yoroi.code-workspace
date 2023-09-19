@@ -34,6 +34,9 @@
     "jest.disabledWorkspaceFolders": ["root"],
     "jest.pathToJest": "node_modules/.bin/jest",
     "jest.pathToConfig": "./jest.config.js",
-    "java.compile.nullAnalysis.mode": "automatic"
+    "java.compile.nullAnalysis.mode": "automatic",
+    "typescript.preferGoToSourceDefinition": true,
+    "typescript.referencesCodeLens.enabled": true,
+    "typescript.tsserver.maxTsServerMemory": 6072
   }
 }

@@ -1,16 +1,15 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {Portfolio} from '@yoroi/types'
 import React, {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon, NftImageGallery, SkeletonGallery, Spacer} from '../components'
+import {NftImageGallery, Spacer} from '../components'
 import {useMetrics} from '../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useNfts} from '../yoroi-wallets/hooks'
-import {filterNfts, useTrackNftGallerySearchActivated} from './filterNfts'
+import {Balances} from '../yoroi-wallets/portfolio/helpers/balances'
+import {useTrackNftGallerySearchActivated} from './filterNfts'
 import {useNavigateTo} from './navigation'
 import {NoNftsScreen} from './NoNftsScreen'
 
@@ -27,50 +26,20 @@ export const Nfts = () => {
   })
 
   const wallet = useSelectedWallet()
-  const [isManualRefreshing, setIsManualRefreshing] = React.useState(false)
-
-  const {isLoading, nfts, refetch, isError} = useNfts(wallet, {
-    onSettled: () => {
-      if (isManualRefreshing) setIsManualRefreshing(false)
-    },
-  })
+  const nfts = React.useMemo(() => Balances.filterByNfts(wallet.balances), [wallet.balances])
 
   useFocusEffect(
     React.useCallback(() => {
-      if (isLoading || isError) return
       track.nftGalleryPageViewed({nft_count: nfts.length})
-    }, [isError, isLoading, nfts.length, track]),
+    }, [nfts.length, track]),
   )
 
-  const sortedNfts = React.useMemo(() => nfts.sort(byName), [nfts])
-
   const {search: nftsSearchTerm} = useSearch()
-  const nftsSearchResult = filterNfts(nftsSearchTerm, sortedNfts)
+  const nftsSearchResult = Balances.filterByName(nfts, nftsSearchTerm)
   useTrackNftGallerySearchActivated(nftsSearchTerm, nftsSearchResult.length)
 
   const hasEmptySearchResult = nftsSearchTerm.length > 0 && nftsSearchResult.length === 0
   const hasNotNfts = nftsSearchResult.length === 0
-
-  const onRefresh = () => {
-    setIsManualRefreshing(true)
-    refetch()
-  }
-
-  if (isError) {
-    return (
-      <Wrapper>
-        <ErrorScreen onRefresh={onRefresh} isRefreshing={isManualRefreshing} />
-      </Wrapper>
-    )
-  }
-
-  if (isLoading) {
-    return (
-      <Wrapper>
-        <LoadingScreen nftsCount={nftsSearchResult.length} />
-      </Wrapper>
-    )
-  }
 
   if (hasEmptySearchResult) {
     return (
@@ -78,7 +47,6 @@ export const Nfts = () => {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewError}
-          refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isManualRefreshing} />}
         >
           <NoNftsScreen message={strings.noNftsFound} />
         </ScrollView>
@@ -92,7 +60,6 @@ export const Nfts = () => {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewError}
-          refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isManualRefreshing} />}
         >
           <NoNftsScreen
             message={strings.noNftsInWallet}
@@ -123,8 +90,6 @@ export const Nfts = () => {
         <NftImageGallery
           nfts={nftsSearchResult}
           onSelect={navigateTo.nftDetails}
-          onRefresh={onRefresh}
-          isRefreshing={isManualRefreshing}
         />
       </View>
     </Wrapper>
@@ -143,38 +108,6 @@ const Wrapper = ({children}: {children: ReactNode}) => {
   )
 }
 
-const ErrorScreen = ({onRefresh, isRefreshing}: {onRefresh: () => void; isRefreshing: boolean}) => {
-  const strings = useStrings()
-
-  return (
-    <ScrollView
-      style={styles.scrollView}
-      contentContainerStyle={styles.galleryContainer}
-      refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isRefreshing} />}
-    >
-      <View style={styles.scrollViewError}>
-        <NftCount count="-" />
-
-        <Spacer height={16} />
-
-        <View style={styles.errorContainer}>
-          <Icon.NoNfts size={140} />
-
-          <Spacer height={20} />
-
-          <Text style={styles.titleText}>{strings.errorTitle}</Text>
-
-          <Spacer height={4} />
-
-          <Text>{strings.errorDescription}</Text>
-
-          <Text>{strings.reloadApp}</Text>
-        </View>
-      </View>
-    </ScrollView>
-  )
-}
-
 const NftCount = ({count}: {count?: number | string}) => {
   const strings = useStrings()
 
@@ -184,20 +117,6 @@ const NftCount = ({count}: {count?: number | string}) => {
     </View>
   )
 }
-
-const LoadingScreen = ({nftsCount}: {nftsCount: number}) => {
-  return (
-    <View style={styles.galleryContainer}>
-      <NftCount count={nftsCount} />
-
-      <Spacer height={16} />
-
-      <SkeletonGallery amount={6} />
-    </View>
-  )
-}
-
-const byName = ({name: A}: Portfolio.TokenInfo, {name: B}: Portfolio.TokenInfo) => A.localeCompare(B)
 
 const styles = StyleSheet.create({
   safeAreaView: {
@@ -225,19 +144,7 @@ const styles = StyleSheet.create({
     color: '#6B7384',
   },
 
-  titleText: {
-    textAlign: 'center',
-    fontWeight: '700',
-    fontSize: 20,
-    color: '#000',
-  },
 
-  errorContainer: {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   galleryContainer: {
     flex: 1,
     flexGrow: 1,

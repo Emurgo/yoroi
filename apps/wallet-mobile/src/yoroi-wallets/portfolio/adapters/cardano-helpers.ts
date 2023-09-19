@@ -1,4 +1,5 @@
 import {Portfolio} from '@yoroi/types'
+import {Cardano} from '@yoroi/wallets'
 import BigNumber from 'bignumber.js'
 
 import {COINS_PER_UTXO_WORD} from '../../cardano/constants/common'
@@ -25,10 +26,8 @@ export async function calcLockedDeposit(utxos: ReadonlyArray<RawUtxo>) {
   return asQuantity(totalLocked)
 }
 
-export const cardanoFallbackTokenAsBalanceToken = <M extends Record<string, unknown>>(
-  tokenId: Portfolio.TokenInfo['id'],
-): Readonly<Portfolio.Token<M>> =>
-  cardanoOnChainMetadataAsBalanceToken<M>({
+export const cardanoFallbackTokenAsBalanceToken = (tokenId: Portfolio.TokenInfo['id']): Cardano.Yoroi.PortfolioToken =>
+  cardanoOnChainMetadataAsBalanceToken({
     tokenId,
     metadata: undefined,
     kind: 'ft',

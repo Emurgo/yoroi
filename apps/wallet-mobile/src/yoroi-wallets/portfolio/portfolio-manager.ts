@@ -89,7 +89,7 @@ export const portfolioManagerMaker = <T extends Portfolio.Token>(
       secondaryIds.forEach((tokenId) => {
         // when token has no metadata - it should branch the flavor of token in the transformation
         // falling back to unknown cardano token
-        const token = secondaryTokens[tokenId] ?? cardanoFallbackTokenAsBalanceToken<T>(tokenId)
+        const token = secondaryTokens[tokenId] ?? cardanoFallbackTokenAsBalanceToken(tokenId)
         const secondaryBalance = {...token, balance: secondaryAmounts[tokenId], isPrimary: false} as const
 
         secondaryBalanceRecords[tokenId] = secondaryBalance

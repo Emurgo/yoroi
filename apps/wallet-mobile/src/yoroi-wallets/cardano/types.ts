@@ -13,6 +13,7 @@ import {
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
 import {Portfolio} from '@yoroi/types'
+import {Cardano} from '@yoroi/wallets'
 import {BigNumber} from 'bignumber.js'
 
 import {HWDeviceInfo} from '../hw'
@@ -163,9 +164,9 @@ export type YoroiWallet = {
   // Balances, TxDetails
   get transactions(): Record<string, TransactionInfo>
   get confirmationCounts(): Record<string, null | number>
-  portfolio: PortfolioManagerState
-  // balances are stored sorted 
-  balances: ReadonlyArray<[Portfolio.TokenInfo['id'], Readonly<Portfolio.TokenBalance>]>
+  portfolio: PortfolioManagerState<Cardano.Yoroi.PortfolioToken>
+  // balances are stored sorted
+  balances: ReadonlyArray<[Portfolio.TokenInfo['id'], Readonly<Portfolio.TokenBalance<Cardano.Yoroi.PortfolioToken>>]>
 
   fetchTipStatus(): Promise<TipStatusResponse>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
@@ -256,7 +257,6 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   'confirmationCounts',
   'fetchTipStatus',
   'fetchTxStatus',
-  'fetchTokenInfo',
   'portfolio',
 
   // Fiat

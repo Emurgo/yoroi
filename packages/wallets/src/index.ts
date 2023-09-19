@@ -8,6 +8,7 @@ export * from './storage/adapters/rootStorage'
 export * from './api/fetcher'
 export * from './observer/observer'
 
+import {Portfolio} from '@yoroi/types'
 import {
   isFtMetadata,
   isMetadataFile,
@@ -88,5 +89,9 @@ export namespace Cardano {
 
     export type MetadataFile = ApiMetadataFile
     export type TokenId = ApiTokenId
+  }
+
+  export namespace Yoroi {
+    export type PortfolioToken = Portfolio.Token<Readonly<ApiFutureToken>>
   }
 }

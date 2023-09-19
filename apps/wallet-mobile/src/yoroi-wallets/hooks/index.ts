@@ -2,7 +2,6 @@
 import {Datum} from '@emurgo/yoroi-lib'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
-import {Portfolio} from '@yoroi/types'
 import {parseBoolean, useStorage} from '@yoroi/wallets'
 import {Buffer} from 'buffer'
 import * as React from 'react'
@@ -18,14 +17,11 @@ import {
 } from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
-import {useSelectedWallet} from '../../SelectedWallet'
 import {useWalletManager} from '../../WalletManager'
-import {calcLockedDeposit} from '../cardano/assetUtils'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
 import {parseWalletMeta} from '../migrations/walletMeta'
-import {Tokens} from '../portfolio/helpers/tokens'
 import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
@@ -35,7 +31,7 @@ import {
 } from '../types'
 import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus, WalletImplementationId} from '../types/other'
 import {delay} from '../utils/timeUtils'
-import {Amounts, Quantities, Utxos} from '../utils/utils'
+import {Amounts, Quantities} from '../utils/utils'
 import {WalletManager, WalletMeta} from '../walletManager'
 
 const crashReportsStorageKey = 'sendCrashReports'
@@ -118,24 +114,6 @@ export const useUtxos = (wallet: YoroiWallet) => {
   return wallet.utxos
 }
 
-export const usePortfolio = (wallet: YoroiWallet) => {
-  useWallet(wallet, 'utxos')
-
-  return React.useMemo(
-    () => {
-      const {portfolio} = wallet
-      const allTokens = Tokens.mergeRecords(portfolio.primary.tokens, portfolio.secondary.tokens)
-      const sortedTokens = Tokens.sort(allTokens)
-      return {
-        portfolio,
-        sortedTokens,
-      } as const
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [wallet, wallet.portfolio],
-  )
-}
-
 export const useStakingKey = (wallet: YoroiWallet) => {
   const getPublicKeyHex: () => Promise<string> = () =>
     wallet
@@ -146,39 +124,6 @@ export const useStakingKey = (wallet: YoroiWallet) => {
   const result = useQuery([wallet.id, 'stakingKey'], getPublicKeyHex, {suspense: true})
   if (!result.data) throw new Error('invalid state')
   return result.data
-}
-
-export const useAssetIds = (wallet: YoroiWallet): string[] => {
-  const balances = useBalances(wallet)
-  return Object.keys(balances).filter((id) => wallet.primaryTokenInfo.id !== id)
-}
-
-/**
- * Calculate the lovelace locked up to hold utxos with assets
- *
- * @summary Returns the locked amount in Lovelace
- */
-export const useLockedAmount = (
-  {wallet}: {wallet: YoroiWallet},
-  options?: UseQueryOptions<Portfolio.Quantity, Error, Portfolio.Quantity, [string, 'lockedAmount']>,
-) => {
-  const query = useQuery({
-    ...options,
-    suspense: true,
-    queryKey: [wallet.id, 'lockedAmount'],
-    queryFn: () =>
-      calcLockedDeposit(wallet.utxos, wallet.networkId).then((amount) => amount.toString() as Portfolio.Quantity),
-  })
-
-  React.useEffect(() => {
-    const unsubscribe = wallet.subscribe(({type}) => type === 'utxos' && query.refetch())
-
-    return () => unsubscribe?.()
-  }, [query, wallet])
-
-  if (query.data == null) throw new Error('invalid state')
-
-  return query.data
 }
 
 export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {
@@ -262,17 +207,11 @@ export const useNftModerationStatus = (
   }
 }
 
-export const useNftImageModerated = ({
-  wallet,
-  nftId,
-}: {
-  wallet: YoroiWallet
-  nftId: string
-}): {image?: string; status: YoroiNftModerationStatus} | null => {
-  const nft = useNft(wallet, {id: nftId})
-  const fingerprint = nft.fingerprint
+export const useNftImageModerated = (
+  {wallet, fingerprint, image}: {wallet: YoroiWallet; fingerprint: string, image: string},
+): {image?: string; status: YoroiNftModerationStatus} | null => {
   const {status} = useNftModerationStatus({wallet, fingerprint})
-  return useMemo(() => (status ? {image: nft.image, status} : null), [nft, status])
+  return useMemo(() => (status ? {image, status} : null), [image, status])
 }
 
 // export const useToken = (
@@ -895,18 +834,6 @@ export const useExchangeRate = ({
   return query.data
 }
 
-export const useBalances = (wallet: YoroiWallet): Portfolio.Amounts => {
-  const utxos = useUtxos(wallet)
-
-  return Utxos.toAmounts(utxos, wallet.primaryTokenInfo.id)
-}
-
-export const useBalance = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
-  const balances = useBalances(wallet)
-
-  return Amounts.getAmount(balances, tokenId).quantity
-}
-
 export const useResync = (wallet: YoroiWallet, options?: UseMutationOptions<void, Error>) => {
   const mutation = useMutation({
     mutationFn: () => wallet.resync(),
@@ -934,20 +861,6 @@ export const useSaveMemo = (
   }
 }
 
-export const useTokenBalance = (id: Portfolio.TokenInfo['id']): Portfolio.TokenBalance => {
-  const wallet = useSelectedWallet()
-
-
-  if (tokenInfo.kind !== 'nft') {
-    throw new Error(`Invalid id used "${id}" to get NFT`)
-  }
-  return tokenInfo
-}
-
-export const useIsWalletEmpty = (wallet: YoroiWallet) => {
-  const balances = useBalances(wallet)
-  return Amounts.toArray(balances).every(({quantity}) => Quantities.isZero(quantity))
-}
 export function useHideBottomTabBar() {
   const navigation = useNavigation()
 

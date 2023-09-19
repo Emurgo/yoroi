@@ -11,12 +11,12 @@ import {PortfolioManagerStorage} from '../types'
  *
  * @returns {Readonly<PortfolioManagerStorage>}
  */
-export const portfolioManagerStorageMaker = <M extends Record<string, unknown>>(
+export const portfolioManagerStorageMaker = <T extends Portfolio.Token>(
   storage: App.Storage,
-): Readonly<PortfolioManagerStorage<M>> => {
+): Readonly<PortfolioManagerStorage<T>> => {
   const dataFolder = 'multi-tokens/'
 
-  const tokens = mountMultiStorage<Portfolio.Token<M>>({
+  const tokens = mountMultiStorage<T>({
     storage,
     keyExtractor: (item) => item.info.id,
     dataFolder,

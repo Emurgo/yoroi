@@ -1,4 +1,4 @@
-import {Portfolio} from '@yoroi/types'
+import {Portfolio, Writable} from '@yoroi/types'
 import {
   asConcatenedString,
   Cardano,
@@ -22,12 +22,12 @@ export function asApiTokenId(tokenId: string): Cardano.Api.TokenId {
 export const cardanoFutureTokenAsBalanceToken = (
   tokenId: Portfolio.TokenInfo['id'],
   futureToken: Cardano.Api.FutureToken,
-): Readonly<Portfolio.Token<Cardano.Api.FutureToken>> => {
+): Cardano.Yoroi.PortfolioToken => {
   const {onChain, offChain, supply} = futureToken
 
   // Nft only if supply is 1 and has 721
   if (supply === 1 && onChain.mintNftRecordSelected) {
-    return cardanoOnChainMetadataAsBalanceToken<Cardano.Api.FutureToken>({
+    return cardanoOnChainMetadataAsBalanceToken({
       tokenId,
       metadata: onChain.mintNftRecordSelected,
       kind: 'nft',
@@ -46,7 +46,7 @@ export const cardanoFutureTokenAsBalanceToken = (
 
   // Ft onchain third
   if (onChain.mintFtRecordSelected) {
-    return cardanoOnChainMetadataAsBalanceToken<Cardano.Api.FutureToken>({
+    return cardanoOnChainMetadataAsBalanceToken({
       tokenId,
       metadata: onChain.mintFtRecordSelected,
       kind: 'ft',
@@ -55,7 +55,7 @@ export const cardanoFutureTokenAsBalanceToken = (
   }
 
   // Otherwise ft fallback record
-  return cardanoOnChainMetadataAsBalanceToken<Cardano.Api.FutureToken>({
+  return cardanoOnChainMetadataAsBalanceToken({
     tokenId,
     metadata: onChain.mintNftRecordSelected,
     kind: 'ft',
@@ -63,7 +63,7 @@ export const cardanoFutureTokenAsBalanceToken = (
   })
 }
 
-export const cardanoOnChainMetadataAsBalanceToken = <M extends Record<string, unknown>>({
+export const cardanoOnChainMetadataAsBalanceToken = ({
   tokenId,
   metadata,
   kind,
@@ -72,8 +72,8 @@ export const cardanoOnChainMetadataAsBalanceToken = <M extends Record<string, un
   tokenId: Portfolio.TokenInfo['id']
   metadata?: Cardano.Api.NftMetadata | Cardano.Api.FtMetadata
   kind: Portfolio.TokenInfo['kind']
-  cardanoFutureToken?: M
-}): Readonly<Portfolio.Token<M>> => {
+  cardanoFutureToken?: Cardano.Api.FutureToken
+}): Cardano.Yoroi.PortfolioToken => {
   const {name: assetNameUtf8, policyId} = CardanoTokenId.getTokenIdentity(tokenId)
 
   const id = tokenId
@@ -110,27 +110,27 @@ export const cardanoOnChainMetadataAsBalanceToken = <M extends Record<string, un
     website,
   }
 
-  const token: Portfolio.Token<M> = {
+  const token: Writable<Cardano.Yoroi.PortfolioToken> = {
     info,
   }
   const files = cardanoFilesAsBalanceTokenFiles(metadata?.files)
   if (files) token['files'] = files
   if (cardanoFutureToken) token['metadatas'] = cardanoFutureToken
 
-  const result: Readonly<Portfolio.Token<M>> = {...token} as const
+  const result: Cardano.Yoroi.PortfolioToken = {...token} as const
 
   return result
 }
 
-export const cardanoOffChainTokenRegistryEntryAsBalanceToken = <M extends Record<string, unknown>>({
+export const cardanoOffChainTokenRegistryEntryAsBalanceToken = ({
   tokenId,
   entry,
   cardanoFutureToken,
 }: {
   tokenId: Portfolio.TokenInfo['id']
   entry: Cardano.Api.TokenRegistryEntry
-  cardanoFutureToken: M
-}): Readonly<Portfolio.Token<M>> => {
+  cardanoFutureToken: Cardano.Api.FutureToken
+}): Cardano.Yoroi.PortfolioToken => {
   const {name: assetNameUtf8, policyId} = CardanoTokenId.getTokenIdentity(tokenId)
 
   const id = tokenId
@@ -160,12 +160,12 @@ export const cardanoOffChainTokenRegistryEntryAsBalanceToken = <M extends Record
     website,
   }
 
-  const token: Portfolio.Token<M> = {
+  const token: Writable<Cardano.Yoroi.PortfolioToken> = {
     info,
   }
   if (cardanoFutureToken) token['metadatas'] = cardanoFutureToken
 
-  const result: Readonly<Portfolio.Token<M>> = {...token} as const
+  const result: Cardano.Yoroi.PortfolioToken = {...token} as const
 
   return result
 }
@@ -174,7 +174,7 @@ export function cardanoFilesAsBalanceTokenFiles(metadataFiles: unknown): Portfol
   const possibleFiles = isArrayOfType(metadataFiles, CardanoApi.isMetadataFile) ? metadataFiles : undefined
   if (!possibleFiles) return
 
-  const files: Portfolio.Token['files'] = []
+  const files: Portfolio.TokenFile[] = []
   for (const possibleFile of possibleFiles) {
     const {name: metaName, mediaType, src: metaSrc, ...rest} = possibleFile
     const name = asConcatenedString(metaName)
@@ -193,7 +193,7 @@ export function cardanoFilesAsBalanceTokenFiles(metadataFiles: unknown): Portfol
     }
   }
 
-  return files
+  return [...files] as const
 }
 
 const websiteFallbackKeys = ['url', 'website', 'homepage', 'www', 'site'] as const

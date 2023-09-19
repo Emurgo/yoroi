@@ -16,7 +16,7 @@ export const portfolioManagerApiMaker = (
     getOnChainMetadatas = CardanoApi.getOnChainMetadatas,
     getOffChainMetadata = CardanoApi.getOffChainMetadata,
   }: ApiDeps = {},
-): Readonly<PortfolioManagerApi> => {
+): Readonly<PortfolioManagerApi<Cardano.Yoroi.PortfolioToken>> => {
   const api = {
     tokenSupply: getTokenSupply(baseUrlApi, request),
     metadataOnChain: getOnChainMetadatas(baseUrlApi, request),
@@ -24,9 +24,11 @@ export const portfolioManagerApiMaker = (
   } as const
 
   // TODO: ids from rawUtxo check if `.` is always included, primary token should not be included in ids
-  const tokens = async (ids: Readonly<Array<Portfolio.TokenInfo['id']>>): Promise<Readonly<Portfolio.TokenRecords>> => {
+  const tokens = async (
+    ids: ReadonlyArray<Portfolio.TokenInfo['id']>,
+  ): Promise<Readonly<Portfolio.TokenRecords<Cardano.Yoroi.PortfolioToken>>> => {
     const idChunks = chunk(ids, MAX_TOKENS_PER_REQUEST)
-    const result: Portfolio.TokenRecords = {}
+    const result: Portfolio.TokenRecords<Cardano.Yoroi.PortfolioToken> = {}
 
     for (const ids of idChunks) {
       const [supplies, offChainMetadata, onChainMetadata] = await Promise.all([
@@ -47,8 +49,7 @@ export const portfolioManagerApiMaker = (
       })
     }
 
-    console.log(JSON.stringify(result, null, 2))
-    return result
+    return {...result} as const
   }
 
   return {
