@@ -2,6 +2,17 @@ import {Quantities} from './quantities'
 import {asQuantity} from './asQuantity'
 import {Balance} from '@yoroi/types'
 
+const mocknumberLocale = {
+  decimalSeparator: '.',
+  fractionGroupSeparator: ' ',
+  fractionGroupSize: 0,
+  groupSeparator: ',',
+  groupSize: 3,
+  prefix: '',
+  secondaryGroupSize: 0,
+  suffix: '',
+}
+
 describe('Quantities', () => {
   describe('sum', () => {
     it('should calculate the sum of quantities', () => {
@@ -137,5 +148,18 @@ describe('Quantities', () => {
     ]
     const maxQuantity = Quantities.max(...quantities) // Convert strings to numbers
     expect(maxQuantity).toBe('700')
+  })
+
+  it('should parse "0" when the input text is an empty string', () => {
+    const text = ''
+    const precision = 2
+    const [input, quantity] = Quantities.parseFromText(
+      text,
+      precision,
+      mocknumberLocale,
+    )
+
+    expect(input).toBe('0')
+    expect(quantity).toBe('0')
   })
 })

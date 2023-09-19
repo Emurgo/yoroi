@@ -21,12 +21,10 @@ export const getTotalFees = (
 ): string => {
   const result = Quantities.denominated(
     Quantities.sum([batcherFee, proiderFee]),
-    decimals ?? 0,
+    decimals,
   )
-  const [quantities] = Quantities.parseFromText(
-    result,
-    decimals ?? 0,
-    numberLocale,
-  )
+
+  console.log('getTotalFees result', result)
+  const [quantities] = Quantities.parseFromText(result, decimals, numberLocale)
   return quantities
 }

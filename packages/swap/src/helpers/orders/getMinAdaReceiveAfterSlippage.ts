@@ -22,7 +22,7 @@ export const getMinAdaReceiveAfterSlippage = (
   const slippageDecimal = slippagePercentage / 100
   const result = Number(outputAmount) / (1 + slippageDecimal)
   const [quantities] = Quantities.parseFromText(
-    Quantities.denominated(asQuantity(result), decimals ?? 0),
+    Quantities.denominated(asQuantity(result), decimals),
     decimals,
     numberLocale,
   )
