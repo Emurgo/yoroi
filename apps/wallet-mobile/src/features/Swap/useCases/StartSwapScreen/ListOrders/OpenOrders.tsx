@@ -1,4 +1,4 @@
-import {useOrderByStatusOpen, useSwap} from '@yoroi/swap'
+import {useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 import React, {useEffect, useState} from 'react'
@@ -46,32 +46,38 @@ export const OpenOrders = () => {
   const {numberLocale} = useLanguage()
   const intl = useIntl()
   const wallet = useSelectedWallet()
+
+  const orders = useSwapOrdersByStatusOpen()
+  const {numberLocale} = useLanguage()
+  const tokenIds = React.useMemo(() => _.uniq(orders?.flatMap((o) => [o.from.tokenId, o.to.tokenId])), [orders])
   const transactionsInfos = useTransactionInfos(wallet)
+  const tokenInfos = useTokenInfos({wallet, tokenIds})
+  const normalizedOrders = React.useMemo(
+    () => mapOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos)),
+    [orders, tokenInfos, numberLocale, transactionsInfos],
+  )
+
   const {search} = useSearch()
   const [showCancelOrderModal, setShowCancelOrderModal] = useState(false)
   const [cancellationUnsignedTx, setCancellationUnsignedTx] = useState<YoroiUnsignedTx | null>(null)
 
-  const {openOrders} = useOrderByStatusOpen({
-    queryKey: [wallet.id, 'open-orders'],
-  })
-
+const openOrders = orders;
   const {resetToTxHistory} = useWalletNavigation()
   const datum = '' // TODO: Use real values
 
-  const tokenIds: string[] = _.uniq(openOrders?.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
-
-  const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})
-
-  const normalizedOrders = mapOrders(openOrders, tokenInfos, numberLocale, Object.values(transactionsInfos))
-
   const searchLower = search.toLocaleLowerCase()
 
-  const filteredOrders = normalizedOrders.filter((order) => {
-    return (
-      order.assetFromLabel.toLocaleLowerCase().includes(searchLower) ||
-      order.assetToLabel.toLocaleLowerCase().includes(searchLower)
-    )
-  })
+  const filteredOrders = React.useMemo(
+    () =>
+      normalizedOrders.filter((order) => {
+        const searchLower = search.toLocaleLowerCase()
+        return (
+          order.assetFromLabel.toLocaleLowerCase().includes(searchLower) ||
+          order.assetToLabel.toLocaleLowerCase().includes(searchLower)
+        )
+      }),
+    [normalizedOrders, search],
+  )
 
   const onOrderCancelConfirm = (id: string, unsignedTx: YoroiUnsignedTx) => {
     const order = normalizedOrders.find((o) => o.id === id)
@@ -203,7 +209,7 @@ export const OpenOrders = () => {
         </BottomSheetModal>
       </View>
 
-      <Counter counter={openOrders?.length ?? 0} customText={strings.listOpenOrders} />
+      <Counter counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
     </>
   )
 }

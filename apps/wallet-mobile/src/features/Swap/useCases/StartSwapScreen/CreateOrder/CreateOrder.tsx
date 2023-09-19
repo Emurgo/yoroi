@@ -1,4 +1,4 @@
-import {makeLimitOrder, makePossibleMarketOrder, useCreateOrder, usePoolsByPair, useSwap} from '@yoroi/swap'
+import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
@@ -43,7 +43,7 @@ export const CreateOrder = () => {
   })
   const [showLimitPriceWarning, setShowLimitPriceWarning] = useState(false)
   const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
-  const {poolList} = usePoolsByPair({
+  const {poolList} = useSwapPoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId ?? '',
     tokenB: createOrder.amounts.buy.tokenId ?? '',
   })
@@ -67,7 +67,7 @@ export const CreateOrder = () => {
     },
   })
 
-  const {createOrderData} = useCreateOrder({
+  const {createOrderData} = useSwapCreateOrder({
     onSuccess: (data: Swap.CreateOrderResponse) => {
       if (data?.contractAddress !== undefined) {
         const entry = createYoroiEntry(createOrder, data.contractAddress, wallet)
@@ -118,17 +118,20 @@ export const CreateOrder = () => {
       slippage: createOrder.slippage,
       address: addresses.used[0],
     }
-    if (createOrder.type === 'market' && poolList !== undefined) {
+
+    if (orderDetails.pools === undefined) return
+
+    if (createOrder.type === 'market') {
       const orderResult: Swap.CreateOrderData | undefined = makePossibleMarketOrder(
         orderDetails.sell,
         orderDetails.buy,
-        orderDetails?.pools as Swap.PoolPair[],
+        orderDetails.pools,
         orderDetails.slippage,
         orderDetails.address,
       )
-      orderResult && createSwapOrder(orderResult)
+      if (orderResult) createSwapOrder(orderResult)
     }
-    if (createOrder.type === 'limit' && poolList !== undefined) {
+    if (createOrder.type === 'limit') {
       const orderResult = makeLimitOrder(
         orderDetails.sell,
         orderDetails.buy,

@@ -1,3 +1,4 @@
+import {BalanceToken} from '../balance/token'
 import {SwapApi} from './api'
 import {SwapStorage} from './storage'
 
@@ -8,7 +9,7 @@ export type SwapManager = Readonly<{
     cancel: SwapApi['cancelOrder']
     create: SwapApi['createOrder']
     list: {
-      byStatusOpen: SwapApi['getOrders']
+      byStatusOpen: SwapApi['getOpenOrders']
       byStatusCompleted: SwapApi['getCompletedOrders']
     }
   }
@@ -19,7 +20,9 @@ export type SwapManager = Readonly<{
   }
   pools: {
     list: {
-      byPair: SwapApi['getPoolPairs']
+      byPair: SwapApi['getPools']
     }
   }
+  stakingKey: string
+  primaryTokenId: BalanceToken['info']['id']
 }>

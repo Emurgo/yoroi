@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import {makeSwapApi, makeSwapManager, makeSwapStorage, SwapProvider} from '@yoroi/swap'
+import {swapApiMaker, swapManagerMaker, SwapProvider, swapStorageMaker} from '@yoroi/swap'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
@@ -38,19 +38,25 @@ export const TxHistoryNavigator = () => {
   const wallet = useSelectedWallet()
 
   const walletName = useWalletName(wallet)
-  const [modalInfoState, setModalInfoState] = React.useState(false)
-  const showModalInfo = () => setModalInfoState(true)
-  const hideModalInfo = () => setModalInfoState(false)
   const stakingKey = useStakingKey(wallet)
+  const [modalInfoState, setModalInfoState] = React.useState(false)
 
-  const swapStorage = makeSwapStorage()
-  const swapAPI = makeSwapApi({
-    network: 0,
-    stakingKey,
-    primaryTokenId: wallet.primaryTokenInfo.id,
-  })
-  const swapManager = makeSwapManager(swapStorage, swapAPI)
-  console.log('txhistoryswapmanager', swapManager.order.cancel.toString())
+  const showModalInfo = React.useCallback(() => setModalInfoState(true), [])
+  const hideModalInfo = React.useCallback(() => setModalInfoState(false), [])
+
+  const swapStorage = React.useMemo(() => swapStorageMaker(), [])
+  const swapAPI = React.useMemo(
+    () =>
+      swapApiMaker({
+        isMainnet: wallet.networkId !== 300,
+        stakingKey,
+        primaryTokenId: wallet.primaryTokenInfo.id,
+      }),
+    [wallet.networkId, stakingKey, wallet.primaryTokenInfo.id],
+  )
+
+  const swapManager = React.useMemo(() => swapManagerMaker(swapStorage, swapAPI), [swapStorage, swapAPI])
+
   return (
     <SendProvider key={wallet.id}>
       <SwapProvider key={wallet.id} swapManager={swapManager}>

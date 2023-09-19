@@ -37,8 +37,8 @@ type NftMetadata = unknown
 
 type BalanceTokenPrice = {
   volume: {
-    base: number // float, trading volume 24h in base currency (e.g. ADA).
-    quote: number // float, trading volume 24h in quote currency.
+    base: string // float, trading volume 24h in base currency (e.g. ADA).
+    quote: string // float, trading volume 24h in quote currency.
   }
   volumeChange: {
     base: number // float, percent change of trading volume in comparison to previous 24h.
@@ -48,8 +48,8 @@ type BalanceTokenPrice = {
   askPrice: number // lowest ask price in base currency (e.g. ADA).
   bidPrice: number // highest bid price in base currency (e.g. ADA).
   priceChange: {
-    '24h': number // float, price change last 24 hours.
-    '7d': number // float, price change last 7 days.
+    '24h': string // float, price change last 24 hours.
+    '7d': string // float, price change last 7 days.
   }
   quoteDecimalPlaces: number // decimal places of quote token.
   baseDecimalPlaces: number // decimal places of base token.

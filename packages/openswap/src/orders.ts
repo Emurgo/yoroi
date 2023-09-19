@@ -4,9 +4,8 @@ import type {
   CancelOrderRequest,
   CreateOrderRequest,
   CreateOrderResponse,
-  OpenOrder,
-  CompletedOrder,
-  ApiV2Order,
+  CompletedOrderResponse,
+  OpenOrderResponse,
 } from './types'
 
 export async function createOrder(
@@ -73,11 +72,11 @@ export async function cancelOrder(
 export async function getOrders(
   deps: ApiDeps,
   args: {stakeKeyHash: string},
-): Promise<OpenOrder[]> {
+): Promise<OpenOrderResponse> {
   const {network, client} = deps
   const {stakeKeyHash} = args
   const apiUrl = SWAP_API_ENDPOINTS[network].getOrders
-  const response = await client.get<OpenOrder[]>(apiUrl, {
+  const response = await client.get<OpenOrderResponse>(apiUrl, {
     params: {
       'stake-key-hash': stakeKeyHash,
     },
@@ -95,11 +94,11 @@ export async function getOrders(
 export async function getCompletedOrders(
   deps: ApiDeps,
   args: {stakeKeyHash: string},
-): Promise<CompletedOrder[]> {
+): Promise<CompletedOrderResponse> {
   const {network, client} = deps
   const {stakeKeyHash} = args
   const apiUrl = SWAP_API_ENDPOINTS[network].getCompletedOrders
-  const response = await client.get<ApiV2Order[]>(apiUrl, {
+  const response = await client.get<CompletedOrderResponse>(apiUrl, {
     params: {
       'stake-key-hash': stakeKeyHash,
       'canceled': 'n',
@@ -115,17 +114,5 @@ export async function getCompletedOrders(
     })
   }
 
-  return response.data
-    .filter((order) => order.status === 'matched')
-    .map<CompletedOrder>((order) => ({
-      utxo: order.txHash,
-      from: {
-        amount: order.fromAmount,
-        token: `${order.fromToken.address.policyId}.${order.fromToken.address.name}`,
-      },
-      to: {
-        amount: order.toAmount,
-        token: `${order.toToken.address.policyId}.${order.toToken.address.name}`,
-      },
-    }))
+  return response.data.filter((order) => order.status === 'matched')
 }

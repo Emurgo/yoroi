@@ -1,5 +1,5 @@
 import {FlashList} from '@shopify/flash-list'
-import {usePairListByToken, useSwap} from '@yoroi/swap'
+import {useSwap, useSwapTokensByPairToken} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -7,13 +7,14 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Spacer, Text} from '../../../../../../../components'
 import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components/AmountItem/AmountItem'
+import {BottomSheetModal} from '../../../../../../../components/BottomSheetModal'
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../../theme'
 import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
 import {useAllTokenInfos, useBalance} from '../../../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../../../../Send/common/filterByFungibility'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {filterBySearch} from '../../../../../common/filterBySearch'
@@ -21,22 +22,12 @@ import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
 import {useSwapTouched} from '../../../../../common/SwapFormProvider'
 
-type TransformedObject = {
-  decimals: number | undefined
-  description: string | undefined
-  fingerprint: string
-  group: string
-  icon: string | undefined
-  id: string
-  image: string | undefined
-  kind: string
-  name: string
-  symbol: string | undefined
-  ticker: string | undefined
-  status: string
-  supply: string
-  inUserWallet: boolean
-}
+type TokenForList = {
+  supply: Balance.TokenSupply['total']
+  status: Balance.TokenStatus
+} & Balance.TokenInfo & {
+    inUserWallet: boolean
+  }
 
 export const SelectBuyTokenFromListScreen = () => {
   const strings = useStrings()
@@ -68,6 +59,10 @@ export const SelectBuyTokenFromListScreen = () => {
     <SafeAreaView style={styles.container}>
       <Spacer height={12} />
 
+      <VerifiedTokensInfo />
+
+      <Spacer height={15} />
+
       <View style={[styles.row, styles.ph]}>
         <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
 
@@ -83,11 +78,52 @@ export const SelectBuyTokenFromListScreen = () => {
   )
 }
 
+const VerifiedTokensInfo = () => {
+  const strings = useStrings()
+  const [showVerifiedTokenInfo, setShowVerifiedTokenInfo] = React.useState(false)
+
+  return (
+    <View style={(styles.flex, styles.ph)}>
+      <View style={styles.row}>
+        <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
+
+        <Text style={styles.topText}>{strings.verifiedBy('MuesliSwap')}</Text>
+
+        <Spacer width={8} />
+
+        <TouchableOpacity onPress={() => setShowVerifiedTokenInfo(true)}>
+          <Icon.Info size={28} />
+        </TouchableOpacity>
+      </View>
+
+      <BottomSheetModal
+        title={strings.poolVerification('MuesliSwap')}
+        isOpen={showVerifiedTokenInfo}
+        onClose={() => setShowVerifiedTokenInfo(false)}
+      >
+        <Text style={styles.modalText}>{strings.poolVerificationInfo('MuesliSwap')}</Text>
+
+        <Spacer height={28} />
+
+        <Text>
+          <Text style={styles.modalText}>{strings.eachVerifiedToken}</Text>
+
+          <Spacer width={8} />
+
+          <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
+
+          <Text style={styles.modalText}>{strings.verifiedBadge}</Text>
+        </Text>
+      </BottomSheetModal>
+    </View>
+  )
+}
+
 const TokenList = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const tokenInfos = useAllTokenInfos({wallet})
-  const {pairsByToken} = usePairListByToken('')
+  const {pairsByToken} = useSwapTokensByPairToken('')
   const walletTokenInfos = React.useMemo(
     () =>
       tokenInfos.filter(
@@ -100,42 +136,49 @@ const TokenList = () => {
   )
 
   const {search: assetSearchTerm} = useSearch()
-  const secondArray = walletTokenInfos
 
-  const transformedArray: TransformedObject[] = React.useMemo(
+  const tokens: TokenForList[] = React.useMemo(
     () => {
       if (pairsByToken === undefined) return []
 
-      return pairsByToken
-        .map((item) => {
-          const matchingSecondItem = secondArray.find((secondItem) => secondItem.id === item.info.id)
-          return {
-            decimals: item.info.decimals,
-            description: item.info.description,
-            fingerprint: item.info.fingerprint,
-            group: item.info.group,
-            icon: item.info.icon,
-            id: item.info.id,
-            image: item.info.image,
-            kind: item.info.kind,
-            metadatas: item.info.metadatas,
-            name: item.info.name,
-            symbol: item.info.symbol,
-            ticker: item.info.ticker,
-            status: item.status,
-            supply: Quantities.format(`${Number(item.supply.total)}`, item.info.decimals ?? 0),
-            inUserWallet: !!matchingSecondItem,
-          }
-        })
-        .filter(({status}) => status === 'verified')
+      const walletTokenIds = new Set(walletTokenInfos.map((walletToken) => walletToken.id))
+      const asTokenForList = (token: Balance.Token) => {
+        const {decimals, description, fingerprint, group, icon, id, image, kind, metadatas, name, symbol, ticker} =
+          token.info
+        const supplyFormatted = Quantities.format(asQuantity(token.supply?.total), decimals ?? 0)
+
+        return {
+          // info
+          decimals,
+          description,
+          fingerprint,
+          group,
+          icon,
+          id,
+          image,
+          kind,
+          metadatas,
+          name,
+          symbol,
+          ticker,
+
+          supply: supplyFormatted,
+
+          status: token.status,
+
+          // custom
+          inUserWallet: walletTokenIds.has(id),
+        }
+      }
+      return pairsByToken.map(asTokenForList)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [pairsByToken?.length, secondArray?.length],
+    [pairsByToken?.length, walletTokenInfos?.length],
   )
 
   const filteredTransformedList = React.useMemo(() => {
-    return transformedArray.filter(filterBySearch(assetSearchTerm))
-  }, [transformedArray, assetSearchTerm])
+    return tokens.filter(filterBySearch(assetSearchTerm))
+  }, [tokens, assetSearchTerm])
 
   return (
     <View style={styles.list}>
@@ -157,11 +200,11 @@ const TokenList = () => {
 
       <FlashList
         data={filteredTransformedList}
-        renderItem={({item: tokenInfo}: {item: TransformedObject}) => (
+        renderItem={({item: tokenForList}: {item: TokenForList}) => (
           <Boundary loading={{fallback: <AmountItemPlaceholder style={styles.item} />}}>
             <SelectableToken
-              tokenInfo={tokenInfo}
-              disabled={tokenInfo.id !== wallet.primaryTokenInfo.id}
+              tokenForList={tokenForList}
+              disabled={tokenForList.id !== wallet.primaryTokenInfo.id}
               wallet={wallet}
             />
           </Boundary>
@@ -170,7 +213,7 @@ const TokenList = () => {
         keyExtractor={({id, name}) => `${name}-${id}`}
         testID="assetsList"
         estimatedItemSize={72}
-        ListEmptyComponent={<EmptyList filteredTokenInfos={filteredTransformedList} allTokenInfos={tokenInfos} />}
+        ListEmptyComponent={<EmptyList filteredTokensForList={filteredTransformedList} allTokenInfos={tokenInfos} />}
       />
 
       <Counter counter={filteredTransformedList.length} />
@@ -178,22 +221,22 @@ const TokenList = () => {
   )
 }
 
-type SelectableTokenProps = {disabled?: boolean; tokenInfo: TransformedObject; wallet: YoroiWallet}
-const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
+type SelectableTokenProps = {disabled?: boolean; tokenForList: TokenForList; wallet: YoroiWallet}
+const SelectableToken = ({tokenForList, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
   const {buyAmountChanged} = useSwap()
   const {buyTouched} = useSwapTouched()
 
   const navigateTo = useNavigateTo()
-  const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
+  const balanceAvailable = useBalance({wallet, tokenId: tokenForList.id})
   const {track} = useMetrics()
 
   const onSelect = () => {
     track.swapAssetToChanged({
-      to_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
+      to_asset: [{asset_name: tokenForList.name, asset_ticker: tokenForList.ticker, policy_id: tokenForList.group}],
     })
     buyTouched()
-    buyAmountChanged({tokenId: tokenInfo.id, quantity: balanceAvailable})
+    buyAmountChanged({tokenId: tokenForList.id, quantity: balanceAvailable})
     navigateTo.startSwap()
     closeSearch()
   }
@@ -201,11 +244,11 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   return (
     <TouchableOpacity style={styles.item} onPress={onSelect} testID="selectTokenButton">
       <AmountItem
-        amount={{tokenId: tokenInfo.id, quantity: balanceAvailable}}
+        amount={{tokenId: tokenForList.id, quantity: balanceAvailable}}
         wallet={wallet}
-        status={tokenInfo.status}
-        inWallet={tokenInfo.inUserWallet}
-        supply={tokenInfo?.supply}
+        status={tokenForList.status}
+        inWallet={tokenForList.inUserWallet}
+        supply={tokenForList?.supply}
         variant="swap"
       />
     </TouchableOpacity>
@@ -240,15 +283,15 @@ const Counter = ({counter}: {counter: number}) => {
 }
 
 const EmptyList = ({
-  filteredTokenInfos,
+  filteredTokensForList,
   allTokenInfos,
 }: {
-  filteredTokenInfos: Array<TransformedObject>
+  filteredTokensForList: Array<TokenForList>
   allTokenInfos: Array<Balance.TokenInfo>
 }) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
 
-  if ((isSearching && assetSearchTerm.length > 0 && filteredTokenInfos.length === 0) || allTokenInfos.length === 0)
+  if ((isSearching && assetSearchTerm.length > 0 && filteredTokensForList.length === 0) || allTokenInfos.length === 0)
     return <EmptySearchResult assetSearchTerm={assetSearchTerm} />
 
   return null
@@ -314,12 +357,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.SHELLEY_BLUE,
   },
+  flex: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   topText: {
     fontSize: 16,
+  },
+  modalText: {
+    fontWeight: '400',
+    lineHeight: 20,
+    color: '#242838',
+    fontFamily: 'Rubik',
+    fontSize: 15,
   },
   image: {
     flex: 1,

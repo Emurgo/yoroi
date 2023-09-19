@@ -40,20 +40,9 @@ export type OpenOrder = {
   deposit: string
   utxo: string
 }
+export type OpenOrderResponse = OpenOrder[]
 
 export type CompletedOrder = {
-  from: {
-    amount: string
-    token: string
-  }
-  to: {
-    amount: string
-    token: string
-  }
-  utxo: string
-}
-
-export type ApiV2Order = {
   toToken: {
     address: {
       policyId: string
@@ -80,6 +69,7 @@ export type ApiV2Order = {
   pubKeyHash: string
   feeField: number
 }
+export type CompletedOrderResponse = CompletedOrder[]
 
 export type Protocol =
   | 'minswap'
@@ -128,6 +118,7 @@ export type Pool = {
     token: string // hexadecimal representation of lpToken,
   }
 }
+export type PoolResponse = Pool[]
 
 export type Token = {
   info: {
@@ -146,11 +137,12 @@ export type Token = {
     description: string
     decimalPlaces: number // number of decimal places of the token, i.e. 6 for ADA and 0 for MILK.
     categories: string[] // encoding categories as ids.
+    sign?: string // token sign, i.e. "₳" for ADA.
   }
   price: {
     volume: {
-      base: number // float, trading volume 24h in base currency (e.g. ADA).
-      quote: number // float, trading volume 24h in quote currency.
+      base: string // float, trading volume 24h in base currency (e.g. ADA).
+      quote: string // float, trading volume 24h in quote currency.
     }
     volumeChange: {
       base: number // float, percent change of trading volume in comparison to previous 24h.
@@ -160,14 +152,15 @@ export type Token = {
     askPrice: number // lowest ask price in base currency (e.g. ADA).
     bidPrice: number // highest bid price in base currency (e.g. ADA).
     priceChange: {
-      '24h': number // float, price change last 24 hours.
-      '7d': number // float, price change last 7 days.
+      '24h': string // float, price change last 24 hours.
+      '7d': string // float, price change last 7 days.
     }
     quoteDecimalPlaces: number // decimal places of quote token.
     baseDecimalPlaces: number // decimal places of base token.
     price10d: number[] //float, prices of this tokens averaged for the last 10 days, in chronological order i.e.oldest first.
   }
 }
+export type TokenResponse = Token[]
 
 export type TokenAddress =
   | {

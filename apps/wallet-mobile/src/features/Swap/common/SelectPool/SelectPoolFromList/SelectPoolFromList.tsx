@@ -13,7 +13,7 @@ import {useStrings} from '../../strings'
 import {useSwapTouched} from '../../SwapFormProvider'
 
 type Props = {
-  data?: Swap.PoolPair[]
+  data?: Swap.Pool[]
 }
 export const SelectPoolFromList = ({data = []}: Props) => {
   const strings = useStrings()
@@ -23,7 +23,7 @@ export const SelectPoolFromList = ({data = []}: Props) => {
   const navigate = useNavigateTo()
   const {track} = useMetrics()
 
-  const handleCardSelect = (pool: Swap.PoolPair) => {
+  const handleCardSelect = (pool: Swap.Pool) => {
     track.swapPoolChanged()
     selectedPoolChanged(pool)
     setSelectedCardIndex(pool.poolId)
