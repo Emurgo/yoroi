@@ -51,8 +51,8 @@ export const mapOrders = (
       .toFormat(numberLocale)
 
     return {
-        owner: 'owner' in order ? order.owner : undefined,
-        utxo: order.utxo,
+      owner: 'owner' in order ? order.owner : undefined,
+      utxo: 'utxo' in order ? order.utxo : undefined,
       tokenPrice,
       tokenAmount,
       id,
@@ -66,9 +66,9 @@ export const mapOrders = (
       toTokenInfo,
       provider: 'provider' in order ? order.provider : undefined,
       poolUrl: 'provider' in order ? getPoolUrlByProvider(order.provider) : undefined,
-        fromTokenAmount: BigNumber(Quantities.denominated(order.from.quantity, fromTokenInfo?.decimals ?? 0)).toFormat(
-            numberLocale,
-        ),
+      fromTokenAmount: BigNumber(Quantities.denominated(order.from.quantity, fromTokenInfo?.decimals ?? 0)).toFormat(
+        numberLocale,
+      ),
     }
   })
 }

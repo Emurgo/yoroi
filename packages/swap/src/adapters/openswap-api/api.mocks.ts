@@ -11,6 +11,8 @@ const getOpenOrders: Array<Swap.OpenOrder> = [
         '2adf188218a66847024664f4f63939577627a56c090f679fe366c5ee.535441424c45',
     },
     deposit: {quantity: '1700000', tokenId: ''},
+    owner:
+      'addr1qxxvt9rzpdxxysmqp50d7f5a3gdescgrejsu7zsdxqjy8yun4cngaq46gr8c9qyz4td9ddajzqhjnrqvfh0gspzv9xnsmq6nqx',
   },
 ]
 

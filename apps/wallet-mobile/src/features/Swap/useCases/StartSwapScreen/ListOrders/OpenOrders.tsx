@@ -1,4 +1,4 @@
-import {useSwapOrdersByStatusOpen} from '@yoroi/swap'
+import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 import React, {useEffect, useState} from 'react'
@@ -43,7 +43,6 @@ export const OpenOrders = () => {
   })
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const strings = useStrings()
-  const {numberLocale} = useLanguage()
   const intl = useIntl()
   const wallet = useSelectedWallet()
 
@@ -61,11 +60,8 @@ export const OpenOrders = () => {
   const [showCancelOrderModal, setShowCancelOrderModal] = useState(false)
   const [cancellationUnsignedTx, setCancellationUnsignedTx] = useState<YoroiUnsignedTx | null>(null)
 
-const openOrders = orders;
   const {resetToTxHistory} = useWalletNavigation()
   const datum = '' // TODO: Use real values
-
-  const searchLower = search.toLocaleLowerCase()
 
   const filteredOrders = React.useMemo(
     () =>
@@ -89,7 +85,7 @@ const openOrders = orders;
 
   const openBottomSheet = (id: string) => {
     const order = normalizedOrders.find((o) => o.id === id)
-    if (!order || order.owner === undefined) return
+    if (!order || order.owner === undefined || order.utxo === undefined) return
     const {assetFromLabel, assetToLabel} = order
     const totalReturned = `${order.fromTokenAmount} ${order.fromTokenInfo?.ticker}`
     const orderUtxo = order.utxo
