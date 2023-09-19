@@ -8,8 +8,12 @@ import {ChangePinScreen} from '../../auth'
 import {EnableLoginWithPin} from '../../auth/EnableLoginWithPin'
 import {Boundary} from '../../components'
 import globalMessages from '../../i18n/global-messages'
-import {defaultStackNavigationOptions, SettingsStackRoutes, SettingsTabRoutes} from '../../navigation'
-import {COLORS} from '../../theme'
+import {
+  defaultMaterialTopTabNavigationOptions,
+  defaultStackNavigationOptions,
+  SettingsStackRoutes,
+  SettingsTabRoutes,
+} from '../../navigation'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'
@@ -134,17 +138,8 @@ const SettingsTabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
+        ...defaultMaterialTopTabNavigationOptions,
         tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,
-        tabBarStyle: {backgroundColor: COLORS.WHITE, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
-        tabBarIndicatorStyle: {backgroundColor: COLORS.SHELLEY_BLUE, height: 2},
-        tabBarLabelStyle: {
-          textTransform: 'none',
-          fontFamily: 'Rubik',
-          fontSize: 16,
-          fontWeight: '500',
-        },
-        tabBarActiveTintColor: COLORS.SHELLEY_BLUE,
-        tabBarInactiveTintColor: COLORS.NOT_SELECTED_TAB_TEXT,
       })}
     >
       <Tab.Screen name="wallet-settings" component={WalletSettingsScreen} />

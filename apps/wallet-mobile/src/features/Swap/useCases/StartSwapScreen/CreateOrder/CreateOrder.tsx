@@ -177,7 +177,7 @@ export const CreateOrder = () => {
   }
 
   return (
-    <>
+    <View style={styles.root}>
       <ScrollView>
         <View style={styles.container}>
           <LimitPriceWarning
@@ -221,17 +221,20 @@ export const CreateOrder = () => {
       </Actions>
 
       <LoadingOverlay loading={isLoading} />
-    </>
+    </View>
   )
 }
 
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
 
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
     paddingHorizontal: 16,
+  },
+  container: {
+    flex: 1,
     paddingTop: 10,
   },
   flex: {
