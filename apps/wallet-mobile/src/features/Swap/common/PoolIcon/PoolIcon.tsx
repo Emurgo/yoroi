@@ -1,14 +1,19 @@
-import {Pool} from '@yoroi/openswap'
+import {Swap} from '@yoroi/types'
 import React, {FunctionComponent} from 'react'
 
 import {Icon} from '../../../../components'
 
-export const PoolIcon = ({providerId, size}: {providerId: Pool['provider']; size: number}) => {
+type Props = {
+  providerId: Swap.PoolProvider
+  size: number
+}
+
+export const PoolIcon = ({providerId, size}: Props) => {
   const IconVariant = icons[providerId] ?? Icon.Swap
   return <IconVariant size={size} />
 }
 
-const icons: Record<Pool['provider'], FunctionComponent<{size?: number}>> = {
+const icons: Record<Swap.PoolProvider, FunctionComponent<{size?: number}>> = {
   muesliswap_v1: Icon.MuesliSwap,
   muesliswap_v2: Icon.MuesliSwap,
   muesliswap_v3: Icon.MuesliSwap,
@@ -18,4 +23,4 @@ const icons: Record<Pool['provider'], FunctionComponent<{size?: number}>> = {
   wingriders: Icon.WingRiders,
   vyfi: Icon.VyfiSwap,
   spectrum: Icon.SpectrumSwap,
-}
+} as const

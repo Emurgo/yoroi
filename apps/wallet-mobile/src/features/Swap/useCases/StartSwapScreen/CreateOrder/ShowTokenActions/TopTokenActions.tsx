@@ -1,4 +1,4 @@
-import {getReceiveAmountbyChangingSell, usePoolsByPair, useSwap} from '@yoroi/swap'
+import {getBuyAmountbyChangingSell, useSwap, useSwapPoolsByPair} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -16,10 +16,10 @@ export const TopTokenActions = () => {
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
   const {createOrder, orderTypeChanged, selectedPoolChanged, limitPriceChanged, buyAmountChanged} = useSwap()
   const {isBuyTouched, isSellTouched} = useSwapTouched()
-  const orderTypeIndex = createOrder.type === 'market' ? 0 : 1
   const isDisabled = !isBuyTouched || !isSellTouched || createOrder.selectedPool === undefined
+  const orderTypeIndex = createOrder.type === 'market' ? 0 : 1
 
-  const {refetch, isLoading, poolList} = usePoolsByPair({
+  const {refetch, isLoading, poolList} = useSwapPoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId ?? '',
     tokenB: createOrder.amounts.buy.tokenId ?? '',
   })
@@ -46,7 +46,7 @@ export const TopTokenActions = () => {
 
       limitPriceChanged(asQuantity(defaultPrice))
 
-      const {buy} = getReceiveAmountbyChangingSell(createOrder?.selectedPool, {
+      const {buy} = getBuyAmountbyChangingSell(createOrder?.selectedPool, {
         quantity: createOrder.amounts.sell.quantity,
         tokenId: createOrder.amounts.sell.tokenId,
       })

@@ -1,4 +1,4 @@
-import {useOrderByStatusOpen} from '@yoroi/swap'
+import {useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -39,30 +39,31 @@ export const OpenOrders = () => {
   const [confirmationModal, setConfirmationModal] = React.useState(false)
   const strings = useStrings()
   const [spendingPassword, setSpendingPassword] = React.useState('')
-  const {numberLocale} = useLanguage()
   const intl = useIntl()
   const wallet = useSelectedWallet()
+
+  const orders = useSwapOrdersByStatusOpen()
+  const {numberLocale} = useLanguage()
+  const tokenIds = React.useMemo(() => _.uniq(orders?.flatMap((o) => [o.from.tokenId, o.to.tokenId])), [orders])
   const transactionsInfos = useTransactionInfos(wallet)
+  const tokenInfos = useTokenInfos({wallet, tokenIds})
+  const normalizedOrders = React.useMemo(
+    () => mapOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos)),
+    [orders, tokenInfos, numberLocale, transactionsInfos],
+  )
+
   const {search} = useSearch()
-
-  const {openOrders} = useOrderByStatusOpen({
-    queryKey: [wallet.id, 'open-orders'],
-  })
-  console.log('openOrders', openOrders)
-  const tokenIds = _.uniq(openOrders?.flatMap((o) => [o.from.tokenId, o.to.tokenId]))
-
-  const tokenInfos = useTokenInfos({wallet, tokenIds: tokenIds})
-
-  const normalizedOrders = mapOrders(openOrders, tokenInfos, numberLocale, Object.values(transactionsInfos))
-
-  const searchLower = search.toLocaleLowerCase()
-
-  const filteredOrders = normalizedOrders.filter((order) => {
-    return (
-      order.assetFromLabel.toLocaleLowerCase().includes(searchLower) ||
-      order.assetToLabel.toLocaleLowerCase().includes(searchLower)
-    )
-  })
+  const filteredOrders = React.useMemo(
+    () =>
+      normalizedOrders.filter((order) => {
+        const searchLower = search.toLocaleLowerCase()
+        return (
+          order.assetFromLabel.toLocaleLowerCase().includes(searchLower) ||
+          order.assetToLabel.toLocaleLowerCase().includes(searchLower)
+        )
+      }),
+    [normalizedOrders, search],
+  )
 
   const openBottomSheet = ({id, fromTokenInfoId, toTokenInfoId, assetFromLabel, assetToLabel}) => {
     setBottomSheetState({
@@ -189,7 +190,7 @@ export const OpenOrders = () => {
         </BottomSheetModal>
       </View>
 
-      <Counter counter={openOrders?.length ?? 0} customText={strings.listOpenOrders} />
+      <Counter counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
     </>
   )
 }

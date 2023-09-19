@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import {makeSwapApi, makeSwapManager, makeSwapStorage, SwapProvider} from '@yoroi/swap'
+import {swapApiMaker, swapManagerMaker, SwapProvider, swapStorageMaker} from '@yoroi/swap'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
@@ -15,11 +15,11 @@ import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/Edit
 import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {SwapFormProvider} from '../features/Swap/common/SwapFormProvider'
+import {SwapTabNavigator} from '../features/Swap/SwapNavigator'
 import {
   ConfirmTxScreen as ConfirmTxSwapScreen,
   EditSlippageScreen,
   SelectPoolFromListScreen,
-  StartSwapScreen,
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
@@ -38,18 +38,24 @@ export const TxHistoryNavigator = () => {
   const wallet = useSelectedWallet()
 
   const walletName = useWalletName(wallet)
-  const [modalInfoState, setModalInfoState] = React.useState(false)
-  const showModalInfo = () => setModalInfoState(true)
-  const hideModalInfo = () => setModalInfoState(false)
   const stakingKey = useStakingKey(wallet)
+  const [modalInfoState, setModalInfoState] = React.useState(false)
 
-  const swapStorage = makeSwapStorage()
-  const swapAPI = makeSwapApi({
-    network: 0,
-    stakingKey,
-    primaryTokenId: wallet.primaryTokenInfo.id,
-  })
-  const swapManager = makeSwapManager(swapStorage, swapAPI)
+  const showModalInfo = React.useCallback(() => setModalInfoState(true), [])
+  const hideModalInfo = React.useCallback(() => setModalInfoState(false), [])
+
+  const swapStorage = React.useMemo(() => swapStorageMaker(), [])
+  const swapAPI = React.useMemo(
+    () =>
+      swapApiMaker({
+        isMainnet: wallet.networkId !== 300,
+        stakingKey,
+        primaryTokenId: wallet.primaryTokenInfo.id,
+      }),
+    [wallet.networkId, stakingKey, wallet.primaryTokenInfo.id],
+  )
+
+  const swapManager = React.useMemo(() => swapManagerMaker(swapStorage, swapAPI), [swapStorage, swapAPI])
 
   return (
     <SendProvider key={wallet.id}>
@@ -97,7 +103,7 @@ export const TxHistoryNavigator = () => {
 
             <Stack.Screen
               name="swap-start-swap"
-              component={StartSwapScreen}
+              component={SwapTabNavigator}
               options={{
                 title: strings.swapTitle,
               }}
