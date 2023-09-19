@@ -1,11 +1,10 @@
-import {Balance, Swap} from '@yoroi/types'
+import {Swap} from '@yoroi/types'
 import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
 import BigNumber from 'bignumber.js'
 
-import {NumberLocale} from '../../../i18n/languages'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {YoroiEntry} from '../../../yoroi-wallets/types'
-import {asQuantity, Quantities} from '../../../yoroi-wallets/utils'
+import {Quantities} from '../../../yoroi-wallets/utils'
 
 export const getBuyQuantityForLimitOrder = (
   sellQuantityDenominated: BalanceQuantity,
