@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useNavigation} from '@react-navigation/native'
-import {isNonNullable} from '@yoroi/wallets'
+import {isNonNullable} from '@yoroi/common'
 import {BigNumber} from 'bignumber.js'
 import _, {fromPairs} from 'lodash'
 import React from 'react'

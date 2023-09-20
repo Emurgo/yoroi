@@ -1,4 +1,4 @@
-import {parseSafe, useStorage} from '@yoroi/wallets'
+import {parseSafe, useStorage} from '@yoroi/common'
 import React from 'react'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 

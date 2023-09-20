@@ -1,6 +1,6 @@
 import {EnrichmentPlugin, Event, PluginType} from '@amplitude/analytics-types'
+import {parseBoolean, rootStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import {parseBoolean, rootStorage} from '@yoroi/wallets'
 import * as React from 'react'
 import Config from 'react-native-config'
 

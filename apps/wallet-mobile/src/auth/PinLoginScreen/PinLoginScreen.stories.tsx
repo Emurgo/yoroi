@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {storiesOf} from '@storybook/react-native'
-import {rootStorage, StorageProvider} from '@yoroi/wallets'
+import {rootStorage, StorageProvider} from '@yoroi/common'
 import React from 'react'
 
 import {PinLoginScreen} from './PinLoginScreen'

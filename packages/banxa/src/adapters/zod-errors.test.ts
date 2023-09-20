@@ -1,4 +1,4 @@
-import {handleZodErrors} from './zod-errors' // Replace with the actual path to the function
+import {handleZodErrors} from './zod-errors'
 import {BanxaUnknownError, BanxaValidationError} from './errors'
 import {z} from 'zod'
 
