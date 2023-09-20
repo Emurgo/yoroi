@@ -1,17 +1,7 @@
 import {Quantities} from './quantities'
 import {asQuantity} from './asQuantity'
 import {Balance} from '@yoroi/types'
-
-const mocknumberLocale = {
-  decimalSeparator: '.',
-  fractionGroupSeparator: ' ',
-  fractionGroupSize: 0,
-  groupSeparator: ',',
-  groupSize: 3,
-  prefix: '',
-  secondaryGroupSize: 0,
-  suffix: '',
-}
+import {mockNumberLocale} from '../adapters/intl/number-locale.mocks'
 
 describe('Quantities', () => {
   describe('sum', () => {
@@ -156,7 +146,7 @@ describe('Quantities', () => {
     const [input, quantity] = Quantities.parseFromText(
       text,
       precision,
-      mocknumberLocale,
+      mockNumberLocale,
     )
 
     expect(input).toBe('0')

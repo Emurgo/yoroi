@@ -1,4 +1,4 @@
-import {Balance, NumberLocale} from '@yoroi/types'
+import {Balance, Numbers} from '@yoroi/types'
 import {Quantities} from '../../utils/quantities'
 
 /**
@@ -17,14 +17,13 @@ export const getTotalFees = (
   batcherFee: Balance.Quantity,
   proiderFee: Balance.Quantity,
   decimals: number,
-  numberLocale: NumberLocale,
+  numberLocale: Numbers.Locale,
 ): string => {
   const result = Quantities.denominated(
     Quantities.sum([batcherFee, proiderFee]),
     decimals,
   )
 
-  console.log('getTotalFees result', result)
   const [quantities] = Quantities.parseFromText(result, decimals, numberLocale)
   return quantities
 }

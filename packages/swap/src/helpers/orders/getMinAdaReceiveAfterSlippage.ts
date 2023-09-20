@@ -1,4 +1,4 @@
-import {Balance, NumberLocale} from '@yoroi/types'
+import {Balance, Numbers} from '@yoroi/types'
 import {Quantities} from '../../utils/quantities'
 import {asQuantity} from '../../utils/asQuantity'
 
@@ -17,7 +17,7 @@ export const getMinAdaReceiveAfterSlippage = (
   outputAmount: Balance.Quantity,
   slippagePercentage: number,
   decimals: number,
-  numberLocale: NumberLocale,
+  numberLocale: Numbers.Locale,
 ): string => {
   const slippageDecimal = slippagePercentage / 100
   const result = Number(outputAmount) / (1 + slippageDecimal)

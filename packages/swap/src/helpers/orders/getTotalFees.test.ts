@@ -1,16 +1,6 @@
+import {mockNumberLocale} from '../../adapters/intl/number-locale.mocks'
 import {asQuantity} from '../../utils/asQuantity'
 import {getTotalFees} from './getTotalFees'
-
-const mocknumberLocale = {
-  decimalSeparator: '.',
-  fractionGroupSeparator: ' ',
-  fractionGroupSize: 0,
-  groupSeparator: ',',
-  groupSize: 3,
-  prefix: '',
-  secondaryGroupSize: 0,
-  suffix: '',
-}
 
 describe('getTotalFees', () => {
   it('should calculate the total fees correctly', () => {
@@ -22,7 +12,7 @@ describe('getTotalFees', () => {
       batcherFee,
       providerFee,
       decimals,
-      mocknumberLocale,
+      mockNumberLocale,
     )
     expect(result).toBe('2.001')
   })
@@ -36,7 +26,7 @@ describe('getTotalFees', () => {
       batcherFee,
       providerFee,
       decimals,
-      mocknumberLocale,
+      mockNumberLocale,
     )
     expect(result).toBe('0')
   })
@@ -50,7 +40,7 @@ describe('getTotalFees', () => {
       asQuantity(batcherFee),
       asQuantity(providerFee),
       decimals,
-      mocknumberLocale,
+      mockNumberLocale,
     )
     expect(result).toBe('2.523222')
   })

@@ -1,4 +1,4 @@
-import lib, {Balance} from '@yoroi/types'
+import {Balance, Numbers} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 export const Quantities = {
@@ -62,11 +62,7 @@ export const Quantities = {
 
     return absoluteQuantity.isEqualTo(minimalFractionalPart)
   },
-  parseFromText: (
-    text: string,
-    precision: number,
-    format: lib.NumberLocale,
-  ) => {
+  parseFromText: (text: string, precision: number, format: Numbers.Locale) => {
     const {decimalSeparator} = format
     const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
     const sanitized = text === '' ? '0' : text.replaceAll(invalid, '')

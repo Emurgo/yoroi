@@ -20,6 +20,7 @@ import {SwapStorage} from './swap/storage'
 import {SwapManager} from './swap/manager'
 import {AppStorage, AppStorageFolderName} from './app/storage'
 import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
+import {NumberLocale} from './intl/numbers'
 
 export namespace App {
   export interface Storage extends AppStorage {}
@@ -62,6 +63,10 @@ export namespace Balance {
   export type Quantity = BalanceQuantity
   export type Amount = BalanceAmount
   export type Amounts = BalanceAmounts
+}
+
+export namespace Numbers {
+  export type Locale = NumberLocale
 }
 
 export * from './helpers/types'
