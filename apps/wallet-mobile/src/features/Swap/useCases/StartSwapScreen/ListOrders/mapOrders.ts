@@ -1,6 +1,9 @@
 import {getPoolUrlByProvider} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
+import {BalanceAmount, BalanceCardanoMetadatas} from '@yoroi/types/lib/balance/token'
 import {SwapCompletedOrder, SwapOpenOrder} from '@yoroi/types/lib/swap/order'
+import {SwapPoolProvider} from '@yoroi/types/lib/swap/pool'
+import {BalanceTokenInfo} from '@yoroi/types/src/balance/token'
 import {isString} from '@yoroi/wallets'
 import BigNumber from 'bignumber.js'
 
@@ -10,15 +13,36 @@ import {Quantities} from '../../../../../yoroi-wallets/utils'
 
 const MAX_DECIMALS = 10
 
+export type MappedOrder = {
+  owner: unknown
+  utxo: string | undefined
+  tokenPrice: string
+  tokenAmount: string
+  id: string
+  assetFromLabel: string
+  assetToLabel: string
+  date: string
+  txId: string
+  total: string
+  txLink: string
+  toTokenInfo: BalanceTokenInfo<BalanceCardanoMetadatas> | undefined
+  provider: SwapPoolProvider | undefined
+  poolUrl: string | undefined
+  fromTokenInfo: BalanceTokenInfo<BalanceCardanoMetadatas> | undefined
+  fromTokenAmount: string
+  from: BalanceAmount
+  to: BalanceAmount
+}
+
 export const mapOrders = (
   orders: Array<SwapOpenOrder | SwapCompletedOrder>,
   tokenInfos: Balance.TokenInfo[],
   numberLocale: NumberLocale,
   transactionInfos: TransactionInfo[],
-) => {
+): Array<MappedOrder> => {
   if (orders.length === 0) return []
 
-  return orders.map((order) => {
+  return orders.map((order: SwapOpenOrder | SwapCompletedOrder) => {
     const {from, to} = order
     const [txIdOpen] = 'utxo' in order ? order.utxo.split('#', 1) : [undefined]
     const txIdComplete = 'txHash' in order ? order.txHash : undefined
@@ -69,6 +93,8 @@ export const mapOrders = (
       fromTokenAmount: BigNumber(Quantities.denominated(order.from.quantity, fromTokenInfo?.decimals ?? 0)).toFormat(
         numberLocale,
       ),
+      from,
+      to,
     }
   })
 }

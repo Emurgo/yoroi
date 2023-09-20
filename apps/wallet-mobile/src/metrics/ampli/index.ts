@@ -1,4 +1,5 @@
 /* tslint:disable */
+/* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
 // @ts-nocheck
 /**
@@ -26,12 +27,11 @@ export type EventOptions = amplitude.Types.EventOptions;
 export type Result = amplitude.Types.Result;
 export type ReactNativeOptions = amplitude.Types.ReactNativeOptions;
 
-export type Environment = 'production' | 'development' | 'staging';
+export type Environment = 'production' | 'development';
 
 export const ApiKey: Record<Environment, string> = {
   production: 'd44950b777177c2ebee5f21f194c1231',
-  development: '52a980fd5fb8da5fc680687d7e991e18',
-  staging: '53e9e81ab1b50d726a692b81f29a0403'
+  development: '52a980fd5fb8da5fc680687d7e991e18'
 };
 
 /**
@@ -300,9 +300,8 @@ export interface SwapCancelationSubmittedProperties {
    * | Rule | Value |
    * |---|---|
    * | Unique Items | null |
-   * | Item Type | string |
    */
-  from_asset: string[];
+  from_asset: any[];
   /**
    * The type of order selected on a given transaction
    *
@@ -320,9 +319,9 @@ export interface SwapCancelationSubmittedProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | null |
+   * | Type | number |
    */
-  slippage_tolerance: any;
+  slippage_tolerance: number;
   /**
    * The amount of fees charged on the transaction. The value is in ADA.
    *
@@ -349,9 +348,8 @@ export interface SwapCancelationSubmittedProperties {
    * | Rule | Value |
    * |---|---|
    * | Unique Items | null |
-   * | Item Type | string |
    */
-  to_asset: string[];
+  to_asset: any[];
 }
 
 export interface SwapInitiatedProperties {
@@ -385,9 +383,9 @@ export interface SwapInitiatedProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | null |
+   * | Type | number |
    */
-  slippage_tolerance: any;
+  slippage_tolerance: number;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -528,9 +526,9 @@ export interface SwapSlippageChangedProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | null |
+   * | Type | number |
    */
-  slippage_tolerance: any;
+  slippage_tolerance: number;
 }
 
 export interface SendProperties {
@@ -635,6 +633,18 @@ export interface SwapProperties {
 
 export class AllWalletsPageViewed implements BaseEvent {
   event_type = 'All Wallets Page Viewed';
+}
+
+export class AssetsPageViewed implements BaseEvent {
+  event_type = 'Assets Page Viewed';
+}
+
+export class ClaimAdaPageViewed implements BaseEvent {
+  event_type = 'Claim ADA Page Viewed';
+}
+
+export class ConnectorPageViewed implements BaseEvent {
+  event_type = 'Connector Page Viewed';
 }
 
 export class MenuPageViewed implements BaseEvent {
@@ -949,6 +959,53 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new AllWalletsPageViewed(), options);
+  }
+
+  /**
+   * Assets Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Assets%20Page%20Viewed)
+   *
+   * This event tracks when a user views the Assets page. Note: only available on Yoroi Extension.
+   *
+   * @param options Amplitude event options.
+   */
+  assetsPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new AssetsPageViewed(), options);
+  }
+
+  /**
+   * Claim ADA Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Claim%20ADA%20Page%20Viewed)
+   *
+   * This event tracks when a user views the page to claim Claim /Transfer ADA page in ExtensionEvent: Claim ADA Page Viewed
+   *
+   * Description: This event tracks when a user views the page to claim ADA tokens. It provides insights into the number of users who are interested in claiming ADA tokens and can be used to analyze user engagement and conversion rates on the claim page
+   *
+   * @param options Amplitude event options.
+   */
+  claimAdaPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new ClaimAdaPageViewed(), options);
+  }
+
+  /**
+   * Connector Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Connector%20Page%20Viewed)
+   *
+   * This event tracks when a user views the dApp Connector page.
+   *
+   * @param options Amplitude event options.
+   */
+  connectorPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new ConnectorPageViewed(), options);
   }
 
   /**

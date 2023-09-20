@@ -1,7 +1,9 @@
+import {useFocusEffect} from '@react-navigation/native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Boundary} from '../../../../../components'
+import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {COLORS} from '../../../../../theme'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
@@ -13,6 +15,7 @@ export const ListOrders = () => {
   const [orderStatusIndex, setOrderStatusIndex] = React.useState(0)
 
   const strings = useStrings()
+  const {track} = useMetrics()
 
   const orderStatusLabels = [strings.openOrders, strings.completedOrders]
   const handleSelectOrderStatus = (index: number) => {
@@ -23,6 +26,13 @@ export const ListOrders = () => {
     placeholder: strings.searchTokens,
     title: strings.swapTitle,
   })
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('swapConfirmedPageViewed')
+      track.swapConfirmedPageViewed()
+    }, [track]),
+  )
 
   return (
     <View style={styles.keyboard}>

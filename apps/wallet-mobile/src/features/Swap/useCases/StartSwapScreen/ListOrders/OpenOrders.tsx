@@ -21,6 +21,7 @@ import {
 } from '../../../../../components'
 import {useLanguage} from '../../../../../i18n'
 import {formatTokenWithText} from '../../../../../legacy/format'
+import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
@@ -33,7 +34,7 @@ import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {ConfirmTx} from '../../ConfirmTxScreen/ConfirmTx'
-import {mapOrders} from './mapOrders'
+import {mapOrders, MappedOrder} from './mapOrders'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
@@ -45,6 +46,7 @@ export const OpenOrders = () => {
   const strings = useStrings()
   const intl = useIntl()
   const wallet = useSelectedWallet()
+  const {track} = useMetrics()
 
   const orders = useSwapOrdersByStatusOpen()
   const {numberLocale} = useLanguage()
@@ -58,7 +60,10 @@ export const OpenOrders = () => {
 
   const {search} = useSearch()
   const [showCancelOrderModal, setShowCancelOrderModal] = useState(false)
-  const [cancellationUnsignedTx, setCancellationUnsignedTx] = useState<YoroiUnsignedTx | null>(null)
+  const [cancellationOrderData, setCancellationOrderData] = useState<{
+    unsignedTx: YoroiUnsignedTx | null
+    order: MappedOrder | null
+  }>({unsignedTx: null, order: null})
 
   const {resetToTxHistory} = useWalletNavigation()
   const datum = '' // TODO: Use real values
@@ -79,7 +84,10 @@ export const OpenOrders = () => {
     const order = normalizedOrders.find((o) => o.id === id)
     if (!order) return
     closeBottomSheet()
-    setCancellationUnsignedTx(unsignedTx)
+    setCancellationOrderData({
+      unsignedTx,
+      order,
+    })
     setShowCancelOrderModal(true)
   }
 
@@ -120,7 +128,7 @@ export const OpenOrders = () => {
   return (
     <>
       <View style={styles.container}>
-        {cancellationUnsignedTx && (
+        {cancellationOrderData.unsignedTx && cancellationOrderData.order && (
           <BottomSheetModal
             isOpen={showCancelOrderModal}
             title={wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction}
@@ -132,8 +140,28 @@ export const OpenOrders = () => {
             <ConfirmTx
               datum={{data: datum}}
               wallet={wallet}
-              unsignedTx={cancellationUnsignedTx}
-              onSuccess={() => resetToTxHistory()}
+              unsignedTx={cancellationOrderData.unsignedTx}
+              onSuccess={() => {
+                track.swapCancelationSubmitted({
+                  from_amount: Number(cancellationOrderData.order?.from.quantity) ?? 0,
+                  to_amount: Number(cancellationOrderData.order?.to.quantity) ?? 0,
+                  from_asset: [
+                    {
+                      asset_name: cancellationOrderData.order?.fromTokenInfo?.name,
+                      asset_ticker: cancellationOrderData.order?.fromTokenInfo?.ticker,
+                      policy_id: cancellationOrderData.order?.fromTokenInfo?.group,
+                    },
+                  ],
+                  to_asset: [
+                    {
+                      asset_name: cancellationOrderData.order?.toTokenInfo?.name,
+                      asset_ticker: cancellationOrderData.order?.toTokenInfo?.ticker,
+                      policy_id: cancellationOrderData.order?.toTokenInfo?.group,
+                    },
+                  ],
+                })
+                resetToTxHistory()
+              }}
               onCancel={() => setShowCancelOrderModal(false)}
             />
           </BottomSheetModal>
