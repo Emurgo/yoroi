@@ -32,11 +32,12 @@ export const TransactionSummary = () => {
     asQuantity(Number(Object.values(unsignedTx?.fee))),
     Number(wallet.primaryTokenInfo.decimals),
   )
-
   const feesInfo = [
     {
       label: strings.swapMinAdaTitle,
-      value: `${Quantities.denominated(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))} ADA`,
+      value: `${Quantities.denominated(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))} ${
+        wallet.primaryTokenInfo.ticker
+      }`,
       info: strings.swapMinAda,
     },
     {
@@ -56,7 +57,7 @@ export const TransactionSummary = () => {
         asQuantity(poolFee),
         wallet.primaryTokenInfo.decimals ?? 0,
         numberLocale,
-      )} ADA`,
+      )} ${wallet.primaryTokenInfo.ticker}`,
       info: strings.swapFees,
     },
   ]

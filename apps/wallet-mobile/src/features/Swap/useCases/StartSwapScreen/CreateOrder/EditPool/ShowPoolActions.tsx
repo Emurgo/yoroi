@@ -121,12 +121,14 @@ const HiddenInfo = ({
     content: '',
   })
   const strings = useStrings()
+  const wallet = useSelectedWallet()
+
   return (
     <View>
       {[
         {
           label: strings.swapMinAdaTitle,
-          value: `${minAda} ADA`,
+          value: `${minAda} ${wallet.primaryTokenInfo.ticker}`,
           info: strings.swapMinAda,
         },
         {
@@ -136,7 +138,7 @@ const HiddenInfo = ({
         },
         {
           label: strings.swapFeesTitle,
-          value: `${totalFees} ADA`,
+          value: `${totalFees} ${wallet.primaryTokenInfo.ticker}`,
           info: strings.swapFees,
         },
       ].map((item) => (

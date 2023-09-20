@@ -16,6 +16,12 @@ export const getSellAmountByChangingBuy = (
   pool: Swap.Pool,
   buy: Balance.Amount,
 ): AmountPair => {
+  if (!pool) {
+    return {
+      buy: {tokenId: '', quantity: '0'},
+      sell: {tokenId: '', quantity: '0'},
+    }
+  }
   const initialPoolA = BigInt(pool.tokenA.quantity)
   const initialPoolB = BigInt(pool.tokenB.quantity)
 
