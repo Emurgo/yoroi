@@ -8,7 +8,6 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {Button, Spacer} from '../../../../../components'
 import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../../metrics/metricsManager'
-import {useAddresses} from '../../../../../Receive/Addresses'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfos} from '../../../../../yoroi-wallets/hooks'
@@ -35,7 +34,6 @@ export const CreateOrder = () => {
   const {createOrder, selectedPoolChanged, unsignedTxChanged, txPayloadChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
-  const addresses = useAddresses()
 
   const tokenInfos = useTokenInfos({
     wallet,
@@ -116,7 +114,7 @@ export const CreateOrder = () => {
       pools: poolList,
       selectedPool: createOrder.selectedPool,
       slippage: createOrder.slippage * 100,
-      address: addresses.used[0],
+      address: wallet.externalAddresses[0],
     }
 
     if (orderDetails.pools === undefined) return

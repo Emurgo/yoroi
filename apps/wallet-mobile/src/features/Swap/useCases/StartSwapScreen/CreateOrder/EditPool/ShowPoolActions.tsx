@@ -1,4 +1,5 @@
 import {getMinAdaReceiveAfterSlippage, getTotalFees, useSwap} from '@yoroi/swap'
+import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
@@ -36,7 +37,6 @@ export const ShowPoolActions = () => {
     return <></>
   }
   const totalAmount = Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)
-  const protocolCapitalize = selectedPool.provider[0].toUpperCase() + selectedPool.provider.substring(1)
   const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrder.amounts.sell.quantity)
   const providerFee = Quantities.format(asQuantity(calculatedFee ?? 0), sellTokenInfo.decimals ?? 0)
 
@@ -57,7 +57,7 @@ export const ShowPoolActions = () => {
 
             <Spacer width={10} />
 
-            <Text>{`${protocolCapitalize}${isPoolTouched ? '' : ` ${strings.autoPool}`}`}</Text>
+            <Text>{`${capitalize(selectedPool.provider)}${isPoolTouched ? '' : ` ${strings.autoPool}`}`}</Text>
           </View>
         </Header>
       }

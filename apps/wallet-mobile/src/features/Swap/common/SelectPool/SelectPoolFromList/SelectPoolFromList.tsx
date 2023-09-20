@@ -90,7 +90,7 @@ export const SelectPoolFromList = ({data = []}: Props) => {
                     <Spacer height={8} />
 
                     <View style={styles.info}>
-                      <Text style={styles.infoLabel}>{`{strings.batcherFee}, ${wallet.primaryTokenInfo.ticker}`}</Text>
+                      <Text style={styles.infoLabel}>{`${strings.batcherFee}, ${wallet.primaryTokenInfo.ticker}`}</Text>
 
                       <Text style={styles.infoValue}>{pool.batcherFee.quantity}</Text>
                     </View>
