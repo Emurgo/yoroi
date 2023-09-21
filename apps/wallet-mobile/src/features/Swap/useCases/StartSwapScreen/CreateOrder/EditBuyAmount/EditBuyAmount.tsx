@@ -20,7 +20,7 @@ export const EditBuyAmount = () => {
   const inputRef = React.useRef<TextInput>(null)
 
   const {createOrder, buyAmountChanged} = useSwap()
-  const {isBuyTouched} = useSwapTouched()
+  const {isBuyTouched, isSellTouched} = useSwapTouched()
   const {tokenId, quantity} = createOrder.amounts.buy
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const {decimals} = tokenInfo
@@ -58,7 +58,7 @@ export const EditBuyAmount = () => {
       navigateTo={navigate.selectBuyToken}
       touched={isBuyTouched}
       inputRef={inputRef}
-      inputEditable={isBuyTouched}
+      inputEditable={isBuyTouched && isSellTouched}
     />
   )
 }
