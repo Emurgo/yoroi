@@ -1,9 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  FixedTransaction,
+  make_vkey_witness,
+  PrivateKey,
+  TransactionHash,
+  Vkeywitnesses,
+} from '@emurgo/csl-mobile-bridge'
 import * as yoroiLib from '@emurgo/yoroi-lib'
 import {App, Balance} from '@yoroi/types'
 import {parseSafe} from '@yoroi/wallets'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
+import blake2b from 'blake2b'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
@@ -91,14 +99,6 @@ import {
 } from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {makeKeys} from './makeKeys'
-import {
-  FixedTransaction,
-  make_vkey_witness,
-  PrivateKey,
-  TransactionHash,
-  Vkeywitnesses,
-} from '@emurgo/csl-mobile-bridge'
-import blake2b from 'blake2b'
 
 type WalletState = {
   lastGeneratedAddressIndex: number

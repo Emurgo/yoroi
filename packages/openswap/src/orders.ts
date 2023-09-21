@@ -50,7 +50,6 @@ export async function cancelOrder(
   args: CancelOrderRequest,
 ): Promise<string> {
   const {network, client} = deps
-  console.log('cancelOrder', args)
   const apiUrl = SWAP_API_ENDPOINTS[network].cancelSwapTransaction
   const response = await client.get('/', {
     baseURL: apiUrl,
@@ -60,7 +59,6 @@ export async function cancelOrder(
       collateralUtxo: args.collateralUTxO,
     },
   })
-  console.log('cancelOrderResponse', response)
 
   if (response.status !== 200) {
     throw new Error('Failed to cancel swap transaction', {

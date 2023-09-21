@@ -36,14 +36,6 @@ export const getSellQuantityForLimitOrder = (
   ).toString() as BalanceQuantity
 }
 
-// TODO: Make entry to work
-export const createSwapCancelEntry = (createOrder: Swap.CancelOrderData, address: string): YoroiEntry => {
-  return {
-    address,
-    amounts: {},
-  }
-}
-
 export const createYoroiEntry = (
   createOrder: Swap.CreateOrderData,
   address: string,
