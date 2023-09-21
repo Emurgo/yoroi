@@ -1,9 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  FixedTransaction,
+  make_vkey_witness,
+  PrivateKey,
+  TransactionHash,
+  Vkeywitnesses,
+} from '@emurgo/csl-mobile-bridge'
 import {Datum} from '@emurgo/yoroi-lib'
 import {App, Balance} from '@yoroi/types'
 import {parseSafe} from '@yoroi/wallets'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
+import blake2b from 'blake2b'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
@@ -65,14 +73,6 @@ import {yoroiUnsignedTx} from '../unsignedTx'
 import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {makeKeys} from './makeKeys'
-import {
-  FixedTransaction,
-  make_vkey_witness,
-  PrivateKey,
-  TransactionHash,
-  Vkeywitnesses,
-} from '@emurgo/csl-mobile-bridge'
-import blake2b from 'blake2b'
 type WalletState = {
   lastGeneratedAddressIndex: number
 }
@@ -485,7 +485,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       await vkeys.add(vkeyWit)
       await witSet.set_vkeys(vkeys)
       await fixedTx.set_witness_set(await witSet.to_bytes())
-      return await fixedTx.to_bytes()
+      return fixedTx.to_bytes()
     }
 
     private async getRewardAddress() {

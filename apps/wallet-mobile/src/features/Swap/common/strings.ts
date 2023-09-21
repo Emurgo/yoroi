@@ -97,12 +97,17 @@ export const useStrings = () => {
     transactionDisplay: intl.formatMessage(messages.transactionDisplay),
     seeOnExplorer: intl.formatMessage(messages.seeOnExplorer),
     goToOrders: intl.formatMessage(messages.goToOrders),
+    wrongPasswordMessage: intl.formatMessage(messages.wrongPasswordMessage),
   }
 }
 
 export const amountInputErrorMessages = defineMessages({})
 
 export const messages = defineMessages({
+  wrongPasswordMessage: {
+    id: 'global.actions.dialogs.incorrectPassword.title',
+    defaultMessage: '!!!Incorrect password.',
+  },
   swapTitle: {
     id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',

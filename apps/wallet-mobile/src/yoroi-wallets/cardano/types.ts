@@ -1,6 +1,7 @@
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
 import {BaseAddress} from '@emurgo/cross-csl-core'
+import {PrivateKey} from '@emurgo/csl-mobile-bridge'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
@@ -42,7 +43,6 @@ import type {
 } from '../types/other'
 import {DefaultAsset} from '../types/tokens'
 import type {Addresses} from './chain'
-import {PrivateKey} from '@emurgo/csl-mobile-bridge'
 
 export type WalletEvent =
   | {type: 'initialize'}
