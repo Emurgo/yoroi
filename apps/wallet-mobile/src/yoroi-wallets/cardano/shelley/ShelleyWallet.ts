@@ -65,7 +65,14 @@ import {yoroiUnsignedTx} from '../unsignedTx'
 import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {makeKeys} from './makeKeys'
-
+import {
+  FixedTransaction,
+  make_vkey_witness,
+  PrivateKey,
+  TransactionHash,
+  Vkeywitnesses,
+} from '@emurgo/csl-mobile-bridge'
+import blake2b from 'blake2b'
 type WalletState = {
   lastGeneratedAddressIndex: number
 }
@@ -452,6 +459,33 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       Logger.info(`getStakingKey: ${Buffer.from(await stakingKey.asBytes()).toString('hex')}`)
       return stakingKey
+    }
+
+    public async signTx2(txHex: string, pKey: PrivateKey) {
+      console.log('signtx2')
+      const fixedTx = await FixedTransaction.from_hex(txHex)
+      console.log('fixedTx', fixedTx)
+      if (!fixedTx) return
+      const rawBody = await fixedTx.raw_body()
+      console.log('get tx hash')
+      const txHash = await TransactionHash.from_bytes(blake2b(32).update(rawBody).digest('binary'))
+      console.log('txHash', txHash)
+      if (!txHash) return
+
+      console.log('privateKey', pKey)
+
+      const vkeyWit = await make_vkey_witness(txHash, pKey)
+
+      const witSet = await fixedTx.witness_set()
+      let vkeys = await witSet.vkeys()
+      if (vkeys === undefined) {
+        vkeys = await Vkeywitnesses.new()
+      }
+      if (!vkeyWit) return
+      await vkeys.add(vkeyWit)
+      await witSet.set_vkeys(vkeys)
+      await fixedTx.set_witness_set(await witSet.to_bytes())
+      return await fixedTx.to_bytes()
     }
 
     private async getRewardAddress() {

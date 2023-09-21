@@ -42,6 +42,7 @@ import type {
 } from '../types/other'
 import {DefaultAsset} from '../types/tokens'
 import type {Addresses} from './chain'
+import {PrivateKey} from '@emurgo/csl-mobile-bridge'
 
 export type WalletEvent =
   | {type: 'initialize'}
@@ -95,6 +96,8 @@ export type YoroiWallet = {
   isReadOnly: boolean
   primaryToken: Readonly<DefaultAsset>
   primaryTokenInfo: Readonly<Balance.TokenInfo>
+
+  signTx2(txHex: string, pKey: PrivateKey): Promise<Uint8Array | undefined>
 
   // Sending
   createUnsignedTx(
