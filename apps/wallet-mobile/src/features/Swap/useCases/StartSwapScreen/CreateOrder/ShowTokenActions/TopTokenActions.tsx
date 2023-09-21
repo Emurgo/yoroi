@@ -25,15 +25,11 @@ export const TopTokenActions = () => {
 
   const handleSelectOrderType = (index: number) => {
     if (index === 0) {
-      handleSync()
+      refetch()
+      orderTypeChanged('market')
     } else {
       orderTypeChanged('limit')
     }
-  }
-
-  const handleSync = () => {
-    orderTypeChanged('market')
-    refetch()
   }
 
   return (
@@ -44,7 +40,7 @@ export const TopTokenActions = () => {
         selected={orderTypeIndex}
       />
 
-      <TouchableOpacity onPress={handleSync} disabled={isDisabled}>
+      <TouchableOpacity onPress={refetch} disabled={isDisabled}>
         <Icon.Refresh size={24} color={isDisabled ? COLORS.DISABLED : ''} />
       </TouchableOpacity>
 
