@@ -133,7 +133,7 @@ export const OpenOrders = () => {
 
     const pkey = await PrivateKey.from_bech32(bech32)
     if (!pkey) return
-    const response = await wallet.signTx2(cbor, pkey)
+    const response = await wallet.signRawTx(cbor, pkey)
     if (!response) return
     const hexTx = new Buffer(response).toString('hex')
     console.log('hex tx', hexTx)

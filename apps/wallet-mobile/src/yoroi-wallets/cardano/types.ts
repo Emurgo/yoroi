@@ -97,7 +97,7 @@ export type YoroiWallet = {
   primaryToken: Readonly<DefaultAsset>
   primaryTokenInfo: Readonly<Balance.TokenInfo>
 
-  signTx2(txHex: string, pKey: PrivateKey): Promise<Uint8Array | undefined>
+  signRawTx(txHex: string, pKey: PrivateKey): Promise<Uint8Array | undefined>
 
   // Sending
   createUnsignedTx(

@@ -91,6 +91,14 @@ import {
 } from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {makeKeys} from './makeKeys'
+import {
+  FixedTransaction,
+  make_vkey_witness,
+  PrivateKey,
+  TransactionHash,
+  Vkeywitnesses,
+} from '@emurgo/csl-mobile-bridge'
+import blake2b from 'blake2b'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -1019,6 +1027,27 @@ export class ByronWallet implements YoroiWallet {
 
   async fetchPoolInfo(request: PoolInfoRequest) {
     return api.getPoolInfo(request, this.getBackendConfig())
+  }
+
+  public async signRawTx(txHex: string, pKey: PrivateKey) {
+    const fixedTx = await FixedTransaction.from_hex(txHex)
+    if (!fixedTx) throw new Error('invalid tx hex')
+    const rawBody = await fixedTx.raw_body()
+    const txHash = await TransactionHash.from_bytes(blake2b(32).update(rawBody).digest('binary'))
+    if (!txHash) throw new Error('invalid tx hex, could not generate tx hash')
+
+    const vkeyWit = await make_vkey_witness(txHash, pKey)
+
+    const witSet = await fixedTx.witness_set()
+    let vkeys = await witSet.vkeys()
+    if (vkeys === undefined) {
+      vkeys = await Vkeywitnesses.new()
+    }
+    if (!vkeyWit) throw new Error('invalid tx hex, could not generate vkey witness')
+    await vkeys.add(vkeyWit)
+    await witSet.set_vkeys(vkeys)
+    await fixedTx.set_witness_set(await witSet.to_bytes())
+    return fixedTx.to_bytes()
   }
 
   async fetchTokenInfo(tokenId: string) {

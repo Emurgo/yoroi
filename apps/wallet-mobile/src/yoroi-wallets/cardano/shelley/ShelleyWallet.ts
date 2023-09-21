@@ -461,18 +461,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       return stakingKey
     }
 
-    public async signTx2(txHex: string, pKey: PrivateKey) {
-      console.log('signtx2')
+    public async signRawTx(txHex: string, pKey: PrivateKey) {
       const fixedTx = await FixedTransaction.from_hex(txHex)
-      console.log('fixedTx', fixedTx)
-      if (!fixedTx) return
+      if (!fixedTx) throw new Error('invalid tx hex')
       const rawBody = await fixedTx.raw_body()
-      console.log('get tx hash')
       const txHash = await TransactionHash.from_bytes(blake2b(32).update(rawBody).digest('binary'))
-      console.log('txHash', txHash)
-      if (!txHash) return
-
-      console.log('privateKey', pKey)
+      if (!txHash) throw new Error('invalid tx hex, could not generate tx hash')
 
       const vkeyWit = await make_vkey_witness(txHash, pKey)
 
@@ -481,7 +475,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       if (vkeys === undefined) {
         vkeys = await Vkeywitnesses.new()
       }
-      if (!vkeyWit) return
+      if (!vkeyWit) throw new Error('invalid tx hex, could not generate vkey witness')
       await vkeys.add(vkeyWit)
       await witSet.set_vkeys(vkeys)
       await fixedTx.set_witness_set(await witSet.to_bytes())
