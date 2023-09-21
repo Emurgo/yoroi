@@ -198,7 +198,7 @@ export const messages = defineMessages({
   },
   swapFeesTitle: {
     id: 'swap.swapScreen.swapFeesTitle',
-    defaultMessage: `!!!Fee`,
+    defaultMessage: `!!!Fees`,
   },
   swapMinReceived: {
     id: 'swap.swapScreen.swapMinReceived',

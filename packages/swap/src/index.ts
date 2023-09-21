@@ -13,6 +13,8 @@ export {apiMocks} from './adapters/openswap-api/api.mocks'
 export {getBuyAmountbyChangingSell} from './helpers/orders/getBuyAmountByChangingSell'
 export {getSellAmountByChangingBuy} from './helpers/orders/getSellAmountByChangingBuy'
 export {makePossibleMarketOrder} from './helpers/orders/makePossibleMarketOrder'
+export {getMinAdaReceiveAfterSlippage} from './helpers/orders/getMinAdaReceiveAfterSlippage'
+export {getTotalFees} from './helpers/orders/getTotalFees'
 export {makeLimitOrder} from './helpers/orders/makeLimitOrder'
 
 export {getPoolUrlByProvider} from './helpers/pools/getPoolUrlByProvider'
