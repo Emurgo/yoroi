@@ -55,10 +55,10 @@ export const EditLimitPrice = () => {
   ])
 
   const onChange = (text: string) => {
-    const [newText, quantity] = Quantities.parseFromText(text, PRECISION, numberLocale)
-    const value = Quantities.denominated(quantity, PRECISION)
+    const [formattedPrice, price] = Quantities.parseFromText(text, PRECISION, numberLocale)
+    const value = Quantities.denominated(price, PRECISION)
 
-    setText(newText)
+    setText(formattedPrice)
     limitPriceChanged(value)
   }
 

@@ -2,6 +2,8 @@ import AssetFingerprint from '@emurgo/cip14-js'
 import {Swap, Balance} from '@yoroi/types'
 import {OpenSwap} from '@yoroi/openswap'
 
+import {Quantities} from '../utils/quantities'
+
 export const transformersMaker = (
   primaryTokenId: Balance.Token['info']['id'],
 ) => {
@@ -146,7 +148,7 @@ export const transformersMaker = (
         tokenId: asYoroiTokenId({policyId, name}),
       } as const
     }
-    return {quantity: '0', tokenId: ''} as const
+    return {quantity: Quantities.zero, tokenId: ''} as const
   }
 
   const asYoroiPools = (openswapPools: OpenSwap.Pool[]): Swap.Pool[] => {

@@ -4,6 +4,7 @@ import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {Quantities} from 'src/yoroi-wallets/utils'
 
 import {Boundary, Spacer, Text} from '../../../../../../../components'
 import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components/AmountItem/AmountItem'
@@ -95,7 +96,7 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
       from_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
     })
     sellTouched()
-    sellAmountChanged({tokenId: tokenInfo.id, quantity: `0`})
+    sellAmountChanged({tokenId: tokenInfo.id, quantity: Quantities.zero})
     navigateTo.startSwap()
     closeSearch()
   }

@@ -10,6 +10,7 @@ import {formatTokenWithText} from '../../../../legacy/format'
 import {COLORS} from '../../../../theme'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
+import {Quantities} from '../../../../yoroi-wallets/utils'
 
 type Props = {
   label?: string
@@ -48,7 +49,7 @@ export const AmountCard = ({
   const noTokenSelected = !touched
 
   const name = tokenInfo.ticker ?? tokenInfo.name
-  const formattedAmount = noTokenSelected ? '0' : formatTokenWithText(quantity, tokenInfo, 18)
+  const formattedAmount = noTokenSelected ? Quantities.zero : formatTokenWithText(quantity, tokenInfo, 18)
   const fallback = React.useCallback(() => <TokenIconPlaceholder />, [])
 
   const focusInput = () => {
