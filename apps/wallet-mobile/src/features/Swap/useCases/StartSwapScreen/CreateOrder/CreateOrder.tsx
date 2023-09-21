@@ -176,7 +176,7 @@ export const CreateOrder = () => {
 
   return (
     <View style={styles.root}>
-      <ScrollView>
+      <ScrollView style={styles.scroll}>
         <View style={styles.container}>
           <LimitPriceWarning
             open={showLimitPriceWarning}
@@ -229,6 +229,8 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
+  },
+  scroll: {
     paddingHorizontal: 16,
   },
   container: {
