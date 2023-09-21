@@ -112,14 +112,9 @@ export const OpenOrders = () => {
     const address = await CardanoMobile.Address.fromBech32(addressBech32)
     const bytes = await address.toBytes()
     const addressHex = new Buffer(bytes).toString('hex')
-    console.log('get cbor')
-    console.log('orderUtxo', orderUtxo)
     const cbor = await swapApiOrder.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address: addressHex})
-    console.log('got cbor', cbor)
     const rootKey = await wallet.encryptedStorage.rootKey.read(password)
-    console.log('got root key')
     const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(rootKey, 'hex'))
-    console.log('master key')
     const accountPrivateKey = await masterKey
       .derive(1852 + HARD_DERIVATION_START)
       .then((key) => key.derive(1815 + HARD_DERIVATION_START))
@@ -127,7 +122,6 @@ export const OpenOrders = () => {
       .then((key) => key.derive(0))
       .then((key) => key.derive(0))
 
-    console.log('got account private key')
     const rawKey = await accountPrivateKey.toRawKey()
     const bech32 = await rawKey.toBech32()
 
@@ -136,7 +130,6 @@ export const OpenOrders = () => {
     const response = await wallet.signRawTx(cbor, pkey)
     if (!response) return
     const hexTx = new Buffer(response).toString('hex')
-    console.log('hex tx', hexTx)
     const hexBase64 = new Buffer(response).toString('base64')
     return {txBase64: hexBase64}
   }
