@@ -6,7 +6,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button} from '../../../../components'
 import {BottomSheetModal} from '../../../../components/BottomSheetModal'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
-import {useWalletNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
@@ -25,8 +24,6 @@ export const ConfirmTxScreen = () => {
 
   const {unsignedTx, createOrder} = useSwap()
 
-  const {resetToTxHistory} = useWalletNavigation()
-
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
     {id: wallet.id},
     {onSuccess: (rootKey) => signAndSubmitTx({unsignedTx, rootKey})},
@@ -38,7 +35,10 @@ export const ConfirmTxScreen = () => {
       signTx: {useErrorBoundary: true},
       submitTx: {
         onSuccess: () => {
-          navigate.startSwap()
+          navigate.submittedTx()
+        },
+        onError: () => {
+          navigate.failedTx()
         },
         useErrorBoundary: true,
       },
@@ -79,7 +79,10 @@ export const ConfirmTxScreen = () => {
           wallet={wallet}
           unsignedTx={unsignedTx}
           datum={{data: createOrder.datum}}
-          onSuccess={() => resetToTxHistory()}
+          onSuccess={() => {
+            setConfirmationModal(false)
+            navigate.submittedTx()
+          }}
           onCancel={() => setConfirmationModal(false)}
         />
       </BottomSheetModal>

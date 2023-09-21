@@ -10,10 +10,14 @@ import {YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {entry: YoroiEntry; datum: Datum}>) => {
   const {createOrder} = useSwap()
   const orderMetadata = omit(createOrder, ['datumHash', 'datum'])
+  console.log('metadata', JSON.stringify(orderMetadata))
   const metadata = [
     {
       label: '674',
-      data: {msg: [`${createOrder.selectedPool?.provider}: Swap B for A Order Request`], order: {...orderMetadata}},
+      data: {
+        msg: [`${createOrder.selectedPool?.provider}: Swap B for A Order Request`],
+        //  order: {...orderMetadata}
+      },
     },
   ]
 

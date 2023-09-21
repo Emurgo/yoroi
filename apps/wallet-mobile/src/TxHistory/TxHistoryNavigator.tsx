@@ -19,7 +19,9 @@ import {SwapTabNavigator} from '../features/Swap/SwapNavigator'
 import {
   ConfirmTxScreen as ConfirmTxSwapScreen,
   EditSlippageScreen,
+  FailedTxScreen as FailedTxSwapScreen,
   SelectPoolFromListScreen,
+  SubmittedTxScreen as SubmittedTxSwapScreen,
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
@@ -147,6 +149,18 @@ export const TxHistoryNavigator = () => {
               options={{
                 title: strings.selectPool,
               }}
+            />
+
+            <Stack.Screen
+              name="swap-submitted-tx"
+              component={SubmittedTxSwapScreen}
+              options={{headerShown: false, gestureEnabled: false}}
+            />
+
+            <Stack.Screen
+              name="swap-failed-tx"
+              component={FailedTxSwapScreen}
+              options={{headerShown: false, gestureEnabled: false}}
             />
 
             <Stack.Screen
