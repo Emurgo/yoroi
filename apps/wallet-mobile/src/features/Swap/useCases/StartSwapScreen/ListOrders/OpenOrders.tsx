@@ -580,6 +580,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   counter: {
-    paddingBottom: 16,
+    paddingVertical: 16,
   },
 })
