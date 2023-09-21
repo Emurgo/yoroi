@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   title: {
-    fontWeight: 'bold',
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
     fontSize: 20,
     padding: 16,
   },
