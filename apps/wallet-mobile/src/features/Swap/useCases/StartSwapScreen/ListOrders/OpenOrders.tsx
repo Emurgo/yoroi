@@ -627,10 +627,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
-  flex: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
   contentRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
