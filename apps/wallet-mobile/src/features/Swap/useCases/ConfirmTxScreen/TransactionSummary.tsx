@@ -1,10 +1,11 @@
-import {useSwap} from '@yoroi/swap'
+import {getMinAdaReceiveAfterSlippage, getTotalFees, useSwap} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {BottomSheetModal} from '../../../../components/BottomSheetModal'
+import {useLanguage} from '../../../../i18n'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
@@ -19,6 +20,7 @@ export const TransactionSummary = () => {
   })
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const {numberLocale} = useLanguage()
   const {createOrder, unsignedTx} = useSwap()
   const {amounts, selectedPool} = createOrder
 
@@ -30,21 +32,32 @@ export const TransactionSummary = () => {
     asQuantity(Number(Object.values(unsignedTx?.fee))),
     Number(wallet.primaryTokenInfo.decimals),
   )
-
   const feesInfo = [
     {
       label: strings.swapMinAdaTitle,
-      value: `${Quantities.denominated(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))} ADA`,
+      value: `${Quantities.denominated(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))} ${
+        wallet.primaryTokenInfo.ticker
+      }`,
       info: strings.swapMinAda,
     },
     {
       label: strings.swapMinReceivedTitle,
-      value: '?', // TODO add real value
+      value: `${getMinAdaReceiveAfterSlippage(
+        amounts.buy.quantity,
+        createOrder.slippage,
+        buyTokenInfo.decimals ?? 0,
+        numberLocale,
+      )} ${tokenToBuyName}`,
       info: strings.swapMinReceived,
     },
     {
       label: strings.swapFeesTitle,
-      value: `${poolFee} ADA`,
+      value: `${getTotalFees(
+        selectedPool?.batcherFee.quantity,
+        asQuantity(poolFee),
+        wallet.primaryTokenInfo.decimals ?? 0,
+        numberLocale,
+      )} ${wallet.primaryTokenInfo.ticker}`,
       info: strings.swapFees,
     },
   ]

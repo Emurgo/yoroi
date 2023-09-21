@@ -6,6 +6,7 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import {Spacer} from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
+import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useNavigateTo} from '../../navigation'
 import {PoolIcon} from '../../PoolIcon/PoolIcon'
@@ -17,6 +18,7 @@ type Props = {
 }
 export const SelectPoolFromList = ({data = []}: Props) => {
   const strings = useStrings()
+  const wallet = useSelectedWallet()
   const {selectedPoolChanged, createOrder} = useSwap()
   const {poolTouched} = useSwapTouched()
   const [selectedCardIndex, setSelectedCardIndex] = useState(createOrder.selectedPool?.poolId)
@@ -60,7 +62,7 @@ export const SelectPoolFromList = ({data = []}: Props) => {
                     <View style={styles.info}>
                       <Text style={styles.infoLabel}>{strings.price}</Text>
 
-                      <Text style={styles.infoValue}>{pool.price} ADA</Text>
+                      <Text style={styles.infoValue}>{`${pool.price} ${wallet.primaryTokenInfo.ticker}`}</Text>
                     </View>
                   </View>
 
@@ -68,7 +70,7 @@ export const SelectPoolFromList = ({data = []}: Props) => {
                     <Spacer height={8} />
 
                     <View style={styles.info}>
-                      <Text style={styles.infoLabel}>{strings.tvl}, ADA</Text>
+                      <Text style={styles.infoLabel}>{`${strings.tvl}, ${wallet.primaryTokenInfo.ticker}`}</Text>
 
                       <Text style={styles.infoValue}>{pool.deposit.quantity}</Text>
                     </View>
@@ -88,7 +90,7 @@ export const SelectPoolFromList = ({data = []}: Props) => {
                     <Spacer height={8} />
 
                     <View style={styles.info}>
-                      <Text style={styles.infoLabel}>{strings.batcherFee}, ADA</Text>
+                      <Text style={styles.infoLabel}>{`${strings.batcherFee}, ${wallet.primaryTokenInfo.ticker}`}</Text>
 
                       <Text style={styles.infoValue}>{pool.batcherFee.quantity}</Text>
                     </View>

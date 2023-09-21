@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-newline */
 import {useSwap} from '@yoroi/swap'
-import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
@@ -8,18 +7,17 @@ import {useLanguage} from '../../../../../i18n'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {getBuyQuantityForLimitOrder} from '../../../common/helpers'
 import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from '../../../common/SwapFormProvider'
+
 const BORDER_SIZE = 1
 const PRECISION = 10
 
 export const EditLimitPrice = () => {
   const strings = useStrings()
   const {numberLocale} = useLanguage()
-  const [text, setText] = React.useState('')
-
   const wallet = useSelectedWallet()
 
   const {createOrder, limitPriceChanged, buyAmountChanged} = useSwap()
@@ -42,29 +40,30 @@ export const EditLimitPrice = () => {
         : 0
 
     limitPriceChanged(`${defaultPrice}`)
-    const formattedValue = BigNumber(defaultPrice).toFormat(numberLocale)
-    setText(formattedValue)
 
     const sellQuantityDenominated = Quantities.denominated(
       createOrder.amounts.sell.quantity,
       sellTokenInfo.decimals ?? 0,
     )
     buyAmountChanged({
-      quantity: getBuyQuantityForLimitOrder(sellQuantityDenominated, `${defaultPrice}`, buyTokenInfo.decimals ?? 0),
+      quantity: getBuyQuantityForLimitOrder(
+        sellQuantityDenominated,
+        asQuantity(defaultPrice ?? 0),
+        buyTokenInfo.decimals ?? 0,
+      ),
       tokenId: createOrder.amounts.buy.tokenId,
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isBuyTouched, isSellTouched, sellTokenInfo.id, buyTokenInfo.id, createOrder?.selectedPool?.price, numberLocale])
 
   const onChange = (text: string) => {
-    const [newText, quantity] = Quantities.parseFromText(text, PRECISION, numberLocale)
+    const [_, quantity] = Quantities.parseFromText(text, PRECISION, numberLocale)
     const value = Quantities.denominated(quantity, PRECISION)
     const sellQuantityDenominated = Quantities.denominated(
       createOrder.amounts.sell.quantity,
       sellTokenInfo.decimals ?? 0,
     )
     limitPriceChanged(value)
-    setText(newText)
     buyAmountChanged({
       quantity: getBuyQuantityForLimitOrder(sellQuantityDenominated, value, buyTokenInfo.decimals ?? 0),
       tokenId: createOrder.amounts.buy.tokenId,
@@ -76,7 +75,7 @@ export const EditLimitPrice = () => {
       <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
 
       <View style={styles.content}>
-        <AmountInput onChange={onChange} value={text} editable={!disabled} />
+        <AmountInput onChange={onChange} value={createOrder.limitPrice} editable={!disabled} />
 
         <View style={[styles.textWrapper, disabled && styles.disabled]}>
           <Text style={styles.text}>

@@ -171,7 +171,7 @@ export const OpenOrders = () => {
   return (
     <>
       <View style={styles.container}>
-        <ScrollView style={styles.flex}>
+        <ScrollView style={styles.content}>
           {filteredOrders.map((order) => {
             const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
             const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
@@ -229,7 +229,7 @@ export const OpenOrders = () => {
         </BottomSheetModal>
       </View>
 
-      <Counter counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
+      <Counter style={styles.counter} counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
     </>
   )
 }
@@ -415,7 +415,7 @@ const LiquidityPool = ({
 
 export const OpenOrdersSkeleton = () => (
   <View style={styles.container}>
-    <View style={styles.flex}>
+    <View style={styles.content}>
       {[0, 1, 2, 3].map((index) => (
         <React.Fragment key={index}>
           <ExpandableInfoCardSkeleton />
@@ -623,8 +623,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingBottom: 8,
   },
+  content: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
   flex: {
     flex: 1,
+    paddingHorizontal: 16,
   },
   contentRow: {
     flexDirection: 'row',
@@ -703,5 +708,8 @@ const styles = StyleSheet.create({
   label: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  counter: {
+    paddingVertical: 16,
   },
 })

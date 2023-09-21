@@ -8,7 +8,6 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {Button, Spacer} from '../../../../../components'
 import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../../metrics/metricsManager'
-import {useAddresses} from '../../../../../Receive/Addresses'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfos} from '../../../../../yoroi-wallets/hooks'
@@ -35,7 +34,6 @@ export const CreateOrder = () => {
   const {createOrder, selectedPoolChanged, unsignedTxChanged, txPayloadChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
-  const addresses = useAddresses()
 
   const tokenInfos = useTokenInfos({
     wallet,
@@ -115,8 +113,8 @@ export const CreateOrder = () => {
       buy: amounts.buy,
       pools: poolList,
       selectedPool: createOrder.selectedPool,
-      slippage: createOrder.slippage,
-      address: addresses.used[0],
+      slippage: createOrder.slippage * 100,
+      address: wallet.externalAddresses[0],
     }
 
     if (orderDetails.pools === undefined) return
@@ -178,7 +176,7 @@ export const CreateOrder = () => {
 
   return (
     <View style={styles.root}>
-      <ScrollView>
+      <ScrollView style={styles.scroll}>
         <View style={styles.container}>
           <LimitPriceWarning
             open={showLimitPriceWarning}
@@ -231,6 +229,8 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
+  },
+  scroll: {
     paddingHorizontal: 16,
   },
   container: {
