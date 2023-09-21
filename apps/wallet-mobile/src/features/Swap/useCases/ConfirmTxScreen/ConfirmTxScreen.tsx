@@ -85,7 +85,7 @@ export const ConfirmTxScreen = () => {
             wallet={wallet}
             unsignedTx={unsignedTx}
             datum={{data: createOrder.datum}}
-            onSuccess={() => resetToTxHistory()}
+            onSuccess={resetToTxHistory}
             onCancel={closeBottomSheet}
           />
 
