@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Select token",
     "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
     "start": {
-      "line": 127,
+      "line": 128,
       "column": 15,
-      "index": 3956
+      "index": 4027
     },
     "end": {
-      "line": 130,
+      "line": 131,
       "column": 3,
-      "index": 4039
+      "index": 4110
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Current Balance",
     "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
     "start": {
-      "line": 131,
+      "line": 132,
       "column": 18,
-      "index": 4059
+      "index": 4130
     },
     "end": {
-      "line": 134,
+      "line": 135,
       "column": 3,
-      "index": 4148
+      "index": 4219
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Not enough balance",
     "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
     "start": {
-      "line": 135,
+      "line": 136,
       "column": 20,
-      "index": 4170
+      "index": 4241
     },
     "end": {
-      "line": 138,
+      "line": 139,
       "column": 3,
-      "index": 4264
+      "index": 4335
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Not enough supply in the pool",
     "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
     "start": {
-      "line": 139,
+      "line": 140,
       "column": 19,
-      "index": 4285
+      "index": 4356
     },
     "end": {
-      "line": 142,
+      "line": 143,
       "column": 3,
-      "index": 4389
+      "index": 4460
     }
   }
 ]
