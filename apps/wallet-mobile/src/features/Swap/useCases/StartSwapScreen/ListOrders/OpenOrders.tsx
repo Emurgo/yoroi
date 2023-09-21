@@ -129,7 +129,6 @@ export const OpenOrders = () => {
     if (!pkey) return
     const response = await wallet.signRawTx(cbor, pkey)
     if (!response) return
-    const hexTx = new Buffer(response).toString('hex')
     const hexBase64 = new Buffer(response).toString('base64')
     return {txBase64: hexBase64}
   }
