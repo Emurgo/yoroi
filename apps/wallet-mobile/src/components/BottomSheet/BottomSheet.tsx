@@ -73,7 +73,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       <>
         {isOpen && <View style={styles.backdrop} />}
 
-        <Modal animationType="slide" visible={debug || isOpen} onRequestClose={closeBottomSheet} transparent>
+        <Modal animationType="slide" visible={debug || isOpen} onRequestClose={closeBottomSheet} transparent={true}>
           <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'height' : undefined}>
             <View style={[styles.sheet, {height: isExtended && isExtendable ? maxHeight : height}]}>
               <Header title={title} onResponderMove={onResponderMove} />
@@ -127,8 +127,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   title: {
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
+    fontWeight: 'bold',
     fontSize: 20,
     padding: 16,
   },
