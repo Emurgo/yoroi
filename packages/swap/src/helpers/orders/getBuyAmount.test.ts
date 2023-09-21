@@ -1,9 +1,9 @@
 import {Swap, Balance} from '@yoroi/types'
 
-import {getBuyAmountbyChangingSell} from './getBuyAmountByChangingSell'
+import {getBuyAmount} from './getBuyAmount'
 
-describe('getReceiveAmountbyChangingSell', () => {
-  it('should calculate the correct receive amount when selling tokenA', () => {
+describe('getBuyAmount', () => {
+  it('should calculate the correct buy amount when selling tokenA', () => {
     const pool = {
       tokenA: {quantity: '4500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
@@ -23,13 +23,16 @@ describe('getReceiveAmountbyChangingSell', () => {
       quantity: '100',
       tokenId: 'tokenA',
     }
-    const result = getBuyAmountbyChangingSell(pool, sell)
-    expect(result.sell).toEqual(sell)
-    expect(result.buy.quantity).toBe('197')
-    expect(result.buy.tokenId).toBe('tokenB')
+    const result = getBuyAmount(pool, sell)
+    expect(result.quantity).toBe('197')
+    expect(result.tokenId).toBe('tokenB')
+
+    const limitedResult = getBuyAmount(pool, sell, '2.1')
+    expect(limitedResult.quantity).toBe('207')
+    expect(limitedResult.tokenId).toBe('tokenB')
   })
 
-  it('should calculate the correct receive amount when selling tokenB', () => {
+  it('should calculate the correct buy amount when selling tokenB', () => {
     const pool = {
       tokenA: {quantity: '4500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
@@ -49,9 +52,12 @@ describe('getReceiveAmountbyChangingSell', () => {
       quantity: '100',
       tokenId: 'tokenB',
     }
-    const result = getBuyAmountbyChangingSell(pool, sell)
-    expect(result.sell).toEqual(sell)
-    expect(result.buy.quantity).toBe('49')
-    expect(result.buy.tokenId).toBe('tokenA')
+    const result = getBuyAmount(pool, sell)
+    expect(result.quantity).toBe('49')
+    expect(result.tokenId).toBe('tokenA')
+
+    const limitedResult = getBuyAmount(pool, sell, '2.1')
+    expect(limitedResult.quantity).toBe('47')
+    expect(limitedResult.tokenId).toBe('tokenA')
   })
 })

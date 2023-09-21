@@ -273,7 +273,9 @@ describe('SwapProvider', () => {
         tokenId: 'policyId.buy',
       },
     })
-    expect(result.current.createOrder.limitPrice).toBeUndefined()
+    expect(result.current.createOrder.limitPrice).toEqual(
+      `${result.current.createOrder.selectedPool?.price ?? 0}`,
+    )
   })
 
   it('ResetState', () => {

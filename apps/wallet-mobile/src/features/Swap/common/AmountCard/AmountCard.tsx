@@ -75,6 +75,7 @@ export const AmountCard = ({
               underlineColorAndroid="transparent"
               ref={amountInputRef}
               editable={inputEditable}
+              selectTextOnFocus
             />
           </Pressable>
 

@@ -1,8 +1,8 @@
 import {Swap, Balance} from '@yoroi/types'
 
-import {getSellAmountByChangingBuy} from './getSellAmountByChangingBuy'
+import {getSellAmount} from './getSellAmount'
 
-describe('getSellAmountByChangingBuy', () => {
+describe('getSellAmount', () => {
   it('should calculate the correct sell amount when buying tokenA', () => {
     const pool = {
       tokenA: {quantity: '4500000', tokenId: 'tokenA'},
@@ -23,10 +23,13 @@ describe('getSellAmountByChangingBuy', () => {
       quantity: '100',
       tokenId: 'tokenA',
     }
-    const result = getSellAmountByChangingBuy(pool, buy)
-    expect(result.buy).toEqual(buy)
-    expect(result.sell.quantity).toBe('204')
-    expect(result.sell.tokenId).toBe('tokenB')
+    const result = getSellAmount(pool, buy)
+    expect(result.quantity).toBe('204')
+    expect(result.tokenId).toBe('tokenB')
+
+    const limitedResult = getSellAmount(pool, buy, '2.1')
+    expect(limitedResult.quantity).toBe('214')
+    expect(limitedResult.tokenId).toBe('tokenB')
   })
 
   it('should calculate the correct sell amount when buying tokenB', () => {
@@ -49,10 +52,13 @@ describe('getSellAmountByChangingBuy', () => {
       quantity: '100',
       tokenId: 'tokenB',
     }
-    const result = getSellAmountByChangingBuy(pool, buy)
-    expect(result.buy).toEqual(buy)
-    expect(result.sell.quantity).toBe('53')
-    expect(result.sell.tokenId).toBe('tokenA')
+    const result = getSellAmount(pool, buy)
+    expect(result.quantity).toBe('53')
+    expect(result.tokenId).toBe('tokenA')
+
+    const limitedResult = getSellAmount(pool, buy, '2.1')
+    expect(limitedResult.quantity).toBe('50')
+    expect(limitedResult.tokenId).toBe('tokenA')
   })
 
   it('should return a big number when there is not enough balance', () => {
@@ -75,10 +81,9 @@ describe('getSellAmountByChangingBuy', () => {
       quantity: '1000001',
       tokenId: 'tokenA',
     }
-    const result = getSellAmountByChangingBuy(pool, buy)
-    expect(result.buy).toEqual(buy)
+    const result = getSellAmount(pool, buy)
     // TODO: check why the fee is always in lovelace when swaping tokens other then ADA
-    expect(result.sell.quantity).toBe('2222220000002')
-    expect(result.sell.tokenId).toBe('tokenB')
+    expect(result.quantity).toBe('2222220000002')
+    expect(result.tokenId).toBe('tokenB')
   })
 })

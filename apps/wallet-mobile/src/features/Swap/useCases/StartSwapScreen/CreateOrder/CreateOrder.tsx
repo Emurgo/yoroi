@@ -47,7 +47,7 @@ export const CreateOrder = () => {
   })
 
   useEffect(() => {
-    if (poolList !== undefined) {
+    if (poolList !== undefined && poolList.length > 0) {
       const bestPool = poolList.map((a) => a).sort((a, b) => a.price - b.price)[0]
       selectedPoolChanged(bestPool)
       poolDefaulted()
@@ -87,8 +87,10 @@ export const CreateOrder = () => {
     (createOrder.type === 'limit' && createOrder.limitPrice !== undefined && Quantities.isZero(createOrder.limitPrice))
 
   const swap = () => {
-    const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
-    const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
+    const sellTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)
+    const buyTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)
+
+    if (!sellTokenInfo || !buyTokenInfo) return
 
     track.swapOrderSelected({
       from_asset: [
@@ -129,6 +131,7 @@ export const CreateOrder = () => {
       )
       if (orderResult) createSwapOrder(orderResult)
     }
+
     if (createOrder.type === 'limit') {
       const orderResult = makeLimitOrder(
         orderDetails.sell,
@@ -181,9 +184,7 @@ export const CreateOrder = () => {
           <LimitPriceWarning
             open={showLimitPriceWarning}
             onClose={() => setShowLimitPriceWarning(false)}
-            onSubmit={() => {
-              handleOnSwap()
-            }}
+            onSubmit={handleOnSwap}
           />
 
           <KeyboardAvoidingView

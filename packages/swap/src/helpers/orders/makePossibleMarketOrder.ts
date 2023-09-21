@@ -1,5 +1,5 @@
 import {Balance, Swap} from '@yoroi/types'
-import {getBuyAmountbyChangingSell} from './getBuyAmountByChangingSell'
+import {getBuyAmount} from './getBuyAmount'
 import {getQuantityWithSlippage} from './getQuantityWithSlippage'
 
 /**
@@ -26,11 +26,11 @@ export const makePossibleMarketOrder = (
     bestOrder: Swap.CreateOrderData | undefined,
     currentPool: Swap.Pool,
   ): Swap.CreateOrderData => {
-    const amountPair = getBuyAmountbyChangingSell(currentPool, sell)
+    const rawBuy = getBuyAmount(currentPool, sell)
 
-    const rawReceiveAmount = BigInt(amountPair.buy.quantity)
-    const receiveAmountWithSlippage = getQuantityWithSlippage(
-      rawReceiveAmount,
+    const rawBuyQuantity = BigInt(rawBuy.quantity)
+    const buyQuantityWithSlippage = getQuantityWithSlippage(
+      rawBuyQuantity,
       BigInt(slippage),
     )
 
@@ -38,10 +38,10 @@ export const makePossibleMarketOrder = (
       selectedPool: currentPool,
       slippage,
       amounts: {
-        sell: amountPair.sell,
+        sell,
         buy: {
           tokenId: buy.tokenId,
-          quantity: receiveAmountWithSlippage.toString() as Balance.Quantity,
+          quantity: buyQuantityWithSlippage.toString() as Balance.Quantity,
         },
       },
       address,
