@@ -62,5 +62,5 @@ export const isTokenSupplyResponse =
 export const parseTokenSupplyResponse = (
   data: unknown,
 ): TokenSupplyResponse | undefined => {
-  return isTokenSupplyResponse(data) ? (data as TokenSupplyResponse) : undefined
+  return isTokenSupplyResponse(data) ? data : undefined
 }
