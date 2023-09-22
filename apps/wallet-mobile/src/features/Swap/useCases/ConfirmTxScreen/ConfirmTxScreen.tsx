@@ -24,7 +24,6 @@ export const ConfirmTxScreen = () => {
   const closeBottomSheet = () => {
     bottomSheetRef.current?.closeBottomSheet()
   }
-
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
