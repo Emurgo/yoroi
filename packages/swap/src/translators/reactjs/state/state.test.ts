@@ -141,6 +141,7 @@ describe('State Actions', () => {
     }
     const expectedState = produce(mockSwapStateDefault, (draft) => {
       draft.createOrder.selectedPool = action.pool
+      draft.createOrder.marketPrice = '1'
     })
     const state = combinedSwapReducers(mockSwapStateDefault, action)
     expect(state).toEqual(expectedState)
@@ -169,6 +170,7 @@ describe('State Actions', () => {
 
     const expectedState = produce(limitedState, (draft) => {
       draft.createOrder.selectedPool = action.pool
+      draft.createOrder.marketPrice = '1'
     })
     const state = combinedSwapReducers(limitedState, action)
     expect(state).toEqual(expectedState)

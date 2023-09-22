@@ -158,14 +158,7 @@ export const CreateOrder = () => {
 
   const handleOnSwap = () => {
     if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
-      const marketPrice = BigNumber(
-        isBuyTouched &&
-          isSellTouched &&
-          createOrder.selectedPool?.price !== undefined &&
-          !Number.isNaN(createOrder.selectedPool.price)
-          ? createOrder.selectedPool.price
-          : 0,
-      )
+      const marketPrice = BigNumber(createOrder.marketPrice)
       const limitPrice = BigNumber(createOrder.limitPrice)
 
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {

@@ -40,7 +40,7 @@ export const EditBuyAmount = () => {
   const onChangeQuantity = (text: string) => {
     try {
       const [input, quantity] = Quantities.parseFromText(text, decimals ?? 0, numberLocale)
-      setInputValue(input)
+      setInputValue(text === '' ? text : input)
       buyAmountChanged({tokenId, quantity})
     } catch (error) {
       Logger.error('SwapAmountScreen::onChangeQuantity', error)

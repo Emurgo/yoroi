@@ -32,27 +32,13 @@ export const EditLimitPrice = () => {
   const tokenToBuyName = isBuyTouched ? buyTokenInfo.ticker ?? buyTokenInfo.name : '-'
 
   React.useEffect(() => {
-    const defaultPrice =
-      isBuyTouched &&
-      isSellTouched &&
-      createOrder?.selectedPool?.price !== undefined &&
-      !Number.isNaN(createOrder.selectedPool.price)
-        ? createOrder.selectedPool.price
-        : 0
+    const defaultPrice = createOrder.marketPrice
 
     const formattedValue = BigNumber(defaultPrice).toFormat(numberLocale)
     setText(formattedValue)
-    limitPriceChanged(`${defaultPrice}`)
-  }, [
-    isBuyTouched,
-    isSellTouched,
-    sellTokenInfo.id,
-    buyTokenInfo.id,
-    createOrder.selectedPool?.price,
-    numberLocale,
-    createOrder.type,
-    limitPriceChanged,
-  ])
+    limitPriceChanged(defaultPrice)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createOrder.marketPrice])
 
   const onChange = (text: string) => {
     const [formattedPrice, price] = Quantities.parseFromText(text, PRECISION, numberLocale)

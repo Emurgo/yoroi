@@ -4,11 +4,13 @@ import {BalanceQuantity} from '@yoroi/types/src/balance/token'
 
 import {getBuyAmount} from '../../../helpers/orders/getBuyAmount'
 import {getSellAmount} from '../../../helpers/orders/getSellAmount'
+import {getMarketPrice} from '../../../helpers/orders/getMarketPrice'
 import {Quantities} from '../../../utils/quantities'
 
 export type SwapState = Readonly<{
   createOrder: Swap.CreateOrderData & {
     type: Swap.OrderType
+    marketPrice: BalanceQuantity
     datum: string
     datumHash: string
   }
@@ -129,6 +131,7 @@ export const defaultSwapState: SwapState = {
     },
     slippage: 1,
     limitPrice: Quantities.zero,
+    marketPrice: Quantities.zero,
     selectedPool: {
       provider: 'minswap',
       fee: '',
@@ -212,6 +215,10 @@ const createOrderReducer = (
             ? state.createOrder.limitPrice
             : undefined,
         )
+        draft.createOrder.marketPrice = getMarketPrice(
+          action.pool,
+          state.createOrder.amounts.sell,
+        )
         break
       case SwapCreateOrderActionType.SlippageChanged:
         draft.createOrder.slippage = action.slippage
@@ -226,6 +233,10 @@ const createOrderReducer = (
           sell: state.createOrder.amounts.buy,
           buy: state.createOrder.amounts.sell,
         }
+        draft.createOrder.marketPrice = getMarketPrice(
+          state.createOrder.selectedPool,
+          state.createOrder.amounts.buy,
+        )
         break
       case SwapCreateOrderActionType.ResetQuantities:
         draft.createOrder.amounts = {
@@ -238,9 +249,7 @@ const createOrderReducer = (
             tokenId: state.createOrder.amounts.buy.tokenId,
           },
         }
-        draft.createOrder.limitPrice = `${
-          state.createOrder.selectedPool?.price ?? 0
-        }`
+        draft.createOrder.limitPrice = state.createOrder.marketPrice
         break
       case SwapCreateOrderActionType.LimitPriceChanged:
         draft.createOrder.limitPrice = action.limitPrice

@@ -201,6 +201,18 @@ describe('SwapProvider', () => {
             tokenId: 'policyId.buy',
           },
         },
+        selectedPool: {
+          provider: 'sundaeswap',
+          fee: '0.5',
+          batcherFee: {tokenId: '', quantity: '1'},
+          deposit: {tokenId: '', quantity: '1'},
+          lastUpdate: '123',
+          lpToken: {tokenId: '', quantity: '1'},
+          poolId: '1',
+          price: 1,
+          tokenA: {tokenId: 'policyId.sell', quantity: '1'},
+          tokenB: {tokenId: 'policyId.buy', quantity: '1'},
+        },
       },
     }
     const wrapper = ({children}: any) => (
@@ -244,7 +256,20 @@ describe('SwapProvider', () => {
             tokenId: 'policyId.buy',
           },
         },
+        selectedPool: {
+          provider: 'sundaeswap',
+          fee: '0.5',
+          batcherFee: {tokenId: '', quantity: '1'},
+          deposit: {tokenId: '', quantity: '1'},
+          lastUpdate: '123',
+          lpToken: {tokenId: '', quantity: '1'},
+          poolId: '1',
+          price: 1,
+          tokenA: {tokenId: 'policyId.sell', quantity: '1'},
+          tokenB: {tokenId: 'policyId.buy', quantity: '1'},
+        },
         limitPrice: '3',
+        marketPrice: '1',
       },
     }
     const wrapper = ({children}: any) => (
@@ -273,9 +298,7 @@ describe('SwapProvider', () => {
         tokenId: 'policyId.buy',
       },
     })
-    expect(result.current.createOrder.limitPrice).toEqual(
-      `${result.current.createOrder.selectedPool?.price ?? 0}`,
-    )
+    expect(result.current.createOrder.limitPrice).toEqual('1')
   })
 
   it('ResetState', () => {
