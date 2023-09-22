@@ -188,16 +188,16 @@ describe('SwapProvider', () => {
     expect(result.current.createOrder.limitPrice).toBe('3')
   })
 
-  it('SwitchTokens', () => {
+  it('SwitchTokens market', () => {
     const initialState: any = {
       createOrder: {
         amounts: {
           sell: {
-            quantity: '1',
+            quantity: '10',
             tokenId: 'policyId.sell',
           },
           buy: {
-            quantity: '2',
+            quantity: '20',
             tokenId: 'policyId.buy',
           },
         },
@@ -209,9 +209,9 @@ describe('SwapProvider', () => {
           lastUpdate: '123',
           lpToken: {tokenId: '', quantity: '1'},
           poolId: '1',
-          price: 1,
-          tokenA: {tokenId: 'policyId.sell', quantity: '1'},
-          tokenB: {tokenId: 'policyId.buy', quantity: '1'},
+          price: 2,
+          tokenA: {tokenId: 'policyId.sell', quantity: '200'},
+          tokenB: {tokenId: 'policyId.buy', quantity: '100'},
         },
       },
     }
@@ -233,11 +233,68 @@ describe('SwapProvider', () => {
 
     expect(result.current.createOrder.amounts).toEqual({
       sell: {
-        quantity: '2',
+        quantity: '20',
         tokenId: 'policyId.buy',
       },
       buy: {
-        quantity: '1',
+        quantity: '31',
+        tokenId: 'policyId.sell',
+      },
+    })
+  })
+
+  it('SwitchTokens limit', () => {
+    const initialState: any = {
+      createOrder: {
+        type: 'limit',
+        limitPrice: 2,
+        amounts: {
+          sell: {
+            quantity: '10',
+            tokenId: 'policyId.sell',
+          },
+          buy: {
+            quantity: '20',
+            tokenId: 'policyId.buy',
+          },
+        },
+        selectedPool: {
+          provider: 'sundaeswap',
+          fee: '0.5',
+          batcherFee: {tokenId: '', quantity: '1'},
+          deposit: {tokenId: '', quantity: '1'},
+          lastUpdate: '123',
+          lpToken: {tokenId: '', quantity: '1'},
+          poolId: '1',
+          price: 2,
+          tokenA: {tokenId: 'policyId.sell', quantity: '200'},
+          tokenB: {tokenId: 'policyId.buy', quantity: '100'},
+        },
+      },
+    }
+    const wrapper = ({children}: any) => (
+      <QueryClientProvider client={queryClient}>
+        <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
+          {children}
+        </SwapProvider>
+      </QueryClientProvider>
+    )
+
+    const {result} = renderHook(() => useSwap(), {
+      wrapper,
+    })
+
+    act(() => {
+      result.current.switchTokens()
+    })
+
+    expect(result.current.createOrder.amounts).toEqual({
+      sell: {
+        quantity: '20',
+        tokenId: 'policyId.buy',
+      },
+      buy: {
+        quantity: '8',
         tokenId: 'policyId.sell',
       },
     })

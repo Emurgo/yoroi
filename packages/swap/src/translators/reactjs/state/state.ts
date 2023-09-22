@@ -235,7 +235,15 @@ const createOrderReducer = (
         }
         draft.createOrder.marketPrice = getMarketPrice(
           state.createOrder.selectedPool,
-          state.createOrder.amounts.buy,
+          draft.createOrder.amounts.sell,
+        )
+        draft.createOrder.limitPrice = draft.createOrder.marketPrice
+        draft.createOrder.amounts.buy = getBuyAmount(
+          state.createOrder.selectedPool,
+          draft.createOrder.amounts.sell,
+          state.createOrder.type === 'limit'
+            ? draft.createOrder.limitPrice
+            : undefined,
         )
         break
       case SwapCreateOrderActionType.ResetQuantities:

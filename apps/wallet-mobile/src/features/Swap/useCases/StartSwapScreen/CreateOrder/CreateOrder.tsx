@@ -1,7 +1,7 @@
 import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
@@ -46,13 +46,20 @@ export const CreateOrder = () => {
     tokenB: createOrder.amounts.buy.tokenId ?? '',
   })
 
-  useEffect(() => {
+  const bestPool = useMemo(() => {
     if (poolList !== undefined && poolList.length > 0) {
-      const bestPool = poolList.map((a) => a).sort((a, b) => a.price - b.price)[0]
+      return poolList.map((a) => a).sort((a, b) => a.price - b.price)[0]
+    }
+    return undefined
+  }, [poolList])
+
+  useEffect(() => {
+    if (bestPool?.poolId !== undefined) {
       selectedPoolChanged(bestPool)
       poolDefaulted()
     }
-  }, [poolDefaulted, selectedPoolChanged, poolList])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [poolDefaulted, selectedPoolChanged, bestPool?.poolId])
 
   const {createUnsignedTx, isLoading} = useSwapTx({
     onSuccess: (yoroiUnsignedTx) => {

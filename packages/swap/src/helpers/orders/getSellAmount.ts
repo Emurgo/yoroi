@@ -4,6 +4,8 @@ import {ceilDivision} from '../../utils/ceilDivision'
 import {Quantities} from '../../utils/quantities'
 import {asQuantity} from '../../utils/asQuantity'
 
+const LIMIT_WITHOUT_FEE = true
+
 /**
  * Calculate the amount to sell based on the desired buy amount in a liquidity pool.
  *
@@ -19,6 +21,7 @@ export const getSellAmount = (
   buy: Balance.Amount,
   limit?: Balance.Quantity,
 ): Balance.Amount => {
+  const notLimit = !limit || Quantities.isZero(limit)
   const isBuyTokenA = buy.tokenId === pool.tokenA.tokenId
 
   const tokenId = isBuyTokenA ? pool.tokenB.tokenId : pool.tokenA.tokenId
@@ -27,16 +30,16 @@ export const getSellAmount = (
     return {tokenId, quantity: Quantities.zero}
 
   const B = BigInt(pool.tokenB.quantity)
-  const A =
-    !limit || Quantities.isZero(limit)
-      ? BigInt(pool.tokenA.quantity)
-      : BigInt(Math.floor(Number(B) / Number(limit)))
+  const A = notLimit
+    ? BigInt(pool.tokenA.quantity)
+    : BigInt(Math.floor(Number(B) / Number(limit)))
 
   const [firstToken, secondToken] = isBuyTokenA ? [A, B] : [B, A]
 
   const buyQuantity = BigInt(buy.quantity)
 
-  const fee = BigInt(100 * 1000) - BigInt(Number(pool.fee) * 1000)
+  const poolFee = !notLimit && LIMIT_WITHOUT_FEE ? 0 : pool.fee
+  const fee = BigInt(100 * 1000) - BigInt(Number(poolFee) * 1000)
 
   const maxBuyQuantity =
     firstToken -
