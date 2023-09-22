@@ -233,11 +233,11 @@ describe('SwapProvider', () => {
 
     expect(result.current.createOrder.amounts).toEqual({
       sell: {
-        quantity: '20',
+        quantity: '8',
         tokenId: 'policyId.buy',
       },
       buy: {
-        quantity: '31',
+        quantity: '10',
         tokenId: 'policyId.sell',
       },
     })
@@ -290,12 +290,27 @@ describe('SwapProvider', () => {
 
     expect(result.current.createOrder.amounts).toEqual({
       sell: {
-        quantity: '20',
+        quantity: '26',
         tokenId: 'policyId.buy',
       },
       buy: {
-        quantity: '8',
+        quantity: '10',
         tokenId: 'policyId.sell',
+      },
+    })
+
+    act(() => {
+      result.current.switchTokens()
+    })
+
+    expect(result.current.createOrder.amounts).toEqual({
+      sell: {
+        quantity: '10',
+        tokenId: 'policyId.sell',
+      },
+      buy: {
+        quantity: '4',
+        tokenId: 'policyId.buy',
       },
     })
   })
