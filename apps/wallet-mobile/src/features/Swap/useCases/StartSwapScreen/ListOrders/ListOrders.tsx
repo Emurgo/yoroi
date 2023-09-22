@@ -25,7 +25,7 @@ export const ListOrders = () => {
   })
 
   return (
-    <View style={styles.keyboard}>
+    <View style={styles.root}>
       <View style={styles.buttonsGroup}>
         <ButtonGroup labels={orderStatusLabels} onSelect={handleSelectOrderStatus} selected={orderStatusIndex} />
       </View>
@@ -45,14 +45,13 @@ export const ListOrders = () => {
 
 const styles = StyleSheet.create({
   buttonsGroup: {
-    paddingBottom: 24,
+    paddingVertical: 24,
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  keyboard: {
+  root: {
     flex: 1,
     justifyContent: 'space-between',
-    padding: 16,
     backgroundColor: COLORS.WHITE,
   },
 })

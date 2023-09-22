@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-labels */
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {parseSafe} from '@yoroi/wallets'
+import {parseSafe} from '@yoroi/common'
 
 import {isYoroiWallet} from '../cardano/types'
 import {WalletManager} from './walletManager'

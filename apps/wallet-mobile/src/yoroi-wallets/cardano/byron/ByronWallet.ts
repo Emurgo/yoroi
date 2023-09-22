@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as yoroiLib from '@emurgo/yoroi-lib'
+import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
-import {parseSafe} from '@yoroi/wallets'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -1007,10 +1007,29 @@ export class ByronWallet implements YoroiWallet {
 
     await this.utxoManager.sync(addresses)
 
-    this._utxos = await this.utxoManager.getCachedUtxos()
+    const newUtxos = await this.utxoManager.getCachedUtxos()
 
-    // notifying always -> sync from lib need to flag if something has changed
-    this.notify({type: 'utxos', utxos: this.utxos})
+    if (this.hasUtxoUpdated(this._utxos, newUtxos)) {
+      this._utxos = newUtxos
+
+      this.notify({type: 'utxos', utxos: this.utxos})
+    }
+  }
+
+  private hasUtxoUpdated(oldUtxos: RawUtxo[], newUtxos: RawUtxo[]): boolean {
+    if (oldUtxos.length !== newUtxos.length) {
+      return true
+    }
+
+    const oldUtxoIds = new Set(oldUtxos.map((utxo) => utxo.utxo_id))
+
+    for (const newUtxo of newUtxos) {
+      if (!oldUtxoIds.has(newUtxo.utxo_id)) {
+        return true
+      }
+    }
+
+    return false
   }
 
   async fetchAccountState(): Promise<AccountStateResponse> {

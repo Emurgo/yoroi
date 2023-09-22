@@ -1,5 +1,5 @@
+import {parseSafe, parseString, useStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import {parseSafe, parseString, useStorage} from '@yoroi/wallets'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, Platform} from 'react-native'

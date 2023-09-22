@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {rootStorage} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
-import {rootStorage} from '@yoroi/wallets'
 
 import {HWDeviceInfo} from '../../../../hw'
 import {EncryptedStorage, EncryptedStorageKeys} from '../../../../storage'

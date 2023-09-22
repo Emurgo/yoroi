@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
-import {isString} from '@yoroi/wallets'
+import {isString} from '@yoroi/common'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
