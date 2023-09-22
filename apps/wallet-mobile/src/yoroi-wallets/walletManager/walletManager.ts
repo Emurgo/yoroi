@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {parseSafe, rootStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import {parseSafe, rootStorage} from '@yoroi/wallets'
 import ExtendableError from 'es6-error'
 import uuid from 'uuid'
 

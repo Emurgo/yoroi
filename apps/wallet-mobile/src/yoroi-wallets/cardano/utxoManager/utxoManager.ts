@@ -1,7 +1,7 @@
 import {initUtxo, UtxoModels, UtxoStorage} from '@emurgo/yoroi-lib'
 import {Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from '@emurgo/yoroi-lib/dist/utxo/models'
+import {parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import {parseSafe} from '@yoroi/wallets'
 import {parseInt} from 'lodash'
 
 import {RawUtxo} from '../../types'

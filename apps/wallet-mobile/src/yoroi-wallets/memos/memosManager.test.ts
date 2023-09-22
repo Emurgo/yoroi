@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {rootStorage} from '@yoroi/wallets'
+import {rootStorage} from '@yoroi/common'
 
 import {makeMemosManager} from './memosManager'
 

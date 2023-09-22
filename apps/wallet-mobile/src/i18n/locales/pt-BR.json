@@ -159,7 +159,7 @@
   "swap.swapScreen.swapMinAda": "Min-ADA is the minimum ADA amount required to be contained when holding or sending Cardano native tokens.",
   "swap.swapScreen.swapMinAdaTitle": "Mínimo",
   "swap.swapScreen.swapFees": "As taxas da operação incluem:\n • Taxa do executor das ordens\n • Taxa da carteira\n • Taxa do operador da reserva",
-  "swap.swapScreen.swapFeesTitle": "Taxas",
+  "swap.swapScreen.swapFeesTitle": "fees",
   "swap.swapScreen.swapMinReceived": "Minimum amount of tokens you can get because of the slippage tolerance.",
   "swap.swapScreen.swapMinReceivedTitle": "Mín. a ser recebido",
   "swap.swapScreen.enterSlippage": "Enter a value from 0% to 100%. You can also enter up to 1 decimal",

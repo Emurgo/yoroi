@@ -1,6 +1,6 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
+import {isRecord, isString} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
-import {isRecord, isString} from '@yoroi/wallets'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Dimensions, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'

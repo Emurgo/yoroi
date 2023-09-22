@@ -1,7 +1,7 @@
 {
-  "name": "@yoroi/wallets",
+  "name": "@yoroi/cardano",
   "version": "1.0.0",
-  "description": "The Wallets package of Yoroi SDK",
+  "description": "The Cardano package of Yoroi SDK",
   "keywords": [
     "yoroi",
     "cardano",
@@ -9,14 +9,14 @@
     "browser",
     "react"
   ],
-  "homepage": "https://github.com/Emurgo/yoroi/packages/wallets#readme",
+  "homepage": "https://github.com/Emurgo/yoroi/packages/cardano#readme",
   "bugs": {
     "url": "https://github.com/Emurgo/yoroi/issues"
   },
   "repository": {
     "type": "github",
     "url": "https://github.com/Emurgo/yoroi.git",
-    "directory": "packages/wallets"
+    "directory": "packages/cardano"
   },
   "license": "Apache-2.0",
   "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",
@@ -129,12 +129,14 @@
     ]
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.19.2",
-    "immer": "^10.0.2",
+    "@emurgo/cip14-js": "^3.0.1",
+    "@yoroi/common": "1.0.0",
+    "axios": "^1.5.0",
     "zod": "^3.22.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
+    "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
     "@testing-library/jest-dom": "^6.0.0",
@@ -145,6 +147,7 @@
     "@types/react": "18.2.0",
     "@types/react-native": "0.71.6",
     "@yoroi/types": "1.0.4",
+    "axios-mock-adapter": "^1.21.5",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",

@@ -1,6 +1,6 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
-import {rootStorage, StorageProvider} from '@yoroi/wallets'
+import {rootStorage, StorageProvider} from '@yoroi/common'
 import React from 'react'
 
 import {CreatePinInput} from './CreatePinInput'

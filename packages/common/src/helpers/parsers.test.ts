@@ -6,11 +6,15 @@ import {
   isBoolean,
   isNonNullable,
   isNumber,
+  isPositiveNumber,
   isRecord,
   isString,
+  isArrayOfString,
+  isStringOrArrayOfString,
   parseBoolean,
   parseSafe,
   parseString,
+  parseNumber,
 } from './parsers'
 
 describe('parsers', () => {
@@ -94,6 +98,39 @@ describe('parsers', () => {
     it('should return undefined if the data is not a string', () => {
       expect(parseString('true')).toBeUndefined()
       expect(parseString('123')).toBeUndefined()
+      expect(parseString({})).toBeUndefined()
+      expect(parseString({hi: 1})).toBeUndefined()
+      expect(parseString(1)).toBeUndefined()
+      expect(parseString(null)).toBeUndefined()
+      expect(parseString(undefined)).toBeUndefined()
+    })
+  })
+
+  describe('parseNumber', () => {
+    it('should return a number if the parsed data is a number', () => {
+      expect(parseNumber('42')).toEqual(42)
+      expect(parseNumber(42)).toEqual(42)
+      expect(parseNumber('3.14')).toEqual(3.14)
+    })
+
+    it('should return undefined if the parsed data is not a number', () => {
+      expect(parseNumber('abc')).toBeUndefined()
+      expect(parseNumber({})).toBeUndefined()
+      expect(parseNumber(null)).toBeUndefined()
+      expect(parseNumber(undefined)).toBeUndefined()
+      expect(parseNumber(true)).toBeUndefined()
+    })
+
+    it('should return undefined for non-number strings', () => {
+      expect(parseNumber('hello')).toBeUndefined()
+      expect(parseNumber('true')).toBeUndefined()
+      expect(parseNumber('false')).toBeUndefined()
+    })
+
+    it('should handle edge cases', () => {
+      expect(parseNumber(Infinity)).toBeUndefined()
+      expect(parseNumber(-Infinity)).toBeUndefined()
+      expect(parseNumber(NaN)).toBeUndefined() // Depends on how you define "isNumber"
     })
   })
 
@@ -147,6 +184,58 @@ describe('parsers', () => {
     })
     it('should return false if the data is not an array', () => {
       expect(isArray('hello')).toBe(false)
+    })
+  })
+
+  describe('isPositiveNumber', () => {
+    it('should return true if the data is a positive number', () => {
+      expect(isPositiveNumber(1)).toBe(true)
+    })
+
+    it('should return false if the data is zero or a negative number', () => {
+      expect(isPositiveNumber(0)).toBe(false)
+      expect(isPositiveNumber(-1)).toBe(false)
+    })
+
+    it('should return false if the data is not a number', () => {
+      expect(isPositiveNumber('1')).toBe(false)
+      expect(isPositiveNumber(undefined)).toBe(false)
+      expect(isPositiveNumber(null)).toBe(false)
+      expect(isPositiveNumber({})).toBe(false)
+      expect(isPositiveNumber([])).toBe(false)
+      expect(isPositiveNumber(NaN)).toBe(false)
+      expect(isPositiveNumber(Infinity)).toBe(false)
+    })
+  })
+
+  describe('isArrayOfString', () => {
+    it('should return true if the data is an array of strings', () => {
+      expect(isArrayOfString(['a', 'b', 'c'])).toBe(true)
+    })
+
+    it('should return false if the data is not an array of strings', () => {
+      expect(isArrayOfString(['a', 1, 'c'])).toBe(false)
+      expect(isArrayOfString([1, 2, 3])).toBe(false)
+      expect(isArrayOfString('abc')).toBe(false)
+    })
+  })
+
+  describe('isStringOrArrayOfString', () => {
+    it('should return true if the data is a string', () => {
+      expect(isStringOrArrayOfString('hello')).toBe(true)
+    })
+
+    it('should return true if the data is an array of strings', () => {
+      expect(isStringOrArrayOfString(['hello', 'world'])).toBe(true)
+      expect(isStringOrArrayOfString([])).toBe(true)
+    })
+
+    it('should return false if the data is neither a string nor an array of strings', () => {
+      expect(isStringOrArrayOfString(['hello', 1])).toBe(false)
+      expect(isStringOrArrayOfString(123)).toBe(false)
+      expect(isStringOrArrayOfString(null)).toBe(false)
+      expect(isStringOrArrayOfString(undefined)).toBe(false)
+      expect(isStringOrArrayOfString({})).toBe(false)
     })
   })
 })
