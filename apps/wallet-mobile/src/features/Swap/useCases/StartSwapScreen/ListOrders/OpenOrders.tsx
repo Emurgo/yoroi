@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
@@ -47,6 +48,12 @@ export const OpenOrders = () => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.swapConfirmedPageViewed({swap_tab: 'Open Orders'})
+    }, [track]),
+  )
 
   const orders = useSwapOrdersByStatusOpen()
   const {numberLocale} = useLanguage()
@@ -128,7 +135,7 @@ export const OpenOrders = () => {
   return (
     <>
       <View style={styles.container}>
-        {cancellationOrderData.unsignedTx && cancellationOrderData.order && (
+        {cancellationOrderData.unsignedTx !== null && cancellationOrderData.order !== null && (
           <BottomSheetModal
             isOpen={showCancelOrderModal}
             title={wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction}
@@ -159,6 +166,7 @@ export const OpenOrders = () => {
                       policy_id: cancellationOrderData.order?.toTokenInfo?.group,
                     },
                   ],
+                  pool_source: cancellationOrderData.order?.provider ?? '',
                 })
                 resetToTxHistory()
               }}

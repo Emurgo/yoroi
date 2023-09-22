@@ -11,7 +11,7 @@ import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useAddresses} from '../../../../../Receive/Addresses'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {useTokenInfos} from '../../../../../yoroi-wallets/hooks'
+import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {createYoroiEntry} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
@@ -37,9 +37,13 @@ export const CreateOrder = () => {
   const {track} = useMetrics()
   const addresses = useAddresses()
 
-  const tokenInfos = useTokenInfos({
+  const sellTokenInfo = useTokenInfo({
     wallet,
-    tokenIds: [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId],
+    tokenId: createOrder.amounts.sell.tokenId,
+  })
+  const buyTokenInfo = useTokenInfo({
+    wallet,
+    tokenId: createOrder.amounts.buy.tokenId,
   })
   const [showLimitPriceWarning, setShowLimitPriceWarning] = useState(false)
   const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
@@ -89,9 +93,6 @@ export const CreateOrder = () => {
     (createOrder.type === 'limit' && createOrder.limitPrice !== undefined && Quantities.isZero(createOrder.limitPrice))
 
   const swap = () => {
-    const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
-    const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
-
     track.swapOrderSelected({
       from_asset: [
         {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},

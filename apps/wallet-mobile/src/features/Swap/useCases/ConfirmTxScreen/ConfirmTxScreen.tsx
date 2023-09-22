@@ -11,7 +11,7 @@ import {useWalletNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
-import {useSignAndSubmitTx, useTokenInfos} from '../../../../yoroi-wallets/hooks'
+import {useSignAndSubmitTx, useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
@@ -29,9 +29,13 @@ export const ConfirmTxScreen = () => {
 
   const {resetToTxHistory} = useWalletNavigation()
 
-  const tokenInfos = useTokenInfos({
+  const sellTokenInfo = useTokenInfo({
     wallet,
-    tokenIds: [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId],
+    tokenId: createOrder.amounts.sell.tokenId,
+  })
+  const buyTokenInfo = useTokenInfo({
+    wallet,
+    tokenId: createOrder.amounts.buy.tokenId,
   })
 
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
@@ -45,9 +49,6 @@ export const ConfirmTxScreen = () => {
       signTx: {useErrorBoundary: true},
       submitTx: {
         onSuccess: () => {
-          const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
-          const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
-
           track.swapOrderSubmitted({
             from_asset: [
               {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
