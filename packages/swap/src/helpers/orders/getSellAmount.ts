@@ -1,6 +1,8 @@
 import {Balance, Swap} from '@yoroi/types'
 
 import {ceilDivision} from '../../utils/ceilDivision'
+import {Quantities} from '../../utils/quantities'
+import {asQuantity} from '../../utils/asQuantity'
 
 /**
  * Calculate the amount to sell based on the desired buy amount in a liquidity pool.
@@ -23,7 +25,7 @@ export const getSellAmount = (
 
   const B = BigInt(pool.tokenB.quantity)
   const A =
-    !limit || Number(limit) === 0
+    !limit || Quantities.isZero(limit)
       ? BigInt(pool.tokenA.quantity)
       : BigInt(Math.floor(Number(B) / Number(limit)))
 
@@ -37,12 +39,14 @@ export const getSellAmount = (
     firstToken -
     (firstToken > buyQuantity ? buyQuantity : firstToken - BigInt(1))
 
-  const quantity = ceilDivision(
-    (ceilDivision(firstToken * secondToken + maxBuyQuantity, maxBuyQuantity) -
-      secondToken) *
-      BigInt(100 * 1000),
-    fee,
-  ).toString() as Balance.Quantity
+  const quantity = asQuantity(
+    ceilDivision(
+      (ceilDivision(firstToken * secondToken + maxBuyQuantity, maxBuyQuantity) -
+        secondToken) *
+        BigInt(100 * 1000),
+      fee,
+    ).toString(),
+  )
 
   return {
     quantity,
