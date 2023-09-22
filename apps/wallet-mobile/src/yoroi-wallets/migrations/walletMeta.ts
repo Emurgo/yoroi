@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {parseSafe, rootStorage} from '@yoroi/wallets'
+import {parseSafe, rootStorage} from '@yoroi/common'
 
 import {Logger} from '../../legacy/logging'
 import {CardanoTypes, legacyWalletChecksum, walletChecksum} from '../cardano/types'

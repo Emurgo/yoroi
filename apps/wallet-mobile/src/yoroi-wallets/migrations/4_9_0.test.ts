@@ -1,4 +1,4 @@
-import {rootStorage} from '@yoroi/wallets'
+import {rootStorage} from '@yoroi/common'
 
 import {migrateAuthSetting, OLD_OS_AUTH_KEY} from './4_9_0'
 describe('migrateAuthSetting', () => {

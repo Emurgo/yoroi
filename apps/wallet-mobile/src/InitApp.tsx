@@ -1,5 +1,5 @@
+import {isString, useStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import {isString, useStorage} from '@yoroi/wallets'
 import React, {useEffect, useRef} from 'react'
 import {Platform, UIManager} from 'react-native'
 import {enableScreens} from 'react-native-screens'

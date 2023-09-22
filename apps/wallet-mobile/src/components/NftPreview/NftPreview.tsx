@@ -1,5 +1,5 @@
+import {isString} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
-import {isString} from '@yoroi/wallets'
 import React, {useEffect, useState} from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {Image, ImageResizeMode, ImageStyle, StyleProp, View} from 'react-native'

@@ -1,5 +1,5 @@
+import {createTypeGuardFromSchema, isArrayOfType, isString} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
-import {createTypeGuardFromSchema, isArrayOfType, isString} from '@yoroi/wallets'
 import {z} from 'zod'
 
 import {features} from '../../features'

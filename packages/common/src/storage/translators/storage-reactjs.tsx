@@ -1,8 +1,8 @@
 import React from 'react'
-
-import {rootStorage} from '../storage'
 import {App} from '@yoroi/types'
-import {invalid} from '../helpers'
+
+import {rootStorage} from '../adapters/rootStorage'
+import {invalid} from '../../errors/errors'
 
 const StorageContext = React.createContext<undefined | App.Storage>(undefined)
 export const StorageProvider = ({

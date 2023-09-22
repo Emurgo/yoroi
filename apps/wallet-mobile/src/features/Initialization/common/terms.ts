@@ -1,4 +1,4 @@
-import {useStorage} from '@yoroi/wallets'
+import {useStorage} from '@yoroi/common'
 import {useCallback} from 'react'
 import {useMutation, useQuery, useQueryClient} from 'react-query'
 

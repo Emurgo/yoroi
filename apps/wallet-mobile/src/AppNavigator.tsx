@@ -1,6 +1,6 @@
 import {NavigationContainer, NavigationContainerRef} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {isString} from '@yoroi/wallets'
+import {isString} from '@yoroi/common'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Alert, AppState, AppStateStatus, InteractionManager, Platform} from 'react-native'

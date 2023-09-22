@@ -1,4 +1,4 @@
-import {parseSafe, useStorage} from '@yoroi/wallets'
+import {parseSafe, useStorage} from '@yoroi/common'
 import React, {useMemo} from 'react'
 import {IntlProvider} from 'react-intl'
 import {NativeModules, Platform, Text} from 'react-native'
