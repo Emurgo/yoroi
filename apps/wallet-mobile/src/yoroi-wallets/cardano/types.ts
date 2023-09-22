@@ -1,6 +1,7 @@
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
 import {BaseAddress} from '@emurgo/cross-csl-core'
+import {PrivateKey} from '@emurgo/csl-mobile-bridge'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
@@ -95,6 +96,8 @@ export type YoroiWallet = {
   isReadOnly: boolean
   primaryToken: Readonly<DefaultAsset>
   primaryTokenInfo: Readonly<Balance.TokenInfo>
+
+  signRawTx(txHex: string, pKey: PrivateKey): Promise<Uint8Array | undefined>
 
   // Sending
   createUnsignedTx(

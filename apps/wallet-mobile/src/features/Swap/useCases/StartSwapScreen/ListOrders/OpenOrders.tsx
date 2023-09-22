@@ -1,10 +1,13 @@
+import {PrivateKey} from '@emurgo/csl-mobile-bridge'
 import {useFocusEffect} from '@react-navigation/native'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
+import {BalanceQuantity} from '@yoroi/types/src/balance/token'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {useMutation} from 'react-query'
 
 import {
   BottomSheetModal,
@@ -18,24 +21,23 @@ import {
   MainInfoWrapper,
   Spacer,
   Text,
+  TextInput,
   TokenIcon,
 } from '../../../../../components'
 import {useLanguage} from '../../../../../i18n'
-import {formatTokenWithText} from '../../../../../legacy/format'
 import {useMetrics} from '../../../../../metrics/metricsManager'
-import {useWalletNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
+import {HARD_DERIVATION_START} from '../../../../../yoroi-wallets/cardano/constants/common'
+import {WrongPassword} from '../../../../../yoroi-wallets/cardano/errors'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {YoroiEntry, YoroiUnsignedTx} from '../../../../../yoroi-wallets/types'
-import {Amounts} from '../../../../../yoroi-wallets/utils'
+import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {ConfirmTx} from '../../ConfirmTxScreen/ConfirmTx'
-import {mapOrders, MappedOrder} from './mapOrders'
+import {mapOrders} from './mapOrders'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
@@ -47,13 +49,9 @@ export const OpenOrders = () => {
   const strings = useStrings()
   const intl = useIntl()
   const wallet = useSelectedWallet()
-  const {track} = useMetrics()
+  const {order: swapApiOrder} = useSwap()
 
-  useFocusEffect(
-    React.useCallback(() => {
-      track.swapConfirmedPageViewed({swap_tab: 'Open Orders'})
-    }, [track]),
-  )
+  const [orderId, setOrderId] = useState<string | null>(null)
 
   const orders = useSwapOrdersByStatusOpen()
   const {numberLocale} = useLanguage()
@@ -66,14 +64,6 @@ export const OpenOrders = () => {
   )
 
   const {search} = useSearch()
-  const [showCancelOrderModal, setShowCancelOrderModal] = useState(false)
-  const [cancellationOrderData, setCancellationOrderData] = useState<{
-    unsignedTx: YoroiUnsignedTx | null
-    order: MappedOrder | null
-  }>({unsignedTx: null, order: null})
-
-  const {resetToTxHistory} = useWalletNavigation()
-  const datum = '' // TODO: Use real values
 
   const filteredOrders = React.useMemo(
     () =>
@@ -87,15 +77,90 @@ export const OpenOrders = () => {
     [normalizedOrders, search],
   )
 
-  const onOrderCancelConfirm = (id: string, unsignedTx: YoroiUnsignedTx) => {
-    const order = normalizedOrders.find((o) => o.id === id)
-    if (!order) return
-    closeBottomSheet()
-    setCancellationOrderData({
-      unsignedTx,
-      order,
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.swapConfirmedPageViewed({swap_tab: 'Open Orders'})
+    }, [track]),
+  )
+
+  const handlePasswordConfirm = async (password: string) => {
+    const order = normalizedOrders.find((o) => o.id === orderId)
+    if (!order || order.owner === undefined || order.utxo === undefined) return
+    const tx = await createCancellationTxAnsSign(order.id, password)
+    if (!tx) return
+    await wallet.submitTransaction(tx.txBase64)
+
+    track.swapCancelationSubmitted({
+      from_amount: Number(order?.from.quantity) ?? 0,
+      to_amount: Number(order?.to.quantity) ?? 0,
+      from_asset: [
+        {
+          asset_name: order?.fromTokenInfo?.name,
+          asset_ticker: order?.fromTokenInfo?.ticker,
+          policy_id: order?.fromTokenInfo?.group,
+        },
+      ],
+      to_asset: [
+        {
+          asset_name: order?.toTokenInfo?.name,
+          asset_ticker: order?.toTokenInfo?.ticker,
+          policy_id: order?.toTokenInfo?.group,
+        },
+      ],
+      pool_source: order?.provider ?? '',
     })
-    setShowCancelOrderModal(true)
+    closeBottomSheet()
+  }
+
+  const onOrderCancelConfirm = (id: string) => {
+    setOrderId(id)
+    closeBottomSheet()
+
+    setBottomSheetState({
+      openId: id,
+      title: strings.signTransaction,
+      content: <PasswordModal onConfirm={handlePasswordConfirm} />,
+    })
+  }
+
+  async function createCancellationTxAnsSign(
+    orderId: string,
+    password: string,
+  ): Promise<{txBase64: string} | undefined> {
+    const order = normalizedOrders.find((o) => o.id === orderId)
+    if (!order || order.owner === undefined || order.utxo === undefined) return
+
+    const orderUtxo = order.utxo
+
+    const collateralUtxo =
+      '82825820caec92c836b10281c35a3a9b13f732686cf8ddccb4c75c9aef42a1324da2197501825839017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea9046931a01f2b015'
+
+    const addressBech32 = order.owner
+
+    const address = await CardanoMobile.Address.fromBech32(addressBech32)
+    const bytes = await address.toBytes()
+    const addressHex = new Buffer(bytes).toString('hex')
+    const cbor = await swapApiOrder.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address: addressHex})
+    const rootKey = await wallet.encryptedStorage.rootKey.read(password)
+    const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(rootKey, 'hex'))
+    const accountPrivateKey = await masterKey
+      .derive(1852 + HARD_DERIVATION_START)
+      .then((key) => key.derive(1815 + HARD_DERIVATION_START))
+      .then((key) => key.derive(0 + HARD_DERIVATION_START))
+      .then((key) => key.derive(0))
+      .then((key) => key.derive(0))
+
+    const rawKey = await accountPrivateKey.toRawKey()
+    const bech32 = await rawKey.toBech32()
+
+    const pkey = await PrivateKey.from_bech32(bech32)
+    if (!pkey) return
+    const response = await wallet.signRawTx(cbor, pkey)
+    if (!response) return
+    const hexBase64 = new Buffer(response).toString('base64')
+    return {txBase64: hexBase64}
   }
 
   const openBottomSheet = (id: string) => {
@@ -104,8 +169,9 @@ export const OpenOrders = () => {
     const {assetFromLabel, assetToLabel} = order
     const totalReturned = `${order.fromTokenAmount} ${order.fromTokenInfo?.ticker}`
     const orderUtxo = order.utxo
+
     const collateralUtxo =
-      '8282582084bfdb864f8d0191b1a39289195d5a0d1b6eafe8eafd6d855ceea8a5c866ad6002825839017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea9046931a02cb6519' // TODO: Use real values
+      '82825820caec92c836b10281c35a3a9b13f732686cf8ddccb4c75c9aef42a1324da2197501825839017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea9046931a01f2b015'
 
     const addressBech32 = order.owner
 
@@ -116,7 +182,7 @@ export const OpenOrders = () => {
         <ModalContent
           assetFromIcon={<TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />}
           assetToIcon={<TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />}
-          onConfirm={(unsignedTx) => onOrderCancelConfirm(id, unsignedTx)}
+          onConfirm={() => onOrderCancelConfirm(id)}
           onBack={closeBottomSheet}
           assetFromLabel={assetFromLabel}
           assetToLabel={assetToLabel}
@@ -135,47 +201,7 @@ export const OpenOrders = () => {
   return (
     <>
       <View style={styles.container}>
-        {cancellationOrderData.unsignedTx !== null && cancellationOrderData.order !== null && (
-          <BottomSheetModal
-            isOpen={showCancelOrderModal}
-            title={wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction}
-            onClose={() => {
-              setShowCancelOrderModal(false)
-            }}
-            contentContainerStyle={{justifyContent: 'space-between'}}
-          >
-            <ConfirmTx
-              datum={{data: datum}}
-              wallet={wallet}
-              unsignedTx={cancellationOrderData.unsignedTx}
-              onSuccess={() => {
-                track.swapCancelationSubmitted({
-                  from_amount: Number(cancellationOrderData.order?.from.quantity) ?? 0,
-                  to_amount: Number(cancellationOrderData.order?.to.quantity) ?? 0,
-                  from_asset: [
-                    {
-                      asset_name: cancellationOrderData.order?.fromTokenInfo?.name,
-                      asset_ticker: cancellationOrderData.order?.fromTokenInfo?.ticker,
-                      policy_id: cancellationOrderData.order?.fromTokenInfo?.group,
-                    },
-                  ],
-                  to_asset: [
-                    {
-                      asset_name: cancellationOrderData.order?.toTokenInfo?.name,
-                      asset_ticker: cancellationOrderData.order?.toTokenInfo?.ticker,
-                      policy_id: cancellationOrderData.order?.toTokenInfo?.group,
-                    },
-                  ],
-                  pool_source: cancellationOrderData.order?.provider ?? '',
-                })
-                resetToTxHistory()
-              }}
-              onCancel={() => setShowCancelOrderModal(false)}
-            />
-          </BottomSheetModal>
-        )}
-
-        <ScrollView style={styles.flex}>
+        <ScrollView style={styles.content}>
           {filteredOrders.map((order) => {
             const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
             const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
@@ -227,21 +253,13 @@ export const OpenOrders = () => {
           isOpen={bottomSheetState.openId !== null}
           title={bottomSheetState.title}
           onClose={closeBottomSheet}
-          snapPoints={['10%', '57%']}
+          snapPoints={['1%', '51%']}
         >
-          {bottomSheetState.content}
-        </BottomSheetModal>
-
-        <BottomSheetModal
-          isOpen={bottomSheetState.openId !== null}
-          title={bottomSheetState.title}
-          onClose={closeBottomSheet}
-        >
-          <Text style={styles.text}>{bottomSheetState.content}</Text>
+          <View style={{flex: 1}}>{bottomSheetState.content}</View>
         </BottomSheetModal>
       </View>
 
-      <Counter counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
+      <Counter style={styles.counter} counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
     </>
   )
 }
@@ -335,6 +353,52 @@ const HiddenInfo = ({
   )
 }
 
+const PasswordModal = ({onConfirm}: {onConfirm: (password: string) => Promise<void>}) => {
+  const [password, setPassword] = useState('')
+  const strings = useStrings()
+
+  const {isLoading, mutate, error} = useMutation({mutationFn: () => onConfirm(password)})
+
+  return (
+    <View style={{flex: 1}}>
+      <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+
+      <TextInput
+        secureTextEntry
+        enablesReturnKeyAutomatically
+        placeholder={strings.spendingPassword}
+        value={password}
+        onChangeText={setPassword}
+        autoComplete="off"
+        label={strings.spendingPassword}
+      />
+
+      {error !== null ? (
+        <View>
+          <Text style={styles.errorMessage} numberOfLines={3}>
+            {getErrorMessage(error, strings)}
+          </Text>
+        </View>
+      ) : null}
+
+      <Spacer fill />
+
+      <Button testID="swapButton" disabled={isLoading} onPress={() => mutate()} shelleyTheme title={strings.sign} />
+    </View>
+  )
+}
+
+const getErrorMessage = (error: unknown, strings: Record<'wrongPasswordMessage' | 'error', string>) => {
+  if (error instanceof WrongPassword) {
+    return strings.wrongPasswordMessage
+  }
+  if (error instanceof Error) {
+    return error.message
+  }
+
+  return strings.error
+}
+
 const MainInfo = ({tokenPrice, tokenAmount}: {tokenPrice: string; tokenAmount: string}) => {
   const strings = useStrings()
   return (
@@ -381,7 +445,7 @@ const LiquidityPool = ({
 
 export const OpenOrdersSkeleton = () => (
   <View style={styles.container}>
-    <View style={styles.flex}>
+    <View style={styles.content}>
       {[0, 1, 2, 3].map((index) => (
         <React.Fragment key={index}>
           <ExpandableInfoCardSkeleton />
@@ -407,7 +471,7 @@ const ModalContent = ({
   collateralUtxo,
   bech32Address,
 }: {
-  onConfirm: (unsignedTx: YoroiUnsignedTx) => void
+  onConfirm: () => void
   onBack: () => void
   assetFromIcon: React.ReactNode
   assetFromLabel: string
@@ -422,42 +486,37 @@ const ModalContent = ({
 }) => {
   const strings = useStrings()
 
-  const {order, unsignedTxChanged} = useSwap()
+  const {order} = useSwap()
   const wallet = useSelectedWallet()
-  const [unsignedTx, setUnsignedTx] = useState<YoroiUnsignedTx | null>(null)
+
+  const [fee, setFee] = useState<string | null>(null)
+
+  const getFee = useCallback(async () => {
+    const address = await CardanoMobile.Address.fromBech32(bech32Address)
+    const bytes = await address.toBytes()
+    const addressHex = new Buffer(bytes).toString('hex')
+    const cbor = await order.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address: addressHex})
+    const tx = await CardanoMobile.Transaction.fromBytes(Buffer.from(cbor, 'hex'))
+    const feeNumber = await tx.body().then((b) => b.fee())
+    return Quantities.denominated(
+      (await feeNumber.toStr()) as BalanceQuantity,
+      wallet.primaryToken.metadata.numberOfDecimals,
+    )
+  }, [bech32Address, collateralUtxo, orderUtxo, wallet, order])
+
+  const handleConfirm = () => {
+    onConfirm()
+  }
+
   useEffect(() => {
-    CardanoMobile.Address.fromBech32(bech32Address).then(async (address) => {
-      const bytes = await address.toBytes()
-      const addressHex = new Buffer(bytes).toString('hex')
-      const cbor = await order.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address: addressHex})
-      const tx = await CardanoMobile.Transaction.fromBytes(Buffer.from(cbor, 'hex'))
-      console.log('tx json', await tx.wasm.to_json())
-
-      const fakeEntry: YoroiEntry = {
-        // TODO: Use real values
-        address: bech32Address,
-        amounts: {
-          '': '1',
-        },
-      }
-      const unsignedTx = await wallet.createUnsignedTx(fakeEntry)
-      unsignedTxChanged(unsignedTx)
-      setUnsignedTx(unsignedTx)
+    getFee().then((fee) => {
+      setFee(fee)
     })
-  }, [bech32Address, orderUtxo, collateralUtxo, order, wallet, unsignedTxChanged])
+  }, [getFee, setFee])
 
-  const feeAmount = unsignedTx
-    ? formatTokenWithText(
-        Amounts.getAmount(unsignedTx.fee, wallet.primaryToken.identifier).quantity,
-        wallet.primaryToken,
-      )
-    : null
-
-  if (feeAmount === null) {
-    // TODO: Use mutation to handle loading / error states
-    // TODO: Verify loading state designs
+  if (fee === null) {
     return (
-      <View>
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
         <ActivityIndicator animating size="large" color="black" style={{padding: 20}} />
       </View>
     )
@@ -486,13 +545,13 @@ const ModalContent = ({
 
       <Spacer height={10} />
 
-      <ModalContentRow label={strings.listOrdersSheetCancellationFee} value={feeAmount} />
+      <ModalContentRow label={strings.listOrdersSheetCancellationFee} value={fee} />
 
       <ModalContentLink />
 
       <Spacer height={10} />
 
-      <ModalContentButtons onConfirm={() => (unsignedTx ? onConfirm(unsignedTx) : null)} onBack={onBack} />
+      <ModalContentButtons onConfirm={handleConfirm} onBack={onBack} />
     </View>
   )
 }
@@ -589,8 +648,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     paddingTop: 10,
   },
-  flex: {
+  modalText: {
+    paddingHorizontal: 70,
+    textAlign: 'center',
+    paddingBottom: 8,
+  },
+  content: {
     flex: 1,
+    paddingHorizontal: 16,
   },
   contentRow: {
     flexDirection: 'row',
@@ -602,6 +667,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 24,
+  },
+  errorMessage: {
+    color: COLORS.ERROR_TEXT_COLOR,
   },
   contentLabel: {
     color: '#6B7384',
@@ -662,15 +730,12 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 22,
   },
-  text: {
-    textAlign: 'left',
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '400',
-    color: '#242838',
-  },
+
   label: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  counter: {
+    paddingVertical: 16,
   },
 })

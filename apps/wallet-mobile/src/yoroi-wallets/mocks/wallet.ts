@@ -76,6 +76,9 @@ const wallet: YoroiWallet = {
   getStakingKey: () => {
     throw new Error('not implemented: getStakingKey')
   },
+  signRawTx(): Promise<Uint8Array | undefined> {
+    throw new Error('not implemented: signRawTx')
+  },
   getAllUtxosForKey: () => Promise.resolve([]),
   fetchTokenInfo: (tokenId: string) => {
     action('fetchTokenInfo')(tokenId)

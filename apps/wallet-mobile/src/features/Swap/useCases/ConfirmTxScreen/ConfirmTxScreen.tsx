@@ -3,8 +3,7 @@ import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../components'
-import {BottomSheetModal} from '../../../../components/BottomSheetModal'
+import {BottomSheet, BottomSheetRef, Button, Spacer} from '../../../../components'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../navigation'
@@ -18,7 +17,15 @@ import {ConfirmTx} from './ConfirmTx'
 import {TransactionSummary} from './TransactionSummary'
 
 export const ConfirmTxScreen = () => {
-  const [confirmationModal, setConfirmationModal] = React.useState<boolean>(false)
+  const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
+
+  const openBottomSheet = () => {
+    bottomSheetRef.current?.openBottomSheet()
+  }
+
+  const closeBottomSheet = () => {
+    bottomSheetRef.current?.closeBottomSheet()
+  }
 
   const strings = useStrings()
   const wallet = useSelectedWallet()
@@ -88,27 +95,29 @@ export const ConfirmTxScreen = () => {
               authWithOs()
               return
             }
-            setConfirmationModal(true)
+            openBottomSheet()
           }}
         />
       </Actions>
 
-      <BottomSheetModal
-        isOpen={confirmationModal}
+      <BottomSheet
+        height={wallet.isHW ? 430 : 350}
+        ref={bottomSheetRef}
         title={wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction}
-        onClose={() => {
-          setConfirmationModal(false)
-        }}
-        contentContainerStyle={{justifyContent: 'space-between'}}
+        isExtendable={false}
       >
-        <ConfirmTx
-          wallet={wallet}
-          unsignedTx={unsignedTx}
-          datum={{data: createOrder.datum}}
-          onSuccess={() => resetToTxHistory()}
-          onCancel={() => setConfirmationModal(false)}
-        />
-      </BottomSheetModal>
+        <View style={styles.modalContent}>
+          <ConfirmTx
+            wallet={wallet}
+            unsignedTx={unsignedTx}
+            datum={{data: createOrder.datum}}
+            onSuccess={resetToTxHistory}
+            onCancel={closeBottomSheet}
+          />
+
+          <Spacer height={16} />
+        </View>
+      </BottomSheet>
 
       <LoadingOverlay loading={txIsLoading} />
     </SafeAreaView>
@@ -127,5 +136,10 @@ const styles = StyleSheet.create({
   },
   actions: {
     paddingVertical: 16,
+  },
+  modalContent: {
+    flex: 1,
+    alignSelf: 'stretch',
+    paddingHorizontal: 16,
   },
 })

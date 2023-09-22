@@ -7,7 +7,7 @@ import {YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 export const useCancelOrderTx = (
   options?: UseMutationOptions<YoroiUnsignedTx, Error, {entry: YoroiEntry; datum: {hash: string}}>,
 ) => {
-  const metadata = [{label: 'Yoroi-Swap', data: {msg: ['Yoroi: Cancel Order']}}] // TODO: Check msg with community standards
+  const metadata = [{label: '674', data: {msg: ['Yoroi: Cancel Order']}}] // TODO: Check msg with community standards
   const wallet = useSelectedWallet()
 
   const mutation = useMutationWithInvalidations({
