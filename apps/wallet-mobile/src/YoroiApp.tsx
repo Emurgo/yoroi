@@ -1,4 +1,4 @@
-import {rootStorage, StorageProvider} from '@yoroi/wallets'
+import {rootStorage, StorageProvider} from '@yoroi/common'
 import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
 import Config from 'react-native-config'

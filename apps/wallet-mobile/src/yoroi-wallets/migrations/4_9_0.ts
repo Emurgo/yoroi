@@ -1,5 +1,5 @@
+import {parseBoolean} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import {parseBoolean} from '@yoroi/wallets'
 
 import {AUTH_WITH_OS, AUTH_WITH_PIN, disableAllEasyConfirmation, getAuthSetting} from '../auth/auth'
 

@@ -1,4 +1,4 @@
-import {createTypeGuardFromSchema} from '@yoroi/wallets'
+import {createTypeGuardFromSchema} from '@yoroi/common'
 import {z} from 'zod'
 
 import {BackendConfig, YoroiNftModerationStatus} from '../../types'

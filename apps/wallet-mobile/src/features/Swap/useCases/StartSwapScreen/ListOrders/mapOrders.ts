@@ -1,3 +1,4 @@
+import {isString} from '@yoroi/common'
 import {getPoolUrlByProvider} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import {BalanceAmount, BalanceCardanoMetadatas} from '@yoroi/types/lib/balance/token'

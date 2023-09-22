@@ -1,4 +1,4 @@
-import {invalid} from './helpers'
+import {invalid} from './errors'
 
 describe('invalid', () => {
   it('should throw an error with the given message', () => {

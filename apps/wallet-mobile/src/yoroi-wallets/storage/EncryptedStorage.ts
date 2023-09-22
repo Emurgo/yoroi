@@ -1,4 +1,4 @@
-import {parseString, rootStorage} from '@yoroi/wallets'
+import {parseString, rootStorage} from '@yoroi/common'
 
 import {YoroiWallet} from '../cardano/types'
 import {decryptData, encryptData} from '../encryption'
