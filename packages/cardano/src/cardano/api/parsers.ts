@@ -47,11 +47,12 @@ export function isFtMetadata(data: unknown): data is ApiFtMetadata {
 
   if (!isString(metadata.name)) return false
 
-  if (metadata.description && !isString(metadata.description)) return false
-  if (metadata.policy && !isString(metadata.policy)) return false
-  if (metadata.logo && !isString(metadata.logo)) return false
+  if (metadata.description && !isStringOrArrayOfString(metadata.description))
+    return false
+  if (metadata.policy && !isStringOrArrayOfString(metadata.policy)) return false
+  if (metadata.logo && !isStringOrArrayOfString(metadata.logo)) return false
   if (metadata.ticker && !isString(metadata.ticker)) return false
-  if (metadata.url && !isString(metadata.url)) return false
+  if (metadata.url && !isStringOrArrayOfString(metadata.url)) return false
 
   if (metadata.decimals !== undefined && !isPositiveNumber(metadata.decimals))
     return false

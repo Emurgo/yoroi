@@ -90,15 +90,15 @@ describe('isFtMetadata', () => {
     expect(isFtMetadata({extra: 123})).toBe(false)
   })
 
-  it('should return false if description exists but is not a string', () => {
+  it('should return false if description exists but is not a string/array of strings', () => {
     expect(isFtMetadata({name: 'some-name', description: 123})).toBe(false)
   })
 
-  it('should return false if policy exists but is not a string', () => {
+  it('should return false if policy exists but is not a string/array of strings', () => {
     expect(isFtMetadata({name: 'some-name', policy: 123})).toBe(false)
   })
 
-  it('should return false if logo exists but is not a string', () => {
+  it('should return false if logo exists but is not a string/array of strings', () => {
     expect(isFtMetadata({name: 'some-name', logo: 123})).toBe(false)
   })
 
@@ -106,7 +106,7 @@ describe('isFtMetadata', () => {
     expect(isFtMetadata({name: 'some-name', ticker: 123})).toBe(false)
   })
 
-  it('should return false if url exists but is not a string', () => {
+  it('should return false if url exists but is not a string/array of strings', () => {
     expect(isFtMetadata({name: 'some-name', url: 123})).toBe(false)
   })
 
