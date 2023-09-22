@@ -39,6 +39,16 @@ export const EditLimitPrice = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createOrder.marketPrice])
 
+  React.useEffect(() => {
+    if (createOrder.type === 'limit') return
+
+    const defaultPrice = createOrder.marketPrice
+
+    const formattedValue = BigNumber(defaultPrice).toFormat(numberLocale)
+    setText(formattedValue)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createOrder.type])
+
   const onChange = (text: string) => {
     const [formattedPrice, price] = Quantities.parseFromText(text, PRECISION, numberLocale)
     const value = Quantities.denominated(price, PRECISION)

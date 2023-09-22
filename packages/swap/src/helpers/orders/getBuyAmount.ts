@@ -1,10 +1,9 @@
+import BigNumber from 'bignumber.js'
 import {Balance, Swap} from '@yoroi/types'
 
 import {ceilDivision} from '../../utils/ceilDivision'
 import {Quantities} from '../../utils/quantities'
 import {asQuantity} from '../../utils/asQuantity'
-
-const LIMIT_WITHOUT_FEE = true
 
 /**
  * Calculate the amount to buy based on the desired sell amount in a liquidity pool.
@@ -20,7 +19,6 @@ export const getBuyAmount = (
   sell: Balance.Amount,
   limit?: Balance.Quantity,
 ): Balance.Amount => {
-  const notLimit = !limit || Quantities.isZero(limit)
   const isSellTokenA = sell.tokenId === pool.tokenA.tokenId
 
   const tokenId = isSellTokenA ? pool.tokenB.tokenId : pool.tokenA.tokenId
@@ -28,18 +26,25 @@ export const getBuyAmount = (
   if (Quantities.isZero(sell.quantity))
     return {tokenId, quantity: Quantities.zero}
 
+  if (!(!limit || Quantities.isZero(limit)))
+    return {
+      tokenId,
+      quantity: asQuantity(
+        BigNumber(sell.quantity)
+          .dividedToIntegerBy(BigNumber(limit))
+          .toString(),
+      ),
+    }
+
+  const A = BigInt(pool.tokenA.quantity)
   const B = BigInt(pool.tokenB.quantity)
-  const A = notLimit
-    ? BigInt(pool.tokenA.quantity)
-    : BigInt(Math.floor(Number(B) / Number(limit)))
 
   const [firstToken, secondToken] = isSellTokenA ? [A, B] : [B, A]
 
   const sellQuantity = BigInt(sell.quantity)
 
-  const poolFee = !notLimit && LIMIT_WITHOUT_FEE ? 0 : pool.fee
   const fee = ceilDivision(
-    BigInt(Number(poolFee) * 1000) * sellQuantity,
+    BigInt(Number(pool.fee) * 1000) * sellQuantity,
     BigInt(100 * 1000),
   )
 

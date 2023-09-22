@@ -32,7 +32,7 @@ describe('getSellAmount', () => {
     expect(zeroResult.tokenId).toBe('tokenB')
 
     const limitedResult = getSellAmount(pool, buy, '2.1')
-    expect(limitedResult.quantity).toBe('212')
+    expect(limitedResult.quantity).toBe('210')
     expect(limitedResult.tokenId).toBe('tokenB')
   })
 
@@ -61,7 +61,7 @@ describe('getSellAmount', () => {
     expect(result.tokenId).toBe('tokenA')
 
     const limitedResult = getSellAmount(pool, buy, '2.1')
-    expect(limitedResult.quantity).toBe('49')
+    expect(limitedResult.quantity).toBe('210')
     expect(limitedResult.tokenId).toBe('tokenA')
   })
 

@@ -28,7 +28,7 @@ describe('getBuyAmount', () => {
     expect(result.tokenId).toBe('tokenB')
 
     const limitedResult = getBuyAmount(pool, sell, '2.1')
-    expect(limitedResult.quantity).toBe('209')
+    expect(limitedResult.quantity).toBe('47')
     expect(limitedResult.tokenId).toBe('tokenB')
   })
 
