@@ -640,7 +640,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           ? [stakingPrivateKey]
           : undefined
 
-      console.log('[signTx DATUM]', datum)
       const signedTx = await unsignedTx.unsignedTx.sign(
         datum ? BIP44_DERIVATION_LEVELS.ACCOUNT : 0,
         accountPrivateKeyHex,

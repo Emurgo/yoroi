@@ -134,6 +134,8 @@ const getStories = () => {
     "./src/features/Swap/common/SelectPool/SelectPoolFromList/SelectPoolFromList.stories.tsx": require("../src/features/Swap/common/SelectPool/SelectPoolFromList/SelectPoolFromList.stories.tsx"),
     "./src/features/Swap/common/TransactionSigned/TransactionSigned.stories.tsx": require("../src/features/Swap/common/TransactionSigned/TransactionSigned.stories.tsx"),
     "./src/features/Swap/useCases/ConfirmTxScreen/ConfirmTxScreen.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/ConfirmTxScreen.stories.tsx"),
+    "./src/features/Swap/useCases/ConfirmTxScreen/FailedTxScreen.tsx/FailedTxScreen.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/FailedTxScreen.tsx/FailedTxScreen.stories.tsx"),
+    "./src/features/Swap/useCases/ConfirmTxScreen/SubmitedTx/SubmitedTxScreen.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/SubmitedTx/SubmitedTxScreen.stories.tsx"),
     "./src/features/Swap/useCases/ConfirmTxScreen/TransactionSummary.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/TransactionSummary.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/CreateOrder.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/CreateOrder.stories.tsx"),
     "./src/features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/EditBuyAmount.stories.tsx": require("../src/features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/EditBuyAmount.stories.tsx"),
