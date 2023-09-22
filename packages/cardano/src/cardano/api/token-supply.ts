@@ -16,7 +16,7 @@ export const getTokenSupply =
       return Promise.resolve({})
     }
 
-    const assetsMap = new Map<string, {policy: string; name: string}>(
+    const assetsMap = new Map<ApiTokenId, {policy: string; name: string}>(
       tokenIds.map((id) => {
         const {policyId: policy, name} = getTokenIdentity(id)
         return [id, {policy, name}]
@@ -35,7 +35,7 @@ export const getTokenSupply =
       if (!parsedResponse)
         return Promise.reject(new Error('Invalid asset supplies'))
 
-      const result: any = {} // need any here TS issues with key indexing
+      const result: Record<ApiTokenId, ApiTokenSupplyRecord> = {} // need any here TS issues with key indexing
       const supplies: Record<ApiTokenId, ApiTokenSupplyRecord | undefined> =
         parsedResponse.supplies
 
@@ -44,7 +44,7 @@ export const getTokenSupply =
         result[id] = supplies[tokenId] ?? null
       })
 
-      return Promise.resolve(result as ApiTokenSupplyResponse) // casting here
+      return Promise.resolve(result)
     })
   }
 
