@@ -21,7 +21,8 @@ export const mocks = {
       },
       datum: '',
       datumHash: '',
-      limitPrice: undefined,
+      limitPrice: '0.089' as `${number}`,
+      marketPrice: '0.089' as `${number}`,
       selectedPool: {
         batcherFee: {quantity: asQuantity(2500000), tokenId: ''},
         deposit: {quantity: asQuantity(2000000), tokenId: ''},
