@@ -1,5 +1,5 @@
 import {BanxaUnknownError, BanxaValidationError} from '../adapters/errors'
-import {banxaModuleMaker} from './module' // Replace with the actual path to the function
+import {banxaModuleMaker} from './module'
 
 describe('banxaModuleMaker', () => {
   test('should generate a correct referral link with all parameters', () => {

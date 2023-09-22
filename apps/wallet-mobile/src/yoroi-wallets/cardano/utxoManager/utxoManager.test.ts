@@ -1,4 +1,4 @@
-import {rootStorage} from '@yoroi/wallets'
+import {rootStorage} from '@yoroi/common'
 
 import {makeUtxoManagerStorage, makeUtxoStorage} from './utxoManager'
 

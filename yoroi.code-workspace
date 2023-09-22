@@ -1,0 +1,46 @@
+{
+  "folders": [
+    {
+      "name": "root",
+      "path": "."
+    },
+    {
+      "name": "@yoroi/types",
+      "path": "./packages/types"
+    },
+    {
+      "name": "@yoroi/swap",
+      "path": "./packages/swap"
+    },
+    {
+      "name": "@yoroi/banxa",
+      "path": "./packages/banxa"
+    },
+    {
+      "name": "@yoroi/cardano",
+      "path": "./packages/cardano"
+    },
+    {
+      "name": "@yoroi/common",
+      "path": "./packages/common"
+    },
+    {
+      "name": "@yoroi/openswap",
+      "path": "./packages/openswap"
+    },
+    {
+      "name": "@yoroi/wallet-mobile",
+      "path": "./apps/wallet-mobile"
+    }
+  ],
+
+  "settings": {
+    "jest.disabledWorkspaceFolders": ["root"],
+    "jest.pathToJest": "node_modules/.bin/jest",
+    "jest.pathToConfig": "./jest.config.js",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "typescript.preferGoToSourceDefinition": true,
+    "typescript.referencesCodeLens.enabled": true,
+    "typescript.tsserver.maxTsServerMemory": 12072
+  }
+}

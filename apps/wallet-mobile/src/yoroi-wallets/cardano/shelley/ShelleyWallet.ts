@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Datum} from '@emurgo/yoroi-lib'
+import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
-import {parseSafe} from '@yoroi/wallets'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'

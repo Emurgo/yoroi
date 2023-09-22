@@ -2,10 +2,13 @@ import {AppStorage, AppStorageFolderName} from './storage'
 import {Nullable} from '../helpers/types'
 
 export interface AppMultiStorage<T> {
-  keys: () => Promise<string[]>
-  remove: () => Promise<void>
-  save: (data: NonNullable<T>[]) => Promise<void>
-  read: () => Promise<[string, Nullable<T>][]>
+  getAllKeys: () => Promise<ReadonlyArray<string>>
+  clear: () => Promise<void>
+  saveMany: (data: ReadonlyArray<NonNullable<T>>) => Promise<void>
+  readAll: () => Promise<ReadonlyArray<[string, Nullable<T>]>>
+  readMany: (
+    keys: ReadonlyArray<string>,
+  ) => Promise<ReadonlyArray<[string, Nullable<T>]>>
 }
 
 export type AppMultiStorageOptions<T> = {

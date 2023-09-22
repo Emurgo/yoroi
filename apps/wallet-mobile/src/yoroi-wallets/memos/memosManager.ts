@@ -1,5 +1,5 @@
+import {isString, parseString} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import {isString, parseString} from '@yoroi/wallets'
 
 export const makeMemosManager = async (storage: App.Storage) => {
   const getMemos = () =>
@@ -33,7 +33,7 @@ export const makeMemosManager = async (storage: App.Storage) => {
   } as const
 }
 
-const filterCorruptEntries = (tuples: [string, string | undefined][]) => {
+const filterCorruptEntries = (tuples: ReadonlyArray<[string, string | undefined]>) => {
   return tuples.filter((tuple): tuple is [string, string] => isString(tuple[1]))
 }
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {isArray, parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import {isArray, parseSafe} from '@yoroi/wallets'
 import assert from 'assert'
 import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'

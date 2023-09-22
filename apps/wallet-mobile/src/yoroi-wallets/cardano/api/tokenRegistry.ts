@@ -1,5 +1,5 @@
+import {createTypeGuardFromSchema} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
-import {createTypeGuardFromSchema} from '@yoroi/wallets'
 import {z} from 'zod'
 
 import {promiseAny} from '../../../utils'
