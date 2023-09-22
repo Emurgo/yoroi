@@ -22,6 +22,9 @@ export const getBuyAmount = (
 
   const tokenId = isSellTokenA ? pool.tokenB.tokenId : pool.tokenA.tokenId
 
+  if (Quantities.isZero(sell.quantity))
+    return {tokenId, quantity: Quantities.zero}
+
   const B = BigInt(pool.tokenB.quantity)
   const A =
     !limit || Quantities.isZero(limit)
