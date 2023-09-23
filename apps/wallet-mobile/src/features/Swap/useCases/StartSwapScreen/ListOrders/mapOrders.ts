@@ -1,9 +1,7 @@
 import {isString} from '@yoroi/common'
 import {getPoolUrlByProvider} from '@yoroi/swap'
-import {Balance} from '@yoroi/types'
 import {Balance, Swap} from '@yoroi/types'
 import {SwapCompletedOrder, SwapOpenOrder} from '@yoroi/types/lib/swap/order'
-import {isString} from '@yoroi/wallets'
 import BigNumber from 'bignumber.js'
 
 import {NumberLocale} from '../../../../../i18n/languages'
@@ -13,7 +11,7 @@ import {Quantities} from '../../../../../yoroi-wallets/utils'
 const MAX_DECIMALS = 10
 
 export type MappedOrder = {
-  owner: unknown
+  owner: string | undefined
   utxo: string | undefined
   tokenPrice: string
   tokenAmount: string
