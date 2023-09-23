@@ -25,7 +25,7 @@ export type MappedOrder = {
   total: string
   txLink: string
   toTokenInfo: Balance.TokenInfo | undefined
-  provider: SwapPoolProvider | undefined
+  provider: Swap.PoolProvider | undefined
   poolUrl: string | undefined
   fromTokenInfo: Balance.TokenInfo | undefined
   fromTokenAmount: string
