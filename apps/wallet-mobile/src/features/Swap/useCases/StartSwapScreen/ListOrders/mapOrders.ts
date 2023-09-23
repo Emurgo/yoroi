@@ -30,7 +30,7 @@ export type MappedOrder = {
   fromTokenInfo: Balance.TokenInfo | undefined
   fromTokenAmount: string
   from: Balance.Amount
-  to: BalanceAmount
+  to: Balance.Amount
 }
 
 export const mapOrders = (
