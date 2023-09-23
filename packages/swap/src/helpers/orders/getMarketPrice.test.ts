@@ -3,7 +3,7 @@ import {Swap, Balance} from '@yoroi/types'
 import {getMarketPrice} from './getMarketPrice'
 
 describe('getMarketPrice', () => {
-  it('should calculate the correct buy amount when selling tokenA', () => {
+  it('should calculate the correct market price when selling tokenA', () => {
     const pool = {
       tokenA: {quantity: '4500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
