@@ -43,7 +43,7 @@ export const mapOrders = (
 ): Array<MappedOrder> => {
   if (orders.length === 0) return []
 
-  return orders.map((order: SwapOpenOrder | SwapCompletedOrder) => {
+  return orders.map((order: Swap.OpenOrder | Swap.CompletedOrder) => {
     const {from, to} = order
     const [txIdOpen] = 'utxo' in order ? order.utxo.split('#', 1) : [undefined]
     const txIdComplete = 'txHash' in order ? order.txHash : undefined
