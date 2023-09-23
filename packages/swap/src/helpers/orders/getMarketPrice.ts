@@ -8,7 +8,6 @@ import {asQuantity} from '../../utils/asQuantity'
  *
  * @param pool - The liquidity pool.
  * @param sell - The desired sell amount.
- * @param buy - The desired buy amount.
  *
  * @returns The market price
  */
