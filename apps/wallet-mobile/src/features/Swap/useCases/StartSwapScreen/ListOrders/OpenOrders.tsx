@@ -97,16 +97,16 @@ export const OpenOrders = () => {
       to_amount: Number(order?.to.quantity) ?? 0,
       from_asset: [
         {
-          asset_name: order?.fromTokenInfo?.name,
-          asset_ticker: order?.fromTokenInfo?.ticker,
-          policy_id: order?.fromTokenInfo?.group,
+          asset_name: order?.fromTokenInfo?.name ?? '',
+          asset_ticker: order?.fromTokenInfo?.ticker ?? '',
+          policy_id: order?.fromTokenInfo?.group ?? '',
         },
       ],
       to_asset: [
         {
-          asset_name: order?.toTokenInfo?.name,
-          asset_ticker: order?.toTokenInfo?.ticker,
-          policy_id: order?.toTokenInfo?.group,
+          asset_name: order?.toTokenInfo?.name ?? '',
+          asset_ticker: order?.toTokenInfo?.ticker ?? '',
+          policy_id: order?.toTokenInfo?.group ?? '',
         },
       ],
       pool_source: order?.provider ?? '',
