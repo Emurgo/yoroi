@@ -29,7 +29,7 @@ export type MappedOrder = {
   poolUrl: string | undefined
   fromTokenInfo: Balance.TokenInfo | undefined
   fromTokenAmount: string
-  from: BalanceAmount
+  from: Balance.Amount
   to: BalanceAmount
 }
 
