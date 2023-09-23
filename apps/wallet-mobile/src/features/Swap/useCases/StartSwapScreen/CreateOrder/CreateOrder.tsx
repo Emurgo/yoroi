@@ -48,7 +48,7 @@ export const CreateOrder = () => {
 
   const bestPool = useMemo(() => {
     if (poolList !== undefined && poolList.length > 0) {
-      return poolList.map((a) => a).sort((a, b) => a.price - b.price)[0]
+      return poolList.sort((a, b) => a.price - b.price).find(() => true)
     }
     return undefined
   }, [poolList])
