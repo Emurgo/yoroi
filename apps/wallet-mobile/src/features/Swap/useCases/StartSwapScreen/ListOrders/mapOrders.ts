@@ -27,7 +27,7 @@ export type MappedOrder = {
   toTokenInfo: Balance.TokenInfo | undefined
   provider: SwapPoolProvider | undefined
   poolUrl: string | undefined
-  fromTokenInfo: BalanceTokenInfo<BalanceCardanoMetadatas> | undefined
+  fromTokenInfo: Balance.TokenInfo | undefined
   fromTokenAmount: string
   from: BalanceAmount
   to: BalanceAmount
