@@ -1,7 +1,7 @@
 import {isString} from '@yoroi/common'
 import {getPoolUrlByProvider} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
-import {BalanceAmount, BalanceCardanoMetadatas} from '@yoroi/types/lib/balance/token'
+import {Balance, Swap} from '@yoroi/types'
 import {SwapCompletedOrder, SwapOpenOrder} from '@yoroi/types/lib/swap/order'
 import {SwapPoolProvider} from '@yoroi/types/lib/swap/pool'
 import {BalanceTokenInfo} from '@yoroi/types/src/balance/token'
