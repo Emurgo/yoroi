@@ -27,7 +27,7 @@ describe('getMarketPrice', () => {
     expect(result).toBe('2')
   })
 
-  it('should calculate the correct buy amount when selling tokenB', () => {
+  it('should calculate the correct market price when selling tokenB', () => {
     const pool = {
       tokenA: {quantity: '4500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
