@@ -39,12 +39,18 @@ export const ManageCollateralScreen = () => {
     addressChanged,
     amountChanged,
     tokenSelectedChanged,
-    targets,
-    selectedTargetIndex,
     yoroiUnsignedTxChanged,
   } = useSend()
   const {refetch, isLoading: isLoadingTx} = useSendTx(
-    {wallet, entry: targets[selectedTargetIndex].entry},
+    {
+      wallet,
+      entry: {
+        address: wallet.externalAddresses[0],
+        amounts: {
+          [wallet.primaryTokenInfo.id]: collateralConfig.minLovelace,
+        },
+      },
+    },
     {
       onSuccess: (yoroiUnsignedTx) => {
         yoroiUnsignedTxChanged(yoroiUnsignedTx)
@@ -68,9 +74,10 @@ export const ManageCollateralScreen = () => {
       quantity: collateralConfig.minLovelace,
       tokenId: wallet.primaryTokenInfo.id,
     }
+
+    // dispatch only for confirmation screen
     resetForm()
     addressChanged(address)
-
     tokenSelectedChanged(amount.tokenId)
     amountChanged(amount.quantity)
 
