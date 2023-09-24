@@ -327,7 +327,21 @@ const PasswordModal = ({onConfirm}: {onConfirm: (password: string) => Promise<vo
   const [password, setPassword] = useState('')
   const strings = useStrings()
 
-  const {isLoading, mutate, error} = useMutation({mutationFn: () => onConfirm(password)})
+  const [error, setError] = useState<Error | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  const onConfirmPress = async () => {
+    setError(null)
+    setLoading(true)
+    try {
+      await onConfirm(password)
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e)
+      }
+    }
+    setLoading(false)
+  }
 
   return (
     <View style={{flex: 1}}>
@@ -353,7 +367,7 @@ const PasswordModal = ({onConfirm}: {onConfirm: (password: string) => Promise<vo
 
       <Spacer fill />
 
-      <Button testID="swapButton" disabled={isLoading} onPress={() => mutate()} shelleyTheme title={strings.sign} />
+      <Button testID="swapButton" disabled={loading} onPress={onConfirmPress} shelleyTheme title={strings.sign} />
     </View>
   )
 }
