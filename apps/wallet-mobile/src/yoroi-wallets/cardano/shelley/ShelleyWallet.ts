@@ -30,7 +30,7 @@ import type {
   YoroiNftModerationStatus,
 } from '../../types'
 import {StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
-import {Quantities} from '../../utils'
+import {asQuantity, Quantities} from '../../utils'
 import {validatePassword} from '../../utils/validators'
 import {WalletMeta} from '../../walletManager'
 import {Cardano, CardanoMobile} from '../../wallets'
@@ -64,6 +64,7 @@ import {
 import {yoroiUnsignedTx} from '../unsignedTx'
 import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
+import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
 
 type WalletState = {
@@ -173,6 +174,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     private readonly utxoManager: UtxoManager
     private readonly transactionManager: TransactionManager
     private readonly memosManager: MemosManager
+    private _collateralId = ''
 
     // =================== create =================== //
 
@@ -341,6 +343,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       this.storage = storage
       this.utxoManager = utxoManager
       this._utxos = utxoManager.initialUtxos
+      this._collateralId = utxoManager.initialCollateralId
       this.encryptedStorage = makeWalletEncryptedStorage(id)
       this.isHW = hwDeviceInfo != null
       this.hwDeviceInfo = hwDeviceInfo
@@ -384,10 +387,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       if (!this.timeout) return
       Logger.info(`stopping wallet: ${this.id}`)
       clearTimeout(this.timeout)
-    }
-
-    get utxos() {
-      return this._utxos
     }
 
     get receiveAddresses(): Addresses {
@@ -921,14 +920,40 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       const newUtxos = await this.utxoManager.getCachedUtxos()
 
-      if (this.hasUtxoUpdated(this._utxos, newUtxos)) {
+      if (this.didUtxosUpdate(this._utxos, newUtxos)) {
         this._utxos = newUtxos
 
         this.notify({type: 'utxos', utxos: this.utxos})
       }
     }
 
-    private hasUtxoUpdated(oldUtxos: RawUtxo[], newUtxos: RawUtxo[]): boolean {
+    get utxos() {
+      return this._utxos.filter((utxo) => utxo.utxo_id !== this._collateralId)
+    }
+
+    get collateralId(): string {
+      return this._collateralId
+    }
+
+    getCollateralInfo(): {utxo: RawUtxo | undefined; amount: Balance.Amount; collateralId: string} {
+      const utxos = utxosMaker(this._utxos)
+      const collateralUtxo = utxos.findById(this.collateralId)
+      const quantity = collateralUtxo?.amount !== undefined ? asQuantity(collateralUtxo?.amount) : Quantities.zero
+
+      return {
+        utxo: collateralUtxo,
+        amount: {quantity, tokenId: this.primaryTokenInfo.id},
+        collateralId: this.collateralId,
+      }
+    }
+
+    async setCollateralId(id: RawUtxo['utxo_id']): Promise<void> {
+      await this.utxoManager.setCollateralId(id)
+      this._collateralId = id
+      this.notify({type: 'collateral-id', collateralId: this._collateralId})
+    }
+
+    private didUtxosUpdate(oldUtxos: RawUtxo[], newUtxos: RawUtxo[]): boolean {
       if (oldUtxos.length !== newUtxos.length) {
         return true
       }

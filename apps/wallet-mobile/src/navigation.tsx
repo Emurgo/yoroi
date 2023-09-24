@@ -247,6 +247,7 @@ export type SettingsStackRoutes = {
   'change-password': undefined
   'change-custom-pin': undefined
   'privacy-policy': undefined
+  'manage-collateral': undefined
   'enable-login-with-pin': {
     onSuccess: () => void | Promise<void>
   }

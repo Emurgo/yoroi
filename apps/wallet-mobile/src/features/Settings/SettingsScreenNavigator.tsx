@@ -22,6 +22,7 @@ import {ChangeWalletName} from './ChangeWalletName'
 import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
 import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
 import {EnableLoginWithOsScreen} from './EnableLoginWithOs'
+import {ManageCollateralScreen} from './ManageCollateral'
 import {PrivacyPolicyScreen} from './PrivacyPolicy'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {TermsOfServiceScreen} from './TermsOfService'
@@ -120,6 +121,14 @@ export const SettingsScreenNavigator = () => {
           title: strings.changeCustomPinTitle,
         }}
         component={ChangePinScreenWrapper}
+      />
+
+      <Stack.Screen //
+        name="manage-collateral"
+        options={{
+          title: strings.collateral,
+        }}
+        component={ManageCollateralScreen}
       />
 
       <Stack.Screen
@@ -234,6 +243,10 @@ const messages = defineMessages({
     id: 'components.settings.privacypolicyscreen.title',
     defaultMessage: '!!!Privacy Policy',
   },
+  collateral: {
+    id: 'global.collateral',
+    defaultMessage: '!!!Collateral',
+  },
 })
 
 const useStrings = () => {
@@ -257,5 +270,6 @@ const useStrings = () => {
     aboutTitle: intl.formatMessage(messages.aboutTitle),
     appSettingsTitle: intl.formatMessage(messages.appSettingsTitle),
     privacyPolicyTitle: intl.formatMessage(messages.privacyPolicyTitle),
+    collateral: intl.formatMessage(messages.collateral),
   }
 }

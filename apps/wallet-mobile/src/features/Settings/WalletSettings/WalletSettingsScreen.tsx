@@ -18,7 +18,13 @@ import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
 import {useNavigateTo} from '../common/navigation'
-import {NavigatedSettingsItem, SettingsBuildItem, SettingsItem, SettingsSection} from '../SettingsItems'
+import {
+  NavigatedSettingsItem,
+  SettingsBuildItem,
+  SettingsCollateralItem,
+  SettingsItem,
+  SettingsSection,
+} from '../SettingsItems'
 
 const iconProps = {
   color: lightPalette.gray['600'],
@@ -88,6 +94,11 @@ export const WalletSettingsScreen = () => {
           />
 
           <ResyncButton />
+
+          <SettingsCollateralItem
+            label={strings.collateral}
+            onNavigate={() => settingsNavigation.navigate('manage-collateral')}
+          />
         </SettingsSection>
 
         <Spacer height={24} />
@@ -234,6 +245,10 @@ const messages = defineMessages({
     id: 'components.settings.walletsettingscreen.removeWallet',
     defaultMessage: '!!!Remove wallet',
   },
+  collateral: {
+    id: 'global.collateral',
+    defaultMessage: '!!!Collateral',
+  },
   // note: moved here from application settings
   network: {
     id: 'global.network',
@@ -285,6 +300,7 @@ const useStrings = () => {
     unknownWalletType: intl.formatMessage(messages.unknownWalletType),
     about: intl.formatMessage(messages.about),
     resync: intl.formatMessage(messages.resync),
+    collateral: intl.formatMessage(messages.collateral),
   }
 }
 
