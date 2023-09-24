@@ -32,7 +32,7 @@ export type MappedOrder = {
 }
 
 export const mapOrders = (
-  orders: Array<SwapOpenOrder | SwapCompletedOrder>,
+  orders: Array<Swap.OpenOrder | Swap.CompletedOrder>,
   tokenInfos: Balance.TokenInfo[],
   numberLocale: NumberLocale,
   transactionInfos: TransactionInfo[],
