@@ -11,6 +11,7 @@ import {
   ViewProps,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
+import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, CopyButton, Icon, Spacer, Text} from '../../../components'
 import {AmountItem} from '../../../components/AmountItem/AmountItem'
@@ -20,17 +21,39 @@ import {COLORS} from '../../../theme'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useCollateralInfo} from '../../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
-import {utxosMaker} from '../../../yoroi-wallets/cardano/utxoManager/utxos'
-import {RawUtxo} from '../../../yoroi-wallets/types'
+import {collateralConfig, utxosMaker} from '../../../yoroi-wallets/cardano/utxoManager/utxos'
+import {RawUtxo, YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {useSend} from '../../Send/common/SendContext'
 import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
+import {useNavigateTo} from './navigation'
 
 export const ManageCollateralScreen = () => {
   const wallet = useSelectedWallet()
   const {amount, collateralId, utxo} = useCollateralInfo(wallet)
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const didSpend = collateralId !== '' && utxo === undefined
+  const navigateTo = useNavigateTo()
 
-  const {isLoading, setCollateralId} = useSetCollateralId(wallet)
+  const {
+    resetForm,
+    addressChanged,
+    amountChanged,
+    tokenSelectedChanged,
+    targets,
+    selectedTargetIndex,
+    yoroiUnsignedTxChanged,
+  } = useSend()
+  const {refetch, isLoading: isLoadingTx} = useSendTx(
+    {wallet, entry: targets[selectedTargetIndex].entry},
+    {
+      onSuccess: (yoroiUnsignedTx) => {
+        yoroiUnsignedTxChanged(yoroiUnsignedTx)
+        navigateTo.confirmTx()
+      },
+    },
+  )
+
+  const {isLoading: isLoadingCollateral, setCollateralId} = useSetCollateralId(wallet)
   const handleRemoveCollateral = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setCollateralId('')
@@ -39,6 +62,23 @@ export const ManageCollateralScreen = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setCollateralId(collateralId)
   }
+  const handleCreateCollateralTransaction = () => {
+    const address = wallet.externalAddresses[0]
+    const amount: Balance.Amount = {
+      quantity: collateralConfig.minLovelace,
+      tokenId: wallet.primaryTokenInfo.id,
+    }
+    resetForm()
+    addressChanged(address)
+
+    tokenSelectedChanged(amount.tokenId)
+    amountChanged(amount.quantity)
+
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    refetch()
+  }
+
+  const isLoading = isLoadingTx || isLoadingCollateral
 
   const handleAutoDrawnCollateral = () => {
     const utxos = utxosMaker(wallet.utxos)
@@ -104,7 +144,12 @@ export const ManageCollateralScreen = () => {
         )}
       </ScrollView>
 
-      <Button title="@ Create collateral transaction" onPress={() => true} outlineShelley disabled={isLoading} />
+      <Button
+        title="@ Create collateral transaction"
+        onPress={handleCreateCollateralTransaction}
+        outlineShelley
+        disabled={isLoading}
+      />
 
       <Spacer height={8} />
 
@@ -152,6 +197,29 @@ export const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) 
       <Icon.CrossCircle size={26} color={COLORS.BLACK} />
     </TouchableOpacity>
   )
+}
+
+export const useSendTx = (
+  {wallet, entry}: {wallet: YoroiWallet; entry: YoroiEntry},
+  options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'send-tx']>,
+) => {
+  const query = useQuery({
+    ...options,
+    cacheTime: 0,
+    suspense: true,
+    enabled: false,
+    retry: false,
+    retryOnMount: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    queryKey: [wallet.id, 'send-tx'],
+    queryFn: () => wallet.createUnsignedTx(entry),
+  })
+
+  return {
+    ...query,
+    unsignedTx: query.data,
+  }
 }
 
 const styles = StyleSheet.create({

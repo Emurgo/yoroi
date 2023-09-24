@@ -5,7 +5,7 @@ import {RawUtxo} from '../../types'
 import {asQuantity} from '../../utils'
 import {CollateralConfig} from './types'
 
-const collateralConfig: CollateralConfig = {
+export const collateralConfig: CollateralConfig = {
   minLovelace: asQuantity(5_000_000),
   maxLovelace: asQuantity(10_000_000),
 }

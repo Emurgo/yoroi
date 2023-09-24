@@ -247,10 +247,13 @@ export type SettingsStackRoutes = {
   'change-password': undefined
   'change-custom-pin': undefined
   'privacy-policy': undefined
-  'manage-collateral': undefined
   'enable-login-with-pin': {
     onSuccess: () => void | Promise<void>
   }
+  'manage-collateral': undefined
+  'collateral-confirm-tx': undefined
+  'collateral-tx-submitted': undefined
+  'collateral-tx-failed': undefined
 }
 
 export type ToggleAnalyticsSettingsRoutes = {

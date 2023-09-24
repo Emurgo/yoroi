@@ -14,6 +14,8 @@ import {
   SettingsStackRoutes,
   SettingsTabRoutes,
 } from '../../navigation'
+import {useSelectedWallet} from '../../SelectedWallet'
+import {SendProvider} from '../Send/common/SendContext'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'
@@ -23,6 +25,9 @@ import {ChangeCurrencyScreen} from './Currency/ChangeCurrencyScreen'
 import {DisableEasyConfirmationScreen, EnableEasyConfirmationScreen} from './EasyConfirmation'
 import {EnableLoginWithOsScreen} from './EnableLoginWithOs'
 import {ManageCollateralScreen} from './ManageCollateral'
+import {ConfirmTxScreen} from './ManageCollateral/ConfirmTx'
+import {FailedTxScreen} from './ManageCollateral/ConfirmTx/FailedTx/FailedTxScreen'
+import {SubmittedTxScreen} from './ManageCollateral/ConfirmTx/SubmittedTx/SubmittedTxScreen'
 import {PrivacyPolicyScreen} from './PrivacyPolicy'
 import {RemoveWalletScreen} from './RemoveWallet'
 import {TermsOfServiceScreen} from './TermsOfService'
@@ -31,112 +36,139 @@ import {WalletSettingsScreen} from './WalletSettings'
 const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
+  const wallet = useSelectedWallet()
 
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...defaultStackNavigationOptions,
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-      }}
-    >
-      <Stack.Screen //
-        name="app-settings"
-        component={ApplicationSettingsScreen}
-        options={{title: strings.appSettingsTitle}}
-      />
-
-      <Stack.Screen name="about" component={About} options={{title: strings.aboutTitle}} />
-
-      <Stack.Screen //
-        name="main-settings"
-        component={SettingsTabNavigator}
-        options={{title: strings.settingsTitle}}
-      />
-
-      <Stack.Screen
-        name="change-wallet-name"
-        component={ChangeWalletName}
-        options={{title: strings.changeWalletNameTitle}}
-      />
-
-      <Stack.Screen
-        name="terms-of-use"
-        component={TermsOfServiceScreen}
-        options={{title: strings.termsOfServiceTitle}}
-      />
-
-      <Stack.Screen
-        name="privacy-policy"
-        component={PrivacyPolicyScreen}
-        options={{title: strings.privacyPolicyTitle}}
-      />
-
-      <Stack.Screen //
-        name="enable-login-with-os"
-        component={EnableLoginWithOsScreenWrapper}
-        options={{headerShown: false}}
-      />
-
-      <Stack.Screen //
-        name="remove-wallet"
-        component={RemoveWalletScreen}
-        options={{title: strings.removeWalletTitle}}
-      />
-
-      <Stack.Screen //
-        name="change-language"
-        component={ChangeLanguageScreen}
-        options={{title: strings.languageTitle}}
-      />
-
-      <Stack.Screen //
-        name="change-currency"
-        component={ChangeCurrencyScreen}
-        options={{
-          title: strings.currency,
+    <SendProvider key={wallet.id}>
+      <Stack.Navigator
+        screenOptions={{
+          ...defaultStackNavigationOptions,
+          detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
         }}
-      />
+      >
+        <Stack.Screen //
+          name="app-settings"
+          component={ApplicationSettingsScreen}
+          options={{title: strings.appSettingsTitle}}
+        />
 
-      <Stack.Screen //
-        name="enable-easy-confirmation"
-        component={EnableEasyConfirmationScreen}
-        options={{title: strings.enableEasyConfirmationTitle}}
-      />
+        <Stack.Screen name="about" component={About} options={{title: strings.aboutTitle}} />
 
-      <Stack.Screen //
-        name="disable-easy-confirmation"
-        component={DisableEasyConfirmationScreen}
-        options={{title: strings.disableEasyConfirmationTitle}}
-      />
+        <Stack.Screen //
+          name="main-settings"
+          component={SettingsTabNavigator}
+          options={{title: strings.settingsTitle}}
+        />
 
-      <Stack.Screen //
-        name="change-password"
-        component={ChangePasswordScreen}
-        options={{title: strings.changePasswordTitle}}
-      />
+        <Stack.Screen
+          name="change-wallet-name"
+          component={ChangeWalletName}
+          options={{title: strings.changeWalletNameTitle}}
+        />
 
-      <Stack.Screen //
-        name="change-custom-pin"
-        options={{
-          title: strings.changeCustomPinTitle,
-        }}
-        component={ChangePinScreenWrapper}
-      />
+        <Stack.Screen
+          name="terms-of-use"
+          component={TermsOfServiceScreen}
+          options={{title: strings.termsOfServiceTitle}}
+        />
 
-      <Stack.Screen //
-        name="manage-collateral"
-        options={{
-          title: strings.collateral,
-        }}
-        component={ManageCollateralScreen}
-      />
+        <Stack.Screen
+          name="privacy-policy"
+          component={PrivacyPolicyScreen}
+          options={{title: strings.privacyPolicyTitle}}
+        />
 
-      <Stack.Screen
-        name="enable-login-with-pin"
-        options={{title: strings.customPinTitle}}
-        component={EnableLoginWithPinWrapper}
-      />
-    </Stack.Navigator>
+        <Stack.Screen //
+          name="enable-login-with-os"
+          component={EnableLoginWithOsScreenWrapper}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen //
+          name="remove-wallet"
+          component={RemoveWalletScreen}
+          options={{title: strings.removeWalletTitle}}
+        />
+
+        <Stack.Screen //
+          name="change-language"
+          component={ChangeLanguageScreen}
+          options={{title: strings.languageTitle}}
+        />
+
+        <Stack.Screen //
+          name="change-currency"
+          component={ChangeCurrencyScreen}
+          options={{
+            title: strings.currency,
+          }}
+        />
+
+        <Stack.Screen //
+          name="enable-easy-confirmation"
+          component={EnableEasyConfirmationScreen}
+          options={{title: strings.enableEasyConfirmationTitle}}
+        />
+
+        <Stack.Screen //
+          name="disable-easy-confirmation"
+          component={DisableEasyConfirmationScreen}
+          options={{title: strings.disableEasyConfirmationTitle}}
+        />
+
+        <Stack.Screen //
+          name="change-password"
+          component={ChangePasswordScreen}
+          options={{title: strings.changePasswordTitle}}
+        />
+
+        <Stack.Screen //
+          name="change-custom-pin"
+          options={{
+            title: strings.changeCustomPinTitle,
+          }}
+          component={ChangePinScreenWrapper}
+        />
+
+        <Stack.Screen //
+          name="manage-collateral"
+          options={{
+            title: strings.collateral,
+          }}
+          component={ManageCollateralScreen}
+        />
+
+        <Stack.Screen //
+          name="collateral-confirm-tx"
+          options={{
+            title: strings.collateral,
+          }}
+          component={ConfirmTxScreen}
+        />
+
+        <Stack.Screen //
+          name="collateral-tx-submitted"
+          options={{
+            title: strings.collateral,
+          }}
+          component={SubmittedTxScreen}
+        />
+
+        <Stack.Screen //
+          name="collateral-tx-failed"
+          options={{
+            title: strings.collateral,
+          }}
+          component={FailedTxScreen}
+        />
+
+        <Stack.Screen
+          name="enable-login-with-pin"
+          options={{title: strings.customPinTitle}}
+          component={EnableLoginWithPinWrapper}
+        />
+      </Stack.Navigator>
+    </SendProvider>
   )
 }
 
