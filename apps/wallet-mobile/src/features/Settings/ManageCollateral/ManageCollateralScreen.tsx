@@ -62,7 +62,7 @@ export const ManageCollateralScreen = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setCollateralId(collateralId)
   }
-  const handleCreateCollateralTransaction = () => {
+  const createCollateralTransaction = () => {
     const address = wallet.externalAddresses[0]
     const amount: Balance.Amount = {
       quantity: collateralConfig.minLovelace,
@@ -81,34 +81,24 @@ export const ManageCollateralScreen = () => {
 
   const isLoading = isLoadingTx || isLoadingCollateral
 
-  const handleAutoDrawnCollateral = () => {
+  const handleGenerateCollateral = () => {
     const utxos = utxosMaker(wallet.utxos)
     const possibleCollateralId = utxos.drawnCollateral()
 
     if (possibleCollateralId !== undefined) {
-      Alert.alert(
-        '@t Collateral Found',
-        '@t We found a collateral that can be used, do you want confirm?',
-        [
-          {text: '@t OK', onPress: () => handleSetCollateralId(possibleCollateralId)},
-          {text: '@t Cancel', onPress: () => true},
-        ],
-        {cancelable: true, onDismiss: () => true},
-      )
-    } else {
-      Alert.alert(
-        '@t No Collateral Found',
-        '@t We could not find a collateral that can be used, please use the create collateral transaction.',
-        [{text: '@t OK', onPress: () => true}],
-        {cancelable: true, onDismiss: () => true},
-      )
+      handleSetCollateralId(possibleCollateralId)
+      return
     }
+
+    createCollateralTransaction()
   }
+
+  const shouldHideButton = !hasCollateral || didSpend
 
   return (
     <SafeAreaView edges={['top', 'left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ScrollView>
-        <Text style={{flex: 1, alignSelf: 'center'}}>@t Locked as collateral</Text>
+        <Text style={styles.heading}>@t Locked as collateral</Text>
 
         <Spacer height={8} />
 
@@ -145,16 +135,9 @@ export const ManageCollateralScreen = () => {
         )}
       </ScrollView>
 
-      <Button
-        title="@ Create collateral transaction"
-        onPress={handleCreateCollateralTransaction}
-        outlineShelley
-        disabled={isLoading}
-      />
-
-      <Spacer height={8} />
-
-      <Button title="@ Auto assign collateral" onPress={handleAutoDrawnCollateral} shelleyTheme disabled={isLoading} />
+      {shouldHideButton && (
+        <Button title="@ Generate collateral" onPress={handleGenerateCollateral} shelleyTheme disabled={isLoading} />
+      )}
     </SafeAreaView>
   )
 }
@@ -234,5 +217,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  heading: {
+    flex: 1,
+    alignSelf: 'center',
   },
 })
