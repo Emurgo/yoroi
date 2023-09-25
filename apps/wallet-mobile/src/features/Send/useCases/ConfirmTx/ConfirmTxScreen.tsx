@@ -12,6 +12,7 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
 import {useSaveMemo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
+import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
 import {useNavigateTo} from '../../common/navigation'
@@ -52,7 +53,7 @@ export const ConfirmTxScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const onSuccess = (signedTx) => {
+  const onSuccess = (signedTx: YoroiSignedTx) => {
     track.sendSummarySubmitted(assetsToSendProperties({tokens, amounts}))
     navigateTo.submittedTx()
 
