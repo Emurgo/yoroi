@@ -70,3 +70,4 @@ export namespace Numbers {
 }
 
 export * from './helpers/types'
+export * from './helpers/storage'
