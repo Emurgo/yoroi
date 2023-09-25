@@ -19,7 +19,7 @@ export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {
         buyTokenId: splitStringInto64CharArray(createOrder.amounts.buy.tokenId),
         buyQuantity: [createOrder.amounts.buy.quantity],
         depositFee: [createOrder.selectedPool.deposit.quantity],
-        poolId: [createOrder.selectedPool.poolId],
+        poolId: [splitStringInto64CharArray(createOrder.selectedPool.poolId)],
       },
     },
   ]
