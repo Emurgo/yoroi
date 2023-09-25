@@ -1,7 +1,6 @@
 import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {
-  Alert,
   LayoutAnimation,
   ScrollView,
   StyleSheet,
