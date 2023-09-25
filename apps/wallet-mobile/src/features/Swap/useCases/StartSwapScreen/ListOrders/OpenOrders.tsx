@@ -1,13 +1,3 @@
-import {
-  PrivateKey,
-  TransactionHash,
-  TransactionInput,
-  TransactionUnspentOutput,
-  Value,
-  BigNum,
-  TransactionOutput,
-  Address,
-} from '@emurgo/csl-mobile-bridge'
 import {useFocusEffect} from '@react-navigation/native'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {BalanceQuantity} from '@yoroi/types/src/balance/token'
@@ -37,7 +27,6 @@ import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {HARD_DERIVATION_START} from '../../../../../yoroi-wallets/cardano/constants/common'
 import {WrongPassword} from '../../../../../yoroi-wallets/cardano/errors'
 import {useTokenInfos, useTransactionInfos, useUtxos} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
@@ -46,7 +35,6 @@ import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {mapOrders} from './mapOrders'
-import BigNumber from 'bignumber.js'
 import {generateCIP30UtxoCbor, generateMuesliSwapSigningKey} from '../../../../../yoroi-wallets/cardano/utils'
 
 export const OpenOrders = () => {
