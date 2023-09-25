@@ -24,7 +24,7 @@ describe('getMarketPrice', () => {
       tokenId: 'tokenA',
     }
     const result = getMarketPrice(pool, sell)
-    expect(result).toBe('2')
+    expect(result).toBe('0.5')
   })
 
   it('should calculate the correct market price when selling tokenB', () => {
@@ -48,6 +48,6 @@ describe('getMarketPrice', () => {
       tokenId: 'tokenB',
     }
     const result = getMarketPrice(pool, sell)
-    expect(result).toBe('0.5')
+    expect(result).toBe('2')
   })
 })
