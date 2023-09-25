@@ -14,9 +14,9 @@ export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {
       label: '674',
       data: {
         provider: [createOrder.selectedPool.provider],
-        sellTokenId: createOrder.amounts.sell.tokenId.split('.'),
+        sellTokenId: splitStringInto64CharArray(createOrder.amounts.sell.tokenId),
         sellQuantity: [createOrder.amounts.sell.quantity],
-        buyTokenId: createOrder.amounts.buy.tokenId.split('.'),
+        buyTokenId: splitStringInto64CharArray(createOrder.amounts.buy.tokenId),
         buyQuantity: [createOrder.amounts.buy.quantity],
         depositFee: [createOrder.selectedPool.deposit.quantity],
         poolId: [createOrder.selectedPool.poolId],
@@ -35,4 +35,16 @@ export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {
     createUnsignedTx: mutation.mutate,
     ...mutation,
   }
+}
+
+function splitStringInto64CharArray(inputString: string): string[] {
+  const maxLength = 64
+  const resultArray: string[] = []
+
+  for (let i = 0; i < inputString.length; i += maxLength) {
+    const substring = inputString.slice(i, i + maxLength)
+    resultArray.push(substring)
+  }
+
+  return resultArray
 }

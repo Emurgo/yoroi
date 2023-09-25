@@ -43,7 +43,6 @@ export const OpenOrders = () => {
   const wallet = useSelectedWallet()
 
   const orders = useSwapOrdersByStatusOpen()
-  console.log('orders', orders[0].valueAttached)
   const {numberLocale} = useLanguage()
   const tokenIds = React.useMemo(() => _.uniq(orders?.flatMap((o) => [o.from.tokenId, o.to.tokenId])), [orders])
   const transactionsInfos = useTransactionInfos(wallet)
