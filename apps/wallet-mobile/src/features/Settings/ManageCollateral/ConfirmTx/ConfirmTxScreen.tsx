@@ -9,6 +9,7 @@ import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
+import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {debugWalletInfo, features} from '../../..'
 import {useSend} from '../../../Send/common/SendContext'
 import {useNavigateTo} from '../navigation'
@@ -36,7 +37,7 @@ export const ConfirmTxScreen = () => {
     }
   }, [])
 
-  const onSuccess = (signedTx) => {
+  const onSuccess = (signedTx: YoroiSignedTx) => {
     navigateTo.submittedTx()
 
     if (memo.length > 0) {
