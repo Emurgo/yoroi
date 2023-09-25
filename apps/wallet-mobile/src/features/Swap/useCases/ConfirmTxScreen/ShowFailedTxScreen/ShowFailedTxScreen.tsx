@@ -8,7 +8,7 @@ import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {FailedTxImage} from './FailedTxImage'
 
-export const FailedTxScreen = () => {
+export const ShowFailedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
   const navigateTo = useNavigateTo()

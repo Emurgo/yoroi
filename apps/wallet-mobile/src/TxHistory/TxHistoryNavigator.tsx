@@ -19,9 +19,9 @@ import {SwapTabNavigator} from '../features/Swap/SwapNavigator'
 import {
   ConfirmTxScreen as ConfirmTxSwapScreen,
   EditSlippageScreen,
-  FailedTxScreen as FailedTxSwapScreen,
   SelectPoolFromListScreen,
-  SubmittedTxScreen as SubmittedTxSwapScreen,
+  ShowFailedTxScreen as FailedTxSwapScreen,
+  ShowSubmittedTxScreen as SubmittedTxSwapScreen,
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
