@@ -1,5 +1,10 @@
 import {z} from 'zod'
-import {createTypeGuardFromSchema, fetcher, isRecord} from '@yoroi/common'
+import {
+  createTypeGuardFromSchema,
+  fetcher,
+  Fetcher,
+  isRecord,
+} from '@yoroi/common'
 
 import {
   ApiOffChainMetadataRecord,
@@ -11,7 +16,10 @@ import {
 } from './types'
 import {asSubject} from '../translators/formatters/cardano-token-id'
 
-export const getOffChainMetadata = (baseUrl: string, request = fetcher) => {
+export const getOffChainMetadata = (
+  baseUrl: string,
+  request: Fetcher = fetcher,
+) => {
   const getTokenRegistryRecord = (
     tokenId: ApiTokenId,
   ): Promise<ApiOffChainMetadataResponse> =>

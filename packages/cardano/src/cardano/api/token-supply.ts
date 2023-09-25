@@ -1,5 +1,5 @@
 import {z} from 'zod'
-import {createTypeGuardFromSchema, fetcher} from '@yoroi/common'
+import {createTypeGuardFromSchema, fetcher, Fetcher} from '@yoroi/common'
 
 import {
   ApiTokenId,
@@ -10,7 +10,7 @@ import {
 import {getTokenIdentity} from '../translators/formatters/cardano-token-id'
 
 export const getTokenSupply =
-  (baseUrl: string, request = fetcher) =>
+  (baseUrl: string, request: Fetcher = fetcher) =>
   async (tokenIds: ApiTokeSupplyRequest): Promise<ApiTokenSupplyResponse> => {
     if (tokenIds.length === 0) {
       return Promise.resolve({})
