@@ -65,7 +65,7 @@ export const ShowPoolActions = () => {
         <HiddenInfo
           totalFees={getTotalFees(
             selectedPool?.batcherFee.quantity,
-            asQuantity(providerFee ?? 0),
+            providerFee,
             wallet.primaryTokenInfo.decimals ?? 0,
             numberLocale,
           )}
