@@ -640,19 +640,28 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           : undefined
 
       console.log('[signTx DATUM]', datum)
+
+      if (datum) {
+        const signedTx = await unsignedTx.unsignedTx.sign(
+          BIP44_DERIVATION_LEVELS.ACCOUNT,
+          accountPrivateKeyHex,
+          new Set<string>(),
+          [],
+          undefined,
+          [datum],
+        )
+        return yoroiSignedTx({unsignedTx, signedTx})
+      }
+
       const signedTx = await unsignedTx.unsignedTx.sign(
-        datum ? BIP44_DERIVATION_LEVELS.ACCOUNT : 0,
+        BIP44_DERIVATION_LEVELS.ACCOUNT,
         accountPrivateKeyHex,
         new Set<string>(),
-        datum ? [] : stakingKeys,
-        datum ? undefined : stakingPrivateKey,
-        datum ? [datum] : undefined,
+        stakingKeys,
+        stakingPrivateKey,
       )
 
-      return yoroiSignedTx({
-        unsignedTx,
-        signedTx,
-      })
+      return yoroiSignedTx({unsignedTx, signedTx})
     }
 
     async createDelegationTx(poolId: string | undefined, delegatedAmount: BigNumber) {

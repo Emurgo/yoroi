@@ -722,19 +722,27 @@ export class ByronWallet implements YoroiWallet {
         ? [stakingPrivateKey]
         : undefined
 
+    if (datum) {
+      const signedTx = await unsignedTx.unsignedTx.sign(
+        NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
+        accountPrivateKeyHex,
+        new Set<string>(),
+        [],
+        undefined,
+        [datum],
+      )
+      return yoroiSignedTx({unsignedTx, signedTx})
+    }
+
     const signedTx = await unsignedTx.unsignedTx.sign(
       NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPrivateKeyHex,
       new Set<string>(),
       stakingKeys,
       stakingPrivateKey,
-      datum ? [datum] : undefined,
     )
 
-    return yoroiSignedTx({
-      unsignedTx,
-      signedTx,
-    })
+    return yoroiSignedTx({unsignedTx, signedTx})
   }
 
   async createDelegationTx(poolId: string | undefined, delegatedAmount: BigNumber) {
