@@ -1,7 +1,7 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios'
 import {ApiError, NetworkError} from '../errors/errors'
 
-export const fetcher = async <T = any>(
+export const fetcher: Fetcher = async <T = any>(
   config: AxiosRequestConfig,
 ): Promise<T> => {
   try {
@@ -23,3 +23,5 @@ export const fetcher = async <T = any>(
     }
   }
 }
+
+export type Fetcher = <T = any>(config: AxiosRequestConfig) => Promise<T>

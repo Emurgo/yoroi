@@ -1976,12 +1976,26 @@
     hash-wasm "^4.9.0"
     mocha "^10.0.0"
 
-"@emurgo/cross-csl-mobile@^2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-2.7.0.tgz#359472bbd1704ac53ceb0893e1195364e487a6f7"
-  integrity sha512-5c6srvkTOEuVt0/nQeeeu8p/KDNQ0GN1uHY21uW3jKBym4npyHjXSikvuOEFahlz4K6LG8hjwHppFu3fWcS6aQ==
+"@emurgo/cross-csl-core@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-2.9.0.tgz#326635c0aea17557db478682ea03cee96db5b723"
+  integrity sha512-/8KgmGye1gJST/IXrngUqW1PVGUqCNAZlEOC73qzROzwwR55xewTxqqFysIEaNZHsR1hw8m0yPPlLydeaex9qA==
   dependencies:
-    "@emurgo/cross-csl-core" "^2.7.0"
+    "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
+    "@types/mocha" "^9.1.1"
+    axios "^0.24.0"
+    bech32 "^2.0.0"
+    bignumber.js "^9.0.1"
+    blake2b "^2.1.4"
+    hash-wasm "^4.9.0"
+    mocha "^10.0.0"
+
+"@emurgo/cross-csl-mobile@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-2.9.0.tgz#c0a7d90d866d2c349f7d578fba9d7991442b30b2"
+  integrity sha512-VpRWjD5vrDJEBU8PptzAeCqLksaxHbqWTbkumpdwK7rE1NTivc6EenjHeLaz7n9SVQMcRU21CJQfQov8cWDz8A==
+  dependencies:
+    "@emurgo/cross-csl-core" "^2.9.0"
     "@emurgo/csl-mobile-bridge" "^5.1.2"
 
 "@emurgo/cross-csl-nodejs@^2.7.0":

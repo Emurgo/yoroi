@@ -12,10 +12,9 @@ import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {useAuthOsWithEasyConfirmation} from '../../yoroi-wallets/auth'
 import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
-import {CardanoTypes} from '../../yoroi-wallets/cardano/types'
 import {useSubmitTx} from '../../yoroi-wallets/hooks'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../yoroi-wallets/hw'
-import {YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {delay} from '../../yoroi-wallets/utils/timeUtils'
 import {walletManager} from '../../yoroi-wallets/walletManager'
 import {Button, ButtonProps, ValidatedTextInput} from '..'
@@ -28,7 +27,7 @@ type ErrorData = {
 
 type Props = {
   buttonProps?: Omit<Partial<ButtonProps>, 'disabled' | 'onPress'>
-  onSuccess: (signedTx: CardanoTypes.SignedTx) => void
+  onSuccess: (signedTx: YoroiSignedTx) => void
   onError?: (err: Error) => void
   yoroiUnsignedTx: YoroiUnsignedTx
   useUSB: boolean
@@ -159,7 +158,7 @@ export const ConfirmTx = ({
       try {
         setIsProcessing(true)
 
-        let signedTx
+        let signedTx: YoroiSignedTx
         if (wallet.isEasyConfirmationEnabled) {
           if (!isEmptyString(easyConfirmDecryptKey)) {
             setDialogStep(DialogStep.Signing)
