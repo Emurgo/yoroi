@@ -35,7 +35,7 @@ export const ManageCollateralScreen = () => {
   const navigateTo = useNavigateTo()
 
   const {resetForm, addressChanged, amountChanged, tokenSelectedChanged, yoroiUnsignedTxChanged} = useSend()
-  const {refetch, isLoading: isLoadingTx} = useSendTx(
+  const {refetch: createUnsignedTx, isFetching: isLoadingTx} = useSendTx(
     {
       wallet,
       entry: {
@@ -46,10 +46,7 @@ export const ManageCollateralScreen = () => {
       },
     },
     {
-      onSuccess: (yoroiUnsignedTx) => {
-        yoroiUnsignedTxChanged(yoroiUnsignedTx)
-        navigateTo.confirmTx()
-      },
+      onSuccess: (yoroiUnsignedTx) => yoroiUnsignedTxChanged(yoroiUnsignedTx),
     },
   )
 
@@ -76,7 +73,7 @@ export const ManageCollateralScreen = () => {
     amountChanged(amount.quantity)
 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    refetch()
+    Promise.resolve(createUnsignedTx()).then(() => navigateTo.confirmTx())
   }
 
   const isLoading = isLoadingTx || isLoadingCollateral
