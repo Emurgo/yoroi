@@ -7,7 +7,6 @@ import _ from 'lodash'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useMutation} from 'react-query'
 
 import {
   BottomSheetModal,
