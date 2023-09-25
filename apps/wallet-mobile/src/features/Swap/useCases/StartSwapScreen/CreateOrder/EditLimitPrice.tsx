@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-newline */
 import {useSwap} from '@yoroi/swap'
+import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
@@ -7,8 +8,7 @@ import {useLanguage} from '../../../../../i18n'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
-import {getBuyQuantityForLimitOrder} from '../../../common/helpers'
+import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from '../../../common/SwapFormProvider'
 
@@ -18,9 +18,10 @@ const PRECISION = 10
 export const EditLimitPrice = () => {
   const strings = useStrings()
   const {numberLocale} = useLanguage()
+  const [text, setText] = React.useState('')
   const wallet = useSelectedWallet()
 
-  const {createOrder, limitPriceChanged, buyAmountChanged} = useSwap()
+  const {createOrder, limitPriceChanged} = useSwap()
   const sellTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
   const disabled = createOrder.type === 'market'
@@ -31,43 +32,29 @@ export const EditLimitPrice = () => {
   const tokenToBuyName = isBuyTouched ? buyTokenInfo.ticker ?? buyTokenInfo.name : '-'
 
   React.useEffect(() => {
-    const defaultPrice =
-      isBuyTouched &&
-      isSellTouched &&
-      createOrder?.selectedPool?.price !== undefined &&
-      !Number.isNaN(createOrder.selectedPool.price)
-        ? createOrder.selectedPool.price
-        : 0
+    const defaultPrice = createOrder.marketPrice
 
-    limitPriceChanged(`${defaultPrice}`)
-
-    const sellQuantityDenominated = Quantities.denominated(
-      createOrder.amounts.sell.quantity,
-      sellTokenInfo.decimals ?? 0,
-    )
-    buyAmountChanged({
-      quantity: getBuyQuantityForLimitOrder(
-        sellQuantityDenominated,
-        asQuantity(defaultPrice ?? 0),
-        buyTokenInfo.decimals ?? 0,
-      ),
-      tokenId: createOrder.amounts.buy.tokenId,
-    })
+    const formattedValue = BigNumber(defaultPrice).toFormat(numberLocale)
+    setText(formattedValue)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isBuyTouched, isSellTouched, sellTokenInfo.id, buyTokenInfo.id, createOrder?.selectedPool?.price, numberLocale])
+  }, [createOrder.marketPrice])
+
+  React.useEffect(() => {
+    if (createOrder.type === 'limit') return
+
+    const defaultPrice = createOrder.marketPrice
+
+    const formattedValue = BigNumber(defaultPrice).toFormat(numberLocale)
+    setText(formattedValue)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createOrder.type])
 
   const onChange = (text: string) => {
-    const [_, quantity] = Quantities.parseFromText(text, PRECISION, numberLocale)
-    const value = Quantities.denominated(quantity, PRECISION)
-    const sellQuantityDenominated = Quantities.denominated(
-      createOrder.amounts.sell.quantity,
-      sellTokenInfo.decimals ?? 0,
-    )
+    const [formattedPrice, price] = Quantities.parseFromText(text, PRECISION, numberLocale)
+    const value = Quantities.denominated(price, PRECISION)
+
+    setText(formattedPrice)
     limitPriceChanged(value)
-    buyAmountChanged({
-      quantity: getBuyQuantityForLimitOrder(sellQuantityDenominated, value, buyTokenInfo.decimals ?? 0),
-      tokenId: createOrder.amounts.buy.tokenId,
-    })
   }
 
   return (
@@ -75,7 +62,7 @@ export const EditLimitPrice = () => {
       <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
 
       <View style={styles.content}>
-        <AmountInput onChange={onChange} value={createOrder.limitPrice} editable={!disabled} />
+        <AmountInput onChange={onChange} value={text} editable={!disabled} />
 
         <View style={[styles.textWrapper, disabled && styles.disabled]}>
           <Text style={styles.text}>

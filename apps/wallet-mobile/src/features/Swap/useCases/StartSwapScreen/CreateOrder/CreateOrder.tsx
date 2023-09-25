@@ -1,7 +1,7 @@
 import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
@@ -46,13 +46,20 @@ export const CreateOrder = () => {
     tokenB: createOrder.amounts.buy.tokenId ?? '',
   })
 
+  const bestPool = useMemo(() => {
+    if (poolList !== undefined && poolList.length > 0) {
+      return poolList.sort((a, b) => a.price - b.price).find(() => true)
+    }
+    return undefined
+  }, [poolList])
+
   useEffect(() => {
-    if (poolList !== undefined) {
-      const bestPool = poolList.map((a) => a).sort((a, b) => a.price - b.price)[0]
+    if (bestPool?.poolId !== undefined) {
       selectedPoolChanged(bestPool)
       poolDefaulted()
     }
-  }, [poolDefaulted, selectedPoolChanged, poolList])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [poolDefaulted, selectedPoolChanged, bestPool?.poolId])
 
   const {createUnsignedTx, isLoading} = useSwapTx({
     onSuccess: (yoroiUnsignedTx) => {
@@ -87,8 +94,10 @@ export const CreateOrder = () => {
     (createOrder.type === 'limit' && createOrder.limitPrice !== undefined && Quantities.isZero(createOrder.limitPrice))
 
   const swap = () => {
-    const sellTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)[0]
-    const buyTokenInfo = tokenInfos.filter((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)[0]
+    const sellTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)
+    const buyTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)
+
+    if (!sellTokenInfo || !buyTokenInfo) return
 
     track.swapOrderSelected({
       from_asset: [
@@ -129,6 +138,7 @@ export const CreateOrder = () => {
       )
       if (orderResult) createSwapOrder(orderResult)
     }
+
     if (createOrder.type === 'limit') {
       const orderResult = makeLimitOrder(
         orderDetails.sell,
@@ -155,14 +165,7 @@ export const CreateOrder = () => {
 
   const handleOnSwap = () => {
     if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
-      const marketPrice = BigNumber(
-        isBuyTouched &&
-          isSellTouched &&
-          createOrder.selectedPool?.price !== undefined &&
-          !Number.isNaN(createOrder.selectedPool.price)
-          ? createOrder.selectedPool.price
-          : 0,
-      )
+      const marketPrice = BigNumber(createOrder.marketPrice)
       const limitPrice = BigNumber(createOrder.limitPrice)
 
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
@@ -181,9 +184,7 @@ export const CreateOrder = () => {
           <LimitPriceWarning
             open={showLimitPriceWarning}
             onClose={() => setShowLimitPriceWarning(false)}
-            onSubmit={() => {
-              handleOnSwap()
-            }}
+            onSubmit={createUnsignedSwapTx}
           />
 
           <KeyboardAvoidingView

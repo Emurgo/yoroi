@@ -10,8 +10,8 @@ export {
 export {mockSwapStateDefault} from './translators/reactjs/state/state.mocks'
 export {apiMocks} from './adapters/openswap-api/api.mocks'
 
-export {getBuyAmountbyChangingSell} from './helpers/orders/getBuyAmountByChangingSell'
-export {getSellAmountByChangingBuy} from './helpers/orders/getSellAmountByChangingBuy'
+export {getBuyAmount} from './helpers/orders/getBuyAmount'
+export {getSellAmount} from './helpers/orders/getSellAmount'
 export {makePossibleMarketOrder} from './helpers/orders/makePossibleMarketOrder'
 export {getMinAdaReceiveAfterSlippage} from './helpers/orders/getMinAdaReceiveAfterSlippage'
 export {getTotalFees} from './helpers/orders/getTotalFees'
