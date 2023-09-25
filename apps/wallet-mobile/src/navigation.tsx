@@ -250,6 +250,10 @@ export type SettingsStackRoutes = {
   'enable-login-with-pin': {
     onSuccess: () => void | Promise<void>
   }
+  'manage-collateral': undefined
+  'collateral-confirm-tx': undefined
+  'collateral-tx-submitted': undefined
+  'collateral-tx-failed': undefined
 }
 
 export type ToggleAnalyticsSettingsRoutes = {

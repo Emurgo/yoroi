@@ -13,3 +13,8 @@ export function intersection<T = unknown>(
   const bSet = new Set(b)
   return a.filter((value) => bSet.has(value))
 }
+
+// predicates
+export function first() {
+  return true
+}

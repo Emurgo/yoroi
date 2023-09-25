@@ -50,6 +50,7 @@ export type WalletEvent =
   | {type: 'addresses'; addresses: Addresses}
   | {type: 'state'; state: WalletState}
   | {type: 'utxos'; utxos: RawUtxo[]}
+  | {type: 'collateral-id'; collateralId: RawUtxo['utxo_id']}
 
 export type WalletSubscription = (event: WalletEvent) => void
 export type Unsubscribe = () => void
@@ -165,6 +166,10 @@ export type YoroiWallet = {
   fetchTipStatus(): Promise<TipStatusResponse>
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
   fetchTokenInfo(tokenId: string): Promise<Balance.TokenInfo>
+  utxos: Array<RawUtxo>
+  get collateralId(): string
+  getCollateralInfo(): {utxo: RawUtxo | undefined; amount: Balance.Amount; collateralId: RawUtxo['utxo_id']}
+  setCollateralId(collateralId: RawUtxo['utxo_id']): Promise<void>
 
   // Fiat
   fetchCurrentPrice(symbol: CurrencySymbol): Promise<number>
@@ -173,7 +178,6 @@ export type YoroiWallet = {
   subscribe: (subscription: WalletSubscription) => Unsubscribe
   subscribeOnTxHistoryUpdate(handler: () => void): () => void
   checkServerStatus(): Promise<ServerStatus>
-  utxos: Array<RawUtxo>
 
   // CIP36 Payment Address
   getFirstPaymentAddress(): Promise<BaseAddress>
