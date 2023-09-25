@@ -98,11 +98,6 @@ export const CreateOrder = () => {
     (createOrder.type === 'limit' && createOrder.limitPrice !== undefined && Quantities.isZero(createOrder.limitPrice))
 
   const swap = () => {
-    const sellTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)
-    const buyTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)
-
-    if (!sellTokenInfo || !buyTokenInfo) return
-
     track.swapOrderSelected({
       from_asset: [
         {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
