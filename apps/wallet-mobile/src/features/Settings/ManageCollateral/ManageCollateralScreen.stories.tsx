@@ -6,6 +6,7 @@ import {SelectedWalletProvider} from '../../../SelectedWallet'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {mocks} from '../../../yoroi-wallets/mocks'
 import {ManageCollateralScreen} from './ManageCollateralScreen'
+import {SendProvider} from '../../Send/common/SendContext'
 
 const styles = StyleSheet.create({
   decorator: {
@@ -49,7 +50,11 @@ const withCollateralRemoveLoading: YoroiWallet = {
 }
 
 storiesOf('ManageCollateralScreen', module)
-  .addDecorator((getStory) => <View style={styles.decorator}>{getStory()}</View>)
+  .addDecorator((getStory) => (
+    <SendProvider>
+      <View style={styles.decorator}>{getStory()}</View>
+    </SendProvider>
+  ))
   .add('with collateral', () => (
     <SelectedWalletProvider wallet={mocks.wallet}>
       <ManageCollateralScreen />

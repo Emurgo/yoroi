@@ -126,7 +126,7 @@ export const ManageCollateralScreen = () => {
 
         {didSpend && (
           <ErrorPanel>
-            <Text>@t Your collateral is gone, please try auto assigning, or create one by creating a transaction.</Text>
+            <Text>@t Your collateral is gone, please generate new collateral.</Text>
           </ErrorPanel>
         )}
       </ScrollView>
