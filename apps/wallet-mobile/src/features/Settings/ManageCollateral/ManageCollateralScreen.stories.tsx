@@ -5,8 +5,8 @@ import {StyleSheet, View} from 'react-native'
 import {SelectedWalletProvider} from '../../../SelectedWallet'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {mocks} from '../../../yoroi-wallets/mocks'
-import {ManageCollateralScreen} from './ManageCollateralScreen'
 import {SendProvider} from '../../Send/common/SendContext'
+import {ManageCollateralScreen} from './ManageCollateralScreen'
 
 const styles = StyleSheet.create({
   decorator: {
