@@ -1,4 +1,5 @@
 import {PrivateKey} from '@emurgo/csl-mobile-bridge'
+import {useFocusEffect} from '@react-navigation/native'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {BalanceQuantity} from '@yoroi/types/src/balance/token'
 import {Buffer} from 'buffer'
@@ -6,7 +7,6 @@ import _ from 'lodash'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useMutation} from 'react-query'
 
 import {
   BottomSheetModal,
@@ -24,6 +24,7 @@ import {
   TokenIcon,
 } from '../../../../../components'
 import {useLanguage} from '../../../../../i18n'
+import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
@@ -75,12 +76,40 @@ export const OpenOrders = () => {
     [normalizedOrders, search],
   )
 
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.swapConfirmedPageViewed({swap_tab: 'Open Orders'})
+    }, [track]),
+  )
+
   const handlePasswordConfirm = async (password: string) => {
     const order = normalizedOrders.find((o) => o.id === orderId)
     if (!order || order.owner === undefined || order.utxo === undefined) return
     const tx = await createCancellationTxAnsSign(order.id, password)
     if (!tx) return
     await wallet.submitTransaction(tx.txBase64)
+
+    track.swapCancelationSubmitted({
+      from_amount: Number(order?.from.quantity) ?? 0,
+      to_amount: Number(order?.to.quantity) ?? 0,
+      from_asset: [
+        {
+          asset_name: order?.fromTokenInfo?.name ?? '',
+          asset_ticker: order?.fromTokenInfo?.ticker ?? '',
+          policy_id: order?.fromTokenInfo?.group ?? '',
+        },
+      ],
+      to_asset: [
+        {
+          asset_name: order?.toTokenInfo?.name ?? '',
+          asset_ticker: order?.toTokenInfo?.ticker ?? '',
+          policy_id: order?.toTokenInfo?.group ?? '',
+        },
+      ],
+      pool_source: order?.provider ?? '',
+    })
     closeBottomSheet()
   }
 

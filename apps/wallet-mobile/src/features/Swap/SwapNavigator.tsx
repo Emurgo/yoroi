@@ -14,6 +14,7 @@ import {ListOrders} from './useCases/StartSwapScreen/ListOrders/ListOrders'
 const Tab = createMaterialTopTabNavigator<SwapTabRoutes>()
 export const SwapTabNavigator = () => {
   const strings = useStrings()
+
   useHideBottomTabBar()
 
   return (
