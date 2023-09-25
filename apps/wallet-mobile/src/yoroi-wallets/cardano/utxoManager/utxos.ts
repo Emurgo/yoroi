@@ -32,7 +32,10 @@ export function utxosMaker(
   }
 
   const findCollateralCandidates = () => {
-    return utxos.filter(isPureUtxo).filter((utxo) => isAmountInCollateralRange(utxo.amount, {maxLovelace, minLovelace}))
+    return utxos
+      .filter(isPureUtxo)
+      .filter((utxo) => isAmountInCollateralRange(utxo.amount, {maxLovelace, minLovelace}))
+      .sort((a, b) => new BigNumber(asQuantity(a.amount)).comparedTo(asQuantity(b.amount)))
   }
   const drawnCollateral = () => {
     const candidates = findCollateralCandidates()
