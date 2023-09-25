@@ -23,9 +23,9 @@ import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useCollateralInfo} from '../../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '../../../yoroi-wallets/cardano/utxoManager/utxos'
-import {useBalances} from '../../../yoroi-wallets/hooks'
+import {useBalances, useLockedAmount} from '../../../yoroi-wallets/hooks'
 import {RawUtxo, YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
-import {Amounts} from '../../../yoroi-wallets/utils'
+import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
 import {useSend} from '../../Send/common/SendContext'
 import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
 import {useNavigateTo} from './navigation'
@@ -39,6 +39,7 @@ export const ManageCollateralScreen = () => {
   const navigateTo = useNavigateTo()
   const strings = useStrings()
   const balances = useBalances(wallet)
+  const lockedAmount = useLockedAmount({wallet})
 
   const {resetForm, addressChanged, amountChanged, tokenSelectedChanged, yoroiUnsignedTxChanged} = useSend()
   const {refetch: createUnsignedTx, isFetching: isLoadingTx} = useSendTx(
@@ -94,8 +95,9 @@ export const ManageCollateralScreen = () => {
     }
 
     const primaryTokenBalance = BigNumber(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity)
+    const lockedBalance = Quantities.isZero(lockedAmount) ? BigNumber(0) : BigNumber(lockedAmount)
 
-    if (primaryTokenBalance.isLessThan(collateralConfig.minLovelace)) {
+    if (primaryTokenBalance.minus(lockedBalance).isLessThan(collateralConfig.minLovelace)) {
       Alert.alert(
         strings.notEnoughFundsAlertTitle,
         strings.notEnoughFundsAlertMessage,
