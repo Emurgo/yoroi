@@ -1,7 +1,18 @@
 /* eslint-disable no-empty */
+import {
+  Address,
+  BigNum,
+  PrivateKey,
+  TransactionHash,
+  TransactionInput,
+  TransactionOutput,
+  TransactionUnspentOutput,
+  Value,
+} from '@emurgo/csl-mobile-bridge'
 import {SendToken} from '@emurgo/yoroi-lib'
 import {Balance} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
+import {Buffer} from 'buffer'
 
 import {
   Addressing,
@@ -27,17 +38,6 @@ import {MultiToken} from './MultiToken'
 import {CardanoHaskellShelleyNetwork, PRIMARY_ASSET_CONSTANTS} from './networks'
 import {NUMBERS} from './numbers'
 import {CardanoTypes, WalletImplementation} from './types'
-import {
-  Address,
-  BigNum,
-  PrivateKey,
-  TransactionHash,
-  TransactionInput,
-  TransactionOutput,
-  TransactionUnspentOutput,
-  Value,
-} from '@emurgo/csl-mobile-bridge'
-import {Buffer} from 'buffer'
 
 export const normalizeToAddress = async (addr: string) => {
   // in Shelley, addresses can be base16, bech32 or base58
@@ -331,7 +331,7 @@ export const generateCIP30UtxoCbor = async (utxo: RawUtxo) => {
   const output = await TransactionOutput.new(address, collateral)
   const collateralUtxo = await TransactionUnspentOutput.new(input, output)
 
-  return await collateralUtxo.to_hex()
+  return collateralUtxo.to_hex()
 }
 
 export const generateMuesliSwapSigningKey = async (rootKey: string) => {

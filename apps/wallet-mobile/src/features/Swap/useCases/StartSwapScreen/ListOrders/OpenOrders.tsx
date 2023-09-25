@@ -28,14 +28,14 @@ import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {WrongPassword} from '../../../../../yoroi-wallets/cardano/errors'
-import {useTokenInfos, useTransactionInfos, useUtxos} from '../../../../../yoroi-wallets/hooks'
+import {generateCIP30UtxoCbor, generateMuesliSwapSigningKey} from '../../../../../yoroi-wallets/cardano/utils'
+import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {mapOrders} from './mapOrders'
-import {generateCIP30UtxoCbor, generateMuesliSwapSigningKey} from '../../../../../yoroi-wallets/cardano/utils'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
@@ -133,7 +133,7 @@ export const OpenOrders = () => {
       throw new Error('Collateral utxo not found')
     }
 
-    return await generateCIP30UtxoCbor(utxo)
+    return generateCIP30UtxoCbor(utxo)
   }
 
   async function createCancellationTxAndSign(
