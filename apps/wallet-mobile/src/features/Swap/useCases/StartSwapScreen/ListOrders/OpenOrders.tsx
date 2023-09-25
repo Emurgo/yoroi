@@ -47,7 +47,6 @@ import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {mapOrders} from './mapOrders'
 import BigNumber from 'bignumber.js'
-import {normalizeToAddress} from '../../../../../yoroi-wallets/cardano/utils'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
