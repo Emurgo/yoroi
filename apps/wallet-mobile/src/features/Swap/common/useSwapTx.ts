@@ -8,6 +8,7 @@ import {YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 
 export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {entry: YoroiEntry; datum: Datum}>) => {
   const {createOrder} = useSwap()
+
   const metadata = [
     {
       label: '674',
@@ -18,6 +19,7 @@ export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {
         buyTokenId: createOrder.amounts.buy.tokenId.split('.'),
         buyQuantity: [createOrder.amounts.buy.quantity],
         depositFee: [createOrder.selectedPool.deposit.quantity],
+        poolId: [createOrder.selectedPool.poolId],
       },
     },
   ]
