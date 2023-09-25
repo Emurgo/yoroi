@@ -6,8 +6,8 @@ import {asQuantity} from '../../utils'
 import {CollateralConfig} from './types'
 
 export const collateralConfig: CollateralConfig = {
-  minLovelace: asQuantity(5_000_000),
-  maxLovelace: asQuantity(10_000_000),
+  minLovelace: asQuantity(2_000_000),
+  maxLovelace: asQuantity(5_000_000),
 }
 
 export function isPureUtxo(utxo: RawUtxo) {
