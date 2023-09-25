@@ -34,13 +34,7 @@ export const ManageCollateralScreen = () => {
   const didSpend = collateralId !== '' && utxo === undefined
   const navigateTo = useNavigateTo()
 
-  const {
-    resetForm,
-    addressChanged,
-    amountChanged,
-    tokenSelectedChanged,
-    yoroiUnsignedTxChanged,
-  } = useSend()
+  const {resetForm, addressChanged, amountChanged, tokenSelectedChanged, yoroiUnsignedTxChanged} = useSend()
   const {refetch, isLoading: isLoadingTx} = useSendTx(
     {
       wallet,
