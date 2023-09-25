@@ -25,6 +25,7 @@ import {RawUtxo, YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types
 import {useSend} from '../../Send/common/SendContext'
 import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
 import {useNavigateTo} from './navigation'
+import {useStrings} from './strings'
 
 export const ManageCollateralScreen = () => {
   const wallet = useSelectedWallet()
@@ -32,6 +33,7 @@ export const ManageCollateralScreen = () => {
   const hasCollateral = collateralId !== '' && utxo !== undefined
   const didSpend = collateralId !== '' && utxo === undefined
   const navigateTo = useNavigateTo()
+  const strings = useStrings()
 
   const {resetForm, addressChanged, amountChanged, tokenSelectedChanged, yoroiUnsignedTxChanged} = useSend()
   const {refetch: createUnsignedTx, isFetching: isLoadingTx} = useSendTx(
@@ -94,7 +96,7 @@ export const ManageCollateralScreen = () => {
   return (
     <SafeAreaView edges={['top', 'left', 'right', 'bottom']} style={styles.safeAreaView}>
       <ScrollView>
-        <Text style={styles.heading}>@t Locked as collateral</Text>
+        <Text style={styles.heading}>{strings.lockedAsCollateral}</Text>
 
         <Spacer height={8} />
 
@@ -120,19 +122,24 @@ export const ManageCollateralScreen = () => {
 
             <Spacer height={16} />
 
-            <Text>@t If you want to return the amount locked as collateral to your balance press the remove icon.</Text>
+            <Text>{strings.removeCollateral}</Text>
           </>
         )}
 
         {didSpend && (
           <ErrorPanel>
-            <Text>@t Your collateral is gone, please generate new collateral.</Text>
+            <Text>{strings.collateralSpent}</Text>
           </ErrorPanel>
         )}
       </ScrollView>
 
       {shouldHideButton && (
-        <Button title="@ Generate collateral" onPress={handleGenerateCollateral} shelleyTheme disabled={isLoading} />
+        <Button
+          title={strings.generateCollateral}
+          onPress={handleGenerateCollateral}
+          shelleyTheme
+          disabled={isLoading}
+        />
       )}
     </SafeAreaView>
   )

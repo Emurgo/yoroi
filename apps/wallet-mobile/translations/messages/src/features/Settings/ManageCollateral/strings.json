@@ -1,0 +1,62 @@
+[
+  {
+    "id": "components.settings.collateral.lockedAsCollateral",
+    "defaultMessage": "!!!Locked as collateral",
+    "file": "src/features/Settings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 14,
+      "column": 22,
+      "index": 467
+    },
+    "end": {
+      "line": 17,
+      "column": 3,
+      "index": 580
+    }
+  },
+  {
+    "id": "components.settings.collateral.removeCollateral",
+    "defaultMessage": "!!!If you want to return the amount locked as collateral to your balance press the remove icon",
+    "file": "src/features/Settings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 18,
+      "column": 20,
+      "index": 602
+    },
+    "end": {
+      "line": 21,
+      "column": 3,
+      "index": 784
+    }
+  },
+  {
+    "id": "components.settings.collateral.collateralSpent",
+    "defaultMessage": "!!!Your collateral is gone, please generate new collateral",
+    "file": "src/features/Settings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 22,
+      "column": 19,
+      "index": 805
+    },
+    "end": {
+      "line": 25,
+      "column": 3,
+      "index": 950
+    }
+  },
+  {
+    "id": "components.settings.collateral.generateCollateral",
+    "defaultMessage": "!!!Generate collateral",
+    "file": "src/features/Settings/ManageCollateral/strings.ts",
+    "start": {
+      "line": 26,
+      "column": 22,
+      "index": 974
+    },
+    "end": {
+      "line": 29,
+      "column": 3,
+      "index": 1086
+    }
+  }
+]
