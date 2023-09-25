@@ -1,4 +1,13 @@
-import {PrivateKey} from '@emurgo/csl-mobile-bridge'
+import {
+  PrivateKey,
+  TransactionHash,
+  TransactionInput,
+  TransactionUnspentOutput,
+  Value,
+  BigNum,
+  TransactionOutput,
+  Address,
+} from '@emurgo/csl-mobile-bridge'
 import {useFocusEffect} from '@react-navigation/native'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {BalanceQuantity} from '@yoroi/types/src/balance/token'
@@ -30,13 +39,15 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {HARD_DERIVATION_START} from '../../../../../yoroi-wallets/cardano/constants/common'
 import {WrongPassword} from '../../../../../yoroi-wallets/cardano/errors'
-import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {useTokenInfos, useTransactionInfos, useUtxos} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {mapOrders} from './mapOrders'
+import BigNumber from 'bignumber.js'
+import {normalizeToAddress} from '../../../../../yoroi-wallets/cardano/utils'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
@@ -87,7 +98,7 @@ export const OpenOrders = () => {
   const handlePasswordConfirm = async (password: string) => {
     const order = normalizedOrders.find((o) => o.id === orderId)
     if (!order || order.owner === undefined || order.utxo === undefined) return
-    const tx = await createCancellationTxAnsSign(order.id, password)
+    const tx = await createCancellationTxAndSign(order.id, password)
     if (!tx) return
     await wallet.submitTransaction(tx.txBase64)
 
@@ -124,7 +135,32 @@ export const OpenOrders = () => {
     })
   }
 
-  async function createCancellationTxAnsSign(
+  async function getCollateralUtxo(orderId: string) {
+    const order = normalizedOrders.find((o) => o.id === orderId)
+    if (!order || order.owner === undefined || order.utxo === undefined) throw new Error('Order not found')
+
+    const collateralInfo = wallet.getCollateralInfo()
+    const utxo = collateralInfo.utxo
+    if (!utxo) {
+      throw new Error('Collateral utxo not found')
+    }
+
+    const txHash = await TransactionHash.from_bytes(Buffer.from(utxo.tx_hash, 'hex'))
+    if (!txHash) throw new Error('Invalid tx hash')
+    const index = BigNumber(utxo.utxo_id.split(':')[1]).toNumber()
+    const input = await TransactionInput.new(txHash, index)
+    const address = await Address.from_bech32(utxo.receiver)
+    if (!address) throw new Error('Invalid address')
+    const amount = await BigNum.from_str(utxo.amount)
+    if (!amount) throw new Error('Invalid amount')
+    const collateral = await Value.new(amount)
+    const output = await TransactionOutput.new(address, collateral)
+    const collateralUtxo = await TransactionUnspentOutput.new(input, output)
+
+    return await collateralUtxo.to_hex()
+  }
+
+  async function createCancellationTxAndSign(
     orderId: string,
     password: string,
   ): Promise<{txBase64: string} | undefined> {
@@ -133,8 +169,7 @@ export const OpenOrders = () => {
 
     const orderUtxo = order.utxo
 
-    const collateralUtxo =
-      '82825820caec92c836b10281c35a3a9b13f732686cf8ddccb4c75c9aef42a1324da2197501825839017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea9046931a01f2b015'
+    const collateralUtxo = await getCollateralUtxo(orderId)
 
     const addressBech32 = order.owner
 
@@ -162,15 +197,14 @@ export const OpenOrders = () => {
     return {txBase64: hexBase64}
   }
 
-  const openBottomSheet = (id: string) => {
+  const openBottomSheet = async (id: string) => {
     const order = normalizedOrders.find((o) => o.id === id)
     if (!order || order.owner === undefined || order.utxo === undefined) return
     const {assetFromLabel, assetToLabel} = order
     const totalReturned = `${order.fromTokenAmount} ${order.fromTokenInfo?.ticker}`
     const orderUtxo = order.utxo
 
-    const collateralUtxo =
-      '82825820caec92c836b10281c35a3a9b13f732686cf8ddccb4c75c9aef42a1324da2197501825839017ef00ee3672330155382a2857573868af466b88aa8c4081f45583e1784d958399bcce03402fd853d43a4e7366f2018932e5aff4eea9046931a01f2b015'
+    const collateralUtxo = await getCollateralUtxo(id)
 
     const addressBech32 = order.owner
 
