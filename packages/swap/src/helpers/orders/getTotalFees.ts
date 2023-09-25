@@ -15,12 +15,12 @@ import {Quantities} from '../../utils/quantities'
 
 export const getTotalFees = (
   batcherFee: Balance.Quantity,
-  proiderFee: Balance.Quantity,
+  providerFee: Balance.Quantity,
   decimals: number,
   numberLocale: Numbers.Locale,
 ): string => {
   const result = Quantities.denominated(
-    Quantities.sum([batcherFee, proiderFee]),
+    Quantities.sum([batcherFee, providerFee]),
     decimals,
   )
 

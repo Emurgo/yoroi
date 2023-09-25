@@ -16,7 +16,8 @@ export const mockSwapStateDefault: SwapState = {
         tokenId: '',
       },
     },
-    limitPrice: undefined,
+    limitPrice: '0',
+    marketPrice: '0',
     slippage: 1,
     selectedPool: {
       provider: 'minswap',

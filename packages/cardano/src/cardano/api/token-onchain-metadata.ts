@@ -1,4 +1,4 @@
-import {fetcher, isArray, isRecord} from '@yoroi/common'
+import {Fetcher, fetcher, isArray, isRecord} from '@yoroi/common'
 
 import {CIP25_KEY_NFT, CIP25_V2, CIP26_KEY_FT} from './constants'
 import {parseFtMetadataRecord, parseNftMetadataRecord} from './parsers'
@@ -15,7 +15,10 @@ import {
 } from './types'
 import {getTokenIdentity} from '../translators/formatters/cardano-token-id'
 
-export const getOnChainMetadatas = (baseUrl: string, request = fetcher) => {
+export const getOnChainMetadatas = (
+  baseUrl: string,
+  request: Fetcher = fetcher,
+) => {
   return (
     tokenIds: ApiOnChainMetadataRequest,
   ): Promise<ApiOnChainMetadataResponse> => {

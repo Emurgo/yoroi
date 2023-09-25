@@ -1,5 +1,4 @@
-import {getBuyAmountbyChangingSell, useSwap} from '@yoroi/swap'
-import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
+import {useSwap} from '@yoroi/swap'
 import * as React from 'react'
 import {TextInput} from 'react-native'
 
@@ -9,7 +8,6 @@ import {useBalance, useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../../yoroi-wallets/logging'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {AmountCard} from '../../../../common/AmountCard/AmountCard'
-import {getBuyQuantityForLimitOrder} from '../../../../common/helpers'
 import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../../../../common/SwapFormProvider'
@@ -21,13 +19,12 @@ export const EditSellAmount = () => {
   const {numberLocale} = useLanguage()
   const inputRef = React.useRef<TextInput>(null)
 
-  const {createOrder, sellAmountChanged, buyAmountChanged} = useSwap()
-  const {isSellTouched} = useSwapTouched()
+  const {createOrder, sellAmountChanged} = useSwap()
+  const {isSellTouched, isBuyTouched} = useSwapTouched()
 
   const {tokenId, quantity} = createOrder.amounts.sell
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
   const {decimals} = tokenInfo
   const balance = useBalance({wallet, tokenId})
 
@@ -42,44 +39,11 @@ export const EditSellAmount = () => {
   const hasBalance = !Quantities.isGreaterThan(quantity, balance)
   const showError = !Quantities.isZero(quantity) && !hasBalance
 
-  const recalculateBuyValue = (sellQuantity: BalanceQuantity) => {
-    if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
-      const sellQuantityDenominated = Quantities.denominated(sellQuantity, tokenInfo.decimals ?? 0)
-      buyAmountChanged({
-        quantity: getBuyQuantityForLimitOrder(
-          sellQuantityDenominated,
-          createOrder.limitPrice,
-          buyTokenInfo.decimals ?? 0,
-        ),
-        tokenId: createOrder.amounts.buy.tokenId,
-      })
-      return
-    }
-
-    if (createOrder.selectedPool?.poolId === undefined) return
-
-    const {buy} = getBuyAmountbyChangingSell(createOrder.selectedPool, {
-      quantity: sellQuantity,
-      tokenId: tokenId,
-    })
-
-    buyAmountChanged({
-      quantity: buy.quantity,
-      tokenId: createOrder.amounts.buy.tokenId,
-    })
-  }
-
-  React.useEffect(() => {
-    recalculateBuyValue(quantity)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [buyTokenInfo.id, createOrder.selectedPool?.poolId])
-
   const onChangeQuantity = (text: string) => {
     try {
       const [input, quantity] = Quantities.parseFromText(text, decimals ?? 0, numberLocale)
-      setInputValue(input)
+      setInputValue(text === '' ? text : input)
       sellAmountChanged({tokenId, quantity})
-      recalculateBuyValue(quantity)
     } catch (error) {
       Logger.error('SwapAmountScreen::onChangeQuantity', error)
     }
@@ -96,7 +60,7 @@ export const EditSellAmount = () => {
       navigateTo={navigate.selectSellToken}
       touched={isSellTouched}
       inputRef={inputRef}
-      inputEditable={isSellTouched}
+      inputEditable={isSellTouched && isBuyTouched}
     />
   )
 }

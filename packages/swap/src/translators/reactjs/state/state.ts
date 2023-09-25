@@ -1,10 +1,15 @@
 import {Balance, Swap} from '@yoroi/types'
 import {produce} from 'immer'
-import {BalanceQuantity} from '@yoroi/types/src/balance/token'
+
+import {getBuyAmount} from '../../../helpers/orders/getBuyAmount'
+import {getSellAmount} from '../../../helpers/orders/getSellAmount'
+import {getMarketPrice} from '../../../helpers/orders/getMarketPrice'
+import {Quantities} from '../../../utils/quantities'
 
 export type SwapState = Readonly<{
   createOrder: Swap.CreateOrderData & {
     type: Swap.OrderType
+    marketPrice: Balance.Quantity
     datum: string
     datumHash: string
   }
@@ -20,7 +25,7 @@ export type SwapCreateOrderActions = Readonly<{
   txPayloadChanged: (txPayload: Readonly<Swap.CreateOrderResponse>) => void
   switchTokens: () => void
   resetQuantities: () => void
-  limitPriceChanged: (limitPrice: BalanceQuantity) => void
+  limitPriceChanged: (limitPrice: Balance.Quantity) => void
 }>
 
 export enum SwapCreateOrderActionType {
@@ -67,7 +72,7 @@ export type SwapCreateOrderAction =
     }
   | {
       type: SwapCreateOrderActionType.LimitPriceChanged
-      limitPrice: BalanceQuantity
+      limitPrice: Balance.Quantity
     }
   | {type: SwapCreateOrderActionType.SwitchTokens}
   | {type: SwapCreateOrderActionType.ResetQuantities}
@@ -115,27 +120,28 @@ export const defaultSwapState: SwapState = {
     datumHash: '',
     amounts: {
       sell: {
-        quantity: '0',
+        quantity: Quantities.zero,
         tokenId: '',
       },
       buy: {
-        quantity: '0',
+        quantity: Quantities.zero,
         tokenId: '',
       },
     },
     slippage: 1,
-    limitPrice: undefined,
+    limitPrice: Quantities.zero,
+    marketPrice: Quantities.zero,
     selectedPool: {
       provider: 'minswap',
       fee: '',
-      tokenA: {tokenId: '', quantity: '0'},
-      tokenB: {tokenId: '', quantity: '0'},
+      tokenA: {tokenId: '', quantity: Quantities.zero},
+      tokenB: {tokenId: '', quantity: Quantities.zero},
       price: 0,
-      batcherFee: {tokenId: '', quantity: '0'},
-      deposit: {tokenId: '', quantity: '0'},
+      batcherFee: {tokenId: '', quantity: Quantities.zero},
+      deposit: {tokenId: '', quantity: Quantities.zero},
       poolId: '',
       lastUpdate: '',
-      lpToken: {tokenId: '', quantity: '0'},
+      lpToken: {tokenId: '', quantity: Quantities.zero},
     },
   },
   unsignedTx: undefined,
@@ -171,15 +177,47 @@ const createOrderReducer = (
     switch (action.type) {
       case SwapCreateOrderActionType.OrderTypeChanged:
         draft.createOrder.type = action.orderType
+        draft.createOrder.amounts.buy = getBuyAmount(
+          state.createOrder.selectedPool,
+          state.createOrder.amounts.sell,
+          action.orderType === 'limit'
+            ? state.createOrder.limitPrice
+            : undefined,
+        )
         break
       case SwapCreateOrderActionType.SellAmountChanged:
         draft.createOrder.amounts.sell = action.amount
+        draft.createOrder.amounts.buy = getBuyAmount(
+          state.createOrder.selectedPool,
+          action.amount,
+          state.createOrder.type === 'limit'
+            ? state.createOrder.limitPrice
+            : undefined,
+        )
         break
       case SwapCreateOrderActionType.BuyAmountChanged:
         draft.createOrder.amounts.buy = action.amount
+        draft.createOrder.amounts.sell = getSellAmount(
+          state.createOrder.selectedPool,
+          action.amount,
+          state.createOrder.type === 'limit'
+            ? state.createOrder.limitPrice
+            : undefined,
+        )
         break
       case SwapCreateOrderActionType.SelectedPoolChanged:
         draft.createOrder.selectedPool = action.pool
+        draft.createOrder.amounts.buy = getBuyAmount(
+          action.pool,
+          state.createOrder.amounts.sell,
+          state.createOrder.type === 'limit'
+            ? state.createOrder.limitPrice
+            : undefined,
+        )
+        draft.createOrder.marketPrice = getMarketPrice(
+          action.pool,
+          state.createOrder.amounts.sell,
+        )
         break
       case SwapCreateOrderActionType.SlippageChanged:
         draft.createOrder.slippage = action.slippage
@@ -194,22 +232,53 @@ const createOrderReducer = (
           sell: state.createOrder.amounts.buy,
           buy: state.createOrder.amounts.sell,
         }
+        draft.createOrder.marketPrice = getMarketPrice(
+          state.createOrder.selectedPool,
+          draft.createOrder.amounts.sell,
+        )
+        draft.createOrder.limitPrice = draft.createOrder.marketPrice
+
+        if (
+          draft.createOrder.amounts.sell.tokenId ===
+          state.createOrder.selectedPool.tokenA.tokenId
+        ) {
+          draft.createOrder.amounts.buy = getBuyAmount(
+            state.createOrder.selectedPool,
+            draft.createOrder.amounts.sell,
+            state.createOrder.type === 'limit'
+              ? draft.createOrder.limitPrice
+              : undefined,
+          )
+        } else {
+          draft.createOrder.amounts.sell = getSellAmount(
+            state.createOrder.selectedPool,
+            draft.createOrder.amounts.buy,
+            state.createOrder.type === 'limit'
+              ? draft.createOrder.limitPrice
+              : undefined,
+          )
+        }
         break
       case SwapCreateOrderActionType.ResetQuantities:
         draft.createOrder.amounts = {
           sell: {
-            quantity: '0',
+            quantity: Quantities.zero,
             tokenId: state.createOrder.amounts.sell.tokenId,
           },
           buy: {
-            quantity: '0',
+            quantity: Quantities.zero,
             tokenId: state.createOrder.amounts.buy.tokenId,
           },
         }
-        draft.createOrder.limitPrice = undefined
+        draft.createOrder.limitPrice = state.createOrder.marketPrice
         break
       case SwapCreateOrderActionType.LimitPriceChanged:
         draft.createOrder.limitPrice = action.limitPrice
+        draft.createOrder.amounts.buy = getBuyAmount(
+          state.createOrder.selectedPool,
+          state.createOrder.amounts.sell,
+          action.limitPrice,
+        )
         break
     }
   })

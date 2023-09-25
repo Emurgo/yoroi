@@ -236,7 +236,7 @@ const SelectableToken = ({tokenForList, wallet}: SelectableTokenProps) => {
       to_asset: [{asset_name: tokenForList.name, asset_ticker: tokenForList.ticker, policy_id: tokenForList.group}],
     })
     buyTouched()
-    buyAmountChanged({tokenId: tokenForList.id, quantity: balanceAvailable})
+    buyAmountChanged({tokenId: tokenForList.id, quantity: Quantities.zero})
     navigateTo.startSwap()
     closeSearch()
   }

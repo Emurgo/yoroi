@@ -45,7 +45,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../types'
-import {Quantities} from '../../utils'
+import {asQuantity, Quantities} from '../../utils'
 import {genTimeToSlot} from '../../utils/timeUtils'
 import {validatePassword} from '../../utils/validators'
 import {WalletMeta} from '../../walletManager'
@@ -98,6 +98,7 @@ import {
   toSendTokenList,
 } from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
+import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
 
 type WalletState = {
@@ -153,6 +154,7 @@ export class ByronWallet implements YoroiWallet {
   private readonly stakingKeyPath: number[]
   private readonly transactionManager: TransactionManager
   private readonly memosManager: MemosManager
+  private _collateralId = ''
 
   // =================== create =================== //
 
@@ -346,6 +348,7 @@ export class ByronWallet implements YoroiWallet {
     this.primaryTokenInfo = PRIMARY_TOKEN_INFO
     this.utxoManager = utxoManager
     this._utxos = utxoManager.initialUtxos
+    this._collateralId = utxoManager.initialCollateralId
     this.encryptedStorage = makeWalletEncryptedStorage(id)
     this.walletImplementationId = implementationId
     this.isHW = hwDeviceInfo != null
@@ -402,10 +405,6 @@ export class ByronWallet implements YoroiWallet {
     if (!this.timeout) return
     Logger.info(`stopping wallet: ${this.id}`)
     clearTimeout(this.timeout)
-  }
-
-  get utxos() {
-    return this._utxos
   }
 
   get receiveAddresses(): Addresses {
@@ -731,19 +730,27 @@ export class ByronWallet implements YoroiWallet {
         ? [stakingPrivateKey]
         : undefined
 
+    if (datum) {
+      const signedTx = await unsignedTx.unsignedTx.sign(
+        NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
+        accountPrivateKeyHex,
+        new Set<string>(),
+        [],
+        undefined,
+        [datum],
+      )
+      return yoroiSignedTx({unsignedTx, signedTx})
+    }
+
     const signedTx = await unsignedTx.unsignedTx.sign(
       NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
       accountPrivateKeyHex,
       new Set<string>(),
       stakingKeys,
       stakingPrivateKey,
-      datum ? [datum] : undefined,
     )
 
-    return yoroiSignedTx({
-      unsignedTx,
-      signedTx,
-    })
+    return yoroiSignedTx({unsignedTx, signedTx})
   }
 
   async createDelegationTx(poolId: string | undefined, delegatedAmount: BigNumber) {
@@ -1017,14 +1024,40 @@ export class ByronWallet implements YoroiWallet {
 
     const newUtxos = await this.utxoManager.getCachedUtxos()
 
-    if (this.hasUtxoUpdated(this._utxos, newUtxos)) {
+    if (this.didUtxosUpdate(this._utxos, newUtxos)) {
       this._utxos = newUtxos
 
       this.notify({type: 'utxos', utxos: this.utxos})
     }
   }
 
-  private hasUtxoUpdated(oldUtxos: RawUtxo[], newUtxos: RawUtxo[]): boolean {
+  get utxos() {
+    return this._utxos.filter((utxo) => utxo.utxo_id !== this._collateralId)
+  }
+
+  get collateralId(): string {
+    return this._collateralId
+  }
+
+  getCollateralInfo(): {utxo: RawUtxo | undefined; amount: Balance.Amount; collateralId: string} {
+    const utxos = utxosMaker(this._utxos)
+    const collateralUtxo = utxos.findById(this.collateralId)
+    const quantity = collateralUtxo?.amount !== undefined ? asQuantity(collateralUtxo?.amount) : Quantities.zero
+
+    return {
+      utxo: collateralUtxo,
+      amount: {quantity, tokenId: this.primaryTokenInfo.id},
+      collateralId: this.collateralId,
+    }
+  }
+
+  async setCollateralId(id: RawUtxo['utxo_id']): Promise<void> {
+    await this.utxoManager.setCollateralId(id)
+    this._collateralId = id
+    this.notify({type: 'collateral-id', collateralId: this._collateralId})
+  }
+
+  private didUtxosUpdate(oldUtxos: RawUtxo[], newUtxos: RawUtxo[]): boolean {
     if (oldUtxos.length !== newUtxos.length) {
       return true
     }

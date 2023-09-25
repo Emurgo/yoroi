@@ -1,4 +1,4 @@
-import {difference, intersection} from './arrays'
+import {difference, first, intersection} from './arrays'
 
 describe('Array Utils', () => {
   describe('difference', () => {
@@ -44,6 +44,12 @@ describe('Array Utils', () => {
       const b = [2, 4, 6]
       const result = intersection(a, b)
       expect(result).toEqual([])
+    })
+  })
+
+  describe('predicates', () => {
+    it('first', () => {
+      expect(first()).toBe(true)
     })
   })
 })

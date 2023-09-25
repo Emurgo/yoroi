@@ -57,12 +57,32 @@ const wallet: YoroiWallet = {
   rewardAddressHex: 'reward-address-hex',
   publicKeyHex: 'publicKeyHex',
   utxos,
+  collateralId: '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')
   },
   encryptedStorage: mockEncryptedStorage,
   ledgerSupportsCIP36: async () => {
     return true
+  },
+  getCollateralInfo: () => {
+    return {
+      utxo: {
+        utxo_id: '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
+        tx_hash: '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181',
+        tx_index: 2,
+        receiver:
+          'addr_test1qrg0x4sx2wfd3l26zqs658u8vyg8qz4dzqw0zke45lpy0vkr3y3kdut55a40jff00qmg74686vz44v6k363md06qkq0qzplc3l',
+        amount: '5449549',
+
+        assets: [],
+      },
+      amount: {quantity: '5449549', tokenId: ''},
+      collateralId: '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
+    }
+  },
+  setCollateralId: () => {
+    throw new Error('not implemented: createUnsignedTx')
   },
   createUnsignedTx: () => {
     throw new Error('not implemented: createUnsignedTx')
@@ -422,6 +442,21 @@ const createDelegationTx = {
   loading: async (...args) => {
     action('createDelegationTx')(...args)
     return new Promise(() => null) as unknown as YoroiUnsignedTx
+  },
+}
+
+const setCollateralId = {
+  success: async (...args) => {
+    action('setCollateralId')(...args)
+    return mocks.yoroiUnsignedTx
+  },
+  error: async (...args) => {
+    action('setCollateralId')(...args)
+    return Promise.reject(new Error('storybook error message'))
+  },
+  loading: async (...args) => {
+    action('setCollateralId')(...args)
+    return new Promise(() => null) as unknown as void
   },
 }
 
@@ -896,6 +931,7 @@ export const mocks = {
   yoroiUnsignedTx,
   yoroiSignedTx,
   utxos,
+  setCollateralId,
   fetchCurrentPrice,
   fetchNftModerationStatus,
   txid,

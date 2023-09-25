@@ -3,8 +3,11 @@ import React, {ReactElement} from 'react'
 import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Hr, Icon, Spacer, Text} from '../../components'
+import {formatTokenWithSymbol} from '../../legacy/format'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {lightPalette} from '../../theme'
+import {useCollateralInfo} from '../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 
@@ -126,6 +129,25 @@ export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
     <Text secondary>{value}</Text>
   </SettingsItem>
 )
+
+export const SettingsCollateralItem = ({label, onNavigate, icon, disabled}: NavigatedSettingsItemProps) => {
+  const wallet = useSelectedWallet()
+  const {amount} = useCollateralInfo(wallet)
+
+  const formattedAmount = formatTokenWithSymbol(amount.quantity, wallet.primaryTokenInfo)
+
+  return (
+    <Touchable onPress={onNavigate} disabled={disabled}>
+      <SettingsItem label={label} icon={icon}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text secondary>{formattedAmount}</Text>
+
+          <Icon.Chevron direction="right" size={28} color={lightPalette.gray['600']} />
+        </View>
+      </SettingsItem>
+    </Touchable>
+  )
+}
 
 const styles = StyleSheet.create({
   itemInner: {
