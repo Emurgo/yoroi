@@ -5,7 +5,7 @@ import {Buffer} from 'buffer'
 import _ from 'lodash'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
-import {ActivityIndicator, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Alert, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {
   BottomSheetModal,
@@ -130,6 +130,7 @@ export const OpenOrders = () => {
     const collateralInfo = wallet.getCollateralInfo()
     const utxo = collateralInfo.utxo
     if (!utxo) {
+      Alert.alert('Collateral utxo not found', "You don't have an active collateral utxo")
       throw new Error('Collateral utxo not found')
     }
 
