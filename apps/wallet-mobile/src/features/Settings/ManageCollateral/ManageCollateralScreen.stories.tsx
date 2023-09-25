@@ -44,6 +44,22 @@ const noCollateral: YoroiWallet = {
   },
 }
 
+const noFundsWallet: YoroiWallet = {
+  ...mocks.wallet,
+  utxos: [],
+  collateralId: '',
+  getCollateralInfo: () => {
+    return {
+      amount: {
+        quantity: '0',
+        tokenId: mocks.wallet.primaryTokenInfo.id,
+      },
+      collateralId: '',
+      utxo: undefined,
+    }
+  },
+}
+
 const withCollateralRemoveLoading: YoroiWallet = {
   ...mocks.wallet,
   setCollateralId: mocks.setCollateralId.loading,
@@ -65,7 +81,6 @@ storiesOf('ManageCollateralScreen', module)
       <ManageCollateralScreen />
     </SelectedWalletProvider>
   ))
-
   .add('collateral is gone', () => (
     <SelectedWalletProvider wallet={goneCollateral}>
       <ManageCollateralScreen />
@@ -73,6 +88,11 @@ storiesOf('ManageCollateralScreen', module)
   ))
   .add('no collateral', () => (
     <SelectedWalletProvider wallet={noCollateral}>
+      <ManageCollateralScreen />
+    </SelectedWalletProvider>
+  ))
+  .add('not enough funds', () => (
+    <SelectedWalletProvider wallet={noFundsWallet}>
       <ManageCollateralScreen />
     </SelectedWalletProvider>
   ))
