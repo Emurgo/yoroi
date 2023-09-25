@@ -1,4 +1,4 @@
-import {getMinAdaReceiveAfterSlippage, getTotalFees, useSwap} from '@yoroi/swap'
+import {getMinAdaReceiveAfterSlippage, useSwap} from '@yoroi/swap'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
@@ -14,7 +14,7 @@ import {
 import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
-import {asQuantity, Quantities} from '../../../../../../yoroi-wallets/utils'
+import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../../common/navigation'
 import {PoolIcon} from '../../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../../common/strings'
@@ -29,7 +29,6 @@ export const ShowPoolActions = () => {
   const {selectedPool, amounts} = createOrder
   const wallet = useSelectedWallet()
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const tokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
@@ -37,9 +36,6 @@ export const ShowPoolActions = () => {
     return <></>
   }
   const totalAmount = Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)
-  const calculatedFee = (Number(selectedPool?.fee) / 100) * Number(createOrder.amounts.sell.quantity)
-  const providerFee = Quantities.format(asQuantity(calculatedFee ?? 0), sellTokenInfo.decimals ?? 0)
-
   const id = selectedPool.poolId
   const extended = id === hiddenInfoOpenId
 
@@ -63,12 +59,7 @@ export const ShowPoolActions = () => {
       }
       adornment={
         <HiddenInfo
-          totalFees={getTotalFees(
-            selectedPool?.batcherFee.quantity,
-            providerFee,
-            wallet.primaryTokenInfo.decimals ?? 0,
-            numberLocale,
-          )}
+          totalFees="" // TODO: add fees
           minReceived={getMinAdaReceiveAfterSlippage(
             amounts.buy.quantity,
             createOrder.slippage,
