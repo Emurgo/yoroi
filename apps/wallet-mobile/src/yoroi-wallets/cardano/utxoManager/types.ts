@@ -8,6 +8,6 @@ export type CollateralConfig = {
 }
 
 export const collateralRange: CollateralConfig = {
-  minLovelace: asQuantity(5_000_000),
-  maxLovelace: asQuantity(10_000_000),
+  minLovelace: asQuantity(2_000_000),
+  maxLovelace: asQuantity(5_000_000),
 }
