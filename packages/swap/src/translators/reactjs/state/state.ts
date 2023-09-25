@@ -1,6 +1,5 @@
 import {Balance, Swap} from '@yoroi/types'
 import {produce} from 'immer'
-import {BalanceQuantity} from '@yoroi/types/src/balance/token'
 
 import {getBuyAmount} from '../../../helpers/orders/getBuyAmount'
 import {getSellAmount} from '../../../helpers/orders/getSellAmount'
@@ -10,7 +9,7 @@ import {Quantities} from '../../../utils/quantities'
 export type SwapState = Readonly<{
   createOrder: Swap.CreateOrderData & {
     type: Swap.OrderType
-    marketPrice: BalanceQuantity
+    marketPrice: Balance.Quantity
     datum: string
     datumHash: string
   }
@@ -26,7 +25,7 @@ export type SwapCreateOrderActions = Readonly<{
   txPayloadChanged: (txPayload: Readonly<Swap.CreateOrderResponse>) => void
   switchTokens: () => void
   resetQuantities: () => void
-  limitPriceChanged: (limitPrice: BalanceQuantity) => void
+  limitPriceChanged: (limitPrice: Balance.Quantity) => void
 }>
 
 export enum SwapCreateOrderActionType {
@@ -73,7 +72,7 @@ export type SwapCreateOrderAction =
     }
   | {
       type: SwapCreateOrderActionType.LimitPriceChanged
-      limitPrice: BalanceQuantity
+      limitPrice: Balance.Quantity
     }
   | {type: SwapCreateOrderActionType.SwitchTokens}
   | {type: SwapCreateOrderActionType.ResetQuantities}
