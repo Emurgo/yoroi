@@ -47,6 +47,7 @@ import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {mapOrders} from './mapOrders'
 import BigNumber from 'bignumber.js'
+import {generateCIP30UtxoCbor, generateMuesliSwapSigningKey} from '../../../../../yoroi-wallets/cardano/utils'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
@@ -144,19 +145,7 @@ export const OpenOrders = () => {
       throw new Error('Collateral utxo not found')
     }
 
-    const txHash = await TransactionHash.from_bytes(Buffer.from(utxo.tx_hash, 'hex'))
-    if (!txHash) throw new Error('Invalid tx hash')
-    const index = BigNumber(utxo.utxo_id.split(':')[1]).toNumber()
-    const input = await TransactionInput.new(txHash, index)
-    const address = await Address.from_bech32(utxo.receiver)
-    if (!address) throw new Error('Invalid address')
-    const amount = await BigNum.from_str(utxo.amount)
-    if (!amount) throw new Error('Invalid amount')
-    const collateral = await Value.new(amount)
-    const output = await TransactionOutput.new(address, collateral)
-    const collateralUtxo = await TransactionUnspentOutput.new(input, output)
-
-    return await collateralUtxo.to_hex()
+    return await generateCIP30UtxoCbor(utxo)
   }
 
   async function createCancellationTxAndSign(
@@ -167,30 +156,15 @@ export const OpenOrders = () => {
     if (!order || order.owner === undefined || order.utxo === undefined) return
 
     const orderUtxo = order.utxo
-
     const collateralUtxo = await getCollateralUtxo(orderId)
-
     const addressBech32 = order.owner
-
     const address = await CardanoMobile.Address.fromBech32(addressBech32)
     const bytes = await address.toBytes()
     const addressHex = new Buffer(bytes).toString('hex')
     const cbor = await swapApiOrder.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address: addressHex})
     const rootKey = await wallet.encryptedStorage.rootKey.read(password)
-    const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(rootKey, 'hex'))
-    const accountPrivateKey = await masterKey
-      .derive(1852 + HARD_DERIVATION_START)
-      .then((key) => key.derive(1815 + HARD_DERIVATION_START))
-      .then((key) => key.derive(0 + HARD_DERIVATION_START))
-      .then((key) => key.derive(0))
-      .then((key) => key.derive(0))
 
-    const rawKey = await accountPrivateKey.toRawKey()
-    const bech32 = await rawKey.toBech32()
-
-    const pkey = await PrivateKey.from_bech32(bech32)
-    if (!pkey) return
-    const response = await wallet.signRawTx(cbor, pkey)
+    const response = await wallet.signRawTx(cbor, await generateMuesliSwapSigningKey(rootKey))
     if (!response) return
     const hexBase64 = new Buffer(response).toString('base64')
     return {txBase64: hexBase64}

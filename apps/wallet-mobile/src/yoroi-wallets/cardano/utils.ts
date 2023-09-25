@@ -17,6 +17,7 @@ import {Amounts} from '../utils'
 import {CardanoMobile} from '../wallets'
 import {toAssetNameHex, toPolicyId} from './api/utils'
 import {
+  HARD_DERIVATION_START,
   NETWORK_ID as mainnetId,
   WALLET_CONFIG as HASKELL_SHELLEY,
   WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
@@ -26,6 +27,17 @@ import {MultiToken} from './MultiToken'
 import {CardanoHaskellShelleyNetwork, PRIMARY_ASSET_CONSTANTS} from './networks'
 import {NUMBERS} from './numbers'
 import {CardanoTypes, WalletImplementation} from './types'
+import {
+  Address,
+  BigNum,
+  PrivateKey,
+  TransactionHash,
+  TransactionInput,
+  TransactionOutput,
+  TransactionUnspentOutput,
+  Value,
+} from '@emurgo/csl-mobile-bridge'
+import {Buffer} from 'buffer'
 
 export const normalizeToAddress = async (addr: string) => {
   // in Shelley, addresses can be base16, bech32 or base58
@@ -304,4 +316,37 @@ export const selectFtOrThrow = (token: Balance.TokenInfo): Balance.TokenInfo => 
     return token
   }
   throw new Error(`Token type "${token.kind}" is not a fungible token`)
+}
+
+export const generateCIP30UtxoCbor = async (utxo: RawUtxo) => {
+  const txHash = await TransactionHash.from_bytes(Buffer.from(utxo.tx_hash, 'hex'))
+  if (!txHash) throw new Error('Invalid tx hash')
+  const index = BigNumber(utxo.utxo_id.split(':')[1]).toNumber()
+  const input = await TransactionInput.new(txHash, index)
+  const address = await Address.from_bech32(utxo.receiver)
+  if (!address) throw new Error('Invalid address')
+  const amount = await BigNum.from_str(utxo.amount)
+  if (!amount) throw new Error('Invalid amount')
+  const collateral = await Value.new(amount)
+  const output = await TransactionOutput.new(address, collateral)
+  const collateralUtxo = await TransactionUnspentOutput.new(input, output)
+
+  return await collateralUtxo.to_hex()
+}
+
+export const generateMuesliSwapSigningKey = async (rootKey: string) => {
+  const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(rootKey, 'hex'))
+  const accountPrivateKey = await masterKey
+    .derive(1852 + HARD_DERIVATION_START)
+    .then((key) => key.derive(1815 + HARD_DERIVATION_START))
+    .then((key) => key.derive(0 + HARD_DERIVATION_START))
+    .then((key) => key.derive(0))
+    .then((key) => key.derive(0))
+
+  const rawKey = await accountPrivateKey.toRawKey()
+  const bech32 = await rawKey.toBech32()
+
+  const pkey = await PrivateKey.from_bech32(bech32)
+  if (!pkey) throw new Error('Invalid private key')
+  return pkey
 }
