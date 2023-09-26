@@ -101,6 +101,9 @@ export const useStrings = () => {
     assignCollateral: intl.formatMessage(messages.assignCollateral),
     collateralNotFound: intl.formatMessage(messages.collateralNotFound),
     noActiveCollateral: intl.formatMessage(messages.noActiveCollateral),
+    failedTxTitle: intl.formatMessage(messages.failedTxTitle),
+    failedTxText: intl.formatMessage(messages.failedTxText),
+    failedTxButton: intl.formatMessage(messages.failedTxButton),
   }
 }
 
@@ -474,5 +477,17 @@ export const messages = defineMessages({
   noActiveCollateral: {
     id: 'components.send.confirmscreen.noActiveCollateral',
     defaultMessage: "!!!You don't have an active collateral utxo",
+  },
+  failedTxTitle: {
+    id: 'components.send.sendscreen.failedTxTitle',
+    defaultMessage: '!!!Transaction failed',
+  },
+  failedTxText: {
+    id: 'components.send.sendscreen.failedTxText',
+    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues',
+  },
+  failedTxButton: {
+    id: 'components.send.sendscreen.failedTxButton',
+    defaultMessage: '!!!Try again',
   },
 })

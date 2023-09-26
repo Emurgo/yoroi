@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from 'react-query'
 
-// TODO: import later from @yoroi/wallets utils/hooks
+// TODO: import later from @yoroi/common utils/hooks
 /* istanbul ignore next */
 export const useMutationWithInvalidations = <
   TData = unknown,

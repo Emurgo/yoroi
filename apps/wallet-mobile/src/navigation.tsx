@@ -207,6 +207,9 @@ export type SwapTokenRoutes = {
   'swap-select-buy-token': undefined
   'swap-edit-slippage': undefined
   'swap-select-pool': undefined
+  'swap-submitted-tx': undefined
+  'swap-failed-tx': undefined
+  'app-root': undefined
 }
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 

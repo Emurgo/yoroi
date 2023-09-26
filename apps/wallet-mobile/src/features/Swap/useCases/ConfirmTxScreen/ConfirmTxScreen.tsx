@@ -26,16 +26,12 @@ export const ConfirmTxScreen = () => {
   const closeBottomSheet = () => {
     bottomSheetRef.current?.closeBottomSheet()
   }
-
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
 
   const {unsignedTx, createOrder} = useSwap()
-
-  const {resetToTxHistory} = useWalletNavigation()
-
   const sellTokenInfo = useTokenInfo({
     wallet,
     tokenId: createOrder.amounts.sell.tokenId,
@@ -71,8 +67,11 @@ export const ConfirmTxScreen = () => {
             swap_fees: Number(createOrder.selectedPool.fee),
           })
 
-          navigate.startSwap()
+            navigate.submittedTx()
         },
+          onError: () => {
+              navigate.failedTx()
+          },
         useErrorBoundary: true,
       },
     },
@@ -111,7 +110,10 @@ export const ConfirmTxScreen = () => {
             wallet={wallet}
             unsignedTx={unsignedTx}
             datum={{data: createOrder.datum}}
-            onSuccess={resetToTxHistory}
+            onSuccess={() => {
+              closeBottomSheet()
+              navigate.submittedTx()
+            }}
             onCancel={closeBottomSheet}
           />
 
