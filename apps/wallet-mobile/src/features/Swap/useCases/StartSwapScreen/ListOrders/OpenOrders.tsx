@@ -24,6 +24,7 @@ import {
 } from '../../../../../components'
 import {useLanguage} from '../../../../../i18n'
 import {useMetrics} from '../../../../../metrics/metricsManager'
+import {useWalletNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
@@ -36,7 +37,6 @@ import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {mapOrders, MappedOrder} from './mapOrders'
-import {useWalletNavigation} from '../../../../../navigation'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState & {top: string}>({

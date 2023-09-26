@@ -6,7 +6,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {BottomSheet, BottomSheetRef, Button, Spacer} from '../../../../components'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../metrics/metricsManager'
-import {useWalletNavigation} from '../../../../navigation'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
@@ -67,11 +66,11 @@ export const ConfirmTxScreen = () => {
             swap_fees: Number(createOrder.selectedPool.fee),
           })
 
-            navigate.submittedTx()
+          navigate.submittedTx()
         },
-          onError: () => {
-              navigate.failedTx()
-          },
+        onError: () => {
+          navigate.failedTx()
+        },
         useErrorBoundary: true,
       },
     },
