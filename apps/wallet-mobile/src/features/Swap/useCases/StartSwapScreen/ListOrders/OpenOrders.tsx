@@ -112,7 +112,7 @@ export const OpenOrders = () => {
     })
   }
 
-  const handlePasswordConfirm = async (password: string) => {
+  const handlePasswordConfirm = async (password: string, orderId: string) => {
     const order = normalizedOrders.find((o) => o.id === orderId)
     if (!order || order.owner === undefined || order.utxo === undefined) return
     const tx = await createCancellationTxAndSign(order.id, password)
@@ -128,7 +128,7 @@ export const OpenOrders = () => {
     setBottomSheetState({
       openId: id,
       title: strings.signTransaction,
-      content: wallet.isHW ? null : <PasswordModal onConfirm={handlePasswordConfirm} />,
+      content: wallet.isHW ? null : <PasswordModal onConfirm={(password) => handlePasswordConfirm(password, id)} />,
       height: 350,
     })
   }
