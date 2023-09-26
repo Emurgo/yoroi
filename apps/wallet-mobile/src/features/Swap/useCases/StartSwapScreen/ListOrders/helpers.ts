@@ -46,3 +46,9 @@ export const useCancellationOrderFee = (options: Options) => {
   if (!result.data) throw new Error('invalid state')
   return result.data
 }
+
+export const convertBech32ToHex = async (bech32Address: string) => {
+  const address = await CardanoMobile.Address.fromBech32(bech32Address)
+  const bytes = await address.toBytes()
+  return new Buffer(bytes).toString('hex')
+}

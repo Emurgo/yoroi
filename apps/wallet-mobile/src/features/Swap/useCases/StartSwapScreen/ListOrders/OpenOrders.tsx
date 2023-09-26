@@ -31,12 +31,11 @@ import {COLORS} from '../../../../../theme'
 import {WrongPassword} from '../../../../../yoroi-wallets/cardano/errors'
 import {generateCIP30UtxoCbor, generateMuesliSwapSigningKey} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {Counter} from '../../../common/Counter/Counter'
 import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {useCancellationOrderFee} from './helpers'
+import {convertBech32ToHex, useCancellationOrderFee} from './helpers'
 import {mapOrders, MappedOrder} from './mapOrders'
 
 export const OpenOrders = () => {
@@ -152,14 +151,10 @@ export const OpenOrders = () => {
   ): Promise<{txBase64: string} | undefined> => {
     const order = normalizedOrders.find((o) => o.id === orderId)
     if (!order || order.owner === undefined || order.utxo === undefined) return
-
-    const orderUtxo = order.utxo
+    const {utxo, owner: bech32Address} = order
     const collateralUtxo = await getCollateralUtxo()
-    const addressBech32 = order.owner
-    const address = await CardanoMobile.Address.fromBech32(addressBech32)
-    const bytes = await address.toBytes()
-    const addressHex = new Buffer(bytes).toString('hex')
-    const cbor = await swapApiOrder.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address: addressHex})
+    const addressHex = await convertBech32ToHex(bech32Address)
+    const cbor = await swapApiOrder.cancel({utxos: {collateral: collateralUtxo, order: utxo}, address: addressHex})
     const rootKey = await wallet.encryptedStorage.rootKey.read(password)
 
     const response = await wallet.signRawTx(cbor, await generateMuesliSwapSigningKey(rootKey))
@@ -170,32 +165,40 @@ export const OpenOrders = () => {
 
   const openBottomSheet = async (order: MappedOrder) => {
     if (order.owner === undefined || order.utxo === undefined) return
-    const totalReturned = `${order.fromTokenAmount} ${order.fromTokenInfo?.ticker}`
-    const orderUtxo = order.utxo
-
+    const {
+      utxo,
+      owner: bech32Address,
+      fromTokenAmount,
+      fromTokenInfo,
+      id,
+      toTokenInfo,
+      assetFromLabel,
+      assetToLabel,
+      tokenPrice,
+      tokenAmount,
+    } = order
+    const totalReturned = `${fromTokenAmount} ${fromTokenInfo?.ticker}`
     const collateralUtxo = await getCollateralUtxo()
-
-    const addressBech32 = order.owner
 
     setBottomSheetState({
       height: 400,
-      openId: order.id,
+      openId: id,
       title: strings.listOrdersSheetTitle,
       content: (
         <Suspense fallback={<ModalLoadingState />}>
           <ModalContent
-            assetFromIcon={<TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />}
-            assetToIcon={<TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />}
-            onConfirm={() => onOrderCancelConfirm(order.id)}
+            assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfo?.id ?? ''} variant="swap" />}
+            assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfo?.id ?? ''} variant="swap" />}
+            onConfirm={() => onOrderCancelConfirm(id)}
             onBack={closeBottomSheet}
-            assetFromLabel={order.assetFromLabel}
-            assetToLabel={order.assetToLabel}
-            assetAmount={`${order.tokenAmount} ${order.assetToLabel}`}
-            assetPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
+            assetFromLabel={assetFromLabel}
+            assetToLabel={assetToLabel}
+            assetAmount={`${tokenAmount} ${assetToLabel}`}
+            assetPrice={`${tokenPrice} ${assetFromLabel}`}
             totalReturned={totalReturned}
-            orderUtxo={orderUtxo}
+            orderUtxo={utxo}
             collateralUtxo={collateralUtxo}
-            bech32Address={addressBech32}
+            bech32Address={bech32Address}
           />
         </Suspense>
       ),
