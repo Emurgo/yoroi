@@ -34,7 +34,7 @@ export const EditLimitPrice = () => {
   React.useEffect(() => {
     const defaultPrice = createOrder.marketPrice
 
-    const formattedValue = BigNumber(defaultPrice).toFormat(numberLocale)
+    const formattedValue = BigNumber(defaultPrice).decimalPlaces(PRECISION).toFormat(numberLocale)
     setText(formattedValue)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createOrder.marketPrice])
@@ -44,7 +44,7 @@ export const EditLimitPrice = () => {
 
     const defaultPrice = createOrder.marketPrice
 
-    const formattedValue = BigNumber(defaultPrice).toFormat(numberLocale)
+    const formattedValue = BigNumber(defaultPrice).decimalPlaces(PRECISION).toFormat(numberLocale)
     setText(formattedValue)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createOrder.type])
