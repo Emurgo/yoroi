@@ -461,7 +461,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     }
 
     public async signRawTx(txHex: string, pKey: PrivateKey) {
-      console.log('[signRawTx] txHex:', txHex)
       const fixedTx = await FixedTransaction.from_hex(txHex)
       if (!fixedTx) throw new Error('invalid tx hex')
       const rawBody = await fixedTx.raw_body()
@@ -480,7 +479,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       await witSet.set_vkeys(vkeys)
       await fixedTx.set_witness_set(await witSet.to_bytes())
 
-      console.log('[signRawTx] signed:', Buffer.from(await fixedTx.to_bytes()).toString('hex'))
       return fixedTx.to_bytes()
     }
 

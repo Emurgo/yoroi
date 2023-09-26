@@ -526,15 +526,20 @@ const ModalContent = ({
   }
 
   useEffect(() => {
+    let mounted = true
     getFee().then((fee) => {
+      if (!mounted) return
       setFee(fee)
     })
+    return () => {
+      mounted = false
+    }
   }, [getFee, setFee])
 
   if (fee === null) {
     return (
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        <ActivityIndicator animating size="large" color="black" style={{padding: 20}} />
+      <View style={styles.centered}>
+        <ActivityIndicator animating size="large" color="black" style={styles.loadingActivityContainer} />
       </View>
     )
   }
@@ -660,6 +665,13 @@ const ModalContentButtons = ({onBack, onConfirm}: {onBack: () => void; onConfirm
 }
 
 const styles = StyleSheet.create({
+  loadingActivityContainer: {
+    padding: 20,
+  },
+  centered: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
