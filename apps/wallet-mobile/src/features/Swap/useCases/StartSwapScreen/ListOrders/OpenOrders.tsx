@@ -157,7 +157,10 @@ export const OpenOrders = () => {
     const cbor = await swapApiOrder.cancel({utxos: {collateral: collateralUtxo, order: utxo}, address: addressHex})
     const rootKey = await wallet.encryptedStorage.rootKey.read(password)
 
-    const response = await wallet.signRawTx(cbor, await generateMuesliSwapSigningKey(rootKey))
+    const response = await wallet.signRawTx(cbor, [
+      await generateMuesliSwapSigningKey(rootKey, 0, 0, 0), // TODO: Should this be hardcoded?
+      await generateMuesliSwapSigningKey(rootKey, 0, 1, 5), // TODO: Should this be hardcoded?
+    ])
     if (!response) return
     const hexBase64 = new Buffer(response).toString('base64')
     return {txBase64: hexBase64}

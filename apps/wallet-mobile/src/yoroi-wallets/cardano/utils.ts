@@ -337,14 +337,14 @@ export const generateCIP30UtxoCbor = async (utxo: RawUtxo) => {
   return transactionUnspentOutput.to_hex()
 }
 
-export const generateMuesliSwapSigningKey = async (rootKey: string) => {
+export const generateMuesliSwapSigningKey = async (rootKey: string, d2 = 0, d3 = 0, d4 = 0) => {
   const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(rootKey, 'hex'))
   const accountPrivateKey = await masterKey
     .derive(1852 + HARD_DERIVATION_START)
     .then((key) => key.derive(1815 + HARD_DERIVATION_START))
-    .then((key) => key.derive(0 + HARD_DERIVATION_START))
-    .then((key) => key.derive(0))
-    .then((key) => key.derive(0))
+    .then((key) => key.derive(d2 + HARD_DERIVATION_START))
+    .then((key) => key.derive(d3))
+    .then((key) => key.derive(d4))
 
   const rawKey = await accountPrivateKey.toRawKey()
   const bech32 = await rawKey.toBech32()

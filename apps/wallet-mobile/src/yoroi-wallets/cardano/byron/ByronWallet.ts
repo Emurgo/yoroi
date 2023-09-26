@@ -1081,24 +1081,29 @@ export class ByronWallet implements YoroiWallet {
     return api.getPoolInfo(request, this.getBackendConfig())
   }
 
-  public async signRawTx(txHex: string, pKey: PrivateKey) {
+  public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
     const fixedTx = await FixedTransaction.from_hex(txHex)
     if (!fixedTx) throw new Error('invalid tx hex')
     const rawBody = await fixedTx.raw_body()
     const txHash = await TransactionHash.from_bytes(blake2b(32).update(rawBody).digest('binary'))
     if (!txHash) throw new Error('invalid tx hex, could not generate tx hash')
 
-    const vkeyWit = await make_vkey_witness(txHash, pKey)
-
     const witSet = await fixedTx.witness_set()
     let vkeys = await witSet.vkeys()
+
     if (vkeys === undefined) {
       vkeys = await Vkeywitnesses.new()
     }
-    if (!vkeyWit) throw new Error('invalid tx hex, could not generate vkey witness')
-    await vkeys.add(vkeyWit)
+
+    for (let i = 0; i < pKeys.length; i++) {
+      const vkeyWit = await make_vkey_witness(txHash, pKeys[i])
+      if (!vkeyWit) throw new Error('invalid tx hex, could not generate vkey witness')
+      await vkeys.add(vkeyWit)
+    }
+
     await witSet.set_vkeys(vkeys)
     await fixedTx.set_witness_set(await witSet.to_bytes())
+
     return fixedTx.to_bytes()
   }
 
