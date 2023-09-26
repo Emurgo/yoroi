@@ -639,8 +639,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           ? [stakingPrivateKey]
           : undefined
 
-      console.log('[signTx DATUM]', datum)
-
       if (datum) {
         const signedTx = await unsignedTx.unsignedTx.sign(
           BIP44_DERIVATION_LEVELS.ACCOUNT,
@@ -861,7 +859,11 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       return doesCardanoAppVersionSupportCIP36(await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB))
     }
 
-    async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
+    async signTxWithLedger(
+      unsignedTx: YoroiUnsignedTx,
+      useUSB: boolean,
+      datum?: {data: string},
+    ): Promise<YoroiSignedTx> {
       if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
 
       const appAdaVersion = await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB)
@@ -876,6 +878,20 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         )
 
         const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
+
+        if (datum) {
+          // not sure wabout args => for buildLedgerSignedTx
+          const signedTx = await Cardano.buildLedgerSignedTx(
+            unsignedTx.unsignedTx,
+            signedLedgerTx,
+            PURPOSE,
+            this.publicKeyHex,
+            false,
+            [datum],
+          )
+
+          return yoroiSignedTx({unsignedTx, signedTx})
+        }
 
         const signedTx = await Cardano.buildLedgerSignedTx(
           unsignedTx.unsignedTx,

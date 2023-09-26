@@ -1,3 +1,4 @@
+import {Datum} from '@emurgo/yoroi-lib'
 import React from 'react'
 import {ScrollView} from 'react-native'
 
@@ -15,6 +16,7 @@ import {LedgerTransportSwitch} from './LedgerTransportSwitch'
 type Props = {
   wallet: YoroiWallet
   unsignedTx: YoroiUnsignedTx
+  datum: Datum
   onCancel?: () => void
   onSuccess: () => void
 }
@@ -65,7 +67,13 @@ export const ConfirmTxWithHW = (props: Props) => {
   )
 }
 
-const Confirm = ({wallet, onSuccess, unsignedTx, transport: transportType}: Props & {transport: TransportType}) => {
+const Confirm = ({
+  wallet,
+  onSuccess,
+  unsignedTx,
+  datum,
+  transport: transportType,
+}: Props & {transport: TransportType}) => {
   const strings = useStrings()
   const {signAndSubmitTx, isLoading} = useSignWithHwAndSubmitTx(
     {wallet}, //
@@ -78,7 +86,7 @@ const Confirm = ({wallet, onSuccess, unsignedTx, transport: transportType}: Prop
       primaryButton={{
         disabled: isLoading,
         label: strings.confirm,
-        onPress: () => signAndSubmitTx({unsignedTx, useUSB: transportType === 'USB'}),
+        onPress: () => signAndSubmitTx({unsignedTx, useUSB: transportType === 'USB', datum}),
       }}
     >
       <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />
