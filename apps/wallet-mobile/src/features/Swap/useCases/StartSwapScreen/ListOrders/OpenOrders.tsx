@@ -35,7 +35,7 @@ import {Counter} from '../../../common/Counter/Counter'
 import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {convertBech32ToHex, useCancellationOrderFee} from './helpers'
+import {convertBech32ToHex, harden, useCancellationOrderFee} from './helpers'
 import {mapOrders, MappedOrder} from './mapOrders'
 
 export const OpenOrders = () => {
@@ -158,8 +158,8 @@ export const OpenOrders = () => {
     const rootKey = await wallet.encryptedStorage.rootKey.read(password)
 
     const response = await wallet.signRawTx(cbor, [
-      await generateMuesliSwapSigningKey(rootKey, 0, 0, 0), // TODO: Should this be hardcoded?
-      await generateMuesliSwapSigningKey(rootKey, 0, 1, 5), // TODO: Should this be hardcoded?
+      await generateMuesliSwapSigningKey(rootKey, [harden(1852), harden(1815), harden(0), 0, 0]), // TODO: Should this be hardcoded?
+      await generateMuesliSwapSigningKey(rootKey, [harden(1852), harden(1815), harden(0), 1, 5]), // TODO: Should this be hardcoded?
     ])
     if (!response) return
     const hexBase64 = new Buffer(response).toString('base64')

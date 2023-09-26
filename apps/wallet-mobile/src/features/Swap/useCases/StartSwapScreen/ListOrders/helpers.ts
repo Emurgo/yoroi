@@ -7,6 +7,7 @@ import {useQuery} from 'react-query'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
+import {HARD_DERIVATION_START} from '../../../../../yoroi-wallets/cardano/constants/common'
 
 type Options = {
   bech32Address: string
@@ -52,3 +53,5 @@ export const convertBech32ToHex = async (bech32Address: string) => {
   const bytes = await address.toBytes()
   return new Buffer(bytes).toString('hex')
 }
+
+export const harden = (num: number) => HARD_DERIVATION_START + num
