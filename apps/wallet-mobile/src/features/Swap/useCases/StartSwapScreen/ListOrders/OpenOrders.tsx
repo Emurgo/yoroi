@@ -36,14 +36,7 @@ import {Counter} from '../../../common/Counter/Counter'
 import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {
-  assertRequired,
-  convertBech32ToHex,
-  fixScriptHash,
-  getRequiredSigners,
-  harden,
-  useCancellationOrderFee,
-} from './helpers'
+import {assertRequired, convertBech32ToHex, fixScriptHash, getRequiredSigners, useCancellationOrderFee} from './helpers'
 import {mapOrders, MappedOrder} from './mapOrders'
 
 export const OpenOrders = () => {
@@ -172,7 +165,7 @@ export const OpenOrders = () => {
     const newCbor = Buffer.from(await txWithFixedBody.to_bytes()).toString('hex')
 
     const signers = await getRequiredSigners(txWithFixedBody, wallet)
-    const keys = await Promise.all(signers.map(async (signer) => await generateMuesliSwapSigningKey(rootKey, signer)))
+    const keys = await Promise.all(signers.map(async (signer) => generateMuesliSwapSigningKey(rootKey, signer)))
     const response = await wallet.signRawTx(newCbor, keys)
     if (!response) return
     const hexBase64 = new Buffer(response).toString('base64')

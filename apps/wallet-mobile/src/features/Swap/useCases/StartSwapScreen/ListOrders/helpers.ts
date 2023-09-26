@@ -22,9 +22,9 @@ import {useQuery} from 'react-query'
 
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {HARD_DERIVATION_START} from '../../../../../yoroi-wallets/cardano/constants/common'
+import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
-import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 
 type Options = {
   bech32Address: string
@@ -506,11 +506,14 @@ const DUMMY_ADDRESS =
   'addr1q9l0qrhrvu3nq92ns23g2atns690ge4c325vgzqlg4vru9uym9vrnx7vuq6q9lv984p6feekdusp3yewttl5a65sg6fs9r9gw5'
 
 export const getRequiredSigners = async (tx: Transaction, wallet: YoroiWallet) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const utxos = wallet.utxos
   const body = await tx.body()
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const inputs = await body.inputs()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const requiredSigners = await body.required_signers()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const collateralInputs = await body.collateral()
 
   return [
