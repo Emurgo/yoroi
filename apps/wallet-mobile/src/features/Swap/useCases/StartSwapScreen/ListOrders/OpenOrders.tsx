@@ -553,7 +553,7 @@ const ModalContent = ({
   }
 
   return (
-    <View>
+    <>
       <ModalContentHeader
         assetFromIcon={assetFromIcon}
         assetFromLabel={assetFromLabel}
@@ -581,10 +581,11 @@ const ModalContent = ({
 
       <ModalContentLink />
 
-      <Spacer height={10} />
+      <Spacer fill />
 
       <ModalContentButtons onConfirm={handleConfirm} onBack={onBack} />
-    </View>
+      <Spacer height={10} />
+    </>
   )
 }
 
