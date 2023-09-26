@@ -503,3 +503,10 @@ export const fixScriptHash = async (tx: Transaction) => {
 
 const DUMMY_ADDRESS =
   'addr1q9l0qrhrvu3nq92ns23g2atns690ge4c325vgzqlg4vru9uym9vrnx7vuq6q9lv984p6feekdusp3yewttl5a65sg6fs9r9gw5'
+
+export const getRequiredSigners = async (tx: Transaction) => {
+  return [
+    [harden(1852), harden(1815), harden(0), 0, 0],
+    [harden(1852), harden(1815), harden(0), 1, 5],
+  ]
+}
