@@ -106,7 +106,7 @@ describe('Quantities', () => {
       FORMAT: italian,
     })
 
-    expect(Quantities.parseFromText('', 3, italian)).toEqual(['0', '0'])
+    expect(Quantities.parseFromText('', 3, italian)).toEqual(['', '0'])
     expect(Quantities.parseFromText('1', 3, italian)).toEqual(['1', '1000'])
     expect(Quantities.parseFromText('123,55', 3, italian)).toEqual(['123,55', '123550'])
     expect(Quantities.parseFromText('1234,6666', 3, italian)).toEqual(['1 234,666', '1234666'])
@@ -120,7 +120,7 @@ describe('Quantities', () => {
       FORMAT: english,
     })
 
-    expect(Quantities.parseFromText('', 3, english)).toEqual(['0', '0'])
+    expect(Quantities.parseFromText('', 3, english)).toEqual(['', '0'])
     expect(Quantities.parseFromText('1', 3, english)).toEqual(['1', '1000'])
     expect(Quantities.parseFromText('123.55', 3, english)).toEqual(['123.55', '123550'])
     expect(Quantities.parseFromText('1234.6666', 3, english)).toEqual(['1,234.666', '1234666'])

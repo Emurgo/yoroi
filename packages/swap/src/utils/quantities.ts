@@ -65,7 +65,8 @@ export const Quantities = {
   parseFromText: (text: string, precision: number, format: Numbers.Locale) => {
     const {decimalSeparator} = format
     const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
-    const sanitized = text === '' ? '0' : text.replaceAll(invalid, '')
+    const sanitized = text === '' ? '' : text.replaceAll(invalid, '')
+    if (sanitized === '') return ['', `0`] as [string, Balance.Quantity]
     const parts = sanitized.split(decimalSeparator)
     const isDec = parts.length >= 2
 

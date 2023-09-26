@@ -149,7 +149,7 @@ describe('Quantities', () => {
       mockNumberLocale,
     )
 
-    expect(input).toBe('0')
+    expect(input).toBe('')
     expect(quantity).toBe('0')
   })
 })
