@@ -35,6 +35,7 @@ import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/h
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {Counter} from '../../../common/Counter/Counter'
+import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {mapOrders, MappedOrder} from './mapOrders'
@@ -51,7 +52,7 @@ export const OpenOrders = () => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
-  const {navigateToCollateralSettings, resetToTxHistory} = useWalletNavigation()
+  const {navigateToCollateralSettings} = useWalletNavigation()
 
   const [orderId, setOrderId] = useState<string | null>(null)
 
@@ -67,6 +68,7 @@ export const OpenOrders = () => {
   )
 
   const {search} = useSearch()
+  const swapNavigation = useNavigateTo()
 
   const filteredOrders = React.useMemo(
     () =>
@@ -118,7 +120,7 @@ export const OpenOrders = () => {
     await wallet.submitTransaction(tx.txBase64)
     trackCancellationSubmitted(order)
     closeBottomSheet()
-    resetToTxHistory()
+    swapNavigation.submittedTx()
   }
 
   const onOrderCancelConfirm = (id: string) => {
@@ -584,6 +586,7 @@ const ModalContent = ({
       <Spacer fill />
 
       <ModalContentButtons onConfirm={handleConfirm} onBack={onBack} />
+
       <Spacer height={10} />
     </>
   )
