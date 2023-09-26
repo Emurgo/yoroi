@@ -521,6 +521,7 @@ export const getRequiredSigners = async (tx: Transaction, wallet: YoroiWallet) =
 
   const matchingUtxo = utxos.find((utxo) => utxo.tx_hash === txId && utxo.tx_index === txIndex)
   if (!matchingUtxo) throw new Error('Could not find matching utxo')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {receiver} = matchingUtxo
   // TODO: get derivation path for receiver
 
