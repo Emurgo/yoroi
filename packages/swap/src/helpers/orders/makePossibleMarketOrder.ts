@@ -2,7 +2,6 @@ import {Balance, Swap} from '@yoroi/types'
 
 import {getBuyAmount} from './getBuyAmount'
 import {getQuantityWithSlippage} from './getQuantityWithSlippage'
-import {asQuantity} from '../../utils/asQuantity'
 
 /**
  * Create a possible market order choosing the best pool based on the given parameters.
@@ -30,10 +29,9 @@ export const makePossibleMarketOrder = (
   ): Swap.CreateOrderData => {
     const rawBuy = getBuyAmount(currentPool, sell)
 
-    const rawBuyQuantity = BigInt(rawBuy.quantity)
     const buyQuantityWithSlippage = getQuantityWithSlippage(
-      rawBuyQuantity,
-      BigInt(slippage),
+      rawBuy.quantity,
+      slippage,
     )
 
     const newOrder: Swap.CreateOrderData = {
@@ -43,7 +41,7 @@ export const makePossibleMarketOrder = (
         sell,
         buy: {
           tokenId: buy.tokenId,
-          quantity: asQuantity(buyQuantityWithSlippage.toString()),
+          quantity: buyQuantityWithSlippage,
         },
       },
       address,
