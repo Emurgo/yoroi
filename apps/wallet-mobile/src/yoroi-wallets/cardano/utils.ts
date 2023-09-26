@@ -28,7 +28,6 @@ import {Amounts} from '../utils'
 import {CardanoMobile} from '../wallets'
 import {toAssetNameHex, toPolicyId} from './api/utils'
 import {
-  HARD_DERIVATION_START,
   NETWORK_ID as mainnetId,
   WALLET_CONFIG as HASKELL_SHELLEY,
   WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
