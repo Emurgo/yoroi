@@ -435,6 +435,15 @@ export const useWalletNavigation = () => {
     })
   }
 
+  const navigateToCollateralSettings = () => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'manage-collateral',
+      },
+    })
+  }
+
   const navigateToAnalyticsSettings = () => {
     navigation.navigate('app-root', {
       screen: 'toggle-analytics-settings',
@@ -453,5 +462,6 @@ export const useWalletNavigation = () => {
     navigateToNftGallery,
     navigateToAppSettings,
     navigateToAnalyticsSettings,
+    navigateToCollateralSettings,
   }
 }

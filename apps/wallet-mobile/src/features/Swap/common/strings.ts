@@ -98,6 +98,9 @@ export const useStrings = () => {
     seeOnExplorer: intl.formatMessage(messages.seeOnExplorer),
     goToOrders: intl.formatMessage(messages.goToOrders),
     wrongPasswordMessage: intl.formatMessage(messages.wrongPasswordMessage),
+    assignCollateral: intl.formatMessage(messages.assignCollateral),
+    collateralNotFound: intl.formatMessage(messages.collateralNotFound),
+    noActiveCollateral: intl.formatMessage(messages.noActiveCollateral),
   }
 }
 
@@ -459,5 +462,17 @@ export const messages = defineMessages({
   confirm: {
     id: 'components.send.confirmscreen.confirmButton',
     defaultMessage: '!!!Confirm',
+  },
+  assignCollateral: {
+    id: 'components.send.confirmscreen.assignCollateral',
+    defaultMessage: '!!!Assign collateral',
+  },
+  collateralNotFound: {
+    id: 'components.send.confirmscreen.collateralNotFound',
+    defaultMessage: '!!!Collateral not found',
+  },
+  noActiveCollateral: {
+    id: 'components.send.confirmscreen.noActiveCollateral',
+    defaultMessage: "!!!You don't have an active collateral utxo",
   },
 })

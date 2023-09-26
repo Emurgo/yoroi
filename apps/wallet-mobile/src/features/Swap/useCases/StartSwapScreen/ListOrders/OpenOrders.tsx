@@ -35,19 +35,22 @@ import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {mapOrders} from './mapOrders'
+import {mapOrders, MappedOrder} from './mapOrders'
+import {useWalletNavigation} from '../../../../../navigation'
 
 export const OpenOrders = () => {
-  const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
+  const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState & {top: string}>({
     openId: null,
     title: '',
     content: '',
+    top: '',
   })
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const strings = useStrings()
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
+  const {navigateToCollateralSettings} = useWalletNavigation()
 
   const [orderId, setOrderId] = useState<string | null>(null)
 
@@ -83,69 +86,75 @@ export const OpenOrders = () => {
     }, [track]),
   )
 
+  const trackCancellationSubmitted = (order: MappedOrder) => {
+    track.swapCancelationSubmitted({
+      from_amount: Number(order.from.quantity) ?? 0,
+      to_amount: Number(order.to.quantity) ?? 0,
+      from_asset: [
+        {
+          asset_name: order.fromTokenInfo?.name ?? '',
+          asset_ticker: order.fromTokenInfo?.ticker ?? '',
+          policy_id: order.fromTokenInfo?.group ?? '',
+        },
+      ],
+      to_asset: [
+        {
+          asset_name: order.toTokenInfo?.name ?? '',
+          asset_ticker: order.toTokenInfo?.ticker ?? '',
+          policy_id: order.toTokenInfo?.group ?? '',
+        },
+      ],
+      pool_source: order.provider ?? '',
+    })
+  }
+
   const handlePasswordConfirm = async (password: string) => {
     const order = normalizedOrders.find((o) => o.id === orderId)
     if (!order || order.owner === undefined || order.utxo === undefined) return
     const tx = await createCancellationTxAndSign(order.id, password)
     if (!tx) return
     await wallet.submitTransaction(tx.txBase64)
-
-    track.swapCancelationSubmitted({
-      from_amount: Number(order?.from.quantity) ?? 0,
-      to_amount: Number(order?.to.quantity) ?? 0,
-      from_asset: [
-        {
-          asset_name: order?.fromTokenInfo?.name ?? '',
-          asset_ticker: order?.fromTokenInfo?.ticker ?? '',
-          policy_id: order?.fromTokenInfo?.group ?? '',
-        },
-      ],
-      to_asset: [
-        {
-          asset_name: order?.toTokenInfo?.name ?? '',
-          asset_ticker: order?.toTokenInfo?.ticker ?? '',
-          policy_id: order?.toTokenInfo?.group ?? '',
-        },
-      ],
-      pool_source: order?.provider ?? '',
-    })
+    trackCancellationSubmitted(order)
     closeBottomSheet()
   }
 
   const onOrderCancelConfirm = (id: string) => {
     setOrderId(id)
-    closeBottomSheet()
-
+    // closeBottomSheet()
     setBottomSheetState({
       openId: id,
       title: strings.signTransaction,
-      content: <PasswordModal onConfirm={handlePasswordConfirm} />,
+      content: wallet.isHW ? null : <PasswordModal onConfirm={handlePasswordConfirm} />,
+      top: '50%',
     })
   }
 
-  async function getCollateralUtxo(orderId: string) {
-    const order = normalizedOrders.find((o) => o.id === orderId)
-    if (!order || order.owner === undefined || order.utxo === undefined) throw new Error('Order not found')
-
+  const getCollateralUtxo = async () => {
     const collateralInfo = wallet.getCollateralInfo()
     const utxo = collateralInfo.utxo
+
     if (!utxo) {
-      Alert.alert('Collateral utxo not found', "You don't have an active collateral utxo")
+      Alert.alert(
+        strings.collateralNotFound,
+        strings.noActiveCollateral,
+        [{text: strings.assignCollateral, onPress: navigateToCollateralSettings}],
+        {cancelable: true, onDismiss: () => true},
+      )
       throw new Error('Collateral utxo not found')
     }
 
     return generateCIP30UtxoCbor(utxo)
   }
 
-  async function createCancellationTxAndSign(
+  const createCancellationTxAndSign = async (
     orderId: string,
     password: string,
-  ): Promise<{txBase64: string} | undefined> {
+  ): Promise<{txBase64: string} | undefined> => {
     const order = normalizedOrders.find((o) => o.id === orderId)
     if (!order || order.owner === undefined || order.utxo === undefined) return
 
     const orderUtxo = order.utxo
-    const collateralUtxo = await getCollateralUtxo(orderId)
+    const collateralUtxo = await getCollateralUtxo()
     const addressBech32 = order.owner
     const address = await CardanoMobile.Address.fromBech32(addressBech32)
     const bytes = await address.toBytes()
@@ -159,28 +168,27 @@ export const OpenOrders = () => {
     return {txBase64: hexBase64}
   }
 
-  const openBottomSheet = async (id: string) => {
-    const order = normalizedOrders.find((o) => o.id === id)
-    if (!order || order.owner === undefined || order.utxo === undefined) return
-    const {assetFromLabel, assetToLabel} = order
+  const openBottomSheet = async (order: MappedOrder) => {
+    if (order.owner === undefined || order.utxo === undefined) return
     const totalReturned = `${order.fromTokenAmount} ${order.fromTokenInfo?.ticker}`
     const orderUtxo = order.utxo
 
-    const collateralUtxo = await getCollateralUtxo(id)
+    const collateralUtxo = await getCollateralUtxo()
 
     const addressBech32 = order.owner
 
     setBottomSheetState({
-      openId: id,
+      top: '51%',
+      openId: order.id,
       title: strings.listOrdersSheetTitle,
       content: (
         <ModalContent
           assetFromIcon={<TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />}
           assetToIcon={<TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />}
-          onConfirm={() => onOrderCancelConfirm(id)}
+          onConfirm={() => onOrderCancelConfirm(order.id)}
           onBack={closeBottomSheet}
-          assetFromLabel={assetFromLabel}
-          assetToLabel={assetToLabel}
+          assetFromLabel={order.assetFromLabel}
+          assetToLabel={order.assetToLabel}
           assetAmount={`${order.tokenAmount} ${order.assetToLabel}`}
           assetPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
           totalReturned={totalReturned}
@@ -191,7 +199,7 @@ export const OpenOrders = () => {
       ),
     })
   }
-  const closeBottomSheet = () => setBottomSheetState({openId: null, title: '', content: ''})
+  const closeBottomSheet = () => setBottomSheetState({openId: null, title: '', content: '', top: ''})
 
   return (
     <>
@@ -229,7 +237,7 @@ export const OpenOrders = () => {
                   />
                 }
                 footer={
-                  <Footer onPress={() => openBottomSheet(order.id)}>
+                  <Footer onPress={() => openBottomSheet(order)}>
                     {strings.listOrdersSheetButtonText.toLocaleUpperCase()}
                   </Footer>
                 }
@@ -248,7 +256,7 @@ export const OpenOrders = () => {
           isOpen={bottomSheetState.openId !== null}
           title={bottomSheetState.title}
           onClose={closeBottomSheet}
-          snapPoints={['1%', '51%']}
+          snapPoints={['1%', bottomSheetState.top === '' ? '50%' : bottomSheetState.top]}
         >
           <View style={{flex: 1}}>{bottomSheetState.content}</View>
         </BottomSheetModal>
