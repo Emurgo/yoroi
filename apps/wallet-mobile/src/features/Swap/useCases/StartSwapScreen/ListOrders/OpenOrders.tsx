@@ -35,8 +35,9 @@ import {Counter} from '../../../common/Counter/Counter'
 import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {convertBech32ToHex, harden, useCancellationOrderFee} from './helpers'
+import {convertBech32ToHex, fixScriptHash, harden, useCancellationOrderFee} from './helpers'
 import {mapOrders, MappedOrder} from './mapOrders'
+import {Transaction, TransactionBody} from '@emurgo/csl-mobile-bridge'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState & {height: number}>({
@@ -157,7 +158,13 @@ export const OpenOrders = () => {
     const cbor = await swapApiOrder.cancel({utxos: {collateral: collateralUtxo, order: utxo}, address: addressHex})
     const rootKey = await wallet.encryptedStorage.rootKey.read(password)
 
-    const response = await wallet.signRawTx(cbor, [
+    const originalTx = (await Transaction.from_hex(cbor))!
+    const fixedTxBody: TransactionBody = await fixScriptHash((await Transaction.from_hex(cbor))!)
+
+    const txWithFixedBody = await Transaction.new(fixedTxBody, await originalTx.witness_set(), undefined)
+    const newCbor = Buffer.from(await txWithFixedBody.to_bytes()).toString('hex')
+
+    const response = await wallet.signRawTx(newCbor, [
       await generateMuesliSwapSigningKey(rootKey, [harden(1852), harden(1815), harden(0), 0, 0]), // TODO: Should this be hardcoded?
       await generateMuesliSwapSigningKey(rootKey, [harden(1852), harden(1815), harden(0), 1, 5]), // TODO: Should this be hardcoded?
     ])
