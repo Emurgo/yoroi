@@ -521,3 +521,14 @@ export const getRequiredSigners = async (tx: Transaction, wallet: YoroiWallet) =
     [harden(1852), harden(1815), harden(0), 1, 5],
   ]
 }
+
+export const getMuesliSwapTransactionAndSigners = async (cbor: string, wallet: YoroiWallet) => {
+  const originalTx = assertRequired(await Transaction.from_hex(cbor), 'Could not parse transaction from cbor')
+  const fixedTxBody = await fixScriptHash(originalTx)
+
+  const txWithFixedBody = await Transaction.new(fixedTxBody, await originalTx.witness_set(), undefined)
+  const newCbor = Buffer.from(await txWithFixedBody.to_bytes()).toString('hex')
+
+  const signers = await getRequiredSigners(txWithFixedBody, wallet)
+  return {cbor: newCbor, signers}
+}

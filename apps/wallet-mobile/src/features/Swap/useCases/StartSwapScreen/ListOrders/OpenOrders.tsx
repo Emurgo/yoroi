@@ -1,4 +1,3 @@
-import {Transaction} from '@emurgo/csl-mobile-bridge'
 import {useFocusEffect} from '@react-navigation/native'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {Buffer} from 'buffer'
@@ -36,7 +35,7 @@ import {Counter} from '../../../common/Counter/Counter'
 import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {assertRequired, convertBech32ToHex, fixScriptHash, getRequiredSigners, useCancellationOrderFee} from './helpers'
+import {convertBech32ToHex, getMuesliSwapTransactionAndSigners, useCancellationOrderFee} from './helpers'
 import {mapOrders, MappedOrder} from './mapOrders'
 
 export const OpenOrders = () => {
@@ -155,18 +154,15 @@ export const OpenOrders = () => {
     const {utxo, owner: bech32Address} = order
     const collateralUtxo = await getCollateralUtxo()
     const addressHex = await convertBech32ToHex(bech32Address)
-    const cbor = await swapApiOrder.cancel({utxos: {collateral: collateralUtxo, order: utxo}, address: addressHex})
+    const originalCbor = await swapApiOrder.cancel({
+      utxos: {collateral: collateralUtxo, order: utxo},
+      address: addressHex,
+    })
     const rootKey = await wallet.encryptedStorage.rootKey.read(password)
+    const {cbor, signers} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
 
-    const originalTx = assertRequired(await Transaction.from_hex(cbor), 'Could not parse transaction from cbor')
-    const fixedTxBody = await fixScriptHash(originalTx)
-
-    const txWithFixedBody = await Transaction.new(fixedTxBody, await originalTx.witness_set(), undefined)
-    const newCbor = Buffer.from(await txWithFixedBody.to_bytes()).toString('hex')
-
-    const signers = await getRequiredSigners(txWithFixedBody, wallet)
     const keys = await Promise.all(signers.map(async (signer) => generateMuesliSwapSigningKey(rootKey, signer)))
-    const response = await wallet.signRawTx(newCbor, keys)
+    const response = await wallet.signRawTx(cbor, keys)
     if (!response) return
     const hexBase64 = new Buffer(response).toString('base64')
     return {txBase64: hexBase64}
