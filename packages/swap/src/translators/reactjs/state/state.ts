@@ -207,16 +207,17 @@ const createOrderReducer = (
         break
       case SwapCreateOrderActionType.SelectedPoolChanged:
         draft.createOrder.selectedPool = action.pool
+        draft.createOrder.marketPrice = getMarketPrice(
+          action.pool,
+          state.createOrder.amounts.sell,
+        )
+        draft.createOrder.limitPrice = draft.createOrder.marketPrice
         draft.createOrder.amounts.buy = getBuyAmount(
           action.pool,
           state.createOrder.amounts.sell,
           state.createOrder.type === 'limit'
-            ? state.createOrder.limitPrice
+            ? draft.createOrder.limitPrice
             : undefined,
-        )
-        draft.createOrder.marketPrice = getMarketPrice(
-          action.pool,
-          state.createOrder.amounts.sell,
         )
         break
       case SwapCreateOrderActionType.SlippageChanged:

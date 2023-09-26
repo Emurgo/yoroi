@@ -24,8 +24,8 @@ export const makeLimitOrder = (
   }
 
   const receiveAmountWithSlippage = getQuantityWithSlippage(
-    BigInt(buy.quantity),
-    BigInt(slippage),
+    buy.quantity,
+    slippage,
   )
 
   return {
@@ -36,7 +36,7 @@ export const makeLimitOrder = (
       sell,
       buy: {
         tokenId: buy.tokenId,
-        quantity: receiveAmountWithSlippage.toString() as Balance.Quantity,
+        quantity: receiveAmountWithSlippage,
       },
     },
   }

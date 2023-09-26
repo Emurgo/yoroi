@@ -59,7 +59,7 @@ export const CreateOrder = () => {
       poolDefaulted()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolDefaulted, selectedPoolChanged, bestPool?.poolId])
+  }, [poolDefaulted, selectedPoolChanged, bestPool?.poolId, bestPool?.price])
 
   const {createUnsignedTx, isLoading} = useSwapTx({
     onSuccess: (yoroiUnsignedTx) => {
@@ -122,7 +122,7 @@ export const CreateOrder = () => {
       buy: amounts.buy,
       pools: poolList,
       selectedPool: createOrder.selectedPool,
-      slippage: createOrder.slippage * 100,
+      slippage: createOrder.slippage,
       address: wallet.externalAddresses[0],
     }
 
