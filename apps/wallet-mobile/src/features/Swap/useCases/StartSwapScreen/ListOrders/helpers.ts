@@ -17,12 +17,16 @@ import {
 import {useSwap} from '@yoroi/swap'
 import {BalanceQuantity} from '@yoroi/types/src/balance/token'
 import {Buffer} from 'buffer'
+import _ from 'lodash'
 import {useCallback} from 'react'
 import {useQuery} from 'react-query'
 
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {HARD_DERIVATION_START} from '../../../../../yoroi-wallets/cardano/constants/common'
+import {NUMBERS} from '../../../../../yoroi-wallets/cardano/numbers'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
+import {isHaskellShelley} from '../../../../../yoroi-wallets/cardano/utils'
+import {RawUtxo} from '../../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 
@@ -508,11 +512,53 @@ const DUMMY_ADDRESS =
 export const getRequiredSigners = async (tx: Transaction, wallet: YoroiWallet) => {
   const utxos = wallet.allUtxos
   const body = await tx.body()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const inputs = await body.inputs()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const requiredSigners = await body.required_signers()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const purpose = isHaskellShelley(wallet.walletImplementationId)
+    ? NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+    : NUMBERS.WALLET_TYPE_PURPOSE.BIP44
+  const signers = [[purpose, harden(1815), harden(0), 0, 0]]
+
+  const inputUtxos: RawUtxo[] = []
+
+  for (let i = 0; i < (await inputs.len()); i++) {
+    const input = await inputs.get(i)
+    const txId = await input.transaction_id().then((t) => t.to_hex())
+    const txIndex = await input.index()
+    const matchingUtxo = utxos.find((utxo) => utxo.tx_hash === txId && utxo.tx_index === txIndex)
+    if (!matchingUtxo) continue
+    inputUtxos.push(matchingUtxo)
+  }
+
+  inputUtxos.forEach((utxo) => {
+    signers.push(getDerivationPathForAddress(utxo.receiver, wallet, purpose))
+  })
+
+  const requiredSigners = assertRequired(await body.required_signers(), 'Transaction does not contain required signers')
+
+  const txRequiredAddresses: string[] = []
+  for (let i = 0; i < (await requiredSigners.len()); i++) {
+    const signer = await requiredSigners.get(i)
+    const hex = await signer.to_hex()
+
+    const allAddresses = [...wallet.externalAddresses, ...wallet.internalAddresses]
+    await Promise.all(
+      allAddresses.map(async (bech32Address) => {
+        const parsedAddress = await CardanoMobile.Address.fromBech32(bech32Address)
+        const baseAddr = await CardanoMobile.BaseAddress.fromAddress(parsedAddress)
+        const paymentCred = await baseAddr.paymentCred()
+        const keyHash = await paymentCred.toKeyhash()
+        const hexKeyHash = await keyHash.toBytes().then((b) => Buffer.from(b).toString('hex'))
+        if (hex === hexKeyHash) {
+          txRequiredAddresses.push(bech32Address)
+        }
+      }),
+    )
+  }
+
+  txRequiredAddresses.forEach((address) => {
+    signers.push(getDerivationPathForAddress(address, wallet, purpose))
+  })
+
   const collateralInputs = assertRequired(await body.collateral(), 'Transaction does not contain collateral inputs')
 
   const firstCollateral = await collateralInputs.get(0)
@@ -521,14 +567,30 @@ export const getRequiredSigners = async (tx: Transaction, wallet: YoroiWallet) =
 
   const matchingUtxo = utxos.find((utxo) => utxo.tx_hash === txId && utxo.tx_index === txIndex)
   if (!matchingUtxo) throw new Error('Could not find matching utxo')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {receiver} = matchingUtxo
-  // TODO: get derivation path for receiver
 
-  return [
-    [harden(1852), harden(1815), harden(0), 0, 0],
-    [harden(1852), harden(1815), harden(0), 1, 5],
-  ]
+  const {receiver} = matchingUtxo
+  signers.push(getDerivationPathForAddress(receiver, wallet, purpose))
+
+  return getUniquePaths(signers)
+}
+
+const getUniquePaths = (paths: number[][]) => {
+  return _.uniqWith(paths, arePathsEqual)
+}
+
+const arePathsEqual = (path1: number[], path2: number[]) => {
+  return path1.every((value, index) => value === path2[index]) && path1.length === path2.length
+}
+
+const getDerivationPathForAddress = (address: string, wallet: YoroiWallet, purpose: number) => {
+  const internalIndex = wallet.internalAddresses.indexOf(address)
+  const externalIndex = wallet.externalAddresses.indexOf(address)
+  if (internalIndex === -1 && externalIndex === -1) throw new Error('Could not find matching address')
+
+  const role = internalIndex > -1 ? 1 : 0
+  const index = Math.max(internalIndex, externalIndex)
+
+  return [purpose, harden(1815), harden(0), role, index]
 }
 
 export const getMuesliSwapTransactionAndSigners = async (cbor: string, wallet: YoroiWallet) => {
