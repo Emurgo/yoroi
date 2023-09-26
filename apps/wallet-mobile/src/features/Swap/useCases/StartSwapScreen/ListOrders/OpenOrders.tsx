@@ -1,3 +1,4 @@
+import {Transaction} from '@emurgo/csl-mobile-bridge'
 import {useFocusEffect} from '@react-navigation/native'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {Buffer} from 'buffer'
@@ -35,9 +36,8 @@ import {Counter} from '../../../common/Counter/Counter'
 import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {convertBech32ToHex, fixScriptHash, harden, useCancellationOrderFee} from './helpers'
+import {assertRequired, convertBech32ToHex, fixScriptHash, harden, useCancellationOrderFee} from './helpers'
 import {mapOrders, MappedOrder} from './mapOrders'
-import {Transaction, TransactionBody} from '@emurgo/csl-mobile-bridge'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState & {height: number}>({
@@ -158,8 +158,8 @@ export const OpenOrders = () => {
     const cbor = await swapApiOrder.cancel({utxos: {collateral: collateralUtxo, order: utxo}, address: addressHex})
     const rootKey = await wallet.encryptedStorage.rootKey.read(password)
 
-    const originalTx = (await Transaction.from_hex(cbor))!
-    const fixedTxBody: TransactionBody = await fixScriptHash((await Transaction.from_hex(cbor))!)
+    const originalTx = assertRequired(await Transaction.from_hex(cbor), 'Could not parse transaction from cbor')
+    const fixedTxBody = await fixScriptHash(originalTx)
 
     const txWithFixedBody = await Transaction.new(fixedTxBody, await originalTx.witness_set(), undefined)
     const newCbor = Buffer.from(await txWithFixedBody.to_bytes()).toString('hex')
