@@ -18,7 +18,6 @@ type BottomSheetModalProps = {
   onClose?: () => void
   contentContainerStyle?: ViewStyle
   children: React.ReactNode
-  snapPoints?: string[]
 }
 
 export const BottomSheetModal = ({
@@ -27,13 +26,14 @@ export const BottomSheetModal = ({
   onClose,
   contentContainerStyle,
   children,
-  snapPoints = ['1%', '50%'],
 }: BottomSheetModalProps) => {
   const navigation = useNavigation()
 
   const [showBackdropComp, setShowBackdropComp] = React.useState(true)
 
   const bottomSheetRef = React.useRef<BottomSheet>(null)
+
+  const snapPoints = ['1%', '50%']
 
   const handleSheetChanges = React.useCallback(
     (index: number) => {
