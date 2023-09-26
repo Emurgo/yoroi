@@ -121,7 +121,7 @@ export const CreateOrder = () => {
       buy: amounts.buy,
       pools: poolList,
       selectedPool: createOrder.selectedPool,
-      slippage: createOrder.slippage * 100,
+      slippage: createOrder.slippage,
       address: wallet.externalAddresses[0],
     }
 
