@@ -1,6 +1,6 @@
 type Subscriber<T> = (data: T) => void
 
-export const observerMaker = <T>(): Observer<T> => {
+export const observerMaker = <T>(): Readonly<Observer<T>> => {
   const subscribers: Set<Subscriber<T>> = new Set()
 
   return {
@@ -19,7 +19,7 @@ export const observerMaker = <T>(): Observer<T> => {
     destroy: () => {
       subscribers.clear()
     },
-  }
+  } as const
 }
 
 export type Observer<T> = {
