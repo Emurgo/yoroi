@@ -63,7 +63,7 @@ export const CreateOrder = () => {
       poolDefaulted()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolDefaulted, selectedPoolChanged, bestPool?.poolId])
+  }, [poolDefaulted, selectedPoolChanged, bestPool?.poolId, bestPool?.price])
 
   const {createUnsignedTx, isLoading} = useSwapTx({
     onSuccess: (yoroiUnsignedTx) => {
