@@ -171,7 +171,7 @@ export const OpenOrders = () => {
     const txWithFixedBody = await Transaction.new(fixedTxBody, await originalTx.witness_set(), undefined)
     const newCbor = Buffer.from(await txWithFixedBody.to_bytes()).toString('hex')
 
-    const signers = await getRequiredSigners(txWithFixedBody)
+    const signers = await getRequiredSigners(txWithFixedBody, wallet)
     const keys = await Promise.all(signers.map(async (signer) => await generateMuesliSwapSigningKey(rootKey, signer)))
     const response = await wallet.signRawTx(newCbor, keys)
     if (!response) return

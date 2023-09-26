@@ -24,6 +24,7 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {HARD_DERIVATION_START} from '../../../../../yoroi-wallets/cardano/constants/common'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
+import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 
 type Options = {
   bech32Address: string
@@ -504,7 +505,14 @@ export const fixScriptHash = async (tx: Transaction) => {
 const DUMMY_ADDRESS =
   'addr1q9l0qrhrvu3nq92ns23g2atns690ge4c325vgzqlg4vru9uym9vrnx7vuq6q9lv984p6feekdusp3yewttl5a65sg6fs9r9gw5'
 
-export const getRequiredSigners = async (tx: Transaction) => {
+export const getRequiredSigners = async (tx: Transaction, wallet: YoroiWallet) => {
+  const utxos = wallet.utxos
+  const body = await tx.body()
+
+  const inputs = await body.inputs()
+  const requiredSigners = await body.required_signers()
+  const collateralInputs = await body.collateral()
+
   return [
     [harden(1852), harden(1815), harden(0), 0, 0],
     [harden(1852), harden(1815), harden(0), 1, 5],
