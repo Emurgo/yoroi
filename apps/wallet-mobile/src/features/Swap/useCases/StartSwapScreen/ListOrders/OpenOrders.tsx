@@ -1,9 +1,8 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
-import {BalanceQuantity} from '@yoroi/types/src/balance/token'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {Suspense, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, Alert, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -32,12 +31,12 @@ import {COLORS} from '../../../../../theme'
 import {WrongPassword} from '../../../../../yoroi-wallets/cardano/errors'
 import {generateCIP30UtxoCbor, generateMuesliSwapSigningKey} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {Counter} from '../../../common/Counter/Counter'
 import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
+import {useCancellationOrderFee} from './helpers'
 import {mapOrders, MappedOrder} from './mapOrders'
 
 export const OpenOrders = () => {
@@ -53,8 +52,6 @@ export const OpenOrders = () => {
   const wallet = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
   const {navigateToCollateralSettings} = useWalletNavigation()
-
-  const [orderId, setOrderId] = useState<string | null>(null)
 
   const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
   const orders = useSwapOrdersByStatusOpen()
@@ -124,7 +121,6 @@ export const OpenOrders = () => {
   }
 
   const onOrderCancelConfirm = (id: string) => {
-    setOrderId(id)
     setBottomSheetState({
       openId: id,
       title: strings.signTransaction,
@@ -186,20 +182,22 @@ export const OpenOrders = () => {
       openId: order.id,
       title: strings.listOrdersSheetTitle,
       content: (
-        <ModalContent
-          assetFromIcon={<TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />}
-          assetToIcon={<TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />}
-          onConfirm={() => onOrderCancelConfirm(order.id)}
-          onBack={closeBottomSheet}
-          assetFromLabel={order.assetFromLabel}
-          assetToLabel={order.assetToLabel}
-          assetAmount={`${order.tokenAmount} ${order.assetToLabel}`}
-          assetPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
-          totalReturned={totalReturned}
-          orderUtxo={orderUtxo}
-          collateralUtxo={collateralUtxo}
-          bech32Address={addressBech32}
-        />
+        <Suspense fallback={<ModalLoadingState />}>
+          <ModalContent
+            assetFromIcon={<TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />}
+            assetToIcon={<TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />}
+            onConfirm={() => onOrderCancelConfirm(order.id)}
+            onBack={closeBottomSheet}
+            assetFromLabel={order.assetFromLabel}
+            assetToLabel={order.assetToLabel}
+            assetAmount={`${order.tokenAmount} ${order.assetToLabel}`}
+            assetPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
+            totalReturned={totalReturned}
+            orderUtxo={orderUtxo}
+            collateralUtxo={collateralUtxo}
+            bech32Address={addressBech32}
+          />
+        </Suspense>
       ),
     })
     bottomSheetRef.current?.openBottomSheet()
@@ -440,6 +438,12 @@ const MainInfo = ({tokenPrice, tokenAmount}: {tokenPrice: string; tokenAmount: s
   )
 }
 
+const ModalLoadingState = () => (
+  <View style={styles.centered}>
+    <ActivityIndicator animating size="large" color="black" style={styles.loadingActivityContainer} />
+  </View>
+)
+
 const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {
   return (
     <TouchableOpacity onPress={() => Linking.openURL(txLink)} style={styles.txLink}>
@@ -513,45 +517,14 @@ const ModalContent = ({
 }) => {
   const strings = useStrings()
 
-  const {order} = useSwap()
-  const wallet = useSelectedWallet()
-
-  const [fee, setFee] = useState<string | null>(null)
-
-  const getFee = useCallback(async () => {
-    const address = await CardanoMobile.Address.fromBech32(bech32Address)
-    const bytes = await address.toBytes()
-    const addressHex = new Buffer(bytes).toString('hex')
-    const cbor = await order.cancel({utxos: {collateral: collateralUtxo, order: orderUtxo}, address: addressHex})
-    const tx = await CardanoMobile.Transaction.fromBytes(Buffer.from(cbor, 'hex'))
-    const feeNumber = await tx.body().then((b) => b.fee())
-    return Quantities.denominated(
-      (await feeNumber.toStr()) as BalanceQuantity,
-      wallet.primaryToken.metadata.numberOfDecimals,
-    )
-  }, [bech32Address, collateralUtxo, orderUtxo, wallet, order])
+  const fee = useCancellationOrderFee({
+    orderUtxo,
+    collateralUtxo,
+    bech32Address,
+  })
 
   const handleConfirm = () => {
     onConfirm()
-  }
-
-  useEffect(() => {
-    let mounted = true
-    getFee().then((fee) => {
-      if (!mounted) return
-      setFee(fee)
-    })
-    return () => {
-      mounted = false
-    }
-  }, [getFee, setFee])
-
-  if (fee === null) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator animating size="large" color="black" style={styles.loadingActivityContainer} />
-      </View>
-    )
   }
 
   return (
