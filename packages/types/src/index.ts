@@ -15,7 +15,7 @@ import {
   SwapOpenOrder,
   SwapOrderType,
 } from './swap/order'
-import {SwapPool, SwapPoolProvider} from './swap/pool'
+import {SwapPool, SwapPoolProvider, SwapSupportedProvider} from './swap/pool'
 import {SwapStorage} from './swap/storage'
 import {SwapManager} from './swap/manager'
 import {AppStorage, AppStorageFolderName} from './app/storage'
@@ -47,6 +47,7 @@ export namespace Swap {
   export type Pool = SwapPool
   export type PoolResponse = SwapPool[]
   export type PoolProvider = SwapPoolProvider
+  export type SupportedProtocol = SwapSupportedProvider
 
   export type Storage = SwapStorage
 }

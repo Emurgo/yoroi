@@ -4,12 +4,23 @@ export type SwapPoolProvider =
   | 'minswap'
   | 'sundaeswap'
   | 'wingriders'
+  | 'muesliswap'
   | 'muesliswap_v1'
   | 'muesliswap_v2'
   | 'muesliswap_v3'
   | 'muesliswap_v4'
   | 'vyfi'
   | 'spectrum'
+
+export type SwapSupportedProvider = Extract<
+  SwapPoolProvider,
+  | 'minswap'
+  | 'wingriders'
+  | 'sundaeswap'
+  | 'muesliswap'
+  | 'muesliswap_v2'
+  | 'vyfi'
+>
 
 export type SwapPool = {
   provider: SwapPoolProvider

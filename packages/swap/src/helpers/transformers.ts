@@ -152,7 +152,24 @@ export const transformersMaker = (
   }
 
   const asYoroiPools = (openswapPools: OpenSwap.Pool[]): Swap.Pool[] => {
-    return openswapPools?.length > 0 ? openswapPools.map(asYoroiPool) : []
+    const supportedProviders: Swap.SupportedProtocol[] = [
+      'minswap',
+      'wingriders',
+      'sundaeswap',
+      'muesliswap',
+      'muesliswap_v2',
+      'vyfi',
+    ]
+
+    return openswapPools?.length > 0
+      ? openswapPools
+          .filter((pool) =>
+            supportedProviders.includes(
+              pool.provider as Swap.SupportedProtocol,
+            ),
+          )
+          .map(asYoroiPool)
+      : []
   }
 
   const asYoroiBalanceTokens = (
