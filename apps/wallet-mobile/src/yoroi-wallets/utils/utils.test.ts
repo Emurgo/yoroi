@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 
 import {YoroiEntries, YoroiEntry} from '../types'
 import {RawUtxo} from '../types/other'
-import {Amounts, asQuantity, Entries, Quantities, Utxos} from './utils'
+import {Amounts, asQuantity, Entries, Quantities, splitStringInto64CharArray, Utxos} from './utils'
 
 describe('Quantities', () => {
   it('sum', () => {
@@ -539,5 +539,34 @@ describe('asQuantity', () => {
     ${-Infinity}
   `('when the input is $input it should throw error', ({input}) => {
     expect(() => asQuantity(input)).toThrowError('Invalid quantity')
+  })
+})
+
+describe('splitStringInto64CharArray', () => {
+  it('should split a short string into a single element array', () => {
+    const inputString = 'Hello, World!'
+    const expectedArray = [inputString]
+
+    const result = splitStringInto64CharArray(inputString)
+
+    expect(result).toEqual(expectedArray)
+  })
+
+  it('should split a long string into multiple 64-character elements', () => {
+    const inputString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789023123'
+    const expectedArray = ['ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789023', '123']
+
+    const result = splitStringInto64CharArray(inputString)
+
+    expect(result).toEqual(expectedArray)
+  })
+
+  it('should handle an empty input string', () => {
+    const inputString = ''
+    const expectedArray: string[] = []
+
+    const result = splitStringInto64CharArray(inputString)
+
+    expect(result).toEqual(expectedArray)
   })
 })

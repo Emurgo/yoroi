@@ -184,7 +184,7 @@ export const CreateOrder = () => {
           <LimitPriceWarning
             open={showLimitPriceWarning}
             onClose={() => setShowLimitPriceWarning(false)}
-            onSubmit={handleOnSwap}
+            onSubmit={createUnsignedSwapTx}
           />
 
           <KeyboardAvoidingView

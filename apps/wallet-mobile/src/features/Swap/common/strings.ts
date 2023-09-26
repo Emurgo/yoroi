@@ -97,6 +97,9 @@ export const useStrings = () => {
     transactionDisplay: intl.formatMessage(messages.transactionDisplay),
     seeOnExplorer: intl.formatMessage(messages.seeOnExplorer),
     goToOrders: intl.formatMessage(messages.goToOrders),
+    failedTxTitle: intl.formatMessage(messages.failedTxTitle),
+    failedTxText: intl.formatMessage(messages.failedTxText),
+    failedTxButton: intl.formatMessage(messages.failedTxButton),
   }
 }
 
@@ -454,5 +457,17 @@ export const messages = defineMessages({
   confirm: {
     id: 'components.send.confirmscreen.confirmButton',
     defaultMessage: '!!!Confirm',
+  },
+  failedTxTitle: {
+    id: 'components.send.sendscreen.failedTxTitle',
+    defaultMessage: '!!!Transaction failed',
+  },
+  failedTxText: {
+    id: 'components.send.sendscreen.failedTxText',
+    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues',
+  },
+  failedTxButton: {
+    id: 'components.send.sendscreen.failedTxButton',
+    defaultMessage: '!!!Try again',
   },
 })

@@ -78,7 +78,7 @@ export type SwapCreateOrderAction =
   | {type: SwapCreateOrderActionType.ResetQuantities}
 
 export type SwapActions = Readonly<{
-  // TODO: import from @yoroi/wallets unsignedTx type
+  // TODO: import from @yoroi/common unsignedTx type
   unsignedTxChanged: (
     unsignedTx: Readonly<Record<string, unknown>> | undefined,
   ) => void

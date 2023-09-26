@@ -195,3 +195,15 @@ export const compareArrays = <T>(array1: Array<T>, array2: Array<T>) => {
   if (array1.length !== array2.length) return false
   return array1.every((item, index) => item === array2[index])
 }
+
+export const splitStringInto64CharArray = (inputString: string): string[] => {
+  const maxLength = 64
+  const resultArray: string[] = []
+
+  for (let i = 0; i < inputString.length; i += maxLength) {
+    const substring = inputString.slice(i, i + maxLength)
+    resultArray.push(substring)
+  }
+
+  return resultArray
+}
