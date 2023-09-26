@@ -170,6 +170,7 @@ export type YoroiWallet = {
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
   fetchTokenInfo(tokenId: string): Promise<Balance.TokenInfo>
   utxos: Array<RawUtxo>
+  allUtxos: Array<RawUtxo>
   get collateralId(): string
   getCollateralInfo(): {utxo: RawUtxo | undefined; amount: Balance.Amount; collateralId: RawUtxo['utxo_id']}
   setCollateralId(collateralId: RawUtxo['utxo_id']): Promise<void>

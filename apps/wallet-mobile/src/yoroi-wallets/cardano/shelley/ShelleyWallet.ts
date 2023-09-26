@@ -971,6 +971,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       return this._utxos.filter((utxo) => utxo.utxo_id !== this._collateralId)
     }
 
+    get allUtxos() {
+      return this._utxos
+    }
+
     get collateralId(): string {
       return this._collateralId
     }

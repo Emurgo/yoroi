@@ -506,15 +506,23 @@ const DUMMY_ADDRESS =
   'addr1q9l0qrhrvu3nq92ns23g2atns690ge4c325vgzqlg4vru9uym9vrnx7vuq6q9lv984p6feekdusp3yewttl5a65sg6fs9r9gw5'
 
 export const getRequiredSigners = async (tx: Transaction, wallet: YoroiWallet) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const utxos = wallet.utxos
+  const utxos = wallet.allUtxos
   const body = await tx.body()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const inputs = await body.inputs()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const requiredSigners = await body.required_signers()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const collateralInputs = await body.collateral()
+  const collateralInputs = assertRequired(await body.collateral(), 'Transaction does not contain collateral inputs')
+
+  const firstCollateral = await collateralInputs.get(0)
+  const txId = await firstCollateral.transaction_id().then((t) => t.to_hex())
+  const txIndex = await firstCollateral.index()
+
+  const matchingUtxo = utxos.find((utxo) => utxo.tx_hash === txId && utxo.tx_index === txIndex)
+  if (!matchingUtxo) throw new Error('Could not find matching utxo')
+  const {receiver} = matchingUtxo
+  // TODO: get derivation path for receiver
 
   return [
     [harden(1852), harden(1815), harden(0), 0, 0],
