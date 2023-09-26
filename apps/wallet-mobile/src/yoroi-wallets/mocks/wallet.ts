@@ -57,6 +57,7 @@ const wallet: YoroiWallet = {
   rewardAddressHex: 'reward-address-hex',
   publicKeyHex: 'publicKeyHex',
   utxos,
+  allUtxos: utxos,
   collateralId: '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
   getStakingInfo: async () => {
     throw new Error('not implemented: getStakingInfo')
