@@ -321,17 +321,20 @@ export const selectFtOrThrow = (token: Balance.TokenInfo): Balance.TokenInfo => 
 export const generateCIP30UtxoCbor = async (utxo: RawUtxo) => {
   const txHash = await TransactionHash.from_bytes(Buffer.from(utxo.tx_hash, 'hex'))
   if (!txHash) throw new Error('Invalid tx hash')
+
   const index = BigNumber(utxo.utxo_id.split(':')[1]).toNumber()
   const input = await TransactionInput.new(txHash, index)
   const address = await Address.from_bech32(utxo.receiver)
   if (!address) throw new Error('Invalid address')
+
   const amount = await BigNum.from_str(utxo.amount)
   if (!amount) throw new Error('Invalid amount')
+
   const collateral = await Value.new(amount)
   const output = await TransactionOutput.new(address, collateral)
-  const collateralUtxo = await TransactionUnspentOutput.new(input, output)
+  const transactionUnspentOutput = await TransactionUnspentOutput.new(input, output)
 
-  return collateralUtxo.to_hex()
+  return transactionUnspentOutput.to_hex()
 }
 
 export const generateMuesliSwapSigningKey = async (rootKey: string) => {
