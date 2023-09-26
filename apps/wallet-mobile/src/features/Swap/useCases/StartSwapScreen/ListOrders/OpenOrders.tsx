@@ -8,7 +8,8 @@ import {useIntl} from 'react-intl'
 import {ActivityIndicator, Alert, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {
-  BottomSheetModal,
+  BottomSheet,
+  BottomSheetRef,
   BottomSheetState,
   Button,
   ExpandableInfoCard,
@@ -39,11 +40,11 @@ import {useStrings} from '../../../common/strings'
 import {mapOrders, MappedOrder} from './mapOrders'
 
 export const OpenOrders = () => {
-  const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState & {top: string}>({
+  const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState & {height: number}>({
     openId: null,
     title: '',
     content: '',
-    top: '',
+    height: 0,
   })
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const strings = useStrings()
@@ -54,6 +55,7 @@ export const OpenOrders = () => {
 
   const [orderId, setOrderId] = useState<string | null>(null)
 
+  const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
   const orders = useSwapOrdersByStatusOpen()
   const {numberLocale} = useLanguage()
   const tokenIds = React.useMemo(() => _.uniq(orders?.flatMap((o) => [o.from.tokenId, o.to.tokenId])), [orders])
@@ -125,7 +127,7 @@ export const OpenOrders = () => {
       openId: id,
       title: strings.signTransaction,
       content: wallet.isHW ? null : <PasswordModal onConfirm={handlePasswordConfirm} />,
-      top: '50%',
+      height: 350,
     })
   }
 
@@ -178,7 +180,7 @@ export const OpenOrders = () => {
     const addressBech32 = order.owner
 
     setBottomSheetState({
-      top: '51%',
+      height: 400,
       openId: order.id,
       title: strings.listOrdersSheetTitle,
       content: (
@@ -198,8 +200,12 @@ export const OpenOrders = () => {
         />
       ),
     })
+    bottomSheetRef.current?.openBottomSheet()
   }
-  const closeBottomSheet = () => setBottomSheetState({openId: null, title: '', content: '', top: ''})
+  const closeBottomSheet = () => {
+    setBottomSheetState({openId: null, title: '', content: '', height: 0})
+    bottomSheetRef.current?.closeBottomSheet()
+  }
 
   return (
     <>
@@ -252,14 +258,14 @@ export const OpenOrders = () => {
           })}
         </ScrollView>
 
-        <BottomSheetModal
-          isOpen={bottomSheetState.openId !== null}
+        <BottomSheet
           title={bottomSheetState.title}
-          onClose={closeBottomSheet}
-          snapPoints={['1%', bottomSheetState.top === '' ? '50%' : bottomSheetState.top]}
+          height={bottomSheetState.height}
+          ref={bottomSheetRef}
+          isExtendable={false}
         >
-          <View style={{flex: 1}}>{bottomSheetState.content}</View>
-        </BottomSheetModal>
+          <View style={styles.modalContent}>{bottomSheetState.content}</View>
+        </BottomSheet>
       </View>
 
       <Counter style={styles.counter} counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
@@ -377,7 +383,7 @@ const PasswordModal = ({onConfirm}: {onConfirm: (password: string) => Promise<vo
   }
 
   return (
-    <View style={{flex: 1}}>
+    <>
       <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
 
       <TextInput
@@ -401,7 +407,9 @@ const PasswordModal = ({onConfirm}: {onConfirm: (password: string) => Promise<vo
       <Spacer fill />
 
       <Button testID="swapButton" disabled={loading} onPress={onConfirmPress} shelleyTheme title={strings.sign} />
-    </View>
+
+      <Spacer height={10} />
+    </>
   )
 }
 
@@ -569,6 +577,8 @@ const ModalContent = ({
 
       <ModalContentRow label={strings.listOrdersSheetCancellationFee} value={fee} />
 
+      <Spacer height={10} />
+
       <ModalContentLink />
 
       <Spacer height={10} />
@@ -696,6 +706,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 24,
+    textAlign: 'center',
   },
   errorMessage: {
     color: COLORS.ERROR_TEXT_COLOR,
@@ -766,5 +777,10 @@ const styles = StyleSheet.create({
   },
   counter: {
     paddingVertical: 16,
+  },
+  modalContent: {
+    flex: 1,
+    alignSelf: 'stretch',
+    paddingHorizontal: 16,
   },
 })
