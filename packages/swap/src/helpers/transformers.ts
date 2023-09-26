@@ -3,6 +3,7 @@ import {Swap, Balance} from '@yoroi/types'
 import {OpenSwap} from '@yoroi/openswap'
 
 import {Quantities} from '../utils/quantities'
+import {supported_protocols} from '../translators/constants'
 
 export const transformersMaker = (
   primaryTokenId: Balance.Token['info']['id'],
@@ -152,19 +153,10 @@ export const transformersMaker = (
   }
 
   const asYoroiPools = (openswapPools: OpenSwap.Pool[]): Swap.Pool[] => {
-    const supportedProviders: Swap.SupportedProtocol[] = [
-      'minswap',
-      'wingriders',
-      'sundaeswap',
-      'muesliswap',
-      'muesliswap_v2',
-      'vyfi',
-    ]
-
     return openswapPools?.length > 0
       ? openswapPools
           .filter((pool) =>
-            supportedProviders.includes(
+            supported_protocols.includes(
               pool.provider as Swap.SupportedProtocol,
             ),
           )
