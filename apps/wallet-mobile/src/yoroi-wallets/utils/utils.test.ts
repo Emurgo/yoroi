@@ -553,8 +553,8 @@ describe('splitStringInto64CharArray', () => {
   })
 
   it('should split a long string into multiple 64-character elements', () => {
-    const inputString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'
-    const expectedArray = ['ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456', '7890']
+    const inputString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789023123'
+    const expectedArray = ['ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789023', '123']
 
     const result = splitStringInto64CharArray(inputString)
 
