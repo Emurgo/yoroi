@@ -20,9 +20,24 @@ export const useNavigateTo = () => {
         index: 0,
         routes: [
           {
-            name: 'swap-start-swap',
+            name: 'app-root',
             state: {
-              routes: [{name: 'orders'}],
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'swap-start-swap',
+                        state: {
+                          routes: [{name: 'orders'}],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
             },
           },
         ],

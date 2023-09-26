@@ -209,6 +209,7 @@ export type SwapTokenRoutes = {
   'swap-select-pool': undefined
   'swap-submitted-tx': undefined
   'swap-failed-tx': undefined
+  'app-root': undefined
 }
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 
