@@ -50,7 +50,7 @@ export const OpenOrders = () => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
-  const {navigateToCollateralSettings} = useWalletNavigation()
+  const {navigateToCollateralSettings, resetToTxHistory} = useWalletNavigation()
 
   const [orderId, setOrderId] = useState<string | null>(null)
 
@@ -116,11 +116,11 @@ export const OpenOrders = () => {
     await wallet.submitTransaction(tx.txBase64)
     trackCancellationSubmitted(order)
     closeBottomSheet()
+    resetToTxHistory()
   }
 
   const onOrderCancelConfirm = (id: string) => {
     setOrderId(id)
-    // closeBottomSheet()
     setBottomSheetState({
       openId: id,
       title: strings.signTransaction,
