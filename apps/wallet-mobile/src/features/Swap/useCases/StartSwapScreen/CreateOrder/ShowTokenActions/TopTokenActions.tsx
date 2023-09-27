@@ -57,12 +57,7 @@ export const TopTokenActions = () => {
         selected={orderTypeIndex}
       />
 
-      <TouchableOpacity
-        onPress={() => {
-          refetch()
-        }}
-        disabled={isDisabled}
-      >
+      <TouchableOpacity onPress={() => refetch()} disabled={isDisabled}>
         <Icon.Refresh size={24} color={isDisabled ? COLORS.DISABLED : ''} />
       </TouchableOpacity>
 
