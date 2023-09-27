@@ -3,6 +3,7 @@ import {Swap, Balance} from '@yoroi/types'
 import {OpenSwap} from '@yoroi/openswap'
 
 import {Quantities} from '../utils/quantities'
+import {supportedProviders} from '../translators/constants'
 
 export const transformersMaker = (
   primaryTokenId: Balance.Token['info']['id'],
@@ -152,7 +153,9 @@ export const transformersMaker = (
   }
 
   const asYoroiPools = (openswapPools: OpenSwap.Pool[]): Swap.Pool[] => {
-    return openswapPools?.length > 0 ? openswapPools.map(asYoroiPool) : []
+    return openswapPools?.length > 0
+      ? filterBySupportedProviders(openswapPools).map(asYoroiPool)
+      : []
   }
 
   const asYoroiBalanceTokens = (
@@ -190,3 +193,11 @@ export const asTokenFingerprint = ({
 }
 
 export const asUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
+
+const filterBySupportedProviders = (
+  pools: OpenSwap.Pool[],
+): OpenSwap.Pool[] => {
+  return pools.filter((pool) =>
+    supportedProviders.includes(pool.provider as Swap.SupportedProvider),
+  )
+}

@@ -8,6 +8,7 @@ const poolUrls: Record<Swap.PoolProvider, string> = {
   minswap: 'https://minswap.org',
   sundaeswap: 'https://sundae.fi',
   wingriders: 'https://www.wingriders.com',
+  muesliswap: 'https://muesliswap.com',
   muesliswap_v1: 'https://muesliswap.com',
   muesliswap_v2: 'https://muesliswap.com',
   muesliswap_v3: 'https://muesliswap.com',

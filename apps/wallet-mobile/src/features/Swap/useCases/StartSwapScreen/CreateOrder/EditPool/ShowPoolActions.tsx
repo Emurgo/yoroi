@@ -45,7 +45,13 @@ export const ShowPoolActions = () => {
       header={
         <Header
           onPressArow={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
-          onPressLabel={navigateTo.selectPool}
+          onPressLabel={() => {
+            if (createOrder.type === 'limit') {
+              navigateTo.selectPool()
+            } else {
+              setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)
+            }
+          }}
           extended={extended}
         >
           <View style={styles.flex}>
