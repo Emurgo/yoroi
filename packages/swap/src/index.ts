@@ -20,6 +20,7 @@ export {makeLimitOrder} from './helpers/orders/makeLimitOrder'
 export {getPoolUrlByProvider} from './helpers/pools/getPoolUrlByProvider'
 
 export {SwapProvider} from './translators/reactjs/provider/SwapProvider'
+export {SwapState} from './translators/reactjs/state/state'
 export {useSwapCreateOrder} from './translators/reactjs/hooks/useSwapCreateOrder'
 export {useSwapOrdersByStatusCompleted} from './translators/reactjs/hooks/useSwapOrdersByStatusCompleted'
 export {useSwapOrdersByStatusOpen} from './translators/reactjs/hooks/useSwapOrdersByStatusOpen'
@@ -37,3 +38,5 @@ export {
   swapStorageMaker,
   swapStorageSlippageKey,
 } from './adapters/async-storage/storage'
+
+export {supportedProviders} from './translators/constants'
