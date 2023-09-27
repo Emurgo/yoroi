@@ -8,7 +8,7 @@ import {useLanguage} from '../../../../../i18n'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
+import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from '../../../common/SwapFormProvider'
 
@@ -18,6 +18,7 @@ const PRECISION = 10
 export const EditLimitPrice = () => {
   const strings = useStrings()
   const {numberLocale} = useLanguage()
+  const [text, setText] = React.useState('')
   const wallet = useSelectedWallet()
 
   const {createOrder, limitPriceChanged} = useSwap()
@@ -34,7 +35,7 @@ export const EditLimitPrice = () => {
     const defaultPrice = createOrder.marketPrice
 
     const formattedValue = BigNumber(defaultPrice).decimalPlaces(PRECISION).toFormat(numberLocale)
-    limitPriceChanged(asQuantity(formattedValue))
+    setText(formattedValue)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createOrder.marketPrice])
 
@@ -44,14 +45,16 @@ export const EditLimitPrice = () => {
     const defaultPrice = createOrder.marketPrice
 
     const formattedValue = BigNumber(defaultPrice).decimalPlaces(PRECISION).toFormat(numberLocale)
-    limitPriceChanged(asQuantity(formattedValue))
+    setText(formattedValue)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createOrder.type])
 
   const onChange = (text: string) => {
-    const [formattedPrice] = Quantities.parseFromText(text, PRECISION, numberLocale)
+    const [formattedPrice, price] = Quantities.parseFromText(text, PRECISION, numberLocale)
+    const value = Quantities.denominated(price, PRECISION)
 
-    limitPriceChanged(asQuantity(formattedPrice))
+    setText(formattedPrice)
+    limitPriceChanged(value)
   }
 
   return (
@@ -59,7 +62,7 @@ export const EditLimitPrice = () => {
       <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
 
       <View style={styles.content}>
-        <AmountInput onChange={onChange} value={createOrder.limitPrice} editable={!disabled} />
+        <AmountInput onChange={onChange} value={text} editable={!disabled} />
 
         <View style={[styles.textWrapper, disabled && styles.disabled]}>
           <Text style={styles.text}>
