@@ -18,17 +18,17 @@ storiesOf('Expandable Info Card', module)
   .add('with Box Shadow', () => {
     const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
-    const extended = hiddenInfoOpenId === '1234'
+    const expanded = hiddenInfoOpenId === '1234'
 
     return (
       <ExpandableInfoCard
-        adornment={<HiddenInfo id="1234" setBottomSheetState={() => null} />}
-        extended={extended}
+        info={<HiddenInfo id="1234" setBottomSheetState={() => null} />}
+        expanded={expanded}
         header={
           <Header
             assetFromLabel="ADA"
             assetToLabel="DOGE"
-            extended={extended}
+            expanded={expanded}
             onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== '1234' ? '1234' : null)}
           />
         }
@@ -46,17 +46,17 @@ storiesOf('Expandable Info Card', module)
   .add('without Box Shadow', () => {
     const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
-    const extended = hiddenInfoOpenId === '1234'
+    const expanded = hiddenInfoOpenId === '1234'
 
     return (
       <ExpandableInfoCard
-        adornment={<HiddenInfo id="1234" setBottomSheetState={() => null} />}
-        extended={extended}
+        info={<HiddenInfo id="1234" setBottomSheetState={() => null} />}
+        expanded={expanded}
         header={
           <Header
             assetFromLabel="ADA"
             assetToLabel="DOGE"
-            extended={extended}
+            expanded={expanded}
             onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== '1234' ? '1234' : null)}
           />
         }
@@ -74,16 +74,16 @@ storiesOf('Expandable Info Card', module)
 const Header = ({
   assetFromLabel,
   assetToLabel,
-  extended,
+  expanded,
   onPress,
 }: {
   assetFromLabel: string
   assetToLabel: string
-  extended: boolean
+  expanded: boolean
   onPress: () => void
 }) => {
   return (
-    <HeaderWrapper extended={extended} onPress={onPress}>
+    <HeaderWrapper expanded={expanded} onPress={onPress}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Icon.YoroiNightly size={24} />
 

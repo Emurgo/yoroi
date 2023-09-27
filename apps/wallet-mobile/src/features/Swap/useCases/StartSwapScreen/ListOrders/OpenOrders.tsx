@@ -96,11 +96,11 @@ export const OpenOrders = () => {
             const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
             const liquidityPoolIcon =
               order.provider !== undefined ? <PoolIcon size={32} providerId={order.provider} /> : null
-            const extended = order.id === hiddenInfoOpenId
+            const expanded = order.id === hiddenInfoOpenId
             return (
               <ExpandableInfoCard
                 key={order.id}
-                adornment={
+                info={
                   <HiddenInfo
                     txId={order.txId}
                     total={`${order.total} ${order.assetFromLabel}`}
@@ -111,7 +111,7 @@ export const OpenOrders = () => {
                     poolUrl={order.poolUrl ?? ''}
                   />
                 }
-                extended={extended}
+                expanded={expanded}
                 header={
                   <Header
                     onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== order.id ? order.id : null)}
@@ -119,7 +119,7 @@ export const OpenOrders = () => {
                     assetToLabel={order.assetToLabel}
                     assetFromIcon={fromIcon}
                     assetToIcon={toIcon}
-                    extended={extended}
+                    expanded={expanded}
                   />
                 }
                 footer={
@@ -200,18 +200,18 @@ const Header = ({
   assetToLabel,
   assetFromIcon,
   assetToIcon,
-  extended,
+  expanded,
   onPress,
 }: {
   assetFromLabel: string
   assetToLabel: string
   assetFromIcon: React.ReactNode
   assetToIcon: React.ReactNode
-  extended: boolean
+  expanded?: boolean
   onPress: () => void
 }) => {
   return (
-    <HeaderWrapper extended={extended} onPress={onPress}>
+    <HeaderWrapper expanded={expanded} onPress={onPress}>
       <View style={styles.label}>
         {assetFromIcon}
 
