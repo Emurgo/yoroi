@@ -13,7 +13,7 @@ import {useSwapTouched} from '../../../../common/SwapFormProvider'
 export const TopTokenActions = () => {
   const strings = useStrings()
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
-  const {createOrder, orderTypeChanged} = useSwap()
+  const {createOrder, limitPriceChanged, orderTypeChanged} = useSwap()
   const {isBuyTouched, isSellTouched} = useSwapTouched()
   const isDisabled = !isBuyTouched || !isSellTouched || createOrder.selectedPool === undefined
   const orderTypeIndex = createOrder.type === 'market' ? 0 : 1
@@ -32,6 +32,11 @@ export const TopTokenActions = () => {
     }
   }
 
+  const refresh = () => {
+    refetch()
+    limitPriceChanged(createOrder.marketPrice)
+  }
+
   return (
     <View style={styles.buttonsGroup}>
       <ButtonGroup
@@ -40,7 +45,7 @@ export const TopTokenActions = () => {
         selected={orderTypeIndex}
       />
 
-      <TouchableOpacity onPress={() => refetch()} disabled={isDisabled}>
+      <TouchableOpacity onPress={refresh} disabled={isDisabled}>
         <Icon.Refresh size={24} color={isDisabled ? COLORS.DISABLED : ''} />
       </TouchableOpacity>
 
