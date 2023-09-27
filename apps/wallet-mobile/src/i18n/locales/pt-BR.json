@@ -619,6 +619,7 @@
   "global.assets": "{qty, plural, one {token} other {tokens}}",
   "global.pools": "{qty, plural, one {pool} other {pools}}",
   "global.price": "Preço",
+  "global.available": "available",
   "global.availableFunds": "Fundos disponíveis",
   "global.buy": "Comprar",
   "global.cancel": "Cancelar",
