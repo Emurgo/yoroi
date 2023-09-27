@@ -28,7 +28,7 @@ const ComponentDefault = () => {
 
       <BottomSheet title="Fake Title" ref={bottomSheetRef}>
         <View style={{flex: 1, alignSelf: 'stretch', paddingHorizontal: 16}}>
-          <Text style={{flex: 1}}>FAke content</Text>
+          <Text style={{flex: 1}}>Content</Text>
         </View>
       </BottomSheet>
     </View>
