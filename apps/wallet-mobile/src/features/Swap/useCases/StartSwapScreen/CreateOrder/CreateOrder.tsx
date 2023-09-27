@@ -132,7 +132,7 @@ export const CreateOrder = () => {
       const orderResult: Swap.CreateOrderData | undefined = makePossibleMarketOrder(
         orderDetails.sell,
         orderDetails.buy,
-        [orderDetails.selectedPool],
+        orderDetails.pools,
         orderDetails.slippage,
         orderDetails.address,
       )
