@@ -1,19 +1,3 @@
-import {
-  Address,
-  BigNum,
-  Costmdls,
-  CostModel,
-  ExUnitPrices,
-  Int,
-  Language,
-  LinearFee,
-  PlutusWitness,
-  Transaction,
-  TransactionBuilder,
-  TransactionBuilderConfigBuilder,
-  UnitInterval,
-  Value,
-} from '@emurgo/csl-mobile-bridge'
 import {useSwap} from '@yoroi/swap'
 import {BalanceQuantity} from '@yoroi/types/src/balance/token'
 import {Buffer} from 'buffer'
@@ -29,6 +13,7 @@ import {isHaskellShelley} from '../../../../../yoroi-wallets/cardano/utils'
 import {RawUtxo} from '../../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
+import * as CSL_TYPES from '@emurgo/cross-csl-core'
 
 type Options = {
   bech32Address: string
@@ -78,43 +63,49 @@ export const convertBech32ToHex = async (bech32Address: string) => {
 export const harden = (num: number) => HARD_DERIVATION_START + num
 
 export const getCostModel = async () => {
-  const babbageCostModels = await Costmdls.new()
-  const v1CostModel = await CostModel.new()
-  await Promise.all(operations1.map(async (cost, operation) => v1CostModel.set(operation, await Int.new_i32(cost))))
+  const babbageCostModels = await CardanoMobile.Costmdls.new()
+  const v1CostModel = await CardanoMobile.CostModel.new()
+  await Promise.all(
+    operations1.map(async (cost, operation) => v1CostModel.set(operation, await CardanoMobile.Int.newI32(cost))),
+  )
 
-  const v2CostModel = await CostModel.new()
-  await Promise.all(operations2.map(async (cost, operation) => v2CostModel.set(operation, await Int.new_i32(cost))))
+  const v2CostModel = await CardanoMobile.CostModel.new()
+  await Promise.all(
+    operations2.map(async (cost, operation) => v2CostModel.set(operation, await CardanoMobile.Int.newI32(cost))),
+  )
 
-  await babbageCostModels.insert(await Language.new_plutus_v1(), v1CostModel)
-  await babbageCostModels.insert(await Language.new_plutus_v2(), v2CostModel)
+  await babbageCostModels.insert(await CardanoMobile.Language.newPlutusV1(), v1CostModel)
+  await babbageCostModels.insert(await CardanoMobile.Language.newPlutusV2(), v2CostModel)
 
   return babbageCostModels
 }
 
 const bigNumFromStr = async (str: string) => {
-  const bigNum = await BigNum.from_str(str)
+  const bigNum = await CardanoMobile.BigNum.fromStr(str)
   if (!bigNum) throw new Error('Could not parse big number from string ' + str)
   return bigNum
 }
 
 export const getTransactionBuilder = async () => {
-  const linearFee = await LinearFee.new(await bigNumFromStr('44'), await bigNumFromStr('155381'))
+  const linearFee = await CardanoMobile.LinearFee.new(await bigNumFromStr('44'), await bigNumFromStr('155381'))
 
-  const exUnitPrices = await ExUnitPrices.new(
-    await UnitInterval.new(await bigNumFromStr('577'), await bigNumFromStr('10000')),
-    await UnitInterval.new(await bigNumFromStr('721'), await bigNumFromStr('10000000')),
+  const exUnitPrices = await CardanoMobile.ExUnitPrices.new(
+    await CardanoMobile.UnitInterval.new(await bigNumFromStr('577'), await bigNumFromStr('10000')),
+    await CardanoMobile.UnitInterval.new(await bigNumFromStr('721'), await bigNumFromStr('10000000')),
   )
 
-  const txBuilderCfg = await TransactionBuilderConfigBuilder.new()
-    .then((builder) => builder.fee_algo(linearFee))
-    .then(async (builder) => builder.pool_deposit(await bigNumFromStr('500000000')))
-    .then(async (builder) => builder.key_deposit(await bigNumFromStr('2000000')))
-    .then((builder) => builder.max_value_size(4000))
-    .then((builder) => builder.max_tx_size(8000))
-    .then(async (builder) => builder.coins_per_utxo_word(await bigNumFromStr('34482')))
-    .then(async (builder) => builder.ex_unit_prices(exUnitPrices).then((builder) => builder.build()))
+  const txBuilderCfg = await CardanoMobile.TransactionBuilderConfigBuilder.new()
+    .then((builder) => builder.feeAlgo(linearFee))
+    .then(async (builder) => builder.poolDeposit(await bigNumFromStr('500000000')))
+    .then(async (builder) => builder.keyDeposit(await bigNumFromStr('2000000')))
+    .then((builder) => builder.maxValueSize(4000))
+    .then((builder) => builder.maxTxSize(8000))
+    .then(async (builder) => builder.coinsPerUtxoWord(await bigNumFromStr('34482')))
+    .then(async (builder) => builder.exUnitPrices(exUnitPrices).then((builder) => builder.build()))
 
-  return TransactionBuilder.new(assertRequired(txBuilderCfg, 'Could not build transaction builder'))
+  return CardanoMobile.TransactionBuilder.fromConfig(
+    assertRequired(txBuilderCfg, 'Could not build transaction builder'),
+  )
 }
 
 const operations1 = Object.values({
@@ -469,47 +460,49 @@ export const assertRequired = <T>(value: T | undefined, message: string): T => {
   return value
 }
 
-export const fixScriptHash = async (tx: Transaction) => {
+export const fixScriptHash = async (tx: CSL_TYPES.Transaction) => {
   const builder = await getTransactionBuilder()
 
-  const witnessSet = await tx.witness_set()
+  const witnessSet = await tx.witnessSet()
 
-  const plutusScripts = assertRequired(await witnessSet.plutus_scripts(), 'Transaction does not contain plutus scripts')
-  const plutusData = assertRequired(await witnessSet.plutus_data(), 'Transaction does not contain plutus data')
+  const plutusScripts = assertRequired(await witnessSet.plutusScripts(), 'Transaction does not contain plutus scripts')
+  const plutusData = assertRequired(await witnessSet.plutusData(), 'Transaction does not contain plutus data')
   const redeemers = assertRequired(await witnessSet.redeemers(), 'Transaction does not contain redeemers')
   const placeholderAddress = assertRequired(
-    await Address.from_bech32(DUMMY_ADDRESS),
+    await CardanoMobile.Address.fromBech32(DUMMY_ADDRESS),
     'Could not parse placeholder address',
   )
 
-  await builder.add_plutus_script_input(
-    await PlutusWitness.new(await plutusScripts.get(0), await plutusData.get(0), await redeemers.get(0)),
-    await (await (await tx.body()).inputs()).get(0),
-    await Value.new(await bigNumFromStr('5000000')),
-  )
+  const input = await (await (await tx.body()).inputs()).get(0)
+  const amount = await CardanoMobile.Value.new(await bigNumFromStr('5000000'))
+  const script = await plutusScripts.get(0)
+  const dataHex = await plutusData.get(0).then((d) => d.toHex())
+  const redeemerHex = await redeemers.get(0).then((r) => r.toHex())
 
-  await builder.calc_script_data_hash(await getCostModel())
+  await builder.addPlutusScriptInput(script, dataHex, redeemerHex, input, amount)
 
-  await builder.add_change_if_needed(placeholderAddress)
+  await builder.calcScriptDataHash(await getCostModel())
+
+  await builder.addChangeIfNeeded(placeholderAddress)
 
   const dummyTxForCalculatingScriptHash = assertRequired(
     await builder.build(),
     'Could not build placeholder transaction',
   )
   const correctScriptHash = assertRequired(
-    await dummyTxForCalculatingScriptHash.script_data_hash(),
+    await dummyTxForCalculatingScriptHash.scriptDataHash(),
     'Script hash is empty',
   )
 
   const body = await tx.body()
-  await body.set_script_data_hash(correctScriptHash)
+  await body.setScriptDataHash(correctScriptHash)
   return body
 }
 
 const DUMMY_ADDRESS =
   'addr1q9l0qrhrvu3nq92ns23g2atns690ge4c325vgzqlg4vru9uym9vrnx7vuq6q9lv984p6feekdusp3yewttl5a65sg6fs9r9gw5'
 
-export const getRequiredSigners = async (tx: Transaction, wallet: YoroiWallet) => {
+export const getRequiredSigners = async (tx: CSL_TYPES.Transaction, wallet: YoroiWallet) => {
   const utxos = wallet.allUtxos
   const body = await tx.body()
   const inputs = await body.inputs()
@@ -522,7 +515,7 @@ export const getRequiredSigners = async (tx: Transaction, wallet: YoroiWallet) =
 
   for (let i = 0; i < (await inputs.len()); i++) {
     const input = await inputs.get(i)
-    const txId = await input.transaction_id().then((t) => t.to_hex())
+    const txId = await input.transactionId().then((t) => t.toHex())
     const txIndex = await input.index()
     const matchingUtxo = utxos.find((utxo) => utxo.tx_hash === txId && utxo.tx_index === txIndex)
     if (!matchingUtxo) continue
@@ -533,12 +526,12 @@ export const getRequiredSigners = async (tx: Transaction, wallet: YoroiWallet) =
     signers.push(getDerivationPathForAddress(utxo.receiver, wallet, purpose))
   })
 
-  const requiredSigners = assertRequired(await body.required_signers(), 'Transaction does not contain required signers')
+  const requiredSigners = assertRequired(await body.requiredSigners(), 'Transaction does not contain required signers')
 
   const txRequiredAddresses: string[] = []
   for (let i = 0; i < (await requiredSigners.len()); i++) {
     const signer = await requiredSigners.get(i)
-    const hex = await signer.to_hex()
+    const hex = await signer.toHex()
 
     const allAddresses = [...wallet.externalAddresses, ...wallet.internalAddresses]
     await Promise.all(
@@ -562,7 +555,7 @@ export const getRequiredSigners = async (tx: Transaction, wallet: YoroiWallet) =
   const collateralInputs = assertRequired(await body.collateral(), 'Transaction does not contain collateral inputs')
 
   const firstCollateral = await collateralInputs.get(0)
-  const txId = await firstCollateral.transaction_id().then((t) => t.to_hex())
+  const txId = await firstCollateral.transactionId().then((t) => t.toHex())
   const txIndex = await firstCollateral.index()
 
   const matchingUtxo = utxos.find((utxo) => utxo.tx_hash === txId && utxo.tx_index === txIndex)
@@ -594,11 +587,14 @@ const getDerivationPathForAddress = (address: string, wallet: YoroiWallet, purpo
 }
 
 export const getMuesliSwapTransactionAndSigners = async (cbor: string, wallet: YoroiWallet) => {
-  const originalTx = assertRequired(await Transaction.from_hex(cbor), 'Could not parse transaction from cbor')
+  const originalTx = assertRequired(
+    await CardanoMobile.Transaction.fromHex(cbor),
+    'Could not parse transaction from cbor',
+  )
   const fixedTxBody = await fixScriptHash(originalTx)
 
-  const txWithFixedBody = await Transaction.new(fixedTxBody, await originalTx.witness_set(), undefined)
-  const newCbor = Buffer.from(await txWithFixedBody.to_bytes()).toString('hex')
+  const txWithFixedBody = await CardanoMobile.Transaction.new(fixedTxBody, await originalTx.witnessSet(), undefined)
+  const newCbor = Buffer.from(await txWithFixedBody.toBytes()).toString('hex')
 
   const signers = await getRequiredSigners(txWithFixedBody, wallet)
   return {cbor: newCbor, signers}

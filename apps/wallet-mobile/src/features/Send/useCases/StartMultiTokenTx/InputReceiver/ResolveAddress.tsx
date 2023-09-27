@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Resolution} from '@unstoppabledomains/resolution'
-import _ from 'lodash'
 import React from 'react'
 import {Text, View, ViewProps} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'

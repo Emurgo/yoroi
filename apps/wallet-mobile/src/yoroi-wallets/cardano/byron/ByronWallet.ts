@@ -1,11 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  FixedTransaction,
-  make_vkey_witness,
-  PrivateKey,
-  TransactionHash,
-  Vkeywitnesses,
-} from '@emurgo/csl-mobile-bridge'
+import {PrivateKey} from '@emurgo/cross-csl-core'
 import * as yoroiLib from '@emurgo/yoroi-lib'
 import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
@@ -1086,29 +1080,29 @@ export class ByronWallet implements YoroiWallet {
   }
 
   public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
-    const fixedTx = await FixedTransaction.from_hex(txHex)
+    const fixedTx = await CardanoMobile.FixedTransaction.fromHex(txHex)
     if (!fixedTx) throw new Error('invalid tx hex')
-    const rawBody = await fixedTx.raw_body()
-    const txHash = await TransactionHash.from_bytes(blake2b(32).update(rawBody).digest('binary'))
+    const rawBody = await fixedTx.rawBody()
+    const txHash = await CardanoMobile.TransactionHash.fromBytes(blake2b(32).update(rawBody).digest('binary'))
     if (!txHash) throw new Error('invalid tx hex, could not generate tx hash')
 
-    const witSet = await fixedTx.witness_set()
+    const witSet = await fixedTx.witnessSet()
     let vkeys = await witSet.vkeys()
 
     if (vkeys === undefined) {
-      vkeys = await Vkeywitnesses.new()
+      vkeys = await CardanoMobile.Vkeywitnesses.new()
     }
 
     for (let i = 0; i < pKeys.length; i++) {
-      const vkeyWit = await make_vkey_witness(txHash, pKeys[i])
+      const vkeyWit = await CardanoMobile.makeVkeyWitness(txHash, pKeys[i])
       if (!vkeyWit) throw new Error('invalid tx hex, could not generate vkey witness')
       await vkeys.add(vkeyWit)
     }
 
-    await witSet.set_vkeys(vkeys)
-    await fixedTx.set_witness_set(await witSet.to_bytes())
+    await witSet.setVkeys(vkeys)
+    await fixedTx.setWitnessSet(await witSet.toBytes())
 
-    return fixedTx.to_bytes()
+    return fixedTx.toBytes()
   }
 
   async fetchTokenInfo(tokenId: string) {

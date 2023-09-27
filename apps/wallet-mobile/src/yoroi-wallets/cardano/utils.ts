@@ -1,14 +1,4 @@
 /* eslint-disable no-empty */
-import {
-  Address,
-  BigNum,
-  PrivateKey,
-  TransactionHash,
-  TransactionInput,
-  TransactionOutput,
-  TransactionUnspentOutput,
-  Value,
-} from '@emurgo/csl-mobile-bridge'
 import {SendToken} from '@emurgo/yoroi-lib'
 import {Balance} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
@@ -318,22 +308,22 @@ export const selectFtOrThrow = (token: Balance.TokenInfo): Balance.TokenInfo => 
 }
 
 export const generateCIP30UtxoCbor = async (utxo: RawUtxo) => {
-  const txHash = await TransactionHash.from_bytes(Buffer.from(utxo.tx_hash, 'hex'))
+  const txHash = await CardanoMobile.TransactionHash.fromBytes(Buffer.from(utxo.tx_hash, 'hex'))
   if (!txHash) throw new Error('Invalid tx hash')
 
-  const index = BigNumber(utxo.utxo_id.split(':')[1]).toNumber()
-  const input = await TransactionInput.new(txHash, index)
-  const address = await Address.from_bech32(utxo.receiver)
+  const index = parseInt(utxo.utxo_id.split(':')[1] || '0', 10)
+  const input = await CardanoMobile.TransactionInput.new(txHash, index)
+  const address = await CardanoMobile.Address.fromBech32(utxo.receiver)
   if (!address) throw new Error('Invalid address')
 
-  const amount = await BigNum.from_str(utxo.amount)
+  const amount = await CardanoMobile.BigNum.fromStr(utxo.amount)
   if (!amount) throw new Error('Invalid amount')
 
-  const collateral = await Value.new(amount)
-  const output = await TransactionOutput.new(address, collateral)
-  const transactionUnspentOutput = await TransactionUnspentOutput.new(input, output)
+  const collateral = await CardanoMobile.Value.new(amount)
+  const output = await CardanoMobile.TransactionOutput.new(address, collateral)
+  const transactionUnspentOutput = await CardanoMobile.TransactionUnspentOutput.new(input, output)
 
-  return transactionUnspentOutput.to_hex()
+  return transactionUnspentOutput.toHex()
 }
 
 export const generateMuesliSwapSigningKey = async (rootKey: string, derivationPath: number[]) => {
@@ -349,7 +339,7 @@ export const generateMuesliSwapSigningKey = async (rootKey: string, derivationPa
   const rawKey = await accountPrivateKey.toRawKey()
   const bech32 = await rawKey.toBech32()
 
-  const pkey = await PrivateKey.from_bech32(bech32)
+  const pkey = await CardanoMobile.PrivateKey.fromBech32(bech32) // TODO: Check this
   if (!pkey) throw new Error('Invalid private key')
   return pkey
 }

@@ -1976,10 +1976,8 @@
     hash-wasm "^4.9.0"
     mocha "^10.0.0"
 
-"@emurgo/cross-csl-core@^2.9.0":
+"@emurgo/cross-csl-core@^2.9.0", "@emurgo/cross-csl-core@file:../cross-csl/packages/cross-csl-core":
   version "2.9.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-2.9.0.tgz#326635c0aea17557db478682ea03cee96db5b723"
-  integrity sha512-/8KgmGye1gJST/IXrngUqW1PVGUqCNAZlEOC73qzROzwwR55xewTxqqFysIEaNZHsR1hw8m0yPPlLydeaex9qA==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
     "@types/mocha" "^9.1.1"
@@ -1990,10 +1988,8 @@
     hash-wasm "^4.9.0"
     mocha "^10.0.0"
 
-"@emurgo/cross-csl-mobile@^2.9.0":
+"@emurgo/cross-csl-mobile@file:../cross-csl/packages/cross-csl-mobile":
   version "2.9.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-2.9.0.tgz#c0a7d90d866d2c349f7d578fba9d7991442b30b2"
-  integrity sha512-VpRWjD5vrDJEBU8PptzAeCqLksaxHbqWTbkumpdwK7rE1NTivc6EenjHeLaz7n9SVQMcRU21CJQfQov8cWDz8A==
   dependencies:
     "@emurgo/cross-csl-core" "^2.9.0"
     "@emurgo/csl-mobile-bridge" "^5.1.2"

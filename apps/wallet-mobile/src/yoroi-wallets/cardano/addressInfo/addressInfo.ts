@@ -79,7 +79,7 @@ export async function getSpendingKey(address: string) {
  * @example toWasmAddress("addr1q9ndnrwz52yeex4j04kggp0ul5632qmxqx22ugtukkytjysw86pdygc6zarl2kks6fvg8um447uvv679sfdtzkwf2kuq673wke")
  * @example toWasmAddress("stake1u948jr02falxxqphnv3g3rkd3mdzqmtqq3x0tjl39m7dqngqg0fxp")
  */
-export async function toWasmAddress(address: string): Promise<CardanoTypes.Address | null> {
+export function toWasmAddress(address: string): Promise<CardanoTypes.Address | null> {
   return CardanoMobile.Address.fromBech32(address)
     .then((wasmAddress) => wasmAddress)
     .catch(() => null)
