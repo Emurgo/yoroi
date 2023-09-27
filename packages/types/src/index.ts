@@ -47,7 +47,7 @@ export namespace Swap {
   export type Pool = SwapPool
   export type PoolResponse = SwapPool[]
   export type PoolProvider = SwapPoolProvider
-  export type SupportedProtocol = SwapSupportedProvider
+  export type SupportedProvider = SwapSupportedProvider
 
   export type Storage = SwapStorage
 }

@@ -157,7 +157,7 @@ export const transformersMaker = (
       ? openswapPools
           .filter((pool) =>
             supported_protocols.includes(
-              pool.provider as Swap.SupportedProtocol,
+              pool.provider as Swap.SupportedProvider,
             ),
           )
           .map(asYoroiPool)
