@@ -177,10 +177,13 @@ describe('asYoroiPools', () => {
     expect(result).toEqual<Array<Swap.Pool>>([])
   })
 
-  it('success', () => {
+  it('success (filter out unsupported pools)', () => {
     const result = transformers.asYoroiPools(openswapMocks.getPools)
 
     expect(result).toEqual<Array<Swap.Pool>>(apiMocks.getPools)
+
+    // should filter out unsupported pools
+    expect(result.length).toBe(openswapMocks.getPools.length - 1)
   })
 })
 
