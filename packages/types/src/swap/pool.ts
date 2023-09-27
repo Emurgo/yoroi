@@ -23,7 +23,7 @@ export type SwapSupportedProvider = Extract<
 >
 
 export type SwapPool = {
-  provider: SwapPoolProvider
+  provider: SwapSupportedProvider
   fee: string // % pool liquidity provider fee, usually 0.3.
   tokenA: BalanceAmount
   tokenB: BalanceAmount

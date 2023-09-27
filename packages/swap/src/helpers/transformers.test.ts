@@ -188,10 +188,16 @@ describe('asYoroiPools', () => {
 })
 
 describe('asYoroiPool', () => {
-  it('success', () => {
+  it('success (supported pool)', () => {
     const result = transformers.asYoroiPool(openswapMocks.getPools[0]!)
 
     expect(result).toEqual<Swap.Pool>(apiMocks.getPools[0]!)
+  })
+
+  it('success (unsupported pool)', () => {
+    const result = transformers.asYoroiPool(openswapMocks.getPools[3]!)
+
+    expect(result).toBeNull()
   })
 })
 

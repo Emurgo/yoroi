@@ -107,7 +107,7 @@ export const transformersMaker = (
     return balanceToken
   }
 
-  const asYoroiPool = (openswapPool: OpenSwap.Pool): Swap.Pool => {
+  const asYoroiPool = (openswapPool: OpenSwap.Pool): Swap.Pool | null => {
     const {
       batcherFee,
       fee,
@@ -120,6 +120,9 @@ export const transformersMaker = (
       price,
       poolId,
     } = openswapPool
+
+    if (provider && !isSupportedProvider(provider)) return null
+
     const pool: Swap.Pool = {
       tokenA: asYoroiAmount(tokenA),
       tokenB: asYoroiAmount(tokenB),
@@ -160,7 +163,9 @@ export const transformersMaker = (
    */
   const asYoroiPools = (openswapPools: OpenSwap.Pool[]): Swap.Pool[] => {
     if (openswapPools?.length > 0)
-      return openswapPools.filter(filterBySupportedProviders).map(asYoroiPool)
+      return openswapPools
+        .map(asYoroiPool)
+        .filter((pool): pool is Swap.Pool => pool !== null)
 
     return []
   }
@@ -201,6 +206,8 @@ export const asTokenFingerprint = ({
 
 export const asUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
 
-function filterBySupportedProviders(pool: OpenSwap.Pool) {
-  return supportedProviders.includes(pool.provider as Swap.SupportedProvider)
+function isSupportedProvider(
+  provider: string,
+): provider is Swap.SupportedProvider {
+  return supportedProviders.includes(provider as Swap.SupportedProvider)
 }
