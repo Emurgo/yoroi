@@ -5,8 +5,8 @@ import {useIntl} from 'react-intl'
 import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {
-  BottomSheetModal,
-  BottomSheetState,
+  BottomSheet,
+  BottomSheetRef,
   Button,
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
@@ -30,13 +30,15 @@ import {useStrings} from '../../../common/strings'
 import {mapOrders} from './mapOrders'
 
 export const OpenOrders = () => {
-  const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
-    openId: null,
+  const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
+  const [bottomSheetState, setBottomSheetState] = React.useState<{title: string; content: React.ReactNode}>({
     title: '',
     content: '',
   })
+
+  const confirmationModalRef = React.useRef<null | BottomSheetRef>(null)
+
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
-  const [confirmationModal, setConfirmationModal] = React.useState(false)
   const strings = useStrings()
   const [spendingPassword, setSpendingPassword] = React.useState('')
   const intl = useIntl()
@@ -65,27 +67,29 @@ export const OpenOrders = () => {
     [normalizedOrders, search],
   )
 
-  const openBottomSheet = ({id, fromTokenInfoId, toTokenInfoId, assetFromLabel, assetToLabel}) => {
+  const openBottomSheet = ({fromTokenInfoId, toTokenInfoId, assetFromLabel, assetToLabel}) => {
     setBottomSheetState({
-      openId: id,
       title: strings.listOrdersSheetTitle,
       content: (
         <ModalContent
           assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfoId} variant="swap" />}
           assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfoId} variant="swap" />}
-          confirmationModal={confirmationModal}
           onConfirm={() => {
-            closeBottomSheet()
-            setConfirmationModal(true)
+            bottomSheetRef.current?.closeBottomSheet()
+            confirmationModalRef.current?.openBottomSheet()
           }}
-          onBack={closeBottomSheet}
+          onBack={() => {
+            bottomSheetRef.current?.closeBottomSheet()
+            onCloseBottomSheet()
+          }}
           assetFromLabel={assetFromLabel}
           assetToLabel={assetToLabel}
         />
       ),
     })
+    bottomSheetRef.current?.openBottomSheet()
   }
-  const closeBottomSheet = () => setBottomSheetState({openId: null, title: '', content: ''})
+  const onCloseBottomSheet = () => setBottomSheetState({title: '', content: ''})
 
   return (
     <>
@@ -126,7 +130,6 @@ export const OpenOrders = () => {
                   <Footer
                     onPress={() => {
                       openBottomSheet({
-                        id: order.id,
                         fromTokenInfoId: order.fromTokenInfo?.id ?? '',
                         toTokenInfoId: order.toTokenInfo?.id ?? '',
                         assetFromLabel: order.assetFromLabel,
@@ -147,50 +150,32 @@ export const OpenOrders = () => {
             )
           })}
         </ScrollView>
-
-        <BottomSheetModal
-          isOpen={bottomSheetState.openId !== null}
-          title={bottomSheetState.title}
-          onClose={closeBottomSheet}
-        >
-          {bottomSheetState.content}
-        </BottomSheetModal>
-
-        <BottomSheetModal
-          isOpen={confirmationModal}
-          title={strings.signTransaction}
-          onClose={() => {
-            setConfirmationModal(false)
-          }}
-        >
-          <>
-            <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
-
-            <TextInput
-              secureTextEntry
-              enablesReturnKeyAutomatically
-              placeholder={strings.spendingPassword}
-              value={spendingPassword}
-              onChangeText={setSpendingPassword}
-              autoComplete="off"
-            />
-
-            <Spacer fill />
-
-            <Button testID="swapButton" shelleyTheme title={strings.sign} />
-          </>
-        </BottomSheetModal>
-
-        <BottomSheetModal
-          isOpen={bottomSheetState.openId !== null}
-          title={bottomSheetState.title}
-          onClose={closeBottomSheet}
-        >
-          <Text style={styles.text}>{bottomSheetState.content}</Text>
-        </BottomSheetModal>
       </View>
 
       <Counter style={styles.counter} counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
+
+      <BottomSheet ref={confirmationModalRef} title={strings.signTransaction}>
+        <View style={{flex: 1, justifyContent: 'space-between'}}>
+          <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
+
+          <TextInput
+            secureTextEntry
+            enablesReturnKeyAutomatically
+            placeholder={strings.spendingPassword}
+            value={spendingPassword}
+            onChangeText={setSpendingPassword}
+            autoComplete="off"
+          />
+
+          <Spacer fill />
+
+          <Button testID="swapButton" shelleyTheme title={strings.sign} />
+        </View>
+      </BottomSheet>
+
+      <BottomSheet ref={bottomSheetRef} title={bottomSheetState.title} onClose={onCloseBottomSheet}>
+        {bottomSheetState.content}
+      </BottomSheet>
     </>
   )
 }
@@ -352,7 +337,6 @@ const ModalContent = ({
 }: {
   onConfirm: () => void
   onBack: () => void
-  confirmationModal: boolean
   assetFromIcon: React.ReactNode
   assetFromLabel: string
   assetToLabel: string
@@ -567,13 +551,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 22,
-  },
-  text: {
-    textAlign: 'left',
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '400',
-    color: '#242838',
   },
   label: {
     flexDirection: 'row',

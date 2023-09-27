@@ -1,20 +1,15 @@
 import {storiesOf} from '@storybook/react-native'
 import {mockSwapManager, mockSwapStateDefault, SwapProvider} from '@yoroi/swap'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 
+import {BottomSheet, BottomSheetRef} from '../../../../components'
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
 import {mocks} from '../../common/mocks'
 import {SwapFormProvider} from '../../common/SwapFormProvider'
+import {BottomSheetState} from '../StartSwapScreen/CreateOrder/CreateOrder'
 import {TransactionSummary} from './TransactionSummary'
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-})
 
 storiesOf('TransactionSummary', module) //
   .add('default', () => {
@@ -26,22 +21,65 @@ storiesOf('TransactionSummary', module) //
   })
 
 const TxSummary = () => {
+  const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
+  const [bottomSheetState, setBottomSheetState] = React.useState<{
+    title: string
+    content: string
+  }>({
+    title: '',
+    content: '',
+  })
+
+  const openBottomSheet = ({title, content}: BottomSheetState) => {
+    setBottomSheetState({
+      title,
+      content,
+    })
+    bottomSheetRef.current?.openBottomSheet()
+  }
+
+  const onCloseBottomSheet = () => {
+    setBottomSheetState({title: '', content: ''})
+  }
+
   return (
-    <SelectedWalletProvider wallet={{...walletMocks.wallet}}>
-      <SwapProvider
-        initialState={{
-          ...mockSwapStateDefault,
-          unsignedTx: walletMocks.yoroiUnsignedTx,
-          createOrder: {...mocks.confirmTx.createOrder},
-        }}
-        swapManager={{
-          ...mockSwapManager,
-        }}
-      >
-        <SwapFormProvider>
-          <TransactionSummary />
-        </SwapFormProvider>
-      </SwapProvider>
-    </SelectedWalletProvider>
+    <>
+      <SelectedWalletProvider wallet={{...walletMocks.wallet}}>
+        <SwapProvider
+          initialState={{
+            ...mockSwapStateDefault,
+            unsignedTx: walletMocks.yoroiUnsignedTx,
+            createOrder: {...mocks.confirmTx.createOrder},
+          }}
+          swapManager={{
+            ...mockSwapManager,
+          }}
+        >
+          <SwapFormProvider>
+            <TransactionSummary openInfoBottomSheet={openBottomSheet} />
+          </SwapFormProvider>
+        </SwapProvider>
+      </SelectedWalletProvider>
+
+      <BottomSheet ref={bottomSheetRef} title={bottomSheetState.title} onClose={onCloseBottomSheet}>
+        <View style={{flex: 1, padding: 8}}>
+          <Text style={styles.text}>{bottomSheetState.content}</Text>
+        </View>
+      </BottomSheet>
+    </>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  text: {
+    textAlign: 'left',
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '400',
+    color: '#242838',
+  },
+})

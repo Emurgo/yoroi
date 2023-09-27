@@ -35,7 +35,10 @@ export const CompletedOrders = () => {
 
   const orders = useSwapOrdersByStatusCompleted()
 
-  const tokenIds = React.useMemo(() => _.uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId])), [orders])
+  const tokenIds: Array<string> = React.useMemo(
+    () => _.uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId])),
+    [orders],
+  )
   const tokenInfos = useTokenInfos({wallet, tokenIds})
   const normalizedOrders = React.useMemo(
     () => mapOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos)),

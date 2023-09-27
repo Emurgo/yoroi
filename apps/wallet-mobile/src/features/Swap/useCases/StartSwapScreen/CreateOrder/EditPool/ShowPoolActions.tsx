@@ -4,7 +4,6 @@ import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {
-  BottomSheetModal,
   ExpandableInfoCard,
   HeaderWrapper,
   HiddenInfoWrapper,
@@ -19,8 +18,9 @@ import {useNavigateTo} from '../../../../common/navigation'
 import {PoolIcon} from '../../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../../../../common/SwapFormProvider'
+import {BottomSheetState} from '../CreateOrder'
 
-export const ShowPoolActions = () => {
+export const ShowPoolActions = ({openBottomSheet}: {openBottomSheet: ({title, content}: BottomSheetState) => void}) => {
   const navigateTo = useNavigateTo()
   const {numberLocale} = useLanguage()
   const {createOrder} = useSwap()
@@ -68,6 +68,7 @@ export const ShowPoolActions = () => {
           )}
           minAda={Quantities.denominated(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))}
           buyTokenName={tokenName}
+          openBottomSheet={openBottomSheet}
         />
       }
       extended={extended}
@@ -100,17 +101,14 @@ const HiddenInfo = ({
   minAda,
   minReceived,
   buyTokenName,
+  openBottomSheet,
 }: {
   totalFees: string
   minAda: string
   minReceived: string
   buyTokenName: string
+  openBottomSheet: ({title, content}: BottomSheetState) => void
 }) => {
-  const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
-    isOpen: false,
-    title: '',
-    content: '',
-  })
   const strings = useStrings()
   const wallet = useSelectedWallet()
 
@@ -138,25 +136,9 @@ const HiddenInfo = ({
           value={item.value}
           label={item.label}
           info={item.info}
-          onPress={() => {
-            setBottomSheetSate({
-              isOpen: true,
-              title: item.label,
-              content: item.info,
-            })
-          }}
+          onPress={() => openBottomSheet({title: item.label, content: item.info})}
         />
       ))}
-
-      <BottomSheetModal
-        isOpen={bottomSheetState.isOpen}
-        title={bottomSheetState.title}
-        onClose={() => {
-          setBottomSheetSate({isOpen: false, title: '', content: ''})
-        }}
-      >
-        <Text style={styles.text}>{bottomSheetState.content}</Text>
-      </BottomSheetModal>
     </View>
   )
 }
@@ -174,12 +156,8 @@ const MainInfo = ({totalAmount, tokenName}: {totalAmount: string; tokenName: str
 }
 
 const styles = StyleSheet.create({
-  flex: {flexDirection: 'row', alignItems: 'center'},
-  text: {
-    textAlign: 'left',
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '400',
-    color: '#242838',
+  flex: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })

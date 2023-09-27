@@ -5,9 +5,8 @@ import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Boundary, Icon, Spacer, Text} from '../../../../../../../components'
+import {BottomSheet, BottomSheetRef, Boundary, Icon, Spacer, Text} from '../../../../../../../components'
 import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components/AmountItem/AmountItem'
-import {BottomSheetModal} from '../../../../../../../components/BottomSheetModal'
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'
@@ -31,6 +30,11 @@ type TokenForList = {
 
 export const SelectBuyTokenFromListScreen = () => {
   const strings = useStrings()
+  const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
+
+  const openBottomSheet = () => {
+    bottomSheetRef.current?.openBottomSheet()
+  }
 
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
@@ -56,51 +60,28 @@ export const SelectBuyTokenFromListScreen = () => {
   )
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Spacer height={12} />
+    <>
+      <SafeAreaView style={styles.container}>
+        <Spacer height={12} />
 
-      <VerifiedTokensInfo />
+        <VerifiedTokensInfo openBottomSheet={openBottomSheet} />
 
-      <Spacer height={15} />
+        <Spacer height={15} />
 
-      <View style={[styles.row, styles.ph]}>
-        <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
+        <View style={[styles.row, styles.ph]}>
+          <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
 
-        <Spacer width={8} />
+          <Spacer width={8} />
 
-        <Text style={styles.topText}>{strings.assetsIn}</Text>
-      </View>
+          <Text style={styles.topText}>{strings.assetsIn}</Text>
+        </View>
 
-      <Boundary loading={loading}>
-        <TokenList />
-      </Boundary>
-    </SafeAreaView>
-  )
-}
+        <Boundary loading={loading}>
+          <TokenList />
+        </Boundary>
+      </SafeAreaView>
 
-const VerifiedTokensInfo = () => {
-  const strings = useStrings()
-  const [showVerifiedTokenInfo, setShowVerifiedTokenInfo] = React.useState(false)
-
-  return (
-    <View style={(styles.flex, styles.ph)}>
-      <View style={styles.row}>
-        <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
-
-        <Text style={styles.topText}>{strings.verifiedBy('MuesliSwap')}</Text>
-
-        <Spacer width={8} />
-
-        <TouchableOpacity onPress={() => setShowVerifiedTokenInfo(true)}>
-          <Icon.Info size={28} />
-        </TouchableOpacity>
-      </View>
-
-      <BottomSheetModal
-        title={strings.poolVerification('MuesliSwap')}
-        isOpen={showVerifiedTokenInfo}
-        onClose={() => setShowVerifiedTokenInfo(false)}
-      >
+      <BottomSheet title={strings.poolVerification('MuesliSwap')} ref={bottomSheetRef}>
         <Text style={styles.modalText}>{strings.poolVerificationInfo('MuesliSwap')}</Text>
 
         <Spacer height={28} />
@@ -114,7 +95,27 @@ const VerifiedTokensInfo = () => {
 
           <Text style={styles.modalText}>{strings.verifiedBadge}</Text>
         </Text>
-      </BottomSheetModal>
+      </BottomSheet>
+    </>
+  )
+}
+
+const VerifiedTokensInfo = ({openBottomSheet}: {openBottomSheet: () => void}) => {
+  const strings = useStrings()
+
+  return (
+    <View style={(styles.flex, styles.ph)}>
+      <View style={styles.row}>
+        <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
+
+        <Text style={styles.topText}>{strings.verifiedBy('MuesliSwap')}</Text>
+
+        <Spacer width={8} />
+
+        <TouchableOpacity onPress={openBottomSheet}>
+          <Icon.Info size={28} />
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }

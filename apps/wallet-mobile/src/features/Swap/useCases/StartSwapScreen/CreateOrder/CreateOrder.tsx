@@ -1,11 +1,11 @@
 import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
-import React, {useEffect, useMemo, useState} from 'react'
-import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
+import React, {useEffect, useMemo} from 'react'
+import {KeyboardAvoidingView, Platform, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, Spacer} from '../../../../../components'
+import {BottomSheet, BottomSheetRef, Button, Spacer} from '../../../../../components'
 import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
@@ -28,18 +28,43 @@ import {TopTokenActions} from './ShowTokenActions/TopTokenActions'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 
+export type BottomSheetState = {title: string; content: string}
+
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
   const {createOrder, selectedPoolChanged, unsignedTxChanged, txPayloadChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
+  const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
+  const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
+    title: '',
+    content: '',
+  })
+  const openBottomSheet = ({title, content}: BottomSheetState) => {
+    setBottomSheetState({
+      title,
+      content,
+    })
+    bottomSheetRef.current?.openBottomSheet()
+  }
+  const onCloseBottomSheet = () => {
+    setBottomSheetState({title: '', content: ''})
+  }
+
+  const limitPriceWarningRef = React.useRef<null | BottomSheetRef>(null)
+  const openLimitPriceWarning = () => {
+    limitPriceWarningRef.current?.openBottomSheet()
+  }
+  const closeLimitPriceWarning = () => {
+    limitPriceWarningRef.current?.closeBottomSheet()
+  }
 
   const tokenInfos = useTokenInfos({
     wallet,
     tokenIds: [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId],
   })
-  const [showLimitPriceWarning, setShowLimitPriceWarning] = useState(false)
+
   const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
   const {poolList} = useSwapPoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId ?? '',
@@ -65,7 +90,7 @@ export const CreateOrder = () => {
     onSuccess: (yoroiUnsignedTx) => {
       unsignedTxChanged(yoroiUnsignedTx)
       swap()
-      setShowLimitPriceWarning(false)
+      closeLimitPriceWarning()
     },
     onError: (error) => {
       console.log(error)
@@ -169,7 +194,7 @@ export const CreateOrder = () => {
       const limitPrice = BigNumber(createOrder.limitPrice)
 
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
-        setShowLimitPriceWarning(true)
+        openLimitPriceWarning()
         return
       }
     }
@@ -182,8 +207,8 @@ export const CreateOrder = () => {
       <ScrollView style={styles.scroll}>
         <View style={styles.container}>
           <LimitPriceWarning
-            open={showLimitPriceWarning}
-            onClose={() => setShowLimitPriceWarning(false)}
+            ref={limitPriceWarningRef}
+            closeLimitPriceWarning={closeLimitPriceWarning}
             onSubmit={createUnsignedSwapTx}
           />
 
@@ -208,9 +233,9 @@ export const CreateOrder = () => {
 
             <EditLimitPrice />
 
-            <EditSlippage />
+            <EditSlippage openBottomSheet={openBottomSheet} />
 
-            <ShowPoolActions />
+            <ShowPoolActions openBottomSheet={openBottomSheet} />
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
@@ -220,6 +245,10 @@ export const CreateOrder = () => {
       </Actions>
 
       <LoadingOverlay loading={isLoading} />
+
+      <BottomSheet ref={bottomSheetRef} title={bottomSheetState.title} onClose={onCloseBottomSheet}>
+        <Text style={styles.text}>{bottomSheetState.content}</Text>
+      </BottomSheet>
     </View>
   )
 }
@@ -246,5 +275,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderTopWidth: 1,
     borderTopColor: COLORS.BORDER_GRAY,
+  },
+  text: {
+    textAlign: 'left',
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '400',
+    color: '#242838',
   },
 })

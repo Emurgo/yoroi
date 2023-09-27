@@ -1,6 +1,6 @@
 import {useSwap} from '@yoroi/swap'
 import React from 'react'
-import {StyleSheet, View, ViewProps} from 'react-native'
+import {StyleSheet, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BottomSheet, BottomSheetRef, Button, Spacer} from '../../../../components'
@@ -15,14 +15,32 @@ import {ConfirmTx} from './ConfirmTx'
 import {TransactionSummary} from './TransactionSummary'
 
 export const ConfirmTxScreen = () => {
-  const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
+  const confirmTxBottomSheetRef = React.useRef<null | BottomSheetRef>(null)
 
-  const openBottomSheet = () => {
-    bottomSheetRef.current?.openBottomSheet()
+  const openConfirmTxBottomSheet = () => {
+    confirmTxBottomSheetRef.current?.openBottomSheet()
   }
 
-  const closeBottomSheet = () => {
-    bottomSheetRef.current?.closeBottomSheet()
+  const closeConfirmTxBottomSheet = () => {
+    confirmTxBottomSheetRef.current?.closeBottomSheet()
+  }
+  const infoBottomSheetRef = React.useRef<null | BottomSheetRef>(null)
+
+  const [infoBottomSheetState, setInfoBottomSheetSate] = React.useState<{
+    title: string
+    content: string
+  }>({
+    title: '',
+    content: '',
+  })
+
+  const openInfoBottomSheet = ({title, content}: {title: string; content: string}) => {
+    setInfoBottomSheetSate({title, content})
+    infoBottomSheetRef.current?.openBottomSheet()
+  }
+
+  const closeInfoBottomSheet = () => {
+    setInfoBottomSheetSate({title: '', content: ''})
   }
   const strings = useStrings()
   const wallet = useSelectedWallet()
@@ -55,7 +73,7 @@ export const ConfirmTxScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TransactionSummary />
+      <TransactionSummary openInfoBottomSheet={openInfoBottomSheet} />
 
       <Actions>
         <Button
@@ -68,16 +86,15 @@ export const ConfirmTxScreen = () => {
               authWithOs()
               return
             }
-            openBottomSheet()
+            openConfirmTxBottomSheet()
           }}
         />
       </Actions>
 
       <BottomSheet
         height={wallet.isHW ? 430 : 350}
-        ref={bottomSheetRef}
+        ref={confirmTxBottomSheetRef}
         title={wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction}
-        isExtendable={false}
       >
         <View style={styles.modalContent}>
           <ConfirmTx
@@ -85,14 +102,18 @@ export const ConfirmTxScreen = () => {
             unsignedTx={unsignedTx}
             datum={{data: createOrder.datum}}
             onSuccess={() => {
-              closeBottomSheet()
+              closeConfirmTxBottomSheet()
               navigate.submittedTx()
             }}
-            onCancel={closeBottomSheet}
+            onCancel={closeConfirmTxBottomSheet}
           />
 
           <Spacer height={16} />
         </View>
+      </BottomSheet>
+
+      <BottomSheet title={infoBottomSheetState.title} ref={infoBottomSheetRef} onClose={closeInfoBottomSheet}>
+        <Text style={styles.text}>{infoBottomSheetState.content}</Text>
       </BottomSheet>
 
       <LoadingOverlay loading={txIsLoading} />
@@ -117,5 +138,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'stretch',
     paddingHorizontal: 16,
+  },
+  text: {
+    textAlign: 'left',
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '400',
+    color: '#242838',
   },
 })

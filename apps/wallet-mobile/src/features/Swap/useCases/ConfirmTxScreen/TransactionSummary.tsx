@@ -4,7 +4,6 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
-import {BottomSheetModal} from '../../../../components/BottomSheetModal'
 import {useLanguage} from '../../../../i18n'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
@@ -12,12 +11,11 @@ import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils'
 import {useStrings} from '../../common/strings'
 
-export const TransactionSummary = () => {
-  const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
-    isOpen: false,
-    title: '',
-    content: '',
-  })
+export const TransactionSummary = ({
+  openInfoBottomSheet,
+}: {
+  openInfoBottomSheet: ({title, content}: {title: string; content: string}) => void
+}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {numberLocale} = useLanguage()
@@ -92,8 +90,7 @@ export const TransactionSummary = () => {
 
                   <TouchableOpacity
                     onPress={() => {
-                      setBottomSheetSate({
-                        isOpen: true,
+                      openInfoBottomSheet({
                         title: orderInfo.label,
                         content: orderInfo.info,
                       })
@@ -121,16 +118,6 @@ export const TransactionSummary = () => {
 
         <AmountItem wallet={wallet} amount={{tokenId: amounts.buy.tokenId, quantity: amounts.buy.quantity}} />
       </View>
-
-      <BottomSheetModal
-        isOpen={bottomSheetState.isOpen}
-        title={bottomSheetState.title}
-        onClose={() => {
-          setBottomSheetSate({isOpen: false, title: '', content: ''})
-        }}
-      >
-        <Text style={styles.text}>{bottomSheetState.content}</Text>
-      </BottomSheetModal>
     </View>
   )
 }

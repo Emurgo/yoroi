@@ -1,5 +1,5 @@
 import React from 'react'
-import {KeyboardAvoidingView, Modal, NativeTouchEvent, Platform, StyleSheet, Text, View} from 'react-native'
+import {KeyboardAvoidingView, Modal, NativeTouchEvent, Platform, Pressable, StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../Spacer'
 
@@ -10,17 +10,17 @@ type BottomSheetProps = {
   isExtendable?: boolean
   maxHeight?: `${number}%` | number
   title: string
+  onClose?: () => void
 }
 
 export type BottomSheetRef = {
   openBottomSheet: () => void
   closeBottomSheet: () => void
   isOpen: boolean
-  onResponderMove: ({nativeEvent}: {nativeEvent: NativeTouchEvent}) => void // in case it needs to be used outside
 }
 
 export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
-  ({children, height = 300, debug = false, maxHeight = '80%', title, isExtendable = true}, ref) => {
+  ({children, height = 300, debug = false, maxHeight = '80%', title, isExtendable = false, onClose}, ref) => {
     const [isOpen, setIsOpen] = React.useState(false)
     const [isExtended, setExtended] = React.useState(false)
     const [swipeLocationY, setSwipeLocationY] = React.useState(height)
@@ -31,7 +31,6 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       openBottomSheet,
       closeBottomSheet,
       isOpen,
-      onResponderMove,
     }))
 
     const openBottomSheet = () => {
@@ -41,6 +40,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     const closeBottomSheet = () => {
       if (isExtended) setExtended(false)
       setIsOpen(false)
+      onClose?.()
     }
 
     const extendBottomSheet = () => {
@@ -71,31 +71,31 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
 
     return (
       <>
-        {isOpen && <View style={styles.backdrop} />}
+        {(debug || isOpen) && <View style={styles.backdrop} />}
 
         <Modal animationType="slide" visible={debug || isOpen} onRequestClose={closeBottomSheet} transparent>
-          <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'height' : undefined}>
-            <View style={[styles.sheet, {height: isExtended && isExtendable ? maxHeight : height}]}>
-              <Header title={title} onResponderMove={onResponderMove} />
+          <Pressable style={styles.backdropAction} onPress={closeBottomSheet}>
+            <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'height' : undefined}>
+              <View
+                style={[styles.sheet, {height: isExtended && isExtendable ? maxHeight : height}]}
+                onResponderMove={onResponderMove}
+                onStartShouldSetResponder={() => false}
+              >
+                <Header title={title} />
 
-              {children}
-            </View>
-          </KeyboardAvoidingView>
+                {children}
+              </View>
+            </KeyboardAvoidingView>
+          </Pressable>
         </Modal>
       </>
     )
   },
 )
 
-const Header = ({
-  onResponderMove,
-  title,
-}: {
-  onResponderMove: ({nativeEvent}: {nativeEvent: NativeTouchEvent}) => void
-  title: string
-}) => {
+const Header = ({title}: {title: string}) => {
   return (
-    <View onResponderMove={onResponderMove} onStartShouldSetResponder={() => true} style={styles.header}>
+    <View style={styles.header}>
       <Spacer height={8} />
 
       <SliderIndicator />
@@ -112,12 +112,8 @@ const SliderIndicator = () => <View style={styles.slider} />
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-end',
     alignItems: 'center',
-  },
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
   },
   sheet: {
     backgroundColor: 'white',
@@ -131,6 +127,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Rubik-Medium',
     fontSize: 20,
     padding: 16,
+    color: 'black',
   },
   header: {
     alignItems: 'center',
@@ -141,5 +138,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     width: 32,
     borderRadius: 10,
+  },
+  backdropAction: {
+    flex: 1,
+  },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    opacity: 0.5,
+    backgroundColor: 'black',
   },
 })

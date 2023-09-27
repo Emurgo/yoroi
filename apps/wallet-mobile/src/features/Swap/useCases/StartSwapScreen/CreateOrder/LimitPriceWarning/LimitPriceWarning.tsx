@@ -3,86 +3,86 @@ import BigNumber from 'bignumber.js'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button, Spacer} from '../../../../../../components'
-import {BottomSheetModal} from '../../../../../../components/BottomSheetModal'
+import {BottomSheet, BottomSheetRef, Button, Spacer} from '../../../../../../components'
 import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {useStrings} from '../../../../common/strings'
 
 export interface LimitPriceWarningProps {
-  open: boolean
-  onClose?: () => void
-  onSubmit?: () => void
+  onSubmit: () => void
+  closeLimitPriceWarning: () => void
 }
 
-export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningProps) => {
-  const {createOrder} = useSwap()
-  const {numberLocale} = useLanguage()
-  const strings = useStrings()
-  const limitPrice = BigNumber(createOrder.limitPrice ?? 0).toFormat(numberLocale)
-  const marketPrice = BigNumber(createOrder.marketPrice).toFormat(numberLocale)
-  const wallet = useSelectedWallet()
+export const LimitPriceWarning = React.forwardRef<BottomSheetRef, LimitPriceWarningProps>(
+  ({closeLimitPriceWarning, onSubmit}, ref) => {
+    const {createOrder} = useSwap()
+    const {numberLocale} = useLanguage()
+    const strings = useStrings()
+    const limitPrice = BigNumber(createOrder.limitPrice ?? 0).toFormat(numberLocale)
+    const marketPrice = BigNumber(createOrder.marketPrice).toFormat(numberLocale)
+    const wallet = useSelectedWallet()
 
-  const tokenToSellInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
-  const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name ?? '-'
-  const tokenToBuyInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
-  const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name ?? '-'
+    const tokenToSellInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
+    const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name ?? '-'
+    const tokenToBuyInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
+    const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name ?? '-'
 
-  const name = `${tokenToSellName}/${tokenToBuyName}`
+    const name = `${tokenToSellName}/${tokenToBuyName}`
 
-  return (
-    <BottomSheetModal title={strings.limitPriceWarningTitle} isOpen={open} onClose={onClose}>
-      <View style={styles.container}>
-        <View>
-          <Text>{strings.limitPriceWarningDescription}</Text>
+    return (
+      <BottomSheet ref={ref} title={strings.limitPriceWarningTitle}>
+        <View style={styles.container}>
+          <View>
+            <Text>{strings.limitPriceWarningDescription}</Text>
 
-          <Spacer height={16} />
+            <Spacer height={16} />
 
-          <View style={styles.table}>
-            <View style={styles.row}>
-              <Text style={styles.label}>{strings.limitPriceWarningYourPrice}</Text>
+            <View style={styles.table}>
+              <View style={styles.row}>
+                <Text style={styles.label}>{strings.limitPriceWarningYourPrice}</Text>
 
-              <View style={styles.textWrapper}>
-                <Text style={styles.value}>{limitPrice}</Text>
+                <View style={styles.textWrapper}>
+                  <Text style={styles.value}>{limitPrice}</Text>
 
-                <Text style={styles.value}>{name}</Text>
+                  <Text style={styles.value}>{name}</Text>
+                </View>
               </View>
-            </View>
 
-            <View style={styles.row}>
-              <Text style={styles.label}>{strings.limitPriceWarningMarketPrice}</Text>
+              <View style={styles.row}>
+                <Text style={styles.label}>{strings.limitPriceWarningMarketPrice}</Text>
 
-              <View style={styles.textWrapper}>
-                <Text style={styles.value}>{marketPrice}</Text>
+                <View style={styles.textWrapper}>
+                  <Text style={styles.value}>{marketPrice}</Text>
 
-                <Text style={styles.value}>{name}</Text>
+                  <Text style={styles.value}>{name}</Text>
+                </View>
               </View>
             </View>
           </View>
-        </View>
 
-        <View style={styles.buttonsWrapper}>
-          <Button
-            testID="swapCancelButton"
-            outlineShelley
-            title={strings.limitPriceWarningBack}
-            onPress={onClose}
-            containerStyle={styles.buttonContainer}
-          />
+          <View style={styles.buttonsWrapper}>
+            <Button
+              testID="swapCancelButton"
+              outlineShelley
+              title={strings.limitPriceWarningBack}
+              onPress={closeLimitPriceWarning}
+              containerStyle={styles.buttonContainer}
+            />
 
-          <Button
-            testID="swapConfirmButton"
-            shelleyTheme
-            title={strings.limitPriceWarningConfirm}
-            onPress={onSubmit}
-            containerStyle={styles.buttonContainer}
-          />
+            <Button
+              testID="swapConfirmButton"
+              shelleyTheme
+              title={strings.limitPriceWarningConfirm}
+              onPress={onSubmit}
+              containerStyle={styles.buttonContainer}
+            />
+          </View>
         </View>
-      </View>
-    </BottomSheetModal>
-  )
-}
+      </BottomSheet>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   buttonContainer: {
@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
+    padding: 16,
   },
   label: {
     fontSize: 16,
