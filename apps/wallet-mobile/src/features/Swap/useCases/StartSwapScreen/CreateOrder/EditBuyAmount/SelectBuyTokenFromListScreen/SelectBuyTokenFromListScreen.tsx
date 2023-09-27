@@ -60,63 +60,11 @@ export const SelectBuyTokenFromListScreen = () => {
   )
 
   return (
-    <>
-      <SafeAreaView style={styles.container}>
-        <Spacer height={12} />
-
-        <VerifiedTokensInfo openBottomSheet={openBottomSheet} />
-
-        <Spacer height={15} />
-
-        <View style={[styles.row, styles.ph]}>
-          <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
-
-          <Spacer width={8} />
-
-          <Text style={styles.topText}>{strings.assetsIn}</Text>
-        </View>
-
-        <Boundary loading={loading}>
-          <TokenList />
-        </Boundary>
-      </SafeAreaView>
-
-      <BottomSheet title={strings.poolVerification('MuesliSwap')} ref={bottomSheetRef}>
-        <Text style={styles.modalText}>{strings.poolVerificationInfo('MuesliSwap')}</Text>
-
-        <Spacer height={28} />
-
-        <Text>
-          <Text style={styles.modalText}>{strings.eachVerifiedToken}</Text>
-
-          <Spacer width={8} />
-
-          <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
-
-          <Text style={styles.modalText}>{strings.verifiedBadge}</Text>
-        </Text>
-      </BottomSheet>
-    </>
-  )
-}
-
-const VerifiedTokensInfo = ({openBottomSheet}: {openBottomSheet: () => void}) => {
-  const strings = useStrings()
-
-  return (
-    <View style={(styles.flex, styles.ph)}>
-      <View style={styles.row}>
-        <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
-
-        <Text style={styles.topText}>{strings.verifiedBy('MuesliSwap')}</Text>
-
-        <Spacer width={8} />
-
-        <TouchableOpacity onPress={openBottomSheet}>
-          <Icon.Info size={28} />
-        </TouchableOpacity>
-      </View>
-    </View>
+     <SafeAreaView style={styles.container}>
+      <Boundary loading={loading}>
+        <TokenList />
+      </Boundary>
+     </SafeAreaView>
   )
 }
 
@@ -216,6 +164,16 @@ const TokenList = () => {
         estimatedItemSize={72}
         ListEmptyComponent={<EmptyList filteredTokensForList={filteredTransformedList} allTokenInfos={tokenInfos} />}
       />
+
+      <Spacer height={16} />
+
+      <View style={[styles.row, styles.ph]}>
+        <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
+
+        <Spacer width={8} />
+
+        <Text style={styles.topText}>{strings.assetsIn}</Text>
+      </View>
 
       <Counter counter={filteredTransformedList.length} />
     </View>
@@ -358,23 +316,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.SHELLEY_BLUE,
   },
-  flex: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   row: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignSelf: 'center',
   },
   topText: {
     fontSize: 16,
-  },
-  modalText: {
-    fontWeight: '400',
-    lineHeight: 20,
-    color: '#242838',
-    fontFamily: 'Rubik',
-    fontSize: 15,
   },
   image: {
     flex: 1,
