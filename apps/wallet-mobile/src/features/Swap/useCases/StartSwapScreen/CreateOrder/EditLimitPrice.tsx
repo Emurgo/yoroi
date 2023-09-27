@@ -18,7 +18,6 @@ const PRECISION = 10
 export const EditLimitPrice = () => {
   const strings = useStrings()
   const {numberLocale} = useLanguage()
-  const [text, setText] = React.useState('')
   const wallet = useSelectedWallet()
 
   const {createOrder, limitPriceChanged} = useSwap()
@@ -35,7 +34,7 @@ export const EditLimitPrice = () => {
     const defaultPrice = createOrder.marketPrice
 
     const formattedValue = BigNumber(defaultPrice).decimalPlaces(PRECISION).toFormat(numberLocale)
-    setText(formattedValue)
+    limitPriceChanged(formattedValue)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createOrder.marketPrice])
 
@@ -45,16 +44,14 @@ export const EditLimitPrice = () => {
     const defaultPrice = createOrder.marketPrice
 
     const formattedValue = BigNumber(defaultPrice).decimalPlaces(PRECISION).toFormat(numberLocale)
-    setText(formattedValue)
+    limitPriceChanged(formattedValue)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createOrder.type])
 
   const onChange = (text: string) => {
-    const [formattedPrice, price] = Quantities.parseFromText(text, PRECISION, numberLocale)
-    const value = Quantities.denominated(price, PRECISION)
+    const [formattedPrice] = Quantities.parseFromText(text, PRECISION, numberLocale)
 
-    setText(formattedPrice)
-    limitPriceChanged(value)
+    limitPriceChanged(formattedPrice)
   }
 
   return (
@@ -62,7 +59,7 @@ export const EditLimitPrice = () => {
       <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
 
       <View style={styles.content}>
-        <AmountInput onChange={onChange} value={text} editable={!disabled} />
+        <AmountInput onChange={onChange} value={createOrder.limitPrice} editable={!disabled} />
 
         <View style={[styles.textWrapper, disabled && styles.disabled]}>
           <Text style={styles.text}>
