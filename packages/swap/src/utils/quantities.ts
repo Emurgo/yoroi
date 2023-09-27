@@ -67,7 +67,7 @@ export const Quantities = {
     const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
     const sanitized = text === '' ? '' : text.replaceAll(invalid, '')
     if (sanitized === '') return ['', `0`] as [string, Balance.Quantity]
-    if (sanitized === decimalSeparator)
+    if (sanitized.startsWith(decimalSeparator))
       return [`0${decimalSeparator}`, `0`] as [string, Balance.Quantity]
     const parts = sanitized.split(decimalSeparator)
     const isDec = parts.length >= 2

@@ -152,4 +152,17 @@ describe('Quantities', () => {
     expect(input).toBe('')
     expect(quantity).toBe('0')
   })
+
+  it('should parse "0" when the input text is an decimal separator', () => {
+    const text = '.'
+    const precision = 2
+    const [input, quantity] = Quantities.parseFromText(
+      text,
+      precision,
+      mockNumberLocale,
+    )
+
+    expect(input).toBe('0.')
+    expect(quantity).toBe('0')
+  })
 })
