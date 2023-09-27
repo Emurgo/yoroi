@@ -21,16 +21,7 @@ export type AmountItemProps = {
   variant?: 'swap'
 }
 
-export const AmountItem = ({
-  isPrivacyOff,
-  wallet,
-  style,
-  amount,
-  status,
-  inWallet,
-  supply,
-  variant,
-}: AmountItemProps) => {
+export const AmountItem = ({isPrivacyOff, wallet, style, amount, inWallet, supply, variant}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -60,8 +51,6 @@ export const AmountItem = ({
           {showSwapDetails && (
             <>
               <Spacer width={4} />
-
-              {status === 'verified' && <Icon.CheckFilled size={22} color={COLORS.SHELLEY_BLUE} />}
 
               {inWallet && <Icon.Portfolio size={22} color={COLORS.LIGHT_GREEN} />}
             </>
