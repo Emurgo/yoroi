@@ -187,23 +187,31 @@ const createOrderReducer = (
         break
       case SwapCreateOrderActionType.SellAmountChanged:
         draft.createOrder.amounts.sell = action.amount
-        draft.createOrder.amounts.buy = getBuyAmount(
-          state.createOrder.selectedPool,
-          action.amount,
-          state.createOrder.type === 'limit'
-            ? state.createOrder.limitPrice
-            : undefined,
-        )
+        if (Quantities.isZero(action.amount.quantity)) {
+          draft.createOrder.amounts.buy.quantity = Quantities.zero
+        } else {
+          draft.createOrder.amounts.buy = getBuyAmount(
+            state.createOrder.selectedPool,
+            action.amount,
+            state.createOrder.type === 'limit'
+              ? state.createOrder.limitPrice
+              : undefined,
+          )
+        }
         break
       case SwapCreateOrderActionType.BuyAmountChanged:
         draft.createOrder.amounts.buy = action.amount
-        draft.createOrder.amounts.sell = getSellAmount(
-          state.createOrder.selectedPool,
-          action.amount,
-          state.createOrder.type === 'limit'
-            ? state.createOrder.limitPrice
-            : undefined,
-        )
+        if (Quantities.isZero(action.amount.quantity)) {
+          draft.createOrder.amounts.sell.quantity = Quantities.zero
+        } else {
+          draft.createOrder.amounts.sell = getSellAmount(
+            state.createOrder.selectedPool,
+            action.amount,
+            state.createOrder.type === 'limit'
+              ? state.createOrder.limitPrice
+              : undefined,
+          )
+        }
         break
       case SwapCreateOrderActionType.SelectedPoolChanged:
         draft.createOrder.selectedPool = action.pool
