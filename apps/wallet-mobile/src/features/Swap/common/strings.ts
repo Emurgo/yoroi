@@ -61,6 +61,7 @@ export const useStrings = () => {
     poolFee: intl.formatMessage(messages.poolFee),
     batcherFee: intl.formatMessage(messages.batcherFee),
     assets: (qty: number) => intl.formatMessage(globalMessages.assets, {qty}),
+    available: intl.formatMessage(globalMessages.available),
     asset: intl.formatMessage(messages.asset),
     volume: intl.formatMessage(messages.volume),
     total: intl.formatMessage(globalMessages.total),
