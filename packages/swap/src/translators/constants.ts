@@ -1,6 +1,6 @@
 import {Swap} from '@yoroi/types'
 
-export const supportedProtocols: ReadonlyArray<Swap.SupportedProvider> = [
+export const supportedProviders: ReadonlyArray<Swap.SupportedProvider> = [
   'minswap',
   'wingriders',
   'sundaeswap',
