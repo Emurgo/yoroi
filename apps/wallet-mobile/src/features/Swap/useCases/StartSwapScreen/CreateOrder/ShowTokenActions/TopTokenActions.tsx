@@ -9,6 +9,7 @@ import {Icon} from '../../../../../../components'
 import {LoadingOverlay} from '../../../../../../components/LoadingOverlay'
 import {useLanguage} from '../../../../../../i18n'
 import {COLORS} from '../../../../../../theme'
+import {asQuantity} from '../../../../../../yoroi-wallets/utils'
 import {ButtonGroup} from '../../../../common/ButtonGroup/ButtonGroup'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../../../../common/SwapFormProvider'
@@ -31,11 +32,15 @@ export const TopTokenActions = () => {
     },
     {
       onSuccess: (poolList: Swap.Pool[]) => {
-        const bestPool = poolList.sort((a: Swap.Pool, b: Swap.Pool) => a.price - b.price).find(() => true)
-        const defaultPrice = createOrder.marketPrice
-        const formattedValue = BigNumber(defaultPrice).decimalPlaces(PRECISION).toFormat(numberLocale)
-        selectedPoolChanged(bestPool)
-        limitPriceChanged(formattedValue)
+        const bestPool: Swap.Pool | undefined = poolList
+          .sort((a: Swap.Pool, b: Swap.Pool) => a.price - b.price)
+          .find(() => true)
+        if (bestPool !== undefined) {
+          const defaultPrice = createOrder.marketPrice
+          const formattedValue = BigNumber(defaultPrice).decimalPlaces(PRECISION).toFormat(numberLocale)
+          selectedPoolChanged(bestPool)
+          limitPriceChanged(asQuantity(formattedValue))
+        }
       },
     },
   )

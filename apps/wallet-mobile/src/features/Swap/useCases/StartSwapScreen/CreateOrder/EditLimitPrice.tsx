@@ -8,7 +8,7 @@ import {useLanguage} from '../../../../../i18n'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from '../../../common/SwapFormProvider'
 
@@ -34,7 +34,7 @@ export const EditLimitPrice = () => {
     const defaultPrice = createOrder.marketPrice
 
     const formattedValue = BigNumber(defaultPrice).decimalPlaces(PRECISION).toFormat(numberLocale)
-    limitPriceChanged(formattedValue)
+    limitPriceChanged(asQuantity(formattedValue))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createOrder.marketPrice])
 
@@ -44,14 +44,14 @@ export const EditLimitPrice = () => {
     const defaultPrice = createOrder.marketPrice
 
     const formattedValue = BigNumber(defaultPrice).decimalPlaces(PRECISION).toFormat(numberLocale)
-    limitPriceChanged(formattedValue)
+    limitPriceChanged(asQuantity(formattedValue))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createOrder.type])
 
   const onChange = (text: string) => {
     const [formattedPrice] = Quantities.parseFromText(text, PRECISION, numberLocale)
 
-    limitPriceChanged(formattedPrice)
+    limitPriceChanged(asQuantity(formattedPrice))
   }
 
   return (
