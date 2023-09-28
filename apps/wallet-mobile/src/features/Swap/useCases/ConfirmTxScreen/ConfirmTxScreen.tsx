@@ -28,7 +28,7 @@ export const ConfirmTxScreen = () => {
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
 
-  const {unsignedTx, createOrder} = useSwap()
+  const {unsignedTx} = useSwap()
 
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
     {id: wallet.id},
@@ -83,7 +83,6 @@ export const ConfirmTxScreen = () => {
           <ConfirmTx
             wallet={wallet}
             unsignedTx={unsignedTx}
-            datum={{data: createOrder.datum}}
             onSuccess={() => {
               closeBottomSheet()
               navigate.submittedTx()
