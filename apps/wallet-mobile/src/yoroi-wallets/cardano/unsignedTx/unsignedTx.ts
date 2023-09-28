@@ -1,3 +1,4 @@
+import {Datum} from '@emurgo/yoroi-lib'
 import {Balance} from '@yoroi/types'
 
 import {YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../../types'
@@ -11,11 +12,13 @@ export const yoroiUnsignedTx = async ({
   networkConfig,
   votingRegistration,
   addressedUtxos,
+  datum,
 }: {
   unsignedTx: CardanoTypes.UnsignedTx
   networkConfig: CardanoHaskellShelleyNetwork
   votingRegistration?: VotingRegistration
   addressedUtxos: CardanoTypes.CardanoAddressedUtxo[]
+  datum?: Datum | undefined
 }) => {
   const fee = toAmounts(unsignedTx.fee.values)
   const change = toEntries(
@@ -70,6 +73,7 @@ export const yoroiUnsignedTx = async ({
         : undefined,
     },
     metadata: toMetadata(unsignedTx.metadata),
+    datum: datum ?? undefined,
     unsignedTx,
   }
 

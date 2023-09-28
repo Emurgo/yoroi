@@ -612,7 +612,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           datum,
         )
 
-        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos})
+        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, datum})
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
         Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -620,7 +620,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       }
     }
 
-    async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string, datum?: {data: string}) {
+    async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
       const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
       const accountPrivateKey = await masterKey
         .derive(PURPOSE)
@@ -639,14 +639,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           ? [stakingPrivateKey]
           : undefined
 
-      if (datum) {
+      if (unsignedTx?.datum) {
         const signedTx = await unsignedTx.unsignedTx.sign(
           BIP44_DERIVATION_LEVELS.ACCOUNT,
           accountPrivateKeyHex,
           new Set<string>(),
           [],
           undefined,
-          [datum],
+          [unsignedTx?.datum as {data: string}],
         )
         return yoroiSignedTx({unsignedTx, signedTx})
       }

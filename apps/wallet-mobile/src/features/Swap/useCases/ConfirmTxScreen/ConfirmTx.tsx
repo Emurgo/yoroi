@@ -11,10 +11,9 @@ type Props = {
   unsignedTx: YoroiUnsignedTx
   onCancel: () => void
   onSuccess: () => void
-  datum: Datum
 }
 
-export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx, datum}: Props) => {
+export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx}: Props) => {
   return wallet.isHW ? (
     <ConfirmTxWithHW //
       wallet={wallet}
@@ -26,7 +25,6 @@ export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx, datum}: Prop
     <ConfirmTxWithPassword //
       wallet={wallet}
       unsignedTx={unsignedTx}
-      datum={datum}
       onSuccess={onSuccess}
       onCancel={onCancel}
     />

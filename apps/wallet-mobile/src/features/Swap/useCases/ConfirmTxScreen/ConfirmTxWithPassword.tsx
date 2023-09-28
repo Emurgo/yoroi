@@ -1,4 +1,3 @@
-import {Datum} from '@emurgo/yoroi-lib'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
@@ -20,12 +19,11 @@ type ErrorData = {
 type Props = {
   wallet: YoroiWallet
   unsignedTx: YoroiUnsignedTx
-  datum: Datum
   onSuccess: () => void
   onCancel?: () => void
 }
 
-export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx, datum}: Props) => {
+export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx}: Props) => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [spendingPassword, setSpendingPassword] = React.useState(
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
@@ -56,7 +54,7 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx, datum}: Pr
     try {
       const rootKey = await wallet.encryptedStorage.rootKey.read(spendingPassword)
       if (rootKey !== undefined) {
-        signAndSubmitTx({unsignedTx, password: spendingPassword, datum})
+        signAndSubmitTx({unsignedTx, password: spendingPassword})
       }
     } catch (err) {
       if (err instanceof WrongPassword) {

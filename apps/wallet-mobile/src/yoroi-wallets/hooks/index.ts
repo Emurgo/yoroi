@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Datum} from '@emurgo/yoroi-lib'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
 import {parseBoolean, useStorage} from '@yoroi/common'
@@ -376,7 +375,7 @@ export const useVotingRegTx = (
 export const useSignWithPasswordAndSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options?: {
-    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string; datum?: Datum}>
+    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string}>
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
   },
 ) => {
@@ -443,7 +442,7 @@ export const useSignWithHwAndSubmitTx = (
 export const useSignAndSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options?: {
-    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; rootKey: string; datum?: Datum}>
+    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; rootKey: string}>
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
   },
 ) => {
@@ -476,10 +475,10 @@ export const useSignAndSubmitTx = (
 
 export const useSignTx = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; rootKey: string; datum?: Datum}> = {},
+  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; rootKey: string}> = {},
 ) => {
   const mutation = useMutation({
-    mutationFn: ({unsignedTx, rootKey, datum}) => wallet.signTx(unsignedTx, rootKey, datum),
+    mutationFn: ({unsignedTx, rootKey}) => wallet.signTx(unsignedTx, rootKey),
     retry: false,
     ...options,
   })
@@ -492,16 +491,12 @@ export const useSignTx = (
 
 export const useSignTxWithPassword = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<
-    YoroiSignedTx,
-    Error,
-    {unsignedTx: YoroiUnsignedTx; password: string; datum?: Datum}
-  > = {},
+  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; password: string}> = {},
 ) => {
   const mutation = useMutation({
-    mutationFn: async ({unsignedTx, password, datum}) => {
+    mutationFn: async ({unsignedTx, password}) => {
       const rootKey = await wallet.encryptedStorage.rootKey.read(password)
-      return wallet.signTx(unsignedTx, rootKey, datum)
+      return wallet.signTx(unsignedTx, rootKey)
     },
     retry: false,
     ...options,

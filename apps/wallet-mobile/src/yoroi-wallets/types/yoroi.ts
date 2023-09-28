@@ -1,3 +1,4 @@
+import {Datum} from '@emurgo/yoroi-lib'
 import {App, Balance} from '@yoroi/types'
 
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
@@ -20,6 +21,7 @@ export type YoroiTxInfo = {
   metadata: YoroiMetadata
   staking: YoroiStaking
   voting: YoroiVoting
+  datum?: Datum
 }
 
 export type YoroiStaking = {
