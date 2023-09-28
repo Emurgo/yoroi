@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {PrivateKey} from '@emurgo/cross-csl-core'
 import {Datum} from '@emurgo/yoroi-lib'
 import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
@@ -67,7 +68,6 @@ import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
-import {PrivateKey} from '@emurgo/cross-csl-core'
 type WalletState = {
   lastGeneratedAddressIndex: number
 }

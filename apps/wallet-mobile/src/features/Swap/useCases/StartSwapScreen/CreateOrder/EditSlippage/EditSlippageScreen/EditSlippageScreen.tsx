@@ -53,7 +53,7 @@ export const EditSlippageScreen = () => {
   const {slippageChanged, createOrder} = useSwap()
   const defaultSelectedChoice = getChoiceBySlippage(createOrder.slippage, numberLocale)
   const defaultInputValue =
-    defaultSelectedChoice.label === 'Manual' ? BigNumber(createOrder.slippage).toFormat(numberLocale) : ''
+    defaultSelectedChoice.label === 'Manual' ? new BigNumber(createOrder.slippage).toFormat(numberLocale) : ''
 
   const [selectedChoiceLabel, setSelectedChoiceLabel] = useState<ChoiceKind>(defaultSelectedChoice.label)
   const [inputValue, setInputValue] = useState(defaultInputValue)
@@ -133,7 +133,7 @@ export const EditSlippageScreen = () => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               ref={inputRef}
-              value={isInputEnabled ? inputValue : BigNumber(selectedChoice.value).toFormat(numberLocale)}
+              value={isInputEnabled ? inputValue : new BigNumber(selectedChoice.value).toFormat(numberLocale)}
               onChangeText={handleInputChange}
               editable={isInputEnabled}
               key={isInputEnabled ? 'enabled' : 'disabled'}
@@ -290,7 +290,7 @@ const getChoiceBySlippage = (slippage: number, format: NumberLocale): Choice => 
   return (
     CHOICES.find((choice) => choice.value === slippage) ?? {
       label: 'Manual',
-      value: BigNumber(slippage).toFormat(format),
+      value: new BigNumber(slippage).toFormat(format),
     }
   )
 }

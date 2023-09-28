@@ -164,8 +164,8 @@ export const CreateOrder = () => {
 
   const handleOnSwap = () => {
     if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
-      const marketPrice = BigNumber(createOrder.marketPrice)
-      const limitPrice = BigNumber(createOrder.limitPrice)
+      const marketPrice = new BigNumber(createOrder.marketPrice)
+      const limitPrice = new BigNumber(createOrder.limitPrice)
 
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
         setShowLimitPriceWarning(true)

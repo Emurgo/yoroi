@@ -52,16 +52,18 @@ export const mapOrders = (
 
     const fromTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.from.tokenId)
     const fromLabel = fromTokenInfo?.ticker ?? fromTokenInfo?.name ?? '-'
-    const total = BigNumber(Quantities.denominated(from.quantity, fromTokenInfo?.decimals ?? 0)).toFormat(numberLocale)
+    const total = new BigNumber(Quantities.denominated(from.quantity, fromTokenInfo?.decimals ?? 0)).toFormat(
+      numberLocale,
+    )
 
     const toTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.to.tokenId)
     const toLabel = toTokenInfo?.ticker ?? toTokenInfo?.name ?? '-'
-    const tokenAmount = BigNumber(Quantities.denominated(to.quantity, toTokenInfo?.decimals ?? 0))
+    const tokenAmount = new BigNumber(Quantities.denominated(to.quantity, toTokenInfo?.decimals ?? 0))
       .decimalPlaces(MAX_DECIMALS)
       .toFormat({
         ...numberLocale,
       })
-    const tokenPrice = BigNumber(
+    const tokenPrice = new BigNumber(
       Quantities.quotient(
         Quantities.denominated(from.quantity, fromTokenInfo?.decimals ?? 0),
         Quantities.denominated(to.quantity, toTokenInfo?.decimals ?? 0),
@@ -86,9 +88,9 @@ export const mapOrders = (
       toTokenInfo,
       provider: 'provider' in order ? order.provider : undefined,
       poolUrl: 'provider' in order ? getPoolUrlByProvider(order.provider) : undefined,
-      fromTokenAmount: BigNumber(Quantities.denominated(order.from.quantity, fromTokenInfo?.decimals ?? 0)).toFormat(
-        numberLocale,
-      ),
+      fromTokenAmount: new BigNumber(
+        Quantities.denominated(order.from.quantity, fromTokenInfo?.decimals ?? 0),
+      ).toFormat(numberLocale),
       from,
       to,
     }

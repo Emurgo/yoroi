@@ -1,3 +1,4 @@
+import * as CSL_TYPES from '@emurgo/cross-csl-core'
 import {useSwap} from '@yoroi/swap'
 import {BalanceQuantity} from '@yoroi/types/src/balance/token'
 import {Buffer} from 'buffer'
@@ -13,7 +14,6 @@ import {isHaskellShelley} from '../../../../../yoroi-wallets/cardano/utils'
 import {RawUtxo} from '../../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
-import * as CSL_TYPES from '@emurgo/cross-csl-core'
 
 type Options = {
   bech32Address: string
@@ -103,9 +103,7 @@ export const getTransactionBuilder = async () => {
     .then(async (builder) => builder.coinsPerUtxoWord(await bigNumFromStr('34482')))
     .then(async (builder) => builder.exUnitPrices(exUnitPrices).then((builder) => builder.build()))
 
-  return CardanoMobile.TransactionBuilder.fromConfig(
-    assertRequired(txBuilderCfg, 'Could not build transaction builder'),
-  )
+  return CardanoMobile.TransactionBuilder.new(assertRequired(txBuilderCfg, 'Could not build transaction builder'))
 }
 
 const operations1 = Object.values({

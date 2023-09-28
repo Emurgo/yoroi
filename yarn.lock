@@ -1935,10 +1935,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@emurgo/cardano-serialization-lib-nodejs@11.3.0":
-  version "11.3.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-11.3.0.tgz#f8896ba4dd4411c97503d99f8fbcd2ef23087646"
-  integrity sha512-F1WXfvTtOZkJf3mSA9yToJaLCpPNOqyK5IljigS8fHxrLjSDEqVGVmQNM2R0NQTNsQLKxcSPBf0I3gukgoHnbQ==
+"@emurgo/cardano-serialization-lib-nodejs@^11.5.0":
+  version "11.5.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cardano-serialization-lib-nodejs/-/cardano-serialization-lib-nodejs-11.5.0.tgz#0662e2a17d7d1e944f8cdb86396133c8edaec059"
+  integrity sha512-IlVABlRgo9XaTR1NunwZpWcxnfEv04ba2l1vkUz4S1W7Jt36F4CtffP+jPeqBZGnAe+fnUwo0XjIJC3ZTNToNQ==
 
 "@emurgo/cardano-serialization-lib-nodejs@^9.1.4":
   version "9.1.4"
@@ -1962,20 +1962,6 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/cross-csl-core@^2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-2.7.0.tgz#67faff47b61d0c467b4cba35f789af43d89693b9"
-  integrity sha512-srX9GHMOyP1HrxgKucqs9SU8ryXD0PytCjcZ79AS0dV1L8Hraj3SZI0QmqbKUmYgmhb8wE2xL4bGYVs8OmgeCA==
-  dependencies:
-    "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
-    "@types/mocha" "^9.1.1"
-    axios "^0.24.0"
-    bech32 "^2.0.0"
-    bignumber.js "^9.0.1"
-    blake2b "^2.1.4"
-    hash-wasm "^4.9.0"
-    mocha "^10.0.0"
-
 "@emurgo/cross-csl-core@^2.9.0", "@emurgo/cross-csl-core@file:../cross-csl/packages/cross-csl-core":
   version "2.9.0"
   dependencies:
@@ -1994,13 +1980,11 @@
     "@emurgo/cross-csl-core" "^2.9.0"
     "@emurgo/csl-mobile-bridge" "^5.1.2"
 
-"@emurgo/cross-csl-nodejs@^2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-2.7.0.tgz#0d1c9c4d9db4cf7aab8236808e003cd490db55fc"
-  integrity sha512-UII24nr/yqXm59OCOe77I6aHMCdkimrIdG3n8CaGiV+KfkIV+AUYT2PTsj8tCWLPDrcqEn1/t9MMtk6QQrO7bw==
+"@emurgo/cross-csl-nodejs@file:../cross-csl/packages/cross-csl-nodejs":
+  version "2.9.0"
   dependencies:
-    "@emurgo/cardano-serialization-lib-nodejs" "11.3.0"
-    "@emurgo/cross-csl-core" "^2.7.0"
+    "@emurgo/cardano-serialization-lib-nodejs" "^11.5.0"
+    "@emurgo/cross-csl-core" "^2.9.0"
 
 "@emurgo/csl-mobile-bridge@^5.1.2":
   version "5.1.2"
@@ -2027,13 +2011,12 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@^0.8.1":
+"@emurgo/yoroi-lib@file:../yoroi-lib":
   version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.8.1.tgz#cf7b40e3f5a869b35cf25a45fbf7b85a1292f610"
-  integrity sha512-yONfhMu+MltaXsTnCoRfT4PZO4vK0LjWEV+5JYkHHIm/e9NSbZ2OBzGX063nFoQM7pYFX5VodOuTclTVGKMQBA==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^6.0.0"
-    "@emurgo/cross-csl-core" "^2.7.0"
+    "@emurgo/cross-csl-core" "file:../cross-csl/packages/cross-csl-core"
+    "@emurgo/cross-csl-nodejs" "file:../cross-csl/packages/cross-csl-nodejs"
     axios "^0.24.0"
     bech32 "^2.0.0"
     bignumber.js "^9.0.1"
@@ -8127,7 +8110,12 @@ big.js@^5.2.2:
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-5.2.2.tgz#65f0af382f578bcdc742bd9c281e9cb2d7768328"
   integrity sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==
 
-bignumber.js@^9.0.0, bignumber.js@^9.0.1:
+bignumber.js@9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.1.tgz#8d7ba124c882bfd8e43260c67475518d0689e4e5"
+  integrity sha512-IdZR9mh6ahOBv/hYGiXyVuyCetmGJhtYkqLBpTStdhEGjegpPlUawydyaF3pbIOFynJTpllEs+NP+CS9jKFLjA==
+
+bignumber.js@^9.0.1:
   version "9.1.1"
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.1.1.tgz#c4df7dc496bd849d4c9464344c1aa74228b4dac6"
   integrity sha512-pHm4LsMJ6lzgNGVfZHjMoO8sdoRhOzOH4MLmY65Jg70bpxCKu5iOHNJyfF6OyvYw7t8Fpf35RuzUyqnQsj8Vig==
