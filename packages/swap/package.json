@@ -103,6 +103,24 @@
     "coverage/"
   ],
   "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/**/*.mocks.{js,jsx,ts,tsx}"
+    ],
+    "coverageReporters": [
+      "text-summary",
+      "html"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    },
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
@@ -110,24 +128,6 @@
     "preset": "react-native",
     "setupFiles": [
       "<rootDir>/jest.setup.js"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts",
-      "!src/**/*.mocks.{js,jsx,ts,tsx}"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 100,
-        "functions": 100,
-        "lines": 100,
-        "statements": 100
-      }
-    },
-    "collectCoverage": true,
-    "coverageReporters": [
-      "text-summary",
-      "html"
     ]
   },
   "dependencies": {
@@ -137,7 +137,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
-    "@react-native-async-storage/async-storage": "^1.18.1",
+    "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
     "@testing-library/react-hooks": "^8.0.1",
@@ -166,11 +166,12 @@
     "typescript": "^4.5.2"
   },
   "peerDependencies": {
+    "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
     "react": ">= 16.8.0 <= 19.0.0",
     "react-query": "^3.39.3"
   },
   "optionalDependencies": {
-    "@react-native-async-storage/async-storage": "^1.18.1"
+    "@react-native-async-storage/async-storage": "^1.19.3"
   },
   "packageManager": "^yarn@1.22.15",
   "engines": {

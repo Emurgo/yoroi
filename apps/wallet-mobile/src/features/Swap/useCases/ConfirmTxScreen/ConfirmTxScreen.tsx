@@ -108,7 +108,6 @@ export const ConfirmTxScreen = () => {
           <ConfirmTx
             wallet={wallet}
             unsignedTx={unsignedTx}
-            datum={{data: createOrder.datum}}
             onSuccess={() => {
               closeBottomSheet()
               navigate.submittedTx()
