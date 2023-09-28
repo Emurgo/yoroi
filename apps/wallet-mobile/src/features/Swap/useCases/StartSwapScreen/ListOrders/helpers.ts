@@ -474,10 +474,12 @@ export const fixScriptHash = async (tx: CSL_TYPES.Transaction) => {
   const input = await (await (await tx.body()).inputs()).get(0)
   const amount = await CardanoMobile.Value.new(await bigNumFromStr('5000000'))
   const script = await plutusScripts.get(0)
-  const dataHex = await plutusData.get(0).then((d) => d.toHex())
-  const redeemerHex = await redeemers.get(0).then((r) => r.toHex())
+  const data = await plutusData.get(0)
+  const redeemer = await redeemers.get(0)
 
-  await builder.addPlutusScriptInput(script, dataHex, redeemerHex, input, amount)
+  const plutusWitness = await CardanoMobile.PlutusWitness.new(script, data, redeemer)
+
+  await builder.addPlutusScriptInput(plutusWitness, input, amount)
 
   await builder.calcScriptDataHash(await getCostModel())
 

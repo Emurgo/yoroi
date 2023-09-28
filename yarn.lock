@@ -1962,8 +1962,10 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/cross-csl-core@^2.9.0", "@emurgo/cross-csl-core@file:../cross-csl/packages/cross-csl-core":
-  version "2.9.0"
+"@emurgo/cross-csl-core@3.1.0", "@emurgo/cross-csl-core@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-3.1.0.tgz#bfc0af0e76fdd93af420c2fe079a482593792758"
+  integrity sha512-owiAQKAk04u+8xhyqp/9Bkh5T/kcNbBsMcYZRzsN7TFryMM7mKsnorGmV1F0B0h4AjvmmV/pDmhvVqdiyADoMg==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
     "@types/mocha" "^9.1.1"
@@ -1974,17 +1976,21 @@
     hash-wasm "^4.9.0"
     mocha "^10.0.0"
 
-"@emurgo/cross-csl-mobile@file:../cross-csl/packages/cross-csl-mobile":
-  version "2.9.0"
+"@emurgo/cross-csl-mobile@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-mobile/-/cross-csl-mobile-3.1.0.tgz#9d0c4686f8d7512ed2e82189796137381a65aca8"
+  integrity sha512-RwwRlHqGldiyAkq+8PlQb0tVuYbzBoMCu2TRC2wPh7ee3BKOU812i9ZmyMayq5QxfPmDv8PbXX0Q6Mi/kanwnQ==
   dependencies:
-    "@emurgo/cross-csl-core" "^2.9.0"
+    "@emurgo/cross-csl-core" "^3.1.0"
     "@emurgo/csl-mobile-bridge" "^5.1.2"
 
-"@emurgo/cross-csl-nodejs@file:../cross-csl/packages/cross-csl-nodejs":
-  version "2.9.0"
+"@emurgo/cross-csl-nodejs@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-nodejs/-/cross-csl-nodejs-3.1.0.tgz#fa2eba5401354e58aef9c3ce6d4dd64bc35ab370"
+  integrity sha512-enEUZFhtJVffcARouAiGSVGl52Hy8qsjsG2Zk70v1zO/nXSKri/NGilTjj1FWZ7dzXfeNF3NS6ieh3Xkozg4vA==
   dependencies:
     "@emurgo/cardano-serialization-lib-nodejs" "^11.5.0"
-    "@emurgo/cross-csl-core" "^2.9.0"
+    "@emurgo/cross-csl-core" "^3.1.0"
 
 "@emurgo/csl-mobile-bridge@^5.1.2":
   version "5.1.2"
@@ -2011,17 +2017,17 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@file:../yoroi-lib":
-  version "0.8.1"
+"@emurgo/yoroi-lib@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.9.0.tgz#15930e2574ce31e8075892620d6a2cd5a23de406"
+  integrity sha512-ibfLMsmmBnOBqKG+M6OJ7zdW6Ajkoy7t25ejzQkU8F0yR93ZwH5rfetGFfE9VCP6OB0hYguoihOC6uCVsjg+yg==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^6.0.0"
-    "@emurgo/cross-csl-core" "file:../cross-csl/packages/cross-csl-core"
-    "@emurgo/cross-csl-nodejs" "file:../cross-csl/packages/cross-csl-nodejs"
+    "@emurgo/cross-csl-core" "3.1.0"
+    "@noble/hashes" "^1.3.2"
     axios "^0.24.0"
     bech32 "^2.0.0"
     bignumber.js "^9.0.1"
-    blake2b "^2.1.4"
-    hash-wasm "^4.9.0"
 
 "@esbuild/android-arm64@0.18.12":
   version "0.18.12"
@@ -3770,6 +3776,11 @@
   version "6.3.3"
   resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/semver-v6/-/semver-v6-6.3.3.tgz#ea6d23ade78a325f7a52750aab1526b02b628c29"
   integrity sha512-3Yc1fUTs69MG/uZbJlLSI3JISMn2UV2rg+1D/vROUqZyh3l6iYHCs7GMp+M40ZD7yOdDbYjJcU1oTJhrc+dGKg==
+
+"@noble/hashes@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.3.2.tgz#6f26dbc8fbc7205873ce3cee2f690eba0d421b39"
+  integrity sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -8109,11 +8120,6 @@ big.js@^5.2.2:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-5.2.2.tgz#65f0af382f578bcdc742bd9c281e9cb2d7768328"
   integrity sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==
-
-bignumber.js@9.0.1:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.1.tgz#8d7ba124c882bfd8e43260c67475518d0689e4e5"
-  integrity sha512-IdZR9mh6ahOBv/hYGiXyVuyCetmGJhtYkqLBpTStdhEGjegpPlUawydyaF3pbIOFynJTpllEs+NP+CS9jKFLjA==
 
 bignumber.js@^9.0.1:
   version "9.1.1"
