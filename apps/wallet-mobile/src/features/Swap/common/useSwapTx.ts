@@ -16,14 +16,14 @@ export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {
       data: {
         msg: splitStringInto64CharArray(
           JSON.stringify({
-            provider: createOrder.selectedPool.provider,
+            provider: createOrder.selectedPool?.provider,
             sellTokenId: createOrder.amounts.sell.tokenId,
             sellQuantity: createOrder.amounts.sell.quantity,
             buyTokenId: createOrder.amounts.buy.tokenId,
             buyQuantity: createOrder.amounts.buy.quantity,
-            depositFee: createOrder.selectedPool.deposit.quantity,
-            feeTokenId: createOrder.selectedPool.deposit.tokenId,
-            poolId: createOrder.selectedPool.poolId,
+            depositFee: createOrder.selectedPool?.deposit.quantity,
+            feeTokenId: createOrder.selectedPool?.deposit.tokenId,
+            poolId: createOrder.selectedPool?.poolId,
           }),
         ),
       },

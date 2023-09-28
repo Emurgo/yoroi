@@ -1,4 +1,4 @@
-import {getMinAdaReceiveAfterSlippage, getTotalFees, useSwap} from '@yoroi/swap'
+import {getMinAdaReceiveAfterSlippage, useSwap} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -9,7 +9,7 @@ import {useLanguage} from '../../../../i18n'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils'
+import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useStrings} from '../../common/strings'
 
 export const TransactionSummary = () => {
@@ -21,23 +21,20 @@ export const TransactionSummary = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {numberLocale} = useLanguage()
-  const {createOrder, unsignedTx} = useSwap()
+  const {createOrder} = useSwap()
   const {amounts, selectedPool} = createOrder
 
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
   const label = `${Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)} ${tokenToBuyName}`
 
-  const poolFee = Quantities.denominated(
-    asQuantity(Number(Object.values(unsignedTx?.fee))),
-    Number(wallet.primaryTokenInfo.decimals),
-  )
   const feesInfo = [
     {
       label: strings.swapMinAdaTitle,
-      value: `${Quantities.denominated(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))} ${
-        wallet.primaryTokenInfo.ticker
-      }`,
+      value: `${Quantities.format(
+        selectedPool?.deposit?.quantity ?? Quantities.zero,
+        Number(wallet.primaryTokenInfo.decimals),
+      )} ${wallet.primaryTokenInfo.ticker}`,
       info: strings.swapMinAda,
     },
     {
@@ -52,11 +49,9 @@ export const TransactionSummary = () => {
     },
     {
       label: strings.swapFeesTitle,
-      value: `${getTotalFees(
-        selectedPool?.batcherFee.quantity,
-        asQuantity(poolFee),
-        wallet.primaryTokenInfo.decimals ?? 0,
-        numberLocale,
+      value: `${Quantities.format(
+        createOrder.selectedPool?.batcherFee?.quantity ?? Quantities.zero,
+        Number(wallet.primaryTokenInfo.decimals),
       )} ${wallet.primaryTokenInfo.ticker}`,
       info: strings.swapFees,
     },

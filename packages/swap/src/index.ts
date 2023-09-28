@@ -14,7 +14,7 @@ export {getBuyAmount} from './helpers/orders/getBuyAmount'
 export {getSellAmount} from './helpers/orders/getSellAmount'
 export {makePossibleMarketOrder} from './helpers/orders/makePossibleMarketOrder'
 export {getMinAdaReceiveAfterSlippage} from './helpers/orders/getMinAdaReceiveAfterSlippage'
-export {getTotalFees} from './helpers/orders/getTotalFees'
+export {getLiquidityProviderFee} from './helpers/orders/getLiquidityProviderFee'
 export {makeLimitOrder} from './helpers/orders/makeLimitOrder'
 
 export {getPoolUrlByProvider} from './helpers/pools/getPoolUrlByProvider'

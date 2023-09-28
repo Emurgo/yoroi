@@ -1,6 +1,7 @@
 import AssetFingerprint from '@emurgo/cip14-js'
 import {Swap, Balance} from '@yoroi/types'
 import {OpenSwap} from '@yoroi/openswap'
+import {isString} from '@yoroi/common'
 
 import {Quantities} from '../utils/quantities'
 import {supportedProviders} from '../translators/constants'
@@ -142,7 +143,7 @@ export const transformersMaker = (
     amount: string
     token: string
   }): Balance.Amount => {
-    if (openswapAmount !== null && openswapAmount?.amount !== null) {
+    if (isString(openswapAmount?.amount)) {
       // openswap is inconsistent about ADA
       // sometimes is '.', '' or 'lovelace'
       const {amount, token} = openswapAmount
