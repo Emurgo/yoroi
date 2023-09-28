@@ -27,7 +27,7 @@ import {useWalletNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {generateCIP30UtxoCbor, generateMuesliSwapSigningKey} from '../../../../../yoroi-wallets/cardano/utils'
+import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {ConfirmWithSpendingPassword} from '../../../common/ConfirmWithSpendingPassword'
 import {Counter} from '../../../common/Counter/Counter'
@@ -160,7 +160,7 @@ export const OpenOrders = () => {
     const rootKey = await wallet.encryptedStorage.rootKey.read(password)
     const {cbor, signers} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
 
-    const keys = await Promise.all(signers.map(async (signer) => generateMuesliSwapSigningKey(rootKey, signer)))
+    const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
     const response = await wallet.signRawTx(cbor, keys)
     if (!response) return
     const hexBase64 = new Buffer(response).toString('base64')

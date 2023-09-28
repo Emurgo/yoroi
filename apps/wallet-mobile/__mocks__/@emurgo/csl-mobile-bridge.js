@@ -1,3 +1,1 @@
-const mockedModule = jest.mock('@emurgo/csl-mobile-bridge')
-
-module.exports = mockedModule
+export * from '@emurgo/cross-csl-mobile'

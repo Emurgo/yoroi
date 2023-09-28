@@ -326,7 +326,7 @@ export const generateCIP30UtxoCbor = async (utxo: RawUtxo) => {
   return transactionUnspentOutput.toHex()
 }
 
-export const generateMuesliSwapSigningKey = async (rootKey: string, derivationPath: number[]) => {
+export const createRawTxSigningKey = async (rootKey: string, derivationPath: number[]) => {
   if (derivationPath.length !== 5) throw new Error('Invalid derivation path')
   const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(rootKey, 'hex'))
   const accountPrivateKey = await masterKey
