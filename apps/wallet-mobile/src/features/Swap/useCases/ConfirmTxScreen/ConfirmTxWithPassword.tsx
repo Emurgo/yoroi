@@ -26,8 +26,6 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx}: Props) =>
   })
   const strings = useStrings()
 
-
-
   const {signAndSubmitTx, isLoading} = useSignWithPasswordAndSubmitTx(
     {wallet}, //
     {submitTx: {onSuccess}},
@@ -61,11 +59,11 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx}: Props) =>
     }
   }
 
-    return (
-        <ConfirmWithSpendingPassword
-            onSubmit={onConfirm}
-            isLoading={isLoading}
-            error={errorData.errorMessage.length > 0 ? new Error(errorData.errorMessage) : undefined}
-        />
-    )
+  return (
+    <ConfirmWithSpendingPassword
+      onSubmit={onConfirm}
+      isLoading={isLoading}
+      error={errorData.errorMessage.length > 0 ? new Error(errorData.errorMessage) : undefined}
+    />
+  )
 }
