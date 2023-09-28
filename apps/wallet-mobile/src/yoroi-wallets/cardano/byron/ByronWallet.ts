@@ -5,7 +5,6 @@ import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
-import blake2b from 'blake2b'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
@@ -68,6 +67,7 @@ import {NUMBERS} from '../numbers'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
+import {signRawTransaction} from '../shelley/signatureUtils'
 import {yoroiSignedTx} from '../signedTx'
 import {TransactionManager} from '../transactionManager'
 import {
@@ -1080,29 +1080,7 @@ export class ByronWallet implements YoroiWallet {
   }
 
   public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
-    const fixedTx = await CardanoMobile.FixedTransaction.fromHex(txHex)
-    if (!fixedTx) throw new Error('invalid tx hex')
-    const rawBody = await fixedTx.rawBody()
-    const txHash = await CardanoMobile.TransactionHash.fromBytes(blake2b(32).update(rawBody).digest('binary'))
-    if (!txHash) throw new Error('invalid tx hex, could not generate tx hash')
-
-    const witSet = await fixedTx.witnessSet()
-    let vkeys = await witSet.vkeys()
-
-    if (vkeys === undefined) {
-      vkeys = await CardanoMobile.Vkeywitnesses.new()
-    }
-
-    for (let i = 0; i < pKeys.length; i++) {
-      const vkeyWit = await CardanoMobile.makeVkeyWitness(txHash, pKeys[i])
-      if (!vkeyWit) throw new Error('invalid tx hex, could not generate vkey witness')
-      await vkeys.add(vkeyWit)
-    }
-
-    await witSet.setVkeys(vkeys)
-    await fixedTx.setWitnessSet(await witSet.toBytes())
-
-    return fixedTx.toBytes()
+    return signRawTransaction(txHex, pKeys)
   }
 
   async fetchTokenInfo(tokenId: string) {

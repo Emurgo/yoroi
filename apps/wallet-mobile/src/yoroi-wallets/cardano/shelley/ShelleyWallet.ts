@@ -5,7 +5,6 @@ import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
-import blake2b from 'blake2b'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
 import DeviceInfo from 'react-native-device-info'
@@ -68,6 +67,7 @@ import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
+import {signRawTransaction} from './signatureUtils'
 type WalletState = {
   lastGeneratedAddressIndex: number
 }
@@ -455,29 +455,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     }
 
     public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
-      const fixedTx = await CardanoMobile.FixedTransaction.fromHex(txHex)
-
-      if (!fixedTx) throw new Error('invalid tx hex')
-      const rawBody = await fixedTx.rawBody()
-      const txHash = await CardanoMobile.TransactionHash.fromBytes(blake2b(32).update(rawBody).digest('binary'))
-
-      if (!txHash) throw new Error('invalid tx hex, could not generate tx hash')
-
-      const witSet = await fixedTx.witnessSet()
-
-      const vkeys = await CardanoMobile.Vkeywitnesses.new()
-
-      for (let i = 0; i < pKeys.length; i++) {
-        const vkeyWit = await CardanoMobile.makeVkeyWitness(txHash, pKeys[i])
-
-        if (!vkeyWit) throw new Error('invalid tx hex, could not generate vkey witness')
-        await vkeys.add(vkeyWit)
-      }
-
-      await witSet.setVkeys(vkeys)
-      await fixedTx.setWitnessSet(await witSet.toBytes())
-
-      return fixedTx.toBytes()
+      return signRawTransaction(txHex, pKeys)
     }
 
     private async getRewardAddress() {
