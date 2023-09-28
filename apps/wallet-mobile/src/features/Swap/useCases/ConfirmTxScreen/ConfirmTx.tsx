@@ -1,4 +1,3 @@
-import {Datum} from '@emurgo/yoroi-lib'
 import React from 'react'
 
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
