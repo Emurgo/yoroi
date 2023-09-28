@@ -47,6 +47,7 @@ import * as api from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
+import {signRawTransaction} from '../common/signatureUtils'
 import {
   HISTORY_REFRESH_TIME,
   MAX_GENERATED_UNUSED,
@@ -67,7 +68,6 @@ import {NUMBERS} from '../numbers'
 import {processTxHistoryData} from '../processTransactions'
 import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
-import {signRawTransaction} from '../shelley/signatureUtils'
 import {yoroiSignedTx} from '../signedTx'
 import {TransactionManager} from '../transactionManager'
 import {

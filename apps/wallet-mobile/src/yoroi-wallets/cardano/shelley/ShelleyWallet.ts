@@ -39,6 +39,7 @@ import * as api from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
+import {signRawTransaction} from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
@@ -67,7 +68,6 @@ import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
-import {signRawTransaction} from './signatureUtils'
 type WalletState = {
   lastGeneratedAddressIndex: number
 }
