@@ -54,10 +54,8 @@ export const CreateOrder = () => {
   }, [poolList])
 
   useEffect(() => {
-    if (bestPool?.poolId !== undefined) {
-      selectedPoolChanged(bestPool)
-      poolDefaulted()
-    }
+    selectedPoolChanged(bestPool)
+    poolDefaulted()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolDefaulted, selectedPoolChanged, bestPool?.poolId, bestPool?.price])
 
