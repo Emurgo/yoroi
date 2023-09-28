@@ -443,7 +443,7 @@ export const useSignWithHwAndSubmitTx = (
 export const useSignAndSubmitTx = (
   {wallet}: {wallet: YoroiWallet},
   options?: {
-    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; rootKey: string}>
+    signTx?: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; rootKey: string; datum?: Datum}>
     submitTx?: UseMutationOptions<TxSubmissionStatus, Error, YoroiSignedTx>
   },
 ) => {
@@ -476,10 +476,10 @@ export const useSignAndSubmitTx = (
 
 export const useSignTx = (
   {wallet}: {wallet: YoroiWallet},
-  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; rootKey: string}> = {},
+  options: UseMutationOptions<YoroiSignedTx, Error, {unsignedTx: YoroiUnsignedTx; rootKey: string; datum?: Datum}> = {},
 ) => {
   const mutation = useMutation({
-    mutationFn: ({unsignedTx, rootKey}) => wallet.signTx(unsignedTx, rootKey),
+    mutationFn: ({unsignedTx, rootKey, datum}) => wallet.signTx(unsignedTx, rootKey, datum),
     retry: false,
     ...options,
   })

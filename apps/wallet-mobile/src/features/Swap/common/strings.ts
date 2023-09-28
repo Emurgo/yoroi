@@ -1,6 +1,6 @@
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages from '../../../i18n/global-messages'
+import globalMessages, {errorMessages} from '../../../i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -101,6 +101,9 @@ export const useStrings = () => {
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
+    generalTxErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),
+    incorrectPasswordTitle: intl.formatMessage(errorMessages.incorrectPassword.title),
+    incorrectPasswordMessage: intl.formatMessage(errorMessages.incorrectPassword.message),
   }
 }
 
