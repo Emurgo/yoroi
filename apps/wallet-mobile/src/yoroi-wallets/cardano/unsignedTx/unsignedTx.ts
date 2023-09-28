@@ -73,7 +73,7 @@ export const yoroiUnsignedTx = async ({
         : undefined,
     },
     metadata: toMetadata(unsignedTx.metadata),
-    datum: datum ?? undefined,
+    datum: datum,
     unsignedTx,
   }
 
