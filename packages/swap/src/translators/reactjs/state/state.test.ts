@@ -263,9 +263,8 @@ describe('State Actions', () => {
           tokenId: mockSwapStateDefault.createOrder.amounts.buy.tokenId,
         },
       }
-      draft.createOrder.limitPrice = `${
-        mockSwapStateDefault.createOrder.selectedPool.price ?? 0
-      }`
+      draft.createOrder.limitPrice =
+        mockSwapStateDefault.createOrder.marketPrice
     })
     const state = combinedSwapReducers(mockSwapStateDefault, action)
     expect(state).toEqual(expectedState)

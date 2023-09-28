@@ -36,8 +36,8 @@ export const EditBuyAmount = () => {
 
   const poolSupply =
     tokenId === createOrder?.selectedPool?.tokenA.tokenId
-      ? createOrder.selectedPool.tokenA.quantity
-      : createOrder.selectedPool.tokenB.quantity
+      ? createOrder.selectedPool?.tokenA.quantity
+      : createOrder.selectedPool?.tokenB.quantity
   const hasSupply = !Quantities.isGreaterThan(quantity, poolSupply ?? Quantities.zero)
   const showError = !Quantities.isZero(quantity) && !hasSupply
 

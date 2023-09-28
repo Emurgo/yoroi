@@ -74,8 +74,19 @@ export const CreateOrder = () => {
 
   const {createOrderData} = useSwapCreateOrder({
     onSuccess: (data: Swap.CreateOrderResponse) => {
-      if (data?.contractAddress !== undefined) {
-        const entry = createYoroiEntry(createOrder, data.contractAddress, wallet)
+      if (data?.contractAddress !== undefined && createOrder.selectedPool !== undefined) {
+        const {amounts, limitPrice, address, slippage, selectedPool} = createOrder
+        const entry = createYoroiEntry(
+          {
+            amounts,
+            limitPrice,
+            address,
+            slippage,
+            selectedPool,
+          },
+          data.contractAddress,
+          wallet,
+        )
         const datum = {data: data.datum}
         txPayloadChanged({datum: data.datum, datumHash: data.datumHash, contractAddress: data.contractAddress})
         createUnsignedTx({entry, datum})
@@ -97,7 +108,7 @@ export const CreateOrder = () => {
     const sellTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)
     const buyTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)
 
-    if (!sellTokenInfo || !buyTokenInfo) return
+    if (!sellTokenInfo || !buyTokenInfo || createOrder?.selectedPool === undefined) return
 
     track.swapOrderSelected({
       from_asset: [
@@ -109,7 +120,9 @@ export const CreateOrder = () => {
       from_amount: createOrder.amounts.sell.quantity,
       to_amount: createOrder.amounts.buy.quantity,
       pool_source: createOrder.selectedPool.provider,
-      swap_fees: Number(createOrder.selectedPool.fee),
+      swap_fees: Number(
+        Quantities.denominated(createOrder.selectedPool.batcherFee.quantity, Number(wallet.primaryTokenInfo.decimals)),
+      ),
     })
 
     navigation.confirmTx()
@@ -126,7 +139,7 @@ export const CreateOrder = () => {
       address: wallet.externalAddresses[0],
     }
 
-    if (orderDetails.pools === undefined) return
+    if (orderDetails.pools === undefined || orderDetails.selectedPool === undefined) return
 
     if (createOrder.type === 'market') {
       const orderResult: Swap.CreateOrderData | undefined = makePossibleMarketOrder(
