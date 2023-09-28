@@ -19,7 +19,6 @@ import {
   MainInfoWrapper,
   Spacer,
   Text,
-  TextInput,
   TokenIcon,
 } from '../../../../../components'
 import {useLanguage} from '../../../../../i18n'
@@ -28,9 +27,9 @@ import {useWalletNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {WrongPassword} from '../../../../../yoroi-wallets/cardano/errors'
 import {generateCIP30UtxoCbor, generateMuesliSwapSigningKey} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {ConfirmWithSpendingPassword} from '../../../common/ConfirmWithSpendingPassword'
 import {Counter} from '../../../common/Counter/Counter'
 import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
@@ -371,13 +370,10 @@ const HiddenInfo = ({
 }
 
 const PasswordModal = ({onConfirm}: {onConfirm: (password: string) => Promise<void>}) => {
-  const [password, setPassword] = useState('')
-  const strings = useStrings()
-
   const [error, setError] = useState<Error | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const onConfirmPress = async () => {
+  const onConfirmPress = async (password) => {
     setError(null)
     setLoading(true)
     try {
@@ -392,44 +388,11 @@ const PasswordModal = ({onConfirm}: {onConfirm: (password: string) => Promise<vo
 
   return (
     <>
-      <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
-
-      <TextInput
-        secureTextEntry
-        enablesReturnKeyAutomatically
-        placeholder={strings.spendingPassword}
-        value={password}
-        onChangeText={setPassword}
-        autoComplete="off"
-        label={strings.spendingPassword}
-      />
-
-      {error !== null ? (
-        <View>
-          <Text style={styles.errorMessage} numberOfLines={3}>
-            {getErrorMessage(error, strings)}
-          </Text>
-        </View>
-      ) : null}
-
-      <Spacer fill />
-
-      <Button testID="swapButton" disabled={loading} onPress={onConfirmPress} shelleyTheme title={strings.sign} />
+      <ConfirmWithSpendingPassword onSubmit={onConfirmPress} isLoading={loading} error={error ?? undefined} />
 
       <Spacer height={10} />
     </>
   )
-}
-
-const getErrorMessage = (error: unknown, strings: Record<'wrongPasswordMessage' | 'error', string>) => {
-  if (error instanceof WrongPassword) {
-    return strings.wrongPasswordMessage
-  }
-  if (error instanceof Error) {
-    return error.message
-  }
-
-  return strings.error
 }
 
 const MainInfo = ({tokenPrice, tokenAmount}: {tokenPrice: string; tokenAmount: string}) => {
@@ -672,11 +635,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     paddingTop: 10,
   },
-  modalText: {
-    paddingHorizontal: 70,
-    textAlign: 'center',
-    paddingBottom: 8,
-  },
   content: {
     flex: 1,
     paddingHorizontal: 16,
@@ -692,9 +650,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 24,
     textAlign: 'center',
-  },
-  errorMessage: {
-    color: COLORS.ERROR_TEXT_COLOR,
   },
   contentLabel: {
     color: '#6B7384',

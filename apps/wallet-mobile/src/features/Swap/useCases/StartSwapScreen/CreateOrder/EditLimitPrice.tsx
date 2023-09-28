@@ -38,11 +38,7 @@ export const EditLimitPrice = () => {
 
   React.useEffect(() => {
     if (createOrder.type === 'limit') {
-      setText(
-        new BigNumber(createOrder?.limitPrice ?? 0)
-          .decimalPlaces(PRECISION)
-          .toFormat(numberLocale),
-      )
+      setText(new BigNumber(createOrder?.limitPrice ?? 0).decimalPlaces(PRECISION).toFormat(numberLocale))
     } else {
       setText(new BigNumber(createOrder.marketPrice).decimalPlaces(PRECISION).toFormat(numberLocale))
     }
