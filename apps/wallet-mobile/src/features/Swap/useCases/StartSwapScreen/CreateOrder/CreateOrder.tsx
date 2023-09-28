@@ -212,8 +212,8 @@ export const CreateOrder = () => {
         <ScrollView style={styles.scroll}>
           <View style={styles.container}>
             <LimitPriceWarning
-              open={showLimitPriceWarning}
-              onClose={() => setShowLimitPriceWarning(false)}
+              ref={limitPriceWarningRef}
+              closeLimitPriceWarning={closeLimitPriceWarning}
               onSubmit={createUnsignedSwapTx}
             />
 
@@ -235,7 +235,7 @@ export const CreateOrder = () => {
 
             <EditSlippage openBottomSheet={openBottomSheet} />
 
-            <ShowPoolActions />
+            <ShowPoolActions openBottomSheet={openBottomSheet} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
