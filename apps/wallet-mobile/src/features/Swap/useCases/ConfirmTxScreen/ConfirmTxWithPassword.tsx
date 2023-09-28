@@ -36,6 +36,10 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx, datum}: Pr
   })
   const strings = useStrings()
 
+  React.useEffect(() => {
+    setErrorData({errorMessage: '', errorLogs: ''})
+  }, [spendingPassword])
+
   const {signAndSubmitTx, isLoading} = useSignWithPasswordAndSubmitTx(
     {wallet}, //
     {submitTx: {onSuccess}},
