@@ -1,9 +1,8 @@
-import {mockSwapStateDefault} from '@yoroi/swap'
+import {mockSwapStateDefault, SwapState} from '@yoroi/swap'
 
 import {mocks as walletMocks} from '../../../yoroi-wallets/mocks/wallet'
 import {asQuantity} from '../../../yoroi-wallets/utils'
 
-type ProviderType = 'sundaeswap' | 'minswap' | 'wingriders' | 'muesliswap_v1' | 'muesliswap_v2' | 'muesliswap_v3'
 type Type = 'market' | 'limit'
 
 export const mocks = {
@@ -34,7 +33,7 @@ export const mocks = {
         },
         poolId: '0029cb7c88c7567b63d1a512c0ed626aa169688ec980730c0473b913.702083',
         price: 0.0890390378168252,
-        provider: 'sundaeswap' as ProviderType,
+        provider: 'sundaeswap',
         tokenA: {quantity: asQuantity(20630071), tokenId: ''},
         tokenB: {
           quantity: asQuantity(231696922),
@@ -44,5 +43,5 @@ export const mocks = {
       slippage: 1,
       type: 'market' as Type,
     },
-  },
+  } as SwapState,
 }

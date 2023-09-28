@@ -665,6 +665,10 @@ export default defineMessages({
     id: 'global.assets',
     defaultMessage: '!!! Assets',
   },
+  available: {
+    id: 'global.available',
+    defaultMessage: '!!! available',
+  },
   pools: {
     id: 'global.pools',
     defaultMessage: '!!! Pools',

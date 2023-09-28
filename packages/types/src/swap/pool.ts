@@ -4,6 +4,7 @@ export type SwapPoolProvider =
   | 'minswap'
   | 'sundaeswap'
   | 'wingriders'
+  | 'muesliswap'
   | 'muesliswap_v1'
   | 'muesliswap_v2'
   | 'muesliswap_v3'
@@ -11,8 +12,18 @@ export type SwapPoolProvider =
   | 'vyfi'
   | 'spectrum'
 
+export type SwapSupportedProvider = Extract<
+  SwapPoolProvider,
+  | 'minswap'
+  | 'wingriders'
+  | 'sundaeswap'
+  | 'muesliswap'
+  | 'muesliswap_v2'
+  | 'vyfi'
+>
+
 export type SwapPool = {
-  provider: SwapPoolProvider
+  provider: SwapSupportedProvider
   fee: string // % pool liquidity provider fee, usually 0.3.
   tokenA: BalanceAmount
   tokenB: BalanceAmount

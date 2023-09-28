@@ -62,13 +62,13 @@ export const CompletedOrders = () => {
       <ScrollView style={styles.container}>
         {filteredOrders.map((order) => {
           const id = `${order.assetFromLabel}-${order.assetToLabel}-${order.date}`
-          const extended = id === hiddenInfoOpenId
+          const expanded = id === hiddenInfoOpenId
           const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
           const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
           return (
             <ExpandableInfoCard
               key={`${order.assetFromLabel}-${order.assetToLabel}-${order.date}`}
-              adornment={
+              info={
                 <HiddenInfo
                   txId={order.txId}
                   total={`${order.total} ${order.assetFromLabel}`}
@@ -83,10 +83,10 @@ export const CompletedOrders = () => {
                   assetToLabel={order.assetToLabel}
                   assetFromIcon={fromIcon}
                   assetToIcon={toIcon}
-                  extended={extended}
+                  expanded={expanded}
                 />
               }
-              extended={extended}
+              expanded={expanded}
               withBoxShadow
             >
               <MainInfo
@@ -108,18 +108,18 @@ const Header = ({
   assetToLabel,
   assetFromIcon,
   assetToIcon,
-  extended,
+  expanded,
   onPress,
 }: {
   assetFromLabel: string
   assetToLabel: string
   assetFromIcon: React.ReactNode
   assetToIcon: React.ReactNode
-  extended: boolean
+  expanded?: boolean
   onPress: () => void
 }) => {
   return (
-    <HeaderWrapper extended={extended} onPress={onPress}>
+    <HeaderWrapper expanded={expanded} onPress={onPress}>
       <View style={styles.label}>
         {assetFromIcon}
 

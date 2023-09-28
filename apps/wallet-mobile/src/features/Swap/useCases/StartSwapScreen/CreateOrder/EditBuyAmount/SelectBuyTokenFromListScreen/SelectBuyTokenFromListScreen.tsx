@@ -221,9 +221,9 @@ const Counter = ({counter}: {counter: number}) => {
   if (!isSearching) {
     return (
       <View style={styles.counter}>
-        <Text style={styles.counterText}>{strings.youHave}</Text>
+        <Text style={styles.counterTextBold}>{`${counter} ${strings.assets(counter)} `}</Text>
 
-        <Text style={styles.counterTextBold}>{` ${counter} ${strings.tokens(counter)}`}</Text>
+        <Text style={styles.counterText}>{strings.available}</Text>
       </View>
     )
   }

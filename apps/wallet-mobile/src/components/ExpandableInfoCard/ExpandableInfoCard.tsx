@@ -1,3 +1,4 @@
+import {isString} from '@yoroi/common'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -8,8 +9,8 @@ import {Icon} from '../Icon'
 import {Spacer} from '../Spacer'
 
 export type ExpandableInfoCardProps = {
-  adornment: React.ReactNode
-  extended: boolean
+  info: React.ReactNode
+  expanded?: boolean
   children: React.ReactNode
   header: React.ReactNode
   footer?: React.ReactNode
@@ -18,11 +19,11 @@ export type ExpandableInfoCardProps = {
 
 export const ExpandableInfoCard = ({
   children,
-  extended,
-  adornment,
+  expanded,
+  info,
   header,
   withBoxShadow = false,
-  footer = null,
+  footer,
 }: ExpandableInfoCardProps) => {
   return (
     <View>
@@ -37,9 +38,9 @@ export const ExpandableInfoCard = ({
 
         <Spacer height={8} />
 
-        {extended && adornment}
+        {expanded && info}
 
-        {footer}
+        {footer != null && footer}
 
         <Spacer height={8} />
       </View>
@@ -51,11 +52,11 @@ export const ExpandableInfoCard = ({
 
 export const HeaderWrapper = ({
   children,
-  extended,
+  expanded,
   onPress,
 }: {
   children: React.ReactNode
-  extended: boolean
+  expanded?: boolean
   onPress: () => void
 }) => {
   return (
@@ -63,7 +64,7 @@ export const HeaderWrapper = ({
       {children}
 
       <TouchableOpacity onPress={onPress}>
-        {extended ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
+        {expanded ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
       </TouchableOpacity>
     </View>
   )
@@ -103,7 +104,7 @@ export const HiddenInfoWrapper = ({
           )}
         </View>
 
-        {typeof value === 'string' ? <Text style={styles.text}>{value}</Text> : value}
+        {isString(value) ? <Text style={styles.text}>{value}</Text> : value}
       </View>
 
       <Spacer height={8} />
@@ -115,9 +116,9 @@ export const MainInfoWrapper = ({label, value, isLast = false}: {label: string; 
   return (
     <View>
       <View style={styles.flexBetween}>
-        <Text style={styles.gray}>{`${label}`}</Text>
+        <Text style={styles.gray}>{label}</Text>
 
-        {value !== undefined && <Text style={styles.text}>{`${value}`}</Text>}
+        {isString(value) && <Text style={styles.text}>{value}</Text>}
       </View>
 
       {!isLast && <Spacer height={8} />}

@@ -46,6 +46,19 @@ describe('State Actions', () => {
     expect(state).toEqual(expectedState)
   })
 
+  it('SellAmountChanged zero', () => {
+    const action: SwapCreateOrderAction = {
+      type: SwapCreateOrderActionType.SellAmountChanged,
+      amount: {quantity: '0', tokenId: 'someTokenId'},
+    }
+    const expectedState = produce(mockSwapStateDefault, (draft) => {
+      draft.createOrder.amounts.sell = action.amount
+      draft.createOrder.amounts.buy.quantity = '0'
+    })
+    const state = combinedSwapReducers(mockSwapStateDefault, action)
+    expect(state).toEqual(expectedState)
+  })
+
   it('SellAmountChanged market', () => {
     const action: SwapCreateOrderAction = {
       type: SwapCreateOrderActionType.SellAmountChanged,
@@ -90,6 +103,19 @@ describe('State Actions', () => {
     const action: SwapAction = {type: SwapActionType.ResetState}
     const state = combinedSwapReducers(mockSwapStateDefault, action)
     expect(state).toEqual(defaultSwapState)
+  })
+
+  it('BuyAmountChanged zero', () => {
+    const action: SwapCreateOrderAction = {
+      type: SwapCreateOrderActionType.BuyAmountChanged,
+      amount: {quantity: '0', tokenId: 'someTokenId'},
+    }
+    const expectedState = produce(mockSwapStateDefault, (draft) => {
+      draft.createOrder.amounts.buy = action.amount
+      draft.createOrder.amounts.sell.quantity = `0`
+    })
+    const state = combinedSwapReducers(mockSwapStateDefault, action)
+    expect(state).toEqual(expectedState)
   })
 
   it('BuyAmountChanged market', () => {

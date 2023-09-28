@@ -37,27 +37,37 @@ export const ShowPoolActions = ({openBottomSheet}: {openBottomSheet: ({title, co
   }
   const totalAmount = Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)
   const id = selectedPool.poolId
-  const extended = id === hiddenInfoOpenId
+  const expanded = id === hiddenInfoOpenId
+
+  const poolProviderFormatted = capitalize(selectedPool.provider)
+  const poolStatus = isPoolTouched ? '' : ` ${strings.autoPool}`
+  const poolTitle = `${poolProviderFormatted}${poolStatus}`
 
   return (
     <ExpandableInfoCard
       key={id}
       header={
         <Header
-          onPressArow={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
-          onPressLabel={navigateTo.selectPool}
-          extended={extended}
+          onPressExpand={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
+          onPressLabel={() => {
+            if (createOrder.type === 'limit') {
+              navigateTo.selectPool()
+            } else {
+              setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)
+            }
+          }}
+          expanded={expanded}
         >
           <View style={styles.flex}>
             <PoolIcon size={25} providerId={selectedPool.provider} />
 
             <Spacer width={10} />
 
-            <Text>{`${capitalize(selectedPool.provider)}${isPoolTouched ? '' : ` ${strings.autoPool}`}`}</Text>
+            <Text>{poolTitle}</Text>
           </View>
         </Header>
       }
-      adornment={
+      info={
         <HiddenInfo
           totalFees="" // TODO: add fees
           minReceived={getMinAdaReceiveAfterSlippage(
@@ -71,7 +81,7 @@ export const ShowPoolActions = ({openBottomSheet}: {openBottomSheet: ({title, co
           openBottomSheet={openBottomSheet}
         />
       }
-      extended={extended}
+      expanded={expanded}
     >
       <MainInfo totalAmount={totalAmount} tokenName={tokenName} />
     </ExpandableInfoCard>
@@ -80,17 +90,17 @@ export const ShowPoolActions = ({openBottomSheet}: {openBottomSheet: ({title, co
 
 const Header = ({
   children,
-  extended,
-  onPressArow,
+  expanded,
+  onPressExpand,
   onPressLabel,
 }: {
   children: React.ReactNode
-  extended: boolean
-  onPressArow: () => void
+  expanded?: boolean
+  onPressExpand: () => void
   onPressLabel: () => void
 }) => {
   return (
-    <HeaderWrapper extended={extended} onPress={onPressArow}>
+    <HeaderWrapper expanded={expanded} onPress={onPressExpand}>
       <TouchableOpacity onPress={onPressLabel}>{children}</TouchableOpacity>
     </HeaderWrapper>
   )

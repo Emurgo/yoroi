@@ -22,6 +22,7 @@ export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {
             buyTokenId: createOrder.amounts.buy.tokenId,
             buyQuantity: createOrder.amounts.buy.quantity,
             depositFee: createOrder.selectedPool.deposit.quantity,
+            feeTokenId: createOrder.selectedPool.deposit.tokenId,
             poolId: createOrder.selectedPool.poolId,
           }),
         ),

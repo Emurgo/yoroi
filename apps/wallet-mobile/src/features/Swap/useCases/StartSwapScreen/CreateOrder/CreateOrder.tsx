@@ -204,19 +204,19 @@ export const CreateOrder = () => {
 
   return (
     <View style={styles.root}>
-      <ScrollView style={styles.scroll}>
-        <View style={styles.container}>
-          <LimitPriceWarning
-            ref={limitPriceWarningRef}
-            closeLimitPriceWarning={closeLimitPriceWarning}
-            onSubmit={createUnsignedSwapTx}
-          />
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={120}
+      >
+        <ScrollView style={styles.scroll}>
+          <View style={styles.container}>
+            <LimitPriceWarning
+              open={showLimitPriceWarning}
+              onClose={() => setShowLimitPriceWarning(false)}
+              onSubmit={createUnsignedSwapTx}
+            />
 
-          <KeyboardAvoidingView
-            style={styles.flex}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={86}
-          >
             <TopTokenActions />
 
             <EditSellAmount />
@@ -235,10 +235,10 @@ export const CreateOrder = () => {
 
             <EditSlippage openBottomSheet={openBottomSheet} />
 
-            <ShowPoolActions openBottomSheet={openBottomSheet} />
-          </KeyboardAvoidingView>
-        </View>
-      </ScrollView>
+            <ShowPoolActions />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       <Actions>
         <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
