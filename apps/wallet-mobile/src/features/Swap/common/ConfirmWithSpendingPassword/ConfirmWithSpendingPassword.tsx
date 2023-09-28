@@ -34,7 +34,7 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error}: Props)
         autoComplete="off"
       />
 
-      {error !== null ? (
+      {error != null ? (
         <View>
           <Text style={styles.errorMessage} numberOfLines={3}>
             {getErrorMessage(error, strings)}
