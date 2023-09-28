@@ -41,12 +41,12 @@ export const CreateOrder = () => {
     title: '',
     content: '',
   })
-  const openBottomSheet = ({title, content}: BottomSheetState) => {
+  const openDialog = ({title, content}: BottomSheetState) => {
     setBottomSheetState({
       title,
       content,
     })
-    bottomSheetRef.current?.openBottomSheet()
+    bottomSheetRef.current?.openDialog()
   }
   const onCloseBottomSheet = () => {
     setBottomSheetState({title: '', content: ''})
@@ -54,7 +54,7 @@ export const CreateOrder = () => {
 
   const limitPriceWarningRef = React.useRef<null | BottomSheetRef>(null)
   const openLimitPriceWarning = () => {
-    limitPriceWarningRef.current?.openBottomSheet()
+    limitPriceWarningRef.current?.openDialog()
   }
   const closeLimitPriceWarning = () => {
     limitPriceWarningRef.current?.closeBottomSheet()
@@ -233,9 +233,9 @@ export const CreateOrder = () => {
 
             <EditLimitPrice />
 
-            <EditSlippage openBottomSheet={openBottomSheet} />
+            <EditSlippage openDialog={openDialog} />
 
-            <ShowPoolActions openBottomSheet={openBottomSheet} />
+            <ShowPoolActions openDialog={openDialog} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

@@ -21,12 +21,12 @@ storiesOf('Swap Edit Slippage', module)
       content: '',
     })
 
-    const openBottomSheet = ({title, content}: BottomSheetState) => {
+    const openDialog = ({title, content}: BottomSheetState) => {
       setBottomSheetState({
         title,
         content,
       })
-      bottomSheetRef.current?.openBottomSheet()
+      bottomSheetRef.current?.openDialog()
     }
 
     const onCloseBottomSheet = () => {
@@ -39,7 +39,7 @@ storiesOf('Swap Edit Slippage', module)
           <SearchProvider>
             <SwapProvider swapManager={mockSwapManager}>
               <SwapFormProvider>
-                <EditSlippage openBottomSheet={openBottomSheet} />
+                <EditSlippage openDialog={openDialog} />
               </SwapFormProvider>
             </SwapProvider>
           </SearchProvider>
@@ -61,12 +61,12 @@ storiesOf('Swap Edit Slippage', module)
       content: '',
     })
 
-    const openBottomSheet = ({title, content}: BottomSheetState) => {
+    const openDialog = ({title, content}: BottomSheetState) => {
       setBottomSheetState({
         title,
         content,
       })
-      bottomSheetRef.current?.openBottomSheet()
+      bottomSheetRef.current?.openDialog()
     }
 
     const onCloseBottomSheet = () => {
@@ -79,7 +79,7 @@ storiesOf('Swap Edit Slippage', module)
           <SearchProvider>
             <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateBigSlippage}>
               <SwapFormProvider>
-                <EditSlippage openBottomSheet={openBottomSheet} />
+                <EditSlippage openDialog={openDialog} />
               </SwapFormProvider>
             </SwapProvider>
           </SearchProvider>

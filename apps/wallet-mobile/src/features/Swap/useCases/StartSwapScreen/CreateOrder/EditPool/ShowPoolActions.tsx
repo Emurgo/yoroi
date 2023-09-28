@@ -20,7 +20,7 @@ import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../../../../common/SwapFormProvider'
 import {BottomSheetState} from '../CreateOrder'
 
-export const ShowPoolActions = ({openBottomSheet}: {openBottomSheet: ({title, content}: BottomSheetState) => void}) => {
+export const ShowPoolActions = ({openDialog}: {openDialog: ({title, content}: BottomSheetState) => void}) => {
   const navigateTo = useNavigateTo()
   const {numberLocale} = useLanguage()
   const {createOrder} = useSwap()
@@ -78,7 +78,7 @@ export const ShowPoolActions = ({openBottomSheet}: {openBottomSheet: ({title, co
           )}
           minAda={Quantities.denominated(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))}
           buyTokenName={tokenName}
-          openBottomSheet={openBottomSheet}
+          openDialog={openDialog}
         />
       }
       expanded={expanded}
@@ -111,13 +111,13 @@ const HiddenInfo = ({
   minAda,
   minReceived,
   buyTokenName,
-  openBottomSheet,
+  openDialog,
 }: {
   totalFees: string
   minAda: string
   minReceived: string
   buyTokenName: string
-  openBottomSheet: ({title, content}: BottomSheetState) => void
+  openDialog: ({title, content}: BottomSheetState) => void
 }) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
@@ -146,7 +146,7 @@ const HiddenInfo = ({
           value={item.value}
           label={item.label}
           info={item.info}
-          onPress={() => openBottomSheet({title: item.label, content: item.info})}
+          onPress={() => openDialog({title: item.label, content: item.info})}
         />
       ))}
     </View>

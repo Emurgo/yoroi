@@ -5,7 +5,7 @@ import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {BottomSheet, BottomSheetRef, Boundary, Icon, Spacer, Text} from '../../../../../../../components'
+import {Boundary, Icon, Spacer, Text} from '../../../../../../../components'
 import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components/AmountItem/AmountItem'
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
@@ -30,11 +30,6 @@ type TokenForList = {
 
 export const SelectBuyTokenFromListScreen = () => {
   const strings = useStrings()
-  const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
-
-  const openBottomSheet = () => {
-    bottomSheetRef.current?.openBottomSheet()
-  }
 
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
@@ -60,11 +55,11 @@ export const SelectBuyTokenFromListScreen = () => {
   )
 
   return (
-     <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Boundary loading={loading}>
         <TokenList />
       </Boundary>
-     </SafeAreaView>
+    </SafeAreaView>
   )
 }
 

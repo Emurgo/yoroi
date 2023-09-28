@@ -18,7 +18,7 @@ const Initial = () => {
     limitPriceWarningRef.current?.closeBottomSheet()
   }
   const openLimitPriceWarning = () => {
-    limitPriceWarningRef.current?.openBottomSheet()
+    limitPriceWarningRef.current?.openDialog()
   }
 
   const handleClick = () => {

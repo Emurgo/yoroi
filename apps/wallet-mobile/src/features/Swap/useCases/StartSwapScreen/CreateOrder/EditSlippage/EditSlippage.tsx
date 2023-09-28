@@ -9,13 +9,13 @@ import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
 import {BottomSheetState} from '../CreateOrder'
 
-export const EditSlippage = ({openBottomSheet}: {openBottomSheet: ({title, content}: BottomSheetState) => void}) => {
+export const EditSlippage = ({openDialog}: {openDialog: ({title, content}: BottomSheetState) => void}) => {
   const navigate = useNavigateTo()
   const {createOrder} = useSwap()
 
   return (
     <View style={styles.container}>
-      <ShowSlippageInfo openBottomSheet={openBottomSheet} />
+      <ShowSlippageInfo openDialog={openDialog} />
 
       <View style={styles.row}>
         <Text>{`${createOrder.slippage} %`}</Text>
@@ -30,7 +30,7 @@ export const EditSlippage = ({openBottomSheet}: {openBottomSheet: ({title, conte
   )
 }
 
-const ShowSlippageInfo = ({openBottomSheet}: {openBottomSheet: ({title, content}: BottomSheetState) => void}) => {
+const ShowSlippageInfo = ({openDialog}: {openDialog: ({title, content}: BottomSheetState) => void}) => {
   const strings = useStrings()
 
   return (
@@ -41,7 +41,7 @@ const ShowSlippageInfo = ({openBottomSheet}: {openBottomSheet: ({title, content}
 
       <TouchableOpacity
         onPress={() => {
-          openBottomSheet({
+          openDialog({
             title: strings.slippageTolerance,
             content: strings.slippageToleranceInfo,
           })

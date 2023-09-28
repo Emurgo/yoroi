@@ -17,11 +17,11 @@ import {TransactionSummary} from './TransactionSummary'
 export const ConfirmTxScreen = () => {
   const confirmTxBottomSheetRef = React.useRef<null | BottomSheetRef>(null)
 
-  const openConfirmTxBottomSheet = () => {
-    confirmTxBottomSheetRef.current?.openBottomSheet()
+  const openConfirmTxDialog = () => {
+    confirmTxBottomSheetRef.current?.openDialog()
   }
 
-  const closeConfirmTxBottomSheet = () => {
+  const closeConfirmTxDialog = () => {
     confirmTxBottomSheetRef.current?.closeBottomSheet()
   }
   const infoBottomSheetRef = React.useRef<null | BottomSheetRef>(null)
@@ -34,9 +34,9 @@ export const ConfirmTxScreen = () => {
     content: '',
   })
 
-  const openInfoBottomSheet = ({title, content}: {title: string; content: string}) => {
+  const openInfo = ({title, content}: {title: string; content: string}) => {
     setInfoBottomSheetSate({title, content})
-    infoBottomSheetRef.current?.openBottomSheet()
+    infoBottomSheetRef.current?.openDialog()
   }
 
   const closeInfoBottomSheet = () => {
@@ -73,7 +73,7 @@ export const ConfirmTxScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TransactionSummary openInfoBottomSheet={openInfoBottomSheet} />
+      <TransactionSummary openInfo={openInfo} />
 
       <Actions>
         <Button
@@ -86,7 +86,7 @@ export const ConfirmTxScreen = () => {
               authWithOs()
               return
             }
-            openConfirmTxBottomSheet()
+            openConfirmTxDialog()
           }}
         />
       </Actions>
@@ -102,10 +102,10 @@ export const ConfirmTxScreen = () => {
             unsignedTx={unsignedTx}
             datum={{data: createOrder.datum}}
             onSuccess={() => {
-              closeConfirmTxBottomSheet()
+              closeConfirmTxDialog()
               navigate.submittedTx()
             }}
-            onCancel={closeConfirmTxBottomSheet}
+            onCancel={closeConfirmTxDialog}
           />
 
           <Spacer height={16} />

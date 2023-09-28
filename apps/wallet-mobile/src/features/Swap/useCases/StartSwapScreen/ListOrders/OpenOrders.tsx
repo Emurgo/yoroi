@@ -67,7 +67,7 @@ export const OpenOrders = () => {
     [normalizedOrders, search],
   )
 
-  const openBottomSheet = ({fromTokenInfoId, toTokenInfoId, assetFromLabel, assetToLabel}) => {
+  const openDialog = ({fromTokenInfoId, toTokenInfoId, assetFromLabel, assetToLabel}) => {
     setBottomSheetState({
       title: strings.listOrdersSheetTitle,
       content: (
@@ -76,7 +76,7 @@ export const OpenOrders = () => {
           assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfoId} variant="swap" />}
           onConfirm={() => {
             bottomSheetRef.current?.closeBottomSheet()
-            confirmationModalRef.current?.openBottomSheet()
+            confirmationModalRef.current?.openDialog()
           }}
           onBack={() => {
             bottomSheetRef.current?.closeBottomSheet()
@@ -87,7 +87,7 @@ export const OpenOrders = () => {
         />
       ),
     })
-    bottomSheetRef.current?.openBottomSheet()
+    bottomSheetRef.current?.openDialog()
   }
   const onCloseBottomSheet = () => setBottomSheetState({title: '', content: ''})
 
@@ -129,7 +129,7 @@ export const OpenOrders = () => {
                 footer={
                   <Footer
                     onPress={() => {
-                      openBottomSheet({
+                      openDialog({
                         fromTokenInfoId: order.fromTokenInfo?.id ?? '',
                         toTokenInfoId: order.toTokenInfo?.id ?? '',
                         assetFromLabel: order.assetFromLabel,

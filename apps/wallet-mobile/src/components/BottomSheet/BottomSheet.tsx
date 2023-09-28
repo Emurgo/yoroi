@@ -14,7 +14,7 @@ type BottomSheetProps = {
 }
 
 export type BottomSheetRef = {
-  openBottomSheet: () => void
+  openDialog: () => void
   closeBottomSheet: () => void
   isOpen: boolean
 }
@@ -28,12 +28,12 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     const [downDirectionCount, setDownDirectionCount] = React.useState(0)
 
     React.useImperativeHandle(ref, () => ({
-      openBottomSheet,
+      openDialog,
       closeBottomSheet,
       isOpen,
     }))
 
-    const openBottomSheet = () => {
+    const openDialog = () => {
       setIsOpen(true)
     }
 
@@ -79,7 +79,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
               <View
                 style={[styles.sheet, {height: isExtended && isExtendable ? maxHeight : height}]}
                 onResponderMove={onResponderMove}
-                onStartShouldSetResponder={() => false}
+                onStartShouldSetResponder={() => true}
               >
                 <Header title={title} />
 
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backdrop: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
     opacity: 0.5,
     backgroundColor: 'black',
   },

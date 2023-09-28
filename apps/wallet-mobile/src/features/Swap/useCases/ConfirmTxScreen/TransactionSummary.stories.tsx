@@ -30,12 +30,12 @@ const TxSummary = () => {
     content: '',
   })
 
-  const openBottomSheet = ({title, content}: BottomSheetState) => {
+  const openDialog = ({title, content}: BottomSheetState) => {
     setBottomSheetState({
       title,
       content,
     })
-    bottomSheetRef.current?.openBottomSheet()
+    bottomSheetRef.current?.openDialog()
   }
 
   const onCloseBottomSheet = () => {
@@ -56,7 +56,7 @@ const TxSummary = () => {
           }}
         >
           <SwapFormProvider>
-            <TransactionSummary openInfoBottomSheet={openBottomSheet} />
+            <TransactionSummary openInfo={openDialog} />
           </SwapFormProvider>
         </SwapProvider>
       </SelectedWalletProvider>

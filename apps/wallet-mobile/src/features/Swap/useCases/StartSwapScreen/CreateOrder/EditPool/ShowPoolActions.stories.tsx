@@ -20,12 +20,12 @@ storiesOf('Swap Pool Actions', module).add('initial', () => {
     content: '',
   })
 
-  const openBottomSheet = ({title, content}: BottomSheetState) => {
+  const openDialog = ({title, content}: BottomSheetState) => {
     setBottomSheetState({
       title,
       content,
     })
-    bottomSheetRef.current?.openBottomSheet()
+    bottomSheetRef.current?.openDialog()
   }
 
   const onCloseBottomSheet = () => {
@@ -38,7 +38,7 @@ storiesOf('Swap Pool Actions', module).add('initial', () => {
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
             <SwapFormProvider initialState={{isBuyTouched: true}}>
-              <ShowPoolActions openBottomSheet={openBottomSheet} />
+              <ShowPoolActions openDialog={openDialog} />
             </SwapFormProvider>
           </SwapProvider>
         </SearchProvider>

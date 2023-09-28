@@ -9,8 +9,8 @@ storiesOf('BottomSheet', module).add('Default', () => <ComponentDefault />)
 const ComponentDefault = () => {
   const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
 
-  const openBottomSheet = () => {
-    bottomSheetRef.current?.openBottomSheet()
+  const openDialog = () => {
+    bottomSheetRef.current?.openDialog()
   }
 
   const closeBottomSheet = () => {
@@ -19,7 +19,7 @@ const ComponentDefault = () => {
 
   const handleClick = () => {
     if (bottomSheetRef.current?.isOpen) closeBottomSheet()
-    else openBottomSheet()
+    else openDialog()
   }
 
   return (

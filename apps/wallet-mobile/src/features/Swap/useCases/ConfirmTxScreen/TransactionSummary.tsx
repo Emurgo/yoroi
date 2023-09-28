@@ -12,9 +12,9 @@ import {asQuantity, Quantities} from '../../../../yoroi-wallets/utils'
 import {useStrings} from '../../common/strings'
 
 export const TransactionSummary = ({
-  openInfoBottomSheet,
+  openInfo,
 }: {
-  openInfoBottomSheet: ({title, content}: {title: string; content: string}) => void
+  openInfo: ({title, content}: {title: string; content: string}) => void
 }) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
@@ -90,7 +90,7 @@ export const TransactionSummary = ({
 
                   <TouchableOpacity
                     onPress={() => {
-                      openInfoBottomSheet({
+                      openInfo({
                         title: orderInfo.label,
                         content: orderInfo.info,
                       })
