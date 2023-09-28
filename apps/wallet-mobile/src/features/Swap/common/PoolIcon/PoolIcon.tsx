@@ -14,6 +14,7 @@ export const PoolIcon = ({providerId, size}: Props) => {
 }
 
 const icons: Record<Swap.PoolProvider, FunctionComponent<{size?: number}>> = {
+  muesliswap: Icon.MuesliSwap,
   muesliswap_v1: Icon.MuesliSwap,
   muesliswap_v2: Icon.MuesliSwap,
   muesliswap_v3: Icon.MuesliSwap,

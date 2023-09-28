@@ -7,7 +7,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Spacer, Text} from '../../../../../../../components'
 import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components/AmountItem/AmountItem'
-import {BottomSheetModal} from '../../../../../../../components/BottomSheetModal'
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'
@@ -57,65 +56,10 @@ export const SelectBuyTokenFromListScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Spacer height={12} />
-
-      <VerifiedTokensInfo />
-
-      <Spacer height={15} />
-
-      <View style={[styles.row, styles.ph]}>
-        <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
-
-        <Spacer width={8} />
-
-        <Text style={styles.topText}>{strings.assetsIn}</Text>
-      </View>
-
       <Boundary loading={loading}>
         <TokenList />
       </Boundary>
     </SafeAreaView>
-  )
-}
-
-const VerifiedTokensInfo = () => {
-  const strings = useStrings()
-  const [showVerifiedTokenInfo, setShowVerifiedTokenInfo] = React.useState(false)
-
-  return (
-    <View style={(styles.flex, styles.ph)}>
-      <View style={styles.row}>
-        <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
-
-        <Text style={styles.topText}>{strings.verifiedBy('MuesliSwap')}</Text>
-
-        <Spacer width={8} />
-
-        <TouchableOpacity onPress={() => setShowVerifiedTokenInfo(true)}>
-          <Icon.Info size={28} />
-        </TouchableOpacity>
-      </View>
-
-      <BottomSheetModal
-        title={strings.poolVerification('MuesliSwap')}
-        isOpen={showVerifiedTokenInfo}
-        onClose={() => setShowVerifiedTokenInfo(false)}
-      >
-        <Text style={styles.modalText}>{strings.poolVerificationInfo('MuesliSwap')}</Text>
-
-        <Spacer height={28} />
-
-        <Text>
-          <Text style={styles.modalText}>{strings.eachVerifiedToken}</Text>
-
-          <Spacer width={8} />
-
-          <Icon.CheckFilled size={28} color={COLORS.SHELLEY_BLUE} />
-
-          <Text style={styles.modalText}>{strings.verifiedBadge}</Text>
-        </Text>
-      </BottomSheetModal>
-    </View>
   )
 }
 
@@ -216,6 +160,16 @@ const TokenList = () => {
         ListEmptyComponent={<EmptyList filteredTokensForList={filteredTransformedList} allTokenInfos={tokenInfos} />}
       />
 
+      <Spacer height={16} />
+
+      <View style={[styles.row, styles.ph]}>
+        <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
+
+        <Spacer width={8} />
+
+        <Text style={styles.topText}>{strings.assetsIn}</Text>
+      </View>
+
       <Counter counter={filteredTransformedList.length} />
     </View>
   )
@@ -262,9 +216,9 @@ const Counter = ({counter}: {counter: number}) => {
   if (!isSearching) {
     return (
       <View style={styles.counter}>
-        <Text style={styles.counterText}>{strings.youHave}</Text>
+        <Text style={styles.counterTextBold}>{`${counter} ${strings.assets(counter)} `}</Text>
 
-        <Text style={styles.counterTextBold}>{` ${counter} ${strings.tokens(counter)}`}</Text>
+        <Text style={styles.counterText}>{strings.available}</Text>
       </View>
     )
   }
@@ -357,23 +311,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.SHELLEY_BLUE,
   },
-  flex: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   row: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignSelf: 'center',
   },
   topText: {
     fontSize: 16,
-  },
-  modalText: {
-    fontWeight: '400',
-    lineHeight: 20,
-    color: '#242838',
-    fontFamily: 'Rubik',
-    fontSize: 15,
   },
   image: {
     flex: 1,
