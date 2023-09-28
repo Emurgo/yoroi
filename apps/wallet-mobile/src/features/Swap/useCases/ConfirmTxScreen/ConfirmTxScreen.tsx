@@ -51,6 +51,7 @@ export const ConfirmTxScreen = () => {
       signTx: {useErrorBoundary: true},
       submitTx: {
         onSuccess: () => {
+          if (!createOrder.selectedPool) return
           track.swapOrderSubmitted({
             from_asset: [
               {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},

@@ -107,6 +107,7 @@ export const CreateOrder = () => {
     (createOrder.type === 'limit' && createOrder.limitPrice !== undefined && Quantities.isZero(createOrder.limitPrice))
 
   const swap = () => {
+    if (!createOrder.selectedPool) return
     track.swapOrderSelected({
       from_asset: [
         {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
