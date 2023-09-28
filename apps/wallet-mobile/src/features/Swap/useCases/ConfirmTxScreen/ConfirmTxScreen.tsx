@@ -32,7 +32,7 @@ export const ConfirmTxScreen = () => {
 
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
     {id: wallet.id},
-    {onSuccess: (rootKey) => signAndSubmitTx({unsignedTx, rootKey})},
+    {onSuccess: (rootKey) => signAndSubmitTx({unsignedTx, rootKey, datum: createOrder.datum})},
   )
 
   const {signAndSubmitTx, isLoading: processingTx} = useSignAndSubmitTx(
