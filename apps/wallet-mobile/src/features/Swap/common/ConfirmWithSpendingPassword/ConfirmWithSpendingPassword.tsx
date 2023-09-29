@@ -74,11 +74,13 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: COLORS.ERROR_TEXT_COLOR,
+    textAlign: 'center',
   },
   loading: {
     position: 'absolute',
     height: '100%',
-    width: '100%',
+    left: 0,
+    right: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },

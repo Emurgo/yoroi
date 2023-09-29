@@ -29,7 +29,7 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {ConfirmPasswordWalletRawTx} from '../../../common/ConfirmPasswordWalletRawTx/ConfirmPasswordWalletRawTx'
+import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
 import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
@@ -122,9 +122,7 @@ export const OpenOrders = () => {
     setBottomSheetState({
       openId: id,
       title: strings.signTransaction,
-      content: wallet.isHW ? null : (
-        <ConfirmPasswordWalletRawTx onConfirm={(rootKey) => handlePasswordWalletConfirm(rootKey, id)} />
-      ),
+      content: <ConfirmRawTx onConfirm={(rootKey) => handlePasswordWalletConfirm(rootKey, id)} />,
       height: 350,
     })
   }
