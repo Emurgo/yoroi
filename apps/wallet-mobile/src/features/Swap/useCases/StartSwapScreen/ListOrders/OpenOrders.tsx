@@ -2,7 +2,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
-import React, {Suspense, useState} from 'react'
+import React, {Suspense} from 'react'
 import {useIntl} from 'react-intl'
 import {ActivityIndicator, Alert, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -29,7 +29,7 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {ConfirmWithSpendingPassword} from '../../../common/ConfirmWithSpendingPassword'
+import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
 import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
@@ -107,10 +107,10 @@ export const OpenOrders = () => {
     })
   }
 
-  const handlePasswordConfirm = async (password: string, orderId: string) => {
+  const onRawTxConfirm = async (rootKey: string, orderId: string) => {
     const order = normalizedOrders.find((o) => o.id === orderId)
     if (!order || order.owner === undefined || order.utxo === undefined) return
-    const tx = await createCancellationTxAndSign(order.id, password)
+    const tx = await createCancellationTxAndSign(order.id, rootKey)
     if (!tx) return
     await wallet.submitTransaction(tx.txBase64)
     trackCancellationSubmitted(order)
@@ -122,7 +122,7 @@ export const OpenOrders = () => {
     setBottomSheetState({
       openId: id,
       title: strings.signTransaction,
-      content: wallet.isHW ? null : <PasswordModal onConfirm={(password) => handlePasswordConfirm(password, id)} />,
+      content: <ConfirmRawTx onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)} />,
       height: 350,
     })
   }
@@ -146,7 +146,7 @@ export const OpenOrders = () => {
 
   const createCancellationTxAndSign = async (
     orderId: string,
-    password: string,
+    rootKey: string,
   ): Promise<{txBase64: string} | undefined> => {
     const order = normalizedOrders.find((o) => o.id === orderId)
     if (!order || order.owner === undefined || order.utxo === undefined) return
@@ -157,7 +157,6 @@ export const OpenOrders = () => {
       utxos: {collateral: collateralUtxo, order: utxo},
       address: addressHex,
     })
-    const rootKey = await wallet.encryptedStorage.rootKey.read(password)
     const {cbor, signers} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
 
     const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
@@ -366,32 +365,6 @@ const HiddenInfo = ({
         <HiddenInfoWrapper key={item.label} value={item.value} label={item.label} />
       ))}
     </View>
-  )
-}
-
-const PasswordModal = ({onConfirm}: {onConfirm: (password: string) => Promise<void>}) => {
-  const [error, setError] = useState<Error | null>(null)
-  const [loading, setLoading] = useState(false)
-
-  const onConfirmPress = async (password) => {
-    setError(null)
-    setLoading(true)
-    try {
-      await onConfirm(password)
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        setError(e)
-      }
-    }
-    setLoading(false)
-  }
-
-  return (
-    <>
-      <ConfirmWithSpendingPassword onSubmit={onConfirmPress} isLoading={loading} error={error ?? undefined} />
-
-      <Spacer height={10} />
-    </>
   )
 }
 
