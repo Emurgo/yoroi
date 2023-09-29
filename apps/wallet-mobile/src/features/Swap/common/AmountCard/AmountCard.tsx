@@ -117,7 +117,13 @@ export const AmountCard = ({
         <View>
           <Spacer height={4} />
 
-          <Text style={styles.errorText}>{isSell ? strings.notEnoughBalance : strings.notEnoughSupply}</Text>
+          <Text style={styles.errorText}>
+            {createOrder.selectedPool === undefined
+              ? strings.noPool
+              : isSell
+              ? strings.notEnoughBalance
+              : strings.notEnoughSupply}
+          </Text>
         </View>
       )}
     </View>
@@ -141,6 +147,10 @@ const messages = defineMessages({
     id: 'swap.swapScreen.notEnoughSupply',
     defaultMessage: '!!!Not enough supply in the pool',
   },
+  noPool: {
+    id: 'swap.swapScreen.noPool',
+    defaultMessage: '!!! This pair is not available in any liquidity pool',
+  },
 })
 
 const useStrings = () => {
@@ -150,6 +160,7 @@ const useStrings = () => {
     currentBalance: intl.formatMessage(messages.currentBalance),
     notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
     notEnoughSupply: intl.formatMessage(messages.notEnoughSupply),
+    noPool: intl.formatMessage(messages.noPool),
   }
 }
 

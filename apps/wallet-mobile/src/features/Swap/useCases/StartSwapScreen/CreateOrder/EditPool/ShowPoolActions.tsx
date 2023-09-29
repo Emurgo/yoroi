@@ -32,12 +32,8 @@ export const ShowPoolActions = () => {
   const tokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
-  if (!isBuyTouched || !isSellTouched) {
+  if (!isBuyTouched || !isSellTouched || selectedPool === undefined) {
     return <></>
-  }
-
-  if (selectedPool === undefined) {
-    return <Text>No trading route found for this pair</Text>
   }
 
   const totalAmount = Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)
