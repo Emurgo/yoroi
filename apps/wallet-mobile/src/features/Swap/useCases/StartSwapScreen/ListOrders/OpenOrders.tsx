@@ -107,7 +107,7 @@ export const OpenOrders = () => {
     })
   }
 
-  const handlePasswordWalletConfirm = async (rootKey: string, orderId: string) => {
+  const onRawTxConfirm = async (rootKey: string, orderId: string) => {
     const order = normalizedOrders.find((o) => o.id === orderId)
     if (!order || order.owner === undefined || order.utxo === undefined) return
     const tx = await createCancellationTxAndSign(order.id, rootKey)
@@ -122,7 +122,7 @@ export const OpenOrders = () => {
     setBottomSheetState({
       openId: id,
       title: strings.signTransaction,
-      content: <ConfirmRawTx onConfirm={(rootKey) => handlePasswordWalletConfirm(rootKey, id)} />,
+      content: <ConfirmRawTx onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)} />,
       height: 350,
     })
   }
