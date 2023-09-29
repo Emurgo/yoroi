@@ -994,6 +994,8 @@ export class ByronWallet implements YoroiWallet {
       signedLedgerTx,
       this.getPurpose(),
       this.publicKeyHex,
+      true,
+      [unsignedTx.datum as {data: string}],
     )
 
     return yoroiSignedTx({unsignedTx, signedTx})
