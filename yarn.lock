@@ -2017,7 +2017,7 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@0.9.8":
+"@emurgo/yoroi-lib@^0.9.8":
   version "0.9.8"
   resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.9.8.tgz#977f81ba6dbeea11e64f0b56068c2a66d02a43f4"
   integrity sha512-Hk//6ZYsPdNjpqmlcFkW6ZQrxravS/vAx5JGbUai5mrSPDNdjCBOqIlamUf0h4YKbVLB0dnlF7Uxu1+/c8vc6g==
