@@ -11,11 +11,7 @@ export const signRawTransaction = async (txHex: string, pKeys: PrivateKey[]): Pr
   if (!txHash) throw new Error('invalid tx hex, could not generate tx hash')
 
   const witSet = await fixedTx.witnessSet()
-  let vkeys = await witSet.vkeys()
-
-  if (vkeys === undefined) {
-    vkeys = await CardanoMobile.Vkeywitnesses.new()
-  }
+  const vkeys = await CardanoMobile.Vkeywitnesses.new()
 
   for (let i = 0; i < pKeys.length; i++) {
     const vkeyWit = await CardanoMobile.makeVkeyWitness(txHash, pKeys[i])
