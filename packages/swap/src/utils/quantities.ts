@@ -62,7 +62,11 @@ export const Quantities = {
 
     return absoluteQuantity.isEqualTo(minimalFractionalPart)
   },
-  parseFromText: (text: string, precision: number, format: Numbers.Locale) => {
+  parseFromText: (
+    text: string,
+    denomination: number,
+    format: Numbers.Locale,
+  ) => {
     const {decimalSeparator} = format
     const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
     const sanitized = text === '' ? '' : text.replaceAll(invalid, '')
@@ -73,7 +77,7 @@ export const Quantities = {
     const isDec = parts.length >= 2
 
     const fullDecValue = isDec
-      ? `${parts[0]}${decimalSeparator}${parts[1]?.slice(0, precision)}1`
+      ? `${parts[0]}${decimalSeparator}${parts[1]?.slice(0, denomination)}1`
       : sanitized
     const fullDecFormat = new BigNumber(
       fullDecValue.replace(decimalSeparator, '.'),
@@ -81,18 +85,26 @@ export const Quantities = {
     const input = isDec ? fullDecFormat.slice(0, -1) : fullDecFormat
 
     const value = isDec
-      ? `${parts[0]}${decimalSeparator}${parts[1]?.slice(0, precision)}`
+      ? `${parts[0]}${decimalSeparator}${parts[1]?.slice(0, denomination)}`
       : sanitized
     const quantity = new BigNumber(value.replace(decimalSeparator, '.'))
-      .decimalPlaces(precision)
-      .shiftedBy(precision)
+      .decimalPlaces(denomination)
+      .shiftedBy(denomination)
       .toString(10)
 
     return [input, quantity] as [string, Balance.Quantity]
   },
-  format: (quantity: Balance.Quantity, denomination: number) => {
-    return new BigNumber(
-      Quantities.denominated(quantity, denomination),
-    ).toFormat()
+  format: (
+    quantity: Balance.Quantity,
+    denomination: number,
+    precision?: number,
+  ) => {
+    if (precision === undefined)
+      return new BigNumber(
+        Quantities.denominated(quantity, denomination),
+      ).toFormat()
+    return new BigNumber(Quantities.denominated(quantity, denomination))
+      .decimalPlaces(precision)
+      .toFormat()
   },
 }
