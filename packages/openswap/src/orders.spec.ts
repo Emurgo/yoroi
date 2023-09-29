@@ -96,7 +96,8 @@ describe('SwapOrdersApi', () => {
         {
           orderUTxO: 'orderUtxo',
           collateralUTxO: 'collateralUtxo',
-          walletAddress: 'addr1',
+          walletAddress:
+            'addr1q9ndnrwz52yeex4j04kggp0ul5632qmxqx22ugtukkytjysw86pdygc6zarl2kks6fvg8um447uvv679sfdtzkwf2kuq673wke',
         },
       )
 

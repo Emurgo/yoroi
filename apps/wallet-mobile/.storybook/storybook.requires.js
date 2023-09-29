@@ -136,6 +136,7 @@ const getStories = () => {
     "./src/features/Settings/WalletSettings/WalletSettingsScreen.stories.tsx": require("../src/features/Settings/WalletSettings/WalletSettingsScreen.stories.tsx"),
     "./src/features/Swap/common/AmountCard/AmountCard.stories.tsx": require("../src/features/Swap/common/AmountCard/AmountCard.stories.tsx"),
     "./src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx": require("../src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx"),
+    "./src/features/Swap/common/ConfirmWithSpendingPassword/ConfirmWithSpendingPassword.stories.tsx": require("../src/features/Swap/common/ConfirmWithSpendingPassword/ConfirmWithSpendingPassword.stories.tsx"),
     "./src/features/Swap/common/SelectPool/SelectPoolFromList/SelectPoolFromList.stories.tsx": require("../src/features/Swap/common/SelectPool/SelectPoolFromList/SelectPoolFromList.stories.tsx"),
     "./src/features/Swap/useCases/ConfirmTxScreen/ConfirmTxScreen.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/ConfirmTxScreen.stories.tsx"),
     "./src/features/Swap/useCases/ConfirmTxScreen/ShowFailedTxScreen/ShowFailedTxScreen.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/ShowFailedTxScreen/ShowFailedTxScreen.stories.tsx"),

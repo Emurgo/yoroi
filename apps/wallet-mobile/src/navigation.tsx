@@ -81,13 +81,13 @@ export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = 
   headerLeft: (props) => <BackButton color="#fff" {...props} />,
 }
 
-// TABS OPTIONS
+// NAVIGATOR TOP TABS OPTIONS
 export const defaultMaterialTopTabNavigationOptions: MaterialTopTabNavigationOptions = {
   tabBarStyle: {backgroundColor: COLORS.WHITE, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
   tabBarIndicatorStyle: {backgroundColor: COLORS.SHELLEY_BLUE, height: 2},
   tabBarLabelStyle: {
     textTransform: 'none',
-    fontFamily: 'Rubik',
+    fontFamily: 'Rubik-Medium',
     fontSize: 16,
     fontWeight: '500',
   },
@@ -438,6 +438,15 @@ export const useWalletNavigation = () => {
     })
   }
 
+  const navigateToCollateralSettings = () => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'manage-collateral',
+      },
+    })
+  }
+
   const navigateToAnalyticsSettings = () => {
     navigation.navigate('app-root', {
       screen: 'toggle-analytics-settings',
@@ -456,5 +465,6 @@ export const useWalletNavigation = () => {
     navigateToNftGallery,
     navigateToAppSettings,
     navigateToAnalyticsSettings,
+    navigateToCollateralSettings,
   }
 }

@@ -1,6 +1,6 @@
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
-import {BaseAddress} from '@emurgo/cross-csl-core'
+import {BaseAddress, PrivateKey} from '@emurgo/cross-csl-core'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
@@ -97,6 +97,8 @@ export type YoroiWallet = {
   primaryToken: Readonly<DefaultAsset>
   primaryTokenInfo: Readonly<Balance.TokenInfo>
 
+  signRawTx(txHex: string, pKeys: PrivateKey[]): Promise<Uint8Array | undefined>
+
   // Sending
   createUnsignedTx(
     entry: YoroiEntry,
@@ -167,6 +169,7 @@ export type YoroiWallet = {
   fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse>
   fetchTokenInfo(tokenId: string): Promise<Balance.TokenInfo>
   utxos: Array<RawUtxo>
+  allUtxos: Array<RawUtxo>
   get collateralId(): string
   getCollateralInfo(): {utxo: RawUtxo | undefined; amount: Balance.Amount; collateralId: RawUtxo['utxo_id']}
   setCollateralId(collateralId: RawUtxo['utxo_id']): Promise<void>

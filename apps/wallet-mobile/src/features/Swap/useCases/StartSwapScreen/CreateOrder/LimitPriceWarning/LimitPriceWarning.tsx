@@ -20,8 +20,8 @@ export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningPr
   const {createOrder} = useSwap()
   const {numberLocale} = useLanguage()
   const strings = useStrings()
-  const limitPrice = BigNumber(createOrder.limitPrice ?? 0).toFormat(numberLocale)
-  const marketPrice = BigNumber(createOrder.marketPrice).toFormat(numberLocale)
+  const limitPrice = new BigNumber(createOrder.limitPrice ?? 0).toFormat(numberLocale)
+  const marketPrice = new BigNumber(createOrder.marketPrice).toFormat(numberLocale)
   const wallet = useSelectedWallet()
 
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})

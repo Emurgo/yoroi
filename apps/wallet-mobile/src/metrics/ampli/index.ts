@@ -26,12 +26,11 @@ export type EventOptions = amplitude.Types.EventOptions;
 export type Result = amplitude.Types.Result;
 export type ReactNativeOptions = amplitude.Types.ReactNativeOptions;
 
-export type Environment = 'production' | 'development' | 'staging';
+export type Environment = 'production' | 'development';
 
 export const ApiKey: Record<Environment, string> = {
   production: 'd44950b777177c2ebee5f21f194c1231',
-  development: '52a980fd5fb8da5fc680687d7e991e18',
-  staging: '53e9e81ab1b50d726a692b81f29a0403'
+  development: '52a980fd5fb8da5fc680687d7e991e18'
 };
 
 /**
@@ -300,37 +299,12 @@ export interface SwapCancelationSubmittedProperties {
    * | Rule | Value |
    * |---|---|
    * | Unique Items | null |
-   * | Item Type | string |
    */
-  from_asset: string[];
-  /**
-   * The type of order selected on a given transaction
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Enum Values | limit, market |
-   */
-  order_type: "limit" | "market";
+  from_asset: any[];
   /**
    * The name of liquidity pool used for this swap transaction
    */
   pool_source: string;
-  /**
-   * The default slippage tolerance is 1%, but users are free to change the slippage.
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Type | null |
-   */
-  slippage_tolerance: any;
-  /**
-   * The amount of fees charged on the transaction. The value is in ADA.
-   *
-   * | Rule | Value |
-   * |---|---|
-   * | Type | number |
-   */
-  swap_fees: number;
   /**
    * The amount of asset that the user is swapping to
    *
@@ -349,9 +323,19 @@ export interface SwapCancelationSubmittedProperties {
    * | Rule | Value |
    * |---|---|
    * | Unique Items | null |
-   * | Item Type | string |
    */
-  to_asset: string[];
+  to_asset: any[];
+}
+
+export interface SwapConfirmedPageViewedProperties {
+  /**
+   * Define the tab that is active in the selected page
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | Open Orders, Completed Orders |
+   */
+  swap_tab: "Open Orders" | "Completed Orders";
 }
 
 export interface SwapInitiatedProperties {
@@ -385,9 +369,9 @@ export interface SwapInitiatedProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | null |
+   * | Type | number |
    */
-  slippage_tolerance: any;
+  slippage_tolerance: number;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -528,9 +512,9 @@ export interface SwapSlippageChangedProperties {
    *
    * | Rule | Value |
    * |---|---|
-   * | Type | null |
+   * | Type | number |
    */
-  slippage_tolerance: any;
+  slippage_tolerance: number;
 }
 
 export interface SendProperties {
@@ -635,6 +619,18 @@ export interface SwapProperties {
 
 export class AllWalletsPageViewed implements BaseEvent {
   event_type = 'All Wallets Page Viewed';
+}
+
+export class AssetsPageViewed implements BaseEvent {
+  event_type = 'Assets Page Viewed';
+}
+
+export class ClaimAdaPageViewed implements BaseEvent {
+  event_type = 'Claim ADA Page Viewed';
+}
+
+export class ConnectorPageViewed implements BaseEvent {
+  event_type = 'Connector Page Viewed';
 }
 
 export class MenuPageViewed implements BaseEvent {
@@ -775,6 +771,12 @@ export class SwapCancelationSubmitted implements BaseEvent {
 
 export class SwapConfirmedPageViewed implements BaseEvent {
   event_type = 'Swap Confirmed  Page Viewed';
+
+  constructor(
+    public event_properties: SwapConfirmedPageViewedProperties,
+  ) {
+    this.event_properties = event_properties;
+  }
 }
 
 export class SwapInitiated implements BaseEvent {
@@ -952,11 +954,58 @@ export class Ampli {
   }
 
   /**
+   * Assets Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Assets%20Page%20Viewed)
+   *
+   * This event tracks when a user views the Assets page. Note: only available on Yoroi Extension.
+   *
+   * @param options Amplitude event options.
+   */
+  assetsPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new AssetsPageViewed(), options);
+  }
+
+  /**
+   * Claim ADA Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Claim%20ADA%20Page%20Viewed)
+   *
+   * This event tracks when a user views the page to claim Claim /Transfer ADA page in ExtensionEvent: Claim ADA Page Viewed
+   *
+   * Description: This event tracks when a user views the page to claim ADA tokens. It provides insights into the number of users who are interested in claiming ADA tokens and can be used to analyze user engagement and conversion rates on the claim page
+   *
+   * @param options Amplitude event options.
+   */
+  claimAdaPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new ClaimAdaPageViewed(), options);
+  }
+
+  /**
+   * Connector Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Connector%20Page%20Viewed)
+   *
+   * This event tracks when a user views the dApp Connector page.
+   *
+   * @param options Amplitude event options.
+   */
+  connectorPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new ConnectorPageViewed(), options);
+  }
+
+  /**
    * Menu Page Viewed
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Menu%20Page%20Viewed)
    *
-   * This event is triggered when a user views the menu page within the application
+   * This event is triggered when a user views the menu page within the application. Only available on Mobile
    *
    * @param options Amplitude event options.
    */
@@ -1274,12 +1323,14 @@ export class Ampli {
    *
    * Owner: Omar Rozak
    *
+   * @param properties The event's properties (e.g. swap_tab)
    * @param options Amplitude event options.
    */
   swapConfirmedPageViewed(
+    properties: SwapConfirmedPageViewedProperties,
     options?: EventOptions,
   ) {
-    return this.track(new SwapConfirmedPageViewed(), options);
+    return this.track(new SwapConfirmedPageViewed(properties), options);
   }
 
   /**

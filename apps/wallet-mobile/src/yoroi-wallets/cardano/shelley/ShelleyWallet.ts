@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {PrivateKey} from '@emurgo/cross-csl-core'
 import {Datum} from '@emurgo/yoroi-lib'
 import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
@@ -38,6 +39,7 @@ import * as api from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
+import {signRawTransaction} from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
@@ -66,7 +68,6 @@ import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
-
 type WalletState = {
   lastGeneratedAddressIndex: number
 }
@@ -451,6 +452,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       Logger.info(`getStakingKey: ${Buffer.from(await stakingKey.asBytes()).toString('hex')}`)
       return stakingKey
+    }
+
+    public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
+      return signRawTransaction(txHex, pKeys)
     }
 
     private async getRewardAddress() {
@@ -936,6 +941,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     get utxos() {
       return this._utxos.filter((utxo) => utxo.utxo_id !== this._collateralId)
+    }
+
+    get allUtxos() {
+      return this._utxos
     }
 
     get collateralId(): string {

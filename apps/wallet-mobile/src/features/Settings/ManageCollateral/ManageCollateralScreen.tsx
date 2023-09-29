@@ -94,8 +94,8 @@ export const ManageCollateralScreen = () => {
       return
     }
 
-    const primaryTokenBalance = BigNumber(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity)
-    const lockedBalance = Quantities.isZero(lockedAmount) ? BigNumber(0) : BigNumber(lockedAmount)
+    const primaryTokenBalance = new BigNumber(Amounts.getAmount(balances, wallet.primaryToken.identifier).quantity)
+    const lockedBalance = Quantities.isZero(lockedAmount) ? new BigNumber(0) : new BigNumber(lockedAmount)
 
     if (primaryTokenBalance.minus(lockedBalance).isLessThan(collateralConfig.minLovelace)) {
       Alert.alert(

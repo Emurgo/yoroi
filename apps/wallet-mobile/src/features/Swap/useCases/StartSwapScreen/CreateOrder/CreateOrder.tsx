@@ -10,7 +10,7 @@ import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {useTokenInfos} from '../../../../../yoroi-wallets/hooks'
+import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {createYoroiEntry} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
@@ -35,9 +35,13 @@ export const CreateOrder = () => {
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
 
-  const tokenInfos = useTokenInfos({
+  const sellTokenInfo = useTokenInfo({
     wallet,
-    tokenIds: [createOrder.amounts.buy.tokenId, createOrder.amounts.sell.tokenId],
+    tokenId: createOrder.amounts.sell.tokenId,
+  })
+  const buyTokenInfo = useTokenInfo({
+    wallet,
+    tokenId: createOrder.amounts.buy.tokenId,
   })
   const [showLimitPriceWarning, setShowLimitPriceWarning] = useState(false)
   const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
@@ -103,11 +107,7 @@ export const CreateOrder = () => {
     (createOrder.type === 'limit' && createOrder.limitPrice !== undefined && Quantities.isZero(createOrder.limitPrice))
 
   const swap = () => {
-    const sellTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === createOrder.amounts.sell.tokenId)
-    const buyTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === createOrder.amounts.buy.tokenId)
-
-    if (!sellTokenInfo || !buyTokenInfo || createOrder?.selectedPool === undefined) return
-
+    if (!createOrder.selectedPool) return
     track.swapOrderSelected({
       from_asset: [
         {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
@@ -176,8 +176,8 @@ export const CreateOrder = () => {
 
   const handleOnSwap = () => {
     if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
-      const marketPrice = BigNumber(createOrder.marketPrice)
-      const limitPrice = BigNumber(createOrder.limitPrice)
+      const marketPrice = new BigNumber(createOrder.marketPrice)
+      const limitPrice = new BigNumber(createOrder.limitPrice)
 
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
         setShowLimitPriceWarning(true)

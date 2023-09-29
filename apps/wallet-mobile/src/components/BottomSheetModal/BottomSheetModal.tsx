@@ -72,6 +72,7 @@ export const BottomSheetModal = ({
       <BottomSheet
         ref={bottomSheetRef}
         index={isOpen ? 1 : 0}
+        contentHeight={900}
         snapPoints={snapPoints}
         backdropComponent={(props) =>
           showBackdropComp === false ? (

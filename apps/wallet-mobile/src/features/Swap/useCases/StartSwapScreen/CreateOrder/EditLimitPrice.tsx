@@ -32,19 +32,15 @@ export const EditLimitPrice = () => {
   const tokenToBuyName = isBuyTouched ? buyTokenInfo.ticker ?? buyTokenInfo.name : '-'
 
   React.useEffect(() => {
-    setText(BigNumber(createOrder.marketPrice).decimalPlaces(PRECISION).toFormat(numberLocale))
+    setText(new BigNumber(createOrder.marketPrice).decimalPlaces(PRECISION).toFormat(numberLocale))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createOrder.marketPrice])
 
   React.useEffect(() => {
     if (createOrder.type === 'limit') {
-      setText(
-        BigNumber(createOrder?.limitPrice ?? 0)
-          .decimalPlaces(PRECISION)
-          .toFormat(numberLocale),
-      )
+      setText(new BigNumber(createOrder?.limitPrice ?? 0).decimalPlaces(PRECISION).toFormat(numberLocale))
     } else {
-      setText(BigNumber(createOrder.marketPrice).decimalPlaces(PRECISION).toFormat(numberLocale))
+      setText(new BigNumber(createOrder.marketPrice).decimalPlaces(PRECISION).toFormat(numberLocale))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createOrder.type, createOrder.limitPrice])
