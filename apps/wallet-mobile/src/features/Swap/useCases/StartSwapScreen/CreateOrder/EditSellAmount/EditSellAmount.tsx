@@ -20,7 +20,7 @@ export const EditSellAmount = () => {
   const inputRef = React.useRef<TextInput>(null)
 
   const {createOrder, sellAmountChanged} = useSwap()
-  const {isSellTouched, isBuyTouched} = useSwapTouched()
+  const {isSellTouched} = useSwapTouched()
 
   const {tokenId, quantity} = createOrder.amounts.sell
 
@@ -60,7 +60,7 @@ export const EditSellAmount = () => {
       navigateTo={navigate.selectSellToken}
       touched={isSellTouched}
       inputRef={inputRef}
-      inputEditable={isSellTouched && isBuyTouched}
+      inputEditable={createOrder.selectedPool !== undefined}
     />
   )
 }
