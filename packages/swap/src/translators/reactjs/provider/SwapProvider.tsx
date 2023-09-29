@@ -51,7 +51,7 @@ export const SwapProvider = ({
     buyAmountChanged: (amount: Balance.Amount) => {
       dispatch({type: SwapCreateOrderActionType.BuyAmountChanged, amount})
     },
-    selectedPoolChanged: (pool: Swap.Pool) => {
+    selectedPoolChanged: (pool?: Swap.Pool) => {
       dispatch({type: SwapCreateOrderActionType.SelectedPoolChanged, pool})
     },
     slippageChanged: (newSlippage: number) => {

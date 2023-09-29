@@ -32,9 +32,14 @@ export const ShowPoolActions = ({openDialog}: {openDialog: ({title, content}: Bo
   const tokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
-  if (!isBuyTouched || !isSellTouched || selectedPool === undefined) {
+  if (!isBuyTouched || !isSellTouched) {
     return <></>
   }
+
+  if (selectedPool === undefined) {
+    return <Text>No trading route found for this pair</Text>
+  }
+
   const totalAmount = Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)
   const id = selectedPool.poolId
   const expanded = id === hiddenInfoOpenId
@@ -69,14 +74,14 @@ export const ShowPoolActions = ({openDialog}: {openDialog: ({title, content}: Bo
       }
       info={
         <HiddenInfo
-          totalFees="" // TODO: add fees
+          totalFees={Quantities.format(selectedPool.batcherFee.quantity, Number(wallet.primaryTokenInfo.decimals))}
           minReceived={getMinAdaReceiveAfterSlippage(
             amounts.buy.quantity,
             createOrder.slippage,
             buyTokenInfo.decimals ?? 0,
             numberLocale,
           )}
-          minAda={Quantities.denominated(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))}
+          minAda={Quantities.format(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))}
           buyTokenName={tokenName}
           openDialog={openDialog}
         />

@@ -7,11 +7,12 @@ import {getMarketPrice} from '../../../helpers/orders/getMarketPrice'
 import {Quantities} from '../../../utils/quantities'
 
 export type SwapState = Readonly<{
-  createOrder: Swap.CreateOrderData & {
+  createOrder: Omit<Swap.CreateOrderData, 'selectedPool'> & {
     type: Swap.OrderType
     marketPrice: Balance.Quantity
     datum: string
     datumHash: string
+    selectedPool?: Swap.Pool
   }
   unsignedTx: any
 }>
@@ -20,7 +21,7 @@ export type SwapCreateOrderActions = Readonly<{
   orderTypeChanged: (orderType: Swap.OrderType) => void
   sellAmountChanged: (sellAmount: Readonly<Balance.Amount>) => void
   buyAmountChanged: (buyAmount: Readonly<Balance.Amount>) => void
-  selectedPoolChanged: (pool: Readonly<Swap.Pool>) => void
+  selectedPoolChanged: (pool?: Readonly<Swap.Pool>) => void
   slippageChanged: (slippage: number) => void
   txPayloadChanged: (txPayload: Readonly<Swap.CreateOrderResponse>) => void
   switchTokens: () => void
@@ -60,7 +61,7 @@ export type SwapCreateOrderAction =
     }
   | {
       type: SwapCreateOrderActionType.SelectedPoolChanged
-      pool: Readonly<Swap.Pool>
+      pool?: Readonly<Swap.Pool>
     }
   | {
       type: SwapCreateOrderActionType.SlippageChanged; // prettier-ignore
@@ -131,18 +132,7 @@ export const defaultSwapState: SwapState = {
     slippage: 1,
     limitPrice: Quantities.zero,
     marketPrice: Quantities.zero,
-    selectedPool: {
-      provider: 'minswap',
-      fee: '',
-      tokenA: {tokenId: '', quantity: Quantities.zero},
-      tokenB: {tokenId: '', quantity: Quantities.zero},
-      price: 0,
-      batcherFee: {tokenId: '', quantity: Quantities.zero},
-      deposit: {tokenId: '', quantity: Quantities.zero},
-      poolId: '',
-      lastUpdate: '',
-      lpToken: {tokenId: '', quantity: Quantities.zero},
-    },
+    selectedPool: undefined,
   },
   unsignedTx: undefined,
 } as const
@@ -177,6 +167,9 @@ const createOrderReducer = (
     switch (action.type) {
       case SwapCreateOrderActionType.OrderTypeChanged:
         draft.createOrder.type = action.orderType
+
+        if (state.createOrder.selectedPool === undefined) break
+
         draft.createOrder.amounts.buy = getBuyAmount(
           state.createOrder.selectedPool,
           state.createOrder.amounts.sell,
@@ -187,7 +180,10 @@ const createOrderReducer = (
         break
       case SwapCreateOrderActionType.SellAmountChanged:
         draft.createOrder.amounts.sell = action.amount
-        if (Quantities.isZero(action.amount.quantity)) {
+        if (
+          Quantities.isZero(action.amount.quantity) ||
+          state.createOrder.selectedPool === undefined
+        ) {
           draft.createOrder.amounts.buy.quantity = Quantities.zero
         } else {
           draft.createOrder.amounts.buy = getBuyAmount(
@@ -201,7 +197,10 @@ const createOrderReducer = (
         break
       case SwapCreateOrderActionType.BuyAmountChanged:
         draft.createOrder.amounts.buy = action.amount
-        if (Quantities.isZero(action.amount.quantity)) {
+        if (
+          Quantities.isZero(action.amount.quantity) ||
+          state.createOrder.selectedPool === undefined
+        ) {
           draft.createOrder.amounts.sell.quantity = Quantities.zero
         } else {
           draft.createOrder.amounts.sell = getSellAmount(
@@ -215,18 +214,23 @@ const createOrderReducer = (
         break
       case SwapCreateOrderActionType.SelectedPoolChanged:
         draft.createOrder.selectedPool = action.pool
-        draft.createOrder.marketPrice = getMarketPrice(
-          action.pool,
-          state.createOrder.amounts.sell,
-        )
-        draft.createOrder.limitPrice = draft.createOrder.marketPrice
-        draft.createOrder.amounts.buy = getBuyAmount(
-          action.pool,
-          state.createOrder.amounts.sell,
-          state.createOrder.type === 'limit'
-            ? draft.createOrder.limitPrice
-            : undefined,
-        )
+        if (action.pool === undefined) {
+          draft.createOrder.marketPrice = Quantities.zero
+          draft.createOrder.limitPrice = Quantities.zero
+        } else {
+          draft.createOrder.marketPrice = getMarketPrice(
+            action.pool,
+            state.createOrder.amounts.sell,
+          )
+          draft.createOrder.limitPrice = draft.createOrder.marketPrice
+          draft.createOrder.amounts.buy = getBuyAmount(
+            action.pool,
+            state.createOrder.amounts.sell,
+            state.createOrder.type === 'limit'
+              ? draft.createOrder.limitPrice
+              : undefined,
+          )
+        }
         break
       case SwapCreateOrderActionType.SlippageChanged:
         draft.createOrder.slippage = action.slippage
@@ -241,6 +245,9 @@ const createOrderReducer = (
           sell: state.createOrder.amounts.buy,
           buy: state.createOrder.amounts.sell,
         }
+
+        if (state.createOrder.selectedPool === undefined) break
+
         draft.createOrder.marketPrice = getMarketPrice(
           state.createOrder.selectedPool,
           draft.createOrder.amounts.sell,
@@ -283,6 +290,9 @@ const createOrderReducer = (
         break
       case SwapCreateOrderActionType.LimitPriceChanged:
         draft.createOrder.limitPrice = action.limitPrice
+
+        if (state.createOrder.selectedPool === undefined) break
+
         draft.createOrder.amounts.buy = getBuyAmount(
           state.createOrder.selectedPool,
           state.createOrder.amounts.sell,

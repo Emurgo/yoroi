@@ -102,17 +102,14 @@
     "coverage/"
   ],
   "jest": {
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
-      "<rootDir>/lib/"
-    ],
-    "preset": "react-native",
-    "setupFiles": [
-      "<rootDir>/jest.setup.js"
-    ],
+    "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
+    ],
+    "coverageReporters": [
+      "text-summary",
+      "html"
     ],
     "coverageThreshold": {
       "global": {
@@ -122,10 +119,13 @@
         "statements": 100
       }
     },
-    "collectCoverage": true,
-    "coverageReporters": [
-      "text-summary",
-      "html"
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
+      "<rootDir>/lib/"
+    ],
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
     ]
   },
   "dependencies": {
@@ -133,8 +133,8 @@
     "zod": "^3.22.1"
   },
   "devDependencies": {
-    "@react-native-async-storage/async-storage": "^1.19.3",
     "@commitlint/config-conventional": "^17.0.2",
+    "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
     "@testing-library/jest-dom": "^6.0.0",
@@ -166,9 +166,9 @@
     "typescript": "^4.5.2"
   },
   "peerDependencies": {
+    "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
     "react": ">= 16.8.0 <= 19.0.0",
-    "react-query": "^3.39.3",
-    "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0"
+    "react-query": "^3.39.3"
   },
   "packageManager": "^yarn@1.22.15",
   "engines": {
