@@ -133,6 +133,7 @@
   "swap.swapScreen.currentBalance": "Current balance",
   "swap.swapScreen.notEnoughBalance": "Not enough balance",
   "swap.swapScreen.notEnoughSupply": "Not enough supply in the pool",
+  "swap.swapScreen.noPool": "This pair is not available in any liquidity pool",
   "swap.swapScreen.balance": "Balance",
   "swap.swapScreen.selectToken": "Select token",
   "swap.swapScreen.marketPrice": "Market price",
