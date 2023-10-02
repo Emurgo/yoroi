@@ -5,6 +5,7 @@ import {
 } from '../../translators/reactjs/state/state'
 import {getQuantityWithSlippage} from './getQuantityWithSlippage'
 import {Quantities} from '../../utils/quantities'
+import {getLiquidityProviderFee} from './getLiquidityProviderFee'
 
 export const makeOrderCalculations = ({
   orderData,
@@ -34,10 +35,8 @@ export const makeOrderCalculations = ({
 
     orderCalculation = {
       cost: {
-        batcherFee: {
-          tokenId: primaryTokenId,
-          quantity: Quantities.zero,
-        },
+        batcherFee: pool.batcherFee,
+        deposit: pool.deposit,
         frontendFeeInfo: {
           fee: {
             tokenId: primaryTokenId,
@@ -45,11 +44,7 @@ export const makeOrderCalculations = ({
           },
           tier: undefined,
         },
-        deposit: pool.deposit,
-        liquidityFee: {
-          tokenId: orderData.amounts.sell.tokenId,
-          quantity: Quantities.zero,
-        },
+        liquidityFee: getLiquidityProviderFee(pool.fee, orderData.amounts.sell),
       },
       buyAmountWithSlippage: {
         quantity: getQuantityWithSlippage(
