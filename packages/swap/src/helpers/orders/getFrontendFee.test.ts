@@ -274,8 +274,6 @@ describe('getFrontendFee', () => {
       sellAmount: notPrimaryTokenAmount,
       buyAmount: buyPrimaryAmountOver99,
       milkBalance: '999999999999999',
-      sellInPrimaryTokenValue: buyPrimaryAmountOver99,
-      buyInPrimaryTokenValue: buyPrimaryAmountOver99,
       primaryTokenInfo,
     })
     // assert
