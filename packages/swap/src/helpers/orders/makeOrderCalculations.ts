@@ -7,14 +7,17 @@ import {getQuantityWithSlippage} from './getQuantityWithSlippage'
 import {Quantities} from '../../utils/quantities'
 import {getLiquidityProviderFee} from './getLiquidityProviderFee'
 import {getFrontendFee} from './getFrontendFee'
+import { getMarketPrice } from './getMarketPrice'
 
 export const makeOrderCalculations = ({
+  orderType,
   orderData,
   pools,
   primaryTokenId,
   action,
   lpTokenHeld,
 }: Readonly<{
+  orderType: Swap.OrderType
   orderData: Swap.CreateOrderData
   pools: Array<Swap.Pool>
   sellAmount: Balance.Amount
@@ -34,6 +37,15 @@ export const makeOrderCalculations = ({
   const result: Array<SwapOrderCalulation> = []
 
   pools.forEach((pool) => {
+    let price: string = ''
+    const marketPrice = getMarketPrice(pool, orderData.amounts.sell)
+    if (orderType === 'market') {
+      price = marketPrice
+    } else {
+      // NOTE: while editing should never receive undefined, otherwise it will replace with market price
+      price = orderData.limitPrice ?? marketPrice
+    }
+
     const buyAmountWithSlippage: Balance.Amount = {
       quantity: getQuantityWithSlippage(
         orderData.amounts.buy.quantity,
@@ -66,7 +78,7 @@ export const makeOrderCalculations = ({
       },
       buyAmountWithSlippage,
       sell: {
-        price: '',
+        price,
         priceDifference: '',
         priceWithFees: '',
         priceWithFeesAndSlippage: '',
