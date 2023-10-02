@@ -6,11 +6,14 @@ export const getQuantityWithSlippage = (
   quantity: Balance.Quantity,
   slippage: number,
 ): Balance.Quantity => {
-  const q = BigInt(quantity)
-  const slippageAmount = ceilDivision(
-    BigInt(Math.floor(10000 * slippage)) * q,
+  const initialQuantity = BigInt(quantity)
+
+  const slippageQuantity = ceilDivision(
+    BigInt(Math.floor(10000 * slippage)) * initialQuantity,
     BigInt(100 * 10000),
   )
 
-  return asQuantity(`${q - slippageAmount}`)
+  const adjustedQuantity = initialQuantity - slippageQuantity
+
+  return asQuantity(adjustedQuantity.toString())
 }
