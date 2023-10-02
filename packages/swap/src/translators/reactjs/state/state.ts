@@ -6,7 +6,6 @@ import {getSellAmount} from '../../../helpers/orders/getSellAmount'
 import {getMarketPrice} from '../../../helpers/orders/getMarketPrice'
 import {Quantities} from '../../../utils/quantities'
 import {SwapDiscountTier} from '../../../translators/constants'
-import _ from 'lodash'
 
 export type SwapOrderCalulation = Readonly<{
   pool: Swap.Pool
@@ -23,7 +22,7 @@ export type SwapOrderCalulation = Readonly<{
     deposit: Balance.Amount
     batcherFee: Balance.Amount
     frontendFeeInfo: {
-      tier: SwapDiscountTier | undefined
+      discountTier: SwapDiscountTier | undefined
       fee: Balance.Amount
     }
   }
@@ -33,11 +32,19 @@ export type SwapState = Readonly<{
   createOrder: Omit<Swap.CreateOrderData, 'selectedPool'> & {
     type: Swap.OrderType
     marketPrice: Balance.Quantity
+    // TODO: is the datum in the state in use?
     datum: string
     datumHash: string
+
+    // TODO: this will probably change after calculations - maybe the selected index?
     selectedPool?: Swap.Pool
+
     //
     calculations: Array<SwapOrderCalulation>
+    // TODO: kind of metadata - slippage should be moved in here too
+    lpTokenHeld: Balance.Amount | undefined
+    sellInPrimaryTokenPrice: string
+    buyInPrimaryTokenPrice: string
   }
   unsignedTx: any
 }>
@@ -53,11 +60,13 @@ export type SwapCreateOrderActions = Readonly<{
   resetQuantities: () => void
   limitPriceChanged: (limitPrice: Balance.Quantity) => void
   //
+  // TODO: when changing quantity/token should receive & update the ADA pair along with it
   sellQuantityChanged: (quantity: Balance.Quantity) => void
   buyQuantityChanged: (quantity: Balance.Quantity) => void
   sellTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => void
   buyTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => void
   poolPairsChanged: (pools: ReadonlyArray<Swap.Pool>) => void
+  lpTokenHeldChanged: (amount: Balance.Amount | undefined) => void
 }>
 
 export enum SwapCreateOrderActionType {
@@ -77,6 +86,7 @@ export enum SwapCreateOrderActionType {
   SellTokenIdChanged = 'sellTokenIdChanged',
   BuyTokenIdChanged = 'buyTokenIdChanged',
   PoolPairsChanged = 'poolPairsChanged',
+  lpTokenHeldChanged = 'lpTokenHeldChanged',
 }
 
 export type SwapCreateOrderAction =
@@ -134,6 +144,10 @@ export type SwapCreateOrderAction =
   | {
       type: SwapCreateOrderActionType.PoolPairsChanged
       pools: ReadonlyArray<Swap.Pool>
+    }
+  | {
+      type: SwapCreateOrderActionType.lpTokenHeldChanged
+      amount: Balance.Amount
     }
 
 export type SwapActions = Readonly<{
@@ -193,6 +207,9 @@ export const defaultSwapState: SwapState = {
     selectedPool: undefined,
     //
     calculations: [],
+    lpTokenHeld: undefined,
+    sellInPrimaryTokenPrice: '',
+    buyInPrimaryTokenPrice: '',
   },
   unsignedTx: undefined,
 } as const
@@ -213,6 +230,7 @@ const defaultSwapCreateOrderActions: SwapCreateOrderActions = {
   sellTokenIdChanged: missingInit,
   buyTokenIdChanged: missingInit,
   poolPairsChanged: missingInit,
+  lpTokenHeldChanged: missingInit,
 } as const
 
 const defaultStateActions: SwapActions = {
@@ -389,6 +407,10 @@ const createOrderReducer = (
 
       case SwapCreateOrderActionType.BuyTokenIdChanged:
         draft.createOrder.amounts.buy.tokenId = action.tokenId
+        break
+
+      case SwapCreateOrderActionType.lpTokenHeldChanged:
+        draft.createOrder.lpTokenHeld = action.amount
         break
 
       case SwapCreateOrderActionType.PoolPairsChanged:
