@@ -41,7 +41,7 @@ export type SwapState = Readonly<{
 
     //
     calculations: Array<SwapOrderCalulation>
-    // TODO: kind of metadata - slippage should be moved in here too
+    // TODO: kind of metadata: - slippage, type, marketPrice should be moved in here too
     lpTokenHeld: Balance.Amount | undefined
     sellInPrimaryTokenPrice: string
     buyInPrimaryTokenPrice: string
