@@ -7,7 +7,9 @@ import {getQuantityWithSlippage} from './getQuantityWithSlippage'
 import {Quantities} from '../../utils/quantities'
 import {getLiquidityProviderFee} from './getLiquidityProviderFee'
 import {getFrontendFee} from './getFrontendFee'
-import { getMarketPrice } from './getMarketPrice'
+import {getMarketPrice} from './getMarketPrice'
+import {getBuyAmount} from './getBuyAmount'
+import { getSellAmount } from './getSellAmount'
 
 export const makeOrderCalculations = ({
   orderType,
@@ -25,6 +27,7 @@ export const makeOrderCalculations = ({
   lpTokenHeld: Balance.Amount
   slippage: number
   primaryTokenId: Balance.TokenInfo['id']
+  // TODO: guessing that later it will boils down to 2/3 scenarios
   action:
     | SwapCreateOrderActionType.SellQuantityChanged
     | SwapCreateOrderActionType.SellTokenIdChanged
@@ -32,11 +35,38 @@ export const makeOrderCalculations = ({
     | SwapCreateOrderActionType.BuyTokenIdChanged
     | SwapCreateOrderActionType.SlippageChanged
     | SwapCreateOrderActionType.PoolPairsChanged
+    | SwapCreateOrderActionType.OrderTypeChanged
 }>) => {
-  console.log(action)
   const result: Array<SwapOrderCalulation> = []
 
-  pools.forEach((pool) => {
+  const isSellZero = Quantities.isZero(orderData.amounts.sell.quantity)
+  const isBuyZero = Quantities.isZero(orderData.amounts.buy.quantity)
+  const isLimit = orderType === 'limit'
+
+  for (const pool of pools) {
+    let buy: Balance.Amount | undefined
+    if (action === SwapCreateOrderActionType.SellQuantityChanged) {
+      buy = getBuyAmount(
+        pool,
+        orderData.amounts.sell,
+        isLimit ? orderData.limitPrice : undefined,
+      )
+    }
+    if (buy === undefined) buy = orderData.amounts.buy
+
+    let sell: Balance.Amount | undefined
+    if (action === SwapCreateOrderActionType.BuyQuantityChanged) {
+      sell = getSellAmount(
+        pool,
+        orderData.amounts.buy,
+        isLimit ? orderData.limitPrice : undefined,
+      )
+    }
+    if (sell === undefined) sell = orderData.amounts.sell
+
+    console.log(buy, sell, isBuyZero, isSellZero)
+
+    // TODO: if any side is zero set as 0
     let price: string = ''
     const marketPrice = getMarketPrice(pool, orderData.amounts.sell)
     if (orderType === 'market') {
@@ -90,7 +120,7 @@ export const makeOrderCalculations = ({
     result.push(orderCalculation)
 
     // TODO: decide the "best" pool later, we need to define "best", maybe lowest price after fees?
-  })
+  }
 
   return result
 }
