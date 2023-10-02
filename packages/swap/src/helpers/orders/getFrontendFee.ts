@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 
 import {Quantities} from '../../utils/quantities'
 import {
-  DiscountTier,
+  SwapDiscountTier,
   milkHoldersDiscountTiers,
 } from '../../translators/constants'
 import {asQuantity} from '../../utils/asQuantity'
@@ -23,8 +23,11 @@ export const getFrontendFee = ({
   sellInPrimaryTokenValue: Balance.Amount
   buyInPrimaryTokenValue: Balance.Amount
   primaryTokenInfo: Balance.TokenInfo
-  discountTiers?: ReadonlyArray<DiscountTier>
-}): Balance.Amount => {
+  discountTiers?: ReadonlyArray<SwapDiscountTier>
+}): Readonly<{
+  frontendFee: Balance.Amount
+  discountTier?: SwapDiscountTier | undefined
+}> => {
   // discover trade value in ADA (sell/buy/max by pairing)
   // it should range around 50/50
   const maxPrimaryValueSellBuy = Quantities.max(
@@ -39,19 +42,17 @@ export const getFrontendFee = ({
       : maxPrimaryValueSellBuy
 
   // identify the discount
-  const defaultTier = discountTiers[discountTiers.length - 1] // expects max fee as last record
-  const discountTier =
-    discountTiers.find(
-      (tier) =>
-        Quantities.isGreaterThanOrEqualTo(
-          milkBalance,
-          tier.secondaryTokenBalanceThreshold,
-        ) &&
-        Quantities.isGreaterThanOrEqualTo(
-          primaryTokenBiggerTradingValue,
-          tier.primaryTokenValueThreshold,
-        ),
-    ) ?? defaultTier
+  const discountTier = discountTiers.find(
+    (tier) =>
+      Quantities.isGreaterThanOrEqualTo(
+        milkBalance,
+        tier.secondaryTokenBalanceThreshold,
+      ) &&
+      Quantities.isGreaterThanOrEqualTo(
+        primaryTokenBiggerTradingValue,
+        tier.primaryTokenValueThreshold,
+      ),
+  )
 
   // calculate the fee
   const fee = asQuantity(
@@ -61,5 +62,8 @@ export const getFrontendFee = ({
       .plus(discountTier?.fixedFee ?? 0),
   )
 
-  return {tokenId: primaryTokenInfo.id, quantity: fee}
+  return {
+    frontendFee: {tokenId: primaryTokenInfo.id, quantity: fee},
+    discountTier,
+  } as const
 }

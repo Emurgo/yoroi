@@ -45,8 +45,11 @@ describe('getFrontendFee', () => {
       })
       // assert
       expect(fee).toEqual({
-        tokenId: primaryTokenInfo.id,
-        quantity: Quantities.zero,
+        frontendFee: {
+          tokenId: primaryTokenInfo.id,
+          quantity: Quantities.zero,
+        },
+        discountTier: undefined,
       })
     })
 
@@ -68,8 +71,11 @@ describe('getFrontendFee', () => {
       })
       // assert
       expect(fee).toEqual({
-        tokenId: primaryTokenInfo.id,
-        quantity: asQuantity(1_050_000), // no milk, 100 ADA * 0.05% + 1 = 1.05 ADA
+        frontendFee: {
+          tokenId: primaryTokenInfo.id,
+          quantity: asQuantity(1_050_000), // no milk, 100 ADA * 0.05% + 1 = 1.05 ADA
+        },
+        discountTier: milkHoldersDiscountTiers[2],
       })
     })
 
@@ -91,8 +97,11 @@ describe('getFrontendFee', () => {
       })
       // assert
       expect(fee).toEqual({
-        tokenId: primaryTokenInfo.id,
-        quantity: asQuantity(1_025_000), // hold 100-499 milk, 100 ADA * 0.025% + 1 = 1.025 ADA
+        frontendFee: {
+          tokenId: primaryTokenInfo.id,
+          quantity: asQuantity(1_025_000), // hold 100-499 milk, 100 ADA * 0.025% + 1 = 1.025 ADA
+        },
+        discountTier: milkHoldersDiscountTiers[1],
       })
     })
 
@@ -114,8 +123,11 @@ describe('getFrontendFee', () => {
       })
       // assert
       expect(fee).toEqual({
-        tokenId: primaryTokenInfo.id,
-        quantity: asQuantity(1_020_000), // hold 500+ milk, 100 ADA * 0.020% + 1 = 1.02 ADA
+        frontendFee: {
+          tokenId: primaryTokenInfo.id,
+          quantity: asQuantity(1_020_000), // hold 500+ milk, 100 ADA * 0.020% + 1 = 1.02 ADA
+        },
+        discountTier: milkHoldersDiscountTiers[0],
       })
     })
   })
@@ -139,8 +151,11 @@ describe('getFrontendFee', () => {
       })
       // assert
       expect(fee).toEqual({
-        tokenId: primaryTokenInfo.id,
-        quantity: Quantities.zero,
+        frontendFee: {
+          tokenId: primaryTokenInfo.id,
+          quantity: Quantities.zero,
+        },
+        discountTier: undefined,
       })
     })
 
@@ -162,8 +177,11 @@ describe('getFrontendFee', () => {
       })
       // assert
       expect(fee).toEqual({
-        tokenId: primaryTokenInfo.id,
-        quantity: asQuantity(1_050_000), // no milk, 100 ADA * 0.05% + 1 = 1.05 ADA
+        frontendFee: {
+          tokenId: primaryTokenInfo.id,
+          quantity: asQuantity(1_050_000), // no milk, 100 ADA * 0.05% + 1 = 1.05 ADA
+        },
+        discountTier: milkHoldersDiscountTiers[2],
       })
     })
 
@@ -185,8 +203,11 @@ describe('getFrontendFee', () => {
       })
       // assert
       expect(fee).toEqual({
-        tokenId: primaryTokenInfo.id,
-        quantity: asQuantity(1_025_000), // hold 100-499 milk, 100 ADA * 0.025% + 1 = 1.025 ADA
+        frontendFee: {
+          tokenId: primaryTokenInfo.id,
+          quantity: asQuantity(1_025_000), // hold 100-499 milk, 100 ADA * 0.025% + 1 = 1.025 ADA
+        },
+        discountTier: milkHoldersDiscountTiers[1],
       })
     })
 
@@ -208,8 +229,11 @@ describe('getFrontendFee', () => {
       })
       // assert
       expect(fee).toEqual({
-        tokenId: primaryTokenInfo.id,
-        quantity: asQuantity(1_020_000), // hold 500+ milk, 100 ADA * 0.020% + 1= 1.02 ADA
+        frontendFee: {
+          tokenId: primaryTokenInfo.id,
+          quantity: asQuantity(1_020_000), // hold 500+ milk, 100 ADA * 0.020% + 1= 1.02 ADA
+        },
+        discountTier: milkHoldersDiscountTiers[0],
       })
     })
   })
@@ -231,8 +255,11 @@ describe('getFrontendFee', () => {
     })
     // assert
     expect(fee).toEqual({
-      tokenId: primaryTokenInfo.id,
-      quantity: Quantities.zero,
+      frontendFee: {
+        tokenId: primaryTokenInfo.id,
+        quantity: Quantities.zero,
+      },
+      discountTier: undefined,
     })
   })
 
@@ -253,8 +280,11 @@ describe('getFrontendFee', () => {
     })
     // assert
     expect(fee).toEqual({
-      tokenId: primaryTokenInfo.id,
-      quantity: Quantities.zero,
+      frontendFee: {
+        tokenId: primaryTokenInfo.id,
+        quantity: Quantities.zero,
+      },
+      discountTier: undefined,
     })
   })
 
@@ -286,8 +316,11 @@ describe('getFrontendFee', () => {
       })
       // assert
       expect(fee).toEqual({
-        tokenId: primaryTokenInfo.id,
-        quantity: Quantities.zero,
+        frontendFee: {
+          tokenId: primaryTokenInfo.id,
+          quantity: Quantities.zero,
+        },
+        discountTier: undefined,
       })
     })
 
@@ -317,8 +350,11 @@ describe('getFrontendFee', () => {
       })
       // assert
       expect(fee).toEqual({
-        tokenId: primaryTokenInfo.id,
-        quantity: asQuantity(1_050_000), // no milk, 100 ADA * 0.05% + 1 = 1.05 ADA
+        frontendFee: {
+          tokenId: primaryTokenInfo.id,
+          quantity: asQuantity(1_050_000), // no milk, 100 ADA * 0.05% + 1 = 1.05 ADA
+        },
+        discountTier: milkHoldersDiscountTiers[2],
       })
     })
 
@@ -348,8 +384,11 @@ describe('getFrontendFee', () => {
       })
       // assert
       expect(fee).toEqual({
-        tokenId: primaryTokenInfo.id,
-        quantity: asQuantity(1_025_000), // hold 100-499 milk, 100 ADA * 0.025% + 1= 1.025 ADA
+        frontendFee: {
+          tokenId: primaryTokenInfo.id,
+          quantity: asQuantity(1_025_000), // hold 100-499 milk, 100 ADA * 0.025% + 1= 1.025 ADA
+        },
+        discountTier: milkHoldersDiscountTiers[1],
       })
     })
 
@@ -379,8 +418,11 @@ describe('getFrontendFee', () => {
       })
       // assert
       expect(fee).toEqual({
-        tokenId: primaryTokenInfo.id,
-        quantity: asQuantity(1_020_000), // hold 500+ milk, 100 ADA * 0.020% + 1 = 1.02 ADA
+        frontendFee: {
+          tokenId: primaryTokenInfo.id,
+          quantity: asQuantity(1_020_000), // hold 500+ milk, 100 ADA * 0.020% + 1 = 1.02 ADA
+        },
+        discountTier: milkHoldersDiscountTiers[0],
       })
     })
   })
