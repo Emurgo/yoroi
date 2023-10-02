@@ -8,25 +8,38 @@ import {
 } from '../../translators/constants'
 import {asQuantity} from '../../utils/asQuantity'
 
+/**
+ * Calculates the frontend fee and selects a discount tier for a swap transaction.
+ *
+ * @param sell - The amount of tokens being sold.
+ * @param buy - The amount of tokens being bought.
+ * @param lpTokenHeld - The amount of LP (liquidity provider) token, is used to calc discount tier.
+ * @param primaryTokenId - The ID of the primary token, available in the manager.
+ * @param sellInPrimaryTokenValue - The value of the sell amount in terms of the primary token.
+ * @param buyInPrimaryTokenValue - The value of the buy amount in terms of the primary token.
+ * @param discountTiers - An array of discount tiers for lp token holders. Defaults to milkHoldersDiscountTiers.
+ *
+ * @returns An object containing the frontend fee and the selected discount tier.
+ */
 export const getFrontendFee = ({
-  sellAmount,
-  buyAmount,
-  milkBalance,
-  primaryTokenInfo,
+  sell,
+  buy,
+  lpTokenHeld,
+  primaryTokenId,
   sellInPrimaryTokenValue,
   buyInPrimaryTokenValue,
   discountTiers = milkHoldersDiscountTiers,
 }: {
-  sellAmount: Balance.Amount
-  buyAmount: Balance.Amount
-  milkBalance: Balance.Quantity
-  primaryTokenInfo: Balance.TokenInfo
+  sell: Balance.Amount
+  buy: Balance.Amount
+  primaryTokenId: Balance.TokenInfo['id']
+  lpTokenHeld?: Balance.Amount
   discountTiers?: ReadonlyArray<SwapDiscountTier>
   // not implemented yet (for now only ffee is added only if ADA is one of the pair)
   sellInPrimaryTokenValue?: Balance.Amount
   buyInPrimaryTokenValue?: Balance.Amount
 }): Readonly<{
-  frontendFee: Balance.Amount
+  fee: Balance.Amount
   discountTier: SwapDiscountTier | undefined
 }> => {
   // discover trade value in ADA (sell/buy/max by pairing)
@@ -36,10 +49,10 @@ export const getFrontendFee = ({
     buyInPrimaryTokenValue?.quantity ?? Quantities.zero,
   )
   let primaryTokenBiggerPairValue: Balance.Quantity
-  if (sellAmount.tokenId === primaryTokenInfo.id) {
-    primaryTokenBiggerPairValue = sellAmount.quantity
-  } else if (buyAmount.tokenId === primaryTokenInfo.id) {
-    primaryTokenBiggerPairValue = buyAmount.quantity
+  if (sell.tokenId === primaryTokenId) {
+    primaryTokenBiggerPairValue = sell.quantity
+  } else if (buy.tokenId === primaryTokenId) {
+    primaryTokenBiggerPairValue = buy.quantity
   } else {
     primaryTokenBiggerPairValue = maxPrimaryValueSellBuy
   }
@@ -48,7 +61,7 @@ export const getFrontendFee = ({
   const discountTier = discountTiers.find(
     (tier) =>
       Quantities.isGreaterThanOrEqualTo(
-        milkBalance,
+        lpTokenHeld?.quantity ?? Quantities.zero,
         tier.secondaryTokenBalanceThreshold,
       ) &&
       Quantities.isGreaterThanOrEqualTo(
@@ -66,7 +79,7 @@ export const getFrontendFee = ({
   )
 
   return {
-    frontendFee: {tokenId: primaryTokenInfo.id, quantity: fee},
+    fee: {tokenId: primaryTokenId, quantity: fee},
     discountTier,
   } as const
 }
