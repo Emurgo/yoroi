@@ -12,34 +12,37 @@ export const getFrontendFee = ({
   sellAmount,
   buyAmount,
   milkBalance,
+  primaryTokenInfo,
   sellInPrimaryTokenValue,
   buyInPrimaryTokenValue,
-  primaryTokenInfo,
   discountTiers = milkHoldersDiscountTiers,
 }: {
   sellAmount: Balance.Amount
   buyAmount: Balance.Amount
   milkBalance: Balance.Quantity
-  sellInPrimaryTokenValue: Balance.Amount
-  buyInPrimaryTokenValue: Balance.Amount
   primaryTokenInfo: Balance.TokenInfo
   discountTiers?: ReadonlyArray<SwapDiscountTier>
+  // not implemented yet (for now only ffee is added only if ADA is one of the pair)
+  sellInPrimaryTokenValue?: Balance.Amount
+  buyInPrimaryTokenValue?: Balance.Amount
 }): Readonly<{
   frontendFee: Balance.Amount
-  discountTier?: SwapDiscountTier | undefined
+  discountTier: SwapDiscountTier | undefined
 }> => {
   // discover trade value in ADA (sell/buy/max by pairing)
   // it should range around 50/50
   const maxPrimaryValueSellBuy = Quantities.max(
-    sellInPrimaryTokenValue.quantity,
-    buyInPrimaryTokenValue.quantity,
+    sellInPrimaryTokenValue?.quantity ?? Quantities.zero,
+    buyInPrimaryTokenValue?.quantity ?? Quantities.zero,
   )
-  const primaryTokenBiggerTradingValue =
-    sellAmount.tokenId === primaryTokenInfo.id
-      ? sellAmount.quantity
-      : buyAmount.tokenId === primaryTokenInfo.id
-      ? buyInPrimaryTokenValue.quantity
-      : maxPrimaryValueSellBuy
+  let primaryTokenBiggerPairValue: Balance.Quantity
+  if (sellAmount.tokenId === primaryTokenInfo.id) {
+    primaryTokenBiggerPairValue = sellAmount.quantity
+  } else if (buyAmount.tokenId === primaryTokenInfo.id) {
+    primaryTokenBiggerPairValue = buyAmount.quantity
+  } else {
+    primaryTokenBiggerPairValue = maxPrimaryValueSellBuy
+  }
 
   // identify the discount
   const discountTier = discountTiers.find(
@@ -49,14 +52,14 @@ export const getFrontendFee = ({
         tier.secondaryTokenBalanceThreshold,
       ) &&
       Quantities.isGreaterThanOrEqualTo(
-        primaryTokenBiggerTradingValue,
+        primaryTokenBiggerPairValue,
         tier.primaryTokenValueThreshold,
       ),
   )
 
   // calculate the fee
   const fee = asQuantity(
-    new BigNumber(primaryTokenBiggerTradingValue)
+    new BigNumber(primaryTokenBiggerPairValue)
       .times(discountTier?.variableFeeMultiplier ?? 0)
       .integerValue(BigNumber.ROUND_UP)
       .plus(discountTier?.fixedFee ?? 0),
