@@ -33,6 +33,14 @@ export const Quantities = {
   isGreaterThan: (quantity1: Balance.Quantity, quantity2: Balance.Quantity) => {
     return new BigNumber(quantity1).isGreaterThan(new BigNumber(quantity2))
   },
+  isGreaterThanOrEqualTo: (
+    quantity1: Balance.Quantity,
+    quantity2: Balance.Quantity,
+  ) => {
+    return new BigNumber(quantity1).isGreaterThanOrEqualTo(
+      new BigNumber(quantity2),
+    )
+  },
   decimalPlaces: (quantity: Balance.Quantity, precision: number) => {
     return new BigNumber(quantity)
       .decimalPlaces(precision)

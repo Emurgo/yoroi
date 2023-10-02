@@ -39,4 +39,8 @@ export {
   swapStorageSlippageKey,
 } from './adapters/async-storage/storage'
 
-export {supportedProviders} from './translators/constants'
+export {
+  supportedProviders,
+  milkHoldersDiscountTiers,
+  milkTokenId,
+} from './translators/constants'

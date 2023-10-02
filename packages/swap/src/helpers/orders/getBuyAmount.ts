@@ -30,8 +30,8 @@ export const getBuyAmount = (
     return {
       tokenId,
       quantity: asQuantity(
-        BigNumber(sell.quantity)
-          .dividedToIntegerBy(BigNumber(limit))
+        new BigNumber(sell.quantity)
+          .dividedToIntegerBy(new BigNumber(limit))
           .toString(),
       ),
     }
