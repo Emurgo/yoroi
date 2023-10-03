@@ -61,6 +61,8 @@ export const makeOrderCalculations = ({
   // when changing price - limit order ?
   // when switching sell/buy
   // when changing slippage
+  // when changing the lp token held
+  // when reseting quantities
 
   pools.forEach((pool) => {
     // when changing sell quantity, calculate buy quantity based on order type
