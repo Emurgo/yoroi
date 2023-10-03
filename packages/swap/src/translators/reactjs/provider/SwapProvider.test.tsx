@@ -4,7 +4,7 @@ import {renderHook, act} from '@testing-library/react-hooks'
 
 import {SwapProvider} from './SwapProvider'
 import {mockSwapManager, swapManagerMocks} from '../../../manager.mocks'
-import {defaultSwapState} from '../state/state'
+import {SwapState, defaultSwapState} from '../state/state'
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {useSwap} from '../hooks/useSwap'
 
@@ -189,8 +189,9 @@ describe('SwapProvider', () => {
   })
 
   it('SwitchTokens market', () => {
-    const initialState: any = {
+    const initialState: SwapState = {
       createOrder: {
+        ...defaultSwapState.createOrder,
         amounts: {
           sell: {
             quantity: '10',
@@ -213,6 +214,7 @@ describe('SwapProvider', () => {
           tokenB: {tokenId: 'policyId.buy', quantity: '100'},
         },
       },
+      unsignedTx: undefined,
     }
     const wrapper = ({children}: any) => (
       <QueryClientProvider client={queryClient}>
@@ -243,10 +245,11 @@ describe('SwapProvider', () => {
   })
 
   it('SwitchTokens limit', () => {
-    const initialState: any = {
+    const initialState: SwapState = {
       createOrder: {
+        ...defaultSwapState.createOrder,
         type: 'limit',
-        limitPrice: 2,
+        limitPrice: '2',
         amounts: {
           sell: {
             quantity: '10',
@@ -269,6 +272,7 @@ describe('SwapProvider', () => {
           tokenB: {tokenId: 'policyId.buy', quantity: '100'},
         },
       },
+      unsignedTx: undefined,
     }
     const wrapper = ({children}: any) => (
       <QueryClientProvider client={queryClient}>
@@ -314,8 +318,9 @@ describe('SwapProvider', () => {
   })
 
   it('ResetQuantities', () => {
-    const initiState: any = {
+    const initiState: SwapState = {
       createOrder: {
+        ...defaultSwapState.createOrder,
         amounts: {
           sell: {
             quantity: '1',
@@ -340,6 +345,7 @@ describe('SwapProvider', () => {
         limitPrice: '3',
         marketPrice: '1',
       },
+      unsignedTx: undefined,
     }
     const wrapper = ({children}: any) => (
       <QueryClientProvider client={queryClient}>
@@ -371,8 +377,9 @@ describe('SwapProvider', () => {
   })
 
   it('ResetState', () => {
-    const initialState: any = {
+    const initialState: SwapState = {
       createOrder: {
+        ...defaultSwapState.createOrder,
         amounts: {
           sell: {
             quantity: '1',
@@ -384,6 +391,7 @@ describe('SwapProvider', () => {
           },
         },
       },
+      unsignedTx: undefined,
     }
     const wrapper = ({children}: any) => (
       <QueryClientProvider client={queryClient}>
