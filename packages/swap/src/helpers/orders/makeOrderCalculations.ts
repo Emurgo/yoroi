@@ -1,4 +1,5 @@
 import {Balance, Swap, Writable} from '@yoroi/types'
+import {BigNumber} from 'bignumber.js'
 import {
   SwapCreateOrderActionType,
   SwapOrderCalulation,
@@ -10,6 +11,7 @@ import {getFrontendFee} from './getFrontendFee'
 import {getMarketPrice} from './getMarketPrice'
 import {getBuyAmount} from './getBuyAmount'
 import {getSellAmount} from './getSellAmount'
+import {asQuantity} from '../../utils/asQuantity'
 
 export const makeOrderCalculations = ({
   orderType,
@@ -105,10 +107,40 @@ export const makeOrderCalculations = ({
       buy: orderData.amounts.buy,
       lpTokenHeld,
       primaryTokenId: primaryTokenId,
-      // TODO: implement after adding the pair to ADA in the state
-      // sellInPrimaryTokenValue: orderData.sellInPrimaryTokenValue,
-      // buyInPrimaryTokenValue: orderData.buyInPrimaryTokenValue,
+      sellInPrimaryTokenValue: {
+        tokenId: primaryTokenId,
+        quantity: asQuantity(
+          new BigNumber(orderData.amounts.sell.quantity)
+            .times(ptPrices.sell)
+            .integerValue(BigNumber.ROUND_CEIL),
+        ),
+      },
+      buyInPrimaryTokenValue: {
+        tokenId: primaryTokenId,
+        quantity: asQuantity(
+          new BigNumber(orderData.amounts.buy.quantity)
+            .times(ptPrices.buy)
+            .integerValue(BigNumber.ROUND_CEIL),
+        ),
+      },
     })
+
+    // transform fees in terms of sell side quantity * pt price (unit of fees)
+    const feeInSellSideQuantities = {
+      batcherFee: new BigNumber(pool.batcherFee.quantity)
+        .times(ptPrices.sell)
+        .integerValue(BigNumber.ROUND_CEIL),
+      frontendFee: new BigNumber(frontendFeeInfo.fee.quantity)
+        .times(ptPrices.sell)
+        .integerValue(BigNumber.ROUND_CEIL),
+    }
+
+    // add up all that's being sold in sell terms
+    const priceWithFees = new BigNumber(sell.quantity)
+      .plus(feeInSellSideQuantities.batcherFee)
+      .plus(feeInSellSideQuantities.frontendFee)
+      .dividedBy(new BigNumber(buy.quantity))
+      .toString()
 
     const orderCalculation: SwapOrderCalulation = {
       cost: {
@@ -121,7 +153,8 @@ export const makeOrderCalculations = ({
       prices: {
         base: priceBase,
         market: marketPrice,
-        withFees: '0',
+        withFees: priceWithFees,
+        // TODO: add later
         difference: '0',
         withSlippage: '0',
         withFeesAndSlippage: '0',
