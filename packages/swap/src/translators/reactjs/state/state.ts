@@ -9,12 +9,13 @@ import {SwapDiscountTier} from '../../../translators/constants'
 
 export type SwapOrderCalulation = Readonly<{
   pool: Swap.Pool
-  sell: {
-    price: string
-    priceWithFees: string
-    priceDifference: string
-    priceWithSlippage: string
-    priceWithFeesAndSlippage: string
+  prices: {
+    base: string
+    market: string
+    withFees: string
+    difference: string
+    withSlippage: string
+    withFeesAndSlippage: string
   }
   buyAmountWithSlippage: Balance.Amount
   cost: {
