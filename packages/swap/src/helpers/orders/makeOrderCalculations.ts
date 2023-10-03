@@ -43,6 +43,8 @@ export const makeOrderCalculations = ({
     | SwapCreateOrderActionType.SlippageChanged
     | SwapCreateOrderActionType.PoolPairsChanged
     | SwapCreateOrderActionType.OrderTypeChanged
+    | SwapCreateOrderActionType.SwitchTokens
+    | SwapCreateOrderActionType.LimitPriceChanged
 }>) => {
   const result: Array<SwapOrderCalulation> = []
 
@@ -126,6 +128,7 @@ export const makeOrderCalculations = ({
     })
 
     // transform fees in terms of sell side quantity * pt price (unit of fees)
+    // it applies market price always
     const feeInSellSideQuantities = {
       batcherFee: new BigNumber(pool.batcherFee.quantity)
         .times(ptPrices.sell)
@@ -136,10 +139,25 @@ export const makeOrderCalculations = ({
     }
 
     // add up all that's being sold in sell terms
-    const priceWithFees = new BigNumber(sell.quantity)
+    const sellWithFees = new BigNumber(sell.quantity)
       .plus(feeInSellSideQuantities.batcherFee)
       .plus(feeInSellSideQuantities.frontendFee)
-      .dividedBy(new BigNumber(buy.quantity))
+
+    const priceWithFees = sellWithFees.dividedBy(buy.quantity)
+
+    const priceWithSlippage = new BigNumber(sell.quantity)
+      .dividedBy(buyAmountWithSlippage.quantity)
+      .toString()
+
+    const priceWithFeesAndSlippage = sellWithFees
+      .dividedBy(buyAmountWithSlippage.quantity)
+      .toString()
+
+    // always based, if is limit it can lead to a weird percentage
+    const priceDifference = priceWithFees
+      .minus(priceBase)
+      .dividedBy(priceBase)
+      .times(100)
       .toString()
 
     const orderCalculation: SwapOrderCalulation = {
@@ -153,11 +171,10 @@ export const makeOrderCalculations = ({
       prices: {
         base: priceBase,
         market: marketPrice,
-        withFees: priceWithFees,
-        // TODO: add later
-        difference: '0',
-        withSlippage: '0',
-        withFeesAndSlippage: '0',
+        withFees: priceWithFees.toString(),
+        withSlippage: priceWithSlippage,
+        withFeesAndSlippage: priceWithFeesAndSlippage,
+        difference: priceDifference,
       },
       pool,
     }
