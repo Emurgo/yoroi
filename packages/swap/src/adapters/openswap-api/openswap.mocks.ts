@@ -441,8 +441,56 @@ const getPools: OpenSwap.Pool[] = [
   },
 ]
 
+const getPrice: OpenSwap.PriceResponse = {
+  baseDecimalPlaces: 6,
+  quoteDecimalPlaces: 6,
+  baseAddress: {
+    policyId: '',
+    name: '',
+  },
+  quoteAddress: {
+    policyId: '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6',
+    name: '4d494e',
+  },
+  askPrice: 0.08209814208,
+  bidPrice: 0.06319999985,
+  price: 0.07080044463,
+  volume: {
+    base: '14735349',
+    quote: '211287611',
+  },
+  volumeAggregator: {
+    minswap: {
+      quote: 107413106646,
+      base: 7651672996,
+    },
+    sundaeswap: {
+      quote: 566084169,
+      base: 39000000,
+    },
+    vyfi: {
+      quote: 12370434748,
+      base: 879028993,
+    },
+  },
+  volumeTotal: {
+    base: 8584437338,
+    quote: 120560913174,
+  },
+  volumeChange: {
+    base: 0,
+    quote: 0,
+  },
+  priceChange: {
+    '24h': '-0.2374956426253183',
+    '7d': '8.757469657697857',
+  },
+  marketCap: 68873484244745.086,
+}
+
 export const openswapMocks = {
   getTokens,
+  getPrice,
   getCompletedOrders,
   getOpenOrders,
   getPools,

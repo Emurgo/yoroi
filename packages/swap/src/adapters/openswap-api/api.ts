@@ -91,7 +91,24 @@ export const swapApiMaker = (
       .then(transformers.asYoroiPools)
   }
 
+  const getPrice: Swap.Api['getPrice'] = async ({baseToken, quoteToken}) => {
+    const opBaseToken = transformers.asOpenswapPriceTokenAddress(baseToken)
+    const opQuoteToken = transformers.asOpenswapPriceTokenAddress(quoteToken)
+
+    return api
+      .getPrice({
+        baseToken: {
+          ...opBaseToken,
+        },
+        quoteToken: {
+          ...opQuoteToken,
+        },
+      })
+      .then((response) => response.price)
+  }
+
   return {
+    getPrice,
     getOpenOrders,
     cancelOrder,
     createOrder,

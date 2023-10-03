@@ -18,6 +18,9 @@ export type SwapManager = Readonly<{
       byToken: SwapApi['getTokens']
     }
   }
+  price: {
+    byPair: SwapApi['getPrice']
+  }
   pools: {
     list: {
       byPair: SwapApi['getPools']

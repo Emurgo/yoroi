@@ -176,3 +176,45 @@ export type ApiDeps = {
   network: Network
   client: AxiosInstance
 }
+
+export type PriceAddress = {
+  policyId: string
+  name: string
+}
+
+type VolumeAggregator = {
+  [key in Protocol]?: {
+    quote: number
+    base: number
+  }
+}
+
+type PriceChange = {
+  '24h': string
+  '7d': string
+}
+
+export type PriceResponse = {
+  baseDecimalPlaces: number
+  quoteDecimalPlaces: number
+  baseAddress: PriceAddress
+  quoteAddress: PriceAddress
+  askPrice: number
+  bidPrice: number
+  price: number
+  volume: {
+    base: string
+    quote: string
+  }
+  volumeAggregator: VolumeAggregator
+  volumeTotal: {
+    base: number
+    quote: number
+  }
+  volumeChange: {
+    base: number
+    quote: number
+  }
+  priceChange: PriceChange
+  marketCap: number
+}

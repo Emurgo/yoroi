@@ -22,4 +22,7 @@ export namespace OpenSwap {
   export type Token = Types.Token
   export type TokenResponse = Types.TokenResponse
   export type TokenAddress = Types.TokenAddress
+
+  export type PriceAddress = Types.PriceAddress
+  export type PriceResponse = Types.PriceResponse
 }

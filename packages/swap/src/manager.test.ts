@@ -19,6 +19,7 @@ describe('swapManagerMaker', () => {
     cancelOrder: jest.fn(),
     createOrder: jest.fn(),
     getOpenOrders: jest.fn(),
+    getPrice: jest.fn(),
     getPools: jest.fn(),
     getTokens: jest.fn(),
     getCompletedOrders: jest.fn(),

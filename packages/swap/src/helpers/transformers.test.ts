@@ -151,6 +151,25 @@ describe('asOpensawpTokenId (TokenAddress)', () => {
   })
 })
 
+describe('asOpensawpPriceTokenAddress (PriceAddress)', () => {
+  it('success', () => {
+    const result = transformers.asOpenswapPriceTokenAddress(
+      '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.425249434b53',
+    )
+    expect(result).toEqual<OpenSwap.PriceAddress>({
+      policyId: '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f',
+      name: '425249434b53',
+    })
+  })
+  it('success primary token (empty values)', () => {
+    const result = transformers.asOpenswapPriceTokenAddress('' as any)
+    expect(result).toEqual<OpenSwap.PriceAddress>({
+      policyId: '',
+      name: '',
+    })
+  })
+})
+
 describe('asTokenFingerprint', () => {
   it('success', () => {
     const full = asTokenFingerprint({
