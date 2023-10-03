@@ -1,11 +1,10 @@
-import {Balance, Swap, Writable} from '@yoroi/types'
+import {Balance, Swap} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import {
   SwapCreateOrderActionType,
   SwapOrderCalulation,
 } from '../../translators/reactjs/state/state'
 import {getQuantityWithSlippage} from './getQuantityWithSlippage'
-import {Quantities} from '../../utils/quantities'
 import {getLiquidityProviderFee} from './getLiquidityProviderFee'
 import {getFrontendFee} from './getFrontendFee'
 import {getMarketPrice} from './getMarketPrice'
@@ -15,113 +14,111 @@ import {asQuantity} from '../../utils/asQuantity'
 
 export const makeOrderCalculations = ({
   orderType,
-  orderData,
+  amounts,
+  limitPrice,
+  slippage,
   ptPrices,
   pools,
   primaryTokenId,
-  action,
   lpTokenHeld,
+  action,
 }: Readonly<{
   orderType: Swap.OrderType
-  orderData: Swap.CreateOrderData
-  ptPrices: {
-    buy: string
-    sell: string
+  amounts: {
+    sell: Balance.Amount
+    buy: Balance.Amount
   }
-  pools: Array<Swap.Pool>
-  sellAmount: Balance.Amount
-  buyAmount: Balance.Amount
-  lpTokenHeld: Balance.Amount
+  limitPrice: `${number}` | undefined
+  ptPrices: {
+    buy: `${number}` | undefined
+    sell: `${number}` | undefined
+  }
+  pools: ReadonlyArray<Swap.Pool>
+  lpTokenHeld: Balance.Amount | undefined
   slippage: number
   primaryTokenId: Balance.TokenInfo['id']
   // TODO: guessing that later it will boils down to 2/3 scenarios
   action:
     | SwapCreateOrderActionType.SellQuantityChanged
-    | SwapCreateOrderActionType.SellTokenIdChanged
     | SwapCreateOrderActionType.BuyQuantityChanged
+    // same bag for now
+    | SwapCreateOrderActionType.SellTokenIdChanged
     | SwapCreateOrderActionType.BuyTokenIdChanged
     | SwapCreateOrderActionType.SlippageChanged
     | SwapCreateOrderActionType.PoolPairsChanged
     | SwapCreateOrderActionType.OrderTypeChanged
     | SwapCreateOrderActionType.SwitchTokens
     | SwapCreateOrderActionType.LimitPriceChanged
+    | SwapCreateOrderActionType.ResetQuantities
+    | SwapCreateOrderActionType.LpTokenHeldChanged
 }>) => {
   const result: Array<SwapOrderCalulation> = []
-
   const isLimit = orderType === 'limit'
+
+  // when changing sell token ?
+  // when changing buy token ?
+  // when changing pool - limit order ?
+  // when changing price - limit order ?
+  // when switching sell/buy
+  // when changing slippage
 
   for (const pool of pools) {
     // when changing sell quantity, calculate buy quantity based on order type
     let buy: Balance.Amount | undefined
     if (action === SwapCreateOrderActionType.SellQuantityChanged) {
-      buy = getBuyAmount(
-        pool,
-        orderData.amounts.sell,
-        isLimit ? orderData.limitPrice : undefined,
-      )
+      buy = getBuyAmount(pool, amounts.sell, isLimit ? limitPrice : undefined)
     }
-    if (buy === undefined) buy = orderData.amounts.buy
+    if (buy === undefined) buy = amounts.buy
 
     // when changing buy quantity, calculate sell quantity based on order type
     let sell: Balance.Amount | undefined
     if (action === SwapCreateOrderActionType.BuyQuantityChanged) {
-      sell = getSellAmount(
-        pool,
-        orderData.amounts.buy,
-        isLimit ? orderData.limitPrice : undefined,
-      )
+      sell = getSellAmount(pool, amounts.buy, isLimit ? limitPrice : undefined)
     }
-    if (sell === undefined) sell = orderData.amounts.sell
-
-    // when changing sell token ?
-    // when changing buy token ?
-    // when changing pool - limit order ?
-    // when changing price - limit order ?
+    if (sell === undefined) sell = amounts.sell
 
     // recalculate price base, limit is user's input, market from pool
     let priceBase: string
-    const marketPrice = getMarketPrice(pool, orderData.amounts.sell)
+    const marketPrice = getMarketPrice(pool, amounts.sell)
     if (orderType === 'market') {
       priceBase = marketPrice
     } else {
       // NOTE: while editing should never receive undefined or '', undefined = market price, '' = NaN
-      priceBase = orderData.limitPrice ?? marketPrice
+      // when switching sell/buy limit is kept
+      priceBase = limitPrice ?? marketPrice
     }
 
     // calculate buy quantity with slippage
     const buyAmountWithSlippage: Balance.Amount = {
-      quantity: getQuantityWithSlippage(
-        orderData.amounts.buy.quantity,
-        orderData.slippage,
-      ),
-      tokenId: orderData.amounts.buy.tokenId,
+      quantity: getQuantityWithSlippage(amounts.buy.quantity, slippage),
+      tokenId: amounts.buy.tokenId,
     }
 
     // lf is sell side % of quantity ie. XToken 100 * 1% = 1 XToken
     const liquidityFee: Balance.Amount = getLiquidityProviderFee(
       pool.fee,
-      orderData.amounts.sell,
+      amounts.sell,
     )
 
     // ffee is based on PT value range + LP holding range (sides may need conversion, when none is PT)
     const frontendFeeInfo = getFrontendFee({
-      sell: orderData.amounts.sell,
-      buy: orderData.amounts.buy,
+      sell: amounts.sell,
+      buy: amounts.buy,
       lpTokenHeld,
       primaryTokenId: primaryTokenId,
       sellInPrimaryTokenValue: {
         tokenId: primaryTokenId,
         quantity: asQuantity(
-          new BigNumber(orderData.amounts.sell.quantity)
-            .times(ptPrices.sell)
+          new BigNumber(amounts.sell.quantity)
+            .times(ptPrices.sell ?? 0)
             .integerValue(BigNumber.ROUND_CEIL),
         ),
       },
       buyInPrimaryTokenValue: {
         tokenId: primaryTokenId,
         quantity: asQuantity(
-          new BigNumber(orderData.amounts.buy.quantity)
-            .times(ptPrices.buy)
+          new BigNumber(amounts.buy.quantity)
+            .times(ptPrices.buy ?? 0)
             .integerValue(BigNumber.ROUND_CEIL),
         ),
       },
@@ -131,10 +128,10 @@ export const makeOrderCalculations = ({
     // it applies market price always
     const feeInSellSideQuantities = {
       batcherFee: new BigNumber(pool.batcherFee.quantity)
-        .times(ptPrices.sell)
+        .times(ptPrices.sell ?? 0)
         .integerValue(BigNumber.ROUND_CEIL),
       frontendFee: new BigNumber(frontendFeeInfo.fee.quantity)
-        .times(ptPrices.sell)
+        .times(ptPrices.sell ?? 0)
         .integerValue(BigNumber.ROUND_CEIL),
     }
 
