@@ -261,6 +261,19 @@ const createOrderReducer = (
       case SwapCreateOrderActionType.OrderTypeChanged:
         draft.createOrder.type = action.orderType
 
+        draft.createOrder.calculations = makeOrderCalculations({
+          orderType: action.orderType,
+          amounts: state.createOrder.amounts,
+          limitPrice: state.createOrder.limitPrice,
+          slippage: state.createOrder.slippage,
+          ptPrices: state.createOrder.ptPrices,
+          pools: state.createOrder.pools,
+          primaryTokenId: '',
+          lpTokenHeld: state.createOrder.lpTokenHeld,
+          action: action.type,
+        })
+        // TODO: use getBest pool filter, upd state accordingly
+
         if (state.createOrder.selectedPool === undefined) break
 
         draft.createOrder.amounts.buy = getBuyAmount(
@@ -310,6 +323,9 @@ const createOrderReducer = (
 
       case SwapCreateOrderActionType.SelectedPoolChanged:
         draft.createOrder.selectedPool = action.pool
+
+        // TODO: just get the calculations.find() and update the state after
+
         if (action.pool === undefined) {
           draft.createOrder.marketPrice = Quantities.zero
           draft.createOrder.limitPrice = Quantities.zero
@@ -331,6 +347,19 @@ const createOrderReducer = (
 
       case SwapCreateOrderActionType.SlippageChanged:
         draft.createOrder.slippage = action.slippage
+
+        draft.createOrder.calculations = makeOrderCalculations({
+          orderType: state.createOrder.type,
+          amounts: state.createOrder.amounts,
+          limitPrice: state.createOrder.limitPrice,
+          slippage: action.slippage,
+          ptPrices: state.createOrder.ptPrices,
+          pools: state.createOrder.pools,
+          primaryTokenId: '',
+          lpTokenHeld: state.createOrder.lpTokenHeld,
+          action: action.type,
+        })
+        // TODO: use getBest pool filter
         break
 
       case SwapCreateOrderActionType.TxPayloadChanged:
@@ -344,6 +373,19 @@ const createOrderReducer = (
           sell: state.createOrder.amounts.buy,
           buy: state.createOrder.amounts.sell,
         }
+
+        draft.createOrder.calculations = makeOrderCalculations({
+          orderType: state.createOrder.type,
+          amounts: draft.createOrder.amounts,
+          limitPrice: state.createOrder.limitPrice,
+          slippage: state.createOrder.slippage,
+          ptPrices: state.createOrder.ptPrices,
+          pools: state.createOrder.pools,
+          primaryTokenId: '',
+          lpTokenHeld: state.createOrder.lpTokenHeld,
+          action: action.type,
+        })
+        // TODO: use getBest pool filter,  upd state accordingly
 
         if (state.createOrder.selectedPool === undefined) break
 
@@ -386,6 +428,21 @@ const createOrderReducer = (
             tokenId: state.createOrder.amounts.buy.tokenId,
           },
         }
+
+        draft.createOrder.calculations = makeOrderCalculations({
+          orderType: state.createOrder.type,
+          amounts: draft.createOrder.amounts,
+          limitPrice: state.createOrder.limitPrice,
+          slippage: state.createOrder.slippage,
+          ptPrices: state.createOrder.ptPrices,
+          pools: state.createOrder.pools,
+          primaryTokenId: '',
+          lpTokenHeld: state.createOrder.lpTokenHeld,
+          action: action.type,
+        })
+        // TODO: use getBest pool filter
+
+        // TODO: this should be based on the best pool selection
         draft.createOrder.limitPrice = state.createOrder.marketPrice
         break
 
@@ -399,6 +456,19 @@ const createOrderReducer = (
           state.createOrder.amounts.sell,
           action.limitPrice,
         )
+
+        draft.createOrder.calculations = makeOrderCalculations({
+          orderType: state.createOrder.type,
+          amounts: state.createOrder.amounts,
+          limitPrice: action.limitPrice,
+          slippage: state.createOrder.slippage,
+          ptPrices: state.createOrder.ptPrices,
+          pools: state.createOrder.pools,
+          primaryTokenId: '',
+          lpTokenHeld: state.createOrder.lpTokenHeld,
+          action: action.type,
+        })
+        // TODO: use getBest pool filter
         break
 
       //
@@ -414,7 +484,7 @@ const createOrderReducer = (
           pools: state.createOrder.pools,
           primaryTokenId: '',
           lpTokenHeld: state.createOrder.lpTokenHeld,
-          action: SwapCreateOrderActionType.PoolPairsChanged,
+          action: action.type,
         })
         // TODO: use getBest pool filter
         break
@@ -436,7 +506,7 @@ const createOrderReducer = (
           pools: state.createOrder.pools,
           primaryTokenId: '',
           lpTokenHeld: state.createOrder.lpTokenHeld,
-          action: SwapCreateOrderActionType.PoolPairsChanged,
+          action: action.type,
         })
         // TODO: use getBest pool filter
         break
@@ -458,7 +528,7 @@ const createOrderReducer = (
           pools: state.createOrder.pools,
           primaryTokenId: '',
           lpTokenHeld: action.amount,
-          action: SwapCreateOrderActionType.PoolPairsChanged,
+          action: action.type,
         })
         // TODO: use getBest pool filter
         break
@@ -475,7 +545,7 @@ const createOrderReducer = (
           pools: pools,
           primaryTokenId: '',
           lpTokenHeld: state.createOrder.lpTokenHeld,
-          action: SwapCreateOrderActionType.PoolPairsChanged,
+          action: action.type,
         })
         // TODO: use getBest pool filter
         break
