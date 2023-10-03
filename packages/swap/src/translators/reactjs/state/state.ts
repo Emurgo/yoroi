@@ -44,8 +44,11 @@ export type SwapState = Readonly<{
     calculations: Array<SwapOrderCalulation>
     // TODO: kind of metadata: - slippage, type, marketPrice should be moved in here too
     lpTokenHeld: Balance.Amount | undefined
-    sellInPrimaryTokenPrice: string
-    buyInPrimaryTokenPrice: string
+    // primary token price in terms of sell/buy token
+    ptPrices: {
+      sell: string
+      buy: string
+    }
   }
   unsignedTx: any
 }>
@@ -209,8 +212,10 @@ export const defaultSwapState: SwapState = {
     //
     calculations: [],
     lpTokenHeld: undefined,
-    sellInPrimaryTokenPrice: '',
-    buyInPrimaryTokenPrice: '',
+    ptPrices: {
+      sell: '0',
+      buy: '0',
+    },
   },
   unsignedTx: undefined,
 } as const
