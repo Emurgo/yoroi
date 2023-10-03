@@ -9,7 +9,7 @@ import {getLiquidityProviderFee} from './getLiquidityProviderFee'
 import {getFrontendFee} from './getFrontendFee'
 import {getMarketPrice} from './getMarketPrice'
 import {getBuyAmount} from './getBuyAmount'
-import { getSellAmount } from './getSellAmount'
+import {getSellAmount} from './getSellAmount'
 
 export const makeOrderCalculations = ({
   orderType,
@@ -46,34 +46,48 @@ export const makeOrderCalculations = ({
   for (const pool of pools) {
     let buy: Balance.Amount | undefined
     if (action === SwapCreateOrderActionType.SellQuantityChanged) {
-      buy = getBuyAmount(
-        pool,
-        orderData.amounts.sell,
-        isLimit ? orderData.limitPrice : undefined,
-      )
+      if (isSellZero) {
+        buy = {
+          tokenId: orderData.amounts.buy.tokenId,
+          quantity: Quantities.zero,
+        }
+      } else {
+        buy = getBuyAmount(
+          pool,
+          orderData.amounts.sell,
+          isLimit ? orderData.limitPrice : undefined,
+        )
+      }
     }
     if (buy === undefined) buy = orderData.amounts.buy
 
     let sell: Balance.Amount | undefined
     if (action === SwapCreateOrderActionType.BuyQuantityChanged) {
-      sell = getSellAmount(
-        pool,
-        orderData.amounts.buy,
-        isLimit ? orderData.limitPrice : undefined,
-      )
+      if (isBuyZero) {
+        sell = {
+          tokenId: orderData.amounts.sell.tokenId,
+          quantity: Quantities.zero,
+        }
+      } else {
+        sell = getSellAmount(
+          pool,
+          orderData.amounts.buy,
+          isLimit ? orderData.limitPrice : undefined,
+        )
+      }
     }
     if (sell === undefined) sell = orderData.amounts.sell
 
     console.log(buy, sell, isBuyZero, isSellZero)
 
     // TODO: if any side is zero set as 0
-    let price: string = ''
+    let priceBase: string = ''
     const marketPrice = getMarketPrice(pool, orderData.amounts.sell)
     if (orderType === 'market') {
-      price = marketPrice
+      priceBase = marketPrice
     } else {
       // NOTE: while editing should never receive undefined, otherwise it will replace with market price
-      price = orderData.limitPrice ?? marketPrice
+      priceBase = orderData.limitPrice ?? marketPrice
     }
 
     const buyAmountWithSlippage: Balance.Amount = {
@@ -107,12 +121,13 @@ export const makeOrderCalculations = ({
         liquidityFee,
       },
       buyAmountWithSlippage,
-      sell: {
-        price,
-        priceDifference: '',
-        priceWithFees: '',
-        priceWithFeesAndSlippage: '',
-        priceWithSlippage: '',
+      prices: {
+        base: priceBase,
+        market: marketPrice,
+        withFees: '',
+        difference: '',
+        withSlippage: '',
+        withFeesAndSlippage: '',
       },
       pool,
     }

@@ -74,7 +74,7 @@ export const getFrontendFee = ({
   const fee = asQuantity(
     new BigNumber(primaryTokenBiggerPairValue)
       .times(discountTier?.variableFeeMultiplier ?? 0)
-      .integerValue(BigNumber.ROUND_UP)
+      .integerValue(BigNumber.ROUND_CEIL)
       .plus(discountTier?.fixedFee ?? 0),
   )
 
