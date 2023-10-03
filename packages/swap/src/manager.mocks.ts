@@ -82,6 +82,16 @@ const getPools = {
   },
 }
 
+const getPrice = {
+  success: () => Promise.resolve(1),
+  delayed: (timeout?: number) => delayedResponse({data: 1, timeout}),
+  empty: () => Promise.resolve(),
+  loading,
+  error: {
+    unknown: unknownError,
+  },
+}
+
 const getTokens = {
   success: () => Promise.resolve(listPairsByTokenResponse),
   delayed: (timeout?: number) =>
@@ -140,6 +150,7 @@ export const swapManagerMocks = {
 
   createOrder,
   cancelOrder,
+  getPrice,
   getOpenOrders,
   getCompletedOrders,
   getPools,
@@ -168,6 +179,9 @@ export const mockSwapManager: Swap.Manager = {
       byToken: getTokens.success,
     },
   },
+  price: {
+    byPair: getPrice.success,
+  },
   slippage: slippage.success,
   clearStorage: clear.success,
   primaryTokenId: '',
@@ -188,6 +202,9 @@ export const mockSwapManagerDefault: Swap.Manager = {
     list: {
       byPair: getPools.error.unknown,
     },
+  },
+  price: {
+    byPair: getPrice.error.unknown,
   },
   pairs: {
     list: {

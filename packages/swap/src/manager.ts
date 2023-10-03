@@ -6,6 +6,7 @@ export const swapManagerMaker = (
 ): Readonly<Swap.Manager> => {
   const {clear: clearStorage, slippage} = swapStorage
   const {
+    getPrice,
     getPools,
     getOpenOrders,
     getCompletedOrders,
@@ -32,6 +33,10 @@ export const swapManagerMaker = (
     } as const,
   }
 
+  const price = {
+    byPair: getPrice,
+  } as const
+
   const pools = {
     list: {
       byPair: getPools,
@@ -39,6 +44,7 @@ export const swapManagerMaker = (
   }
 
   return {
+    price,
     clearStorage,
     slippage,
     order,

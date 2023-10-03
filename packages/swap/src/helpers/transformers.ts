@@ -22,6 +22,15 @@ export const transformersMaker = (
     }
   }
 
+  const asOpenswapPriceTokenAddress = (yoroiTokenId: string) => {
+    const [policyId, name = ''] = yoroiTokenId.split('.') as [string, string?]
+    // we dont convert to '.' or 'lovelace' only ''
+    return {
+      policyId,
+      name,
+    }
+  }
+
   const asYoroiTokenId = ({
     policyId,
     name,
@@ -203,6 +212,7 @@ export const transformersMaker = (
 
   return {
     asOpenswapTokenId,
+    asOpenswapPriceTokenAddress,
     asOpenswapAmount,
 
     asYoroiTokenId,
