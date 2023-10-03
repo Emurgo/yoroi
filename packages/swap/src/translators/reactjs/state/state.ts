@@ -491,6 +491,19 @@ const createOrderReducer = (
 
       case SwapCreateOrderActionType.BuyQuantityChanged:
         draft.createOrder.amounts.buy.quantity = action.quantity
+
+        draft.createOrder.calculations = makeOrderCalculations({
+          orderType: state.createOrder.type,
+          amounts: draft.createOrder.amounts,
+          limitPrice: state.createOrder.limitPrice,
+          slippage: state.createOrder.slippage,
+          ptPrices: state.createOrder.ptPrices,
+          pools: state.createOrder.pools,
+          primaryTokenId: '',
+          lpTokenHeld: state.createOrder.lpTokenHeld,
+          action: action.type,
+        })
+        // TODO: use getBest pool filter
         break
 
       // TODO: this should have the pools list too
@@ -514,6 +527,19 @@ const createOrderReducer = (
       // TODO: this should have the pools list too
       case SwapCreateOrderActionType.BuyTokenIdChanged:
         draft.createOrder.amounts.buy.tokenId = action.tokenId
+
+        draft.createOrder.calculations = makeOrderCalculations({
+          orderType: state.createOrder.type,
+          amounts: draft.createOrder.amounts,
+          limitPrice: state.createOrder.limitPrice,
+          slippage: state.createOrder.slippage,
+          ptPrices: state.createOrder.ptPrices,
+          pools: state.createOrder.pools,
+          primaryTokenId: '',
+          lpTokenHeld: state.createOrder.lpTokenHeld,
+          action: action.type,
+        })
+        // TODO: use getBest pool filter
         break
 
       case SwapCreateOrderActionType.LpTokenHeldChanged:
