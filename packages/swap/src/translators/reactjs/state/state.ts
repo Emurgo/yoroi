@@ -6,6 +6,7 @@ import {getSellAmount} from '../../../helpers/orders/getSellAmount'
 import {getMarketPrice} from '../../../helpers/orders/getMarketPrice'
 import {Quantities} from '../../../utils/quantities'
 import {SwapDiscountTier} from '../../../translators/constants'
+import {makeOrderCalculations} from 'helpers/orders/makeOrderCalculations'
 
 export type SwapOrderCalulation = Readonly<{
   pool: Swap.Pool
@@ -46,9 +47,10 @@ export type SwapState = Readonly<{
     lpTokenHeld: Balance.Amount | undefined
     // primary token price in terms of sell/buy token
     ptPrices: {
-      sell: string
-      buy: string
+      sell: `${number}` | undefined
+      buy: `${number}` | undefined
     }
+    pools: Array<Swap.Pool>
   }
   unsignedTx: any
 }>
@@ -90,7 +92,7 @@ export enum SwapCreateOrderActionType {
   SellTokenIdChanged = 'sellTokenIdChanged',
   BuyTokenIdChanged = 'buyTokenIdChanged',
   PoolPairsChanged = 'poolPairsChanged',
-  lpTokenHeldChanged = 'lpTokenHeldChanged',
+  LpTokenHeldChanged = 'lpTokenHeldChanged',
 }
 
 export type SwapCreateOrderAction =
@@ -150,8 +152,8 @@ export type SwapCreateOrderAction =
       pools: ReadonlyArray<Swap.Pool>
     }
   | {
-      type: SwapCreateOrderActionType.lpTokenHeldChanged
-      amount: Balance.Amount
+      type: SwapCreateOrderActionType.LpTokenHeldChanged
+      amount: Balance.Amount | undefined
     }
 
 export type SwapActions = Readonly<{
@@ -216,6 +218,7 @@ export const defaultSwapState: SwapState = {
       sell: '0',
       buy: '0',
     },
+    pools: [],
   },
   unsignedTx: undefined,
 } as const
@@ -401,62 +404,80 @@ const createOrderReducer = (
       //
       case SwapCreateOrderActionType.SellQuantityChanged:
         draft.createOrder.amounts.sell.quantity = action.quantity
+
+        draft.createOrder.calculations = makeOrderCalculations({
+          orderType: state.createOrder.type,
+          amounts: draft.createOrder.amounts,
+          limitPrice: state.createOrder.limitPrice,
+          slippage: state.createOrder.slippage,
+          ptPrices: state.createOrder.ptPrices,
+          pools: state.createOrder.pools,
+          primaryTokenId: '',
+          lpTokenHeld: state.createOrder.lpTokenHeld,
+          action: SwapCreateOrderActionType.PoolPairsChanged,
+        })
+        // TODO: use getBest pool filter
         break
 
       case SwapCreateOrderActionType.BuyQuantityChanged:
         draft.createOrder.amounts.buy.quantity = action.quantity
         break
 
+      // TODO: this should have the pools list too
       case SwapCreateOrderActionType.SellTokenIdChanged:
         draft.createOrder.amounts.sell.tokenId = action.tokenId
+
+        draft.createOrder.calculations = makeOrderCalculations({
+          orderType: state.createOrder.type,
+          amounts: draft.createOrder.amounts,
+          limitPrice: state.createOrder.limitPrice,
+          slippage: state.createOrder.slippage,
+          ptPrices: state.createOrder.ptPrices,
+          pools: state.createOrder.pools,
+          primaryTokenId: '',
+          lpTokenHeld: state.createOrder.lpTokenHeld,
+          action: SwapCreateOrderActionType.PoolPairsChanged,
+        })
+        // TODO: use getBest pool filter
         break
 
+      // TODO: this should have the pools list too
       case SwapCreateOrderActionType.BuyTokenIdChanged:
         draft.createOrder.amounts.buy.tokenId = action.tokenId
         break
 
-      case SwapCreateOrderActionType.lpTokenHeldChanged:
+      case SwapCreateOrderActionType.LpTokenHeldChanged:
         draft.createOrder.lpTokenHeld = action.amount
+
+        draft.createOrder.calculations = makeOrderCalculations({
+          orderType: state.createOrder.type,
+          amounts: state.createOrder.amounts,
+          limitPrice: state.createOrder.limitPrice,
+          slippage: state.createOrder.slippage,
+          ptPrices: state.createOrder.ptPrices,
+          pools: state.createOrder.pools,
+          primaryTokenId: '',
+          lpTokenHeld: action.amount,
+          action: SwapCreateOrderActionType.PoolPairsChanged,
+        })
+        // TODO: use getBest pool filter
         break
 
       case SwapCreateOrderActionType.PoolPairsChanged:
-        draft.createOrder.calculations = action.pools.map((pool) => {
-          return {
-            buyAmountWithSlippage: {
-              quantity: Quantities.zero,
-              tokenId: state.createOrder.amounts.buy.tokenId,
-            },
-            sell: {
-              price: '',
-              priceDifference: '',
-              priceWithFees: '',
-              priceWithFeesAndSlippage: '',
-              priceWithSlippage: '',
-            },
-            cost: {
-              batcherFee: {
-                quantity: Quantities.zero,
-                tokenId: state.createOrder.amounts.buy.tokenId,
-              },
-              deposit: {
-                quantity: Quantities.zero,
-                tokenId: state.createOrder.amounts.buy.tokenId,
-              },
-              liquidityFee: {
-                quantity: Quantities.zero,
-                tokenId: state.createOrder.amounts.buy.tokenId,
-              },
-              frontendFeeInfo: {
-                tier: undefined,
-                fee: {
-                  quantity: Quantities.zero,
-                  tokenId: state.createOrder.amounts.buy.tokenId,
-                },
-              },
-            },
-            pool,
-          }
+        const pools = [...action.pools]
+        draft.createOrder.pools = pools
+        draft.createOrder.calculations = makeOrderCalculations({
+          orderType: state.createOrder.type,
+          amounts: state.createOrder.amounts,
+          limitPrice: state.createOrder.limitPrice,
+          slippage: state.createOrder.slippage,
+          ptPrices: state.createOrder.ptPrices,
+          pools: pools,
+          primaryTokenId: '',
+          lpTokenHeld: state.createOrder.lpTokenHeld,
+          action: SwapCreateOrderActionType.PoolPairsChanged,
         })
+        // TODO: use getBest pool filter
         break
     }
   })
@@ -469,8 +490,8 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.unsignedTx = action.unsignedTx
         break
       case SwapActionType.ResetState:
-        draft.createOrder = defaultSwapState.createOrder
-        draft.unsignedTx = defaultSwapState.unsignedTx
+        draft.createOrder = {...defaultSwapState.createOrder}
+        draft.unsignedTx = {...defaultSwapState.unsignedTx}
         break
     }
   })
