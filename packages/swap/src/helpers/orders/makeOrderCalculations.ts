@@ -44,44 +44,28 @@ export const makeOrderCalculations = ({
 }>) => {
   const result: Array<SwapOrderCalulation> = []
 
-  const isSellZero = Quantities.isZero(orderData.amounts.sell.quantity)
-  const isBuyZero = Quantities.isZero(orderData.amounts.buy.quantity)
   const isLimit = orderType === 'limit'
 
   for (const pool of pools) {
-    // when changing sell quantity, calculate buy quantity
+    // when changing sell quantity, calculate buy quantity based on order type
     let buy: Balance.Amount | undefined
     if (action === SwapCreateOrderActionType.SellQuantityChanged) {
-      if (isSellZero) {
-        buy = {
-          tokenId: orderData.amounts.buy.tokenId,
-          quantity: Quantities.zero,
-        }
-      } else {
-        buy = getBuyAmount(
-          pool,
-          orderData.amounts.sell,
-          isLimit ? orderData.limitPrice : undefined,
-        )
-      }
+      buy = getBuyAmount(
+        pool,
+        orderData.amounts.sell,
+        isLimit ? orderData.limitPrice : undefined,
+      )
     }
     if (buy === undefined) buy = orderData.amounts.buy
 
-    // when changing buy quantity, calculate sell quantity
+    // when changing buy quantity, calculate sell quantity based on order type
     let sell: Balance.Amount | undefined
     if (action === SwapCreateOrderActionType.BuyQuantityChanged) {
-      if (isBuyZero) {
-        sell = {
-          tokenId: orderData.amounts.sell.tokenId,
-          quantity: Quantities.zero,
-        }
-      } else {
-        sell = getSellAmount(
-          pool,
-          orderData.amounts.buy,
-          isLimit ? orderData.limitPrice : undefined,
-        )
-      }
+      sell = getSellAmount(
+        pool,
+        orderData.amounts.buy,
+        isLimit ? orderData.limitPrice : undefined,
+      )
     }
     if (sell === undefined) sell = orderData.amounts.sell
 
