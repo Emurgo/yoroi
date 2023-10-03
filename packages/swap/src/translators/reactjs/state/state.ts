@@ -6,7 +6,7 @@ import {getSellAmount} from '../../../helpers/orders/getSellAmount'
 import {getMarketPrice} from '../../../helpers/orders/getMarketPrice'
 import {Quantities} from '../../../utils/quantities'
 import {SwapDiscountTier} from '../../../translators/constants'
-import {makeOrderCalculations} from 'helpers/orders/makeOrderCalculations'
+import {makeOrderCalculations} from '../../../helpers/orders/makeOrderCalculations'
 
 export type SwapOrderCalulation = Readonly<{
   pool: Swap.Pool
@@ -42,7 +42,7 @@ export type SwapState = Readonly<{
     selectedPool?: Swap.Pool
 
     //
-    calculations: Array<SwapOrderCalulation>
+    calculations: ReadonlyArray<SwapOrderCalulation>
     // TODO: kind of metadata: - slippage, type, marketPrice should be moved in here too
     lpTokenHeld: Balance.Amount | undefined
     // primary token price in terms of sell/buy token
@@ -50,7 +50,7 @@ export type SwapState = Readonly<{
       sell: `${number}` | undefined
       buy: `${number}` | undefined
     }
-    pools: Array<Swap.Pool>
+    pools: ReadonlyArray<Swap.Pool>
   }
   unsignedTx: any
 }>
@@ -212,13 +212,13 @@ export const defaultSwapState: SwapState = {
     marketPrice: Quantities.zero,
     selectedPool: undefined,
     //
-    calculations: [],
+    calculations: [] as const,
     lpTokenHeld: undefined,
     ptPrices: {
       sell: '0',
       buy: '0',
     },
-    pools: [],
+    pools: [] as const,
   },
   unsignedTx: undefined,
 } as const
@@ -560,8 +560,12 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
         draft.unsignedTx = action.unsignedTx
         break
       case SwapActionType.ResetState:
-        draft.createOrder = {...defaultSwapState.createOrder}
-        draft.unsignedTx = {...defaultSwapState.unsignedTx}
+        draft.createOrder = {
+          ...defaultSwapState.createOrder,
+          calculations: [...defaultSwapState.createOrder.calculations],
+          pools: [...defaultSwapState.createOrder.pools],
+        }
+        draft.unsignedTx = defaultSwapState.unsignedTx
         break
     }
   })
