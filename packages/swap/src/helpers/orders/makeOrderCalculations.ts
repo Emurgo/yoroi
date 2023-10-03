@@ -14,6 +14,7 @@ import {getSellAmount} from './getSellAmount'
 export const makeOrderCalculations = ({
   orderType,
   orderData,
+  ptPrices,
   pools,
   primaryTokenId,
   action,
@@ -21,6 +22,10 @@ export const makeOrderCalculations = ({
 }: Readonly<{
   orderType: Swap.OrderType
   orderData: Swap.CreateOrderData
+  ptPrices: {
+    buy: string
+    sell: string
+  }
   pools: Array<Swap.Pool>
   sellAmount: Balance.Amount
   buyAmount: Balance.Amount
@@ -44,6 +49,7 @@ export const makeOrderCalculations = ({
   const isLimit = orderType === 'limit'
 
   for (const pool of pools) {
+    // when changing sell quantity, calculate buy quantity
     let buy: Balance.Amount | undefined
     if (action === SwapCreateOrderActionType.SellQuantityChanged) {
       if (isSellZero) {
@@ -61,6 +67,7 @@ export const makeOrderCalculations = ({
     }
     if (buy === undefined) buy = orderData.amounts.buy
 
+    // when changing buy quantity, calculate sell quantity
     let sell: Balance.Amount | undefined
     if (action === SwapCreateOrderActionType.BuyQuantityChanged) {
       if (isBuyZero) {
@@ -78,18 +85,22 @@ export const makeOrderCalculations = ({
     }
     if (sell === undefined) sell = orderData.amounts.sell
 
-    console.log(buy, sell, isBuyZero, isSellZero)
+    // when changing sell token ?
+    // when changing buy token ?
+    // when changing pool - limit order ?
+    // when changing price - limit order ?
 
-    // TODO: if any side is zero set as 0
-    let priceBase: string = ''
+    // recalculate price base, limit is user's input, market from pool
+    let priceBase: string
     const marketPrice = getMarketPrice(pool, orderData.amounts.sell)
     if (orderType === 'market') {
       priceBase = marketPrice
     } else {
-      // NOTE: while editing should never receive undefined, otherwise it will replace with market price
+      // NOTE: while editing should never receive undefined or '', undefined = market price, '' = NaN
       priceBase = orderData.limitPrice ?? marketPrice
     }
 
+    // calculate buy quantity with slippage
     const buyAmountWithSlippage: Balance.Amount = {
       quantity: getQuantityWithSlippage(
         orderData.amounts.buy.quantity,
@@ -98,11 +109,13 @@ export const makeOrderCalculations = ({
       tokenId: orderData.amounts.buy.tokenId,
     }
 
+    // lf is sell side % of quantity ie. XToken 100 * 1% = 1 XToken
     const liquidityFee: Balance.Amount = getLiquidityProviderFee(
       pool.fee,
       orderData.amounts.sell,
     )
 
+    // ffee is based on PT value range + LP holding range (sides may need conversion, when none is PT)
     const frontendFeeInfo = getFrontendFee({
       sell: orderData.amounts.sell,
       buy: orderData.amounts.buy,
@@ -124,10 +137,10 @@ export const makeOrderCalculations = ({
       prices: {
         base: priceBase,
         market: marketPrice,
-        withFees: '',
-        difference: '',
-        withSlippage: '',
-        withFeesAndSlippage: '',
+        withFees: '0',
+        difference: '0',
+        withSlippage: '0',
+        withFeesAndSlippage: '0',
       },
       pool,
     }
