@@ -62,7 +62,7 @@ export const makeOrderCalculations = ({
   // when switching sell/buy
   // when changing slippage
 
-  for (const pool of pools) {
+  pools.forEach((pool) => {
     // when changing sell quantity, calculate buy quantity based on order type
     let buy: Balance.Amount | undefined
     if (action === SwapCreateOrderActionType.SellQuantityChanged) {
@@ -179,7 +179,7 @@ export const makeOrderCalculations = ({
     result.push(orderCalculation)
 
     // TODO: decide the "best" pool later, we need to define "best", maybe lowest price after fees?
-  }
+  })
 
   return result
 }
