@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Button, Text, View} from 'react-native'
 
-import {BottomSheet, DialogRef} from './BottomSheet'
+import {BottomSheet, DialogRef} from './Dialog'
 
 storiesOf('BottomSheet', module).add('Default', () => <ComponentDefault />)
 
