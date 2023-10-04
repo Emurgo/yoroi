@@ -25,9 +25,9 @@ export const ConfirmTxScreen = () => {
   const closeConfirmTxDialog = () => {
     confirmTxDialogRef.current?.closeDialog()
   }
-  const infoBottomSheetRef = React.useRef<null | DialogRef>(null)
+  const infoDialogRef = React.useRef<null | DialogRef>(null)
 
-  const [infoBottomSheetState, setInfoBottomSheetSate] = React.useState<{
+  const [infoDialogState, setInfoDialogState] = React.useState<{
     title: string
     content: string
   }>({
@@ -36,12 +36,12 @@ export const ConfirmTxScreen = () => {
   })
 
   const openInfo = ({title, content}: {title: string; content: string}) => {
-    setInfoBottomSheetSate({title, content})
-    infoBottomSheetRef.current?.openDialog()
+    setInfoDialogState({title, content})
+    infoDialogRef.current?.openDialog()
   }
 
   const closeInfoBottomSheet = () => {
-    setInfoBottomSheetSate({title: '', content: ''})
+    setInfoDialogState({title: '', content: ''})
   }
   const strings = useStrings()
   const wallet = useSelectedWallet()
@@ -137,8 +137,8 @@ export const ConfirmTxScreen = () => {
         </View>
       </Dialog>
 
-      <Dialog title={infoBottomSheetState.title} ref={infoBottomSheetRef} onClose={closeInfoBottomSheet}>
-        <Text style={styles.text}>{infoBottomSheetState.content}</Text>
+      <Dialog title={infoDialogState.title} ref={infoDialogRef} onClose={closeInfoBottomSheet}>
+        <Text style={styles.text}>{infoDialogState.content}</Text>
       </Dialog>
 
       <LoadingOverlay loading={txIsLoading} />
