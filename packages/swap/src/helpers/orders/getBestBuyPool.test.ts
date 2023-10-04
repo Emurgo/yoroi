@@ -131,7 +131,7 @@ describe('getBestBuyPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
+    }
 
     const pool2: Swap.Pool = {
       tokenA: {quantity: '157622738316', tokenId: 'tokenA'},
