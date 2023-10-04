@@ -48,7 +48,6 @@ export const OpenOrders = () => {
   })
 
   const dialogRef = React.useRef<null | DialogRef>(null)
-  const confirmationDialoglRef = React.useRef<null | DialogRef>(null)
 
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const strings = useStrings()
@@ -129,6 +128,8 @@ export const OpenOrders = () => {
       content: <ConfirmRawTx onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)} />,
       height: 350,
     })
+
+    dialogRef.current?.openDialog()
   }
 
   const getCollateralUtxo = async () => {
@@ -170,7 +171,7 @@ export const OpenOrders = () => {
     return {txBase64: hexBase64}
   }
 
-  const openBottomSheet = async (order: MappedOrder) => {
+  const openDialog = async (order: MappedOrder) => {
     if (order.owner === undefined || order.utxo === undefined) return
     const {
       utxo,
@@ -197,10 +198,9 @@ export const OpenOrders = () => {
             assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfo?.id ?? ''} variant="swap" />}
             onConfirm={() => {
               dialogRef.current?.closeDialog()
-              confirmationDialoglRef.current?.openDialog()
+              onOrderCancelConfirm(id)
             }}
             onBack={() => {
-              onOrderCancelConfirm(id)
               dialogRef.current?.closeDialog()
             }}
             assetFromLabel={assetFromLabel}
@@ -258,7 +258,7 @@ export const OpenOrders = () => {
                   />
                 }
                 footer={
-                  <Footer onPress={() => openBottomSheet(order)}>
+                  <Footer onPress={() => openDialog(order)}>
                     {strings.listOrdersSheetButtonText.toLocaleUpperCase()}
                   </Footer>
                 }
