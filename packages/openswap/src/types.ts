@@ -189,11 +189,6 @@ type VolumeAggregator = {
   }
 }
 
-type PriceChange = {
-  '24h': string
-  '7d': string
-}
-
 export type PriceResponse = {
   baseDecimalPlaces: number
   quoteDecimalPlaces: number
@@ -215,6 +210,9 @@ export type PriceResponse = {
     base: number
     quote: number
   }
-  priceChange: PriceChange
+  priceChange: {
+    '24h': string
+    '7d': string
+  }
   marketCap: number
 }

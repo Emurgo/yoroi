@@ -31,6 +31,7 @@ export type SwapOrderCalulation = Readonly<{
 }>
 
 export type SwapState = Readonly<{
+  // TODO: CreateOrderData should be build at request time, and unlinked from the state
   createOrder: Omit<Swap.CreateOrderData, 'selectedPool'> & {
     type: Swap.OrderType
     marketPrice: Balance.Quantity
@@ -69,8 +70,14 @@ export type SwapCreateOrderActions = Readonly<{
   // TODO: when changing quantity/token should receive & update the ADA pair along with it
   sellQuantityChanged: (quantity: Balance.Quantity) => void
   buyQuantityChanged: (quantity: Balance.Quantity) => void
-  sellTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => void
-  buyTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => void
+  sellTokenIdChanged: (payload: {
+    tokenId: Balance.TokenInfo['id']
+    pools: ReadonlyArray<Swap.Pool>
+  }) => void
+  buyTokenIdChanged: (payload: {
+    tokenId: Balance.TokenInfo['id']
+    pools: ReadonlyArray<Swap.Pool>
+  }) => void
   poolPairsChanged: (pools: ReadonlyArray<Swap.Pool>) => void
   lpTokenHeldChanged: (amount: Balance.Amount | undefined) => void
 }>
@@ -141,11 +148,17 @@ export type SwapCreateOrderAction =
     }
   | {
       type: SwapCreateOrderActionType.SellTokenIdChanged
-      tokenId: Balance.TokenInfo['id']
+      payload: {
+        tokenId: Balance.TokenInfo['id']
+        pools: ReadonlyArray<Swap.Pool>
+      }
     }
   | {
       type: SwapCreateOrderActionType.BuyTokenIdChanged
-      tokenId: Balance.TokenInfo['id']
+      payload: {
+        tokenId: Balance.TokenInfo['id']
+        pools: ReadonlyArray<Swap.Pool>
+      }
     }
   | {
       type: SwapCreateOrderActionType.PoolPairsChanged
@@ -508,7 +521,8 @@ const createOrderReducer = (
 
       // TODO: this should have the pools list too
       case SwapCreateOrderActionType.SellTokenIdChanged:
-        draft.createOrder.amounts.sell.tokenId = action.tokenId
+        draft.createOrder.amounts.sell.tokenId = action.payload.tokenId
+        draft.createOrder.pools = [...action.payload.pools]
 
         draft.createOrder.calculations = makeOrderCalculations({
           orderType: state.createOrder.type,
@@ -516,7 +530,7 @@ const createOrderReducer = (
           limitPrice: state.createOrder.limitPrice,
           slippage: state.createOrder.slippage,
           ptPrices: state.createOrder.ptPrices,
-          pools: state.createOrder.pools,
+          pools: draft.createOrder.pools,
           primaryTokenId: '',
           lpTokenHeld: state.createOrder.lpTokenHeld,
           action: action.type,
@@ -526,7 +540,8 @@ const createOrderReducer = (
 
       // TODO: this should have the pools list too
       case SwapCreateOrderActionType.BuyTokenIdChanged:
-        draft.createOrder.amounts.buy.tokenId = action.tokenId
+        draft.createOrder.amounts.buy.tokenId = action.payload.tokenId
+        draft.createOrder.pools = [...action.payload.pools]
 
         draft.createOrder.calculations = makeOrderCalculations({
           orderType: state.createOrder.type,
@@ -534,7 +549,7 @@ const createOrderReducer = (
           limitPrice: state.createOrder.limitPrice,
           slippage: state.createOrder.slippage,
           ptPrices: state.createOrder.ptPrices,
-          pools: state.createOrder.pools,
+          pools: draft.createOrder.pools,
           primaryTokenId: '',
           lpTokenHeld: state.createOrder.lpTokenHeld,
           action: action.type,
@@ -560,15 +575,14 @@ const createOrderReducer = (
         break
 
       case SwapCreateOrderActionType.PoolPairsChanged:
-        const pools = [...action.pools]
-        draft.createOrder.pools = pools
+        draft.createOrder.pools = [...action.pools]
         draft.createOrder.calculations = makeOrderCalculations({
           orderType: state.createOrder.type,
           amounts: state.createOrder.amounts,
           limitPrice: state.createOrder.limitPrice,
           slippage: state.createOrder.slippage,
           ptPrices: state.createOrder.ptPrices,
-          pools: pools,
+          pools: draft.createOrder.pools,
           primaryTokenId: '',
           lpTokenHeld: state.createOrder.lpTokenHeld,
           action: action.type,
