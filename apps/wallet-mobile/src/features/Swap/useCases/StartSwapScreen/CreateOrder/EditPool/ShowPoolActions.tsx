@@ -18,9 +18,9 @@ import {useNavigateTo} from '../../../../common/navigation'
 import {PoolIcon} from '../../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../../../../common/SwapFormProvider'
-import {BottomSheetState} from '../CreateOrder'
+import {DialogState} from '../CreateOrder'
 
-export const ShowPoolActions = ({openDialog}: {openDialog: ({title, content}: BottomSheetState) => void}) => {
+export const ShowPoolActions = ({openDialog}: {openDialog: ({title, content}: DialogState) => void}) => {
   const navigateTo = useNavigateTo()
   const {numberLocale} = useLanguage()
   const {createOrder} = useSwap()
@@ -118,7 +118,7 @@ const HiddenInfo = ({
   minAda: string
   minReceived: string
   buyTokenName: string
-  openDialog: ({title, content}: BottomSheetState) => void
+  openDialog: ({title, content}: DialogState) => void
 }) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()

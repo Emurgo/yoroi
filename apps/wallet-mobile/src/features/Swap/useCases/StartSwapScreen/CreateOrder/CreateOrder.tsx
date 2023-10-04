@@ -5,7 +5,7 @@ import React, {useEffect, useMemo} from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {BottomSheet, Button, DialogRef, Spacer} from '../../../../../components'
+import {BottomSheet, Button, DialogRef, DialogState, Spacer} from '../../../../../components'
 import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
@@ -28,8 +28,6 @@ import {TopTokenActions} from './ShowTokenActions/TopTokenActions'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 
-export type BottomSheetState = {title: string; content: string}
-
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
@@ -37,11 +35,11 @@ export const CreateOrder = () => {
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
   const dialogRef = React.useRef<null | DialogRef>(null)
-  const [dialogState, setDialogtState] = React.useState<BottomSheetState>({
+  const [dialogState, setDialogtState] = React.useState<DialogState>({
     title: '',
     content: '',
   })
-  const openDialog = ({title, content}: BottomSheetState) => {
+  const openDialog = ({title, content}: DialogState) => {
     setDialogtState({
       title,
       content,

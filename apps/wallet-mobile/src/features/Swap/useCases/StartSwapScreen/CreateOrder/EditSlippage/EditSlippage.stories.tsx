@@ -4,24 +4,23 @@ import {produce} from 'immer'
 import React from 'react'
 import {StyleSheet, Text} from 'react-native'
 
-import {BottomSheet, DialogRef} from '../../../../../../components'
+import {BottomSheet, DialogRef, DialogState} from '../../../../../../components'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../theme'
 import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
 import {SwapFormProvider} from '../../../../common/SwapFormProvider'
-import {BottomSheetState} from '../CreateOrder'
 import {EditSlippage} from './EditSlippage'
 
 storiesOf('Swap Edit Slippage', module)
   .add('initial %', () => {
     const dialogRef = React.useRef<null | DialogRef>(null)
-    const [dialogState, setDialogtState] = React.useState<BottomSheetState>({
+    const [dialogState, setDialogtState] = React.useState<DialogState>({
       title: '',
       content: '',
     })
 
-    const openDialog = ({title, content}: BottomSheetState) => {
+    const openDialog = ({title, content}: DialogState) => {
       setDialogtState({
         title,
         content,
@@ -56,12 +55,12 @@ storiesOf('Swap Edit Slippage', module)
       draft.createOrder.slippage = 99.123456789
     })
     const dialogRef = React.useRef<null | DialogRef>(null)
-    const [dialogState, setDialogtState] = React.useState<BottomSheetState>({
+    const [dialogState, setDialogtState] = React.useState<DialogState>({
       title: '',
       content: '',
     })
 
-    const openDialog = ({title, content}: BottomSheetState) => {
+    const openDialog = ({title, content}: DialogState) => {
       setDialogtState({
         title,
         content,

@@ -3,24 +3,23 @@ import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {BottomSheet, DialogRef} from '../../../../../../components'
+import {BottomSheet, DialogRef, DialogState} from '../../../../../../components'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../theme'
 import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
 import {SwapFormProvider} from '../../../../common/SwapFormProvider'
-import {BottomSheetState} from '../CreateOrder'
 import {ShowPoolActions} from './ShowPoolActions'
 
 storiesOf('Swap Pool Actions', module).add('initial', () => {
   const dialogRef = React.useRef<null | DialogRef>(null)
 
-  const [dialogState, setDialogtState] = React.useState<BottomSheetState>({
+  const [dialogState, setDialogtState] = React.useState<DialogState>({
     title: '',
     content: '',
   })
 
-  const openDialog = ({title, content}: BottomSheetState) => {
+  const openDialog = ({title, content}: DialogState) => {
     setDialogtState({
       title,
       content,

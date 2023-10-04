@@ -7,9 +7,9 @@ import {Icon, Spacer} from '../../../../../../components'
 import {COLORS} from '../../../../../../theme'
 import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
-import {BottomSheetState} from '../CreateOrder'
+import {DialogState} from '../CreateOrder'
 
-export const EditSlippage = ({openDialog}: {openDialog: ({title, content}: BottomSheetState) => void}) => {
+export const EditSlippage = ({openDialog}: {openDialog: ({title, content}: DialogState) => void}) => {
   const navigate = useNavigateTo()
   const {createOrder} = useSwap()
 
@@ -30,7 +30,7 @@ export const EditSlippage = ({openDialog}: {openDialog: ({title, content}: Botto
   )
 }
 
-const ShowSlippageInfo = ({openDialog}: {openDialog: ({title, content}: BottomSheetState) => void}) => {
+const ShowSlippageInfo = ({openDialog}: {openDialog: ({title, content}: DialogState) => void}) => {
   const strings = useStrings()
 
   return (

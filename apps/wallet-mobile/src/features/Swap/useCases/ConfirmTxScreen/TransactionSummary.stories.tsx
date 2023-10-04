@@ -3,12 +3,11 @@ import {mockSwapManager, mockSwapStateDefault, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {BottomSheet, DialogRef} from '../../../../components'
+import {BottomSheet, DialogRef, DialogState} from '../../../../components'
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
 import {mocks} from '../../common/mocks'
 import {SwapFormProvider} from '../../common/SwapFormProvider'
-import {BottomSheetState} from '../StartSwapScreen/CreateOrder/CreateOrder'
 import {TransactionSummary} from './TransactionSummary'
 
 storiesOf('TransactionSummary', module) //
@@ -30,7 +29,7 @@ const TxSummary = () => {
     content: '',
   })
 
-  const openDialog = ({title, content}: BottomSheetState) => {
+  const openDialog = ({title, content}: DialogState) => {
     setDialogtState({
       title,
       content,

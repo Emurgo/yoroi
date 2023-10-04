@@ -19,6 +19,8 @@ export type DialogRef = {
   isOpen: boolean
 }
 
+export type DialogState = {title: string; content: string}
+
 export const BottomSheet = React.forwardRef<DialogRef, BottomSheetProps>(
   ({children, height = 300, debug = false, maxHeight = '80%', title, isExtendable = false, onClose}, ref) => {
     const [isOpen, setIsOpen] = React.useState(false)
