@@ -14,13 +14,13 @@ import {ShowPoolActions} from './ShowPoolActions'
 storiesOf('Swap Pool Actions', module).add('initial', () => {
   const dialogRef = React.useRef<null | DialogRef>(null)
 
-  const [dialogState, setDialogtState] = React.useState<DialogState>({
+  const [dialogState, setDialogState] = React.useState<DialogState>({
     title: '',
     content: '',
   })
 
   const openDialog = ({title, content}: DialogState) => {
-    setDialogtState({
+    setDialogState({
       title,
       content,
     })
@@ -28,7 +28,7 @@ storiesOf('Swap Pool Actions', module).add('initial', () => {
   }
 
   const onCloseBottomSheet = () => {
-    setDialogtState({title: '', content: ''})
+    setDialogState({title: '', content: ''})
   }
 
   return (

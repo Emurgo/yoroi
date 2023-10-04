@@ -15,13 +15,13 @@ import {EditSlippage} from './EditSlippage'
 storiesOf('Swap Edit Slippage', module)
   .add('initial %', () => {
     const dialogRef = React.useRef<null | DialogRef>(null)
-    const [dialogState, setDialogtState] = React.useState<DialogState>({
+    const [dialogState, setDialogState] = React.useState<DialogState>({
       title: '',
       content: '',
     })
 
     const openDialog = ({title, content}: DialogState) => {
-      setDialogtState({
+      setDialogState({
         title,
         content,
       })
@@ -29,7 +29,7 @@ storiesOf('Swap Edit Slippage', module)
     }
 
     const onCloseBottomSheet = () => {
-      setDialogtState({title: '', content: ''})
+      setDialogState({title: '', content: ''})
     }
 
     return (
@@ -55,13 +55,13 @@ storiesOf('Swap Edit Slippage', module)
       draft.createOrder.slippage = 99.123456789
     })
     const dialogRef = React.useRef<null | DialogRef>(null)
-    const [dialogState, setDialogtState] = React.useState<DialogState>({
+    const [dialogState, setDialogState] = React.useState<DialogState>({
       title: '',
       content: '',
     })
 
     const openDialog = ({title, content}: DialogState) => {
-      setDialogtState({
+      setDialogState({
         title,
         content,
       })
@@ -69,7 +69,7 @@ storiesOf('Swap Edit Slippage', module)
     }
 
     const onCloseBottomSheet = () => {
-      setDialogtState({title: '', content: ''})
+      setDialogState({title: '', content: ''})
     }
 
     return (

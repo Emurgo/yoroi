@@ -35,19 +35,19 @@ export const CreateOrder = () => {
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
   const dialogRef = React.useRef<null | DialogRef>(null)
-  const [dialogState, setDialogtState] = React.useState<DialogState>({
+  const [dialogState, setDialogState] = React.useState<DialogState>({
     title: '',
     content: '',
   })
   const openDialog = ({title, content}: DialogState) => {
-    setDialogtState({
+    setDialogState({
       title,
       content,
     })
     dialogRef.current?.openDialog()
   }
   const onCloseBottomSheet = () => {
-    setDialogtState({title: '', content: ''})
+    setDialogState({title: '', content: ''})
   }
 
   const limitPriceWarningRef = React.useRef<null | DialogRef>(null)

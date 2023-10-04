@@ -37,7 +37,7 @@ import {convertBech32ToHex, getMuesliSwapTransactionAndSigners, useCancellationO
 import {mapOrders, MappedOrder} from './mapOrders'
 
 export const OpenOrders = () => {
-  const [dialogState, setDialogtState] = React.useState<{
+  const [dialogState, setDialogState] = React.useState<{
     title: string
     content: React.ReactNode
     height: number
@@ -124,7 +124,7 @@ export const OpenOrders = () => {
   }
 
   const onOrderCancelConfirm = (id: string) => {
-    setDialogtState({
+    setDialogState({
       title: strings.signTransaction,
       content: <ConfirmRawTx onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)} />,
       height: 350,
@@ -187,7 +187,7 @@ export const OpenOrders = () => {
     const totalReturned = `${fromTokenAmount} ${fromTokenInfo?.ticker}`
     const collateralUtxo = await getCollateralUtxo()
 
-    setDialogtState({
+    setDialogState({
       height: 400,
       title: strings.listOrdersSheetTitle,
       content: (
@@ -218,7 +218,7 @@ export const OpenOrders = () => {
     dialogRef.current?.openDialog()
   }
   const closeDialog = () => {
-    setDialogtState({title: '', content: '', height: 0})
+    setDialogState({title: '', content: '', height: 0})
     dialogRef.current?.closeDialog()
   }
 

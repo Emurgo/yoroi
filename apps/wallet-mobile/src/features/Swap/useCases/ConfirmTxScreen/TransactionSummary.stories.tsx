@@ -21,7 +21,7 @@ storiesOf('TransactionSummary', module) //
 
 const TxSummary = () => {
   const dialogRef = React.useRef<null | DialogRef>(null)
-  const [dialogState, setDialogtState] = React.useState<{
+  const [dialogState, setDialogState] = React.useState<{
     title: string
     content: string
   }>({
@@ -30,7 +30,7 @@ const TxSummary = () => {
   })
 
   const openDialog = ({title, content}: DialogState) => {
-    setDialogtState({
+    setDialogState({
       title,
       content,
     })
@@ -38,7 +38,7 @@ const TxSummary = () => {
   }
 
   const onCloseBottomSheet = () => {
-    setDialogtState({title: '', content: ''})
+    setDialogState({title: '', content: ''})
   }
 
   return (

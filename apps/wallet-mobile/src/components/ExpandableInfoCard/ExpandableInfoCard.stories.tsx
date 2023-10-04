@@ -22,7 +22,7 @@ storiesOf('Expandable Info Card', module)
 
     return (
       <ExpandableInfoCard
-        info={<HiddenInfo id="1234" setDialogtState={() => null} />}
+        info={<HiddenInfo id="1234" setDialogState={() => null} />}
         expanded={expanded}
         header={
           <Header
@@ -50,7 +50,7 @@ storiesOf('Expandable Info Card', module)
 
     return (
       <ExpandableInfoCard
-        info={<HiddenInfo id="1234" setDialogtState={() => null} />}
+        info={<HiddenInfo id="1234" setDialogState={() => null} />}
         expanded={expanded}
         header={
           <Header
@@ -105,7 +105,7 @@ const Header = ({
   )
 }
 
-const HiddenInfo = ({id, setDialogtState}) => {
+const HiddenInfo = ({id, setDialogState}) => {
   return (
     <View>
       {[
@@ -130,7 +130,7 @@ const HiddenInfo = ({id, setDialogtState}) => {
           value={item.value}
           label={item.label}
           onPress={() => {
-            setDialogtState({
+            setDialogState({
               openId: id,
               title: item.label,
               content: item.info,
