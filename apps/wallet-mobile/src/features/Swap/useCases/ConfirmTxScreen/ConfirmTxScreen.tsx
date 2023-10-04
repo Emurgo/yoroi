@@ -40,7 +40,7 @@ export const ConfirmTxScreen = () => {
     infoDialogRef.current?.openDialog()
   }
 
-  const closeInfoBottomSheet = () => {
+  const closeInfoDialog = () => {
     setInfoDialogState({title: '', content: ''})
   }
   const strings = useStrings()
@@ -137,7 +137,7 @@ export const ConfirmTxScreen = () => {
         </View>
       </Dialog>
 
-      <Dialog title={infoDialogState.title} ref={infoDialogRef} onClose={closeInfoBottomSheet}>
+      <Dialog title={infoDialogState.title} ref={infoDialogRef} onClose={closeInfoDialog}>
         <Text style={styles.text}>{infoDialogState.content}</Text>
       </Dialog>
 
