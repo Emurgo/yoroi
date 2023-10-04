@@ -283,4 +283,25 @@ describe('State Actions', () => {
     const state = combinedSwapReducers(mockSwapStateDefault, action)
     expect(state).toEqual(expectedState)
   })
+
+  //
+  // TODO: implement
+  it('SellTokenIdChanged', () => {
+    expect('todo').toBeDefined()
+  })
+  it('BuyTokenIdChanged', () => {
+    expect('todo').toBeDefined()
+  })
+  it('SellQuantityChanged', () => {
+    expect('todo').toBeDefined()
+  })
+  it('BuyQuantityChanged', () => {
+    expect('todo').toBeDefined()
+  })
+  it('PoolPairsChanged', () => {
+    expect('todo').toBeDefined()
+  })
+  it('LpTokenHeldChanged', () => {
+    expect('todo').toBeDefined()
+  })
 })
