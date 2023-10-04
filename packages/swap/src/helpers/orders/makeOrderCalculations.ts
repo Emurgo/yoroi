@@ -11,6 +11,7 @@ import {getMarketPrice} from './getMarketPrice'
 import {getBuyAmount} from './getBuyAmount'
 import {getSellAmount} from './getSellAmount'
 import {asQuantity} from '../../utils/asQuantity'
+import {Quantities} from 'utils/quantities'
 
 export const makeOrderCalculations = ({
   orderType,
@@ -33,6 +34,7 @@ export const makeOrderCalculations = ({
     buy: `${number}` | undefined
     sell: `${number}` | undefined
   }
+  hasSupply: boolean,
   pools: ReadonlyArray<Swap.Pool>
   lpTokenHeld: Balance.Amount | undefined
   slippage: number
@@ -159,6 +161,15 @@ export const makeOrderCalculations = ({
       .times(100)
       .toString()
 
+    const poolSupply =
+      buy.tokenId === pool.tokenA.tokenId
+        ? pool.tokenA.quantity
+        : pool.tokenB.quantity
+    const hasSupply = !Quantities.isGreaterThan(
+      buy.quantity,
+      poolSupply ?? Quantities.zero,
+    )
+
     const orderCalculation: SwapOrderCalulation = {
       cost: {
         batcherFee: pool.batcherFee,
@@ -167,6 +178,7 @@ export const makeOrderCalculations = ({
         liquidityFee,
       },
       buyAmountWithSlippage,
+      hasSupply,
       prices: {
         base: priceBase,
         market: marketPrice,
