@@ -28,7 +28,7 @@ storiesOf('Swap Edit Slippage', module)
       dialogRef.current?.openDialog()
     }
 
-    const onCloseBottomSheet = () => {
+    const onCloseDialog = () => {
       setDialogState({title: '', content: ''})
     }
 
@@ -44,7 +44,7 @@ storiesOf('Swap Edit Slippage', module)
           </SearchProvider>
         </SelectedWalletProvider>
 
-        <Dialog ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
+        <Dialog ref={dialogRef} title={dialogState.title} onClose={onCloseDialog}>
           <Text style={styles.text}>{dialogState.content}</Text>
         </Dialog>
       </>
@@ -68,7 +68,7 @@ storiesOf('Swap Edit Slippage', module)
       dialogRef.current?.openDialog()
     }
 
-    const onCloseBottomSheet = () => {
+    const onCloseDialog = () => {
       setDialogState({title: '', content: ''})
     }
 
@@ -84,7 +84,7 @@ storiesOf('Swap Edit Slippage', module)
           </SearchProvider>
         </SelectedWalletProvider>
 
-        <Dialog ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
+        <Dialog ref={dialogRef} title={dialogState.title} onClose={onCloseDialog}>
           <Text style={styles.text}>{dialogState.content}</Text>
         </Dialog>
       </>

@@ -37,7 +37,7 @@ const TxSummary = () => {
     dialogRef.current?.openDialog()
   }
 
-  const onCloseBottomSheet = () => {
+  const onCloseDialog = () => {
     setDialogState({title: '', content: ''})
   }
 
@@ -60,7 +60,7 @@ const TxSummary = () => {
         </SwapProvider>
       </SelectedWalletProvider>
 
-      <Dialog ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
+      <Dialog ref={dialogRef} title={dialogState.title} onClose={onCloseDialog}>
         <View style={{flex: 1, padding: 8}}>
           <Text style={styles.text}>{dialogState.content}</Text>
         </View>
