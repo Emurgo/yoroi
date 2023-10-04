@@ -15,6 +15,8 @@ describe('makePossibleMarketOrder', () => {
     const pool1: Swap.Pool = {
       tokenA: {quantity: '4500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       fee: '0.3',
       provider: 'minswap',
       price: 2,
@@ -30,6 +32,8 @@ describe('makePossibleMarketOrder', () => {
     const pool2: Swap.Pool = {
       tokenA: {quantity: '5500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       fee: '0.3',
       provider: 'sundaeswap',
       price: 2,

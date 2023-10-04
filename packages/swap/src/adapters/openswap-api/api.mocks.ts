@@ -39,6 +39,8 @@ const createOrderData: Swap.CreateOrderData = {
       quantity: '1000',
     },
     tokenB: {tokenId: '', quantity: '1000000000'},
+    tokenAPriceLovelace: '0',
+    tokenBPriceLovelace: '0',
     price: 0,
     batcherFee: {tokenId: '', quantity: '0'},
     deposit: {tokenId: '', quantity: '2000000'},
@@ -67,6 +69,8 @@ const getPools: Swap.Pool[] = [
       tokenId:
         'e16c2dc8ae937e8d3790c7fd7168d7b994621ba14ca11415f39fed72.43414b45',
     },
+    tokenAPriceLovelace: '0',
+    tokenBPriceLovelace: '0',
     deposit: {quantity: '2000000', tokenId: ''},
     lpToken: {
       quantity: '981004',
@@ -88,6 +92,8 @@ const getPools: Swap.Pool[] = [
       tokenId:
         'e16c2dc8ae937e8d3790c7fd7168d7b994621ba14ca11415f39fed72.43414b45',
     },
+    tokenAPriceLovelace: '0',
+    tokenBPriceLovelace: '0',
     deposit: {quantity: '2000000', tokenId: ''},
     lpToken: {
       quantity: '981004',
@@ -109,6 +115,8 @@ const getPools: Swap.Pool[] = [
       tokenId:
         'e16c2dc8ae937e8d3790c7fd7168d7b994621ba14ca11415f39fed72.43414b45',
     },
+    tokenAPriceLovelace: '0',
+    tokenBPriceLovelace: '0',
     deposit: {quantity: '2000000', tokenId: ''},
     lpToken: {
       quantity: '981004',

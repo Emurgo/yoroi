@@ -39,6 +39,8 @@ export const mocks = {
           quantity: asQuantity(231696922),
           tokenId: '208a2ca888886921513cb777bb832a8dc685c04de990480151f12150.53484942414441',
         },
+        tokenAPriceLovelace: '0',
+        tokenBPriceLovelace: '0',
       },
       slippage: 1,
       type: 'market' as Type,

@@ -127,6 +127,8 @@ export const transformersMaker = (
     const pool: Swap.Pool = {
       tokenA: asYoroiAmount(tokenA),
       tokenB: asYoroiAmount(tokenB),
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       deposit: asYoroiAmount({amount: deposit.toString(), token: ''}),
       lpToken: asYoroiAmount(lpToken),
       batcherFee: asYoroiAmount(batcherFee),

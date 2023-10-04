@@ -8,6 +8,8 @@ describe('getBestBuyPool', () => {
     const pool1: Swap.Pool = {
       tokenA: {quantity: '522195900', tokenId: 'tokenA'},
       tokenB: {quantity: '7442057385', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '1',
+      tokenBPriceLovelace: '1',
       fee: '0.3', // 0.3%
       provider: 'muesliswap_v2',
       price: 0,
@@ -24,6 +26,8 @@ describe('getBestBuyPool', () => {
     const pool2: Swap.Pool = {
       tokenA: {quantity: '157622738316', tokenId: 'tokenA'},
       tokenB: {quantity: '2432884054682', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       fee: '0.3', // 0.3%
       provider: 'vyfi',
       price: 0,
@@ -40,6 +44,8 @@ describe('getBestBuyPool', () => {
     const pool3: Swap.Pool = {
       tokenA: {quantity: '27273832383672', tokenId: 'tokenA'},
       tokenB: {quantity: '419770997375770', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       fee: '0.3', // 0.3%
       provider: 'minswap',
       price: 0,
@@ -56,6 +62,8 @@ describe('getBestBuyPool', () => {
     const pool4: Swap.Pool = {
       tokenA: {quantity: '3324463783', tokenId: 'tokenA'},
       tokenB: {quantity: '50335968991', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       fee: '0.35', // 0.3%
       provider: 'wingriders',
       price: 0,
@@ -72,6 +80,8 @@ describe('getBestBuyPool', () => {
     const pool5: Swap.Pool = {
       tokenA: {quantity: '9776356330', tokenId: 'tokenA'},
       tokenB: {quantity: '149474209737', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       fee: '0.35', // 0.35%
       provider: 'sundaeswap',
       price: 0,
@@ -88,6 +98,8 @@ describe('getBestBuyPool', () => {
     const pool6: Swap.Pool = {
       tokenA: {quantity: '934171347', tokenId: 'tokenA'},
       tokenB: {quantity: '14274535204', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       fee: '0.05', // 0.05%
       provider: 'sundaeswap',
       price: 0,
@@ -120,6 +132,8 @@ describe('getBestBuyPool', () => {
     const pool1: Swap.Pool = {
       tokenA: {quantity: '522195900', tokenId: 'tokenA'},
       tokenB: {quantity: '7442057385', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       fee: '0.3', // 0.3%
       provider: 'muesliswap_v2',
       price: 0,
@@ -136,6 +150,8 @@ describe('getBestBuyPool', () => {
     const pool2: Swap.Pool = {
       tokenA: {quantity: '157622738316', tokenId: 'tokenA'},
       tokenB: {quantity: '2432884054682', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       fee: '0.3', // 0.3%
       provider: 'vyfi',
       price: 0,
@@ -152,6 +168,8 @@ describe('getBestBuyPool', () => {
     const pool3: Swap.Pool = {
       tokenA: {quantity: '27278040255177', tokenId: 'tokenA'},
       tokenB: {quantity: '419697172209171', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       fee: '0.3', // 0.3%
       provider: 'minswap',
       price: 0,
@@ -168,6 +186,8 @@ describe('getBestBuyPool', () => {
     const pool4: Swap.Pool = {
       tokenA: {quantity: '3324463783', tokenId: 'tokenA'},
       tokenB: {quantity: '50335968991', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       fee: '0.35', // 0.3%
       provider: 'wingriders',
       price: 0,
@@ -184,6 +204,8 @@ describe('getBestBuyPool', () => {
     const pool5: Swap.Pool = {
       tokenA: {quantity: '9776356330', tokenId: 'tokenA'},
       tokenB: {quantity: '149474209737', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       fee: '0.35', // 0.35%
       provider: 'sundaeswap',
       price: 0,
@@ -200,6 +222,8 @@ describe('getBestBuyPool', () => {
     const pool6: Swap.Pool = {
       tokenA: {quantity: '934171347', tokenId: 'tokenA'},
       tokenB: {quantity: '14274535204', tokenId: 'tokenB'},
+      tokenAPriceLovelace: '0',
+      tokenBPriceLovelace: '0',
       fee: '0.05', // 0.05%
       provider: 'sundaeswap',
       price: 0,
