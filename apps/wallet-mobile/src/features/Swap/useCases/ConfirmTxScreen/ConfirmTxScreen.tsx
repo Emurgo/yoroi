@@ -16,14 +16,14 @@ import {ConfirmTx} from './ConfirmTx'
 import {TransactionSummary} from './TransactionSummary'
 
 export const ConfirmTxScreen = () => {
-  const confirmTxBottomSheetRef = React.useRef<null | DialogRef>(null)
+  const confirmTxDialogRef = React.useRef<null | DialogRef>(null)
 
   const openConfirmTxDialog = () => {
-    confirmTxBottomSheetRef.current?.openDialog()
+    confirmTxDialogRef.current?.openDialog()
   }
 
   const closeConfirmTxDialog = () => {
-    confirmTxBottomSheetRef.current?.closeDialog()
+    confirmTxDialogRef.current?.closeDialog()
   }
   const infoBottomSheetRef = React.useRef<null | DialogRef>(null)
 
@@ -119,7 +119,7 @@ export const ConfirmTxScreen = () => {
 
       <Dialog
         height={wallet.isHW ? 430 : 350}
-        ref={confirmTxBottomSheetRef}
+        ref={confirmTxDialogRef}
         title={wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction}
       >
         <View style={styles.modalContent}>
