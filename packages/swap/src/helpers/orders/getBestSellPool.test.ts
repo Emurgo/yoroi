@@ -21,9 +21,9 @@ describe('getBestSellPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
+    }
 
-    const pool2 = {
+    const pool2: Swap.Pool = {
       tokenA: {quantity: '157622738316', tokenId: 'tokenA'},
       tokenB: {quantity: '2432884054682', tokenId: 'tokenB'},
       tokenAPriceLovelace: '0',
@@ -39,9 +39,9 @@ describe('getBestSellPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
+    }
 
-    const pool3 = {
+    const pool3: Swap.Pool = {
       tokenA: {quantity: '27273832383672', tokenId: 'tokenA'},
       tokenB: {quantity: '419770997375770', tokenId: 'tokenB'},
       tokenAPriceLovelace: '0',
@@ -57,9 +57,9 @@ describe('getBestSellPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
+    }
 
-    const pool4 = {
+    const pool4: Swap.Pool = {
       tokenA: {quantity: '3324463783', tokenId: 'tokenA'},
       tokenB: {quantity: '50335968991', tokenId: 'tokenB'},
       tokenAPriceLovelace: '0',
@@ -75,8 +75,9 @@ describe('getBestSellPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
-    const pool5 = {
+    }
+
+    const pool5: Swap.Pool = {
       tokenA: {quantity: '9776356330', tokenId: 'tokenA'},
       tokenB: {quantity: '149474209737', tokenId: 'tokenB'},
       tokenAPriceLovelace: '0',
@@ -92,8 +93,9 @@ describe('getBestSellPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
-    const pool6 = {
+    }
+
+    const pool6: Swap.Pool = {
       tokenA: {quantity: '934171347', tokenId: 'tokenA'},
       tokenB: {quantity: '14274535204', tokenId: 'tokenB'},
       tokenAPriceLovelace: '0',
@@ -109,7 +111,7 @@ describe('getBestSellPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
+    }
 
     const buy: Balance.Amount = {
       quantity: '1000000000',
