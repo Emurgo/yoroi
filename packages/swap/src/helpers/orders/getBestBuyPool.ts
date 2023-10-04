@@ -21,7 +21,7 @@ export const getBestBuyPool = (
   if (pools != null && pools.length === 0) {
     return undefined
   }
-  let bestPool
+  let bestPool: Swap.Pool | undefined
   let bestBuyAmount = 0n
   for (const pool of pools) {
     const buyAmount = getBuyAmount(pool, sell)
