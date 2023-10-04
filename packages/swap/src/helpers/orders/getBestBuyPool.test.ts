@@ -1,10 +1,10 @@
 import {Swap, Balance} from '@yoroi/types'
 
-import {getBestBuyPool} from './getBestBuyPoll'
+import {getBestBuyPool} from './getBestBuyPool'
 import {getBuyAmount} from './getBuyAmount'
 
 describe('getBestBuyPool', () => {
-  it('should return poll with maximin possible tokens to buy', () => {
+  it('should return pool with maximin possible tokens to buy', () => {
     const pool1 = {
       tokenA: {quantity: '522195900', tokenId: 'tokenA'},
       tokenB: {quantity: '7442057385', tokenId: 'tokenB'},
@@ -114,7 +114,7 @@ describe('getBestBuyPool', () => {
     }
   })
 
-  it('should return poll with maximin possible tokens to buy (case 2)', () => {
+  it('should return pool with maximin possible tokens to buy (case 2)', () => {
     const pool1 = {
       tokenA: {quantity: '522195900', tokenId: 'tokenA'},
       tokenB: {quantity: '7442057385', tokenId: 'tokenB'},

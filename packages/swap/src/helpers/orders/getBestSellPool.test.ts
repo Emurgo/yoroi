@@ -4,7 +4,7 @@ import {getBestSellPool} from './getBestSellPool'
 import {getSellAmount} from './getSellAmount'
 
 describe('getBestSellPool', () => {
-  it('should return poll with min possible tokens to sell', () => {
+  it('should return pool with min possible tokens to sell', () => {
     const pool1 = {
       tokenA: {quantity: '522195900', tokenId: 'tokenA'},
       tokenB: {quantity: '7442057385', tokenId: 'tokenB'},
