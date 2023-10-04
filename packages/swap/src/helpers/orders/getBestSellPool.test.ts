@@ -5,7 +5,7 @@ import {getSellAmount} from './getSellAmount'
 
 describe('getBestSellPool', () => {
   it('should return pool with min possible tokens to sell', () => {
-    const pool1 = {
+    const pool1: Swap.Pool = {
       tokenA: {quantity: '522195900', tokenId: 'tokenA'},
       tokenB: {quantity: '7442057385', tokenId: 'tokenB'},
       fee: '0.3', // 0.3%

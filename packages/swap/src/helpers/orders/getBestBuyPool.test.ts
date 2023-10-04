@@ -5,7 +5,7 @@ import {getBuyAmount} from './getBuyAmount'
 
 describe('getBestBuyPool', () => {
   it('should return pool with maximin possible tokens to buy', () => {
-    const pool1 = {
+    const pool1: Swap.Pool = {
       tokenA: {quantity: '522195900', tokenId: 'tokenA'},
       tokenB: {quantity: '7442057385', tokenId: 'tokenB'},
       fee: '0.3', // 0.3%
@@ -19,9 +19,9 @@ describe('getBestBuyPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
+    }
 
-    const pool2 = {
+    const pool2: Swap.Pool = {
       tokenA: {quantity: '157622738316', tokenId: 'tokenA'},
       tokenB: {quantity: '2432884054682', tokenId: 'tokenB'},
       fee: '0.3', // 0.3%
@@ -35,9 +35,9 @@ describe('getBestBuyPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
+    }
 
-    const pool3 = {
+    const pool3: Swap.Pool = {
       tokenA: {quantity: '27273832383672', tokenId: 'tokenA'},
       tokenB: {quantity: '419770997375770', tokenId: 'tokenB'},
       fee: '0.3', // 0.3%
@@ -51,9 +51,9 @@ describe('getBestBuyPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
+    }
 
-    const pool4 = {
+    const pool4: Swap.Pool = {
       tokenA: {quantity: '3324463783', tokenId: 'tokenA'},
       tokenB: {quantity: '50335968991', tokenId: 'tokenB'},
       fee: '0.35', // 0.3%
@@ -67,8 +67,9 @@ describe('getBestBuyPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
-    const pool5 = {
+    }
+
+    const pool5: Swap.Pool = {
       tokenA: {quantity: '9776356330', tokenId: 'tokenA'},
       tokenB: {quantity: '149474209737', tokenId: 'tokenB'},
       fee: '0.35', // 0.35%
@@ -82,8 +83,9 @@ describe('getBestBuyPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
-    const pool6 = {
+    }
+
+    const pool6: Swap.Pool = {
       tokenA: {quantity: '934171347', tokenId: 'tokenA'},
       tokenB: {quantity: '14274535204', tokenId: 'tokenB'},
       fee: '0.05', // 0.05%
@@ -115,7 +117,7 @@ describe('getBestBuyPool', () => {
   })
 
   it('should return pool with maximin possible tokens to buy (case 2)', () => {
-    const pool1 = {
+    const pool1: Swap.Pool = {
       tokenA: {quantity: '522195900', tokenId: 'tokenA'},
       tokenB: {quantity: '7442057385', tokenId: 'tokenB'},
       fee: '0.3', // 0.3%
@@ -131,7 +133,7 @@ describe('getBestBuyPool', () => {
       },
     } as Swap.Pool
 
-    const pool2 = {
+    const pool2: Swap.Pool = {
       tokenA: {quantity: '157622738316', tokenId: 'tokenA'},
       tokenB: {quantity: '2432884054682', tokenId: 'tokenB'},
       fee: '0.3', // 0.3%
@@ -145,9 +147,9 @@ describe('getBestBuyPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
+    }
 
-    const pool3 = {
+    const pool3: Swap.Pool = {
       tokenA: {quantity: '27278040255177', tokenId: 'tokenA'},
       tokenB: {quantity: '419697172209171', tokenId: 'tokenB'},
       fee: '0.3', // 0.3%
@@ -161,9 +163,9 @@ describe('getBestBuyPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
+    }
 
-    const pool4 = {
+    const pool4: Swap.Pool = {
       tokenA: {quantity: '3324463783', tokenId: 'tokenA'},
       tokenB: {quantity: '50335968991', tokenId: 'tokenB'},
       fee: '0.35', // 0.3%
@@ -177,8 +179,9 @@ describe('getBestBuyPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
-    const pool5 = {
+    }
+
+    const pool5: Swap.Pool = {
       tokenA: {quantity: '9776356330', tokenId: 'tokenA'},
       tokenB: {quantity: '149474209737', tokenId: 'tokenB'},
       fee: '0.35', // 0.35%
@@ -192,8 +195,9 @@ describe('getBestBuyPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
-    const pool6 = {
+    }
+
+    const pool6: Swap.Pool = {
       tokenA: {quantity: '934171347', tokenId: 'tokenA'},
       tokenB: {quantity: '14274535204', tokenId: 'tokenB'},
       fee: '0.05', // 0.05%
@@ -207,7 +211,7 @@ describe('getBestBuyPool', () => {
         quantity: '0',
         tokenId: '0',
       },
-    } as Swap.Pool
+    }
 
     const sell: Balance.Amount = {
       quantity: '1000000000',
