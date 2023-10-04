@@ -3,7 +3,7 @@ import {mockSwapManager, mockSwapStateDefault, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {BottomSheet, BottomSheetRef} from '../../../../components'
+import {BottomSheet, DialogRef} from '../../../../components'
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
 import {mocks} from '../../common/mocks'
@@ -21,8 +21,8 @@ storiesOf('TransactionSummary', module) //
   })
 
 const TxSummary = () => {
-  const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
-  const [bottomSheetState, setBottomSheetState] = React.useState<{
+  const dialog = React.useRef<null | DialogRef>(null)
+  const [dialogState, setDialogtState] = React.useState<{
     title: string
     content: string
   }>({
@@ -31,15 +31,15 @@ const TxSummary = () => {
   })
 
   const openDialog = ({title, content}: BottomSheetState) => {
-    setBottomSheetState({
+    setDialogtState({
       title,
       content,
     })
-    bottomSheetRef.current?.openDialog()
+    dialog.current?.openDialog()
   }
 
   const onCloseBottomSheet = () => {
-    setBottomSheetState({title: '', content: ''})
+    setDialogtState({title: '', content: ''})
   }
 
   return (
@@ -61,9 +61,9 @@ const TxSummary = () => {
         </SwapProvider>
       </SelectedWalletProvider>
 
-      <BottomSheet ref={bottomSheetRef} title={bottomSheetState.title} onClose={onCloseBottomSheet}>
+      <BottomSheet ref={dialog} title={dialogState.title} onClose={onCloseBottomSheet}>
         <View style={{flex: 1, padding: 8}}>
-          <Text style={styles.text}>{bottomSheetState.content}</Text>
+          <Text style={styles.text}>{dialogState.content}</Text>
         </View>
       </BottomSheet>
     </>

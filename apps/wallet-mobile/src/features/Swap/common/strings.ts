@@ -98,6 +98,10 @@ export const useStrings = () => {
     transactionDisplay: intl.formatMessage(messages.transactionDisplay),
     seeOnExplorer: intl.formatMessage(messages.seeOnExplorer),
     goToOrders: intl.formatMessage(messages.goToOrders),
+    wrongPasswordMessage: intl.formatMessage(messages.wrongPasswordMessage),
+    assignCollateral: intl.formatMessage(messages.assignCollateral),
+    collateralNotFound: intl.formatMessage(messages.collateralNotFound),
+    noActiveCollateral: intl.formatMessage(messages.noActiveCollateral),
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
@@ -110,6 +114,10 @@ export const useStrings = () => {
 export const amountInputErrorMessages = defineMessages({})
 
 export const messages = defineMessages({
+  wrongPasswordMessage: {
+    id: 'global.actions.dialogs.incorrectPassword.title',
+    defaultMessage: '!!!Incorrect password.',
+  },
   swapTitle: {
     id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
@@ -461,6 +469,18 @@ export const messages = defineMessages({
   confirm: {
     id: 'components.send.confirmscreen.confirmButton',
     defaultMessage: '!!!Confirm',
+  },
+  assignCollateral: {
+    id: 'components.send.confirmscreen.assignCollateral',
+    defaultMessage: '!!!Assign collateral',
+  },
+  collateralNotFound: {
+    id: 'components.send.confirmscreen.collateralNotFound',
+    defaultMessage: '!!!Collateral not found',
+  },
+  noActiveCollateral: {
+    id: 'components.send.confirmscreen.noActiveCollateral',
+    defaultMessage: "!!!You don't have an active collateral utxo",
   },
   failedTxTitle: {
     id: 'components.send.sendscreen.failedTxTitle',

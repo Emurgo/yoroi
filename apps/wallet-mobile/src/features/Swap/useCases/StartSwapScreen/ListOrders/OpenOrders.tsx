@@ -1,13 +1,15 @@
-import {useSwapOrdersByStatusOpen} from '@yoroi/swap'
+import {useFocusEffect} from '@react-navigation/native'
+import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
+import {Buffer} from 'buffer'
 import _ from 'lodash'
-import React from 'react'
+import React, {Suspense} from 'react'
 import {useIntl} from 'react-intl'
-import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Alert, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {
   BottomSheet,
-  BottomSheetRef,
   Button,
+  DialogRef,
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
   Footer,
@@ -16,33 +18,44 @@ import {
   MainInfoWrapper,
   Spacer,
   Text,
-  TextInput,
   TokenIcon,
 } from '../../../../../components'
 import {useLanguage} from '../../../../../i18n'
+import {useMetrics} from '../../../../../metrics/metricsManager'
+import {useWalletNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
+import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
+import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {mapOrders} from './mapOrders'
+import {convertBech32ToHex, getMuesliSwapTransactionAndSigners, useCancellationOrderFee} from './helpers'
+import {mapOrders, MappedOrder} from './mapOrders'
 
 export const OpenOrders = () => {
-  const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
-  const [bottomSheetState, setBottomSheetState] = React.useState<{title: string; content: React.ReactNode}>({
+  const [dialogState, setDialogtState] = React.useState<{
+    title: string
+    content: React.ReactNode
+    height: number
+  }>({
     title: '',
     content: '',
+    height: 0,
   })
 
-  const confirmationModalRef = React.useRef<null | BottomSheetRef>(null)
+  const dialog = React.useRef<null | DialogRef>(null)
+  const confirmationDialoglRef = React.useRef<null | DialogRef>(null)
 
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const strings = useStrings()
-  const [spendingPassword, setSpendingPassword] = React.useState('')
   const intl = useIntl()
   const wallet = useSelectedWallet()
+  const {order: swapApiOrder} = useSwap()
+  const {navigateToCollateralSettings} = useWalletNavigation()
 
   const orders = useSwapOrdersByStatusOpen()
   const {numberLocale} = useLanguage()
@@ -55,6 +68,8 @@ export const OpenOrders = () => {
   )
 
   const {search} = useSearch()
+  const swapNavigation = useNavigateTo()
+
   const filteredOrders = React.useMemo(
     () =>
       normalizedOrders.filter((order) => {
@@ -67,29 +82,145 @@ export const OpenOrders = () => {
     [normalizedOrders, search],
   )
 
-  const openDialog = ({fromTokenInfoId, toTokenInfoId, assetFromLabel, assetToLabel}) => {
-    setBottomSheetState({
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.swapConfirmedPageViewed({swap_tab: 'Open Orders'})
+    }, [track]),
+  )
+
+  const trackCancellationSubmitted = (order: MappedOrder) => {
+    track.swapCancelationSubmitted({
+      from_amount: Number(order.from.quantity) ?? 0,
+      to_amount: Number(order.to.quantity) ?? 0,
+      from_asset: [
+        {
+          asset_name: order.fromTokenInfo?.name ?? '',
+          asset_ticker: order.fromTokenInfo?.ticker ?? '',
+          policy_id: order.fromTokenInfo?.group ?? '',
+        },
+      ],
+      to_asset: [
+        {
+          asset_name: order.toTokenInfo?.name ?? '',
+          asset_ticker: order.toTokenInfo?.ticker ?? '',
+          policy_id: order.toTokenInfo?.group ?? '',
+        },
+      ],
+      pool_source: order.provider ?? '',
+    })
+  }
+
+  const onRawTxConfirm = async (rootKey: string, orderId: string) => {
+    const order = normalizedOrders.find((o) => o.id === orderId)
+    if (!order || order.owner === undefined || order.utxo === undefined) return
+    const tx = await createCancellationTxAndSign(order.id, rootKey)
+    if (!tx) return
+    await wallet.submitTransaction(tx.txBase64)
+    trackCancellationSubmitted(order)
+    closeDialog()
+    swapNavigation.submittedTx()
+  }
+
+  const onOrderCancelConfirm = (id: string) => {
+    setDialogtState({
+      title: strings.signTransaction,
+      content: <ConfirmRawTx onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)} />,
+      height: 350,
+    })
+  }
+
+  const getCollateralUtxo = async () => {
+    const collateralInfo = wallet.getCollateralInfo()
+    const utxo = collateralInfo.utxo
+
+    if (!utxo) {
+      Alert.alert(
+        strings.collateralNotFound,
+        strings.noActiveCollateral,
+        [{text: strings.assignCollateral, onPress: navigateToCollateralSettings}],
+        {cancelable: true, onDismiss: () => true},
+      )
+      throw new Error('Collateral utxo not found')
+    }
+
+    return generateCIP30UtxoCbor(utxo)
+  }
+
+  const createCancellationTxAndSign = async (
+    orderId: string,
+    rootKey: string,
+  ): Promise<{txBase64: string} | undefined> => {
+    const order = normalizedOrders.find((o) => o.id === orderId)
+    if (!order || order.owner === undefined || order.utxo === undefined) return
+    const {utxo, owner: bech32Address} = order
+    const collateralUtxo = await getCollateralUtxo()
+    const addressHex = await convertBech32ToHex(bech32Address)
+    const originalCbor = await swapApiOrder.cancel({
+      utxos: {collateral: collateralUtxo, order: utxo},
+      address: addressHex,
+    })
+    const {cbor, signers} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
+
+    const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
+    const response = await wallet.signRawTx(cbor, keys)
+    if (!response) return
+    const hexBase64 = new Buffer(response).toString('base64')
+    return {txBase64: hexBase64}
+  }
+
+  const openBottomSheet = async (order: MappedOrder) => {
+    if (order.owner === undefined || order.utxo === undefined) return
+    const {
+      utxo,
+      owner: bech32Address,
+      fromTokenAmount,
+      fromTokenInfo,
+      id,
+      toTokenInfo,
+      assetFromLabel,
+      assetToLabel,
+      tokenPrice,
+      tokenAmount,
+    } = order
+    const totalReturned = `${fromTokenAmount} ${fromTokenInfo?.ticker}`
+    const collateralUtxo = await getCollateralUtxo()
+
+    setDialogtState({
+      height: 400,
       title: strings.listOrdersSheetTitle,
       content: (
-        <ModalContent
-          assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfoId} variant="swap" />}
-          assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfoId} variant="swap" />}
-          onConfirm={() => {
-            bottomSheetRef.current?.closeBottomSheet()
-            confirmationModalRef.current?.openDialog()
-          }}
-          onBack={() => {
-            bottomSheetRef.current?.closeBottomSheet()
-            onCloseBottomSheet()
-          }}
-          assetFromLabel={assetFromLabel}
-          assetToLabel={assetToLabel}
-        />
+        <Suspense fallback={<ModalLoadingState />}>
+          <ModalContent
+            assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfo?.id ?? ''} variant="swap" />}
+            assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfo?.id ?? ''} variant="swap" />}
+            onConfirm={() => {
+              dialog.current?.closeDialog()
+              confirmationDialoglRef.current?.openDialog()
+            }}
+            onBack={() => {
+              onOrderCancelConfirm(id)
+              dialog.current?.closeDialog()
+            }}
+            assetFromLabel={assetFromLabel}
+            assetToLabel={assetToLabel}
+            assetAmount={`${tokenAmount} ${assetToLabel}`}
+            assetPrice={`${tokenPrice} ${assetFromLabel}`}
+            totalReturned={totalReturned}
+            orderUtxo={utxo}
+            collateralUtxo={collateralUtxo}
+            bech32Address={bech32Address}
+          />
+        </Suspense>
       ),
     })
-    bottomSheetRef.current?.openDialog()
+    dialog.current?.openDialog()
   }
-  const onCloseBottomSheet = () => setBottomSheetState({title: '', content: ''})
+  const closeDialog = () => {
+    setDialogtState({title: '', content: '', height: 0})
+    dialog.current?.closeDialog()
+  }
 
   return (
     <>
@@ -127,16 +258,7 @@ export const OpenOrders = () => {
                   />
                 }
                 footer={
-                  <Footer
-                    onPress={() => {
-                      openDialog({
-                        fromTokenInfoId: order.fromTokenInfo?.id ?? '',
-                        toTokenInfoId: order.toTokenInfo?.id ?? '',
-                        assetFromLabel: order.assetFromLabel,
-                        assetToLabel: order.assetToLabel,
-                      })
-                    }}
-                  >
+                  <Footer onPress={() => openBottomSheet(order)}>
                     {strings.listOrdersSheetButtonText.toLocaleUpperCase()}
                   </Footer>
                 }
@@ -152,30 +274,11 @@ export const OpenOrders = () => {
         </ScrollView>
       </View>
 
+      <BottomSheet title={dialogState.title} height={dialogState.height} ref={dialog} isExtendable={false}>
+        <View style={styles.modalContent}>{dialogState.content}</View>
+      </BottomSheet>
+
       <Counter style={styles.counter} counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
-
-      <BottomSheet ref={confirmationModalRef} title={strings.signTransaction}>
-        <View style={{flex: 1, justifyContent: 'space-between'}}>
-          <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
-
-          <TextInput
-            secureTextEntry
-            enablesReturnKeyAutomatically
-            placeholder={strings.spendingPassword}
-            value={spendingPassword}
-            onChangeText={setSpendingPassword}
-            autoComplete="off"
-          />
-
-          <Spacer fill />
-
-          <Button testID="swapButton" shelleyTheme title={strings.sign} />
-        </View>
-      </BottomSheet>
-
-      <BottomSheet ref={bottomSheetRef} title={bottomSheetState.title} onClose={onCloseBottomSheet}>
-        {bottomSheetState.content}
-      </BottomSheet>
     </>
   )
 }
@@ -283,6 +386,12 @@ const MainInfo = ({tokenPrice, tokenAmount}: {tokenPrice: string; tokenAmount: s
   )
 }
 
+const ModalLoadingState = () => (
+  <View style={styles.centered}>
+    <ActivityIndicator animating size="large" color="black" style={styles.loadingActivityContainer} />
+  </View>
+)
+
 const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {
   return (
     <TouchableOpacity onPress={() => Linking.openURL(txLink)} style={styles.txLink}>
@@ -334,6 +443,12 @@ const ModalContent = ({
   assetFromLabel,
   assetToIcon,
   assetToLabel,
+  assetPrice,
+  assetAmount,
+  totalReturned,
+  orderUtxo,
+  collateralUtxo,
+  bech32Address,
 }: {
   onConfirm: () => void
   onBack: () => void
@@ -341,10 +456,27 @@ const ModalContent = ({
   assetFromLabel: string
   assetToLabel: string
   assetToIcon: React.ReactNode
+  assetPrice: string
+  assetAmount: string
+  totalReturned: string
+  orderUtxo: string
+  collateralUtxo: string
+  bech32Address: string
 }) => {
   const strings = useStrings()
+
+  const fee = useCancellationOrderFee({
+    orderUtxo,
+    collateralUtxo,
+    bech32Address,
+  })
+
+  const handleConfirm = () => {
+    onConfirm()
+  }
+
   return (
-    <View>
+    <>
       <ModalContentHeader
         assetFromIcon={assetFromIcon}
         assetFromLabel={assetFromLabel}
@@ -354,30 +486,30 @@ const ModalContent = ({
 
       <Spacer height={10} />
 
-      {/* TODO: add real values */}
-      <ModalContentRow label={strings.listOrdersSheetAssetPrice} value="3 ADA" />
+      <ModalContentRow label={strings.listOrdersSheetAssetPrice} value={assetPrice} />
 
       <Spacer height={10} />
 
-      {/* TODO: add real values */}
-      <ModalContentRow label={strings.listOrdersSheetAssetAmount} value="3 USDA" />
+      <ModalContentRow label={strings.listOrdersSheetAssetAmount} value={assetAmount} />
 
       <Spacer height={10} />
 
-      {/* TODO: add real values */}
-      <ModalContentRow label={strings.listOrdersSheetTotalReturned} value="11 ADA" />
+      <ModalContentRow label={strings.listOrdersSheetTotalReturned} value={totalReturned} />
 
       <Spacer height={10} />
 
-      {/* TODO: add real values */}
-      <ModalContentRow label={strings.listOrdersSheetCancellationFee} value="0.17 ADA" />
+      <ModalContentRow label={strings.listOrdersSheetCancellationFee} value={fee} />
+
+      <Spacer height={10} />
 
       <ModalContentLink />
 
-      <Spacer height={10} />
+      <Spacer fill />
 
-      <ModalContentButtons onConfirm={onConfirm} onBack={onBack} />
-    </View>
+      <ModalContentButtons onConfirm={handleConfirm} onBack={onBack} />
+
+      <Spacer height={10} />
+    </>
   )
 }
 
@@ -468,6 +600,13 @@ const ModalContentButtons = ({onBack, onConfirm}: {onBack: () => void; onConfirm
 }
 
 const styles = StyleSheet.create({
+  loadingActivityContainer: {
+    padding: 20,
+  },
+  centered: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
@@ -487,6 +626,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 24,
+    textAlign: 'center',
   },
   contentLabel: {
     color: '#6B7384',
@@ -501,11 +641,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 24,
-  },
-  modalText: {
-    paddingHorizontal: 70,
-    textAlign: 'center',
-    paddingBottom: 8,
   },
   modalContentTitle: {
     flexDirection: 'row',
@@ -558,5 +693,10 @@ const styles = StyleSheet.create({
   },
   counter: {
     paddingVertical: 16,
+  },
+  modalContent: {
+    flex: 1,
+    alignSelf: 'stretch',
+    paddingHorizontal: 16,
   },
 })

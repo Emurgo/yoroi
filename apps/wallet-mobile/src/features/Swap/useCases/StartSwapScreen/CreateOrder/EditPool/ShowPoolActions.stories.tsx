@@ -3,7 +3,7 @@ import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {BottomSheet, BottomSheetRef} from '../../../../../../components'
+import {BottomSheet, DialogRef} from '../../../../../../components'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../theme'
@@ -13,23 +13,23 @@ import {BottomSheetState} from '../CreateOrder'
 import {ShowPoolActions} from './ShowPoolActions'
 
 storiesOf('Swap Pool Actions', module).add('initial', () => {
-  const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
+  const dialog = React.useRef<null | DialogRef>(null)
 
-  const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
+  const [dialogState, setDialogtState] = React.useState<BottomSheetState>({
     title: '',
     content: '',
   })
 
   const openDialog = ({title, content}: BottomSheetState) => {
-    setBottomSheetState({
+    setDialogtState({
       title,
       content,
     })
-    bottomSheetRef.current?.openDialog()
+    dialog.current?.openDialog()
   }
 
   const onCloseBottomSheet = () => {
-    setBottomSheetState({title: '', content: ''})
+    setDialogtState({title: '', content: ''})
   }
 
   return (
@@ -44,9 +44,9 @@ storiesOf('Swap Pool Actions', module).add('initial', () => {
         </SearchProvider>
       </SelectedWalletProvider>
 
-      <BottomSheet ref={bottomSheetRef} title={bottomSheetState.title} onClose={onCloseBottomSheet}>
+      <BottomSheet ref={dialog} title={dialogState.title} onClose={onCloseBottomSheet}>
         <View style={{flex: 1, padding: 8}}>
-          <Text style={styles.text}>{bottomSheetState.content}</Text>
+          <Text style={styles.text}>{dialogState.content}</Text>
         </View>
       </BottomSheet>
     </>

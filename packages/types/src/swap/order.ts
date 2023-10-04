@@ -34,6 +34,7 @@ export type SwapOpenOrder = {
   to: BalanceAmount
   deposit: BalanceAmount
   utxo: string
+  owner: string
 }
 
 export type SwapCompletedOrder = {

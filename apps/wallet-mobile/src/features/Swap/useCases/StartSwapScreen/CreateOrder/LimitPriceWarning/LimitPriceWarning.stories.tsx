@@ -4,7 +4,7 @@ import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {Button, View} from 'react-native'
 
-import {BottomSheetRef} from '../../../../../../components'
+import {DialogRef} from '../../../../../../components'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../../../yoroi-wallets/mocks'
 import {SwapFormProvider} from '../../../../common/SwapFormProvider'
@@ -13,9 +13,9 @@ import {LimitPriceWarning} from './LimitPriceWarning'
 storiesOf('Swap Limit Price Warning', module).add('Initial', () => <Initial />)
 
 const Initial = () => {
-  const limitPriceWarningRef = React.useRef<null | BottomSheetRef>(null)
+  const limitPriceWarningRef = React.useRef<null | DialogRef>(null)
   const closeLimitPriceWarning = () => {
-    limitPriceWarningRef.current?.closeBottomSheet()
+    limitPriceWarningRef.current?.closeDialog()
   }
   const openLimitPriceWarning = () => {
     limitPriceWarningRef.current?.openDialog()

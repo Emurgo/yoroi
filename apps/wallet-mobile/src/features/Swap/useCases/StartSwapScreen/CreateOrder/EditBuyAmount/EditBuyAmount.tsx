@@ -20,7 +20,7 @@ export const EditBuyAmount = () => {
   const inputRef = React.useRef<TextInput>(null)
 
   const {createOrder, buyAmountChanged} = useSwap()
-  const {isBuyTouched, isSellTouched} = useSwapTouched()
+  const {isBuyTouched} = useSwapTouched()
   const {tokenId, quantity} = createOrder.amounts.buy
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const {decimals} = tokenInfo
@@ -39,7 +39,8 @@ export const EditBuyAmount = () => {
       ? createOrder.selectedPool?.tokenA.quantity
       : createOrder.selectedPool?.tokenB.quantity
   const hasSupply = !Quantities.isGreaterThan(quantity, poolSupply ?? Quantities.zero)
-  const showError = !Quantities.isZero(quantity) && !hasSupply
+  const showError =
+    (!Quantities.isZero(quantity) && !hasSupply) || (isBuyTouched && createOrder.selectedPool === undefined)
 
   const onChangeQuantity = (text: string) => {
     try {
@@ -62,7 +63,7 @@ export const EditBuyAmount = () => {
       navigateTo={navigate.selectBuyToken}
       touched={isBuyTouched}
       inputRef={inputRef}
-      inputEditable={isBuyTouched && isSellTouched}
+      inputEditable={createOrder.selectedPool !== undefined}
     />
   )
 }

@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {BottomSheet, BottomSheetRef, Button, Spacer} from '../../../../../../components'
+import {BottomSheet, Button, DialogRef, Spacer} from '../../../../../../components'
 import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
@@ -14,7 +14,7 @@ export interface LimitPriceWarningProps {
   closeLimitPriceWarning: () => void
 }
 
-export const LimitPriceWarning = React.forwardRef<BottomSheetRef, LimitPriceWarningProps>(
+export const LimitPriceWarning = React.forwardRef<DialogRef, LimitPriceWarningProps>(
   ({closeLimitPriceWarning, onSubmit}, ref) => {
     const {createOrder} = useSwap()
     const {numberLocale} = useLanguage()

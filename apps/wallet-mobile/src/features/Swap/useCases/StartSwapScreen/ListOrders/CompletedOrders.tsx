@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {useSwapOrdersByStatusCompleted} from '@yoroi/swap'
 import _ from 'lodash'
 import React from 'react'
@@ -15,6 +16,7 @@ import {
   TokenIcon,
 } from '../../../../../components'
 import {useLanguage} from '../../../../../i18n'
+import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
@@ -35,10 +37,15 @@ export const CompletedOrders = () => {
 
   const orders = useSwapOrdersByStatusCompleted()
 
-  const tokenIds: Array<string> = React.useMemo(
-    () => _.uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId])),
-    [orders],
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.swapConfirmedPageViewed({swap_tab: 'Completed Orders'})
+    }, [track]),
   )
+
+  const tokenIds = React.useMemo(() => _.uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId])), [orders])
   const tokenInfos = useTokenInfos({wallet, tokenIds})
   const normalizedOrders = React.useMemo(
     () => mapOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos)),

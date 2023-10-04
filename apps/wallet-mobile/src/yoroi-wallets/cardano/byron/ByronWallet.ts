@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {PrivateKey} from '@emurgo/cross-csl-core'
 import * as yoroiLib from '@emurgo/yoroi-lib'
 import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
@@ -46,6 +47,7 @@ import * as api from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
+import {signRawTransaction} from '../common/signatureUtils'
 import {
   HISTORY_REFRESH_TIME,
   MAX_GENERATED_UNUSED,
@@ -992,6 +994,8 @@ export class ByronWallet implements YoroiWallet {
       signedLedgerTx,
       this.getPurpose(),
       this.publicKeyHex,
+      true,
+      [unsignedTx.datum as {data: string}],
     )
 
     return yoroiSignedTx({unsignedTx, signedTx})
@@ -1025,6 +1029,10 @@ export class ByronWallet implements YoroiWallet {
 
   get utxos() {
     return this._utxos.filter((utxo) => utxo.utxo_id !== this._collateralId)
+  }
+
+  get allUtxos() {
+    return this._utxos
   }
 
   get collateralId(): string {
@@ -1071,6 +1079,10 @@ export class ByronWallet implements YoroiWallet {
 
   async fetchPoolInfo(request: PoolInfoRequest) {
     return api.getPoolInfo(request, this.getBackendConfig())
+  }
+
+  public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
+    return signRawTransaction(txHex, pKeys)
   }
 
   async fetchTokenInfo(tokenId: string) {

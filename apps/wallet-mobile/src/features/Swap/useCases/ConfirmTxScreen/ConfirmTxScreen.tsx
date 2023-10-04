@@ -3,28 +3,29 @@ import React from 'react'
 import {StyleSheet, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {BottomSheet, BottomSheetRef, Button, Spacer} from '../../../../components'
+import {BottomSheet, Button, DialogRef, Spacer} from '../../../../components'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
-import {useSignAndSubmitTx} from '../../../../yoroi-wallets/hooks'
+import {useSignAndSubmitTx, useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
 import {TransactionSummary} from './TransactionSummary'
 
 export const ConfirmTxScreen = () => {
-  const confirmTxBottomSheetRef = React.useRef<null | BottomSheetRef>(null)
+  const confirmTxBottomSheetRef = React.useRef<null | DialogRef>(null)
 
   const openConfirmTxDialog = () => {
     confirmTxBottomSheetRef.current?.openDialog()
   }
 
   const closeConfirmTxDialog = () => {
-    confirmTxBottomSheetRef.current?.closeBottomSheet()
+    confirmTxBottomSheetRef.current?.closeDialog()
   }
-  const infoBottomSheetRef = React.useRef<null | BottomSheetRef>(null)
+  const infoBottomSheetRef = React.useRef<null | DialogRef>(null)
 
   const [infoBottomSheetState, setInfoBottomSheetSate] = React.useState<{
     title: string
@@ -45,8 +46,17 @@ export const ConfirmTxScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
+  const {track} = useMetrics()
 
-  const {unsignedTx} = useSwap()
+  const {unsignedTx, createOrder} = useSwap()
+  const sellTokenInfo = useTokenInfo({
+    wallet,
+    tokenId: createOrder.amounts.sell.tokenId,
+  })
+  const buyTokenInfo = useTokenInfo({
+    wallet,
+    tokenId: createOrder.amounts.buy.tokenId,
+  })
 
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
     {id: wallet.id},
@@ -59,6 +69,22 @@ export const ConfirmTxScreen = () => {
       signTx: {useErrorBoundary: true},
       submitTx: {
         onSuccess: () => {
+          if (!createOrder.selectedPool) return
+          track.swapOrderSubmitted({
+            from_asset: [
+              {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
+            ],
+            to_asset: [
+              {asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group},
+            ],
+            order_type: createOrder.type,
+            slippage_tolerance: createOrder.slippage,
+            from_amount: createOrder.amounts.sell.quantity,
+            to_amount: createOrder.amounts.buy.quantity,
+            pool_source: createOrder.selectedPool.provider,
+            swap_fees: Number(createOrder.selectedPool.fee),
+          })
+
           navigate.submittedTx()
         },
         onError: () => {

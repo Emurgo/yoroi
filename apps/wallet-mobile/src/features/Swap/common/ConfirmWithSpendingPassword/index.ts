@@ -1,0 +1,1 @@
+export {ConfirmWithSpendingPassword} from './ConfirmWithSpendingPassword'

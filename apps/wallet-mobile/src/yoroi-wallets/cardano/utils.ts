@@ -2,6 +2,7 @@
 import {SendToken} from '@emurgo/yoroi-lib'
 import {Balance} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
+import {Buffer} from 'buffer'
 
 import {
   Addressing,
@@ -304,4 +305,41 @@ export const selectFtOrThrow = (token: Balance.TokenInfo): Balance.TokenInfo => 
     return token
   }
   throw new Error(`Token type "${token.kind}" is not a fungible token`)
+}
+
+export const generateCIP30UtxoCbor = async (utxo: RawUtxo) => {
+  const txHash = await CardanoMobile.TransactionHash.fromBytes(Buffer.from(utxo.tx_hash, 'hex'))
+  if (!txHash) throw new Error('Invalid tx hash')
+
+  const index = parseInt(utxo.utxo_id.split(':')[1] || '0', 10)
+  const input = await CardanoMobile.TransactionInput.new(txHash, index)
+  const address = await CardanoMobile.Address.fromBech32(utxo.receiver)
+  if (!address) throw new Error('Invalid address')
+
+  const amount = await CardanoMobile.BigNum.fromStr(utxo.amount)
+  if (!amount) throw new Error('Invalid amount')
+
+  const collateral = await CardanoMobile.Value.new(amount)
+  const output = await CardanoMobile.TransactionOutput.new(address, collateral)
+  const transactionUnspentOutput = await CardanoMobile.TransactionUnspentOutput.new(input, output)
+
+  return transactionUnspentOutput.toHex()
+}
+
+export const createRawTxSigningKey = async (rootKey: string, derivationPath: number[]) => {
+  if (derivationPath.length !== 5) throw new Error('Invalid derivation path')
+  const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(rootKey, 'hex'))
+  const accountPrivateKey = await masterKey
+    .derive(derivationPath[0])
+    .then((key) => key.derive(derivationPath[1]))
+    .then((key) => key.derive(derivationPath[2]))
+    .then((key) => key.derive(derivationPath[3]))
+    .then((key) => key.derive(derivationPath[4]))
+
+  const rawKey = await accountPrivateKey.toRawKey()
+  const bech32 = await rawKey.toBech32()
+
+  const pkey = await CardanoMobile.PrivateKey.fromBech32(bech32) // TODO: Check this
+  if (!pkey) throw new Error('Invalid private key')
+  return pkey
 }

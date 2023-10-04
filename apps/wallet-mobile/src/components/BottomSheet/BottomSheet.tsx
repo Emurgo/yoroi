@@ -13,13 +13,13 @@ type BottomSheetProps = {
   onClose?: () => void
 }
 
-export type BottomSheetRef = {
+export type DialogRef = {
   openDialog: () => void
-  closeBottomSheet: () => void
+  closeDialog: () => void
   isOpen: boolean
 }
 
-export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
+export const BottomSheet = React.forwardRef<DialogRef, BottomSheetProps>(
   ({children, height = 300, debug = false, maxHeight = '80%', title, isExtendable = false, onClose}, ref) => {
     const [isOpen, setIsOpen] = React.useState(false)
     const [isExtended, setExtended] = React.useState(false)
@@ -29,7 +29,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
 
     React.useImperativeHandle(ref, () => ({
       openDialog,
-      closeBottomSheet,
+      closeDialog,
       isOpen,
     }))
 
@@ -37,7 +37,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       setIsOpen(true)
     }
 
-    const closeBottomSheet = () => {
+    const closeDialog = () => {
       if (isExtended) setExtended(false)
       setIsOpen(false)
       onClose?.()
@@ -56,7 +56,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       if (swipeLocationY < nativeEvent.locationY) {
         const newState = downDirectionCount + 1
         if (newState > 4) {
-          closeBottomSheet()
+          closeDialog()
           cleanDirectionCount()
         } else setDownDirectionCount(newState)
       } else if (swipeLocationY > nativeEvent.locationY) {
@@ -73,8 +73,8 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       <>
         {(debug || isOpen) && <View style={styles.backdrop} />}
 
-        <Modal animationType="slide" visible={debug || isOpen} onRequestClose={closeBottomSheet} transparent>
-          <Pressable style={styles.backdropAction} onPress={closeBottomSheet}>
+        <Modal animationType="slide" visible={debug || isOpen} onRequestClose={closeDialog} transparent>
+          <Pressable style={styles.backdropAction} onPress={closeDialog}>
             <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'height' : undefined}>
               <View
                 style={[styles.sheet, {height: isExtended && isExtendable ? maxHeight : height}]}

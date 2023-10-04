@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-newline */
 import {useSwap} from '@yoroi/swap'
-import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
@@ -24,6 +23,7 @@ export const EditLimitPrice = () => {
   const {createOrder, limitPriceChanged} = useSwap()
   const sellTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
+  const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
   const disabled = createOrder.type === 'market'
 
   const {isBuyTouched, isSellTouched} = useSwapTouched()
@@ -32,19 +32,15 @@ export const EditLimitPrice = () => {
   const tokenToBuyName = isBuyTouched ? buyTokenInfo.ticker ?? buyTokenInfo.name : '-'
 
   React.useEffect(() => {
-    setText(BigNumber(createOrder.marketPrice).decimalPlaces(PRECISION).toFormat(numberLocale))
+    setText(Quantities.format(createOrder.marketPrice, denomination, PRECISION))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createOrder.marketPrice])
 
   React.useEffect(() => {
     if (createOrder.type === 'limit') {
-      setText(
-        BigNumber(createOrder?.limitPrice ?? 0)
-          .decimalPlaces(PRECISION)
-          .toFormat(numberLocale),
-      )
+      setText(Quantities.format(createOrder?.limitPrice ?? Quantities.zero, denomination, PRECISION))
     } else {
-      setText(BigNumber(createOrder.marketPrice).decimalPlaces(PRECISION).toFormat(numberLocale))
+      setText(Quantities.format(createOrder.marketPrice, denomination, PRECISION))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createOrder.type, createOrder.limitPrice])

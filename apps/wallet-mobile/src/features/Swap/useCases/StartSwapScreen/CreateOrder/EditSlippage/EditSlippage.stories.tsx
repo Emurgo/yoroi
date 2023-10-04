@@ -4,7 +4,7 @@ import {produce} from 'immer'
 import React from 'react'
 import {StyleSheet, Text} from 'react-native'
 
-import {BottomSheet, BottomSheetRef} from '../../../../../../components'
+import {BottomSheet, DialogRef} from '../../../../../../components'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../theme'
@@ -15,22 +15,22 @@ import {EditSlippage} from './EditSlippage'
 
 storiesOf('Swap Edit Slippage', module)
   .add('initial %', () => {
-    const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
-    const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
+    const dialog = React.useRef<null | DialogRef>(null)
+    const [dialogState, setDialogtState] = React.useState<BottomSheetState>({
       title: '',
       content: '',
     })
 
     const openDialog = ({title, content}: BottomSheetState) => {
-      setBottomSheetState({
+      setDialogtState({
         title,
         content,
       })
-      bottomSheetRef.current?.openDialog()
+      dialog.current?.openDialog()
     }
 
     const onCloseBottomSheet = () => {
-      setBottomSheetState({title: '', content: ''})
+      setDialogtState({title: '', content: ''})
     }
 
     return (
@@ -45,8 +45,8 @@ storiesOf('Swap Edit Slippage', module)
           </SearchProvider>
         </SelectedWalletProvider>
 
-        <BottomSheet ref={bottomSheetRef} title={bottomSheetState.title} onClose={onCloseBottomSheet}>
-          <Text style={styles.text}>{bottomSheetState.content}</Text>
+        <BottomSheet ref={dialog} title={dialogState.title} onClose={onCloseBottomSheet}>
+          <Text style={styles.text}>{dialogState.content}</Text>
         </BottomSheet>
       </>
     )
@@ -55,22 +55,22 @@ storiesOf('Swap Edit Slippage', module)
     const mockSwapStateBigSlippage = produce(mockSwapStateDefault, (draft) => {
       draft.createOrder.slippage = 99.123456789
     })
-    const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
-    const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState>({
+    const dialog = React.useRef<null | DialogRef>(null)
+    const [dialogState, setDialogtState] = React.useState<BottomSheetState>({
       title: '',
       content: '',
     })
 
     const openDialog = ({title, content}: BottomSheetState) => {
-      setBottomSheetState({
+      setDialogtState({
         title,
         content,
       })
-      bottomSheetRef.current?.openDialog()
+      dialog.current?.openDialog()
     }
 
     const onCloseBottomSheet = () => {
-      setBottomSheetState({title: '', content: ''})
+      setDialogtState({title: '', content: ''})
     }
 
     return (
@@ -85,8 +85,8 @@ storiesOf('Swap Edit Slippage', module)
           </SearchProvider>
         </SelectedWalletProvider>
 
-        <BottomSheet ref={bottomSheetRef} title={bottomSheetState.title} onClose={onCloseBottomSheet}>
-          <Text style={styles.text}>{bottomSheetState.content}</Text>
+        <BottomSheet ref={dialog} title={dialogState.title} onClose={onCloseBottomSheet}>
+          <Text style={styles.text}>{dialogState.content}</Text>
         </BottomSheet>
       </>
     )
