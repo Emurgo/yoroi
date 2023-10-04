@@ -31,8 +31,8 @@ export const getSellAmount = (
     return {
       tokenId,
       quantity: asQuantity(
-        BigNumber(buy.quantity)
-          .times(BigNumber(limit))
+        new BigNumber(buy.quantity)
+          .times(new BigNumber(limit))
           .integerValue(BigNumber.ROUND_CEIL)
           .toString(),
       ),

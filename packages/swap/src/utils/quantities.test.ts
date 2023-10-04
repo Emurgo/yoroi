@@ -34,6 +34,26 @@ describe('Quantities', () => {
     })
   })
 
+  describe('isGreaterThanOrEqualTo', () => {
+    it('should correctly compare two quantities', () => {
+      const quantity1 = '100'
+      const quantity2 = '50'
+      expect(Quantities.isGreaterThanOrEqualTo(quantity1, quantity2)).toBe(true)
+    })
+
+    it('should handle equal quantities', () => {
+      const quantity1 = '100'
+      const quantity2 = '100'
+      expect(Quantities.isGreaterThanOrEqualTo(quantity1, quantity2)).toBe(true)
+    })
+
+    it('should handle negative quantities', () => {
+      const quantity1 = '-50'
+      const quantity2 = '-100'
+      expect(Quantities.isGreaterThanOrEqualTo(quantity1, quantity2)).toBe(true)
+    })
+  })
+
   describe('isGreaterThan', () => {
     it('should correctly compare two quantities', () => {
       const quantity1 = '100'
