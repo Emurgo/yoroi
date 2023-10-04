@@ -274,7 +274,7 @@ export const OpenOrders = () => {
         </ScrollView>
       </View>
 
-      <BottomSheet title={dialogState.title} height={dialogState.height} ref={dialogRef} isExtendable={false}>
+      <BottomSheet title={dialogState.title} height={dialogState.height} ref={dialogRef}>
         <View style={styles.modalContent}>{dialogState.content}</View>
       </BottomSheet>
 
