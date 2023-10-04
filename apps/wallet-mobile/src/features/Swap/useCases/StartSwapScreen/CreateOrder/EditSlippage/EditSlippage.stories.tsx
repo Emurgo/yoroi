@@ -15,7 +15,7 @@ import {EditSlippage} from './EditSlippage'
 
 storiesOf('Swap Edit Slippage', module)
   .add('initial %', () => {
-    const dialog = React.useRef<null | DialogRef>(null)
+    const dialogRef = React.useRef<null | DialogRef>(null)
     const [dialogState, setDialogtState] = React.useState<BottomSheetState>({
       title: '',
       content: '',
@@ -26,7 +26,7 @@ storiesOf('Swap Edit Slippage', module)
         title,
         content,
       })
-      dialog.current?.openDialog()
+      dialogRef.current?.openDialog()
     }
 
     const onCloseBottomSheet = () => {
@@ -45,7 +45,7 @@ storiesOf('Swap Edit Slippage', module)
           </SearchProvider>
         </SelectedWalletProvider>
 
-        <BottomSheet ref={dialog} title={dialogState.title} onClose={onCloseBottomSheet}>
+        <BottomSheet ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
           <Text style={styles.text}>{dialogState.content}</Text>
         </BottomSheet>
       </>
@@ -55,7 +55,7 @@ storiesOf('Swap Edit Slippage', module)
     const mockSwapStateBigSlippage = produce(mockSwapStateDefault, (draft) => {
       draft.createOrder.slippage = 99.123456789
     })
-    const dialog = React.useRef<null | DialogRef>(null)
+    const dialogRef = React.useRef<null | DialogRef>(null)
     const [dialogState, setDialogtState] = React.useState<BottomSheetState>({
       title: '',
       content: '',
@@ -66,7 +66,7 @@ storiesOf('Swap Edit Slippage', module)
         title,
         content,
       })
-      dialog.current?.openDialog()
+      dialogRef.current?.openDialog()
     }
 
     const onCloseBottomSheet = () => {
@@ -85,7 +85,7 @@ storiesOf('Swap Edit Slippage', module)
           </SearchProvider>
         </SelectedWalletProvider>
 
-        <BottomSheet ref={dialog} title={dialogState.title} onClose={onCloseBottomSheet}>
+        <BottomSheet ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
           <Text style={styles.text}>{dialogState.content}</Text>
         </BottomSheet>
       </>

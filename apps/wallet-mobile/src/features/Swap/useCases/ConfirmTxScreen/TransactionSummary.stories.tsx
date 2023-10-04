@@ -21,7 +21,7 @@ storiesOf('TransactionSummary', module) //
   })
 
 const TxSummary = () => {
-  const dialog = React.useRef<null | DialogRef>(null)
+  const dialogRef = React.useRef<null | DialogRef>(null)
   const [dialogState, setDialogtState] = React.useState<{
     title: string
     content: string
@@ -35,7 +35,7 @@ const TxSummary = () => {
       title,
       content,
     })
-    dialog.current?.openDialog()
+    dialogRef.current?.openDialog()
   }
 
   const onCloseBottomSheet = () => {
@@ -61,7 +61,7 @@ const TxSummary = () => {
         </SwapProvider>
       </SelectedWalletProvider>
 
-      <BottomSheet ref={dialog} title={dialogState.title} onClose={onCloseBottomSheet}>
+      <BottomSheet ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
         <View style={{flex: 1, padding: 8}}>
           <Text style={styles.text}>{dialogState.content}</Text>
         </View>

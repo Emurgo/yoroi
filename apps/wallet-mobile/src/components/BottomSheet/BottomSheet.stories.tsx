@@ -7,18 +7,18 @@ import {BottomSheet, DialogRef} from './BottomSheet'
 storiesOf('BottomSheet', module).add('Default', () => <ComponentDefault />)
 
 const ComponentDefault = () => {
-  const dialog = React.useRef<null | DialogRef>(null)
+  const dialogRef = React.useRef<null | DialogRef>(null)
 
   const openDialog = () => {
-    dialog.current?.openDialog()
+    dialogRef.current?.openDialog()
   }
 
   const closeDialog = () => {
-    dialog.current?.closeDialog()
+    dialogRef.current?.closeDialog()
   }
 
   const handleClick = () => {
-    if (dialog.current?.isOpen) closeDialog()
+    if (dialogRef.current?.isOpen) closeDialog()
     else openDialog()
   }
 
@@ -26,7 +26,7 @@ const ComponentDefault = () => {
     <View style={{flex: 1}}>
       <Button title="click" onPress={handleClick} />
 
-      <BottomSheet title="Fake Title" ref={dialog}>
+      <BottomSheet title="Fake Title" ref={dialogRef}>
         <View style={{flex: 1, alignSelf: 'stretch', paddingHorizontal: 16}}>
           <Text style={{flex: 1}}>Content</Text>
         </View>

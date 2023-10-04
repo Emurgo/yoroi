@@ -47,7 +47,7 @@ export const OpenOrders = () => {
     height: 0,
   })
 
-  const dialog = React.useRef<null | DialogRef>(null)
+  const dialogRef = React.useRef<null | DialogRef>(null)
   const confirmationDialoglRef = React.useRef<null | DialogRef>(null)
 
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
@@ -196,12 +196,12 @@ export const OpenOrders = () => {
             assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfo?.id ?? ''} variant="swap" />}
             assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfo?.id ?? ''} variant="swap" />}
             onConfirm={() => {
-              dialog.current?.closeDialog()
+              dialogRef.current?.closeDialog()
               confirmationDialoglRef.current?.openDialog()
             }}
             onBack={() => {
               onOrderCancelConfirm(id)
-              dialog.current?.closeDialog()
+              dialogRef.current?.closeDialog()
             }}
             assetFromLabel={assetFromLabel}
             assetToLabel={assetToLabel}
@@ -215,11 +215,11 @@ export const OpenOrders = () => {
         </Suspense>
       ),
     })
-    dialog.current?.openDialog()
+    dialogRef.current?.openDialog()
   }
   const closeDialog = () => {
     setDialogtState({title: '', content: '', height: 0})
-    dialog.current?.closeDialog()
+    dialogRef.current?.closeDialog()
   }
 
   return (
@@ -274,7 +274,7 @@ export const OpenOrders = () => {
         </ScrollView>
       </View>
 
-      <BottomSheet title={dialogState.title} height={dialogState.height} ref={dialog} isExtendable={false}>
+      <BottomSheet title={dialogState.title} height={dialogState.height} ref={dialogRef} isExtendable={false}>
         <View style={styles.modalContent}>{dialogState.content}</View>
       </BottomSheet>
 

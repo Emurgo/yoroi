@@ -36,7 +36,7 @@ export const CreateOrder = () => {
   const {createOrder, selectedPoolChanged, unsignedTxChanged, txPayloadChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
-  const dialog = React.useRef<null | DialogRef>(null)
+  const dialogRef = React.useRef<null | DialogRef>(null)
   const [dialogState, setDialogtState] = React.useState<BottomSheetState>({
     title: '',
     content: '',
@@ -46,7 +46,7 @@ export const CreateOrder = () => {
       title,
       content,
     })
-    dialog.current?.openDialog()
+    dialogRef.current?.openDialog()
   }
   const onCloseBottomSheet = () => {
     setDialogtState({title: '', content: ''})
@@ -257,7 +257,7 @@ export const CreateOrder = () => {
 
       <LoadingOverlay loading={isLoading} />
 
-      <BottomSheet ref={dialog} title={dialogState.title} onClose={onCloseBottomSheet}>
+      <BottomSheet ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
         <Text style={styles.text}>{dialogState.content}</Text>
       </BottomSheet>
     </View>

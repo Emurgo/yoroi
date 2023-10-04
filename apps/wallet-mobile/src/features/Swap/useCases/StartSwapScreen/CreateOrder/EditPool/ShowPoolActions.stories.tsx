@@ -13,7 +13,7 @@ import {BottomSheetState} from '../CreateOrder'
 import {ShowPoolActions} from './ShowPoolActions'
 
 storiesOf('Swap Pool Actions', module).add('initial', () => {
-  const dialog = React.useRef<null | DialogRef>(null)
+  const dialogRef = React.useRef<null | DialogRef>(null)
 
   const [dialogState, setDialogtState] = React.useState<BottomSheetState>({
     title: '',
@@ -25,7 +25,7 @@ storiesOf('Swap Pool Actions', module).add('initial', () => {
       title,
       content,
     })
-    dialog.current?.openDialog()
+    dialogRef.current?.openDialog()
   }
 
   const onCloseBottomSheet = () => {
@@ -44,7 +44,7 @@ storiesOf('Swap Pool Actions', module).add('initial', () => {
         </SearchProvider>
       </SelectedWalletProvider>
 
-      <BottomSheet ref={dialog} title={dialogState.title} onClose={onCloseBottomSheet}>
+      <BottomSheet ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
         <View style={{flex: 1, padding: 8}}>
           <Text style={styles.text}>{dialogState.content}</Text>
         </View>
