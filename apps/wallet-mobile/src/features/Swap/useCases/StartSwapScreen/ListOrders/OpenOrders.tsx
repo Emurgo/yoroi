@@ -122,8 +122,16 @@ export const OpenOrders = () => {
     setBottomSheetState({
       openId: id,
       title: strings.signTransaction,
-      content: <ConfirmRawTx onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)} />,
-      height: 350,
+      content: (
+        <ConfirmRawTx
+          onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)}
+          onHWSuccess={() => {
+            closeBottomSheet()
+            swapNavigation.submittedTx()
+          }}
+        />
+      ),
+      height: 400,
     })
   }
 
