@@ -7,8 +7,8 @@ import {useIntl} from 'react-intl'
 import {ActivityIndicator, Alert, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {
-  BottomSheet,
   Button,
+  Dialog,
   DialogRef,
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
@@ -274,9 +274,9 @@ export const OpenOrders = () => {
         </ScrollView>
       </View>
 
-      <BottomSheet title={dialogState.title} height={dialogState.height} ref={dialogRef}>
+      <Dialog title={dialogState.title} height={dialogState.height} ref={dialogRef}>
         <View style={styles.modalContent}>{dialogState.content}</View>
-      </BottomSheet>
+      </Dialog>
 
       <Counter style={styles.counter} counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
     </>

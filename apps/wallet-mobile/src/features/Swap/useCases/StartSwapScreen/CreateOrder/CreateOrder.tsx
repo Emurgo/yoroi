@@ -5,7 +5,7 @@ import React, {useEffect, useMemo} from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {BottomSheet, Button, DialogRef, DialogState, Spacer} from '../../../../../components'
+import {Button, Dialog, DialogRef, DialogState, Spacer} from '../../../../../components'
 import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
@@ -255,9 +255,9 @@ export const CreateOrder = () => {
 
       <LoadingOverlay loading={isLoading} />
 
-      <BottomSheet ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
+      <Dialog ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
         <Text style={styles.text}>{dialogState.content}</Text>
-      </BottomSheet>
+      </Dialog>
     </View>
   )
 }

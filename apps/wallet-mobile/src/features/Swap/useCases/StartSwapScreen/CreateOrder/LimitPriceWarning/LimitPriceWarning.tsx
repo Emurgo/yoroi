@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {BottomSheet, Button, DialogRef, Spacer} from '../../../../../../components'
+import {Button, Dialog, DialogRef, Spacer} from '../../../../../../components'
 import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
@@ -31,7 +31,7 @@ export const LimitPriceWarning = React.forwardRef<DialogRef, LimitPriceWarningPr
     const name = `${tokenToSellName}/${tokenToBuyName}`
 
     return (
-      <BottomSheet ref={ref} title={strings.limitPriceWarningTitle}>
+      <Dialog ref={ref} title={strings.limitPriceWarningTitle}>
         <View style={styles.container}>
           <View>
             <Text>{strings.limitPriceWarningDescription}</Text>
@@ -79,7 +79,7 @@ export const LimitPriceWarning = React.forwardRef<DialogRef, LimitPriceWarningPr
             />
           </View>
         </View>
-      </BottomSheet>
+      </Dialog>
     )
   },
 )

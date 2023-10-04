@@ -3,7 +3,7 @@ import {mockSwapManager, mockSwapStateDefault, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {BottomSheet, DialogRef, DialogState} from '../../../../components'
+import {Dialog, DialogRef, DialogState} from '../../../../components'
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
 import {mocks} from '../../common/mocks'
@@ -60,11 +60,11 @@ const TxSummary = () => {
         </SwapProvider>
       </SelectedWalletProvider>
 
-      <BottomSheet ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
+      <Dialog ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
         <View style={{flex: 1, padding: 8}}>
           <Text style={styles.text}>{dialogState.content}</Text>
         </View>
-      </BottomSheet>
+      </Dialog>
     </>
   )
 }

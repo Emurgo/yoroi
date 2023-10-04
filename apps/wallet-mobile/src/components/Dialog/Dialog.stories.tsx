@@ -2,9 +2,9 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Button, Text, View} from 'react-native'
 
-import {BottomSheet, DialogRef} from './Dialog'
+import {Dialog, DialogRef} from './Dialog'
 
-storiesOf('BottomSheet', module).add('Default', () => <ComponentDefault />)
+storiesOf('Dialog', module).add('Default', () => <ComponentDefault />)
 
 const ComponentDefault = () => {
   const dialogRef = React.useRef<null | DialogRef>(null)
@@ -26,11 +26,11 @@ const ComponentDefault = () => {
     <View style={{flex: 1}}>
       <Button title="click" onPress={handleClick} />
 
-      <BottomSheet title="Fake Title" ref={dialogRef}>
+      <Dialog title="Fake Title" ref={dialogRef}>
         <View style={{flex: 1, alignSelf: 'stretch', paddingHorizontal: 16}}>
           <Text style={{flex: 1}}>Content</Text>
         </View>
-      </BottomSheet>
+      </Dialog>
     </View>
   )
 }

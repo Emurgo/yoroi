@@ -4,7 +4,7 @@ import {produce} from 'immer'
 import React from 'react'
 import {StyleSheet, Text} from 'react-native'
 
-import {BottomSheet, DialogRef, DialogState} from '../../../../../../components'
+import {Dialog, DialogRef, DialogState} from '../../../../../../components'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../theme'
@@ -44,9 +44,9 @@ storiesOf('Swap Edit Slippage', module)
           </SearchProvider>
         </SelectedWalletProvider>
 
-        <BottomSheet ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
+        <Dialog ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
           <Text style={styles.text}>{dialogState.content}</Text>
-        </BottomSheet>
+        </Dialog>
       </>
     )
   })
@@ -84,9 +84,9 @@ storiesOf('Swap Edit Slippage', module)
           </SearchProvider>
         </SelectedWalletProvider>
 
-        <BottomSheet ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
+        <Dialog ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
           <Text style={styles.text}>{dialogState.content}</Text>
-        </BottomSheet>
+        </Dialog>
       </>
     )
   })

@@ -3,7 +3,7 @@ import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {BottomSheet, DialogRef, DialogState} from '../../../../../../components'
+import {Dialog, DialogRef, DialogState} from '../../../../../../components'
 import {SearchProvider} from '../../../../../../Search/SearchContext'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../theme'
@@ -43,11 +43,11 @@ storiesOf('Swap Pool Actions', module).add('initial', () => {
         </SearchProvider>
       </SelectedWalletProvider>
 
-      <BottomSheet ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
+      <Dialog ref={dialogRef} title={dialogState.title} onClose={onCloseBottomSheet}>
         <View style={{flex: 1, padding: 8}}>
           <Text style={styles.text}>{dialogState.content}</Text>
         </View>
-      </BottomSheet>
+      </Dialog>
     </>
   )
 })

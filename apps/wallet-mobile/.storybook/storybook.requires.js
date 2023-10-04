@@ -69,7 +69,7 @@ const getStories = () => {
     "./src/components/AmountItem/AmountItem.stories.tsx": require("../src/components/AmountItem/AmountItem.stories.tsx"),
     "./src/components/Analytics/Analytics.stories.tsx": require("../src/components/Analytics/Analytics.stories.tsx"),
     "./src/components/BlueCheckbox/BlueCheckbox.stories.tsx": require("../src/components/BlueCheckbox/BlueCheckbox.stories.tsx"),
-    "./src/components/BottomSheet/BottomSheet.stories.tsx": require("../src/components/BottomSheet/BottomSheet.stories.tsx"),
+    "./src/components/Dialog/Dialog.stories.tsx": require("../src/components/Dialog/Dialog.stories.tsx"),
     "./src/components/BottomSheetModal/BottomSheetModal.stories.tsx": require("../src/components/BottomSheetModal/BottomSheetModal.stories.tsx"),
     "./src/components/Boundary/Boundary.stories.tsx": require("../src/components/Boundary/Boundary.stories.tsx"),
     "./src/components/Button/Button.stories.tsx": require("../src/components/Button/Button.stories.tsx"),

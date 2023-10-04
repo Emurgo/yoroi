@@ -3,7 +3,7 @@ import React from 'react'
 import {StyleSheet, Text, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {BottomSheet, Button, DialogRef, Spacer} from '../../../../components'
+import {Button, Dialog, DialogRef, Spacer} from '../../../../components'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -117,7 +117,7 @@ export const ConfirmTxScreen = () => {
         />
       </Actions>
 
-      <BottomSheet
+      <Dialog
         height={wallet.isHW ? 430 : 350}
         ref={confirmTxBottomSheetRef}
         title={wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction}
@@ -135,11 +135,11 @@ export const ConfirmTxScreen = () => {
 
           <Spacer height={16} />
         </View>
-      </BottomSheet>
+      </Dialog>
 
-      <BottomSheet title={infoBottomSheetState.title} ref={infoBottomSheetRef} onClose={closeInfoBottomSheet}>
+      <Dialog title={infoBottomSheetState.title} ref={infoBottomSheetRef} onClose={closeInfoBottomSheet}>
         <Text style={styles.text}>{infoBottomSheetState.content}</Text>
-      </BottomSheet>
+      </Dialog>
 
       <LoadingOverlay loading={txIsLoading} />
     </SafeAreaView>
