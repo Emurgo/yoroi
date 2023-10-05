@@ -34,6 +34,5 @@ export type SwapPool = {
   deposit: BalanceAmount // amount of deposit / minUTxO required by protocol, returned to user, in lovelace.
   // utxo: string // txhash#txindex of latest transaction involving this pool.
   poolId: string // identifier of the pool across platforms.
-  lastUpdate: string // latest update of this pool in UTC, i.e. 2023-05-23 06:13:26.
   lpToken: BalanceAmount
 }

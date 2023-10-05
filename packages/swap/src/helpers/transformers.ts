@@ -49,11 +49,18 @@ export const transformersMaker = (
 
   const asYoroiOpenOrder = (openswapOrder: OpenSwap.OpenOrder) => {
     const {from, to, deposit, ...rest} = openswapOrder
+    const [policyId, name = ''] = primaryTokenId.split('.') as [string, string?]
     return {
       ...rest,
       from: asYoroiAmount(from),
       to: asYoroiAmount(to),
-      deposit: asYoroiAmount({amount: deposit, token: primaryTokenId}),
+      deposit: asYoroiAmount({
+        amount: deposit,
+        address: {
+          policyId,
+          name,
+        },
+      }),
     } as const
   }
 
@@ -111,14 +118,12 @@ export const transformersMaker = (
   const asYoroiPool = (openswapPool: OpenSwap.Pool): Swap.Pool | null => {
     const {
       batcherFee,
-      fee,
-      deposit,
+      poolFee,
+      lvlDeposit,
       lpToken,
       tokenA,
       tokenB,
-      timestamp,
       provider,
-      price,
       poolId,
     } = openswapPool
 
@@ -129,12 +134,11 @@ export const transformersMaker = (
       tokenB: asYoroiAmount(tokenB),
       tokenAPriceLovelace: '0',
       tokenBPriceLovelace: '0',
-      deposit: asYoroiAmount({amount: deposit.toString(), token: ''}),
+      deposit: asYoroiAmount({amount: lvlDeposit, address: undefined}),
       lpToken: asYoroiAmount(lpToken),
-      batcherFee: asYoroiAmount(batcherFee),
-      lastUpdate: timestamp,
-      fee,
-      price,
+      batcherFee: asYoroiAmount({amount: batcherFee, address: undefined}),
+      fee: poolFee,
+      price: 0,
       poolId,
       provider,
     }
@@ -142,17 +146,27 @@ export const transformersMaker = (
   }
 
   const asYoroiAmount = (openswapAmount: {
-    amount: string
-    token: string
+    address?: {
+      policyId: string
+      name: string
+    }
+    token?: string
+    amount?: string
   }): Balance.Amount => {
     if (isString(openswapAmount?.amount)) {
       // openswap is inconsistent about ADA
       // sometimes is '.', '' or 'lovelace'
-      const {amount, token} = openswapAmount
-      const [policyId, name = ''] = token.split('.') as [string, string?]
+      const {amount, address, token} = openswapAmount
+      const [policyId, name = ''] =
+        address == null
+          ? token?.split('.') ?? (['', ''] as [string, string?])
+          : [address.policyId, address.name]
       return {
         quantity: amount as Balance.Quantity,
-        tokenId: asYoroiTokenId({policyId, name}),
+        tokenId: asYoroiTokenId({
+          policyId: policyId ?? '',
+          name: name ?? '',
+        }),
       } as const
     }
     return {quantity: Quantities.zero, tokenId: ''} as const

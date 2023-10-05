@@ -15,8 +15,8 @@ export namespace OpenSwap {
   export type CompletedOrderResponse = Types.CompletedOrderResponse
 
   // Pool
-  export type Pool = Types.Pool
-  export type PoolResponse = Types.PoolResponse
+  export type Pool = Types.PoolV2
+  export type PoolResponse = Types.PoolResponseV2
 
   // Token
   export type Token = Types.Token

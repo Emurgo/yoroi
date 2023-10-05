@@ -176,3 +176,60 @@ export type ApiDeps = {
   network: Network
   client: AxiosInstance
 }
+
+export type PoolResponseV2 = PoolV2[]
+export type PoolV2 = {
+  tokenA: {
+    address: {
+      policyId: string
+      name: string
+    }
+    symbol?: string
+    image?: string
+    decimalPlaces: number
+    amount: string
+    status: string
+    priceAda: string
+  }
+  tokenB: {
+    address: {
+      policyId: string
+      name: string
+    }
+    symbol?: string
+    image?: string
+    decimalPlaces: number
+    amount: string
+    status: string
+    priceAda: string
+  }
+  feeToken: {
+    address: {
+      policyId: string
+      name: string
+    }
+    symbol?: string
+    image?: string
+    decimalPlaces: number
+  }
+  batcherFee: string
+  lvlDeposit: string
+  poolFee: string
+  lpToken: {
+    address?: {
+      policyId: string
+      name: string
+    }
+    amount?: string
+  }
+  poolId: string
+  provider: Protocol
+  txHash?: string
+  outputIdx?: number
+  volume24h?: number
+  volume7d?: number
+  liquidityApy?: number
+  priceASqrt?: any
+  priceBSqrt?: any
+  batcherAddress: string
+}

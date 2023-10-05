@@ -107,7 +107,10 @@ describe('asYoroiAmount', () => {
   it('success', () => {
     const result = transformers.asYoroiAmount({
       amount: '100',
-      token: 'c04f4200502a998e9eebafac0291a1f38008de3fe146d136946d8f4b.30',
+      address: {
+        policyId: 'c04f4200502a998e9eebafac0291a1f38008de3fe146d136946d8f4b',
+        name: '30',
+      },
     })
     expect(result).toEqual<Balance.Amount>({
       quantity: '100',
@@ -118,7 +121,10 @@ describe('asYoroiAmount', () => {
   it('success (lovelace) primary token', () => {
     const result = transformers.asYoroiAmount({
       amount: '1000000',
-      token: 'lovelace',
+      address: {
+        policyId: '',
+        name: '',
+      },
     })
     expect(result).toEqual<Balance.Amount>({quantity: '1000000', tokenId: ''})
   })
@@ -126,7 +132,10 @@ describe('asYoroiAmount', () => {
   it('success (period) primary token', () => {
     const result = transformers.asYoroiAmount({
       amount: '1000000',
-      token: '.',
+      address: {
+        policyId: '',
+        name: '.',
+      },
     })
     expect(result).toEqual<Balance.Amount>({quantity: '1000000', tokenId: ''})
   })

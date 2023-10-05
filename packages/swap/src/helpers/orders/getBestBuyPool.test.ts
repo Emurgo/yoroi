@@ -16,7 +16,6 @@ describe('getBestBuyPool', () => {
       batcherFee: {quantity: '950000', tokenId: ''},
       deposit: {quantity: '2000000', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -34,7 +33,6 @@ describe('getBestBuyPool', () => {
       batcherFee: {quantity: '1900000', tokenId: ''},
       deposit: {quantity: '2000000', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -52,7 +50,6 @@ describe('getBestBuyPool', () => {
       batcherFee: {quantity: '2000000', tokenId: ''},
       deposit: {quantity: '2000000', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -70,7 +67,6 @@ describe('getBestBuyPool', () => {
       batcherFee: {quantity: '2000000', tokenId: ''},
       deposit: {quantity: '2000000', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -88,7 +84,6 @@ describe('getBestBuyPool', () => {
       batcherFee: {quantity: '2500000', tokenId: ''},
       deposit: {quantity: '2000000', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -106,7 +101,6 @@ describe('getBestBuyPool', () => {
       batcherFee: {quantity: '2500000', tokenId: ''},
       deposit: {quantity: '2000000', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -140,7 +134,6 @@ describe('getBestBuyPool', () => {
       batcherFee: {quantity: '950000', tokenId: ''},
       deposit: {quantity: '2000000', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -158,7 +151,6 @@ describe('getBestBuyPool', () => {
       batcherFee: {quantity: '1900000', tokenId: ''},
       deposit: {quantity: '2000000', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -176,7 +168,6 @@ describe('getBestBuyPool', () => {
       batcherFee: {quantity: '2000000', tokenId: ''},
       deposit: {quantity: '2000000', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -194,7 +185,6 @@ describe('getBestBuyPool', () => {
       batcherFee: {quantity: '2000000', tokenId: ''},
       deposit: {quantity: '2000000', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -212,7 +202,6 @@ describe('getBestBuyPool', () => {
       batcherFee: {quantity: '2500000', tokenId: ''},
       deposit: {quantity: '2000000', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -230,7 +219,6 @@ describe('getBestBuyPool', () => {
       batcherFee: {quantity: '2500000', tokenId: ''},
       deposit: {quantity: '2000000', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',

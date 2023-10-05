@@ -5,7 +5,6 @@ import {
   getCompletedOrders,
   getOrders, // returns all orders for a given stake key hash.
 } from './orders'
-import {getPools} from './pools'
 import {getTokens} from './tokens'
 import {
   CancelOrderRequest,
@@ -14,6 +13,7 @@ import {
   TokenAddress,
 } from './types'
 import {axiosClient} from './config'
+import {getPoolsV2} from './poolsV2'
 
 export class OpenSwapApi {
   constructor(
@@ -58,7 +58,7 @@ export class OpenSwapApi {
     tokenA: TokenAddress
     tokenB: TokenAddress
   }) {
-    return getPools(
+    return getPoolsV2(
       {network: this.network, client: this.client},
       {tokenA, tokenB},
     )

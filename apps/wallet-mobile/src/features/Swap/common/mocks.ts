@@ -26,7 +26,6 @@ export const mocks = {
         batcherFee: {quantity: asQuantity(2500000), tokenId: ''},
         deposit: {quantity: asQuantity(2000000), tokenId: ''},
         fee: '0.05',
-        lastUpdate: '2023-09-08 09:56:13',
         lpToken: {
           quantity: asQuantity(68917682),
           tokenId: '0029cb7c88c7567b63d1a512c0ed626aa169688ec980730c0473b913.6c702083',

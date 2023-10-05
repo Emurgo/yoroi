@@ -26,7 +26,6 @@ storiesOf('Swap List Pool', module)
           batcherFee: {quantity: '1', tokenId: ''},
           deposit: {quantity: '1', tokenId: ''},
           poolId: '0',
-          lastUpdate: '0',
           lpToken: {
             quantity: '0',
             tokenId: '0',
@@ -43,7 +42,6 @@ storiesOf('Swap List Pool', module)
           batcherFee: {quantity: '122', tokenId: ''},
           deposit: {quantity: '432', tokenId: ''},
           poolId: '23455',
-          lastUpdate: '235',
           lpToken: {
             quantity: '13524',
             tokenId: '1355',

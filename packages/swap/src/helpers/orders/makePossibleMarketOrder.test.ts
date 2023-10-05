@@ -23,7 +23,6 @@ describe('makePossibleMarketOrder', () => {
       batcherFee: {quantity: '1', tokenId: ''},
       deposit: {quantity: '1', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -40,7 +39,6 @@ describe('makePossibleMarketOrder', () => {
       batcherFee: {quantity: '10', tokenId: ''},
       deposit: {quantity: '1', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',

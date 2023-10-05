@@ -30,7 +30,6 @@ export const mockSwapStateDefault: SwapState = {
       batcherFee: {tokenId: '', quantity: '0'},
       deposit: {tokenId: '', quantity: '0'},
       poolId: '',
-      lastUpdate: '',
       lpToken: {tokenId: '', quantity: '0'},
     },
   },

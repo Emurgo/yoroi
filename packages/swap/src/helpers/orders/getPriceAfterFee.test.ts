@@ -15,7 +15,6 @@ describe('getPriceAfterFee', () => {
       batcherFee: {quantity: '950000', tokenId: ''},
       deposit: {quantity: '1', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -41,7 +40,6 @@ describe('getPriceAfterFee', () => {
       batcherFee: {quantity: '1900000', tokenId: ''},
       deposit: {quantity: '1', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
