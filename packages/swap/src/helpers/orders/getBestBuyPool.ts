@@ -20,7 +20,7 @@ export const getBestBuyPool = (
   pools: Swap.Pool[],
   sell: Balance.Amount,
 ): Swap.Pool | undefined => {
-  if (pools != null && pools.length === 0) {
+  if (pools.length === 0) {
     return undefined
   }
   let bestPool: Swap.Pool | undefined
