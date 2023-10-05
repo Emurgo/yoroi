@@ -7,7 +7,7 @@ import {Quantities} from '../../../utils/quantities'
 import {SwapDiscountTier} from '../../../translators/constants'
 import {makeOrderCalculations} from '../../../helpers/orders/makeOrderCalculations'
 
-export type SwapOrderCalulation = Readonly<{
+export type SwapOrderCalculation = Readonly<{
   pool: Swap.Pool
   prices: {
     base: Balance.Quantity
@@ -39,22 +39,19 @@ export type SwapState = Readonly<{
     }
     slippage: number
     limitPrice?: Balance.Quantity
-    maybeLimitPrice?: Readonly<Balance.Quantity>
     selectedPoolId?: string
-    bestPool?: SwapOrderCalulation
-    calculatedPool?: Readonly<SwapOrderCalulation>
+    bestPool?: SwapOrderCalculation
+    calculatedPool?: SwapOrderCalculation
     pools: ReadonlyArray<Swap.Pool>
-
-    calculations: ReadonlyArray<SwapOrderCalulation>
-
-    // TODO: kind of metadata: - slippage, type, marketPrice should be moved in here too
-    marketPrice: Balance.Quantity
+    calculations: ReadonlyArray<SwapOrderCalculation>
     lpTokenHeld?: Balance.Amount
     // primary token price in terms of sell/buy token
     ptPrices: {
       sell?: Balance.Quantity
       buy?: Balance.Quantity
     }
+    getMaybeLimitPrice: () => Balance.Quantity | undefined
+    getCalculatedPool: () => SwapOrderCalculation | undefined
   }
   unsignedTx: any
 }>
@@ -196,23 +193,10 @@ export const defaultSwapState: SwapState = {
     },
     slippage: 1,
     limitPrice: undefined,
-    get maybeLimitPrice() {
-      return this.type === 'limit' ? this.limitPrice : undefined
-    },
+
     selectedPoolId: undefined,
     bestPool: undefined,
-    get calculatedPool() {
-      return this.type === 'limit' && this.selectedPoolId !== undefined
-        ? this.calculations.find(
-            ({pool}) => pool.poolId === this.selectedPoolId,
-          ) ?? this.bestPool
-        : this.bestPool
-    },
-    get marketPrice() {
-      const pool = this.calculatedPool
 
-      return pool === undefined ? Quantities.zero : pool.prices.market
-    },
     calculations: [] as const,
     lpTokenHeld: undefined,
     ptPrices: {
@@ -220,6 +204,16 @@ export const defaultSwapState: SwapState = {
       buy: '0',
     },
     pools: [] as const,
+    getMaybeLimitPrice: function () {
+      return this.type === 'limit' ? this.limitPrice : undefined
+    },
+    getCalculatedPool: function () {
+      return this.type === 'limit' && this.selectedPoolId !== undefined
+        ? this.calculations.find(
+            ({pool}) => pool.poolId === this.selectedPoolId,
+          ) ?? this.bestPool
+        : this.bestPool
+    },
   },
   unsignedTx: undefined,
 } as const
@@ -271,24 +265,26 @@ const orderReducer = (
 
         draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
 
+        draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
         if (draft.orderData.calculatedPool === undefined) break
 
         draft.orderData.amounts.buy = getBuyAmount(
           draft.orderData.calculatedPool.pool,
           state.orderData.amounts.sell,
-          draft.orderData.maybeLimitPrice,
+          draft.orderData.getMaybeLimitPrice(),
         )
         break
 
       case SwapCreateOrderActionType.SelectedPoolChanged:
         draft.orderData.selectedPoolId = action.poolId
 
+        draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
         if (draft.orderData.calculatedPool === undefined) break
 
         draft.orderData.amounts.buy = getBuyAmount(
           draft.orderData.calculatedPool.pool,
           state.orderData.amounts.sell,
-          state.orderData.maybeLimitPrice,
+          state.orderData.getMaybeLimitPrice(),
         )
         break
 
@@ -327,6 +323,8 @@ const orderReducer = (
         })
 
         draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
+
         if (draft.orderData.calculatedPool === undefined) break
 
         if (
@@ -336,13 +334,13 @@ const orderReducer = (
           draft.orderData.amounts.buy = getBuyAmount(
             draft.orderData.calculatedPool.pool,
             draft.orderData.amounts.sell,
-            draft.orderData.maybeLimitPrice,
+            draft.orderData.getMaybeLimitPrice(),
           )
         } else {
           draft.orderData.amounts.sell = getSellAmount(
             draft.orderData.calculatedPool.pool,
             draft.orderData.amounts.buy,
-            draft.orderData.maybeLimitPrice,
+            draft.orderData.getMaybeLimitPrice(),
           )
         }
         break
@@ -371,6 +369,7 @@ const orderReducer = (
         })
 
         draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
 
         draft.orderData.limitPrice = draft.orderData.bestPool?.prices.market
 
@@ -392,6 +391,7 @@ const orderReducer = (
           lpTokenHeld: state.orderData.lpTokenHeld,
         })
         draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
 
         if (draft.orderData.calculatedPool === undefined) break
 
@@ -418,6 +418,15 @@ const orderReducer = (
           action: 'sell',
         })
         draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
+
+        if (draft.orderData.calculatedPool === undefined) break
+
+        draft.orderData.amounts.buy = getBuyAmount(
+          draft.orderData.calculatedPool.pool,
+          draft.orderData.amounts.sell,
+          draft.orderData.getMaybeLimitPrice(),
+        )
         break
 
       case SwapCreateOrderActionType.BuyQuantityChanged:
@@ -435,6 +444,15 @@ const orderReducer = (
           action: 'buy',
         })
         draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
+
+        if (draft.orderData.calculatedPool === undefined) break
+
+        draft.orderData.amounts.sell = getSellAmount(
+          draft.orderData.calculatedPool.pool,
+          draft.orderData.amounts.buy,
+          draft.orderData.getMaybeLimitPrice(),
+        )
         break
 
       case SwapCreateOrderActionType.SellTokenIdChanged:
@@ -453,6 +471,8 @@ const orderReducer = (
           action: 'sell',
         })
         draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
+
         break
 
       case SwapCreateOrderActionType.BuyTokenIdChanged:
@@ -471,6 +491,8 @@ const orderReducer = (
           action: 'buy',
         })
         draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
+
         break
 
       case SwapCreateOrderActionType.LpTokenHeldChanged:
@@ -487,6 +509,8 @@ const orderReducer = (
           lpTokenHeld: action.amount,
         })
         draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
+
         break
 
       case SwapCreateOrderActionType.PoolPairsChanged:
@@ -502,6 +526,8 @@ const orderReducer = (
           lpTokenHeld: state.orderData.lpTokenHeld,
         })
         draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
+
         break
     }
   })

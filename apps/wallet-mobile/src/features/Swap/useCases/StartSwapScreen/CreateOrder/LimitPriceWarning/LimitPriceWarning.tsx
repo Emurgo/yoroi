@@ -21,7 +21,7 @@ export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningPr
   const {numberLocale} = useLanguage()
   const strings = useStrings()
   const limitPrice = new BigNumber(orderData.limitPrice ?? 0).toFormat(numberLocale)
-  const marketPrice = new BigNumber(orderData.marketPrice).toFormat(numberLocale)
+  const marketPrice = new BigNumber(orderData.calculatedPool?.prices.market ?? 0).toFormat(numberLocale)
   const wallet = useSelectedWallet()
 
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
