@@ -1,6 +1,8 @@
 import {Balance, Swap} from '@yoroi/types'
 
 import {Quantities} from '../../utils/quantities'
+import BigNumber from 'bignumber.js'
+import {getPriceAfterFee} from './getPriceAfterFee'
 import {getSellAmount} from './getSellAmount'
 
 /**
@@ -22,20 +24,33 @@ export const getBestSellPool = (
     return undefined
   }
   let bestPool: Swap.Pool | undefined
-  let bestSellAmount = 0n
+  let bestPrice = new BigNumber(0)
   for (const pool of pools) {
+    const isBuyTokenA = buy.tokenId === pool.tokenA.tokenId
     const sellAmount = getSellAmount(pool, buy)
     if (Quantities.isZero(sellAmount.quantity)) {
       continue
     }
+    const [aAmount, bAmount] = isBuyTokenA
+      ? [buy.quantity, sellAmount.quantity]
+      : [sellAmount.quantity, buy.quantity]
+
+    const price = getPriceAfterFee(
+      pool,
+      aAmount,
+      bAmount,
+      isBuyTokenA ? pool.tokenB.tokenId : pool.tokenA.tokenId,
+    )
+
     if (bestPool === undefined) {
       bestPool = pool
-      bestSellAmount = BigInt(sellAmount.quantity)
+      bestPrice = price
       continue
     }
-    if (BigInt(sellAmount.quantity) < bestSellAmount) {
+
+    if (price < bestPrice) {
       bestPool = pool
-      bestSellAmount = BigInt(sellAmount.quantity)
+      bestPrice = price
     }
   }
   return bestPool

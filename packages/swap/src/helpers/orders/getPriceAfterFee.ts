@@ -9,7 +9,7 @@ import {BalanceQuantity} from '@yoroi/types/src/balance/token'
  * @param pool - The liquidity pool.
  * @param tokenAAmount - Token A amount in an order.
  * @param tokenBAmount - Token B amount in an order.
- * @param tokenId - The token id of the desired sell amount.
+ * @param sellTokenId - The token id of the desired sell amount.
  *
  * @returns The price after fee
  */
@@ -17,21 +17,21 @@ export const getPriceAfterFee = (
   pool: Swap.Pool,
   tokenAAmount: BalanceQuantity,
   tokenBAmount: BalanceQuantity,
-  tokenId: string,
+  sellTokenId: string,
 ): BigNumber => {
-  const isSellTokenA = tokenId === pool.tokenA.tokenId
+  const isSellTokenA = sellTokenId === pool.tokenA.tokenId
 
   const A = new BigNumber(tokenAAmount)
   const B = new BigNumber(tokenBAmount)
 
   const [firstToken, secondToken] = isSellTokenA ? [A, B] : [B, A]
-  const sellTokenPriceLovlace = new BigNumber(
+  const sellTokenPriceLovelace = new BigNumber(
     isSellTokenA ? pool.tokenAPriceLovelace : pool.tokenBPriceLovelace,
   )
 
-  const feeInTokenEquivalent = sellTokenPriceLovlace.isZero()
+  const feeInTokenEquivalent = sellTokenPriceLovelace.isZero()
     ? new BigNumber(0)
-    : new BigNumber(pool.batcherFee.quantity).dividedBy(sellTokenPriceLovlace)
+    : new BigNumber(pool.batcherFee.quantity).dividedBy(sellTokenPriceLovelace)
 
   const firstTokenWithFee = firstToken.plus(feeInTokenEquivalent)
 

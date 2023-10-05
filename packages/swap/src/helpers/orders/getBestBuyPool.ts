@@ -2,6 +2,8 @@ import {Balance, Swap} from '@yoroi/types'
 
 import {Quantities} from '../../utils/quantities'
 import {getBuyAmount} from './getBuyAmount'
+import {getPriceAfterFee} from './getPriceAfterFee'
+import BigNumber from 'bignumber.js'
 
 /**
  * Find the best pool to buy based on the desired sell amount in a liquidity pool.
@@ -22,20 +24,27 @@ export const getBestBuyPool = (
     return undefined
   }
   let bestPool: Swap.Pool | undefined
-  let bestBuyAmount = 0n
+  let bestPrice = new BigNumber(0)
   for (const pool of pools) {
+    const isSellTokenA = sell.tokenId === pool.tokenA.tokenId
     const buyAmount = getBuyAmount(pool, sell)
     if (Quantities.isZero(buyAmount.quantity)) {
       continue
     }
+    const [aAmount, bAmount] = isSellTokenA
+      ? [sell.quantity, buyAmount.quantity]
+      : [buyAmount.quantity, sell.quantity]
+
+    const price = getPriceAfterFee(pool, aAmount, bAmount, sell.tokenId)
     if (bestPool === undefined) {
       bestPool = pool
-      bestBuyAmount = BigInt(buyAmount.quantity)
+      bestPrice = price
       continue
     }
-    if (BigInt(buyAmount.quantity) > bestBuyAmount) {
+
+    if (price < bestPrice) {
       bestPool = pool
-      bestBuyAmount = BigInt(buyAmount.quantity)
+      bestPrice = price
     }
   }
   return bestPool
