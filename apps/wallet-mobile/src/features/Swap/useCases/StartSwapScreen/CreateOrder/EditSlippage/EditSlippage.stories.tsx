@@ -25,7 +25,7 @@ storiesOf('Swap Edit Slippage', module)
   })
   .add('big %', () => {
     const mockSwapStateBigSlippage = produce(mockSwapStateDefault, (draft) => {
-      draft.createOrder.slippage = 99.123456789
+      draft.orderData.slippage = 99.123456789
     })
     return (
       <SelectedWalletProvider wallet={mocks.wallet}>

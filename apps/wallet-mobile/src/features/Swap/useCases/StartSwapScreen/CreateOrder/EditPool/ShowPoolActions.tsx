@@ -23,25 +23,25 @@ import {useSwapTouched} from '../../../../common/SwapFormProvider'
 export const ShowPoolActions = () => {
   const navigateTo = useNavigateTo()
   const {numberLocale} = useLanguage()
-  const {createOrder} = useSwap()
+  const {orderData} = useSwap()
   const strings = useStrings()
   const {isBuyTouched, isSellTouched, isPoolTouched} = useSwapTouched()
-  const {selectedPool, amounts} = createOrder
+  const {calculatedPool, amounts} = orderData
   const wallet = useSelectedWallet()
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
-  if (!isBuyTouched || !isSellTouched || selectedPool === undefined) {
+  if (!isBuyTouched || !isSellTouched || calculatedPool === undefined) {
     return <></>
   }
 
   const totalAmount = Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)
-  const id = selectedPool.poolId
+  const id = calculatedPool.pool.poolId
   const expanded = id === hiddenInfoOpenId
 
-  const poolProviderFormatted = capitalize(selectedPool.provider)
-  const poolStatus = isPoolTouched ? '' : ` ${strings.autoPool}`
+  const poolProviderFormatted = capitalize(calculatedPool.pool.provider)
+  const poolStatus = orderData.type === 'limit' && isPoolTouched ? '' : ` ${strings.autoPool}`
   const poolTitle = `${poolProviderFormatted}${poolStatus}`
 
   return (
@@ -51,7 +51,7 @@ export const ShowPoolActions = () => {
         <Header
           onPressExpand={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
           onPressLabel={() => {
-            if (createOrder.type === 'limit') {
+            if (orderData.type === 'limit') {
               navigateTo.selectPool()
             } else {
               setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)
@@ -60,7 +60,7 @@ export const ShowPoolActions = () => {
           expanded={expanded}
         >
           <View style={styles.flex}>
-            <PoolIcon size={25} providerId={selectedPool.provider} />
+            <PoolIcon size={25} providerId={calculatedPool.pool.provider} />
 
             <Spacer width={10} />
 
@@ -70,14 +70,17 @@ export const ShowPoolActions = () => {
       }
       info={
         <HiddenInfo
-          totalFees={Quantities.format(selectedPool.batcherFee.quantity, Number(wallet.primaryTokenInfo.decimals))}
+          totalFees={Quantities.format(
+            calculatedPool.pool.batcherFee.quantity,
+            Number(wallet.primaryTokenInfo.decimals),
+          )}
           minReceived={getMinAdaReceiveAfterSlippage(
             amounts.buy.quantity,
-            createOrder.slippage,
+            orderData.slippage,
             buyTokenInfo.decimals ?? 0,
             numberLocale,
           )}
-          minAda={Quantities.format(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))}
+          minAda={Quantities.format(calculatedPool.pool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))}
           buyTokenName={tokenName}
         />
       }

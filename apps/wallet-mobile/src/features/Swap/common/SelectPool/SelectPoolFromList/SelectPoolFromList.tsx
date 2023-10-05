@@ -19,15 +19,15 @@ type Props = {
 export const SelectPoolFromList = ({data = []}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {selectedPoolChanged, createOrder} = useSwap()
+  const {selectedPoolChanged, orderData} = useSwap()
   const {poolTouched} = useSwapTouched()
-  const [selectedCardIndex, setSelectedCardIndex] = useState(createOrder.selectedPool?.poolId)
+  const [selectedCardIndex, setSelectedCardIndex] = useState(orderData.selectedPoolId)
   const navigate = useNavigateTo()
   const {track} = useMetrics()
 
   const handleCardSelect = (pool: Swap.Pool) => {
     track.swapPoolChanged()
-    selectedPoolChanged(pool)
+    selectedPoolChanged(pool.poolId)
     setSelectedCardIndex(pool.poolId)
     poolTouched()
     navigate.startSwap()
