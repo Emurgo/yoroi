@@ -19,10 +19,10 @@ export const EditSellAmount = () => {
   const {numberLocale} = useLanguage()
   const inputRef = React.useRef<TextInput>(null)
 
-  const {createOrder, sellAmountChanged} = useSwap()
+  const {orderData, sellQuantityChanged} = useSwap()
   const {isSellTouched} = useSwapTouched()
 
-  const {tokenId, quantity} = createOrder.amounts.sell
+  const {tokenId, quantity} = orderData.amounts.sell
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const {decimals} = tokenInfo
@@ -43,7 +43,7 @@ export const EditSellAmount = () => {
     try {
       const [input, quantity] = Quantities.parseFromText(text, decimals ?? 0, numberLocale)
       setInputValue(text === '' ? text : input)
-      sellAmountChanged({tokenId, quantity})
+      sellQuantityChanged(quantity)
     } catch (error) {
       Logger.error('SwapAmountScreen::onChangeQuantity', error)
     }
@@ -60,7 +60,7 @@ export const EditSellAmount = () => {
       navigateTo={navigate.selectSellToken}
       touched={isSellTouched}
       inputRef={inputRef}
-      inputEditable={createOrder.selectedPool !== undefined}
+      inputEditable={orderData.calculatedPool?.pool !== undefined}
     />
   )
 }

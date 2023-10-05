@@ -178,7 +178,7 @@ const TokenList = () => {
 type SelectableTokenProps = {disabled?: boolean; tokenForList: TokenForList; wallet: YoroiWallet}
 const SelectableToken = ({tokenForList, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
-  const {buyAmountChanged} = useSwap()
+  const {buyTokenIdChanged} = useSwap()
   const {buyTouched} = useSwapTouched()
 
   const navigateTo = useNavigateTo()
@@ -190,7 +190,7 @@ const SelectableToken = ({tokenForList, wallet}: SelectableTokenProps) => {
       to_asset: [{asset_name: tokenForList.name, asset_ticker: tokenForList.ticker, policy_id: tokenForList.group}],
     })
     buyTouched()
-    buyAmountChanged({tokenId: tokenForList.id, quantity: Quantities.zero})
+    buyTokenIdChanged({tokenId: tokenForList.id, pools: []})
     navigateTo.startSwap()
     closeSearch()
   }

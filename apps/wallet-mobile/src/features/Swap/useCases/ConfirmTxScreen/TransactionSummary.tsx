@@ -21,8 +21,8 @@ export const TransactionSummary = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {numberLocale} = useLanguage()
-  const {createOrder} = useSwap()
-  const {amounts, selectedPool} = createOrder
+  const {orderData} = useSwap()
+  const {amounts, calculatedPool} = orderData
 
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
@@ -32,7 +32,7 @@ export const TransactionSummary = () => {
     {
       label: strings.swapMinAdaTitle,
       value: `${Quantities.format(
-        selectedPool?.deposit?.quantity ?? Quantities.zero,
+        calculatedPool?.cost?.deposit?.quantity ?? Quantities.zero,
         Number(wallet.primaryTokenInfo.decimals),
       )} ${wallet.primaryTokenInfo.ticker}`,
       info: strings.swapMinAda,
@@ -41,7 +41,7 @@ export const TransactionSummary = () => {
       label: strings.swapMinReceivedTitle,
       value: `${getMinAdaReceiveAfterSlippage(
         amounts.buy.quantity,
-        createOrder.slippage,
+        orderData.slippage,
         buyTokenInfo.decimals ?? 0,
         numberLocale,
       )} ${tokenToBuyName}`,
@@ -50,7 +50,7 @@ export const TransactionSummary = () => {
     {
       label: strings.swapFeesTitle,
       value: `${Quantities.format(
-        createOrder.selectedPool?.batcherFee?.quantity ?? Quantities.zero,
+        calculatedPool?.cost?.batcherFee?.quantity ?? Quantities.zero, // TODO: Show all fees
         Number(wallet.primaryTokenInfo.decimals),
       )} ${wallet.primaryTokenInfo.ticker}`,
       info: strings.swapFees,

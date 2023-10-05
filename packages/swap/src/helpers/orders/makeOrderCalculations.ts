@@ -1,9 +1,6 @@
 import {Balance, Swap} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
-import {
-  SwapCreateOrderActionType,
-  SwapOrderCalulation,
-} from '../../translators/reactjs/state/state'
+import {SwapOrderCalulation} from '../../translators/reactjs/state/state'
 import {getQuantityWithSlippage} from './getQuantityWithSlippage'
 import {getLiquidityProviderFee} from './getLiquidityProviderFee'
 import {getFrontendFee} from './getFrontendFee'
@@ -11,7 +8,7 @@ import {getMarketPrice} from './getMarketPrice'
 import {getBuyAmount} from './getBuyAmount'
 import {getSellAmount} from './getSellAmount'
 import {asQuantity} from '../../utils/asQuantity'
-import {Quantities} from 'utils/quantities'
+import {Quantities} from '../../utils/quantities'
 
 export const makeOrderCalculations = ({
   orderType,
@@ -29,87 +26,49 @@ export const makeOrderCalculations = ({
     sell: Balance.Amount
     buy: Balance.Amount
   }
-  limitPrice: `${number}` | undefined
+  limitPrice?: Balance.Quantity
   ptPrices: {
-    buy: `${number}` | undefined
-    sell: `${number}` | undefined
+    buy?: Balance.Quantity
+    sell?: Balance.Quantity
   }
-  hasSupply: boolean,
   pools: ReadonlyArray<Swap.Pool>
-  lpTokenHeld: Balance.Amount | undefined
+  lpTokenHeld?: Balance.Amount
   slippage: number
   primaryTokenId: Balance.TokenInfo['id']
-  // TODO: guessing that later it will boils down to 2/3 scenarios
-  action:
-    | SwapCreateOrderActionType.SellQuantityChanged
-    | SwapCreateOrderActionType.BuyQuantityChanged
-    // same bag for now
-    | SwapCreateOrderActionType.SellTokenIdChanged
-    | SwapCreateOrderActionType.BuyTokenIdChanged
-    | SwapCreateOrderActionType.SlippageChanged
-    | SwapCreateOrderActionType.PoolPairsChanged
-    | SwapCreateOrderActionType.OrderTypeChanged
-    | SwapCreateOrderActionType.SwitchTokens
-    | SwapCreateOrderActionType.LimitPriceChanged
-    | SwapCreateOrderActionType.ResetQuantities
-    | SwapCreateOrderActionType.LpTokenHeldChanged
-}>) => {
-  const result: Array<SwapOrderCalulation> = []
+  action?: 'buy' | 'sell'
+}>): Array<SwapOrderCalulation> => {
   const isLimit = orderType === 'limit'
+  const maybeLimitPrice = isLimit ? limitPrice : undefined
 
-  // when changing sell token ?
-  // when changing buy token ?
-  // when changing pool - limit order ?
-  // when changing price - limit order ?
-  // when switching sell/buy
-  // when changing slippage
-  // when changing the lp token held
-  // when reseting quantities
+  return pools.map<SwapOrderCalulation>((pool) => {
+    const buy =
+      action === 'sell'
+        ? getBuyAmount(pool, amounts.sell, maybeLimitPrice)
+        : amounts.buy
+    const sell =
+      action === 'buy'
+        ? getSellAmount(pool, amounts.buy, maybeLimitPrice)
+        : amounts.sell
 
-  pools.forEach((pool) => {
-    // when changing sell quantity, calculate buy quantity based on order type
-    let buy: Balance.Amount | undefined
-    if (action === SwapCreateOrderActionType.SellQuantityChanged) {
-      buy = getBuyAmount(pool, amounts.sell, isLimit ? limitPrice : undefined)
-    }
-    if (buy === undefined) buy = amounts.buy
-
-    // when changing buy quantity, calculate sell quantity based on order type
-    let sell: Balance.Amount | undefined
-    if (action === SwapCreateOrderActionType.BuyQuantityChanged) {
-      sell = getSellAmount(pool, amounts.buy, isLimit ? limitPrice : undefined)
-    }
-    if (sell === undefined) sell = amounts.sell
-
+    const marketPrice = getMarketPrice(pool, sell)
     // recalculate price base, limit is user's input, market from pool
-    let priceBase: string
-    const marketPrice = getMarketPrice(pool, amounts.sell)
-    if (orderType === 'market') {
-      priceBase = marketPrice
-    } else {
-      // NOTE: while editing should never receive undefined or '', undefined = market price, '' = NaN
-      // when switching sell/buy limit is kept
-      priceBase = limitPrice ?? marketPrice
-    }
+    const priceBase = isLimit ? limitPrice ?? marketPrice : marketPrice
 
     // calculate buy quantity with slippage
     const buyAmountWithSlippage: Balance.Amount = {
-      quantity: getQuantityWithSlippage(amounts.buy.quantity, slippage),
-      tokenId: amounts.buy.tokenId,
+      quantity: getQuantityWithSlippage(buy.quantity, slippage),
+      tokenId: buy.tokenId,
     }
 
     // lf is sell side % of quantity ie. XToken 100 * 1% = 1 XToken
-    const liquidityFee: Balance.Amount = getLiquidityProviderFee(
-      pool.fee,
-      amounts.sell,
-    )
+    const liquidityFee: Balance.Amount = getLiquidityProviderFee(pool.fee, sell)
 
     // ffee is based on PT value range + LP holding range (sides may need conversion, when none is PT)
     const frontendFeeInfo = getFrontendFee({
-      sell: amounts.sell,
-      buy: amounts.buy,
+      sell,
+      buy,
       lpTokenHeld,
-      primaryTokenId: primaryTokenId,
+      primaryTokenId,
       sellInPrimaryTokenValue: {
         tokenId: primaryTokenId,
         quantity: asQuantity(
@@ -170,7 +129,7 @@ export const makeOrderCalculations = ({
       poolSupply ?? Quantities.zero,
     )
 
-    const orderCalculation: SwapOrderCalulation = {
+    return {
       cost: {
         batcherFee: pool.batcherFee,
         deposit: pool.deposit,
@@ -182,18 +141,12 @@ export const makeOrderCalculations = ({
       prices: {
         base: priceBase,
         market: marketPrice,
-        withFees: priceWithFees.toString(),
-        withSlippage: priceWithSlippage,
-        withFeesAndSlippage: priceWithFeesAndSlippage,
-        difference: priceDifference,
+        withFees: asQuantity(priceWithFees),
+        withSlippage: asQuantity(priceWithSlippage),
+        withFeesAndSlippage: asQuantity(priceWithFeesAndSlippage),
+        difference: asQuantity(priceDifference),
       },
       pool,
     }
-
-    result.push(orderCalculation)
-
-    // TODO: decide the "best" pool later, we need to define "best", maybe lowest price after fees?
   })
-
-  return result
 }

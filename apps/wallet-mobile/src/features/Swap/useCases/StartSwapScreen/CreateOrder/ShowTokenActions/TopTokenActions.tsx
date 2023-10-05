@@ -13,14 +13,14 @@ import {useSwapTouched} from '../../../../common/SwapFormProvider'
 export const TopTokenActions = () => {
   const strings = useStrings()
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
-  const {createOrder, limitPriceChanged, orderTypeChanged} = useSwap()
+  const {orderData, orderTypeChanged} = useSwap()
   const {isBuyTouched, isSellTouched} = useSwapTouched()
-  const isDisabled = !isBuyTouched || !isSellTouched || createOrder.selectedPool === undefined
-  const orderTypeIndex = createOrder.type === 'market' ? 0 : 1
+  const isDisabled = !isBuyTouched || !isSellTouched || orderData.calculatedPool === undefined
+  const orderTypeIndex = orderData.type === 'market' ? 0 : 1
 
   const {refetch, isLoading} = useSwapPoolsByPair({
-    tokenA: createOrder.amounts.sell.tokenId ?? '',
-    tokenB: createOrder.amounts.buy.tokenId ?? '',
+    tokenA: orderData.amounts.sell.tokenId ?? '',
+    tokenB: orderData.amounts.buy.tokenId ?? '',
   })
 
   const handleSelectOrderType = (index: number) => {
@@ -34,7 +34,7 @@ export const TopTokenActions = () => {
 
   const refresh = () => {
     refetch()
-    limitPriceChanged(createOrder.marketPrice)
+    // limitPriceChanged(orderData.marketPrice)
   }
 
   return (

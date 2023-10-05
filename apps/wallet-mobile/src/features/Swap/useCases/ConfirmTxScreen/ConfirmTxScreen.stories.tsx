@@ -26,7 +26,7 @@ const ConfirmTxWithPasswaordScreen = () => {
         initialState={{
           ...mockSwapStateDefault,
           unsignedTx: walletMocks.yoroiUnsignedTx,
-          createOrder: {...mocks.confirmTx.createOrder},
+          orderData: {...mocks.confirmTx.orderData},
         }}
         swapManager={{
           ...mockSwapManager,
@@ -46,7 +46,7 @@ const ConfirmTxWithOSScreen = () => {
         initialState={{
           ...mockSwapStateDefault,
           unsignedTx: walletMocks.yoroiUnsignedTx,
-          createOrder: {...mocks.confirmTx.createOrder},
+          orderData: {...mocks.confirmTx.orderData},
         }}
         swapManager={{
           ...mockSwapManager,
@@ -66,7 +66,7 @@ const ConfirmTxWithHWcreen = () => {
         initialState={{
           ...mockSwapStateDefault,
           unsignedTx: walletMocks.yoroiUnsignedTx,
-          createOrder: {...mocks.confirmTx.createOrder},
+          orderData: {...mocks.confirmTx.orderData},
         }}
         swapManager={{
           ...mockSwapManager,

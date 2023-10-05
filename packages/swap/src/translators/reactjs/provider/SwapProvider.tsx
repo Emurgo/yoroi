@@ -45,23 +45,14 @@ export const SwapProvider = ({
     orderTypeChanged: (orderType: Swap.OrderType) => {
       dispatch({type: SwapCreateOrderActionType.OrderTypeChanged, orderType})
     },
-    sellAmountChanged: (amount: Balance.Amount) => {
-      dispatch({type: SwapCreateOrderActionType.SellAmountChanged, amount})
-    },
-    buyAmountChanged: (amount: Balance.Amount) => {
-      dispatch({type: SwapCreateOrderActionType.BuyAmountChanged, amount})
-    },
-    selectedPoolChanged: (pool?: Swap.Pool) => {
-      dispatch({type: SwapCreateOrderActionType.SelectedPoolChanged, pool})
+    selectedPoolChanged: (poolId: string) => {
+      dispatch({type: SwapCreateOrderActionType.SelectedPoolChanged, poolId})
     },
     slippageChanged: (newSlippage: number) => {
       dispatch({
         type: SwapCreateOrderActionType.SlippageChanged,
         slippage: newSlippage,
       })
-    },
-    txPayloadChanged: (txPayload: Swap.CreateOrderResponse) => {
-      dispatch({type: SwapCreateOrderActionType.TxPayloadChanged, txPayload})
     },
     switchTokens: () => {
       dispatch({type: SwapCreateOrderActionType.SwitchTokens})

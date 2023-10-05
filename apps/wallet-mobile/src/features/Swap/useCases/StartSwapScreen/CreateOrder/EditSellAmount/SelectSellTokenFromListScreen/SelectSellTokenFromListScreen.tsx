@@ -14,7 +14,6 @@ import {COLORS} from '../../../../../../../theme'
 import {sortTokenInfos} from '../../../../../../../utils'
 import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
 import {useAllTokenInfos, useBalance, useIsWalletEmpty} from '../../../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../../../yoroi-wallets/utils/utils'
 import {filterByFungibility} from '../../../../../../Send/common/filterByFungibility'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {Counter} from '../../../../../common/Counter/Counter'
@@ -84,7 +83,7 @@ const TokenList = () => {
 type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
-  const {sellAmountChanged} = useSwap()
+  const {sellTokenIdChanged} = useSwap()
   const {sellTouched} = useSwapTouched()
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
@@ -96,7 +95,7 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
       from_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
     })
     sellTouched()
-    sellAmountChanged({tokenId: tokenInfo.id, quantity: Quantities.zero})
+    sellTokenIdChanged({tokenId: tokenInfo.id, pools: []})
     navigateTo.startSwap()
     closeSearch()
   }
