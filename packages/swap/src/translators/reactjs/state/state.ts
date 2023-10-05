@@ -30,6 +30,23 @@ export type SwapOrderCalculation = Readonly<{
   }
 }>
 
+const getBestPool = (
+  calculations: ReadonlyArray<SwapOrderCalculation>,
+): SwapOrderCalculation | undefined => {
+  return calculations.reduce(
+    (best, current): SwapOrderCalculation | undefined => {
+      if (!current.hasSupply) return best
+      if (best === undefined) return current
+      if (
+        Quantities.isGreaterThan(best.prices.withFees, current.prices.withFees)
+      )
+        return current
+      return best
+    },
+    undefined as SwapOrderCalculation | undefined,
+  )
+}
+
 export type SwapState = Readonly<{
   orderData: {
     type: Swap.OrderType
@@ -263,7 +280,7 @@ const orderReducer = (
           lpTokenHeld: state.orderData.lpTokenHeld,
         })
 
-        draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.bestPool = getBestPool(draft.orderData.calculations)
 
         draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
         if (draft.orderData.calculatedPool === undefined) break
@@ -302,7 +319,7 @@ const orderReducer = (
           lpTokenHeld: state.orderData.lpTokenHeld,
         })
 
-        draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.bestPool = getBestPool(draft.orderData.calculations)
         break
 
       case SwapCreateOrderActionType.SwitchTokens:
@@ -322,7 +339,7 @@ const orderReducer = (
           lpTokenHeld: state.orderData.lpTokenHeld,
         })
 
-        draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.bestPool = getBestPool(draft.orderData.calculations)
         draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
 
         if (draft.orderData.calculatedPool === undefined) break
@@ -368,7 +385,7 @@ const orderReducer = (
           lpTokenHeld: state.orderData.lpTokenHeld,
         })
 
-        draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.bestPool = getBestPool(draft.orderData.calculations)
         draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
 
         draft.orderData.limitPrice = draft.orderData.bestPool?.prices.market
@@ -390,7 +407,7 @@ const orderReducer = (
           primaryTokenId: '',
           lpTokenHeld: state.orderData.lpTokenHeld,
         })
-        draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.bestPool = getBestPool(draft.orderData.calculations)
         draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
 
         if (draft.orderData.calculatedPool === undefined) break
@@ -417,7 +434,7 @@ const orderReducer = (
           lpTokenHeld: state.orderData.lpTokenHeld,
           action: 'sell',
         })
-        draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.bestPool = getBestPool(draft.orderData.calculations)
         draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
 
         if (draft.orderData.calculatedPool === undefined) break
@@ -443,7 +460,7 @@ const orderReducer = (
           lpTokenHeld: state.orderData.lpTokenHeld,
           action: 'buy',
         })
-        draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.bestPool = getBestPool(draft.orderData.calculations)
         draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
 
         if (draft.orderData.calculatedPool === undefined) break
@@ -470,7 +487,7 @@ const orderReducer = (
           lpTokenHeld: state.orderData.lpTokenHeld,
           action: 'sell',
         })
-        draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.bestPool = getBestPool(draft.orderData.calculations)
         draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
 
         break
@@ -490,7 +507,7 @@ const orderReducer = (
           lpTokenHeld: state.orderData.lpTokenHeld,
           action: 'buy',
         })
-        draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.bestPool = getBestPool(draft.orderData.calculations)
         draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
 
         break
@@ -508,7 +525,7 @@ const orderReducer = (
           primaryTokenId: '',
           lpTokenHeld: action.amount,
         })
-        draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.bestPool = getBestPool(draft.orderData.calculations)
         draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
 
         break
@@ -525,7 +542,7 @@ const orderReducer = (
           primaryTokenId: '',
           lpTokenHeld: state.orderData.lpTokenHeld,
         })
-        draft.orderData.bestPool = draft.orderData.calculations.find(() => true)
+        draft.orderData.bestPool = getBestPool(draft.orderData.calculations)
         draft.orderData.calculatedPool = draft.orderData.getCalculatedPool()
 
         break
