@@ -25,15 +25,15 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {resetForm} = useSend()
-  const {createOrder} = useSwap()
+  const {orderData} = useSwap()
   const {track} = useMetrics()
   const sellTokenInfo = useTokenInfo({
     wallet,
-    tokenId: createOrder.amounts.sell.tokenId,
+    tokenId: orderData.amounts.sell.tokenId,
   })
   const buyTokenInfo = useTokenInfo({
     wallet,
-    tokenId: createOrder.amounts.buy.tokenId,
+    tokenId: orderData.amounts.buy.tokenId,
   })
 
   const handleOnBuy = () => {
@@ -60,8 +60,8 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
         {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
       ],
       to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
-      order_type: createOrder.type,
-      slippage_tolerance: createOrder.slippage,
+      order_type: orderData.type,
+      slippage_tolerance: orderData.slippage,
     })
 
     navigateTo.swap()

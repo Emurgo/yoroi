@@ -35,55 +35,7 @@ describe('SwapProvider', () => {
       result.current.orderTypeChanged('limit')
     })
 
-    expect(result.current.createOrder.type).toBe('limit')
-  })
-
-  it('SellAmountChanged', () => {
-    const wrapper = ({children}: any) => (
-      <QueryClientProvider client={queryClient}>
-        <SwapProvider swapManager={mockSwapManager}>{children}</SwapProvider>
-      </QueryClientProvider>
-    )
-
-    const {result} = renderHook(() => useSwap(), {
-      wrapper,
-    })
-
-    act(() => {
-      result.current.sellAmountChanged({
-        quantity: '1',
-        tokenId: 'policyId.assetName',
-      })
-    })
-
-    expect(result.current.createOrder.amounts.sell.quantity).toBe('1')
-    expect(result.current.createOrder.amounts.sell.tokenId).toBe(
-      'policyId.assetName',
-    )
-  })
-
-  it('BuyAmountChanged', () => {
-    const wrapper = ({children}: any) => (
-      <QueryClientProvider client={queryClient}>
-        <SwapProvider swapManager={mockSwapManager}>{children}</SwapProvider>
-      </QueryClientProvider>
-    )
-
-    const {result} = renderHook(() => useSwap(), {
-      wrapper,
-    })
-
-    act(() => {
-      result.current.buyAmountChanged({
-        quantity: '2',
-        tokenId: 'policyId.assetName',
-      })
-    })
-
-    expect(result.current.createOrder.amounts.buy.quantity).toBe('2')
-    expect(result.current.createOrder.amounts.buy.tokenId).toBe(
-      'policyId.assetName',
-    )
+    expect(result.current.orderData.type).toBe('limit')
   })
 
   it('SelectedPoolChanged', () => {
@@ -99,12 +51,12 @@ describe('SwapProvider', () => {
 
     act(() => {
       result.current.selectedPoolChanged(
-        swapManagerMocks.listPoolsByPairResponse[0]!,
+        swapManagerMocks.listPoolsByPairResponse[0]?.poolId!,
       )
     })
 
-    expect(result.current.createOrder.selectedPool).toEqual(
-      swapManagerMocks.listPoolsByPairResponse[0],
+    expect(result.current.orderData.selectedPoolId).toEqual(
+      swapManagerMocks.listPoolsByPairResponse[0]?.poolId,
     )
   })
 
@@ -123,31 +75,7 @@ describe('SwapProvider', () => {
       result.current.slippageChanged(3)
     })
 
-    expect(result.current.createOrder.slippage).toBe(3)
-  })
-
-  it('TxPayloadChanged', () => {
-    const wrapper = ({children}: any) => (
-      <QueryClientProvider client={queryClient}>
-        <SwapProvider swapManager={mockSwapManager}>{children}</SwapProvider>
-      </QueryClientProvider>
-    )
-
-    const {result} = renderHook(() => useSwap(), {
-      wrapper,
-    })
-
-    act(() => {
-      result.current.txPayloadChanged({
-        contractAddress: 'contractAddress',
-        datum: 'datum',
-        datumHash: 'datumHash',
-      })
-    })
-
-    expect(result.current.createOrder.datum).toBe('datum')
-    expect(result.current.createOrder.address).toBe('contractAddress')
-    expect(result.current.createOrder.datumHash).toBe('datumHash')
+    expect(result.current.orderData.slippage).toBe(3)
   })
 
   it('UnsignedTxChanged', () => {
@@ -185,13 +113,13 @@ describe('SwapProvider', () => {
       result.current.limitPriceChanged('3')
     })
 
-    expect(result.current.createOrder.limitPrice).toBe('3')
+    expect(result.current.orderData.limitPrice).toBe('3')
   })
 
   it('SwitchTokens market', () => {
     const initialState: SwapState = {
-      createOrder: {
-        ...defaultSwapState.createOrder,
+      orderData: {
+        ...defaultSwapState.orderData,
         amounts: {
           sell: {
             quantity: '10',
@@ -201,18 +129,6 @@ describe('SwapProvider', () => {
             quantity: '20',
             tokenId: 'policyId.buy',
           },
-        },
-        selectedPool: {
-          provider: 'sundaeswap',
-          fee: '0.5',
-          batcherFee: {tokenId: '', quantity: '1'},
-          deposit: {tokenId: '', quantity: '1'},
-          lastUpdate: '123',
-          lpToken: {tokenId: '', quantity: '1'},
-          poolId: '1',
-          price: 2,
-          tokenA: {tokenId: 'policyId.sell', quantity: '200'},
-          tokenB: {tokenId: 'policyId.buy', quantity: '100'},
         },
       },
       unsignedTx: undefined,
@@ -233,9 +149,9 @@ describe('SwapProvider', () => {
       result.current.switchTokens()
     })
 
-    expect(result.current.createOrder.amounts).toEqual({
+    expect(result.current.orderData.amounts).toEqual({
       sell: {
-        quantity: '8',
+        quantity: '20',
         tokenId: 'policyId.buy',
       },
       buy: {
@@ -247,8 +163,8 @@ describe('SwapProvider', () => {
 
   it('SwitchTokens limit', () => {
     const initialState: SwapState = {
-      createOrder: {
-        ...defaultSwapState.createOrder,
+      orderData: {
+        ...defaultSwapState.orderData,
         type: 'limit',
         limitPrice: '2',
         amounts: {
@@ -261,18 +177,6 @@ describe('SwapProvider', () => {
             tokenId: 'policyId.buy',
           },
         },
-        selectedPool: {
-          provider: 'sundaeswap',
-          fee: '0.5',
-          batcherFee: {tokenId: '', quantity: '1'},
-          deposit: {tokenId: '', quantity: '1'},
-          lastUpdate: '123',
-          lpToken: {tokenId: '', quantity: '1'},
-          poolId: '1',
-          price: 2,
-          tokenA: {tokenId: 'policyId.sell', quantity: '200'},
-          tokenB: {tokenId: 'policyId.buy', quantity: '100'},
-        },
       },
       unsignedTx: undefined,
     }
@@ -292,9 +196,9 @@ describe('SwapProvider', () => {
       result.current.switchTokens()
     })
 
-    expect(result.current.createOrder.amounts).toEqual({
+    expect(result.current.orderData.amounts).toEqual({
       sell: {
-        quantity: '5',
+        quantity: '20',
         tokenId: 'policyId.buy',
       },
       buy: {
@@ -307,13 +211,13 @@ describe('SwapProvider', () => {
       result.current.switchTokens()
     })
 
-    expect(result.current.createOrder.amounts).toEqual({
+    expect(result.current.orderData.amounts).toEqual({
       sell: {
         quantity: '10',
         tokenId: 'policyId.sell',
       },
       buy: {
-        quantity: '5',
+        quantity: '20',
         tokenId: 'policyId.buy',
       },
     })
@@ -321,8 +225,8 @@ describe('SwapProvider', () => {
 
   it('ResetQuantities', () => {
     const initiState: SwapState = {
-      createOrder: {
-        ...defaultSwapState.createOrder,
+      orderData: {
+        ...defaultSwapState.orderData,
         amounts: {
           sell: {
             quantity: '1',
@@ -333,20 +237,7 @@ describe('SwapProvider', () => {
             tokenId: 'policyId.buy',
           },
         },
-        selectedPool: {
-          provider: 'sundaeswap',
-          fee: '0.5',
-          batcherFee: {tokenId: '', quantity: '1'},
-          deposit: {tokenId: '', quantity: '1'},
-          lastUpdate: '123',
-          lpToken: {tokenId: '', quantity: '1'},
-          poolId: '1',
-          price: 1,
-          tokenA: {tokenId: 'policyId.sell', quantity: '1'},
-          tokenB: {tokenId: 'policyId.buy', quantity: '1'},
-        },
         limitPrice: '3',
-        marketPrice: '1',
       },
       unsignedTx: undefined,
     }
@@ -366,7 +257,7 @@ describe('SwapProvider', () => {
       result.current.resetQuantities()
     })
 
-    expect(result.current.createOrder.amounts).toEqual({
+    expect(result.current.orderData.amounts).toEqual({
       sell: {
         quantity: '0',
         tokenId: 'policyId.sell',
@@ -376,13 +267,13 @@ describe('SwapProvider', () => {
         tokenId: 'policyId.buy',
       },
     })
-    expect(result.current.createOrder.limitPrice).toEqual('1')
+    expect(result.current.orderData.limitPrice).toEqual(undefined)
   })
 
   it('ResetState', () => {
     const initialState: SwapState = {
-      createOrder: {
-        ...defaultSwapState.createOrder,
+      orderData: {
+        ...defaultSwapState.orderData,
         amounts: {
           sell: {
             quantity: '1',
@@ -412,7 +303,7 @@ describe('SwapProvider', () => {
       result.current.resetState()
     })
 
-    expect(result.current.createOrder).toEqual(defaultSwapState.createOrder)
+    expect(result.current.orderData).toEqual(defaultSwapState.orderData)
     expect(result.current.unsignedTx).toBeUndefined()
   })
 })

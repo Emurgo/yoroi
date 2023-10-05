@@ -17,7 +17,7 @@ import {getQuantityWithSlippage} from './getQuantityWithSlippage'
 export const makePossibleMarketOrder = (
   sell: Balance.Amount,
   buy: Balance.Amount,
-  pools: Swap.Pool[],
+  pools: Readonly<Swap.Pool[]>,
   slippage: number,
   address: string,
 ): Swap.CreateOrderData | undefined => {

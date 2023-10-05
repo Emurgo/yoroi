@@ -10,11 +10,11 @@ import {useStrings} from '../../../../../common/strings'
 
 export const SelectPoolFromListScreen = () => {
   const strings = useStrings()
-  const {createOrder} = useSwap()
+  const {orderData} = useSwap()
 
   const {poolList} = useSwapPoolsByPair({
-    tokenA: createOrder.amounts.sell.tokenId,
-    tokenB: createOrder.amounts.buy.tokenId,
+    tokenA: orderData.amounts.sell.tokenId,
+    tokenB: orderData.amounts.buy.tokenId,
   })
   const poolCounter = Array.isArray(poolList) ? poolList.length : 0
 

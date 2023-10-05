@@ -1,11 +1,9 @@
-import {SwapState} from './state'
+import {SwapState, defaultSwapState} from './state'
 
 export const mockSwapStateDefault: SwapState = {
-  createOrder: {
+  orderData: {
+    ...defaultSwapState.orderData,
     type: 'market',
-    address: '',
-    datum: '',
-    datumHash: '',
     amounts: {
       sell: {
         quantity: '0',
@@ -17,20 +15,8 @@ export const mockSwapStateDefault: SwapState = {
       },
     },
     limitPrice: '0',
-    marketPrice: '0',
     slippage: 1,
-    selectedPool: {
-      provider: 'minswap',
-      fee: '',
-      tokenA: {tokenId: '', quantity: '0'},
-      tokenB: {tokenId: '', quantity: '0'},
-      price: 0,
-      batcherFee: {tokenId: '', quantity: '0'},
-      deposit: {tokenId: '', quantity: '0'},
-      poolId: '',
-      lastUpdate: '',
-      lpToken: {tokenId: '', quantity: '0'},
-    },
+    selectedPoolId: undefined,
     calculations: [],
     lpTokenHeld: undefined,
     pools: [],
