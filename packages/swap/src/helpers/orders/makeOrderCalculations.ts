@@ -1,6 +1,6 @@
 import {Balance, Swap} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
-import {SwapOrderCalulation} from '../../translators/reactjs/state/state'
+import {SwapOrderCalculation} from '../../translators/reactjs/state/state'
 import {getQuantityWithSlippage} from './getQuantityWithSlippage'
 import {getLiquidityProviderFee} from './getLiquidityProviderFee'
 import {getFrontendFee} from './getFrontendFee'
@@ -36,11 +36,11 @@ export const makeOrderCalculations = ({
   slippage: number
   primaryTokenId: Balance.TokenInfo['id']
   action?: 'buy' | 'sell'
-}>): Array<SwapOrderCalulation> => {
+}>): Array<SwapOrderCalculation> => {
   const isLimit = orderType === 'limit'
   const maybeLimitPrice = isLimit ? limitPrice : undefined
 
-  return pools.map<SwapOrderCalulation>((pool) => {
+  return pools.map<SwapOrderCalculation>((pool) => {
     const buy =
       action === 'sell'
         ? getBuyAmount(pool, amounts.sell, maybeLimitPrice)
@@ -103,15 +103,19 @@ export const makeOrderCalculations = ({
       .plus(feeInSellSideQuantities.batcherFee)
       .plus(feeInSellSideQuantities.frontendFee)
 
-    const priceWithFees = sellWithFees.dividedBy(buy.quantity)
+    const priceWithFees = Quantities.isZero(buy.quantity)
+      ? new BigNumber(0)
+      : sellWithFees.dividedBy(buy.quantity)
 
-    const priceWithSlippage = new BigNumber(sell.quantity)
-      .dividedBy(buyAmountWithSlippage.quantity)
-      .toString()
+    const priceWithSlippage = Quantities.isZero(buy.quantity)
+      ? Quantities.zero
+      : new BigNumber(sell.quantity)
+          .dividedBy(buyAmountWithSlippage.quantity)
+          .toString()
 
-    const priceWithFeesAndSlippage = sellWithFees
-      .dividedBy(buyAmountWithSlippage.quantity)
-      .toString()
+    const priceWithFeesAndSlippage = Quantities.isZero(buy.quantity)
+      ? Quantities.zero
+      : sellWithFees.dividedBy(buyAmountWithSlippage.quantity).toString()
 
     // always based, if is limit it can lead to a weird percentage
     const priceDifference = priceWithFees

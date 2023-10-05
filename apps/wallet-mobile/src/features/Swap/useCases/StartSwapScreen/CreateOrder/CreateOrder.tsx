@@ -171,9 +171,9 @@ export const CreateOrder = () => {
   }
 
   const handleOnSwap = () => {
-    if (orderData.marketPrice === undefined) return
+    if (orderData.calculatedPool === undefined) return
     if (orderData.type === 'limit' && orderData.limitPrice !== undefined) {
-      const marketPrice = new BigNumber(orderData.marketPrice)
+      const marketPrice = new BigNumber(orderData.calculatedPool.prices.market)
       const limitPrice = new BigNumber(orderData.limitPrice)
 
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
