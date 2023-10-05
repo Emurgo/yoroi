@@ -118,6 +118,25 @@ export const OpenOrders = () => {
     swapNavigation.submittedTx()
   }
 
+  const onRawTxHwConfirm = async ({useUSB = false, orderId}: {useUSB?: boolean; orderId: string}) => {
+    console.log('HW: onRawTxHwConfirm')
+    const order = normalizedOrders.find((o) => o.id === orderId)
+    if (!order || order.owner === undefined || order.utxo === undefined) return
+    const {utxo, owner: bech32Address} = order
+    const collateralUtxo = await getCollateralUtxo()
+    const addressHex = await convertBech32ToHex(bech32Address)
+    const originalCbor = await swapApiOrder.cancel({
+      utxos: {collateral: collateralUtxo, order: utxo},
+      address: addressHex,
+    })
+    const {cbor, signers} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
+    console.log('got cbor')
+    await wallet.signSwapCancellationWithLedger(cbor, useUSB)
+
+    closeBottomSheet()
+    swapNavigation.submittedTx()
+  }
+
   const onOrderCancelConfirm = (id: string) => {
     setBottomSheetState({
       openId: id,
@@ -125,10 +144,7 @@ export const OpenOrders = () => {
       content: (
         <ConfirmRawTx
           onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)}
-          onHWSuccess={() => {
-            closeBottomSheet()
-            swapNavigation.submittedTx()
-          }}
+          onHWSuccess={() => onRawTxHwConfirm({useUSB: false, orderId: id})}
         />
       ),
       height: 400,

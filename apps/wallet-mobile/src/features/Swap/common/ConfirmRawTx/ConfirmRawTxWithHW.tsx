@@ -73,22 +73,19 @@ const Confirm = ({
   transport: TransportType
 }) => {
   const strings = useStrings()
-  const {signAndSubmitTx, isLoading} = useSignWithHwAndSubmitTx(
-    {wallet}, //
-    {signTx: {onSuccess}},
-  )
 
   return (
     <TwoActionView
       title={strings.confirm}
       primaryButton={{
-        disabled: isLoading,
         label: strings.confirm,
-        onPress: () => signAndSubmitTx({unsignedTx: null as any, useUSB: transportType === 'USB'}),
+        onPress: () => {
+          console.log('ConfirmRawTxWithHW.tsx: Confirm: onPress')
+          onSuccess?.()
+        },
       }}
       secondaryButton={{
         label: strings.clear,
-        disabled: isLoading,
         onPress: () => onCancel?.(),
       }}
     >

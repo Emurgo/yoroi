@@ -68,6 +68,7 @@ import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
+import {createSwapCancellationLedgerPayload} from '../../../features/Swap/useCases/StartSwapScreen/ListOrders/helpers'
 type WalletState = {
   lastGeneratedAddressIndex: number
 }
@@ -859,9 +860,26 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       })
     }
 
-    async ledgerSupportsCIP36(useUSB): Promise<boolean> {
+    async ledgerSupportsCIP36(useUSB: boolean): Promise<boolean> {
       if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
       return doesCardanoAppVersionSupportCIP36(await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB))
+    }
+
+    async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {
+      if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
+
+      const payload = await createSwapCancellationLedgerPayload(
+        cbor,
+        this,
+        NETWORK_ID,
+        PROTOCOL_MAGIC,
+        (address: string) => this.getAddressing(address),
+      )
+      console.log('payload', payload)
+
+      const signedLedgerTx = await signTxWithLedger(payload, this.hwDeviceInfo, useUSB)
+
+      // TODO: handle signedLedgerTx
     }
 
     async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {

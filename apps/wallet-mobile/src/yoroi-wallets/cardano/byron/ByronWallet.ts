@@ -801,7 +801,7 @@ export class ByronWallet implements YoroiWallet {
     return Cardano.Wasm.BaseAddress.fromAddress(addr)
   }
 
-  async ledgerSupportsCIP36(useUSB): Promise<boolean> {
+  async ledgerSupportsCIP36(useUSB: boolean): Promise<boolean> {
     if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
     return doesCardanoAppVersionSupportCIP36(await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB))
   }
