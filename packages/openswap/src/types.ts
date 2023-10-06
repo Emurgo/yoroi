@@ -75,12 +75,14 @@ export type Provider =
   | 'minswap'
   | 'sundaeswap'
   | 'wingriders'
+  | 'muesliswap'
   | 'muesliswap_v1'
   | 'muesliswap_v2'
   | 'muesliswap_v3'
   | 'muesliswap_v4'
   | 'vyfi'
   | 'spectrum'
+// | 'muesliswap_clp'
 
 export type Network = 'mainnet' | 'preprod'
 

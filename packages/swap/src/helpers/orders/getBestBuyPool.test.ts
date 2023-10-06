@@ -114,11 +114,12 @@ describe('getBestBuyPool', () => {
 
     const pools = [pool1, pool2, pool3, pool4, pool5, pool6]
     const bestBuyPool = getBestBuyPool(pools, sell)
-    expect(bestBuyPool?.provider).toBe('minswap')
-
     if (bestBuyPool) {
+      expect(bestBuyPool.provider).toBe('minswap')
       const buyAmount = getBuyAmount(bestBuyPool, sell)
       expect(buyAmount.quantity).toBe('693300972')
+    } else {
+      fail('bestBuyPool undefined')
     }
   })
 
@@ -232,11 +233,47 @@ describe('getBestBuyPool', () => {
 
     const pools = [pool1, pool2, pool3, pool4, pool5, pool6]
     const bestBuyPool = getBestBuyPool(pools, sell)
-    expect(bestBuyPool?.provider).toBe('minswap')
-
     if (bestBuyPool) {
+      expect(bestBuyPool.provider).toBe('minswap')
       const buyAmount = getBuyAmount(bestBuyPool, sell)
       expect(buyAmount.quantity).toBe('14336451239')
+    } else {
+      fail('bestBuyPool undefined')
     }
+  })
+
+  it('should return undefined if sell amount is 0', () => {
+    const pool1: Swap.Pool = {
+      tokenA: {quantity: '529504614', tokenId: 'tokenA'},
+      tokenB: {quantity: '7339640354', tokenId: 'tokenB'},
+      ptPriceTokenA: '1',
+      ptPriceTokenB: '0.0695404765',
+      fee: '0.3', // 0.3%
+      provider: 'muesliswap_v2',
+      price: 0,
+      batcherFee: {quantity: '950000', tokenId: ''},
+      deposit: {quantity: '2000000', tokenId: ''},
+      poolId: '0',
+      lpToken: {
+        quantity: '0',
+        tokenId: '0',
+      },
+    }
+
+    const sell: Balance.Amount = {
+      quantity: '0',
+      tokenId: 'tokenA',
+    }
+
+    expect(getBestBuyPool([pool1], sell)).toBeUndefined()
+  })
+
+  it('should return undefined if pools list is empty', () => {
+    const sell: Balance.Amount = {
+      quantity: '1',
+      tokenId: 'tokenA',
+    }
+
+    expect(getBestBuyPool([], sell)).toBeUndefined()
   })
 })

@@ -310,7 +310,7 @@ const getOpenOrders: OpenSwap.OpenOrder[] = [
   },
 ]
 
-const getPools: OpenSwap.Pool[] = [
+const getLiquidityPools: OpenSwap.LiquidityPool[] = [
   {
     provider: 'minswap',
     poolFee: '0.3',
@@ -324,7 +324,7 @@ const getPools: OpenSwap.Pool[] = [
       image: '',
       decimalPlaces: 0,
       status: '',
-      priceAda: '0',
+      priceAda: 0,
     },
     tokenB: {
       amount: '780',
@@ -336,7 +336,7 @@ const getPools: OpenSwap.Pool[] = [
       image: '',
       decimalPlaces: 0,
       status: '',
-      priceAda: '0',
+      priceAda: 0,
     },
     batcherFee: '2000000',
     // depositFee: {
@@ -377,7 +377,7 @@ const getPools: OpenSwap.Pool[] = [
       image: '',
       decimalPlaces: 0,
       status: '',
-      priceAda: '0',
+      priceAda: 0,
     },
     tokenB: {
       amount: '780',
@@ -389,7 +389,7 @@ const getPools: OpenSwap.Pool[] = [
       image: '',
       decimalPlaces: 0,
       status: '',
-      priceAda: '0',
+      priceAda: 0,
     },
     batcherFee: '2000000',
     // depositFee: {
@@ -430,7 +430,7 @@ const getPools: OpenSwap.Pool[] = [
       image: '',
       decimalPlaces: 0,
       status: '',
-      priceAda: '0',
+      priceAda: 0,
     },
     tokenB: {
       amount: '780',
@@ -442,7 +442,7 @@ const getPools: OpenSwap.Pool[] = [
       image: '',
       decimalPlaces: 0,
       status: '',
-      priceAda: '0',
+      priceAda: 0,
     },
     batcherFee: '2000000',
     // depositFee: {
@@ -483,7 +483,7 @@ const getPools: OpenSwap.Pool[] = [
       image: '',
       decimalPlaces: 0,
       status: '',
-      priceAda: '0',
+      priceAda: 0,
     },
     tokenB: {
       amount: '780',
@@ -495,7 +495,7 @@ const getPools: OpenSwap.Pool[] = [
       image: '',
       decimalPlaces: 0,
       status: '',
-      priceAda: '0',
+      priceAda: 0,
     },
     batcherFee: '2000000',
     // depositFee: {
@@ -529,5 +529,5 @@ export const openswapMocks = {
   getTokens,
   getCompletedOrders,
   getOpenOrders,
-  getPools,
+  getLiquidityPools,
 }

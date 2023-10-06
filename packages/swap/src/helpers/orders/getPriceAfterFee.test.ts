@@ -52,4 +52,54 @@ describe('getPriceAfterFee', () => {
     const expected = new BigNumber('14.39254173470077386167')
     expect(result).toStrictEqual(expected)
   })
+
+  it('should return 0 when sell side is 0', () => {
+    const pool = {
+      tokenA: {quantity: '143983812522', tokenId: 'tokenA'},
+      tokenB: {quantity: '2050476716943', tokenId: 'tokenB'},
+      ptPriceTokenA: '0.06954250577',
+      ptPriceTokenB: '1',
+      fee: '0.3', // 0.3%
+      provider: 'minswap',
+      price: 2,
+      batcherFee: {quantity: '1900000', tokenId: ''},
+      deposit: {quantity: '1', tokenId: ''},
+      poolId: '0',
+      lpToken: {
+        quantity: '0',
+        tokenId: '0',
+      },
+    } as Swap.Pool
+    const tokenAAmount = '0'
+    const tokenBAmount = '93613464'
+    const tokenId = 'tokenA'
+    const result = getPriceAfterFee(pool, tokenAAmount, tokenBAmount, tokenId)
+    const expected = new BigNumber(0)
+    expect(result).toStrictEqual(expected)
+  })
+
+  it('should return 0 when buy side is 0', () => {
+    const pool = {
+      tokenA: {quantity: '143983812522', tokenId: 'tokenA'},
+      tokenB: {quantity: '2050476716943', tokenId: 'tokenB'},
+      ptPriceTokenA: '0.06954250577',
+      ptPriceTokenB: '1',
+      fee: '0.3', // 0.3%
+      provider: 'minswap',
+      price: 2,
+      batcherFee: {quantity: '1900000', tokenId: ''},
+      deposit: {quantity: '1', tokenId: ''},
+      poolId: '0',
+      lpToken: {
+        quantity: '0',
+        tokenId: '0',
+      },
+    } as Swap.Pool
+    const tokenAAmount = '10000000000'
+    const tokenBAmount = '0'
+    const tokenId = 'tokenA'
+    const result = getPriceAfterFee(pool, tokenAAmount, tokenBAmount, tokenId)
+    const expected = new BigNumber(0)
+    expect(result).toStrictEqual(expected)
+  })
 })

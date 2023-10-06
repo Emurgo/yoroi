@@ -115,7 +115,9 @@ export const transformersMaker = (
     return balanceToken
   }
 
-  const asYoroiPool = (openswapPool: OpenSwap.Pool): Swap.Pool | null => {
+  const asYoroiPool = (
+    openswapLiquidityPool: OpenSwap.LiquidityPool,
+  ): Swap.Pool | null => {
     const {
       batcherFee,
       poolFee,
@@ -125,15 +127,15 @@ export const transformersMaker = (
       tokenB,
       provider,
       poolId,
-    } = openswapPool
+    } = openswapLiquidityPool
 
     if (provider && !isSupportedProvider(provider)) return null
 
     const pool: Swap.Pool = {
       tokenA: asYoroiAmount(tokenA),
       tokenB: asYoroiAmount(tokenB),
-      ptPriceTokenA: tokenA.priceAda,
-      ptPriceTokenB: tokenB.priceAda,
+      ptPriceTokenA: tokenA.priceAda?.toString() ?? '0',
+      ptPriceTokenB: tokenB.priceAda?.toString() ?? '0',
       deposit: asYoroiAmount({amount: lvlDeposit, address: undefined}),
       lpToken: asYoroiAmount(lpToken),
       batcherFee: asYoroiAmount({amount: batcherFee, address: undefined}),
@@ -175,12 +177,14 @@ export const transformersMaker = (
   /**
    *  Filter out pools that are not supported by Yoroi
    *
-   * @param openswapPools
+   * @param openswapLiquidityPools
    * @returns {Swap.Pool[]}
    */
-  const asYoroiPools = (openswapPools: OpenSwap.Pool[]): Swap.Pool[] => {
-    if (openswapPools?.length > 0)
-      return openswapPools
+  const asYoroiPools = (
+    openswapLiquidityPools: OpenSwap.LiquidityPool[],
+  ): Swap.Pool[] => {
+    if (openswapLiquidityPools?.length > 0)
+      return openswapLiquidityPools
         .map(asYoroiPool)
         .filter((pool): pool is Swap.Pool => pool !== null)
 

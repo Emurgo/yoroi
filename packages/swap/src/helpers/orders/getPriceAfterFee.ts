@@ -1,7 +1,6 @@
-import {Swap} from '@yoroi/types'
+import {Balance, Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
-
-import {BalanceQuantity} from '@yoroi/types/src/balance/token'
+import {Quantities} from '../../utils/quantities'
 
 /**
  * Calculate the price with batcher fee in a liquidity pool.
@@ -15,27 +14,25 @@ import {BalanceQuantity} from '@yoroi/types/src/balance/token'
  */
 export const getPriceAfterFee = (
   pool: Swap.Pool,
-  tokenAAmount: BalanceQuantity,
-  tokenBAmount: BalanceQuantity,
+  quantityA: Balance.Quantity,
+  quantityB: Balance.Quantity,
   sellTokenId: string,
 ): BigNumber => {
+  if (Quantities.isZero(quantityA) || Quantities.isZero(quantityB))
+    return new BigNumber(0)
+
+  const A = new BigNumber(quantityA)
+  const B = new BigNumber(quantityB)
+
   const isSellTokenA = sellTokenId === pool.tokenA.tokenId
+  const [dividend, divisor] = isSellTokenA ? [A, B] : [B, A]
+  const sellPriceInPtTerm = isSellTokenA
+    ? new BigNumber(pool.ptPriceTokenA)
+    : new BigNumber(pool.ptPriceTokenB)
 
-  const A = new BigNumber(tokenAAmount)
-  const B = new BigNumber(tokenBAmount)
-
-  const [firstToken, secondToken] = isSellTokenA ? [A, B] : [B, A]
-  const sellTokenPriceLovelace = new BigNumber(
-    isSellTokenA ? pool.ptPriceTokenA : pool.ptPriceTokenB,
-  )
-
-  const feeInTokenEquivalent = sellTokenPriceLovelace.isZero()
+  const feeInSellTerm = sellPriceInPtTerm.isZero()
     ? new BigNumber(0)
-    : new BigNumber(pool.batcherFee.quantity).dividedBy(sellTokenPriceLovelace)
+    : new BigNumber(pool.batcherFee.quantity).dividedBy(sellPriceInPtTerm)
 
-  const firstTokenWithFee = firstToken.plus(feeInTokenEquivalent)
-
-  return secondToken.isZero()
-    ? new BigNumber(0)
-    : firstTokenWithFee.dividedBy(secondToken)
+  return dividend.plus(feeInSellTerm).dividedBy(divisor)
 }
