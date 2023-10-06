@@ -19,6 +19,7 @@ import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {bech32} from 'bech32'
 
 import {
+  AddressType,
   AddressType as LedgerAddressType,
   AssetGroup as LedgerAssetGroup,
   DeviceOwnedAddress as LedgerDeviceOwnedAddress,
@@ -32,6 +33,7 @@ import {
   TxRequiredSignerType,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import {Addressing, AddressingAddress, Bip44DerivationLevels} from '@emurgo/yoroi-lib'
+import {str_to_path} from '@cardano-foundation/ledgerjs-hw-app-cardano/dist/utils/address'
 
 type Options = {
   bech32Address: string
@@ -681,11 +683,12 @@ export const createSwapCancellationLedgerPayload = async (
           }
           return collateralArray
         }),
-      ttl: await tx
-        .body()
-        .then((b) => b.ttl())
-        .then((n) => n?.toString()),
-      requiredSigners: [{type: TxRequiredSignerType.PATH, path: [harden(1825), harden(1815), harden(0), 0, 0]}],
+      ttl:
+        (await tx
+          .body()
+          .then((b) => b.ttl())
+          .then((n) => n?.toString())) || 10,
+      requiredSigners: [{type: TxRequiredSignerType.PATH, path: [harden(1852), harden(1815), harden(0), 0, 0]}],
       outputs: await transformToLedgerOutputs(CardanoMobile, {
         networkId,
         txOutputs: await tx.body().then((b) => b.outputs()),
@@ -734,6 +737,25 @@ export const transformToLedgerOutputs = async (
     }
 
     const dataHash = (await output.hasDataHash()) ? (await output.dataHash().then((x) => x?.toHex())) ?? '' : undefined
+
+    // result.push({
+    //   amount: await output
+    //     .amount()
+    //     .then((x) => x.coin())
+    //     .then((x) => x.toStr()),
+    //   tokenBundle: await toLedgerTokenBundle(await output.amount().then((x) => x.multiasset())),
+    //   datumHashHex: dataHash,
+    //   destination: {
+    //     type: TxOutputDestinationType.DEVICE_OWNED,
+    //     params: {
+    //       type: AddressType.BASE_PAYMENT_KEY_STAKE_KEY,
+    //       params: {
+    //         spendingPath: str_to_path("1852'/1815'/0'/0/0"),
+    //         stakingPath: str_to_path("1852'/1815'/0'/2/0"),
+    //       },
+    //     },
+    //   },
+    // })
 
     if (changeAddr != null) {
       verifyFromBip44Root(changeAddr.addressing)

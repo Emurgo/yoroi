@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PrivateKey} from '@emurgo/cross-csl-core'
-import {Datum} from '@emurgo/yoroi-lib'
+import {CardanoAddressedUtxo, Datum, RemoteUnspentOutput} from '@emurgo/yoroi-lib'
 import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
 import assert from 'assert'
@@ -39,7 +39,7 @@ import * as api from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
-import {signRawTransaction} from '../common/signatureUtils'
+import {createSignedLedgerSwapCancellationTx, signRawTransaction} from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
@@ -879,7 +879,59 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       const signedLedgerTx = await signTxWithLedger(payload, this.hwDeviceInfo, useUSB)
 
-      // TODO: handle signedLedgerTx
+      console.log('received signature', signedLedgerTx)
+
+      // const tx = await CardanoMobile.Transaction.fromHex(cbor)
+      //
+      // const allUtxos = await this.getAddressedUtxos()
+      // const addressingMap = new Map<RemoteUnspentOutput, CardanoAddressedUtxo>()
+      // console.log('allUtxos', allUtxos)
+      // for (const utxo of allUtxos) {
+      //   addressingMap.set(
+      //     {
+      //       amount: utxo.amount,
+      //       receiver: utxo.receiver,
+      //       txHash: utxo.txHash,
+      //       txIndex: utxo.txIndex,
+      //       utxoId: utxo.utxoId,
+      //       assets: utxo.assets,
+      //     },
+      //     utxo,
+      //   )
+      // }
+      //
+      // const senderUtxos = allUtxos
+      // try {
+      //   const signedTx = await Cardano.buildLedgerSignedTx(
+      //     {senderUtxos, txBuilder: {build: () => tx.body()}} as any,
+      //     signedLedgerTx,
+      //     PURPOSE,
+      //     this.publicKeyHex,
+      //     true,
+      //   )
+      //
+      //   console.log('signedTx', signedTx)
+      //   // await this.submitTransaction(base64)
+      //   const base64 = Buffer.from(signedTx.encodedTx).toString('base64')
+      //   console.log('got base64', base64)
+      //   await this.submitTransaction(base64)
+      // } catch (e) {
+      //   if (e instanceof Error) {
+      //     console.log('error', e)
+      //     console.log('error', e.stack)
+      //   }
+      // }
+
+      const bytes = await createSignedLedgerSwapCancellationTx(
+        cbor,
+        signedLedgerTx.witnesses,
+        PURPOSE,
+        this.publicKeyHex,
+      )
+
+      const base64 = Buffer.from(bytes).toString('base64')
+      console.log('got base64', base64)
+      await this.submitTransaction(base64)
     }
 
     async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
