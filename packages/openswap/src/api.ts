@@ -10,10 +10,11 @@ import {
   CancelOrderRequest,
   CreateOrderRequest,
   Network,
+  Provider,
   TokenAddress,
 } from './types'
 import {axiosClient} from './config'
-import {getPoolsV2} from './poolsV2'
+import {getLiquidityPools, getPoolsPair} from './pools'
 
 export class OpenSwapApi {
   constructor(
@@ -51,16 +52,31 @@ export class OpenSwapApi {
     )
   }
 
-  public async getPools({
+  public async getPoolsPair({
     tokenA,
     tokenB,
   }: {
     tokenA: TokenAddress
     tokenB: TokenAddress
   }) {
-    return getPoolsV2(
+    return getPoolsPair(
       {network: this.network, client: this.client},
       {tokenA, tokenB},
+    )
+  }
+
+  public async getLiquidityPools({
+    tokenA,
+    tokenB,
+    providers,
+  }: {
+    tokenA: string
+    tokenB: string
+    providers: ReadonlyArray<Provider>
+  }) {
+    return getLiquidityPools(
+      {network: this.network, client: this.client},
+      {tokenA, tokenB, providers},
     )
   }
 
@@ -74,4 +90,19 @@ export class OpenSwapApi {
   }
 }
 
-const supportedNetworks: Network[] = ['mainnet', 'preprod']
+export const supportedNetworks: ReadonlyArray<Network> = [
+  'mainnet',
+  'preprod',
+] as const
+
+export const supportedProviders: ReadonlyArray<Provider> = [
+  'minswap',
+  'muesliswap_v1',
+  'muesliswap_v2',
+  'muesliswap_v3',
+  'muesliswap_v4',
+  'spectrum',
+  'sundaeswap',
+  'vyfi',
+  'wingriders',
+] as const

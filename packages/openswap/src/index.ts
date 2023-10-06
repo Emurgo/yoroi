@@ -2,10 +2,10 @@ export * from './api'
 import * as Types from './types'
 
 export namespace OpenSwap {
-  export type Protocol = Types.Protocol
+  export type Provider = Types.Provider
   export type Network = Types.Network
 
-  // Order
+  // Orders
   export type CreateOrderRequest = Types.CreateOrderRequest
   export type CreateOrderResponse = Types.CreateOrderResponse
   export type CancelOrderRequest = Types.CancelOrderRequest
@@ -14,11 +14,13 @@ export namespace OpenSwap {
   export type CompletedOrder = Types.CompletedOrder
   export type CompletedOrderResponse = Types.CompletedOrderResponse
 
-  // Pool
-  export type Pool = Types.PoolV2
-  export type PoolResponse = Types.PoolResponseV2
+  // Pools
+  export type PoolPair = Types.PoolPair
+  export type PoolPairResponse = Types.PoolPairResponse
+  export type LiquidityPool = Types.LiquidityPool
+  export type LiquidityPoolResponse = Types.LiquidityPoolResponse
 
-  // Token
+  // Tokens
   export type Token = Types.Token
   export type TokenResponse = Types.TokenResponse
   export type TokenAddress = Types.TokenAddress
