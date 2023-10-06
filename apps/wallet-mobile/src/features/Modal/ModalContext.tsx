@@ -5,7 +5,6 @@ type ModalState = {
   height: number
   title: string
   content: React.ReactNode
-  isOpen: boolean
 }
 type ModalActions = {
   openModal: (title: ModalState['title'], content: ModalState['content'], height?: ModalState['height']) => void
@@ -33,10 +32,8 @@ export const ModalProvider = ({
   const navigation = useNavigation()
   const actions = React.useRef<ModalActions>({
     closeModal: () => {
-      if (state.isOpen) {
-        dispatch({type: 'close'})
-        navigation.goBack()
-      }
+      dispatch({type: 'close'})
+      navigation.goBack()
     },
     openModal: (title: ModalState['title'], content: ModalState['content'], height?: ModalState['height']) => {
       dispatch({type: 'open', title, content, height})
@@ -56,13 +53,7 @@ type ModalAction =
 const modalReducer = (state: ModalState, action: ModalAction) => {
   switch (action.type) {
     case 'open':
-      return {
-        ...state,
-        isOpen: true,
-        content: action.content,
-        height: action.height ?? defaultState.height,
-        title: action.title,
-      }
+      return {...state, content: action.content, height: action.height ?? defaultState.height, title: action.title}
 
     case 'close':
       return {...defaultState}
@@ -72,4 +63,4 @@ const modalReducer = (state: ModalState, action: ModalAction) => {
   }
 }
 
-const defaultState: ModalState = Object.freeze({content: null, height: 350, title: '', isOpen: false})
+const defaultState: ModalState = Object.freeze({content: undefined, height: 350, title: ''})
