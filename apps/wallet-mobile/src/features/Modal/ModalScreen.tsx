@@ -29,12 +29,16 @@ export const ModalScreen = () => {
   const onResponderMove = ({nativeEvent}: {nativeEvent: NativeTouchEvent}) => {
     if (swipeLocationY < nativeEvent.locationY) {
       const newState = downDirectionCount + 1
-      if (newState > 4) {
+      if (newState > 6) {
         closeModal()
         cleanDirectionCount()
       } else setDownDirectionCount(newState)
     }
     setSwipeLocationY(nativeEvent.locationY)
+  }
+
+  const closeModaltest = () => {
+    closeModal()
   }
 
   return (
@@ -43,7 +47,7 @@ export const ModalScreen = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={150}
     >
-      <Pressable style={styles.backdrop} onPress={closeModal} />
+      <Pressable style={styles.backdrop} onPress={closeModaltest} />
 
       <Animated.View
         style={[
