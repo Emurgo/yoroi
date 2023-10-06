@@ -3,13 +3,13 @@ import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon, Spacer} from '../../../../../../components'
-import {BottomSheetModal} from '../../../../../../components/BottomSheetModal'
+import {useModal} from '../../../../../../features/Modal/ModalContext'
 import {COLORS} from '../../../../../../theme'
 import {useStrings} from '../../../../common/strings'
 
 export const ShowSlippageInfo = () => {
-  const [showInfo, setShowInfo] = React.useState(false)
   const strings = useStrings()
+  const {openModal} = useModal()
 
   return (
     <View style={styles.row}>
@@ -19,15 +19,11 @@ export const ShowSlippageInfo = () => {
 
       <TouchableOpacity
         onPress={() => {
-          setShowInfo(true)
+          openModal(strings.slippageTolerance, <Text style={styles.sheetContent}>{strings.slippageToleranceInfo}</Text>)
         }}
       >
         <Icon.Info size={24} />
       </TouchableOpacity>
-
-      <BottomSheetModal title={strings.slippageTolerance} isOpen={showInfo} onClose={() => setShowInfo(false)}>
-        <Text style={styles.sheetContent}>{strings.slippageToleranceInfo}</Text>
-      </BottomSheetModal>
     </View>
   )
 }
