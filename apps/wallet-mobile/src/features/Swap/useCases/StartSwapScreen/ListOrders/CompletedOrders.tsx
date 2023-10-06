@@ -167,7 +167,7 @@ const HiddenInfo = ({
         },
 
         {
-          label: strings.dex,
+          label: strings.dex.toUpperCase(),
           value: capitalize(provider),
           icon: <PoolIcon providerId={provider} size={23} />,
         },
