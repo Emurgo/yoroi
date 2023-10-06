@@ -248,11 +248,11 @@ export type RemoteTxInfo = {
     // hex
     amount: string
   }>
-  readonly metadata: TxMetadata
   readonly certificates: Array<RemoteCertificateMeta>
   readonly valid_contract?: boolean
   readonly script_size?: number
   readonly collateral_inputs?: Array<RemoteTransactionInput>
+  readonly metadata?: TxMetadata
 }
 export type RawTransaction = Partial<RemoteTxBlockMeta> & RemoteTxInfo
 
