@@ -417,14 +417,14 @@ export type TransactionInfo = {
   tokens: Record<string, Token>
   blockNumber: number
   memo: null | string
-  metadata: TxMetadataInfo
+  metadata?: TxMetadataInfo
 }
 
 export type IOData = {
   address: string
   assets: Array<CardanoTypes.TokenEntry>
   amount: string
-  id: string
+  id?: string
 }
 
 export type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
@@ -454,6 +454,7 @@ export type Transaction = {
     address: string
     amount: string
     assets: Array<BaseAsset>
+    id?: string
   }>
   outputs: Array<{
     address: string
@@ -481,7 +482,7 @@ export type Transaction = {
     assets: Array<BaseAsset>
   }>
   memo: string | null
-  metadata: TxMetadata
+  readonly metadata?: TxMetadata
 }
 
 export type CommonMetadata = {
