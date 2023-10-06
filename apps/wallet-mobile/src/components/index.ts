@@ -1,7 +1,5 @@
 export * from './Analytics'
 export * from './Banner'
-export * from './BottomSheet'
-export * from './BottomSheetModal'
 export * from './Boundary'
 export * from './BulletPointItem'
 export * from './Button'

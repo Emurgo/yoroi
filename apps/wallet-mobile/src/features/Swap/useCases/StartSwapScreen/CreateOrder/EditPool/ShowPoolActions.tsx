@@ -4,13 +4,13 @@ import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {
-  BottomSheetModal,
   ExpandableInfoCard,
   HeaderWrapper,
   HiddenInfoWrapper,
   MainInfoWrapper,
   Spacer,
 } from '../../../../../../components'
+import {useModal} from '../../../../../../features/Modal/ModalContext'
 import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
@@ -117,13 +117,9 @@ const HiddenInfo = ({
   minReceived: string
   buyTokenName: string
 }) => {
-  const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
-    isOpen: false,
-    title: '',
-    content: '',
-  })
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const {openModal} = useModal()
 
   return (
     <View>
@@ -150,24 +146,10 @@ const HiddenInfo = ({
           label={item.label}
           info={item.info}
           onPress={() => {
-            setBottomSheetSate({
-              isOpen: true,
-              title: item.label,
-              content: item.info,
-            })
+            openModal(item.label, <Text style={styles.text}>{item.info}</Text>)
           }}
         />
       ))}
-
-      <BottomSheetModal
-        isOpen={bottomSheetState.isOpen}
-        title={bottomSheetState.title}
-        onClose={() => {
-          setBottomSheetSate({isOpen: false, title: '', content: ''})
-        }}
-      >
-        <Text style={styles.text}>{bottomSheetState.content}</Text>
-      </BottomSheetModal>
     </View>
   )
 }

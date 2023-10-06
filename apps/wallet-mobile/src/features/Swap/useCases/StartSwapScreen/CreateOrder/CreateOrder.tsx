@@ -1,12 +1,13 @@
 import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useMemo} from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer} from '../../../../../components'
 import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
+import {useModal} from '../../../../../features/Modal/ModalContext'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
@@ -34,6 +35,7 @@ export const CreateOrder = () => {
   const {createOrder, selectedPoolChanged, unsignedTxChanged, txPayloadChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
+  const {openModal, closeModal} = useModal()
 
   const sellTokenInfo = useTokenInfo({
     wallet,
@@ -43,7 +45,6 @@ export const CreateOrder = () => {
     wallet,
     tokenId: createOrder.amounts.buy.tokenId,
   })
-  const [showLimitPriceWarning, setShowLimitPriceWarning] = useState(false)
   const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
   const {poolList} = useSwapPoolsByPair({
     tokenA: createOrder.amounts.sell.tokenId ?? '',
@@ -67,7 +68,7 @@ export const CreateOrder = () => {
     onSuccess: (yoroiUnsignedTx) => {
       unsignedTxChanged(yoroiUnsignedTx)
       swap()
-      setShowLimitPriceWarning(false)
+      closeModal()
     },
     onError: (error) => {
       console.log(error)
@@ -180,7 +181,10 @@ export const CreateOrder = () => {
       const limitPrice = new BigNumber(createOrder.limitPrice)
 
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
-        setShowLimitPriceWarning(true)
+        openModal(
+          strings.limitPriceWarningTitle,
+          <LimitPriceWarning onClose={closeModal} onSubmit={createUnsignedSwapTx} />,
+        )
         return
       }
     }
@@ -197,12 +201,6 @@ export const CreateOrder = () => {
       >
         <ScrollView style={styles.scroll}>
           <View style={styles.container}>
-            <LimitPriceWarning
-              open={showLimitPriceWarning}
-              onClose={() => setShowLimitPriceWarning(false)}
-              onSubmit={createUnsignedSwapTx}
-            />
-
             <TopTokenActions />
 
             <EditSellAmount />

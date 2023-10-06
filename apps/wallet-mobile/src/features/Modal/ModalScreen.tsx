@@ -37,27 +37,23 @@ export const ModalScreen = () => {
     setSwipeLocationY(nativeEvent.locationY)
   }
 
-  const closeModaltest = () => {
-    closeModal()
-  }
-
   return (
     <KeyboardAvoidingView
       style={styles.root}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={150}
     >
-      <Pressable style={styles.backdrop} onPress={closeModaltest} />
+      <Pressable style={styles.backdrop} onPress={closeModal} />
 
       <Animated.View
         style={[
           {
-            height: windowHeight,
+            height: height,
             transform: [
               {
                 translateY: current.progress.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [windowHeight, windowHeight - height],
+                  outputRange: [height, windowHeight - 500],
                   extrapolate: 'clamp',
                 }),
               },

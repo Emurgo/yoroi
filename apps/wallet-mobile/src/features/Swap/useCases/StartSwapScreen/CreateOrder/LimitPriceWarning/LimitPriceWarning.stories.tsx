@@ -14,7 +14,7 @@ const Initial = () => {
     <SelectedWalletProvider wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager}>
         <SwapFormProvider>
-          <LimitPriceWarning open />
+          <LimitPriceWarning />
         </SwapFormProvider>
       </SwapProvider>
     </SelectedWalletProvider>

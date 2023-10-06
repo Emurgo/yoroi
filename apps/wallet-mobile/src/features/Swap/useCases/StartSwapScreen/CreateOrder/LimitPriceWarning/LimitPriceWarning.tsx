@@ -4,19 +4,17 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer} from '../../../../../../components'
-import {BottomSheetModal} from '../../../../../../components/BottomSheetModal'
 import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {useStrings} from '../../../../common/strings'
 
 export interface LimitPriceWarningProps {
-  open: boolean
   onClose?: () => void
   onSubmit?: () => void
 }
 
-export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningProps) => {
+export const LimitPriceWarning = ({onClose, onSubmit}: LimitPriceWarningProps) => {
   const {createOrder} = useSwap()
   const {numberLocale} = useLanguage()
   const strings = useStrings()
@@ -32,59 +30,63 @@ export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningPr
   const name = `${tokenToSellName}/${tokenToBuyName}`
 
   return (
-    <BottomSheetModal title={strings.limitPriceWarningTitle} isOpen={open} onClose={onClose}>
-      <View style={styles.container}>
-        <View>
-          <Text>{strings.limitPriceWarningDescription}</Text>
+    <View style={styles.container}>
+      <View>
+        <Text>{strings.limitPriceWarningDescription}</Text>
 
-          <Spacer height={16} />
+        <Spacer height={16} />
 
-          <View style={styles.table}>
-            <View style={styles.row}>
-              <Text style={styles.label}>{strings.limitPriceWarningYourPrice}</Text>
+        <View style={styles.table}>
+          <View style={styles.row}>
+            <Text style={styles.label}>{strings.limitPriceWarningYourPrice}</Text>
 
-              <View style={styles.textWrapper}>
-                <Text style={styles.value}>{limitPrice}</Text>
+            <View style={styles.textWrapper}>
+              <Text style={styles.value}>{limitPrice}</Text>
 
-                <Text style={styles.value}>{name}</Text>
-              </View>
+              <Text style={styles.value}>{name}</Text>
             </View>
+          </View>
 
-            <View style={styles.row}>
-              <Text style={styles.label}>{strings.limitPriceWarningMarketPrice}</Text>
+          <View style={styles.row}>
+            <Text style={styles.label}>{strings.limitPriceWarningMarketPrice}</Text>
 
-              <View style={styles.textWrapper}>
-                <Text style={styles.value}>{marketPrice}</Text>
+            <View style={styles.textWrapper}>
+              <Text style={styles.value}>{marketPrice}</Text>
 
-                <Text style={styles.value}>{name}</Text>
-              </View>
+              <Text style={styles.value}>{name}</Text>
             </View>
           </View>
         </View>
-
-        <View style={styles.buttonsWrapper}>
-          <Button
-            testID="swapCancelButton"
-            outlineShelley
-            title={strings.limitPriceWarningBack}
-            onPress={onClose}
-            containerStyle={styles.buttonContainer}
-          />
-
-          <Button
-            testID="swapConfirmButton"
-            shelleyTheme
-            title={strings.limitPriceWarningConfirm}
-            onPress={onSubmit}
-            containerStyle={styles.buttonContainer}
-          />
-        </View>
       </View>
-    </BottomSheetModal>
+
+      <View style={styles.buttonsWrapper}>
+        <Button
+          testID="swapCancelButton"
+          outlineShelley
+          title={strings.limitPriceWarningBack}
+          onPress={onClose}
+          containerStyle={styles.buttonContainer}
+          block
+        />
+
+        <Button
+          testID="swapConfirmButton"
+          shelleyTheme
+          title={strings.limitPriceWarningConfirm}
+          onPress={onSubmit}
+          containerStyle={styles.buttonContainer}
+          block
+        />
+      </View>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
   buttonContainer: {
     flex: 1,
   },
@@ -93,10 +95,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     gap: 16,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
+    paddingBottom: 16,
   },
   label: {
     fontSize: 16,
