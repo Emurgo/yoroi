@@ -162,8 +162,8 @@ describe('State Actions', () => {
         price: 1,
         tokenA: {tokenId: '', quantity: '1'},
         tokenB: {tokenId: '', quantity: '1'},
-        tokenAPriceLovelace: '1',
-        tokenBPriceLovelace: '1',
+        ptPriceTokenA: '1',
+        ptPriceTokenB: '1',
       },
     }
     const expectedState = produce(mockSwapStateDefault, (draft) => {
@@ -188,8 +188,8 @@ describe('State Actions', () => {
         price: 1,
         tokenA: {tokenId: '', quantity: '1'},
         tokenB: {tokenId: '', quantity: '1'},
-        tokenAPriceLovelace: '1',
-        tokenBPriceLovelace: '1',
+        ptPriceTokenA: '1',
+        ptPriceTokenB: '1',
       },
     }
 

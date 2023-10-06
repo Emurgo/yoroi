@@ -7,8 +7,8 @@ describe('getPriceAfterFee', () => {
     const pool = {
       tokenA: {quantity: '1200400368252', tokenId: 'tokenA'},
       tokenB: {quantity: '11364790709', tokenId: 'tokenB'},
-      tokenAPriceLovelace: '0.03465765134',
-      tokenBPriceLovelace: '3.81247293317',
+      ptPriceTokenA: '0.03465765134',
+      ptPriceTokenB: '3.81247293317',
       fee: '0.3', // 0.3%
       provider: 'minswap',
       price: 2,
@@ -32,8 +32,8 @@ describe('getPriceAfterFee', () => {
     const pool = {
       tokenA: {quantity: '143983812522', tokenId: 'tokenA'},
       tokenB: {quantity: '2050476716943', tokenId: 'tokenB'},
-      tokenAPriceLovelace: '0.06954250577',
-      tokenBPriceLovelace: '1',
+      ptPriceTokenA: '0.06954250577',
+      ptPriceTokenB: '1',
       fee: '0.3', // 0.3%
       provider: 'minswap',
       price: 2,

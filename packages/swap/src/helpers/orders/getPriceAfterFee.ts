@@ -26,7 +26,7 @@ export const getPriceAfterFee = (
 
   const [firstToken, secondToken] = isSellTokenA ? [A, B] : [B, A]
   const sellTokenPriceLovelace = new BigNumber(
-    isSellTokenA ? pool.tokenAPriceLovelace : pool.tokenBPriceLovelace,
+    isSellTokenA ? pool.ptPriceTokenA : pool.ptPriceTokenB,
   )
 
   const feeInTokenEquivalent = sellTokenPriceLovelace.isZero()
