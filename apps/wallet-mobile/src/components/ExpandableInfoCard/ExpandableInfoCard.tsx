@@ -11,7 +11,7 @@ import {Spacer} from '../Spacer'
 export type ExpandableInfoCardProps = {
   info: React.ReactNode
   expanded?: boolean
-  children: React.ReactNode
+  children?: React.ReactNode
   header: React.ReactNode
   footer?: React.ReactNode
   withBoxShadow?: boolean
@@ -32,17 +32,29 @@ export const ExpandableInfoCard = ({
       <View style={[styles.container, withBoxShadow && styles.shadowProp]}>
         {header}
 
-        <Spacer height={8} />
+        {children !== undefined && (
+          <>
+            <Spacer height={8} />
 
-        {children}
+            {children}
+          </>
+        )}
 
-        <Spacer height={8} />
+        {expanded && (
+          <>
+            <Spacer height={8} />
 
-        {expanded && info}
+            {info}
+          </>
+        )}
 
-        {footer != null && footer}
+        {footer !== undefined && (
+          <>
+            <Spacer height={8} />
 
-        <Spacer height={8} />
+            {footer}
+          </>
+        )}
       </View>
 
       <Spacer height={8} />

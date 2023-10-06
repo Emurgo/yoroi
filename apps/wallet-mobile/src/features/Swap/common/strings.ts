@@ -27,11 +27,13 @@ export const useStrings = () => {
     defaultSlippage: intl.formatMessage(messages.defaultSlippage),
     slippageInfo: intl.formatMessage(messages.slippageInfo),
     autoPool: intl.formatMessage(messages.autoPool),
+    changePool: intl.formatMessage(messages.changePool),
     swapMinAda: intl.formatMessage(messages.swapMinAda),
     swapMinAdaTitle: intl.formatMessage(messages.swapMinAdaTitle),
     swapMinReceived: intl.formatMessage(messages.swapMinReceived),
     swapMinReceivedTitle: intl.formatMessage(messages.swapMinReceivedTitle),
     swapFeesTitle: intl.formatMessage(messages.swapFeesTitle),
+    swapLiquidityFee: (fee: string) => intl.formatMessage(messages.swapLiquidityFee, {fee}),
     swapFees: intl.formatMessage(messages.swapFees),
     poolVerification: (pool: string) => intl.formatMessage(messages.poolVerification, {pool}),
     poolVerificationInfo: (pool: string) => intl.formatMessage(messages.poolVerificationInfo, {pool}),
@@ -198,6 +200,10 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.autoPool',
     defaultMessage: '!!!(auto)',
   },
+  changePool: {
+    id: 'swap.swapScreen.changePool',
+    defaultMessage: '!!!change pool',
+  },
   swapMinAda: {
     id: 'swap.swapScreen.swapMinAda',
     defaultMessage:
@@ -214,6 +220,10 @@ export const messages = defineMessages({
   swapFeesTitle: {
     id: 'swap.swapScreen.swapFeesTitle',
     defaultMessage: `!!!Fees`,
+  },
+  swapLiquidityFee: {
+    id: 'swap.swapScreen.swapLiquidityFee',
+    defaultMessage: `!!!Liquidity provider fee ({fee}%)`,
   },
   swapMinReceived: {
     id: 'swap.swapScreen.swapMinReceived',
