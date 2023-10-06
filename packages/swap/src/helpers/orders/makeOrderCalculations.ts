@@ -60,6 +60,15 @@ export const makeOrderCalculations = ({
       tokenId: buy.tokenId,
     }
 
+    const poolSupply =
+      buy.tokenId === pool.tokenA.tokenId
+        ? pool.tokenA.quantity
+        : pool.tokenB.quantity
+    const hasSupply = !Quantities.isGreaterThan(
+      buy.quantity,
+      poolSupply ?? Quantities.zero,
+    )
+
     // lf is sell side % of quantity ie. XToken 100 * 1% = 1 XToken
     const liquidityFee: Balance.Amount = getLiquidityProviderFee(pool.fee, sell)
 
@@ -98,41 +107,57 @@ export const makeOrderCalculations = ({
         .integerValue(BigNumber.ROUND_CEIL),
     }
 
-    // add up all that's being sold in sell terms
-    const sellWithFees = new BigNumber(sell.quantity)
-      .plus(feeInSellSideQuantities.batcherFee)
-      .plus(feeInSellSideQuantities.frontendFee)
-
-    const priceWithFees = Quantities.isZero(buy.quantity)
-      ? new BigNumber(0)
-      : sellWithFees.dividedBy(buy.quantity)
-
-    const priceWithSlippage = Quantities.isZero(buy.quantity)
+    const priceWithSlippage = Quantities.isZero(buyAmountWithSlippage.quantity)
       ? Quantities.zero
-      : new BigNumber(sell.quantity)
-          .dividedBy(buyAmountWithSlippage.quantity)
-          .toString()
+      : asQuantity(
+          new BigNumber(sell.quantity)
+            .dividedBy(buyAmountWithSlippage.quantity)
+            .toString(),
+        )
 
-    const priceWithFeesAndSlippage = Quantities.isZero(buy.quantity)
-      ? Quantities.zero
-      : sellWithFees.dividedBy(buyAmountWithSlippage.quantity).toString()
+    const calculatePricesWithFees = (withFrontendFee?: boolean) => {
+      // add up all that's being sold in sell terms
+      const sellWithBatcher = new BigNumber(sell.quantity).plus(
+        feeInSellSideQuantities.batcherFee,
+      )
+      const sellWithFees = withFrontendFee
+        ? sellWithBatcher.plus(feeInSellSideQuantities.frontendFee)
+        : sellWithBatcher
 
-    // always based, if is limit it can lead to a weird percentage
-    const priceDifference = priceWithFees
-      .minus(priceBase)
-      .dividedBy(priceBase)
-      .times(100)
-      .toString()
+      const priceWithFees = Quantities.isZero(buy.quantity)
+        ? new BigNumber(0)
+        : sellWithFees.dividedBy(buy.quantity)
 
-    const poolSupply =
-      buy.tokenId === pool.tokenA.tokenId
-        ? pool.tokenA.quantity
-        : pool.tokenB.quantity
-    const hasSupply = !Quantities.isGreaterThan(
-      buy.quantity,
-      poolSupply ?? Quantities.zero,
-    )
+      const priceWithFeesAndSlippage = Quantities.isZero(
+        buyAmountWithSlippage.quantity,
+      )
+        ? Quantities.zero
+        : sellWithFees.dividedBy(buyAmountWithSlippage.quantity).toString()
 
+      // always based, if is limit it can lead to a weird percentage
+      const priceDifference = priceWithFees
+        .minus(priceBase)
+        .dividedBy(priceBase)
+        .times(100)
+        .toString()
+
+      return {
+        priceWithFees: asQuantity(priceWithFees),
+        priceWithFeesAndSlippage: asQuantity(priceWithFeesAndSlippage),
+        priceDifference: asQuantity(priceDifference),
+      }
+    }
+
+    const {
+      priceWithFees: withFees,
+      priceWithFeesAndSlippage: withFeesAndSlippage,
+      priceDifference: difference,
+    } = calculatePricesWithFees(true)
+    const {
+      priceWithFees: withFeesNoFEF,
+      priceWithFeesAndSlippage: withFeesAndSlippageNoFEF,
+      priceDifference: differenceNoFEF,
+    } = calculatePricesWithFees(false)
     return {
       cost: {
         batcherFee: pool.batcherFee,
@@ -145,10 +170,13 @@ export const makeOrderCalculations = ({
       prices: {
         base: priceBase,
         market: marketPrice,
-        withFees: asQuantity(priceWithFees),
-        withSlippage: asQuantity(priceWithSlippage),
-        withFeesAndSlippage: asQuantity(priceWithFeesAndSlippage),
-        difference: asQuantity(priceDifference),
+        withSlippage: priceWithSlippage,
+        withFees,
+        withFeesAndSlippage,
+        difference,
+        withFeesNoFEF,
+        withFeesAndSlippageNoFEF,
+        differenceNoFEF,
       },
       pool,
     }
