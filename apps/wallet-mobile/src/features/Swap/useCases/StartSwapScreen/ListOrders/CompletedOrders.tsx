@@ -1,6 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {useSwapOrdersByStatusCompleted} from '@yoroi/swap'
+import {Swap} from '@yoroi/types'
 import _ from 'lodash'
+import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -15,15 +16,27 @@ import {
   Text,
   TokenIcon,
 } from '../../../../../components'
-import {useLanguage} from '../../../../../i18n'
 import {useMetrics} from '../../../../../metrics/metricsManager'
-import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {Counter} from '../../../common/Counter/Counter'
+import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {mapOrders} from './mapOrders'
+import {mapCompleteOrders} from './mapOrders'
+
+const findCompletedOrderTx = (transactions: TransactionInfo[]): TransactionInfo[] => {
+  const sendTransactions = transactions.filter((tx) => tx.direction === 'SENT')
+  const receivedTransactions = transactions.filter((tx) => tx.direction === 'RECEIVED')
+
+  const filteredTx = sendTransactions.filter((sentTx) => {
+    return receivedTransactions.filter((receivedTx) => {
+      return sentTx.id === receivedTx.inputs[1]?.id?.slice(0, -1)
+    })
+  })
+  return filteredTx
+}
 
 export const CompletedOrders = () => {
   const strings = useStrings()
@@ -31,11 +44,10 @@ export const CompletedOrders = () => {
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
   const transactionsInfos = useTransactionInfos(wallet)
-  const {search} = useSearch()
-  const {numberLocale} = useLanguage()
-  const intl = useIntl()
 
-  const orders = useSwapOrdersByStatusCompleted()
+  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos))
+
+  const intl = useIntl()
 
   const {track} = useMetrics()
 
@@ -45,51 +57,34 @@ export const CompletedOrders = () => {
     }, [track]),
   )
 
-  const tokenIds = React.useMemo(() => _.uniq(orders.flatMap((o) => [o.from.tokenId, o.to.tokenId])), [orders])
-  const tokenInfos = useTokenInfos({wallet, tokenIds})
-  const normalizedOrders = React.useMemo(
-    () => mapOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos)),
-    [orders, tokenInfos, numberLocale, transactionsInfos],
-  )
-
-  const filteredOrders = React.useMemo(
-    () =>
-      normalizedOrders.filter((order) => {
-        const searchLower = search.toLocaleLowerCase()
-        return (
-          order.assetFromLabel.toLocaleLowerCase().includes(searchLower) ||
-          order.assetToLabel.toLocaleLowerCase().includes(searchLower)
-        )
-      }),
-    [normalizedOrders, search],
-  )
+  const normalizedOrders = mapCompleteOrders(completeOrders, wallet)
 
   return (
     <>
       <ScrollView style={styles.container}>
-        {filteredOrders.map((order) => {
-          const id = `${order.assetFromLabel}-${order.assetToLabel}-${order.date}`
+        {normalizedOrders?.map((order) => {
+          const id = order.id
           const expanded = id === hiddenInfoOpenId
-          const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
-          const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
+          const sellIcon = <TokenIcon wallet={wallet} tokenId={order.sellTokenId} variant="swap" />
+          const buyIcon = <TokenIcon wallet={wallet} tokenId={order.buyTokenId} variant="swap" />
           return (
             <ExpandableInfoCard
-              key={`${order.assetFromLabel}-${order.assetToLabel}-${order.date}`}
+              key={id}
               info={
                 <HiddenInfo
-                  txId={order.txId}
-                  total={`${order.total} ${order.assetFromLabel}`}
+                  txId={order.id}
+                  total={`${order.buyQuantity} ${order.buyLabel}`}
                   txLink={order.txLink}
-                  date={intl.formatDate(new Date(order.date), {dateStyle: 'short', timeStyle: 'short'})}
+                  provider={order.provider}
                 />
               }
               header={
                 <Header
                   onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
-                  assetFromLabel={order.assetFromLabel}
-                  assetToLabel={order.assetToLabel}
-                  assetFromIcon={fromIcon}
-                  assetToIcon={toIcon}
+                  assetFromLabel={order.sellLabel}
+                  assetToLabel={order.buyLabel}
+                  assetFromIcon={sellIcon}
+                  assetToIcon={buyIcon}
                   expanded={expanded}
                 />
               }
@@ -97,15 +92,17 @@ export const CompletedOrders = () => {
               withBoxShadow
             >
               <MainInfo
-                tokenAmount={`${order.tokenAmount} ${order.assetToLabel}`}
-                tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
+                tokenPrice={order.tokenPrice}
+                sellLabel={order.sellLabel}
+                tokenAmount={`${order.sellQuantity} ${order.sellLabel}`}
+                txTimeCreated={intl.formatDate(new Date(order.date), {dateStyle: 'short', timeStyle: 'short'})}
               />
             </ExpandableInfoCard>
           )
         })}
       </ScrollView>
 
-      <Counter counter={orders?.length ?? 0} customText={strings.listCompletedOrders} />
+      <Counter counter={normalizedOrders?.length ?? 0} customText={strings.listCompletedOrders} />
     </>
   )
 }
@@ -148,7 +145,17 @@ const Header = ({
   )
 }
 
-const HiddenInfo = ({total, date, txId, txLink}: {total: string; date: string; txId: string; txLink: string}) => {
+const HiddenInfo = ({
+  total,
+  txId,
+  txLink,
+  provider,
+}: {
+  total: string
+  txId: string
+  txLink: string
+  provider: Swap.PoolProvider
+}) => {
   const shortenedTxId = `${txId.substring(0, 9)}...${txId.substring(txId.length - 4, txId.length)}`
   const strings = useStrings()
   return (
@@ -160,29 +167,41 @@ const HiddenInfo = ({total, date, txId, txLink}: {total: string; date: string; t
         },
 
         {
-          label: strings.listOrdersTimeCreated,
-          value: date,
+          label: strings.dex,
+          value: capitalize(provider),
+          icon: <PoolIcon providerId={provider} size={23} />,
         },
         {
           label: strings.listOrdersTxId,
           value: <TxLink txId={shortenedTxId} txLink={txLink} />,
         },
       ].map((item) => (
-        <HiddenInfoWrapper key={item.label} value={item.value} label={item.label} />
+        <HiddenInfoWrapper key={item.label} value={item.value} label={item.label} icon={item.icon} />
       ))}
     </View>
   )
 }
 
-const MainInfo = ({tokenPrice, tokenAmount}: {tokenPrice: string; tokenAmount: string}) => {
+const MainInfo = ({
+  tokenPrice,
+  tokenAmount,
+  sellLabel,
+  txTimeCreated,
+}: {
+  tokenPrice: string
+  sellLabel: string
+  tokenAmount: string
+  txTimeCreated: string
+}) => {
   const strings = useStrings()
   return (
     <View>
       {[
-        {label: strings.listOrdersSheetAssetPrice, value: tokenPrice},
+        {label: strings.listOrdersSheetAssetPrice, value: `${tokenPrice} ${sellLabel}`},
         {label: strings.listOrdersSheetAssetAmount, value: tokenAmount},
+        {label: strings.listOrdersTimeCreated, value: txTimeCreated},
       ].map((item, index) => (
-        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />
+        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 2} />
       ))}
     </View>
   )
@@ -215,6 +234,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.WHITE,
     paddingTop: 10,
+    paddingHorizontal: 16,
   },
   flex: {
     flex: 1,

@@ -248,6 +248,7 @@ export type RemoteTxInfo = {
     // hex
     amount: string
   }>
+  readonly metadata: TxMetadata
   readonly certificates: Array<RemoteCertificateMeta>
   readonly valid_contract?: boolean
   readonly script_size?: number
@@ -397,6 +398,9 @@ export const TRANSACTION_STATUS = {
 }
 export type TransactionStatus = (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
 
+export type TxMetadata = Array<{label: string; map_json: {msg: Array<string>}}>
+export type TxMetadataInfo = any
+
 export type TransactionInfo = {
   id: string
   inputs: Array<IOData>
@@ -413,12 +417,14 @@ export type TransactionInfo = {
   tokens: Record<string, Token>
   blockNumber: number
   memo: null | string
+  metadata: TxMetadataInfo
 }
 
 export type IOData = {
   address: string
   assets: Array<CardanoTypes.TokenEntry>
   amount: string
+  id: string
 }
 
 export type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
@@ -475,6 +481,7 @@ export type Transaction = {
     assets: Array<BaseAsset>
   }>
   memo: string | null
+  metadata: TxMetadata
 }
 
 export type CommonMetadata = {

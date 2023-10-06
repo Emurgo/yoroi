@@ -83,11 +83,13 @@ export const HiddenInfoWrapper = ({
   info,
   onPress,
   value,
+  icon,
 }: {
   label: string
   info?: React.ReactNode
   onPress?: () => void
   value: React.ReactNode
+  icon?: React.ReactNode
 }) => {
   return (
     <View>
@@ -104,7 +106,17 @@ export const HiddenInfoWrapper = ({
           )}
         </View>
 
-        {isString(value) ? <Text style={styles.text}>{value}</Text> : value}
+        {isString(value) ? (
+          <View style={styles.flex}>
+            {icon !== undefined && icon}
+
+            <Spacer width={6} />
+
+            <Text style={styles.text}>{value}</Text>
+          </View>
+        ) : (
+          value
+        )}
       </View>
 
       <Spacer height={8} />

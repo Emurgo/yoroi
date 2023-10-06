@@ -4,12 +4,28 @@ import {Balance, Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {NumberLocale} from '../../../../../i18n/languages'
+import {NETWORK_CONFIG} from '../../../../../yoroi-wallets/cardano/constants/mainnet/constants'
+import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
+import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 
 const MAX_DECIMALS = 10
 
-export type MappedOrder = {
+export type MappedCompleteOrder = {
+  id: string
+  provider: Swap.PoolProvider
+  date: string
+  tokenPrice: string
+  sellLabel: string
+  sellQuantity: string
+  sellTokenId: string
+  buyLabel: string
+  buyQuantity: string
+  buyTokenId: string
+  txLink: string
+}
+export type MappedOpenOrder = {
   owner: string | undefined
   utxo: string | undefined
   tokenPrice: string
@@ -30,12 +46,65 @@ export type MappedOrder = {
   to: Balance.Amount
 }
 
-export const mapOrders = (
+export const mapCompleteOrders = (orders: TransactionInfo[], wallet: YoroiWallet): Array<MappedCompleteOrder> => {
+  if (orders.length === 0) return []
+  const result = orders
+    .map((order) => {
+      let metadata: {
+        buyTokenId: string
+        sellTokenId: string
+        sellQuantity: Balance.Quantity
+        buyQuantity: Balance.Quantity
+        provider: string
+      }
+
+      try {
+        metadata = JSON.parse(order.metadata)
+
+        const buyTokenInfo = useTokenInfo({wallet, tokenId: metadata.buyTokenId})
+        const sellTokenInfo = useTokenInfo({wallet, tokenId: metadata.sellTokenId})
+
+        const buyLabel = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
+        const sellLabel = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
+
+        const txLink = NETWORK_CONFIG.EXPLORER_URL_FOR_TX(order.id)
+        const tokenPrice = asQuantity(new BigNumber(metadata.sellQuantity).dividedBy(metadata.buyQuantity).toString())
+
+        const formattedBuyQuantity = Quantities.format(metadata.buyQuantity, buyTokenInfo.decimals ?? 0)
+        const formattedSellQuantity = Quantities.format(metadata.sellQuantity, sellTokenInfo.decimals ?? 0)
+
+        return {
+          id: order.id,
+          provider: metadata.provider,
+          date: order?.lastUpdatedAt,
+          sellLabel,
+          sellQuantity: formattedSellQuantity,
+          sellTokenId: sellTokenInfo.id,
+          buyLabel,
+          buyQuantity: formattedBuyQuantity,
+          buyTokenId: buyTokenInfo.id,
+          txLink,
+          tokenPrice: Quantities.format(tokenPrice, sellTokenInfo.decimals ?? 0, MAX_DECIMALS),
+        }
+      } catch (error) {
+        console.error('Error parsing JSON: ', error)
+      }
+
+      return []
+    })
+    .filter((order): order is MappedCompleteOrder => {
+      return order !== undefined && Object.keys(order).length > 0
+    })
+
+  return result
+}
+
+export const mapOpenOrders = (
   orders: Array<Swap.OpenOrder | Swap.CompletedOrder>,
   tokenInfos: Balance.TokenInfo[],
   numberLocale: NumberLocale,
   transactionInfos: TransactionInfo[],
-): Array<MappedOrder> => {
+): Array<MappedOpenOrder> => {
   if (orders.length === 0) return []
 
   return orders.map((order: Swap.OpenOrder | Swap.CompletedOrder) => {
@@ -44,7 +113,7 @@ export const mapOrders = (
     const txIdComplete = 'txHash' in order ? order.txHash : undefined
     const txId = txIdComplete ?? txIdOpen ?? ''
     const id = `${from.tokenId}-${to.tokenId}-${txId}`
-    const txLink = `https://cardanoscan.io/transaction/${txId}` // FIX: this should come from the wallet (preprod/mainnet) explorers
+    const txLink = NETWORK_CONFIG.EXPLORER_URL_FOR_TX(txId)
 
     const txInfo = transactionInfos.find((tx) => tx.id === txId)
     const submittedAt = txInfo?.submittedAt
