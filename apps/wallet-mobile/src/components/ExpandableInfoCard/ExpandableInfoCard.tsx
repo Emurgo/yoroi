@@ -108,9 +108,13 @@ export const HiddenInfoWrapper = ({
 
         {isString(value) ? (
           <View style={styles.flex}>
-            {icon !== undefined && icon}
+            {icon !== undefined && (
+              <View style={styles.flex}>
+                {icon}
 
-            <Spacer width={6} />
+                <Spacer width={6} />
+              </View>
+            )}
 
             <Text style={styles.text}>{value}</Text>
           </View>
