@@ -11,12 +11,12 @@ export const mocks = {
       ...mockSwapStateDefault.orderData,
       amounts: {
         buy: {
-          quantity: asQuantity(20467572) as `${number}`,
+          quantity: asQuantity(20467572),
           tokenId: '208a2ca888886921513cb777bb832a8dc685c04de990480151f12150.53484942414441',
         },
         sell: {quantity: asQuantity(2000000), tokenId: ''},
       },
-      limitPrice: '0.089' as `${number}`,
+      limitPrice: '0.089',
       selectedPool: '0029cb7c88c7567b63d1a512c0ed626aa169688ec980730c0473b913.702083',
       pools: [
         {

@@ -42,6 +42,10 @@ export const ShowPoolActions = () => {
     Quantities.sum([calculatedPool.cost.batcherFee.quantity, calculatedPool.cost.frontendFeeInfo.fee.quantity]),
     Number(wallet.primaryTokenInfo.decimals),
   )
+  const header = `${strings.total}: ${Quantities.format(
+    amounts.sell.quantity,
+    sellTokenInfo.decimals ?? 0,
+  )} ${sellTokenName} + ${totalFees} ${wallet.primaryTokenInfo.ticker}`
   const id = calculatedPool.pool.poolId
   const expanded = id === hiddenInfoOpenId
 
@@ -74,10 +78,7 @@ export const ShowPoolActions = () => {
         header={
           <HeaderWrapper expanded={expanded} onPress={handlePress}>
             <TouchableOpacity onPress={handlePress}>
-              <Text style={styles.bold}>{`${strings.total}: ${Quantities.format(
-                amounts.sell.quantity,
-                sellTokenInfo.decimals ?? 0,
-              )} ${sellTokenName} + ${totalFees} ${wallet.primaryTokenInfo.ticker}`}</Text>
+              <Text style={styles.bold}>{header}</Text>
             </TouchableOpacity>
           </HeaderWrapper>
         }
