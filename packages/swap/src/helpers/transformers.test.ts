@@ -118,6 +118,16 @@ describe('asYoroiAmount', () => {
     })
   })
 
+  it('success nameless token', () => {
+    const result = transformers.asYoroiAmount({
+      token: 'c04f4200502a998e9eebafac0291a1f38008de3fe146d136946d8f4b',
+    })
+    expect(result).toEqual<Balance.Amount>({
+      quantity: '0',
+      tokenId: 'c04f4200502a998e9eebafac0291a1f38008de3fe146d136946d8f4b.',
+    })
+  })
+
   it('success (lovelace) primary token', () => {
     const result = transformers.asYoroiAmount({
       amount: '1000000',

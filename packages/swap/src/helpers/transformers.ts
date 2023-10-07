@@ -5,6 +5,7 @@ import {isString} from '@yoroi/common'
 
 import {Quantities} from '../utils/quantities'
 import {supportedProviders} from '../translators/constants'
+import {asQuantity} from '../utils/asQuantity'
 
 export const transformersMaker = (
   primaryTokenId: Balance.Token['info']['id'],
@@ -134,8 +135,8 @@ export const transformersMaker = (
     const pool: Swap.Pool = {
       tokenA: asYoroiAmount(tokenA),
       tokenB: asYoroiAmount(tokenB),
-      ptPriceTokenA: tokenA.priceAda?.toString() ?? '0',
-      ptPriceTokenB: tokenB.priceAda?.toString() ?? '0',
+      ptPriceTokenA: tokenA.priceAda.toString(),
+      ptPriceTokenB: tokenB.priceAda.toString(),
       deposit: asYoroiAmount({amount: lvlDeposit, address: undefined}),
       lpToken: asYoroiAmount(lpToken),
       batcherFee: asYoroiAmount({amount: batcherFee, address: undefined}),
@@ -152,26 +153,31 @@ export const transformersMaker = (
       policyId: string
       name: string
     }
+    // openswap is inconsistent about ADA
+    // sometimes is '.', '' or 'lovelace'
     token?: string
     amount?: string
   }): Balance.Amount => {
-    if (isString(openswapAmount?.amount)) {
-      // openswap is inconsistent about ADA
-      // sometimes is '.', '' or 'lovelace'
-      const {amount, address, token} = openswapAmount
-      const [policyId, name = ''] =
-        address == null
-          ? token?.split('.') ?? (['', ''] as [string, string?])
-          : [address.policyId, address.name]
-      return {
-        quantity: amount as Balance.Quantity,
-        tokenId: asYoroiTokenId({
-          policyId: policyId ?? '',
-          name: name ?? '',
-        }),
-      } as const
+    const {amount, address, token} = openswapAmount ?? {}
+
+    let policyId = ''
+    let name = ''
+
+    if (address) {
+      policyId = address.policyId
+      name = address.name
+    } else if (isString(token)) {
+      const tokenParts = token.split('.') as [string, string?]
+      policyId = tokenParts[0]
+      name = tokenParts[1] ?? ''
     }
-    return {quantity: Quantities.zero, tokenId: ''} as const
+
+    const yoroiAmount: Balance.Amount = {
+      quantity: asQuantity(amount ?? Quantities.zero),
+      tokenId: asYoroiTokenId({policyId, name}),
+    } as const
+
+    return yoroiAmount
   }
 
   /**
