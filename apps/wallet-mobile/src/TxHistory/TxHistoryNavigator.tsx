@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import {swapApiMaker, swapManagerMaker, SwapProvider, swapStorageMaker} from '@yoroi/swap'
+import {supportedProviders, swapApiMaker, swapManagerMaker, SwapProvider, swapStorageMaker} from '@yoroi/swap'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
@@ -53,6 +53,7 @@ export const TxHistoryNavigator = () => {
         isMainnet: wallet.networkId !== 300,
         stakingKey,
         primaryTokenId: wallet.primaryTokenInfo.id,
+        supportedProviders,
       }),
     [wallet.networkId, stakingKey, wallet.primaryTokenInfo.id],
   )
