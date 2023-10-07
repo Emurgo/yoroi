@@ -8,7 +8,7 @@ export type CancelOrderRequest = {
 
 export type CreateOrderRequest = {
   walletAddress: string
-  protocol: Protocol
+  protocol: Provider // only in the CreateOrder they call provider as protocol
   poolId?: string // only required for SundaeSwap trades.
   sell: {
     policyId: string
@@ -27,7 +27,7 @@ export type CreateOrderResponse =
   | {status: 'success'; hash: string; datum: string; address: string}
 
 export type OpenOrder = {
-  provider: Protocol
+  provider: Provider
   owner: string
   from: {
     amount: string
@@ -71,30 +71,24 @@ export type CompletedOrder = {
 }
 export type CompletedOrderResponse = CompletedOrder[]
 
-export type Protocol =
+export type Provider =
   | 'minswap'
   | 'sundaeswap'
   | 'wingriders'
+  | 'muesliswap'
   | 'muesliswap_v1'
   | 'muesliswap_v2'
   | 'muesliswap_v3'
   | 'muesliswap_v4'
   | 'vyfi'
   | 'spectrum'
+// | 'muesliswap_clp'
 
 export type Network = 'mainnet' | 'preprod'
 
-export type Pool = {
-  provider:
-    | 'minswap'
-    | 'sundaeswap'
-    | 'wingriders'
-    | 'muesliswap_v1'
-    | 'muesliswap_v2'
-    | 'muesliswap_v3'
-    | 'muesliswap_v4'
-    | 'vyfi'
-    | 'spectrum'
+// NOTE: TBR
+export type PoolPair = {
+  provider: Provider
   fee: string // % pool liquidity provider fee, usually 0.3.
   tokenA: {
     amount: string // amount of tokenA in the pool, without decimals.
@@ -107,7 +101,7 @@ export type Pool = {
   price: number // float, current price in tokenA / tokenB according to the pool, NOT SUITABLE for price calculations, just for display purposes, i.e. 0.9097362621640215.
   batcherFee: {
     amount: string // amount of fee taken by protocol batchers, in lovelace.
-    token: '.'
+    token: string // most likely "." for lovelace.
   }
   deposit: number // amount of deposit / minUTxO required by protocol, returned to user, in lovelace.
   utxo: string // txhash#txindex of latest transaction involving this pool.
@@ -117,8 +111,13 @@ export type Pool = {
     amount: string // amount of lpToken minted by the pool, without decimals.
     token: string // hexadecimal representation of lpToken,
   }
+  depositFee: {
+    amount: string // amount of fee taken by protocol batchers, in lovelace.
+    token: string // most likely "." for lovelace.
+  }
+  batcherAddress: string // address of the protocol batcher.
 }
-export type PoolResponse = Pool[]
+export type PoolPairResponse = PoolPair[]
 
 export type Token = {
   info: {
@@ -183,7 +182,7 @@ export type PriceAddress = {
 }
 
 type VolumeAggregator = {
-  [key in Protocol]?: {
+  [key in Provider]?: {
     quote: number
     base: number
   }
@@ -215,4 +214,61 @@ export type PriceResponse = {
     '7d': string
   }
   marketCap: number
+}
+
+export type LiquidityPoolResponse = LiquidityPool[]
+export type LiquidityPool = {
+  tokenA: {
+    address: {
+      policyId: string
+      name: string
+    }
+    symbol?: string
+    image?: string
+    decimalPlaces: number
+    amount: string
+    status: string
+    priceAda: number
+  }
+  tokenB: {
+    address: {
+      policyId: string
+      name: string
+    }
+    symbol?: string
+    image?: string
+    decimalPlaces: number
+    amount: string
+    status: string
+    priceAda: number
+  }
+  feeToken: {
+    address: {
+      policyId: string
+      name: string
+    }
+    symbol?: string
+    image?: string
+    decimalPlaces: number
+  }
+  batcherFee: string
+  lvlDeposit: string
+  poolFee: string
+  lpToken: {
+    address?: {
+      policyId: string
+      name: string
+    }
+    amount?: string
+  }
+  poolId: string
+  provider: Provider
+  txHash?: string
+  outputIdx?: number
+  volume24h?: number
+  volume7d?: number
+  liquidityApy?: number
+  priceASqrt?: any
+  priceBSqrt?: any
+  batcherAddress: string
 }

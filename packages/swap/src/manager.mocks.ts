@@ -186,6 +186,7 @@ export const mockSwapManager: Swap.Manager = {
   clearStorage: clear.success,
   primaryTokenId: '',
   stakingKey: '',
+  supportedProviders: [] as const,
 } as const
 
 export const mockSwapManagerDefault: Swap.Manager = {
@@ -214,4 +215,5 @@ export const mockSwapManagerDefault: Swap.Manager = {
   clearStorage: clear.error.unknown,
   primaryTokenId: '',
   stakingKey: '',
+  supportedProviders: [] as const,
 } as const

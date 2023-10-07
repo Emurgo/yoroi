@@ -18,13 +18,14 @@ storiesOf('Swap List Pool', module)
         {
           tokenA: {quantity: '4500000', tokenId: 'tokenA'},
           tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+          ptPriceTokenA: '0',
+          ptPriceTokenB: '0',
           fee: '0.3', // 0.3%
           provider: 'minswap',
           price: 2,
           batcherFee: {quantity: '1', tokenId: ''},
           deposit: {quantity: '1', tokenId: ''},
           poolId: '0',
-          lastUpdate: '0',
           lpToken: {
             quantity: '0',
             tokenId: '0',
@@ -33,13 +34,14 @@ storiesOf('Swap List Pool', module)
         {
           tokenA: {quantity: '4500000', tokenId: 'tokenA'},
           tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+          ptPriceTokenA: '0',
+          ptPriceTokenB: '0',
           fee: '0.3', // 0.3%
           provider: 'sundaeswap',
           price: 6,
           batcherFee: {quantity: '122', tokenId: ''},
           deposit: {quantity: '432', tokenId: ''},
           poolId: '23455',
-          lastUpdate: '235',
           lpToken: {
             quantity: '13524',
             tokenId: '1355',

@@ -15,6 +15,7 @@ export const swapManagerMaker = (
     createOrder,
     primaryTokenId,
     stakingKey,
+    supportedProviders,
   } = swapApi
 
   const order = {
@@ -51,5 +52,6 @@ export const swapManagerMaker = (
     pools,
     primaryTokenId,
     stakingKey,
+    supportedProviders,
   } as const
 }

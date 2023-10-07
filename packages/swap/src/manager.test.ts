@@ -25,6 +25,7 @@ describe('swapManagerMaker', () => {
     getCompletedOrders: jest.fn(),
     primaryTokenId: '',
     stakingKey: 'someStakingKey',
+    supportedProviders: ['minswap'] as const,
   }
 
   beforeEach(() => {
@@ -34,7 +35,7 @@ describe('swapManagerMaker', () => {
 
   it('clearStorage clear', async () => {
     await expect(manager.clearStorage()).resolves.toBeUndefined()
-    await expect(mockedStorage.clear).toHaveBeenCalledTimes(1)
+    expect(mockedStorage.clear).toHaveBeenCalledTimes(1)
   })
 
   it('slippage', async () => {

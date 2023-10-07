@@ -107,7 +107,10 @@ describe('asYoroiAmount', () => {
   it('success', () => {
     const result = transformers.asYoroiAmount({
       amount: '100',
-      token: 'c04f4200502a998e9eebafac0291a1f38008de3fe146d136946d8f4b.30',
+      address: {
+        policyId: 'c04f4200502a998e9eebafac0291a1f38008de3fe146d136946d8f4b',
+        name: '30',
+      },
     })
     expect(result).toEqual<Balance.Amount>({
       quantity: '100',
@@ -115,10 +118,23 @@ describe('asYoroiAmount', () => {
     })
   })
 
+  it('success nameless token', () => {
+    const result = transformers.asYoroiAmount({
+      token: 'c04f4200502a998e9eebafac0291a1f38008de3fe146d136946d8f4b',
+    })
+    expect(result).toEqual<Balance.Amount>({
+      quantity: '0',
+      tokenId: 'c04f4200502a998e9eebafac0291a1f38008de3fe146d136946d8f4b.',
+    })
+  })
+
   it('success (lovelace) primary token', () => {
     const result = transformers.asYoroiAmount({
       amount: '1000000',
-      token: 'lovelace',
+      address: {
+        policyId: '',
+        name: '',
+      },
     })
     expect(result).toEqual<Balance.Amount>({quantity: '1000000', tokenId: ''})
   })
@@ -126,7 +142,10 @@ describe('asYoroiAmount', () => {
   it('success (period) primary token', () => {
     const result = transformers.asYoroiAmount({
       amount: '1000000',
-      token: '.',
+      address: {
+        policyId: '',
+        name: '.',
+      },
     })
     expect(result).toEqual<Balance.Amount>({quantity: '1000000', tokenId: ''})
   })
@@ -197,24 +216,24 @@ describe('asYoroiPools', () => {
   })
 
   it('success (filter out unsupported pools)', () => {
-    const result = transformers.asYoroiPools(openswapMocks.getPools)
+    const result = transformers.asYoroiPools(openswapMocks.getLiquidityPools)
 
     expect(result).toEqual<Array<Swap.Pool>>(apiMocks.getPools)
 
     // should filter out unsupported pools
-    expect(result.length).toBe(openswapMocks.getPools.length - 1)
+    expect(result.length).toBe(openswapMocks.getLiquidityPools.length - 1)
   })
 })
 
 describe('asYoroiPool', () => {
   it('success (supported pool)', () => {
-    const result = transformers.asYoroiPool(openswapMocks.getPools[0]!)
+    const result = transformers.asYoroiPool(openswapMocks.getLiquidityPools[0]!)
 
     expect(result).toEqual<Swap.Pool>(apiMocks.getPools[0]!)
   })
 
   it('success (unsupported pool)', () => {
-    const result = transformers.asYoroiPool(openswapMocks.getPools[3]!)
+    const result = transformers.asYoroiPool(openswapMocks.getLiquidityPools[3]!)
 
     expect(result).toBeNull()
   })
