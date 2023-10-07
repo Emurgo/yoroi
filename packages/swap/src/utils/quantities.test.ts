@@ -146,6 +146,13 @@ describe('Quantities', () => {
       const denomination = 2
       expect(Quantities.format(quantity, denomination)).toBe('0.0001')
     })
+
+    it('should format a quantity with the specified denomination and precision', () => {
+      const quantity = '0.01'
+      const denomination = 2
+      const precision = 1
+      expect(Quantities.format(quantity, denomination, precision)).toBe('0')
+    })
   })
 
   it('should find the maximum quantity from an array of quantities', () => {

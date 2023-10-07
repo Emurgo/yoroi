@@ -27,13 +27,12 @@ export type SwapPool = {
   fee: string // % pool liquidity provider fee, usually 0.3.
   tokenA: BalanceAmount
   tokenB: BalanceAmount
-  tokenAPriceLovelace: string // float, current price in lovelace of tokenA, i.e. 0.000000000000000000.
-  tokenBPriceLovelace: string // float, current price in lovelace of tokenB, i.e. 0.000000000000000000.
+  ptPriceTokenA: string // float, current price in lovelace of tokenA, i.e. 0.000000000000000000.
+  ptPriceTokenB: string // float, current price in lovelace of tokenB, i.e. 0.000000000000000000.
   price: number // float, current price in tokenA / tokenB according to the pool, NOT SUITABLE for price calculations, just for display purposes, i.e. 0.9097362621640215.
   batcherFee: BalanceAmount
   deposit: BalanceAmount // amount of deposit / minUTxO required by protocol, returned to user, in lovelace.
   // utxo: string // txhash#txindex of latest transaction involving this pool.
   poolId: string // identifier of the pool across platforms.
-  lastUpdate: string // latest update of this pool in UTC, i.e. 2023-05-23 06:13:26.
   lpToken: BalanceAmount
 }

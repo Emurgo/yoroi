@@ -5,6 +5,7 @@ import {isString} from '@yoroi/common'
 
 import {Quantities} from '../utils/quantities'
 import {supportedProviders} from '../translators/constants'
+import {asQuantity} from '../utils/asQuantity'
 
 export const transformersMaker = (
   primaryTokenId: Balance.Token['info']['id'],
@@ -49,11 +50,18 @@ export const transformersMaker = (
 
   const asYoroiOpenOrder = (openswapOrder: OpenSwap.OpenOrder) => {
     const {from, to, deposit, ...rest} = openswapOrder
+    const [policyId, name = ''] = primaryTokenId.split('.') as [string, string?]
     return {
       ...rest,
       from: asYoroiAmount(from),
       to: asYoroiAmount(to),
-      deposit: asYoroiAmount({amount: deposit, token: primaryTokenId}),
+      deposit: asYoroiAmount({
+        amount: deposit,
+        address: {
+          policyId,
+          name,
+        },
+      }),
     } as const
   }
 
@@ -108,33 +116,32 @@ export const transformersMaker = (
     return balanceToken
   }
 
-  const asYoroiPool = (openswapPool: OpenSwap.Pool): Swap.Pool | null => {
+  const asYoroiPool = (
+    openswapLiquidityPool: OpenSwap.LiquidityPool,
+  ): Swap.Pool | null => {
     const {
       batcherFee,
-      fee,
-      deposit,
+      poolFee,
+      lvlDeposit,
       lpToken,
       tokenA,
       tokenB,
-      timestamp,
       provider,
-      price,
       poolId,
-    } = openswapPool
+    } = openswapLiquidityPool
 
     if (provider && !isSupportedProvider(provider)) return null
 
     const pool: Swap.Pool = {
       tokenA: asYoroiAmount(tokenA),
       tokenB: asYoroiAmount(tokenB),
-      tokenAPriceLovelace: '0',
-      tokenBPriceLovelace: '0',
-      deposit: asYoroiAmount({amount: deposit.toString(), token: ''}),
+      ptPriceTokenA: tokenA.priceAda.toString(),
+      ptPriceTokenB: tokenB.priceAda.toString(),
+      deposit: asYoroiAmount({amount: lvlDeposit, address: undefined}),
       lpToken: asYoroiAmount(lpToken),
-      batcherFee: asYoroiAmount(batcherFee),
-      lastUpdate: timestamp,
-      fee,
-      price,
+      batcherFee: asYoroiAmount({amount: batcherFee, address: undefined}),
+      fee: poolFee,
+      price: 0,
       poolId,
       provider,
     }
@@ -142,31 +149,48 @@ export const transformersMaker = (
   }
 
   const asYoroiAmount = (openswapAmount: {
-    amount: string
-    token: string
-  }): Balance.Amount => {
-    if (isString(openswapAmount?.amount)) {
-      // openswap is inconsistent about ADA
-      // sometimes is '.', '' or 'lovelace'
-      const {amount, token} = openswapAmount
-      const [policyId, name = ''] = token.split('.') as [string, string?]
-      return {
-        quantity: amount as Balance.Quantity,
-        tokenId: asYoroiTokenId({policyId, name}),
-      } as const
+    address?: {
+      policyId: string
+      name: string
     }
-    return {quantity: Quantities.zero, tokenId: ''} as const
+    // openswap is inconsistent about ADA
+    // sometimes is '.', '' or 'lovelace'
+    token?: string
+    amount?: string
+  }): Balance.Amount => {
+    const {amount, address, token} = openswapAmount ?? {}
+
+    let policyId = ''
+    let name = ''
+
+    if (address) {
+      policyId = address.policyId
+      name = address.name
+    } else if (isString(token)) {
+      const tokenParts = token.split('.') as [string, string?]
+      policyId = tokenParts[0]
+      name = tokenParts[1] ?? ''
+    }
+
+    const yoroiAmount: Balance.Amount = {
+      quantity: asQuantity(amount ?? Quantities.zero),
+      tokenId: asYoroiTokenId({policyId, name}),
+    } as const
+
+    return yoroiAmount
   }
 
   /**
    *  Filter out pools that are not supported by Yoroi
    *
-   * @param openswapPools
+   * @param openswapLiquidityPools
    * @returns {Swap.Pool[]}
    */
-  const asYoroiPools = (openswapPools: OpenSwap.Pool[]): Swap.Pool[] => {
-    if (openswapPools?.length > 0)
-      return openswapPools
+  const asYoroiPools = (
+    openswapLiquidityPools: OpenSwap.LiquidityPool[],
+  ): Swap.Pool[] => {
+    if (openswapLiquidityPools?.length > 0)
+      return openswapLiquidityPools
         .map(asYoroiPool)
         .filter((pool): pool is Swap.Pool => pool !== null)
 

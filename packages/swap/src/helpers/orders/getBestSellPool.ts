@@ -20,21 +20,19 @@ export const getBestSellPool = (
   pools: Swap.Pool[],
   buy: Balance.Amount,
 ): Swap.Pool | undefined => {
-  if (pools.length === 0) {
-    return undefined
-  }
+  if (pools.length === 0 || Quantities.isZero(buy.quantity)) return undefined
+
   let bestPool: Swap.Pool | undefined
   let bestPrice = new BigNumber(0)
-  for (const pool of pools) {
-    const isBuyTokenA = buy.tokenId === pool.tokenA.tokenId
-    const sellAmount = getSellAmount(pool, buy)
-    if (Quantities.isZero(sellAmount.quantity)) {
-      continue
-    }
-    const [aAmount, bAmount] = isBuyTokenA
-      ? [buy.quantity, sellAmount.quantity]
-      : [sellAmount.quantity, buy.quantity]
 
+  for (const pool of pools) {
+    const sell = getSellAmount(pool, buy)
+    if (Quantities.isZero(sell.quantity)) continue
+
+    const isBuyTokenA = buy.tokenId === pool.tokenA.tokenId
+    const [aAmount, bAmount] = isBuyTokenA
+      ? [buy.quantity, sell.quantity]
+      : [sell.quantity, buy.quantity]
     const price = getPriceAfterFee(
       pool,
       aAmount,
@@ -53,5 +51,6 @@ export const getBestSellPool = (
       bestPrice = price
     }
   }
+
   return bestPool
 }
