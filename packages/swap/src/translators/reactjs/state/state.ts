@@ -65,11 +65,6 @@ export type SwapState = Readonly<{
     pools: ReadonlyArray<Swap.Pool>
     calculations: ReadonlyArray<SwapOrderCalculation>
     lpTokenHeld?: Balance.Amount
-    // primary token price in terms of sell/buy token
-    ptPrices: {
-      sell?: Balance.Quantity
-      buy?: Balance.Quantity
-    }
     getMaybeLimitPrice: () => Balance.Quantity | undefined
     getCalculatedPool: () => SwapOrderCalculation | undefined
   }
@@ -219,10 +214,6 @@ export const defaultSwapState: SwapState = {
 
     calculations: [] as const,
     lpTokenHeld: undefined,
-    ptPrices: {
-      sell: '0',
-      buy: '0',
-    },
     pools: [] as const,
     getMaybeLimitPrice: function () {
       return this.type === 'limit' ? this.limitPrice : undefined
@@ -277,7 +268,6 @@ const orderReducer = (
           amounts: state.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
           slippage: state.orderData.slippage,
-          ptPrices: state.orderData.ptPrices,
           pools: state.orderData.pools,
           primaryTokenId: '',
           lpTokenHeld: state.orderData.lpTokenHeld,
@@ -316,7 +306,6 @@ const orderReducer = (
           amounts: state.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
           slippage: action.slippage,
-          ptPrices: state.orderData.ptPrices,
           pools: state.orderData.pools,
           primaryTokenId: '',
           lpTokenHeld: state.orderData.lpTokenHeld,
@@ -336,7 +325,6 @@ const orderReducer = (
           amounts: draft.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
           slippage: state.orderData.slippage,
-          ptPrices: state.orderData.ptPrices,
           pools: state.orderData.pools,
           primaryTokenId: '',
           lpTokenHeld: state.orderData.lpTokenHeld,
@@ -382,7 +370,6 @@ const orderReducer = (
           amounts: draft.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
           slippage: state.orderData.slippage,
-          ptPrices: state.orderData.ptPrices,
           pools: state.orderData.pools,
           primaryTokenId: '',
           lpTokenHeld: state.orderData.lpTokenHeld,
@@ -405,7 +392,6 @@ const orderReducer = (
           amounts: state.orderData.amounts,
           limitPrice: action.limitPrice,
           slippage: state.orderData.slippage,
-          ptPrices: state.orderData.ptPrices,
           pools: state.orderData.pools,
           primaryTokenId: '',
           lpTokenHeld: state.orderData.lpTokenHeld,
@@ -431,7 +417,6 @@ const orderReducer = (
           amounts: draft.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
           slippage: state.orderData.slippage,
-          ptPrices: state.orderData.ptPrices,
           pools: state.orderData.pools,
           primaryTokenId: '',
           lpTokenHeld: state.orderData.lpTokenHeld,
@@ -457,7 +442,6 @@ const orderReducer = (
           amounts: draft.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
           slippage: state.orderData.slippage,
-          ptPrices: state.orderData.ptPrices,
           pools: state.orderData.pools,
           primaryTokenId: '',
           lpTokenHeld: state.orderData.lpTokenHeld,
@@ -484,7 +468,6 @@ const orderReducer = (
           amounts: draft.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
           slippage: state.orderData.slippage,
-          ptPrices: state.orderData.ptPrices,
           pools: draft.orderData.pools,
           primaryTokenId: '',
           lpTokenHeld: state.orderData.lpTokenHeld,
@@ -504,7 +487,6 @@ const orderReducer = (
           amounts: draft.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
           slippage: state.orderData.slippage,
-          ptPrices: state.orderData.ptPrices,
           pools: draft.orderData.pools,
           primaryTokenId: '',
           lpTokenHeld: state.orderData.lpTokenHeld,
@@ -523,7 +505,6 @@ const orderReducer = (
           amounts: state.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
           slippage: state.orderData.slippage,
-          ptPrices: state.orderData.ptPrices,
           pools: state.orderData.pools,
           primaryTokenId: '',
           lpTokenHeld: action.amount,
@@ -540,7 +521,6 @@ const orderReducer = (
           amounts: state.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
           slippage: state.orderData.slippage,
-          ptPrices: state.orderData.ptPrices,
           pools: draft.orderData.pools,
           primaryTokenId: '',
           lpTokenHeld: state.orderData.lpTokenHeld,

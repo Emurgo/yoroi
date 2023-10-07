@@ -20,10 +20,6 @@ export const mockSwapStateDefault: SwapState = {
     calculations: [],
     lpTokenHeld: undefined,
     pools: [],
-    ptPrices: {
-      sell: '0',
-      buy: '0',
-    },
   },
   unsignedTx: undefined,
 } as const
