@@ -15,7 +15,6 @@ export const makeOrderCalculations = ({
   amounts,
   limitPrice,
   slippage,
-  ptPrices,
   pools,
   primaryTokenId,
   lpTokenHeld,
@@ -27,10 +26,6 @@ export const makeOrderCalculations = ({
     buy: Balance.Amount
   }
   limitPrice?: Balance.Quantity
-  ptPrices: {
-    buy?: Balance.Quantity
-    sell?: Balance.Quantity
-  }
   pools: ReadonlyArray<Swap.Pool>
   lpTokenHeld?: Balance.Amount
   slippage: number
@@ -60,10 +55,9 @@ export const makeOrderCalculations = ({
       tokenId: buy.tokenId,
     }
 
-    const poolSupply =
-      buy.tokenId === pool.tokenA.tokenId
-        ? pool.tokenA.quantity
-        : pool.tokenB.quantity
+    // pools that with not enough supply will be filtered out
+    const isBuyTokenA = buy.tokenId === pool.tokenA.tokenId
+    const poolSupply = isBuyTokenA ? pool.tokenA.quantity : pool.tokenB.quantity
     const hasSupply = !Quantities.isGreaterThan(
       buy.quantity,
       poolSupply ?? Quantities.zero,
@@ -71,6 +65,10 @@ export const makeOrderCalculations = ({
 
     // lf is sell side % of quantity ie. XToken 100 * 1% = 1 XToken
     const liquidityFee: Balance.Amount = getLiquidityProviderFee(pool.fee, sell)
+
+    const [ptPriceBuy, ptPriceSell] = isBuyTokenA
+      ? [pool.ptPriceTokenA, pool.ptPriceTokenB]
+      : [pool.ptPriceTokenB, pool.ptPriceTokenA]
 
     // ffee is based on PT value range + LP holding range (sides may need conversion, when none is PT)
     const frontendFeeInfo = getFrontendFee({
@@ -82,7 +80,7 @@ export const makeOrderCalculations = ({
         tokenId: primaryTokenId,
         quantity: asQuantity(
           new BigNumber(amounts.sell.quantity)
-            .times(ptPrices.sell ?? 0)
+            .times(ptPriceSell)
             .integerValue(BigNumber.ROUND_CEIL),
         ),
       },
@@ -90,7 +88,7 @@ export const makeOrderCalculations = ({
         tokenId: primaryTokenId,
         quantity: asQuantity(
           new BigNumber(amounts.buy.quantity)
-            .times(ptPrices.buy ?? 0)
+            .times(ptPriceBuy)
             .integerValue(BigNumber.ROUND_CEIL),
         ),
       },
@@ -100,10 +98,10 @@ export const makeOrderCalculations = ({
     // it applies market price always
     const feeInSellSideQuantities = {
       batcherFee: new BigNumber(pool.batcherFee.quantity)
-        .times(ptPrices.sell ?? 0)
+        .times(ptPriceSell)
         .integerValue(BigNumber.ROUND_CEIL),
       frontendFee: new BigNumber(frontendFeeInfo.fee.quantity)
-        .times(ptPrices.sell ?? 0)
+        .times(ptPriceSell)
         .integerValue(BigNumber.ROUND_CEIL),
     }
 
