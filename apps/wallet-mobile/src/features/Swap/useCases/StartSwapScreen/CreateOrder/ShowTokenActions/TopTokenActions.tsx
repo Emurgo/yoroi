@@ -15,7 +15,7 @@ export const TopTokenActions = () => {
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
   const {orderData, orderTypeChanged} = useSwap()
   const {isBuyTouched, isSellTouched} = useSwapTouched()
-  const isDisabled = !isBuyTouched || !isSellTouched || orderData.calculatedPool === undefined
+  const isDisabled = !isBuyTouched || !isSellTouched || orderData.selectedPoolCalculation === undefined
   const orderTypeIndex = orderData.type === 'market' ? 0 : 1
 
   const {refetch, isLoading} = useSwapPoolsByPair({

@@ -9,7 +9,7 @@ import {splitStringInto64CharArray} from '../../../yoroi-wallets/utils'
 
 export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {entry: YoroiEntry; datum: Datum}>) => {
   const {orderData} = useSwap()
-  const pool = orderData.calculatedPool?.pool
+  const pool = orderData.selectedPoolCalculation?.pool
   const metadata = [
     {
       label: '674',
