@@ -1,5 +1,5 @@
 import {FlashList} from '@shopify/flash-list'
-import {useSwap, useSwapTokensByPairToken} from '@yoroi/swap'
+import {useSwap, useSwapPoolsByPair, useSwapTokensByPairToken} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -178,8 +178,20 @@ const TokenList = () => {
 type SelectableTokenProps = {disabled?: boolean; tokenForList: TokenForList; wallet: YoroiWallet}
 const SelectableToken = ({tokenForList, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
-  const {buyTokenIdChanged} = useSwap()
+  const {buyTokenIdChanged, orderData} = useSwap()
   const {buyTouched} = useSwapTouched()
+  const {refetch} = useSwapPoolsByPair(
+    {
+      tokenA: orderData.amounts.buy.tokenId,
+      tokenB: orderData.amounts.sell.tokenId,
+    },
+    {
+      enabled: false,
+    },
+  )
+  React.useEffect(() => {
+    console.log('refetch')
+  }, [refetch, orderData.amounts.buy.tokenId])
 
   const navigateTo = useNavigateTo()
   const balanceAvailable = useBalance({wallet, tokenId: tokenForList.id})

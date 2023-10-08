@@ -55,6 +55,19 @@ describe('SwapProvider', () => {
       )
     })
 
+    // initial state = market order
+    expect(result.current.orderData.selectedPoolId).toBeUndefined()
+
+    act(() => {
+      result.current.orderTypeChanged('limit')
+    })
+
+    act(() => {
+      result.current.selectedPoolChanged(
+        swapManagerMocks.listPoolsByPairResponse[0]?.poolId!,
+      )
+    })
+
     expect(result.current.orderData.selectedPoolId).toEqual(
       swapManagerMocks.listPoolsByPairResponse[0]?.poolId,
     )

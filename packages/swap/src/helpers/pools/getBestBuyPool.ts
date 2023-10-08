@@ -1,8 +1,8 @@
 import {Balance, Swap} from '@yoroi/types'
 
 import {Quantities} from '../../utils/quantities'
-import {getBuyAmount} from './getBuyAmount'
-import {getPriceAfterFee} from './getPriceAfterFee'
+import {getBuyAmount} from '../orders/getBuyAmount'
+import {getPriceAfterFee} from '../orders/getPriceAfterFee'
 import BigNumber from 'bignumber.js'
 
 /**
