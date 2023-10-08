@@ -79,17 +79,11 @@ export const SwapProvider = ({
     lpTokenHeldChanged: (amount: Balance.Amount | undefined) => {
       dispatch({type: SwapCreateOrderActionType.LpTokenHeldChanged, amount})
     },
-    buyTokenIdChanged: (payload: {
-      tokenId: Balance.TokenInfo['id']
-      pools: ReadonlyArray<Swap.Pool>
-    }) => {
-      dispatch({type: SwapCreateOrderActionType.BuyTokenIdChanged, payload})
+    buyTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => {
+      dispatch({type: SwapCreateOrderActionType.BuyTokenIdChanged, tokenId})
     },
-    sellTokenIdChanged: (payload: {
-      tokenId: Balance.TokenInfo['id']
-      pools: ReadonlyArray<Swap.Pool>
-    }) => {
-      dispatch({type: SwapCreateOrderActionType.SellTokenIdChanged, payload})
+    sellTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => {
+      dispatch({type: SwapCreateOrderActionType.SellTokenIdChanged, tokenId})
     },
     poolPairsChanged: (pools: ReadonlyArray<Swap.Pool>) => {
       dispatch({type: SwapCreateOrderActionType.PoolPairsChanged, pools})
