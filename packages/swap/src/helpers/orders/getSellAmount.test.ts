@@ -7,13 +7,14 @@ describe('getSellAmount', () => {
     const pool = {
       tokenA: {quantity: '4500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+      ptPriceTokenA: '0',
+      ptPriceTokenB: '0',
       fee: '0.5', // 0.5%
       provider: 'minswap',
       price: 2,
       batcherFee: {quantity: '1', tokenId: ''},
       deposit: {quantity: '1', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -40,13 +41,14 @@ describe('getSellAmount', () => {
     const pool = {
       tokenA: {quantity: '4500000', tokenId: 'tokenA'},
       tokenB: {quantity: '9000000', tokenId: 'tokenB'},
+      ptPriceTokenA: '0',
+      ptPriceTokenB: '0',
       fee: '0.5', // 0.5%
       provider: 'minswap',
       price: 2,
       batcherFee: {quantity: '1', tokenId: ''},
       deposit: {quantity: '1', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
@@ -69,13 +71,14 @@ describe('getSellAmount', () => {
     const pool = {
       tokenA: {quantity: '1000000', tokenId: 'tokenA'},
       tokenB: {quantity: '2000000', tokenId: 'tokenB'},
+      ptPriceTokenA: '0',
+      ptPriceTokenB: '0',
       fee: '10',
       provider: 'minswap',
       price: 2,
       batcherFee: {quantity: '1', tokenId: ''},
       deposit: {quantity: '1', tokenId: ''},
       poolId: '0',
-      lastUpdate: '0',
       lpToken: {
         quantity: '0',
         tokenId: '0',
