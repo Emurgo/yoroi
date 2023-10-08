@@ -18,7 +18,7 @@ export const makeOrderCalculations = ({
   pools,
   primaryTokenId,
   lpTokenHeld,
-  action,
+  side,
 }: Readonly<{
   orderType: Swap.OrderType
   amounts: {
@@ -30,24 +30,24 @@ export const makeOrderCalculations = ({
   lpTokenHeld?: Balance.Amount
   slippage: number
   primaryTokenId: Balance.TokenInfo['id']
-  action?: 'buy' | 'sell'
+  side?: 'buy' | 'sell'
 }>): Array<SwapOrderCalculation> => {
   const isLimit = orderType === 'limit'
   const maybeLimitPrice = isLimit ? limitPrice : undefined
 
-  return pools.map<SwapOrderCalculation>((pool) => {
+  const calculations = pools.map<SwapOrderCalculation>((pool) => {
     const buy =
-      action === 'sell'
+      side === 'sell'
         ? getBuyAmount(pool, amounts.sell, maybeLimitPrice)
         : amounts.buy
     const sell =
-      action === 'buy'
+      side === 'buy'
         ? getSellAmount(pool, amounts.buy, maybeLimitPrice)
         : amounts.sell
 
     const marketPrice = getMarketPrice(pool, sell)
     // recalculate price base, limit is user's input, market from pool
-    const priceBase = isLimit ? limitPrice ?? marketPrice : marketPrice
+    const priceBase = maybeLimitPrice ?? marketPrice
 
     // calculate buy quantity with slippage
     const buyAmountWithSlippage: Balance.Amount = {
@@ -113,7 +113,11 @@ export const makeOrderCalculations = ({
             .toString(),
         )
 
-    const calculatePricesWithFees = (withFrontendFee?: boolean) => {
+    const calculatePricesWithFees = ({
+      withFrontendFee,
+    }: {
+      withFrontendFee?: boolean
+    }) => {
       // add up all that's being sold in sell terms
       const sellWithBatcher = new BigNumber(sell.quantity).plus(
         feeInSellSideQuantities.batcherFee,
@@ -133,11 +137,13 @@ export const makeOrderCalculations = ({
         : sellWithFees.dividedBy(buyAmountWithSlippage.quantity).toString()
 
       // always based, if is limit it can lead to a weird percentage
-      const priceDifference = priceWithFees
-        .minus(priceBase)
-        .dividedBy(priceBase)
-        .times(100)
-        .toString()
+      const priceDifference = Quantities.isZero(priceBase)
+        ? Quantities.zero
+        : priceWithFees
+            .minus(priceBase)
+            .dividedBy(priceBase)
+            .times(100)
+            .toString()
 
       return {
         priceWithFees: asQuantity(priceWithFees),
@@ -146,17 +152,31 @@ export const makeOrderCalculations = ({
       }
     }
 
+    // fees + ffee + slippage
     const {
       priceWithFees: withFees,
       priceWithFeesAndSlippage: withFeesAndSlippage,
       priceDifference: difference,
-    } = calculatePricesWithFees(true)
+    } = calculatePricesWithFees({withFrontendFee: true})
     const {
       priceWithFees: withFeesNoFEF,
       priceWithFeesAndSlippage: withFeesAndSlippageNoFEF,
       priceDifference: differenceNoFEF,
-    } = calculatePricesWithFees(false)
-    return {
+    } = calculatePricesWithFees({withFrontendFee: false})
+
+    const result: SwapOrderCalculation = {
+      order: {
+        side,
+        slippage,
+        orderType,
+        limitPrice,
+        amounts,
+        lpTokenHeld,
+      },
+      sides: {
+        buy,
+        sell,
+      },
       cost: {
         batcherFee: pool.batcherFee,
         deposit: pool.deposit,
@@ -177,6 +197,10 @@ export const makeOrderCalculations = ({
         differenceNoFEF,
       },
       pool,
-    }
+    } as const
+
+    return result
   })
+
+  return calculations
 }
