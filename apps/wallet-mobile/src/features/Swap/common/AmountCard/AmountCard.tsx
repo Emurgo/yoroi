@@ -118,7 +118,7 @@ export const AmountCard = ({
           <Spacer height={4} />
 
           <Text style={styles.errorText}>
-            {orderData.calculatedPool === undefined
+            {orderData.selectedPoolCalculation === undefined
               ? strings.noPool
               : isSell
               ? strings.notEnoughBalance

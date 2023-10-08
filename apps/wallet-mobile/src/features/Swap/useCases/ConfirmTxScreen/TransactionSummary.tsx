@@ -22,7 +22,7 @@ export const TransactionSummary = () => {
   const wallet = useSelectedWallet()
   const {numberLocale} = useLanguage()
   const {orderData} = useSwap()
-  const {amounts, calculatedPool} = orderData
+  const {amounts, selectedPoolCalculation} = orderData
 
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
@@ -32,7 +32,7 @@ export const TransactionSummary = () => {
     {
       label: strings.swapMinAdaTitle,
       value: `${Quantities.format(
-        calculatedPool?.cost?.deposit?.quantity ?? Quantities.zero,
+        selectedPoolCalculation?.cost?.deposit?.quantity ?? Quantities.zero,
         Number(wallet.primaryTokenInfo.decimals),
       )} ${wallet.primaryTokenInfo.ticker}`,
       info: strings.swapMinAda,
@@ -50,7 +50,7 @@ export const TransactionSummary = () => {
     {
       label: strings.swapFeesTitle,
       value: `${Quantities.format(
-        calculatedPool?.cost?.batcherFee?.quantity ?? Quantities.zero, // TODO: Show all fees
+        selectedPoolCalculation?.cost?.batcherFee?.quantity ?? Quantities.zero, // TODO: Show all fees
         Number(wallet.primaryTokenInfo.decimals),
       )} ${wallet.primaryTokenInfo.ticker}`,
       info: strings.swapFees,

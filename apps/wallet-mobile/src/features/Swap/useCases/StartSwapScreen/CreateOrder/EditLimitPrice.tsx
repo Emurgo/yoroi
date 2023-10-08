@@ -35,9 +35,11 @@ export const EditLimitPrice = () => {
     if (orderData.type === 'limit') {
       setText(Quantities.format(orderData.limitPrice ?? Quantities.zero, denomination, PRECISION))
     } else {
-      setText(Quantities.format(orderData.calculatedPool?.prices.market ?? Quantities.zero, denomination, PRECISION))
+      setText(
+        Quantities.format(orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero, denomination, PRECISION),
+      )
     }
-  }, [orderData.type, orderData.limitPrice, orderData.amounts.sell, denomination, orderData.calculatedPool])
+  }, [orderData.type, orderData.limitPrice, orderData.amounts.sell, denomination, orderData.selectedPoolCalculation])
 
   const onChange = (text: string) => {
     const [formattedPrice, price] = Quantities.parseFromText(text, PRECISION, numberLocale)

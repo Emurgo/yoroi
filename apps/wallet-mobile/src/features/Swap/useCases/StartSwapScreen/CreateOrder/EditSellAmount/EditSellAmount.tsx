@@ -60,7 +60,7 @@ export const EditSellAmount = () => {
       navigateTo={navigate.selectSellToken}
       touched={isSellTouched}
       inputRef={inputRef}
-      inputEditable={orderData.calculatedPool?.pool !== undefined}
+      inputEditable={orderData.selectedPoolCalculation?.pool !== undefined}
     />
   )
 }
