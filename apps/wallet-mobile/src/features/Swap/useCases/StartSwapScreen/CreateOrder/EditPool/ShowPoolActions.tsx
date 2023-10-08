@@ -26,7 +26,7 @@ export const ShowPoolActions = () => {
   const {orderData} = useSwap()
   const strings = useStrings()
   const {isBuyTouched, isSellTouched, isPoolTouched} = useSwapTouched()
-  const {calculatedPool, amounts} = orderData
+  const {selectedPoolCalculation, amounts} = orderData
   const wallet = useSelectedWallet()
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
@@ -34,22 +34,25 @@ export const ShowPoolActions = () => {
   const sellTokenName = sellTokenInfo.ticker ?? sellTokenInfo.name
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
-  if (!isBuyTouched || !isSellTouched || calculatedPool === undefined) {
+  if (!isBuyTouched || !isSellTouched || selectedPoolCalculation === undefined) {
     return <></>
   }
 
   const totalFees = Quantities.format(
-    Quantities.sum([calculatedPool.cost.batcherFee.quantity, calculatedPool.cost.frontendFeeInfo.fee.quantity]),
+    Quantities.sum([
+      selectedPoolCalculation.cost.batcherFee.quantity,
+      selectedPoolCalculation.cost.frontendFeeInfo.fee.quantity,
+    ]),
     Number(wallet.primaryTokenInfo.decimals),
   )
   const header = `${strings.total}: ${Quantities.format(
     amounts.sell.quantity,
     sellTokenInfo.decimals ?? 0,
   )} ${sellTokenName} + ${totalFees} ${wallet.primaryTokenInfo.ticker}`
-  const id = calculatedPool.pool.poolId
+  const id = selectedPoolCalculation.pool.poolId
   const expanded = id === hiddenInfoOpenId
 
-  const poolProviderFormatted = capitalize(calculatedPool.pool.provider)
+  const poolProviderFormatted = capitalize(selectedPoolCalculation.pool.provider)
   const poolStatus = orderData.type === 'limit' && isPoolTouched ? '' : ` ${strings.autoPool}`
   const poolTitle = `${poolProviderFormatted}${poolStatus}`
 
@@ -59,7 +62,7 @@ export const ShowPoolActions = () => {
     <View>
       <View style={[styles.flex, styles.between]}>
         <View style={styles.flex}>
-          <PoolIcon size={25} providerId={calculatedPool.pool.provider} />
+          <PoolIcon size={25} providerId={selectedPoolCalculation.pool.provider} />
 
           <Spacer width={10} />
 
@@ -85,7 +88,7 @@ export const ShowPoolActions = () => {
         info={
           <HiddenInfo
             totalFees={Quantities.format(
-              calculatedPool.pool.batcherFee.quantity,
+              selectedPoolCalculation.pool.batcherFee.quantity,
               Number(wallet.primaryTokenInfo.decimals),
             )}
             minReceived={getMinAdaReceiveAfterSlippage(
@@ -94,12 +97,15 @@ export const ShowPoolActions = () => {
               buyTokenInfo.decimals ?? 0,
               numberLocale,
             )}
-            minAda={Quantities.format(calculatedPool.pool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))}
+            minAda={Quantities.format(
+              selectedPoolCalculation.pool.deposit.quantity,
+              Number(wallet.primaryTokenInfo.decimals),
+            )}
             buyTokenName={buyTokenName}
             sellTokenName={sellTokenName}
-            liquidityFee={calculatedPool.pool.fee}
+            liquidityFee={selectedPoolCalculation.pool.fee}
             liquidityFeeValue={Quantities.format(
-              calculatedPool.cost.liquidityFee.quantity,
+              selectedPoolCalculation.cost.liquidityFee.quantity,
               sellTokenInfo.decimals ?? 0,
             )}
           />

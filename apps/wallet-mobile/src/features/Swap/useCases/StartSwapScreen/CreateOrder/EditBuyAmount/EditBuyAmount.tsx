@@ -21,7 +21,7 @@ export const EditBuyAmount = () => {
 
   const {orderData, buyQuantityChanged} = useSwap()
   const {isBuyTouched} = useSwapTouched()
-  const pool = orderData.calculatedPool?.pool
+  const pool = orderData.selectedPoolCalculation?.pool
   const {tokenId, quantity} = orderData.amounts.buy
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const {decimals} = tokenInfo

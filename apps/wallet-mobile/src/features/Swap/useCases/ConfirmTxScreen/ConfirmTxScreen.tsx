@@ -51,7 +51,7 @@ export const ConfirmTxScreen = () => {
       signTx: {useErrorBoundary: true},
       submitTx: {
         onSuccess: () => {
-          if (orderData.calculatedPool === undefined) return
+          if (orderData.selectedPoolCalculation === undefined) return
           track.swapOrderSubmitted({
             from_asset: [
               {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
@@ -63,8 +63,8 @@ export const ConfirmTxScreen = () => {
             slippage_tolerance: orderData.slippage,
             from_amount: orderData.amounts.sell.quantity,
             to_amount: orderData.amounts.buy.quantity,
-            pool_source: orderData.calculatedPool.pool.provider,
-            swap_fees: Number(orderData.calculatedPool.cost.batcherFee),
+            pool_source: orderData.selectedPoolCalculation.pool.provider,
+            swap_fees: Number(orderData.selectedPoolCalculation.cost.batcherFee),
           })
 
           navigate.submittedTx()

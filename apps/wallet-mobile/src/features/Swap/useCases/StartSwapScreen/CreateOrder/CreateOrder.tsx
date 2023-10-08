@@ -1,4 +1,4 @@
-import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
+import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import React, {useEffect, useState} from 'react'
@@ -31,7 +31,7 @@ const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
-  const {orderData, poolPairsChanged, unsignedTxChanged} = useSwap()
+  const {orderData, unsignedTxChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
 
@@ -45,18 +45,10 @@ export const CreateOrder = () => {
   })
   const [showLimitPriceWarning, setShowLimitPriceWarning] = useState(false)
   const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
-  const {poolList} = useSwapPoolsByPair({
-    tokenA: orderData.amounts.sell.tokenId ?? '',
-    tokenB: orderData.amounts.buy.tokenId ?? '',
-  })
 
   useEffect(() => {
-    poolPairsChanged(poolList ?? [])
-  }, [poolPairsChanged, poolList])
-
-  useEffect(() => {
-    if (orderData.selectedPoolId === orderData.bestPool?.pool.poolId) poolDefaulted()
-  }, [orderData.selectedPoolId, orderData.bestPool, poolDefaulted])
+    if (orderData.selectedPoolId === orderData.bestPoolCalculation?.pool.poolId) poolDefaulted()
+  }, [orderData.selectedPoolId, orderData.bestPoolCalculation, poolDefaulted])
 
   const {createUnsignedTx, isLoading} = useSwapTx({
     onSuccess: (yoroiUnsignedTx) => {
@@ -71,15 +63,15 @@ export const CreateOrder = () => {
 
   const {createOrderData} = useSwapCreateOrder({
     onSuccess: (data: Swap.CreateOrderResponse) => {
-      if (data?.contractAddress !== undefined && orderData.calculatedPool?.pool !== undefined) {
-        const {amounts, limitPrice, slippage, calculatedPool} = orderData
+      if (data?.contractAddress !== undefined && orderData.selectedPoolCalculation?.pool !== undefined) {
+        const {amounts, limitPrice, slippage, selectedPoolCalculation} = orderData
         const entry = createYoroiEntry(
           {
             amounts,
             limitPrice,
             address: data.contractAddress,
             slippage,
-            selectedPool: calculatedPool.pool,
+            selectedPool: selectedPoolCalculation.pool,
           },
           data.contractAddress,
           wallet,
@@ -101,7 +93,7 @@ export const CreateOrder = () => {
     (orderData.type === 'limit' && orderData.limitPrice !== undefined && Quantities.isZero(orderData.limitPrice))
 
   const swap = () => {
-    if (orderData.calculatedPool === undefined) return
+    if (orderData.selectedPoolCalculation === undefined) return
     track.swapOrderSelected({
       from_asset: [
         {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
@@ -111,10 +103,10 @@ export const CreateOrder = () => {
       slippage_tolerance: orderData.slippage,
       from_amount: orderData.amounts.sell.quantity,
       to_amount: orderData.amounts.buy.quantity,
-      pool_source: orderData.calculatedPool.pool.provider,
+      pool_source: orderData.selectedPoolCalculation.pool.provider,
       swap_fees: Number(
         Quantities.denominated(
-          orderData.calculatedPool.pool.batcherFee.quantity,
+          orderData.selectedPoolCalculation.pool.batcherFee.quantity,
           Number(wallet.primaryTokenInfo.decimals),
         ),
       ),
@@ -128,7 +120,7 @@ export const CreateOrder = () => {
       sell: orderData.amounts.sell,
       buy: orderData.amounts.buy,
       pools: orderData.pools,
-      selectedPool: orderData.calculatedPool?.pool,
+      selectedPool: orderData.selectedPoolCalculation?.pool,
       slippage: orderData.slippage,
       address: wallet.externalAddresses[0],
     }
@@ -171,9 +163,9 @@ export const CreateOrder = () => {
   }
 
   const handleOnSwap = () => {
-    if (orderData.calculatedPool === undefined) return
+    if (orderData.selectedPoolCalculation === undefined) return
     if (orderData.type === 'limit' && orderData.limitPrice !== undefined) {
-      const marketPrice = new BigNumber(orderData.calculatedPool.prices.market)
+      const marketPrice = new BigNumber(orderData.selectedPoolCalculation.prices.market)
       const limitPrice = new BigNumber(orderData.limitPrice)
 
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
