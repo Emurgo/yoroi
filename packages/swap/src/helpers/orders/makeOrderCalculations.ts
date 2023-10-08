@@ -80,7 +80,7 @@ export const makeOrderCalculations = ({
         tokenId: primaryTokenId,
         quantity: asQuantity(
           new BigNumber(amounts.sell.quantity)
-            .times(ptPriceSell)
+            .dividedBy(ptPriceSell)
             .integerValue(BigNumber.ROUND_CEIL),
         ),
       },
@@ -88,7 +88,7 @@ export const makeOrderCalculations = ({
         tokenId: primaryTokenId,
         quantity: asQuantity(
           new BigNumber(amounts.buy.quantity)
-            .times(ptPriceBuy)
+            .dividedBy(ptPriceBuy)
             .integerValue(BigNumber.ROUND_CEIL),
         ),
       },
@@ -98,10 +98,10 @@ export const makeOrderCalculations = ({
     // it applies market price always
     const feeInSellSideQuantities = {
       batcherFee: new BigNumber(pool.batcherFee.quantity)
-        .times(ptPriceSell)
+        .dividedBy(ptPriceSell)
         .integerValue(BigNumber.ROUND_CEIL),
       frontendFee: new BigNumber(frontendFeeInfo.fee.quantity)
-        .times(ptPriceSell)
+        .dividedBy(ptPriceSell)
         .integerValue(BigNumber.ROUND_CEIL),
     }
 
