@@ -705,6 +705,10 @@ export class ByronWallet implements YoroiWallet {
     }
   }
 
+  signSwapCancellationWithLedger(): Promise<void> {
+    return Promise.reject(new Error('Method not implemented.'))
+  }
+
   async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string, datum?: {data: string}) {
     const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
     const accountPrivateKey = await masterKey
