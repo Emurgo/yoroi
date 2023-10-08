@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PrivateKey} from '@emurgo/cross-csl-core'
-import {CardanoAddressedUtxo, Datum, RemoteUnspentOutput} from '@emurgo/yoroi-lib'
+import {Datum} from '@emurgo/yoroi-lib'
 import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
 import assert from 'assert'
@@ -39,7 +39,11 @@ import * as api from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
-import {createSignedLedgerSwapCancellationTx, signRawTransaction} from '../common/signatureUtils'
+import {
+  createSignedLedgerSwapCancellationTx,
+  createSwapCancellationLedgerPayload,
+  signRawTransaction,
+} from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
@@ -68,7 +72,6 @@ import {deriveRewardAddressHex, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
-import {createSwapCancellationLedgerPayload} from '../../../features/Swap/useCases/StartSwapScreen/ListOrders/helpers'
 type WalletState = {
   lastGeneratedAddressIndex: number
 }

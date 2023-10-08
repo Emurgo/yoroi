@@ -129,8 +129,7 @@ export const OpenOrders = () => {
       utxos: {collateral: collateralUtxo, order: utxo},
       address: addressHex,
     })
-    const {cbor, signers} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
-    console.log('got cbor')
+    const {cbor} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
     await wallet.signSwapCancellationWithLedger(cbor, useUSB)
 
     closeBottomSheet()

@@ -1,20 +1,24 @@
 import React, {useState} from 'react'
+import {ScrollView} from 'react-native'
+
+import {Boundary, TwoActionView} from '../../../../components'
+import {LedgerConnect} from '../../../../HW'
+import {useSelectedWallet} from '../../../../SelectedWallet'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
 import {walletManager} from '../../../../yoroi-wallets/walletManager'
-import {useSelectedWallet} from '../../../../SelectedWallet'
 import {LedgerTransportSwitch} from '../../useCases/ConfirmTxScreen/LedgerTransportSwitch'
-import {LedgerConnect} from '../../../../HW'
-import {ScrollView} from 'react-native'
-import {Boundary, TwoActionView} from '../../../../components'
 import {useStrings} from '../strings'
-import {useSignWithHwAndSubmitTx} from '../../../../yoroi-wallets/hooks'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 
 type TransportType = 'USB' | 'BLE'
+type Step = 'select-transport' | 'connect-transport' | 'confirm'
 
-export const ConfirmRawTxWithHW = ({onSuccess}: {onSuccess?: VoidFunction}) => {
+type Props = {
+  onSuccess?: (options: {useUSB: boolean}) => void
+}
+
+export const ConfirmRawTxWithHW = ({onSuccess}: Props) => {
   const [transportType, setTransportType] = useState<TransportType>('USB')
-  const [step, setStep] = useState<'select-transport' | 'connect-transport' | 'confirm'>('select-transport')
+  const [step, setStep] = useState<Step>('select-transport')
   const wallet = useSelectedWallet()
 
   const onSelectTransport = (transportType: TransportType) => {
@@ -30,6 +34,10 @@ export const ConfirmRawTxWithHW = ({onSuccess}: {onSuccess?: VoidFunction}) => {
   const onConnectUSB = async (deviceObj: DeviceObj) => {
     await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
     setStep('confirm')
+  }
+
+  const handleConfirm = () => {
+    onSuccess?.({useUSB: transportType === 'USB'})
   }
 
   if (step === 'select-transport') {
@@ -51,27 +59,12 @@ export const ConfirmRawTxWithHW = ({onSuccess}: {onSuccess?: VoidFunction}) => {
 
   return (
     <Boundary>
-      <Confirm
-        wallet={wallet}
-        onSuccess={onSuccess}
-        onCancel={() => setStep('select-transport')}
-        transport={transportType}
-      />
+      <Confirm onSuccess={handleConfirm} onCancel={() => setStep('select-transport')} />
     </Boundary>
   )
 }
 
-const Confirm = ({
-  wallet,
-  onSuccess,
-  transport: transportType,
-  onCancel,
-}: {
-  wallet: YoroiWallet
-  onCancel?: () => void
-  onSuccess?: () => void
-  transport: TransportType
-}) => {
+const Confirm = ({onSuccess, onCancel}: {onCancel?: () => void; onSuccess?: () => void}) => {
   const strings = useStrings()
 
   return (
@@ -89,7 +82,7 @@ const Confirm = ({
         onPress: () => onCancel?.(),
       }}
     >
-      {/*<TransferSummary wallet={wallet} unsignedTx={unsignedTx} />*/}
+      {/* <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />*/}
     </TwoActionView>
   )
 }
