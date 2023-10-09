@@ -18,15 +18,18 @@ export const TopTokenActions = () => {
   const isDisabled = !isBuyTouched || !isSellTouched || orderData.selectedPoolCalculation === undefined
   const orderTypeIndex = orderData.type === 'market' ? 0 : 1
 
-  const {refetch, isLoading} = useSwapPoolsByPair({
-    tokenA: orderData.amounts.sell.tokenId,
-    tokenB: orderData.amounts.buy.tokenId,
-  }, {
-    enabled: false,
-    onSuccess: (pools) => {
-      poolPairsChanged(pools)
-    }
-  })
+  const {refetch, isLoading} = useSwapPoolsByPair(
+    {
+      tokenA: orderData.amounts.sell.tokenId,
+      tokenB: orderData.amounts.buy.tokenId,
+    },
+    {
+      enabled: false,
+      onSuccess: (pools) => {
+        poolPairsChanged(pools)
+      },
+    },
+  )
 
   const handleSelectOrderType = (index: number) => {
     if (index === 0) {

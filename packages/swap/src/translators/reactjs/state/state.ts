@@ -272,6 +272,7 @@ const orderReducer = (
           pools: state.orderData.pools,
           primaryTokenId: state.orderData.primartyTokenId,
           lpTokenHeld: state.orderData.lpTokenHeld,
+          side: 'sell',
         })
         draft.orderData.bestPoolCalculation = getBestPoolCalculation(
           draft.orderData.calculations,
@@ -298,7 +299,7 @@ const orderReducer = (
       // it ignores events if order type is not limit
       // NOTE: late it can replace the order from market to limit and recalc
       case SwapCreateOrderActionType.SelectedPoolChanged:
-        if (state.orderData.type !== 'limit') break
+        if (state.orderData.type === 'market') break
 
         draft.orderData.selectedPoolId = action.poolId
 
@@ -329,7 +330,6 @@ const orderReducer = (
         )
         draft.orderData.selectedPoolCalculation =
           selectedPoolCalculationSelector(draft.orderData)
-
         break
 
       // when switching and the type is limit can end up with weird amounts
@@ -371,6 +371,7 @@ const orderReducer = (
         break
 
       // when resetting quantities, when order is limit, limit price is the best market price
+      // also resets the selected pool, otherwise users will need to leave the funnel
       // otherwise the limit set back to undefined
       case SwapCreateOrderActionType.ResetQuantities:
         draft.orderData.amounts = {
@@ -383,11 +384,13 @@ const orderReducer = (
             tokenId: state.orderData.amounts.buy.tokenId,
           },
         }
+        draft.orderData.selectedPoolId = undefined
+        draft.orderData.limitPrice = undefined
 
         draft.orderData.calculations = makeOrderCalculations({
-          orderType: state.orderData.type,
+          orderType: 'market',
           amounts: draft.orderData.amounts,
-          limitPrice: state.orderData.limitPrice,
+          limitPrice: undefined,
           slippage: state.orderData.slippage,
           pools: state.orderData.pools,
           primaryTokenId: state.orderData.primartyTokenId,
@@ -413,7 +416,7 @@ const orderReducer = (
       case SwapCreateOrderActionType.LimitPriceChanged:
         draft.orderData.limitPrice = action.limitPrice
 
-        if (state.orderData.type !== 'limit') break
+        if (state.orderData.type === 'market') break
 
         draft.orderData.calculations = makeOrderCalculations({
           orderType: state.orderData.type,
