@@ -184,7 +184,6 @@ const SelectableToken = ({tokenForList, wallet}: SelectableTokenProps) => {
   const balanceAvailable = useBalance({wallet, tokenId: tokenForList.id})
   const {track} = useMetrics()
 
-
   const onSelect = () => {
     track.swapAssetToChanged({
       to_asset: [{asset_name: tokenForList.name, asset_ticker: tokenForList.ticker, policy_id: tokenForList.group}],
