@@ -42,7 +42,7 @@ export const CreateOrder = () => {
       tokenB: orderData.amounts.buy.tokenId,
     },
     {
-      enabled: isBuyTouched,
+      enabled: isBuyTouched && isSellTouched,
       onSuccess: (pools) => {
         poolPairsChanged(pools)
       },
