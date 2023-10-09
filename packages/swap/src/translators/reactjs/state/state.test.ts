@@ -157,12 +157,13 @@ describe('State Actions', () => {
         fee: '0.5',
         batcherFee: {tokenId: '', quantity: '1'},
         deposit: {tokenId: '', quantity: '1'},
-        lastUpdate: '123',
         lpToken: {tokenId: '', quantity: '1'},
         poolId: '1',
         price: 1,
         tokenA: {tokenId: '', quantity: '1'},
         tokenB: {tokenId: '', quantity: '1'},
+        ptPriceTokenA: '1',
+        ptPriceTokenB: '1',
       },
     }
     const expectedState = produce(mockSwapStateDefault, (draft) => {
@@ -182,12 +183,13 @@ describe('State Actions', () => {
         fee: '0.5',
         batcherFee: {tokenId: '', quantity: '1'},
         deposit: {tokenId: '', quantity: '1'},
-        lastUpdate: '123',
         lpToken: {tokenId: '', quantity: '1'},
         poolId: '1',
         price: 1,
         tokenA: {tokenId: '', quantity: '1'},
         tokenB: {tokenId: '', quantity: '1'},
+        ptPriceTokenA: '1',
+        ptPriceTokenB: '1',
       },
     }
 
