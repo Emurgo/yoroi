@@ -1,8 +1,8 @@
 import {FlashList} from '@shopify/flash-list'
-import {useSwap, useSwapPoolsByPair, useSwapTokensByPairToken} from '@yoroi/swap'
+import {useSwap, useSwapTokensByPairToken} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React from 'react'
-import {InteractionManager, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Spacer, Text} from '../../../../../../../components'
@@ -178,41 +178,21 @@ const TokenList = () => {
 type SelectableTokenProps = {disabled?: boolean; tokenForList: TokenForList; wallet: YoroiWallet}
 const SelectableToken = ({tokenForList, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
-  const {buyTokenIdChanged, poolPairsChanged, orderData} = useSwap()
+  const {buyTokenIdChanged} = useSwap()
   const {buyTouched} = useSwapTouched()
-  const {refetch} = useSwapPoolsByPair(
-    {
-      tokenA: orderData.amounts.buy.tokenId,
-      tokenB: orderData.amounts.sell.tokenId,
-    },
-    {
-      useErrorBoundary: true,
-      enabled: false,
-      onSuccess: (pools) => {
-        buyTouched()
-        closeSearch()
-        poolPairsChanged(pools)
-
-        InteractionManager.runAfterInteractions(() => {
-          navigateTo.startSwap()
-        })
-      },
-    },
-  )
-
-  React.useEffect(() => {
-    refetch()
-  }, [refetch, orderData.amounts.buy.tokenId])
-
   const navigateTo = useNavigateTo()
   const balanceAvailable = useBalance({wallet, tokenId: tokenForList.id})
   const {track} = useMetrics()
+
 
   const onSelect = () => {
     track.swapAssetToChanged({
       to_asset: [{asset_name: tokenForList.name, asset_ticker: tokenForList.ticker, policy_id: tokenForList.group}],
     })
+    buyTouched()
     buyTokenIdChanged(tokenForList.id)
+    navigateTo.startSwap()
+    closeSearch()
   }
 
   return (

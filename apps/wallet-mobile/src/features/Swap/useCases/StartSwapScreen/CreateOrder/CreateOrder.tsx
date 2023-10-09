@@ -1,7 +1,7 @@
-import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder} from '@yoroi/swap'
+import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
-import React, {useEffect, useState} from 'react'
+import * as React from 'react'
 import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
@@ -34,6 +34,15 @@ export const CreateOrder = () => {
   const {orderData, unsignedTxChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
+  const {refetch} = useSwapPoolsByPair(
+    {
+      tokenA: orderData.amounts.sell.tokenId,
+      tokenB: orderData.amounts.buy.tokenId,
+    },
+    {
+      enabled: false,
+    },
+  )
 
   const sellTokenInfo = useTokenInfo({
     wallet,
@@ -43,12 +52,16 @@ export const CreateOrder = () => {
     wallet,
     tokenId: orderData.amounts.buy.tokenId,
   })
-  const [showLimitPriceWarning, setShowLimitPriceWarning] = useState(false)
+  const [showLimitPriceWarning, setShowLimitPriceWarning] = React.useState(false)
   const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (orderData.selectedPoolId === orderData.bestPoolCalculation?.pool.poolId) poolDefaulted()
   }, [orderData.selectedPoolId, orderData.bestPoolCalculation, poolDefaulted])
+
+  React.useEffect(() => {
+    if (isBuyTouched) refetch()
+  }, [orderData.amounts.sell.tokenId, orderData.amounts.buy.tokenId, refetch, orderData.type, isBuyTouched])
 
   const {createUnsignedTx, isLoading} = useSwapTx({
     onSuccess: (yoroiUnsignedTx) => {
@@ -115,6 +128,18 @@ export const CreateOrder = () => {
     navigation.confirmTx()
   }
 
+  const createSwapOrder = (orderData: Swap.CreateOrderData) => {
+    createOrderData({
+      amounts: {
+        sell: orderData.amounts.sell,
+        buy: orderData.amounts.buy,
+      },
+      address: orderData?.address,
+      slippage: orderData.slippage,
+      selectedPool: orderData.selectedPool,
+    })
+  }
+
   const createUnsignedSwapTx = () => {
     const orderDetails = {
       sell: orderData.amounts.sell,
@@ -148,18 +173,6 @@ export const CreateOrder = () => {
       )
       createSwapOrder(orderResult)
     }
-  }
-
-  const createSwapOrder = (orderData: Swap.CreateOrderData) => {
-    createOrderData({
-      amounts: {
-        sell: orderData.amounts.sell,
-        buy: orderData.amounts.buy,
-      },
-      address: orderData?.address,
-      slippage: orderData.slippage,
-      selectedPool: orderData.selectedPool,
-    })
   }
 
   const handleOnSwap = () => {
