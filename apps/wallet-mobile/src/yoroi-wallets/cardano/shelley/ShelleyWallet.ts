@@ -871,12 +871,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {
       if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
 
+      const stakeVkeyHash = await this.getStakingKey().then((key) => key.hash())
       const payload = await createSwapCancellationLedgerPayload(
         cbor,
         this,
         NETWORK_ID,
         PROTOCOL_MAGIC,
         (address: string) => this.getAddressing(address),
+        stakeVkeyHash,
       )
       console.log('payload', payload)
 
