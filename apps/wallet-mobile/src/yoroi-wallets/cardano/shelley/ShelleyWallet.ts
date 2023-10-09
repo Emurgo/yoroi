@@ -884,47 +884,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       console.log('received signature', signedLedgerTx)
 
-      // const tx = await CardanoMobile.Transaction.fromHex(cbor)
-      //
-      // const allUtxos = await this.getAddressedUtxos()
-      // const addressingMap = new Map<RemoteUnspentOutput, CardanoAddressedUtxo>()
-      // console.log('allUtxos', allUtxos)
-      // for (const utxo of allUtxos) {
-      //   addressingMap.set(
-      //     {
-      //       amount: utxo.amount,
-      //       receiver: utxo.receiver,
-      //       txHash: utxo.txHash,
-      //       txIndex: utxo.txIndex,
-      //       utxoId: utxo.utxoId,
-      //       assets: utxo.assets,
-      //     },
-      //     utxo,
-      //   )
-      // }
-      //
-      // const senderUtxos = allUtxos
-      // try {
-      //   const signedTx = await Cardano.buildLedgerSignedTx(
-      //     {senderUtxos, txBuilder: {build: () => tx.body()}} as any,
-      //     signedLedgerTx,
-      //     PURPOSE,
-      //     this.publicKeyHex,
-      //     true,
-      //   )
-      //
-      //   console.log('signedTx', signedTx)
-      //   // await this.submitTransaction(base64)
-      //   const base64 = Buffer.from(signedTx.encodedTx).toString('base64')
-      //   console.log('got base64', base64)
-      //   await this.submitTransaction(base64)
-      // } catch (e) {
-      //   if (e instanceof Error) {
-      //     console.log('error', e)
-      //     console.log('error', e.stack)
-      //   }
-      // }
-
       const bytes = await createSignedLedgerSwapCancellationTx(
         cbor,
         signedLedgerTx.witnesses,
