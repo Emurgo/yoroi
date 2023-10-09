@@ -8,7 +8,7 @@ import {walletManager} from '../../../../yoroi-wallets/walletManager'
 import {LedgerTransportSwitch} from '../../useCases/ConfirmTxScreen/LedgerTransportSwitch'
 
 type TransportType = 'USB' | 'BLE'
-type Step = 'select-transport' | 'connect-transport' | 'confirm' | 'loading'
+type Step = 'select-transport' | 'connect-transport' | 'loading'
 
 type Props = {
   onConfirm?: (options: {useUSB: boolean}) => void
