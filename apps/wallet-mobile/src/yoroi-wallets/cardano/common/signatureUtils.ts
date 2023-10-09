@@ -141,6 +141,10 @@ export const createSwapCancellationLedgerPayload = async (
     if (!utxo) return null
     return getAddressing(utxo.receiver).path
   }
+  const ttl = await tx
+    .body()
+    .then((b) => b.ttl())
+    .then((n) => n?.toString())
 
   return {
     signingMode: TransactionSigningMode.PLUTUS_TRANSACTION,
@@ -180,10 +184,7 @@ export const createSwapCancellationLedgerPayload = async (
           }
           return collateralArray
         }),
-      ttl: await tx
-        .body()
-        .then((b) => b.ttl())
-        .then((n) => n?.toString()),
+      ...(ttl ? {ttl} : {}),
       requiredSigners: [{type: TxRequiredSignerType.PATH, path: [harden(1852), harden(1815), harden(0), 0, 0]}],
       outputs: await transformToLedgerOutputs(CardanoMobile, {
         networkId,
