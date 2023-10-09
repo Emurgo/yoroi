@@ -20,7 +20,7 @@ export const EditSellAmount = () => {
   const inputRef = React.useRef<TextInput>(null)
 
   const {orderData, sellQuantityChanged} = useSwap()
-  const {isSellTouched} = useSwapTouched()
+  const {isSellTouched, isBuyTouched} = useSwapTouched()
 
   const {tokenId, quantity} = orderData.amounts.sell
 
@@ -37,7 +37,7 @@ export const EditSellAmount = () => {
   }, [isSellTouched, quantity, tokenInfo.decimals])
 
   const hasBalance = !Quantities.isGreaterThan(quantity, balance)
-  const showError = !Quantities.isZero(quantity) && !hasBalance
+  const showError = !Quantities.isZero(quantity) && !hasBalance && isBuyTouched
 
   const onChangeQuantity = (text: string) => {
     try {
@@ -60,7 +60,7 @@ export const EditSellAmount = () => {
       navigateTo={navigate.selectSellToken}
       touched={isSellTouched}
       inputRef={inputRef}
-      inputEditable={orderData.selectedPoolCalculation?.pool !== undefined}
+      // inputEditable={orderData.selectedPoolCalculation?.pool !== undefined}
     />
   )
 }
