@@ -1,14 +1,14 @@
 import {Balance, Swap} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
-import {SwapOrderCalculation} from '../../translators/reactjs/state/state'
-import {getQuantityWithSlippage} from './getQuantityWithSlippage'
-import {getLiquidityProviderFee} from './getLiquidityProviderFee'
-import {getFrontendFee} from './getFrontendFee'
-import {getMarketPrice} from './getMarketPrice'
-import {getBuyAmount} from './getBuyAmount'
-import {getSellAmount} from './getSellAmount'
-import {asQuantity} from '../../utils/asQuantity'
-import {Quantities} from '../../utils/quantities'
+import {SwapOrderCalculation} from '../../../translators/reactjs/state/state'
+import {getQuantityWithSlippage} from '../amounts/getQuantityWithSlippage'
+import {getLiquidityProviderFee} from '../costs/getLiquidityProviderFee'
+import {getFrontendFee} from '../costs/getFrontendFee'
+import {getMarketPrice} from '../../prices/getMarketPrice'
+import {getBuyAmount} from '../amounts/getBuyAmount'
+import {getSellAmount} from '../amounts/getSellAmount'
+import {asQuantity} from '../../../utils/asQuantity'
+import {Quantities} from '../../../utils/quantities'
 
 export const makeOrderCalculations = ({
   orderType,

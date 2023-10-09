@@ -1,6 +1,6 @@
-import {Quantities} from '../../utils/quantities'
+import {Quantities} from '../../../utils/quantities'
 import {getLiquidityProviderFee} from './getLiquidityProviderFee'
-import {asQuantity} from '../../utils/asQuantity'
+import {asQuantity} from '../../../utils/asQuantity'
 
 describe('getLiquidityProviderFee', () => {
   it('should return zero when sell quantity is zero', () => {

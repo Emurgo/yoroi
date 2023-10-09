@@ -150,7 +150,6 @@ export const transformersMaker = (
       lpToken: asYoroiAmount(lpToken),
       batcherFee: asYoroiAmount({amount: batcherFee, address: undefined}),
       fee: poolFee,
-      price: 0,
       poolId,
       provider,
     }

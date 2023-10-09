@@ -1,6 +1,6 @@
 import {Balance} from '@yoroi/types'
-import {ceilDivision} from '../../utils/ceilDivision'
-import {asQuantity} from '../../utils/asQuantity'
+import {ceilDivision} from '../../../utils/ceilDivision'
+import {asQuantity} from '../../../utils/asQuantity'
 
 export const getQuantityWithSlippage = (
   quantity: Balance.Quantity,
