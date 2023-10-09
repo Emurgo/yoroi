@@ -13,6 +13,8 @@ import {supportsAndroidFingerprintOverlay} from './auth/biometrics'
 import {EnableLoginWithPin} from './auth/EnableLoginWithPin'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
+import {ModalProvider} from './features/Modal/ModalContext'
+import {ModalScreen} from './features/Modal/ModalScreen'
 import {CONFIG} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
@@ -62,78 +64,86 @@ export const AppNavigator = () => {
 
   return (
     <NavigationContainer onReady={onReady} ref={navRef}>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false /* used only for transition */,
-          detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-        }}
-      >
-        {/* Not Authenticated */}
+      <ModalProvider>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false /* used only for transition */,
+            detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+          }}
+        >
+          {/* Not Authenticated */}
 
-        {isLoggedOut && (
-          <Stack.Group>
-            {firstAction === 'first-run' && (
-              <Stack.Screen name="first-run">
-                {() => (
-                  <SearchProvider>
-                    <InitializationNavigator />
-                  </SearchProvider>
-                )}
-              </Stack.Screen>
-            )}
-
-            {firstAction === 'show-agreement-changed-notice' && (
-              <Stack.Screen name="agreement-changed-notice">{() => <AgreementChangedNavigator />}</Stack.Screen>
-            )}
-
-            {firstAction === 'auth-with-pin' && (
-              <Stack.Screen
-                name="custom-pin-auth"
-                component={PinLoginScreen}
-                options={{title: strings.loginPinTitle}}
-              />
-            )}
-
-            {firstAction === 'auth-with-os' && (
-              <Stack.Screen name="bio-auth-initial" component={OsLoginScreen} options={{headerShown: false}} />
-            )}
-
-            {firstAction === 'request-new-pin' && (
-              <Stack.Screen //
-                name="enable-login-with-pin"
-                component={CreatePinScreenWrapper}
-                options={{title: strings.customPinTitle}}
-              />
-            )}
-          </Stack.Group>
-        )}
-
-        {/* Authenticated */}
-
-        {isLoggedIn && (
-          <Stack.Group>
-            <Stack.Screen name="app-root">
-              {() => (
-                <SearchProvider>
-                  <WalletNavigator />
-                </SearchProvider>
+          {isLoggedOut && (
+            <Stack.Group>
+              {firstAction === 'first-run' && (
+                <Stack.Screen name="first-run">
+                  {() => (
+                    <SearchProvider>
+                      <InitializationNavigator />
+                    </SearchProvider>
+                  )}
+                </Stack.Screen>
               )}
-            </Stack.Screen>
 
-            <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
-          </Stack.Group>
-        )}
+              {firstAction === 'show-agreement-changed-notice' && (
+                <Stack.Screen name="agreement-changed-notice">{() => <AgreementChangedNavigator />}</Stack.Screen>
+              )}
 
-        {/* Development */}
+              {firstAction === 'auth-with-pin' && (
+                <Stack.Screen
+                  name="custom-pin-auth"
+                  component={PinLoginScreen}
+                  options={{title: strings.loginPinTitle}}
+                />
+              )}
 
-        {__DEV__ && (
-          <Stack.Group>
-            <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
+              {firstAction === 'auth-with-os' && (
+                <Stack.Screen name="bio-auth-initial" component={OsLoginScreen} options={{headerShown: false}} />
+              )}
 
-            <Stack.Screen name="storybook" component={StorybookScreen} />
-          </Stack.Group>
-        )}
-      </Stack.Navigator>
+              {firstAction === 'request-new-pin' && (
+                <Stack.Screen //
+                  name="enable-login-with-pin"
+                  component={CreatePinScreenWrapper}
+                  options={{title: strings.customPinTitle}}
+                />
+              )}
+            </Stack.Group>
+          )}
+
+          {/* Authenticated */}
+
+          {isLoggedIn && (
+            <>
+              <Stack.Group>
+                <Stack.Screen name="app-root">
+                  {() => (
+                    <SearchProvider>
+                      <WalletNavigator />
+                    </SearchProvider>
+                  )}
+                </Stack.Screen>
+
+                <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
+              </Stack.Group>
+
+              <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
+                <Stack.Screen name="modal" component={ModalScreen} />
+              </Stack.Group>
+            </>
+          )}
+
+          {/* Development */}
+
+          {__DEV__ && (
+            <Stack.Group>
+              <Stack.Screen name="developer" component={DeveloperScreen} options={{headerShown: false}} />
+
+              <Stack.Screen name="storybook" component={StorybookScreen} />
+            </Stack.Group>
+          )}
+        </Stack.Navigator>
+      </ModalProvider>
     </NavigationContainer>
   )
 }
