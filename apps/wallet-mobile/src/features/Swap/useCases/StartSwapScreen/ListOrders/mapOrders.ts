@@ -1,4 +1,5 @@
 import {isString} from '@yoroi/common'
+import {isNonNullable} from '@yoroi/common'
 import {getPoolUrlByProvider} from '@yoroi/swap'
 import {Balance, Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
@@ -46,7 +47,7 @@ export type MappedOpenOrder = {
   to: Balance.Amount
 }
 
-export const mapCompleteOrders = (orders: TransactionInfo[], wallet: YoroiWallet): Array<MappedCompleteOrder> => {
+export const mapCompletedOrders = (orders: TransactionInfo[], wallet: YoroiWallet): Array<MappedCompleteOrder> => {
   if (orders.length === 0) return []
   const result = orders
     .map((order) => {
@@ -55,11 +56,11 @@ export const mapCompleteOrders = (orders: TransactionInfo[], wallet: YoroiWallet
         sellTokenId: string
         sellQuantity: Balance.Quantity
         buyQuantity: Balance.Quantity
-        provider: string
+        provider: Swap.SupportedProvider
       }
 
       try {
-        metadata = JSON.parse(order.metadata)
+        metadata = JSON.parse(order.metadata as string)
 
         const buyTokenInfo = useTokenInfo({wallet, tokenId: metadata.buyTokenId})
         const sellTokenInfo = useTokenInfo({wallet, tokenId: metadata.sellTokenId})
@@ -88,13 +89,10 @@ export const mapCompleteOrders = (orders: TransactionInfo[], wallet: YoroiWallet
         }
       } catch (error) {
         console.error('Error parsing JSON: ', error)
+        return null
       }
-
-      return []
     })
-    .filter((order): order is MappedCompleteOrder => {
-      return order !== undefined && Object.keys(order).length > 0
-    })
+    .filter(isNonNullable)
 
   return result
 }

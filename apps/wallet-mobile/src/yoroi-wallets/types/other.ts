@@ -399,7 +399,7 @@ export const TRANSACTION_STATUS = {
 export type TransactionStatus = (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
 
 export type TxMetadata = Array<{label: string; map_json: {msg: Array<string>}}>
-export type TxMetadataInfo = any
+export type TxMetadataInfo = unknown
 
 export type TransactionInfo = {
   id: string

@@ -24,13 +24,13 @@ import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {mapCompleteOrders} from './mapOrders'
+import {mapCompletedOrders} from './mapOrders'
 
 const findCompletedOrderTx = (transactions: TransactionInfo[]): TransactionInfo[] => {
-  const sendTransactions = transactions.filter((tx) => tx.direction === 'SENT')
+  const sentTransactions = transactions.filter((tx) => tx.direction === 'SENT')
   const receivedTransactions = transactions.filter((tx) => tx.direction === 'RECEIVED')
 
-  const filteredTx = sendTransactions.filter((sentTx) => {
+  const filteredTx = sentTransactions.filter((sentTx) => {
     return receivedTransactions.filter((receivedTx) => {
       return sentTx.id === receivedTx.inputs[1]?.id?.slice(0, -1)
     })
@@ -57,7 +57,7 @@ export const CompletedOrders = () => {
     }, [track]),
   )
 
-  const normalizedOrders = mapCompleteOrders(completeOrders, wallet)
+  const normalizedOrders = mapCompletedOrders(completeOrders, wallet)
 
   return (
     <>
