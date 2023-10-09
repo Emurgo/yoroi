@@ -20,7 +20,7 @@ export const EditBuyAmount = () => {
   const inputRef = React.useRef<TextInput>(null)
 
   const {orderData, buyQuantityChanged} = useSwap()
-  const {isBuyTouched} = useSwapTouched()
+  const {isBuyTouched, isSellTouched} = useSwapTouched()
   const pool = orderData.selectedPoolCalculation?.pool
   const {tokenId, quantity} = orderData.amounts.buy
   const tokenInfo = useTokenInfo({wallet, tokenId})
@@ -30,15 +30,6 @@ export const EditBuyAmount = () => {
   const [inputValue, setInputValue] = React.useState<string>(Quantities.format(quantity, tokenInfo.decimals ?? 0))
 
   React.useEffect(() => {
-    console.log('EditBuyAmount::useEffect')
-    console.log(
-      'isBuyTouched',
-      isBuyTouched,
-      'inputRef?.current?.isFocused()',
-      inputRef?.current?.isFocused(),
-      'quantity',
-      quantity,
-    )
     if (isBuyTouched && !inputRef?.current?.isFocused()) {
       setInputValue(Quantities.format(quantity, tokenInfo.decimals ?? 0))
     }
@@ -46,7 +37,8 @@ export const EditBuyAmount = () => {
 
   const poolSupply = tokenId === pool?.tokenA.tokenId ? pool?.tokenA.quantity : pool?.tokenB.quantity
   const hasSupply = !Quantities.isGreaterThan(quantity, poolSupply ?? Quantities.zero)
-  const showError = (!Quantities.isZero(quantity) && !hasSupply) || (isBuyTouched && pool === undefined)
+  const showError =
+    (!Quantities.isZero(quantity) && !hasSupply) || (isSellTouched && isBuyTouched && pool === undefined)
 
   const onChangeQuantity = (text: string) => {
     try {
