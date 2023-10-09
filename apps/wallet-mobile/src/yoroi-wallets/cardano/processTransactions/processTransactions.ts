@@ -90,7 +90,7 @@ export const processTxHistoryData = (
   memo: string | null,
   defaultAsset: DefaultAsset,
 ): TransactionInfo => {
-  const metadata = tx.metadata ? tx.metadata[0]?.map_json.msg?.join('') : null
+  const metadata = tx.metadata?.[0]?.map_json.msg?.join('') ?? null
   const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, networkId, defaultAsset)
   // collateral
   const collateral = tx.collateralInputs || []
