@@ -1,11 +1,23 @@
+import {useCardAnimation} from '@react-navigation/stack'
 import React from 'react'
-import {KeyboardAvoidingView, NativeTouchEvent, Platform, Pressable, StyleSheet, Text, View} from 'react-native'
-import Animated, {FadeIn} from 'react-native-reanimated'
+import {
+  Animated,
+  KeyboardAvoidingView,
+  NativeTouchEvent,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 
 import {Spacer} from '../../components'
 import {useModal} from './ModalContext'
 
 export const ModalScreen = () => {
+  const {height: windowHeight} = useWindowDimensions()
+  const {current} = useCardAnimation()
   const {height, closeModal, content} = useModal()
   const [swipeLocationY, setSwipeLocationY] = React.useState(height)
   const [downDirectionCount, setDownDirectionCount] = React.useState(0)
@@ -26,25 +38,36 @@ export const ModalScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <Animated.View entering={FadeIn.duration(600)} style={styles.test}>
-        <Pressable style={styles.backdrop} onPress={closeModal} />
-      </Animated.View>
+    <KeyboardAvoidingView
+      style={styles.root}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={150}
+    >
+      <Pressable style={styles.backdrop} onPress={closeModal} />
 
-      <View
+      <Animated.View
         style={[
           {
-            height: height,
+            height: windowHeight,
+            transform: [
+              {
+                translateY: current.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [windowHeight, windowHeight - height],
+                  extrapolate: 'clamp',
+                }),
+              },
+            ],
           },
           styles.animatedView,
         ]}
       >
-        <View style={[styles.sheet]} onResponderMove={onResponderMove} onStartShouldSetResponder={() => true}>
+        <View style={styles.sheet} onResponderMove={onResponderMove} onStartShouldSetResponder={() => true}>
           <Header />
 
           {content}
         </View>
-      </View>
+      </Animated.View>
     </KeyboardAvoidingView>
   )
 }
@@ -70,14 +93,11 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    alignSelf: 'stretch',
-  },
-  test: {
-    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
   },
   backdrop: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   animatedView: {
     alignSelf: 'stretch',

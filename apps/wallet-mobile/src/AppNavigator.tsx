@@ -1,5 +1,5 @@
 import {NavigationContainer, NavigationContainerRef} from '@react-navigation/native'
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack'
+import {createStackNavigator} from '@react-navigation/stack'
 import {isString} from '@yoroi/common'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -127,16 +127,8 @@ export const AppNavigator = () => {
                 <Stack.Screen name="new-wallet" component={WalletInitNavigator} />
               </Stack.Group>
 
-              <Stack.Group
-                screenOptions={{presentation: 'transparentModal', cardStyle: {backgroundColor: 'rgba(0, 0, 0, 0.5)'}}}
-              >
-                <Stack.Screen
-                  name="modal"
-                  component={ModalScreen}
-                  options={{
-                    ...TransitionPresets.ModalSlideFromBottomIOS,
-                  }}
-                />
+              <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
+                <Stack.Screen name="modal" component={ModalScreen} />
               </Stack.Group>
             </>
           )}
