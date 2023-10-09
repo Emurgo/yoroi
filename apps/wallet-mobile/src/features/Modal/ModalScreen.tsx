@@ -27,7 +27,7 @@ export const ModalScreen = () => {
   const onResponderMove = ({nativeEvent}: {nativeEvent: NativeTouchEvent}) => {
     if (swipeLocationY < nativeEvent.locationY) {
       const newState = downDirectionCount + 1
-      if (newState > 6) {
+      if (newState > 4) {
         closeModal()
         cleanDirectionCount()
       } else setDownDirectionCount(newState)
@@ -36,37 +36,33 @@ export const ModalScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.root}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'android' ? -90 : undefined}
-    >
-      <Pressable style={styles.backdrop} onPress={closeModal} />
+    <Pressable style={styles.backdrop} onPress={closeModal}>
+      <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <Animated.View
+          style={[
+            {
+              height: height,
+              transform: [
+                {
+                  translateY: current.progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [height, 0],
+                    extrapolate: 'clamp',
+                  }),
+                },
+              ],
+            },
+            styles.animatedView,
+          ]}
+        >
+          <View style={styles.sheet} onResponderMove={onResponderMove} onStartShouldSetResponder={() => true}>
+            <Header />
 
-      <Animated.View
-        style={[
-          {
-            height: height,
-            transform: [
-              {
-                translateY: current.progress.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [height, 0],
-                  extrapolate: 'clamp',
-                }),
-              },
-            ],
-          },
-          styles.animatedView,
-        ]}
-      >
-        <View style={styles.sheet} onResponderMove={onResponderMove} onStartShouldSetResponder={() => true}>
-          <Header />
-
-          {content}
-        </View>
-      </Animated.View>
-    </KeyboardAvoidingView>
+            {content}
+          </View>
+        </Animated.View>
+      </KeyboardAvoidingView>
+    </Pressable>
   )
 }
 
@@ -92,6 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
+    alignSelf: 'stretch',
   },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
