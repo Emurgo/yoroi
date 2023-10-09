@@ -1,9 +1,9 @@
 import {Balance} from '@yoroi/types'
 
 import {getFrontendFee} from './getFrontendFee'
-import {milkHoldersDiscountTiers} from '../../translators/constants'
-import {Quantities} from '../../utils/quantities'
-import {asQuantity} from '../../utils/asQuantity'
+import {milkHoldersDiscountTiers} from '../../../translators/constants'
+import {Quantities} from '../../../utils/quantities'
+import {asQuantity} from '../../../utils/asQuantity'
 
 describe('getFrontendFee', () => {
   const primaryTokenId = 'primary.token'

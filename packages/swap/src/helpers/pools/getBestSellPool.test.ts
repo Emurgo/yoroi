@@ -1,7 +1,7 @@
 import {Balance} from '@yoroi/types'
 
 import {getBestSellPool} from './getBestSellPool'
-import {getSellAmount} from '../orders/getSellAmount'
+import {getSellAmount} from '../orders/amounts/getSellAmount'
 import {mocks} from '../mocks'
 
 describe('getBestSellPool', () => {
