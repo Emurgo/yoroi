@@ -26,14 +26,14 @@ const WalletTabNavigator = () => {
   const wallet = useSelectedWallet()
   const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
 
-  const [keyboardStatus, setKeyboardStatus] = React.useState(false)
+  const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardWillShow', () => {
-      setKeyboardStatus(true)
+      setIsKeyboardOpen(true)
     })
     const hideSubscription = Keyboard.addListener('keyboardWillHide', () => {
-      setKeyboardStatus(false)
+      setIsKeyboardOpen(false)
     })
 
     return () => {
@@ -53,7 +53,7 @@ const WalletTabNavigator = () => {
           tabBarActiveTintColor: theme.COLORS.NAVIGATION_ACTIVE,
           tabBarInactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
           tabBarStyle: {
-            display: keyboardStatus ? 'none' : undefined,
+            display: isKeyboardOpen ? 'none' : undefined,
           },
         }}
         initialRouteName={initialRoute}
