@@ -22,7 +22,6 @@ storiesOf('Swap List Pool', module)
           ptPriceTokenB: '0',
           fee: '0.3', // 0.3%
           provider: 'minswap',
-          price: 2,
           batcherFee: {quantity: '1', tokenId: ''},
           deposit: {quantity: '1', tokenId: ''},
           poolId: '0',
@@ -38,7 +37,6 @@ storiesOf('Swap List Pool', module)
           ptPriceTokenB: '0',
           fee: '0.3', // 0.3%
           provider: 'sundaeswap',
-          price: 6,
           batcherFee: {quantity: '122', tokenId: ''},
           deposit: {quantity: '432', tokenId: ''},
           poolId: '23455',

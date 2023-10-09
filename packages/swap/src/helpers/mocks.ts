@@ -9,7 +9,6 @@ const mockedPools1: Swap.Pool[] = [
     ptPriceTokenB: '0.0695404765',
     fee: '0.3', // 0.3%
     provider: 'muesliswap_v2',
-    price: 0,
     batcherFee: {quantity: '950000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '1',
@@ -25,7 +24,6 @@ const mockedPools1: Swap.Pool[] = [
     ptPriceTokenB: '0.0695404765',
     fee: '0.3', // 0.3%
     provider: 'vyfi',
-    price: 0,
     batcherFee: {quantity: '1900000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '2',
@@ -41,7 +39,6 @@ const mockedPools1: Swap.Pool[] = [
     ptPriceTokenB: '0.0695404765',
     fee: '0.3', // 0.3%
     provider: 'minswap',
-    price: 0,
     batcherFee: {quantity: '2000000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '3',
@@ -57,7 +54,6 @@ const mockedPools1: Swap.Pool[] = [
     ptPriceTokenB: '0.0695404765',
     fee: '0.35', // 0.35%
     provider: 'wingriders',
-    price: 0,
     batcherFee: {quantity: '2000000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '4',
@@ -73,7 +69,6 @@ const mockedPools1: Swap.Pool[] = [
     ptPriceTokenB: '0.0695404765',
     fee: '0.3', // 0.3%
     provider: 'sundaeswap',
-    price: 0,
     batcherFee: {quantity: '2500000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '5',
@@ -89,7 +84,6 @@ const mockedPools1: Swap.Pool[] = [
     ptPriceTokenB: '0.0695404765',
     fee: '0.05', // 0.05%
     provider: 'sundaeswap',
-    price: 0,
     batcherFee: {quantity: '2500000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '6',
@@ -108,7 +102,6 @@ const mockedPools2: Swap.Pool[] = [
     ptPriceTokenB: '0.0695404765',
     fee: '0.3', // 0.3%
     provider: 'muesliswap_v2',
-    price: 0,
     batcherFee: {quantity: '950000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -125,7 +118,6 @@ const mockedPools2: Swap.Pool[] = [
     ptPriceTokenB: '0.0695404765',
     fee: '0.3', // 0.3%
     provider: 'vyfi',
-    price: 0,
     batcherFee: {quantity: '1900000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -142,7 +134,6 @@ const mockedPools2: Swap.Pool[] = [
     ptPriceTokenB: '0.0695404765',
     fee: '0.3', // 0.3%
     provider: 'minswap',
-    price: 0,
     batcherFee: {quantity: '2000000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -159,7 +150,6 @@ const mockedPools2: Swap.Pool[] = [
     ptPriceTokenB: '0.0695404765',
     fee: '0.35', // 0.35%
     provider: 'wingriders',
-    price: 0,
     batcherFee: {quantity: '2000000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -176,7 +166,6 @@ const mockedPools2: Swap.Pool[] = [
     ptPriceTokenB: '0.0695404765',
     fee: '0.3', // 0.3%
     provider: 'sundaeswap',
-    price: 0,
     batcherFee: {quantity: '2500000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -193,7 +182,6 @@ const mockedPools2: Swap.Pool[] = [
     ptPriceTokenB: '0.0695404765',
     fee: '0.05', // 0.05%
     provider: 'sundaeswap',
-    price: 0,
     batcherFee: {quantity: '2500000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -211,7 +199,6 @@ const mockedPools3: Swap.Pool[] = [
     ptPriceTokenB: '0.06950020009',
     fee: '0.3', // 0.3%
     provider: 'muesliswap_v2',
-    price: 0,
     batcherFee: {quantity: '950000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -227,7 +214,6 @@ const mockedPools3: Swap.Pool[] = [
     ptPriceTokenB: '0.06950020009',
     fee: '0.3', // 0.3%
     provider: 'vyfi',
-    price: 0,
     batcherFee: {quantity: '1900000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -243,7 +229,6 @@ const mockedPools3: Swap.Pool[] = [
     ptPriceTokenB: '0.06950020009',
     fee: '0.3', // 0.3%
     provider: 'minswap',
-    price: 0,
     batcherFee: {quantity: '2000000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -259,7 +244,6 @@ const mockedPools3: Swap.Pool[] = [
     ptPriceTokenB: '0.06950020009',
     fee: '0.35', // 0.35%
     provider: 'wingriders',
-    price: 0,
     batcherFee: {quantity: '2000000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -275,7 +259,6 @@ const mockedPools3: Swap.Pool[] = [
     ptPriceTokenB: '0.06950020009',
     fee: '0.3', // 0.3%
     provider: 'sundaeswap',
-    price: 0,
     batcherFee: {quantity: '2500000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -291,7 +274,6 @@ const mockedPools3: Swap.Pool[] = [
     ptPriceTokenB: '0.06950020009',
     fee: '0.05', // 0.05%
     provider: 'sundaeswap',
-    price: 0,
     batcherFee: {quantity: '2500000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -309,7 +291,6 @@ const mockedPools4: Swap.Pool[] = [
     ptPriceTokenA: '0.06950020009',
     fee: '0.3', // 0.3%
     provider: 'muesliswap_v2',
-    price: 0,
     batcherFee: {quantity: '950000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -325,7 +306,6 @@ const mockedPools4: Swap.Pool[] = [
     ptPriceTokenA: '0.06950020009',
     fee: '0.3', // 0.3%
     provider: 'vyfi',
-    price: 0,
     batcherFee: {quantity: '1900000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -341,7 +321,6 @@ const mockedPools4: Swap.Pool[] = [
     ptPriceTokenA: '0.06950020009',
     fee: '0.3', // 0.3%
     provider: 'minswap',
-    price: 0,
     batcherFee: {quantity: '2000000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -357,7 +336,6 @@ const mockedPools4: Swap.Pool[] = [
     ptPriceTokenB: '0.06950020009',
     fee: '0.35', // 0.35%
     provider: 'wingriders',
-    price: 0,
     batcherFee: {quantity: '2000000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -373,7 +351,6 @@ const mockedPools4: Swap.Pool[] = [
     ptPriceTokenA: '0.06950020009',
     fee: '0.3', // 0.3%
     provider: 'sundaeswap',
-    price: 0,
     batcherFee: {quantity: '2500000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -389,7 +366,6 @@ const mockedPools4: Swap.Pool[] = [
     ptPriceTokenB: '0.06950020009',
     fee: '0.05', // 0.05%
     provider: 'sundaeswap',
-    price: 0,
     batcherFee: {quantity: '2500000', tokenId: ''},
     deposit: {quantity: '2000000', tokenId: ''},
     poolId: '0',
@@ -483,7 +459,6 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       ptPriceTokenB: '0.0695404765',
       fee: '0.3',
       provider: 'muesliswap_v2',
-      price: 0,
       batcherFee: {
         quantity: '950000',
         tokenId: '',
@@ -581,7 +556,6 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       ptPriceTokenB: '0.0695404765',
       fee: '0.3',
       provider: 'vyfi',
-      price: 0,
       batcherFee: {
         quantity: '1900000',
         tokenId: '',
@@ -679,7 +653,6 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       ptPriceTokenB: '0.0695404765',
       fee: '0.3',
       provider: 'minswap',
-      price: 0,
       batcherFee: {
         quantity: '2000000',
         tokenId: '',
@@ -777,7 +750,6 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       ptPriceTokenB: '0.0695404765',
       fee: '0.35',
       provider: 'wingriders',
-      price: 0,
       batcherFee: {
         quantity: '2000000',
         tokenId: '',
@@ -875,7 +847,6 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       ptPriceTokenB: '0.0695404765',
       fee: '0.3',
       provider: 'sundaeswap',
-      price: 0,
       batcherFee: {
         quantity: '2500000',
         tokenId: '',
@@ -973,7 +944,6 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       ptPriceTokenB: '0.0695404765',
       fee: '0.05',
       provider: 'sundaeswap',
-      price: 0,
       batcherFee: {
         quantity: '2500000',
         tokenId: '',
@@ -1067,7 +1037,6 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       ptPriceTokenB: '0.0695404765',
       fee: '0.3',
       provider: 'muesliswap_v2',
-      price: 0,
       batcherFee: {
         quantity: '950000',
         tokenId: '',
@@ -1158,7 +1127,6 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       ptPriceTokenB: '0.0695404765',
       fee: '0.3',
       provider: 'vyfi',
-      price: 0,
       batcherFee: {
         quantity: '1900000',
         tokenId: '',
@@ -1249,7 +1217,6 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       ptPriceTokenB: '0.0695404765',
       fee: '0.3',
       provider: 'minswap',
-      price: 0,
       batcherFee: {
         quantity: '2000000',
         tokenId: '',
@@ -1340,7 +1307,6 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       ptPriceTokenB: '0.0695404765',
       fee: '0.35',
       provider: 'wingriders',
-      price: 0,
       batcherFee: {
         quantity: '2000000',
         tokenId: '',
@@ -1431,7 +1397,6 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       ptPriceTokenB: '0.0695404765',
       fee: '0.3',
       provider: 'sundaeswap',
-      price: 0,
       batcherFee: {
         quantity: '2500000',
         tokenId: '',
@@ -1522,7 +1487,6 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       ptPriceTokenB: '0.0695404765',
       fee: '0.05',
       provider: 'sundaeswap',
-      price: 0,
       batcherFee: {
         quantity: '2500000',
         tokenId: '',

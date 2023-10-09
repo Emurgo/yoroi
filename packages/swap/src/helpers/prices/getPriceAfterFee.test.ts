@@ -11,7 +11,6 @@ describe('getPriceAfterFee', () => {
       ptPriceTokenB: '3.81247293317',
       fee: '0.3', // 0.3%
       provider: 'minswap',
-      price: 2,
       batcherFee: {quantity: '950000', tokenId: ''},
       deposit: {quantity: '1', tokenId: ''},
       poolId: '0',
@@ -36,7 +35,6 @@ describe('getPriceAfterFee', () => {
       ptPriceTokenB: '1',
       fee: '0.3', // 0.3%
       provider: 'minswap',
-      price: 2,
       batcherFee: {quantity: '1900000', tokenId: ''},
       deposit: {quantity: '1', tokenId: ''},
       poolId: '0',
@@ -61,7 +59,6 @@ describe('getPriceAfterFee', () => {
       ptPriceTokenB: '1',
       fee: '0.3', // 0.3%
       provider: 'minswap',
-      price: 2,
       batcherFee: {quantity: '1900000', tokenId: ''},
       deposit: {quantity: '1', tokenId: ''},
       poolId: '0',
@@ -86,7 +83,6 @@ describe('getPriceAfterFee', () => {
       ptPriceTokenB: '1',
       fee: '0.3', // 0.3%
       provider: 'minswap',
-      price: 2,
       batcherFee: {quantity: '1900000', tokenId: ''},
       deposit: {quantity: '1', tokenId: ''},
       poolId: '0',

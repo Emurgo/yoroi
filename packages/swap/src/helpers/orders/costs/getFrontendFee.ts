@@ -1,12 +1,12 @@
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
-import {Quantities} from '../../utils/quantities'
+import {Quantities} from '../../../utils/quantities'
 import {
   SwapDiscountTier,
   milkHoldersDiscountTiers,
-} from '../../translators/constants'
-import {asQuantity} from '../../utils/asQuantity'
+} from '../../../translators/constants'
+import {asQuantity} from '../../../utils/asQuantity'
 
 /**
  * Calculates the frontend fee and selects a discount tier for a swap transaction.

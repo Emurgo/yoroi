@@ -1,5 +1,5 @@
 import {Balance, Swap} from '@yoroi/types'
-import {getQuantityWithSlippage} from './getQuantityWithSlippage'
+import {getQuantityWithSlippage} from '../amounts/getQuantityWithSlippage'
 
 /**
  * Create a limit order with specified parameters.

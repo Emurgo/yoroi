@@ -28,7 +28,6 @@ export const mocks = {
             tokenId: '0029cb7c88c7567b63d1a512c0ed626aa169688ec980730c0473b913.6c702083',
           },
           poolId: '0029cb7c88c7567b63d1a512c0ed626aa169688ec980730c0473b913.702083',
-          price: 0.0890390378168252,
           provider: 'sundaeswap',
           tokenA: {quantity: asQuantity(20630071), tokenId: ''},
           tokenB: {

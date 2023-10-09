@@ -1,9 +1,9 @@
 import BigNumber from 'bignumber.js'
 import {Balance, Swap} from '@yoroi/types'
 
-import {ceilDivision} from '../../utils/ceilDivision'
-import {Quantities} from '../../utils/quantities'
-import {asQuantity} from '../../utils/asQuantity'
+import {ceilDivision} from '../../../utils/ceilDivision'
+import {Quantities} from '../../../utils/quantities'
+import {asQuantity} from '../../../utils/asQuantity'
 
 /**
  * Calculate the amount to sell based on the desired buy amount in a liquidity pool.

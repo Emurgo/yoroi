@@ -3,7 +3,7 @@ import {produce} from 'immer'
 
 import {Quantities} from '../../../utils/quantities'
 import {SwapDiscountTier} from '../../../translators/constants'
-import {makeOrderCalculations} from '../../../helpers/orders/makeOrderCalculations'
+import {makeOrderCalculations} from '../../../helpers/orders/factories/makeOrderCalculations'
 import {selectedPoolCalculationSelector} from './selectors/selectedPoolCalculationSelector'
 import {getBestPoolCalculation} from '../../../helpers/pools/getBestPoolCalculation'
 
