@@ -1635,7 +1635,6 @@
     hoist-non-react-statics "^3.3.0"
 
 "@cardano-foundation/ledgerjs-hw-app-cardano@^5.0.0":
-  name "@cardano-foundation/ledgerjs-hw-app-cardanoV5"
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/@cardano-foundation/ledgerjs-hw-app-cardano/-/ledgerjs-hw-app-cardano-5.1.0.tgz#69b94f7c5055bdb19aa719ff277fa5f683d11067"
   integrity sha512-ucuz/XbS/0ZD0Bal/GI/kiTm9jDIl8J+A7ypEqcAcBDGicFsyWmtPotOTwuDovTsiM8+eA/5OGTFX0oRqzxstQ==
@@ -2017,8 +2016,10 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@file:../yoroi-lib":
-  version "0.9.8"
+"@emurgo/yoroi-lib@0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.10.1.tgz#1c794311a0e07e9eed7f06010a0a77dd2b43f48a"
+  integrity sha512-g4azRsP8BbdVT6ibZ0BdtBtrn2jED172Zw7CwWhr5J6PNXptuv907zTGWGIFUHrrovKvYx0S6BBuM1lIIFsoKQ==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^6.0.0"
     "@emurgo/cross-csl-core" "3.1.0"

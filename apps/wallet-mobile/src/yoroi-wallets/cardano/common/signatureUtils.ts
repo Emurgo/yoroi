@@ -131,9 +131,7 @@ export const createSwapCancellationLedgerPayload = async (
     purpose: harden(1852),
     stakeVKHash,
     getUtxoAddressing: getAddressingByTxIdAndIndex,
-    getAddressAddressing: (address: string) => {
-      return getAddressing(address)
-    },
+    getAddressAddressing: getAddressing,
   })
 }
 
