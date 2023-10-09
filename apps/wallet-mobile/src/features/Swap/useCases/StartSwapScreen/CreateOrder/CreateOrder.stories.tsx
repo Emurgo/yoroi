@@ -27,7 +27,7 @@ const Initial = () => {
 
 const MarketOrder = () => {
   const initialState = produce(mockSwapStateDefault, (draft) => {
-    draft.createOrder.type = 'market'
+    draft.orderData.type = 'market'
   })
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
@@ -42,7 +42,7 @@ const MarketOrder = () => {
 
 const LimitOrder = () => {
   const initialState = produce(mockSwapStateDefault, (draft) => {
-    draft.createOrder.type = 'limit'
+    draft.orderData.type = 'limit'
   })
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>

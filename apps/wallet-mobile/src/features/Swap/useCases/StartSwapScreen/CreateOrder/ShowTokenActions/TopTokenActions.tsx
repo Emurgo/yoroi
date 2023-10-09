@@ -13,28 +13,34 @@ import {useSwapTouched} from '../../../../common/SwapFormProvider'
 export const TopTokenActions = () => {
   const strings = useStrings()
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
-  const {createOrder, limitPriceChanged, orderTypeChanged} = useSwap()
+  const {orderData, orderTypeChanged, poolPairsChanged} = useSwap()
   const {isBuyTouched, isSellTouched} = useSwapTouched()
-  const isDisabled = !isBuyTouched || !isSellTouched || createOrder.selectedPool === undefined
-  const orderTypeIndex = createOrder.type === 'market' ? 0 : 1
+  const isDisabled = !isBuyTouched || !isSellTouched || orderData.selectedPoolCalculation === undefined
+  const orderTypeIndex = orderData.type === 'market' ? 0 : 1
 
-  const {refetch, isLoading} = useSwapPoolsByPair({
-    tokenA: createOrder.amounts.sell.tokenId ?? '',
-    tokenB: createOrder.amounts.buy.tokenId ?? '',
-  })
+  const {refetch, isLoading} = useSwapPoolsByPair(
+    {
+      tokenA: orderData.amounts.sell.tokenId,
+      tokenB: orderData.amounts.buy.tokenId,
+    },
+    {
+      enabled: false,
+      onSuccess: (pools) => {
+        poolPairsChanged(pools)
+      },
+    },
+  )
 
   const handleSelectOrderType = (index: number) => {
     if (index === 0) {
-      refetch()
       orderTypeChanged('market')
     } else {
       orderTypeChanged('limit')
     }
   }
 
-  const refresh = () => {
+  const handleRefresh = () => {
     refetch()
-    limitPriceChanged(createOrder.marketPrice)
   }
 
   return (
@@ -45,7 +51,7 @@ export const TopTokenActions = () => {
         selected={orderTypeIndex}
       />
 
-      <TouchableOpacity onPress={refresh} disabled={isDisabled}>
+      <TouchableOpacity onPress={handleRefresh} disabled={isDisabled}>
         <Icon.Refresh size={24} color={isDisabled ? COLORS.DISABLED : ''} />
       </TouchableOpacity>
 

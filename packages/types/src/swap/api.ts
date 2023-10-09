@@ -19,6 +19,10 @@ export interface SwapApi {
     providers?: ReadonlyArray<SwapPoolProvider>
   }): Promise<SwapPool[]>
   getTokens(tokenIdBase: BalanceToken['info']['id']): Promise<BalanceToken[]>
+  getPrice(args: {
+    baseToken: BalanceToken['info']['id']
+    quoteToken: BalanceToken['info']['id']
+  }): Promise<number>
   stakingKey: string
   primaryTokenId: BalanceToken['info']['id']
   supportedProviders: ReadonlyArray<SwapPoolProvider>

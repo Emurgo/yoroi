@@ -2,8 +2,8 @@ import {Balance, Swap} from '@yoroi/types'
 
 import {Quantities} from '../../utils/quantities'
 import BigNumber from 'bignumber.js'
-import {getPriceAfterFee} from './getPriceAfterFee'
-import {getSellAmount} from './getSellAmount'
+import {getPriceAfterFee} from '../prices/getPriceAfterFee'
+import {getSellAmount} from '../orders/amounts/getSellAmount'
 
 /**
  * Find the best pool to sell based on the desired sell amount in a liquidity pool.

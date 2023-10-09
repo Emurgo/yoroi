@@ -8,11 +8,11 @@ import {
   ExpandableInfoCard,
   HeaderWrapper,
   HiddenInfoWrapper,
-  MainInfoWrapper,
   Spacer,
 } from '../../../../../../components'
 import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
+import {COLORS} from '../../../../../../theme'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../../common/navigation'
@@ -23,86 +23,95 @@ import {useSwapTouched} from '../../../../common/SwapFormProvider'
 export const ShowPoolActions = () => {
   const navigateTo = useNavigateTo()
   const {numberLocale} = useLanguage()
-  const {createOrder} = useSwap()
+  const {orderData} = useSwap()
   const strings = useStrings()
   const {isBuyTouched, isSellTouched, isPoolTouched} = useSwapTouched()
-  const {selectedPool, amounts} = createOrder
+  const {selectedPoolCalculation, amounts} = orderData
   const wallet = useSelectedWallet()
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
-  const tokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
+  const buyTokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
+  const sellTokenName = sellTokenInfo.ticker ?? sellTokenInfo.name
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
-  if (!isBuyTouched || !isSellTouched || selectedPool === undefined) {
+  if (!isBuyTouched || !isSellTouched || selectedPoolCalculation === undefined) {
     return <></>
   }
 
-  const totalAmount = Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)
-  const id = selectedPool.poolId
+  const totalFees = Quantities.format(
+    Quantities.sum([
+      selectedPoolCalculation.cost.batcherFee.quantity,
+      selectedPoolCalculation.cost.frontendFeeInfo.fee.quantity,
+    ]),
+    Number(wallet.primaryTokenInfo.decimals),
+  )
+  const header = `${strings.total}: ${Quantities.format(
+    amounts.sell.quantity,
+    sellTokenInfo.decimals ?? 0,
+  )} ${sellTokenName} + ${totalFees} ${wallet.primaryTokenInfo.ticker}`
+  const id = selectedPoolCalculation.pool.poolId
   const expanded = id === hiddenInfoOpenId
 
-  const poolProviderFormatted = capitalize(selectedPool.provider)
-  const poolStatus = isPoolTouched ? '' : ` ${strings.autoPool}`
+  const poolProviderFormatted = capitalize(selectedPoolCalculation.pool.provider)
+  const poolStatus = orderData.type === 'limit' && isPoolTouched ? '' : ` ${strings.autoPool}`
   const poolTitle = `${poolProviderFormatted}${poolStatus}`
 
+  const handleOnExpand = () => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)
+  const handleOnChangePool = () => navigateTo.selectPool()
+
   return (
-    <ExpandableInfoCard
-      key={id}
-      header={
-        <Header
-          onPressExpand={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
-          onPressLabel={() => {
-            if (createOrder.type === 'limit') {
-              navigateTo.selectPool()
-            } else {
-              setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)
-            }
-          }}
-          expanded={expanded}
-        >
-          <View style={styles.flex}>
-            <PoolIcon size={25} providerId={selectedPool.provider} />
+    <View>
+      <View style={[styles.flex, styles.between]}>
+        <View style={styles.flex}>
+          <PoolIcon size={25} providerId={selectedPoolCalculation.pool.provider} />
 
-            <Spacer width={10} />
+          <Spacer width={10} />
 
-            <Text>{poolTitle}</Text>
-          </View>
-        </Header>
-      }
-      info={
-        <HiddenInfo
-          totalFees={Quantities.format(selectedPool.batcherFee.quantity, Number(wallet.primaryTokenInfo.decimals))}
-          minReceived={getMinAdaReceiveAfterSlippage(
-            amounts.buy.quantity,
-            createOrder.slippage,
-            buyTokenInfo.decimals ?? 0,
-            numberLocale,
-          )}
-          minAda={Quantities.format(selectedPool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))}
-          buyTokenName={tokenName}
-        />
-      }
-      expanded={expanded}
-    >
-      <MainInfo totalAmount={totalAmount} tokenName={tokenName} />
-    </ExpandableInfoCard>
-  )
-}
+          <Text style={styles.bolder}>{poolTitle}</Text>
+        </View>
 
-const Header = ({
-  children,
-  expanded,
-  onPressExpand,
-  onPressLabel,
-}: {
-  children: React.ReactNode
-  expanded?: boolean
-  onPressExpand: () => void
-  onPressLabel: () => void
-}) => {
-  return (
-    <HeaderWrapper expanded={expanded} onPress={onPressExpand}>
-      <TouchableOpacity onPress={onPressLabel}>{children}</TouchableOpacity>
-    </HeaderWrapper>
+        {orderData.type === 'limit' && (
+          <TouchableOpacity onPress={handleOnChangePool}>
+            <Text style={styles.change}>{strings.changePool}</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
+      <ExpandableInfoCard
+        key={id}
+        header={
+          <HeaderWrapper expanded={expanded} onPress={handleOnExpand}>
+            <Text style={styles.bold}>{header}</Text>
+          </HeaderWrapper>
+        }
+        info={
+          <HiddenInfo
+            totalFees={Quantities.format(
+              selectedPoolCalculation.pool.batcherFee.quantity,
+              Number(wallet.primaryTokenInfo.decimals),
+            )}
+            minReceived={getMinAdaReceiveAfterSlippage(
+              amounts.buy.quantity,
+              orderData.slippage,
+              buyTokenInfo.decimals ?? 0,
+              numberLocale,
+            )}
+            minAda={Quantities.format(
+              selectedPoolCalculation.pool.deposit.quantity,
+              Number(wallet.primaryTokenInfo.decimals),
+            )}
+            buyTokenName={buyTokenName}
+            sellTokenName={sellTokenName}
+            liquidityFee={selectedPoolCalculation.pool.fee}
+            liquidityFeeValue={Quantities.format(
+              selectedPoolCalculation.cost.liquidityFee.quantity,
+              sellTokenInfo.decimals ?? 0,
+            )}
+          />
+        }
+        expanded={expanded}
+      />
+    </View>
   )
 }
 
@@ -111,11 +120,17 @@ const HiddenInfo = ({
   minAda,
   minReceived,
   buyTokenName,
+  sellTokenName,
+  liquidityFee,
+  liquidityFeeValue,
 }: {
   totalFees: string
   minAda: string
   minReceived: string
   buyTokenName: string
+  sellTokenName: string
+  liquidityFee: string
+  liquidityFeeValue: string
 }) => {
   const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
     isOpen: false,
@@ -134,14 +149,18 @@ const HiddenInfo = ({
           info: strings.swapMinAda,
         },
         {
+          label: strings.swapFeesTitle,
+          value: `${totalFees} ${wallet.primaryTokenInfo.ticker}`,
+          info: strings.swapFees,
+        },
+        {
           label: strings.swapMinReceivedTitle,
           value: `${minReceived} ${buyTokenName}`,
           info: strings.swapMinReceived,
         },
         {
-          label: strings.swapFeesTitle,
-          value: `${totalFees} ${wallet.primaryTokenInfo.ticker}`,
-          info: strings.swapFees,
+          label: strings.swapLiquidityFee(liquidityFee),
+          value: `${liquidityFeeValue} ${sellTokenName}`,
         },
       ].map((item) => (
         <HiddenInfoWrapper
@@ -172,25 +191,25 @@ const HiddenInfo = ({
   )
 }
 
-const MainInfo = ({totalAmount, tokenName}: {totalAmount: string; tokenName: string}) => {
-  const strings = useStrings()
-
-  return (
-    <View>
-      {[{label: `${strings.total} ${totalAmount} ${tokenName} `}].map((item, index) => (
-        <MainInfoWrapper key={index} label={item.label} isLast={index === 0} />
-      ))}
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
   flex: {flexDirection: 'row', alignItems: 'center'},
+  between: {justifyContent: 'space-between'},
   text: {
     textAlign: 'left',
     fontSize: 16,
     lineHeight: 24,
     fontWeight: '400',
     color: '#242838',
+  },
+  change: {color: COLORS.SHELLEY_BLUE, fontWeight: '600', textTransform: 'uppercase'},
+  bold: {
+    color: COLORS.BLACK,
+    fontWeight: '400',
+    fontFamily: 'Rubik-Regular',
+  },
+  bolder: {
+    color: COLORS.BLACK,
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
 })

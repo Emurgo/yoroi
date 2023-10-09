@@ -176,6 +176,46 @@ export type ApiDeps = {
   client: AxiosInstance
 }
 
+export type PriceAddress = {
+  policyId: string
+  name: string
+}
+
+type VolumeAggregator = {
+  [key in Provider]?: {
+    quote: number
+    base: number
+  }
+}
+
+export type PriceResponse = {
+  baseDecimalPlaces: number
+  quoteDecimalPlaces: number
+  baseAddress: PriceAddress
+  quoteAddress: PriceAddress
+  askPrice: number
+  bidPrice: number
+  price: number
+  volume: {
+    base: string
+    quote: string
+  }
+  volumeAggregator: VolumeAggregator
+  volumeTotal: {
+    base: number
+    quote: number
+  }
+  volumeChange: {
+    base: number
+    quote: number
+  }
+  priceChange: {
+    '24h': string
+    '7d': string
+  }
+  marketCap: number
+}
+
 export type LiquidityPoolResponse = LiquidityPool[]
 export type LiquidityPool = {
   tokenA: {

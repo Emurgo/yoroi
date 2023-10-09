@@ -23,14 +23,14 @@ export const ConfirmTxScreen = () => {
   const {track} = useMetrics()
   const {openModal, closeModal} = useModal()
 
-  const {unsignedTx, createOrder} = useSwap()
+  const {unsignedTx, orderData} = useSwap()
   const sellTokenInfo = useTokenInfo({
     wallet,
-    tokenId: createOrder.amounts.sell.tokenId,
+    tokenId: orderData.amounts.sell.tokenId,
   })
   const buyTokenInfo = useTokenInfo({
     wallet,
-    tokenId: createOrder.amounts.buy.tokenId,
+    tokenId: orderData.amounts.buy.tokenId,
   })
 
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
@@ -44,7 +44,7 @@ export const ConfirmTxScreen = () => {
       signTx: {useErrorBoundary: true},
       submitTx: {
         onSuccess: () => {
-          if (!createOrder.selectedPool) return
+          if (orderData.selectedPoolCalculation === undefined) return
           track.swapOrderSubmitted({
             from_asset: [
               {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
@@ -52,12 +52,12 @@ export const ConfirmTxScreen = () => {
             to_asset: [
               {asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group},
             ],
-            order_type: createOrder.type,
-            slippage_tolerance: createOrder.slippage,
-            from_amount: createOrder.amounts.sell.quantity,
-            to_amount: createOrder.amounts.buy.quantity,
-            pool_source: createOrder.selectedPool.provider,
-            swap_fees: Number(createOrder.selectedPool.fee),
+            order_type: orderData.type,
+            slippage_tolerance: orderData.slippage,
+            from_amount: orderData.amounts.sell.quantity,
+            to_amount: orderData.amounts.buy.quantity,
+            pool_source: orderData.selectedPoolCalculation.pool.provider,
+            swap_fees: Number(orderData.selectedPoolCalculation.cost.batcherFee),
           })
 
           navigate.submittedTx()

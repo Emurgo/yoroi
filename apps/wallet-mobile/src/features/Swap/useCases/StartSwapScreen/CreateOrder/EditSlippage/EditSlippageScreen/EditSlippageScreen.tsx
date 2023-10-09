@@ -50,10 +50,10 @@ const MAX_DECIMALS = 1
 export const EditSlippageScreen = () => {
   const {numberLocale} = useLanguage()
 
-  const {slippageChanged, createOrder} = useSwap()
-  const defaultSelectedChoice = getChoiceBySlippage(createOrder.slippage, numberLocale)
+  const {slippageChanged, orderData} = useSwap()
+  const defaultSelectedChoice = getChoiceBySlippage(orderData.slippage, numberLocale)
   const defaultInputValue =
-    defaultSelectedChoice.label === 'Manual' ? new BigNumber(createOrder.slippage).toFormat(numberLocale) : ''
+    defaultSelectedChoice.label === 'Manual' ? new BigNumber(orderData.slippage).toFormat(numberLocale) : ''
 
   const [selectedChoiceLabel, setSelectedChoiceLabel] = useState<ChoiceKind>(defaultSelectedChoice.label)
   const [inputValue, setInputValue] = useState(defaultInputValue)
