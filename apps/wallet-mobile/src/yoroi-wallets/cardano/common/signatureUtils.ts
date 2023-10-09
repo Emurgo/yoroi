@@ -180,11 +180,10 @@ export const createSwapCancellationLedgerPayload = async (
           }
           return collateralArray
         }),
-      ttl:
-        (await tx
-          .body()
-          .then((b) => b.ttl())
-          .then((n) => n?.toString())) || 10,
+      ttl: await tx
+        .body()
+        .then((b) => b.ttl())
+        .then((n) => n?.toString()),
       requiredSigners: [{type: TxRequiredSignerType.PATH, path: [harden(1852), harden(1815), harden(0), 0, 0]}],
       outputs: await transformToLedgerOutputs(CardanoMobile, {
         networkId,
