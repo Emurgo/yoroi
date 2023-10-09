@@ -423,6 +423,7 @@ const orderReducer = (
           pools: state.orderData.pools,
           primaryTokenId: state.orderData.primartyTokenId,
           lpTokenHeld: state.orderData.lpTokenHeld,
+          side: 'sell',
         })
         draft.orderData.bestPoolCalculation = getBestPoolCalculation(
           draft.orderData.calculations,
@@ -557,6 +558,7 @@ const orderReducer = (
           pools: draft.orderData.pools,
           primaryTokenId: state.orderData.primartyTokenId,
           lpTokenHeld: state.orderData.lpTokenHeld,
+          side: 'sell',
         })
         draft.orderData.bestPoolCalculation = getBestPoolCalculation(
           draft.orderData.calculations,

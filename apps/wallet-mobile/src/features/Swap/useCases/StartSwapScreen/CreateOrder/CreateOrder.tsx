@@ -31,16 +31,21 @@ const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
-  const {orderData, unsignedTxChanged} = useSwap()
+  const {orderData, unsignedTxChanged, poolPairsChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
-  const {refetch} = useSwapPoolsByPair(
+  const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
+
+  useSwapPoolsByPair(
     {
       tokenA: orderData.amounts.sell.tokenId,
       tokenB: orderData.amounts.buy.tokenId,
     },
     {
-      enabled: false,
+      enabled: isBuyTouched,
+      onSuccess: (pools) => {
+        poolPairsChanged(pools)
+      },
     },
   )
 
@@ -53,15 +58,10 @@ export const CreateOrder = () => {
     tokenId: orderData.amounts.buy.tokenId,
   })
   const [showLimitPriceWarning, setShowLimitPriceWarning] = React.useState(false)
-  const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
 
   React.useEffect(() => {
     if (orderData.selectedPoolId === orderData.bestPoolCalculation?.pool.poolId) poolDefaulted()
   }, [orderData.selectedPoolId, orderData.bestPoolCalculation, poolDefaulted])
-
-  React.useEffect(() => {
-    if (isBuyTouched) refetch()
-  }, [orderData.amounts.sell.tokenId, orderData.amounts.buy.tokenId, refetch, orderData.type, isBuyTouched])
 
   const {createUnsignedTx, isLoading} = useSwapTx({
     onSuccess: (yoroiUnsignedTx) => {
