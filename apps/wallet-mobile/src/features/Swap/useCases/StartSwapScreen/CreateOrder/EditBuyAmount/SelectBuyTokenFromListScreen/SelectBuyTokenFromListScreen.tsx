@@ -189,8 +189,8 @@ const SelectableToken = ({tokenForList, wallet}: SelectableTokenProps) => {
     track.swapAssetToChanged({
       to_asset: [{asset_name: tokenForList.name, asset_ticker: tokenForList.ticker, policy_id: tokenForList.group}],
     })
-    buyTouched()
     buyTokenIdChanged(tokenForList.id)
+    buyTouched()
     navigateTo.startSwap()
     closeSearch()
   }
