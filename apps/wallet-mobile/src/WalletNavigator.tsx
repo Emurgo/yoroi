@@ -3,7 +3,7 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {useWindowDimensions, View} from 'react-native'
+import {Keyboard} from 'react-native'
 
 import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
@@ -23,100 +23,111 @@ import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
-  const {height, width} = useWindowDimensions()
   const wallet = useSelectedWallet()
   const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
+
+  const [keyboardStatus, setKeyboardStatus] = React.useState<boolean>()
+
+  React.useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardWillShow', () => {
+      setKeyboardStatus(true)
+    })
+    const hideSubscription = Keyboard.addListener('keyboardWillHide', () => {
+      setKeyboardStatus(false)
+    })
+
+    return () => {
+      showSubscription.remove()
+      hideSubscription.remove()
+    }
+  }, [])
 
   return (
     <>
       <OfflineBanner />
 
-      <View
-        style={{
-          width,
-          height,
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarLabelStyle: {fontSize: 11},
+          tabBarActiveTintColor: theme.COLORS.NAVIGATION_ACTIVE,
+          tabBarInactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
+          tabBarHideOnKeyboard: false,
+          tabBarStyle: {
+            display: keyboardStatus ? 'none' : undefined,
+          },
         }}
+        initialRouteName={initialRoute}
+        backBehavior="initialRoute"
       >
-        <Tab.Navigator
-          screenOptions={{
-            headerShown: false,
-            tabBarLabelStyle: {fontSize: 11},
-            tabBarActiveTintColor: theme.COLORS.NAVIGATION_ACTIVE,
-            tabBarInactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
-            tabBarHideOnKeyboard: false,
-          }}
-          initialRouteName={initialRoute}
-          backBehavior="initialRoute"
+        <Tab.Screen
+          name="history"
+          options={(route) => ({
+            tabBarIcon: ({focused}) => (
+              <Icon.TabWallet
+                size={24}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
+            tabBarLabel: strings.walletTabBarLabel,
+            tabBarTestID: 'walletTabBarButton',
+            tabBarStyle: getFocusedRouteNameFromRoute(route.route) === 'send-read-qr-code' ? {display: 'none'} : {},
+          })}
         >
+          {() => (
+            <SearchProvider>
+              <TxHistoryNavigator />
+            </SearchProvider>
+          )}
+        </Tab.Screen>
+
+        <Tab.Screen
+          name="nfts"
+          options={{
+            tabBarIcon: ({focused}) => (
+              <Icon.Image
+                size={28}
+                color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
+              />
+            ),
+            tabBarLabel: strings.nftsTabBarLabel,
+            tabBarTestID: 'nftsTabBarButton',
+          }}
+        >
+          {() => (
+            <SearchProvider>
+              <NftsNavigator />
+            </SearchProvider>
+          )}
+        </Tab.Screen>
+
+        {isHaskellShelley(wallet.walletImplementationId) && (
           <Tab.Screen
-            name="history"
-            options={(route) => ({
+            name="staking-dashboard"
+            component={DashboardNavigator}
+            options={{
               tabBarIcon: ({focused}) => (
-                <Icon.TabWallet
+                <Icon.TabStaking
                   size={24}
                   color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
                 />
               ),
-              tabBarLabel: strings.walletTabBarLabel,
-              tabBarTestID: 'walletTabBarButton',
-              tabBarStyle: getFocusedRouteNameFromRoute(route.route) === 'send-read-qr-code' ? {display: 'none'} : {},
-            })}
-          >
-            {() => (
-              <SearchProvider>
-                <TxHistoryNavigator />
-              </SearchProvider>
-            )}
-          </Tab.Screen>
-
-          <Tab.Screen
-            name="nfts"
-            options={{
-              tabBarIcon: ({focused}) => (
-                <Icon.Image
-                  size={28}
-                  color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-                />
-              ),
-              tabBarLabel: strings.nftsTabBarLabel,
-              tabBarTestID: 'nftsTabBarButton',
-            }}
-          >
-            {() => (
-              <SearchProvider>
-                <NftsNavigator />
-              </SearchProvider>
-            )}
-          </Tab.Screen>
-
-          {isHaskellShelley(wallet.walletImplementationId) && (
-            <Tab.Screen
-              name="staking-dashboard"
-              component={DashboardNavigator}
-              options={{
-                tabBarIcon: ({focused}) => (
-                  <Icon.TabStaking
-                    size={24}
-                    color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
-                  />
-                ),
-                tabBarLabel: strings.stakingButton,
-                tabBarTestID: 'stakingTabBarButton',
-              }}
-            />
-          )}
-
-          <Tab.Screen
-            name="menu"
-            component={MenuNavigator}
-            options={{
-              tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
-              tabBarLabel: strings.menuTabBarLabel,
-              tabBarTestID: 'menuTabBarButton',
+              tabBarLabel: strings.stakingButton,
+              tabBarTestID: 'stakingTabBarButton',
             }}
           />
-        </Tab.Navigator>
-      </View>
+        )}
+
+        <Tab.Screen
+          name="menu"
+          component={MenuNavigator}
+          options={{
+            tabBarIcon: ({focused}) => <Icon.Menu size={28} color={focused ? '#17d1aa' : '#A7AFC0'} />,
+            tabBarLabel: strings.menuTabBarLabel,
+            tabBarTestID: 'menuTabBarButton',
+          }}
+        />
+      </Tab.Navigator>
     </>
   )
 }
