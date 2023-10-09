@@ -11,6 +11,7 @@ type TouchedActions = {
   switchTouched: () => void
   poolTouched: () => void
   poolDefaulted: () => void
+  resetTouches: () => void
 }
 
 const TouchedContext = createContext<undefined | (TouchedState & TouchedActions)>(undefined)
@@ -37,6 +38,7 @@ export const SwapFormProvider = ({
     switchTouched: () => dispatch({type: 'switchTouched'}),
     poolTouched: () => dispatch({type: 'poolTouched'}),
     poolDefaulted: () => dispatch({type: 'poolDefaulted'}),
+    resetTouches: () => dispatch({type: 'resetTouches'}),
   }).current
 
   const context = React.useMemo(() => ({...state, ...actions}), [state, actions])
@@ -50,6 +52,7 @@ type TouchedAction =
   | {type: 'switchTouched'}
   | {type: 'poolTouched'}
   | {type: 'poolDefaulted'}
+  | {type: 'resetTouches'}
 
 function touchedReducer(state: TouchedState, action: TouchedAction) {
   switch (action.type) {
@@ -71,6 +74,9 @@ function touchedReducer(state: TouchedState, action: TouchedAction) {
 
     case 'poolDefaulted':
       return {...state, isPoolTouched: false}
+
+    case 'resetTouches':
+      return defaultState
 
     default:
       throw new Error(`touchedReducer invalid action`)

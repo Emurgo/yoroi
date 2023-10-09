@@ -1,5 +1,5 @@
-import {mockNumberLocale} from '../../adapters/intl/number-locale.mocks'
-import {asQuantity} from '../../utils/asQuantity'
+import {mockNumberLocale} from '../../../adapters/intl/number-locale.mocks'
+import {asQuantity} from '../../../utils/asQuantity'
 import {getMinAdaReceiveAfterSlippage} from './getMinAdaReceiveAfterSlippage'
 
 describe('getMinAdaReceiveAfterSlippage', () => {

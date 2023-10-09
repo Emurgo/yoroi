@@ -20,11 +20,11 @@ export const EditLimitPrice = () => {
   const [text, setText] = React.useState('')
   const wallet = useSelectedWallet()
 
-  const {createOrder, limitPriceChanged} = useSwap()
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
+  const {orderData, limitPriceChanged} = useSwap()
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
+  const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
   const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
-  const disabled = createOrder.type === 'market'
+  const disabled = orderData.type === 'market'
 
   const {isBuyTouched, isSellTouched} = useSwapTouched()
 
@@ -32,18 +32,14 @@ export const EditLimitPrice = () => {
   const tokenToBuyName = isBuyTouched ? buyTokenInfo.ticker ?? buyTokenInfo.name : '-'
 
   React.useEffect(() => {
-    setText(Quantities.format(createOrder.marketPrice, denomination, PRECISION))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createOrder.marketPrice])
-
-  React.useEffect(() => {
-    if (createOrder.type === 'limit') {
-      setText(Quantities.format(createOrder?.limitPrice ?? Quantities.zero, denomination, PRECISION))
+    if (orderData.type === 'limit') {
+      setText(Quantities.format(orderData.limitPrice ?? Quantities.zero, denomination, PRECISION))
     } else {
-      setText(Quantities.format(createOrder.marketPrice, denomination, PRECISION))
+      setText(
+        Quantities.format(orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero, denomination, PRECISION),
+      )
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createOrder.type, createOrder.limitPrice])
+  }, [orderData.type, orderData.limitPrice, orderData.amounts.sell, denomination, orderData.selectedPoolCalculation])
 
   const onChange = (text: string) => {
     const [formattedPrice, price] = Quantities.parseFromText(text, PRECISION, numberLocale)

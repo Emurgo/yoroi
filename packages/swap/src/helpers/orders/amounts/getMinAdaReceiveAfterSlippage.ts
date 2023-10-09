@@ -1,6 +1,6 @@
 import {Balance, Numbers} from '@yoroi/types'
-import {Quantities} from '../../utils/quantities'
-import {asQuantity} from '../../utils/asQuantity'
+import {Quantities} from '../../../utils/quantities'
+import {asQuantity} from '../../../utils/asQuantity'
 
 /**
  * Calculate the minimum amount of ADA received after accounting for slippage.

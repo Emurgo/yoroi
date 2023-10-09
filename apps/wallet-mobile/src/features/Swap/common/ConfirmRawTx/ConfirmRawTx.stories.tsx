@@ -42,7 +42,7 @@ const Provider = ({children, wallet}: {children: React.ReactNode; wallet: YoroiW
         initialState={{
           ...mockSwapStateDefault,
           unsignedTx: walletMocks.yoroiUnsignedTx,
-          createOrder: {...mocks.confirmTx.createOrder},
+          orderData: {...mocks.confirmTx.orderData},
         }}
         swapManager={{
           ...mockSwapManager,

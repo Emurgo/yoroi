@@ -8,6 +8,7 @@ import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Icon, Spacer} from '../components'
 import {features} from '../features'
 import {useSend} from '../features/Send/common/SendContext'
+import {useSwapTouched} from '../features/Swap/common/SwapFormProvider'
 import {actionMessages} from '../i18n/global-messages'
 import {useMetrics} from '../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../navigation'
@@ -25,15 +26,16 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {resetForm} = useSend()
-  const {createOrder} = useSwap()
+  const {orderData, resetState} = useSwap()
+  const {resetTouches} = useSwapTouched()
   const {track} = useMetrics()
   const sellTokenInfo = useTokenInfo({
     wallet,
-    tokenId: createOrder.amounts.sell.tokenId,
+    tokenId: orderData.amounts.sell.tokenId,
   })
   const buyTokenInfo = useTokenInfo({
     wallet,
-    tokenId: createOrder.amounts.buy.tokenId,
+    tokenId: orderData.amounts.buy.tokenId,
   })
 
   const handleOnBuy = () => {
@@ -55,13 +57,16 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   const handleOnSwap = () => {
+    resetTouches()
+    resetState()
+
     track.swapInitiated({
       from_asset: [
         {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
       ],
       to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
-      order_type: createOrder.type,
-      slippage_tolerance: createOrder.slippage,
+      order_type: orderData.type,
+      slippage_tolerance: orderData.slippage,
     })
 
     navigateTo.swap()

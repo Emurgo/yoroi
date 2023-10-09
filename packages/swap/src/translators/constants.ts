@@ -12,16 +12,16 @@ export const supportedProviders: ReadonlyArray<Swap.SupportedProvider> = [
   'vyfi',
 ] as const
 
-export type DiscountTier = {
+export type SwapDiscountTier = Readonly<{
   primaryTokenValueThreshold: Balance.Quantity // primary token trade value threshold
   secondaryTokenBalanceThreshold: Balance.Quantity // secodary token balance (holding)
   variableFeeMultiplier: number
   variableFeeVisual: number
   fixedFee: Balance.Quantity
-}
+}>
 
 // table of discounts based on MILK token holdings + value in ADA
-export const milkHoldersDiscountTiers: ReadonlyArray<DiscountTier> = [
+export const milkHoldersDiscountTiers: ReadonlyArray<SwapDiscountTier> = [
   // MILK 500+, VALUE ADA 100+, FFEE = 1 ADA + 0.020 %
   {
     primaryTokenValueThreshold: asQuantity(100_000_000),
@@ -47,13 +47,6 @@ export const milkHoldersDiscountTiers: ReadonlyArray<DiscountTier> = [
     fixedFee: asQuantity(1_000_000),
   },
   // VALUE ADA 0-99, FFEE = 0%
-  {
-    primaryTokenValueThreshold: Quantities.zero,
-    secondaryTokenBalanceThreshold: Quantities.zero,
-    variableFeeMultiplier: 0.0,
-    variableFeeVisual: 0.0,
-    fixedFee: Quantities.zero,
-  },
 ] as const
 
 export const milkTokenId = {

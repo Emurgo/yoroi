@@ -11,9 +11,11 @@ import {
   CreateOrderRequest,
   Network,
   Provider,
+  PriceAddress,
   TokenAddress,
 } from './types'
 import {axiosClient} from './config'
+import {getPrice} from './price'
 import {getLiquidityPools, getPoolsPair} from './pools'
 
 export class OpenSwapApi {
@@ -49,6 +51,19 @@ export class OpenSwapApi {
     return getCompletedOrders(
       {network: this.network, client: this.client},
       {stakeKeyHash},
+    )
+  }
+
+  public async getPrice({
+    baseToken,
+    quoteToken,
+  }: {
+    baseToken: PriceAddress
+    quoteToken: PriceAddress
+  }) {
+    return getPrice(
+      {network: this.network, client: this.client},
+      {baseToken, quoteToken},
     )
   }
 

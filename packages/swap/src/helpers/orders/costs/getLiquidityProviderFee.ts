@@ -1,7 +1,7 @@
 import {Balance} from '@yoroi/types'
-import {Quantities} from '../../utils/quantities'
-import {ceilDivision} from '../../utils/ceilDivision'
-import {asQuantity} from '../../utils/asQuantity'
+import {Quantities} from '../../../utils/quantities'
+import {ceilDivision} from '../../../utils/ceilDivision'
+import {asQuantity} from '../../../utils/asQuantity'
 
 export const getLiquidityProviderFee = (
   poolFee: string,
