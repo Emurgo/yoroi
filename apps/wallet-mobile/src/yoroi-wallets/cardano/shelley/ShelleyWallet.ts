@@ -880,11 +880,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         (address: string) => this.getAddressing(address),
         stakeVkeyHash,
       )
-      console.log('payload', payload)
 
       const signedLedgerTx = await signTxWithLedger(payload, this.hwDeviceInfo, useUSB)
-
-      console.log('received signature', signedLedgerTx)
 
       const bytes = await createSignedLedgerSwapCancellationTx(
         cbor,
@@ -894,7 +891,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       )
 
       const base64 = Buffer.from(bytes).toString('base64')
-      console.log('got base64', base64)
       await this.submitTransaction(base64)
     }
 
