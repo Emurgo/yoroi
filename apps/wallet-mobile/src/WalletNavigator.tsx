@@ -52,7 +52,6 @@ const WalletTabNavigator = () => {
           tabBarLabelStyle: {fontSize: 11},
           tabBarActiveTintColor: theme.COLORS.NAVIGATION_ACTIVE,
           tabBarInactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
-          tabBarHideOnKeyboard: false,
           tabBarStyle: {
             display: keyboardStatus ? 'none' : undefined,
           },
