@@ -33,16 +33,13 @@ import {
 } from '../../../../../yoroi-wallets/cardano/common/signatureUtils'
 import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {RejectedByUserError} from '../../../../../yoroi-wallets/hw'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
-import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {useCancellationOrderFee} from './helpers'
 import {mapOrders, MappedOrder} from './mapOrders'
-import {Simulate} from 'react-dom/test-utils'
-import error = Simulate.error
-import {RejectedByUserError} from '../../../../../yoroi-wallets/hw'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState & {height: number}>({
@@ -56,7 +53,7 @@ export const OpenOrders = () => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
-  const {navigateToCollateralSettings} = useWalletNavigation()
+  const {navigateToCollateralSettings, navigateToTxHistory} = useWalletNavigation()
 
   const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
   const orders = useSwapOrdersByStatusOpen()
@@ -70,7 +67,6 @@ export const OpenOrders = () => {
   )
 
   const {search} = useSearch()
-  const swapNavigation = useNavigateTo()
 
   const filteredOrders = React.useMemo(
     () =>
@@ -122,7 +118,7 @@ export const OpenOrders = () => {
     await wallet.submitTransaction(tx.txBase64)
     trackCancellationSubmitted(order)
     closeBottomSheet()
-    swapNavigation.submittedTx()
+    navigateToTxHistory()
   }
 
   const onRawTxHwConfirm = async ({useUSB, orderId}: {useUSB: boolean; orderId: string}) => {
@@ -140,7 +136,7 @@ export const OpenOrders = () => {
       await wallet.signSwapCancellationWithLedger(cbor, useUSB)
 
       closeBottomSheet()
-      swapNavigation.submittedTx()
+      navigateToTxHistory()
     } catch (e) {
       if (e instanceof RejectedByUserError) {
         Alert.alert(strings.error, strings.rejectedByUser)
