@@ -5,12 +5,8 @@ import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useSignWithPasswordAndSubmitTx} from '../../../../yoroi-wallets/hooks'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {ConfirmWithSpendingPassword} from '../../common/ConfirmWithSpendingPassword'
+import {ErrorData} from '../../common/ConfirmWithSpendingPassword/ConfirmWithSpendingPassword'
 import {useStrings} from '../../common/strings'
-
-type ErrorData = {
-  errorMessage: string
-  errorLogs?: unknown
-}
 
 type Props = {
   wallet: YoroiWallet
@@ -64,6 +60,7 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx}: Props) =>
       onSubmit={onConfirm}
       isLoading={isLoading}
       error={errorData.errorMessage.length > 0 ? new Error(errorData.errorMessage) : undefined}
+      setErrorData={setErrorData}
     />
   )
 }
