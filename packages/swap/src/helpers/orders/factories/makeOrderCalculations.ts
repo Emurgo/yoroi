@@ -67,10 +67,11 @@ export const makeOrderCalculations = ({
     const liquidityFee: Balance.Amount = getLiquidityProviderFee(pool.fee, sell)
 
     const [ptPriceBuy, ptPriceSell] = isBuyTokenA
-      ? [pool.ptPriceTokenA, pool.ptPriceTokenB]
-      : [pool.ptPriceTokenB, pool.ptPriceTokenA]
+      ? [new BigNumber(pool.ptPriceTokenA), new BigNumber(pool.ptPriceTokenB)]
+      : [new BigNumber(pool.ptPriceTokenB), new BigNumber(pool.ptPriceTokenA)]
 
     // ffee is based on PT value range + LP holding range (sides may need conversion, when none is PT)
+    // TODO: it needs update, prices by muesli are provided in ADA, quantities in atomic units
     const frontendFeeInfo = getFrontendFee({
       sell,
       buy,
@@ -78,31 +79,39 @@ export const makeOrderCalculations = ({
       primaryTokenId,
       sellInPrimaryTokenValue: {
         tokenId: primaryTokenId,
-        quantity: asQuantity(
-          new BigNumber(amounts.sell.quantity)
-            .dividedBy(ptPriceSell)
-            .integerValue(BigNumber.ROUND_CEIL),
-        ),
+        quantity: ptPriceSell.isZero()
+          ? Quantities.zero
+          : asQuantity(
+              new BigNumber(amounts.sell.quantity)
+                .dividedBy(ptPriceSell)
+                .integerValue(BigNumber.ROUND_CEIL),
+            ),
       },
       buyInPrimaryTokenValue: {
         tokenId: primaryTokenId,
-        quantity: asQuantity(
-          new BigNumber(amounts.buy.quantity)
-            .dividedBy(ptPriceBuy)
-            .integerValue(BigNumber.ROUND_CEIL),
-        ),
+        quantity: ptPriceBuy.isZero()
+          ? Quantities.zero
+          : asQuantity(
+              new BigNumber(amounts.buy.quantity)
+                .dividedBy(ptPriceBuy)
+                .integerValue(BigNumber.ROUND_CEIL),
+            ),
       },
     })
 
     // transform fees in terms of sell side quantity * pt price (unit of fees)
     // it applies market price always
     const feeInSellSideQuantities = {
-      batcherFee: new BigNumber(pool.batcherFee.quantity)
-        .dividedBy(ptPriceSell)
-        .integerValue(BigNumber.ROUND_CEIL),
-      frontendFee: new BigNumber(frontendFeeInfo.fee.quantity)
-        .dividedBy(ptPriceSell)
-        .integerValue(BigNumber.ROUND_CEIL),
+      batcherFee: ptPriceSell.isZero()
+        ? Quantities.zero
+        : new BigNumber(pool.batcherFee.quantity)
+            .dividedBy(ptPriceSell)
+            .integerValue(BigNumber.ROUND_CEIL),
+      frontendFee: ptPriceSell.isZero()
+        ? Quantities.zero
+        : new BigNumber(frontendFeeInfo.fee.quantity)
+            .dividedBy(ptPriceSell)
+            .integerValue(BigNumber.ROUND_CEIL),
     }
 
     const priceWithSlippage = Quantities.isZero(buyAmountWithSlippage.quantity)
