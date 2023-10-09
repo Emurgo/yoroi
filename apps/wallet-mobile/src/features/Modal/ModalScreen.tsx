@@ -8,7 +8,6 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
 } from 'react-native'
 
@@ -16,7 +15,6 @@ import {Spacer} from '../../components'
 import {useModal} from './ModalContext'
 
 export const ModalScreen = () => {
-  const {height: windowHeight} = useWindowDimensions()
   const {current} = useCardAnimation()
   const {height, closeModal, content} = useModal()
   const [swipeLocationY, setSwipeLocationY] = React.useState(height)
@@ -41,7 +39,7 @@ export const ModalScreen = () => {
     <KeyboardAvoidingView
       style={styles.root}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={150}
+      keyboardVerticalOffset={Platform.OS === 'android' ? -90 : undefined}
     >
       <Pressable style={styles.backdrop} onPress={closeModal} />
 
@@ -53,7 +51,7 @@ export const ModalScreen = () => {
               {
                 translateY: current.progress.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [height, windowHeight - 500],
+                  outputRange: [height, 0],
                   extrapolate: 'clamp',
                 }),
               },
@@ -93,7 +91,7 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
@@ -108,7 +106,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     alignSelf: 'stretch',
-    paddingHorizontal: 16,
   },
   title: {
     fontWeight: '500',
