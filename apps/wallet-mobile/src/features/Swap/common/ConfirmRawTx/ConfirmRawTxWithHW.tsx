@@ -1,16 +1,14 @@
 import React, {useState} from 'react'
-import {ScrollView} from 'react-native'
+import {ActivityIndicator, ScrollView} from 'react-native'
 
-import {Boundary, TwoActionView} from '../../../../components'
 import {LedgerConnect} from '../../../../HW'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
 import {walletManager} from '../../../../yoroi-wallets/walletManager'
 import {LedgerTransportSwitch} from '../../useCases/ConfirmTxScreen/LedgerTransportSwitch'
-import {useStrings} from '../strings'
 
 type TransportType = 'USB' | 'BLE'
-type Step = 'select-transport' | 'connect-transport' | 'confirm'
+type Step = 'select-transport' | 'connect-transport' | 'confirm' | 'loading'
 
 type Props = {
   onSuccess?: (options: {useUSB: boolean}) => void
@@ -28,16 +26,14 @@ export const ConfirmRawTxWithHW = ({onSuccess}: Props) => {
 
   const onConnectBLE = async (deviceId: DeviceId) => {
     await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
-    setStep('confirm')
+    onSuccess?.({useUSB: false})
+    setStep('loading')
   }
 
   const onConnectUSB = async (deviceObj: DeviceObj) => {
     await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
-    setStep('confirm')
-  }
-
-  const handleConfirm = () => {
-    onSuccess?.({useUSB: transportType === 'USB'})
+    onSuccess?.({useUSB: true})
+    setStep('loading')
   }
 
   if (step === 'select-transport') {
@@ -52,37 +48,10 @@ export const ConfirmRawTxWithHW = ({onSuccess}: Props) => {
   if (step === 'connect-transport') {
     return (
       <ScrollView>
-        <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} />
+        <LedgerConnect useUSB={transportType === 'USB'} onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} />
       </ScrollView>
     )
   }
 
-  return (
-    <Boundary>
-      <Confirm onSuccess={handleConfirm} onCancel={() => setStep('select-transport')} />
-    </Boundary>
-  )
-}
-
-const Confirm = ({onSuccess, onCancel}: {onCancel?: () => void; onSuccess?: () => void}) => {
-  const strings = useStrings()
-
-  return (
-    <TwoActionView
-      title={strings.confirm}
-      primaryButton={{
-        label: strings.confirm,
-        onPress: () => {
-          console.log('ConfirmRawTxWithHW.tsx: Confirm: onPress')
-          onSuccess?.()
-        },
-      }}
-      secondaryButton={{
-        label: strings.clear,
-        onPress: () => onCancel?.(),
-      }}
-    >
-      {/* <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />*/}
-    </TwoActionView>
-  )
+  return <ActivityIndicator size="large" color="black" />
 }

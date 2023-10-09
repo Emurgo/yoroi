@@ -7,15 +7,15 @@ import {ConfirmRawTxWithPassword} from './ConfirmRawTxWithPassword'
 
 export const ConfirmRawTx = ({
   onConfirm,
-  onHWSuccess,
+  onHWConfirm,
 }: {
   onConfirm?: (rootKey: string) => Promise<void>
-  onHWSuccess?: VoidFunction
+  onHWConfirm?: VoidFunction
 }) => {
   const wallet = useSelectedWallet()
 
   if (wallet.isHW) {
-    return <ConfirmRawTxWithHW onSuccess={onHWSuccess} />
+    return <ConfirmRawTxWithHW onSuccess={onHWConfirm} />
   }
 
   if (wallet.isEasyConfirmationEnabled) {

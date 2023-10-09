@@ -40,6 +40,9 @@ import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {useCancellationOrderFee} from './helpers'
 import {mapOrders, MappedOrder} from './mapOrders'
+import {Simulate} from 'react-dom/test-utils'
+import error = Simulate.error
+import {RejectedByUserError} from '../../../../../yoroi-wallets/hw'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState & {height: number}>({
@@ -123,21 +126,33 @@ export const OpenOrders = () => {
   }
 
   const onRawTxHwConfirm = async ({useUSB = false, orderId}: {useUSB?: boolean; orderId: string}) => {
-    console.log('HW: onRawTxHwConfirm')
-    const order = normalizedOrders.find((o) => o.id === orderId)
-    if (!order || order.owner === undefined || order.utxo === undefined) return
-    const {utxo, owner: bech32Address} = order
-    const collateralUtxo = await getCollateralUtxo()
-    const addressHex = await convertBech32ToHex(bech32Address)
-    const originalCbor = await swapApiOrder.cancel({
-      utxos: {collateral: collateralUtxo, order: utxo},
-      address: addressHex,
-    })
-    const {cbor} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
-    await wallet.signSwapCancellationWithLedger(cbor, useUSB)
+    try {
+      const order = normalizedOrders.find((o) => o.id === orderId)
+      if (!order || order.owner === undefined || order.utxo === undefined) return
+      const {utxo, owner: bech32Address} = order
+      const collateralUtxo = await getCollateralUtxo()
+      const addressHex = await convertBech32ToHex(bech32Address)
+      const originalCbor = await swapApiOrder.cancel({
+        utxos: {collateral: collateralUtxo, order: utxo},
+        address: addressHex,
+      })
+      const {cbor} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
+      await wallet.signSwapCancellationWithLedger(cbor, useUSB)
 
-    closeBottomSheet()
-    swapNavigation.submittedTx()
+      closeBottomSheet()
+      swapNavigation.submittedTx()
+    } catch (e) {
+      if (e instanceof RejectedByUserError) {
+        Alert.alert(strings.error, strings.rejectedByUser)
+        closeBottomSheet()
+        return
+      }
+
+      if (e instanceof Error) {
+        Alert.alert(strings.error, e.message)
+        closeBottomSheet()
+      }
+    }
   }
 
   const onOrderCancelConfirm = (id: string) => {
@@ -147,7 +162,7 @@ export const OpenOrders = () => {
       content: (
         <ConfirmRawTx
           onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)}
-          onHWSuccess={() => onRawTxHwConfirm({useUSB: false, orderId: id})}
+          onHWConfirm={() => onRawTxHwConfirm({useUSB: false, orderId: id})}
         />
       ),
       height: 400,
