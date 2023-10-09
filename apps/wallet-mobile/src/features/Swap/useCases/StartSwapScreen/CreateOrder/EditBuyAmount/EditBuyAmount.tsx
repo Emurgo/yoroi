@@ -19,9 +19,10 @@ export const EditBuyAmount = () => {
   const {numberLocale} = useLanguage()
   const inputRef = React.useRef<TextInput>(null)
 
-  const {createOrder, buyAmountChanged} = useSwap()
-  const {isBuyTouched} = useSwapTouched()
-  const {tokenId, quantity} = createOrder.amounts.buy
+  const {orderData, buyQuantityChanged} = useSwap()
+  const {isBuyTouched, isSellTouched} = useSwapTouched()
+  const pool = orderData.selectedPoolCalculation?.pool
+  const {tokenId, quantity} = orderData.amounts.buy
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const {decimals} = tokenInfo
   const balance = useBalance({wallet, tokenId})
@@ -34,19 +35,16 @@ export const EditBuyAmount = () => {
     }
   }, [isBuyTouched, quantity, tokenInfo.decimals])
 
-  const poolSupply =
-    tokenId === createOrder?.selectedPool?.tokenA.tokenId
-      ? createOrder.selectedPool?.tokenA.quantity
-      : createOrder.selectedPool?.tokenB.quantity
+  const poolSupply = tokenId === pool?.tokenA.tokenId ? pool?.tokenA.quantity : pool?.tokenB.quantity
   const hasSupply = !Quantities.isGreaterThan(quantity, poolSupply ?? Quantities.zero)
   const showError =
-    (!Quantities.isZero(quantity) && !hasSupply) || (isBuyTouched && createOrder.selectedPool === undefined)
+    (!Quantities.isZero(quantity) && !hasSupply) || (isSellTouched && isBuyTouched && pool === undefined)
 
   const onChangeQuantity = (text: string) => {
     try {
       const [input, quantity] = Quantities.parseFromText(text, decimals ?? 0, numberLocale)
       setInputValue(text === '' ? text : input)
-      buyAmountChanged({tokenId, quantity})
+      buyQuantityChanged(quantity)
     } catch (error) {
       Logger.error('SwapAmountScreen::onChangeQuantity', error)
     }
@@ -63,7 +61,7 @@ export const EditBuyAmount = () => {
       navigateTo={navigate.selectBuyToken}
       touched={isBuyTouched}
       inputRef={inputRef}
-      inputEditable={createOrder.selectedPool !== undefined}
+      inputEditable={pool !== undefined}
     />
   )
 }

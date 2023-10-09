@@ -42,9 +42,9 @@ export const AmountCard = ({
   const amountInputRef = useRef<TextInput>(inputRef?.current ?? null)
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
-  const {createOrder} = useSwap()
+  const {orderData} = useSwap()
 
-  const isSell = tokenId === createOrder.amounts.sell.tokenId
+  const isSell = tokenId === orderData.amounts.sell.tokenId
 
   const noTokenSelected = !touched
 
@@ -118,7 +118,7 @@ export const AmountCard = ({
           <Spacer height={4} />
 
           <Text style={styles.errorText}>
-            {createOrder.selectedPool === undefined
+            {orderData.selectedPoolCalculation === undefined
               ? strings.noPool
               : isSell
               ? strings.notEnoughBalance

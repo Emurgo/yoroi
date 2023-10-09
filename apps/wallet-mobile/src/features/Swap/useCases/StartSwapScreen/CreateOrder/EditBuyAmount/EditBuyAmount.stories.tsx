@@ -49,7 +49,7 @@ const mockWallet = produce(mocks.wallet, (draft) => {
   ]
 })
 const mockSwapStateOtherToken = produce(mockSwapStateDefault, (draft) => {
-  draft.createOrder.amounts = {
+  draft.orderData.amounts = {
     sell: {
       tokenId: '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.444444',
       quantity: '500000',
@@ -61,7 +61,7 @@ const mockSwapStateOtherToken = produce(mockSwapStateDefault, (draft) => {
   }
 })
 const mockSwapStateSameToken = produce(mockSwapStateDefault, (draft) => {
-  draft.createOrder.amounts = {
+  draft.orderData.amounts = {
     sell: {
       tokenId: '648823ffdad1610b4162f4dbc87bd47f6f9cf45d772ddef661eff198.7755534443',
       quantity: '500000',
@@ -73,10 +73,10 @@ const mockSwapStateSameToken = produce(mockSwapStateDefault, (draft) => {
   }
 })
 const mockSwapStateUnamedToken = produce(mockSwapStateDefault, (draft) => {
-  draft.createOrder.amounts.sell.tokenId = '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.'
+  draft.orderData.amounts.sell.tokenId = '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.'
 })
 const mockSwapStateWithIconBigDecimals = produce(mockSwapStateDefault, (draft) => {
-  draft.createOrder.amounts.buy = {
+  draft.orderData.amounts.buy = {
     tokenId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53',
     quantity: '12301234567',
   }

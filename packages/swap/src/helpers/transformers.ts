@@ -22,6 +22,15 @@ export const transformersMaker = (
     }
   }
 
+  const asOpenswapPriceTokenAddress = (yoroiTokenId: string) => {
+    const [policyId, name = ''] = yoroiTokenId.split('.') as [string, string?]
+    // we dont convert to '.' or 'lovelace' only ''
+    return {
+      policyId,
+      name,
+    }
+  }
+
   const asYoroiTokenId = ({
     policyId,
     name,
@@ -141,7 +150,6 @@ export const transformersMaker = (
       lpToken: asYoroiAmount(lpToken),
       batcherFee: asYoroiAmount({amount: batcherFee, address: undefined}),
       fee: poolFee,
-      price: 0,
       poolId,
       provider,
     }
@@ -203,6 +211,7 @@ export const transformersMaker = (
 
   return {
     asOpenswapTokenId,
+    asOpenswapPriceTokenAddress,
     asOpenswapAmount,
 
     asYoroiTokenId,

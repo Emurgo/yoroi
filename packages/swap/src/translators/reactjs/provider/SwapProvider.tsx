@@ -45,23 +45,14 @@ export const SwapProvider = ({
     orderTypeChanged: (orderType: Swap.OrderType) => {
       dispatch({type: SwapCreateOrderActionType.OrderTypeChanged, orderType})
     },
-    sellAmountChanged: (amount: Balance.Amount) => {
-      dispatch({type: SwapCreateOrderActionType.SellAmountChanged, amount})
-    },
-    buyAmountChanged: (amount: Balance.Amount) => {
-      dispatch({type: SwapCreateOrderActionType.BuyAmountChanged, amount})
-    },
-    selectedPoolChanged: (pool?: Swap.Pool) => {
-      dispatch({type: SwapCreateOrderActionType.SelectedPoolChanged, pool})
+    selectedPoolChanged: (poolId: string) => {
+      dispatch({type: SwapCreateOrderActionType.SelectedPoolChanged, poolId})
     },
     slippageChanged: (newSlippage: number) => {
       dispatch({
         type: SwapCreateOrderActionType.SlippageChanged,
         slippage: newSlippage,
       })
-    },
-    txPayloadChanged: (txPayload: Swap.CreateOrderResponse) => {
-      dispatch({type: SwapCreateOrderActionType.TxPayloadChanged, txPayload})
     },
     switchTokens: () => {
       dispatch({type: SwapCreateOrderActionType.SwitchTokens})
@@ -77,6 +68,28 @@ export const SwapProvider = ({
     },
     limitPriceChanged: (limitPrice: Balance.Quantity) => {
       dispatch({type: SwapCreateOrderActionType.LimitPriceChanged, limitPrice})
+    },
+    //
+    buyQuantityChanged: (quantity: Balance.Quantity) => {
+      dispatch({type: SwapCreateOrderActionType.BuyQuantityChanged, quantity})
+    },
+    sellQuantityChanged: (quantity: Balance.Quantity) => {
+      dispatch({type: SwapCreateOrderActionType.SellQuantityChanged, quantity})
+    },
+    lpTokenHeldChanged: (amount: Balance.Amount | undefined) => {
+      dispatch({type: SwapCreateOrderActionType.LpTokenHeldChanged, amount})
+    },
+    buyTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => {
+      dispatch({type: SwapCreateOrderActionType.BuyTokenIdChanged, tokenId})
+    },
+    sellTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => {
+      dispatch({type: SwapCreateOrderActionType.SellTokenIdChanged, tokenId})
+    },
+    poolPairsChanged: (pools: ReadonlyArray<Swap.Pool>) => {
+      dispatch({type: SwapCreateOrderActionType.PoolPairsChanged, pools})
+    },
+    primaryTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => {
+      dispatch({type: SwapCreateOrderActionType.PrimaryTokenIdChanged, tokenId})
     },
   }).current
 

@@ -41,7 +41,6 @@ const createOrderData: Swap.CreateOrderData = {
     tokenB: {tokenId: '', quantity: '1000000000'},
     ptPriceTokenA: '0',
     ptPriceTokenB: '0',
-    price: 0,
     batcherFee: {tokenId: '', quantity: '0'},
     deposit: {tokenId: '', quantity: '2000000'},
     poolId:
@@ -78,7 +77,6 @@ const getPools: Swap.Pool[] = [
     },
     batcherFee: {quantity: '2000000', tokenId: ''},
     fee: '0.3',
-    price: 0,
     poolId:
       '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
     provider: 'minswap',
@@ -100,7 +98,6 @@ const getPools: Swap.Pool[] = [
     },
     batcherFee: {quantity: '2000000', tokenId: ''},
     fee: '0.3',
-    price: 0,
     poolId:
       '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
     provider: 'sundaeswap',
@@ -122,7 +119,6 @@ const getPools: Swap.Pool[] = [
     },
     batcherFee: {quantity: '2000000', tokenId: ''},
     fee: '0.3',
-    price: 0,
     poolId:
       '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
     provider: 'sundaeswap',
