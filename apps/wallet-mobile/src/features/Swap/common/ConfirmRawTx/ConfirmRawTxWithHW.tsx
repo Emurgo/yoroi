@@ -11,10 +11,10 @@ type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'confirm' | 'loading'
 
 type Props = {
-  onSuccess?: (options: {useUSB: boolean}) => void
+  onConfirm?: (options: {useUSB: boolean}) => void
 }
 
-export const ConfirmRawTxWithHW = ({onSuccess}: Props) => {
+export const ConfirmRawTxWithHW = ({onConfirm}: Props) => {
   const [transportType, setTransportType] = useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')
   const wallet = useSelectedWallet()
@@ -26,13 +26,13 @@ export const ConfirmRawTxWithHW = ({onSuccess}: Props) => {
 
   const onConnectBLE = async (deviceId: DeviceId) => {
     await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
-    onSuccess?.({useUSB: false})
+    onConfirm?.({useUSB: false})
     setStep('loading')
   }
 
   const onConnectUSB = async (deviceObj: DeviceObj) => {
     await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
-    onSuccess?.({useUSB: true})
+    onConfirm?.({useUSB: true})
     setStep('loading')
   }
 

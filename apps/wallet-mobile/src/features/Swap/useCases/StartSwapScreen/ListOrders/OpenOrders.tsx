@@ -125,7 +125,7 @@ export const OpenOrders = () => {
     swapNavigation.submittedTx()
   }
 
-  const onRawTxHwConfirm = async ({useUSB = false, orderId}: {useUSB?: boolean; orderId: string}) => {
+  const onRawTxHwConfirm = async ({useUSB, orderId}: {useUSB: boolean; orderId: string}) => {
     try {
       const order = normalizedOrders.find((o) => o.id === orderId)
       if (!order || order.owner === undefined || order.utxo === undefined) return
@@ -162,7 +162,7 @@ export const OpenOrders = () => {
       content: (
         <ConfirmRawTx
           onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)}
-          onHWConfirm={() => onRawTxHwConfirm({useUSB: false, orderId: id})}
+          onHWConfirm={({useUSB}) => onRawTxHwConfirm({useUSB, orderId: id})}
         />
       ),
       height: 400,

@@ -10,12 +10,12 @@ export const ConfirmRawTx = ({
   onHWConfirm,
 }: {
   onConfirm?: (rootKey: string) => Promise<void>
-  onHWConfirm?: VoidFunction
+  onHWConfirm?: ({useUSB}: {useUSB: boolean}) => Promise<void>
 }) => {
   const wallet = useSelectedWallet()
 
   if (wallet.isHW) {
-    return <ConfirmRawTxWithHW onSuccess={onHWConfirm} />
+    return <ConfirmRawTxWithHW onConfirm={onHWConfirm} />
   }
 
   if (wallet.isEasyConfirmationEnabled) {
