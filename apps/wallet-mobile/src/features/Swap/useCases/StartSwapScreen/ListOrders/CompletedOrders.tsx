@@ -102,7 +102,11 @@ export const CompletedOrders = () => {
         })}
       </ScrollView>
 
-      <Counter counter={normalizedOrders?.length ?? 0} customText={strings.listCompletedOrders} />
+      <Counter
+        style={styles.counter}
+        counter={normalizedOrders?.length ?? 0}
+        customText={strings.listCompletedOrders}
+      />
     </>
   )
 }
@@ -253,5 +257,8 @@ const styles = StyleSheet.create({
   label: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  counter: {
+    paddingVertical: 16,
   },
 })
