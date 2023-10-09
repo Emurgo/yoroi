@@ -14,9 +14,9 @@ import {useStrings} from '../../strings'
 import {useSwapTouched} from '../../SwapFormProvider'
 
 type Props = {
-  data?: Swap.Pool[]
+  pools?: ReadonlyArray<Swap.Pool>
 }
-export const SelectPoolFromList = ({data = []}: Props) => {
+export const SelectPoolFromList = ({pools = []}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {selectedPoolChanged, orderData} = useSwap()
@@ -37,7 +37,7 @@ export const SelectPoolFromList = ({data = []}: Props) => {
 
   return (
     <View style={styles.container}>
-      {data.map((pool) => (
+      {pools.map((pool) => (
         <View key={pool.poolId}>
           <Spacer height={16} />
 

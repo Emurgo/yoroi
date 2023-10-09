@@ -14,7 +14,7 @@ storiesOf('Swap List Pool', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('initial', () => (
     <SelectPoolFromList
-      data={[
+      pools={[
         {
           tokenA: {quantity: '4500000', tokenId: 'tokenA'},
           tokenB: {quantity: '9000000', tokenId: 'tokenB'},

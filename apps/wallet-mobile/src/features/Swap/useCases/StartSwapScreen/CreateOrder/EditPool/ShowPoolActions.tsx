@@ -56,7 +56,8 @@ export const ShowPoolActions = () => {
   const poolStatus = orderData.type === 'limit' && isPoolTouched ? '' : ` ${strings.autoPool}`
   const poolTitle = `${poolProviderFormatted}${poolStatus}`
 
-  const handlePress = () => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)
+  const handleOnExpand = () => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)
+  const handleOnChangePool = () => navigateTo.selectPool()
 
   return (
     <View>
@@ -70,7 +71,7 @@ export const ShowPoolActions = () => {
         </View>
 
         {orderData.type === 'limit' && (
-          <TouchableOpacity onPress={() => navigateTo.selectPool()}>
+          <TouchableOpacity onPress={handleOnChangePool}>
             <Text style={styles.change}>{strings.changePool}</Text>
           </TouchableOpacity>
         )}
@@ -79,10 +80,8 @@ export const ShowPoolActions = () => {
       <ExpandableInfoCard
         key={id}
         header={
-          <HeaderWrapper expanded={expanded} onPress={handlePress}>
-            <TouchableOpacity onPress={handlePress}>
-              <Text style={styles.bold}>{header}</Text>
-            </TouchableOpacity>
+          <HeaderWrapper expanded={expanded} onPress={handleOnExpand}>
+            <Text style={styles.bold}>{header}</Text>
           </HeaderWrapper>
         }
         info={
