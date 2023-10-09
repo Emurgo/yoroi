@@ -26,7 +26,7 @@ const WalletTabNavigator = () => {
   const wallet = useSelectedWallet()
   const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
 
-  const [keyboardStatus, setKeyboardStatus] = React.useState<boolean>()
+  const [keyboardStatus, setKeyboardStatus] = React.useState(false)
 
   React.useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardWillShow', () => {
