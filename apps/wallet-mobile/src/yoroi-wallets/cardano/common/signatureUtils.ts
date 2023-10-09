@@ -56,8 +56,8 @@ export const createSignedLedgerSwapCancellationTx = async (
   purpose: number,
   publicKeyHex: string,
 ): Promise<Uint8Array> => {
-  console.log('trying to get fixed tx')
-  const fixedTx = await CardanoMobile.FixedTransaction.fromHex(cbor)
+  const fixedBodyCbor = await getMuesliSwapFixedCbor(cbor)
+  const fixedTx = await CardanoMobile.FixedTransaction.fromHex(fixedBodyCbor)
   if (!fixedTx) throw new Error('invalid tx hex')
   const rawBody = await fixedTx.rawBody()
   const txHash = await CardanoMobile.TransactionHash.fromBytes(blake2b(32).update(rawBody).digest('binary'))
@@ -128,13 +128,7 @@ export const createSwapCancellationLedgerPayload = async (
   protocolMagic: number,
   getAddressing: (address: string) => Addressing,
 ): Promise<SignTransactionRequest> => {
-  const originalTx = assertRequired(
-    await CardanoMobile.Transaction.fromHex(cbor),
-    'Could not parse transaction from cbor',
-  )
-  const fixedTxBody = await fixScriptHash(originalTx)
-
-  const tx = await CardanoMobile.Transaction.new(fixedTxBody, await originalTx.witnessSet(), undefined)
+  const tx = await CardanoMobile.Transaction.fromHex(await getMuesliSwapFixedCbor(cbor))
   console.log('cbor', cbor)
   const json = JSON.parse(await tx.wasm.to_json())
   console.log('json', json)
@@ -1026,6 +1020,13 @@ const getDerivationPathForAddress = (address: string, wallet: YoroiWallet, purpo
 }
 
 export const getMuesliSwapTransactionAndSigners = async (cbor: string, wallet: YoroiWallet) => {
+  const newCbor = await getMuesliSwapFixedCbor(cbor)
+  const tx = await CardanoMobile.Transaction.fromHex(newCbor)
+  const signers = await getRequiredSigners(tx, wallet)
+  return {cbor: newCbor, signers}
+}
+
+export const getMuesliSwapFixedCbor = async (cbor: string) => {
   const originalTx = assertRequired(
     await CardanoMobile.Transaction.fromHex(cbor),
     'Could not parse transaction from cbor',
@@ -1033,8 +1034,5 @@ export const getMuesliSwapTransactionAndSigners = async (cbor: string, wallet: Y
   const fixedTxBody = await fixScriptHash(originalTx)
 
   const txWithFixedBody = await CardanoMobile.Transaction.new(fixedTxBody, await originalTx.witnessSet(), undefined)
-  const newCbor = Buffer.from(await txWithFixedBody.toBytes()).toString('hex')
-
-  const signers = await getRequiredSigners(txWithFixedBody, wallet)
-  return {cbor: newCbor, signers}
+  return Buffer.from(await txWithFixedBody.toBytes()).toString('hex')
 }
