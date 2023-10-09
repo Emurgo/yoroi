@@ -30,15 +30,6 @@ export const EditBuyAmount = () => {
   const [inputValue, setInputValue] = React.useState<string>(Quantities.format(quantity, tokenInfo.decimals ?? 0))
 
   React.useEffect(() => {
-    console.log('EditBuyAmount::useEffect')
-    console.log(
-      'isBuyTouched',
-      isBuyTouched,
-      'inputRef?.current?.isFocused()',
-      inputRef?.current?.isFocused(),
-      'quantity',
-      quantity,
-    )
     if (isBuyTouched && !inputRef?.current?.isFocused()) {
       setInputValue(Quantities.format(quantity, tokenInfo.decimals ?? 0))
     }
