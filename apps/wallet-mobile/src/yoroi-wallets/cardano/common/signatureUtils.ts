@@ -165,7 +165,9 @@ export const createSwapCancellationLedgerPayload = async (
             const txId = await input.transactionId().then((t) => t.toHex())
             const txIndex = await input.index()
             const path = getAddressingPath(txId, txIndex)
-            if (!path) throw new Error('Could not find path for TX input: ' + txId + ':' + txIndex)
+            if (!path) {
+              console.warn('Could not find path for TX input: ' + txId + ':' + txIndex)
+            }
             inputsArray.push({txHashHex: txId, outputIndex: txIndex, path})
           }
           return inputsArray
