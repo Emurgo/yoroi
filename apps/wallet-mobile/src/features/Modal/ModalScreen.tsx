@@ -48,12 +48,12 @@ export const ModalScreen = () => {
       <Animated.View
         style={[
           {
-            height: windowHeight,
+            height: height,
             transform: [
               {
                 translateY: current.progress.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [windowHeight, windowHeight - height],
+                  outputRange: [height, windowHeight - 500],
                   extrapolate: 'clamp',
                 }),
               },
