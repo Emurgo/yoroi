@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native'
 
-import {Spacer} from '../../components'
+import {Spacer} from '..'
 import {useModal} from './ModalContext'
 
 export const ModalScreen = () => {

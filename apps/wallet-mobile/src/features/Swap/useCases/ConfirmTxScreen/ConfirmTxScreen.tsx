@@ -5,7 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../../components'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
-import {useModal} from '../../../../features/Modal/ModalContext'
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
