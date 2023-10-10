@@ -1,20 +1,21 @@
-import {getPairPriceInPtTerms, useSwap} from '@yoroi/swap'
-import {Balance, Swap} from '@yoroi/types'
+import {useSwap} from '@yoroi/swap'
+import {Swap} from '@yoroi/types'
 import React, {useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Boundary, Spacer} from '../../../../../components'
+import {Spacer} from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../navigation'
 import {PoolIcon} from '../../PoolIcon/PoolIcon'
 import {useStrings} from '../../strings'
 import {useSwapTouched} from '../../SwapFormProvider'
+
+const PRECISION = 14
 
 type Props = {
   pools?: ReadonlyArray<Swap.Pool>
@@ -27,6 +28,10 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(orderData.selectedPoolId)
   const navigate = useNavigateTo()
   const {track} = useMetrics()
+
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
+  const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
+  const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
 
   const handleOnPoolSelection = (pool: Swap.Pool) => {
     track.swapPoolChanged()
@@ -69,9 +74,17 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
                     <View>
                       <Spacer height={8} />
 
-                      <Boundary>
-                        <PriceInAda pool={pool} wallet={wallet} sell={orderData.amounts.sell} />
-                      </Boundary>
+                      <View style={styles.info}>
+                        <Text style={styles.infoLabel}>{strings.price}</Text>
+
+                        <Text style={styles.infoValue}>
+                          {Quantities.format(
+                            orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
+                            denomination,
+                            PRECISION,
+                          )}
+                        </Text>
+                      </View>
                     </View>
 
                     <View>
@@ -112,32 +125,6 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
           </View>
         )
       })}
-    </View>
-  )
-}
-
-type PriceInAdaProps = {pool: Swap.Pool; wallet: YoroiWallet; sell: Balance.Amount}
-const PriceInAda = ({pool, wallet, sell}: PriceInAdaProps) => {
-  const strings = useStrings()
-  const {ptPriceTokenA, ptPriceTokenB, tokenA, tokenB} = pool
-
-  const {decimals: decimalsA = 0} = useTokenInfo({wallet, tokenId: tokenA.tokenId})
-  const {decimals: decimalsB = 0} = useTokenInfo({wallet, tokenId: tokenB.tokenId})
-
-  const {ptPriceAB} = getPairPriceInPtTerms({
-    amountA: tokenA,
-    decimalsA,
-    decimalsB,
-    ptPriceTokenA,
-    ptPriceTokenB,
-    sell,
-  })
-
-  return (
-    <View style={styles.info}>
-      <Text style={styles.infoLabel}>{strings.price}</Text>
-
-      <Text style={styles.infoValue}>{ptPriceAB}</Text>
     </View>
   )
 }
