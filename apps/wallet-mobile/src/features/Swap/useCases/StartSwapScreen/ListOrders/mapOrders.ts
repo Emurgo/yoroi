@@ -51,6 +51,7 @@ export const mapCompletedOrders = (orders: TransactionInfo[], wallet: YoroiWalle
   if (orders.length === 0) return []
   const result = orders
     .map((order) => {
+      console.log('order', order)
       let metadata: {
         buyTokenId: string
         sellTokenId: string
@@ -61,7 +62,6 @@ export const mapCompletedOrders = (orders: TransactionInfo[], wallet: YoroiWalle
 
       try {
         metadata = JSON.parse(order.metadata as string)
-
         const buyTokenInfo = useTokenInfo({wallet, tokenId: metadata.buyTokenId})
         const sellTokenInfo = useTokenInfo({wallet, tokenId: metadata.sellTokenId})
 
@@ -80,10 +80,10 @@ export const mapCompletedOrders = (orders: TransactionInfo[], wallet: YoroiWalle
           date: order?.lastUpdatedAt,
           sellLabel,
           sellQuantity: formattedSellQuantity,
-          sellTokenId: sellTokenInfo.id,
+          sellTokenId: metadata.sellTokenId,
           buyLabel,
           buyQuantity: formattedBuyQuantity,
-          buyTokenId: buyTokenInfo.id,
+          buyTokenId: metadata.buyTokenId,
           txLink,
           tokenPrice: Quantities.format(tokenPrice, sellTokenInfo.decimals ?? 0, MAX_DECIMALS),
         }
