@@ -3,8 +3,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Image, ScrollView, StyleSheet, TextStyle, View} from 'react-native'
 
 import image from '../../assets/img/mnemonic_explanation.png'
-import {Button, Modal, Text} from '../../components'
+import {Button, Text} from '../../components'
 import {confirmationMessages} from '../../i18n/global-messages'
+import {Modal} from '../../legacy/Modal'
 import {spacing} from '../../theme'
 
 type Props = {

@@ -3,6 +3,7 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {Keyboard} from 'react-native'
 
 import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
@@ -25,6 +26,22 @@ const WalletTabNavigator = () => {
   const wallet = useSelectedWallet()
   const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
 
+  const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
+
+  React.useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardWillShow', () => {
+      setIsKeyboardOpen(true)
+    })
+    const hideSubscription = Keyboard.addListener('keyboardWillHide', () => {
+      setIsKeyboardOpen(false)
+    })
+
+    return () => {
+      showSubscription.remove()
+      hideSubscription.remove()
+    }
+  }, [])
+
   return (
     <>
       <OfflineBanner />
@@ -35,6 +52,9 @@ const WalletTabNavigator = () => {
           tabBarLabelStyle: {fontSize: 11},
           tabBarActiveTintColor: theme.COLORS.NAVIGATION_ACTIVE,
           tabBarInactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
+          tabBarStyle: {
+            display: isKeyboardOpen ? 'none' : undefined,
+          },
         }}
         initialRouteName={initialRoute}
         backBehavior="initialRoute"

@@ -2,7 +2,7 @@ import {action} from '@storybook/addon-actions'
 import React from 'react'
 import {Button, View} from 'react-native'
 
-import {Modal} from '../../src/components'
+import {Modal} from '../../src/legacy/Modal'
 
 type childrenFn = (modalProps: {
   visible: boolean
