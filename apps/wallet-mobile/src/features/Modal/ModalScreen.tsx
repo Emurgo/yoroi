@@ -37,7 +37,11 @@ export const ModalScreen = () => {
 
   return (
     <Pressable style={styles.backdrop} onPress={closeModal}>
-      <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <KeyboardAvoidingView
+        style={styles.root}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        enabled={Platform.OS === 'ios'}
+      >
         <Animated.View
           style={[
             {
