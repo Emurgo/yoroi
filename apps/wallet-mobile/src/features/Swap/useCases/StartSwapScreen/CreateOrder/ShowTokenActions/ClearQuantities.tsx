@@ -1,6 +1,6 @@
 import {useSwap} from '@yoroi/swap'
 import React from 'react'
-import {StyleSheet, Text} from 'react-native'
+import {Keyboard, StyleSheet, Text} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {COLORS} from '../../../../../../theme'
@@ -13,6 +13,7 @@ export const ClearQuantities = () => {
   const {poolDefaulted} = useSwapTouched()
 
   const handleReset = () => {
+    Keyboard.dismiss()
     resetQuantities()
     poolDefaulted()
   }
