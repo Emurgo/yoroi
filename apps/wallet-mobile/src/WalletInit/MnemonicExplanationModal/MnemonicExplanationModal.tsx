@@ -4,7 +4,8 @@ import {Image, StyleSheet, View} from 'react-native'
 import Markdown from 'react-native-markdown-display'
 
 import image from '../../assets/img/mnemonic_explanation.png'
-import {Button, Modal} from '../../components'
+import {Button} from '../../components'
+import {Modal} from '../../legacy/Modal'
 import {spacing} from '../../theme'
 
 type Props = {

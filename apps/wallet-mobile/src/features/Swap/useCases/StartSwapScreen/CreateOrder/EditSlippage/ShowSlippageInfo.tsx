@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon, Spacer} from '../../../../../../components'
-import {BottomSheetModal} from '../../../../../../components/BottomSheetModal'
+import {BottomSheetModal} from '../../../../../../legacy/BottomSheetModal'
 import {COLORS} from '../../../../../../theme'
 import {useStrings} from '../../../../common/strings'
 

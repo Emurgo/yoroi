@@ -1,9 +1,10 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {ErrorView, Modal, PleaseWaitView} from '../../components'
+import {ErrorView, PleaseWaitView} from '../../components'
 import {LedgerConnect, LedgerTransportSwitchView} from '../../HW'
 import globalMessages, {ledgerMessages, txLabels} from '../../i18n/global-messages'
+import {Modal} from '../../legacy/Modal'
 import {DeviceId, DeviceObj} from '../../yoroi-wallets/hw'
 
 type ErrorData = {

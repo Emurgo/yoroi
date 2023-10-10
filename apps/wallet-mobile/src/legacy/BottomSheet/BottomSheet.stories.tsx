@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Button, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {Spacer} from '../Spacer'
+import {Spacer} from '../../components/Spacer'
 import {BottomSheet, BottomSheetRef} from './BottomSheet'
 
 storiesOf('BottomSheet', module)

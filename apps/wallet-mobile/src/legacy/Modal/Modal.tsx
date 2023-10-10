@@ -15,9 +15,9 @@ import {NavigationProp, useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {Modal as RNModal, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
+import {Icon} from '../../components'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
-import {Icon} from '../Icon'
 
 type Props = {
   onRequestClose: () => void

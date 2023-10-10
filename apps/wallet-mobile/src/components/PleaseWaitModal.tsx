@@ -1,7 +1,7 @@
 import React from 'react'
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
-import {Modal} from './Modal'
+import {Modal} from '../legacy/Modal'
 import {Spacer} from './Spacer'
 
 type PleaseWaitViewProps = {
