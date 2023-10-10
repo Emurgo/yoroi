@@ -12,7 +12,7 @@ import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from '../../../common/SwapFormProvider'
 
 const BORDER_SIZE = 1
-const PRECISION = 10
+const PRECISION = 14
 
 export const EditLimitPrice = () => {
   const strings = useStrings()
