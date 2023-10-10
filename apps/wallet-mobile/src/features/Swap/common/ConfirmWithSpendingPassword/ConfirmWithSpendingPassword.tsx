@@ -16,19 +16,15 @@ type Props = {
   onSubmit?: (spendingPassword: string) => void
   isLoading?: boolean
   error?: Error
-  setErrorData?: (data: ErrorData) => void
+  onPasswordChange?: () => void
 }
 
-export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, setErrorData}: Props) => {
+export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPasswordChange}: Props) => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [spendingPassword, setSpendingPassword] = React.useState(
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
   )
   const strings = useStrings()
-
-  React.useEffect(() => {
-    setErrorData && setErrorData({errorMessage: '', errorLogs: ''})
-  }, [setErrorData, spendingPassword])
 
   return (
     <>
@@ -40,7 +36,10 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, setErro
         enablesReturnKeyAutomatically
         placeholder={strings.spendingPassword}
         value={spendingPassword}
-        onChangeText={setSpendingPassword}
+        onChangeText={(text) => {
+          setSpendingPassword(text)
+          onPasswordChange && onPasswordChange()
+        }}
         autoComplete="off"
       />
 
@@ -59,7 +58,7 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, setErro
         shelleyTheme
         title={strings.sign}
         onPress={() => onSubmit?.(spendingPassword)}
-        disabled={spendingPassword?.length === 0}
+        disabled={spendingPassword.length === 0}
       />
 
       {isLoading && (

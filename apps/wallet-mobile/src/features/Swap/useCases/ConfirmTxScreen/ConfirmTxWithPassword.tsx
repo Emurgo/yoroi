@@ -60,7 +60,7 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx}: Props) =>
       onSubmit={onConfirm}
       isLoading={isLoading}
       error={errorData.errorMessage.length > 0 ? new Error(errorData.errorMessage) : undefined}
-      setErrorData={setErrorData}
+      onPasswordChange={() => setErrorData({errorMessage: '', errorLogs: ''})}
     />
   )
 }
