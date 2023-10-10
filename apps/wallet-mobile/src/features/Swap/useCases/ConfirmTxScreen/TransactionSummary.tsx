@@ -1,11 +1,10 @@
-import {getMinAdaReceiveAfterSlippage, useSwap} from '@yoroi/swap'
+import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {BottomSheetModal} from '../../../../components/BottomSheetModal'
-import {useLanguage} from '../../../../i18n'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
@@ -20,7 +19,6 @@ export const TransactionSummary = () => {
   })
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {numberLocale} = useLanguage()
   const {orderData} = useSwap()
   const {amounts, selectedPoolCalculation} = orderData
 
@@ -39,11 +37,9 @@ export const TransactionSummary = () => {
     },
     {
       label: strings.swapMinReceivedTitle,
-      value: `${getMinAdaReceiveAfterSlippage(
-        amounts.buy.quantity,
-        orderData.slippage,
+      value: `${Quantities.format(
+        selectedPoolCalculation?.buyAmountWithSlippage?.quantity ?? Quantities.zero,
         buyTokenInfo.decimals ?? 0,
-        numberLocale,
       )} ${tokenToBuyName}`,
       info: strings.swapMinReceived,
     },
