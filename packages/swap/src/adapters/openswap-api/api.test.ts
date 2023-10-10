@@ -329,34 +329,7 @@ describe('swapApiMaker', () => {
           isMainnet: true,
           stakingKey,
           primaryTokenId,
-        },
-        {
-          openswap: mockOpenSwapApi,
-        },
-      )
-
-      const result = await api.getPrice({
-        baseToken: '',
-        quoteToken:
-          '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e',
-      })
-
-      expect(result).toBe(0.07080044463)
-      expect(mockOpenSwapApi.getPrice).toHaveBeenCalledTimes(1)
-    })
-  })
-
-  describe('getPrice', () => {
-    it('mainnet', async () => {
-      mockOpenSwapApi.getPrice = jest
-        .fn()
-        .mockResolvedValue(openswapMocks.getPrice)
-
-      const api = swapApiMaker(
-        {
-          isMainnet: true,
-          stakingKey,
-          primaryTokenId,
+          supportedProviders,
         },
         {
           openswap: mockOpenSwapApi,
