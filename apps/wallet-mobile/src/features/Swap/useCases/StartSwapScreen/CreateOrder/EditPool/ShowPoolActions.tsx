@@ -1,4 +1,4 @@
-import {getMinAdaReceiveAfterSlippage, useSwap} from '@yoroi/swap'
+import {useSwap} from '@yoroi/swap'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
@@ -10,7 +10,6 @@ import {
   HiddenInfoWrapper,
   Spacer,
 } from '../../../../../../components'
-import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../theme'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
@@ -22,7 +21,6 @@ import {useSwapTouched} from '../../../../common/SwapFormProvider'
 
 export const ShowPoolActions = () => {
   const navigateTo = useNavigateTo()
-  const {numberLocale} = useLanguage()
   const {orderData} = useSwap()
   const strings = useStrings()
   const {isBuyTouched, isSellTouched, isPoolTouched} = useSwapTouched()
@@ -90,11 +88,9 @@ export const ShowPoolActions = () => {
               selectedPoolCalculation.pool.batcherFee.quantity,
               Number(wallet.primaryTokenInfo.decimals),
             )}
-            minReceived={getMinAdaReceiveAfterSlippage(
-              amounts.buy.quantity,
-              orderData.slippage,
+            minReceived={Quantities.format(
+              selectedPoolCalculation.buyAmountWithSlippage.quantity,
               buyTokenInfo.decimals ?? 0,
-              numberLocale,
             )}
             minAda={Quantities.format(
               selectedPoolCalculation.pool.deposit.quantity,

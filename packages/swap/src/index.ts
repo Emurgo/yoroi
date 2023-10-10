@@ -10,7 +10,6 @@ export {apiMocks} from './adapters/openswap-api/api.mocks'
 // orders amounts
 export {getBuyAmount} from './helpers/orders/amounts/getBuyAmount'
 export {getSellAmount} from './helpers/orders/amounts/getSellAmount'
-export {getMinAdaReceiveAfterSlippage} from './helpers/orders/amounts/getMinAdaReceiveAfterSlippage'
 export {getQuantityWithSlippage} from './helpers/orders/amounts/getQuantityWithSlippage'
 // orders factories
 export {makePossibleMarketOrder} from './helpers/orders/factories/makePossibleMarketOrder'
