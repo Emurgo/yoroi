@@ -64,7 +64,6 @@ export const createSignedLedgerSwapCancellationTx = async (
   const keyLevel = addressing.startLevel + addressing.path.length - 1
 
   for (let i = 0; i < witnesses.length; i++) {
-    console.log('getting witness', witnesses[i].path)
     const addressKey = await derivePublicByAddressing(
       {startLevel: 1, path: witnesses[i].path},
       {
