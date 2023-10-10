@@ -7,13 +7,19 @@ import {COLORS} from '../../../../theme'
 import {WrongPassword} from '../../../../yoroi-wallets/cardano/errors'
 import {useStrings} from '../../common/strings'
 
+export type ErrorData = {
+  errorMessage: string
+  errorLogs?: unknown
+}
+
 type Props = {
   onSubmit?: (spendingPassword: string) => void
   isLoading?: boolean
   error?: Error
+  onPasswordChange?: () => void
 }
 
-export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error}: Props) => {
+export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPasswordChange}: Props) => {
   const spendingPasswordRef = React.useRef<RNTextInput>(null)
   const [spendingPassword, setSpendingPassword] = React.useState(
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
@@ -30,7 +36,10 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error}: Props)
         enablesReturnKeyAutomatically
         placeholder={strings.spendingPassword}
         value={spendingPassword}
-        onChangeText={setSpendingPassword}
+        onChangeText={(text) => {
+          setSpendingPassword(text)
+          onPasswordChange && onPasswordChange()
+        }}
         autoComplete="off"
       />
 
@@ -44,7 +53,13 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error}: Props)
 
       <Spacer fill />
 
-      <Button testID="swapButton" shelleyTheme title={strings.sign} onPress={() => onSubmit?.(spendingPassword)} />
+      <Button
+        testID="swapButton"
+        shelleyTheme
+        title={strings.sign}
+        onPress={() => onSubmit?.(spendingPassword)}
+        disabled={spendingPassword.length === 0}
+      />
 
       {isLoading && (
         <View style={styles.loading}>
