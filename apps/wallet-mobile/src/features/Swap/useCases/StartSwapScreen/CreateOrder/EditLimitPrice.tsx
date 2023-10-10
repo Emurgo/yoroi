@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-newline */
 import {useSwap} from '@yoroi/swap'
 import * as React from 'react'
-import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
+import {StyleSheet, Text, TextInput, View} from 'react-native'
 
 import {useLanguage} from '../../../../../i18n'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
@@ -75,30 +75,20 @@ type AmountInputProps = {
   inputRef?: React.RefObject<TextInput>
 }
 const AmountInput = ({onChange, value, editable, inputRef}: AmountInputProps) => {
-  const amountInputRef = React.useRef<TextInput>(inputRef?.current ?? null)
-
-  const focusInput = () => {
-    if (amountInputRef?.current) {
-      amountInputRef.current.focus()
-    }
-  }
-
   return (
-    <Pressable onPress={focusInput}>
-      <TextInput
-        keyboardType="numeric"
-        autoComplete="off"
-        value={value}
-        placeholder="0"
-        onChangeText={onChange}
-        allowFontScaling
-        selectionColor={COLORS.TRANSPARENT_BLACK}
-        style={styles.amountInput}
-        underlineColorAndroid="transparent"
-        editable={editable}
-        ref={inputRef}
-      />
-    </Pressable>
+    <TextInput
+      keyboardType="numeric"
+      autoComplete="off"
+      value={value}
+      placeholder="0"
+      onChangeText={onChange}
+      allowFontScaling
+      selectionColor={COLORS.TRANSPARENT_BLACK}
+      style={styles.amountInput}
+      underlineColorAndroid="transparent"
+      editable={editable}
+      ref={inputRef}
+    />
   )
 }
 
