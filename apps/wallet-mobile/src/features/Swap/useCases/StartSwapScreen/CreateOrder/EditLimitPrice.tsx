@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-newline */
 import {useSwap} from '@yoroi/swap'
 import * as React from 'react'
-import {StyleSheet, Text, TextInput, View} from 'react-native'
+import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 
 import {useLanguage} from '../../../../../i18n'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
@@ -19,6 +19,7 @@ export const EditLimitPrice = () => {
   const {numberLocale} = useLanguage()
   const [text, setText] = React.useState('')
   const wallet = useSelectedWallet()
+  const inputRef = React.useRef<TextInput>(null)
 
   const {orderData, limitPriceChanged} = useSwap()
   const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
@@ -33,7 +34,8 @@ export const EditLimitPrice = () => {
 
   React.useEffect(() => {
     if (orderData.type === 'limit') {
-      setText(Quantities.format(orderData.limitPrice ?? Quantities.zero, denomination, PRECISION))
+      !inputRef?.current?.isFocused() &&
+        setText(Quantities.format(orderData.limitPrice ?? Quantities.zero, denomination, PRECISION))
     } else {
       setText(
         Quantities.format(orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero, denomination, PRECISION),
@@ -54,7 +56,7 @@ export const EditLimitPrice = () => {
       <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
 
       <View style={styles.content}>
-        <AmountInput onChange={onChange} value={text} editable={!disabled} />
+        <AmountInput onChange={onChange} value={text} editable={!disabled} inputRef={inputRef} />
 
         <View style={[styles.textWrapper, disabled && styles.disabled]}>
           <Text style={styles.text}>
@@ -70,21 +72,33 @@ type AmountInputProps = {
   value?: string
   onChange(value: string): void
   editable: boolean
+  inputRef?: React.RefObject<TextInput>
 }
-const AmountInput = ({onChange, value, editable}: AmountInputProps) => {
+const AmountInput = ({onChange, value, editable, inputRef}: AmountInputProps) => {
+  const amountInputRef = React.useRef<TextInput>(inputRef?.current ?? null)
+
+  const focusInput = () => {
+    if (amountInputRef?.current) {
+      amountInputRef.current.focus()
+    }
+  }
+
   return (
-    <TextInput
-      keyboardType="numeric"
-      autoComplete="off"
-      value={value}
-      placeholder="0"
-      onChangeText={onChange}
-      allowFontScaling
-      selectionColor={COLORS.TRANSPARENT_BLACK}
-      style={styles.amountInput}
-      underlineColorAndroid="transparent"
-      editable={editable}
-    />
+    <Pressable onPress={focusInput}>
+      <TextInput
+        keyboardType="numeric"
+        autoComplete="off"
+        value={value}
+        placeholder="0"
+        onChangeText={onChange}
+        allowFontScaling
+        selectionColor={COLORS.TRANSPARENT_BLACK}
+        style={styles.amountInput}
+        underlineColorAndroid="transparent"
+        editable={editable}
+        ref={inputRef}
+      />
+    </Pressable>
   )
 }
 
