@@ -119,6 +119,9 @@ export type YoroiWallet = {
   // CIP36
   ledgerSupportsCIP36(useUSB: boolean): Promise<boolean>
 
+  // Ledger
+  signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void>
+
   // Staking
   rewardAddressHex: string
   createDelegationTx(poolRequest: string, valueInAccount: BigNumber): Promise<YoroiUnsignedTx>

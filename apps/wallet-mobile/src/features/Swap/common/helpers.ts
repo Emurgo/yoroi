@@ -3,7 +3,6 @@ import {Swap} from '@yoroi/types'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {YoroiEntry} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
-
 export const createYoroiEntry = (
   createOrder: Swap.CreateOrderData,
   address: string,

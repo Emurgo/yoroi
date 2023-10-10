@@ -705,6 +705,10 @@ export class ByronWallet implements YoroiWallet {
     }
   }
 
+  signSwapCancellationWithLedger(): Promise<void> {
+    return Promise.reject(new Error('Method not implemented.'))
+  }
+
   async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string, datum?: {data: string}) {
     const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
     const accountPrivateKey = await masterKey
@@ -801,7 +805,7 @@ export class ByronWallet implements YoroiWallet {
     return Cardano.Wasm.BaseAddress.fromAddress(addr)
   }
 
-  async ledgerSupportsCIP36(useUSB): Promise<boolean> {
+  async ledgerSupportsCIP36(useUSB: boolean): Promise<boolean> {
     if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
     return doesCardanoAppVersionSupportCIP36(await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB))
   }

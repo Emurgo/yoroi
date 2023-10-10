@@ -1,6 +1,6 @@
 import {defineMessages, useIntl} from 'react-intl'
 
-import globalMessages, {errorMessages} from '../../../i18n/global-messages'
+import globalMessages, {errorMessages, ledgerMessages} from '../../../i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -90,6 +90,7 @@ export const useStrings = () => {
     limitPriceWarningBack: intl.formatMessage(messages.limitPriceWarningBack),
     limitPriceWarningConfirm: intl.formatMessage(messages.limitPriceWarningConfirm),
     error: intl.formatMessage(globalMessages.error),
+    rejectedByUser: intl.formatMessage(ledgerMessages.rejectedByUserError),
     usbExplanation: intl.formatMessage(messages.usbExplanation),
     usbButton: intl.formatMessage(messages.usbButton),
     usbConnectionIsBlocked: intl.formatMessage(messages.usbConnectionIsBlocked),
