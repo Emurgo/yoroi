@@ -4,8 +4,9 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../components/Icon'
 import globalMessages, {confirmationMessages} from '../../i18n/global-messages'
+import {Modal} from '../../legacy/Modal'
 import {COLORS} from '../../theme'
-import {Button, Checkbox, Modal, Spacer, Text} from '..'
+import {Button, Checkbox, Spacer, Text} from '..'
 
 type DangerousActionProps = {
   title: string

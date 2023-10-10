@@ -3,8 +3,9 @@ import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {BottomSheet, BottomSheetRef, Button, Spacer} from '../../../../components'
+import {Button, Spacer} from '../../../../components'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
@@ -16,19 +17,11 @@ import {ConfirmTx} from './ConfirmTx'
 import {TransactionSummary} from './TransactionSummary'
 
 export const ConfirmTxScreen = () => {
-  const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
-
-  const openBottomSheet = () => {
-    bottomSheetRef.current?.openBottomSheet()
-  }
-
-  const closeBottomSheet = () => {
-    bottomSheetRef.current?.closeBottomSheet()
-  }
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
+  const {openModal, closeModal} = useModal()
 
   const {unsignedTx, orderData} = useSwap()
   const sellTokenInfo = useTokenInfo({
@@ -94,31 +87,26 @@ export const ConfirmTxScreen = () => {
               authWithOs()
               return
             }
-            openBottomSheet()
+            openModal(
+              wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction,
+              <View style={styles.modalContent}>
+                <ConfirmTx
+                  wallet={wallet}
+                  unsignedTx={unsignedTx}
+                  onSuccess={() => {
+                    closeModal()
+                    navigate.submittedTx()
+                  }}
+                  onCancel={closeModal}
+                />
+
+                <Spacer height={16} />
+              </View>,
+              wallet.isHW ? 430 : 350,
+            )
           }}
         />
       </Actions>
-
-      <BottomSheet
-        height={wallet.isHW ? 430 : 350}
-        ref={bottomSheetRef}
-        title={wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction}
-        isExtendable={false}
-      >
-        <View style={styles.modalContent}>
-          <ConfirmTx
-            wallet={wallet}
-            unsignedTx={unsignedTx}
-            onSuccess={() => {
-              closeBottomSheet()
-              navigate.submittedTx()
-            }}
-            onCancel={closeBottomSheet}
-          />
-
-          <Spacer height={16} />
-        </View>
-      </BottomSheet>
 
       <LoadingOverlay loading={txIsLoading} />
     </SafeAreaView>

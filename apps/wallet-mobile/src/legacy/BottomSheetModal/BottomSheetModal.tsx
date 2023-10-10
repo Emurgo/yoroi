@@ -3,8 +3,8 @@ import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {Modal as RNModal, Platform, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import {Icon} from '../Icon'
-import {Spacer} from '../Spacer'
+import {Icon} from '../../components/Icon'
+import {Spacer} from '../../components/Spacer'
 
 export type BottomSheetState = {
   openId: string | null
