@@ -2,7 +2,8 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
 
-import {Icon, Modal, Spacer} from '../../components'
+import {Icon, Spacer} from '../../components'
+import {Modal} from '../../legacy/Modal'
 import {COLORS} from '../../theme'
 
 type Props = {

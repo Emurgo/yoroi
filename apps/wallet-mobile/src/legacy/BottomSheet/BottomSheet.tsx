@@ -1,7 +1,7 @@
 import React from 'react'
 import {KeyboardAvoidingView, Modal, NativeTouchEvent, Platform, StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '../Spacer'
+import {Spacer} from '../../components/Spacer'
 
 type BottomSheetProps = {
   children: React.ReactNode

@@ -3,8 +3,9 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Alert, Platform, ScrollView, StyleSheet, View} from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import {Button, Modal, Text} from '../../components'
+import {Button, Text} from '../../components'
 import globalMessages from '../../i18n/global-messages'
+import {Modal} from '../../legacy/Modal'
 import {spacing} from '../../theme'
 import {HARDWARE_WALLETS, useLedgerPermissions} from '../../yoroi-wallets/hw'
 

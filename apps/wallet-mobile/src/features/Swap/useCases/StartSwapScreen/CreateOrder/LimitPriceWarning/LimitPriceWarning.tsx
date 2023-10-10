@@ -4,7 +4,7 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer} from '../../../../../../components'
-import {BottomSheetModal} from '../../../../../../components/BottomSheetModal'
+import {BottomSheetModal} from '../../../../../../legacy/BottomSheetModal'
 import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
