@@ -1,6 +1,6 @@
 import {useSwap, useSwapPoolsByPair} from '@yoroi/swap'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Keyboard, StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon} from '../../../../../../components'
@@ -40,6 +40,7 @@ export const TopTokenActions = () => {
   }
 
   const handleRefresh = () => {
+    Keyboard.dismiss()
     refetch()
   }
 
