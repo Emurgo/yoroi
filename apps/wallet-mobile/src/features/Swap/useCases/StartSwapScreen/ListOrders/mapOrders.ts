@@ -10,19 +10,6 @@ import {Quantities} from '../../../../../yoroi-wallets/utils'
 
 export const MAX_DECIMALS = 10
 
-export type MappedCompleteOrder = {
-  id: string
-  provider: Swap.PoolProvider
-  date: string
-  tokenPrice: string
-  sellLabel: string
-  sellQuantity: string
-  sellTokenId: string
-  buyLabel: string
-  buyQuantity: string
-  buyTokenId: string
-  txLink: string
-}
 export type MappedOpenOrder = {
   owner: string | undefined
   utxo: string | undefined

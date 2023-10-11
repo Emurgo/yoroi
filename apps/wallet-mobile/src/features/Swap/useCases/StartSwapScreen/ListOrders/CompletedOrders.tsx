@@ -1,11 +1,12 @@
 import {useFocusEffect} from '@react-navigation/native'
-import {Swap} from '@yoroi/types'
+import {Balance, Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import _ from 'lodash'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {FlatList} from 'react-native-gesture-handler'
 
 import {
   ExpandableInfoCard,
@@ -21,16 +22,27 @@ import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {NETWORK_CONFIG} from '../../../../../yoroi-wallets/cardano/constants/mainnet/constants'
-import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {MappedCompleteOrder, MAX_DECIMALS} from './mapOrders'
+import {MAX_DECIMALS} from './mapOrders'
 
-const findCompletedOrderTx = (transactions: TransactionInfo[], wallet: YoroiWallet): MappedCompleteOrder[] => {
+export type MappedRawOrder = {
+  id: string
+  metadata: {
+    sellTokenId: string
+    buyTokenId: string
+    buyQuantity: string
+    sellQuantity: string
+    provider: Swap.SupportedProvider
+  }
+  date: string
+}
+
+const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[] => {
   const sentTransactions = transactions.filter((tx) => tx.direction === 'SENT')
   const receivedTransactions = transactions.filter((tx) => tx.direction === 'RECEIVED')
 
@@ -48,30 +60,11 @@ const findCompletedOrderTx = (transactions: TransactionInfo[], wallet: YoroiWall
 
     if (result['id'] !== undefined && result['metadata'] !== undefined) {
       const metadata = JSON.parse(result.metadata as string)
-
-      const buyTokenInfo = useTokenInfo({wallet, tokenId: metadata.buyTokenId})
-      const sellTokenInfo = useTokenInfo({wallet, tokenId: metadata.sellTokenId})
-      const formattedBuyQuantity = Quantities.format(metadata.buyQuantity, buyTokenInfo.decimals ?? 0)
-      const formattedSellQuantity = Quantities.format(metadata.sellQuantity, sellTokenInfo.decimals ?? 0)
-      const tokenPrice = asQuantity(new BigNumber(metadata.sellQuantity).dividedBy(metadata.buyQuantity).toString())
-
-      const mappedResult: MappedCompleteOrder = {
-        id: result.id,
-        date: result?.date ?? '',
-        provider: metadata.provider,
-        sellLabel: sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-',
-        sellQuantity: formattedSellQuantity,
-        sellTokenId: metadata.sellTokenId,
-        buyLabel: buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-',
-        buyQuantity: formattedBuyQuantity,
-        buyTokenId: metadata.buyTokenId,
-        txLink: NETWORK_CONFIG.EXPLORER_URL_FOR_TX(metadata.buyTokenId),
-        tokenPrice: Quantities.format(tokenPrice, sellTokenInfo.decimals ?? 0, MAX_DECIMALS),
-      }
-      return acc.concat(mappedResult)
+      result['metadata'] = metadata
+      return acc.concat(result as MappedRawOrder)
     }
     return acc
-  }, [] as Array<MappedCompleteOrder>)
+  }, [] as Array<MappedRawOrder>)
 
   return filteredTx
 }
@@ -79,13 +72,10 @@ const findCompletedOrderTx = (transactions: TransactionInfo[], wallet: YoroiWall
 export const CompletedOrders = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
 
   const transactionsInfos = useTransactionInfos(wallet)
 
-  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos), wallet)
-
-  const intl = useIntl()
+  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos))
 
   const {track} = useMetrics()
 
@@ -98,48 +88,61 @@ export const CompletedOrders = () => {
   return (
     <>
       <ScrollView style={styles.container}>
-        {completeOrders?.map((order) => {
-          const id = order.id
-          const expanded = id === hiddenInfoOpenId
-          const sellIcon = <TokenIcon wallet={wallet} tokenId={order.sellTokenId} variant="swap" />
-          const buyIcon = <TokenIcon wallet={wallet} tokenId={order.buyTokenId} variant="swap" />
-          return (
-            <ExpandableInfoCard
-              key={id}
-              info={
-                <HiddenInfo
-                  txId={order.id}
-                  total={`${order.buyQuantity} ${order.buyLabel}`}
-                  txLink={order.txLink}
-                  provider={order.provider}
-                />
-              }
-              header={
-                <Header
-                  onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
-                  assetFromLabel={order.sellLabel}
-                  assetToLabel={order.buyLabel}
-                  assetFromIcon={sellIcon}
-                  assetToIcon={buyIcon}
-                  expanded={expanded}
-                />
-              }
-              expanded={expanded}
-              withBoxShadow
-            >
-              <MainInfo
-                tokenPrice={order.tokenPrice}
-                sellLabel={order.sellLabel}
-                tokenAmount={`${order.sellQuantity} ${order.sellLabel}`}
-                txTimeCreated={intl.formatDate(new Date(order.date), {dateStyle: 'short', timeStyle: 'short'})}
-              />
-            </ExpandableInfoCard>
-          )
-        })}
+        <FlatList
+          data={completeOrders}
+          renderItem={({item}: {item: MappedRawOrder}) => <ExpandableOrder order={item} />}
+          keyExtractor={(item) => item.id}
+        />
       </ScrollView>
 
       <Counter style={styles.counter} counter={completeOrders?.length ?? 0} customText={strings.listCompletedOrders} />
     </>
+  )
+}
+
+export const ExpandableOrder = ({order}: {order: MappedRawOrder}) => {
+  const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
+  const wallet = useSelectedWallet()
+  const intl = useIntl()
+  const metadata = order.metadata
+  const id = order.id
+  const expanded = id === hiddenInfoOpenId
+  const sellIcon = <TokenIcon wallet={wallet} tokenId={metadata.sellTokenId} variant="swap" />
+  const buyIcon = <TokenIcon wallet={wallet} tokenId={metadata.buyTokenId} variant="swap" />
+  const buyTokenInfo = useTokenInfo({wallet, tokenId: metadata.buyTokenId})
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: metadata.sellTokenId})
+  const buyQuantity = Quantities.format(metadata.buyQuantity as Balance.Quantity, buyTokenInfo.decimals ?? 0)
+  const sellQuantity = Quantities.format(metadata.sellQuantity as Balance.Quantity, sellTokenInfo.decimals ?? 0)
+  const tokenPrice = asQuantity(new BigNumber(metadata.sellQuantity).dividedBy(metadata.buyQuantity).toString())
+  const marketPrice = Quantities.format(tokenPrice, sellTokenInfo.decimals ?? 0, MAX_DECIMALS)
+  const buyLabel = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
+  const sellLabel = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
+  const txLink = NETWORK_CONFIG.EXPLORER_URL_FOR_TX(metadata.buyTokenId)
+
+  return (
+    <ExpandableInfoCard
+      key={id}
+      info={<HiddenInfo txId={id} total={`${buyQuantity} ${buyLabel}`} txLink={txLink} provider={metadata.provider} />}
+      header={
+        <Header
+          onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
+          assetFromLabel={sellLabel}
+          assetToLabel={buyLabel}
+          assetFromIcon={sellIcon}
+          assetToIcon={buyIcon}
+          expanded={expanded}
+        />
+      }
+      expanded={expanded}
+      withBoxShadow
+    >
+      <MainInfo
+        tokenPrice={marketPrice}
+        sellLabel={sellLabel}
+        tokenAmount={`${sellQuantity} ${sellLabel}`}
+        txTimeCreated={intl.formatDate(new Date(order.date), {dateStyle: 'short', timeStyle: 'short'})}
+      />
+    </ExpandableInfoCard>
   )
 }
 
