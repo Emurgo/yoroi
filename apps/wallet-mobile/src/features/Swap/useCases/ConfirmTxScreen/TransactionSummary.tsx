@@ -1,6 +1,8 @@
-import {useSwap} from '@yoroi/swap'
+import {getPoolUrlByProvider, useSwap} from '@yoroi/swap'
+import {Swap} from '@yoroi/types'
+import {capitalize} from 'lodash'
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Linking, Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
@@ -9,6 +11,7 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
+import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
 
 export const TransactionSummary = () => {
@@ -25,8 +28,22 @@ export const TransactionSummary = () => {
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
   const label = `${Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)} ${tokenToBuyName}`
+  const poolProviderFormatted = capitalize(selectedPoolCalculation?.pool.provider)
+  const poolUrl = getPoolUrlByProvider(selectedPoolCalculation?.pool.provider as Swap.SupportedProvider)
 
   const feesInfo = [
+    {
+      label: strings.dex.toUpperCase(),
+      value: (
+        <Pressable style={styles.flex} onPress={() => Linking.openURL(poolUrl)}>
+          <PoolIcon providerId={selectedPoolCalculation?.pool.provider as Swap.SupportedProvider} size={18} />
+
+          <Spacer width={8} />
+
+          <Text style={[styles.text, styles.poolText]}>{poolProviderFormatted}</Text>
+        </Pressable>
+      ),
+    },
     {
       label: strings.swapMinAdaTitle,
       value: `${Quantities.format(
@@ -81,17 +98,19 @@ export const TransactionSummary = () => {
 
                   <Spacer width={8} />
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      setBottomSheetSate({
-                        isOpen: true,
-                        title: orderInfo.label,
-                        content: orderInfo.info,
-                      })
-                    }}
-                  >
-                    <Icon.Info size={24} />
-                  </TouchableOpacity>
+                  {orderInfo.info != undefined && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setBottomSheetSate({
+                          isOpen: true,
+                          title: orderInfo.label,
+                          content: orderInfo.info,
+                        })
+                      }}
+                    >
+                      <Icon.Info size={24} />
+                    </TouchableOpacity>
+                  )}
                 </View>
 
                 <Text style={styles.text}>{orderInfo.value}</Text>
@@ -162,6 +181,8 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontWeight: '400',
     color: '#242838',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   gray: {
     color: COLORS.GRAY,
@@ -170,5 +191,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#242838',
     paddingBottom: 8,
+  },
+  poolText: {
+    color: COLORS.PRIMARY_GRADIENT_END,
   },
 })
