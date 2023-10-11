@@ -404,7 +404,7 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeWithFfe: {
+      ptTotalFeeNoFEF: {
         quantity: '2950000',
         tokenId: '',
       },
@@ -509,7 +509,7 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeWithFfe: {
+      ptTotalFeeNoFEF: {
         quantity: '3900000',
         tokenId: '',
       },
@@ -614,7 +614,7 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeWithFfe: {
+      ptTotalFeeNoFEF: {
         quantity: '4000000',
         tokenId: '',
       },
@@ -719,7 +719,7 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeWithFfe: {
+      ptTotalFeeNoFEF: {
         quantity: '4000000',
         tokenId: '',
       },
@@ -824,7 +824,7 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeWithFfe: {
+      ptTotalFeeNoFEF: {
         quantity: '4500000',
         tokenId: '',
       },
@@ -929,7 +929,7 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeWithFfe: {
+      ptTotalFeeNoFEF: {
         quantity: '4500000',
         tokenId: '',
       },
@@ -1037,7 +1037,7 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeWithFfe: {
+      ptTotalFeeNoFEF: {
         quantity: '2950000',
         tokenId: '',
       },
@@ -1135,7 +1135,7 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeWithFfe: {
+      ptTotalFeeNoFEF: {
         quantity: '5050000',
         tokenId: '',
       },
@@ -1233,7 +1233,7 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeWithFfe: {
+      ptTotalFeeNoFEF: {
         quantity: '4000000',
         tokenId: '',
       },
@@ -1331,7 +1331,7 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeWithFfe: {
+      ptTotalFeeNoFEF: {
         quantity: '4000000',
         tokenId: '',
       },
@@ -1429,7 +1429,7 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeWithFfe: {
+      ptTotalFeeNoFEF: {
         quantity: '4500000',
         tokenId: '',
       },
@@ -1527,7 +1527,7 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeWithFfe: {
+      ptTotalFeeNoFEF: {
         quantity: '4500000',
         tokenId: '',
       },

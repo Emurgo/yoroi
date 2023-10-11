@@ -173,7 +173,7 @@ export const makeOrderCalculations = ({
       priceDifference: differenceNoFEF,
     } = calculatePricesWithFees({withFrontendFee: false})
 
-    const ptTotalFeeWithFfe: Balance.Amount = {
+    const ptTotalFee: Balance.Amount = {
       tokenId: primaryTokenId,
       quantity: Quantities.sum([
         pool.batcherFee.quantity,
@@ -182,7 +182,7 @@ export const makeOrderCalculations = ({
       ]),
     }
 
-    const ptTotalFee: Balance.Amount = {
+    const ptTotalFeeNoFEF: Balance.Amount = {
       tokenId: primaryTokenId,
       quantity: Quantities.sum([
         pool.batcherFee.quantity,
@@ -208,7 +208,7 @@ export const makeOrderCalculations = ({
         deposit: pool.deposit,
         frontendFeeInfo,
         liquidityFee,
-        ptTotalFeeWithFfe,
+        ptTotalFeeNoFEF,
         ptTotalFee,
       },
       buyAmountWithSlippage,

@@ -300,7 +300,7 @@ const useNotEnoughBalanceError = (): string => {
   const hasPrimaryTokenBalance = !Quantities.isGreaterThan(
     Quantities.sum([
       tokenId === wallet.primaryTokenInfo.id ? orderData.amounts.sell.quantity : Quantities.zero,
-      orderData.selectedPoolCalculation?.cost.ptTotalFee.quantity ?? Quantities.zero,
+      orderData.selectedPoolCalculation?.cost.ptTotalFeeNoFEF.quantity ?? Quantities.zero,
     ]),
     balance,
   )
