@@ -176,8 +176,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontWeight: '400',
     color: '#242838',
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   gray: {
     color: COLORS.GRAY,
