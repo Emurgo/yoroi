@@ -332,6 +332,7 @@ export function toCachedTx(tx: RawTransaction): Transaction {
     fee: tx.fee ?? undefined,
     status: tx.tx_state,
     inputs: tx.inputs.map((input) => ({
+      id: input.id,
       address: input.address,
       amount: input.amount,
       assets: (input.assets ?? []).map((asset) => ({
@@ -374,6 +375,7 @@ export function toCachedTx(tx: RawTransaction): Transaction {
       })),
     })),
     memo: null,
+    metadata: tx.metadata,
   }
 }
 

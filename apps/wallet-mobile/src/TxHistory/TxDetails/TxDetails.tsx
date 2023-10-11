@@ -5,7 +5,7 @@ import {BigNumber} from 'bignumber.js'
 import {fromPairs} from 'lodash'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, IntlShape, useIntl} from 'react-intl'
-import {LayoutAnimation, Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
+import {LayoutAnimation, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Banner, Boundary, Button, CopyButton, FadeIn, Icon, StatusBar, Text} from '../../components'
@@ -17,11 +17,10 @@ import {useSelectedWallet} from '../../SelectedWallet'
 import {brand, COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {MultiToken} from '../../yoroi-wallets/cardano/MultiToken'
-import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
 import {CardanoTypes, YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTipStatus, useTransactionInfos} from '../../yoroi-wallets/hooks'
-import {NetworkId, TransactionInfo} from '../../yoroi-wallets/types'
-import {asQuantity} from '../../yoroi-wallets/utils'
+import {TransactionInfo} from '../../yoroi-wallets/types'
+import {asQuantity, openInExplorer} from '../../yoroi-wallets/utils'
 import {AssetList} from './AssetList'
 import assetListStyle from './AssetListTransaction.style'
 
@@ -168,7 +167,7 @@ export const TxDetails = () => {
 
       <Actions>
         <Button
-          onPress={() => openInExplorer(transaction, wallet.networkId)}
+          onPress={() => openInExplorer(transaction.id, wallet.networkId)}
           title={strings.openInExplorer}
           shelleyTheme
         />
@@ -322,11 +321,6 @@ const getShownAddresses = (
     toFiltered,
     cntOmittedTo,
   }
-}
-
-const openInExplorer = async (transaction: TransactionInfo, networkId: NetworkId) => {
-  const networkConfig = getNetworkConfigById(networkId)
-  await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transaction.id))
 }
 
 export type Params = {

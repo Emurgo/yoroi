@@ -4,12 +4,13 @@ import {Balance, Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {NumberLocale} from '../../../../../i18n/languages'
+import {NETWORK_CONFIG} from '../../../../../yoroi-wallets/cardano/constants/mainnet/constants'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 
-const MAX_DECIMALS = 10
+export const MAX_DECIMALS = 10
 
-export type MappedOrder = {
+export type MappedOpenOrder = {
   owner: string | undefined
   utxo: string | undefined
   tokenPrice: string
@@ -30,12 +31,12 @@ export type MappedOrder = {
   to: Balance.Amount
 }
 
-export const mapOrders = (
+export const mapOpenOrders = (
   orders: Array<Swap.OpenOrder | Swap.CompletedOrder>,
   tokenInfos: Balance.TokenInfo[],
   numberLocale: NumberLocale,
   transactionInfos: TransactionInfo[],
-): Array<MappedOrder> => {
+): Array<MappedOpenOrder> => {
   if (orders.length === 0) return []
 
   return orders.map((order: Swap.OpenOrder | Swap.CompletedOrder) => {
@@ -44,7 +45,7 @@ export const mapOrders = (
     const txIdComplete = 'txHash' in order ? order.txHash : undefined
     const txId = txIdComplete ?? txIdOpen ?? ''
     const id = `${from.tokenId}-${to.tokenId}-${txId}`
-    const txLink = `https://cardanoscan.io/transaction/${txId}` // FIX: this should come from the wallet (preprod/mainnet) explorers
+    const txLink = NETWORK_CONFIG.EXPLORER_URL_FOR_TX(txId)
 
     const txInfo = transactionInfos.find((tx) => tx.id === txId)
     const submittedAt = txInfo?.submittedAt
