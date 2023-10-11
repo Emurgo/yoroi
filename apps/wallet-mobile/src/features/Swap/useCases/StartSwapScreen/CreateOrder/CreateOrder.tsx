@@ -306,8 +306,6 @@ const useNotEnoughBalanceError = (): string => {
     balance,
   )
 
-  console.log('isBuyTouched', orderData.selectedPoolCalculation?.pool.deposit.quantity)
-
   const notEnoughBalanceError =
     !Quantities.isZero(quantity) && !hasBalance && isBuyTouched ? strings.notEnoughBalance : ''
 
@@ -318,8 +316,6 @@ const useNoPoolError = () => {
   const strings = useStrings()
   const {orderData} = useSwap()
   const {isBuyTouched} = useSwapTouched()
-
-  console.log('orderData.amounts.buy', orderData.amounts.buy)
 
   const noPoolError = orderData.selectedPoolCalculation === undefined && isBuyTouched ? strings.noPool : ''
 
