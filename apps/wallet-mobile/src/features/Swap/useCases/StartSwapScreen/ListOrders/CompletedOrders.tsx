@@ -98,7 +98,12 @@ export const CompletedOrders = () => {
         />
       </ScrollView>
 
-      <Counter style={styles.counter} counter={completeOrders?.length ?? 0} customText={strings.listCompletedOrders} />
+      <Counter
+        style={styles.counter}
+        openingText={strings.youHave}
+        counter={completeOrders?.length ?? 0}
+        closingText={strings.listCompletedOrders}
+      />
     </>
   )
 }

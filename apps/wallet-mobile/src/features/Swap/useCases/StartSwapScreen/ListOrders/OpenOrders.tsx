@@ -313,7 +313,12 @@ export const OpenOrders = () => {
         </BottomSheet>
       </View>
 
-      <Counter style={styles.counter} counter={orders?.length ?? 0} customText={strings.listOpenOrders} />
+      <Counter
+        style={styles.counter}
+        openingText={strings.youHave}
+        counter={orders?.length ?? 0}
+        closingText={strings.listOpenOrders}
+      />
     </>
   )
 }
