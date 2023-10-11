@@ -5,7 +5,7 @@ import _ from 'lodash'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 
 import {
@@ -69,7 +69,7 @@ const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[]
     return acc
   }, [] as Array<MappedRawOrder>)
 
-  return filteredTx
+  return filteredTx.filter((tx) => tx.metadata !== null)
 }
 
 export const CompletedOrders = () => {
@@ -90,15 +90,20 @@ export const CompletedOrders = () => {
 
   return (
     <>
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <FlatList
           data={completeOrders}
           renderItem={({item}: {item: MappedRawOrder}) => <ExpandableOrder order={item} />}
           keyExtractor={(item) => item.id}
         />
-      </ScrollView>
+      </View>
 
-      <Counter style={styles.counter} counter={completeOrders?.length ?? 0} customText={strings.listCompletedOrders} />
+      <Counter
+        style={styles.counter}
+        openingText={strings.youHave}
+        counter={completeOrders?.length ?? 0}
+        closingText={strings.listCompletedOrders}
+      />
     </>
   )
 }
