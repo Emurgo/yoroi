@@ -5,11 +5,17 @@ import {ConfirmRawTxWithHW} from './ConfirmRawTxWithHW'
 import {ConfirmRawTxWithOs} from './ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from './ConfirmRawTxWithPassword'
 
-export const ConfirmRawTx = ({onConfirm}: {onConfirm?: (rootKey: string) => Promise<void>}) => {
+export const ConfirmRawTx = ({
+  onConfirm,
+  onHWConfirm,
+}: {
+  onConfirm?: (rootKey: string) => Promise<void>
+  onHWConfirm?: ({useUSB}: {useUSB: boolean}) => Promise<void>
+}) => {
   const wallet = useSelectedWallet()
 
   if (wallet.isHW) {
-    return <ConfirmRawTxWithHW />
+    return <ConfirmRawTxWithHW onConfirm={onHWConfirm} />
   }
 
   if (wallet.isEasyConfirmationEnabled) {

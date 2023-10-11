@@ -339,7 +339,7 @@ export const createRawTxSigningKey = async (rootKey: string, derivationPath: num
   const rawKey = await accountPrivateKey.toRawKey()
   const bech32 = await rawKey.toBech32()
 
-  const pkey = await CardanoMobile.PrivateKey.fromBech32(bech32) // TODO: Check this
+  const pkey = await CardanoMobile.PrivateKey.fromBech32(bech32)
   if (!pkey) throw new Error('Invalid private key')
   return pkey
 }

@@ -82,6 +82,9 @@ const wallet: YoroiWallet = {
       collateralId: '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
     }
   },
+  signSwapCancellationWithLedger: async () => {
+    throw new Error('not implemented: signSwapCancellationWithLedger')
+  },
   setCollateralId: () => {
     throw new Error('not implemented: createUnsignedTx')
   },

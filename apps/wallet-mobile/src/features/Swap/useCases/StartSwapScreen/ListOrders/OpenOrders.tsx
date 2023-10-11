@@ -27,15 +27,19 @@ import {useWalletNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
+import {
+  convertBech32ToHex,
+  getMuesliSwapTransactionAndSigners,
+} from '../../../../../yoroi-wallets/cardano/common/signatureUtils'
 import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {RejectedByUserError} from '../../../../../yoroi-wallets/hw'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
-import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {convertBech32ToHex, getMuesliSwapTransactionAndSigners, useCancellationOrderFee} from './helpers'
-import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
+import {useCancellationOrderFee} from './helpers'
+import {mapOrders, MappedOrder} from './mapOrders'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState & {height: number}>({
@@ -49,7 +53,7 @@ export const OpenOrders = () => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
-  const {navigateToCollateralSettings} = useWalletNavigation()
+  const {navigateToCollateralSettings, navigateToTxHistory} = useWalletNavigation()
 
   const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
   const orders = useSwapOrdersByStatusOpen()
@@ -58,12 +62,11 @@ export const OpenOrders = () => {
   const transactionsInfos = useTransactionInfos(wallet)
   const tokenInfos = useTokenInfos({wallet, tokenIds})
   const normalizedOrders = React.useMemo(
-    () => mapOpenOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos)),
+    () => mapOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos)),
     [orders, tokenInfos, numberLocale, transactionsInfos],
   )
 
   const {search} = useSearch()
-  const swapNavigation = useNavigateTo()
 
   const filteredOrders = React.useMemo(
     () =>
@@ -85,7 +88,7 @@ export const OpenOrders = () => {
     }, [track]),
   )
 
-  const trackCancellationSubmitted = (order: MappedOpenOrder) => {
+  const trackCancellationSubmitted = (order: MappedOrder) => {
     track.swapCancelationSubmitted({
       from_amount: Number(order.from.quantity) ?? 0,
       to_amount: Number(order.to.quantity) ?? 0,
@@ -115,15 +118,50 @@ export const OpenOrders = () => {
     await wallet.submitTransaction(tx.txBase64)
     trackCancellationSubmitted(order)
     closeBottomSheet()
-    swapNavigation.submittedTx()
+    navigateToTxHistory()
+  }
+
+  const onRawTxHwConfirm = async ({useUSB, orderId}: {useUSB: boolean; orderId: string}) => {
+    try {
+      const order = normalizedOrders.find((o) => o.id === orderId)
+      if (!order || order.owner === undefined || order.utxo === undefined) return
+      const {utxo, owner: bech32Address} = order
+      const collateralUtxo = await getCollateralUtxo()
+      const addressHex = await convertBech32ToHex(bech32Address)
+      const originalCbor = await swapApiOrder.cancel({
+        utxos: {collateral: collateralUtxo, order: utxo},
+        address: addressHex,
+      })
+      const {cbor} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
+      await wallet.signSwapCancellationWithLedger(cbor, useUSB)
+
+      closeBottomSheet()
+      navigateToTxHistory()
+    } catch (e) {
+      if (e instanceof RejectedByUserError) {
+        Alert.alert(strings.error, strings.rejectedByUser)
+        closeBottomSheet()
+        return
+      }
+
+      if (e instanceof Error) {
+        Alert.alert(strings.error, e.message)
+        closeBottomSheet()
+      }
+    }
   }
 
   const onOrderCancelConfirm = (id: string) => {
     setBottomSheetState({
       openId: id,
       title: strings.signTransaction,
-      content: <ConfirmRawTx onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)} />,
-      height: 350,
+      content: (
+        <ConfirmRawTx
+          onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)}
+          onHWConfirm={({useUSB}) => onRawTxHwConfirm({useUSB, orderId: id})}
+        />
+      ),
+      height: 400,
     })
   }
 
@@ -166,7 +204,7 @@ export const OpenOrders = () => {
     return {txBase64: hexBase64}
   }
 
-  const openBottomSheet = async (order: MappedOpenOrder) => {
+  const openBottomSheet = async (order: MappedOrder) => {
     if (order.owner === undefined || order.utxo === undefined) return
     const {
       utxo,

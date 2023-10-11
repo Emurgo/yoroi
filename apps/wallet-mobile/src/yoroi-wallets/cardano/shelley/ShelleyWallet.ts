@@ -39,7 +39,11 @@ import * as api from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
-import {signRawTransaction} from '../common/signatureUtils'
+import {
+  createSignedLedgerSwapCancellationTx,
+  createSwapCancellationLedgerPayload,
+  signRawTransaction,
+} from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
@@ -859,9 +863,35 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       })
     }
 
-    async ledgerSupportsCIP36(useUSB): Promise<boolean> {
+    async ledgerSupportsCIP36(useUSB: boolean): Promise<boolean> {
       if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
       return doesCardanoAppVersionSupportCIP36(await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB))
+    }
+
+    async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {
+      if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
+
+      const stakeVkeyHash = await this.getStakingKey().then((key) => key.hash())
+      const payload = await createSwapCancellationLedgerPayload(
+        cbor,
+        this,
+        NETWORK_ID,
+        PROTOCOL_MAGIC,
+        (address: string) => this.getAddressing(address),
+        stakeVkeyHash,
+      )
+
+      const signedLedgerTx = await signTxWithLedger(payload, this.hwDeviceInfo, useUSB)
+
+      const bytes = await createSignedLedgerSwapCancellationTx(
+        cbor,
+        signedLedgerTx.witnesses,
+        PURPOSE,
+        this.publicKeyHex,
+      )
+
+      const base64 = Buffer.from(bytes).toString('base64')
+      await this.submitTransaction(base64)
     }
 
     async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
