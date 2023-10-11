@@ -122,6 +122,7 @@
   "nft.navigation.search": "Zoek NFT",
   "swap.swapScreen.swapTitle": "Swap",
   "swap.swapScreen.batcherFee": "Batcher Fee",
+  "swap.swapScreen.dex": "dex",
   "swap.swapScreen.tokenSwapTab": "Token swap",
   "swap.swapScreen.ordersSwapTab": "Orders",
   "swap.swapScreen.openOrders": "Open orders",
