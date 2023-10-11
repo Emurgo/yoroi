@@ -122,6 +122,7 @@
   "nft.navigation.search": "Recherche",
   "swap.swapScreen.swapTitle": "Swap",
   "swap.swapScreen.batcherFee": "Frais de regroupement de transactions",
+  "swap.swapScreen.dex": "dex",
   "swap.swapScreen.tokenSwapTab": "Token swap",
   "swap.swapScreen.ordersSwapTab": "Orders",
   "swap.swapScreen.openOrders": "Open orders",
