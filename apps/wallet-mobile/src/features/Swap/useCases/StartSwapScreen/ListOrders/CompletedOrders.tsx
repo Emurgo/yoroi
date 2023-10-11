@@ -1,5 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {Swap} from '@yoroi/types'
+import BigNumber from 'bignumber.js'
 import _ from 'lodash'
 import {capitalize} from 'lodash'
 import React from 'react'
@@ -19,22 +20,59 @@ import {
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {TransactionInfo} from '../../../../../yoroi-wallets/types'
+import {NETWORK_CONFIG} from '../../../../../yoroi-wallets/cardano/constants/mainnet/constants'
+import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
+import {useTokenInfo, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
+import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {mapCompletedOrders} from './mapOrders'
+import {MappedCompleteOrder, MAX_DECIMALS} from './mapOrders'
 
-const findCompletedOrderTx = (transactions: TransactionInfo[]): TransactionInfo[] => {
+const findCompletedOrderTx = (transactions: TransactionInfo[], wallet: YoroiWallet): MappedCompleteOrder[] => {
   const sentTransactions = transactions.filter((tx) => tx.direction === 'SENT')
   const receivedTransactions = transactions.filter((tx) => tx.direction === 'RECEIVED')
 
-  const filteredTx = sentTransactions.filter((sentTx) => {
-    return receivedTransactions.filter((receivedTx) => {
-      return sentTx.id === receivedTx.inputs[1]?.id?.slice(0, -1)
+  const filteredTx = sentTransactions.reduce((acc, sentTx) => {
+    const result: {id?: string; metadata?: TxMetadataInfo; date?: string} = {}
+    receivedTransactions.forEach((receivedTx) => {
+      receivedTx.inputs.forEach((input) => {
+        if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id) {
+          result['id'] = sentTx?.id
+          result['metadata'] = sentTx?.metadata
+          result['date'] = receivedTx?.lastUpdatedAt
+        }
+      })
     })
-  })
+
+    if (result['id'] !== undefined && result['metadata'] !== undefined) {
+      const metadata = JSON.parse(result.metadata as string)
+
+      const buyTokenInfo = useTokenInfo({wallet, tokenId: metadata.buyTokenId})
+      const sellTokenInfo = useTokenInfo({wallet, tokenId: metadata.sellTokenId})
+      const formattedBuyQuantity = Quantities.format(metadata.buyQuantity, buyTokenInfo.decimals ?? 0)
+      const formattedSellQuantity = Quantities.format(metadata.sellQuantity, sellTokenInfo.decimals ?? 0)
+      const tokenPrice = asQuantity(new BigNumber(metadata.sellQuantity).dividedBy(metadata.buyQuantity).toString())
+
+      const mappedResult: MappedCompleteOrder = {
+        id: result.id,
+        date: result?.date ?? '',
+        provider: metadata.provider,
+        sellLabel: sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-',
+        sellQuantity: formattedSellQuantity,
+        sellTokenId: metadata.sellTokenId,
+        buyLabel: buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-',
+        buyQuantity: formattedBuyQuantity,
+        buyTokenId: metadata.buyTokenId,
+        txLink: NETWORK_CONFIG.EXPLORER_URL_FOR_TX(metadata.buyTokenId),
+        tokenPrice: Quantities.format(tokenPrice, sellTokenInfo.decimals ?? 0, MAX_DECIMALS),
+      }
+      return acc.concat(mappedResult)
+    }
+    return acc
+  }, [] as Array<MappedCompleteOrder>)
+
   return filteredTx
 }
 
@@ -45,7 +83,7 @@ export const CompletedOrders = () => {
 
   const transactionsInfos = useTransactionInfos(wallet)
 
-  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos))
+  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos), wallet)
 
   const intl = useIntl()
 
@@ -57,12 +95,10 @@ export const CompletedOrders = () => {
     }, [track]),
   )
 
-  const normalizedOrders = mapCompletedOrders(completeOrders, wallet)
-
   return (
     <>
       <ScrollView style={styles.container}>
-        {normalizedOrders?.map((order) => {
+        {completeOrders?.map((order) => {
           const id = order.id
           const expanded = id === hiddenInfoOpenId
           const sellIcon = <TokenIcon wallet={wallet} tokenId={order.sellTokenId} variant="swap" />
@@ -102,11 +138,7 @@ export const CompletedOrders = () => {
         })}
       </ScrollView>
 
-      <Counter
-        style={styles.counter}
-        counter={normalizedOrders?.length ?? 0}
-        customText={strings.listCompletedOrders}
-      />
+      <Counter style={styles.counter} counter={completeOrders?.length ?? 0} customText={strings.listCompletedOrders} />
     </>
   )
 }

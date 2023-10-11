@@ -1,17 +1,14 @@
 import {isString} from '@yoroi/common'
-import {isNonNullable} from '@yoroi/common'
 import {getPoolUrlByProvider} from '@yoroi/swap'
 import {Balance, Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {NumberLocale} from '../../../../../i18n/languages'
 import {NETWORK_CONFIG} from '../../../../../yoroi-wallets/cardano/constants/mainnet/constants'
-import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
-import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
+import {Quantities} from '../../../../../yoroi-wallets/utils'
 
-const MAX_DECIMALS = 10
+export const MAX_DECIMALS = 10
 
 export type MappedCompleteOrder = {
   id: string
@@ -45,57 +42,6 @@ export type MappedOpenOrder = {
   fromTokenAmount: string
   from: Balance.Amount
   to: Balance.Amount
-}
-
-export const mapCompletedOrders = (orders: TransactionInfo[], wallet: YoroiWallet): Array<MappedCompleteOrder> => {
-  if (orders.length === 0) return []
-  const result = orders
-    .map((order) => {
-      console.log('order', order)
-      let metadata: {
-        buyTokenId: string
-        sellTokenId: string
-        sellQuantity: Balance.Quantity
-        buyQuantity: Balance.Quantity
-        provider: Swap.SupportedProvider
-      }
-
-      try {
-        metadata = JSON.parse(order.metadata as string)
-        const buyTokenInfo = useTokenInfo({wallet, tokenId: metadata.buyTokenId})
-        const sellTokenInfo = useTokenInfo({wallet, tokenId: metadata.sellTokenId})
-
-        const buyLabel = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
-        const sellLabel = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
-
-        const txLink = NETWORK_CONFIG.EXPLORER_URL_FOR_TX(order.id)
-        const tokenPrice = asQuantity(new BigNumber(metadata.sellQuantity).dividedBy(metadata.buyQuantity).toString())
-
-        const formattedBuyQuantity = Quantities.format(metadata.buyQuantity, buyTokenInfo.decimals ?? 0)
-        const formattedSellQuantity = Quantities.format(metadata.sellQuantity, sellTokenInfo.decimals ?? 0)
-
-        return {
-          id: order.id,
-          provider: metadata.provider,
-          date: order?.lastUpdatedAt,
-          sellLabel,
-          sellQuantity: formattedSellQuantity,
-          sellTokenId: metadata.sellTokenId,
-          buyLabel,
-          buyQuantity: formattedBuyQuantity,
-          buyTokenId: metadata.buyTokenId,
-          txLink,
-          tokenPrice: Quantities.format(tokenPrice, sellTokenInfo.decimals ?? 0, MAX_DECIMALS),
-        }
-      } catch (error) {
-        console.error('Error parsing JSON: ', error)
-        return null
-      }
-    })
-    .filter(isNonNullable)
-    .sort((a, b) => (a.date > b.date ? -1 : 1))
-
-  return result
 }
 
 export const mapOpenOrders = (
