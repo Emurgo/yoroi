@@ -69,7 +69,7 @@ const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[]
     return acc
   }, [] as Array<MappedRawOrder>)
 
-  return filteredTx
+  return filteredTx.filter((tx) => tx.metadata !== null)
 }
 
 export const CompletedOrders = () => {
@@ -90,13 +90,13 @@ export const CompletedOrders = () => {
 
   return (
     <>
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <FlatList
           data={completeOrders}
           renderItem={({item}: {item: MappedRawOrder}) => <ExpandableOrder order={item} />}
           keyExtractor={(item) => item.id}
         />
-      </ScrollView>
+      </View>
 
       <Counter
         style={styles.counter}
