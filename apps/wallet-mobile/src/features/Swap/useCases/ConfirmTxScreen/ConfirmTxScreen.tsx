@@ -129,6 +129,5 @@ const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
     alignSelf: 'stretch',
-    paddingHorizontal: 16,
   },
 })
