@@ -1,6 +1,8 @@
+import {SwapApi} from '@yoroi/types/lib/swap/api'
 import {BalanceQuantity} from '@yoroi/types/src/balance/token'
 import {Buffer} from 'buffer'
 
+import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 
@@ -10,7 +12,11 @@ type Options = {
   collateralUtxo: string
 }
 
-export const getCancellationOrderFee = async (wallet, cancelOrder, options: Options) => {
+export const getCancellationOrderFee = async (
+  wallet: YoroiWallet,
+  cancelOrder: SwapApi['cancelOrder'],
+  options: Options,
+) => {
   const address = await CardanoMobile.Address.fromBech32(options.bech32Address)
   const bytes = await address.toBytes()
   const addressHex = new Buffer(bytes).toString('hex')
