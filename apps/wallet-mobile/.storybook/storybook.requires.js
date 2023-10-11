@@ -166,7 +166,6 @@ const getStories = () => {
     "./src/HW/LedgerConnect/DeviceItem/DeviceItem.stories.tsx": require("../src/HW/LedgerConnect/DeviceItem/DeviceItem.stories.tsx"),
     "./src/HW/LedgerConnect/LedgerConnect.stories.tsx": require("../src/HW/LedgerConnect/LedgerConnect.stories.tsx"),
     "./src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories.tsx": require("../src/HW/LedgerTransportSwitchModal/LedgerTransportSwitchModal.stories.tsx"),
-    "./src/legacy/BottomSheet/BottomSheet.stories.tsx": require("../src/legacy/BottomSheet/BottomSheet.stories.tsx"),
     "./src/legacy/BottomSheetModal/BottomSheetModal.stories.tsx": require("../src/legacy/BottomSheetModal/BottomSheetModal.stories.tsx"),
     "./src/legacy/Modal/Modal.stories.tsx": require("../src/legacy/Modal/Modal.stories.tsx"),
     "./src/Legal/PrivacyPolicy/PrivacyPolicy.stories.tsx": require("../src/Legal/PrivacyPolicy/PrivacyPolicy.stories.tsx"),
