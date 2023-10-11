@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Select token",
     "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
     "start": {
-      "line": 135,
+      "line": 125,
       "column": 15,
-      "index": 4171
+      "index": 3920
     },
     "end": {
-      "line": 138,
+      "line": 128,
       "column": 3,
-      "index": 4254
+      "index": 4003
     }
   },
   {
@@ -19,59 +19,14 @@
     "defaultMessage": "!!!Current Balance",
     "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
     "start": {
-      "line": 139,
+      "line": 129,
       "column": 18,
-      "index": 4274
+      "index": 4023
     },
     "end": {
-      "line": 142,
+      "line": 132,
       "column": 3,
-      "index": 4363
-    }
-  },
-  {
-    "id": "swap.swapScreen.notEnoughBalance",
-    "defaultMessage": "!!!Not enough balance",
-    "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
-    "start": {
-      "line": 143,
-      "column": 20,
-      "index": 4385
-    },
-    "end": {
-      "line": 146,
-      "column": 3,
-      "index": 4479
-    }
-  },
-  {
-    "id": "swap.swapScreen.notEnoughSupply",
-    "defaultMessage": "!!!Not enough supply in the pool",
-    "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
-    "start": {
-      "line": 147,
-      "column": 19,
-      "index": 4500
-    },
-    "end": {
-      "line": 150,
-      "column": 3,
-      "index": 4604
-    }
-  },
-  {
-    "id": "swap.swapScreen.noPool",
-    "defaultMessage": "!!! This pair is not available in any liquidity pool",
-    "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
-    "start": {
-      "line": 151,
-      "column": 10,
-      "index": 4616
-    },
-    "end": {
-      "line": 154,
-      "column": 3,
-      "index": 4731
+      "index": 4112
     }
   }
 ]

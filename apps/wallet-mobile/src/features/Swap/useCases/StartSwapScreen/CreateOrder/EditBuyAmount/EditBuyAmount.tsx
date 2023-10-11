@@ -12,7 +12,7 @@ import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../../../../common/SwapFormProvider'
 
-export const EditBuyAmount = () => {
+export const EditBuyAmount = ({error}: {error: string}) => {
   const strings = useStrings()
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
@@ -20,7 +20,7 @@ export const EditBuyAmount = () => {
   const inputRef = React.useRef<TextInput>(null)
 
   const {orderData, buyQuantityChanged} = useSwap()
-  const {isBuyTouched, isSellTouched} = useSwapTouched()
+  const {isBuyTouched} = useSwapTouched()
   const pool = orderData.selectedPoolCalculation?.pool
   const {tokenId, quantity} = orderData.amounts.buy
   const tokenInfo = useTokenInfo({wallet, tokenId})
@@ -34,11 +34,6 @@ export const EditBuyAmount = () => {
       setInputValue(Quantities.format(quantity, tokenInfo.decimals ?? 0))
     }
   }, [isBuyTouched, quantity, tokenInfo.decimals])
-
-  const poolSupply = tokenId === pool?.tokenA.tokenId ? pool?.tokenA.quantity : pool?.tokenB.quantity
-  const hasSupply = !Quantities.isGreaterThan(quantity, poolSupply ?? Quantities.zero)
-  const showError =
-    (!Quantities.isZero(quantity) && !hasSupply) || (isSellTouched && isBuyTouched && pool === undefined)
 
   const onChangeQuantity = (text: string) => {
     try {
@@ -57,11 +52,11 @@ export const EditBuyAmount = () => {
       value={inputValue}
       amount={{tokenId, quantity: balance}}
       wallet={wallet}
-      hasError={showError}
       navigateTo={navigate.selectBuyToken}
       touched={isBuyTouched}
       inputRef={inputRef}
       inputEditable={pool !== undefined}
+      error={error}
     />
   )
 }
