@@ -296,7 +296,7 @@ const useNotEnoughBalanceError = (): string => {
   const {tokenId, quantity} = orderData.amounts.sell
   const balance = useBalance({wallet, tokenId})
 
-  const hasBalance = !Quantities.isGreaterThan(
+  const hasPrimaryTokenBalance = !Quantities.isGreaterThan(
     Quantities.sum([
       tokenId === wallet.primaryTokenInfo.id ? orderData.amounts.sell.quantity : Quantities.zero,
       orderData.selectedPoolCalculation?.cost.batcherFee.quantity ?? Quantities.zero,
@@ -306,8 +306,15 @@ const useNotEnoughBalanceError = (): string => {
     balance,
   )
 
+  const hasSecondaryTokenBalance = !Quantities.isGreaterThan(
+    tokenId !== wallet.primaryTokenInfo.id ? orderData.amounts.sell.quantity : Quantities.zero,
+    balance,
+  )
+
   const notEnoughBalanceError =
-    !Quantities.isZero(quantity) && !hasBalance && isBuyTouched ? strings.notEnoughBalance : ''
+    !Quantities.isZero(quantity) && !hasPrimaryTokenBalance && !hasSecondaryTokenBalance && isBuyTouched
+      ? strings.notEnoughBalance
+      : ''
 
   return notEnoughBalanceError
 }
