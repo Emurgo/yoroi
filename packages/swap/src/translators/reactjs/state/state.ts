@@ -45,6 +45,7 @@ export type SwapOrderCalculation = Readonly<{
       discountTier?: SwapDiscountTier
       fee: Balance.Amount
     }
+    ptTotalFee: Balance.Amount
   }
 }>
 
