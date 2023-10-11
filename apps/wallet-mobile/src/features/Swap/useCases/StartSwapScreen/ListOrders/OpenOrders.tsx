@@ -383,7 +383,7 @@ const HiddenInfo = ({
           value: total,
         },
         {
-          label: strings.dex.toUpperCase(),
+          label: strings.dex.toLocaleUpperCase(),
           value: (
             <LiquidityPool
               liquidityPoolIcon={liquidityPoolIcon}
