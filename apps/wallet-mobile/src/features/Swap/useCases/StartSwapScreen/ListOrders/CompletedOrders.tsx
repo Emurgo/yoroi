@@ -5,7 +5,7 @@ import _ from 'lodash'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 
 import {
@@ -21,10 +21,9 @@ import {
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
 import {useTokenInfo, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
-import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
+import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
@@ -121,13 +120,18 @@ export const ExpandableOrder = ({order}: {order: MappedRawOrder}) => {
   const marketPrice = Quantities.format(tokenPrice, sellTokenInfo.decimals ?? 0, MAX_DECIMALS)
   const buyLabel = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
   const sellLabel = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
-  const networkConfig = getNetworkConfigById(wallet.networkId)
-  const txLink = networkConfig.EXPLORER_URL_FOR_TX(metadata.buyTokenId)
 
   return (
     <ExpandableInfoCard
       key={id}
-      info={<HiddenInfo txId={id} total={`${buyQuantity} ${buyLabel}`} txLink={txLink} provider={metadata.provider} />}
+      info={
+        <HiddenInfo
+          txId={id}
+          total={`${buyQuantity} ${buyLabel}`}
+          onTxPress={() => openInExplorer(id, wallet.networkId)}
+          provider={metadata.provider}
+        />
+      }
       header={
         <Header
           onPress={() => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)}
@@ -192,12 +196,12 @@ const Header = ({
 const HiddenInfo = ({
   total,
   txId,
-  txLink,
+  onTxPress,
   provider,
 }: {
   total: string
   txId: string
-  txLink: string
+  onTxPress: () => void
   provider: Swap.PoolProvider
 }) => {
   const shortenedTxId = `${txId.substring(0, 9)}...${txId.substring(txId.length - 4, txId.length)}`
@@ -217,7 +221,7 @@ const HiddenInfo = ({
         },
         {
           label: strings.listOrdersTxId,
-          value: <TxLink txId={shortenedTxId} txLink={txLink} />,
+          value: <TxLink txId={shortenedTxId} onTxPress={onTxPress} />,
         },
       ].map((item) => (
         <HiddenInfoWrapper key={item.label} value={item.value} label={item.label} icon={item.icon} />
@@ -265,9 +269,9 @@ export const CompletedOrdersSkeleton = () => (
   </View>
 )
 
-const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {
+const TxLink = ({onTxPress, txId}: {onTxPress: () => void; txId: string}) => {
   return (
-    <TouchableOpacity onPress={() => Linking.openURL(txLink)} style={styles.txLink}>
+    <TouchableOpacity onPress={onTxPress} style={styles.txLink}>
       <Text style={styles.txLinkText}>{txId}</Text>
     </TouchableOpacity>
   )
