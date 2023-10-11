@@ -21,7 +21,7 @@ import {
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {NETWORK_CONFIG} from '../../../../../yoroi-wallets/cardano/constants/mainnet/constants'
+import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
 import {useTokenInfo, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
@@ -59,9 +59,13 @@ const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[]
     })
 
     if (result['id'] !== undefined && result['metadata'] !== undefined) {
-      const metadata = JSON.parse(result.metadata as string)
-      result['metadata'] = metadata
-      return acc.concat(result as MappedRawOrder)
+      try {
+        const metadata = JSON.parse(result.metadata as string)
+        result['metadata'] = metadata
+        return acc.concat(result as MappedRawOrder)
+      } catch (error) {
+        console.warn('Error parsing json metadata', error)
+      }
     }
     return acc
   }, [] as Array<MappedRawOrder>)
@@ -117,7 +121,8 @@ export const ExpandableOrder = ({order}: {order: MappedRawOrder}) => {
   const marketPrice = Quantities.format(tokenPrice, sellTokenInfo.decimals ?? 0, MAX_DECIMALS)
   const buyLabel = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
   const sellLabel = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
-  const txLink = NETWORK_CONFIG.EXPLORER_URL_FOR_TX(metadata.buyTokenId)
+  const networkConfig = getNetworkConfigById(wallet.networkId)
+  const txLink = networkConfig.EXPLORER_URL_FOR_TX(metadata.buyTokenId)
 
   return (
     <ExpandableInfoCard
