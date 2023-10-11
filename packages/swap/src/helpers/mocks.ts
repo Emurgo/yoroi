@@ -404,6 +404,14 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
+      ptTotalFeeNoFEF: {
+        quantity: '2950000',
+        tokenId: '',
+      },
+      ptTotalFee: {
+        quantity: '3050000',
+        tokenId: '',
+      },
       batcherFee: {
         quantity: '950000',
         tokenId: '',
@@ -501,6 +509,14 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
+      ptTotalFeeNoFEF: {
+        quantity: '3900000',
+        tokenId: '',
+      },
+      ptTotalFee: {
+        quantity: '4950000',
+        tokenId: '',
+      },
       batcherFee: {
         quantity: '1900000',
         tokenId: '',
@@ -598,6 +614,14 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
+      ptTotalFeeNoFEF: {
+        quantity: '4000000',
+        tokenId: '',
+      },
+      ptTotalFee: {
+        quantity: '5050000',
+        tokenId: '',
+      },
       batcherFee: {
         quantity: '2000000',
         tokenId: '',
@@ -695,6 +719,14 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
+      ptTotalFeeNoFEF: {
+        quantity: '4000000',
+        tokenId: '',
+      },
+      ptTotalFee: {
+        quantity: '5050000',
+        tokenId: '',
+      },
       batcherFee: {
         quantity: '2000000',
         tokenId: '',
@@ -792,6 +824,14 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
+      ptTotalFeeNoFEF: {
+        quantity: '4500000',
+        tokenId: '',
+      },
+      ptTotalFee: {
+        quantity: '5050000',
+        tokenId: '',
+      },
       batcherFee: {
         quantity: '2500000',
         tokenId: '',
@@ -889,6 +929,14 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
+      ptTotalFeeNoFEF: {
+        quantity: '4500000',
+        tokenId: '',
+      },
+      ptTotalFee: {
+        quantity: '5050000',
+        tokenId: '',
+      },
       batcherFee: {
         quantity: '2500000',
         tokenId: '',
@@ -989,6 +1037,14 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
+      ptTotalFeeNoFEF: {
+        quantity: '2950000',
+        tokenId: '',
+      },
+      ptTotalFee: {
+        quantity: '2950000',
+        tokenId: '',
+      },
       batcherFee: {
         quantity: '950000',
         tokenId: '',
@@ -1079,6 +1135,14 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
+      ptTotalFeeNoFEF: {
+        quantity: '5050000',
+        tokenId: '',
+      },
+      ptTotalFee: {
+        quantity: '5050000',
+        tokenId: '',
+      },
       batcherFee: {
         quantity: '1900000',
         tokenId: '',
@@ -1169,6 +1233,14 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
+      ptTotalFeeNoFEF: {
+        quantity: '4000000',
+        tokenId: '',
+      },
+      ptTotalFee: {
+        quantity: '4000000',
+        tokenId: '',
+      },
       batcherFee: {
         quantity: '2000000',
         tokenId: '',
@@ -1259,6 +1331,14 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
+      ptTotalFeeNoFEF: {
+        quantity: '4000000',
+        tokenId: '',
+      },
+      ptTotalFee: {
+        quantity: '4000000',
+        tokenId: '',
+      },
       batcherFee: {
         quantity: '2000000',
         tokenId: '',
@@ -1349,6 +1429,14 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
+      ptTotalFeeNoFEF: {
+        quantity: '4500000',
+        tokenId: '',
+      },
+      ptTotalFee: {
+        quantity: '4500000',
+        tokenId: '',
+      },
       batcherFee: {
         quantity: '2500000',
         tokenId: '',
@@ -1439,6 +1527,14 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
+      ptTotalFeeNoFEF: {
+        quantity: '4500000',
+        tokenId: '',
+      },
+      ptTotalFee: {
+        quantity: '4500000',
+        tokenId: '',
+      },
       batcherFee: {
         quantity: '2500000',
         tokenId: '',

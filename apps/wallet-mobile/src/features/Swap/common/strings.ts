@@ -112,6 +112,11 @@ export const useStrings = () => {
     generalTxErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),
     incorrectPasswordTitle: intl.formatMessage(errorMessages.incorrectPassword.title),
     incorrectPasswordMessage: intl.formatMessage(errorMessages.incorrectPassword.message),
+    notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
+    notEnoughSupply: intl.formatMessage(messages.notEnoughSupply),
+    noPool: intl.formatMessage(messages.noPool),
+    generalErrorTitle: intl.formatMessage(errorMessages.generalError.title),
+    generalErrorMessage: (e) => intl.formatMessage(errorMessages.generalError.message, {message: e}),
   }
 }
 
@@ -509,5 +514,17 @@ export const messages = defineMessages({
   failedTxButton: {
     id: 'components.send.sendscreen.failedTxButton',
     defaultMessage: '!!!Try again',
+  },
+  notEnoughBalance: {
+    id: 'swap.swapScreen.notEnoughBalance',
+    defaultMessage: '!!!Not enough balance',
+  },
+  notEnoughSupply: {
+    id: 'swap.swapScreen.notEnoughSupply',
+    defaultMessage: '!!!Not enough supply in the pool',
+  },
+  noPool: {
+    id: 'swap.swapScreen.noPool',
+    defaultMessage: '!!! This pair is not available in any liquidity pool',
   },
 })
