@@ -39,7 +39,7 @@ import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {useCancellationOrderFee} from './helpers'
-import {mapOrders, MappedOrder} from './mapOrders'
+import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
 
 export const OpenOrders = () => {
   const [bottomSheetState, setBottomSheetState] = React.useState<BottomSheetState & {height: number}>({
@@ -62,7 +62,7 @@ export const OpenOrders = () => {
   const transactionsInfos = useTransactionInfos(wallet)
   const tokenInfos = useTokenInfos({wallet, tokenIds})
   const normalizedOrders = React.useMemo(
-    () => mapOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos)),
+    () => mapOpenOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos)),
     [orders, tokenInfos, numberLocale, transactionsInfos],
   )
 
@@ -88,7 +88,7 @@ export const OpenOrders = () => {
     }, [track]),
   )
 
-  const trackCancellationSubmitted = (order: MappedOrder) => {
+  const trackCancellationSubmitted = (order: MappedOpenOrder) => {
     track.swapCancelationSubmitted({
       from_amount: Number(order.from.quantity) ?? 0,
       to_amount: Number(order.to.quantity) ?? 0,
@@ -204,7 +204,7 @@ export const OpenOrders = () => {
     return {txBase64: hexBase64}
   }
 
-  const openBottomSheet = async (order: MappedOrder) => {
+  const openBottomSheet = async (order: MappedOpenOrder) => {
     if (order.owner === undefined || order.utxo === undefined) return
     const {
       utxo,
