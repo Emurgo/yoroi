@@ -36,6 +36,7 @@ import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/h
 import {RejectedByUserError} from '../../../../../yoroi-wallets/hw'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
+import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {useCancellationOrderFee} from './helpers'
@@ -382,7 +383,7 @@ const HiddenInfo = ({
           value: total,
         },
         {
-          label: strings.listOrdersLiquidityPool,
+          label: strings.dex.toUpperCase(),
           value: (
             <LiquidityPool
               liquidityPoolIcon={liquidityPoolIcon}
@@ -431,28 +432,6 @@ const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {
     <TouchableOpacity onPress={() => Linking.openURL(txLink)} style={styles.txLink}>
       <Text style={styles.txLinkText}>{txId}</Text>
     </TouchableOpacity>
-  )
-}
-
-const LiquidityPool = ({
-  liquidityPoolIcon,
-  liquidityPoolName,
-  poolUrl,
-}: {
-  liquidityPoolIcon: React.ReactNode
-  liquidityPoolName: string
-  poolUrl: string
-}) => {
-  return (
-    <View style={styles.liquidityPool}>
-      {liquidityPoolIcon}
-
-      <Spacer width={3} />
-
-      <TouchableOpacity onPress={() => Linking.openURL(poolUrl)} style={styles.liquidityPoolLink}>
-        <Text style={styles.liquidityPoolText}>{liquidityPoolName}</Text>
-      </TouchableOpacity>
-    </View>
   )
 }
 
@@ -700,21 +679,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txLinkText: {
-    color: '#4B6DDE',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '400',
-    lineHeight: 22,
-  },
-  liquidityPool: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  liquidityPoolLink: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  liquidityPoolText: {
     color: '#4B6DDE',
     fontFamily: 'Rubik',
     fontSize: 16,

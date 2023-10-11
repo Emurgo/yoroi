@@ -2,7 +2,7 @@ import {getPoolUrlByProvider, useSwap} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import {capitalize} from 'lodash'
 import React from 'react'
-import {Linking, Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
@@ -11,6 +11,7 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
+import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
 
@@ -31,18 +32,12 @@ export const TransactionSummary = () => {
   const poolProviderFormatted = capitalize(selectedPoolCalculation?.pool.provider)
   const poolUrl = getPoolUrlByProvider(selectedPoolCalculation?.pool.provider as Swap.SupportedProvider)
 
+  const poolIcon = <PoolIcon providerId={selectedPoolCalculation?.pool.provider as Swap.SupportedProvider} size={18} />
+
   const feesInfo = [
     {
       label: strings.dex.toUpperCase(),
-      value: (
-        <Pressable style={styles.flex} onPress={() => Linking.openURL(poolUrl)}>
-          <PoolIcon providerId={selectedPoolCalculation?.pool.provider as Swap.SupportedProvider} size={18} />
-
-          <Spacer width={8} />
-
-          <Text style={[styles.text, styles.poolText]}>{poolProviderFormatted}</Text>
-        </Pressable>
-      ),
+      value: <LiquidityPool liquidityPoolIcon={poolIcon} liquidityPoolName={poolProviderFormatted} poolUrl={poolUrl} />,
     },
     {
       label: strings.swapMinAdaTitle,
@@ -191,8 +186,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#242838',
     paddingBottom: 8,
-  },
-  poolText: {
-    color: COLORS.PRIMARY_GRADIENT_END,
   },
 })

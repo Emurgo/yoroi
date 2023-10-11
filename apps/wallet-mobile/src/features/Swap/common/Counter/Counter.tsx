@@ -14,7 +14,7 @@ export const Counter = ({counter, customText, style}: {counter: number; customTe
   if (!isSearching) {
     return (
       <View style={[styles.counter, style]}>
-        {customText == null && <Text style={styles.counterText}>{strings.youHave}</Text>}
+        <Text style={styles.counterText}>{strings.youHave}</Text>
 
         <Text style={styles.counterTextBold}>{` ${counter} ${customText ?? strings.assets(counter)}`}</Text>
       </View>
