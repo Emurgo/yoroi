@@ -1,4 +1,3 @@
-export * from '../legacy/BottomSheet'
 export * from '../legacy/BottomSheetModal'
 export * from './Analytics'
 export * from './Banner'

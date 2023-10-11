@@ -107,6 +107,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     alignSelf: 'stretch',
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   title: {
     fontWeight: '500',
