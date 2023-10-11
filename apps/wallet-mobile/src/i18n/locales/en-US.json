@@ -151,7 +151,7 @@
   "swap.swapScreen.transactionSigned": "Transaction signed",
   "swap.swapScreen.transactionDisplay": "Your transactions will be displayed both in the list of transaction and Open swap orders",
   "swap.swapScreen.poolVerificationInfo": "Cardano projects that list their own tokens can apply for an additional {pool} verification. This verification is a manual validation that {pool} team performs with the help of Cardano Foundation.",
-  "swap.swapScreen.poolFee": "Pool Fee",
+  "swap.swapScreen.poolFee": "DEX Fee",
   "swap.swapScreen.assetsIn": "This asset is in my portfolio",
   "swap.swapScreen.noAssetsFound": "No assets found for this pair",
   "swap.swapScreen.noAssetsFoundFor": "No assets found for \"{search}\"",

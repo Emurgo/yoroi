@@ -75,7 +75,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
                       <Spacer height={8} />
 
                       <View style={styles.info}>
-                        <Text style={styles.infoLabel}>{strings.price}</Text>
+                        <Text style={styles.infoLabel}>{strings.marketPrice}</Text>
 
                         <Text style={styles.infoValue}>
                           {Quantities.format(
