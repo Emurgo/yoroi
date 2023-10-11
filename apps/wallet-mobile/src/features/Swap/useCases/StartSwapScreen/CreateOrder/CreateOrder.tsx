@@ -2,7 +2,7 @@ import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, us
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
+import {Alert, KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer} from '../../../../../components'
@@ -75,9 +75,10 @@ export const CreateOrder = () => {
     onError: (error) => {
       if (error instanceof NotEnoughMoneyToSendError) {
         setSellBackendError(strings.notEnoughBalance)
-      } else {
-        console.error(error)
+        return
       }
+
+      Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error.message))
     },
   })
 
@@ -101,7 +102,7 @@ export const CreateOrder = () => {
       }
     },
     onError: (error) => {
-      console.log(error)
+      Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
     },
   })
 
@@ -320,9 +321,10 @@ const useNotEnoughBalanceError = (): string => {
 const useNoPoolError = () => {
   const strings = useStrings()
   const {orderData} = useSwap()
-  const {isBuyTouched} = useSwapTouched()
+  const {isBuyTouched, isSellTouched} = useSwapTouched()
 
-  const noPoolError = orderData.selectedPoolCalculation === undefined && isBuyTouched ? strings.noPool : ''
+  const noPoolError =
+    orderData.selectedPoolCalculation === undefined && isBuyTouched && isSellTouched ? strings.noPool : ''
 
   return noPoolError
 }

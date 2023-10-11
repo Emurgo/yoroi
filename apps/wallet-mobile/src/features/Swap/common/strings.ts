@@ -115,6 +115,8 @@ export const useStrings = () => {
     notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
     notEnoughSupply: intl.formatMessage(messages.notEnoughSupply),
     noPool: intl.formatMessage(messages.noPool),
+    generalErrorTitle: intl.formatMessage(errorMessages.generalError.title),
+    generalErrorMessage: (e) => intl.formatMessage(errorMessages.generalError.message, {message: e}),
   }
 }
 
