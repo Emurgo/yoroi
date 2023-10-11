@@ -1,4 +1,6 @@
-import {useSwap} from '@yoroi/swap'
+import {getPoolUrlByProvider, useSwap} from '@yoroi/swap'
+import {Swap} from '@yoroi/types'
+import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -9,6 +11,8 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
+import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
+import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
 
 export const TransactionSummary = () => {
@@ -25,8 +29,16 @@ export const TransactionSummary = () => {
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
   const label = `${Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)} ${tokenToBuyName}`
+  const poolProviderFormatted = capitalize(selectedPoolCalculation?.pool.provider)
+  const poolUrl = getPoolUrlByProvider(selectedPoolCalculation?.pool.provider as Swap.SupportedProvider)
+
+  const poolIcon = <PoolIcon providerId={selectedPoolCalculation?.pool.provider as Swap.SupportedProvider} size={18} />
 
   const feesInfo = [
+    {
+      label: strings.dex.toUpperCase(),
+      value: <LiquidityPool liquidityPoolIcon={poolIcon} liquidityPoolName={poolProviderFormatted} poolUrl={poolUrl} />,
+    },
     {
       label: strings.swapMinAdaTitle,
       value: `${Quantities.format(
@@ -81,17 +93,19 @@ export const TransactionSummary = () => {
 
                   <Spacer width={8} />
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      setBottomSheetSate({
-                        isOpen: true,
-                        title: orderInfo.label,
-                        content: orderInfo.info,
-                      })
-                    }}
-                  >
-                    <Icon.Info size={24} />
-                  </TouchableOpacity>
+                  {orderInfo.info != undefined && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setBottomSheetSate({
+                          isOpen: true,
+                          title: orderInfo.label,
+                          content: orderInfo.info,
+                        })
+                      }}
+                    >
+                      <Icon.Info size={24} />
+                    </TouchableOpacity>
+                  )}
                 </View>
 
                 <Text style={styles.text}>{orderInfo.value}</Text>

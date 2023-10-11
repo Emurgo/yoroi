@@ -671,7 +671,7 @@ export default defineMessages({
   },
   pools: {
     id: 'global.pools',
-    defaultMessage: '!!! Pools',
+    defaultMessage: '!!! Dex',
   },
   price: {
     id: 'global.price',
