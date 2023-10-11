@@ -12,7 +12,7 @@ import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../../../../common/SwapFormProvider'
 
-export const EditBuyAmount = ({error}: {error: string}) => {
+export const EditBuyAmount = ({error = ''}: {error?: string}) => {
   const strings = useStrings()
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
