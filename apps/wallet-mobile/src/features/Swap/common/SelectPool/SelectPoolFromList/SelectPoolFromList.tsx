@@ -1,4 +1,4 @@
-import {useSwap} from '@yoroi/swap'
+import {getMarketPrice, useSwap} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import React, {useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
@@ -32,6 +32,8 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
   const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
   const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
+  const tokenToSellName = sellTokenInfo.ticker ?? sellTokenInfo.name
+  const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
 
   const handleOnPoolSelection = (pool: Swap.Pool) => {
     track.swapPoolChanged()
@@ -78,11 +80,11 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
                         <Text style={styles.infoLabel}>{strings.marketPrice}</Text>
 
                         <Text style={styles.infoValue}>
-                          {Quantities.format(
-                            orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
+                          {`${Quantities.format(
+                            getMarketPrice(pool, orderData.amounts.sell) ?? Quantities.zero,
                             denomination,
                             PRECISION,
-                          )}
+                          )} ${tokenToSellName}/${tokenToBuyName}`}
                         </Text>
                       </View>
                     </View>
