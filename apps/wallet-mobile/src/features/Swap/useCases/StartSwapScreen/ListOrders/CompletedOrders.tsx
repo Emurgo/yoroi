@@ -5,7 +5,7 @@ import _ from 'lodash'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 
 import {
