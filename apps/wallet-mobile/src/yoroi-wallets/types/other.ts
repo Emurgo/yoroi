@@ -252,6 +252,7 @@ export type RemoteTxInfo = {
   readonly valid_contract?: boolean
   readonly script_size?: number
   readonly collateral_inputs?: Array<RemoteTransactionInput>
+  readonly metadata?: TxMetadata
 }
 export type RawTransaction = Partial<RemoteTxBlockMeta> & RemoteTxInfo
 
@@ -397,6 +398,9 @@ export const TRANSACTION_STATUS = {
 }
 export type TransactionStatus = (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
 
+export type TxMetadata = Array<{label: string; map_json: {msg: Array<string>}}>
+export type TxMetadataInfo = unknown
+
 export type TransactionInfo = {
   id: string
   inputs: Array<IOData>
@@ -413,12 +417,14 @@ export type TransactionInfo = {
   tokens: Record<string, Token>
   blockNumber: number
   memo: null | string
+  metadata?: TxMetadataInfo
 }
 
 export type IOData = {
   address: string
   assets: Array<CardanoTypes.TokenEntry>
   amount: string
+  id?: string
 }
 
 export type TransactionAssurance = 'PENDING' | 'FAILED' | 'LOW' | 'MEDIUM' | 'HIGH'
@@ -448,6 +454,7 @@ export type Transaction = {
     address: string
     amount: string
     assets: Array<BaseAsset>
+    id?: string
   }>
   outputs: Array<{
     address: string
@@ -475,6 +482,7 @@ export type Transaction = {
     assets: Array<BaseAsset>
   }>
   memo: string | null
+  readonly metadata?: TxMetadata
 }
 
 export type CommonMetadata = {

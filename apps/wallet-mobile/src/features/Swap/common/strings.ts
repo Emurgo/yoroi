@@ -9,6 +9,7 @@ export const useStrings = () => {
     swapTitle: intl.formatMessage(messages.swapTitle),
     tokenSwap: intl.formatMessage(messages.tokenSwap),
     orderSwap: intl.formatMessage(messages.orderSwap),
+    dex: intl.formatMessage(messages.dex),
     marketButton: intl.formatMessage(messages.marketButton),
     limitButton: intl.formatMessage(messages.limitButton),
     swapFrom: intl.formatMessage(messages.swapFrom),
@@ -324,6 +325,10 @@ export const messages = defineMessages({
   transactionDisplay: {
     id: 'swap.swapScreen.transactionDisplay',
     defaultMessage: '!!!Your transactions will be displayed both in the list of transaction and Open swap orders',
+  },
+  dex: {
+    id: 'swap.swapScreen.dex',
+    defaultMessage: '!!! dex',
   },
   seeOnExplorer: {
     id: 'swap.swapScreen.seeOnExplorer',
