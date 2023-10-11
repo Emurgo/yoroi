@@ -299,7 +299,7 @@ export const OpenOrders = () => {
         counter={orders?.length ?? 0}
         closingText={strings.listOpenOrders}
       />
-       
+
       <LoadingOverlay loading={isLoading} />
     </>
   )
