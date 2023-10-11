@@ -1,4 +1,4 @@
-import {useSwap} from '@yoroi/swap'
+import {getMarketPrice, useSwap} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import React, {useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
@@ -79,7 +79,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
 
                         <Text style={styles.infoValue}>
                           {Quantities.format(
-                            orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
+                            getMarketPrice(pool, orderData.amounts.sell) ?? Quantities.zero,
                             denomination,
                             PRECISION,
                           )}
