@@ -75,7 +75,12 @@ const TokenList = () => {
         ListEmptyComponent={<EmptyList filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
       />
 
-      <Counter style={styles.ph} counter={filteredTokenInfos.length} />
+      <Counter
+        counter={filteredTokenInfos.length}
+        style={styles.counter}
+        unitsText={strings.assets(filteredTokenInfos.length)}
+        closingText={strings.available}
+      />
     </View>
   )
 }
@@ -212,5 +217,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#000',
     paddingTop: 4,
+  },
+  counter: {
+    paddingVertical: 16,
   },
 })

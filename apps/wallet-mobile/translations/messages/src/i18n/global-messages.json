@@ -51,12 +51,12 @@
     "start": {
       "line": 704,
       "column": 10,
-      "index": 21075
+      "index": 21073
     },
     "end": {
       "line": 707,
       "column": 3,
-      "index": 21138
+      "index": 21136
     }
   },
   {
@@ -1967,7 +1967,7 @@
   },
   {
     "id": "global.pools",
-    "defaultMessage": "!!! Pools",
+    "defaultMessage": "!!! Dex",
     "file": "src/i18n/global-messages.ts",
     "start": {
       "line": 672,
@@ -1977,7 +1977,7 @@
     "end": {
       "line": 675,
       "column": 3,
-      "index": 20495
+      "index": 20493
     }
   },
   {
@@ -1987,12 +1987,12 @@
     "start": {
       "line": 676,
       "column": 9,
-      "index": 20506
+      "index": 20504
     },
     "end": {
       "line": 679,
       "column": 3,
-      "index": 20568
+      "index": 20566
     }
   },
   {
@@ -2002,12 +2002,12 @@
     "start": {
       "line": 680,
       "column": 7,
-      "index": 20577
+      "index": 20575
     },
     "end": {
       "line": 683,
       "column": 3,
-      "index": 20634
+      "index": 20632
     }
   },
   {
@@ -2017,12 +2017,12 @@
     "start": {
       "line": 684,
       "column": 17,
-      "index": 20653
+      "index": 20651
     },
     "end": {
       "line": 687,
       "column": 3,
-      "index": 20731
+      "index": 20729
     }
   },
   {
@@ -2032,12 +2032,12 @@
     "start": {
       "line": 688,
       "column": 21,
-      "index": 20754
+      "index": 20752
     },
     "end": {
       "line": 691,
       "column": 3,
-      "index": 20841
+      "index": 20839
     }
   },
   {
@@ -2047,12 +2047,12 @@
     "start": {
       "line": 692,
       "column": 12,
-      "index": 20855
+      "index": 20853
     },
     "end": {
       "line": 695,
       "column": 3,
-      "index": 20922
+      "index": 20920
     }
   },
   {
@@ -2062,12 +2062,12 @@
     "start": {
       "line": 696,
       "column": 8,
-      "index": 20932
+      "index": 20930
     },
     "end": {
       "line": 699,
       "column": 3,
-      "index": 20991
+      "index": 20989
     }
   },
   {
@@ -2077,12 +2077,12 @@
     "start": {
       "line": 700,
       "column": 9,
-      "index": 21002
+      "index": 21000
     },
     "end": {
       "line": 703,
       "column": 3,
-      "index": 21063
+      "index": 21061
     }
   }
 ]

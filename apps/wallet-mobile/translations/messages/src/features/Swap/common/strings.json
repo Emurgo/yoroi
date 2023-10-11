@@ -616,7 +616,7 @@
   },
   {
     "id": "swap.swapScreen.poolFee",
-    "defaultMessage": "!!! Pool Fee",
+    "defaultMessage": "!!! Dex Fee",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
       "line": 290,

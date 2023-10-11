@@ -289,7 +289,7 @@ export const messages = defineMessages({
   },
   poolFee: {
     id: 'swap.swapScreen.poolFee',
-    defaultMessage: '!!! Pool Fee',
+    defaultMessage: '!!! Dex Fee',
   },
   batcherFee: {
     id: 'swap.swapScreen.batcherFee',
