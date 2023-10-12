@@ -12,8 +12,8 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {isEmptyString} from '../../../../../utils'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
-import {useBalance, useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {useBalances, useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {createYoroiEntry} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
@@ -295,7 +295,10 @@ const useNotEnoughBalanceError = (): string => {
   const {isBuyTouched} = useSwapTouched()
   const wallet = useSelectedWallet()
   const {tokenId, quantity} = orderData.amounts.sell
-  const balance = useBalance({wallet, tokenId})
+
+  const balances = useBalances(wallet)
+  const primaryTokenBalance = Amounts.getAmount(balances, wallet.primaryTokenInfo.id).quantity
+  const balance = Amounts.getAmount(balances, tokenId).quantity
 
   if (Quantities.isZero(quantity) || !isBuyTouched) return ''
 
@@ -308,7 +311,7 @@ const useNotEnoughBalanceError = (): string => {
       tokenId === wallet.primaryTokenInfo.id ? orderData.amounts.sell.quantity : Quantities.zero,
       orderData.selectedPoolCalculation?.cost.ptTotalFeeNoFEF.quantity ?? Quantities.zero,
     ]),
-    balance,
+    primaryTokenBalance,
   )
 
   if (!hasFeesBalance) return strings.notEnoughFeeBalance
