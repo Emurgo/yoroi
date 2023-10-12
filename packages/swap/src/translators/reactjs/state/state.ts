@@ -313,7 +313,7 @@ const orderReducer = (
         draft.orderData.amounts.buy =
           draft.orderData.selectedPoolCalculation.sides.buy
 
-        draft.orderData.limitPrice = draft.orderData.bestPoolCalculation.prices.market
+        draft.orderData.limitPrice = draft.orderData.selectedPoolCalculation.prices.market
         break
 
       case SwapCreateOrderActionType.SlippageChanged:
