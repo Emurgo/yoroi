@@ -6,6 +6,7 @@ import {SwapDiscountTier} from '../../../translators/constants'
 import {makeOrderCalculations} from '../../../helpers/orders/factories/makeOrderCalculations'
 import {selectedPoolCalculationSelector} from './selectors/selectedPoolCalculationSelector'
 import {getBestPoolCalculation} from '../../../helpers/pools/getBestPoolCalculation'
+import {getMarketPrice} from '../../../helpers/prices/getMarketPrice'
 
 export type SwapOrderCalculation = Readonly<{
   order: {
@@ -312,6 +313,11 @@ const orderReducer = (
 
         draft.orderData.amounts.buy =
           draft.orderData.selectedPoolCalculation.sides.buy
+
+        draft.orderData.limitPrice = getMarketPrice(
+          draft.orderData.selectedPoolCalculation.pool,
+          draft.orderData.selectedPoolCalculation.sides.sell,
+        )
         break
 
       case SwapCreateOrderActionType.SlippageChanged:
