@@ -938,7 +938,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         PURPOSE,
         this.publicKeyHex,
         true,
-        [unsignedTx.datum as {data: string}],
+        unsignedTx.datum ? [unsignedTx.datum as {data: string}] : undefined,
       )
 
       return yoroiSignedTx({unsignedTx, signedTx})
