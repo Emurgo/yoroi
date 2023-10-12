@@ -1,11 +1,11 @@
 import React from 'react'
+import {ErrorBoundary} from 'react-error-boundary'
 
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {ModalError} from '../../common/ModalError/ModalError'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'
-import {ErrorBoundary} from 'react-error-boundary'
-import {ModalError} from '../../common/ModalError/ModalError'
 
 type Props = {
   wallet: YoroiWallet

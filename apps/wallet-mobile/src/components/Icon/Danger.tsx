@@ -13,6 +13,7 @@ export const Danger = ({size = 36, color = '#000000'}: Props) => {
         d="M25 31.25a2.083 2.083 0 000 4.167h.02a2.083 2.083 0 000-4.167H25zM25 14.584c-1.15 0-2.083.932-2.083 2.083v10.417a2.083 2.083 0 104.166 0V16.667c0-1.15-.932-2.083-2.083-2.083z"
         fill={color}
       />
+
       <Path
         fillRule="evenodd"
         clipRule="evenodd"

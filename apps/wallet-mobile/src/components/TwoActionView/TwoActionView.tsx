@@ -1,3 +1,4 @@
+import {isString} from '@yoroi/common'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
@@ -6,7 +7,6 @@ import {confirmationMessages} from '../../i18n/global-messages'
 import {spacing} from '../../theme'
 import {Button} from '../Button'
 import {Text} from '../Text'
-import {isString} from '@yoroi/common'
 
 type Props = {
   title?: string

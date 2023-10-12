@@ -17,6 +17,7 @@ import {Copy} from './Copy'
 import {CopySuccess} from './CopySuccess'
 import {Cross} from './Cross'
 import {CrossCircle} from './CrossCircle'
+import {Danger} from './Danger'
 import {DappConnector} from './DappConnector'
 import {Delete} from './Delete'
 import {Device} from './Device'
@@ -100,7 +101,6 @@ import {WalletStack} from './WalletStack'
 import {WingRiders} from './WingRiders'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
-import {Danger} from './Danger'
 
 export const Icon = {
   Ada,

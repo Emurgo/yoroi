@@ -118,39 +118,27 @@ export const OpenOrders = () => {
   }
 
   const onRawTxHwConfirm = async ({useUSB, orderId}: {useUSB: boolean; orderId: string}) => {
-    try {
-      const order = normalizedOrders.find((o) => o.id === orderId)
-      if (!order || order.owner === undefined || order.utxo === undefined) return
-      const {utxo, owner: bech32Address} = order
-      const collateralUtxo = await getCollateralUtxo()
-      const addressHex = await convertBech32ToHex(bech32Address)
-      const originalCbor = await swapApiOrder.cancel({
-        utxos: {collateral: collateralUtxo, order: utxo},
-        address: addressHex,
-      })
-      const {cbor} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
-      await wallet.signSwapCancellationWithLedger(cbor, useUSB)
+    const order = normalizedOrders.find((o) => o.id === orderId)
+    if (!order || order.owner === undefined || order.utxo === undefined) return
+    const {utxo, owner: bech32Address} = order
+    const collateralUtxo = await getCollateralUtxo()
+    const addressHex = await convertBech32ToHex(bech32Address)
+    const originalCbor = await swapApiOrder.cancel({
+      utxos: {collateral: collateralUtxo, order: utxo},
+      address: addressHex,
+    })
+    const {cbor} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
+    await wallet.signSwapCancellationWithLedger(cbor, useUSB)
 
-      closeModal()
-      navigateToTxHistory()
-    } catch (e) {
-      if (e instanceof RejectedByUserError) {
-        Alert.alert(strings.error, strings.rejectedByUser)
-        closeModal()
-        return
-      }
-
-      if (e instanceof Error) {
-        Alert.alert(strings.error, e.message)
-        closeModal()
-      }
-    }
+    closeModal()
+    navigateToTxHistory()
   }
 
   const onOrderCancelConfirm = (id: string) => {
     openModal(
       strings.signTransaction,
       <ConfirmRawTx
+        onCancel={closeModal}
         onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)}
         onHWConfirm={({useUSB}) => onRawTxHwConfirm({useUSB, orderId: id})}
       />,

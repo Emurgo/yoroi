@@ -1,6 +1,9 @@
-import {StyleSheet, View} from 'react-native'
-import {Button, Icon, Text} from '../../../../components'
 import React from 'react'
+import {StyleSheet, View} from 'react-native'
+
+import {Button, Icon, Text} from '../../../../components'
+import {BluetoothDisabledError, RejectedByUserError} from '../../../../yoroi-wallets/hw'
+import {useStrings} from '../strings'
 
 export const ModalError = ({
   error,
@@ -11,20 +14,40 @@ export const ModalError = ({
   resetErrorBoundary?: () => void
   onCancel?: () => void
 }) => {
+  const strings = useStrings()
+  const message = getErrorMessage(error, strings)
   return (
     <>
       <View style={styles.container}>
         <View>
           <Icon.Danger color="#FF1351" size={42} />
         </View>
-        <Text style={styles.message}>Something went wrong</Text>
+
+        <Text style={styles.message}>{message}</Text>
       </View>
+
       <View style={styles.buttons}>
-        <Button shelleyTheme outlineOnLight block onPress={onCancel} title={'Cancel'} />
-        <Button shelleyTheme block onPress={resetErrorBoundary} title={'Try Again'} />
+        <Button shelleyTheme outlineOnLight block onPress={onCancel} title={strings.cancel} />
+
+        <Button shelleyTheme block onPress={resetErrorBoundary} title={strings.tryAgain} />
       </View>
     </>
   )
+}
+
+const getErrorMessage = (
+  error: Error,
+  strings: Record<'error' | 'rejectedByUser' | 'bluetoothDisabledError', string>,
+): string => {
+  if (error instanceof RejectedByUserError) {
+    return strings.rejectedByUser
+  }
+
+  if (error instanceof BluetoothDisabledError) {
+    return strings.bluetoothDisabledError
+  }
+
+  return `${strings.error}: ${error.message}`
 }
 
 const styles = StyleSheet.create({
