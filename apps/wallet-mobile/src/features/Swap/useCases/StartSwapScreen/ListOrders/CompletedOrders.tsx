@@ -55,7 +55,7 @@ const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[]
       const result: {id?: string; metadata?: TxMetadataInfo; date?: string} = {}
       receivedTransactions.forEach((receivedTx) => {
         receivedTx.inputs.forEach((input) => {
-          if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id) {
+          if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id && receivedTx.metadata !== null) {
             result['id'] = sentTx?.id
             result['metadata'] = sentTx?.metadata
             result['date'] = receivedTx?.lastUpdatedAt
