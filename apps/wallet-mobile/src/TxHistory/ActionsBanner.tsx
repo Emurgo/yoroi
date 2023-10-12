@@ -10,6 +10,7 @@ import {features} from '../features'
 import {useSend} from '../features/Send/common/SendContext'
 import {useSwapTouched} from '../features/Swap/common/SwapFormProvider'
 import {actionMessages} from '../i18n/global-messages'
+import env from '../legacy/env'
 import {useMetrics} from '../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -39,8 +40,10 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   })
 
   const handleOnBuy = () => {
+    // banxa doesn't support testnet for the sandbox it needs a mainnet address
+    const sandboxWallet = env.getString('BANXA_TEST_WALLET')
     const isMainnet = wallet.networkId !== 300
-    const walletAddress = wallet.externalAddresses[0]
+    const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
     const banxa = banxaModuleMaker({isProduction: isMainnet, partner: 'emurgo'})
     const url = banxa.createReferralUrl({
       coinType: 'ADA',
