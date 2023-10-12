@@ -27,7 +27,8 @@ import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-walle
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {MAX_DECIMALS} from './mapOrders'
+
+const PRECISION = 14
 
 export type MappedRawOrder = {
   id: string
@@ -133,7 +134,8 @@ export const ExpandableOrder = ({order}: {order: MappedRawOrder}) => {
   const buyQuantity = Quantities.format(metadata.buyQuantity as Balance.Quantity, buyTokenInfo.decimals ?? 0)
   const sellQuantity = Quantities.format(metadata.sellQuantity as Balance.Quantity, sellTokenInfo.decimals ?? 0)
   const tokenPrice = asQuantity(new BigNumber(metadata.sellQuantity).dividedBy(metadata.buyQuantity).toString())
-  const marketPrice = Quantities.format(tokenPrice, sellTokenInfo.decimals ?? 0, MAX_DECIMALS)
+  const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
+  const marketPrice = Quantities.format(tokenPrice ?? Quantities.zero, denomination, PRECISION)
   const buyLabel = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
   const sellLabel = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
 
