@@ -16,8 +16,9 @@ export const BanxaUrlReferralQueryStringParamsSchema = z
     walletAddress: z.string(),
     walletAddressTag: z.string().optional(),
   })
-  .refine(
-    (data) =>
-      data.coinType === 'ADA' &&
-      banxaIsPossibleCardanoAddress(data.walletAddress),
-  )
+  .refine((data) => {
+    return (
+      (data.coinType === 'ADA' || data.coinType === 'TADA') &&
+      banxaIsPossibleCardanoAddress(data.walletAddress)
+    )
+  })
