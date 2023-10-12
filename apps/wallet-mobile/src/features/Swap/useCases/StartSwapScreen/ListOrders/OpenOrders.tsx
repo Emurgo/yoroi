@@ -201,6 +201,23 @@ export const OpenOrders = () => {
     order: {cancel: cancelOrder},
   } = useSwap()
 
+  const getFee = React.useCallback(
+    async (utxo: string, collateralUtxo: string, bech32Address: string) => {
+      let fee = '0'
+      setIsLoading(true)
+
+      try {
+        fee = await getCancellationOrderFee(wallet, cancelOrder, {orderUtxo: utxo, collateralUtxo, bech32Address})
+      } catch (error) {
+        Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
+      }
+
+      setIsLoading(false)
+      return fee
+    },
+    [cancelOrder, strings, wallet],
+  )
+
   const openCancellationModal = async (order: MappedOpenOrder) => {
     if (order.owner === undefined || order.utxo === undefined) return
     const {
@@ -215,13 +232,10 @@ export const OpenOrders = () => {
       tokenPrice,
       tokenAmount,
     } = order
-    setIsLoading(true)
     const totalReturned = `${fromTokenAmount} ${fromTokenInfo?.ticker}`
     const collateralUtxo = await getCollateralUtxo()
 
-    const fee = await getCancellationOrderFee(wallet, cancelOrder, {orderUtxo: utxo, collateralUtxo, bech32Address})
-
-    setIsLoading(false)
+    const fee = await getFee(utxo, collateralUtxo, bech32Address)
 
     openModal(
       strings.listOrdersSheetTitle,
