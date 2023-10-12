@@ -2,17 +2,19 @@ import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, us
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {Alert, KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
+import {Alert, KeyboardAvoidingView, Platform, StyleSheet, TextInput, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer} from '../../../../../components'
 import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
+import {useLanguage} from '../../../../../i18n'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {isEmptyString} from '../../../../../utils'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
 import {useBalances, useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {Logger} from '../../../../../yoroi-wallets/logging'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {createYoroiEntry} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
@@ -203,6 +205,12 @@ export const CreateOrder = () => {
     createUnsignedSwapTx()
   }
 
+  const {inputValue, onChangeSellQuantity, inputRef} = useSellInputValues({
+    onChange: () => {
+      if (!isEmptyString(sellBackendError)) setSellBackendError('')
+    },
+  })
+
   return (
     <View style={styles.root}>
       <KeyboardAvoidingView
@@ -220,7 +228,7 @@ export const CreateOrder = () => {
 
             <TopTokenActions />
 
-            <EditSellAmount error={sellError} />
+            <EditSellAmount value={inputValue} onChange={onChangeSellQuantity} inputRef={inputRef} error={sellError} />
 
             <Spacer height={16} />
 
@@ -352,3 +360,38 @@ const styles = StyleSheet.create({
     borderTopColor: COLORS.BORDER_GRAY,
   },
 })
+
+const useSellInputValues = ({onChange}: {onChange?: () => void}) => {
+  const {orderData, sellQuantityChanged} = useSwap()
+  const {isSellTouched} = useSwapTouched()
+  const {tokenId, quantity} = orderData.amounts.sell
+  const wallet = useSelectedWallet()
+  const tokenInfo = useTokenInfo({wallet, tokenId})
+  const {decimals} = tokenInfo
+  const {numberLocale} = useLanguage()
+  const inputRef = React.useRef<TextInput>(null)
+  const [inputValue, setInputValue] = React.useState(Quantities.format(quantity, tokenInfo.decimals ?? 0))
+
+  React.useEffect(() => {
+    if (isSellTouched && !inputRef?.current?.isFocused()) {
+      setInputValue(Quantities.format(quantity, tokenInfo.decimals ?? 0))
+    }
+  }, [isSellTouched, quantity, tokenInfo.decimals])
+
+  const onChangeSellQuantity = (text: string) => {
+    try {
+      const [input, quantity] = Quantities.parseFromText(text, decimals ?? 0, numberLocale)
+      setInputValue(text === '' ? text : input)
+      sellQuantityChanged(quantity)
+      onChange?.()
+    } catch (error) {
+      Logger.error('SwapAmountScreen::onChangeQuantity', error)
+    }
+  }
+
+  return {
+    inputRef,
+    inputValue,
+    onChangeSellQuantity,
+  }
+}
