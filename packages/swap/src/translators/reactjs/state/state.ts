@@ -6,7 +6,6 @@ import {SwapDiscountTier} from '../../../translators/constants'
 import {makeOrderCalculations} from '../../../helpers/orders/factories/makeOrderCalculations'
 import {selectedPoolCalculationSelector} from './selectors/selectedPoolCalculationSelector'
 import {getBestPoolCalculation} from '../../../helpers/pools/getBestPoolCalculation'
-import {getMarketPrice} from '../../../helpers/prices/getMarketPrice'
 
 export type SwapOrderCalculation = Readonly<{
   order: {
