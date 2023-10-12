@@ -117,6 +117,7 @@ export const useStrings = () => {
     noPool: intl.formatMessage(messages.noPool),
     generalErrorTitle: intl.formatMessage(errorMessages.generalError.title),
     generalErrorMessage: (e) => intl.formatMessage(errorMessages.generalError.message, {message: e}),
+    continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
   }
 }
 
@@ -526,5 +527,9 @@ export const messages = defineMessages({
   noPool: {
     id: 'swap.swapScreen.noPool',
     defaultMessage: '!!! This pair is not available in any liquidity pool',
+  },
+  continueOnLedger: {
+    id: 'global.ledgerMessages.continueOnLedger',
+    defaultMessage: '!!!Continue on Ledger',
   },
 })
