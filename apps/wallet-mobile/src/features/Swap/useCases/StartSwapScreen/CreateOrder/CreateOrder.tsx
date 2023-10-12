@@ -75,7 +75,7 @@ export const CreateOrder = () => {
     },
     onError: (error) => {
       if (error instanceof NotEnoughMoneyToSendError) {
-        setSellBackendError(strings.notEnoughBalance)
+        setSellBackendError(strings.notEnoughFeeBalance)
         return
       }
 
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const useSellInput = ({onChange}: {onChange?: () => void}) => {
+export const useSellInput = ({onChange}: {onChange?: () => void}) => {
   const strings = useStrings()
   const {orderData, sellQuantityChanged} = useSwap()
   const {isSellTouched} = useSwapTouched()
