@@ -2,8 +2,8 @@ import {useCardAnimation} from '@react-navigation/stack'
 import React from 'react'
 import {
   Animated,
+  GestureResponderEvent,
   KeyboardAvoidingView,
-  NativeTouchEvent,
   Platform,
   Pressable,
   StyleSheet,
@@ -24,7 +24,7 @@ export const ModalScreen = () => {
     setDownDirectionCount(0)
   }
 
-  const onResponderMove = ({nativeEvent}: {nativeEvent: NativeTouchEvent}) => {
+  const onResponderMove = ({nativeEvent}: GestureResponderEvent) => {
     if (swipeLocationY < nativeEvent.locationY) {
       const newState = downDirectionCount + 1
       if (newState > 4) {
@@ -73,7 +73,7 @@ export const ModalScreen = () => {
 }
 
 const Header = (props: {
-  onResponderMove?: ({nativeEvent}: {nativeEvent: NativeTouchEvent}) => void
+  onResponderMove?: (event: GestureResponderEvent) => void
   onStartShouldSetResponder?: () => boolean
 }) => {
   const {title} = useModal()
