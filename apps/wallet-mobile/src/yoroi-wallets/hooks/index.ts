@@ -515,6 +515,7 @@ export const useSignTxWithHW = (
   const mutation = useMutation({
     mutationFn: async ({unsignedTx, useUSB}) => wallet.signTxWithLedger(unsignedTx, useUSB),
     retry: false,
+
     ...options,
   })
 

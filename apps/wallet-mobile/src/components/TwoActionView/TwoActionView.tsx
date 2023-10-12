@@ -6,9 +6,10 @@ import {confirmationMessages} from '../../i18n/global-messages'
 import {spacing} from '../../theme'
 import {Button} from '../Button'
 import {Text} from '../Text'
+import {isString} from '@yoroi/common'
 
 type Props = {
-  title: string
+  title?: string
   children: React.ReactNode
   primaryButton: {
     disabled?: boolean
@@ -30,9 +31,11 @@ export const TwoActionView = ({title, children, primaryButton, secondaryButton}:
   return (
     <ScrollView style={styles.scrollView} keyboardShouldPersistTaps="always" testID="twoActionView">
       <View style={styles.content}>
-        <View style={styles.heading}>
-          <Text style={styles.titleText}>{title}</Text>
-        </View>
+        {isString(title) && (
+          <View style={styles.heading}>
+            <Text style={styles.titleText}>{title}</Text>
+          </View>
+        )}
 
         {children}
       </View>

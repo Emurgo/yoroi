@@ -4,6 +4,8 @@ import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'
+import {ErrorBoundary} from 'react-error-boundary'
+import {ModalError} from '../../common/ModalError/ModalError'
 
 type Props = {
   wallet: YoroiWallet
@@ -14,12 +16,18 @@ type Props = {
 
 export const ConfirmTx = ({wallet, onSuccess, onCancel, unsignedTx}: Props) => {
   return wallet.isHW ? (
-    <ConfirmTxWithHW //
-      wallet={wallet}
-      unsignedTx={unsignedTx}
-      onSuccess={onSuccess}
-      onCancel={onCancel}
-    />
+    <ErrorBoundary
+      fallbackRender={({error, resetErrorBoundary}) => (
+        <ModalError error={error} resetErrorBoundary={resetErrorBoundary} onCancel={onCancel} />
+      )}
+    >
+      <ConfirmTxWithHW //
+        wallet={wallet}
+        unsignedTx={unsignedTx}
+        onSuccess={onSuccess}
+        onCancel={onCancel}
+      />
+    </ErrorBoundary>
   ) : (
     <ConfirmTxWithPassword //
       wallet={wallet}

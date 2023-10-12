@@ -100,6 +100,7 @@ import {WalletStack} from './WalletStack'
 import {WingRiders} from './WingRiders'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
+import {Danger} from './Danger'
 
 export const Icon = {
   Ada,
@@ -204,4 +205,5 @@ export const Icon = {
   WingRiders,
   VyfiSwap,
   SpectrumSwap,
+  Danger,
 }
