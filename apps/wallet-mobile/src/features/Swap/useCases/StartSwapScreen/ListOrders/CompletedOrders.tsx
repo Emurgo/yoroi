@@ -21,7 +21,7 @@ import {
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {useTokenInfo, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {useSync, useTokenInfo, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
 import {Counter} from '../../../common/Counter/Counter'
@@ -41,40 +41,46 @@ export type MappedRawOrder = {
   date: string
 }
 
+const compareByDate = (a: MappedRawOrder, b: MappedRawOrder) => {
+  return new Date(b.date).getTime() - new Date(a.date).getTime()
+}
+
 const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[] => {
   const sentTransactions = transactions.filter((tx) => tx.direction === 'SENT')
   const receivedTransactions = transactions.filter((tx) => tx.direction === 'RECEIVED')
 
-  const filteredTx = sentTransactions.reduce((acc, sentTx) => {
-    const result: {id?: string; metadata?: TxMetadataInfo; date?: string} = {}
-    receivedTransactions.forEach((receivedTx) => {
-      receivedTx.inputs.forEach((input) => {
-        if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id) {
-          result['id'] = sentTx?.id
-          result['metadata'] = sentTx?.metadata
-          result['date'] = receivedTx?.lastUpdatedAt
-        }
+  const filteredTx = sentTransactions
+    .reduce((acc, sentTx) => {
+      const result: {id?: string; metadata?: TxMetadataInfo; date?: string} = {}
+      receivedTransactions.forEach((receivedTx) => {
+        receivedTx.inputs.forEach((input) => {
+          if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id) {
+            result['id'] = sentTx?.id
+            result['metadata'] = sentTx?.metadata
+            result['date'] = receivedTx?.lastUpdatedAt
+          }
+        })
       })
-    })
 
-    if (result['id'] !== undefined && result['metadata'] !== undefined) {
-      try {
-        const metadata = JSON.parse(result.metadata as string)
-        result['metadata'] = metadata
-        return acc.concat(result as MappedRawOrder)
-      } catch (error) {
-        console.warn('Error parsing json metadata', error)
+      if (result['id'] !== undefined && result['metadata'] !== undefined) {
+        try {
+          const metadata = JSON.parse(result.metadata as string)
+          result['metadata'] = metadata
+          return acc.concat(result as MappedRawOrder)
+        } catch (error) {
+          console.warn('Error parsing json metadata', error)
+        }
       }
-    }
-    return acc
-  }, [] as Array<MappedRawOrder>)
-
-  return filteredTx.filter((tx) => tx.metadata !== null)
+      return acc
+    }, [] as Array<MappedRawOrder>)
+    .sort(compareByDate)
+  return filteredTx.filter((tx) => tx.metadata !== null).sort(compareByDate)
 }
 
 export const CompletedOrders = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const {sync} = useSync(wallet)
 
   const transactionsInfos = useTransactionInfos(wallet)
 
@@ -87,6 +93,11 @@ export const CompletedOrders = () => {
       track.swapConfirmedPageViewed({swap_tab: 'Completed Orders'})
     }, [track]),
   )
+
+  React.useEffect(() => {
+    sync()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>
