@@ -14,7 +14,6 @@ import {COLORS} from '../../../../../theme'
 import {isEmptyString} from '../../../../../utils'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
 import {useBalances, useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {Logger} from '../../../../../yoroi-wallets/logging'
 import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {createYoroiEntry} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
@@ -367,6 +366,7 @@ const styles = StyleSheet.create({
 })
 
 const useSellInput = ({onChange}: {onChange?: () => void}) => {
+  const strings = useStrings()
   const {orderData, sellQuantityChanged} = useSwap()
   const {isSellTouched} = useSwapTouched()
   const {tokenId, quantity} = orderData.amounts.sell
@@ -390,7 +390,7 @@ const useSellInput = ({onChange}: {onChange?: () => void}) => {
       sellQuantityChanged(quantity)
       onChange?.()
     } catch (error) {
-      Logger.error('SwapAmountScreen::onChangeQuantity', error)
+      Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
     }
   }
 
