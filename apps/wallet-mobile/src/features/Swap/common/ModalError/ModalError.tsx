@@ -5,15 +5,13 @@ import {Button, Icon, Text} from '../../../../components'
 import {BluetoothDisabledError, RejectedByUserError} from '../../../../yoroi-wallets/hw'
 import {useStrings} from '../strings'
 
-export const ModalError = ({
-  error,
-  resetErrorBoundary,
-  onCancel,
-}: {
+type Props = {
   error: Error
   resetErrorBoundary?: () => void
   onCancel?: () => void
-}) => {
+}
+
+export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
   const strings = useStrings()
   const message = getErrorMessage(error, strings)
   return (
