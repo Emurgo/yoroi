@@ -36,41 +36,39 @@ export const ModalScreen = () => {
   }
 
   return (
-    <>
-      <View style={styles.backdrop}>
-        <Pressable style={styles.cancellableArea} onPress={closeModal} />
+    <View style={styles.backdrop}>
+      <Pressable style={styles.cancellableArea} onPress={closeModal} />
 
-        <KeyboardAvoidingView
-          style={styles.root}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          enabled={Platform.OS === 'ios'}
+      <KeyboardAvoidingView
+        style={styles.root}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        enabled={Platform.OS === 'ios'}
+      >
+        <Animated.View
+          style={[
+            {
+              height: height,
+              transform: [
+                {
+                  translateY: current.progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [height, 0],
+                    extrapolate: 'clamp',
+                  }),
+                },
+              ],
+            },
+            styles.animatedView,
+          ]}
         >
-          <Animated.View
-            style={[
-              {
-                height: height,
-                transform: [
-                  {
-                    translateY: current.progress.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [height, 0],
-                      extrapolate: 'clamp',
-                    }),
-                  },
-                ],
-              },
-              styles.animatedView,
-            ]}
-          >
-            <View style={styles.sheet}>
-              <Header onResponderMove={onResponderMove} onStartShouldSetResponder={() => true} />
+          <View style={styles.sheet}>
+            <Header onResponderMove={onResponderMove} onStartShouldSetResponder={() => true} />
 
-              {content}
-            </View>
-          </Animated.View>
-        </KeyboardAvoidingView>
-      </View>
-    </>
+            {content}
+          </View>
+        </Animated.View>
+      </KeyboardAvoidingView>
+    </View>
   )
 }
 
