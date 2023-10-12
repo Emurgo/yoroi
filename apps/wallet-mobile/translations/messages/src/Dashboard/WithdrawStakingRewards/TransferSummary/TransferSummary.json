@@ -4,14 +4,14 @@
     "defaultMessage": "!!!From",
     "file": "src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.tsx",
     "start": {
-      "line": 173,
+      "line": 174,
       "column": 13,
-      "index": 5470
+      "index": 5519
     },
     "end": {
-      "line": 176,
+      "line": 177,
       "column": 3,
-      "index": 5583
+      "index": 5632
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Recovered balance",
     "file": "src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.tsx",
     "start": {
-      "line": 177,
+      "line": 178,
       "column": 16,
-      "index": 5601
+      "index": 5650
     },
     "end": {
-      "line": 180,
+      "line": 181,
       "column": 3,
-      "index": 5730
+      "index": 5779
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Final balance",
     "file": "src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.tsx",
     "start": {
-      "line": 181,
+      "line": 182,
       "column": 21,
-      "index": 5753
+      "index": 5802
     },
     "end": {
-      "line": 184,
+      "line": 185,
       "column": 3,
-      "index": 5883
+      "index": 5932
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!This transaction will unregister one or more staking keys, giving you back your {refundAmount} from your deposit",
     "file": "src/Dashboard/WithdrawStakingRewards/TransferSummary/TransferSummary.tsx",
     "start": {
-      "line": 185,
+      "line": 186,
       "column": 25,
-      "index": 5910
+      "index": 5959
     },
     "end": {
-      "line": 190,
+      "line": 191,
       "column": 3,
-      "index": 6145
+      "index": 6194
     }
   }
 ]

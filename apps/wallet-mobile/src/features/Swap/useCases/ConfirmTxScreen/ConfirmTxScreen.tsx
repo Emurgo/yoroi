@@ -11,11 +11,11 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
 import {useSignAndSubmitTx, useTokenInfo} from '../../../../yoroi-wallets/hooks'
+import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
 import {TransactionSummary} from './TransactionSummary'
-import {Quantities} from '../../../../yoroi-wallets/utils'
 
 export const ConfirmTxScreen = () => {
   const strings = useStrings()

@@ -11,8 +11,6 @@ import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {walletManager} from '../../../../yoroi-wallets/walletManager'
 import {useStrings} from '../../common/strings'
 import {LedgerTransportSwitch} from './LedgerTransportSwitch'
-import {useSwap} from '@yoroi/swap'
-import {Quantities} from '../../../../yoroi-wallets/utils'
 
 type Props = {
   wallet: YoroiWallet

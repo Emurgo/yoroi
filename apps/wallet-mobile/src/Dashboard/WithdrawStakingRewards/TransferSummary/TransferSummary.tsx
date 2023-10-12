@@ -1,3 +1,4 @@
+import {isString} from '@yoroi/common'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
@@ -37,7 +38,7 @@ export const TransferSummary = ({wallet, unsignedTx, additionalFees}: Props) => 
         <Text>{strings.fees}</Text>
 
         <Text style={styles.balanceAmount} testID="feeAmountText">
-          {additionalFees ? `${additionalFees} + ${transactionFee}` : transactionFee}
+          {isString(additionalFees) ? `${additionalFees} + ${transactionFee}` : transactionFee}
         </Text>
       </Item>
 
