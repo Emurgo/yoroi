@@ -311,7 +311,7 @@ const useNotEnoughBalanceError = (): string => {
   )
 
   const notEnoughBalanceError =
-    !Quantities.isZero(quantity) && !hasPrimaryTokenBalance && !hasSecondaryTokenBalance && isBuyTouched
+    !Quantities.isZero(quantity) && (!hasPrimaryTokenBalance || !hasSecondaryTokenBalance) && isBuyTouched
       ? strings.notEnoughBalance
       : ''
 
