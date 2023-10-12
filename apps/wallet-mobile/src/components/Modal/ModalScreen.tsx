@@ -2,7 +2,6 @@ import {useCardAnimation} from '@react-navigation/stack'
 import React from 'react'
 import {
   Animated,
-  GestureResponderEvent,
   KeyboardAvoidingView,
   NativeTouchEvent,
   Platform,
@@ -40,6 +39,7 @@ export const ModalScreen = () => {
     <>
       <View style={styles.backdrop}>
         <Pressable style={styles.cancellableArea} onPress={closeModal} />
+
         <KeyboardAvoidingView
           style={styles.root}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
