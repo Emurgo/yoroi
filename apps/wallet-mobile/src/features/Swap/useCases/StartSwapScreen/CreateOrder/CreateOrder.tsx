@@ -205,7 +205,7 @@ export const CreateOrder = () => {
     createUnsignedSwapTx()
   }
 
-  const {inputValue, onChangeSellQuantity, inputRef} = useSellInputValues({
+  const {inputValue, onChangeSellQuantity, inputRef} = useSellInput({
     onChange: () => {
       if (!isEmptyString(sellBackendError)) setSellBackendError('')
     },
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const useSellInputValues = ({onChange}: {onChange?: () => void}) => {
+const useSellInput = ({onChange}: {onChange?: () => void}) => {
   const {orderData, sellQuantityChanged} = useSwap()
   const {isSellTouched} = useSwapTouched()
   const {tokenId, quantity} = orderData.amounts.sell
