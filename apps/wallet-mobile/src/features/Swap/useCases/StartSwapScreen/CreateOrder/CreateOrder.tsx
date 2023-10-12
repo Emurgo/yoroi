@@ -205,7 +205,7 @@ export const CreateOrder = () => {
     createUnsignedSwapTx()
   }
 
-  const {inputValue, onChangeSellQuantity, inputRef} = useSellInput({
+  const {sellInputValue, onChangeSellQuantity, sellInputRef} = useSellInput({
     onChange: () => {
       if (!isEmptyString(sellBackendError)) setSellBackendError('')
     },
@@ -228,7 +228,12 @@ export const CreateOrder = () => {
 
             <TopTokenActions />
 
-            <EditSellAmount value={inputValue} onChange={onChangeSellQuantity} inputRef={inputRef} error={sellError} />
+            <EditSellAmount
+              value={sellInputValue}
+              onChange={onChangeSellQuantity}
+              inputRef={sellInputRef}
+              error={sellError}
+            />
 
             <Spacer height={16} />
 
@@ -390,8 +395,8 @@ const useSellInput = ({onChange}: {onChange?: () => void}) => {
   }
 
   return {
-    inputRef,
-    inputValue,
+    sellInputRef: inputRef,
+    sellInputValue: inputValue,
     onChangeSellQuantity,
   }
 }
