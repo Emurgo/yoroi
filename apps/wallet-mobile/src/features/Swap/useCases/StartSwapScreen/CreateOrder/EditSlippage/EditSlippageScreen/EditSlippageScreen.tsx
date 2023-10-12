@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.WHITE,
     paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingBottom: 48,
   },
   header: {
     fontSize: 16,
