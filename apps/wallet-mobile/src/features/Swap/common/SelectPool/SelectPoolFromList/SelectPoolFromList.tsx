@@ -1,5 +1,6 @@
 import {getMarketPrice, useSwap} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
+import {BalanceQuantity} from '@yoroi/types/lib/balance/token'
 import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
@@ -24,7 +25,7 @@ type Props = {
 export const SelectPoolFromList = ({pools = []}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {selectedPoolChanged, orderData} = useSwap()
+  const {selectedPoolChanged, orderData, limitPriceChanged} = useSwap()
   const {poolTouched} = useSwapTouched()
   const [selectedCardIndex, setSelectedCardIndex] = useState(orderData.selectedPoolId)
   const navigate = useNavigateTo()
@@ -36,11 +37,16 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
   const tokenToSellName = sellTokenInfo.ticker ?? sellTokenInfo.name
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
 
-  const handleOnPoolSelection = (pool: Swap.Pool) => {
+  const handleOnPoolSelection = (pool: Swap.Pool, marketPrice: BalanceQuantity) => {
     track.swapPoolChanged()
     selectedPoolChanged(pool.poolId)
     setSelectedCardIndex(pool.poolId)
     poolTouched()
+
+    if (orderData.type === 'limit') {
+      limitPriceChanged(marketPrice)
+    }
+
     navigate.startSwap()
   }
 
@@ -58,6 +64,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
         )
         const formattedTvl = Quantities.format(tvl, decimals, 0)
         const formattedBatcherFeeInPt = Quantities.format(pool.batcherFee.quantity, decimals, decimals)
+        const marketPrice = getMarketPrice(pool, orderData.amounts.sell)
 
         return (
           <View key={pool.poolId}>
@@ -68,7 +75,11 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
                 colors={pool.poolId === selectedCardIndex ? ['#E4E8F7', '#C6F7F7'] : [COLORS.WHITE, COLORS.WHITE]}
                 style={styles.linearGradient}
               >
-                <TouchableOpacity key={pool.poolId} onPress={() => handleOnPoolSelection(pool)} style={[styles.card]}>
+                <TouchableOpacity
+                  key={pool.poolId}
+                  onPress={() => handleOnPoolSelection(pool, marketPrice)}
+                  style={[styles.card]}
+                >
                   <View style={styles.cardHeader}>
                     <View style={styles.icon}>
                       <PoolIcon size={40} providerId={pool.provider} />
@@ -86,7 +97,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
 
                         <Text style={styles.infoValue}>
                           {`${Quantities.format(
-                            getMarketPrice(pool, orderData.amounts.sell) ?? Quantities.zero,
+                            marketPrice ?? Quantities.zero,
                             denomination,
                             PRECISION,
                           )} ${tokenToSellName}/${tokenToBuyName}`}
