@@ -15,6 +15,7 @@ import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
 import {TransactionSummary} from './TransactionSummary'
+import {Quantities} from '../../../../yoroi-wallets/utils'
 
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
@@ -70,6 +71,11 @@ export const ConfirmTxScreen = () => {
     },
   )
 
+  const batcherFee = `${Quantities.format(
+    orderData.selectedPoolCalculation?.cost?.batcherFee?.quantity ?? Quantities.zero,
+    Number(wallet.primaryTokenInfo.decimals),
+  )} ${wallet.primaryTokenInfo.ticker}`
+
   const txIsLoading = authenticating || processingTx
 
   return (
@@ -97,6 +103,7 @@ export const ConfirmTxScreen = () => {
                     closeModal()
                     navigate.submittedTx()
                   }}
+                  additionalFees={batcherFee}
                   onCancel={closeModal}
                 />
 

@@ -11,10 +11,13 @@ import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {walletManager} from '../../../../yoroi-wallets/walletManager'
 import {useStrings} from '../../common/strings'
 import {LedgerTransportSwitch} from './LedgerTransportSwitch'
+import {useSwap} from '@yoroi/swap'
+import {Quantities} from '../../../../yoroi-wallets/utils'
 
 type Props = {
   wallet: YoroiWallet
   unsignedTx: YoroiUnsignedTx
+  additionalFees?: string
   onCancel?: () => void
   onSuccess: () => void
 }
@@ -65,7 +68,13 @@ export const ConfirmTxWithHW = (props: Props) => {
   )
 }
 
-const Confirm = ({wallet, onSuccess, unsignedTx, transport: transportType}: Props & {transport: TransportType}) => {
+const Confirm = ({
+  wallet,
+  onSuccess,
+  unsignedTx,
+  transport: transportType,
+  additionalFees,
+}: Props & {transport: TransportType; additionalFees?: string}) => {
   const strings = useStrings()
   const {signAndSubmitTx, isLoading} = useSignWithHwAndSubmitTx(
     {wallet}, //
@@ -81,7 +90,7 @@ const Confirm = ({wallet, onSuccess, unsignedTx, transport: transportType}: Prop
         onPress: () => signAndSubmitTx({unsignedTx, useUSB: transportType === 'USB'}),
       }}
     >
-      <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />
+      <TransferSummary wallet={wallet} unsignedTx={unsignedTx} additionalFees={additionalFees} />
     </TwoActionView>
   )
 }

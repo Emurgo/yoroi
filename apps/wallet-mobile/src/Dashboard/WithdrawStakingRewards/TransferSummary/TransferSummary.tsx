@@ -11,9 +11,17 @@ import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {YoroiStaking, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {Amounts, Entries} from '../../../yoroi-wallets/utils'
 
-export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsignedTx: YoroiUnsignedTx}) => {
+type Props = {
+  wallet: YoroiWallet
+  unsignedTx: YoroiUnsignedTx
+  additionalFees?: string
+}
+
+export const TransferSummary = ({wallet, unsignedTx, additionalFees}: Props) => {
   const strings = useStrings()
   const {deregistrations, withdrawals, refundAmount, feeAmount, totalAmount} = withdrawalInfo(unsignedTx)
+
+  const transactionFee = formatTokenWithText(feeAmount.quantity, wallet.primaryToken)
 
   return (
     <>
@@ -29,7 +37,7 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
         <Text>{strings.fees}</Text>
 
         <Text style={styles.balanceAmount} testID="feeAmountText">
-          {formatTokenWithText(feeAmount.quantity, wallet.primaryToken)}
+          {additionalFees ? `${additionalFees} + ${transactionFee}` : transactionFee}
         </Text>
       </Item>
 
