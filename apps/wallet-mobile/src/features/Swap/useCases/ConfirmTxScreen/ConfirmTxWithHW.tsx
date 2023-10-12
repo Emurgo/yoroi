@@ -1,8 +1,7 @@
-import React from 'react'
-import {ScrollView} from 'react-native'
+import React, {useState} from 'react'
+import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
 
-import {Boundary, TwoActionView} from '../../../../components'
-import {TransferSummary} from '../../../../Dashboard/WithdrawStakingRewards/TransferSummary'
+import {Text} from '../../../../components'
 import {LedgerConnect} from '../../../../HW'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useSignWithHwAndSubmitTx} from '../../../../yoroi-wallets/hooks'
@@ -20,11 +19,17 @@ type Props = {
 }
 
 type TransportType = 'USB' | 'BLE'
+type Step = 'select-transport' | 'connect-transport' | 'loading'
 
-export const ConfirmTxWithHW = (props: Props) => {
-  const {wallet} = props
+export const ConfirmTxWithHW = ({onSuccess, wallet, unsignedTx}: Props) => {
   const [transportType, setTransportType] = React.useState<TransportType>('USB')
-  const [step, setStep] = React.useState<'select-transport' | 'connect-transport' | 'confirm'>('select-transport')
+  const [step, setStep] = useState<Step>('select-transport')
+  const strings = useStrings()
+
+  const {signAndSubmitTx} = useSignWithHwAndSubmitTx(
+    {wallet}, //
+    {signTx: {onSuccess}},
+  )
 
   const onSelectTransport = (transportType: TransportType) => {
     setTransportType(transportType)
@@ -32,58 +37,53 @@ export const ConfirmTxWithHW = (props: Props) => {
   }
 
   const onConnectBLE = async (deviceId: DeviceId) => {
+    setStep('loading')
     await walletManager.updateHWDeviceInfo(wallet, withBLE(wallet, deviceId))
-    setStep('confirm')
+    signAndSubmitTx({unsignedTx, useUSB: false})
   }
 
   const onConnectUSB = async (deviceObj: DeviceObj) => {
+    setStep('loading')
     await walletManager.updateHWDeviceInfo(wallet, withUSB(wallet, deviceObj))
-    setStep('confirm')
+    signAndSubmitTx({unsignedTx, useUSB: true})
+  }
+
+  if (step === 'select-transport') {
+    return (
+      <LedgerTransportSwitch
+        onSelectBLE={() => onSelectTransport('BLE')}
+        onSelectUSB={() => onSelectTransport('USB')}
+      />
+    )
+  }
+
+  if (step === 'connect-transport') {
+    return (
+      <ScrollView>
+        <LedgerConnect useUSB={transportType === 'USB'} onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} />
+      </ScrollView>
+    )
   }
 
   return (
-    <>
-      <Route active={step === 'select-transport'}>
-        <LedgerTransportSwitch
-          onSelectBLE={() => onSelectTransport('BLE')}
-          onSelectUSB={() => onSelectTransport('USB')}
-        />
-      </Route>
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color="black" />
 
-      <Route active={step === 'connect-transport'}>
-        <ScrollView>
-          <LedgerConnect onConnectBLE={onConnectBLE} onConnectUSB={onConnectUSB} />
-        </ScrollView>
-      </Route>
-
-      <Route active={step === 'confirm'}>
-        <Boundary>
-          <Confirm {...props} transport={transportType} />
-        </Boundary>
-      </Route>
-    </>
+      <Text style={styles.text}>{strings.continueOnLedger}</Text>
+    </View>
   )
 }
 
-const Confirm = ({wallet, onSuccess, unsignedTx, transport: transportType}: Props & {transport: TransportType}) => {
-  const strings = useStrings()
-  const {signAndSubmitTx, isLoading} = useSignWithHwAndSubmitTx(
-    {wallet}, //
-    {signTx: {onSuccess}},
-  )
-
-  return (
-    <TwoActionView
-      title={strings.confirm}
-      primaryButton={{
-        disabled: isLoading,
-        label: strings.confirm,
-        onPress: () => signAndSubmitTx({unsignedTx, useUSB: transportType === 'USB'}),
-      }}
-    >
-      <TransferSummary wallet={wallet} unsignedTx={unsignedTx} />
-    </TwoActionView>
-  )
-}
-
-const Route = ({active, children}: {active: boolean; children: React.ReactNode}) => <>{active ? children : null}</>
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 35,
+  },
+  text: {
+    fontSize: 18,
+    color: '#000',
+    textAlign: 'center',
+  },
+})
