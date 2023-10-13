@@ -376,6 +376,129 @@ const mockedPools4: Swap.Pool[] = [
   },
 ]
 
+const mockedPools5: Swap.Pool[] = [
+  {
+    tokenA: {quantity: '27019025551205', tokenId: 'tokenA'},
+    tokenB: {quantity: '403657459031350', tokenId: 'tokenB'},
+    ptPriceTokenA: '1',
+    ptPriceTokenB: '0.06693552899',
+    fee: '0.3', // 0.3%
+    provider: 'minswap',
+    batcherFee: {quantity: '2000000', tokenId: ''},
+    deposit: {quantity: '2000000', tokenId: ''},
+    poolId: '0',
+    lpToken: {
+      quantity: '0',
+      tokenId: '0',
+    },
+  },
+  {
+    tokenB: {quantity: '27019025551205', tokenId: 'tokenB'},
+    tokenA: {quantity: '403657459031350', tokenId: 'tokenA'},
+    ptPriceTokenB: '1',
+    ptPriceTokenA: '0.06693552899',
+    fee: '0.3', // 0.3%
+    provider: 'minswap',
+    batcherFee: {quantity: '2000000', tokenId: ''},
+    deposit: {quantity: '2000000', tokenId: ''},
+    poolId: '0',
+    lpToken: {
+      quantity: '0',
+      tokenId: '0',
+    },
+  },
+  {
+    tokenA: {quantity: '10000', tokenId: 'tokenA'},
+    tokenB: {quantity: '10100', tokenId: 'tokenB'},
+    ptPriceTokenA: '1',
+    ptPriceTokenB: '1',
+    fee: '0', // 0.3%
+    provider: 'minswap',
+    batcherFee: {quantity: '0', tokenId: ''},
+    deposit: {quantity: '0', tokenId: ''},
+    poolId: '0',
+    lpToken: {
+      quantity: '0',
+      tokenId: '0',
+    },
+  },
+  {
+    tokenA: {quantity: '0', tokenId: 'tokenA'},
+    tokenB: {quantity: '0', tokenId: 'tokenB'},
+    ptPriceTokenA: '1',
+    ptPriceTokenB: '1',
+    fee: '0', // 0.3%
+    provider: 'minswap',
+    batcherFee: {quantity: '0', tokenId: ''},
+    deposit: {quantity: '0', tokenId: ''},
+    poolId: '0',
+    lpToken: {
+      quantity: '0',
+      tokenId: '0',
+    },
+  },
+  {
+    tokenA: {quantity: '1', tokenId: 'tokenA'},
+    tokenB: {quantity: '1', tokenId: 'tokenB'},
+    ptPriceTokenA: '1',
+    ptPriceTokenB: '1',
+    fee: '0', // 0.3%
+    provider: 'minswap',
+    batcherFee: {quantity: '0', tokenId: ''},
+    deposit: {quantity: '0', tokenId: ''},
+    poolId: '0',
+    lpToken: {
+      quantity: '0',
+      tokenId: '0',
+    },
+  },
+  {
+    tokenA: {quantity: '0', tokenId: 'tokenA'},
+    tokenB: {quantity: '1', tokenId: 'tokenB'},
+    ptPriceTokenA: '1',
+    ptPriceTokenB: '1',
+    fee: '0', // 0.3%
+    provider: 'minswap',
+    batcherFee: {quantity: '0', tokenId: ''},
+    deposit: {quantity: '0', tokenId: ''},
+    poolId: '0',
+    lpToken: {
+      quantity: '0',
+      tokenId: '0',
+    },
+  },
+  {
+    tokenA: {quantity: '1', tokenId: 'tokenA'},
+    tokenB: {quantity: '0', tokenId: 'tokenB'},
+    ptPriceTokenA: '1',
+    ptPriceTokenB: '1',
+    fee: '0', // 0.3%
+    provider: 'minswap',
+    batcherFee: {quantity: '0', tokenId: ''},
+    deposit: {quantity: '0', tokenId: ''},
+    poolId: '0',
+    lpToken: {
+      quantity: '0',
+      tokenId: '0',
+    },
+  },
+  {
+    tokenA: {quantity: '10000000000', tokenId: 'tokenA'},
+    tokenB: {quantity: '10000000000', tokenId: 'tokenB'},
+    ptPriceTokenA: '1',
+    ptPriceTokenB: '1',
+    fee: '0', // 0.3%
+    provider: 'minswap',
+    batcherFee: {quantity: '0', tokenId: ''},
+    deposit: {quantity: '0', tokenId: ''},
+    poolId: '0',
+    lpToken: {
+      quantity: '0',
+      tokenId: '0',
+    },
+  },
+]
+
 const mockedOrderCalculations1: SwapOrderCalculation[] = [
   {
     order: {
@@ -1509,6 +1632,7 @@ export const mocks = {
   mockedPools2,
   mockedPools3,
   mockedPools4,
+  mockedPools5,
 
   mockedOrderCalculations1,
   mockedOrderCalculations2,

@@ -58,23 +58,23 @@ export const makeOrderCalculations = ({
     // pools that with not enough supply will be filtered out
     const isBuyTokenA = buy.tokenId === pool.tokenA.tokenId
     const poolSupply = isBuyTokenA ? pool.tokenA.quantity : pool.tokenB.quantity
-    const hasSupply = !Quantities.isGreaterThan(
-      buy.quantity,
-      poolSupply ?? Quantities.zero,
-    )
+    const supplyRequired =
+      (!Quantities.isZero(buy.quantity) || !Quantities.isZero(sell.quantity)) &&
+      Quantities.isZero(poolSupply)
+    const hasSupply =
+      !Quantities.isGreaterThan(buy.quantity, poolSupply ?? Quantities.zero) &&
+      !supplyRequired
 
     // lf is sell side % of quantity ie. XToken 100 * 1% = 1 XToken
     const liquidityFee: Balance.Amount = getLiquidityProviderFee(pool.fee, sell)
 
-    const [ptPriceBuy, ptPriceSell] = isBuyTokenA
-      ? [new BigNumber(pool.ptPriceTokenA), new BigNumber(pool.ptPriceTokenB)]
-      : [new BigNumber(pool.ptPriceTokenB), new BigNumber(pool.ptPriceTokenA)]
+    const ptPriceSell = isBuyTokenA
+      ? new BigNumber(pool.ptPriceTokenB)
+      : new BigNumber(pool.ptPriceTokenA)
 
     // ffee is based on PT value range + LP holding range (sides may need conversion, when none is PT)
     // TODO: it needs update, prices by muesli are provided in ADA, quantities in atomic units
     const frontendFeeInfo = getFrontendFee({
-      sell,
-      buy,
       lpTokenHeld,
       primaryTokenId,
       sellInPrimaryTokenValue: {
@@ -82,18 +82,8 @@ export const makeOrderCalculations = ({
         quantity: ptPriceSell.isZero()
           ? Quantities.zero
           : asQuantity(
-              new BigNumber(amounts.sell.quantity)
+              new BigNumber(sell.quantity)
                 .dividedBy(ptPriceSell)
-                .integerValue(BigNumber.ROUND_CEIL),
-            ),
-      },
-      buyInPrimaryTokenValue: {
-        tokenId: primaryTokenId,
-        quantity: ptPriceBuy.isZero()
-          ? Quantities.zero
-          : asQuantity(
-              new BigNumber(amounts.buy.quantity)
-                .dividedBy(ptPriceBuy)
                 .integerValue(BigNumber.ROUND_CEIL),
             ),
       },
