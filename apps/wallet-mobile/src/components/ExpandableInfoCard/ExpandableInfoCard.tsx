@@ -72,13 +72,13 @@ export const HeaderWrapper = ({
   onPress: () => void
 }) => {
   return (
-    <View style={styles.flexBetween}>
-      {children}
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.flexBetween}>
+        {children}
 
-      <TouchableOpacity onPress={onPress}>
         {expanded ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   )
 }
 

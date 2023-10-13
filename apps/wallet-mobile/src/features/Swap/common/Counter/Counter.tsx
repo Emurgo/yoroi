@@ -18,11 +18,15 @@ export const Counter = ({openingText, counter, unitsText, closingText, style}: C
       <Text style={styles.counterText}>{openingText}</Text>
 
       <Text>
-        <Text style={styles.counterTextBold}> {counter}</Text>
+        <Text style={styles.counterTextBold}> {counter} </Text>
 
         {unitsText !== undefined && <Text style={styles.counterTextBold}> {unitsText ?? ''} </Text>}
 
-        <Text style={styles.counterText}> {closingText ?? ''}</Text>
+        {closingText !== undefined && (
+          <Text style={[openingText != undefined ? styles.counterTextBold : styles.counterText]}>
+            {closingText ?? ''}
+          </Text>
+        )}
       </Text>
     </View>
   )

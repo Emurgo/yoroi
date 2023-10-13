@@ -326,7 +326,7 @@ export const messages = defineMessages({
   },
   transactionSigned: {
     id: 'swap.swapScreen.transactionSigned',
-    defaultMessage: '!!!Transaction signed',
+    defaultMessage: '!!!Transaction submitted',
   },
   transactionDisplay: {
     id: 'swap.swapScreen.transactionDisplay',

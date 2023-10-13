@@ -72,7 +72,6 @@ export const BottomSheetModal = ({
       <BottomSheet
         ref={bottomSheetRef}
         index={isOpen ? 1 : 0}
-        contentHeight={900}
         snapPoints={snapPoints}
         backdropComponent={(props) =>
           showBackdropComp === false ? (
@@ -117,6 +116,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    paddingBottom: 40,
   },
   header: {
     flexDirection: 'row',
