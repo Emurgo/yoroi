@@ -108,7 +108,7 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
 
   return (
     <TouchableOpacity
-      style={[styles.item]}
+      style={[styles.item, isDisabled && styles.disabled]}
       onPress={handleOnTokenSelection}
       testID="selectTokenButton"
       disabled={isDisabled}
@@ -220,5 +220,8 @@ const styles = StyleSheet.create({
   },
   counter: {
     paddingVertical: 16,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 })
