@@ -11,12 +11,9 @@ import {asQuantity} from '../../../utils/asQuantity'
 /**
  * Calculates the frontend fee and selects a discount tier for a swap transaction.
  *
- * @param sell - The amount of tokens being sold.
- * @param buy - The amount of tokens being bought.
  * @param lpTokenHeld - The amount of LP (liquidity provider) token, is used to calc discount tier.
  * @param primaryTokenId - The ID of the primary token, available in the manager.
  * @param sellInPrimaryTokenValue - The value of the sell amount in terms of the primary token.
- * @param buyInPrimaryTokenValue - The value of the buy amount in terms of the primary token.
  * @param discountTiers - An array of discount tiers for lp token holders. Defaults to milkHoldersDiscountTiers.
  *
  * @returns An object containing the frontend fee and the selected discount tier.
