@@ -31,7 +31,7 @@ export const SelectSellTokenFromListScreen = () => {
   })
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['left', 'right']}>
       <Boundary>
         <TokenList />
       </Boundary>
@@ -184,6 +184,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    display: 'flex',
+    justifyContent: 'flex-start',
   },
   ph: {
     paddingHorizontal: 16,
@@ -197,6 +199,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.BORDER_GRAY,
   },
   list: {
+    paddingTop: 16,
     flex: 1,
   },
   image: {

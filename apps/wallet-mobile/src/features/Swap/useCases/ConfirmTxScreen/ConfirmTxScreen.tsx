@@ -73,7 +73,7 @@ export const ConfirmTxScreen = () => {
   const txIsLoading = authenticating || processingTx
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['left', 'right']}>
       <TransactionSummary />
 
       <Actions>
@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: COLORS.WHITE,
     justifyContent: 'space-between',
+    paddingTop: 16,
   },
   actions: {
     paddingVertical: 16,
