@@ -96,7 +96,7 @@ export const Quantities = {
 
     if (parts.length >= 2) {
       const [int, dec] = parts
-      // trailing `1` is to allow user type `1.0` without losing the decimal part
+      // trailing `1` is to allow the user to type `1.0` without losing the decimal part
       fullDecValue = `${int}${decimalSeparator}${dec?.slice(0, precision)}1`
       value = `${int}${decimalSeparator}${dec?.slice(0, precision)}`
       fullDecFormat = new BigNumber(

@@ -209,4 +209,11 @@ describe('Quantities', () => {
       ['1.234', '123.4'],
     )
   })
+
+  it('should parse whole numbers', () => {
+    expect(Quantities.parseFromText('123', 2, mockNumberLocale)).toEqual([
+      '123',
+      '12300',
+    ])
+  })
 })
