@@ -22,41 +22,19 @@ import {asQuantity} from '../../../utils/asQuantity'
  * @returns An object containing the frontend fee and the selected discount tier.
  */
 export const getFrontendFee = ({
-  sell,
-  buy,
   lpTokenHeld,
   primaryTokenId,
   sellInPrimaryTokenValue,
-  buyInPrimaryTokenValue,
   discountTiers = milkHoldersDiscountTiers,
 }: {
-  sell: Balance.Amount
-  buy: Balance.Amount
   primaryTokenId: Balance.TokenInfo['id']
   lpTokenHeld?: Balance.Amount
   discountTiers?: ReadonlyArray<SwapDiscountTier>
-  // not implemented yet (for now only ffee is added only if ADA is one of the pair)
-  sellInPrimaryTokenValue?: Balance.Amount
-  buyInPrimaryTokenValue?: Balance.Amount
+  sellInPrimaryTokenValue: Balance.Amount
 }): Readonly<{
   fee: Balance.Amount
   discountTier: SwapDiscountTier | undefined
 }> => {
-  // discover trade value in ADA (sell/buy/max by pairing)
-  // it should range around 50/50
-  const maxPrimaryValueSellBuy = Quantities.max(
-    sellInPrimaryTokenValue?.quantity ?? Quantities.zero,
-    buyInPrimaryTokenValue?.quantity ?? Quantities.zero,
-  )
-  let primaryTokenBiggerPairValue: Balance.Quantity
-  if (sell.tokenId === primaryTokenId) {
-    primaryTokenBiggerPairValue = sell.quantity
-  } else if (buy.tokenId === primaryTokenId) {
-    primaryTokenBiggerPairValue = buy.quantity
-  } else {
-    primaryTokenBiggerPairValue = maxPrimaryValueSellBuy
-  }
-
   // identify the discount
   const discountTier = discountTiers.find(
     (tier) =>
@@ -65,14 +43,14 @@ export const getFrontendFee = ({
         tier.secondaryTokenBalanceThreshold,
       ) &&
       Quantities.isGreaterThanOrEqualTo(
-        primaryTokenBiggerPairValue,
+        sellInPrimaryTokenValue.quantity,
         tier.primaryTokenValueThreshold,
       ),
   )
 
   // calculate the fee
   const fee = asQuantity(
-    new BigNumber(primaryTokenBiggerPairValue)
+    new BigNumber(sellInPrimaryTokenValue.quantity)
       .times(discountTier?.variableFeeMultiplier ?? 0)
       .integerValue(BigNumber.ROUND_CEIL)
       .plus(discountTier?.fixedFee ?? 0),
