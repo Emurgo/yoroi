@@ -1,3 +1,4 @@
+import {SwapApi} from '@yoroi/types/lib/swap/api'
 import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
@@ -10,10 +11,13 @@ import {ConfirmRawTxWithPassword} from './ConfirmRawTxWithPassword'
 type Props = {
   onCancel: () => void
   onConfirm?: (rootKey: string) => Promise<void>
-  onHWConfirm?: ({useUSB}: {useUSB: boolean}) => Promise<void>
+  onHWConfirm?: () => void
+  utxo: string
+  bech32Address: string
+  cancelOrder: SwapApi['cancelOrder']
 }
 
-export const ConfirmRawTx = ({onConfirm, onHWConfirm, onCancel}: Props) => {
+export const ConfirmRawTx = ({onConfirm, onHWConfirm, onCancel, utxo, bech32Address, cancelOrder}: Props) => {
   const wallet = useSelectedWallet()
 
   if (wallet.isHW) {
@@ -23,7 +27,12 @@ export const ConfirmRawTx = ({onConfirm, onHWConfirm, onCancel}: Props) => {
           <ModalError error={error} resetErrorBoundary={resetErrorBoundary} onCancel={onCancel} />
         )}
       >
-        <ConfirmRawTxWithHW onConfirm={onHWConfirm} />
+        <ConfirmRawTxWithHW
+          cancelOrder={cancelOrder}
+          onConfirm={onHWConfirm}
+          utxo={utxo}
+          bech32Address={bech32Address}
+        />
       </ErrorBoundary>
     )
   }
