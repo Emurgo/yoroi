@@ -2,7 +2,12 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Icon, Text} from '../../../../components'
-import {BluetoothDisabledError, RejectedByUserError} from '../../../../yoroi-wallets/hw'
+import {
+  BluetoothDisabledError,
+  GeneralConnectionError,
+  LedgerUserError,
+  RejectedByUserError,
+} from '../../../../yoroi-wallets/hw'
 import {useStrings} from '../strings'
 
 type Props = {
@@ -35,7 +40,15 @@ export const ModalError = ({error, resetErrorBoundary, onCancel}: Props) => {
 
 const getErrorMessage = (
   error: Error,
-  strings: Record<'error' | 'rejectedByUser' | 'bluetoothDisabledError', string>,
+  strings: Record<
+    | 'error'
+    | 'rejectedByUser'
+    | 'bluetoothDisabledError'
+    | 'ledgerUserError'
+    | 'ledgerGeneralConnectionError'
+    | 'ledgerBluetoothDisabledError',
+    string
+  >,
 ): string => {
   if (error instanceof RejectedByUserError) {
     return strings.rejectedByUser
@@ -43,6 +56,18 @@ const getErrorMessage = (
 
   if (error instanceof BluetoothDisabledError) {
     return strings.bluetoothDisabledError
+  }
+
+  if (error instanceof LedgerUserError) {
+    return strings.ledgerUserError
+  }
+
+  if (error instanceof GeneralConnectionError) {
+    return strings.ledgerGeneralConnectionError
+  }
+
+  if (error instanceof BluetoothDisabledError) {
+    return strings.ledgerBluetoothDisabledError
   }
 
   return `${strings.error}: ${error.message}`
