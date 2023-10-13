@@ -136,6 +136,7 @@ const getStories = () => {
     "./src/features/Swap/common/ConfirmRawTx/ConfirmRawTx.stories.tsx": require("../src/features/Swap/common/ConfirmRawTx/ConfirmRawTx.stories.tsx"),
     "./src/features/Swap/common/ConfirmWithSpendingPassword/ConfirmWithSpendingPassword.stories.tsx": require("../src/features/Swap/common/ConfirmWithSpendingPassword/ConfirmWithSpendingPassword.stories.tsx"),
     "./src/features/Swap/common/LiquidityPool/LiquidityPool.stories.tsx": require("../src/features/Swap/common/LiquidityPool/LiquidityPool.stories.tsx"),
+    "./src/features/Swap/common/ModalError/ModalError.stories.tsx": require("../src/features/Swap/common/ModalError/ModalError.stories.tsx"),
     "./src/features/Swap/common/SelectPool/SelectPoolFromList/SelectPoolFromList.stories.tsx": require("../src/features/Swap/common/SelectPool/SelectPoolFromList/SelectPoolFromList.stories.tsx"),
     "./src/features/Swap/useCases/ConfirmTxScreen/ConfirmTxScreen.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/ConfirmTxScreen.stories.tsx"),
     "./src/features/Swap/useCases/ConfirmTxScreen/ShowFailedTxScreen/ShowFailedTxScreen.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/ShowFailedTxScreen/ShowFailedTxScreen.stories.tsx"),

@@ -17,6 +17,7 @@ import {Copy} from './Copy'
 import {CopySuccess} from './CopySuccess'
 import {Cross} from './Cross'
 import {CrossCircle} from './CrossCircle'
+import {Danger} from './Danger'
 import {DappConnector} from './DappConnector'
 import {Delete} from './Delete'
 import {Device} from './Device'
@@ -204,4 +205,5 @@ export const Icon = {
   WingRiders,
   VyfiSwap,
   SpectrumSwap,
+  Danger,
 }

@@ -118,6 +118,12 @@ export const useStrings = () => {
     generalErrorTitle: intl.formatMessage(errorMessages.generalError.title),
     generalErrorMessage: (e) => intl.formatMessage(errorMessages.generalError.message, {message: e}),
     continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
+    cancel: intl.formatMessage(globalMessages.cancel),
+    tryAgain: intl.formatMessage(globalMessages.tryAgain),
+    bluetoothDisabledError: intl.formatMessage(ledgerMessages.bluetoothDisabledError),
+    ledgerBluetoothDisabledError: intl.formatMessage(ledgerMessages.bluetoothDisabledError),
+    ledgerGeneralConnectionError: intl.formatMessage(ledgerMessages.connectionError),
+    ledgerUserError: intl.formatMessage(ledgerMessages.connectionError),
   }
 }
 

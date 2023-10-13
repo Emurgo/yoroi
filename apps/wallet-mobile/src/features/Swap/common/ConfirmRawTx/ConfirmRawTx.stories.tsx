@@ -10,21 +10,25 @@ import {mocks} from '../mocks'
 import {SwapFormProvider} from '../SwapFormProvider'
 import {ConfirmRawTx} from './ConfirmRawTx'
 
+const bech32Address = 'addr1vpu5vlrf4xkxv2qpwngf6cjhtw542ayty80v8dyr49rf5eg0yu80w'
+const utxo = 'utxo'
+const cancelOrder = () => Promise.resolve('cbor')
+
 storiesOf('ConfirmRawTx', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('ConfirmRawTxWithPassword', () => (
     <Provider wallet={walletMocks.wallet}>
-      <ConfirmRawTx />
+      <ConfirmRawTx utxo={utxo} bech32Address={bech32Address} cancelOrder={cancelOrder} />
     </Provider>
   ))
   .add('ConfirmRawTxWithOs', () => (
     <Provider wallet={{...walletMocks.wallet, isEasyConfirmationEnabled: true}}>
-      <ConfirmRawTx />
+      <ConfirmRawTx utxo={utxo} bech32Address={bech32Address} cancelOrder={cancelOrder} />
     </Provider>
   ))
   .add('ConfirmRawTxWithHw', () => (
     <Provider wallet={{...walletMocks.wallet, isHW: true}}>
-      <ConfirmRawTx />
+      <ConfirmRawTx utxo={utxo} bech32Address={bech32Address} cancelOrder={cancelOrder} />
     </Provider>
   ))
 

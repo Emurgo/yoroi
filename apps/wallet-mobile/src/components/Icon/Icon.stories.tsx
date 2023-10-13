@@ -230,6 +230,8 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.Logout />} title="Logout" />
 
         <Item icon={<Icon.Resync />} title="Resync" />
+
+        <Item icon={<Icon.Danger />} title="Danger" />
       </ScrollView>
     </FilterProvider>
   )
