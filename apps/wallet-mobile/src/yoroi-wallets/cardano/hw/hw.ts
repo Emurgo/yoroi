@@ -91,7 +91,6 @@ const isAdaAppClosedError = (e: Error | unknown): boolean => {
 }
 
 const mapLedgerError = (e: Error | any): Error | LocalizableError => {
-  console.log('map ledger error', e)
   if (isAdaAppClosedError(e)) {
     Logger.info('ledgerUtils::mapLedgerError: Ada app closed', e)
     return new AdaAppClosedError()
