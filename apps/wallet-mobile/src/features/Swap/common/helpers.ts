@@ -10,19 +10,22 @@ export const createYoroiEntry = (
 ): YoroiEntry => {
   const amountEntry = {}
 
-  const tokenId = createOrder.amounts.sell.tokenId
-  if (tokenId != null && createOrder.amounts.sell.quantity !== undefined) {
-    if (tokenId === wallet.primaryTokenInfo.id) {
-      amountEntry[tokenId] = Quantities.sum([
-        createOrder.selectedPool.deposit.quantity,
-        createOrder.selectedPool.batcherFee.quantity,
-        createOrder.amounts.sell.quantity,
-      ])
-    } else {
-      amountEntry[''] = createOrder.selectedPool.deposit.quantity
-      amountEntry[tokenId] = createOrder.amounts.sell.quantity
-    }
+  const sellTokenId = createOrder.amounts.sell.tokenId
+  // summing fees is missing the frontend fee
+  if (sellTokenId === wallet.primaryTokenInfo.id) {
+    amountEntry[sellTokenId] = Quantities.sum([
+      createOrder.selectedPool.deposit.quantity,
+      createOrder.selectedPool.batcherFee.quantity,
+      createOrder.amounts.sell.quantity,
+    ])
+  } else {
+    amountEntry[wallet.primaryTokenInfo.id] = Quantities.sum([
+      createOrder.selectedPool.deposit.quantity,
+      createOrder.selectedPool.batcherFee.quantity,
+    ])
+    amountEntry[sellTokenId] = createOrder.amounts.sell.quantity
   }
+
   return {
     address: address,
     amounts: amountEntry,
