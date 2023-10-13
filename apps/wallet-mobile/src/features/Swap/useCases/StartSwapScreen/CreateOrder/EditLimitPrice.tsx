@@ -45,9 +45,7 @@ export const EditLimitPrice = () => {
   }, [orderData.type, orderData.limitPrice, orderData.amounts.sell, denomination, orderData.selectedPoolCalculation])
 
   const onChange = (text: string) => {
-    const [formattedPrice, price] = Quantities.parseFromText(text, denomination, numberLocale)
-    const value = Quantities.denominated(price, denomination)
-
+    const [formattedPrice, price] = Quantities.parseFromText(text, denomination, numberLocale, PRECISION)
     setText(formattedPrice)
     limitPriceChanged(price)
   }
