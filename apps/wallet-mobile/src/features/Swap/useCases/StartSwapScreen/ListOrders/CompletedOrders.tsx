@@ -5,7 +5,7 @@ import _ from 'lodash'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 
 import {
@@ -46,7 +46,7 @@ const compareByDate = (a: MappedRawOrder, b: MappedRawOrder) => {
   return new Date(b.date).getTime() - new Date(a.date).getTime()
 }
 
-const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[] => {
+const findCompletedOrderTx = (transactions: TransactionInfo[], onError: (err: Error) => void): MappedRawOrder[] => {
   const sentTransactions = transactions.filter((tx) => tx.direction === 'SENT')
   const receivedTransactions = transactions.filter((tx) => tx.direction === 'RECEIVED')
 
@@ -69,7 +69,7 @@ const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[]
           result['metadata'] = metadata
           return acc.concat(result as MappedRawOrder)
         } catch (error) {
-          console.warn('Error parsing json metadata', error)
+          onError(error as Error)
         }
       }
       return acc
@@ -85,7 +85,9 @@ export const CompletedOrders = () => {
 
   const transactionsInfos = useTransactionInfos(wallet)
 
-  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos))
+  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos), (error: Error) => {
+    Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
+  })
 
   const {track} = useMetrics()
 
