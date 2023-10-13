@@ -41,7 +41,6 @@ export const TopTokenActions = () => {
 
   const handleRefresh = () => {
     Keyboard.dismiss()
-
     refetch()
   }
 
@@ -66,14 +65,14 @@ const RefreshIcon = ({onPress, disabled}: {onPress: () => void; disabled: boolea
   const handleOnPress = () => {
     Animated.timing(spin, {
       toValue: 1,
-      duration: 1000,
+      duration: 200,
       useNativeDriver: true,
     }).start(() => spin.setValue(0))
     onPress()
   }
 
   return (
-    <TouchableOpacity onPress={handleOnPress} disabled={disabled}>
+    <TouchableOpacity activeOpacity={0.5} onPress={handleOnPress} disabled={disabled}>
       <Animated.View
         style={{
           transform: [
