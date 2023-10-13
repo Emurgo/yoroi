@@ -83,19 +83,23 @@ export const Quantities = {
     if (sanitized.startsWith(decimalSeparator))
       return [`0${decimalSeparator}`, `0`] as [string, Balance.Quantity]
     const parts = sanitized.split(decimalSeparator)
+
+    let fullDecValue = sanitized
+    let value = sanitized
+
     const isDec = parts.length >= 2
 
-    const fullDecValue = isDec
-      ? `${parts[0]}${decimalSeparator}${parts[1]?.slice(0, precision)}1`
-      : sanitized
+    if (isDec) {
+      const [int, dec] = parts
+      fullDecValue = `${int}${decimalSeparator}${dec?.slice(0, precision)}1`
+      value = `${int}${decimalSeparator}${dec?.slice(0, precision)}`
+    }
+
     const fullDecFormat = new BigNumber(
       fullDecValue.replace(decimalSeparator, '.'),
     ).toFormat()
     const input = isDec ? fullDecFormat.slice(0, -1) : fullDecFormat
 
-    const value = isDec
-      ? `${parts[0]}${decimalSeparator}${parts[1]?.slice(0, precision)}`
-      : sanitized
     const quantity = new BigNumber(value.replace(decimalSeparator, '.'))
       .decimalPlaces(precision)
       .shiftedBy(denomination)
