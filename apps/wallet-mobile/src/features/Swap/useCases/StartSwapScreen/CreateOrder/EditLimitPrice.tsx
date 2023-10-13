@@ -32,10 +32,11 @@ export const EditLimitPrice = () => {
   const tokenToSellName = isSellTouched ? sellTokenInfo.ticker ?? sellTokenInfo.name : '-'
   const tokenToBuyName = isBuyTouched ? buyTokenInfo.ticker ?? buyTokenInfo.name : '-'
 
+  const limitPriceFromState = Quantities.format(orderData.limitPrice ?? Quantities.zero, denomination, PRECISION)
+
   React.useEffect(() => {
     if (orderData.type === 'limit') {
-      !inputRef?.current?.isFocused() &&
-        setText(Quantities.format(orderData.limitPrice ?? Quantities.zero, denomination, PRECISION))
+      !inputRef?.current?.isFocused() && setText(limitPriceFromState)
     } else {
       setText(
         Quantities.format(orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero, denomination, PRECISION),
@@ -44,16 +45,17 @@ export const EditLimitPrice = () => {
   }, [orderData.type, orderData.limitPrice, orderData.amounts.sell, denomination, orderData.selectedPoolCalculation])
 
   const onChange = (text: string) => {
-    const [formattedPrice, price] = Quantities.parseFromText(text, PRECISION, numberLocale)
-    const value = Quantities.denominated(price, PRECISION)
+    const [formattedPrice, price] = Quantities.parseFromText(text, denomination, numberLocale)
+    const value = Quantities.denominated(price, denomination)
 
     setText(formattedPrice)
-    limitPriceChanged(value)
+    limitPriceChanged(price)
   }
 
   return (
     <View style={[styles.container, disabled && styles.disabled]}>
       <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
+      <Text>{limitPriceFromState}</Text>
 
       <View style={styles.content}>
         <AmountInput onChange={onChange} value={text} editable={!disabled} inputRef={inputRef} />
