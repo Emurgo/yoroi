@@ -13,8 +13,8 @@ const supportedProviders: ReadonlyArray<Swap.SupportedProvider> = [
   'wingriders',
   'sundaeswap',
   'muesliswap',
-  'muesliswap_v2',
   'vyfi',
+  // 'muesliswap_v2', // TODO: enable after more clarification - right now user is not receiving tokens back when choosing this pool
 ] as const
 
 const LiquidityDexList = () => {
