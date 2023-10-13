@@ -9,7 +9,7 @@ import {ConfirmRawTxWithOs} from './ConfirmRawTxWithOs'
 import {ConfirmRawTxWithPassword} from './ConfirmRawTxWithPassword'
 
 type Props = {
-  onCancel: () => void
+  onCancel?: () => void
   onConfirm?: (rootKey: string) => Promise<void>
   onHWConfirm?: () => void
   utxo: string
