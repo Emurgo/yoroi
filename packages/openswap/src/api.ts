@@ -113,11 +113,11 @@ export const supportedNetworks: ReadonlyArray<Network> = [
 export const supportedProviders: ReadonlyArray<Provider> = [
   'minswap',
   'muesliswap_v1',
-  'muesliswap_v2',
   'muesliswap_v3',
   'muesliswap_v4',
   'spectrum',
   'sundaeswap',
   'vyfi',
   'wingriders',
+  // 'muesliswap_v2' // TODO: enable after more clarification - right now user is not receiving tokens back when choosing this pool
 ] as const

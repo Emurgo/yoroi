@@ -5,7 +5,7 @@ import _ from 'lodash'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 
 import {
@@ -21,13 +21,14 @@ import {
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {useTokenInfo, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {useSync, useTokenInfo, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
 import {Counter} from '../../../common/Counter/Counter'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {MAX_DECIMALS} from './mapOrders'
+
+const PRECISION = 14
 
 export type MappedRawOrder = {
   id: string
@@ -41,44 +42,52 @@ export type MappedRawOrder = {
   date: string
 }
 
-const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[] => {
+const compareByDate = (a: MappedRawOrder, b: MappedRawOrder) => {
+  return new Date(b.date).getTime() - new Date(a.date).getTime()
+}
+
+const findCompletedOrderTx = (transactions: TransactionInfo[], onError: (err: Error) => void): MappedRawOrder[] => {
   const sentTransactions = transactions.filter((tx) => tx.direction === 'SENT')
   const receivedTransactions = transactions.filter((tx) => tx.direction === 'RECEIVED')
 
-  const filteredTx = sentTransactions.reduce((acc, sentTx) => {
-    const result: {id?: string; metadata?: TxMetadataInfo; date?: string} = {}
-    receivedTransactions.forEach((receivedTx) => {
-      receivedTx.inputs.forEach((input) => {
-        if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id) {
-          result['id'] = sentTx?.id
-          result['metadata'] = sentTx?.metadata
-          result['date'] = receivedTx?.lastUpdatedAt
-        }
+  const filteredTx = sentTransactions
+    .reduce((acc, sentTx) => {
+      const result: {id?: string; metadata?: TxMetadataInfo; date?: string} = {}
+      receivedTransactions.forEach((receivedTx) => {
+        receivedTx.inputs.forEach((input) => {
+          if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id && receivedTx.metadata !== null) {
+            result['id'] = sentTx?.id
+            result['metadata'] = sentTx?.metadata
+            result['date'] = receivedTx?.lastUpdatedAt
+          }
+        })
       })
-    })
 
-    if (result['id'] !== undefined && result['metadata'] !== undefined) {
-      try {
-        const metadata = JSON.parse(result.metadata as string)
-        result['metadata'] = metadata
-        return acc.concat(result as MappedRawOrder)
-      } catch (error) {
-        console.warn('Error parsing json metadata', error)
+      if (result['id'] !== undefined && result['metadata'] !== undefined) {
+        try {
+          const metadata = JSON.parse(result.metadata as string)
+          result['metadata'] = metadata
+          return acc.concat(result as MappedRawOrder)
+        } catch (error) {
+          onError(error as Error)
+        }
       }
-    }
-    return acc
-  }, [] as Array<MappedRawOrder>)
-
-  return filteredTx.filter((tx) => tx.metadata !== null)
+      return acc
+    }, [] as Array<MappedRawOrder>)
+    .sort(compareByDate)
+  return filteredTx.filter((tx) => tx.metadata !== null).sort(compareByDate)
 }
 
 export const CompletedOrders = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const {sync} = useSync(wallet)
 
   const transactionsInfos = useTransactionInfos(wallet)
 
-  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos))
+  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos), (error: Error) => {
+    Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
+  })
 
   const {track} = useMetrics()
 
@@ -87,6 +96,11 @@ export const CompletedOrders = () => {
       track.swapConfirmedPageViewed({swap_tab: 'Completed Orders'})
     }, [track]),
   )
+
+  React.useEffect(() => {
+    sync()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>
@@ -122,7 +136,8 @@ export const ExpandableOrder = ({order}: {order: MappedRawOrder}) => {
   const buyQuantity = Quantities.format(metadata.buyQuantity as Balance.Quantity, buyTokenInfo.decimals ?? 0)
   const sellQuantity = Quantities.format(metadata.sellQuantity as Balance.Quantity, sellTokenInfo.decimals ?? 0)
   const tokenPrice = asQuantity(new BigNumber(metadata.sellQuantity).dividedBy(metadata.buyQuantity).toString())
-  const marketPrice = Quantities.format(tokenPrice, sellTokenInfo.decimals ?? 0, MAX_DECIMALS)
+  const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
+  const marketPrice = Quantities.format(tokenPrice ?? Quantities.zero, denomination, PRECISION)
   const buyLabel = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
   const sellLabel = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
 

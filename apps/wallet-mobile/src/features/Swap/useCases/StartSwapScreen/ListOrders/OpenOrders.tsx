@@ -1,4 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
+import {isString} from '@yoroi/common'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
@@ -32,7 +33,6 @@ import {
 } from '../../../../../yoroi-wallets/cardano/common/signatureUtils'
 import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {RejectedByUserError} from '../../../../../yoroi-wallets/hw'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
 import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
@@ -117,42 +117,37 @@ export const OpenOrders = () => {
     navigateToTxHistory()
   }
 
-  const onRawTxHwConfirm = async ({useUSB, orderId}: {useUSB: boolean; orderId: string}) => {
-    try {
-      const order = normalizedOrders.find((o) => o.id === orderId)
-      if (!order || order.owner === undefined || order.utxo === undefined) return
-      const {utxo, owner: bech32Address} = order
-      const collateralUtxo = await getCollateralUtxo()
-      const addressHex = await convertBech32ToHex(bech32Address)
-      const originalCbor = await swapApiOrder.cancel({
-        utxos: {collateral: collateralUtxo, order: utxo},
-        address: addressHex,
-      })
-      const {cbor} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
-      await wallet.signSwapCancellationWithLedger(cbor, useUSB)
-
-      closeModal()
-      navigateToTxHistory()
-    } catch (e) {
-      if (e instanceof RejectedByUserError) {
-        Alert.alert(strings.error, strings.rejectedByUser)
-        closeModal()
-        return
-      }
-
-      if (e instanceof Error) {
-        Alert.alert(strings.error, e.message)
-        closeModal()
-      }
-    }
+  const onRawTxHwConfirm = () => {
+    closeModal()
+    navigateToTxHistory()
   }
 
-  const onOrderCancelConfirm = (id: string) => {
+  const showCollateralNotFoundAlert = () => {
+    Alert.alert(
+      strings.collateralNotFound,
+      strings.noActiveCollateral,
+      [{text: strings.assignCollateral, onPress: navigateToCollateralSettings}],
+      {cancelable: true, onDismiss: () => true},
+    )
+  }
+
+  const onOrderCancelConfirm = (order: MappedOpenOrder) => {
+    if (!isString(order.utxo) || !isString(order.owner)) return
+
+    if (!wallet.getCollateralInfo().utxo) {
+      showCollateralNotFoundAlert()
+      return
+    }
+
     openModal(
       strings.signTransaction,
       <ConfirmRawTx
-        onConfirm={(rootKey) => onRawTxConfirm(rootKey, id)}
-        onHWConfirm={({useUSB}) => onRawTxHwConfirm({useUSB, orderId: id})}
+        cancelOrder={swapApiOrder.cancel}
+        utxo={order.utxo}
+        bech32Address={order.owner}
+        onCancel={closeModal}
+        onConfirm={(rootKey) => onRawTxConfirm(rootKey, order.id)}
+        onHWConfirm={() => onRawTxHwConfirm()}
       />,
       400,
     )
@@ -163,12 +158,6 @@ export const OpenOrders = () => {
     const utxo = collateralInfo.utxo
 
     if (!utxo) {
-      Alert.alert(
-        strings.collateralNotFound,
-        strings.noActiveCollateral,
-        [{text: strings.assignCollateral, onPress: navigateToCollateralSettings}],
-        {cancelable: true, onDismiss: () => true},
-      )
       throw new Error('Collateral utxo not found')
     }
 
@@ -225,7 +214,6 @@ export const OpenOrders = () => {
       owner: bech32Address,
       fromTokenAmount,
       fromTokenInfo,
-      id,
       toTokenInfo,
       assetFromLabel,
       assetToLabel,
@@ -242,7 +230,7 @@ export const OpenOrders = () => {
       <ModalContent
         assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfo?.id ?? ''} variant="swap" />}
         assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfo?.id ?? ''} variant="swap" />}
-        onConfirm={() => onOrderCancelConfirm(id)}
+        onConfirm={() => onOrderCancelConfirm(order)}
         onBack={closeModal}
         assetFromLabel={assetFromLabel}
         assetToLabel={assetToLabel}
