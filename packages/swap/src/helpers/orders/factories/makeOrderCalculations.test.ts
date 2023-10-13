@@ -96,6 +96,14 @@ describe('makeOrderCalculations', () => {
           quantity: '30000000',
           tokenId: 'tokenA',
         },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '4000000',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '10000000',
+        },
       },
       buyAmountWithSlippage: {
         quantity: '148894355282',
@@ -196,6 +204,14 @@ describe('makeOrderCalculations', () => {
         liquidityFee: {
           quantity: '30000000',
           tokenId: 'tokenB',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '4000000',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '10000000',
         },
       },
       buyAmountWithSlippage: {
@@ -307,6 +323,14 @@ describe('makeOrderCalculations', () => {
           quantity: '30000000',
           tokenId: 'tokenA',
         },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '4000000',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '10000000',
+        },
       },
       buyAmountWithSlippage: {
         quantity: '148894355268',
@@ -417,6 +441,14 @@ describe('makeOrderCalculations', () => {
           quantity: '30000000',
           tokenId: 'tokenB',
         },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '4000000',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '10000000',
+        },
       },
       buyAmountWithSlippage: {
         quantity: '148894355268',
@@ -520,6 +552,14 @@ describe('makeOrderCalculations', () => {
         liquidityFee: {
           quantity: '0',
           tokenId: 'tokenA',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
         },
       },
       buyAmountWithSlippage: {
@@ -625,6 +665,14 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenA',
         },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
+        },
       },
       buyAmountWithSlippage: {
         quantity: '0',
@@ -728,6 +776,14 @@ describe('makeOrderCalculations', () => {
         liquidityFee: {
           quantity: '0',
           tokenId: 'tokenA',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
         },
       },
       buyAmountWithSlippage: {
@@ -833,6 +889,14 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
+        },
       },
       buyAmountWithSlippage: {
         quantity: '100',
@@ -936,6 +1000,14 @@ describe('makeOrderCalculations', () => {
         liquidityFee: {
           quantity: '0',
           tokenId: 'tokenA',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
         },
       },
       buyAmountWithSlippage: {
@@ -1041,6 +1113,14 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenA',
         },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
+        },
       },
       buyAmountWithSlippage: {
         quantity: '0',
@@ -1144,6 +1224,14 @@ describe('makeOrderCalculations', () => {
         liquidityFee: {
           quantity: '0',
           tokenId: 'tokenB',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
         },
       },
       buyAmountWithSlippage: {
@@ -1249,6 +1337,14 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
+        },
       },
       buyAmountWithSlippage: {
         quantity: '100',
@@ -1352,6 +1448,14 @@ describe('makeOrderCalculations', () => {
         liquidityFee: {
           quantity: '0',
           tokenId: 'tokenB',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
         },
       },
       buyAmountWithSlippage: {
@@ -1457,6 +1561,14 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
+        },
       },
       buyAmountWithSlippage: {
         quantity: '0',
@@ -1560,6 +1672,14 @@ describe('makeOrderCalculations', () => {
         liquidityFee: {
           quantity: '0',
           tokenId: 'tokenA',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
         },
       },
       buyAmountWithSlippage: {
@@ -1665,6 +1785,14 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenA',
         },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
+        },
       },
       buyAmountWithSlippage: {
         quantity: '100',
@@ -1758,6 +1886,14 @@ describe('makeOrderCalculations', () => {
         liquidityFee: {
           quantity: '0',
           tokenId: 'tokenB',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
         },
       },
       buyAmountWithSlippage: {
@@ -1853,6 +1989,14 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenA',
         },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
+        },
       },
       buyAmountWithSlippage: {
         quantity: '100',
@@ -1946,6 +2090,14 @@ describe('makeOrderCalculations', () => {
         liquidityFee: {
           quantity: '0',
           tokenId: 'tokenA',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
         },
       },
       buyAmountWithSlippage: {
@@ -2041,6 +2193,14 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
+        },
       },
       buyAmountWithSlippage: {
         quantity: '100',
@@ -2134,6 +2294,14 @@ describe('makeOrderCalculations', () => {
         liquidityFee: {
           quantity: '0',
           tokenId: 'tokenB',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
         },
       },
       buyAmountWithSlippage: {
@@ -2241,6 +2409,14 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '1050000',
+        },
       },
       buyAmountWithSlippage: {
         quantity: '100000000',
@@ -2347,6 +2523,14 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '1025000',
+        },
       },
       buyAmountWithSlippage: {
         quantity: '100000000',
@@ -2452,6 +2636,14 @@ describe('makeOrderCalculations', () => {
         liquidityFee: {
           quantity: '0',
           tokenId: 'tokenB',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '1020000',
         },
       },
       buyAmountWithSlippage: {
