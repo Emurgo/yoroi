@@ -15,6 +15,7 @@ import {BleError} from 'react-native-ble-plx'
 import {ledgerMessages} from '../../../i18n/global-messages'
 import LocalizableError from '../../../i18n/LocalizableError'
 import {
+  AdaAppClosedError,
   DeviceId,
   DeviceObj,
   GeneralConnectionError,
@@ -85,8 +86,16 @@ const isRejectedError = (e: Error | any): boolean => {
   return false
 }
 
+const isAdaAppClosedError = (e: Error | unknown): boolean => {
+  return e instanceof Error && e.message.includes('0x6e01')
+}
+
 const mapLedgerError = (e: Error | any): Error | LocalizableError => {
-  if (isUserError(e)) {
+  console.log('map ledger error', e)
+  if (isAdaAppClosedError(e)) {
+    Logger.info('ledgerUtils::mapLedgerError: Ada app closed', e)
+    return new AdaAppClosedError()
+  } else if (isUserError(e)) {
     Logger.info('ledgerUtils::mapLedgerError: User-side error', e)
     return new LedgerUserError()
   } else if (isRejectedError(e)) {
@@ -174,25 +183,29 @@ const connectionHandler = async (
 ): Promise<AppAda> => {
   let transport
 
-  if (useUSB) {
-    if (deviceObj == null) {
-      throw new Error('ledgerUtils::connectionHandler deviceObj is null')
+  try {
+    if (useUSB) {
+      if (deviceObj == null) {
+        throw new Error('ledgerUtils::connectionHandler deviceObj is null')
+      }
+
+      transport = await TransportHID.open(deviceObj)
+    } else {
+      if (deviceId == null) {
+        throw new Error('ledgerUtils::connectionHandler deviceId is null')
+      }
+
+      transport = await TransportBLE.open(deviceId)
     }
 
-    transport = await TransportHID.open(deviceObj)
-  } else {
-    if (deviceId == null) {
-      throw new Error('ledgerUtils::connectionHandler deviceId is null')
-    }
-
-    transport = await TransportBLE.open(deviceId)
+    const appAda = new AppAda(transport)
+    const versionResp: GetVersionResponse = await appAda.getVersion()
+    Logger.debug('ledgerUtils::connectionHandler: AppAda version', versionResp)
+    checkDeviceVersion(versionResp)
+    return appAda
+  } catch (e) {
+    throw mapLedgerError(e)
   }
-
-  const appAda = new AppAda(transport)
-  const versionResp: GetVersionResponse = await appAda.getVersion()
-  Logger.debug('ledgerUtils::connectionHandler: AppAda version', versionResp)
-  checkDeviceVersion(versionResp)
-  return appAda
 }
 
 export const getHWDeviceInfo = async (
