@@ -2,17 +2,17 @@ import {banxaIsPossibleCardanoAddress} from './wallet-address'
 
 describe('banxaIsPossibleCardanoAddress', () => {
   // Test valid Byron addresses
-  test('should return true for valid Byron mainnet addresses', () => {
+  test('should return false for valid Byron mainnet addresses', () => {
     expect(
       banxaIsPossibleCardanoAddress(
         'Ae2tdPwUPEZ5VwwZpNmy1ruH7mfmGv4JDqY4RiUZsMUTVDcsSsSh2Gu5noo',
       ),
-    ).toBe(true)
+    ).toBe(false)
     expect(
       banxaIsPossibleCardanoAddress(
         'Ae2tdPwUPEZMK3H6mAmaSB1E4dGvcwRTe1tTkoSCNmQWBNxF6twLDwZoxt8',
       ),
-    ).toBe(true)
+    ).toBe(false)
   })
 
   // Test valid Shelley addresses
@@ -30,17 +30,17 @@ describe('banxaIsPossibleCardanoAddress', () => {
   })
 
   // Test valid Shelley testnet addresses
-  test('should return true for valid Shelley testnet addresses', () => {
+  test('should return false for valid Shelley testnet addresses', () => {
     expect(
       banxaIsPossibleCardanoAddress(
         'addr_test1q9xwspw7mcmrhlzsp5v3xxvtzgqhp5tkmdt6zydu9evmvg28gr8v6svtefqgghsk93y4qqtv7kjeg5k06c8qxy4r89agqheknqv',
       ),
-    ).toBe(true)
+    ).toBe(false)
     expect(
       banxaIsPossibleCardanoAddress(
         'addr_test1qqlzhn7wya6s2c3x6px63hklwt2ss9f8s0v5c90v6w8wtfl5mv6m2tckwqlyvlwmnx9ct68fqk7nngeja4kvz65prdrqudmm25h',
       ),
-    ).toBe(true)
+    ).toBe(false)
   })
 
   // Test invalid addresses

@@ -1,5 +1,6 @@
-import {useSwap} from '@yoroi/swap'
+import {getMarketPrice, useSwap} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
+import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -9,7 +10,7 @@ import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../navigation'
 import {PoolIcon} from '../../PoolIcon/PoolIcon'
 import {useStrings} from '../../strings'
@@ -32,6 +33,8 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
   const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
   const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
+  const tokenToSellName = sellTokenInfo.ticker ?? sellTokenInfo.name
+  const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
 
   const handleOnPoolSelection = (pool: Swap.Pool) => {
     track.swapPoolChanged()
@@ -49,8 +52,13 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
   return (
     <View style={styles.container}>
       {pools.map((pool) => {
-        const formattedDepositInPt = `${Quantities.format(pool.deposit.quantity, decimals, decimals)} ${ticker}`
-        const formattedBatcherFeeInPt = `${Quantities.format(pool.batcherFee.quantity, decimals, decimals)} ${ticker}`
+        // TODO: Needs review and move to package
+        const tvl = asQuantity(
+          new BigNumber(pool.tokenA.quantity).dividedBy(new BigNumber(pool.ptPriceTokenA)).multipliedBy(2).toString(),
+        )
+        const formattedTvl = Quantities.format(tvl, decimals, 0)
+        const formattedBatcherFeeInPt = Quantities.format(pool.batcherFee.quantity, decimals, decimals)
+        const marketPrice = getMarketPrice(pool, orderData.amounts.sell)
 
         return (
           <View key={pool.poolId}>
@@ -75,14 +83,14 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
                       <Spacer height={8} />
 
                       <View style={styles.info}>
-                        <Text style={styles.infoLabel}>{strings.price}</Text>
+                        <Text style={styles.infoLabel}>{strings.marketPrice}</Text>
 
                         <Text style={styles.infoValue}>
-                          {Quantities.format(
-                            orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
+                          {`${Quantities.format(
+                            marketPrice ?? Quantities.zero,
                             denomination,
                             PRECISION,
-                          )}
+                          )} ${tokenToSellName}/${tokenToBuyName}`}
                         </Text>
                       </View>
                     </View>
@@ -91,9 +99,9 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
                       <Spacer height={8} />
 
                       <View style={styles.info}>
-                        <Text style={styles.infoLabel}>{`${strings.tvl}, ${wallet.primaryTokenInfo.ticker}`}</Text>
+                        <Text style={styles.infoLabel}>{`${strings.tvl}, ${ticker}`}</Text>
 
-                        <Text style={styles.infoValue}>{formattedDepositInPt}</Text>
+                        <Text style={styles.infoValue}>{formattedTvl}</Text>
                       </View>
                     </View>
 
@@ -111,9 +119,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
                       <Spacer height={8} />
 
                       <View style={styles.info}>
-                        <Text
-                          style={styles.infoLabel}
-                        >{`${strings.batcherFee}, ${wallet.primaryTokenInfo.ticker}`}</Text>
+                        <Text style={styles.infoLabel}>{`${strings.batcherFee}, ${ticker}`}</Text>
 
                         <Text style={styles.infoValue}>{formattedBatcherFeeInPt}</Text>
                       </View>

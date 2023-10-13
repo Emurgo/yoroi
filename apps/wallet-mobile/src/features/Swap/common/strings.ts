@@ -9,6 +9,7 @@ export const useStrings = () => {
     swapTitle: intl.formatMessage(messages.swapTitle),
     tokenSwap: intl.formatMessage(messages.tokenSwap),
     orderSwap: intl.formatMessage(messages.orderSwap),
+    dex: intl.formatMessage(messages.dex),
     marketButton: intl.formatMessage(messages.marketButton),
     limitButton: intl.formatMessage(messages.limitButton),
     swapFrom: intl.formatMessage(messages.swapFrom),
@@ -111,6 +112,18 @@ export const useStrings = () => {
     generalTxErrorMessage: intl.formatMessage(errorMessages.generalTxError.message),
     incorrectPasswordTitle: intl.formatMessage(errorMessages.incorrectPassword.title),
     incorrectPasswordMessage: intl.formatMessage(errorMessages.incorrectPassword.message),
+    notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
+    notEnoughSupply: intl.formatMessage(messages.notEnoughSupply),
+    noPool: intl.formatMessage(messages.noPool),
+    generalErrorTitle: intl.formatMessage(errorMessages.generalError.title),
+    generalErrorMessage: (e) => intl.formatMessage(errorMessages.generalError.message, {message: e}),
+    continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
+    cancel: intl.formatMessage(globalMessages.cancel),
+    tryAgain: intl.formatMessage(globalMessages.tryAgain),
+    bluetoothDisabledError: intl.formatMessage(ledgerMessages.bluetoothDisabledError),
+    ledgerBluetoothDisabledError: intl.formatMessage(ledgerMessages.bluetoothDisabledError),
+    ledgerGeneralConnectionError: intl.formatMessage(ledgerMessages.connectionError),
+    ledgerUserError: intl.formatMessage(ledgerMessages.connectionError),
   }
 }
 
@@ -285,7 +298,7 @@ export const messages = defineMessages({
   },
   poolFee: {
     id: 'swap.swapScreen.poolFee',
-    defaultMessage: '!!! Pool Fee',
+    defaultMessage: '!!! Dex Fee',
   },
   batcherFee: {
     id: 'swap.swapScreen.batcherFee',
@@ -319,11 +332,15 @@ export const messages = defineMessages({
   },
   transactionSigned: {
     id: 'swap.swapScreen.transactionSigned',
-    defaultMessage: '!!!Transaction signed',
+    defaultMessage: '!!!Transaction submitted',
   },
   transactionDisplay: {
     id: 'swap.swapScreen.transactionDisplay',
     defaultMessage: '!!!Your transactions will be displayed both in the list of transaction and Open swap orders',
+  },
+  dex: {
+    id: 'swap.swapScreen.dex',
+    defaultMessage: '!!! dex',
   },
   seeOnExplorer: {
     id: 'swap.swapScreen.seeOnExplorer',
@@ -504,5 +521,21 @@ export const messages = defineMessages({
   failedTxButton: {
     id: 'components.send.sendscreen.failedTxButton',
     defaultMessage: '!!!Try again',
+  },
+  notEnoughBalance: {
+    id: 'swap.swapScreen.notEnoughBalance',
+    defaultMessage: '!!!Not enough balance',
+  },
+  notEnoughSupply: {
+    id: 'swap.swapScreen.notEnoughSupply',
+    defaultMessage: '!!!Not enough supply in the pool',
+  },
+  noPool: {
+    id: 'swap.swapScreen.noPool',
+    defaultMessage: '!!! This pair is not available in any liquidity pool',
+  },
+  continueOnLedger: {
+    id: 'global.ledgerMessages.continueOnLedger',
+    defaultMessage: '!!!Continue on Ledger',
   },
 })

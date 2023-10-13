@@ -3,35 +3,33 @@ import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {Text} from '../../../../components'
-import {useSearch} from '../../../../Search/SearchContext'
 import {COLORS} from '../../../../theme'
-import {useStrings} from '../strings'
 
-export const Counter = ({counter, customText, style}: {counter: number; customText?: string} & ViewProps) => {
-  const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const strings = useStrings()
+type CounterTypes = {
+  openingText?: string
+  counter: number
+  unitsText?: string
+  closingText?: string
+}
 
-  if (!isSearching) {
-    return (
-      <View style={[styles.counter, style]}>
-        {customText == null && <Text style={styles.counterText}>{strings.youHave}</Text>}
+export const Counter = ({openingText, counter, unitsText, closingText, style}: CounterTypes & ViewProps) => {
+  return (
+    <View style={[styles.counter, style]}>
+      <Text style={styles.counterText}>{openingText}</Text>
 
-        <Text style={styles.counterTextBold}>{` ${counter} ${customText ?? strings.assets(counter)}`}</Text>
-      </View>
-    )
-  }
+      <Text>
+        <Text style={styles.counterTextBold}> {counter} </Text>
 
-  if (isSearching && assetSearchTerm.length > 0) {
-    return (
-      <View style={[styles.counter, style]}>
-        <Text style={styles.counterTextBold}>{`${counter} ${customText ?? strings.assets(counter)} `}</Text>
+        {unitsText !== undefined && <Text style={styles.counterTextBold}> {unitsText ?? ''} </Text>}
 
-        <Text style={styles.counterText}>{strings.found}</Text>
-      </View>
-    )
-  }
-
-  return null
+        {closingText !== undefined && (
+          <Text style={[openingText != undefined ? styles.counterTextBold : styles.counterText]}>
+            {closingText ?? ''}
+          </Text>
+        )}
+      </Text>
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({

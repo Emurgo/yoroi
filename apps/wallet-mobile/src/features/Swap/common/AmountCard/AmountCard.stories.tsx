@@ -34,7 +34,7 @@ storiesOf('Amount Card', module)
         console.log('VALUE', value)
       }}
       value="2223"
-      hasError
+      error="Fake Error"
       touched
     />
   ))

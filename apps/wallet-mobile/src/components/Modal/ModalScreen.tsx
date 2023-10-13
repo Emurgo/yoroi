@@ -2,8 +2,8 @@ import {useCardAnimation} from '@react-navigation/stack'
 import React from 'react'
 import {
   Animated,
+  GestureResponderEvent,
   KeyboardAvoidingView,
-  NativeTouchEvent,
   Platform,
   Pressable,
   StyleSheet,
@@ -24,7 +24,7 @@ export const ModalScreen = () => {
     setDownDirectionCount(0)
   }
 
-  const onResponderMove = ({nativeEvent}: {nativeEvent: NativeTouchEvent}) => {
+  const onResponderMove = ({nativeEvent}: GestureResponderEvent) => {
     if (swipeLocationY < nativeEvent.locationY) {
       const newState = downDirectionCount + 1
       if (newState > 4) {
@@ -36,7 +36,9 @@ export const ModalScreen = () => {
   }
 
   return (
-    <Pressable style={styles.backdrop} onPress={closeModal}>
+    <View style={styles.backdrop}>
+      <Pressable style={styles.cancellableArea} onPress={closeModal} />
+
       <KeyboardAvoidingView
         style={styles.root}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -59,21 +61,24 @@ export const ModalScreen = () => {
             styles.animatedView,
           ]}
         >
-          <View style={styles.sheet} onResponderMove={onResponderMove} onStartShouldSetResponder={() => true}>
-            <Header />
+          <View style={styles.sheet}>
+            <Header onResponderMove={onResponderMove} onStartShouldSetResponder={() => true} />
 
             {content}
           </View>
         </Animated.View>
       </KeyboardAvoidingView>
-    </Pressable>
+    </View>
   )
 }
 
-const Header = () => {
+const Header = (props: {
+  onResponderMove?: (event: GestureResponderEvent) => void
+  onStartShouldSetResponder?: () => boolean
+}) => {
   const {title} = useModal()
   return (
-    <View style={styles.header}>
+    <View style={styles.header} {...props}>
       <Spacer height={8} />
 
       <SliderIndicator />
@@ -94,6 +99,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignSelf: 'stretch',
   },
+  cancellableArea: {
+    flexGrow: 1,
+  },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -107,6 +115,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     alignSelf: 'stretch',
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   title: {
     fontWeight: '500',

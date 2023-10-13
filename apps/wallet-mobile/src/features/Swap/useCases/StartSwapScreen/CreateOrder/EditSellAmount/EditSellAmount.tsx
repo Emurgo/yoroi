@@ -12,7 +12,7 @@ import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../../../../common/SwapFormProvider'
 
-export const EditSellAmount = () => {
+export const EditSellAmount = ({error = ''}: {error?: string}) => {
   const strings = useStrings()
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
@@ -20,7 +20,7 @@ export const EditSellAmount = () => {
   const inputRef = React.useRef<TextInput>(null)
 
   const {orderData, sellQuantityChanged} = useSwap()
-  const {isSellTouched, isBuyTouched} = useSwapTouched()
+  const {isSellTouched} = useSwapTouched()
 
   const {tokenId, quantity} = orderData.amounts.sell
 
@@ -35,9 +35,6 @@ export const EditSellAmount = () => {
       setInputValue(Quantities.format(quantity, tokenInfo.decimals ?? 0))
     }
   }, [isSellTouched, quantity, tokenInfo.decimals])
-
-  const hasBalance = !Quantities.isGreaterThan(quantity, balance)
-  const showError = !Quantities.isZero(quantity) && !hasBalance && isBuyTouched
 
   const onChangeQuantity = (text: string) => {
     try {
@@ -56,10 +53,10 @@ export const EditSellAmount = () => {
       value={inputValue}
       amount={{tokenId, quantity: balance}}
       wallet={wallet}
-      hasError={showError}
       navigateTo={navigate.selectSellToken}
       touched={isSellTouched}
       inputRef={inputRef}
+      error={error}
       // inputEditable={orderData.selectedPoolCalculation?.pool !== undefined}
     />
   )

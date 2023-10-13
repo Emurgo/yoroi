@@ -31,7 +31,7 @@ export const SelectSellTokenFromListScreen = () => {
   })
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['left', 'right']}>
       <Boundary>
         <TokenList />
       </Boundary>
@@ -75,7 +75,12 @@ const TokenList = () => {
         ListEmptyComponent={<EmptyList filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
       />
 
-      <Counter style={styles.ph} counter={filteredTokenInfos.length} />
+      <Counter
+        counter={filteredTokenInfos.length}
+        style={styles.counter}
+        unitsText={strings.assets(filteredTokenInfos.length)}
+        closingText={strings.available}
+      />
     </View>
   )
 }
@@ -84,12 +89,12 @@ type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; w
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
   const {sellTokenIdChanged, orderData} = useSwap()
-  const {sellTouched} = useSwapTouched()
+  const {sellTouched, isBuyTouched} = useSwapTouched()
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
 
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
-  const isDisabled = tokenInfo.id === orderData.amounts.buy.tokenId
+  const isDisabled = tokenInfo.id === orderData.amounts.buy.tokenId && isBuyTouched
 
   const handleOnTokenSelection = () => {
     track.swapAssetFromChanged({
@@ -103,7 +108,7 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
 
   return (
     <TouchableOpacity
-      style={[styles.item]}
+      style={[styles.item, isDisabled && styles.disabled]}
       onPress={handleOnTokenSelection}
       testID="selectTokenButton"
       disabled={isDisabled}
@@ -179,6 +184,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    display: 'flex',
+    justifyContent: 'flex-start',
   },
   ph: {
     paddingHorizontal: 16,
@@ -192,6 +199,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.BORDER_GRAY,
   },
   list: {
+    paddingTop: 16,
     flex: 1,
   },
   image: {
@@ -212,5 +220,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#000',
     paddingTop: 4,
+  },
+  counter: {
+    paddingVertical: 16,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 })
