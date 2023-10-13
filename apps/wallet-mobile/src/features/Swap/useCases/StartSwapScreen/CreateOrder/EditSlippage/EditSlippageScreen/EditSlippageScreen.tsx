@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../../../../components'
 import {useLanguage} from '../../../../../../../i18n'
@@ -94,7 +95,7 @@ export const EditSlippageScreen = () => {
   const isButtonDisabled = hasError || (isSelectedChoiceManual && inputValue.length === 0)
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -162,7 +163,7 @@ export const EditSlippageScreen = () => {
           onPress={onSubmit}
         />
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.WHITE,
     paddingHorizontal: 16,
-    paddingBottom: 48,
+    paddingBottom: 16,
   },
   header: {
     fontSize: 16,

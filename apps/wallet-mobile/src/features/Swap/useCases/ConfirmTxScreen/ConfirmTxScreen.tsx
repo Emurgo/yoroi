@@ -73,7 +73,7 @@ export const ConfirmTxScreen = () => {
   const txIsLoading = authenticating || processingTx
 
   return (
-    <SafeAreaView style={styles.container} edges={['left', 'right']}>
+    <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
       <TransactionSummary />
 
       <Actions>
