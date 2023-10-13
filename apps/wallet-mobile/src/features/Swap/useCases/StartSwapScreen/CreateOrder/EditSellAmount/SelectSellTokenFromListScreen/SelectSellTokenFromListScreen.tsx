@@ -89,12 +89,12 @@ type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; w
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
   const {sellTokenIdChanged, orderData} = useSwap()
-  const {sellTouched} = useSwapTouched()
+  const {sellTouched, isBuyTouched} = useSwapTouched()
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
 
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
-  const isDisabled = tokenInfo.id === orderData.amounts.buy.tokenId
+  const isDisabled = tokenInfo.id === orderData.amounts.buy.tokenId && isBuyTouched
 
   const handleOnTokenSelection = () => {
     track.swapAssetFromChanged({
