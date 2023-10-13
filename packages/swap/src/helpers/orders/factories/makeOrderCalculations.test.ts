@@ -2665,4 +2665,220 @@ describe('makeOrderCalculations', () => {
       pool: pools[0],
     } as SwapOrderCalculation)
   })
+  it('should calculate all fees and amounts correctly (case 25, zero sell)', () => {
+    const pool = mocks.mockedPools5[7] as Swap.Pool
+    const pools = [pool]
+    const amounts = {
+      sell: {
+        quantity: '0',
+        tokenId: 'tokenB',
+      } as Balance.Amount,
+      buy: {
+        quantity: '0',
+        tokenId: 'tokenA',
+      } as Balance.Amount,
+    }
+
+    const slippage = 0
+    const calculations = makeOrderCalculations({
+      orderType: 'limit',
+      amounts: amounts,
+      limitPrice: '1',
+      slippage: slippage,
+      pools: pools,
+      primaryTokenId: '',
+      lpTokenHeld: {
+        quantity: '50',
+        tokenId: 'tokenX',
+      },
+      side: 'sell',
+    })
+    const calculation = calculations[0] as SwapOrderCalculation
+    expect(calculation).toStrictEqual({
+      order: {
+        side: 'sell',
+        slippage: 0,
+        orderType: 'limit',
+        limitPrice: '1',
+        amounts: {
+          sell: {
+            quantity: '0',
+            tokenId: 'tokenB',
+          },
+          buy: {
+            quantity: '0',
+            tokenId: 'tokenA',
+          },
+        },
+        lpTokenHeld: {
+          quantity: '50',
+          tokenId: 'tokenX',
+        },
+      },
+      sides: {
+        sell: {
+          quantity: '0',
+          tokenId: 'tokenB',
+        },
+        buy: {
+          quantity: '0',
+          tokenId: 'tokenA',
+        },
+      },
+      cost: {
+        batcherFee: {
+          quantity: '0',
+          tokenId: '',
+        },
+        deposit: {
+          quantity: '0',
+          tokenId: '',
+        },
+        frontendFeeInfo: {
+          discountTier: undefined,
+          fee: {
+            quantity: '0',
+            tokenId: '',
+          },
+        },
+        liquidityFee: {
+          quantity: '0',
+          tokenId: 'tokenB',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
+        },
+      },
+      buyAmountWithSlippage: {
+        quantity: '0',
+        tokenId: 'tokenA',
+      },
+      hasSupply: true,
+      prices: {
+        base: '1',
+        market: '1',
+        withSlippage: '0',
+        withFees: '0',
+        withFeesAndSlippage: '0',
+        difference: '-100',
+        withFeesNoFEF: '0',
+        withFeesAndSlippageNoFEF: '0',
+        differenceNoFEF: '-100',
+      },
+      pool: pools[0],
+    } as SwapOrderCalculation)
+  })
+  it('should calculate all fees and amounts correctly (case 26, zero buy)', () => {
+    const pool = mocks.mockedPools5[7] as Swap.Pool
+    const pools = [pool]
+    const amounts = {
+      sell: {
+        quantity: '0',
+        tokenId: 'tokenB',
+      } as Balance.Amount,
+      buy: {
+        quantity: '0',
+        tokenId: 'tokenA',
+      } as Balance.Amount,
+    }
+
+    const slippage = 0
+    const calculations = makeOrderCalculations({
+      orderType: 'market',
+      amounts: amounts,
+      limitPrice: '1',
+      slippage: slippage,
+      pools: pools,
+      primaryTokenId: '',
+      lpTokenHeld: {
+        quantity: '50',
+        tokenId: 'tokenX',
+      },
+      side: 'buy',
+    })
+    const calculation = calculations[0] as SwapOrderCalculation
+    expect(calculation).toStrictEqual({
+      order: {
+        side: 'buy',
+        slippage: 0,
+        orderType: 'market',
+        limitPrice: '1',
+        amounts: {
+          sell: {
+            quantity: '0',
+            tokenId: 'tokenB',
+          },
+          buy: {
+            quantity: '0',
+            tokenId: 'tokenA',
+          },
+        },
+        lpTokenHeld: {
+          quantity: '50',
+          tokenId: 'tokenX',
+        },
+      },
+      sides: {
+        sell: {
+          quantity: '0',
+          tokenId: 'tokenB',
+        },
+        buy: {
+          quantity: '0',
+          tokenId: 'tokenA',
+        },
+      },
+      cost: {
+        batcherFee: {
+          quantity: '0',
+          tokenId: '',
+        },
+        deposit: {
+          quantity: '0',
+          tokenId: '',
+        },
+        frontendFeeInfo: {
+          discountTier: undefined,
+          fee: {
+            quantity: '0',
+            tokenId: '',
+          },
+        },
+        liquidityFee: {
+          quantity: '0',
+          tokenId: 'tokenB',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: '',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: '',
+          quantity: '0',
+        },
+      },
+      buyAmountWithSlippage: {
+        quantity: '0',
+        tokenId: 'tokenA',
+      },
+      hasSupply: true,
+      prices: {
+        base: '1',
+        market: '1',
+        withSlippage: '0',
+        withFees: '0',
+        withFeesAndSlippage: '0',
+        difference: '-100',
+        withFeesNoFEF: '0',
+        withFeesAndSlippageNoFEF: '0',
+        differenceNoFEF: '-100',
+      },
+      pool: pools[0],
+    } as SwapOrderCalculation)
+  })
 })
