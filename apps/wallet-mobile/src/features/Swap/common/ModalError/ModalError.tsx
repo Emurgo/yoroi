@@ -46,7 +46,8 @@ const getErrorMessage = (
     | 'bluetoothDisabledError'
     | 'ledgerUserError'
     | 'ledgerGeneralConnectionError'
-    | 'ledgerBluetoothDisabledError',
+    | 'ledgerBluetoothDisabledError'
+    | 'ledgerAdaAppNeedsToBeOpenError',
     string
   >,
 ): string => {
@@ -68,6 +69,10 @@ const getErrorMessage = (
 
   if (error instanceof BluetoothDisabledError) {
     return strings.ledgerBluetoothDisabledError
+  }
+
+  if (error.message.toLowerCase().includes('0x6e01')) {
+    return strings.ledgerAdaAppNeedsToBeOpenError
   }
 
   return `${strings.error}: ${error.message}`
