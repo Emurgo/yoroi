@@ -22,11 +22,8 @@ describe('getFrontendFee', () => {
       }
       // act
       const fee = getFrontendFee({
-        sell: sell,
-        buy: notPrimaryTokenAmount,
-        sellInPrimaryTokenValue: sell,
         lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999999'},
-        buyInPrimaryTokenValue: sell,
+        sellInPrimaryTokenValue: sell,
         primaryTokenId,
         discountTiers: milkHoldersDiscountTiers,
       })
@@ -48,11 +45,8 @@ describe('getFrontendFee', () => {
       }
       // act
       const fee = getFrontendFee({
-        sell: sellPrimaryAmountOver99,
-        buy: notPrimaryTokenAmount,
         sellInPrimaryTokenValue: sellPrimaryAmountOver99,
         lpTokenHeld: {tokenId: 'lp.token', quantity: Quantities.zero},
-        buyInPrimaryTokenValue: sellPrimaryAmountOver99,
         primaryTokenId,
         discountTiers: milkHoldersDiscountTiers,
       })
@@ -74,11 +68,8 @@ describe('getFrontendFee', () => {
       }
       // act
       const fee = getFrontendFee({
-        sell: sellPrimaryAmountOver99,
-        buy: notPrimaryTokenAmount,
         lpTokenHeld: {tokenId: 'lp.token', quantity: '499'},
         sellInPrimaryTokenValue: sellPrimaryAmountOver99,
-        buyInPrimaryTokenValue: sellPrimaryAmountOver99,
         primaryTokenId,
         discountTiers: milkHoldersDiscountTiers,
       })
@@ -100,11 +91,8 @@ describe('getFrontendFee', () => {
       }
       // act
       const fee = getFrontendFee({
-        sell: sellPrimaryAmountOver99,
-        buy: notPrimaryTokenAmount,
         lpTokenHeld: {tokenId: 'lp.token', quantity: '500'},
         sellInPrimaryTokenValue: sellPrimaryAmountOver99,
-        buyInPrimaryTokenValue: sellPrimaryAmountOver99,
         primaryTokenId,
         discountTiers: milkHoldersDiscountTiers,
       })
@@ -128,11 +116,8 @@ describe('getFrontendFee', () => {
       }
       // act
       const fee = getFrontendFee({
-        sell: notPrimaryTokenAmount,
-        buy: buyPrimaryTokenAmount,
         sellInPrimaryTokenValue: buyPrimaryTokenAmount,
         lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999999'},
-        buyInPrimaryTokenValue: buyPrimaryTokenAmount,
         primaryTokenId,
         discountTiers: milkHoldersDiscountTiers,
       })
@@ -154,11 +139,8 @@ describe('getFrontendFee', () => {
       }
       // act
       const fee = getFrontendFee({
-        sell: notPrimaryTokenAmount,
-        buy: buyPrimaryAmountOver99,
         sellInPrimaryTokenValue: buyPrimaryAmountOver99,
         lpTokenHeld: {tokenId: 'lp.token', quantity: Quantities.zero},
-        buyInPrimaryTokenValue: buyPrimaryAmountOver99,
         primaryTokenId,
         discountTiers: milkHoldersDiscountTiers,
       })
@@ -180,11 +162,8 @@ describe('getFrontendFee', () => {
       }
       // act
       const fee = getFrontendFee({
-        sell: notPrimaryTokenAmount,
-        buy: buyPrimaryAmountOver99,
         lpTokenHeld: {tokenId: 'lp.token', quantity: '499'},
         sellInPrimaryTokenValue: buyPrimaryAmountOver99,
-        buyInPrimaryTokenValue: buyPrimaryAmountOver99,
         primaryTokenId,
         discountTiers: milkHoldersDiscountTiers,
       })
@@ -206,11 +185,8 @@ describe('getFrontendFee', () => {
       }
       // act
       const fee = getFrontendFee({
-        sell: notPrimaryTokenAmount,
-        buy: buyPrimaryAmountOver99,
         lpTokenHeld: {tokenId: 'lp.token', quantity: '500'},
         sellInPrimaryTokenValue: buyPrimaryAmountOver99,
-        buyInPrimaryTokenValue: buyPrimaryAmountOver99,
         primaryTokenId,
         discountTiers: milkHoldersDiscountTiers,
       })
@@ -232,11 +208,8 @@ describe('getFrontendFee', () => {
     }
     // act
     const fee = getFrontendFee({
-      sell: notPrimaryTokenAmount,
-      buy: buyPrimaryAmountOver99,
       lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999'},
       sellInPrimaryTokenValue: buyPrimaryAmountOver99,
-      buyInPrimaryTokenValue: buyPrimaryAmountOver99,
       primaryTokenId,
       discountTiers: [],
     })
@@ -252,15 +225,10 @@ describe('getFrontendFee', () => {
 
   it('should fallback - coverage only', () => {
     // arrange
-    const buyPrimaryAmountOver99: Balance.Amount = {
-      tokenId: primaryTokenId,
-      quantity: asQuantity(1_000_000),
-    }
     // act
     const fee = getFrontendFee({
-      sell: notPrimaryTokenAmount,
-      buy: buyPrimaryAmountOver99,
       lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999'},
+      sellInPrimaryTokenValue: notPrimaryTokenAmount,
       primaryTokenId,
     })
     // assert
@@ -273,29 +241,18 @@ describe('getFrontendFee', () => {
     })
   })
 
-  // TODO: check with openswap
+  // TODO: check with openswap, need to rework after decision about FEF
   describe('neither sell nor buy are primary token, it should use the value in ADA (paired)', () => {
     it('< 100 and whatever milk in balance', () => {
       // arrange
-      const sellNotPrimaryAmount: Balance.Amount = {
-        tokenId: 'not.primary.token',
-        quantity: asQuantity(99_999_999),
-      }
       const sellValueInPrimaryToken: Balance.Amount = {
         tokenId: primaryTokenId,
         quantity: asQuantity(99_999_999),
       }
-      const buyValueInPrimaryToken: Balance.Amount = {
-        tokenId: primaryTokenId,
-        quantity: asQuantity(99_999_998),
-      }
       // act
       const fee = getFrontendFee({
-        sell: sellNotPrimaryAmount,
-        buy: notPrimaryTokenAmount,
         sellInPrimaryTokenValue: sellValueInPrimaryToken,
         lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999999'},
-        buyInPrimaryTokenValue: buyValueInPrimaryToken,
         primaryTokenId,
         discountTiers: milkHoldersDiscountTiers,
       })
@@ -308,28 +265,16 @@ describe('getFrontendFee', () => {
         discountTier: undefined,
       })
     })
-
     it('>= 100 and milk in balance = 0', () => {
       // arrange
-      const sellNotPrimaryAmountOver99: Balance.Amount = {
-        tokenId: 'not.primary.token',
-        quantity: asQuantity(100_000_000),
-      }
       const sellValueInPrimaryToken: Balance.Amount = {
         tokenId: primaryTokenId,
         quantity: asQuantity(100_000_000),
       }
-      const buyValueInPrimaryToken: Balance.Amount = {
-        tokenId: primaryTokenId,
-        quantity: asQuantity(99_999_998),
-      }
       // act
       const fee = getFrontendFee({
-        sell: sellNotPrimaryAmountOver99,
-        buy: notPrimaryTokenAmount,
         sellInPrimaryTokenValue: sellValueInPrimaryToken,
         lpTokenHeld: {tokenId: 'lp.token', quantity: Quantities.zero},
-        buyInPrimaryTokenValue: buyValueInPrimaryToken,
         primaryTokenId,
         discountTiers: milkHoldersDiscountTiers,
       })
@@ -345,25 +290,14 @@ describe('getFrontendFee', () => {
 
     it('>= 100 and milk in balance >= 100 (buy side higher)', () => {
       // arrange
-      const sellNotPrimaryAmountOver99: Balance.Amount = {
-        tokenId: 'not.primary.token',
-        quantity: asQuantity(100_000_000),
-      }
       const sellValueInPrimaryToken: Balance.Amount = {
-        tokenId: primaryTokenId,
-        quantity: asQuantity(99_000_000),
-      }
-      const buyValueInPrimaryToken: Balance.Amount = {
         tokenId: primaryTokenId,
         quantity: asQuantity(100_000_000),
       }
       // act
       const fee = getFrontendFee({
-        sell: sellNotPrimaryAmountOver99,
-        buy: notPrimaryTokenAmount,
         lpTokenHeld: {tokenId: 'lp.token', quantity: '499'},
         sellInPrimaryTokenValue: sellValueInPrimaryToken,
-        buyInPrimaryTokenValue: buyValueInPrimaryToken,
         primaryTokenId,
         discountTiers: milkHoldersDiscountTiers,
       })
@@ -379,25 +313,14 @@ describe('getFrontendFee', () => {
 
     it('>= 100 and milk in balance >= 500 (50/50)', () => {
       // arrange
-      const sellNotPrimaryAmountOver99: Balance.Amount = {
-        tokenId: primaryTokenId,
-        quantity: asQuantity(100_000_000),
-      }
       const sellValueInPrimaryToken: Balance.Amount = {
-        tokenId: primaryTokenId,
-        quantity: asQuantity(100_000_000),
-      }
-      const buyValueInPrimaryToken: Balance.Amount = {
         tokenId: primaryTokenId,
         quantity: asQuantity(100_000_000),
       }
       // act
       const fee = getFrontendFee({
-        sell: sellNotPrimaryAmountOver99,
-        buy: notPrimaryTokenAmount,
         lpTokenHeld: {tokenId: 'lp.token', quantity: '500'},
         sellInPrimaryTokenValue: sellValueInPrimaryToken,
-        buyInPrimaryTokenValue: buyValueInPrimaryToken,
         primaryTokenId,
         discountTiers: milkHoldersDiscountTiers,
       })
