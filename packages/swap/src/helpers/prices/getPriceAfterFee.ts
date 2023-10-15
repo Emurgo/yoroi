@@ -6,8 +6,8 @@ import {Quantities} from '../../utils/quantities'
  * Calculate the price with batcher fee in a liquidity pool.
  *
  * @param pool - The liquidity pool.
- * @param tokenAAmount - Token A amount in an order.
- * @param tokenBAmount - Token B amount in an order.
+ * @param quantityA - Token A amount in an order.
+ * @param quantityB - Token B amount in an order.
  * @param sellTokenId - The token id of the desired sell amount.
  *
  * @returns The price after fee

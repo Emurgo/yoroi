@@ -124,6 +124,7 @@ export const useStrings = () => {
     ledgerBluetoothDisabledError: intl.formatMessage(ledgerMessages.bluetoothDisabledError),
     ledgerGeneralConnectionError: intl.formatMessage(ledgerMessages.connectionError),
     ledgerUserError: intl.formatMessage(ledgerMessages.connectionError),
+    ledgerAdaAppNeedsToBeOpenError: intl.formatMessage(ledgerMessages.appOpened),
   }
 }
 
