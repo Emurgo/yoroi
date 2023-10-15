@@ -133,26 +133,48 @@ export const Quantities = {
 
     return absoluteQuantity.isEqualTo(minimalFractionalPart)
   },
-  parseFromText: (text: string, denomination: number, format: NumberLocale) => {
+  parseFromText: (
+    text: string,
+    denomination: number,
+    format: NumberLocale,
+    precision = denomination,
+  ): [string, Balance.Quantity] => {
     const {decimalSeparator} = format
     const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
     const sanitized = text === '' ? '' : text.replaceAll(invalid, '')
-    if (sanitized === '') return ['', `0`] as [string, Balance.Quantity]
-    if (sanitized.startsWith(decimalSeparator)) return [`0${decimalSeparator}`, `0`] as [string, Balance.Quantity]
+
+    if (sanitized === '') return ['', Quantities.zero]
+    if (sanitized.startsWith(decimalSeparator)) return [`0${decimalSeparator}`, Quantities.zero]
+
     const parts = sanitized.split(decimalSeparator)
-    const isDec = parts.length >= 2
 
-    const fullDecValue = isDec ? `${parts[0]}${decimalSeparator}${parts[1].slice(0, denomination)}1` : sanitized
-    const fullDecFormat = new BigNumber(fullDecValue.replace(decimalSeparator, '.')).toFormat()
-    const input = isDec ? fullDecFormat.slice(0, -1) : fullDecFormat
+    let fullDecValue = sanitized
+    let value = sanitized
 
-    const value = isDec ? `${parts[0]}${decimalSeparator}${parts[1].slice(0, denomination)}` : sanitized
-    const quantity = new BigNumber(value.replace(decimalSeparator, '.'))
-      .decimalPlaces(denomination)
-      .shiftedBy(denomination)
-      .toString(10)
+    let fullDecFormat = new BigNumber(fullDecValue.replace(decimalSeparator, '.')).toFormat()
+    let input = fullDecFormat
 
-    return [input, quantity] as [string, Balance.Quantity]
+    if (parts.length <= 1) {
+      const quantity = asQuantity(
+        new BigNumber(value.replace(decimalSeparator, '.')).decimalPlaces(precision).shiftedBy(denomination),
+      )
+
+      return [input, quantity]
+    }
+
+    const [int, dec] = parts
+    // trailing `1` is to allow the user to type `1.0` without losing the decimal part
+    fullDecValue = `${int}${decimalSeparator}${dec?.slice(0, precision)}1`
+    value = `${int}${decimalSeparator}${dec?.slice(0, precision)}`
+    fullDecFormat = new BigNumber(fullDecValue.replace(decimalSeparator, '.')).toFormat()
+    // remove trailing `1`
+    input = fullDecFormat.slice(0, -1)
+
+    const quantity = asQuantity(
+      new BigNumber(value.replace(decimalSeparator, '.')).decimalPlaces(precision).shiftedBy(denomination),
+    )
+
+    return [input, quantity]
   },
   format: (quantity: Balance.Quantity, denomination: number, precision?: number) => {
     if (precision === undefined) return new BigNumber(Quantities.denominated(quantity, denomination)).toFormat()

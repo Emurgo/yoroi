@@ -169,10 +169,10 @@ describe('Quantities', () => {
 
   it('should parse "0" when the input text is an empty string', () => {
     const text = ''
-    const precision = 2
+    const denomination = 2
     const [input, quantity] = Quantities.parseFromText(
       text,
-      precision,
+      denomination,
       mockNumberLocale,
     )
 
@@ -182,14 +182,38 @@ describe('Quantities', () => {
 
   it('should parse "0" when the input text is an decimal separator', () => {
     const text = '.'
-    const precision = 2
+    const denomination = 2
     const [input, quantity] = Quantities.parseFromText(
       text,
-      precision,
+      denomination,
       mockNumberLocale,
     )
 
     expect(input).toBe('0.')
     expect(quantity).toBe('0')
+  })
+
+  it('should parse "1.0" when the input text has trailing 0', () => {
+    expect(Quantities.parseFromText('1.0', 2, mockNumberLocale)).toEqual([
+      '1.0',
+      '100',
+    ])
+  })
+
+  it('should parse "1.234" when precision is 3', () => {
+    expect(Quantities.parseFromText('1.23456', 0, mockNumberLocale, 3)).toEqual(
+      ['1.234', '1.234'],
+    )
+
+    expect(Quantities.parseFromText('1.23456', 2, mockNumberLocale, 3)).toEqual(
+      ['1.234', '123.4'],
+    )
+  })
+
+  it('should parse whole numbers', () => {
+    expect(Quantities.parseFromText('123', 2, mockNumberLocale)).toEqual([
+      '123',
+      '12300',
+    ])
   })
 })
