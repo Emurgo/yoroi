@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Button, Icon, Text} from '../../../../components'
 import {
+  AdaAppClosedError,
   BluetoothDisabledError,
   GeneralConnectionError,
   LedgerUserError,
@@ -46,7 +47,8 @@ const getErrorMessage = (
     | 'bluetoothDisabledError'
     | 'ledgerUserError'
     | 'ledgerGeneralConnectionError'
-    | 'ledgerBluetoothDisabledError',
+    | 'ledgerBluetoothDisabledError'
+    | 'ledgerAdaAppNeedsToBeOpenError',
     string
   >,
 ): string => {
@@ -68,6 +70,10 @@ const getErrorMessage = (
 
   if (error instanceof BluetoothDisabledError) {
     return strings.ledgerBluetoothDisabledError
+  }
+
+  if (error instanceof AdaAppClosedError) {
+    return strings.ledgerAdaAppNeedsToBeOpenError
   }
 
   return `${strings.error}: ${error.message}`
