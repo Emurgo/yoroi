@@ -52,20 +52,22 @@ const findCompletedOrderTx = (transactions: TransactionInfo[], onError: (err: Er
 
   const filteredTx = sentTransactions
     .reduce((acc, sentTx) => {
-      const result: {id?: string; metadata?: TxMetadataInfo; date?: string} = {}
+      // TODO: metadata is Record<string, any>
+      const result: {id?: string; metadata?: string; date?: string} = {}
       receivedTransactions.forEach((receivedTx) => {
         receivedTx.inputs.forEach((input) => {
-          if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id && receivedTx.metadata !== null) {
+          if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id && receivedTx.metadata?.['674'] != null) {
             result['id'] = sentTx?.id
-            result['metadata'] = sentTx?.metadata
+            result['metadata'] = sentTx?.metadata?.['674']
             result['date'] = receivedTx?.lastUpdatedAt
           }
         })
       })
 
-      if (result['id'] !== undefined && result['metadata'] !== undefined) {
+      if (result['id'] !== undefined && result['metadata'] != null) {
         try {
-          const metadata = JSON.parse(result.metadata as string)
+          // TODO: need a parser for metadata for completed orders
+          const metadata = JSON.parse(result.metadata) as MappedRawOrder['metadata']
           result['metadata'] = metadata
           return acc.concat(result as MappedRawOrder)
         } catch (error) {
