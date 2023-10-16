@@ -286,7 +286,10 @@ export const OpenOrders = () => {
                   />
                 }
                 footer={
-                  <Footer disabled={!order.utxo || !order.owner} onPress={() => openCancellationModal(order)}>
+                  <Footer
+                    disabled={!isString(order.utxo) || !isString(order.owner)}
+                    onPress={() => openCancellationModal(order)}
+                  >
                     {strings.listOrdersSheetButtonText.toLocaleUpperCase()}
                   </Footer>
                 }
