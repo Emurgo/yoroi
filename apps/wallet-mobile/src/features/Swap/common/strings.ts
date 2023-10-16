@@ -222,7 +222,7 @@ export const messages = defineMessages({
   swapMinAda: {
     id: 'swap.swapScreen.swapMinAda',
     defaultMessage:
-      '!!!Min-ADA is the minimum ADA amount required to be contained when holding or sending Cardano native tokens.',
+      '!!!Min-ADA is the minimum ADA amount required to be contained when holding or sending Cardano native assets.',
   },
   swapMinAdaTitle: {
     id: 'swap.swapScreen.swapMinAdaTitle',
@@ -242,7 +242,7 @@ export const messages = defineMessages({
   },
   swapMinReceived: {
     id: 'swap.swapScreen.swapMinReceived',
-    defaultMessage: '!!!Minimum amount of tokens you can get because of the slippage tolerance.',
+    defaultMessage: '!!!Minimum amount of assets you can get because of the slippage tolerance.',
   },
   swapMinReceivedTitle: {
     id: 'swap.swapScreen.swapMinReceivedTitle',
