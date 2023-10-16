@@ -1,6 +1,6 @@
 import {useSwap, useSwapPoolsByPair} from '@yoroi/swap'
 import React from 'react'
-import {Keyboard, StyleSheet, View} from 'react-native'
+import {Animated, Keyboard, StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon} from '../../../../../../components'
@@ -52,12 +52,41 @@ export const TopTokenActions = () => {
         selected={orderTypeIndex}
       />
 
-      <TouchableOpacity onPress={handleRefresh} disabled={isDisabled}>
-        <Icon.Refresh size={24} color={isDisabled ? COLORS.DISABLED : ''} />
-      </TouchableOpacity>
+      <RefreshIcon onPress={handleRefresh} disabled={isDisabled} />
 
       <LoadingOverlay loading={isLoading} />
     </View>
+  )
+}
+
+const RefreshIcon = ({onPress, disabled}: {onPress: () => void; disabled: boolean}) => {
+  const spin = React.useRef(new Animated.Value(0)).current
+
+  const handleOnPress = () => {
+    Animated.timing(spin, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => spin.setValue(0))
+    onPress()
+  }
+  const getRotationStyle = () => {
+    const rotate = spin.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '180deg'],
+    })
+
+    return {
+      transform: [{rotate}],
+    }
+  }
+
+  return (
+    <TouchableOpacity activeOpacity={0.5} onPress={handleOnPress} disabled={disabled}>
+      <Animated.View style={getRotationStyle()}>
+        <Icon.Refresh size={24} color={disabled ? COLORS.DISABLED : ''} />
+      </Animated.View>
+    </TouchableOpacity>
   )
 }
 
