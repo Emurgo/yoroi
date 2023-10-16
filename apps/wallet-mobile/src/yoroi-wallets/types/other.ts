@@ -417,7 +417,7 @@ export type TransactionInfo = {
   tokens: Record<string, Token>
   blockNumber: number
   memo: null | string
-  metadata: TxMetadataInfo | undefined
+  metadata: TxMetadataInfo
 }
 
 export type IOData = {
