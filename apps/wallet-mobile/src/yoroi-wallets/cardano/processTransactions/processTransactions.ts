@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {isArray, isString} from '@yoroi/common'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 
@@ -16,7 +17,6 @@ import {
 } from '../../types'
 import {getDefaultNetworkTokenEntry, MultiToken, strToDefaultMultiAsset} from '../MultiToken'
 import {multiTokenFromRemote} from '../utils'
-import {isArray, isString} from '@yoroi/common'
 
 export const ASSURANCE_LEVELS = {
   LOW: 3,
@@ -94,21 +94,18 @@ export const processTxHistoryData = (
   const metadata = tx.metadata?.reduce<TransactionInfo['metadata']>(
     (metadatas: TransactionInfo['metadata'], metadata) => {
       if (metadata?.label && metadatas != null) {
-        // 674, .msg string | string[]
         if (isArray(metadata?.map_json?.msg)) {
           metadatas[metadata.label] = metadata.map_json.msg.join('')
         }
         if (isString(metadata?.map_json?.msg)) {
           metadatas[metadata.label] = metadata.map_json.msg
         }
-        // ---- 674
       }
       return metadatas
     },
     {},
   )
   console.log(JSON.stringify(tx.metadata, null, 2))
-  // const metadata = tx.metadata?.[0]?.map_json.msg?.join('') ?? null
   const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, networkId, defaultAsset)
   // collateral
   const collateral = tx.collateralInputs || []
@@ -286,6 +283,6 @@ export const processTxHistoryData = (
     tokens,
     blockNumber: tx.blockNum ?? 0,
     memo,
-    metadata,
+    metadata: metadata || {},
   }
 }
