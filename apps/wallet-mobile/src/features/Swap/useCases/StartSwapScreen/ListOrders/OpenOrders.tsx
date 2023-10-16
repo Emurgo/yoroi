@@ -131,10 +131,14 @@ export const OpenOrders = () => {
     )
   }
 
+  const hasCollateralUtxo = () => {
+    return !!wallet.getCollateralInfo().utxo
+  }
+
   const onOrderCancelConfirm = (order: MappedOpenOrder) => {
     if (!isString(order.utxo) || !isString(order.owner)) return
 
-    if (!wallet.getCollateralInfo().utxo) {
+    if (!hasCollateralUtxo()) {
       showCollateralNotFoundAlert()
       return
     }
@@ -209,6 +213,11 @@ export const OpenOrders = () => {
 
   const openCancellationModal = async (order: MappedOpenOrder) => {
     if (order.owner === undefined || order.utxo === undefined) return
+    if (!hasCollateralUtxo()) {
+      showCollateralNotFoundAlert()
+      return
+    }
+
     const {
       utxo,
       owner: bech32Address,
