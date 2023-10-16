@@ -76,7 +76,7 @@ export const SwapFormProvider = ({
   const {tokenId: sellTokenId, quantity: sellQuantity} = orderData.amounts.sell
 
   const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
 
   const balances = useBalances(wallet)
   const sellbalance = Amounts.getAmount(balances, sellTokenId).quantity
