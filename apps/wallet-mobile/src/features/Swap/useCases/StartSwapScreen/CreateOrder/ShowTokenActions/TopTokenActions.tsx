@@ -1,7 +1,6 @@
 import {useSwap, useSwapPoolsByPair} from '@yoroi/swap'
 import React from 'react'
-import {Animated, Keyboard, StyleSheet, View} from 'react-native'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import {Animated, Keyboard, Pressable, StyleSheet, View} from 'react-native'
 
 import {Icon} from '../../../../../../components'
 import {LoadingOverlay} from '../../../../../../components/LoadingOverlay'
@@ -83,8 +82,7 @@ const RefreshIcon = ({onPress, disabled}: {onPress: () => void; disabled: boolea
   }
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
+    <Pressable
       onPress={handleOnPress}
       disabled={disabled}
       onPressIn={() => setIsActive(true)}
@@ -93,7 +91,7 @@ const RefreshIcon = ({onPress, disabled}: {onPress: () => void; disabled: boolea
       <Animated.View style={getRotationStyle()}>
         <Icon.Refresh size={28} color={disabled ? COLORS.DISABLED : ''} active={isActive} />
       </Animated.View>
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 
