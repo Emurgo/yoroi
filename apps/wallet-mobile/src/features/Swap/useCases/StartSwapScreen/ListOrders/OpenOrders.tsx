@@ -199,7 +199,7 @@ export const OpenOrders = () => {
       setIsLoading(false)
       return fee
     },
-    [cancelOrder, strings, wallet],
+    [cancelOrder, wallet],
   )
 
   const openCancellationModal = async (order: MappedOpenOrder) => {
