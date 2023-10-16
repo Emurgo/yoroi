@@ -23,7 +23,7 @@ export const createYoroiEntry = (
   const amountEntry = {}
 
   const sellTokenId = createOrder.amounts.sell.tokenId
-  // TODO Frontend Fee is not added here. Once we have it will need to add it here as well
+  // TODO Frontend Fee is not added. Once will be defined needs to be added here
   if (sellTokenId === wallet.primaryTokenInfo.id) {
     amountEntry[sellTokenId] = Quantities.sum([
       createOrder.selectedPool.deposit.quantity,

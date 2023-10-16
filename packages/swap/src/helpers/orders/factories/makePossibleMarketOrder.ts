@@ -8,7 +8,7 @@ import {getQuantityWithSlippage} from '../amounts/getQuantityWithSlippage'
  *
  * @param sell - The amount to sell.
  * @param buy - The desired buy amount.
- * @param bestPool - best liquidity pools.
+ * @param bestPool - best liquidity pool.
  * @param slippage - Maximum acceptable slippage in percentage.
  * @param address - The address placing the order.
  *
