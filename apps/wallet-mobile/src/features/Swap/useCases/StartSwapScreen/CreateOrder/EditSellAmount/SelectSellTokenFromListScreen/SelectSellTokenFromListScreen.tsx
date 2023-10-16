@@ -14,7 +14,6 @@ import {COLORS} from '../../../../../../../theme'
 import {sortTokenInfos} from '../../../../../../../utils'
 import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
 import {useAllTokenInfos, useBalance, useIsWalletEmpty} from '../../../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../../../yoroi-wallets/utils/utils'
 import {filterByFungibility} from '../../../../../../Send/common/filterByFungibility'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {Counter} from '../../../../../common/Counter/Counter'
@@ -32,7 +31,7 @@ export const SelectSellTokenFromListScreen = () => {
   })
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['left', 'right']}>
       <Boundary>
         <TokenList />
       </Boundary>
@@ -76,7 +75,12 @@ const TokenList = () => {
         ListEmptyComponent={<EmptyList filteredTokenInfos={filteredTokenInfos} allTokenInfos={tokenInfos} />}
       />
 
-      <Counter style={styles.ph} counter={filteredTokenInfos.length} />
+      <Counter
+        counter={filteredTokenInfos.length}
+        style={styles.counter}
+        unitsText={strings.assets(filteredTokenInfos.length)}
+        closingText={strings.available}
+      />
     </View>
   )
 }
@@ -84,25 +88,31 @@ const TokenList = () => {
 type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
-  const {sellAmountChanged} = useSwap()
-  const {sellTouched} = useSwapTouched()
+  const {sellTokenIdChanged, orderData} = useSwap()
+  const {sellTouched, isBuyTouched} = useSwapTouched()
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
 
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
+  const isDisabled = tokenInfo.id === orderData.amounts.buy.tokenId && isBuyTouched
 
-  const onSelect = () => {
+  const handleOnTokenSelection = () => {
     track.swapAssetFromChanged({
       from_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
     })
     sellTouched()
-    sellAmountChanged({tokenId: tokenInfo.id, quantity: Quantities.zero})
+    sellTokenIdChanged(tokenInfo.id)
     navigateTo.startSwap()
     closeSearch()
   }
 
   return (
-    <TouchableOpacity style={[styles.item]} onPress={onSelect} testID="selectTokenButton">
+    <TouchableOpacity
+      style={[styles.item, isDisabled && styles.disabled]}
+      onPress={handleOnTokenSelection}
+      testID="selectTokenButton"
+      disabled={isDisabled}
+    >
       <AmountItem amount={{tokenId: tokenInfo.id, quantity: balanceAvailable}} wallet={wallet} />
     </TouchableOpacity>
   )
@@ -174,6 +184,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    display: 'flex',
+    justifyContent: 'flex-start',
   },
   ph: {
     paddingHorizontal: 16,
@@ -187,6 +199,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.BORDER_GRAY,
   },
   list: {
+    paddingTop: 16,
     flex: 1,
   },
   image: {
@@ -207,5 +220,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#000',
     paddingTop: 4,
+  },
+  counter: {
+    paddingVertical: 16,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 })

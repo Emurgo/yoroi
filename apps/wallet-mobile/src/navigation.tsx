@@ -326,6 +326,7 @@ export type AppRoutes = {
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
   'agreement-changed-notice': undefined
+  modal: undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 

@@ -1,15 +1,18 @@
-import {getMinAdaReceiveAfterSlippage, useSwap} from '@yoroi/swap'
+import {getPoolUrlByProvider, useSwap} from '@yoroi/swap'
+import {Swap} from '@yoroi/types'
+import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
-import {BottomSheetModal} from '../../../../components/BottomSheetModal'
-import {useLanguage} from '../../../../i18n'
+import {BottomSheetModal} from '../../../../legacy/BottomSheetModal'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
+import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
+import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
 
 export const TransactionSummary = () => {
@@ -20,37 +23,42 @@ export const TransactionSummary = () => {
   })
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {numberLocale} = useLanguage()
-  const {createOrder} = useSwap()
-  const {amounts, selectedPool} = createOrder
+  const {orderData} = useSwap()
+  const {amounts, selectedPoolCalculation} = orderData
 
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
   const label = `${Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)} ${tokenToBuyName}`
+  const poolProviderFormatted = capitalize(selectedPoolCalculation?.pool.provider)
+  const poolUrl = getPoolUrlByProvider(selectedPoolCalculation?.pool.provider as Swap.SupportedProvider)
+
+  const poolIcon = <PoolIcon providerId={selectedPoolCalculation?.pool.provider as Swap.SupportedProvider} size={18} />
 
   const feesInfo = [
     {
+      label: strings.dex.toUpperCase(),
+      value: <LiquidityPool liquidityPoolIcon={poolIcon} liquidityPoolName={poolProviderFormatted} poolUrl={poolUrl} />,
+    },
+    {
       label: strings.swapMinAdaTitle,
       value: `${Quantities.format(
-        selectedPool?.deposit?.quantity ?? Quantities.zero,
+        selectedPoolCalculation?.cost?.deposit?.quantity ?? Quantities.zero,
         Number(wallet.primaryTokenInfo.decimals),
       )} ${wallet.primaryTokenInfo.ticker}`,
       info: strings.swapMinAda,
     },
     {
       label: strings.swapMinReceivedTitle,
-      value: `${getMinAdaReceiveAfterSlippage(
-        amounts.buy.quantity,
-        createOrder.slippage,
+      value: `${Quantities.format(
+        selectedPoolCalculation?.buyAmountWithSlippage?.quantity ?? Quantities.zero,
         buyTokenInfo.decimals ?? 0,
-        numberLocale,
       )} ${tokenToBuyName}`,
       info: strings.swapMinReceived,
     },
     {
       label: strings.swapFeesTitle,
       value: `${Quantities.format(
-        createOrder.selectedPool?.batcherFee?.quantity ?? Quantities.zero,
+        selectedPoolCalculation?.cost?.batcherFee?.quantity ?? Quantities.zero, // TODO: Show all fees
         Number(wallet.primaryTokenInfo.decimals),
       )} ${wallet.primaryTokenInfo.ticker}`,
       info: strings.swapFees,
@@ -85,17 +93,19 @@ export const TransactionSummary = () => {
 
                   <Spacer width={8} />
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      setBottomSheetSate({
-                        isOpen: true,
-                        title: orderInfo.label,
-                        content: orderInfo.info,
-                      })
-                    }}
-                  >
-                    <Icon.Info size={24} />
-                  </TouchableOpacity>
+                  {orderInfo.info != undefined && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setBottomSheetSate({
+                          isOpen: true,
+                          title: orderInfo.label,
+                          content: orderInfo.info,
+                        })
+                      }}
+                    >
+                      <Icon.Info size={24} />
+                    </TouchableOpacity>
+                  )}
                 </View>
 
                 <Text style={styles.text}>{orderInfo.value}</Text>

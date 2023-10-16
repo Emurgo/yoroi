@@ -3,8 +3,9 @@ import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {BottomSheet, BottomSheetRef, Button, Spacer} from '../../../../components'
+import {Button, Spacer} from '../../../../components'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
+import {useModal} from '../../../../components/Modal/ModalContext'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
@@ -16,28 +17,20 @@ import {ConfirmTx} from './ConfirmTx'
 import {TransactionSummary} from './TransactionSummary'
 
 export const ConfirmTxScreen = () => {
-  const bottomSheetRef = React.useRef<null | BottomSheetRef>(null)
-
-  const openBottomSheet = () => {
-    bottomSheetRef.current?.openBottomSheet()
-  }
-
-  const closeBottomSheet = () => {
-    bottomSheetRef.current?.closeBottomSheet()
-  }
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
+  const {openModal, closeModal} = useModal()
 
-  const {unsignedTx, createOrder} = useSwap()
+  const {unsignedTx, orderData} = useSwap()
   const sellTokenInfo = useTokenInfo({
     wallet,
-    tokenId: createOrder.amounts.sell.tokenId,
+    tokenId: orderData.amounts.sell.tokenId,
   })
   const buyTokenInfo = useTokenInfo({
     wallet,
-    tokenId: createOrder.amounts.buy.tokenId,
+    tokenId: orderData.amounts.buy.tokenId,
   })
 
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
@@ -51,7 +44,7 @@ export const ConfirmTxScreen = () => {
       signTx: {useErrorBoundary: true},
       submitTx: {
         onSuccess: () => {
-          if (!createOrder.selectedPool) return
+          if (orderData.selectedPoolCalculation === undefined) return
           track.swapOrderSubmitted({
             from_asset: [
               {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
@@ -59,12 +52,12 @@ export const ConfirmTxScreen = () => {
             to_asset: [
               {asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group},
             ],
-            order_type: createOrder.type,
-            slippage_tolerance: createOrder.slippage,
-            from_amount: createOrder.amounts.sell.quantity,
-            to_amount: createOrder.amounts.buy.quantity,
-            pool_source: createOrder.selectedPool.provider,
-            swap_fees: Number(createOrder.selectedPool.fee),
+            order_type: orderData.type,
+            slippage_tolerance: orderData.slippage,
+            from_amount: orderData.amounts.sell.quantity,
+            to_amount: orderData.amounts.buy.quantity,
+            pool_source: orderData.selectedPoolCalculation.pool.provider,
+            swap_fees: Number(orderData.selectedPoolCalculation.cost.batcherFee),
           })
 
           navigate.submittedTx()
@@ -80,7 +73,7 @@ export const ConfirmTxScreen = () => {
   const txIsLoading = authenticating || processingTx
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
       <TransactionSummary />
 
       <Actions>
@@ -94,31 +87,26 @@ export const ConfirmTxScreen = () => {
               authWithOs()
               return
             }
-            openBottomSheet()
+            openModal(
+              wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction,
+              <View style={styles.modalContent}>
+                <ConfirmTx
+                  wallet={wallet}
+                  unsignedTx={unsignedTx}
+                  onSuccess={() => {
+                    closeModal()
+                    navigate.submittedTx()
+                  }}
+                  onCancel={closeModal}
+                />
+
+                <Spacer height={16} />
+              </View>,
+              wallet.isHW ? 430 : 350,
+            )
           }}
         />
       </Actions>
-
-      <BottomSheet
-        height={wallet.isHW ? 430 : 350}
-        ref={bottomSheetRef}
-        title={wallet.isHW ? strings.chooseConnectionMethod : strings.signTransaction}
-        isExtendable={false}
-      >
-        <View style={styles.modalContent}>
-          <ConfirmTx
-            wallet={wallet}
-            unsignedTx={unsignedTx}
-            onSuccess={() => {
-              closeBottomSheet()
-              navigate.submittedTx()
-            }}
-            onCancel={closeBottomSheet}
-          />
-
-          <Spacer height={16} />
-        </View>
-      </BottomSheet>
 
       <LoadingOverlay loading={txIsLoading} />
     </SafeAreaView>
@@ -134,6 +122,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: COLORS.WHITE,
     justifyContent: 'space-between',
+    paddingTop: 16,
   },
   actions: {
     paddingVertical: 16,
@@ -141,6 +130,5 @@ const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
     alignSelf: 'stretch',
-    paddingHorizontal: 16,
   },
 })

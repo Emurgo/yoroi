@@ -9,7 +9,13 @@ export const swapApiMaker = (
     isMainnet,
     stakingKey,
     primaryTokenId,
-  }: {isMainnet?: boolean; stakingKey: string; primaryTokenId: string},
+    supportedProviders,
+  }: {
+    isMainnet?: boolean
+    stakingKey: string
+    primaryTokenId: string
+    supportedProviders: ReadonlyArray<Swap.SupportedProvider>
+  },
   deps?: {openswap?: OpenSwapApi},
 ): Readonly<Swap.Api> => {
   const api =
@@ -35,7 +41,6 @@ export const swapApiMaker = (
 
     const orderRequest: OpenSwap.CreateOrderRequest = {
       walletAddress: address,
-      // TODO: check this mistmach of protocol x provider on our end
       protocol:
         selectedPool.provider as OpenSwap.CreateOrderRequest['protocol'],
       poolId: selectedPool.poolId,
@@ -71,27 +76,40 @@ export const swapApiMaker = (
           .getTokens(transformers.asOpenswapTokenId(token))
           .then(transformers.asYoroiBalanceTokens)
 
-  const getPools: Swap.Api['getPools'] = async ({tokenA, tokenB}) => {
+  const getPools: Swap.Api['getPools'] = async ({
+    tokenA,
+    tokenB,
+    providers = supportedProviders,
+  }) => {
     if (!isMainnet) return apiMocks.getPools // preprod doesn't return any pools
 
-    const tokenIdA = transformers.asOpenswapTokenId(tokenA)
-    const tokenIdB = transformers.asOpenswapTokenId(tokenB)
-
     return api
-      .getPools({
-        tokenA: {
-          policyId: tokenIdA.policyId,
-          assetNameHex: tokenIdA.assetName,
-        },
-        tokenB: {
-          policyId: tokenIdB.policyId,
-          assetNameHex: tokenIdB.assetName,
-        },
+      .getLiquidityPools({
+        tokenA,
+        tokenB,
+        providers,
       })
       .then(transformers.asYoroiPools)
   }
 
+  const getPrice: Swap.Api['getPrice'] = async ({baseToken, quoteToken}) => {
+    const opBaseToken = transformers.asOpenswapPriceTokenAddress(baseToken)
+    const opQuoteToken = transformers.asOpenswapPriceTokenAddress(quoteToken)
+
+    return api
+      .getPrice({
+        baseToken: {
+          ...opBaseToken,
+        },
+        quoteToken: {
+          ...opQuoteToken,
+        },
+      })
+      .then((response) => response.price)
+  }
+
   return {
+    getPrice,
     getOpenOrders,
     cancelOrder,
     createOrder,
@@ -100,5 +118,6 @@ export const swapApiMaker = (
     getCompletedOrders,
     stakingKey,
     primaryTokenId,
+    supportedProviders,
   } as const
 }

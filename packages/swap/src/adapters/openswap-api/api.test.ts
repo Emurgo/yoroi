@@ -7,6 +7,7 @@ import {apiMocks} from './api.mocks'
 
 const stakingKey = 'someStakingKey'
 const primaryTokenId = ''
+const supportedProviders: ReadonlyArray<Swap.SupportedProvider> = ['minswap']
 
 describe('swapApiMaker', () => {
   let mockOpenSwapApi: jest.Mocked<OpenSwapApi>
@@ -14,12 +15,14 @@ describe('swapApiMaker', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockOpenSwapApi = {
+      getPrice: jest.fn(),
       cancelOrder: jest.fn(),
       createOrder: jest.fn(),
       getOrders: jest.fn(),
       getTokens: jest.fn(),
       getCompletedOrders: jest.fn(),
-      getPools: jest.fn(),
+      getLiquidityPools: jest.fn(),
+      getPoolsPair: jest.fn(),
       network: 'mainnet',
     } as any
   })
@@ -34,6 +37,7 @@ describe('swapApiMaker', () => {
         isMainnet: true,
         stakingKey,
         primaryTokenId,
+        supportedProviders,
       },
       {
         openswap: mockOpenSwapApi,
@@ -56,6 +60,7 @@ describe('swapApiMaker', () => {
         isMainnet: true,
         stakingKey,
         primaryTokenId,
+        supportedProviders,
       },
       {
         openswap: mockOpenSwapApi,
@@ -80,6 +85,7 @@ describe('swapApiMaker', () => {
         isMainnet: true,
         stakingKey,
         primaryTokenId,
+        supportedProviders,
       },
       {
         openswap: mockOpenSwapApi,
@@ -107,6 +113,7 @@ describe('swapApiMaker', () => {
       isMainnet: true,
       stakingKey,
       primaryTokenId,
+      supportedProviders,
     })
     expect(testnet).toBeDefined()
 
@@ -114,6 +121,7 @@ describe('swapApiMaker', () => {
       isMainnet: false,
       stakingKey,
       primaryTokenId,
+      supportedProviders,
     })
     expect(mainnet).toBeDefined()
   })
@@ -134,6 +142,7 @@ describe('swapApiMaker', () => {
           isMainnet: true,
           stakingKey,
           primaryTokenId,
+          supportedProviders,
         },
         {
           openswap: mockOpenSwapApi,
@@ -165,6 +174,7 @@ describe('swapApiMaker', () => {
           isMainnet: true,
           stakingKey,
           primaryTokenId,
+          supportedProviders,
         },
         {
           openswap: mockOpenSwapApi,
@@ -191,6 +201,7 @@ describe('swapApiMaker', () => {
           isMainnet: true,
           stakingKey,
           primaryTokenId,
+          supportedProviders,
         },
         {
           openswap: mockOpenSwapApi,
@@ -216,6 +227,7 @@ describe('swapApiMaker', () => {
           isMainnet: true,
           stakingKey,
           primaryTokenId,
+          supportedProviders,
         },
         {
           openswap: mockOpenSwapApi,
@@ -238,6 +250,7 @@ describe('swapApiMaker', () => {
           isMainnet: false,
           stakingKey,
           primaryTokenId,
+          supportedProviders,
         },
         {
           openswap: mockOpenSwapApi,
@@ -253,15 +266,16 @@ describe('swapApiMaker', () => {
 
   describe('getPools', () => {
     it('mainnet', async () => {
-      mockOpenSwapApi.getPools = jest
+      mockOpenSwapApi.getLiquidityPools = jest
         .fn()
-        .mockResolvedValue(openswapMocks.getPools)
+        .mockResolvedValue(openswapMocks.getLiquidityPools)
 
       const api = swapApiMaker(
         {
           isMainnet: true,
           stakingKey,
           primaryTokenId,
+          supportedProviders,
         },
         {
           openswap: mockOpenSwapApi,
@@ -274,19 +288,20 @@ describe('swapApiMaker', () => {
       })
 
       expect(result).toEqual<Swap.PoolResponse>(apiMocks.getPools)
-      expect(mockOpenSwapApi.getPools).toHaveBeenCalledTimes(1)
+      expect(mockOpenSwapApi.getLiquidityPools).toHaveBeenCalledTimes(1)
     })
 
     it('preprod (mocked)', async () => {
-      mockOpenSwapApi.getPools = jest
+      mockOpenSwapApi.getLiquidityPools = jest
         .fn()
-        .mockResolvedValue(openswapMocks.getPools)
+        .mockResolvedValue(openswapMocks.getLiquidityPools)
 
       const api = swapApiMaker(
         {
           isMainnet: false,
           stakingKey,
           primaryTokenId,
+          supportedProviders,
         },
         {
           openswap: mockOpenSwapApi,
@@ -299,7 +314,36 @@ describe('swapApiMaker', () => {
       })
 
       expect(result).toBeDefined()
-      expect(mockOpenSwapApi.getPools).not.toHaveBeenCalled()
+      expect(mockOpenSwapApi.getLiquidityPools).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('getPrice', () => {
+    it('mainnet', async () => {
+      mockOpenSwapApi.getPrice = jest
+        .fn()
+        .mockResolvedValue(openswapMocks.getPrice)
+
+      const api = swapApiMaker(
+        {
+          isMainnet: true,
+          stakingKey,
+          primaryTokenId,
+          supportedProviders,
+        },
+        {
+          openswap: mockOpenSwapApi,
+        },
+      )
+
+      const result = await api.getPrice({
+        baseToken: '',
+        quoteToken:
+          '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6.4d494e',
+      })
+
+      expect(result).toBe(0.07080044463)
+      expect(mockOpenSwapApi.getPrice).toHaveBeenCalledTimes(1)
     })
   })
 })

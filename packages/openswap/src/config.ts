@@ -2,7 +2,9 @@ import axios from 'axios'
 
 export const SWAP_API_ENDPOINTS = {
   mainnet: {
-    getPools: 'https://onchain2.muesliswap.com/pools/pair',
+    getPrice: 'https://api.muesliswap.com/price',
+    getPoolsPair: 'https://onchain2.muesliswap.com/pools/pair',
+    getLiquidityPools: 'https://api.muesliswap.com/liquidity/pools',
     getOrders: 'https://onchain2.muesliswap.com/orders/all/',
     getCompletedOrders: 'https://api.muesliswap.com/orders/v2',
     getTokens: 'https://api.muesliswap.com/list',
@@ -11,7 +13,9 @@ export const SWAP_API_ENDPOINTS = {
       'https://aggregator.muesliswap.com/cancelSwapTransaction',
   },
   preprod: {
-    getPools: 'https://preprod.pools.muesliswap.com/pools/pair',
+    getPrice: 'https://preprod.api.muesliswap.com/price',
+    getPoolsPair: 'https://preprod.pools.muesliswap.com/pools/pair',
+    getLiquidityPools: 'https://preprod.api.muesliswap.com/liquidity/pools',
     getOrders: 'https://preprod.pools.muesliswap.com/orders/all/',
     getCompletedOrders: 'https://api.muesliswap.com/orders/v2',
     getTokens: 'https://preprod.api.muesliswap.com/list',

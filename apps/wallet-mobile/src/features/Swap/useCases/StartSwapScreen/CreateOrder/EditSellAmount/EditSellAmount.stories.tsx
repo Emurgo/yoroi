@@ -42,17 +42,14 @@ const mockWallet = produce(mocks.wallet, (draft) => {
     },
   ]
 })
-const mockSwapStateNoBalance = produce(mockSwapStateDefault, (draft) => {
-  draft.createOrder.amounts.sell.quantity = '3000000'
-})
 const mockSwapStateSecodaryToken = produce(mockSwapStateDefault, (draft) => {
-  draft.createOrder.amounts.sell.tokenId = '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.444444'
+  draft.orderData.amounts.sell.tokenId = '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.444444'
 })
 const mockSwapStateUnamedToken = produce(mockSwapStateDefault, (draft) => {
-  draft.createOrder.amounts.sell.tokenId = '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.'
+  draft.orderData.amounts.sell.tokenId = '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f.'
 })
 const mockSwapStateWithIconBigDecimals = produce(mockSwapStateDefault, (draft) => {
-  draft.createOrder.amounts.sell = {
+  draft.orderData.amounts.sell = {
     tokenId: '1d129dc9c03f95a863489883914f05a52e13135994a32f0cbeacc65e.74484f444c53',
     quantity: '12301234567',
   }
@@ -79,21 +76,6 @@ storiesOf('Swap Edit Sell Amount', module)
       <SelectedWalletProvider wallet={mocks.wallet}>
         <SearchProvider>
           <SwapProvider swapManager={mockSwapManager}>
-            <SwapFormProvider>
-              <View style={styles.container}>
-                <EditSellAmount />
-              </View>
-            </SwapFormProvider>
-          </SwapProvider>
-        </SearchProvider>
-      </SelectedWalletProvider>
-    )
-  })
-  .add('without balance error', () => {
-    return (
-      <SelectedWalletProvider wallet={mockWallet}>
-        <SearchProvider>
-          <SwapProvider swapManager={mockSwapManager} initialState={mockSwapStateNoBalance}>
             <SwapFormProvider>
               <View style={styles.container}>
                 <EditSellAmount />

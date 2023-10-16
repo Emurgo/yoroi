@@ -1,30 +1,37 @@
-import {useSwap, useSwapPoolsByPair} from '@yoroi/swap'
+import {useSwap} from '@yoroi/swap'
 import React from 'react'
-import {ScrollView} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {ScrollView, StyleSheet} from 'react-native'
 
-import {COLORS} from '../../../../../../../theme'
 import {Counter} from '../../../../../common/Counter/Counter'
 import {SelectPoolFromList} from '../../../../../common/SelectPool/SelectPoolFromList/SelectPoolFromList'
 import {useStrings} from '../../../../../common/strings'
 
 export const SelectPoolFromListScreen = () => {
   const strings = useStrings()
-  const {createOrder} = useSwap()
+  const {orderData} = useSwap()
 
-  const {poolList} = useSwapPoolsByPair({
-    tokenA: createOrder.amounts.sell.tokenId,
-    tokenB: createOrder.amounts.buy.tokenId,
-  })
-  const poolCounter = Array.isArray(poolList) ? poolList.length : 0
+  const {pools} = orderData
+
+  const poolCounter = Array.isArray(pools) ? pools.length : 0
 
   return (
-    <SafeAreaView style={{backgroundColor: COLORS.WHITE, paddingBottom: 16}}>
+    <>
       <ScrollView>
-        <SelectPoolFromList data={poolList} />
-
-        <Counter counter={poolCounter} customText={strings.pools(poolCounter)} />
+        <SelectPoolFromList pools={pools} />
       </ScrollView>
-    </SafeAreaView>
+
+      <Counter
+        counter={poolCounter}
+        unitsText={strings.pools(poolCounter)}
+        closingText={strings.available}
+        style={styles.counter}
+      />
+    </>
   )
 }
+
+const styles = StyleSheet.create({
+  counter: {
+    paddingVertical: 16,
+  },
+})

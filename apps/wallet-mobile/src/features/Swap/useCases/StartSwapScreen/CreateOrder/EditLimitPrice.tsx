@@ -12,19 +12,20 @@ import {useStrings} from '../../../common/strings'
 import {useSwapTouched} from '../../../common/SwapFormProvider'
 
 const BORDER_SIZE = 1
-const PRECISION = 10
+const PRECISION = 14
 
 export const EditLimitPrice = () => {
   const strings = useStrings()
   const {numberLocale} = useLanguage()
   const [text, setText] = React.useState('')
   const wallet = useSelectedWallet()
+  const inputRef = React.useRef<TextInput>(null)
 
-  const {createOrder, limitPriceChanged} = useSwap()
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
+  const {orderData, limitPriceChanged} = useSwap()
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
+  const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
   const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
-  const disabled = createOrder.type === 'market'
+  const disabled = orderData.type === 'market'
 
   const {isBuyTouched, isSellTouched} = useSwapTouched()
 
@@ -32,25 +33,20 @@ export const EditLimitPrice = () => {
   const tokenToBuyName = isBuyTouched ? buyTokenInfo.ticker ?? buyTokenInfo.name : '-'
 
   React.useEffect(() => {
-    setText(Quantities.format(createOrder.marketPrice, denomination, PRECISION))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createOrder.marketPrice])
-
-  React.useEffect(() => {
-    if (createOrder.type === 'limit') {
-      setText(Quantities.format(createOrder?.limitPrice ?? Quantities.zero, denomination, PRECISION))
+    if (orderData.type === 'limit') {
+      !inputRef?.current?.isFocused() &&
+        setText(Quantities.format(orderData.limitPrice ?? Quantities.zero, denomination, PRECISION))
     } else {
-      setText(Quantities.format(createOrder.marketPrice, denomination, PRECISION))
+      setText(
+        Quantities.format(orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero, denomination, PRECISION),
+      )
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createOrder.type, createOrder.limitPrice])
+  }, [orderData.type, orderData.limitPrice, orderData.amounts.sell, denomination, orderData.selectedPoolCalculation])
 
   const onChange = (text: string) => {
-    const [formattedPrice, price] = Quantities.parseFromText(text, PRECISION, numberLocale)
-    const value = Quantities.denominated(price, PRECISION)
-
+    const [formattedPrice, price] = Quantities.parseFromText(text, denomination, numberLocale, PRECISION)
     setText(formattedPrice)
-    limitPriceChanged(value)
+    limitPriceChanged(price)
   }
 
   return (
@@ -58,7 +54,7 @@ export const EditLimitPrice = () => {
       <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
 
       <View style={styles.content}>
-        <AmountInput onChange={onChange} value={text} editable={!disabled} />
+        <AmountInput onChange={onChange} value={text} editable={!disabled} inputRef={inputRef} />
 
         <View style={[styles.textWrapper, disabled && styles.disabled]}>
           <Text style={styles.text}>
@@ -74,8 +70,9 @@ type AmountInputProps = {
   value?: string
   onChange(value: string): void
   editable: boolean
+  inputRef?: React.RefObject<TextInput>
 }
-const AmountInput = ({onChange, value, editable}: AmountInputProps) => {
+const AmountInput = ({onChange, value, editable, inputRef}: AmountInputProps) => {
   return (
     <TextInput
       keyboardType="numeric"
@@ -88,6 +85,7 @@ const AmountInput = ({onChange, value, editable}: AmountInputProps) => {
       style={styles.amountInput}
       underlineColorAndroid="transparent"
       editable={editable}
+      ref={inputRef}
     />
   )
 }

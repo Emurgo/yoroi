@@ -12,16 +12,17 @@ import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../../../../common/SwapFormProvider'
 
-export const EditBuyAmount = () => {
+export const EditBuyAmount = ({error = ''}: {error?: string}) => {
   const strings = useStrings()
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
   const {numberLocale} = useLanguage()
   const inputRef = React.useRef<TextInput>(null)
 
-  const {createOrder, buyAmountChanged} = useSwap()
+  const {orderData, buyQuantityChanged} = useSwap()
   const {isBuyTouched} = useSwapTouched()
-  const {tokenId, quantity} = createOrder.amounts.buy
+  const pool = orderData.selectedPoolCalculation?.pool
+  const {tokenId, quantity} = orderData.amounts.buy
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const {decimals} = tokenInfo
   const balance = useBalance({wallet, tokenId})
@@ -34,19 +35,11 @@ export const EditBuyAmount = () => {
     }
   }, [isBuyTouched, quantity, tokenInfo.decimals])
 
-  const poolSupply =
-    tokenId === createOrder?.selectedPool?.tokenA.tokenId
-      ? createOrder.selectedPool?.tokenA.quantity
-      : createOrder.selectedPool?.tokenB.quantity
-  const hasSupply = !Quantities.isGreaterThan(quantity, poolSupply ?? Quantities.zero)
-  const showError =
-    (!Quantities.isZero(quantity) && !hasSupply) || (isBuyTouched && createOrder.selectedPool === undefined)
-
   const onChangeQuantity = (text: string) => {
     try {
       const [input, quantity] = Quantities.parseFromText(text, decimals ?? 0, numberLocale)
       setInputValue(text === '' ? text : input)
-      buyAmountChanged({tokenId, quantity})
+      buyQuantityChanged(quantity)
     } catch (error) {
       Logger.error('SwapAmountScreen::onChangeQuantity', error)
     }
@@ -59,11 +52,11 @@ export const EditBuyAmount = () => {
       value={inputValue}
       amount={{tokenId, quantity: balance}}
       wallet={wallet}
-      hasError={showError}
       navigateTo={navigate.selectBuyToken}
       touched={isBuyTouched}
       inputRef={inputRef}
-      inputEditable={createOrder.selectedPool !== undefined}
+      inputEditable={pool !== undefined}
+      error={error}
     />
   )
 }

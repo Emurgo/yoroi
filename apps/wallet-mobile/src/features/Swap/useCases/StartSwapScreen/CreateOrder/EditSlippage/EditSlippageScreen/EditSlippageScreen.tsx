@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button} from '../../../../../../../components'
 import {useLanguage} from '../../../../../../../i18n'
@@ -50,10 +51,10 @@ const MAX_DECIMALS = 1
 export const EditSlippageScreen = () => {
   const {numberLocale} = useLanguage()
 
-  const {slippageChanged, createOrder} = useSwap()
-  const defaultSelectedChoice = getChoiceBySlippage(createOrder.slippage, numberLocale)
+  const {slippageChanged, orderData} = useSwap()
+  const defaultSelectedChoice = getChoiceBySlippage(orderData.slippage, numberLocale)
   const defaultInputValue =
-    defaultSelectedChoice.label === 'Manual' ? new BigNumber(createOrder.slippage).toFormat(numberLocale) : ''
+    defaultSelectedChoice.label === 'Manual' ? new BigNumber(orderData.slippage).toFormat(numberLocale) : ''
 
   const [selectedChoiceLabel, setSelectedChoiceLabel] = useState<ChoiceKind>(defaultSelectedChoice.label)
   const [inputValue, setInputValue] = useState(defaultInputValue)
@@ -94,7 +95,7 @@ export const EditSlippageScreen = () => {
   const isButtonDisabled = hasError || (isSelectedChoiceManual && inputValue.length === 0)
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -162,7 +163,7 @@ export const EditSlippageScreen = () => {
           onPress={onSubmit}
         />
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   )
 }
 

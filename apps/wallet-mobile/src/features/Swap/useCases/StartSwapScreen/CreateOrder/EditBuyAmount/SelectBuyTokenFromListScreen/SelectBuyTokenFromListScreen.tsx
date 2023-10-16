@@ -16,6 +16,7 @@ import {useAllTokenInfos, useBalance} from '../../../../../../../yoroi-wallets/h
 import {asQuantity, Quantities} from '../../../../../../../yoroi-wallets/utils'
 import {filterByFungibility} from '../../../../../../Send/common/filterByFungibility'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
+import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
@@ -55,7 +56,7 @@ export const SelectBuyTokenFromListScreen = () => {
   )
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['left', 'right']}>
       <Boundary loading={loading}>
         <TokenList />
       </Boundary>
@@ -170,7 +171,12 @@ const TokenList = () => {
         <Text style={styles.topText}>{strings.assetsIn}</Text>
       </View>
 
-      <Counter counter={filteredTransformedList.length} />
+      <Counter
+        counter={filteredTransformedList.length}
+        style={styles.counter}
+        unitsText={strings.assets(filteredTransformedList.length)}
+        closingText={strings.available}
+      />
     </View>
   )
 }
@@ -178,25 +184,31 @@ const TokenList = () => {
 type SelectableTokenProps = {disabled?: boolean; tokenForList: TokenForList; wallet: YoroiWallet}
 const SelectableToken = ({tokenForList, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
-  const {buyAmountChanged} = useSwap()
-  const {buyTouched} = useSwapTouched()
-
+  const {buyTokenIdChanged, orderData} = useSwap()
+  const {buyTouched, isSellTouched} = useSwapTouched()
   const navigateTo = useNavigateTo()
   const balanceAvailable = useBalance({wallet, tokenId: tokenForList.id})
   const {track} = useMetrics()
 
-  const onSelect = () => {
+  const isDisabled = tokenForList.id === orderData.amounts.sell.tokenId && isSellTouched
+
+  const handleOnTokenSelection = () => {
     track.swapAssetToChanged({
       to_asset: [{asset_name: tokenForList.name, asset_ticker: tokenForList.ticker, policy_id: tokenForList.group}],
     })
+    buyTokenIdChanged(tokenForList.id)
     buyTouched()
-    buyAmountChanged({tokenId: tokenForList.id, quantity: Quantities.zero})
     navigateTo.startSwap()
     closeSearch()
   }
 
   return (
-    <TouchableOpacity style={styles.item} onPress={onSelect} testID="selectTokenButton">
+    <TouchableOpacity
+      style={[styles.item, isDisabled && styles.disabled]}
+      onPress={handleOnTokenSelection}
+      testID="selectTokenButton"
+      disabled={isDisabled}
+    >
       <AmountItem
         amount={{tokenId: tokenForList.id, quantity: balanceAvailable}}
         wallet={wallet}
@@ -207,33 +219,6 @@ const SelectableToken = ({tokenForList, wallet}: SelectableTokenProps) => {
       />
     </TouchableOpacity>
   )
-}
-
-const Counter = ({counter}: {counter: number}) => {
-  const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const strings = useStrings()
-
-  if (!isSearching) {
-    return (
-      <View style={styles.counter}>
-        <Text style={styles.counterTextBold}>{`${counter} ${strings.assets(counter)} `}</Text>
-
-        <Text style={styles.counterText}>{strings.available}</Text>
-      </View>
-    )
-  }
-
-  if (isSearching && assetSearchTerm.length > 0) {
-    return (
-      <View style={styles.counter}>
-        <Text style={styles.counterTextBold}>{`${counter} ${strings.assets(counter)} `}</Text>
-
-        <Text style={styles.counterText}>{strings.found}</Text>
-      </View>
-    )
-  }
-
-  return null
 }
 
 const EmptyList = ({
@@ -298,19 +283,6 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: COLORS.BORDER_GRAY,
   },
-  counter: {
-    padding: 16,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  counterText: {
-    fontWeight: '400',
-    color: COLORS.SHELLEY_BLUE,
-  },
-  counterTextBold: {
-    fontWeight: 'bold',
-    color: COLORS.SHELLEY_BLUE,
-  },
   row: {
     flexDirection: 'row',
     alignSelf: 'center',
@@ -336,5 +308,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#000',
     paddingTop: 4,
+  },
+  counter: {
+    paddingVertical: 16,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 })

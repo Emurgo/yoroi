@@ -1,8 +1,8 @@
 import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
-import React, {useEffect, useMemo, useState} from 'react'
-import {KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
+import * as React from 'react'
+import {Alert, KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer} from '../../../../../components'
@@ -10,7 +10,9 @@ import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {isEmptyString} from '../../../../../utils'
+import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
+import {useBalance, useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {createYoroiEntry} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
@@ -31,37 +33,38 @@ const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 export const CreateOrder = () => {
   const strings = useStrings()
   const navigation = useNavigateTo()
-  const {createOrder, selectedPoolChanged, unsignedTxChanged, txPayloadChanged} = useSwap()
+  const {orderData, unsignedTxChanged, poolPairsChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
+  const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
+  const [sellBackendError, setSellBackendError] = React.useState('')
+
+  useSwapPoolsByPair(
+    {
+      tokenA: orderData.amounts.sell.tokenId,
+      tokenB: orderData.amounts.buy.tokenId,
+    },
+    {
+      enabled: isBuyTouched && isSellTouched,
+      onSuccess: (pools) => {
+        poolPairsChanged(pools)
+      },
+    },
+  )
 
   const sellTokenInfo = useTokenInfo({
     wallet,
-    tokenId: createOrder.amounts.sell.tokenId,
+    tokenId: orderData.amounts.sell.tokenId,
   })
   const buyTokenInfo = useTokenInfo({
     wallet,
-    tokenId: createOrder.amounts.buy.tokenId,
+    tokenId: orderData.amounts.buy.tokenId,
   })
-  const [showLimitPriceWarning, setShowLimitPriceWarning] = useState(false)
-  const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
-  const {poolList} = useSwapPoolsByPair({
-    tokenA: createOrder.amounts.sell.tokenId ?? '',
-    tokenB: createOrder.amounts.buy.tokenId ?? '',
-  })
+  const [showLimitPriceWarning, setShowLimitPriceWarning] = React.useState(false)
 
-  const bestPool = useMemo(() => {
-    if (poolList !== undefined && poolList.length > 0) {
-      return poolList.sort((a, b) => a.price - b.price).find(() => true)
-    }
-    return undefined
-  }, [poolList])
-
-  useEffect(() => {
-    selectedPoolChanged(bestPool)
-    poolDefaulted()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolDefaulted, selectedPoolChanged, bestPool?.poolId, bestPool?.price])
+  React.useEffect(() => {
+    if (orderData.selectedPoolId === orderData.bestPoolCalculation?.pool.poolId) poolDefaulted()
+  }, [orderData.selectedPoolId, orderData.bestPoolCalculation, poolDefaulted])
 
   const {createUnsignedTx, isLoading} = useSwapTx({
     onSuccess: (yoroiUnsignedTx) => {
@@ -70,96 +73,72 @@ export const CreateOrder = () => {
       setShowLimitPriceWarning(false)
     },
     onError: (error) => {
-      console.log(error)
+      if (error instanceof NotEnoughMoneyToSendError) {
+        setSellBackendError(strings.notEnoughBalance)
+        return
+      }
+
+      Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error.message))
     },
   })
 
   const {createOrderData} = useSwapCreateOrder({
     onSuccess: (data: Swap.CreateOrderResponse) => {
-      if (data?.contractAddress !== undefined && createOrder.selectedPool !== undefined) {
-        const {amounts, limitPrice, address, slippage, selectedPool} = createOrder
+      if (data?.contractAddress !== undefined && orderData.selectedPoolCalculation?.pool !== undefined) {
+        const {amounts, limitPrice, slippage, selectedPoolCalculation} = orderData
         const entry = createYoroiEntry(
           {
             amounts,
             limitPrice,
-            address,
+            address: data.contractAddress,
             slippage,
-            selectedPool,
+            selectedPool: selectedPoolCalculation.pool,
           },
           data.contractAddress,
           wallet,
         )
         const datum = {data: data.datum}
-        txPayloadChanged({datum: data.datum, datumHash: data.datumHash, contractAddress: data.contractAddress})
         createUnsignedTx({entry, datum})
       }
     },
     onError: (error) => {
-      console.log(error)
+      Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
     },
   })
+
+  const sellError = useSellError([sellBackendError])
+  const buyError = useBuyError()
 
   const disabled =
     !isBuyTouched ||
     !isSellTouched ||
-    Quantities.isZero(createOrder.amounts.buy.quantity) ||
-    Quantities.isZero(createOrder.amounts.sell.quantity) ||
-    (createOrder.type === 'limit' && createOrder.limitPrice !== undefined && Quantities.isZero(createOrder.limitPrice))
+    Quantities.isZero(orderData.amounts.buy.quantity) ||
+    Quantities.isZero(orderData.amounts.sell.quantity) ||
+    (orderData.type === 'limit' && orderData.limitPrice !== undefined && Quantities.isZero(orderData.limitPrice)) ||
+    !isEmptyString(sellError) ||
+    !isEmptyString(buyError)
 
   const swap = () => {
-    if (!createOrder.selectedPool) return
+    if (orderData.selectedPoolCalculation === undefined) return
     track.swapOrderSelected({
       from_asset: [
         {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
       ],
       to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
-      order_type: createOrder.type,
-      slippage_tolerance: createOrder.slippage,
-      from_amount: createOrder.amounts.sell.quantity,
-      to_amount: createOrder.amounts.buy.quantity,
-      pool_source: createOrder.selectedPool.provider,
+      order_type: orderData.type,
+      slippage_tolerance: orderData.slippage,
+      from_amount: orderData.amounts.sell.quantity,
+      to_amount: orderData.amounts.buy.quantity,
+      pool_source: orderData.selectedPoolCalculation.pool.provider,
       swap_fees: Number(
-        Quantities.denominated(createOrder.selectedPool.batcherFee.quantity, Number(wallet.primaryTokenInfo.decimals)),
+        Quantities.denominated(
+          orderData.selectedPoolCalculation.pool.batcherFee.quantity,
+          Number(wallet.primaryTokenInfo.decimals),
+        ),
       ),
     })
 
     navigation.confirmTx()
-  }
-
-  const createUnsignedSwapTx = () => {
-    const {amounts} = createOrder
-    const orderDetails = {
-      sell: amounts.sell,
-      buy: amounts.buy,
-      pools: poolList,
-      selectedPool: createOrder.selectedPool,
-      slippage: createOrder.slippage,
-      address: wallet.externalAddresses[0],
-    }
-
-    if (orderDetails.pools === undefined || orderDetails.selectedPool === undefined) return
-
-    if (createOrder.type === 'market') {
-      const orderResult: Swap.CreateOrderData | undefined = makePossibleMarketOrder(
-        orderDetails.sell,
-        orderDetails.buy,
-        orderDetails.pools,
-        orderDetails.slippage,
-        orderDetails.address,
-      )
-      if (orderResult) createSwapOrder(orderResult)
-    }
-
-    if (createOrder.type === 'limit') {
-      const orderResult = makeLimitOrder(
-        orderDetails.sell,
-        orderDetails.buy,
-        orderDetails.selectedPool,
-        orderDetails.slippage,
-        orderDetails.address,
-      )
-      createSwapOrder(orderResult)
-    }
   }
 
   const createSwapOrder = (orderData: Swap.CreateOrderData) => {
@@ -174,10 +153,46 @@ export const CreateOrder = () => {
     })
   }
 
+  const createUnsignedSwapTx = () => {
+    const orderDetails = {
+      sell: orderData.amounts.sell,
+      buy: orderData.amounts.buy,
+      pools: orderData.pools,
+      selectedPool: orderData.selectedPoolCalculation?.pool,
+      slippage: orderData.slippage,
+      address: wallet.externalAddresses[0],
+    }
+
+    if (orderDetails.pools === undefined || orderDetails.selectedPool === undefined) return
+
+    if (orderData.type === 'market') {
+      const orderResult: Swap.CreateOrderData | undefined = makePossibleMarketOrder(
+        orderDetails.sell,
+        orderDetails.buy,
+        orderDetails.pools,
+        orderDetails.slippage,
+        orderDetails.address,
+      )
+      if (orderResult) createSwapOrder(orderResult)
+    }
+
+    if (orderData.type === 'limit') {
+      const orderResult = makeLimitOrder(
+        orderDetails.sell,
+        orderDetails.buy,
+        orderDetails.selectedPool,
+        orderDetails.slippage,
+        orderDetails.address,
+      )
+      createSwapOrder(orderResult)
+    }
+  }
+
   const handleOnSwap = () => {
-    if (createOrder.type === 'limit' && createOrder.limitPrice !== undefined) {
-      const marketPrice = new BigNumber(createOrder.marketPrice)
-      const limitPrice = new BigNumber(createOrder.limitPrice)
+    if (orderData.selectedPoolCalculation === undefined) return
+    if (orderData.type === 'limit' && orderData.limitPrice !== undefined) {
+      const marketPrice = new BigNumber(orderData.selectedPoolCalculation.prices.market)
+      const limitPrice = new BigNumber(orderData.limitPrice)
 
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
         setShowLimitPriceWarning(true)
@@ -205,7 +220,7 @@ export const CreateOrder = () => {
 
             <TopTokenActions />
 
-            <EditSellAmount />
+            <EditSellAmount error={sellError} />
 
             <Spacer height={16} />
 
@@ -213,7 +228,7 @@ export const CreateOrder = () => {
 
             <Spacer height={16} />
 
-            <EditBuyAmount />
+            <EditBuyAmount error={buyError} />
 
             <Spacer height={20} />
 
@@ -236,6 +251,83 @@ export const CreateOrder = () => {
 }
 
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
+
+const useSellError = (errors: Array<string> = []): string => {
+  const noPoolError = useNoPoolError()
+  const notEnoughBalanceError = useNotEnoughBalanceError()
+
+  const allErrors = [noPoolError, notEnoughBalanceError, ...errors]
+  const sellError = allErrors.find((error) => !isEmptyString(error))
+
+  return sellError ?? ''
+}
+
+const useBuyError = (errors: Array<string> = []): string => {
+  const noPoolError = useNoPoolError()
+  const notEnoughSupplyError = useNotEnoughSupplyError()
+
+  const allErrors = [noPoolError, notEnoughSupplyError, ...errors]
+  const buyError = allErrors.find((error) => !isEmptyString(error))
+
+  return buyError ?? ''
+}
+
+const useNotEnoughSupplyError = (): string => {
+  const strings = useStrings()
+  const {orderData} = useSwap()
+  const {isBuyTouched, isSellTouched} = useSwapTouched()
+  const pool = orderData.selectedPoolCalculation?.pool
+  const {tokenId, quantity} = orderData.amounts.buy
+  const poolSupply = tokenId === pool?.tokenA.tokenId ? pool?.tokenA.quantity : pool?.tokenB.quantity
+  const hasSupply = !Quantities.isGreaterThan(quantity, poolSupply ?? Quantities.zero)
+
+  const notEnoughSupplyError =
+    (!Quantities.isZero(quantity) && !hasSupply) || (isSellTouched && isBuyTouched && pool === undefined)
+      ? strings.notEnoughSupply
+      : ''
+
+  return notEnoughSupplyError
+}
+
+const useNotEnoughBalanceError = (): string => {
+  const strings = useStrings()
+  const {orderData} = useSwap()
+  const {isBuyTouched} = useSwapTouched()
+  const wallet = useSelectedWallet()
+  const {tokenId, quantity} = orderData.amounts.sell
+  const balance = useBalance({wallet, tokenId})
+
+  const hasPrimaryTokenBalance = !Quantities.isGreaterThan(
+    Quantities.sum([
+      tokenId === wallet.primaryTokenInfo.id ? orderData.amounts.sell.quantity : Quantities.zero,
+      orderData.selectedPoolCalculation?.cost.ptTotalFeeNoFEF.quantity ?? Quantities.zero,
+    ]),
+    balance,
+  )
+
+  const hasSecondaryTokenBalance = !Quantities.isGreaterThan(
+    tokenId !== wallet.primaryTokenInfo.id ? orderData.amounts.sell.quantity : Quantities.zero,
+    balance,
+  )
+
+  const notEnoughBalanceError =
+    !Quantities.isZero(quantity) && (!hasPrimaryTokenBalance || !hasSecondaryTokenBalance) && isBuyTouched
+      ? strings.notEnoughBalance
+      : ''
+
+  return notEnoughBalanceError
+}
+
+const useNoPoolError = () => {
+  const strings = useStrings()
+  const {orderData} = useSwap()
+  const {isBuyTouched, isSellTouched} = useSwapTouched()
+
+  const noPoolError =
+    orderData.selectedPoolCalculation === undefined && isBuyTouched && isSellTouched ? strings.noPool : ''
+
+  return noPoolError
+}
 
 const styles = StyleSheet.create({
   root: {

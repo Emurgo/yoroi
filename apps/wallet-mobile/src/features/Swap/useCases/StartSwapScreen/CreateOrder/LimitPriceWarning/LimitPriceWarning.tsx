@@ -4,8 +4,8 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer} from '../../../../../../components'
-import {BottomSheetModal} from '../../../../../../components/BottomSheetModal'
 import {useLanguage} from '../../../../../../i18n'
+import {BottomSheetModal} from '../../../../../../legacy/BottomSheetModal'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {useStrings} from '../../../../common/strings'
@@ -17,16 +17,16 @@ export interface LimitPriceWarningProps {
 }
 
 export const LimitPriceWarning = ({open, onClose, onSubmit}: LimitPriceWarningProps) => {
-  const {createOrder} = useSwap()
+  const {orderData} = useSwap()
   const {numberLocale} = useLanguage()
   const strings = useStrings()
-  const limitPrice = new BigNumber(createOrder.limitPrice ?? 0).toFormat(numberLocale)
-  const marketPrice = new BigNumber(createOrder.marketPrice).toFormat(numberLocale)
+  const limitPrice = new BigNumber(orderData.limitPrice ?? 0).toFormat(numberLocale)
+  const marketPrice = new BigNumber(orderData.selectedPoolCalculation?.prices.market ?? 0).toFormat(numberLocale)
   const wallet = useSelectedWallet()
 
-  const tokenToSellInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.sell.tokenId})
+  const tokenToSellInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
   const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name ?? '-'
-  const tokenToBuyInfo = useTokenInfo({wallet, tokenId: createOrder.amounts.buy.tokenId})
+  const tokenToBuyInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
   const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name ?? '-'
 
   const name = `${tokenToSellName}/${tokenToBuyName}`

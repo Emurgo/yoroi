@@ -8,7 +8,9 @@ import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Icon, Spacer} from '../components'
 import {features} from '../features'
 import {useSend} from '../features/Send/common/SendContext'
+import {useSwapTouched} from '../features/Swap/common/SwapFormProvider'
 import {actionMessages} from '../i18n/global-messages'
+import env from '../legacy/env'
 import {useMetrics} from '../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -25,20 +27,23 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {resetForm} = useSend()
-  const {createOrder} = useSwap()
+  const {orderData, resetState} = useSwap()
+  const {resetTouches} = useSwapTouched()
   const {track} = useMetrics()
   const sellTokenInfo = useTokenInfo({
     wallet,
-    tokenId: createOrder.amounts.sell.tokenId,
+    tokenId: orderData.amounts.sell.tokenId,
   })
   const buyTokenInfo = useTokenInfo({
     wallet,
-    tokenId: createOrder.amounts.buy.tokenId,
+    tokenId: orderData.amounts.buy.tokenId,
   })
 
   const handleOnBuy = () => {
+    // banxa doesn't support testnet for the sandbox it needs a mainnet address
+    const sandboxWallet = env.getString('BANXA_TEST_WALLET')
     const isMainnet = wallet.networkId !== 300
-    const walletAddress = wallet.externalAddresses[0]
+    const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
     const banxa = banxaModuleMaker({isProduction: isMainnet, partner: 'emurgo'})
     const url = banxa.createReferralUrl({
       coinType: 'ADA',
@@ -55,13 +60,16 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   const handleOnSwap = () => {
+    resetTouches()
+    resetState()
+
     track.swapInitiated({
       from_asset: [
         {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
       ],
       to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
-      order_type: createOrder.type,
-      slippage_tolerance: createOrder.slippage,
+      order_type: orderData.type,
+      slippage_tolerance: orderData.slippage,
     })
 
     navigateTo.swap()

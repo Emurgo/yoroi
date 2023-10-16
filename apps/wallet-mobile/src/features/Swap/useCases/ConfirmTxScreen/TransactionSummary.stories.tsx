@@ -32,7 +32,7 @@ const TxSummary = () => {
         initialState={{
           ...mockSwapStateDefault,
           unsignedTx: walletMocks.yoroiUnsignedTx,
-          createOrder: {...mocks.confirmTx.createOrder},
+          orderData: {...mocks.confirmTx.orderData},
         }}
         swapManager={{
           ...mockSwapManager,

@@ -1,4 +1,3 @@
-import {useSwap} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React, {useRef} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -8,6 +7,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 import {Boundary, Icon, Spacer, TokenIcon, TokenIconPlaceholder} from '../../../../components'
 import {formatTokenWithText} from '../../../../legacy/format'
 import {COLORS} from '../../../../theme'
+import {isEmptyString} from '../../../../utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
@@ -18,11 +18,11 @@ type Props = {
   amount: Balance.Amount
   onChange(value: string): void
   value?: string
-  hasError?: boolean
   navigateTo?: () => void
   touched?: boolean
   inputRef?: React.RefObject<TextInput>
   inputEditable?: boolean
+  error?: string
 }
 
 export const AmountCard = ({
@@ -32,19 +32,16 @@ export const AmountCard = ({
   wallet,
   amount,
   navigateTo,
-  hasError,
   touched,
   inputRef,
   inputEditable = true,
+  error,
 }: Props) => {
   const strings = useStrings()
   const {quantity, tokenId} = amount
   const amountInputRef = useRef<TextInput>(inputRef?.current ?? null)
 
   const tokenInfo = useTokenInfo({wallet, tokenId})
-  const {createOrder} = useSwap()
-
-  const isSell = tokenId === createOrder.amounts.sell.tokenId
 
   const noTokenSelected = !touched
 
@@ -59,8 +56,8 @@ export const AmountCard = ({
   }
   return (
     <View>
-      <View style={[styles.container, hasError && styles.borderError]}>
-        {label != null && <Text style={[styles.label, hasError && styles.labelError]}>{label}</Text>}
+      <View style={[styles.container, !isEmptyString(error) && styles.borderError]}>
+        {label != null && <Text style={[styles.label, !isEmptyString(error) && styles.labelError]}>{label}</Text>}
 
         <View style={styles.content}>
           <Pressable style={styles.amountWrapper} onPress={focusInput}>
@@ -113,17 +110,11 @@ export const AmountCard = ({
         </View>
       </View>
 
-      {hasError && (
+      {!isEmptyString(error) && (
         <View>
           <Spacer height={4} />
 
-          <Text style={styles.errorText}>
-            {createOrder.selectedPool === undefined
-              ? strings.noPool
-              : isSell
-              ? strings.notEnoughBalance
-              : strings.notEnoughSupply}
-          </Text>
+          <Text style={styles.errorText}>{error}</Text>
         </View>
       )}
     </View>
@@ -139,18 +130,6 @@ const messages = defineMessages({
     id: 'swap.swapScreen.currentBalance',
     defaultMessage: '!!!Current Balance',
   },
-  notEnoughBalance: {
-    id: 'swap.swapScreen.notEnoughBalance',
-    defaultMessage: '!!!Not enough balance',
-  },
-  notEnoughSupply: {
-    id: 'swap.swapScreen.notEnoughSupply',
-    defaultMessage: '!!!Not enough supply in the pool',
-  },
-  noPool: {
-    id: 'swap.swapScreen.noPool',
-    defaultMessage: '!!! This pair is not available in any liquidity pool',
-  },
 })
 
 const useStrings = () => {
@@ -158,9 +137,6 @@ const useStrings = () => {
   return {
     selectToken: intl.formatMessage(messages.selectToken),
     currentBalance: intl.formatMessage(messages.currentBalance),
-    notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
-    notEnoughSupply: intl.formatMessage(messages.notEnoughSupply),
-    noPool: intl.formatMessage(messages.noPool),
   }
 }
 

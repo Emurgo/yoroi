@@ -296,10 +296,12 @@ exports[`transactionManager restore, resetState, sync 5`] = `
             "policyId": "ecd07b4ef62f37a68d145de8efd60c53d288dd5ffc641215120cc3db",
           },
         ],
+        "id": "7bbdb2c383b2a87d6b6e596af4784c0460837018b795597cb5f284ea74d967161",
       },
     ],
     "lastUpdatedAt": "2022-06-12T23:46:47.000Z",
     "memo": null,
+    "metadata": undefined,
     "outputs": [
       {
         "address": "addr_test1qqkv3gr95tsuvwmgy4fcyffpcaxta9xu3df3az4rydxtlmwv60x7wwxgjxt6865rgds3na6sezwl4j483vmm796z0f7s9c9pry",

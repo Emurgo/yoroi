@@ -11,7 +11,7 @@ import {Spacer} from '../Spacer'
 export type ExpandableInfoCardProps = {
   info: React.ReactNode
   expanded?: boolean
-  children: React.ReactNode
+  children?: React.ReactNode
   header: React.ReactNode
   footer?: React.ReactNode
   withBoxShadow?: boolean
@@ -32,17 +32,29 @@ export const ExpandableInfoCard = ({
       <View style={[styles.container, withBoxShadow && styles.shadowProp]}>
         {header}
 
-        <Spacer height={8} />
+        {children !== undefined && (
+          <>
+            <Spacer height={8} />
 
-        {children}
+            {children}
+          </>
+        )}
 
-        <Spacer height={8} />
+        {expanded && (
+          <>
+            <Spacer height={8} />
 
-        {expanded && info}
+            {info}
+          </>
+        )}
 
-        {footer != null && footer}
+        {footer !== undefined && (
+          <>
+            <Spacer height={8} />
 
-        <Spacer height={8} />
+            {footer}
+          </>
+        )}
       </View>
 
       <Spacer height={8} />
@@ -60,13 +72,13 @@ export const HeaderWrapper = ({
   onPress: () => void
 }) => {
   return (
-    <View style={styles.flexBetween}>
-      {children}
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.flexBetween}>
+        {children}
 
-      <TouchableOpacity onPress={onPress}>
         {expanded ? <Icon.Chevron direction="up" size={24} /> : <Icon.Chevron direction="down" size={24} />}
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   )
 }
 
@@ -83,11 +95,13 @@ export const HiddenInfoWrapper = ({
   info,
   onPress,
   value,
+  icon,
 }: {
   label: string
   info?: React.ReactNode
   onPress?: () => void
   value: React.ReactNode
+  icon?: React.ReactNode
 }) => {
   return (
     <View>
@@ -104,7 +118,21 @@ export const HiddenInfoWrapper = ({
           )}
         </View>
 
-        {isString(value) ? <Text style={styles.text}>{value}</Text> : value}
+        {isString(value) ? (
+          <View style={styles.flex}>
+            {icon !== undefined && (
+              <View style={styles.flex}>
+                {icon}
+
+                <Spacer width={6} />
+              </View>
+            )}
+
+            <Text style={styles.text}>{value}</Text>
+          </View>
+        ) : (
+          value
+        )}
       </View>
 
       <Spacer height={8} />

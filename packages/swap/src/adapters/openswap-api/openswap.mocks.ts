@@ -310,140 +310,272 @@ const getOpenOrders: OpenSwap.OpenOrder[] = [
   },
 ]
 
-const getPools: OpenSwap.Pool[] = [
+const getLiquidityPools: OpenSwap.LiquidityPool[] = [
   {
     provider: 'minswap',
-    fee: '0.3',
+    poolFee: '0.3',
     tokenA: {
       amount: '1233807687',
-      token: '.',
+      address: {
+        policyId: '',
+        name: '',
+      },
+      symbol: '',
+      image: '',
+      decimalPlaces: 0,
+      status: '',
+      priceAda: 0,
     },
     tokenB: {
       amount: '780',
-      token:
-        'e16c2dc8ae937e8d3790c7fd7168d7b994621ba14ca11415f39fed72.43414b45',
+      address: {
+        policyId: 'e16c2dc8ae937e8d3790c7fd7168d7b994621ba14ca11415f39fed72',
+        name: '43414b45',
+      },
+      symbol: '',
+      image: '',
+      decimalPlaces: 0,
+      status: '',
+      priceAda: 0,
     },
-    price: 1581804.726923077,
-    batcherFee: {
-      amount: '2000000',
-      token: '.',
-    },
+    batcherFee: '2000000',
     // depositFee: {
     //   amount: '2000000',
     //   token: '.',
     // },
-    deposit: 2000000,
-    utxo: '0596860b5970ef989c56f7ae38b3c0f74bb4979ac15ee994c30760f7f4d908ce#0',
+    lvlDeposit: '2000000',
+    batcherAddress: 'someBatcherAddress',
+    feeToken: {
+      address: {
+        policyId: '.',
+        name: '.',
+      },
+      decimalPlaces: 0,
+    },
+    txHash: '0596860b5970ef989c56f7ae38b3c0f74bb4979ac15ee994c30760f7f4d908ce',
+    outputIdx: 0,
     poolId:
       '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
-    timestamp: '2023-05-31 07:03:41',
     lpToken: {
       amount: '981004',
-      token:
-        'e4214b7cce62ac6fbba385d164df48e157eae5863521b4b67ca71d86.7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
+      address: {
+        policyId: 'e4214b7cce62ac6fbba385d164df48e157eae5863521b4b67ca71d86',
+        name: '7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
+      },
     },
   },
   {
     provider: 'sundaeswap',
-    fee: '0.3',
+    poolFee: '0.3',
     tokenA: {
       amount: '1233807687',
-      token: '.',
+      address: {
+        policyId: '',
+        name: '',
+      },
+      symbol: '',
+      image: '',
+      decimalPlaces: 0,
+      status: '',
+      priceAda: 0,
     },
     tokenB: {
       amount: '780',
-      token:
-        'e16c2dc8ae937e8d3790c7fd7168d7b994621ba14ca11415f39fed72.43414b45',
+      address: {
+        policyId: 'e16c2dc8ae937e8d3790c7fd7168d7b994621ba14ca11415f39fed72',
+        name: '43414b45',
+      },
+      symbol: '',
+      image: '',
+      decimalPlaces: 0,
+      status: '',
+      priceAda: 0,
     },
-    price: 1581804.726923077,
-    batcherFee: {
-      amount: '2000000',
-      token: '.',
-    },
+    batcherFee: '2000000',
     // depositFee: {
     //   amount: '2000000',
     //   token: '.',
     // },
-    deposit: 2000000,
-    utxo: '0596860b5970ef989c56f7ae38b3c0f74bb4979ac15ee994c30760f7f4d908ce#0',
+    lvlDeposit: '2000000',
+    txHash: '0596860b5970ef989c56f7ae38b3c0f74bb4979ac15ee994c30760f7f4d908ce',
+    outputIdx: 0,
+    batcherAddress: 'someBatcherAddress',
+    feeToken: {
+      address: {
+        policyId: '.',
+        name: '.',
+      },
+      decimalPlaces: 0,
+    },
     poolId:
       '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
-    timestamp: '2023-05-31 07:03:41',
     lpToken: {
       amount: '981004',
-      token:
-        'e4214b7cce62ac6fbba385d164df48e157eae5863521b4b67ca71d86.7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
+      address: {
+        policyId: 'e4214b7cce62ac6fbba385d164df48e157eae5863521b4b67ca71d86',
+        name: '7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
+      },
     },
   },
   {
     provider: 'sundaeswap',
-    fee: '0.3',
+    poolFee: '0.3',
     tokenA: {
       amount: '1233807687',
-      token: '.',
+      address: {
+        policyId: '',
+        name: '',
+      },
+      symbol: '',
+      image: '',
+      decimalPlaces: 0,
+      status: '',
+      priceAda: 0,
     },
     tokenB: {
       amount: '780',
-      token:
-        'e16c2dc8ae937e8d3790c7fd7168d7b994621ba14ca11415f39fed72.43414b45',
+      address: {
+        policyId: 'e16c2dc8ae937e8d3790c7fd7168d7b994621ba14ca11415f39fed72',
+        name: '43414b45',
+      },
+      symbol: '',
+      image: '',
+      decimalPlaces: 0,
+      status: '',
+      priceAda: 0,
     },
-    price: 1581804.726923077,
-    batcherFee: {
-      amount: '2000000',
-      token: '.',
-    },
+    batcherFee: '2000000',
     // depositFee: {
     //   amount: '2000000',
     //   token: '.',
     // },
-    deposit: 2000000,
-    utxo: '0596860b5970ef989c56f7ae38b3c0f74bb4979ac15ee994c30760f7f4d908ce#0',
+    lvlDeposit: '2000000',
+    txHash: '0596860b5970ef989c56f7ae38b3c0f74bb4979ac15ee994c30760f7f4d908ce',
+    outputIdx: 0,
+    batcherAddress: 'someBatcherAddress',
+    feeToken: {
+      address: {
+        policyId: '.',
+        name: '.',
+      },
+      decimalPlaces: 0,
+    },
     poolId:
       '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
-    timestamp: '2023-05-31 07:03:41',
     lpToken: {
       amount: '981004',
-      token:
-        'e4214b7cce62ac6fbba385d164df48e157eae5863521b4b67ca71d86.7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
+      address: {
+        policyId: 'e4214b7cce62ac6fbba385d164df48e157eae5863521b4b67ca71d86',
+        name: '7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
+      },
     },
   },
   {
     provider: 'spectrum', // unsupported pool
-    fee: '0.3',
+    poolFee: '0.3',
     tokenA: {
       amount: '1233807687',
-      token: '.',
+      address: {
+        policyId: '',
+        name: '',
+      },
+      symbol: '',
+      image: '',
+      decimalPlaces: 0,
+      status: '',
+      priceAda: 0,
     },
     tokenB: {
       amount: '780',
-      token:
-        'e16c2dc8ae937e8d3790c7fd7168d7b994621ba14ca11415f39fed72.43414b45',
+      address: {
+        policyId: 'e16c2dc8ae937e8d3790c7fd7168d7b994621ba14ca11415f39fed72',
+        name: '43414b45',
+      },
+      symbol: '',
+      image: '',
+      decimalPlaces: 0,
+      status: '',
+      priceAda: 0,
     },
-    price: 1581804.726923077,
-    batcherFee: {
-      amount: '2000000',
-      token: '.',
-    },
+    batcherFee: '2000000',
     // depositFee: {
     //   amount: '2000000',
     //   token: '.',
     // },
-    deposit: 2000000,
-    utxo: '0596860b5970ef989c56f7ae38b3c0f74bb4979ac15ee994c30760f7f4d908ce#0',
+    lvlDeposit: '2000000',
+    txHash: '0596860b5970ef989c56f7ae38b3c0f74bb4979ac15ee994c30760f7f4d908ce',
+    outputIdx: 0,
+    batcherAddress: 'someBatcherAddress',
+    feeToken: {
+      address: {
+        policyId: '.',
+        name: '.',
+      },
+      decimalPlaces: 0,
+    },
     poolId:
       '0be55d262b29f564998ff81efe21bdc0022621c12f15af08d0f2ddb1.7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
-    timestamp: '2023-05-31 07:03:41',
     lpToken: {
       amount: '981004',
-      token:
-        'e4214b7cce62ac6fbba385d164df48e157eae5863521b4b67ca71d86.7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
+      address: {
+        policyId: 'e4214b7cce62ac6fbba385d164df48e157eae5863521b4b67ca71d86',
+        name: '7339a8bcda85e2c997d9f16beddbeb3ad755f5202f5cfd9cb08db346a1292c01',
+      },
     },
   },
 ]
 
+const getPrice: OpenSwap.PriceResponse = {
+  baseDecimalPlaces: 6,
+  quoteDecimalPlaces: 6,
+  baseAddress: {
+    policyId: '',
+    name: '',
+  },
+  quoteAddress: {
+    policyId: '29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6',
+    name: '4d494e',
+  },
+  askPrice: 0.08209814208,
+  bidPrice: 0.06319999985,
+  price: 0.07080044463,
+  volume: {
+    base: '14735349',
+    quote: '211287611',
+  },
+  volumeAggregator: {
+    minswap: {
+      quote: 107413106646,
+      base: 7651672996,
+    },
+    sundaeswap: {
+      quote: 566084169,
+      base: 39000000,
+    },
+    vyfi: {
+      quote: 12370434748,
+      base: 879028993,
+    },
+  },
+  volumeTotal: {
+    base: 8584437338,
+    quote: 120560913174,
+  },
+  volumeChange: {
+    base: 0,
+    quote: 0,
+  },
+  priceChange: {
+    '24h': '-0.2374956426253183',
+    '7d': '8.757469657697857',
+  },
+  marketCap: 68873484244745.086,
+}
+
 export const openswapMocks = {
   getTokens,
+  getPrice,
   getCompletedOrders,
   getOpenOrders,
-  getPools,
+  getLiquidityPools,
 }

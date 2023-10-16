@@ -9,14 +9,14 @@ import {ShowSlippageInfo} from './ShowSlippageInfo'
 
 export const EditSlippage = () => {
   const navigate = useNavigateTo()
-  const {createOrder} = useSwap()
+  const {orderData} = useSwap()
 
   return (
     <View style={styles.container}>
       <ShowSlippageInfo />
 
       <View style={styles.row}>
-        <Text>{`${createOrder.slippage} %`}</Text>
+        <Text>{`${orderData.slippage} %`}</Text>
 
         <Spacer width={4} />
 

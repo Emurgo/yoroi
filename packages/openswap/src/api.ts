@@ -5,15 +5,18 @@ import {
   getCompletedOrders,
   getOrders, // returns all orders for a given stake key hash.
 } from './orders'
-import {getPools} from './pools'
 import {getTokens} from './tokens'
 import {
   CancelOrderRequest,
   CreateOrderRequest,
   Network,
+  Provider,
+  PriceAddress,
   TokenAddress,
 } from './types'
 import {axiosClient} from './config'
+import {getPrice} from './price'
+import {getLiquidityPools, getPoolsPair} from './pools'
 
 export class OpenSwapApi {
   constructor(
@@ -51,16 +54,44 @@ export class OpenSwapApi {
     )
   }
 
-  public async getPools({
+  public async getPrice({
+    baseToken,
+    quoteToken,
+  }: {
+    baseToken: PriceAddress
+    quoteToken: PriceAddress
+  }) {
+    return getPrice(
+      {network: this.network, client: this.client},
+      {baseToken, quoteToken},
+    )
+  }
+
+  public async getPoolsPair({
     tokenA,
     tokenB,
   }: {
     tokenA: TokenAddress
     tokenB: TokenAddress
   }) {
-    return getPools(
+    return getPoolsPair(
       {network: this.network, client: this.client},
       {tokenA, tokenB},
+    )
+  }
+
+  public async getLiquidityPools({
+    tokenA,
+    tokenB,
+    providers,
+  }: {
+    tokenA: string
+    tokenB: string
+    providers: ReadonlyArray<Provider>
+  }) {
+    return getLiquidityPools(
+      {network: this.network, client: this.client},
+      {tokenA, tokenB, providers},
     )
   }
 
@@ -74,4 +105,19 @@ export class OpenSwapApi {
   }
 }
 
-const supportedNetworks: Network[] = ['mainnet', 'preprod']
+export const supportedNetworks: ReadonlyArray<Network> = [
+  'mainnet',
+  'preprod',
+] as const
+
+export const supportedProviders: ReadonlyArray<Provider> = [
+  'minswap',
+  'muesliswap_v1',
+  'muesliswap_v3',
+  'muesliswap_v4',
+  'spectrum',
+  'sundaeswap',
+  'vyfi',
+  'wingriders',
+  // 'muesliswap_v2' // TODO: enable after more clarification - right now user is not receiving tokens back when choosing this pool
+] as const
