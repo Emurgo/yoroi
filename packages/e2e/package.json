@@ -30,10 +30,13 @@
     "jest-html-reporters": "^3.1.4"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.23.2",
+    "@types/jest": "^29.5.5",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "eslint": "^8.51.0",
-    "eslint-plugin-react": "^7.33.2"
+    "eslint-plugin-react": "^7.33.2",
+    "ts-jest": "^29.1.1"
   },
   "eslintConfig": {
     "extends": [
@@ -70,8 +73,8 @@
     "jest.config.js"
   ],
   "e2ePath": {
-    "ios": "./e2e/tests/_ios",
-    "android": "./e2e/tests/_android"
+    "ios": "./tests/_ios_test",
+    "android": "./tests/_android"
   },
   "setEnvDetox": "export TARGET_DEVICE_PLATFORM_NAME=iphonesimulator",
   "ts-node": {

@@ -3,7 +3,7 @@ module.exports = {
   testRunner: {
     args: {
       '$0': 'jest',
-      config: 'e2e/jest.config.js'
+      config: 'jest.config.js'
     },
     jest: {
       setupTimeout: 120000
@@ -17,7 +17,7 @@ module.exports = {
     },
     'ios.nightly.debug': {
       type: 'ios.app',
-      binaryPath: '/Users/rahulnair/projects/yoroi/apps/wallet-mobile/ios/build/Build/Products/Debug-iphonesimulator/yoroi.app',
+      binaryPath: '/Users/rahulnair/projects/yoroi/apps/wallet-mobile/ios/build/Build/Products/Debug-iphonesimulator/nightly.app',
       build: 'xcodebuild -workspace /Users/rahulnair/projects/yoroi/apps/wallet-mobile/ios/yoroi.xcworkspace -scheme nightly -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'ios.nightly.release': {
