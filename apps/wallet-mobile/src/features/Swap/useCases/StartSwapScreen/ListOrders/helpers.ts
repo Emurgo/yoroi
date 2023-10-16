@@ -19,11 +19,12 @@ export const getCancellationOrderFee = async (
 ) => {
   const address = await CardanoMobile.Address.fromBech32(options.bech32Address)
   const bytes = await address.toBytes()
-  const addressHex = new Buffer(bytes).toString('hex')
+  const addressHex = Buffer.from(bytes).toString('hex')
   const cbor = await cancelOrder({
     utxos: {collateral: options.collateralUtxo, order: options.orderUtxo},
     address: addressHex,
   })
+  if (!cbor) throw new Error(`Failed to get CBOR from REST API for address ${options.bech32Address}`)
   const tx = await CardanoMobile.Transaction.fromBytes(Buffer.from(cbor, 'hex'))
   const feeNumber = await tx.body().then((b) => b.fee())
   return Quantities.denominated(
