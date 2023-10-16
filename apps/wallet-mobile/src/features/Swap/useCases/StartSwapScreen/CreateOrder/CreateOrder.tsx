@@ -6,7 +6,6 @@ import {Alert, KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer} from '../../../../../components'
-import {LoadingOverlay} from '../../../../../components/LoadingOverlay'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
@@ -109,8 +108,8 @@ export const CreateOrder = () => {
   const sellError = useSellError([sellBackendError])
   const buyError = useBuyError()
 
-  const disabled =
-    !isBuyTouched ||
+  const disabled = isLoading
+  !isBuyTouched ||
     !isSellTouched ||
     Quantities.isZero(orderData.amounts.buy.quantity) ||
     Quantities.isZero(orderData.amounts.sell.quantity) ||
@@ -244,8 +243,6 @@ export const CreateOrder = () => {
       <Actions>
         <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
       </Actions>
-
-      <LoadingOverlay loading={isLoading} />
     </View>
   )
 }
