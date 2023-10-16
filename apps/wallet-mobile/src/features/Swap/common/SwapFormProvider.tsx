@@ -100,7 +100,7 @@ export const SwapFormProvider = ({
       displayValue: Quantities.format(orderData.amounts.buy.quantity, buyTokenInfo.decimals ?? 0),
     },
     sellAmount: {
-      ...defaultState.buyAmount,
+      ...defaultState.sellAmount,
       displayValue: Quantities.format(orderData.amounts.sell.quantity, buyTokenInfo.decimals ?? 0),
     },
     ...initialState,
