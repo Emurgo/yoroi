@@ -25,7 +25,7 @@ import {useSync, useTokenInfo, useTransactionInfos} from '../../../../../yoroi-w
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
 import {Counter} from '../../../common/Counter/Counter'
-import {ExpectedOrderMetadata, parseCompleteOrderMetadata} from '../../../common/helpers'
+import {parseOrderTxMetadata} from '../../../common/helpers'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 
@@ -59,7 +59,7 @@ const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[]
           if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id && receivedTx.metadata?.['674'] !== null) {
             result['id'] = sentTx?.id
             result['date'] = receivedTx?.lastUpdatedAt
-            const metadata: ExpectedOrderMetadata | null = parseCompleteOrderMetadata(sentTx?.metadata?.['674'])
+            const metadata = parseOrderTxMetadata(sentTx?.metadata?.['674'])
             if (metadata) {
               result['metadata'] = metadata
               return acc.push(result as MappedRawOrder)
