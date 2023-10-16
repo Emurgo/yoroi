@@ -219,7 +219,7 @@ export const CreateOrder = () => {
 
             <TopTokenActions />
 
-            <EditSellAmount error={sellError} />
+            <EditSellAmount />
 
             <Spacer height={16} />
 

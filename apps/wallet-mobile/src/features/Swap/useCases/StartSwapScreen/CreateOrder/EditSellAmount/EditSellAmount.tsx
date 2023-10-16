@@ -8,13 +8,13 @@ import {useNavigateTo} from '../../../../common/navigation'
 import {useStrings} from '../../../../common/strings'
 import {useSwapForm} from '../../../../common/SwapFormProvider'
 
-export const EditSellAmount = ({error = ''}: {error?: string}) => {
+export const EditSellAmount = () => {
   const strings = useStrings()
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
   const {orderData} = useSwap()
   const {
-    sellAmount: {isTouched: isSellTouched, displayValue: sellDisplayValue},
+    sellAmount: {isTouched: isSellTouched, displayValue: sellDisplayValue, error},
     onChangeSellQuantity,
     sellInputRef,
   } = useSwapForm()
