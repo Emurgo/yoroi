@@ -105,7 +105,7 @@ export const processTxHistoryData = (
     },
     {},
   )
-  console.log(JSON.stringify(tx.metadata, null, 2))
+
   const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, networkId, defaultAsset)
   // collateral
   const collateral = tx.collateralInputs || []

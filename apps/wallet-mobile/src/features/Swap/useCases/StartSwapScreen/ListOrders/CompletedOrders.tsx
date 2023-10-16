@@ -5,7 +5,7 @@ import _ from 'lodash'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 
 import {
@@ -25,7 +25,7 @@ import {useSync, useTokenInfo, useTransactionInfos} from '../../../../../yoroi-w
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
 import {Counter} from '../../../common/Counter/Counter'
-import {parseMetadata} from '../../../common/helpers'
+import {ExpectedOrderMetadata, parseCompleteOrderMetadata} from '../../../common/helpers'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 
@@ -47,38 +47,30 @@ const compareByDate = (a: MappedRawOrder, b: MappedRawOrder) => {
   return new Date(b.date).getTime() - new Date(a.date).getTime()
 }
 
-const findCompletedOrderTx = (transactions: TransactionInfo[], onError: (err: Error) => void): MappedRawOrder[] => {
+const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[] => {
   const sentTransactions = transactions.filter((tx) => tx.direction === 'SENT')
   const receivedTransactions = transactions.filter((tx) => tx.direction === 'RECEIVED')
 
   const filteredTx = sentTransactions
     .reduce((acc, sentTx) => {
-      const result: TxMetadataInfo | null = {}
+      const result: TxMetadataInfo = {}
       receivedTransactions.forEach((receivedTx) => {
         receivedTx.inputs.forEach((input) => {
-          console.log('receivedTx.metadata', receivedTx.metadata)
-          if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id && receivedTx.metadata?.['674'] != null) {
+          if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id && receivedTx.metadata?.['674'] !== null) {
             result['id'] = sentTx?.id
-            result['metadata'] = sentTx?.metadata?.['674']
             result['date'] = receivedTx?.lastUpdatedAt
+            const metadata: ExpectedOrderMetadata | null = parseCompleteOrderMetadata(sentTx?.metadata?.['674'])
+            if (metadata) {
+              result['metadata'] = metadata
+              return acc.push(result as MappedRawOrder)
+            }
           }
         })
       })
-
-      if (result['id'] !== undefined && result['metadata'] != null) {
-        try {
-          const metadata = parseMetadata(result.metadata)
-          if (metadata) {
-            result['metadata'] = metadata
-            return acc.concat(result as MappedRawOrder)
-          }
-        } catch (error) {
-          onError(error as Error)
-        }
-      }
       return acc
     }, [] as Array<MappedRawOrder>)
     .sort(compareByDate)
+
   return filteredTx.filter((tx) => tx.metadata !== null).sort(compareByDate)
 }
 
@@ -89,9 +81,7 @@ export const CompletedOrders = () => {
 
   const transactionsInfos = useTransactionInfos(wallet)
 
-  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos), (error: Error) => {
-    Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
-  })
+  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos))
 
   const {track} = useMetrics()
 
