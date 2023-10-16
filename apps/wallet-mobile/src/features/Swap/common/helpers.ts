@@ -20,7 +20,7 @@ export const createYoroiEntry = (
   wallet: YoroiWallet,
 ): YoroiEntry => {
   const amountEntry = {}
-
+  console.log('createOrder', createOrder.selectedPool)
   const sellTokenId = createOrder.amounts.sell.tokenId
   // summing fees is missing the frontend fee
   if (sellTokenId === wallet.primaryTokenInfo.id) {
