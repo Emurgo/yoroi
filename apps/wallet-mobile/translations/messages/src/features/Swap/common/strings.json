@@ -331,7 +331,7 @@
   },
   {
     "id": "swap.swapScreen.swapMinAda",
-    "defaultMessage": "!!!Min-ADA is the minimum ADA amount required to be contained when holding or sending Cardano native tokens.",
+    "defaultMessage": "!!!Min-ADA is the minimum ADA amount required to be contained when holding or sending Cardano native assets.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
       "line": 222,
@@ -406,7 +406,7 @@
   },
   {
     "id": "swap.swapScreen.swapMinReceived",
-    "defaultMessage": "!!!Minimum amount of tokens you can get because of the slippage tolerance.",
+    "defaultMessage": "!!!Minimum amount of assets you can get because of the slippage tolerance.",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
       "line": 243,
