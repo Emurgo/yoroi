@@ -299,7 +299,7 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
 
 const defaultState: SwapFormState = Object.freeze({
   sellAmount: {
-    isTouched: false,
+    isTouched: true,
     disabled: false,
     error: undefined,
     displayValue: '',
