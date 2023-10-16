@@ -61,6 +61,7 @@ export const TopTokenActions = () => {
 
 const RefreshIcon = ({onPress, disabled}: {onPress: () => void; disabled: boolean}) => {
   const spin = React.useRef(new Animated.Value(0)).current
+  const [isActive, setIsActive] = React.useState(false)
 
   const handleOnPress = () => {
     Animated.timing(spin, {
@@ -82,9 +83,15 @@ const RefreshIcon = ({onPress, disabled}: {onPress: () => void; disabled: boolea
   }
 
   return (
-    <TouchableOpacity activeOpacity={0.5} onPress={handleOnPress} disabled={disabled}>
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={handleOnPress}
+      disabled={disabled}
+      onPressIn={() => setIsActive(true)}
+      onPressOut={() => setIsActive(false)}
+    >
       <Animated.View style={getRotationStyle()}>
-        <Icon.Refresh size={24} color={disabled ? COLORS.DISABLED : ''} />
+        <Icon.Refresh size={28} color={disabled ? COLORS.DISABLED : ''} active={isActive} />
       </Animated.View>
     </TouchableOpacity>
   )
