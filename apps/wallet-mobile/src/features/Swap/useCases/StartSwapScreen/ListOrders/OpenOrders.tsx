@@ -106,9 +106,7 @@ export const OpenOrders = () => {
     })
   }
 
-  const onRawTxConfirm = async (rootKey: string, orderId: string) => {
-    const order = normalizedOrders.find((o) => o.id === orderId)
-    if (!order || order.owner === undefined || order.utxo === undefined) return
+  const onRawTxConfirm = async (rootKey: string, order: MappedOpenOrder) => {
     const tx = await createCancellationTxAndSign(order.id, rootKey)
     if (!tx) return
     await wallet.submitTransaction(tx.txBase64)
@@ -131,10 +129,14 @@ export const OpenOrders = () => {
     )
   }
 
+  const hasCollateralUtxo = () => {
+    return !!wallet.getCollateralInfo().utxo
+  }
+
   const onOrderCancelConfirm = (order: MappedOpenOrder) => {
     if (!isString(order.utxo) || !isString(order.owner)) return
 
-    if (!wallet.getCollateralInfo().utxo) {
+    if (!hasCollateralUtxo()) {
       showCollateralNotFoundAlert()
       return
     }
@@ -146,7 +148,7 @@ export const OpenOrders = () => {
         utxo={order.utxo}
         bech32Address={order.owner}
         onCancel={closeModal}
-        onConfirm={(rootKey) => onRawTxConfirm(rootKey, order.id)}
+        onConfirm={(rootKey) => onRawTxConfirm(rootKey, order)}
         onHWConfirm={() => onRawTxHwConfirm()}
       />,
       400,
@@ -182,7 +184,7 @@ export const OpenOrders = () => {
     const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
     const response = await wallet.signRawTx(cbor, keys)
     if (!response) return
-    const hexBase64 = new Buffer(response).toString('base64')
+    const hexBase64 = Buffer.from(response).toString('base64')
     return {txBase64: hexBase64}
   }
 
@@ -192,23 +194,21 @@ export const OpenOrders = () => {
 
   const getFee = React.useCallback(
     async (utxo: string, collateralUtxo: string, bech32Address: string) => {
-      let fee = '0'
       setIsLoading(true)
-
-      try {
-        fee = await getCancellationOrderFee(wallet, cancelOrder, {orderUtxo: utxo, collateralUtxo, bech32Address})
-      } catch (error) {
-        Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
-      }
-
+      const fee = await getCancellationOrderFee(wallet, cancelOrder, {orderUtxo: utxo, collateralUtxo, bech32Address})
       setIsLoading(false)
       return fee
     },
-    [cancelOrder, strings, wallet],
+    [cancelOrder, wallet],
   )
 
   const openCancellationModal = async (order: MappedOpenOrder) => {
     if (order.owner === undefined || order.utxo === undefined) return
+    if (!hasCollateralUtxo()) {
+      showCollateralNotFoundAlert()
+      return
+    }
+
     const {
       utxo,
       owner: bech32Address,
@@ -223,24 +223,31 @@ export const OpenOrders = () => {
     const totalReturned = `${fromTokenAmount} ${fromTokenInfo?.ticker}`
     const collateralUtxo = await getCollateralUtxo()
 
-    const fee = await getFee(utxo, collateralUtxo, bech32Address)
-
-    openModal(
-      strings.listOrdersSheetTitle,
-      <ModalContent
-        assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfo?.id ?? ''} variant="swap" />}
-        assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfo?.id ?? ''} variant="swap" />}
-        onConfirm={() => onOrderCancelConfirm(order)}
-        onBack={closeModal}
-        assetFromLabel={assetFromLabel}
-        assetToLabel={assetToLabel}
-        assetAmount={`${tokenAmount} ${assetToLabel}`}
-        assetPrice={`${tokenPrice} ${assetFromLabel}`}
-        totalReturned={totalReturned}
-        fee={fee}
-      />,
-      460,
-    )
+    try {
+      const fee = await getFee(utxo, collateralUtxo, bech32Address)
+      openModal(
+        strings.listOrdersSheetTitle,
+        <ModalContent
+          assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfo?.id ?? ''} variant="swap" />}
+          assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfo?.id ?? ''} variant="swap" />}
+          onConfirm={() => onOrderCancelConfirm(order)}
+          onBack={closeModal}
+          assetFromLabel={assetFromLabel}
+          assetToLabel={assetToLabel}
+          assetAmount={`${tokenAmount} ${assetToLabel}`}
+          assetPrice={`${tokenPrice} ${assetFromLabel}`}
+          totalReturned={totalReturned}
+          fee={fee}
+        />,
+        460,
+      )
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error.message))
+      } else {
+        Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(JSON.stringify(error)))
+      }
+    }
   }
 
   return (
@@ -279,7 +286,10 @@ export const OpenOrders = () => {
                   />
                 }
                 footer={
-                  <Footer onPress={() => openCancellationModal(order)}>
+                  <Footer
+                    disabled={!isString(order.utxo) || !isString(order.owner)}
+                    onPress={() => openCancellationModal(order)}
+                  >
                     {strings.listOrdersSheetButtonText.toLocaleUpperCase()}
                   </Footer>
                 }
