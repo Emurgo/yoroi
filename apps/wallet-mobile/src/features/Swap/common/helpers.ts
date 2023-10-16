@@ -1,6 +1,8 @@
+import {createTypeGuardFromSchema} from '@yoroi/common'
 import {Swap} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
 import {useMutation, UseMutationOptions} from 'react-query'
+import {z} from 'zod'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {
@@ -73,8 +75,18 @@ export type ExpectedOrderMetadata = {
   buyTokenId: string
   sellQuantity: string
   buyQuantity: string
-  provider: Swap.SupportedProvider
+  provider: string
 }
+
+const CompleteOrderMetadataSchema: z.ZodSchema<ExpectedOrderMetadata> = z.object({
+  sellTokenId: z.string(),
+  buyTokenId: z.string(),
+  sellQuantity: z.string(),
+  buyQuantity: z.string(),
+  provider: z.string(),
+})
+
+const isCompleteOrderMetadata = createTypeGuardFromSchema(CompleteOrderMetadataSchema)
 
 /**
  * Parses and validates a JSON metadata string, transforming it into a structure compliant with MappedRawOrder['metadata'].
@@ -86,15 +98,8 @@ export const parseCompleteOrderMetadata = (metadataJson: string): ExpectedOrderM
   try {
     const metadata = JSON.parse(metadataJson)
 
-    if (
-      !metadata ||
-      typeof metadata !== 'object' ||
-      typeof metadata.sellTokenId !== 'string' ||
-      typeof metadata.buyTokenId !== 'string' ||
-      typeof metadata.sellQuantity !== 'string' ||
-      typeof metadata.buyQuantity !== 'string'
-    ) {
-      console.error('Invalid metadata structure.')
+    if (!isCompleteOrderMetadata(metadata)) {
+      console.error('Invalid metadata schema.')
       return null
     }
 
