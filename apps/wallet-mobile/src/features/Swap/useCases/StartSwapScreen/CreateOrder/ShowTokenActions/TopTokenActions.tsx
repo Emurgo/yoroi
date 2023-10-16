@@ -65,7 +65,7 @@ const RefreshIcon = ({onPress, disabled}: {onPress: () => void; disabled: boolea
   const handleOnPress = () => {
     Animated.timing(spin, {
       toValue: 1,
-      duration: 200,
+      duration: 300,
       useNativeDriver: true,
     }).start(() => spin.setValue(0))
     onPress()
