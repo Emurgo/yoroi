@@ -3,11 +3,11 @@ import React from 'react'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon} from '../../../../../../components/Icon'
-import {useSwapTouched} from '../../../../common/SwapFormProvider'
+import {useSwapForm} from '../../../../common/SwapFormProvider'
 
 export const SwitchTokens = () => {
   const {switchTokens} = useSwap()
-  const {switchTouched} = useSwapTouched()
+  const {switchTouched} = useSwapForm()
 
   const handleSwitch = () => {
     switchTokens()

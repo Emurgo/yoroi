@@ -5,12 +5,12 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {COLORS} from '../../../../../../theme'
 import {useStrings} from '../../../../common/strings'
-import {useSwapTouched} from '../../../../common/SwapFormProvider'
+import {useSwapForm} from '../../../../common/SwapFormProvider'
 
 export const ClearQuantities = () => {
   const strings = useStrings()
   const {resetQuantities} = useSwap()
-  const {poolDefaulted} = useSwapTouched()
+  const {poolDefaulted} = useSwapForm()
 
   const handleReset = () => {
     Keyboard.dismiss()

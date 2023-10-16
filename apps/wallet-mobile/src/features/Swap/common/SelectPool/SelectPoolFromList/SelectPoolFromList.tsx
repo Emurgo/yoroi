@@ -14,7 +14,7 @@ import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../navigation'
 import {PoolIcon} from '../../PoolIcon/PoolIcon'
 import {useStrings} from '../../strings'
-import {useSwapTouched} from '../../SwapFormProvider'
+import {useSwapForm} from '../../SwapFormProvider'
 
 const PRECISION = 14
 
@@ -25,7 +25,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {selectedPoolChanged, orderData} = useSwap()
-  const {poolTouched} = useSwapTouched()
+  const {poolTouched} = useSwapForm()
   const [selectedCardIndex, setSelectedCardIndex] = useState(orderData.selectedPoolId)
   const navigate = useNavigateTo()
   const {track} = useMetrics()
