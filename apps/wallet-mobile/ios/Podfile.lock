@@ -105,9 +105,9 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
-  - hermes-engine (0.71.6):
-    - hermes-engine/Pre-built (= 0.71.6)
-  - hermes-engine/Pre-built (0.71.6)
+  - hermes-engine (0.71.14):
+    - hermes-engine/Pre-built (= 0.71.14)
+  - hermes-engine/Pre-built (0.71.14)
   - libevent (2.1.12)
   - MultiplatformBleAdapter (0.1.9)
   - OpenSSL-Universal (1.1.1100)
@@ -868,7 +868,7 @@ SPEC CHECKSUMS:
   FlipperKit: cbdee19bdd4e7f05472a66ce290f1b729ba3cb86
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
-  hermes-engine: b434cea529ad0152c56c7cb6486b0c4c0b23b5de
+  hermes-engine: d7cc127932c89c53374452d6f93473f1970d8e88
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
