@@ -82,10 +82,18 @@ export const HeaderWrapper = ({
   )
 }
 
-export const Footer = ({children, onPress}: {children: React.ReactNode; onPress: () => void}) => {
+export const Footer = ({
+  children,
+  onPress,
+  disabled,
+}: {
+  children: React.ReactNode
+  onPress: () => void
+  disabled?: boolean
+}) => {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <Text style={styles.buttonLabel}>{children}</Text>
+    <TouchableOpacity onPress={onPress} disabled={disabled}>
+      <Text style={[styles.buttonLabel, disabled && styles.footerDisabled]}>{children}</Text>
     </TouchableOpacity>
   )
 }
@@ -212,5 +220,8 @@ const styles = StyleSheet.create({
     paddingTop: 13,
     fontWeight: '500',
     fontFamily: 'Rubik-Medium',
+  },
+  footerDisabled: {
+    opacity: 0.5,
   },
 })
