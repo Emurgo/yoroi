@@ -35,8 +35,8 @@ module.exports = {
     },    
     'android.nightly.debug': {
       type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/nightly/debug/app-nightly-debug.apk',
-      build: 'ENVFILE=.env.nightly cd android && ./gradlew assembleNightlyDebug assembleNightlyDebugAndroidTest -DtestBuildType=debug',
+      binaryPath: '../../apps/wallet-mobile/android/app/build/outputs/apk/nightly/debug/app-nightly-debug.apk',
+      build: 'ENVFILE=.env.nightly  cd ../../apps/wallet-mobile/android && ./gradlew assembleNightlyDebug assembleNightlyDebugAndroidTest -DtestBuildType=debug',
       reversePorts: [
         8081
       ]
