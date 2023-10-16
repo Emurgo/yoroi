@@ -244,6 +244,8 @@ export const OpenOrders = () => {
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error.message))
+      } else {
+        Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(JSON.stringify(error)))
       }
     }
   }
