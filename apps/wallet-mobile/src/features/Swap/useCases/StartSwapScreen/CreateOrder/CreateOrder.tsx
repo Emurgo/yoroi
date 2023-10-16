@@ -172,7 +172,6 @@ export const CreateOrder = () => {
         orderDetails.slippage,
         orderDetails.address,
       )
-      console.log('!!!!orderResult', orderResult)
       if (orderResult) createSwapOrder(orderResult)
     }
 
