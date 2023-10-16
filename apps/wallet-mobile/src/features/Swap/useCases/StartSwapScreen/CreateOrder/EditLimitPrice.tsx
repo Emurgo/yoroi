@@ -9,7 +9,7 @@ import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {useStrings} from '../../../common/strings'
-import {useSwapTouched} from '../../../common/SwapFormProvider'
+import {useSwapForm} from '../../../common/SwapFormProvider'
 
 const BORDER_SIZE = 1
 const PRECISION = 14
@@ -27,7 +27,10 @@ export const EditLimitPrice = () => {
   const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
   const disabled = orderData.type === 'market'
 
-  const {isBuyTouched, isSellTouched} = useSwapTouched()
+  const {
+    buyAmount: {isTouched: isBuyTouched},
+    sellAmount: {isTouched: isSellTouched},
+  } = useSwapForm()
 
   const tokenToSellName = isSellTouched ? sellTokenInfo.ticker ?? sellTokenInfo.name : '-'
   const tokenToBuyName = isBuyTouched ? buyTokenInfo.ticker ?? buyTokenInfo.name : '-'

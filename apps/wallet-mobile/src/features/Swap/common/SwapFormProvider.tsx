@@ -41,7 +41,12 @@ type SwapFormActions = {
 const SwapFormContext = React.createContext<
   | undefined
   | (SwapFormState &
-      SwapFormActions & {sellInputRef: React.RefObject<TextInput>; buyInputRef: React.RefObject<TextInput>})
+      SwapFormActions & {
+        sellInputRef: React.RefObject<TextInput>
+        buyInputRef: React.RefObject<TextInput>
+        onChangeSellQuantity: (value: string) => void
+        onChangeBuyQuantity: (value: string) => void
+      })
 >(undefined)
 
 export const useSwapForm = () => {

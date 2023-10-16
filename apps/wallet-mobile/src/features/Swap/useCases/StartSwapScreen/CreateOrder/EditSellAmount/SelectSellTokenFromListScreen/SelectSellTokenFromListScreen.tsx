@@ -20,7 +20,7 @@ import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
-import {useSwapTouched} from '../../../../../common/SwapFormProvider'
+import {useSwapForm} from '../../../../../common/SwapFormProvider'
 
 export const SelectSellTokenFromListScreen = () => {
   const strings = useStrings()
@@ -89,7 +89,10 @@ type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; w
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
   const {sellTokenIdChanged, orderData} = useSwap()
-  const {sellTouched, isBuyTouched} = useSwapTouched()
+  const {
+    buyAmount: {isTouched: isBuyTouched},
+    sellTouched,
+  } = useSwapForm()
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
 

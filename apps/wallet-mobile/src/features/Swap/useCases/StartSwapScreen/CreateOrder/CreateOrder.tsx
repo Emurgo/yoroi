@@ -9,14 +9,13 @@ import {Button, Spacer} from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {isEmptyString} from '../../../../../utils'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
-import {useBalance, useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
 import {createYoroiEntry} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
-import {useSwapTouched} from '../../../common/SwapFormProvider'
+import {useSwapForm} from '../../../common/SwapFormProvider'
 import {useSwapTx} from '../../../common/useSwapTx'
 import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
 import {EditLimitPrice} from './EditLimitPrice'
@@ -35,8 +34,12 @@ export const CreateOrder = () => {
   const {orderData, unsignedTxChanged, poolPairsChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
-  const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
-  const [sellBackendError, setSellBackendError] = React.useState('')
+  const {
+    sellAmount: {isTouched: isSellTouched, error: sellError},
+    buyAmount: {isTouched: isBuyTouched, error: buyError},
+    setSellAmountError,
+    poolDefaulted,
+  } = useSwapForm()
 
   useSwapPoolsByPair(
     {
@@ -73,7 +76,7 @@ export const CreateOrder = () => {
     },
     onError: (error) => {
       if (error instanceof NotEnoughMoneyToSendError) {
-        setSellBackendError(strings.notEnoughBalance)
+        setSellAmountError(strings.notEnoughBalance)
         return
       }
 
@@ -105,17 +108,14 @@ export const CreateOrder = () => {
     },
   })
 
-  const sellError = useSellError([sellBackendError])
-  const buyError = useBuyError()
-
   const disabled = isLoading
   !isBuyTouched ||
     !isSellTouched ||
     Quantities.isZero(orderData.amounts.buy.quantity) ||
     Quantities.isZero(orderData.amounts.sell.quantity) ||
     (orderData.type === 'limit' && orderData.limitPrice !== undefined && Quantities.isZero(orderData.limitPrice)) ||
-    !isEmptyString(sellError) ||
-    !isEmptyString(buyError)
+    sellError !== undefined ||
+    buyError !== undefined
 
   const swap = () => {
     if (orderData.selectedPoolCalculation === undefined) return
@@ -227,7 +227,7 @@ export const CreateOrder = () => {
 
             <Spacer height={16} />
 
-            <EditBuyAmount error={buyError} />
+            <EditBuyAmount />
 
             <Spacer height={20} />
 
@@ -248,83 +248,6 @@ export const CreateOrder = () => {
 }
 
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
-
-const useSellError = (errors: Array<string> = []): string => {
-  const noPoolError = useNoPoolError()
-  const notEnoughBalanceError = useNotEnoughBalanceError()
-
-  const allErrors = [noPoolError, notEnoughBalanceError, ...errors]
-  const sellError = allErrors.find((error) => !isEmptyString(error))
-
-  return sellError ?? ''
-}
-
-const useBuyError = (errors: Array<string> = []): string => {
-  const noPoolError = useNoPoolError()
-  const notEnoughSupplyError = useNotEnoughSupplyError()
-
-  const allErrors = [noPoolError, notEnoughSupplyError, ...errors]
-  const buyError = allErrors.find((error) => !isEmptyString(error))
-
-  return buyError ?? ''
-}
-
-const useNotEnoughSupplyError = (): string => {
-  const strings = useStrings()
-  const {orderData} = useSwap()
-  const {isBuyTouched, isSellTouched} = useSwapTouched()
-  const pool = orderData.selectedPoolCalculation?.pool
-  const {tokenId, quantity} = orderData.amounts.buy
-  const poolSupply = tokenId === pool?.tokenA.tokenId ? pool?.tokenA.quantity : pool?.tokenB.quantity
-  const hasSupply = !Quantities.isGreaterThan(quantity, poolSupply ?? Quantities.zero)
-
-  const notEnoughSupplyError =
-    (!Quantities.isZero(quantity) && !hasSupply) || (isSellTouched && isBuyTouched && pool === undefined)
-      ? strings.notEnoughSupply
-      : ''
-
-  return notEnoughSupplyError
-}
-
-const useNotEnoughBalanceError = (): string => {
-  const strings = useStrings()
-  const {orderData} = useSwap()
-  const {isBuyTouched} = useSwapTouched()
-  const wallet = useSelectedWallet()
-  const {tokenId, quantity} = orderData.amounts.sell
-  const balance = useBalance({wallet, tokenId})
-
-  const hasPrimaryTokenBalance = !Quantities.isGreaterThan(
-    Quantities.sum([
-      tokenId === wallet.primaryTokenInfo.id ? orderData.amounts.sell.quantity : Quantities.zero,
-      orderData.selectedPoolCalculation?.cost.ptTotalFeeNoFEF.quantity ?? Quantities.zero,
-    ]),
-    balance,
-  )
-
-  const hasSecondaryTokenBalance = !Quantities.isGreaterThan(
-    tokenId !== wallet.primaryTokenInfo.id ? orderData.amounts.sell.quantity : Quantities.zero,
-    balance,
-  )
-
-  const notEnoughBalanceError =
-    !Quantities.isZero(quantity) && (!hasPrimaryTokenBalance || !hasSecondaryTokenBalance) && isBuyTouched
-      ? strings.notEnoughBalance
-      : ''
-
-  return notEnoughBalanceError
-}
-
-const useNoPoolError = () => {
-  const strings = useStrings()
-  const {orderData} = useSwap()
-  const {isBuyTouched, isSellTouched} = useSwapTouched()
-
-  const noPoolError =
-    orderData.selectedPoolCalculation === undefined && isBuyTouched && isSellTouched ? strings.noPool : ''
-
-  return noPoolError
-}
 
 const styles = StyleSheet.create({
   root: {

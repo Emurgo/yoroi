@@ -114,6 +114,7 @@ export const useStrings = () => {
     incorrectPasswordMessage: intl.formatMessage(errorMessages.incorrectPassword.message),
     notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
     notEnoughSupply: intl.formatMessage(messages.notEnoughSupply),
+    notEnoughFeeBalance: intl.formatMessage(messages.notEnoughFeeBalance),
     noPool: intl.formatMessage(messages.noPool),
     generalErrorTitle: intl.formatMessage(errorMessages.generalError.title),
     generalErrorMessage: (e) => intl.formatMessage(errorMessages.generalError.message, {message: e}),
@@ -530,6 +531,10 @@ export const messages = defineMessages({
   notEnoughSupply: {
     id: 'swap.swapScreen.notEnoughSupply',
     defaultMessage: '!!!Not enough supply in the pool',
+  },
+  notEnoughFeeBalance: {
+    id: 'swap.swapScreen.notEnoughFeeBalance',
+    defaultMessage: '!!!Not enough balance, please consider the fees',
   },
   noPool: {
     id: 'swap.swapScreen.noPool',

@@ -8,13 +8,16 @@ import {LoadingOverlay} from '../../../../../../components/LoadingOverlay'
 import {COLORS} from '../../../../../../theme'
 import {ButtonGroup} from '../../../../common/ButtonGroup/ButtonGroup'
 import {useStrings} from '../../../../common/strings'
-import {useSwapTouched} from '../../../../common/SwapFormProvider'
+import {useSwapForm} from '../../../../common/SwapFormProvider'
 
 export const TopTokenActions = () => {
   const strings = useStrings()
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
   const {orderData, orderTypeChanged, poolPairsChanged} = useSwap()
-  const {isBuyTouched, isSellTouched} = useSwapTouched()
+  const {
+    buyAmount: {isTouched: isBuyTouched},
+    sellAmount: {isTouched: isSellTouched},
+  } = useSwapForm()
   const isDisabled = !isBuyTouched || !isSellTouched || orderData.selectedPoolCalculation === undefined
   const orderTypeIndex = orderData.type === 'market' ? 0 : 1
 
