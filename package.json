@@ -11,7 +11,8 @@
       "packages/common",
       "packages/cardano",
       "packages/*",
-      "apps/*"
+      "apps/*",
+      "packages/e2e"
     ],
     "nohoist": [
       "**/chokidar-cli",
