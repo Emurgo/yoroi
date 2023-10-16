@@ -11,6 +11,7 @@ import {
 } from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
+import {Logger} from '../../../yoroi-wallets/logging'
 import {YoroiEntry} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
 
@@ -70,7 +71,7 @@ export const useCancelOrderWithHw = (
   }
 }
 
-export type ExpectedOrderMetadata = {
+export type OrderTxMetadata = {
   sellTokenId: string
   buyTokenId: string
   sellQuantity: string
@@ -78,7 +79,7 @@ export type ExpectedOrderMetadata = {
   provider: string
 }
 
-const CompleteOrderMetadataSchema: z.ZodSchema<ExpectedOrderMetadata> = z.object({
+const OrderTxMetadataSchema: z.ZodSchema<OrderTxMetadata> = z.object({
   sellTokenId: z.string(),
   buyTokenId: z.string(),
   sellQuantity: z.string(),
@@ -86,7 +87,7 @@ const CompleteOrderMetadataSchema: z.ZodSchema<ExpectedOrderMetadata> = z.object
   provider: z.string(),
 })
 
-const isCompleteOrderMetadata = createTypeGuardFromSchema(CompleteOrderMetadataSchema)
+const isOrderTxMetadata = createTypeGuardFromSchema(OrderTxMetadataSchema)
 
 /**
  * Parses and validates a JSON metadata string, transforming it into a structure compliant with MappedRawOrder['metadata'].
@@ -94,18 +95,13 @@ const isCompleteOrderMetadata = createTypeGuardFromSchema(CompleteOrderMetadataS
  * @param metadataJson - The JSON string representation of metadata.
  * @returns The parsed metadata object or null if parsing fails or validation fails.
  */
-export const parseCompleteOrderMetadata = (metadataJson: string): ExpectedOrderMetadata | null => {
+export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | null => {
   try {
     const metadata = JSON.parse(metadataJson)
 
-    if (!isCompleteOrderMetadata(metadata)) {
-      console.error('Invalid metadata schema.')
-      return null
-    }
-
-    return metadata as ExpectedOrderMetadata
+    return isOrderTxMetadata(metadata) ? metadata : null
   } catch (error) {
-    console.error('JSON parsing error:', error)
+    Logger.warn('JSON parsing error:', error)
     return null
   }
 }

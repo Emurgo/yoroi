@@ -283,6 +283,6 @@ export const processTxHistoryData = (
     tokens,
     blockNumber: tx.blockNum ?? 0,
     memo,
-    metadata: metadata || {},
+    metadata,
   }
 }
