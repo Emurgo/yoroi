@@ -1,4 +1,4 @@
-import {createTypeGuardFromSchema} from '@yoroi/common'
+import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
 import {Swap} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
 import {useMutation, UseMutationOptions} from 'react-query'
@@ -11,7 +11,6 @@ import {
 } from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
-import {Logger} from '../../../yoroi-wallets/logging'
 import {YoroiEntry} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
 
@@ -96,12 +95,6 @@ const isOrderTxMetadata = createTypeGuardFromSchema(OrderTxMetadataSchema)
  * @returns The parsed metadata object or null if parsing fails or validation fails.
  */
 export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | null => {
-  try {
-    const metadata = JSON.parse(metadataJson)
-
-    return isOrderTxMetadata(metadata) ? metadata : null
-  } catch (error) {
-    Logger.warn('JSON parsing error:', error)
-    return null
-  }
+  const parsedMetadata = parseSafe(metadataJson)
+  return isOrderTxMetadata(parsedMetadata) ? parsedMetadata : null
 }
