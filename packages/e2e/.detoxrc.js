@@ -12,18 +12,18 @@ module.exports = {
   apps: {
     'ios.yoroi.debug': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/yoroi.app',
-      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme yoroi -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+      binaryPath: '../../apps/wallet-mobile/ios/build/Build/Products/Debug-iphonesimulator/yoroi.app',
+      build: 'cd ../../apps/wallet-mobile/ && xcodebuild -workspace ios/yoroi.xcworkspace -scheme yoroi -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'ios.nightly.debug': {
       type: 'ios.app',
-      binaryPath: '/Users/rahulnair/projects/yoroi/apps/wallet-mobile/ios/build/Build/Products/Debug-iphonesimulator/nightly.app',
-      build: 'xcodebuild -workspace /Users/rahulnair/projects/yoroi/apps/wallet-mobile/ios/yoroi.xcworkspace -scheme nightly -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+      binaryPath: '../../apps/wallet-mobile/ios/build/Build/Products/Debug-iphonesimulator/nightly.app',
+      build: 'cd ../../apps/wallet-mobile/ &&  xcodebuild -workspace ios/yoroi.xcworkspace -scheme nightly -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'ios.nightly.release': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/nightly.app',
-      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme nightly -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
+      binaryPath: '../../apps/wallet-mobile/ios/build/Build/Products/Debug-iphonesimulator/nightly.app',
+      build: 'cd ../../apps/wallet-mobile/ && xcodebuild -workspace ios/yoroi.xcworkspace -scheme nightly -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'android.dev.debug': {
       type: 'android.apk',
