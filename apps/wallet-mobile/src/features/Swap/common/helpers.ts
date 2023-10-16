@@ -11,6 +11,7 @@ import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
 import {YoroiEntry} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
+
 export const createYoroiEntry = (
   createOrder: Swap.CreateOrderData,
   address: string,
@@ -64,5 +65,52 @@ export const useCancelOrderWithHw = (
   return {
     ...mutation,
     cancelOrder: mutation.mutate,
+  }
+}
+
+const VALID_PROVIDERS: Record<Swap.SupportedProvider, true> = {
+  minswap: true,
+  wingriders: true,
+  sundaeswap: true,
+  muesliswap: true,
+  muesliswap_v2: true,
+  vyfi: true,
+}
+
+interface ExpectedMetadata {
+  sellTokenId: string
+  buyTokenId: string
+  sellQuantity: string
+  buyQuantity: string
+  provider: Swap.SupportedProvider
+}
+
+/**
+ * Parses and validates a JSON metadata string, transforming it into a structure compliant with MappedRawOrder['metadata'].
+ *
+ * @param metadataJson - The JSON string representation of metadata.
+ * @returns The parsed metadata object or null if parsing fails or validation fails.
+ */
+export const parseMetadata = (metadataJson: string): ExpectedMetadata | null => {
+  try {
+    const metadata = JSON.parse(metadataJson)
+
+    if (
+      !metadata ||
+      typeof metadata !== 'object' ||
+      typeof metadata.sellTokenId !== 'string' ||
+      typeof metadata.buyTokenId !== 'string' ||
+      typeof metadata.sellQuantity !== 'string' ||
+      typeof metadata.buyQuantity !== 'string' ||
+      (typeof metadata.provider === 'string' && metadata.provider in VALID_PROVIDERS)
+    ) {
+      console.error('Invalid metadata structure.')
+      return null
+    }
+
+    return metadata as ExpectedMetadata
+  } catch (error) {
+    console.error('JSON parsing error:', error)
+    return null
   }
 }

@@ -25,6 +25,7 @@ import {useSync, useTokenInfo, useTransactionInfos} from '../../../../../yoroi-w
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
 import {Counter} from '../../../common/Counter/Counter'
+import {parseMetadata} from '../../../common/helpers'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 
@@ -52,10 +53,10 @@ const findCompletedOrderTx = (transactions: TransactionInfo[], onError: (err: Er
 
   const filteredTx = sentTransactions
     .reduce((acc, sentTx) => {
-      // TODO: metadata is Record<string, any>
-      const result: {id?: string; metadata?: string; date?: string} = {}
+      const result: TxMetadataInfo | null = {}
       receivedTransactions.forEach((receivedTx) => {
         receivedTx.inputs.forEach((input) => {
+          console.log('receivedTx.metadata', receivedTx.metadata)
           if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id && receivedTx.metadata?.['674'] != null) {
             result['id'] = sentTx?.id
             result['metadata'] = sentTx?.metadata?.['674']
@@ -66,10 +67,11 @@ const findCompletedOrderTx = (transactions: TransactionInfo[], onError: (err: Er
 
       if (result['id'] !== undefined && result['metadata'] != null) {
         try {
-          // TODO: need a parser for metadata for completed orders
-          const metadata = JSON.parse(result.metadata) as MappedRawOrder['metadata']
-          result['metadata'] = metadata
-          return acc.concat(result as MappedRawOrder)
+          const metadata = parseMetadata(result.metadata)
+          if (metadata) {
+            result['metadata'] = metadata
+            return acc.concat(result as MappedRawOrder)
+          }
         } catch (error) {
           onError(error as Error)
         }
