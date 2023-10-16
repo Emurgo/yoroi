@@ -44,13 +44,17 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     const sandboxWallet = env.getString('BANXA_TEST_WALLET')
     const isMainnet = wallet.networkId !== 300
     const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
-    const banxa = banxaModuleMaker({isProduction: isMainnet, partner: 'emurgo'})
-    const url = banxa.createReferralUrl({
+    const moduleOptions = {isProduction: isMainnet, partner: 'yoroi'} as const
+    const urlOptions = {
       coinType: 'ADA',
       fiatType: 'USD',
       blockchain: 'ADA',
       walletAddress,
-    })
+    } as const
+
+    const banxa = banxaModuleMaker(moduleOptions)
+    const url = banxa.createReferralUrl(urlOptions)
+
     Linking.openURL(url.toString())
   }
 
