@@ -70,6 +70,22 @@ storiesOf('Expandable Info Card', module)
       </ExpandableInfoCard>
     )
   })
+  .add('with footer disabled', () => {
+    return (
+      <ExpandableInfoCard
+        info={<HiddenInfo id="1234" setBottomSheetState={() => null} />}
+        expanded={false}
+        header={<Header assetFromLabel="ADA" assetToLabel="DOGE" expanded={false} onPress={() => null} />}
+        footer={
+          <Footer disabled onPress={() => action('footer clicked')}>
+            <Text>FOOTER LABEL</Text>
+          </Footer>
+        }
+      >
+        <MainInfo />
+      </ExpandableInfoCard>
+    )
+  })
 
 const Header = ({
   assetFromLabel,

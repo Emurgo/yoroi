@@ -106,9 +106,7 @@ export const OpenOrders = () => {
     })
   }
 
-  const onRawTxConfirm = async (rootKey: string, orderId: string) => {
-    const order = normalizedOrders.find((o) => o.id === orderId)
-    if (!order || order.owner === undefined || order.utxo === undefined) return
+  const onRawTxConfirm = async (rootKey: string, order: MappedOpenOrder) => {
     const tx = await createCancellationTxAndSign(order.id, rootKey)
     if (!tx) return
     await wallet.submitTransaction(tx.txBase64)
@@ -131,10 +129,14 @@ export const OpenOrders = () => {
     )
   }
 
+  const hasCollateralUtxo = () => {
+    return !!wallet.getCollateralInfo().utxo
+  }
+
   const onOrderCancelConfirm = (order: MappedOpenOrder) => {
     if (!isString(order.utxo) || !isString(order.owner)) return
 
-    if (!wallet.getCollateralInfo().utxo) {
+    if (!hasCollateralUtxo()) {
       showCollateralNotFoundAlert()
       return
     }
@@ -146,7 +148,7 @@ export const OpenOrders = () => {
         utxo={order.utxo}
         bech32Address={order.owner}
         onCancel={closeModal}
-        onConfirm={(rootKey) => onRawTxConfirm(rootKey, order.id)}
+        onConfirm={(rootKey) => onRawTxConfirm(rootKey, order)}
         onHWConfirm={() => onRawTxHwConfirm()}
       />,
       400,
@@ -209,6 +211,11 @@ export const OpenOrders = () => {
 
   const openCancellationModal = async (order: MappedOpenOrder) => {
     if (order.owner === undefined || order.utxo === undefined) return
+    if (!hasCollateralUtxo()) {
+      showCollateralNotFoundAlert()
+      return
+    }
+
     const {
       utxo,
       owner: bech32Address,
@@ -279,7 +286,10 @@ export const OpenOrders = () => {
                   />
                 }
                 footer={
-                  <Footer onPress={() => openCancellationModal(order)}>
+                  <Footer
+                    disabled={!isString(order.utxo) || !isString(order.owner)}
+                    onPress={() => openCancellationModal(order)}
+                  >
                     {strings.listOrdersSheetButtonText.toLocaleUpperCase()}
                   </Footer>
                 }
