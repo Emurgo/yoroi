@@ -184,7 +184,7 @@ export const OpenOrders = () => {
     const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
     const response = await wallet.signRawTx(cbor, keys)
     if (!response) return
-    const hexBase64 = new Buffer(response).toString('base64')
+    const hexBase64 = Buffer.from(response).toString('base64')
     return {txBase64: hexBase64}
   }
 
@@ -194,15 +194,8 @@ export const OpenOrders = () => {
 
   const getFee = React.useCallback(
     async (utxo: string, collateralUtxo: string, bech32Address: string) => {
-      let fee = '0'
       setIsLoading(true)
-
-      try {
-        fee = await getCancellationOrderFee(wallet, cancelOrder, {orderUtxo: utxo, collateralUtxo, bech32Address})
-      } catch (error) {
-        Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
-      }
-
+      const fee = await getCancellationOrderFee(wallet, cancelOrder, {orderUtxo: utxo, collateralUtxo, bech32Address})
       setIsLoading(false)
       return fee
     },
@@ -230,24 +223,29 @@ export const OpenOrders = () => {
     const totalReturned = `${fromTokenAmount} ${fromTokenInfo?.ticker}`
     const collateralUtxo = await getCollateralUtxo()
 
-    const fee = await getFee(utxo, collateralUtxo, bech32Address)
-
-    openModal(
-      strings.listOrdersSheetTitle,
-      <ModalContent
-        assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfo?.id ?? ''} variant="swap" />}
-        assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfo?.id ?? ''} variant="swap" />}
-        onConfirm={() => onOrderCancelConfirm(order)}
-        onBack={closeModal}
-        assetFromLabel={assetFromLabel}
-        assetToLabel={assetToLabel}
-        assetAmount={`${tokenAmount} ${assetToLabel}`}
-        assetPrice={`${tokenPrice} ${assetFromLabel}`}
-        totalReturned={totalReturned}
-        fee={fee}
-      />,
-      460,
-    )
+    try {
+      const fee = await getFee(utxo, collateralUtxo, bech32Address)
+      openModal(
+        strings.listOrdersSheetTitle,
+        <ModalContent
+          assetFromIcon={<TokenIcon wallet={wallet} tokenId={fromTokenInfo?.id ?? ''} variant="swap" />}
+          assetToIcon={<TokenIcon wallet={wallet} tokenId={toTokenInfo?.id ?? ''} variant="swap" />}
+          onConfirm={() => onOrderCancelConfirm(order)}
+          onBack={closeModal}
+          assetFromLabel={assetFromLabel}
+          assetToLabel={assetToLabel}
+          assetAmount={`${tokenAmount} ${assetToLabel}`}
+          assetPrice={`${tokenPrice} ${assetFromLabel}`}
+          totalReturned={totalReturned}
+          fee={fee}
+        />,
+        460,
+      )
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error.message))
+      }
+    }
   }
 
   return (
