@@ -68,16 +68,7 @@ export const useCancelOrderWithHw = (
   }
 }
 
-const VALID_PROVIDERS: Record<Swap.SupportedProvider, true> = {
-  minswap: true,
-  wingriders: true,
-  sundaeswap: true,
-  muesliswap: true,
-  muesliswap_v2: true,
-  vyfi: true,
-}
-
-interface ExpectedMetadata {
+export type ExpectedOrderMetadata = {
   sellTokenId: string
   buyTokenId: string
   sellQuantity: string
@@ -91,7 +82,7 @@ interface ExpectedMetadata {
  * @param metadataJson - The JSON string representation of metadata.
  * @returns The parsed metadata object or null if parsing fails or validation fails.
  */
-export const parseMetadata = (metadataJson: string): ExpectedMetadata | null => {
+export const parseCompleteOrderMetadata = (metadataJson: string): ExpectedOrderMetadata | null => {
   try {
     const metadata = JSON.parse(metadataJson)
 
@@ -101,14 +92,13 @@ export const parseMetadata = (metadataJson: string): ExpectedMetadata | null => 
       typeof metadata.sellTokenId !== 'string' ||
       typeof metadata.buyTokenId !== 'string' ||
       typeof metadata.sellQuantity !== 'string' ||
-      typeof metadata.buyQuantity !== 'string' ||
-      (typeof metadata.provider === 'string' && metadata.provider in VALID_PROVIDERS)
+      typeof metadata.buyQuantity !== 'string'
     ) {
       console.error('Invalid metadata structure.')
       return null
     }
 
-    return metadata as ExpectedMetadata
+    return metadata as ExpectedOrderMetadata
   } catch (error) {
     console.error('JSON parsing error:', error)
     return null
