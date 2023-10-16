@@ -70,7 +70,7 @@ const RefreshIcon = ({onPress, disabled}: {onPress: () => void; disabled: boolea
     }).start(() => spin.setValue(0))
     onPress()
   }
- const getRotationStyle = () => {
+  const getRotationStyle = () => {
     const rotate = spin.interpolate({
       inputRange: [0, 1],
       outputRange: ['0deg', '180deg'],
@@ -80,7 +80,7 @@ const RefreshIcon = ({onPress, disabled}: {onPress: () => void; disabled: boolea
       transform: [{rotate}],
     }
   }
-  
+
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={handleOnPress} disabled={disabled}>
       <Animated.View style={getRotationStyle()}>
