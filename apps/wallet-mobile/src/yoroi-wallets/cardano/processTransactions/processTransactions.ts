@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {isArray, isString} from '@yoroi/common'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 
@@ -90,7 +91,21 @@ export const processTxHistoryData = (
   memo: string | null,
   defaultAsset: DefaultAsset,
 ): TransactionInfo => {
-  const metadata = tx.metadata?.[0]?.map_json.msg?.join('') ?? null
+  const metadata = tx.metadata?.reduce<TransactionInfo['metadata']>(
+    (metadatas: TransactionInfo['metadata'], metadata) => {
+      if (metadata?.label && metadatas != null) {
+        if (isArray(metadata?.map_json?.msg)) {
+          metadatas[metadata.label] = metadata.map_json.msg.join('')
+        }
+        if (isString(metadata?.map_json?.msg)) {
+          metadatas[metadata.label] = metadata.map_json.msg
+        }
+      }
+      return metadatas
+    },
+    {},
+  )
+
   const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, networkId, defaultAsset)
   // collateral
   const collateral = tx.collateralInputs || []
@@ -268,6 +283,6 @@ export const processTxHistoryData = (
     tokens,
     blockNumber: tx.blockNum ?? 0,
     memo,
-    metadata: metadata ?? null,
+    metadata,
   }
 }

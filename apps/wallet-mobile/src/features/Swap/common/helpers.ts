@@ -1,6 +1,8 @@
+import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
 import {Swap} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
 import {useMutation, UseMutationOptions} from 'react-query'
+import {z} from 'zod'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {
@@ -11,6 +13,7 @@ import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
 import {YoroiEntry} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
+
 export const createYoroiEntry = (
   createOrder: Swap.CreateOrderData,
   address: string,
@@ -19,7 +22,7 @@ export const createYoroiEntry = (
   const amountEntry = {}
 
   const sellTokenId = createOrder.amounts.sell.tokenId
-  // summing fees is missing the frontend fee
+  // TODO Frontend Fee is not added. Once will be defined needs to be added here
   if (sellTokenId === wallet.primaryTokenInfo.id) {
     amountEntry[sellTokenId] = Quantities.sum([
       createOrder.selectedPool.deposit.quantity,
@@ -65,4 +68,33 @@ export const useCancelOrderWithHw = (
     ...mutation,
     cancelOrder: mutation.mutate,
   }
+}
+
+export type OrderTxMetadata = {
+  sellTokenId: string
+  buyTokenId: string
+  sellQuantity: string
+  buyQuantity: string
+  provider: string
+}
+
+const OrderTxMetadataSchema: z.ZodSchema<OrderTxMetadata> = z.object({
+  sellTokenId: z.string(),
+  buyTokenId: z.string(),
+  sellQuantity: z.string(),
+  buyQuantity: z.string(),
+  provider: z.string(),
+})
+
+const isOrderTxMetadata = createTypeGuardFromSchema(OrderTxMetadataSchema)
+
+/**
+ * Parses and validates a JSON metadata string, transforming it into a structure compliant with MappedRawOrder['metadata'].
+ *
+ * @param metadataJson - The JSON string representation of metadata.
+ * @returns The parsed metadata object or null if parsing fails or validation fails.
+ */
+export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | null => {
+  const parsedMetadata = parseSafe(metadataJson)
+  return isOrderTxMetadata(parsedMetadata) ? parsedMetadata : null
 }
