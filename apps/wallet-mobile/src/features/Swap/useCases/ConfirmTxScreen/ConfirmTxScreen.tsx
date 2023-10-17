@@ -1,6 +1,6 @@
 import {useSwap} from '@yoroi/swap'
 import React from 'react'
-import {StyleSheet, View, ViewProps} from 'react-native'
+import {InteractionManager, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../../components'
@@ -93,7 +93,9 @@ export const ConfirmTxScreen = () => {
                   unsignedTx={unsignedTx}
                   onSuccess={(signedTx) => {
                     closeModal()
-                    navigate.submittedTx(signedTx.signedTx.id)
+                    InteractionManager.runAfterInteractions(() => {
+                      navigate.submittedTx(signedTx.signedTx.id)
+                    })
                   }}
                   onCancel={closeModal}
                 />

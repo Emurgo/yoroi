@@ -25,8 +25,7 @@ export const ShowSubmittedTxScreen = () => {
   const params = isParams(unsafeParams) ? unsafeParams : null
 
   const navigateToExplorer = () => {
-    const txId = params?.txId
-    if (!isString(txId)) return
+    const txId = params?.txId ?? ''
     Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_TX(txId))
   }
 
