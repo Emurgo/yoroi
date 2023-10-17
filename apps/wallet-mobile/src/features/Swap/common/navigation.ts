@@ -13,7 +13,7 @@ export const useNavigateTo = () => {
     selectSellToken: () => navigation.navigate('swap-select-sell-token'),
     startSwap: () => navigation.navigate('swap-start-swap'),
     confirmTx: () => navigation.navigate('swap-confirm-tx'),
-    submittedTx: () => navigation.navigate('swap-submitted-tx'),
+    submittedTx: (txId: string) => navigation.navigate('swap-submitted-tx', {txId}),
     failedTx: () => navigation.navigate('swap-failed-tx'),
     swapOpenOrders: () =>
       navigation.reset({
