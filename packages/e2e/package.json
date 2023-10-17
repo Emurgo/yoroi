@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "e2e tests using detox",
   "main": "index.js",
+  "author": "Emurgo",
+  "license": "MIT",
   "scripts": {
     "e2e:build:android:dev:debug": "detox build --configuration android.emu.dev.debug",
     "e2e:build:android:nightly:debug": "detox build --configuration android.emu.nightly.debug",
