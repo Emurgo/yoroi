@@ -26,7 +26,7 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx}: Props) =>
   const {signAndSubmitTx, isLoading} = useSignWithPasswordAndSubmitTx(
     {wallet}, //
     {
-      submitTx: {onSuccess: () => onSuccess(signedTxRef.current as YoroiSignedTx)},
+      submitTx: {onSuccess: () => signedTxRef.current && onSuccess(signedTxRef.current)},
       signTx: {
         onSuccess: (tx) => {
           signedTxRef.current = tx
