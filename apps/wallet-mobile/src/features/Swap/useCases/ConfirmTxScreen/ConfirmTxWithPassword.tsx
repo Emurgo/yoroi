@@ -21,18 +21,10 @@ export const ConfirmTxWithPassword = ({wallet, onSuccess, unsignedTx}: Props) =>
     errorLogs: '',
   })
   const strings = useStrings()
-  const signedTxRef = React.useRef<YoroiSignedTx | undefined>(undefined)
 
-  const {signAndSubmitTx, isLoading} = useSignWithPasswordAndSubmitTx(
+  const {signAndSubmitTx, isLoading, signTx} = useSignWithPasswordAndSubmitTx(
     {wallet}, //
-    {
-      submitTx: {onSuccess: () => signedTxRef.current && onSuccess(signedTxRef.current)},
-      signTx: {
-        onSuccess: (tx) => {
-          signedTxRef.current = tx
-        },
-      },
-    },
+    {submitTx: {onSuccess: () => signTx.data && onSuccess(signTx.data)}},
   )
 
   const showError = ({errorMessage, errorLogs}: ErrorData) => {
