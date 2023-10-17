@@ -38,6 +38,7 @@ import {Counter} from '../../../common/Counter/Counter'
 import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
+import {SwapInfoLink} from '../../../common/SwapInfoLink/SwapInfoLink'
 import {getCancellationOrderFee} from './helpers'
 import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
 
@@ -498,7 +499,7 @@ const ModalContent = ({
 
       <Spacer height={10} />
 
-      <ModalContentLink />
+      <SwapInfoLink />
 
       <Spacer fill />
 
@@ -561,16 +562,6 @@ const ModalContentRow = ({label, value}: {label: string; value: string}) => {
 
       <Text style={styles.contentValue}>{value}</Text>
     </View>
-  )
-}
-
-const ModalContentLink = () => {
-  const strings = useStrings()
-  return (
-    // TODO: add real link
-    <TouchableOpacity onPress={() => Linking.openURL('https://google.com')} style={styles.link}>
-      <Text style={styles.linkText}>{strings.listOrdersSheetLink}</Text>
-    </TouchableOpacity>
   )
 }
 
@@ -642,17 +633,6 @@ const styles = StyleSheet.create({
   modalContentTitle: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  link: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  linkText: {
-    color: '#4B6DDE',
-    fontFamily: 'Rubik-Medium',
-    fontSize: 16,
-    fontWeight: '500',
-    lineHeight: 22,
   },
   buttons: {
     flexDirection: 'row',

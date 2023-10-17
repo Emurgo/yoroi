@@ -99,9 +99,9 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
                       <Spacer height={8} />
 
                       <View style={styles.info}>
-                        <Text style={styles.infoLabel}>{`${strings.tvl}, ${ticker}`}</Text>
+                        <Text style={styles.infoLabel}>{strings.tvl}</Text>
 
-                        <Text style={styles.infoValue}>{formattedTvl}</Text>
+                        <Text style={styles.infoValue}>{`${formattedTvl} ${ticker}`}</Text>
                       </View>
                     </View>
 
@@ -109,9 +109,9 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
                       <Spacer height={8} />
 
                       <View style={styles.info}>
-                        <Text style={styles.infoLabel}>{strings.poolFee}, %</Text>
+                        <Text style={styles.infoLabel}>{strings.poolFee}</Text>
 
-                        <Text style={styles.infoValue}>{pool.fee}%</Text>
+                        <Text style={styles.infoValue}>{`${formattedBatcherFeeInPt} ${ticker}`}</Text>
                       </View>
                     </View>
 
@@ -119,9 +119,9 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
                       <Spacer height={8} />
 
                       <View style={styles.info}>
-                        <Text style={styles.infoLabel}>{`${strings.batcherFee}, ${ticker}`}</Text>
+                        <Text style={styles.infoLabel}>{strings.swapLiquidityFee}</Text>
 
-                        <Text style={styles.infoValue}>{formattedBatcherFeeInPt}</Text>
+                        <Text style={styles.infoValue}>{pool.fee} %</Text>
                       </View>
                     </View>
                   </View>

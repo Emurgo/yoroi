@@ -18,6 +18,7 @@ import {useNavigateTo} from '../../../../common/navigation'
 import {PoolIcon} from '../../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../../common/strings'
 import {useSwapTouched} from '../../../../common/SwapFormProvider'
+import {SwapInfoLink} from '../../../../common/SwapInfoLink/SwapInfoLink'
 
 export const ShowPoolActions = () => {
   const navigateTo = useNavigateTo()
@@ -155,8 +156,9 @@ const HiddenInfo = ({
           info: strings.swapMinReceived,
         },
         {
-          label: strings.swapLiquidityFee(liquidityFee),
+          label: strings.swapLiquidityFee,
           value: `${liquidityFeeValue} ${sellTokenName}`,
+          info: strings.swapLiquidityFeeInfo(liquidityFee),
         },
       ].map((item) => (
         <HiddenInfoWrapper
@@ -181,7 +183,11 @@ const HiddenInfo = ({
           setBottomSheetSate({isOpen: false, title: '', content: ''})
         }}
       >
-        <Text style={styles.text}>{bottomSheetState.content}</Text>
+        <View style={styles.modalContent}>
+          <Text style={styles.text}>{bottomSheetState.content}</Text>
+
+          <SwapInfoLink />
+        </View>
       </BottomSheetModal>
     </View>
   )
@@ -196,6 +202,11 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontWeight: '400',
     color: '#242838',
+  },
+  modalContent: {
+    flex: 1,
+    justifyContent: 'space-between',
+    paddingBottom: 24,
   },
   change: {color: COLORS.SHELLEY_BLUE, fontWeight: '600', textTransform: 'uppercase'},
   bold: {
