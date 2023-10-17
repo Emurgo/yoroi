@@ -119,5 +119,5 @@ export const supportedProviders: ReadonlyArray<Provider> = [
   'sundaeswap',
   'vyfi',
   'wingriders',
-  // 'muesliswap_v2' // TODO: enable after more clarification - right now user is not receiving tokens back when choosing this pool
+  'muesliswap_v2',
 ] as const
