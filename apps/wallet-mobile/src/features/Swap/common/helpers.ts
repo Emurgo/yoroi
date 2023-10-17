@@ -98,3 +98,29 @@ export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | nu
   const parsedMetadata = parseSafe(metadataJson)
   return isOrderTxMetadata(parsedMetadata) ? parsedMetadata : null
 }
+
+export const formatCustomDate = (dateString: string, locale: string): string => {
+  const date = new Date(dateString)
+
+  // Use Intl.DateTimeFormat to handle locale and time zone conversions
+  const dateTimeFormatOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false, // use 24-hour cycle
+  }
+  const formattedParts = new Intl.DateTimeFormat(locale, dateTimeFormatOptions).formatToParts(date)
+
+  const findPart = (type: string) => formattedParts.find((part) => part.type === type)?.value
+  const day = findPart('day')
+  const month = findPart('month')
+  const year = findPart('year')
+  const hour = findPart('hour')
+  const minute = findPart('minute')
+  const second = findPart('second')
+
+  return `${day}/${month}/${year} ${hour}:${minute}:${second}`
+}
