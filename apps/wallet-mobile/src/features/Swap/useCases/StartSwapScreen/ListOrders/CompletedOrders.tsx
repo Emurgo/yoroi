@@ -267,7 +267,7 @@ const MainInfo = ({
       {[
         {label: strings.listOrdersSheetAssetPrice, value: `${tokenPrice} ${sellLabel}`},
         {label: strings.listOrdersSheetAssetAmount, value: tokenAmount},
-        {label: strings.listOrdersTimeCreated, value: txTimeCreated},
+        {label: strings.listOrdersTimeCompleted, value: txTimeCreated},
       ].map((item, index) => (
         <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 2} />
       ))}

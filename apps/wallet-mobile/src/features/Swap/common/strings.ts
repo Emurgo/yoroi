@@ -35,6 +35,7 @@ export const useStrings = () => {
     swapMinReceivedTitle: intl.formatMessage(messages.swapMinReceivedTitle),
     swapFeesTitle: intl.formatMessage(messages.swapFeesTitle),
     swapLiquidityFee: intl.formatMessage(messages.swapLiquidityFee),
+    swapLiqProvFee: intl.formatMessage(messages.swapLiqProvFee),
     swapLiquidityFeeInfo: (fee: string) => intl.formatMessage(messages.swapLiquidityFeeInfo, {fee}),
     swapFees: intl.formatMessage(messages.swapFees),
     poolVerification: (pool: string) => intl.formatMessage(messages.poolVerification, {pool}),
@@ -82,6 +83,7 @@ export const useStrings = () => {
     listOrdersSheetConfirm: intl.formatMessage(messages.listOrdersSheetConfirm),
     listOrdersSheetBack: intl.formatMessage(messages.listOrdersSheetBack),
     listOrdersTimeCreated: intl.formatMessage(messages.listOrdersTimeCreated),
+    listOrdersTimeCompleted: intl.formatMessage(messages.listOrdersTimeCompleted),
     listOrdersLiquidityPool: intl.formatMessage(messages.listOrdersLiquidityPool),
     listOrdersTotal: intl.formatMessage(messages.listOrdersTotal),
     listOrdersTxId: intl.formatMessage(messages.listOrdersTxId),
@@ -239,6 +241,10 @@ export const messages = defineMessages({
   },
   swapLiquidityFee: {
     id: 'swap.swapScreen.swapLiquidityFee',
+    defaultMessage: '!!!Liquidity provider fee',
+  },
+  swapLiqProvFee: {
+    id: 'swap.swapScreen.swapLiqProvFee',
     defaultMessage: '!!!Liq. prov. fee',
   },
   swapLiquidityFeeInfo: {
@@ -444,6 +450,10 @@ export const messages = defineMessages({
   listOrdersTimeCreated: {
     id: 'swap.listOrders.timeCreated',
     defaultMessage: '!!!Time Created',
+  },
+  listOrdersTimeCompleted: {
+    id: 'swap.listOrders.timeCompleted',
+    defaultMessage: '!!!Time Completed',
   },
   listOrdersTxId: {
     id: 'swap.listOrders.txId',

@@ -156,7 +156,8 @@ const HiddenInfo = ({
           info: strings.swapMinReceived,
         },
         {
-          label: strings.swapLiquidityFee,
+          label: strings.swapLiqProvFee,
+          title: strings.swapLiquidityFee,
           value: `${liquidityFeeValue} ${sellTokenName}`,
           info: strings.swapLiquidityFeeInfo(liquidityFee),
         },
@@ -169,7 +170,7 @@ const HiddenInfo = ({
           onPress={() => {
             setBottomSheetSate({
               isOpen: true,
-              title: item.label,
+              title: item.title ?? item.label,
               content: item.info,
             })
           }}

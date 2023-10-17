@@ -269,7 +269,6 @@ export const OpenOrders = () => {
                     txId={order.txId}
                     total={`${order.total} ${order.assetFromLabel}`}
                     txLink={order.txLink}
-                    date={intl.formatDate(new Date(order.date), {dateStyle: 'short', timeStyle: 'short'})}
                     liquidityPoolIcon={liquidityPoolIcon}
                     liquidityPoolName={order.provider ?? ''}
                     poolUrl={order.poolUrl ?? ''}
@@ -299,6 +298,7 @@ export const OpenOrders = () => {
                 <MainInfo
                   tokenAmount={`${order.tokenAmount} ${order.assetToLabel}`}
                   tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
+                  date={intl.formatDate(new Date(order.date), {dateStyle: 'short', timeStyle: 'short'})}
                 />
               </ExpandableInfoCard>
             )
@@ -361,7 +361,6 @@ const HiddenInfo = ({
   liquidityPoolIcon,
   liquidityPoolName,
   poolUrl,
-  date,
   txId,
   txLink,
 }: {
@@ -369,7 +368,6 @@ const HiddenInfo = ({
   liquidityPoolIcon: React.ReactNode
   liquidityPoolName: string
   poolUrl: string
-  date: string
   txId: string
   txLink: string
 }) => {
@@ -392,10 +390,7 @@ const HiddenInfo = ({
             />
           ),
         },
-        {
-          label: strings.listOrdersTimeCreated,
-          value: date,
-        },
+
         {
           label: strings.listOrdersTxId,
           value: <TxLink txId={shortenedTxId} txLink={txLink} />,
@@ -407,15 +402,19 @@ const HiddenInfo = ({
   )
 }
 
-const MainInfo = ({tokenPrice, tokenAmount}: {tokenPrice: string; tokenAmount: string}) => {
+const MainInfo = ({tokenPrice, tokenAmount, date}: {tokenPrice: string; tokenAmount: string; date: string}) => {
   const strings = useStrings()
   return (
     <View>
       {[
         {label: strings.listOrdersSheetAssetPrice, value: tokenPrice},
         {label: strings.listOrdersSheetAssetAmount, value: tokenAmount},
+        {
+          label: strings.listOrdersTimeCreated,
+          value: date,
+        },
       ].map((item, index) => (
-        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />
+        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 2} />
       ))}
     </View>
   )
