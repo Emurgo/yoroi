@@ -1,4 +1,3 @@
-import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {Keyboard, StyleSheet, Text} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -9,13 +8,11 @@ import {useSwapForm} from '../../../../common/SwapFormProvider'
 
 export const ClearQuantities = () => {
   const strings = useStrings()
-  const {resetQuantities} = useSwap()
-  const {poolDefaulted} = useSwapForm()
+  const {resetSwapForm} = useSwapForm()
 
   const handleReset = () => {
     Keyboard.dismiss()
-    resetQuantities()
-    poolDefaulted()
+    resetSwapForm()
   }
 
   return (

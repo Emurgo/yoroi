@@ -35,10 +35,11 @@ export const CreateOrder = () => {
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
   const {
-    sellAmount: {isTouched: isSellTouched, error: sellError},
-    buyAmount: {isTouched: isBuyTouched, error: buyError},
-    setSellAmountError,
+    sellAmount: {isTouched: isSellTouched},
+    buyAmount: {isTouched: isBuyTouched},
+    sellAmountErrorChanged,
     poolDefaulted,
+    canSwap,
   } = useSwapForm()
 
   useSwapPoolsByPair(
@@ -76,7 +77,7 @@ export const CreateOrder = () => {
     },
     onError: (error) => {
       if (error instanceof NotEnoughMoneyToSendError) {
-        setSellAmountError(strings.notEnoughBalance)
+        sellAmountErrorChanged(strings.notEnoughBalance)
         return
       }
 
@@ -107,15 +108,6 @@ export const CreateOrder = () => {
       Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
     },
   })
-
-  const disabled = isLoading
-  !isBuyTouched ||
-    !isSellTouched ||
-    Quantities.isZero(orderData.amounts.buy.quantity) ||
-    Quantities.isZero(orderData.amounts.sell.quantity) ||
-    (orderData.type === 'limit' && orderData.limitPrice !== undefined && Quantities.isZero(orderData.limitPrice)) ||
-    sellError !== undefined ||
-    buyError !== undefined
 
   const swap = () => {
     if (orderData.selectedPoolCalculation === undefined) return
@@ -201,6 +193,8 @@ export const CreateOrder = () => {
 
     createUnsignedSwapTx()
   }
+
+  const disabled = isLoading || !canSwap
 
   return (
     <View style={styles.root}>
