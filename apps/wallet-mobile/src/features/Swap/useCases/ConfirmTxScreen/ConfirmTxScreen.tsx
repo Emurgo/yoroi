@@ -38,11 +38,7 @@ export const ConfirmTxScreen = () => {
     {onSuccess: (rootKey) => signAndSubmitTx({unsignedTx, rootKey})},
   )
 
-  const {
-    signAndSubmitTx,
-    isLoading: processingTx,
-    signTx,
-  } = useSignAndSubmitTx(
+  const {signAndSubmitTx, isLoading: processingTx} = useSignAndSubmitTx(
     {wallet},
     {
       signTx: {useErrorBoundary: true},
@@ -63,8 +59,6 @@ export const ConfirmTxScreen = () => {
             pool_source: orderData.selectedPoolCalculation.pool.provider,
             swap_fees: Number(orderData.selectedPoolCalculation.cost.batcherFee),
           })
-
-          navigate.submittedTx(signTx.data?.signedTx.id ?? '')
         },
         onError: () => {
           navigate.failedTx()
