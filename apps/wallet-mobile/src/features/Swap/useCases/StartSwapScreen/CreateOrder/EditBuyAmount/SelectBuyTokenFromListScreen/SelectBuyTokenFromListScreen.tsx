@@ -168,7 +168,7 @@ const TokenList = () => {
 
         <Spacer width={8} />
 
-        <Text style={styles.topText}>{strings.assetsIn}</Text>
+        <Text style={styles.legend}>{strings.assetsIn}</Text>
       </View>
 
       <Counter
@@ -287,8 +287,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'center',
   },
-  topText: {
-    fontSize: 16,
+  legend: {
+    fontSize: 14,
+    fontWeight: '400',
+    fontFamily: 'Rubik',
   },
   image: {
     flex: 1,
