@@ -398,8 +398,8 @@ export const TRANSACTION_STATUS = {
 }
 export type TransactionStatus = (typeof TRANSACTION_STATUS)[keyof typeof TRANSACTION_STATUS]
 
-export type TxMetadata = Array<{label: string; map_json: {msg: Array<string>}}>
-export type TxMetadataInfo = unknown
+export type TxMetadata = Array<{label: string; map_json?: any; text_scalar?: string | null}>
+export type TxMetadataInfo = Record<string, any>
 
 export type TransactionInfo = {
   id: string
@@ -417,7 +417,7 @@ export type TransactionInfo = {
   tokens: Record<string, Token>
   blockNumber: number
   memo: null | string
-  metadata?: TxMetadataInfo
+  metadata: TxMetadataInfo | undefined
 }
 
 export type IOData = {
