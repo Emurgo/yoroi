@@ -6,7 +6,7 @@ import {LedgerConnect} from '../../../../HW'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useSignWithHwAndSubmitTx} from '../../../../yoroi-wallets/hooks'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../../yoroi-wallets/hw'
-import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {walletManager} from '../../../../yoroi-wallets/walletManager'
 import {useStrings} from '../../common/strings'
 import {LedgerTransportSwitch} from './LedgerTransportSwitch'
@@ -15,7 +15,7 @@ type Props = {
   wallet: YoroiWallet
   unsignedTx: YoroiUnsignedTx
   onCancel?: () => void
-  onSuccess: () => void
+  onSuccess: (signedTx: YoroiSignedTx) => void
 }
 
 type TransportType = 'USB' | 'BLE'
