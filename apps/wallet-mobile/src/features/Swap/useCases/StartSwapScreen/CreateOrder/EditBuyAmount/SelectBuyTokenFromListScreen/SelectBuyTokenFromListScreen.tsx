@@ -69,14 +69,14 @@ const TokenList = () => {
     return pairsByToken
   }, [pairsByToken])
 
-  const filteredTransformedList = React.useMemo(() => {
+  const filteredTokenList = React.useMemo(() => {
     const filter = filterBySearch(assetSearchTerm)
     return tokens.filter((token) => filter(token.info))
   }, [tokens, assetSearchTerm])
 
   return (
     <View style={styles.list}>
-      {filteredTransformedList?.length > 0 && (
+      {filteredTokenList?.length > 0 && (
         <View style={styles.ph}>
           <Spacer height={16} />
 
@@ -93,7 +93,7 @@ const TokenList = () => {
       )}
 
       <FlashList
-        data={filteredTransformedList}
+        data={filteredTokenList}
         renderItem={({item: token}: {item: Balance.Token}) => (
           <Boundary loading={{fallback: <AmountItemPlaceholder style={styles.item} />}}>
             <SelectableToken
@@ -108,7 +108,7 @@ const TokenList = () => {
         keyExtractor={({info: {id, name}}) => `${name}-${id}`}
         testID="assetsList"
         estimatedItemSize={72}
-        ListEmptyComponent={<EmptyList filteredTokensForList={filteredTransformedList} />}
+        ListEmptyComponent={<EmptyList filteredTokensForList={filteredTokenList} />}
       />
 
       <Spacer height={16} />
@@ -122,9 +122,9 @@ const TokenList = () => {
       </View>
 
       <Counter
-        counter={filteredTransformedList.length}
+        counter={filteredTokenList.length}
         style={styles.counter}
-        unitsText={strings.assets(filteredTransformedList.length)}
+        unitsText={strings.assets(filteredTokenList.length)}
         closingText={strings.available}
       />
     </View>
