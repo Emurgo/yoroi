@@ -56,7 +56,11 @@ const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[]
       const result: TxMetadataInfo = {}
       receivedTransactions.forEach((receivedTx) => {
         receivedTx.inputs.forEach((input) => {
-          if (Boolean(input.id) && input?.id?.slice(0, -1) === sentTx?.id && receivedTx.metadata?.['674'] !== null) {
+          if (
+            Boolean(input.id) &&
+            input?.id?.slice(0, -1) === sentTx?.id &&
+            receivedTx.metadata?.['674'] !== undefined
+          ) {
             result['id'] = sentTx?.id
             result['date'] = receivedTx?.lastUpdatedAt
             const metadata = parseOrderTxMetadata(sentTx?.metadata?.['674'])
@@ -163,7 +167,11 @@ export const ExpandableOrder = ({order}: {order: MappedRawOrder}) => {
         tokenPrice={marketPrice}
         sellLabel={sellLabel}
         tokenAmount={`${sellQuantity} ${sellLabel}`}
-        txTimeCreated={intl.formatDate(new Date(order.date), {dateStyle: 'short', timeStyle: 'short'})}
+        txTimeCreated={intl.formatDate(new Date(order.date), {
+          dateStyle: 'short',
+          timeStyle: 'medium',
+          hour12: false,
+        })}
       />
     </ExpandableInfoCard>
   )
@@ -256,14 +264,15 @@ const MainInfo = ({
   txTimeCreated: string
 }) => {
   const strings = useStrings()
+  const orderInfo = [
+    {label: strings.listOrdersSheetAssetPrice, value: `${tokenPrice} ${sellLabel}`},
+    {label: strings.listOrdersSheetAssetAmount, value: tokenAmount},
+    {label: strings.listOrdersTimeCompleted, value: txTimeCreated},
+  ]
   return (
     <View>
-      {[
-        {label: strings.listOrdersSheetAssetPrice, value: `${tokenPrice} ${sellLabel}`},
-        {label: strings.listOrdersSheetAssetAmount, value: tokenAmount},
-        {label: strings.listOrdersTimeCreated, value: txTimeCreated},
-      ].map((item, index) => (
-        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 2} />
+      {orderInfo.map((item, index) => (
+        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === orderInfo.length - 1} />
       ))}
     </View>
   )
