@@ -1,7 +1,7 @@
 import {useSwap} from '@yoroi/swap'
 import {produce} from 'immer'
 import React from 'react'
-import {TextInput} from 'react-native'
+import {Keyboard, TextInput} from 'react-native'
 
 import {useLanguage} from '../../../i18n'
 import {useSelectedWallet} from '../../../SelectedWallet'
@@ -41,10 +41,10 @@ export const SwapFormProvider = ({
 
   const poolSupply = buyTokenId === pool?.tokenA.tokenId ? pool?.tokenA.quantity : pool?.tokenB.quantity
   const hasBuyTokenSupply = !Quantities.isGreaterThan(buyQuantity, poolSupply ?? Quantities.zero)
-  const hasSellBalance = !Quantities.isGreaterThan(orderData.amounts.sell.quantity, sellbalance)
+  const hasSellBalance = !Quantities.isGreaterThan(sellQuantity, sellbalance)
   const hasFeesBalance = !Quantities.isGreaterThan(
     Quantities.sum([
-      sellTokenId === wallet.primaryTokenInfo.id ? orderData.amounts.sell.quantity : Quantities.zero,
+      sellTokenId === wallet.primaryTokenInfo.id ? sellQuantity : Quantities.zero,
       orderData.selectedPoolCalculation?.cost.ptTotalFeeNoFEF.quantity ?? Quantities.zero,
     ]),
     primaryTokenBalance,
@@ -56,11 +56,11 @@ export const SwapFormProvider = ({
     ...defaultState,
     buyAmount: {
       ...defaultState.buyAmount,
-      displayValue: Quantities.format(orderData.amounts.buy.quantity, buyTokenInfo.decimals ?? 0),
+      displayValue: Quantities.format(buyQuantity, buyTokenInfo.decimals ?? 0),
     },
     sellAmount: {
       ...defaultState.sellAmount,
-      displayValue: Quantities.format(orderData.amounts.sell.quantity, buyTokenInfo.decimals ?? 0),
+      displayValue: Quantities.format(sellQuantity, sellTokenInfo.decimals ?? 0),
     },
     ...initialState,
   })
@@ -90,8 +90,8 @@ export const SwapFormProvider = ({
   const canSwap =
     state.buyAmount.isTouched &&
     state.sellAmount.isTouched &&
-    !Quantities.isZero(orderData.amounts.buy.quantity) &&
-    !Quantities.isZero(orderData.amounts.sell.quantity) &&
+    !Quantities.isZero(buyQuantity) &&
+    !Quantities.isZero(sellQuantity) &&
     state.buyAmount.error === undefined &&
     state.sellAmount.error === undefined &&
     ((orderData.type === 'limit' && orderData.limitPrice !== undefined && !Quantities.isZero(orderData.limitPrice)) ||
@@ -110,6 +110,8 @@ export const SwapFormProvider = ({
     resetSwapForm: () => {
       resetQuantities()
       dispatch({type: SwapFormActionType.ResetSwapForm})
+
+      Keyboard.dismiss()
     },
     canSwapChanged: (canSwap: boolean) => dispatch({type: SwapFormActionType.CanSwapChanged, canSwap}),
     buyInputValueChanged: (value: string) => dispatch({type: SwapFormActionType.BuyInputValueChanged, value}),
@@ -121,57 +123,35 @@ export const SwapFormProvider = ({
       dispatch({type: SwapFormActionType.SellAmountErrorChanged, error}),
   }).current
 
-  React.useEffect(() => {
-    if (state.buyAmount.isTouched && !buyInputRef?.current?.isFocused()) {
-      actions.buyInputValueChanged(Quantities.format(orderData.amounts.buy.quantity, buyTokenInfo.decimals ?? 0))
-    }
-  }, [state.buyAmount.isTouched, orderData.amounts.buy.quantity, buyTokenInfo.decimals, actions])
-
-  React.useEffect(() => {
+  const updateSellInput = React.useCallback(() => {
     if (state.sellAmount.isTouched && !sellInputRef?.current?.isFocused()) {
-      actions.sellInputValueChanged(Quantities.format(orderData.amounts.sell.quantity, sellTokenInfo.decimals ?? 0))
+      actions.sellInputValueChanged(Quantities.format(sellQuantity, sellTokenInfo.decimals ?? 0))
     }
-  }, [actions, state.sellAmount.isTouched, orderData.amounts.sell.quantity, sellTokenInfo.decimals])
+  }, [actions, sellQuantity, sellTokenInfo.decimals, state.sellAmount.isTouched])
 
-  React.useEffect(() => {
-    if (sellError !== state.sellAmount.error) actions.sellAmountErrorChanged(sellError)
-  }, [actions, sellError, state.sellAmount.error])
+  const updateBuyInput = React.useCallback(() => {
+    if (state.buyAmount.isTouched && !buyInputRef?.current?.isFocused()) {
+      actions.buyInputValueChanged(Quantities.format(buyQuantity, buyTokenInfo.decimals ?? 0))
+    }
+  }, [actions, buyTokenInfo.decimals, buyQuantity, state.buyAmount.isTouched])
 
-  React.useEffect(() => {
-    if (canSwap !== state.canSwap) actions.canSwapChanged(canSwap)
-  }, [actions, canSwap, state.canSwap])
-
-  React.useEffect(() => {
-    if (buyError !== state.buyAmount.error) actions.buyAmountErrorChanged(buyError)
-  }, [actions, buyError, state.buyAmount.error])
-
-  React.useEffect(() => {
-    if (orderData.type === 'limit') {
-      !limitInputRef?.current?.isFocused() &&
-        actions.limitInputValueChanged(
-          Quantities.format(orderData.limitPrice ?? Quantities.zero, denomination, PRECISION),
-        )
+  const updateLimitPrice = React.useCallback(() => {
+    if (orderData.type === 'limit' && !limitInputRef?.current?.isFocused()) {
+      actions.limitInputValueChanged(
+        Quantities.format(orderData.limitPrice ?? Quantities.zero, denomination, PRECISION),
+      )
     } else {
       actions.limitInputValueChanged(
         Quantities.format(orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero, denomination, PRECISION),
       )
     }
-  }, [
-    orderData.type,
-    orderData.limitPrice,
-    orderData.amounts.sell,
-    orderData.selectedPoolCalculation,
-    sellTokenInfo.decimals,
-    buyTokenInfo.decimals,
-    actions,
-    denomination,
-  ])
+  }, [actions, denomination, orderData.limitPrice, orderData.selectedPoolCalculation?.prices.market, orderData.type])
 
   const onChangeSellQuantity = React.useCallback(
     (text: string) => {
       const [input, quantity] = Quantities.parseFromText(text, sellTokenInfo.decimals ?? 0, numberLocale)
       sellQuantityChanged(quantity)
-      actions.sellInputValueChanged(text === '' ? text : input)
+      actions.sellInputValueChanged(text === '' ? '' : input)
     },
     [actions, numberLocale, sellQuantityChanged, sellTokenInfo.decimals],
   )
@@ -180,7 +160,7 @@ export const SwapFormProvider = ({
     (text: string) => {
       const [input, quantity] = Quantities.parseFromText(text, buyTokenInfo.decimals ?? 0, numberLocale)
       buyQuantityChanged(quantity)
-      actions.buyInputValueChanged(text === '' ? text : input)
+      actions.buyInputValueChanged(text === '' ? '' : input)
     },
     [actions, buyQuantityChanged, buyTokenInfo.decimals, numberLocale],
   )
@@ -193,6 +173,30 @@ export const SwapFormProvider = ({
     },
     [actions, denomination, limitPriceChanged, numberLocale],
   )
+
+  React.useEffect(() => {
+    if (buyError !== state.buyAmount.error) actions.buyAmountErrorChanged(buyError)
+  }, [actions, buyError, state.buyAmount.error])
+
+  React.useEffect(() => {
+    if (sellError !== state.sellAmount.error) actions.sellAmountErrorChanged(sellError)
+  }, [actions, sellError, state.sellAmount.error])
+
+  React.useEffect(() => {
+    if (canSwap !== state.canSwap) actions.canSwapChanged(canSwap)
+  }, [actions, canSwap, state.canSwap])
+
+  React.useEffect(() => {
+    updateSellInput()
+  }, [sellQuantity, updateSellInput])
+
+  React.useEffect(() => {
+    updateBuyInput()
+  }, [buyQuantity, updateBuyInput])
+
+  React.useEffect(() => {
+    updateLimitPrice()
+  }, [orderData.limitPrice, orderData.selectedPoolCalculation?.prices.market, orderData.type, updateLimitPrice])
 
   const context = React.useMemo(
     () => ({
@@ -241,9 +245,7 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
         break
 
       case SwapFormActionType.ResetSwapForm:
-        draft = defaultState
-
-        break
+        return defaultState
 
       case SwapFormActionType.CanSwapChanged:
         draft.canSwap = action.canSwap
