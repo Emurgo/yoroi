@@ -115,14 +115,14 @@ export const SwapFormProvider = ({
     poolTouched: () => dispatch({type: SwapFormActionType.PoolTouched}),
     poolDefaulted: () => dispatch({type: SwapFormActionType.PoolDefaulted}),
     clearSwapForm: () => {
-      resetState()
+      resetQuantities()
       dispatch({type: SwapFormActionType.ClearSwapForm})
 
       // In certain iOS simulators, the focused input's `onChangeText` may be called before dismissal, using the previous input value.
       Keyboard.dismiss()
     },
     resetSwapForm: () => {
-      resetQuantities()
+      resetState()
       dispatch({type: SwapFormActionType.ResetSwapForm})
     },
     canSwapChanged: (canSwap: boolean) => dispatch({type: SwapFormActionType.CanSwapChanged, canSwap}),
