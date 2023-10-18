@@ -38,6 +38,7 @@ import {Counter} from '../../../common/Counter/Counter'
 import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
+import {SwapInfoLink} from '../../../common/SwapInfoLink/SwapInfoLink'
 import {getCancellationOrderFee} from './helpers'
 import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
 
@@ -242,6 +243,7 @@ export const OpenOrders = () => {
         460,
       )
     } catch (error) {
+      setIsLoading(false)
       if (error instanceof Error) {
         Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error.message))
       } else {
@@ -268,7 +270,6 @@ export const OpenOrders = () => {
                     txId={order.txId}
                     total={`${order.total} ${order.assetFromLabel}`}
                     txLink={order.txLink}
-                    date={intl.formatDate(new Date(order.date), {dateStyle: 'short', timeStyle: 'short'})}
                     liquidityPoolIcon={liquidityPoolIcon}
                     liquidityPoolName={order.provider ?? ''}
                     poolUrl={order.poolUrl ?? ''}
@@ -298,6 +299,11 @@ export const OpenOrders = () => {
                 <MainInfo
                   tokenAmount={`${order.tokenAmount} ${order.assetToLabel}`}
                   tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
+                  date={intl.formatDate(new Date(order.date), {
+                    dateStyle: 'short',
+                    timeStyle: 'medium',
+                    hour12: false,
+                  })}
                 />
               </ExpandableInfoCard>
             )
@@ -360,7 +366,6 @@ const HiddenInfo = ({
   liquidityPoolIcon,
   liquidityPoolName,
   poolUrl,
-  date,
   txId,
   txLink,
 }: {
@@ -368,7 +373,6 @@ const HiddenInfo = ({
   liquidityPoolIcon: React.ReactNode
   liquidityPoolName: string
   poolUrl: string
-  date: string
   txId: string
   txLink: string
 }) => {
@@ -391,10 +395,7 @@ const HiddenInfo = ({
             />
           ),
         },
-        {
-          label: strings.listOrdersTimeCreated,
-          value: date,
-        },
+
         {
           label: strings.listOrdersTxId,
           value: <TxLink txId={shortenedTxId} txLink={txLink} />,
@@ -406,15 +407,20 @@ const HiddenInfo = ({
   )
 }
 
-const MainInfo = ({tokenPrice, tokenAmount}: {tokenPrice: string; tokenAmount: string}) => {
+const MainInfo = ({tokenPrice, tokenAmount, date}: {tokenPrice: string; tokenAmount: string; date: string}) => {
   const strings = useStrings()
+  const orderInfo = [
+    {label: strings.listOrdersSheetAssetPrice, value: tokenPrice},
+    {label: strings.listOrdersSheetAssetAmount, value: tokenAmount},
+    {
+      label: strings.listOrdersTimeCreated,
+      value: date,
+    },
+  ]
   return (
     <View>
-      {[
-        {label: strings.listOrdersSheetAssetPrice, value: tokenPrice},
-        {label: strings.listOrdersSheetAssetAmount, value: tokenAmount},
-      ].map((item, index) => (
-        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 1} />
+      {orderInfo.map((item, index) => (
+        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === orderInfo.length - 1} />
       ))}
     </View>
   )
@@ -498,7 +504,7 @@ const ModalContent = ({
 
       <Spacer height={10} />
 
-      <ModalContentLink />
+      <SwapInfoLink />
 
       <Spacer fill />
 
@@ -561,16 +567,6 @@ const ModalContentRow = ({label, value}: {label: string; value: string}) => {
 
       <Text style={styles.contentValue}>{value}</Text>
     </View>
-  )
-}
-
-const ModalContentLink = () => {
-  const strings = useStrings()
-  return (
-    // TODO: add real link
-    <TouchableOpacity onPress={() => Linking.openURL('https://google.com')} style={styles.link}>
-      <Text style={styles.linkText}>{strings.listOrdersSheetLink}</Text>
-    </TouchableOpacity>
   )
 }
 
@@ -642,17 +638,6 @@ const styles = StyleSheet.create({
   modalContentTitle: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  link: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  linkText: {
-    color: '#4B6DDE',
-    fontFamily: 'Rubik-Medium',
-    fontSize: 16,
-    fontWeight: '500',
-    lineHeight: 22,
   },
   buttons: {
     flexDirection: 'row',
