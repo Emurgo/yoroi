@@ -389,7 +389,7 @@ export const messages = defineMessages({
   },
   listOrdersSheetTitle: {
     id: 'swap.listOrders.sheet.title',
-    defaultMessage: '!!!Confirm order cancelation',
+    defaultMessage: '!!!Confirm order cancellation',
   },
   listOrdersSheetButtonText: {
     id: 'swap.listOrders.card.buttonText',
