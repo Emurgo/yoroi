@@ -88,7 +88,7 @@ export const SwapFormProvider = ({
   const sellError =
     noPoolError !== undefined
       ? noPoolError
-      : !Quantities.isZero(sellQuantity) && state.buyQuantity.isTouched && !hasSellBalance
+      : !Quantities.isZero(sellQuantity) && !hasSellBalance
       ? strings.notEnoughBalance
       : !Quantities.isZero(sellQuantity) && state.buyQuantity.isTouched && !hasFeesBalance
       ? strings.notEnoughFeeBalance
