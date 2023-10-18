@@ -1,17 +1,33 @@
+import {createTypeGuardFromSchema, isString} from '@yoroi/common'
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Linking, StyleSheet, View} from 'react-native'
+import {z} from 'zod'
 
 import {Button, Spacer, Text} from '../../../../../components'
-import {useBlockGoBack} from '../../../../../navigation'
+import {useBlockGoBack, useUnsafeParams} from '../../../../../navigation'
+import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
+import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
+
+const schema = z.object({txId: z.string()})
+const isParams = createTypeGuardFromSchema(schema)
 
 export const ShowSubmittedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
   const navigate = useNavigateTo()
+  const wallet = useSelectedWallet()
+
+  const unsafeParams = useUnsafeParams()
+  const params = isParams(unsafeParams) ? unsafeParams : null
+
+  const navigateToExplorer = () => {
+    const txId = params?.txId ?? ''
+    Linking.openURL(getNetworkConfigById(wallet.networkId).EXPLORER_URL_FOR_TX(txId))
+  }
 
   return (
     <View style={styles.container}>
@@ -21,14 +37,38 @@ export const ShowSubmittedTxScreen = () => {
 
       <Text style={styles.text}>{strings.transactionDisplay}</Text>
 
-      <Spacer height={22} />
+      <Spacer height={20} />
 
-      <Button onPress={() => navigate.swapOpenOrders()} title={strings.goToOrders} style={styles.button} shelleyTheme />
+      {isString(params?.txId) && (
+        <Button
+          onPress={navigateToExplorer}
+          title={strings.seeOnExplorer}
+          style={styles.explorerButton}
+          outlineShelley
+        />
+      )}
+
+      <View style={styles.bottomFixed}>
+        <Button
+          onPress={() => navigate.swapOpenOrders()}
+          title={strings.goToOrders}
+          style={styles.button}
+          shelleyTheme
+        />
+      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  bottomFixed: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -53,5 +93,8 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingHorizontal: 20,
+  },
+  explorerButton: {
+    borderColor: 'transparent',
   },
 })

@@ -192,7 +192,7 @@ export type TxHistoryRoutes = {
   'send-start-tx': undefined
   'send-read-qr-code': undefined
   'send-confirm-tx': undefined
-  'send-submitted-tx': undefined
+  'send-submitted-tx': {txId: string}
   'send-failed-tx': undefined
   'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
@@ -207,7 +207,7 @@ export type SwapTokenRoutes = {
   'swap-select-buy-token': undefined
   'swap-edit-slippage': undefined
   'swap-select-pool': undefined
-  'swap-submitted-tx': undefined
+  'swap-submitted-tx': {txId: string}
   'swap-failed-tx': undefined
   'app-root': undefined
 }
