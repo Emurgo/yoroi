@@ -118,8 +118,7 @@ export const SwapFormProvider = ({
       resetState()
       dispatch({type: SwapFormActionType.ClearSwapForm})
 
-      // In some iOS simulator it can calls focused input onChangeText before dismissal with the previous
-      // input value
+      // In certain iOS simulators, the focused input's `onChangeText` may be called before dismissal, using the previous input value.
       Keyboard.dismiss()
     },
     resetSwapForm: () => {
