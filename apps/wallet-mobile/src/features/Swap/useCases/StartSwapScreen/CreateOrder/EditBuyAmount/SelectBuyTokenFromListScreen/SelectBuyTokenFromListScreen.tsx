@@ -12,7 +12,7 @@ import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchCo
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../../theme'
 import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
-import {useBalance, useBalances, useTokenInfo} from '../../../../../../../yoroi-wallets/hooks'
+import {useBalance, useBalances} from '../../../../../../../yoroi-wallets/hooks'
 import {asQuantity, Quantities} from '../../../../../../../yoroi-wallets/utils'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {Counter} from '../../../../../common/Counter/Counter'
@@ -61,6 +61,8 @@ const TokenList = () => {
   const wallet = useSelectedWallet()
   const {pairsByToken} = useSwapTokensByPairToken('')
   const {search: assetSearchTerm} = useSearch()
+  const balances = useBalances(wallet)
+  const walletTokenIds = Object.keys(balances)
 
   const tokens: Array<Balance.Token> = React.useMemo(() => {
     if (pairsByToken === undefined) return []
@@ -94,14 +96,19 @@ const TokenList = () => {
         data={filteredTransformedList}
         renderItem={({item: token}: {item: Balance.Token}) => (
           <Boundary loading={{fallback: <AmountItemPlaceholder style={styles.item} />}}>
-            <SelectableToken token={token} disabled={token.info.id !== wallet.primaryTokenInfo.id} wallet={wallet} />
+            <SelectableToken
+              token={token}
+              disabled={token.info.id !== wallet.primaryTokenInfo.id}
+              wallet={wallet}
+              walletTokenIds={walletTokenIds}
+            />
           </Boundary>
         )}
         bounces={false}
         keyExtractor={({info: {id, name}}) => `${name}-${id}`}
         testID="assetsList"
         estimatedItemSize={72}
-        ListEmptyComponent={<EmptyList filteredTokensForList={filteredTransformedList} wallet={wallet} />}
+        ListEmptyComponent={<EmptyList filteredTokensForList={filteredTransformedList} balances={balances} />}
       />
 
       <Spacer height={16} />
@@ -124,9 +131,13 @@ const TokenList = () => {
   )
 }
 
-type SelectableTokenProps = {disabled?: boolean; wallet: YoroiWallet; token: Balance.Token}
-const SelectableToken = ({wallet, token}: SelectableTokenProps) => {
-  const tokenInfo = useTokenInfo({wallet, tokenId: token.info.id})
+type SelectableTokenProps = {
+  disabled?: boolean
+  wallet: YoroiWallet
+  walletTokenIds: Array<string>
+  token: Balance.Token
+}
+const SelectableToken = ({wallet, token, walletTokenIds}: SelectableTokenProps) => {
   const balanceAvailable = useBalance({wallet, tokenId: token.info.id})
   const {closeSearch} = useSearch()
   const {buyTokenIdChanged, orderData} = useSwap()
@@ -135,7 +146,7 @@ const SelectableToken = ({wallet, token}: SelectableTokenProps) => {
   const {track} = useMetrics()
 
   const isDisabled = token.info.id === orderData.amounts.sell.tokenId && isSellTouched
-  const inUserWallet = tokenInfo !== undefined
+  const inUserWallet = walletTokenIds.includes(token.info.id)
   const supplyFormatted = Quantities.format(asQuantity(token.supply?.total), token.info.decimals ?? 0)
 
   const handleOnTokenSelection = () => {
@@ -169,13 +180,12 @@ const SelectableToken = ({wallet, token}: SelectableTokenProps) => {
 
 const EmptyList = ({
   filteredTokensForList,
-  wallet,
+  balances,
 }: {
   filteredTokensForList: Array<Balance.Token>
-  wallet: YoroiWallet
+  balances: Balance.Amounts
 }) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const balances = useBalances(wallet)
   const hasTokenBalance = Object.keys(balances).length === 1
 
   if ((isSearching && assetSearchTerm.length > 0 && filteredTokensForList.length === 0) || hasTokenBalance)
