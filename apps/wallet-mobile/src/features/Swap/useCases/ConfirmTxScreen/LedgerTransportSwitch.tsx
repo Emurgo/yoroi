@@ -22,7 +22,7 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
   })
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <ScrollView>
       <View style={styles.content}>
         <Text style={styles.paragraph}>{strings.bluetoothExplanation}</Text>
 
@@ -54,9 +54,6 @@ export const LedgerTransportSwitchView = ({onSelectUSB, onSelectBLE}: Props) => 
 export const LedgerTransportSwitch = LedgerTransportSwitchView
 
 const styles = StyleSheet.create({
-  scrollView: {
-    paddingRight: 10,
-  },
   paragraph: {
     marginBottom: spacing.paragraphBottomMargin,
     fontSize: 14,
