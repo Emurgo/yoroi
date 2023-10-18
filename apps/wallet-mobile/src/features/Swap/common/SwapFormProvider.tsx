@@ -292,7 +292,7 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
         break
 
       default:
-        throw new Error(`touchedReducer invalid action`)
+        throw new Error(`swapFormReducer invalid action`)
     }
   })
 }
