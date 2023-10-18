@@ -405,17 +405,18 @@ const HiddenInfo = ({
 
 const MainInfo = ({tokenPrice, tokenAmount, date}: {tokenPrice: string; tokenAmount: string; date: string}) => {
   const strings = useStrings()
+  const orderInfo = [
+    {label: strings.listOrdersSheetAssetPrice, value: tokenPrice},
+    {label: strings.listOrdersSheetAssetAmount, value: tokenAmount},
+    {
+      label: strings.listOrdersTimeCreated,
+      value: date,
+    },
+  ]
   return (
     <View>
-      {[
-        {label: strings.listOrdersSheetAssetPrice, value: tokenPrice},
-        {label: strings.listOrdersSheetAssetAmount, value: tokenAmount},
-        {
-          label: strings.listOrdersTimeCreated,
-          value: date,
-        },
-      ].map((item, index) => (
-        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 2} />
+      {orderInfo.map((item, index) => (
+        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === orderInfo.length - 1} />
       ))}
     </View>
   )

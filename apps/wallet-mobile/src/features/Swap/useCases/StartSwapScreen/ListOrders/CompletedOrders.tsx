@@ -256,14 +256,15 @@ const MainInfo = ({
   txTimeCreated: string
 }) => {
   const strings = useStrings()
+  const orderInfo = [
+    {label: strings.listOrdersSheetAssetPrice, value: `${tokenPrice} ${sellLabel}`},
+    {label: strings.listOrdersSheetAssetAmount, value: tokenAmount},
+    {label: strings.listOrdersTimeCompleted, value: txTimeCreated},
+  ]
   return (
     <View>
-      {[
-        {label: strings.listOrdersSheetAssetPrice, value: `${tokenPrice} ${sellLabel}`},
-        {label: strings.listOrdersSheetAssetAmount, value: tokenAmount},
-        {label: strings.listOrdersTimeCompleted, value: txTimeCreated},
-      ].map((item, index) => (
-        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === 2} />
+      {orderInfo.map((item, index) => (
+        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === orderInfo.length - 1} />
       ))}
     </View>
   )
