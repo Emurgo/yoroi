@@ -1,6 +1,6 @@
 import {useSwap} from '@yoroi/swap'
 import React from 'react'
-import {StyleSheet, View, ViewProps} from 'react-native'
+import {InteractionManager, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../../components'
@@ -59,8 +59,6 @@ export const ConfirmTxScreen = () => {
             pool_source: orderData.selectedPoolCalculation.pool.provider,
             swap_fees: Number(orderData.selectedPoolCalculation.cost.batcherFee),
           })
-
-          navigate.submittedTx()
         },
         onError: () => {
           navigate.failedTx()
@@ -93,9 +91,11 @@ export const ConfirmTxScreen = () => {
                 <ConfirmTx
                   wallet={wallet}
                   unsignedTx={unsignedTx}
-                  onSuccess={() => {
+                  onSuccess={(signedTx) => {
                     closeModal()
-                    navigate.submittedTx()
+                    InteractionManager.runAfterInteractions(() => {
+                      navigate.submittedTx(signedTx.signedTx.id)
+                    })
                   }}
                   onCancel={closeModal}
                 />
