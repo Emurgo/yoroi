@@ -243,6 +243,7 @@ export const OpenOrders = () => {
         460,
       )
     } catch (error) {
+      setIsLoading(false)
       if (error instanceof Error) {
         Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error.message))
       } else {

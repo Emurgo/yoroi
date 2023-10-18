@@ -174,7 +174,7 @@
   "swap.swapScreen.tvl": "TVL",
   "swap.listOrders.completed": "completed orders",
   "swap.listOrders.open": "open orders",
-  "swap.listOrders.sheet.title": "Confirm order cancelation",
+  "swap.listOrders.sheet.title": "Confirm order cancellation",
   "swap.listOrders.card.buttonText": "Cancel order",
   "swap.listOrders.sheet.contentTitle": "Are you sure you want to cancel this order?",
   "swap.listOrders.sheet.link": "Learn more about swap orders in Yoroi",
