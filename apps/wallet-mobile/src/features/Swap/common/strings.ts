@@ -34,7 +34,9 @@ export const useStrings = () => {
     swapMinReceived: intl.formatMessage(messages.swapMinReceived),
     swapMinReceivedTitle: intl.formatMessage(messages.swapMinReceivedTitle),
     swapFeesTitle: intl.formatMessage(messages.swapFeesTitle),
-    swapLiquidityFee: (fee: string) => intl.formatMessage(messages.swapLiquidityFee, {fee}),
+    swapLiquidityFee: intl.formatMessage(messages.swapLiquidityFee),
+    swapLiqProvFee: intl.formatMessage(messages.swapLiqProvFee),
+    swapLiquidityFeeInfo: (fee: string) => intl.formatMessage(messages.swapLiquidityFeeInfo, {fee}),
     swapFees: intl.formatMessage(messages.swapFees),
     poolVerification: (pool: string) => intl.formatMessage(messages.poolVerification, {pool}),
     poolVerificationInfo: (pool: string) => intl.formatMessage(messages.poolVerificationInfo, {pool}),
@@ -81,6 +83,7 @@ export const useStrings = () => {
     listOrdersSheetConfirm: intl.formatMessage(messages.listOrdersSheetConfirm),
     listOrdersSheetBack: intl.formatMessage(messages.listOrdersSheetBack),
     listOrdersTimeCreated: intl.formatMessage(messages.listOrdersTimeCreated),
+    listOrdersTimeCompleted: intl.formatMessage(messages.listOrdersTimeCompleted),
     listOrdersLiquidityPool: intl.formatMessage(messages.listOrdersLiquidityPool),
     listOrdersTotal: intl.formatMessage(messages.listOrdersTotal),
     listOrdersTxId: intl.formatMessage(messages.listOrdersTxId),
@@ -217,7 +220,7 @@ export const messages = defineMessages({
   },
   changePool: {
     id: 'swap.swapScreen.changePool',
-    defaultMessage: '!!!change pool',
+    defaultMessage: '!!!change dex',
   },
   swapMinAda: {
     id: 'swap.swapScreen.swapMinAda',
@@ -238,7 +241,16 @@ export const messages = defineMessages({
   },
   swapLiquidityFee: {
     id: 'swap.swapScreen.swapLiquidityFee',
-    defaultMessage: `!!!Liquidity provider fee ({fee}%)`,
+    defaultMessage: '!!!Liquidity provider fee',
+  },
+  swapLiqProvFee: {
+    id: 'swap.swapScreen.swapLiqProvFee',
+    defaultMessage: '!!!Liq. prov. fee',
+  },
+  swapLiquidityFeeInfo: {
+    id: 'swap.swapScreen.swapLiquidityFeeInfo',
+    defaultMessage:
+      '!!!Liquidity provider fee is a fixed {fee}% operational fee from the whole transaction volume, that is taken to support DEX “liquidity” allowing traders to buy and sell assets on the decentralized Cardano network.',
   },
   swapMinReceived: {
     id: 'swap.swapScreen.swapMinReceived',
@@ -438,6 +450,10 @@ export const messages = defineMessages({
   listOrdersTimeCreated: {
     id: 'swap.listOrders.timeCreated',
     defaultMessage: '!!!Time Created',
+  },
+  listOrdersTimeCompleted: {
+    id: 'swap.listOrders.timeCompleted',
+    defaultMessage: '!!!Time Completed',
   },
   listOrdersTxId: {
     id: 'swap.listOrders.txId',
