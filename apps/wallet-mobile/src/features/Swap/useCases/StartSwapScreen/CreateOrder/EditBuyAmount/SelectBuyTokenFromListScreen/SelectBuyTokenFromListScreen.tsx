@@ -108,7 +108,7 @@ const TokenList = () => {
         keyExtractor={({info: {id, name}}) => `${name}-${id}`}
         testID="assetsList"
         estimatedItemSize={72}
-        ListEmptyComponent={<EmptyList filteredTokensForList={filteredTransformedList} balances={balances} />}
+        ListEmptyComponent={<EmptyList filteredTokensForList={filteredTransformedList} />}
       />
 
       <Spacer height={16} />
@@ -178,17 +178,10 @@ const SelectableToken = ({wallet, token, walletTokenIds}: SelectableTokenProps) 
   )
 }
 
-const EmptyList = ({
-  filteredTokensForList,
-  balances,
-}: {
-  filteredTokensForList: Array<Balance.Token>
-  balances: Balance.Amounts
-}) => {
+const EmptyList = ({filteredTokensForList}: {filteredTokensForList: Array<Balance.Token>}) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const hasTokenBalance = Object.keys(balances).length === 1
 
-  if ((isSearching && assetSearchTerm.length > 0 && filteredTokensForList.length === 0) || hasTokenBalance)
+  if (isSearching && assetSearchTerm.length > 0 && filteredTokensForList.length === 0)
     return <EmptySearchResult assetSearchTerm={assetSearchTerm} />
 
   return null
