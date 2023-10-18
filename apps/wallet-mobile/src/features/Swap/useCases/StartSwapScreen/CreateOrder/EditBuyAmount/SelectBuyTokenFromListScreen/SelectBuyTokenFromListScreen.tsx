@@ -13,7 +13,7 @@ import {useSelectedWallet} from '../../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../../theme'
 import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
 import {useBalance, useBalances} from '../../../../../../../yoroi-wallets/hooks'
-import {asQuantity, Quantities} from '../../../../../../../yoroi-wallets/utils'
+import {Amounts, asQuantity, Quantities} from '../../../../../../../yoroi-wallets/utils'
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
@@ -62,7 +62,7 @@ const TokenList = () => {
   const {pairsByToken} = useSwapTokensByPairToken('')
   const {search: assetSearchTerm} = useSearch()
   const balances = useBalances(wallet)
-  const walletTokenIds = Object.keys(balances)
+  const walletTokenIds = Amounts.toArray(balances).map(({tokenId}) => tokenId)
 
   const tokens: Array<Balance.Token> = React.useMemo(() => {
     if (pairsByToken === undefined) return []
