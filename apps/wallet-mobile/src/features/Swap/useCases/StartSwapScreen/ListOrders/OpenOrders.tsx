@@ -35,7 +35,6 @@ import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
-import {formatCustomDate} from '../../../common/helpers'
 import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
@@ -299,7 +298,11 @@ export const OpenOrders = () => {
                 <MainInfo
                   tokenAmount={`${order.tokenAmount} ${order.assetToLabel}`}
                   tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
-                  date={formatCustomDate(order.date, intl.locale)}
+                  date={intl.formatDate(new Date(order.date), {
+                    dateStyle: 'short',
+                    timeStyle: 'medium',
+                    hour12: false,
+                  })}
                 />
               </ExpandableInfoCard>
             )
