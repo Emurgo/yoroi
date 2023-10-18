@@ -8,10 +8,10 @@ import {useSwapForm} from '../../../../common/SwapFormProvider'
 
 export const ClearQuantities = () => {
   const strings = useStrings()
-  const {resetSwapForm} = useSwapForm()
+  const {clearSwapForm} = useSwapForm()
 
   return (
-    <TouchableOpacity onPress={resetSwapForm}>
+    <TouchableOpacity onPress={clearSwapForm}>
       <Text style={styles.text}>{strings.clear}</Text>
     </TouchableOpacity>
   )

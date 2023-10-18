@@ -27,7 +27,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {resetForm} = useSend()
-  const {orderData, resetState} = useSwap()
+  const {orderData} = useSwap()
   const {resetSwapForm} = useSwapForm()
   const {track} = useMetrics()
   const sellTokenInfo = useTokenInfo({
@@ -65,7 +65,6 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
   const handleOnSwap = () => {
     resetSwapForm()
-    resetState()
 
     track.swapInitiated({
       from_asset: [

@@ -14,7 +14,7 @@ export const EditSellAmount = () => {
   const wallet = useSelectedWallet()
   const {orderData} = useSwap()
   const {
-    sellAmount: {isTouched: isSellTouched, displayValue: sellDisplayValue, error},
+    sellQuantity: {isTouched: isSellTouched, displayValue: sellDisplayValue, error},
     onChangeSellQuantity,
     sellInputRef,
   } = useSwapForm()

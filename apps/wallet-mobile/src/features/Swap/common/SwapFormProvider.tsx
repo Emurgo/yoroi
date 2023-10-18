@@ -18,8 +18,15 @@ export const SwapFormProvider = ({
   children: React.ReactNode
   initialState?: Partial<SwapFormState>
 }) => {
-  const {orderData, buyQuantityChanged, sellQuantityChanged, switchTokens, limitPriceChanged, resetQuantities} =
-    useSwap()
+  const {
+    orderData,
+    resetState,
+    buyQuantityChanged,
+    sellQuantityChanged,
+    switchTokens,
+    limitPriceChanged,
+    resetQuantities,
+  } = useSwap()
   const wallet = useSelectedWallet()
   const {numberLocale} = useLanguage()
   const strings = useStrings()
@@ -54,19 +61,19 @@ export const SwapFormProvider = ({
 
   const [state, dispatch] = React.useReducer(swapFormReducer, {
     ...defaultState,
-    buyAmount: {
-      ...defaultState.buyAmount,
+    buyQuantity: {
+      ...defaultState.buyQuantity,
       displayValue: Quantities.format(buyQuantity, buyTokenInfo.decimals ?? 0),
     },
-    sellAmount: {
-      ...defaultState.sellAmount,
+    sellQuantity: {
+      ...defaultState.sellQuantity,
       displayValue: Quantities.format(sellQuantity, sellTokenInfo.decimals ?? 0),
     },
     ...initialState,
   })
 
   const noPoolError =
-    orderData.selectedPoolCalculation === undefined && state.buyAmount.isTouched && state.sellAmount.isTouched
+    orderData.selectedPoolCalculation === undefined && state.buyQuantity.isTouched && state.sellQuantity.isTouched
       ? strings.noPool
       : undefined
 
@@ -74,26 +81,26 @@ export const SwapFormProvider = ({
     noPoolError !== undefined
       ? noPoolError
       : (!Quantities.isZero(buyQuantity) && !hasBuyTokenSupply) ||
-        (state.sellAmount.isTouched && state.buyAmount.isTouched && pool === undefined)
+        (state.sellQuantity.isTouched && state.buyQuantity.isTouched && pool === undefined)
       ? strings.notEnoughSupply
       : undefined
 
   const sellError =
     noPoolError !== undefined
       ? noPoolError
-      : !Quantities.isZero(sellQuantity) && state.buyAmount.isTouched && !hasSellBalance
+      : !Quantities.isZero(sellQuantity) && state.buyQuantity.isTouched && !hasSellBalance
       ? strings.notEnoughBalance
-      : !Quantities.isZero(sellQuantity) && state.buyAmount.isTouched && !hasFeesBalance
+      : !Quantities.isZero(sellQuantity) && state.buyQuantity.isTouched && !hasFeesBalance
       ? strings.notEnoughFeeBalance
       : undefined
 
   const canSwap =
-    state.buyAmount.isTouched &&
-    state.sellAmount.isTouched &&
+    state.buyQuantity.isTouched &&
+    state.sellQuantity.isTouched &&
     !Quantities.isZero(buyQuantity) &&
     !Quantities.isZero(sellQuantity) &&
-    state.buyAmount.error === undefined &&
-    state.sellAmount.error === undefined &&
+    state.buyQuantity.error === undefined &&
+    state.sellQuantity.error === undefined &&
     ((orderData.type === 'limit' && orderData.limitPrice !== undefined && !Quantities.isZero(orderData.limitPrice)) ||
       orderData.selectedPoolCalculation !== undefined)
 
@@ -107,16 +114,23 @@ export const SwapFormProvider = ({
     },
     poolTouched: () => dispatch({type: SwapFormActionType.PoolTouched}),
     poolDefaulted: () => dispatch({type: SwapFormActionType.PoolDefaulted}),
+    clearSwapForm: () => {
+      resetState()
+      dispatch({type: SwapFormActionType.ClearSwapForm})
+
+      // In some iOS simulator it can calls focused input onChangeText before dismissal with the previous
+      // input value
+      Keyboard.dismiss()
+    },
     resetSwapForm: () => {
       resetQuantities()
       dispatch({type: SwapFormActionType.ResetSwapForm})
-
-      Keyboard.dismiss()
     },
     canSwapChanged: (canSwap: boolean) => dispatch({type: SwapFormActionType.CanSwapChanged, canSwap}),
     buyInputValueChanged: (value: string) => dispatch({type: SwapFormActionType.BuyInputValueChanged, value}),
     sellInputValueChanged: (value: string) => dispatch({type: SwapFormActionType.SellInputValueChanged, value}),
-    limitInputValueChanged: (value: string) => dispatch({type: SwapFormActionType.LimitInputValueChanged, value}),
+    limitPriceInputValueChanged: (value: string) =>
+      dispatch({type: SwapFormActionType.LimitPriceInputValueChanged, value}),
     buyAmountErrorChanged: (error: string | undefined) =>
       dispatch({type: SwapFormActionType.BuyAmountErrorChanged, error}),
     sellAmountErrorChanged: (error: string | undefined) =>
@@ -124,24 +138,24 @@ export const SwapFormProvider = ({
   }).current
 
   const updateSellInput = React.useCallback(() => {
-    if (state.sellAmount.isTouched && !sellInputRef?.current?.isFocused()) {
+    if (state.sellQuantity.isTouched && !sellInputRef?.current?.isFocused()) {
       actions.sellInputValueChanged(Quantities.format(sellQuantity, sellTokenInfo.decimals ?? 0))
     }
-  }, [actions, sellQuantity, sellTokenInfo.decimals, state.sellAmount.isTouched])
+  }, [actions, sellQuantity, sellTokenInfo.decimals, state.sellQuantity.isTouched])
 
   const updateBuyInput = React.useCallback(() => {
-    if (state.buyAmount.isTouched && !buyInputRef?.current?.isFocused()) {
+    if (state.buyQuantity.isTouched && !buyInputRef?.current?.isFocused()) {
       actions.buyInputValueChanged(Quantities.format(buyQuantity, buyTokenInfo.decimals ?? 0))
     }
-  }, [actions, buyTokenInfo.decimals, buyQuantity, state.buyAmount.isTouched])
+  }, [actions, buyTokenInfo.decimals, buyQuantity, state.buyQuantity.isTouched])
 
   const updateLimitPrice = React.useCallback(() => {
     if (orderData.type === 'limit' && !limitInputRef?.current?.isFocused()) {
-      actions.limitInputValueChanged(
+      actions.limitPriceInputValueChanged(
         Quantities.format(orderData.limitPrice ?? Quantities.zero, denomination, PRECISION),
       )
     } else {
-      actions.limitInputValueChanged(
+      actions.limitPriceInputValueChanged(
         Quantities.format(orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero, denomination, PRECISION),
       )
     }
@@ -168,19 +182,19 @@ export const SwapFormProvider = ({
   const onChangeLimitPrice = React.useCallback(
     (text: string) => {
       const [formattedPrice, price] = Quantities.parseFromText(text, denomination, numberLocale, PRECISION)
-      actions.limitInputValueChanged(formattedPrice)
+      actions.limitPriceInputValueChanged(formattedPrice)
       limitPriceChanged(price)
     },
     [actions, denomination, limitPriceChanged, numberLocale],
   )
 
   React.useEffect(() => {
-    if (buyError !== state.buyAmount.error) actions.buyAmountErrorChanged(buyError)
-  }, [actions, buyError, state.buyAmount.error])
+    if (buyError !== state.buyQuantity.error) actions.buyAmountErrorChanged(buyError)
+  }, [actions, buyError, state.buyQuantity.error])
 
   React.useEffect(() => {
-    if (sellError !== state.sellAmount.error) actions.sellAmountErrorChanged(sellError)
-  }, [actions, sellError, state.sellAmount.error])
+    if (sellError !== state.sellQuantity.error) actions.sellAmountErrorChanged(sellError)
+  }, [actions, sellError, state.sellQuantity.error])
 
   React.useEffect(() => {
     if (canSwap !== state.canSwap) actions.canSwapChanged(canSwap)
@@ -219,18 +233,18 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
   return produce(state, (draft) => {
     switch (action.type) {
       case SwapFormActionType.SellTouched:
-        draft.sellAmount.isTouched = true
+        draft.sellQuantity.isTouched = true
 
         break
 
       case SwapFormActionType.BuyTouched:
-        draft.buyAmount.isTouched = true
+        draft.buyQuantity.isTouched = true
 
         break
 
       case SwapFormActionType.SwitchTouched:
-        draft.sellAmount.isTouched = state.buyAmount.isTouched
-        draft.buyAmount.isTouched = state.sellAmount.isTouched
+        draft.sellQuantity.isTouched = state.buyQuantity.isTouched
+        draft.buyQuantity.isTouched = state.sellQuantity.isTouched
 
         break
 
@@ -245,6 +259,7 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
         break
 
       case SwapFormActionType.ResetSwapForm:
+      case SwapFormActionType.ClearSwapForm:
         return defaultState
 
       case SwapFormActionType.CanSwapChanged:
@@ -253,27 +268,27 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
         break
 
       case SwapFormActionType.SellInputValueChanged:
-        draft.sellAmount.displayValue = action.value
+        draft.sellQuantity.displayValue = action.value
 
         break
 
       case SwapFormActionType.BuyInputValueChanged:
-        draft.buyAmount.displayValue = action.value
+        draft.buyQuantity.displayValue = action.value
 
         break
 
-      case SwapFormActionType.LimitInputValueChanged:
-        draft.limitAmount.displayValue = action.value
+      case SwapFormActionType.LimitPriceInputValueChanged:
+        draft.limitPrice.displayValue = action.value
 
         break
 
       case SwapFormActionType.SellAmountErrorChanged:
-        draft.sellAmount.error = action.error
+        draft.sellQuantity.error = action.error
 
         break
 
       case SwapFormActionType.BuyAmountErrorChanged:
-        draft.buyAmount.error = action.error
+        draft.buyQuantity.error = action.error
 
         break
 
@@ -286,13 +301,13 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
 const PRECISION = 14
 
 const defaultState: SwapFormState = Object.freeze({
-  sellAmount: {
+  sellQuantity: {
     isTouched: true,
     disabled: false,
     error: undefined,
     displayValue: '',
   },
-  buyAmount: {
+  buyQuantity: {
     isTouched: false,
     disabled: false,
     error: undefined,
@@ -301,7 +316,7 @@ const defaultState: SwapFormState = Object.freeze({
   selectedPool: {
     isTouched: false,
   },
-  limitAmount: {
+  limitPrice: {
     displayValue: '',
   },
   canSwap: false,
@@ -320,10 +335,11 @@ const initialSwapFormContext: SwapFormContext = {
   poolDefaulted: missingInit,
   switchTouched: missingInit,
   switchTokens: missingInit,
+  clearSwapForm: missingInit,
   resetSwapForm: missingInit,
   buyInputValueChanged: missingInit,
   sellInputValueChanged: missingInit,
-  limitInputValueChanged: missingInit,
+  limitPriceInputValueChanged: missingInit,
   buyAmountErrorChanged: missingInit,
   sellAmountErrorChanged: missingInit,
   canSwapChanged: missingInit,
@@ -341,22 +357,23 @@ type SwapFormAction =
   | {type: SwapFormActionType.SwitchTouched}
   | {type: SwapFormActionType.PoolTouched}
   | {type: SwapFormActionType.PoolDefaulted}
+  | {type: SwapFormActionType.ClearSwapForm}
   | {type: SwapFormActionType.ResetSwapForm}
   | {type: SwapFormActionType.CanSwapChanged; canSwap: boolean}
   | {type: SwapFormActionType.SellInputValueChanged; value: string}
   | {type: SwapFormActionType.BuyInputValueChanged; value: string}
   | {type: SwapFormActionType.SellAmountErrorChanged; error: string | undefined}
-  | {type: SwapFormActionType.LimitInputValueChanged; value: string}
+  | {type: SwapFormActionType.LimitPriceInputValueChanged; value: string}
   | {type: SwapFormActionType.BuyAmountErrorChanged; error: string | undefined}
 
 type SwapFormState = {
-  sellAmount: {
+  sellQuantity: {
     isTouched: boolean
     disabled: boolean
     error: string | undefined
     displayValue: string
   }
-  buyAmount: {
+  buyQuantity: {
     isTouched: boolean
     disabled: boolean
     error: string | undefined
@@ -365,7 +382,7 @@ type SwapFormState = {
   selectedPool: {
     isTouched: boolean
   }
-  limitAmount: {
+  limitPrice: {
     displayValue: string
   }
   canSwap: boolean
@@ -377,11 +394,12 @@ type SwapFormActions = {
   switchTokens: () => void
   poolTouched: () => void
   poolDefaulted: () => void
+  clearSwapForm: () => void
   resetSwapForm: () => void
   canSwapChanged: (canSwap: boolean) => void
   buyInputValueChanged: (value: string) => void
   sellInputValueChanged: (value: string) => void
-  limitInputValueChanged: (value: string) => void
+  limitPriceInputValueChanged: (value: string) => void
   buyAmountErrorChanged: (error: string | undefined) => void
   sellAmountErrorChanged: (error: string | undefined) => void
 }
@@ -393,11 +411,12 @@ enum SwapFormActionType {
   SwitchTokens = 'switchTokens',
   PoolTouched = 'poolTouched',
   PoolDefaulted = 'poolDefaulted',
+  ClearSwapForm = 'clearSwapForm',
   ResetSwapForm = 'resetSwapForm',
   CanSwapChanged = 'canSwapChanged',
   BuyInputValueChanged = 'buyInputValueChanged',
   SellInputValueChanged = 'sellInputValueChanged',
-  LimitInputValueChanged = 'limitInputValueChanged',
+  LimitPriceInputValueChanged = 'limitPriceInputValueChanged',
   SellAmountErrorChanged = 'sellAmountErrorChanged',
   BuyAmountErrorChanged = 'buyAmountErrorChanged',
 }

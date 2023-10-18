@@ -35,8 +35,8 @@ export const CreateOrder = () => {
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
   const {
-    sellAmount: {isTouched: isSellTouched},
-    buyAmount: {isTouched: isBuyTouched},
+    sellQuantity: {isTouched: isSellTouched},
+    buyQuantity: {isTouched: isBuyTouched},
     sellAmountErrorChanged,
     poolDefaulted,
     canSwap,

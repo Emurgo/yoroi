@@ -25,8 +25,8 @@ export const ShowPoolActions = () => {
   const {orderData} = useSwap()
   const strings = useStrings()
   const {
-    buyAmount: {isTouched: isBuyTouched},
-    sellAmount: {isTouched: isSellTouched},
+    buyQuantity: {isTouched: isBuyTouched},
+    sellQuantity: {isTouched: isSellTouched},
     selectedPool: {isTouched: isPoolTouched},
   } = useSwapForm()
   const {selectedPoolCalculation, amounts} = orderData

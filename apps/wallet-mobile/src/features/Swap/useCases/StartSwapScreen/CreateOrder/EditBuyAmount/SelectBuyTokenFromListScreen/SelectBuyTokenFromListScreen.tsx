@@ -186,7 +186,7 @@ const SelectableToken = ({tokenForList, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
   const {buyTokenIdChanged, orderData} = useSwap()
   const {
-    sellAmount: {isTouched: isSellTouched},
+    sellQuantity: {isTouched: isSellTouched},
     buyTouched,
   } = useSwapForm()
   const navigateTo = useNavigateTo()

@@ -21,9 +21,9 @@ export const EditLimitPrice = () => {
   const disabled = orderData.type === 'market'
 
   const {
-    buyAmount: {isTouched: isBuyTouched},
-    sellAmount: {isTouched: isSellTouched},
-    limitAmount: {displayValue: limitDisplayValue},
+    sellQuantity: {isTouched: isBuyTouched},
+    sellQuantity: {isTouched: isSellTouched},
+    limitPrice: {displayValue: limitDisplayValue},
     limitInputRef,
     onChangeLimitPrice,
   } = useSwapForm()
