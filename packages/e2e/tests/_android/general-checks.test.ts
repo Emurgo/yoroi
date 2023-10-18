@@ -2,7 +2,7 @@ import {device, expect} from 'detox'
 
 import * as initialScreen from '../../screens/initialScreen.screen'
 import * as analyticsScreen from '../../screens/shareUserInsights.screen'
-import * as utils from '../../utils'
+import * as utils from '../../general/utils'
 
 describe('General checks', () => {
  beforeAll(async () => {

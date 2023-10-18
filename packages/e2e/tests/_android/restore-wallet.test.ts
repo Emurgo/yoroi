@@ -1,9 +1,9 @@
 import {device, expect} from 'detox'
 
-import * as constants from '../../constants'
+import * as constants from '../../general/constants'
 import * as myWalletsScreen from '../../screens/myWallets.screen'
 import * as restoreWalletFlow from '../../screens/restoreWalletFlow.screen'
-import * as utils from '../../utils'
+import * as utils from '../../general/utils'
 
 describe('Restore a wallet', () => {
  let platform: string

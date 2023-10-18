@@ -1,7 +1,7 @@
 import {by, element, expect} from 'detox'
 import jestExpect from 'expect'
 
-import * as utils from '../utils'
+import * as utils from '../general/utils'
 
 export const iconSearch = () => element(by.id('iconSearch'))
 export const inputSearch = () => element(by.id('inputSearch'))

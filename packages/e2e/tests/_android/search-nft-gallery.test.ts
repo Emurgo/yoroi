@@ -1,12 +1,12 @@
 import {device, expect} from 'detox'
 import jestExpect from 'expect'
 
-import * as constants from '../../constants'
+import * as constants from '../../general/constants'
 import * as devOptionsScreen from '../../screens/devOptionsScreen.screen'
 import * as myWalletsScreen from '../../screens/myWallets.screen'
 import * as nftGalleryScreen from '../../screens/nftGallery.screen'
 import * as walletMenuScreen from '../../screens/walletMenuItems.screen'
-import * as utils from '../../utils'
+import * as utils from '../../general/utils'
 
 describe('Search for an NFT from gallery and verify', () => {
  let nftToSearch: string

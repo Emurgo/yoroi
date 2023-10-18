@@ -6,12 +6,12 @@ import yargs from 'yargs/yargs'
 import {
  mnemonicBadgeByWord,
  mnemonicByIndexText,
-} from './screens/createWalletFlow.screen'
-import * as initialScreen from './screens/initialScreen.screen'
-import * as myWalletsScreen from './screens/myWallets.screen'
-import {pinKeyButton} from './screens/pinCode.screen'
-import {mnemonicByIndexInput} from './screens/restoreWalletFlow.screen'
-import * as userInsightScreen from './screens/shareUserInsights.screen'
+} from '../screens/createWalletFlow.screen'
+import * as initialScreen from '../screens/initialScreen.screen'
+import * as myWalletsScreen from '../screens/myWallets.screen'
+import {pinKeyButton} from '../screens/pinCode.screen'
+import {mnemonicByIndexInput} from '../screens/restoreWalletFlow.screen'
+import * as userInsightScreen from '../screens/shareUserInsights.screen'
 
 export const enterPIN = async (pin: string): Promise<void> => {
  for (const pinNumber of pin) {

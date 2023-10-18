@@ -1,15 +1,16 @@
 {
+  "extends": "@tsconfig/react-native/tsconfig.json",
   "compilerOptions": {
     "allowJs": false,
     "lib": ["es2019", "dom"],
     "moduleResolution": "node",
     "strict": true,
     "noImplicitAny": false,
-    "types": ["react", "react-native", "jest", "node", "chai"],
+    "types": ["jest", "node", "chai"],
     "baseUrl": ".",
     "paths": {
       "*.md": ["text-loader"]
     }
   },
-  "exclude": ["**/*.spec.ts"]
+  "include": ["./general", "./screen", "./tests"]
 }

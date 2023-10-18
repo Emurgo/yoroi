@@ -19,9 +19,10 @@
     "e2e:test:ios:nightly:debug": "detox test $npm_package_e2ePath_ios --configuration ios.sim.nightly.debug",
     "e2e:test:ios:nightly:release": "detox test $npm_package_e2ePath_ios --configuration ios.sim.nightly.release",
     "e2e:test:ios:yoroi:debug": "detox test $npm_package_e2ePath_ios --configuration ios.sim.yoroi.debug",
+    "tsc": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "lint:fix": "yarn lint --fix",
-    "build": "yarn lint"
+    "build": "yarn lint && yarn tsc"
   },
   "prettier": {
     "bracketSpacing": false,

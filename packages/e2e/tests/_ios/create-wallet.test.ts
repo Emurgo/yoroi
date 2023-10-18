@@ -1,9 +1,9 @@
 import {device, expect} from 'detox'
 
-import * as constants from '../../constants'
+import * as constants from '../../general/constants'
 import * as createWalletFlow from '../../screens/createWalletFlow.screen'
 import * as myWalletsScreen from '../../screens/myWallets.screen'
-import * as utils from '../../utils'
+import * as utils from '../../general/utils'
 
 describe('Create a wallet', () => {
  let seedPhraseText: string[]
