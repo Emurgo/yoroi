@@ -55,7 +55,7 @@ export const ConfirmTxScreen = () => {
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
     track.sendSummarySubmitted(assetsToSendProperties({tokens, amounts}))
-    navigateTo.submittedTx()
+    navigateTo.submittedTx(signedTx.signedTx.id)
 
     if (memo.length > 0) {
       saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})
