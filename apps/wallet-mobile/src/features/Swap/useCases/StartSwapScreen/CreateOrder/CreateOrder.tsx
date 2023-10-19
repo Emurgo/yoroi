@@ -34,7 +34,7 @@ export const CreateOrder = () => {
   const {orderData, unsignedTxChanged, poolPairsChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
-  const {openModal, closeModal} = useModal()
+  const {openModal} = useModal()
   const {
     sellQuantity: {isTouched: isSellTouched},
     buyQuantity: {isTouched: isBuyTouched},
@@ -73,7 +73,6 @@ export const CreateOrder = () => {
     onSuccess: (yoroiUnsignedTx) => {
       unsignedTxChanged(yoroiUnsignedTx)
       swap()
-      closeModal()
     },
     onError: (error) => {
       if (error instanceof NotEnoughMoneyToSendError) {
