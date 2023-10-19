@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   buyInfo: {
     fontSize: 16,
     color: '#000000',
-    fontFamily: 'Rubik-Regular',
+    fontFamily: 'Rubik',
     lineHeight: 24,
   },
   disabled: {
