@@ -13,6 +13,7 @@ import {Quantities} from '../../../../yoroi-wallets/utils'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
+import {SwapInfoLink} from '../../common/SwapInfoLink/SwapInfoLink'
 
 export const TransactionSummary = () => {
   const strings = useStrings()
@@ -90,7 +91,18 @@ export const TransactionSummary = () => {
                 {orderInfo.info != undefined && (
                   <TouchableOpacity
                     onPress={() => {
-                      openModal(orderInfo.label, <Text>{orderInfo.info}</Text>)
+                      openModal(
+                        orderInfo.label,
+                        <View style={{justifyContent: 'space-between', flex: 1}}>
+                          <Text>{orderInfo.info}</Text>
+
+                          <Spacer fill />
+
+                          <SwapInfoLink />
+
+                          <Spacer height={24} />
+                        </View>,
+                      )
                     }}
                   >
                     <Icon.Info size={24} />
