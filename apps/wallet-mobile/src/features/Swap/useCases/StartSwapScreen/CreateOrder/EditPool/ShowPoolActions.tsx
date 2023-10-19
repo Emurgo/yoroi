@@ -17,14 +17,18 @@ import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../../common/navigation'
 import {PoolIcon} from '../../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../../common/strings'
-import {useSwapTouched} from '../../../../common/SwapFormProvider'
+import {useSwapForm} from '../../../../common/SwapFormProvider'
 import {SwapInfoLink} from '../../../../common/SwapInfoLink/SwapInfoLink'
 
 export const ShowPoolActions = () => {
   const navigateTo = useNavigateTo()
   const {orderData} = useSwap()
   const strings = useStrings()
-  const {isBuyTouched, isSellTouched, isPoolTouched} = useSwapTouched()
+  const {
+    buyQuantity: {isTouched: isBuyTouched},
+    sellQuantity: {isTouched: isSellTouched},
+    selectedPool: {isTouched: isPoolTouched},
+  } = useSwapForm()
   const {selectedPoolCalculation, amounts} = orderData
   const wallet = useSelectedWallet()
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
