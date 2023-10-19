@@ -20,7 +20,7 @@ import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
-import {useSwapTouched} from '../../../../../common/SwapFormProvider'
+import {useSwapForm} from '../../../../../common/SwapFormProvider'
 
 type TokenForList = {
   supply: Balance.TokenSupply['total']
@@ -185,7 +185,10 @@ type SelectableTokenProps = {disabled?: boolean; tokenForList: TokenForList; wal
 const SelectableToken = ({tokenForList, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
   const {buyTokenIdChanged, orderData} = useSwap()
-  const {buyTouched, isSellTouched} = useSwapTouched()
+  const {
+    sellQuantity: {isTouched: isSellTouched},
+    buyTouched,
+  } = useSwapForm()
   const navigateTo = useNavigateTo()
   const balanceAvailable = useBalance({wallet, tokenId: tokenForList.id})
   const {track} = useMetrics()

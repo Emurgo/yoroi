@@ -8,7 +8,7 @@ import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {Icon, Spacer} from '../components'
 import {features} from '../features'
 import {useSend} from '../features/Send/common/SendContext'
-import {useSwapTouched} from '../features/Swap/common/SwapFormProvider'
+import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
 import {actionMessages} from '../i18n/global-messages'
 import env from '../legacy/env'
 import {useMetrics} from '../metrics/metricsManager'
@@ -27,8 +27,8 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {resetForm} = useSend()
-  const {orderData, resetState} = useSwap()
-  const {resetTouches} = useSwapTouched()
+  const {orderData} = useSwap()
+  const {resetSwapForm} = useSwapForm()
   const {track} = useMetrics()
   const sellTokenInfo = useTokenInfo({
     wallet,
@@ -64,8 +64,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   const handleOnSwap = () => {
-    resetTouches()
-    resetState()
+    resetSwapForm()
 
     track.swapInitiated({
       from_asset: [
