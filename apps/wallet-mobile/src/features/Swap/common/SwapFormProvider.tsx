@@ -153,7 +153,7 @@ export const SwapFormProvider = ({
       actions.limitPriceInputValueChanged(
         Quantities.format(orderData.limitPrice ?? Quantities.zero, denomination, PRECISION),
       )
-    } else {
+    } else if (orderData.type === 'market') {
       actions.limitPriceInputValueChanged(
         Quantities.format(orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero, denomination, PRECISION),
       )
@@ -277,6 +277,7 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
         break
 
       case SwapFormActionType.LimitPriceInputValueChanged:
+        console.log(SwapFormActionType.LimitPriceInputValueChanged, action.value)
         draft.limitPrice.displayValue = action.value
 
         break
