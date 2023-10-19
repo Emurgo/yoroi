@@ -19,7 +19,7 @@ import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
-import {useSwapTouched} from '../../../../../common/SwapFormProvider'
+import {useSwapForm} from '../../../../../common/SwapFormProvider'
 
 export const SelectBuyTokenFromListScreen = () => {
   const strings = useStrings()
@@ -135,7 +135,10 @@ const SelectableToken = ({wallet, token, walletTokenIds}: SelectableTokenProps) 
   const balanceAvailable = useBalance({wallet, tokenId: token.info.id})
   const {closeSearch} = useSearch()
   const {buyTokenIdChanged, orderData} = useSwap()
-  const {buyTouched, isSellTouched} = useSwapTouched()
+  const {
+    sellQuantity: {isTouched: isSellTouched},
+    buyTouched,
+  } = useSwapForm()
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
 
