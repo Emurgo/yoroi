@@ -8,7 +8,6 @@ export const ACCOUNT_INDEX = 0
 export const HARD_DERIVATION_START = 2147483648
 export const CHIMERIC_ACCOUNT = 2
 export const STAKING_KEY_INDEX = 0
-export const SWAP_ZENDESK_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/8154256843407-Swap'
 
 export const WALLET_CONFIG = {
   WALLET_IMPLEMENTATION_ID,

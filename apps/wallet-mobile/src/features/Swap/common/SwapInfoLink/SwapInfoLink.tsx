@@ -1,8 +1,9 @@
 import React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity} from 'react-native'
 
-import {SWAP_ZENDESK_LINK} from '../../../../yoroi-wallets/cardano/constants/common'
 import {useStrings} from '../strings'
+
+const SWAP_ZENDESK_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/8154256843407-Swap'
 
 export const SwapInfoLink = () => {
   const strings = useStrings()
