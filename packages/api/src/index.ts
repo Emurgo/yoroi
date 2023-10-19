@@ -30,13 +30,16 @@ import {
   ApiOffChainMetadataRecord,
 } from './cardano/api/types'
 
-import {
-  asFingerprint,
-  getTokenIdentity,
-} from './cardano/translators/formatters/cardano-token-id'
+import {getTokenIdentity} from './cardano/translators/helpers/getTokenIdentity'
+import {asFingerprint} from './cardano/translators/transformers/asFingerprint'
+import {asSubject} from './cardano/translators/transformers/asSubject'
 
 export const CardanoTokenId = {
+  // transformers
   asFingerprint,
+  asSubject,
+
+  // helpers
   getTokenIdentity,
 } as const
 

@@ -17,8 +17,8 @@
       "path": "./packages/banxa"
     },
     {
-      "name": "@yoroi/cardano",
-      "path": "./packages/cardano"
+      "name": "@yoroi/api",
+      "path": "./packages/api"
     },
     {
       "name": "@yoroi/common",

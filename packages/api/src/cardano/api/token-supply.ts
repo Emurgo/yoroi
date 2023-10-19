@@ -7,7 +7,7 @@ import {
   ApiTokenSupplyResponse,
   ApiTokeSupplyRequest,
 } from './types'
-import {getTokenIdentity} from '../translators/formatters/cardano-token-id'
+import {getTokenIdentity} from '../translators/helpers/getTokenIdentity'
 
 export const getTokenSupply =
   (baseUrl: string, request: Fetcher = fetcher) =>

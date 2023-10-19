@@ -120,7 +120,7 @@
     "@shopify/flash-list": "^1.4.1",
     "@unstoppabledomains/resolution": "6.0.3",
     "@yoroi/banxa": "1.0.0",
-    "@yoroi/cardano": "1.0.0",
+    "@yoroi/api": "1.0.0",
     "@yoroi/common": "1.0.0",
     "@yoroi/swap": "1.0.0",
     "add": "2.0.6",
