@@ -22,13 +22,13 @@ module.exports = {
     },
     'ios.nightly.release': {
       type: 'ios.app',
-      binaryPath: '../../apps/wallet-mobile/ios/build/Build/Products/Debug-iphonesimulator/nightly.app',
+      binaryPath: '../../apps/wallet-mobile/ios/build/Build/Products/Release-iphonesimulator/nightly.app',
       build: 'cd ../../apps/wallet-mobile/ && xcodebuild -workspace ios/yoroi.xcworkspace -scheme nightly -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'android.dev.debug': {
       type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/dev/debug/app-dev-debug.apk',
-      build: 'ENVFILE=.env cd android && ./gradlew assembleDevDebug assembleDevDebugAndroidTest -DtestBuildType=debug',
+      binaryPath: '../../apps/wallet-mobile/android/app/build/outputs/apk/dev/debug/app-dev-debug.apk',
+      build: 'ENVFILE=.env cd ../../apps/wallet-mobile/android && ./gradlew assembleDevDebug assembleDevDebugAndroidTest -DtestBuildType=debug',
       reversePorts: [
         8081
       ]
@@ -43,8 +43,8 @@ module.exports = {
     },
     'android.nightly.release': {
       type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/nightly/release/app-nightly-release.apk',
-      build: 'ENVFILE=.env.nightly cd android && ./gradlew assembleNightlyRelease assembleNightlyReleaseAndroidTest -DtestBuildType=release',
+      binaryPath: '../../apps/wallet-mobile/android/app/build/outputs/apk/nightly/release/app-nightly-release.apk',
+      build: 'ENVFILE=.env.nightly cd ../../apps/wallet-mobile/android && ./gradlew assembleNightlyRelease assembleNightlyReleaseAndroidTest -DtestBuildType=release',
       reversePorts: [
         8081
       ]
