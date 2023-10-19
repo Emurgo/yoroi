@@ -986,11 +986,7 @@
     "end": {
       "line": 406,
       "column": 3,
-<<<<<<< HEAD
-      "index": 16713
-=======
       "index": 16788
->>>>>>> origin/develop
     }
   },
   {
@@ -1000,20 +996,12 @@
     "start": {
       "line": 407,
       "column": 29,
-<<<<<<< HEAD
-      "index": 16744
-=======
       "index": 16819
->>>>>>> origin/develop
     },
     "end": {
       "line": 410,
       "column": 3,
-<<<<<<< HEAD
-      "index": 16831
-=======
       "index": 16906
->>>>>>> origin/develop
     }
   },
   {
@@ -1023,20 +1011,12 @@
     "start": {
       "line": 411,
       "column": 31,
-<<<<<<< HEAD
-      "index": 16864
-=======
       "index": 16939
->>>>>>> origin/develop
     },
     "end": {
       "line": 414,
       "column": 3,
-<<<<<<< HEAD
-      "index": 16985
-=======
       "index": 17060
->>>>>>> origin/develop
     }
   },
   {
@@ -1046,20 +1026,12 @@
     "start": {
       "line": 415,
       "column": 23,
-<<<<<<< HEAD
-      "index": 17010
-=======
       "index": 17085
->>>>>>> origin/develop
     },
     "end": {
       "line": 418,
       "column": 3,
-<<<<<<< HEAD
-      "index": 17117
-=======
       "index": 17192
->>>>>>> origin/develop
     }
   },
   {
@@ -1069,20 +1041,12 @@
     "start": {
       "line": 419,
       "column": 29,
-<<<<<<< HEAD
-      "index": 17148
-=======
       "index": 17223
->>>>>>> origin/develop
     },
     "end": {
       "line": 422,
       "column": 3,
-<<<<<<< HEAD
-      "index": 17235
-=======
       "index": 17310
->>>>>>> origin/develop
     }
   },
   {
@@ -1092,20 +1056,12 @@
     "start": {
       "line": 423,
       "column": 30,
-<<<<<<< HEAD
-      "index": 17267
-=======
       "index": 17342
->>>>>>> origin/develop
     },
     "end": {
       "line": 426,
       "column": 3,
-<<<<<<< HEAD
-      "index": 17356
-=======
       "index": 17431
->>>>>>> origin/develop
     }
   },
   {
@@ -1115,20 +1071,12 @@
     "start": {
       "line": 427,
       "column": 32,
-<<<<<<< HEAD
-      "index": 17390
-=======
       "index": 17465
->>>>>>> origin/develop
     },
     "end": {
       "line": 430,
       "column": 3,
-<<<<<<< HEAD
-      "index": 17483
-=======
       "index": 17558
->>>>>>> origin/develop
     }
   },
   {
@@ -1138,20 +1086,12 @@
     "start": {
       "line": 431,
       "column": 34,
-<<<<<<< HEAD
-      "index": 17519
-=======
       "index": 17594
->>>>>>> origin/develop
     },
     "end": {
       "line": 434,
       "column": 3,
-<<<<<<< HEAD
-      "index": 17616
-=======
       "index": 17691
->>>>>>> origin/develop
     }
   },
   {
@@ -1161,20 +1101,12 @@
     "start": {
       "line": 435,
       "column": 26,
-<<<<<<< HEAD
-      "index": 17644
-=======
       "index": 17719
->>>>>>> origin/develop
     },
     "end": {
       "line": 438,
       "column": 3,
-<<<<<<< HEAD
-      "index": 17724
-=======
       "index": 17799
->>>>>>> origin/develop
     }
   },
   {
@@ -1184,20 +1116,12 @@
     "start": {
       "line": 439,
       "column": 23,
-<<<<<<< HEAD
-      "index": 17749
-=======
       "index": 17824
->>>>>>> origin/develop
     },
     "end": {
       "line": 442,
       "column": 3,
-<<<<<<< HEAD
-      "index": 17823
-=======
       "index": 17898
->>>>>>> origin/develop
     }
   },
   {
@@ -1207,20 +1131,12 @@
     "start": {
       "line": 443,
       "column": 19,
-<<<<<<< HEAD
-      "index": 17844
-=======
       "index": 17919
->>>>>>> origin/develop
     },
     "end": {
       "line": 446,
       "column": 3,
-<<<<<<< HEAD
-      "index": 17914
-=======
       "index": 17989
->>>>>>> origin/develop
     }
   },
   {
@@ -1230,20 +1146,12 @@
     "start": {
       "line": 447,
       "column": 27,
-<<<<<<< HEAD
-      "index": 17943
-=======
       "index": 18018
->>>>>>> origin/develop
     },
     "end": {
       "line": 450,
       "column": 3,
-<<<<<<< HEAD
-      "index": 18030
-=======
       "index": 18105
->>>>>>> origin/develop
     }
   },
   {
@@ -1253,20 +1161,12 @@
     "start": {
       "line": 451,
       "column": 25,
-<<<<<<< HEAD
-      "index": 18057
-=======
       "index": 18132
->>>>>>> origin/develop
     },
     "end": {
       "line": 454,
       "column": 3,
-<<<<<<< HEAD
-      "index": 18140
-=======
       "index": 18215
->>>>>>> origin/develop
     }
   },
   {
@@ -1274,16 +1174,6 @@
     "defaultMessage": "!!!Time Completed",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-<<<<<<< HEAD
-      "line": 454,
-      "column": 27,
-      "index": 18169
-    },
-    "end": {
-      "line": 457,
-      "column": 3,
-      "index": 18256
-=======
       "line": 455,
       "column": 27,
       "index": 18244
@@ -1292,7 +1182,6 @@
       "line": 458,
       "column": 3,
       "index": 18331
->>>>>>> origin/develop
     }
   },
   {
@@ -1302,20 +1191,12 @@
     "start": {
       "line": 459,
       "column": 18,
-<<<<<<< HEAD
-      "index": 18276
-=======
       "index": 18351
->>>>>>> origin/develop
     },
     "end": {
       "line": 462,
       "column": 3,
-<<<<<<< HEAD
-      "index": 18354
-=======
       "index": 18429
->>>>>>> origin/develop
     }
   },
   {
@@ -1325,20 +1206,12 @@
     "start": {
       "line": 463,
       "column": 26,
-<<<<<<< HEAD
-      "index": 18382
-=======
       "index": 18457
->>>>>>> origin/develop
     },
     "end": {
       "line": 466,
       "column": 3,
-<<<<<<< HEAD
-      "index": 18500
-=======
       "index": 18575
->>>>>>> origin/develop
     }
   },
   {
@@ -1348,20 +1221,12 @@
     "start": {
       "line": 467,
       "column": 18,
-<<<<<<< HEAD
-      "index": 18520
-=======
       "index": 18595
->>>>>>> origin/develop
     },
     "end": {
       "line": 472,
       "column": 3,
-<<<<<<< HEAD
-      "index": 18749
-=======
       "index": 18824
->>>>>>> origin/develop
     }
   },
   {
@@ -1371,20 +1236,12 @@
     "start": {
       "line": 473,
       "column": 13,
-<<<<<<< HEAD
-      "index": 18764
-=======
       "index": 18839
->>>>>>> origin/develop
     },
     "end": {
       "line": 476,
       "column": 3,
-<<<<<<< HEAD
-      "index": 18878
-=======
       "index": 18953
->>>>>>> origin/develop
     }
   },
   {
@@ -1394,20 +1251,12 @@
     "start": {
       "line": 477,
       "column": 26,
-<<<<<<< HEAD
-      "index": 18906
-=======
       "index": 18981
->>>>>>> origin/develop
     },
     "end": {
       "line": 480,
       "column": 3,
-<<<<<<< HEAD
-      "index": 19058
-=======
       "index": 19133
->>>>>>> origin/develop
     }
   },
   {
@@ -1417,20 +1266,12 @@
     "start": {
       "line": 481,
       "column": 24,
-<<<<<<< HEAD
-      "index": 19084
-=======
       "index": 19159
->>>>>>> origin/develop
     },
     "end": {
       "line": 484,
       "column": 3,
-<<<<<<< HEAD
-      "index": 19278
-=======
       "index": 19353
->>>>>>> origin/develop
     }
   },
   {
@@ -1440,20 +1281,12 @@
     "start": {
       "line": 485,
       "column": 19,
-<<<<<<< HEAD
-      "index": 19299
-=======
       "index": 19374
->>>>>>> origin/develop
     },
     "end": {
       "line": 488,
       "column": 3,
-<<<<<<< HEAD
-      "index": 19425
-=======
       "index": 19500
->>>>>>> origin/develop
     }
   },
   {
@@ -1463,20 +1296,12 @@
     "start": {
       "line": 489,
       "column": 18,
-<<<<<<< HEAD
-      "index": 19445
-=======
       "index": 19520
->>>>>>> origin/develop
     },
     "end": {
       "line": 492,
       "column": 3,
-<<<<<<< HEAD
-      "index": 19555
-=======
       "index": 19630
->>>>>>> origin/develop
     }
   },
   {
@@ -1486,20 +1311,12 @@
     "start": {
       "line": 495,
       "column": 11,
-<<<<<<< HEAD
-      "index": 19614
-=======
       "index": 19689
->>>>>>> origin/develop
     },
     "end": {
       "line": 498,
       "column": 3,
-<<<<<<< HEAD
-      "index": 19709
-=======
       "index": 19784
->>>>>>> origin/develop
     }
   },
   {
@@ -1509,20 +1326,12 @@
     "start": {
       "line": 499,
       "column": 12,
-<<<<<<< HEAD
-      "index": 19723
-=======
       "index": 19798
->>>>>>> origin/develop
     },
     "end": {
       "line": 502,
       "column": 3,
-<<<<<<< HEAD
-      "index": 19826
-=======
       "index": 19901
->>>>>>> origin/develop
     }
   },
   {
@@ -1532,20 +1341,12 @@
     "start": {
       "line": 503,
       "column": 9,
-<<<<<<< HEAD
-      "index": 19837
-=======
       "index": 19912
->>>>>>> origin/develop
     },
     "end": {
       "line": 506,
       "column": 3,
-<<<<<<< HEAD
-      "index": 19927
-=======
       "index": 20002
->>>>>>> origin/develop
     }
   },
   {
@@ -1555,20 +1356,12 @@
     "start": {
       "line": 507,
       "column": 16,
-<<<<<<< HEAD
-      "index": 19945
-=======
       "index": 20020
->>>>>>> origin/develop
     },
     "end": {
       "line": 510,
       "column": 3,
-<<<<<<< HEAD
-      "index": 20041
-=======
       "index": 20116
->>>>>>> origin/develop
     }
   },
   {
@@ -1578,20 +1371,12 @@
     "start": {
       "line": 511,
       "column": 20,
-<<<<<<< HEAD
-      "index": 20063
-=======
       "index": 20138
->>>>>>> origin/develop
     },
     "end": {
       "line": 514,
       "column": 3,
-<<<<<<< HEAD
-      "index": 20152
-=======
       "index": 20227
->>>>>>> origin/develop
     }
   },
   {
@@ -1601,20 +1386,12 @@
     "start": {
       "line": 515,
       "column": 11,
-<<<<<<< HEAD
-      "index": 20165
-=======
       "index": 20240
->>>>>>> origin/develop
     },
     "end": {
       "line": 518,
       "column": 3,
-<<<<<<< HEAD
-      "index": 20259
-=======
       "index": 20334
->>>>>>> origin/develop
     }
   },
   {
@@ -1624,20 +1401,12 @@
     "start": {
       "line": 519,
       "column": 20,
-<<<<<<< HEAD
-      "index": 20281
-=======
       "index": 20356
->>>>>>> origin/develop
     },
     "end": {
       "line": 522,
       "column": 3,
-<<<<<<< HEAD
-      "index": 20388
-=======
       "index": 20463
->>>>>>> origin/develop
     }
   },
   {
@@ -1647,20 +1416,12 @@
     "start": {
       "line": 523,
       "column": 22,
-<<<<<<< HEAD
-      "index": 20412
-=======
       "index": 20487
->>>>>>> origin/develop
     },
     "end": {
       "line": 526,
       "column": 3,
-<<<<<<< HEAD
-      "index": 20524
-=======
       "index": 20599
->>>>>>> origin/develop
     }
   },
   {
@@ -1670,20 +1431,12 @@
     "start": {
       "line": 527,
       "column": 22,
-<<<<<<< HEAD
-      "index": 20548
-=======
       "index": 20623
->>>>>>> origin/develop
     },
     "end": {
       "line": 530,
       "column": 3,
-<<<<<<< HEAD
-      "index": 20680
-=======
       "index": 20755
->>>>>>> origin/develop
     }
   },
   {
@@ -1693,20 +1446,12 @@
     "start": {
       "line": 531,
       "column": 17,
-<<<<<<< HEAD
-      "index": 20699
-=======
       "index": 20774
->>>>>>> origin/develop
     },
     "end": {
       "line": 534,
       "column": 3,
-<<<<<<< HEAD
-      "index": 20801
-=======
       "index": 20876
->>>>>>> origin/develop
     }
   },
   {
@@ -1716,20 +1461,12 @@
     "start": {
       "line": 535,
       "column": 16,
-<<<<<<< HEAD
-      "index": 20819
-=======
       "index": 20894
->>>>>>> origin/develop
     },
     "end": {
       "line": 538,
       "column": 3,
-<<<<<<< HEAD
-      "index": 20974
-=======
       "index": 21049
->>>>>>> origin/develop
     }
   },
   {
@@ -1739,20 +1476,12 @@
     "start": {
       "line": 539,
       "column": 18,
-<<<<<<< HEAD
-      "index": 20994
-=======
       "index": 21069
->>>>>>> origin/develop
     },
     "end": {
       "line": 542,
       "column": 3,
-<<<<<<< HEAD
-      "index": 21088
-=======
       "index": 21163
->>>>>>> origin/develop
     }
   },
   {
@@ -1762,20 +1491,12 @@
     "start": {
       "line": 543,
       "column": 20,
-<<<<<<< HEAD
-      "index": 21110
-=======
       "index": 21185
->>>>>>> origin/develop
     },
     "end": {
       "line": 546,
       "column": 3,
-<<<<<<< HEAD
-      "index": 21204
-=======
       "index": 21279
->>>>>>> origin/develop
     }
   },
   {
@@ -1785,18 +1506,11 @@
     "start": {
       "line": 547,
       "column": 19,
-<<<<<<< HEAD
-      "index": 21225
-=======
       "index": 21300
->>>>>>> origin/develop
     },
     "end": {
       "line": 550,
       "column": 3,
-<<<<<<< HEAD
-      "index": 21329
-=======
       "index": 21404
     }
   },
@@ -1813,7 +1527,6 @@
       "line": 554,
       "column": 3,
       "index": 21552
->>>>>>> origin/develop
     }
   },
   {
@@ -1823,20 +1536,12 @@
     "start": {
       "line": 555,
       "column": 10,
-<<<<<<< HEAD
-      "index": 21341
-=======
       "index": 21564
->>>>>>> origin/develop
     },
     "end": {
       "line": 558,
       "column": 3,
-<<<<<<< HEAD
-      "index": 21456
-=======
       "index": 21679
->>>>>>> origin/develop
     }
   },
   {
@@ -1846,20 +1551,12 @@
     "start": {
       "line": 559,
       "column": 20,
-<<<<<<< HEAD
-      "index": 21478
-=======
       "index": 21701
->>>>>>> origin/develop
     },
     "end": {
       "line": 562,
       "column": 3,
-<<<<<<< HEAD
-      "index": 21578
-=======
       "index": 21801
->>>>>>> origin/develop
     }
   }
 ]
