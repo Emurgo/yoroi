@@ -487,6 +487,19 @@ export const actionMessages = defineMessages({
     id: 'global.buy',
     defaultMessage: '!!!Buy',
   },
+  buyTitle: {
+    id: 'global.buyTitle',
+    defaultMessage: '!!!Exchange ADA',
+  },
+  buyInfo: {
+    id: 'global.buyInfo',
+    defaultMessage:
+      '!!!Yoroi uses <b>Banxa</b> to provide direct Fiat-ADA exchange. By clicking “Proceed,” you also acknowledge that you will be redirected to our partner’s website, where you may be asked to accept their terms and conditions.',
+  },
+  proceed: {
+    id: 'global.proceed',
+    defaultMessage: '!!!Proceed',
+  },
   swap: {
     id: 'global.swap',
     defaultMessage: '!!!Swap',
