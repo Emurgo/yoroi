@@ -1,4 +1,5 @@
 import {AxiosInstance} from 'axios'
+import {BalanceQuantity} from '@yoroi/types/src/balance/token'
 
 export type CancelOrderRequest = {
   orderUTxO: string // order UTxO from the smart contract to cancel. e.g. "txhash#0".
@@ -273,4 +274,24 @@ export type LiquidityPool = {
   batcherAddress: string
 }
 
-export type GetFrontedFeeResponse = {}
+export type GetFrontedFeeResponse = {
+  [aggregator in SwapAggregator]?: FeeTiers
+}
+
+type SwapDiscountTier = {
+  primaryTokenValueThreshold: BalanceQuantity // primary token trade value threshold
+  secondaryTokenBalanceThreshold: BalanceQuantity // secodary token balance (holding)
+  variableFeeMultiplier: number
+  variableFeeVisual: number
+  fixedFee: BalanceQuantity
+}
+
+type FeeTiers = {
+  lpTokens: {
+    mainnet: string
+    preprod: string
+  }
+  tiers: Array<SwapDiscountTier>
+}
+
+type SwapAggregator = 'muesliswap'

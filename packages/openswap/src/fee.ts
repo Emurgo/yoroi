@@ -1,17 +1,20 @@
 import {asQuantity} from '@yoroi/swap/src/utils/asQuantity'
 import {Quantities} from '@yoroi/swap/src/utils/quantities'
 import {ApiDeps, GetFrontedFeeResponse} from './types'
+import {Swap} from '@yoroi/types'
 
 export const fetchFrontendFee = async (
   _deps: ApiDeps,
 ): Promise<GetFrontedFeeResponse> => {
   return {
-    tiers,
-    lpTokens: {mainnet: milkTokenId.mainnet, preprod: milkTokenId.preprod},
+    muesliswap: {
+      tiers,
+      lpTokens: {mainnet: milkTokenId.mainnet, preprod: milkTokenId.preprod},
+    },
   }
 }
 
-const tiers = [
+const tiers: Swap.DiscountTier[] = [
   // MILK 500+, VALUE ADA 100+, FFEE = 1 ADA + 0.020 %
   {
     primaryTokenValueThreshold: asQuantity(100_000_000),
