@@ -131,7 +131,6 @@ const TokenList = () => {
 }
 
 type SelectableTokenProps = {
-  disabled?: boolean
   wallet: YoroiWallet
   walletTokenIds: Array<string>
   token: Balance.Token
