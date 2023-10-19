@@ -163,7 +163,11 @@ const HiddenInfo = ({
               <View style={styles.modalContent}>
                 <Text style={styles.text}>{item.info}</Text>
 
+                <Spacer fill />
+
                 <SwapInfoLink />
+
+                <Spacer height={24} />
               </View>,
             )
           }}
@@ -186,7 +190,6 @@ const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingBottom: 24,
   },
   change: {color: COLORS.SHELLEY_BLUE, fontWeight: '600', textTransform: 'uppercase'},
   bold: {
