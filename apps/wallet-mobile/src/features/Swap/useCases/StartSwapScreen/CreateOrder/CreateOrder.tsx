@@ -1,4 +1,11 @@
-import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
+import {
+  makeLimitOrder,
+  makePossibleMarketOrder,
+  useSwap,
+  useSwapCreateOrder,
+  useSwapPoolsByPair,
+  useSwapTokensByPairToken,
+} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
@@ -37,6 +44,7 @@ export const CreateOrder = () => {
   const {track} = useMetrics()
   const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
   const [sellBackendError, setSellBackendError] = React.useState('')
+  useSwapTokensByPairToken('', {suspense: false, enabled: false})
 
   useSwapPoolsByPair(
     {

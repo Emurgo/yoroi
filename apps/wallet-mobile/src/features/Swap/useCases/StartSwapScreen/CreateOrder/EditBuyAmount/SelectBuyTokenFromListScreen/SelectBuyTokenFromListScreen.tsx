@@ -59,10 +59,14 @@ export const SelectBuyTokenFromListScreen = () => {
 const TokenList = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {pairsByToken} = useSwapTokensByPairToken('')
+  const {pairsByToken, refetch} = useSwapTokensByPairToken('')
   const {search: assetSearchTerm} = useSearch()
   const balances = useBalances(wallet)
   const walletTokenIds = Amounts.toArray(balances).map(({tokenId}) => tokenId)
+
+  React.useEffect(() => {
+    refetch()
+  }, [refetch])
 
   const tokens: Array<Balance.Token> = React.useMemo(() => {
     if (pairsByToken === undefined) return []
@@ -96,11 +100,7 @@ const TokenList = () => {
         data={filteredTokenList}
         renderItem={({item: token}: {item: Balance.Token}) => (
           <Boundary loading={{fallback: <AmountItemPlaceholder style={styles.item} />}}>
-            <SelectableToken
-              token={token}
-              wallet={wallet}
-              walletTokenIds={walletTokenIds}
-            />
+            <SelectableToken token={token} wallet={wallet} walletTokenIds={walletTokenIds} />
           </Boundary>
         )}
         bounces={false}
