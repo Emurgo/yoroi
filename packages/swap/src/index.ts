@@ -41,11 +41,7 @@ export {useSwapSetSlippage} from './translators/reactjs/hooks/useSwapSetSlippage
 export {useSwapSlippage} from './translators/reactjs/hooks/useSwapSlippage'
 export {useSwapTokensByPairToken} from './translators/reactjs/hooks/useSwapTokensByPairToken'
 export {useSwap} from './translators/reactjs/hooks/useSwap'
-export {
-  supportedProviders,
-  milkHoldersDiscountTiers,
-  milkTokenId,
-} from './translators/constants'
+export {supportedProviders} from './translators/constants'
 
 // factories
 export {swapApiMaker} from './adapters/openswap-api/api'

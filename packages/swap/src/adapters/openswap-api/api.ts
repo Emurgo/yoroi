@@ -108,6 +108,10 @@ export const swapApiMaker = (
       .then((response) => response.price)
   }
 
+  const getFrontendFees: Swap.Api['getFrontendFees'] = async () => {
+    return await api.getFrontendFees()
+  }
+
   return {
     getPrice,
     getOpenOrders,
@@ -119,5 +123,6 @@ export const swapApiMaker = (
     stakingKey,
     primaryTokenId,
     supportedProviders,
+    getFrontendFees,
   } as const
 }

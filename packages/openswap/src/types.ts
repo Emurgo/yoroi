@@ -272,3 +272,5 @@ export type LiquidityPool = {
   priceBSqrt?: any
   batcherAddress: string
 }
+
+export type GetFrontedFeeResponse = {}

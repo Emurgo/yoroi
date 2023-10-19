@@ -2,10 +2,10 @@ import {Balance, Swap} from '@yoroi/types'
 import {produce} from 'immer'
 
 import {Quantities} from '../../../utils/quantities'
-import {SwapDiscountTier} from '../../../translators/constants'
 import {makeOrderCalculations} from '../../../helpers/orders/factories/makeOrderCalculations'
 import {selectedPoolCalculationSelector} from './selectors/selectedPoolCalculationSelector'
 import {getBestPoolCalculation} from '../../../helpers/pools/getBestPoolCalculation'
+import {SwapDiscountTier} from '@yoroi/types/lib/swap/order'
 
 export type SwapOrderCalculation = Readonly<{
   order: {
@@ -74,6 +74,7 @@ export type SwapState = Readonly<{
     // derivaded data
     calculations: ReadonlyArray<SwapOrderCalculation>
     bestPoolCalculation?: SwapOrderCalculation
+    discountTiers?: ReadonlyArray<Swap.DiscountTier>
   }
   unsignedTx: any
 }>
@@ -92,6 +93,7 @@ export type SwapCreateOrderActions = Readonly<{
   poolPairsChanged: (pools: ReadonlyArray<Swap.Pool>) => void
   lpTokenHeldChanged: (amount: Balance.Amount | undefined) => void
   primaryTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => void
+  discountTiersChanged: (tiers: ReadonlyArray<Swap.DiscountTier>) => void
 }>
 
 export enum SwapCreateOrderActionType {
@@ -109,6 +111,7 @@ export enum SwapCreateOrderActionType {
   PoolPairsChanged = 'poolPairsChanged',
   LpTokenHeldChanged = 'lpTokenHeldChanged',
   PrimaryTokenIdChanged = 'primaryTokenIdChanged',
+  DiscountTiersChanged = 'discountTiersChanged',
 }
 
 export type SwapCreateOrderAction =
@@ -157,6 +160,10 @@ export type SwapCreateOrderAction =
   | {
       type: SwapCreateOrderActionType.PrimaryTokenIdChanged
       tokenId: Balance.TokenInfo['id']
+    }
+  | {
+      type: SwapCreateOrderActionType.DiscountTiersChanged
+      tiers: ReadonlyArray<Swap.DiscountTier>
     }
 
 export type SwapActions = Readonly<{
@@ -224,6 +231,7 @@ export const defaultSwapState: SwapState = {
     // derivaded data
     calculations: [] as const,
     bestPoolCalculation: undefined,
+    discountTiers: undefined,
   },
   unsignedTx: undefined,
 } as const
@@ -242,6 +250,7 @@ const defaultSwapCreateOrderActions: SwapCreateOrderActions = {
   poolPairsChanged: missingInit,
   lpTokenHeldChanged: missingInit,
   primaryTokenIdChanged: missingInit,
+  discountTiersChanged: missingInit,
 } as const
 
 const defaultStateActions: SwapActions = {
@@ -267,6 +276,7 @@ const orderReducer = (
         draft.orderData.type = action.orderType
 
         draft.orderData.calculations = makeOrderCalculations({
+          discountTiers: state.orderData.discountTiers,
           orderType: action.orderType,
           amounts: state.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
@@ -321,6 +331,7 @@ const orderReducer = (
         draft.orderData.slippage = action.slippage
 
         draft.orderData.calculations = makeOrderCalculations({
+          discountTiers: state.orderData.discountTiers,
           orderType: state.orderData.type,
           amounts: state.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
@@ -346,6 +357,7 @@ const orderReducer = (
         }
 
         draft.orderData.calculations = makeOrderCalculations({
+          discountTiers: state.orderData.discountTiers,
           orderType: state.orderData.type,
           amounts: draft.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
@@ -393,6 +405,7 @@ const orderReducer = (
         draft.orderData.limitPrice = undefined
 
         draft.orderData.calculations = makeOrderCalculations({
+          discountTiers: state.orderData.discountTiers,
           orderType: 'market',
           amounts: draft.orderData.amounts,
           limitPrice: undefined,
@@ -424,6 +437,7 @@ const orderReducer = (
         if (state.orderData.type === 'market') break
 
         draft.orderData.calculations = makeOrderCalculations({
+          discountTiers: state.orderData.discountTiers,
           orderType: state.orderData.type,
           amounts: state.orderData.amounts,
           limitPrice: action.limitPrice,
@@ -452,6 +466,7 @@ const orderReducer = (
         draft.orderData.amounts.sell.quantity = action.quantity
 
         draft.orderData.calculations = makeOrderCalculations({
+          discountTiers: state.orderData.discountTiers,
           orderType: state.orderData.type,
           amounts: draft.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
@@ -480,6 +495,7 @@ const orderReducer = (
         draft.orderData.amounts.buy.quantity = action.quantity
 
         draft.orderData.calculations = makeOrderCalculations({
+          discountTiers: state.orderData.discountTiers,
           orderType: state.orderData.type,
           amounts: draft.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
@@ -533,6 +549,7 @@ const orderReducer = (
         draft.orderData.lpTokenHeld = action.amount
 
         draft.orderData.calculations = makeOrderCalculations({
+          discountTiers: state.orderData.discountTiers,
           orderType: state.orderData.type,
           amounts: state.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
@@ -559,6 +576,7 @@ const orderReducer = (
       case SwapCreateOrderActionType.PoolPairsChanged:
         draft.orderData.pools = [...action.pools]
         draft.orderData.calculations = makeOrderCalculations({
+          discountTiers: state.orderData.discountTiers,
           orderType: state.orderData.type,
           amounts: state.orderData.amounts,
           limitPrice: state.orderData.limitPrice,
@@ -591,6 +609,9 @@ const orderReducer = (
       case SwapCreateOrderActionType.PrimaryTokenIdChanged:
         draft.orderData.primartyTokenId = action.tokenId
         break
+
+      case SwapCreateOrderActionType.DiscountTiersChanged:
+        draft.orderData.discountTiers = [...action.tiers]
     }
   })
 }
@@ -604,6 +625,9 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
       case SwapActionType.ResetState:
         draft.orderData = {
           ...defaultSwapState.orderData,
+          discountTiers: defaultSwapState.orderData.discountTiers
+            ? [...defaultSwapState.orderData.discountTiers]
+            : undefined,
           calculations: [...defaultSwapState.orderData.calculations],
           pools: [...defaultSwapState.orderData.pools],
         }

@@ -12,6 +12,7 @@ import {
   SwapCompletedOrder,
   SwapCreateOrderData,
   SwapCreateOrderResponse,
+  SwapDiscountTier,
   SwapOpenOrder,
   SwapOrderType,
 } from './swap/order'
@@ -50,6 +51,8 @@ export namespace Swap {
   export type SupportedProvider = SwapSupportedProvider
 
   export type Storage = SwapStorage
+
+  export type DiscountTier = SwapDiscountTier
 }
 
 export namespace Balance {

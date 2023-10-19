@@ -2,11 +2,8 @@ import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {Quantities} from '../../../utils/quantities'
-import {
-  SwapDiscountTier,
-  milkHoldersDiscountTiers,
-} from '../../../translators/constants'
 import {asQuantity} from '../../../utils/asQuantity'
+import {SwapDiscountTier} from '@yoroi/types/lib/swap/order'
 
 /**
  * Calculates the frontend fee and selects a discount tier for a swap transaction.
@@ -22,11 +19,11 @@ export const getFrontendFee = ({
   lpTokenHeld,
   primaryTokenId,
   sellInPrimaryTokenValue,
-  discountTiers = milkHoldersDiscountTiers,
+  discountTiers,
 }: {
   primaryTokenId: Balance.TokenInfo['id']
   lpTokenHeld?: Balance.Amount
-  discountTiers?: ReadonlyArray<SwapDiscountTier>
+  discountTiers: ReadonlyArray<SwapDiscountTier>
   sellInPrimaryTokenValue: Balance.Amount
 }): Readonly<{
   fee: Balance.Amount

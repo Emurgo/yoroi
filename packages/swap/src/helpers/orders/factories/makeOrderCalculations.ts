@@ -19,6 +19,7 @@ export const makeOrderCalculations = ({
   primaryTokenId,
   lpTokenHeld,
   side,
+  discountTiers,
 }: Readonly<{
   orderType: Swap.OrderType
   amounts: {
@@ -31,6 +32,7 @@ export const makeOrderCalculations = ({
   slippage: number
   primaryTokenId: Balance.TokenInfo['id']
   side?: 'buy' | 'sell'
+  discountTiers: ReadonlyArray<Swap.DiscountTier> | undefined
 }>): Array<SwapOrderCalculation> => {
   const isLimit = orderType === 'limit'
   const maybeLimitPrice = isLimit ? limitPrice : undefined
@@ -72,9 +74,8 @@ export const makeOrderCalculations = ({
       ? new BigNumber(pool.ptPriceTokenB)
       : new BigNumber(pool.ptPriceTokenA)
 
-    // ffee is based on PT value range + LP holding range (sides may need conversion, when none is PT)
-    // TODO: it needs update, prices by muesli are provided in ADA, quantities in atomic units
     const frontendFeeInfo = getFrontendFee({
+      discountTiers: discountTiers ?? [],
       lpTokenHeld,
       primaryTokenId,
       sellInPrimaryTokenValue: {

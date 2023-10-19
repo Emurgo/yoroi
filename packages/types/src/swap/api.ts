@@ -4,6 +4,7 @@ import {
   SwapCompletedOrder,
   SwapCreateOrderData,
   SwapCreateOrderResponse,
+  SwapFrontendFee,
   SwapOpenOrder,
 } from './order'
 import {SwapPool, SwapPoolProvider} from './pool'
@@ -23,6 +24,7 @@ export interface SwapApi {
     baseToken: BalanceToken['info']['id']
     quoteToken: BalanceToken['info']['id']
   }): Promise<number>
+  getFrontendFees(): Promise<SwapFrontendFee>
   stakingKey: string
   primaryTokenId: BalanceToken['info']['id']
   supportedProviders: ReadonlyArray<SwapPoolProvider>

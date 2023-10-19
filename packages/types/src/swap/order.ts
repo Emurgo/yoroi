@@ -42,3 +42,23 @@ export type SwapCompletedOrder = {
   to: BalanceAmount
   txHash: string
 }
+
+export type SwapAggregator = 'muesliswap'
+
+export type SwapDiscountTier = Readonly<{
+  primaryTokenValueThreshold: BalanceQuantity // primary token trade value threshold
+  secondaryTokenBalanceThreshold: BalanceQuantity // secodary token balance (holding)
+  variableFeeMultiplier: number
+  variableFeeVisual: number
+  fixedFee: BalanceQuantity
+}>
+
+export type SwapFrontendFee = Readonly<{
+  [aggregator in SwapAggregator]?: {
+    tiers: ReadonlyArray<SwapDiscountTier>
+    lpTokens: {
+      mainnet: string
+      preprod: string
+    }
+  }
+}>
