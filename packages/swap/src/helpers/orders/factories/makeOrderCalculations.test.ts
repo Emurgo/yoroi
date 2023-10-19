@@ -22,6 +22,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -140,6 +141,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -249,6 +251,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -367,6 +370,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -485,6 +489,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 50
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -597,6 +602,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 50
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -709,6 +715,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 50
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -821,6 +828,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -933,6 +941,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -1045,6 +1054,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -1157,6 +1167,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -1269,6 +1280,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -1381,6 +1393,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -1493,6 +1506,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -1605,6 +1619,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -1717,6 +1732,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: undefined,
@@ -1829,6 +1845,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'limit',
       amounts: amounts,
       limitPrice: '2',
@@ -1931,6 +1948,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'limit',
       amounts: amounts,
       limitPrice: '2',
@@ -2033,6 +2051,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'limit',
       amounts: amounts,
       limitPrice: '2',
@@ -2135,6 +2154,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'limit',
       amounts: amounts,
       limitPrice: '2',
@@ -2237,6 +2257,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'limit',
       amounts: amounts,
       limitPrice: '1',
@@ -2339,6 +2360,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'limit',
       amounts: amounts,
       limitPrice: '1',
@@ -2453,6 +2475,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'limit',
       amounts: amounts,
       limitPrice: '1',
@@ -2567,6 +2590,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'limit',
       amounts: amounts,
       limitPrice: '1',
@@ -2681,6 +2705,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'limit',
       amounts: amounts,
       limitPrice: '1',
@@ -2789,6 +2814,7 @@ describe('makeOrderCalculations', () => {
 
     const slippage = 0
     const calculations = makeOrderCalculations({
+      discountTiers: mocks.mockedDiscountTiers,
       orderType: 'market',
       amounts: amounts,
       limitPrice: '1',

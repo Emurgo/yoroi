@@ -26,6 +26,7 @@ describe('swapManagerMaker', () => {
     primaryTokenId: '',
     stakingKey: 'someStakingKey',
     supportedProviders: ['minswap'] as const,
+    getFrontendFees: jest.fn(),
   }
 
   beforeEach(() => {

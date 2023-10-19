@@ -13,6 +13,7 @@ import {
   SwapCreateOrderData,
   SwapCreateOrderResponse,
   SwapDiscountTier,
+  SwapFrontendFee,
   SwapOpenOrder,
   SwapOrderType,
 } from './swap/order'
@@ -53,6 +54,7 @@ export namespace Swap {
   export type Storage = SwapStorage
 
   export type DiscountTier = SwapDiscountTier
+  export type FrontendFee = SwapFrontendFee
 }
 
 export namespace Balance {

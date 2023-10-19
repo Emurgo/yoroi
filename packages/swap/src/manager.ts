@@ -16,6 +16,7 @@ export const swapManagerMaker = (
     primaryTokenId,
     stakingKey,
     supportedProviders,
+    getFrontendFees,
   } = swapApi
 
   const order = {
@@ -43,6 +44,10 @@ export const swapManagerMaker = (
     } as const,
   }
 
+  const frontendFees = {
+    get: getFrontendFees,
+  }
+
   return {
     price,
     clearStorage,
@@ -53,5 +58,6 @@ export const swapManagerMaker = (
     primaryTokenId,
     stakingKey,
     supportedProviders,
+    frontendFees,
   } as const
 }

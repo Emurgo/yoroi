@@ -27,6 +27,9 @@ export type SwapManager = Readonly<{
       byPair: SwapApi['getPools']
     }
   }
+  frontendFees: {
+    get: SwapApi['getFrontendFees']
+  }
   stakingKey: string
   primaryTokenId: BalanceToken['info']['id']
   supportedProviders: ReadonlyArray<SwapPoolProvider>

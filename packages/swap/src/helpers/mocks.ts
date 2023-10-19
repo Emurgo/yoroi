@@ -1,5 +1,7 @@
 import {Swap} from '@yoroi/types'
 import {SwapOrderCalculation} from 'translators/reactjs/state/state'
+import {asQuantity} from '../utils/asQuantity'
+import {Quantities} from '../utils/quantities'
 
 const mockedPools1: Swap.Pool[] = [
   {
@@ -1723,6 +1725,34 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
   },
 ]
 
+const mockedDiscountTiers = [
+  // MILK 500+, VALUE ADA 100+, FFEE = 1 ADA + 0.020 %
+  {
+    primaryTokenValueThreshold: asQuantity(100_000_000),
+    secondaryTokenBalanceThreshold: '500',
+    variableFeeMultiplier: 0.0002,
+    variableFeeVisual: 0.02,
+    fixedFee: asQuantity(1_000_000),
+  },
+  // MILK 100+, VALUE ADA 100+, FFEE = 1 ADA + 0.025 %
+  {
+    primaryTokenValueThreshold: asQuantity(100_000_000),
+    secondaryTokenBalanceThreshold: '100',
+    variableFeeMultiplier: 0.00025,
+    variableFeeVisual: 0.025,
+    fixedFee: asQuantity(1_000_000),
+  },
+  // VALUE ADA 100+, FFEE = 1 ADA + 0.050 %
+  {
+    primaryTokenValueThreshold: asQuantity(100_000_000),
+    secondaryTokenBalanceThreshold: Quantities.zero,
+    variableFeeMultiplier: 0.0005,
+    variableFeeVisual: 0.05,
+    fixedFee: asQuantity(1_000_000),
+  },
+  // VALUE ADA 0-99, FFEE = 0%
+] as const
+
 export const mocks = {
   mockedPools1,
   mockedPools2,
@@ -1732,4 +1762,6 @@ export const mocks = {
 
   mockedOrderCalculations1,
   mockedOrderCalculations2,
+
+  mockedDiscountTiers,
 }

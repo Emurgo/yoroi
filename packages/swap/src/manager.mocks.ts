@@ -182,6 +182,9 @@ export const mockSwapManager: Swap.Manager = {
   price: {
     byPair: getPrice.success,
   },
+  frontendFees: {
+    get: unknownError,
+  },
   slippage: slippage.success,
   clearStorage: clear.success,
   primaryTokenId: '',
@@ -210,6 +213,9 @@ export const mockSwapManagerDefault: Swap.Manager = {
     list: {
       byToken: getTokens.error.unknown,
     },
+  },
+  frontendFees: {
+    get: unknownError,
   },
   slippage: slippage.error.unknown,
   clearStorage: clear.error.unknown,

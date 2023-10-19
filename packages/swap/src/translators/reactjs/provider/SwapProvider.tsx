@@ -91,6 +91,9 @@ export const SwapProvider = ({
     primaryTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => {
       dispatch({type: SwapCreateOrderActionType.PrimaryTokenIdChanged, tokenId})
     },
+    discountTiersChanged: (tiers: ReadonlyArray<Swap.DiscountTier>) => {
+      dispatch({type: SwapCreateOrderActionType.DiscountTiersChanged, tiers})
+    },
   }).current
 
   const context = React.useMemo(

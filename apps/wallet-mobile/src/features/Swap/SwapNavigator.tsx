@@ -1,5 +1,5 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
-import {useSwapTokensByPairToken} from '@yoroi/swap'
+import {useFrontendFees, useSwap, useSwapTokensByPairToken} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -16,13 +16,21 @@ const Tab = createMaterialTopTabNavigator<SwapTabRoutes>()
 export const SwapTabNavigator = () => {
   const strings = useStrings()
 
+  const {discountTiersChanged} = useSwap()
+
   useHideBottomTabBar()
+
+  const {data: tiers = []} = useFrontendFees()
 
   const {refetch} = useSwapTokensByPairToken('', {suspense: false, enabled: false})
 
   React.useEffect(() => {
     refetch()
   }, [refetch])
+
+  React.useEffect(() => {
+    discountTiersChanged(tiers)
+  }, [discountTiersChanged, tiers])
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>

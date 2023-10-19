@@ -18,7 +18,7 @@ import {axiosClient} from './config'
 import {getPrice} from './price'
 import {getLiquidityPools, getPoolsPair} from './pools'
 import {fetchFrontendFee} from './fee'
-import {SwapFrontendFee} from '@yoroi/types/src/swap/order'
+import {Swap} from '@yoroi/types'
 
 export class OpenSwapApi {
   constructor(
@@ -106,7 +106,7 @@ export class OpenSwapApi {
     return tokens
   }
 
-  public async getFrontendFees(): Promise<SwapFrontendFee> {
+  public async getFrontendFees(): Promise<Swap.FrontendFee> {
     return await fetchFrontendFee({client: this.client, network: this.network})
   }
 }

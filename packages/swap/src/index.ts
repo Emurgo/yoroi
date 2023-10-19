@@ -54,3 +54,5 @@ export {
   makeStorageMaker,
   makeStorageMakerDefault,
 } from './adapters/async-storage/storage.mocks'
+
+export {useFrontendFees} from './translators/reactjs/hooks/useFrontendFees'
