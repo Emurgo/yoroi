@@ -6,11 +6,11 @@
     "moduleResolution": "node",
     "strict": true,
     "noImplicitAny": false,
-    "types": ["react", "react-native", "jest", "node", "chai"],
+    "types": ["jest", "node", "chai"],
     "baseUrl": ".",
     "paths": {
       "*.md": ["text-loader"]
     }
   },
-  "include": ["./.d.ts", "./src", ".storybook/decorators"]
+  "include": ["./general", "./screen", "./tests"]
 }

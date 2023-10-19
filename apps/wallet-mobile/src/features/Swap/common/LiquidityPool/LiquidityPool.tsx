@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 22,
+    textDecorationLine: 'underline',
   },
   liquidityPool: {
     flexDirection: 'row',
