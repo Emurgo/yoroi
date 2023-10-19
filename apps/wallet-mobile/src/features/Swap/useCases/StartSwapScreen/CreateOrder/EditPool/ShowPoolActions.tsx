@@ -182,9 +182,10 @@ const styles = StyleSheet.create({
   between: {justifyContent: 'space-between'},
   text: {
     textAlign: 'left',
+    fontFamily: 'Rubik',
+    fontWeight: '400',
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: '400',
     color: '#242838',
   },
   modalContent: {
