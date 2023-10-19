@@ -1,13 +1,13 @@
 import React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity} from 'react-native'
 
+import {SWAP_ZENDESK_LINK} from '../../../../yoroi-wallets/cardano/constants/common'
 import {useStrings} from '../strings'
 
 export const SwapInfoLink = () => {
   const strings = useStrings()
   return (
-    // TODO: add real link
-    <TouchableOpacity onPress={() => Linking.openURL('https://yoroi-wallet.com/#/')} style={styles.link}>
+    <TouchableOpacity onPress={() => Linking.openURL(SWAP_ZENDESK_LINK)} style={styles.link}>
       <Text style={styles.linkText}>{strings.listOrdersSheetLink}</Text>
     </TouchableOpacity>
   )
