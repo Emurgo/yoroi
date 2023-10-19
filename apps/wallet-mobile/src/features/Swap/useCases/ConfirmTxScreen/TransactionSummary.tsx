@@ -93,7 +93,7 @@ export const TransactionSummary = () => {
                     onPress={() => {
                       openModal(
                         orderInfo.label,
-                        <View style={{justifyContent: 'space-between', flex: 1}}>
+                        <View style={styles.modalContent}>
                           <Text>{orderInfo.info}</Text>
 
                           <Spacer fill />
@@ -175,5 +175,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#242838',
     paddingBottom: 8,
+  },
+  modalContent: {
+    justifyContent: 'space-between',
+    flex: 1,
   },
 })
