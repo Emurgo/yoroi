@@ -1,4 +1,5 @@
 /* tslint:disable */
+/* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
 // @ts-nocheck
 /**
@@ -17,21 +18,21 @@
  * [Full Setup Instructions](https://data.amplitude.com/emurgo/Yoroi/implementation/mobile)
  */
 
-import * as amplitude from '@amplitude/analytics-react-native'
+import * as amplitude from '@amplitude/analytics-react-native';
 
-export type ReactNativeClient = amplitude.Types.ReactNativeClient
-export type BaseEvent = amplitude.Types.BaseEvent
-export type Event = amplitude.Types.Event
-export type EventOptions = amplitude.Types.EventOptions
-export type Result = amplitude.Types.Result
-export type ReactNativeOptions = amplitude.Types.ReactNativeOptions
+export type ReactNativeClient = amplitude.Types.ReactNativeClient;
+export type BaseEvent = amplitude.Types.BaseEvent;
+export type Event = amplitude.Types.Event;
+export type EventOptions = amplitude.Types.EventOptions;
+export type Result = amplitude.Types.Result;
+export type ReactNativeOptions = amplitude.Types.ReactNativeOptions;
 
-export type Environment = 'production' | 'development'
+export type Environment = 'production' | 'development';
 
 export const ApiKey: Record<Environment, string> = {
   production: 'd44950b777177c2ebee5f21f194c1231',
-  development: '52a980fd5fb8da5fc680687d7e991e18',
-}
+  development: '52a980fd5fb8da5fc680687d7e991e18'
+};
 
 /**
  * Default Amplitude configuration options. Contains tracking plan information.
@@ -41,28 +42,23 @@ export const DefaultConfiguration: ReactNativeOptions = {
     version: '7',
     branch: 'main',
     source: 'mobile',
-    versionId: 'a0985241-d0c0-4bda-bc6d-271830af0067',
+    versionId: 'a0985241-d0c0-4bda-bc6d-271830af0067'
   },
   ...{
     ingestionMetadata: {
       sourceName: 'react-native-typescript-ampli',
-      sourceVersion: '2.0.0',
-    },
-  },
-}
+      sourceVersion: '2.0.0'
+    }
+  }
+};
 
-export interface LoadOptionsBase {
-  disabled?: boolean
-}
+export interface LoadOptionsBase { disabled?: boolean }
 
-export type LoadOptionsWithEnvironment = LoadOptionsBase & {
-  environment: Environment
-  client?: {configuration?: ReactNativeOptions}
-}
-export type LoadOptionsWithApiKey = LoadOptionsBase & {client: {apiKey: string; configuration?: ReactNativeOptions}}
-export type LoadOptionsWithClientInstance = LoadOptionsBase & {client: {instance: ReactNativeClient}}
+export type LoadOptionsWithEnvironment = LoadOptionsBase & { environment: Environment; client?: { configuration?: ReactNativeOptions; }; };
+export type LoadOptionsWithApiKey = LoadOptionsBase & { client: { apiKey: string; configuration?: ReactNativeOptions; } };
+export type LoadOptionsWithClientInstance = LoadOptionsBase & { client: { instance: ReactNativeClient; } };
 
-export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance
+export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance;
 
 export interface NftGalleryDetailsTabProperties {
   /**
@@ -70,7 +66,7 @@ export interface NftGalleryDetailsTabProperties {
    * |---|---|
    * | Enum Values | Overview, Metadata |
    */
-  nft_tab: 'Overview' | 'Metadata'
+  nft_tab: "Overview" | "Metadata";
 }
 
 export interface NftGalleryPageViewedProperties {
@@ -81,7 +77,7 @@ export interface NftGalleryPageViewedProperties {
    * |---|---|
    * | Type | integer |
    */
-  nft_count: number
+  nft_count: number;
 }
 
 export interface NftGallerySearchActivatedProperties {
@@ -92,11 +88,11 @@ export interface NftGallerySearchActivatedProperties {
    * |---|---|
    * | Type | integer |
    */
-  nft_count: number
+  nft_count: number;
   /**
    * What user is looking to search on NFT gallery page
    */
-  nft_search_term: string
+  nft_search_term: string;
 }
 
 export interface SendSelectAssetSelectedProperties {
@@ -107,7 +103,7 @@ export interface SendSelectAssetSelectedProperties {
    * |---|---|
    * | Type | number |
    */
-  asset_count: number
+  asset_count: number;
   /**
    * ```
    * nfts: [
@@ -121,7 +117,7 @@ export interface SendSelectAssetSelectedProperties {
    * ]
    * ```
    */
-  nfts?: any[]
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -136,7 +132,7 @@ export interface SendSelectAssetSelectedProperties {
    * ]
    * ```
    */
-  tokens?: any[]
+  tokens?: any[];
 }
 
 export interface SendSelectAssetUpdatedProperties {
@@ -145,7 +141,7 @@ export interface SendSelectAssetUpdatedProperties {
    * |---|---|
    * | Type | number |
    */
-  asset_count: number
+  asset_count: number;
   /**
    * ```
    * nfts: [
@@ -159,7 +155,7 @@ export interface SendSelectAssetUpdatedProperties {
    * ]
    * ```
    */
-  nfts?: any[]
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -174,7 +170,7 @@ export interface SendSelectAssetUpdatedProperties {
    * ]
    * ```
    */
-  tokens?: any[]
+  tokens?: any[];
 }
 
 export interface SendSummaryPageViewedProperties {
@@ -183,7 +179,7 @@ export interface SendSummaryPageViewedProperties {
    * |---|---|
    * | Type | number |
    */
-  asset_count: number
+  asset_count: number;
   /**
    * ```
    * nfts: [
@@ -197,7 +193,7 @@ export interface SendSummaryPageViewedProperties {
    * ]
    * ```
    */
-  nfts?: any[]
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -212,7 +208,7 @@ export interface SendSummaryPageViewedProperties {
    * ]
    * ```
    */
-  tokens?: any[]
+  tokens?: any[];
 }
 
 export interface SendSummarySubmittedProperties {
@@ -221,7 +217,7 @@ export interface SendSummarySubmittedProperties {
    * |---|---|
    * | Type | number |
    */
-  asset_count: number
+  asset_count: number;
   /**
    * ```
    * nfts: [
@@ -235,7 +231,7 @@ export interface SendSummarySubmittedProperties {
    * ]
    * ```
    */
-  nfts?: any[]
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -250,7 +246,7 @@ export interface SendSummarySubmittedProperties {
    * ]
    * ```
    */
-  tokens?: any[]
+  tokens?: any[];
 }
 
 export interface SwapAssetFromChangedProperties {
@@ -266,7 +262,7 @@ export interface SwapAssetFromChangedProperties {
    *   },
    * \]
    */
-  from_asset: any[]
+  from_asset: any[];
 }
 
 export interface SwapAssetToChangedProperties {
@@ -277,7 +273,7 @@ export interface SwapAssetToChangedProperties {
    * Asset Ticker
    * Policy ID
    */
-  to_asset: any[]
+  to_asset: any[];
 }
 
 export interface SwapCancelationSubmittedProperties {
@@ -288,7 +284,7 @@ export interface SwapCancelationSubmittedProperties {
    * |---|---|
    * | Type | number |
    */
-  from_amount: number
+  from_amount: number;
   /**
    * Displaying the asset that the user chose to trade with.
    *
@@ -305,11 +301,11 @@ export interface SwapCancelationSubmittedProperties {
    * |---|---|
    * | Unique Items | null |
    */
-  from_asset: any[]
+  from_asset: any[];
   /**
    * The name of liquidity pool used for this swap transaction
    */
-  pool_source: string
+  pool_source: string;
   /**
    * The amount of asset that the user is swapping to
    *
@@ -317,7 +313,7 @@ export interface SwapCancelationSubmittedProperties {
    * |---|---|
    * | Type | number |
    */
-  to_amount: number
+  to_amount: number;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -329,7 +325,7 @@ export interface SwapCancelationSubmittedProperties {
    * |---|---|
    * | Unique Items | null |
    */
-  to_asset: any[]
+  to_asset: any[];
 }
 
 export interface SwapConfirmedPageViewedProperties {
@@ -340,7 +336,7 @@ export interface SwapConfirmedPageViewedProperties {
    * |---|---|
    * | Enum Values | Open Orders, Completed Orders |
    */
-  swap_tab: 'Open Orders' | 'Completed Orders'
+  swap_tab: "Open Orders" | "Completed Orders";
 }
 
 export interface SwapInitiatedProperties {
@@ -360,7 +356,7 @@ export interface SwapInitiatedProperties {
    * |---|---|
    * | Unique Items | null |
    */
-  from_asset: any[]
+  from_asset: any[];
   /**
    * The type of order selected on a given transaction
    *
@@ -368,7 +364,7 @@ export interface SwapInitiatedProperties {
    * |---|---|
    * | Enum Values | limit, market |
    */
-  order_type: 'limit' | 'market'
+  order_type: "limit" | "market";
   /**
    * The default slippage tolerance is 1%, but users are free to change the slippage.
    *
@@ -376,7 +372,7 @@ export interface SwapInitiatedProperties {
    * |---|---|
    * | Type | number |
    */
-  slippage_tolerance: number
+  slippage_tolerance: number;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -388,14 +384,14 @@ export interface SwapInitiatedProperties {
    * |---|---|
    * | Unique Items | null |
    */
-  to_asset: any[]
+  to_asset: any[];
 }
 
 export interface SwapOrderSelectedProperties {
   /**
    * The amount of asset that the user is swapping from
    */
-  from_amount: string
+  from_amount: string;
   /**
    * Displaying the asset that the user chose to trade with.
    *
@@ -408,7 +404,7 @@ export interface SwapOrderSelectedProperties {
    *   },
    * \]
    */
-  from_asset: any[]
+  from_asset: any[];
   /**
    * The type of order selected on a given transaction
    *
@@ -416,11 +412,11 @@ export interface SwapOrderSelectedProperties {
    * |---|---|
    * | Enum Values | limit, market |
    */
-  order_type: 'limit' | 'market'
+  order_type: "limit" | "market";
   /**
    * The name of liquidity pool used for this swap transaction
    */
-  pool_source: string
+  pool_source: string;
   /**
    * The default slippage tolerance is 1%, but users are free to change the slippage.
    *
@@ -428,7 +424,7 @@ export interface SwapOrderSelectedProperties {
    * |---|---|
    * | Type | number |
    */
-  slippage_tolerance: number
+  slippage_tolerance: number;
   /**
    * The amount of fees charged on the transaction. The value is in ADA.
    *
@@ -436,11 +432,11 @@ export interface SwapOrderSelectedProperties {
    * |---|---|
    * | Type | number |
    */
-  swap_fees: number
+  swap_fees: number;
   /**
    * The amount of asset that the user is swapping to
    */
-  to_amount: string
+  to_amount: string;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -448,14 +444,14 @@ export interface SwapOrderSelectedProperties {
    * Asset Ticker
    * Policy ID
    */
-  to_asset: any[]
+  to_asset: any[];
 }
 
 export interface SwapOrderSubmittedProperties {
   /**
    * The amount of asset that the user is swapping from
    */
-  from_amount: string
+  from_amount: string;
   /**
    * Displaying the asset that the user chose to trade with.
    *
@@ -468,7 +464,7 @@ export interface SwapOrderSubmittedProperties {
    *   },
    * \]
    */
-  from_asset: any[]
+  from_asset: any[];
   /**
    * The type of order selected on a given transaction
    *
@@ -476,11 +472,11 @@ export interface SwapOrderSubmittedProperties {
    * |---|---|
    * | Enum Values | limit, market |
    */
-  order_type: 'limit' | 'market'
+  order_type: "limit" | "market";
   /**
    * The name of liquidity pool used for this swap transaction
    */
-  pool_source: string
+  pool_source: string;
   /**
    * The default slippage tolerance is 1%, but users are free to change the slippage.
    *
@@ -488,7 +484,7 @@ export interface SwapOrderSubmittedProperties {
    * |---|---|
    * | Type | number |
    */
-  slippage_tolerance: number
+  slippage_tolerance: number;
   /**
    * The amount of fees charged on the transaction. The value is in ADA.
    *
@@ -496,11 +492,11 @@ export interface SwapOrderSubmittedProperties {
    * |---|---|
    * | Type | number |
    */
-  swap_fees: number
+  swap_fees: number;
   /**
    * The amount of asset that the user is swapping to
    */
-  to_amount: string
+  to_amount: string;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -508,7 +504,7 @@ export interface SwapOrderSubmittedProperties {
    * Asset Ticker
    * Policy ID
    */
-  to_asset: any[]
+  to_asset: any[];
 }
 
 export interface SwapSlippageChangedProperties {
@@ -519,7 +515,7 @@ export interface SwapSlippageChangedProperties {
    * |---|---|
    * | Type | number |
    */
-  slippage_tolerance: number
+  slippage_tolerance: number;
 }
 
 export interface SendProperties {
@@ -530,7 +526,7 @@ export interface SendProperties {
    * |---|---|
    * | Type | number |
    */
-  asset_count: number
+  asset_count: number;
   /**
    * ```
    * nfts: [
@@ -544,7 +540,7 @@ export interface SendProperties {
    * ]
    * ```
    */
-  nfts?: any[]
+  nfts?: any[];
   /**
    * ```
    * Tokens: [
@@ -559,14 +555,14 @@ export interface SendProperties {
    * ]
    * ```
    */
-  tokens?: any[]
+  tokens?: any[];
 }
 
 export interface SwapProperties {
   /**
    * The amount of asset that the user is swapping from
    */
-  from_amount: string
+  from_amount: string;
   /**
    * Displaying the asset that the user chose to trade with.
    *
@@ -579,7 +575,7 @@ export interface SwapProperties {
    *   },
    * \]
    */
-  from_asset: any[]
+  from_asset: any[];
   /**
    * The type of order selected on a given transaction
    *
@@ -587,11 +583,11 @@ export interface SwapProperties {
    * |---|---|
    * | Enum Values | limit, market |
    */
-  order_type: 'limit' | 'market'
+  order_type: "limit" | "market";
   /**
    * The name of liquidity pool used for this swap transaction
    */
-  pool_source: string
+  pool_source: string;
   /**
    * The default slippage tolerance is 1%, but users are free to change the slippage.
    *
@@ -599,7 +595,7 @@ export interface SwapProperties {
    * |---|---|
    * | Type | number |
    */
-  slippage_tolerance: number
+  slippage_tolerance: number;
   /**
    * The amount of fees charged on the transaction. The value is in ADA.
    *
@@ -607,11 +603,11 @@ export interface SwapProperties {
    * |---|---|
    * | Type | number |
    */
-  swap_fees: number
+  swap_fees: number;
   /**
    * The amount of asset that the user is swapping to
    */
-  to_amount: string
+  to_amount: string;
   /**
    * Displaying the asset that the user chose to trade to
    *
@@ -619,204 +615,234 @@ export interface SwapProperties {
    * Asset Ticker
    * Policy ID
    */
-  to_asset: any[]
+  to_asset: any[];
 }
 
 export class AllWalletsPageViewed implements BaseEvent {
-  event_type = 'All Wallets Page Viewed'
+  event_type = 'All Wallets Page Viewed';
 }
 
 export class AssetsPageViewed implements BaseEvent {
-  event_type = 'Assets Page Viewed'
+  event_type = 'Assets Page Viewed';
 }
 
 export class ClaimAdaPageViewed implements BaseEvent {
-  event_type = 'Claim ADA Page Viewed'
+  event_type = 'Claim ADA Page Viewed';
 }
 
 export class ConnectorPageViewed implements BaseEvent {
-  event_type = 'Connector Page Viewed'
+  event_type = 'Connector Page Viewed';
 }
 
 export class MenuPageViewed implements BaseEvent {
-  event_type = 'Menu Page Viewed'
+  event_type = 'Menu Page Viewed';
 }
 
 export class NftGalleryDetailsImageViewed implements BaseEvent {
-  event_type = 'NFT Gallery Details Image Viewed'
+  event_type = 'NFT Gallery Details Image Viewed';
 }
 
 export class NftGalleryDetailsPageViewed implements BaseEvent {
-  event_type = 'NFT Gallery Details Page Viewed'
+  event_type = 'NFT Gallery Details Page Viewed';
 }
 
 export class NftGalleryDetailsTab implements BaseEvent {
-  event_type = 'NFT Gallery Details Tab'
+  event_type = 'NFT Gallery Details Tab';
 
-  constructor(public event_properties: NftGalleryDetailsTabProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: NftGalleryDetailsTabProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class NftGalleryPageViewed implements BaseEvent {
-  event_type = 'NFT Gallery Page Viewed'
+  event_type = 'NFT Gallery Page Viewed';
 
-  constructor(public event_properties: NftGalleryPageViewedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: NftGalleryPageViewedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class NftGallerySearchActivated implements BaseEvent {
-  event_type = 'NFT Gallery Search Activated'
+  event_type = 'NFT Gallery Search Activated';
 
-  constructor(public event_properties: NftGallerySearchActivatedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: NftGallerySearchActivatedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class ReceivePageViewed implements BaseEvent {
-  event_type = 'Receive Page Viewed'
+  event_type = 'Receive Page Viewed';
 }
 
 export class SendInitiated implements BaseEvent {
-  event_type = 'Send Initiated'
+  event_type = 'Send Initiated';
 }
 
 export class SendSelectAssetPageViewed implements BaseEvent {
-  event_type = 'Send Select Asset Page Viewed'
+  event_type = 'Send Select Asset Page Viewed';
 }
 
 export class SendSelectAssetSelected implements BaseEvent {
-  event_type = 'Send Select Asset Selected'
+  event_type = 'Send Select Asset Selected';
 
-  constructor(public event_properties: SendSelectAssetSelectedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SendSelectAssetSelectedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SendSelectAssetUpdated implements BaseEvent {
-  event_type = 'Send Select Asset Updated'
+  event_type = 'Send Select Asset Updated';
 
-  constructor(public event_properties: SendSelectAssetUpdatedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SendSelectAssetUpdatedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SendSummaryPageViewed implements BaseEvent {
-  event_type = 'Send Summary Page Viewed'
+  event_type = 'Send Summary Page Viewed';
 
-  constructor(public event_properties: SendSummaryPageViewedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SendSummaryPageViewedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SendSummarySubmitted implements BaseEvent {
-  event_type = 'Send Summary Submitted'
+  event_type = 'Send Summary Submitted';
 
-  constructor(public event_properties: SendSummarySubmittedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SendSummarySubmittedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SettingsPageViewed implements BaseEvent {
-  event_type = 'Settings Page Viewed'
+  event_type = 'Settings Page Viewed';
 }
 
 export class StakingCenterPageViewed implements BaseEvent {
-  event_type = 'Staking Center Page Viewed'
+  event_type = 'Staking Center Page Viewed';
 }
 
 export class SwapAssetFromChanged implements BaseEvent {
-  event_type = 'Swap Asset From Changed'
+  event_type = 'Swap Asset From Changed';
 
-  constructor(public event_properties: SwapAssetFromChangedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapAssetFromChangedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapAssetToChanged implements BaseEvent {
-  event_type = 'Swap Asset To Changed'
+  event_type = 'Swap Asset To Changed';
 
-  constructor(public event_properties: SwapAssetToChangedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapAssetToChangedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapCancelationSubmitted implements BaseEvent {
-  event_type = 'Swap Cancelation Submitted'
+  event_type = 'Swap Cancelation Submitted';
 
-  constructor(public event_properties: SwapCancelationSubmittedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapCancelationSubmittedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapConfirmedPageViewed implements BaseEvent {
-  event_type = 'Swap Confirmed  Page Viewed'
+  event_type = 'Swap Confirmed  Page Viewed';
 
-  constructor(public event_properties: SwapConfirmedPageViewedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapConfirmedPageViewedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapInitiated implements BaseEvent {
-  event_type = 'Swap Initiated'
+  event_type = 'Swap Initiated';
 
-  constructor(public event_properties: SwapInitiatedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapInitiatedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapOrderSelected implements BaseEvent {
-  event_type = 'Swap Order Selected'
+  event_type = 'Swap Order Selected';
 
-  constructor(public event_properties: SwapOrderSelectedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapOrderSelectedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapOrderSubmitted implements BaseEvent {
-  event_type = 'Swap Order Submitted'
+  event_type = 'Swap Order Submitted';
 
-  constructor(public event_properties: SwapOrderSubmittedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapOrderSubmittedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class SwapPoolChanged implements BaseEvent {
-  event_type = 'Swap Pool Changed'
+  event_type = 'Swap Pool Changed';
 }
 
 export class SwapSlippageChanged implements BaseEvent {
-  event_type = 'Swap Slippage Changed'
+  event_type = 'Swap Slippage Changed';
 
-  constructor(public event_properties: SwapSlippageChangedProperties) {
-    this.event_properties = event_properties
+  constructor(
+    public event_properties: SwapSlippageChangedProperties,
+  ) {
+    this.event_properties = event_properties;
   }
 }
 
 export class TransactionsPageViewed implements BaseEvent {
-  event_type = 'Transactions Page Viewed'
+  event_type = 'Transactions Page Viewed';
 }
 
 export class VotingPageViewed implements BaseEvent {
-  event_type = 'Voting Page Viewed'
+  event_type = 'Voting Page Viewed';
 }
 
 export class WalletPageExchangeBottomSheetClicked implements BaseEvent {
-  event_type = 'Wallet Page Exchange Bottom Sheet Clicked'
+  event_type = 'Wallet Page Exchange Bottom Sheet Clicked';
 }
 
 export class WalletPageExchangeClicked implements BaseEvent {
-  event_type = 'Wallet Page Exchange Clicked'
+  event_type = 'Wallet Page Exchange Clicked';
 }
 
 export class WalletPageViewed implements BaseEvent {
-  event_type = 'Wallet Page Viewed'
+  event_type = 'Wallet Page Viewed';
 }
 
-export type PromiseResult<T> = {promise: Promise<T | void>}
+export type PromiseResult<T> = { promise: Promise<T | void> };
 
-const getVoidPromiseResult = () => ({promise: Promise.resolve()})
+const getVoidPromiseResult = () => ({ promise: Promise.resolve() });
 
 // prettier-ignore
 export class Ampli {
@@ -1470,4 +1496,4 @@ export class Ampli {
   }
 }
 
-export const ampli = new Ampli()
+export const ampli = new Ampli();
