@@ -277,7 +277,6 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
         break
 
       case SwapFormActionType.LimitPriceInputValueChanged:
-        console.log(SwapFormActionType.LimitPriceInputValueChanged, action.value)
         draft.limitPrice.displayValue = action.value
 
         break
