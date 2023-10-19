@@ -38,7 +38,7 @@ export const makeOrderCalculations = ({
   const maybeLimitPrice = isLimit ? limitPrice : undefined
 
   if (!discountTiers || discountTiers.length === 0) {
-    throw new Error('discountTiers is undefined')
+    throw new Error('discountTiers is empty')
   }
 
   const calculations = pools.map<SwapOrderCalculation>((pool) => {
