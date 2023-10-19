@@ -17,10 +17,10 @@
   resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.3.1.tgz#abfccb8ca78075a2b6187345c26243c1a0842f28"
   integrity sha512-/62yikz7NLScCGAAST5SHdnjaDJQBDq0M2muyRTpf2VQhw6StBg2ALiu73zSJQ4fMVLA+0uBhBHAle7Wg+2kSg==
 
-"@amplitude/ampli@^1.32.0":
-  version "1.32.0"
-  resolved "https://registry.yarnpkg.com/@amplitude/ampli/-/ampli-1.32.0.tgz#f0175c3f6e5423609b0dab92a748f6ceac1d9381"
-  integrity sha512-mpSB0AP2xJbcGrJiOSRS9pq6sEXd9pn0coCv3toHItvcgzv7SY/8FaUDF67cSo9II5Y4tlHWhC0ZEEMT9Pzy+w==
+"@amplitude/ampli@^1.34.0":
+  version "1.34.0"
+  resolved "https://registry.yarnpkg.com/@amplitude/ampli/-/ampli-1.34.0.tgz#878bdeddc392ff24d707f8137834f9213098dd8e"
+  integrity sha512-44cZJeZahoDy3UEdHczVbNaVFNZ+Uk/XZMcjan6Qpliq0/P75sUpjUyei0uMKcI5hwEbsrzNEqYJTokf3o7kRA==
   dependencies:
     "@amplitude/identify" "^1.10.0"
     "@amplitude/node" "^1.10.0"
