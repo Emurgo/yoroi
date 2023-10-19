@@ -185,5 +185,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 16,
     lineHeight: 24,
+    color: '#242838',
   },
 })
