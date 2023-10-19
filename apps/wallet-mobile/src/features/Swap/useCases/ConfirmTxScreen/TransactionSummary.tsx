@@ -94,7 +94,7 @@ export const TransactionSummary = () => {
                       openModal(
                         orderInfo.label,
                         <View style={styles.modalContent}>
-                          <Text>{orderInfo.info}</Text>
+                          <Text style={styles.modalText}>{orderInfo.info}</Text>
 
                           <Spacer fill />
 
@@ -179,5 +179,11 @@ const styles = StyleSheet.create({
   modalContent: {
     justifyContent: 'space-between',
     flex: 1,
+  },
+  modalText: {
+    fontFamily: 'Rubik',
+    fontWeight: '400',
+    fontSize: 16,
+    lineHeight: 24,
   },
 })
