@@ -3,7 +3,7 @@ module.exports = {
   testRunner: {
     args: {
       '$0': 'jest',
-      config: 'e2e/jest.config.js'
+      config: 'jest.config.js'
     },
     jest: {
       setupTimeout: 120000
@@ -12,39 +12,39 @@ module.exports = {
   apps: {
     'ios.yoroi.debug': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/yoroi.app',
-      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme yoroi -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+      binaryPath: '../../apps/wallet-mobile/ios/build/Build/Products/Debug-iphonesimulator/yoroi.app',
+      build: 'cd ../../apps/wallet-mobile/ && xcodebuild -workspace ios/yoroi.xcworkspace -scheme yoroi -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'ios.nightly.debug': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/nightly.app',
-      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme nightly -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+      binaryPath: '../../apps/wallet-mobile/ios/build/Build/Products/Debug-iphonesimulator/nightly.app',
+      build: 'cd ../../apps/wallet-mobile/ &&  xcodebuild -workspace ios/yoroi.xcworkspace -scheme nightly -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'ios.nightly.release': {
       type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Release-iphonesimulator/nightly.app',
-      build: 'xcodebuild -workspace ios/yoroi.xcworkspace -scheme nightly -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
+      binaryPath: '../../apps/wallet-mobile/ios/build/Build/Products/Release-iphonesimulator/nightly.app',
+      build: 'cd ../../apps/wallet-mobile/ && xcodebuild -workspace ios/yoroi.xcworkspace -scheme nightly -configuration Release -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'android.dev.debug': {
       type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/dev/debug/app-dev-debug.apk',
-      build: 'ENVFILE=.env cd android && ./gradlew assembleDevDebug assembleDevDebugAndroidTest -DtestBuildType=debug',
+      binaryPath: '../../apps/wallet-mobile/android/app/build/outputs/apk/dev/debug/app-dev-debug.apk',
+      build: 'ENVFILE=.env cd ../../apps/wallet-mobile/android && ./gradlew assembleDevDebug assembleDevDebugAndroidTest -DtestBuildType=debug',
       reversePorts: [
         8081
       ]
     },    
     'android.nightly.debug': {
       type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/nightly/debug/app-nightly-debug.apk',
-      build: 'ENVFILE=.env.nightly cd android && ./gradlew assembleNightlyDebug assembleNightlyDebugAndroidTest -DtestBuildType=debug',
+      binaryPath: '../../apps/wallet-mobile/android/app/build/outputs/apk/nightly/debug/app-nightly-debug.apk',
+      build: 'ENVFILE=.env.nightly  cd ../../apps/wallet-mobile/android && ./gradlew assembleNightlyDebug assembleNightlyDebugAndroidTest -DtestBuildType=debug',
       reversePorts: [
         8081
       ]
     },
     'android.nightly.release': {
       type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/nightly/release/app-nightly-release.apk',
-      build: 'ENVFILE=.env.nightly cd android && ./gradlew assembleNightlyRelease assembleNightlyReleaseAndroidTest -DtestBuildType=release',
+      binaryPath: '../../apps/wallet-mobile/android/app/build/outputs/apk/nightly/release/app-nightly-release.apk',
+      build: 'ENVFILE=.env.nightly cd ../../apps/wallet-mobile/android && ./gradlew assembleNightlyRelease assembleNightlyReleaseAndroidTest -DtestBuildType=release',
       reversePorts: [
         8081
       ]
@@ -66,7 +66,7 @@ module.exports = {
     emulator: {
       type: 'android.emulator',
       device: {
-        avdName: 'Pixel_3_e2e'
+        avdName: 'Pixel_6' // Make sure to use API level 31 while creating emulator on Android Studio 
       }
     }
   },
