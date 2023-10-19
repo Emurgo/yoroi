@@ -4,9 +4,8 @@ import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Icon, Spacer, Text} from '../../../../components'
+import {Icon, Spacer, Text, useModal} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
-import {BottomSheetModal} from '../../../../legacy/BottomSheetModal'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
@@ -16,15 +15,11 @@ import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
 
 export const TransactionSummary = () => {
-  const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
-    isOpen: false,
-    title: '',
-    content: '',
-  })
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {orderData} = useSwap()
   const {amounts, selectedPoolCalculation} = orderData
+  const {openModal} = useModal()
 
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
@@ -67,75 +62,59 @@ export const TransactionSummary = () => {
 
   return (
     <View>
-      <View>
-        <View style={styles.card}>
-          <Text style={styles.cardText}>{strings.total}</Text>
+      <View style={styles.card}>
+        <Text style={styles.cardText}>{strings.total}</Text>
 
-          <View>
-            <Text style={[styles.cardText, styles.cardTextValue]}>{label}</Text>
+        <View>
+          <Text style={[styles.cardText, styles.cardTextValue]}>{label}</Text>
 
-            <Spacer height={6} />
+          <Spacer height={6} />
 
-            <Text style={styles.cardTextUSD}></Text>
-          </View>
+          <Text style={styles.cardTextUSD}></Text>
         </View>
-
-        <Spacer height={24} />
-
-        {feesInfo.map((orderInfo) => {
-          return (
-            <View key={orderInfo.label}>
-              <Spacer height={8} />
-
-              <View style={styles.flexBetween}>
-                <View style={styles.flex}>
-                  <Text style={[styles.text, styles.gray]}>{orderInfo.label}</Text>
-
-                  <Spacer width={8} />
-
-                  {orderInfo.info != undefined && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        setBottomSheetSate({
-                          isOpen: true,
-                          title: orderInfo.label,
-                          content: orderInfo.info,
-                        })
-                      }}
-                    >
-                      <Icon.Info size={24} />
-                    </TouchableOpacity>
-                  )}
-                </View>
-
-                <Text style={styles.text}>{orderInfo.value}</Text>
-              </View>
-            </View>
-          )
-        })}
-
-        <Spacer height={24} />
-
-        <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
-
-        <AmountItem wallet={wallet} amount={{tokenId: amounts.sell.tokenId, quantity: amounts.sell.quantity}} />
-
-        <Spacer height={16} />
-
-        <Text style={styles.amountItemLabel}>{strings.swapTo}</Text>
-
-        <AmountItem wallet={wallet} amount={{tokenId: amounts.buy.tokenId, quantity: amounts.buy.quantity}} />
       </View>
 
-      <BottomSheetModal
-        isOpen={bottomSheetState.isOpen}
-        title={bottomSheetState.title}
-        onClose={() => {
-          setBottomSheetSate({isOpen: false, title: '', content: ''})
-        }}
-      >
-        <Text style={styles.text}>{bottomSheetState.content}</Text>
-      </BottomSheetModal>
+      <Spacer height={24} />
+
+      {feesInfo.map((orderInfo) => {
+        return (
+          <View key={orderInfo.label}>
+            <Spacer height={8} />
+
+            <View style={styles.flexBetween}>
+              <View style={styles.flex}>
+                <Text style={[styles.text, styles.gray]}>{orderInfo.label}</Text>
+
+                <Spacer width={8} />
+
+                {orderInfo.info != undefined && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      openModal(orderInfo.label, <Text>{orderInfo.info}</Text>)
+                    }}
+                  >
+                    <Icon.Info size={24} />
+                  </TouchableOpacity>
+                )}
+              </View>
+
+              <Text style={styles.text}>{orderInfo.value}</Text>
+            </View>
+          </View>
+        )
+      })}
+
+      <Spacer height={24} />
+
+      <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
+
+      <AmountItem wallet={wallet} amount={{tokenId: amounts.sell.tokenId, quantity: amounts.sell.quantity}} />
+
+      <Spacer height={16} />
+
+      <Text style={styles.amountItemLabel}>{strings.swapTo}</Text>
+
+      <AmountItem wallet={wallet} amount={{tokenId: amounts.buy.tokenId, quantity: amounts.buy.quantity}} />
     </View>
   )
 }
