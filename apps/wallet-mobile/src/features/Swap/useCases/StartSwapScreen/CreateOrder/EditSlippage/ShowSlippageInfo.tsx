@@ -37,9 +37,10 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_INPUT,
   },
   sheetContent: {
-    fontSize: 16,
-    color: '#242838',
-    lineHeight: 24,
+    fontFamily: 'Rubik',
     fontWeight: '400',
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#242838',
   },
 })
