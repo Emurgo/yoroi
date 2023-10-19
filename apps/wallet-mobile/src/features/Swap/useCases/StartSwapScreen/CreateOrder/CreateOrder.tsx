@@ -5,7 +5,7 @@ import * as React from 'react'
 import {Alert, KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, Spacer} from '../../../../../components'
+import {Button, Spacer, useModal} from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
@@ -37,6 +37,7 @@ export const CreateOrder = () => {
   const {track} = useMetrics()
   const {isBuyTouched, isSellTouched, poolDefaulted} = useSwapTouched()
   const [sellBackendError, setSellBackendError] = React.useState('')
+  const {openModal, closeModal} = useModal()
 
   useSwapPoolsByPair(
     {
@@ -59,7 +60,6 @@ export const CreateOrder = () => {
     wallet,
     tokenId: orderData.amounts.buy.tokenId,
   })
-  const [showLimitPriceWarning, setShowLimitPriceWarning] = React.useState(false)
 
   React.useEffect(() => {
     if (orderData.selectedPoolId === orderData.bestPoolCalculation?.pool.poolId) poolDefaulted()
@@ -69,7 +69,7 @@ export const CreateOrder = () => {
     onSuccess: (yoroiUnsignedTx) => {
       unsignedTxChanged(yoroiUnsignedTx)
       swap()
-      setShowLimitPriceWarning(false)
+      closeModal()
     },
     onError: (error) => {
       if (error instanceof NotEnoughMoneyToSendError) {
@@ -194,7 +194,7 @@ export const CreateOrder = () => {
       const limitPrice = new BigNumber(orderData.limitPrice)
 
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
-        setShowLimitPriceWarning(true)
+        openModal(strings.limitPriceWarningTitle, <LimitPriceWarning onSubmit={createUnsignedSwapTx} />)
         return
       }
     }
@@ -211,12 +211,6 @@ export const CreateOrder = () => {
       >
         <ScrollView style={styles.scroll}>
           <View style={styles.container}>
-            <LimitPriceWarning
-              open={showLimitPriceWarning}
-              onClose={() => setShowLimitPriceWarning(false)}
-              onSubmit={createUnsignedSwapTx}
-            />
-
             <TopTokenActions />
 
             <EditSellAmount error={sellError} />
