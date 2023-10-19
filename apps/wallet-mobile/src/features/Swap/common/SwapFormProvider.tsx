@@ -153,7 +153,7 @@ export const SwapFormProvider = ({
       actions.limitPriceInputValueChanged(
         Quantities.format(orderData.limitPrice ?? Quantities.zero, denomination, PRECISION),
       )
-    } else {
+    } else if (orderData.type === 'market') {
       actions.limitPriceInputValueChanged(
         Quantities.format(orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero, denomination, PRECISION),
       )
