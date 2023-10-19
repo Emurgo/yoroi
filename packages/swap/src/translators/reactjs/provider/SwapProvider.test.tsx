@@ -7,6 +7,7 @@ import {mockSwapManager, swapManagerMocks} from '../../../manager.mocks'
 import {SwapState, defaultSwapState} from '../state/state'
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {useSwap} from '../hooks/useSwap'
+import {mocks} from '../../../helpers/mocks'
 
 describe('SwapProvider', () => {
   let queryClient: QueryClient
@@ -23,7 +24,18 @@ describe('SwapProvider', () => {
   it('OrderTypeChanged', () => {
     const wrapper = ({children}: any) => (
       <QueryClientProvider client={queryClient}>
-        <SwapProvider swapManager={mockSwapManager}>{children}</SwapProvider>
+        <SwapProvider
+          swapManager={mockSwapManager}
+          initialState={{
+            ...defaultSwapState,
+            orderData: {
+              ...defaultSwapState.orderData,
+              discountTiers: mocks.mockedDiscountTiers,
+            },
+          }}
+        >
+          {children}
+        </SwapProvider>
       </QueryClientProvider>
     )
 
@@ -41,7 +53,18 @@ describe('SwapProvider', () => {
   it('SelectedPoolChanged', () => {
     const wrapper = ({children}: any) => (
       <QueryClientProvider client={queryClient}>
-        <SwapProvider swapManager={mockSwapManager}>{children}</SwapProvider>
+        <SwapProvider
+          swapManager={mockSwapManager}
+          initialState={{
+            ...defaultSwapState,
+            orderData: {
+              ...defaultSwapState.orderData,
+              discountTiers: mocks.mockedDiscountTiers,
+            },
+          }}
+        >
+          {children}
+        </SwapProvider>
       </QueryClientProvider>
     )
 
@@ -76,7 +99,18 @@ describe('SwapProvider', () => {
   it('SlippageChanged', () => {
     const wrapper = ({children}: any) => (
       <QueryClientProvider client={queryClient}>
-        <SwapProvider swapManager={mockSwapManager}>{children}</SwapProvider>
+        <SwapProvider
+          swapManager={mockSwapManager}
+          initialState={{
+            ...defaultSwapState,
+            orderData: {
+              ...defaultSwapState.orderData,
+              discountTiers: mocks.mockedDiscountTiers,
+            },
+          }}
+        >
+          {children}
+        </SwapProvider>
       </QueryClientProvider>
     )
 
@@ -94,7 +128,18 @@ describe('SwapProvider', () => {
   it('UnsignedTxChanged', () => {
     const wrapper = ({children}: any) => (
       <QueryClientProvider client={queryClient}>
-        <SwapProvider swapManager={mockSwapManager}>{children}</SwapProvider>
+        <SwapProvider
+          swapManager={mockSwapManager}
+          initialState={{
+            ...defaultSwapState,
+            orderData: {
+              ...defaultSwapState.orderData,
+              discountTiers: mocks.mockedDiscountTiers,
+            },
+          }}
+        >
+          {children}
+        </SwapProvider>
       </QueryClientProvider>
     )
 
@@ -114,7 +159,18 @@ describe('SwapProvider', () => {
   it('LimitPriceChanged', () => {
     const wrapper = ({children}: any) => (
       <QueryClientProvider client={queryClient}>
-        <SwapProvider swapManager={mockSwapManager}>{children}</SwapProvider>
+        <SwapProvider
+          swapManager={mockSwapManager}
+          initialState={{
+            ...defaultSwapState,
+            orderData: {
+              ...defaultSwapState.orderData,
+              discountTiers: mocks.mockedDiscountTiers,
+            },
+          }}
+        >
+          {children}
+        </SwapProvider>
       </QueryClientProvider>
     )
 
@@ -133,6 +189,7 @@ describe('SwapProvider', () => {
     const initialState: SwapState = {
       orderData: {
         ...defaultSwapState.orderData,
+        discountTiers: mocks.mockedDiscountTiers,
         amounts: {
           sell: {
             quantity: '10',
@@ -180,6 +237,7 @@ describe('SwapProvider', () => {
         ...defaultSwapState.orderData,
         type: 'limit',
         limitPrice: '2',
+        discountTiers: mocks.mockedDiscountTiers,
         amounts: {
           sell: {
             quantity: '10',
@@ -240,6 +298,7 @@ describe('SwapProvider', () => {
     const initiState: SwapState = {
       orderData: {
         ...defaultSwapState.orderData,
+        discountTiers: mocks.mockedDiscountTiers,
         amounts: {
           sell: {
             quantity: '1',
@@ -287,6 +346,7 @@ describe('SwapProvider', () => {
     const initialState: SwapState = {
       orderData: {
         ...defaultSwapState.orderData,
+        discountTiers: mocks.mockedDiscountTiers,
         amounts: {
           sell: {
             quantity: '1',
