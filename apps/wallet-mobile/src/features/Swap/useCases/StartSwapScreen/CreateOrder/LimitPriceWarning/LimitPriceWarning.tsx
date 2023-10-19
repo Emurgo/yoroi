@@ -33,7 +33,7 @@ export const LimitPriceWarning = ({onSubmit}: LimitPriceWarningProps) => {
   return (
     <View style={styles.container}>
       <View>
-        <Text>{strings.limitPriceWarningDescription}</Text>
+        <Text style={styles.description}>{strings.limitPriceWarningDescription}</Text>
 
         <Spacer height={16} />
 
@@ -128,5 +128,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 10,
+  },
+  description: {
+    fontFamily: 'Rubik',
+    fontWeight: '400',
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#242838',
   },
 })
