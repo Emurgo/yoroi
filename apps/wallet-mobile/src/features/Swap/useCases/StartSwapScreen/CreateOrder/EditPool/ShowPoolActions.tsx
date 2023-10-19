@@ -3,13 +3,7 @@ import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {
-  BottomSheetModal,
-  ExpandableInfoCard,
-  HeaderWrapper,
-  HiddenInfoWrapper,
-  Spacer,
-} from '../../../../../../components'
+import {ExpandableInfoCard, HeaderWrapper, HiddenInfoWrapper, Spacer, useModal} from '../../../../../../components'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../theme'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
@@ -133,13 +127,9 @@ const HiddenInfo = ({
   liquidityFee: string
   liquidityFeeValue: string
 }) => {
-  const [bottomSheetState, setBottomSheetSate] = React.useState<{isOpen: boolean; title: string; content?: string}>({
-    isOpen: false,
-    title: '',
-    content: '',
-  })
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const {openModal} = useModal()
 
   return (
     <View>
@@ -172,28 +162,21 @@ const HiddenInfo = ({
           label={item.label}
           info={item.info}
           onPress={() => {
-            setBottomSheetSate({
-              isOpen: true,
-              title: item.title ?? item.label,
-              content: item.info,
-            })
+            openModal(
+              item.title ?? item.label,
+              <View style={styles.modalContent}>
+                <Text style={styles.text}>{item.info}</Text>
+
+                <Spacer fill />
+
+                <SwapInfoLink />
+
+                <Spacer height={24} />
+              </View>,
+            )
           }}
         />
       ))}
-
-      <BottomSheetModal
-        isOpen={bottomSheetState.isOpen}
-        title={bottomSheetState.title}
-        onClose={() => {
-          setBottomSheetSate({isOpen: false, title: '', content: ''})
-        }}
-      >
-        <View style={styles.modalContent}>
-          <Text style={styles.text}>{bottomSheetState.content}</Text>
-
-          <SwapInfoLink />
-        </View>
-      </BottomSheetModal>
     </View>
   )
 }
@@ -203,15 +186,15 @@ const styles = StyleSheet.create({
   between: {justifyContent: 'space-between'},
   text: {
     textAlign: 'left',
+    fontFamily: 'Rubik',
+    fontWeight: '400',
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: '400',
     color: '#242838',
   },
   modalContent: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingBottom: 24,
   },
   change: {color: COLORS.SHELLEY_BLUE, fontWeight: '600', textTransform: 'uppercase'},
   bold: {

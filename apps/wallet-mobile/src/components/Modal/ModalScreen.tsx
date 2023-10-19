@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Rubik-Medium',
     fontSize: 20,
     padding: 16,
+    color: '#000',
   },
   header: {
     alignItems: 'center',
