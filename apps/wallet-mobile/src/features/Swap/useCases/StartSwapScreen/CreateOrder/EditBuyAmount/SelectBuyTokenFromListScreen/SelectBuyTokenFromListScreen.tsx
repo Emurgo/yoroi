@@ -98,7 +98,6 @@ const TokenList = () => {
           <Boundary loading={{fallback: <AmountItemPlaceholder style={styles.item} />}}>
             <SelectableToken
               token={token}
-              disabled={token.info.id !== wallet.primaryTokenInfo.id}
               wallet={wallet}
               walletTokenIds={walletTokenIds}
             />
