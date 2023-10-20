@@ -157,8 +157,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     },
   }
 
-  const appApi = AppApi.mockAppApi
-  // const api = AppApi.appApiMaker({baseUrl: API_ROOT})
+  const appApi = AppApi.appApiMaker({baseUrl: API_ROOT})
 
   return class ShelleyWallet implements YoroiWallet {
     readonly api: App.Api = appApi

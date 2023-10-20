@@ -71,13 +71,7 @@ export const TxHistoryNavigator = () => {
     [wallet.networkId, stakingKey, wallet.primaryTokenInfo.id],
   )
   const swapManager = React.useMemo(() => {
-    // const frontendFeeTiers = frontendFees?.[aggregator] ?? [] as const
-    const frontendFeeTiers: App.FrontendFeeTier[] = [{
-      fixedFee: '3000000',
-      primaryTokenValueThreshold: '0',
-      secondaryTokenBalanceThreshold: '0',
-      variableFeeMultiplier: 0.0,
-    }] as const
+    const frontendFeeTiers = frontendFees?.[aggregator] ?? [] as const
     return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
   }, [frontendFees, swapStorage, swapApi, aggregatorTokenId])
 
