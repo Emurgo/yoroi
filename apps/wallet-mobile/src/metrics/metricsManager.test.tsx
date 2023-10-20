@@ -70,6 +70,9 @@ const mockAmpli = {
   swapAssetFromChanged: jest.fn(),
   swapConfirmedPageViewed: jest.fn(),
   swapCancelationSubmitted: jest.fn(),
+
+  walletPageExchangeClicked: jest.fn(),
+  walletPageExchangeBottomSheetClicked: jest.fn(),
 } as unknown as Ampli
 
 const mockMetricsStorage = {
@@ -195,6 +198,9 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.swapAssetToChanged).toHaveBeenCalledWith({
       to_asset: [{asset_name: 'DOGE', asset_ticker: 'DOGE', policy_id: '65432'}],
     })
+
+    expect(mockAmpli.walletPageExchangeClicked).toHaveBeenCalled()
+    expect(mockAmpli.walletPageExchangeBottomSheetClicked).toHaveBeenCalled()
   })
 
   test('enable should set metrics enabled to true', async () => {
