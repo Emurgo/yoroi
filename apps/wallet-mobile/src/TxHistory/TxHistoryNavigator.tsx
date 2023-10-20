@@ -59,21 +59,17 @@ export const TxHistoryNavigator = () => {
   const {frontendFees} = useFrontendFees(wallet)
   const aggregatorTokenId = wallet.networkId !== 300 ? milkTokenId.mainnet : milkTokenId.preprod
   const stakingKey = useStakingKey(wallet)
-  const swapStorage = React.useMemo(() => swapStorageMaker(), [])
-  const swapApi = React.useMemo(
-    () =>
-      swapApiMaker({
-        isMainnet: wallet.networkId !== 300,
-        stakingKey,
-        primaryTokenId: wallet.primaryTokenInfo.id,
-        supportedProviders,
-      }),
-    [wallet.networkId, stakingKey, wallet.primaryTokenInfo.id],
-  )
   const swapManager = React.useMemo(() => {
+    const swapStorage = swapStorageMaker()
+    const swapApi = swapApiMaker({
+      isMainnet: wallet.networkId !== 300,
+      stakingKey,
+      primaryTokenId: wallet.primaryTokenInfo.id,
+      supportedProviders,
+    })
     const frontendFeeTiers = frontendFees?.[aggregator] ?? ([] as const)
     return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
-  }, [frontendFees, swapStorage, swapApi, aggregatorTokenId])
+  }, [wallet.networkId, wallet.primaryTokenInfo.id, stakingKey, frontendFees, aggregatorTokenId])
 
   return (
     <SendProvider key={wallet.id}>
