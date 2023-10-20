@@ -167,8 +167,9 @@ export const SwapFormProvider = ({
       actions.sellInputValueChanged(text === '' ? '' : input)
 
       if (sellError === undefined) actions.sellAmountErrorChanged(undefined)
+      if (buyError === undefined) actions.buyAmountErrorChanged(undefined)
     },
-    [actions, numberLocale, sellError, sellQuantityChanged, sellTokenInfo.decimals],
+    [actions, buyError, numberLocale, sellError, sellQuantityChanged, sellTokenInfo.decimals],
   )
 
   const onChangeBuyQuantity = React.useCallback(
@@ -178,8 +179,9 @@ export const SwapFormProvider = ({
       actions.buyInputValueChanged(text === '' ? '' : input)
 
       if (buyError === undefined) actions.buyAmountErrorChanged(undefined)
+      if (sellError === undefined) actions.sellAmountErrorChanged(undefined)
     },
-    [actions, buyError, buyQuantityChanged, buyTokenInfo.decimals, numberLocale],
+    [actions, buyError, buyQuantityChanged, buyTokenInfo.decimals, numberLocale, sellError],
   )
 
   const onChangeLimitPrice = React.useCallback(
@@ -187,8 +189,11 @@ export const SwapFormProvider = ({
       const [formattedPrice, price] = Quantities.parseFromText(text, denomination, numberLocale, PRECISION)
       actions.limitPriceInputValueChanged(formattedPrice)
       limitPriceChanged(price)
+
+      if (buyError === undefined) actions.buyAmountErrorChanged(undefined)
+      if (sellError === undefined) actions.sellAmountErrorChanged(undefined)
     },
-    [actions, denomination, limitPriceChanged, numberLocale],
+    [actions, buyError, denomination, limitPriceChanged, numberLocale, sellError],
   )
 
   React.useEffect(() => {
