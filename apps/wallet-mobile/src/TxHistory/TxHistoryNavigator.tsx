@@ -7,7 +7,7 @@ import {
   SwapProvider,
   swapStorageMaker,
 } from '@yoroi/swap'
-import {App, Swap} from '@yoroi/types'
+import {Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
