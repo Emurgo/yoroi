@@ -897,7 +897,7 @@ export const useBalances = (wallet: YoroiWallet): Balance.Amounts => {
 export const useBalance = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string | undefined}) => {
   const balances = useBalances(wallet)
 
-  if (!tokenId) return Quantities.zero
+  if (tokenId == null) return Quantities.zero
   return Amounts.getAmount(balances, tokenId).quantity
 }
 
