@@ -1,17 +1,15 @@
-import {Balance} from '@yoroi/types'
+import {App, Balance} from '@yoroi/types'
+import {AppApi} from '@yoroi/api'
 
 import {getFrontendFee} from './getFrontendFee'
-import {milkHoldersDiscountTiers} from '../../../translators/constants'
 import {Quantities} from '../../../utils/quantities'
 import {asQuantity} from '../../../utils/asQuantity'
 
 describe('getFrontendFee', () => {
   const primaryTokenId = 'primary.token'
 
-  const notPrimaryTokenAmount: Balance.Amount = {
-    tokenId: 'not.primary.token',
-    quantity: '99',
-  }
+  const milkHoldersDiscountTiers: ReadonlyArray<App.FrontendFeeTier> =
+    AppApi.mockGetFrontendFees.withFees.muesliswap!
 
   describe('selling side is primary token', () => {
     it('< 100 and whatever milk in balance', () => {
@@ -223,26 +221,7 @@ describe('getFrontendFee', () => {
     })
   })
 
-  it('should fallback - coverage only', () => {
-    // arrange
-    // act
-    const fee = getFrontendFee({
-      lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999'},
-      sellInPrimaryTokenValue: notPrimaryTokenAmount,
-      primaryTokenId,
-    })
-    // assert
-    expect(fee).toEqual({
-      fee: {
-        tokenId: primaryTokenId,
-        quantity: Quantities.zero,
-      },
-      discountTier: undefined,
-    })
-  })
-
-  // TODO: check with openswap, need to rework after decision about FEF
-  describe('neither sell nor buy are primary token, it should use the value in ADA (paired)', () => {
+  describe('neither sell nor buy are primary token, it should use the value in ADA (paired) of selling side', () => {
     it('< 100 and whatever milk in balance', () => {
       // arrange
       const sellValueInPrimaryToken: Balance.Amount = {

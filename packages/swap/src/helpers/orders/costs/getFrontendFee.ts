@@ -1,11 +1,7 @@
-import {Balance} from '@yoroi/types'
+import {App, Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
 import {Quantities} from '../../../utils/quantities'
-import {
-  SwapDiscountTier,
-  milkHoldersDiscountTiers,
-} from '../../../translators/constants'
 import {asQuantity} from '../../../utils/asQuantity'
 
 /**
@@ -22,15 +18,15 @@ export const getFrontendFee = ({
   lpTokenHeld,
   primaryTokenId,
   sellInPrimaryTokenValue,
-  discountTiers = milkHoldersDiscountTiers,
+  discountTiers,
 }: {
   primaryTokenId: Balance.TokenInfo['id']
   lpTokenHeld?: Balance.Amount
-  discountTiers?: ReadonlyArray<SwapDiscountTier>
+  discountTiers: ReadonlyArray<App.FrontendFeeTier>
   sellInPrimaryTokenValue: Balance.Amount
 }): Readonly<{
   fee: Balance.Amount
-  discountTier: SwapDiscountTier | undefined
+  discountTier: App.FrontendFeeTier | undefined
 }> => {
   // identify the discount
   const discountTier = discountTiers.find(
