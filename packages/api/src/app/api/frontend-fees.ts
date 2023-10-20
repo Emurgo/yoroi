@@ -6,7 +6,7 @@ export const getFrontendFees =
   (baseUrl: string, request: Fetcher = fetcher) =>
   async (): Promise<App.FrontendFeesResponse> => {
     return request<App.FrontendFeesResponse>({
-      url: `${baseUrl}/frontend-fee`,
+      url: `${baseUrl}/v2.1/swap/feesInfo`,
       data: undefined,
       method: 'GET',
       headers: {'Content-Type': 'application/json'},
