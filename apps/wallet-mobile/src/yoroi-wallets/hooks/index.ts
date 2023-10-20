@@ -2,7 +2,7 @@
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
 import {parseBoolean, useStorage} from '@yoroi/common'
-import {Balance} from '@yoroi/types'
+import {App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
@@ -613,6 +613,23 @@ export const useWalletNames = (
   }
 }
 
+export const useFrontendFees = (
+  wallet: YoroiWallet,
+  options?: UseQueryOptions<App.FrontendFeesResponse, Error, App.FrontendFeesResponse, [string, 'frontend-fees']>,
+) => {
+  const query = useQuery({
+    suspense: true,
+    queryKey: [wallet.id, 'frontend-fees'],
+    ...options,
+    queryFn: () => wallet.api.getFrontendFees(),
+  })
+
+  return {
+    ...query,
+    frontendFees: query.data,
+  }
+}
+
 export const useWalletMetas = (walletManager: WalletManager, options?: UseQueryOptions<Array<WalletMeta>, Error>) => {
   const query = useQuery({
     queryKey: ['walletMetas'],
@@ -877,9 +894,10 @@ export const useBalances = (wallet: YoroiWallet): Balance.Amounts => {
   return Utxos.toAmounts(utxos, wallet.primaryTokenInfo.id)
 }
 
-export const useBalance = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
+export const useBalance = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string | undefined}) => {
   const balances = useBalances(wallet)
 
+  if (tokenId == null) return Quantities.zero
   return Amounts.getAmount(balances, tokenId).quantity
 }
 

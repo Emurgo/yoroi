@@ -9,7 +9,7 @@
       "packages/types",
       "packages/openswap",
       "packages/common",
-      "packages/cardano",
+      "packages/api",
       "packages/*",
       "apps/*",
       "e2e/*"

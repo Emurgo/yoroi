@@ -76,7 +76,7 @@ export const CreateOrder = () => {
     },
     onError: (error) => {
       if (error instanceof NotEnoughMoneyToSendError) {
-        sellAmountErrorChanged(strings.notEnoughBalance)
+        sellAmountErrorChanged(strings.notEnoughFeeBalance)
         return
       }
 

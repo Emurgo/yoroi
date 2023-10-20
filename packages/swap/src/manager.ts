@@ -1,9 +1,18 @@
-import {Swap} from '@yoroi/types'
+import {App, Balance, Swap} from '@yoroi/types'
 
-export const swapManagerMaker = (
-  swapStorage: Swap.Storage,
-  swapApi: Swap.Api,
-): Readonly<Swap.Manager> => {
+export const swapManagerMaker = ({
+  swapStorage,
+  swapApi,
+  frontendFeeTiers,
+  aggregatorTokenId,
+  aggregator,
+}: {
+  swapStorage: Swap.Storage
+  swapApi: Swap.Api
+  frontendFeeTiers: ReadonlyArray<App.FrontendFeeTier>
+  aggregatorTokenId?: Balance.TokenInfo['id']
+  aggregator: Swap.Aggregator
+}): Readonly<Swap.Manager> => {
   const {clear: clearStorage, slippage} = swapStorage
   const {
     getPrice,
@@ -53,5 +62,8 @@ export const swapManagerMaker = (
     primaryTokenId,
     stakingKey,
     supportedProviders,
+    frontendFeeTiers,
+    aggregator,
+    aggregatorTokenId,
   } as const
 }

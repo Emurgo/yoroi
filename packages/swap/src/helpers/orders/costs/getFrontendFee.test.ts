@@ -1,17 +1,15 @@
-import {Balance} from '@yoroi/types'
+import {App, Balance} from '@yoroi/types'
+import {AppApi} from '@yoroi/api'
 
 import {getFrontendFee} from './getFrontendFee'
-import {milkHoldersDiscountTiers} from '../../../translators/constants'
 import {Quantities} from '../../../utils/quantities'
 import {asQuantity} from '../../../utils/asQuantity'
 
 describe('getFrontendFee', () => {
   const primaryTokenId = 'primary.token'
 
-  const notPrimaryTokenAmount: Balance.Amount = {
-    tokenId: 'not.primary.token',
-    quantity: '99',
-  }
+  const milkHoldersDiscountTiers: ReadonlyArray<App.FrontendFeeTier> =
+    AppApi.mockGetFrontendFees.withFees.muesliswap!
 
   describe('selling side is primary token', () => {
     it('< 100 and whatever milk in balance', () => {
@@ -25,7 +23,7 @@ describe('getFrontendFee', () => {
         lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999999'},
         sellInPrimaryTokenValue: sell,
         primaryTokenId,
-        discountTiers: milkHoldersDiscountTiers,
+        feeTiers: milkHoldersDiscountTiers,
       })
       // assert
       expect(fee).toEqual({
@@ -48,7 +46,7 @@ describe('getFrontendFee', () => {
         sellInPrimaryTokenValue: sellPrimaryAmountOver99,
         lpTokenHeld: {tokenId: 'lp.token', quantity: Quantities.zero},
         primaryTokenId,
-        discountTiers: milkHoldersDiscountTiers,
+        feeTiers: milkHoldersDiscountTiers,
       })
       // assert
       expect(fee).toEqual({
@@ -71,7 +69,7 @@ describe('getFrontendFee', () => {
         lpTokenHeld: {tokenId: 'lp.token', quantity: '499'},
         sellInPrimaryTokenValue: sellPrimaryAmountOver99,
         primaryTokenId,
-        discountTiers: milkHoldersDiscountTiers,
+        feeTiers: milkHoldersDiscountTiers,
       })
       // assert
       expect(fee).toEqual({
@@ -94,7 +92,7 @@ describe('getFrontendFee', () => {
         lpTokenHeld: {tokenId: 'lp.token', quantity: '500'},
         sellInPrimaryTokenValue: sellPrimaryAmountOver99,
         primaryTokenId,
-        discountTiers: milkHoldersDiscountTiers,
+        feeTiers: milkHoldersDiscountTiers,
       })
       // assert
       expect(fee).toEqual({
@@ -119,7 +117,7 @@ describe('getFrontendFee', () => {
         sellInPrimaryTokenValue: buyPrimaryTokenAmount,
         lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999999'},
         primaryTokenId,
-        discountTiers: milkHoldersDiscountTiers,
+        feeTiers: milkHoldersDiscountTiers,
       })
       // assert
       expect(fee).toEqual({
@@ -142,7 +140,7 @@ describe('getFrontendFee', () => {
         sellInPrimaryTokenValue: buyPrimaryAmountOver99,
         lpTokenHeld: {tokenId: 'lp.token', quantity: Quantities.zero},
         primaryTokenId,
-        discountTiers: milkHoldersDiscountTiers,
+        feeTiers: milkHoldersDiscountTiers,
       })
       // assert
       expect(fee).toEqual({
@@ -165,7 +163,7 @@ describe('getFrontendFee', () => {
         lpTokenHeld: {tokenId: 'lp.token', quantity: '499'},
         sellInPrimaryTokenValue: buyPrimaryAmountOver99,
         primaryTokenId,
-        discountTiers: milkHoldersDiscountTiers,
+        feeTiers: milkHoldersDiscountTiers,
       })
       // assert
       expect(fee).toEqual({
@@ -188,7 +186,7 @@ describe('getFrontendFee', () => {
         lpTokenHeld: {tokenId: 'lp.token', quantity: '500'},
         sellInPrimaryTokenValue: buyPrimaryAmountOver99,
         primaryTokenId,
-        discountTiers: milkHoldersDiscountTiers,
+        feeTiers: milkHoldersDiscountTiers,
       })
       // assert
       expect(fee).toEqual({
@@ -211,7 +209,7 @@ describe('getFrontendFee', () => {
       lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999'},
       sellInPrimaryTokenValue: buyPrimaryAmountOver99,
       primaryTokenId,
-      discountTiers: [],
+      feeTiers: [],
     })
     // assert
     expect(fee).toEqual({
@@ -223,26 +221,42 @@ describe('getFrontendFee', () => {
     })
   })
 
-  it('should fallback - coverage only', () => {
+  it('should add only the fixedFee when no variable', () => {
     // arrange
+    const buyPrimaryAmountOver99: Balance.Amount = {
+      tokenId: primaryTokenId,
+      quantity: asQuantity(100_000_000),
+    }
     // act
     const fee = getFrontendFee({
       lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999'},
-      sellInPrimaryTokenValue: notPrimaryTokenAmount,
+      sellInPrimaryTokenValue: buyPrimaryAmountOver99,
       primaryTokenId,
+      feeTiers: [
+        {
+          fixedFee: asQuantity(3_000_000),
+          primaryTokenValueThreshold: Quantities.zero,
+          secondaryTokenBalanceThreshold: Quantities.zero,
+          variableFeeMultiplier: 0,
+        },
+      ],
     })
     // assert
     expect(fee).toEqual({
       fee: {
         tokenId: primaryTokenId,
-        quantity: Quantities.zero,
+        quantity: asQuantity(3_000_000),
       },
-      discountTier: undefined,
+      discountTier: {
+        fixedFee: asQuantity(3_000_000),
+        primaryTokenValueThreshold: Quantities.zero,
+        secondaryTokenBalanceThreshold: Quantities.zero,
+        variableFeeMultiplier: 0,
+      },
     })
   })
 
-  // TODO: check with openswap, need to rework after decision about FEF
-  describe('neither sell nor buy are primary token, it should use the value in ADA (paired)', () => {
+  describe('neither sell nor buy are primary token, it should use the value in ADA (paired) of selling side', () => {
     it('< 100 and whatever milk in balance', () => {
       // arrange
       const sellValueInPrimaryToken: Balance.Amount = {
@@ -254,7 +268,7 @@ describe('getFrontendFee', () => {
         sellInPrimaryTokenValue: sellValueInPrimaryToken,
         lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999999'},
         primaryTokenId,
-        discountTiers: milkHoldersDiscountTiers,
+        feeTiers: milkHoldersDiscountTiers,
       })
       // assert
       expect(fee).toEqual({
@@ -276,7 +290,7 @@ describe('getFrontendFee', () => {
         sellInPrimaryTokenValue: sellValueInPrimaryToken,
         lpTokenHeld: {tokenId: 'lp.token', quantity: Quantities.zero},
         primaryTokenId,
-        discountTiers: milkHoldersDiscountTiers,
+        feeTiers: milkHoldersDiscountTiers,
       })
       // assert
       expect(fee).toEqual({
@@ -299,7 +313,7 @@ describe('getFrontendFee', () => {
         lpTokenHeld: {tokenId: 'lp.token', quantity: '499'},
         sellInPrimaryTokenValue: sellValueInPrimaryToken,
         primaryTokenId,
-        discountTiers: milkHoldersDiscountTiers,
+        feeTiers: milkHoldersDiscountTiers,
       })
       // assert
       expect(fee).toEqual({
@@ -322,7 +336,7 @@ describe('getFrontendFee', () => {
         lpTokenHeld: {tokenId: 'lp.token', quantity: '500'},
         sellInPrimaryTokenValue: sellValueInPrimaryToken,
         primaryTokenId,
-        discountTiers: milkHoldersDiscountTiers,
+        feeTiers: milkHoldersDiscountTiers,
       })
       // assert
       expect(fee).toEqual({

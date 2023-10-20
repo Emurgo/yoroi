@@ -13,7 +13,7 @@ import {
   ApiOnChainNftMetadataResult,
   ApiTokenIdentity,
 } from './types'
-import {getTokenIdentity} from '../translators/formatters/cardano-token-id'
+import {getTokenIdentity} from '../translators/helpers/getTokenIdentity'
 
 export const getOnChainMetadatas = (
   baseUrl: string,
