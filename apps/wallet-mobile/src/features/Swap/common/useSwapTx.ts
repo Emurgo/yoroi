@@ -7,7 +7,9 @@ import {useMutationWithInvalidations} from '../../../yoroi-wallets/hooks'
 import {YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {splitStringInto64CharArray} from '../../../yoroi-wallets/utils'
 
-export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {entry: YoroiEntry; datum: Datum}>) => {
+export const useSwapTx = (
+  options?: UseMutationOptions<YoroiUnsignedTx, Error, {entries: YoroiEntry[]; datum: Datum}>,
+) => {
   const {orderData} = useSwap()
   const pool = orderData.selectedPoolCalculation?.pool
   const metadata = [
@@ -29,7 +31,7 @@ export const useSwapTx = (options?: UseMutationOptions<YoroiUnsignedTx, Error, {
 
   const wallet = useSelectedWallet()
   const mutation = useMutationWithInvalidations({
-    mutationFn: (data) => wallet.createUnsignedTx(data.entry, metadata, data.datum),
+    mutationFn: (data) => wallet.createUnsignedTx(data.entries, metadata, data.datum),
     invalidateQueries: ['useCreateOrder'],
     ...options,
   })

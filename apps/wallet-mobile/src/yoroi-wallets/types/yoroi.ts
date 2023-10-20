@@ -48,6 +48,7 @@ export type YoroiEntries = Record<string, Balance.Amounts>
 export type YoroiEntry = {
   address: Address
   amounts: Balance.Amounts
+  datum?: Datum
 }
 
 export type YoroiMetadata = {

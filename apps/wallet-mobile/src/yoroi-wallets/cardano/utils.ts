@@ -27,6 +27,8 @@ import {MultiToken} from './MultiToken'
 import {CardanoHaskellShelleyNetwork, PRIMARY_ASSET_CONSTANTS} from './networks'
 import {NUMBERS} from './numbers'
 import {CardanoTypes, WalletImplementation} from './types'
+import {YoroiEntry} from '../types'
+import {withMinAmounts} from './getMinAmounts'
 
 export const normalizeToAddress = async (addr: string) => {
   // in Shelley, addresses can be base16, bech32 or base58
@@ -277,6 +279,19 @@ export const toCardanoNetworkId = (networkId: number) => {
 
 export const toSendTokenList = (amounts: Balance.Amounts, primaryToken: Token): Array<SendToken> => {
   return Amounts.toArray(amounts).map(toSendToken(primaryToken))
+}
+
+export const toRecipients = async (entries: YoroiEntry[], primaryToken: DefaultAsset) => {
+  return await Promise.all(
+    entries.map(async (entry) => {
+      const amounts = await withMinAmounts(entry.address, entry.amounts, primaryToken)
+      return {
+        receiver: entry.address,
+        tokens: toSendTokenList(amounts, primaryToken),
+        datum: entry.datum,
+      }
+    }),
+  )
 }
 
 export const toSendToken =

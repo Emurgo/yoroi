@@ -89,6 +89,7 @@ import {
   getWalletConfigById,
   isByron,
   isHaskellShelley,
+  toRecipients,
   toSendTokenList,
 } from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
@@ -662,7 +663,11 @@ export class ByronWallet implements YoroiWallet {
 
   // =================== tx building =================== //
 
-  async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>, datum?: yoroiLib.Datum) {
+  async createUnsignedTx(
+    entries: YoroiEntry[],
+    auxiliaryData?: Array<CardanoTypes.TxMetadata>,
+    datum?: yoroiLib.Datum,
+  ) {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
@@ -672,15 +677,20 @@ export class ByronWallet implements YoroiWallet {
     const changeAddr = await this.getAddressedChangeAddress()
     const addressedUtxos = await this.getAddressedUtxos()
     const networkConfig = this.getNetworkConfig()
-    const amounts = await withMinAmounts(entry.address, entry.amounts, this.primaryToken)
+
+    let recipients = await toRecipients(entries, this.primaryToken)
+
+    // TODO: This is hacky
+    if (datum && !recipients[0].datum) {
+      recipients = recipients.map((recipient, index) => (index === 0 ? {...recipient, datum} : recipient))
+    }
 
     try {
       const unsignedTx = await Cardano.createUnsignedTx(
         absSlotNumber,
         addressedUtxos,
-        entry.address,
+        recipients,
         changeAddr,
-        toSendTokenList(amounts, this.primaryToken) as unknown as Array<yoroiLib.SendToken>,
         {
           keyDeposit: networkConfig.KEY_DEPOSIT,
           linearFee: {
@@ -694,10 +704,9 @@ export class ByronWallet implements YoroiWallet {
         },
         this.primaryToken,
         {metadata: auxiliaryData},
-        datum,
       )
 
-      return yoroiUnsignedTx({unsignedTx, networkConfig: this.getNetworkConfig(), addressedUtxos})
+      return yoroiUnsignedTx({unsignedTx, networkConfig: this.getNetworkConfig(), addressedUtxos, datum})
     } catch (e) {
       if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
       Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)

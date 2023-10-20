@@ -101,7 +101,7 @@ export type YoroiWallet = {
 
   // Sending
   createUnsignedTx(
-    entry: YoroiEntry,
+    entries: YoroiEntry[],
     metadata?: Array<CardanoTypes.TxMetadata>,
     datum?: Datum,
   ): Promise<YoroiUnsignedTx>

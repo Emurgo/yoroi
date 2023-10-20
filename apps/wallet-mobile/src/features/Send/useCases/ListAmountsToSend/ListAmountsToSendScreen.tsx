@@ -177,7 +177,7 @@ export const useSendTx = (
     refetchOnMount: false,
     refetchOnReconnect: false,
     queryKey: [wallet.id, 'send-tx'],
-    queryFn: () => wallet.createUnsignedTx(entry),
+    queryFn: () => wallet.createUnsignedTx([entry]),
   })
 
   return {

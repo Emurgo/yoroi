@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PrivateKey} from '@emurgo/cross-csl-core'
-import {Datum} from '@emurgo/yoroi-lib'
+import {Datum, SendToken} from '@emurgo/yoroi-lib'
 import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
 import assert from 'assert'
@@ -68,7 +68,7 @@ import {
   YoroiWallet,
 } from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
-import {deriveRewardAddressHex, toSendTokenList} from '../utils'
+import {deriveRewardAddressHex, toRecipients, toSendTokenList} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
@@ -589,22 +589,28 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     // =================== tx building =================== //
 
-    async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>, datum?: Datum) {
+    async createUnsignedTx(entries: YoroiEntry[], auxiliaryData?: Array<CardanoTypes.TxMetadata>, datum?: Datum) {
+      // todo: all createUnsignedTx needs to have datum in entry
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
-      const amounts = await withMinAmounts(entry.address, entry.amounts, this.primaryToken)
+
+      let recipients = await toRecipients(entries, this.primaryToken)
+
+      // TODO: This is hacky
+      if (datum && !recipients[0].datum) {
+        recipients = recipients.map((recipient, index) => (index === 0 ? {...recipient, datum} : recipient))
+      }
 
       try {
         const unsignedTx = await Cardano.createUnsignedTx(
           absSlotNumber,
           addressedUtxos,
-          entry.address,
+          recipients,
           changeAddr,
-          toSendTokenList(amounts, this.primaryToken),
           {
             keyDeposit: KEY_DEPOSIT,
             linearFee: {
@@ -618,7 +624,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           },
           PRIMARY_TOKEN,
           {metadata: auxiliaryData},
-          datum,
         )
 
         return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, datum})
