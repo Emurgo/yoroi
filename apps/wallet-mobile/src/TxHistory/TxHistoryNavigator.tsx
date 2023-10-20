@@ -48,15 +48,17 @@ const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const {frontendFees} = useFrontendFees(wallet)
-
   const walletName = useWalletName(wallet)
+
+  // modal
+  const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
+  const showModalInfo = React.useCallback(() => setIsModalInfoVisible(true), [])
+  const hideModalInfo = React.useCallback(() => setIsModalInfoVisible(false), [])
+
+  // swap 
+  const {frontendFees} = useFrontendFees(wallet)
+  const aggregatorTokenId = wallet.networkId !== 300 ? milkTokenId.mainnet : milkTokenId.preprod
   const stakingKey = useStakingKey(wallet)
-  const [modalInfoState, setModalInfoState] = React.useState(false)
-
-  const showModalInfo = React.useCallback(() => setModalInfoState(true), [])
-  const hideModalInfo = React.useCallback(() => setModalInfoState(false), [])
-
   const swapStorage = React.useMemo(() => swapStorageMaker(), [])
   const swapApi = React.useMemo(
     () =>
@@ -68,12 +70,10 @@ export const TxHistoryNavigator = () => {
       }),
     [wallet.networkId, stakingKey, wallet.primaryTokenInfo.id],
   )
-
   const swapManager = React.useMemo(() => {
-    const frontendFee = frontendFees?.[aggregator] ?? []
-    const aggregatorToken = wallet.networkId !== 300 ? milkTokenId.mainnet : milkTokenId.preprod
-    return swapManagerMaker({swapStorage, swapApi, frontendFee, aggregator, aggregatorToken})
-  }, [frontendFees, wallet.networkId, swapStorage, swapApi])
+    const frontendFeeTiers = frontendFees?.[aggregator] ?? []
+    return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
+  }, [frontendFees, swapStorage, swapApi, aggregatorTokenId])
 
   return (
     <SendProvider key={wallet.id}>
@@ -269,7 +269,7 @@ export const TxHistoryNavigator = () => {
             />
           </Stack.Navigator>
 
-          <ModalInfo hideModalInfo={hideModalInfo} visible={modalInfoState}>
+          <ModalInfo hideModalInfo={hideModalInfo} visible={isModalInfoVisible}>
             <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
           </ModalInfo>
         </SwapFormProvider>

@@ -1,13 +1,14 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
-import {useSwapTokensByPairToken} from '@yoroi/swap'
+import {useSwap, useSwapTokensByPairToken} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {StatusBar} from '../../components'
 import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../navigation'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
-import {useHideBottomTabBar} from '../../yoroi-wallets/hooks'
+import {useBalance, useHideBottomTabBar} from '../../yoroi-wallets/hooks'
 import {useStrings} from './common/strings'
 import {CreateOrder} from './useCases/StartSwapScreen/CreateOrder/CreateOrder'
 import {ListOrders} from './useCases/StartSwapScreen/ListOrders/ListOrders'
@@ -15,11 +16,31 @@ import {ListOrders} from './useCases/StartSwapScreen/ListOrders/ListOrders'
 const Tab = createMaterialTopTabNavigator<SwapTabRoutes>()
 export const SwapTabNavigator = () => {
   const strings = useStrings()
-
+  
   useHideBottomTabBar()
 
-  const {refetch} = useSwapTokensByPairToken('', {suspense: false, enabled: false})
+  // state data
+  const wallet = useSelectedWallet()
+  const {aggregatorTokenId, lpTokenHeldChanged, frontendFeeTiers, frontendFeeTiersChanged} = useSwap()
+  const lpTokenHeld = useBalance({wallet, tokenId: aggregatorTokenId})
 
+  // update the fee tiers
+  React.useEffect(() => {
+    frontendFeeTiersChanged(frontendFeeTiers)
+  }, [frontendFeeTiers, frontendFeeTiersChanged])
+
+  // update lp token balance
+  React.useEffect(() => {
+    if (aggregatorTokenId == null) return
+
+    lpTokenHeldChanged({
+      tokenId: aggregatorTokenId,
+      quantity: lpTokenHeld,
+    })
+  }, [aggregatorTokenId, lpTokenHeld, lpTokenHeldChanged])
+
+  // pre load swap tokens
+  const {refetch} = useSwapTokensByPairToken('', {suspense: false, enabled: false})
   React.useEffect(() => {
     refetch()
   }, [refetch])
