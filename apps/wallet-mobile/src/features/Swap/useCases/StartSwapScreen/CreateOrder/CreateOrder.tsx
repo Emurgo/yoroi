@@ -105,7 +105,7 @@ export const CreateOrder = () => {
 
         const frontendFeeEntry = getFrontendFeeEntry(selectedPoolCalculation)
         const entries = frontendFeeEntry ? [swapEntry, frontendFeeEntry] : [swapEntry]
-        createUnsignedTx({entries: entries})
+        createUnsignedTx({entries})
       }
     },
     onError: (error) => {
