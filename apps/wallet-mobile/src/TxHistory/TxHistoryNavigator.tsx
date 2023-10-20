@@ -7,7 +7,7 @@ import {
   SwapProvider,
   swapStorageMaker,
 } from '@yoroi/swap'
-import {App, Swap} from '@yoroi/types'
+import {Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
@@ -55,7 +55,7 @@ export const TxHistoryNavigator = () => {
   const showModalInfo = React.useCallback(() => setIsModalInfoVisible(true), [])
   const hideModalInfo = React.useCallback(() => setIsModalInfoVisible(false), [])
 
-  // swap 
+  // swap
   const {frontendFees} = useFrontendFees(wallet)
   const aggregatorTokenId = wallet.networkId !== 300 ? milkTokenId.mainnet : milkTokenId.preprod
   const stakingKey = useStakingKey(wallet)
@@ -71,7 +71,7 @@ export const TxHistoryNavigator = () => {
     [wallet.networkId, stakingKey, wallet.primaryTokenInfo.id],
   )
   const swapManager = React.useMemo(() => {
-    const frontendFeeTiers = frontendFees?.[aggregator] ?? [] as const
+    const frontendFeeTiers = frontendFees?.[aggregator] ?? ([] as const)
     return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
   }, [frontendFees, swapStorage, swapApi, aggregatorTokenId])
 
