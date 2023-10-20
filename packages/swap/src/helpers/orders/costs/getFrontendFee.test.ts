@@ -221,6 +221,41 @@ describe('getFrontendFee', () => {
     })
   })
 
+  it('should add only the fixedFee when no variable', () => {
+    // arrange
+    const buyPrimaryAmountOver99: Balance.Amount = {
+      tokenId: primaryTokenId,
+      quantity: asQuantity(100_000_000),
+    }
+    // act
+    const fee = getFrontendFee({
+      lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999'},
+      sellInPrimaryTokenValue: buyPrimaryAmountOver99,
+      primaryTokenId,
+      feeTiers: [
+        {
+          fixedFee: asQuantity(3_000_000),
+          primaryTokenValueThreshold: Quantities.zero,
+          secondaryTokenBalanceThreshold: Quantities.zero,
+          variableFeeMultiplier: 0,
+        },
+      ],
+    })
+    // assert
+    expect(fee).toEqual({
+      fee: {
+        tokenId: primaryTokenId,
+        quantity: asQuantity(3_000_000),
+      },
+      discountTier: {
+        fixedFee: asQuantity(3_000_000),
+        primaryTokenValueThreshold: Quantities.zero,
+        secondaryTokenBalanceThreshold: Quantities.zero,
+        variableFeeMultiplier: 0,
+      },
+    })
+  })
+
   describe('neither sell nor buy are primary token, it should use the value in ADA (paired) of selling side', () => {
     it('< 100 and whatever milk in balance', () => {
       // arrange
