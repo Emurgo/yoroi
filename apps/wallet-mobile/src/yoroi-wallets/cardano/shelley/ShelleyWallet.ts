@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PrivateKey} from '@emurgo/cross-csl-core'
-import {Datum, SendToken} from '@emurgo/yoroi-lib'
 import {AppApi} from '@yoroi/api'
 import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
@@ -49,7 +48,6 @@ import * as MAINNET from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
-import {withMinAmounts} from '../getMinAmounts'
 import {getTime} from '../getTime'
 import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
 import {processTxHistoryData} from '../processTransactions'
@@ -69,7 +67,7 @@ import {
   YoroiWallet,
 } from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
-import {deriveRewardAddressHex, toRecipients, toSendTokenList} from '../utils'
+import {deriveRewardAddressHex, toRecipients} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
@@ -593,8 +591,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     // =================== tx building =================== //
 
-    async createUnsignedTx(entries: YoroiEntry[], auxiliaryData?: Array<CardanoTypes.TxMetadata>, datum?: Datum) {
-      // todo: all createUnsignedTx needs to have datum in entry
+    async createUnsignedTx(entries: YoroiEntry[], auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
@@ -602,12 +599,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
 
-      let recipients = await toRecipients(entries, this.primaryToken)
+      const recipients = await toRecipients(entries, this.primaryToken)
 
-      // TODO: This is hacky
-      if (datum && !recipients[0].datum) {
-        recipients = recipients.map((recipient, index) => (index === 0 ? {...recipient, datum} : recipient))
-      }
+      const datum = recipients.find((recipient) => recipient.datum)?.datum
 
       try {
         const unsignedTx = await Cardano.createUnsignedTx(

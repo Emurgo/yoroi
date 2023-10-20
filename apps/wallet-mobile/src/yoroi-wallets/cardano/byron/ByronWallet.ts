@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PrivateKey} from '@emurgo/cross-csl-core'
-import * as yoroiLib from '@emurgo/yoroi-lib'
 import {AppApi} from '@yoroi/api'
 import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
@@ -58,7 +57,6 @@ import {
 } from '../constants/mainnet/constants'
 import {CardanoError, InvalidState} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
-import {withMinAmounts} from '../getMinAmounts'
 import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
 import {
   CardanoHaskellShelleyNetwork,
@@ -92,7 +90,6 @@ import {
   isByron,
   isHaskellShelley,
   toRecipients,
-  toSendTokenList,
 } from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
@@ -668,11 +665,7 @@ export class ByronWallet implements YoroiWallet {
 
   // =================== tx building =================== //
 
-  async createUnsignedTx(
-    entries: YoroiEntry[],
-    auxiliaryData?: Array<CardanoTypes.TxMetadata>,
-    datum?: yoroiLib.Datum,
-  ) {
+  async createUnsignedTx(entries: YoroiEntry[], auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
@@ -683,12 +676,9 @@ export class ByronWallet implements YoroiWallet {
     const addressedUtxos = await this.getAddressedUtxos()
     const networkConfig = this.getNetworkConfig()
 
-    let recipients = await toRecipients(entries, this.primaryToken)
+    const recipients = await toRecipients(entries, this.primaryToken)
 
-    // TODO: This is hacky
-    if (datum && !recipients[0].datum) {
-      recipients = recipients.map((recipient, index) => (index === 0 ? {...recipient, datum} : recipient))
-    }
+    const datum = recipients.find((recipient) => recipient.datum)?.datum
 
     try {
       const unsignedTx = await Cardano.createUnsignedTx(

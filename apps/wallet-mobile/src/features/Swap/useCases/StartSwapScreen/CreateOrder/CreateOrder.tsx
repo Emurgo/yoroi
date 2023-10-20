@@ -100,8 +100,10 @@ export const CreateOrder = () => {
           wallet,
         )
         const datum = {data: data.datum}
+
+        const swapEntry = {...entry, datum}
         // TODO: add frontend fee here as another entry
-        createUnsignedTx({entries: [entry], datum})
+        createUnsignedTx({entries: [swapEntry]})
       }
     },
     onError: (error) => {
