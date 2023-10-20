@@ -159,6 +159,9 @@ describe('makeMetricsManager', () => {
       to_asset: [{asset_name: 'DOGE', asset_ticker: 'DOGE', policy_id: '65432'}],
     })
 
+    metricsManager.track.walletPageExchangeClicked()
+    metricsManager.track.walletPageExchangeBottomSheetClicked()
+
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
     expect(mockAmpli.nftGallerySearchActivated).toHaveBeenCalledWith({nft_search_term: 'test', nft_count: 10})
