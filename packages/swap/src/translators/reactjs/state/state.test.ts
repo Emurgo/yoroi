@@ -196,4 +196,7 @@ describe('State Actions', () => {
   it('LpTokenHeldChanged', () => {
     expect('todo').toBeDefined()
   })
+  it('FrontendFeeTiersChanged', () => {
+    expect('todo').toBeDefined()
+  })
 })

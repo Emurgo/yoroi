@@ -19,6 +19,7 @@ export const mockSwapStateDefault: SwapState = {
     selectedPoolId: undefined,
     calculations: [],
     lpTokenHeld: undefined,
+    frontendFeeTiers: [],
     pools: [],
   },
   unsignedTx: undefined,

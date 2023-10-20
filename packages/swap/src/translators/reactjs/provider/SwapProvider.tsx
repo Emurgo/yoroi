@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Balance, Swap} from '@yoroi/types'
+import {App, Balance, Swap} from '@yoroi/types'
 
 import {
   SwapActionType,
@@ -90,6 +90,12 @@ export const SwapProvider = ({
     },
     primaryTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => {
       dispatch({type: SwapCreateOrderActionType.PrimaryTokenIdChanged, tokenId})
+    },
+    frontendFeeTiersChanged: (feeTiers: ReadonlyArray<App.FrontendFeeTier>) => {
+      dispatch({
+        type: SwapCreateOrderActionType.FrontendFeeTiersChanged,
+        feeTiers,
+      })
     },
   }).current
 
