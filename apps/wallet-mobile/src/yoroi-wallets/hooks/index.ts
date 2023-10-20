@@ -2,7 +2,7 @@
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
 import {parseBoolean, useStorage} from '@yoroi/common'
-import {Balance} from '@yoroi/types'
+import {App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
@@ -610,6 +610,23 @@ export const useWalletNames = (
   return {
     ...query,
     walletNames: query.data,
+  }
+}
+
+export const useFrontendFees = (
+  wallet: YoroiWallet,
+  options?: UseQueryOptions<App.FrontendFeesResponse, Error, App.FrontendFeesResponse, [string, 'frontend-fees']>,
+) => {
+  const query = useQuery({
+    suspense: true,
+    queryKey: [wallet.id, 'frontend-fees'],
+    ...options,
+    queryFn: () => wallet.api.getFrontendFees(),
+  })
+
+  return {
+    ...query,
+    frontendFees: query.data,
   }
 }
 

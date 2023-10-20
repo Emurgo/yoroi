@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PrivateKey} from '@emurgo/cross-csl-core'
 import {Datum} from '@emurgo/yoroi-lib'
+import {AppApi} from '@yoroi/api'
 import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
 import assert from 'assert'
@@ -35,7 +36,7 @@ import {asQuantity, Quantities} from '../../utils'
 import {validatePassword} from '../../utils/validators'
 import {WalletMeta} from '../../walletManager'
 import {Cardano, CardanoMobile} from '../../wallets'
-import * as api from '../api'
+import * as legacyApi from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
@@ -156,7 +157,11 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     },
   }
 
+  const appApi = AppApi.mockAppApi
+  // const api = AppApi.appApiMaker({baseUrl: API_ROOT})
+
   return class ShelleyWallet implements YoroiWallet {
+    readonly api: App.Api = appApi
     readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
     readonly primaryTokenInfo: Balance.TokenInfo = PRIMARY_TOKEN_INFO
     readonly walletImplementationId = WALLET_IMPLEMENTATION_ID
@@ -827,7 +832,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
-      const accountState = await api.getAccountState({addresses: [this.rewardAddressHex]}, BACKEND)
+      const accountState = await legacyApi.getAccountState({addresses: [this.rewardAddressHex]}, BACKEND)
 
       const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
         accountState,
@@ -947,11 +952,11 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     // =================== backend API =================== //
 
     async checkServerStatus() {
-      return api.checkServerStatus(BACKEND)
+      return legacyApi.checkServerStatus(BACKEND)
     }
 
     async submitTransaction(signedTx: string) {
-      const response: any = await api.submitTransaction(signedTx, BACKEND)
+      const response: any = await legacyApi.submitTransaction(signedTx, BACKEND)
       Logger.info(response)
       return response as any
     }
@@ -1017,38 +1022,38 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     }
 
     async fetchAccountState(): Promise<AccountStateResponse> {
-      return api.bulkGetAccountState([this.rewardAddressHex], BACKEND)
+      return legacyApi.bulkGetAccountState([this.rewardAddressHex], BACKEND)
     }
 
     async fetchPoolInfo(request: PoolInfoRequest) {
-      return api.getPoolInfo(request, BACKEND)
+      return legacyApi.getPoolInfo(request, BACKEND)
     }
 
     fetchTokenInfo(tokenId: string) {
       return tokenId === '' || tokenId === 'ADA'
         ? Promise.resolve(PRIMARY_TOKEN_INFO)
-        : api.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`, BACKEND)
+        : legacyApi.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`, BACKEND)
     }
 
     async fetchFundInfo(): Promise<FundInfoResponse> {
-      return api.getFundInfo(BACKEND, IS_MAINNET)
+      return legacyApi.getFundInfo(BACKEND, IS_MAINNET)
     }
 
     async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
-      return api.fetchTxStatus(request, BACKEND)
+      return legacyApi.fetchTxStatus(request, BACKEND)
     }
 
     async fetchTipStatus(): Promise<TipStatusResponse> {
-      return api.getTipStatus(BACKEND)
+      return legacyApi.getTipStatus(BACKEND)
     }
 
     async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
-      return api.fetchCurrentPrice(symbol, BACKEND)
+      return legacyApi.fetchCurrentPrice(symbol, BACKEND)
     }
 
     // TODO: caching
     fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus> {
-      return api.getNFTModerationStatus(fingerprint, {...BACKEND, mainnet: true})
+      return legacyApi.getNFTModerationStatus(fingerprint, {...BACKEND, mainnet: true})
     }
 
     private state: WalletState = {
@@ -1214,7 +1219,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     private async discoverAddresses() {
       // last chunk gap limit check
-      const filterFn = (addrs) => api.filterUsedAddresses(addrs, BACKEND)
+      const filterFn = (addrs) => legacyApi.filterUsedAddresses(addrs, BACKEND)
       await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
     }
 

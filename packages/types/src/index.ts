@@ -21,12 +21,20 @@ import {SwapManager} from './swap/manager'
 import {AppStorage, AppStorageFolderName} from './app/storage'
 import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
 import {NumberLocale} from './intl/numbers'
+import {SwapAggregator} from './swap/aggregator'
+import {AppApi} from './app/api'
+import {AppFrontendFeesResponse, AppFrontendFeeTier} from './app/frontend-fees'
 
 export namespace App {
   export interface Storage extends AppStorage {}
   export type StorageFolderName = AppStorageFolderName
   export interface MultiStorage<T> extends AppMultiStorage<T> {}
   export type MultiStorageOptions<T> = AppMultiStorageOptions<T>
+
+  export interface Api extends AppApi {}
+
+  export type FrontendFeeTier = AppFrontendFeeTier
+  export type FrontendFeesResponse = AppFrontendFeesResponse
 }
 export namespace Swap {
   export interface Api extends SwapApi {}
@@ -43,6 +51,8 @@ export namespace Swap {
   export type OrderType = SwapOrderType
 
   export type Protocol = SwapProtocol
+
+  export type Aggregator = SwapAggregator
 
   export type Pool = SwapPool
   export type PoolResponse = SwapPool[]
