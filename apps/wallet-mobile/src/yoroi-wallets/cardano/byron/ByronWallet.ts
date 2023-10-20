@@ -50,6 +50,7 @@ import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
 import {signRawTransaction} from '../common/signatureUtils'
 import {
+  API_ROOT,
   HISTORY_REFRESH_TIME,
   MAX_GENERATED_UNUSED,
   PRIMARY_TOKEN,
@@ -125,8 +126,7 @@ export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 const networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
 const implementationId = WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 
-const appApi = AppApi.mockAppApi
-// const api = AppApi.appApiMaker({baseUrl: API_ROOT})
+const appApi = AppApi.appApiMaker({baseUrl: API_ROOT})
 
 export class ByronWallet implements YoroiWallet {
   readonly api: App.Api = appApi
