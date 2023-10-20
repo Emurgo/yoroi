@@ -83,10 +83,7 @@ export const ShowPoolActions = () => {
         }
         info={
           <HiddenInfo
-            totalFees={Quantities.format(
-              selectedPoolCalculation.pool.batcherFee.quantity,
-              Number(wallet.primaryTokenInfo.decimals),
-            )}
+            totalFees={totalFees}
             minReceived={Quantities.format(
               selectedPoolCalculation.buyAmountWithSlippage.quantity,
               buyTokenInfo.decimals ?? 0,

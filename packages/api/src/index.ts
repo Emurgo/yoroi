@@ -1,3 +1,8 @@
+import {appApiMaker} from './app/api/app-api-maker'
+import {mockAppApi} from './app/api/app-api-maker.mocks'
+import {getFrontendFees} from './app/api/frontend-fees'
+import {mockGetFrontendFees} from './app/api/frontend-fees.mocks'
+
 import {
   isFtMetadata,
   isMetadataFile,
@@ -7,6 +12,9 @@ import {getOffChainMetadata} from './cardano/api/token-offchain-metadata'
 import {getOnChainMetadatas} from './cardano/api/token-onchain-metadata'
 import {mockGetOnChainMetadatas} from './cardano/api/token-onchain-metadata.mocks'
 import {getTokenSupply} from './cardano/api/token-supply'
+import {getTokenIdentity} from './cardano/translators/helpers/getTokenIdentity'
+import {asFingerprint} from './cardano/translators/transformers/asFingerprint'
+import {asSubject} from './cardano/translators/transformers/asSubject'
 import {
   ApiFutureToken,
   ApiFutureTokenRecords,
@@ -30,14 +38,21 @@ import {
   ApiOffChainMetadataRecord,
 } from './cardano/api/types'
 
-import {
-  asFingerprint,
-  getTokenIdentity,
-} from './cardano/translators/formatters/cardano-token-id'
-
 export const CardanoTokenId = {
+  // transformers
   asFingerprint,
+  asSubject,
+
+  // helpers
   getTokenIdentity,
+} as const
+
+export const AppApi = {
+  getFrontendFees,
+  mockGetFrontendFees,
+
+  appApiMaker,
+  mockAppApi,
 } as const
 
 export const CardanoApi = {

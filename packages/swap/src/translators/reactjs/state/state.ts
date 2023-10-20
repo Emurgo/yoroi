@@ -1,8 +1,7 @@
-import {Balance, Swap} from '@yoroi/types'
+import {App, Balance, Swap} from '@yoroi/types'
 import {produce} from 'immer'
 
 import {Quantities} from '../../../utils/quantities'
-import {SwapDiscountTier} from '../../../translators/constants'
 import {makeOrderCalculations} from '../../../helpers/orders/factories/makeOrderCalculations'
 import {selectedPoolCalculationSelector} from './selectors/selectedPoolCalculationSelector'
 import {getBestPoolCalculation} from '../../../helpers/pools/getBestPoolCalculation'
@@ -42,7 +41,7 @@ export type SwapOrderCalculation = Readonly<{
     deposit: Balance.Amount
     batcherFee: Balance.Amount
     frontendFeeInfo: {
-      discountTier?: SwapDiscountTier
+      discountTier?: App.FrontendFeeTier
       fee: Balance.Amount
     }
     ptTotalFeeNoFEF: Balance.Amount
@@ -67,8 +66,9 @@ export type SwapState = Readonly<{
     // state from wallet
     lpTokenHeld?: Balance.Amount
     primartyTokenId: Balance.TokenInfo['id']
+    frontendFeeTiers: ReadonlyArray<App.FrontendFeeTier>
 
-    // state from api
+    // state from swap api
     pools: ReadonlyArray<Swap.Pool>
 
     // derivaded data
@@ -92,6 +92,9 @@ export type SwapCreateOrderActions = Readonly<{
   poolPairsChanged: (pools: ReadonlyArray<Swap.Pool>) => void
   lpTokenHeldChanged: (amount: Balance.Amount | undefined) => void
   primaryTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => void
+  frontendFeeTiersChanged: (
+    feeTiers: ReadonlyArray<App.FrontendFeeTier>,
+  ) => void
 }>
 
 export enum SwapCreateOrderActionType {
@@ -109,6 +112,7 @@ export enum SwapCreateOrderActionType {
   PoolPairsChanged = 'poolPairsChanged',
   LpTokenHeldChanged = 'lpTokenHeldChanged',
   PrimaryTokenIdChanged = 'primaryTokenIdChanged',
+  FrontendFeeTiersChanged = 'frontendFeeTiersChanged',
 }
 
 export type SwapCreateOrderAction =
@@ -157,6 +161,10 @@ export type SwapCreateOrderAction =
   | {
       type: SwapCreateOrderActionType.PrimaryTokenIdChanged
       tokenId: Balance.TokenInfo['id']
+    }
+  | {
+      type: SwapCreateOrderActionType.FrontendFeeTiersChanged
+      feeTiers: ReadonlyArray<App.FrontendFeeTier>
     }
 
 export type SwapActions = Readonly<{
@@ -217,6 +225,7 @@ export const defaultSwapState: SwapState = {
     // state from wallet
     lpTokenHeld: undefined,
     primartyTokenId: '',
+    frontendFeeTiers: [] as const,
 
     // state from api
     pools: [] as const,
@@ -242,6 +251,7 @@ const defaultSwapCreateOrderActions: SwapCreateOrderActions = {
   poolPairsChanged: missingInit,
   lpTokenHeldChanged: missingInit,
   primaryTokenIdChanged: missingInit,
+  frontendFeeTiersChanged: missingInit,
 } as const
 
 const defaultStateActions: SwapActions = {
@@ -275,6 +285,7 @@ const orderReducer = (
           primaryTokenId: state.orderData.primartyTokenId,
           lpTokenHeld: state.orderData.lpTokenHeld,
           side: 'sell',
+          frontendFeeTiers: state.orderData.frontendFeeTiers,
         })
         draft.orderData.bestPoolCalculation = getBestPoolCalculation(
           draft.orderData.calculations,
@@ -328,6 +339,7 @@ const orderReducer = (
           pools: state.orderData.pools,
           primaryTokenId: state.orderData.primartyTokenId,
           lpTokenHeld: state.orderData.lpTokenHeld,
+          frontendFeeTiers: state.orderData.frontendFeeTiers,
         })
 
         draft.orderData.bestPoolCalculation = getBestPoolCalculation(
@@ -353,6 +365,7 @@ const orderReducer = (
           pools: state.orderData.pools,
           primaryTokenId: state.orderData.primartyTokenId,
           lpTokenHeld: state.orderData.lpTokenHeld,
+          frontendFeeTiers: state.orderData.frontendFeeTiers,
         })
 
         draft.orderData.bestPoolCalculation = getBestPoolCalculation(
@@ -400,6 +413,7 @@ const orderReducer = (
           pools: state.orderData.pools,
           primaryTokenId: state.orderData.primartyTokenId,
           lpTokenHeld: state.orderData.lpTokenHeld,
+          frontendFeeTiers: state.orderData.frontendFeeTiers,
         })
 
         draft.orderData.bestPoolCalculation = getBestPoolCalculation(
@@ -432,6 +446,7 @@ const orderReducer = (
           primaryTokenId: state.orderData.primartyTokenId,
           lpTokenHeld: state.orderData.lpTokenHeld,
           side: 'sell',
+          frontendFeeTiers: state.orderData.frontendFeeTiers,
         })
         draft.orderData.bestPoolCalculation = getBestPoolCalculation(
           draft.orderData.calculations,
@@ -460,6 +475,7 @@ const orderReducer = (
           primaryTokenId: state.orderData.primartyTokenId,
           lpTokenHeld: state.orderData.lpTokenHeld,
           side: 'sell',
+          frontendFeeTiers: state.orderData.frontendFeeTiers,
         })
         draft.orderData.bestPoolCalculation = getBestPoolCalculation(
           draft.orderData.calculations,
@@ -488,6 +504,7 @@ const orderReducer = (
           primaryTokenId: state.orderData.primartyTokenId,
           lpTokenHeld: state.orderData.lpTokenHeld,
           side: 'buy',
+          frontendFeeTiers: state.orderData.frontendFeeTiers,
         })
         draft.orderData.bestPoolCalculation = getBestPoolCalculation(
           draft.orderData.calculations,
@@ -525,10 +542,8 @@ const orderReducer = (
         draft.orderData.selectedPoolCalculation = undefined
         break
 
-      // NOTE: not fully implemented
       // when the lp token held changes, the calculations are updated
       // buy side needs recalculation since best pool can change
-      // affects only market order and limit without a selected pool
       case SwapCreateOrderActionType.LpTokenHeldChanged:
         draft.orderData.lpTokenHeld = action.amount
 
@@ -540,6 +555,36 @@ const orderReducer = (
           pools: state.orderData.pools,
           primaryTokenId: state.orderData.primartyTokenId,
           lpTokenHeld: action.amount,
+          frontendFeeTiers: state.orderData.frontendFeeTiers,
+          side: 'sell',
+        })
+        draft.orderData.bestPoolCalculation = getBestPoolCalculation(
+          draft.orderData.calculations,
+        )
+        draft.orderData.selectedPoolCalculation =
+          selectedPoolCalculationSelector(draft.orderData)
+
+        if (draft.orderData.selectedPoolCalculation === undefined) break
+
+        draft.orderData.amounts.buy =
+          draft.orderData.selectedPoolCalculation.sides.buy
+        break
+
+      // when the frontend feee tiers changes, the calculations are updated
+      // buy side needs recalculation since best pool can change
+      case SwapCreateOrderActionType.FrontendFeeTiersChanged:
+        draft.orderData.frontendFeeTiers = [...action.feeTiers]
+
+        draft.orderData.calculations = makeOrderCalculations({
+          orderType: state.orderData.type,
+          amounts: state.orderData.amounts,
+          limitPrice: state.orderData.limitPrice,
+          slippage: state.orderData.slippage,
+          pools: state.orderData.pools,
+          primaryTokenId: state.orderData.primartyTokenId,
+          lpTokenHeld: state.orderData.lpTokenHeld,
+          frontendFeeTiers: state.orderData.frontendFeeTiers,
+          side: 'sell',
         })
         draft.orderData.bestPoolCalculation = getBestPoolCalculation(
           draft.orderData.calculations,
@@ -567,6 +612,7 @@ const orderReducer = (
           primaryTokenId: state.orderData.primartyTokenId,
           lpTokenHeld: state.orderData.lpTokenHeld,
           side: 'sell',
+          frontendFeeTiers: state.orderData.frontendFeeTiers,
         })
         draft.orderData.bestPoolCalculation = getBestPoolCalculation(
           draft.orderData.calculations,
@@ -606,6 +652,7 @@ const swapReducer = (state: SwapState, action: SwapAction) => {
           ...defaultSwapState.orderData,
           calculations: [...defaultSwapState.orderData.calculations],
           pools: [...defaultSwapState.orderData.pools],
+          frontendFeeTiers: [...defaultSwapState.orderData.frontendFeeTiers],
         }
         draft.unsignedTx = defaultSwapState.unsignedTx
         break

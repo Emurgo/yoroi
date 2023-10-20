@@ -1,4 +1,5 @@
 import {Balance, Swap} from '@yoroi/types'
+import {AppApi} from '@yoroi/api'
 
 import {makeOrderCalculations} from './makeOrderCalculations'
 import {mocks} from '../../mocks'
@@ -6,6 +7,8 @@ import {getPriceAfterFee} from '../../prices/getPriceAfterFee'
 import {SwapOrderCalculation} from '../../../translators/reactjs/state/state'
 
 describe('makeOrderCalculations', () => {
+  const frontendFeeTiers = AppApi.mockGetFrontendFees.withFees.muesliswap!
+
   it('should calculate all fees and amounts correctly (case 1, sell A)', () => {
     const pool = mocks.mockedPools5[0] as Swap.Pool
     const pools = [pool]
@@ -30,6 +33,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -85,7 +89,6 @@ describe('makeOrderCalculations', () => {
             primaryTokenValueThreshold: '100000000',
             secondaryTokenBalanceThreshold: '0',
             variableFeeMultiplier: 0.0005,
-            variableFeeVisual: 0.05,
           },
           fee: {
             quantity: '6000000',
@@ -148,6 +151,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     expect(calculation.prices.withFeesNoFEF).toBe('0.06717514563300004847')
@@ -194,7 +198,6 @@ describe('makeOrderCalculations', () => {
             primaryTokenValueThreshold: '100000000',
             secondaryTokenBalanceThreshold: '0',
             variableFeeMultiplier: 0.0005,
-            variableFeeVisual: 0.05,
           },
           fee: {
             quantity: '6000000',
@@ -257,6 +260,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'buy',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -312,7 +316,6 @@ describe('makeOrderCalculations', () => {
             primaryTokenValueThreshold: '100000000',
             secondaryTokenBalanceThreshold: '0',
             variableFeeMultiplier: 0.0005,
-            variableFeeVisual: 0.05,
           },
           fee: {
             quantity: '6000000',
@@ -375,6 +378,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'buy',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -430,7 +434,6 @@ describe('makeOrderCalculations', () => {
             primaryTokenValueThreshold: '100000000',
             secondaryTokenBalanceThreshold: '0',
             variableFeeMultiplier: 0.0005,
-            variableFeeVisual: 0.05,
           },
           fee: {
             quantity: '6000000',
@@ -493,6 +496,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -605,6 +609,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -717,6 +722,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -829,6 +835,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'buy',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -941,6 +948,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -1053,6 +1061,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -1165,6 +1174,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'buy',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -1277,6 +1287,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'buy',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -1389,6 +1400,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -1501,6 +1513,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -1613,6 +1626,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'buy',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -1725,6 +1739,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'buy',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     const price_with_batcher_fee = getPriceAfterFee(
@@ -1837,6 +1852,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'buy',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     expect(calculation).toStrictEqual({
@@ -1939,6 +1955,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     expect(calculation).toStrictEqual({
@@ -2041,6 +2058,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'buy',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     expect(calculation).toStrictEqual({
@@ -2143,6 +2161,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     expect(calculation).toStrictEqual({
@@ -2245,6 +2264,7 @@ describe('makeOrderCalculations', () => {
       primaryTokenId: '',
       lpTokenHeld: undefined,
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     expect(calculation).toStrictEqual({
@@ -2350,6 +2370,7 @@ describe('makeOrderCalculations', () => {
         tokenId: 'tokenX',
       },
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     expect(calculation).toStrictEqual({
@@ -2398,7 +2419,6 @@ describe('makeOrderCalculations', () => {
             primaryTokenValueThreshold: '100000000',
             secondaryTokenBalanceThreshold: '0',
             variableFeeMultiplier: 0.0005,
-            variableFeeVisual: 0.05,
           },
           fee: {
             quantity: '1050000',
@@ -2464,6 +2484,7 @@ describe('makeOrderCalculations', () => {
         tokenId: 'tokenX',
       },
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     expect(calculation).toStrictEqual({
@@ -2512,7 +2533,6 @@ describe('makeOrderCalculations', () => {
             primaryTokenValueThreshold: '100000000',
             secondaryTokenBalanceThreshold: '100',
             variableFeeMultiplier: 0.00025,
-            variableFeeVisual: 0.025,
           },
           fee: {
             quantity: '1025000',
@@ -2578,6 +2598,7 @@ describe('makeOrderCalculations', () => {
         tokenId: 'tokenX',
       },
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     expect(calculation).toStrictEqual({
@@ -2626,7 +2647,6 @@ describe('makeOrderCalculations', () => {
             primaryTokenValueThreshold: '100000000',
             secondaryTokenBalanceThreshold: '500',
             variableFeeMultiplier: 0.0002,
-            variableFeeVisual: 0.02,
           },
           fee: {
             quantity: '1020000',
@@ -2692,6 +2712,7 @@ describe('makeOrderCalculations', () => {
         tokenId: 'tokenX',
       },
       side: 'sell',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     expect(calculation).toStrictEqual({
@@ -2800,6 +2821,7 @@ describe('makeOrderCalculations', () => {
         tokenId: 'tokenX',
       },
       side: 'buy',
+      frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
     expect(calculation).toStrictEqual({

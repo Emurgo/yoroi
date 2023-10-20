@@ -14,7 +14,7 @@ import {
   ApiTokenRegistryEntry,
   ApiTokenRegistryProperty,
 } from './types'
-import {asSubject} from '../translators/formatters/cardano-token-id'
+import {asSubject} from '../translators/transformers/asSubject'
 
 export const getOffChainMetadata = (
   baseUrl: string,

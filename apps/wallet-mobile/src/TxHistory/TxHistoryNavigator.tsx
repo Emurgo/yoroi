@@ -1,5 +1,13 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import {supportedProviders, swapApiMaker, swapManagerMaker, SwapProvider, swapStorageMaker} from '@yoroi/swap'
+import {
+  milkTokenId,
+  supportedProviders,
+  swapApiMaker,
+  swapManagerMaker,
+  SwapProvider,
+  swapStorageMaker,
+} from '@yoroi/swap'
+import {Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
@@ -29,36 +37,39 @@ import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes, useWalletNav
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
+import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
+
+const aggregator: Swap.Aggregator = 'muesliswap'
 
 const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-
   const walletName = useWalletName(wallet)
+
+  // modal
+  const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
+  const showModalInfo = React.useCallback(() => setIsModalInfoVisible(true), [])
+  const hideModalInfo = React.useCallback(() => setIsModalInfoVisible(false), [])
+
+  // swap
+  const {frontendFees} = useFrontendFees(wallet)
+  const aggregatorTokenId = wallet.networkId !== 300 ? milkTokenId.mainnet : milkTokenId.preprod
   const stakingKey = useStakingKey(wallet)
-  const [modalInfoState, setModalInfoState] = React.useState(false)
-
-  const showModalInfo = React.useCallback(() => setModalInfoState(true), [])
-  const hideModalInfo = React.useCallback(() => setModalInfoState(false), [])
-
-  const swapStorage = React.useMemo(() => swapStorageMaker(), [])
-  const swapAPI = React.useMemo(
-    () =>
-      swapApiMaker({
-        isMainnet: wallet.networkId !== 300,
-        stakingKey,
-        primaryTokenId: wallet.primaryTokenInfo.id,
-        supportedProviders,
-      }),
-    [wallet.networkId, stakingKey, wallet.primaryTokenInfo.id],
-  )
-
-  const swapManager = React.useMemo(() => swapManagerMaker(swapStorage, swapAPI), [swapStorage, swapAPI])
+  const swapManager = React.useMemo(() => {
+    const swapStorage = swapStorageMaker()
+    const swapApi = swapApiMaker({
+      isMainnet: wallet.networkId !== 300,
+      stakingKey,
+      primaryTokenId: wallet.primaryTokenInfo.id,
+      supportedProviders,
+    })
+    const frontendFeeTiers = frontendFees?.[aggregator] ?? ([] as const)
+    return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
+  }, [wallet.networkId, wallet.primaryTokenInfo.id, stakingKey, frontendFees, aggregatorTokenId])
 
   return (
     <SendProvider key={wallet.id}>
@@ -254,7 +265,7 @@ export const TxHistoryNavigator = () => {
             />
           </Stack.Navigator>
 
-          <ModalInfo hideModalInfo={hideModalInfo} visible={modalInfoState}>
+          <ModalInfo hideModalInfo={hideModalInfo} visible={isModalInfoVisible}>
             <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
           </ModalInfo>
         </SwapFormProvider>

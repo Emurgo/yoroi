@@ -1,7 +1,7 @@
 {
-  "name": "@yoroi/cardano",
+  "name": "@yoroi/api",
   "version": "1.0.0",
-  "description": "The Cardano package of Yoroi SDK",
+  "description": "The API package of Yoroi SDK",
   "keywords": [
     "yoroi",
     "cardano",
@@ -9,14 +9,14 @@
     "browser",
     "react"
   ],
-  "homepage": "https://github.com/Emurgo/yoroi/packages/cardano#readme",
+  "homepage": "https://github.com/Emurgo/yoroi/packages/api#readme",
   "bugs": {
     "url": "https://github.com/Emurgo/yoroi/issues"
   },
   "repository": {
     "type": "github",
     "url": "https://github.com/Emurgo/yoroi.git",
-    "directory": "packages/cardano"
+    "directory": "packages/api"
   },
   "license": "Apache-2.0",
   "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",

@@ -30,7 +30,13 @@ describe('swapManagerMaker', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    manager = swapManagerMaker(mockedStorage, mockedApi)
+    manager = swapManagerMaker({
+      swapStorage: mockedStorage,
+      swapApi: mockedApi,
+      aggregator: 'muesliswap',
+      aggregatorTokenId: '',
+      frontendFeeTiers: [] as const,
+    })
   })
 
   it('clearStorage clear', async () => {
