@@ -1,4 +1,4 @@
-import {Balance, Swap} from '@yoroi/types'
+import {App, Balance, Swap} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import {SwapOrderCalculation} from '../../../translators/reactjs/state/state'
 import {getQuantityWithSlippage} from '../amounts/getQuantityWithSlippage'
@@ -19,6 +19,7 @@ export const makeOrderCalculations = ({
   primaryTokenId,
   lpTokenHeld,
   side,
+  frontendFeeTiers,
 }: Readonly<{
   orderType: Swap.OrderType
   amounts: {
@@ -31,6 +32,7 @@ export const makeOrderCalculations = ({
   slippage: number
   primaryTokenId: Balance.TokenInfo['id']
   side?: 'buy' | 'sell'
+  frontendFeeTiers: ReadonlyArray<App.FrontendFeeTier>
 }>): Array<SwapOrderCalculation> => {
   const isLimit = orderType === 'limit'
   const maybeLimitPrice = isLimit ? limitPrice : undefined
@@ -87,6 +89,7 @@ export const makeOrderCalculations = ({
                 .integerValue(BigNumber.ROUND_CEIL),
             ),
       },
+      feeTiers: frontendFeeTiers,
     })
 
     // transform fees in terms of sell side quantity * pt price (unit of fees)
