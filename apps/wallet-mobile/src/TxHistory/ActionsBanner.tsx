@@ -3,9 +3,9 @@ import {banxaModuleMaker} from '@yoroi/banxa'
 import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Icon, Spacer} from '../components'
+import {Button, Icon, Spacer, Text, useModal} from '../components'
 import {features} from '../features'
 import {useSend} from '../features/Send/common/SendContext'
 import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
@@ -38,24 +38,39 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     wallet,
     tokenId: orderData.amounts.buy.tokenId,
   })
+  const {openModal, closeModal} = useModal()
 
   const handleOnBuy = () => {
-    // banxa doesn't support testnet for the sandbox it needs a mainnet address
-    const sandboxWallet = env.getString('BANXA_TEST_WALLET')
-    const isMainnet = wallet.networkId !== 300
-    const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
-    const moduleOptions = {isProduction: isMainnet, partner: 'yoroi'} as const
-    const urlOptions = {
-      coinType: 'ADA',
-      fiatType: 'USD',
-      blockchain: 'ADA',
-      walletAddress,
-    } as const
+    track.walletPageExchangeBottomSheetClicked()
+    openModal(
+      strings.buyTitle,
+      <View style={styles.buyModalContent}>
+        <Text style={styles.buyInfo}>{strings.buyInfo}</Text>
 
-    const banxa = banxaModuleMaker(moduleOptions)
-    const url = banxa.createReferralUrl(urlOptions)
-
-    Linking.openURL(url.toString())
+        <Button
+          shelleyTheme
+          title={strings.proceed}
+          onPress={() => {
+            track.walletPageExchangeClicked()
+            // banxa doesn't support testnet for the sandbox it needs a mainnet address
+            const sandboxWallet = env.getString('BANXA_TEST_WALLET')
+            const isMainnet = wallet.networkId !== 300
+            const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
+            const moduleOptions = {isProduction: isMainnet, partner: 'yoroi'} as const
+            const urlOptions = {
+              coinType: 'ADA',
+              fiatType: 'USD',
+              blockchain: 'ADA',
+              walletAddress,
+            } as const
+            const banxa = banxaModuleMaker(moduleOptions)
+            const url = banxa.createReferralUrl(urlOptions)
+            Linking.openURL(url.toString())
+            closeModal()
+          }}
+        />
+      </View>,
+    )
   }
 
   const handleOnSend = () => {
@@ -178,18 +193,29 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 18,
   },
+  buyInfo: {
+    fontSize: 16,
+    color: '#000000',
+    fontFamily: 'Rubik',
+    lineHeight: 24,
+  },
   disabled: {
     opacity: 0.5,
   },
+  buyModalContent: {flex: 1, flexDirection: 'column', justifyContent: 'space-between', paddingBottom: 26},
 })
 
 const useStrings = () => {
   const intl = useIntl()
+  const bold = {b: (text) => <Text bold>{text}</Text>}
 
   return {
     sendLabel: intl.formatMessage(actionMessages.send),
     receiveLabel: intl.formatMessage(actionMessages.receive),
     buyLabel: intl.formatMessage(actionMessages.buy),
+    buyTitle: intl.formatMessage(actionMessages.buyTitle),
+    buyInfo: intl.formatMessage(actionMessages.buyInfo, bold),
+    proceed: intl.formatMessage(actionMessages.proceed),
     swapLabel: intl.formatMessage(actionMessages.swap),
     messageBuy: intl.formatMessage(actionMessages.soon),
   }
