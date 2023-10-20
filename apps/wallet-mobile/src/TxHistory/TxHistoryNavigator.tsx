@@ -1,5 +1,13 @@
 import {createStackNavigator} from '@react-navigation/stack'
-import {supportedProviders, swapApiMaker, swapManagerMaker, SwapProvider, swapStorageMaker} from '@yoroi/swap'
+import {
+  milkTokenId,
+  supportedProviders,
+  swapApiMaker,
+  swapManagerMaker,
+  SwapProvider,
+  swapStorageMaker,
+} from '@yoroi/swap'
+import {Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
@@ -29,15 +37,18 @@ import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes, useWalletNav
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
+import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
+
+const aggregator: Swap.Aggregator = 'muesliswap'
 
 const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const {frontendFees} = useFrontendFees(wallet)
 
   const walletName = useWalletName(wallet)
   const stakingKey = useStakingKey(wallet)
@@ -47,7 +58,7 @@ export const TxHistoryNavigator = () => {
   const hideModalInfo = React.useCallback(() => setModalInfoState(false), [])
 
   const swapStorage = React.useMemo(() => swapStorageMaker(), [])
-  const swapAPI = React.useMemo(
+  const swapApi = React.useMemo(
     () =>
       swapApiMaker({
         isMainnet: wallet.networkId !== 300,
@@ -58,7 +69,11 @@ export const TxHistoryNavigator = () => {
     [wallet.networkId, stakingKey, wallet.primaryTokenInfo.id],
   )
 
-  const swapManager = React.useMemo(() => swapManagerMaker(swapStorage, swapAPI), [swapStorage, swapAPI])
+  const swapManager = React.useMemo(() => {
+    const frontendFee = frontendFees?.[aggregator] ?? []
+    const aggregatorToken = wallet.networkId !== 300 ? milkTokenId.mainnet : milkTokenId.preprod
+    return swapManagerMaker({swapStorage, swapApi, frontendFee, aggregator, aggregatorToken})
+  }, [frontendFees, wallet.networkId, swapStorage, swapApi])
 
   return (
     <SendProvider key={wallet.id}>

@@ -1,4 +1,6 @@
+import {AppFrontendFeeTier} from '../app/frontend-fees'
 import {BalanceToken} from '../balance/token'
+import {SwapAggregator} from './aggregator'
 import {SwapApi} from './api'
 import {SwapPoolProvider} from './pool'
 import {SwapStorage} from './storage'
@@ -30,4 +32,7 @@ export type SwapManager = Readonly<{
   stakingKey: string
   primaryTokenId: BalanceToken['info']['id']
   supportedProviders: ReadonlyArray<SwapPoolProvider>
+  aggregator: SwapAggregator
+  aggregatorToken?: BalanceToken['info']['id']
+  frontendFee: ReadonlyArray<AppFrontendFeeTier>
 }>

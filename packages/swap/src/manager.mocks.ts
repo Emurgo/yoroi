@@ -2,7 +2,7 @@ import {Balance, Swap} from '@yoroi/types'
 import {apiMocks} from './adapters/openswap-api/api.mocks'
 
 const loading = () => new Promise(() => {})
-const unknownError = () => Promise.reject('Unknown error')
+const unknownError = () => Promise.reject(new Error('Unknown error'))
 const delayedResponse = <T = never>({
   data,
   timeout = 3000,
@@ -187,6 +187,9 @@ export const mockSwapManager: Swap.Manager = {
   primaryTokenId: '',
   stakingKey: '',
   supportedProviders: [] as const,
+  aggregator: 'muesliswap',
+  aggregatorToken: '',
+  frontendFee: [] as const,
 } as const
 
 export const mockSwapManagerDefault: Swap.Manager = {
@@ -216,4 +219,7 @@ export const mockSwapManagerDefault: Swap.Manager = {
   primaryTokenId: '',
   stakingKey: '',
   supportedProviders: [] as const,
+  frontendFee: [] as const,
+  aggregatorToken: '',
+  aggregator: 'muesliswap',
 } as const

@@ -7,7 +7,7 @@ module.exports = {
     path.resolve(__dirname, "packages/types"),
     path.resolve(__dirname, "packages/banxa"),
     path.resolve(__dirname, "packages/common"),
-    path.resolve(__dirname, "packages/cardano"),
+    path.resolve(__dirname, "packages/api"),
     path.resolve(__dirname, "packages/openswap"),
     path.resolve(__dirname, "packages/swap"),
     path.resolve(__dirname, "apps/wallet-mobile"),

@@ -12,7 +12,7 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {Balance} from '@yoroi/types'
+import {App, Balance} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {HWDeviceInfo} from '../hw'
@@ -96,6 +96,9 @@ export type YoroiWallet = {
   isReadOnly: boolean
   primaryToken: Readonly<DefaultAsset>
   primaryTokenInfo: Readonly<Balance.TokenInfo>
+
+  // API
+  api: App.Api
 
   signRawTx(txHex: string, pKeys: PrivateKey[]): Promise<Uint8Array | undefined>
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PrivateKey} from '@emurgo/cross-csl-core'
 import * as yoroiLib from '@emurgo/yoroi-lib'
+import {AppApi} from '@yoroi/api'
 import {parseSafe} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
 import assert from 'assert'
@@ -43,7 +44,7 @@ import {genTimeToSlot} from '../../utils/timeUtils'
 import {validatePassword} from '../../utils/validators'
 import {WalletMeta} from '../../walletManager'
 import {Cardano, CardanoMobile} from '../../wallets'
-import * as api from '../api'
+import * as legacyApi from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
@@ -124,7 +125,11 @@ export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 const networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
 const implementationId = WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 
+const appApi = AppApi.mockAppApi
+// const api = AppApi.appApiMaker({baseUrl: API_ROOT})
+
 export class ByronWallet implements YoroiWallet {
+  readonly api: App.Api = appApi
   readonly primaryToken: DefaultAsset
   readonly primaryTokenInfo: Balance.TokenInfo
   readonly id: string
@@ -917,7 +922,7 @@ export class ByronWallet implements YoroiWallet {
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this.getAddressedChangeAddress()
     const addressedUtxos = await this.getAddressedUtxos()
-    const accountState = await api.getAccountState(
+    const accountState = await legacyApi.getAccountState(
       {addresses: [this.rewardAddressHex]},
       this.getNetworkConfig().BACKEND,
     )
@@ -1008,11 +1013,11 @@ export class ByronWallet implements YoroiWallet {
   // =================== backend API =================== //
 
   async checkServerStatus() {
-    return api.checkServerStatus(this.getBackendConfig())
+    return legacyApi.checkServerStatus(this.getBackendConfig())
   }
 
   async submitTransaction(signedTx: string) {
-    const response: any = await api.submitTransaction(signedTx, this.getBackendConfig())
+    const response: any = await legacyApi.submitTransaction(signedTx, this.getBackendConfig())
     Logger.info(response)
     return response as any
   }
@@ -1078,11 +1083,11 @@ export class ByronWallet implements YoroiWallet {
   }
 
   async fetchAccountState(): Promise<AccountStateResponse> {
-    return api.bulkGetAccountState([this.rewardAddressHex], this.getBackendConfig())
+    return legacyApi.bulkGetAccountState([this.rewardAddressHex], this.getBackendConfig())
   }
 
   async fetchPoolInfo(request: PoolInfoRequest) {
-    return api.getPoolInfo(request, this.getBackendConfig())
+    return legacyApi.getPoolInfo(request, this.getBackendConfig())
   }
 
   public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
@@ -1104,23 +1109,23 @@ export class ByronWallet implements YoroiWallet {
       return primaryTokenInfo.testnet
     }
 
-    return api.getTokenInfo(tokenId, `${apiUrl}/metadata`, this.getBackendConfig())
+    return legacyApi.getTokenInfo(tokenId, `${apiUrl}/metadata`, this.getBackendConfig())
   }
 
   async fetchFundInfo(): Promise<FundInfoResponse> {
-    return api.getFundInfo(this.getBackendConfig(), this.getNetworkConfig().IS_MAINNET)
+    return legacyApi.getFundInfo(this.getBackendConfig(), this.getNetworkConfig().IS_MAINNET)
   }
 
   async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
-    return api.fetchTxStatus(request, this.getBackendConfig())
+    return legacyApi.fetchTxStatus(request, this.getBackendConfig())
   }
 
   async fetchTipStatus(): Promise<TipStatusResponse> {
-    return api.getTipStatus(this.getBackendConfig())
+    return legacyApi.getTipStatus(this.getBackendConfig())
   }
 
   async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
-    return api.fetchCurrentPrice(symbol, this.getBackendConfig())
+    return legacyApi.fetchCurrentPrice(symbol, this.getBackendConfig())
   }
 
   // TODO: caching
@@ -1128,7 +1133,7 @@ export class ByronWallet implements YoroiWallet {
     const backendConfig = this.getBackendConfig()
     const networkConfig = this.getNetworkConfig()
     const isMainnet = networkConfig.IS_MAINNET
-    return api.getNFTModerationStatus(fingerprint, {...backendConfig, mainnet: isMainnet})
+    return legacyApi.getNFTModerationStatus(fingerprint, {...backendConfig, mainnet: isMainnet})
   }
 
   private state: WalletState = {
@@ -1296,7 +1301,7 @@ export class ByronWallet implements YoroiWallet {
 
   private async discoverAddresses() {
     // last chunk gap limit check
-    const filterFn = (addrs) => api.filterUsedAddresses(addrs, this.getBackendConfig())
+    const filterFn = (addrs) => legacyApi.filterUsedAddresses(addrs, this.getBackendConfig())
     await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
   }
 
