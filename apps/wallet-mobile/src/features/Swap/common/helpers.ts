@@ -1,6 +1,8 @@
-import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
+import {createTypeGuardFromSchema, isString, parseSafe} from '@yoroi/common'
+import {SwapState} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
+import config from 'react-native-config'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
@@ -97,4 +99,19 @@ const isOrderTxMetadata = createTypeGuardFromSchema(OrderTxMetadataSchema)
 export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | null => {
   const parsedMetadata = parseSafe(metadataJson)
   return isOrderTxMetadata(parsedMetadata) ? parsedMetadata : null
+}
+
+export const getFrontendFeeEntry = (
+  calculation: SwapState['orderData']['selectedPoolCalculation'],
+): YoroiEntry | null => {
+  if (!calculation) return null
+
+  const {quantity, tokenId} = calculation.cost.frontendFeeInfo.fee
+  const isFrontendFeeDefined = !Quantities.isZero(quantity)
+  if (!isString(config['FINTECH_WALLET']) || !isFrontendFeeDefined) return null
+
+  return {
+    address: config['FINTECH_WALLET'],
+    amounts: {[tokenId]: quantity},
+  }
 }

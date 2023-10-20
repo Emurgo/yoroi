@@ -1,10 +1,8 @@
-import {isString} from '@yoroi/common'
 import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {Alert, KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
-import config from 'react-native-config'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer, useModal} from '../../../../../components'
@@ -13,9 +11,8 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {YoroiEntry} from '../../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
-import {createYoroiEntry} from '../../../common/helpers'
+import {createYoroiEntry, getFrontendFeeEntry} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {useSwapForm} from '../../../common/SwapFormProvider'
@@ -106,18 +103,8 @@ export const CreateOrder = () => {
 
         const swapEntry = {...entry, datum}
 
-        let entries: YoroiEntry[] = [swapEntry]
-
-        // add frontend fee as another entry
-        if (isString(config['FINTECH_WALLET'])) {
-          const frontendFeeEntry: YoroiEntry = {
-            address: config['FINTECH_WALLET'],
-            amounts: {
-              [wallet.primaryTokenInfo.id]: '1000000',
-            },
-          }
-          entries = [swapEntry, frontendFeeEntry]
-        }
+        const frontendFeeEntry = getFrontendFeeEntry(selectedPoolCalculation)
+        const entries = frontendFeeEntry ? [swapEntry, frontendFeeEntry] : [swapEntry]
         createUnsignedTx({entries: entries})
       }
     },
