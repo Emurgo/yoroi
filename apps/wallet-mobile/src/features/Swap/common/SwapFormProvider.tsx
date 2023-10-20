@@ -39,8 +39,8 @@ export const SwapFormProvider = ({
   const {tokenId: buyTokenId, quantity: buyQuantity} = orderData.amounts.buy
   const {tokenId: sellTokenId, quantity: sellQuantity} = orderData.amounts.sell
 
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
+  const buyTokenInfo = useTokenInfo({wallet, tokenId: buyTokenId})
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: sellTokenId})
 
   const balances = useBalances(wallet)
   const sellbalance = Amounts.getAmount(balances, sellTokenId).quantity
@@ -101,8 +101,9 @@ export const SwapFormProvider = ({
     !Quantities.isZero(sellQuantity) &&
     state.buyQuantity.error === undefined &&
     state.sellQuantity.error === undefined &&
-    ((orderData.type === 'limit' && orderData.limitPrice !== undefined && !Quantities.isZero(orderData.limitPrice)) ||
-      orderData.selectedPoolCalculation !== undefined)
+    orderData.selectedPoolCalculation !== undefined &&
+    (orderData.type === 'market' ||
+      (orderData.type === 'limit' && orderData.limitPrice !== undefined && !Quantities.isZero(orderData.limitPrice)))
 
   const actions = React.useRef<SwapFormActions>({
     sellTouched: () => dispatch({type: SwapFormActionType.SellTouched}),
