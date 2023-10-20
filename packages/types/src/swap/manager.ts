@@ -33,6 +33,6 @@ export type SwapManager = Readonly<{
   primaryTokenId: BalanceToken['info']['id']
   supportedProviders: ReadonlyArray<SwapPoolProvider>
   aggregator: SwapAggregator
-  aggregatorToken?: BalanceToken['info']['id']
-  frontendFee: ReadonlyArray<AppFrontendFeeTier>
+  aggregatorTokenId?: BalanceToken['info']['id']
+  frontendFeeTiers: ReadonlyArray<AppFrontendFeeTier>
 }>

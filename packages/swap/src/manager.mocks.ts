@@ -188,8 +188,8 @@ export const mockSwapManager: Swap.Manager = {
   stakingKey: '',
   supportedProviders: [] as const,
   aggregator: 'muesliswap',
-  aggregatorToken: '',
-  frontendFee: [] as const,
+  aggregatorTokenId: '',
+  frontendFeeTiers: [] as const,
 } as const
 
 export const mockSwapManagerDefault: Swap.Manager = {
@@ -219,7 +219,7 @@ export const mockSwapManagerDefault: Swap.Manager = {
   primaryTokenId: '',
   stakingKey: '',
   supportedProviders: [] as const,
-  frontendFee: [] as const,
-  aggregatorToken: '',
+  frontendFeeTiers: [] as const,
+  aggregatorTokenId: '',
   aggregator: 'muesliswap',
 } as const

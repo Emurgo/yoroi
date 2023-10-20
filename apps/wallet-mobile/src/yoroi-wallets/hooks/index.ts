@@ -894,9 +894,10 @@ export const useBalances = (wallet: YoroiWallet): Balance.Amounts => {
   return Utxos.toAmounts(utxos, wallet.primaryTokenInfo.id)
 }
 
-export const useBalance = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
+export const useBalance = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string | undefined}) => {
   const balances = useBalances(wallet)
 
+  if (!tokenId) return Quantities.zero
   return Amounts.getAmount(balances, tokenId).quantity
 }
 

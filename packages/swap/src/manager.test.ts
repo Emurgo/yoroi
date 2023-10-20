@@ -34,8 +34,8 @@ describe('swapManagerMaker', () => {
       swapStorage: mockedStorage,
       swapApi: mockedApi,
       aggregator: 'muesliswap',
-      aggregatorToken: '',
-      frontendFee: [] as const,
+      aggregatorTokenId: '',
+      frontendFeeTiers: [] as const,
     })
   })
 
