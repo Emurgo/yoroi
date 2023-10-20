@@ -99,11 +99,11 @@ export const SwapFormProvider = ({
     state.sellQuantity.isTouched &&
     !Quantities.isZero(buyQuantity) &&
     !Quantities.isZero(sellQuantity) &&
-    !Quantities.isZero(sellQuantity) &&
     state.buyQuantity.error === undefined &&
     state.sellQuantity.error === undefined &&
-    ((orderData.type === 'limit' && orderData.limitPrice !== undefined && !Quantities.isZero(orderData.limitPrice)) ||
-      (orderData.type === 'market' && orderData.selectedPoolCalculation !== undefined))
+    orderData.selectedPoolCalculation !== undefined &&
+    (orderData.type === 'market' ||
+      (orderData.type === 'limit' && orderData.limitPrice !== undefined && !Quantities.isZero(orderData.limitPrice)))
 
   const actions = React.useRef<SwapFormActions>({
     sellTouched: () => dispatch({type: SwapFormActionType.SellTouched}),
