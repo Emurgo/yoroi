@@ -738,7 +738,9 @@ export class ByronWallet implements YoroiWallet {
         ? [stakingPrivateKey]
         : undefined
 
-    if (datum) {
+    const datum = unsignedTx.recipientEntries.find((entry) => entry.datum)?.datum
+
+    if (datum && 'data' in datum) {
       const signedTx = await unsignedTx.unsignedTx.sign(
         NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
         accountPrivateKeyHex,
@@ -806,6 +808,7 @@ export class ByronWallet implements YoroiWallet {
       unsignedTx,
       networkConfig,
       addressedUtxos,
+      recipientEntries: [],
     })
   }
 
@@ -908,6 +911,7 @@ export class ByronWallet implements YoroiWallet {
           networkConfig,
           votingRegistration,
           addressedUtxos,
+          recipientEntries: [],
         }),
       }
     } catch (e) {
@@ -963,6 +967,7 @@ export class ByronWallet implements YoroiWallet {
       unsignedTx: withdrawalTx,
       networkConfig: this.getNetworkConfig(),
       addressedUtxos,
+      recipientEntries: [],
     })
   }
 
@@ -1002,6 +1007,8 @@ export class ByronWallet implements YoroiWallet {
       this.stakingKeyPath,
     )
 
+    const datum = unsignedTx.recipientEntries.find((entry) => entry.datum)?.datum
+
     const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
     const signedTx = await Cardano.buildLedgerSignedTx(
       unsignedTx.unsignedTx,
@@ -1009,7 +1016,7 @@ export class ByronWallet implements YoroiWallet {
       this.getPurpose(),
       this.publicKeyHex,
       true,
-      unsignedTx.datum ? [unsignedTx.datum as {data: string}] : undefined,
+      datum && 'data' in datum ? [datum] : undefined,
     )
 
     return yoroiSignedTx({unsignedTx, signedTx})

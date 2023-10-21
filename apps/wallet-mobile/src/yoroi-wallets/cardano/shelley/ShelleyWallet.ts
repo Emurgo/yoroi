@@ -655,14 +655,16 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           ? [stakingPrivateKey]
           : undefined
 
-      if (unsignedTx?.datum) {
+      const datum = unsignedTx.recipientEntries.find((entry) => entry.datum)?.datum
+
+      if (datum && 'data' in datum) {
         const signedTx = await unsignedTx.unsignedTx.sign(
           BIP44_DERIVATION_LEVELS.ACCOUNT,
           accountPrivateKeyHex,
           new Set<string>(),
           [],
           undefined,
-          [unsignedTx?.datum as {data: string}],
+          [datum],
         )
         return yoroiSignedTx({unsignedTx, signedTx})
       }
@@ -939,13 +941,15 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
 
+      const datum = unsignedTx.recipientEntries.find((entry) => entry.datum)?.datum
+
       const signedTx = await Cardano.buildLedgerSignedTx(
         unsignedTx.unsignedTx,
         signedLedgerTx,
         PURPOSE,
         this.publicKeyHex,
         true,
-        unsignedTx.datum ? [unsignedTx.datum as {data: string}] : undefined,
+        datum && 'data' in datum ? [datum] : undefined,
       )
 
       return yoroiSignedTx({unsignedTx, signedTx})

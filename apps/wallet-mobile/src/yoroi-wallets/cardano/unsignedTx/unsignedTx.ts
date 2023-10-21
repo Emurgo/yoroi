@@ -1,6 +1,6 @@
 import {Balance} from '@yoroi/types'
 
-import {YoroiEntries, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../../types'
+import {YoroiEntries, YoroiEntry, YoroiMetadata, YoroiUnsignedTx, YoroiVoting} from '../../types'
 import {Amounts, Entries, Quantities} from '../../utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import {CardanoHaskellShelleyNetwork} from '../networks'
@@ -11,11 +11,13 @@ export const yoroiUnsignedTx = async ({
   networkConfig,
   votingRegistration,
   addressedUtxos,
+  recipientEntries,
 }: {
   unsignedTx: CardanoTypes.UnsignedTx
   networkConfig: CardanoHaskellShelleyNetwork
   votingRegistration?: VotingRegistration
   addressedUtxos: CardanoTypes.CardanoAddressedUtxo[]
+  recipientEntries: YoroiEntry[]
 }) => {
   const fee = toAmounts(unsignedTx.fee.values)
   const change = toEntries(
@@ -37,6 +39,7 @@ export const yoroiUnsignedTx = async ({
   const stakingBalances = await Cardano.getBalanceForStakingCredentials(addressedUtxos)
 
   const yoroiTx: YoroiUnsignedTx = {
+    recipientEntries,
     amounts,
     entries,
     fee,

@@ -21,6 +21,7 @@ export type YoroiTxInfo = {
   metadata: YoroiMetadata
   staking: YoroiStaking
   voting: YoroiVoting
+  recipientEntries: YoroiEntry[]
 }
 
 export type YoroiStaking = {
