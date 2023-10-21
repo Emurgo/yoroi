@@ -105,7 +105,7 @@ export type YoroiWallet = {
   // Sending
   createUnsignedTx(entries: YoroiEntry[], metadata?: Array<CardanoTypes.TxMetadata>): Promise<YoroiUnsignedTx>
   signTxWithLedger(request: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx>
-  signTx(signRequest: YoroiUnsignedTx, rootKey: string, datum?: Datum): Promise<YoroiSignedTx>
+  signTx(signRequest: YoroiUnsignedTx, rootKey: string): Promise<YoroiSignedTx>
   submitTransaction(signedTx: string): Promise<[]>
 
   // Voting

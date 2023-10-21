@@ -694,7 +694,9 @@ export class ByronWallet implements YoroiWallet {
           keyDeposit: networkConfig.KEY_DEPOSIT,
           linearFee: {
             coefficient: networkConfig.LINEAR_FEE.COEFFICIENT,
-            constant: networkConfig.LINEAR_FEE.CONSTANT,
+            constant: datum
+              ? String(BigInt(networkConfig.LINEAR_FEE.CONSTANT) * 2n)
+              : networkConfig.LINEAR_FEE.CONSTANT,
           },
           minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
           coinsPerUtxoWord: networkConfig.COINS_PER_UTXO_WORD,
@@ -705,7 +707,7 @@ export class ByronWallet implements YoroiWallet {
         {metadata: auxiliaryData},
       )
 
-      return yoroiUnsignedTx({unsignedTx, networkConfig: this.getNetworkConfig(), addressedUtxos, datum})
+      return yoroiUnsignedTx({unsignedTx, networkConfig: this.getNetworkConfig(), addressedUtxos})
     } catch (e) {
       if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
       Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -717,7 +719,7 @@ export class ByronWallet implements YoroiWallet {
     return Promise.reject(new Error('Method not implemented.'))
   }
 
-  async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string, datum?: {data: string}) {
+  async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
     const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
     const accountPrivateKey = await masterKey
       .derive(this.getPurpose())

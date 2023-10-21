@@ -628,7 +628,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           {metadata: auxiliaryData},
         )
 
-        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, datum})
+        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos})
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
         Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
