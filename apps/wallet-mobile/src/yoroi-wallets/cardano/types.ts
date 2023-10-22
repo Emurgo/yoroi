@@ -4,7 +4,6 @@ import {BaseAddress, PrivateKey} from '@emurgo/cross-csl-core'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
-  Datum,
   MultiTokenValue as MultiTokenValueType,
   SignedTx as SignedTxType,
   StakingKeyBalances as StakingKeyBalancesType,

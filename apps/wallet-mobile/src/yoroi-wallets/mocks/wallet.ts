@@ -858,6 +858,7 @@ const yoroiUnsignedTx: YoroiUnsignedTx & {mock: true} = {
   entries: {
     address1: {'': '99999'},
   },
+  recipientEntries: [{address: 'address1', amounts: {'': '99999'}}],
   amounts: {'': '99999'},
   fee: {'': '12345'},
   metadata: {},
@@ -873,11 +874,12 @@ const yoroiUnsignedTx: YoroiUnsignedTx & {mock: true} = {
   voting: {},
   unsignedTx: {} as any,
   mock: true,
-} as const
+}
 
 const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
   entries: {},
   amounts: {},
+  recipientEntries: [],
   fee: {'': '12345'},
   metadata: {},
   change: {},

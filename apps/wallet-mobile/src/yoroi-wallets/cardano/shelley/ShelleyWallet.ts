@@ -628,7 +628,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           {metadata: auxiliaryData},
         )
 
-        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos})
+        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, recipientEntries: entries})
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
         Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -725,6 +725,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         unsignedTx,
         networkConfig: NETWORK_CONFIG,
         addressedUtxos,
+        recipientEntries: [],
       })
     }
 
@@ -819,6 +820,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
             networkConfig: NETWORK_CONFIG,
             votingRegistration,
             addressedUtxos,
+            recipientEntries: [],
           }),
         }
       } catch (e) {
@@ -869,6 +871,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         unsignedTx: withdrawalTx,
         networkConfig: NETWORK_CONFIG,
         addressedUtxos,
+        recipientEntries: [],
       })
     }
 
