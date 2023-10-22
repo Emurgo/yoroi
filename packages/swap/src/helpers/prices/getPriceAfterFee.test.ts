@@ -98,4 +98,29 @@ describe('getPriceAfterFee', () => {
     const expected = new BigNumber(0)
     expect(result).toStrictEqual(expected)
   })
+
+  // NOTE: it means that if the price is missing the fee wont consider the batcher fee
+  it('should return not add the feeInSellTerm when pt sell side is 0', () => {
+    const pool = {
+      tokenA: {quantity: '143983812522', tokenId: 'tokenA'},
+      tokenB: {quantity: '2050476716943', tokenId: 'tokenB'},
+      ptPriceTokenA: '0',
+      ptPriceTokenB: '1',
+      fee: '0.3', // 0.3%
+      provider: 'minswap',
+      batcherFee: {quantity: '1900000', tokenId: ''},
+      deposit: {quantity: '1', tokenId: ''},
+      poolId: '0',
+      lpToken: {
+        quantity: '0',
+        tokenId: '0',
+      },
+    } as Swap.Pool
+    const tokenAAmount = '10000000000'
+    const tokenBAmount = '1000'
+    const tokenId = 'tokenA'
+    const result = getPriceAfterFee(pool, tokenAAmount, tokenBAmount, tokenId)
+    const expected = new BigNumber(10000000)
+    expect(result).toStrictEqual(expected)
+  })
 })

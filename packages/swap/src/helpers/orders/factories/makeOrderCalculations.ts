@@ -64,8 +64,7 @@ export const makeOrderCalculations = ({
       (!Quantities.isZero(buy.quantity) || !Quantities.isZero(sell.quantity)) &&
       Quantities.isZero(poolSupply)
     const hasSupply =
-      !Quantities.isGreaterThan(buy.quantity, poolSupply ?? Quantities.zero) &&
-      !supplyRequired
+      !Quantities.isGreaterThan(buy.quantity, poolSupply) && !supplyRequired
 
     // lf is sell side % of quantity ie. XToken 100 * 1% = 1 XToken
     const liquidityFee: Balance.Amount = getLiquidityProviderFee(pool.fee, sell)

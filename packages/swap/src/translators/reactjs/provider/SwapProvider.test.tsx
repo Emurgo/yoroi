@@ -1,12 +1,14 @@
 import * as React from 'react'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import {renderHook, act} from '@testing-library/react-hooks'
+import {AppApi} from '@yoroi/api'
 
 import {SwapProvider} from './SwapProvider'
 import {mockSwapManager, swapManagerMocks} from '../../../manager.mocks'
 import {SwapState, defaultSwapState} from '../state/state'
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {useSwap} from '../hooks/useSwap'
+import {mocks} from '../../../helpers/mocks'
 
 describe('SwapProvider', () => {
   let queryClient: QueryClient
@@ -111,22 +113,43 @@ describe('SwapProvider', () => {
     expect(result.current.unsignedTx).toEqual({hash: 'hash'})
   })
 
-  it('LimitPriceChanged', () => {
-    const wrapper = ({children}: any) => (
-      <QueryClientProvider client={queryClient}>
-        <SwapProvider swapManager={mockSwapManager}>{children}</SwapProvider>
-      </QueryClientProvider>
-    )
+  describe('LimitPriceChanged', () => {
+    it('should not update limit price if order type is market', () => {
+      const wrapper = ({children}: any) => (
+        <QueryClientProvider client={queryClient}>
+          <SwapProvider swapManager={mockSwapManager}>{children}</SwapProvider>
+        </QueryClientProvider>
+      )
 
-    const {result} = renderHook(() => useSwap(), {
-      wrapper,
+      const {result} = renderHook(() => useSwap(), {
+        wrapper,
+      })
+
+      act(() => {
+        result.current.limitPriceChanged('3')
+      })
+
+      expect(result.current.orderData.limitPrice).toBeUndefined()
     })
 
-    act(() => {
-      result.current.limitPriceChanged('3')
-    })
+    it('should update limit price if order type is market', () => {
+      const wrapper = ({children}: any) => (
+        <QueryClientProvider client={queryClient}>
+          <SwapProvider swapManager={mockSwapManager}>{children}</SwapProvider>
+        </QueryClientProvider>
+      )
 
-    expect(result.current.orderData.limitPrice).toBe('3')
+      const {result} = renderHook(() => useSwap(), {
+        wrapper,
+      })
+
+      act(() => {
+        result.current.orderTypeChanged('limit')
+        result.current.limitPriceChanged('3')
+      })
+
+      expect(result.current.orderData.limitPrice).toBe('3')
+    })
   })
 
   it('SwitchTokens market', () => {
@@ -318,5 +341,288 @@ describe('SwapProvider', () => {
 
     expect(result.current.orderData).toEqual(defaultSwapState.orderData)
     expect(result.current.unsignedTx).toBeUndefined()
+  })
+
+  it('BuyQuantityChanged', () => {
+    const initialState: SwapState = {
+      orderData: {
+        ...defaultSwapState.orderData,
+        amounts: {
+          sell: {
+            quantity: '10',
+            tokenId: 'policyId.sell',
+          },
+          buy: {
+            quantity: '20',
+            tokenId: 'policyId.buy',
+          },
+        },
+      },
+      unsignedTx: undefined,
+    }
+    const wrapper = ({children}: any) => (
+      <QueryClientProvider client={queryClient}>
+        <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
+          {children}
+        </SwapProvider>
+      </QueryClientProvider>
+    )
+
+    const {result} = renderHook(() => useSwap(), {
+      wrapper,
+    })
+
+    act(() => {
+      result.current.buyQuantityChanged('30')
+    })
+
+    expect(result.current.orderData.amounts).toEqual({
+      sell: {
+        quantity: '10',
+        tokenId: 'policyId.sell',
+      },
+      buy: {
+        quantity: '30',
+        tokenId: 'policyId.buy',
+      },
+    })
+  })
+
+  it('SellQuantityChanged', () => {
+    const initialState: SwapState = {
+      orderData: {
+        ...defaultSwapState.orderData,
+        amounts: {
+          sell: {
+            quantity: '10',
+            tokenId: 'policyId.sell',
+          },
+          buy: {
+            quantity: '20',
+            tokenId: 'policyId.buy',
+          },
+        },
+      },
+      unsignedTx: undefined,
+    }
+    const wrapper = ({children}: any) => (
+      <QueryClientProvider client={queryClient}>
+        <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
+          {children}
+        </SwapProvider>
+      </QueryClientProvider>
+    )
+
+    const {result} = renderHook(() => useSwap(), {
+      wrapper,
+    })
+
+    act(() => {
+      result.current.sellQuantityChanged('30')
+    })
+
+    expect(result.current.orderData.amounts).toEqual({
+      sell: {
+        quantity: '30',
+        tokenId: 'policyId.sell',
+      },
+      buy: {
+        quantity: '20',
+        tokenId: 'policyId.buy',
+      },
+    })
+  })
+
+  it('LpTokenHeldChanged', () => {
+    const initialState: SwapState = {
+      orderData: {
+        ...defaultSwapState.orderData,
+        lpTokenHeld: undefined,
+      },
+      unsignedTx: undefined,
+    }
+    const wrapper = ({children}: any) => (
+      <QueryClientProvider client={queryClient}>
+        <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
+          {children}
+        </SwapProvider>
+      </QueryClientProvider>
+    )
+
+    const {result} = renderHook(() => useSwap(), {
+      wrapper,
+    })
+
+    act(() => {
+      result.current.lpTokenHeldChanged({
+        quantity: '30',
+        tokenId: 'policyId.tokenHeld',
+      })
+    })
+
+    expect(result.current.orderData.lpTokenHeld).toEqual({
+      quantity: '30',
+      tokenId: 'policyId.tokenHeld',
+    })
+  })
+
+  it('BuyTokenIdChanged', () => {
+    const initialState: SwapState = {
+      orderData: {
+        ...defaultSwapState.orderData,
+        amounts: {
+          sell: {
+            quantity: '10',
+            tokenId: 'policyId.sell',
+          },
+          buy: {
+            quantity: '20',
+            tokenId: 'policyId.buy',
+          },
+        },
+      },
+      unsignedTx: undefined,
+    }
+    const wrapper = ({children}: any) => (
+      <QueryClientProvider client={queryClient}>
+        <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
+          {children}
+        </SwapProvider>
+      </QueryClientProvider>
+    )
+
+    const {result} = renderHook(() => useSwap(), {
+      wrapper,
+    })
+
+    act(() => {
+      result.current.buyTokenIdChanged('new.token')
+    })
+
+    expect(result.current.orderData.amounts.buy).toEqual({
+      quantity: '20',
+      tokenId: 'new.token',
+    })
+  })
+
+  it('SellTokenIdChanged', () => {
+    const initialState: SwapState = {
+      orderData: {
+        ...defaultSwapState.orderData,
+        amounts: {
+          sell: {
+            quantity: '10',
+            tokenId: 'policyId.sell',
+          },
+          buy: {
+            quantity: '20',
+            tokenId: 'policyId.buy',
+          },
+        },
+      },
+      unsignedTx: undefined,
+    }
+    const wrapper = ({children}: any) => (
+      <QueryClientProvider client={queryClient}>
+        <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
+          {children}
+        </SwapProvider>
+      </QueryClientProvider>
+    )
+
+    const {result} = renderHook(() => useSwap(), {
+      wrapper,
+    })
+
+    act(() => {
+      result.current.sellTokenIdChanged('new.token')
+    })
+
+    expect(result.current.orderData.amounts.sell).toEqual({
+      quantity: '10',
+      tokenId: 'new.token',
+    })
+  })
+
+  it('PoolPairsChanged', () => {
+    const initialState: SwapState = {
+      orderData: {
+        ...defaultSwapState.orderData,
+      },
+      unsignedTx: undefined,
+    }
+    const wrapper = ({children}: any) => (
+      <QueryClientProvider client={queryClient}>
+        <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
+          {children}
+        </SwapProvider>
+      </QueryClientProvider>
+    )
+
+    const {result} = renderHook(() => useSwap(), {
+      wrapper,
+    })
+
+    act(() => {
+      result.current.poolPairsChanged(mocks.mockedPools1)
+    })
+
+    expect(result.current.orderData.pools).toEqual(mocks.mockedPools1)
+  })
+
+  it('PrimaryTokenIdChanged', () => {
+    const initialState: SwapState = {
+      orderData: {
+        ...defaultSwapState.orderData,
+      },
+      unsignedTx: undefined,
+    }
+    const wrapper = ({children}: any) => (
+      <QueryClientProvider client={queryClient}>
+        <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
+          {children}
+        </SwapProvider>
+      </QueryClientProvider>
+    )
+
+    const {result} = renderHook(() => useSwap(), {
+      wrapper,
+    })
+
+    act(() => {
+      result.current.primaryTokenIdChanged('primary.tokenId')
+    })
+
+    expect(result.current.orderData.primartyTokenId).toEqual('primary.tokenId')
+  })
+
+  it('FrontendFeeTiersChanged', () => {
+    const initialState: SwapState = {
+      orderData: {
+        ...defaultSwapState.orderData,
+      },
+      unsignedTx: undefined,
+    }
+    const wrapper = ({children}: any) => (
+      <QueryClientProvider client={queryClient}>
+        <SwapProvider swapManager={mockSwapManager} initialState={initialState}>
+          {children}
+        </SwapProvider>
+      </QueryClientProvider>
+    )
+
+    const {result} = renderHook(() => useSwap(), {
+      wrapper,
+    })
+
+    act(() => {
+      result.current.frontendFeeTiersChanged(
+        AppApi.mockGetFrontendFees.withFees.muesliswap!,
+      )
+    })
+
+    expect(result.current.orderData.frontendFeeTiers).toEqual(
+      AppApi.mockGetFrontendFees.withFees.muesliswap!,
+    )
   })
 })
