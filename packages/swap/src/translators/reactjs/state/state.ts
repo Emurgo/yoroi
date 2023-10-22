@@ -366,6 +366,7 @@ const orderReducer = (
           primaryTokenId: state.orderData.primartyTokenId,
           lpTokenHeld: state.orderData.lpTokenHeld,
           frontendFeeTiers: state.orderData.frontendFeeTiers,
+          side: 'sell',
         })
 
         draft.orderData.bestPoolCalculation = getBestPoolCalculation(
@@ -376,16 +377,8 @@ const orderReducer = (
 
         if (draft.orderData.selectedPoolCalculation === undefined) break
 
-        if (
-          draft.orderData.amounts.sell.tokenId ===
-          draft.orderData.selectedPoolCalculation.pool.tokenA.tokenId
-        ) {
-          draft.orderData.amounts.buy =
-            draft.orderData.selectedPoolCalculation.sides.buy
-        } else {
-          draft.orderData.amounts.sell =
-            draft.orderData.selectedPoolCalculation.sides.sell
-        }
+        draft.orderData.amounts.buy =
+          draft.orderData.selectedPoolCalculation.sides.buy
         break
 
       // when resetting quantities, when order is limit, limit price is the best market price
@@ -433,9 +426,9 @@ const orderReducer = (
       // this can cause a pool if not enough supply to be selected
       // must be handled on the UI
       case SwapCreateOrderActionType.LimitPriceChanged:
-        draft.orderData.limitPrice = action.limitPrice
-
         if (state.orderData.type === 'market') break
+
+        draft.orderData.limitPrice = action.limitPrice
 
         draft.orderData.calculations = makeOrderCalculations({
           orderType: state.orderData.type,
@@ -572,6 +565,7 @@ const orderReducer = (
 
       // when the frontend feee tiers changes, the calculations are updated
       // buy side needs recalculation since best pool can change
+      // NOTE: designed to be loaded once at the initialization
       case SwapCreateOrderActionType.FrontendFeeTiersChanged:
         draft.orderData.frontendFeeTiers = [...action.feeTiers]
 
@@ -606,7 +600,7 @@ const orderReducer = (
         draft.orderData.calculations = makeOrderCalculations({
           orderType: state.orderData.type,
           amounts: state.orderData.amounts,
-          limitPrice: state.orderData.limitPrice,
+          limitPrice: undefined,
           slippage: state.orderData.slippage,
           pools: draft.orderData.pools,
           primaryTokenId: state.orderData.primartyTokenId,
@@ -634,6 +628,7 @@ const orderReducer = (
           draft.orderData.selectedPoolCalculation.sides.buy
         break
 
+      // NOTE: designed to be loaded once at the initialization
       case SwapCreateOrderActionType.PrimaryTokenIdChanged:
         draft.orderData.primartyTokenId = action.tokenId
         break
