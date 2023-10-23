@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PrivateKey} from '@emurgo/cross-csl-core'
+import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi} from '@yoroi/api'
 import {parseSafe} from '@yoroi/common'
+import {isNonNullable} from '@yoroi/common/src'
 import {App, Balance} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
@@ -601,7 +603,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       const recipients = await toRecipients(entries, this.primaryToken)
 
-      const datum = recipients.find((recipient) => recipient.datum)?.datum
+      const containsDatum = recipients.some((recipient) => recipient.datum)
 
       if (recipients.filter((r) => r.datum).length > 1) {
         throw new Error('Only one datum per transaction is supported')
@@ -617,7 +619,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
             keyDeposit: KEY_DEPOSIT,
             linearFee: {
               coefficient: LINEAR_FEE.COEFFICIENT,
-              constant: datum ? String(BigInt(LINEAR_FEE.CONSTANT) * 2n) : LINEAR_FEE.CONSTANT,
+              constant: containsDatum ? String(BigInt(LINEAR_FEE.CONSTANT) * 2n) : LINEAR_FEE.CONSTANT,
             },
             minimumUtxoVal: MINIMUM_UTXO_VAL,
             coinsPerUtxoWord: COINS_PER_UTXO_WORD,
@@ -655,16 +657,19 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           ? [stakingPrivateKey]
           : undefined
 
-      const datum = unsignedTx.entries.find((entry) => entry.datum)?.datum
+      const datums = unsignedTx.entries
+        .map((entry) => entry.datum)
+        .filter(isNonNullable)
+        .filter((datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum)
 
-      if (datum && 'data' in datum) {
+      if (datums.length > 0) {
         const signedTx = await unsignedTx.unsignedTx.sign(
           BIP44_DERIVATION_LEVELS.ACCOUNT,
           accountPrivateKeyHex,
           new Set<string>(),
           [],
           undefined,
-          [datum],
+          datums,
         )
         return yoroiSignedTx({unsignedTx, signedTx})
       }
@@ -933,7 +938,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
 
-      const datum = unsignedTx.entries.find((entry) => entry.datum)?.datum
+      const datums = unsignedTx.entries
+        .map((entry) => entry.datum)
+        .filter(isNonNullable)
+        .filter((datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum)
 
       const signedTx = await Cardano.buildLedgerSignedTx(
         unsignedTx.unsignedTx,
@@ -941,7 +949,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         PURPOSE,
         this.publicKeyHex,
         true,
-        datum && 'data' in datum ? [datum] : undefined,
+        datums.length > 0 ? datums : undefined,
       )
 
       return yoroiSignedTx({unsignedTx, signedTx})
