@@ -52,7 +52,7 @@ export const SwapFormProvider = ({
   const hasFeesBalance = !Quantities.isGreaterThan(
     Quantities.sum([
       sellTokenId === wallet.primaryTokenInfo.id ? sellQuantity : Quantities.zero,
-      orderData.selectedPoolCalculation?.cost.ptTotalFeeNoFEF.quantity ?? Quantities.zero,
+      orderData.selectedPoolCalculation?.cost.ptTotalFee.quantity ?? Quantities.zero,
     ]),
     primaryTokenBalance,
   )
