@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.walletinit.createwallet.mnemonicshowscreen.mnemonicNote",
+    "defaultMessage": "!!!Please, make sure you have carefully written down your recovery phrase somewhere safe. You will need this phrase to use and restore your wallet. Phrase is case sensitive.",
+    "file": "src/WalletInit/MnemonicShow/MnemonicShowScreen.tsx",
+    "start": {
+      "line": 85,
+      "column": 16,
+      "index": 3015
+    },
+    "end": {
+      "line": 92,
+      "column": 3,
+      "index": 3334
+    }
+  },
+  {
+    "id": "components.walletinit.createwallet.mnemonicshowscreen.confirmationButton",
+    "defaultMessage": "!!!Yes, I have written it down",
+    "file": "src/WalletInit/MnemonicShow/MnemonicShowScreen.tsx",
+    "start": {
+      "line": 93,
+      "column": 22,
+      "index": 3358
+    },
+    "end": {
+      "line": 96,
+      "column": 3,
+      "index": 3501
+    }
+  }
+]

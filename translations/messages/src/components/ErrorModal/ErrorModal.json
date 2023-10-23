@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.common.errormodal.showError",
+    "defaultMessage": "!!!Show error message",
+    "file": "src/components/ErrorModal/ErrorModal.tsx",
+    "start": {
+      "line": 147,
+      "column": 13,
+      "index": 4032
+    },
+    "end": {
+      "line": 150,
+      "column": 3,
+      "index": 4132
+    }
+  },
+  {
+    "id": "components.common.errormodal.hideError",
+    "defaultMessage": "!!!Hide error message",
+    "file": "src/components/ErrorModal/ErrorModal.tsx",
+    "start": {
+      "line": 151,
+      "column": 13,
+      "index": 4147
+    },
+    "end": {
+      "line": 154,
+      "column": 3,
+      "index": 4247
+    }
+  }
+]

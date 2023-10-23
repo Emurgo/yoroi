@@ -1,0 +1,137 @@
+[
+  {
+    "id": "components.common.navigation.transactionsButton",
+    "defaultMessage": "!!!Transactions",
+    "file": "src/WalletNavigator.tsx",
+    "start": {
+      "line": 161,
+      "column": 22,
+      "index": 5551
+    },
+    "end": {
+      "line": 164,
+      "column": 3,
+      "index": 5654
+    }
+  },
+  {
+    "id": "components.txhistory.txnavigationbuttons.sendButton",
+    "defaultMessage": "!!!Send",
+    "file": "src/WalletNavigator.tsx",
+    "start": {
+      "line": 165,
+      "column": 14,
+      "index": 5670
+    },
+    "end": {
+      "line": 168,
+      "column": 3,
+      "index": 5769
+    }
+  },
+  {
+    "id": "components.txhistory.txnavigationbuttons.receiveButton",
+    "defaultMessage": "!!!Receive",
+    "file": "src/WalletNavigator.tsx",
+    "start": {
+      "line": 169,
+      "column": 17,
+      "index": 5788
+    },
+    "end": {
+      "line": 172,
+      "column": 3,
+      "index": 5893
+    }
+  },
+  {
+    "id": "components.common.navigation.dashboardButton",
+    "defaultMessage": "!!!Dashboard",
+    "file": "src/WalletNavigator.tsx",
+    "start": {
+      "line": 173,
+      "column": 19,
+      "index": 5914
+    },
+    "end": {
+      "line": 176,
+      "column": 3,
+      "index": 6011
+    }
+  },
+  {
+    "id": "components.common.navigation.delegateButton",
+    "defaultMessage": "!!!Delegate",
+    "file": "src/WalletNavigator.tsx",
+    "start": {
+      "line": 177,
+      "column": 18,
+      "index": 6031
+    },
+    "end": {
+      "line": 180,
+      "column": 3,
+      "index": 6126
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.tabTitle",
+    "defaultMessage": "!!!Wallet",
+    "file": "src/WalletNavigator.tsx",
+    "start": {
+      "line": 181,
+      "column": 16,
+      "index": 6144
+    },
+    "end": {
+      "line": 184,
+      "column": 3,
+      "index": 6242
+    }
+  },
+  {
+    "id": "global.staking",
+    "defaultMessage": "!!!Staking",
+    "file": "src/WalletNavigator.tsx",
+    "start": {
+      "line": 185,
+      "column": 17,
+      "index": 6261
+    },
+    "end": {
+      "line": 188,
+      "column": 3,
+      "index": 6326
+    }
+  },
+  {
+    "id": "components.common.navigation.nftGallery",
+    "defaultMessage": "!!!NFT Gallery",
+    "file": "src/WalletNavigator.tsx",
+    "start": {
+      "line": 189,
+      "column": 14,
+      "index": 6342
+    },
+    "end": {
+      "line": 192,
+      "column": 3,
+      "index": 6436
+    }
+  },
+  {
+    "id": "menu",
+    "defaultMessage": "!!!Menu",
+    "file": "src/WalletNavigator.tsx",
+    "start": {
+      "line": 193,
+      "column": 14,
+      "index": 6452
+    },
+    "end": {
+      "line": 196,
+      "column": 3,
+      "index": 6504
+    }
+  }
+]

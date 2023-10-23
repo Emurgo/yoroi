@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.send.sendscreen.resolvesTo",
+    "defaultMessage": "!!!Resolves to",
+    "file": "src/features/Settings/ManageCollateral/ConfirmTx/Summary/ReceiverInfo.tsx",
+    "start": {
+      "line": 35,
+      "column": 14,
+      "index": 772
+    },
+    "end": {
+      "line": 38,
+      "column": 3,
+      "index": 864
+    }
+  }
+]

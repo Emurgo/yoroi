@@ -1,0 +1,17 @@
+[
+  {
+    "id": "global.info",
+    "defaultMessage": "!!!Info",
+    "file": "src/TxHistory/ModalInfo/ModalInfo.tsx",
+    "start": {
+      "line": 32,
+      "column": 13,
+      "index": 778
+    },
+    "end": {
+      "line": 35,
+      "column": 3,
+      "index": 837
+    }
+  }
+]
