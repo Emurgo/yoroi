@@ -43,12 +43,10 @@ export const SwapFormProvider = ({
   const sellTokenInfo = useTokenInfo({wallet, tokenId: sellTokenId})
 
   const balances = useBalances(wallet)
-  const sellbalance = Amounts.getAmount(balances, sellTokenId).quantity
+  const sellBalance = Amounts.getAmount(balances, sellTokenId).quantity
   const primaryTokenBalance = Amounts.getAmount(balances, wallet.primaryTokenInfo.id).quantity
 
-  const poolSupply = buyTokenId === pool?.tokenA.tokenId ? pool?.tokenA.quantity : pool?.tokenB.quantity
-  const hasBuyTokenSupply = !Quantities.isGreaterThan(buyQuantity, poolSupply ?? Quantities.zero)
-  const hasSellBalance = !Quantities.isGreaterThan(sellQuantity, sellbalance)
+  const hasSellBalance = !Quantities.isGreaterThan(sellQuantity, sellBalance)
   const hasFeesBalance = !Quantities.isGreaterThan(
     Quantities.sum([
       sellTokenId === wallet.primaryTokenInfo.id ? sellQuantity : Quantities.zero,
@@ -80,7 +78,7 @@ export const SwapFormProvider = ({
   const buyError =
     noPoolError !== undefined
       ? noPoolError
-      : (!Quantities.isZero(buyQuantity) && !hasBuyTokenSupply) ||
+      : !orderData.selectedPoolCalculation?.hasSupply ||
         (state.sellQuantity.isTouched && state.buyQuantity.isTouched && pool === undefined)
       ? strings.notEnoughSupply
       : undefined
@@ -198,11 +196,11 @@ export const SwapFormProvider = ({
   )
 
   React.useEffect(() => {
-    if (buyError !== state.buyQuantity.error && buyError !== undefined) actions.buyAmountErrorChanged(buyError)
+    if (buyError !== state.buyQuantity.error) actions.buyAmountErrorChanged(buyError)
   }, [actions, buyError, state.buyQuantity.error])
 
   React.useEffect(() => {
-    if (sellError !== state.sellQuantity.error && sellError !== undefined) {
+    if (sellError !== state.sellQuantity.error) {
       actions.sellAmountErrorChanged(sellError)
     }
   }, [actions, sellError, state.sellQuantity.error])
@@ -270,8 +268,10 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
         break
 
       case SwapFormActionType.ResetSwapForm:
-      case SwapFormActionType.ClearSwapForm:
         return defaultState
+
+      case SwapFormActionType.ClearSwapForm:
+        return state
 
       case SwapFormActionType.CanSwapChanged:
         draft.canSwap = action.canSwap
