@@ -12,18 +12,20 @@ export const yoroiUnsignedTx = async ({
   networkConfig,
   votingRegistration,
   addressedUtxos,
+  entries,
 }: {
   unsignedTx: CardanoTypes.UnsignedTx
   networkConfig: CardanoHaskellShelleyNetwork
   votingRegistration?: VotingRegistration
   addressedUtxos: CardanoTypes.CardanoAddressedUtxo[]
+  entries?: YoroiEntry[]
 }) => {
   const fee = toAmounts(unsignedTx.fee.values)
   const change = await toEntriesFromChange(unsignedTx.change)
   const outputsEntries = await toEntriesFromOutputs(unsignedTx.outputs)
   const changeAddresses = Entries.toAddresses(change)
   // entries === (outputs - change)
-  const entries = Entries.remove(outputsEntries, changeAddresses)
+  entries = entries ?? Entries.remove(outputsEntries, changeAddresses)
   const stakingBalances = await Cardano.getBalanceForStakingCredentials(addressedUtxos)
 
   const yoroiTx: YoroiUnsignedTx = {

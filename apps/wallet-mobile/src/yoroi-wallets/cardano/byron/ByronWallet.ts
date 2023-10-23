@@ -709,7 +709,7 @@ export class ByronWallet implements YoroiWallet {
         {metadata: auxiliaryData},
       )
 
-      return yoroiUnsignedTx({unsignedTx, networkConfig: this.getNetworkConfig(), addressedUtxos})
+      return yoroiUnsignedTx({unsignedTx, networkConfig: this.getNetworkConfig(), addressedUtxos, entries})
     } catch (e) {
       if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
       Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
