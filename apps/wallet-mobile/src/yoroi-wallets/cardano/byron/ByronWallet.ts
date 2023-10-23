@@ -740,19 +740,19 @@ export class ByronWallet implements YoroiWallet {
         ? [stakingPrivateKey]
         : undefined
 
-    const datums = unsignedTx.entries
+    const datumDatas = unsignedTx.entries
       .map((entry) => entry.datum)
       .filter(isNonNullable)
       .filter((datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum)
 
-    if (datums.length > 0) {
+    if (datumDatas.length > 0) {
       const signedTx = await unsignedTx.unsignedTx.sign(
         NUMBERS.BIP44_DERIVATION_LEVELS.ACCOUNT,
         accountPrivateKeyHex,
         new Set<string>(),
         [],
         undefined,
-        datums,
+        datumDatas,
       )
       return yoroiSignedTx({unsignedTx, signedTx})
     }
@@ -1009,7 +1009,7 @@ export class ByronWallet implements YoroiWallet {
       this.stakingKeyPath,
     )
 
-    const datums = unsignedTx.entries
+    const datumDatas = unsignedTx.entries
       .map((entry) => entry.datum)
       .filter(isNonNullable)
       .filter((datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum)
@@ -1021,7 +1021,7 @@ export class ByronWallet implements YoroiWallet {
       this.getPurpose(),
       this.publicKeyHex,
       true,
-      datums.length > 0 ? datums : undefined,
+      datumDatas.length > 0 ? datumDatas : undefined,
     )
 
     return yoroiSignedTx({unsignedTx, signedTx})
