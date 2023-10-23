@@ -95,7 +95,7 @@ export const CreateOrder = () => {
 
       const {amounts, selectedPoolCalculation} = orderData
       const {contractAddress, datum: datumData} = orderResponse
-      const datum: YoroiEntry['datum'] = {data: datumData}
+      const datum: YoroiEntry['datum'] = datumData != null ? {data: datumData} : undefined
       const orderEntry = createOrderEntry(
         amounts,
         selectedPoolCalculation.pool,
