@@ -31,6 +31,10 @@
     {
       "name": "@yoroi/wallet-mobile",
       "path": "./apps/wallet-mobile"
+    },
+    {
+      "name": "@yoroi/e2e-wallet-mobile",
+      "path": "./e2e/wallet-mobile"
     }
   ],
 

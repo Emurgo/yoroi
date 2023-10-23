@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/openswap",
-  "version": "0.0.1",
+  "version": "1.1.0",
   "repository": {
     "type": "github",
     "url": "https://github.com/Emurgo/yoroi.git",

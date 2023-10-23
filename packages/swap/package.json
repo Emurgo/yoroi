@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/swap",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "The Swap package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -115,10 +115,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 60,
-        "functions": 60,
-        "lines": 60,
-        "statements": 60
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100 
       }
     },
     "modulePathIgnorePatterns": [
@@ -132,8 +132,8 @@
   },
   "dependencies": {
     "@emurgo/cip14-js": "^3.0.1",
-    "@yoroi/api": "1.0.0",
-    "@yoroi/openswap": "0.0.1",
+    "@yoroi/api": "1.1.0",
+    "@yoroi/openswap": "1.1.0",
     "immer": "^10.0.2"
   },
   "devDependencies": {
@@ -146,7 +146,7 @@
     "@types/jest": "^28.1.2",
     "@types/react": "18.2.0",
     "@types/react-native": "0.71.6",
-    "@yoroi/types": "1.0.4",
+    "@yoroi/types": "1.1.0",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",

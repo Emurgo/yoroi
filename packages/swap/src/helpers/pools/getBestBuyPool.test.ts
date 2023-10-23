@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Balance, Swap} from '@yoroi/types'
 
 import {getBestBuyPool} from './getBestBuyPool'
 import {getBuyAmount} from '../orders/amounts/getBuyAmount'
@@ -46,6 +46,33 @@ describe('getBestBuyPool', () => {
     }
 
     expect(getBestBuyPool([mocks.mockedPools1[0]!], sell)).toBeUndefined()
+  })
+
+  it('should return undefined if the buy quantity turns to be 0', () => {
+    const pools: Array<Swap.Pool> = [
+      {
+        tokenA: {quantity: '1000000000000000000000', tokenId: 'tokenA'},
+        tokenB: {quantity: '1', tokenId: 'tokenB'},
+        ptPriceTokenA: '1',
+        ptPriceTokenB: '0.0695404765',
+        fee: '0.3', // 0.3%
+        provider: 'muesliswap_v2',
+        batcherFee: {quantity: '950000', tokenId: ''},
+        deposit: {quantity: '2000000', tokenId: ''},
+        poolId: '1',
+        lpToken: {
+          quantity: '0',
+          tokenId: '0',
+        },
+      },
+    ]
+
+    const sell: Balance.Amount = {
+      quantity: '1',
+      tokenId: 'tokenA',
+    }
+
+    expect(getBestBuyPool(pools, sell)).toBeUndefined()
   })
 
   it('should return undefined if pools list is empty', () => {
