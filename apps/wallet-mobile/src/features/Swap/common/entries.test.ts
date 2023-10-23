@@ -66,7 +66,7 @@ describe('createOrderEntry', () => {
       quantity: '1000000',
       tokenId: 'token2.Id',
     },
-    // below are the values that are used in the helper
+    // below are the values that are not used in the helper
     fee: '1',
     lpToken: {
       quantity: '1',
