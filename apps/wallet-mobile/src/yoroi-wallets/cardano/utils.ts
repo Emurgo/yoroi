@@ -4,6 +4,7 @@ import {Balance} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
 
+import {YoroiEntry} from '../types'
 import {
   Addressing,
   BaseAsset,
@@ -23,6 +24,7 @@ import {
   WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
 } from './constants/mainnet/constants'
 import {NETWORK_ID as testnetId} from './constants/testnet/constants'
+import {withMinAmounts} from './getMinAmounts'
 import {MultiToken} from './MultiToken'
 import {CardanoHaskellShelleyNetwork, PRIMARY_ASSET_CONSTANTS} from './networks'
 import {NUMBERS} from './numbers'
@@ -277,6 +279,19 @@ export const toCardanoNetworkId = (networkId: number) => {
 
 export const toSendTokenList = (amounts: Balance.Amounts, primaryToken: Token): Array<SendToken> => {
   return Amounts.toArray(amounts).map(toSendToken(primaryToken))
+}
+
+export const toRecipients = async (entries: YoroiEntry[], primaryToken: DefaultAsset) => {
+  return Promise.all(
+    entries.map(async (entry) => {
+      const amounts = await withMinAmounts(entry.address, entry.amounts, primaryToken)
+      return {
+        receiver: entry.address,
+        tokens: toSendTokenList(amounts, primaryToken),
+        datum: entry.datum,
+      }
+    }),
+  )
 }
 
 export const toSendToken =

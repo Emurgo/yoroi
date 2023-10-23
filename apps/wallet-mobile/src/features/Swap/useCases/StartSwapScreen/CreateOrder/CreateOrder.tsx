@@ -11,8 +11,9 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {YoroiEntry} from '../../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
-import {createYoroiEntry} from '../../../common/helpers'
+import {createYoroiEntry, getFrontendFeeEntry} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {useSwapForm} from '../../../common/SwapFormProvider'
@@ -99,8 +100,11 @@ export const CreateOrder = () => {
           data.contractAddress,
           wallet,
         )
-        const datum = {data: data.datum}
-        createUnsignedTx({entry, datum})
+
+        const swapEntry: YoroiEntry = {...entry, datum: {data: data.datum}}
+        const frontendFeeEntry = getFrontendFeeEntry(selectedPoolCalculation)
+        const entries = frontendFeeEntry ? [swapEntry, frontendFeeEntry] : [swapEntry]
+        createUnsignedTx({entries})
       }
     },
     onError: (error) => {

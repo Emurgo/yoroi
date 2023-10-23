@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PrivateKey} from '@emurgo/cross-csl-core'
-import {Datum} from '@emurgo/yoroi-lib'
+import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi} from '@yoroi/api'
 import {parseSafe} from '@yoroi/common'
+import {isNonNullable} from '@yoroi/common/src'
 import {App, Balance} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
@@ -49,7 +50,6 @@ import * as MAINNET from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
-import {withMinAmounts} from '../getMinAmounts'
 import {getTime} from '../getTime'
 import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
 import {processTxHistoryData} from '../processTransactions'
@@ -69,7 +69,7 @@ import {
   YoroiWallet,
 } from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
-import {deriveRewardAddressHex, toSendTokenList} from '../utils'
+import {deriveRewardAddressHex, toRecipients} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
@@ -593,27 +593,34 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     // =================== tx building =================== //
 
-    async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>, datum?: Datum) {
+    async createUnsignedTx(entries: YoroiEntry[], auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
+      const primaryTokenId = this.primaryTokenInfo.id
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
-      const amounts = await withMinAmounts(entry.address, entry.amounts, this.primaryToken)
+
+      const recipients = await toRecipients(entries, this.primaryToken)
+
+      const containsDatum = recipients.some((recipient) => recipient.datum)
+
+      if (recipients.filter((r) => r.datum).length > 1) {
+        throw new Error('Only one datum per transaction is supported')
+      }
 
       try {
         const unsignedTx = await Cardano.createUnsignedTx(
           absSlotNumber,
           addressedUtxos,
-          entry.address,
+          recipients,
           changeAddr,
-          toSendTokenList(amounts, this.primaryToken),
           {
             keyDeposit: KEY_DEPOSIT,
             linearFee: {
               coefficient: LINEAR_FEE.COEFFICIENT,
-              constant: datum ? String(BigInt(LINEAR_FEE.CONSTANT) * 2n) : LINEAR_FEE.CONSTANT,
+              constant: containsDatum ? String(BigInt(LINEAR_FEE.CONSTANT) * 2n) : LINEAR_FEE.CONSTANT,
             },
             minimumUtxoVal: MINIMUM_UTXO_VAL,
             coinsPerUtxoWord: COINS_PER_UTXO_WORD,
@@ -622,10 +629,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           },
           PRIMARY_TOKEN,
           {metadata: auxiliaryData},
-          datum,
         )
 
-        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, datum})
+        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, entries, primaryTokenId})
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
         Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -652,14 +658,19 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           ? [stakingPrivateKey]
           : undefined
 
-      if (unsignedTx?.datum) {
+      const datumDatas = unsignedTx.entries
+        .map((entry) => entry.datum)
+        .filter(isNonNullable)
+        .filter((datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum)
+
+      if (datumDatas.length > 0) {
         const signedTx = await unsignedTx.unsignedTx.sign(
           BIP44_DERIVATION_LEVELS.ACCOUNT,
           accountPrivateKeyHex,
           new Set<string>(),
           [],
           undefined,
-          [unsignedTx?.datum as {data: string}],
+          datumDatas,
         )
         return yoroiSignedTx({unsignedTx, signedTx})
       }
@@ -679,6 +690,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
+      const primaryTokenId = this.primaryTokenInfo.id
 
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
@@ -716,11 +728,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         },
       )
 
-      return yoroiUnsignedTx({
-        unsignedTx,
-        networkConfig: NETWORK_CONFIG,
-        addressedUtxos,
-      })
+      return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, primaryTokenId})
     }
 
     async getFirstPaymentAddress() {
@@ -735,6 +743,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const bytes = await generatePrivateKeyForCatalyst()
         .then((key) => key.toRawKey())
         .then((key) => key.asBytes())
+
+      const primaryTokenId = this.primaryTokenInfo.id
 
       const catalystKeyHex = Buffer.from(bytes).toString('hex')
 
@@ -814,6 +824,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
             networkConfig: NETWORK_CONFIG,
             votingRegistration,
             addressedUtxos,
+            primaryTokenId,
           }),
         }
       } catch (e) {
@@ -827,6 +838,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
+      const primaryTokenId = this.primaryTokenInfo.id
 
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
@@ -860,11 +872,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         {metadata: undefined},
       )
 
-      return yoroiUnsignedTx({
-        unsignedTx: withdrawalTx,
-        networkConfig: NETWORK_CONFIG,
-        addressedUtxos,
-      })
+      return yoroiUnsignedTx({unsignedTx: withdrawalTx, networkConfig: NETWORK_CONFIG, addressedUtxos, primaryTokenId})
     }
 
     async ledgerSupportsCIP36(useUSB: boolean): Promise<boolean> {
@@ -936,13 +944,18 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
 
+      const datumDatas = unsignedTx.entries
+        .map((entry) => entry.datum)
+        .filter(isNonNullable)
+        .filter((datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum)
+
       const signedTx = await Cardano.buildLedgerSignedTx(
         unsignedTx.unsignedTx,
         signedLedgerTx,
         PURPOSE,
         this.publicKeyHex,
         true,
-        unsignedTx.datum ? [unsignedTx.datum as {data: string}] : undefined,
+        datumDatas.length > 0 ? datumDatas : undefined,
       )
 
       return yoroiSignedTx({unsignedTx, signedTx})

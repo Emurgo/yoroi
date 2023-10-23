@@ -18,7 +18,7 @@ export const BalanceAfter = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedT
   const balancesAfter = Amounts.diff(
       balances,
       Amounts.sum([
-        yoroiUnsignedTx.amounts,
+        Amounts.getAmountsFromEntries(yoroiUnsignedTx.entries),
         yoroiUnsignedTx.fee,
       ]),
     )
