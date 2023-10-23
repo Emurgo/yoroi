@@ -88,31 +88,32 @@ export const CreateOrder = () => {
 
   const {createOrderData} = useSwapCreateOrder({
     onSuccess: (orderResponse: Swap.CreateOrderResponse) => {
-      if (orderResponse?.contractAddress !== undefined && orderData.selectedPoolCalculation?.pool !== undefined) {
-        const {amounts, selectedPoolCalculation} = orderData
-        const {contractAddress, datum: datumData} = orderResponse
-        const datum: YoroiEntry['datum'] = {data: datumData}
-        const orderEntry = createOrderEntry(
-          amounts,
-          selectedPoolCalculation.pool,
-          contractAddress,
-          wallet.primaryTokenInfo.id,
-          datum,
-        )
-
-        const isMainnet = wallet.networkId !== 300
-        const frontendFee = selectedPoolCalculation.cost.frontendFeeInfo.fee
-        const frontendFeeDepositAddress = isMainnet
-          ? Config['FRONTEND_FEE_ADDRESS_MAINNET']
-          : Config['FRONTEND_FEE_ADDRESS_PREPROD']
-        const frontendFeeEntry = makePossibleFrontendFeeEntry(frontendFee, frontendFeeDepositAddress)
-
-        const entries = frontendFeeEntry != null ? [orderEntry, frontendFeeEntry] : [orderEntry]
-
-        createUnsignedTx({entries})
-      } else {
+      if (orderResponse?.contractAddress === undefined || orderData.selectedPoolCalculation?.pool === undefined) {
         Alert.alert(strings.generalErrorTitle, strings.generalTxErrorMessage)
+        return
       }
+
+      const {amounts, selectedPoolCalculation} = orderData
+      const {contractAddress, datum: datumData} = orderResponse
+      const datum: YoroiEntry['datum'] = {data: datumData}
+      const orderEntry = createOrderEntry(
+        amounts,
+        selectedPoolCalculation.pool,
+        contractAddress,
+        wallet.primaryTokenInfo.id,
+        datum,
+      )
+
+      const isMainnet = wallet.networkId !== 300
+      const frontendFee = selectedPoolCalculation.cost.frontendFeeInfo.fee
+      const frontendFeeDepositAddress = isMainnet
+        ? Config['FRONTEND_FEE_ADDRESS_MAINNET']
+        : Config['FRONTEND_FEE_ADDRESS_PREPROD']
+      const frontendFeeEntry = makePossibleFrontendFeeEntry(frontendFee, frontendFeeDepositAddress)
+
+      const entries = frontendFeeEntry != null ? [orderEntry, frontendFeeEntry] : [orderEntry]
+
+      createUnsignedTx({entries})
     },
     onError: (error) => {
       Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
