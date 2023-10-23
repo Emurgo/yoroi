@@ -1,8 +1,10 @@
+import {isString} from '@yoroi/common'
 import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {Alert, KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
+import Config from 'react-native-config'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer, useModal} from '../../../../../components'
@@ -13,7 +15,7 @@ import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/ty
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types'
 import {Quantities} from '../../../../../yoroi-wallets/utils'
-import {createYoroiEntry, getFrontendFeeEntry} from '../../../common/helpers'
+import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {useSwapForm} from '../../../common/SwapFormProvider'
@@ -86,26 +88,37 @@ export const CreateOrder = () => {
   })
 
   const {createOrderData} = useSwapCreateOrder({
-    onSuccess: (data: Swap.CreateOrderResponse) => {
-      if (data?.contractAddress !== undefined && orderData.selectedPoolCalculation?.pool !== undefined) {
-        const {amounts, limitPrice, slippage, selectedPoolCalculation} = orderData
-        const entry = createYoroiEntry(
-          {
-            amounts,
-            limitPrice,
-            address: data.contractAddress,
-            slippage,
-            selectedPool: selectedPoolCalculation.pool,
-          },
-          data.contractAddress,
-          wallet,
-        )
-
-        const swapEntry: YoroiEntry = {...entry, datum: {data: data.datum}}
-        const frontendFeeEntry = getFrontendFeeEntry(selectedPoolCalculation)
-        const entries = frontendFeeEntry ? [swapEntry, frontendFeeEntry] : [swapEntry]
-        createUnsignedTx({entries})
+    onSuccess: (orderResponse: Swap.CreateOrderResponse) => {
+      if (
+        orderResponse?.contractAddress === undefined ||
+        orderData.selectedPoolCalculation?.pool === undefined ||
+        !isString(orderResponse?.datum)
+      ) {
+        Alert.alert(strings.generalErrorTitle, strings.generalTxErrorMessage)
+        return
       }
+
+      const {amounts, selectedPoolCalculation} = orderData
+      const {contractAddress, datum: datumData} = orderResponse
+      const datum: YoroiEntry['datum'] = datumData != null ? {data: datumData} : undefined
+      const orderEntry = createOrderEntry(
+        amounts,
+        selectedPoolCalculation.pool,
+        contractAddress,
+        wallet.primaryTokenInfo.id,
+        datum,
+      )
+
+      const isMainnet = wallet.networkId !== 300
+      const frontendFee = selectedPoolCalculation.cost.frontendFeeInfo.fee
+      const frontendFeeDepositAddress = isMainnet
+        ? Config['FRONTEND_FEE_ADDRESS_MAINNET']
+        : Config['FRONTEND_FEE_ADDRESS_PREPROD']
+      const frontendFeeEntry = makePossibleFrontendFeeEntry(frontendFee, frontendFeeDepositAddress)
+
+      const entries = frontendFeeEntry != null ? [orderEntry, frontendFeeEntry] : [orderEntry]
+
+      createUnsignedTx({entries})
     },
     onError: (error) => {
       Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))

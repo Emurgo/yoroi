@@ -1,8 +1,5 @@
-import {createTypeGuardFromSchema, isString, parseSafe} from '@yoroi/common'
-import {SwapState} from '@yoroi/swap'
-import {Swap} from '@yoroi/types'
+import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
 import {SwapApi} from '@yoroi/types/src/swap/api'
-import config from 'react-native-config'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
@@ -11,39 +8,7 @@ import {
   convertBech32ToHex,
   getMuesliSwapTransactionAndSigners,
 } from '../../../yoroi-wallets/cardano/common/signatureUtils'
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
-import {YoroiEntry} from '../../../yoroi-wallets/types'
-import {Quantities} from '../../../yoroi-wallets/utils'
-
-export const createYoroiEntry = (
-  createOrder: Swap.CreateOrderData,
-  address: string,
-  wallet: YoroiWallet,
-): YoroiEntry => {
-  const amountEntry = {}
-
-  const sellTokenId = createOrder.amounts.sell.tokenId
-  // TODO Frontend Fee is not added. Once will be defined needs to be added here
-  if (sellTokenId === wallet.primaryTokenInfo.id) {
-    amountEntry[sellTokenId] = Quantities.sum([
-      createOrder.selectedPool.deposit.quantity,
-      createOrder.selectedPool.batcherFee.quantity,
-      createOrder.amounts.sell.quantity,
-    ])
-  } else {
-    amountEntry[wallet.primaryTokenInfo.id] = Quantities.sum([
-      createOrder.selectedPool.deposit.quantity,
-      createOrder.selectedPool.batcherFee.quantity,
-    ])
-    amountEntry[sellTokenId] = createOrder.amounts.sell.quantity
-  }
-
-  return {
-    address: address,
-    amounts: amountEntry,
-  }
-}
 
 export const useCancelOrderWithHw = (
   {cancelOrder}: {cancelOrder: SwapApi['cancelOrder']},
@@ -99,19 +64,4 @@ const isOrderTxMetadata = createTypeGuardFromSchema(OrderTxMetadataSchema)
 export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | null => {
   const parsedMetadata = parseSafe(metadataJson)
   return isOrderTxMetadata(parsedMetadata) ? parsedMetadata : null
-}
-
-export const getFrontendFeeEntry = (
-  calculation: SwapState['orderData']['selectedPoolCalculation'],
-): YoroiEntry | null => {
-  if (!calculation) return null
-
-  const {quantity, tokenId} = calculation.cost.frontendFeeInfo.fee
-  const hasFrontendFee = !Quantities.isZero(quantity)
-  if (!isString(config['FINTECH_WALLET']) || !hasFrontendFee) return null
-
-  return {
-    address: config['FINTECH_WALLET'],
-    amounts: {[tokenId]: quantity},
-  }
 }
