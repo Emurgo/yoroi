@@ -72,39 +72,6 @@ export const SwapFormProvider = ({
     ...initialState,
   })
 
-  const noPoolError =
-    orderData.selectedPoolCalculation === undefined && state.buyQuantity.isTouched && state.sellQuantity.isTouched
-      ? strings.noPool
-      : undefined
-
-  const buyError =
-    noPoolError !== undefined
-      ? noPoolError
-      : (!Quantities.isZero(buyQuantity) && !hasBuyTokenSupply) ||
-        (state.sellQuantity.isTouched && state.buyQuantity.isTouched && pool === undefined)
-      ? strings.notEnoughSupply
-      : undefined
-
-  const sellError =
-    noPoolError !== undefined
-      ? noPoolError
-      : !Quantities.isZero(sellQuantity) && !hasSellBalance
-      ? strings.notEnoughBalance
-      : !Quantities.isZero(sellQuantity) && state.buyQuantity.isTouched && !hasFeesBalance
-      ? strings.notEnoughFeeBalance
-      : undefined
-
-  const canSwap =
-    state.buyQuantity.isTouched &&
-    state.sellQuantity.isTouched &&
-    !Quantities.isZero(buyQuantity) &&
-    !Quantities.isZero(sellQuantity) &&
-    state.buyQuantity.error === undefined &&
-    state.sellQuantity.error === undefined &&
-    orderData.selectedPoolCalculation !== undefined &&
-    (orderData.type === 'market' ||
-      (orderData.type === 'limit' && orderData.limitPrice !== undefined && !Quantities.isZero(orderData.limitPrice)))
-
   const actions = React.useRef<SwapFormActions>({
     sellTouched: () => dispatch({type: SwapFormActionType.SellTouched}),
     buyTouched: () => dispatch({type: SwapFormActionType.BuyTouched}),
@@ -161,16 +128,20 @@ export const SwapFormProvider = ({
     }
   }, [actions, denomination, orderData.limitPrice, orderData.selectedPoolCalculation?.prices.market, orderData.type])
 
+  const clearErrors = React.useCallback(() => {
+    if (state.sellQuantity.error !== undefined) actions.sellAmountErrorChanged(undefined)
+    if (state.buyQuantity.error !== undefined) actions.buyAmountErrorChanged(undefined)
+  }, [actions, state.buyQuantity.error, state.sellQuantity.error])
+
   const onChangeSellQuantity = React.useCallback(
     (text: string) => {
       const [input, quantity] = Quantities.parseFromText(text, sellTokenInfo.decimals ?? 0, numberLocale)
       sellQuantityChanged(quantity)
       actions.sellInputValueChanged(text === '' ? '' : input)
 
-      if (sellError === undefined) actions.sellAmountErrorChanged(undefined)
-      if (buyError === undefined) actions.buyAmountErrorChanged(undefined)
+      clearErrors()
     },
-    [actions, buyError, numberLocale, sellError, sellQuantityChanged, sellTokenInfo.decimals],
+    [actions, clearErrors, numberLocale, sellQuantityChanged, sellTokenInfo.decimals],
   )
 
   const onChangeBuyQuantity = React.useCallback(
@@ -179,10 +150,9 @@ export const SwapFormProvider = ({
       buyQuantityChanged(quantity)
       actions.buyInputValueChanged(text === '' ? '' : input)
 
-      if (buyError === undefined) actions.buyAmountErrorChanged(undefined)
-      if (sellError === undefined) actions.sellAmountErrorChanged(undefined)
+      clearErrors()
     },
-    [actions, buyError, buyQuantityChanged, buyTokenInfo.decimals, numberLocale, sellError],
+    [buyTokenInfo.decimals, numberLocale, buyQuantityChanged, actions, clearErrors],
   )
 
   const onChangeLimitPrice = React.useCallback(
@@ -191,25 +161,124 @@ export const SwapFormProvider = ({
       actions.limitPriceInputValueChanged(formattedPrice)
       limitPriceChanged(price)
 
-      if (buyError === undefined) actions.buyAmountErrorChanged(undefined)
-      if (sellError === undefined) actions.sellAmountErrorChanged(undefined)
+      clearErrors()
     },
-    [actions, buyError, denomination, limitPriceChanged, numberLocale, sellError],
+    [actions, clearErrors, denomination, limitPriceChanged, numberLocale],
   )
 
   React.useEffect(() => {
-    if (buyError !== state.buyQuantity.error && buyError !== undefined) actions.buyAmountErrorChanged(buyError)
-  }, [actions, buyError, state.buyQuantity.error])
-
-  React.useEffect(() => {
-    if (sellError !== state.sellQuantity.error && sellError !== undefined) {
-      actions.sellAmountErrorChanged(sellError)
+    if (
+      orderData.selectedPoolCalculation === undefined &&
+      state.buyQuantity.isTouched &&
+      state.sellQuantity.isTouched
+    ) {
+      actions.buyAmountErrorChanged(strings.noPool)
+      return
     }
-  }, [actions, sellError, state.sellQuantity.error])
+
+    if (
+      orderData.selectedPoolCalculation !== undefined &&
+      state.buyQuantity.isTouched &&
+      state.sellQuantity.isTouched &&
+      state.buyQuantity.error === strings.noPool
+    ) {
+      actions.buyAmountErrorChanged(undefined)
+      return
+    }
+
+    if (
+      (!Quantities.isZero(buyQuantity) && !hasBuyTokenSupply) ||
+      (state.sellQuantity.isTouched && state.buyQuantity.isTouched && pool === undefined)
+    ) {
+      actions.buyAmountErrorChanged(strings.notEnoughSupply)
+      return
+    }
+
+    if (state.buyQuantity.error !== undefined) {
+      actions.buyAmountErrorChanged(undefined)
+    }
+  }, [
+    actions,
+    buyQuantity,
+    hasBuyTokenSupply,
+    pool,
+    state.buyQuantity.isTouched,
+    state.sellQuantity.isTouched,
+    strings.notEnoughSupply,
+    orderData.selectedPoolCalculation,
+    strings.noPool,
+    state.buyQuantity.error,
+  ])
 
   React.useEffect(() => {
-    if (canSwap !== state.canSwap) actions.canSwapChanged(canSwap)
-  }, [actions, canSwap, state.canSwap])
+    if (
+      orderData.selectedPoolCalculation === undefined &&
+      state.buyQuantity.isTouched &&
+      state.sellQuantity.isTouched
+    ) {
+      actions.sellAmountErrorChanged(strings.noPool)
+      return
+    }
+
+    if (
+      orderData.selectedPoolCalculation !== undefined &&
+      state.buyQuantity.isTouched &&
+      state.sellQuantity.isTouched &&
+      state.sellQuantity.error === strings.noPool
+    ) {
+      actions.sellAmountErrorChanged(undefined)
+      return
+    }
+
+    if (!Quantities.isZero(sellQuantity) && !hasSellBalance) {
+      actions.sellAmountErrorChanged(strings.notEnoughBalance)
+      return
+    }
+
+    if (!Quantities.isZero(sellQuantity) && state.buyQuantity.isTouched && !hasFeesBalance) {
+      actions.sellAmountErrorChanged(strings.notEnoughFeeBalance)
+      return
+    }
+  }, [
+    actions,
+    hasFeesBalance,
+    hasSellBalance,
+    orderData.selectedPoolCalculation,
+    sellQuantity,
+    state.buyQuantity.isTouched,
+    state.sellQuantity.error,
+    state.sellQuantity.isTouched,
+    strings.noPool,
+    strings.notEnoughBalance,
+    strings.notEnoughFeeBalance,
+  ])
+
+  React.useEffect(() => {
+    const canSwap =
+      state.buyQuantity.isTouched &&
+      state.sellQuantity.isTouched &&
+      !Quantities.isZero(buyQuantity) &&
+      !Quantities.isZero(sellQuantity) &&
+      state.buyQuantity.error === undefined &&
+      state.sellQuantity.error === undefined &&
+      orderData.selectedPoolCalculation !== undefined &&
+      (orderData.type === 'market' ||
+        (orderData.type === 'limit' && orderData.limitPrice !== undefined && !Quantities.isZero(orderData.limitPrice)))
+
+    actions.canSwapChanged(canSwap)
+  }, [
+    actions,
+    buyQuantity,
+    orderData.limitPrice,
+    orderData.selectedPoolCalculation,
+    orderData.type,
+    sellQuantity,
+    state.buyQuantity.error,
+    state.buyQuantity.isTouched,
+    state.canSwap,
+    state.sellQuantity.error,
+    state.sellQuantity.isTouched,
+  ])
 
   React.useEffect(() => {
     updateSellInput()
