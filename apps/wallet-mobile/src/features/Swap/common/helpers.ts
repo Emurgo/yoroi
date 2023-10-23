@@ -107,8 +107,8 @@ export const getFrontendFeeEntry = (
   if (!calculation) return null
 
   const {quantity, tokenId} = calculation.cost.frontendFeeInfo.fee
-  const isFrontendFeeDefined = !Quantities.isZero(quantity)
-  if (!isString(config['FINTECH_WALLET']) || !isFrontendFeeDefined) return null
+  const hasFrontendFee = !Quantities.isZero(quantity)
+  if (!isString(config['FINTECH_WALLET']) || !hasFrontendFee) return null
 
   return {
     address: config['FINTECH_WALLET'],

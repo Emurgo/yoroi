@@ -677,6 +677,7 @@ export class ByronWallet implements YoroiWallet {
     const changeAddr = await this.getAddressedChangeAddress()
     const addressedUtxos = await this.getAddressedUtxos()
     const networkConfig = this.getNetworkConfig()
+    const primaryTokenId = this.primaryTokenInfo.id
 
     const recipients = await toRecipients(entries, this.primaryToken)
 
@@ -709,7 +710,13 @@ export class ByronWallet implements YoroiWallet {
         {metadata: auxiliaryData},
       )
 
-      return yoroiUnsignedTx({unsignedTx, networkConfig: this.getNetworkConfig(), addressedUtxos, entries})
+      return yoroiUnsignedTx({
+        unsignedTx,
+        networkConfig: this.getNetworkConfig(),
+        addressedUtxos,
+        entries,
+        primaryTokenId,
+      })
     } catch (e) {
       if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
       Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -781,6 +788,7 @@ export class ByronWallet implements YoroiWallet {
     const stakingKey = await this.getStakingKey()
     const delegationType = registrationStatus ? RegistrationStatus.DelegateOnly : RegistrationStatus.RegisterAndDelegate
     const networkConfig = this.getNetworkConfig()
+    const primaryTokenId = this.primaryTokenInfo.id
     const delegatedAmountMT = {
       values: [{identifier: '', amount: delegatedAmount, networkId: networkConfig.NETWORK_ID}],
       defaults: this.primaryToken,
@@ -813,6 +821,7 @@ export class ByronWallet implements YoroiWallet {
       unsignedTx,
       networkConfig,
       addressedUtxos,
+      primaryTokenId,
     })
   }
 
@@ -841,6 +850,7 @@ export class ByronWallet implements YoroiWallet {
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
+      const primaryTokenId = this.primaryTokenInfo.id
 
       const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
       const votingPublicKey = await Promise.resolve(Buffer.from(catalystKeyHex, 'hex'))
@@ -915,6 +925,7 @@ export class ByronWallet implements YoroiWallet {
           networkConfig,
           votingRegistration,
           addressedUtxos,
+          primaryTokenId,
         }),
       }
     } catch (e) {
@@ -926,6 +937,7 @@ export class ByronWallet implements YoroiWallet {
 
   async createWithdrawalTx(shouldDeregister: boolean): Promise<YoroiUnsignedTx> {
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
+    const primaryTokenId = this.primaryTokenInfo.id
 
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
@@ -970,6 +982,7 @@ export class ByronWallet implements YoroiWallet {
       unsignedTx: withdrawalTx,
       networkConfig: this.getNetworkConfig(),
       addressedUtxos,
+      primaryTokenId,
     })
   }
 

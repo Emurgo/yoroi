@@ -597,6 +597,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
+      const primaryTokenId = this.primaryTokenInfo.id
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
@@ -630,7 +631,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           {metadata: auxiliaryData},
         )
 
-        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, entries})
+        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, entries, primaryTokenId})
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
         Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -689,6 +690,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
+      const primaryTokenId = this.primaryTokenInfo.id
 
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
@@ -726,7 +728,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         },
       )
 
-      return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos})
+      return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, primaryTokenId})
     }
 
     async getFirstPaymentAddress() {
@@ -741,6 +743,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const bytes = await generatePrivateKeyForCatalyst()
         .then((key) => key.toRawKey())
         .then((key) => key.asBytes())
+
+      const primaryTokenId = this.primaryTokenInfo.id
 
       const catalystKeyHex = Buffer.from(bytes).toString('hex')
 
@@ -820,6 +824,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
             networkConfig: NETWORK_CONFIG,
             votingRegistration,
             addressedUtxos,
+            primaryTokenId,
           }),
         }
       } catch (e) {
@@ -833,6 +838,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
+      const primaryTokenId = this.primaryTokenInfo.id
 
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
@@ -866,7 +872,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         {metadata: undefined},
       )
 
-      return yoroiUnsignedTx({unsignedTx: withdrawalTx, networkConfig: NETWORK_CONFIG, addressedUtxos})
+      return yoroiUnsignedTx({unsignedTx: withdrawalTx, networkConfig: NETWORK_CONFIG, addressedUtxos, primaryTokenId})
     }
 
     async ledgerSupportsCIP36(useUSB: boolean): Promise<boolean> {
