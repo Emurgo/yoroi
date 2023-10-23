@@ -14,7 +14,9 @@ import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils/utils'
 
 export const SecondaryTotals = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const wallet = useSelectedWallet()
-  const secondaryAmounts = Amounts.remove(yoroiUnsignedTx.amounts, [wallet.primaryTokenInfo.id])
+  const secondaryAmounts = Amounts.remove(Amounts.getAmountsFromEntries(yoroiUnsignedTx.entries), [
+    wallet.primaryTokenInfo.id,
+  ])
   const sortedAmounts = Amounts.toArray(secondaryAmounts).sort((a, b) =>
     Quantities.isGreaterThan(a.quantity, b.quantity) ? -1 : 1,
   )

@@ -321,13 +321,16 @@ describe('Entries', () => {
     } as YoroiEntry)
   })
 
-  it('first throws error if multiple addresses', () => {
+  it('first returns first item multiple entries', () => {
     const entries: YoroiEntry[] = [
       {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
       {address: 'address2', amounts: {'': '1', token123: '2', token567: '-2'}},
     ]
 
-    expect(() => Entries.first(entries)).toThrowError()
+    expect(Entries.first(entries)).toEqual({
+      address: 'address1',
+      amounts: {'': '1', token123: '2', token567: '-2'},
+    })
   })
 
   it('remove', () => {

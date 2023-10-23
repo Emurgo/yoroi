@@ -707,12 +707,7 @@ export class ByronWallet implements YoroiWallet {
         {metadata: auxiliaryData},
       )
 
-      return yoroiUnsignedTx({
-        unsignedTx,
-        networkConfig: this.getNetworkConfig(),
-        addressedUtxos,
-        recipientEntries: entries,
-      })
+      return yoroiUnsignedTx({unsignedTx, networkConfig: this.getNetworkConfig(), addressedUtxos})
     } catch (e) {
       if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
       Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -743,7 +738,7 @@ export class ByronWallet implements YoroiWallet {
         ? [stakingPrivateKey]
         : undefined
 
-    const datum = unsignedTx.recipientEntries.find((entry) => entry.datum)?.datum
+    const datum = unsignedTx.entries.find((entry) => entry.datum)?.datum
 
     if (datum && 'data' in datum) {
       const signedTx = await unsignedTx.unsignedTx.sign(
@@ -813,7 +808,6 @@ export class ByronWallet implements YoroiWallet {
       unsignedTx,
       networkConfig,
       addressedUtxos,
-      recipientEntries: [],
     })
   }
 
@@ -916,7 +910,6 @@ export class ByronWallet implements YoroiWallet {
           networkConfig,
           votingRegistration,
           addressedUtxos,
-          recipientEntries: [],
         }),
       }
     } catch (e) {
@@ -972,7 +965,6 @@ export class ByronWallet implements YoroiWallet {
       unsignedTx: withdrawalTx,
       networkConfig: this.getNetworkConfig(),
       addressedUtxos,
-      recipientEntries: [],
     })
   }
 
@@ -1012,7 +1004,7 @@ export class ByronWallet implements YoroiWallet {
       this.stakingKeyPath,
     )
 
-    const datum = unsignedTx.recipientEntries.find((entry) => entry.datum)?.datum
+    const datum = unsignedTx.entries.find((entry) => entry.datum)?.datum
 
     const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
     const signedTx = await Cardano.buildLedgerSignedTx(

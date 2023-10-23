@@ -855,21 +855,20 @@ const stakingInfo: StakingInfo = {
 }
 
 const yoroiUnsignedTx: YoroiUnsignedTx & {mock: true} = {
-  entries: {
-    address1: {'': '99999'},
-  },
-  recipientEntries: [{address: 'address1', amounts: {'': '99999'}}],
-  amounts: {'': '99999'},
+  entries: [
+    {
+      address: 'address1',
+      amounts: {'': '99999'},
+    },
+  ],
   fee: {'': '12345'},
   metadata: {},
-  change: {
-    change_address: {'': '1'},
-  },
+  change: [{address: 'change_address', amounts: {'': '1'}}],
   staking: {
-    registrations: {},
-    deregistrations: {},
-    delegations: {},
-    withdrawals: {},
+    registrations: [],
+    deregistrations: [],
+    delegations: [],
+    withdrawals: [],
   },
   voting: {},
   unsignedTx: {} as any,
@@ -877,17 +876,15 @@ const yoroiUnsignedTx: YoroiUnsignedTx & {mock: true} = {
 }
 
 const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
-  entries: {},
-  amounts: {},
-  recipientEntries: [],
+  entries: [],
   fee: {'': '12345'},
   metadata: {},
-  change: {},
+  change: [],
   staking: {
-    registrations: {},
-    deregistrations: {},
-    delegations: {},
-    withdrawals: {},
+    registrations: [],
+    deregistrations: [],
+    delegations: [],
+    withdrawals: [],
   },
   voting: {},
   signedTx: {id: 'tx-id', encodedTx: new Uint8Array([1, 2, 3])},

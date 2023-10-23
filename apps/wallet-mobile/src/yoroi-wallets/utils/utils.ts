@@ -58,6 +58,12 @@ export const Amounts = {
       quantity: amounts[tokenId] || Quantities.zero,
     }
   },
+  getAmountsFromEntries: (entries: YoroiEntry[]): Balance.Amounts => {
+    return Amounts.sum(entries.map((e) => e.amounts))
+  },
+  getAmountFromEntries: (entries: YoroiEntry[], tokenId: string): Balance.Amount => {
+    return Amounts.getAmount(Amounts.getAmountsFromEntries(entries), tokenId)
+  },
   save: (amounts: Balance.Amounts, amount: Balance.Amount): Balance.Amounts => {
     const {tokenId, quantity} = amount
 
