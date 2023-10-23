@@ -1,11 +1,13 @@
 import {Balance} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
+
+import {Quantities} from '../../utils/quantities'
+
 export const getPairPriceInPtTerms = ({
   sell,
   amountA,
-  decimalsA = 0,
-  decimalsB = 0,
-  // prices not scaled - visual
+  decimalsA,
+  decimalsB,
   ptPriceTokenA,
   ptPriceTokenB,
   precision,
@@ -24,7 +26,7 @@ export const getPairPriceInPtTerms = ({
     scale: number,
   ) => {
     return divisor.isZero()
-      ? '0'
+      ? Quantities.zero
       : dividend
           .dividedBy(divisor)
           .toFixed(precision ?? scale, BigNumber.ROUND_DOWN)
