@@ -1,7 +1,7 @@
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
-import {YoroiEntries, YoroiEntry} from '../types'
+import {YoroiEntry} from '../types'
 import {RawUtxo} from '../types/other'
 import {Amounts, asQuantity, Entries, Quantities, splitStringInto64CharArray, Utxos} from './utils'
 
@@ -309,9 +309,7 @@ describe('Amounts', () => {
 
 describe('Entries', () => {
   it('first gets the first entry from YoroiEnrties', () => {
-    const entries: YoroiEntries = {
-      address1: {'': '1', token123: '2', token567: '-2'},
-    }
+    const entries: YoroiEntry[] = [{address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}}]
 
     expect(Entries.first(entries)).toEqual({
       address: 'address1',
@@ -324,87 +322,45 @@ describe('Entries', () => {
   })
 
   it('first throws error if multiple addresses', () => {
-    const entries: YoroiEntries = {
-      address1: {'': '1', token123: '2', token567: '-2'},
-      address2: {'': '1', token123: '2', token567: '-2'},
-    }
+    const entries: YoroiEntry[] = [
+      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address2', amounts: {'': '1', token123: '2', token567: '-2'}},
+    ]
 
     expect(() => Entries.first(entries)).toThrowError()
   })
 
   it('remove', () => {
-    const entries1: YoroiEntries = {
-      address1: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address2: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address3: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-    }
+    const entries: YoroiEntry[] = [
+      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address2', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address3', amounts: {'': '1', token123: '2', token567: '-2'}},
+    ]
 
-    expect(Entries.remove(entries1, ['address2'])).toEqual({
-      address1: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address3: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-    } as YoroiEntries)
+    const expectedEntries: YoroiEntry[] = [
+      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address3', amounts: {'': '1', token123: '2', token567: '-2'}},
+    ]
+
+    expect(Entries.remove(entries, ['address2'])).toEqual(expectedEntries)
   })
 
   it('toAddresses', () => {
-    const entries: YoroiEntries = {
-      address1: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address2: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address3: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-    }
+    const entries: YoroiEntry[] = [
+      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address2', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address3', amounts: {'': '1', token123: '2', token567: '-2'}},
+    ]
 
     expect(Entries.toAddresses(entries)).toEqual(['address1', 'address2', 'address3'])
   })
 
   it('toAmounts', () => {
-    const entries: YoroiEntries = {
-      address1: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address2: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address3: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-    }
+    const entries: YoroiEntry[] = [
+      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address2', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address3', amounts: {'': '1', token123: '2', token567: '-2'}},
+    ]
 
     expect(Entries.toAmounts(entries)).toEqual({
       '': '3',

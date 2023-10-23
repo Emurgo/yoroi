@@ -628,7 +628,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           {metadata: auxiliaryData},
         )
 
-        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, recipientEntries: entries})
+        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos})
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
         Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -655,7 +655,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           ? [stakingPrivateKey]
           : undefined
 
-      const datum = unsignedTx.recipientEntries.find((entry) => entry.datum)?.datum
+      const datum = unsignedTx.entries.find((entry) => entry.datum)?.datum
 
       if (datum && 'data' in datum) {
         const signedTx = await unsignedTx.unsignedTx.sign(
@@ -721,12 +721,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         },
       )
 
-      return yoroiUnsignedTx({
-        unsignedTx,
-        networkConfig: NETWORK_CONFIG,
-        addressedUtxos,
-        recipientEntries: [],
-      })
+      return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos})
     }
 
     async getFirstPaymentAddress() {
@@ -820,7 +815,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
             networkConfig: NETWORK_CONFIG,
             votingRegistration,
             addressedUtxos,
-            recipientEntries: [],
           }),
         }
       } catch (e) {
@@ -867,12 +861,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         {metadata: undefined},
       )
 
-      return yoroiUnsignedTx({
-        unsignedTx: withdrawalTx,
-        networkConfig: NETWORK_CONFIG,
-        addressedUtxos,
-        recipientEntries: [],
-      })
+      return yoroiUnsignedTx({unsignedTx: withdrawalTx, networkConfig: NETWORK_CONFIG, addressedUtxos})
     }
 
     async ledgerSupportsCIP36(useUSB: boolean): Promise<boolean> {
@@ -944,7 +933,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
 
-      const datum = unsignedTx.recipientEntries.find((entry) => entry.datum)?.datum
+      const datum = unsignedTx.entries.find((entry) => entry.datum)?.datum
 
       const signedTx = await Cardano.buildLedgerSignedTx(
         unsignedTx.unsignedTx,

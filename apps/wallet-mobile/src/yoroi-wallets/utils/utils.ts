@@ -4,32 +4,21 @@ import {Linking} from 'react-native'
 
 import {NumberLocale} from '../../i18n/languages'
 import {getNetworkConfigById} from '../cardano/networks'
-import {NetworkId, RawUtxo, TokenId, YoroiEntries, YoroiEntry} from '../types'
+import {NetworkId, RawUtxo, TokenId, YoroiEntry} from '../types'
 
 export const Entries = {
-  first: (entries: YoroiEntries): YoroiEntry => {
-    const addresses = Object.keys(entries)
-    if (addresses.length > 1) throw new Error('multiple addresses not supported')
-    const firstEntry = Object.entries(entries)[0]
-    if (!firstEntry) throw new Error('invalid entries')
-
-    return {
-      address: firstEntry[0],
-      amounts: firstEntry[1],
-    }
+  first: (entries: YoroiEntry[]): YoroiEntry => {
+    if (entries.length === 0) throw new Error('invalid entries')
+    return entries[0]
   },
-  remove: (entries: YoroiEntries, removeAddresses: Array<string>): YoroiEntries => {
-    const _entries = Object.entries(entries)
-    const filteredEntries = _entries.filter(([address]) => !removeAddresses.includes(address))
-
-    return Object.fromEntries(filteredEntries)
+  remove: (entries: YoroiEntry[], removeAddresses: Array<string>): YoroiEntry[] => {
+    return entries.filter((e) => !removeAddresses.includes(e.address))
   },
-  toAddresses: (entries: YoroiEntries): Array<string> => {
-    return Object.keys(entries)
+  toAddresses: (entries: YoroiEntry[]): Array<string> => {
+    return entries.map((e) => e.address)
   },
-  toAmounts: (entries: YoroiEntries): Balance.Amounts => {
-    const amounts = Object.values(entries)
-
+  toAmounts: (entries: YoroiEntry[]): Balance.Amounts => {
+    const amounts = entries.map((e) => e.amounts)
     return Amounts.sum(amounts)
   },
 }

@@ -5,42 +5,28 @@ import {Amounts, Entries, Quantities} from '../../utils'
 import {Cardano, CardanoMobile} from '../../wallets'
 import {CardanoHaskellShelleyNetwork} from '../networks'
 import {CardanoTypes} from '../types'
+import {Change, Datum, MultiTokenValue} from '@emurgo/yoroi-lib/dist/internals/models'
 
 export const yoroiUnsignedTx = async ({
   unsignedTx,
   networkConfig,
   votingRegistration,
   addressedUtxos,
-  recipientEntries,
 }: {
   unsignedTx: CardanoTypes.UnsignedTx
   networkConfig: CardanoHaskellShelleyNetwork
   votingRegistration?: VotingRegistration
   addressedUtxos: CardanoTypes.CardanoAddressedUtxo[]
-  recipientEntries: YoroiEntry[]
 }) => {
   const fee = toAmounts(unsignedTx.fee.values)
-  const change = toEntries(
-    await Promise.all(
-      unsignedTx.change.map((change) =>
-        toDisplayAddress(change.address).then((address) => ({...change, address, value: change.values})),
-      ),
-    ),
-  )
-  const outputsEntries = toEntries(
-    await Promise.all(
-      unsignedTx.outputs.map((output) => toDisplayAddress(output.address).then((address) => ({...output, address}))),
-    ),
-  )
+  const change = await toEntriesFromChange(unsignedTx.change)
+  const outputsEntries = await toEntriesFromOutputs(unsignedTx.outputs)
   const changeAddresses = Entries.toAddresses(change)
   // entries === (outputs - change)
   const entries = Entries.remove(outputsEntries, changeAddresses)
-  const amounts = Entries.toAmounts(entries)
   const stakingBalances = await Cardano.getBalanceForStakingCredentials(addressedUtxos)
 
   const yoroiTx: YoroiUnsignedTx = {
-    recipientEntries,
-    amounts,
     entries,
     fee,
     change,
@@ -105,20 +91,36 @@ export const toMetadata = (metadata: ReadonlyArray<CardanoTypes.TxMetadata>) =>
     {} as YoroiMetadata,
   )
 
-export const toEntries = (addressedValues: ReadonlyArray<AddressedValue>) =>
-  addressedValues.reduce(
-    (result, current) => ({
-      ...result,
-      [current.address]: toAmounts(current.value.values),
-    }),
-    {} as YoroiEntries,
+export const toEntriesFromChange = (change: ReadonlyArray<Change>): Promise<YoroiEntry[]> => {
+  return Promise.all(
+    change.map(async (o) => ({
+      address: await toDisplayAddress(o.address),
+      amounts: toAmounts(o.values.values),
+    })),
   )
+}
+
+export const toEntriesFromOutputs = (
+  outputs: ReadonlyArray<{
+    address: string
+    value: MultiTokenValue
+    datum?: Datum
+  }>,
+): Promise<YoroiEntry[]> => {
+  return Promise.all(
+    outputs.map(async (o) => ({
+      address: await toDisplayAddress(o.address),
+      amounts: toAmounts(o.value.values),
+      datum: o.datum,
+    })),
+  )
+}
 
 const Staking = {
-  toWithdrawals: async (withdrawals: CardanoTypes.UnsignedTx['withdrawals']) => {
-    if (!withdrawals.hasValue()) return {} // no withdrawals
+  toWithdrawals: async (withdrawals: CardanoTypes.UnsignedTx['withdrawals']): Promise<YoroiEntry[]> => {
+    if (!withdrawals.hasValue()) return [] // no withdrawals
 
-    const result: YoroiEntries = {}
+    const result: YoroiEntry[] = []
     const length = await withdrawals.len()
     const rewardAddresses = await withdrawals.keys()
 
@@ -130,7 +132,10 @@ const Staking = {
         .then((address) => address.toBytes())
         .then((bytes) => Buffer.from(bytes).toString('hex'))
 
-      result[address] = {'': amount}
+      result.push({
+        address,
+        amounts: {'': amount},
+      })
     }
 
     return result
@@ -162,13 +167,13 @@ const Staking = {
       }
     }, Promise.resolve({} as YoroiEntries)),
 
-  toRegistrations: ({
+  toRegistrations: async ({
     registrations,
     networkConfig: {CHAIN_NETWORK_ID, KEY_DEPOSIT},
   }: {
     registrations: CardanoTypes.UnsignedTx['registrations']
     networkConfig: CardanoHaskellShelleyNetwork
-  }) =>
+  }): Promise<YoroiEntry[]> => {
     registrations.reduce(async (result, current) => {
       const address = await current
         .stakeCredential()
@@ -186,7 +191,8 @@ const Staking = {
         ...(await result),
         [address]: {'': KEY_DEPOSIT as Balance.Quantity},
       }
-    }, Promise.resolve({} as YoroiEntries)),
+    }, Promise.resolve({} as YoroiEntries))
+  },
 
   toDelegations: ({
     balances,
