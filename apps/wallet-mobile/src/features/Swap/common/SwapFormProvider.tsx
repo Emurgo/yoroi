@@ -339,8 +339,10 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
         break
 
       case SwapFormActionType.ResetSwapForm:
-      case SwapFormActionType.ClearSwapForm:
         return defaultState
+
+      case SwapFormActionType.ClearSwapForm:
+        return state
 
       case SwapFormActionType.CanSwapChanged:
         draft.canSwap = action.canSwap
