@@ -1,3 +1,4 @@
+import {isString} from '@yoroi/common'
 import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
@@ -88,7 +89,11 @@ export const CreateOrder = () => {
 
   const {createOrderData} = useSwapCreateOrder({
     onSuccess: (orderResponse: Swap.CreateOrderResponse) => {
-      if (orderResponse?.contractAddress === undefined || orderData.selectedPoolCalculation?.pool === undefined) {
+      if (
+        orderResponse?.contractAddress === undefined ||
+        orderData.selectedPoolCalculation?.pool === undefined ||
+        !isString(orderResponse?.datum)
+      ) {
         Alert.alert(strings.generalErrorTitle, strings.generalTxErrorMessage)
         return
       }
