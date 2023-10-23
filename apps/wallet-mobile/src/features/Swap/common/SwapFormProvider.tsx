@@ -193,10 +193,6 @@ export const SwapFormProvider = ({
       actions.buyAmountErrorChanged(strings.notEnoughSupply)
       return
     }
-
-    if (state.buyQuantity.error !== undefined) {
-      actions.buyAmountErrorChanged(undefined)
-    }
   }, [
     actions,
     buyQuantity,
