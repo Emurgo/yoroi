@@ -13,7 +13,10 @@ import {Amounts, Entries} from '../../../yoroi-wallets/utils'
 
 export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
-  const {deregistrations, withdrawals, refundAmount, feeAmount, totalAmount} = withdrawalInfo(unsignedTx)
+  const {deregistrations, withdrawals, refundAmount, feeAmount, totalAmount} = withdrawalInfo(
+    unsignedTx,
+    wallet.primaryToken.identifier,
+  )
 
   return (
     <>
@@ -48,15 +51,15 @@ export const TransferSummary = ({wallet, unsignedTx}: {wallet: YoroiWallet; unsi
   )
 }
 
-const withdrawalInfo = (unsignedTx: YoroiUnsignedTx) => {
+const withdrawalInfo = (unsignedTx: YoroiUnsignedTx, primaryTokenId: string) => {
   const deregistrations = unsignedTx.staking?.deregistrations
   const withdrawals = unsignedTx.staking?.withdrawals
-  const withdrawalAmounts = Entries.toAmounts(withdrawals || {})
-  const deregistrationAmounts = Entries.toAmounts(deregistrations || {})
+  const withdrawalAmounts = Entries.toAmounts(withdrawals ?? [])
+  const deregistrationAmounts = Entries.toAmounts(deregistrations ?? [])
   const refundAmounts = Amounts.sum([withdrawalAmounts, deregistrationAmounts])
-  const refundAmount = Amounts.getAmount(Amounts.sum([withdrawalAmounts, deregistrationAmounts]), '')
-  const feeAmount = Amounts.getAmount(unsignedTx.fee, '')
-  const totalAmount = Amounts.getAmount(Amounts.diff(refundAmounts, unsignedTx.fee), '')
+  const refundAmount = Amounts.getAmount(Amounts.sum([withdrawalAmounts, deregistrationAmounts]), primaryTokenId)
+  const feeAmount = Amounts.getAmount(unsignedTx.fee, primaryTokenId)
+  const totalAmount = Amounts.getAmount(Amounts.diff(refundAmounts, unsignedTx.fee), primaryTokenId)
 
   return {
     deregistrations,

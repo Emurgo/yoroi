@@ -4,7 +4,6 @@ import React from 'react'
 import {QueryProvider} from '../../../../.storybook/decorators'
 import {Boundary} from '../../../components'
 import {mocks} from '../../../yoroi-wallets/mocks'
-import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
 import {TransferSummary} from './TransferSummary'
 
 storiesOf('TransferSummary', module)
@@ -13,17 +12,13 @@ storiesOf('TransferSummary', module)
       <Boundary>
         <TransferSummary
           wallet={mocks.wallet}
-          unsignedTx={
-            {
-              ...mocks.yoroiUnsignedTx,
-              staking: {
-                ...mocks.yoroiUnsignedTx.staking,
-                withdrawals: {
-                  'withdrawal-address': {'': '12356789'},
-                },
-              },
-            } as YoroiUnsignedTx
-          }
+          unsignedTx={{
+            ...mocks.yoroiUnsignedTx,
+            staking: {
+              ...mocks.yoroiUnsignedTx.staking,
+              withdrawals: [{address: 'withdrawal-address', amounts: {['']: '12356789'}}],
+            },
+          }}
         />
       </Boundary>
     </QueryProvider>
@@ -33,17 +28,13 @@ storiesOf('TransferSummary', module)
       <Boundary>
         <TransferSummary
           wallet={mocks.wallet}
-          unsignedTx={
-            {
-              ...mocks.yoroiUnsignedTx,
-              staking: {
-                ...mocks.yoroiUnsignedTx.staking,
-                deregistrations: {
-                  'deregistration-address': {'': '2000000'},
-                },
-              },
-            } as YoroiUnsignedTx
-          }
+          unsignedTx={{
+            ...mocks.yoroiUnsignedTx,
+            staking: {
+              ...mocks.yoroiUnsignedTx.staking,
+              deregistrations: [{address: 'deregistration-address', amounts: {['']: '12356789'}}],
+            },
+          }}
         />
       </Boundary>
     </QueryProvider>
@@ -53,20 +44,14 @@ storiesOf('TransferSummary', module)
       <Boundary>
         <TransferSummary
           wallet={mocks.wallet}
-          unsignedTx={
-            {
-              ...mocks.yoroiUnsignedTx,
-              staking: {
-                ...mocks.yoroiUnsignedTx.staking,
-                deregistrations: {
-                  'deregistration-address': {'': '2000000'},
-                },
-                withdrawals: {
-                  'withdrawal-address': {'': '12356789'},
-                },
-              },
-            } as YoroiUnsignedTx
-          }
+          unsignedTx={{
+            ...mocks.yoroiUnsignedTx,
+            staking: {
+              ...mocks.yoroiUnsignedTx.staking,
+              deregistrations: [{address: 'deregistration-address', amounts: {['']: '12356789'}}],
+              withdrawals: [{address: 'withdrawal-address', amounts: {['']: '12356789'}}],
+            },
+          }}
         />
       </Boundary>
     </QueryProvider>

@@ -393,11 +393,13 @@ describe('ShelleyWallet', () => {
     expect(tx.votingRegTx.voting.registration?.rewardAddress).toEqual(
       'addr_test1qrc9hzr4jp5d9608aww2u0a2342t2hdu3s6rs6c8tnwaxl0vnvq4r4es9alr4n79ey2kh9j4cq0tt3tm5tyekwxymytqslgys2',
     )
-    expect(tx.votingRegTx.change).toEqual({
-      addr1q9zh4tvj9gx2j65t6zuj76x5csvxpv9wlm99zlj64gs56t0vnvq4r4es9alr4n79ey2kh9j4cq0tt3tm5tyekwxymytqplyqfc: {
-        '': '9823411',
+    expect(tx.votingRegTx.change).toEqual([
+      {
+        address:
+          'addr1q9zh4tvj9gx2j65t6zuj76x5csvxpv9wlm99zlj64gs56t0vnvq4r4es9alr4n79ey2kh9j4cq0tt3tm5tyekwxymytqplyqfc',
+        amounts: {'': '9823411'},
       },
-    })
+    ])
   })
 })
 

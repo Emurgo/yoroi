@@ -14,21 +14,19 @@ export type YoroiSignedTx = YoroiTxInfo & {
 }
 
 export type YoroiTxInfo = {
-  entries: YoroiEntries
-  amounts: Balance.Amounts
+  entries: YoroiEntry[]
   fee: Balance.Amounts
-  change: YoroiEntries
+  change: YoroiEntry[]
   metadata: YoroiMetadata
   staking: YoroiStaking
   voting: YoroiVoting
-  datum?: Datum
 }
 
 export type YoroiStaking = {
-  registrations?: YoroiEntries
-  deregistrations?: YoroiEntries
-  delegations?: YoroiEntries
-  withdrawals?: YoroiEntries
+  registrations?: YoroiEntry[]
+  deregistrations?: YoroiEntry[]
+  delegations?: YoroiEntry[]
+  withdrawals?: YoroiEntry[]
 }
 
 export type YoroiVoting = {
@@ -42,8 +40,6 @@ export type YoroiVoting = {
 
 export type Address = string
 export type TokenId = string
-
-export type YoroiEntries = Record<string, Balance.Amounts>
 
 export type YoroiEntry = {
   address: Address
