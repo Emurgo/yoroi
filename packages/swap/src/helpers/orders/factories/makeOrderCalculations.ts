@@ -1,6 +1,9 @@
 import {App, Balance, Swap} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
-import {SwapOrderCalculation} from '../../../translators/reactjs/state/state'
+import {
+  SwapOrderCalculation,
+  SwapState,
+} from '../../../translators/reactjs/state/state'
 import {getQuantityWithSlippage} from '../amounts/getQuantityWithSlippage'
 import {getLiquidityProviderFee} from '../costs/getLiquidityProviderFee'
 import {getFrontendFee} from '../costs/getFrontendFee'
@@ -16,10 +19,10 @@ export const makeOrderCalculations = ({
   limitPrice,
   slippage,
   pools,
-  primaryTokenId,
   lpTokenHeld,
   side,
   frontendFeeTiers,
+  tokens,
 }: Readonly<{
   orderType: Swap.OrderType
   amounts: {
@@ -30,9 +33,9 @@ export const makeOrderCalculations = ({
   pools: ReadonlyArray<Swap.Pool>
   lpTokenHeld?: Balance.Amount
   slippage: number
-  primaryTokenId: Balance.TokenInfo['id']
   side?: 'buy' | 'sell'
   frontendFeeTiers: ReadonlyArray<App.FrontendFeeTier>
+  tokens: SwapState['orderData']['tokens']
 }>): Array<SwapOrderCalculation> => {
   const isLimit = orderType === 'limit'
   const maybeLimitPrice = isLimit ? limitPrice : undefined
@@ -77,9 +80,9 @@ export const makeOrderCalculations = ({
     // TODO: it needs update, prices by muesli are provided in ADA, quantities in atomic units
     const frontendFeeInfo = getFrontendFee({
       lpTokenHeld,
-      primaryTokenId,
+      primaryTokenId: tokens.ptInfo.id,
       sellInPrimaryTokenValue: {
-        tokenId: primaryTokenId,
+        tokenId: tokens.ptInfo.id,
         quantity: ptPriceSell.isZero()
           ? Quantities.zero
           : asQuantity(
@@ -166,7 +169,7 @@ export const makeOrderCalculations = ({
     } = calculatePricesWithFees({withFrontendFee: false})
 
     const ptTotalFee: Balance.Amount = {
-      tokenId: primaryTokenId,
+      tokenId: tokens.ptInfo.id,
       quantity: Quantities.sum([
         pool.batcherFee.quantity,
         pool.deposit.quantity,
@@ -175,7 +178,7 @@ export const makeOrderCalculations = ({
     }
 
     const ptTotalFeeNoFEF: Balance.Amount = {
-      tokenId: primaryTokenId,
+      tokenId: tokens.ptInfo.id,
       quantity: Quantities.sum([
         pool.batcherFee.quantity,
         pool.deposit.quantity,

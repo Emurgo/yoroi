@@ -30,7 +30,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
@@ -148,7 +162,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
@@ -257,7 +285,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'buy',
       frontendFeeTiers,
@@ -375,7 +417,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'buy',
       frontendFeeTiers,
@@ -493,7 +549,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
@@ -606,7 +676,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
@@ -719,7 +803,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
@@ -832,7 +930,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'buy',
       frontendFeeTiers,
@@ -945,7 +1057,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
@@ -1058,7 +1184,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
@@ -1171,7 +1311,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'buy',
       frontendFeeTiers,
@@ -1284,7 +1438,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'buy',
       frontendFeeTiers,
@@ -1397,7 +1565,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
@@ -1510,7 +1692,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
@@ -1623,7 +1819,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'buy',
       frontendFeeTiers,
@@ -1736,7 +1946,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'buy',
       frontendFeeTiers,
@@ -1849,7 +2073,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: '2',
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'buy',
       frontendFeeTiers,
@@ -1952,7 +2190,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: '2',
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
@@ -2055,7 +2307,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: '2',
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'buy',
       frontendFeeTiers,
@@ -2158,7 +2424,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: '2',
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
@@ -2261,7 +2541,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: '1',
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: undefined,
       side: 'sell',
       frontendFeeTiers,
@@ -2364,7 +2658,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: '1',
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: {
         quantity: '50',
         tokenId: 'tokenX',
@@ -2478,7 +2786,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: '1',
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: {
         quantity: '100',
         tokenId: 'tokenX',
@@ -2592,7 +2914,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: '1',
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: {
         quantity: '500',
         tokenId: 'tokenX',
@@ -2706,7 +3042,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: '1',
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: {
         quantity: '50',
         tokenId: 'tokenX',
@@ -2815,7 +3165,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: '1',
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: {
         quantity: '50',
         tokenId: 'tokenX',
@@ -2923,7 +3287,21 @@ describe('makeOrderCalculations', () => {
       limitPrice: undefined,
       slippage: slippage,
       pools: pools,
-      primaryTokenId: '',
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: '',
+        },
+        priceDenomination: 0,
+      },
       lpTokenHeld: {
         quantity: '50',
         tokenId: 'tokenX',
