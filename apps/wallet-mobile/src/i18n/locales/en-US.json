@@ -169,7 +169,7 @@
   "swap.swapScreen.swapLiquidityFeeInfo": "Liquidity provider fee is a fixed {fee}% operational fee from the whole transaction volume, that is taken to support DEX “liquidity” allowing traders to buy and sell assets on the decentralized Cardano network.",
   "swap.swapScreen.swapMinReceived": "Minimum amount of assets you can get because of the slippage tolerance.",
   "swap.swapScreen.swapMinReceivedTitle": "Min Received",
-  "swap.swapScreen.enterSlippage": "Enter a value from 0% to 100%. You can also enter up to 1 decimal",
+  "swap.swapScreen.enterSlippage": "Enter a value from 0% to 75%. You can also enter up to 1 decimal",
   "swap.swapScreen.poolVerification": "{pool} verification",
   "swap.swapScreen.volume": "Volume, 24h",
   "swap.swapScreen.tvl": "TVL",

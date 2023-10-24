@@ -193,7 +193,7 @@ export const messages = defineMessages({
   },
   slippageToleranceError: {
     id: 'swap.swapScreen.slippageToleranceError',
-    defaultMessage: '!!!Slippage must be a number between 0 and 100 and have up to 1 decimal',
+    defaultMessage: '!!!Slippage must be a number between 0 and 75 and have up to 1 decimal',
   },
   slippageToleranceInfo: {
     id: 'swap.swapScreen.slippageToleranceInfo',
@@ -263,7 +263,7 @@ export const messages = defineMessages({
   },
   enterSlippage: {
     id: 'swap.swapScreen.enterSlippage',
-    defaultMessage: '!!!Enter a value from 0% to 100%. You can also enter up to 1 decimal',
+    defaultMessage: '!!!Enter a value from 0% to 75%. You can also enter up to 1 decimal',
   },
   poolVerification: {
     id: 'swap.swapScreen.poolVerification',
