@@ -1,5 +1,6 @@
 import {App, Balance, RemoveUndefined, Swap} from '@yoroi/types'
 import {produce} from 'immer'
+import BigNumber from 'bignumber.js'
 
 import {Quantities} from '../../../utils/quantities'
 import {makeOrderCalculations} from '../../../helpers/orders/factories/makeOrderCalculations'
@@ -551,6 +552,14 @@ const orderReducer = (
         draft.orderData.amounts.sell.tokenId = action.tokenInfo.id
         draft.orderData.tokens.priceDenomination =
           action.tokenInfo.decimals - state.orderData.tokens.buyInfo.decimals
+        draft.orderData.amounts.sell.quantity = Quantities.decimalPlaces(
+          Quantities.denominated(
+            state.orderData.amounts.sell.quantity,
+            draft.orderData.tokens.priceDenomination,
+          ),
+          0,
+          BigNumber.ROUND_FLOOR,
+        )
 
         draft.orderData.pools = []
 

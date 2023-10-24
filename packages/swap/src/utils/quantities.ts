@@ -42,9 +42,13 @@ export const Quantities = {
       new BigNumber(quantity2),
     )
   },
-  decimalPlaces: (quantity: Balance.Quantity, precision: number) => {
+  decimalPlaces: (
+    quantity: Balance.Quantity,
+    precision: number,
+    roundMode?: BigNumber.RoundingMode,
+  ) => {
     return new BigNumber(quantity)
-      .decimalPlaces(precision)
+      .decimalPlaces(precision, roundMode)
       .toString(10) as Balance.Quantity
   },
   denominated: (quantity: Balance.Quantity, denomination: number) => {

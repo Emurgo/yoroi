@@ -111,8 +111,8 @@ export const Quantities = {
   isGreaterThan: (quantity1: Balance.Quantity, quantity2: Balance.Quantity) => {
     return new BigNumber(quantity1).isGreaterThan(new BigNumber(quantity2))
   },
-  decimalPlaces: (quantity: Balance.Quantity, precision: number) => {
-    return new BigNumber(quantity).decimalPlaces(precision).toString(10) as Balance.Quantity
+  decimalPlaces: (quantity: Balance.Quantity, precision: number, roundMode?: BigNumber.RoundingMode) => {
+    return new BigNumber(quantity).decimalPlaces(precision, roundMode).toString(10) as Balance.Quantity
   },
   denominated: (quantity: Balance.Quantity, denomination: number) => {
     return Quantities.quotient(quantity, new BigNumber(10).pow(denomination).toString(10) as Balance.Quantity)
