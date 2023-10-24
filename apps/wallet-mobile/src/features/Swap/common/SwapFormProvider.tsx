@@ -167,11 +167,7 @@ export const SwapFormProvider = ({
   )
 
   React.useEffect(() => {
-    if (
-      orderData.selectedPoolCalculation === undefined &&
-      state.buyQuantity.isTouched &&
-      state.sellQuantity.isTouched
-    ) {
+    if (orderData.pools.length === 0 && state.buyQuantity.isTouched && state.sellQuantity.isTouched) {
       actions.buyAmountErrorChanged(strings.noPool)
       return
     }
@@ -204,6 +200,7 @@ export const SwapFormProvider = ({
     orderData.selectedPoolCalculation,
     strings.noPool,
     state.buyQuantity.error,
+    orderData.pools.length,
   ])
 
   React.useEffect(() => {
