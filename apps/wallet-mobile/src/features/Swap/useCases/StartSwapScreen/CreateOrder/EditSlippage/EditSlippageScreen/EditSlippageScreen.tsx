@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
 
 const validateSlippage = (text: string, format: NumberLocale) => {
   const slippage = parseNumber(text, format)
-  return !isNaN(slippage) && slippage >= 0 && slippage <= 100
+  return !isNaN(slippage) && slippage >= 0 && slippage <= 75
 }
 
 const parseNumber = (text: string, format: NumberLocale) => {
