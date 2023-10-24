@@ -3389,4 +3389,126 @@ describe('makeOrderCalculations', () => {
     }
     expect(calculations[0]).toStrictEqual(expectedCalculation)
   })
+  it('should calculate fees and amounts correctly (case 28, pt at buy side)', () => {
+    const pool: Swap.Pool = mocks.mockedPools7[1]!
+    const pools = [pool]
+    const amounts = {
+      sell: {
+        quantity: '1000000',
+        tokenId: 'tokenB',
+      } as Balance.Amount,
+      buy: {
+        quantity: '0',
+        tokenId: 'tokenA',
+      } as Balance.Amount,
+    }
+    const slippage = 0
+    const calculations = makeOrderCalculations({
+      orderType: 'market',
+      amounts: amounts,
+      limitPrice: undefined,
+      slippage: slippage,
+      pools: pools,
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: 'tokenA',
+        },
+        priceDenomination: 0,
+      },
+      lpTokenHeld: {
+        quantity: '50',
+        tokenId: 'tokenX',
+      },
+      side: 'sell',
+      frontendFeeTiers,
+    })
+    const expectedCalculation: SwapOrderCalculation = {
+      order: {
+        side: 'sell',
+        slippage: 0,
+        orderType: 'market',
+        limitPrice: undefined,
+        amounts: {
+          sell: {
+            quantity: '1000000',
+            tokenId: 'tokenB',
+          },
+          buy: {
+            quantity: '0',
+            tokenId: 'tokenA',
+          },
+        },
+        lpTokenHeld: {
+          quantity: '50',
+          tokenId: 'tokenX',
+        },
+      },
+      sides: {
+        sell: {
+          quantity: '1000000',
+          tokenId: 'tokenB',
+        },
+        buy: {
+          quantity: '199',
+          tokenId: 'tokenA',
+        },
+      },
+      cost: {
+        batcherFee: {
+          quantity: '0',
+          tokenId: '',
+        },
+        deposit: {
+          quantity: '0',
+          tokenId: '',
+        },
+        frontendFeeInfo: {
+          discountTier: undefined,
+          fee: {
+            quantity: '0',
+            tokenId: 'tokenA',
+          },
+        },
+        liquidityFee: {
+          quantity: '0',
+          tokenId: 'tokenB',
+        },
+        ptTotalFeeNoFEF: {
+          tokenId: 'tokenA',
+          quantity: '0',
+        },
+        ptTotalFee: {
+          tokenId: 'tokenA',
+          quantity: '0',
+        },
+      },
+      buyAmountWithSlippage: {
+        quantity: '199',
+        tokenId: 'tokenA',
+      },
+      hasSupply: true,
+      prices: {
+        base: '0.5',
+        market: '0.5',
+        withSlippage: '5025.12562814070351758794',
+        withFees: '5025.12562814070351758794',
+        withFeesAndSlippage: '5025.12562814070351758794',
+        difference: '1004925.125628140703517588',
+        withFeesNoFEF: '5025.12562814070351758794',
+        withFeesAndSlippageNoFEF: '5025.12562814070351758794',
+        differenceNoFEF: '1004925.125628140703517588',
+      },
+      pool: pool,
+    }
+    expect(calculations[0]).toStrictEqual(expectedCalculation)
+  })
 })
