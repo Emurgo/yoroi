@@ -19,6 +19,7 @@ export const getSellAmount = (
   pool: Swap.Pool,
   buy: Balance.Amount,
   limit?: Balance.Quantity,
+  isLimit?: boolean,
 ): Balance.Amount => {
   const isBuyTokenA = buy.tokenId === pool.tokenA.tokenId
 
@@ -45,7 +46,8 @@ export const getSellAmount = (
 
   const buyQuantity = BigInt(buy.quantity)
 
-  const fee = BigInt(100 * 1000) - BigInt(Number(pool.fee) * 1000)
+  // if limit order for the initial price when limit is undefined
+  const fee = BigInt(100 * 1000) - BigInt(Number(isLimit ? 0 : pool.fee) * 1000)
 
   const maxBuyQuantity =
     firstToken -
