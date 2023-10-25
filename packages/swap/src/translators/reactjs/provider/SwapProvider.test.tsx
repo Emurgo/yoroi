@@ -534,7 +534,7 @@ describe('SwapProvider', () => {
         ...defaultSwapState.orderData,
         amounts: {
           sell: {
-            quantity: '10',
+            quantity: '1000000',
             tokenId: 'policyId.sell',
           },
           buy: {
@@ -580,7 +580,7 @@ describe('SwapProvider', () => {
     })
 
     expect(result.current.orderData.amounts.sell).toEqual({
-      quantity: '10',
+      quantity: '10000',
       tokenId: 'new.token',
     })
     expect(result.current.orderData.tokens.sellInfo).toEqual({

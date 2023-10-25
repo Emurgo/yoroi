@@ -1,10 +1,15 @@
-import {App, Balance, RemoveUndefined, Swap} from '@yoroi/types'
+import {App, Balance, Swap} from '@yoroi/types'
 import {produce} from 'immer'
 
 import {Quantities} from '../../../utils/quantities'
 import {makeOrderCalculations} from '../../../helpers/orders/factories/makeOrderCalculations'
 import {selectedPoolCalculationSelector} from './selectors/selectedPoolCalculationSelector'
 import {getBestPoolCalculation} from '../../../helpers/pools/getBestPoolCalculation'
+
+export type SimpleTokenInfo = {
+  id: Balance.TokenInfo['id']
+  decimals: Exclude<Balance.TokenInfo['decimals'], undefined>
+}
 
 export type SwapOrderCalculation = Readonly<{
   order: {
@@ -30,9 +35,6 @@ export type SwapOrderCalculation = Readonly<{
     withFees: Balance.Quantity
     withFeesAndSlippage: Balance.Quantity
     difference: Balance.Quantity
-    withFeesNoFEF: Balance.Quantity
-    withFeesAndSlippageNoFEF: Balance.Quantity
-    differenceNoFEF: Balance.Quantity
   }
   hasSupply: boolean
   buyAmountWithSlippage: Balance.Amount
@@ -44,8 +46,7 @@ export type SwapOrderCalculation = Readonly<{
       discountTier?: App.FrontendFeeTier
       fee: Balance.Amount
     }
-    ptTotalFeeNoFEF: Balance.Amount
-    ptTotalFee: Balance.Amount
+    ptTotalRequired: Balance.Amount
   }
 }>
 
@@ -66,9 +67,9 @@ export type SwapState = Readonly<{
     // state from wallet
     lpTokenHeld?: Balance.Amount
     tokens: {
-      sellInfo: RemoveUndefined<Pick<Balance.TokenInfo, 'decimals' | 'id'>>
-      buyInfo: RemoveUndefined<Pick<Balance.TokenInfo, 'decimals' | 'id'>>
-      ptInfo: RemoveUndefined<Pick<Balance.TokenInfo, 'decimals' | 'id'>>
+      sellInfo: SimpleTokenInfo
+      buyInfo: SimpleTokenInfo
+      ptInfo: SimpleTokenInfo
       // diff sell - buy decimals
       priceDenomination: number
     }
@@ -93,17 +94,11 @@ export type SwapCreateOrderActions = Readonly<{
   limitPriceChanged: (limitPrice: Balance.Quantity) => void
   sellQuantityChanged: (quantity: Balance.Quantity) => void
   buyQuantityChanged: (quantity: Balance.Quantity) => void
-  sellTokenInfoChanged: (
-    tokenInfo: RemoveUndefined<Pick<Balance.TokenInfo, 'decimals' | 'id'>>,
-  ) => void
-  buyTokenInfoChanged: (
-    tokenInfo: RemoveUndefined<Pick<Balance.TokenInfo, 'decimals' | 'id'>>,
-  ) => void
+  sellTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => void
+  buyTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => void
   poolPairsChanged: (pools: ReadonlyArray<Swap.Pool>) => void
   lpTokenHeldChanged: (amount: Balance.Amount | undefined) => void
-  primaryTokenInfoChanged: (
-    tokenInfo: RemoveUndefined<Pick<Balance.TokenInfo, 'decimals' | 'id'>>,
-  ) => void
+  primaryTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => void
   frontendFeeTiersChanged: (
     feeTiers: ReadonlyArray<App.FrontendFeeTier>,
   ) => void
@@ -156,11 +151,11 @@ export type SwapCreateOrderAction =
     }
   | {
       type: SwapCreateOrderActionType.SellTokenInfoChanged
-      tokenInfo: RemoveUndefined<Pick<Balance.TokenInfo, 'decimals' | 'id'>>
+      tokenInfo: SimpleTokenInfo
     }
   | {
       type: SwapCreateOrderActionType.BuyTokenInfoChanged
-      tokenInfo: RemoveUndefined<Pick<Balance.TokenInfo, 'decimals' | 'id'>>
+      tokenInfo: SimpleTokenInfo
     }
   | {
       type: SwapCreateOrderActionType.PoolPairsChanged
@@ -172,7 +167,7 @@ export type SwapCreateOrderAction =
     }
   | {
       type: SwapCreateOrderActionType.PrimaryTokenInfoChanged
-      tokenInfo: RemoveUndefined<Pick<Balance.TokenInfo, 'decimals' | 'id'>>
+      tokenInfo: SimpleTokenInfo
     }
   | {
       type: SwapCreateOrderActionType.FrontendFeeTiersChanged
@@ -551,6 +546,15 @@ const orderReducer = (
         draft.orderData.amounts.sell.tokenId = action.tokenInfo.id
         draft.orderData.tokens.priceDenomination =
           action.tokenInfo.decimals - state.orderData.tokens.buyInfo.decimals
+
+        draft.orderData.amounts.sell.quantity = Quantities.decimalPlaces(
+          Quantities.denominated(
+            state.orderData.amounts.sell.quantity,
+            state.orderData.tokens.sellInfo.decimals -
+              action.tokenInfo.decimals,
+          ),
+          0,
+        )
 
         draft.orderData.pools = []
 

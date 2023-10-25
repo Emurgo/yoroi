@@ -39,8 +39,6 @@ export const makeOrderCalculations = ({
 }>): Array<SwapOrderCalculation> => {
   const isLimit = orderType === 'limit'
   const maybeLimitPrice = isLimit ? limitPrice : undefined
-  const isSellPt = amounts.sell.tokenId === tokens.ptInfo.id
-  const isBuyPt = amounts.buy.tokenId === tokens.ptInfo.id
 
   const calculations = pools.map<SwapOrderCalculation>((pool) => {
     const buy =
@@ -81,26 +79,14 @@ export const makeOrderCalculations = ({
       ? new BigNumber(pool.ptPriceTokenB)
       : new BigNumber(pool.ptPriceTokenA)
     const sellQuantity = new BigNumber(sell.quantity)
-    const sellPrice = new BigNumber(ptPriceSell)
-    const sellInPtTerms = ptPriceSell.isZero()
-      ? Quantities.zero
-      : asQuantity(
-          sellQuantity
-            .dividedBy(new BigNumber(1).dividedBy(sellPrice))
-            .toString(),
-        )
-    const ptQuantity = isSellPt
-      ? sell.quantity
-      : isBuyPt
-      ? buy.quantity
-      : sellInPtTerms
+    const sellInPtTerms = asQuantity(sellQuantity.multipliedBy(ptPriceSell))
 
     // ffee is based on PT value range + LP holding range
     const frontendFeeInfo = getFrontendFee({
       lpTokenHeld,
       ptAmount: {
         tokenId: tokens.ptInfo.id,
-        quantity: ptQuantity,
+        quantity: sellInPtTerms,
       },
       feeTiers: frontendFeeTiers,
     })
@@ -130,71 +116,41 @@ export const makeOrderCalculations = ({
             .toString(),
         )
 
-    const calculatePricesWithFees = ({
-      withFrontendFee,
-    }: {
-      withFrontendFee?: boolean
-    }) => {
-      // add up all that's being sold in sell terms
-      const sellWithBatcher = new BigNumber(sell.quantity).plus(
-        feeInSellSideQuantities.batcherFee,
-      )
-      const sellWithFees = withFrontendFee
-        ? sellWithBatcher.plus(feeInSellSideQuantities.frontendFee)
-        : sellWithBatcher
+    // add up all that's being sold in sell terms
+    const sellWithFees = new BigNumber(sell.quantity)
+      .plus(feeInSellSideQuantities.batcherFee)
+      .plus(feeInSellSideQuantities.frontendFee)
 
-      const priceWithFees = Quantities.isZero(buy.quantity)
-        ? new BigNumber(0)
-        : sellWithFees.dividedBy(buy.quantity)
+    const priceWithFees = Quantities.isZero(buy.quantity)
+      ? new BigNumber(0)
+      : sellWithFees.dividedBy(buy.quantity)
 
-      const priceWithFeesAndSlippage = Quantities.isZero(
-        buyAmountWithSlippage.quantity,
-      )
-        ? Quantities.zero
-        : sellWithFees.dividedBy(buyAmountWithSlippage.quantity).toString()
+    const priceWithFeesAndSlippage = Quantities.isZero(
+      buyAmountWithSlippage.quantity,
+    )
+      ? Quantities.zero
+      : sellWithFees.dividedBy(buyAmountWithSlippage.quantity).toString()
 
-      // always based, if is limit it can lead to a weird percentage
-      const priceDifference = Quantities.isZero(priceBase)
-        ? Quantities.zero
-        : priceWithFees
-            .minus(priceBase)
-            .dividedBy(priceBase)
-            .times(100)
-            .toString()
-
-      return {
-        priceWithFees: asQuantity(priceWithFees),
-        priceWithFeesAndSlippage: asQuantity(priceWithFeesAndSlippage),
-        priceDifference: asQuantity(priceDifference),
-      }
-    }
+    // always based, if is limit it can lead to a weird percentage
+    const priceDifference = Quantities.isZero(priceBase)
+      ? Quantities.zero
+      : priceWithFees
+          .minus(priceBase)
+          .dividedBy(priceBase)
+          .times(100)
+          .toString()
 
     // fees + ffee + slippage
-    const {
-      priceWithFees: withFees,
-      priceWithFeesAndSlippage: withFeesAndSlippage,
-      priceDifference: difference,
-    } = calculatePricesWithFees({withFrontendFee: true})
-    const {
-      priceWithFees: withFeesNoFEF,
-      priceWithFeesAndSlippage: withFeesAndSlippageNoFEF,
-      priceDifference: differenceNoFEF,
-    } = calculatePricesWithFees({withFrontendFee: false})
+    const withFees = asQuantity(priceWithFees)
+    const withFeesAndSlippage = asQuantity(priceWithFeesAndSlippage)
+    const difference = asQuantity(priceDifference)
 
-    const ptTotalFee: Balance.Amount = {
+    const ptTotalRequired: Balance.Amount = {
       tokenId: tokens.ptInfo.id,
       quantity: Quantities.sum([
         pool.batcherFee.quantity,
         pool.deposit.quantity,
         frontendFeeInfo.fee.quantity,
-      ]),
-    }
-
-    const ptTotalFeeNoFEF: Balance.Amount = {
-      tokenId: tokens.ptInfo.id,
-      quantity: Quantities.sum([
-        pool.batcherFee.quantity,
-        pool.deposit.quantity,
       ]),
     }
 
@@ -216,8 +172,7 @@ export const makeOrderCalculations = ({
         deposit: pool.deposit,
         frontendFeeInfo,
         liquidityFee,
-        ptTotalFeeNoFEF,
-        ptTotalFee,
+        ptTotalRequired,
       },
       buyAmountWithSlippage,
       hasSupply,
@@ -228,9 +183,6 @@ export const makeOrderCalculations = ({
         withFees,
         withFeesAndSlippage,
         difference,
-        withFeesNoFEF,
-        withFeesAndSlippageNoFEF,
-        differenceNoFEF,
       },
       pool,
     } as const

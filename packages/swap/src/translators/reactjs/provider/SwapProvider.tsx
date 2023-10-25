@@ -1,7 +1,8 @@
 import * as React from 'react'
-import {App, Balance, RemoveUndefined, Swap} from '@yoroi/types'
+import {App, Balance, Swap} from '@yoroi/types'
 
 import {
+  SimpleTokenInfo,
   SwapActionType,
   SwapActions,
   SwapCreateOrderActionType,
@@ -79,14 +80,10 @@ export const SwapProvider = ({
     lpTokenHeldChanged: (amount: Balance.Amount | undefined) => {
       dispatch({type: SwapCreateOrderActionType.LpTokenHeldChanged, amount})
     },
-    buyTokenInfoChanged: (
-      tokenInfo: RemoveUndefined<Pick<Balance.TokenInfo, 'decimals' | 'id'>>,
-    ) => {
+    buyTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => {
       dispatch({type: SwapCreateOrderActionType.BuyTokenInfoChanged, tokenInfo})
     },
-    sellTokenInfoChanged: (
-      tokenInfo: RemoveUndefined<Pick<Balance.TokenInfo, 'decimals' | 'id'>>,
-    ) => {
+    sellTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => {
       dispatch({
         type: SwapCreateOrderActionType.SellTokenInfoChanged,
         tokenInfo,
@@ -95,9 +92,7 @@ export const SwapProvider = ({
     poolPairsChanged: (pools: ReadonlyArray<Swap.Pool>) => {
       dispatch({type: SwapCreateOrderActionType.PoolPairsChanged, pools})
     },
-    primaryTokenInfoChanged: (
-      tokenInfo: RemoveUndefined<Pick<Balance.TokenInfo, 'decimals' | 'id'>>,
-    ) => {
+    primaryTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => {
       dispatch({
         type: SwapCreateOrderActionType.PrimaryTokenInfoChanged,
         tokenInfo,

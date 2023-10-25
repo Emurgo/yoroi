@@ -3,7 +3,6 @@ import {AppApi} from '@yoroi/api'
 
 import {makeOrderCalculations} from './makeOrderCalculations'
 import {mocks} from '../../mocks'
-import {getPriceAfterFee} from '../../prices/getPriceAfterFee'
 import {SwapOrderCalculation} from '../../../translators/reactjs/state/state'
 
 describe('makeOrderCalculations', () => {
@@ -49,17 +48,7 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.sell.quantity,
-      calculation.sides.buy.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('0.06717514563300004847')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculations[0]).toStrictEqual({
       order: {
         side: 'sell',
@@ -113,11 +102,8 @@ describe('makeOrderCalculations', () => {
           quantity: '30000000',
           tokenId: 'tokenA',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '4000000',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '10000000',
         },
@@ -134,9 +120,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0.06721544266097425366',
         withFeesAndSlippage: '0.06721544266097425366',
         difference: '0.418183996965910966',
-        withFeesNoFEF: '0.06717514563300004847',
-        withFeesAndSlippageNoFEF: '0.06717514563300004847',
-        differenceNoFEF: '0.357981248766291112',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -182,7 +165,6 @@ describe('makeOrderCalculations', () => {
       frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
-    expect(calculation.prices.withFeesNoFEF).toBe('0.06717514563300004847')
     expect(calculation).toStrictEqual({
       order: {
         side: 'sell',
@@ -236,11 +218,8 @@ describe('makeOrderCalculations', () => {
           quantity: '30000000',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '4000000',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '10000000',
         },
@@ -257,9 +236,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0.06721544266097425366',
         withFeesAndSlippage: '0.06721544266097425366',
         difference: '0.418183996965910966',
-        withFeesNoFEF: '0.06717514563300004847',
-        withFeesAndSlippageNoFEF: '0.06717514563300004847',
-        differenceNoFEF: '0.357981248766291112',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -305,16 +281,7 @@ describe('makeOrderCalculations', () => {
       frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.sell.quantity,
-      calculation.sides.buy.quantity,
-      amounts.sell.tokenId,
-    )
-    // expect(calculation.prices.withFeesNoFEF).toBe('0.06717514564643239113')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculation).toStrictEqual({
       order: {
         side: 'buy',
@@ -368,11 +335,8 @@ describe('makeOrderCalculations', () => {
           quantity: '30000000',
           tokenId: 'tokenA',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '4000000',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '10000000',
         },
@@ -389,9 +353,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0.06721544266729427966',
         withFeesAndSlippage: '0.06721544266729427966',
         difference: '0.418184006407871156',
-        withFeesNoFEF: '0.06717514563931628549',
-        withFeesAndSlippageNoFEF: '0.06717514563931628549',
-        differenceNoFEF: '0.357981258202590661',
       },
       pool: pool,
     } as SwapOrderCalculation)
@@ -437,16 +398,7 @@ describe('makeOrderCalculations', () => {
       frontendFeeTiers,
     })
     const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.buy.quantity,
-      calculation.sides.sell.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('0.06717514563931628549')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculation).toStrictEqual({
       order: {
         side: 'buy',
@@ -500,11 +452,8 @@ describe('makeOrderCalculations', () => {
           quantity: '30000000',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '4000000',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '10000000',
         },
@@ -521,9 +470,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0.06721544266729427966',
         withFeesAndSlippage: '0.06721544266729427966',
         difference: '0.418184006407871156',
-        withFeesNoFEF: '0.06717514563931628549',
-        withFeesAndSlippageNoFEF: '0.06717514563931628549',
-        differenceNoFEF: '0.357981258202590661',
       },
       pool: pool,
     } as SwapOrderCalculation)
@@ -568,17 +514,7 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.sell.quantity,
-      calculation.sides.buy.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('1')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculations[0]).toStrictEqual({
       order: {
         side: 'sell',
@@ -627,11 +563,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenA',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -648,9 +581,6 @@ describe('makeOrderCalculations', () => {
         withFees: '1',
         withFeesAndSlippage: '2',
         difference: '1',
-        withFeesNoFEF: '1',
-        withFeesAndSlippageNoFEF: '2',
-        differenceNoFEF: '1',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -695,17 +625,6 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.sell.quantity,
-      calculation.sides.buy.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('0')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
     expect(calculations[0]).toStrictEqual({
       order: {
         side: 'sell',
@@ -754,11 +673,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenA',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -775,9 +691,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '0',
-        withFeesNoFEF: '0',
-        withFeesAndSlippageNoFEF: '0',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -822,17 +735,7 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.sell.quantity,
-      calculation.sides.buy.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('0')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculations[0]).toStrictEqual({
       order: {
         side: 'sell',
@@ -881,11 +784,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenA',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -902,9 +802,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '-100',
-        withFeesNoFEF: '0',
-        withFeesAndSlippageNoFEF: '0',
-        differenceNoFEF: '-100',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -949,17 +846,7 @@ describe('makeOrderCalculations', () => {
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.buy.quantity,
-      calculation.sides.sell.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('0.01')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculations[0]).toStrictEqual({
       order: {
         side: 'buy',
@@ -1008,11 +895,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -1029,9 +913,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0.01',
         withFeesAndSlippage: '0.01',
         difference: '-99',
-        withFeesNoFEF: '0.01',
-        withFeesAndSlippageNoFEF: '0.01',
-        differenceNoFEF: '-99',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1076,17 +957,7 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.sell.quantity,
-      calculation.sides.buy.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('100')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculations[0]).toStrictEqual({
       order: {
         side: 'sell',
@@ -1135,11 +1006,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenA',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -1156,9 +1024,6 @@ describe('makeOrderCalculations', () => {
         withFees: '100',
         withFeesAndSlippage: '100',
         difference: '0',
-        withFeesNoFEF: '100',
-        withFeesAndSlippageNoFEF: '100',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1203,17 +1068,7 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.sell.quantity,
-      calculation.sides.buy.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('0')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculations[0]).toStrictEqual({
       order: {
         side: 'sell',
@@ -1262,11 +1117,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenA',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -1283,9 +1135,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '0',
-        withFeesNoFEF: '0',
-        withFeesAndSlippageNoFEF: '0',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1330,17 +1179,7 @@ describe('makeOrderCalculations', () => {
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.sell.quantity,
-      calculation.sides.buy.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('0')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculations[0]).toStrictEqual({
       order: {
         side: 'buy',
@@ -1389,11 +1228,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -1410,9 +1246,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '0',
-        withFeesNoFEF: '0',
-        withFeesAndSlippageNoFEF: '0',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1457,17 +1290,7 @@ describe('makeOrderCalculations', () => {
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.buy.quantity,
-      calculation.sides.sell.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('0.01')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculations[0]).toStrictEqual({
       order: {
         side: 'buy',
@@ -1516,11 +1339,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -1537,9 +1357,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0.01',
         withFeesAndSlippage: '0.01',
         difference: '0',
-        withFeesNoFEF: '0.01',
-        withFeesAndSlippageNoFEF: '0.01',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1584,17 +1401,7 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.buy.quantity,
-      calculation.sides.sell.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('100')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculations[0]).toStrictEqual({
       order: {
         side: 'sell',
@@ -1643,11 +1450,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -1664,9 +1468,6 @@ describe('makeOrderCalculations', () => {
         withFees: '100',
         withFeesAndSlippage: '100',
         difference: '0',
-        withFeesNoFEF: '100',
-        withFeesAndSlippageNoFEF: '100',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1711,17 +1512,7 @@ describe('makeOrderCalculations', () => {
       side: 'sell',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.sell.quantity,
-      calculation.sides.buy.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('0')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculations[0]).toStrictEqual({
       order: {
         side: 'sell',
@@ -1770,11 +1561,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -1791,9 +1579,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '0',
-        withFeesNoFEF: '0',
-        withFeesAndSlippageNoFEF: '0',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1838,17 +1623,7 @@ describe('makeOrderCalculations', () => {
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.sell.quantity,
-      calculation.sides.buy.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('0')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculations[0]).toStrictEqual({
       order: {
         side: 'buy',
@@ -1897,11 +1672,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenA',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -1918,9 +1690,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '0',
-        withFeesNoFEF: '0',
-        withFeesAndSlippageNoFEF: '0',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1965,17 +1734,7 @@ describe('makeOrderCalculations', () => {
       side: 'buy',
       frontendFeeTiers,
     })
-    const calculation = calculations[0] as SwapOrderCalculation
-    const price_with_batcher_fee = getPriceAfterFee(
-      pool,
-      calculation.sides.sell.quantity,
-      calculation.sides.buy.quantity,
-      amounts.sell.tokenId,
-    )
-    expect(calculation.prices.withFeesNoFEF).toBe('0.01')
-    expect(calculation.prices.withFeesNoFEF).toBe(
-      price_with_batcher_fee.toString(),
-    )
+
     expect(calculations[0]).toStrictEqual({
       order: {
         side: 'buy',
@@ -2024,11 +1783,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenA',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -2045,9 +1801,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0.01',
         withFeesAndSlippage: '0.01',
         difference: '0',
-        withFeesNoFEF: '0.01',
-        withFeesAndSlippageNoFEF: '0.01',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2141,11 +1894,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -2162,9 +1912,6 @@ describe('makeOrderCalculations', () => {
         withFees: '2',
         withFeesAndSlippage: '2',
         difference: '0',
-        withFeesNoFEF: '2',
-        withFeesAndSlippageNoFEF: '2',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2258,11 +2005,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenA',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -2279,9 +2023,6 @@ describe('makeOrderCalculations', () => {
         withFees: '2',
         withFeesAndSlippage: '2',
         difference: '0',
-        withFeesNoFEF: '2',
-        withFeesAndSlippageNoFEF: '2',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2375,11 +2116,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenA',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -2396,9 +2134,6 @@ describe('makeOrderCalculations', () => {
         withFees: '2',
         withFeesAndSlippage: '2',
         difference: '0',
-        withFeesNoFEF: '2',
-        withFeesAndSlippageNoFEF: '2',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2492,11 +2227,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -2513,9 +2245,6 @@ describe('makeOrderCalculations', () => {
         withFees: '2',
         withFeesAndSlippage: '2',
         difference: '0',
-        withFeesNoFEF: '2',
-        withFeesAndSlippageNoFEF: '2',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2609,11 +2338,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -2630,9 +2356,6 @@ describe('makeOrderCalculations', () => {
         withFees: '1',
         withFeesAndSlippage: '1',
         difference: '0',
-        withFeesNoFEF: '1',
-        withFeesAndSlippageNoFEF: '1',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2737,11 +2460,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '1050000',
         },
@@ -2758,9 +2478,6 @@ describe('makeOrderCalculations', () => {
         withFees: '1.0105',
         withFeesAndSlippage: '1.0105',
         difference: '1.05',
-        withFeesNoFEF: '1',
-        withFeesAndSlippageNoFEF: '1',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2865,11 +2582,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '1025000',
         },
@@ -2886,9 +2600,6 @@ describe('makeOrderCalculations', () => {
         withFees: '1.01025',
         withFeesAndSlippage: '1.01025',
         difference: '1.025',
-        withFeesNoFEF: '1',
-        withFeesAndSlippageNoFEF: '1',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2993,11 +2704,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '1020000',
         },
@@ -3014,9 +2722,6 @@ describe('makeOrderCalculations', () => {
         withFees: '1.0102',
         withFeesAndSlippage: '1.0102',
         difference: '1.02',
-        withFeesNoFEF: '1',
-        withFeesAndSlippageNoFEF: '1',
-        differenceNoFEF: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -3116,11 +2821,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -3137,9 +2839,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '-100',
-        withFeesNoFEF: '0',
-        withFeesAndSlippageNoFEF: '0',
-        differenceNoFEF: '-100',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -3239,11 +2938,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -3260,9 +2956,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '-100',
-        withFeesNoFEF: '0',
-        withFeesAndSlippageNoFEF: '0',
-        differenceNoFEF: '-100',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -3360,11 +3053,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: '',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: '',
           quantity: '0',
         },
@@ -3381,9 +3071,6 @@ describe('makeOrderCalculations', () => {
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '-100',
-        withFeesNoFEF: '0',
-        withFeesAndSlippageNoFEF: '0',
-        differenceNoFEF: '-100',
       },
       pool: pool,
     }
@@ -3482,11 +3169,8 @@ describe('makeOrderCalculations', () => {
           quantity: '0',
           tokenId: 'tokenB',
         },
-        ptTotalFeeNoFEF: {
-          tokenId: 'tokenA',
-          quantity: '0',
-        },
-        ptTotalFee: {
+
+        ptTotalRequired: {
           tokenId: 'tokenA',
           quantity: '0',
         },
@@ -3503,9 +3187,6 @@ describe('makeOrderCalculations', () => {
         withFees: '5025.12562814070351758794',
         withFeesAndSlippage: '5025.12562814070351758794',
         difference: '1004925.125628140703517588',
-        withFeesNoFEF: '5025.12562814070351758794',
-        withFeesAndSlippageNoFEF: '5025.12562814070351758794',
-        differenceNoFEF: '1004925.125628140703517588',
       },
       pool: pool,
     }
