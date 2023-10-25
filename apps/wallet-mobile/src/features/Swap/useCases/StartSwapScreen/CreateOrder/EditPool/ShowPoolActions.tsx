@@ -1,4 +1,5 @@
 import {useSwap} from '@yoroi/swap'
+import {Swap} from '@yoroi/types'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
@@ -15,52 +16,56 @@ import {useSwapForm} from '../../../../common/SwapFormProvider'
 import {SwapInfoLink} from '../../../../common/SwapInfoLink/SwapInfoLink'
 
 export const ShowPoolActions = () => {
-  const navigateTo = useNavigateTo()
-  const {orderData} = useSwap()
   const strings = useStrings()
+  const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
+
+  const navigateTo = useNavigateTo()
+  const handleOnChangePool = () => navigateTo.selectPool()
+
+  const {orderData} = useSwap()
+  const {selectedPoolCalculation: calculation, amounts} = orderData
+
+  const wallet = useSelectedWallet()
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
+  const sellTokenName = sellTokenInfo.ticker ?? sellTokenInfo.name
+
   const {
     buyQuantity: {isTouched: isBuyTouched},
     sellQuantity: {isTouched: isSellTouched},
     selectedPool: {isTouched: isPoolTouched},
   } = useSwapForm()
-  const {selectedPoolCalculation, amounts} = orderData
-  const wallet = useSelectedWallet()
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
-  const buyTokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
-  const sellTokenName = sellTokenInfo.ticker ?? sellTokenInfo.name
-  const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
-
-  if (!isBuyTouched || !isSellTouched || selectedPoolCalculation === undefined) {
+  if (!isBuyTouched || !isSellTouched || calculation === undefined) {
     return <></>
   }
+  const {cost, pool} = calculation
 
   const totalFees = Quantities.format(
-    Quantities.sum([
-      selectedPoolCalculation.cost.batcherFee.quantity,
-      selectedPoolCalculation.cost.frontendFeeInfo.fee.quantity,
-    ]),
+    Quantities.sum([cost.batcherFee.quantity, cost.frontendFeeInfo.fee.quantity]),
     wallet.primaryTokenInfo.decimals ?? 0,
   )
-  const header = `${strings.total}: ${Quantities.format(
+  const titleTotalFeesFormatted = `${strings.total}: ${Quantities.format(
     amounts.sell.quantity,
     sellTokenInfo.decimals ?? 0,
   )} ${sellTokenName} + ${totalFees} ${wallet.primaryTokenInfo.ticker}`
-  const id = selectedPoolCalculation.pool.poolId
-  const expanded = id === hiddenInfoOpenId
+  const id = pool.poolId
+  const isExpanded = id === hiddenInfoOpenId
+  const handleOnExpand = () => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)
+  const totalFeesTitle = (
+    <HeaderWrapper expanded={isExpanded} onPress={handleOnExpand}>
+      <Text style={styles.bold}>{titleTotalFeesFormatted}</Text>
+    </HeaderWrapper>
+  )
 
-  const poolProviderFormatted = capitalize(selectedPoolCalculation.pool.provider)
   const poolStatus = orderData.type === 'limit' && isPoolTouched ? '' : ` ${strings.autoPool}`
+  const poolProviderFormatted = capitalize(pool.provider)
   const poolTitle = `${poolProviderFormatted}${poolStatus}`
 
-  const handleOnExpand = () => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)
-  const handleOnChangePool = () => navigateTo.selectPool()
-
+  const feeBreakdown = <FeeBreakdown totalFees={totalFees} orderType={orderData.type} />
   return (
     <View>
       <View style={[styles.flex, styles.between]}>
         <View style={styles.flex}>
-          <PoolIcon size={25} providerId={selectedPoolCalculation.pool.provider} />
+          <PoolIcon size={25} providerId={pool.provider} />
 
           <Spacer width={10} />
 
@@ -74,106 +79,175 @@ export const ShowPoolActions = () => {
         )}
       </View>
 
-      <ExpandableInfoCard
-        key={id}
-        header={
-          <HeaderWrapper expanded={expanded} onPress={handleOnExpand}>
-            <Text style={styles.bold}>{header}</Text>
-          </HeaderWrapper>
-        }
-        info={
-          <HiddenInfo
-            totalFees={totalFees}
-            minReceived={Quantities.format(
-              selectedPoolCalculation.buyAmountWithSlippage.quantity,
-              buyTokenInfo.decimals ?? 0,
-            )}
-            minAda={Quantities.format(
-              selectedPoolCalculation.pool.deposit.quantity,
-              Number(wallet.primaryTokenInfo.decimals),
-            )}
-            buyTokenName={buyTokenName}
-            sellTokenName={sellTokenName}
-            liquidityFee={selectedPoolCalculation.pool.fee}
-            liquidityFeeValue={Quantities.format(
-              selectedPoolCalculation.cost.liquidityFee.quantity,
-              sellTokenInfo.decimals ?? 0,
-            )}
-          />
-        }
-        expanded={expanded}
-      />
+      <ExpandableInfoCard key={id} header={totalFeesTitle} info={feeBreakdown} expanded={isExpanded} />
     </View>
   )
 }
 
-const HiddenInfo = ({
-  totalFees,
-  minAda,
-  minReceived,
-  buyTokenName,
-  sellTokenName,
-  liquidityFee,
-  liquidityFeeValue,
-}: {
-  totalFees: string
-  minAda: string
-  minReceived: string
-  buyTokenName: string
-  sellTokenName: string
-  liquidityFee: string
-  liquidityFeeValue: string
-}) => {
+const FeeBreakdown = ({totalFees, orderType}: {totalFees: string; orderType: Swap.OrderType}) => {
+  return orderType === 'limit' ? (
+    <ShowLimitOrderFeeBreakdown totalFees={totalFees} />
+  ) : (
+    <ShowMarketOrderFeeBreakdown totalFees={totalFees} />
+  )
+}
+
+const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {openModal} = useModal()
 
+  const {orderData} = useSwap()
+  const {selectedPoolCalculation: calculation, amounts} = orderData
+
+  const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
+  const buyTokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
+
+  // should not happen
+  if (!calculation) return <></>
+
+  const {pool} = calculation
+
+  const minReceived = Quantities.format(calculation.buyAmountWithSlippage.quantity, buyTokenInfo.decimals ?? 0)
+  const deposit = Quantities.format(pool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))
+
+  const depositFormatted = `${deposit} ${wallet.primaryTokenInfo.ticker}`
+  const totalFeesFormatted = `${totalFees} ${wallet.primaryTokenInfo.ticker}`
+  const minReceivedFormatted = `${minReceived} ${buyTokenName}`
+
+  const feeStructure = [
+    {
+      label: strings.swapMinAdaTitle,
+      value: depositFormatted,
+      info: strings.swapMinAda,
+    },
+    {
+      label: strings.swapFeesTitle,
+      value: totalFeesFormatted,
+      info: strings.swapFees,
+    },
+    {
+      label: strings.swapMinReceivedTitle,
+      value: minReceivedFormatted,
+      info: strings.swapMinReceived,
+    },
+  ]
+
   return (
     <View>
-      {[
-        {
-          label: strings.swapMinAdaTitle,
-          value: `${minAda} ${wallet.primaryTokenInfo.ticker}`,
-          info: strings.swapMinAda,
-        },
-        {
-          label: strings.swapFeesTitle,
-          value: `${totalFees} ${wallet.primaryTokenInfo.ticker}`,
-          info: strings.swapFees,
-        },
-        {
-          label: strings.swapMinReceivedTitle,
-          value: `${minReceived} ${buyTokenName}`,
-          info: strings.swapMinReceived,
-        },
-        {
-          label: strings.swapLiqProvFee,
-          title: strings.swapLiquidityFee,
-          value: `${liquidityFeeValue} ${sellTokenName}`,
-          info: strings.swapLiquidityFeeInfo(liquidityFee),
-        },
-      ].map((item) => (
-        <HiddenInfoWrapper
-          key={item.label}
-          value={item.value}
-          label={item.label}
-          info={item.info}
-          onPress={() => {
-            openModal(
-              item.title ?? item.label,
-              <View style={styles.modalContent}>
-                <Text style={styles.text}>{item.info}</Text>
+      {feeStructure.map((fee) => {
+        const modalContent = (
+          <View style={styles.modalContent}>
+            <Text style={styles.text}>{fee.info}</Text>
 
-                <Spacer fill />
+            <Spacer fill />
 
-                <SwapInfoLink />
+            <SwapInfoLink />
 
-                <Spacer height={24} />
-              </View>,
-            )
-          }}
-        />
-      ))}
+            <Spacer height={24} />
+          </View>
+        )
+
+        const handleOpenModal = () => {
+          openModal(fee.label, modalContent)
+        }
+
+        return (
+          <HiddenInfoWrapper
+            key={fee.label}
+            value={fee.value}
+            label={fee.label}
+            info={fee.info}
+            onPress={handleOpenModal}
+          />
+        )
+      })}
+    </View>
+  )
+}
+
+const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
+  const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const {openModal} = useModal()
+
+  const {orderData} = useSwap()
+  const {selectedPoolCalculation: calculation, amounts} = orderData
+
+  const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
+  const buyTokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
+  const sellTokenName = sellTokenInfo.ticker ?? sellTokenInfo.name
+
+  // should not happen
+  if (!calculation) return <></>
+
+  const {pool, cost} = calculation
+
+  const minReceived = Quantities.format(calculation.buyAmountWithSlippage.quantity, buyTokenInfo.decimals ?? 0)
+  const deposit = Quantities.format(pool.deposit.quantity, Number(wallet.primaryTokenInfo.decimals))
+  const liqFeeQuantity = Quantities.format(cost.liquidityFee.quantity, sellTokenInfo.decimals ?? 0)
+  const liqFeePerc = pool.fee
+
+  const depositFormatted = `${deposit} ${wallet.primaryTokenInfo.ticker}`
+  const totalFeesFormatted = `${totalFees} ${wallet.primaryTokenInfo.ticker}`
+  const minReceivedFormatted = `${minReceived} ${buyTokenName}`
+  const liqFeeQuantityFormatted = `${liqFeeQuantity} ${sellTokenName}`
+  const liqFeePercFormatted = strings.swapLiquidityFeeInfo(liqFeePerc)
+
+  const feeStructure = [
+    {
+      label: strings.swapMinAdaTitle,
+      value: depositFormatted,
+      info: strings.swapMinAda,
+    },
+    {
+      label: strings.swapFeesTitle,
+      value: totalFeesFormatted,
+      info: strings.swapFees,
+    },
+    {
+      label: strings.swapMinReceivedTitle,
+      value: minReceivedFormatted,
+      info: strings.swapMinReceived,
+    },
+    {
+      label: strings.swapLiqProvFee,
+      title: strings.swapLiquidityFee,
+      value: liqFeeQuantityFormatted,
+      info: liqFeePercFormatted,
+    },
+  ]
+
+  return (
+    <View>
+      {feeStructure.map((fee) => {
+        const modalContent = (
+          <View style={styles.modalContent}>
+            <Text style={styles.text}>{fee.info}</Text>
+
+            <Spacer fill />
+
+            <SwapInfoLink />
+
+            <Spacer height={24} />
+          </View>
+        )
+
+        const handleOpenModal = () => {
+          openModal(fee.title ?? fee.label, modalContent)
+        }
+
+        return (
+          <HiddenInfoWrapper
+            key={fee.label}
+            value={fee.value}
+            label={fee.label}
+            info={fee.info}
+            onPress={handleOpenModal}
+          />
+        )
+      })}
     </View>
   )
 }
