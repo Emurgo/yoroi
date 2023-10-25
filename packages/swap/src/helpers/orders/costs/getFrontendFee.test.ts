@@ -21,8 +21,7 @@ describe('getFrontendFee', () => {
       // act
       const fee = getFrontendFee({
         lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999999'},
-        sellInPrimaryTokenValue: sell,
-        primaryTokenId,
+        ptAmount: sell,
         feeTiers: milkHoldersDiscountTiers,
       })
       // assert
@@ -43,9 +42,8 @@ describe('getFrontendFee', () => {
       }
       // act
       const fee = getFrontendFee({
-        sellInPrimaryTokenValue: sellPrimaryAmountOver99,
+        ptAmount: sellPrimaryAmountOver99,
         lpTokenHeld: {tokenId: 'lp.token', quantity: Quantities.zero},
-        primaryTokenId,
         feeTiers: milkHoldersDiscountTiers,
       })
       // assert
@@ -67,8 +65,7 @@ describe('getFrontendFee', () => {
       // act
       const fee = getFrontendFee({
         lpTokenHeld: {tokenId: 'lp.token', quantity: '499'},
-        sellInPrimaryTokenValue: sellPrimaryAmountOver99,
-        primaryTokenId,
+        ptAmount: sellPrimaryAmountOver99,
         feeTiers: milkHoldersDiscountTiers,
       })
       // assert
@@ -90,8 +87,7 @@ describe('getFrontendFee', () => {
       // act
       const fee = getFrontendFee({
         lpTokenHeld: {tokenId: 'lp.token', quantity: '500'},
-        sellInPrimaryTokenValue: sellPrimaryAmountOver99,
-        primaryTokenId,
+        ptAmount: sellPrimaryAmountOver99,
         feeTiers: milkHoldersDiscountTiers,
       })
       // assert
@@ -114,9 +110,8 @@ describe('getFrontendFee', () => {
       }
       // act
       const fee = getFrontendFee({
-        sellInPrimaryTokenValue: buyPrimaryTokenAmount,
+        ptAmount: buyPrimaryTokenAmount,
         lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999999'},
-        primaryTokenId,
         feeTiers: milkHoldersDiscountTiers,
       })
       // assert
@@ -137,9 +132,8 @@ describe('getFrontendFee', () => {
       }
       // act
       const fee = getFrontendFee({
-        sellInPrimaryTokenValue: buyPrimaryAmountOver99,
+        ptAmount: buyPrimaryAmountOver99,
         lpTokenHeld: {tokenId: 'lp.token', quantity: Quantities.zero},
-        primaryTokenId,
         feeTiers: milkHoldersDiscountTiers,
       })
       // assert
@@ -161,8 +155,7 @@ describe('getFrontendFee', () => {
       // act
       const fee = getFrontendFee({
         lpTokenHeld: {tokenId: 'lp.token', quantity: '499'},
-        sellInPrimaryTokenValue: buyPrimaryAmountOver99,
-        primaryTokenId,
+        ptAmount: buyPrimaryAmountOver99,
         feeTiers: milkHoldersDiscountTiers,
       })
       // assert
@@ -184,8 +177,7 @@ describe('getFrontendFee', () => {
       // act
       const fee = getFrontendFee({
         lpTokenHeld: {tokenId: 'lp.token', quantity: '500'},
-        sellInPrimaryTokenValue: buyPrimaryAmountOver99,
-        primaryTokenId,
+        ptAmount: buyPrimaryAmountOver99,
         feeTiers: milkHoldersDiscountTiers,
       })
       // assert
@@ -207,8 +199,7 @@ describe('getFrontendFee', () => {
     // act
     const fee = getFrontendFee({
       lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999'},
-      sellInPrimaryTokenValue: buyPrimaryAmountOver99,
-      primaryTokenId,
+      ptAmount: buyPrimaryAmountOver99,
       feeTiers: [],
     })
     // assert
@@ -230,8 +221,7 @@ describe('getFrontendFee', () => {
     // act
     const fee = getFrontendFee({
       lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999'},
-      sellInPrimaryTokenValue: buyPrimaryAmountOver99,
-      primaryTokenId,
+      ptAmount: buyPrimaryAmountOver99,
       feeTiers: [
         {
           fixedFee: asQuantity(3_000_000),
@@ -265,9 +255,8 @@ describe('getFrontendFee', () => {
       }
       // act
       const fee = getFrontendFee({
-        sellInPrimaryTokenValue: sellValueInPrimaryToken,
+        ptAmount: sellValueInPrimaryToken,
         lpTokenHeld: {tokenId: 'lp.token', quantity: '999999999999999999'},
-        primaryTokenId,
         feeTiers: milkHoldersDiscountTiers,
       })
       // assert
@@ -287,9 +276,8 @@ describe('getFrontendFee', () => {
       }
       // act
       const fee = getFrontendFee({
-        sellInPrimaryTokenValue: sellValueInPrimaryToken,
+        ptAmount: sellValueInPrimaryToken,
         lpTokenHeld: {tokenId: 'lp.token', quantity: Quantities.zero},
-        primaryTokenId,
         feeTiers: milkHoldersDiscountTiers,
       })
       // assert
@@ -311,8 +299,7 @@ describe('getFrontendFee', () => {
       // act
       const fee = getFrontendFee({
         lpTokenHeld: {tokenId: 'lp.token', quantity: '499'},
-        sellInPrimaryTokenValue: sellValueInPrimaryToken,
-        primaryTokenId,
+        ptAmount: sellValueInPrimaryToken,
         feeTiers: milkHoldersDiscountTiers,
       })
       // assert
@@ -334,8 +321,7 @@ describe('getFrontendFee', () => {
       // act
       const fee = getFrontendFee({
         lpTokenHeld: {tokenId: 'lp.token', quantity: '500'},
-        sellInPrimaryTokenValue: sellValueInPrimaryToken,
-        primaryTokenId,
+        ptAmount: sellValueInPrimaryToken,
         feeTiers: milkHoldersDiscountTiers,
       })
       // assert
