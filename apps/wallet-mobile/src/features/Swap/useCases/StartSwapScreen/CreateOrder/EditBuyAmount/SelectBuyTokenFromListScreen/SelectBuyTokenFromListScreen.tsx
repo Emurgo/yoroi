@@ -17,6 +17,7 @@ import {Amounts, asQuantity, Quantities} from '../../../../../../../yoroi-wallet
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
+import {sortTokensByName} from '../../../../../common/helpers'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
 import {useSwapForm} from '../../../../../common/SwapFormProvider'
@@ -71,7 +72,7 @@ const TokenList = () => {
 
   const filteredTokenList = React.useMemo(() => {
     const filter = filterBySearch(assetSearchTerm)
-    return tokens.filter((token) => filter(token.info))
+    return tokens.filter((token) => filter(token.info)).sort(sortTokensByName)
   }, [tokens, assetSearchTerm])
 
   return (
