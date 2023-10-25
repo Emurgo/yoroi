@@ -46,14 +46,17 @@
     "!**/.*"
   ],
   "scripts": {
-    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build && yarn flow",
+    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build",
+    "build:release": "yarn build && yarn flow",
     "clean": "del-cli lib",
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "flow": ". ./scripts/flowgen.sh",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepack": "yarn build",
-    "publish:beta": "yarn build && npm publish --scope yoroi --tag beta --access beta",
-    "publish:prod": "yarn build && npm publish --scope yoroi --access public",
+    "prepack": "yarn build:release",
+    "prepublish:beta": "yarn build:release",
+    "publish:beta": "npm publish --scope yoroi --tag beta --access beta",
+    "prepublish:prod": "yarn build:release",
+    "publish:prod": "npm publish --scope yoroi --access public",
     "release": "release-it",
     "test": "jest",
     "test:watch": "jest --watch --debug",
@@ -102,17 +105,14 @@
     "coverage/"
   ],
   "jest": {
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
-      "<rootDir>/lib/"
-    ],
-    "preset": "react-native",
-    "setupFiles": [
-      "<rootDir>/jest.setup.js"
-    ],
+    "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
+    ],
+    "coverageReporters": [
+      "text-summary",
+      "html"
     ],
     "coverageThreshold": {
       "global": {
@@ -122,10 +122,13 @@
         "statements": 100
       }
     },
-    "collectCoverage": true,
-    "coverageReporters": [
-      "text-summary",
-      "html"
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
+      "<rootDir>/lib/"
+    ],
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
     ]
   },
   "dependencies": {
