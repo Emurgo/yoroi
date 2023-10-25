@@ -26,9 +26,9 @@
   ],
   "main": "lib/index",
   "module": "lib/index",
-  "types": "lib/index.d.ts",
   "source": "src/index",
   "browser": "lib/index",
+  "types": "lib/index.d.ts",
   "files": [
     "src",
     "lib",
@@ -38,14 +38,17 @@
     "!**/.*"
   ],
   "scripts": {
-    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && tsc --project tsconfig.build.json && yarn flow",
+    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && tsc --project tsconfig.build.json",
+    "build:release": "yarn build && yarn flow",
     "clean": "del-cli lib",
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "flow": ". ./scripts/flowgen.sh",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepack": "yarn build",
-    "publish:beta": "yarn build && npm publish --scope yoroi --tag beta --access beta",
-    "publish:prod": "yarn build && npm publish --scope yoroi --access public",
+    "prepack": "yarn build:release",
+    "prepublish:beta": "yarn build:release",
+    "publish:beta": "npm publish --scope yoroi --tag beta --access beta",
+    "prepublish:prod": "yarn build:release",
+    "publish:prod": "npm publish --scope yoroi --access public",
     "release": "release-it",
     "test": "jest --passWithNoTests",
     "tsc": "tsc --noEmit -p tsconfig.json"
