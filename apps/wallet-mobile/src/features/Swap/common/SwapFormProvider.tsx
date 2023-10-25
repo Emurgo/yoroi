@@ -49,10 +49,10 @@ export const SwapFormProvider = ({
   const poolSupply = buyTokenId === pool?.tokenA.tokenId ? pool?.tokenA.quantity : pool?.tokenB.quantity
   const hasBuyTokenSupply = !Quantities.isGreaterThan(buyQuantity, poolSupply ?? Quantities.zero)
   const hasSellBalance = !Quantities.isGreaterThan(sellQuantity, sellbalance)
-  const hasFeesBalance = !Quantities.isGreaterThan(
+  const hasPtBalance = !Quantities.isGreaterThan(
     Quantities.sum([
       sellTokenId === wallet.primaryTokenInfo.id ? sellQuantity : Quantities.zero,
-      orderData.selectedPoolCalculation?.cost.ptTotalFee.quantity ?? Quantities.zero,
+      orderData.selectedPoolCalculation?.cost.ptTotalRequired.quantity ?? Quantities.zero,
     ]),
     primaryTokenBalance,
   )
@@ -228,13 +228,13 @@ export const SwapFormProvider = ({
       return
     }
 
-    if (!Quantities.isZero(sellQuantity) && state.buyQuantity.isTouched && !hasFeesBalance) {
+    if (!Quantities.isZero(sellQuantity) && state.buyQuantity.isTouched && !hasPtBalance) {
       actions.sellAmountErrorChanged(strings.notEnoughFeeBalance)
       return
     }
   }, [
     actions,
-    hasFeesBalance,
+    hasPtBalance,
     hasSellBalance,
     orderData.selectedPoolCalculation,
     sellQuantity,
