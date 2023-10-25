@@ -3,7 +3,7 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Keyboard} from 'react-native'
+import {Keyboard, Platform} from 'react-native'
 
 import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
@@ -29,6 +29,8 @@ const WalletTabNavigator = () => {
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
   React.useEffect(() => {
+    if (Platform.OS === 'android') return
+
     const showSubscription = Keyboard.addListener('keyboardWillShow', () => {
       setIsKeyboardOpen(true)
     })
@@ -53,8 +55,10 @@ const WalletTabNavigator = () => {
           tabBarActiveTintColor: theme.COLORS.NAVIGATION_ACTIVE,
           tabBarInactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
           tabBarStyle: {
+            // keyboardWillShow keyboardWillHiden dont work on android
             display: isKeyboardOpen ? 'none' : undefined,
           },
+          tabBarHideOnKeyboard: Platform.OS === 'android',
         }}
         initialRouteName={initialRoute}
         backBehavior="initialRoute"
