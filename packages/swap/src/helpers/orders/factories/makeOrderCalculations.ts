@@ -1,6 +1,9 @@
 import {App, Balance, Swap} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
-import {SwapOrderCalculation} from '../../../translators/reactjs/state/state'
+import {
+  SwapOrderCalculation,
+  SwapState,
+} from '../../../translators/reactjs/state/state'
 import {getQuantityWithSlippage} from '../amounts/getQuantityWithSlippage'
 import {getLiquidityProviderFee} from '../costs/getLiquidityProviderFee'
 import {getFrontendFee} from '../costs/getFrontendFee'
@@ -16,10 +19,10 @@ export const makeOrderCalculations = ({
   limitPrice,
   slippage,
   pools,
-  primaryTokenId,
   lpTokenHeld,
   side,
   frontendFeeTiers,
+  tokens,
 }: Readonly<{
   orderType: Swap.OrderType
   amounts: {
@@ -30,12 +33,14 @@ export const makeOrderCalculations = ({
   pools: ReadonlyArray<Swap.Pool>
   lpTokenHeld?: Balance.Amount
   slippage: number
-  primaryTokenId: Balance.TokenInfo['id']
   side?: 'buy' | 'sell'
   frontendFeeTiers: ReadonlyArray<App.FrontendFeeTier>
+  tokens: SwapState['orderData']['tokens']
 }>): Array<SwapOrderCalculation> => {
   const isLimit = orderType === 'limit'
   const maybeLimitPrice = isLimit ? limitPrice : undefined
+  const isSellPt = amounts.sell.tokenId === tokens.ptInfo.id
+  const isBuyPt = amounts.buy.tokenId === tokens.ptInfo.id
 
   const calculations = pools.map<SwapOrderCalculation>((pool) => {
     const buy =
@@ -57,8 +62,9 @@ export const makeOrderCalculations = ({
       tokenId: buy.tokenId,
     }
 
-    // pools that with not enough supply will be filtered out
     const isBuyTokenA = buy.tokenId === pool.tokenA.tokenId
+
+    // pools that with not enough supply will be filtered out
     const poolSupply = isBuyTokenA ? pool.tokenA.quantity : pool.tokenB.quantity
     const supplyRequired =
       (!Quantities.isZero(buy.quantity) || !Quantities.isZero(sell.quantity)) &&
@@ -69,24 +75,32 @@ export const makeOrderCalculations = ({
     // lf is sell side % of quantity ie. XToken 100 * 1% = 1 XToken
     const liquidityFee: Balance.Amount = getLiquidityProviderFee(pool.fee, sell)
 
+    // whether sell or buy is PT, then we use the quantity as frontend fee base
+    // otherwise we derive from the ptPrice of the pool of the sell side
     const ptPriceSell = isBuyTokenA
       ? new BigNumber(pool.ptPriceTokenB)
       : new BigNumber(pool.ptPriceTokenA)
+    const sellQuantity = new BigNumber(sell.quantity)
+    const sellPrice = new BigNumber(ptPriceSell)
+    const sellInPtTerms = ptPriceSell.isZero()
+      ? Quantities.zero
+      : asQuantity(
+          sellQuantity
+            .dividedBy(new BigNumber(1).dividedBy(sellPrice))
+            .toString(),
+        )
+    const ptQuantity = isSellPt
+      ? sell.quantity
+      : isBuyPt
+      ? buy.quantity
+      : sellInPtTerms
 
-    // ffee is based on PT value range + LP holding range (sides may need conversion, when none is PT)
-    // TODO: it needs update, prices by muesli are provided in ADA, quantities in atomic units
+    // ffee is based on PT value range + LP holding range
     const frontendFeeInfo = getFrontendFee({
       lpTokenHeld,
-      primaryTokenId,
-      sellInPrimaryTokenValue: {
-        tokenId: primaryTokenId,
-        quantity: ptPriceSell.isZero()
-          ? Quantities.zero
-          : asQuantity(
-              new BigNumber(sell.quantity)
-                .dividedBy(ptPriceSell)
-                .integerValue(BigNumber.ROUND_CEIL),
-            ),
+      ptAmount: {
+        tokenId: tokens.ptInfo.id,
+        quantity: ptQuantity,
       },
       feeTiers: frontendFeeTiers,
     })
@@ -98,12 +112,14 @@ export const makeOrderCalculations = ({
         ? Quantities.zero
         : new BigNumber(pool.batcherFee.quantity)
             .dividedBy(ptPriceSell)
-            .integerValue(BigNumber.ROUND_CEIL),
+            .integerValue(BigNumber.ROUND_CEIL)
+            .toString(),
       frontendFee: ptPriceSell.isZero()
         ? Quantities.zero
         : new BigNumber(frontendFeeInfo.fee.quantity)
             .dividedBy(ptPriceSell)
-            .integerValue(BigNumber.ROUND_CEIL),
+            .integerValue(BigNumber.ROUND_CEIL)
+            .toString(),
     }
 
     const priceWithSlippage = Quantities.isZero(buyAmountWithSlippage.quantity)
@@ -166,7 +182,7 @@ export const makeOrderCalculations = ({
     } = calculatePricesWithFees({withFrontendFee: false})
 
     const ptTotalFee: Balance.Amount = {
-      tokenId: primaryTokenId,
+      tokenId: tokens.ptInfo.id,
       quantity: Quantities.sum([
         pool.batcherFee.quantity,
         pool.deposit.quantity,
@@ -175,7 +191,7 @@ export const makeOrderCalculations = ({
     }
 
     const ptTotalFeeNoFEF: Balance.Amount = {
-      tokenId: primaryTokenId,
+      tokenId: tokens.ptInfo.id,
       quantity: Quantities.sum([
         pool.batcherFee.quantity,
         pool.deposit.quantity,

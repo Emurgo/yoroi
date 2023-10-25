@@ -88,7 +88,7 @@ const TokenList = () => {
 type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
-  const {sellTokenIdChanged, orderData} = useSwap()
+  const {sellTokenInfoChanged, orderData} = useSwap()
   const {
     buyQuantity: {isTouched: isBuyTouched},
     sellTouched,
@@ -104,7 +104,10 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
       from_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
     })
     sellTouched()
-    sellTokenIdChanged(tokenInfo.id)
+    sellTokenInfoChanged({
+      id: tokenInfo.id,
+      decimals: tokenInfo.decimals ?? 0,
+    })
     navigateTo.startSwap()
     closeSearch()
   }
