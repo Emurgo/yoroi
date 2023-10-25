@@ -75,8 +75,8 @@ function containsOnlyValidChars(str?: string): boolean {
 export const sortTokensByName = (a: Balance.Token, b: Balance.Token) => {
   const isValidNameA = containsOnlyValidChars(a.info.name) && containsOnlyValidChars(a.info.ticker)
   const isValidNameB = containsOnlyValidChars(b.info.name) && containsOnlyValidChars(b.info.ticker)
-  const nameA = isValidNameA ? a.info.name.toLowerCase() : (a.info.ticker ?? '').toLowerCase()
-  const nameB = isValidNameB ? b.info.name.toLowerCase() : (b.info.ticker ?? '').toLowerCase()
+  const nameA = isValidNameA ? a.info.name.toLocaleLowerCase() : (a.info.ticker ?? '').toLocaleLowerCase()
+  const nameB = isValidNameB ? b.info.name.toLocaleLowerCase() : (b.info.ticker ?? '').toLocaleLowerCase()
 
   // Move invalid names to the end.
   if (!isValidNameA) {
