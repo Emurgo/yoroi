@@ -40,7 +40,7 @@ export const ShowPoolActions = () => {
       selectedPoolCalculation.cost.batcherFee.quantity,
       selectedPoolCalculation.cost.frontendFeeInfo.fee.quantity,
     ]),
-    Number(wallet.primaryTokenInfo.decimals),
+    wallet.primaryTokenInfo.decimals ?? 0,
   )
   const header = `${strings.total}: ${Quantities.format(
     amounts.sell.quantity,

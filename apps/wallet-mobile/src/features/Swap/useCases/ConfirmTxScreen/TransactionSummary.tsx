@@ -1,5 +1,4 @@
 import {getPoolUrlByProvider, useSwap} from '@yoroi/swap'
-import {Swap} from '@yoroi/types'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -19,16 +18,20 @@ export const TransactionSummary = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {orderData} = useSwap()
-  const {amounts, selectedPoolCalculation} = orderData
+  const {amounts, selectedPoolCalculation: calculation} = orderData
   const {openModal} = useModal()
+
+  // should never happen
+  if (!calculation) throw new Error('No selected pool calculation')
+  const {pool, cost} = calculation
 
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
   const label = `${Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)} ${tokenToBuyName}`
-  const poolProviderFormatted = capitalize(selectedPoolCalculation?.pool.provider)
-  const poolUrl = getPoolUrlByProvider(selectedPoolCalculation?.pool.provider as Swap.SupportedProvider)
+  const poolProviderFormatted = capitalize(pool.provider)
+  const poolUrl = getPoolUrlByProvider(pool.provider)
 
-  const poolIcon = <PoolIcon providerId={selectedPoolCalculation?.pool.provider as Swap.SupportedProvider} size={18} />
+  const poolIcon = <PoolIcon providerId={pool.provider} size={18} />
 
   const feesInfo = [
     {
@@ -37,16 +40,15 @@ export const TransactionSummary = () => {
     },
     {
       label: strings.swapMinAdaTitle,
-      value: `${Quantities.format(
-        selectedPoolCalculation?.cost?.deposit?.quantity ?? Quantities.zero,
-        Number(wallet.primaryTokenInfo.decimals),
-      )} ${wallet.primaryTokenInfo.ticker}`,
+      value: `${Quantities.format(cost.deposit.quantity, wallet.primaryTokenInfo.decimals ?? 0)} ${
+        wallet.primaryTokenInfo.ticker
+      }`,
       info: strings.swapMinAda,
     },
     {
       label: strings.swapMinReceivedTitle,
       value: `${Quantities.format(
-        selectedPoolCalculation?.buyAmountWithSlippage?.quantity ?? Quantities.zero,
+        calculation.buyAmountWithSlippage.quantity,
         buyTokenInfo.decimals ?? 0,
       )} ${tokenToBuyName}`,
       info: strings.swapMinReceived,
@@ -54,8 +56,8 @@ export const TransactionSummary = () => {
     {
       label: strings.swapFeesTitle,
       value: `${Quantities.format(
-        selectedPoolCalculation?.cost?.batcherFee?.quantity ?? Quantities.zero, // TODO: Show all fees
-        Number(wallet.primaryTokenInfo.decimals),
+        Quantities.sum([cost.batcherFee.quantity, cost.frontendFeeInfo.fee.quantity]),
+        wallet.primaryTokenInfo.decimals ?? 0,
       )} ${wallet.primaryTokenInfo.ticker}`,
       info: strings.swapFees,
     },

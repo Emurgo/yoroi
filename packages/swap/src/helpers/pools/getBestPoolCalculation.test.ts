@@ -40,11 +40,7 @@ describe('getBestPoolCalculation', () => {
           },
         },
         cost: {
-          ptTotalFeeNoFEF: {
-            quantity: '4500000',
-            tokenId: '',
-          },
-          ptTotalFee: {
+          ptTotalRequired: {
             quantity: '4500000',
             tokenId: '',
           },
@@ -79,9 +75,6 @@ describe('getBestPoolCalculation', () => {
           withFees: '0.09657209903427900966',
           withFeesAndSlippage: '0.10730233333333333333',
           difference: '35.989182655713084861',
-          withFeesNoFEF: '0.09657209903427900966',
-          withFeesAndSlippageNoFEF: '0.10730233333333333333',
-          differenceNoFEF: '35.989182655713084861',
         },
         pool: {
           tokenA: {

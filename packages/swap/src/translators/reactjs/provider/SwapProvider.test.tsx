@@ -466,7 +466,7 @@ describe('SwapProvider', () => {
     })
   })
 
-  it('BuyTokenIdChanged', () => {
+  it('BuyTokenInfoChanged', () => {
     const initialState: SwapState = {
       orderData: {
         ...defaultSwapState.orderData,
@@ -479,6 +479,21 @@ describe('SwapProvider', () => {
             quantity: '20',
             tokenId: 'policyId.buy',
           },
+        },
+        tokens: {
+          sellInfo: {
+            decimals: 6,
+            id: 'policyId.sell',
+          },
+          buyInfo: {
+            decimals: 6,
+            id: 'policyId.buy',
+          },
+          ptInfo: {
+            decimals: 6,
+            id: '',
+          },
+          priceDenomination: 0,
         },
       },
       unsignedTx: undefined,
@@ -496,28 +511,51 @@ describe('SwapProvider', () => {
     })
 
     act(() => {
-      result.current.buyTokenIdChanged('new.token')
+      result.current.buyTokenInfoChanged({
+        decimals: 4,
+        id: 'new.token',
+      })
     })
 
     expect(result.current.orderData.amounts.buy).toEqual({
       quantity: '20',
       tokenId: 'new.token',
     })
+    expect(result.current.orderData.tokens.buyInfo).toEqual({
+      decimals: 4,
+      id: 'new.token',
+    })
+    expect(result.current.orderData.tokens.priceDenomination).toBe(2)
   })
 
-  it('SellTokenIdChanged', () => {
+  it('SellTokenInfoChanged', () => {
     const initialState: SwapState = {
       orderData: {
         ...defaultSwapState.orderData,
         amounts: {
           sell: {
-            quantity: '10',
+            quantity: '1000000',
             tokenId: 'policyId.sell',
           },
           buy: {
             quantity: '20',
             tokenId: 'policyId.buy',
           },
+        },
+        tokens: {
+          sellInfo: {
+            decimals: 6,
+            id: 'policyId.sell',
+          },
+          buyInfo: {
+            decimals: 6,
+            id: 'policyId.buy',
+          },
+          ptInfo: {
+            decimals: 6,
+            id: '',
+          },
+          priceDenomination: 0,
         },
       },
       unsignedTx: undefined,
@@ -535,13 +573,21 @@ describe('SwapProvider', () => {
     })
 
     act(() => {
-      result.current.sellTokenIdChanged('new.token')
+      result.current.sellTokenInfoChanged({
+        decimals: 4,
+        id: 'new.token',
+      })
     })
 
     expect(result.current.orderData.amounts.sell).toEqual({
-      quantity: '10',
+      quantity: '10000',
       tokenId: 'new.token',
     })
+    expect(result.current.orderData.tokens.sellInfo).toEqual({
+      decimals: 4,
+      id: 'new.token',
+    })
+    expect(result.current.orderData.tokens.priceDenomination).toBe(-2)
   })
 
   it('PoolPairsChanged', () => {
@@ -590,10 +636,16 @@ describe('SwapProvider', () => {
     })
 
     act(() => {
-      result.current.primaryTokenIdChanged('primary.tokenId')
+      result.current.primaryTokenInfoChanged({
+        decimals: 6,
+        id: 'primary.tokenId',
+      })
     })
 
-    expect(result.current.orderData.primartyTokenId).toEqual('primary.tokenId')
+    expect(result.current.orderData.tokens.ptInfo).toEqual({
+      decimals: 6,
+      id: 'primary.tokenId',
+    })
   })
 
   it('FrontendFeeTiersChanged', () => {

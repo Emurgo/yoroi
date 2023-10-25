@@ -1,4 +1,5 @@
 import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
+import {Balance} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
@@ -64,4 +65,29 @@ const isOrderTxMetadata = createTypeGuardFromSchema(OrderTxMetadataSchema)
 export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | null => {
   const parsedMetadata = parseSafe(metadataJson)
   return isOrderTxMetadata(parsedMetadata) ? parsedMetadata : null
+}
+
+function containsOnlyValidChars(str?: string): boolean {
+  const validCharsRegex = /^[a-zA-Z0]*$/
+  return typeof str === 'string' && validCharsRegex.test(str)
+}
+
+export const sortTokensByName = (a: Balance.Token, b: Balance.Token) => {
+  const isValidNameA = containsOnlyValidChars(a.info.name) && containsOnlyValidChars(a.info.ticker)
+  const isValidNameB = containsOnlyValidChars(b.info.name) && containsOnlyValidChars(b.info.ticker)
+  const nameA = isValidNameA ? a.info.name.toLocaleLowerCase() : (a.info.ticker ?? '').toLocaleLowerCase()
+  const nameB = isValidNameB ? b.info.name.toLocaleLowerCase() : (b.info.ticker ?? '').toLocaleLowerCase()
+
+  // Move invalid names to the end.
+  if (!isValidNameA) {
+    return 1
+  }
+
+  if (nameA < nameB) {
+    return -1
+  }
+  if (nameA > nameB) {
+    return 1
+  }
+  return 0
 }

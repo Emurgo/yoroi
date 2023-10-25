@@ -46,15 +46,18 @@
     "!**/.*"
   ],
   "scripts": {
-    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build && yarn flow",
+    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build",
+    "build:release": "yarn build && yarn flow",
     "clean": "del-cli lib",
     "dev": "yarn clean && bob build",
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "flow": ". ./scripts/flowgen.sh",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepack": "yarn build",
-    "publish:beta": "yarn build && npm publish --scope yoroi --tag beta --access beta",
-    "publish:prod": "yarn build && npm publish --scope yoroi --access public",
+    "prepack": "yarn build:release",
+    "prepublish:beta": "yarn build:release",
+    "publish:beta": "npm publish --scope yoroi --tag beta --access beta",
+    "prepublish:prod": "yarn build:release",
+    "publish:prod": "npm publish --scope yoroi --access public",
     "release": "release-it",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -118,7 +121,7 @@
         "branches": 100,
         "functions": 100,
         "lines": 100,
-        "statements": 100 
+        "statements": 100
       }
     },
     "modulePathIgnorePatterns": [

@@ -16,14 +16,12 @@ import {asQuantity} from '../../../utils/asQuantity'
  */
 export const getFrontendFee = ({
   lpTokenHeld,
-  primaryTokenId,
-  sellInPrimaryTokenValue,
+  ptAmount,
   feeTiers,
 }: {
-  primaryTokenId: Balance.TokenInfo['id']
   lpTokenHeld?: Balance.Amount
   feeTiers: ReadonlyArray<App.FrontendFeeTier>
-  sellInPrimaryTokenValue: Balance.Amount
+  ptAmount: Balance.Amount
 }): Readonly<{
   fee: Balance.Amount
   discountTier: App.FrontendFeeTier | undefined
@@ -36,21 +34,21 @@ export const getFrontendFee = ({
         tier.secondaryTokenBalanceThreshold,
       ) &&
       Quantities.isGreaterThanOrEqualTo(
-        sellInPrimaryTokenValue.quantity,
+        ptAmount.quantity,
         tier.primaryTokenValueThreshold,
       ),
   )
 
   // calculate the fee
   const fee = asQuantity(
-    new BigNumber(sellInPrimaryTokenValue.quantity)
+    new BigNumber(ptAmount.quantity)
       .times(discountTier?.variableFeeMultiplier ?? 0)
       .integerValue(BigNumber.ROUND_CEIL)
       .plus(discountTier?.fixedFee ?? 0),
   )
 
   return {
-    fee: {tokenId: primaryTokenId, quantity: fee},
+    fee: {tokenId: ptAmount.tokenId, quantity: fee},
     discountTier,
   } as const
 }

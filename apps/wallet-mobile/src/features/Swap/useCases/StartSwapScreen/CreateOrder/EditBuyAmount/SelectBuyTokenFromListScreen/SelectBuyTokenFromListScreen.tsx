@@ -17,6 +17,7 @@ import {Amounts, asQuantity, Quantities} from '../../../../../../../yoroi-wallet
 import {NoAssetFoundImage} from '../../../../../../Send/common/NoAssetFoundImage'
 import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
+import {sortTokensByName} from '../../../../../common/helpers'
 import {useNavigateTo} from '../../../../../common/navigation'
 import {useStrings} from '../../../../../common/strings'
 import {useSwapForm} from '../../../../../common/SwapFormProvider'
@@ -71,7 +72,7 @@ const TokenList = () => {
 
   const filteredTokenList = React.useMemo(() => {
     const filter = filterBySearch(assetSearchTerm)
-    return tokens.filter((token) => filter(token.info))
+    return tokens.filter((token) => filter(token.info)).sort(sortTokensByName)
   }, [tokens, assetSearchTerm])
 
   return (
@@ -134,7 +135,7 @@ type SelectableTokenProps = {
 const SelectableToken = ({wallet, token, walletTokenIds}: SelectableTokenProps) => {
   const balanceAvailable = useBalance({wallet, tokenId: token.info.id})
   const {closeSearch} = useSearch()
-  const {buyTokenIdChanged, orderData} = useSwap()
+  const {buyTokenInfoChanged, orderData} = useSwap()
   const {
     sellQuantity: {isTouched: isSellTouched},
     buyTouched,
@@ -150,7 +151,10 @@ const SelectableToken = ({wallet, token, walletTokenIds}: SelectableTokenProps) 
     track.swapAssetToChanged({
       to_asset: [{asset_name: token.info.name, asset_ticker: token.info.ticker, policy_id: token.info.group}],
     })
-    buyTokenIdChanged(token.info.id)
+    buyTokenInfoChanged({
+      decimals: token.info.decimals ?? 0,
+      id: token.info.id,
+    })
     buyTouched()
     navigateTo.startSwap()
     closeSearch()

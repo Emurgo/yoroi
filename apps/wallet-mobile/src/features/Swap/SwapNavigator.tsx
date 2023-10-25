@@ -21,8 +21,25 @@ export const SwapTabNavigator = () => {
 
   // state data
   const wallet = useSelectedWallet()
-  const {aggregatorTokenId, lpTokenHeldChanged, frontendFeeTiers, frontendFeeTiersChanged} = useSwap()
+  const {
+    aggregatorTokenId,
+    lpTokenHeldChanged,
+    frontendFeeTiers,
+    frontendFeeTiersChanged,
+    sellTokenInfoChanged,
+    primaryTokenInfoChanged,
+  } = useSwap()
   const lpTokenHeld = useBalance({wallet, tokenId: aggregatorTokenId})
+
+  // initialize sell with / and primary token
+  React.useEffect(() => {
+    const ptInfo = {
+      decimals: wallet.primaryTokenInfo.decimals ?? 0,
+      id: wallet.primaryTokenInfo.id,
+    }
+    sellTokenInfoChanged(ptInfo)
+    primaryTokenInfoChanged(ptInfo)
+  }, [primaryTokenInfoChanged, sellTokenInfoChanged, wallet.primaryTokenInfo.decimals, wallet.primaryTokenInfo.id])
 
   // update the fee tiers
   React.useEffect(() => {

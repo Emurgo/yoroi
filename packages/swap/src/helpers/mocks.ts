@@ -593,11 +593,7 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeNoFEF: {
-        quantity: '2950000',
-        tokenId: '',
-      },
-      ptTotalFee: {
+      ptTotalRequired: {
         quantity: '3050000',
         tokenId: '',
       },
@@ -638,9 +634,6 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       withFees: '0.08770455161678684826',
       withFeesAndSlippage: '0.09744950186160124105',
       difference: '21.570209070179074072',
-      withFeesNoFEF: '0.08680171064426110129',
-      withFeesAndSlippageNoFEF: '0.09644634522479064004',
-      differenceNoFEF: '20.318751035633113011',
     },
     pool: {
       tokenA: {
@@ -697,11 +690,7 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeNoFEF: {
-        quantity: '3900000',
-        tokenId: '',
-      },
-      ptTotalFee: {
+      ptTotalRequired: {
         quantity: '4950000',
         tokenId: '',
       },
@@ -742,9 +731,6 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       withFees: '0.07218258055862406896',
       withFeesAndSlippage: '0.08020286733734550586',
       difference: '3.33146651058691987',
-      withFeesNoFEF: '0.07144638133971629555',
-      withFeesAndSlippageNoFEF: '0.07938486820471594995',
-      differenceNoFEF: '2.277575885661069787',
     },
     pool: {
       tokenA: {
@@ -801,11 +787,7 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeNoFEF: {
-        quantity: '4000000',
-        tokenId: '',
-      },
-      ptTotalFee: {
+      ptTotalRequired: {
         quantity: '5050000',
         tokenId: '',
       },
@@ -846,9 +828,6 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       withFees: '0.0718773544083958157',
       withFeesAndSlippage: '0.07986372713900810646',
       difference: '3.360457138951796387',
-      withFeesNoFEF: '0.07114497961820837653',
-      withFeesAndSlippageNoFEF: '0.07904997737194397728',
-      differenceNoFEF: '2.307293820214296279',
     },
     pool: {
       tokenA: {
@@ -905,11 +884,7 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeNoFEF: {
-        quantity: '4000000',
-        tokenId: '',
-      },
-      ptTotalFee: {
+      ptTotalRequired: {
         quantity: '5050000',
         tokenId: '',
       },
@@ -950,9 +925,6 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       withFees: '0.07354606563387783488',
       withFeesAndSlippage: '0.08171785072374919196',
       difference: '6.44235191792733844',
-      withFeesNoFEF: '0.07279668796366365025',
-      withFeesAndSlippageNoFEF: '0.08088520886775756992',
-      differenceNoFEF: '5.357786468981936163',
     },
     pool: {
       tokenA: {
@@ -1009,11 +981,7 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeNoFEF: {
-        quantity: '4500000',
-        tokenId: '',
-      },
-      ptTotalFee: {
+      ptTotalRequired: {
         quantity: '5050000',
         tokenId: '',
       },
@@ -1054,9 +1022,6 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       withFees: '0.07361461466459101084',
       withFeesAndSlippage: '0.08179401635213810471',
       difference: '4.878953041653028379',
-      withFeesNoFEF: '0.07286816033916541392',
-      withFeesAndSlippageNoFEF: '0.08096462265663115145',
-      differenceNoFEF: '3.81547741930888855',
     },
     pool: {
       tokenA: {
@@ -1113,11 +1078,7 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeNoFEF: {
-        quantity: '4500000',
-        tokenId: '',
-      },
-      ptTotalFee: {
+      ptTotalRequired: {
         quantity: '5050000',
         tokenId: '',
       },
@@ -1158,9 +1119,6 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
       withFees: '0.08112475846386043214',
       withFeesAndSlippage: '0.09013862051540048015',
       difference: '14.236821058705550837',
-      withFeesNoFEF: '0.08030215106273002698',
-      withFeesAndSlippageNoFEF: '0.0892246122919222522',
-      differenceNoFEF: '13.078456383556918976',
     },
     pool: {
       tokenA: {
@@ -1220,11 +1178,7 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeNoFEF: {
-        quantity: '2950000',
-        tokenId: '',
-      },
-      ptTotalFee: {
+      ptTotalRequired: {
         quantity: '2950000',
         tokenId: '',
       },
@@ -1259,9 +1213,6 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       withFees: '0.08285972917140270829',
       withFeesAndSlippage: '0.09206636666666666667',
       difference: '14.854638820567161388',
-      withFeesNoFEF: '0.08285972917140270829',
-      withFeesAndSlippageNoFEF: '0.09206636666666666667',
-      differenceNoFEF: '14.854638820567161388',
     },
     pool: {
       tokenA: {
@@ -1318,11 +1269,7 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeNoFEF: {
-        quantity: '5050000',
-        tokenId: '',
-      },
-      ptTotalFee: {
+      ptTotalRequired: {
         quantity: '5050000',
         tokenId: '',
       },
@@ -1357,9 +1304,6 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       withFees: '0.08906899910931000891',
       withFeesAndSlippage: '0.09896555555555555556',
       difference: '27.50486651166910406',
-      withFeesNoFEF: '0.08906899910931000891',
-      withFeesAndSlippageNoFEF: '0.09896555555555555556',
-      differenceNoFEF: '27.50486651166910406',
     },
     pool: {
       tokenA: {
@@ -1416,11 +1360,7 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeNoFEF: {
-        quantity: '4000000',
-        tokenId: '',
-      },
-      ptTotalFee: {
+      ptTotalRequired: {
         quantity: '4000000',
         tokenId: '',
       },
@@ -1455,9 +1395,6 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       withFees: '0.08974975910250240897',
       withFeesAndSlippage: '0.09972195555555555556',
       difference: '29.061179356121031793',
-      withFeesNoFEF: '0.08974975910250240897',
-      withFeesAndSlippageNoFEF: '0.09972195555555555556',
-      differenceNoFEF: '29.061179356121031793',
     },
     pool: {
       tokenA: {
@@ -1514,11 +1451,7 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeNoFEF: {
-        quantity: '4000000',
-        tokenId: '',
-      },
-      ptTotalFee: {
+      ptTotalRequired: {
         quantity: '4000000',
         tokenId: '',
       },
@@ -1553,9 +1486,6 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       withFees: '0.08947860910521390895',
       withFeesAndSlippage: '0.09942067777777777778',
       difference: '29.501333856757818526',
-      withFeesNoFEF: '0.08947860910521390895',
-      withFeesAndSlippageNoFEF: '0.09942067777777777778',
-      differenceNoFEF: '29.501333856757818526',
     },
     pool: {
       tokenA: {
@@ -1612,11 +1542,7 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeNoFEF: {
-        quantity: '4500000',
-        tokenId: '',
-      },
-      ptTotalFee: {
+      ptTotalRequired: {
         quantity: '4500000',
         tokenId: '',
       },
@@ -1651,9 +1577,6 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       withFees: '0.09544987904550120954',
       withFeesAndSlippage: '0.10605542222222222222',
       difference: '35.987716948001227979',
-      withFeesNoFEF: '0.09544987904550120954',
-      withFeesAndSlippageNoFEF: '0.10605542222222222222',
-      differenceNoFEF: '35.987716948001227979',
     },
     pool: {
       tokenA: {
@@ -1710,11 +1633,7 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       },
     },
     cost: {
-      ptTotalFeeNoFEF: {
-        quantity: '4500000',
-        tokenId: '',
-      },
-      ptTotalFee: {
+      ptTotalRequired: {
         quantity: '4500000',
         tokenId: '',
       },
@@ -1749,9 +1668,6 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
       withFees: '0.09657209903427900966',
       withFeesAndSlippage: '0.10730233333333333333',
       difference: '35.989182655713084861',
-      withFeesNoFEF: '0.09657209903427900966',
-      withFeesAndSlippageNoFEF: '0.10730233333333333333',
-      differenceNoFEF: '35.989182655713084861',
     },
     pool: {
       tokenA: {

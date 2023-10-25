@@ -2,6 +2,7 @@ import * as React from 'react'
 import {App, Balance, Swap} from '@yoroi/types'
 
 import {
+  SimpleTokenInfo,
   SwapActionType,
   SwapActions,
   SwapCreateOrderActionType,
@@ -79,17 +80,23 @@ export const SwapProvider = ({
     lpTokenHeldChanged: (amount: Balance.Amount | undefined) => {
       dispatch({type: SwapCreateOrderActionType.LpTokenHeldChanged, amount})
     },
-    buyTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => {
-      dispatch({type: SwapCreateOrderActionType.BuyTokenIdChanged, tokenId})
+    buyTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => {
+      dispatch({type: SwapCreateOrderActionType.BuyTokenInfoChanged, tokenInfo})
     },
-    sellTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => {
-      dispatch({type: SwapCreateOrderActionType.SellTokenIdChanged, tokenId})
+    sellTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => {
+      dispatch({
+        type: SwapCreateOrderActionType.SellTokenInfoChanged,
+        tokenInfo,
+      })
     },
     poolPairsChanged: (pools: ReadonlyArray<Swap.Pool>) => {
       dispatch({type: SwapCreateOrderActionType.PoolPairsChanged, pools})
     },
-    primaryTokenIdChanged: (tokenId: Balance.TokenInfo['id']) => {
-      dispatch({type: SwapCreateOrderActionType.PrimaryTokenIdChanged, tokenId})
+    primaryTokenInfoChanged: (tokenInfo: SimpleTokenInfo) => {
+      dispatch({
+        type: SwapCreateOrderActionType.PrimaryTokenInfoChanged,
+        tokenInfo,
+      })
     },
     frontendFeeTiersChanged: (feeTiers: ReadonlyArray<App.FrontendFeeTier>) => {
       dispatch({
