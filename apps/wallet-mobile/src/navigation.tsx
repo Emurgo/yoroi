@@ -197,6 +197,7 @@ export type TxHistoryRoutes = {
   'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
   'send-select-token-from-list': undefined
+  modal: undefined
 } & SwapTokenRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
@@ -326,7 +327,6 @@ export type AppRoutes = {
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
   'agreement-changed-notice': undefined
-  modal: undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 
