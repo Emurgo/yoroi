@@ -27,9 +27,17 @@ describe('getBuyAmount', () => {
     expect(result.quantity).toBe('197')
     expect(result.tokenId).toBe('tokenB')
 
-    const limitedResult = getBuyAmount(pool, sell, '2.1')
+    const limitedResult = getBuyAmount(pool, sell, true, '2.1')
     expect(limitedResult.quantity).toBe('47')
     expect(limitedResult.tokenId).toBe('tokenB')
+
+    const zeroLimitResult = getBuyAmount(
+      {...pool, tokenA: {quantity: '0', tokenId: 'tokenA'}},
+      sell,
+      true,
+    )
+    expect(zeroLimitResult.quantity).toBe('0')
+    expect(zeroLimitResult.tokenId).toBe('tokenB')
   })
 
   it('should calculate the correct buy amount when selling tokenA (muesli example)', () => {
@@ -56,7 +64,7 @@ describe('getBuyAmount', () => {
     expect(result.quantity).toBe('136')
     expect(result.tokenId).toBe('tokenB')
 
-    const limitedResult = getBuyAmount(pool, sell, '2.1')
+    const limitedResult = getBuyAmount(pool, sell, true, '2.1')
     //expect(limitedResult.quantity).toBe('47')
     expect(limitedResult.tokenId).toBe('tokenB')
   })
@@ -85,7 +93,7 @@ describe('getBuyAmount', () => {
     expect(result.quantity).toBe('49')
     expect(result.tokenId).toBe('tokenA')
 
-    const limitedResult = getBuyAmount(pool, sell, '2.1')
+    const limitedResult = getBuyAmount(pool, sell, true, '2.1')
     expect(limitedResult.quantity).toBe('47')
     expect(limitedResult.tokenId).toBe('tokenA')
   })
@@ -110,11 +118,11 @@ describe('getBuyAmount', () => {
       quantity: '100',
       tokenId: 'tokenA',
     }
-    const limitResult = getBuyAmount(pool, sell, undefined, true)
+    const limitResult = getBuyAmount(pool, sell, true)
     const marketResult = getBuyAmount(pool, sell)
 
     // buy more (fee not included)
-    expect(limitResult.quantity).toBe('999')
+    expect(limitResult.quantity).toBe('1000')
     expect(limitResult.tokenId).toBe('tokenB')
 
     // buy less (fee included)

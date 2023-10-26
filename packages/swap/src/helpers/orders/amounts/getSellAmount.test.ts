@@ -31,9 +31,17 @@ describe('getSellAmount', () => {
     expect(zeroResult.quantity).toBe('0')
     expect(zeroResult.tokenId).toBe('tokenB')
 
-    const limitedResult = getSellAmount(pool, buy, '2.1')
+    const limitedResult = getSellAmount(pool, buy, true, '2.1')
     expect(limitedResult.quantity).toBe('210')
     expect(limitedResult.tokenId).toBe('tokenB')
+
+    const zeroLimitResult = getSellAmount(
+      {...pool, tokenA: {quantity: '0', tokenId: 'tokenA'}},
+      buy,
+      true,
+    )
+    expect(zeroLimitResult.quantity).toBe('0')
+    expect(zeroLimitResult.tokenId).toBe('tokenB')
   })
 
   it('should calculate the correct sell amount when buying tokenB', () => {
@@ -60,7 +68,7 @@ describe('getSellAmount', () => {
     expect(result.quantity).toBe('53')
     expect(result.tokenId).toBe('tokenA')
 
-    const limitedResult = getSellAmount(pool, buy, '2.1')
+    const limitedResult = getSellAmount(pool, buy, true, '2.1')
     expect(limitedResult.quantity).toBe('210')
     expect(limitedResult.tokenId).toBe('tokenA')
   })
@@ -110,11 +118,11 @@ describe('getSellAmount', () => {
       quantity: '100',
       tokenId: 'tokenA',
     }
-    const limitResult = getSellAmount(pool, buy, undefined, true)
+    const limitResult = getSellAmount(pool, buy, true)
     const marketResult = getSellAmount(pool, buy)
 
     // need less on sell side (fee is not included)
-    expect(limitResult.quantity).toBe('1002')
+    expect(limitResult.quantity).toBe('1000')
     expect(limitResult.tokenId).toBe('tokenB')
 
     // need more on sell side (fee is included)

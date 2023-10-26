@@ -58,7 +58,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
         )
         const formattedTvl = Quantities.format(tvl, decimals, 0)
         const formattedBatcherFeeInPt = Quantities.format(pool.batcherFee.quantity, decimals, decimals)
-        const marketPrice = getMarketPrice(pool, orderData.amounts.sell)
+        const marketPrice = getMarketPrice(pool, orderData.amounts.sell.tokenId)
 
         return (
           <View key={pool.poolId}>

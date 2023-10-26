@@ -92,7 +92,7 @@ describe('State Actions', () => {
           ...mockSwapStateDefault.orderData,
           amounts: {
             sell: {
-              quantity: '10000',
+              quantity: '100',
               tokenId: 'tokenA',
             },
             buy: {
@@ -125,7 +125,7 @@ describe('State Actions', () => {
 
       expect(state.orderData.type).toBe('limit')
       expect(state.orderData.limitPrice).toBe('0.5')
-      expect(state.orderData.amounts.buy.quantity).toBe('198')
+      expect(state.orderData.amounts.buy.quantity).toBe('200')
 
       const actionMarket: SwapCreateOrderAction = {
         type: SwapCreateOrderActionType.OrderTypeChanged,
@@ -486,7 +486,7 @@ describe('State Actions', () => {
         })
         const updatedSellQuantity = combinedSwapReducers(updatedPools, {
           type: SwapCreateOrderActionType.SellQuantityChanged,
-          quantity: '10000',
+          quantity: '100',
         })
         const updatedType = combinedSwapReducers(updatedSellQuantity, {
           type: SwapCreateOrderActionType.OrderTypeChanged,

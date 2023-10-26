@@ -24,7 +24,7 @@ describe('getMarketPrice', () => {
       quantity: '100',
       tokenId: 'tokenA',
     }
-    const result = getMarketPrice(pool, sell)
+    const result = getMarketPrice(pool, sell.tokenId)
     expect(result).toBe('0.5')
   })
 
@@ -49,7 +49,7 @@ describe('getMarketPrice', () => {
       quantity: '100',
       tokenId: 'tokenB',
     }
-    const result = getMarketPrice(pool, sell)
+    const result = getMarketPrice(pool, sell.tokenId)
     expect(result).toBe('2')
   })
 })

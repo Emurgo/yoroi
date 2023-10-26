@@ -7,15 +7,15 @@ import {asQuantity} from '../../utils/asQuantity'
  * Calculate the market price based on the desired sell amount in a liquidity pool.
  *
  * @param pool - The liquidity pool.
- * @param sell - The desired sell amount.
+ * @param sellTokenId - The desired sell token id.
  *
  * @returns The market price
  */
 export const getMarketPrice = (
   pool: Swap.Pool,
-  sell: Balance.Amount,
+  sellTokenId: string,
 ): Balance.Quantity => {
-  const isSellTokenA = sell.tokenId === pool.tokenA.tokenId
+  const isSellTokenA = sellTokenId === pool.tokenA.tokenId
 
   const A = new BigNumber(pool.tokenA.quantity)
   const B = new BigNumber(pool.tokenB.quantity)

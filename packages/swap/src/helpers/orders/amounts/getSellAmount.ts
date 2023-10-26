@@ -4,13 +4,15 @@ import {Balance, Swap} from '@yoroi/types'
 import {ceilDivision} from '../../../utils/ceilDivision'
 import {Quantities} from '../../../utils/quantities'
 import {asQuantity} from '../../../utils/asQuantity'
+import {getMarketPrice} from '../../prices/getMarketPrice'
 
 /**
  * Calculate the amount to sell based on the desired buy amount in a liquidity pool.
  *
  * @param pool - The liquidity pool.
  * @param buy - The desired buy amount.
- * @param limit - Optional limit value.
+ * @param isLimit - Optional limit type.
+ * @param limit - Optional limit price.
  *
  * @returns The calculated sell amount
  * if the balance in the pool is insuficient it wont throw an error
@@ -18,8 +20,8 @@ import {asQuantity} from '../../../utils/asQuantity'
 export const getSellAmount = (
   pool: Swap.Pool,
   buy: Balance.Amount,
-  limit?: Balance.Quantity,
   isLimit?: boolean,
+  limit: Balance.Quantity = Quantities.zero,
 ): Balance.Amount => {
   const isBuyTokenA = buy.tokenId === pool.tokenA.tokenId
 
@@ -28,16 +30,23 @@ export const getSellAmount = (
   if (Quantities.isZero(buy.quantity))
     return {tokenId, quantity: Quantities.zero}
 
-  if (!(!limit || Quantities.isZero(limit)))
+  if (isLimit) {
+    const limitPrice = Quantities.isZero(limit)
+      ? getMarketPrice(pool, tokenId)
+      : limit
+
     return {
       tokenId,
-      quantity: asQuantity(
-        new BigNumber(buy.quantity)
-          .times(new BigNumber(limit))
-          .integerValue(BigNumber.ROUND_CEIL)
-          .toString(),
-      ),
+      quantity: Quantities.isZero(limitPrice)
+        ? Quantities.zero
+        : asQuantity(
+            new BigNumber(buy.quantity)
+              .times(new BigNumber(limitPrice))
+              .integerValue(BigNumber.ROUND_CEIL)
+              .toString(),
+          ),
     }
+  }
 
   const A = BigInt(pool.tokenA.quantity)
   const B = BigInt(pool.tokenB.quantity)
@@ -46,8 +55,7 @@ export const getSellAmount = (
 
   const buyQuantity = BigInt(buy.quantity)
 
-  // if limit order for the initial price when limit is undefined
-  const fee = BigInt(100 * 1000) - BigInt(Number(isLimit ? 0 : pool.fee) * 1000)
+  const fee = BigInt(100 * 1000) - BigInt(Number(pool.fee) * 1000)
 
   const maxBuyQuantity =
     firstToken -
