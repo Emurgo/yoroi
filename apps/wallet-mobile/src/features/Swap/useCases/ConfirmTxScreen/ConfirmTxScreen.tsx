@@ -11,6 +11,7 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
 import {useSignAndSubmitTx, useTokenInfo} from '../../../../yoroi-wallets/hooks'
+import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
@@ -22,6 +23,7 @@ export const ConfirmTxScreen = () => {
   const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {openModal, closeModal} = useModal()
+  const signedTxRef = React.useRef<YoroiSignedTx | null>(null)
 
   const {unsignedTx, orderData} = useSwap()
   const sellTokenInfo = useTokenInfo({
@@ -41,7 +43,12 @@ export const ConfirmTxScreen = () => {
   const {signAndSubmitTx, isLoading: processingTx} = useSignAndSubmitTx(
     {wallet},
     {
-      signTx: {useErrorBoundary: true},
+      signTx: {
+        useErrorBoundary: true,
+        onSuccess: (signedTx) => {
+          signedTxRef.current = signedTx
+        },
+      },
       submitTx: {
         onSuccess: () => {
           if (orderData.selectedPoolCalculation === undefined) return
@@ -59,6 +66,7 @@ export const ConfirmTxScreen = () => {
             pool_source: orderData.selectedPoolCalculation.pool.provider,
             swap_fees: Number(orderData.selectedPoolCalculation.cost.batcherFee),
           })
+          navigate.submittedTx(signedTxRef.current?.signedTx.id ?? '')
         },
         onError: () => {
           navigate.failedTx()
