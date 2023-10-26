@@ -40,6 +40,15 @@ export const WalletSettingsScreen = () => {
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
+  const navigateTo = useNavigateTo()
+
+  const onToggleEasyConfirmation = () => {
+    if (easyConfirmationEnabled) {
+      navigateTo.disableEasyConfirmation()
+    } else {
+      navigateTo.enableEasyConfirmation()
+    }
+  }
 
   const onSwitchWallet = () => {
     resetToWalletSelection()
@@ -81,7 +90,11 @@ export const WalletSettingsScreen = () => {
             label={strings.easyConfirmation}
             disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
           >
-            <DisableEasyConfirmationSwitch easyConfirmationEnabled={easyConfirmationEnabled} />
+            <Switch
+              value={easyConfirmationEnabled}
+              onValueChange={onToggleEasyConfirmation}
+              disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
+            />
           </SettingsItem>
         </SettingsSection>
 
@@ -179,34 +192,6 @@ const useLogout = () => {
       })
     }
   }
-}
-
-// to avoid switch jumps
-const DisableEasyConfirmationSwitch = ({easyConfirmationEnabled}: {easyConfirmationEnabled: boolean}) => {
-  const wallet = useSelectedWallet()
-  const [isLocalEnabled, setIsLocalEnabled] = React.useState(easyConfirmationEnabled)
-  const authSetting = useAuthSetting()
-  const navigateTo = useNavigateTo()
-
-  const onToggleEasyConfirmation = () => {
-    setIsLocalEnabled((prevState) => {
-      if (prevState) {
-        navigateTo.disableEasyConfirmation()
-      } else {
-        navigateTo.enableEasyConfirmation()
-      }
-
-      return !prevState
-    })
-  }
-
-  return (
-    <Switch
-      value={isLocalEnabled}
-      onValueChange={onToggleEasyConfirmation}
-      disabled={authSetting === 'pin' || wallet.isHW || wallet.isReadOnly}
-    />
-  )
 }
 
 const messages = defineMessages({
