@@ -22,14 +22,11 @@ export const LimitPriceWarning = ({onSubmit, orderData}: LimitPriceWarningProps)
   const limitPrice = new BigNumber(orderData.limitPrice ?? 0).toFormat(numberLocale)
   const wallet = useSelectedWallet()
   const {closeModal} = useModal()
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
-
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
   const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name ?? '-'
   const tokenToBuyInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
   const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name ?? '-'
-  const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
+  const denomination = (tokenToSellInfo.decimals ?? 0) - (tokenToBuyInfo.decimals ?? 0)
   const marketPrice = Quantities.format(
     orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
     denomination,
