@@ -156,7 +156,6 @@
   "swap.swapScreen.assetsIn": "Possuo esse ativo",
   "swap.swapScreen.noAssetsFound": "No assets found for this pair",
   "swap.swapScreen.noAssetsFoundFor": "No assets found for \"{search}\"",
-  "swap.swapScreen.defaultSlippage": "Default Slippage Tolerance",
   "swap.swapScreen.slippageInfo": "Slippage tolerance is set as a percentage of the total swap value. Your transactions will not be executed if the price moves by more than this amount.",
   "swap.swapScreen.autoPool": "(auto)",
   "swap.swapScreen.changePool": "change dex",
