@@ -102,8 +102,6 @@ export const EditSlippageScreen = () => {
         keyboardVerticalOffset={102}
       >
         <ScrollView bounces={false} style={styles.flex}>
-          <Text style={styles.header}>{strings.defaultSlippage}</Text>
-
           <Text style={styles.description}>{strings.slippageInfo}</Text>
 
           <View style={styles.choicesContainer}>
@@ -177,22 +175,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 16,
   },
-  header: {
-    fontSize: 16,
-    fontWeight: '500',
-    paddingVertical: 12,
-    fontFamily: 'Rubik-Medium',
-    color: '#242838',
-  },
   textInfo: {
     fontSize: 12,
     color: COLORS.TEXT_INPUT,
   },
   description: {
-    fontSize: 12,
-    lineHeight: 18,
-    fontFamily: 'Rubik-Regular',
-    color: '#6B7384',
+    paddingVertical: 16,
+    fontSize: 16,
+    lineHeight: 24,
+    fontFamily: 'Rubik',
+    color: '#242838',
   },
   bottomText: {
     paddingTop: 16,
@@ -203,7 +195,7 @@ const styles = StyleSheet.create({
   },
   choicesContainer: {
     flexDirection: 'row',
-    paddingVertical: 16,
+    paddingBottom: 24,
     flexWrap: 'wrap',
   },
   choiceButton: {

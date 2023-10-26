@@ -72,8 +72,8 @@ const TokenList = () => {
 
   const filteredTokenList = React.useMemo(() => {
     const filter = filterBySearch(assetSearchTerm)
-    return tokens.filter((token) => filter(token.info)).sort(sortTokensByName)
-  }, [tokens, assetSearchTerm])
+    return tokens.filter((token) => filter(token.info)).sort((a, b) => sortTokensByName(a, b, wallet))
+  }, [tokens, assetSearchTerm, wallet])
 
   return (
     <View style={styles.list}>
