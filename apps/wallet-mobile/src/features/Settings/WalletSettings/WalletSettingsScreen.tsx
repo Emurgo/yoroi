@@ -73,6 +73,7 @@ export const WalletSettingsScreen = () => {
             icon={<Icon.Lock {...iconProps} />}
             label={strings.changePassword}
             onNavigate={() => settingsNavigation.navigate('change-password')}
+            disabled={wallet.isReadOnly}
           />
 
           <SettingsItem
@@ -235,7 +236,7 @@ const messages = defineMessages({
   },
   changePassword: {
     id: 'components.settings.walletsettingscreen.changePassword',
-    defaultMessage: '!!!Change password',
+    defaultMessage: '!!!Change spending password',
   },
   easyConfirmation: {
     id: 'components.settings.walletsettingscreen.easyConfirmation',
