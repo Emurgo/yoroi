@@ -24,9 +24,11 @@ export const useModal = () => {
 export const ModalProvider = ({
   children,
   initialState,
+  navigateToModal,
 }: {
   children: React.ReactNode
   initialState?: Partial<ModalState>
+  navigateToModal: () => void
 }) => {
   const [state, dispatch] = React.useReducer(modalReducer, {...defaultState, ...initialState})
   const navigation = useNavigation()
@@ -37,7 +39,7 @@ export const ModalProvider = ({
     },
     openModal: (title: ModalState['title'], content: ModalState['content'], height?: ModalState['height']) => {
       dispatch({type: 'open', title, content, height})
-      navigation.navigate('modal')
+      navigateToModal()
     },
   }).current
 

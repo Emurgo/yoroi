@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {
   milkTokenId,
@@ -33,7 +34,13 @@ import {
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
-import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes, useWalletNavigation} from '../navigation'
+import {
+  BackButton,
+  defaultStackNavigationOptions,
+  TxHistoryRouteNavigation,
+  TxHistoryRoutes,
+  useWalletNavigation,
+} from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
@@ -47,6 +54,7 @@ const aggregator: Swap.Aggregator = 'muesliswap'
 const Stack = createStackNavigator<TxHistoryRoutes>()
 export const TxHistoryNavigator = () => {
   const strings = useStrings()
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
 
@@ -75,7 +83,7 @@ export const TxHistoryNavigator = () => {
     <SendProvider key={wallet.id}>
       <SwapProvider key={wallet.id} swapManager={swapManager}>
         <SwapFormProvider>
-          <ModalProvider>
+          <ModalProvider navigateToModal={() => navigation.navigate('tx-history-modal')}>
             <Stack.Navigator
               screenListeners={{}}
               screenOptions={{
@@ -266,7 +274,7 @@ export const TxHistoryNavigator = () => {
               />
 
               <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
-                <Stack.Screen name="modal" component={ModalScreen} />
+                <Stack.Screen name="tx-history-modal" component={ModalScreen} />
               </Stack.Group>
             </Stack.Navigator>
 
