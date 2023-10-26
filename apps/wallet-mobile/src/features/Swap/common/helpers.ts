@@ -77,7 +77,6 @@ export const sortTokensByName = (a: Balance.Token, b: Balance.Token, wallet: Yor
   const isValidNameA = containsOnlyValidChars(a.info.name)
   const isValidTickerA = containsOnlyValidChars(a.info.ticker)
   const isValidTickerB = containsOnlyValidChars(b.info.ticker)
-  const isPrimaryToken = (token: Balance.Token) => token.info.ticker === wallet.primaryTokenInfo.ticker
   const nameA =
     a.info.ticker?.toLocaleLowerCase() && isValidTickerA
       ? a.info.ticker?.toLocaleLowerCase()
@@ -87,7 +86,7 @@ export const sortTokensByName = (a: Balance.Token, b: Balance.Token, wallet: Yor
       ? b.info.ticker?.toLocaleLowerCase()
       : b.info.name.toLocaleLowerCase()
 
-  const isBPrimary = isPrimaryToken(b)
+  const isBPrimary = b.info.ticker === wallet.primaryTokenInfo.ticker
   if (isBPrimary) return 1
 
   // Move invalid names to the end.
