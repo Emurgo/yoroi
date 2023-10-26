@@ -202,7 +202,11 @@ export const CreateOrder = () => {
       const limitPrice = new BigNumber(orderData.limitPrice)
 
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
-        openModal(strings.limitPriceWarningTitle, <LimitPriceWarning onSubmit={createUnsignedSwapTx} />, 400)
+        openModal(
+          strings.limitPriceWarningTitle,
+          <LimitPriceWarning orderData={orderData} onSubmit={createUnsignedSwapTx} />,
+          400,
+        )
         return
       }
     }
