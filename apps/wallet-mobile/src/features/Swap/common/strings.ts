@@ -25,7 +25,6 @@ export const useStrings = () => {
     swapButton: intl.formatMessage(messages.swapButton),
     verifiedBy: (pool: string) => intl.formatMessage(messages.verifiedBy, {pool}),
     assetsIn: intl.formatMessage(messages.assetsIn),
-    defaultSlippage: intl.formatMessage(messages.defaultSlippage),
     slippageInfo: intl.formatMessage(messages.slippageInfo),
     autoPool: intl.formatMessage(messages.autoPool),
     changePool: intl.formatMessage(messages.changePool),
@@ -206,10 +205,6 @@ export const messages = defineMessages({
   assetsIn: {
     id: 'swap.swapScreen.assetsIn',
     defaultMessage: '!!!This asset is in my portfolio',
-  },
-  defaultSlippage: {
-    id: 'swap.swapScreen.defaultSlippage',
-    defaultMessage: '!!!Default Slippage Tolerance',
   },
   slippageInfo: {
     id: 'swap.swapScreen.slippageInfo',

@@ -88,7 +88,6 @@ export const sortTokensByName = (a: Balance.Token, b: Balance.Token, wallet: Yor
       : b.info.name.toLocaleLowerCase()
 
   const isBPrimary = isPrimaryToken(b)
-
   if (isBPrimary) return 1
 
   // Move invalid names to the end.
