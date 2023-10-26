@@ -1,10 +1,8 @@
 import {SwapState} from '@yoroi/swap'
-import BigNumber from 'bignumber.js'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../../../components'
-import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
@@ -17,17 +15,14 @@ export interface LimitPriceWarningProps {
 }
 
 export const LimitPriceWarning = ({onSubmit, orderData}: LimitPriceWarningProps) => {
-  const {numberLocale} = useLanguage()
   const strings = useStrings()
-  const limitPrice = Quantities.format(
-     orderData.limitPrice ?? Quantities.zero,
-     orderData.tokens.priceDenomination,
-   )
+  const limitPrice = Quantities.format(orderData.limitPrice ?? Quantities.zero, orderData.tokens.priceDenomination)
   const wallet = useSelectedWallet()
   const {closeModal} = useModal()
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
-  const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name ?? '-'
   const tokenToBuyInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
+
+  const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name ?? '-'
   const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name ?? '-'
   const marketPrice = Quantities.format(
     orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
