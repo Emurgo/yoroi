@@ -7,6 +7,7 @@ import {Button, Spacer, useModal} from '../../../../../../components'
 import {useLanguage} from '../../../../../../i18n'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
+import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {useStrings} from '../../../../common/strings'
 
 export interface LimitPriceWarningProps {
@@ -19,14 +20,21 @@ export const LimitPriceWarning = ({onSubmit, orderData}: LimitPriceWarningProps)
   const {numberLocale} = useLanguage()
   const strings = useStrings()
   const limitPrice = new BigNumber(orderData.limitPrice ?? 0).toFormat(numberLocale)
-  const marketPrice = new BigNumber(orderData.selectedPoolCalculation?.prices.market ?? 0).toFormat(numberLocale)
   const wallet = useSelectedWallet()
   const {closeModal} = useModal()
+  const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
 
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
   const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name ?? '-'
   const tokenToBuyInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
   const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name ?? '-'
+  const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
+  const marketPrice = Quantities.format(
+    orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
+    denomination,
+    14,
+  )
 
   const name = `${tokenToSellName}/${tokenToBuyName}`
 
