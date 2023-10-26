@@ -1,4 +1,4 @@
-import {useSwap} from '@yoroi/swap'
+import {SwapState} from '@yoroi/swap'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
@@ -12,10 +12,10 @@ import {useStrings} from '../../../../common/strings'
 export interface LimitPriceWarningProps {
   onClose?: () => void
   onSubmit?: () => void
+  orderData: SwapState['orderData']
 }
 
-export const LimitPriceWarning = ({onSubmit}: LimitPriceWarningProps) => {
-  const {orderData} = useSwap()
+export const LimitPriceWarning = ({onSubmit, orderData}: LimitPriceWarningProps) => {
   const {numberLocale} = useLanguage()
   const strings = useStrings()
   const limitPrice = new BigNumber(orderData.limitPrice ?? 0).toFormat(numberLocale)
