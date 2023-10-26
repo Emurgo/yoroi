@@ -19,7 +19,10 @@ export interface LimitPriceWarningProps {
 export const LimitPriceWarning = ({onSubmit, orderData}: LimitPriceWarningProps) => {
   const {numberLocale} = useLanguage()
   const strings = useStrings()
-  const limitPrice = new BigNumber(orderData.limitPrice ?? 0).toFormat(numberLocale)
+  const limitPrice = Quantities.format(
+     orderData.limitPrice ?? Quantities.zero,
+     orderData.tokens.priceDenomination,
+   )
   const wallet = useSelectedWallet()
   const {closeModal} = useModal()
   const tokenToSellInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
