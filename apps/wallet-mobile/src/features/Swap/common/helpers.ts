@@ -69,36 +69,41 @@ export const parseOrderTxMetadata = (metadataJson: string): OrderTxMetadata | nu
 }
 
 function containsOnlyValidChars(str?: string): boolean {
-  const validCharsRegex = /^[a-zA-Z0]*$/
+  const validCharsRegex = /^[a-zA-Z0 ]*$/
   return typeof str === 'string' && validCharsRegex.test(str)
 }
 
 export const sortTokensByName = (a: Balance.Token, b: Balance.Token, wallet: YoroiWallet) => {
   const isValidNameA = containsOnlyValidChars(a.info.name)
+  const isValidNameB = containsOnlyValidChars(b.info.name)
   const isValidTickerA = containsOnlyValidChars(a.info.ticker)
   const isValidTickerB = containsOnlyValidChars(b.info.ticker)
+
   const nameA =
     a.info.ticker?.toLocaleLowerCase() && isValidTickerA
       ? a.info.ticker?.toLocaleLowerCase()
       : a.info.name.toLocaleLowerCase()
+
   const nameB =
     b.info.ticker?.toLocaleLowerCase() && isValidTickerB
       ? b.info.ticker?.toLocaleLowerCase()
       : b.info.name.toLocaleLowerCase()
 
   const isBPrimary = b.info.ticker === wallet.primaryTokenInfo.ticker
-  if (isBPrimary) return 1
-
-  // Move invalid names to the end.
-  if (!isValidNameA) {
+  if (isBPrimary) {
+    console.log('isBPrimary', isBPrimary)
     return 1
   }
 
-  if (nameA < nameB) {
+  const isAPrimary =
+    a.info.ticker === wallet.primaryTokenInfo.ticker || b.info.ticker === wallet.primaryTokenInfo.ticker
+  if (isAPrimary) return -1
+
+  if (!isValidNameA && isValidNameB) {
+    return 1
+  } else if (isValidNameA && !isValidNameB) {
     return -1
   }
-  if (nameA > nameB) {
-    return 1
-  }
-  return 0
+
+  return nameA.localeCompare(nameB, undefined, {sensitivity: 'base'})
 }
