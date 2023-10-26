@@ -57,8 +57,6 @@ export const SwapFormProvider = ({
     primaryTokenBalance,
   )
 
-  const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
-
   const [state, dispatch] = React.useReducer(swapFormReducer, {
     ...defaultState,
     buyQuantity: {
@@ -119,14 +117,24 @@ export const SwapFormProvider = ({
   const updateLimitPrice = React.useCallback(() => {
     if (orderData.type === 'limit' && !limitInputRef?.current?.isFocused()) {
       actions.limitPriceInputValueChanged(
-        Quantities.format(orderData.limitPrice ?? Quantities.zero, denomination, PRECISION),
+        Quantities.format(orderData.limitPrice ?? Quantities.zero, orderData.tokens.priceDenomination, PRECISION),
       )
     } else if (orderData.type === 'market') {
       actions.limitPriceInputValueChanged(
-        Quantities.format(orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero, denomination, PRECISION),
+        Quantities.format(
+          orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
+          orderData.tokens.priceDenomination,
+          PRECISION,
+        ),
       )
     }
-  }, [actions, denomination, orderData.limitPrice, orderData.selectedPoolCalculation?.prices.market, orderData.type])
+  }, [
+    actions,
+    orderData.tokens.priceDenomination,
+    orderData.limitPrice,
+    orderData.selectedPoolCalculation?.prices.market,
+    orderData.type,
+  ])
 
   const clearErrors = React.useCallback(() => {
     if (state.sellQuantity.error !== undefined) actions.sellAmountErrorChanged(undefined)
@@ -157,13 +165,18 @@ export const SwapFormProvider = ({
 
   const onChangeLimitPrice = React.useCallback(
     (text: string) => {
-      const [formattedPrice, price] = Quantities.parseFromText(text, denomination, numberLocale, PRECISION)
+      const [formattedPrice, price] = Quantities.parseFromText(
+        text,
+        orderData.tokens.priceDenomination,
+        numberLocale,
+        PRECISION,
+      )
       actions.limitPriceInputValueChanged(formattedPrice)
       limitPriceChanged(price)
 
       clearErrors()
     },
-    [actions, clearErrors, denomination, limitPriceChanged, numberLocale],
+    [actions, clearErrors, orderData.tokens.priceDenomination, limitPriceChanged, numberLocale],
   )
 
   React.useEffect(() => {

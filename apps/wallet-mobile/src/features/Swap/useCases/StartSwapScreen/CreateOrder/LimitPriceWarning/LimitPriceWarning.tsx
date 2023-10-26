@@ -26,10 +26,9 @@ export const LimitPriceWarning = ({onSubmit, orderData}: LimitPriceWarningProps)
   const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name ?? '-'
   const tokenToBuyInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
   const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name ?? '-'
-  const denomination = (tokenToSellInfo.decimals ?? 0) - (tokenToBuyInfo.decimals ?? 0)
   const marketPrice = Quantities.format(
     orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
-    denomination,
+    orderData.tokens.priceDenomination,
     14,
   )
 
