@@ -43,14 +43,14 @@ export const makeOrderCalculations = ({
   const calculations = pools.map<SwapOrderCalculation>((pool) => {
     const buy =
       side === 'sell'
-        ? getBuyAmount(pool, amounts.sell, maybeLimitPrice, isLimit)
+        ? getBuyAmount(pool, amounts.sell, isLimit, maybeLimitPrice)
         : amounts.buy
     const sell =
       side === 'buy'
-        ? getSellAmount(pool, amounts.buy, maybeLimitPrice, isLimit)
+        ? getSellAmount(pool, amounts.buy, isLimit, maybeLimitPrice)
         : amounts.sell
 
-    const marketPrice = getMarketPrice(pool, sell)
+    const marketPrice = getMarketPrice(pool, sell.tokenId)
     // recalculate price base, limit is user's input, market from pool
     const priceBase = maybeLimitPrice ?? marketPrice
 

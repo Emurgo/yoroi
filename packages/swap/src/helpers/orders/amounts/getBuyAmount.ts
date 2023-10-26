@@ -4,12 +4,15 @@ import {Balance, Swap} from '@yoroi/types'
 import {ceilDivision} from '../../../utils/ceilDivision'
 import {Quantities} from '../../../utils/quantities'
 import {asQuantity} from '../../../utils/asQuantity'
+import {getMarketPrice} from '../../prices/getMarketPrice'
 
 /**
  * Calculate the amount to buy based on the desired sell amount in a liquidity pool.
  *
  * @param pool - The liquidity pool.
  * @param sell - The desired sell amount.
+ * @param isLimit - Optional limit type.
+ * @param limit - Limit value, required if isLimit is true.
  *
  * @returns The calculated buy amount
  * if the balance in the pool is insuficient it wont throw an error
@@ -17,8 +20,8 @@ import {asQuantity} from '../../../utils/asQuantity'
 export const getBuyAmount = (
   pool: Swap.Pool,
   sell: Balance.Amount,
-  limit?: Balance.Quantity,
   isLimit?: boolean,
+  limit: Balance.Quantity = Quantities.zero,
 ): Balance.Amount => {
   const isSellTokenA = sell.tokenId === pool.tokenA.tokenId
 
@@ -27,15 +30,22 @@ export const getBuyAmount = (
   if (Quantities.isZero(sell.quantity))
     return {tokenId, quantity: Quantities.zero}
 
-  if (!(!limit || Quantities.isZero(limit)))
+  if (isLimit) {
+    const limitPrice = Quantities.isZero(limit)
+      ? getMarketPrice(pool, sell.tokenId)
+      : limit
+
     return {
       tokenId,
-      quantity: asQuantity(
-        new BigNumber(sell.quantity)
-          .dividedToIntegerBy(new BigNumber(limit))
-          .toString(),
-      ),
+      quantity: Quantities.isZero(limitPrice)
+        ? Quantities.zero
+        : asQuantity(
+            new BigNumber(sell.quantity)
+              .dividedToIntegerBy(new BigNumber(limitPrice))
+              .toString(),
+          ),
     }
+  }
 
   const A = BigInt(pool.tokenA.quantity)
   const B = BigInt(pool.tokenB.quantity)
@@ -44,13 +54,10 @@ export const getBuyAmount = (
 
   const sellQuantity = BigInt(sell.quantity)
 
-  // fee is 0 if limit order for the initial price when limit is undefined
-  const fee = isLimit
-    ? BigInt(0)
-    : ceilDivision(
-        BigInt(Number(pool.fee) * 1000) * sellQuantity,
-        BigInt(100 * 1000),
-      )
+  const fee = ceilDivision(
+    BigInt(Number(pool.fee) * 1000) * sellQuantity,
+    BigInt(100 * 1000),
+  )
 
   const quantity = asQuantity(
     (
