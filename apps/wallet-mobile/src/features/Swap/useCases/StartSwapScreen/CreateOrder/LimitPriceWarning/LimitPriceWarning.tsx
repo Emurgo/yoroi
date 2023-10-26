@@ -27,7 +27,7 @@ export const LimitPriceWarning = ({onSubmit, orderData}: LimitPriceWarningProps)
   const marketPrice = Quantities.format(
     orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
     orderData.tokens.priceDenomination,
-    14,
+    PRECISION,
   )
 
   const name = `${tokenToSellName}/${tokenToBuyName}`
@@ -86,6 +86,8 @@ export const LimitPriceWarning = ({onSubmit, orderData}: LimitPriceWarningProps)
     </View>
   )
 }
+
+const PRECISION = 14
 
 const styles = StyleSheet.create({
   buttonContainer: {
