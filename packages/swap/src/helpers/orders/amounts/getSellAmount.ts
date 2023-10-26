@@ -12,7 +12,7 @@ import {getMarketPrice} from '../../prices/getMarketPrice'
  * @param pool - The liquidity pool.
  * @param buy - The desired buy amount.
  * @param isLimit - Optional limit type.
- * @param limit - Limit value, required if isLimit is true.
+ * @param limit - Optional limit price.
  *
  * @returns The calculated sell amount
  * if the balance in the pool is insuficient it wont throw an error
