@@ -1,6 +1,5 @@
-import * as CSL from '@emurgo/cross-csl-core'
-import {Balance, Swap} from '@yoroi/types'
 import {createEmptyPlutusDatum} from '@emurgo/yoroi-lib'
+import {Balance, Swap} from '@yoroi/types'
 
 import {YoroiEntry} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
