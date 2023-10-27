@@ -669,6 +669,7 @@ const getDerivationPathForAddress = (address: string, wallet: YoroiWallet, purpo
 export const getMuesliSwapTransactionAndSigners = async (cbor: string, wallet: YoroiWallet) => {
   const newCbor = await getMuesliSwapFixedCbor(cbor)
   const tx = await CardanoMobile.Transaction.fromHex(newCbor)
+
   const signers = await getRequiredSigners(tx, wallet)
   return {cbor: newCbor, signers}
 }

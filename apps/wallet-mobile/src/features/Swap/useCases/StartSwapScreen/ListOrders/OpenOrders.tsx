@@ -41,6 +41,7 @@ import {useStrings} from '../../../common/strings'
 import {SwapInfoLink} from '../../../common/SwapInfoLink/SwapInfoLink'
 import {getCancellationOrderFee} from './helpers'
 import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
+import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 
 export const OpenOrders = () => {
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
@@ -182,8 +183,16 @@ export const OpenOrders = () => {
     })
     const {cbor, signers} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
 
+    const tx = await CardanoMobile.Transaction.fromHex(cbor)
+
+    // include the fee utxo in the inputs
+    // build the script witness
+    // add datum and the redeemer
+
+    const newCbor = Buffer.from(await tx.toBytes()).toString('hex')
+
     const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
-    const response = await wallet.signRawTx(cbor, keys)
+    const response = await wallet.signRawTx(newCbor, keys)
     if (!response) return
     const hexBase64 = Buffer.from(response).toString('base64')
     return {txBase64: hexBase64}
