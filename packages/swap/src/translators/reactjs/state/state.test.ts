@@ -282,7 +282,7 @@ describe('State Actions', () => {
       })
       const updatedLimit = combinedSwapReducers(updatedPools, {
         type: SwapCreateOrderActionType.LimitPriceChanged,
-        limitPrice: '2',
+        limitPrice: '0.5',
       })
 
       const state = combinedSwapReducers(updatedLimit, {
@@ -290,7 +290,7 @@ describe('State Actions', () => {
       })
 
       // change back to market price
-      expect(state.orderData.limitPrice).toBe('0.5')
+      expect(state.orderData.limitPrice).toBe('2')
     })
   })
 

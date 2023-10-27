@@ -14,6 +14,7 @@ export const getBestPoolCalculation = (
       if (best === undefined) return current
 
       if (
+        Quantities.isZero(best.prices.withFees) ||
         Quantities.isGreaterThan(best.prices.withFees, current.prices.withFees)
       )
         return current
