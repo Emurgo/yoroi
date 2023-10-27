@@ -82,7 +82,7 @@ export const WalletSettingsScreen = () => {
             icon={<Icon.Lock {...iconProps} />}
             label={strings.changePassword}
             onNavigate={() => settingsNavigation.navigate('change-password')}
-            disabled={wallet.isReadOnly}
+            disabled={wallet.isReadOnly || wallet.isHW}
           />
 
           <SettingsItem
