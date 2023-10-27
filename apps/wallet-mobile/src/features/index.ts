@@ -1,8 +1,4 @@
 export const features = {
-  walletHero: {
-    fiat: __DEV__ || false,
-    buy: __DEV__ || false,
-  },
   txHistory: {
     export: __DEV__ || false,
     search: __DEV__ || false,
@@ -13,7 +9,6 @@ export const features = {
   prefillWalletInfo: __DEV__ ? false : false,
   showProdPoolsInDev: __DEV__ ? false : false,
   moderatingNftsEnabled: __DEV__ ? false : false,
-  showSwapButton: __DEV__ ? true : false,
 }
 
 export const debugWalletInfo = {

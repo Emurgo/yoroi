@@ -6,7 +6,6 @@ import {useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Button, Icon, Spacer, Text, useModal} from '../components'
-import {features} from '../features'
 import {useSend} from '../features/Send/common/SendContext'
 import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
 import {actionMessages} from '../i18n/global-messages'
@@ -129,34 +128,25 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
           </View>
 
-          {Boolean(features.showSwapButton) && <Spacer width={32} />}
+          <Spacer width={32} />
 
-          {Boolean(features.showSwapButton) && (
-            <View style={styles.centralized}>
-              <TouchableOpacity
-                style={styles.actionIcon}
-                onPress={handleOnSwap}
-                testID="swapButton"
-                disabled={disabled}
-              >
-                <Icon.Swap color={ACTION_PROPS.color} />
-              </TouchableOpacity>
+          <View style={styles.centralized}>
+            <TouchableOpacity style={styles.actionIcon} onPress={handleOnSwap} testID="swapButton" disabled={disabled}>
+              <Icon.Swap color={ACTION_PROPS.color} />
+            </TouchableOpacity>
 
-              <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
-            </View>
-          )}
+            <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
+          </View>
 
-          {features.walletHero.buy && <Spacer width={32} />}
+          <Spacer width={32} />
 
-          {features.walletHero.buy && (
-            <View style={styles.centralized}>
-              <TouchableOpacity style={styles.actionIcon} onPress={handleOnBuy} testID="buyButton" disabled={disabled}>
-                <Icon.PlusCircle {...ACTION_PROPS} />
-              </TouchableOpacity>
+          <View style={styles.centralized}>
+            <TouchableOpacity style={styles.actionIcon} onPress={handleOnBuy} testID="buyButton" disabled={disabled}>
+              <Icon.PlusCircle {...ACTION_PROPS} />
+            </TouchableOpacity>
 
-              <Text style={styles.actionLabel}>{strings.buyLabel}</Text>
-            </View>
-          )}
+            <Text style={styles.actionLabel}>{strings.buyLabel}</Text>
+          </View>
         </View>
       </View>
 
