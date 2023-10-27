@@ -49,7 +49,6 @@ import * as legacyApi from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
-import {signRawTransaction} from '../common/signatureUtils'
 import {
   API_ROOT,
   HISTORY_REFRESH_TIME,
@@ -96,6 +95,7 @@ import {
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
+import {signRawTransaction} from '@emurgo/yoroi-lib'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -1121,7 +1121,7 @@ export class ByronWallet implements YoroiWallet {
   }
 
   public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
-    return signRawTransaction(txHex, pKeys)
+    return signRawTransaction(CardanoMobile, txHex, pKeys)
   }
 
   async fetchTokenInfo(tokenId: string) {

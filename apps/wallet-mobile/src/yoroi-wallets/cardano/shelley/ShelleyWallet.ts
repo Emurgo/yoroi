@@ -41,11 +41,7 @@ import * as legacyApi from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
-import {
-  createSignedLedgerSwapCancellationTx,
-  createSwapCancellationLedgerPayload,
-  signRawTransaction,
-} from '../common/signatureUtils'
+import {createSwapCancellationLedgerPayload} from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
@@ -73,6 +69,7 @@ import {deriveRewardAddressHex, toRecipients} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
+import {createSignedLedgerTxFromCbor, signRawTransaction} from '@emurgo/yoroi-lib'
 type WalletState = {
   lastGeneratedAddressIndex: number
 }
@@ -463,7 +460,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     }
 
     public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
-      return signRawTransaction(txHex, pKeys)
+      return signRawTransaction(CardanoMobile, txHex, pKeys)
     }
 
     private async getRewardAddress() {
@@ -892,7 +889,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       const signedLedgerTx = await signTxWithLedger(payload, this.hwDeviceInfo, useUSB)
 
-      const bytes = await createSignedLedgerSwapCancellationTx(
+      const bytes = await createSignedLedgerTxFromCbor(
+        CardanoMobile,
         cbor,
         signedLedgerTx.witnesses,
         PURPOSE,

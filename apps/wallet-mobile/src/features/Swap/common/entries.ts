@@ -1,6 +1,6 @@
 import * as CSL from '@emurgo/cross-csl-core'
-import {createDatumForFrontendFee} from '@emurgo/yoroi-lib'
 import {Balance, Swap} from '@yoroi/types'
+import {createEmptyPlutusDatum} from '@emurgo/yoroi-lib'
 
 import {YoroiEntry} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
@@ -18,7 +18,7 @@ export const makePossibleFrontendFeeEntry = async (
   fee: Balance.Amount,
   addressFeeDeposit: string | undefined,
 ): Promise<YoroiEntry | null> => {
-  console.log('makePossibleFrontendFeeEntry', createDatumForFrontendFee, CardanoMobile.PlutusData)
+  console.log('makePossibleFrontendFeeEntry', CardanoMobile.PlutusData)
   if (addressFeeDeposit == null) return null
 
   const {tokenId} = fee
@@ -26,10 +26,7 @@ export const makePossibleFrontendFeeEntry = async (
   // const hasFrontendFee = !Quantities.isZero(quantity)
   // if (!hasFrontendFee) return null
 
-  const datum = await CardanoMobile.PlutusData.fromJson(
-    JSON.stringify({constructor: 0, fields: []}),
-    CSL.PlutusDatumSchema.DetailedSchema,
-  )
+  const datum = await createEmptyPlutusDatum(CardanoMobile)
   console.log('got datum', datum)
   const hex = await datum?.toHex()
   if (!hex) throw new Error('makePossibleFrontendFeeEntry: datum.toHex() failed')
