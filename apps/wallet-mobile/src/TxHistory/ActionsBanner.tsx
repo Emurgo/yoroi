@@ -128,25 +128,39 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
           </View>
 
-          <Spacer width={32} />
+          {!wallet.isReadOnly && (
+            <>
+              <Spacer width={32} />
 
-          <View style={styles.centralized}>
-            <TouchableOpacity style={styles.actionIcon} onPress={handleOnSwap} testID="swapButton" disabled={disabled}>
-              <Icon.Swap color={ACTION_PROPS.color} />
-            </TouchableOpacity>
+              <View style={styles.centralized}>
+                <TouchableOpacity
+                  style={styles.actionIcon}
+                  onPress={handleOnSwap}
+                  testID="swapButton"
+                  disabled={disabled}
+                >
+                  <Icon.Swap color={ACTION_PROPS.color} />
+                </TouchableOpacity>
 
-            <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
-          </View>
+                <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
+              </View>
 
-          <Spacer width={32} />
+              <Spacer width={32} />
 
-          <View style={styles.centralized}>
-            <TouchableOpacity style={styles.actionIcon} onPress={handleOnBuy} testID="buyButton" disabled={disabled}>
-              <Icon.PlusCircle {...ACTION_PROPS} />
-            </TouchableOpacity>
+              <View style={styles.centralized}>
+                <TouchableOpacity
+                  style={styles.actionIcon}
+                  onPress={handleOnBuy}
+                  testID="buyButton"
+                  disabled={disabled}
+                >
+                  <Icon.PlusCircle {...ACTION_PROPS} />
+                </TouchableOpacity>
 
-            <Text style={styles.actionLabel}>{strings.buyLabel}</Text>
-          </View>
+                <Text style={styles.actionLabel}>{strings.buyLabel}</Text>
+              </View>
+            </>
+          )}
         </View>
       </View>
 
