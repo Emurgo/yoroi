@@ -1,7 +1,10 @@
+import * as CSL from '@emurgo/cross-csl-core'
+import {createDatumForFrontendFee} from '@emurgo/yoroi-lib'
 import {Balance, Swap} from '@yoroi/types'
 
 import {YoroiEntry} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
+import {CardanoMobile} from '../../../yoroi-wallets/wallets'
 
 /**
  * Build the YoroiEntry to add the extra output for the swap transaciton with the frontend fee.
@@ -11,19 +14,30 @@ import {Quantities} from '../../../yoroi-wallets/utils'
  *
  * @returns {YoroiEntry | null} The entry for the fee or null if missing fee or address.
  */
-export const makePossibleFrontendFeeEntry = (
+export const makePossibleFrontendFeeEntry = async (
   fee: Balance.Amount,
   addressFeeDeposit: string | undefined,
-): YoroiEntry | null => {
+): Promise<YoroiEntry | null> => {
+  console.log('makePossibleFrontendFeeEntry', createDatumForFrontendFee, CardanoMobile.PlutusData)
   if (addressFeeDeposit == null) return null
 
-  const {quantity, tokenId} = fee
-  const hasFrontendFee = !Quantities.isZero(quantity)
-  if (!hasFrontendFee) return null
+  const {tokenId} = fee
+  // TODO: Revert hardcoded fee
+  // const hasFrontendFee = !Quantities.isZero(quantity)
+  // if (!hasFrontendFee) return null
+
+  const datum = await CardanoMobile.PlutusData.fromJson(
+    JSON.stringify({constructor: 0, fields: []}),
+    CSL.PlutusDatumSchema.DetailedSchema,
+  )
+  console.log('got datum', datum)
+  const hex = await datum?.toHex()
+  if (!hex) throw new Error('makePossibleFrontendFeeEntry: datum.toHex() failed')
 
   return {
     address: addressFeeDeposit,
-    amounts: {[tokenId]: quantity},
+    amounts: {[tokenId]: '1000000'},
+    datum: {data: hex},
   } as const
 }
 

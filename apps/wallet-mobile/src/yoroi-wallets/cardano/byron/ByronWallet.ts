@@ -545,7 +545,7 @@ export class ByronWallet implements YoroiWallet {
 
   async getAllUtxosForKey() {
     return filterAddressesByStakingKey(
-      await CardanoMobile.StakeCredential.fromKeyhash(await (await this.getStakingKey()).hash()),
+      await CardanoMobile.Credential.fromKeyhash(await (await this.getStakingKey()).hash()),
       await this.getAddressedUtxos(),
       false,
     )

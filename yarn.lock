@@ -2057,10 +2057,22 @@
     buffer-crc32 "0.2.13"
     fnv-plus "1.3.1"
 
-"@emurgo/cross-csl-core@3.1.0", "@emurgo/cross-csl-core@^3.1.0":
+"@emurgo/cross-csl-core@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@emurgo/cross-csl-core/-/cross-csl-core-3.1.0.tgz#bfc0af0e76fdd93af420c2fe079a482593792758"
   integrity sha512-owiAQKAk04u+8xhyqp/9Bkh5T/kcNbBsMcYZRzsN7TFryMM7mKsnorGmV1F0B0h4AjvmmV/pDmhvVqdiyADoMg==
+  dependencies:
+    "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
+    "@types/mocha" "^9.1.1"
+    axios "^0.24.0"
+    bech32 "^2.0.0"
+    bignumber.js "^9.0.1"
+    blake2b "^2.1.4"
+    hash-wasm "^4.9.0"
+    mocha "^10.0.0"
+
+"@emurgo/cross-csl-core@file:../cross-csl/packages/cross-csl-core":
+  version "3.2.1"
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^5.0.0"
     "@types/mocha" "^9.1.1"
@@ -2112,13 +2124,11 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@^0.11.0":
+"@emurgo/yoroi-lib@file:../yoroi-lib":
   version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.11.0.tgz#29b566ccbf909a9c2dc65e89bc6d4459cdc0491f"
-  integrity sha512-Rzumfs55MvfEnHWSzDhRTcdihhRRyilK4+rQqQDOQRi2LgRo0A37kLZI7xauwIEgzScQqOSmkOeWiQiuELeZcg==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^6.0.0"
-    "@emurgo/cross-csl-core" "3.1.0"
+    "@emurgo/cross-csl-core" "file:../cross-csl/packages/cross-csl-core"
     "@noble/hashes" "^1.3.2"
     axios "^0.24.0"
     bech32 "^2.0.0"

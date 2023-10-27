@@ -77,7 +77,7 @@ export class AddressGenerator {
 
     // cache reward address
     const chainNetworkId = toCardanoNetworkId(this.networkId)
-    const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
+    const credential = await CardanoMobile.Credential.fromKeyhash(await stakingKey.hash())
     const rewardAddr = await CardanoMobile.RewardAddress.new(chainNetworkId, credential)
     const rewardAddrAsAddr = await rewardAddr.toAddress()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -109,8 +109,8 @@ export class AddressGenerator {
           const addrKey = await (await chainKey.derive(idx)).toRawKey()
           const addr = await CardanoMobile.BaseAddress.new(
             parseInt(chainNetworkId, 10),
-            await CardanoMobile.StakeCredential.fromKeyhash(await addrKey.hash()),
-            await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash()),
+            await CardanoMobile.Credential.fromKeyhash(await addrKey.hash()),
+            await CardanoMobile.Credential.fromKeyhash(await stakingKey.hash()),
           )
           return (await addr.toAddress()).toBech32()
         }),

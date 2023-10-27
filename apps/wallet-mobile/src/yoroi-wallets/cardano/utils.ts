@@ -77,7 +77,7 @@ export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId
   const stakingKey = await (
     await (await accountPubKeyPtr.derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)).derive(NUMBERS.STAKING_KEY_INDEX)
   ).toRawKey()
-  const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
+  const credential = await CardanoMobile.Credential.fromKeyhash(await stakingKey.hash())
   const chainNetworkId = toCardanoNetworkId(networkId)
 
   const rewardAddr = await CardanoMobile.RewardAddress.new(chainNetworkId, credential)

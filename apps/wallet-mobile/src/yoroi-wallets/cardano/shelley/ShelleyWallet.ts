@@ -473,7 +473,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     async getAllUtxosForKey() {
       return filterAddressesByStakingKey(
-        await CardanoMobile.StakeCredential.fromKeyhash(await (await this.getStakingKey()).hash()),
+        await CardanoMobile.Credential.fromKeyhash(await (await this.getStakingKey()).hash()),
         await this.getAddressedUtxos(),
         false,
       )
@@ -602,13 +602,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
 
+      console.log('createUnsignedTx', entries)
       const recipients = await toRecipients(entries, this.primaryToken)
 
       const containsDatum = recipients.some((recipient) => recipient.datum)
-
-      if (recipients.filter((r) => r.datum).length > 1) {
-        throw new Error('Only one datum per transaction is supported')
-      }
 
       try {
         const unsignedTx = await Cardano.createUnsignedTx(
@@ -620,7 +617,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
             keyDeposit: KEY_DEPOSIT,
             linearFee: {
               coefficient: LINEAR_FEE.COEFFICIENT,
-              constant: containsDatum ? String(BigInt(LINEAR_FEE.CONSTANT) * 2n) : LINEAR_FEE.CONSTANT,
+              constant: containsDatum ? String(BigInt(LINEAR_FEE.CONSTANT) * 3n) : LINEAR_FEE.CONSTANT,
             },
             minimumUtxoVal: MINIMUM_UTXO_VAL,
             coinsPerUtxoWord: COINS_PER_UTXO_WORD,
@@ -969,7 +966,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     async submitTransaction(signedTx: string) {
       console.log('signed tx', signedTx)
-      throw new Error('Temporarily disabled')
       const response: any = await legacyApi.submitTransaction(signedTx, BACKEND)
       Logger.info(response)
       return response as any
