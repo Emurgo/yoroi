@@ -90,13 +90,9 @@ export const sortTokensByName = (a: Balance.Token, b: Balance.Token, wallet: Yor
       : b.info.name.toLocaleLowerCase()
 
   const isBPrimary = b.info.ticker === wallet.primaryTokenInfo.ticker
-  if (isBPrimary) {
-    console.log('isBPrimary', isBPrimary)
-    return 1
-  }
+  if (isBPrimary) return 1
 
-  const isAPrimary =
-    a.info.ticker === wallet.primaryTokenInfo.ticker || b.info.ticker === wallet.primaryTokenInfo.ticker
+  const isAPrimary = a.info.ticker === wallet.primaryTokenInfo.ticker
   if (isAPrimary) return -1
 
   if (!isValidNameA && isValidNameB) {
