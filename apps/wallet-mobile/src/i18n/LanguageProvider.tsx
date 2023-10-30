@@ -30,7 +30,7 @@ export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
   return (
     <LanguageContext.Provider
       value={{
-        numberLocale: numberLocales[languageCode],
+        numberLocale: numberLocales[defaultLanguageCode],
         languageCode,
         selectLanguageCode,
         supportedLanguages,
@@ -93,7 +93,7 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<LanguageCode> 
       return languageCode ?? defaultLanguageCode
     },
     onSuccess: (languageCode) => {
-      updateLanguageSettings(languageCode)
+      updateLanguageSettings(defaultLanguageCode)
       onSuccess?.(languageCode)
     },
     suspense: true,
@@ -113,7 +113,7 @@ const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, E
   const mutation = useMutation({
     mutationFn: (languageCode) => storage.join('appSettings/').setItem('languageCode', languageCode),
     onSuccess: (data, languageCode, context) => {
-      updateLanguageSettings(languageCode)
+      updateLanguageSettings(defaultLanguageCode)
       queryClient.invalidateQueries('languageCode')
       onSuccess?.(data, languageCode, context)
     },
