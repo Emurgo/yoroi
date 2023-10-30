@@ -964,6 +964,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     async submitTransaction(signedTx: string) {
       console.log('signed tx', signedTx)
+      // TODO: Remove before merge
+      if (signedTx) throw new Error('Temporarily disabled')
       const response: any = await legacyApi.submitTransaction(signedTx, BACKEND)
       Logger.info(response)
       return response as any

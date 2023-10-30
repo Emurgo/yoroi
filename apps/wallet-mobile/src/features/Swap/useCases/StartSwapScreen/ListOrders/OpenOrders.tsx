@@ -1,3 +1,4 @@
+import {createSwapCancellationInputs} from '@emurgo/yoroi-lib'
 import {useFocusEffect} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
@@ -177,13 +178,25 @@ export const OpenOrders = () => {
     const {utxo, owner: bech32Address} = order
     const collateralUtxo = await getCollateralUtxo()
     const addressHex = await convertBech32ToHex(bech32Address)
-    const originalCbor = await swapApiOrder.cancel({
+    const cbor = await swapApiOrder.cancel({
       utxos: {collateral: collateralUtxo, order: utxo},
       address: addressHex,
     })
-    const {cbor, signers} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
+    const {signers} = await getMuesliSwapTransactionAndSigners(cbor, wallet)
 
     const tx = await CardanoMobile.Transaction.fromHex(cbor)
+
+    const cancellationInputs = await createSwapCancellationInputs(CardanoMobile)
+
+    // rebuild everything else in tx
+    // -> input from muesliswap, collateral input, required signers,
+    // witness set, keep plutus scripts, plutus data, redeemer.
+
+    await tx.body().then(async (body) => {
+      const json = await body.wasm.to_json()
+      console.log('cbor json', json)
+      console.log('inputs', await cancellationInputs.wasm.to_json())
+    })
 
     // include the fee utxo in the inputs
     // build the script witness

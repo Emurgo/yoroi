@@ -142,5 +142,5 @@ export const getMuesliSwapTransactionAndSigners = async (cbor: string, wallet: Y
   // TODO: Fixed tx body was here
   const tx = await CardanoMobile.Transaction.fromHex(cbor)
   const signers = await getRequiredSigners(tx, wallet)
-  return {cbor: cbor, signers}
+  return {signers}
 }
