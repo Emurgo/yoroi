@@ -1,5 +1,5 @@
 import {Balance} from '@yoroi/types'
-import React, {useRef} from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -39,8 +39,6 @@ export const AmountCard = ({
 }: Props) => {
   const strings = useStrings()
   const {quantity, tokenId} = amount
-  const amountInputRef = useRef<TextInput>(inputRef?.current ?? null)
-
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
   const noTokenSelected = !touched
@@ -50,8 +48,8 @@ export const AmountCard = ({
   const fallback = React.useCallback(() => <TokenIconPlaceholder />, [])
 
   const focusInput = () => {
-    if (amountInputRef?.current) {
-      amountInputRef.current.focus()
+    if (inputRef?.current) {
+      inputRef.current.focus()
     }
   }
   return (
@@ -71,7 +69,7 @@ export const AmountCard = ({
               selectionColor={COLORS.TRANSPARENT_BLACK}
               style={styles.amountInput}
               underlineColorAndroid="transparent"
-              ref={amountInputRef}
+              ref={inputRef}
               editable={inputEditable}
               selectTextOnFocus
             />
