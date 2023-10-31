@@ -3,7 +3,7 @@ import React, {useEffect, useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
+import {KeyboardAvoidingView, KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -55,61 +55,66 @@ export const ConfirmTxScreen = () => {
 
   return (
     <View style={styles.root}>
-      <CurrentBalance />
-
-      <View style={{paddingTop: 16, paddingHorizontal: 16}}>
-        <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
-
-        <Spacer height={4} />
-
-        <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
-
-        <Spacer height={16} />
-
-        {targets.map((target, index) => (
-          <ReceiverInfo key={index} address={target.entry.address} receiver={target.receiver} />
-        ))}
-      </View>
-
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{padding: 16}}
-        persistentScrollbar
-        ref={scrollViewRef}
-      >
-        <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
-
-        <Spacer height={8} />
-
-        <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
-
-        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
-          <>
-            <ValidatedTextInput
-              secureTextEntry
-              value={password}
-              label={strings.password}
-              onChangeText={setPassword}
-              testID="spendingPasswordInput"
+      <KeyboardAvoidingView
+        scrollEnabled={false}
+        notHiddenContent={
+          <Actions>
+            <ConfirmTx
+              onSuccess={onSuccess}
+              onError={onError}
+              yoroiUnsignedTx={yoroiUnsignedTx}
+              useUSB={useUSB}
+              setUseUSB={setUseUSB}
+              isProvidingPassword
+              providedPassword={password}
+              chooseTransportOnConfirmation
             />
-          </>
-        )}
+          </Actions>
+        }
+      >
+        <CurrentBalance />
 
-        <KeyboardSpacer />
-      </ScrollView>
+        <View style={{paddingTop: 16, paddingHorizontal: 16}}>
+          <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
 
-      <Actions>
-        <ConfirmTx
-          onSuccess={onSuccess}
-          onError={onError}
-          yoroiUnsignedTx={yoroiUnsignedTx}
-          useUSB={useUSB}
-          setUseUSB={setUseUSB}
-          isProvidingPassword
-          providedPassword={password}
-          chooseTransportOnConfirmation
-        />
-      </Actions>
+          <Spacer height={4} />
+
+          <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
+
+          <Spacer height={16} />
+
+          {targets.map((target, index) => (
+            <ReceiverInfo key={index} address={target.entry.address} receiver={target.receiver} />
+          ))}
+        </View>
+
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={{padding: 16}}
+          persistentScrollbar
+          ref={scrollViewRef}
+        >
+          <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
+
+          <Spacer height={8} />
+
+          <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
+
+          {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
+            <>
+              <ValidatedTextInput
+                secureTextEntry
+                value={password}
+                label={strings.password}
+                onChangeText={setPassword}
+                testID="spendingPasswordInput"
+              />
+            </>
+          )}
+
+          <KeyboardSpacer />
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   )
 }

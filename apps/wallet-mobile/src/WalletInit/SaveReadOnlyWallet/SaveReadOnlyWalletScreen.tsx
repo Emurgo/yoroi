@@ -1,7 +1,7 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {FlatList, InteractionManager, ScrollView, StyleSheet, View} from 'react-native'
+import {FlatList, InteractionManager, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
@@ -80,10 +80,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.COLORS.BACKGROUND,
-    paddingHorizontal: 16,
-  },
-  scrollView: {
-    paddingRight: 10,
   },
   walletInfoContainer: {
     marginTop: SECTION_MARGIN,
@@ -119,7 +115,7 @@ const styles = StyleSheet.create({
   },
   walletFormStyle: {
     paddingTop: 0,
-    paddingHorizontal: 0,
+    paddingHorizontal: 16,
   },
   walletFormButtonStyle: {
     marginHorizontal: 0,
@@ -181,43 +177,41 @@ const WalletInfoView = ({normalizedPath, publicKeyHex, networkId}: WalletInfoPro
 
   return (
     <View style={styles.walletInfoContainer}>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.checksumContainer}>
-          <Text>{strings.checksumLabel}</Text>
+      <View style={styles.checksumContainer}>
+        <Text>{strings.checksumLabel}</Text>
 
-          {!isEmptyString(plate.accountPlate.ImagePart) && (
-            <CheckSumView icon={plate.accountPlate.ImagePart} checksum={plate.accountPlate.TextPart} />
-          )}
-        </View>
+        {!isEmptyString(plate.accountPlate.ImagePart) && (
+          <CheckSumView icon={plate.accountPlate.ImagePart} checksum={plate.accountPlate.TextPart} />
+        )}
+      </View>
 
-        <View style={styles.addressesContainer}>
-          <Text>{strings.walletAddressLabel}</Text>
+      <View style={styles.addressesContainer}>
+        <Text>{strings.walletAddressLabel}</Text>
 
-          <FlatList
-            data={plate.addresses}
-            keyExtractor={(item) => item}
-            renderItem={({item}) => <WalletAddress addressHash={item} networkId={networkId} />}
-          />
-        </View>
+        <FlatList
+          data={plate.addresses}
+          keyExtractor={(item) => item}
+          renderItem={({item}) => <WalletAddress addressHash={item} networkId={networkId} />}
+        />
+      </View>
 
-        <Line />
+      <Line />
 
-        <View style={styles.keyAttributesContainer}>
-          <Text style={styles.label}>{strings.key}</Text>
+      <View style={styles.keyAttributesContainer}>
+        <Text style={styles.label}>{strings.key}</Text>
 
-          <View style={styles.keyView}>
-            <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
-              {publicKeyHex}
-            </Text>
-          </View>
-
-          <Text style={styles.label}>{strings.derivationPath}</Text>
-
-          <Text secondary monospace>
-            {`m/${normalizedPath[0]}'/${normalizedPath[1]}'/${normalizedPath[2]}`}
+        <View style={styles.keyView}>
+          <Text secondary monospace numberOfLines={1} ellipsizeMode="middle">
+            {publicKeyHex}
           </Text>
         </View>
-      </ScrollView>
+
+        <Text style={styles.label}>{strings.derivationPath}</Text>
+
+        <Text secondary monospace>
+          {`m/${normalizedPath[0]}'/${normalizedPath[1]}'/${normalizedPath[2]}`}
+        </Text>
+      </View>
     </View>
   )
 }

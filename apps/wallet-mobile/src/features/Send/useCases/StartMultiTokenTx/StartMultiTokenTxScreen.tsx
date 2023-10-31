@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import React from 'react'
-import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {Button, Spacer} from '../../../../components'
+import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
@@ -58,37 +58,33 @@ export const StartMultiTokenTxScreen = () => {
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={86}
+        notHiddenContent={
+          <Actions>
+            <NextButton
+              onPress={onNext}
+              title={strings.next}
+              disabled={!isValid || isLoading}
+              testID="nextButton"
+              shelleyTheme
+            />
+          </Actions>
+        }
       >
-        <ScrollView style={styles.flex} bounces={false}>
-          <ShowErrors />
+        <ShowErrors />
 
-          <Spacer height={16} />
+        <Spacer height={16} />
 
-          <ResolveAddress
-            onChangeReceiver={receiverChanged}
-            receiver={receiver}
-            address={address}
-            errorMessage={addressErrorMessage}
-            isLoading={isLoading}
-          />
+        <ResolveAddress
+          onChangeReceiver={receiverChanged}
+          receiver={receiver}
+          address={address}
+          errorMessage={addressErrorMessage}
+          isLoading={isLoading}
+        />
 
-          <Spacer height={16} />
+        <Spacer height={16} />
 
-          <InputMemo memo={memo} onChangeText={memoChanged} />
-        </ScrollView>
-
-        <Actions>
-          <NextButton
-            onPress={onNext}
-            title={strings.next}
-            disabled={!isValid || isLoading}
-            testID="nextButton"
-            shelleyTheme
-          />
-        </Actions>
+        <InputMemo memo={memo} onChangeText={memoChanged} />
       </KeyboardAvoidingView>
     </View>
   )
@@ -101,9 +97,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.WHITE,
     paddingHorizontal: 16,
-  },
-  flex: {
-    flex: 1,
   },
   actions: {
     paddingVertical: 16,

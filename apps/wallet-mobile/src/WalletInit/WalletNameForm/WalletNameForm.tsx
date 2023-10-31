@@ -3,7 +3,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, Image, ImageSourcePropType, StyleSheet, View, ViewStyle} from 'react-native'
 
-import {Button, ProgressStep, TextInput} from '../../components'
+import {Button, KeyboardAvoidingView, ProgressStep, TextInput} from '../../components'
 import globalMessages from '../../i18n/global-messages'
 import {spacing} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
@@ -51,40 +51,44 @@ export const WalletNameForm = ({
 
   return (
     <View style={styles.root}>
-      {progress != null && (
-        <ProgressStep currentStep={progress.currentStep} totalSteps={progress.totalSteps} displayStepNumber />
-      )}
+      <KeyboardAvoidingView
+        notHiddenContent={
+          <View style={styles.buttonContainer}>
+            <Button
+              block
+              onPress={() => onSubmit({name: name.trim()})}
+              title={strings.save}
+              style={buttonStyle}
+              disabled={hasErrors || isWaiting}
+              testID="saveWalletButton"
+            />
+          </View>
+        }
+      >
+        {progress != null && (
+          <ProgressStep currentStep={progress.currentStep} totalSteps={progress.totalSteps} displayStepNumber />
+        )}
 
-      <View style={[styles.container, containerStyle]}>
-        <View style={styles.heading}>{image != null && <Image source={image} />}</View>
+        <View style={[styles.container, containerStyle]}>
+          <View style={styles.heading}>{image != null && <Image source={image} />}</View>
 
-        {topContent}
+          {topContent}
 
-        <TextInput
-          errorOnMount
-          autoFocus
-          label={strings.walletNameInputLabel}
-          value={name}
-          onChangeText={(walletName: string) => setName(walletName)}
-          errorText={walletNameErrorText}
-          disabled={isWaiting}
-          autoComplete="off"
-          testID="walletNameInput"
-        />
+          <TextInput
+            errorOnMount
+            autoFocus
+            label={strings.walletNameInputLabel}
+            value={name}
+            onChangeText={(walletName: string) => setName(walletName)}
+            errorText={walletNameErrorText}
+            disabled={isWaiting}
+            autoComplete="off"
+            testID="walletNameInput"
+          />
 
-        {bottomContent}
-      </View>
-
-      <View style={styles.buttonContainer}>
-        <Button
-          block
-          onPress={() => onSubmit({name: name.trim()})}
-          title={strings.save}
-          style={[styles.button, buttonStyle]}
-          disabled={hasErrors || isWaiting}
-          testID="saveWalletButton"
-        />
-      </View>
+          {bottomContent}
+        </View>
+      </KeyboardAvoidingView>
 
       {isWaiting && <ActivityIndicator color="black" />}
     </View>
@@ -108,11 +112,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    marginTop: 12,
-  },
-  button: {
-    marginHorizontal: 10,
-    marginVertical: 16,
+    padding: 16,
   },
 })
 
