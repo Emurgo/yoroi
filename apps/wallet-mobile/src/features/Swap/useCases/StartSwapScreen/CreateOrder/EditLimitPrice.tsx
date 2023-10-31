@@ -21,7 +21,7 @@ export const EditLimitPrice = () => {
   const disabled = orderData.type === 'market'
 
   const {
-    sellQuantity: {isTouched: isBuyTouched},
+    buyQuantity: {isTouched: isBuyTouched},
     sellQuantity: {isTouched: isSellTouched},
     limitPrice: {displayValue: limitDisplayValue},
     limitInputRef,

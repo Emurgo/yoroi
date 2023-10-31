@@ -52,7 +52,38 @@ export const LANGUAGES = {
 
 export type LanguageCode = (typeof LANGUAGES)[keyof typeof LANGUAGES]
 
-import BigNumber from 'bignumber.js'
+// This makes sure supportedLanguages and LANGUAGES are in sync
+type SupportedLanguageCode = (typeof supportedLanguages)[number]['code']
+type EqualityGuard<A, B> = Exclude<A, B> | Exclude<B, A>
+const assert = <T extends never>() => null as T
+assert<EqualityGuard<LanguageCode, SupportedLanguageCode>>()
+
+export const REGIONS = {
+  BENGALI: 'BD',
+  BRAZILIAN: 'BR',
+  CHINESE_SIMPLIFIED: 'Hans',
+  CZECH: 'CZ',
+  DUTCH: 'NL',
+  ENGLISH: 'US',
+  FILIPINO: 'PH',
+  FRENCH: 'FR',
+  GERMAN: 'DE',
+  HUNGARIAN: 'HU',
+  INDONESIAN: 'ID',
+  ITALIAN: 'IT',
+  JAPANESE: 'JP',
+  KENYAN: 'KE',
+  KOREAN: 'KR',
+  POLISH: 'PL',
+  RUSSIAN: 'RU',
+  SLOVAK: 'SK',
+  SLOVENIAN: 'SI',
+  SPANISH: 'ES',
+  SWEDISH: 'SE',
+  UKRAINIAN: 'UA',
+  VIETNAMESE: 'VN',
+} as const
+export type RegionCode = (typeof REGIONS)[keyof typeof REGIONS]
 
 export type NumberLocale = {
   prefix: string
@@ -65,66 +96,45 @@ export type NumberLocale = {
   suffix: string
 }
 
-const defaultNumberFmt: NumberLocale = {
+const decimalComma: NumberLocale = {
   prefix: '',
-  decimalSeparator: '.',
-  groupSeparator: ',',
+  decimalSeparator: ',',
+  groupSeparator: ' ',
   groupSize: 3,
   secondaryGroupSize: 0,
   fractionGroupSize: 0,
-  fractionGroupSeparator: ' ',
+  fractionGroupSeparator: ' ',
   suffix: '',
-}
+} as const
 
-// note(v-almonacid): most countries use comma as decimal separator, so this
-// is more genereic than the above
-const defaultCommaDecimalSeparatorFmt = {
-  ...defaultNumberFmt,
-  decimalSeparator: ',',
-  groupSeparator: ' ',
-}
-
-// Note(ppershing): this is just temporary
-// and should be replaced with real configs
-const russianNumberFmt = defaultCommaDecimalSeparatorFmt
-const spanishNumberFmt = {
-  ...defaultNumberFmt,
-  decimalSeparator: ',',
-  groupSeparator: '.',
-}
+const decimalDot: NumberLocale = {
+  ...decimalComma,
+  decimalSeparator: '.',
+  groupSeparator: ',',
+} as const
 
 export const numberLocales = {
-  [LANGUAGES.BENGALI]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.BRAZILIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.CHINESE_SIMPLIFIED]: defaultNumberFmt,
-  [LANGUAGES.CZECH]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.DUTCH]: defaultNumberFmt,
-  [LANGUAGES.ENGLISH]: defaultNumberFmt,
-  [LANGUAGES.FILIPINO]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.FRENCH]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.GERMAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.HUNGARIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.INDONESIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.ITALIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.JAPANESE]: defaultNumberFmt,
-  [LANGUAGES.KENYAN]: defaultNumberFmt,
-  [LANGUAGES.KOREAN]: defaultNumberFmt,
-  [LANGUAGES.POLISH]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.RUSSIAN]: russianNumberFmt,
-  [LANGUAGES.SLOVAK]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.SLOVENIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.SPANISH]: spanishNumberFmt,
-  [LANGUAGES.SWEDISH]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.UKRAINIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.VIETNAMESE]: defaultCommaDecimalSeparatorFmt,
-}
-
-export const updateLanguageSettings = (code: LanguageCode) => {
-  BigNumber.config({
-    FORMAT: numberLocales[code],
-  })
-}
-
-updateLanguageSettings(LANGUAGES.ENGLISH)
-
-export * from './LanguageProvider'
+  [REGIONS.BENGALI]: decimalComma,
+  [REGIONS.BRAZILIAN]: decimalComma,
+  [REGIONS.CHINESE_SIMPLIFIED]: decimalDot,
+  [REGIONS.CZECH]: decimalComma,
+  [REGIONS.DUTCH]: decimalDot,
+  [REGIONS.ENGLISH]: decimalDot,
+  [REGIONS.FILIPINO]: decimalComma,
+  [REGIONS.FRENCH]: decimalComma,
+  [REGIONS.GERMAN]: decimalComma,
+  [REGIONS.HUNGARIAN]: decimalComma,
+  [REGIONS.INDONESIAN]: decimalComma,
+  [REGIONS.ITALIAN]: decimalComma,
+  [REGIONS.JAPANESE]: decimalDot,
+  [REGIONS.KENYAN]: decimalDot,
+  [REGIONS.KOREAN]: decimalDot,
+  [REGIONS.POLISH]: decimalComma,
+  [REGIONS.RUSSIAN]: decimalComma,
+  [REGIONS.SLOVAK]: decimalComma,
+  [REGIONS.SLOVENIAN]: decimalComma,
+  [REGIONS.SPANISH]: decimalComma,
+  [REGIONS.SWEDISH]: decimalComma,
+  [REGIONS.UKRAINIAN]: decimalComma,
+  [REGIONS.VIETNAMESE]: decimalComma,
+} as const
