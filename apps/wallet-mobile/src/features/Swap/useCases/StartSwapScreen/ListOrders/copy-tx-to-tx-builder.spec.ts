@@ -26,7 +26,24 @@ describe.only('copy tx to tx builder', () => {
     const fee = await txBody.fee()
     await txBuilder.setFee(await bigNumFromStr(await fee.toStr()))
 
-    const finalTx = await txBuilder.build()
+    // copy outputs
+    const outputs = await txBody.outputs()
+    for (let i = 0; i < (await outputs.len()); i++) {
+      const output = await outputs.get(i)
+      await txBuilder.addOutput(output)
+    }
+
+    // copy script data hash
+    const scriptDataHash = await txBody.scriptDataHash()
+    if (scriptDataHash) {
+      await txBuilder.setScriptDataHash(scriptDataHash)
+    }
+
+    const finalTx = await CardanoMobile.Transaction.new(
+      await txBuilder.build(),
+      await orignalTx.witnessSet(),
+      await orignalTx.auxiliaryData(),
+    )
     expect(JSON.parse(await orignalTx.wasm.to_json())).toEqual(JSON.parse(await finalTx.wasm.to_json()))
   })
 })
