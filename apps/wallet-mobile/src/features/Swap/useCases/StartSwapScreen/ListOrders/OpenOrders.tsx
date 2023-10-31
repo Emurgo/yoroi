@@ -1,4 +1,4 @@
-import {createSwapCancellationInputs} from '@emurgo/yoroi-lib'
+import {createSwapCancellationInputs, getTxBuilder} from '@emurgo/yoroi-lib'
 import {useFocusEffect} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
@@ -185,6 +185,7 @@ export const OpenOrders = () => {
     const {signers} = await getMuesliSwapTransactionAndSigners(cbor, wallet)
 
     const tx = await CardanoMobile.Transaction.fromHex(cbor)
+    const txBody = await tx.body()
 
     const cancellationInputs = await createSwapCancellationInputs(CardanoMobile)
 
@@ -192,11 +193,32 @@ export const OpenOrders = () => {
     // -> input from muesliswap, collateral input, required signers,
     // witness set, keep plutus scripts, plutus data, redeemer.
 
-    await tx.body().then(async (body) => {
-      const json = await body.wasm.to_json()
-      console.log('cbor json', json)
-      console.log('inputs', await cancellationInputs.wasm.to_json())
-    })
+    const txJson = await tx.wasm.to_json()
+    console.log('txJson', txJson)
+
+    const linearFee = await CardanoMobile.LinearFee.new(
+      await CardanoMobile.BigNum.fromStr('44'),
+      await CardanoMobile.BigNum.fromStr('155381'),
+    )
+    const poolDeposit = await CardanoMobile.BigNum.fromStr('500000000')
+    const keyDeposit = await CardanoMobile.BigNum.fromStr('2000000')
+    const coinsPerUtxoWord = await CardanoMobile.BigNum.fromStr('34482')
+    const txBuilder = await getTxBuilder(CardanoMobile, linearFee, poolDeposit, keyDeposit, coinsPerUtxoWord)
+
+    const inputs = await txBody.inputs()
+    const outputs = await txBody.outputs()
+    const fee = await txBody.fee()
+
+    for (let i = 0; i < (await inputs.len()); i++) {
+      const input = await inputs.get(i)
+      await txBuilder.set(input)
+    }
+
+    // await tx.body().then(async (body) => {
+    //   const json = await body.wasm.to_json()
+    //   console.log('cbor json', json)
+    //   console.log('inputs', await cancellationInputs.wasm.to_json())
+    // })
 
     // include the fee utxo in the inputs
     // build the script witness
