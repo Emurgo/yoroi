@@ -1,3 +1,9 @@
+import BigNumber from 'bignumber.js'
+import {NativeModules, Platform} from 'react-native'
+
+import {getRegion} from './getRegion'
+import {asYoroiLocale} from './transformers/asYoroiLocale'
+
 export const supportedLanguages = [
   {code: 'bn-BD', label: 'বাংলা'},
   {code: 'cs-CZ', label: 'Čeština'},
@@ -52,7 +58,38 @@ export const LANGUAGES = {
 
 export type LanguageCode = (typeof LANGUAGES)[keyof typeof LANGUAGES]
 
-import BigNumber from 'bignumber.js'
+// This makes sure supportedLanguages and LANGUAGES are in sync
+type SupportedLanguageCode = (typeof supportedLanguages)[number]['code']
+type EqualityGuard<A, B> = Exclude<A, B> | Exclude<B, A>
+const assert = <T extends never>() => null as T
+assert<EqualityGuard<LanguageCode, SupportedLanguageCode>>()
+
+export const REGIONS = {
+  BENGALI: 'BD',
+  BRAZILIAN: 'BR',
+  CHINESE_SIMPLIFIED: 'Hans',
+  CZECH: 'CZ',
+  DUTCH: 'NL',
+  ENGLISH: 'US',
+  FILIPINO: 'PH',
+  FRENCH: 'FR',
+  GERMAN: 'DE',
+  HUNGARIAN: 'HU',
+  INDONESIAN: 'ID',
+  ITALIAN: 'IT',
+  JAPANESE: 'JP',
+  KENYAN: 'KE',
+  KOREAN: 'KR',
+  POLISH: 'PL',
+  RUSSIAN: 'RU',
+  SLOVAK: 'SK',
+  SLOVENIAN: 'SI',
+  SPANISH: 'ES',
+  SWEDISH: 'SE',
+  UKRAINIAN: 'UA',
+  VIETNAMESE: 'VN',
+} as const
+export type RegionCode = (typeof REGIONS)[keyof typeof REGIONS]
 
 export type NumberLocale = {
   prefix: string
@@ -65,66 +102,58 @@ export type NumberLocale = {
   suffix: string
 }
 
-const defaultNumberFmt: NumberLocale = {
+const standard: NumberLocale = {
   prefix: '',
-  decimalSeparator: '.',
-  groupSeparator: ',',
+  decimalSeparator: ',',
+  groupSeparator: ' ',
   groupSize: 3,
   secondaryGroupSize: 0,
   fractionGroupSize: 0,
-  fractionGroupSeparator: ' ',
+  fractionGroupSeparator: ' ',
   suffix: '',
 }
 
-// note(v-almonacid): most countries use comma as decimal separator, so this
-// is more genereic than the above
-const defaultCommaDecimalSeparatorFmt = {
-  ...defaultNumberFmt,
-  decimalSeparator: ',',
-  groupSeparator: ' ',
-}
-
-// Note(ppershing): this is just temporary
-// and should be replaced with real configs
-const russianNumberFmt = defaultCommaDecimalSeparatorFmt
-const spanishNumberFmt = {
-  ...defaultNumberFmt,
-  decimalSeparator: ',',
-  groupSeparator: '.',
+const decimalDot: NumberLocale = {
+  ...standard,
+  decimalSeparator: '.',
+  groupSeparator: ',',
 }
 
 export const numberLocales = {
-  [LANGUAGES.BENGALI]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.BRAZILIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.CHINESE_SIMPLIFIED]: defaultNumberFmt,
-  [LANGUAGES.CZECH]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.DUTCH]: defaultNumberFmt,
-  [LANGUAGES.ENGLISH]: defaultNumberFmt,
-  [LANGUAGES.FILIPINO]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.FRENCH]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.GERMAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.HUNGARIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.INDONESIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.ITALIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.JAPANESE]: defaultNumberFmt,
-  [LANGUAGES.KENYAN]: defaultNumberFmt,
-  [LANGUAGES.KOREAN]: defaultNumberFmt,
-  [LANGUAGES.POLISH]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.RUSSIAN]: russianNumberFmt,
-  [LANGUAGES.SLOVAK]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.SLOVENIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.SPANISH]: spanishNumberFmt,
-  [LANGUAGES.SWEDISH]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.UKRAINIAN]: defaultCommaDecimalSeparatorFmt,
-  [LANGUAGES.VIETNAMESE]: defaultCommaDecimalSeparatorFmt,
+  [REGIONS.BENGALI]: standard,
+  [REGIONS.BRAZILIAN]: standard,
+  [REGIONS.CHINESE_SIMPLIFIED]: decimalDot,
+  [REGIONS.CZECH]: standard,
+  [REGIONS.DUTCH]: decimalDot,
+  [REGIONS.ENGLISH]: decimalDot,
+  [REGIONS.FILIPINO]: standard,
+  [REGIONS.FRENCH]: standard,
+  [REGIONS.GERMAN]: standard,
+  [REGIONS.HUNGARIAN]: standard,
+  [REGIONS.INDONESIAN]: standard,
+  [REGIONS.ITALIAN]: standard,
+  [REGIONS.JAPANESE]: decimalDot,
+  [REGIONS.KENYAN]: decimalDot,
+  [REGIONS.KOREAN]: decimalDot,
+  [REGIONS.POLISH]: standard,
+  [REGIONS.RUSSIAN]: standard,
+  [REGIONS.SLOVAK]: standard,
+  [REGIONS.SLOVENIAN]: standard,
+  [REGIONS.SPANISH]: standard,
+  [REGIONS.SWEDISH]: standard,
+  [REGIONS.UKRAINIAN]: standard,
+  [REGIONS.VIETNAMESE]: standard,
 }
 
-export const updateLanguageSettings = (code: LanguageCode) => {
-  BigNumber.config({
-    FORMAT: numberLocales[code],
-  })
-}
+const systemLanguageCode = Platform.select({
+  ios: () =>
+    NativeModules.SettingsManager.settings.AppleLocale ?? NativeModules.SettingsManager.settings.AppleLanguages[0],
+  android: () => NativeModules.I18nManager.localeIdentifier,
+  default: () => 'en-US',
+})()
+export const systemLocale = asYoroiLocale(systemLanguageCode)
+export const numberLocale = numberLocales[getRegion(systemLanguageCode)]
 
-updateLanguageSettings(LANGUAGES.ENGLISH)
-
-export * from './LanguageProvider'
+BigNumber.config({
+  FORMAT: numberLocale,
+})
