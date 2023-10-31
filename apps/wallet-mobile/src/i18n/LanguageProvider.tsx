@@ -13,7 +13,8 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {LanguageCode, NumberLocale, numberLocale, supportedLanguages, systemLocale} from './languages'
+import {numberLocale, systemLocale} from './initialization'
+import {LanguageCode, NumberLocale, supportedLanguages} from './languages'
 import translations from './translations'
 
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)

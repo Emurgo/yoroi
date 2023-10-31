@@ -1,9 +1,3 @@
-import BigNumber from 'bignumber.js'
-import {NativeModules, Platform} from 'react-native'
-
-import {getRegion} from './getRegion'
-import {asYoroiLocale} from './transformers/asYoroiLocale'
-
 export const supportedLanguages = [
   {code: 'bn-BD', label: 'বাংলা'},
   {code: 'cs-CZ', label: 'Čeština'},
@@ -102,7 +96,7 @@ export type NumberLocale = {
   suffix: string
 }
 
-const standard: NumberLocale = {
+const decimalComma: NumberLocale = {
   prefix: '',
   decimalSeparator: ',',
   groupSeparator: ' ',
@@ -111,49 +105,36 @@ const standard: NumberLocale = {
   fractionGroupSize: 0,
   fractionGroupSeparator: ' ',
   suffix: '',
-}
+} as const
 
 const decimalDot: NumberLocale = {
-  ...standard,
+  ...decimalComma,
   decimalSeparator: '.',
   groupSeparator: ',',
-}
+} as const
 
 export const numberLocales = {
-  [REGIONS.BENGALI]: standard,
-  [REGIONS.BRAZILIAN]: standard,
+  [REGIONS.BENGALI]: decimalComma,
+  [REGIONS.BRAZILIAN]: decimalComma,
   [REGIONS.CHINESE_SIMPLIFIED]: decimalDot,
-  [REGIONS.CZECH]: standard,
+  [REGIONS.CZECH]: decimalComma,
   [REGIONS.DUTCH]: decimalDot,
   [REGIONS.ENGLISH]: decimalDot,
-  [REGIONS.FILIPINO]: standard,
-  [REGIONS.FRENCH]: standard,
-  [REGIONS.GERMAN]: standard,
-  [REGIONS.HUNGARIAN]: standard,
-  [REGIONS.INDONESIAN]: standard,
-  [REGIONS.ITALIAN]: standard,
+  [REGIONS.FILIPINO]: decimalComma,
+  [REGIONS.FRENCH]: decimalComma,
+  [REGIONS.GERMAN]: decimalComma,
+  [REGIONS.HUNGARIAN]: decimalComma,
+  [REGIONS.INDONESIAN]: decimalComma,
+  [REGIONS.ITALIAN]: decimalComma,
   [REGIONS.JAPANESE]: decimalDot,
   [REGIONS.KENYAN]: decimalDot,
   [REGIONS.KOREAN]: decimalDot,
-  [REGIONS.POLISH]: standard,
-  [REGIONS.RUSSIAN]: standard,
-  [REGIONS.SLOVAK]: standard,
-  [REGIONS.SLOVENIAN]: standard,
-  [REGIONS.SPANISH]: standard,
-  [REGIONS.SWEDISH]: standard,
-  [REGIONS.UKRAINIAN]: standard,
-  [REGIONS.VIETNAMESE]: standard,
-}
-
-const systemLanguageCode = Platform.select({
-  ios: () =>
-    NativeModules.SettingsManager.settings.AppleLocale ?? NativeModules.SettingsManager.settings.AppleLanguages[0],
-  android: () => NativeModules.I18nManager.localeIdentifier,
-  default: () => 'en-US',
-})()
-export const systemLocale = asYoroiLocale(systemLanguageCode)
-export const numberLocale = numberLocales[getRegion(systemLanguageCode)]
-
-BigNumber.config({
-  FORMAT: numberLocale,
-})
+  [REGIONS.POLISH]: decimalComma,
+  [REGIONS.RUSSIAN]: decimalComma,
+  [REGIONS.SLOVAK]: decimalComma,
+  [REGIONS.SLOVENIAN]: decimalComma,
+  [REGIONS.SPANISH]: decimalComma,
+  [REGIONS.SWEDISH]: decimalComma,
+  [REGIONS.UKRAINIAN]: decimalComma,
+  [REGIONS.VIETNAMESE]: decimalComma,
+} as const
