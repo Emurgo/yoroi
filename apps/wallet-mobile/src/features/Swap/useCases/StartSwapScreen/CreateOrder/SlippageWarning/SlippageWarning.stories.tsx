@@ -10,32 +10,26 @@ import {mocks as walletMocks} from '../../../../../../yoroi-wallets/mocks'
 import {SwapFormProvider} from '../../../../common/SwapFormProvider'
 import {SlippageWarning} from './SlippageWarning'
 
-storiesOf('Swap Slippage Tolerance Warning', module).add('Initial', () => <Initial />)
-
-const Initial = () => {
-  const {openModal, content, closeModal} = useModal()
-  const strings = useStrings()
-  return (
+storiesOf('Swap Slippage Tolerance Warning', module)
+  .addDecorator((getStory) => (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager}>
-        <SwapFormProvider>
-          <View style={{...StyleSheet.absoluteFillObject}}>
-            <Button
-              title="Open Modal"
-              onPress={() => {
-                content !== undefined
-                  ? closeModal()
-                  : openModal(
-                      strings.slippageWarningTitle,
-                      <SelectedWalletProvider wallet={walletMocks.wallet}>
-                        <SlippageWarning slippage={10} />
-                      </SelectedWalletProvider>,
-                    )
-              }}
-            />
-          </View>
-        </SwapFormProvider>
+        <View style={{...StyleSheet.absoluteFillObject}}>{getStory()}</View>
       </SwapProvider>
     </SelectedWalletProvider>
-  )
-}
+  ))
+  .add('Initial', () => {
+    const {openModal, content, closeModal} = useModal()
+    const strings = useStrings()
+
+    return (
+      <Button
+        title="Open Modal"
+        onPress={() => {
+          content !== undefined
+            ? closeModal()
+            : openModal(strings.slippageWarningTitle, <SlippageWarning slippage={10} onSubmit={closeModal} />)
+        }}
+      />
+    )
+  })

@@ -5,8 +5,7 @@ import {Button, Spacer, useModal} from '../../../../../../components'
 import {useStrings} from '../../../../common/strings'
 
 export interface Props {
-  onClose?: () => void
-  onSubmit?: () => void
+  onSubmit: () => void
   slippage: number
 }
 
