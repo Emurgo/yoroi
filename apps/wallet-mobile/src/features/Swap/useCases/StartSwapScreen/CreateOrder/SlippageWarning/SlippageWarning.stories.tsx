@@ -7,7 +7,6 @@ import {useModal} from '../../../../../../components'
 import {useStrings} from '../../../../../../features/Swap/common/strings'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../../../yoroi-wallets/mocks'
-import {SwapFormProvider} from '../../../../common/SwapFormProvider'
 import {SlippageWarning} from './SlippageWarning'
 
 storiesOf('Swap Slippage Tolerance Warning', module)
