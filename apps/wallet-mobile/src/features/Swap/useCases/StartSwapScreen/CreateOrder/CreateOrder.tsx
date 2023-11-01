@@ -28,6 +28,7 @@ import {EditSlippage} from './EditSlippage/EditSlippage'
 import {LimitPriceWarning} from './LimitPriceWarning/LimitPriceWarning'
 import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
 import {TopTokenActions} from './ShowTokenActions/TopTokenActions'
+import {SlippageWarning} from './SlippageWarning'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
@@ -213,6 +214,24 @@ export const CreateOrder = () => {
         )
         return
       }
+    }
+
+    const minReceived = Quantities.denominated(
+      orderData.selectedPoolCalculation.buyAmountWithSlippage.quantity,
+      buyTokenInfo.decimals ?? 0,
+    )
+
+    if (Quantities.isZero(minReceived)) {
+      openModal(
+        strings.slippageWarningTitle,
+        <SlippageWarning
+          onSubmit={createUnsignedSwapTx}
+          slippage={orderData.slippage}
+          ticker={buyTokenInfo.ticker ?? buyTokenInfo.name ?? ''}
+        />,
+        300,
+      )
+      return
     }
 
     createUnsignedSwapTx()

@@ -128,6 +128,9 @@ export const useStrings = () => {
     ledgerGeneralConnectionError: intl.formatMessage(ledgerMessages.connectionError),
     ledgerUserError: intl.formatMessage(ledgerMessages.connectionError),
     ledgerAdaAppNeedsToBeOpenError: intl.formatMessage(ledgerMessages.appOpened),
+    slippageWarningTitle: intl.formatMessage(messages.slippageWarningTitle),
+    slippageWarningText: intl.formatMessage(messages.slippageWarningText),
+    slippageWarningYourSlippage: intl.formatMessage(messages.slippageWarningYourSlippage),
   }
 }
 
@@ -554,5 +557,18 @@ export const messages = defineMessages({
   continueOnLedger: {
     id: 'global.ledgerMessages.continueOnLedger',
     defaultMessage: '!!!Continue on Ledger',
+  },
+  slippageWarningTitle: {
+    id: 'swap.slippage.slippageWarningTitle',
+    defaultMessage: '!!!Slippage Warning',
+  },
+  slippageWarningText: {
+    id: 'swap.slippage.slippageWarningText',
+    defaultMessage:
+      '!!!Are you sure you want to proceed this order with the current slippage tolerance? It could result in receiving no assets.',
+  },
+  slippageWarningYourSlippage: {
+    id: 'swap.slippage.yourSlippage',
+    defaultMessage: '!!!Your slippage tolerance',
   },
 })
