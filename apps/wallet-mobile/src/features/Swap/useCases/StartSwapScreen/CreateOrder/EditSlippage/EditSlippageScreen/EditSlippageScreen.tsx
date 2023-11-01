@@ -138,10 +138,11 @@ export const EditSlippageScreen = () => {
               key={isInputEnabled ? 'enabled' : 'disabled'}
               selectTextOnFocus={isInputEnabled}
               autoFocus={isInputEnabled}
-              style={[!isInputEnabled && styles.disabledInput, styles.input]}
+              style={styles.input}
+              keyboardType="numeric"
             />
 
-            <Text style={[styles.percentLabel, isInputEnabled && styles.darkColor]}>%</Text>
+            <Text style={styles.percentLabel}>%</Text>
           </View>
 
           {isSelectedChoiceManual && !hasError && (
@@ -231,9 +232,7 @@ const styles = StyleSheet.create({
     color: COLORS.ERROR_TEXT_COLOR_DARK,
     fontFamily: 'Rubik-Regular',
   },
-  disabledInput: {
-    color: COLORS.TEXT_INPUT,
-  },
+
   disabledInputContainer: {
     backgroundColor: '#F0F3F5',
   },
@@ -248,24 +247,21 @@ const styles = StyleSheet.create({
     height: 24,
     padding: 0,
     fontSize: 16,
-    fontFamily: 'Rubik-Regular',
+    fontFamily: 'Rubik',
   },
   inputFocused: {
     borderColor: '#242838',
   },
   percentLabel: {
     lineHeight: 24,
-    fontFamily: 'Rubik-Regular',
+    fontFamily: 'Rubik',
     fontWeight: '400',
-    color: '#6B7384',
+    color: '#242838',
     position: 'absolute',
     padding: 16,
     fontSize: 16,
     right: 0,
     top: 0,
-  },
-  darkColor: {
-    color: '#242838',
   },
 })
 
