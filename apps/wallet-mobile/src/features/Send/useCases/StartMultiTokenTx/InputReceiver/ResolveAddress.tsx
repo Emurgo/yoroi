@@ -85,12 +85,17 @@ const resolveAndCheckAddress = async (receiver: string, networkId: NetworkId) =>
 
   if (isDomain(receiver)) {
     address = await getUnstoppableDomainAddress(receiver)
+  } else if (isHandle(receiver)) {
+    console.log('test', receiver)
+    resolvedAddress = await getResolvedAddress(address.substring(1))
+
+    if (typeof resolvedAddress.error === 'string') throw new Error(resolvedAddress.error)
+    if (resolvedAddress.address === null) throw new Error('Unknown error')
+
+    address = resolvedAddress.address
   }
 
-  resolvedAddress = await getResolvedAddress(address)
-  if (typeof resolvedAddress.error === 'string') throw new Error(resolvedAddress.error)
-
-  await isReceiverAddressValid(resolvedAddress.address ?? address, networkId)
+  await isReceiverAddressValid(address, networkId)
   return address
 }
 
@@ -138,3 +143,4 @@ const isReceiverAddressValid = async (resolvedAddress: string, walletNetworkId: 
 }
 
 const isDomain = (receiver: string) => /.+\..+/.test(receiver)
+const isHandle = (receiver: string) => /^\$[a-zA-Z]+$/.test(receiver)
