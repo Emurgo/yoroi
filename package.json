@@ -8,6 +8,7 @@
     "packages": [
       "packages/types",
       "packages/openswap",
+      "packages/resolver",
       "packages/common",
       "packages/api",
       "packages/*",

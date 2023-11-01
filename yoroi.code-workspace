@@ -21,6 +21,10 @@
       "path": "./packages/api"
     },
     {
+      "name": "@yoroi/resolver",
+      "path": "./packages/resolver"
+    },
+    {
       "name": "@yoroi/common",
       "path": "./packages/common"
     },

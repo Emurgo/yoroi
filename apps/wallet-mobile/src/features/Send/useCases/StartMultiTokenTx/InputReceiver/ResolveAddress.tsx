@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Resolution} from '@unstoppabledomains/resolution'
+import {resolveAddress} from '@yoroi/resolver'
 import React from 'react'
 import {Text, View, ViewProps} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import {HelperText} from '../../../../../components'
+import * as components from '../../../../../components'
 import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {normalizeToAddress} from '../../../../../yoroi-wallets/cardano/utils'
@@ -43,9 +44,9 @@ export const ResolveAddress = ({
         autoComplete="off"
       />
 
-      <HelperText type={isError ? 'error' : 'info'}>
+      <components.HelperText type={isError ? 'error' : 'info'}>
         {isLoading ? <Text>{strings.pleaseWait}</Text> : <Text>{errorMessage}</Text>}
-      </HelperText>
+      </components.HelperText>
 
       {isResolved && (
         <Text ellipsizeMode="middle" numberOfLines={1}>
@@ -74,12 +75,30 @@ export const useReceiver = (
 
 const resolveAndCheckAddress = async (receiver: string, networkId: NetworkId) => {
   let address = receiver
+  let resolvedAddress: {
+    error: string | null
+    address: string | null
+  } = {
+    error: null,
+    address: null,
+  }
+
   if (isDomain(receiver)) {
     address = await getUnstoppableDomainAddress(receiver)
   }
 
-  await isReceiverAddressValid(address, networkId)
+  resolvedAddress = await getResolvedAddress(address)
+  if (typeof resolvedAddress.error === 'string') throw new Error(resolvedAddress.error)
+
+  await isReceiverAddressValid(resolvedAddress.address ?? address, networkId)
   return address
+}
+
+const getResolvedAddress = async (receiver) => {
+  const {
+    handle: {address, error},
+  } = await resolveAddress(receiver)
+  return {address, error}
 }
 
 export const getAddressErrorMessage = (error: Error & {code?: string}, strings: ReturnType<typeof useStrings>) => {
