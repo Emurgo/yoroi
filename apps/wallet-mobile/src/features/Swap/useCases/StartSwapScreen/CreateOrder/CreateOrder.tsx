@@ -224,7 +224,11 @@ export const CreateOrder = () => {
     if (Quantities.isZero(minReceived)) {
       openModal(
         strings.slippageWarningTitle,
-        <SlippageWarning onSubmit={createUnsignedSwapTx} slippage={orderData.slippage} ticker={buyTokenInfo.ticker} />,
+        <SlippageWarning
+          onSubmit={createUnsignedSwapTx}
+          slippage={orderData.slippage}
+          ticker={buyTokenInfo.ticker ?? buyTokenInfo.name ?? ''}
+        />,
         300,
       )
       return
