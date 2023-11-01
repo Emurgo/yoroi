@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import assert from 'assert'
 import _ from 'lodash'
-import type {Moment} from 'moment'
 import {defaultMemoize} from 'reselect'
 
 import {Logger} from '../../logging'
@@ -15,8 +14,6 @@ import {getNetworkConfigById, NETWORKS} from '../networks'
 import {NUMBERS} from '../numbers'
 import {CardanoTypes} from '../types'
 import {isByron, isHaskellShelley, toCardanoNetworkId} from '../utils'
-
-export type AddressBlock = [number, Moment, Array<string>]
 
 export type ShelleyAddressGeneratorJSON = {
   accountPubKeyHex: string
