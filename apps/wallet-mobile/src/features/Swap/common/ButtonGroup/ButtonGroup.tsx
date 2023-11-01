@@ -36,16 +36,18 @@ const styles = StyleSheet.create({
     paddingRight: 8,
   },
   button: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 8,
     paddingVertical: 8,
-    borderRadius: 4,
-    fontFamily: 'Rubik-Medium',
-    fontWeight: '500',
+    borderRadius: 8,
   },
   selected: {
     backgroundColor: COLORS.BORDER_GRAY,
   },
   label: {
     color: COLORS.BLACK,
+    fontFamily: 'Rubik-Medium',
+    fontWeight: '500',
+    lineHeight: 24,
+    fontSize: 16,
   },
 })
