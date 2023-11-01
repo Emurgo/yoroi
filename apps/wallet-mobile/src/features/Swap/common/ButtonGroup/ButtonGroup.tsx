@@ -48,5 +48,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Rubik-Bold',
     fontWeight: '500',
     lineHeight: 24,
+    fontSize: 16,
   },
 })
