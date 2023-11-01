@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: COLORS.BLACK,
-    fontFamily: 'Rubik-Bold',
+    fontFamily: 'Rubik-Medium',
     fontWeight: '500',
     lineHeight: 24,
     fontSize: 16,
