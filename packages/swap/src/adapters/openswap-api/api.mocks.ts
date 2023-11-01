@@ -125,7 +125,7 @@ const getPools: Swap.Pool[] = [
   },
 ]
 
-const getTokens: Balance.Token[] = [
+const getTokenPairs: Balance.Token[] = [
   {
     info: {
       id: '1c1e38cfcc815d2015dbda6bee668b2e707ee3f9d038d96668fcf63c.4567677363617065436c75624561737465725a656e6e79',
@@ -263,10 +263,75 @@ const getTokens: Balance.Token[] = [
   },
 ]
 
+const getTokens: Balance.TokenInfo[] = [
+  {
+    id: '1c1e38cfcc815d2015dbda6bee668b2e707ee3f9d038d96668fcf63c.4567677363617065436c75624561737465725a656e6e79',
+    group: '1c1e38cfcc815d2015dbda6bee668b2e707ee3f9d038d96668fcf63c',
+    fingerprint: 'asset126v2sm79r8uxvk4ju64mr6srxrvm2x75fpg6w3',
+    name: 'EggscapeClubEasterZenny',
+    decimals: 0,
+    description: 'Eggscape Club Utility Token',
+    image: 'ipfs://QmNYibJoiTWRiMmWn4yXwvoakEPgq9WmaukmRXHF1VGbAU',
+    kind: 'ft',
+    symbol: undefined,
+    icon: undefined,
+    ticker: 'EZY',
+
+    metadatas: {},
+  },
+  {
+    id: 'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354',
+    group: 'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a',
+    fingerprint: 'asset1yv4fx867hueqt98aqvjw5ncjymz8k3ah8zawcg',
+    name: 'CAST',
+    decimals: 0,
+    description: 'Utility Token for Carda Station Metaverse',
+    image:
+      'https://tokens.muesliswap.com/static/img/tokens/cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354.png',
+    kind: 'ft',
+    symbol: undefined,
+    icon: undefined,
+    ticker: 'CAST',
+    metadatas: {},
+  },
+  {
+    id: 'cd5b9dd91319edbb19477ad00cbef673a221e70a17ef043951fc6786.52656465656d61626c65',
+    group: 'cd5b9dd91319edbb19477ad00cbef673a221e70a17ef043951fc6786',
+    fingerprint: 'asset18qw75gcdldlu7q5xh8fjsemgvwffzkg8hatq3s',
+    name: 'Redeemable',
+    decimals: 4,
+    description:
+      'The fiat-backed stablecoin issued by Shareslake. Powering the fully stable branch of Cardano.',
+    image:
+      'https://tokens.muesliswap.com/static/img/tokens/cd5b9dd91319edbb19477ad00cbef673a221e70a17ef043951fc6786.52656465656d61626c65.png',
+    kind: 'ft',
+    symbol: undefined,
+    icon: undefined,
+    ticker: 'RUSD',
+    metadatas: {},
+  },
+  {
+    id: '2d420236ffaada336c21e3f4520b799f6e246d8618f2fc89a4907da6.4564756c6164646572546f6b656e',
+    group: '2d420236ffaada336c21e3f4520b799f6e246d8618f2fc89a4907da6',
+    fingerprint: 'asset1ny2ehvl20cp5y7mmn5qq332sgdncdmsgrcqlwh',
+    name: 'EduladderToken',
+    decimals: 6,
+    description: 'Proof Of Contribution.',
+    image:
+      'https://tokens.muesliswap.com/static/img/tokens/2d420236ffaada336c21e3f4520b799f6e246d8618f2fc89a4907da6.4564756c6164646572546f6b656e.png',
+    kind: 'ft',
+    symbol: undefined,
+    icon: undefined,
+    ticker: 'ELADR',
+    metadatas: {},
+  },
+]
+
 export const apiMocks = {
   getOpenOrders,
   getCompletedOrders,
   createOrderData,
   getPools,
+  getTokenPairs,
   getTokens,
 }

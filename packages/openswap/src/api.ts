@@ -5,6 +5,7 @@ import {
   getCompletedOrders,
   getOrders, // returns all orders for a given stake key hash.
 } from './orders'
+import {getTokenPairs} from './token-pairs'
 import {getTokens} from './tokens'
 import {
   CancelOrderRequest,
@@ -95,13 +96,17 @@ export class OpenSwapApi {
     )
   }
 
-  public async getTokens({policyId = '', assetName = ''} = {}) {
-    const tokens = await getTokens(
+  public async getTokenPairs({policyId = '', assetName = ''} = {}) {
+    const tokenPairs = await getTokenPairs(
       {network: this.network, client: this.client},
       {policyId, assetName},
     )
 
-    return tokens
+    return tokenPairs
+  }
+
+  public async getTokens() {
+    return getTokens({network: this.network, client: this.client})
   }
 }
 
