@@ -37,6 +37,7 @@ export const AmountCard = ({
   inputEditable = true,
   error,
 }: Props) => {
+  const [isFocused, setIsFocused] = React.useState(false)
   const strings = useStrings()
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
@@ -52,9 +53,10 @@ export const AmountCard = ({
       inputRef.current.focus()
     }
   }
+
   return (
     <View>
-      <View style={[styles.container, !isEmptyString(error) && styles.borderError]}>
+      <View style={[styles.container, isFocused && styles.active, !isEmptyString(error) && styles.borderError]}>
         {label != null && <Text style={[styles.label, !isEmptyString(error) && styles.labelError]}>{label}</Text>}
 
         <View style={styles.content}>
@@ -66,12 +68,14 @@ export const AmountCard = ({
               placeholder="0"
               onChangeText={onChange}
               allowFontScaling
-              selectionColor={COLORS.TRANSPARENT_BLACK}
+              selectionColor={isFocused ? '#242838' : COLORS.TRANSPARENT_BLACK}
               style={styles.amountInput}
               underlineColorAndroid="transparent"
               ref={inputRef}
               editable={inputEditable}
               selectTextOnFocus
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
             />
           </Pressable>
 
@@ -153,6 +157,11 @@ const styles = StyleSheet.create({
   borderError: {
     borderColor: COLORS.ALERT_TEXT_COLOR,
   },
+  active: {
+    borderWidth: 2,
+    borderColor: '#242838',
+  },
+
   label: {
     position: 'absolute',
     top: -7,
