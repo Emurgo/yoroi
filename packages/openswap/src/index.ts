@@ -21,8 +21,10 @@ export namespace OpenSwap {
   export type LiquidityPoolResponse = Types.LiquidityPoolResponse
 
   // Tokens
-  export type Token = Types.Token
-  export type TokenResponse = Types.TokenResponse
+  export type TokenPair = Types.TokenPair
+  export type TokenInfo = Types.TokenInfo
+  export type TokenPairsResponse = Types.TokenPairsResponse
+  export type ListTokensResponse = Types.ListTokensResponse
   export type TokenAddress = Types.TokenAddress
 
   export type PriceAddress = Types.PriceAddress

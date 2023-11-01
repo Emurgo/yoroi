@@ -1,4 +1,9 @@
 {
   "npmClient": "yarn",
-  "version": "independent"
+  "version": "independent",
+  "command": {
+    "run": {
+      "ignore": ["e2e/*"]
+    }
+  }
 }

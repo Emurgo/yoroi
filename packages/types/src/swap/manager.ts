@@ -16,9 +16,10 @@ export type SwapManager = Readonly<{
       byStatusCompleted: SwapApi['getCompletedOrders']
     }
   }
-  pairs: {
+  tokens: {
     list: {
-      byToken: SwapApi['getTokens']
+      onlyVerified: SwapApi['getTokens']
+      byPair: SwapApi['getTokenPairs']
     }
   }
   price: {

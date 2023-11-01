@@ -1,5 +1,5 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
-import {useSwap, useSwapTokensByPairToken} from '@yoroi/swap'
+import {useSwap, useSwapTokensOnlyVerified} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -57,7 +57,7 @@ export const SwapTabNavigator = () => {
   }, [aggregatorTokenId, lpTokenHeld, lpTokenHeldChanged])
 
   // pre load swap tokens
-  const {refetch} = useSwapTokensByPairToken('', {suspense: false, enabled: false})
+  const {refetch} = useSwapTokensOnlyVerified({suspense: false, enabled: false})
   React.useEffect(() => {
     refetch()
   }, [refetch])

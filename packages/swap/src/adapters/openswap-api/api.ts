@@ -69,12 +69,16 @@ export const swapApiMaker = (
       })
       .then((response) => response)
 
-  const getTokens: Swap.Api['getTokens'] = async (token) =>
+  const getTokenPairs: Swap.Api['getTokenPairs'] = async (token) =>
     !isMainnet
-      ? apiMocks.getTokens // preprod doesn't return any tokens
+      ? apiMocks.getTokenPairs // preprod doesn't return any tokens
       : api
-          .getTokens(transformers.asOpenswapTokenId(token))
+          .getTokenPairs(transformers.asOpenswapTokenId(token))
           .then(transformers.asYoroiBalanceTokens)
+
+  const getTokens: Swap.Api['getTokens'] = async () => {
+    return api.getTokens().then(transformers.asYoroiBalanceTokenInfos)
+  }
 
   const getPools: Swap.Api['getPools'] = async ({
     tokenA,
@@ -114,6 +118,7 @@ export const swapApiMaker = (
     cancelOrder,
     createOrder,
     getTokens,
+    getTokenPairs,
     getPools,
     getCompletedOrders,
     stakingKey,

@@ -22,6 +22,7 @@ describe('swapManagerMaker', () => {
     getPrice: jest.fn(),
     getPools: jest.fn(),
     getTokens: jest.fn(),
+    getTokenPairs: jest.fn(),
     getCompletedOrders: jest.fn(),
     primaryTokenId: '',
     stakingKey: 'someStakingKey',
