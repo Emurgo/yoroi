@@ -3,7 +3,7 @@ import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, us
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {Alert, KeyboardAvoidingView, Platform, StyleSheet, View, ViewProps} from 'react-native'
+import {Alert, KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import Config from 'react-native-config'
 import {ScrollView} from 'react-native-gesture-handler'
 
@@ -30,14 +30,18 @@ import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
 import {TopTokenActions} from './ShowTokenActions/TopTokenActions'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
+const BOTTOM_ACTION_SECTION = 180
 
 export const CreateOrder = () => {
+  const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
   const navigation = useNavigateTo()
   const {orderData, unsignedTxChanged, poolPairsChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
   const {openModal} = useModal()
+  const {height: deviceHeight} = useWindowDimensions()
+
   const {
     sellQuantity: {isTouched: isSellTouched},
     buyQuantity: {isTouched: isBuyTouched},
@@ -224,7 +228,13 @@ export const CreateOrder = () => {
         keyboardVerticalOffset={120}
       >
         <ScrollView style={styles.scroll}>
-          <View style={styles.container}>
+          <View
+            style={styles.container}
+            onLayout={(event) => {
+              const {height} = event.nativeEvent.layout
+              setContentHeight(height + BOTTOM_ACTION_SECTION)
+            }}
+          >
             <TopTokenActions />
 
             <EditSellAmount />
@@ -248,7 +258,11 @@ export const CreateOrder = () => {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      <Actions>
+      <Actions
+        style={{
+          ...(deviceHeight < contentHeight && styles.actionBorder),
+        }}
+      >
         <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
       </Actions>
     </View>
@@ -275,6 +289,8 @@ const styles = StyleSheet.create({
   actions: {
     paddingVertical: 16,
     paddingHorizontal: 16,
+  },
+  actionBorder: {
     borderTopWidth: 1,
     borderTopColor: COLORS.BORDER_GRAY,
   },
