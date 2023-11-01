@@ -16,7 +16,7 @@ export const EditSlippage = () => {
       <ShowSlippageInfo />
 
       <View style={styles.row}>
-        <Text>{`${orderData.slippage} %`}</Text>
+        <Text style={styles.text}>{`${orderData.slippage}%`}</Text>
 
         <Spacer width={4} />
 
@@ -38,5 +38,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  text: {
+    fontSize: 16,
+    fontFamily: 'Rubik',
   },
 })

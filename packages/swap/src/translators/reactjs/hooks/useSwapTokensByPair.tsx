@@ -3,26 +3,26 @@ import {UseQueryOptions, useQuery} from 'react-query'
 
 import {useSwap} from './useSwap'
 
-export const useSwapTokensByPairToken = (
+export const useSwapTokensByPair = (
   tokenIdBase: Balance.Token['info']['id'],
   options?: UseQueryOptions<
     Balance.Token[],
     Error,
     Balance.Token[],
-    ['useSwapTokensByPairToken', string]
+    ['useSwapTokensByPair', string]
   >,
 ) => {
-  const {pairs} = useSwap()
+  const {tokens} = useSwap()
 
   const query = useQuery({
     suspense: true,
-    queryKey: ['useSwapTokensByPairToken', tokenIdBase],
+    queryKey: ['useSwapTokensByPair', tokenIdBase],
     ...options,
-    queryFn: () => pairs.list.byToken(tokenIdBase),
+    queryFn: () => tokens.list.byPair(tokenIdBase),
   })
 
   return {
     ...query,
-    pairsByToken: query.data,
+    tokensByPair: query.data,
   }
 }

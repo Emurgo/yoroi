@@ -19,6 +19,7 @@ export const swapManagerMaker = ({
     getPools,
     getOpenOrders,
     getCompletedOrders,
+    getTokenPairs,
     getTokens,
     cancelOrder,
     createOrder,
@@ -36,12 +37,6 @@ export const swapManagerMaker = ({
     } as const,
   }
 
-  const pairs = {
-    list: {
-      byToken: getTokens,
-    } as const,
-  }
-
   const price = {
     byPair: getPrice,
   } as const
@@ -52,12 +47,19 @@ export const swapManagerMaker = ({
     } as const,
   }
 
+  const tokens = {
+    list: {
+      byPair: getTokenPairs,
+      onlyVerified: getTokens,
+    } as const,
+  }
+
   return {
     price,
     clearStorage,
     slippage,
     order,
-    pairs,
+    tokens,
     pools,
     primaryTokenId,
     stakingKey,
