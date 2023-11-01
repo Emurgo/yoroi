@@ -98,16 +98,19 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
 
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
   const isDisabled = tokenInfo.id === orderData.amounts.buy.tokenId && isBuyTouched
+  const isSameToken = tokenInfo.id === orderData.amounts.sell.tokenId
 
   const handleOnTokenSelection = () => {
     track.swapAssetFromChanged({
       from_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
     })
-    sellTouched()
-    sellTokenInfoChanged({
-      id: tokenInfo.id,
-      decimals: tokenInfo.decimals ?? 0,
-    })
+    if (!isSameToken) {
+      sellTouched()
+      sellTokenInfoChanged({
+        id: tokenInfo.id,
+        decimals: tokenInfo.decimals ?? 0,
+      })
+    }
     navigateTo.startSwap()
     closeSearch()
   }
