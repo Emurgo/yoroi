@@ -5,7 +5,7 @@ import React from 'react'
 import {Text, View, ViewProps} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
-import * as components from '../../../../../components'
+import {HelperText} from '../../../../../components'
 import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {normalizeToAddress} from '../../../../../yoroi-wallets/cardano/utils'
@@ -44,9 +44,9 @@ export const ResolveAddress = ({
         autoComplete="off"
       />
 
-      <components.HelperText type={isError ? 'error' : 'info'}>
+      <HelperText type={isError ? 'error' : 'info'}>
         {isLoading ? <Text>{strings.pleaseWait}</Text> : <Text>{errorMessage}</Text>}
-      </components.HelperText>
+      </HelperText>
 
       {isResolved && (
         <Text ellipsizeMode="middle" numberOfLines={1}>
