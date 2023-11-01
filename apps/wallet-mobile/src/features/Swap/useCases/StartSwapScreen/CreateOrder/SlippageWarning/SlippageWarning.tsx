@@ -7,13 +7,15 @@ import {useStrings} from '../../../../common/strings'
 export interface Props {
   onSubmit: () => void
   slippage: number
+  ticker: string
 }
 
-export const SlippageWarning = ({onSubmit, slippage}: Props) => {
+export const SlippageWarning = ({onSubmit, slippage, ticker}: Props) => {
   const strings = useStrings()
   const {closeModal} = useModal()
 
   const slippageTolerance = `${slippage}%`
+  const minReceived = `0 ${ticker}`
 
   return (
     <View style={styles.container}>
@@ -28,6 +30,14 @@ export const SlippageWarning = ({onSubmit, slippage}: Props) => {
 
             <View style={styles.textWrapper}>
               <Text style={styles.value}>{slippageTolerance}</Text>
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.label}>{strings.swapMinReceivedTitle}</Text>
+
+            <View style={styles.textWrapper}>
+              <Text style={styles.value}>{minReceived}</Text>
             </View>
           </View>
         </View>
