@@ -26,6 +26,7 @@ export const SlippageWarning = ({onSubmit, slippage}: Props) => {
         <View style={styles.table}>
           <View style={styles.row}>
             <Text style={styles.label}>{strings.slippageWarningYourSlippage}</Text>
+
             <View style={styles.textWrapper}>
               <Text style={styles.value}>{slippageTolerance}</Text>
             </View>
