@@ -66,6 +66,7 @@ export const AmountCard = ({
               autoComplete="off"
               value={value}
               placeholder="0"
+              placeholderTextColor="#6B7384"
               onChangeText={onChange}
               allowFontScaling
               selectionColor={isFocused ? '#242838' : COLORS.TRANSPARENT_BLACK}
