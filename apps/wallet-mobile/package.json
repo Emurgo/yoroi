@@ -25,9 +25,9 @@
     "release:ios:nightly": "bundle exec fastlane ios release --env nightly",
     "prerelease:ios:production": "bundle install && ./scripts/update-commit.sh && npx pod-install",
     "release:ios:production": "bundle exec fastlane ios release --env production",
+    "reset": "yarn reset:android && yarn reset:ios",
     "reset:android": "cd android && ./gradlew clean && cd ..",
     "reset:ios": "yarn pod-install",
-    "reset": "yarn reset:android && yarn reset:ios",
     "run:android:dev:debug": "ENVFILE=.env react-native run-android --mode=devDebug --appIdSuffix=dev --verbose",
     "run:android:nightly:debug": "ENVFILE=.env.nightly react-native run-android --mode=nightlyDebug --appIdSuffix=nightly --verbose",
     "run:android:nightly:release": "ENVFILE=.env.nightly react-native run-android --mode=nightlyRelease --appIdSuffix=nightly --verbose",
@@ -56,11 +56,11 @@
   },
   "jest": {
     "cacheDirectory": ".jest/cache",
+    "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
     ],
-    "collectCoverage": true,
     "coverageReporters": [
       "text-summary",
       "html"
@@ -119,8 +119,8 @@
     "@sentry/react-native": "^5.8.0",
     "@shopify/flash-list": "^1.4.1",
     "@unstoppabledomains/resolution": "6.0.3",
-    "@yoroi/banxa": "1.2.0",
     "@yoroi/api": "1.2.0",
+    "@yoroi/banxa": "1.2.0",
     "@yoroi/common": "1.2.0",
     "@yoroi/swap": "1.2.0",
     "add": "2.0.6",
