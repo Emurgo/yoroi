@@ -251,6 +251,7 @@ const styles = StyleSheet.create({
   },
   inputFocused: {
     borderColor: '#242838',
+    borderWidth: 2,
   },
   percentLabel: {
     lineHeight: 24,
