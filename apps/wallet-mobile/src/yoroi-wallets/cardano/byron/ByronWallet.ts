@@ -683,10 +683,6 @@ export class ByronWallet implements YoroiWallet {
 
     const containsDatum = recipients.some((recipient) => recipient.datum)
 
-    if (recipients.filter((r) => r.datum).length > 1) {
-      throw new Error('Only one datum per transaction is supported')
-    }
-
     try {
       const unsignedTx = await Cardano.createUnsignedTx(
         absSlotNumber,

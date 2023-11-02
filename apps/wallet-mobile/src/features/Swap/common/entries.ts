@@ -17,22 +17,20 @@ export const makePossibleFrontendFeeEntry = async (
   fee: Balance.Amount,
   addressFeeDeposit: string | undefined,
 ): Promise<YoroiEntry | null> => {
-  console.log('makePossibleFrontendFeeEntry', CardanoMobile.PlutusData)
   if (addressFeeDeposit == null) return null
 
-  const {tokenId} = fee
-  // TODO: Revert hardcoded fee
-  // const hasFrontendFee = !Quantities.isZero(quantity)
-  // if (!hasFrontendFee) return null
+  const {quantity, tokenId} = fee
+  const hasFrontendFee = !Quantities.isZero(quantity)
+  if (!hasFrontendFee) return null
 
   const datum = await createEmptyPlutusDatum(CardanoMobile)
-  console.log('got datum', datum)
+
   const hex = await datum?.toHex()
   if (!hex) throw new Error('makePossibleFrontendFeeEntry: datum.toHex() failed')
 
   return {
     address: addressFeeDeposit,
-    amounts: {[tokenId]: '1000000'},
+    amounts: {[tokenId]: quantity},
     datum: {data: hex},
   } as const
 }

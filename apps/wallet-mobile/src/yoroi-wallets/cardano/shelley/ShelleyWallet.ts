@@ -599,7 +599,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
 
-      console.log('createUnsignedTx', entries)
       const recipients = await toRecipients(entries, this.primaryToken)
 
       const containsDatum = recipients.some((recipient) => recipient.datum)
@@ -614,7 +613,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
             keyDeposit: KEY_DEPOSIT,
             linearFee: {
               coefficient: LINEAR_FEE.COEFFICIENT,
-              constant: containsDatum ? String(BigInt(LINEAR_FEE.CONSTANT) * 3n) : LINEAR_FEE.CONSTANT,
+              constant: containsDatum ? String(BigInt(LINEAR_FEE.CONSTANT) * 2n) : LINEAR_FEE.CONSTANT,
             },
             minimumUtxoVal: MINIMUM_UTXO_VAL,
             coinsPerUtxoWord: COINS_PER_UTXO_WORD,
@@ -963,8 +962,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     }
 
     async submitTransaction(signedTx: string) {
-      console.log('signed tx', signedTx)
-      // TODO: Remove before merge
       if (signedTx) throw new Error('Temporarily disabled')
       const response: any = await legacyApi.submitTransaction(signedTx, BACKEND)
       Logger.info(response)
