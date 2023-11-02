@@ -24,6 +24,8 @@ export const supportedLanguages = [
   {code: 'zh-Hans', label: '简体中文'},
 ] as const
 
+export const supportedLanguagesCodes = supportedLanguages.map(({code}) => code)
+
 export const LANGUAGES = {
   BENGALI: 'bn-BD',
   BRAZILIAN: 'pt-BR',
@@ -58,33 +60,6 @@ type EqualityGuard<A, B> = Exclude<A, B> | Exclude<B, A>
 const assert = <T extends never>() => null as T
 assert<EqualityGuard<LanguageCode, SupportedLanguageCode>>()
 
-export const REGIONS = {
-  BENGALI: 'BD',
-  BRAZILIAN: 'BR',
-  CHINESE_SIMPLIFIED: 'Hans',
-  CZECH: 'CZ',
-  DUTCH: 'NL',
-  ENGLISH: 'US',
-  FILIPINO: 'PH',
-  FRENCH: 'FR',
-  GERMAN: 'DE',
-  HUNGARIAN: 'HU',
-  INDONESIAN: 'ID',
-  ITALIAN: 'IT',
-  JAPANESE: 'JP',
-  KENYAN: 'KE',
-  KOREAN: 'KR',
-  POLISH: 'PL',
-  RUSSIAN: 'RU',
-  SLOVAK: 'SK',
-  SLOVENIAN: 'SI',
-  SPANISH: 'ES',
-  SWEDISH: 'SE',
-  UKRAINIAN: 'UA',
-  VIETNAMESE: 'VN',
-} as const
-export type RegionCode = (typeof REGIONS)[keyof typeof REGIONS]
-
 export type NumberLocale = {
   prefix: string
   decimalSeparator: string
@@ -96,7 +71,7 @@ export type NumberLocale = {
   suffix: string
 }
 
-const decimalComma: NumberLocale = {
+export const decimalComma: NumberLocale = {
   prefix: '',
   decimalSeparator: ',',
   groupSeparator: ' ',
@@ -107,34 +82,8 @@ const decimalComma: NumberLocale = {
   suffix: '',
 } as const
 
-const decimalDot: NumberLocale = {
+export const decimalDot: NumberLocale = {
   ...decimalComma,
   decimalSeparator: '.',
   groupSeparator: ',',
-} as const
-
-export const numberLocales = {
-  [REGIONS.BENGALI]: decimalComma,
-  [REGIONS.BRAZILIAN]: decimalComma,
-  [REGIONS.CHINESE_SIMPLIFIED]: decimalDot,
-  [REGIONS.CZECH]: decimalComma,
-  [REGIONS.DUTCH]: decimalDot,
-  [REGIONS.ENGLISH]: decimalDot,
-  [REGIONS.FILIPINO]: decimalComma,
-  [REGIONS.FRENCH]: decimalComma,
-  [REGIONS.GERMAN]: decimalComma,
-  [REGIONS.HUNGARIAN]: decimalComma,
-  [REGIONS.INDONESIAN]: decimalComma,
-  [REGIONS.ITALIAN]: decimalComma,
-  [REGIONS.JAPANESE]: decimalDot,
-  [REGIONS.KENYAN]: decimalDot,
-  [REGIONS.KOREAN]: decimalDot,
-  [REGIONS.POLISH]: decimalComma,
-  [REGIONS.RUSSIAN]: decimalComma,
-  [REGIONS.SLOVAK]: decimalComma,
-  [REGIONS.SLOVENIAN]: decimalComma,
-  [REGIONS.SPANISH]: decimalComma,
-  [REGIONS.SWEDISH]: decimalComma,
-  [REGIONS.UKRAINIAN]: decimalComma,
-  [REGIONS.VIETNAMESE]: decimalComma,
 } as const
