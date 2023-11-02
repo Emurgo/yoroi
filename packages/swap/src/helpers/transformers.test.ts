@@ -241,16 +241,46 @@ describe('asYoroiPool', () => {
 
 describe('asYoroiBalanceToken', () => {
   it('success', () => {
-    const result = transformers.asYoroiBalanceToken(openswapMocks.getTokens[0]!)
+    const result = transformers.asYoroiBalanceToken(
+      openswapMocks.getTokenPairs[0]!,
+    )
 
-    expect(result).toEqual<Balance.Token>(apiMocks.getTokens[0]!)
+    expect(result).toEqual<Balance.Token>(apiMocks.getTokenPairs[0]!)
   })
 })
 
 describe('asYoroiBalanceTokens', () => {
   it('success', () => {
-    const result = transformers.asYoroiBalanceTokens(openswapMocks.getTokens)
+    const result = transformers.asYoroiBalanceTokens(
+      openswapMocks.getTokenPairs,
+    )
 
-    expect(result).toEqual<Array<Balance.Token>>(apiMocks.getTokens)
+    expect(result).toEqual<Array<Balance.Token>>(apiMocks.getTokenPairs)
+  })
+})
+
+describe('asYoroiBalanceTokenInfo', () => {
+  it('success', () => {
+    const result = transformers.asYoroiBalanceTokenInfo(
+      openswapMocks.getTokens[0]!,
+    )
+
+    expect(result).toEqual<Balance.TokenInfo>(apiMocks.getTokens[0]!)
+  })
+})
+
+describe('asYoroiBalanceTokenInfos', () => {
+  it('success', () => {
+    const result = transformers.asYoroiBalanceTokenInfos(
+      openswapMocks.getTokens,
+    )
+
+    expect(result).toEqual<Array<Balance.TokenInfo>>(apiMocks.getTokens)
+  })
+
+  it('success (empty)', () => {
+    const result = transformers.asYoroiBalanceTokenInfos([])
+
+    expect(result).toEqual<Array<Balance.TokenInfo>>([])
   })
 })

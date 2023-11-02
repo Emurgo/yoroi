@@ -33,8 +33,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   label: {
-    fontSize: 12,
+    fontSize: 16,
     color: COLORS.TEXT_INPUT,
+    fontFamily: 'Rubik',
   },
   sheetContent: {
     fontFamily: 'Rubik',

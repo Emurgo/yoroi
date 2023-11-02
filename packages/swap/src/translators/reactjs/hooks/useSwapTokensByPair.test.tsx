@@ -6,9 +6,9 @@ import {render, waitFor} from '@testing-library/react-native'
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {mockSwapManager, swapManagerMocks} from '../../../manager.mocks'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
-import {useSwapTokensByPairToken} from './useSwapTokensByPairToken'
+import {useSwapTokensByPair} from './useSwapTokensByPair'
 
-describe('useSwapTokensByPairToken', () => {
+describe('useSwapTokensByPair', () => {
   let queryClient: QueryClient
 
   beforeEach(() => {
@@ -22,7 +22,7 @@ describe('useSwapTokensByPairToken', () => {
 
   it('success', async () => {
     const TestPairListToken = () => {
-      const tokens = useSwapTokensByPairToken('tokenIdBase')
+      const tokens = useSwapTokensByPair('tokenIdBase')
       return (
         <View>
           <Text testID="tokens">{JSON.stringify(tokens.data)}</Text>
@@ -30,9 +30,9 @@ describe('useSwapTokensByPairToken', () => {
       )
     }
 
-    mockSwapManager.pairs.list.byToken = jest
+    mockSwapManager.tokens.list.byPair = jest
       .fn()
-      .mockResolvedValue(swapManagerMocks.listPairsByTokenResponse)
+      .mockResolvedValue(swapManagerMocks.listTokensByPairResponse)
     const wrapper = wrapperManagerFixture({
       queryClient,
       swapManager: mockSwapManager,
@@ -44,10 +44,10 @@ describe('useSwapTokensByPairToken', () => {
     })
 
     expect(getByTestId('tokens').props.children).toEqual(
-      JSON.stringify(swapManagerMocks.listPairsByTokenResponse),
+      JSON.stringify(swapManagerMocks.listTokensByPairResponse),
     )
-    expect(mockSwapManager.pairs.list.byToken).toHaveBeenCalled()
-    expect(mockSwapManager.pairs.list.byToken).toHaveBeenCalledWith(
+    expect(mockSwapManager.tokens.list.byPair).toHaveBeenCalled()
+    expect(mockSwapManager.tokens.list.byPair).toHaveBeenCalledWith(
       'tokenIdBase',
     )
   })
