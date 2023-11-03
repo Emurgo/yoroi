@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
 const useStrings = () => {
   const intl = useIntl()
 
-  const bold = {
+  const formattingOptions = {
     b: (text: ReactNode) => <Text style={[styles.buyInfo, styles.bold]}>{text}</Text>,
     textComponent: (text: ReactNode) => <Text style={styles.buyInfo}>{text}</Text>,
   }
@@ -233,7 +233,7 @@ const useStrings = () => {
     receiveLabel: intl.formatMessage(actionMessages.receive),
     buyLabel: intl.formatMessage(actionMessages.buy),
     buyTitle: intl.formatMessage(actionMessages.buyTitle),
-    buyInfo: intl.formatMessage(actionMessages.buyInfo, bold),
+    buyInfo: intl.formatMessage(actionMessages.buyInfo, formattingOptions),
     proceed: intl.formatMessage(actionMessages.proceed),
     swapLabel: intl.formatMessage(actionMessages.swap),
     messageBuy: intl.formatMessage(actionMessages.soon),
