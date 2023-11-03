@@ -2087,6 +2087,13 @@
     "@emurgo/cardano-serialization-lib-nodejs" "^11.5.0"
     "@emurgo/cross-csl-core" "^3.1.0"
 
+"@emurgo/csl-mobile-bridge@5.1.3":
+  version "5.1.3"
+  resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-5.1.3.tgz#91515b34fd8e4fbf507520690258d83a1e94f0d2"
+  integrity sha512-3cxjvlNJ6p9jn7GlJDcO3j8W1B/F6oLvb71TPWtXfS5/kp9iasUZAX0vg5m5X8YH7LAqZzickOoYd5ZWGO3ehQ==
+  dependencies:
+    base-64 "0.1.0"
+
 "@emurgo/csl-mobile-bridge@^5.1.2":
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/@emurgo/csl-mobile-bridge/-/csl-mobile-bridge-5.1.2.tgz#726282a490cf39326135b22c0f4acaeb73ae3d73"
@@ -20396,6 +20403,11 @@ react-native-linear-gradient@2.5.6:
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
   integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
+
+react-native-localize@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-3.0.2.tgz#43fa75c0097dbdb24a54ff320b3c8ad732407365"
+  integrity sha512-/l/oE1LVNgIRRhLbhmfFMHiWV0xhUn0A0iz1ytLVRYywL7FTp8Rx2vkJS/q/RpExDvV7yLw2493XZBYIM1dnLQ==
 
 react-native-markdown-display@^7.0.0-alpha.2:
   version "7.0.0-alpha.2"
