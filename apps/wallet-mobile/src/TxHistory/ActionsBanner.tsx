@@ -41,12 +41,13 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
   const handleOnBuy = () => {
     track.walletPageExchangeBottomSheetClicked()
-    const modalHeight = 338
+    const modalHeight = 300
     openModal(
       strings.buyTitle,
       <View style={styles.buyModalContent}>
         <Text style={styles.buyInfo}>{strings.buyInfo}</Text>
 
+        <Spacer height={32} />
         <Button
           shelleyTheme
           title={strings.proceed}
@@ -69,6 +70,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             closeModal()
           }}
         />
+        <Spacer height={23} />
       </View>,
       modalHeight,
     )
@@ -213,7 +215,7 @@ const styles = StyleSheet.create({
   disabled: {
     opacity: 0.5,
   },
-  buyModalContent: {flex: 1, flexDirection: 'column', justifyContent: 'space-between', paddingBottom: 26},
+  buyModalContent: {flex: 1, flexDirection: 'column'},
 })
 
 const useStrings = () => {
