@@ -62,6 +62,8 @@ export const SlippageWarning = ({onSubmit, slippage, ticker}: Props) => {
           containerStyle={styles.buttonContainer}
         />
       </View>
+
+      <Spacer height={23} />
     </View>
   )
 }
