@@ -41,11 +41,17 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
   const handleOnBuy = () => {
     track.walletPageExchangeBottomSheetClicked()
+
     const modalHeight = 300
+    const modalTextFormattingOptions: BuyInfoFormattingOptions = {
+      b: (text) => <Text style={[styles.buyInfo, styles.bold]}>{text}</Text>,
+      textComponent: (text) => <Text style={styles.buyInfo}>{text}</Text>,
+    }
+
     openModal(
       strings.buyTitle,
       <View style={styles.buyModalContent}>
-        <Text style={styles.buyInfo}>{strings.buyInfo}</Text>
+        <Text style={styles.buyInfo}>{strings.buyInfo(modalTextFormattingOptions)}</Text>
 
         <Spacer height={32} />
 
@@ -222,22 +228,19 @@ const styles = StyleSheet.create({
 const useStrings = () => {
   const intl = useIntl()
 
-  const formattingOptions = {
-    b: (text: ReactNode) => <Text style={[styles.buyInfo, styles.bold]}>{text}</Text>,
-    textComponent: (text: ReactNode) => <Text style={styles.buyInfo}>{text}</Text>,
-  }
-
   return {
     sendLabel: intl.formatMessage(actionMessages.send),
     receiveLabel: intl.formatMessage(actionMessages.receive),
     buyLabel: intl.formatMessage(actionMessages.buy),
     buyTitle: intl.formatMessage(actionMessages.buyTitle),
-    buyInfo: intl.formatMessage(actionMessages.buyInfo, formattingOptions),
+    buyInfo: (options: BuyInfoFormattingOptions) => intl.formatMessage(actionMessages.buyInfo, options),
     proceed: intl.formatMessage(actionMessages.proceed),
     swapLabel: intl.formatMessage(actionMessages.swap),
     messageBuy: intl.formatMessage(actionMessages.soon),
   }
 }
+
+type BuyInfoFormattingOptions = Record<'b' | 'textComponent', (text: ReactNode[]) => ReactNode>
 
 const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
