@@ -48,6 +48,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
         <Text style={styles.buyInfo}>{strings.buyInfo}</Text>
 
         <Spacer height={32} />
+
         <Button
           shelleyTheme
           title={strings.proceed}
@@ -70,6 +71,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             closeModal()
           }}
         />
+
         <Spacer height={23} />
       </View>,
       modalHeight,
