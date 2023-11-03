@@ -73,7 +73,7 @@ export const AmountCard = ({
               style={styles.amountInput}
               underlineColorAndroid="transparent"
               ref={inputRef}
-              editable={inputEditable}
+              editable={inputEditable && touched}
               selectTextOnFocus
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
