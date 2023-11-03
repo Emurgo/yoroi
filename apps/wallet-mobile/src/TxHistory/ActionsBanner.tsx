@@ -208,7 +208,6 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontFamily: 'Rubik-Regular',
     lineHeight: 24,
-    textAlignVertical: 'center',
   },
   bold: {
     fontWeight: '500',
