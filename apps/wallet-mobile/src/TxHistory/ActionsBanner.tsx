@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import {banxaModuleMaker} from '@yoroi/banxa'
 import {useSwap} from '@yoroi/swap'
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {useIntl} from 'react-intl'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -41,6 +41,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
   const handleOnBuy = () => {
     track.walletPageExchangeBottomSheetClicked()
+    const modalHeight = 338
     openModal(
       strings.buyTitle,
       <View style={styles.buyModalContent}>
@@ -69,6 +70,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
           }}
         />
       </View>,
+      modalHeight,
     )
   }
 
@@ -200,8 +202,13 @@ const styles = StyleSheet.create({
   buyInfo: {
     fontSize: 16,
     color: '#000000',
-    fontFamily: 'Rubik',
+    fontFamily: 'Rubik-Regular',
     lineHeight: 24,
+    textAlignVertical: 'center',
+  },
+  bold: {
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
   disabled: {
     opacity: 0.5,
@@ -211,7 +218,11 @@ const styles = StyleSheet.create({
 
 const useStrings = () => {
   const intl = useIntl()
-  const bold = {b: (text) => <Text bold>{text}</Text>}
+
+  const bold = {
+    b: (text: ReactNode) => <Text style={[styles.buyInfo, styles.bold]}>{text}</Text>,
+    textComponent: (text: ReactNode) => <Text style={styles.buyInfo}>{text}</Text>,
+  }
 
   return {
     sendLabel: intl.formatMessage(actionMessages.send),
