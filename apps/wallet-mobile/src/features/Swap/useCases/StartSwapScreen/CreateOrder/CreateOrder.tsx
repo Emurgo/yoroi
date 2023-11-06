@@ -229,7 +229,7 @@ export const CreateOrder = () => {
           slippage={orderData.slippage}
           ticker={buyTokenInfo.ticker ?? buyTokenInfo.name ?? ''}
         />,
-        300,
+        350,
       )
       return
     }
