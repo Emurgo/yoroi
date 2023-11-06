@@ -29,6 +29,10 @@
       "path": "./packages/openswap"
     },
     {
+      "name": "@yoroi/governance",
+      "path": "./packages/governance"
+    },
+    {
       "name": "@yoroi/wallet-mobile",
       "path": "./apps/wallet-mobile"
     },
