@@ -1,4 +1,3 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {useCardAnimation} from '@react-navigation/stack'
 import React from 'react'
 import {
@@ -19,26 +18,11 @@ export const ModalScreen = () => {
   const {current} = useCardAnimation()
   const {height, closeModal, content, isOpen} = useModal()
   const [swipeLocationY, setSwipeLocationY] = React.useState(height)
-  const [downDirectionCount, setDownDirectionCount] = React.useState(0)
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setSwipeLocationY(height)
-      clearDirectionCount()
-    }, [height]),
-  )
-
-  const clearDirectionCount = () => {
-    setDownDirectionCount(0)
-  }
 
   const onResponderMove = ({nativeEvent}: GestureResponderEvent) => {
-    if (swipeLocationY < nativeEvent.locationY) {
-      const newState = downDirectionCount + 1
-      if (newState > 4 && isOpen) {
-        clearDirectionCount()
-        closeModal()
-      } else setDownDirectionCount(newState)
+    if (swipeLocationY < nativeEvent.locationY && isOpen) {
+      setSwipeLocationY(height)
+      closeModal()
     }
     setSwipeLocationY(nativeEvent.locationY)
   }
