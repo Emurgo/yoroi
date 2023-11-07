@@ -23,7 +23,9 @@ export const ModalScreen = () => {
     if (swipeLocationY < nativeEvent.locationY && isOpen) {
       setSwipeLocationY(height)
       closeModal()
+      return
     }
+
     setSwipeLocationY(nativeEvent.locationY)
   }
 
