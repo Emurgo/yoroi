@@ -60,7 +60,7 @@ export const AmountCard = ({
         {label != null && <Text style={[styles.label, !isEmptyString(error) && styles.labelError]}>{label}</Text>}
 
         <View style={styles.content}>
-          <Pressable style={styles.amountWrapper} onPress={focusInput}>
+          <Pressable style={styles.amountWrapper} onPress={focusInput} {...(noTokenSelected && {onPress: navigateTo})}>
             <TextInput
               keyboardType="numeric"
               autoComplete="off"
@@ -77,13 +77,14 @@ export const AmountCard = ({
               selectTextOnFocus
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
+              {...(noTokenSelected && {onPressIn: navigateTo})}
             />
           </Pressable>
 
           <Spacer width={7} />
 
           <View style={styles.rightSection}>
-            <TouchableOpacity onPress={() => navigateTo?.()}>
+            <TouchableOpacity onPress={navigateTo}>
               <View style={styles.sectionContainer}>
                 <Boundary loading={{fallback: <TokenIconPlaceholder />}} error={{fallback}}>
                   {noTokenSelected ? (
