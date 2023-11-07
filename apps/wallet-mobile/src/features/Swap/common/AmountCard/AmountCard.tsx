@@ -60,7 +60,7 @@ export const AmountCard = ({
         {label != null && <Text style={[styles.label, !isEmptyString(error) && styles.labelError]}>{label}</Text>}
 
         <View style={styles.content}>
-          <Pressable style={styles.amountWrapper} onPress={focusInput} {...(noTokenSelected && {onPress: navigateTo})}>
+          <Pressable style={styles.amountWrapper} onPress={() => (noTokenSelected ? navigateTo?.() : focusInput())}>
             <TextInput
               keyboardType="numeric"
               autoComplete="off"
