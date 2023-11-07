@@ -98,7 +98,7 @@ const useStrings = () => {
 
 const styles = StyleSheet.create({
   pairedBalanceText: {
-    fontSize: 14,
+    fontSize: 12,
     lineHeight: 24,
     fontFamily: 'Rubik-Regular',
     color: COLORS.TEXT_INPUT,

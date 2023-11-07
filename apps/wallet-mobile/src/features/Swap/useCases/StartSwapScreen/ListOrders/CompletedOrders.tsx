@@ -100,6 +100,7 @@ export const CompletedOrders = () => {
     <>
       <View style={styles.container}>
         <FlatList
+          contentContainerStyle={{paddingTop: 10, paddingHorizontal: 16}}
           data={completeOrders}
           renderItem={({item}: {item: MappedRawOrder}) => <ExpandableOrder order={item} />}
           keyExtractor={(item) => item.id}
@@ -300,8 +301,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
-    paddingTop: 10,
-    paddingHorizontal: 16,
   },
   flex: {
     flex: 1,

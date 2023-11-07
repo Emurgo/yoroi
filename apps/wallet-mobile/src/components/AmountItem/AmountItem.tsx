@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   name: {
     color: COLORS.DARK_TEXT,
-    fontSize: 14,
+    fontSize: 16,
     lineHeight: 22,
     fontWeight: '500',
     fontFamily: 'Rubik-Medium',
@@ -134,6 +134,8 @@ const styles = StyleSheet.create({
   quantity: {
     color: COLORS.DARK_TEXT,
     textAlign: 'right',
+    fontSize: 16,
+    fontFamily: 'Rubik-Regular',
   },
   row: {
     flexDirection: 'row',
