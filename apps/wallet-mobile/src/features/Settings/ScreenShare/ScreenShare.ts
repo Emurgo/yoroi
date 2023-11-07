@@ -1,6 +1,5 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {isBoolean, useStorage} from '@yoroi/common'
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {NativeModules, Platform} from 'react-native'
 import {useQuery} from 'react-query'
 
@@ -38,20 +37,6 @@ export const useScreenShareSettingEnabled = () => {
   })
 }
 
-export const useAllowScreenshots = () => {
-  const {data: screenShareSettingEnabled} = useScreenShareSettingEnabled()
-  const callback = React.useCallback(() => {
-    if (Platform.OS !== 'android') return
-    if (!isBoolean(screenShareSettingEnabled) || screenShareSettingEnabled) return
-
-    changeScreenShareNativeSettingOnAndroid(true)
-    return () => {
-      changeScreenShareNativeSettingOnAndroid(false)
-    }
-  }, [screenShareSettingEnabled])
-  useFocusEffect(callback)
-}
-
 export const useInitScreenShare = () => {
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
   const [initialised, setInitialised] = useState(false)
@@ -69,7 +54,7 @@ export const useInitScreenShare = () => {
   return {initialised}
 }
 
-const changeScreenShareNativeSettingOnAndroid = (screenShareEnabled: boolean) => {
+export const changeScreenShareNativeSettingOnAndroid = (screenShareEnabled: boolean) => {
   if (screenShareEnabled) {
     FlagSecure.deactivate()
   } else {
