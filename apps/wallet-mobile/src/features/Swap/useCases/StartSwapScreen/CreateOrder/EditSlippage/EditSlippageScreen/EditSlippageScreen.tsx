@@ -140,6 +140,7 @@ export const EditSlippageScreen = () => {
               autoFocus={isInputEnabled}
               style={styles.input}
               keyboardType="numeric"
+              selectionColor="#242838"
             />
 
             <Text style={styles.percentLabel}>%</Text>
