@@ -325,12 +325,14 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
     switch (action.type) {
       case SwapFormActionType.SellTouched:
         draft.sellQuantity.isTouched = true
+        draft.sellQuantity.displayValue = ''
         draft.sellQuantity.error = undefined
 
         break
 
       case SwapFormActionType.BuyTouched:
         draft.buyQuantity.isTouched = true
+        draft.buyQuantity.displayValue = ''
         draft.buyQuantity.error = undefined
 
         break
