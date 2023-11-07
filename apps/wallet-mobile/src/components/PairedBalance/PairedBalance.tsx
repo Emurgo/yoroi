@@ -1,21 +1,22 @@
 import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Text} from 'react-native'
+import {StyleSheet, Text, TextStyle} from 'react-native'
 
-import {Boundary, ResetError, ResetErrorRef} from '../components'
-import {useCurrencyContext} from '../features/Settings/Currency'
-import {useSelectedWallet} from '../SelectedWallet'
-import {COLORS} from '../theme'
-import {useExchangeRate} from '../yoroi-wallets/hooks'
-import {CurrencySymbol} from '../yoroi-wallets/types'
-import {Quantities} from '../yoroi-wallets/utils'
+import {useCurrencyContext} from '../../features/Settings/Currency'
+import {useSelectedWallet} from '../../SelectedWallet'
+import {COLORS} from '../../theme'
+import {useExchangeRate} from '../../yoroi-wallets/hooks'
+import {CurrencySymbol} from '../../yoroi-wallets/types'
+import {Quantities} from '../../yoroi-wallets/utils'
+import {Boundary, ResetError, ResetErrorRef} from '..'
 
 type Props = {
   amount: Balance.Amount
   isPrivacyOff?: boolean
+  textStyle?: TextStyle
 }
-export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({isPrivacyOff, amount}, ref) => {
+export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({isPrivacyOff, amount, textStyle}, ref) => {
   const {currency} = useCurrencyContext()
 
   return (
@@ -25,18 +26,18 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({isPrivacyO
       error={{
         fallback: ({resetErrorBoundary}) => (
           <ResetError resetErrorBoundary={resetErrorBoundary} ref={ref}>
-            <BalanceError />
+            <BalanceError textStyle={textStyle} />
           </ResetError>
         ),
       }}
     >
-      <Amount isPrivacyOff={isPrivacyOff} amount={amount} />
+      <Amount isPrivacyOff={isPrivacyOff} amount={amount} textStyle={textStyle} />
     </Boundary>
   )
 })
 
 const hiddenPairedTotal = '*.**'
-const Amount = ({isPrivacyOff, amount}: Props) => {
+const Amount = ({isPrivacyOff, amount, textStyle}: Props) => {
   const wallet = useSelectedWallet()
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
@@ -49,7 +50,7 @@ const Amount = ({isPrivacyOff, amount}: Props) => {
 
   if (rate == null)
     return (
-      <Text style={styles.pairedBalanceText} testID="pairedTotalText">
+      <Text style={[styles.pairedBalanceText, textStyle]} testID="pairedTotalText">
         ... {currency}
       </Text>
     )
@@ -64,18 +65,18 @@ const Amount = ({isPrivacyOff, amount}: Props) => {
   )
   const pairedTotal = isPrivacyOff ? hiddenPairedTotal : secondaryExchangeQuantity
   return (
-    <Text style={styles.pairedBalanceText} testID="pairedTotalText">
+    <Text style={[styles.pairedBalanceText, textStyle]} testID="pairedTotalText">
       {`${pairedTotal} ${currency}`}
     </Text>
   )
 }
 
-const BalanceError = () => {
+const BalanceError = ({textStyle}: {textStyle?: TextStyle}) => {
   const strings = useStrings()
   const {currency} = useCurrencyContext()
 
   return (
-    <Text style={styles.pairedBalanceText} testID="pairedTotalText">
+    <Text style={[styles.pairedBalanceText, textStyle]} testID="pairedTotalText">
       {strings.pairedBalanceError(currency)}
     </Text>
   )
