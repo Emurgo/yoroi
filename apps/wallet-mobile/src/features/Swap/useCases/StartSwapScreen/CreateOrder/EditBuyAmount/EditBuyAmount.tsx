@@ -18,7 +18,6 @@ export const EditBuyAmount = () => {
     onChangeBuyQuantity,
     buyInputRef,
   } = useSwapForm()
-  const pool = orderData.selectedPoolCalculation?.pool
   const {tokenId} = orderData.amounts.buy
   const balance = useBalance({wallet, tokenId})
 
@@ -32,7 +31,6 @@ export const EditBuyAmount = () => {
       navigateTo={navigate.selectBuyToken}
       touched={isBuyTouched}
       inputRef={buyInputRef}
-      inputEditable={pool !== undefined}
       error={buyError}
     />
   )
