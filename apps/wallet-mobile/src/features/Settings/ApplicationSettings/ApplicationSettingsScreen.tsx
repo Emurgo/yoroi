@@ -135,8 +135,8 @@ export const ApplicationSettingsScreen = () => {
           {displayScreenShareSetting && (
             <SettingsItem
               icon={<Icon.Share {...iconProps} />}
-              label="Enable screensharing"
-              info="Changes to this option will enable you to make screenshots as well share your screen via third party apps"
+              label={strings.screenSharing}
+              info={strings.screenSharingInfo}
             >
               <ScreenSharingSwitch
                 screenSharingEnabled={screenShareEnabled ?? false}
@@ -224,6 +224,8 @@ const useStrings = () => {
     crashReportingInfo: intl.formatMessage(messages.crashReportingInfo),
     analytics: intl.formatMessage(messages.analytics),
     privacyPolicy: intl.formatMessage(messages.privacyPolicy),
+    screenSharing: intl.formatMessage(messages.screenSharing),
+    screenSharingInfo: intl.formatMessage(messages.screenSharingInfo),
   }
 }
 
@@ -287,6 +289,15 @@ const messages = defineMessages({
   privacyPolicy: {
     id: 'components.settings.applicationsettingsscreen.privacyPolicy',
     defaultMessage: '!!!Privacy Policy',
+  },
+  screenSharing: {
+    id: 'components.settings.applicationsettingsscreen.screenSharing',
+    defaultMessage: '!!!Enable screensharing',
+  },
+  screenSharingInfo: {
+    id: 'components.settings.applicationsettingsscreen.screenSharingInfo',
+    defaultMessage:
+      '!!!Changes to this option will enable you to make screenshots as well share your screen via third party apps',
   },
 })
 
