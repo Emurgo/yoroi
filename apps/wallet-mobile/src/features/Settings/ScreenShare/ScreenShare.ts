@@ -57,14 +57,14 @@ export const useInitScreenShare = () => {
   const [initialised, setInitialised] = useState(false)
 
   useEffect(() => {
-    if (!isBoolean(screenShareEnabled)) return
+    if (!isBoolean(screenShareEnabled) || initialised) return
 
     if (Platform.OS === 'android') {
       changeScreenShareNativeSettingOnAndroid(screenShareEnabled)
     }
 
     setInitialised(true)
-  }, [screenShareEnabled])
+  }, [screenShareEnabled, initialised])
 
   return {initialised}
 }
