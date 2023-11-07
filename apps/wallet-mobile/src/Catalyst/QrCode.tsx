@@ -5,13 +5,13 @@ import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, CopyButton, ProgressStep, Spacer, Text} from '../components'
+import {useAllowScreenshots} from '../features/ScreenShare'
 import {confirmationMessages} from '../i18n/global-messages'
 import {useBlockGoBack} from '../navigation'
 import {COLORS} from '../theme'
 import {Actions, Description, Title} from './components'
 import {useCountdown} from './hooks'
 import {VotingRegistrationBackupCheckModal} from './VotingRegistrationBackupCheckModal'
-import {useAllowScreenshots} from '../features/ScreenShare'
 
 export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; votingKeyEncrypted: string}) => {
   useBlockGoBack()

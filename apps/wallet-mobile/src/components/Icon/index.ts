@@ -68,6 +68,7 @@ import {RewardWithdrawn} from './RewardWithdrawn'
 import {Sandbox} from './Sandbox'
 import {Send} from './Send'
 import {Settings} from './Settings'
+import {Share} from './Share'
 import {SliderSettings} from './SliderSettings'
 import {SortTable} from './SortTable'
 import {SpectrumSwap} from './SpectrumSwap'
@@ -101,7 +102,6 @@ import {WalletStack} from './WalletStack'
 import {WingRiders} from './WingRiders'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
-import {Share} from './Share'
 
 export const Icon = {
   Ada,

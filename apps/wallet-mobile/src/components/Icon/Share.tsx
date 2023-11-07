@@ -13,6 +13,7 @@ export const Share = ({size = 36, color = '#000000'}: Props) => {
         d="M11.293 8.793a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L13 11.914V15.5a1 1 0 11-2 0v-3.586l-1.293 1.293a1 1 0 01-1.414-1.414l3-3z"
         fill={color}
       />
+
       <Path
         fillRule="evenodd"
         clipRule="evenodd"

@@ -1,3 +1,4 @@
+import {isBoolean} from '@yoroi/common'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
@@ -5,16 +6,15 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer, StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
-import {CONFIG, isNightly} from '../../../legacy/config'
+import {CONFIG, isProduction} from '../../../legacy/config'
 import {lightPalette} from '../../../theme'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
+import {useChangeScreenShareSetting, useScreenShareSettingEnabled} from '../../ScreenShare'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {useNavigateTo} from '../common/navigation'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
-import {useChangeScreenShareSetting, useScreenShareSettingEnabled} from '../../ScreenShare'
-import {isBoolean} from '@yoroi/common'
 
 const iconProps = {
   color: lightPalette.gray['600'],
@@ -38,7 +38,7 @@ export const ApplicationSettingsScreen = () => {
 
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
 
-  const displayScreenShareSetting = Platform.OS === 'android' && isNightly()
+  const displayScreenShareSetting = Platform.OS === 'android' && !isProduction()
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {

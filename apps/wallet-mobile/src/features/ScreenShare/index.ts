@@ -1,9 +1,10 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {isBoolean, useStorage} from '@yoroi/common'
-import {useMutationWithInvalidations} from '../../yoroi-wallets/hooks'
+import React, {useEffect, useState} from 'react'
 import {NativeModules, Platform} from 'react-native'
 import {useQuery} from 'react-query'
-import React, {useEffect, useState} from 'react'
-import {useFocusEffect} from '@react-navigation/native'
+
+import {useMutationWithInvalidations} from '../../yoroi-wallets/hooks'
 
 const {FlagSecure} = NativeModules
 

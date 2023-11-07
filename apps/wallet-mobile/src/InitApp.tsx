@@ -7,10 +7,10 @@ import * as Sentry from 'sentry-expo'
 import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
+import {useInitScreenShare} from './features/ScreenShare'
 import {CONFIG, isProduction} from './legacy/config'
 import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
 import {walletManager} from './yoroi-wallets/walletManager'
-import {useInitScreenShare} from './features/ScreenShare'
 
 enableScreens()
 
