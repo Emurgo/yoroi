@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Backup Catalyst Code",
     "file": "src/Catalyst/QrCode.tsx",
     "start": {
-      "line": 94,
+      "line": 92,
       "column": 12,
-      "index": 2961
+      "index": 2890
     },
     "end": {
-      "line": 97,
+      "line": 95,
       "column": 3,
-      "index": 3059
+      "index": 2988
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Please take a screenshot of this QR code.",
     "file": "src/Catalyst/QrCode.tsx",
     "start": {
-      "line": 98,
+      "line": 96,
       "column": 15,
-      "index": 3076
+      "index": 3005
     },
     "end": {
-      "line": 101,
+      "line": 99,
       "column": 3,
-      "index": 3198
+      "index": 3127
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!We strongly recommend you to save your Catalyst secret code in plain text too, so that you can re-create your QR code if necessary.",
     "file": "src/Catalyst/QrCode.tsx",
     "start": {
-      "line": 102,
+      "line": 100,
       "column": 16,
-      "index": 3216
+      "index": 3145
     },
     "end": {
-      "line": 107,
+      "line": 105,
       "column": 3,
-      "index": 3446
+      "index": 3375
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Then, send the QR code to an external device, as you will need toscan it with your phone using the Catalyst mobile app.",
     "file": "src/Catalyst/QrCode.tsx",
     "start": {
-      "line": 108,
+      "line": 106,
       "column": 16,
-      "index": 3464
+      "index": 3393
     },
     "end": {
-      "line": 113,
+      "line": 111,
       "column": 3,
-      "index": 3682
+      "index": 3611
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Keep it — you won’t be able to access this code after tapping on Complete.",
     "file": "src/Catalyst/QrCode.tsx",
     "start": {
-      "line": 114,
+      "line": 112,
       "column": 8,
-      "index": 3692
+      "index": 3621
     },
     "end": {
-      "line": 117,
+      "line": 115,
       "column": 3,
-      "index": 3840
+      "index": 3769
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Secret Code",
     "file": "src/Catalyst/QrCode.tsx",
     "start": {
-      "line": 118,
+      "line": 116,
       "column": 14,
-      "index": 3856
+      "index": 3785
     },
     "end": {
-      "line": 121,
+      "line": 119,
       "column": 3,
-      "index": 3947
+      "index": 3876
     }
   }
 ]
