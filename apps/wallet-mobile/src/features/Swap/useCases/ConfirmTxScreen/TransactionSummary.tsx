@@ -31,8 +31,8 @@ export const TransactionSummary = () => {
   const tokenToSellName = sellTokenInfo.ticker ?? sellTokenInfo.name
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
   const isSellPrimary = amounts.sell.tokenId === wallet.primaryTokenInfo.id
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const total = isSellPrimary ? calculation.ptTotalValueSpent!.quantity : amounts.sell.quantity
+  // Quantities.zero case would only happen on an API error where the price in Ada of Ada were missing
+  const total = isSellPrimary ? calculation.ptTotalValueSpent?.quantity ?? Quantities.zero : amounts.sell.quantity
   const formattedSellText = `${Quantities.format(total, sellTokenInfo.decimals ?? 0)} ${tokenToSellName}`
   const formattedFeeText = `${Quantities.format(
     Quantities.sum([cost.batcherFee.quantity, cost.frontendFeeInfo.fee.quantity]),
