@@ -112,6 +112,10 @@ describe('makeOrderCalculations', () => {
         quantity: '148894355282',
         tokenId: 'tokenB',
       },
+      ptTotalValueSpent: {
+        quantity: '10008000000',
+        tokenId: '',
+      },
       hasSupply: true,
       prices: {
         base: '0.06693552899045170664',
@@ -227,6 +231,10 @@ describe('makeOrderCalculations', () => {
       buyAmountWithSlippage: {
         quantity: '148894355282',
         tokenId: 'tokenA',
+      },
+      ptTotalValueSpent: {
+        quantity: '10008000000',
+        tokenId: '',
       },
       hasSupply: true,
       prices: {
@@ -345,6 +353,10 @@ describe('makeOrderCalculations', () => {
         quantity: '148894355268',
         tokenId: 'tokenB',
       },
+      ptTotalValueSpent: {
+        quantity: '10008000000',
+        tokenId: '',
+      },
       hasSupply: true,
       prices: {
         base: '0.06693552899045170664',
@@ -462,6 +474,10 @@ describe('makeOrderCalculations', () => {
         quantity: '148894355268',
         tokenId: 'tokenA',
       },
+      ptTotalValueSpent: {
+        quantity: '10008000000',
+        tokenId: '',
+      },
       hasSupply: true,
       prices: {
         base: '0.06693552899045170664',
@@ -573,6 +589,11 @@ describe('makeOrderCalculations', () => {
         quantity: '50',
         tokenId: 'tokenB',
       },
+      ptTotalValueSpent: {
+        quantity: '100',
+        tokenId: '',
+      },
+
       hasSupply: true,
       prices: {
         base: '0.99009900990099009901',
@@ -682,6 +703,10 @@ describe('makeOrderCalculations', () => {
       buyAmountWithSlippage: {
         quantity: '0',
         tokenId: 'tokenB',
+      },
+      ptTotalValueSpent: {
+        quantity: '100',
+        tokenId: '',
       },
       hasSupply: false,
       prices: {
@@ -794,6 +819,10 @@ describe('makeOrderCalculations', () => {
         quantity: '0',
         tokenId: 'tokenB',
       },
+      ptTotalValueSpent: {
+        quantity: '100',
+        tokenId: '',
+      },
       hasSupply: true,
       prices: {
         base: '1',
@@ -904,6 +933,10 @@ describe('makeOrderCalculations', () => {
       buyAmountWithSlippage: {
         quantity: '100',
         tokenId: 'tokenA',
+      },
+      ptTotalValueSpent: {
+        quantity: '1',
+        tokenId: '',
       },
       hasSupply: false,
       prices: {
@@ -1016,6 +1049,10 @@ describe('makeOrderCalculations', () => {
         quantity: '1',
         tokenId: 'tokenB',
       },
+      ptTotalValueSpent: {
+        quantity: '100',
+        tokenId: '',
+      },
       hasSupply: true,
       prices: {
         base: '0',
@@ -1126,6 +1163,10 @@ describe('makeOrderCalculations', () => {
       buyAmountWithSlippage: {
         quantity: '0',
         tokenId: 'tokenB',
+      },
+      ptTotalValueSpent: {
+        quantity: '100',
+        tokenId: '',
       },
       hasSupply: false,
       prices: {
@@ -1238,6 +1279,7 @@ describe('makeOrderCalculations', () => {
         quantity: '100',
         tokenId: 'tokenA',
       },
+      ptTotalValueSpent: undefined,
       hasSupply: false,
       prices: {
         base: '0',
@@ -1348,6 +1390,10 @@ describe('makeOrderCalculations', () => {
       buyAmountWithSlippage: {
         quantity: '100',
         tokenId: 'tokenA',
+      },
+      ptTotalValueSpent: {
+        quantity: '1',
+        tokenId: '',
       },
       hasSupply: false,
       prices: {
@@ -1460,6 +1506,10 @@ describe('makeOrderCalculations', () => {
         quantity: '1',
         tokenId: 'tokenA',
       },
+      ptTotalValueSpent: {
+        quantity: '100',
+        tokenId: '',
+      },
       hasSupply: true,
       prices: {
         base: '0',
@@ -1570,6 +1620,10 @@ describe('makeOrderCalculations', () => {
       buyAmountWithSlippage: {
         quantity: '0',
         tokenId: 'tokenA',
+      },
+      ptTotalValueSpent: {
+        quantity: '100',
+        tokenId: '',
       },
       hasSupply: false,
       prices: {
@@ -1682,6 +1736,7 @@ describe('makeOrderCalculations', () => {
         quantity: '100',
         tokenId: 'tokenB',
       },
+      ptTotalValueSpent: undefined,
       hasSupply: false,
       prices: {
         base: '0',
@@ -1792,6 +1847,10 @@ describe('makeOrderCalculations', () => {
       buyAmountWithSlippage: {
         quantity: '100',
         tokenId: 'tokenB',
+      },
+      ptTotalValueSpent: {
+        quantity: '1',
+        tokenId: '',
       },
       hasSupply: false,
       prices: {
@@ -1904,6 +1963,10 @@ describe('makeOrderCalculations', () => {
         quantity: '100',
         tokenId: 'tokenA',
       },
+      ptTotalValueSpent: {
+        quantity: '200',
+        tokenId: '',
+      },
       hasSupply: true,
       prices: {
         base: '2',
@@ -2014,6 +2077,10 @@ describe('makeOrderCalculations', () => {
       buyAmountWithSlippage: {
         quantity: '100',
         tokenId: 'tokenB',
+      },
+      ptTotalValueSpent: {
+        quantity: '200',
+        tokenId: '',
       },
       hasSupply: true,
       prices: {
@@ -2126,6 +2193,10 @@ describe('makeOrderCalculations', () => {
         quantity: '100',
         tokenId: 'tokenB',
       },
+      ptTotalValueSpent: {
+        quantity: '200',
+        tokenId: '',
+      },
       hasSupply: true,
       prices: {
         base: '2',
@@ -2237,6 +2308,10 @@ describe('makeOrderCalculations', () => {
         quantity: '100',
         tokenId: 'tokenA',
       },
+      ptTotalValueSpent: {
+        quantity: '200',
+        tokenId: '',
+      },
       hasSupply: true,
       prices: {
         base: '2',
@@ -2347,6 +2422,10 @@ describe('makeOrderCalculations', () => {
       buyAmountWithSlippage: {
         quantity: '99999999',
         tokenId: 'tokenA',
+      },
+      ptTotalValueSpent: {
+        quantity: '99999999',
+        tokenId: '',
       },
       hasSupply: true,
       prices: {
@@ -2470,6 +2549,10 @@ describe('makeOrderCalculations', () => {
         quantity: '100000000',
         tokenId: 'tokenA',
       },
+      ptTotalValueSpent: {
+        quantity: '101050000',
+        tokenId: '',
+      },
       hasSupply: true,
       prices: {
         base: '1',
@@ -2591,6 +2674,10 @@ describe('makeOrderCalculations', () => {
       buyAmountWithSlippage: {
         quantity: '100000000',
         tokenId: 'tokenA',
+      },
+      ptTotalValueSpent: {
+        quantity: '101025000',
+        tokenId: '',
       },
       hasSupply: true,
       prices: {
@@ -2714,6 +2801,10 @@ describe('makeOrderCalculations', () => {
         quantity: '100000000',
         tokenId: 'tokenA',
       },
+      ptTotalValueSpent: {
+        quantity: '101020000',
+        tokenId: '',
+      },
       hasSupply: true,
       prices: {
         base: '1',
@@ -2831,6 +2922,7 @@ describe('makeOrderCalculations', () => {
         quantity: '0',
         tokenId: 'tokenA',
       },
+      ptTotalValueSpent: undefined,
       hasSupply: true,
       prices: {
         base: '1',
@@ -2948,6 +3040,7 @@ describe('makeOrderCalculations', () => {
         quantity: '0',
         tokenId: 'tokenA',
       },
+      ptTotalValueSpent: undefined,
       hasSupply: true,
       prices: {
         base: '1',
@@ -3063,6 +3156,7 @@ describe('makeOrderCalculations', () => {
         quantity: '0',
         tokenId: 'tokenA',
       },
+      ptTotalValueSpent: undefined,
       hasSupply: true,
       prices: {
         base: '0.5',
@@ -3179,6 +3273,7 @@ describe('makeOrderCalculations', () => {
         quantity: '199',
         tokenId: 'tokenA',
       },
+      ptTotalValueSpent: undefined,
       hasSupply: true,
       prices: {
         base: '0.5',
