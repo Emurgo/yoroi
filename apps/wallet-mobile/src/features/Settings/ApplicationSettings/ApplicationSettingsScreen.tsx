@@ -13,7 +13,7 @@ import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {useNavigateTo} from '../common/navigation'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
-import {useChangeScreenShareSettings, useScreenShareEnabled} from '../../ScreenShare'
+import {useChangeScreenShareSetting, useScreenShareSettingEnabled} from '../../ScreenShare'
 import {isBoolean} from '@yoroi/common'
 
 const iconProps = {
@@ -36,7 +36,7 @@ export const ApplicationSettingsScreen = () => {
   const navigateTo = useNavigateTo()
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
 
-  const {data: screenShareEnabled} = useScreenShareEnabled()
+  const {data: screenShareEnabled} = useScreenShareSettingEnabled()
 
   const displayScreenShareSetting = Platform.OS === 'android' && isNightly()
 
@@ -194,15 +194,15 @@ const CrashReportsSwitch = ({crashReportEnabled}: {crashReportEnabled: boolean})
 
 // to avoid switch jumps
 const ScreenSharingSwitch = ({screenSharingEnabled, disabled}: {screenSharingEnabled: boolean; disabled?: boolean}) => {
-  const {changeScreenShareSettings} = useChangeScreenShareSettings()
+  const {changeScreenShareSettings} = useChangeScreenShareSetting()
   const [isLocalEnabled, setIsLocalEnabled] = React.useState(screenSharingEnabled)
 
-  const onToggleCrashReports = () => {
-    changeScreenShareSettings(!isLocalEnabled)
-    setIsLocalEnabled(!isLocalEnabled)
+  const onToggle = (enabled: boolean) => {
+    changeScreenShareSettings(enabled)
+    setIsLocalEnabled(enabled)
   }
 
-  return <Switch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={disabled} />
+  return <Switch value={isLocalEnabled} onValueChange={onToggle} disabled={disabled} />
 }
 
 const useStrings = () => {

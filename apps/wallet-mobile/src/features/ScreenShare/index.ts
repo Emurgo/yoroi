@@ -2,11 +2,12 @@ import {isBoolean, useStorage} from '@yoroi/common'
 import {useMutationWithInvalidations} from '../../yoroi-wallets/hooks'
 import {NativeModules, Platform} from 'react-native'
 import {useQuery} from 'react-query'
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
+import {useFocusEffect} from '@react-navigation/native'
 
 const {FlagSecure} = NativeModules
 
-export const useChangeScreenShareSettings = () => {
+export const useChangeScreenShareSetting = () => {
   const storage = useStorage()
 
   const mutation = useMutationWithInvalidations({
@@ -25,7 +26,7 @@ export const useChangeScreenShareSettings = () => {
   }
 }
 
-export const useScreenShareEnabled = () => {
+export const useScreenShareSettingEnabled = () => {
   const storage = useStorage()
 
   return useQuery('screenShareEnabled', async () => {
@@ -36,8 +37,22 @@ export const useScreenShareEnabled = () => {
   })
 }
 
+export const useAllowScreenshots = () => {
+  const {data: screenShareSettingEnabled} = useScreenShareSettingEnabled()
+  const callback = React.useCallback(() => {
+    if (Platform.OS !== 'android') return
+    if (!isBoolean(screenShareSettingEnabled) || screenShareSettingEnabled) return
+
+    changeScreenShareNativeSettingOnAndroid(true)
+    return () => {
+      changeScreenShareNativeSettingOnAndroid(false)
+    }
+  }, [screenShareSettingEnabled])
+  useFocusEffect(callback)
+}
+
 export const useInitScreenShare = () => {
-  const {data: screenShareEnabled} = useScreenShareEnabled()
+  const {data: screenShareEnabled} = useScreenShareSettingEnabled()
   const [initialised, setInitialised] = useState(false)
 
   useEffect(() => {
@@ -53,10 +68,10 @@ export const useInitScreenShare = () => {
   return {initialised}
 }
 
-const changeScreenShareNativeSettingOnAndroid = (enabled: boolean) => {
-  if (enabled) {
-    FlagSecure.activate()
-  } else {
+const changeScreenShareNativeSettingOnAndroid = (screenShareEnabled: boolean) => {
+  if (screenShareEnabled) {
     FlagSecure.deactivate()
+  } else {
+    FlagSecure.activate()
   }
 }
