@@ -61,11 +61,15 @@ export const SwapFormProvider = ({
     ...defaultState,
     buyQuantity: {
       ...defaultState.buyQuantity,
-      displayValue: Quantities.format(buyQuantity, buyTokenInfo.decimals ?? 0),
+      ...(defaultState.buyQuantity.isTouched && {
+        displayValue: Quantities.format(buyQuantity, buyTokenInfo.decimals ?? 0),
+      }),
     },
     sellQuantity: {
       ...defaultState.sellQuantity,
-      displayValue: Quantities.format(sellQuantity, sellTokenInfo.decimals ?? 0),
+      ...(defaultState.sellQuantity.isTouched && {
+        displayValue: Quantities.format(sellQuantity, sellTokenInfo.decimals ?? 0),
+      }),
     },
     ...initialState,
   })
@@ -196,8 +200,9 @@ export const SwapFormProvider = ({
     }
 
     if (
-      (!Quantities.isZero(buyQuantity) && !hasBuyTokenSupply) ||
-      (state.sellQuantity.isTouched && state.buyQuantity.isTouched && pool === undefined)
+      state.sellQuantity.isTouched &&
+      state.buyQuantity.isTouched &&
+      (pool === undefined || (!Quantities.isZero(buyQuantity) && !hasBuyTokenSupply))
     ) {
       actions.buyAmountErrorChanged(strings.notEnoughSupply)
       return
@@ -331,6 +336,8 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
       case SwapFormActionType.SwitchTouched:
         draft.sellQuantity.isTouched = state.buyQuantity.isTouched
         draft.buyQuantity.isTouched = state.sellQuantity.isTouched
+        draft.sellQuantity.displayValue = ''
+        draft.buyQuantity.displayValue = ''
         draft.sellQuantity.error = undefined
         draft.buyQuantity.error = undefined
 
@@ -358,12 +365,12 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
         break
 
       case SwapFormActionType.SellInputValueChanged:
-        draft.sellQuantity.displayValue = action.value
+        if (state.sellQuantity.isTouched) draft.sellQuantity.displayValue = action.value
 
         break
 
       case SwapFormActionType.BuyInputValueChanged:
-        draft.buyQuantity.displayValue = action.value
+        if (state.buyQuantity.isTouched) draft.buyQuantity.displayValue = action.value
 
         break
 
