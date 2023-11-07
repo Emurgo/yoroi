@@ -13,9 +13,9 @@ import {
 
 import {Button, Spacer, TextInput} from '../../../../../components'
 import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
+import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {PairedBalance} from '../../../../../TxHistory/PairedBalance'
 import {selectFtOrThrow} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../yoroi-wallets/logging'

@@ -154,6 +154,19 @@ export const makeOrderCalculations = ({
       ]),
     }
 
+    const ptTotalValueSpent: Balance.Amount | undefined = Quantities.isZero(
+      sellInPtTerms,
+    )
+      ? undefined
+      : {
+          tokenId: tokens.ptInfo.id,
+          quantity: Quantities.sum([
+            pool.batcherFee.quantity,
+            frontendFeeInfo.fee.quantity,
+            sellInPtTerms,
+          ]),
+        }
+
     const result: SwapOrderCalculation = {
       order: {
         side,
@@ -176,6 +189,7 @@ export const makeOrderCalculations = ({
       },
       buyAmountWithSlippage,
       hasSupply,
+      ptTotalValueSpent,
       prices: {
         base: priceBase,
         market: marketPrice,
