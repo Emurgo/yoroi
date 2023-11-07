@@ -10,10 +10,10 @@ import {CONFIG, isProduction} from '../../../legacy/config'
 import {lightPalette} from '../../../theme'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
-import {useChangeScreenShareSetting, useScreenShareSettingEnabled} from '../../ScreenShare'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {useNavigateTo} from '../common/navigation'
 import {useCurrencyContext} from '../Currency'
+import {useChangeScreenShareSetting, useScreenShareSettingEnabled} from '../ScreenShare'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
 
 const iconProps = {

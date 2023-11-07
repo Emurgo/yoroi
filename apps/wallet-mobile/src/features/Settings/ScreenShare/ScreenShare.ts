@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react'
 import {NativeModules, Platform} from 'react-native'
 import {useQuery} from 'react-query'
 
-import {useMutationWithInvalidations} from '../../yoroi-wallets/hooks'
+import {useMutationWithInvalidations} from '../../../yoroi-wallets/hooks'
 
 const {FlagSecure} = NativeModules
 

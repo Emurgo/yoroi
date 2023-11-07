@@ -5,7 +5,7 @@ import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, CopyButton, ProgressStep, Spacer, Text} from '../components'
-import {useAllowScreenshots} from '../features/ScreenShare'
+import {useAllowScreenshots} from '../features/Settings/ScreenShare'
 import {confirmationMessages} from '../i18n/global-messages'
 import {useBlockGoBack} from '../navigation'
 import {COLORS} from '../theme'
