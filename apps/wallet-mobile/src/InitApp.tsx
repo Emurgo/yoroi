@@ -10,6 +10,7 @@ import {AppNavigator} from './AppNavigator'
 import {CONFIG, isProduction} from './legacy/config'
 import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
 import {walletManager} from './yoroi-wallets/walletManager'
+import {useInitScreenShare} from './features/ScreenShare'
 
 enableScreens()
 
@@ -31,6 +32,8 @@ const useInitApp = () => {
   const storage = useStorage()
   const crashReportsEnabled = useCrashReportsEnabled()
 
+  const {initialised: screenShareInitialized} = useInitScreenShare()
+
   useInitSentry({enabled: crashReportsEnabled})
 
   useEffect(() => {
@@ -42,7 +45,7 @@ const useInitApp = () => {
     load()
   }, [storage])
 
-  return loaded
+  return loaded && screenShareInitialized
 }
 
 const initInstallationId = async (storage: App.Storage) => {

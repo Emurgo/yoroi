@@ -1,11 +1,11 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, Switch} from 'react-native'
+import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer, StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
-import {CONFIG} from '../../../legacy/config'
+import {CONFIG, isNightly} from '../../../legacy/config'
 import {lightPalette} from '../../../theme'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
@@ -13,6 +13,8 @@ import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
 import {useNavigateTo} from '../common/navigation'
 import {useCurrencyContext} from '../Currency'
 import {NavigatedSettingsItem, SettingsItem, SettingsSection} from '../SettingsItems'
+import {useChangeScreenShareSettings, useScreenShareEnabled} from '../../ScreenShare'
+import {isBoolean} from '@yoroi/common'
 
 const iconProps = {
   color: lightPalette.gray['600'],
@@ -33,6 +35,10 @@ export const ApplicationSettingsScreen = () => {
   const authOsEnabled = useAuthOsEnabled()
   const navigateTo = useNavigateTo()
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
+
+  const {data: screenShareEnabled} = useScreenShareEnabled()
+
+  const displayScreenShareSetting = Platform.OS === 'android' && isNightly()
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
@@ -125,6 +131,19 @@ export const ApplicationSettingsScreen = () => {
           >
             <CrashReportsSwitch crashReportEnabled={crashReportEnabled} />
           </SettingsItem>
+
+          {displayScreenShareSetting && (
+            <SettingsItem
+              icon={<Icon.Share {...iconProps} />}
+              label="Enable screensharing"
+              info="Changes to this option will enable you to make screenshots as well share your screen via third party apps"
+            >
+              <ScreenSharingSwitch
+                screenSharingEnabled={screenShareEnabled ?? false}
+                disabled={!isBoolean(screenShareEnabled)}
+              />
+            </SettingsItem>
+          )}
         </SettingsSection>
 
         <Spacer height={24} />
@@ -171,6 +190,19 @@ const CrashReportsSwitch = ({crashReportEnabled}: {crashReportEnabled: boolean})
   }
 
   return <Switch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={CONFIG.FORCE_CRASH_REPORTS} />
+}
+
+// to avoid switch jumps
+const ScreenSharingSwitch = ({screenSharingEnabled, disabled}: {screenSharingEnabled: boolean; disabled?: boolean}) => {
+  const {changeScreenShareSettings} = useChangeScreenShareSettings()
+  const [isLocalEnabled, setIsLocalEnabled] = React.useState(screenSharingEnabled)
+
+  const onToggleCrashReports = () => {
+    changeScreenShareSettings(!isLocalEnabled)
+    setIsLocalEnabled(!isLocalEnabled)
+  }
+
+  return <Switch value={isLocalEnabled} onValueChange={onToggleCrashReports} disabled={disabled} />
 }
 
 const useStrings = () => {
