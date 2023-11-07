@@ -305,6 +305,8 @@
   "components.settings.applicationsettingsscreen.analytics": "Analytics",
   "components.settings.applicationsettingsscreen.analyticsTitle": "User Insights",
   "components.settings.applicationsettingsscreen.privacyPolicy": "Политика конфиденциальности",
+  "components.settings.applicationsettingsscreen.screenSharing": "Enable screensharing",
+  "components.settings.applicationsettingsscreen.screenSharingInfo": "Changes to this option will enable you to make screenshots as well share your screen via third party apps",
   "components.send.sendscreen.submittedTxTitle": "Transaction submitted",
   "components.send.sendscreen.submittedTxText": "Check this transaction in the list of wallet transactions",
   "components.send.sendscreen.submittedTxButton": "Go to transactions",
