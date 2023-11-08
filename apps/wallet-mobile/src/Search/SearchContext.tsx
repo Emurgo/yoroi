@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {StackNavigationOptions} from '@react-navigation/stack'
 import React, {createContext, ReactNode, useCallback, useContext, useReducer} from 'react'
 import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
@@ -93,10 +93,12 @@ export const useSearchOnNavBar = ({
   placeholder,
   title,
   noBack = false,
+  isChild = false,
 }: {
   placeholder: string
   title: string
   noBack?: boolean
+  isChild?: boolean
 }) => {
   const navigation = useNavigation()
 
@@ -143,7 +145,45 @@ export const useSearchOnNavBar = ({
   }
 
   React.useLayoutEffect(() => {
-    navigation.setOptions(visible ? withSearchInput : withSearchButton)
+    if (!isChild) navigation.setOptions(visible ? withSearchInput : withSearchButton)
+  })
+
+  useFocusEffect(() => {
+    if (isChild) navigation.getParent()?.setOptions(visible ? withSearchInput : withSearchButton)
+  })
+}
+
+export const useDisableSearchOnBar = ({
+  title,
+  isChild = false,
+  onBack,
+}: {
+  title: string
+  isChild?: boolean
+  onBack?: () => void
+}) => {
+  const navigation = useNavigation()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isChild)
+        navigation.getParent()?.setOptions({
+          ...defaultStackNavigationOptions,
+          headerLeft: onBack ? () => <BackButton onPress={onBack} /> : undefined,
+          headerRight: undefined,
+          title,
+        })
+    }, [isChild, navigation, onBack, title]),
+  )
+
+  React.useLayoutEffect(() => {
+    if (!isChild)
+      navigation.setOptions({
+        ...defaultStackNavigationOptions,
+        headerLeft: onBack ? () => <BackButton onPress={onBack} /> : undefined,
+        headerRight: undefined,
+        title,
+      })
   })
 }
 

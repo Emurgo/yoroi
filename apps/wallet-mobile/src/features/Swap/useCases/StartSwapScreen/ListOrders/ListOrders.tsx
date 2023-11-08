@@ -4,6 +4,7 @@ import {StyleSheet, View} from 'react-native'
 import {Boundary} from '../../../../../components'
 import {useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {COLORS} from '../../../../../theme'
+import {useOverridePreviousRoute} from '../../../../../utils/navigation'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useStrings} from '../../../common/strings'
 import {CompletedOrders, CompletedOrdersSkeleton} from './CompletedOrders'
@@ -19,9 +20,12 @@ export const ListOrders = () => {
     setOrderStatusIndex(index)
   }
 
+  useOverridePreviousRoute('history-list')
+
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
     title: strings.swapTitle,
+    isChild: true,
   })
 
   return (
