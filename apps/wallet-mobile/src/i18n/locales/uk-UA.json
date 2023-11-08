@@ -189,7 +189,7 @@
   "swap.listOrders.timeCreated": "Time created",
   "swap.listOrders.timeCompleted": "Time completed",
   "swap.listOrders.txId": "Transaction ID",
-  "swap.listOrders.emptyOpenOrders": "No orders avaliable yet",
+  "swap.listOrders.emptyOpenOrders": "No orders available yet",
   "swap.listOrders.emptyOpenOrdersSub": "Start doing the swap operations to your open orders here",
   "swap.listOrders.emptyCompletedOrders": "No orders completed yet",
   "swap.swapScreen.limitPriceWarningTitle": "Limit price",
