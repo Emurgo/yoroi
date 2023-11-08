@@ -27,29 +27,6 @@ import {useSwapForm} from '../../../../../common/SwapFormProvider'
 export const SelectBuyTokenFromListScreen = () => {
   const strings = useStrings()
 
-  useSearchOnNavBar({
-    placeholder: strings.searchTokens,
-    title: strings.swapTo,
-  })
-
-  return (
-    <SafeAreaView style={styles.container} edges={['left', 'right']}>
-      <ErrorBoundary
-        fallbackRender={({resetErrorBoundary}) => <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />}
-      >
-        <TokenList />
-      </ErrorBoundary>
-    </SafeAreaView>
-  )
-}
-
-const TokenList = () => {
-  const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const {onlyVerifiedTokens, isLoading} = useSwapTokensOnlyVerified()
-  const {search: assetSearchTerm} = useSearch()
-  const balances = useBalances(wallet)
-  const walletTokenIds = Amounts.toArray(balances).map(({tokenId}) => tokenId)
   const loading = React.useMemo(
     () => ({
       fallback: (
@@ -68,6 +45,32 @@ const TokenList = () => {
     [],
   )
 
+  useSearchOnNavBar({
+    placeholder: strings.searchTokens,
+    title: strings.swapTo,
+  })
+
+  return (
+    <SafeAreaView style={styles.container} edges={['left', 'right']}>
+      <Boundary loading={loading}>
+        <ErrorBoundary
+          fallbackRender={({resetErrorBoundary}) => <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />}
+        >
+          <TokenList />
+        </ErrorBoundary>
+      </Boundary>
+    </SafeAreaView>
+  )
+}
+
+const TokenList = () => {
+  const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const {onlyVerifiedTokens, isLoading} = useSwapTokensOnlyVerified()
+  const {search: assetSearchTerm} = useSearch()
+  const balances = useBalances(wallet)
+  const walletTokenIds = Amounts.toArray(balances).map(({tokenId}) => tokenId)
+
   const tokenInfos: Array<Balance.TokenInfo> = React.useMemo(() => {
     if (onlyVerifiedTokens === undefined) return []
     return onlyVerifiedTokens
@@ -80,8 +83,6 @@ const TokenList = () => {
 
   return (
     <View style={styles.list}>
-      {isLoading && <>{loading.fallback}</>}
-
       {filteredTokenList?.length > 0 && (
         <View style={styles.ph}>
           <Spacer height={16} />
