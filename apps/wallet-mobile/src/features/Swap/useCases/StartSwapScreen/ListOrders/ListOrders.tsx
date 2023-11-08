@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Boundary} from '../../../../../components'
+import {useWalletNavigation} from '../../../../../navigation'
 import {useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {COLORS} from '../../../../../theme'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
@@ -10,6 +11,7 @@ import {CompletedOrders, CompletedOrdersSkeleton} from './CompletedOrders'
 import {OpenOrders, OpenOrdersSkeleton} from './OpenOrders'
 
 export const ListOrders = () => {
+  const {navigateToTxHistory} = useWalletNavigation()
   const [orderStatusIndex, setOrderStatusIndex] = React.useState(0)
 
   const strings = useStrings()
@@ -22,6 +24,8 @@ export const ListOrders = () => {
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
     title: strings.swapTitle,
+    isChild: true,
+    onBack: navigateToTxHistory,
   })
 
   return (

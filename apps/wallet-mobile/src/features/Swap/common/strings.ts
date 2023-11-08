@@ -131,6 +131,9 @@ export const useStrings = () => {
     slippageWarningTitle: intl.formatMessage(messages.slippageWarningTitle),
     slippageWarningText: intl.formatMessage(messages.slippageWarningText),
     slippageWarningYourSlippage: intl.formatMessage(messages.slippageWarningYourSlippage),
+    emptyOpenOrders: intl.formatMessage(messages.emptyOpenOrders),
+    emptyOpenOrdersSub: intl.formatMessage(messages.emptyOpenOrdersSub),
+    emptyCompletedOrders: intl.formatMessage(messages.emptyCompletedOrders),
   }
 }
 
@@ -570,5 +573,17 @@ export const messages = defineMessages({
   slippageWarningYourSlippage: {
     id: 'swap.slippage.yourSlippage',
     defaultMessage: '!!!Your slippage tolerance',
+  },
+  emptyOpenOrders: {
+    id: 'swap.listOrders.emptyOpenOrders',
+    defaultMessage: '!!!No orders avaliable yet',
+  },
+  emptyOpenOrdersSub: {
+    id: 'swap.listOrders.emptyOpenOrdersSub',
+    defaultMessage: '!!!Start doing the swap operations to your open orders here',
+  },
+  emptyCompletedOrders: {
+    id: 'swap.listOrders.emptyCompletedOrders',
+    defaultMessage: '!!!No orders completed yet',
   },
 })
