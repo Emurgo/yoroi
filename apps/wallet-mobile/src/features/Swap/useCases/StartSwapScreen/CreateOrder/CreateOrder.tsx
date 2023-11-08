@@ -13,7 +13,6 @@ import {useWalletNavigation} from '../../../../../navigation'
 import {useDisableSearchOnBar} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {useOverridePreviousRoute} from '../../../../../utils/navigation'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types'
@@ -67,8 +66,6 @@ export const CreateOrder = () => {
       },
     },
   )
-
-  useOverridePreviousRoute('history-list')
 
   useDisableSearchOnBar({
     title: strings.swapTitle,

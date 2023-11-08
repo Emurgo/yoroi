@@ -93,11 +93,13 @@ export const useSearchOnNavBar = ({
   placeholder,
   title,
   noBack = false,
+  onBack,
   isChild = false,
 }: {
   placeholder: string
   title: string
   noBack?: boolean
+  onBack?: () => void
   isChild?: boolean
 }) => {
   const navigation = useNavigation()
@@ -118,10 +120,11 @@ export const useSearchOnNavBar = ({
      */
     if (visible) return true
 
-    navigation.goBack()
+    if (onBack) onBack()
+    else navigation.goBack()
 
     return true
-  }, [navigation, visible, handleCloseSearch])
+  }, [handleCloseSearch, visible, onBack, navigation])
 
   const withSearchInput: StackNavigationOptions = {
     ...defaultStackNavigationOptions,
