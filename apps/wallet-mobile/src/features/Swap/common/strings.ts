@@ -103,7 +103,7 @@ export const useStrings = () => {
     transactionSigned: intl.formatMessage(messages.transactionSigned),
     transactionDisplay: intl.formatMessage(messages.transactionDisplay),
     seeOnExplorer: intl.formatMessage(messages.seeOnExplorer),
-    goToOrders: intl.formatMessage(messages.goToOrders),
+    goToTransactions: intl.formatMessage(messages.goToTransactions),
     wrongPasswordMessage: intl.formatMessage(messages.wrongPasswordMessage),
     assignCollateral: intl.formatMessage(messages.assignCollateral),
     collateralNotFound: intl.formatMessage(messages.collateralNotFound),
@@ -131,6 +131,8 @@ export const useStrings = () => {
     slippageWarningTitle: intl.formatMessage(messages.slippageWarningTitle),
     slippageWarningText: intl.formatMessage(messages.slippageWarningText),
     slippageWarningYourSlippage: intl.formatMessage(messages.slippageWarningYourSlippage),
+    serviceUnavailable: intl.formatMessage(messages.serviceUnavailable),
+    serviceUnavailableInfo: intl.formatMessage(messages.serviceUnavailableInfo),
     emptyOpenOrders: intl.formatMessage(messages.emptyOpenOrders),
     emptyOpenOrdersSub: intl.formatMessage(messages.emptyOpenOrdersSub),
     emptyCompletedOrders: intl.formatMessage(messages.emptyCompletedOrders),
@@ -361,10 +363,6 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.seeOnExplorer',
     defaultMessage: '!!!see on explorer',
   },
-  goToOrders: {
-    id: 'swap.swapScreen.goToOrders',
-    defaultMessage: '!!!GO to Orders',
-  },
   asset: {
     id: 'global.assets.assetLabel',
     defaultMessage: '!!!Asset',
@@ -490,6 +488,18 @@ export const messages = defineMessages({
   bluetoothError: {
     id: 'global.ledgerMessages.bluetoothDisabledError',
     defaultMessage: '!!!Connect with Bluetooth',
+  },
+  serviceUnavailable: {
+    id: 'global.error.serviceUnavailable',
+    defaultMessage: '!!!Service unavailable',
+  },
+  serviceUnavailableInfo: {
+    id: 'global.error.serviceUnavailableInfo',
+    defaultMessage: '!!!The server is temporarily busy due to maintenance downtime or capacity problems',
+  },
+  goToTransactions: {
+    id: 'components.send.sendscreen.submittedTxButton',
+    defaultMessage: '!!!GO TO transactions',
   },
   // TODO check this and change if necessary
 
