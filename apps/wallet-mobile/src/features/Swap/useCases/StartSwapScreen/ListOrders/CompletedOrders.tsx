@@ -336,7 +336,7 @@ const NoOrdersYet = () => {
 
       <EmptyCompletedOrdersLogo style={styles.image} />
 
-      <Spacer height={25} />
+      <Spacer height={15} />
 
       <Text style={styles.contentText}>{strings.emptyCompletedOrders}</Text>
     </View>
