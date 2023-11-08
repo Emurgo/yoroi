@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Defs, G, LinearGradient, Path, Stop} from 'react-native-svg'
 
-export const ServiceUnavailableImage = () => {
+export const ConectionErrorImage = () => {
   return (
     <Svg width="254" height="191" viewBox="0 0 254 191" fill="none">
       <G opacity="0.2">
