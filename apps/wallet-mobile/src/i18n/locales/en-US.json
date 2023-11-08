@@ -660,6 +660,8 @@
   "global.currency.USD": "US Dollar",
   "global.error": "Error",
   "global.error.insufficientBalance": "Insufficent balance",
+  "global.error.serviceUnavailable": "Service unavailable",
+  "global.error.serviceUnavailableInfo": "The server is temporarily busy due to maintenance downtime or capacity problems",
   "global.error.walletNameAlreadyTaken": "You already have a wallet with this name",
   "global.error.walletNameTooLong": "Wallet name cannot exceed 40 letters",
   "global.error.walletNameMustBeFilled": "Must be filled",

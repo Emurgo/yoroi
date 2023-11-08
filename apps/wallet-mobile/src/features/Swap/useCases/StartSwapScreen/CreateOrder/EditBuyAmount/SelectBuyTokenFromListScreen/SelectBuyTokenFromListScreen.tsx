@@ -2,6 +2,7 @@ import {FlashList} from '@shopify/flash-list'
 import {useSwap, useSwapTokensOnlyVerified} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React from 'react'
+import {ErrorBoundary} from 'react-error-boundary'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -19,6 +20,7 @@ import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
 import {sortTokensByName} from '../../../../../common/helpers'
 import {useNavigateTo} from '../../../../../common/navigation'
+import {ServiceUnavailable} from '../../../../../common/ServiceUnavailable/ServiceUnavailable'
 import {useStrings} from '../../../../../common/strings'
 import {useSwapForm} from '../../../../../common/SwapFormProvider'
 
@@ -30,6 +32,24 @@ export const SelectBuyTokenFromListScreen = () => {
     title: strings.swapTo,
   })
 
+  return (
+    <SafeAreaView style={styles.container} edges={['left', 'right']}>
+      <ErrorBoundary
+        fallbackRender={({resetErrorBoundary}) => <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />}
+      >
+        <TokenList />
+      </ErrorBoundary>
+    </SafeAreaView>
+  )
+}
+
+const TokenList = () => {
+  const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const {onlyVerifiedTokens, isLoading} = useSwapTokensOnlyVerified()
+  const {search: assetSearchTerm} = useSearch()
+  const balances = useBalances(wallet)
+  const walletTokenIds = Amounts.toArray(balances).map(({tokenId}) => tokenId)
   const loading = React.useMemo(
     () => ({
       fallback: (
@@ -48,23 +68,6 @@ export const SelectBuyTokenFromListScreen = () => {
     [],
   )
 
-  return (
-    <SafeAreaView style={styles.container} edges={['left', 'right']}>
-      <Boundary loading={loading}>
-        <TokenList />
-      </Boundary>
-    </SafeAreaView>
-  )
-}
-
-const TokenList = () => {
-  const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const {onlyVerifiedTokens} = useSwapTokensOnlyVerified()
-  const {search: assetSearchTerm} = useSearch()
-  const balances = useBalances(wallet)
-  const walletTokenIds = Amounts.toArray(balances).map(({tokenId}) => tokenId)
-
   const tokenInfos: Array<Balance.TokenInfo> = React.useMemo(() => {
     if (onlyVerifiedTokens === undefined) return []
     return onlyVerifiedTokens
@@ -77,6 +80,8 @@ const TokenList = () => {
 
   return (
     <View style={styles.list}>
+      {isLoading && <>{loading.fallback}</>}
+
       {filteredTokenList?.length > 0 && (
         <View style={styles.ph}>
           <Spacer height={16} />

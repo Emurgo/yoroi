@@ -386,7 +386,7 @@ export const useSignWithPasswordAndSubmitTx = (
       ...options?.signTx,
       onSuccess: (signedTx, args, context) => {
         options?.signTx?.onSuccess?.(signedTx, args, context)
-        submitTx.mutate(signedTx)
+        // submitTx.mutate(signedTx)
       },
     },
   )
