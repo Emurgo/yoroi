@@ -1,11 +1,12 @@
 import {useFocusEffect} from '@react-navigation/native'
+import {FlashList} from '@shopify/flash-list'
 import {isString} from '@yoroi/common'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Alert, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {
   Button,
@@ -39,6 +40,7 @@ import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {SwapInfoLink} from '../../../common/SwapInfoLink/SwapInfoLink'
+import {EmptyOpenOrdersLogo} from './EmptyOpenOrdersLogo'
 import {getCancellationOrderFee} from './helpers'
 import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
 
@@ -255,8 +257,10 @@ export const OpenOrders = () => {
   return (
     <>
       <View style={styles.container}>
-        <ScrollView style={styles.content}>
-          {filteredOrders.map((order) => {
+        <FlashList
+          data={filteredOrders}
+          contentContainerStyle={styles.list}
+          renderItem={({item: order}: {item: MappedOpenOrder}) => {
             const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
             const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
             const liquidityPoolIcon =
@@ -307,14 +311,19 @@ export const OpenOrders = () => {
                 />
               </ExpandableInfoCard>
             )
-          })}
-        </ScrollView>
+          }}
+          keyExtractor={({id}) => `${id}`}
+          testID="openOrdersList"
+          estimatedItemSize={72}
+          bounces={false}
+          ListEmptyComponent={<ListEmptyComponent openOrders={filteredOrders} />}
+        />
       </View>
 
       <Counter
         style={styles.counter}
         openingText={strings.youHave}
-        counter={orders?.length ?? 0}
+        counter={filteredOrders?.length ?? 0}
         closingText={strings.listOpenOrders}
       />
 
@@ -591,6 +600,37 @@ const ModalContentButtons = ({onBack, onConfirm}: {onBack: () => void; onConfirm
   )
 }
 
+const ListEmptyComponent = ({openOrders}: {openOrders: Array<MappedOpenOrder>}) => {
+  const {search: assetSearchTerm, visible: isSearching} = useSearch()
+
+  if (isSearching && assetSearchTerm.length > 0 && openOrders.length === 0) return <EmptySearchResult />
+
+  return <NoOrdersYet />
+}
+
+const NoOrdersYet = () => {
+  const strings = useStrings()
+  return (
+    <View style={styles.imageContainer}>
+      <Spacer height={80} />
+
+      <EmptyOpenOrdersLogo style={styles.image} />
+
+      <Spacer height={25} />
+
+      <Text style={styles.contentText}>{strings.emptyOpenOrders}</Text>
+
+      <Spacer height={5} />
+
+      <Text style={styles.contentSubText}>{strings.emptyOpenOrdersSub}</Text>
+    </View>
+  )
+}
+
+const EmptySearchResult = () => {
+  return null
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -599,6 +639,9 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    paddingHorizontal: 16,
+  },
+  list: {
     paddingHorizontal: 16,
   },
   contentRow: {
@@ -662,5 +705,32 @@ const styles = StyleSheet.create({
   },
   counter: {
     paddingVertical: 16,
+  },
+  image: {
+    flex: 1,
+    alignSelf: 'center',
+    width: 200,
+    height: 228,
+  },
+  imageContainer: {
+    flex: 1,
+    textAlign: 'center',
+  },
+  contentText: {
+    flex: 1,
+    textAlign: 'center',
+    fontFamily: 'Rubik-Medium',
+    fontWeigh: '500',
+    fontSize: 20,
+    color: '#000',
+  },
+  contentSubText: {
+    flex: 1,
+    textAlign: 'center',
+    fontFamily: 'Rubik-Regular',
+    fontWeigh: '400',
+    fontSize: 16,
+    color: '#6B7384',
+    lineHeight: 24,
   },
 })
