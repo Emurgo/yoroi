@@ -139,6 +139,7 @@ const getStories = () => {
     "./src/features/Swap/common/LiquidityPool/LiquidityPool.stories.tsx": require("../src/features/Swap/common/LiquidityPool/LiquidityPool.stories.tsx"),
     "./src/features/Swap/common/ModalError/ModalError.stories.tsx": require("../src/features/Swap/common/ModalError/ModalError.stories.tsx"),
     "./src/features/Swap/common/SelectPool/SelectPoolFromList/SelectPoolFromList.stories.tsx": require("../src/features/Swap/common/SelectPool/SelectPoolFromList/SelectPoolFromList.stories.tsx"),
+    "./src/features/Swap/common/ServiceUnavailable/ServiceUnavailable.stories.tsx": require("../src/features/Swap/common/ServiceUnavailable/ServiceUnavailable.stories.tsx"),
     "./src/features/Swap/useCases/ConfirmTxScreen/ConfirmTxScreen.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/ConfirmTxScreen.stories.tsx"),
     "./src/features/Swap/useCases/ConfirmTxScreen/ShowFailedTxScreen/ShowFailedTxScreen.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/ShowFailedTxScreen/ShowFailedTxScreen.stories.tsx"),
     "./src/features/Swap/useCases/ConfirmTxScreen/ShowSubmittedTxScreen/ShowSubmittedTxScreen.stories.tsx": require("../src/features/Swap/useCases/ConfirmTxScreen/ShowSubmittedTxScreen/ShowSubmittedTxScreen.stories.tsx"),

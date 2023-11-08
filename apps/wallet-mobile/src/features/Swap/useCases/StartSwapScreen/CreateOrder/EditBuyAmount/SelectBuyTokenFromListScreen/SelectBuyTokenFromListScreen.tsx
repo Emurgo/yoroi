@@ -2,6 +2,7 @@ import {FlashList} from '@shopify/flash-list'
 import {useSwap, useSwapTokensOnlyVerified} from '@yoroi/swap'
 import {Balance} from '@yoroi/types'
 import React from 'react'
+import {ErrorBoundary} from 'react-error-boundary'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -19,16 +20,12 @@ import {Counter} from '../../../../../common/Counter/Counter'
 import {filterBySearch} from '../../../../../common/filterBySearch'
 import {sortTokensByName} from '../../../../../common/helpers'
 import {useNavigateTo} from '../../../../../common/navigation'
+import {ServiceUnavailable} from '../../../../../common/ServiceUnavailable/ServiceUnavailable'
 import {useStrings} from '../../../../../common/strings'
 import {useSwapForm} from '../../../../../common/SwapFormProvider'
 
 export const SelectBuyTokenFromListScreen = () => {
   const strings = useStrings()
-
-  useSearchOnNavBar({
-    placeholder: strings.searchTokens,
-    title: strings.swapTo,
-  })
 
   const loading = React.useMemo(
     () => ({
@@ -48,10 +45,19 @@ export const SelectBuyTokenFromListScreen = () => {
     [],
   )
 
+  useSearchOnNavBar({
+    placeholder: strings.searchTokens,
+    title: strings.swapTo,
+  })
+
   return (
     <SafeAreaView style={styles.container} edges={['left', 'right']}>
       <Boundary loading={loading}>
-        <TokenList />
+        <ErrorBoundary
+          fallbackRender={({resetErrorBoundary}) => <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />}
+        >
+          <TokenList />
+        </ErrorBoundary>
       </Boundary>
     </SafeAreaView>
   )
