@@ -126,34 +126,42 @@ export const useSearchOnNavBar = ({
     return true
   }, [handleCloseSearch, visible, onBack, navigation])
 
-  const withSearchInput: StackNavigationOptions = {
-    ...defaultStackNavigationOptions,
-    headerTitle: () => <InputSearch placeholder={placeholder} />,
-    headerRight: () => (search.length > 0 ? <EraseButton onPress={handleCloseSearch} /> : null),
-    headerLeft: () => <BackButton onPress={handleGoBack} />,
-    headerTitleAlign: 'left',
-    headerTitleContainerStyle: {
-      flex: 1,
-    },
-    headerBackTitleVisible: false,
-  }
+  const withSearchInput: StackNavigationOptions = React.useMemo(
+    () => ({
+      ...defaultStackNavigationOptions,
+      headerTitle: () => <InputSearch placeholder={placeholder} />,
+      headerRight: () => (search.length > 0 ? <EraseButton onPress={handleCloseSearch} /> : null),
+      headerLeft: () => <BackButton onPress={handleGoBack} />,
+      headerTitleAlign: 'left',
+      headerTitleContainerStyle: {
+        flex: 1,
+      },
+      headerBackTitleVisible: false,
+    }),
+    [handleCloseSearch, handleGoBack, placeholder, search.length],
+  )
 
-  const withSearchButton: StackNavigationOptions = {
-    ...defaultStackNavigationOptions,
-    headerTitle: title,
-    headerRight: () => <SearchButton onPress={() => showSearch()} />,
-    headerLeft: () => <BackButton onPress={handleGoBack} />,
-    ...(noBack ? {headerLeft: () => null} : {}),
-    headerBackTitleVisible: false,
-  }
+  const withSearchButton: StackNavigationOptions = React.useMemo(
+    () => ({
+      ...defaultStackNavigationOptions,
+      headerTitle: title,
+      headerRight: () => <SearchButton onPress={() => showSearch()} />,
+      headerLeft: () => <BackButton onPress={handleGoBack} />,
+      ...(noBack ? {headerLeft: () => null} : {}),
+      headerBackTitleVisible: false,
+    }),
+    [handleGoBack, noBack, showSearch, title],
+  )
 
   React.useLayoutEffect(() => {
     if (!isChild) navigation.setOptions(visible ? withSearchInput : withSearchButton)
   })
 
-  useFocusEffect(() => {
-    if (isChild) navigation.getParent()?.setOptions(visible ? withSearchInput : withSearchButton)
-  })
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isChild) navigation.getParent()?.setOptions(visible ? withSearchInput : withSearchButton)
+    }, [isChild, navigation, visible, withSearchButton, withSearchInput]),
+  )
 }
 
 export const useDisableSearchOnBar = ({
