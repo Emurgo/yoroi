@@ -272,10 +272,14 @@ const styles = StyleSheet.create({
     color: COLORS.BLACK,
     fontWeight: '400',
     fontFamily: 'Rubik-Regular',
+    fontSize: 16,
+    lineHeight: 24,
   },
   bolder: {
     color: COLORS.BLACK,
     fontWeight: '500',
     fontFamily: 'Rubik-Medium',
+    fontSize: 16,
+    lineHeight: 24,
   },
 })

@@ -38,6 +38,7 @@ export type SwapOrderCalculation = Readonly<{
   }
   hasSupply: boolean
   buyAmountWithSlippage: Balance.Amount
+  ptTotalValueSpent?: Balance.Amount
   cost: {
     liquidityFee: Balance.Amount
     deposit: Balance.Amount

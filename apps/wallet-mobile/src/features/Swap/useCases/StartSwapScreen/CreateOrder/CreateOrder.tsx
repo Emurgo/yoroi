@@ -9,6 +9,8 @@ import {ScrollView} from 'react-native-gesture-handler'
 
 import {Button, Spacer, useModal} from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
+import {useWalletNavigation} from '../../../../../navigation'
+import {useDisableSearchOnBar} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
@@ -36,7 +38,8 @@ const BOTTOM_ACTION_SECTION = 180
 export const CreateOrder = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
-  const navigation = useNavigateTo()
+  const navigateTo = useNavigateTo()
+  const {navigateToTxHistory} = useWalletNavigation()
   const {orderData, unsignedTxChanged, poolPairsChanged} = useSwap()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
@@ -63,6 +66,12 @@ export const CreateOrder = () => {
       },
     },
   )
+
+  useDisableSearchOnBar({
+    title: strings.swapTitle,
+    isChild: true,
+    onBack: navigateToTxHistory,
+  })
 
   const sellTokenInfo = useTokenInfo({
     wallet,
@@ -150,7 +159,7 @@ export const CreateOrder = () => {
       ),
     })
 
-    navigation.confirmTx()
+    navigateTo.confirmTx()
   }
 
   const createSwapOrder = (orderData: Swap.CreateOrderData) => {
@@ -229,7 +238,7 @@ export const CreateOrder = () => {
           slippage={orderData.slippage}
           ticker={buyTokenInfo.ticker ?? buyTokenInfo.name ?? ''}
         />,
-        300,
+        350,
       )
       return
     }

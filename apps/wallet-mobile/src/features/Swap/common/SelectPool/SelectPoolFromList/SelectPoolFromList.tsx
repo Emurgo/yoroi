@@ -16,7 +16,7 @@ import {PoolIcon} from '../../PoolIcon/PoolIcon'
 import {useStrings} from '../../strings'
 import {useSwapForm} from '../../SwapFormProvider'
 
-const PRECISION = 14
+const PRECISION = 10
 
 type Props = {
   pools?: ReadonlyArray<Swap.Pool>
@@ -59,6 +59,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
         const formattedTvl = Quantities.format(tvl, decimals, 0)
         const formattedBatcherFeeInPt = Quantities.format(pool.batcherFee.quantity, decimals, decimals)
         const marketPrice = getMarketPrice(pool, orderData.amounts.sell.tokenId)
+        const selectedPoolId = selectedCardIndex ?? orderData?.bestPoolCalculation?.pool?.poolId ?? null
 
         return (
           <View key={pool.poolId}>
@@ -66,7 +67,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
 
             <View style={[styles.shadowProp]}>
               <LinearGradient
-                colors={pool.poolId === selectedCardIndex ? ['#E4E8F7', '#C6F7F7'] : [COLORS.WHITE, COLORS.WHITE]}
+                colors={pool.poolId === selectedPoolId ? ['#E4E8F7', '#C6F7F7'] : [COLORS.WHITE, COLORS.WHITE]}
                 style={styles.linearGradient}
               >
                 <TouchableOpacity key={pool.poolId} onPress={() => handleOnPoolSelection(pool)} style={[styles.card]}>
@@ -190,6 +191,9 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     color: '#6B7384',
+    fontSize: 16,
   },
-  infoValue: {},
+  infoValue: {
+    fontSize: 16,
+  },
 })

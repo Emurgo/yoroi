@@ -16,22 +16,16 @@ import {useModal} from './ModalContext'
 
 export const ModalScreen = () => {
   const {current} = useCardAnimation()
-  const {height, closeModal, content} = useModal()
+  const {height, closeModal, content, isOpen} = useModal()
   const [swipeLocationY, setSwipeLocationY] = React.useState(height)
-  const [downDirectionCount, setDownDirectionCount] = React.useState(0)
-
-  const cleanDirectionCount = () => {
-    setDownDirectionCount(0)
-  }
 
   const onResponderMove = ({nativeEvent}: GestureResponderEvent) => {
-    if (swipeLocationY < nativeEvent.locationY) {
-      const newState = downDirectionCount + 1
-      if (newState > 4) {
-        closeModal()
-        cleanDirectionCount()
-      } else setDownDirectionCount(newState)
+    if (swipeLocationY < nativeEvent.locationY && isOpen) {
+      setSwipeLocationY(height)
+      closeModal()
+      return
     }
+
     setSwipeLocationY(nativeEvent.locationY)
   }
 
