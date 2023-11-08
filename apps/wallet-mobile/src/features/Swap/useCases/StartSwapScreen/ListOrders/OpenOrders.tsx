@@ -259,7 +259,7 @@ export const OpenOrders = () => {
       <View style={styles.container}>
         <FlashList
           data={filteredOrders}
-          contentContainerStyle={styles.content}
+          contentContainerStyle={styles.list}
           renderItem={({item: order}: {item: MappedOpenOrder}) => {
             const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
             const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
@@ -639,6 +639,9 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    paddingHorizontal: 16,
+  },
+  list: {
     paddingHorizontal: 16,
   },
   contentRow: {
