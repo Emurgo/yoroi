@@ -53,7 +53,7 @@ export const ShowSubmittedTxScreen = () => {
         <View style={styles.bottomFixed}>
           <Button
             onPress={() => navigate.swapOpenOrders()}
-            title={strings.goToOrders}
+            title={strings.goToTransactions}
             style={styles.button}
             shelleyTheme
           />
