@@ -137,6 +137,7 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
   const {buyTokenInfoChanged, orderData} = useSwap()
   const {
     sellQuantity: {isTouched: isSellTouched},
+    buyQuantity: {isTouched: isBuyTouched},
     buyTouched,
   } = useSwapForm()
   const navigateTo = useNavigateTo()
@@ -144,13 +145,13 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
 
   const isDisabled = id === orderData.amounts.sell.tokenId && isSellTouched
   const inUserWallet = walletTokenIds.includes(tokenInfo.id)
-  const isSameToken = id === orderData.amounts.buy.tokenId
+  const shouldUpdateToken = id !== orderData.amounts.buy.tokenId || !isBuyTouched
 
   const handleOnTokenSelection = () => {
     track.swapAssetToChanged({
       to_asset: [{asset_name: name, asset_ticker: ticker, policy_id: group}],
     })
-    if (!isSameToken) {
+    if (shouldUpdateToken) {
       buyTokenInfoChanged({
         decimals: decimals ?? 0,
         id: id,
