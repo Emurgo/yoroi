@@ -391,5 +391,6 @@ const styles = StyleSheet.create({
     fontWeigh: '500',
     fontSize: 20,
     color: '#000',
+    lineHeight: 30,
   },
 })
