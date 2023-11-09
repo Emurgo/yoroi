@@ -42,7 +42,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const handleOnBuy = () => {
     track.walletPageExchangeBottomSheetClicked()
 
-    const modalHeight = 300
+    const modalHeight = 310
     const modalTextFormattingOptions: BuyInfoFormattingOptions = {
       b: (text) => <Text style={[styles.buyInfo, styles.bold]}>{text}</Text>,
       textComponent: (text) => <Text style={styles.buyInfo}>{text}</Text>,

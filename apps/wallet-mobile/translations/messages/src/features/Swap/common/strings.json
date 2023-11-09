@@ -1621,7 +1621,7 @@
   },
   {
     "id": "swap.listOrders.emptyOpenOrders",
-    "defaultMessage": "!!!No orders avaliable yet",
+    "defaultMessage": "!!!No orders available yet",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
       "line": 587,
