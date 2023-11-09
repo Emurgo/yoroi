@@ -31,7 +31,7 @@ export {getBestSellPool} from './helpers/pools/getBestSellPool'
 export {getBestPoolCalculation} from './helpers/pools/getBestPoolCalculation'
 
 // translators
-export {SwapProvider} from './translators/reactjs/provider/SwapProvider'
+export {SwapProvider, SwapContext} from './translators/reactjs/provider/SwapProvider'
 export {SwapState} from './translators/reactjs/state/state'
 export {useSwapCreateOrder} from './translators/reactjs/hooks/useSwapCreateOrder'
 export {useSwapOrdersByStatusCompleted} from './translators/reactjs/hooks/useSwapOrdersByStatusCompleted'
