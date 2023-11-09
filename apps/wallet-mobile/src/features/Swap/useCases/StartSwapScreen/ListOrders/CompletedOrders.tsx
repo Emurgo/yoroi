@@ -377,8 +377,8 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     alignSelf: 'center',
-    width: 200,
-    height: 228,
+    width: 280,
+    height: 224,
   },
   imageContainer: {
     flex: 1,
