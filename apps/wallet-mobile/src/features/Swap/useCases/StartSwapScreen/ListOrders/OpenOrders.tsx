@@ -616,7 +616,7 @@ const NoOrdersYet = () => {
 
       <EmptyOpenOrdersLogo style={styles.image} />
 
-      <Spacer height={25} />
+      <Spacer height={15} />
 
       <Text style={styles.contentText}>{strings.emptyOpenOrders}</Text>
 
@@ -723,6 +723,7 @@ const styles = StyleSheet.create({
     fontWeigh: '500',
     fontSize: 20,
     color: '#000',
+    lineHeight: 30,
   },
   contentSubText: {
     flex: 1,

@@ -586,7 +586,7 @@ export const messages = defineMessages({
   },
   emptyOpenOrders: {
     id: 'swap.listOrders.emptyOpenOrders',
-    defaultMessage: '!!!No orders avaliable yet',
+    defaultMessage: '!!!No orders available yet',
   },
   emptyOpenOrdersSub: {
     id: 'swap.listOrders.emptyOpenOrdersSub',
