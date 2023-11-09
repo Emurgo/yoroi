@@ -1,10 +1,10 @@
 import React from 'react'
+import {ErrorBoundary} from 'react-error-boundary'
 import {StyleSheet, View} from 'react-native'
 
-import {ErrorBoundary} from 'react-error-boundary'
-import {useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {Boundary} from '../../../../../components'
 import {useWalletNavigation} from '../../../../../navigation'
+import {useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {COLORS} from '../../../../../theme'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {ServiceUnavailable} from '../../../common/ServiceUnavailable/ServiceUnavailable'
