@@ -6,10 +6,8 @@ import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {Image} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 
-import img from '../../../../../assets/img/illustration-swap-completed-order.png' // using png because svg logo has the issue is going to be fixed here https://github.com/software-mansion/react-native-svg/pull/2152
 import {
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
@@ -31,6 +29,7 @@ import {Counter} from '../../../common/Counter/Counter'
 import {parseOrderTxMetadata} from '../../../common/helpers'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
+import {EmptyCompletedOrdersLogo} from './EmptyCompletedOrdersLogo'
 
 const PRECISION = 14
 
@@ -335,7 +334,7 @@ const NoOrdersYet = () => {
     <View style={styles.imageContainer}>
       <Spacer height={80} />
 
-      <Image source={img} style={styles.image} />
+      <EmptyCompletedOrdersLogo style={styles.image} />
 
       <Spacer height={15} />
 
@@ -378,9 +377,8 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     alignSelf: 'center',
-    resizeMode: 'contain',
-    width: 280,
-    height: 224,
+    width: 200,
+    height: 228,
   },
   imageContainer: {
     flex: 1,
@@ -390,7 +388,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontFamily: 'Rubik-Medium',
-    fontWeight: '500',
+    fontWeigh: '500',
     fontSize: 20,
     color: '#000',
     lineHeight: 30,
