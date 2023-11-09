@@ -2,15 +2,15 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Boundary} from '../../../../../components'
-import {useWalletNavigation} from '../../../../../navigation'
-import {useSearchOnNavBar} from '../../../../../Search/SearchContext'
-import {COLORS} from '../../../../../theme'
-import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useStrings} from '../../../common/strings'
 import {CompletedOrders, CompletedOrdersSkeleton} from './CompletedOrders'
 import {OpenOrders, OpenOrdersSkeleton} from './OpenOrders'
+import {useWalletNavigation} from '../../../../../navigation'
+import {useSearchOnNavBar} from '../../../../../Search/SearchContext'
+import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {ErrorBoundary} from 'react-error-boundary'
 import {ServiceUnavailable} from '../../../common/ServiceUnavailable/ServiceUnavailable'
+import {COLORS} from '../../../../../theme'
 
 export const ListOrders = () => {
   const {navigateToTxHistory} = useWalletNavigation()
