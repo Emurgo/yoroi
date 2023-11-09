@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontFamily: 'Rubik-Medium',
-    fontWeigh: '500',
+    fontWeight: '500',
     fontSize: 20,
     color: '#000',
     lineHeight: 30,
