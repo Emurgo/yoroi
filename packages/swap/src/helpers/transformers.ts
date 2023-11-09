@@ -93,27 +93,11 @@ export const transformersMaker = (
   }
 
   const asYoroiBalanceToken = (
-    openswapToken: OpenSwap.Token,
+    openswapTokenPair: OpenSwap.TokenPair,
   ): Balance.Token => {
-    const {info, price} = openswapToken
+    const {info, price} = openswapTokenPair
     const balanceToken: Balance.Token = {
-      info: {
-        id: asYoroiTokenId(info.address),
-        group: info.address.policyId,
-        fingerprint: asTokenFingerprint({
-          policyId: info.address.policyId,
-          assetNameHex: info.address.name,
-        }),
-        name: asUtf8(info.address.name),
-        decimals: info.decimalPlaces,
-        description: info.description,
-        image: info.image,
-        kind: 'ft',
-        symbol: info?.sign,
-        icon: undefined,
-        ticker: info.symbol,
-        metadatas: {},
-      },
+      info: asYoroiBalanceTokenInfo(info),
       price: {
         ...price,
       },
@@ -123,6 +107,39 @@ export const transformersMaker = (
       },
     }
     return balanceToken
+  }
+
+  const asYoroiBalanceTokenInfo = (
+    openswapToken: OpenSwap.TokenPair['info'],
+  ): Balance.TokenInfo => {
+    const tokenInfo: Balance.TokenInfo = {
+      id: asYoroiTokenId(openswapToken.address),
+      group: openswapToken.address.policyId,
+      fingerprint: asTokenFingerprint({
+        policyId: openswapToken.address.policyId,
+        assetNameHex: openswapToken.address.name,
+      }),
+      name: asUtf8(openswapToken.address.name),
+      decimals: openswapToken.decimalPlaces,
+      description: openswapToken.description,
+      image: openswapToken.image,
+      kind: 'ft',
+      icon: undefined,
+      ticker: openswapToken.symbol,
+      symbol: openswapToken.sign,
+      metadatas: {},
+    }
+    return tokenInfo
+  }
+
+  const asYoroiBalanceTokenInfos = (
+    openswapTokens: OpenSwap.ListTokensResponse,
+  ): Balance.TokenInfo[] => {
+    if (openswapTokens.length === 0) return []
+    // filters should go into manager, but since we strip out the status is here for now
+    return openswapTokens
+      .filter((token) => token.status === 'verified')
+      .map(asYoroiBalanceTokenInfo)
   }
 
   const asYoroiPool = (
@@ -206,22 +223,27 @@ export const transformersMaker = (
   }
 
   const asYoroiBalanceTokens = (
-    openswapTokens: OpenSwap.Token[],
-  ): Balance.Token[] => openswapTokens.map(asYoroiBalanceToken)
+    openswapTokenPairs: OpenSwap.TokenPair[],
+  ): Balance.Token[] => openswapTokenPairs.map(asYoroiBalanceToken)
 
   return {
     asOpenswapTokenId,
     asOpenswapPriceTokenAddress,
     asOpenswapAmount,
 
-    asYoroiTokenId,
-    asYoroiAmount,
-    asYoroiBalanceToken,
-    asYoroiBalanceTokens,
     asYoroiCompletedOrder,
     asYoroiOpenOrder,
+
     asYoroiPool,
     asYoroiPools,
+
+    asYoroiTokenId,
+    asYoroiBalanceToken,
+    asYoroiBalanceTokens,
+    asYoroiBalanceTokenInfo,
+    asYoroiBalanceTokenInfos,
+
+    asYoroiAmount,
   }
 }
 

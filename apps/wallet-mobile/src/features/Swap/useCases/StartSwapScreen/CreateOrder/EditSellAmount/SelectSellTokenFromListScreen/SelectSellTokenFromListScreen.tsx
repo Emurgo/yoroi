@@ -91,6 +91,7 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {sellTokenInfoChanged, orderData} = useSwap()
   const {
     buyQuantity: {isTouched: isBuyTouched},
+    sellQuantity: {isTouched: isSellTouched},
     sellTouched,
   } = useSwapForm()
   const navigateTo = useNavigateTo()
@@ -98,16 +99,19 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
 
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
   const isDisabled = tokenInfo.id === orderData.amounts.buy.tokenId && isBuyTouched
+  const shouldUpdateToken = tokenInfo.id !== orderData.amounts.sell.tokenId || !isSellTouched
 
   const handleOnTokenSelection = () => {
     track.swapAssetFromChanged({
       from_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
     })
-    sellTouched()
-    sellTokenInfoChanged({
-      id: tokenInfo.id,
-      decimals: tokenInfo.decimals ?? 0,
-    })
+    if (shouldUpdateToken) {
+      sellTouched()
+      sellTokenInfoChanged({
+        id: tokenInfo.id,
+        decimals: tokenInfo.decimals ?? 0,
+      })
+    }
     navigateTo.startSwap()
     closeSearch()
   }

@@ -7,7 +7,8 @@ export const SWAP_API_ENDPOINTS = {
     getLiquidityPools: 'https://api.muesliswap.com/liquidity/pools',
     getOrders: 'https://onchain2.muesliswap.com/orders/all/',
     getCompletedOrders: 'https://api.muesliswap.com/orders/v2',
-    getTokens: 'https://api.muesliswap.com/list',
+    getTokenPairs: 'https://api.muesliswap.com/list',
+    getTokens: 'https://api.muesliswap.com/token-list',
     constructSwapDatum: 'https://aggregator.muesliswap.com/constructSwapDatum',
     cancelSwapTransaction:
       'https://aggregator.muesliswap.com/cancelSwapTransaction',
@@ -18,7 +19,8 @@ export const SWAP_API_ENDPOINTS = {
     getLiquidityPools: 'https://preprod.api.muesliswap.com/liquidity/pools',
     getOrders: 'https://preprod.pools.muesliswap.com/orders/all/',
     getCompletedOrders: 'https://api.muesliswap.com/orders/v2',
-    getTokens: 'https://preprod.api.muesliswap.com/list',
+    getTokenPairs: 'https://preprod.api.muesliswap.com/list',
+    getTokens: 'https://preprod.api.muesliswap.com/token-list',
     constructSwapDatum:
       'https://aggregator.muesliswap.com/constructTestnetSwapDatum',
     cancelSwapTransaction:

@@ -26,7 +26,8 @@ const listOrdersByStatusOpenResponse: Swap.OpenOrderResponse =
 const listOrdersByStatusCompletedResponse: Swap.CompletedOrderResponse =
   apiMocks.getCompletedOrders
 const listPoolsByPairResponse: Swap.PoolResponse = apiMocks.getPools
-const listPairsByTokenResponse: Balance.Token[] = apiMocks.getTokens
+const listTokensByPairResponse: Balance.Token[] = apiMocks.getTokenPairs
+const listOnlyVerifiedTokensResponse: Balance.TokenInfo[] = apiMocks.getTokens
 
 // API FUNCTIONS
 const createOrder = {
@@ -92,10 +93,21 @@ const getPrice = {
   },
 }
 
-const getTokens = {
-  success: () => Promise.resolve(listPairsByTokenResponse),
+const getTokenPairs = {
+  success: () => Promise.resolve(listTokensByPairResponse),
   delayed: (timeout?: number) =>
-    delayedResponse({data: listPairsByTokenResponse, timeout}),
+    delayedResponse({data: listTokensByPairResponse, timeout}),
+  empty: () => Promise.resolve([]),
+  loading,
+  error: {
+    unknown: unknownError,
+  },
+}
+
+const getTokens = {
+  success: () => Promise.resolve(listOnlyVerifiedTokensResponse),
+  delayed: (timeout?: number) =>
+    delayedResponse({data: listOnlyVerifiedTokensResponse, timeout}),
   empty: () => Promise.resolve([]),
   loading,
   error: {
@@ -144,7 +156,8 @@ export const swapManagerMocks = {
   listOrdersByStatusOpenResponse,
   listOrdersByStatusCompletedResponse,
   listPoolsByPairResponse,
-  listPairsByTokenResponse,
+  listTokensByPairResponse,
+  listOnlyVerifiedTokensResponse,
 
   slippageResponse,
 
@@ -154,6 +167,7 @@ export const swapManagerMocks = {
   getOpenOrders,
   getCompletedOrders,
   getPools,
+  getTokenPairs,
   getTokens,
 
   slippage,
@@ -174,9 +188,10 @@ export const mockSwapManager: Swap.Manager = {
       byPair: getPools.success,
     },
   },
-  pairs: {
+  tokens: {
     list: {
-      byToken: getTokens.success,
+      byPair: getTokenPairs.success,
+      onlyVerified: getTokens.success,
     },
   },
   price: {
@@ -209,9 +224,10 @@ export const mockSwapManagerDefault: Swap.Manager = {
   price: {
     byPair: getPrice.error.unknown,
   },
-  pairs: {
+  tokens: {
     list: {
-      byToken: getTokens.error.unknown,
+      byPair: getTokenPairs.error.unknown,
+      onlyVerified: getTokens.error.unknown,
     },
   },
   slippage: slippage.error.unknown,

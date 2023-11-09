@@ -119,7 +119,7 @@ export type PoolPair = {
 }
 export type PoolPairResponse = PoolPair[]
 
-export type Token = {
+export type TokenPair = {
   info: {
     supply: {
       total: string // total circulating supply of the token, without decimals.
@@ -159,7 +159,10 @@ export type Token = {
     price10d: number[] //float, prices of this tokens averaged for the last 10 days, in chronological order i.e.oldest first.
   }
 }
-export type TokenResponse = Token[]
+export type TokenPairsResponse = TokenPair[]
+
+export type TokenInfo = Omit<TokenPair['info'], 'sign'>
+export type ListTokensResponse = TokenInfo[]
 
 export type TokenAddress =
   | {

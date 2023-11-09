@@ -69,26 +69,22 @@ function containsOnlyValidChars(str?: string): boolean {
   return typeof str === 'string' && validCharsRegex.test(str)
 }
 
-export const sortTokensByName = (a: Balance.Token, b: Balance.Token, wallet: YoroiWallet) => {
-  const isValidNameA = containsOnlyValidChars(a.info.name)
-  const isValidNameB = containsOnlyValidChars(b.info.name)
-  const isValidTickerA = containsOnlyValidChars(a.info.ticker)
-  const isValidTickerB = containsOnlyValidChars(b.info.ticker)
+export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo, wallet: YoroiWallet) => {
+  const isValidNameA = containsOnlyValidChars(a.name)
+  const isValidNameB = containsOnlyValidChars(b.name)
+  const isValidTickerA = containsOnlyValidChars(a.ticker)
+  const isValidTickerB = containsOnlyValidChars(b.ticker)
 
   const nameA =
-    a.info.ticker?.toLocaleLowerCase() && isValidTickerA
-      ? a.info.ticker?.toLocaleLowerCase()
-      : a.info.name.toLocaleLowerCase()
+    a.ticker?.toLocaleLowerCase() && isValidTickerA ? a.ticker?.toLocaleLowerCase() : a.name.toLocaleLowerCase()
 
   const nameB =
-    b.info.ticker?.toLocaleLowerCase() && isValidTickerB
-      ? b.info.ticker?.toLocaleLowerCase()
-      : b.info.name.toLocaleLowerCase()
+    b.ticker?.toLocaleLowerCase() && isValidTickerB ? b.ticker?.toLocaleLowerCase() : b.name.toLocaleLowerCase()
 
-  const isBPrimary = b.info.ticker === wallet.primaryTokenInfo.ticker
+  const isBPrimary = b.ticker === wallet.primaryTokenInfo.ticker
   if (isBPrimary) return 1
 
-  const isAPrimary = a.info.ticker === wallet.primaryTokenInfo.ticker
+  const isAPrimary = a.ticker === wallet.primaryTokenInfo.ticker
   if (isAPrimary) return -1
 
   if (!isValidNameA && isValidNameB) {

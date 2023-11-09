@@ -31,6 +31,34 @@ jest.mock('react-native-reanimated', () => {
   Reanimated.default.call = () => {}
   return Reanimated
 })
+jest.mock('react-native-localize', () => ({
+  getLocales: () => [
+    // extend if needed, add the locales you want
+    {countryCode: 'US', languageTag: 'en-US', languageCode: 'en', isRTL: false},
+    {countryCode: 'FR', languageTag: 'fr-FR', languageCode: 'fr', isRTL: false},
+  ],
+
+  // use a provided translation, or return undefined to test your fallback
+  findBestLanguageTag: () => ({
+    languageTag: 'en-US',
+    isRTL: false,
+  }),
+
+  getNumberFormatSettings: () => ({
+    decimalSeparator: '.',
+    groupingSeparator: ',',
+  }),
+
+  getCalendar: () => 'gregorian', // the calendar identifier you want
+  getCountry: () => 'US', // the country code you want
+  getCurrencies: () => ['USD', 'EUR'], // can be empty array
+  getTemperatureUnit: () => 'celsius', // or "fahrenheit"
+  getTimeZone: () => 'Europe/Paris', // the timezone you want
+  uses24HourClock: () => true,
+  usesMetricSystem: () => true,
+  usesAutoDateAndTime: () => true,
+  usesAutoTimeZone: () => true,
+}))
 
 Logger.setLogLevel(LogLevel.Nothing)
 YoroiLogging.Logger.setLogLevel(YoroiLogging.LogLevel.Nothing)

@@ -1,7 +1,6 @@
-import {useFocusEffect} from '@react-navigation/native'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {NativeModules, Platform, ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -9,15 +8,14 @@ import {Button, CopyButton, ProgressStep, Spacer, Text} from '../components'
 import {confirmationMessages} from '../i18n/global-messages'
 import {useBlockGoBack} from '../navigation'
 import {COLORS} from '../theme'
+import {useAllowScreenshots} from '../utils'
 import {Actions, Description, Title} from './components'
 import {useCountdown} from './hooks'
 import {VotingRegistrationBackupCheckModal} from './VotingRegistrationBackupCheckModal'
 
-const {FlagSecure} = NativeModules
-
 export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; votingKeyEncrypted: string}) => {
   useBlockGoBack()
-  useAllowScreenshot()
+  useAllowScreenshots()
   const strings = useStrings()
 
   const [showBackupWarningModal, setShowBackupWarningModal] = useState(false)
@@ -164,18 +162,4 @@ const useStrings = () => {
     secretCode: intl.formatMessage(messages.secretCode),
     completeButton: intl.formatMessage(confirmationMessages.commonButtons.completeButton),
   }
-}
-
-const useAllowScreenshot = () => {
-  useFocusEffect(
-    React.useCallback(() => {
-      if (Platform.OS === 'android') {
-        FlagSecure.deactivate()
-
-        return () => {
-          FlagSecure.activate()
-        }
-      }
-    }, []),
-  )
 }
