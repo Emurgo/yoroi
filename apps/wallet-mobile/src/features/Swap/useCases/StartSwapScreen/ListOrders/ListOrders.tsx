@@ -9,6 +9,8 @@ import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useStrings} from '../../../common/strings'
 import {CompletedOrders, CompletedOrdersSkeleton} from './CompletedOrders'
 import {OpenOrders, OpenOrdersSkeleton} from './OpenOrders'
+import {ErrorBoundary} from 'react-error-boundary'
+import {ServiceUnavailable} from '../../../common/ServiceUnavailable/ServiceUnavailable'
 
 export const ListOrders = () => {
   const {navigateToTxHistory} = useWalletNavigation()
@@ -36,11 +38,19 @@ export const ListOrders = () => {
 
       {orderStatusIndex === 0 ? (
         <Boundary loading={{fallback: <OpenOrdersSkeleton />}}>
-          <OpenOrders />
+          <ErrorBoundary
+            fallbackRender={({resetErrorBoundary}) => <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />}
+          >
+            <OpenOrders />
+          </ErrorBoundary>
         </Boundary>
       ) : (
         <Boundary loading={{fallback: <CompletedOrdersSkeleton />}}>
-          <CompletedOrders />
+          <ErrorBoundary
+            fallbackRender={({resetErrorBoundary}) => <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />}
+          >
+            <CompletedOrders />
+          </ErrorBoundary>
         </Boundary>
       )}
     </View>
