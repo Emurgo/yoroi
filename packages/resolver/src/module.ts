@@ -1,4 +1,4 @@
-import {handleResolveAddress} from './handle/handle'
+import {handleResolveAddress} from './adapters/handle/handle'
 
 export const resolveAddress = async (domain: string) => {
   const handleResult = await handleResolveAddress(domain)

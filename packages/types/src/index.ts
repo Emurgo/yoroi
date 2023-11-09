@@ -24,6 +24,7 @@ import {NumberLocale} from './intl/numbers'
 import {SwapAggregator} from './swap/aggregator'
 import {AppApi} from './app/api'
 import {AppFrontendFeesResponse, AppFrontendFeeTier} from './app/frontend-fees'
+import {ResolverApi} from './resolver/api'
 
 export namespace App {
   export interface Storage extends AppStorage {}
@@ -78,6 +79,10 @@ export namespace Balance {
 
 export namespace Numbers {
   export type Locale = NumberLocale
+}
+
+export namespace Resolver {
+  export interface Api extends ResolverApi {}
 }
 
 export * from './helpers/types'
