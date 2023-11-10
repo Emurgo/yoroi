@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Svg, {Defs, G, LinearGradient, Path, Stop} from 'react-native-svg'
 
-export const EmptyCompletedOrdersLogo = (props) => {
+export const EmptyCompletedOrdersIllustration = (props) => {
   return (
     <Svg width={280} height={224} viewBox="0 0 280 224" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <Path
