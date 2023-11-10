@@ -5,7 +5,7 @@ import {Buffer} from 'buffer'
 import _ from 'lodash'
 
 import {CardanoMobile} from '../../wallets'
-import {HARD_DERIVATION_START} from '../constants/common'
+import {BIP44_DERIVATION_LEVELS, HARD_DERIVATION_START} from '../constants/common'
 import {NUMBERS} from '../numbers'
 import {YoroiWallet} from '../types'
 import {isHaskellShelley} from '../utils'
@@ -51,6 +51,8 @@ export const getRequiredSigners = async (tx: CSL_TYPES.Transaction, wallet: Yoro
   const stakeVKHash = await wallet.getStakingKey().then((key) => key.hash())
   const body = await tx.body()
 
+  const startLevel = BIP44_DERIVATION_LEVELS.PURPOSE
+
   const addressedUtxos = wallet.allUtxos.map((utxo) => ({
     txHash: utxo.tx_hash,
     txIndex: utxo.tx_index,
@@ -58,12 +60,12 @@ export const getRequiredSigners = async (tx: CSL_TYPES.Transaction, wallet: Yoro
     receiver: utxo.receiver,
     utxoId: utxo.utxo_id,
     assets: utxo.assets,
-    addressing: {path: getDerivationPathForAddress(utxo.receiver, wallet), startLevel: 0},
+    addressing: {path: getDerivationPathForAddress(utxo.receiver, wallet), startLevel},
   }))
 
   const getAddressAddressing = (bech32Address: string) => {
     const path = getDerivationPathForAddress(bech32Address, wallet)
-    return {path, startLevel: 0}
+    return {path, startLevel}
   }
   const signers = await getAllSigners(
     CardanoMobile,
