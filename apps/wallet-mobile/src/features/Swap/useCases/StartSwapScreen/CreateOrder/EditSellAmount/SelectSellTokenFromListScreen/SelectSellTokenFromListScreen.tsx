@@ -88,23 +88,28 @@ const TokenList = () => {
 type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   const {closeSearch} = useSearch()
-  const {sellTokenInfoChanged, orderData} = useSwap()
+  const {sellTokenInfoChanged, orderData, resetQuantities} = useSwap()
   const {
     buyQuantity: {isTouched: isBuyTouched},
     sellQuantity: {isTouched: isSellTouched},
     sellTouched,
+    switchTokens,
   } = useSwapForm()
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
 
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
-  const isDisabled = tokenInfo.id === orderData.amounts.buy.tokenId && isBuyTouched
   const shouldUpdateToken = tokenInfo.id !== orderData.amounts.sell.tokenId || !isSellTouched
 
   const handleOnTokenSelection = () => {
     track.swapAssetFromChanged({
       from_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
     })
+
+    if (tokenInfo.id === orderData.amounts.buy.tokenId && isBuyTouched) {
+      resetQuantities()
+      switchTokens()
+    }
     if (shouldUpdateToken) {
       sellTouched()
       sellTokenInfoChanged({
@@ -117,12 +122,7 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
   }
 
   return (
-    <TouchableOpacity
-      style={[styles.item, isDisabled && styles.disabled]}
-      onPress={handleOnTokenSelection}
-      testID="selectTokenButton"
-      disabled={isDisabled}
-    >
+    <TouchableOpacity style={styles.item} onPress={handleOnTokenSelection} testID="selectTokenButton">
       <AmountItem amount={{tokenId: tokenInfo.id, quantity: balanceAvailable}} wallet={wallet} />
     </TouchableOpacity>
   )
@@ -233,8 +233,5 @@ const styles = StyleSheet.create({
   },
   counter: {
     paddingVertical: 16,
-  },
-  disabled: {
-    opacity: 0.5,
   },
 })
