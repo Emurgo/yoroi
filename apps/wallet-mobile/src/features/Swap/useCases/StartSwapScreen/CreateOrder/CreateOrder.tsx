@@ -128,13 +128,13 @@ export const CreateOrder = () => {
       const frontendFeeDepositAddress = isMainnet
         ? Config['FRONTEND_FEE_ADDRESS_MAINNET']
         : Config['FRONTEND_FEE_ADDRESS_PREPROD']
+      const frontendFeeEntry = makePossibleFrontendFeeEntry(frontendFee, frontendFeeDepositAddress)
 
-      makePossibleFrontendFeeEntry(frontendFee, frontendFeeDepositAddress).then((frontendFeeEntry) => {
-        const entries = frontendFeeEntry != null ? [orderEntry, frontendFeeEntry] : [orderEntry]
-        createUnsignedTx({entries})
-      })
+      const entries = frontendFeeEntry != null ? [orderEntry, frontendFeeEntry] : [orderEntry]
+
+      createUnsignedTx({entries})
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
     },
   })

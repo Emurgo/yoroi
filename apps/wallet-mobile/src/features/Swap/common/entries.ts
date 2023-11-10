@@ -13,25 +13,19 @@ import {CardanoMobile} from '../../../yoroi-wallets/wallets'
  *
  * @returns {YoroiEntry | null} The entry for the fee or null if missing fee or address.
  */
-export const makePossibleFrontendFeeEntry = async (
+export const makePossibleFrontendFeeEntry = (
   fee: Balance.Amount,
   addressFeeDeposit: string | undefined,
-): Promise<YoroiEntry | null> => {
+): YoroiEntry | null => {
   if (addressFeeDeposit == null) return null
 
   const {quantity, tokenId} = fee
   const hasFrontendFee = !Quantities.isZero(quantity)
   if (!hasFrontendFee) return null
 
-  const datum = await createEmptyPlutusDatum(CardanoMobile)
-
-  const hex = await datum?.toHex()
-  if (!hex) throw new Error('makePossibleFrontendFeeEntry: datum.toHex() failed')
-
   return {
     address: addressFeeDeposit,
     amounts: {[tokenId]: quantity},
-    datum: {data: hex},
   } as const
 }
 
