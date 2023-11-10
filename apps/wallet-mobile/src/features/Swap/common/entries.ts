@@ -1,9 +1,7 @@
-import {createEmptyPlutusDatum} from '@emurgo/yoroi-lib'
 import {Balance, Swap} from '@yoroi/types'
 
 import {YoroiEntry} from '../../../yoroi-wallets/types'
 import {Quantities} from '../../../yoroi-wallets/utils'
-import {CardanoMobile} from '../../../yoroi-wallets/wallets'
 
 /**
  * Build the YoroiEntry to add the extra output for the swap transaciton with the frontend fee.
