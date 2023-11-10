@@ -29,10 +29,7 @@ import {useWalletNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {
-  convertBech32ToHex,
-  getMuesliSwapTransactionAndSigners,
-} from '../../../../../yoroi-wallets/cardano/common/signatureUtils'
+import {convertBech32ToHex, getTransactionSigners} from '../../../../../yoroi-wallets/cardano/common/signatureUtils'
 import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
@@ -182,7 +179,7 @@ export const OpenOrders = () => {
       utxos: {collateral: collateralUtxo, order: utxo},
       address: addressHex,
     })
-    const {signers} = await getMuesliSwapTransactionAndSigners(cbor, wallet)
+    const signers = await getTransactionSigners(cbor, wallet)
     const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
     const response = await wallet.signRawTx(cbor, keys)
     if (!response) return

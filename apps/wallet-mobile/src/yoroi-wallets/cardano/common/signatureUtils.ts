@@ -1,10 +1,9 @@
 import {SignTransactionRequest} from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import * as CSL_TYPES from '@emurgo/cross-csl-core'
-import {Addressing, createLedgerPlutusPayload} from '@emurgo/yoroi-lib'
+import {Addressing, createLedgerPlutusPayload, getAllSigners} from '@emurgo/yoroi-lib'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 
-import {RawUtxo} from '../../types'
 import {CardanoMobile} from '../../wallets'
 import {HARD_DERIVATION_START} from '../constants/common'
 import {NUMBERS} from '../numbers'
@@ -43,80 +42,39 @@ export const createSwapCancellationLedgerPayload = async (
 export const convertBech32ToHex = async (bech32Address: string) => {
   const address = await CardanoMobile.Address.fromBech32(bech32Address)
   const bytes = await address.toBytes()
-  return new Buffer(bytes).toString('hex')
+  return Buffer.from(bytes).toString('hex')
 }
 
 export const harden = (num: number) => HARD_DERIVATION_START + num
 
-export const assertRequired = <T>(value: T | undefined, message: string): T => {
-  if (value === undefined) throw new Error(message)
-  return value
-}
-
-// TODO: Use fn from yoroi-lib
-export const getRequiredSigners = async (tx: CSL_TYPES.Transaction, wallet: YoroiWallet) => {
-  const utxos = wallet.allUtxos
+export const getRequiredSigners = async (tx: CSL_TYPES.Transaction, wallet: YoroiWallet): Promise<number[][]> => {
+  const stakeVKHash = await wallet.getStakingKey().then((key) => key.hash())
   const body = await tx.body()
-  const inputs = await body.inputs()
-  const purpose = isHaskellShelley(wallet.walletImplementationId)
-    ? NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
-    : NUMBERS.WALLET_TYPE_PURPOSE.BIP44
-  const signers = [[purpose, harden(1815), harden(0), 0, 0]]
 
-  const inputUtxos: RawUtxo[] = []
+  const addressedUtxos = wallet.allUtxos.map((utxo) => ({
+    txHash: utxo.tx_hash,
+    txIndex: utxo.tx_index,
+    amount: utxo.amount,
+    receiver: utxo.receiver,
+    utxoId: utxo.utxo_id,
+    assets: utxo.assets,
+    addressing: {path: getDerivationPathForAddress(utxo.receiver, wallet), startLevel: 0},
+  }))
 
-  for (let i = 0; i < (await inputs.len()); i++) {
-    const input = await inputs.get(i)
-    const txId = await input.transactionId().then((t) => t.toHex())
-    const txIndex = await input.index()
-    const matchingUtxo = utxos.find((utxo) => utxo.tx_hash === txId && utxo.tx_index === txIndex)
-    if (!matchingUtxo) continue
-    inputUtxos.push(matchingUtxo)
+  const getAddressAddressing = (bech32Address: string) => {
+    const path = getDerivationPathForAddress(bech32Address, wallet)
+    return {path, startLevel: 0}
   }
+  const signers = await getAllSigners(
+    CardanoMobile,
+    body,
+    wallet.networkId,
+    stakeVKHash,
+    getAddressAddressing,
+    addressedUtxos,
+  )
 
-  inputUtxos.forEach((utxo) => {
-    signers.push(getDerivationPathForAddress(utxo.receiver, wallet, purpose))
-  })
-
-  const requiredSigners = assertRequired(await body.requiredSigners(), 'Transaction does not contain required signers')
-
-  const txRequiredAddresses: string[] = []
-  for (let i = 0; i < (await requiredSigners.len()); i++) {
-    const signer = await requiredSigners.get(i)
-    const hex = await signer.toHex()
-
-    const allAddresses = [...wallet.externalAddresses, ...wallet.internalAddresses]
-    await Promise.all(
-      allAddresses.map(async (bech32Address) => {
-        const parsedAddress = await CardanoMobile.Address.fromBech32(bech32Address)
-        const baseAddr = await CardanoMobile.BaseAddress.fromAddress(parsedAddress)
-        const paymentCred = await baseAddr.paymentCred()
-        const keyHash = await paymentCred.toKeyhash()
-        const hexKeyHash = await keyHash.toBytes().then((b) => Buffer.from(b).toString('hex'))
-        if (hex === hexKeyHash) {
-          txRequiredAddresses.push(bech32Address)
-        }
-      }),
-    )
-  }
-
-  txRequiredAddresses.forEach((address) => {
-    signers.push(getDerivationPathForAddress(address, wallet, purpose))
-  })
-
-  const collateralInputs = assertRequired(await body.collateral(), 'Transaction does not contain collateral inputs')
-
-  const firstCollateral = await collateralInputs.get(0)
-  const txId = await firstCollateral.transactionId().then((t) => t.toHex())
-  const txIndex = await firstCollateral.index()
-
-  const matchingUtxo = utxos.find((utxo) => utxo.tx_hash === txId && utxo.tx_index === txIndex)
-  if (!matchingUtxo) throw new Error('Could not find matching utxo')
-
-  const {receiver} = matchingUtxo
-  signers.push(getDerivationPathForAddress(receiver, wallet, purpose))
-
-  return getUniquePaths(signers)
+  return getUniquePaths(signers.map((s) => s.path))
 }
 
 const getUniquePaths = (paths: number[][]) => {
@@ -127,9 +85,12 @@ const arePathsEqual = (path1: number[], path2: number[]) => {
   return path1.every((value, index) => value === path2[index]) && path1.length === path2.length
 }
 
-const getDerivationPathForAddress = (address: string, wallet: YoroiWallet, purpose: number) => {
+const getDerivationPathForAddress = (address: string, wallet: YoroiWallet) => {
   const internalIndex = wallet.internalAddresses.indexOf(address)
   const externalIndex = wallet.externalAddresses.indexOf(address)
+  const purpose = isHaskellShelley(wallet.walletImplementationId)
+    ? NUMBERS.WALLET_TYPE_PURPOSE.CIP1852
+    : NUMBERS.WALLET_TYPE_PURPOSE.BIP44
   if (internalIndex === -1 && externalIndex === -1) throw new Error('Could not find matching address')
 
   const role = internalIndex > -1 ? 1 : 0
@@ -138,9 +99,7 @@ const getDerivationPathForAddress = (address: string, wallet: YoroiWallet, purpo
   return [purpose, harden(1815), harden(0), role, index]
 }
 
-export const getMuesliSwapTransactionAndSigners = async (cbor: string, wallet: YoroiWallet) => {
-  // TODO: Fixed tx body was here
+export const getTransactionSigners = async (cbor: string, wallet: YoroiWallet) => {
   const tx = await CardanoMobile.Transaction.fromHex(cbor)
-  const signers = await getRequiredSigners(tx, wallet)
-  return {signers}
+  return getRequiredSigners(tx, wallet)
 }
