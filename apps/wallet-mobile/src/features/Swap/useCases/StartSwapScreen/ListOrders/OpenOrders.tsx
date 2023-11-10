@@ -6,8 +6,9 @@ import {Buffer} from 'buffer'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Alert, Image, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
+import img from '../../../../../assets/img/illustration-swap-open-order.png' // using png because svg logo has the issue is going to be fixed here https://github.com/software-mansion/react-native-svg/pull/2152
 import {
   Button,
   ExpandableInfoCard,
@@ -40,7 +41,6 @@ import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {SwapInfoLink} from '../../../common/SwapInfoLink/SwapInfoLink'
-import {EmptyOpenOrdersLogo} from './EmptyOpenOrdersLogo'
 import {getCancellationOrderFee} from './helpers'
 import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
 
@@ -613,7 +613,7 @@ const NoOrdersYet = () => {
     <View style={styles.imageContainer}>
       <Spacer height={80} />
 
-      <EmptyOpenOrdersLogo style={styles.image} />
+      <Image source={img} style={styles.image} />
 
       <Spacer height={15} />
 
@@ -708,8 +708,9 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     alignSelf: 'center',
-    width: 200,
-    height: 228,
+    resizeMode: 'contain',
+    width: 280,
+    height: 224,
   },
   imageContainer: {
     flex: 1,
@@ -719,7 +720,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontFamily: 'Rubik-Medium',
-    fontWeigh: '500',
+    fontWeight: '500',
     fontSize: 20,
     color: '#000',
     lineHeight: 30,
@@ -728,7 +729,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontFamily: 'Rubik-Regular',
-    fontWeigh: '400',
+    fontWeight: '400',
     fontSize: 16,
     color: '#6B7384',
     lineHeight: 24,
