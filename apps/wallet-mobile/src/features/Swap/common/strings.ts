@@ -131,6 +131,7 @@ export const useStrings = () => {
     slippageWarningTitle: intl.formatMessage(messages.slippageWarningTitle),
     slippageWarningText: intl.formatMessage(messages.slippageWarningText),
     slippageWarningYourSlippage: intl.formatMessage(messages.slippageWarningYourSlippage),
+    slippageWarningChangeAmount: intl.formatMessage(messages.slippageWarningChangeAmount),
     serviceUnavailable: intl.formatMessage(messages.serviceUnavailable),
     serviceUnavailableInfo: intl.formatMessage(messages.serviceUnavailableInfo),
     emptyOpenOrders: intl.formatMessage(messages.emptyOpenOrders),
@@ -583,6 +584,10 @@ export const messages = defineMessages({
   slippageWarningYourSlippage: {
     id: 'swap.slippage.yourSlippage',
     defaultMessage: '!!!Your slippage tolerance',
+  },
+  slippageWarningChangeAmount: {
+    id: 'swap.slippage.changeAmount',
+    defaultMessage: '!!!Increase the amount to proceed or change slippage tolerance to 0%',
   },
   emptyOpenOrders: {
     id: 'swap.listOrders.emptyOpenOrders',
