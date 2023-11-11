@@ -3,7 +3,7 @@ import {banxaModuleMaker} from '@yoroi/banxa'
 import {useSwap} from '@yoroi/swap'
 import React, {ReactNode} from 'react'
 import {useIntl} from 'react-intl'
-import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Linking, Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Button, Icon, Spacer, Text, useModal} from '../components'
 import {useSend} from '../features/Send/common/SendContext'
@@ -42,7 +42,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const handleOnBuy = () => {
     track.walletPageExchangeBottomSheetClicked()
 
-    const modalHeight = 300
+    const modalHeight = 320
     const modalTextFormattingOptions: BuyInfoFormattingOptions = {
       b: (text) => <Text style={[styles.buyInfo, styles.bold]}>{text}</Text>,
       textComponent: (text) => <Text style={styles.buyInfo}>{text}</Text>,
@@ -53,7 +53,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
       <View style={styles.buyModalContent}>
         <Text style={styles.buyInfo}>{strings.buyInfo(modalTextFormattingOptions)}</Text>
 
-        <Spacer height={32} />
+        <Spacer fill />
 
         <Button
           shelleyTheme
@@ -78,7 +78,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
           }}
         />
 
-        <Spacer height={23} />
+        {Platform.OS === 'ios' && <Spacer height={20} />}
       </View>,
       modalHeight,
     )
@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000000',
     fontFamily: 'Rubik-Regular',
+    fontWeight: '400',
     lineHeight: 24,
   },
   bold: {
@@ -222,7 +223,9 @@ const styles = StyleSheet.create({
   disabled: {
     opacity: 0.5,
   },
-  buyModalContent: {flex: 1, flexDirection: 'column'},
+  buyModalContent: {
+    flex: 1,
+  },
 })
 
 const useStrings = () => {

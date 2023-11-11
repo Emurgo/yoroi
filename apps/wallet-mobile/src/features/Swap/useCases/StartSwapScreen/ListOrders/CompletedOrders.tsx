@@ -6,8 +6,10 @@ import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Image} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 
+import img from '../../../../../assets/img/illustration-swap-completed-order.png' // using png because svg logo has the issue is going to be fixed here https://github.com/software-mansion/react-native-svg/pull/2152
 import {
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
@@ -19,9 +21,10 @@ import {
   TokenIcon,
 } from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
+import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
-import {useSync, useTokenInfo, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {useSync, useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
 import {Counter} from '../../../common/Counter/Counter'
@@ -79,10 +82,6 @@ export const CompletedOrders = () => {
   const wallet = useSelectedWallet()
   const {sync} = useSync(wallet)
 
-  const transactionsInfos = useTransactionInfos(wallet)
-
-  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos))
-
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -96,27 +95,52 @@ export const CompletedOrders = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const transactionsInfos = useTransactionInfos(wallet)
+  const completeOrders = findCompletedOrderTx(Object.values(transactionsInfos))
+  const tokenIds = React.useMemo(
+    () => _.uniq(completeOrders?.flatMap((o) => [o.metadata.sellTokenId, o.metadata.buyTokenId])),
+    [completeOrders],
+  )
+  const tokenInfos = useTokenInfos({wallet, tokenIds})
+  const {search} = useSearch()
+
+  const filteredOrders = React.useMemo(
+    () =>
+      completeOrders.filter((order) => {
+        const sellTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.metadata.sellTokenId)
+        const buyTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === order.metadata.buyTokenId)
+
+        const sellLabel = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
+        const buyLabel = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
+        const searchLower = search.toLocaleLowerCase()
+        return sellLabel.toLocaleLowerCase().includes(searchLower) || buyLabel.toLocaleLowerCase().includes(searchLower)
+      }),
+    [completeOrders, search, tokenInfos],
+  )
+
   return (
     <>
       <View style={styles.container}>
         <FlatList
-          data={completeOrders}
-          renderItem={({item}: {item: MappedRawOrder}) => <ExpandableOrder order={item} />}
+          contentContainerStyle={{paddingTop: 10, paddingHorizontal: 16}}
+          data={filteredOrders}
+          renderItem={({item}: {item: MappedRawOrder}) => <ExpandableOrder tokenInfos={tokenInfos} order={item} />}
           keyExtractor={(item) => item.id}
+          ListEmptyComponent={<ListEmptyComponent completedOrders={filteredOrders} />}
         />
       </View>
 
       <Counter
         style={styles.counter}
         openingText={strings.youHave}
-        counter={completeOrders?.length ?? 0}
+        counter={filteredOrders?.length ?? 0}
         closingText={strings.listCompletedOrders}
       />
     </>
   )
 }
 
-export const ExpandableOrder = ({order}: {order: MappedRawOrder}) => {
+export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tokenInfos: Array<Balance.TokenInfo>}) => {
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const wallet = useSelectedWallet()
   const intl = useIntl()
@@ -125,12 +149,13 @@ export const ExpandableOrder = ({order}: {order: MappedRawOrder}) => {
   const expanded = id === hiddenInfoOpenId
   const sellIcon = <TokenIcon wallet={wallet} tokenId={metadata.sellTokenId} variant="swap" />
   const buyIcon = <TokenIcon wallet={wallet} tokenId={metadata.buyTokenId} variant="swap" />
-  const buyTokenInfo = useTokenInfo({wallet, tokenId: metadata.buyTokenId})
-  const sellTokenInfo = useTokenInfo({wallet, tokenId: metadata.sellTokenId})
-  const buyQuantity = Quantities.format(metadata.buyQuantity as Balance.Quantity, buyTokenInfo.decimals ?? 0)
-  const sellQuantity = Quantities.format(metadata.sellQuantity as Balance.Quantity, sellTokenInfo.decimals ?? 0)
+  const buyTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === metadata.buyTokenId)
+  const sellTokenInfo = tokenInfos.find((tokenInfo) => tokenInfo.id === metadata.sellTokenId)
+
+  const buyQuantity = Quantities.format(metadata.buyQuantity as Balance.Quantity, buyTokenInfo?.decimals ?? 0)
+  const sellQuantity = Quantities.format(metadata.sellQuantity as Balance.Quantity, sellTokenInfo?.decimals ?? 0)
   const tokenPrice = asQuantity(new BigNumber(metadata.sellQuantity).dividedBy(metadata.buyQuantity).toString())
-  const denomination = (sellTokenInfo.decimals ?? 0) - (buyTokenInfo.decimals ?? 0)
+  const denomination = (sellTokenInfo?.decimals ?? 0) - (buyTokenInfo?.decimals ?? 0)
   const marketPrice = Quantities.format(tokenPrice ?? Quantities.zero, denomination, PRECISION)
   const buyLabel = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
   const sellLabel = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
@@ -296,12 +321,37 @@ const TxLink = ({onTxPress, txId}: {onTxPress: () => void; txId: string}) => {
   )
 }
 
+const ListEmptyComponent = ({completedOrders}: {completedOrders: Array<MappedRawOrder>}) => {
+  const {search: assetSearchTerm, visible: isSearching} = useSearch()
+
+  if (isSearching && assetSearchTerm.length > 0 && completedOrders.length === 0) return <EmptySearchResult />
+
+  return <NoOrdersYet />
+}
+
+const NoOrdersYet = () => {
+  const strings = useStrings()
+  return (
+    <View style={styles.imageContainer}>
+      <Spacer height={80} />
+
+      <Image source={img} style={styles.image} />
+
+      <Spacer height={15} />
+
+      <Text style={styles.contentText}>{strings.emptyCompletedOrders}</Text>
+    </View>
+  )
+}
+
+const EmptySearchResult = () => {
+  return null
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
-    paddingTop: 10,
-    paddingHorizontal: 16,
   },
   flex: {
     flex: 1,
@@ -324,5 +374,25 @@ const styles = StyleSheet.create({
   },
   counter: {
     paddingVertical: 16,
+  },
+  image: {
+    flex: 1,
+    alignSelf: 'center',
+    resizeMode: 'contain',
+    width: 280,
+    height: 224,
+  },
+  imageContainer: {
+    flex: 1,
+    textAlign: 'center',
+  },
+  contentText: {
+    flex: 1,
+    textAlign: 'center',
+    fontFamily: 'Rubik-Medium',
+    fontWeight: '500',
+    fontSize: 20,
+    color: '#000',
+    lineHeight: 30,
   },
 })
