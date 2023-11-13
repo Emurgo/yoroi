@@ -6,10 +6,8 @@ import {capitalize} from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {Image} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
 
-import img from '../../../../../assets/img/illustration-swap-completed-order.png' // using png because svg logo has the issue is going to be fixed here https://github.com/software-mansion/react-native-svg/pull/2152
 import {
   ExpandableInfoCard,
   ExpandableInfoCardSkeleton,
@@ -29,6 +27,7 @@ import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/type
 import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
 import {Counter} from '../../../common/Counter/Counter'
 import {parseOrderTxMetadata} from '../../../common/helpers'
+import {EmptyCompletedOrdersIllustration} from '../../../common/Illustrations/EmptyCompletedOrdersIllustration'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 
@@ -332,10 +331,10 @@ const ListEmptyComponent = ({completedOrders}: {completedOrders: Array<MappedRaw
 const NoOrdersYet = () => {
   const strings = useStrings()
   return (
-    <View style={styles.imageContainer}>
+    <View style={styles.notOrdersYetContainer}>
       <Spacer height={80} />
 
-      <Image source={img} style={styles.image} />
+      <EmptyCompletedOrdersIllustration style={styles.illustration} />
 
       <Spacer height={15} />
 
@@ -375,14 +374,13 @@ const styles = StyleSheet.create({
   counter: {
     paddingVertical: 16,
   },
-  image: {
+  illustration: {
     flex: 1,
     alignSelf: 'center',
-    resizeMode: 'contain',
     width: 280,
     height: 224,
   },
-  imageContainer: {
+  notOrdersYetContainer: {
     flex: 1,
     textAlign: 'center',
   },
