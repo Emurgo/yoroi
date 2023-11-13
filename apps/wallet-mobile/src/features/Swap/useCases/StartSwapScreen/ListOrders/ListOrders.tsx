@@ -1,4 +1,5 @@
 import React from 'react'
+import {ErrorBoundary} from 'react-error-boundary'
 import {StyleSheet, View} from 'react-native'
 
 import {Boundary} from '../../../../../components'
@@ -6,6 +7,7 @@ import {useWalletNavigation} from '../../../../../navigation'
 import {useSearchOnNavBar} from '../../../../../Search/SearchContext'
 import {COLORS} from '../../../../../theme'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
+import {ServiceUnavailable} from '../../../common/ServiceUnavailable/ServiceUnavailable'
 import {useStrings} from '../../../common/strings'
 import {CompletedOrders, CompletedOrdersSkeleton} from './CompletedOrders'
 import {OpenOrders, OpenOrdersSkeleton} from './OpenOrders'
@@ -36,11 +38,19 @@ export const ListOrders = () => {
 
       {orderStatusIndex === 0 ? (
         <Boundary loading={{fallback: <OpenOrdersSkeleton />}}>
-          <OpenOrders />
+          <ErrorBoundary
+            fallbackRender={({resetErrorBoundary}) => <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />}
+          >
+            <OpenOrders />
+          </ErrorBoundary>
         </Boundary>
       ) : (
         <Boundary loading={{fallback: <CompletedOrdersSkeleton />}}>
-          <CompletedOrders />
+          <ErrorBoundary
+            fallbackRender={({resetErrorBoundary}) => <ServiceUnavailable resetErrorBoundary={resetErrorBoundary} />}
+          >
+            <CompletedOrders />
+          </ErrorBoundary>
         </Boundary>
       )}
     </View>
