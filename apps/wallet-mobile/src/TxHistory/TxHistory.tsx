@@ -1,4 +1,3 @@
-import {useFocusEffect} from '@react-navigation/native'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -34,7 +33,6 @@ export const TxHistory = () => {
   }
 
   const {sync, isLoading} = useSync(wallet)
-  useFocusEffect(React.useCallback(() => sync(), [sync]))
 
   const [expanded, setExpanded] = useState(true)
   const onScroll = useOnScroll({
