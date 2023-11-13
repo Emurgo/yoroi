@@ -100,16 +100,19 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
 
   const balanceAvailable = useBalance({wallet, tokenId: tokenInfo.id})
   const shouldUpdateToken = tokenInfo.id !== orderData.amounts.sell.tokenId || !isSellTouched
+  const shouldSwitchTokens = tokenInfo.id === orderData.amounts.buy.tokenId && isBuyTouched
 
   const handleOnTokenSelection = () => {
     track.swapAssetFromChanged({
       from_asset: [{asset_name: tokenInfo.name, asset_ticker: tokenInfo.ticker, policy_id: tokenInfo.group}],
     })
 
-    if (tokenInfo.id === orderData.amounts.buy.tokenId && isBuyTouched) {
+    // useCase - switch tokens when selecting the same already selected token on the other side
+    if (shouldSwitchTokens) {
       resetQuantities()
       switchTokens()
     }
+
     if (shouldUpdateToken) {
       sellTouched()
       sellTokenInfoChanged({
@@ -117,6 +120,7 @@ const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
         decimals: tokenInfo.decimals ?? 0,
       })
     }
+
     navigateTo.startSwap()
     closeSearch()
   }

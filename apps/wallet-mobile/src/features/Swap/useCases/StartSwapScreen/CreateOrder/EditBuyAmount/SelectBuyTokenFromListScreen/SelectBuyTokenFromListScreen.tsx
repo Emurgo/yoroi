@@ -152,16 +152,19 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
 
   const inUserWallet = walletTokenIds.includes(tokenInfo.id)
   const shouldUpdateToken = id !== orderData.amounts.buy.tokenId || !isBuyTouched
+  const shouldSwitchTokens = id === orderData.amounts.sell.tokenId && isSellTouched
 
   const handleOnTokenSelection = () => {
     track.swapAssetToChanged({
       to_asset: [{asset_name: name, asset_ticker: ticker, policy_id: group}],
     })
 
-    if (id === orderData.amounts.sell.tokenId && isSellTouched) {
+    // useCase - switch tokens when selecting the same already selected token on the other side
+    if (shouldSwitchTokens) {
       resetQuantities()
       switchTokens()
     }
+
     if (shouldUpdateToken) {
       buyTokenInfoChanged({
         decimals: decimals ?? 0,
