@@ -36,11 +36,18 @@ export const EditLimitPrice = () => {
       <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
 
       <View style={styles.content}>
-        <AmountInput
-          onChange={onChangeLimitPrice}
+        <TextInput
+          keyboardType="numeric"
+          autoComplete="off"
           value={limitDisplayValue}
+          placeholder="0"
+          onChangeText={onChangeLimitPrice}
+          allowFontScaling
+          selectionColor={COLORS.TRANSPARENT_BLACK}
+          style={styles.amountInput}
+          underlineColorAndroid="transparent"
           editable={!disabled}
-          inputRef={limitInputRef}
+          ref={limitInputRef}
         />
 
         <View style={[styles.textWrapper, disabled && styles.disabled]}>
@@ -50,30 +57,6 @@ export const EditLimitPrice = () => {
         </View>
       </View>
     </View>
-  )
-}
-
-type AmountInputProps = {
-  value?: string
-  onChange(value: string): void
-  editable: boolean
-  inputRef?: React.RefObject<TextInput>
-}
-const AmountInput = ({onChange, value, editable, inputRef}: AmountInputProps) => {
-  return (
-    <TextInput
-      keyboardType="numeric"
-      autoComplete="off"
-      value={value}
-      placeholder="0"
-      onChangeText={onChange}
-      allowFontScaling
-      selectionColor="#242838"
-      style={styles.amountInput}
-      underlineColorAndroid="transparent"
-      editable={editable}
-      ref={inputRef}
-    />
   )
 }
 
@@ -109,6 +92,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     height: 56,
     paddingRight: 16,
+    color: '#000000',
   },
   text: {
     fontSize: 16,
