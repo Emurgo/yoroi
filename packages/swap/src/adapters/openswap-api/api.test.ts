@@ -20,6 +20,7 @@ describe('swapApiMaker', () => {
       createOrder: jest.fn(),
       getOrders: jest.fn(),
       getTokens: jest.fn(),
+      getTokenPairs: jest.fn(),
       getCompletedOrders: jest.fn(),
       getLiquidityPools: jest.fn(),
       getPoolsPair: jest.fn(),
@@ -217,6 +218,53 @@ describe('swapApiMaker', () => {
     })
   })
 
+  describe('getTokenPairs', () => {
+    it('mainnet', async () => {
+      mockOpenSwapApi.getTokenPairs = jest
+        .fn()
+        .mockResolvedValue(openswapMocks.getTokenPairs)
+      const api = swapApiMaker(
+        {
+          isMainnet: true,
+          stakingKey,
+          primaryTokenId,
+          supportedProviders,
+        },
+        {
+          openswap: mockOpenSwapApi,
+        },
+      )
+
+      const result = await api.getTokenPairs('')
+
+      expect(mockOpenSwapApi.getTokenPairs).toHaveBeenCalledTimes(1)
+      expect(result).toEqual<Array<Balance.Token>>(apiMocks.getTokenPairs)
+    })
+
+    it('preprod (mocked)', async () => {
+      mockOpenSwapApi.getTokenPairs = jest
+        .fn()
+        .mockResolvedValue(openswapMocks.getTokenPairs)
+
+      const api = swapApiMaker(
+        {
+          isMainnet: false,
+          stakingKey,
+          primaryTokenId,
+          supportedProviders,
+        },
+        {
+          openswap: mockOpenSwapApi,
+        },
+      )
+
+      const result = await api.getTokenPairs('')
+
+      expect(result).toBeDefined()
+      expect(mockOpenSwapApi.getTokenPairs).not.toHaveBeenCalled()
+    })
+  })
+
   describe('getTokens', () => {
     it('mainnet', async () => {
       mockOpenSwapApi.getTokens = jest
@@ -234,13 +282,13 @@ describe('swapApiMaker', () => {
         },
       )
 
-      const result = await api.getTokens('')
+      const result = await api.getTokens()
 
       expect(mockOpenSwapApi.getTokens).toHaveBeenCalledTimes(1)
-      expect(result).toEqual<Array<Balance.Token>>(apiMocks.getTokens)
+      expect(result).toEqual<Array<Balance.TokenInfo>>(apiMocks.getTokens)
     })
 
-    it('preprod (mocked)', async () => {
+    it('preprod', async () => {
       mockOpenSwapApi.getTokens = jest
         .fn()
         .mockResolvedValue(openswapMocks.getTokens)
@@ -257,10 +305,10 @@ describe('swapApiMaker', () => {
         },
       )
 
-      const result = await api.getTokens('')
+      const result = await api.getTokens()
 
       expect(result).toBeDefined()
-      expect(mockOpenSwapApi.getTokens).not.toHaveBeenCalled()
+      expect(mockOpenSwapApi.getTokenPairs).not.toHaveBeenCalled()
     })
   })
 

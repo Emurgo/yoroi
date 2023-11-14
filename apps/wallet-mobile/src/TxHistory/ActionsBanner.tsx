@@ -1,9 +1,9 @@
 import {useNavigation} from '@react-navigation/native'
 import {banxaModuleMaker} from '@yoroi/banxa'
 import {useSwap} from '@yoroi/swap'
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {useIntl} from 'react-intl'
-import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Linking, Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Button, Icon, Spacer, Text, useModal} from '../components'
 import {useSend} from '../features/Send/common/SendContext'
@@ -41,10 +41,19 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
   const handleOnBuy = () => {
     track.walletPageExchangeBottomSheetClicked()
+
+    const modalHeight = 320
+    const modalTextFormattingOptions: BuyInfoFormattingOptions = {
+      b: (text) => <Text style={[styles.buyInfo, styles.bold]}>{text}</Text>,
+      textComponent: (text) => <Text style={styles.buyInfo}>{text}</Text>,
+    }
+
     openModal(
       strings.buyTitle,
       <View style={styles.buyModalContent}>
-        <Text style={styles.buyInfo}>{strings.buyInfo}</Text>
+        <Text style={styles.buyInfo}>{strings.buyInfo(modalTextFormattingOptions)}</Text>
+
+        <Spacer fill />
 
         <Button
           shelleyTheme
@@ -68,7 +77,10 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             closeModal()
           }}
         />
+
+        {Platform.OS === 'ios' && <Spacer height={20} />}
       </View>,
+      modalHeight,
     )
   }
 
@@ -200,30 +212,38 @@ const styles = StyleSheet.create({
   buyInfo: {
     fontSize: 16,
     color: '#000000',
-    fontFamily: 'Rubik',
+    fontFamily: 'Rubik-Regular',
+    fontWeight: '400',
     lineHeight: 24,
+  },
+  bold: {
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
   disabled: {
     opacity: 0.5,
   },
-  buyModalContent: {flex: 1, flexDirection: 'column', justifyContent: 'space-between', paddingBottom: 26},
+  buyModalContent: {
+    flex: 1,
+  },
 })
 
 const useStrings = () => {
   const intl = useIntl()
-  const bold = {b: (text) => <Text bold>{text}</Text>}
 
   return {
     sendLabel: intl.formatMessage(actionMessages.send),
     receiveLabel: intl.formatMessage(actionMessages.receive),
     buyLabel: intl.formatMessage(actionMessages.buy),
     buyTitle: intl.formatMessage(actionMessages.buyTitle),
-    buyInfo: intl.formatMessage(actionMessages.buyInfo, bold),
+    buyInfo: (options: BuyInfoFormattingOptions) => intl.formatMessage(actionMessages.buyInfo, options),
     proceed: intl.formatMessage(actionMessages.proceed),
     swapLabel: intl.formatMessage(actionMessages.swap),
     messageBuy: intl.formatMessage(actionMessages.soon),
   }
 }
+
+type BuyInfoFormattingOptions = Record<'b' | 'textComponent', (text: ReactNode[]) => ReactNode>
 
 const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()

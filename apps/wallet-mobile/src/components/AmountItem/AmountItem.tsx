@@ -3,12 +3,12 @@ import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {COLORS} from '../../theme'
-import {PairedBalance} from '../../TxHistory/PairedBalance'
 import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
 import {Quantities} from '../../yoroi-wallets/utils'
 import {Boundary, Icon, Spacer, Text, TokenIcon, TokenIconPlaceholder} from '..'
+import {PairedBalance} from '../PairedBalance/PairedBalance'
 
 export type AmountItemProps = {
   wallet: YoroiWallet
@@ -17,11 +17,10 @@ export type AmountItemProps = {
   isPrivacyOff?: boolean
   status?: string
   inWallet?: boolean
-  supply?: string
   variant?: 'swap'
 }
 
-export const AmountItem = ({isPrivacyOff, wallet, style, amount, inWallet, supply, variant}: AmountItemProps) => {
+export const AmountItem = ({isPrivacyOff, wallet, style, amount, inWallet, variant}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -63,13 +62,15 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, inWallet, suppl
       </Middle>
 
       <Right>
-        {tokenInfo.kind !== 'nft' && (
+        {tokenInfo.kind !== 'nft' && variant !== 'swap' && (
           <Text style={styles.quantity} testID="tokenAmountText">
-            {isPrivacyOff ? '**.*******' : variant === 'swap' ? `${supply}` : formattedQuantity}
+            {isPrivacyOff ? '**.*******' : formattedQuantity}
           </Text>
         )}
 
-        {isPrimary && <PairedBalance isPrivacyOff={isPrivacyOff} amount={{quantity, tokenId: tokenInfo.id}} />}
+        {isPrimary && variant !== 'swap' && (
+          <PairedBalance isPrivacyOff={isPrivacyOff} amount={{quantity, tokenId: tokenInfo.id}} />
+        )}
       </Right>
     </View>
   )
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
   },
   name: {
     color: COLORS.DARK_TEXT,
-    fontSize: 14,
+    fontSize: 16,
     lineHeight: 22,
     fontWeight: '500',
     fontFamily: 'Rubik-Medium',
@@ -133,6 +134,8 @@ const styles = StyleSheet.create({
   quantity: {
     color: COLORS.DARK_TEXT,
     textAlign: 'right',
+    fontSize: 16,
+    fontFamily: 'Rubik-Regular',
   },
   row: {
     flexDirection: 'row',

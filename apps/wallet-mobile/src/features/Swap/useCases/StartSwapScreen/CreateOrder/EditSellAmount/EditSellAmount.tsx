@@ -32,7 +32,6 @@ export const EditSellAmount = () => {
       touched={isSellTouched}
       inputRef={sellInputRef}
       error={error}
-      // inputEditable={orderData.selectedPoolCalculation?.pool !== undefined}
     />
   )
 }

@@ -68,6 +68,7 @@ import {RewardWithdrawn} from './RewardWithdrawn'
 import {Sandbox} from './Sandbox'
 import {Send} from './Send'
 import {Settings} from './Settings'
+import {Share} from './Share'
 import {SliderSettings} from './SliderSettings'
 import {SortTable} from './SortTable'
 import {SpectrumSwap} from './SpectrumSwap'
@@ -206,4 +207,5 @@ export const Icon = {
   VyfiSwap,
   SpectrumSwap,
   Danger,
+  Share,
 }

@@ -1,6 +1,7 @@
 import {useSwap} from '@yoroi/swap'
 import React from 'react'
-import {ScrollView, StyleSheet} from 'react-native'
+import {ScrollView} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Counter} from '../../../../../common/Counter/Counter'
 import {SelectPoolFromList} from '../../../../../common/SelectPool/SelectPoolFromList/SelectPoolFromList'
@@ -15,23 +16,12 @@ export const SelectPoolFromListScreen = () => {
   const poolCounter = Array.isArray(pools) ? pools.length : 0
 
   return (
-    <>
+    <SafeAreaView style={{flex: 1}} edges={['left', 'right', 'bottom']}>
       <ScrollView>
         <SelectPoolFromList pools={pools} />
       </ScrollView>
 
-      <Counter
-        counter={poolCounter}
-        unitsText={strings.pools(poolCounter)}
-        closingText={strings.available}
-        style={styles.counter}
-      />
-    </>
+      <Counter counter={poolCounter} unitsText={strings.pools(poolCounter)} closingText={strings.available} />
+    </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  counter: {
-    paddingVertical: 16,
-  },
-})

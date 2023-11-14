@@ -12,6 +12,7 @@ import {COLORS} from '../../../../theme'
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
 import {useSignAndSubmitTx, useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
+import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
@@ -34,6 +35,13 @@ export const ConfirmTxScreen = () => {
     wallet,
     tokenId: orderData.amounts.buy.tokenId,
   })
+
+  const minReceived = Quantities.denominated(
+    orderData.selectedPoolCalculation?.buyAmountWithSlippage?.quantity ?? Quantities.zero,
+    buyTokenInfo.decimals ?? 0,
+  )
+
+  const couldReceiveNoAssets = Quantities.isZero(minReceived)
 
   const {authWithOs, isLoading: authenticating} = useAuthOsWithEasyConfirmation(
     {id: wallet.id},
@@ -77,6 +85,7 @@ export const ConfirmTxScreen = () => {
   )
 
   const txIsLoading = authenticating || processingTx
+  const isButtonDisabled = txIsLoading || couldReceiveNoAssets
 
   return (
     <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
@@ -84,7 +93,7 @@ export const ConfirmTxScreen = () => {
 
       <Actions>
         <Button
-          disabled={txIsLoading}
+          disabled={isButtonDisabled}
           testID="swapButton"
           shelleyTheme
           title={strings.confirm}

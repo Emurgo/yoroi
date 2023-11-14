@@ -5,6 +5,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer, Text, useModal} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
+import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
@@ -25,9 +26,18 @@ export const TransactionSummary = () => {
   if (!calculation) throw new Error('No selected pool calculation')
   const {pool, cost} = calculation
 
+  const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
+  const tokenToSellName = sellTokenInfo.ticker ?? sellTokenInfo.name
   const tokenToBuyName = buyTokenInfo.ticker ?? buyTokenInfo.name
-  const label = `${Quantities.format(amounts.buy.quantity, buyTokenInfo.decimals ?? 0)} ${tokenToBuyName}`
+  const isSellPrimary = amounts.sell.tokenId === wallet.primaryTokenInfo.id
+  // Quantities.zero case would only happen on an API error where the price in Ada of Ada were missing
+  const total = isSellPrimary ? calculation.ptTotalValueSpent?.quantity ?? Quantities.zero : amounts.sell.quantity
+  const formattedSellText = `${Quantities.format(total, sellTokenInfo.decimals ?? 0)} ${tokenToSellName}`
+  const formattedFeeText = `${Quantities.format(
+    Quantities.sum([cost.batcherFee.quantity, cost.frontendFeeInfo.fee.quantity]),
+    wallet.primaryTokenInfo.decimals ?? 0,
+  )} ${wallet.primaryTokenInfo.ticker}`
   const poolProviderFormatted = capitalize(pool.provider)
   const poolUrl = getPoolUrlByProvider(pool.provider)
 
@@ -55,10 +65,7 @@ export const TransactionSummary = () => {
     },
     {
       label: strings.swapFeesTitle,
-      value: `${Quantities.format(
-        Quantities.sum([cost.batcherFee.quantity, cost.frontendFeeInfo.fee.quantity]),
-        wallet.primaryTokenInfo.decimals ?? 0,
-      )} ${wallet.primaryTokenInfo.ticker}`,
+      value: formattedFeeText,
       info: strings.swapFees,
     },
   ]
@@ -69,11 +76,23 @@ export const TransactionSummary = () => {
         <Text style={styles.cardText}>{strings.total}</Text>
 
         <View>
-          <Text style={[styles.cardText, styles.cardTextValue]}>{label}</Text>
+          <Text style={[styles.cardText, styles.cardTextValue]}>{formattedSellText}</Text>
 
-          <Spacer height={6} />
+          {!isSellPrimary && (
+            <>
+              <Spacer height={6} />
 
-          <Text style={styles.cardTextUSD}></Text>
+              <Text style={[styles.cardText, styles.cardTextValue]}>{formattedFeeText}</Text>
+            </>
+          )}
+
+          {!!calculation.ptTotalValueSpent && (
+            <>
+              <Spacer height={6} />
+
+              <PairedBalance amount={calculation.ptTotalValueSpent} textStyle={styles.cardTextUSD} />
+            </>
+          )}
         </View>
       </View>
 
@@ -148,11 +167,12 @@ const styles = StyleSheet.create({
   },
   cardTextValue: {
     fontWeight: '500',
+    textAlign: 'right',
   },
   cardTextUSD: {
     fontSize: 14,
     color: COLORS.WHITE,
-    opacity: 0.5,
+    opacity: 0.75,
   },
   flexBetween: {
     flexDirection: 'row',

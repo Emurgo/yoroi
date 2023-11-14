@@ -39,7 +39,8 @@ export {useSwapOrdersByStatusOpen} from './translators/reactjs/hooks/useSwapOrde
 export {useSwapPoolsByPair} from './translators/reactjs/hooks/useSwapPoolsByPair'
 export {useSwapSetSlippage} from './translators/reactjs/hooks/useSwapSetSlippage'
 export {useSwapSlippage} from './translators/reactjs/hooks/useSwapSlippage'
-export {useSwapTokensByPairToken} from './translators/reactjs/hooks/useSwapTokensByPairToken'
+export {useSwapTokensByPair} from './translators/reactjs/hooks/useSwapTokensByPair'
+export {useSwapTokensOnlyVerified} from './translators/reactjs/hooks/useSwapTokensOnlyVerified'
 export {useSwap} from './translators/reactjs/hooks/useSwap'
 export {supportedProviders, milkTokenId} from './translators/constants'
 

@@ -1,6 +1,81 @@
 import {OpenSwap} from '@yoroi/openswap'
 
-const getTokens: OpenSwap.Token[] = [
+const getTokens: OpenSwap.ListTokensResponse = [
+  {
+    supply: {
+      total: '10000000',
+      circulating: '300',
+    },
+    status: 'verified',
+    website: 'https://eggscape.io/',
+    image: 'ipfs://QmNYibJoiTWRiMmWn4yXwvoakEPgq9WmaukmRXHF1VGbAU',
+    description: 'Eggscape Club Utility Token',
+    address: {
+      policyId: '1c1e38cfcc815d2015dbda6bee668b2e707ee3f9d038d96668fcf63c',
+      name: '4567677363617065436c75624561737465725a656e6e79',
+    },
+    symbol: 'EZY',
+    decimalPlaces: 0,
+    categories: [],
+  },
+  {
+    supply: {
+      total: '1500000000',
+      circulating: null,
+    },
+    status: 'verified',
+    symbol: 'CAST',
+    decimalPlaces: 0,
+    image:
+      'https://tokens.muesliswap.com/static/img/tokens/cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a.43415354.png',
+    description: 'Utility Token for Carda Station Metaverse',
+    address: {
+      policyId: 'cdaaee586376139ee8c3cc4061623968810d177ca5c300afb890b48a',
+      name: '43415354',
+    },
+    website: 'https://cardastation.com',
+    categories: [],
+  },
+  {
+    supply: {
+      total: '387017195',
+      circulating: null,
+    },
+    status: 'verified',
+    website: 'https://www.shareslake.com',
+    description:
+      'The fiat-backed stablecoin issued by Shareslake. Powering the fully stable branch of Cardano.',
+    image:
+      'https://tokens.muesliswap.com/static/img/tokens/cd5b9dd91319edbb19477ad00cbef673a221e70a17ef043951fc6786.52656465656d61626c65.png',
+    symbol: 'RUSD',
+    decimalPlaces: 4,
+    address: {
+      policyId: 'cd5b9dd91319edbb19477ad00cbef673a221e70a17ef043951fc6786',
+      name: '52656465656d61626c65',
+    },
+    categories: [],
+  },
+  {
+    supply: {
+      total: '45000000003000000',
+      circulating: null,
+    },
+    status: 'verified',
+    website: 'https://eduladder.com',
+    symbol: 'ELADR',
+    decimalPlaces: 6,
+    image:
+      'https://tokens.muesliswap.com/static/img/tokens/2d420236ffaada336c21e3f4520b799f6e246d8618f2fc89a4907da6.4564756c6164646572546f6b656e.png',
+    description: 'Proof Of Contribution.',
+    address: {
+      policyId: '2d420236ffaada336c21e3f4520b799f6e246d8618f2fc89a4907da6',
+      name: '4564756c6164646572546f6b656e',
+    },
+    categories: [],
+  },
+]
+
+const getTokenPairs: OpenSwap.TokenPairsResponse = [
   {
     info: {
       supply: {
@@ -573,6 +648,7 @@ const getPrice: OpenSwap.PriceResponse = {
 }
 
 export const openswapMocks = {
+  getTokenPairs,
   getTokens,
   getPrice,
   getCompletedOrders,

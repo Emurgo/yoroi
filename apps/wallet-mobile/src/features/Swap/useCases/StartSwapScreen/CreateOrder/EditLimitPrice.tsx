@@ -21,7 +21,7 @@ export const EditLimitPrice = () => {
   const disabled = orderData.type === 'market'
 
   const {
-    sellQuantity: {isTouched: isBuyTouched},
+    buyQuantity: {isTouched: isBuyTouched},
     sellQuantity: {isTouched: isSellTouched},
     limitPrice: {displayValue: limitDisplayValue},
     limitInputRef,
@@ -68,7 +68,7 @@ const AmountInput = ({onChange, value, editable, inputRef}: AmountInputProps) =>
       placeholder="0"
       onChangeText={onChange}
       allowFontScaling
-      selectionColor={COLORS.TRANSPARENT_BLACK}
+      selectionColor="#242838"
       style={styles.amountInput}
       underlineColorAndroid="transparent"
       editable={editable}

@@ -1,6 +1,7 @@
 import {createTypeGuardFromSchema, isString} from '@yoroi/common'
 import React from 'react'
 import {Linking, StyleSheet, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import {z} from 'zod'
 
 import {Button, Spacer, Text} from '../../../../../components'
@@ -30,33 +31,35 @@ export const ShowSubmittedTxScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <SubmittedTxImage />
+    <SafeAreaView style={{flex: 1}} edges={['left', 'right', 'bottom']}>
+      <View style={styles.container}>
+        <SubmittedTxImage />
 
-      <Text style={styles.title}>{strings.transactionSigned}</Text>
+        <Text style={styles.title}>{strings.transactionSigned}</Text>
 
-      <Text style={styles.text}>{strings.transactionDisplay}</Text>
+        <Text style={styles.text}>{strings.transactionDisplay}</Text>
 
-      <Spacer height={20} />
+        <Spacer height={20} />
 
-      {isString(params?.txId) && (
-        <Button
-          onPress={navigateToExplorer}
-          title={strings.seeOnExplorer}
-          style={styles.explorerButton}
-          outlineShelley
-        />
-      )}
+        {isString(params?.txId) && (
+          <Button
+            onPress={navigateToExplorer}
+            title={strings.seeOnExplorer}
+            style={styles.explorerButton}
+            outlineShelley
+          />
+        )}
 
-      <View style={styles.bottomFixed}>
-        <Button
-          onPress={() => navigate.swapOpenOrders()}
-          title={strings.goToOrders}
-          style={styles.button}
-          shelleyTheme
-        />
+        <View style={styles.bottomFixed}>
+          <Button
+            onPress={() => navigate.swapOpenOrders()}
+            title={strings.goToTransactions}
+            style={styles.button}
+            shelleyTheme
+          />
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 
