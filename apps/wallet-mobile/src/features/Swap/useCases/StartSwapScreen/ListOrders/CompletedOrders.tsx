@@ -27,7 +27,7 @@ import {useSync, useTokenInfos, useTransactionInfos} from '../../../../../yoroi-
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
 import {Counter} from '../../../common/Counter/Counter'
-import {parseOrderTxMetadata, switchDayAndMonth} from '../../../common/helpers'
+import {parseOrderTxMetadata} from '../../../common/helpers'
 import {EmptyCompletedOrdersIllustration} from '../../../common/Illustrations/EmptyCompletedOrdersIllustration'
 import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
@@ -189,13 +189,11 @@ export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tok
         tokenPrice={marketPrice}
         sellLabel={sellLabel}
         tokenAmount={`${sellQuantity} ${sellLabel}`}
-        txTimeCreated={switchDayAndMonth(
-          intl.formatDate(new Date(order.date), {
-            dateStyle: 'short',
-            timeStyle: 'medium',
-            hour12: false,
-          }),
-        )}
+        txTimeCreated={intl.formatDate(new Date(order.date), {
+          dateStyle: 'short',
+          timeStyle: 'medium',
+          hour12: false,
+        })}
       />
     </ExpandableInfoCard>
   )

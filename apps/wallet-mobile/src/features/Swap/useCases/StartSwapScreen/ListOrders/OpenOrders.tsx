@@ -36,7 +36,6 @@ import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
-import {switchDayAndMonth} from '../../../common/helpers'
 import {EmptyOpenOrdersIllustration} from '../../../common/Illustrations/EmptyOpenOrdersIllustration'
 import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
@@ -304,13 +303,11 @@ export const OpenOrders = () => {
                 <MainInfo
                   tokenAmount={`${order.tokenAmount} ${order.assetToLabel}`}
                   tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
-                  date={switchDayAndMonth(
-                    intl.formatDate(new Date(order.date), {
-                      dateStyle: 'short',
-                      timeStyle: 'medium',
-                      hour12: false,
-                    }),
-                  )}
+                  date={intl.formatDate(new Date(order.date), {
+                    dateStyle: 'short',
+                    timeStyle: 'medium',
+                    hour12: false,
+                  })}
                 />
               </ExpandableInfoCard>
             )
