@@ -70,7 +70,7 @@ export const AmountCard = ({
               onChangeText={onChange}
               allowFontScaling
               selectionColor={isFocused ? '#242838' : COLORS.TRANSPARENT_BLACK}
-              style={styles.amountInput}
+              style={[styles.amountInput, value === '0' && styles.grayText]}
               underlineColorAndroid="transparent"
               ref={inputRef}
               editable={inputEditable && touched}
@@ -214,5 +214,8 @@ const styles = StyleSheet.create({
   errorText: {
     color: COLORS.ALERT_TEXT_COLOR,
     fontSize: 12,
+  },
+  grayText: {
+    color: '#6B7384',
   },
 })
