@@ -36,11 +36,11 @@ import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
+import {EmptyOpenOrdersIllustration} from '../../../common/Illustrations/EmptyOpenOrdersIllustration'
 import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {SwapInfoLink} from '../../../common/SwapInfoLink/SwapInfoLink'
-import {EmptyOpenOrdersLogo} from './EmptyOpenOrdersLogo'
 import {getCancellationOrderFee} from './helpers'
 import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
 
@@ -611,10 +611,10 @@ const ListEmptyComponent = ({openOrders}: {openOrders: Array<MappedOpenOrder>}) 
 const NoOrdersYet = () => {
   const strings = useStrings()
   return (
-    <View style={styles.imageContainer}>
+    <View style={styles.notOrdersYetContainer}>
       <Spacer height={80} />
 
-      <EmptyOpenOrdersLogo style={styles.image} />
+      <EmptyOpenOrdersIllustration style={styles.illustration} />
 
       <Spacer height={15} />
 
@@ -706,13 +706,13 @@ const styles = StyleSheet.create({
   counter: {
     paddingVertical: 16,
   },
-  image: {
+  illustration: {
     flex: 1,
     alignSelf: 'center',
-    width: 200,
-    height: 228,
+    width: 280,
+    height: 224,
   },
-  imageContainer: {
+  notOrdersYetContainer: {
     flex: 1,
     textAlign: 'center',
   },
@@ -720,7 +720,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontFamily: 'Rubik-Medium',
-    fontWeigh: '500',
+    fontWeight: '500',
     fontSize: 20,
     color: '#000',
     lineHeight: 30,
@@ -729,7 +729,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontFamily: 'Rubik-Regular',
-    fontWeigh: '400',
+    fontWeight: '400',
     fontSize: 16,
     color: '#6B7384',
     lineHeight: 24,

@@ -27,9 +27,9 @@ import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/type
 import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
 import {Counter} from '../../../common/Counter/Counter'
 import {parseOrderTxMetadata} from '../../../common/helpers'
+import {EmptyCompletedOrdersIllustration} from '../../../common/Illustrations/EmptyCompletedOrdersIllustration'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-import {EmptyCompletedOrdersLogo} from './EmptyCompletedOrdersLogo'
 
 const PRECISION = 14
 
@@ -331,10 +331,10 @@ const ListEmptyComponent = ({completedOrders}: {completedOrders: Array<MappedRaw
 const NoOrdersYet = () => {
   const strings = useStrings()
   return (
-    <View style={styles.imageContainer}>
+    <View style={styles.notOrdersYetContainer}>
       <Spacer height={80} />
 
-      <EmptyCompletedOrdersLogo style={styles.image} />
+      <EmptyCompletedOrdersIllustration style={styles.illustration} />
 
       <Spacer height={15} />
 
@@ -374,13 +374,13 @@ const styles = StyleSheet.create({
   counter: {
     paddingVertical: 16,
   },
-  image: {
+  illustration: {
     flex: 1,
     alignSelf: 'center',
-    width: 200,
-    height: 228,
+    width: 280,
+    height: 224,
   },
-  imageContainer: {
+  notOrdersYetContainer: {
     flex: 1,
     textAlign: 'center',
   },
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     fontFamily: 'Rubik-Medium',
-    fontWeigh: '500',
+    fontWeight: '500',
     fontSize: 20,
     color: '#000',
     lineHeight: 30,
