@@ -1,6 +1,6 @@
-import axios from 'axios'
+import {fetcher} from '@yoroi/common'
 
-export const handleResolveAddress = async (handle: string) => {
+export const getHandleAddresses = async (receiver: string) => {
   const result: {
     error: string | null
     address: string | null
@@ -11,31 +11,26 @@ export const handleResolveAddress = async (handle: string) => {
 
   const config = {
     method: 'get',
-    url: `https://api.handle.me/handles/${handle}`,
-    headers: {
-      Accept: 'application/json',
-    },
+    url: `https://api.handle.me/handles/${receiver}`,
+    headers: {Accept: 'application/json'},
   }
 
   try {
-    const {
-      data: {
-        resolved_addresses: {ada},
-      },
-    } = await axios(config)
+    const response = await fetcher(config)
 
-    result.address = ada
-    return result
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      result.error = error.response?.data.message
+    if (response?.data?.resolved_addresses?.ada) {
+      result.address = response.data.resolved_addresses.ada
       return result
-    } else if (error instanceof Error) {
+    }
+
+    throw new Error('Handle Resolver error: invalid response')
+  } catch (error: any) {
+    if (error instanceof Error) {
       result.error = error.message
       return result
     }
 
-    result.error = 'Unknown Error'
+    result.error = 'Handle Resolver error: unknown Error'
     return result
   }
 }

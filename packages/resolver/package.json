@@ -135,7 +135,6 @@
     ]
   },
   "dependencies": {
-    "axios": "^1.6.0",
     "zod": "^3.22.2"
   },
   "devDependencies": {
