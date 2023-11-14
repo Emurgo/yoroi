@@ -188,6 +188,7 @@ const styles = StyleSheet.create({
     maxWidth: 200,
     height: 34,
     fontSize: 16,
+    color: '#000000',
   },
   amountWrapper: {
     flex: 1,
