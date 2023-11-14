@@ -249,6 +249,7 @@ const styles = StyleSheet.create({
     padding: 0,
     fontSize: 16,
     fontFamily: 'Rubik',
+    color: '#242838',
   },
   inputFocused: {
     borderColor: '#242838',
