@@ -264,7 +264,7 @@ export const OpenOrders = () => {
             const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
             const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
             const liquidityPoolIcon =
-              order.provider !== undefined ? <PoolIcon size={32} providerId={order.provider} /> : null
+              order.provider !== undefined ? <PoolIcon size={28} providerId={order.provider} /> : null
             const expanded = order.id === hiddenInfoOpenId
             return (
               <ExpandableInfoCard
@@ -354,9 +354,9 @@ const Header = ({
 
         <Spacer width={4} />
 
-        <Text>{assetFromLabel}</Text>
+        <Text style={styles.headerLabel}>{assetFromLabel}</Text>
 
-        <Text>/</Text>
+        <Text style={styles.headerLabel}>/</Text>
 
         <Spacer width={4} />
 
@@ -364,7 +364,7 @@ const Header = ({
 
         <Spacer width={4} />
 
-        <Text>{assetToLabel}</Text>
+        <Text style={styles.headerLabel}>{assetToLabel}</Text>
       </View>
     </HeaderWrapper>
   )
@@ -670,6 +670,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 24,
+  },
+  headerLabel: {
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
   contentValue: {
     color: '#000',
