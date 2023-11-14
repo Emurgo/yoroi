@@ -46,6 +46,7 @@ export const SwapFormProvider = ({
   const sellbalance = Amounts.getAmount(balances, sellTokenId).quantity
   const primaryTokenBalance = Amounts.getAmount(balances, wallet.primaryTokenInfo.id).quantity
 
+  const minReceived = orderData.selectedPoolCalculation?.buyAmountWithSlippage.quantity ?? Quantities.zero
   const poolSupply = buyTokenId === pool?.tokenA.tokenId ? pool?.tokenA.quantity : pool?.tokenB.quantity
   const hasBuyTokenSupply = !Quantities.isGreaterThan(buyQuantity, poolSupply ?? Quantities.zero)
   const hasSellBalance = !Quantities.isGreaterThan(sellQuantity, sellbalance)
@@ -183,7 +184,9 @@ export const SwapFormProvider = ({
     [actions, clearErrors, orderData.tokens.priceDenomination, limitPriceChanged, numberLocale],
   )
 
+  // buy input errors
   React.useEffect(() => {
+    // not enough pool error
     if (orderData.pools.length === 0 && state.buyQuantity.isTouched && state.sellQuantity.isTouched) {
       actions.buyAmountErrorChanged(strings.noPool)
       return
@@ -199,12 +202,25 @@ export const SwapFormProvider = ({
       return
     }
 
+    // not enough supply error
     if (
       state.sellQuantity.isTouched &&
       state.buyQuantity.isTouched &&
       (pool === undefined || (!Quantities.isZero(buyQuantity) && !hasBuyTokenSupply))
     ) {
       actions.buyAmountErrorChanged(strings.notEnoughSupply)
+      return
+    }
+
+    if (
+      state.sellQuantity.isTouched &&
+      state.buyQuantity.isTouched &&
+      pool !== undefined &&
+      !Quantities.isZero(buyQuantity) &&
+      hasBuyTokenSupply &&
+      state.buyQuantity.error === strings.notEnoughSupply
+    ) {
+      actions.buyAmountErrorChanged(undefined)
       return
     }
   }, [
@@ -221,7 +237,9 @@ export const SwapFormProvider = ({
     orderData.pools.length,
   ])
 
+  // sell input errors
   React.useEffect(() => {
+    // no pool error
     if (
       orderData.selectedPoolCalculation === undefined &&
       state.buyQuantity.isTouched &&
@@ -241,19 +259,45 @@ export const SwapFormProvider = ({
       return
     }
 
+    // no enough balance error
     if (!Quantities.isZero(sellQuantity) && !hasSellBalance) {
       actions.sellAmountErrorChanged(strings.notEnoughBalance)
       return
     }
 
+    // no enough fee balance error
     if (!Quantities.isZero(sellQuantity) && state.buyQuantity.isTouched && !hasPtBalance) {
       actions.sellAmountErrorChanged(strings.notEnoughFeeBalance)
       return
     }
+
+    // min received 0 error
+    if (
+      state.sellQuantity.isTouched &&
+      state.buyQuantity.isTouched &&
+      !Quantities.isZero(buyQuantity) &&
+      Quantities.isZero(minReceived)
+    ) {
+      actions.sellAmountErrorChanged(strings.slippageWarningChangeAmount)
+      return
+    }
+
+    if (
+      state.sellQuantity.isTouched &&
+      state.buyQuantity.isTouched &&
+      !Quantities.isZero(buyQuantity) &&
+      !Quantities.isZero(minReceived) &&
+      state.sellQuantity.error === strings.slippageWarningChangeAmount
+    ) {
+      actions.sellAmountErrorChanged(undefined)
+      return
+    }
   }, [
     actions,
+    buyQuantity,
     hasPtBalance,
     hasSellBalance,
+    minReceived,
     orderData.selectedPoolCalculation,
     sellQuantity,
     state.buyQuantity.isTouched,
@@ -262,8 +306,10 @@ export const SwapFormProvider = ({
     strings.noPool,
     strings.notEnoughBalance,
     strings.notEnoughFeeBalance,
+    strings.slippageWarningChangeAmount,
   ])
 
+  // can swap?
   React.useEffect(() => {
     const canSwap =
       state.buyQuantity.isTouched &&

@@ -140,23 +140,31 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
   const {id, name, ticker, group, decimals} = tokenInfo
   const balanceAvailable = useBalance({wallet, tokenId: id})
   const {closeSearch} = useSearch()
-  const {buyTokenInfoChanged, orderData} = useSwap()
+  const {buyTokenInfoChanged, orderData, resetQuantities} = useSwap()
   const {
     sellQuantity: {isTouched: isSellTouched},
     buyQuantity: {isTouched: isBuyTouched},
     buyTouched,
+    switchTokens,
   } = useSwapForm()
   const navigateTo = useNavigateTo()
   const {track} = useMetrics()
 
-  const isDisabled = id === orderData.amounts.sell.tokenId && isSellTouched
   const inUserWallet = walletTokenIds.includes(tokenInfo.id)
   const shouldUpdateToken = id !== orderData.amounts.buy.tokenId || !isBuyTouched
+  const shouldSwitchTokens = id === orderData.amounts.sell.tokenId && isSellTouched
 
   const handleOnTokenSelection = () => {
     track.swapAssetToChanged({
       to_asset: [{asset_name: name, asset_ticker: ticker, policy_id: group}],
     })
+
+    // useCase - switch tokens when selecting the same already selected token on the other side
+    if (shouldSwitchTokens) {
+      resetQuantities()
+      switchTokens()
+    }
+
     if (shouldUpdateToken) {
       buyTokenInfoChanged({
         decimals: decimals ?? 0,
@@ -169,12 +177,7 @@ const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenPro
   }
 
   return (
-    <TouchableOpacity
-      style={[styles.item, isDisabled && styles.disabled]}
-      onPress={handleOnTokenSelection}
-      testID="selectTokenButton"
-      disabled={isDisabled}
-    >
+    <TouchableOpacity style={styles.item} onPress={handleOnTokenSelection} testID="selectTokenButton">
       <AmountItem
         amount={{tokenId: id, quantity: balanceAvailable}}
         wallet={wallet}
@@ -272,8 +275,5 @@ const styles = StyleSheet.create({
   },
   counter: {
     paddingVertical: 16,
-  },
-  disabled: {
-    opacity: 0.5,
   },
 })

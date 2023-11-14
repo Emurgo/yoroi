@@ -68,7 +68,7 @@ const AmountInput = ({onChange, value, editable, inputRef}: AmountInputProps) =>
       placeholder="0"
       onChangeText={onChange}
       allowFontScaling
-      selectionColor={COLORS.TRANSPARENT_BLACK}
+      selectionColor="#242838"
       style={styles.amountInput}
       underlineColorAndroid="transparent"
       editable={editable}
