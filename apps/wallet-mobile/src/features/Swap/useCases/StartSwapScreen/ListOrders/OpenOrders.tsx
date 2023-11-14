@@ -36,6 +36,7 @@ import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
+import {switchDayAndMonth} from '../../../common/helpers'
 import {EmptyOpenOrdersIllustration} from '../../../common/Illustrations/EmptyOpenOrdersIllustration'
 import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
@@ -264,7 +265,7 @@ export const OpenOrders = () => {
             const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
             const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
             const liquidityPoolIcon =
-              order.provider !== undefined ? <PoolIcon size={32} providerId={order.provider} /> : null
+              order.provider !== undefined ? <PoolIcon size={28} providerId={order.provider} /> : null
             const expanded = order.id === hiddenInfoOpenId
             return (
               <ExpandableInfoCard
@@ -303,11 +304,13 @@ export const OpenOrders = () => {
                 <MainInfo
                   tokenAmount={`${order.tokenAmount} ${order.assetToLabel}`}
                   tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
-                  date={intl.formatDate(new Date(order.date), {
-                    dateStyle: 'short',
-                    timeStyle: 'medium',
-                    hour12: false,
-                  })}
+                  date={switchDayAndMonth(
+                    intl.formatDate(new Date(order.date), {
+                      dateStyle: 'short',
+                      timeStyle: 'medium',
+                      hour12: false,
+                    }),
+                  )}
                 />
               </ExpandableInfoCard>
             )
@@ -354,9 +357,9 @@ const Header = ({
 
         <Spacer width={4} />
 
-        <Text>{assetFromLabel}</Text>
+        <Text style={styles.headerLabel}>{assetFromLabel}</Text>
 
-        <Text>/</Text>
+        <Text style={styles.headerLabel}>/</Text>
 
         <Spacer width={4} />
 
@@ -364,7 +367,7 @@ const Header = ({
 
         <Spacer width={4} />
 
-        <Text>{assetToLabel}</Text>
+        <Text style={styles.headerLabel}>{assetToLabel}</Text>
       </View>
     </HeaderWrapper>
   )
@@ -670,6 +673,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 24,
+  },
+  headerLabel: {
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
   contentValue: {
     color: '#000',

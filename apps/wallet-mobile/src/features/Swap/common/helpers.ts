@@ -99,3 +99,11 @@ export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo, wal
 
   return nameA.localeCompare(nameB, undefined, {sensitivity: 'base'})
 }
+
+export const switchDayAndMonth = (dateString: string): string => {
+  const [datePart, timePart] = dateString.split(', ')
+  const [month, day, year] = datePart.split('/')
+  const newDatePart = `${day}/${month}/${year}`
+
+  return `${newDatePart}, ${timePart}`
+}

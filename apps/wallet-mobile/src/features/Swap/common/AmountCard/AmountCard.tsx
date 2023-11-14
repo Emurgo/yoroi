@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
   },
   borderError: {
     borderColor: COLORS.ALERT_TEXT_COLOR,
+    borderWidth: 2,
   },
   active: {
     borderWidth: 2,
