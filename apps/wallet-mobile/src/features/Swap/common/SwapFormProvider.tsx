@@ -60,18 +60,6 @@ export const SwapFormProvider = ({
 
   const [state, dispatch] = React.useReducer(swapFormReducer, {
     ...defaultState,
-    buyQuantity: {
-      ...defaultState.buyQuantity,
-      ...(defaultState.buyQuantity.isTouched && {
-        displayValue: Quantities.format(buyQuantity, buyTokenInfo.decimals ?? 0),
-      }),
-    },
-    sellQuantity: {
-      ...defaultState.sellQuantity,
-      ...(defaultState.sellQuantity.isTouched && {
-        displayValue: Quantities.format(sellQuantity, sellTokenInfo.decimals ?? 0),
-      }),
-    },
     ...initialState,
   })
 
