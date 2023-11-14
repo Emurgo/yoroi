@@ -33,7 +33,7 @@ import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 
-const PRECISION = 14
+const PRECISION = 10
 
 export type MappedRawOrder = {
   id: string
