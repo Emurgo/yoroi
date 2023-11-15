@@ -6,9 +6,8 @@ import {Buffer} from 'buffer'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Alert, Image, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import img from '../../../../../assets/img/illustration-swap-open-order.png' // using png because svg logo has the issue is going to be fixed here https://github.com/software-mansion/react-native-svg/pull/2152
 import {
   Button,
   ExpandableInfoCard,
@@ -37,6 +36,7 @@ import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
+import {EmptyOpenOrdersIllustration} from '../../../common/Illustrations/EmptyOpenOrdersIllustration'
 import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
@@ -264,7 +264,7 @@ export const OpenOrders = () => {
             const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
             const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
             const liquidityPoolIcon =
-              order.provider !== undefined ? <PoolIcon size={32} providerId={order.provider} /> : null
+              order.provider !== undefined ? <PoolIcon size={28} providerId={order.provider} /> : null
             const expanded = order.id === hiddenInfoOpenId
             return (
               <ExpandableInfoCard
@@ -354,9 +354,9 @@ const Header = ({
 
         <Spacer width={4} />
 
-        <Text>{assetFromLabel}</Text>
+        <Text style={styles.headerLabel}>{assetFromLabel}</Text>
 
-        <Text>/</Text>
+        <Text style={styles.headerLabel}>/</Text>
 
         <Spacer width={4} />
 
@@ -364,7 +364,7 @@ const Header = ({
 
         <Spacer width={4} />
 
-        <Text>{assetToLabel}</Text>
+        <Text style={styles.headerLabel}>{assetToLabel}</Text>
       </View>
     </HeaderWrapper>
   )
@@ -611,10 +611,10 @@ const ListEmptyComponent = ({openOrders}: {openOrders: Array<MappedOpenOrder>}) 
 const NoOrdersYet = () => {
   const strings = useStrings()
   return (
-    <View style={styles.imageContainer}>
+    <View style={styles.notOrdersYetContainer}>
       <Spacer height={80} />
 
-      <Image source={img} style={styles.image} />
+      <EmptyOpenOrdersIllustration style={styles.illustration} />
 
       <Spacer height={15} />
 
@@ -671,6 +671,10 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 24,
   },
+  headerLabel: {
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
+  },
   contentValue: {
     color: '#000',
     fontFamily: 'Rubik',
@@ -706,14 +710,13 @@ const styles = StyleSheet.create({
   counter: {
     paddingVertical: 16,
   },
-  image: {
+  illustration: {
     flex: 1,
     alignSelf: 'center',
-    resizeMode: 'contain',
     width: 280,
     height: 224,
   },
-  imageContainer: {
+  notOrdersYetContainer: {
     flex: 1,
     textAlign: 'center',
   },
