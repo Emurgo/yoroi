@@ -14,6 +14,7 @@ import {
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
 
+// TODO: This should be a dependency
 export const CardanoMobile = init('global')
 
 export namespace CardanoTypes {
