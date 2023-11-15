@@ -1,22 +1,22 @@
 {
-  "name": "@yoroi/governance",
+  "name": "@yoroi/staking",
   "version": "1.3.0",
-  "description": "The governance package of Yoroi SDK",
+  "description": "The staking package of Yoroi SDK",
   "keywords": [
     "yoroi",
     "cardano",
-    "governance",
+    "staking",
     "browser",
     "react"
   ],
-  "homepage": "https://github.com/Emurgo/yoroi/packages/governance#readme",
+  "homepage": "https://github.com/Emurgo/yoroi/packages/staking#readme",
   "bugs": {
     "url": "https://github.com/Emurgo/yoroi/issues"
   },
   "repository": {
     "type": "github",
     "url": "https://github.com/Emurgo/yoroi.git",
-    "directory": "packages/governance"
+    "directory": "packages/staking"
   },
   "license": "Apache-2.0",
   "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",

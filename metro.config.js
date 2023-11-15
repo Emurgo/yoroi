@@ -10,7 +10,7 @@ module.exports = {
     path.resolve(__dirname, "packages/api"),
     path.resolve(__dirname, "packages/openswap"),
     path.resolve(__dirname, "packages/swap"),
-    path.resolve(__dirname, "packages/governance"),
+    path.resolve(__dirname, "packages/staking"),
     path.resolve(__dirname, "apps/wallet-mobile"),
   ],
   resolver: {
