@@ -1,0 +1,32 @@
+[
+  {
+    "id": "swap.swapScreen.selectToken",
+    "defaultMessage": "!!!Select token",
+    "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
+    "start": {
+      "line": 129,
+      "column": 15,
+      "index": 4221
+    },
+    "end": {
+      "line": 132,
+      "column": 3,
+      "index": 4304
+    }
+  },
+  {
+    "id": "swap.swapScreen.currentBalance",
+    "defaultMessage": "!!!Current Balance",
+    "file": "src/features/Swap/common/AmountCard/AmountCard.tsx",
+    "start": {
+      "line": 133,
+      "column": 18,
+      "index": 4324
+    },
+    "end": {
+      "line": 136,
+      "column": 3,
+      "index": 4413
+    }
+  }
+]

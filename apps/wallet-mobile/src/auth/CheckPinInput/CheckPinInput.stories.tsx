@@ -1,17 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
+import {rootStorage, StorageProvider} from '@yoroi/common'
 import React from 'react'
 
-import {storage, StorageProvider} from '../../yoroi-wallets/storage'
 import {CheckPinInput} from './CheckPinInput'
 
 storiesOf('CheckPinInput', module).add('Default', () => (
   <StorageProvider
     storage={{
-      ...storage,
+      ...rootStorage,
       getItem: async (key) => {
         action('getItem')(key)
-        return encryptedKeyHash
+        return encryptedKeyHash as any
       },
     }}
   >

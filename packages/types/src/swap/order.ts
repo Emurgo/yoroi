@@ -1,5 +1,5 @@
-import {BalanceAmount} from '../balance/token'
-import {SwapProtocol} from './protocol'
+import {BalanceAmount, BalanceQuantity} from '../balance/token'
+import {SwapPool, SwapPoolProvider} from './pool'
 
 export type SwapOrderType = 'market' | 'limit'
 
@@ -8,18 +8,11 @@ export type SwapCreateOrderData = {
     sell: BalanceAmount
     buy: BalanceAmount
   }
+  limitPrice?: BalanceQuantity
   address: string
   slippage: number
-} & (
-  | {
-      protocol: Omit<SwapProtocol, 'sundaeswap'>
-      poolId: string | undefined // only required for SundaeSwap trades.
-    }
-  | {
-      protocol: 'sundaeswap'
-      poolId: string
-    }
-)
+  selectedPool: SwapPool
+}
 
 export type SwapCancelOrderData = {
   utxos: {
@@ -36,9 +29,16 @@ export type SwapCreateOrderResponse = {
 }
 
 export type SwapOpenOrder = {
-  provider: SwapProtocol
+  provider: SwapPoolProvider
   from: BalanceAmount
   to: BalanceAmount
   deposit: BalanceAmount
   utxo: string
+  owner: string
+}
+
+export type SwapCompletedOrder = {
+  from: BalanceAmount
+  to: BalanceAmount
+  txHash: string
 }

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {isArray, isString} from '@yoroi/common'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 
@@ -90,8 +91,22 @@ export const processTxHistoryData = (
   memo: string | null,
   defaultAsset: DefaultAsset,
 ): TransactionInfo => {
-  const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, networkId, defaultAsset)
+  const metadata = tx.metadata?.reduce<TransactionInfo['metadata']>(
+    (metadatas: TransactionInfo['metadata'], metadata) => {
+      if (metadata?.label && metadatas != null) {
+        if (isArray(metadata?.map_json?.msg)) {
+          metadatas[metadata.label] = metadata.map_json.msg.join('')
+        }
+        if (isString(metadata?.map_json?.msg)) {
+          metadatas[metadata.label] = metadata.map_json.msg
+        }
+      }
+      return metadatas
+    },
+    {},
+  )
 
+  const _strToDefaultMultiAsset = (amount: string) => strToDefaultMultiAsset(amount, networkId, defaultAsset)
   // collateral
   const collateral = tx.collateralInputs || []
   const isNonNativeScriptExecution = Number(tx.scriptSize) > 0 || collateral.length > 0
@@ -245,10 +260,11 @@ export const processTxHistoryData = (
 
   return {
     id: tx.id,
-    inputs: tx.inputs.map(({address, assets, amount}) => ({
+    inputs: tx.inputs.map(({address, assets, amount, id}) => ({
       address,
       amount,
       assets: assets.map(_remoteAssetAsTokenEntry),
+      id,
     })),
     outputs: tx.outputs.map(({address, assets, amount}) => ({
       address,
@@ -267,5 +283,6 @@ export const processTxHistoryData = (
     tokens,
     blockNumber: tx.blockNum ?? 0,
     memo,
+    metadata,
   }
 }

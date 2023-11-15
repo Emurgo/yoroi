@@ -60,12 +60,10 @@ const params: StakingCenterRoutes['delegation-confirmation'] = {
   yoroiUnsignedTx: {
     ...mocks.yoroiUnsignedTx,
     staking: {
-      registrations: {},
-      deregistrations: {},
-      delegations: {
-        rewardAddress: {'': '123456789'},
-      },
-      withdrawals: {},
+      registrations: [],
+      deregistrations: [],
+      delegations: [{address: 'rewardAddress', amounts: {'': '123456789'}}],
+      withdrawals: [],
     },
   },
 }

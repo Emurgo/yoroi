@@ -3,6 +3,7 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import {Keyboard, Platform} from 'react-native'
 
 import {VotingRegistration as VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
@@ -25,6 +26,24 @@ const WalletTabNavigator = () => {
   const wallet = useSelectedWallet()
   const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
 
+  const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
+
+  React.useEffect(() => {
+    if (Platform.OS === 'android') return
+
+    const showSubscription = Keyboard.addListener('keyboardWillShow', () => {
+      setIsKeyboardOpen(true)
+    })
+    const hideSubscription = Keyboard.addListener('keyboardWillHide', () => {
+      setIsKeyboardOpen(false)
+    })
+
+    return () => {
+      showSubscription.remove()
+      hideSubscription.remove()
+    }
+  }, [])
+
   return (
     <>
       <OfflineBanner />
@@ -35,6 +54,11 @@ const WalletTabNavigator = () => {
           tabBarLabelStyle: {fontSize: 11},
           tabBarActiveTintColor: theme.COLORS.NAVIGATION_ACTIVE,
           tabBarInactiveTintColor: theme.COLORS.NAVIGATION_INACTIVE,
+          tabBarStyle: {
+            // keyboardWillShow keyboardWillHiden dont work on android
+            display: isKeyboardOpen ? 'none' : undefined,
+          },
+          tabBarHideOnKeyboard: Platform.OS === 'android',
         }}
         initialRouteName={initialRoute}
         backBehavior="initialRoute"

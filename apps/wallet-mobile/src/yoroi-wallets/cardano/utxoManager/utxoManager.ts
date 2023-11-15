@@ -1,12 +1,12 @@
 import {initUtxo, UtxoModels, UtxoStorage} from '@emurgo/yoroi-lib'
 import {Utxo, UtxoAtSafePoint, UtxoDiffToBestBlock} from '@emurgo/yoroi-lib/dist/utxo/models'
+import {isString, parseSafe} from '@yoroi/common'
+import {App} from '@yoroi/types'
 import {parseInt} from 'lodash'
 
-import {YoroiStorage} from '../../storage'
 import {RawUtxo} from '../../types'
-import {parseSafe} from '../../utils/parsing'
 
-export const makeUtxoManager = async ({storage, apiUrl}: {storage: YoroiStorage; apiUrl: string}) => {
+export const makeUtxoManager = async ({storage, apiUrl}: {storage: App.Storage; apiUrl: string}) => {
   const managerStorage = makeUtxoManagerStorage(storage)
   const serviceStorage = makeUtxoStorage(storage.join('utxos/'))
   const service = initUtxo(serviceStorage, `${apiUrl}/`)
@@ -15,6 +15,7 @@ export const makeUtxoManager = async ({storage, apiUrl}: {storage: YoroiStorage;
 
   const getCachedUtxos = () => service.getAvailableUtxos().then((utxos) => utxos.map(serializer))
   const initialUtxos = await getCachedUtxos()
+  const initialCollateralId = await managerStorage.collateral.read()
 
   // utxo state is related to the addresses used, if it changes a reset is needed
   const sync = (addresses: Array<string>) => {
@@ -33,21 +34,36 @@ export const makeUtxoManager = async ({storage, apiUrl}: {storage: YoroiStorage;
     clear: async () => {
       await serviceStorage.clearUtxoState()
       await managerStorage.addrCounter.clear()
+      await managerStorage.collateral.clear()
     },
     initialUtxos,
     getCachedUtxos,
     sync,
+
+    initialCollateralId,
+    getCollateralId: () => managerStorage.collateral.read(),
+    setCollateralId: (utxoId: RawUtxo['utxo_id']) => managerStorage.collateral.save(utxoId),
   } as const
 }
 
-export const makeUtxoManagerStorage = (storage: YoroiStorage) => {
+export const makeUtxoManagerStorage = (storage: App.Storage) => {
   const addrCounterKey = 'addrCounter'
+  const collateralKey = 'collateral'
 
   return {
     addrCounter: {
       save: (count: number) => storage.setItem(addrCounterKey, count),
       clear: () => storage.removeItem(addrCounterKey),
       read: () => storage.getItem(addrCounterKey, (count) => (count != null ? parseInt(count) : 0)),
+    },
+    collateral: {
+      save: (utxoId: string) => storage.setItem(collateralKey, utxoId),
+      clear: () => storage.removeItem(collateralKey),
+      read: () =>
+        storage.getItem<string>(collateralKey, (utxoId) => {
+          const parsed = parseSafe(utxoId)
+          return isString(parsed) ? parsed : ''
+        }),
     },
   } as const
 }
@@ -66,7 +82,7 @@ export type UtxoManager = Awaited<ReturnType<typeof makeUtxoManager>>
 const diffPath = 'diff'
 const safePointPath = 'safe-point'
 
-export const makeUtxoStorage = (storage: YoroiStorage) => {
+export const makeUtxoStorage = (storage: App.Storage) => {
   const getUtxoDiffToBestBlock = () => storage.getItem(diffPath, parseDiff).then((diff) => diff ?? [])
   const setUtxoDiffToBestBlock = (utxoDiffToBestBlock: UtxoDiffToBestBlock[]) =>
     storage.setItem(diffPath, utxoDiffToBestBlock)

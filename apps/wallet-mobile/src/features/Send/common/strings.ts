@@ -11,6 +11,7 @@ export const useStrings = () => {
     all: intl.formatMessage(globalMessages.all),
     amount: intl.formatMessage(txLabels.amount),
     apply: intl.formatMessage(globalMessages.apply),
+    pools: intl.formatMessage(globalMessages.pools),
     asset: intl.formatMessage(messages.asset),
     assets: (qty: number) => intl.formatMessage(globalMessages.assets, {qty}),
     assetsLabel: intl.formatMessage(globalMessages.assetsLabel),

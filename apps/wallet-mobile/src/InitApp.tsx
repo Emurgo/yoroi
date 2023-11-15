@@ -1,3 +1,5 @@
+import {isString, useStorage} from '@yoroi/common'
+import {App} from '@yoroi/types'
 import React, {useEffect, useRef} from 'react'
 import {Platform, UIManager} from 'react-native'
 import {enableScreens} from 'react-native-screens'
@@ -5,10 +7,9 @@ import * as Sentry from 'sentry-expo'
 import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
+import {useInitScreenShare} from './features/Settings/ScreenShare'
 import {CONFIG, isProduction} from './legacy/config'
 import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
-import {useStorage, YoroiStorage} from './yoroi-wallets/storage'
-import {isString} from './yoroi-wallets/utils'
 import {walletManager} from './yoroi-wallets/walletManager'
 
 enableScreens()
@@ -31,6 +32,8 @@ const useInitApp = () => {
   const storage = useStorage()
   const crashReportsEnabled = useCrashReportsEnabled()
 
+  const {initialised: screenShareInitialized} = useInitScreenShare()
+
   useInitSentry({enabled: crashReportsEnabled})
 
   useEffect(() => {
@@ -42,10 +45,10 @@ const useInitApp = () => {
     load()
   }, [storage])
 
-  return loaded
+  return loaded && screenShareInitialized
 }
 
-const initInstallationId = async (storage: YoroiStorage) => {
+const initInstallationId = async (storage: App.Storage) => {
   const installationId = await storage.join('appSettings/').getItem('installationId', (data) => data) // LEGACY: installationId is not serialized
   if (installationId != null) return installationId
 
@@ -53,7 +56,7 @@ const initInstallationId = async (storage: YoroiStorage) => {
   await storage.setItem('appSettings/installationId', newInstallationId, () => newInstallationId) // LEGACY: installationId is not serialized
 }
 
-export const initApp = async (storage: YoroiStorage) => {
+export const initApp = async (storage: App.Storage) => {
   await initInstallationId(storage)
   await walletManager.initialize()
 }

@@ -1,6 +1,7 @@
+import {parseSafe, useStorage} from '@yoroi/common'
 import React, {useMemo} from 'react'
 import {IntlProvider} from 'react-intl'
-import {NativeModules, Platform, Text} from 'react-native'
+import {Text} from 'react-native'
 import TimeZone from 'react-native-timezone'
 import {
   QueryKey,
@@ -12,9 +13,8 @@ import {
   UseQueryOptions,
 } from 'react-query'
 
-import {useStorage} from '../yoroi-wallets/storage'
-import {parseSafe} from '../yoroi-wallets/utils'
-import {LanguageCode, supportedLanguages, updateLanguageSettings} from './languages'
+import {numberLocale, systemLocale} from './initialization'
+import {LanguageCode, NumberLocale, supportedLanguages} from './languages'
 import translations from './translations'
 
 const LanguageContext = React.createContext<undefined | LanguageContext>(undefined)
@@ -27,9 +27,18 @@ export const LanguageProvider = ({children}: {children: React.ReactNode}) => {
     () => new QueryObserver<LanguageCode>(queryClient, {queryKey: 'languageCode'}),
     [queryClient],
   )
+  const initialState = React.useMemo(() => {
+    return {
+      numberLocale,
+      languageCode,
+      selectLanguageCode,
+      supportedLanguages,
+      observer,
+    }
+  }, [languageCode, selectLanguageCode, observer])
 
   return (
-    <LanguageContext.Provider value={{languageCode, selectLanguageCode, supportedLanguages, observer}}>
+    <LanguageContext.Provider value={initialState}>
       <IntlProvider
         timeZone={timeZone}
         locale={languageCode}
@@ -60,12 +69,12 @@ const useTimezone = () => {
 }
 
 export const useLanguage = ({onChange}: {onChange?: (languageCode: LanguageCode) => void} = {}) => {
-  const value = React.useContext(LanguageContext) || missingProvider()
+  const value = React.useContext(LanguageContext) ?? missingProvider()
 
   React.useEffect(() => {
     if (onChange) {
       return value.observer.subscribe((result) => {
-        onChange(result.data ?? defaultLanguageCode)
+        onChange(result.data ?? systemLocale)
       })
     }
   }, [onChange, value.observer])
@@ -83,10 +92,9 @@ const useLanguageCode = ({onSuccess, ...options}: UseQueryOptions<LanguageCode> 
     queryFn: async () => {
       const languageCode = await storage.join('appSettings/').getItem('languageCode', parseLanguageCode)
 
-      return languageCode ?? defaultLanguageCode
+      return languageCode ?? systemLocale
     },
     onSuccess: (languageCode) => {
-      updateLanguageSettings(languageCode)
       onSuccess?.(languageCode)
     },
     suspense: true,
@@ -106,7 +114,6 @@ const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, E
   const mutation = useMutation({
     mutationFn: (languageCode) => storage.join('appSettings/').setItem('languageCode', languageCode),
     onSuccess: (data, languageCode, context) => {
-      updateLanguageSettings(languageCode)
       queryClient.invalidateQueries('languageCode')
       onSuccess?.(data, languageCode, context)
     },
@@ -119,20 +126,12 @@ const useSaveLanguageCode = ({onSuccess, ...options}: UseMutationOptions<void, E
 type SaveLanguageCode = ReturnType<typeof useSaveLanguageCode>
 type SupportedLanguages = typeof supportedLanguages
 type LanguageContext = {
+  numberLocale: NumberLocale
   languageCode: LanguageCode
   selectLanguageCode: SaveLanguageCode
   supportedLanguages: SupportedLanguages
   observer: QueryObserver<LanguageCode, unknown, LanguageCode, LanguageCode, QueryKey>
 }
-
-const systemLanguageCode = Platform.select({
-  ios: () =>
-    NativeModules.SettingsManager.settings.AppleLocale ?? NativeModules.SettingsManager.settings.AppleLanguages[0],
-  android: () => NativeModules.I18nManager.localeIdentifier,
-  default: () => 'en-US',
-})()
-
-const defaultLanguageCode = supportedLanguages.some((v) => v.code === systemLanguageCode) ? systemLanguageCode : 'en-US'
 
 const parseLanguageCode = (data: unknown) => {
   const isLanguageCode = (data: unknown): data is LanguageCode =>

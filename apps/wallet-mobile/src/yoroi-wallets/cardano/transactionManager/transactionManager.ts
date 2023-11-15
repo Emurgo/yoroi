@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {isArray, parseSafe} from '@yoroi/common'
+import {App} from '@yoroi/types'
 import assert from 'assert'
 import {fromPairs, mapValues, max} from 'lodash'
 import DeviceInfo from 'react-native-device-info'
 import {defaultMemoize} from 'reselect'
 
 import {Logger} from '../../logging'
-import {YoroiStorage} from '../../storage/storage'
 import {
   BackendConfig,
   CERTIFICATE_KIND,
@@ -17,7 +18,6 @@ import {
   TxHistoryRequest,
 } from '../../types/other'
 import {RemoteCertificateMeta} from '../../types/staking'
-import {isArray, parseSafe} from '../../utils/parsing'
 import {Version, versionCompare} from '../../utils/versioning'
 import * as yoroiApi from '../api'
 import {ApiHistoryError} from '../errors'
@@ -38,7 +38,7 @@ export class TransactionManager {
   #confirmationCountsSelector = defaultMemoize(confirmationCountsSelector)
   #storage: TxManagerStorage
 
-  static async create(storage: YoroiStorage) {
+  static async create(storage: App.Storage) {
     const txStorage = makeTxManagerStorage(storage)
     const version = DeviceInfo.getVersion() as Version
     const isDeprecatedSchema = versionCompare(version, '4.1.0') === -1
@@ -332,6 +332,7 @@ export function toCachedTx(tx: RawTransaction): Transaction {
     fee: tx.fee ?? undefined,
     status: tx.tx_state,
     inputs: tx.inputs.map((input) => ({
+      id: input.id,
       address: input.address,
       amount: input.amount,
       assets: (input.assets ?? []).map((asset) => ({
@@ -374,6 +375,7 @@ export function toCachedTx(tx: RawTransaction): Transaction {
       })),
     })),
     memo: null,
+    metadata: tx.metadata,
   }
 }
 
@@ -481,7 +483,7 @@ export type TxManagerStorage = {
   clear: () => Promise<void>
 }
 
-export const makeTxManagerStorage = (storage: YoroiStorage): TxManagerStorage => ({
+export const makeTxManagerStorage = (storage: App.Storage): TxManagerStorage => ({
   loadTxs: async () => {
     const txids = await storage.getItem('txids', parseTxids)
     if (!txids) return {}

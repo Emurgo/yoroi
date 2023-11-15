@@ -3,22 +3,24 @@ import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {COLORS} from '../../theme'
-import {PairedBalance} from '../../TxHistory/PairedBalance'
 import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
 import {Quantities} from '../../yoroi-wallets/utils'
-import {Boundary, Icon, Placeholder, Spacer, Text, TokenIcon} from '..'
+import {Boundary, Icon, Spacer, Text, TokenIcon, TokenIconPlaceholder} from '..'
+import {PairedBalance} from '../PairedBalance/PairedBalance'
 
 export type AmountItemProps = {
   wallet: YoroiWallet
   amount: Balance.Amount
   style?: ViewProps['style']
   isPrivacyOff?: boolean
+  status?: string
+  inWallet?: boolean
   variant?: 'swap'
 }
 
-export const AmountItem = ({isPrivacyOff, wallet, style, amount, variant}: AmountItemProps) => {
+export const AmountItem = ({isPrivacyOff, wallet, style, amount, inWallet, variant}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -27,13 +29,14 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, variant}: Amoun
   const nameLabel = isEmptyString(name) ? '-' : name
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
 
-  const denominatedQuantity = Quantities.denominated(quantity, tokenInfo.decimals ?? 0)
+  const formattedQuantity = Quantities.format(quantity, tokenInfo.decimals ?? 0)
+
   const showSwapDetails = !isPrimary && variant === 'swap'
 
   return (
     <View style={[style, styles.container]} testID="assetItem">
       <Left>
-        <Boundary loading={{fallback: <Placeholder />}} error={{fallback: () => <Placeholder />}}>
+        <Boundary loading={{fallback: <TokenIconPlaceholder />}} error={{fallback: () => <TokenIconPlaceholder />}}>
           <TokenIcon wallet={wallet} tokenId={tokenInfo.id} variant={variant} />
         </Boundary>
       </Left>
@@ -48,7 +51,7 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, variant}: Amoun
             <>
               <Spacer width={4} />
 
-              <Icon.CheckFilled size={22} color={COLORS.SHELLEY_BLUE} />
+              {inWallet && <Icon.Portfolio size={22} color={COLORS.LIGHT_GREEN} />}
             </>
           )}
         </View>
@@ -59,13 +62,15 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, variant}: Amoun
       </Middle>
 
       <Right>
-        {tokenInfo.kind !== 'nft' && (
+        {tokenInfo.kind !== 'nft' && variant !== 'swap' && (
           <Text style={styles.quantity} testID="tokenAmountText">
-            {isPrivacyOff ? '**.*******' : denominatedQuantity}
+            {isPrivacyOff ? '**.*******' : formattedQuantity}
           </Text>
         )}
 
-        {isPrimary && <PairedBalance isPrivacyOff={isPrivacyOff} amount={{quantity, tokenId: tokenInfo.id}} />}
+        {isPrimary && variant !== 'swap' && (
+          <PairedBalance isPrivacyOff={isPrivacyOff} amount={{quantity, tokenId: tokenInfo.id}} />
+        )}
       </Right>
     </View>
   )
@@ -77,6 +82,36 @@ const Middle = ({style, ...props}: ViewProps) => (
 )
 const Right = ({style, ...props}: ViewProps) => <View style={style} {...props} />
 
+export const AmountItemPlaceholder = ({style}: ViewProps) => (
+  <View
+    style={[
+      style,
+      {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 12,
+        height: 56,
+      },
+    ]}
+  >
+    <View
+      style={{
+        backgroundColor: COLORS.BACKGROUND_GRAY,
+        borderRadius: 8,
+        flexGrow: 3,
+      }}
+    />
+
+    <View
+      style={{
+        backgroundColor: COLORS.BACKGROUND_GRAY,
+        borderRadius: 8,
+        flexGrow: 1,
+      }}
+    />
+  </View>
+)
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -85,7 +120,7 @@ const styles = StyleSheet.create({
   },
   name: {
     color: COLORS.DARK_TEXT,
-    fontSize: 14,
+    fontSize: 16,
     lineHeight: 22,
     fontWeight: '500',
     fontFamily: 'Rubik-Medium',
@@ -99,6 +134,8 @@ const styles = StyleSheet.create({
   quantity: {
     color: COLORS.DARK_TEXT,
     textAlign: 'right',
+    fontSize: 16,
+    fontFamily: 'Rubik-Regular',
   },
   row: {
     flexDirection: 'row',

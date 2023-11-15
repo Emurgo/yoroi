@@ -12,5 +12,5 @@
       "*.md": ["text-loader"]
     }
   },
-  "include": ["./.d.ts", "./src", ".storybook/decorators", "./e2e"]
+  "include": ["./.d.ts", "./src", ".storybook/decorators"]
 }

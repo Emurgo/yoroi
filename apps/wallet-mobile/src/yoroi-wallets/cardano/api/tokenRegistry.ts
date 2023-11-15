@@ -1,9 +1,9 @@
+import {createTypeGuardFromSchema} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
 import {z} from 'zod'
 
 import {promiseAny} from '../../../utils'
 import {BackendConfig} from '../../types'
-import {createTypeGuardFromSchema} from '../../utils'
 import {checkedFetch} from './fetch'
 import {getNFT} from './metadata'
 import {fallbackTokenInfo, tokenInfo, toTokenSubject} from './utils'

@@ -1,30 +1,26 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {COLORS} from '../../../../theme'
 
 interface ButtonGroupProps {
-  buttons: string[]
-  onButtonPress: (event: string, id: number) => void
+  labels: string[]
+  onSelect: (index: number) => void
+  selected: number
 }
 
-export const ButtonGroup: React.FC<ButtonGroupProps> = ({buttons, onButtonPress}) => {
-  const [clickedId, setClickedId] = useState(0)
-
-  const handleClick = (buttonLabel: string, id: number) => {
-    setClickedId(id)
-    onButtonPress(buttonLabel, id)
-  }
+export const ButtonGroup: React.FC<ButtonGroupProps> = ({labels, onSelect, selected}) => {
+  const handleOnPress = (index: number) => onSelect(index)
 
   return (
     <View style={styles.container}>
-      {buttons.map((buttonLabel, i) => (
-        <View key={i} style={styles.buttonWrapper}>
+      {labels.map((buttonLabel, index) => (
+        <View key={buttonLabel} style={styles.buttonWrapper}>
           <TouchableOpacity
-            onPress={() => handleClick(buttonLabel, i)}
-            style={[styles.customButton, i === clickedId && styles.activeButton]}
+            onPress={() => handleOnPress(index)}
+            style={[styles.button, index === selected && styles.selected]}
           >
-            <Text style={styles.buttonText}>{buttonLabel}</Text>
+            <Text style={styles.label}>{buttonLabel}</Text>
           </TouchableOpacity>
         </View>
       ))}
@@ -39,15 +35,19 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     paddingRight: 8,
   },
-  customButton: {
-    paddingHorizontal: 12,
+  button: {
+    paddingHorizontal: 8,
     paddingVertical: 8,
-    borderRadius: 4,
+    borderRadius: 8,
   },
-  activeButton: {
+  selected: {
     backgroundColor: COLORS.BORDER_GRAY,
   },
-  buttonText: {
+  label: {
     color: COLORS.BLACK,
+    fontFamily: 'Rubik-Medium',
+    fontWeight: '500',
+    lineHeight: 24,
+    fontSize: 16,
   },
 })

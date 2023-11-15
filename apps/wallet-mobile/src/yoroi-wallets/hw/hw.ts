@@ -100,6 +100,15 @@ export class RejectedByUserError extends LocalizableError {
   }
 }
 
+export class AdaAppClosedError extends LocalizableError {
+  constructor() {
+    super({
+      id: ledgerMessages.appOpened.id,
+      defaultMessage: ledgerMessages.appOpened.defaultMessage,
+    })
+  }
+}
+
 export const HARDWARE_WALLETS = {
   LEDGER_NANO: {
     ENABLED: true,

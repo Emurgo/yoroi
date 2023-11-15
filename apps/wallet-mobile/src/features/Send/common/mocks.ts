@@ -129,7 +129,7 @@ export const mocks = {
             ...initialState.targets[0].entry,
             amounts: {
               [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(
-                walletMocks.yoroiUnsignedTx.amounts[walletMocks.wallet.primaryTokenInfo.id],
+                walletMocks.yoroiUnsignedTx.entries[0].amounts[walletMocks.wallet.primaryTokenInfo.id],
               ),
             },
           },

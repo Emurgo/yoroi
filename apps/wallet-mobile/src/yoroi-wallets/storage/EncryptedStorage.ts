@@ -1,14 +1,14 @@
+import {parseString, rootStorage} from '@yoroi/common'
+
 import {YoroiWallet} from '../cardano/types'
 import {decryptData, encryptData} from '../encryption'
-import {parseString} from '../utils'
-import {storage} from './storage'
 
 type StorageKey = `${string}-MASTER_PASSWORD`
 export const EncryptedStorageKeys = {
   rootKey: (id: YoroiWallet['id']): StorageKey => `${id}-MASTER_PASSWORD`,
 }
 
-const keyStorage = storage.join('keystore/')
+const keyStorage = rootStorage.join('keystore/')
 
 export const EncryptedStorage = {
   async read(key: StorageKey, password: string) {

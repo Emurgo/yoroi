@@ -1,3 +1,4 @@
+import {isString} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
@@ -7,7 +8,6 @@ import {SvgUri} from 'react-native-svg'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
 import {getNftFilenameMediaType, getNftMainImageMediaType, isSvgMediaType} from '../../yoroi-wallets/cardano/nfts'
-import {isString} from '../../yoroi-wallets/utils'
 
 export const NftPreview = ({
   nft,

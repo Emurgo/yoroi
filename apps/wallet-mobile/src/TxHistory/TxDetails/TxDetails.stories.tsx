@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {storiesOf} from '@storybook/react-native'
+import {rootStorage, StorageProvider} from '@yoroi/common'
 import React from 'react'
 
 import {QueryProvider, RouteProvider} from '../../../.storybook/decorators'
 import {SelectedWalletProvider} from '../../SelectedWallet'
 import {mocks} from '../../yoroi-wallets/mocks'
-import {storage, StorageProvider} from '../../yoroi-wallets/storage'
 import {TxDetails} from './TxDetails'
 
 storiesOf('TxDetails', module)
@@ -49,16 +50,16 @@ storiesOf('TxDetails', module)
         <SelectedWalletProvider wallet={mocks.wallet}>
           <StorageProvider
             storage={{
-              ...storage,
+              ...rootStorage,
               join: (key: string) => {
                 if (key === 'appSettings/') {
-                  const appSettings = storage.join(key)
+                  const appSettings = rootStorage.join(key)
                   return {
                     ...appSettings,
-                    getItem: async (key) => (key === 'privacyMode' ? 'HIDDEN' : appSettings.getItem(key)),
+                    getItem: async (key): Promise<any> => (key === 'privacyMode' ? 'HIDDEN' : appSettings.getItem(key)),
                   }
                 }
-                return storage
+                return rootStorage
               },
             }}
           >

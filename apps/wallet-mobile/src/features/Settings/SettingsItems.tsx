@@ -3,8 +3,11 @@ import React, {ReactElement} from 'react'
 import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 
 import {Hr, Icon, Spacer, Text} from '../../components'
+import {formatTokenWithSymbol} from '../../legacy/format'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {COLORS} from '../../theme'
 import {lightPalette} from '../../theme'
+import {useCollateralInfo} from '../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 
 const Touchable = (props: TouchableOpacityProps) => <TouchableOpacity {...props} activeOpacity={0.5} />
 
@@ -14,17 +17,14 @@ type SettingsSectionProps = {
 }
 
 export const SettingsSection = ({title, children}: SettingsSectionProps) => (
-  <View style={styles.section}>
+  <View>
     {title != null && (
       <>
-        <Text
-          style={[
-            styles.sectionTitle,
-            {fontFamily: 'Rubik-Regular', color: lightPalette.gray['600'], fontSize: 14, lineHeight: 22},
-          ]}
-        >
+        <Text style={{fontFamily: 'Rubik-Regular', color: lightPalette.gray['600'], fontSize: 14, lineHeight: 22}}>
           {title}
         </Text>
+
+        <Spacer height={5} />
 
         <Hr />
       </>
@@ -53,8 +53,8 @@ export const SettingsItem = ({label, children, disabled, icon, info}: SettingsIt
         <Text
           style={[
             styles.label,
-            disabled && styles.disabled,
             {fontFamily: 'Rubik-Medium', color: lightPalette.gray['900'], fontSize: 16, lineHeight: 24},
+            disabled && styles.disabled,
           ]}
         >
           {label}
@@ -119,6 +119,36 @@ export const NavigatedSettingsItem = ({label, onNavigate, icon, disabled, select
   )
 }
 
+type SettingsBuildItemProps = {
+  label: string
+  value: string
+}
+
+export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
+  <SettingsItem label={label}>
+    <Text secondary>{value}</Text>
+  </SettingsItem>
+)
+
+export const SettingsCollateralItem = ({label, onNavigate, icon, disabled}: NavigatedSettingsItemProps) => {
+  const wallet = useSelectedWallet()
+  const {amount} = useCollateralInfo(wallet)
+
+  const formattedAmount = formatTokenWithSymbol(amount.quantity, wallet.primaryTokenInfo)
+
+  return (
+    <Touchable onPress={onNavigate} disabled={disabled}>
+      <SettingsItem label={label} icon={icon}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text secondary>{formattedAmount}</Text>
+
+          <Icon.Chevron direction="right" size={28} color={lightPalette.gray['600']} />
+        </View>
+      </SettingsItem>
+    </Touchable>
+  )
+}
+
 const styles = StyleSheet.create({
   itemInner: {
     paddingVertical: 16,
@@ -130,12 +160,6 @@ const styles = StyleSheet.create({
   },
   label: {
     flex: 1,
-  },
-  section: {
-    paddingHorizontal: 16,
-  },
-  sectionTitle: {
-    paddingBottom: 5,
   },
   disabled: {
     color: COLORS.DISABLED,

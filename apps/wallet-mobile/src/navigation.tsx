@@ -1,3 +1,4 @@
+import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-tabs'
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import React from 'react'
@@ -61,6 +62,7 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
   headerRightContainerStyle: {
     paddingRight: 10,
   },
+  cardStyle: {backgroundColor: 'white'},
   headerLeft: (props) => <BackButton {...props} />,
 }
 
@@ -77,6 +79,20 @@ export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = 
     paddingLeft: Platform.OS === 'ios' ? 8 : undefined,
   },
   headerLeft: (props) => <BackButton color="#fff" {...props} />,
+}
+
+// NAVIGATOR TOP TABS OPTIONS
+export const defaultMaterialTopTabNavigationOptions: MaterialTopTabNavigationOptions = {
+  tabBarStyle: {backgroundColor: COLORS.WHITE, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
+  tabBarIndicatorStyle: {backgroundColor: COLORS.SHELLEY_BLUE, height: 2},
+  tabBarLabelStyle: {
+    textTransform: 'none',
+    fontFamily: 'Rubik-Medium',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  tabBarActiveTintColor: COLORS.SHELLEY_BLUE,
+  tabBarInactiveTintColor: COLORS.NOT_SELECTED_TAB_TEXT,
 }
 
 // ROUTES
@@ -176,27 +192,24 @@ export type TxHistoryRoutes = {
   'send-start-tx': undefined
   'send-read-qr-code': undefined
   'send-confirm-tx': undefined
-  'send-submitted-tx': undefined
+  'send-submitted-tx': {txId: string}
   'send-failed-tx': undefined
   'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
   'send-select-token-from-list': undefined
-  'swap-start-order': undefined
-  'swap-confirmation-order': undefined
-  'swap-select-token-from': undefined
-  'swap-select-token-to': undefined
-  'swap-set-slippage': undefined
-  'swap-select-pool': undefined
-}
+} & SwapTokenRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 export type SwapTokenRoutes = {
-  'swap-start-order': undefined
-  'swap-confirmation-order': undefined
-  'swap-select-token-from': undefined
-  'swap-select-token-to': undefined
-  'swap-set-slippage': undefined
+  'swap-start-swap': undefined
+  'swap-confirm-tx': undefined
+  'swap-select-sell-token': undefined
+  'swap-select-buy-token': undefined
+  'swap-edit-slippage': undefined
   'swap-select-pool': undefined
+  'swap-submitted-tx': {txId: string}
+  'swap-failed-tx': undefined
+  'app-root': undefined
 }
 export type SwapTokenRouteseNavigation = StackNavigationProp<SwapTokenRoutes>
 
@@ -207,6 +220,12 @@ export type StakingCenterRoutes = {
     yoroiUnsignedTx: YoroiUnsignedTx
   }
 }
+
+export type SwapTabRoutes = {
+  'token-swap': undefined
+  orders: undefined
+}
+
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
 
 export type SettingsTabRoutes = {
@@ -234,6 +253,10 @@ export type SettingsStackRoutes = {
   'enable-login-with-pin': {
     onSuccess: () => void | Promise<void>
   }
+  'manage-collateral': undefined
+  'collateral-confirm-tx': undefined
+  'collateral-tx-submitted': undefined
+  'collateral-tx-failed': undefined
 }
 
 export type ToggleAnalyticsSettingsRoutes = {
@@ -303,6 +326,7 @@ export type AppRoutes = {
   'bio-auth-initial': undefined
   'enable-login-with-pin': undefined
   'agreement-changed-notice': undefined
+  modal: undefined
 }
 export type AppRouteNavigation = StackNavigationProp<AppRoutes>
 
@@ -415,6 +439,15 @@ export const useWalletNavigation = () => {
     })
   }
 
+  const navigateToCollateralSettings = () => {
+    navigation.navigate('app-root', {
+      screen: 'settings',
+      params: {
+        screen: 'manage-collateral',
+      },
+    })
+  }
+
   const navigateToAnalyticsSettings = () => {
     navigation.navigate('app-root', {
       screen: 'toggle-analytics-settings',
@@ -433,5 +466,6 @@ export const useWalletNavigation = () => {
     navigateToNftGallery,
     navigateToAppSettings,
     navigateToAnalyticsSettings,
+    navigateToCollateralSettings,
   }
 }

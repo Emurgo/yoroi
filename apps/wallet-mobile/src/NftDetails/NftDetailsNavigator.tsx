@@ -18,7 +18,6 @@ export const NftDetailsNavigator = () => {
       screenOptions={{
         ...defaultStackNavigationOptions,
         headerTitleContainerStyle: {alignItems: 'center'},
-        cardStyle: {backgroundColor: '#fff'},
       }}
       initialRouteName="nft-details"
     >

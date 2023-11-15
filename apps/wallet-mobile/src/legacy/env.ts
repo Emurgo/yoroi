@@ -1,6 +1,6 @@
 import BuildConfig from 'react-native-config'
 
-const getString = (key: string) => BuildConfig[key]
+const getString = (key: string) => BuildConfig[key] ?? ''
 
 const getBoolean = (key: string, defaultValue: boolean) => {
   const value = getString(key)

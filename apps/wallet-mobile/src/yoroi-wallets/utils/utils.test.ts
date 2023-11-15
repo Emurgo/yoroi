@@ -1,9 +1,9 @@
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
-import {YoroiEntries, YoroiEntry} from '../types'
+import {YoroiEntry} from '../types'
 import {RawUtxo} from '../types/other'
-import {Amounts, asQuantity, Entries, Quantities, Utxos} from './utils'
+import {Amounts, asQuantity, Entries, Quantities, splitStringInto64CharArray, Utxos} from './utils'
 
 describe('Quantities', () => {
   it('sum', () => {
@@ -83,6 +83,55 @@ describe('Quantities', () => {
     expect(Quantities.max('1', '2', '3')).toEqual('3')
     expect(Quantities.max('3', '2', '1')).toEqual('3')
     expect(Quantities.max('1', '1')).toEqual('1')
+  })
+  it('parseFromText', () => {
+    const english = {
+      prefix: '',
+      decimalSeparator: '.',
+      groupSeparator: ',',
+      groupSize: 3,
+      secondaryGroupSize: 0,
+      fractionGroupSize: 0,
+      fractionGroupSeparator: ' ',
+      suffix: '',
+    }
+
+    const italian = {
+      ...english,
+      decimalSeparator: ',',
+      groupSeparator: ' ',
+    }
+
+    BigNumber.config({
+      FORMAT: italian,
+    })
+
+    expect(Quantities.parseFromText('', 3, italian)).toEqual(['', '0'])
+    expect(Quantities.parseFromText('1', 3, italian)).toEqual(['1', '1000'])
+    expect(Quantities.parseFromText('123,55', 3, italian)).toEqual(['123,55', '123550'])
+    expect(Quantities.parseFromText('1234,6666', 3, italian)).toEqual(['1 234,666', '1234666'])
+    expect(Quantities.parseFromText('55,', 3, italian)).toEqual(['55,', '55000'])
+    expect(Quantities.parseFromText('55,0', 3, italian)).toEqual(['55,0', '55000'])
+    expect(Quantities.parseFromText('55,10', 3, italian)).toEqual(['55,10', '55100'])
+
+    expect(Quantities.parseFromText('ab1.5c,6.5', 3, italian)).toEqual(['15,65', '15650'])
+
+    BigNumber.config({
+      FORMAT: english,
+    })
+
+    expect(Quantities.parseFromText('', 3, english)).toEqual(['', '0'])
+    expect(Quantities.parseFromText('1', 3, english)).toEqual(['1', '1000'])
+    expect(Quantities.parseFromText('123.55', 3, english)).toEqual(['123.55', '123550'])
+    expect(Quantities.parseFromText('1234.6666', 3, english)).toEqual(['1,234.666', '1234666'])
+    expect(Quantities.parseFromText('55.', 3, english)).toEqual(['55.', '55000'])
+    expect(Quantities.parseFromText('55.0', 3, english)).toEqual(['55.0', '55000'])
+    expect(Quantities.parseFromText('55.10', 3, english)).toEqual(['55.10', '55100'])
+
+    expect(Quantities.parseFromText('ab1.5c,6.5', 3, english)).toEqual(['1.56', '1560'])
+
+    expect(Quantities.parseFromText('1.23456', 0, english, 3)).toEqual(['1.234', '1.234'])
+    expect(Quantities.parseFromText('1.23456', 2, english, 3)).toEqual(['1.234', '123.4'])
   })
 })
 
@@ -260,9 +309,7 @@ describe('Amounts', () => {
 
 describe('Entries', () => {
   it('first gets the first entry from YoroiEnrties', () => {
-    const entries: YoroiEntries = {
-      address1: {'': '1', token123: '2', token567: '-2'},
-    }
+    const entries: YoroiEntry[] = [{address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}}]
 
     expect(Entries.first(entries)).toEqual({
       address: 'address1',
@@ -274,88 +321,49 @@ describe('Entries', () => {
     } as YoroiEntry)
   })
 
-  it('first throws error if multiple addresses', () => {
-    const entries: YoroiEntries = {
-      address1: {'': '1', token123: '2', token567: '-2'},
-      address2: {'': '1', token123: '2', token567: '-2'},
-    }
+  it('first returns first item multiple entries', () => {
+    const entries: YoroiEntry[] = [
+      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address2', amounts: {'': '1', token123: '2', token567: '-2'}},
+    ]
 
-    expect(() => Entries.first(entries)).toThrowError()
+    expect(Entries.first(entries)).toEqual({
+      address: 'address1',
+      amounts: {'': '1', token123: '2', token567: '-2'},
+    })
   })
 
   it('remove', () => {
-    const entries1: YoroiEntries = {
-      address1: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address2: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address3: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-    }
+    const entries: YoroiEntry[] = [
+      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address2', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address3', amounts: {'': '1', token123: '2', token567: '-2'}},
+    ]
 
-    expect(Entries.remove(entries1, ['address2'])).toEqual({
-      address1: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address3: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-    } as YoroiEntries)
+    const expectedEntries: YoroiEntry[] = [
+      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address3', amounts: {'': '1', token123: '2', token567: '-2'}},
+    ]
+
+    expect(Entries.remove(entries, ['address2'])).toEqual(expectedEntries)
   })
 
   it('toAddresses', () => {
-    const entries: YoroiEntries = {
-      address1: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address2: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address3: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-    }
+    const entries: YoroiEntry[] = [
+      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address2', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address3', amounts: {'': '1', token123: '2', token567: '-2'}},
+    ]
 
     expect(Entries.toAddresses(entries)).toEqual(['address1', 'address2', 'address3'])
   })
 
   it('toAmounts', () => {
-    const entries: YoroiEntries = {
-      address1: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address2: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-      address3: {
-        '': '1',
-        token123: '2',
-        token567: '-2',
-      },
-    }
+    const entries: YoroiEntry[] = [
+      {address: 'address1', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address2', amounts: {'': '1', token123: '2', token567: '-2'}},
+      {address: 'address3', amounts: {'': '1', token123: '2', token567: '-2'}},
+    ]
 
     expect(Entries.toAmounts(entries)).toEqual({
       '': '3',
@@ -493,5 +501,34 @@ describe('asQuantity', () => {
     ${-Infinity}
   `('when the input is $input it should throw error', ({input}) => {
     expect(() => asQuantity(input)).toThrowError('Invalid quantity')
+  })
+})
+
+describe('splitStringInto64CharArray', () => {
+  it('should split a short string into a single element array', () => {
+    const inputString = 'Hello, World!'
+    const expectedArray = [inputString]
+
+    const result = splitStringInto64CharArray(inputString)
+
+    expect(result).toEqual(expectedArray)
+  })
+
+  it('should split a long string into multiple 64-character elements', () => {
+    const inputString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789023123'
+    const expectedArray = ['ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789023', '123']
+
+    const result = splitStringInto64CharArray(inputString)
+
+    expect(result).toEqual(expectedArray)
+  })
+
+  it('should handle an empty input string', () => {
+    const inputString = ''
+    const expectedArray: string[] = []
+
+    const result = splitStringInto64CharArray(inputString)
+
+    expect(result).toEqual(expectedArray)
   })
 })

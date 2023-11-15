@@ -8,10 +8,39 @@ export const useNavigateTo = () => {
 
   return useRef({
     selectPool: () => navigation.navigate('swap-select-pool'),
-    slippageToleranceInput: () => navigation.navigate('swap-set-slippage'),
-    selectedSwapFromTokens: () => navigation.navigate('swap-select-token-from'),
-    selectedSwapToTokens: () => navigation.navigate('swap-select-token-to'),
-    swapTokens: () => navigation.navigate('swap-start-order'),
-    confirmationOrder: () => navigation.navigate('swap-confirmation-order'),
+    editSlippage: () => navigation.navigate('swap-edit-slippage'),
+    selectBuyToken: () => navigation.navigate('swap-select-buy-token'),
+    selectSellToken: () => navigation.navigate('swap-select-sell-token'),
+    startSwap: () => navigation.navigate('swap-start-swap'),
+    confirmTx: () => navigation.navigate('swap-confirm-tx'),
+    submittedTx: (txId: string) => navigation.navigate('swap-submitted-tx', {txId}),
+    failedTx: () => navigation.navigate('swap-failed-tx'),
+    swapOpenOrders: () =>
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'swap-start-swap',
+                        state: {
+                          routes: [{name: 'orders'}],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }),
   }).current
 }

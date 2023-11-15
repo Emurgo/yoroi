@@ -1,3 +1,4 @@
+import {rootStorage, StorageProvider} from '@yoroi/common'
 import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
 import Config from 'react-native-config'
@@ -19,7 +20,6 @@ import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWall
 import {ThemeProvider} from './theme'
 import {WalletManagerProvider} from './WalletManager'
 import {useMigrations} from './yoroi-wallets/migrations'
-import {storage, StorageProvider} from './yoroi-wallets/storage'
 import {walletManager} from './yoroi-wallets/walletManager'
 
 enableScreens()
@@ -40,7 +40,7 @@ const queryClient = new QueryClient()
 const metricsManager = makeMetricsManager()
 
 export const YoroiApp = () => {
-  const migrated = useMigrations(storage)
+  const migrated = useMigrations(rootStorage)
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   return migrated ? (

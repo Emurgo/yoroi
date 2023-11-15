@@ -1,4 +1,5 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
+import {isRecord, isString} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -17,7 +18,6 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {getNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {useNft} from '../yoroi-wallets/hooks'
-import {isRecord, isString} from '../yoroi-wallets/utils'
 
 export const NftDetails = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params

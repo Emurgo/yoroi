@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
-import {Balance} from '@yoroi/types'
+import {useNavigation} from '@react-navigation/native'
+import {parseBoolean, useStorage} from '@yoroi/common'
+import {App, Balance} from '@yoroi/types'
+import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {
@@ -21,7 +24,6 @@ import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
 import {parseWalletMeta} from '../migrations/walletMeta'
-import {useStorage} from '../storage'
 import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
@@ -30,7 +32,6 @@ import {
   YoroiUnsignedTx,
 } from '../types'
 import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus, WalletImplementationId} from '../types/other'
-import {parseBoolean} from '../utils/parsing'
 import {delay} from '../utils/timeUtils'
 import {Amounts, Quantities, Utxos} from '../utils/utils'
 import {WalletManager, WalletMeta} from '../walletManager'
@@ -113,6 +114,18 @@ export const useUtxos = (wallet: YoroiWallet) => {
   useWallet(wallet, 'utxos')
 
   return wallet.utxos
+}
+
+export const useStakingKey = (wallet: YoroiWallet) => {
+  const getPublicKeyHex: () => Promise<string> = () =>
+    wallet
+      .getStakingKey()
+      .then((r) => r.hash())
+      .then((h) => h.toBytes())
+      .then((bytes) => Buffer.from(bytes).toString('hex'))
+  const result = useQuery([wallet.id, 'stakingKey'], getPublicKeyHex, {suspense: true})
+  if (!result.data) throw new Error('invalid state')
+  return result.data
 }
 
 export const useAssetIds = (wallet: YoroiWallet): string[] => {
@@ -205,6 +218,7 @@ export const useTokenInfo = <T extends Balance.TokenInfo>(
     suspense: true,
     queryKey: [wallet.id, 'tokenInfo', tokenId],
     queryFn: () => wallet.fetchTokenInfo(tokenId),
+    staleTime: 600_000,
   })
 
   if (!query.data) throw new Error('Invalid token id')
@@ -250,6 +264,7 @@ export const useToken = (
     suspense: true,
     queryKey: [wallet.id, 'tokenInfo', tokenId],
     queryFn: () => wallet.fetchTokenInfo(tokenId),
+    staleTime: 600_000,
   })
 
   if (!query.data) throw new Error('Invalid token id')
@@ -266,6 +281,7 @@ export const useTokenInfosDetailed = (
     suspense: true,
     queryKey: [wallet.id, 'tokenInfo', tokenId],
     queryFn: () => wallet.fetchTokenInfo(tokenId),
+    staleTime: 600_000,
   }))
   return useQueries(queries)
 }
@@ -480,7 +496,6 @@ export const useSignTxWithPassword = (
   const mutation = useMutation({
     mutationFn: async ({unsignedTx, password}) => {
       const rootKey = await wallet.encryptedStorage.rootKey.read(password)
-
       return wallet.signTx(unsignedTx, rootKey)
     },
     retry: false,
@@ -595,6 +610,23 @@ export const useWalletNames = (
   return {
     ...query,
     walletNames: query.data,
+  }
+}
+
+export const useFrontendFees = (
+  wallet: YoroiWallet,
+  options?: UseQueryOptions<App.FrontendFeesResponse, Error, App.FrontendFeesResponse, [string, 'frontend-fees']>,
+) => {
+  const query = useQuery({
+    suspense: true,
+    queryKey: [wallet.id, 'frontend-fees'],
+    ...options,
+    queryFn: () => wallet.api.getFrontendFees(),
+  })
+
+  return {
+    ...query,
+    frontendFees: query.data,
   }
 }
 
@@ -862,9 +894,10 @@ export const useBalances = (wallet: YoroiWallet): Balance.Amounts => {
   return Utxos.toAmounts(utxos, wallet.primaryTokenInfo.id)
 }
 
-export const useBalance = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string}) => {
+export const useBalance = ({wallet, tokenId}: {wallet: YoroiWallet; tokenId: string | undefined}) => {
   const balances = useBalances(wallet)
 
+  if (tokenId == null) return Quantities.zero
   return Amounts.getAmount(balances, tokenId).quantity
 }
 
@@ -918,4 +951,12 @@ export const useNft = (wallet: YoroiWallet, {id}: {id: string}): Balance.TokenIn
 export const useIsWalletEmpty = (wallet: YoroiWallet) => {
   const balances = useBalances(wallet)
   return Amounts.toArray(balances).every(({quantity}) => Quantities.isZero(quantity))
+}
+export function useHideBottomTabBar() {
+  const navigation = useNavigation()
+
+  React.useLayoutEffect(() => {
+    navigation.getParent()?.setOptions({tabBarStyle: {display: 'none'}, tabBarVisible: false})
+    return () => navigation.getParent()?.setOptions({tabBarStyle: true, tabBarVisible: undefined})
+  }, [navigation])
 }

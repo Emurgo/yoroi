@@ -23,8 +23,8 @@ export const confirmationMessages = {
       defaultMessage: '!!!Yes',
     },
     noButton: {
-      id: 'global.actions.dialogs.logout.noButton',
-      defaultMessage: '!!!No',
+      id: 'global.cancel',
+      defaultMessage: '!!!Cancel',
     },
   }),
   resync: defineMessages({
@@ -41,8 +41,8 @@ export const confirmationMessages = {
       defaultMessage: '!!!Yes',
     },
     noButton: {
-      id: 'global.actions.dialogs.logout.noButton',
-      defaultMessage: '!!!No',
+      id: 'global.cancel',
+      defaultMessage: '!!!Cancel',
     },
   }),
   commonButtons: defineMessages({
@@ -487,6 +487,19 @@ export const actionMessages = defineMessages({
     id: 'global.buy',
     defaultMessage: '!!!Buy',
   },
+  buyTitle: {
+    id: 'global.buyTitle',
+    defaultMessage: '!!!Exchange ADA',
+  },
+  buyInfo: {
+    id: 'global.buyInfo',
+    defaultMessage:
+      '!!!Yoroi uses <b>Banxa</b> to provide direct Fiat-ADA exchange. By clicking “Proceed,” you also acknowledge that you will be redirected to our partner’s website, where you may be asked to accept their terms and conditions.',
+  },
+  proceed: {
+    id: 'global.proceed',
+    defaultMessage: '!!!Proceed',
+  },
   swap: {
     id: 'global.swap',
     defaultMessage: '!!!Swap',
@@ -665,9 +678,17 @@ export default defineMessages({
     id: 'global.assets',
     defaultMessage: '!!! Assets',
   },
+  available: {
+    id: 'global.available',
+    defaultMessage: '!!! available',
+  },
   pools: {
     id: 'global.pools',
-    defaultMessage: '!!! Pools',
+    defaultMessage: '!!! Dex',
+  },
+  price: {
+    id: 'global.price',
+    defaultMessage: '!!! Price',
   },
   all: {
     id: 'global.all',

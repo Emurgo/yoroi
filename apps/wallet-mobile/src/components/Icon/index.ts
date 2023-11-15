@@ -17,6 +17,7 @@ import {Copy} from './Copy'
 import {CopySuccess} from './CopySuccess'
 import {Cross} from './Cross'
 import {CrossCircle} from './CrossCircle'
+import {Danger} from './Danger'
 import {DappConnector} from './DappConnector'
 import {Delete} from './Delete'
 import {Device} from './Device'
@@ -41,10 +42,13 @@ import {Launchpad} from './Launchpad'
 import {Lightning} from './Lightning'
 import {Link} from './Link'
 import {Lock} from './Lock'
+import {Logout} from './Logout'
 import {Magnify} from './Magnify'
 import {Megaphone} from './Megaphone'
 import {Menu} from './Menu'
 import {Message} from './Message'
+import {MinSwap} from './MinSwap'
+import {MuesliSwap} from './MuesliSwap'
 import {MultipleWallets} from './MultipleWallets'
 import {NftAsset} from './NftAsset'
 import {NoNfts} from './NoNfts'
@@ -58,18 +62,22 @@ import {Qr} from './Qr'
 import {QuestionMark} from './QuestionMark'
 import {Received} from './Received'
 import {Refresh} from './Refresh'
+import {Resync} from './Resync'
 import {RewardManuallyPayout} from './RewardManuallyPayout'
 import {RewardWithdrawn} from './RewardWithdrawn'
 import {Sandbox} from './Sandbox'
 import {Send} from './Send'
 import {Settings} from './Settings'
+import {Share} from './Share'
 import {SliderSettings} from './SliderSettings'
 import {SortTable} from './SortTable'
+import {SpectrumSwap} from './SpectrumSwap'
 import {Staking} from './Staking'
 import {StakingKeyDeregistered} from './StakingKeyDeregistered'
 import {StakingKeyRegistered} from './StakingKeyRegistered'
 import {StarFilled} from './StarFilled'
 import {StarOutlined} from './StarOutlined'
+import {SundaeSwap} from './SundaeSwap'
 import {Support} from './Support'
 import {Swap} from './Swap'
 import {Switch} from './Switch'
@@ -86,10 +94,12 @@ import {TotalReward} from './TotalReward'
 import {Transaction} from './Transaction'
 import {Twitter} from './Twitter'
 import {Verify} from './Verify'
+import {VyfiSwap} from './VyfiSwap'
 import {Wallet} from './Wallet'
 import {WalletAccount} from './WalletAccount'
 import {Wallets} from './Wallets'
 import {WalletStack} from './WalletStack'
+import {WingRiders} from './WingRiders'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
 
@@ -136,6 +146,7 @@ export const Icon = {
   Lightning,
   Link,
   Lock,
+  Logout,
   Magnify,
   Megaphone,
   Menu,
@@ -151,6 +162,7 @@ export const Icon = {
   Qr,
   QuestionMark,
   Received,
+  Resync,
   RewardManuallyPayout,
   RewardWithdrawn,
   Sandbox,
@@ -188,4 +200,12 @@ export const Icon = {
   Switch,
   Edit,
   Portfolio,
+  MinSwap,
+  SundaeSwap,
+  MuesliSwap,
+  WingRiders,
+  VyfiSwap,
+  SpectrumSwap,
+  Danger,
+  Share,
 }

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Recovery phrase",
     "file": "src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.tsx",
     "start": {
-      "line": 50,
+      "line": 51,
       "column": 9,
-      "index": 1522
+      "index": 1556
     },
     "end": {
-      "line": 53,
+      "line": 54,
       "column": 3,
-      "index": 1651
+      "index": 1685
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!I understand that my secret keys are held securely on this device only, not on the company`s servers",
     "file": "src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.tsx",
     "start": {
-      "line": 54,
+      "line": 55,
       "column": 23,
-      "index": 1676
+      "index": 1710
     },
     "end": {
-      "line": 58,
+      "line": 59,
       "column": 3,
-      "index": 1910
+      "index": 1944
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!I understand that if this application is moved to another device or deleted, my money can be only recovered with the backup phrase that I have written down and saved in a secure place.",
     "file": "src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.tsx",
     "start": {
-      "line": 59,
+      "line": 60,
       "column": 29,
-      "index": 1941
+      "index": 1975
     },
     "end": {
-      "line": 65,
+      "line": 66,
       "column": 3,
-      "index": 2287
+      "index": 2321
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!I understand",
     "file": "src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.tsx",
     "start": {
-      "line": 66,
+      "line": 67,
       "column": 22,
-      "index": 2311
+      "index": 2345
     },
     "end": {
-      "line": 69,
+      "line": 70,
       "column": 3,
-      "index": 2450
+      "index": 2484
     }
   }
 ]

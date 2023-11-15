@@ -1,8 +1,8 @@
+import {useStorage} from '@yoroi/common'
 import {useCallback} from 'react'
 import {useMutation, useQuery, useQueryClient} from 'react-query'
 
 import {CONFIG} from '../../../legacy/config'
-import {useStorage} from '../../../yoroi-wallets/storage'
 
 export type LegalAgreement = {
   latestAcceptedAgreementsDate: number

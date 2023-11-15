@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Balance} from '@yoroi/types'
+import {PrivateKey} from '@emurgo/cross-csl-core'
+import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
+import {AppApi} from '@yoroi/api'
+import {parseSafe} from '@yoroi/common'
+import {isNonNullable} from '@yoroi/common/src'
+import {App, Balance} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -11,7 +16,7 @@ import LocalizableError from '../../../i18n/LocalizableError'
 import {HWDeviceInfo} from '../../hw'
 import {Logger} from '../../logging'
 import {makeMemosManager, MemosManager} from '../../memos'
-import {makeWalletEncryptedStorage, WalletEncryptedStorage, YoroiStorage} from '../../storage'
+import {makeWalletEncryptedStorage, WalletEncryptedStorage} from '../../storage'
 import {Keychain} from '../../storage/Keychain'
 import type {
   AccountStateResponse,
@@ -28,20 +33,23 @@ import type {
   YoroiNftModerationStatus,
 } from '../../types'
 import {StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
-import {Quantities} from '../../utils'
-import {parseSafe} from '../../utils/parsing'
+import {asQuantity, Quantities} from '../../utils'
 import {validatePassword} from '../../utils/validators'
 import {WalletMeta} from '../../walletManager'
 import {Cardano, CardanoMobile} from '../../wallets'
-import * as api from '../api'
+import * as legacyApi from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
+import {
+  createSignedLedgerSwapCancellationTx,
+  createSwapCancellationLedgerPayload,
+  signRawTransaction,
+} from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
-import {withMinAmounts} from '../getMinAmounts'
 import {getTime} from '../getTime'
 import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
 import {processTxHistoryData} from '../processTransactions'
@@ -61,10 +69,10 @@ import {
   YoroiWallet,
 } from '../types'
 import {yoroiUnsignedTx} from '../unsignedTx'
-import {deriveRewardAddressHex, toSendTokenList} from '../utils'
+import {deriveRewardAddressHex, toRecipients} from '../utils'
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
+import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
-
 type WalletState = {
   lastGeneratedAddressIndex: number
 }
@@ -149,7 +157,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     },
   }
 
+  const appApi = AppApi.appApiMaker({baseUrl: API_ROOT})
+
   return class ShelleyWallet implements YoroiWallet {
+    readonly api: App.Api = appApi
     readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
     readonly primaryTokenInfo: Balance.TokenInfo = PRIMARY_TOKEN_INFO
     readonly walletImplementationId = WALLET_IMPLEMENTATION_ID
@@ -168,10 +179,11 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     isEasyConfirmationEnabled = false
 
     private _utxos: RawUtxo[]
-    private readonly storage: YoroiStorage
+    private readonly storage: App.Storage
     private readonly utxoManager: UtxoManager
     private readonly transactionManager: TransactionManager
     private readonly memosManager: MemosManager
+    private _collateralId = ''
 
     // =================== create =================== //
 
@@ -182,7 +194,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       password,
     }: {
       id: string
-      storage: YoroiStorage
+      storage: App.Storage
       mnemonic: string
       password: string
     }): Promise<YoroiWallet> {
@@ -216,7 +228,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       hwDeviceInfo: HWDeviceInfo | null
       id: string
       isReadOnly: boolean
-      storage: YoroiStorage
+      storage: App.Storage
     }): Promise<YoroiWallet> {
       const {internalChain, externalChain} = await addressChains.create({accountPubKeyHex})
 
@@ -232,7 +244,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       })
     }
 
-    static async restore({walletMeta, storage}: {storage: YoroiStorage; walletMeta: WalletMeta}) {
+    static async restore({walletMeta, storage}: {storage: App.Storage; walletMeta: WalletMeta}) {
       const data = await storage.getItem('data', parseWalletJSON)
       if (!data) throw new Error('Cannot read saved data')
       Logger.debug('openWallet::data', data)
@@ -269,7 +281,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       accountPubKeyHex: string
       hwDeviceInfo: HWDeviceInfo | null
       id: string
-      storage: YoroiStorage
+      storage: App.Storage
       internalChain: AddressChain
       externalChain: AddressChain
       isReadOnly: boolean
@@ -322,7 +334,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       transactionManager,
       memosManager,
     }: {
-      storage: YoroiStorage
+      storage: App.Storage
       id: string
       utxoManager: UtxoManager
       hwDeviceInfo: HWDeviceInfo | null
@@ -340,6 +352,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       this.storage = storage
       this.utxoManager = utxoManager
       this._utxos = utxoManager.initialUtxos
+      this._collateralId = utxoManager.initialCollateralId
       this.encryptedStorage = makeWalletEncryptedStorage(id)
       this.isHW = hwDeviceInfo != null
       this.hwDeviceInfo = hwDeviceInfo
@@ -383,10 +396,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       if (!this.timeout) return
       Logger.info(`stopping wallet: ${this.id}`)
       clearTimeout(this.timeout)
-    }
-
-    get utxos() {
-      return this._utxos
     }
 
     get receiveAddresses(): Addresses {
@@ -442,7 +451,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       return Promise.resolve(result)
     }
 
-    private async getStakingKey() {
+    public async getStakingKey() {
       const accountPubKey = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(this.publicKeyHex, 'hex'))
       const stakingKey = await accountPubKey
         .derive(CHIMERIC_ACCOUNT)
@@ -451,6 +460,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       Logger.info(`getStakingKey: ${Buffer.from(await stakingKey.asBytes()).toString('hex')}`)
       return stakingKey
+    }
+
+    public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
+      return signRawTransaction(txHex, pKeys)
     }
 
     private async getRewardAddress() {
@@ -580,28 +593,34 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     // =================== tx building =================== //
 
-    async createUnsignedTx(entry: YoroiEntry, auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
+    async createUnsignedTx(entries: YoroiEntry[], auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
-
+      const primaryTokenId = this.primaryTokenInfo.id
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
-      const amounts = await withMinAmounts(entry.amounts, this.primaryToken)
+
+      const recipients = await toRecipients(entries, this.primaryToken)
+
+      const containsDatum = recipients.some((recipient) => recipient.datum)
+
+      if (recipients.filter((r) => r.datum).length > 1) {
+        throw new Error('Only one datum per transaction is supported')
+      }
 
       try {
         const unsignedTx = await Cardano.createUnsignedTx(
           absSlotNumber,
           addressedUtxos,
-          entry.address,
+          recipients,
           changeAddr,
-          toSendTokenList(amounts, this.primaryToken),
           {
             keyDeposit: KEY_DEPOSIT,
             linearFee: {
               coefficient: LINEAR_FEE.COEFFICIENT,
-              constant: LINEAR_FEE.CONSTANT,
+              constant: containsDatum ? String(BigInt(LINEAR_FEE.CONSTANT) * 2n) : LINEAR_FEE.CONSTANT,
             },
             minimumUtxoVal: MINIMUM_UTXO_VAL,
             coinsPerUtxoWord: COINS_PER_UTXO_WORD,
@@ -612,7 +631,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           {metadata: auxiliaryData},
         )
 
-        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos})
+        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, entries, primaryTokenId})
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
         Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -639,6 +658,23 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           ? [stakingPrivateKey]
           : undefined
 
+      const datumDatas = unsignedTx.entries
+        .map((entry) => entry.datum)
+        .filter(isNonNullable)
+        .filter((datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum)
+
+      if (datumDatas.length > 0) {
+        const signedTx = await unsignedTx.unsignedTx.sign(
+          BIP44_DERIVATION_LEVELS.ACCOUNT,
+          accountPrivateKeyHex,
+          new Set<string>(),
+          [],
+          undefined,
+          datumDatas,
+        )
+        return yoroiSignedTx({unsignedTx, signedTx})
+      }
+
       const signedTx = await unsignedTx.unsignedTx.sign(
         BIP44_DERIVATION_LEVELS.ACCOUNT,
         accountPrivateKeyHex,
@@ -647,16 +683,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         stakingPrivateKey,
       )
 
-      return yoroiSignedTx({
-        unsignedTx,
-        signedTx,
-      })
+      return yoroiSignedTx({unsignedTx, signedTx})
     }
 
     async createDelegationTx(poolId: string | undefined, delegatedAmount: BigNumber) {
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
+      const primaryTokenId = this.primaryTokenInfo.id
 
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
@@ -694,11 +728,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         },
       )
 
-      return yoroiUnsignedTx({
-        unsignedTx,
-        networkConfig: NETWORK_CONFIG,
-        addressedUtxos,
-      })
+      return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, primaryTokenId})
     }
 
     async getFirstPaymentAddress() {
@@ -713,6 +743,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const bytes = await generatePrivateKeyForCatalyst()
         .then((key) => key.toRawKey())
         .then((key) => key.asBytes())
+
+      const primaryTokenId = this.primaryTokenInfo.id
 
       const catalystKeyHex = Buffer.from(bytes).toString('hex')
 
@@ -792,6 +824,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
             networkConfig: NETWORK_CONFIG,
             votingRegistration,
             addressedUtxos,
+            primaryTokenId,
           }),
         }
       } catch (e) {
@@ -805,11 +838,12 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
+      const primaryTokenId = this.primaryTokenInfo.id
 
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
-      const accountState = await api.getAccountState({addresses: [this.rewardAddressHex]}, BACKEND)
+      const accountState = await legacyApi.getAccountState({addresses: [this.rewardAddressHex]}, BACKEND)
 
       const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
         accountState,
@@ -838,16 +872,38 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
         {metadata: undefined},
       )
 
-      return yoroiUnsignedTx({
-        unsignedTx: withdrawalTx,
-        networkConfig: NETWORK_CONFIG,
-        addressedUtxos,
-      })
+      return yoroiUnsignedTx({unsignedTx: withdrawalTx, networkConfig: NETWORK_CONFIG, addressedUtxos, primaryTokenId})
     }
 
-    async ledgerSupportsCIP36(useUSB): Promise<boolean> {
+    async ledgerSupportsCIP36(useUSB: boolean): Promise<boolean> {
       if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
       return doesCardanoAppVersionSupportCIP36(await getCardanoAppMajorVersion(this.hwDeviceInfo, useUSB))
+    }
+
+    async signSwapCancellationWithLedger(cbor: string, useUSB: boolean): Promise<void> {
+      if (!this.hwDeviceInfo) throw new Error('Invalid wallet state')
+
+      const stakeVkeyHash = await this.getStakingKey().then((key) => key.hash())
+      const payload = await createSwapCancellationLedgerPayload(
+        cbor,
+        this,
+        NETWORK_ID,
+        PROTOCOL_MAGIC,
+        (address: string) => this.getAddressing(address),
+        stakeVkeyHash,
+      )
+
+      const signedLedgerTx = await signTxWithLedger(payload, this.hwDeviceInfo, useUSB)
+
+      const bytes = await createSignedLedgerSwapCancellationTx(
+        cbor,
+        signedLedgerTx.witnesses,
+        PURPOSE,
+        this.publicKeyHex,
+      )
+
+      const base64 = Buffer.from(bytes).toString('base64')
+      await this.submitTransaction(base64)
     }
 
     async signTxWithLedger(unsignedTx: YoroiUnsignedTx, useUSB: boolean): Promise<YoroiSignedTx> {
@@ -888,12 +944,18 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       const signedLedgerTx = await signTxWithLedger(ledgerPayload, this.hwDeviceInfo, useUSB)
 
+      const datumDatas = unsignedTx.entries
+        .map((entry) => entry.datum)
+        .filter(isNonNullable)
+        .filter((datum): datum is Exclude<Datum, {hash: string}> => 'data' in datum)
+
       const signedTx = await Cardano.buildLedgerSignedTx(
         unsignedTx.unsignedTx,
         signedLedgerTx,
         PURPOSE,
         this.publicKeyHex,
         true,
+        datumDatas.length > 0 ? datumDatas : undefined,
       )
 
       return yoroiSignedTx({unsignedTx, signedTx})
@@ -902,11 +964,11 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     // =================== backend API =================== //
 
     async checkServerStatus() {
-      return api.checkServerStatus(BACKEND)
+      return legacyApi.checkServerStatus(BACKEND)
     }
 
     async submitTransaction(signedTx: string) {
-      const response: any = await api.submitTransaction(signedTx, BACKEND)
+      const response: any = await legacyApi.submitTransaction(signedTx, BACKEND)
       Logger.info(response)
       return response as any
     }
@@ -916,45 +978,94 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
       await this.utxoManager.sync(addresses)
 
-      this._utxos = await this.utxoManager.getCachedUtxos()
+      const newUtxos = await this.utxoManager.getCachedUtxos()
 
-      // notifying always -> sync from lib need to flag if something has changed
-      this.notify({type: 'utxos', utxos: this.utxos})
+      if (this.didUtxosUpdate(this._utxos, newUtxos)) {
+        this._utxos = newUtxos
+
+        this.notify({type: 'utxos', utxos: this.utxos})
+      }
+    }
+
+    get utxos() {
+      return this._utxos.filter((utxo) => utxo.utxo_id !== this._collateralId)
+    }
+
+    get allUtxos() {
+      return this._utxos
+    }
+
+    get collateralId(): string {
+      return this._collateralId
+    }
+
+    getCollateralInfo(): {utxo: RawUtxo | undefined; amount: Balance.Amount; collateralId: string} {
+      const utxos = utxosMaker(this._utxos)
+      const collateralUtxo = utxos.findById(this.collateralId)
+      const quantity = collateralUtxo?.amount !== undefined ? asQuantity(collateralUtxo?.amount) : Quantities.zero
+
+      return {
+        utxo: collateralUtxo,
+        amount: {quantity, tokenId: this.primaryTokenInfo.id},
+        collateralId: this.collateralId,
+      }
+    }
+
+    async setCollateralId(id: RawUtxo['utxo_id']): Promise<void> {
+      await this.utxoManager.setCollateralId(id)
+      this._collateralId = id
+      this.notify({type: 'collateral-id', collateralId: this._collateralId})
+    }
+
+    private didUtxosUpdate(oldUtxos: RawUtxo[], newUtxos: RawUtxo[]): boolean {
+      if (oldUtxos.length !== newUtxos.length) {
+        return true
+      }
+
+      const oldUtxoIds = new Set(oldUtxos.map((utxo) => utxo.utxo_id))
+
+      for (const newUtxo of newUtxos) {
+        if (!oldUtxoIds.has(newUtxo.utxo_id)) {
+          return true
+        }
+      }
+
+      return false
     }
 
     async fetchAccountState(): Promise<AccountStateResponse> {
-      return api.bulkGetAccountState([this.rewardAddressHex], BACKEND)
+      return legacyApi.bulkGetAccountState([this.rewardAddressHex], BACKEND)
     }
 
     async fetchPoolInfo(request: PoolInfoRequest) {
-      return api.getPoolInfo(request, BACKEND)
+      return legacyApi.getPoolInfo(request, BACKEND)
     }
 
     fetchTokenInfo(tokenId: string) {
       return tokenId === '' || tokenId === 'ADA'
         ? Promise.resolve(PRIMARY_TOKEN_INFO)
-        : api.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`, BACKEND)
+        : legacyApi.getTokenInfo(tokenId, `${TOKEN_INFO_SERVICE}/metadata`, BACKEND)
     }
 
     async fetchFundInfo(): Promise<FundInfoResponse> {
-      return api.getFundInfo(BACKEND, IS_MAINNET)
+      return legacyApi.getFundInfo(BACKEND, IS_MAINNET)
     }
 
     async fetchTxStatus(request: TxStatusRequest): Promise<TxStatusResponse> {
-      return api.fetchTxStatus(request, BACKEND)
+      return legacyApi.fetchTxStatus(request, BACKEND)
     }
 
     async fetchTipStatus(): Promise<TipStatusResponse> {
-      return api.getTipStatus(BACKEND)
+      return legacyApi.getTipStatus(BACKEND)
     }
 
     async fetchCurrentPrice(symbol: CurrencySymbol): Promise<number> {
-      return api.fetchCurrentPrice(symbol, BACKEND)
+      return legacyApi.fetchCurrentPrice(symbol, BACKEND)
     }
 
     // TODO: caching
     fetchNftModerationStatus(fingerprint: string): Promise<YoroiNftModerationStatus> {
-      return api.getNFTModerationStatus(fingerprint, {...BACKEND, mainnet: true})
+      return legacyApi.getNFTModerationStatus(fingerprint, {...BACKEND, mainnet: true})
     }
 
     private state: WalletState = {
@@ -1120,7 +1231,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
     private async discoverAddresses() {
       // last chunk gap limit check
-      const filterFn = (addrs) => api.filterUsedAddresses(addrs, BACKEND)
+      const filterFn = (addrs) => legacyApi.filterUsedAddresses(addrs, BACKEND)
       await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
     }
 

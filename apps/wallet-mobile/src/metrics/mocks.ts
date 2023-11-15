@@ -34,6 +34,9 @@ export const mockMetricsManager = (): MetricsManager => {
     swapAssetFromChanged: e,
     swapConfirmedPageViewed: e,
     swapCancelationSubmitted: e,
+
+    walletPageExchangeClicked: e,
+    walletPageExchangeBottomSheetClicked: e,
   } as const
 
   return {

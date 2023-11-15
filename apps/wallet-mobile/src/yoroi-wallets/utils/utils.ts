@@ -1,32 +1,24 @@
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
+import {Linking} from 'react-native'
 
-import {RawUtxo, TokenId, YoroiEntries, YoroiEntry} from '../types'
+import {NumberLocale} from '../../i18n/languages'
+import {getNetworkConfigById} from '../cardano/networks'
+import {NetworkId, RawUtxo, TokenId, YoroiEntry} from '../types'
 
 export const Entries = {
-  first: (entries: YoroiEntries): YoroiEntry => {
-    const addresses = Object.keys(entries)
-    if (addresses.length > 1) throw new Error('multiple addresses not supported')
-    const firstEntry = Object.entries(entries)[0]
-    if (!firstEntry) throw new Error('invalid entries')
-
-    return {
-      address: firstEntry[0],
-      amounts: firstEntry[1],
-    }
+  first: (entries: YoroiEntry[]): YoroiEntry => {
+    if (entries.length === 0) throw new Error('invalid entries')
+    return entries[0]
   },
-  remove: (entries: YoroiEntries, removeAddresses: Array<string>): YoroiEntries => {
-    const _entries = Object.entries(entries)
-    const filteredEntries = _entries.filter(([address]) => !removeAddresses.includes(address))
-
-    return Object.fromEntries(filteredEntries)
+  remove: (entries: YoroiEntry[], removeAddresses: Array<string>): YoroiEntry[] => {
+    return entries.filter((e) => !removeAddresses.includes(e.address))
   },
-  toAddresses: (entries: YoroiEntries): Array<string> => {
-    return Object.keys(entries)
+  toAddresses: (entries: YoroiEntry[]): Array<string> => {
+    return entries.map((e) => e.address)
   },
-  toAmounts: (entries: YoroiEntries): Balance.Amounts => {
-    const amounts = Object.values(entries)
-
+  toAmounts: (entries: YoroiEntry[]): Balance.Amounts => {
+    const amounts = entries.map((e) => e.amounts)
     return Amounts.sum(amounts)
   },
 }
@@ -65,6 +57,12 @@ export const Amounts = {
       tokenId,
       quantity: amounts[tokenId] || Quantities.zero,
     }
+  },
+  getAmountsFromEntries: (entries: YoroiEntry[]): Balance.Amounts => {
+    return Amounts.sum(entries.map((e) => e.amounts))
+  },
+  getAmountFromEntries: (entries: YoroiEntry[], tokenId: string): Balance.Amount => {
+    return Amounts.getAmount(Amounts.getAmountsFromEntries(entries), tokenId)
   },
   save: (amounts: Balance.Amounts, amount: Balance.Amount): Balance.Amounts => {
     const {tokenId, quantity} = amount
@@ -130,6 +128,53 @@ export const Quantities = {
 
     return absoluteQuantity.isEqualTo(minimalFractionalPart)
   },
+  parseFromText: (
+    text: string,
+    denomination: number,
+    format: NumberLocale,
+    precision = denomination,
+  ): [string, Balance.Quantity] => {
+    const {decimalSeparator} = format
+    const invalid = new RegExp(`[^0-9${decimalSeparator}]`, 'g')
+    const sanitized = text === '' ? '' : text.replaceAll(invalid, '')
+
+    if (sanitized === '') return ['', Quantities.zero]
+    if (sanitized.startsWith(decimalSeparator)) return [`0${decimalSeparator}`, Quantities.zero]
+
+    const parts = sanitized.split(decimalSeparator)
+
+    let fullDecValue = sanitized
+    let value = sanitized
+
+    let fullDecFormat = new BigNumber(fullDecValue.replace(decimalSeparator, '.')).toFormat()
+    let input = fullDecFormat
+
+    if (parts.length <= 1) {
+      const quantity = asQuantity(
+        new BigNumber(value.replace(decimalSeparator, '.')).decimalPlaces(precision).shiftedBy(denomination),
+      )
+
+      return [input, quantity]
+    }
+
+    const [int, dec] = parts
+    // trailing `1` is to allow the user to type `1.0` without losing the decimal part
+    fullDecValue = `${int}${decimalSeparator}${dec?.slice(0, precision)}1`
+    value = `${int}${decimalSeparator}${dec?.slice(0, precision)}`
+    fullDecFormat = new BigNumber(fullDecValue.replace(decimalSeparator, '.')).toFormat()
+    // remove trailing `1`
+    input = fullDecFormat.slice(0, -1)
+
+    const quantity = asQuantity(
+      new BigNumber(value.replace(decimalSeparator, '.')).decimalPlaces(precision).shiftedBy(denomination),
+    )
+
+    return [input, quantity]
+  },
+  format: (quantity: Balance.Quantity, denomination: number, precision?: number) => {
+    if (precision === undefined) return new BigNumber(Quantities.denominated(quantity, denomination)).toFormat()
+    return new BigNumber(Quantities.denominated(quantity, denomination)).decimalPlaces(precision).toFormat()
+  },
 }
 
 export const asQuantity = (value: BigNumber | number | string) => {
@@ -171,4 +216,21 @@ export const Utxos = {
 export const compareArrays = <T>(array1: Array<T>, array2: Array<T>) => {
   if (array1.length !== array2.length) return false
   return array1.every((item, index) => item === array2[index])
+}
+
+export const splitStringInto64CharArray = (inputString: string): string[] => {
+  const maxLength = 64
+  const resultArray: string[] = []
+
+  for (let i = 0; i < inputString.length; i += maxLength) {
+    const substring = inputString.slice(i, i + maxLength)
+    resultArray.push(substring)
+  }
+
+  return resultArray
+}
+
+export const openInExplorer = async (transactionId: string, networkId: NetworkId) => {
+  const networkConfig = getNetworkConfigById(networkId)
+  await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transactionId))
 }

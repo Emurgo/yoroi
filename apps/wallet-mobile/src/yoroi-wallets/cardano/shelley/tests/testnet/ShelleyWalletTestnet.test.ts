@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {rootStorage} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
 
 import {HWDeviceInfo} from '../../../../hw'
-import {EncryptedStorage, EncryptedStorageKeys, storage} from '../../../../storage'
+import {EncryptedStorage, EncryptedStorageKeys} from '../../../../storage'
 import {DefaultAsset} from '../../../../types'
 import {WalletMeta} from '../../../../walletManager'
 import {ShelleyAddressGeneratorJSON} from '../../../chain'
@@ -22,7 +23,7 @@ describe('ShelleyWalletTestnet', () => {
     const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletTestnet.create({
       id: walletMeta.id,
       mnemonic,
-      storage: storage.join(`${walletMeta.id}/`),
+      storage: rootStorage.join(`${walletMeta.id}/`),
       password,
     })
 
@@ -125,8 +126,8 @@ describe('ShelleyWalletTestnet', () => {
   })
 
   it('restore', async () => {
-    storage.setItem(`${walletMeta.id}`, walletMeta)
-    storage.setItem(`${walletMeta.id}/data`, data)
+    rootStorage.setItem(`${walletMeta.id}`, walletMeta)
+    rootStorage.setItem(`${walletMeta.id}/data`, data)
 
     const rootKey =
       'a0cf109fd1346748a20f2ade2b3d1e1561485d2f28ae6d8c36e289b4d0ca22544b4e892132ca15095d48370d4cb2bc7c8cde3f68b8a2f63cfeda4c5ac2752599065111b0929f2b3e6fa0f4bddbc90f9a00d1997d4164f6361d2c0f3c4be1f050'
@@ -134,7 +135,7 @@ describe('ShelleyWalletTestnet', () => {
     await EncryptedStorage.write(EncryptedStorageKeys.rootKey(walletMeta.id), rootKey, password)
 
     const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletTestnet.restore({
-      storage: storage.join(`${walletMeta.id}/`),
+      storage: rootStorage.join(`${walletMeta.id}/`),
       walletMeta,
     })
     await wallet.internalChain?._addressGenerator.getRewardAddressHex()
@@ -255,7 +256,7 @@ describe('ShelleyWalletTestnet', () => {
     const wallet: YoroiWallet & Record<string, any> = await ShelleyWalletTestnet.createBip44({
       id: walletMeta.id,
       accountPubKeyHex,
-      storage: storage.join(`${walletMeta.id}/`),
+      storage: rootStorage.join(`${walletMeta.id}/`),
       hwDeviceInfo,
       isReadOnly,
     })
@@ -491,5 +492,5 @@ const data: WalletJSON = {
 
 const getBech32InternalChain = (wallet: any) => wallet.internalChain?._addressGenerator._accountPubKeyPtr?.toBech32()
 const getRewardAddress = (wallet: any) => wallet.getRewardAddress().then((address) => address.toBech32())
-const getWalletData = (wallet: YoroiWallet) => storage.join(`${wallet.id}/`).getItem(`data`)
+const getWalletData = (wallet: YoroiWallet) => rootStorage.join(`${wallet.id}/`).getItem(`data`)
 const getStakingKey = (wallet: any) => wallet.getStakingKey().then((key) => key.toBech32())

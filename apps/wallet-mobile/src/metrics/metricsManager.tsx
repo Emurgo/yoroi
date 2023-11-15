@@ -1,10 +1,10 @@
 import {EnrichmentPlugin, Event, PluginType} from '@amplitude/analytics-types'
+import {parseBoolean, rootStorage} from '@yoroi/common'
+import {App} from '@yoroi/types'
 import * as React from 'react'
 import Config from 'react-native-config'
 
 import {Logger} from '../yoroi-wallets/logging'
-import {storage, YoroiStorage} from '../yoroi-wallets/storage'
-import {parseBoolean} from '../yoroi-wallets/utils'
 import {Ampli, ampli} from './ampli'
 import {mockMetricsManager} from './mocks'
 
@@ -30,7 +30,7 @@ const infoPlugin: EnrichmentPlugin = {
   },
 }
 
-export const makeMetricsStorage = (yoroiStorage: YoroiStorage = storage) => {
+export const makeMetricsStorage = (yoroiStorage: App.Storage = rootStorage) => {
   const enabledKey = 'metrics-enabled'
   const consentRequestedKey = 'metrics-consentRequested'
   const settingsStorage = yoroiStorage.join('appSettings/')
@@ -53,7 +53,7 @@ export const makeMetricsStorage = (yoroiStorage: YoroiStorage = storage) => {
 export type MetricsStorage = ReturnType<typeof makeMetricsStorage>
 
 export const makeMetricsManager = (
-  metricsStorage: MetricsStorage = makeMetricsStorage(storage),
+  metricsStorage: MetricsStorage = makeMetricsStorage(rootStorage),
   metricsModule: Ampli = ampli,
 ) => {
   const disable = () =>
@@ -118,6 +118,9 @@ export const makeMetricsManager = (
     swapAssetFromChanged: metricsModule.swapAssetFromChanged.bind(metricsModule),
     swapConfirmedPageViewed: metricsModule.swapConfirmedPageViewed.bind(metricsModule),
     swapCancelationSubmitted: metricsModule.swapCancelationSubmitted.bind(metricsModule),
+
+    walletPageExchangeClicked: metricsModule.walletPageExchangeClicked.bind(metricsModule),
+    walletPageExchangeBottomSheetClicked: metricsModule.walletPageExchangeBottomSheetClicked.bind(metricsModule),
   } as const
 
   return {

@@ -97,6 +97,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
       },
     },
     memo: null,
+    metadata: {},
   },
   '5e7eff1b687f538066ea08938e91ba562c88dc817782816a1fc6f1560d8905e8': {
     id: '5e7eff1b687f538066ea08938e91ba562c88dc817782816a1fc6f1560d8905e8',
@@ -193,6 +194,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
       },
     },
     memo: null,
+    metadata: {},
   },
   '0953a5e90889ed0b2ea1e3230cccde871d90c17868aea22300716ecaeec93096': {
     id: '0953a5e90889ed0b2ea1e3230cccde871d90c17868aea22300716ecaeec93096',
@@ -289,6 +291,7 @@ export const mockTransactionInfos: Record<string, TransactionInfo> = {
       },
     },
     memo: null,
+    metadata: {},
   },
 }
 
@@ -388,6 +391,7 @@ export const mockTransactionInfo = (transaction?: Partial<TransactionInfo>): Tra
       },
     },
     memo: null,
+    metadata: {},
     ...transaction,
   }
 }

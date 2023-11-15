@@ -1,8 +1,9 @@
-import {storage as rootStorage} from '../../storage'
+import {rootStorage} from '@yoroi/common'
+
 import {makeUtxoManagerStorage, makeUtxoStorage} from './utxoManager'
 
 describe('utxo manager storage', () => {
-  it('works', async () => {
+  it('addrCounter works', async () => {
     const storage = rootStorage.join('utxos/')
     const {addrCounter} = makeUtxoManagerStorage(storage)
 
@@ -19,6 +20,25 @@ describe('utxo manager storage', () => {
     await addrCounter.clear()
     await addrCounter.read().then((addrCounter) => {
       return expect(addrCounter).toEqual(0)
+    })
+  })
+  it('collateral works', async () => {
+    const storage = rootStorage.join('utxos/')
+    const {collateral} = makeUtxoManagerStorage(storage)
+
+    // initial
+    await collateral.read().then((collateral) => {
+      return expect(collateral).toEqual('')
+    })
+
+    await collateral.save('id#0')
+    await collateral.read().then((collateral) => {
+      return expect(collateral).toEqual('id#0')
+    })
+
+    await collateral.clear()
+    await collateral.read().then((collateral) => {
+      return expect(collateral).toEqual('')
     })
   })
 })

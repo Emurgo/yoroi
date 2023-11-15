@@ -1,4 +1,8 @@
+import {AppFrontendFeeTier} from '../app/frontend-fees'
+import {BalanceToken} from '../balance/token'
+import {SwapAggregator} from './aggregator'
 import {SwapApi} from './api'
+import {SwapPoolProvider} from './pool'
 import {SwapStorage} from './storage'
 
 export type SwapManager = Readonly<{
@@ -8,17 +12,28 @@ export type SwapManager = Readonly<{
     cancel: SwapApi['cancelOrder']
     create: SwapApi['createOrder']
     list: {
-      byStatusOpen: SwapApi['getOrders']
+      byStatusOpen: SwapApi['getOpenOrders']
+      byStatusCompleted: SwapApi['getCompletedOrders']
     }
   }
-  pairs: {
+  tokens: {
     list: {
-      byToken: SwapApi['getTokens']
+      onlyVerified: SwapApi['getTokens']
+      byPair: SwapApi['getTokenPairs']
     }
+  }
+  price: {
+    byPair: SwapApi['getPrice']
   }
   pools: {
     list: {
       byPair: SwapApi['getPools']
     }
   }
+  stakingKey: string
+  primaryTokenId: BalanceToken['info']['id']
+  supportedProviders: ReadonlyArray<SwapPoolProvider>
+  aggregator: SwapAggregator
+  aggregatorTokenId?: BalanceToken['info']['id']
+  frontendFeeTiers: ReadonlyArray<AppFrontendFeeTier>
 }>

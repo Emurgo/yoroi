@@ -13,7 +13,7 @@ import {Amounts} from '../../../../../yoroi-wallets/utils/utils'
 export const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedTx}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const primaryAmount = Amounts.getAmount(yoroiUnsignedTx.amounts, wallet.primaryToken.identifier)
+  const primaryAmount = Amounts.getAmountFromEntries(yoroiUnsignedTx.entries, wallet.primaryToken.identifier)
 
   return (
     <View>

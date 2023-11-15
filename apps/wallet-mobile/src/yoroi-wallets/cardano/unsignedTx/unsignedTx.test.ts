@@ -1,9 +1,9 @@
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
-import {YoroiEntries, YoroiMetadata} from '../../types'
+import {YoroiEntry, YoroiMetadata} from '../../types'
 import {CardanoTypes} from '../types'
-import {toAmounts, toDisplayAddress, toEntries, toMetadata} from './unsignedTx'
+import {toAmounts, toDisplayAddress, toEntriesFromOutputs, toMetadata} from './unsignedTx'
 
 describe('YoroiUnsignedTx', () => {
   it('toAmounts converts TokenEntry[] to Balance.Amounts', () => {
@@ -36,7 +36,7 @@ describe('YoroiUnsignedTx', () => {
     } as YoroiMetadata)
   })
 
-  it('toEntries converts change/outputs to YoroiEntries', () => {
+  it('toEntries converts change/outputs to YoroiEntry[]', async () => {
     const defaults = {identifier: '', networkId: 1, isDefault: true}
     const addressedValues = [
       {
@@ -61,16 +61,11 @@ describe('YoroiUnsignedTx', () => {
       },
     ]
 
-    expect(toEntries(addressedValues)).toEqual({
-      address1: {
-        '': '1',
-        token123: '2',
-      },
-      address2: {
-        '': '1',
-        token123: '2',
-      },
-    } as YoroiEntries)
+    const expectedEntries: YoroiEntry[] = [
+      {address: 'address1', amounts: {'': '1', token123: '2'}},
+      {address: 'address2', amounts: {'': '1', token123: '2'}},
+    ]
+    expect(await toEntriesFromOutputs(addressedValues)).toEqual(expectedEntries)
   })
 
   describe('toDisplayAddress', () => {

@@ -1,34 +1,33 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {parseSafe, rootStorage} from '@yoroi/common'
 
 import {disableAllEasyConfirmation, enableAuthWithOs} from '../yoroi-wallets/auth'
-import {storage} from '../yoroi-wallets/storage'
-import {parseSafe} from '../yoroi-wallets/utils/parsing'
 import {WalletMeta} from '../yoroi-wallets/walletManager'
 
 describe('enableAuthWithOs', () => {
   beforeEach(() => AsyncStorage.clear())
 
   it('empty', async () => {
-    await enableAuthWithOs(storage)
+    await enableAuthWithOs(rootStorage)
     expect(await storageSnapshot()).toEqual({
       '/appSettings/auth': 'os',
     })
   })
 
   it('existing value', async () => {
-    storage.join('appSettings/').setItem('auth', 'pin')
+    rootStorage.join('appSettings/').setItem('auth', 'pin')
 
-    await enableAuthWithOs(storage)
+    await enableAuthWithOs(rootStorage)
     expect(await storageSnapshot()).toEqual({
       '/appSettings/auth': 'os',
     })
   })
 
   it('remove pin', async () => {
-    storage.join('appSettings/').setItem('auth', 'pin')
-    storage.join('appSettings/').setItem('customPinHash', '123456789')
+    rootStorage.join('appSettings/').setItem('auth', 'pin')
+    rootStorage.join('appSettings/').setItem('customPinHash', '123456789')
 
-    await enableAuthWithOs(storage)
+    await enableAuthWithOs(rootStorage)
     expect(await storageSnapshot()).toEqual({
       '/appSettings/auth': 'os',
     })
@@ -39,25 +38,25 @@ describe('disableAllEasyConfirmations', () => {
   beforeEach(() => AsyncStorage.clear())
 
   it('works', async () => {
-    await storage.join('wallet/').setItem('1', {
+    await rootStorage.join('wallet/').setItem('1', {
       ...mockWalletMeta,
       isEasyConfirmationEnabled: true,
     } as WalletMeta)
-    await storage
+    await rootStorage
       .join('wallet/')
       .join('1/')
       .setItem('data', {...mockWalletJSON, isEasyConfirmationEnabled: true})
 
-    await storage.join('wallet/').setItem('2', {
+    await rootStorage.join('wallet/').setItem('2', {
       ...mockWalletMeta,
       isEasyConfirmationEnabled: true,
     } as WalletMeta)
-    await storage
+    await rootStorage
       .join('wallet/')
       .join('2/')
       .setItem('data', {...mockWalletJSON, isEasyConfirmationEnabled: true})
 
-    await disableAllEasyConfirmation(storage)
+    await disableAllEasyConfirmation(rootStorage)
     expect(await storageSnapshot()).toEqual({
       '/wallet/1': {
         checksum: {
