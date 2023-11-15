@@ -29,8 +29,8 @@
       "path": "./packages/openswap"
     },
     {
-      "name": "@yoroi/governance",
-      "path": "./packages/governance"
+      "name": "@yoroi/staking",
+      "path": "./packages/staking"
     },
     {
       "name": "@yoroi/wallet-mobile",
