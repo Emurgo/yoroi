@@ -136,6 +136,8 @@
   },
   "dependencies": {
     "@unstoppabledomains/resolution": "^9.2.2",
+    "@yoroi/common": "^1.3.0",
+    "@yoroi/types": "^1.3.0",
     "zod": "^3.22.2"
   },
   "devDependencies": {

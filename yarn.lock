@@ -7059,15 +7059,6 @@
     js-yaml "^3.10.0"
     tslib "^2.4.0"
 
-"@yoroi/banxa@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@yoroi/banxa/-/banxa-1.3.0.tgz#e79e360c5eb091686d92790ee451d7e4372d32e6"
-  integrity sha512-45miQ6wOT7tHyLRJmubifNhYPJhBbLJsLAOJGw5pSMfbMZxfdH0YpnZk6KqLUPPTcQMyZY6fL8LUgxJf933PGQ==
-  dependencies:
-    zod "^3.22.2"
-  optionalDependencies:
-    "@react-native-async-storage/async-storage" "^1.18.1"
-
 "@zkochan/js-yaml@0.0.6":
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/@zkochan/js-yaml/-/js-yaml-0.0.6.tgz#975f0b306e705e28b8068a07737fa46d3fc04826"
