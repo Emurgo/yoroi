@@ -1,16 +1,13 @@
-export const resolverModuleMaker = (
-  strategy: 'all' | 'first',
-  receiver: string,
-) => {
-  const getCryptoAddress = () => {
-    if (strategy === 'all') {
-      return Promise.all([])
-    }
+import {resolverApiMaker} from '../adapters/api'
+import {Resolver} from '@yoroi/types'
 
-    return Promise.race([])
-  }
+export const resolverModuleMaker = (
+  resolutionStrategy: Resolver.Strategy,
+  apiConfig: any = {},
+): Resolver.Module => {
+  const api = resolverApiMaker(resolutionStrategy, apiConfig)
 
   return {
-    getCryptoAddress,
+    address: {getCryptoAddress: api.getCryptoAddress},
   }
 }

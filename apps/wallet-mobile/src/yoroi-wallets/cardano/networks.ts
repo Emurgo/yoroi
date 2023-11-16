@@ -197,7 +197,7 @@ export const NETWORKS = {
   // Deprecated. Consider removing
   JORMUNGANDR,
 }
-type NetworkConfig =
+export type NetworkConfig =
   | typeof NETWORKS.BYRON_MAINNET
   | typeof NETWORKS.HASKELL_SHELLEY
   | typeof NETWORKS.HASKELL_SHELLEY_TESTNET

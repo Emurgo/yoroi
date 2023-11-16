@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Resolution} from '@unstoppabledomains/resolution'
-import {resolveAddress} from '@yoroi/resolver'
+import {resolverModuleMaker} from '@yoroi/resolver'
 import React from 'react'
 import {Text, View, ViewProps} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {HelperText} from '../../../../../components'
+import env from '../../../../../legacy/env'
 import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {normalizeToAddress} from '../../../../../yoroi-wallets/cardano/utils'
@@ -74,36 +74,14 @@ export const useReceiver = (
 }
 
 const resolveAndCheckAddress = async (receiver: string, networkId: NetworkId) => {
-  let address = receiver
-  let resolvedAddress: {
-    error: string | null
-    address: string | null
-  } = {
-    error: null,
-    address: null,
-  }
+  const resolver = resolverModuleMaker('first', {apiKeys: {unstoppableApiKey: env.getString('UNSTOPPABLE_API_KEY')}})
+  const [{address: resolvedAddress}] = await resolver.address.getCryptoAddress(receiver)
 
-  if (isDomain(receiver)) {
-    address = await getUnstoppableDomainAddress(receiver)
-  } else if (isHandle(receiver)) {
-    console.log('test', receiver)
-    resolvedAddress = await getResolvedAddress(address.substring(1))
-
-    if (typeof resolvedAddress.error === 'string') throw new Error(resolvedAddress.error)
-    if (resolvedAddress.address === null) throw new Error('Unknown error')
-
-    address = resolvedAddress.address
-  }
+  const address = resolvedAddress ?? receiver
 
   await isReceiverAddressValid(address, networkId)
-  return address
-}
 
-const getResolvedAddress = async (receiver) => {
-  const {
-    handle: {address, error},
-  } = await resolveAddress(receiver)
-  return {address, error}
+  return address
 }
 
 export const getAddressErrorMessage = (error: Error & {code?: string}, strings: ReturnType<typeof useStrings>) => {
@@ -117,11 +95,6 @@ export const getAddressErrorMessage = (error: Error & {code?: string}, strings: 
     default:
       return strings.addressInputErrorInvalidAddress
   }
-}
-
-const getUnstoppableDomainAddress = (receiver: string) => {
-  const resolution = new Resolution()
-  return resolution.addr(receiver, 'ADA')
 }
 
 const isReceiverAddressValid = async (resolvedAddress: string, walletNetworkId: NetworkId): Promise<void> => {
@@ -143,4 +116,3 @@ const isReceiverAddressValid = async (resolvedAddress: string, walletNetworkId: 
 }
 
 const isDomain = (receiver: string) => /.+\..+/.test(receiver)
-const isHandle = (receiver: string) => /^\$[a-zA-Z]+$/.test(receiver)

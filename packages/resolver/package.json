@@ -135,6 +135,7 @@
     ]
   },
   "dependencies": {
+    "@unstoppabledomains/resolution": "^9.2.2",
     "zod": "^3.22.2"
   },
   "devDependencies": {

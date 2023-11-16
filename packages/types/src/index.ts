@@ -24,7 +24,14 @@ import {NumberLocale} from './intl/numbers'
 import {SwapAggregator} from './swap/aggregator'
 import {AppApi} from './app/api'
 import {AppFrontendFeesResponse, AppFrontendFeeTier} from './app/frontend-fees'
-import {ResolverApi} from './resolver/api'
+import {
+  ResolverAddressResponse,
+  ResolverAddressesResponse,
+  ResolverApi,
+  ResolverStrategy,
+} from './resolver/api'
+import {ResolverModule} from './resolver/module'
+import {ResolverReceiver} from './resolver/receiver'
 
 export namespace App {
   export interface Storage extends AppStorage {}
@@ -83,6 +90,13 @@ export namespace Numbers {
 
 export namespace Resolver {
   export interface Api extends ResolverApi {}
+  export type Module = ResolverModule
+
+  export type Receiver = ResolverReceiver
+  export type AddressResponse = ResolverAddressResponse
+  export type AddresessResponse = ResolverAddressesResponse
+
+  export type Strategy = ResolverStrategy
 }
 
 export * from './helpers/types'

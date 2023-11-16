@@ -1,6 +1,16 @@
+import {ResolverReceiver} from './receiver'
+
 export interface ResolverApi {
-  getCryptoAddresses(
-    receiver: string,
-    network: 'preprod' | 'mainnet',
-  ): Promise<Array<{address: string | null; error: string | null}>>
+  getCryptoAddress(
+    receiverDomain: ResolverReceiver['domain'],
+  ): Promise<ResolverAddressesResponse>
 }
+
+export type ResolverStrategy = 'all' | 'first'
+
+export type ResolverAddressResponse = {
+  address: string | null
+  error: string | null
+}
+
+export type ResolverAddressesResponse = Array<ResolverAddressResponse>
