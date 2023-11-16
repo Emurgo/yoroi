@@ -30,7 +30,7 @@ export const ResolveAddress = ({
   ...props
 }: ReceiverProps) => {
   const strings = useStrings()
-  const isResolved = !isLoading && isDomain(receiver) && !receiver.includes(address)
+  const isResolved = !isLoading && !receiver.includes(address)
   const isError = errorMessage.length > 0
 
   return (
@@ -114,5 +114,3 @@ const isReceiverAddressValid = async (resolvedAddress: string, walletNetworkId: 
     return Promise.reject(new Error('Should not happen'))
   }
 }
-
-const isDomain = (receiver: string) => /.+\..+/.test(receiver)
