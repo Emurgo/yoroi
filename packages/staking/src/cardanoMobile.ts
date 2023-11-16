@@ -1,4 +1,3 @@
-import {init} from '@emurgo/cross-csl-mobile'
 import {
   Addressing as AddressingType,
   CardanoAddressedUtxo as CardanoAddressedUtxoType,
@@ -13,9 +12,6 @@ import {
 } from '@emurgo/yoroi-lib/dist/internals/tx'
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
-
-// TODO: This should be a dependency
-export const CardanoMobile = init('global')
 
 export namespace CardanoTypes {
   export type TxMetadata = TxMetadataType
@@ -43,4 +39,5 @@ export namespace CardanoTypes {
   export type TransactionBuilder = CoreTypes.TransactionBuilder
   export type Value = CoreTypes.Value
   export type TokenEntry = TokenEntryType
+  export type Wasm = CoreTypes.WasmModuleProxy
 }
