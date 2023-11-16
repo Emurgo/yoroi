@@ -1,4 +1,3 @@
-import {YoroiUnsignedTx} from '@yoroi/wallet-mobile/src/yoroi-wallets/types'
 import {DRep, DRepCredential} from './types'
 import {CardanoTypes} from '../cardanoMobile'
 import {assertIsBech32WithPrefix} from '@cardano-sdk/util'
@@ -13,9 +12,9 @@ type GovernanceManager = {
   validateDrepKey: (
     drepKey: string,
   ) => Promise<{status: 'valid'} | {status: 'invalid'; reason: string}>
-  delegateToDrep: (drep: DRepCredential) => Promise<YoroiUnsignedTx>
-  voteAbstain: (drep: DRepCredential) => Promise<YoroiUnsignedTx>
-  voteNoConfidence: (drep: DRepCredential) => Promise<YoroiUnsignedTx>
+  delegateToDrep: (drep: DRepCredential) => Promise<void>
+  voteAbstain: (drep: DRepCredential) => Promise<void>
+  voteNoConfidence: (drep: DRepCredential) => Promise<void>
 }
 
 export const createGovernanceManager = (_config: Config): GovernanceManager => {
