@@ -1,4 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native'
+import {getPoolUrlByProvider} from '@yoroi/swap'
 import {Balance, Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import _ from 'lodash'
@@ -28,10 +29,11 @@ import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-walle
 import {Counter} from '../../../common/Counter/Counter'
 import {parseOrderTxMetadata} from '../../../common/helpers'
 import {EmptyCompletedOrdersIllustration} from '../../../common/Illustrations/EmptyCompletedOrdersIllustration'
+import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 
-const PRECISION = 14
+const PRECISION = 10
 
 export type MappedRawOrder = {
   id: string
@@ -219,9 +221,9 @@ const Header = ({
 
         <Spacer width={4} />
 
-        <Text>{assetFromLabel}</Text>
+        <Text style={styles.headerLabel}>{assetFromLabel}</Text>
 
-        <Text>/</Text>
+        <Text style={styles.headerLabel}>/</Text>
 
         <Spacer width={4} />
 
@@ -229,7 +231,7 @@ const Header = ({
 
         <Spacer width={4} />
 
-        <Text>{assetToLabel}</Text>
+        <Text style={styles.headerLabel}>{assetToLabel}</Text>
       </View>
     </HeaderWrapper>
   )
@@ -258,7 +260,13 @@ const HiddenInfo = ({
 
         {
           label: strings.dex.toUpperCase(),
-          value: capitalize(provider),
+          value: (
+            <LiquidityPool
+              liquidityPoolIcon={<PoolIcon providerId={provider} size={28} />}
+              liquidityPoolName={capitalize(provider)}
+              poolUrl={getPoolUrlByProvider(provider)}
+            />
+          ),
           icon: <PoolIcon providerId={provider} size={23} />,
         },
         {
@@ -370,6 +378,10 @@ const styles = StyleSheet.create({
   label: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  headerLabel: {
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
   counter: {
     paddingVertical: 16,

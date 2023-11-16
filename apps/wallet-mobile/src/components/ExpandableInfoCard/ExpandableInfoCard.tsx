@@ -151,10 +151,10 @@ export const HiddenInfoWrapper = ({
 export const MainInfoWrapper = ({label, value, isLast = false}: {label: string; value?: string; isLast?: boolean}) => {
   return (
     <View>
-      <View style={styles.flexBetween}>
-        <Text style={styles.gray}>{label}</Text>
+      <View style={styles.info}>
+        <Text style={styles.label}>{label}</Text>
 
-        {isString(value) && <Text style={styles.text}>{value}</Text>}
+        {isString(value) && <Text style={styles.value}>{value}</Text>}
       </View>
 
       {!isLast && <Spacer height={8} />}
@@ -220,6 +220,26 @@ const styles = StyleSheet.create({
     paddingTop: 13,
     fontWeight: '500',
     fontFamily: 'Rubik-Medium',
+  },
+  info: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  value: {
+    textAlign: 'right',
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '400',
+    color: '#242838',
+    flexShrink: 1,
+  },
+  label: {
+    color: '#6B7384',
+    fontFamily: 'Rubik',
+    fontSize: 16,
+    fontWeight: '400',
+    paddingRight: 8,
   },
   footerDisabled: {
     opacity: 0.5,

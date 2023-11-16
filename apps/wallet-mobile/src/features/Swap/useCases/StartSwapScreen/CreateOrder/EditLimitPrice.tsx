@@ -14,6 +14,7 @@ const BORDER_SIZE = 1
 export const EditLimitPrice = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const [isFocused, setIsFocused] = React.useState(false)
 
   const {orderData} = useSwap()
   const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
@@ -32,7 +33,7 @@ export const EditLimitPrice = () => {
   const tokenToBuyName = isBuyTouched ? buyTokenInfo.ticker ?? buyTokenInfo.name : '-'
 
   return (
-    <View style={[styles.container, disabled && styles.disabled]}>
+    <View style={[styles.container, disabled && styles.disabled, isFocused && styles.active]}>
       <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
 
       <View style={styles.content}>
@@ -43,11 +44,13 @@ export const EditLimitPrice = () => {
           placeholder="0"
           onChangeText={onChangeLimitPrice}
           allowFontScaling
-          selectionColor={COLORS.TRANSPARENT_BLACK}
+          selectionColor="#242838"
           style={styles.amountInput}
           underlineColorAndroid="transparent"
           editable={!disabled}
           ref={limitInputRef}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
 
         <View style={[styles.textWrapper, disabled && styles.disabled]}>
@@ -72,6 +75,11 @@ const styles = StyleSheet.create({
   },
   disabled: {
     backgroundColor: COLORS.BANNER_GREY,
+  },
+  active: {
+    borderWidth: 2,
+    borderColor: '#242838',
+    zIndex: 2222,
   },
   label: {
     position: 'absolute',
@@ -104,7 +112,6 @@ const styles = StyleSheet.create({
     top: 0,
     right: 8,
     paddingLeft: 8,
-    backgroundColor: '#FFFFFF',
     height: 56 - BORDER_SIZE * 2,
     display: 'flex',
     alignItems: 'center',

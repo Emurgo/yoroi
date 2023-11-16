@@ -34,9 +34,8 @@ const styles = StyleSheet.create({
     color: '#4B6DDE',
     fontFamily: 'Rubik',
     fontSize: 16,
-    fontWeight: '400',
+    fontWeight: '500',
     lineHeight: 22,
-    textDecorationLine: 'underline',
   },
   liquidityPool: {
     flexDirection: 'row',
