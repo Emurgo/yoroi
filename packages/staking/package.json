@@ -179,7 +179,7 @@
   },
   "packageManager": "^yarn@1.22.15",
   "engines": {
-    "node": ">= 16.19.0"
+    "node": ">= 16.20.2"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
