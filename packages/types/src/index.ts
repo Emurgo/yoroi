@@ -94,7 +94,7 @@ export namespace Resolver {
 
   export type Receiver = ResolverReceiver
   export type AddressResponse = ResolverAddressResponse
-  export type AddresessResponse = ResolverAddressesResponse
+  export type AddressesResponse = ResolverAddressesResponse
 
   export type Strategy = ResolverStrategy
 }

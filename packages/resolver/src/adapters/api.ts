@@ -34,7 +34,7 @@ const wrapCryptoAddressRequest = async (
   getCryptoAddress: (receiver: string, apiConfig: any) => Promise<string>,
   receiverDomain: string,
   apiKey?: string,
-): Resolver.ResolverAddressResponse => {
+): Promise<Resolver.AddressResponse> => {
   try {
     const address = await getCryptoAddress(receiverDomain, apiKey ?? undefined)
     return {address, error: null}
