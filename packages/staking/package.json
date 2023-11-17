@@ -47,6 +47,7 @@
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "flow": ". ./scripts/flowgen.sh",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint:fix": "eslint \"**/*.{js,ts,tsx}\" --fix",
     "prepack": "yarn build:release",
     "prepublish:beta": "yarn build:release",
     "publish:beta": "npm publish --scope yoroi --tag beta --access beta",

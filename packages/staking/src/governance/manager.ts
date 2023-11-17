@@ -9,7 +9,10 @@ type Config = {
 
 type GovernanceManager = {
   validateDRepID: (drepID: string) => Promise<void>
-  createDelegationCertificate: (drepID: string, stakingKey: CardanoTypes.PublicKey) => Promise<CardanoTypes.Certificate>
+  createDelegationCertificate: (
+    drepID: string,
+    stakingKey: CardanoTypes.PublicKey,
+  ) => Promise<CardanoTypes.Certificate>
 }
 
 export const createGovernanceManager = (config: Config): GovernanceManager => {
@@ -23,11 +26,17 @@ class Manager implements GovernanceManager {
     drepID: string,
     stakingKey: CardanoTypes.PublicKey,
   ): Promise<CardanoTypes.Certificate> {
-    const {Certificate, Ed25519KeyHash, StakeDelegation, StakeCredential} = this.config.cardano
+    const {Certificate, Ed25519KeyHash, StakeDelegation, StakeCredential} =
+      this.config.cardano
 
-    const credential = await StakeCredential.fromKeyhash(await stakingKey.hash())
+    const credential = await StakeCredential.fromKeyhash(
+      await stakingKey.hash(),
+    )
     return await Certificate.newStakeDelegation(
-      await StakeDelegation.new(credential, await Ed25519KeyHash.fromBytes(Buffer.from(drepID, 'hex'))),
+      await StakeDelegation.new(
+        credential,
+        await Ed25519KeyHash.fromBytes(Buffer.from(drepID, 'hex')),
+      ),
     )
   }
 
@@ -40,7 +49,12 @@ class Manager implements GovernanceManager {
       throw new Error('invalid DRep ID format, must be hexadecimal')
     }
 
-    if (!(await isRegisteredDrep({networkId: this.config.networkId, client: axiosClient}, drepId))) {
+    if (
+      !(await isRegisteredDrep(
+        {networkId: this.config.networkId, client: axiosClient},
+        drepId,
+      ))
+    ) {
       throw new Error('DRep ID not registered')
     }
   }
