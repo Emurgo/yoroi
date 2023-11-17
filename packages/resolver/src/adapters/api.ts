@@ -22,7 +22,7 @@ export const resolverApiMaker = (
       return Promise.all(operations)
     } else {
       return Promise.any(
-        operations.map((operation) => operation.catch((error) => error)),
+        operations.map((operation) => operation.catch((error: anyå) => error)),
       )
     }
   }
@@ -34,7 +34,7 @@ const wrapCryptoAddressRequest = async (
   getCryptoAddress: (receiver: string, apiConfig: any) => Promise<string>,
   receiverDomain: string,
   apiKey?: string,
-) => {
+): Resolver.ResolverAddressResponse => {
   try {
     const address = await getCryptoAddress(receiverDomain, apiKey ?? undefined)
     return {address, error: null}
