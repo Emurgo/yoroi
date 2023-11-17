@@ -22,7 +22,7 @@ export const resolverApiMaker = (
       return Promise.all(operations)
     } else {
       return Promise.any(
-        operations.map((operation) => operation.catch((error: anyå) => error)),
+        operations.map((operation) => operation.catch((error: any) => error)),
       )
     }
   }
