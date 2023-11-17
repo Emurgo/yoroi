@@ -74,13 +74,14 @@ export const useReceiver = (
 }
 
 const resolveAndCheckAddress = async (receiver: string, networkId: NetworkId) => {
+  const all = resolverModuleMaker('all', {apiKeys: {unstoppableApiKey: env.getString('UNSTOPPABLE_API_KEY')}})
+  console.log('all', await all.address.getCryptoAddress(receiver))
   const resolver = resolverModuleMaker('first', {apiKeys: {unstoppableApiKey: env.getString('UNSTOPPABLE_API_KEY')}})
   const [{address: resolvedAddress}] = await resolver.address.getCryptoAddress(receiver)
 
   const address = resolvedAddress ?? receiver
 
   await isReceiverAddressValid(address, networkId)
-
   return address
 }
 
