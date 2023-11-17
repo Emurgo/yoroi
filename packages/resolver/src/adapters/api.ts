@@ -39,6 +39,6 @@ const wrapCryptoAddressRequest = async (
     const address = await getCryptoAddress(receiverDomain, apiKey ?? undefined)
     return {address, error: null}
   } catch (error: any) {
-    return Promise.reject({address: null, error: error.message})
+    return Promise.reject({address: null, error})
   }
 }
