@@ -32,6 +32,7 @@ import {
 } from './resolver/api'
 import {ResolverModule} from './resolver/module'
 import {ResolverReceiver} from './resolver/receiver'
+import {ResolverStorage} from './resolver/storage'
 
 export namespace App {
   export interface Storage extends AppStorage {}
@@ -93,10 +94,13 @@ export namespace Resolver {
   export type Module = ResolverModule
 
   export type Receiver = ResolverReceiver
+
   export type AddressResponse = ResolverAddressResponse
   export type AddressesResponse = ResolverAddressesResponse
 
   export type Strategy = ResolverStrategy
+
+  export type Storage = ResolverStorage
 }
 
 export * from './helpers/types'

@@ -135,16 +135,17 @@
     ]
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.19.5",
     "@unstoppabledomains/resolution": "^9.2.2",
-    "@yoroi/common": "^1.3.0",
-    "@yoroi/types": "^1.3.0",
-    "zod": "^3.22.2"
+    "zod": "^3.22.2",
+    "@yoroi/common": "1.3.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
     "@types/jest": "^28.1.2",
+    "@yoroi/types": "1.3.0",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",

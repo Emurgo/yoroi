@@ -1,4 +1,4 @@
-import {fetcher} from '@yoroi/common'
+import {fetcher} from '@yoroi/common/src'
 import {Resolver} from '@yoroi/types'
 import {z} from 'zod'
 import {handleZodErrors} from './zod-errors'
