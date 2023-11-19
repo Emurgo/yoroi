@@ -72,6 +72,8 @@ export const Menu = () => {
           left={<Icon.Info size={24} color={lightPalette.gray['600']} />}
         />
 
+        <Hr />
+
         <Spacer fill />
 
         <SupportLink />
