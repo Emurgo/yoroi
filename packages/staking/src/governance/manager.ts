@@ -9,7 +9,7 @@ export type Config = {
   api: GovernanceApi
 }
 
-export type Vote = 'abstain' | 'no-confidence'
+export type VoteKind = 'abstain' | 'no-confidence'
 
 export type GovernanceAction =
   | {
@@ -19,7 +19,7 @@ export type GovernanceAction =
     }
   | {
       kind: 'vote'
-      vote: Vote
+      vote: VoteKind
       txID: string
     }
 
@@ -34,11 +34,11 @@ export type GovernanceManager = {
     stakingKey: CardanoTypes.PublicKey,
   ) => Promise<object>
   createVotingCertificate: (
-    vote: Vote,
+    vote: VoteKind,
     stakingKey: CardanoTypes.PublicKey,
   ) => Promise<CardanoTypes.Certificate>
   createLedgerVotingPayload: (
-    vote: Vote,
+    vote: VoteKind,
     stakingKey: CardanoTypes.PublicKey,
   ) => Promise<object>
 
@@ -94,14 +94,14 @@ class Manager implements GovernanceManager {
   }
 
   async createVotingCertificate(
-    _vote: Vote,
+    _vote: VoteKind,
     _stakingKey: CardanoTypes.PublicKey,
   ): Promise<CardanoTypes.Certificate> {
     throw new Error('Not implemented')
   }
 
   async createLedgerVotingPayload(
-    _vote: Vote,
+    _vote: VoteKind,
     _stakingKey: CardanoTypes.PublicKey,
   ): Promise<object> {
     throw new Error('Not implemented')
