@@ -17,7 +17,7 @@ import {init} from '@emurgo/cross-csl-nodejs'
 const createMocks = (managerPatch: Partial<GovernanceManager>) => {
   const manager = {...managerMock, ...managerPatch}
   const queryClient = new QueryClient()
-  queryClient.setDefaultOptions({queries: {cacheTime: 0}})
+  queryClient.setDefaultOptions({queries: {cacheTime: 0, retry: false}})
   const wrapper = ({children}: PropsWithChildren<{}>) => {
     return (
       <QueryClientProvider client={queryClient}>

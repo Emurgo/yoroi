@@ -24,11 +24,13 @@ describe('useMutationWithInvalidations', () => {
 
     await waitFor(() => result.current.isSuccess)
 
-    expect((client.cancelQueries as any).mock.calls[0][0]).toBe(queries[0])
-    expect((client.cancelQueries as any).mock.calls[1][0]).toBe(queries[1])
+    expect(client.cancelQueries).toHaveBeenCalledTimes(2)
+    expect(client.invalidateQueries).toHaveBeenNthCalledWith(1, queries[0])
+    expect(client.invalidateQueries).toHaveBeenNthCalledWith(2, queries[1])
 
-    expect((client.invalidateQueries as any).mock.calls[0][0]).toBe(queries[0])
-    expect((client.invalidateQueries as any).mock.calls[1][0]).toBe(queries[1])
+    expect(client.invalidateQueries).toHaveBeenCalledTimes(2)
+    expect(client.cancelQueries).toHaveBeenNthCalledWith(1, queries[0])
+    expect(client.cancelQueries).toHaveBeenNthCalledWith(2, queries[1])
   })
 })
 
@@ -36,5 +38,6 @@ const getMockedQueryClient = () => {
   const queryClient = new QueryClient()
   queryClient.cancelQueries = jest.fn()
   queryClient.invalidateQueries = jest.fn()
+  queryClient.setDefaultOptions({queries: {cacheTime: 0, retry: false}})
   return queryClient
 }
