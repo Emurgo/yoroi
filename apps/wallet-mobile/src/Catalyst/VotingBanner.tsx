@@ -8,9 +8,9 @@ import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {isNightly} from '../legacy/config'
 import {Logger} from '../legacy/logging'
 import {COLORS} from '../theme'
-import {isRegistrationOpen} from '../yoroi-wallets/cardano/catalyst/catalystUtils'
 import {useCanVote} from './hooks'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
+import {initCatalyst} from '@yoroi/staking'
 
 type Props = {onPress: () => void; disabled?: boolean}
 
@@ -42,7 +42,9 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
         }
       }
 
-      setShowCatalystBanner((canVote && isRegistrationOpen(fundInfo)) || isNightly() || __DEV__)
+      const catalyst = initCatalyst()
+
+      setShowCatalystBanner((canVote && catalyst.isRegistrationOpen(fundInfo)) || isNightly() || __DEV__)
     }
 
     checkCatalystFundInfo()

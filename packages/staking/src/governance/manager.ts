@@ -1,12 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {CardanoTypes} from '../cardanoMobile'
-import {isRegisteredDRep} from './api'
-import {axiosClient} from './config'
+import {GovernanceApi} from './api'
 
 export type Config = {
   networkId: number
   cardano: CardanoTypes.Wasm
   storage: typeof AsyncStorage
+  api: GovernanceApi
 }
 
 export type Vote = 'abstain' | 'no-confidence'
@@ -81,12 +81,7 @@ class Manager implements GovernanceManager {
       throw new Error('invalid DRep ID format, must be hexadecimal')
     }
 
-    if (
-      !(await isRegisteredDRep(
-        {networkId: this.config.networkId, client: axiosClient},
-        drepId,
-      ))
-    ) {
+    if (!(await this.config.api.isRegisteredDRep(drepId))) {
       throw new Error('DRep ID not registered')
     }
   }

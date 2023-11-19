@@ -1,1 +1,1 @@
-export * from './catalystUtils'
+export {initCatalyst} from './manager'

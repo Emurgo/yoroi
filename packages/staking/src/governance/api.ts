@@ -1,7 +1,41 @@
 import {AxiosInstance} from 'axios'
 import {GOVERNANCE_ENDPOINTS} from './config'
 
-type BackendConfig = {
+export type GovernanceApi = {
+  getDRepById: (drepId: string) => Promise<GetDRepByIdResponse>
+  isRegisteredDRep: (drepId: string) => Promise<boolean>
+}
+
+export const initApi = (config: Config) => {
+  return new Api(config)
+}
+
+class Api implements GovernanceApi {
+  constructor(private config: Config) {}
+
+  async getDRepById(drepId: string): Promise<GetDRepByIdResponse> {
+    const {networkId, client} = this.config
+    const backend =
+      networkId === 1
+        ? GOVERNANCE_ENDPOINTS.mainnet
+        : GOVERNANCE_ENDPOINTS.preprod
+
+    return await client
+      .get(backend.getDRepById.replace('{{DREP_ID}}', drepId))
+      .then((response) => response.data)
+  }
+
+  async isRegisteredDRep(drepId: string): Promise<boolean> {
+    try {
+      await this.getDRepById(drepId)
+      return true
+    } catch {
+      return false
+    }
+  }
+}
+
+type Config = {
   networkId: number
   client: AxiosInstance
 }
@@ -16,31 +50,5 @@ type GetDRepByIdResponse = {
       url?: string
       contentHash?: string
     }
-  }
-}
-
-export const getDRepById = async (
-  config: BackendConfig,
-  drepId: string,
-): Promise<GetDRepByIdResponse> => {
-  const backend =
-    config.networkId === 1
-      ? GOVERNANCE_ENDPOINTS.mainnet
-      : GOVERNANCE_ENDPOINTS.preprod
-  return await config.client
-    .get(backend.getDRepById.replace('{{DREP_ID}}', drepId))
-    .then((response) => response.data)
-}
-
-// TODO: Add these as an API class, so that we can mock it in tests
-export const isRegisteredDRep = async (
-  config: BackendConfig,
-  drepId: string,
-): Promise<boolean> => {
-  try {
-    await getDRepById(config, drepId)
-    return true
-  } catch {
-    return false
   }
 }

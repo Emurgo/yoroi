@@ -3,10 +3,18 @@ import {describe, it, expect, afterEach} from '@jest/globals'
 import {createGovernanceManager, GovernanceAction} from './manager'
 import {init} from '@emurgo/cross-csl-nodejs'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {initApi} from './api'
+import {axiosClient} from './config'
 
 describe('createGovernanceManager', () => {
   const cardano = init('global')
-  const options = {networkId: 1, cardano, storage: AsyncStorage}
+  const networkId = 1
+  const options = {
+    networkId,
+    cardano,
+    storage: AsyncStorage,
+    api: initApi({networkId, client: axiosClient}),
+  }
 
   afterEach(async () => {
     await options.storage.clear()
