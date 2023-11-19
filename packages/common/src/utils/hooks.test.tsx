@@ -25,12 +25,12 @@ describe('useMutationWithInvalidations', () => {
     await waitFor(() => result.current.isSuccess)
 
     expect(client.cancelQueries).toHaveBeenCalledTimes(2)
-    expect(client.invalidateQueries).toHaveBeenNthCalledWith(1, queries[0])
-    expect(client.invalidateQueries).toHaveBeenNthCalledWith(2, queries[1])
-
-    expect(client.invalidateQueries).toHaveBeenCalledTimes(2)
     expect(client.cancelQueries).toHaveBeenNthCalledWith(1, queries[0])
     expect(client.cancelQueries).toHaveBeenNthCalledWith(2, queries[1])
+
+    expect(client.invalidateQueries).toHaveBeenCalledTimes(2)
+    expect(client.invalidateQueries).toHaveBeenNthCalledWith(1, queries[0])
+    expect(client.invalidateQueries).toHaveBeenNthCalledWith(2, queries[1])
   })
 })
 
