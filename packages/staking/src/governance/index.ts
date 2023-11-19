@@ -6,3 +6,4 @@ export {
   GovernanceProvider,
   useIsValidDRepID,
 } from './translators/react'
+export {initApi} from './api'

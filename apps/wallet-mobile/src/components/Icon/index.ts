@@ -35,6 +35,7 @@ import {Facebook} from './Facebook'
 import {Gear} from './Gear'
 import {Github} from './Github'
 import {Globe} from './Globe'
+import {Governance} from './Governance'
 import {HardwareWallet} from './HardwareWallet'
 import {Image} from './Image'
 import {Info} from './Info'
@@ -208,4 +209,5 @@ export const Icon = {
   SpectrumSwap,
   Danger,
   Share,
+  Governance,
 }

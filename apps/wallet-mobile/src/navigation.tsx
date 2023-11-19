@@ -110,8 +110,13 @@ export type WalletStackRoutes = {
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
+  governance: NavigatorScreenParams<GovernanceRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
+
+export type GovernanceRoutes = {
+  center: undefined
+}
 
 export type WalletInitRoutes = {
   'choose-create-restore': {
@@ -457,6 +462,15 @@ export const useWalletNavigation = () => {
     })
   }
 
+  const navigateToGovernanceCenter = () => {
+    navigation.navigate('app-root', {
+      screen: 'governance',
+      params: {
+        screen: 'center',
+      },
+    })
+  }
+
   return {
     navigation,
     resetToTxHistory,
@@ -467,5 +481,6 @@ export const useWalletNavigation = () => {
     navigateToAppSettings,
     navigateToAnalyticsSettings,
     navigateToCollateralSettings,
+    navigateToGovernanceCenter,
   }
 }

@@ -1,13 +1,19 @@
 import {AxiosInstance} from 'axios'
-import {GOVERNANCE_ENDPOINTS} from './config'
+import {axiosClient, GOVERNANCE_ENDPOINTS} from './config'
 
 export type GovernanceApi = {
   getDRepById: (drepId: string) => Promise<{txId: string}>
   isRegisteredDRep: (drepId: string) => Promise<boolean>
 }
 
-export const initApi = (config: Config) => {
-  return new Api(config)
+export const initApi = ({
+  networkId,
+  client = axiosClient,
+}: {
+  networkId: number
+  client?: Config['client']
+}) => {
+  return new Api({networkId, client})
 }
 
 class Api implements GovernanceApi {
