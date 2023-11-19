@@ -1,12 +1,10 @@
 import {
   QueryKey,
-  UseMutationOptions,
   useMutation,
+  UseMutationOptions,
   useQueryClient,
 } from 'react-query'
 
-// TODO: import later from @yoroi/common utils/hooks
-/* istanbul ignore next */
 export const useMutationWithInvalidations = <
   TData = unknown,
   TError = unknown,
@@ -17,7 +15,7 @@ export const useMutationWithInvalidations = <
   ...options
 }: UseMutationOptions<TData, TError, TVariables, TContext> & {
   invalidateQueries?: Array<QueryKey>
-} = {}) => {
+}) => {
   const queryClient = useQueryClient()
 
   return useMutation<TData, TError, TVariables, TContext>({

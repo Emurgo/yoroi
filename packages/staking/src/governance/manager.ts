@@ -1,18 +1,50 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {CardanoTypes} from '../cardanoMobile'
-import {isRegisteredDrep} from './api'
+import {isRegisteredDRep} from './api'
 import {axiosClient} from './config'
 
-type Config = {
+export type Config = {
   networkId: number
   cardano: CardanoTypes.Wasm
+  storage: typeof AsyncStorage
 }
 
-type GovernanceManager = {
+export type Vote = 'abstain' | 'no-confidence'
+
+export type GovernanceAction =
+  | {
+      kind: 'delegate-to-drep'
+      drepID: string
+      txID: string
+    }
+  | {
+      kind: 'vote'
+      vote: Vote
+      txID: string
+    }
+
+export type GovernanceManager = {
   validateDRepID: (drepID: string) => Promise<void>
   createDelegationCertificate: (
     drepID: string,
     stakingKey: CardanoTypes.PublicKey,
   ) => Promise<CardanoTypes.Certificate>
+  createLedgerDelegationPayload: (
+    drepID: string,
+    stakingKey: CardanoTypes.PublicKey,
+  ) => Promise<object>
+  createVotingCertificate: (
+    vote: Vote,
+    stakingKey: CardanoTypes.PublicKey,
+  ) => Promise<CardanoTypes.Certificate>
+  createLedgerVotingPayload: (
+    vote: Vote,
+    stakingKey: CardanoTypes.PublicKey,
+  ) => Promise<object>
+
+  // latest governance action to be used only to check the "pending" transaction that is not yet confirmed on the blockchain
+  setLatestGovernanceAction: (action: GovernanceAction) => Promise<void>
+  getLatestGovernanceAction: () => Promise<GovernanceAction | null>
 }
 
 export const createGovernanceManager = (config: Config): GovernanceManager => {
@@ -50,7 +82,7 @@ class Manager implements GovernanceManager {
     }
 
     if (
-      !(await isRegisteredDrep(
+      !(await isRegisteredDRep(
         {networkId: this.config.networkId, client: axiosClient},
         drepId,
       ))
@@ -58,4 +90,45 @@ class Manager implements GovernanceManager {
       throw new Error('DRep ID not registered')
     }
   }
+
+  async createLedgerDelegationPayload(
+    _drepID: string,
+    _stakingKey: CardanoTypes.PublicKey,
+  ): Promise<object> {
+    throw new Error('Not implemented')
+  }
+
+  async createVotingCertificate(
+    _vote: Vote,
+    _stakingKey: CardanoTypes.PublicKey,
+  ): Promise<CardanoTypes.Certificate> {
+    throw new Error('Not implemented')
+  }
+
+  async createLedgerVotingPayload(
+    _vote: Vote,
+    _stakingKey: CardanoTypes.PublicKey,
+  ): Promise<object> {
+    throw new Error('Not implemented')
+  }
+
+  async setLatestGovernanceAction(action: GovernanceAction): Promise<void> {
+    await this.config.storage.setItem(
+      governanceStorageLatestActionKey,
+      JSON.stringify(action),
+    )
+  }
+
+  async getLatestGovernanceAction(): Promise<GovernanceAction | null> {
+    try {
+      const action = await this.config.storage.getItem(
+        governanceStorageLatestActionKey,
+      )
+      return action ? JSON.parse(action) : null
+    } catch {
+      return null
+    }
+  }
 }
+
+const governanceStorageLatestActionKey = 'governance-manager/latest-action'

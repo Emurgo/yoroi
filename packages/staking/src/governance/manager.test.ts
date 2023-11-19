@@ -1,11 +1,16 @@
-import {describe, it, expect} from '@jest/globals'
+import {describe, it, expect, afterEach} from '@jest/globals'
 
-import {createGovernanceManager} from './manager'
+import {createGovernanceManager, GovernanceAction} from './manager'
 import {init} from '@emurgo/cross-csl-nodejs'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 describe('createGovernanceManager', () => {
   const cardano = init('global')
-  const options = {networkId: 1, cardano}
+  const options = {networkId: 1, cardano, storage: AsyncStorage}
+
+  afterEach(async () => {
+    await options.storage.clear()
+  })
 
   it('should return a manager', () => {
     expect(createGovernanceManager(options)).toBeDefined()
@@ -75,6 +80,38 @@ describe('createGovernanceManager', () => {
       expect(certificateHex).toBe(
         '83028200581cc3892366f174a76af9252f78368f5747d3055ab3568ea3b6bf40b01e581cc1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758',
       )
+    })
+  })
+
+  describe('latestGovernanceAction', () => {
+    it('should return null if there is no action', async () => {
+      const manager = createGovernanceManager(options)
+      const latestGovernanceAction = await manager.getLatestGovernanceAction()
+      expect(latestGovernanceAction).toBeNull()
+    })
+
+    it('should return the latest vote action that was set', async () => {
+      const manager = createGovernanceManager(options)
+      const action: GovernanceAction = {
+        kind: 'vote',
+        txID: 'txID',
+        vote: 'no-confidence',
+      }
+      await manager.setLatestGovernanceAction(action)
+      const latestGovernanceAction = await manager.getLatestGovernanceAction()
+      expect(latestGovernanceAction).toEqual(action)
+    })
+
+    it('should return the latest delegation action that was set', async () => {
+      const manager = createGovernanceManager(options)
+      const action: GovernanceAction = {
+        kind: 'delegate-to-drep',
+        txID: 'txID',
+        drepID: 'drepID',
+      }
+      await manager.setLatestGovernanceAction(action)
+      const latestGovernanceAction = await manager.getLatestGovernanceAction()
+      expect(latestGovernanceAction).toEqual(action)
     })
   })
 })
