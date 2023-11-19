@@ -19,7 +19,7 @@ describe('useMutationWithInvalidations', () => {
     )
 
     await act(async () => {
-      await result.current.mutate(undefined)
+      result.current.mutate(undefined)
     })
 
     await waitFor(() => result.current.isSuccess)
