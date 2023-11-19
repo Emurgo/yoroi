@@ -1,3 +1,4 @@
+import {initCatalyst} from '@yoroi/staking'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -10,7 +11,6 @@ import {Logger} from '../legacy/logging'
 import {COLORS} from '../theme'
 import {useCanVote} from './hooks'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
-import {initCatalyst} from '@yoroi/staking'
 
 type Props = {onPress: () => void; disabled?: boolean}
 
