@@ -129,7 +129,6 @@
     ]
   },
   "dependencies": {
-    "@cardano-sdk/util": "^0.14.2",
     "@emurgo/cip14-js": "^3.0.1",
     "@yoroi/api": "1.3.0",
     "@yoroi/openswap": "1.3.0",
