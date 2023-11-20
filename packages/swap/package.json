@@ -177,7 +177,7 @@
   "optionalDependencies": {
     "@react-native-async-storage/async-storage": "^1.19.3"
   },
-  "packageManager": "^yarn@1.22.21",
+  "packageManager": "yarn@1.22.21",
   "engines": {
     "node": ">= 16.19.0"
   },

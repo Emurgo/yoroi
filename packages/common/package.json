@@ -173,7 +173,7 @@
     "react": ">= 16.8.0 <= 19.0.0",
     "react-query": "^3.39.3"
   },
-  "packageManager": "^yarn@1.22.21",
+  "packageManager": "yarn@1.22.21",
   "engines": {
     "node": ">= 16.19.0"
   },
