@@ -10,35 +10,41 @@ export const resolverApiMaker = (
     receiverDomain: Resolver.Receiver['domain'],
   ) => {
     const operations = [
-      wrapCryptoAddressRequest(getHandleCryptoAddress, receiverDomain),
-      wrapCryptoAddressRequest(
-        getUnstoppableCryptoAddress,
+      getHandleCryptoAddress(receiverDomain),
+      getUnstoppableCryptoAddress(
         receiverDomain,
         apiConfig?.apiKeys?.unstoppableApiKey ?? undefined,
       ),
     ]
 
     if (resolutionStrategy === 'all') {
-      return Promise.all(operations)
-    } else {
-      return Promise.any(
-        operations.map((operation) => operation.catch((error: any) => error)),
+      const results = await Promise.all(
+        operations.map((operation) =>
+          operation
+            .then((address) => ({
+              address,
+              error: null,
+            }))
+            .catch((error) => ({error, address: null})),
+        ),
       )
+
+      return results
     }
+
+    const result = await Promise.any(
+      operations.map((operation) =>
+        operation.then((address) => ({
+          address,
+          error: null,
+        })),
+      ),
+    ).catch((error) => ({address: null, error}))
+
+    return [result]
   }
 
-  return {getCryptoAddress}
-}
-
-const wrapCryptoAddressRequest = async (
-  getCryptoAddress: (receiver: string, apiConfig: any) => Promise<string>,
-  receiverDomain: string,
-  apiKey?: string,
-): Promise<Resolver.AddressResponse> => {
-  try {
-    const address = await getCryptoAddress(receiverDomain, apiKey ?? undefined)
-    return {address, error: null}
-  } catch (error: any) {
-    return Promise.reject({address: null, error})
+  return {
+    getCryptoAddress,
   }
 }
