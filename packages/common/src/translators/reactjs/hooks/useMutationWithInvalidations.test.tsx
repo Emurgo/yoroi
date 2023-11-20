@@ -1,4 +1,4 @@
-import {useMutationWithInvalidations} from './hooks'
+import {useMutationWithInvalidations} from './useMutationWithInvalidations'
 import {QueryClient, QueryClientProvider} from 'react-query'
 import React, {PropsWithChildren} from 'react'
 import {act, renderHook, waitFor} from '@testing-library/react-native'

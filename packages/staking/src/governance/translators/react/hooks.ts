@@ -2,7 +2,7 @@ import {UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
 import {useGovernance} from './context'
 import {GovernanceAction, VoteKind} from '../../manager'
 import {useMutationWithInvalidations} from '@yoroi/common'
-import {CardanoTypes} from '../../../cardanoMobile'
+import {CardanoTypes} from '../../../types'
 
 export const useIsValidDRepID = (
   id: string,

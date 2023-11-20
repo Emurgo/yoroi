@@ -1,4 +1,4 @@
-import {initCatalyst} from '@yoroi/staking'
+import {catalystManagerMaker} from '@yoroi/staking'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -42,7 +42,7 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
         }
       }
 
-      const catalyst = initCatalyst()
+      const catalyst = catalystManagerMaker()
 
       setShowCatalystBanner((canVote && catalyst.isRegistrationOpen(fundInfo)) || isNightly() || __DEV__)
     }

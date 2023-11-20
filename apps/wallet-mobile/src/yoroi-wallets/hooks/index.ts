@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
-import {parseBoolean, useStorage} from '@yoroi/common'
+import {parseBoolean, useMutationWithInvalidations, useStorage} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
@@ -824,25 +824,6 @@ const fetchTxStatus = async (
   return {
     status: 'WAITING',
   }
-}
-
-export const useMutationWithInvalidations = <TData = unknown, TError = unknown, TVariables = void, TContext = unknown>({
-  invalidateQueries,
-  ...options
-}: UseMutationOptions<TData, TError, TVariables, TContext> & {invalidateQueries?: Array<QueryKey>} = {}) => {
-  const queryClient = useQueryClient()
-
-  return useMutation<TData, TError, TVariables, TContext>({
-    ...options,
-    onMutate: (variables) => {
-      invalidateQueries?.forEach((key) => queryClient.cancelQueries(key))
-      return options?.onMutate?.(variables)
-    },
-    onSuccess: (data, variables, context) => {
-      invalidateQueries?.forEach((key) => queryClient.invalidateQueries(key))
-      return options?.onSuccess?.(data, variables, context)
-    },
-  })
 }
 
 export const useTipStatus = ({

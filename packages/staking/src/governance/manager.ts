@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {CardanoTypes} from '../cardanoMobile'
+import {CardanoTypes} from '../types'
 import {GovernanceApi} from './api'
 
 export type Config = {
@@ -47,7 +47,7 @@ export type GovernanceManager = {
   getLatestGovernanceAction: () => Promise<GovernanceAction | null>
 }
 
-export const createGovernanceManager = (config: Config): GovernanceManager => {
+export const governanceManagerMaker = (config: Config): GovernanceManager => {
   return new Manager(config)
 }
 
@@ -81,7 +81,9 @@ class Manager implements GovernanceManager {
       throw new Error('invalid DRep ID format, must be hexadecimal')
     }
 
-    if (!(await this.config.api.isRegisteredDRep(drepId))) {
+    const drepStatus = await this.config.api.getDRepById(drepId)
+
+    if (!drepStatus || !drepStatus.epoch) {
       throw new Error('DRep ID not registered')
     }
   }

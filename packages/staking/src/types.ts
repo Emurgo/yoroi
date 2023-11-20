@@ -5,11 +5,9 @@ import {
   StakingKeyBalances as StakingKeyBalancesType,
   TokenEntry as TokenEntryType,
   TxMetadata as TxMetadataType,
-} from '@emurgo/yoroi-lib/dist/internals/models'
-import {
   SignedTx as SignedTxType,
   UnsignedTx as UnsignedTxType,
-} from '@emurgo/yoroi-lib/dist/internals/tx'
+} from '@emurgo/yoroi-lib'
 import {WalletChecksum as WalletChecksumType} from '@emurgo/cip4-js'
 import * as CoreTypes from '@emurgo/cross-csl-core'
 

@@ -1,14 +1,14 @@
-import {AxiosInstance} from 'axios'
-import {axiosClient, GOVERNANCE_ENDPOINTS} from './config'
+import {GOVERNANCE_ENDPOINTS} from './config'
+import {DRepId} from './types'
+import {Fetcher, fetcher} from '@yoroi/common/src'
 
 export type GovernanceApi = {
-  getDRepById: (drepId: string) => Promise<{txId: string}>
-  isRegisteredDRep: (drepId: string) => Promise<boolean>
+  getDRepById: (drepId: DRepId) => Promise<{txId: string; epoch: number} | null>
 }
 
-export const initApi = ({
+export const governanceApiMaker = ({
   networkId,
-  client = axiosClient,
+  client = fetcher,
 }: {
   networkId: number
   client?: Config['client']
@@ -19,33 +19,25 @@ export const initApi = ({
 class Api implements GovernanceApi {
   constructor(private config: Config) {}
 
-  async getDRepById(drepId: string) {
+  async getDRepById(drepId: DRepId) {
     const {networkId, client} = this.config
     const backend =
-      networkId === 1
+      networkId !== 300
         ? GOVERNANCE_ENDPOINTS.mainnet
         : GOVERNANCE_ENDPOINTS.preprod
 
-    const response = await client.get<GetDRepByIdResponse>(
-      backend.getDRepById.replace('{{DREP_ID}}', drepId),
-    )
-
-    return {txId: response.data.registration.tx}
-  }
-
-  async isRegisteredDRep(drepId: string): Promise<boolean> {
-    try {
-      await this.getDRepById(drepId)
-      return true
-    } catch {
-      return false
-    }
+    const response = await client<GetDRepByIdResponse>({
+      url: backend.getDRepById.replace('{{DREP_ID}}', drepId),
+    })
+    const txId = response.registration.tx
+    const epoch = response.registration.epoch
+    return {txId, epoch}
   }
 }
 
 type Config = {
   networkId: number
-  client: AxiosInstance
+  client: Fetcher
 }
 
 type GetDRepByIdResponse = {

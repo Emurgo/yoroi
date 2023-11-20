@@ -1,5 +1,4 @@
 import {Balance} from '@yoroi/types'
-import Quantity = Balance.Quantity
 
 export type Anchor = string | undefined // (a URL to a JSON payload of metadata) OR (a hash of the contents of the metadata URL)
 export type DRepId = string // The blake2b-224 hash digest of a serialized DRep credential is called the DRep ID.
@@ -11,10 +10,10 @@ export type DRepRetirementCertificate = {
   anchor: Anchor
 }
 
-export type DRep = {
+export type DRepRegistrationCertificate = {
   credential: DRepCredential
   id: DRepId
-  deposit: Quantity
+  deposit: Balance.Quantity
   anchor: Anchor
 }
 

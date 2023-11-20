@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {createGovernanceManager, GovernanceProvider, initApi} from '@yoroi/staking'
+import {governanceManagerMaker, GovernanceProvider, governanceApiMaker} from '@yoroi/staking'
 import React, {useMemo} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -13,7 +13,12 @@ export const GovernanceNavigator = () => {
   const {networkId} = useSelectedWallet()
   const manager = useMemo(
     () =>
-      createGovernanceManager({networkId, api: initApi({networkId}), cardano: CardanoMobile, storage: AsyncStorage}),
+      governanceManagerMaker({
+        networkId,
+        api: governanceApiMaker({networkId}),
+        cardano: CardanoMobile,
+        storage: AsyncStorage,
+      }),
     [networkId],
   )
   return (

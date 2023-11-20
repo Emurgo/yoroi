@@ -1,12 +1,10 @@
 import {BigNumber} from 'bignumber.js'
 
-export const initCatalyst = () => {
+export const catalystManagerMaker = () => {
   return new Catalyst()
 }
 
 class Catalyst {
-  constructor() {}
-
   isRegistrationOpen(
     fundInfo?: null | {registrationStart: string; registrationEnd: string},
   ) {

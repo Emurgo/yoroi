@@ -1,10 +1,8 @@
-import {describe, it, expect, afterEach} from '@jest/globals'
-
-import {createGovernanceManager, GovernanceAction} from './manager'
+import {governanceManagerMaker, GovernanceAction} from './manager'
 import {init} from '@emurgo/cross-csl-nodejs'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {initApi} from './api'
-import {axiosClient} from './config'
+import {governanceApiMaker} from './api'
+import {fetcher} from '@yoroi/common/src'
 
 describe('createGovernanceManager', () => {
   const cardano = init('global')
@@ -13,7 +11,7 @@ describe('createGovernanceManager', () => {
     networkId,
     cardano,
     storage: AsyncStorage,
-    api: initApi({networkId, client: axiosClient}),
+    api: governanceApiMaker({networkId, client: fetcher}),
   }
 
   afterEach(async () => {
@@ -21,11 +19,11 @@ describe('createGovernanceManager', () => {
   })
 
   it('should return a manager', () => {
-    expect(createGovernanceManager(options)).toBeDefined()
+    expect(governanceManagerMaker(options)).toBeDefined()
   })
 
   describe('validateDRepID', () => {
-    const governanceManager = createGovernanceManager(options)
+    const governanceManager = governanceManagerMaker(options)
 
     it('should throw an error when for a DRep id that has wrong length', async () => {
       const invalidId = 'abc'
@@ -76,7 +74,7 @@ describe('createGovernanceManager', () => {
         .then((x) => x.toRawKey())
 
       const drepId = 'c1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758'
-      const manager = createGovernanceManager(options)
+      const manager = governanceManagerMaker(options)
       const certificate = await manager.createDelegationCertificate(
         drepId,
         stakingKey,
@@ -93,13 +91,13 @@ describe('createGovernanceManager', () => {
 
   describe('latestGovernanceAction', () => {
     it('should return null if there is no action', async () => {
-      const manager = createGovernanceManager(options)
+      const manager = governanceManagerMaker(options)
       const latestGovernanceAction = await manager.getLatestGovernanceAction()
       expect(latestGovernanceAction).toBeNull()
     })
 
     it('should return the latest vote action that was set', async () => {
-      const manager = createGovernanceManager(options)
+      const manager = governanceManagerMaker(options)
       const action: GovernanceAction = {
         kind: 'vote',
         txID: 'txID',
@@ -111,7 +109,7 @@ describe('createGovernanceManager', () => {
     })
 
     it('should return the latest delegation action that was set', async () => {
-      const manager = createGovernanceManager(options)
+      const manager = governanceManagerMaker(options)
       const action: GovernanceAction = {
         kind: 'delegate-to-drep',
         txID: 'txID',

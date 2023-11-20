@@ -1,8 +1,8 @@
 import {UseMutationOptions} from 'react-query'
 
-import {useMutationWithInvalidations} from '../../hooks'
 import {RawUtxo} from '../../types'
 import {YoroiWallet} from '../types'
+import {useMutationWithInvalidations} from '@yoroi/common'
 
 export const useSetCollateralId = (
   wallet: YoroiWallet,
