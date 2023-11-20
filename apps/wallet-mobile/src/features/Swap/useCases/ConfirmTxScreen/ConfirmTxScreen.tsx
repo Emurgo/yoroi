@@ -134,6 +134,7 @@ export const ConfirmTxScreen = () => {
     </SafeAreaView>
   )
 }
+//
 
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
 
