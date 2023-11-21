@@ -128,7 +128,8 @@
     },
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
-      "<rootDir>/lib/"
+      "<rootDir>/lib/",
+      "<rootDir>/.*mock.*"
     ],
     "setupFiles": [
       "<rootDir>/jest.setup.js"

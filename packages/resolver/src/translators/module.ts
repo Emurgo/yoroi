@@ -3,7 +3,7 @@ import {Resolver} from '@yoroi/types'
 
 export const resolverModuleMaker = (
   resolutionStrategy: Resolver.Strategy,
-  apiConfig: any = {},
+  apiConfig?: any,
 ): Resolver.Module => {
   const api = resolverApiMaker(resolutionStrategy, apiConfig)
 

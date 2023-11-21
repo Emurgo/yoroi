@@ -44,14 +44,14 @@ export const getUnstoppableCryptoAddress = async (
 
 const StoppableResponseSchema = z.string()
 
-class UnstoppableValidationError extends Error {
+export class UnstoppableValidationError extends Error {
   constructor(message: string) {
     super(message)
     this.name = 'UnstoppableValidationError'
   }
 }
 
-class UnstoppableUnknownError extends Error {
+export class UnstoppableUnknownError extends Error {
   constructor(message: string) {
     super(message)
     this.name = 'UnstoppableUnknownError'

@@ -7,12 +7,8 @@ export const getHandleCryptoAddress = async (
   receiverDomain: Resolver.Receiver['domain'],
 ): Promise<string> => {
   try {
-    if (!/^\$/.test(receiverDomain))
-      throw new HandleValidationError(
-        `${receiverDomain} it is not a handle. Missing '$'.`,
-      )
-
-    const handle = receiverDomain.replace(/^\$/, '')
+    const validatedHandle = stringWithDollarSchema.parse(receiverDomain)
+    const handle = validatedHandle.replace(/^\$/, '')
 
     const config = {
       method: 'get',
@@ -28,8 +24,8 @@ export const getHandleCryptoAddress = async (
     return address
   } catch (error: unknown) {
     const zodErrorMessage = handleZodErrors(error)
-
     if (zodErrorMessage) throw new HandleValidationError(zodErrorMessage)
+
     throw new HandleUnknownError(JSON.stringify(error))
   }
 }
@@ -40,14 +36,23 @@ const HandleResponseSchema = z.object({
   }),
 })
 
-class HandleValidationError extends Error {
+const stringWithDollarSchema = z.string().refine(
+  (value) => {
+    return value.startsWith('$')
+  },
+  {
+    message: "The domain must start with a '$' symbol",
+  },
+)
+
+export class HandleValidationError extends Error {
   constructor(message: string) {
     super(message)
     this.name = 'HandleValidationError'
   }
 }
 
-class HandleUnknownError extends Error {
+export class HandleUnknownError extends Error {
   constructor(message: string) {
     super(message)
     this.name = 'HandleUnknownError'
