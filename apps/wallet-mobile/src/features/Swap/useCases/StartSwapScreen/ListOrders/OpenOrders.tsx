@@ -118,7 +118,8 @@ export const OpenOrders = () => {
     navigateToTxHistory()
   }
 
-  const onRawTxHwConfirm = () => {
+  const onRawTxHwConfirm = (order: MappedOpenOrder) => {
+    trackCancellationSubmitted(order)
     closeModal()
     navigateToTxHistory()
   }
@@ -152,7 +153,7 @@ export const OpenOrders = () => {
         bech32Address={order.owner}
         onCancel={closeModal}
         onConfirm={(rootKey) => onRawTxConfirm(rootKey, order)}
-        onHWConfirm={() => onRawTxHwConfirm()}
+        onHWConfirm={() => onRawTxHwConfirm(order)}
       />,
       400,
     )
