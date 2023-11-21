@@ -86,6 +86,8 @@ export const OpenOrders = () => {
   const navigation = useNavigation()
 
   const trackSwapConfirmPageViewed = React.useCallback(() => {
+    // Closing a modal triggers this callback.
+    // https://github.com/Emurgo/yoroi/pull/2913
     const currentState = navigation.getState()
     const previousState = navigationRef.current
     if (currentState === previousState) return
