@@ -1,6 +1,6 @@
 import {GOVERNANCE_ENDPOINTS} from './config'
 import {DRepId} from './types'
-import {Fetcher, fetcher} from '@yoroi/common/src'
+import {ApiError, Fetcher, fetcher} from '@yoroi/common'
 
 export type GovernanceApi = {
   getDRepById: (drepId: DRepId) => Promise<{txId: string; epoch: number} | null>
@@ -26,12 +26,20 @@ class Api implements GovernanceApi {
         ? GOVERNANCE_ENDPOINTS.mainnet
         : GOVERNANCE_ENDPOINTS.preprod
 
-    const response = await client<GetDRepByIdResponse>({
-      url: backend.getDRepById.replace('{{DREP_ID}}', drepId),
-    })
-    const txId = response.registration.tx
-    const epoch = response.registration.epoch
-    return {txId, epoch}
+    try {
+      const response = await client<GetDRepByIdResponse>({
+        url: backend.getDRepById.replace('{{DREP_ID}}', drepId),
+      })
+      const txId = response.registration.tx
+      const epoch = response.registration.epoch
+      return {txId, epoch}
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('404')) {
+        return null
+      }
+
+      throw error
+    }
   }
 }
 
