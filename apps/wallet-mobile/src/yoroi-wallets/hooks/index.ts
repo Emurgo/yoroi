@@ -962,6 +962,7 @@ export function useHideBottomTabBar() {
 }
 
 const supportedTypes = [
+  'img/png', // Yeah, someone minted that
   'image/png',
   'image/jpeg',
   'image/jpg',
