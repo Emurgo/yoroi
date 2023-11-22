@@ -197,8 +197,15 @@ export type TxHistoryRoutes = {
   'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
   'send-select-token-from-list': undefined
-} & SwapTokenRoutes
+} & SwapTokenRoutes &
+  ScanRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
+
+export type ScanRoutes = {
+  'scan-start': undefined
+  'scan-claim-confirm-summary': undefined
+  'scan-show-camera-permission-denied': undefined
+}
 
 export type SwapTokenRoutes = {
   'swap-start-swap': undefined
@@ -354,118 +361,110 @@ export const useBlockGoBack = () => {
 export const useWalletNavigation = () => {
   const navigation = useNavigation()
 
-  const resetToTxHistory = () => {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: 'app-root',
-          state: {
-            routes: [
-              {name: 'wallet-selection'},
-              {
-                name: 'main-wallet-routes',
-                state: {
-                  routes: [
-                    {
-                      name: 'history',
-                      state: {
-                        routes: [{name: 'history-list'}],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      ],
-    })
-  }
-
-  const resetToWalletSelection = () => {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: 'app-root',
-          state: {
-            routes: [{name: 'wallet-selection'}],
-          },
-        },
-      ],
-    })
-  }
-
-  const navigateToSettings = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'main-settings',
-      },
-    })
-  }
-
-  const navigateToTxHistory = () => {
-    navigation.navigate('app-root', {
-      screen: 'main-wallet-routes',
-      params: {
-        screen: 'history',
-        params: {
-          screen: 'history-list',
-        },
-      },
-    })
-  }
-
-  const navigateToNftGallery = () => {
-    navigation.navigate('app-root', {
-      screen: 'main-wallet-routes',
-      params: {
-        screen: 'nfts',
-        params: {
-          screen: 'nft-gallery',
-        },
-      },
-    })
-  }
-
-  const navigateToAppSettings = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'app-settings',
-      },
-    })
-  }
-
-  const navigateToCollateralSettings = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'manage-collateral',
-      },
-    })
-  }
-
-  const navigateToAnalyticsSettings = () => {
-    navigation.navigate('app-root', {
-      screen: 'toggle-analytics-settings',
-      params: {
-        screen: 'settings',
-      },
-    })
-  }
-
-  return {
+  return React.useRef({
     navigation,
-    resetToTxHistory,
-    resetToWalletSelection,
-    navigateToSettings,
-    navigateToTxHistory,
-    navigateToNftGallery,
-    navigateToAppSettings,
-    navigateToAnalyticsSettings,
-    navigateToCollateralSettings,
-  }
+
+    resetToTxHistory: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'history',
+                        state: {
+                          routes: [{name: 'history-list'}],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
+    },
+
+    resetToWalletSelection: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [{name: 'wallet-selection'}],
+            },
+          },
+        ],
+      })
+    },
+
+    navigateToSettings: () => {
+      navigation.navigate('app-root', {
+        screen: 'settings',
+        params: {
+          screen: 'main-settings',
+        },
+      })
+    },
+
+    navigateToTxHistory: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'history-list',
+          },
+        },
+      })
+    },
+
+    navigateToNftGallery: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'nfts',
+          params: {
+            screen: 'nft-gallery',
+          },
+        },
+      })
+    },
+
+    navigateToAppSettings: () => {
+      navigation.navigate('app-root', {
+        screen: 'settings',
+        params: {
+          screen: 'app-settings',
+        },
+      })
+    },
+
+    navigateToCollateralSettings: () => {
+      navigation.navigate('app-root', {
+        screen: 'settings',
+        params: {
+          screen: 'manage-collateral',
+        },
+      })
+    },
+
+    navigateToAnalyticsSettings: () => {
+      navigation.navigate('app-root', {
+        screen: 'toggle-analytics-settings',
+        params: {
+          screen: 'settings',
+        },
+      })
+    },
+  } as const).current
 }

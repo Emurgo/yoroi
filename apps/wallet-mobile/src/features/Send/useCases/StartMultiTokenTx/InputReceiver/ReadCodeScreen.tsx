@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 
-import {QRCodeScanner} from '../../../../../components'
+import {CameraCodeScanner} from '../../../../../components'
 import {TxHistoryRouteNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {asQuantity, pastedFormatter, Quantities} from '../../../../../yoroi-wallets/utils'
@@ -34,10 +34,10 @@ export const ReadQRCodeScreen = () => {
       receiverChanged(qrData ?? '')
     }
     navigation.navigate('send-start-tx')
-    return Promise.resolve(false)
+    return true
   }
 
-  return <QRCodeScanner onRead={handleOnRead} withMask maskText={strings.addressReaderQrText} />
+  return <CameraCodeScanner onRead={handleOnRead} withMask maskText={strings.addressReaderQrText} />
 }
 
 const getParams = (params: string) => {
