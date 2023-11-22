@@ -49,12 +49,14 @@ export type Palette = {
     100: HexColor
   }
   magenta: {
+    700: HexColor
+    600: HexColor
     500: HexColor
     300: HexColor
     100: HexColor
   }
   cyan: {
-    400: HexColor
+    500: HexColor
     100: HexColor
   }
   yellow: {
@@ -66,7 +68,10 @@ export type Palette = {
     green: Gradient
     blue: Gradient
   }
-  overlay: {hex: HexColor; opacity: number}
+  'overlay-extension': {hex: HexColor; opacity: number}
+  'overlay-mobile': {hex: HexColor; opacity: number}
+  'sidebar-overlay': {hex: HexColor; opacity: number}
+  'sidebar-item': {hex: HexColor; opacity: number}
 }
 
 type TypographyKeys =
