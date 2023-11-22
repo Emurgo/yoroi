@@ -25,19 +25,11 @@ describe('createGovernanceManager', () => {
   describe('validateDRepID', () => {
     const governanceManager = governanceManagerMaker(options)
 
-    it('should throw an error when for a DRep id that has wrong length', async () => {
-      const invalidId = 'abc'
-      const errorMessage = 'invalid DRep ID length, must be 56 characters'
-
-      await expect(() =>
-        governanceManager.validateDRepID(invalidId),
-      ).rejects.toThrow(errorMessage)
-    })
-
     it('should throw an error for a wrongly formatted DRep id', async () => {
       const invalidId =
         '0123456789012345678901234567890123456789012345678901234X'
-      const errorMessage = 'invalid DRep ID format, must be hexadecimal'
+      const errorMessage =
+        'Invalid DRep ID. Must be a valid Bech32 or a valid key hash'
 
       await expect(() =>
         governanceManager.validateDRepID(invalidId),
@@ -59,6 +51,19 @@ describe('createGovernanceManager', () => {
         'c1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758'
 
       await governanceManager.validateDRepID(invalidId)
+    })
+
+    it('should accept key hash as DRep ID', async () => {
+      const keyHash = 'db1bc3c3f99ce68977ceaf27ab4dd917123ef9e73f85c304236eab23'
+
+      await governanceManager.validateDRepID(keyHash)
+    })
+
+    it('should accept bech32 address as DRep ID', async () => {
+      const bech32Address =
+        'drep1wdt7ryc567pauvc5a93rt5mnzpx6y2rh6mvtu5phehmj5lkqjgx'
+
+      await governanceManager.validateDRepID(bech32Address)
     })
   })
 

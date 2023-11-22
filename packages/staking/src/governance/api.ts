@@ -1,6 +1,6 @@
 import {GOVERNANCE_ENDPOINTS} from './config'
 import {DRepId} from './types'
-import {ApiError, Fetcher, fetcher} from '@yoroi/common'
+import {Fetcher, fetcher} from '@yoroi/common'
 
 export type GovernanceApi = {
   getDRepById: (drepId: DRepId) => Promise<{txId: string; epoch: number} | null>

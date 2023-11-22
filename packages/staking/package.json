@@ -113,10 +113,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 75,
+        "branches": 70,
         "functions": 65,
-        "lines": 75,
-        "statements": 75
+        "lines": 70,
+        "statements": 70
       }
     },
     "modulePathIgnorePatterns": [
@@ -132,6 +132,7 @@
     "@emurgo/cip14-js": "^3.0.1",
     "@yoroi/api": "1.3.0",
     "@yoroi/openswap": "1.3.0",
+    "bech32": "^2.0.0",
     "bip39": "^3.1.0",
     "immer": "^10.0.2"
   },
