@@ -960,3 +960,51 @@ export function useHideBottomTabBar() {
     return () => navigation.getParent()?.setOptions({tabBarStyle: true, tabBarVisible: undefined})
   }, [navigation])
 }
+
+const supportedTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml', 'image/tiff']
+
+type NativeAssetImageRequest = {
+  networkId: NetworkId
+  policy: string
+  name: string
+  width: string | number
+  height: string | number
+  mediaType?: string
+  resizeMode?: 'contain' | 'cover' | 'fill' | 'inside' | 'outside'
+  kind?: 'logo' | 'metadata'
+}
+export const useNativeAssetImage = ({
+  networkId,
+  policy,
+  name,
+  width,
+  height,
+  mediaType = 'image/webp',
+  resizeMode = 'cover',
+  kind = 'metadata',
+}: NativeAssetImageRequest) => {
+  const network = networkId === 300 ? 'preprod' : 'mainnet'
+  const isMediaTypeSupported = supportedTypes.includes(mediaType.toLocaleLowerCase())
+  const query = useQuery({
+    staleTime: Infinity,
+    queryKey: ['native-asset-img', policy, name, `${width}x${height}`, resizeMode],
+    queryFn: async () => {
+      const response = await fetch(
+        `https://${network}.cardano-nativeassets-prod.emurgornd.com/${policy}/${name}?width=${width}&height=${height}&kind=${kind}&fit=${resizeMode}`,
+      )
+      if (!response.ok) {
+        throw new Error(`NativeAsset CDN response was not ok for policy=${policy} name=${name}`)
+      }
+      if (response.status === 201) {
+        throw new Error(`NativeAsset CDN still processing policy=${policy} name=${name}`)
+      }
+      return `data:image/webp;base64,${await response.text()}`
+    },
+    enabled: isMediaTypeSupported,
+  })
+
+  return {
+    ...query,
+    uri: query.data,
+  }
+}

@@ -27,13 +27,12 @@ export const NftDetailsImage = () => {
   }, [nft?.id, track])
 
   const dimensions = Dimensions.get('window')
-  const imageSize = Math.min(dimensions.width, dimensions.height)
 
   return (
     <FadeIn style={styles.container}>
       <ViewTransformer maxScale={3} minScale={1}>
         <View style={styles.contentContainer}>
-          <NftPreview nft={nft} width={imageSize} height={imageSize} />
+          <NftPreview nft={nft} width={dimensions.width} height={dimensions.height} zoom={3} resizeMode="contain" />
         </View>
       </ViewTransformer>
     </FadeIn>
