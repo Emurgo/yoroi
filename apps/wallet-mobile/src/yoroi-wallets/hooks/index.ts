@@ -961,7 +961,15 @@ export function useHideBottomTabBar() {
   }, [navigation])
 }
 
-const supportedTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml', 'image/tiff']
+const supportedTypes = [
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/gif',
+  'image/webp',
+  'image/svg+xml',
+  'image/tiff',
+]
 
 type NativeAssetImageRequest = {
   networkId: NetworkId
