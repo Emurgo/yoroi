@@ -3,6 +3,7 @@ import {TextStyle} from 'react-native'
 export type Theme = {
   color: Palette
   typography: Typography
+  spacing: Spacing
 }
 
 export type HexColor = `#${string}`
@@ -102,4 +103,19 @@ type TypographyKeys =
   | 'caption-medium'
   | 'caption-regular'
 
+type SpacingKeys =
+  | 'spacing-2'
+  | 'spacing-4'
+  | 'spacing-6'
+  | 'spacing-8'
+  | 'spacing-10'
+  | 'spacing-12'
+  | 'spacing-16'
+  | 'spacing-24'
+  | 'spacing-32'
+  | 'spacing-40'
+  | 'spacing-48'
+  | 'spacing-80'
+
 export type Typography = Record<TypographyKeys, TextStyle>
+export type Spacing = Record<SpacingKeys, string>
