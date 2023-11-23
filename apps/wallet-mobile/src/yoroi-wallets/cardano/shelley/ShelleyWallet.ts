@@ -977,7 +977,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     async submitTransaction(signedTx: string) {
       const response: any = await legacyApi.submitTransaction(signedTx, BACKEND)
       Logger.info(response)
-      return response
+      return response as any
     }
 
     private async syncUtxos() {

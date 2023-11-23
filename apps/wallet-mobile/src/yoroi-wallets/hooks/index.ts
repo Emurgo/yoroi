@@ -640,7 +640,7 @@ export const useProtocolParams = (
   >,
 ) => {
   const wallet = useSelectedWallet()
-  console.log('wallet.api', wallet.api)
+
   const query = useQuery({
     suspense: true,
     queryKey: ['protocol-params'],
