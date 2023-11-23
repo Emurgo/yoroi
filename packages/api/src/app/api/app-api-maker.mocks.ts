@@ -2,6 +2,7 @@
 
 import {App} from '@yoroi/types'
 import {mockGetFrontendFees} from './frontend-fees.mocks'
+import {paramParsedsMockResponse} from './protocol-params.mocks'
 
 const loading = () => new Promise(() => {})
 const unknownError = () => Promise.reject(new Error('Unknown error'))
@@ -27,6 +28,18 @@ const getFrontendFees = {
   },
 }
 
+const getProtocolParams = {
+  success: () => Promise.resolve(paramParsedsMockResponse),
+  delayed: (timeout?: number) =>
+    delayedResponse({data: paramParsedsMockResponse, timeout}),
+  empty: () => Promise.resolve({}),
+  loading,
+  error: {
+    unknown: unknownError,
+  },
+}
+
 export const mockAppApi: App.Api = {
   getFrontendFees: getFrontendFees.success,
+  getProtocolParams: getProtocolParams.success,
 } as const

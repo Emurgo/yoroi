@@ -1,6 +1,7 @@
 import {appApiMaker} from './app/api/app-api-maker'
 import {mockAppApi} from './app/api/app-api-maker.mocks'
 import {getFrontendFees} from './app/api/frontend-fees'
+import {getProtocolParams} from './app/api/protocol-params'
 import {mockGetFrontendFees} from './app/api/frontend-fees.mocks'
 
 import {
@@ -50,6 +51,8 @@ export const CardanoTokenId = {
 export const AppApi = {
   getFrontendFees,
   mockGetFrontendFees,
+
+  getProtocolParams,
 
   appApiMaker,
   mockAppApi,

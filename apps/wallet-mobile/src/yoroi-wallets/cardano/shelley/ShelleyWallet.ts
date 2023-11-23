@@ -602,6 +602,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
 
+      const protocolParams = await this.getProtocolParams()
+      const {coins_per_utxo_word, key_deposit, min_utxo, pool_deposit, min_fee_a, min_fee_b} = protocolParams
+
       const recipients = await toRecipients(entries, this.primaryToken)
 
       const containsDatum = recipients.some((recipient) => recipient.datum)
@@ -617,14 +620,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
           recipients,
           changeAddr,
           {
-            keyDeposit: KEY_DEPOSIT,
+            keyDeposit: key_deposit,
             linearFee: {
-              coefficient: LINEAR_FEE.COEFFICIENT,
-              constant: containsDatum ? String(BigInt(LINEAR_FEE.CONSTANT) * 2n) : LINEAR_FEE.CONSTANT,
+              coefficient: String(min_fee_a),
+              constant: containsDatum ? String(BigInt(String(min_fee_b)) * 2n) : String(min_fee_b),
             },
-            minimumUtxoVal: MINIMUM_UTXO_VAL,
-            coinsPerUtxoWord: COINS_PER_UTXO_WORD,
-            poolDeposit: POOL_DEPOSIT,
+            minimumUtxoVal: min_utxo,
+            coinsPerUtxoWord: coins_per_utxo_word,
+            poolDeposit: pool_deposit,
             networkId: NETWORK_ID,
           },
           PRIMARY_TOKEN,
@@ -967,10 +970,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
       return legacyApi.checkServerStatus(BACKEND)
     }
 
+    getProtocolParams() {
+      return this.api.getProtocolParams()
+    }
+
     async submitTransaction(signedTx: string) {
       const response: any = await legacyApi.submitTransaction(signedTx, BACKEND)
       Logger.info(response)
-      return response as any
+      return response
     }
 
     private async syncUtxos() {

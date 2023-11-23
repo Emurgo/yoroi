@@ -18,6 +18,7 @@ import {
 } from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
+import {useSelectedWallet} from '../../SelectedWallet'
 import {useWalletManager} from '../../WalletManager'
 import {calcLockedDeposit} from '../cardano/assetUtils'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
@@ -627,6 +628,29 @@ export const useFrontendFees = (
   return {
     ...query,
     frontendFees: query.data,
+  }
+}
+
+export const useProtocolParams = (
+  options?: UseQueryOptions<
+    App.FrontendProtocolParamsResponse,
+    Error,
+    App.FrontendProtocolParamsResponse,
+    ['protocol-params']
+  >,
+) => {
+  const wallet = useSelectedWallet()
+  console.log('wallet.api', wallet.api)
+  const query = useQuery({
+    suspense: true,
+    queryKey: ['protocol-params'],
+    ...options,
+    queryFn: () => wallet.api.getProtocolParams(),
+  })
+
+  return {
+    ...query,
+    protocolParams: query.data,
   }
 }
 
