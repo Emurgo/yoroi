@@ -40,22 +40,27 @@ export const lightPalette: Palette = {
     100: '#E4F7F3',
   },
   magenta: {
+    700: '#CF053A',
+    600: '#E80742',
     500: '#FF1351',
     300: '#FBCBD7',
     100: '#FFF1F5',
   },
   cyan: {
-    400: '#59B1F4',
+    500: '#59B1F4',
     100: '#F2F9FF',
   },
   yellow: {
-    500: '#F5C70F',
-    100: '#FDF8E2',
+    500: '#ECBA09',
+    100: '#FDF7E2',
   },
   gradients: {
     'blue-green': ['#E4E8F7', '#C6F7F7'],
     green: ['#93F5E1', '#C6F7F7'],
     blue: ['#244ABF', '#4B6DDE'],
   },
-  overlay: {hex: '#000000', opacity: 0.1},
+  'overlay-extension': {hex: '#121f4d', opacity: 0.7},
+  'overlay-mobile': {hex: '#000000', opacity: 0.4},
+  'sidebar-overlay': {hex: '#000000', opacity: 0.16},
+  'sidebar-item': {hex: '#ffffff', opacity: 0.48},
 }
