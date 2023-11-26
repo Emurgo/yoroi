@@ -31,7 +31,7 @@ export const GovernanceNavigator = () => {
   return (
     <GovernanceProvider manager={manager}>
       <StatusBar type="dark" />
-      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
+      <SafeAreaView edges={safeAreaEdges} style={styles.root}>
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen name="home" component={HomeScreen} options={{title: strings.governanceCentreTitle}} />
           <Stack.Screen
@@ -47,6 +47,8 @@ export const GovernanceNavigator = () => {
     </GovernanceProvider>
   )
 }
+
+const safeAreaEdges = ['bottom', 'left', 'right'] as const
 
 const txStatusOptions = {
   detachPreviousScreen: true,
