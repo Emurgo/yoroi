@@ -5,8 +5,15 @@ import {Spacer} from '../../../../../components'
 import {UserAction} from '../../types'
 
 export const HomeScreen = () => {
-  // return <NeverParticipatedInGovernanceVariant />
-  return <ParticipatingInGovernanceVariant action={{kind: 'delegate', drepID: 'drep1abc'}} isTxPending={true} />
+  const action: UserAction = {kind: 'delegate', drepID: 'drep1e93a2zvs3aw8e4naez0ynpmc48ghx7yaa3n2k8jhwfdt70yscts'}
+  const isTxPending = true
+  const isParticipatingInGovernance = true
+
+  if (!isParticipatingInGovernance) {
+    return <NeverParticipatedInGovernanceVariant />
+  }
+
+  return <ParticipatingInGovernanceVariant action={action} isTxPending={isTxPending} />
 }
 
 const ParticipatingInGovernanceVariant = ({action, isTxPending}: {action: UserAction; isTxPending: boolean}) => {
@@ -40,7 +47,10 @@ const ParticipatingInGovernanceVariant = ({action, isTxPending}: {action: UserAc
             title={strings.delegatingToADRep}
             description={strings.actionDelegateToADRepDescription}
             pending={isTxPending}
-          />
+          >
+            <Text style={styles.drepInfoTitle}>{strings.drepKey}</Text>
+            <Text style={styles.drepInfoDescription}>{action.drepID}</Text>
+          </Action>
         )}
         {action.kind === 'abstain' && (
           <Action title={strings.abstaining} description={strings.actionAbstainDescription} pending={isTxPending} />
@@ -100,5 +110,18 @@ const styles = StyleSheet.create({
   actions: {
     flex: 1,
     gap: 16,
+  },
+  drepInfoTitle: {
+    fontFamily: 'Rubik-Medium',
+    fontWeight: '500',
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#242838',
+  },
+  drepInfoDescription: {
+    fontFamily: 'Rubik-Regular',
+    fontSize: 12,
+    lineHeight: 18,
+    color: '#6B7384',
   },
 })
