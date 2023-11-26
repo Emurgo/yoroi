@@ -33,6 +33,9 @@ export const useStrings = () => {
     actionYouHaveSelected: (action: string, formattingOptions: FormattingOptions) =>
       intl.formatMessage(messages.actionYouHaveSelected, {...formattingOptions, action}),
     changeDRep: intl.formatMessage(messages.changeDRep),
+    confirm: intl.formatMessage(messages.confirm),
+    transactionDetails: intl.formatMessage(messages.transactionDetails),
+    total: intl.formatMessage(messages.total),
   }
 }
 
@@ -149,5 +152,17 @@ const messages = defineMessages({
   changeDRep: {
     id: 'components.governance.changeDRep',
     defaultMessage: '!!!Change DRep',
+  },
+  confirm: {
+    id: 'components.governance.confirm',
+    defaultMessage: '!!!Confirm',
+  },
+  transactionDetails: {
+    id: 'components.governance.transactionDetails',
+    defaultMessage: '!!!Transaction details',
+  },
+  total: {
+    id: 'components.governance.total',
+    defaultMessage: '!!!Total',
   },
 })

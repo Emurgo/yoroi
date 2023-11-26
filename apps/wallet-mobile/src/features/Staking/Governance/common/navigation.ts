@@ -4,7 +4,7 @@ import {useRef} from 'react'
 import {GovernanceVote} from '../types'
 import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 
-type Routes = {
+export type Routes = {
   home: undefined
   'change-vote': undefined
   'confirm-tx': {vote: GovernanceVote; unsignedTx: YoroiUnsignedTx}
