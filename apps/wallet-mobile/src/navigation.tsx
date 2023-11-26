@@ -462,7 +462,7 @@ export const useWalletNavigation = () => {
     })
   }
 
-  const navigateToGovernanceCenter = () => {
+  const navigateToGovernanceCentre = () => {
     navigation.navigate('app-root', {
       screen: 'governance',
       params: {
@@ -481,6 +481,6 @@ export const useWalletNavigation = () => {
     navigateToAppSettings,
     navigateToAnalyticsSettings,
     navigateToCollateralSettings,
-    navigateToGovernanceCenter,
+    navigateToGovernanceCentre,
   }
 }
