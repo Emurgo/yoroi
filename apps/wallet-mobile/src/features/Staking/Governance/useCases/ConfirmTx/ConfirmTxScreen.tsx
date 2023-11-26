@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {Button, Spacer} from '../../../../../components'
-import {useStrings} from '../../common'
+import {useNavigateTo, useStrings} from '../../common'
 import {useUnsafeParams} from '../../../../../navigation'
 import {Routes} from '../../common/navigation'
 import {Text} from '../../../../../components'
@@ -14,6 +14,7 @@ export const ConfirmTxScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const params = useUnsafeParams<Routes['confirm-tx']>()
+  const navigateTo = useNavigateTo()
 
   const titles = {
     abstain: strings.actionAbstainTitle,
@@ -32,6 +33,12 @@ export const ConfirmTxScreen = () => {
   const fee = params.unsignedTx.fee
   const feeAmount = Amounts.getAmount(fee, wallet.primaryToken.identifier)
   const feeText = formatTokenWithText(feeAmount.quantity, wallet.primaryToken)
+
+  const onSubmit = () => {
+    // TODO: save tx
+    // TODO: Submit tx
+    navigateTo.txSuccess()
+  }
 
   return (
     <View style={styles.root}>
@@ -52,7 +59,7 @@ export const ConfirmTxScreen = () => {
       <Spacer height={24} />
       <Text style={styles.secondaryText}>{strings.transactionDetails}</Text>
       <Spacer fill />
-      <Button title={strings.confirm} shelleyTheme />
+      <Button title={strings.confirm} shelleyTheme onPress={onSubmit} />
     </View>
   )
 }

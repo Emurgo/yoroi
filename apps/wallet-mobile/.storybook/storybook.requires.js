@@ -137,6 +137,7 @@ const getStories = () => {
     "./src/features/Staking/Governance/useCases/ChangeVote/ChangeVoteScreen.stories.tsx": require("../src/features/Staking/Governance/useCases/ChangeVote/ChangeVoteScreen.stories.tsx"),
     "./src/features/Staking/Governance/useCases/ConfirmTx/ConfirmTxScreen.stories.tsx": require("../src/features/Staking/Governance/useCases/ConfirmTx/ConfirmTxScreen.stories.tsx"),
     "./src/features/Staking/Governance/useCases/Home/HomeScreen.stories.tsx": require("../src/features/Staking/Governance/useCases/Home/HomeScreen.stories.tsx"),
+    "./src/features/Staking/Governance/useCases/SuccessTx/SuccessTxScreen.stories.tsx": require("../src/features/Staking/Governance/useCases/SuccessTx/SuccessTxScreen.stories.tsx"),
     "./src/features/Swap/common/AmountCard/AmountCard.stories.tsx": require("../src/features/Swap/common/AmountCard/AmountCard.stories.tsx"),
     "./src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx": require("../src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx"),
     "./src/features/Swap/common/ConfirmRawTx/ConfirmRawTx.stories.tsx": require("../src/features/Swap/common/ConfirmRawTx/ConfirmRawTx.stories.tsx"),
