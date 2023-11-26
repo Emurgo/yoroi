@@ -32,6 +32,7 @@ export const useStrings = () => {
       intl.formatMessage(messages.actionYouHaveSelectedTxPending, {...formattingOptions, action}),
     actionYouHaveSelected: (action: string, formattingOptions: FormattingOptions) =>
       intl.formatMessage(messages.actionYouHaveSelected, {...formattingOptions, action}),
+    changeDRep: intl.formatMessage(messages.changeDRep),
   }
 }
 
@@ -144,5 +145,9 @@ const messages = defineMessages({
     id: 'components.governance.actionYouHaveSelected',
     defaultMessage:
       '!!!You have selected <b>{action}</b> as your governance status. You can change it at any time by clicking in the card below.',
+  },
+  changeDRep: {
+    id: 'components.governance.changeDRep',
+    defaultMessage: '!!!Change DRep',
   },
 })

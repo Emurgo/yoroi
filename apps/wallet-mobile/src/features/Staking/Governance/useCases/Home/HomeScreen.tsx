@@ -1,14 +1,13 @@
 import {isNonNullable, isString} from '@yoroi/common'
-import {parseActionFromMetadata, useLatestGovernanceAction} from '@yoroi/staking'
+import {useLatestGovernanceAction} from '@yoroi/staking'
 import React, {ReactNode, useMemo} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
+import {Action, LearnMoreLink, useNavigateTo, useStrings, getVotingActionsFromTxInfos} from '../../common'
 import {UserAction} from '../../types'
-import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
@@ -175,12 +174,6 @@ const NeverParticipatedInGovernanceVariant = () => {
       <Spacer height={24} />
     </View>
   )
-}
-
-const getVotingActionsFromTxInfos = (txInfos: Record<string, TransactionInfo>) => {
-  return Object.values(txInfos)
-    .map((i) => parseActionFromMetadata(i.metadata))
-    .filter(isNonNullable)
 }
 
 const styles = StyleSheet.create({
