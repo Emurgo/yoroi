@@ -1,11 +1,12 @@
 import {storiesOf} from '@storybook/react-native'
-import React from 'react'
-import {ChangeVoteScreen} from './ChangeVoteScreen'
-import {mocks} from '../../../../../yoroi-wallets/mocks'
 import {GovernanceManager, GovernanceProvider} from '@yoroi/staking'
-import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
+import React from 'react'
+
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
+import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
+import {mocks} from '../../../../../yoroi-wallets/mocks'
 import {mocks as governanceMocks} from '../../common'
+import {ChangeVoteScreen} from './ChangeVoteScreen'
 
 storiesOf('Governance/ChangeVoteScreen', module)
   .add('When Delegated', () => {

@@ -1,27 +1,28 @@
 import {GovernanceManager} from '@yoroi/staking'
+
 import {mockTransactionInfos} from '../../../../yoroi-wallets/mocks'
 
 const governanceManager: GovernanceManager = {
-  createDelegationCertificate: async () => {
-    throw new Error('mock not implemented')
+  createDelegationCertificate: () => {
+    return Promise.reject(new Error('mock not implemented'))
   },
-  createLedgerDelegationPayload: async () => {
-    throw new Error('mock not implemented')
+  createLedgerDelegationPayload: () => {
+    return Promise.reject(new Error('mock not implemented'))
   },
-  getLatestGovernanceAction: async () => {
-    throw new Error('mock not implemented')
+  getLatestGovernanceAction: () => {
+    return Promise.reject(new Error('mock not implemented'))
   },
-  setLatestGovernanceAction: async () => {
-    throw new Error('mock not implemented')
+  setLatestGovernanceAction: () => {
+    return Promise.reject(new Error('mock not implemented'))
   },
-  createLedgerVotingPayload: async () => {
-    throw new Error('mock not implemented')
+  createLedgerVotingPayload: () => {
+    return Promise.reject(new Error('mock not implemented'))
   },
-  validateDRepID: async () => {
-    throw new Error('mock not implemented')
+  validateDRepID: () => {
+    return Promise.reject(new Error('mock not implemented'))
   },
-  createVotingCertificate: async () => {
-    throw new Error('mock not implemented')
+  createVotingCertificate: () => {
+    return Promise.reject(new Error('mock not implemented'))
   },
 }
 

@@ -1,13 +1,13 @@
 import {storiesOf} from '@storybook/react-native'
+import {GovernanceManager, GovernanceProvider} from '@yoroi/staking'
 import React from 'react'
 
-import {HomeScreen} from './HomeScreen'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
-import {mocks} from '../../../../../yoroi-wallets/mocks'
-import {GovernanceProvider, GovernanceManager} from '@yoroi/staking'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
+import {mocks} from '../../../../../yoroi-wallets/mocks'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {mocks as governanceMocks} from '../../common'
+import {HomeScreen} from './HomeScreen'
 
 storiesOf('Governance/HomeScreen', module)
   .add('Default', () => (

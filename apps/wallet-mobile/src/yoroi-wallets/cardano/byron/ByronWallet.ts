@@ -734,7 +734,7 @@ export class ByronWallet implements YoroiWallet {
       .then((a) => a.toAddress())
       .then((a) => a.toBech32())
 
-    return await this.createUnsignedTx([{address: address, amounts: {[this.primaryTokenInfo.id]: Quantities.zero}}])
+    return this.createUnsignedTx([{address: address, amounts: {[this.primaryTokenInfo.id]: Quantities.zero}}])
   }
 
   async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {

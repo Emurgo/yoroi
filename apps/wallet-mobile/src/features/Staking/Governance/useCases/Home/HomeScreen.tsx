@@ -6,7 +6,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {Spacer} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {Action, LearnMoreLink, useNavigateTo, useStrings, getVotingActionsFromTxInfos} from '../../common'
+import {Action, getVotingActionsFromTxInfos, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {GovernanceVote} from '../../types'
 
 export const HomeScreen = () => {
@@ -133,7 +133,7 @@ const NeverParticipatedInGovernanceVariant = () => {
     useErrorBoundary: true,
   })
 
-  //TODO: delegate / drep id flow to be confirmed
+  // TODO: delegate / drep id flow to be confirmed
   const handleDelegate = async () => {
     const drepID = 'c1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758'
     const stakingKey = await wallet.getStakingKey()

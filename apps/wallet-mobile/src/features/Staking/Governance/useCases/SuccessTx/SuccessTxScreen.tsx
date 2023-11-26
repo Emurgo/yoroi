@@ -1,8 +1,9 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {SuccessTxImage} from './SuccessTxImage'
+
 import {Button, Spacer, Text} from '../../../../../components'
 import {useNavigateTo, useStrings} from '../../common'
+import {SuccessTxImage} from './SuccessTxImage'
 
 export const SuccessTxScreen = () => {
   const strings = useStrings()
@@ -15,17 +16,27 @@ export const SuccessTxScreen = () => {
   return (
     <View style={styles.root}>
       <Spacer fill />
+
       <View style={styles.center}>
         <SuccessTxImage />
+
         <Spacer height={24} />
+
         <Text style={styles.title}>{strings.thankYouForParticipating}</Text>
+
         <Spacer height={16} />
+
         <Text style={styles.description}>{strings.thisTransactionCanTakeAWhile}</Text>
+
         <Spacer height={16} />
+
         <Text style={styles.description}>{strings.participationBenefits}</Text>
       </View>
+
       <Spacer fill />
+
       <Button title={strings.goToGovernance} shelleyTheme onPress={onPress} />
+
       <Spacer height={24} />
     </View>
   )

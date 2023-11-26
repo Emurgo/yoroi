@@ -1,10 +1,11 @@
+import {useVotingCertificate} from '@yoroi/staking'
 import React, {useMemo} from 'react'
+import {StyleSheet, Text, View} from 'react-native'
+
+import {Spacer} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {Action, getVotingActionsFromTxInfos, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
-import {StyleSheet, Text, View} from 'react-native'
-import {Spacer} from '../../../../../components'
-import {useVotingCertificate} from '@yoroi/staking'
 
 export const ChangeVoteScreen = () => {
   const strings = useStrings()
@@ -19,7 +20,7 @@ export const ChangeVoteScreen = () => {
 
   if (!lastVotingAction) throw new Error('User has never voted')
 
-  //TODO: delegate / drep id flow to be confirmed
+  // TODO: delegate / drep id flow to be confirmed
   const handleDelegate = async () => {
     const stakingKey = await wallet.getStakingKey()
     createCertificate(
@@ -33,7 +34,7 @@ export const ChangeVoteScreen = () => {
     )
   }
 
-  //TODO: delegate / drep id flow to be confirmed
+  // TODO: delegate / drep id flow to be confirmed
   const handleChangeDelegation = async () => {
     const stakingKey = await wallet.getStakingKey()
     createCertificate(

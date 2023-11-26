@@ -1,14 +1,15 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+
 import {Button, Spacer} from '../../../../../components'
-import {useNavigateTo, useStrings} from '../../common'
-import {useUnsafeParams} from '../../../../../navigation'
-import {Routes} from '../../common/navigation'
 import {Text} from '../../../../../components'
-import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {formatTokenWithText} from '../../../../../legacy/format'
-import {Amounts} from '../../../../../yoroi-wallets/utils'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
+import {formatTokenWithText} from '../../../../../legacy/format'
+import {useUnsafeParams} from '../../../../../navigation'
+import {useSelectedWallet} from '../../../../../SelectedWallet'
+import {Amounts} from '../../../../../yoroi-wallets/utils'
+import {useNavigateTo, useStrings} from '../../common'
+import {Routes} from '../../common/navigation'
 
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
@@ -43,22 +44,33 @@ export const ConfirmTxScreen = () => {
   return (
     <View style={styles.root}>
       <Text style={styles.primaryText}>{title}</Text>
+
       <Spacer height={4} />
+
       <Text style={styles.secondaryText}>{description}</Text>
+
       <Spacer height={24} />
+
       <View style={styles.totalsArea}>
         <View style={styles.row}>
           <Text style={styles.total}>{strings.total}</Text>
+
           <Text style={styles.totalValue}>{feeText}</Text>
         </View>
+
         <View style={styles.row}>
           <Text style={styles.total} />
+
           <PairedBalance amount={feeAmount} textStyle={styles.fiatValue} />
         </View>
       </View>
+
       <Spacer height={24} />
+
       <Text style={styles.secondaryText}>{strings.transactionDetails}</Text>
+
       <Spacer fill />
+
       <Button title={strings.confirm} shelleyTheme onPress={onSubmit} />
     </View>
   )
