@@ -94,9 +94,9 @@ describe('Governance Translators React', () => {
       .derive(2)
       .then((x) => x.derive(0))
       .then((x) => x.toRawKey())
-    const {result} = renderHook(
-      () => useDelegationCertificate({drepID: 'drepId', stakingKey}),
-      {wrapper},
+    const {result} = renderHook(() => useDelegationCertificate(), {wrapper})
+    await waitFor(() =>
+      result.current.createCertificate({drepID: 'drepId', stakingKey}),
     )
     await waitFor(() => result.current.isSuccess)
     expect(manager.createDelegationCertificate).toHaveBeenCalledWith(
@@ -119,9 +119,9 @@ describe('Governance Translators React', () => {
       .derive(2)
       .then((x) => x.derive(0))
       .then((x) => x.toRawKey())
-    const {result} = renderHook(
-      () => useVotingCertificate({vote: 'no-confidence', stakingKey}),
-      {wrapper},
+    const {result} = renderHook(() => useVotingCertificate(), {wrapper})
+    await waitFor(() =>
+      result.current.createCertificate({vote: 'no-confidence', stakingKey}),
     )
     await waitFor(() => result.current.isSuccess)
     expect(manager.createVotingCertificate).toHaveBeenCalledWith(

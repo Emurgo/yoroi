@@ -728,6 +728,15 @@ export class ByronWallet implements YoroiWallet {
     return Promise.reject(new Error('Method not implemented.'))
   }
 
+  // TODO: This will come from yoroi lib
+  async createUnsignedGovernanceTx(_votingCertificate: CardanoTypes.Certificate) {
+    const address = await this.getFirstPaymentAddress()
+      .then((a) => a.toAddress())
+      .then((a) => a.toBech32())
+
+    return await this.createUnsignedTx([{address: address, amounts: {[this.primaryTokenInfo.id]: Quantities.zero}}])
+  }
+
   async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
     const masterKey = await CardanoMobile.Bip32PrivateKey.fromBytes(Buffer.from(decryptedMasterKey, 'hex'))
     const accountPrivateKey = await masterKey

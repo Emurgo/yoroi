@@ -1,11 +1,13 @@
 import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator, StackNavigationProp} from '@react-navigation/stack'
 import {useRef} from 'react'
+import {GovernanceVote} from '../types'
+import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 
 type Routes = {
   home: undefined
   'change-vote': undefined
-  'confirm-tx': undefined
+  'confirm-tx': {vote: GovernanceVote; unsignedTx: YoroiUnsignedTx}
   'tx-success': undefined
   'tx-failed': undefined
 }
@@ -17,7 +19,7 @@ export const useNavigateTo = () => {
   return useRef({
     home: () => navigation.navigate('home'),
     changeVote: () => navigation.navigate('change-vote'),
-    confirmTx: () => navigation.navigate('confirm-tx'),
+    confirmTx: (params: Routes['confirm-tx']) => navigation.navigate('confirm-tx', params),
     txSuccess: () => navigation.navigate('tx-success'),
     txFailed: () => navigation.navigate('tx-failed'),
   }).current

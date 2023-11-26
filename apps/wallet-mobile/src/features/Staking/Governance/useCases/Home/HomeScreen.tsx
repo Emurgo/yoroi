@@ -1,5 +1,5 @@
 import {isNonNullable, isString} from '@yoroi/common'
-import {useLatestGovernanceAction} from '@yoroi/staking'
+import {useLatestGovernanceAction, useVotingCertificate} from '@yoroi/staking'
 import React, {ReactNode, useMemo} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
@@ -7,7 +7,7 @@ import {Spacer} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {Action, LearnMoreLink, useNavigateTo, useStrings, getVotingActionsFromTxInfos} from '../../common'
-import {UserAction} from '../../types'
+import {GovernanceVote} from '../../types'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
@@ -23,16 +23,16 @@ export const HomeScreen = () => {
 
   if (isTxPending && isNonNullable(lastSubmittedTx)) {
     if (lastSubmittedTx.kind === 'delegate-to-drep') {
-      const action: UserAction = {kind: 'delegate', drepID: lastSubmittedTx.drepID}
+      const action: GovernanceVote = {kind: 'delegate', drepID: lastSubmittedTx.drepID}
       return <ParticipatingInGovernanceVariant action={action} isTxPending />
     }
     if (lastSubmittedTx.kind === 'vote' && lastSubmittedTx.vote === 'abstain') {
-      const action: UserAction = {kind: 'abstain'}
+      const action: GovernanceVote = {kind: 'abstain'}
       return <ParticipatingInGovernanceVariant action={action} isTxPending />
     }
 
     if (lastSubmittedTx.kind === 'vote' && lastSubmittedTx.vote === 'no-confidence') {
-      const action: UserAction = {kind: 'no-confidence'}
+      const action: GovernanceVote = {kind: 'no-confidence'}
       return <ParticipatingInGovernanceVariant action={action} isTxPending />
     }
   }
@@ -43,7 +43,7 @@ export const HomeScreen = () => {
   return <NeverParticipatedInGovernanceVariant />
 }
 
-const ParticipatingInGovernanceVariant = ({action, isTxPending}: {action: UserAction; isTxPending: boolean}) => {
+const ParticipatingInGovernanceVariant = ({action, isTxPending}: {action: GovernanceVote; isTxPending: boolean}) => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
 
@@ -123,20 +123,48 @@ const ParticipatingInGovernanceVariant = ({action, isTxPending}: {action: UserAc
 const NeverParticipatedInGovernanceVariant = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
+  const wallet = useSelectedWallet()
 
-  const handleDelegateToADRep = () => {
-    // TODO: Create a tx
-    navigateTo.confirmTx()
+  const {createCertificate} = useVotingCertificate()
+
+  //TODO: delegate / drep id flow to be confirmed
+  const handleDelegate = async () => {
+    const stakingKey = await wallet.getStakingKey()
+    createCertificate(
+      {vote: 'abstain', stakingKey},
+      {
+        onSuccess: async (certificate) => {
+          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+          navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID: ''}})
+        },
+      },
+    )
   }
 
-  const handleAbstain = () => {
-    // TODO: Create a tx
-    navigateTo.confirmTx()
+  const handleAbstain = async () => {
+    const stakingKey = await wallet.getStakingKey()
+    createCertificate(
+      {vote: 'abstain', stakingKey},
+      {
+        onSuccess: async (certificate) => {
+          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+          navigateTo.confirmTx({unsignedTx, vote: {kind: 'abstain'}})
+        },
+      },
+    )
   }
 
-  const handleNoConfidence = () => {
-    // TODO: Create a tx
-    navigateTo.confirmTx()
+  const handleNoConfidence = async () => {
+    const stakingKey = await wallet.getStakingKey()
+    createCertificate(
+      {vote: 'no-confidence', stakingKey},
+      {
+        onSuccess: async (certificate) => {
+          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+          navigateTo.confirmTx({unsignedTx, vote: {kind: 'no-confidence'}})
+        },
+      },
+    )
   }
 
   return (
@@ -151,7 +179,7 @@ const NeverParticipatedInGovernanceVariant = () => {
         <Action
           title={strings.actionDelegateToADRepTitle}
           description={strings.actionDelegateToADRepDescription}
-          onPress={handleDelegateToADRep}
+          onPress={handleDelegate}
         />
 
         <Action

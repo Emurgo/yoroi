@@ -4,6 +4,7 @@ import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {Action, getVotingActionsFromTxInfos, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {StyleSheet, Text, View} from 'react-native'
 import {Spacer} from '../../../../../components'
+import {useVotingCertificate} from '@yoroi/staking'
 
 export const ChangeVoteScreen = () => {
   const strings = useStrings()
@@ -12,26 +13,64 @@ export const ChangeVoteScreen = () => {
   const txInfos = useTransactionInfos(wallet)
   const votingActions = useMemo(() => getVotingActionsFromTxInfos(txInfos), [txInfos])
   const lastVotingAction = votingActions.length > 0 ? votingActions[votingActions.length - 1] : null
+  const {createCertificate} = useVotingCertificate({
+    useErrorBoundary: true,
+  })
 
   if (!lastVotingAction) throw new Error('User has never voted')
-  const handleDelegate = () => {
-    // TODO: Create a tx
-    navigateTo.confirmTx()
+
+  //TODO: delegate / drep id flow to be confirmed
+  const handleDelegate = async () => {
+    const stakingKey = await wallet.getStakingKey()
+    createCertificate(
+      {vote: 'abstain', stakingKey},
+      {
+        onSuccess: async (certificate) => {
+          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+          navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID: ''}})
+        },
+      },
+    )
   }
 
-  const handleChangeDelegation = () => {
-    // TODO: Create a tx
-    navigateTo.confirmTx()
+  //TODO: delegate / drep id flow to be confirmed
+  const handleChangeDelegation = async () => {
+    const stakingKey = await wallet.getStakingKey()
+    createCertificate(
+      {vote: 'abstain', stakingKey},
+      {
+        onSuccess: async (certificate) => {
+          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+          navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID: ''}})
+        },
+      },
+    )
   }
 
-  const handleAbstain = () => {
-    // TODO: Create a tx
-    navigateTo.confirmTx()
+  const handleAbstain = async () => {
+    const stakingKey = await wallet.getStakingKey()
+    createCertificate(
+      {vote: 'abstain', stakingKey},
+      {
+        onSuccess: async (certificate) => {
+          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+          navigateTo.confirmTx({unsignedTx, vote: {kind: 'abstain'}})
+        },
+      },
+    )
   }
 
-  const handleNoConfidence = () => {
-    // TODO: Create a tx
-    navigateTo.confirmTx()
+  const handleNoConfidence = async () => {
+    const stakingKey = await wallet.getStakingKey()
+    createCertificate(
+      {vote: 'no-confidence', stakingKey},
+      {
+        onSuccess: async (certificate) => {
+          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+          navigateTo.confirmTx({unsignedTx, vote: {kind: 'no-confidence'}})
+        },
+      },
+    )
   }
 
   const voteKind = lastVotingAction.kind

@@ -100,9 +100,26 @@ class Manager implements GovernanceManager {
 
   async createVotingCertificate(
     _vote: VoteKind,
-    _stakingKey: CardanoTypes.PublicKey,
+    stakingKey: CardanoTypes.PublicKey,
   ): Promise<CardanoTypes.Certificate> {
-    throw new Error('Not implemented')
+    // TODO: will come from yoroi-lib
+    const {Certificate, Ed25519KeyHash, StakeDelegation, StakeCredential} =
+      this.config.cardano
+
+    const credential = await StakeCredential.fromKeyhash(
+      await stakingKey.hash(),
+    )
+    return await Certificate.newStakeDelegation(
+      await StakeDelegation.new(
+        credential,
+        await Ed25519KeyHash.fromBytes(
+          Buffer.from(
+            'drep1wdt7ryc567pauvc5a93rt5mnzpx6y2rh6mvtu5phehmj5lkqjgx',
+            'hex',
+          ),
+        ),
+      ),
+    )
   }
 
   async createLedgerVotingPayload(
