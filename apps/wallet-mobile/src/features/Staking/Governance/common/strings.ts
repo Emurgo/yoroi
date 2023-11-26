@@ -36,6 +36,9 @@ export const useStrings = () => {
     confirm: intl.formatMessage(messages.confirm),
     transactionDetails: intl.formatMessage(messages.transactionDetails),
     total: intl.formatMessage(messages.total),
+    transactionFailed: intl.formatMessage(messages.transactionFailed),
+    transactionFailedDescription: intl.formatMessage(messages.transactionFailedDescription),
+    tryAgain: intl.formatMessage(messages.tryAgain),
   }
 }
 
@@ -164,5 +167,17 @@ const messages = defineMessages({
   total: {
     id: 'components.governance.total',
     defaultMessage: '!!!Total',
+  },
+  transactionFailed: {
+    id: 'components.governance.transactionFailed',
+    defaultMessage: '!!!Transaction failed',
+  },
+  transactionFailedDescription: {
+    id: 'components.governance.transactionFailedDescription',
+    defaultMessage: '!!!Your transaction has not been processed properly due to technical issues',
+  },
+  tryAgain: {
+    id: 'components.governance.tryAgain',
+    defaultMessage: '!!!Try again',
   },
 })
