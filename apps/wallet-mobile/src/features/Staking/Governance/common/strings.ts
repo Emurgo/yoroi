@@ -1,4 +1,5 @@
 import {defineMessages, useIntl} from 'react-intl'
+import {ReactNode} from 'react'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -27,8 +28,14 @@ export const useStrings = () => {
     goToGovernance: intl.formatMessage(messages.goToGovernance),
     findDRepHere: intl.formatMessage(messages.findDRepHere),
     reviewActions: intl.formatMessage(messages.reviewActions),
+    actionYouHaveSelectedTxPending: (action: string, formattingOptions: FormattingOptions) =>
+      intl.formatMessage(messages.actionYouHaveSelectedTxPending, {...formattingOptions, action}),
+    actionYouHaveSelected: (action: string, formattingOptions: FormattingOptions) =>
+      intl.formatMessage(messages.actionYouHaveSelected, {...formattingOptions, action}),
   }
 }
+
+type FormattingOptions = Record<'b' | 'textComponent', (text: ReactNode[]) => ReactNode>
 
 const messages = defineMessages({
   governanceCentreTitle: {
@@ -128,5 +135,14 @@ const messages = defineMessages({
   reviewActions: {
     id: 'components.governance.reviewActions',
     defaultMessage: '!!!Review the selections carefully to assign yourself a Governance Status',
+  },
+  actionYouHaveSelectedTxPending: {
+    id: 'components.governance.actionYouHaveSelectedTxPending',
+    defaultMessage: '!!!You have selected <b>{action}</b> as your governance status.',
+  },
+  actionYouHaveSelected: {
+    id: 'components.governance.actionYouHaveSelected',
+    defaultMessage:
+      '!!!You have selected <b>{action}</b> as your governance status. You can change it at any time by clicking in the card below.',
   },
 })
