@@ -8,9 +8,16 @@ import {StatusBar} from '../../../components'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {COLORS} from '../../../theme'
 import {CardanoMobile} from '../../../yoroi-wallets/wallets'
+import {defaultStackNavigationOptions} from '../../../navigation'
+
+import {NavigationStack, useStrings} from './common'
+import {HomeScreen, ConfirmTxScreen, SuccessTxScreen, FailedTxScreen, ChangeVoteScreen} from './useCases'
+
+const Stack = NavigationStack
 
 export const GovernanceNavigator = () => {
   const {networkId} = useSelectedWallet()
+  const strings = useStrings()
   const manager = useMemo(
     () =>
       governanceManagerMaker({
@@ -23,11 +30,33 @@ export const GovernanceNavigator = () => {
   )
   return (
     <GovernanceProvider manager={manager}>
+      <StatusBar type="dark" />
       <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-        <StatusBar type="light" />
+        <Stack.Navigator screenOptions={screenOptions}>
+          <Stack.Screen name="home" component={HomeScreen} options={{title: strings.governanceCentreTitle}} />
+          <Stack.Screen
+            name="change-vote"
+            component={ChangeVoteScreen}
+            options={{title: strings.governanceCentreTitle}}
+          />
+          <Stack.Screen name="confirm-tx" component={ConfirmTxScreen} options={{title: strings.confirmTxTitle}} />
+          <Stack.Screen name="tx-success" component={SuccessTxScreen} options={txStatusOptions} />
+          <Stack.Screen name="tx-failed" component={FailedTxScreen} options={txStatusOptions} />
+        </Stack.Navigator>
       </SafeAreaView>
     </GovernanceProvider>
   )
+}
+
+const txStatusOptions = {
+  detachPreviousScreen: true,
+  header: () => null,
+}
+
+const screenOptions = {
+  ...defaultStackNavigationOptions,
+  detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+  gestureEnabled: true,
 }
 
 const styles = StyleSheet.create({

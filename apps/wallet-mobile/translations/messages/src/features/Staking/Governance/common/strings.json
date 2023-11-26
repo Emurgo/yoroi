@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.governance.governanceCentreTitle",
+    "defaultMessage": "!!!Governance centre",
+    "file": "src/features/Staking/Governance/common/strings.ts",
+    "start": {
+      "line": 12,
+      "column": 25,
+      "index": 332
+    },
+    "end": {
+      "line": 15,
+      "column": 3,
+      "index": 436
+    }
+  },
+  {
+    "id": "components.governance.confirmTxTitle",
+    "defaultMessage": "!!!Confirm transaction",
+    "file": "src/features/Staking/Governance/common/strings.ts",
+    "start": {
+      "line": 16,
+      "column": 18,
+      "index": 456
+    },
+    "end": {
+      "line": 19,
+      "column": 3,
+      "index": 555
+    }
+  }
+]
