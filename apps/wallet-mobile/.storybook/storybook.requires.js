@@ -134,6 +134,7 @@ const getStories = () => {
     "./src/features/Settings/WalletSettings/WalletSettingsScreen.stories.tsx": require("../src/features/Settings/WalletSettings/WalletSettingsScreen.stories.tsx"),
     "./src/features/Staking/Governance/common/Action/Action.stories.tsx": require("../src/features/Staking/Governance/common/Action/Action.stories.tsx"),
     "./src/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink.stories.tsx": require("../src/features/Staking/Governance/common/LearnMoreLink/LearnMoreLink.stories.tsx"),
+    "./src/features/Staking/Governance/useCases/Home/HomeScreen.stories.tsx": require("../src/features/Staking/Governance/useCases/Home/HomeScreen.stories.tsx"),
     "./src/features/Swap/common/AmountCard/AmountCard.stories.tsx": require("../src/features/Swap/common/AmountCard/AmountCard.stories.tsx"),
     "./src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx": require("../src/features/Swap/common/ButtonGroup/ButtonGroup.stories.tsx"),
     "./src/features/Swap/common/ConfirmRawTx/ConfirmRawTx.stories.tsx": require("../src/features/Swap/common/ConfirmRawTx/ConfirmRawTx.stories.tsx"),

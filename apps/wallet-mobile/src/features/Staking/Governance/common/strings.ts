@@ -1,5 +1,5 @@
-import {defineMessages, useIntl} from 'react-intl'
 import {ReactNode} from 'react'
+import {defineMessages, useIntl} from 'react-intl'
 
 export const useStrings = () => {
   const intl = useIntl()

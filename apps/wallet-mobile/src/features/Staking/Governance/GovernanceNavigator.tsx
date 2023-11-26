@@ -5,13 +5,12 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {StatusBar} from '../../../components'
+import {defaultStackNavigationOptions} from '../../../navigation'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {COLORS} from '../../../theme'
 import {CardanoMobile} from '../../../yoroi-wallets/wallets'
-import {defaultStackNavigationOptions} from '../../../navigation'
-
 import {NavigationStack, useStrings} from './common'
-import {HomeScreen, ConfirmTxScreen, SuccessTxScreen, FailedTxScreen, ChangeVoteScreen} from './useCases'
+import {ChangeVoteScreen, ConfirmTxScreen, FailedTxScreen, HomeScreen, SuccessTxScreen} from './useCases'
 
 const Stack = NavigationStack
 
@@ -31,16 +30,21 @@ export const GovernanceNavigator = () => {
   return (
     <GovernanceProvider manager={manager}>
       <StatusBar type="dark" />
+
       <SafeAreaView edges={safeAreaEdges} style={styles.root}>
         <Stack.Navigator screenOptions={screenOptions}>
           <Stack.Screen name="home" component={HomeScreen} options={{title: strings.governanceCentreTitle}} />
+
           <Stack.Screen
             name="change-vote"
             component={ChangeVoteScreen}
             options={{title: strings.governanceCentreTitle}}
           />
+
           <Stack.Screen name="confirm-tx" component={ConfirmTxScreen} options={{title: strings.confirmTxTitle}} />
+
           <Stack.Screen name="tx-success" component={SuccessTxScreen} options={txStatusOptions} />
+
           <Stack.Screen name="tx-failed" component={FailedTxScreen} options={txStatusOptions} />
         </Stack.Navigator>
       </SafeAreaView>

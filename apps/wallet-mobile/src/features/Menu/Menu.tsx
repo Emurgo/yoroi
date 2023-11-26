@@ -10,10 +10,10 @@ import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../../components'
 import {Hr} from '../../components/Hr'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
+import {CONFIG} from '../../legacy/config'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {lightPalette} from '../../theme'
-import {CONFIG} from '../../legacy/config'
 
 const MenuStack = createStackNavigator()
 

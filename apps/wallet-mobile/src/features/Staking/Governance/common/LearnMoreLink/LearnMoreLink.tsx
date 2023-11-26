@@ -1,8 +1,9 @@
 import React from 'react'
 import {Linking, StyleSheet, TouchableOpacity} from 'react-native'
+
+import {Text} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
 import {useStrings} from '../strings'
-import {Text} from '../../../../../components'
 
 // TODO: replace with real link
 const LEARN_MORE_LINK = 'https://google.com'

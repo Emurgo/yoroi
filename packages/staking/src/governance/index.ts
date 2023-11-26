@@ -1,4 +1,4 @@
-export {governanceManagerMaker} from './manager'
+export {governanceManagerMaker, GovernanceManager} from './manager'
 export {
   useLatestGovernanceAction,
   useGovernance,
@@ -7,3 +7,4 @@ export {
   useIsValidDRepID,
 } from './translators/react'
 export {governanceApiMaker} from './api'
+export {parseActionFromMetadata} from './helpers'

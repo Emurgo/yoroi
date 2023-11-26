@@ -1,5 +1,6 @@
 import {Ada} from './Ada'
 import {Analytics} from './Analytics'
+import {ArrowRight} from './ArrowRight'
 import {Assets} from './Assets'
 import {Bio} from './Bio'
 import {Bug} from './Bug'
@@ -103,7 +104,6 @@ import {WalletStack} from './WalletStack'
 import {WingRiders} from './WingRiders'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
-import {ArrowRight} from './ArrowRight'
 
 export const Icon = {
   Ada,

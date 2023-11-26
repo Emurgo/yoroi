@@ -1,7 +1,9 @@
+import {isNonNullable} from '@yoroi/common'
+import React, {ReactNode} from 'react'
 import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import {Spacer, Text, Icon} from '../../../../../components'
-import React, {ReactNode} from 'react'
+
+import {Icon, Spacer, Text} from '../../../../../components'
 
 type Props = {
   title: string
@@ -21,13 +23,22 @@ export const Action = ({title, description, onPress, pending, children, showRigh
             <ActivityIndicator color="black" size="small" />
           </View>
         )}
-        {showRightArrow && <View style={styles.icon}>{<Icon.ArrowRight size={24} />}</View>}
+
+        {showRightArrow && (
+          <View style={styles.icon}>
+            <Icon.ArrowRight size={24} />
+          </View>
+        )}
+
         <View style={styles.root}>
           <Text style={styles.title}>{title}</Text>
+
           <Text style={styles.description}>{description}</Text>
-          {children && (
+
+          {isNonNullable(children) && (
             <>
               <Spacer height={16} />
+
               {children}
             </>
           )}
