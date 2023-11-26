@@ -135,13 +135,14 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   //TODO: delegate / drep id flow to be confirmed
   const handleDelegate = async () => {
+    const drepID = 'c1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758'
     const stakingKey = await wallet.getStakingKey()
     createDelegationCertificate(
-      {drepID: 'c1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758', stakingKey},
+      {drepID, stakingKey},
       {
         onSuccess: async (certificate) => {
           const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
-          navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID: ''}})
+          navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID}})
         },
       },
     )
