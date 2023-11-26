@@ -1,8 +1,9 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {useNavigateTo, useStrings} from '../../common'
+
 import {Button, Spacer} from '../../../../../components'
 import {Text} from '../../../../../components'
+import {useNavigateTo, useStrings} from '../../common'
 import {FailedTxImage} from './FailedTxImage'
 
 export const FailedTxScreen = () => {
