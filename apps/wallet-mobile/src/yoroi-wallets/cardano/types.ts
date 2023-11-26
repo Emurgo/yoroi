@@ -156,10 +156,8 @@ export type YoroiWallet = {
   // Sync, Save
   resync(): Promise<void>
   clear(): Promise<void>
-  tryDoFullSync(): Promise<void>
   save(): Promise<void>
   sync(): Promise<void>
-  startSync: () => void
   stopSync: () => void
   saveMemo(txId: string, memo: string): Promise<void>
 
@@ -248,10 +246,8 @@ const yoroiWalletKeys: Array<keyof YoroiWallet> = [
   // Sync, Save
   'resync',
   'clear',
-  'tryDoFullSync',
   'save',
   'sync',
-  'startSync',
   'stopSync',
   'saveMemo',
 

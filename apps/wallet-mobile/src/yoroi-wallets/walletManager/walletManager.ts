@@ -168,7 +168,7 @@ export class WalletManager {
     })
 
     wallet.subscribe((event) => this._notify(event as any))
-    wallet.startSync()
+    await wallet.sync()
 
     return wallet
   }

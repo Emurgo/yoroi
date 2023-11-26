@@ -213,9 +213,6 @@ const wallet: YoroiWallet = {
   saveMemo: async (...args) => {
     action('saveMemo')(...args)
   },
-  tryDoFullSync: async (...args) => {
-    action('tryDoFullSync')(...args)
-  },
   clear: async (...args) => {
     action('clear')(...args)
   },
@@ -250,9 +247,6 @@ const wallet: YoroiWallet = {
 
   fetchFundInfo: () => {
     throw new Error('not implemented: fetchFundInfo')
-  },
-  startSync: () => {
-    throw new Error('not implemented: start')
   },
   stopSync: () => {
     throw new Error('not implemented: stop')

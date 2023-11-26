@@ -50,13 +50,7 @@ import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
 import {signRawTransaction} from '../common/signatureUtils'
-import {
-  API_ROOT,
-  HISTORY_REFRESH_TIME,
-  MAX_GENERATED_UNUSED,
-  PRIMARY_TOKEN,
-  PRIMARY_TOKEN_INFO,
-} from '../constants/mainnet/constants'
+import {API_ROOT, MAX_GENERATED_UNUSED, PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../constants/mainnet/constants'
 import {CardanoError, InvalidState} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
 import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
@@ -68,7 +62,7 @@ import {
 } from '../networks'
 import {NUMBERS} from '../numbers'
 import {processTxHistoryData} from '../processTransactions'
-import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
+import {synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
 import {yoroiSignedTx} from '../signedTx'
 import {TransactionManager} from '../transactionManager'
@@ -380,25 +374,6 @@ export class ByronWallet implements YoroiWallet {
   }
 
   timeout: NodeJS.Timeout | null = null
-
-  startSync() {
-    Logger.info(`starting wallet: ${this.id}`)
-
-    const backgroundSync = async () => {
-      try {
-        await this.tryDoFullSync()
-        await this.save()
-      } catch (error) {
-        Logger.error((error as Error)?.message)
-      } finally {
-        if (process.env.NODE_ENV !== 'test') {
-          this.timeout = setTimeout(() => backgroundSync(), HISTORY_REFRESH_TIME)
-        }
-      }
-    }
-
-    backgroundSync()
-  }
 
   stopSync() {
     if (!this.timeout) return
@@ -1289,16 +1264,6 @@ export class ByronWallet implements YoroiWallet {
   }
 
   // =================== sync =================== //
-
-  async tryDoFullSync() {
-    try {
-      return await nonblockingSynchronize(this._doFullSyncMutex, () => this._doFullSync())
-    } catch (error) {
-      if (!(error instanceof IsLockedError)) {
-        throw error
-      }
-    }
-  }
 
   private async doFullSync() {
     return synchronize(this._doFullSyncMutex, () => this._doFullSync())

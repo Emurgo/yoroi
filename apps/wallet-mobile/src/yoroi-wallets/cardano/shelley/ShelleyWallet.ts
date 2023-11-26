@@ -53,7 +53,7 @@ import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
 import {getTime} from '../getTime'
 import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
 import {processTxHistoryData} from '../processTransactions'
-import {IsLockedError, nonblockingSynchronize, synchronize} from '../promise'
+import {synchronize} from '../promise'
 import {filterAddressesByStakingKey, getDelegationStatus} from '../shelley/delegationUtils'
 import {yoroiSignedTx} from '../signedTx'
 import {TransactionManager} from '../transactionManager'
@@ -108,7 +108,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     DISCOVERY_BLOCK_SIZE,
     DISCOVERY_GAP_SIZE,
     HARD_DERIVATION_START,
-    HISTORY_REFRESH_TIME,
     IS_MAINNET,
     KEY_DEPOSIT,
     LINEAR_FEE,
@@ -373,24 +372,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     }
 
     timeout: NodeJS.Timeout | null = null
-
-    startSync() {
-      Logger.info(`starting wallet: ${this.id}`)
-
-      const backgroundSync = async () => {
-        try {
-          await this.tryDoFullSync()
-          await this.save()
-        } catch (error) {
-          Logger.error((error as Error)?.message)
-        }
-        if (process.env.NODE_ENV !== 'test') {
-          this.timeout = setTimeout(() => backgroundSync(), HISTORY_REFRESH_TIME)
-        }
-      }
-
-      backgroundSync()
-    }
 
     stopSync() {
       if (!this.timeout) return
@@ -1193,16 +1174,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
     }
 
     // =================== sync =================== //
-
-    async tryDoFullSync() {
-      try {
-        return await nonblockingSynchronize(this._doFullSyncMutex, () => this._doFullSync())
-      } catch (error) {
-        if (!(error instanceof IsLockedError)) {
-          throw error
-        }
-      }
-    }
 
     private async doFullSync() {
       return synchronize(this._doFullSyncMutex, () => this._doFullSync())
