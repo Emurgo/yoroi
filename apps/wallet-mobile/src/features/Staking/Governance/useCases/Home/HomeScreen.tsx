@@ -1,5 +1,5 @@
 import {isNonNullable, isString} from '@yoroi/common'
-import {useLatestGovernanceAction, useVotingCertificate} from '@yoroi/staking'
+import {useDelegationCertificate, useLatestGovernanceAction, useVotingCertificate} from '@yoroi/staking'
 import React, {ReactNode, useMemo} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
@@ -125,13 +125,19 @@ const NeverParticipatedInGovernanceVariant = () => {
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
 
-  const {createCertificate} = useVotingCertificate()
+  const {createCertificate: createDelegationCertificate} = useDelegationCertificate({
+    useErrorBoundary: true,
+  })
+
+  const {createCertificate: createVotingCertificate} = useVotingCertificate({
+    useErrorBoundary: true,
+  })
 
   //TODO: delegate / drep id flow to be confirmed
   const handleDelegate = async () => {
     const stakingKey = await wallet.getStakingKey()
-    createCertificate(
-      {vote: 'abstain', stakingKey},
+    createDelegationCertificate(
+      {drepID: 'c1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758', stakingKey},
       {
         onSuccess: async (certificate) => {
           const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
@@ -143,7 +149,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleAbstain = async () => {
     const stakingKey = await wallet.getStakingKey()
-    createCertificate(
+    createVotingCertificate(
       {vote: 'abstain', stakingKey},
       {
         onSuccess: async (certificate) => {
@@ -156,7 +162,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleNoConfidence = async () => {
     const stakingKey = await wallet.getStakingKey()
-    createCertificate(
+    createVotingCertificate(
       {vote: 'no-confidence', stakingKey},
       {
         onSuccess: async (certificate) => {
