@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {governanceManagerMaker, GovernanceProvider, governanceApiMaker} from '@yoroi/staking'
+import {governanceApiMaker, governanceManagerMaker, GovernanceProvider} from '@yoroi/staking'
 import React, {useMemo} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'

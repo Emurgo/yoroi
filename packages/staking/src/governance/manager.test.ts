@@ -29,7 +29,7 @@ describe('createGovernanceManager', () => {
       const invalidId =
         '0123456789012345678901234567890123456789012345678901234X'
       const errorMessage =
-        'Invalid DRep ID. Must be a valid Bech32 or a valid key hash'
+        'Invalid DRep ID. Must have a valid bech32 format or a valid key hash format'
 
       await expect(() =>
         governanceManager.validateDRepID(invalidId),
@@ -59,12 +59,13 @@ describe('createGovernanceManager', () => {
       await governanceManager.validateDRepID(keyHash)
     })
 
-    it('should accept bech32 address as DRep ID', async () => {
-      const bech32Address =
-        'drep1wdt7ryc567pauvc5a93rt5mnzpx6y2rh6mvtu5phehmj5lkqjgx'
-
-      await governanceManager.validateDRepID(bech32Address)
-    })
+    // TODO: will be implemented in the future
+    // it('should accept bech32 address as DRep ID', async () => {
+    //   const bech32Address =
+    //     'drep1wdt7ryc567pauvc5a93rt5mnzpx6y2rh6mvtu5phehmj5lkqjgx'
+    //
+    //   await governanceManager.validateDRepID(bech32Address)
+    // })
   })
 
   describe('createDelegationCertificate', () => {

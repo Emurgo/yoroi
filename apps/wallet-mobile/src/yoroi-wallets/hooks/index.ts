@@ -6,16 +6,7 @@ import {App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
-import {
-  onlineManager,
-  QueryKey,
-  useMutation,
-  UseMutationOptions,
-  useQueries,
-  useQuery,
-  useQueryClient,
-  UseQueryOptions,
-} from 'react-query'
+import {onlineManager, useMutation, UseMutationOptions, useQueries, useQuery, UseQueryOptions} from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
 import {useWalletManager} from '../../WalletManager'
