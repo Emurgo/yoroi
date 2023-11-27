@@ -5,109 +5,116 @@ import * as React from 'react'
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import {Path, Svg} from 'react-native-svg'
 
-export const QRCodeScanner = ({
-  onRead,
-  withMask,
-  maskText = '',
-}: {
-  onRead: (event: BarCodeScannerResult) => Promise<boolean>
+export type CameraCodeScannerMethods = {
+  continueScanning: () => void
+  stopScanning: () => void
+}
+export type CameraCodeScannerProps = {
+  onRead: (event: BarCodeScannerResult) => void
   withMask?: boolean
   maskText?: string
-}) => {
-  const [status, requestPermissions] = Camera.useCameraPermissions()
-  const {height: deviceHeight, width: deviceWidth} = useWindowDimensions()
-  const [qrScanned, setQrScanned] = React.useState(false)
-
-  const scannerBounds = getScannerBounds({deviceHeight, deviceWidth})
-  const granted = status && status.granted
-
-  useFocusEffect(
-    React.useCallback(() => {
-      if (qrScanned) setQrScanned(false)
-    }, [qrScanned]),
-  )
-
-  React.useEffect(() => {
-    if (!granted) {
-      requestPermissions()
-    }
-  }, [granted, requestPermissions])
-
-  const handleBarCodeScanned = async (event) => {
-    const isQrInsideScannerBounds =
-      withMask && (event.bounds !== undefined || event.boundingBox !== undefined)
-        ? getIsQrInsideScannerBounds({
-            qrBounds: event.bounds,
-            qrBoundingBox: event.boundingBox,
-            scannerBounds,
-            deviceHeight,
-            deviceWidth,
-          })
-        : true
-
-    if (!qrScanned && isQrInsideScannerBounds) {
-      setQrScanned(true)
-      const error = await onRead(event)
-
-      if (error) {
-        setQrScanned(false)
-      }
-    }
-  }
-
-  if (!granted) {
-    return null
-  }
-
-  return (
-    /*
-     * expo-barcode-scanner issue in android https://github.com/expo/expo/issues/5212
-     * so expo-camera is used
-     */
-    <Camera
-      style={[StyleSheet.absoluteFill, styles.container]}
-      ratio="16:9"
-      barCodeScannerSettings={{
-        barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
-      }}
-      onBarCodeScanned={handleBarCodeScanned}
-    >
-      {withMask && <Mask maskText={maskText} />}
-    </Camera>
-  )
+  onCameraPermissionDenied?: () => void
 }
+export const CameraCodeScanner = React.forwardRef<CameraCodeScannerMethods, CameraCodeScannerProps>(
+  ({onRead, withMask, maskText = '', onCameraPermissionDenied}, ref) => {
+    const [status] = Camera.useCameraPermissions({request: true, get: true})
+    const {height: deviceHeight, width: deviceWidth} = useWindowDimensions()
+    const qrScanned = React.useRef(false)
 
-const Mask = ({maskText}: {maskText: string}) => (
-  <View style={styles.maskContainer}>
-    <LayerTop />
+    React.useImperativeHandle(ref, () => ({
+      continueScanning: () => {
+        qrScanned.current = false
+      },
+      stopScanning: () => {
+        qrScanned.current = true
+      },
+    }))
 
-    <LayerCenter>
-      <LayerCenterLeft />
+    useFocusEffect(
+      React.useCallback(() => {
+        if (qrScanned.current) qrScanned.current = false
+      }, [qrScanned]),
+    )
 
-      <CameraOpening>
-        <InnerCameraOpeningTop>
-          <TopLeftCorner />
+    React.useEffect(() => {
+      if (status?.granted === false) onCameraPermissionDenied?.()
+    }, [onCameraPermissionDenied, status?.granted])
 
-          <TopRightCorner />
-        </InnerCameraOpeningTop>
+    const handleOnBarCodeScanned = React.useCallback(
+      (event) => {
+        const scannerBounds = getScannerBounds({deviceHeight, deviceWidth})
+        const isQrInsideScannerBounds =
+          withMask && (event.bounds !== undefined || event.boundingBox !== undefined)
+            ? getIsQrInsideScannerBounds({
+                qrBounds: event.bounds,
+                qrBoundingBox: event.boundingBox,
+                scannerBounds,
+                deviceHeight,
+                deviceWidth,
+              })
+            : true
 
-        <InnerCameraOpeningCenter />
+        if (!qrScanned.current && isQrInsideScannerBounds) onRead(event)
+      },
+      [deviceHeight, deviceWidth, onRead, qrScanned, withMask],
+    )
 
-        <InnerCameraOpeningBottom>
-          <BottomRightCorner />
+    if (!status?.granted) {
+      return null
+    }
 
-          <BottomLeftCorner />
-        </InnerCameraOpeningBottom>
-      </CameraOpening>
-
-      <LayerCenterRight />
-    </LayerCenter>
-
-    <LayerBottom>
-      <MaskText>{maskText}</MaskText>
-    </LayerBottom>
-  </View>
+    return (
+      /*
+       * expo-barcode-scanner issue in android https://github.com/expo/expo/issues/5212
+       * so expo-camera is used
+       */
+      <Camera
+        style={[StyleSheet.absoluteFill, styles.container]}
+        ratio="16:9"
+        barCodeScannerSettings={{
+          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr, BarCodeScanner.Constants.BarCodeType.pdf417],
+        }}
+        onBarCodeScanned={handleOnBarCodeScanned}
+      >
+        {withMask && <Mask maskText={maskText} />}
+      </Camera>
+    )
+  },
 )
+
+const Mask = React.memo(({maskText}: {maskText: string}) => {
+  return (
+    <View style={styles.maskContainer}>
+      <LayerTop />
+
+      <LayerCenter>
+        <LayerCenterLeft />
+
+        <CameraOpening>
+          <InnerCameraOpeningTop>
+            <TopLeftCorner />
+
+            <TopRightCorner />
+          </InnerCameraOpeningTop>
+
+          <InnerCameraOpeningCenter />
+
+          <InnerCameraOpeningBottom>
+            <BottomRightCorner />
+
+            <BottomLeftCorner />
+          </InnerCameraOpeningBottom>
+        </CameraOpening>
+
+        <LayerCenterRight />
+      </LayerCenter>
+
+      <LayerBottom>
+        <MaskText>{maskText}</MaskText>
+      </LayerBottom>
+    </View>
+  )
+})
 
 const LayerTop = ({children}: {children?: React.ReactNode}) => <View style={styles.layerTop}>{children}</View>
 const LayerCenter = ({children}: {children?: React.ReactNode}) => <View style={styles.layerCenter}>{children}</View>
