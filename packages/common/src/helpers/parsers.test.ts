@@ -15,6 +15,7 @@ import {
   parseSafe,
   parseString,
   parseNumber,
+  isUrl,
 } from './parsers'
 
 describe('parsers', () => {
@@ -44,6 +45,26 @@ describe('parsers', () => {
       expect(isString(null)).toEqual(false)
       expect(isString(undefined)).toEqual(false)
       expect(isString(true)).toEqual(false)
+    })
+  })
+
+  describe('isUrl', () => {
+    it('returns true if string is a valid url', () => {
+      expect(isUrl('https://domiain.com')).toEqual(true)
+      expect(isUrl('http://domain.com')).toEqual(true)
+      expect(isUrl('bitcoin://domain.com/path')).toEqual(true)
+      expect(isUrl('ipfs://domain.com/path?query=string')).toEqual(true)
+      expect(isUrl('https://domain.com/path?query=string#hash')).toEqual(true)
+    })
+
+    it('returns false if string is not a valid url', () => {
+      expect(isUrl('hello')).toEqual(false)
+      expect(isUrl('123')).toEqual(false)
+      expect(isUrl({})).toEqual(false)
+      expect(isUrl([])).toEqual(false)
+      expect(isUrl(null)).toEqual(false)
+      expect(isUrl(undefined)).toEqual(false)
+      expect(isUrl(true)).toEqual(false)
     })
   })
 

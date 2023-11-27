@@ -62,6 +62,11 @@ export const isArray = createTypeGuardFromSchema<unknown[]>(
   z.array(z.unknown()),
 )
 
+export const urlSchema = z.string().url()
+export const isUrl = (data: unknown): data is string => {
+  return urlSchema.safeParse(data).success
+}
+
 export function isArrayOfType<T>(
   data: unknown,
   predicate: (data: unknown) => data is T,
