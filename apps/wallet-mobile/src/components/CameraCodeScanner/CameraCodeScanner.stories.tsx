@@ -6,7 +6,7 @@ import {Text, View} from 'react-native'
 
 import {Button} from '../Button'
 import {Spacer} from '../Spacer'
-import {QRCodeScanner} from './QRCodeScanner'
+import {CameraCodeScanner} from './CameraCodeScanner'
 
 storiesOf('QRCodeScanner', module).add('Default', () => <Wrapper />)
 
@@ -14,7 +14,7 @@ const Wrapper = () => {
   const [status] = Camera.useCameraPermissions()
   const [publicKeyHex, setPublicKeyHex] = React.useState(null)
   const [path, setPath] = React.useState(null)
-  const [withMask, setMaskEnabled] = React.useState(true)
+  const [withMask, setWithMask] = React.useState(true)
 
   const handleOnRead = async ({data}) => {
     const parsedData = JSON.parse(data)
@@ -28,7 +28,7 @@ const Wrapper = () => {
 
   return (
     <View style={{justifyContent: 'space-between', flex: 1}}>
-      <QRCodeScanner onRead={handleOnRead} withMask={withMask} />
+      <CameraCodeScanner onRead={handleOnRead} withMask={withMask} />
 
       <View style={{padding: 10}}>
         <Info text="QR DATA" />
@@ -56,7 +56,7 @@ const Wrapper = () => {
         <Info text={`canAskAgain: ${status?.canAskAgain}`} />
       </View>
 
-      <Button title={withMask ? 'Remove Mask' : 'Add Mask'} onPress={() => setMaskEnabled(!withMask)} />
+      <Button title={withMask ? 'Remove Mask' : 'Add Mask'} onPress={() => setWithMask(!withMask)} />
     </View>
   )
 }
