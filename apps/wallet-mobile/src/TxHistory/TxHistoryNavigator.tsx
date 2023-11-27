@@ -24,7 +24,6 @@ import {SubmittedTxScreen} from '../features/Send/useCases/ConfirmTx/SubmittedTx
 import {ListAmountsToSendScreen} from '../features/Send/useCases/ListAmountsToSend'
 import {SelectTokenFromListScreen} from '../features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
-import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {SwapFormProvider} from '../features/Swap/common/SwapFormProvider'
 import {SwapTabNavigator} from '../features/Swap/SwapNavigator'
@@ -245,18 +244,6 @@ export const TxHistoryNavigator = () => {
             </Stack.Screen>
 
             <Stack.Screen //
-              name="send-read-qr-code"
-              component={ReadQRCodeScreen}
-              options={{
-                ...sendOptions,
-                headerTransparent: true,
-                title: strings.qrScannerTitle,
-                headerTintColor: '#fff',
-                headerLeft: (props) => <BackButton color="#fff" {...props} />,
-              }}
-            />
-
-            <Stack.Screen //
               name="send-confirm-tx"
               component={ConfirmTxScreen}
               options={{
@@ -418,7 +405,10 @@ const HeaderRightHistory = React.memo(() => {
 
   return (
     <Row>
-      <CodeScannerButton onPress={() => navigation.navigate('scan-start')} color={COLORS.ACTION_GRAY} />
+      <CodeScannerButton
+        onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
+        color={COLORS.ACTION_GRAY}
+      />
 
       <Spacer width={10} />
 

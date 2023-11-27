@@ -5,6 +5,7 @@ import React from 'react'
 import {Dimensions, Platform, TouchableOpacity} from 'react-native'
 
 import {Icon} from './components'
+import {ScanFeature} from './features/Scan/common/types'
 import {COLORS} from './theme'
 import {HWDeviceInfo} from './yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
@@ -190,7 +191,6 @@ export type TxHistoryRoutes = {
   }
   receive: undefined
   'send-start-tx': undefined
-  'send-read-qr-code': undefined
   'send-confirm-tx': undefined
   'send-submitted-tx': {txId: string}
   'send-failed-tx': undefined
@@ -201,8 +201,11 @@ export type TxHistoryRoutes = {
   ScanRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
+type ScanStartParams = Readonly<{
+  insideFeature: ScanFeature
+}>
 export type ScanRoutes = {
-  'scan-start': undefined
+  'scan-start': ScanStartParams
   'scan-claim-confirm-summary': undefined
   'scan-show-camera-permission-denied': undefined
 }

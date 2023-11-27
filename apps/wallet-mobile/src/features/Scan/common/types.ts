@@ -25,3 +25,4 @@ export type ScanAction = Readonly<
       params: Record<string, any> | undefined
     }
 >
+export type ScanFeature = 'send' | 'scan'

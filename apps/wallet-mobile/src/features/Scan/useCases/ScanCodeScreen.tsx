@@ -1,18 +1,17 @@
+import {createTypeGuardFromSchema} from '@yoroi/common'
 import {BarCodeScannerResult} from 'expo-barcode-scanner'
 import * as React from 'react'
 import {Alert, AlertButton, StatusBar} from 'react-native'
+import {z} from 'zod'
 
 import {CameraCodeScanner, CameraCodeScannerMethods} from '../../../components/CameraCodeScanner/CameraCodeScanner'
-import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
+import {ScanRoutes, useParams} from '../../../navigation'
 import * as feedback from '../../../utils/feedback'
-import {pastedFormatter} from '../../../yoroi-wallets/utils/amountUtils'
-import {asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
-import {useSend} from '../../Send/common/SendContext'
 import {parseScanAction} from '../common/parsers'
-import {ScanAction} from '../common/types'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useScanErrorResolver} from '../common/useScanErrorResolver'
 import {useStrings} from '../common/useStrings'
+import {useTriggerScanAction} from '../common/useTriggerScanAction'
 
 export const ScanCodeScreen = () => {
   const navigateTo = useNavigateTo()
@@ -22,7 +21,8 @@ export const ScanCodeScreen = () => {
     {text: strings.ok, onPress: () => scannerRef.current?.continueScanning()},
   ])
   const scanErrorResolver = useScanErrorResolver()
-  const {trigger} = useScanAction()
+  const {insideFeature} = useParams<Params>(isParams)
+  const trigger = useTriggerScanAction({insideFeature})
 
   const handleOnRead = React.useCallback(
     (event: BarCodeScannerResult) => {
@@ -35,6 +35,8 @@ export const ScanCodeScreen = () => {
 
         return trigger(parsedScanAction)
       } catch (error) {
+        feedback.error()
+
         const errorDialog = scanErrorResolver(error as Error)
         Alert.alert(errorDialog.title, errorDialog.message, buttons, {cancelable: false})
       }
@@ -56,42 +58,10 @@ export const ScanCodeScreen = () => {
   )
 }
 
-const useScanAction = () => {
-  const {receiverChanged, amountChanged, tokenSelectedChanged, resetForm, memoChanged} = useSend()
-  const {primaryTokenInfo} = useSelectedWallet()
-  const navigateTo = useNavigateTo()
+type Params = ScanRoutes['scan-start']
+const ScanStartParamsSchema = z.object({
+  insideFeature: z.union([z.literal('scan'), z.literal('send')]),
+})
 
-  const trigger = (scanAction: ScanAction) => {
-    switch (scanAction.action) {
-      case 'send-single-pt': {
-        navigateTo.back()
-        navigateTo.send()
-        resetForm()
-        receiverChanged(scanAction.receiver)
-        tokenSelectedChanged(primaryTokenInfo.id)
-        amountChanged(
-          Quantities.integer(
-            asQuantity(pastedFormatter(scanAction.params?.amount?.toString() ?? '')),
-            primaryTokenInfo.decimals ?? 0,
-          ),
-        )
-        memoChanged(scanAction.params?.memo ?? '')
-        break
-      }
-      case 'send-only-receiver': {
-        navigateTo.back()
-        navigateTo.send()
-        resetForm()
-        receiverChanged(scanAction.receiver)
-        navigateTo.send()
-        break
-      }
-      case 'claim': {
-        console.log('TODO: implement')
-        break
-      }
-    }
-  }
-
-  return {trigger}
-}
+export const isScanStartParams = createTypeGuardFromSchema<Params>(ScanStartParamsSchema)
+export const isParams = (params?: unknown): params is Params => isScanStartParams(params)

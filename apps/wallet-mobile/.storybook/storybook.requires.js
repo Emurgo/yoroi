@@ -118,7 +118,6 @@ const getStories = () => {
     "./src/features/Send/useCases/ListAmountsToSend/AddToken/Show/MaxAmountsPerTx.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/AddToken/Show/MaxAmountsPerTx.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen.stories.tsx"),
     "./src/features/Send/useCases/ListAmountsToSend/ListAmountsToSendScreen.stories.tsx": require("../src/features/Send/useCases/ListAmountsToSend/ListAmountsToSendScreen.stories.tsx"),
-    "./src/features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadCodeScreen.stories.tsx": require("../src/features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadCodeScreen.stories.tsx"),
     "./src/features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen.stories.tsx": require("../src/features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen.stories.tsx"),
     "./src/features/Settings/About/About.stories.tsx": require("../src/features/Settings/About/About.stories.tsx"),
     "./src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.stories.tsx": require("../src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.stories.tsx"),
