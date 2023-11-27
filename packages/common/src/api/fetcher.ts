@@ -1,6 +1,10 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios'
+
 import {ApiError, NetworkError} from '../errors/errors'
 
+/**
+ * @deprecated This function is deprecated and will be removed in a future release. Use `fetchData` instead.
+ */
 export const fetcher: Fetcher = async <T = any>(
   config: AxiosRequestConfig,
 ): Promise<T> => {

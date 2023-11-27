@@ -5,8 +5,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Spacer, Text} from '../../../../components'
 import {useBlockGoBack, useWalletNavigation} from '../../../../navigation'
 import {COLORS} from '../../../../theme'
-import {CameraPermissionDeniedIllustration} from '../../common/illustrations/CameraPermissionDeniedIlustration'
 import {useStrings} from '../../common/useStrings'
+import {CameraPermissionDeniedIllustration} from '../../illustrations/CameraPermissionDeniedIlustration'
 import {OpenDeviceAppSettingsButton} from './OpenDeviceAppSettingsButton'
 
 export const ShowCameraPermissionDeniedScreen = () => {
