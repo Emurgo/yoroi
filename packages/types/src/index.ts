@@ -24,6 +24,16 @@ import {NumberLocale} from './intl/numbers'
 import {SwapAggregator} from './swap/aggregator'
 import {AppApi} from './app/api'
 import {AppFrontendFeesResponse, AppFrontendFeeTier} from './app/frontend-fees'
+import {LinksLink, LinksModule, LinksUriConfig} from './links/link'
+import {
+  LinksErrorExtraParamsDenied,
+  LinksErrorForbiddenParamsProvided,
+  LinksErrorParamsValidationFailed,
+  LinksErrorRequiredParamsMissing,
+  LinksErrorSchemeNotImplemented,
+  LinksErrorUnsupportedAuthority,
+  LinksErrorUnsupportedVersion,
+} from './links/errors'
 
 export namespace App {
   export interface Storage extends AppStorage {}
@@ -74,6 +84,28 @@ export namespace Balance {
   export type Quantity = BalanceQuantity
   export type Amount = BalanceAmount
   export type Amounts = BalanceAmounts
+}
+
+export namespace Links {
+  export interface UriConfig extends LinksUriConfig {}
+  export type Scheme = LinksUriConfig['scheme']
+  export type Authority = LinksUriConfig['authority']
+  export type Version = LinksUriConfig['version']
+  export type Rules = LinksUriConfig['rules']
+
+  export type Link<T extends LinksUriConfig> = LinksLink<T>
+
+  export type Module<T extends LinksUriConfig> = LinksModule<T>
+
+  export namespace Errors {
+    export class ExtraParamsDenied extends LinksErrorExtraParamsDenied {}
+    export class ForbiddenParamsProvided extends LinksErrorForbiddenParamsProvided {}
+    export class RequiredParamsMissing extends LinksErrorRequiredParamsMissing {}
+    export class ParamsValidationFailed extends LinksErrorParamsValidationFailed {}
+    export class UnsupportedAuthority extends LinksErrorUnsupportedAuthority {}
+    export class UnsupportedVersion extends LinksErrorUnsupportedVersion {}
+    export class SchemeNotImplemented extends LinksErrorSchemeNotImplemented {}
+  }
 }
 
 export namespace Numbers {

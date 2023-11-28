@@ -13,6 +13,10 @@
       "path": "./packages/swap"
     },
     {
+      "name": "@yoroi/links",
+      "path": "./packages/links"
+    },
+    {
       "name": "@yoroi/banxa",
       "path": "./packages/banxa"
     },
