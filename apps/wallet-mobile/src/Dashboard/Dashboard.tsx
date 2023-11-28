@@ -6,7 +6,13 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Banner, Button, StatusBar, useModal} from '../components'
+import {
+  useGovernanceStrings,
+  useIsParticipatingInGovernance,
+  WithdrawWarningModal,
+} from '../features/Staking/Governance'
 import globalMessages from '../i18n/global-messages'
+import {CONFIG} from '../legacy/config'
 import {Modal} from '../legacy/Modal'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -26,12 +32,6 @@ import {NotDelegatedInfo} from './NotDelegatedInfo'
 import {StakePoolInfos, useStakingInfo} from './StakePoolInfos'
 import {UserSummary} from './UserSummary'
 import {WithdrawStakingRewards} from './WithdrawStakingRewards'
-import {
-  useIsParticipatingInGovernance,
-  useGovernanceStrings,
-  WithdrawWarningModal,
-} from '../features/Staking/Governance'
-import {CONFIG} from '../legacy/config'
 
 export const Dashboard = () => {
   const intl = useIntl()

@@ -7,8 +7,8 @@ import {Spacer} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
-import {GovernanceVote} from '../../types'
 import {useLatestConfirmedGovernanceAction} from '../../common/helpers'
+import {GovernanceVote} from '../../types'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
@@ -37,7 +37,7 @@ export const HomeScreen = () => {
     }
   }
 
-  if (lastVotingAction) {
+  if (isNonNullable(lastVotingAction)) {
     return <ParticipatingInGovernanceVariant action={lastVotingAction} isTxPending={isTxPending} />
   }
   return <NeverParticipatedInGovernanceVariant />

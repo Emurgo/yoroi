@@ -1,3 +1,4 @@
+import {isNonNullable} from '@yoroi/common'
 import {useVotingCertificate} from '@yoroi/staking'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
@@ -16,7 +17,7 @@ export const ChangeVoteScreen = () => {
     useErrorBoundary: true,
   })
 
-  if (!lastVotingAction) throw new Error('User has never voted')
+  if (!isNonNullable(lastVotingAction)) throw new Error('User has never voted')
 
   // TODO: delegate / drep id flow to be confirmed
   const handleDelegate = async () => {
