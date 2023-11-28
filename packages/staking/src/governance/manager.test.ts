@@ -54,6 +54,15 @@ describe('createGovernanceManager', () => {
     })
 
     it('should accept key hash as DRep ID', async () => {
+      const fakeSuccessResponse = {
+        txId: 'tx',
+        epoch: 123,
+      }
+      const governanceManager = governanceManagerMaker({
+        ...options,
+        api: {getDRepById: () => Promise.resolve(fakeSuccessResponse)},
+      })
+
       const keyHash = 'db1bc3c3f99ce68977ceaf27ab4dd917123ef9e73f85c304236eab23'
 
       await governanceManager.validateDRepID(keyHash)
