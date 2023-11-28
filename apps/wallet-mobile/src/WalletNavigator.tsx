@@ -5,7 +5,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Keyboard, Platform} from 'react-native'
 
-import {VotingRegistration as VotingRegistration} from './Catalyst'
+import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
 import {MenuNavigator} from './features/Menu'
@@ -75,7 +75,11 @@ const WalletTabNavigator = () => {
             ),
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
-            tabBarStyle: getFocusedRouteNameFromRoute(route.route) === 'send-read-qr-code' ? {display: 'none'} : {},
+            tabBarStyle:
+              getFocusedRouteNameFromRoute(route.route) === 'send-read-qr-code' ||
+              getFocusedRouteNameFromRoute(route.route)?.startsWith('scan-')
+                ? {display: 'none'}
+                : {},
           })}
         >
           {() => (

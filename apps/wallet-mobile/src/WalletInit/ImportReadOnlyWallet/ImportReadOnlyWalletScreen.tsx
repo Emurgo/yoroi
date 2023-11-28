@@ -3,7 +3,7 @@ import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StatusBar, StyleSheet, View} from 'react-native'
 
-import {BulletPointItem, QRCodeScanner, Spacer, Text} from '../../components'
+import {BulletPointItem, CameraCodeScanner, Spacer, Text} from '../../components'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {Logger} from '../../legacy/logging'
@@ -41,7 +41,7 @@ export const ImportReadOnlyWalletScreen = () => {
       <StatusBar translucent backgroundColor="transparent" />
 
       <View style={styles.cameraContainer}>
-        <QRCodeScanner onRead={onRead} />
+        <CameraCodeScanner onRead={onRead} />
       </View>
 
       <ScrollView style={styles.scrollView}>
