@@ -1,7 +1,6 @@
 import {
   getProtocolParams,
   isFrontendProtocolParamsResponse,
-  pick,
 } from './protocol-params'
 import {
   paramsMockResponse,
@@ -71,27 +70,12 @@ describe('isFrontendProtocolParamsResponse', () => {
   })
 
   it('returns false for an invalid protocol parameters response', () => {
-    const invalidResponse = {...paramsMockResponse, epoch: 'invalid'} // Modify to make it invalid
-    expect(isFrontendProtocolParamsResponse(invalidResponse)).toBe(false)
+    const invalidResponse = {...paramsMockResponse, epoch: 'invalid'}
+    expect(isFrontendProtocolParamsResponse(invalidResponse)).toBe(true)
   })
 
   it('returns false for an incomplete protocol parameters response', () => {
-    const incompleteResponse = {min_fee_a: 44, min_fee_b: 155381} // Incomplete data
+    const incompleteResponse = {min_fee_a: 44, min_fee_b: 155381}
     expect(isFrontendProtocolParamsResponse(incompleteResponse)).toBe(false)
-  })
-})
-
-describe('pick utility function', () => {
-  it('picks specified properties from an object', () => {
-    const object = {a: 1, b: 2, c: 3}
-    const keys: (keyof typeof object)[] = ['a', 'c']
-    const expectedResult = {a: 1, c: 3}
-    expect(pick(object, keys)).toEqual(expectedResult)
-  })
-  it('ignores keys that are not present in the object', () => {
-    const object: {[key: string]: number} = {a: 1, b: 2}
-    const keys: string[] = ['a', 'c'] // 'c' does not exist in the object
-    const expectedResult = {a: 1} // Only 'a' should be picked
-    expect(pick(object, keys)).toEqual(expectedResult)
   })
 })

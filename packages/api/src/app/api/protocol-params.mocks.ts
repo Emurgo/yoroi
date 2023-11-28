@@ -380,25 +380,10 @@ export const paramsMockResponse = {
 }
 
 export const paramParsedsMockResponse = {
-  coins_per_utxo_size: '4310',
   coins_per_utxo_word: '4310',
-  collateral_percent: 150,
-  epoch: 88,
   key_deposit: '2000000',
-  max_block_ex_mem: '62000000',
-  max_block_ex_steps: '20000000000',
-  max_block_header_size: 1100,
-  max_block_size: 90112,
-  max_collateral_inputs: 3,
-  max_tx_ex_mem: '14000000',
-  max_tx_ex_steps: '10000000000',
-  max_tx_size: 16384,
-  max_val_size: '5000',
   min_fee_a: 44,
   min_fee_b: 155381,
-  min_pool_cost: '340000000',
   min_utxo: '4310',
   pool_deposit: '500000000',
-  price_mem: 0.0577,
-  price_step: 0.0000721,
 }
