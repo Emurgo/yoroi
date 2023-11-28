@@ -1,20 +1,20 @@
 import {isNonNullable, isString} from '@yoroi/common'
 import {useDelegationCertificate, useLatestGovernanceAction, useVotingCertificate} from '@yoroi/staking'
-import React, {ReactNode, useMemo} from 'react'
+import React, {ReactNode} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {Action, getVotingActionsFromTxInfos, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
+import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {GovernanceVote} from '../../types'
+import {useLatestConfirmedGovernanceAction} from '../../common/helpers'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
   const txInfos = useTransactionInfos(wallet)
-  const votingActions = useMemo(() => getVotingActionsFromTxInfos(txInfos), [txInfos])
 
-  const lastVotingAction = votingActions.length > 0 ? votingActions[votingActions.length - 1] : null
+  const lastVotingAction = useLatestConfirmedGovernanceAction(wallet)
 
   const {data: lastSubmittedTx} = useLatestGovernanceAction()
 

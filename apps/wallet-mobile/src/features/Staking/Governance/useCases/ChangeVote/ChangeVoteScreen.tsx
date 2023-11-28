@@ -1,19 +1,17 @@
 import {useVotingCertificate} from '@yoroi/staking'
-import React, {useMemo} from 'react'
+import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
-import {Action, getVotingActionsFromTxInfos, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
+import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
+import {useLatestConfirmedGovernanceAction} from '../../common/helpers'
 
 export const ChangeVoteScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
-  const txInfos = useTransactionInfos(wallet)
-  const votingActions = useMemo(() => getVotingActionsFromTxInfos(txInfos), [txInfos])
-  const lastVotingAction = votingActions.length > 0 ? votingActions[votingActions.length - 1] : null
+  const lastVotingAction = useLatestConfirmedGovernanceAction(wallet)
   const {createCertificate} = useVotingCertificate({
     useErrorBoundary: true,
   })

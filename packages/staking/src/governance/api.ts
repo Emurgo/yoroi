@@ -30,9 +30,9 @@ class Api implements GovernanceApi {
       const response = await client<GetDRepByIdResponse>({
         url: backend.getDRepById.replace('{{DREP_ID}}', drepId),
       })
-      const txId = response.registration.tx
-      const epoch = response.registration.epoch
-      return {txId, epoch}
+      const txId = response?.registration?.tx
+      const epoch = response?.registration?.epoch
+      return txId && epoch ? {txId, epoch} : null
     } catch (error) {
       if (error instanceof Error && error.message.includes('404')) {
         return null
@@ -48,8 +48,8 @@ type Config = {
   client: Fetcher
 }
 
-type GetDRepByIdResponse = {
-  registration: {
+export type GetDRepByIdResponse = {
+  registration?: {
     tx: string
     epoch: number
     slot: number
@@ -58,5 +58,10 @@ type GetDRepByIdResponse = {
       url?: string
       contentHash?: string
     }
+  }
+  deregistration?: {
+    tx: string
+    epoch: number
+    slot: number
   }
 }

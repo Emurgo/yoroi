@@ -39,6 +39,9 @@ export const useStrings = () => {
     transactionFailed: intl.formatMessage(messages.transactionFailed),
     transactionFailedDescription: intl.formatMessage(messages.transactionFailedDescription),
     tryAgain: intl.formatMessage(messages.tryAgain),
+    withdrawWarningTitle: intl.formatMessage(messages.withdrawWarningTitle),
+    withdrawWarningDescription: intl.formatMessage(messages.withdrawWarningDescription),
+    withdrawWarningButton: intl.formatMessage(messages.withdrawWarningButton),
   }
 }
 
@@ -179,5 +182,18 @@ const messages = defineMessages({
   tryAgain: {
     id: 'components.governance.tryAgain',
     defaultMessage: '!!!Try again',
+  },
+  withdrawWarningTitle: {
+    id: 'components.governance.withdrawWarningTitle',
+    defaultMessage: '!!!Withdraw warning',
+  },
+  withdrawWarningDescription: {
+    id: 'components.governance.withdrawWarningDescription',
+    defaultMessage:
+      '!!!To withdraw your rewards, you need to participate in the Cardano Governance. Your rewards will continue to accumulate, but you are only able to withdraw it once you join the Governance process.',
+  },
+  withdrawWarningButton: {
+    id: 'components.governance.withdrawWarningButton',
+    defaultMessage: '!!!Participate on governance',
   },
 })
