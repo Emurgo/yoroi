@@ -60,6 +60,7 @@ const HASKELL_SHELLEY = {
 
   BACKEND: {
     API_ROOT: 'https://api.yoroiwallet.com/api',
+    API_ROOT_NEW: 'https://api.yoroiwallet.com/api', // TODO the new base url to be added
     NFT_STORAGE_URL: 'https://fibo-validated-nft-images.s3.amazonaws.com',
     TOKEN_INFO_SERVICE: 'https://cdn.yoroiwallet.com',
     ..._DEFAULT_BACKEND_RULES,
@@ -112,6 +113,7 @@ const HASKELL_SHELLEY_TESTNET = {
 
   BACKEND: {
     API_ROOT: 'https://preprod-backend.yoroiwallet.com/api',
+    API_ROOT_NEW: 'https://dev-yoroi-backend-zero-preprod.emurgornd.com',
     NFT_STORAGE_URL: 'https://validated-nft-images.s3.amazonaws.com',
     TOKEN_INFO_SERVICE: 'https://stage-cdn.yoroiwallet.com',
     ..._DEFAULT_BACKEND_RULES,
