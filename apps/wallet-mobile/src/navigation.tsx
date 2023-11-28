@@ -482,6 +482,6 @@ export const useWalletNavigation = () => {
           screen: 'center',
         },
       })
-    }
+    },
   } as const).current
 }
