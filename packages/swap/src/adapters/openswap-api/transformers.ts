@@ -3,9 +3,9 @@ import {Swap, Balance} from '@yoroi/types'
 import {OpenSwap} from '@yoroi/openswap'
 import {isString} from '@yoroi/common'
 
-import {Quantities} from '../utils/quantities'
-import {supportedProviders} from '../translators/constants'
-import {asQuantity} from '../utils/asQuantity'
+import {Quantities} from '../../utils/quantities'
+import {supportedProviders} from '../../translators/constants'
+import {asQuantity} from '../../utils/asQuantity'
 
 export const transformersMaker = (
   primaryTokenId: Balance.Token['info']['id'],

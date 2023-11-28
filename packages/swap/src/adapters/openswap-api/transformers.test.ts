@@ -2,8 +2,8 @@ import {Balance, Swap} from '@yoroi/types'
 import {OpenSwap} from '@yoroi/openswap'
 
 import {asTokenFingerprint, transformersMaker} from './transformers'
-import {openswapMocks} from '../adapters/openswap-api/openswap.mocks'
-import {apiMocks} from '../adapters/openswap-api/api.mocks'
+import {openswapMocks} from './openswap.mocks'
+import {apiMocks} from './api.mocks'
 
 const primaryTokenId = ''
 const transformers = transformersMaker(primaryTokenId)
