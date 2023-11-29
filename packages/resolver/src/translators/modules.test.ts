@@ -1,4 +1,5 @@
 /* istanbul ignore file */
+import {Resolver} from '@yoroi/types'
 import {resolverApiMaker} from '../adapters/api'
 import {resolverModuleMaker} from './module'
 
@@ -9,6 +10,7 @@ jest.mock('../adapters/api', () => ({
 describe('resolverModuleMaker', () => {
   const mockStrategy = 'all'
   const mockApiConfig = {someKey: 'someValue'}
+  const mockResolverStorage = {notice: 'notice'} as unknown as Resolver.Storage
   const mockGetCryptoAddress = jest.fn()
 
   beforeEach(() => {
@@ -19,13 +21,31 @@ describe('resolverModuleMaker', () => {
   })
 
   it('creates a module with getCryptoAddress function', () => {
-    const module = resolverModuleMaker(mockStrategy, mockApiConfig)
+    const module = resolverModuleMaker(
+      mockStrategy,
+      mockResolverStorage,
+      mockApiConfig,
+    )
 
     expect(module).toHaveProperty('address.getCryptoAddress')
   })
 
+  it('creates a module with notice property', () => {
+    const module = resolverModuleMaker(
+      mockStrategy,
+      mockResolverStorage,
+      mockApiConfig,
+    )
+
+    expect(module).toHaveProperty('notice')
+  })
+
   it('calls getCryptoAddress from the created API', () => {
-    const module = resolverModuleMaker(mockStrategy, mockApiConfig)
+    const module = resolverModuleMaker(
+      mockStrategy,
+      mockResolverStorage,
+      mockApiConfig,
+    )
     const mockDomain = 'example.domain'
 
     module.address.getCryptoAddress(mockDomain)

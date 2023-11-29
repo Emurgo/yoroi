@@ -1,4 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
+import {resolverModuleMaker, resolverStorageMaker} from '@yoroi/resolver'
 import {
   milkTokenId,
   supportedProviders,
@@ -13,6 +14,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Boundary, Icon} from '../components'
+import {ResolverProvider} from '../features/Send/common/ResolverProvider'
 import {SendProvider} from '../features/Send/common/SendContext'
 import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
 import {FailedTxScreen} from '../features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
@@ -33,6 +35,7 @@ import {
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
+import env from '../legacy/env'
 import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes, useWalletNavigation} from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -71,203 +74,213 @@ export const TxHistoryNavigator = () => {
     return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
   }, [wallet.networkId, wallet.primaryTokenInfo.id, stakingKey, frontendFees, aggregatorTokenId])
 
+  // resolver
+  const resolverModule = React.useMemo(() => {
+    const resolverStorage = resolverStorageMaker()
+    return resolverModuleMaker('all', resolverStorage, {
+      apiKeys: {unstoppableApiKey: env.getString('UNSTOPPABLE_API_KEY')},
+    })
+  }, [])
+
   return (
     <SendProvider key={wallet.id}>
       <SwapProvider key={wallet.id} swapManager={swapManager}>
         <SwapFormProvider>
-          <Stack.Navigator
-            screenListeners={{}}
-            screenOptions={{
-              ...defaultStackNavigationOptions,
-              detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-              gestureEnabled: true,
-            }}
-          >
-            <Stack.Screen
-              name="history-list"
-              component={TxHistory}
-              options={{
-                title: walletName ?? '',
-                headerRight: () => <HeaderRightHistory />,
-              }}
-            />
-
-            <Stack.Screen name="history-details" options={{title: ''}}>
-              {() => (
-                <Boundary loading={{size: 'full'}}>
-                  <TxDetails />
-                </Boundary>
-              )}
-            </Stack.Screen>
-
-            <Stack.Screen
-              name="receive"
-              component={ReceiveScreen}
-              options={{
-                title: strings.receiveTitle,
-
-                headerRight: () => <ModalInfoIconButton onPress={showModalInfo} />,
-                headerStyle: {
-                  elevation: 0,
-                  shadowOpacity: 0,
-                  backgroundColor: '#fff',
-                },
-              }}
-            />
-
-            <Stack.Screen
-              name="swap-start-swap"
-              component={SwapTabNavigator}
-              options={{
-                title: strings.swapTitle,
-              }}
-            />
-
-            <Stack.Screen
-              name="swap-confirm-tx"
-              component={ConfirmTxSwapScreen}
-              options={{
-                title: strings.confirmationTransaction,
-              }}
-            />
-
-            <Stack.Screen
-              name="swap-select-sell-token"
-              component={SelectSellTokenFromListScreen}
-              options={{
-                title: strings.swapFromTitle,
-              }}
-            />
-
-            <Stack.Screen
-              name="swap-select-buy-token"
-              component={SelectBuyTokenFromListScreen}
-              options={{
-                title: strings.swapToTitle,
-              }}
-            />
-
-            <Stack.Screen
-              name="swap-edit-slippage"
-              component={EditSlippageScreen}
-              options={{
-                title: strings.slippageTolerance,
-              }}
-            />
-
-            <Stack.Screen
-              name="swap-select-pool"
-              component={SelectPoolFromListScreen}
-              options={{
-                title: strings.selectPool,
-              }}
-            />
-
-            <Stack.Screen
-              name="swap-submitted-tx"
-              component={SubmittedTxSwapScreen}
-              options={{headerShown: false, gestureEnabled: false}}
-            />
-
-            <Stack.Screen
-              name="swap-failed-tx"
-              component={FailedTxSwapScreen}
-              options={{headerShown: false, gestureEnabled: false}}
-            />
-
-            <Stack.Screen
-              name="send-start-tx"
-              options={{
-                title: strings.sendTitle,
-                ...sendOptions,
+          <ResolverProvider resolverModule={resolverModule}>
+            <Stack.Navigator
+              screenListeners={{}}
+              screenOptions={{
+                ...defaultStackNavigationOptions,
+                detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+                gestureEnabled: true,
               }}
             >
-              {() => (
-                <Boundary>
-                  <StartMultiTokenTxScreen />
-                </Boundary>
-              )}
-            </Stack.Screen>
+              <Stack.Screen
+                name="history-list"
+                component={TxHistory}
+                options={{
+                  title: walletName ?? '',
+                  headerRight: () => <HeaderRightHistory />,
+                }}
+              />
 
-            <Stack.Screen
-              name="send-select-token-from-list"
-              options={{
-                title: strings.selectAssetTitle,
-                ...sendOptions,
-              }}
-            >
-              {() => (
-                <Boundary>
-                  <SelectTokenFromListScreen />
-                </Boundary>
-              )}
-            </Stack.Screen>
+              <Stack.Screen name="history-details" options={{title: ''}}>
+                {() => (
+                  <Boundary loading={{size: 'full'}}>
+                    <TxDetails />
+                  </Boundary>
+                )}
+              </Stack.Screen>
 
-            <Stack.Screen //
-              name="send-list-amounts-to-send"
-              options={{
-                title: strings.listAmountsToSendTitle,
-                ...sendOptions,
-              }}
-            >
-              {() => (
-                <Boundary>
-                  <ListAmountsToSendScreen />
-                </Boundary>
-              )}
-            </Stack.Screen>
+              <Stack.Screen
+                name="receive"
+                component={ReceiveScreen}
+                options={{
+                  title: strings.receiveTitle,
 
-            <Stack.Screen //
-              name="send-edit-amount"
-              options={{
-                title: strings.editAmountTitle,
-                ...sendOptions,
-              }}
-            >
-              {() => (
-                <Boundary>
-                  <EditAmountScreen />
-                </Boundary>
-              )}
-            </Stack.Screen>
+                  headerRight: () => <ModalInfoIconButton onPress={showModalInfo} />,
+                  headerStyle: {
+                    elevation: 0,
+                    shadowOpacity: 0,
+                    backgroundColor: '#fff',
+                  },
+                }}
+              />
 
-            <Stack.Screen //
-              name="send-read-qr-code"
-              component={ReadQRCodeScreen}
-              options={{
-                ...sendOptions,
-                headerTransparent: true,
-                title: strings.qrScannerTitle,
-                headerTintColor: '#fff',
-                headerLeft: (props) => <BackButton color="#fff" {...props} />,
-              }}
-            />
+              <Stack.Screen
+                name="swap-start-swap"
+                component={SwapTabNavigator}
+                options={{
+                  title: strings.swapTitle,
+                }}
+              />
 
-            <Stack.Screen //
-              name="send-confirm-tx"
-              component={ConfirmTxScreen}
-              options={{
-                title: strings.confirmTitle,
-                ...sendOptions,
-              }}
-            />
+              <Stack.Screen
+                name="swap-confirm-tx"
+                component={ConfirmTxSwapScreen}
+                options={{
+                  title: strings.confirmationTransaction,
+                }}
+              />
 
-            <Stack.Screen
-              name="send-submitted-tx"
-              component={SubmittedTxScreen}
-              options={{headerShown: false, gestureEnabled: false}}
-            />
+              <Stack.Screen
+                name="swap-select-sell-token"
+                component={SelectSellTokenFromListScreen}
+                options={{
+                  title: strings.swapFromTitle,
+                }}
+              />
 
-            <Stack.Screen
-              name="send-failed-tx"
-              component={FailedTxScreen}
-              options={{headerShown: false, gestureEnabled: false}}
-            />
-          </Stack.Navigator>
+              <Stack.Screen
+                name="swap-select-buy-token"
+                component={SelectBuyTokenFromListScreen}
+                options={{
+                  title: strings.swapToTitle,
+                }}
+              />
 
-          <ModalInfo hideModalInfo={hideModalInfo} visible={isModalInfoVisible}>
-            <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
-          </ModalInfo>
+              <Stack.Screen
+                name="swap-edit-slippage"
+                component={EditSlippageScreen}
+                options={{
+                  title: strings.slippageTolerance,
+                }}
+              />
+
+              <Stack.Screen
+                name="swap-select-pool"
+                component={SelectPoolFromListScreen}
+                options={{
+                  title: strings.selectPool,
+                }}
+              />
+
+              <Stack.Screen
+                name="swap-submitted-tx"
+                component={SubmittedTxSwapScreen}
+                options={{headerShown: false, gestureEnabled: false}}
+              />
+
+              <Stack.Screen
+                name="swap-failed-tx"
+                component={FailedTxSwapScreen}
+                options={{headerShown: false, gestureEnabled: false}}
+              />
+
+              <Stack.Screen
+                name="send-start-tx"
+                options={{
+                  title: strings.sendTitle,
+                  ...sendOptions,
+                }}
+              >
+                {() => (
+                  <Boundary>
+                    <StartMultiTokenTxScreen />
+                  </Boundary>
+                )}
+              </Stack.Screen>
+
+              <Stack.Screen
+                name="send-select-token-from-list"
+                options={{
+                  title: strings.selectAssetTitle,
+                  ...sendOptions,
+                }}
+              >
+                {() => (
+                  <Boundary>
+                    <SelectTokenFromListScreen />
+                  </Boundary>
+                )}
+              </Stack.Screen>
+
+              <Stack.Screen //
+                name="send-list-amounts-to-send"
+                options={{
+                  title: strings.listAmountsToSendTitle,
+                  ...sendOptions,
+                }}
+              >
+                {() => (
+                  <Boundary>
+                    <ListAmountsToSendScreen />
+                  </Boundary>
+                )}
+              </Stack.Screen>
+
+              <Stack.Screen //
+                name="send-edit-amount"
+                options={{
+                  title: strings.editAmountTitle,
+                  ...sendOptions,
+                }}
+              >
+                {() => (
+                  <Boundary>
+                    <EditAmountScreen />
+                  </Boundary>
+                )}
+              </Stack.Screen>
+
+              <Stack.Screen //
+                name="send-read-qr-code"
+                component={ReadQRCodeScreen}
+                options={{
+                  ...sendOptions,
+                  headerTransparent: true,
+                  title: strings.qrScannerTitle,
+                  headerTintColor: '#fff',
+                  headerLeft: (props) => <BackButton color="#fff" {...props} />,
+                }}
+              />
+
+              <Stack.Screen //
+                name="send-confirm-tx"
+                component={ConfirmTxScreen}
+                options={{
+                  title: strings.confirmTitle,
+                  ...sendOptions,
+                }}
+              />
+
+              <Stack.Screen
+                name="send-submitted-tx"
+                component={SubmittedTxScreen}
+                options={{headerShown: false, gestureEnabled: false}}
+              />
+
+              <Stack.Screen
+                name="send-failed-tx"
+                component={FailedTxScreen}
+                options={{headerShown: false, gestureEnabled: false}}
+              />
+            </Stack.Navigator>
+
+            <ModalInfo hideModalInfo={hideModalInfo} visible={isModalInfoVisible}>
+              <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
+            </ModalInfo>
+          </ResolverProvider>
         </SwapFormProvider>
       </SwapProvider>
     </SendProvider>

@@ -2,6 +2,12 @@ import {Resolver} from '@yoroi/types'
 import {getHandleCryptoAddress} from './handle-api'
 import {getUnstoppableCryptoAddress} from './unstoppable-api'
 
+enum DomainService {
+  CNS = 'cns',
+  Unstoppable = 'unstoppable',
+  Handle = 'handle',
+}
+
 export const resolverApiMaker = (
   resolutionStrategy: Resolver.Strategy,
   apiConfig?: any,
@@ -9,23 +15,20 @@ export const resolverApiMaker = (
   const getCryptoAddress = async (
     receiverDomain: Resolver.Receiver['domain'],
   ) => {
-    const operations = [
-      getHandleCryptoAddress(receiverDomain),
-      getUnstoppableCryptoAddress(
+    const operations = {
+      [DomainService.Handle]: getHandleCryptoAddress(receiverDomain),
+      [DomainService.Unstoppable]: getUnstoppableCryptoAddress(
         receiverDomain,
         apiConfig?.apiKeys?.unstoppableApiKey ?? undefined,
       ),
-    ]
+    }
 
     if (resolutionStrategy === 'all') {
       const results = await Promise.all(
-        operations.map((operation) =>
+        Object.entries(operations).map(([service, operation]) =>
           operation
-            .then((address) => ({
-              address,
-              error: null,
-            }))
-            .catch((error) => ({error, address: null})),
+            .then((address) => ({error: null, address, service}))
+            .catch((error) => ({error, address: null, service})),
         ),
       )
 
@@ -33,13 +36,14 @@ export const resolverApiMaker = (
     }
 
     const result = await Promise.any(
-      operations.map((operation) =>
-        operation.then((address) => ({
-          address,
-          error: null,
-        })),
+      Object.entries(operations).map(([service, operation]) =>
+        operation.then((address) => ({error: null, address, service})),
       ),
-    ).catch((error) => ({address: null, error}))
+    ).catch((error) => ({
+      address: null,
+      error,
+      service: null,
+    }))
 
     return [result]
   }

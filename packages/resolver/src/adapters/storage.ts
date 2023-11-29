@@ -8,7 +8,7 @@ export function resolverStorageMaker(
 ): Readonly<Resolver.Storage> {
   const {storage} = deps
 
-  const noticed: Readonly<Resolver.Storage['noticed']> = {
+  const notice: Readonly<Resolver.Storage['notice']> = {
     save: (newNoticed) =>
       storage.setItem(resolverStorageNoticedKey, JSON.stringify(newNoticed)),
     read: () =>
@@ -24,12 +24,12 @@ export function resolverStorageMaker(
   }
 
   return {
-    noticed,
+    notice,
     clear,
   } as const
 }
 
-export const resolverStorageNoticedKey = 'resolver-noticed'
+export const resolverStorageNoticedKey = 'resolver-notice'
 
 // * === UTILS ===
 // * NOTE copied from utils it should be imported from utils package later

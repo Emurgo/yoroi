@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {resolverModuleMaker} from '@yoroi/resolver'
+// import {resolverModuleMaker} from '@yoroi/resolver'
 import React from 'react'
 import {Text, View, ViewProps} from 'react-native'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {HelperText} from '../../../../../components'
-import env from '../../../../../legacy/env'
+// import env from '../../../../../legacy/env'
 import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {normalizeToAddress} from '../../../../../yoroi-wallets/cardano/utils'
@@ -74,14 +74,14 @@ export const useReceiver = (
 }
 
 const resolveAndCheckAddress = async (receiver: string, networkId: NetworkId) => {
-  const all = resolverModuleMaker('all', {apiKeys: {unstoppableApiKey: env.getString('UNSTOPPABLE_API_KEY')}})
+  /*   const all = resolverModuleMaker('all', {apiKeys: {unstoppableApiKey: env.getString('UNSTOPPABLE_API_KEY')}})
 
   console.log('all', await all.address.getCryptoAddress(receiver))
 
   const resolver = resolverModuleMaker('first', {apiKeys: {unstoppableApiKey: env.getString('UNSTOPPABLE_API_KEY')}})
-  const [{address: resolvedAddress /* , error */}] = await resolver.address.getCryptoAddress(receiver)
+  const [{address: resolvedAddress}] = await resolver.address.getCryptoAddress(receiver) */
 
-  const address = resolvedAddress ?? receiver
+  const address = receiver
 
   await isReceiverAddressValid(address, networkId)
   return address

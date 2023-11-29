@@ -13,6 +13,7 @@ import {useSend} from '../../common/SendContext'
 import {useStrings} from '../../common/strings'
 import {InputMemo, maxMemoLength} from './InputMemo'
 import {getAddressErrorMessage, ResolveAddress, useReceiver} from './InputReceiver/ResolveAddress'
+import {Notice} from './Notice/Notice'
 import {ShowErrors} from './ShowErrors'
 
 export const StartMultiTokenTxScreen = () => {
@@ -63,6 +64,8 @@ export const StartMultiTokenTxScreen = () => {
         keyboardVerticalOffset={86}
       >
         <ScrollView style={styles.flex} bounces={false}>
+          <Notice />
+
           <ShowErrors />
 
           <Spacer height={16} />

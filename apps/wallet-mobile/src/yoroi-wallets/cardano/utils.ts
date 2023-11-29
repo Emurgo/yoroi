@@ -40,19 +40,16 @@ export const normalizeToAddress = async (addr: string) => {
     }
   } catch (_e) {}
 
-  // eslint-disable-line no-empty
   // 2) If already base16, simply return
   try {
     return await CardanoMobile.Address.fromBytes(Buffer.from(addr, 'hex'))
   } catch (_e) {}
 
-  // eslint-disable-line no-empty
   // 3) Try converting from bech32
   try {
     return await CardanoMobile.Address.fromBech32(addr)
   } catch (_e) {}
 
-  // eslint-disable-line no-empty
   return undefined
 }
 

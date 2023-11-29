@@ -1,34 +1,34 @@
 import {Resolver} from '@yoroi/types'
 
 export const makeStorageMaker = (): Readonly<Resolver.Storage> => {
-  const noticed: Resolver.Storage['noticed'] = {
+  const notice: Resolver.Storage['notice'] = {
     read: () => Promise.resolve(true),
     remove: () => Promise.resolve(),
     save: () => Promise.resolve(),
-    key: 'mock-resolver-noticed',
+    key: 'mock-resolver-notice',
   }
 
   const clear: Resolver.Storage['clear'] = () => Promise.resolve()
 
   return {
-    noticed,
+    notice,
     clear,
   } as const
 }
 
 const unknownError = () => Promise.reject('Unknown error')
 export const makeStorageMakerDefault = (): Readonly<Resolver.Storage> => {
-  const noticed: Resolver.Storage['noticed'] = {
+  const notice: Resolver.Storage['notice'] = {
     read: unknownError,
     remove: unknownError,
     save: unknownError,
-    key: 'mock-resolver-noticed',
+    key: 'mock-resolver-notice',
   }
 
   const clear: Resolver.Storage['clear'] = unknownError
 
   return {
-    noticed,
+    notice,
     clear,
   } as const
 }
