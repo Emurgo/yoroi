@@ -115,6 +115,10 @@ export const txLabels = defineMessages({
     id: 'global.txLabels.signingTx',
     defaultMessage: '!!!Signing transaction',
   },
+  sign: {
+    id: 'global.sign',
+    defaultMessage: '!!!Sign',
+  },
   to: {
     id: 'components.walletinit.restorewallet.upgradeconfirmmodal.toLabel',
     defaultMessage: '!!!To',

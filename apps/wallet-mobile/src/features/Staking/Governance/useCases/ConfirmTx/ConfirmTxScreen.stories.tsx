@@ -6,9 +6,15 @@ import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
 import {Routes} from '../../common/navigation'
 import {ConfirmTxScreen} from './ConfirmTxScreen'
+import {GovernanceProvider} from '@yoroi/staking'
+import {mocks as governanceMocks} from '../../common'
 
 storiesOf('Governance/ConfirmTxScreen', module)
-  .addDecorator((story) => <SelectedWalletProvider wallet={mocks.wallet}>{story()}</SelectedWalletProvider>)
+  .addDecorator((story) => (
+    <SelectedWalletProvider wallet={mocks.wallet}>
+      <GovernanceProvider manager={governanceMocks.governanceManager}>{story()}</GovernanceProvider>
+    </SelectedWalletProvider>
+  ))
   .add('Abstain', () => (
     <NavigationRouteContext.Provider value={getContextValue({kind: 'abstain'})}>
       <ConfirmTxScreen />

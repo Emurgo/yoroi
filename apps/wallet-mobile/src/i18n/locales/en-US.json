@@ -630,6 +630,8 @@
   "components.governance.withdrawWarningTitle": "Withdraw warning",
   "components.governance.withdrawWarningDescription": "To withdraw your rewards, you need to participate in the Cardano Governance. Your rewards will continue to accumulate, but you are only able to withdraw it once you join the Governance process.",
   "components.governance.withdrawWarningButton": "Participate on governance",
+  "components.governance.enterDRepID": "Enter DRep ID",
+  "components.governance.enterPassword": "Enter password to sign this transaction",
   "crypto.errors.rewardAddressEmpty": "Reward address is empty.",
   "crypto.keystore.approveTransaction": "Authorize with your biometrics",
   "crypto.keystore.cancelButton": "Cancel",

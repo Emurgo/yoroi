@@ -37,12 +37,16 @@ export const useUpdateLatestGovernanceAction = (
   options: UseMutationOptions<void, Error, GovernanceAction> = {},
 ) => {
   const {manager} = useGovernance()
-  return useMutationWithInvalidations({
+  const mutation = useMutationWithInvalidations({
     ...options,
     mutationFn: async (action: GovernanceAction) =>
       await manager.setLatestGovernanceAction(action),
     invalidateQueries: ['governanceLatestGovernanceAction'],
   })
+  return {
+    ...mutation,
+    updateLatestGovernanceAction: mutation.mutate,
+  }
 }
 
 export const useDelegationCertificate = (

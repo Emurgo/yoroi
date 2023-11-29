@@ -4,7 +4,11 @@ import {StyleSheet, View} from 'react-native'
 import {Button, Spacer, Text} from '../../../../../components'
 import {useStrings} from '../../common'
 
-export const WithdrawWarningModal = ({onParticipatePress}: {onParticipatePress: () => void}) => {
+type Props = {
+  onParticipatePress: () => void
+}
+
+export const WithdrawWarningModal = ({onParticipatePress}: Props) => {
   const strings = useStrings()
   return (
     <View style={styles.root}>

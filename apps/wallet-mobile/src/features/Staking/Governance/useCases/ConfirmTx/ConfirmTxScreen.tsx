@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Spacer} from '../../../../../components'
+import {Button, Spacer, useModal} from '../../../../../components'
 import {Text} from '../../../../../components'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {formatTokenWithText} from '../../../../../legacy/format'
@@ -10,12 +10,16 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {Amounts} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo, useStrings} from '../../common'
 import {Routes} from '../../common/navigation'
+import {useUpdateLatestGovernanceAction} from '@yoroi/staking/src'
+import {ConfirmWithSpendingPasswordModal} from '../../../../../components/ConfirmWithSpendingPasswordModal'
 
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const params = useUnsafeParams<Routes['confirm-tx']>()
   const navigateTo = useNavigateTo()
+  const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction()
+  const {openModal} = useModal()
 
   const titles = {
     abstain: strings.actionAbstainTitle,
@@ -35,10 +39,46 @@ export const ConfirmTxScreen = () => {
   const feeAmount = Amounts.getAmount(fee, wallet.primaryToken.identifier)
   const feeText = formatTokenWithText(feeAmount.quantity, wallet.primaryToken)
 
-  const onSubmit = () => {
-    // TODO: save tx
-    // TODO: Submit tx
+  const onSuccess = (txID: string) => {
+    if (params.vote.kind === 'delegate') {
+      updateLatestGovernanceAction({kind: 'delegate-to-drep', drepID: params.vote.drepID, txID})
+    }
+
+    if (params.vote.kind === 'abstain') {
+      updateLatestGovernanceAction({kind: 'vote', vote: 'abstain', txID})
+    }
+
+    if (params.vote.kind === 'no-confidence') {
+      updateLatestGovernanceAction({kind: 'vote', vote: 'no-confidence', txID})
+    }
+
     navigateTo.txSuccess()
+  }
+
+  const onSubmit = () => {
+    // TODO: open password modal / easy confirmation / hw confirmation
+    // TODO: Submit tx
+    // TODO: Translations
+
+    if (!wallet.isHW && !wallet.isEasyConfirmationEnabled) {
+      // password wallet
+      openModal(
+        strings.signTransaction,
+        <ConfirmWithSpendingPasswordModal
+          strings={{
+            enterSpendingPassword: 'Enter spending password',
+            spendingPassword: strings.password,
+            sign: strings.sign,
+            wrongPasswordMessage: strings.wrongPassword,
+            error: strings.error,
+          }}
+        />,
+      )
+    }
+
+    const txID = 'TODO: txID'
+
+    onSuccess(txID)
   }
 
   return (

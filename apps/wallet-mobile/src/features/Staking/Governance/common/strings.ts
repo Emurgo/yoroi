@@ -1,5 +1,6 @@
 import {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
+import globalMessages, {errorMessages, txLabels} from '../../../../i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -42,6 +43,13 @@ export const useStrings = () => {
     withdrawWarningTitle: intl.formatMessage(messages.withdrawWarningTitle),
     withdrawWarningDescription: intl.formatMessage(messages.withdrawWarningDescription),
     withdrawWarningButton: intl.formatMessage(messages.withdrawWarningButton),
+    enterDRepID: intl.formatMessage(messages.enterDRepID),
+    signTransaction: intl.formatMessage(txLabels.signingTx),
+    password: intl.formatMessage(txLabels.password),
+    sign: intl.formatMessage(txLabels.sign),
+    error: intl.formatMessage(globalMessages.error),
+    wrongPassword: intl.formatMessage(errorMessages.incorrectPassword.title),
+    enterPassword: intl.formatMessage(messages.enterPassword),
   }
 }
 
@@ -113,9 +121,9 @@ const messages = defineMessages({
     id: 'components.governance.operations',
     defaultMessage: '!!!Operations',
   },
-  enterADrepIDAndPassword: {
-    id: 'components.governance.enterADrepIDAndPassword',
-    defaultMessage: '!!!Enter a Drep ID and password to sign this transaction',
+  enterPassword: {
+    id: 'components.governance.enterPassword',
+    defaultMessage: '!!!Enter password to sign this transaction',
   },
   drepID: {
     id: 'components.governance.drepID',
@@ -195,5 +203,9 @@ const messages = defineMessages({
   withdrawWarningButton: {
     id: 'components.governance.withdrawWarningButton',
     defaultMessage: '!!!Participate on governance',
+  },
+  enterDRepID: {
+    id: 'components.governance.enterDRepID',
+    defaultMessage: '!!!Enter DRep ID',
   },
 })

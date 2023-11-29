@@ -1,14 +1,21 @@
 import {isNonNullable, isString} from '@yoroi/common'
-import {useDelegationCertificate, useLatestGovernanceAction, useVotingCertificate} from '@yoroi/staking'
+import {
+  GovernanceProvider,
+  useDelegationCertificate,
+  useGovernance,
+  useLatestGovernanceAction,
+  useVotingCertificate,
+} from '@yoroi/staking'
 import React, {ReactNode} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '../../../../../components'
+import {Spacer, useModal} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {useLatestConfirmedGovernanceAction} from '../../common/helpers'
 import {GovernanceVote} from '../../types'
+import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
@@ -124,6 +131,8 @@ const NeverParticipatedInGovernanceVariant = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
+  const {manager} = useGovernance()
+  const {openModal} = useModal()
 
   const {createCertificate: createDelegationCertificate} = useDelegationCertificate({
     useErrorBoundary: true,
@@ -133,19 +142,29 @@ const NeverParticipatedInGovernanceVariant = () => {
     useErrorBoundary: true,
   })
 
-  // TODO: delegate / drep id flow to be confirmed
-  const handleDelegate = async () => {
-    const drepID = 'c1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758'
-    const stakingKey = await wallet.getStakingKey()
-    createDelegationCertificate(
-      {drepID, stakingKey},
-      {
-        onSuccess: async (certificate) => {
-          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
-          navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID}})
-        },
-      },
+  const openDRepIdModal = (onSubmit: (drepId: string) => void) => {
+    openModal(
+      strings.drepID,
+      <GovernanceProvider manager={manager}>
+        <EnterDrepIdModal onSubmit={onSubmit} />
+      </GovernanceProvider>,
+      360,
     )
+  }
+
+  const handleDelegate = () => {
+    openDRepIdModal(async (drepID) => {
+      const stakingKey = await wallet.getStakingKey()
+      createDelegationCertificate(
+        {drepID, stakingKey},
+        {
+          onSuccess: async (certificate) => {
+            const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+            navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID}})
+          },
+        },
+      )
+    })
   }
 
   const handleAbstain = async () => {
