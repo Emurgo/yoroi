@@ -58,7 +58,6 @@ export const ConfirmTxScreen = () => {
   const onSubmit = () => {
     // TODO: open password modal / easy confirmation / hw confirmation
     // TODO: Submit tx
-    // TODO: Translations
 
     if (!wallet.isHW && !wallet.isEasyConfirmationEnabled) {
       // password wallet
@@ -66,7 +65,7 @@ export const ConfirmTxScreen = () => {
         strings.signTransaction,
         <ConfirmWithSpendingPasswordModal
           strings={{
-            enterSpendingPassword: 'Enter spending password',
+            enterSpendingPassword: strings.enterPassword,
             spendingPassword: strings.password,
             sign: strings.sign,
             wrongPasswordMessage: strings.wrongPassword,
