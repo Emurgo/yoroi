@@ -21,7 +21,6 @@ export const useStrings = () => {
     selectAbstain: intl.formatMessage(messages.selectAbstain),
     selectNoConfidence: intl.formatMessage(messages.selectNoConfidence),
     operations: intl.formatMessage(messages.operations),
-    enterADrepIDAndPassword: intl.formatMessage(messages.enterADrepIDAndPassword),
     drepID: intl.formatMessage(messages.drepID),
     thankYouForParticipating: intl.formatMessage(messages.thankYouForParticipating),
     thisTransactionCanTakeAWhile: intl.formatMessage(messages.thisTransactionCanTakeAWhile),
