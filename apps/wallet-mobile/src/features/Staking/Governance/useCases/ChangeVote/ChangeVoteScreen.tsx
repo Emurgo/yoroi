@@ -19,7 +19,6 @@ export const ChangeVoteScreen = () => {
 
   if (!isNonNullable(lastVotingAction)) throw new Error('User has never voted')
 
-  // TODO: delegate / drep id flow to be confirmed
   const handleDelegate = async () => {
     const stakingKey = await wallet.getStakingKey()
     createCertificate(
@@ -33,7 +32,6 @@ export const ChangeVoteScreen = () => {
     )
   }
 
-  // TODO: delegate / drep id flow to be confirmed
   const handleChangeDelegation = async () => {
     const stakingKey = await wallet.getStakingKey()
     createCertificate(
