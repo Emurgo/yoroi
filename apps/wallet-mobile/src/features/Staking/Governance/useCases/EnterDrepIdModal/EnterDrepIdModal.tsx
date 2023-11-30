@@ -42,9 +42,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
 
       <TextInput
         value={drepId}
-        onChangeText={(e) => {
-          setDrepId(e)
-        }}
+        onChangeText={(text) => setDrepId(text)}
         multiline
         errorDelay={1000}
         errorText={error?.message}
