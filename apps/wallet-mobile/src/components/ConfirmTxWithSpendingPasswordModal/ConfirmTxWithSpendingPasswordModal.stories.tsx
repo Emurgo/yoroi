@@ -13,7 +13,7 @@ const strings = {
   error: 'Error',
 }
 
-storiesOf('ConfirmWithSpendingPassword', module)
+storiesOf('ConfirmTxWithSpendingPasswordModal', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('Default', () => <ConfirmTxWithSpendingPasswordModal strings={strings} unsignedTx={mocks.yoroiUnsignedTx} />)
 
