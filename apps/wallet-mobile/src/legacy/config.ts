@@ -15,7 +15,7 @@ const FORCE_CRASH_REPORTS = isNightly()
 
 const AGREEMENT_DATE = 1691967600000
 
-const GOVERNANCE_CENTRE_ENABLED = true
+const GOVERNANCE_CENTRE_ENABLED = env.getString('GOVERNANCE_CENTRE_ENABLED') === 'true'
 
 export const CONFIG = {
   SENTRY_DSN,
