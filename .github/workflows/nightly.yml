@@ -1,0 +1,131 @@
+on:
+  push:
+    branches:
+      - "release/**"
+
+jobs:
+  build:
+    runs-on: macos-13
+    steps:         
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.0'
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Install Android Tools
+        run: |
+          which sdkmanager
+          sdkmanager "tools"
+          sdkmanager --update
+          sdkmanager "build-tools;33.0.0" "platform-tools" "platforms;android-33" "tools"
+          echo "y" | sdkmanager --licenses
+          sdkmanager --install "ndk;23.1.7779620"
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+   
+      - uses: ruby/setup-ruby@v1
+        with:
+            working-directory: 'apps/wallet-mobile'
+            ruby-version: '3.1.0'
+            bundler-cache: true
+
+      - uses: maierj/fastlane-action@v3.0.0
+        with:
+            subdirectory: 'apps/wallet-mobile'
+            lane: 'bump_build_android'
+
+      - uses: maierj/fastlane-action@v3.0.0
+        with:
+            subdirectory: 'apps/wallet-mobile'
+            lane: 'bump_build_ios'
+
+    
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+            author_name: ci-bot
+            author_email: support@emurgo.io
+            message: 'chore(release): nightly'
+            add: '.'
+  
+      - name: Install deps for ASDF    
+        run: brew install coreutils curl git
+        
+      - name: Install ASDF    
+        run: brew install asdf
+
+      - name: Install ASDF packages
+        run: |
+          echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> $HOME/.zshrc
+          echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> $HOME/.bashrc
+          . /usr/local/opt/asdf/libexec/asdf.sh
+          cd apps/wallet-mobile 
+          asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
+          asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+          asdf plugin-add java https://github.com/halcyon/asdf-java.git
+          asdf plugin-add rust https://github.com/code-lever/asdf-rust.git
+          asdf plugin-add python
+          asdf install
+          asdf install python 2.7.13
+          rustup default 1.69
+          rustup target add aarch64-apple-darwin aarch64-apple-ios aarch64-apple-ios-sim aarch64-linux-android armv7-linux-androideabi i686-linux-android wasm32-unknown-unknown x86_64-apple-ios x86_64-linux-android
+          bash -c -l "rustup default 1.69"
+          bash -l -c "rustup target add aarch64-apple-darwin aarch64-apple-ios aarch64-apple-ios-sim aarch64-linux-android armv7-linux-androideabi i686-linux-android wasm32-unknown-unknown x86_64-apple-ios x86_64-linux-android"
+          gem install cocoapods fastlane
+          ruby --version
+          python --version
+          node --version
+          rustc --version 
+          java --version
+          cargo install --version 3.1.1 cargo-lipo
+          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      - name: Yarn & Pod Install     
+        run: |
+          . /usr/local/opt/asdf/libexec/asdf.sh
+          yarn install 
+          cd apps/wallet-mobile
+          yarn install
+          cd ios 
+          pod install
+          cd ..
+          yarn workspaces run build
+      - name: Copy Apple Signing Key
+        run: |
+           mkdir -p $HOME/.yoroi/ios
+           echo ${{secrets.APP_STORE_KEY}} | base64 -d > $HOME/.yoroi/ios/AuthKey_PH9Z89M567.p8
+           chmod 600 $HOME/.yoroi/ios/AuthKey_PH9Z89M567.p8
+           
+      - name: Copy Android Keys
+        run: |
+           mkdir -p $HOME/.yoroi/android
+           echo ${{secrets.ANDROID_NIGHTLY_KEYSTORE}} | base64 -d > $HOME/.yoroi/android/nightly.keystore
+           chmod 600 $HOME/.yoroi/android/nightly.keystore
+           echo ${{secrets.ANDROID_KEYSTORE_PASS}} > $HOME/.yoroi/android/nightly.pass
+           echo ${{secrets.ANDROID_SERVICE_ACCOUNT_JSON}} | base64 -d > $HOME/.yoroi/android/service-account.json
+
+      - name: Copy Yoroi Certs SSH Key
+        run: |
+           mkdir -p $HOME/.ssh
+           echo ${{secrets.CERT_SSH_KEY}} | base64 -d > $HOME/.ssh/id_rsa
+           chmod 600 $HOME/.ssh/id_rsa
+           
+      - name: Fastlane Deploy iOS and Android Nightly     
+        run: | 
+           . /usr/local/opt/asdf/libexec/asdf.sh
+           cd apps/wallet-mobile
+           export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
+           export ANDROID_HOME=$HOME/Library/Android/sdk
+           export JAVA_HOME=$(/usr/libexec/java_home -v 11)
+           export PATH=$JAVA_HOME/bin:$PATH           
+           export ANDROID_KEYSTORE_PASS="${{secrets.ANDROID_KEYSTORE_PASS}}"
+           export ANDROID_KEY_PASS="${{secrets.ANDROID_KEY_PASS}}"
+           export CI_KEYCHAIN_NAME="${{secrets.CI_KEYCHAIN_NAME}}"
+           export CI_KEYCHAIN_PASSWORD="${{secrets.CI_KEYCHAIN_PASSWORD}}"
+           export FASTLANE_PASSWORD="${{secrets.FASTLANE_PASSWORD}}"
+           export MATCH_PASSWORD="${{secrets.MATCH_PASSWORD}}"
+           fastlane ios release --env nightly
+           asdf global python 2.7.13
+           fastlane android release --env nightly
+

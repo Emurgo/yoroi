@@ -84,3 +84,6 @@ coverage/
 
 # Dependency cruiser
 dependency-graph.svg 
+
+# Scripts 
+test-codes/

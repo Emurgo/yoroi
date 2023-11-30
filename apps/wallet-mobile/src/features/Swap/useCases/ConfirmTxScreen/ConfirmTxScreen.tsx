@@ -48,6 +48,22 @@ export const ConfirmTxScreen = () => {
     {onSuccess: (rootKey) => signAndSubmitTx({unsignedTx, rootKey})},
   )
 
+  const trackSwapOrderSubmitted = () => {
+    if (orderData.selectedPoolCalculation === undefined) return
+    track.swapOrderSubmitted({
+      from_asset: [
+        {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
+      ],
+      to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
+      order_type: orderData.type,
+      slippage_tolerance: orderData.slippage,
+      from_amount: orderData.amounts.sell.quantity,
+      to_amount: orderData.amounts.buy.quantity,
+      pool_source: orderData.selectedPoolCalculation.pool.provider,
+      swap_fees: Number(orderData.selectedPoolCalculation.cost.batcherFee),
+    })
+  }
+
   const {signAndSubmitTx, isLoading: processingTx} = useSignAndSubmitTx(
     {wallet},
     {
@@ -59,21 +75,7 @@ export const ConfirmTxScreen = () => {
       },
       submitTx: {
         onSuccess: () => {
-          if (orderData.selectedPoolCalculation === undefined) return
-          track.swapOrderSubmitted({
-            from_asset: [
-              {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
-            ],
-            to_asset: [
-              {asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group},
-            ],
-            order_type: orderData.type,
-            slippage_tolerance: orderData.slippage,
-            from_amount: orderData.amounts.sell.quantity,
-            to_amount: orderData.amounts.buy.quantity,
-            pool_source: orderData.selectedPoolCalculation.pool.provider,
-            swap_fees: Number(orderData.selectedPoolCalculation.cost.batcherFee),
-          })
+          trackSwapOrderSubmitted()
           navigate.submittedTx(signedTxRef.current?.signedTx.id ?? '')
         },
         onError: () => {
@@ -83,6 +85,14 @@ export const ConfirmTxScreen = () => {
       },
     },
   )
+
+  const onPasswordTxSuccess = (signedTx: YoroiSignedTx) => {
+    trackSwapOrderSubmitted()
+    closeModal()
+    InteractionManager.runAfterInteractions(() => {
+      navigate.submittedTx(signedTx.signedTx.id)
+    })
+  }
 
   const txIsLoading = authenticating || processingTx
   const isButtonDisabled = txIsLoading || couldReceiveNoAssets
@@ -108,12 +118,7 @@ export const ConfirmTxScreen = () => {
                 <ConfirmTx
                   wallet={wallet}
                   unsignedTx={unsignedTx}
-                  onSuccess={(signedTx) => {
-                    closeModal()
-                    InteractionManager.runAfterInteractions(() => {
-                      navigate.submittedTx(signedTx.signedTx.id)
-                    })
-                  }}
+                  onSuccess={onPasswordTxSuccess}
                   onCancel={closeModal}
                 />
 

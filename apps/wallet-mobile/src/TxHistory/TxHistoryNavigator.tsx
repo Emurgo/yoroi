@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {
   milkTokenId,
@@ -10,9 +11,12 @@ import {
 import {Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
 
-import {Boundary, Icon} from '../components'
+import {Boundary, Icon, Spacer} from '../components'
+import {CodeScannerButton} from '../features/Scan/common/CodeScannerButton'
+import {ScanCodeScreen} from '../features/Scan/useCases/ScanCodeScreen'
+import {ShowCameraPermissionDeniedScreen} from '../features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
 import {SendProvider} from '../features/Send/common/SendContext'
 import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
 import {FailedTxScreen} from '../features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
@@ -20,7 +24,6 @@ import {SubmittedTxScreen} from '../features/Send/useCases/ConfirmTx/SubmittedTx
 import {ListAmountsToSendScreen} from '../features/Send/useCases/ListAmountsToSend'
 import {SelectTokenFromListScreen} from '../features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
 import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
-import {ReadQRCodeScreen} from '../features/Send/useCases/StartMultiTokenTx/InputReceiver/ReadQRCodeScreen'
 import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
 import {SwapFormProvider} from '../features/Swap/common/SwapFormProvider'
 import {SwapTabNavigator} from '../features/Swap/SwapNavigator'
@@ -33,7 +36,13 @@ import {
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
-import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes, useWalletNavigation} from '../navigation'
+import {
+  BackButton,
+  defaultStackNavigationOptions,
+  TxHistoryRouteNavigation,
+  TxHistoryRoutes,
+  useWalletNavigation,
+} from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
@@ -71,6 +80,9 @@ export const TxHistoryNavigator = () => {
     return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
   }, [wallet.networkId, wallet.primaryTokenInfo.id, stakingKey, frontendFees, aggregatorTokenId])
 
+  // navigator components
+  const headerRightHistory = React.useCallback(() => <HeaderRightHistory />, [])
+
   return (
     <SendProvider key={wallet.id}>
       <SwapProvider key={wallet.id} swapManager={swapManager}>
@@ -88,7 +100,7 @@ export const TxHistoryNavigator = () => {
               component={TxHistory}
               options={{
                 title: walletName ?? '',
-                headerRight: () => <HeaderRightHistory />,
+                headerRight: headerRightHistory,
               }}
             />
 
@@ -232,18 +244,6 @@ export const TxHistoryNavigator = () => {
             </Stack.Screen>
 
             <Stack.Screen //
-              name="send-read-qr-code"
-              component={ReadQRCodeScreen}
-              options={{
-                ...sendOptions,
-                headerTransparent: true,
-                title: strings.qrScannerTitle,
-                headerTintColor: '#fff',
-                headerLeft: (props) => <BackButton color="#fff" {...props} />,
-              }}
-            />
-
-            <Stack.Screen //
               name="send-confirm-tx"
               component={ConfirmTxScreen}
               options={{
@@ -262,6 +262,27 @@ export const TxHistoryNavigator = () => {
               name="send-failed-tx"
               component={FailedTxScreen}
               options={{headerShown: false, gestureEnabled: false}}
+            />
+
+            <Stack.Screen //
+              name="scan-start"
+              component={ScanCodeScreen}
+              options={{
+                ...sendOptions,
+                headerTransparent: true,
+                title: strings.scanTitle,
+                headerTintColor: COLORS.WHITE,
+                headerLeft: (props) => <BackButton color={COLORS.WHITE} {...props} />,
+              }}
+            />
+
+            <Stack.Screen //
+              name="scan-show-camera-permission-denied"
+              component={ShowCameraPermissionDeniedScreen}
+              options={{
+                headerShown: false,
+                gestureEnabled: false,
+              }}
             />
           </Stack.Navigator>
 
@@ -334,6 +355,10 @@ const messages = defineMessages({
     id: 'global.confirmationTransaction',
     defaultMessage: '!!!Confirm transaction',
   },
+  scanTitle: {
+    id: 'scan.title',
+    defaultMessage: '!!!Please scan a QR code',
+  },
 })
 
 const useStrings = () => {
@@ -354,6 +379,7 @@ const useStrings = () => {
     editAmountTitle: intl.formatMessage(messages.editAmountTitle),
     listAmountsToSendTitle: intl.formatMessage(messages.listAmountsToSendTitle),
     confirmationTransaction: intl.formatMessage(messages.confirmationTransaction),
+    scanTitle: intl.formatMessage(messages.scanTitle),
   }
 }
 
@@ -373,11 +399,28 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
   )
 }
 
-const HeaderRightHistory = () => {
+const HeaderRightHistory = React.memo(() => {
   const {navigateToSettings} = useWalletNavigation()
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
 
-  return <SettingsIconButton style={styles.settingIconButton} onPress={() => navigateToSettings()} />
-}
+  return (
+    <Row>
+      <CodeScannerButton
+        onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
+        color={COLORS.ACTION_GRAY}
+      />
+
+      <Spacer width={10} />
+
+      <SettingsIconButton style={styles.settingIconButton} onPress={navigateToSettings} />
+    </Row>
+  )
+})
+const Row = ({children, style, ...rest}: ViewProps) => (
+  <View style={[style, {flexDirection: 'row'}]} {...rest}>
+    {children}
+  </View>
+)
 
 const styles = StyleSheet.create({
   receiveInfoText: {

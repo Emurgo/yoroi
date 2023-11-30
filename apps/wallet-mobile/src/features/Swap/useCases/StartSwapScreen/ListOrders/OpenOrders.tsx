@@ -1,10 +1,11 @@
-import {useFocusEffect} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/core'
+import {NavigationState, useFocusEffect} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import {isString} from '@yoroi/common'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
-import React from 'react'
+import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -59,6 +60,7 @@ export const OpenOrders = () => {
     () => mapOpenOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos)),
     [orders, tokenInfos, numberLocale, transactionsInfos],
   )
+  const navigationRef = useRef<NavigationState | null>(null)
 
   const {closeModal, openModal} = useModal()
 
@@ -78,11 +80,19 @@ export const OpenOrders = () => {
 
   const {track} = useMetrics()
 
-  useFocusEffect(
-    React.useCallback(() => {
-      track.swapConfirmedPageViewed({swap_tab: 'Open Orders'})
-    }, [track]),
-  )
+  const navigation = useNavigation()
+
+  const trackSwapConfirmPageViewed = React.useCallback(() => {
+    // Closing a modal triggers this callback.
+    // https://github.com/Emurgo/yoroi/pull/2913
+    const currentState = navigation.getState()
+    const previousState = navigationRef.current
+    if (currentState === previousState) return
+    track.swapConfirmedPageViewed({swap_tab: 'Open Orders'})
+    navigationRef.current = currentState
+  }, [track, navigation])
+
+  useFocusEffect(trackSwapConfirmPageViewed)
 
   const trackCancellationSubmitted = (order: MappedOpenOrder) => {
     track.swapCancelationSubmitted({
@@ -115,7 +125,8 @@ export const OpenOrders = () => {
     navigateToTxHistory()
   }
 
-  const onRawTxHwConfirm = () => {
+  const onRawTxHwConfirm = (order: MappedOpenOrder) => {
+    trackCancellationSubmitted(order)
     closeModal()
     navigateToTxHistory()
   }
@@ -149,7 +160,7 @@ export const OpenOrders = () => {
         bech32Address={order.owner}
         onCancel={closeModal}
         onConfirm={(rootKey) => onRawTxConfirm(rootKey, order)}
-        onHWConfirm={() => onRawTxHwConfirm()}
+        onHWConfirm={() => onRawTxHwConfirm(order)}
       />,
       400,
     )
@@ -260,7 +271,7 @@ export const OpenOrders = () => {
             const fromIcon = <TokenIcon wallet={wallet} tokenId={order.fromTokenInfo?.id ?? ''} variant="swap" />
             const toIcon = <TokenIcon wallet={wallet} tokenId={order.toTokenInfo?.id ?? ''} variant="swap" />
             const liquidityPoolIcon =
-              order.provider !== undefined ? <PoolIcon size={32} providerId={order.provider} /> : null
+              order.provider !== undefined ? <PoolIcon size={28} providerId={order.provider} /> : null
             const expanded = order.id === hiddenInfoOpenId
             return (
               <ExpandableInfoCard
@@ -350,9 +361,9 @@ const Header = ({
 
         <Spacer width={4} />
 
-        <Text>{assetFromLabel}</Text>
+        <Text style={styles.headerLabel}>{assetFromLabel}</Text>
 
-        <Text>/</Text>
+        <Text style={styles.headerLabel}>/</Text>
 
         <Spacer width={4} />
 
@@ -360,7 +371,7 @@ const Header = ({
 
         <Spacer width={4} />
 
-        <Text>{assetToLabel}</Text>
+        <Text style={styles.headerLabel}>{assetToLabel}</Text>
       </View>
     </HeaderWrapper>
   )
@@ -666,6 +677,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 24,
+  },
+  headerLabel: {
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
   contentValue: {
     color: '#000',

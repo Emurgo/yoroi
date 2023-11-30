@@ -145,27 +145,25 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   linearGradient: {
-    height: 200,
     borderRadius: 8,
   },
   card: {
-    height: 200,
     padding: 16,
     paddingHorizontal: 20,
     borderRadius: 20,
   },
   shadowProp: {
     shadowColor: '#000',
+    shadowOpacity: 0.2,
     shadowOffset: {
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.2,
     shadowRadius: 1.41,
-
-    elevation: 2,
+    elevation: 1.2,
+    backgroundColor: 'white',
+    borderRadius: 8,
   },
-
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -192,8 +190,14 @@ const styles = StyleSheet.create({
   infoLabel: {
     color: '#6B7384',
     fontSize: 16,
+    fontFamily: 'Rubik-Regular',
   },
   infoValue: {
     fontSize: 16,
+    color: '#000',
+    fontFamily: 'Rubik-Regular',
+    display: 'flex',
+    flexShrink: 1,
+    textAlign: 'right',
   },
 })
