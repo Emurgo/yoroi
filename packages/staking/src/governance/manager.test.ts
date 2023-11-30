@@ -47,10 +47,17 @@ describe('createGovernanceManager', () => {
     })
 
     it('should not throw an error for a DRep id that is registered', async () => {
-      const invalidId =
-        'c1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758'
+      const id = 'c1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758'
+      const fakeSuccessResponse = {
+        txId: 'tx',
+        epoch: 123,
+      }
+      const manager = governanceManagerMaker({
+        ...options,
+        api: {getDRepById: () => Promise.resolve(fakeSuccessResponse)},
+      })
 
-      await governanceManager.validateDRepID(invalidId)
+      await manager.validateDRepID(id)
     })
 
     it('should accept key hash as DRep ID', async () => {
