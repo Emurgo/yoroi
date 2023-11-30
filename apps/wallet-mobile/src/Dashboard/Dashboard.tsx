@@ -132,7 +132,7 @@ export const Dashboard = () => {
         </Actions>
       </View>
 
-      {(stakingInfo?.status === 'staked' || true) && (
+      {stakingInfo?.status === 'staked' && (
         <Modal visible={showWithdrawalDialog} onRequestClose={() => setShowWithdrawalDialog(false)} showCloseIcon>
           <WithdrawStakingRewards
             wallet={wallet}
