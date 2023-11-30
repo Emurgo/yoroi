@@ -2,7 +2,8 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {ConfirmWithSpendingPasswordModal} from './ConfirmWithSpendingPasswordModal'
+import {mocks} from '../../yoroi-wallets/mocks'
+import {ConfirmTxWithSpendingPasswordModal} from './ConfirmTxWithSpendingPasswordModal'
 
 const strings = {
   enterSpendingPassword: 'Enter spending password',
@@ -14,9 +15,7 @@ const strings = {
 
 storiesOf('ConfirmWithSpendingPassword', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
-  .add('Initial', () => <ConfirmWithSpendingPasswordModal strings={strings} />)
-  .add('Loading', () => <ConfirmWithSpendingPasswordModal strings={strings} isLoading />)
-  .add('Error', () => <ConfirmWithSpendingPasswordModal strings={strings} error={new Error('Example error')} />)
+  .add('Default', () => <ConfirmTxWithSpendingPasswordModal strings={strings} unsignedTx={mocks.yoroiUnsignedTx} />)
 
 const styles = StyleSheet.create({
   container: {

@@ -2,10 +2,10 @@ import {storiesOf} from '@storybook/react-native'
 import {GovernanceProvider} from '@yoroi/staking'
 import React from 'react'
 
-import {EnterDrepIdModal} from './EnterDrepIdModal'
-import {mocks} from '../../../../../yoroi-wallets/mocks'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
+import {mocks} from '../../../../../yoroi-wallets/mocks'
 import {mocks as governanceMocks} from '../../common'
+import {EnterDrepIdModal} from './EnterDrepIdModal'
 
 storiesOf('Governance/EnterDrepIdModal', module)
   .addDecorator((story) => (

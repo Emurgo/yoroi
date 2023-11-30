@@ -1,10 +1,11 @@
-import {useStrings} from '../../common'
-import {Linking, StyleSheet, View} from 'react-native'
-import {Button, Spacer, Text, TextInput} from '../../../../../components'
-import React, {useState} from 'react'
-import {COLORS} from '../../../../../theme'
-import {useIsValidDRepID} from '@yoroi/staking'
 import {isNonNullable} from '@yoroi/common'
+import {useIsValidDRepID} from '@yoroi/staking'
+import React, {useState} from 'react'
+import {Linking, StyleSheet, View} from 'react-native'
+
+import {Button, Spacer, Text, TextInput} from '../../../../../components'
+import {COLORS} from '../../../../../theme'
+import {useStrings} from '../../common'
 
 type Props = {
   onSubmit?: (drepId: string) => void
@@ -14,7 +15,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const strings = useStrings()
   const [drepId, setDrepId] = useState('')
 
-  const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {retry: false, enabled: !!drepId})
+  const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {retry: false, enabled: drepId.length > 0})
 
   const onPress = () => {
     onSubmit?.(drepId)

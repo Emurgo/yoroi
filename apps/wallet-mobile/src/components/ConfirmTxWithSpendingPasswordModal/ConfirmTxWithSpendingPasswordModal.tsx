@@ -1,23 +1,20 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
-import {debugWalletInfo, features} from '../../features'
-import {TextInput} from '../TextInput'
-import {Text} from '../Text'
-import {Spacer} from '../Spacer'
-import {Button} from '../Button'
-import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
-import {COLORS} from '../../theme'
 
-export type ErrorData = {
-  errorMessage: string
-  errorLogs?: unknown
-}
+import {debugWalletInfo, features} from '../../features'
+import {useSelectedWallet} from '../../SelectedWallet'
+import {COLORS} from '../../theme'
+import {WrongPassword} from '../../yoroi-wallets/cardano/errors'
+import {useSignTxWithPassword, useSubmitTx} from '../../yoroi-wallets/hooks'
+import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
+import {Button} from '../Button'
+import {Spacer} from '../Spacer'
+import {Text} from '../Text'
+import {TextInput} from '../TextInput'
 
 type Props = {
-  onSubmit?: (spendingPassword: string) => void
-  isLoading?: boolean
-  error?: Error
-  onPasswordChange?: () => void
+  onSuccess?: (signedTx: YoroiSignedTx) => void
+  unsignedTx: YoroiUnsignedTx
   strings: {
     enterSpendingPassword: string
     spendingPassword: string
@@ -27,12 +24,29 @@ type Props = {
   }
 }
 
-export const ConfirmWithSpendingPasswordModal = ({onSubmit, isLoading, error, onPasswordChange, strings}: Props) => {
-  const spendingPasswordRef = React.useRef<RNTextInput>(null)
+export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, strings}: Props) => {
+  const spendingPasswordRef = useRef<RNTextInput>(null)
+  const wallet = useSelectedWallet()
+  const {signTx, error: signError, isLoading: signIsLoading} = useSignTxWithPassword({wallet})
+  const {submitTx, error: submitError, isLoading: submitIsLoading} = useSubmitTx({wallet})
+
   const [spendingPassword, setSpendingPassword] = React.useState(
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
   )
 
+  const onSubmit = (password: string) => {
+    signTx(
+      {unsignedTx, password},
+      {
+        onSuccess: (signedTx) => {
+          submitTx(signedTx, {onSuccess: () => onSuccess?.(signedTx)})
+        },
+      },
+    )
+  }
+
+  const error = signError || submitError
+  const isLoading = signIsLoading || submitIsLoading
   return (
     <>
       <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
@@ -43,10 +57,7 @@ export const ConfirmWithSpendingPasswordModal = ({onSubmit, isLoading, error, on
         enablesReturnKeyAutomatically
         placeholder={strings.spendingPassword}
         value={spendingPassword}
-        onChangeText={(text) => {
-          setSpendingPassword(text)
-          onPasswordChange && onPasswordChange()
-        }}
+        onChangeText={(text) => setSpendingPassword(text)}
         autoComplete="off"
       />
 

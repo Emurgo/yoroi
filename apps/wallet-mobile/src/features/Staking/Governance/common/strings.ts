@@ -1,6 +1,7 @@
 import {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import globalMessages, {errorMessages, txLabels} from '../../../../i18n/global-messages'
+
+import globalMessages, {errorMessages, ledgerMessages, txLabels} from '../../../../i18n/global-messages'
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -49,6 +50,8 @@ export const useStrings = () => {
     error: intl.formatMessage(globalMessages.error),
     wrongPassword: intl.formatMessage(errorMessages.incorrectPassword.title),
     enterPassword: intl.formatMessage(messages.enterPassword),
+    continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
+    fees: intl.formatMessage(txLabels.fees),
   }
 }
 

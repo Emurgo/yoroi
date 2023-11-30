@@ -1,1 +1,0 @@
-export {ConfirmWithSpendingPasswordModal} from './ConfirmWithSpendingPasswordModal'

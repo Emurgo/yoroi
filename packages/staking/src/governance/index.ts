@@ -8,5 +8,5 @@ export {
   useVotingCertificate,
   useDelegationCertificate,
 } from './translators/react'
-export {governanceApiMaker} from './api'
+export {governanceApiMaker, GovernanceApi} from './api'
 export {parseActionFromMetadata} from './helpers'

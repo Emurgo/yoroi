@@ -43,7 +43,7 @@ export type GovernanceManager = {
   ) => Promise<object>
 
   // latest governance action to be used only to check the "pending" transaction that is not yet confirmed on the blockchain
-  setLatestGovernanceAction: (action: GovernanceAction) => Promise<void>
+  setLatestGovernanceAction: (action: GovernanceAction | null) => Promise<void>
   getLatestGovernanceAction: () => Promise<GovernanceAction | null>
 }
 
@@ -82,7 +82,7 @@ class Manager implements GovernanceManager {
       throw new Error(message)
     }
 
-    // TODO: will be implemented in the future
+    // // TODO: will be implemented in the future
     const drepKeyHash = isValidKeyHash ? drepId : drepId
     const drepStatus = await this.config.api.getDRepById(drepKeyHash)
 
@@ -113,7 +113,13 @@ class Manager implements GovernanceManager {
     throw new Error('Not implemented')
   }
 
-  async setLatestGovernanceAction(action: GovernanceAction): Promise<void> {
+  async setLatestGovernanceAction(
+    action: GovernanceAction | null,
+  ): Promise<void> {
+    if (!action) {
+      await this.config.storage.removeItem(governanceStorageLatestActionKey)
+      return
+    }
     await this.config.storage.setItem(
       governanceStorageLatestActionKey,
       JSON.stringify(action),

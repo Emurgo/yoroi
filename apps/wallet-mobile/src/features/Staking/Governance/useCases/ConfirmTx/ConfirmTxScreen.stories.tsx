@@ -1,13 +1,13 @@
 import {NavigationRouteContext} from '@react-navigation/core'
 import {storiesOf} from '@storybook/react-native'
+import {GovernanceProvider} from '@yoroi/staking'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
+import {mocks as governanceMocks} from '../../common'
 import {Routes} from '../../common/navigation'
 import {ConfirmTxScreen} from './ConfirmTxScreen'
-import {GovernanceProvider} from '@yoroi/staking'
-import {mocks as governanceMocks} from '../../common'
 
 storiesOf('Governance/ConfirmTxScreen', module)
   .addDecorator((story) => (
