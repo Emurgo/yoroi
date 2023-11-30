@@ -84,7 +84,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
                       <Spacer height={8} />
 
                       <View style={styles.info}>
-                        <Text style={styles.infoLabel}>{strings.marketPrice}</Text>
+                        <Text style={styles.infoLabel}>{strings.marketPrice}some more text</Text>
 
                         <Text style={styles.infoValue}>
                           {`${Quantities.format(
@@ -145,11 +145,9 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   linearGradient: {
-    height: 200,
     borderRadius: 8,
   },
   card: {
-    height: 200,
     padding: 16,
     paddingHorizontal: 20,
     borderRadius: 20,
@@ -166,7 +164,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 8,
   },
-
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -199,5 +196,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000',
     fontFamily: 'Rubik-Regular',
+    display: 'flex',
+    flexShrink: 1,
+    textAlign: 'right',
   },
 })
