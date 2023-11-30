@@ -10,11 +10,19 @@ import {mocks as governanceMocks} from '../../common'
 import {HomeScreen} from './HomeScreen'
 
 storiesOf('Governance/HomeScreen', module)
-  .add('Default', () => (
-    <Wrapper manager={governanceMocks.governanceManager}>
-      <HomeScreen />
-    </Wrapper>
-  ))
+  .add('Default', () => {
+    const manager: GovernanceManager = {
+      ...governanceMocks.governanceManager,
+      getLatestGovernanceAction: async () => {
+        return null
+      },
+    }
+    return (
+      <Wrapper manager={manager}>
+        <HomeScreen />
+      </Wrapper>
+    )
+  })
   .add('Loading TX', () => {
     const manager: GovernanceManager = {
       ...governanceMocks.governanceManager,
