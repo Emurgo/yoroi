@@ -1,4 +1,4 @@
 export const actionRamp = {
-  sellAda: 'Sell ADA',
-  buyAda: 'Buy ADA',
-}
+  sellAda: 'sell',
+  buyAda: 'buy',
+} as const

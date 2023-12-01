@@ -2311,8 +2311,8 @@
     }
   },
   {
-    "id": "global.next",
-    "defaultMessage": "!!!Next",
+    "id": "global.currency",
+    "defaultMessage": "!!!Currency",
     "file": "src/i18n/global-messages.ts",
     "start": {
       "line": 768,

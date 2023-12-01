@@ -3,15 +3,16 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {useTheme} from '../../../../theme'
 import {Theme} from '../../../../theme/types'
+import {TRampOnOffAction} from '../RampOnOffProvider'
 
 interface ButtonActionGroupProps {
-  onSelect: (action: string) => void
-  selected: string
-  labels: string[]
+  onSelect: (action: TRampOnOffAction) => void
+  selected: TRampOnOffAction
+  labels: {label: string; value: TRampOnOffAction}[]
 }
 
 export const ButtonActionGroup: React.FC<ButtonActionGroupProps> = ({labels, onSelect, selected}) => {
-  const handleOnPress = (label: string) => onSelect(label)
+  const handleOnPress = (actionType: TRampOnOffAction) => onSelect(actionType)
 
   const {theme} = useTheme()
 
@@ -19,13 +20,13 @@ export const ButtonActionGroup: React.FC<ButtonActionGroupProps> = ({labels, onS
 
   return (
     <View style={styles.container}>
-      {labels.map((buttonLabel) => (
-        <View key={buttonLabel} style={styles.buttonWrapper}>
+      {labels.map((labelItem) => (
+        <View key={labelItem.value} style={styles.buttonWrapper}>
           <TouchableOpacity
-            onPress={() => handleOnPress(buttonLabel)}
-            style={[styles.button, buttonLabel === selected && styles.selected]}
+            onPress={() => handleOnPress(labelItem.value)}
+            style={[styles.button, labelItem.value === selected && styles.selected]}
           >
-            <Text style={styles.label}>{buttonLabel}</Text>
+            <Text style={styles.label}>{labelItem.label}</Text>
           </TouchableOpacity>
         </View>
       ))}

@@ -1,10 +1,15 @@
+import {banxaModuleMaker} from '@yoroi/banxa'
+import {BanxaReferralUrlQueryStringParams} from '@yoroi/banxa/lib/typescript/translators/module'
 import * as React from 'react'
-import {KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {KeyboardAvoidingView, Linking, Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {Theme} from 'src/theme/types'
 
+import env from '../../../../../../src/legacy/env'
+import {useSelectedWallet} from '../../../../../../src/SelectedWallet'
+import {Theme} from '../../../../../../src/theme/types'
 import {Button} from '../../../../../components'
 import {useTheme} from '../../../../../theme'
+import {useRampOnOff} from '../../../common/RampOnOffProvider'
 import {useStrings} from '../../../common/strings'
 import Disclaimer from './Disclaimer'
 import EditAmount from './EditAmount/EditAmount'
@@ -16,15 +21,38 @@ const BOTTOM_ACTION_SECTION = 180
 const CreateExchange = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
 
+  const {actionType, amount} = useRampOnOff()
+
+  const wallet = useSelectedWallet()
+
   const {height: deviceHeight} = useWindowDimensions()
 
   const {theme} = useTheme()
 
   const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
 
-  const handleExchange = () => null
-
   const strings = useStrings()
+
+  const handleExchange = () => {
+    // banxa doesn't support testnet for the sandbox it needs a mainnet address
+    const sandboxWallet = env.getString('BANXA_TEST_WALLET')
+    const returnUrl = env.getString('BANXA_RETURN_URL')
+    const isMainnet = wallet.networkId !== 300
+    const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
+    const moduleOptions = {isProduction: isMainnet, partner: 'yoroi'} as const
+    const urlOptions = {
+      orderType: actionType,
+      fiatType: 'USD',
+      coinType: 'ADA',
+      coinAmount: amount?.value ?? 0,
+      blockchain: 'ADA',
+      walletAddress,
+      returnUrl,
+    } as BanxaReferralUrlQueryStringParams
+    const banxa = banxaModuleMaker(moduleOptions)
+    const url = banxa.createReferralUrl(urlOptions)
+    Linking.openURL(url.toString())
+  }
 
   return (
     <View style={styles.root}>

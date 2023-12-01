@@ -3,14 +3,20 @@ import {StyleSheet, View} from 'react-native'
 
 import {ButtonActionGroup} from '../../../../common/ButtonActionGroup/ButtonActionGroup'
 import {actionRamp} from '../../../../common/mocks'
-import {useRampOnOff} from '../../../../common/RampOnOffProvider'
+import {TRampOnOffAction, useRampOnOff} from '../../../../common/RampOnOffProvider'
+import {useStrings} from '../../../../common/strings'
 
 export const TopActions = () => {
-  const actionTypeLabels = [actionRamp.buyAda, actionRamp.sellAda]
+  const strings = useStrings()
+
+  const actionTypeLabels = [
+    {label: strings.buyADA, value: actionRamp.buyAda},
+    {label: strings.sellADA, value: actionRamp.sellAda},
+  ]
 
   const {actionType, actionTypeChanged} = useRampOnOff()
 
-  const handleSelectAction = (action: string) => {
+  const handleSelectAction = (action: TRampOnOffAction) => {
     actionTypeChanged(action)
   }
 

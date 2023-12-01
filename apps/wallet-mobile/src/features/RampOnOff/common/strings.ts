@@ -8,6 +8,8 @@ export const useStrings = () => {
     proceed: intl.formatMessage(messages.proceed),
     disclaimer: intl.formatMessage(messages.disclaimer),
     contentDisclaimer: intl.formatMessage(messages.contentDisclaimer),
+    buyADA: intl.formatMessage(messages.buyADA),
+    sellADA: intl.formatMessage(messages.sellADA),
     amountTitle: intl.formatMessage(messages.amountTitle),
     providerFee: intl.formatMessage(messages.providerFee),
     provider: intl.formatMessage(messages.provider),
@@ -34,6 +36,14 @@ export const messages = defineMessages({
     id: 'rampOnOff.createRampOnOff.contentDisclaimer',
     defaultMessage:
       '!!!"Yoroi uses Banxa to provide direct Fiat-ADA exchange. By clicking “Proceed,” you also acknowledge that you will be redirected to our partner’s website, where you may be asked to accept their terms and conditions. Banxa may have buy and sell limitations depending on your location and your financial institution."',
+  },
+  buyADA: {
+    id: 'rampOnOff.createRampOnOff.buyADA',
+    defaultMessage: '!!!Buy ADA',
+  },
+  sellADA: {
+    id: 'rampOnOff.createRampOnOff.sellADA',
+    defaultMessage: '!!!Sell ADA',
   },
   amountTitle: {
     id: 'rampOnOff.createRampOnOff.amountTitle',
