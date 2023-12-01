@@ -8,8 +8,8 @@ import {useSelectedWallet} from '../../../SelectedWallet'
 import {useBalances} from '../../../yoroi-wallets/hooks'
 import {useTokenInfo} from '../../../yoroi-wallets/hooks'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
-import { actionRamp } from './mocks'
-import { useStrings } from './strings'
+import {actionRamp} from './mocks'
+import {useStrings} from './strings'
 
 export const useRampOnOff = () => React.useContext(RampOnOffContext)
 
@@ -37,7 +37,6 @@ export const RampOnOffProvider = ({
 
   const strings = useStrings()
 
-
   const actions = React.useRef<RampOnOffActions>({
     actionTypeChanged: (actionType: string) => dispatch({type: RampOnOffActionType.ActionTypeChanged, actionType}),
     amountInputDisplayValueChanged: (value: string) =>
@@ -62,7 +61,6 @@ export const RampOnOffProvider = ({
 
   const isNotEnoughBalance = new BigNumber(state.amount.value).isGreaterThan(new BigNumber(amountbalance))
 
-
   // amount input errors
   React.useEffect(() => {
     // no enough balance error
@@ -71,11 +69,22 @@ export const RampOnOffProvider = ({
       return
     }
 
-    if ((!Quantities.isZero(amountbalance) && !isNotEnoughBalance && state.amount.isTouched) || state.actionType === actionRamp.buyAda) {
+    if (
+      (!Quantities.isZero(amountbalance) && !isNotEnoughBalance && state.amount.isTouched) ||
+      state.actionType === actionRamp.buyAda
+    ) {
       actions.amountErrorChanged(undefined)
       return
     }
-  }, [actions, state.amount.displayValue, amountbalance, isNotEnoughBalance, state.amount.isTouched, state.actionType, strings.notEnoughtBalance])
+  }, [
+    actions,
+    state.amount.displayValue,
+    amountbalance,
+    isNotEnoughBalance,
+    state.amount.isTouched,
+    state.actionType,
+    strings.notEnoughtBalance,
+  ])
 
   const context = React.useMemo(
     () => ({

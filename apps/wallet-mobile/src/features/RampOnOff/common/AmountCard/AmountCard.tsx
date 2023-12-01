@@ -9,7 +9,7 @@ import {Theme} from '../../../../theme/types'
 import {isEmptyString} from '../../../../utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import { useStrings } from '../strings'
+import {useStrings} from '../strings'
 
 interface AmountCardProps {
   error?: string
@@ -100,7 +100,10 @@ export const AmountCard: React.FC<AmountCardProps> = ({
             <Spacer width={8} />
 
             <View style={styles.sectionContainer}>
-              <Text ellipsizeMode="middle" style={styles.balanceText}>{`${strings.currentBalance}: ${formattedAmount}`}</Text>
+              <Text
+                ellipsizeMode="middle"
+                style={styles.balanceText}
+              >{`${strings.currentBalance}: ${formattedAmount}`}</Text>
             </View>
           </View>
         </View>

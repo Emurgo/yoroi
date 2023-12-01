@@ -5,7 +5,7 @@ import {Theme} from 'src/theme/types'
 
 import {Button} from '../../../../../components'
 import {useTheme} from '../../../../../theme'
-import { useStrings } from '../../../common/strings'
+import {useStrings} from '../../../common/strings'
 import Disclaimer from './Disclaimer'
 import EditAmount from './EditAmount/EditAmount'
 import ProviderFee from './ProviderFee/ProviderFee'
@@ -61,7 +61,13 @@ const CreateExchange = () => {
             },
           ]}
         >
-          <Button testID="swapButton" shelleyTheme title={strings.proceed.toLocaleUpperCase()} onPress={handleExchange} disabled={false} />
+          <Button
+            testID="rampOnOffButton"
+            shelleyTheme
+            title={strings.proceed.toLocaleUpperCase()}
+            onPress={handleExchange}
+            disabled={false}
+          />
         </View>
       </KeyboardAvoidingView>
     </View>

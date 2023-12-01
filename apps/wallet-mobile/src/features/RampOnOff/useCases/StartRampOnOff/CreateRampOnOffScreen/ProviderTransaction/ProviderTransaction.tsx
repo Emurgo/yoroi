@@ -5,7 +5,7 @@ import image from '../../../../../../assets/img/banxa.png'
 import {Spacer} from '../../../../../../components'
 import {useTheme} from '../../../../../../theme'
 import {Theme} from '../../../../../../theme/types'
-import { useStrings } from '../../../../common/strings'
+import {useStrings} from '../../../../common/strings'
 
 const ProviderTransaction = () => {
   const {theme} = useTheme()

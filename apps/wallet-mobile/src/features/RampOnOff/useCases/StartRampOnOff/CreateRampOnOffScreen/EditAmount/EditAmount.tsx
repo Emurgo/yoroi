@@ -4,8 +4,7 @@ import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {useBalance} from '../../../../../../yoroi-wallets/hooks'
 import {AmountCard} from '../../../../common/AmountCard/AmountCard'
 import {useRampOnOff} from '../../../../common/RampOnOffProvider'
-import { useStrings } from '../../../../common/strings'
-
+import {useStrings} from '../../../../common/strings'
 
 const EditAmount = () => {
   const wallet = useSelectedWallet()
