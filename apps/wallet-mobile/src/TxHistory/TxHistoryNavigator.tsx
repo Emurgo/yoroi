@@ -17,6 +17,7 @@ import {Boundary, Icon, Spacer} from '../components'
 import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
+import {RampOnOffScreen} from '../features/RampOnOff/RampOnOffNavigator'
 import {CodeScannerButton} from '../features/Scan/common/CodeScannerButton'
 import {ScanCodeScreen} from '../features/Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '../features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
@@ -136,6 +137,14 @@ export const TxHistoryNavigator = () => {
                     shadowOpacity: 0,
                     backgroundColor: '#fff',
                   },
+                }}
+              />
+
+              <Stack.Screen
+                name="rampOnOff-start-rampOnOff"
+                component={RampOnOffScreen}
+                options={{
+                  title: strings.rampOnOffTitle,
                 }}
               />
 
@@ -323,6 +332,10 @@ const messages = defineMessages({
     id: 'swap.swapScreen.swapTitle',
     defaultMessage: '!!!Swap',
   },
+  rampOnOffTitle: {
+    id: 'rampOnOff.rampOnOffScreen.rampOnOffTitle',
+    defaultMessage: '!!!Exchange ADA',
+  },
   swapFromTitle: {
     id: 'swap.swapScreen.swapFrom',
     defaultMessage: '!!!Swap from',
@@ -390,6 +403,7 @@ const useStrings = () => {
   return {
     receiveTitle: intl.formatMessage(messages.receiveTitle),
     swapTitle: intl.formatMessage(messages.swapTitle),
+    rampOnOffTitle: intl.formatMessage(messages.rampOnOffTitle),
     swapFromTitle: intl.formatMessage(messages.swapFromTitle),
     swapToTitle: intl.formatMessage(messages.swapToTitle),
     slippageTolerance: intl.formatMessage(messages.slippageTolerance),
