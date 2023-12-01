@@ -277,6 +277,7 @@ export const OpenOrders = () => {
             const liquidityPoolIcon =
               order.provider !== undefined ? <PoolIcon size={28} providerId={order.provider} /> : null
             const expanded = order.id === hiddenInfoOpenId
+            const date = new Date(order.date)
             return (
               <ExpandableInfoCard
                 key={order.id}
@@ -314,11 +315,15 @@ export const OpenOrders = () => {
                 <MainInfo
                   tokenAmount={`${order.tokenAmount} ${order.assetToLabel}`}
                   tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
-                  date={intl.formatDate(new Date(order.date), {
-                    dateStyle: 'short',
-                    timeStyle: 'medium',
-                    hour12: false,
-                  })}
+                  date={
+                    isNaN(date.getTime())
+                      ? ''
+                      : intl.formatDate(date, {
+                          dateStyle: 'short',
+                          timeStyle: 'medium',
+                          hour12: false,
+                        })
+                  }
                 />
               </ExpandableInfoCard>
             )
