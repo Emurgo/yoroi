@@ -104,6 +104,10 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     navigateTo.swap()
   }
 
+  const handleExchange = () => {
+    navigateTo.exchange()
+  }
+
   return (
     <View style={styles.banner}>
       <Spacer height={16} />
@@ -170,6 +174,21 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
                 </TouchableOpacity>
 
                 <Text style={styles.actionLabel}>{strings.buyLabel}</Text>
+              </View>
+
+              <Spacer width={32} />
+
+              <View style={styles.centralized}>
+                <TouchableOpacity
+                  style={styles.actionIcon}
+                  onPress={handleExchange}
+                  testID="buyButton"
+                  disabled={disabled}
+                >
+                  <Icon.Exchange {...ACTION_PROPS} />
+                </TouchableOpacity>
+
+                <Text style={styles.actionLabel}>{strings.exchange}</Text>
               </View>
             </>
           )}
@@ -240,6 +259,7 @@ const useStrings = () => {
     proceed: intl.formatMessage(actionMessages.proceed),
     swapLabel: intl.formatMessage(actionMessages.swap),
     messageBuy: intl.formatMessage(actionMessages.soon),
+    exchange: intl.formatMessage(actionMessages.exchange),
   }
 }
 
@@ -252,5 +272,6 @@ const useNavigateTo = () => {
     send: () => navigation.navigate('send-start-tx'),
     receive: () => navigation.navigate('receive'),
     swap: () => navigation.navigate('swap-start-swap'),
+    exchange: () => navigation.navigate('rampOnOff-start-rampOnOff'),
   }
 }

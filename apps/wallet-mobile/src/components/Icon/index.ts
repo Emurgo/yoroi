@@ -27,6 +27,7 @@ import {Document} from './Document'
 import {Drag} from './Drag'
 import {Edit} from './Edit'
 import {Emurgo} from './Emurgo'
+import {Exchange} from './Exchange'
 import {Export} from './Export'
 import {ExternalLink} from './ExternalLink'
 import {EyeOff} from './EyeOff'
@@ -105,6 +106,7 @@ import {YoroiWallet} from './YoroiWallet'
 
 export const Icon = {
   Ada,
+  Exchange,
   Analytics,
   Assets,
   Bio,
