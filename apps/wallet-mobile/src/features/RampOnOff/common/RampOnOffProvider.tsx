@@ -1,3 +1,4 @@
+import {BanxaReferralUrlQueryStringParams} from '@yoroi/banxa/lib/typescript/translators/module'
 import BigNumber from 'bignumber.js'
 import {produce} from 'immer'
 import React from 'react'
@@ -38,7 +39,8 @@ export const RampOnOffProvider = ({
   const strings = useStrings()
 
   const actions = React.useRef<RampOnOffActions>({
-    actionTypeChanged: (actionType: string) => dispatch({type: RampOnOffActionType.ActionTypeChanged, actionType}),
+    actionTypeChanged: (actionType: TRampOnOffAction) =>
+      dispatch({type: RampOnOffActionType.ActionTypeChanged, actionType}),
     amountInputDisplayValueChanged: (value: string) =>
       dispatch({type: RampOnOffActionType.AmountInputDisplayValueChanged, value}),
     amountInputValueChanged: (value: number) => dispatch({type: RampOnOffActionType.AmountInputValueChanged, value}),
@@ -121,14 +123,16 @@ const rampOnOffReducer = (state: RampOnOffState, action: RampOnOffAction) => {
   })
 }
 
+export type TRampOnOffAction = BanxaReferralUrlQueryStringParams['orderType']
+
 type RampOnOffAction =
-  | {type: RampOnOffActionType.ActionTypeChanged; actionType: string}
+  | {type: RampOnOffActionType.ActionTypeChanged; actionType: TRampOnOffAction}
   | {type: RampOnOffActionType.AmountInputDisplayValueChanged; value: string}
   | {type: RampOnOffActionType.AmountErrorChanged; error: string | undefined}
   | {type: RampOnOffActionType.AmountInputValueChanged; value: number}
 
 type RampOnOffState = {
-  actionType: string
+  actionType: TRampOnOffAction
   amount: {
     isTouched: boolean
     disabled: boolean
@@ -139,7 +143,7 @@ type RampOnOffState = {
 }
 
 type RampOnOffActions = {
-  actionTypeChanged: (type: string) => void
+  actionTypeChanged: (type: TRampOnOffAction) => void
   amountInputDisplayValueChanged: (value: string) => void
   amountErrorChanged: (error: string | undefined) => void
   amountInputValueChanged: (value: number) => void
