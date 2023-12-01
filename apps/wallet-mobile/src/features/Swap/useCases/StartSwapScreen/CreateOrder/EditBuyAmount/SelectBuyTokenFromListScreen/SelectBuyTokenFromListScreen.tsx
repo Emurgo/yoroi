@@ -76,10 +76,12 @@ const TokenList = () => {
     return onlyVerifiedTokens
   }, [onlyVerifiedTokens])
 
-  const filteredTokenList = React.useMemo(() => {
-    const filter = filterBySearch(assetSearchTerm)
-    return tokenInfos.filter((tokenInfo) => filter(tokenInfo)).sort((a, b) => sortTokensByName(a, b, wallet))
-  }, [tokenInfos, assetSearchTerm, wallet])
+  const [filteredTokenList, someInWallet] = React.useMemo(() => {
+    const list = tokenInfos.filter(filterBySearch(assetSearchTerm)).sort((a, b) => sortTokensByName(a, b, wallet))
+    const set = new Set(list.map(({id}) => id))
+    const someInWallet = walletTokenIds.some((id) => set.has(id))
+    return [list, someInWallet]
+  }, [tokenInfos, assetSearchTerm, walletTokenIds, wallet])
 
   return (
     <View style={styles.list}>
@@ -113,13 +115,15 @@ const TokenList = () => {
 
       <Spacer height={16} />
 
-      <View style={[styles.row, styles.ph]}>
-        <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
+      {someInWallet && (
+        <View style={[styles.row, styles.ph]}>
+          <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
 
-        <Spacer width={8} />
+          <Spacer width={8} />
 
-        <Text style={styles.legend}>{strings.assetsIn}</Text>
-      </View>
+          <Text style={styles.legend}>{strings.assetsIn}</Text>
+        </View>
+      )}
 
       <Counter
         counter={filteredTokenList.length}
