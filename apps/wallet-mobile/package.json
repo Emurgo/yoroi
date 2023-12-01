@@ -126,6 +126,7 @@
     "@yoroi/common": "1.3.0",
     "@yoroi/links": "1.3.0",
     "@yoroi/swap": "1.3.0",
+    "@yoroi/staking": "1.0.0",
     "add": "2.0.6",
     "assert": "^2.0.0",
     "base-64": "^1.0.0",

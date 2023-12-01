@@ -1,8 +1,8 @@
 import {Swap} from '@yoroi/types'
 import {UseMutationOptions} from 'react-query'
+import {useMutationWithInvalidations} from '@yoroi/common'
 
 import {useSwap} from './useSwap'
-import {useMutationWithInvalidations} from '../../../utils/useMutationsWithInvalidations'
 
 export const useSwapCreateOrder = (
   options?: UseMutationOptions<

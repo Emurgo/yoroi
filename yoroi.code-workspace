@@ -33,6 +33,10 @@
       "path": "./packages/openswap"
     },
     {
+      "name": "@yoroi/staking",
+      "path": "./packages/staking"
+    },
+    {
       "name": "@yoroi/wallet-mobile",
       "path": "./apps/wallet-mobile"
     },

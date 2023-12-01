@@ -58,6 +58,14 @@ export const Menu = () => {
 
         <Hr />
 
+        <Governance
+          label={strings.governanceCenter}
+          onPress={navigateTo.governanceCenter}
+          left={<Icon.Governance size={24} color={lightPalette.gray['600']} />}
+        />
+
+        <Hr />
+
         <KnowledgeBase //
           label={strings.knowledgeBase}
           onPress={navigateTo.knowledgeBase}
@@ -133,6 +141,7 @@ const Item = ({
   )
 }
 
+const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
@@ -162,7 +171,7 @@ const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/request
 const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
 
 const useNavigateTo = () => {
-  const {navigation, navigateToSettings} = useWalletNavigation()
+  const {navigation, navigateToSettings, navigateToGovernanceCenter} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
@@ -181,6 +190,7 @@ const useNavigateTo = () => {
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
+    governanceCenter: () => navigateToGovernanceCenter(),
   }
 }
 
@@ -195,6 +205,7 @@ const useStrings = () => {
     knowledgeBase: intl.formatMessage(messages.knowledgeBase),
     menu: intl.formatMessage(messages.menu),
     releases: intl.formatMessage(messages.releases),
+    governanceCenter: intl.formatMessage(messages.governanceCenter),
   }
 }
 
@@ -226,6 +237,10 @@ const messages = defineMessage({
   releases: {
     id: 'menu.releases',
     defaultMessage: '!!!Releases',
+  },
+  governanceCenter: {
+    id: 'menu.governanceCenter',
+    defaultMessage: '!!!Governance center',
   },
 })
 
