@@ -1,0 +1,152 @@
+[
+  {
+    "id": "swap.swapScreen.currentBalance",
+    "defaultMessage": "!!!Current Balance",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 21,
+      "column": 18,
+      "index": 769
+    },
+    "end": {
+      "line": 24,
+      "column": 3,
+      "index": 858
+    }
+  },
+  {
+    "id": "global.proceed",
+    "defaultMessage": "!!!PROCEED",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 25,
+      "column": 11,
+      "index": 871
+    },
+    "end": {
+      "line": 28,
+      "column": 3,
+      "index": 936
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.disclaimer",
+    "defaultMessage": "!!!Disclaimer",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 29,
+      "column": 14,
+      "index": 952
+    },
+    "end": {
+      "line": 32,
+      "column": 3,
+      "index": 1042
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.contentDisclaimer",
+    "defaultMessage": "!!!\"Yoroi uses Banxa to provide direct Fiat-ADA exchange. By clicking “Proceed,” you also acknowledge that you will be redirected to our partner’s website, where you may be asked to accept their terms and conditions. Banxa may have buy and sell limitations depending on your location and your financial institution.\"",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 33,
+      "column": 21,
+      "index": 1065
+    },
+    "end": {
+      "line": 37,
+      "column": 3,
+      "index": 1471
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.amountTitle",
+    "defaultMessage": "!!!ADA amount",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 38,
+      "column": 15,
+      "index": 1488
+    },
+    "end": {
+      "line": 41,
+      "column": 3,
+      "index": 1579
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.providerFee",
+    "defaultMessage": "!!!Provider Fee",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 42,
+      "column": 15,
+      "index": 1596
+    },
+    "end": {
+      "line": 45,
+      "column": 3,
+      "index": 1689
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.provider",
+    "defaultMessage": "!!!Provider",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 46,
+      "column": 12,
+      "index": 1703
+    },
+    "end": {
+      "line": 49,
+      "column": 3,
+      "index": 1789
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.banxa",
+    "defaultMessage": "!!!Banxa",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 50,
+      "column": 9,
+      "index": 1800
+    },
+    "end": {
+      "line": 53,
+      "column": 3,
+      "index": 1880
+    }
+  },
+  {
+    "id": "global.buyTitle",
+    "defaultMessage": "!!!Exchange ADA",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 54,
+      "column": 9,
+      "index": 1891
+    },
+    "end": {
+      "line": 57,
+      "column": 3,
+      "index": 1962
+    }
+  },
+  {
+    "id": "swap.swapScreen.notEnoughBalance",
+    "defaultMessage": "!!!Not Enough Balannce",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 58,
+      "column": 21,
+      "index": 1985
+    },
+    "end": {
+      "line": 61,
+      "column": 3,
+      "index": 2080
+    }
+  }
+]
