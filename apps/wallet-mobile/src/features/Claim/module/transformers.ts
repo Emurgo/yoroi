@@ -20,7 +20,7 @@ export const asClaimToken = (
   const ptQuantity = asQuantity(lovelaces)
   const amounts = Amounts.fromArray(
     Object.entries(tokens)
-      .concat([primaryTokenId, ptQuantity])
+      .concat([[primaryTokenId, ptQuantity]])
       .map(([tokenId, quantity]): Balance.Amount => ({tokenId, quantity: asQuantity(quantity)})),
   )
 

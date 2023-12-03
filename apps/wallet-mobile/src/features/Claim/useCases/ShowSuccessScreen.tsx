@@ -9,7 +9,6 @@ import {AmountItem} from '../../../components/AmountItem/AmountItem'
 import {Button} from '../../../components/Button/Button'
 import {PressableIcon} from '../../../components/PressableIcon/PressableIcon'
 import {Spacer} from '../../../components/Spacer/Spacer'
-import {useBlockGoBack} from '../../../navigation'
 import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
 import {COLORS} from '../../../theme/config'
 import {sortTokenInfos} from '../../../utils/sorting'
@@ -25,7 +24,6 @@ import {useClaim} from '../module/ClaimProvider'
 import {ClaimStatus} from '../module/types'
 
 export const ShowSuccessScreen = () => {
-  useBlockGoBack()
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const {claimToken} = useClaim()

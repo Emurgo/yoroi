@@ -40,6 +40,7 @@ const postClaimTokens =
     if (isLeft(response)) {
       return asClaimApiError(response.error)
     } else {
+      console.log('----------  |  -----------')
       const claimToken = response.value.data
       if (!ClaimTokensApiResponseSchema.safeParse(claimToken).success) throw new Api.Errors.ResponseMalformed()
 

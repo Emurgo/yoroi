@@ -300,7 +300,7 @@ export const TxHistoryNavigator = () => {
               <Stack.Screen
                 name="claim-show-success"
                 component={ShowSuccessScreen}
-                options={{title: strings.claimShowSuccess}}
+                options={{title: strings.claimShowSuccess, headerLeft: () => null}}
               />
             </Stack.Navigator>
 
