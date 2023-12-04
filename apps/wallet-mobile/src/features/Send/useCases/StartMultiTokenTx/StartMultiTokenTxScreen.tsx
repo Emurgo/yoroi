@@ -42,6 +42,8 @@ export const StartMultiTokenTxScreen = () => {
     (succesfulResolvedAddresses.length === 1 && resolvedAddressSelected?.address !== null) ||
     (!isDomain(receiver) && !isHandle(receiver))
 
+  console.log('addressValidationEnabled')
+
   const {error, isLoading} = useValidAddress(
     {wallet, receiver: resolvedAddressSelected?.address ?? receiver},
     {
@@ -56,25 +58,22 @@ export const StartMultiTokenTxScreen = () => {
     },
   )
 
-  const addressResolutionEnabled =
-    succesfulResolvedAddresses.length === 0 &&
-    error != null &&
-    resolvedAddressSelected === null &&
-    (isDomain(receiver) || isHandle(receiver))
-
   useResolverAddresses(
     {receiver},
     {
       onSettled(addresses) {
         const succesfulResolvedAddresses = addresses?.filter(({address}) => address !== null) ?? []
 
-        if (succesfulResolvedAddresses?.length === 1) {
+        if (succesfulResolvedAddresses.length === 0) {
+          setSuccesfulResolvedAddresses([])
+          addressChanged('')
+        } else if (succesfulResolvedAddresses?.length === 1) {
           resolvedAddressSelectedChanged(succesfulResolvedAddresses[0])
         }
 
         setSuccesfulResolvedAddresses(succesfulResolvedAddresses)
       },
-      enabled: addressResolutionEnabled,
+      enabled: succesfulResolvedAddresses.length === 0,
     },
   )
 
