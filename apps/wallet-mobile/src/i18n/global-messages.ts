@@ -135,6 +135,14 @@ export const txLabels = defineMessages({
     id: 'global.txLabels.withdrawals',
     defaultMessage: '!!!Withdrawals',
   },
+  enterSpendingPassword: {
+    id: 'global.enterSpendingPassword',
+    defaultMessage: '!!!Enter spending password to sign this transaction',
+  },
+  spendingPassword: {
+    id: 'global.spendingPassword',
+    defaultMessage: '!!!Spending Password',
+  },
 })
 
 export const ledgerMessages = defineMessages({

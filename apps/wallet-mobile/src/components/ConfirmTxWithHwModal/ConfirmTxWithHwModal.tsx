@@ -11,6 +11,7 @@ import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {walletManager} from '../../yoroi-wallets/walletManager'
 import {ModalError} from '../ModalError/ModalError'
 import {Text} from '../Text'
+import {useStrings} from './strings'
 
 type TransportType = 'USB' | 'BLE'
 type Step = 'select-transport' | 'connect-transport' | 'loading'
@@ -19,27 +20,25 @@ type Props = {
   onSuccess?: (signedTx: YoroiSignedTx) => void
   unsignedTx: YoroiUnsignedTx
   onCancel?: () => void
-  strings: {
-    continueOnLedger: string
-  }
 }
 
-export const ConfirmTxWithHwModal = ({onSuccess, strings, unsignedTx, onCancel}: Props) => {
+export const ConfirmTxWithHwModal = ({onSuccess, unsignedTx, onCancel}: Props) => {
   return (
     <ErrorBoundary
       fallbackRender={({error, resetErrorBoundary}) => (
         <ModalError error={error} resetErrorBoundary={resetErrorBoundary} onCancel={onCancel} />
       )}
     >
-      <ConfirmTxWithHwModalContent onSuccess={onSuccess} unsignedTx={unsignedTx} strings={strings} />
+      <ConfirmTxWithHwModalContent onSuccess={onSuccess} unsignedTx={unsignedTx} />
     </ErrorBoundary>
   )
 }
 
-const ConfirmTxWithHwModalContent = ({onSuccess, unsignedTx, strings}: Omit<Props, 'onCancel'>) => {
+const ConfirmTxWithHwModalContent = ({onSuccess, unsignedTx}: Omit<Props, 'onCancel'>) => {
   const [transportType, setTransportType] = useState<TransportType>('USB')
   const [step, setStep] = useState<Step>('select-transport')
   const wallet = useSelectedWallet()
+  const strings = useStrings()
 
   const {submitTx} = useSubmitTx({wallet}, {useErrorBoundary: true})
 

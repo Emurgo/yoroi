@@ -11,24 +11,19 @@ import {Button} from '../Button'
 import {Spacer} from '../Spacer'
 import {Text} from '../Text'
 import {TextInput} from '../TextInput'
+import {useStrings} from './strings'
 
 type Props = {
   onSuccess?: (signedTx: YoroiSignedTx) => void
   unsignedTx: YoroiUnsignedTx
-  strings: {
-    enterSpendingPassword: string
-    spendingPassword: string
-    sign: string
-    wrongPasswordMessage: string
-    error: string
-  }
 }
 
-export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, strings}: Props) => {
+export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx}: Props) => {
   const spendingPasswordRef = useRef<RNTextInput>(null)
   const wallet = useSelectedWallet()
   const {signTx, error: signError, isLoading: signIsLoading} = useSignTxWithPassword({wallet})
   const {submitTx, error: submitError, isLoading: submitIsLoading} = useSubmitTx({wallet})
+  const strings = useStrings()
 
   const [spendingPassword, setSpendingPassword] = React.useState(
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',

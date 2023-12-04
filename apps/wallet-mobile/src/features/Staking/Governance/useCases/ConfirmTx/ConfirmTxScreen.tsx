@@ -86,13 +86,6 @@ export const ConfirmTxScreen = () => {
         <ConfirmTxWithSpendingPasswordModal
           unsignedTx={params.unsignedTx}
           onSuccess={(signedTx) => onSuccess(signedTx.signedTx.id)}
-          strings={{
-            enterSpendingPassword: strings.enterPassword,
-            spendingPassword: strings.password,
-            sign: strings.sign,
-            wrongPasswordMessage: strings.wrongPassword,
-            error: strings.error,
-          }}
         />,
       )
       return
