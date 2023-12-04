@@ -74,7 +74,6 @@ export const ConfirmTxScreen = () => {
           onCancel={closeModal}
           unsignedTx={params.unsignedTx}
           onSuccess={(signedTx) => onSuccess(signedTx.signedTx.id)}
-          strings={{continueOnLedger: strings.continueOnLedger}}
         />,
       )
       return

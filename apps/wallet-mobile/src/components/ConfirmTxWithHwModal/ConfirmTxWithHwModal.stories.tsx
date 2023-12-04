@@ -7,9 +7,7 @@ import {ConfirmTxWithHwModal} from './ConfirmTxWithHwModal'
 
 storiesOf('ConfirmTxWithHwModal', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
-  .add('Default', () => (
-    <ConfirmTxWithHwModal strings={{continueOnLedger: 'Continue on Ledger'}} unsignedTx={mocks.yoroiUnsignedTx} />
-  ))
+  .add('Default', () => <ConfirmTxWithHwModal unsignedTx={mocks.yoroiUnsignedTx} />)
 
 const styles = StyleSheet.create({
   container: {
