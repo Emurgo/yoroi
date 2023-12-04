@@ -7,6 +7,7 @@ import {Button, Spacer} from '../../../../components'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
+import {isEmptyString} from '../../../../utils'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../common/navigation'
@@ -38,12 +39,6 @@ export const StartMultiTokenTxScreen = () => {
   const {resolvedAddressSelected, resolvedAddressSelectedChanged} = useResolver()
   const [succesfulResolvedAddresses, setSuccesfulResolvedAddresses] = React.useState<Resolver.AddressesResponse>([])
 
-  const addressValidationEnabled =
-    (succesfulResolvedAddresses.length === 1 && resolvedAddressSelected?.address !== null) ||
-    (!isDomain(receiver) && !isHandle(receiver))
-
-  console.log('addressValidationEnabled')
-
   const {error, isLoading} = useValidAddress(
     {wallet, receiver: resolvedAddressSelected?.address ?? receiver},
     {
@@ -54,7 +49,7 @@ export const StartMultiTokenTxScreen = () => {
           addressChanged(address ?? '')
         }
       },
-      enabled: addressValidationEnabled,
+      enabled: !isEmptyString(resolvedAddressSelected?.address) || !isEmptyString(receiver),
     },
   )
 
@@ -66,14 +61,16 @@ export const StartMultiTokenTxScreen = () => {
 
         if (succesfulResolvedAddresses.length === 0) {
           setSuccesfulResolvedAddresses([])
-          addressChanged('')
         } else if (succesfulResolvedAddresses?.length === 1) {
           resolvedAddressSelectedChanged(succesfulResolvedAddresses[0])
         }
 
         setSuccesfulResolvedAddresses(succesfulResolvedAddresses)
       },
-      enabled: succesfulResolvedAddresses.length === 0,
+      enabled:
+        succesfulResolvedAddresses.length === 0 &&
+        !isEmptyString(receiver) &&
+        (isHandle(receiver) || isDomain(receiver)),
     },
   )
 
