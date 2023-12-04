@@ -1,9 +1,12 @@
-export {governanceManagerMaker} from './manager'
+export {governanceManagerMaker, GovernanceManager} from './manager'
 export {
   useLatestGovernanceAction,
   useGovernance,
   useUpdateLatestGovernanceAction,
   GovernanceProvider,
   useIsValidDRepID,
+  useVotingCertificate,
+  useDelegationCertificate,
 } from './translators/react'
-export {governanceApiMaker} from './api'
+export {governanceApiMaker, GovernanceApi} from './api'
+export {parseActionFromMetadata} from './helpers'

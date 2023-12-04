@@ -1,4 +1,9 @@
-import {UseMutationOptions, useQuery, UseQueryOptions} from 'react-query'
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions,
+} from 'react-query'
 import {useGovernance} from './context'
 import {GovernanceAction, VoteKind} from '../../manager'
 import {useMutationWithInvalidations} from '@yoroi/common'
@@ -32,44 +37,62 @@ export const useUpdateLatestGovernanceAction = (
   options: UseMutationOptions<void, Error, GovernanceAction> = {},
 ) => {
   const {manager} = useGovernance()
-  return useMutationWithInvalidations({
+  const mutation = useMutationWithInvalidations({
     ...options,
     mutationFn: async (action: GovernanceAction) =>
       await manager.setLatestGovernanceAction(action),
     invalidateQueries: ['governanceLatestGovernanceAction'],
   })
+  return {
+    ...mutation,
+    updateLatestGovernanceAction: mutation.mutate,
+  }
 }
 
 export const useDelegationCertificate = (
-  variables: {drepID: string; stakingKey: CardanoTypes.PublicKey},
-  options: UseQueryOptions<CardanoTypes.Certificate, Error> = {},
+  options: UseMutationOptions<
+    CardanoTypes.Certificate,
+    Error,
+    {drepID: string; stakingKey: CardanoTypes.PublicKey}
+  > = {},
 ) => {
   const {manager} = useGovernance()
 
-  return useQuery({
-    queryKey: ['governanceDelegationCertificate', variables.drepID],
-    queryFn: async () =>
+  const mutation = useMutation({
+    mutationKey: ['governanceDelegationCertificate'],
+    mutationFn: async (variables) =>
       await manager.createDelegationCertificate(
         variables.drepID,
         variables.stakingKey,
       ),
     ...options,
   })
+  return {
+    ...mutation,
+    createCertificate: mutation.mutate,
+  }
 }
 
 export const useVotingCertificate = (
-  variables: {vote: VoteKind; stakingKey: CardanoTypes.PublicKey},
-  options: UseQueryOptions<CardanoTypes.Certificate, Error> = {},
+  options: UseMutationOptions<
+    CardanoTypes.Certificate,
+    Error,
+    {vote: VoteKind; stakingKey: CardanoTypes.PublicKey}
+  > = {},
 ) => {
   const {manager} = useGovernance()
 
-  return useQuery({
-    queryKey: ['governanceVotingCertificate', variables.vote],
-    queryFn: async () =>
+  const mutation = useMutation({
+    mutationKey: ['governanceVotingCertificate'],
+    mutationFn: async (variables) =>
       await manager.createVotingCertificate(
         variables.vote,
         variables.stakingKey,
       ),
     ...options,
   })
+  return {
+    ...mutation,
+    createCertificate: mutation.mutate,
+  }
 }

@@ -1,0 +1,1 @@
+export {parseActionFromMetadata} from './metadata'

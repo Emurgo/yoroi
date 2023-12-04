@@ -5,8 +5,14 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {Banner, Button, StatusBar} from '../components'
+import {Banner, Button, StatusBar, useModal} from '../components'
+import {
+  useGovernanceStrings,
+  useIsParticipatingInGovernance,
+  WithdrawWarningModal,
+} from '../features/Staking/Governance'
 import globalMessages from '../i18n/global-messages'
+import {CONFIG} from '../legacy/config'
 import {Modal} from '../legacy/Modal'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -30,10 +36,12 @@ import {WithdrawStakingRewards} from './WithdrawStakingRewards'
 export const Dashboard = () => {
   const intl = useIntl()
   const navigateTo = useNavigateTo()
+  const governanceStrings = useGovernanceStrings()
 
   const wallet = useSelectedWallet()
   const {isLoading: isSyncing, sync} = useSync(wallet)
   const isOnline = useIsOnline(wallet)
+  const {openModal} = useModal()
 
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, '')
@@ -42,6 +50,20 @@ export const Dashboard = () => {
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
 
   const {resetToTxHistory} = useWalletNavigation()
+
+  const isParticipatingInGovernance = useIsParticipatingInGovernance(wallet)
+  const walletNavigateTo = useWalletNavigation()
+
+  const onWithdraw = () => {
+    if (CONFIG.GOVERNANCE_CENTRE_ENABLED && !isParticipatingInGovernance) {
+      openModal(
+        governanceStrings.withdrawWarningTitle,
+        <WithdrawWarningModal onParticipatePress={walletNavigateTo.navigateToGovernanceCentre} />,
+      )
+      return
+    }
+    setShowWithdrawalDialog(true)
+  }
 
   return (
     <View style={styles.root}>
@@ -77,7 +99,7 @@ export const Dashboard = () => {
                 totalAdaSum={!isEmptyString(primaryAmount.quantity) ? new BigNumber(primaryAmount.quantity) : null}
                 totalRewards={new BigNumber(stakingInfo.rewards)}
                 totalDelegated={new BigNumber(stakingInfo.amount)}
-                onWithdraw={() => setShowWithdrawalDialog(true)}
+                onWithdraw={onWithdraw}
                 disableWithdraw={wallet.isReadOnly}
               />
             ) : (
@@ -85,7 +107,7 @@ export const Dashboard = () => {
                 totalAdaSum={!isEmptyString(primaryAmount.quantity) ? new BigNumber(primaryAmount.quantity) : null}
                 totalRewards={null}
                 totalDelegated={null}
-                onWithdraw={() => setShowWithdrawalDialog(true)}
+                onWithdraw={onWithdraw}
                 disableWithdraw
               />
             )}

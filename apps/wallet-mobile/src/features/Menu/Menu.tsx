@@ -10,6 +10,7 @@ import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../../components'
 import {Hr} from '../../components/Hr'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
+import {CONFIG} from '../../legacy/config'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {lightPalette} from '../../theme'
@@ -56,13 +57,17 @@ export const Menu = () => {
           />
         </Boundary>
 
-        <Hr />
+        {CONFIG.GOVERNANCE_CENTRE_ENABLED && (
+          <>
+            <Hr />
 
-        <Governance
-          label={strings.governanceCenter}
-          onPress={navigateTo.governanceCenter}
-          left={<Icon.Governance size={24} color={lightPalette.gray['600']} />}
-        />
+            <Governance
+              label={strings.governanceCentre}
+              onPress={navigateTo.governanceCentre}
+              left={<Icon.Governance size={24} color={lightPalette.gray['600']} />}
+            />
+          </>
+        )}
 
         <Hr />
 
@@ -171,7 +176,7 @@ const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/request
 const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
 
 const useNavigateTo = () => {
-  const {navigation, navigateToSettings, navigateToGovernanceCenter} = useWalletNavigation()
+  const {navigation, navigateToSettings, navigateToGovernanceCentre} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
@@ -190,7 +195,7 @@ const useNavigateTo = () => {
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
-    governanceCenter: () => navigateToGovernanceCenter(),
+    governanceCentre: () => navigateToGovernanceCentre(),
   }
 }
 
@@ -205,7 +210,7 @@ const useStrings = () => {
     knowledgeBase: intl.formatMessage(messages.knowledgeBase),
     menu: intl.formatMessage(messages.menu),
     releases: intl.formatMessage(messages.releases),
-    governanceCenter: intl.formatMessage(messages.governanceCenter),
+    governanceCentre: intl.formatMessage(messages.governanceCentre),
   }
 }
 
@@ -238,9 +243,9 @@ const messages = defineMessage({
     id: 'menu.releases',
     defaultMessage: '!!!Releases',
   },
-  governanceCenter: {
-    id: 'menu.governanceCenter',
-    defaultMessage: '!!!Governance center',
+  governanceCentre: {
+    id: 'menu.governanceCentre',
+    defaultMessage: '!!!Governance centre',
   },
 })
 

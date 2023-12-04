@@ -475,7 +475,7 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToGovernanceCenter: () => {
+    navigateToGovernanceCentre: () => {
       navigation.navigate('app-root', {
         screen: 'governance',
         params: {

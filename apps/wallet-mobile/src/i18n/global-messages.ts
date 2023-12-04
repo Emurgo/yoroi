@@ -115,6 +115,10 @@ export const txLabels = defineMessages({
     id: 'global.txLabels.signingTx',
     defaultMessage: '!!!Signing transaction',
   },
+  sign: {
+    id: 'global.sign',
+    defaultMessage: '!!!Sign',
+  },
   to: {
     id: 'components.walletinit.restorewallet.upgradeconfirmmodal.toLabel',
     defaultMessage: '!!!To',
@@ -130,6 +134,14 @@ export const txLabels = defineMessages({
   withdrawals: {
     id: 'global.txLabels.withdrawals',
     defaultMessage: '!!!Withdrawals',
+  },
+  enterSpendingPassword: {
+    id: 'global.enterSpendingPassword',
+    defaultMessage: '!!!Enter spending password to sign this transaction',
+  },
+  spendingPassword: {
+    id: 'global.spendingPassword',
+    defaultMessage: '!!!Spending Password',
   },
 })
 

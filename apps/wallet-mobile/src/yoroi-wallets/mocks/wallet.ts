@@ -257,6 +257,10 @@ const wallet: YoroiWallet = {
   stopSync: () => {
     throw new Error('not implemented: stop')
   },
+
+  createUnsignedGovernanceTx: () => {
+    throw new Error('not implemented: createUnsignedGovernanceTx')
+  },
 }
 
 const hwWallet: YoroiWallet = {

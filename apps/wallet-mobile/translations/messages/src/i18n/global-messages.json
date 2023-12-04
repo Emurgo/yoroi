@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Cancel",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 717,
+      "line": 729,
       "column": 10,
-      "index": 21532
+      "index": 21854
     },
     "end": {
-      "line": 720,
+      "line": 732,
       "column": 3,
-      "index": 21595
+      "index": 21917
     }
   },
   {
@@ -330,18 +330,33 @@
     }
   },
   {
-    "id": "components.walletinit.restorewallet.upgradeconfirmmodal.toLabel",
-    "defaultMessage": "!!!To",
+    "id": "global.sign",
+    "defaultMessage": "!!!Sign",
     "file": "src/i18n/global-messages.ts",
     "start": {
       "line": 118,
-      "column": 6,
-      "index": 3209
+      "column": 8,
+      "index": 3211
     },
     "end": {
       "line": 121,
       "column": 3,
-      "index": 3318
+      "index": 3270
+    }
+  },
+  {
+    "id": "components.walletinit.restorewallet.upgradeconfirmmodal.toLabel",
+    "defaultMessage": "!!!To",
+    "file": "src/i18n/global-messages.ts",
+    "start": {
+      "line": 122,
+      "column": 6,
+      "index": 3278
+    },
+    "end": {
+      "line": 125,
+      "column": 3,
+      "index": 3387
     }
   },
   {
@@ -349,14 +364,14 @@
     "defaultMessage": "!!!Transactions",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 122,
+      "line": 126,
       "column": 16,
-      "index": 3336
+      "index": 3405
     },
     "end": {
-      "line": 125,
+      "line": 129,
       "column": 3,
-      "index": 3420
+      "index": 3489
     }
   },
   {
@@ -364,14 +379,14 @@
     "defaultMessage": "!!!Transaction ID",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 126,
+      "line": 130,
       "column": 8,
-      "index": 3430
+      "index": 3499
     },
     "end": {
-      "line": 129,
+      "line": 133,
       "column": 3,
-      "index": 3553
+      "index": 3622
     }
   },
   {
@@ -379,14 +394,44 @@
     "defaultMessage": "!!!Withdrawals",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 130,
+      "line": 134,
       "column": 15,
-      "index": 3570
+      "index": 3639
     },
     "end": {
-      "line": 133,
+      "line": 137,
       "column": 3,
-      "index": 3652
+      "index": 3721
+    }
+  },
+  {
+    "id": "global.enterSpendingPassword",
+    "defaultMessage": "!!!Enter spending password to sign this transaction",
+    "file": "src/i18n/global-messages.ts",
+    "start": {
+      "line": 138,
+      "column": 25,
+      "index": 3748
+    },
+    "end": {
+      "line": 141,
+      "column": 3,
+      "index": 3868
+    }
+  },
+  {
+    "id": "global.spendingPassword",
+    "defaultMessage": "!!!Spending Password",
+    "file": "src/i18n/global-messages.ts",
+    "start": {
+      "line": 142,
+      "column": 20,
+      "index": 3890
+    },
+    "end": {
+      "line": 145,
+      "column": 3,
+      "index": 3974
     }
   },
   {
@@ -394,14 +439,14 @@
     "defaultMessage": "!!!Bluetooth is enabled on your smartphone.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 138,
+      "line": 150,
       "column": 20,
-      "index": 3744
+      "index": 4066
     },
     "end": {
-      "line": 141,
+      "line": 153,
       "column": 3,
-      "index": 3866
+      "index": 4188
     }
   },
   {
@@ -409,14 +454,14 @@
     "defaultMessage": "!!!Location is enabled on your device.Android requires location to be enabled to provide access to Bluetooth, but EMURGO will never store any location data.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 142,
+      "line": 154,
       "column": 19,
-      "index": 3887
+      "index": 4209
     },
     "end": {
-      "line": 148,
+      "line": 160,
       "column": 3,
-      "index": 4149
+      "index": 4471
     }
   },
   {
@@ -424,14 +469,14 @@
     "defaultMessage": "!!!You have an on-the-go adapter allowing you to connect your Ledgerdevice with your smartphone using a USB cable.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 149,
+      "line": 161,
       "column": 18,
-      "index": 4169
+      "index": 4491
     },
     "end": {
-      "line": 154,
+      "line": 166,
       "column": 3,
-      "index": 4377
+      "index": 4699
     }
   },
   {
@@ -439,14 +484,14 @@
     "defaultMessage": "!!!Your Ledger device remains connected through USB until the processis completed.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 155,
+      "line": 167,
       "column": 22,
-      "index": 4401
+      "index": 4723
     },
     "end": {
-      "line": 158,
+      "line": 170,
       "column": 3,
-      "index": 4569
+      "index": 4891
     }
   },
   {
@@ -454,14 +499,14 @@
     "defaultMessage": "!!!Cardano ADA app is installed on your Ledger device.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 159,
+      "line": 171,
       "column": 16,
-      "index": 4587
+      "index": 4909
     },
     "end": {
-      "line": 162,
+      "line": 174,
       "column": 3,
-      "index": 4716
+      "index": 5038
     }
   },
   {
@@ -469,14 +514,14 @@
     "defaultMessage": "!!!Cardano ADA app must remain open on your Ledger device.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 163,
+      "line": 175,
       "column": 13,
-      "index": 4731
+      "index": 5053
     },
     "end": {
-      "line": 166,
+      "line": 178,
       "column": 3,
-      "index": 4861
+      "index": 5183
     }
   },
   {
@@ -484,14 +529,14 @@
     "defaultMessage": "!!!Enable bluetooth.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 168,
+      "line": 180,
       "column": 19,
-      "index": 4909
+      "index": 5231
     },
     "end": {
-      "line": 171,
+      "line": 183,
       "column": 3,
-      "index": 5007
+      "index": 5329
     }
   },
   {
@@ -499,14 +544,14 @@
     "defaultMessage": "!!!Enable location services.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 172,
+      "line": 184,
       "column": 18,
-      "index": 5027
+      "index": 5349
     },
     "end": {
-      "line": 175,
+      "line": 187,
       "column": 3,
-      "index": 5132
+      "index": 5454
     }
   },
   {
@@ -514,14 +559,14 @@
     "defaultMessage": "!!!Connect your Ledger device through your smartphone'sUSB port using your OTG adapter.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 176,
+      "line": 188,
       "column": 14,
-      "index": 5148
+      "index": 5470
     },
     "end": {
-      "line": 179,
+      "line": 191,
       "column": 3,
-      "index": 5313
+      "index": 5635
     }
   },
   {
@@ -529,14 +574,14 @@
     "defaultMessage": "!!!Make sure your device remains connected until the operation is completed.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 180,
+      "line": 192,
       "column": 20,
-      "index": 5335
+      "index": 5657
     },
     "end": {
-      "line": 183,
+      "line": 195,
       "column": 3,
-      "index": 5495
+      "index": 5817
     }
   },
   {
@@ -544,14 +589,14 @@
     "defaultMessage": "!!!Power on your ledger device and enter your PIN.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 184,
+      "line": 196,
       "column": 12,
-      "index": 5509
+      "index": 5831
     },
     "end": {
-      "line": 187,
+      "line": 199,
       "column": 3,
-      "index": 5630
+      "index": 5952
     }
   },
   {
@@ -559,14 +604,14 @@
     "defaultMessage": "!!!Open Cardano ADA app on the Ledger device.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 188,
+      "line": 200,
       "column": 11,
-      "index": 5643
+      "index": 5965
     },
     "end": {
-      "line": 191,
+      "line": 203,
       "column": 3,
-      "index": 5758
+      "index": 6080
     }
   },
   {
@@ -574,14 +619,14 @@
     "defaultMessage": "!!!Please, follow the steps shown in your Ledger device",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 192,
+      "line": 204,
       "column": 15,
-      "index": 5775
+      "index": 6097
     },
     "end": {
-      "line": 195,
+      "line": 207,
       "column": 3,
-      "index": 5904
+      "index": 6226
     }
   },
   {
@@ -589,14 +634,14 @@
     "defaultMessage": "!!!Bluetooth is disabled in your smartphone",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 197,
+      "line": 209,
       "column": 26,
-      "index": 5951
+      "index": 6273
     },
     "end": {
-      "line": 200,
+      "line": 212,
       "column": 3,
-      "index": 6079
+      "index": 6401
     }
   },
   {
@@ -604,14 +649,14 @@
     "defaultMessage": "!!!An error occurred while trying to connect with your hardware wallet. Please, make sure you are following the stepscorrectly. Restarting your hardware wallet may also fix the problem.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 201,
+      "line": 213,
       "column": 19,
-      "index": 6100
+      "index": 6422
     },
     "end": {
-      "line": 207,
+      "line": 219,
       "column": 3,
-      "index": 6391
+      "index": 6713
     }
   },
   {
@@ -619,14 +664,14 @@
     "defaultMessage": "!!!The Cardano ADA app installed in your Ledger deviceis not up-to-date. Required version: {version}",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 208,
+      "line": 220,
       "column": 25,
-      "index": 6418
+      "index": 6740
     },
     "end": {
-      "line": 212,
+      "line": 224,
       "column": 3,
-      "index": 6613
+      "index": 6935
     }
   },
   {
@@ -634,14 +679,14 @@
     "defaultMessage": "!!!Operation rejected by user.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 213,
+      "line": 225,
       "column": 23,
-      "index": 6638
+      "index": 6960
     },
     "end": {
-      "line": 216,
+      "line": 228,
       "column": 3,
-      "index": 6750
+      "index": 7072
     }
   },
   {
@@ -649,14 +694,14 @@
     "defaultMessage": "!!!Device metadata was lost or corrupted. To fix this issue, please add a new wallet and connect it with your device.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 217,
+      "line": 229,
       "column": 21,
-      "index": 6773
+      "index": 7095
     },
     "end": {
-      "line": 222,
+      "line": 234,
       "column": 3,
-      "index": 6987
+      "index": 7309
     }
   },
   {
@@ -664,14 +709,14 @@
     "defaultMessage": "!!!Continue on Ledger",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 223,
+      "line": 235,
       "column": 20,
-      "index": 7009
+      "index": 7331
     },
     "end": {
-      "line": 226,
+      "line": 238,
       "column": 3,
-      "index": 7109
+      "index": 7431
     }
   },
   {
@@ -679,14 +724,14 @@
     "defaultMessage": "!!!Invalid PIN",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 231,
+      "line": 243,
       "column": 11,
-      "index": 7189
+      "index": 7511
     },
     "end": {
-      "line": 234,
+      "line": 246,
       "column": 5,
-      "index": 7290
+      "index": 7612
     }
   },
   {
@@ -694,14 +739,14 @@
     "defaultMessage": "!!!PINs do not match.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 235,
+      "line": 247,
       "column": 13,
-      "index": 7305
+      "index": 7627
     },
     "end": {
-      "line": 238,
+      "line": 250,
       "column": 5,
-      "index": 7415
+      "index": 7737
     }
   },
   {
@@ -709,14 +754,14 @@
     "defaultMessage": "!!!Invalid PIN",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 241,
+      "line": 253,
       "column": 11,
-      "index": 7467
+      "index": 7789
     },
     "end": {
-      "line": 244,
+      "line": 256,
       "column": 5,
-      "index": 7569
+      "index": 7891
     }
   },
   {
@@ -724,14 +769,14 @@
     "defaultMessage": "!!!The PIN you entered is incorrect.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 245,
+      "line": 257,
       "column": 13,
-      "index": 7584
+      "index": 7906
     },
     "end": {
-      "line": 248,
+      "line": 260,
       "column": 5,
-      "index": 7710
+      "index": 8032
     }
   },
   {
@@ -739,14 +784,14 @@
     "defaultMessage": "!!!Wrong password",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 251,
+      "line": 263,
       "column": 11,
-      "index": 7767
+      "index": 8089
     },
     "end": {
-      "line": 254,
+      "line": 266,
       "column": 5,
-      "index": 7877
+      "index": 8199
     }
   },
   {
@@ -754,14 +799,14 @@
     "defaultMessage": "!!!Password you provided is incorrect.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 255,
+      "line": 267,
       "column": 13,
-      "index": 7892
+      "index": 8214
     },
     "end": {
-      "line": 258,
+      "line": 270,
       "column": 5,
-      "index": 8025
+      "index": 8347
     }
   },
   {
@@ -769,14 +814,14 @@
     "defaultMessage": "!!!Biometrics was turned off",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 261,
+      "line": 273,
       "column": 11,
-      "index": 8082
+      "index": 8404
     },
     "end": {
-      "line": 264,
+      "line": 276,
       "column": 5,
-      "index": 8207
+      "index": 8529
     }
   },
   {
@@ -784,14 +829,14 @@
     "defaultMessage": "!!!It seems that you turned off biometrics, please turn it on",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 265,
+      "line": 277,
       "column": 13,
-      "index": 8222
+      "index": 8544
     },
     "end": {
-      "line": 268,
+      "line": 280,
       "column": 5,
-      "index": 8382
+      "index": 8704
     }
   },
   {
@@ -799,14 +844,14 @@
     "defaultMessage": "!!!Biometrics changed",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 271,
+      "line": 283,
       "column": 11,
-      "index": 8443
+      "index": 8765
     },
     "end": {
-      "line": 274,
+      "line": 286,
       "column": 5,
-      "index": 8561
+      "index": 8883
     }
   },
   {
@@ -814,14 +859,14 @@
     "defaultMessage": "!!!We detected that your biometrics in phone changed. As a result the easy transaction confirmation was disabled and transaction submitting is allowed only with master password. You can re-enable easy transactions confirmation in settings",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 275,
+      "line": 287,
       "column": 13,
-      "index": 8576
+      "index": 8898
     },
     "end": {
-      "line": 282,
+      "line": 294,
       "column": 5,
-      "index": 8960
+      "index": 9282
     }
   },
   {
@@ -829,14 +874,14 @@
     "defaultMessage": "!!!Invalid wallet state",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 285,
+      "line": 297,
       "column": 11,
-      "index": 9018
+      "index": 9340
     },
     "end": {
-      "line": 288,
+      "line": 300,
       "column": 5,
-      "index": 9135
+      "index": 9457
     }
   },
   {
@@ -844,14 +889,14 @@
     "defaultMessage": "!!!Your wallet is in an inconsistent state. You may solve this by restoring your wallet with your mnemonics. Please contact EMURGO support to report this issue as this may help us fix the problem in a future release.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 289,
+      "line": 301,
       "column": 13,
-      "index": 9150
+      "index": 9472
     },
     "end": {
-      "line": 296,
+      "line": 308,
       "column": 5,
-      "index": 9509
+      "index": 9831
     }
   },
   {
@@ -859,14 +904,14 @@
     "defaultMessage": "!!!ITN Wallet not longer supported",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 299,
+      "line": 311,
       "column": 11,
-      "index": 9564
+      "index": 9886
     },
     "end": {
-      "line": 302,
+      "line": 314,
       "column": 5,
-      "index": 9689
+      "index": 10011
     }
   },
   {
@@ -874,14 +919,14 @@
     "defaultMessage": "!!!Wallets created during the Incentivized Testnet (ITN) are no longer operative. If you would like to claim your rewards, we will update Yoroi Mobile as well as Yoroi Desktop in the next couple of weeks.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 303,
+      "line": 315,
       "column": 13,
-      "index": 9704
+      "index": 10026
     },
     "end": {
-      "line": 310,
+      "line": 322,
       "column": 5,
-      "index": 10048
+      "index": 10370
     }
   },
   {
@@ -889,14 +934,14 @@
     "defaultMessage": "!!!Network error",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 313,
+      "line": 325,
       "column": 11,
-      "index": 10100
+      "index": 10422
     },
     "end": {
-      "line": 316,
+      "line": 328,
       "column": 5,
-      "index": 10204
+      "index": 10526
     }
   },
   {
@@ -904,14 +949,14 @@
     "defaultMessage": "!!!Error connecting to the server. Please check your internet connection",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 317,
+      "line": 329,
       "column": 13,
-      "index": 10219
+      "index": 10541
     },
     "end": {
-      "line": 320,
+      "line": 332,
       "column": 5,
-      "index": 10386
+      "index": 10708
     }
   },
   {
@@ -919,14 +964,14 @@
     "defaultMessage": "!!!API error",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 323,
+      "line": 335,
       "column": 11,
-      "index": 10434
+      "index": 10756
     },
     "end": {
-      "line": 326,
+      "line": 338,
       "column": 5,
-      "index": 10530
+      "index": 10852
     }
   },
   {
@@ -934,14 +979,14 @@
     "defaultMessage": "!!!Error received from api method call while sending transaction. Please try again later or check our Twitter account (https://twitter.com/YoroiWallet)",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 327,
+      "line": 339,
       "column": 13,
-      "index": 10545
+      "index": 10867
     },
     "end": {
-      "line": 332,
+      "line": 344,
       "column": 5,
-      "index": 10803
+      "index": 11125
     }
   },
   {
@@ -949,14 +994,14 @@
     "defaultMessage": "!!!Transaction error",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 335,
+      "line": 347,
       "column": 11,
-      "index": 10862
+      "index": 11184
     },
     "end": {
-      "line": 338,
+      "line": 350,
       "column": 5,
-      "index": 10977
+      "index": 11299
     }
   },
   {
@@ -964,14 +1009,14 @@
     "defaultMessage": "!!Not enough funds to make this transaction",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 339,
+      "line": 351,
       "column": 13,
-      "index": 10992
+      "index": 11314
     },
     "end": {
-      "line": 342,
+      "line": 354,
       "column": 5,
-      "index": 11132
+      "index": 11454
     }
   },
   {
@@ -979,14 +1024,14 @@
     "defaultMessage": "!!!Action failed",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 345,
+      "line": 357,
       "column": 11,
-      "index": 11200
+      "index": 11522
     },
     "end": {
-      "line": 348,
+      "line": 360,
       "column": 5,
-      "index": 11320
+      "index": 11642
     }
   },
   {
@@ -994,14 +1039,14 @@
     "defaultMessage": "!!!Please disable easy confirmation function in all your wallets first",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 349,
+      "line": 361,
       "column": 13,
-      "index": 11335
+      "index": 11657
     },
     "end": {
-      "line": 352,
+      "line": 364,
       "column": 5,
-      "index": 11516
+      "index": 11838
     }
   },
   {
@@ -1009,14 +1054,14 @@
     "defaultMessage": "!!!Action failed",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 355,
+      "line": 367,
       "column": 11,
-      "index": 11579
+      "index": 11901
     },
     "end": {
-      "line": 358,
+      "line": 370,
       "column": 5,
-      "index": 11694
+      "index": 12016
     }
   },
   {
@@ -1024,14 +1069,14 @@
     "defaultMessage": "!!!You need to enable biometrics in your device first in order to be able link it with this app",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 359,
+      "line": 371,
       "column": 13,
-      "index": 11709
+      "index": 12031
     },
     "end": {
-      "line": 363,
+      "line": 375,
       "column": 5,
-      "index": 11918
+      "index": 12240
     }
   },
   {
@@ -1039,14 +1084,14 @@
     "defaultMessage": "!!!Lock screen disabled",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 366,
+      "line": 378,
       "column": 11,
-      "index": 11979
+      "index": 12301
     },
     "end": {
-      "line": 369,
+      "line": 381,
       "column": 5,
-      "index": 12099
+      "index": 12421
     }
   },
   {
@@ -1054,14 +1099,14 @@
     "defaultMessage": "!!!You probably disabled lock screen in your phone. You need to disable easy transaction confirmation first. Please set up you lock screen (PIN / Password / Pattern) on your phone and then restart application. After this action you should be able to disable lock screen on your phone and use this application",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 370,
+      "line": 382,
       "column": 13,
-      "index": 12114
+      "index": 12436
     },
     "end": {
-      "line": 379,
+      "line": 391,
       "column": 5,
-      "index": 12594
+      "index": 12916
     }
   },
   {
@@ -1069,14 +1114,14 @@
     "defaultMessage": "!!!Invalid PIN",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 382,
+      "line": 394,
       "column": 11,
-      "index": 12647
+      "index": 12969
     },
     "end": {
-      "line": 385,
+      "line": 397,
       "column": 5,
-      "index": 12750
+      "index": 13072
     }
   },
   {
@@ -1084,14 +1129,14 @@
     "defaultMessage": "!!!PIN is incorrect.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 386,
+      "line": 398,
       "column": 13,
-      "index": 12765
+      "index": 13087
     },
     "end": {
-      "line": 389,
+      "line": 401,
       "column": 5,
-      "index": 12876
+      "index": 13198
     }
   },
   {
@@ -1099,14 +1144,14 @@
     "defaultMessage": "!!!Connection error",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 392,
+      "line": 404,
       "column": 11,
-      "index": 12933
+      "index": 13255
     },
     "end": {
-      "line": 395,
+      "line": 407,
       "column": 5,
-      "index": 13045
+      "index": 13367
     }
   },
   {
@@ -1114,14 +1159,14 @@
     "defaultMessage": "!!!An error occurred while trying to connect with your hardware wallet. Please, make sure you are following the stepscorrectly. Restarting your hardware wallet may also fix the problem.Error: {message}",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 396,
+      "line": 408,
       "column": 13,
-      "index": 13060
+      "index": 13382
     },
     "end": {
-      "line": 403,
+      "line": 415,
       "column": 5,
-      "index": 13403
+      "index": 13725
     }
   },
   {
@@ -1129,14 +1174,14 @@
     "defaultMessage": "!!!Feature not supported",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 626,
+      "line": 638,
       "column": 16,
-      "index": 19299
+      "index": 19621
     },
     "end": {
-      "line": 629,
+      "line": 641,
       "column": 3,
-      "index": 19383
+      "index": 19705
     }
   },
   {
@@ -1144,14 +1189,14 @@
     "defaultMessage": "!!!This feature is not yet supported. It will be enabled in a future release.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 410,
+      "line": 422,
       "column": 13,
-      "index": 13565
+      "index": 13887
     },
     "end": {
-      "line": 413,
+      "line": 425,
       "column": 5,
-      "index": 13742
+      "index": 14064
     }
   },
   {
@@ -1159,14 +1204,14 @@
     "defaultMessage": "!!!Unexpected error",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 416,
+      "line": 428,
       "column": 11,
-      "index": 13794
+      "index": 14116
     },
     "end": {
-      "line": 419,
+      "line": 431,
       "column": 5,
-      "index": 13901
+      "index": 14223
     }
   },
   {
@@ -1174,14 +1219,14 @@
     "defaultMessage": "!!!Requested operation failed. This is all we know: {message}",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 420,
+      "line": 432,
       "column": 13,
-      "index": 13916
+      "index": 14238
     },
     "end": {
-      "line": 423,
+      "line": 435,
       "column": 5,
-      "index": 14067
+      "index": 14389
     }
   },
   {
@@ -1189,14 +1234,14 @@
     "defaultMessage": "!!!Operation failed",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 426,
+      "line": 438,
       "column": 11,
-      "index": 14130
+      "index": 14452
     },
     "end": {
-      "line": 429,
+      "line": 441,
       "column": 5,
-      "index": 14248
+      "index": 14570
     }
   },
   {
@@ -1204,14 +1249,14 @@
     "defaultMessage": "!!!Requested operation failed: {message}",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 430,
+      "line": 442,
       "column": 13,
-      "index": 14263
+      "index": 14585
     },
     "end": {
-      "line": 433,
+      "line": 445,
       "column": 5,
-      "index": 14404
+      "index": 14726
     }
   },
   {
@@ -1219,14 +1264,14 @@
     "defaultMessage": "!!!Transaction Error",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 436,
+      "line": 448,
       "column": 11,
-      "index": 14458
+      "index": 14780
     },
     "end": {
-      "line": 439,
+      "line": 451,
       "column": 5,
-      "index": 14568
+      "index": 14890
     }
   },
   {
@@ -1234,14 +1279,14 @@
     "defaultMessage": "!!!An error occurred while trying to send the transaction.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 440,
+      "line": 452,
       "column": 13,
-      "index": 14583
+      "index": 14905
     },
     "end": {
-      "line": 443,
+      "line": 455,
       "column": 5,
-      "index": 14733
+      "index": 15055
     }
   },
   {
@@ -1249,14 +1294,14 @@
     "defaultMessage": "!!!Invalid QR code",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 446,
+      "line": 458,
       "column": 11,
-      "index": 14786
+      "index": 15108
     },
     "end": {
-      "line": 449,
+      "line": 461,
       "column": 5,
-      "index": 14893
+      "index": 15215
     }
   },
   {
@@ -1264,14 +1309,14 @@
     "defaultMessage": "!!!The QR code you scanned does not seem to contain a valid public key. Please try again with a new one.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 450,
+      "line": 462,
       "column": 13,
-      "index": 14908
+      "index": 15230
     },
     "end": {
-      "line": 454,
+      "line": 466,
       "column": 5,
-      "index": 15116
+      "index": 15438
     }
   },
   {
@@ -1279,14 +1324,14 @@
     "defaultMessage": "!!!Server error",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 457,
+      "line": 469,
       "column": 11,
-      "index": 15166
+      "index": 15488
     },
     "end": {
-      "line": 460,
+      "line": 472,
       "column": 5,
-      "index": 15267
+      "index": 15589
     }
   },
   {
@@ -1294,14 +1339,14 @@
     "defaultMessage": "!!!An error occurred when Yoroi tried to fetch your wallet state from the server. Please try again later.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 461,
+      "line": 473,
       "column": 13,
-      "index": 15282
+      "index": 15604
     },
     "end": {
-      "line": 466,
+      "line": 478,
       "column": 5,
-      "index": 15496
+      "index": 15818
     }
   },
   {
@@ -1309,14 +1354,14 @@
     "defaultMessage": "!!!Assets",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 654,
+      "line": 666,
       "column": 15,
-      "index": 20124
+      "index": 20446
     },
     "end": {
-      "line": 657,
+      "line": 669,
       "column": 3,
-      "index": 20199
+      "index": 20521
     }
   },
   {
@@ -1324,14 +1369,14 @@
     "defaultMessage": "!!!Send",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 478,
+      "line": 490,
       "column": 8,
-      "index": 15699
+      "index": 16021
     },
     "end": {
-      "line": 481,
+      "line": 493,
       "column": 3,
-      "index": 15758
+      "index": 16080
     }
   },
   {
@@ -1339,14 +1384,14 @@
     "defaultMessage": "!!!Receive",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 482,
+      "line": 494,
       "column": 11,
-      "index": 15771
+      "index": 16093
     },
     "end": {
-      "line": 485,
+      "line": 497,
       "column": 3,
-      "index": 15836
+      "index": 16158
     }
   },
   {
@@ -1354,14 +1399,14 @@
     "defaultMessage": "!!!Buy",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 486,
+      "line": 498,
       "column": 7,
-      "index": 15845
+      "index": 16167
     },
     "end": {
-      "line": 489,
+      "line": 501,
       "column": 3,
-      "index": 15902
+      "index": 16224
     }
   },
   {
@@ -1369,14 +1414,14 @@
     "defaultMessage": "!!!Exchange ADA",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 490,
+      "line": 502,
       "column": 12,
-      "index": 15916
+      "index": 16238
     },
     "end": {
-      "line": 493,
+      "line": 505,
       "column": 3,
-      "index": 15987
+      "index": 16309
     }
   },
   {
@@ -1384,14 +1429,14 @@
     "defaultMessage": "!!!Yoroi uses <b>Banxa</b> to provide direct Fiat-ADA exchange. By clicking “Proceed,” you also acknowledge that you will be redirected to our partner’s website, where you may be asked to accept their terms and conditions.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 494,
+      "line": 506,
       "column": 11,
-      "index": 16000
+      "index": 16322
     },
     "end": {
-      "line": 498,
+      "line": 510,
       "column": 3,
-      "index": 16283
+      "index": 16605
     }
   },
   {
@@ -1399,14 +1444,14 @@
     "defaultMessage": "!!!Proceed",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 499,
+      "line": 511,
       "column": 11,
-      "index": 16296
+      "index": 16618
     },
     "end": {
-      "line": 502,
+      "line": 514,
       "column": 3,
-      "index": 16361
+      "index": 16683
     }
   },
   {
@@ -1414,14 +1459,14 @@
     "defaultMessage": "!!!Swap",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 503,
+      "line": 515,
       "column": 8,
-      "index": 16371
+      "index": 16693
     },
     "end": {
-      "line": 506,
+      "line": 518,
       "column": 3,
-      "index": 16430
+      "index": 16752
     }
   },
   {
@@ -1429,14 +1474,14 @@
     "defaultMessage": "!!!Coming soon",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 610,
+      "line": 622,
       "column": 14,
-      "index": 18947
+      "index": 19269
     },
     "end": {
-      "line": 613,
+      "line": 625,
       "column": 3,
-      "index": 19019
+      "index": 19341
     }
   },
   {
@@ -1444,14 +1489,14 @@
     "defaultMessage": "!!!ADA",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 514,
+      "line": 526,
       "column": 29,
-      "index": 16593
+      "index": 16915
     },
     "end": {
-      "line": 517,
+      "line": 529,
       "column": 3,
-      "index": 16659
+      "index": 16981
     }
   },
   {
@@ -1459,14 +1504,14 @@
     "defaultMessage": "!!!BRL",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 518,
+      "line": 530,
       "column": 29,
-      "index": 16690
+      "index": 17012
     },
     "end": {
-      "line": 521,
+      "line": 533,
       "column": 3,
-      "index": 16756
+      "index": 17078
     }
   },
   {
@@ -1474,14 +1519,14 @@
     "defaultMessage": "!!!BTC",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 522,
+      "line": 534,
       "column": 29,
-      "index": 16787
+      "index": 17109
     },
     "end": {
-      "line": 525,
+      "line": 537,
       "column": 3,
-      "index": 16853
+      "index": 17175
     }
   },
   {
@@ -1489,14 +1534,14 @@
     "defaultMessage": "!!!CNY",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 526,
+      "line": 538,
       "column": 29,
-      "index": 16884
+      "index": 17206
     },
     "end": {
-      "line": 529,
+      "line": 541,
       "column": 3,
-      "index": 16950
+      "index": 17272
     }
   },
   {
@@ -1504,14 +1549,14 @@
     "defaultMessage": "!!!ETH",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 530,
+      "line": 542,
       "column": 29,
-      "index": 16981
+      "index": 17303
     },
     "end": {
-      "line": 533,
+      "line": 545,
       "column": 3,
-      "index": 17047
+      "index": 17369
     }
   },
   {
@@ -1519,14 +1564,14 @@
     "defaultMessage": "!!!EUR",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 534,
+      "line": 546,
       "column": 29,
-      "index": 17078
+      "index": 17400
     },
     "end": {
-      "line": 537,
+      "line": 549,
       "column": 3,
-      "index": 17144
+      "index": 17466
     }
   },
   {
@@ -1534,14 +1579,14 @@
     "defaultMessage": "!!!JPY",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 538,
+      "line": 550,
       "column": 29,
-      "index": 17175
+      "index": 17497
     },
     "end": {
-      "line": 541,
+      "line": 553,
       "column": 3,
-      "index": 17241
+      "index": 17563
     }
   },
   {
@@ -1549,14 +1594,14 @@
     "defaultMessage": "!!!KRW",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 542,
+      "line": 554,
       "column": 29,
-      "index": 17272
+      "index": 17594
     },
     "end": {
-      "line": 545,
+      "line": 557,
       "column": 3,
-      "index": 17338
+      "index": 17660
     }
   },
   {
@@ -1564,14 +1609,14 @@
     "defaultMessage": "!!!USD",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 546,
+      "line": 558,
       "column": 29,
-      "index": 17369
+      "index": 17691
     },
     "end": {
-      "line": 549,
+      "line": 561,
       "column": 3,
-      "index": 17435
+      "index": 17757
     }
   },
   {
@@ -1579,14 +1624,14 @@
     "defaultMessage": "!!!Apply",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 553,
+      "line": 565,
       "column": 9,
-      "index": 17482
+      "index": 17804
     },
     "end": {
-      "line": 556,
+      "line": 568,
       "column": 3,
-      "index": 17543
+      "index": 17865
     }
   },
   {
@@ -1594,14 +1639,14 @@
     "defaultMessage": "!!!Max",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 557,
+      "line": 569,
       "column": 7,
-      "index": 17552
+      "index": 17874
     },
     "end": {
-      "line": 560,
+      "line": 572,
       "column": 3,
-      "index": 17609
+      "index": 17931
     }
   },
   {
@@ -1609,14 +1654,14 @@
     "defaultMessage": "!!!All done!",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 561,
+      "line": 573,
       "column": 11,
-      "index": 17622
+      "index": 17944
     },
     "end": {
-      "line": 564,
+      "line": 576,
       "column": 3,
-      "index": 17745
+      "index": 18067
     }
   },
   {
@@ -1624,14 +1669,14 @@
     "defaultMessage": "!!!Attention",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 565,
+      "line": 577,
       "column": 13,
-      "index": 17760
+      "index": 18082
     },
     "end": {
-      "line": 568,
+      "line": 580,
       "column": 3,
-      "index": 17860
+      "index": 18182
     }
   },
   {
@@ -1639,14 +1684,14 @@
     "defaultMessage": "!!!Try again",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 569,
+      "line": 581,
       "column": 12,
-      "index": 17874
+      "index": 18196
     },
     "end": {
-      "line": 572,
+      "line": 584,
       "column": 3,
-      "index": 17942
+      "index": 18264
     }
   },
   {
@@ -1654,14 +1699,14 @@
     "defaultMessage": "!!!Wallet name cannot exceed 40 letters",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 573,
+      "line": 585,
       "column": 26,
-      "index": 17970
+      "index": 18292
     },
     "end": {
-      "line": 576,
+      "line": 588,
       "column": 3,
-      "index": 18080
+      "index": 18402
     }
   },
   {
@@ -1669,14 +1714,14 @@
     "defaultMessage": "!!!You already have a wallet with this name",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 577,
+      "line": 589,
       "column": 35,
-      "index": 18117
+      "index": 18439
     },
     "end": {
-      "line": 580,
+      "line": 592,
       "column": 3,
-      "index": 18236
+      "index": 18558
     }
   },
   {
@@ -1684,14 +1729,14 @@
     "defaultMessage": "!!!Must be filled",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 581,
+      "line": 593,
       "column": 31,
-      "index": 18269
+      "index": 18591
     },
     "end": {
-      "line": 584,
+      "line": 596,
       "column": 3,
-      "index": 18362
+      "index": 18684
     }
   },
   {
@@ -1700,14 +1745,14 @@
     "defaultMessage": "!!!please wait ...",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 585,
+      "line": 597,
       "column": 14,
-      "index": 18378
+      "index": 18700
     },
     "end": {
-      "line": 589,
+      "line": 601,
       "column": 3,
-      "index": 18517
+      "index": 18839
     }
   },
   {
@@ -1715,14 +1760,14 @@
     "defaultMessage": "!!!Please confirm",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 590,
+      "line": 602,
       "column": 17,
-      "index": 18536
+      "index": 18858
     },
     "end": {
-      "line": 593,
+      "line": 605,
       "column": 3,
-      "index": 18614
+      "index": 18936
     }
   },
   {
@@ -1730,14 +1775,14 @@
     "defaultMessage": "!!!Terms of use",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 594,
+      "line": 606,
       "column": 7,
-      "index": 18623
+      "index": 18945
     },
     "end": {
-      "line": 597,
+      "line": 609,
       "column": 3,
-      "index": 18696
+      "index": 19018
     }
   },
   {
@@ -1745,14 +1790,14 @@
     "defaultMessage": "!!!OK",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 598,
+      "line": 610,
       "column": 6,
-      "index": 18704
+      "index": 19026
     },
     "end": {
-      "line": 601,
+      "line": 613,
       "column": 3,
-      "index": 18759
+      "index": 19081
     }
   },
   {
@@ -1760,14 +1805,14 @@
     "defaultMessage": "!!!close",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 602,
+      "line": 614,
       "column": 9,
-      "index": 18770
+      "index": 19092
     },
     "end": {
-      "line": 605,
+      "line": 617,
       "column": 3,
-      "index": 18831
+      "index": 19153
     }
   },
   {
@@ -1775,14 +1820,14 @@
     "defaultMessage": "!!!Available funds",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 606,
+      "line": 618,
       "column": 18,
-      "index": 18851
+      "index": 19173
     },
     "end": {
-      "line": 609,
+      "line": 621,
       "column": 3,
-      "index": 18931
+      "index": 19253
     }
   },
   {
@@ -1790,14 +1835,14 @@
     "defaultMessage": "!!!Deprecated",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 614,
+      "line": 626,
       "column": 14,
-      "index": 19035
+      "index": 19357
     },
     "end": {
-      "line": 617,
+      "line": 629,
       "column": 3,
-      "index": 19106
+      "index": 19428
     }
   },
   {
@@ -1805,14 +1850,14 @@
     "defaultMessage": "!!!Epoch",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 618,
+      "line": 630,
       "column": 14,
-      "index": 19122
+      "index": 19444
     },
     "end": {
-      "line": 621,
+      "line": 633,
       "column": 3,
-      "index": 19196
+      "index": 19518
     }
   },
   {
@@ -1820,14 +1865,14 @@
     "defaultMessage": "!!!Learn more",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 622,
+      "line": 634,
       "column": 13,
-      "index": 19211
+      "index": 19533
     },
     "end": {
-      "line": 625,
+      "line": 637,
       "column": 3,
-      "index": 19281
+      "index": 19603
     }
   },
   {
@@ -1835,14 +1880,14 @@
     "defaultMessage": "!!!Total",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 630,
+      "line": 642,
       "column": 9,
-      "index": 19394
+      "index": 19716
     },
     "end": {
-      "line": 633,
+      "line": 645,
       "column": 3,
-      "index": 19455
+      "index": 19777
     }
   },
   {
@@ -1850,14 +1895,14 @@
     "defaultMessage": "!!!Total ADA",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 634,
+      "line": 646,
       "column": 12,
-      "index": 19469
+      "index": 19791
     },
     "end": {
-      "line": 637,
+      "line": 649,
       "column": 3,
-      "index": 19537
+      "index": 19859
     }
   },
   {
@@ -1865,14 +1910,14 @@
     "defaultMessage": "!!!Stake pool name",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 638,
+      "line": 650,
       "column": 17,
-      "index": 19556
+      "index": 19878
     },
     "end": {
-      "line": 641,
+      "line": 653,
       "column": 3,
-      "index": 19643
+      "index": 19965
     }
   },
   {
@@ -1880,14 +1925,14 @@
     "defaultMessage": "!!!Stake pool hash",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 642,
+      "line": 654,
       "column": 17,
-      "index": 19662
+      "index": 19984
     },
     "end": {
-      "line": 645,
+      "line": 657,
       "column": 3,
-      "index": 19749
+      "index": 20071
     }
   },
   {
@@ -1895,14 +1940,14 @@
     "defaultMessage": "!!!We are experiencing synchronization issues.",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 646,
+      "line": 658,
       "column": 37,
-      "index": 19788
+      "index": 20110
     },
     "end": {
-      "line": 649,
+      "line": 661,
       "column": 3,
-      "index": 19923
+      "index": 20245
     }
   },
   {
@@ -1910,14 +1955,14 @@
     "defaultMessage": "!!!We are experiencing synchronization issues. Pull to refresh",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 650,
+      "line": 662,
       "column": 34,
-      "index": 19959
+      "index": 20281
     },
     "end": {
-      "line": 653,
+      "line": 665,
       "column": 3,
-      "index": 20107
+      "index": 20429
     }
   },
   {
@@ -1925,14 +1970,14 @@
     "defaultMessage": "!!!Register to vote",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 658,
+      "line": 670,
       "column": 15,
-      "index": 20216
+      "index": 20538
     },
     "end": {
-      "line": 661,
+      "line": 673,
       "column": 3,
-      "index": 20301
+      "index": 20623
     }
   },
   {
@@ -1940,14 +1985,14 @@
     "defaultMessage": "!!!Participating requires at least {requiredBalance},but you only have {currentBalance}. Unwithdrawn rewards are not included in this amount",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 662,
+      "line": 674,
       "column": 23,
-      "index": 20326
+      "index": 20648
     },
     "end": {
-      "line": 668,
+      "line": 680,
       "column": 3,
-      "index": 20574
+      "index": 20896
     }
   },
   {
@@ -1955,14 +2000,14 @@
     "defaultMessage": "!!! NFTs",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 669,
+      "line": 681,
       "column": 8,
-      "index": 20584
+      "index": 20906
     },
     "end": {
-      "line": 672,
+      "line": 684,
       "column": 3,
-      "index": 20644
+      "index": 20966
     }
   },
   {
@@ -1970,14 +2015,14 @@
     "defaultMessage": "!!! Tokens",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 673,
+      "line": 685,
       "column": 10,
-      "index": 20656
+      "index": 20978
     },
     "end": {
-      "line": 676,
+      "line": 688,
       "column": 3,
-      "index": 20720
+      "index": 21042
     }
   },
   {
@@ -1985,14 +2030,14 @@
     "defaultMessage": "!!! Assets",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 677,
+      "line": 689,
       "column": 10,
-      "index": 20732
+      "index": 21054
     },
     "end": {
-      "line": 680,
+      "line": 692,
       "column": 3,
-      "index": 20796
+      "index": 21118
     }
   },
   {
@@ -2000,14 +2045,14 @@
     "defaultMessage": "!!! available",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 681,
+      "line": 693,
       "column": 13,
-      "index": 20811
+      "index": 21133
     },
     "end": {
-      "line": 684,
+      "line": 696,
       "column": 3,
-      "index": 20881
+      "index": 21203
     }
   },
   {
@@ -2015,14 +2060,14 @@
     "defaultMessage": "!!! Dex",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 685,
+      "line": 697,
       "column": 9,
-      "index": 20892
+      "index": 21214
     },
     "end": {
-      "line": 688,
+      "line": 700,
       "column": 3,
-      "index": 20952
+      "index": 21274
     }
   },
   {
@@ -2030,14 +2075,14 @@
     "defaultMessage": "!!! Price",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 689,
+      "line": 701,
       "column": 9,
-      "index": 20963
+      "index": 21285
     },
     "end": {
-      "line": 692,
+      "line": 704,
       "column": 3,
-      "index": 21025
+      "index": 21347
     }
   },
   {
@@ -2045,14 +2090,14 @@
     "defaultMessage": "!!!All",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 693,
+      "line": 705,
       "column": 7,
-      "index": 21034
+      "index": 21356
     },
     "end": {
-      "line": 696,
+      "line": 708,
       "column": 3,
-      "index": 21091
+      "index": 21413
     }
   },
   {
@@ -2060,14 +2105,14 @@
     "defaultMessage": "!!!Locked deposit",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 697,
+      "line": 709,
       "column": 17,
-      "index": 21110
+      "index": 21432
     },
     "end": {
-      "line": 700,
+      "line": 712,
       "column": 3,
-      "index": 21188
+      "index": 21510
     }
   },
   {
@@ -2075,14 +2120,14 @@
     "defaultMessage": "!!!Locked deposit hint",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 701,
+      "line": 713,
       "column": 21,
-      "index": 21211
+      "index": 21533
     },
     "end": {
-      "line": 704,
+      "line": 716,
       "column": 3,
-      "index": 21298
+      "index": 21620
     }
   },
   {
@@ -2090,14 +2135,14 @@
     "defaultMessage": "!!!Currency",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 705,
+      "line": 717,
       "column": 12,
-      "index": 21312
+      "index": 21634
     },
     "end": {
-      "line": 708,
+      "line": 720,
       "column": 3,
-      "index": 21379
+      "index": 21701
     }
   },
   {
@@ -2105,14 +2150,14 @@
     "defaultMessage": "!!!Next",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 709,
+      "line": 721,
       "column": 8,
-      "index": 21389
+      "index": 21711
     },
     "end": {
-      "line": 712,
+      "line": 724,
       "column": 3,
-      "index": 21448
+      "index": 21770
     }
   },
   {
@@ -2120,14 +2165,14 @@
     "defaultMessage": "!!!Error",
     "file": "src/i18n/global-messages.ts",
     "start": {
-      "line": 713,
+      "line": 725,
       "column": 9,
-      "index": 21459
+      "index": 21781
     },
     "end": {
-      "line": 716,
+      "line": 728,
       "column": 3,
-      "index": 21520
+      "index": 21842
     }
   }
 ]
