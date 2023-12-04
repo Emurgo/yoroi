@@ -9,9 +9,15 @@ enum DomainService {
   Handle = 'handle',
 }
 
+type ApiConfig = {
+  [DomainService.Unstoppable]: {
+    apiKey: string
+  }
+}
+
 export const resolverApiMaker = (
   resolutionStrategy: Resolver.Strategy,
-  apiConfig?: any,
+  apiConfig: ApiConfig,
 ): Resolver.Api => {
   const getCryptoAddress = async (
     receiverDomain: Resolver.Receiver['domain'],
@@ -20,7 +26,7 @@ export const resolverApiMaker = (
       [DomainService.Handle]: getHandleCryptoAddress(receiverDomain),
       [DomainService.Unstoppable]: getUnstoppableCryptoAddress(
         receiverDomain,
-        apiConfig?.apiKeys?.unstoppableApiKey ?? undefined,
+        apiConfig[DomainService.Unstoppable].apiKey,
       ),
       [DomainService.Cns]: getCnsCryptoAddress(receiverDomain),
     }

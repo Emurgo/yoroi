@@ -1,60 +1,108 @@
-import {fetcher} from '@yoroi/common/src'
-import {Resolver} from '@yoroi/types'
+import {Api, Resolver} from '@yoroi/types'
+import {fetchData, FetchData, handleApiError, isLeft} from '@yoroi/common'
 import {z} from 'zod'
+
 import {handleZodErrors} from './zod-errors'
 
-export const getHandleCryptoAddress = async (
-  receiverDomain: Resolver.Receiver['domain'],
-): Promise<string> => {
-  try {
-    const validatedHandle = stringWithDollarSchema.parse(receiverDomain)
-    const handle = validatedHandle.replace(/^\$/, '')
+export const handleApiGetCryptoAddress = ({
+  request = fetchData,
+}: {
+  request?: FetchData
+} = {}) => {
+  return async (
+    receiverDomain: Resolver.Receiver['domain'],
+  ): Promise<string> => {
+    try {
+      if (!isAdaHandleDomain(receiverDomain)) throw new HandleApiErrorInvalidDomain()
 
-    const config = {
-      method: 'get',
-      url: `https://api.handle.me/handles/${handle}`,
-      headers: {Accept: 'application/json'},
+      const sanitizedDomain = receiverDomain.replace(/^\$/, '')
+      const config = {
+        url: `${handleApiConfig.mainnet.getCryptoAddress}${sanitizedDomain}`,
+      } as const
+
+      const response = await request<HandleApiGetCryptoAddressResponse>(config)
+
+      if (isLeft(response)) {
+        handleApiError(response.error)
+      } else {
+        const parsedResponse = HandleApiResponseSchema.parse(response.value)
+        return asResolverCryptoAddress(parsedResponse)
+      }
+    } catch (error: unknown) {
+      return handleHandleApiError(error)
     }
-
-    const response = await fetcher(config)
-
-    const validatedHandleResponse = HandleResponseSchema.parse(response)
-
-    const address = validatedHandleResponse.resolved_addresses.ada
-    return address
-  } catch (error: unknown) {
-    const zodErrorMessage = handleZodErrors(error)
-    if (zodErrorMessage) throw new HandleValidationError(zodErrorMessage)
-
-    throw new HandleUnknownError(JSON.stringify(error))
   }
 }
 
-const HandleResponseSchema = z.object({
+export const asResolverCryptoAddress = (
+  handleCryptoAddress: Pick<
+    HandleApiGetCryptoAddressResponse,
+    'resolved_addresses'
+  >,
+) => handleCryptoAddress.resolved_addresses.ada
+
+// https://github.com/koralabs/handles-public-api/blob/master/src/models/view/handle.view.model.ts
+export type HandleApiGetCryptoAddressResponse = {
+  hex: string
+  name: string
+  image: string
+  standard_image: string
+  holder: string
+  holder_type: string
+  length: number
+  og_number: number
+  //   export enum Rarity {
+  //     basic = 'basic', // - 8-15 characters
+  //     common = 'common', // - 4-7 characters
+  //     rare = 'rare', // - 3 characters
+  //     ultra_rare = 'ultra_rare', // - 2 characters
+  //     legendary = 'legendary' // - 1 character
+  // }
+  rarity: string // translated to string only
+  utxo: string
+  characters: string
+  numeric_modifiers: string
+  default_in_wallet: string
+  pfp_image?: string
+  pfp_asset?: string
+  bg_image?: string
+  bg_asset?: string
+  resolved_addresses: {
+    ada: string
+    eth?: string | undefined
+    btc?: string | undefined
+  }
+  created_slot_number: number
+  updated_slot_number: number
+  has_datum: boolean
+  svg_version: string
+  image_hash: string
+  standard_image_hash: string
+  version: number
+}
+
+const HandleApiResponseSchema = z.object({
   resolved_addresses: z.object({
     ada: z.string(),
   }),
 })
+export const isAdaHandleDomain = (value: string) => value.startsWith('$')
 
-const stringWithDollarSchema = z.string().refine(
-  (value) => {
-    return value.startsWith('$')
+export const handleApiConfig = {
+  mainnet: {
+    getCryptoAddress: 'https://api.handle.me/handles/',
   },
-  {
-    message: "The domain must start with a '$' symbol",
-  },
-)
+} as const
 
-export class HandleValidationError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'HandleValidationError'
-  }
+export const handleHandleApiError = (error: unknown): never => {
+  const zodErrorMessage = handleZodErrors(error)
+  if (zodErrorMessage) throw new HandleApiErrorInvalidResponse(zodErrorMessage)
+
+  if (error instanceof Api.Errors.NotFound) throw new HandleApiErrorNotFound()
+
+  throw error
 }
 
-export class HandleUnknownError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'HandleUnknownError'
-  }
-}
+export class HandleApiErrorInvalidResponse extends Error {}
+export class HandleApiErrorInvalidDomain extends Error {}
+export class HandleApiErrorNotFound extends Error {}
