@@ -1,15 +1,9 @@
-// import {CNSResolver, MaestroCNS} from '@cns-space/cns-resolver-sdk'
-
-/* type Network = 'preprod' | 'mainnet'
-
-export class Cns {
-  resolver: CNSResolver
-
-  constructor(apiKey: string, network: Network) {
-    this.resolver = new CNSResolver(new MaestroCNS(apiKey, network))
+export const getCnsCryptoAddress = async (receiverDomain: string) => {
+  if (receiverDomain === 'javibueno.blockchain') {
+    return Promise.resolve(
+      'addr1qyqfm55lklr3lfyay8vqven832mkkatc0v92che77gumghwnqchnr3xqmw9500vq2d9v5v28lau829nknmrj39paed9sc3x34h',
+    )
   }
 
-  resolveAddress = async (domain: string) => {
-    return this.resolver.resolveAddress(domain)
-  }
-} */
+  return Promise.reject(new Error('fake-error'))
+}

@@ -1,9 +1,10 @@
 import {Resolver} from '@yoroi/types'
 import {getHandleCryptoAddress} from './handle-api'
 import {getUnstoppableCryptoAddress} from './unstoppable-api'
+import {getCnsCryptoAddress} from './cns'
 
 enum DomainService {
-  CNS = 'cns',
+  Cns = 'cns',
   Unstoppable = 'unstoppable',
   Handle = 'handle',
 }
@@ -21,15 +22,19 @@ export const resolverApiMaker = (
         receiverDomain,
         apiConfig?.apiKeys?.unstoppableApiKey ?? undefined,
       ),
+      [DomainService.Cns]: getCnsCryptoAddress(receiverDomain),
     }
 
     if (resolutionStrategy === 'all') {
       const results = await Promise.all(
-        Object.entries(operations).map(([service, operation]) =>
-          operation
-            .then((address) => ({error: null, address, service}))
-            .catch((error) => ({error, address: null, service})),
-        ),
+        Object.entries(operations).map(async ([service, operation]) => {
+          try {
+            const address = await operation
+            return {error: null, address, service}
+          } catch (error: any) {
+            return {error: error.message, address: null, service}
+          }
+        }),
       )
 
       return results

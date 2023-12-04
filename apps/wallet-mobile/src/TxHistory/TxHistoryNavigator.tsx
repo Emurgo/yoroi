@@ -35,7 +35,7 @@ import {
 } from '../features/Swap/useCases'
 import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
 import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
-import env from '../legacy/env'
+import {CONFIG} from '../legacy/config'
 import {BackButton, defaultStackNavigationOptions, TxHistoryRoutes, useWalletNavigation} from '../navigation'
 import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -78,7 +78,7 @@ export const TxHistoryNavigator = () => {
   const resolverModule = React.useMemo(() => {
     const resolverStorage = resolverStorageMaker()
     return resolverModuleMaker('all', resolverStorage, {
-      apiKeys: {unstoppableApiKey: env.getString('UNSTOPPABLE_API_KEY')},
+      apiKeys: {unstoppableApiKey: CONFIG.UNSTOPPABLE_API_KEY},
     })
   }, [])
 
