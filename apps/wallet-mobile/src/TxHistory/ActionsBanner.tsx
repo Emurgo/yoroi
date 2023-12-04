@@ -40,7 +40,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {openModal, closeModal} = useModal()
 
   const handleOnBuy = () => {
-    track.walletPageExchangeBottomSheetClicked()
+    track.walletPageExchangeClicked()
 
     const modalHeight = 320
     const modalTextFormattingOptions: BuyInfoFormattingOptions = {
@@ -59,7 +59,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
           shelleyTheme
           title={strings.proceed}
           onPress={() => {
-            track.walletPageExchangeClicked()
+            track.walletPageExchangeBottomSheetClicked()
             // banxa doesn't support testnet for the sandbox it needs a mainnet address
             const sandboxWallet = env.getString('BANXA_TEST_WALLET')
             const isMainnet = wallet.networkId !== 300
