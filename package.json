@@ -10,6 +10,7 @@
       "packages/openswap",
       "packages/resolver",
       "packages/common",
+      "packages/links",
       "packages/api",
       "packages/*",
       "apps/*",
