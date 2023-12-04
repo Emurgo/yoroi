@@ -5,11 +5,10 @@ module.exports = {
   watchFolders: [
     path.resolve(__dirname, "node_modules"),
     path.resolve(__dirname, "packages/types"),
+    path.resolve(__dirname, "packages/common"),
+    path.resolve(__dirname, "packages/api"),
     path.resolve(__dirname, "packages/banxa"),
     path.resolve(__dirname, "packages/links"),
-    path.resolve(__dirname, "packages/common"),
-    path.resolve(__dirname, "packages/links"),
-    path.resolve(__dirname, "packages/api"),
     path.resolve(__dirname, "packages/resolver"),
     path.resolve(__dirname, "packages/openswap"),
     path.resolve(__dirname, "packages/swap"),
