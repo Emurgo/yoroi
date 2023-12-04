@@ -198,7 +198,8 @@ export type TxHistoryRoutes = {
   'send-edit-amount': undefined
   'send-select-token-from-list': undefined
 } & SwapTokenRoutes &
-  ScanRoutes
+  ScanRoutes &
+  ClaimRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 type ScanStartParams = Readonly<{
@@ -208,6 +209,9 @@ export type ScanRoutes = {
   'scan-start': ScanStartParams
   'scan-claim-confirm-summary': undefined
   'scan-show-camera-permission-denied': undefined
+}
+export type ClaimRoutes = {
+  'claim-show-success': undefined
 }
 
 export type SwapTokenRoutes = {

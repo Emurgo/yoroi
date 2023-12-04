@@ -1,0 +1,13 @@
+export class ApiErrorBadRequest extends Error {}
+export class ApiErrorUnauthorized extends Error {}
+export class ApiErrorForbidden extends Error {}
+export class ApiErrorNotFound extends Error {}
+export class ApiErrorConflict extends Error {}
+export class ApiErrorGone extends Error {}
+export class ApiErrorTooEarly extends Error {}
+export class ApiErrorTooManyRequests extends Error {}
+export class ApiErrorServerSide extends Error {}
+export class ApiErrorUnknown extends Error {}
+export class ApiErrorNetwork extends Error {}
+export class ApiErrorInvalidState extends Error {}
+export class ApiErrorResponseMalformed extends Error {}

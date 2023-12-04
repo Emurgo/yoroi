@@ -35,6 +35,22 @@ import {
   LinksErrorUnsupportedAuthority,
   LinksErrorUnsupportedVersion,
 } from './links/errors'
+import {ApiResponse, ApiResponseError, ApiResponseSuccess} from './api/response'
+import {
+  ApiErrorBadRequest,
+  ApiErrorNotFound,
+  ApiErrorConflict,
+  ApiErrorForbidden,
+  ApiErrorGone,
+  ApiErrorTooEarly,
+  ApiErrorTooManyRequests,
+  ApiErrorUnauthorized,
+  ApiErrorNetwork,
+  ApiErrorUnknown,
+  ApiErrorServerSide,
+  ApiErrorInvalidState,
+  ApiErrorResponseMalformed,
+} from './api/errors'
 
 export namespace App {
   export interface Storage extends AppStorage {}
@@ -107,6 +123,29 @@ export namespace Links {
     export class UnsupportedAuthority extends LinksErrorUnsupportedAuthority {}
     export class UnsupportedVersion extends LinksErrorUnsupportedVersion {}
     export class SchemeNotImplemented extends LinksErrorSchemeNotImplemented {}
+  }
+}
+
+export namespace Api {
+  export type ResponseError = ApiResponseError
+  export type ResponseSuccess<T> = ApiResponseSuccess<T>
+  export type Response<T> = ApiResponse<T>
+
+  export namespace Errors {
+    export class BadRequest extends ApiErrorBadRequest {}
+    export class NotFound extends ApiErrorNotFound {}
+    export class Conflict extends ApiErrorConflict {}
+    export class Forbidden extends ApiErrorForbidden {}
+    export class Gone extends ApiErrorGone {}
+    export class TooEarly extends ApiErrorTooEarly {}
+    export class TooManyRequests extends ApiErrorTooManyRequests {}
+    export class Unauthorized extends ApiErrorUnauthorized {}
+    export class ServerSide extends ApiErrorServerSide {}
+    export class Network extends ApiErrorNetwork {}
+    export class Unknown extends ApiErrorUnknown {}
+    export class InvalidState extends ApiErrorInvalidState {}
+
+    export class ResponseMalformed extends ApiErrorResponseMalformed {}
   }
 }
 
