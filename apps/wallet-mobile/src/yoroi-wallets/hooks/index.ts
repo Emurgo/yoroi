@@ -632,6 +632,7 @@ export const useFrontendFees = (
 }
 
 export const useProtocolParams = (
+  wallet: YoroiWallet,
   options?: UseQueryOptions<
     App.FrontendProtocolParamsResponse,
     Error,
@@ -639,8 +640,6 @@ export const useProtocolParams = (
     ['protocol-params']
   >,
 ) => {
-  const wallet = useSelectedWallet()
-
   const query = useQuery({
     suspense: true,
     queryKey: ['protocol-params'],
