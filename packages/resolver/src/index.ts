@@ -1,2 +1,3 @@
-export {resolverModuleMaker} from './translators/module'
-export {resolverStorageMaker} from './adapters/storage'
+export * from './translators/module'
+export * from './adapters/storage'
+export * from './adapters/api'

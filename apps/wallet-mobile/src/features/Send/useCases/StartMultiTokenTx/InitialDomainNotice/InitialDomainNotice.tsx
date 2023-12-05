@@ -3,12 +3,9 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer} from '../../../../../components'
-import {
-  useReadResolverNoticeStatus,
-  useSaveResolverNoticeStatus,
-} from '../../../../../features/Send/common/ResolverProvider'
+import {useReadResolverNoticeStatus, useSaveResolverNoticeStatus} from '../../../common/ResolverProvider'
 
-export const Notice = () => {
+export const InitialDomainNotice = () => {
   const {readResolverNoticeStatus, refetch: refetchResolverNoticeStatus} = useReadResolverNoticeStatus()
   const {saveResolverNoticeStatus} = useSaveResolverNoticeStatus({
     onSuccess: () => refetchResolverNoticeStatus(),

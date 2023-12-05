@@ -1,22 +1,28 @@
 import {Resolver} from '@yoroi/types'
 import _ from 'lodash'
 import React from 'react'
-import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
+import {useQuery, UseQueryOptions} from 'react-query'
 
 import {Button, Spacer} from '../../../../components'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {isEmptyString} from '../../../../utils'
+import {getNetworkConfigById} from '../../../../yoroi-wallets/cardano/networks'
+import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
+import {normalizeToAddress} from '../../../../yoroi-wallets/cardano/utils'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
+import {NetworkId} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../common/navigation'
 import {isDomain, isHandle, useResolver, useResolverAddresses} from '../../common/ResolverProvider'
 import {useSend} from '../../common/SendContext'
 import {useStrings} from '../../common/strings'
+import {InitialDomainNotice} from './InitialDomainNotice/InitialDomainNotice'
 import {InputMemo, maxMemoLength} from './InputMemo'
-import {getAddressErrorMessage, ResolveAddress, useValidAddress} from './InputReceiver/ResolveAddress'
-import {Notice} from './Notice/Notice'
+import {ResolveAddress} from './InputReceiver/ResolveAddress'
+import {MultiAddressResolutionNotice} from './MultiAddressResolutionNotice/MultiAddressResolutionNotice'
 import {ShowErrors} from './ShowErrors'
 
 export const StartMultiTokenTxScreen = () => {
@@ -39,7 +45,9 @@ export const StartMultiTokenTxScreen = () => {
   const {resolvedAddressSelected, resolvedAddressSelectedChanged} = useResolver()
   const [succesfulResolvedAddresses, setSuccesfulResolvedAddresses] = React.useState<Resolver.AddressesResponse>([])
 
-  const {error, isLoading} = useValidAddress(
+  console.log('tests')
+
+  const {error, isLoading: isValidationLoading} = useValidAddress(
     {wallet, receiver: resolvedAddressSelected?.address ?? receiver},
     {
       onSettled(address, error) {
@@ -49,19 +57,19 @@ export const StartMultiTokenTxScreen = () => {
           addressChanged(address ?? '')
         }
       },
-      enabled: !isEmptyString(resolvedAddressSelected?.address) || !isEmptyString(receiver),
+      enabled:
+        (!isEmptyString(resolvedAddressSelected?.address) || !isEmptyString(receiver)) &&
+        succesfulResolvedAddresses.length < 2,
     },
   )
 
-  useResolverAddresses(
+  const {isLoading: isResolutionLoading} = useResolverAddresses(
     {receiver},
     {
       onSettled(addresses) {
         const succesfulResolvedAddresses = addresses?.filter(({address}) => address !== null) ?? []
 
-        if (succesfulResolvedAddresses.length === 0) {
-          setSuccesfulResolvedAddresses([])
-        } else if (succesfulResolvedAddresses?.length === 1) {
+        if (succesfulResolvedAddresses?.length === 1) {
           resolvedAddressSelectedChanged(succesfulResolvedAddresses[0])
         }
 
@@ -74,7 +82,8 @@ export const StartMultiTokenTxScreen = () => {
     },
   )
 
-  const addressErrorMessage = error != null ? getAddressErrorMessage(error, strings) : ''
+  const addressErrorMessage =
+    error != null && succesfulResolvedAddresses.length < 2 ? strings.addressInputErrorInvalidAddress : ''
   const isValid = isOnline && !hasPendingTx && _.isEmpty(error) && memo.length <= maxMemoLength && address.length > 0
 
   const onNext = () => {
@@ -89,6 +98,7 @@ export const StartMultiTokenTxScreen = () => {
     receiverChanged(text)
     resolvedAddressSelectedChanged(null)
     setSuccesfulResolvedAddresses([])
+    addressChanged('')
   }
 
   return (
@@ -99,7 +109,16 @@ export const StartMultiTokenTxScreen = () => {
         keyboardVerticalOffset={86}
       >
         <ScrollView style={styles.flex} bounces={false}>
-          <Notice />
+          <InitialDomainNotice />
+
+          <MultiAddressResolutionNotice isOpen={succesfulResolvedAddresses.length > 1} />
+
+          {succesfulResolvedAddresses.length > 1 &&
+            succesfulResolvedAddresses.map(({address, service}, index) => (
+              <Pressable key={index}>
+                <Text>{`${address} ${service}`}</Text>
+              </Pressable>
+            ))}
 
           <ShowErrors />
 
@@ -110,7 +129,8 @@ export const StartMultiTokenTxScreen = () => {
             receiver={receiver}
             address={address}
             errorMessage={addressErrorMessage}
-            isLoading={isLoading}
+            isLoading={isValidationLoading || isResolutionLoading}
+            isValid={!!isValid}
           />
 
           <Spacer height={16} />
@@ -122,7 +142,7 @@ export const StartMultiTokenTxScreen = () => {
           <NextButton
             onPress={onNext}
             title={strings.next}
-            disabled={!isValid || isLoading}
+            disabled={!isValid || isValidationLoading || isResolutionLoading}
             testID="nextButton"
             shelleyTheme
           />
@@ -133,6 +153,46 @@ export const StartMultiTokenTxScreen = () => {
 }
 
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
+
+export const useValidAddress = (
+  {wallet, receiver}: {wallet: YoroiWallet; receiver: string},
+  options?: UseQueryOptions<string, Error, string, ['receiver', string]>,
+) => {
+  const query = useQuery({
+    queryKey: ['receiver', receiver],
+    queryFn: () => checkAddress(receiver, wallet.networkId),
+    ...options,
+  })
+
+  return {
+    ...query,
+    address: query.data ?? '',
+  }
+}
+
+const checkAddress = async (receiver: string, networkId: NetworkId) => {
+  await isReceiverAddressValid(receiver, networkId)
+  return receiver
+}
+
+const isReceiverAddressValid = async (resolvedAddress: string, walletNetworkId: NetworkId): Promise<void> => {
+  if (resolvedAddress.length === 0) return Promise.resolve()
+
+  const address = await normalizeToAddress(resolvedAddress)
+  if (!address) return Promise.reject(new Error('Invalid address'))
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const networkConfig: any = getNetworkConfigById(walletNetworkId)
+    const configNetworkId = Number(networkConfig.CHAIN_NETWORK_ID)
+    const addressNetworkId = await address.networkId()
+    if (addressNetworkId !== configNetworkId && !isNaN(configNetworkId)) {
+      return Promise.reject(new Error('Invalid address'))
+    }
+  } catch (e) {
+    return Promise.reject(new Error('Should not happen'))
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
