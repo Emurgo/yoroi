@@ -7,6 +7,7 @@ export const useStrings = () => {
 
   return {
     addressInputErrorInvalidAddress: intl.formatMessage(messages.addressInputErrorInvalidAddress),
+    addressInputErrorInvalidDomain: intl.formatMessage(messages.addressInputErrorInvalidDomain),
     addressInputLabel: intl.formatMessage(messages.addressInputLabel),
     all: intl.formatMessage(globalMessages.all),
     amount: intl.formatMessage(txLabels.amount),
@@ -131,9 +132,13 @@ export const messages = defineMessages({
     id: 'components.send.sendscreen.addressInputErrorInvalidAddress',
     defaultMessage: '!!!Please enter valid address',
   },
+  addressInputErrorInvalidDomain: {
+    id: 'components.send.sendscreen.addressInputErrorInvalidDomain',
+    defaultMessage: '!!!Please enter valid domain',
+  },
   addressInputLabel: {
     id: 'components.send.confirmscreen.receiver',
-    defaultMessage: '!!!Address',
+    defaultMessage: '!!!Receiver address, ADA Handle or domains',
   },
   checkboxSendAllAssets: {
     id: 'components.send.sendscreen.checkboxSendAllAssets',

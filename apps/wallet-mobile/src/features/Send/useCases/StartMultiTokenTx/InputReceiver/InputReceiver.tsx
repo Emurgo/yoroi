@@ -21,7 +21,7 @@ export const InputReceiver = ({
         isLoading ? (
           <Loading />
         ) : isValid ? (
-          <Icon.Check color="#08C29D" />
+          <Icon.Check size={30} color="#08C29D" />
         ) : (
           <ScannerButton onPress={navigateTo.reader} />
         )

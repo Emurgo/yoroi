@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {resolverModuleMaker, resolverStorageMaker} from '@yoroi/resolver'
+import {resolverModuleMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
 import {
   milkTokenId,
   supportedProviders,
@@ -21,7 +21,6 @@ import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
 import {CodeScannerButton} from '../features/Scan/common/CodeScannerButton'
 import {ScanCodeScreen} from '../features/Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '../features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
-import {ResolverProvider} from '../features/Send/common/ResolverProvider'
 import {SendProvider} from '../features/Send/common/SendContext'
 import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
 import {FailedTxScreen} from '../features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'

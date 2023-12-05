@@ -1,12 +1,12 @@
-import {DomainService} from '@yoroi/resolver'
+import {DomainService, useResolver} from '@yoroi/resolver'
 import React from 'react'
 import {Text, View, ViewProps} from 'react-native'
 
-import {Spacer} from '../../../../../components'
-import {useResolver} from '../../../../../features/Send/common/ResolverProvider'
+import {HelperText, Spacer} from '../../../../../components'
+import {isEmptyString} from '../../../../../utils'
 import {InputReceiver} from './InputReceiver'
 
-const Service = {
+export const Service = {
   [DomainService.Cns]: 'CNS',
   [DomainService.Unstoppable]: 'Unstoppable Domains',
   [DomainService.Handle]: 'ADA Handle',
@@ -14,7 +14,6 @@ const Service = {
 
 type ReceiverProps = ViewProps & {
   receiver: string
-  address: string
   errorMessage: string
   isLoading: boolean
   isValid: boolean
@@ -22,7 +21,6 @@ type ReceiverProps = ViewProps & {
 }
 export const ResolveAddress = ({
   isLoading,
-  address,
   receiver,
   errorMessage,
   isValid,
@@ -31,11 +29,10 @@ export const ResolveAddress = ({
   ...props
 }: ReceiverProps) => {
   const {resolvedAddressSelected} = useResolver()
-  const isResolved = !isLoading && !!resolvedAddressSelected
   const isError = errorMessage.length > 0
-
-  const firstHalf = address.substring(0, 8)
-  const secondHalf = address.substring(address.length - 8)
+  const selectedAddress = resolvedAddressSelected?.address ?? ''
+  const selectedSevice = resolvedAddressSelected?.service ?? ''
+  const isResolved = !isLoading && !isEmptyString(selectedAddress) && !isEmptyString(selectedSevice)
 
   return (
     <View style={style} {...props}>
@@ -49,23 +46,41 @@ export const ResolveAddress = ({
         autoComplete="off"
       />
 
-      {isResolved && (
-        <>
-          <Spacer height={4} />
-
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text
-              style={{fontFamily: 'Rubik', fontSize: 12, fontWeight: '400', color: '#4A5065'}}
-              numberOfLines={1}
-            >{`${Service[resolvedAddressSelected?.service ?? '']}`}</Text>
-
-            <Text
-              style={{fontFamily: 'Rubik', fontSize: 12, fontWeight: '400', color: '#8A92A3'}}
-              numberOfLines={1}
-            >{`${firstHalf}...${secondHalf}`}</Text>
-          </View>
-        </>
+      {!isEmptyString(errorMessage) && (
+        <HelperText type="error">
+          <Text>{errorMessage}</Text>
+        </HelperText>
       )}
+
+      {isResolved && <ResolvedAddress address={selectedAddress} service={selectedSevice} />}
     </View>
+  )
+}
+
+const ResolvedAddress = ({address, service}: {address: string; service: string}) => {
+  const {firstHalf, secondHalf} = React.useMemo(() => {
+    const firstHalf = address.substring(0, 8)
+    const secondHalf = address.substring(address.length - 8)
+
+    return {
+      firstHalf,
+      secondHalf,
+    }
+  }, [address])
+  return (
+    <>
+      <Spacer height={4} />
+
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <Text style={{fontFamily: 'Rubik', fontSize: 12, fontWeight: '400', color: '#4A5065'}} numberOfLines={1}>{`${
+          Service[service ?? '']
+        }`}</Text>
+
+        <Text
+          style={{fontFamily: 'Rubik', fontSize: 12, fontWeight: '400', color: '#8A92A3'}}
+          numberOfLines={1}
+        >{`${firstHalf}...${secondHalf}`}</Text>
+      </View>
+    </>
   )
 }

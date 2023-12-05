@@ -1,3 +1,4 @@
+import {isDomain, useResolver, useResolverAddresses} from '@yoroi/resolver'
 import {Resolver} from '@yoroi/types'
 import _ from 'lodash'
 import React from 'react'
@@ -16,12 +17,11 @@ import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
 import {NetworkId} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../common/navigation'
-import {isDomain, isHandle, useResolver, useResolverAddresses} from '../../common/ResolverProvider'
 import {useSend} from '../../common/SendContext'
 import {useStrings} from '../../common/strings'
 import {InitialDomainNotice} from './InitialDomainNotice/InitialDomainNotice'
 import {InputMemo, maxMemoLength} from './InputMemo'
-import {ResolveAddress} from './InputReceiver/ResolveAddress'
+import {ResolveAddress, Service} from './InputReceiver/ResolveAddress'
 import {MultiAddressResolutionNotice} from './MultiAddressResolutionNotice/MultiAddressResolutionNotice'
 import {ShowErrors} from './ShowErrors'
 
@@ -45,9 +45,14 @@ export const StartMultiTokenTxScreen = () => {
   const {resolvedAddressSelected, resolvedAddressSelectedChanged} = useResolver()
   const [succesfulResolvedAddresses, setSuccesfulResolvedAddresses] = React.useState<Resolver.AddressesResponse>([])
 
-  console.log('tests')
+  const validatorEnabled = React.useMemo(
+    () =>
+      (!isEmptyString(resolvedAddressSelected?.address) || !isEmptyString(receiver)) &&
+      succesfulResolvedAddresses.length < 2,
+    [receiver, resolvedAddressSelected?.address, succesfulResolvedAddresses.length],
+  )
 
-  const {error, isLoading: isValidationLoading} = useValidAddress(
+  const {error: addressValidationError, isLoading: isValidationLoading} = useValidAddress(
     {wallet, receiver: resolvedAddressSelected?.address ?? receiver},
     {
       onSettled(address, error) {
@@ -57,10 +62,15 @@ export const StartMultiTokenTxScreen = () => {
           addressChanged(address ?? '')
         }
       },
-      enabled:
-        (!isEmptyString(resolvedAddressSelected?.address) || !isEmptyString(receiver)) &&
-        succesfulResolvedAddresses.length < 2,
+      enabled: validatorEnabled,
     },
+  )
+
+  const resolverEnabled = React.useMemo(
+    () =>
+      // addressValidationError != null &&
+      succesfulResolvedAddresses.length === 0 && !isEmptyString(receiver) && isDomain(receiver),
+    [receiver, succesfulResolvedAddresses.length],
   )
 
   const {isLoading: isResolutionLoading} = useResolverAddresses(
@@ -69,22 +79,40 @@ export const StartMultiTokenTxScreen = () => {
       onSettled(addresses) {
         const succesfulResolvedAddresses = addresses?.filter(({address}) => address !== null) ?? []
 
-        if (succesfulResolvedAddresses?.length === 1) {
+        if (succesfulResolvedAddresses?.length > 0) {
           resolvedAddressSelectedChanged(succesfulResolvedAddresses[0])
         }
 
         setSuccesfulResolvedAddresses(succesfulResolvedAddresses)
       },
-      enabled:
-        succesfulResolvedAddresses.length === 0 &&
-        !isEmptyString(receiver) &&
-        (isHandle(receiver) || isDomain(receiver)),
+      enabled: resolverEnabled,
     },
   )
 
-  const addressErrorMessage =
-    error != null && succesfulResolvedAddresses.length < 2 ? strings.addressInputErrorInvalidAddress : ''
-  const isValid = isOnline && !hasPendingTx && _.isEmpty(error) && memo.length <= maxMemoLength && address.length > 0
+  const addressErrorMessage = React.useMemo(
+    () =>
+      addressValidationError != null && succesfulResolvedAddresses.length < 2
+        ? isDomain(receiver)
+          ? strings.addressInputErrorInvalidDomain
+          : strings.addressInputErrorInvalidAddress
+        : '',
+    [
+      addressValidationError,
+      receiver,
+      strings.addressInputErrorInvalidAddress,
+      strings.addressInputErrorInvalidDomain,
+      succesfulResolvedAddresses.length,
+    ],
+  )
+  const isValid = React.useMemo(
+    () =>
+      isOnline &&
+      !hasPendingTx &&
+      _.isEmpty(addressValidationError) &&
+      memo.length <= maxMemoLength &&
+      (!isEmptyString(address) || !isEmptyString(resolvedAddressSelected?.address)),
+    [address, addressValidationError, hasPendingTx, isOnline, memo.length, resolvedAddressSelected?.address],
+  )
 
   const onNext = () => {
     if (shouldOpenAddToken) {
@@ -95,10 +123,10 @@ export const StartMultiTokenTxScreen = () => {
   }
 
   const onChangeReceiver = (text: string) => {
+    addressChanged('')
     receiverChanged(text)
     resolvedAddressSelectedChanged(null)
     setSuccesfulResolvedAddresses([])
-    addressChanged('')
   }
 
   return (
@@ -109,25 +137,23 @@ export const StartMultiTokenTxScreen = () => {
         keyboardVerticalOffset={86}
       >
         <ScrollView style={styles.flex} bounces={false}>
+          <ShowErrors />
+
+          <Spacer height={16} />
+
           <InitialDomainNotice />
+
+          <Spacer height={16} />
 
           <MultiAddressResolutionNotice isOpen={succesfulResolvedAddresses.length > 1} />
 
-          {succesfulResolvedAddresses.length > 1 &&
-            succesfulResolvedAddresses.map(({address, service}, index) => (
-              <Pressable key={index}>
-                <Text>{`${address} ${service}`}</Text>
-              </Pressable>
-            ))}
-
-          <ShowErrors />
+          {succesfulResolvedAddresses.length > 1 && <ResolvedAddressesList list={succesfulResolvedAddresses} />}
 
           <Spacer height={16} />
 
           <ResolveAddress
             onChangeReceiver={onChangeReceiver}
             receiver={receiver}
-            address={address}
             errorMessage={addressErrorMessage}
             isLoading={isValidationLoading || isResolutionLoading}
             isValid={!!isValid}
@@ -152,6 +178,37 @@ export const StartMultiTokenTxScreen = () => {
   )
 }
 
+const ResolvedAddressesList = ({list}: {list: Resolver.AddressesResponse}) => {
+  const {resolvedAddressSelected, resolvedAddressSelectedChanged} = useResolver()
+  return (
+    <>
+      <Spacer height={16} />
+
+      <View style={styles.list}>
+        {list.map((address, index) => {
+          return (
+            <>
+              {index !== 0 && <Spacer width={5} />}
+
+              <Pressable
+                onPress={() => resolvedAddressSelectedChanged(address)}
+                style={[
+                  styles.listButton,
+                  {
+                    backgroundColor: address.service === resolvedAddressSelected?.service ? '#DCE0E9' : undefined,
+                  },
+                ]}
+                key={address.service}
+              >
+                <Text style={styles.listButtonText}>{`${Service[address.service ?? '']}`}</Text>
+              </Pressable>
+            </>
+          )
+        })}
+      </View>
+    </>
+  )
+}
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
 
 export const useValidAddress = (
@@ -205,6 +262,18 @@ const styles = StyleSheet.create({
   },
   actions: {
     paddingVertical: 16,
+  },
+  list: {
+    flexDirection: 'row',
+  },
+  listButton: {
+    padding: 8,
+    borderRadius: 5,
+  },
+  listButtonText: {
+    fontFamily: 'Rubik-Medium',
+    fontSize: 16,
+    fontWeight: '500',
   },
 })
 

@@ -1,9 +1,9 @@
+import {useReadResolverNoticeStatus, useSaveResolverNoticeStatus} from '@yoroi/resolver'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer} from '../../../../../components'
-import {useReadResolverNoticeStatus, useSaveResolverNoticeStatus} from '../../../common/ResolverProvider'
 
 export const InitialDomainNotice = () => {
   const {readResolverNoticeStatus, refetch: refetchResolverNoticeStatus} = useReadResolverNoticeStatus()
