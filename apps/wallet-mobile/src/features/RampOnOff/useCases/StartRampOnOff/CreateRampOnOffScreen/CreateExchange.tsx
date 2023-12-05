@@ -4,11 +4,13 @@ import * as React from 'react'
 import {KeyboardAvoidingView, Linking, Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
+import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../../../src/legacy/config'
 import env from '../../../../../../src/legacy/env'
 import {useSelectedWallet} from '../../../../../../src/SelectedWallet'
 import {Theme} from '../../../../../../src/theme/types'
 import {Button} from '../../../../../components'
 import {useTheme} from '../../../../../theme'
+import {useNavigateTo} from '../../../common/navigation'
 import {useRampOnOff} from '../../../common/RampOnOffProvider'
 import {useStrings} from '../../../common/strings'
 import Disclaimer from './Disclaimer'
@@ -16,11 +18,13 @@ import EditAmount from './EditAmount/EditAmount'
 import ProviderFee from './ProviderFee/ProviderFee'
 import ProviderTransaction from './ProviderTransaction/ProviderTransaction'
 import {TopActions} from './ShowActions/TopActions'
+
 const BOTTOM_ACTION_SECTION = 180
 
 const CreateExchange = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
 
+  const navigateTo = useNavigateTo()
   const {actionType, amount} = useRampOnOff()
 
   const wallet = useSelectedWallet()
@@ -36,7 +40,7 @@ const CreateExchange = () => {
   const handleExchange = () => {
     // banxa doesn't support testnet for the sandbox it needs a mainnet address
     const sandboxWallet = env.getString('BANXA_TEST_WALLET')
-    const returnUrl = env.getString('BANXA_RETURN_URL')
+    const returnUrl = `${SCHEME_URL}${RAMP_ON_OFF_PATH}`
     const isMainnet = wallet.networkId !== 300
     const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
     const moduleOptions = {isProduction: isMainnet, partner: 'yoroi'} as const
@@ -52,6 +56,7 @@ const CreateExchange = () => {
     const banxa = banxaModuleMaker(moduleOptions)
     const url = banxa.createReferralUrl(urlOptions)
     Linking.openURL(url.toString())
+    navigateTo.rampOnOffOpenOrder()
   }
 
   return (

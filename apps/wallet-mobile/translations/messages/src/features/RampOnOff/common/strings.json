@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Current Balance",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 23,
+      "line": 27,
       "column": 18,
-      "index": 869
+      "index": 1125
     },
     "end": {
-      "line": 26,
+      "line": 30,
       "column": 3,
-      "index": 958
+      "index": 1214
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!PROCEED",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 27,
+      "line": 31,
       "column": 11,
-      "index": 971
+      "index": 1227
     },
     "end": {
-      "line": 30,
+      "line": 34,
       "column": 3,
-      "index": 1036
+      "index": 1292
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Disclaimer",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 31,
+      "line": 35,
       "column": 14,
-      "index": 1052
+      "index": 1308
     },
     "end": {
-      "line": 34,
+      "line": 38,
       "column": 3,
-      "index": 1142
+      "index": 1398
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!\"Yoroi uses Banxa to provide direct Fiat-ADA exchange. By clicking “Proceed,” you also acknowledge that you will be redirected to our partner’s website, where you may be asked to accept their terms and conditions. Banxa may have buy and sell limitations depending on your location and your financial institution.\"",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 35,
+      "line": 39,
       "column": 21,
-      "index": 1165
+      "index": 1421
     },
     "end": {
-      "line": 39,
+      "line": 43,
       "column": 3,
-      "index": 1571
+      "index": 1827
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Buy ADA",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 40,
+      "line": 44,
       "column": 10,
-      "index": 1583
+      "index": 1839
     },
     "end": {
-      "line": 43,
+      "line": 47,
       "column": 3,
-      "index": 1666
+      "index": 1922
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Sell ADA",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 44,
+      "line": 48,
       "column": 11,
-      "index": 1679
+      "index": 1935
     },
     "end": {
-      "line": 47,
+      "line": 51,
       "column": 3,
-      "index": 1764
+      "index": 2020
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!ADA amount",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 48,
+      "line": 52,
       "column": 15,
-      "index": 1781
+      "index": 2037
     },
     "end": {
-      "line": 51,
+      "line": 55,
       "column": 3,
-      "index": 1872
+      "index": 2128
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Provider Fee",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 52,
+      "line": 56,
       "column": 15,
-      "index": 1889
+      "index": 2145
     },
     "end": {
-      "line": 55,
+      "line": 59,
       "column": 3,
-      "index": 1982
+      "index": 2238
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Provider",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 56,
+      "line": 60,
       "column": 12,
-      "index": 1996
+      "index": 2252
     },
     "end": {
-      "line": 59,
+      "line": 63,
       "column": 3,
-      "index": 2082
+      "index": 2338
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Banxa",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 60,
+      "line": 64,
       "column": 9,
-      "index": 2093
+      "index": 2349
     },
     "end": {
-      "line": 63,
+      "line": 67,
       "column": 3,
-      "index": 2173
+      "index": 2429
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Exchange ADA",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 64,
+      "line": 68,
       "column": 9,
-      "index": 2184
+      "index": 2440
     },
     "end": {
-      "line": 67,
+      "line": 71,
       "column": 3,
-      "index": 2255
+      "index": 2511
     }
   },
   {
@@ -169,14 +169,74 @@
     "defaultMessage": "!!!Not Enough Balannce",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 68,
+      "line": 72,
       "column": 21,
-      "index": 2278
+      "index": 2534
     },
     "end": {
-      "line": 71,
+      "line": 75,
       "column": 3,
-      "index": 2373
+      "index": 2629
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.congrats",
+    "defaultMessage": "!!!Congrats🎉 Your ADA will come in a few minutes",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 76,
+      "column": 12,
+      "index": 2643
+    },
+    "end": {
+      "line": 79,
+      "column": 3,
+      "index": 2767
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.ADAmountYouGet",
+    "defaultMessage": "!!!ADA amount you get",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 80,
+      "column": 18,
+      "index": 2787
+    },
+    "end": {
+      "line": 83,
+      "column": 3,
+      "index": 2889
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.fiatAmountYouGet",
+    "defaultMessage": "!!!Fiat amount you sell",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 84,
+      "column": 20,
+      "index": 2911
+    },
+    "end": {
+      "line": 87,
+      "column": 3,
+      "index": 3017
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.goToTransactions",
+    "defaultMessage": "!!!GO TO TRANSACTIONS",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 88,
+      "column": 20,
+      "index": 3039
+    },
+    "end": {
+      "line": 91,
+      "column": 3,
+      "index": 3143
     }
   }
 ]

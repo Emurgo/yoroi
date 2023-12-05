@@ -248,7 +248,10 @@ export type SwapTabRoutes = {
 export type RampOnOffStackRoutes = {
   'create-ramp-on-off': undefined
   'result-ramp-on-off': undefined
+  'app-root': undefined
 }
+
+export type RampOnOffRouteseNavigation = StackNavigationProp<RampOnOffStackRoutes>
 
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
 
