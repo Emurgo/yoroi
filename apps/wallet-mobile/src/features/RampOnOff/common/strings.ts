@@ -22,6 +22,8 @@ export const useStrings = () => {
     goToTransactions: intl.formatMessage(messages.goToTransactions),
     buySellADATransaction: intl.formatMessage(messages.buySellADATransaction),
     descriptionBuySellADATransaction: intl.formatMessage(messages.descriptionBuySellADATransaction),
+    rampOnOffTitle: intl.formatMessage(messages.rampOnOffTitle),
+    fewMinutes: intl.formatMessage(messages.fewMinutes)
   }
 }
 
@@ -98,5 +100,13 @@ export const messages = defineMessages({
   descriptionBuySellADATransaction: {
     id: 'rampOnOff.resultRampOnOff.descriptionBuySellADATransaction',
     defaultMessage: '!!!Normally the Buy ADA/Sell transaction takes 3-5 of minutes for the order to be fulfilled. However, there are instances where the order cannot be fulfilled instantly because the compliance team can be doing a manual verification of the KYC docs or any other issues.',
+  },
+  rampOnOffTitle: {
+    id: 'rampOnOff.rampOnOffScreen.rampOnOffTitle',
+    defaultMessage: '!!!Exchange ADA',
+  },
+  fewMinutes: {
+    id: 'rampOnOff.resultRampOnOff.fewMinutes',
+    defaultMessage: '!!!few minutes',
   },
 })

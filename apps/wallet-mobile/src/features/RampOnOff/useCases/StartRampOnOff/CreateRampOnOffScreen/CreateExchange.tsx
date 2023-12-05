@@ -1,14 +1,14 @@
 import {banxaModuleMaker} from '@yoroi/banxa'
 import {BanxaReferralUrlQueryStringParams} from '@yoroi/banxa/lib/typescript/translators/module'
 import * as React from 'react'
-import {KeyboardAvoidingView, Linking, Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {KeyboardAvoidingView, Linking, Platform, SafeAreaView, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../../../src/legacy/config'
 import env from '../../../../../../src/legacy/env'
 import {useSelectedWallet} from '../../../../../../src/SelectedWallet'
 import {Theme} from '../../../../../../src/theme/types'
-import {Button} from '../../../../../components'
+import {Button, Spacer} from '../../../../../components'
 import {useTheme} from '../../../../../theme'
 import {useNavigateTo} from '../../../common/navigation'
 import {useRampOnOff} from '../../../common/RampOnOffProvider'
@@ -60,7 +60,9 @@ const CreateExchange = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.root}>
+      <Spacer height={40} />
+      
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -103,7 +105,7 @@ const CreateExchange = () => {
           />
         </View>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -118,6 +120,7 @@ const getStyles = (props: {theme: Theme}) => {
     },
     flex: {
       flex: 1,
+      // paddingTop: 40,
     },
     scroll: {
       paddingHorizontal: 16,
