@@ -18,7 +18,6 @@ import {
 } from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
-import {useSelectedWallet} from '../../SelectedWallet'
 import {useWalletManager} from '../../WalletManager'
 import {calcLockedDeposit} from '../cardano/assetUtils'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
