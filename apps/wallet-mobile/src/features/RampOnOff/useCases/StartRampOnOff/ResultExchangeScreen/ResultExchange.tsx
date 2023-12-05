@@ -118,7 +118,7 @@ const getStyles = (props: {theme: Theme}) => {
       lineHeight: 30,
       fontWeight: '500',
       textAlign: 'center',
-      textAlignVertical: 'center'
+      textAlignVertical: 'center',
     },
     contentValueText: {
       fontSize: 16,

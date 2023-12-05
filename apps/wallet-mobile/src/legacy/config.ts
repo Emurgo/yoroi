@@ -1,5 +1,3 @@
-import { LinkingOptions } from '@react-navigation/native'
-
 import {LogLevel} from '../legacy/logging'
 import env from './env'
 
@@ -35,21 +33,21 @@ export const LINKING_CONFIG = {
       screens: {
         'main-wallet-routes': {
           screens: {
-            'history': {
+            history: {
               initialRouteName: 'history-list',
               screens: {
                 'rampOnOff-start-rampOnOff': {
                   screens: {
                     'result-ramp-on-off': {
                       path: RAMP_ON_OFF_PATH,
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
-};
+}

@@ -1,7 +1,15 @@
 import {banxaModuleMaker} from '@yoroi/banxa'
 import {BanxaReferralUrlQueryStringParams} from '@yoroi/banxa/lib/typescript/translators/module'
 import * as React from 'react'
-import {KeyboardAvoidingView, Linking, Platform, SafeAreaView, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {
+  KeyboardAvoidingView,
+  Linking,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../../../src/legacy/config'
@@ -62,7 +70,7 @@ const CreateExchange = () => {
   return (
     <SafeAreaView style={styles.root}>
       <Spacer height={40} />
-      
+
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
