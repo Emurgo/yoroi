@@ -38,8 +38,6 @@ export const AppNavigator = () => {
     config: LINKING_CONFIG,
   }
 
-  console.log('check routeName:: ', routeName)
-
   useHideScreenInAppSwitcher()
   useAutoLogout()
 

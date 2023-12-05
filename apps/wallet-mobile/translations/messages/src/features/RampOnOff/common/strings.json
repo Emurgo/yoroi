@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Current Balance",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 35,
+      "line": 34,
       "column": 18,
-      "index": 1591
+      "index": 1590
     },
     "end": {
-      "line": 38,
+      "line": 37,
       "column": 3,
-      "index": 1680
+      "index": 1679
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!PROCEED",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 39,
+      "line": 38,
       "column": 11,
-      "index": 1693
+      "index": 1692
     },
     "end": {
-      "line": 42,
+      "line": 41,
       "column": 3,
-      "index": 1758
+      "index": 1757
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Disclaimer",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 43,
+      "line": 42,
       "column": 14,
-      "index": 1774
+      "index": 1773
     },
     "end": {
-      "line": 46,
+      "line": 45,
       "column": 3,
-      "index": 1864
+      "index": 1863
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!\"Yoroi uses Banxa to provide direct Fiat-ADA exchange. By clicking “Proceed,” you also acknowledge that you will be redirected to our partner’s website, where you may be asked to accept their terms and conditions. Banxa may have buy and sell limitations depending on your location and your financial institution.\"",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 47,
+      "line": 46,
       "column": 21,
-      "index": 1887
+      "index": 1886
     },
     "end": {
-      "line": 51,
+      "line": 50,
       "column": 3,
-      "index": 2293
+      "index": 2292
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Buy ADA",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 52,
+      "line": 51,
       "column": 10,
-      "index": 2305
+      "index": 2304
     },
     "end": {
-      "line": 55,
+      "line": 54,
       "column": 3,
-      "index": 2388
+      "index": 2387
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Sell ADA",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 56,
+      "line": 55,
       "column": 11,
-      "index": 2401
+      "index": 2400
     },
     "end": {
-      "line": 59,
+      "line": 58,
       "column": 3,
-      "index": 2486
+      "index": 2485
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!ADA amount",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 60,
+      "line": 59,
       "column": 15,
-      "index": 2503
+      "index": 2502
     },
     "end": {
-      "line": 63,
+      "line": 62,
       "column": 3,
-      "index": 2594
+      "index": 2593
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Provider Fee",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 64,
+      "line": 63,
       "column": 15,
-      "index": 2611
+      "index": 2610
     },
     "end": {
-      "line": 67,
+      "line": 66,
       "column": 3,
-      "index": 2704
+      "index": 2703
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Provider",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 68,
+      "line": 67,
       "column": 12,
-      "index": 2718
+      "index": 2717
     },
     "end": {
-      "line": 71,
+      "line": 70,
       "column": 3,
-      "index": 2804
+      "index": 2803
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Banxa",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 72,
+      "line": 71,
       "column": 9,
-      "index": 2815
+      "index": 2814
     },
     "end": {
-      "line": 75,
+      "line": 74,
       "column": 3,
-      "index": 2895
+      "index": 2894
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Exchange ADA",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 76,
+      "line": 75,
       "column": 9,
-      "index": 2906
+      "index": 2905
     },
     "end": {
-      "line": 79,
+      "line": 78,
       "column": 3,
-      "index": 2977
+      "index": 2976
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Not Enough Balannce",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 80,
+      "line": 79,
       "column": 21,
-      "index": 3000
+      "index": 2999
     },
     "end": {
-      "line": 83,
+      "line": 82,
       "column": 3,
-      "index": 3095
+      "index": 3094
     }
   },
   {
@@ -184,14 +184,14 @@
     "defaultMessage": "!!!Congrats🎉 Your ADA will come in a few minutes",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 84,
+      "line": 83,
       "column": 12,
-      "index": 3109
+      "index": 3108
     },
     "end": {
-      "line": 87,
+      "line": 86,
       "column": 3,
-      "index": 3233
+      "index": 3232
     }
   },
   {
@@ -199,14 +199,14 @@
     "defaultMessage": "!!!ADA amount you get",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 88,
+      "line": 87,
       "column": 18,
-      "index": 3253
+      "index": 3252
     },
     "end": {
-      "line": 91,
+      "line": 90,
       "column": 3,
-      "index": 3355
+      "index": 3354
     }
   },
   {
@@ -214,14 +214,14 @@
     "defaultMessage": "!!!Fiat amount you sell",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 92,
+      "line": 91,
       "column": 20,
-      "index": 3377
+      "index": 3376
     },
     "end": {
-      "line": 95,
+      "line": 94,
       "column": 3,
-      "index": 3483
+      "index": 3482
     }
   },
   {
@@ -229,14 +229,14 @@
     "defaultMessage": "!!!GO TO TRANSACTIONS",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 96,
+      "line": 95,
       "column": 20,
-      "index": 3505
+      "index": 3504
     },
     "end": {
-      "line": 99,
+      "line": 98,
       "column": 3,
-      "index": 3609
+      "index": 3608
     }
   },
   {
@@ -244,14 +244,14 @@
     "defaultMessage": "!!!Buy ADA/Sell transaction",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 100,
+      "line": 99,
       "column": 25,
-      "index": 3636
+      "index": 3635
     },
     "end": {
-      "line": 103,
+      "line": 102,
       "column": 3,
-      "index": 3751
+      "index": 3750
     }
   },
   {
@@ -259,14 +259,14 @@
     "defaultMessage": "!!!Normally the Buy ADA/Sell transaction takes 3-5 of minutes for the order to be fulfilled. However, there are instances where the order cannot be fulfilled instantly because the compliance team can be doing a manual verification of the KYC docs or any other issues.",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 104,
+      "line": 103,
       "column": 36,
-      "index": 3789
+      "index": 3788
     },
     "end": {
       "line": 107,
       "column": 3,
-      "index": 4155
+      "index": 4160
     }
   },
   {
@@ -276,12 +276,12 @@
     "start": {
       "line": 108,
       "column": 18,
-      "index": 4175
+      "index": 4180
     },
     "end": {
       "line": 111,
       "column": 3,
-      "index": 4271
+      "index": 4276
     }
   },
   {
@@ -291,12 +291,12 @@
     "start": {
       "line": 112,
       "column": 11,
-      "index": 4284
+      "index": 4289
     },
     "end": {
       "line": 115,
       "column": 3,
-      "index": 4368
+      "index": 4373
     }
   },
   {
@@ -306,12 +306,12 @@
     "start": {
       "line": 116,
       "column": 7,
-      "index": 4377
+      "index": 4382
     },
     "end": {
       "line": 119,
       "column": 3,
-      "index": 4453
+      "index": 4458
     }
   },
   {
@@ -321,12 +321,12 @@
     "start": {
       "line": 120,
       "column": 19,
-      "index": 4474
+      "index": 4479
     },
     "end": {
       "line": 123,
       "column": 3,
-      "index": 4581
+      "index": 4586
     }
   },
   {
@@ -336,12 +336,12 @@
     "start": {
       "line": 124,
       "column": 15,
-      "index": 4598
+      "index": 4603
     },
     "end": {
       "line": 127,
       "column": 3,
-      "index": 4741
+      "index": 4746
     }
   }
 ]

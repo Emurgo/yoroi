@@ -1,7 +1,7 @@
 import * as React from 'react'
-import {StyleSheet,Text, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 
-import { useTheme } from '../../../../../../theme'
+import {useTheme} from '../../../../../../theme'
 import {Theme} from '../../../../../../theme/types'
 
 interface ContentResultProps {
@@ -31,7 +31,7 @@ const getStyles = (props: {theme: Theme}) => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      width: '100%'
+      width: '100%',
     },
     contentLabel: {
       fontSize: 16,

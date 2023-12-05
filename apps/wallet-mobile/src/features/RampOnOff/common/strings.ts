@@ -27,7 +27,6 @@ export const useStrings = () => {
     and: intl.formatMessage(messages.and),
     customerSupport: intl.formatMessage(messages.customerSupport),
     significant: intl.formatMessage(messages.significant),
-
   }
 }
 
@@ -103,7 +102,8 @@ export const messages = defineMessages({
   },
   descriptionBuySellADATransaction: {
     id: 'rampOnOff.resultRampOnOff.descriptionBuySellADATransaction',
-    defaultMessage: '!!!Normally the Buy ADA/Sell transaction takes 3-5 of minutes for the order to be fulfilled. However, there are instances where the order cannot be fulfilled instantly because the compliance team can be doing a manual verification of the KYC docs or any other issues.',
+    defaultMessage:
+      '!!!Normally the Buy ADA/Sell transaction takes 3-5 of minutes for the order to be fulfilled. However, there are instances where the order cannot be fulfilled instantly because the compliance team can be doing a manual verification of the KYC docs or any other issues.',
   },
   rampOnOffTitle: {
     id: 'rampOnOff.rampOnOffScreen.rampOnOffTitle',
@@ -124,5 +124,5 @@ export const messages = defineMessages({
   significant: {
     id: 'rampOnOff.resultRampOnOff.significant',
     defaultMessage: '!!!if you witnessed any significant transaction delays or errors.',
-  }
+  },
 })
