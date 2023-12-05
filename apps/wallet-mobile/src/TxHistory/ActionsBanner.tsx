@@ -1,15 +1,13 @@
 import {useNavigation} from '@react-navigation/native'
-import {banxaModuleMaker} from '@yoroi/banxa'
 import {useSwap} from '@yoroi/swap'
 import React, {ReactNode} from 'react'
 import {useIntl} from 'react-intl'
-import {Linking, Platform, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Button, Icon, Spacer, Text, useModal} from '../components'
+import {Icon, Spacer, Text} from '../components'
 import {useSend} from '../features/Send/common/SendContext'
 import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
 import {actionMessages} from '../i18n/global-messages'
-import env from '../legacy/env'
 import {useMetrics} from '../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -37,52 +35,6 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     wallet,
     tokenId: orderData.amounts.buy.tokenId,
   })
-  const {openModal, closeModal} = useModal()
-
-  const handleOnBuy = () => {
-    track.walletPageExchangeClicked()
-
-    const modalHeight = 320
-    const modalTextFormattingOptions: BuyInfoFormattingOptions = {
-      b: (text) => <Text style={[styles.buyInfo, styles.bold]}>{text}</Text>,
-      textComponent: (text) => <Text style={styles.buyInfo}>{text}</Text>,
-    }
-
-    openModal(
-      strings.buyTitle,
-      <View style={styles.buyModalContent}>
-        <Text style={styles.buyInfo}>{strings.buyInfo(modalTextFormattingOptions)}</Text>
-
-        <Spacer fill />
-
-        <Button
-          shelleyTheme
-          title={strings.proceed}
-          onPress={() => {
-            track.walletPageExchangeBottomSheetClicked()
-            // banxa doesn't support testnet for the sandbox it needs a mainnet address
-            const sandboxWallet = env.getString('BANXA_TEST_WALLET')
-            const isMainnet = wallet.networkId !== 300
-            const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
-            const moduleOptions = {isProduction: isMainnet, partner: 'yoroi'} as const
-            const urlOptions = {
-              coinType: 'ADA',
-              fiatType: 'USD',
-              blockchain: 'ADA',
-              walletAddress,
-            } as const
-            const banxa = banxaModuleMaker(moduleOptions)
-            const url = banxa.createReferralUrl(urlOptions)
-            Linking.openURL(url.toString())
-            closeModal()
-          }}
-        />
-
-        {Platform.OS === 'ios' && <Spacer height={20} />}
-      </View>,
-      modalHeight,
-    )
-  }
 
   const handleOnSend = () => {
     navigateTo.send()
@@ -166,21 +118,6 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
               <View style={styles.centralized}>
                 <TouchableOpacity
                   style={styles.actionIcon}
-                  onPress={handleOnBuy}
-                  testID="buyButton"
-                  disabled={disabled}
-                >
-                  <Icon.PlusCircle {...ACTION_PROPS} />
-                </TouchableOpacity>
-
-                <Text style={styles.actionLabel}>{strings.buyLabel}</Text>
-              </View>
-
-              <Spacer width={32} />
-
-              <View style={styles.centralized}>
-                <TouchableOpacity
-                  style={styles.actionIcon}
                   onPress={handleExchange}
                   testID="buyButton"
                   disabled={disabled}
@@ -228,22 +165,9 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 18,
   },
-  buyInfo: {
-    fontSize: 16,
-    color: '#000000',
-    fontFamily: 'Rubik-Regular',
-    fontWeight: '400',
-    lineHeight: 24,
-  },
-  bold: {
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-  },
+
   disabled: {
     opacity: 0.5,
-  },
-  buyModalContent: {
-    flex: 1,
   },
 })
 

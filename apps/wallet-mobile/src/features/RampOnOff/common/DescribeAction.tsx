@@ -25,19 +25,19 @@ const DescribeAction = () => {
       <Spacer height={24} />
 
       <View style={[styles.decorationText]}>
-        <Text style={[styles.description]}>Contact </Text>
+        <Text style={[styles.description]}>{strings.contact} </Text>
 
         <TouchableOpacity onPress={handleLinkingContactBanxa}>
-          <Text style={[styles.description, styles.linkText]}>Banxa </Text>
+          <Text style={[styles.description, styles.linkText]}>{strings.banxa} </Text>
         </TouchableOpacity>
 
-        <Text style={styles.description}>and </Text>
+        <Text style={styles.description}>{strings.and} </Text>
 
         <TouchableOpacity onPress={handleLinkingContactYoroi}>
-          <Text style={[styles.description, styles.linkText]}>Yoroi Customer Support</Text>
+          <Text style={[styles.description, styles.linkText]}>{strings.customerSupport}</Text>
         </TouchableOpacity>
 
-        <Text style={styles.description}>if you witnessed any significant transaction delays or errors.</Text>
+        <Text style={styles.description}>{strings.significant}</Text>
       </View>
     </View>
   )
@@ -51,6 +51,8 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
+    lineHeight: 22,
+    fontFamily: 'Rubik',
   },
   decorationText: {
     flexDirection: 'row',
