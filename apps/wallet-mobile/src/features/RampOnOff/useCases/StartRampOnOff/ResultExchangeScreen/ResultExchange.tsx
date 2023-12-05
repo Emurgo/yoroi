@@ -50,19 +50,15 @@ const ResultExchangeScreen = () => {
 
         <Spacer height={25} />
 
-        <View style={styles.congrats}>
-          <Text style={styles.congratsText}>{strings.congrats}</Text>
+        <Text style={styles.congratsText}>
+          {strings.congrats}
 
-          <View style={styles.congratsNextLine}>
-            <Text style={styles.congratsText}>{strings.fewMinutes}</Text>
+          <Spacer width={4} />
 
-            <Spacer width={4} />
-
-            <TouchableOpacity onPress={handlePressDescribe}>
-              <Icon.Info size={24} />
-            </TouchableOpacity>
-          </View>
-        </View>
+          <TouchableOpacity style={{transform: [{translateY: 3}]}} onPress={handlePressDescribe}>
+            <Icon.Info size={26} />
+          </TouchableOpacity>
+        </Text>
 
         <Spacer height={16} />
 
@@ -115,22 +111,14 @@ const getStyles = (props: {theme: Theme}) => {
       width: 200,
       height: 228,
     },
-    congrats: {
-      flexDirection: 'column',
-      alignItems: 'center',
-      width: '100%',
-    },
     congratsText: {
       fontSize: 22,
       color: theme.color.gray[900],
       fontFamily: 'Rubik',
       lineHeight: 30,
       fontWeight: '500',
-    },
-    congratsNextLine: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+      textAlign: 'center',
+      textAlignVertical: 'center'
     },
     contentValueText: {
       fontSize: 16,
