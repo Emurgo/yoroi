@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Current Balance",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 27,
+      "line": 29,
       "column": 18,
-      "index": 1125
+      "index": 1305
     },
     "end": {
-      "line": 30,
+      "line": 32,
       "column": 3,
-      "index": 1214
+      "index": 1394
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!PROCEED",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 31,
+      "line": 33,
       "column": 11,
-      "index": 1227
+      "index": 1407
     },
     "end": {
-      "line": 34,
+      "line": 36,
       "column": 3,
-      "index": 1292
+      "index": 1472
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Disclaimer",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 35,
+      "line": 37,
       "column": 14,
-      "index": 1308
+      "index": 1488
     },
     "end": {
-      "line": 38,
+      "line": 40,
       "column": 3,
-      "index": 1398
+      "index": 1578
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!\"Yoroi uses Banxa to provide direct Fiat-ADA exchange. By clicking “Proceed,” you also acknowledge that you will be redirected to our partner’s website, where you may be asked to accept their terms and conditions. Banxa may have buy and sell limitations depending on your location and your financial institution.\"",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 39,
+      "line": 41,
       "column": 21,
-      "index": 1421
+      "index": 1601
     },
     "end": {
-      "line": 43,
+      "line": 45,
       "column": 3,
-      "index": 1827
+      "index": 2007
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Buy ADA",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 44,
+      "line": 46,
       "column": 10,
-      "index": 1839
+      "index": 2019
     },
     "end": {
-      "line": 47,
+      "line": 49,
       "column": 3,
-      "index": 1922
+      "index": 2102
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Sell ADA",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 48,
+      "line": 50,
       "column": 11,
-      "index": 1935
+      "index": 2115
     },
     "end": {
-      "line": 51,
+      "line": 53,
       "column": 3,
-      "index": 2020
+      "index": 2200
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!ADA amount",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 52,
+      "line": 54,
       "column": 15,
-      "index": 2037
+      "index": 2217
     },
     "end": {
-      "line": 55,
+      "line": 57,
       "column": 3,
-      "index": 2128
+      "index": 2308
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Provider Fee",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 56,
+      "line": 58,
       "column": 15,
-      "index": 2145
+      "index": 2325
     },
     "end": {
-      "line": 59,
+      "line": 61,
       "column": 3,
-      "index": 2238
+      "index": 2418
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Provider",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 60,
+      "line": 62,
       "column": 12,
-      "index": 2252
+      "index": 2432
     },
     "end": {
-      "line": 63,
+      "line": 65,
       "column": 3,
-      "index": 2338
+      "index": 2518
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Banxa",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 64,
+      "line": 66,
       "column": 9,
-      "index": 2349
+      "index": 2529
     },
     "end": {
-      "line": 67,
+      "line": 69,
       "column": 3,
-      "index": 2429
+      "index": 2609
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Exchange ADA",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 68,
+      "line": 70,
       "column": 9,
-      "index": 2440
+      "index": 2620
     },
     "end": {
-      "line": 71,
+      "line": 73,
       "column": 3,
-      "index": 2511
+      "index": 2691
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Not Enough Balannce",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 72,
+      "line": 74,
       "column": 21,
-      "index": 2534
+      "index": 2714
     },
     "end": {
-      "line": 75,
+      "line": 77,
       "column": 3,
-      "index": 2629
+      "index": 2809
     }
   },
   {
@@ -184,14 +184,14 @@
     "defaultMessage": "!!!Congrats🎉 Your ADA will come in a few minutes",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 76,
+      "line": 78,
       "column": 12,
-      "index": 2643
+      "index": 2823
     },
     "end": {
-      "line": 79,
+      "line": 81,
       "column": 3,
-      "index": 2767
+      "index": 2947
     }
   },
   {
@@ -199,14 +199,14 @@
     "defaultMessage": "!!!ADA amount you get",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 80,
+      "line": 82,
       "column": 18,
-      "index": 2787
+      "index": 2967
     },
     "end": {
-      "line": 83,
+      "line": 85,
       "column": 3,
-      "index": 2889
+      "index": 3069
     }
   },
   {
@@ -214,14 +214,14 @@
     "defaultMessage": "!!!Fiat amount you sell",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 84,
+      "line": 86,
       "column": 20,
-      "index": 2911
+      "index": 3091
     },
     "end": {
-      "line": 87,
+      "line": 89,
       "column": 3,
-      "index": 3017
+      "index": 3197
     }
   },
   {
@@ -229,14 +229,44 @@
     "defaultMessage": "!!!GO TO TRANSACTIONS",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
-      "line": 88,
+      "line": 90,
       "column": 20,
-      "index": 3039
+      "index": 3219
     },
     "end": {
-      "line": 91,
+      "line": 93,
       "column": 3,
-      "index": 3143
+      "index": 3323
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.buySellADATransaction",
+    "defaultMessage": "!!!Buy ADA/Sell transaction",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 94,
+      "column": 25,
+      "index": 3350
+    },
+    "end": {
+      "line": 97,
+      "column": 3,
+      "index": 3465
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.descriptionBuySellADATransaction",
+    "defaultMessage": "!!!Normally the Buy ADA/Sell transaction takes 3-5 of minutes for the order to be fulfilled. However, there are instances where the order cannot be fulfilled instantly because the compliance team can be doing a manual verification of the KYC docs or any other issues.",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 98,
+      "column": 36,
+      "index": 3503
+    },
+    "end": {
+      "line": 101,
+      "column": 3,
+      "index": 3869
     }
   }
 ]
