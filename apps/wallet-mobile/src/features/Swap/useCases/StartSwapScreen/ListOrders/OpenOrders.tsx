@@ -249,7 +249,7 @@ export const OpenOrders = () => {
           assetFromLabel={assetFromLabel}
           assetToLabel={assetToLabel}
           assetAmount={`${tokenAmount} ${assetToLabel}`}
-          assetPrice={`${tokenPrice} ${assetFromLabel}`}
+          assetPrice={`${tokenPrice} ${assetFromLabel}/${assetToLabel}`}
           totalReturned={totalReturned}
           fee={fee}
         />,
@@ -444,9 +444,11 @@ const MainInfo = ({tokenPrice, tokenAmount, date}: {tokenPrice: string; tokenAmo
   ]
   return (
     <View>
-      {orderInfo.map((item, index) => (
-        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === orderInfo.length - 1} />
-      ))}
+      {orderInfo.map((item, index) =>
+        item.value === '' ? null : (
+          <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === orderInfo.length - 1} />
+        ),
+      )}
     </View>
   )
 }
