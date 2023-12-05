@@ -1,10 +1,11 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import * as React from 'react'
-import {Image, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {Image, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import image from '../../../../../assets/img/banxa.png'
-import {Button, Spacer} from '../../../../../components'
+import {Button, Icon, Spacer, Text, useModal} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
+import DescribeAction from '../../../common/DescribeAction'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import WalletAssetImage from '../../../common/WalletAssetImage'
@@ -23,8 +24,14 @@ const ResultExchangeScreen = () => {
   const params = route.params
   const {coin, coinAmount, fiat, fiatAmount} = params
 
+  const {openModal} = useModal()
+
   const handleDirectTransaction = () => {
     navigateTo.rampOnOffOpenOrder()
+  }
+
+  const handlePressDescribe = () => {
+    openModal(strings.buySellADATransaction, <DescribeAction />)
   }
 
   return (
@@ -36,7 +43,15 @@ const ResultExchangeScreen = () => {
 
         <Spacer height={25} />
 
-        <Text style={styles.congratsText}>{strings.congrats}</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.congratsText}>{strings.congrats}</Text>
+
+          <View style={{display: 'flex'}}>
+            <TouchableOpacity onPress={handlePressDescribe}>
+              <Icon.Info size={24} />
+            </TouchableOpacity>
+          </View>
+        </View>
 
         <Spacer height={16} />
 
