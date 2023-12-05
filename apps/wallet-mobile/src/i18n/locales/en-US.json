@@ -812,5 +812,9 @@
   "rampOnOff.createRampOnOff.providerFee": "Provider Fee",
   "rampOnOff.createRampOnOff.provider": "Provider",
   "rampOnOff.createRampOnOff.banxa": "Banxa",
-  "rampOnOff.rampOnOffScreen.rampOnOffTitle": "Exchange ADA"
+  "rampOnOff.rampOnOffScreen.rampOnOffTitle": "Exchange ADA",
+  "rampOnOff.resultRampOnOff.congrats": "Congrats🎉 Your ADA will come in a few minute",
+  "rampOnOff.resultRampOnOff.ADAmountYouGet": "ADA amount you get",
+  "rampOnOff.resultRampOnOff.fiatAmountYouGet": "Fiat amount you sell",
+  "rampOnOff.resultRampOnOff.goToTransactions": "GO TO TRANSACTIONS"
 }

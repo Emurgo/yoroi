@@ -16,6 +16,10 @@ export const useStrings = () => {
     banxa: intl.formatMessage(messages.banxa),
     title: intl.formatMessage(messages.title),
     notEnoughtBalance: intl.formatMessage(messages.notEnoughtBalance),
+    congrats: intl.formatMessage(messages.congrats),
+    ADAmountYouGet: intl.formatMessage(messages.ADAmountYouGet),
+    fiatAmountYouGet: intl.formatMessage(messages.fiatAmountYouGet),
+    goToTransactions: intl.formatMessage(messages.goToTransactions),
   }
 }
 
@@ -68,5 +72,21 @@ export const messages = defineMessages({
   notEnoughtBalance: {
     id: 'swap.swapScreen.notEnoughBalance',
     defaultMessage: '!!!Not Enough Balannce',
+  },
+  congrats: {
+    id: 'rampOnOff.resultRampOnOff.congrats',
+    defaultMessage: '!!!Congrats🎉 Your ADA will come in a few minutes',
+  },
+  ADAmountYouGet: {
+    id: 'rampOnOff.resultRampOnOff.ADAmountYouGet',
+    defaultMessage: '!!!ADA amount you get',
+  },
+  fiatAmountYouGet: {
+    id: 'rampOnOff.resultRampOnOff.fiatAmountYouGet',
+    defaultMessage: '!!!Fiat amount you sell',
+  },
+  goToTransactions: {
+    id: 'rampOnOff.resultRampOnOff.goToTransactions',
+    defaultMessage: '!!!GO TO TRANSACTIONS',
   },
 })
