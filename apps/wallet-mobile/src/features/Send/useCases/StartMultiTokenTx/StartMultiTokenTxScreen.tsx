@@ -110,8 +110,8 @@ export const StartMultiTokenTxScreen = () => {
       !hasPendingTx &&
       _.isEmpty(addressValidationError) &&
       memo.length <= maxMemoLength &&
-      (!isEmptyString(address) || !isEmptyString(resolvedAddressSelected?.address)),
-    [address, addressValidationError, hasPendingTx, isOnline, memo.length, resolvedAddressSelected?.address],
+      !isEmptyString(address),
+    [address, addressValidationError, hasPendingTx, isOnline, memo.length],
   )
 
   const onNext = () => {
