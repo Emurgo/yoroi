@@ -1,6 +1,6 @@
 import {DomainService, useResolver} from '@yoroi/resolver'
 import React from 'react'
-import {Text, View, ViewProps} from 'react-native'
+import {StyleSheet, Text, View, ViewProps} from 'react-native'
 
 import {HelperText, Spacer} from '../../../../../components'
 import {isEmptyString} from '../../../../../utils'
@@ -71,16 +71,30 @@ const ResolvedAddress = ({address, service}: {address: string; service: string})
     <>
       <Spacer height={4} />
 
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text style={{fontFamily: 'Rubik', fontSize: 12, fontWeight: '400', color: '#4A5065'}} numberOfLines={1}>{`${
-          Service[service ?? '']
-        }`}</Text>
+      <View style={styles.resolvedAddressContainer}>
+        <Text style={styles.resolvedAddressService} numberOfLines={1}>{`${Service[service ?? ''] ?? ''}`}</Text>
 
-        <Text
-          style={{fontFamily: 'Rubik', fontSize: 12, fontWeight: '400', color: '#8A92A3'}}
-          numberOfLines={1}
-        >{`${firstHalf}...${secondHalf}`}</Text>
+        <Text style={styles.resolvedAddress} numberOfLines={1}>{`${firstHalf}...${secondHalf}`}</Text>
       </View>
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  resolvedAddressContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  resolvedAddressService: {
+    fontFamily: 'Rubik',
+    fontSize: 12,
+    fontWeight: '400',
+    color: '#4A5065',
+  },
+  resolvedAddress: {
+    fontFamily: 'Rubik',
+    fontSize: 12,
+    fontWeight: '400',
+    color: '#8A92A3',
+  },
+})

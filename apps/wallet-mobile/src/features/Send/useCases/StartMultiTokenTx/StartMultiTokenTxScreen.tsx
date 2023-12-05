@@ -200,7 +200,7 @@ const ResolvedAddressesList = ({list}: {list: Resolver.AddressesResponse}) => {
                 ]}
                 key={address.service}
               >
-                <Text style={styles.listButtonText}>{`${Service[address.service ?? '']}`}</Text>
+                <Text style={styles.listButtonText}>{`${Service[address.service ?? ''] ?? ''}`}</Text>
               </Pressable>
             </>
           )

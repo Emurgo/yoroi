@@ -9,6 +9,7 @@ export const useStrings = () => {
     addressInputErrorInvalidAddress: intl.formatMessage(messages.addressInputErrorInvalidAddress),
     addressInputErrorInvalidDomain: intl.formatMessage(messages.addressInputErrorInvalidDomain),
     addressInputLabel: intl.formatMessage(messages.addressInputLabel),
+    addressReaderQrText: intl.formatMessage(messages.addressReaderQrText),
     all: intl.formatMessage(globalMessages.all),
     amount: intl.formatMessage(txLabels.amount),
     apply: intl.formatMessage(globalMessages.apply),
@@ -30,6 +31,9 @@ export const useStrings = () => {
     domainUnsupportedError: intl.formatMessage(messages.domainUnsupportedError),
     errorBannerNetworkError: intl.formatMessage(messages.errorBannerNetworkError),
     errorBannerPendingOutgoingTransaction: intl.formatMessage(messages.errorBannerPendingOutgoingTransaction),
+    failedTxTitle: intl.formatMessage(messages.failedTxTitle),
+    failedTxText: intl.formatMessage(messages.failedTxText),
+    failedTxButton: intl.formatMessage(messages.failedTxButton),
     feeLabel: intl.formatMessage(messages.feeLabel),
     feeNotAvailable: intl.formatMessage(messages.feeNotAvailable),
     found: intl.formatMessage(messages.found),
@@ -42,7 +46,7 @@ export const useStrings = () => {
     noBalance: intl.formatMessage(amountInputErrorMessages.insufficientBalance),
     ok: intl.formatMessage(globalMessages.ok),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
-    resolvesTo: intl.formatMessage(messages.resolvesTo),
+    receiver: intl.formatMessage(messages.receiver),
     searchTokens: intl.formatMessage(messages.searchTokens),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     sendAllContinueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
@@ -51,16 +55,13 @@ export const useStrings = () => {
     sendAllWarningAlert3: intl.formatMessage(messages.sendAllWarningAlert3),
     sendAllWarningText: intl.formatMessage(messages.sendAllWarningText),
     sendAllWarningTitle: intl.formatMessage(messages.sendAllWarningTitle),
+    submittedTxButton: intl.formatMessage(messages.submittedTxButton),
+    submittedTxText: intl.formatMessage(messages.submittedTxText),
+    submittedTxTitle: intl.formatMessage(messages.submittedTxTitle),
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
     unknownAsset: intl.formatMessage(messages.unknownAsset),
     youHave: intl.formatMessage(messages.youHave),
-    submittedTxTitle: intl.formatMessage(messages.submittedTxTitle),
-    submittedTxText: intl.formatMessage(messages.submittedTxText),
-    submittedTxButton: intl.formatMessage(messages.submittedTxButton),
-    failedTxTitle: intl.formatMessage(messages.failedTxTitle),
-    failedTxText: intl.formatMessage(messages.failedTxText),
-    failedTxButton: intl.formatMessage(messages.failedTxButton),
-    addressReaderQrText: intl.formatMessage(messages.addressReaderQrText),
+    walletAddress: intl.formatMessage(messages.walletAddress),
   }
 }
 
@@ -104,6 +105,14 @@ export const amountInputErrorMessages = defineMessages({
 })
 
 export const messages = defineMessages({
+  walletAddress: {
+    id: 'components.send.sendscreen.walletAddress',
+    defaultMessage: '!!!Wallet Address',
+  },
+  receiver: {
+    id: 'components.send.sendscreen.receiver',
+    defaultMessage: '!!!Receiver',
+  },
   feeLabel: {
     id: 'components.send.sendscreen.feeLabel',
     defaultMessage: '!!!Fee',
@@ -162,10 +171,6 @@ export const messages = defineMessages({
     id: 'components.send.sendscreen.domainUnsupportedError',
     defaultMessage: '!!!Domain is not supported',
     description: 'some desc',
-  },
-  resolvesTo: {
-    id: 'components.send.sendscreen.resolvesTo',
-    defaultMessage: '!!!Resolves to',
   },
   searchTokens: {
     id: 'components.send.sendscreen.searchTokens',
