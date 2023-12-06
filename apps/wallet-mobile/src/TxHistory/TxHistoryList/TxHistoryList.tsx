@@ -3,7 +3,7 @@ import {isString} from '@yoroi/common'
 import {BalanceAmount} from '@yoroi/types/lib/balance/token'
 import BigNumber from 'bignumber.js'
 import _ from 'lodash'
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
 
@@ -28,8 +28,6 @@ type Props = Partial<ListProps> & {
   onScroll: ListProps['onScroll']
 }
 export const TxHistoryList = (props: Props) => {
-  const [hideRampOnOffBanner, setHideRampOnOffBanner] = React.useState(false)
-
   const strings = useStrings()
   const key = useRemountOnFocusHack()
   const wallet = useSelectedWallet()
@@ -37,9 +35,15 @@ export const TxHistoryList = (props: Props) => {
   const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
   const transactionsInfo = useTransactionInfos(wallet)
   const groupedTransactions = getTransactionsByDate(transactionsInfo)
+  const heightBanner = useRef(0)
 
   const handleExport = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
+
+  const onLayout=(event)=> {
+    const {height} = event.nativeEvent.layout;
+    heightBanner.current = height
+  }
 
   return (
     <View style={styles.container}>
@@ -50,8 +54,8 @@ export const TxHistoryList = (props: Props) => {
       <SectionList
         {...props}
         key={key}
-        ListHeaderComponent={<HeaderTransactionList primaryAmount={primaryAmount} />}
-        contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 8}}
+        ListHeaderComponent={<HeaderTransactionList onLayout={onLayout} primaryAmount={primaryAmount} />}
+        contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 18 + heightBanner.current}}
         ListEmptyComponent={<EmptyHistory />}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
         ItemSeparatorComponent={() => <Spacer height={16} />}
@@ -68,7 +72,8 @@ export const TxHistoryList = (props: Props) => {
   )
 }
 
-const HeaderTransactionList = ({primaryAmount}: {primaryAmount: BalanceAmount}) => {
+const HeaderTransactionList = (props: {primaryAmount: BalanceAmount, onLayout: (event)=> void}) => {
+  const {primaryAmount} = props
   const [showSmallBanner, setShowSmallBanner] = useState(true)
 
   const isNeedBuyAda = new BigNumber(5).isGreaterThan(new BigNumber(primaryAmount.quantity))
@@ -77,8 +82,8 @@ const HeaderTransactionList = ({primaryAmount}: {primaryAmount: BalanceAmount}) 
   const isShowBigBanner = isAdaZero
   const isShowSmallBanner = showSmallBanner && isNeedBuyAda
 
-  if (isShowSmallBanner) return <SmallBanner onClose={() => setShowSmallBanner(false)} />
-  if (isShowBigBanner) return <BigBanner />
+  if (isShowSmallBanner) return <SmallBanner {...props} onClose={() => setShowSmallBanner(false)} />
+  if (isShowBigBanner) return <BigBanner {...props}/>
 
   return null
 }
