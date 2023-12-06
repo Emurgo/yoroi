@@ -1,5 +1,5 @@
 import {UseMutationOptions, useMutation, useQueryClient} from 'react-query'
-import {useResolver} from '../provider/ReceiverProvider'
+import {useResolver} from '../provider/ResolverProvider'
 
 export const useSaveResolverNoticeStatus = (
   options?: UseMutationOptions<void, Error, boolean>,

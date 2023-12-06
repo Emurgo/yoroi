@@ -22,8 +22,9 @@ describe('resolverApiMaker', () => {
     const results = await api.getCryptoAddress(mockDomain)
 
     expect(results).toEqual([
-      {address: 'handleAddress', error: null},
-      {address: 'unstoppableAddress', error: null},
+      {address: 'handleAddress', error: null, service: 'handle'},
+      {address: 'unstoppableAddress', error: null, service: 'unstoppable'},
+      {address: null, error: 'not-implemented', service: 'cns'},
     ])
   })
 
@@ -38,8 +39,9 @@ describe('resolverApiMaker', () => {
     const results = await api.getCryptoAddress(mockDomain)
 
     expect(results).toEqual([
-      {address: 'handleAddress', error: null},
-      {address: null, error: mockError},
+      {address: 'handleAddress', error: null, service: 'handle'},
+      {address: null, error: mockError.message, service: 'unstoppable'},
+      {address: null, error: 'not-implemented', service: 'cns'},
     ])
   })
 
@@ -52,7 +54,9 @@ describe('resolverApiMaker', () => {
     const api = resolverApiMaker('first')
     const results = await api.getCryptoAddress(mockDomain)
 
-    expect(results).toEqual([{address: 'unstoppableAddress', error: null}])
+    expect(results).toEqual([
+      {address: 'unstoppableAddress', error: null, service: 'unstoppable'},
+    ])
   })
 
   it('handles all errors with strategy "first"', async () => {

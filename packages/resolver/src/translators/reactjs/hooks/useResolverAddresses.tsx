@@ -1,5 +1,5 @@
 import {UseQueryOptions, useQuery, useQueryClient} from 'react-query'
-import {useResolver} from '../provider/ReceiverProvider'
+import {useResolver} from '../provider/ResolverProvider'
 import {Resolver} from '@yoroi/types'
 
 export const useResolverAddresses = (

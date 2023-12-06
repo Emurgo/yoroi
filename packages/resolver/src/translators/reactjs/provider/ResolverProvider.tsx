@@ -14,9 +14,34 @@ type ResolverState = {
   resolvedAddressSelected: Resolver.AddressResponse | null
 }
 
-const ResolverContext = React.createContext<
-  undefined | (ResolverActions & ResolverState)
->(undefined)
+type ResolverProviderContext = React.PropsWithChildren<
+  ResolverState & ResolverActions
+>
+
+export const defaultResolverActions = {
+  saveResolverNoticeStatus: missingInit,
+  readResolverNoticeStatus: missingInit,
+  getCryptoAddress: missingInit,
+  resolvedAddressSelectedChanged: missingInit,
+} as unknown as ResolverActions
+
+/* istanbul ignore next */
+function missingInit() {
+  console.error('[@yoroi/resolver] missing initialization')
+}
+
+export const defaultResolverState: ResolverState = {
+  resolvedAddressSelected: null,
+}
+
+const initialResolverProvider: ResolverProviderContext = {
+  ...defaultResolverState,
+  ...defaultResolverActions,
+}
+
+const ResolverContext = React.createContext<ResolverProviderContext>(
+  initialResolverProvider,
+)
 export const ResolverProvider = ({
   children,
   resolverModule,
@@ -25,7 +50,7 @@ export const ResolverProvider = ({
   resolverModule: Resolver.Module
 }) => {
   const [state, dispatch] = React.useReducer(resolverReducer, {
-    ...initialState,
+    ...defaultResolverState,
   })
 
   const actions = React.useRef<ResolverActions>({
@@ -55,19 +80,17 @@ export const ResolverProvider = ({
   )
 }
 
-export const useResolver = () =>
-  React.useContext(ResolverContext) || missingProvider()
-
-const missingProvider = () => {
-  throw new Error('ResolverProvider is missing')
-}
+export const useResolver = () => React.useContext(ResolverContext)
 
 export type ResolverAction = {
   type: 'resolvedAddressSelectedChanged'
   resolvedAddressSelected: ResolverState['resolvedAddressSelected']
 }
 
-const resolverReducer = (state: ResolverState, action: ResolverAction) => {
+export const resolverReducer = (
+  state: ResolverState,
+  action: ResolverAction,
+) => {
   switch (action.type) {
     case 'resolvedAddressSelectedChanged':
       return {
@@ -78,8 +101,4 @@ const resolverReducer = (state: ResolverState, action: ResolverAction) => {
     default:
       return state
   }
-}
-
-export const initialState: ResolverState = {
-  resolvedAddressSelected: null,
 }

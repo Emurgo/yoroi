@@ -1,5 +1,5 @@
 import {useQuery, useQueryClient} from 'react-query'
-import {useResolver} from '../provider/ReceiverProvider'
+import {useResolver} from '../provider/ResolverProvider'
 
 export const useReadResolverNoticeStatus = () => {
   const {readResolverNoticeStatus} = useResolver()
