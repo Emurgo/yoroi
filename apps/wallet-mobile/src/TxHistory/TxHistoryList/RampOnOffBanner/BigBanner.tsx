@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {Image, StyleSheet, Text, View} from 'react-native'
+import {Dimensions, Image, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import image from '../../../assets/img/banner-buy-ada.png'
@@ -10,13 +10,13 @@ import {useTheme} from '../../../theme'
 import {Theme} from '../../../theme/types'
 import {useStrings} from '../TxHistoryList'
 
-type Props = {
-  onLayout: (event) => void 
-}
+const DIMENSIONS = Dimensions.get('window')
 
-const BigBanner = (props: Props) => {
-  const {onLayout} = props
+const BigBanner = () => {
   const {theme} = useTheme()
+
+  const bannerWidth = DIMENSIONS.width - 16 * 2
+  const bannerHeight = (bannerWidth * 174) / 512
 
   const strings = useStrings()
 
@@ -26,15 +26,18 @@ const BigBanner = (props: Props) => {
   const handleExchange = () => {
     navigateTo.exchange()
   }
+
   return (
-    <View style={styles.root} onLayout={onLayout}>
+    <View style={styles.root}>
       <LinearGradient
         style={styles.gradient}
         start={{x: 1, y: 1}}
         end={{x: 1, y: 1}}
         colors={theme.color.gradients['green']}
       >
-        <Image style={styles.banner} source={image} />
+        <View>
+          <Image style={[styles.banner, {width: bannerWidth, height: bannerHeight}]} source={image} />
+        </View>
 
         <Spacer height={16} />
 
@@ -46,14 +49,12 @@ const BigBanner = (props: Props) => {
 
         <Spacer height={16} />
 
-        <View style={[styles.actions]}>
-          <Button
-            testID="rampOnOffButton"
-            shelleyTheme
-            title={strings.buyADA.toLocaleUpperCase()}
-            onPress={handleExchange}
-          />
-        </View>
+        <Button
+          testID="rampOnOffButton"
+          shelleyTheme
+          title={strings.buyADA.toLocaleUpperCase()}
+          onPress={handleExchange}
+        />
       </LinearGradient>
     </View>
   )
@@ -66,7 +67,7 @@ const getStyles = (props: {theme: Theme}) => {
   const styles = StyleSheet.create({
     root: {
       backgroundColor: theme.color['white-static'],
-      paddingVertical: 16,
+      paddingVertical: 18,
     },
     gradient: {
       opacity: 1,
@@ -76,13 +77,7 @@ const getStyles = (props: {theme: Theme}) => {
       paddingBottom: 25,
     },
     banner: {
-      width: '100%',
-      height: '35%',
-      resizeMode: 'stretch',
-    },
-    actions: {
-      // paddingVertical: 16,
-      // paddingHorizontal: 16,
+      resizeMode: 'contain',
     },
     label: {
       fontSize: 20,

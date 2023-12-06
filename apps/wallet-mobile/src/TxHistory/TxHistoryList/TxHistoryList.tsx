@@ -35,15 +35,9 @@ export const TxHistoryList = (props: Props) => {
   const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
   const transactionsInfo = useTransactionInfos(wallet)
   const groupedTransactions = getTransactionsByDate(transactionsInfo)
-  const heightBanner = useRef(0)
 
   const handleExport = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
-
-  const onLayout=(event)=> {
-    const {height} = event.nativeEvent.layout;
-    heightBanner.current = height
-  }
 
   return (
     <View style={styles.container}>
@@ -54,8 +48,13 @@ export const TxHistoryList = (props: Props) => {
       <SectionList
         {...props}
         key={key}
-        ListHeaderComponent={<HeaderTransactionList onLayout={onLayout} primaryAmount={primaryAmount} />}
-        contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 18 + heightBanner.current}}
+        ListHeaderComponent={<HeaderTransactionList primaryAmount={primaryAmount} />}
+        style={{}}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          flexGrow: 1,
+          height: 'auto',
+        }}
         ListEmptyComponent={<EmptyHistory />}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
         ItemSeparatorComponent={() => <Spacer height={16} />}
@@ -72,7 +71,7 @@ export const TxHistoryList = (props: Props) => {
   )
 }
 
-const HeaderTransactionList = (props: {primaryAmount: BalanceAmount, onLayout: (event)=> void}) => {
+const HeaderTransactionList = (props: {primaryAmount: BalanceAmount}) => {
   const {primaryAmount} = props
   const [showSmallBanner, setShowSmallBanner] = useState(true)
 
@@ -82,8 +81,8 @@ const HeaderTransactionList = (props: {primaryAmount: BalanceAmount, onLayout: (
   const isShowBigBanner = isAdaZero
   const isShowSmallBanner = showSmallBanner && isNeedBuyAda
 
-  if (isShowSmallBanner) return <SmallBanner {...props} onClose={() => setShowSmallBanner(false)} />
-  if (isShowBigBanner) return <BigBanner {...props}/>
+  if (isShowBigBanner) return <BigBanner />
+  if (isShowSmallBanner) return <SmallBanner onClose={() => setShowSmallBanner(false)} />
 
   return null
 }
@@ -136,6 +135,7 @@ const getTransactionsByDate = (transactions: Record<string, TransactionInfo>) =>
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
   },
   dayHeaderRoot: {
     paddingTop: 16,

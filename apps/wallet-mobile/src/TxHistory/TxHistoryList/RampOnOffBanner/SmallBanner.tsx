@@ -10,11 +10,10 @@ import {useNavigateTo} from './BigBanner'
 
 type Props = {
   onClose: () => void
-  onLayout: (event) => void 
 }
 
 const SmallBanner = (props: Props) => {
-  const {onClose, onLayout} = props
+  const {onClose} = props
 
   const strings = useStrings()
 
@@ -27,7 +26,7 @@ const SmallBanner = (props: Props) => {
     navigateTo.exchange()
   }
   return (
-    <View style={styles.root} onLayout={onLayout}>
+    <View style={styles.root}>
       <LinearGradient
         style={styles.gradient}
         start={{x: 1, y: 1}}
