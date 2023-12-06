@@ -39,7 +39,7 @@ const BigBanner = () => {
           <Image style={[styles.banner, {width: bannerWidth, height: bannerHeight}]} source={image} />
         </View>
 
-        <Spacer height={16} />
+        <Spacer />
 
         <Text style={styles.label}>{strings.getFirstAda}</Text>
 
@@ -47,7 +47,7 @@ const BigBanner = () => {
 
         <Text style={styles.text}>{strings.ourTrustedPartners}</Text>
 
-        <Spacer height={16} />
+        <Spacer />
 
         <Button
           testID="rampOnOffButton"
