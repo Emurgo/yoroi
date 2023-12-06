@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
+import BigNumber from 'bignumber.js'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -10,10 +11,14 @@ import {features} from '../../features'
 import {actionMessages} from '../../i18n/global-messages'
 import {formatDateRelative} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {useTransactionInfos} from '../../yoroi-wallets/hooks'
+import {useBalances, useTransactionInfos} from '../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../yoroi-wallets/types'
+import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
 import {EmptyHistory} from './EmptyHistory'
+import BigBanner from './RampOnOffBanner/BigBanner'
+import SmaillBanner from './RampOnOffBanner/SmaillBanner'
+import {bannerRampOnOffMessages} from './RampOnOffBanner/strings'
 import {TxHistoryListItem} from './TxHistoryListItem'
 
 type ListProps = SectionListProps<TransactionInfo>
@@ -22,37 +27,50 @@ type Props = Partial<ListProps> & {
   onScroll: ListProps['onScroll']
 }
 export const TxHistoryList = (props: Props) => {
+  const [hideRampOnOffBanner, setHideRampOnOffBanner] = React.useState(false)
+
   const strings = useStrings()
   const key = useRemountOnFocusHack()
   const wallet = useSelectedWallet()
+  const balances = useBalances(wallet)
+  const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
   const transactionsInfo = useTransactionInfos(wallet)
   const groupedTransactions = getTransactionsByDate(transactionsInfo)
 
   const handleExport = () => Alert.alert(strings.soon, strings.soon)
   const handleSearch = () => Alert.alert(strings.soon, strings.soon)
-
+  const isNeedBuyAda = new BigNumber(5).isGreaterThan(new BigNumber(primaryAmount.quantity))
+  const isAdaZero = Quantities.isZero(primaryAmount.quantity)
   return (
     <View style={styles.container}>
       {(features.txHistory.export || features.txHistory.search) && (
         <ActionsBanner onExport={handleExport} onSearch={handleSearch} />
       )}
 
-      <SectionList
-        {...props}
-        key={key}
-        contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 8}}
-        ListEmptyComponent={<EmptyHistory />}
-        renderItem={({item}) => <TxHistoryListItem transaction={item} />}
-        ItemSeparatorComponent={() => <Spacer height={16} />}
-        renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
-        sections={groupedTransactions}
-        keyExtractor={(item) => item.id}
-        stickySectionHeadersEnabled={false}
-        nestedScrollEnabled={true}
-        maxToRenderPerBatch={20}
-        initialNumToRender={20}
-        testID="txHistoryList"
-      />
+      {!hideRampOnOffBanner && isNeedBuyAda && !isAdaZero && (
+        <SmaillBanner onClose={() => setHideRampOnOffBanner(true)} />
+      )}
+
+      {isAdaZero ? (
+        <BigBanner />
+      ) : (
+        <SectionList
+          {...props}
+          key={key}
+          contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 8}}
+          ListEmptyComponent={<EmptyHistory />}
+          renderItem={({item}) => <TxHistoryListItem transaction={item} />}
+          ItemSeparatorComponent={() => <Spacer height={16} />}
+          renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
+          sections={groupedTransactions}
+          keyExtractor={(item) => item.id}
+          stickySectionHeadersEnabled={false}
+          nestedScrollEnabled={true}
+          maxToRenderPerBatch={20}
+          initialNumToRender={20}
+          testID="txHistoryList"
+        />
+      )}
     </View>
   )
 }
@@ -113,10 +131,14 @@ const styles = StyleSheet.create({
   },
 })
 
-const useStrings = () => {
+export const useStrings = () => {
   const intl = useIntl()
 
   return {
     soon: intl.formatMessage(actionMessages.soon),
+    buyADA: intl.formatMessage(bannerRampOnOffMessages.buyADA),
+    getFirstAda: intl.formatMessage(bannerRampOnOffMessages.getFirstAda),
+    ourTrustedPartners: intl.formatMessage(bannerRampOnOffMessages.ourTrustedPartners),
+    needMoreAda: intl.formatMessage(bannerRampOnOffMessages.needMoreAda),
   }
 }

@@ -12,6 +12,7 @@ import {CheckFilled} from './CheckFilled'
 import {CheckOutlined} from './CheckOutlined'
 import {Chevron} from './Chevron'
 import {Clock} from './Clock'
+import {Close} from './Close'
 import {Coins} from './Coins'
 import {Copy} from './Copy'
 import {CopySuccess} from './CopySuccess'
@@ -210,4 +211,5 @@ export const Icon = {
   SpectrumSwap,
   Danger,
   Share,
+  Close
 }
