@@ -16,14 +16,13 @@ const BigBanner = () => {
   const strings = useStrings()
 
   const navigateTo = useNavigateTo()
-  
 
   const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
   const handleExchange = () => {
     navigateTo.exchange()
   }
   return (
-    <ScrollView style={styles.root} contentContainerStyle={{paddingBottom: 100}}>
+    <View style={styles.root}>
       <LinearGradient
         style={styles.gradient}
         start={{x: 1, y: 1}}
@@ -32,15 +31,15 @@ const BigBanner = () => {
       >
         <Image style={styles.banner} source={image} />
 
-        <Spacer width={16} />
+        <Spacer height={16} />
 
         <Text style={styles.label}>{strings.getFirstAda}</Text>
 
-        <Spacer width={4} />
+        <Spacer height={4} />
 
         <Text style={styles.text}>{strings.ourTrustedPartners}</Text>
 
-        <Spacer width={16} />
+        <Spacer height={16} />
 
         <View style={[styles.actions]}>
           <Button
@@ -51,9 +50,7 @@ const BigBanner = () => {
           />
         </View>
       </LinearGradient>
-
-      <Spacer width={50} />
-    </ScrollView>
+    </View>
   )
 }
 
@@ -64,15 +61,14 @@ const getStyles = (props: {theme: Theme}) => {
   const styles = StyleSheet.create({
     root: {
       backgroundColor: theme.color['white-static'],
-      paddingHorizontal: 20,
-      paddingVertical: 18,
+      paddingVertical: 16,
     },
     gradient: {
       opacity: 1,
       borderRadius: 8,
       flexDirection: 'column',
       alignItems: 'center',
-      paddingBottom: 25
+      paddingBottom: 25,
     },
     banner: {
       width: '100%',
@@ -80,8 +76,8 @@ const getStyles = (props: {theme: Theme}) => {
       resizeMode: 'stretch',
     },
     actions: {
-      paddingVertical: 16,
-      paddingHorizontal: 16,
+      // paddingVertical: 16,
+      // paddingHorizontal: 16,
     },
     label: {
       fontSize: 20,
