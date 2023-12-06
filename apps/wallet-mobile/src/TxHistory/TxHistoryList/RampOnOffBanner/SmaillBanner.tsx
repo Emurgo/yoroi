@@ -5,7 +5,8 @@ import LinearGradient from 'react-native-linear-gradient'
 import {Icon, Spacer} from '../../../components'
 import {useTheme} from '../../../theme'
 import {Theme} from '../../../theme/types'
-import { useStrings } from '../TxHistoryList'
+import {useStrings} from '../TxHistoryList'
+import { useNavigateTo } from './BigBanner'
 
 type Props = {
   onClose: () => void
@@ -19,6 +20,11 @@ const SmaillBanner = (props: Props) => {
   const {theme} = useTheme()
   const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
 
+  const navigateTo = useNavigateTo()
+
+  const handleExchange = () => {
+    navigateTo.exchange()
+  }
   return (
     <View style={styles.root}>
       <LinearGradient
@@ -41,7 +47,9 @@ const SmaillBanner = (props: Props) => {
 
         <Spacer width={16} />
 
-        <Text style={styles.textButton}>{strings.buyADA.toUpperCase()}</Text>
+        <TouchableOpacity onPress={handleExchange}>
+          <Text style={styles.textButton}>{strings.buyADA.toUpperCase()}</Text>
+        </TouchableOpacity>
       </LinearGradient>
     </View>
   )
@@ -68,12 +76,13 @@ const getStyles = (props: {theme: Theme}) => {
       flexDirection: 'row',
       width: '100%',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
     },
     title: {
       fontSize: 16,
       fontWeight: '500',
       fontFamily: 'Rubik',
+      width: '80%',
     },
     text: {
       fontSize: 16,
@@ -84,8 +93,8 @@ const getStyles = (props: {theme: Theme}) => {
       fontSize: 14,
       fontWeight: '500',
       fontFamily: 'Rubik',
-      color: theme.color.primary[500]
-    }
+      color: theme.color.primary[500],
+    },
   })
   return styles
 }
