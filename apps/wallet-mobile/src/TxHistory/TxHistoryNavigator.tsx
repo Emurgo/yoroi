@@ -424,17 +424,22 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
 }
 
 const HeaderRightHistory = React.memo(() => {
+  const wallet = useSelectedWallet()
   const {navigateToSettings} = useWalletNavigation()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
   return (
     <Row>
-      <CodeScannerButton
-        onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
-        color={COLORS.ACTION_GRAY}
-      />
+      {!wallet.isReadOnly && (
+        <>
+          <CodeScannerButton
+            onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
+            color={COLORS.ACTION_GRAY}
+          />
 
-      <Spacer width={10} />
+          <Spacer width={10} />
+        </>
+      )}
 
       <SettingsIconButton style={styles.settingIconButton} onPress={navigateToSettings} />
     </Row>
