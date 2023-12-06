@@ -41,6 +41,7 @@ export const RampOnOffProvider = ({
   const actions = React.useRef<RampOnOffActions>({
     actionTypeChanged: (actionType: TRampOnOffAction) =>
       dispatch({type: RampOnOffActionType.ActionTypeChanged, actionType}),
+    canExchangeChanged: (value: boolean) => dispatch({type: RampOnOffActionType.CanExchangeChanged, value}),
     amountInputDisplayValueChanged: (value: string) =>
       dispatch({type: RampOnOffActionType.AmountInputDisplayValueChanged, value}),
     amountInputValueChanged: (value: number) => dispatch({type: RampOnOffActionType.AmountInputValueChanged, value}),
@@ -56,9 +57,10 @@ export const RampOnOffProvider = ({
       const [input] = Quantities.parseFromText(text, amountTokenInfo.decimals ?? 0, numberLocale)
       actions.amountInputDisplayValueChanged(text === '' ? '' : input)
       actions.amountInputValueChanged(isNaN(parseInt(text)) ? 0 : parseInt(text))
+      actions.canExchangeChanged(text === '' || state.amount.error !== undefined ? false : true)
       clearErrors()
     },
-    [actions, clearErrors, numberLocale, amountTokenInfo.decimals],
+    [amountTokenInfo.decimals, numberLocale, actions, state.amount.error, clearErrors],
   )
 
   const isNotEnoughBalance = new BigNumber(state.amount.value).isGreaterThan(new BigNumber(amountbalance))
@@ -75,7 +77,7 @@ export const RampOnOffProvider = ({
       (!Quantities.isZero(amountbalance) && !isNotEnoughBalance && state.amount.isTouched) ||
       state.actionType === actionRamp.buyAda
     ) {
-      actions.amountErrorChanged(undefined)
+      clearErrors()
       return
     }
   }, [
@@ -86,6 +88,7 @@ export const RampOnOffProvider = ({
     state.amount.isTouched,
     state.actionType,
     strings.notEnoughtBalance,
+    clearErrors,
   ])
 
   const context = React.useMemo(
@@ -117,6 +120,10 @@ const rampOnOffReducer = (state: RampOnOffState, action: RampOnOffAction) => {
         draft.amount.error = action.error
 
         break
+      case RampOnOffActionType.CanExchangeChanged:
+        draft.canExchange = action.value
+
+        break
       default:
         throw new Error(`swapFormReducer invalid action`)
     }
@@ -130,6 +137,7 @@ type RampOnOffAction =
   | {type: RampOnOffActionType.AmountInputDisplayValueChanged; value: string}
   | {type: RampOnOffActionType.AmountErrorChanged; error: string | undefined}
   | {type: RampOnOffActionType.AmountInputValueChanged; value: number}
+  | {type: RampOnOffActionType.CanExchangeChanged; value: boolean}
 
 type RampOnOffState = {
   actionType: TRampOnOffAction
@@ -140,10 +148,12 @@ type RampOnOffState = {
     displayValue: string
     value: number
   }
+  canExchange: boolean
 }
 
 type RampOnOffActions = {
   actionTypeChanged: (type: TRampOnOffAction) => void
+  canExchangeChanged: (value: boolean) => void
   amountInputDisplayValueChanged: (value: string) => void
   amountErrorChanged: (error: string | undefined) => void
   amountInputValueChanged: (value: number) => void
@@ -158,6 +168,7 @@ const defaultState: RampOnOffState = Object.freeze({
     displayValue: '',
     value: 0,
   },
+  canExchange: false,
 })
 
 function missingInit() {
@@ -172,6 +183,7 @@ const initialSwapFormContext: RampOnOffContext = {
   amountInputValueChanged: missingInit,
   amountErrorChanged: missingInit,
   onChangeAmountQuantity: missingInit,
+  canExchangeChanged: missingInit,
 }
 
 enum RampOnOffActionType {
@@ -179,6 +191,7 @@ enum RampOnOffActionType {
   AmountInputDisplayValueChanged = 'amountInputDisplayValueChanged',
   AmountErrorChanged = 'amountErrorChanged',
   AmountInputValueChanged = 'amountInputValueChanged',
+  CanExchangeChanged = 'canExchangeChanged',
 }
 
 type RampOnOffContext = RampOnOffState &

@@ -17,7 +17,7 @@ import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
 import {EmptyHistory} from './EmptyHistory'
 import BigBanner from './RampOnOffBanner/BigBanner'
-import SmaillBanner from './RampOnOffBanner/SmaillBanner'
+import SmallBanner from './RampOnOffBanner/SmallBanner'
 import {bannerRampOnOffMessages} from './RampOnOffBanner/strings'
 import {TxHistoryListItem} from './TxHistoryListItem'
 
@@ -48,7 +48,7 @@ export const TxHistoryList = (props: Props) => {
       )}
 
       {!hideRampOnOffBanner && isNeedBuyAda && !isAdaZero && (
-        <SmaillBanner onClose={() => setHideRampOnOffBanner(true)} />
+        <SmallBanner onClose={() => setHideRampOnOffBanner(true)} />
       )}
 
       {isAdaZero ? (
