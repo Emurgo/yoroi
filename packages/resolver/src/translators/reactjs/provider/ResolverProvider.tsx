@@ -8,6 +8,7 @@ type ResolverActions = {
   resolvedAddressSelectedChanged: (
     resolvedAddressSelected: ResolverState['resolvedAddressSelected'],
   ) => void
+  resetState: () => void
 }
 
 type ResolverState = {
@@ -23,6 +24,7 @@ export const defaultResolverActions = {
   readResolverNoticeStatus: missingInit,
   getCryptoAddress: missingInit,
   resolvedAddressSelectedChanged: missingInit,
+  resetState: missingInit,
 } as unknown as ResolverActions
 
 /* istanbul ignore next */
@@ -66,6 +68,10 @@ export const ResolverProvider = ({
         type: 'resolvedAddressSelectedChanged',
         resolvedAddressSelected,
       }),
+    resetState: () =>
+      dispatch({
+        type: 'resetState',
+      }),
   }).current
 
   const context = React.useMemo(
@@ -82,10 +88,12 @@ export const ResolverProvider = ({
 
 export const useResolver = () => React.useContext(ResolverContext)
 
-export type ResolverAction = {
-  type: 'resolvedAddressSelectedChanged'
-  resolvedAddressSelected: ResolverState['resolvedAddressSelected']
-}
+export type ResolverAction =
+  | {
+      type: 'resolvedAddressSelectedChanged'
+      resolvedAddressSelected: ResolverState['resolvedAddressSelected']
+    }
+  | {type: 'resetState'}
 
 export const resolverReducer = (
   state: ResolverState,
@@ -97,6 +105,8 @@ export const resolverReducer = (
         ...state,
         resolvedAddressSelected: action.resolvedAddressSelected,
       }
+    case 'resetState':
+      return {...defaultResolverState}
 
     default:
       return state
