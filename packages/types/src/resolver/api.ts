@@ -1,8 +1,9 @@
 import {ResolverReceiver} from './receiver'
 
 export interface ResolverApi {
-  getCryptoAddress(
+  getCryptoAddresses(
     receiverDomain: ResolverReceiver['domain'],
+    resolverStrategy?: ResolverStrategy,
   ): Promise<ResolverAddressesResponse>
 }
 

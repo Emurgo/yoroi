@@ -3,7 +3,7 @@ import {ResolverStorage} from './storage'
 
 export type ResolverModule = Readonly<{
   address: {
-    getCryptoAddress: ResolverApi['getCryptoAddress']
+    getCryptoAddresses: ResolverApi['getCryptoAddresses']
   }
   notice: ResolverStorage['notice']
 }>

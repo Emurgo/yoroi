@@ -1,72 +1,135 @@
 import {resolverApiMaker} from './api'
-// import {getHandleCryptoAddress} from './handle-api'
-import {getUnstoppableCryptoAddress} from './unstoppable-api'
 
-jest.mock('./handle-api', () => ({
-  getHandleCryptoAddress: jest.fn(),
-}))
-jest.mock('./unstoppable-api', () => ({
-  getUnstoppableCryptoAddress: jest.fn(),
-}))
+const mockApiConfig = {
+  apiConfig: {
+    unstoppable: {
+      apiKey: 'mock-api-key',
+    },
+  },
+}
+const mockError = new Error('Test Error')
 
-describe.skip('resolverApiMaker', () => {
-  const mockDomain = 'example.domain'
+describe('resolverApiMaker', () => {
+  const domain = 'example.domain'
 
-  it('resolves all addresses with strategy "all"', async () => {
-    // @ts-ignore
-    getHandleCryptoAddress.mockResolvedValue('handleAddress')
-    // @ts-ignore
-    getUnstoppableCryptoAddress.mockResolvedValue('unstoppableAddress')
-
-    // const api = resolverApiMaker('all')
-    const results = await api.getCryptoAddress(mockDomain)
-
-    expect(results).toEqual([
-      {address: 'handleAddress', error: null},
-      {address: 'unstoppableAddress', error: null},
-    ])
+  beforeEach(() => {
+    jest.clearAllMocks()
   })
 
-  it('handles errors with strategy "all"', async () => {
-    const mockError = new Error('Test Error')
-    // @ts-ignore
-    getHandleCryptoAddress.mockResolvedValue('handleAddress')
-    // @ts-ignore
-    getUnstoppableCryptoAddress.mockRejectedValue(mockError)
+  describe('getCryptoAddresses', () => {
+    describe('strategy "all"', () => {
+      it('all resolved', async () => {
+        const deps = {
+          unstoppableApi: {
+            getCryptoAddress: jest
+              .fn()
+              .mockReturnValue(
+                jest.fn().mockResolvedValue('unstoppableAddress'),
+              ),
+          },
+          handleApi: {
+            getCryptoAddress: jest
+              .fn()
+              .mockReturnValue(jest.fn().mockResolvedValue('handleAddress')),
+          },
+          cnsApi: {
+            getCryptoAddress: jest.fn().mockResolvedValue('cnsAddress'),
+          },
+        }
 
-    // const api = resolverApiMaker('all')
-    const results = await api.getCryptoAddress(mockDomain)
+        const api = resolverApiMaker(mockApiConfig, deps)
+        const results = await api.getCryptoAddresses(domain)
 
-    expect(results).toEqual([
-      {address: 'handleAddress', error: null},
-      {address: null, error: mockError},
-    ])
-  })
+        expect(results).toEqual([
+          {address: 'handleAddress', error: null, service: 'handle'},
+          {address: 'unstoppableAddress', error: null, service: 'unstoppable'},
+          {address: 'cnsAddress', error: null, service: 'cns'},
+        ])
+      })
 
-  it('resolves first successful address with strategy "first"', async () => {
-    // @ts-ignore
-    getHandleCryptoAddress.mockRejectedValue(new Error('Test Error'))
-    // @ts-ignore
-    getUnstoppableCryptoAddress.mockResolvedValue('unstoppableAddress')
+      it('some resolved', async () => {
+        const deps = {
+          unstoppableApi: {
+            getCryptoAddress: jest
+              .fn()
+              .mockReturnValue(jest.fn().mockRejectedValue(mockError)),
+          },
+          handleApi: {
+            getCryptoAddress: jest
+              .fn()
+              .mockReturnValue(jest.fn().mockResolvedValue('handleAddress')),
+          },
+          cnsApi: {
+            getCryptoAddress: jest.fn().mockRejectedValue(mockError),
+          },
+        }
 
-    // const api = resolverApiMaker('first')
-    // const results = await api.getCryptoAddress(mockDomain)
+        const api = resolverApiMaker(mockApiConfig, deps)
+        const results = await api.getCryptoAddresses(domain)
 
-    // expect(results).toEqual([{address: 'unstoppableAddress', error: null}])
-  })
+        expect(results).toEqual([
+          {address: 'handleAddress', error: null, service: 'handle'},
+          {address: null, error: mockError.message, service: 'unstoppable'},
+          {address: null, error: mockError.message, service: 'cns'},
+        ])
+      })
+    })
 
-  it('handles all errors with strategy "first"', async () => {
-    const mockError = new Error('Test Error')
-    // @ts-ignore
-    getHandleCryptoAddress.mockRejectedValue(mockError)
-    // @ts-ignore
-    getUnstoppableCryptoAddress.mockRejectedValue(mockError)
+    describe('strategy "first"', () => {
+      it('any resolved', async () => {
+        const deps = {
+          unstoppableApi: {
+            getCryptoAddress: jest
+              .fn()
+              .mockReturnValue(jest.fn().mockRejectedValue(mockError)),
+          },
+          handleApi: {
+            getCryptoAddress: jest
+              .fn()
+              .mockReturnValue(jest.fn().mockResolvedValue('handleAddress')),
+          },
+          cnsApi: {
+            getCryptoAddress: jest.fn().mockRejectedValue(mockError),
+          },
+        }
 
-    // const api = resolverApiMaker('first')
-    try {
-      // await api.getCryptoAddress(mockDomain)
-    } catch (error) {
-      expect(error).toEqual(mockError)
-    }
+        const api = resolverApiMaker(mockApiConfig, deps)
+        const results = await api.getCryptoAddresses(domain, 'first')
+
+        expect(results).toEqual([
+          {address: 'handleAddress', error: null, service: 'handle'},
+        ])
+      })
+
+      it('none resolved', async () => {
+        const deps = {
+          unstoppableApi: {
+            getCryptoAddress: jest
+              .fn()
+              .mockReturnValue(jest.fn().mockRejectedValue(mockError)),
+          },
+          handleApi: {
+            getCryptoAddress: jest
+              .fn()
+              .mockReturnValue(jest.fn().mockRejectedValue(mockError)),
+          },
+          cnsApi: {
+            getCryptoAddress: jest.fn().mockRejectedValue(mockError),
+          },
+        }
+
+        const api = resolverApiMaker(mockApiConfig, deps)
+        const results = await api.getCryptoAddresses(domain, 'first')
+
+        expect(results).toEqual([
+          {address: null, error: 'Not resolved', service: null},
+        ])
+      })
+    })
+
+    it('instantiate - coverage only', async () => {
+      const api = resolverApiMaker(mockApiConfig)
+      expect(api).toBeDefined()
+    })
   })
 })

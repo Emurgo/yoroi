@@ -112,6 +112,7 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.mocks.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
     ],
     "coverageReporters": [

@@ -1,4 +1,5 @@
 import {Api, Left, Right} from '@yoroi/types'
+
 import {
   HandleApiGetCryptoAddressResponse,
   HandleApiErrorInvalidDomain,
@@ -57,11 +58,11 @@ describe('getCryptoAddress', () => {
     const domain = `$${mockApiResponse.name}`
     const sanitizedDomain = `${mockApiResponse.name}`
     const expectedUrl = `${handleApiConfig.mainnet.getCryptoAddress}${sanitizedDomain}`
-    const invalidApiReponse = {...mockApiResponse, resolved_addresses: {}}
+    const invalidApiResponse = {...mockApiResponse, resolved_addresses: {}}
 
     const mockFetchDataResponse: Right<HandleApiGetCryptoAddressResponse> = {
       tag: 'right',
-      value: invalidApiReponse as any,
+      value: invalidApiResponse as any,
     }
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
     const getCryptoAddress = handleApiGetCryptoAddress({request: mockFetchData})

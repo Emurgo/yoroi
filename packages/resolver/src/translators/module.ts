@@ -1,16 +1,14 @@
-import {resolverApiMaker} from '../adapters/api'
 import {Resolver} from '@yoroi/types'
 
 export const resolverModuleMaker = (
-  resolutionStrategy: Resolver.Strategy,
   resolverStorage: Resolver.Storage,
-  apiConfig?: any,
+  resolverApi: Resolver.Api,
 ): Resolver.Module => {
   const {notice} = resolverStorage
-  const api = resolverApiMaker(resolutionStrategy, apiConfig)
+  const {getCryptoAddresses} = resolverApi
 
   return {
-    address: {getCryptoAddress: api.getCryptoAddress},
+    address: {getCryptoAddresses},
     notice,
-  }
+  } as const
 }

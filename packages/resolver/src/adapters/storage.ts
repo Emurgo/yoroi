@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {parseBoolean} from '@yoroi/common'
 import {Resolver, BaseStorage} from '@yoroi/types'
 
 const initialDeps = {storage: AsyncStorage} as const
@@ -30,21 +31,3 @@ export function resolverStorageMaker(
 }
 
 export const resolverStorageNoticedKey = 'resolver-notice'
-
-// * === UTILS ===
-// * NOTE copied from utils it should be imported from utils package later
-export const parseBoolean = (data: unknown) => {
-  const parsed = parseSafe(data)
-  return isBoolean(parsed) ? parsed : undefined
-}
-
-const parseSafe = (text: any) => {
-  try {
-    return JSON.parse(text) as unknown
-  } catch (_) {
-    return undefined
-  }
-}
-
-export const isBoolean = (data: unknown): data is boolean =>
-  typeof data === 'boolean'

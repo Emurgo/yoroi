@@ -1,55 +1,23 @@
 /* istanbul ignore file */
-import {Resolver} from '@yoroi/types'
-import {resolverApiMaker} from '../adapters/api'
+import {mockResolverApi} from '../adapters/api.mocks'
+import {mockStorageMaker} from '../adapters/storage.mocks'
 import {resolverModuleMaker} from './module'
 
-jest.mock('../adapters/api', () => ({
-  resolverApiMaker: jest.fn(),
-}))
-
 describe('resolverModuleMaker', () => {
-  const mockStrategy = 'all'
-  const mockApiConfig = {someKey: 'someValue'}
-  const mockResolverStorage = {notice: 'notice'} as unknown as Resolver.Storage
-  const mockGetCryptoAddress = jest.fn()
-
   beforeEach(() => {
-    // @ts-ignore
-    resolverApiMaker.mockImplementation(() => ({
-      getCryptoAddress: mockGetCryptoAddress,
-    }))
+    jest.clearAllMocks()
   })
 
   it('creates a module with getCryptoAddress function', () => {
     const module = resolverModuleMaker(
-      mockStrategy,
-      mockResolverStorage,
-      mockApiConfig,
+      mockStorageMaker.success,
+      mockResolverApi.success,
     )
 
-    expect(module).toHaveProperty('address.getCryptoAddress')
-  })
-
-  it('creates a module with notice property', () => {
-    const module = resolverModuleMaker(
-      mockStrategy,
-      mockResolverStorage,
-      mockApiConfig,
-    )
-
-    expect(module).toHaveProperty('notice')
-  })
-
-  it('calls getCryptoAddress from the created API', () => {
-    const module = resolverModuleMaker(
-      mockStrategy,
-      mockResolverStorage,
-      mockApiConfig,
-    )
-    const mockDomain = 'example.domain'
-
-    module.address.getCryptoAddress(mockDomain)
-
-    expect(mockGetCryptoAddress).toHaveBeenCalledWith(mockDomain)
+    expect(module).toHaveProperty('address.getCryptoAddresses')
+    expect(module).toHaveProperty('notice.read')
+    expect(module).toHaveProperty('notice.remove')
+    expect(module).toHaveProperty('notice.save')
+    expect(module).toHaveProperty('notice.key')
   })
 })

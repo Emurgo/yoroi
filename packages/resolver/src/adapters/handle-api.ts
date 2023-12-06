@@ -4,42 +4,36 @@ import {z} from 'zod'
 
 import {handleZodErrors} from './zod-errors'
 
+const initialDeps = {request: fetchData} as const
+
 export const handleApiGetCryptoAddress = ({
-  request = fetchData,
-}: {
-  request?: FetchData
-} = {}) => {
+  request,
+}: {request: FetchData} = initialDeps) => {
   return async (
     receiverDomain: Resolver.Receiver['domain'],
   ): Promise<string> => {
+    if (!isAdaHandleDomain(receiverDomain))
+      throw new HandleApiErrorInvalidDomain()
+
+    const sanitizedDomain = receiverDomain.replace(/^\$/, '')
+    const config = {
+      url: `${handleApiConfig.mainnet.getCryptoAddress}${sanitizedDomain}`,
+    } as const
+
     try {
-      if (!isAdaHandleDomain(receiverDomain)) throw new HandleApiErrorInvalidDomain()
-
-      const sanitizedDomain = receiverDomain.replace(/^\$/, '')
-      const config = {
-        url: `${handleApiConfig.mainnet.getCryptoAddress}${sanitizedDomain}`,
-      } as const
-
       const response = await request<HandleApiGetCryptoAddressResponse>(config)
 
       if (isLeft(response)) {
         handleApiError(response.error)
       } else {
         const parsedResponse = HandleApiResponseSchema.parse(response.value)
-        return asResolverCryptoAddress(parsedResponse)
+        return parsedResponse.resolved_addresses.ada
       }
     } catch (error: unknown) {
       return handleHandleApiError(error)
     }
   }
 }
-
-export const asResolverCryptoAddress = (
-  handleCryptoAddress: Pick<
-    HandleApiGetCryptoAddressResponse,
-    'resolved_addresses'
-  >,
-) => handleCryptoAddress.resolved_addresses.ada
 
 // https://github.com/koralabs/handles-public-api/blob/master/src/models/view/handle.view.model.ts
 export type HandleApiGetCryptoAddressResponse = {

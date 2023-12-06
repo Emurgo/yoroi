@@ -1,6 +1,7 @@
 import {Resolver} from '@yoroi/types'
-import {getHandleCryptoAddress} from './handle-api'
-import {getUnstoppableCryptoAddress} from './unstoppable-api'
+
+import {handleApiGetCryptoAddress} from './handle-api'
+import {unstoppableApiGetCryptoAddress} from './unstoppable-api'
 import {getCnsCryptoAddress} from './cns'
 
 enum DomainService {
@@ -15,51 +16,111 @@ type ApiConfig = {
   }
 }
 
+const initialDeps = {
+  unstoppableApi: {
+    getCryptoAddress: unstoppableApiGetCryptoAddress,
+  },
+  handleApi: {
+    getCryptoAddress: handleApiGetCryptoAddress,
+  },
+  cnsApi: {
+    getCryptoAddress: getCnsCryptoAddress,
+  },
+} as const
+
 export const resolverApiMaker = (
-  resolutionStrategy: Resolver.Strategy,
-  apiConfig: ApiConfig,
+  {
+    apiConfig,
+  }: {
+    apiConfig: Readonly<ApiConfig>
+  },
+  {
+    unstoppableApi,
+    handleApi,
+    cnsApi,
+  }: {
+    unstoppableApi: {
+      getCryptoAddress: typeof unstoppableApiGetCryptoAddress
+    }
+    handleApi: {
+      getCryptoAddress: typeof handleApiGetCryptoAddress
+    }
+    cnsApi: {
+      getCryptoAddress: typeof getCnsCryptoAddress
+    }
+  } = initialDeps,
 ): Resolver.Api => {
-  const getCryptoAddress = async (
+  const getHandleCryptoAddress = handleApi.getCryptoAddress()
+  const getUnstoppableCryptoAddress = unstoppableApi.getCryptoAddress(
+    apiConfig[DomainService.Unstoppable],
+  )
+
+  const operationsGetCryptoAddress: GetCryptoAddressOperations = [
+    [DomainService.Handle, getHandleCryptoAddress],
+    [DomainService.Unstoppable, getUnstoppableCryptoAddress],
+    [DomainService.Cns, cnsApi.getCryptoAddress],
+  ] as const
+
+  // facade to the different crypto address resolution
+  const getCryptoAddresses = async (
     receiverDomain: Resolver.Receiver['domain'],
-  ) => {
-    const operations = {
-      [DomainService.Handle]: getHandleCryptoAddress(receiverDomain),
-      [DomainService.Unstoppable]: getUnstoppableCryptoAddress(
-        receiverDomain,
-        apiConfig[DomainService.Unstoppable].apiKey,
-      ),
-      [DomainService.Cns]: getCnsCryptoAddress(receiverDomain),
-    }
+    resolutionStrategy: Resolver.Strategy = 'all',
+  ): Promise<Resolver.AddressesResponse> => {
+    if (resolutionStrategy === 'all')
+      return resolveAll(operationsGetCryptoAddress, receiverDomain)
 
-    if (resolutionStrategy === 'all') {
-      const results = await Promise.all(
-        Object.entries(operations).map(async ([service, operation]) => {
-          try {
-            const address = await operation
-            return {error: null, address, service}
-          } catch (error: any) {
-            return {error: error.message, address: null, service}
-          }
-        }),
-      )
-
-      return results
-    }
-
-    const result = await Promise.any(
-      Object.entries(operations).map(([service, operation]) =>
-        operation.then((address) => ({error: null, address, service})),
-      ),
-    ).catch((error) => ({
-      address: null,
-      error,
-      service: null,
-    }))
-
-    return [result]
+    return resolveFirst(operationsGetCryptoAddress, receiverDomain)
   }
 
   return {
-    getCryptoAddress,
+    getCryptoAddresses,
+  } as const
+}
+
+const safelyExecuteOperation = async (
+  operationFn: GetCryptoAddress,
+  service: DomainService,
+  receiverDomain: Resolver.Receiver['domain'],
+): Promise<Resolver.AddressResponse> => {
+  try {
+    const address = await operationFn(receiverDomain)
+    return {error: null, address, service}
+  } catch (error) {
+    return {error: (error as Error).message, address: null, service}
   }
 }
+
+const resolveAll = async (
+  operations: GetCryptoAddressOperations,
+  receiverDomain: Resolver.Receiver['domain'],
+): Promise<Resolver.AddressesResponse> => {
+  const promises = operations.map(([service, operationFn]) =>
+    safelyExecuteOperation(operationFn, service, receiverDomain),
+  )
+  const result = await Promise.all(promises)
+  return result
+}
+
+const resolveFirst = async (
+  operations: GetCryptoAddressOperations,
+  receiverDomain: Resolver.Receiver['domain'],
+): Promise<Resolver.AddressesResponse> => {
+  const promises = operations.map(async ([service, operationFn]) => {
+    const address = await operationFn(receiverDomain)
+    return {error: null, address, service}
+  })
+  try {
+    const result = await Promise.any(promises)
+    return [result]
+  } catch (error) {
+    return [{address: null, error: 'Not resolved', service: null}]
+  }
+}
+
+type GetCryptoAddress = (
+  receiverDomain: Resolver.Receiver['domain'],
+) => Promise<string>
+
+type GetCryptoAddressOperations = ReadonlyArray<
+  [DomainService, GetCryptoAddress]
+>
