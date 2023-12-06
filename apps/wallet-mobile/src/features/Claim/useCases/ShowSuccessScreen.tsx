@@ -33,7 +33,7 @@ export const ShowSuccessScreen = () => {
   const {status, txHash, amounts} = claimToken
 
   return (
-    <SafeAreaView edges={['top', 'bottom', 'left', 'right']} style={{flex: 1}}>
+    <SafeAreaView edges={['top', 'left', 'right']} style={{flex: 1}}>
       <View style={{flex: 1}}>
         <Header>
           <ClaimSuccessIllustration zoom={0.65} />
