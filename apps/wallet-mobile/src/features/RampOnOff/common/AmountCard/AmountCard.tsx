@@ -2,7 +2,7 @@ import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {Boundary, Icon, Spacer, TokenIcon, TokenIconPlaceholder} from '../../../../components'
+import {Boundary, Spacer, TokenIcon, TokenIconPlaceholder} from '../../../../components'
 import {formatTokenWithText} from '../../../../legacy/format'
 import {useTheme} from '../../../../theme'
 import {Theme} from '../../../../theme/types'
@@ -94,7 +94,6 @@ export const AmountCard: React.FC<AmountCardProps> = ({
 
               <Text style={styles.coinName}>{name}</Text>
 
-              <Icon.Chevron direction="right" size={20} color="black" />
             </View>
 
             <Spacer width={8} />

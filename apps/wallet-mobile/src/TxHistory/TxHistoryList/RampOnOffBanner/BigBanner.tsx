@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {Image, StyleSheet, Text, View} from 'react-native'
+import {Image, ScrollView, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import image from '../../../assets/img/banner-buy-ada.png'
@@ -8,23 +8,22 @@ import {Button, Spacer} from '../../../components'
 import {TxHistoryRouteNavigation} from '../../../navigation'
 import {useTheme} from '../../../theme'
 import {Theme} from '../../../theme/types'
-import { useStrings } from '../TxHistoryList'
+import {useStrings} from '../TxHistoryList'
 
 const BigBanner = () => {
   const {theme} = useTheme()
 
   const strings = useStrings()
 
-
   const navigateTo = useNavigateTo()
-
+  
 
   const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
   const handleExchange = () => {
     navigateTo.exchange()
   }
   return (
-    <View style={styles.root}>
+    <ScrollView style={styles.root} contentContainerStyle={{paddingBottom: 100}}>
       <LinearGradient
         style={styles.gradient}
         start={{x: 1, y: 1}}
@@ -49,11 +48,12 @@ const BigBanner = () => {
             shelleyTheme
             title={strings.buyADA.toLocaleUpperCase()}
             onPress={handleExchange}
-            disabled={false}
           />
         </View>
       </LinearGradient>
-    </View>
+
+      <Spacer width={50} />
+    </ScrollView>
   )
 }
 
@@ -63,7 +63,6 @@ const getStyles = (props: {theme: Theme}) => {
   const {theme} = props
   const styles = StyleSheet.create({
     root: {
-      flex: 1,
       backgroundColor: theme.color['white-static'],
       paddingHorizontal: 20,
       paddingVertical: 18,
@@ -71,9 +70,9 @@ const getStyles = (props: {theme: Theme}) => {
     gradient: {
       opacity: 1,
       borderRadius: 8,
-      flex: 1,
       flexDirection: 'column',
       alignItems: 'center',
+      paddingBottom: 25
     },
     banner: {
       width: '100%',
@@ -83,7 +82,6 @@ const getStyles = (props: {theme: Theme}) => {
     actions: {
       paddingVertical: 16,
       paddingHorizontal: 16,
-      width: '40%',
     },
     label: {
       fontSize: 20,
@@ -107,7 +105,7 @@ const getStyles = (props: {theme: Theme}) => {
   return styles
 }
 
-const useNavigateTo = () => {
+export const useNavigateTo = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
   return {
