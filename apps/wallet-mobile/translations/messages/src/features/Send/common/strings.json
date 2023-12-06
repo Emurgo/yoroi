@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Please enter valid amount",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 67,
+      "line": 69,
       "column": 18,
-      "index": 4187
+      "index": 4343
     },
     "end": {
-      "line": 70,
+      "line": 72,
       "column": 3,
-      "index": 4315
+      "index": 4471
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Please enter valid amount",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 71,
+      "line": 73,
       "column": 27,
-      "index": 4344
+      "index": 4500
     },
     "end": {
-      "line": 74,
+      "line": 76,
       "column": 3,
-      "index": 4481
+      "index": 4637
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Amount too large",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 75,
+      "line": 77,
       "column": 13,
-      "index": 4496
+      "index": 4652
     },
     "end": {
-      "line": 78,
+      "line": 80,
       "column": 3,
-      "index": 4610
+      "index": 4766
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Amount is too low",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 79,
+      "line": 81,
       "column": 11,
-      "index": 4623
+      "index": 4779
     },
     "end": {
-      "line": 82,
+      "line": 84,
       "column": 3,
-      "index": 4736
+      "index": 4892
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Cannot send less than {minUtxo} {ticker}",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 83,
+      "line": 85,
       "column": 15,
-      "index": 4753
+      "index": 4909
     },
     "end": {
-      "line": 86,
+      "line": 88,
       "column": 3,
-      "index": 4893
+      "index": 5049
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Amount must be positive",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 87,
+      "line": 89,
       "column": 12,
-      "index": 4907
+      "index": 5063
     },
     "end": {
-      "line": 90,
+      "line": 92,
       "column": 3,
-      "index": 5027
+      "index": 5183
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Not enough money to make this transaction",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 91,
+      "line": 93,
       "column": 23,
-      "index": 5052
+      "index": 5208
     },
     "end": {
-      "line": 94,
+      "line": 96,
       "column": 3,
-      "index": 5201
+      "index": 5357
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!!Maximum value of a token inside a UTXO exceeded (overflow).",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 95,
+      "line": 97,
       "column": 17,
-      "index": 5220
+      "index": 5376
     },
     "end": {
-      "line": 98,
+      "line": 100,
       "column": 3,
-      "index": 5382
+      "index": 5538
     }
   },
   {
@@ -124,14 +124,44 @@
     "defaultMessage": "!!!Keep some balance for tokens",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 99,
+      "line": 101,
       "column": 30,
-      "index": 5414
+      "index": 5570
     },
     "end": {
-      "line": 102,
+      "line": 104,
       "column": 3,
-      "index": 5524
+      "index": 5680
+    }
+  },
+  {
+    "id": "components.send.sendscreen.walletAddress",
+    "defaultMessage": "!!!Wallet Address",
+    "file": "src/features/Send/common/strings.ts",
+    "start": {
+      "line": 108,
+      "column": 17,
+      "index": 5744
+    },
+    "end": {
+      "line": 111,
+      "column": 3,
+      "index": 5842
+    }
+  },
+  {
+    "id": "components.send.sendscreen.receiver",
+    "defaultMessage": "!!!Receiver",
+    "file": "src/features/Send/common/strings.ts",
+    "start": {
+      "line": 112,
+      "column": 12,
+      "index": 5856
+    },
+    "end": {
+      "line": 115,
+      "column": 3,
+      "index": 5943
     }
   },
   {
@@ -139,14 +169,14 @@
     "defaultMessage": "!!!Fee",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 106,
+      "line": 116,
       "column": 12,
-      "index": 5583
+      "index": 5957
     },
     "end": {
-      "line": 109,
+      "line": 119,
       "column": 3,
-      "index": 5665
+      "index": 6039
     }
   },
   {
@@ -154,14 +184,14 @@
     "defaultMessage": "!!!-",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 110,
+      "line": 120,
       "column": 19,
-      "index": 5686
+      "index": 6060
     },
     "end": {
-      "line": 113,
+      "line": 123,
       "column": 3,
-      "index": 5773
+      "index": 6147
     }
   },
   {
@@ -169,14 +199,14 @@
     "defaultMessage": "!!!Balance after",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 114,
+      "line": 124,
       "column": 21,
-      "index": 5796
+      "index": 6170
     },
     "end": {
-      "line": 117,
+      "line": 127,
       "column": 3,
-      "index": 5883
+      "index": 6257
     }
   },
   {
@@ -184,14 +214,14 @@
     "defaultMessage": "!!!-",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 118,
+      "line": 128,
       "column": 28,
-      "index": 5913
+      "index": 6287
     },
     "end": {
-      "line": 121,
+      "line": 131,
       "column": 3,
-      "index": 6009
+      "index": 6383
     }
   },
   {
@@ -199,14 +229,14 @@
     "defaultMessage": "!!!Checking balance...",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 122,
+      "line": 132,
       "column": 34,
-      "index": 6045
+      "index": 6419
     },
     "end": {
-      "line": 125,
+      "line": 135,
       "column": 3,
-      "index": 6165
+      "index": 6539
     }
   },
   {
@@ -214,14 +244,14 @@
     "defaultMessage": "!!!-",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 126,
+      "line": 136,
       "column": 36,
-      "index": 6203
+      "index": 6577
     },
     "end": {
-      "line": 129,
+      "line": 139,
       "column": 3,
-      "index": 6307
+      "index": 6681
     }
   },
   {
@@ -229,29 +259,44 @@
     "defaultMessage": "!!!Please enter valid address",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 130,
+      "line": 140,
       "column": 35,
-      "index": 6344
+      "index": 6718
     },
     "end": {
-      "line": 133,
+      "line": 143,
       "column": 3,
-      "index": 6472
+      "index": 6846
+    }
+  },
+  {
+    "id": "components.send.sendscreen.addressInputErrorInvalidDomain",
+    "defaultMessage": "!!!Please enter valid domain",
+    "file": "src/features/Send/common/strings.ts",
+    "start": {
+      "line": 144,
+      "column": 34,
+      "index": 6882
+    },
+    "end": {
+      "line": 147,
+      "column": 3,
+      "index": 7008
     }
   },
   {
     "id": "components.send.confirmscreen.receiver",
-    "defaultMessage": "!!!Address",
+    "defaultMessage": "!!!Receiver address, ADA Handle or domains",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 134,
+      "line": 148,
       "column": 21,
-      "index": 6495
+      "index": 7031
     },
     "end": {
-      "line": 137,
+      "line": 151,
       "column": 3,
-      "index": 6584
+      "index": 7152
     }
   },
   {
@@ -259,14 +304,14 @@
     "defaultMessage": "!!!Send all assets (including all tokens)",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 138,
+      "line": 152,
       "column": 25,
-      "index": 6611
+      "index": 7179
     },
     "end": {
-      "line": 141,
+      "line": 155,
       "column": 3,
-      "index": 6741
+      "index": 7309
     }
   },
   {
@@ -274,14 +319,14 @@
     "defaultMessage": "!!!Send all {assetId}",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 142,
+      "line": 156,
       "column": 19,
-      "index": 6762
+      "index": 7330
     },
     "end": {
-      "line": 145,
+      "line": 159,
       "column": 3,
-      "index": 6866
+      "index": 7434
     }
   },
   {
@@ -290,14 +335,14 @@
     "defaultMessage": "!!!Domain is not registered",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 146,
+      "line": 160,
       "column": 28,
-      "index": 6896
+      "index": 7464
     },
     "end": {
-      "line": 150,
+      "line": 164,
       "column": 3,
-      "index": 7045
+      "index": 7613
     }
   },
   {
@@ -306,14 +351,14 @@
     "defaultMessage": "!!!No Cardano record found for this domain",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 151,
+      "line": 165,
       "column": 29,
-      "index": 7076
+      "index": 7644
     },
     "end": {
-      "line": 155,
+      "line": 169,
       "column": 3,
-      "index": 7241
+      "index": 7809
     }
   },
   {
@@ -322,29 +367,14 @@
     "defaultMessage": "!!!Domain is not supported",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 156,
+      "line": 170,
       "column": 26,
-      "index": 7269
+      "index": 7837
     },
     "end": {
-      "line": 160,
+      "line": 174,
       "column": 3,
-      "index": 7415
-    }
-  },
-  {
-    "id": "components.send.sendscreen.resolvesTo",
-    "defaultMessage": "!!!Resolves to",
-    "file": "src/features/Send/common/strings.ts",
-    "start": {
-      "line": 161,
-      "column": 14,
-      "index": 7431
-    },
-    "end": {
-      "line": 164,
-      "column": 3,
-      "index": 7523
+      "index": 7983
     }
   },
   {
@@ -352,14 +382,14 @@
     "defaultMessage": "!!!Search tokens",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 165,
+      "line": 175,
       "column": 16,
-      "index": 7541
+      "index": 8001
     },
     "end": {
-      "line": 168,
+      "line": 178,
       "column": 3,
-      "index": 7637
+      "index": 8097
     }
   },
   {
@@ -367,14 +397,14 @@
     "defaultMessage": "!!!Select asset",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 169,
+      "line": 179,
       "column": 20,
-      "index": 7659
+      "index": 8119
     },
     "end": {
-      "line": 172,
+      "line": 182,
       "column": 3,
-      "index": 7748
+      "index": 8208
     }
   },
   {
@@ -382,14 +412,14 @@
     "defaultMessage": "!!!Unknown asset",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 173,
+      "line": 183,
       "column": 16,
-      "index": 7766
+      "index": 8226
     },
     "end": {
-      "line": 176,
+      "line": 186,
       "column": 3,
-      "index": 7871
+      "index": 8331
     }
   },
   {
@@ -397,14 +427,14 @@
     "defaultMessage": "!!!No assets found",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 177,
+      "line": 187,
       "column": 12,
-      "index": 7885
+      "index": 8345
     },
     "end": {
-      "line": 180,
+      "line": 190,
       "column": 3,
-      "index": 7988
+      "index": 8448
     }
   },
   {
@@ -412,14 +442,14 @@
     "defaultMessage": "!!!found",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 181,
+      "line": 191,
       "column": 9,
-      "index": 7999
+      "index": 8459
     },
     "end": {
-      "line": 184,
+      "line": 194,
       "column": 3,
-      "index": 8089
+      "index": 8549
     }
   },
   {
@@ -427,14 +457,14 @@
     "defaultMessage": "!!!You have",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 185,
+      "line": 195,
       "column": 11,
-      "index": 8102
+      "index": 8562
     },
     "end": {
-      "line": 188,
+      "line": 198,
       "column": 3,
-      "index": 8197
+      "index": 8657
     }
   },
   {
@@ -442,14 +472,14 @@
     "defaultMessage": "!!!No {fungible} added yet",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 189,
+      "line": 199,
       "column": 20,
-      "index": 8219
+      "index": 8679
     },
     "end": {
-      "line": 192,
+      "line": 202,
       "column": 3,
-      "index": 8338
+      "index": 8798
     }
   },
   {
@@ -457,14 +487,14 @@
     "defaultMessage": "!!!Do you really want to send all?",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 193,
+      "line": 203,
       "column": 23,
-      "index": 8363
+      "index": 8823
     },
     "end": {
-      "line": 196,
+      "line": 206,
       "column": 3,
-      "index": 8484
+      "index": 8944
     }
   },
   {
@@ -472,14 +502,14 @@
     "defaultMessage": "!!!You have selected the send all option. Please confirm that you understand how this feature works.",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 197,
+      "line": 207,
       "column": 22,
-      "index": 8508
+      "index": 8968
     },
     "end": {
-      "line": 201,
+      "line": 211,
       "column": 3,
-      "index": 8700
+      "index": 9160
     }
   },
   {
@@ -487,14 +517,14 @@
     "defaultMessage": "!!!All you {assetNameOrId} balance will be transferred in this transaction.",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 202,
+      "line": 212,
       "column": 24,
-      "index": 8726
+      "index": 9186
     },
     "end": {
-      "line": 205,
+      "line": 215,
       "column": 3,
-      "index": 8889
+      "index": 9349
     }
   },
   {
@@ -502,14 +532,14 @@
     "defaultMessage": "!!!All your tokens, including NFTs and any other native assets in your wallet, will also be transferred in this transaction.",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 206,
+      "line": 216,
       "column": 24,
-      "index": 8915
+      "index": 9375
     },
     "end": {
-      "line": 211,
+      "line": 221,
       "column": 3,
-      "index": 9144
+      "index": 9604
     }
   },
   {
@@ -517,14 +547,14 @@
     "defaultMessage": "!!!After you confirm the transaction in the next screen, your wallet will be emptied.",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 212,
+      "line": 222,
       "column": 24,
-      "index": 9170
+      "index": 9630
     },
     "end": {
-      "line": 215,
+      "line": 225,
       "column": 3,
-      "index": 9343
+      "index": 9803
     }
   },
   {
@@ -532,14 +562,14 @@
     "defaultMessage": "!!!Continue",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 216,
+      "line": 226,
       "column": 18,
-      "index": 9363
+      "index": 9823
     },
     "end": {
-      "line": 219,
+      "line": 229,
       "column": 3,
-      "index": 9456
+      "index": 9916
     }
   },
   {
@@ -547,14 +577,14 @@
     "defaultMessage": "!!!We are experiencing issues with fetching your current balance. Click to retry.",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 220,
+      "line": 230,
       "column": 27,
-      "index": 9485
+      "index": 9945
     },
     "end": {
-      "line": 223,
+      "line": 233,
       "column": 3,
-      "index": 9657
+      "index": 10117
     }
   },
   {
@@ -562,14 +592,14 @@
     "defaultMessage": "!!!You cannot send a new transaction while an existing one is still pending",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 224,
+      "line": 234,
       "column": 41,
-      "index": 9700
+      "index": 10160
     },
     "end": {
-      "line": 227,
+      "line": 237,
       "column": 3,
-      "index": 9880
+      "index": 10340
     }
   },
   {
@@ -577,14 +607,14 @@
     "defaultMessage": "!!!Transaction submitted",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 228,
+      "line": 238,
       "column": 20,
-      "index": 9902
+      "index": 10362
     },
     "end": {
-      "line": 231,
+      "line": 241,
       "column": 3,
-      "index": 10010
+      "index": 10470
     }
   },
   {
@@ -592,14 +622,14 @@
     "defaultMessage": "!!!Check this transaction in the list of wallet transactions",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 232,
+      "line": 242,
       "column": 19,
-      "index": 10031
+      "index": 10491
     },
     "end": {
-      "line": 235,
+      "line": 245,
       "column": 3,
-      "index": 10174
+      "index": 10634
     }
   },
   {
@@ -607,14 +637,14 @@
     "defaultMessage": "!!!Go to transactions",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 236,
+      "line": 246,
       "column": 21,
-      "index": 10197
+      "index": 10657
     },
     "end": {
-      "line": 239,
+      "line": 249,
       "column": 3,
-      "index": 10303
+      "index": 10763
     }
   },
   {
@@ -622,14 +652,14 @@
     "defaultMessage": "!!!Transaction failed",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 240,
+      "line": 250,
       "column": 17,
-      "index": 10322
+      "index": 10782
     },
     "end": {
-      "line": 243,
+      "line": 253,
       "column": 3,
-      "index": 10424
+      "index": 10884
     }
   },
   {
@@ -637,14 +667,14 @@
     "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 244,
+      "line": 254,
       "column": 16,
-      "index": 10442
+      "index": 10902
     },
     "end": {
-      "line": 247,
+      "line": 257,
       "column": 3,
-      "index": 10597
+      "index": 11057
     }
   },
   {
@@ -652,14 +682,14 @@
     "defaultMessage": "!!!Try again",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 248,
+      "line": 258,
       "column": 18,
-      "index": 10617
+      "index": 11077
     },
     "end": {
-      "line": 251,
+      "line": 261,
       "column": 3,
-      "index": 10711
+      "index": 11171
     }
   },
   {
@@ -667,14 +697,14 @@
     "defaultMessage": "!!!Asset",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 252,
+      "line": 262,
       "column": 9,
-      "index": 10722
+      "index": 11182
     },
     "end": {
-      "line": 255,
+      "line": 265,
       "column": 3,
-      "index": 10795
+      "index": 11255
     }
   },
   {
@@ -682,14 +712,14 @@
     "defaultMessage": "!!!Scan recipients QR code to add a wallet address",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 256,
+      "line": 266,
       "column": 23,
-      "index": 10820
+      "index": 11280
     },
     "end": {
-      "line": 259,
+      "line": 269,
       "column": 3,
-      "index": 10947
+      "index": 11407
     }
   }
 ]

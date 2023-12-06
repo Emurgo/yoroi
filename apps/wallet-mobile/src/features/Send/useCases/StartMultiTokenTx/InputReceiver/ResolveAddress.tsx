@@ -1,37 +1,38 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// import {resolverModuleMaker} from '@yoroi/resolver'
+import {DomainService, useResolver} from '@yoroi/resolver'
 import React from 'react'
-import {Text, View, ViewProps} from 'react-native'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {StyleSheet, Text, View, ViewProps} from 'react-native'
 
-import {HelperText} from '../../../../../components'
-// import env from '../../../../../legacy/env'
-import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
-import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {normalizeToAddress} from '../../../../../yoroi-wallets/cardano/utils'
-import {NetworkId} from '../../../../../yoroi-wallets/types'
-import {useStrings} from '../../../common/strings'
+import {HelperText, Spacer} from '../../../../../components'
+import {isEmptyString} from '../../../../../utils'
 import {InputReceiver} from './InputReceiver'
+
+export const Service = {
+  [DomainService.Cns]: 'CNS',
+  [DomainService.Unstoppable]: 'Unstoppable Domains',
+  [DomainService.Handle]: 'ADA Handle',
+}
 
 type ReceiverProps = ViewProps & {
   receiver: string
-  address: string
   errorMessage: string
   isLoading: boolean
+  isValid: boolean
   onChangeReceiver: (receiver: string) => void
 }
 export const ResolveAddress = ({
   isLoading,
-  address,
   receiver,
   errorMessage,
+  isValid,
   onChangeReceiver,
   style,
   ...props
 }: ReceiverProps) => {
-  const strings = useStrings()
-  const isResolved = !isLoading && !receiver.includes(address)
+  const {resolvedAddressSelected} = useResolver()
   const isError = errorMessage.length > 0
+  const selectedAddress = resolvedAddressSelected?.address ?? ''
+  const selectedSevice = resolvedAddressSelected?.service ?? ''
+  const isResolved = !isLoading && !isEmptyString(selectedAddress) && !isEmptyString(selectedSevice)
 
   return (
     <View style={style} {...props}>
@@ -41,79 +42,59 @@ export const ResolveAddress = ({
         error={isError}
         errorText={errorMessage}
         isLoading={isLoading}
+        isValid={isValid}
         autoComplete="off"
       />
 
-      <HelperText type={isError ? 'error' : 'info'}>
-        {isLoading ? <Text>{strings.pleaseWait}</Text> : <Text>{errorMessage}</Text>}
-      </HelperText>
-
-      {isResolved && (
-        <Text ellipsizeMode="middle" numberOfLines={1}>
-          {`${strings.resolvesTo}: ${address}`}
-        </Text>
+      {!isEmptyString(errorMessage) && (
+        <HelperText type="error">
+          <Text>{errorMessage}</Text>
+        </HelperText>
       )}
+
+      {isResolved && <ResolvedAddress address={selectedAddress} service={selectedSevice} />}
     </View>
   )
 }
 
-export const useReceiver = (
-  {wallet, receiver}: {wallet: YoroiWallet; receiver: string},
-  options?: UseQueryOptions<string, Error, string, ['receiver', string]>,
-) => {
-  const query = useQuery({
-    queryKey: ['receiver', receiver],
-    queryFn: () => resolveAndCheckAddress(receiver, wallet.networkId),
-    ...options,
-  })
+const ResolvedAddress = ({address, service}: {address: string; service: string}) => {
+  const {firstHalf, secondHalf} = React.useMemo(() => {
+    const firstHalf = address.substring(0, 8)
+    const secondHalf = address.substring(address.length - 8)
 
-  return {
-    ...query,
-    address: query.data ?? '',
-  }
-}
-
-const resolveAndCheckAddress = async (receiver: string, networkId: NetworkId) => {
-  /*   const all = resolverModuleMaker('all', {apiKeys: {unstoppableApiKey: env.getString('UNSTOPPABLE_API_KEY')}})
-
-  console.log('all', await all.address.getCryptoAddress(receiver))
-
-  const resolver = resolverModuleMaker('first', {apiKeys: {unstoppableApiKey: env.getString('UNSTOPPABLE_API_KEY')}})
-  const [{address: resolvedAddress}] = await resolver.address.getCryptoAddress(receiver) */
-
-  const address = receiver
-
-  await isReceiverAddressValid(address, networkId)
-  return address
-}
-
-export const getAddressErrorMessage = (error: Error & {code?: string}, strings: ReturnType<typeof useStrings>) => {
-  switch (error?.code) {
-    case 'UnsupportedDomain':
-      return strings.domainUnsupportedError
-    case 'RecordNotFound':
-      return strings.domainRecordNotFoundError
-    case 'UnregisteredDomain':
-      return strings.domainNotRegisteredError
-    default:
-      return strings.addressInputErrorInvalidAddress
-  }
-}
-
-const isReceiverAddressValid = async (resolvedAddress: string, walletNetworkId: NetworkId): Promise<void> => {
-  if (resolvedAddress.length === 0) return Promise.resolve()
-
-  const address = await normalizeToAddress(resolvedAddress)
-  if (!address) return Promise.reject(new Error('Invalid address'))
-
-  try {
-    const networkConfig: any = getNetworkConfigById(walletNetworkId)
-    const configNetworkId = Number(networkConfig.CHAIN_NETWORK_ID)
-    const addressNetworkId = await address.networkId()
-    if (addressNetworkId !== configNetworkId && !isNaN(configNetworkId)) {
-      return Promise.reject(new Error('Invalid address'))
+    return {
+      firstHalf,
+      secondHalf,
     }
-  } catch (e) {
-    return Promise.reject(new Error('Should not happen'))
-  }
+  }, [address])
+  return (
+    <>
+      <Spacer height={4} />
+
+      <View style={styles.resolvedAddressContainer}>
+        <Text style={styles.resolvedAddressService} numberOfLines={1}>{`${Service[service ?? ''] ?? ''}`}</Text>
+
+        <Text style={styles.resolvedAddress} numberOfLines={1}>{`${firstHalf}...${secondHalf}`}</Text>
+      </View>
+    </>
+  )
 }
+
+const styles = StyleSheet.create({
+  resolvedAddressContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  resolvedAddressService: {
+    fontFamily: 'Rubik',
+    fontSize: 12,
+    fontWeight: '400',
+    color: '#4A5065',
+  },
+  resolvedAddress: {
+    fontFamily: 'Rubik',
+    fontSize: 12,
+    fontWeight: '400',
+    color: '#8A92A3',
+  },
+})

@@ -4,7 +4,7 @@ import {handleApiGetCryptoAddress} from './handle-api'
 import {unstoppableApiGetCryptoAddress} from './unstoppable-api'
 import {getCnsCryptoAddress} from './cns'
 
-enum DomainService {
+export enum DomainService {
   Cns = 'cns',
   Unstoppable = 'unstoppable',
   Handle = 'handle',
