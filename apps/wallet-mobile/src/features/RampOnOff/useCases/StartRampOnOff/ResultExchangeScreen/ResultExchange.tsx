@@ -31,7 +31,7 @@ const ResultExchangeScreen = () => {
 
   const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
   const params = route.params
-  const {coin, coinAmount, fiat, fiatAmount} = params
+  const {coin, coinAmount, fiat, fiatAmount} = params ?? {}
 
   const {openModal} = useModal()
 
@@ -63,13 +63,13 @@ const ResultExchangeScreen = () => {
         <Spacer height={16} />
 
         <ContentResult title={strings.ADAmountYouGet}>
-          <Text style={styles.contentValueText}>{`${coinAmount} ${coin}`}</Text>
+          <Text style={styles.contentValueText}>{`${coinAmount ?? 0} ${coin ?? ''}`}</Text>
         </ContentResult>
 
         <Spacer height={16} />
 
         <ContentResult title={strings.fiatAmountYouGet}>
-          <Text style={styles.contentValueText}>{`${fiatAmount} ${fiat}`}</Text>
+          <Text style={styles.contentValueText}>{`${fiatAmount ?? 0} ${fiat ?? ''}`}</Text>
         </ContentResult>
 
         <Spacer height={16} />
