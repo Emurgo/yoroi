@@ -12,7 +12,7 @@ type Props = {
   onClose: () => void
 }
 
-const SmaillBanner = (props: Props) => {
+const SmallBanner = (props: Props) => {
   const {onClose} = props
 
   const strings = useStrings()
@@ -55,7 +55,7 @@ const SmaillBanner = (props: Props) => {
   )
 }
 
-export default SmaillBanner
+export default SmallBanner
 
 const getStyles = (props: {theme: Theme}) => {
   const {theme} = props
