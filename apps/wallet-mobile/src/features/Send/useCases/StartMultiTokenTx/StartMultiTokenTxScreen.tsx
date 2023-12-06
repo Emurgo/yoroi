@@ -68,9 +68,11 @@ export const StartMultiTokenTxScreen = () => {
 
   const resolverEnabled = React.useMemo(
     () =>
-      // addressValidationError != null &&
-      succesfulResolvedAddresses.length === 0 && !isEmptyString(receiver) && isDomain(receiver),
-    [receiver, succesfulResolvedAddresses.length],
+      addressValidationError === null &&
+      succesfulResolvedAddresses.length === 0 &&
+      !isEmptyString(receiver) &&
+      isDomain(receiver),
+    [addressValidationError, receiver, succesfulResolvedAddresses.length],
   )
 
   const {isLoading: isResolutionLoading} = useResolverAddresses(
