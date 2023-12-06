@@ -4,6 +4,7 @@ import {StyleSheet, Text, View, ViewProps} from 'react-native'
 
 import {HelperText, Spacer} from '../../../../../components'
 import {isEmptyString} from '../../../../../utils'
+import {useStrings} from '../../../common/strings'
 import {InputReceiver} from './InputReceiver'
 
 export const Service = {
@@ -58,6 +59,7 @@ export const ResolveAddress = ({
 }
 
 const ResolvedAddress = ({address, service}: {address: string; service: string}) => {
+  const strings = useStrings()
   const {firstHalf, secondHalf} = React.useMemo(() => {
     const firstHalf = address.substring(0, 8)
     const secondHalf = address.substring(address.length - 8)
@@ -74,7 +76,10 @@ const ResolvedAddress = ({address, service}: {address: string; service: string})
       <View style={styles.resolvedAddressContainer}>
         <Text style={styles.resolvedAddressService} numberOfLines={1}>{`${Service[service ?? ''] ?? ''}`}</Text>
 
-        <Text style={styles.resolvedAddress} numberOfLines={1}>{`${firstHalf}...${secondHalf}`}</Text>
+        <Text
+          style={styles.resolvedAddress}
+          numberOfLines={1}
+        >{`${strings.resolvedAddress}: ${firstHalf}...${secondHalf}`}</Text>
       </View>
     </>
   )

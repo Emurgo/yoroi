@@ -47,6 +47,7 @@ export const useStrings = () => {
     ok: intl.formatMessage(globalMessages.ok),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
     receiver: intl.formatMessage(messages.receiver),
+    resolvedAddress: intl.formatMessage(messages.resolvedAddress),
     searchTokens: intl.formatMessage(messages.searchTokens),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     sendAllContinueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
@@ -266,5 +267,9 @@ export const messages = defineMessages({
   addressReaderQrText: {
     id: 'components.send.addressreaderqr.text',
     defaultMessage: '!!!Scan recipients QR code to add a wallet address',
+  },
+  resolvedAddress: {
+    id: 'components.send.sendscreen.resolvedAddress',
+    defaultMessage: '!!!Related Address',
   },
 })
