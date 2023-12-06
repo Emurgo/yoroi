@@ -1,16 +1,24 @@
-const resolverApiSuccess = {
-  getCryptoAddresses: () =>
+const getCardanoAddresses = {
+  success: () =>
     Promise.resolve([
       {address: 'unstoppableAddress', error: null, service: 'unstoppable'},
     ]),
+
+  error: () => Promise.resolve([{address: null, error: null, service: null}]),
 } as const
 
-const resolverApiError = {
-  getCryptoAddresses: () =>
-    Promise.resolve([{address: null, error: null, service: null}]),
+const getCryptoAddressesResponse = {
+  success: [
+    {address: 'unstoppableAddress', error: null, service: 'unstoppable'},
+  ],
+  error: [{address: null, error: 'any error', service: null}],
+}
+
+export const resolverApiMocks = {
+  getCardanoAddresses,
+  getCryptoAddressesResponse,
 } as const
 
 export const mockResolverApi = {
-  success: resolverApiSuccess,
-  error: resolverApiError,
+  getCardanoAddresses: getCardanoAddresses.success,
 } as const

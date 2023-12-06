@@ -11,13 +11,13 @@ describe('resolverModuleMaker', () => {
   it('creates a module with getCryptoAddress function', () => {
     const module = resolverModuleMaker(
       mockStorageMaker.success,
-      mockResolverApi.success,
+      mockResolverApi,
     )
 
-    expect(module).toHaveProperty('address.getCryptoAddresses')
-    expect(module).toHaveProperty('notice.read')
-    expect(module).toHaveProperty('notice.remove')
-    expect(module).toHaveProperty('notice.save')
-    expect(module).toHaveProperty('notice.key')
+    expect(module).toHaveProperty('crypto.getCardanoAddresses')
+    expect(module).toHaveProperty('showNotice.read')
+    expect(module).toHaveProperty('showNotice.remove')
+    expect(module).toHaveProperty('showNotice.save')
+    expect(module).toHaveProperty('showNotice.key')
   })
 })

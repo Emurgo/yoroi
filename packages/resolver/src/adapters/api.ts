@@ -55,6 +55,7 @@ export const resolverApiMaker = (
     apiConfig[DomainService.Unstoppable],
   )
 
+  // @ts-expect-error TODO: bugfix on TS 5.4 (readonly array of readonly array)
   const operationsGetCryptoAddress: GetCryptoAddressOperations = [
     [DomainService.Handle, getHandleCryptoAddress],
     [DomainService.Unstoppable, getUnstoppableCryptoAddress],
@@ -62,7 +63,7 @@ export const resolverApiMaker = (
   ] as const
 
   // facade to the different crypto address resolution
-  const getCryptoAddresses = async (
+  const getCardanoAddresses = async (
     receiverDomain: Resolver.Receiver['domain'],
     resolutionStrategy: Resolver.Strategy = 'all',
   ): Promise<Resolver.AddressesResponse> => {
@@ -73,7 +74,7 @@ export const resolverApiMaker = (
   }
 
   return {
-    getCryptoAddresses,
+    getCardanoAddresses,
   } as const
 }
 

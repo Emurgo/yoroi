@@ -15,44 +15,44 @@ describe('resolverStorageMaker', () => {
     resolverStorage = resolverStorageMaker()
   })
 
-  it('notice.save', async () => {
-    const notice = true
-    await resolverStorage.notice.save(notice)
+  it('showNotice.save', async () => {
+    const showNotice = true
+    await resolverStorage.showNotice.save(showNotice)
     expect(mockedAsyncStorage.setItem).toHaveBeenCalledWith(
       resolverStorageNoticedKey,
-      JSON.stringify(notice),
+      JSON.stringify(showNotice),
     )
   })
 
-  it('notice.read', async () => {
-    const notice = true
-    mockedAsyncStorage.getItem.mockResolvedValue(JSON.stringify(notice))
-    const result = await resolverStorage.notice.read()
-    expect(result).toEqual(notice)
+  it('showNotice.read', async () => {
+    const showNotice = true
+    mockedAsyncStorage.getItem.mockResolvedValue(JSON.stringify(showNotice))
+    const result = await resolverStorage.showNotice.read()
+    expect(result).toEqual(showNotice)
     expect(mockedAsyncStorage.getItem).toHaveBeenCalledWith(
       resolverStorageNoticedKey,
     )
   })
 
-  it('notice.read should fallback to false when wrong data', async () => {
+  it('showNotice.read should fallback to true when empty / invalid', async () => {
     mockedAsyncStorage.getItem.mockResolvedValue(
       JSON.stringify('not a boolean'),
     )
-    const result = await resolverStorage.notice.read()
-    expect(result).toEqual(false)
+    const result = await resolverStorage.showNotice.read()
+    expect(result).toEqual(true)
     expect(mockedAsyncStorage.getItem).toHaveBeenCalledWith(
       resolverStorageNoticedKey,
     )
     mockedAsyncStorage.getItem.mockResolvedValue('[1, 2, ]')
-    const result2 = await resolverStorage.notice.read()
-    expect(result2).toEqual(false)
+    const result2 = await resolverStorage.showNotice.read()
+    expect(result2).toEqual(true)
     expect(mockedAsyncStorage.getItem).toHaveBeenCalledWith(
       resolverStorageNoticedKey,
     )
   })
 
-  it('notice.remove', async () => {
-    await resolverStorage.notice.remove()
+  it('showNotice.remove', async () => {
+    await resolverStorage.showNotice.remove()
     expect(mockedAsyncStorage.removeItem).toHaveBeenCalledWith(
       resolverStorageNoticedKey,
     )

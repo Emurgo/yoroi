@@ -9,13 +9,13 @@ export function resolverStorageMaker(
 ): Readonly<Resolver.Storage> {
   const {storage} = deps
 
-  const notice: Readonly<Resolver.Storage['notice']> = {
-    save: (newNoticed) =>
-      storage.setItem(resolverStorageNoticedKey, JSON.stringify(newNoticed)),
+  const showNotice: Readonly<Resolver.Storage['showNotice']> = {
+    save: (newShowNotice) =>
+      storage.setItem(resolverStorageNoticedKey, JSON.stringify(newShowNotice)),
     read: () =>
       storage
         .getItem(resolverStorageNoticedKey)
-        .then((value) => parseBoolean(value) ?? false),
+        .then((value) => parseBoolean(value) ?? true),
     remove: () => storage.removeItem(resolverStorageNoticedKey),
     key: resolverStorageNoticedKey,
   } as const
@@ -25,9 +25,9 @@ export function resolverStorageMaker(
   }
 
   return {
-    notice,
+    showNotice,
     clear,
   } as const
 }
 
-export const resolverStorageNoticedKey = 'resolver-notice'
+export const resolverStorageNoticedKey = 'resolver-show-notice'

@@ -1,5 +1,5 @@
 export type ResolverStorage = {
-  notice: {
+  showNotice: {
     read(): Promise<boolean>
     remove(): Promise<void>
     save(noticed: boolean): Promise<void>

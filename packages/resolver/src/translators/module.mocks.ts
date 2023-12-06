@@ -1,19 +1,22 @@
 import {Resolver} from '@yoroi/types'
 
-import {mockResolverApi} from '../adapters/api.mocks'
+import {resolverApiMocks} from '../adapters/api.mocks'
 import {mockStorageMaker} from '../adapters/storage.mocks'
 
 const resolverModuleSuccess: Resolver.Module = {
-  address: mockResolverApi.success,
-  notice: mockStorageMaker.success.notice,
+  crypto: {getCardanoAddresses: resolverApiMocks.getCardanoAddresses.success},
+  showNotice: mockStorageMaker.success.showNotice,
 } as const
 
 const resolverModuleError: Resolver.Module = {
-  address: mockResolverApi.error,
-  notice: mockStorageMaker.error.notice,
+  crypto: {getCardanoAddresses: resolverApiMocks.getCardanoAddresses.error},
+  showNotice: mockStorageMaker.error.showNotice,
 } as const
 
-export const mockResolverModule = {
+export const resolverModuleMocks = {
   success: resolverModuleSuccess,
   error: resolverModuleError,
+
+  getCardanoAddresses: resolverApiMocks.getCardanoAddresses,
+  getCryptoAddressesResponse: resolverApiMocks.getCryptoAddressesResponse,
 } as const

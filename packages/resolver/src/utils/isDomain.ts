@@ -1,4 +1,5 @@
+import {isAdaHandleDomain} from '../adapters/handle-api'
+
 export const isDomain = (receiver: string): boolean => {
-  return /.+\..+/.test(receiver) || isHandle(receiver)
+  return /.+\..+/.test(receiver) || isAdaHandleDomain(receiver)
 }
-export const isHandle = (receiver: string): boolean => receiver.startsWith('$')

@@ -16,7 +16,7 @@ describe('resolverApiMaker', () => {
     jest.clearAllMocks()
   })
 
-  describe('getCryptoAddresses', () => {
+  describe('getCardanoAddresses', () => {
     describe('strategy "all"', () => {
       it('all resolved', async () => {
         const deps = {
@@ -38,7 +38,7 @@ describe('resolverApiMaker', () => {
         }
 
         const api = resolverApiMaker(mockApiConfig, deps)
-        const results = await api.getCryptoAddresses(domain)
+        const results = await api.getCardanoAddresses(domain)
 
         expect(results).toEqual([
           {address: 'handleAddress', error: null, service: 'handle'},
@@ -65,7 +65,7 @@ describe('resolverApiMaker', () => {
         }
 
         const api = resolverApiMaker(mockApiConfig, deps)
-        const results = await api.getCryptoAddresses(domain)
+        const results = await api.getCardanoAddresses(domain)
 
         expect(results).toEqual([
           {address: 'handleAddress', error: null, service: 'handle'},
@@ -94,7 +94,7 @@ describe('resolverApiMaker', () => {
         }
 
         const api = resolverApiMaker(mockApiConfig, deps)
-        const results = await api.getCryptoAddresses(domain, 'first')
+        const results = await api.getCardanoAddresses(domain, 'first')
 
         expect(results).toEqual([
           {address: 'handleAddress', error: null, service: 'handle'},
@@ -119,7 +119,7 @@ describe('resolverApiMaker', () => {
         }
 
         const api = resolverApiMaker(mockApiConfig, deps)
-        const results = await api.getCryptoAddresses(domain, 'first')
+        const results = await api.getCardanoAddresses(domain, 'first')
 
         expect(results).toEqual([
           {address: null, error: 'Not resolved', service: null},

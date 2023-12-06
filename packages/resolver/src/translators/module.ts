@@ -4,11 +4,11 @@ export const resolverModuleMaker = (
   resolverStorage: Resolver.Storage,
   resolverApi: Resolver.Api,
 ): Resolver.Module => {
-  const {notice} = resolverStorage
-  const {getCryptoAddresses} = resolverApi
+  const {showNotice} = resolverStorage
+  const {getCardanoAddresses} = resolverApi
 
   return {
-    address: {getCryptoAddresses},
-    notice,
+    crypto: {getCardanoAddresses},
+    showNotice,
   } as const
 }

@@ -1,40 +1,20 @@
-import * as React from 'react'
-import {QueryClient, QueryClientProvider} from 'react-query'
-import {renderHook, act} from '@testing-library/react-hooks'
-import {
-  ResolverAction,
-  ResolverProvider,
-  defaultResolverState,
-  resolverReducer,
-  useResolver,
-} from './ResolverProvider'
 import {Resolver} from '@yoroi/types'
+import {QueryClient} from 'react-query'
+import {renderHook, act} from '@testing-library/react-hooks'
 
-const fakeAddressResponse: Resolver.AddressResponse = {
-  address: 'fake-address',
-  error: null,
-  service: 'fake-service',
-}
-
-const fakeAddressesResponses: Resolver.AddressesResponse = [
-  {
-    address: 'fake-address',
-    error: null,
-    service: 'fake-service',
-  },
-]
+import {queryClientFixture} from '../../../fixtures/query-client'
+import {useResolver} from './ResolverProvider'
+import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 
 const resolverModuleMock: Resolver.Module = {
-  address: {
-    getCryptoAddress: jest.fn((_receiver: string) =>
-      Promise.resolve(fakeAddressesResponses),
-    ),
+  crypto: {
+    getCardanoAddresses: jest.fn(),
   },
-  notice: {
-    read: jest.fn(() => Promise.resolve(true)),
+  showNotice: {
+    read: jest.fn(),
     remove: jest.fn(),
     save: jest.fn(),
-    key: 'string',
+    key: 'show-notice-key',
   },
 }
 
@@ -43,119 +23,35 @@ describe('ResolverProvider', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    queryClient = new QueryClient({
-      defaultOptions: {
-        queries: {
-          retry: false,
-          cacheTime: 0,
-        },
-        mutations: {
-          retry: false,
-        },
-      },
-    })
+    queryClient = queryClientFixture()
   })
 
   afterEach(() => {
     queryClient.clear()
   })
 
-  it('saveResolverNoticeStatus', () => {
-    const wrapper = ({children}: any) => (
-      <QueryClientProvider client={queryClient}>
-        <ResolverProvider resolverModule={resolverModuleMock}>
-          {children}
-        </ResolverProvider>
-      </QueryClientProvider>
-    )
-
+  it('works', () => {
+    const wrapper = wrapperManagerFixture({
+      queryClient,
+      resolverModule: resolverModuleMock,
+    })
     const {result} = renderHook(() => useResolver(), {
       wrapper,
     })
-
-    expect(resolverModuleMock.notice.save).not.toHaveBeenCalled()
 
     act(() => {
-      result.current.saveResolverNoticeStatus(true)
+      result.current.showNotice.read()
+      result.current.showNotice.save(true)
+      result.current.showNotice.remove()
+      result.current.crypto.getCardanoAddresses('domain')
     })
 
-    expect(resolverModuleMock.notice.save).toHaveBeenCalledWith(true)
-  })
-
-  it('readResolverNoticeStatus', async () => {
-    const wrapper = ({children}: any) => (
-      <QueryClientProvider client={queryClient}>
-        <ResolverProvider resolverModule={resolverModuleMock}>
-          {children}
-        </ResolverProvider>
-      </QueryClientProvider>
+    expect(resolverModuleMock.showNotice.read).toHaveBeenCalled()
+    expect(resolverModuleMock.showNotice.save).toHaveBeenCalledWith(true)
+    expect(resolverModuleMock.showNotice.remove).toHaveBeenCalled()
+    expect(resolverModuleMock.crypto.getCardanoAddresses).toHaveBeenCalledWith(
+      'domain',
     )
-
-    const {result} = renderHook(() => useResolver(), {
-      wrapper,
-    })
-
-    expect(await result.current.readResolverNoticeStatus()).toBe(true)
-  })
-
-  it('getCryptoAddress', async () => {
-    const wrapper = ({children}: any) => (
-      <QueryClientProvider client={queryClient}>
-        <ResolverProvider resolverModule={resolverModuleMock}>
-          {children}
-        </ResolverProvider>
-      </QueryClientProvider>
-    )
-
-    const {result} = renderHook(() => useResolver(), {
-      wrapper,
-    })
-
-    expect(await result.current.getCryptoAddress('fake-receiver')).toEqual(
-      fakeAddressesResponses,
-    )
-  })
-
-  it('resolvedAddressSelectedChanged', async () => {
-    const wrapper = ({children}: any) => (
-      <QueryClientProvider client={queryClient}>
-        <ResolverProvider resolverModule={resolverModuleMock}>
-          {children}
-        </ResolverProvider>
-      </QueryClientProvider>
-    )
-
-    const {result} = renderHook(() => useResolver(), {
-      wrapper,
-    })
-
-    expect(result.current.resolvedAddressSelected).toBe(null)
-
-    act(() => {
-      return result.current.resolvedAddressSelectedChanged(fakeAddressResponse)
-    })
-
-    expect(result.current.resolvedAddressSelected).toEqual(fakeAddressResponse)
-  })
-})
-
-describe('resolverReducer', () => {
-  it('default state', () => {
-    const state = resolverReducer(defaultResolverState, {
-      type: 'FAKE_ACTION',
-    } as unknown as ResolverAction)
-
-    expect(state.resolvedAddressSelected).toBe(
-      defaultResolverState.resolvedAddressSelected,
-    )
-  })
-
-  it('resolvedAddressSelectedChanged', () => {
-    const state = resolverReducer(defaultResolverState, {
-      type: 'resolvedAddressSelectedChanged',
-      resolvedAddressSelected: fakeAddressResponse,
-    })
-
-    expect(state.resolvedAddressSelected).toEqual(fakeAddressResponse)
+    expect(result.current.showNotice.key).toBe('show-notice-key')
   })
 })
