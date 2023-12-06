@@ -68,9 +68,7 @@ const CreateExchange = () => {
   }
 
   return (
-    <SafeAreaView style={styles.root}>
-      <Spacer height={50} />
-      
+    <View style={styles.root}>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -113,7 +111,7 @@ const CreateExchange = () => {
           />
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   )
 }
 
