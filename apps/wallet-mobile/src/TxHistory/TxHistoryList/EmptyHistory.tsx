@@ -17,6 +17,8 @@ export const EmptyHistory = () => {
       <Spacer height={20} />
 
       <Text style={styles.emptyText}>{strings.noTransactions}</Text>
+
+      <Spacer height={20} />
     </View>
   )
 }
