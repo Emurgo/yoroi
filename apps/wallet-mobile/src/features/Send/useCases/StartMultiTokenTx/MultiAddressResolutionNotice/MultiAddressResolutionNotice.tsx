@@ -3,9 +3,7 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {Icon, Spacer} from '../../../../../components'
 
-export const MultiAddressResolutionNotice = ({isOpen}: {isOpen: boolean}) => {
-  if (!isOpen) return null
-
+export const MultiAddressResolutionNotice = () => {
   return (
     <View style={styles.notice}>
       <Icon.Info size={30} color="#ECBA09" />

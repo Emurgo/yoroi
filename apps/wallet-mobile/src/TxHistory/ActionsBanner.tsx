@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {banxaModuleMaker} from '@yoroi/banxa'
+import {useResolver} from '@yoroi/resolver'
 import {useSwap} from '@yoroi/swap'
 import React, {ReactNode} from 'react'
 import {useIntl} from 'react-intl'
@@ -28,6 +29,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {resetForm} = useSend()
   const {orderData} = useSwap()
   const {resetSwapForm} = useSwapForm()
+  const {resetState: resetResolverState} = useResolver()
   const {track} = useMetrics()
   const sellTokenInfo = useTokenInfo({
     wallet,
@@ -87,6 +89,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const handleOnSend = () => {
     navigateTo.send()
     resetForm()
+    resetResolverState()
   }
 
   const handleOnSwap = () => {
