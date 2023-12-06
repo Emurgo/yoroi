@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {Image, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {Image, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import image from '../../../assets/img/banner-buy-ada.png'
@@ -10,7 +10,12 @@ import {useTheme} from '../../../theme'
 import {Theme} from '../../../theme/types'
 import {useStrings} from '../TxHistoryList'
 
-const BigBanner = () => {
+type Props = {
+  onLayout: (event) => void 
+}
+
+const BigBanner = (props: Props) => {
+  const {onLayout} = props
   const {theme} = useTheme()
 
   const strings = useStrings()
@@ -22,7 +27,7 @@ const BigBanner = () => {
     navigateTo.exchange()
   }
   return (
-    <View style={styles.root}>
+    <View style={styles.root} onLayout={onLayout}>
       <LinearGradient
         style={styles.gradient}
         start={{x: 1, y: 1}}
