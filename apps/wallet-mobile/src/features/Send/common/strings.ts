@@ -48,6 +48,7 @@ export const useStrings = () => {
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
     receiver: intl.formatMessage(messages.receiver),
     resolvedAddress: intl.formatMessage(messages.resolvedAddress),
+    resolverNoticeTitle: intl.formatMessage(messages.resolverNoticeTitle),
     searchTokens: intl.formatMessage(messages.searchTokens),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     sendAllContinueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
@@ -271,5 +272,9 @@ export const messages = defineMessages({
   resolvedAddress: {
     id: 'components.send.sendscreen.resolvedAddress',
     defaultMessage: '!!!Related Address',
+  },
+  resolverNoticeTitle: {
+    id: 'components.send.sendscreen.resolverNoticeTitle',
+    defaultMessage: '!!!Yoroi Supports',
   },
 })

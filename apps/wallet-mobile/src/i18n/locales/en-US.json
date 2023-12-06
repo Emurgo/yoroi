@@ -315,6 +315,7 @@
   "components.send.listamountstosendscreen.title": "Assets added",
   "components.send.sendscreen.walletAddress": "Wallet Address",
   "components.send.sendscreen.resolvedAddress": "Related Address",
+  "components.send.sendscreen.resolverNoticeTitle": "Yoroi Supports",
   "components.send.sendscreen.addressInputErrorInvalidAddress": "Please enter a valid address",
   "components.send.sendscreen.addressInputErrorInvalidDomain": "Please enter a valid domain",
   "components.send.sendscreen.addressInputLabel": "Address",
