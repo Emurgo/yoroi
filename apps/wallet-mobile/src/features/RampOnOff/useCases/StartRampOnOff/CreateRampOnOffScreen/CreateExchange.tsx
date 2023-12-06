@@ -1,14 +1,7 @@
 import {banxaModuleMaker} from '@yoroi/banxa'
 import {BanxaReferralUrlQueryStringParams} from '@yoroi/banxa/lib/typescript/translators/module'
 import * as React from 'react'
-import {
-  KeyboardAvoidingView,
-  Linking,
-  Platform,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {KeyboardAvoidingView, Linking, Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
 import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../../../src/legacy/config'

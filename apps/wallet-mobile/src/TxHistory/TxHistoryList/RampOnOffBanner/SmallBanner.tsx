@@ -41,11 +41,11 @@ const SmallBanner = (props: Props) => {
           </TouchableOpacity>
         </View>
 
-        <Spacer width={16} />
+        <Spacer />
 
         <Text style={styles.text}>{strings.ourTrustedPartners}</Text>
 
-        <Spacer width={16} />
+        <Spacer />
 
         <TouchableOpacity onPress={handleExchange}>
           <Text style={styles.textButton}>{strings.buyADA.toUpperCase()}</Text>

@@ -93,7 +93,6 @@ export const AmountCard: React.FC<AmountCardProps> = ({
               <Spacer width={8} />
 
               <Text style={styles.coinName}>{name}</Text>
-
             </View>
 
             <Spacer width={8} />

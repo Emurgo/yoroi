@@ -3,7 +3,7 @@ import {isString} from '@yoroi/common'
 import {BalanceAmount} from '@yoroi/types/lib/balance/token'
 import BigNumber from 'bignumber.js'
 import _ from 'lodash'
-import React, {useRef, useState} from 'react'
+import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
 
@@ -135,7 +135,6 @@ const getTransactionsByDate = (transactions: Record<string, TransactionInfo>) =>
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
   },
   dayHeaderRoot: {
     paddingTop: 16,
