@@ -822,6 +822,10 @@
   "rampOnOff.resultRampOnOff.contact": "Contact",
   "rampOnOff.resultRampOnOff.and": "and",
   "rampOnOff.resultRampOnOff.customerSupport": "Yoroi Customer Support",
-  "rampOnOff.resultRampOnOff.significant": "if you witnessed any significant transaction delays or errors."
+  "rampOnOff.resultRampOnOff.significant": "if you witnessed any significant transaction delays or errors.",
+  "rampOnOff.rampOnOffScreen.getFirstAda": "Welcome to Yoroi 👋️ Get your first ADA fast & easy",
+  "rampOnOff.rampOnOffScreen.needMoreAda": "Need more ADA for staking or swap?",
+  "rampOnOff.rampOnOffScreen.ourTrustedPartners": "Top up your wallet safely using our trusted partners"
+
 
 }
