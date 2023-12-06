@@ -126,6 +126,15 @@ export const DeveloperScreen = () => {
         />
 
         <Button
+          title="Reset Send Initial Resolver Notice"
+          style={styles.button}
+          onPress={() => {
+            storage.remove('resolver-notice"')
+          }}
+          testID="btnResetIntialResolverNotice"
+        />
+
+        <Button
           disabled={isLoading}
           style={styles.button}
           onPress={() =>
