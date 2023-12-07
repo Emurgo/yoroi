@@ -211,5 +211,5 @@ export const Icon = {
   SpectrumSwap,
   Danger,
   Share,
-  Close
+  Close,
 }

@@ -1,10 +1,10 @@
 import {useNavigation} from '@react-navigation/native'
 import {useRef} from 'react'
 
-import {RampOnOffRouteseNavigation} from '../../../navigation'
+import {RampOnOffRoutesNavigation} from '../../../navigation'
 
 export const useNavigateTo = () => {
-  const navigation = useNavigation<RampOnOffRouteseNavigation>()
+  const navigation = useNavigation<RampOnOffRoutesNavigation>()
 
   return useRef({
     rampOnOffOpenOrder: () =>

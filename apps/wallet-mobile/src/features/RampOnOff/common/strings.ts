@@ -15,7 +15,7 @@ export const useStrings = () => {
     provider: intl.formatMessage(messages.provider),
     banxa: intl.formatMessage(messages.banxa),
     title: intl.formatMessage(messages.title),
-    notEnoughtBalance: intl.formatMessage(messages.notEnoughtBalance),
+    notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
     congrats: intl.formatMessage(messages.congrats),
     ADAmountYouGet: intl.formatMessage(messages.ADAmountYouGet),
     fiatAmountYouGet: intl.formatMessage(messages.fiatAmountYouGet),
@@ -76,7 +76,7 @@ export const messages = defineMessages({
     id: 'global.buyTitle',
     defaultMessage: '!!!Exchange ADA',
   },
-  notEnoughtBalance: {
+  notEnoughBalance: {
     id: 'swap.swapScreen.notEnoughBalance',
     defaultMessage: '!!!Not Enough Balannce',
   },
