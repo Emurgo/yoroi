@@ -314,7 +314,7 @@ export const OpenOrders = () => {
               >
                 <MainInfo
                   tokenAmount={`${order.tokenAmount} ${order.assetToLabel}`}
-                  tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
+                  tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}/${order.assetToLabel}`}
                   date={
                     isNaN(date.getTime())
                       ? ''
