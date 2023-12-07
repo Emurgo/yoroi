@@ -34,7 +34,7 @@ export const RampOnOffProvider = ({
   const amountTokenInfo = useTokenInfo({wallet, tokenId: ''})
 
   const balances = useBalances(wallet)
-  const amountbalance = Amounts.getAmount(balances, '').quantity
+  const amountBalance = Amounts.getAmount(balances, '').quantity
 
   const strings = useStrings()
 
@@ -63,18 +63,18 @@ export const RampOnOffProvider = ({
     [amountTokenInfo.decimals, numberLocale, actions, state.amount.error, clearErrors],
   )
 
-  const isNotEnoughBalance = new BigNumber(state.amount.value).isGreaterThan(new BigNumber(amountbalance))
+  const isNotEnoughBalance = new BigNumber(state.amount.value).isGreaterThan(new BigNumber(amountBalance))
 
   // amount input errors
   React.useEffect(() => {
     // no enough balance error
     if (isNotEnoughBalance && state.amount.isTouched && state.actionType === actionRamp.sellAda) {
-      actions.amountErrorChanged(strings.notEnoughtBalance)
+      actions.amountErrorChanged(strings.notEnoughBalance)
       return
     }
 
     if (
-      (!Quantities.isZero(amountbalance) && !isNotEnoughBalance && state.amount.isTouched) ||
+      (!Quantities.isZero(amountBalance) && !isNotEnoughBalance && state.amount.isTouched) ||
       state.actionType === actionRamp.buyAda
     ) {
       clearErrors()
@@ -83,11 +83,11 @@ export const RampOnOffProvider = ({
   }, [
     actions,
     state.amount.displayValue,
-    amountbalance,
+    amountBalance,
     isNotEnoughBalance,
     state.amount.isTouched,
     state.actionType,
-    strings.notEnoughtBalance,
+    strings.notEnoughBalance,
     clearErrors,
   ])
 
