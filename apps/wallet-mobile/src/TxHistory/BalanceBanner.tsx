@@ -64,7 +64,7 @@ const Row = ({children}: {children: React.ReactNode}) => <View style={styles.cen
 
 const styles = StyleSheet.create({
   banner: {
-    backgroundColor: COLORS.BACKGROUND_GRAY,
+    // backgroundColor: COLORS.BACKGROUND_GRAY,
   },
   walletIcon: {
     height: 40,

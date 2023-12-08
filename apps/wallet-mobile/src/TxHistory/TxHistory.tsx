@@ -2,6 +2,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {LayoutAnimation, StyleSheet, TouchableOpacity, View} from 'react-native'
+import Animated from 'react-native-reanimated'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
 import {Boundary, ResetErrorRef, Spacer, StatusBar, Text} from '../components'
@@ -16,6 +17,7 @@ import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
 import {LockedDeposit} from './LockedDeposit'
 import {TxHistoryList} from './TxHistoryList'
+import {useAnimatedTxHistory} from './useAnimatedTxHistory'
 import {useOnScroll} from './useOnScroll'
 import {WarningBanner} from './WarningBanner'
 
@@ -28,6 +30,9 @@ export const TxHistory = () => {
   const [showWarning, setShowWarning] = useState(isByron(wallet.walletImplementationId))
 
   const [activeTab, setActiveTab] = useState<Tab>('transactions')
+
+  const {translateStyles} = useAnimatedTxHistory()
+
   const onSelectTab = (tab: Tab) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setActiveTab(tab)
@@ -51,14 +56,14 @@ export const TxHistory = () => {
     <View style={styles.scrollView}>
       <StatusBar type="dark" />
 
-      <View style={styles.container}>
+      <Animated.View style={[styles.container, translateStyles]}>
         <CollapsibleHeader expanded={expanded}>
           <BalanceBanner ref={resetErrorRef} />
 
           <ActionsBanner disabled={isLoading} />
         </CollapsibleHeader>
 
-        <Tabs>
+        <Tabs expanded={expanded}>
           <Tab
             onPress={() => {
               setExpanded(true)
@@ -111,12 +116,14 @@ export const TxHistory = () => {
             </Boundary>
           </TabPanel>
         </TabPanels>
-      </View>
+      </Animated.View>
     </View>
   )
 }
 
-const Tabs = ({children}: {children: React.ReactNode}) => <View style={styles.tabs}>{children}</View>
+const Tabs = ({children, expanded}: {children: React.ReactNode; expanded: boolean}) => (
+  <View style={[styles.tabs, !expanded && styles.borderRadiusNone]}>{children}</View>
+)
 const Tab = ({
   onPress,
   active,
@@ -164,7 +171,8 @@ const warningBannerMessages = defineMessages({
 const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
-    backgroundColor: COLORS.BACKGROUND_GRAY,
+    // backgroundColor: COLORS.BACKGROUND_GRAY,
+    backgroundColor: '#E1EAF6',
   },
   container: {
     flexDirection: 'column',
@@ -179,8 +187,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  borderRadiusNone: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+  },
   tabs: {
     flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
   },
   tab: {
     alignItems: 'center',

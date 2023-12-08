@@ -15,7 +15,7 @@ import {COLORS} from '../theme'
 import {useTokenInfo} from '../yoroi-wallets/hooks'
 
 const ACTION_PROPS = {
-  size: 32,
+  size: 24,
   color: COLORS.WHITE,
 }
 
@@ -70,35 +70,30 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             <View style={styles.centralized}>
               <TouchableOpacity
                 style={styles.actionIcon}
-                onPress={handleOnSend}
-                testID="sendButton"
+                onPress={navigateTo.receive}
+                testID="receiveButton"
                 disabled={disabled}
               >
-                <Icon.Send {...ACTION_PROPS} />
+                <Icon.Received {...ACTION_PROPS} />
               </TouchableOpacity>
 
-              <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
+              <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
             </View>
           )}
 
-          {!wallet.isReadOnly && <Spacer width={32} />}
+          {!wallet.isReadOnly && <Spacer width={18} />}
 
           <View style={styles.centralized}>
-            <TouchableOpacity
-              style={styles.actionIcon}
-              onPress={navigateTo.receive}
-              testID="receiveButton"
-              disabled={disabled}
-            >
-              <Icon.Received {...ACTION_PROPS} />
+            <TouchableOpacity style={styles.actionIcon} onPress={handleOnSend} testID="sendButton" disabled={disabled}>
+              <Icon.Send {...ACTION_PROPS} />
             </TouchableOpacity>
 
-            <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
+            <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
           </View>
 
           {!wallet.isReadOnly && (
             <>
-              <Spacer width={32} />
+              <Spacer width={18} />
 
               <View style={styles.centralized}>
                 <TouchableOpacity
@@ -107,13 +102,13 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
                   testID="swapButton"
                   disabled={disabled}
                 >
-                  <Icon.Swap color={ACTION_PROPS.color} />
+                  <Icon.Swap {...ACTION_PROPS} />
                 </TouchableOpacity>
 
                 <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
               </View>
 
-              <Spacer width={32} />
+              <Spacer width={18} />
 
               <View style={styles.centralized}>
                 <TouchableOpacity
@@ -139,7 +134,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
 const styles = StyleSheet.create({
   banner: {
-    backgroundColor: COLORS.BACKGROUND_GRAY,
+    // backgroundColor: COLORS.BACKGROUND_GRAY,
   },
   centralized: {
     alignItems: 'center',
@@ -152,10 +147,10 @@ const styles = StyleSheet.create({
   actionIcon: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 42,
-    width: 42,
-    borderRadius: 20,
-    backgroundColor: '#3154CB',
+    height: 56,
+    width: 56,
+    borderRadius: 28,
+    backgroundColor: '#4B6DDE',
   },
   actionLabel: {
     paddingTop: 8,
