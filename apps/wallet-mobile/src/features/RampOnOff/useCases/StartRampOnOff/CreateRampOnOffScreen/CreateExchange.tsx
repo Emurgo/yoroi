@@ -3,7 +3,6 @@ import {BanxaReferralUrlQueryStringParams} from '@yoroi/banxa/lib/typescript/tra
 import * as React from 'react'
 import {KeyboardAvoidingView, Linking, Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import Animated from 'react-native-reanimated'
 
 import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../../../src/legacy/config'
 import env from '../../../../../../src/legacy/env'
@@ -14,7 +13,6 @@ import {useTheme} from '../../../../../theme'
 import {useNavigateTo} from '../../../common/navigation'
 import {useRampOnOff} from '../../../common/RampOnOffProvider'
 import {useStrings} from '../../../common/strings'
-import {useAnimatedCreateExchange} from '../../../common/useAnimatedCreateExchange'
 import Disclaimer from './Disclaimer'
 import EditAmount from './EditAmount/EditAmount'
 import ProviderFee from './ProviderFee/ProviderFee'
@@ -26,7 +24,6 @@ const BOTTOM_ACTION_SECTION = 180
 const CreateExchange = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
 
-  const {translateStyles} = useAnimatedCreateExchange()
   const navigateTo = useNavigateTo()
   const {actionType, amount, canExchange} = useRampOnOff()
 
@@ -63,7 +60,7 @@ const CreateExchange = () => {
   }
 
   return (
-    <Animated.View style={[styles.root, translateStyles]}>
+    <View style={styles.root}>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -106,7 +103,7 @@ const CreateExchange = () => {
           />
         </View>
       </KeyboardAvoidingView>
-    </Animated.View>
+    </View>
   )
 }
 
@@ -118,7 +115,6 @@ const getStyles = (props: {theme: Theme}) => {
     root: {
       flex: 1,
       backgroundColor: theme.color['white-static'],
-      transform: [{translateY: -100}],
     },
     flex: {
       flex: 1,
