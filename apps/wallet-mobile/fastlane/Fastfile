@@ -23,14 +23,16 @@ platform :ios do
     environment = lane_context[SharedValues::ENVIRONMENT]
     scheme = environment == "nightly" ? "nightly" : "yoroi"
 
-    create_keychain(
-      name: ENV["CI_KEYCHAIN_NAME"],
-      password: ENV["CI_KEYCHAIN_PASSWORD"],
-      default_keychain: true,
-      unlock: true,
-      timeout: 3600,
-      lock_when_sleeps: false
-    )
+    if is_ci
+      create_keychain(
+        name: ENV["CI_KEYCHAIN_NAME"],
+        password: ENV["CI_KEYCHAIN_PASSWORD"],
+        default_keychain: true,
+        unlock: true,
+        timeout: 3600,
+        lock_when_sleeps: false
+      )
+    end
 
     api_key = app_store_connect_api_key(
       key_id: ENV["APP_STORE_KEY_ID"],
@@ -43,7 +45,10 @@ platform :ios do
     match(app_identifier: ENV["APP_STORE_BUNDLE_ID"], type: "appstore", api_key: api_key, keychain_name: ENV["CI_KEYCHAIN_NAME"], keychain_password: ENV["CI_KEYCHAIN_PASSWORD"])
 
     set_version_ios
-    bump_build_ios
+
+    if is_ci
+      bump_build_ios
+    end
 
     update_code_signing_settings(
       use_automatic_signing: false,
@@ -102,8 +107,11 @@ platform :android do
 
     gradle(task: "clean", project_dir: 'android/')
 
-    bump_build_android
     set_version_android
+
+    if is_ci
+      bump_build_android
+    end
 
     gradle(
       task: "assemble" + build_type,
