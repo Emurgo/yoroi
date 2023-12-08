@@ -1,6 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import {useNavigation} from '@react-navigation/native'
+import React from 'react'
+import {useAnimatedStyle, useSharedValue, withSpring} from 'react-native-reanimated'
 
 const initialTranslateYOffset = -2000
 const animatedConfig = {
@@ -22,7 +22,7 @@ const useAnimatedTxHistory = () => {
 
   React.useLayoutEffect(() => {
     translateYOffset.value = withSpring(0, animatedConfig)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   React.useEffect(() => {
@@ -42,6 +42,6 @@ const useAnimatedTxHistory = () => {
   }, [navigation, translateYOffset])
 
   return {translateStyles}
-};
+}
 
-export {useAnimatedTxHistory};
+export {useAnimatedTxHistory}
