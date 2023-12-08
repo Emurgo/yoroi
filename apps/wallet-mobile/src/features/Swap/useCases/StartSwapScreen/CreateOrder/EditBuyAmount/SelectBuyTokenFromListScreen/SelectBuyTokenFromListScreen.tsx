@@ -79,6 +79,7 @@ const TokenList = () => {
   const [filteredTokenList, someInWallet] = React.useMemo(() => {
     const list = tokenInfos.filter(filterBySearch(assetSearchTerm)).sort((a, b) => sortTokensByName(a, b, wallet))
     const set = new Set(list.map(({id}) => id))
+    set.delete(wallet.primaryTokenInfo.id)
     const someInWallet = walletTokenIds.some((id) => set.has(id))
     return [list, someInWallet]
   }, [tokenInfos, assetSearchTerm, walletTokenIds, wallet])

@@ -59,8 +59,9 @@ export const StartMultiTokenTxScreen = () => {
     <View style={styles.container}>
       <KeyboardAvoidingView
         style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={86}
+        enabled={Platform.OS === 'ios'}
       >
         <ScrollView style={styles.flex} bounces={false}>
           <ShowErrors />
