@@ -15,5 +15,5 @@ export * from './utils/isResolvableDomain'
 export const mocksResolver = {
   storage: mockStorageMaker,
   api: mockResolverApi,
-  module: resolverManagerMocks.success,
+  manager: resolverManagerMocks.success,
 } as const

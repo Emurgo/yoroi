@@ -19,7 +19,7 @@ export const ResolverProvider = ({
   children: React.ReactNode
   resolverManager: Resolver.Manager
 }) => {
-  const context = React.useMemo(() => ({...resolverManager}), [resolver])
+  const context = React.useMemo(() => ({...resolverManager}), [resolverManager])
 
   return (
     <ResolverContext.Provider value={context}>

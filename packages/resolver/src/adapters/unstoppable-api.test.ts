@@ -41,7 +41,7 @@ describe('getCryptoAddress', () => {
     expect(result).toBe(mockAddress)
   })
 
-  it('should throw invalid domain if the domain provided is not a valid unstoppable domain (doesnt have . or unsupported TLD)', async () => {
+  it('should throw invalid domain if the domain provided is not a valid unstoppable domain (doesnt contain .)', async () => {
     const domain = 'not-a-valid-domain'
     const expectedUrl = `${unstoppableApiConfig.mainnet.getCryptoAddress}${domain}`
 
@@ -57,6 +57,32 @@ describe('getCryptoAddress', () => {
 
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
       Resolver.Errors.InvalidDomain,
+    )
+    expect(mockFetchData).not.toHaveBeenCalledWith({
+      headers: {
+        'Content-Type': 'application/json',
+        'Bearer': mockOptions.apiKey,
+      },
+      url: expectedUrl,
+    })
+  })
+
+  it('should throw unsupported tlds', async () => {
+    const domain = 'ud.what'
+    const expectedUrl = `${unstoppableApiConfig.mainnet.getCryptoAddress}${domain}`
+
+    const mockFetchDataResponse: Right<UnstoppableApiGetCryptoAddressResponse> =
+      {
+        tag: 'right',
+        value: mockApiResponse,
+      }
+    const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
+    const getCryptoAddress = unstoppableApiGetCryptoAddress(mockOptions, {
+      request: mockFetchData,
+    })
+
+    await expect(() => getCryptoAddress(domain)).rejects.toThrow(
+      Resolver.Errors.UnsupportedTld,
     )
     expect(mockFetchData).not.toHaveBeenCalledWith({
       headers: {
