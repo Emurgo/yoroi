@@ -39,6 +39,7 @@ export const useStrings = () => {
     noAssets: intl.formatMessage(messages.noAssets),
     noAssetsAddedYet: (fungible) => intl.formatMessage(messages.noAssetsAddedYet, {fungible}),
     noBalance: intl.formatMessage(amountInputErrorMessages.insufficientBalance),
+    ok: intl.formatMessage(globalMessages.ok),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
     resolvesTo: intl.formatMessage(messages.resolvesTo),
     searchTokens: intl.formatMessage(messages.searchTokens),

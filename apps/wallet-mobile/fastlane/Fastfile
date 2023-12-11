@@ -23,7 +23,16 @@ platform :ios do
     environment = lane_context[SharedValues::ENVIRONMENT]
     scheme = environment == "nightly" ? "nightly" : "yoroi"
 
-    match(app_identifier: ENV["APP_STORE_BUNDLE_ID"], type: "appstore")
+    if is_ci
+      create_keychain(
+        name: ENV["CI_KEYCHAIN_NAME"],
+        password: ENV["CI_KEYCHAIN_PASSWORD"],
+        default_keychain: true,
+        unlock: true,
+        timeout: 3600,
+        lock_when_sleeps: false
+      )
+    end
 
     api_key = app_store_connect_api_key(
       key_id: ENV["APP_STORE_KEY_ID"],
@@ -32,7 +41,23 @@ platform :ios do
       duration: 1200, 
       in_house: false
     )
-    
+
+    match(app_identifier: ENV["APP_STORE_BUNDLE_ID"], type: "appstore", api_key: api_key, keychain_name: ENV["CI_KEYCHAIN_NAME"], keychain_password: ENV["CI_KEYCHAIN_PASSWORD"])
+
+    set_version_ios
+
+    if is_ci
+      bump_build_ios
+    end
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: XC_PROJECT,
+      code_sign_identity: "iPhone Distribution",
+      bundle_identifier: ENV["APP_STORE_BUNDLE_ID"],
+      profile_name: "match AppStore #{ENV["APP_STORE_BUNDLE_ID"]}"
+    )
+
     begin
       gym(
         scheme: scheme, 
@@ -44,18 +69,23 @@ platform :ios do
         xcargs: `-UseNewBuildSystem=YES`,
         output_directory: "./ios",
         output_name: "yoroi.ipa",
+        sdk: "iphoneos",
         export_options: {
           method: "app-store",
-          signingStyle: "automatic"
+          signingStyle: "manual",
+          provisioningProfiles: {
+              ENV["APP_STORE_BUNDLE_ID"] => "match AppStore #{ENV["APP_STORE_BUNDLE_ID"]}"
+          }
         },
       )
     rescue => e
-      xcode_log_path = '~/Library/Logs/gym/yoroi-yoroi.log'
+      xcode_log_path = "~/Library/Logs/gym/#{scheme}-#{scheme}.log"
       p "iOS build failed -> #{xcode_log_path}"
       sh "cat #{xcode_log_path}"
 
       raise 'iOS build failed.'
     end
+    enable_automatic_code_signing(path: XC_PROJECT)
 
     if ENV['DRY_RUN'] == 'true'
       UI.message("DRY RUN: Skipping upload to App Store")
@@ -76,6 +106,12 @@ platform :android do
     build_type = environment == "nightly" ? "Nightly" : "Production"
 
     gradle(task: "clean", project_dir: 'android/')
+
+    set_version_android
+
+    if is_ci
+      bump_build_android
+    end
 
     gradle(
       task: "assemble" + build_type,

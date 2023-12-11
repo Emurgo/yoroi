@@ -188,6 +188,7 @@ export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tok
       <MainInfo
         tokenPrice={marketPrice}
         sellLabel={sellLabel}
+        buyLabel={buyLabel}
         tokenAmount={`${sellQuantity} ${sellLabel}`}
         txTimeCreated={intl.formatDate(new Date(order.date), {
           dateStyle: 'short',
@@ -284,16 +285,18 @@ const MainInfo = ({
   tokenPrice,
   tokenAmount,
   sellLabel,
+  buyLabel,
   txTimeCreated,
 }: {
   tokenPrice: string
   sellLabel: string
+  buyLabel: string
   tokenAmount: string
   txTimeCreated: string
 }) => {
   const strings = useStrings()
   const orderInfo = [
-    {label: strings.listOrdersSheetAssetPrice, value: `${tokenPrice} ${sellLabel}`},
+    {label: strings.listOrdersSheetAssetPrice, value: `${tokenPrice} ${sellLabel}/${buyLabel}`},
     {label: strings.listOrdersSheetAssetAmount, value: tokenAmount},
     {label: strings.listOrdersTimeCompleted, value: txTimeCreated},
   ]

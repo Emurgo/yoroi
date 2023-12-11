@@ -1,10 +1,11 @@
-import {useFocusEffect} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/core'
+import {NavigationState, useFocusEffect} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import {isString} from '@yoroi/common'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
-import React from 'react'
+import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
@@ -62,6 +63,7 @@ export const OpenOrders = () => {
     () => mapOpenOrders(orders, tokenInfos, numberLocale, Object.values(transactionsInfos)),
     [orders, tokenInfos, numberLocale, transactionsInfos],
   )
+  const navigationRef = useRef<NavigationState | null>(null)
 
   const {closeModal, openModal} = useModal()
 
@@ -81,11 +83,19 @@ export const OpenOrders = () => {
 
   const {track} = useMetrics()
 
-  useFocusEffect(
-    React.useCallback(() => {
-      track.swapConfirmedPageViewed({swap_tab: 'Open Orders'})
-    }, [track]),
-  )
+  const navigation = useNavigation()
+
+  const trackSwapConfirmPageViewed = React.useCallback(() => {
+    // Closing a modal triggers this callback.
+    // https://github.com/Emurgo/yoroi/pull/2913
+    const currentState = navigation.getState()
+    const previousState = navigationRef.current
+    if (currentState === previousState) return
+    track.swapConfirmedPageViewed({swap_tab: 'Open Orders'})
+    navigationRef.current = currentState
+  }, [track, navigation])
+
+  useFocusEffect(trackSwapConfirmPageViewed)
 
   const trackCancellationSubmitted = (order: MappedOpenOrder) => {
     track.swapCancelationSubmitted({
@@ -118,7 +128,8 @@ export const OpenOrders = () => {
     navigateToTxHistory()
   }
 
-  const onRawTxHwConfirm = () => {
+  const onRawTxHwConfirm = (order: MappedOpenOrder) => {
+    trackCancellationSubmitted(order)
     closeModal()
     navigateToTxHistory()
   }
@@ -152,7 +163,7 @@ export const OpenOrders = () => {
         bech32Address={order.owner}
         onCancel={closeModal}
         onConfirm={(rootKey) => onRawTxConfirm(rootKey, order)}
-        onHWConfirm={() => onRawTxHwConfirm()}
+        onHWConfirm={() => onRawTxHwConfirm(order)}
       />,
       400,
     )
@@ -238,7 +249,7 @@ export const OpenOrders = () => {
           assetFromLabel={assetFromLabel}
           assetToLabel={assetToLabel}
           assetAmount={`${tokenAmount} ${assetToLabel}`}
-          assetPrice={`${tokenPrice} ${assetFromLabel}`}
+          assetPrice={`${tokenPrice} ${assetFromLabel}/${assetToLabel}`}
           totalReturned={totalReturned}
           fee={fee}
         />,
@@ -266,6 +277,7 @@ export const OpenOrders = () => {
             const liquidityPoolIcon =
               order.provider !== undefined ? <PoolIcon size={28} providerId={order.provider} /> : null
             const expanded = order.id === hiddenInfoOpenId
+            const date = new Date(order.date)
             return (
               <ExpandableInfoCard
                 key={order.id}
@@ -302,12 +314,16 @@ export const OpenOrders = () => {
               >
                 <MainInfo
                   tokenAmount={`${order.tokenAmount} ${order.assetToLabel}`}
-                  tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}`}
-                  date={intl.formatDate(new Date(order.date), {
-                    dateStyle: 'short',
-                    timeStyle: 'medium',
-                    hour12: false,
-                  })}
+                  tokenPrice={`${order.tokenPrice} ${order.assetFromLabel}/${order.assetToLabel}`}
+                  date={
+                    isNaN(date.getTime())
+                      ? ''
+                      : intl.formatDate(date, {
+                          dateStyle: 'short',
+                          timeStyle: 'medium',
+                          hour12: false,
+                        })
+                  }
                 />
               </ExpandableInfoCard>
             )
@@ -428,9 +444,11 @@ const MainInfo = ({tokenPrice, tokenAmount, date}: {tokenPrice: string; tokenAmo
   ]
   return (
     <View>
-      {orderInfo.map((item, index) => (
-        <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === orderInfo.length - 1} />
-      ))}
+      {orderInfo.map((item, index) =>
+        item.value === '' ? null : (
+          <MainInfoWrapper key={index} label={item.label} value={item.value} isLast={index === orderInfo.length - 1} />
+        ),
+      )}
     </View>
   )
 }

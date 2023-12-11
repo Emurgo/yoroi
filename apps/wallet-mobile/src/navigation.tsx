@@ -5,6 +5,7 @@ import React from 'react'
 import {Dimensions, Platform, TouchableOpacity} from 'react-native'
 
 import {Icon} from './components'
+import {ScanFeature} from './features/Scan/common/types'
 import {COLORS} from './theme'
 import {HWDeviceInfo} from './yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
@@ -190,15 +191,28 @@ export type TxHistoryRoutes = {
   }
   receive: undefined
   'send-start-tx': undefined
-  'send-read-qr-code': undefined
   'send-confirm-tx': undefined
   'send-submitted-tx': {txId: string}
   'send-failed-tx': undefined
   'send-list-amounts-to-send': undefined
   'send-edit-amount': undefined
   'send-select-token-from-list': undefined
-} & SwapTokenRoutes
+} & SwapTokenRoutes &
+  ScanRoutes &
+  ClaimRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
+
+type ScanStartParams = Readonly<{
+  insideFeature: ScanFeature
+}>
+export type ScanRoutes = {
+  'scan-start': ScanStartParams
+  'scan-claim-confirm-summary': undefined
+  'scan-show-camera-permission-denied': undefined
+}
+export type ClaimRoutes = {
+  'claim-show-success': undefined
+}
 
 export type SwapTokenRoutes = {
   'swap-start-swap': undefined
@@ -354,118 +368,110 @@ export const useBlockGoBack = () => {
 export const useWalletNavigation = () => {
   const navigation = useNavigation()
 
-  const resetToTxHistory = () => {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: 'app-root',
-          state: {
-            routes: [
-              {name: 'wallet-selection'},
-              {
-                name: 'main-wallet-routes',
-                state: {
-                  routes: [
-                    {
-                      name: 'history',
-                      state: {
-                        routes: [{name: 'history-list'}],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      ],
-    })
-  }
-
-  const resetToWalletSelection = () => {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: 'app-root',
-          state: {
-            routes: [{name: 'wallet-selection'}],
-          },
-        },
-      ],
-    })
-  }
-
-  const navigateToSettings = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'main-settings',
-      },
-    })
-  }
-
-  const navigateToTxHistory = () => {
-    navigation.navigate('app-root', {
-      screen: 'main-wallet-routes',
-      params: {
-        screen: 'history',
-        params: {
-          screen: 'history-list',
-        },
-      },
-    })
-  }
-
-  const navigateToNftGallery = () => {
-    navigation.navigate('app-root', {
-      screen: 'main-wallet-routes',
-      params: {
-        screen: 'nfts',
-        params: {
-          screen: 'nft-gallery',
-        },
-      },
-    })
-  }
-
-  const navigateToAppSettings = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'app-settings',
-      },
-    })
-  }
-
-  const navigateToCollateralSettings = () => {
-    navigation.navigate('app-root', {
-      screen: 'settings',
-      params: {
-        screen: 'manage-collateral',
-      },
-    })
-  }
-
-  const navigateToAnalyticsSettings = () => {
-    navigation.navigate('app-root', {
-      screen: 'toggle-analytics-settings',
-      params: {
-        screen: 'settings',
-      },
-    })
-  }
-
-  return {
+  return React.useRef({
     navigation,
-    resetToTxHistory,
-    resetToWalletSelection,
-    navigateToSettings,
-    navigateToTxHistory,
-    navigateToNftGallery,
-    navigateToAppSettings,
-    navigateToAnalyticsSettings,
-    navigateToCollateralSettings,
-  }
+
+    resetToTxHistory: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [
+                {name: 'wallet-selection'},
+                {
+                  name: 'main-wallet-routes',
+                  state: {
+                    routes: [
+                      {
+                        name: 'history',
+                        state: {
+                          routes: [{name: 'history-list'}],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      })
+    },
+
+    resetToWalletSelection: () => {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'app-root',
+            state: {
+              routes: [{name: 'wallet-selection'}],
+            },
+          },
+        ],
+      })
+    },
+
+    navigateToSettings: () => {
+      navigation.navigate('app-root', {
+        screen: 'settings',
+        params: {
+          screen: 'main-settings',
+        },
+      })
+    },
+
+    navigateToTxHistory: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'history',
+          params: {
+            screen: 'history-list',
+          },
+        },
+      })
+    },
+
+    navigateToNftGallery: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'nfts',
+          params: {
+            screen: 'nft-gallery',
+          },
+        },
+      })
+    },
+
+    navigateToAppSettings: () => {
+      navigation.navigate('app-root', {
+        screen: 'settings',
+        params: {
+          screen: 'app-settings',
+        },
+      })
+    },
+
+    navigateToCollateralSettings: () => {
+      navigation.navigate('app-root', {
+        screen: 'settings',
+        params: {
+          screen: 'manage-collateral',
+        },
+      })
+    },
+
+    navigateToAnalyticsSettings: () => {
+      navigation.navigate('app-root', {
+        screen: 'toggle-analytics-settings',
+        params: {
+          screen: 'settings',
+        },
+      })
+    },
+  } as const).current
 }
