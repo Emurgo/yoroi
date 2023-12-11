@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {isNonNullable, isString} from '@yoroi/common'
 import {
   GovernanceProvider,
@@ -6,7 +7,7 @@ import {
   useLatestGovernanceAction,
   useVotingCertificate,
 } from '@yoroi/staking'
-import React, {ReactNode} from 'react'
+import React, {ReactNode, useCallback, useState} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer, useModal} from '../../../../../components'
@@ -20,6 +21,7 @@ import {EnterDrepIdModal} from '../EnterDrepIdModal'
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
   const txInfos = useTransactionInfos(wallet)
+  useRerenderOnFocus()
 
   const lastVotingAction = useLatestConfirmedGovernanceAction(wallet)
 
@@ -228,6 +230,12 @@ const NeverParticipatedInGovernanceVariant = () => {
       <Spacer height={24} />
     </View>
   )
+}
+
+const useRerenderOnFocus = () => {
+  const [_, rerender] = useState(0)
+  const callback = useCallback(() => rerender((r) => r + 1), [rerender])
+  useFocusEffect(callback)
 }
 
 const styles = StyleSheet.create({
