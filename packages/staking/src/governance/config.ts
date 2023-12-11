@@ -7,4 +7,8 @@ export const GOVERNANCE_ENDPOINTS = {
     getDRepById:
       'https://dev-yoroi-backend-zero-sanchonet.emurgornd.com/dreps/{{DREP_ID}}/state',
   },
+  sanchonet: {
+    getDRepById:
+      'https://dev-yoroi-backend-zero-sanchonet.emurgornd.com/dreps/{{DREP_ID}}/state',
+  },
 } as const

@@ -3,7 +3,8 @@ import {ByronWallet} from './byron'
 import {WALLET_CONFIG, WALLET_CONFIG_24} from './constants/common'
 import * as MAINNET from './constants/mainnet/constants'
 import * as TESTNET from './constants/testnet/constants'
-import {ShelleyWalletMainnet, ShelleyWalletTestnet} from './shelley'
+import * as SANCHONET from './constants/sanchonet/constants'
+import {ShelleyWalletMainnet, ShelleyWalletTestnet, ShelleySanchonetWallet} from './shelley'
 
 export const getCardanoWalletFactory = ({
   networkId,
@@ -21,6 +22,10 @@ export const getCardanoWalletFactory = ({
     [TESTNET.NETWORK_ID]: /* cardano testnet */ {
       [WALLET_CONFIG.WALLET_IMPLEMENTATION_ID]: ShelleyWalletTestnet,
       [WALLET_CONFIG_24.WALLET_IMPLEMENTATION_ID]: ShelleyWalletTestnet,
+    },
+    [SANCHONET.NETWORK_ID]: /* cardano sanchonet */ {
+      [WALLET_CONFIG.WALLET_IMPLEMENTATION_ID]: ShelleySanchonetWallet,
+      [WALLET_CONFIG_24.WALLET_IMPLEMENTATION_ID]: ShelleySanchonetWallet,
     },
   } as const
 

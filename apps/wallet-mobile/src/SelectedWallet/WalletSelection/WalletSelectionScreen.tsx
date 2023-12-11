@@ -16,6 +16,7 @@ import {COLORS} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
 import * as HASKELL_SHELLEY from '../../yoroi-wallets/cardano/constants/mainnet/constants'
 import * as HASKELL_SHELLEY_TESTNET from '../../yoroi-wallets/cardano/constants/testnet/constants'
+import * as SANCHONET from '../../yoroi-wallets/cardano/constants/sanchonet/constants'
 import {InvalidState, NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {isJormungandr} from '../../yoroi-wallets/cardano/networks'
 import {useOpenWallet, useWalletMetas} from '../../yoroi-wallets/hooks'
@@ -88,6 +89,8 @@ export const WalletSelectionScreen = () => {
       <ShelleyButton />
 
       <OnlyNightlyShelleyTestnetButton />
+
+      <OnlyNightlyShelleySanchonetButton />
 
       <OnlyDevButton />
 
@@ -193,6 +196,31 @@ const OnlyNightlyShelleyTestnetButton = () => {
       title={`${strings.addWalletButton} (preprod)`}
       style={styles.button}
       testID="addWalletPreprodShelleyButton"
+    />
+  )
+}
+
+const OnlyNightlyShelleySanchonetButton = () => {
+  const navigation = useNavigation()
+  const strings = useStrings()
+
+  if (!isNightly() && !__DEV__) return null
+
+  return (
+    <Button
+      onPress={() =>
+        // note: assume wallet implementation = yoroi haskell shelley
+        // (15 words), but user may choose 24 words in next screen
+        navigation.navigate('new-wallet', {
+          screen: 'choose-create-restore',
+          params: {
+            networkId: SANCHONET.NETWORK_ID,
+            walletImplementationId: SANCHONET.WALLET_IMPLEMENTATION_ID,
+          },
+        })
+      }
+      title={`${strings.addWalletButton} (sanchonet)`}
+      style={styles.button}
     />
   )
 }

@@ -21,15 +21,11 @@ class Api implements GovernanceApi {
 
   async getDRepById(drepId: DRepId) {
     const {networkId, client} = this.config
-    const backend =
-      networkId !== 300
-        ? GOVERNANCE_ENDPOINTS.mainnet
-        : GOVERNANCE_ENDPOINTS.preprod
+    const backend = getApiConfig(networkId)
 
     try {
-      const response = await client<GetDRepByIdResponse>({
-        url: backend.getDRepById.replace('{{DREP_ID}}', drepId),
-      })
+      const url = backend.getDRepById.replace('{{DREP_ID}}', drepId)
+      const response = await client<GetDRepByIdResponse>({url})
       const txId = response?.registration?.tx
       const epoch = response?.registration?.epoch
       return txId && epoch ? {txId, epoch} : null
@@ -41,6 +37,12 @@ class Api implements GovernanceApi {
       throw error
     }
   }
+}
+
+const getApiConfig = (networkId: number) => {
+  if (networkId === 450) return GOVERNANCE_ENDPOINTS.sanchonet
+  if (networkId === 300) return GOVERNANCE_ENDPOINTS.preprod
+  return GOVERNANCE_ENDPOINTS.mainnet
 }
 
 type Config = {
