@@ -486,6 +486,65 @@ export const assetMessages = defineMessages({
   },
 })
 
+export const apiErrors = defineMessages({
+  title: {
+    id: 'api.error.title',
+    defaultMessage: '!!!API error title',
+  },
+  badRequest: {
+    id: 'api.error.badRequest',
+    defaultMessage: '!!!Bad request',
+  },
+  unauthorized: {
+    id: 'api.error.unauthorized',
+    defaultMessage: '!!!Unauthorized',
+  },
+  forbidden: {
+    id: 'api.error.forbidden',
+    defaultMessage: '!!!Forbidden',
+  },
+  notFound: {
+    id: 'api.error.notFound',
+    defaultMessage: '!!!Not found',
+  },
+  conflict: {
+    id: 'api.error.conflict',
+    defaultMessage: '!!!Conflict',
+  },
+  gone: {
+    id: 'api.error.gone',
+    defaultMessage: '!!!Gone',
+  },
+  tooEarly: {
+    id: 'api.error.tooEarly',
+    defaultMessage: '!!!Too early',
+  },
+  tooManyRequests: {
+    id: 'api.error.tooManyRequests',
+    defaultMessage: '!!!Too many requests',
+  },
+  serverSide: {
+    id: 'api.error.serverSide',
+    defaultMessage: '!!!Server side',
+  },
+  unknown: {
+    id: 'api.error.unknown',
+    defaultMessage: '!!!Unknown',
+  },
+  network: {
+    id: 'api.error.network',
+    defaultMessage: '!!!Network',
+  },
+  invalidState: {
+    id: 'api.error.invalidState',
+    defaultMessage: '!!!Invalid state',
+  },
+  responseMalformed: {
+    id: 'api.error.responseMalformed',
+    defaultMessage: '!!!Response malformed',
+  },
+})
+
 export const actionMessages = defineMessages({
   send: {
     id: 'global.send',

@@ -6,6 +6,7 @@ module.exports = {
     path.resolve(__dirname, "node_modules"),
     path.resolve(__dirname, "packages/types"),
     path.resolve(__dirname, "packages/banxa"),
+    path.resolve(__dirname, "packages/links"),
     path.resolve(__dirname, "packages/common"),
     path.resolve(__dirname, "packages/links"),
     path.resolve(__dirname, "packages/api"),
