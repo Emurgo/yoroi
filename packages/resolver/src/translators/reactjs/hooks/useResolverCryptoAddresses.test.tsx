@@ -6,7 +6,7 @@ import {render, waitFor} from '@testing-library/react-native'
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 import {useResolverCryptoAddresses} from './useResolverCryptoAddresses'
-import {resolverModuleMocks} from '../../module.mocks'
+import {resolverManagerMocks} from '../../manager.mocks'
 
 describe('useResolverCryptoAddresses', () => {
   let queryClient: QueryClient
@@ -20,7 +20,7 @@ describe('useResolverCryptoAddresses', () => {
     queryClient.clear()
   })
 
-  const mockResolverModule = {...resolverModuleMocks.success}
+  const mockResolverManager = {...resolverManagerMocks.success}
   const domain = '$test'
 
   it('success', async () => {
@@ -33,12 +33,14 @@ describe('useResolverCryptoAddresses', () => {
       )
     }
 
-    mockResolverModule.crypto.getCardanoAddresses = jest
+    mockResolverManager.crypto.getCardanoAddresses = jest
       .fn()
-      .mockResolvedValue(resolverModuleMocks.getCryptoAddressesResponse.success)
+      .mockResolvedValue(
+        resolverManagerMocks.getCryptoAddressesResponse.success,
+      )
     const wrapper = wrapperManagerFixture({
       queryClient,
-      resolverModule: mockResolverModule,
+      resolverManager: mockResolverManager,
     })
     const {getByTestId} = render(<TestResolverAddresss />, {wrapper})
 
@@ -47,9 +49,9 @@ describe('useResolverCryptoAddresses', () => {
     })
 
     expect(getByTestId('addresses').props.children).toEqual(
-      JSON.stringify(resolverModuleMocks.getCryptoAddressesResponse.success),
+      JSON.stringify(resolverManagerMocks.getCryptoAddressesResponse.success),
     )
-    expect(mockResolverModule.crypto.getCardanoAddresses).toHaveBeenCalledWith(
+    expect(mockResolverManager.crypto.getCardanoAddresses).toHaveBeenCalledWith(
       domain,
       'all',
     )

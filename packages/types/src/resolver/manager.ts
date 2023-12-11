@@ -1,7 +1,7 @@
 import {ResolverApi} from './api'
 import {ResolverStorage} from './storage'
 
-export type ResolverModule = Readonly<{
+export type ResolverManager = Readonly<{
   crypto: {
     getCardanoAddresses: ResolverApi['getCardanoAddresses']
   }

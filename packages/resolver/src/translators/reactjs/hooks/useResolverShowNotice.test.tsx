@@ -5,7 +5,7 @@ import {render, waitFor} from '@testing-library/react-native'
 
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
-import {resolverModuleMocks} from '../../module.mocks'
+import {resolverManagerMocks} from '../../manager.mocks'
 import {useResolverShowNotice} from './useResolverShowNotice'
 
 describe('useResolverCryptoAddresses', () => {
@@ -20,7 +20,7 @@ describe('useResolverCryptoAddresses', () => {
     queryClient.clear()
   })
 
-  const mockResolverModule = {...resolverModuleMocks.success}
+  const mockResolverManager = {...resolverManagerMocks.success}
 
   it('success', async () => {
     const TestResolver = () => {
@@ -32,10 +32,10 @@ describe('useResolverCryptoAddresses', () => {
       )
     }
 
-    mockResolverModule.showNotice.read = jest.fn().mockResolvedValue(false)
+    mockResolverManager.showNotice.read = jest.fn().mockResolvedValue(false)
     const wrapper = wrapperManagerFixture({
       queryClient,
-      resolverModule: mockResolverModule,
+      resolverManager: mockResolverManager,
     })
     const {getByTestId} = render(<TestResolver />, {wrapper})
 
@@ -46,7 +46,7 @@ describe('useResolverCryptoAddresses', () => {
     expect(getByTestId('showNotice').props.children).toEqual(
       JSON.stringify(false),
     )
-    expect(mockResolverModule.showNotice.read).toHaveBeenCalledTimes(1)
+    expect(mockResolverManager.showNotice.read).toHaveBeenCalledTimes(1)
   })
 
   it('error', async () => {
@@ -58,11 +58,11 @@ describe('useResolverCryptoAddresses', () => {
         </View>
       )
     }
-    mockResolverModule.showNotice.read = jest.fn().mockRejectedValue('error')
+    mockResolverManager.showNotice.read = jest.fn().mockRejectedValue('error')
 
     const wrapper = wrapperManagerFixture({
       queryClient,
-      resolverModule: mockResolverModule,
+      resolverManager: mockResolverManager,
     })
     const {getByTestId} = render(<TestResolver />, {wrapper})
 

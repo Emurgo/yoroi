@@ -3,7 +3,7 @@ import {renderHook, act} from '@testing-library/react-hooks'
 
 import {queryClientFixture} from '../../../fixtures/query-client'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
-import {resolverModuleMocks} from '../../module.mocks'
+import {resolverManagerMocks} from '../../manager.mocks'
 import {useResolverSetShowNotice} from './useResolverSetShowNotice'
 
 describe('useResolverSetShowNotice', () => {
@@ -18,13 +18,13 @@ describe('useResolverSetShowNotice', () => {
     queryClient.clear()
   })
 
-  const mockResolverModule = {...resolverModuleMocks.success}
+  const mockResolverManager = {...resolverManagerMocks.success}
 
   it('success', async () => {
-    mockResolverModule.showNotice.save = jest.fn().mockResolvedValue(undefined)
+    mockResolverManager.showNotice.save = jest.fn().mockResolvedValue(undefined)
     const wrapper = wrapperManagerFixture({
       queryClient,
-      resolverModule: mockResolverModule,
+      resolverManager: mockResolverManager,
     })
 
     const {result, waitFor: waitForHook} = renderHook(
@@ -36,8 +36,8 @@ describe('useResolverSetShowNotice', () => {
 
     await waitForHook(() => expect(result.current.isLoading).toBe(false))
 
-    expect(mockResolverModule.showNotice.save).toHaveBeenCalledTimes(1)
-    expect(mockResolverModule.showNotice.save).toHaveBeenCalledWith(true)
+    expect(mockResolverManager.showNotice.save).toHaveBeenCalledTimes(1)
+    expect(mockResolverManager.showNotice.save).toHaveBeenCalledWith(true)
     expect(result.current.isError).toBe(false)
   })
 })

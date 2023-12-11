@@ -1,9 +1,14 @@
+import {Resolver} from '@yoroi/types'
+
 import {getCnsCryptoAddress} from './cns' // Adjust the path accordingly
 
 describe('getCnsCryptoAddress', () => {
-  it('should reject with an error', async () => {
-    const domain = 'anotherdomain.blockchain'
-
-    await expect(getCnsCryptoAddress(domain)).rejects.toThrow('not-implemented')
+  it.each`
+    domain         | error
+    ${'test'}      | ${Resolver.Errors.InvalidDomain}
+    ${'test.tada'} | ${Resolver.Errors.UnsupportedTld}
+    ${'test.ada'}  | ${Resolver.Errors.UnsupportedTld}
+  `('should reject with error $error', async ({domain, error}) => {
+    await expect(getCnsCryptoAddress(domain)).rejects.toThrowError(error)
   })
 })

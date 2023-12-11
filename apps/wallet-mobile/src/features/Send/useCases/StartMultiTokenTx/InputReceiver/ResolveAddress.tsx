@@ -1,4 +1,4 @@
-import {DomainService, useResolver} from '@yoroi/resolver'
+import {serviceName} from '@yoroi/resolver'
 import React from 'react'
 import {StyleSheet, Text, View, ViewProps} from 'react-native'
 
@@ -6,12 +6,6 @@ import {HelperText, Spacer} from '../../../../../components'
 import {isEmptyString} from '../../../../../utils'
 import {useStrings} from '../../../common/strings'
 import {InputReceiver} from './InputReceiver'
-
-export const Service = {
-  [DomainService.Cns]: 'CNS',
-  [DomainService.Unstoppable]: 'Unstoppable Domains',
-  [DomainService.Handle]: 'ADA Handle',
-}
 
 type ReceiverProps = ViewProps & {
   receiver: string
@@ -29,11 +23,12 @@ export const ResolveAddress = ({
   style,
   ...props
 }: ReceiverProps) => {
-  const {resolvedAddressSelected} = useResolver()
+  // const {resolvedAddressSelected} = useResolver()
   const isError = errorMessage.length > 0
-  const selectedAddress = resolvedAddressSelected?.address ?? ''
-  const selectedSevice = resolvedAddressSelected?.service ?? ''
-  const isResolved = !isLoading && !isEmptyString(selectedAddress) && !isEmptyString(selectedSevice)
+  // const selectedAddress = resolvedAddressSelected?.address ?? ''
+  // const selectedSevice = resolvedAddressSelected?.service ?? ''
+  // const isResolved = !isLoading && !isEmptyString(selectedAddress) && !isEmptyString(selectedSevice)
+  const _isResolved = false
 
   return (
     <View style={style} {...props}>
@@ -53,12 +48,12 @@ export const ResolveAddress = ({
         </HelperText>
       )}
 
-      {isResolved && <ResolvedAddress address={selectedAddress} service={selectedSevice} />}
+      {/* {isResolved && <ResolvedAddress address={selectedAddress} service={selectedSevice} />} */}
     </View>
   )
 }
 
-const ResolvedAddress = ({address, service}: {address: string; service: string}) => {
+const _ResolvedAddress = ({address, service}: {address: string; service: string}) => {
   const strings = useStrings()
   const {firstHalf, secondHalf} = React.useMemo(() => {
     const firstHalf = address.substring(0, 8)
@@ -74,7 +69,7 @@ const ResolvedAddress = ({address, service}: {address: string; service: string})
       <Spacer height={4} />
 
       <View style={styles.resolvedAddressContainer}>
-        <Text style={styles.resolvedAddressService} numberOfLines={1}>{`${Service[service ?? ''] ?? ''}`}</Text>
+        <Text style={styles.resolvedAddressService} numberOfLines={1}>{`${serviceName[service]}`}</Text>
 
         <Text
           style={styles.resolvedAddress}

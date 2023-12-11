@@ -1,12 +1,12 @@
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 
-import {resolverModuleMocks} from '../../../translators/module.mocks'
+import {resolverManagerMocks} from '../../manager.mocks'
 
-type ResolverProviderContext = React.PropsWithChildren<Resolver.Module>
+type ResolverProviderContext = React.PropsWithChildren<Resolver.Manager>
 
 const initialResolverProvider: ResolverProviderContext = {
-  ...resolverModuleMocks.error,
+  ...resolverManagerMocks.error,
 }
 
 const ResolverContext = React.createContext<ResolverProviderContext>(
@@ -14,12 +14,12 @@ const ResolverContext = React.createContext<ResolverProviderContext>(
 )
 export const ResolverProvider = ({
   children,
-  resolverModule,
+  resolverManager,
 }: {
   children: React.ReactNode
-  resolverModule: Resolver.Module
+  resolverManager: Resolver.Manager
 }) => {
-  const context = React.useMemo(() => ({...resolverModule}), [resolverModule])
+  const context = React.useMemo(() => ({...resolverManager}), [resolver])
 
   return (
     <ResolverContext.Provider value={context}>

@@ -6,7 +6,7 @@ import {queryClientFixture} from '../../../fixtures/query-client'
 import {useResolver} from './ResolverProvider'
 import {wrapperManagerFixture} from '../../../fixtures/manager-wrapper'
 
-const resolverModuleMock: Resolver.Module = {
+const resolverManagerMock: Resolver.Manager = {
   crypto: {
     getCardanoAddresses: jest.fn(),
   },
@@ -33,7 +33,7 @@ describe('ResolverProvider', () => {
   it('works', () => {
     const wrapper = wrapperManagerFixture({
       queryClient,
-      resolverModule: resolverModuleMock,
+      resolverManager: resolverManagerMock,
     })
     const {result} = renderHook(() => useResolver(), {
       wrapper,
@@ -46,10 +46,10 @@ describe('ResolverProvider', () => {
       result.current.crypto.getCardanoAddresses('domain')
     })
 
-    expect(resolverModuleMock.showNotice.read).toHaveBeenCalled()
-    expect(resolverModuleMock.showNotice.save).toHaveBeenCalledWith(true)
-    expect(resolverModuleMock.showNotice.remove).toHaveBeenCalled()
-    expect(resolverModuleMock.crypto.getCardanoAddresses).toHaveBeenCalledWith(
+    expect(resolverManagerMock.showNotice.read).toHaveBeenCalled()
+    expect(resolverManagerMock.showNotice.save).toHaveBeenCalledWith(true)
+    expect(resolverManagerMock.showNotice.remove).toHaveBeenCalled()
+    expect(resolverManagerMock.crypto.getCardanoAddresses).toHaveBeenCalledWith(
       'domain',
     )
     expect(result.current.showNotice.key).toBe('show-notice-key')

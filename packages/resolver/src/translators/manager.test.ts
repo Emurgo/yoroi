@@ -1,15 +1,15 @@
 /* istanbul ignore file */
 import {mockResolverApi} from '../adapters/api.mocks'
 import {mockStorageMaker} from '../adapters/storage.mocks'
-import {resolverModuleMaker} from './module'
+import {resolverManagerMaker} from './manager'
 
-describe('resolverModuleMaker', () => {
+describe('resolverManagerMaker', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
   it('creates a module with getCryptoAddress function', () => {
-    const module = resolverModuleMaker(
+    const module = resolverManagerMaker(
       mockStorageMaker.success,
       mockResolverApi,
     )

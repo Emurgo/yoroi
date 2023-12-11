@@ -222,7 +222,12 @@ export const initialState: SendState = {
 
   targets: [
     {
-      receiver: '',
+      receiver: {
+        domain: '',
+        isDomain: false,
+        service: undefined,
+        addresses: undefined,
+      },
       entry: {
         address: '',
         amounts: {},

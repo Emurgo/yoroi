@@ -13,7 +13,7 @@ export const handleApiGetCryptoAddress = ({
     receiverDomain: Resolver.Receiver['domain'],
   ): Promise<string> => {
     if (!isAdaHandleDomain(receiverDomain))
-      throw new HandleApiErrorInvalidDomain()
+      throw new Resolver.Errors.InvalidDomain()
 
     const sanitizedDomain = receiverDomain.replace(/^\$/, '')
     const config = {
@@ -90,13 +90,10 @@ export const handleApiConfig = {
 
 export const handleHandleApiError = (error: unknown): never => {
   const zodErrorMessage = handleZodErrors(error)
-  if (zodErrorMessage) throw new HandleApiErrorInvalidResponse(zodErrorMessage)
+  if (zodErrorMessage)
+    throw new Resolver.Errors.InvalidResponse(zodErrorMessage)
 
-  if (error instanceof Api.Errors.NotFound) throw new HandleApiErrorNotFound()
+  if (error instanceof Api.Errors.NotFound) throw new Resolver.Errors.NotFound()
 
   throw error
 }
-
-export class HandleApiErrorInvalidResponse extends Error {}
-export class HandleApiErrorInvalidDomain extends Error {}
-export class HandleApiErrorNotFound extends Error {}

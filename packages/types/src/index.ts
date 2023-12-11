@@ -30,7 +30,7 @@ import {
   ResolverApi,
   ResolverStrategy,
 } from './resolver/api'
-import {ResolverModule} from './resolver/module'
+import {ResolverManager} from './resolver/manager'
 import {ResolverReceiver} from './resolver/receiver'
 import {ResolverStorage} from './resolver/storage'
 import {LinksLink, LinksModule, LinksUriConfig} from './links/link'
@@ -59,6 +59,13 @@ import {
   ApiErrorInvalidState,
   ApiErrorResponseMalformed,
 } from './api/errors'
+import {ResolverService} from './resolver/service'
+import {
+  ResolverErrorInvalidDomain,
+  ResolverErrorInvalidResponse,
+  ResolverErrorNotFound,
+  ResolverErrorUnsupportedTld,
+} from './resolver/errors'
 
 export namespace App {
   export interface Storage extends AppStorage {}
@@ -162,8 +169,10 @@ export namespace Numbers {
 
 export namespace Resolver {
   export interface Api extends ResolverApi {}
-  export type Module = ResolverModule
+  export type Manager = ResolverManager
 
+  export type Service = ResolverService
+  export const Service = ResolverService
   export type Receiver = ResolverReceiver
 
   export type AddressResponse = ResolverAddressResponse
@@ -172,6 +181,13 @@ export namespace Resolver {
   export type Strategy = ResolverStrategy
 
   export type Storage = ResolverStorage
+
+  export namespace Errors {
+    export class InvalidResponse extends ResolverErrorInvalidResponse {}
+    export class InvalidDomain extends ResolverErrorInvalidDomain {}
+    export class NotFound extends ResolverErrorNotFound {}
+    export class UnsupportedTld extends ResolverErrorUnsupportedTld {}
+  }
 }
 
 export * from './helpers/types'

@@ -4,14 +4,8 @@ import {handleApiGetCryptoAddress} from './handle-api'
 import {unstoppableApiGetCryptoAddress} from './unstoppable-api'
 import {getCnsCryptoAddress} from './cns'
 
-export enum DomainService {
-  Cns = 'cns',
-  Unstoppable = 'unstoppable',
-  Handle = 'handle',
-}
-
 type ApiConfig = {
-  [DomainService.Unstoppable]: {
+  [Resolver.Service.Unstoppable]: {
     apiKey: string
   }
 }
@@ -52,14 +46,13 @@ export const resolverApiMaker = (
 ): Resolver.Api => {
   const getHandleCryptoAddress = handleApi.getCryptoAddress()
   const getUnstoppableCryptoAddress = unstoppableApi.getCryptoAddress(
-    apiConfig[DomainService.Unstoppable],
+    apiConfig[Resolver.Service.Unstoppable],
   )
-
   // @ts-expect-error TODO: bugfix on TS 5.4 (readonly array of readonly array)
   const operationsGetCryptoAddress: GetCryptoAddressOperations = [
-    [DomainService.Handle, getHandleCryptoAddress],
-    [DomainService.Unstoppable, getUnstoppableCryptoAddress],
-    [DomainService.Cns, cnsApi.getCryptoAddress],
+    [Resolver.Service.Handle, getHandleCryptoAddress],
+    [Resolver.Service.Unstoppable, getUnstoppableCryptoAddress],
+    [Resolver.Service.Cns, cnsApi.getCryptoAddress],
   ] as const
 
   // facade to the different crypto address resolution
@@ -80,7 +73,7 @@ export const resolverApiMaker = (
 
 const safelyExecuteOperation = async (
   operationFn: GetCryptoAddress,
-  service: DomainService,
+  service: Resolver.Service,
   receiverDomain: Resolver.Receiver['domain'],
 ): Promise<Resolver.AddressResponse> => {
   try {
@@ -123,5 +116,5 @@ type GetCryptoAddress = (
 ) => Promise<string>
 
 type GetCryptoAddressOperations = ReadonlyArray<
-  [DomainService, GetCryptoAddress]
+  [Resolver.Service, GetCryptoAddress]
 >

@@ -13,8 +13,10 @@ export const unstoppableApiGetCryptoAddress = (
   return async (
     receiverDomain: Resolver.Receiver['domain'],
   ): Promise<string> => {
+    if (!receiverDomain.includes('.')) throw new Resolver.Errors.InvalidDomain()
+
     if (!isUnstoppableHandleDomain(receiverDomain))
-      throw new UnstoppableApiErrorInvalidDomain()
+      throw new Resolver.Errors.UnsupportedTld()
 
     const config = {
       url: `${unstoppableApiConfig.mainnet.getCryptoAddress}${receiverDomain}`,
@@ -37,7 +39,7 @@ export const unstoppableApiGetCryptoAddress = (
         )
 
         const result = parsedResponse.records['crypto.ADA.address']
-        if (!result) throw new UnstoppableApiErrorNotFound()
+        if (!result) throw new Resolver.Errors.NotFound()
         return result
       }
     } catch (error: unknown) {
@@ -70,7 +72,26 @@ const UnstoppableApiResponseSchema = z.object({
     'crypto.ADA.address': z.string().optional(),
   }),
 })
-export const isUnstoppableHandleDomain = (value: string) => value.includes('.')
+
+export const unstoppableSupportedTlds = [
+  '.x',
+  '.crypto',
+  '.nft',
+  '.wallet',
+  '.polygon',
+  '.dao',
+  '.888',
+  '.zil',
+  '.go',
+  '.blockchain',
+  '.bitcoin',
+  '.eth',
+  '.com',
+  '.unstoppable',
+] as const
+export const isUnstoppableHandleDomain = (value: string) => {
+  return unstoppableSupportedTlds.some((tld) => value.endsWith(tld))
+}
 
 export const unstoppableApiConfig = {
   mainnet: {
@@ -81,14 +102,9 @@ export const unstoppableApiConfig = {
 export const handleUnstoppableApiError = (error: unknown): never => {
   const zodErrorMessage = handleZodErrors(error)
   if (zodErrorMessage)
-    throw new UnstoppableApiErrorInvalidResponse(zodErrorMessage)
+    throw new Resolver.Errors.InvalidResponse(zodErrorMessage)
 
-  if (error instanceof Api.Errors.NotFound)
-    throw new UnstoppableApiErrorNotFound()
+  if (error instanceof Api.Errors.NotFound) throw new Resolver.Errors.NotFound()
 
   throw error
 }
-
-export class UnstoppableApiErrorInvalidResponse extends Error {}
-export class UnstoppableApiErrorInvalidDomain extends Error {}
-export class UnstoppableApiErrorNotFound extends Error {}

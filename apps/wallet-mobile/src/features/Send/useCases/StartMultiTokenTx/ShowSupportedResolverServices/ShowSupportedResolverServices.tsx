@@ -1,53 +1,46 @@
-import {
-  DomainService as DomainServiceEnum,
-  useReadResolverNoticeStatus,
-  useSaveResolverNoticeStatus,
-} from '@yoroi/resolver'
+import {serviceName, useResolverSetShowNotice, useResolverShowNotice} from '@yoroi/resolver'
+import {Resolver} from '@yoroi/types'
 import React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer} from '../../../../../components'
+import {PressableIcon} from '../../../../../components/PressableIcon/PressableIcon'
 import {useStrings} from '../../../common/strings'
-import {Service} from '../InputReceiver/ResolveAddress'
 
-export const InitialDomainNotice = () => {
+export const ShowSupportedResolverServices = () => {
   const strings = useStrings()
-  const {readResolverNoticeStatus, refetch: refetchResolverNoticeStatus} = useReadResolverNoticeStatus()
-  const {saveResolverNoticeStatus} = useSaveResolverNoticeStatus({
-    onSuccess: () => refetchResolverNoticeStatus(),
-  })
+  const {showNotice, refetch} = useResolverShowNotice()
 
-  if (readResolverNoticeStatus === true) {
-    return null
-  }
+  const {setShowNotice} = useResolverSetShowNotice({
+    onSuccess: () => refetch(),
+  })
+  const handleOnClose = React.useCallback(() => {
+    setShowNotice(false)
+  }, [setShowNotice])
+
+  if (!showNotice) return null
 
   return (
     <LinearGradient style={styles.gradient} start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={['#C6F7ED', '#E4E8F7']}>
       <View style={styles.header}>
         <Text style={styles.title}>{strings.resolverNoticeTitle}</Text>
 
-        <TouchableOpacity
-          onPress={() => {
-            saveResolverNoticeStatus(true)
-          }}
-        >
-          <Icon.CrossCircle size={24} />
-        </TouchableOpacity>
+        <PressableIcon icon={Icon.CrossCircle} onPress={handleOnClose} size={24} />
       </View>
 
       <Spacer height={10} />
 
-      <DomainService text={Service[DomainServiceEnum.Handle]} />
+      <Service text={serviceName[Resolver.Service.Handle]} />
 
-      <DomainService text={Service[DomainServiceEnum.Cns]} />
+      <Service text={serviceName[Resolver.Service.Cns]} />
 
-      <DomainService text={Service[DomainServiceEnum.Unstoppable]} />
+      <Service text={serviceName[Resolver.Service.Unstoppable]} />
     </LinearGradient>
   )
 }
 
-const DomainService = ({text}: {text: string}) => {
+const Service = ({text}: {text: string}) => {
   return (
     <View style={styles.domainServiceContainer}>
       <Spacer width={8} />

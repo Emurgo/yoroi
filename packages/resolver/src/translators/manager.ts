@@ -1,9 +1,9 @@
 import {Resolver} from '@yoroi/types'
 
-export const resolverModuleMaker = (
+export const resolverManagerMaker = (
   resolverStorage: Resolver.Storage,
   resolverApi: Resolver.Api,
-): Resolver.Module => {
+): Resolver.Manager => {
   const {showNotice} = resolverStorage
   const {getCardanoAddresses} = resolverApi
 

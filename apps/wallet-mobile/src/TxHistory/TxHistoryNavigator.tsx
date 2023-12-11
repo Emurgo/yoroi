@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {resolverModuleMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
+import {DomainService, resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
 import {
   milkTokenId,
   supportedProviders,
@@ -87,10 +87,15 @@ export const TxHistoryNavigator = () => {
 
   // resolver
   const resolverModule = React.useMemo(() => {
-    const resolverStorage = resolverStorageMaker()
-    return resolverModuleMaker('all', resolverStorage, {
-      apiKeys: {unstoppableApiKey: CONFIG.UNSTOPPABLE_API_KEY},
+    const resolverApi = resolverApiMaker({
+      apiConfig: {
+        [DomainService.Unstoppable]: {
+          apiKey: CONFIG.UNSTOPPABLE_API_KEY,
+        },
+      },
     })
+    const resolverStorage = resolverStorageMaker()
+    return resolverManagerMaker(resolverStorage, resolverApi)
   }, [])
 
   // claim

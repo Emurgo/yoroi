@@ -1,10 +1,7 @@
-import {Api, Left, Right} from '@yoroi/types'
+import {Api, Left, Resolver, Right} from '@yoroi/types'
 
 import {
   UnstoppableApiGetCryptoAddressResponse,
-  UnstoppableApiErrorInvalidDomain,
-  UnstoppableApiErrorInvalidResponse,
-  UnstoppableApiErrorNotFound,
   unstoppableApiConfig,
   unstoppableApiGetCryptoAddress,
 } from './unstoppable-api'
@@ -59,7 +56,7 @@ describe('getCryptoAddress', () => {
     })
 
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
-      UnstoppableApiErrorInvalidDomain,
+      Resolver.Errors.InvalidDomain,
     )
     expect(mockFetchData).not.toHaveBeenCalledWith({
       headers: {
@@ -89,7 +86,7 @@ describe('getCryptoAddress', () => {
     })
 
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
-      UnstoppableApiErrorInvalidResponse,
+      Resolver.Errors.InvalidResponse,
     )
     expect(mockFetchData).toHaveBeenCalledWith({
       headers: {
@@ -119,7 +116,7 @@ describe('getCryptoAddress', () => {
     })
 
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
-      UnstoppableApiErrorNotFound,
+      Resolver.Errors.NotFound,
     )
     expect(mockFetchData).toHaveBeenCalledWith({
       headers: {
@@ -148,7 +145,7 @@ describe('getCryptoAddress', () => {
     })
 
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
-      UnstoppableApiErrorNotFound,
+      Resolver.Errors.NotFound,
     )
     expect(mockFetchData).toHaveBeenCalledWith({
       headers: {

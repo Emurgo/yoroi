@@ -1,10 +1,7 @@
-import {Api, Left, Right} from '@yoroi/types'
+import {Api, Left, Resolver, Right} from '@yoroi/types'
 
 import {
   HandleApiGetCryptoAddressResponse,
-  HandleApiErrorInvalidDomain,
-  HandleApiErrorInvalidResponse,
-  HandleApiErrorNotFound,
   handleApiConfig,
   handleApiGetCryptoAddress,
 } from './handle-api'
@@ -47,7 +44,7 @@ describe('getCryptoAddress', () => {
     const getCryptoAddress = handleApiGetCryptoAddress({request: mockFetchData})
 
     await expect(() => getCryptoAddress(sanitizedDomain)).rejects.toThrow(
-      HandleApiErrorInvalidDomain,
+      Resolver.Errors.InvalidDomain,
     )
     expect(mockFetchData).not.toHaveBeenCalledWith({
       url: expectedUrl,
@@ -68,7 +65,7 @@ describe('getCryptoAddress', () => {
     const getCryptoAddress = handleApiGetCryptoAddress({request: mockFetchData})
 
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
-      HandleApiErrorInvalidResponse,
+      Resolver.Errors.InvalidResponse,
     )
     expect(mockFetchData).toHaveBeenCalledWith({
       url: expectedUrl,
@@ -92,7 +89,7 @@ describe('getCryptoAddress', () => {
     const getCryptoAddress = handleApiGetCryptoAddress({request: mockFetchData})
 
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
-      HandleApiErrorNotFound,
+      Resolver.Errors.NotFound,
     )
     expect(mockFetchData).toHaveBeenCalledWith({
       url: expectedUrl,

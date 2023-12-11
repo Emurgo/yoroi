@@ -11,21 +11,20 @@ export const InputReceiver = ({
   isLoading,
   isValid,
   ...props
-}: {isLoading: boolean; isValid: boolean} & TextInputProps) => {
+}: {isLoading?: boolean; isValid?: boolean} & TextInputProps) => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
+  const rightAdornment = isLoading ? (
+    <LoadingSpinner />
+  ) : isValid ? (
+    <Icon.Check size={25} color="#08C29D" />
+  ) : (
+    <ScannerButton onPress={navigateTo.reader} />
+  )
 
   return (
     <TextInput
-      right={
-        isLoading ? (
-          <Loading />
-        ) : isValid ? (
-          <Icon.Check size={25} color="#08C29D" />
-        ) : (
-          <ScannerButton onPress={navigateTo.reader} />
-        )
-      }
+      right={rightAdornment}
       label={strings.addressInputLabel}
       testID="receiverInput"
       style={styles.receiver}
@@ -42,33 +41,12 @@ export const InputReceiver = ({
   )
 }
 
-const Loading = (props) => {
-  const spin = React.useRef(new Animated.Value(0)).current
+const LoadingSpinner = () => {
+  const rotate = useInfinityRotation()
 
-  React.useEffect(() => {
-    Animated.loop(
-      Animated.timing(spin, {
-        toValue: 1,
-        duration: 1500,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      }),
-    ).start()
-  }, [spin])
-
-  const getRotationStyle = () => {
-    const rotate = spin.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0deg', '360deg'],
-    })
-
-    return {
-      transform: [{rotate}],
-    }
-  }
   return (
-    <Animated.View style={getRotationStyle()}>
-      <Svg width={20} height={20} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <Animated.View style={{transform: [{rotate}]}}>
+      <Svg width={20} height={20} viewBox="0 0 20 20" fill="none">
         <Path
           d="M1 10c-.552 0-1.005.449-.95.998A10 10 0 1010.998.05C10.448-.005 10 .448 10 1c0 .552.45.994.997 1.062a8 8 0 11-8.935 8.935C1.994 10.45 1.552 10 1 10z"
           fill="url(#paint0_linear_12263_40263)"
@@ -98,3 +76,25 @@ const styles = StyleSheet.create({
     height: 120,
   },
 })
+
+const useInfinityRotation = () => {
+  const spin = React.useRef(new Animated.Value(0)).current
+
+  React.useEffect(() => {
+    Animated.loop(
+      Animated.timing(spin, {
+        toValue: 1,
+        duration: 1500,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+    ).start()
+  }, [spin])
+
+  const rotate = spin.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  })
+
+  return rotate
+}

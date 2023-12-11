@@ -8,17 +8,17 @@ import {ResolverProvider} from '../translators/reactjs/provider/ResolverProvider
 
 type Props = {
   queryClient: QueryClient
-  resolverModule: Resolver.Module
+  resolverManager: Resolver.Manager
 }
 
 export const wrapperManagerFixture =
-  ({queryClient, resolverModule}: Props) =>
+  ({queryClient, resolverManager}: Props) =>
   ({children}: {children: React.ReactNode}) =>
     (
       <QueryClientProvider client={queryClient}>
         <ErrorBoundary>
           <SuspenseBoundary>
-            <ResolverProvider resolverModule={resolverModule}>
+            <ResolverProvider resolverManager={resolverManager}>
               {children}
             </ResolverProvider>
           </SuspenseBoundary>
