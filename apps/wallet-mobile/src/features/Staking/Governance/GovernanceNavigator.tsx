@@ -27,15 +27,17 @@ const apiMock: GovernanceApi = {
 export const GovernanceNavigator = () => {
   const {networkId} = useSelectedWallet()
   const strings = useStrings()
+  const wallet = useSelectedWallet()
   const manager = useMemo(
     () =>
       governanceManagerMaker({
+        walletId: wallet.id,
         networkId,
         api: USE_MOCKED_API ? apiMock : governanceApiMaker({networkId}),
         cardano: CardanoMobile,
         storage: AsyncStorage,
       }),
-    [networkId],
+    [networkId, wallet.id],
   )
   return (
     <GovernanceProvider manager={manager}>

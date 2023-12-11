@@ -22,12 +22,13 @@ export const useIsValidDRepID = (
 }
 
 export const useLatestGovernanceAction = (
+  walletId: string,
   options: UseQueryOptions<GovernanceAction | null, Error> = {},
 ) => {
   const {manager} = useGovernance()
 
   return useQuery({
-    queryKey: 'governanceLatestGovernanceAction',
+    queryKey: [walletId, 'governanceLatestGovernanceAction'],
     queryFn: async () => await manager.getLatestGovernanceAction(),
     ...options,
   })

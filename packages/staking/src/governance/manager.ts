@@ -4,6 +4,7 @@ import {GovernanceApi} from './api'
 
 export type Config = {
   networkId: number
+  walletId: string
   cardano: CardanoTypes.Wasm
   storage: typeof AsyncStorage
   api: GovernanceApi
@@ -117,11 +118,13 @@ class Manager implements GovernanceManager {
     action: GovernanceAction | null,
   ): Promise<void> {
     if (!action) {
-      await this.config.storage.removeItem(governanceStorageLatestActionKey)
+      await this.config.storage.removeItem(
+        getGovernanceStorageLatestActionKey(this.config.walletId),
+      )
       return
     }
     await this.config.storage.setItem(
-      governanceStorageLatestActionKey,
+      getGovernanceStorageLatestActionKey(this.config.walletId),
       JSON.stringify(action),
     )
   }
@@ -129,7 +132,7 @@ class Manager implements GovernanceManager {
   async getLatestGovernanceAction(): Promise<GovernanceAction | null> {
     try {
       const action = await this.config.storage.getItem(
-        governanceStorageLatestActionKey,
+        getGovernanceStorageLatestActionKey(this.config.walletId),
       )
       return action ? JSON.parse(action) : null
     } catch {
@@ -138,4 +141,6 @@ class Manager implements GovernanceManager {
   }
 }
 
-const governanceStorageLatestActionKey = 'governance-manager/latest-action'
+const getGovernanceStorageLatestActionKey = (walletId: string) => {
+  return `${walletId}/governance-manager/latest-action`
+}
