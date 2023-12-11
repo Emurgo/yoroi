@@ -206,23 +206,17 @@ const OnlyNightlyShelleySanchonetButton = () => {
 
   if (!isNightly() && !__DEV__) return null
 
-  return (
-    <Button
-      onPress={() =>
-        // note: assume wallet implementation = yoroi haskell shelley
-        // (15 words), but user may choose 24 words in next screen
-        navigation.navigate('new-wallet', {
-          screen: 'choose-create-restore',
-          params: {
-            networkId: SANCHONET.NETWORK_ID,
-            walletImplementationId: SANCHONET.WALLET_IMPLEMENTATION_ID,
-          },
-        })
-      }
-      title={`${strings.addWalletButton} (sanchonet)`}
-      style={styles.button}
-    />
-  )
+  const onPress = () => {
+    navigation.navigate('new-wallet', {
+      screen: 'choose-create-restore',
+      params: {
+        networkId: SANCHONET.NETWORK_ID,
+        walletImplementationId: SANCHONET.WALLET_IMPLEMENTATION_ID,
+      },
+    })
+  }
+
+  return <Button onPress={onPress} title={`${strings.addWalletButton} (sanchonet)`} style={styles.button} />
 }
 
 const OnlyDevButton = () => {
