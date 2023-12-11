@@ -5,7 +5,7 @@ import {COIN_TYPE, COINS_PER_UTXO_WORD, KEY_DEPOSIT, LINEAR_FEE, MINIMUM_UTXO_VA
 
 export * from '../common'
 
-export const NETWORK_ID = 4_50
+export const NETWORK_ID = 450
 export const API_ROOT = 'https://sanchonet-backend.yoroiwallet.com/api'
 export const TOKEN_INFO_SERVICE = 'https://stage-cdn.yoroiwallet.com'
 
