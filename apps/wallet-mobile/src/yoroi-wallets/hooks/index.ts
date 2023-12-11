@@ -1004,7 +1004,7 @@ export const useNativeAssetImage = ({
       if (!response.ok) {
         throw new Error(`NativeAsset CDN response was not ok for policy=${policy} name=${name}`)
       }
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 202) {
         throw new Error(`NativeAsset CDN still processing policy=${policy} name=${name}`)
       }
       return `data:image/webp;base64,${await response.text()}`
@@ -1015,5 +1015,31 @@ export const useNativeAssetImage = ({
   return {
     ...query,
     uri: query.data,
+  }
+}
+
+type NativeAssetInvalidationRequest = {
+  networkId: NetworkId
+  policy: string
+  name: string
+}
+export const useNativeAssetInvalidation = ({networkId, policy, name}: NativeAssetInvalidationRequest) => {
+  const network = networkId === 300 ? 'preprod' : 'mainnet'
+  const mutation = useMutationWithInvalidations({
+    invalidateQueries: [['native-asset-img', policy, name]],
+    mutationFn: async () => {
+      const response = await fetch(`https://${network}.cardano-nativeassets-prod.emurgornd.com/invalidate`, {
+        method: 'POST',
+        body: JSON.stringify({policy, name}),
+      })
+      if (!response.ok) {
+        throw new Error(`NativeAsset invalid request body for policy=${policy} name=${name}`)
+      }
+    },
+  })
+
+  return {
+    ...mutation,
+    invalidate: mutation.mutate,
   }
 }
