@@ -464,7 +464,16 @@ export class ByronWallet implements YoroiWallet {
   }
 
   private getBaseNetworkConfig() {
-    return this.getNetworkConfig().BASE_CONFIG.reduce((acc, next) => Object.assign(acc, next), {})
+    type Config = {
+      PROTOCOL_MAGIC?: number
+      GENESIS_DATE?: string
+      START_AT: number
+      SLOTS_PER_EPOCH: number
+      SLOT_DURATION: number
+    }
+
+    const config: Config[] = this.getNetworkConfig().BASE_CONFIG
+    return config.reduce((acc, next) => Object.assign(acc, next), {})
   }
 
   private getBackendConfig(): BackendConfig {
