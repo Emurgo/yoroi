@@ -114,7 +114,7 @@ describe('createGovernanceManager', () => {
         'hex',
       )
       expect(certificateHex).toBe(
-        '83028200581cc3892366f174a76af9252f78368f5747d3055ab3568ea3b6bf40b01e581cc1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758',
+        '83098200581cc3892366f174a76af9252f78368f5747d3055ab3568ea3b6bf40b01e8200581cc1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758',
       )
     })
   })
