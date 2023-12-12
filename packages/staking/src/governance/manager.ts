@@ -60,14 +60,19 @@ class Manager implements GovernanceManager {
     drepID: string,
     stakingKey: CardanoTypes.PublicKey,
   ): Promise<CardanoTypes.Certificate> {
-    const {Certificate, Ed25519KeyHash, StakeDelegation, Credential} =
+    const {Certificate, Ed25519KeyHash, Credential, VoteDelegation, DRep} =
       this.config.cardano
 
-    const credential = await Credential.fromKeyhash(await stakingKey.hash())
-    return await Certificate.newStakeDelegation(
-      await StakeDelegation.new(
-        credential,
-        await Ed25519KeyHash.fromBytes(Buffer.from(drepID, 'hex')),
+    const stakingCredential = await Credential.fromKeyhash(
+      await stakingKey.hash(),
+    )
+
+    return await Certificate.newVoteDelegation(
+      await VoteDelegation.new(
+        stakingCredential,
+        await DRep.newKeyHash(
+          await Ed25519KeyHash.fromBytes(Buffer.from(drepID, 'hex')),
+        ),
       ),
     )
   }
@@ -89,11 +94,34 @@ class Manager implements GovernanceManager {
   }
 
   async createVotingCertificate(
-    _vote: VoteKind,
-    _stakingKey: CardanoTypes.PublicKey,
+    vote: VoteKind,
+    stakingKey: CardanoTypes.PublicKey,
   ): Promise<CardanoTypes.Certificate> {
-    // TODO: will come from yoroi-lib
-    throw new Error('Not implemented')
+    const {Certificate, Credential, VoteDelegation, DRep} = this.config.cardano
+
+    const stakingCredential = await Credential.fromKeyhash(
+      await stakingKey.hash(),
+    )
+
+    if (vote === 'abstain') {
+      return await Certificate.newVoteDelegation(
+        await VoteDelegation.new(
+          stakingCredential,
+          await DRep.newAlwaysAbstain(),
+        ),
+      )
+    }
+
+    if (vote === 'no-confidence') {
+      return await Certificate.newVoteDelegation(
+        await VoteDelegation.new(
+          stakingCredential,
+          await DRep.newAlwaysNoConfidence(),
+        ),
+      )
+    }
+
+    throw new Error('Invalid vote')
   }
 
   async createLedgerVotingPayload(
