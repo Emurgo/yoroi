@@ -1,1 +1,0 @@
-{"version":3,"names":["getCnsCryptoAddress","_receiverDomain","Promise","resolve","reject"],"sourceRoot":"../../../src","sources":["adapters/cns.ts"],"mappings":"AAAA,OAAO,MAAMA,mBAAmB,GAAG,MAAOC,eAAuB,IAAK;EACpE,IAAIA,eAAe,KAAK,sBAAsB,EAAE;IAC9C,OAAOC,OAAO,CAACC,OAAO,CACpB,yGACF,CAAC;EACH;EAEA,OAAOD,OAAO,CAACE,MAAM,CAAC,iBAAiB,CAAC;AAC1C,CAAC"}

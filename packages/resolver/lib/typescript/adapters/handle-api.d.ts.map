@@ -1,1 +1,0 @@
-{"version":3,"file":"handle-api.d.ts","sourceRoot":"","sources":["../../../src/adapters/handle-api.ts"],"names":[],"mappings":"AACA,OAAO,EAAC,QAAQ,EAAC,MAAM,cAAc,CAAA;AAIrC,eAAO,MAAM,sBAAsB,mBACjB,SAAS,QAAQ,CAAC,QAAQ,CAAC,KAC1C,QAAQ,MAAM,CAuBhB,CAAA;AAiBD,qBAAa,qBAAsB,SAAQ,KAAK;gBAClC,OAAO,EAAE,MAAM;CAI5B;AAED,qBAAa,kBAAmB,SAAQ,KAAK;gBAC/B,OAAO,EAAE,MAAM;CAI5B"}
