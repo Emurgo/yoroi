@@ -1,4 +1,3 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {isNonNullable, isString} from '@yoroi/common'
 import {
   GovernanceProvider,
@@ -7,7 +6,7 @@ import {
   useLatestGovernanceAction,
   useVotingCertificate,
 } from '@yoroi/staking'
-import React, {ReactNode, useCallback, useState} from 'react'
+import React, {ReactNode} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer, useModal} from '../../../../../components'
