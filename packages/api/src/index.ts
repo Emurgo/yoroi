@@ -1,7 +1,7 @@
 import {appApiMaker} from './app/api/app-api-maker'
 import {mockAppApi} from './app/api/app-api-maker.mocks'
 import {getFrontendFees} from './app/api/frontend-fees'
-import {getProtocolParams} from './app/api/protocol-params'
+import {getProtocolParams} from './cardano/api/protocol-params'
 import {mockGetFrontendFees} from './app/api/frontend-fees.mocks'
 
 import {
@@ -35,9 +35,13 @@ import {
   ApiTokenRegistryEntry,
   ApiTokenId,
   ApiTokenSupplyRecord,
+  ApiTokenIdentity,
   ApiOnChainMetadataRecord,
   ApiOffChainMetadataRecord,
+  ApiProtocolParamsResult,
 } from './cardano/api/types'
+import {cardanoApiMaker} from './cardano/api/cardano-api-maker'
+import {mockCardanoApi} from './cardano/api/cardano-api-maker.mocks'
 
 export const CardanoTokenId = {
   // transformers
@@ -52,8 +56,6 @@ export const AppApi = {
   getFrontendFees,
   mockGetFrontendFees,
 
-  getProtocolParams,
-
   appApiMaker,
   mockAppApi,
 } as const
@@ -62,39 +64,48 @@ export const CardanoApi = {
   getOffChainMetadata,
   getOnChainMetadatas,
   getTokenSupply,
+  getProtocolParams,
   mockGetOnChainMetadatas,
   isNftMetadata,
   isFtMetadata,
   isMetadataFile,
+  cardanoApiMaker,
+  mockCardanoApi,
 } as const
 
-export namespace Cardano {
-  export namespace Api {
-    export type OffChainMetadataRequest = ApiOffChainMetadataRequest
-    export type OnChainMetadataRecord = ApiOnChainMetadataRecord
-    export type OffChainMetadataResponse = ApiOffChainMetadataResponse
+export namespace CardanoApi {
+  export type OffChainMetadataRequest = ApiOffChainMetadataRequest
+  export type OnChainMetadataRecord = ApiOnChainMetadataRecord
+  export type OffChainMetadataResponse = ApiOffChainMetadataResponse
 
-    export type OnChainMetadataRequest = ApiOnChainMetadataRequest
-    export type OffChainMetadataRecord = ApiOffChainMetadataRecord
-    export type OnChainMetadataResponse = ApiOnChainMetadataResponse
+  export type OnChainMetadataRequest = ApiOnChainMetadataRequest
+  export type OffChainMetadataRecord = ApiOffChainMetadataRecord
+  export type OnChainMetadataResponse = ApiOnChainMetadataResponse
 
-    export type TokenSupplyRequest = ApiTokeSupplyRequest
-    export type TokenSupplyRecord = ApiTokenSupplyRecord
-    export type TokenSupplyResponse = ApiTokenSupplyResponse
+  export type TokenSupplyRequest = ApiTokeSupplyRequest
+  export type TokenSupplyRecord = ApiTokenSupplyRecord
 
-    export type FutureToken = ApiFutureToken
-    export type FutureTokenRecords = ApiFutureTokenRecords
+  export type TokenIdentity = ApiTokenIdentity
+  export type TokenSupplyResponse = ApiTokenSupplyResponse
 
-    export type FtMetadata = ApiFtMetadata
-    export type FtMetadataRecord = ApiFtMetadataRecord
-    export interface FtRecords extends ApiFtRecords {}
-    export type TokenRegistryEntry = ApiTokenRegistryEntry
+  export type FutureToken = ApiFutureToken
+  export type FutureTokenRecords = ApiFutureTokenRecords
 
-    export type NftMetadata = ApiNftMetadata
-    export type NftMetadataRecord = ApiNftMetadataRecord
-    export interface NftRecords extends ApiNftRecords {}
+  export type FtMetadata = ApiFtMetadata
+  export type FtMetadataRecord = ApiFtMetadataRecord
+  export interface FtRecords extends ApiFtRecords {}
+  export type TokenRegistryEntry = ApiTokenRegistryEntry
 
-    export type MetadataFile = ApiMetadataFile
-    export type TokenId = ApiTokenId
+  export type NftMetadata = ApiNftMetadata
+  export type NftMetadataRecord = ApiNftMetadataRecord
+  export interface NftRecords extends ApiNftRecords {}
+
+  export type MetadataFile = ApiMetadataFile
+  export type TokenId = ApiTokenId
+
+  export type ProtocolParamsResult = ApiProtocolParamsResult
+
+  export interface api {
+    getProtocolParams: () => Promise<ProtocolParamsResult>
   }
 }

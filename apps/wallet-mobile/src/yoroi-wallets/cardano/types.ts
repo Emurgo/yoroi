@@ -11,6 +11,7 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
+import {CardanoApi} from '@yoroi/api'
 import {App, Balance} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
@@ -99,6 +100,9 @@ export type YoroiWallet = {
   // API
   api: App.Api
 
+  // Cardano API
+  cardanoApi: CardanoApi.api
+
   signRawTx(txHex: string, pKeys: PrivateKey[]): Promise<Uint8Array | undefined>
 
   // Sending
@@ -185,6 +189,8 @@ export type YoroiWallet = {
 
   // CIP36 Payment Address
   getFirstPaymentAddress(): Promise<BaseAddress>
+
+  getProtocolParams(): Promise<CardanoApi.ProtocolParamsResult>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {

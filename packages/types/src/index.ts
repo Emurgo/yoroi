@@ -24,7 +24,6 @@ import {NumberLocale} from './intl/numbers'
 import {SwapAggregator} from './swap/aggregator'
 import {AppApi} from './app/api'
 import {AppFrontendFeesResponse, AppFrontendFeeTier} from './app/frontend-fees'
-import {AppProtocolParamsResponse} from './app/protocol-params'
 import {LinksLink, LinksModule, LinksUriConfig} from './links/link'
 import {
   LinksErrorExtraParamsDenied,
@@ -62,7 +61,6 @@ export namespace App {
 
   export type FrontendFeeTier = AppFrontendFeeTier
   export type FrontendFeesResponse = AppFrontendFeesResponse
-  export type FrontendProtocolParamsResponse = AppProtocolParamsResponse
 }
 export namespace Swap {
   export interface Api extends SwapApi {}

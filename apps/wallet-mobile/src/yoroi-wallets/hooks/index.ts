@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
+import {CardanoApi} from '@yoroi/api'
 import {parseBoolean, useStorage} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
@@ -633,9 +634,9 @@ export const useFrontendFees = (
 export const useProtocolParams = (
   wallet: YoroiWallet,
   options?: UseQueryOptions<
-    App.FrontendProtocolParamsResponse,
+    CardanoApi.ProtocolParamsResult,
     Error,
-    App.FrontendProtocolParamsResponse,
+    CardanoApi.ProtocolParamsResult,
     ['protocol-params']
   >,
 ) => {
@@ -643,7 +644,7 @@ export const useProtocolParams = (
     suspense: true,
     queryKey: ['protocol-params'],
     ...options,
-    queryFn: () => wallet.api.getProtocolParams(),
+    queryFn: () => wallet.getProtocolParams(),
   })
 
   return {

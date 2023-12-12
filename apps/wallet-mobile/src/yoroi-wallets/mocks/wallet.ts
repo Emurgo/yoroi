@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {action} from '@storybook/addon-actions'
-import {AppApi} from '@yoroi/api'
+import {AppApi, CardanoApi} from '@yoroi/api'
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 
@@ -43,6 +43,7 @@ const walletMeta: WalletMeta = {
 const wallet: YoroiWallet = {
   id: 'wallet-id',
   api: AppApi.mockAppApi,
+  cardanoApi: CardanoApi.mockCardanoApi,
   primaryToken: PRIMARY_TOKEN,
   primaryTokenInfo: PRIMARY_TOKEN_INFO,
   walletImplementationId: 'haskell-shelley',
@@ -231,6 +232,7 @@ const wallet: YoroiWallet = {
   disableEasyConfirmation: async () => {
     action('disableEasyConfirmation')
   },
+  getProtocolParams: CardanoApi.mockCardanoApi.getProtocolParams,
 
   // canGenerateNewReceiveAddress: () => {
   //   throw new Error('not implemented: canGenerateNewReceiveAddress')

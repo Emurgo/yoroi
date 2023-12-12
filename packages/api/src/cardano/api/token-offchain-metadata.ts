@@ -6,24 +6,18 @@ import {
   isRecord,
 } from '@yoroi/common'
 
-import {
-  ApiOffChainMetadataRecord,
-  ApiOffChainMetadataRequest,
-  ApiOffChainMetadataResponse,
-  ApiTokenId,
-  ApiTokenRegistryEntry,
-  ApiTokenRegistryProperty,
-} from './types'
+import {ApiTokenRegistryProperty} from './types'
 import {asSubject} from '../translators/transformers/asSubject'
+import {CardanoApi} from '../../index'
 
 export const getOffChainMetadata = (
   baseUrl: string,
   request: Fetcher = fetcher,
 ) => {
   const getTokenRegistryRecord = (
-    tokenId: ApiTokenId,
-  ): Promise<ApiOffChainMetadataResponse> =>
-    request<ApiOffChainMetadataResponse>({
+    tokenId: CardanoApi.TokenId,
+  ): Promise<CardanoApi.OffChainMetadataResponse> =>
+    request<CardanoApi.OffChainMetadataResponse>({
       url: `${baseUrl}/metadata/${asSubject(tokenId)}`,
       method: 'GET',
       headers: {'Content-Type': 'application/json'},
@@ -47,16 +41,16 @@ export const getOffChainMetadata = (
           [tokenId]: {
             tokenRegistry: response,
             isValid: false,
-          } as ApiOffChainMetadataRecord,
+          } as CardanoApi.OffChainMetadataRecord,
         })
       })
       .catch((_e) => Promise.resolve({[tokenId]: emptyOffChainMetadataRecord}))
 
-  return (tokenIds: ApiOffChainMetadataRequest) =>
+  return (tokenIds: CardanoApi.OffChainMetadataRequest) =>
     Promise.all(
       tokenIds.map((tokenId) => getTokenRegistryRecord(tokenId)),
     ).then((responses) => {
-      const result: ApiOffChainMetadataResponse = {}
+      const result: CardanoApi.OffChainMetadataResponse = {}
       responses.forEach((response) => {
         Object.assign(result, response)
       })
@@ -90,16 +84,17 @@ const TokenRegistryPropertyStringSchema: z.ZodSchema<
   value: z.string().optional(),
 })
 
-const TokenRegistryEntrySchema: z.ZodSchema<ApiTokenRegistryEntry> = z.object({
-  subject: z.string(),
-  name: TokenRegistryPropertyStringSchema,
-  description: TokenRegistryPropertyStringSchema.optional(),
-  policy: z.string().optional(),
-  logo: TokenRegistryPropertyStringSchema.optional(),
-  ticker: TokenRegistryPropertyStringSchema.optional(),
-  url: TokenRegistryPropertyStringSchema.optional(),
-  decimals: TokenRegistryPropertyNumberSchema.optional(),
-})
+const TokenRegistryEntrySchema: z.ZodSchema<CardanoApi.TokenRegistryEntry> =
+  z.object({
+    subject: z.string(),
+    name: TokenRegistryPropertyStringSchema,
+    description: TokenRegistryPropertyStringSchema.optional(),
+    policy: z.string().optional(),
+    logo: TokenRegistryPropertyStringSchema.optional(),
+    ticker: TokenRegistryPropertyStringSchema.optional(),
+    url: TokenRegistryPropertyStringSchema.optional(),
+    decimals: TokenRegistryPropertyNumberSchema.optional(),
+  })
 
 export const isTokenRegistryEntry = createTypeGuardFromSchema(
   TokenRegistryEntrySchema,
@@ -109,7 +104,7 @@ const parseTokenRegistryEntry = (data: unknown) => {
   return isTokenRegistryEntry(data) ? data : undefined
 }
 
-export const emptyOffChainMetadataRecord: Readonly<ApiOffChainMetadataRecord> =
+export const emptyOffChainMetadataRecord: Readonly<CardanoApi.OffChainMetadataRecord> =
   {
     tokenRegistry: undefined,
     isValid: false,
