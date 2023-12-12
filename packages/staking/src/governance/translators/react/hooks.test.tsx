@@ -64,9 +64,12 @@ describe('Governance Translators React', () => {
     const {wrapper, manager} = createMocks({
       setLatestGovernanceAction: jest.fn().mockResolvedValue(true),
     })
-    const {result} = renderHook(() => useUpdateLatestGovernanceAction(), {
-      wrapper,
-    })
+    const {result} = renderHook(
+      () => useUpdateLatestGovernanceAction('wallet-id'),
+      {
+        wrapper,
+      },
+    )
     act(() => {
       result.current.mutate({
         drepID: 'drepId',

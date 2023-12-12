@@ -35,6 +35,7 @@ export const useLatestGovernanceAction = (
 }
 
 export const useUpdateLatestGovernanceAction = (
+  walletId: string,
   options: UseMutationOptions<void, Error, GovernanceAction> = {},
 ) => {
   const {manager} = useGovernance()
@@ -42,7 +43,7 @@ export const useUpdateLatestGovernanceAction = (
     ...options,
     mutationFn: async (action: GovernanceAction) =>
       await manager.setLatestGovernanceAction(action),
-    invalidateQueries: ['governanceLatestGovernanceAction'],
+    invalidateQueries: [walletId, 'governanceLatestGovernanceAction'],
   })
   return {
     ...mutation,

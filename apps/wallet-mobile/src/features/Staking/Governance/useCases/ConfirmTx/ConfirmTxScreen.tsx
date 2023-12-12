@@ -21,7 +21,7 @@ export const ConfirmTxScreen = () => {
   const wallet = useSelectedWallet()
   const params = useUnsafeParams<Routes['confirm-tx']>()
   const navigateTo = useNavigateTo()
-  const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction()
+  const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(wallet.id)
   const {openModal, closeModal} = useModal()
 
   const titles = {
