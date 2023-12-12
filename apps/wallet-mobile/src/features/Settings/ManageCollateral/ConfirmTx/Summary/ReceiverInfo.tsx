@@ -1,3 +1,4 @@
+import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {View} from 'react-native'
 
@@ -6,7 +7,7 @@ import {Text} from '../../../../../components/Text'
 import {useStrings} from '../../../../Send/common/strings'
 
 type Props = {
-  receiver: string
+  receiver: Resolver.Receiver
 }
 export const ReceiverInfo = ({receiver}: Props) => {
   const strings = useStrings()
@@ -17,7 +18,7 @@ export const ReceiverInfo = ({receiver}: Props) => {
 
       <Spacer height={12} />
 
-      <Text testID="receiverAddressText">{receiver}</Text>
+      <Text testID="receiverAddressText">{receiver.domain}</Text>
     </View>
   )
 }

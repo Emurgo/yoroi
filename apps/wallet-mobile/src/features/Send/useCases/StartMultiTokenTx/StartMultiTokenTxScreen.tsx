@@ -38,7 +38,7 @@ export const StartMultiTokenTxScreen = () => {
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)
 
-  const {targets, selectedTargetIndex, receiverChanged, memo, memoChanged, addressChanged} = useSend()
+  const {targets, selectedTargetIndex, domainInfoChanged, memo, memoChanged, addressChanged} = useSend()
   const {address, amounts} = targets[selectedTargetIndex].entry
   const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
   const receiver = targets[selectedTargetIndex].receiver
@@ -92,21 +92,21 @@ export const StartMultiTokenTxScreen = () => {
   //   },
   // )
 
-  const addressErrorMessage = React.useMemo(
-    () =>
-      addressValidationError != null && succesfulResolvedAddresses.length < 2
-        ? isDomain(receiver)
-          ? strings.addressInputErrorInvalidDomain
-          : strings.addressInputErrorInvalidAddress
-        : '',
-    [
-      addressValidationError,
-      receiver,
-      strings.addressInputErrorInvalidAddress,
-      strings.addressInputErrorInvalidDomain,
-      succesfulResolvedAddresses.length,
-    ],
-  )
+  // const addressErrorMessage = React.useMemo(
+  //   () =>
+  //     addressValidationError != null && succesfulResolvedAddresses.length < 2
+  //       ? isDomain(receiver)
+  //         ? strings.addressInputErrorInvalidDomain
+  //         : strings.addressInputErrorInvalidAddress
+  //       : '',
+  //   [
+  //     addressValidationError,
+  //     receiver,
+  //     strings.addressInputErrorInvalidAddress,
+  //     strings.addressInputErrorInvalidDomain,
+  //     succesfulResolvedAddresses.length,
+  //   ],
+  // )
   const isValid = React.useMemo(
     () =>
       isOnline &&

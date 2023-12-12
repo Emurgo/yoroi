@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {DomainService, resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
+import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
 import {
   milkTokenId,
   supportedProviders,
@@ -9,7 +9,7 @@ import {
   SwapProvider,
   swapStorageMaker,
 } from '@yoroi/swap'
-import {Swap} from '@yoroi/types'
+import {Resolver, Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
@@ -86,10 +86,10 @@ export const TxHistoryNavigator = () => {
   }, [wallet.networkId, wallet.primaryTokenInfo.id, stakingKey, frontendFees, aggregatorTokenId])
 
   // resolver
-  const resolverModule = React.useMemo(() => {
+  const resolverManager = React.useMemo(() => {
     const resolverApi = resolverApiMaker({
       apiConfig: {
-        [DomainService.Unstoppable]: {
+        [Resolver.NameServer.Unstoppable]: {
           apiKey: CONFIG.UNSTOPPABLE_API_KEY,
         },
       },
@@ -113,7 +113,7 @@ export const TxHistoryNavigator = () => {
     <SendProvider key={wallet.id}>
       <SwapProvider key={wallet.id} swapManager={swapManager}>
         <SwapFormProvider>
-          <ResolverProvider resolverModule={resolverModule}>
+          <ResolverProvider resolverManager={resolverManager}>
             <ClaimProvider key={wallet.id} claimApi={claimApi}>
               <Stack.Navigator
                 screenListeners={{}}

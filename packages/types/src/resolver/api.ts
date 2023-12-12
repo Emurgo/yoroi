@@ -2,17 +2,17 @@ import {ResolverReceiver} from './receiver'
 
 export interface ResolverApi {
   getCardanoAddresses(
-    receiverDomain: ResolverReceiver['domain'],
-    resolverStrategy?: ResolverStrategy,
+    receiver: ResolverReceiver['receiver'],
+    strategy?: ResolverStrategy,
   ): Promise<ResolverAddressesResponse>
 }
 
 export type ResolverStrategy = 'all' | 'first'
 
-export type ResolverAddressResponse = {
+export type ResolverAddressResponse = Readonly<{
   address: string | null
   error: string | null
-  service: string | null
-}
+  nameServer: string | null
+}>
 
-export type ResolverAddressesResponse = Array<ResolverAddressResponse>
+export type ResolverAddressesResponse = ReadonlyArray<ResolverAddressResponse>

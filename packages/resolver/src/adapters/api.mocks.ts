@@ -1,17 +1,18 @@
 const getCardanoAddresses = {
   success: () =>
     Promise.resolve([
-      {address: 'unstoppableAddress', error: null, service: 'unstoppable'},
+      {address: 'unstoppableAddress', error: null, nameServer: 'unstoppable'},
     ]),
 
-  error: () => Promise.resolve([{address: null, error: null, service: null}]),
+  error: () =>
+    Promise.resolve([{address: null, error: null, nameServer: null}]),
 } as const
 
 const getCryptoAddressesResponse = {
   success: [
-    {address: 'unstoppableAddress', error: null, service: 'unstoppable'},
+    {address: 'unstoppableAddress', error: null, nameServer: 'unstoppable'},
   ],
-  error: [{address: null, error: 'any error', service: null}],
+  error: [{address: null, error: 'any error', nameServer: null}],
 }
 
 export const resolverApiMocks = {

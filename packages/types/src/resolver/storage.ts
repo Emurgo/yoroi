@@ -1,4 +1,4 @@
-export type ResolverStorage = {
+export type ResolverStorage = Readonly<{
   showNotice: {
     read(): Promise<boolean>
     remove(): Promise<void>
@@ -7,4 +7,4 @@ export type ResolverStorage = {
   }
 
   clear(): Promise<void>
-}
+}>

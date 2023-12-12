@@ -5,7 +5,7 @@ import {unstoppableApiGetCryptoAddress} from './unstoppable-api'
 import {getCnsCryptoAddress} from './cns'
 
 type ApiConfig = {
-  [Resolver.Service.Unstoppable]: {
+  [Resolver.NameServer.Unstoppable]: {
     apiKey: string
   }
 }
@@ -46,24 +46,24 @@ export const resolverApiMaker = (
 ): Resolver.Api => {
   const getHandleCryptoAddress = handleApi.getCryptoAddress()
   const getUnstoppableCryptoAddress = unstoppableApi.getCryptoAddress(
-    apiConfig[Resolver.Service.Unstoppable],
+    apiConfig[Resolver.NameServer.Unstoppable],
   )
   // @ts-expect-error TODO: bugfix on TS 5.4 (readonly array of readonly array)
   const operationsGetCryptoAddress: GetCryptoAddressOperations = [
-    [Resolver.Service.Handle, getHandleCryptoAddress],
-    [Resolver.Service.Unstoppable, getUnstoppableCryptoAddress],
-    [Resolver.Service.Cns, cnsApi.getCryptoAddress],
+    [Resolver.NameServer.Handle, getHandleCryptoAddress],
+    [Resolver.NameServer.Unstoppable, getUnstoppableCryptoAddress],
+    [Resolver.NameServer.Cns, cnsApi.getCryptoAddress],
   ] as const
 
   // facade to the different crypto address resolution
   const getCardanoAddresses = async (
-    receiverDomain: Resolver.Receiver['domain'],
-    resolutionStrategy: Resolver.Strategy = 'all',
+    receiver: Resolver.Receiver['receiver'],
+    strategy: Resolver.Strategy = 'all',
   ): Promise<Resolver.AddressesResponse> => {
-    if (resolutionStrategy === 'all')
-      return resolveAll(operationsGetCryptoAddress, receiverDomain)
+    if (strategy === 'all')
+      return resolveAll(operationsGetCryptoAddress, receiver)
 
-    return resolveFirst(operationsGetCryptoAddress, receiverDomain)
+    return resolveFirst(operationsGetCryptoAddress, receiver)
   }
 
   return {
@@ -73,23 +73,23 @@ export const resolverApiMaker = (
 
 const safelyExecuteOperation = async (
   operationFn: GetCryptoAddress,
-  service: Resolver.Service,
-  receiverDomain: Resolver.Receiver['domain'],
+  nameServer: Resolver.NameServer,
+  receiver: Resolver.Receiver['receiver'],
 ): Promise<Resolver.AddressResponse> => {
   try {
-    const address = await operationFn(receiverDomain)
-    return {error: null, address, service}
+    const address = await operationFn(receiver)
+    return {error: null, address, nameServer}
   } catch (error) {
-    return {error: (error as Error).message, address: null, service}
+    return {error: (error as Error).message, address: null, nameServer}
   }
 }
 
 const resolveAll = async (
   operations: GetCryptoAddressOperations,
-  receiverDomain: Resolver.Receiver['domain'],
+  receiver: Resolver.Receiver['receiver'],
 ): Promise<Resolver.AddressesResponse> => {
-  const promises = operations.map(([service, operationFn]) =>
-    safelyExecuteOperation(operationFn, service, receiverDomain),
+  const promises = operations.map(([nameServer, operationFn]) =>
+    safelyExecuteOperation(operationFn, nameServer, receiver),
   )
   const result = await Promise.all(promises)
   return result
@@ -97,24 +97,24 @@ const resolveAll = async (
 
 const resolveFirst = async (
   operations: GetCryptoAddressOperations,
-  receiverDomain: Resolver.Receiver['domain'],
+  receiver: Resolver.Receiver['receiver'],
 ): Promise<Resolver.AddressesResponse> => {
-  const promises = operations.map(async ([service, operationFn]) => {
-    const address = await operationFn(receiverDomain)
-    return {error: null, address, service}
+  const promises = operations.map(async ([nameServer, operationFn]) => {
+    const address = await operationFn(receiver)
+    return {error: null, address, nameServer}
   })
   try {
     const result = await Promise.any(promises)
     return [result]
   } catch (error) {
-    return [{address: null, error: 'Not resolved', service: null}]
+    return [{address: null, error: 'Not resolved', nameServer: null}]
   }
 }
 
 type GetCryptoAddress = (
-  receiverDomain: Resolver.Receiver['domain'],
+  receiver: Resolver.Receiver['receiver'],
 ) => Promise<string>
 
 type GetCryptoAddressOperations = ReadonlyArray<
-  [Resolver.Service, GetCryptoAddress]
+  [Resolver.NameServer, GetCryptoAddress]
 >

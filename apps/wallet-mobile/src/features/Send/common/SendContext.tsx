@@ -1,4 +1,4 @@
-import {Balance} from '@yoroi/types'
+import {Balance, Resolver} from '@yoroi/types'
 import * as React from 'react'
 
 import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
@@ -18,9 +18,14 @@ export type SendState = {
 }
 
 type TargetActions = {
+  // Amount
   amountChanged: (quantity: Balance.Quantity) => void
   amountRemoved: (tokenId: string) => void
-  receiverChanged: (receiver: string) => void
+  // Receiver
+  domainInfoChanged: (domainInfo: Pick<Resolver.Receiver, 'domain' | 'isDomain'>) => void
+  selectedServiceChanged: (service: Resolver.NameServer) => void
+  domainResolved: (resolvedInfo: Pick<Resolver.Receiver, 'addresses' | 'selectedService'>) => void
+  // It can be derived from the selected service
   addressChanged: (address: Address) => void
 }
 
@@ -53,7 +58,12 @@ export const SendProvider = ({children, ...props}: {initialState?: Partial<SendS
   const actions = React.useRef<SendActions & TargetActions>({
     resetForm: () => dispatch({type: 'resetForm'}),
 
-    receiverChanged: (receiver: string) => dispatch({type: 'receiverChanged', receiver}),
+    domainInfoChanged: (domainInfo: Pick<Resolver.Receiver, 'domain' | 'isDomain'>) =>
+      dispatch({type: 'domainInfoChanged', domainInfo}),
+    selectedServiceChanged: (service: Resolver.NameServer) => dispatch({type: 'serviceSelectedChanged', service}),
+    domainResolved: (resolvedInfo: Pick<Resolver.Receiver, 'addresses' | 'selectedService'>) =>
+      dispatch({type: 'domainResolved', resolvedInfo}),
+
     addressChanged: (address: Address) => dispatch({type: 'addressChanged', address}),
 
     memoChanged: (memo) => dispatch({type: 'memoChanged', memo}),
@@ -116,8 +126,16 @@ const sendReducer = (state: SendState, action: SendAction) => {
 
 export type TargetAction =
   | {
-      type: 'receiverChanged'
-      receiver: string
+      type: 'domainInfoChanged'
+      domainInfo: Pick<Resolver.Receiver, 'domain' | 'isDomain'>
+    }
+  | {
+      type: 'serviceSelectedChanged'
+      service: Resolver.NameServer
+    }
+  | {
+      type: 'domainResolved'
+      resolvedInfo: Pick<Resolver.Receiver, 'addresses' | 'selectedService'>
     }
   | {
       type: 'addressChanged'
@@ -138,12 +156,60 @@ export type TargetAction =
 
 const targetsReducer = (state: SendState, action: TargetAction) => {
   switch (action.type) {
-    case 'receiverChanged': {
-      const {receiver} = action
+    case 'domainInfoChanged': {
+      const {domainInfo} = action
       const selectedTargetIndex = state.selectedTargetIndex
       const updatedTargets = state.targets.map((target, index) => {
         if (index === selectedTargetIndex) {
-          return {...target, receiver}
+          return {
+            ...target,
+            receiver: {
+              ...target.receiver,
+              domain: domainInfo.domain,
+              isDomain: domainInfo.isDomain,
+              selectedService: undefined,
+              addresses: undefined,
+            },
+          }
+        }
+
+        return {...target}
+      })
+
+      return updatedTargets
+    }
+
+    case 'domainResolved': {
+      const {resolvedInfo} = action
+      const selectedTargetIndex = state.selectedTargetIndex
+      const updatedTargets = state.targets.map((target, index) => {
+        if (index === selectedTargetIndex) {
+          return {
+            ...target,
+            receiver: {
+              ...target.receiver,
+              addresses: resolvedInfo.addresses,
+              selectedService: resolvedInfo.selectedService,
+            },
+          }
+        }
+
+        return {...target}
+      })
+
+      return updatedTargets
+    }
+
+    case 'serviceSelectedChanged': {
+      const {service} = action
+      const selectedTargetIndex = state.selectedTargetIndex
+      const updatedTargets = state.targets.map((target, index) => {
+        if (index === selectedTargetIndex) {
+          return {
+            ...target,
+            receiver: {...target.receiver, selectedService: service},
+            entry: {...target.entry, address: target.receiver.addresses?.[service] ?? ''},
+          }
         }
 
         return {...target}
@@ -225,7 +291,7 @@ export const initialState: SendState = {
       receiver: {
         domain: '',
         isDomain: false,
-        service: undefined,
+        selectedService: undefined,
         addresses: undefined,
       },
       entry: {

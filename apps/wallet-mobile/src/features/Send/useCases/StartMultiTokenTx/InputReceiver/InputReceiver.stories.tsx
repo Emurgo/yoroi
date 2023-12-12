@@ -16,7 +16,7 @@ storiesOf('Send InputReceiver', module)
     const wallet: YoroiWallet = walletMocks.wallet
     const resolverApi = resolverApiMaker({
       apiConfig: {
-        [Resolver.Service.Unstoppable]: {
+        [Resolver.NameServer.Unstoppable]: {
           apiKey: 'apiKey',
         },
       },

@@ -9,13 +9,10 @@ const initialDeps = {request: fetchData} as const
 export const handleApiGetCryptoAddress = ({
   request,
 }: {request: FetchData} = initialDeps) => {
-  return async (
-    receiverDomain: Resolver.Receiver['domain'],
-  ): Promise<string> => {
-    if (!isAdaHandleDomain(receiverDomain))
-      throw new Resolver.Errors.InvalidDomain()
+  return async (receiver: Resolver.Receiver['receiver']): Promise<string> => {
+    if (!isAdaHandleDomain(receiver)) throw new Resolver.Errors.InvalidDomain()
 
-    const sanitizedDomain = receiverDomain.replace(/^\$/, '')
+    const sanitizedDomain = receiver.replace(/^\$/, '')
     const config = {
       url: `${handleApiConfig.mainnet.getCryptoAddress}${sanitizedDomain}`,
     } as const

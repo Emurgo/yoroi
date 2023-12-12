@@ -1,3 +1,4 @@
+import {isResolvableDomain} from '@yoroi/resolver'
 import * as React from 'react'
 import {Alert} from 'react-native'
 
@@ -19,7 +20,7 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
   const {openModal, closeModal, startLoading, stopLoading} = useModal()
   const navigateTo = useNavigateTo()
 
-  const {receiverChanged, amountChanged, tokenSelectedChanged, resetForm, memoChanged} = useSend()
+  const {domainInfoChanged, amountChanged, tokenSelectedChanged, resetForm, memoChanged} = useSend()
 
   const {reset, scanActionClaimChanged, address, claimTokenChanged} = useClaim()
   const claimErrorResolver = useClaimErrorResolver()
@@ -45,7 +46,7 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
 
         if (insideFeature !== 'send') resetForm()
 
-        receiverChanged(scanAction.receiver)
+        domainInfoChanged({domain: scanAction.receiver, isDomain: isResolvableDomain(scanAction.receiver)})
 
         if (scanAction.params) {
           if ('amount' in scanAction.params) {
@@ -68,7 +69,7 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
 
         if (insideFeature !== 'send') resetForm()
 
-        receiverChanged(scanAction.receiver)
+        domainInfoChanged({domain: scanAction.receiver, isDomain: isResolvableDomain(scanAction.receiver)})
         break
       }
 

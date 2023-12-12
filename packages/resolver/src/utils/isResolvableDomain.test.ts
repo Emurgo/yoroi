@@ -2,7 +2,7 @@ import {isResolvableDomain} from './isResolvableDomain'
 
 describe('isResolvableDomain', () => {
   it.each`
-    domain              | expected
+    receiver            | expected
     ${'ud.com'}         | ${true}
     ${'ud.eth'}         | ${true}
     ${'ud.crypto'}      | ${true}
@@ -20,7 +20,7 @@ describe('isResolvableDomain', () => {
     ${'$adahandle'}     | ${true}
     ${'cns.ada'}        | ${true}
     ${'other.uk'}       | ${false}
-  `('should return $expected for $domain', ({domain, expected}) => {
-    expect(isResolvableDomain(domain)).toBe(expected)
+  `('should return $expected for $domain', ({receiver, expected}) => {
+    expect(isResolvableDomain(receiver)).toBe(expected)
   })
 })

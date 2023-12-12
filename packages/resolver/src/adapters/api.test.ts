@@ -1,8 +1,10 @@
+import {Resolver} from '@yoroi/types'
+
 import {resolverApiMaker} from './api'
 
 const mockApiConfig = {
   apiConfig: {
-    unstoppable: {
+    [Resolver.NameServer.Unstoppable]: {
       apiKey: 'mock-api-key',
     },
   },
@@ -41,9 +43,13 @@ describe('resolverApiMaker', () => {
         const results = await api.getCardanoAddresses(domain)
 
         expect(results).toEqual([
-          {address: 'handleAddress', error: null, service: 'handle'},
-          {address: 'unstoppableAddress', error: null, service: 'unstoppable'},
-          {address: 'cnsAddress', error: null, service: 'cns'},
+          {address: 'handleAddress', error: null, nameServer: 'handle'},
+          {
+            address: 'unstoppableAddress',
+            error: null,
+            nameServer: 'unstoppable',
+          },
+          {address: 'cnsAddress', error: null, nameServer: 'cns'},
         ])
       })
 
@@ -68,9 +74,9 @@ describe('resolverApiMaker', () => {
         const results = await api.getCardanoAddresses(domain)
 
         expect(results).toEqual([
-          {address: 'handleAddress', error: null, service: 'handle'},
-          {address: null, error: mockError.message, service: 'unstoppable'},
-          {address: null, error: mockError.message, service: 'cns'},
+          {address: 'handleAddress', error: null, nameServer: 'handle'},
+          {address: null, error: mockError.message, nameServer: 'unstoppable'},
+          {address: null, error: mockError.message, nameServer: 'cns'},
         ])
       })
     })
@@ -97,7 +103,7 @@ describe('resolverApiMaker', () => {
         const results = await api.getCardanoAddresses(domain, 'first')
 
         expect(results).toEqual([
-          {address: 'handleAddress', error: null, service: 'handle'},
+          {address: 'handleAddress', error: null, nameServer: 'handle'},
         ])
       })
 
@@ -122,7 +128,7 @@ describe('resolverApiMaker', () => {
         const results = await api.getCardanoAddresses(domain, 'first')
 
         expect(results).toEqual([
-          {address: null, error: 'Not resolved', service: null},
+          {address: null, error: 'Not resolved', nameServer: null},
         ])
       })
     })

@@ -54,6 +54,5 @@
     "typescript.preferGoToSourceDefinition": true,
     "typescript.referencesCodeLens.enabled": true,
     "typescript.tsserver.maxTsServerMemory": 12072,
-    "typescript.tsdk": "@yoroi/openswap/node_modules/typescript/lib"
   }
 }

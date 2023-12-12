@@ -31,11 +31,11 @@ export const ShowSupportedResolverServices = () => {
 
       <Spacer height={10} />
 
-      <Service text={serviceName[Resolver.Service.Handle]} />
+      <Service text={serviceName[Resolver.NameServer.Handle]} />
 
-      <Service text={serviceName[Resolver.Service.Cns]} />
+      <Service text={serviceName[Resolver.NameServer.Cns]} />
 
-      <Service text={serviceName[Resolver.Service.Unstoppable]} />
+      <Service text={serviceName[Resolver.NameServer.Unstoppable]} />
     </LinearGradient>
   )
 }

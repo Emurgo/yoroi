@@ -11,7 +11,7 @@ import {initialState, SendProvider, useSelectedSecondaryAmountsCounter, useSend}
 
 const wrapper: React.FC<React.PropsWithChildren> = ({children}) => <SendProvider>{children}</SendProvider>
 
-describe('SendContext :: ui', () => {
+describe('SendContext', () => {
   test('resetForm', () => {
     const {getByTestId, getByText} = render(
       <SendProvider>
@@ -87,14 +87,19 @@ describe('SendContext :: hooks', () => {
     expect(result.current.yoroiUnsignedTx).toBeUndefined()
   })
 
-  test('receiverChanged', () => {
+  test('domainInfoChanged', () => {
     const {result} = renderHook(() => useSend(), {wrapper})
 
     act(() => {
-      result.current.receiverChanged('receiver123')
+      result.current.domainInfoChanged({domain: 'domain123', isDomain: true})
     })
 
-    expect(result.current.targets[0].receiver).toBe('receiver123')
+    expect(result.current.targets[0].receiver).toEqual({
+      domain: 'domain123',
+      isDomain: true,
+      selectedService: undefined,
+      addresses: undefined,
+    })
   })
 
   test('addressChanged', () => {

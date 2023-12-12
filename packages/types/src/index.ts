@@ -59,7 +59,7 @@ import {
   ApiErrorInvalidState,
   ApiErrorResponseMalformed,
 } from './api/errors'
-import {ResolverService} from './resolver/service'
+import {ResolverNameServer} from './resolver/service'
 import {
   ResolverErrorInvalidDomain,
   ResolverErrorInvalidResponse,
@@ -171,8 +171,8 @@ export namespace Resolver {
   export interface Api extends ResolverApi {}
   export type Manager = ResolverManager
 
-  export type Service = ResolverService
-  export const Service = ResolverService
+  export type NameServer = ResolverNameServer
+  export const NameServer = ResolverNameServer
   export type Receiver = ResolverReceiver
 
   export type AddressResponse = ResolverAddressResponse
