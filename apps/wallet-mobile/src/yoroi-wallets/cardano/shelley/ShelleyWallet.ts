@@ -159,9 +159,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) =>
 
   return class ShelleyWallet implements YoroiWallet {
     readonly api: App.Api = appApi
-
     readonly cardanoApi: CardanoApi.api = cardanoApi
-
     readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
     readonly primaryTokenInfo: Balance.TokenInfo = PRIMARY_TOKEN_INFO
     readonly walletImplementationId = WALLET_IMPLEMENTATION_ID
