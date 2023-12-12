@@ -1,4 +1,6 @@
+import {isResolvableDomain} from '@yoroi/resolver'
 import {Balance, Resolver} from '@yoroi/types'
+import {produce} from 'immer'
 import * as React from 'react'
 
 import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
@@ -22,17 +24,15 @@ type TargetActions = {
   amountChanged: (quantity: Balance.Quantity) => void
   amountRemoved: (tokenId: string) => void
   // Receiver
-  domainInfoChanged: (domainInfo: Pick<Resolver.Receiver, 'domain' | 'isDomain'>) => void
-  selectedServiceChanged: (service: Resolver.NameServer) => void
-  domainResolved: (resolvedInfo: Pick<Resolver.Receiver, 'addresses' | 'selectedService'>) => void
-  // It can be derived from the selected service
-  addressChanged: (address: Address) => void
+  receiverResolveChanged: (resolve: Resolver.Receiver['resolve']) => void
+  nameServerSelectedChanged: (nameServer: Resolver.NameServer) => void
+  addressRecordsFetched: (addressRecords: Resolver.Receiver['addressRecords']) => void
 }
 
 type SendActions = {
   yoroiUnsignedTxChanged: (yoroiUnsignedTx: YoroiUnsignedTx | undefined) => void
   tokenSelectedChanged: (tokenId: string) => void
-  resetForm: () => void
+  reset: () => void
   memoChanged: (memo: string) => void
 }
 
@@ -56,15 +56,14 @@ export const SendProvider = ({children, ...props}: {initialState?: Partial<SendS
   })
 
   const actions = React.useRef<SendActions & TargetActions>({
-    resetForm: () => dispatch({type: 'resetForm'}),
+    reset: () => dispatch({type: 'reset'}),
 
-    domainInfoChanged: (domainInfo: Pick<Resolver.Receiver, 'domain' | 'isDomain'>) =>
-      dispatch({type: 'domainInfoChanged', domainInfo}),
-    selectedServiceChanged: (service: Resolver.NameServer) => dispatch({type: 'serviceSelectedChanged', service}),
-    domainResolved: (resolvedInfo: Pick<Resolver.Receiver, 'addresses' | 'selectedService'>) =>
-      dispatch({type: 'domainResolved', resolvedInfo}),
-
-    addressChanged: (address: Address) => dispatch({type: 'addressChanged', address}),
+    receiverResolveChanged: (resolve: Resolver.Receiver['resolve']) =>
+      dispatch({type: 'receiverResolveChanged', resolve}),
+    nameServerSelectedChanged: (nameServer: Resolver.NameServer) =>
+      dispatch({type: 'nameServerSelectedChanged', nameServer}),
+    addressRecordsFetched: (addressRecords: Resolver.Receiver['addressRecords']) =>
+      dispatch({type: 'addressRecordsFetched', addressRecords}),
 
     memoChanged: (memo) => dispatch({type: 'memoChanged', memo}),
 
@@ -81,7 +80,7 @@ export const SendProvider = ({children, ...props}: {initialState?: Partial<SendS
 
 export type SendAction =
   | {
-      type: 'resetForm'
+      type: 'reset'
     }
   | {
       type: 'memoChanged'
@@ -98,7 +97,7 @@ export type SendAction =
 
 const sendReducer = (state: SendState, action: SendAction) => {
   switch (action.type) {
-    case 'resetForm':
+    case 'reset':
       return {...initialState}
 
     case 'memoChanged':
@@ -126,16 +125,16 @@ const sendReducer = (state: SendState, action: SendAction) => {
 
 export type TargetAction =
   | {
-      type: 'domainInfoChanged'
-      domainInfo: Pick<Resolver.Receiver, 'domain' | 'isDomain'>
+      type: 'receiverResolveChanged'
+      resolve: Resolver.Receiver['resolve']
     }
   | {
-      type: 'serviceSelectedChanged'
-      service: Resolver.NameServer
+      type: 'nameServerSelectedChanged'
+      nameServer: Resolver.NameServer
     }
   | {
-      type: 'domainResolved'
-      resolvedInfo: Pick<Resolver.Receiver, 'addresses' | 'selectedService'>
+      type: 'addressRecordsFetched'
+      addressRecords: Resolver.Receiver['addressRecords']
     }
   | {
       type: 'addressChanged'
@@ -155,122 +154,87 @@ export type TargetAction =
     }
 
 const targetsReducer = (state: SendState, action: TargetAction) => {
-  switch (action.type) {
-    case 'domainInfoChanged': {
-      const {domainInfo} = action
-      const selectedTargetIndex = state.selectedTargetIndex
-      const updatedTargets = state.targets.map((target, index) => {
-        if (index === selectedTargetIndex) {
-          return {
-            ...target,
-            receiver: {
-              ...target.receiver,
-              domain: domainInfo.domain,
-              isDomain: domainInfo.isDomain,
-              selectedService: undefined,
-              addresses: undefined,
-            },
-          }
-        }
+  return produce(state, (draft) => {
+    switch (action.type) {
+      case 'receiverResolveChanged': {
+        const {resolve} = action
+        const selectedTargetIndex = state.selectedTargetIndex
 
-        return {...target}
-      })
-
-      return updatedTargets
-    }
-
-    case 'domainResolved': {
-      const {resolvedInfo} = action
-      const selectedTargetIndex = state.selectedTargetIndex
-      const updatedTargets = state.targets.map((target, index) => {
-        if (index === selectedTargetIndex) {
-          return {
-            ...target,
-            receiver: {
-              ...target.receiver,
-              addresses: resolvedInfo.addresses,
-              selectedService: resolvedInfo.selectedService,
-            },
-          }
-        }
-
-        return {...target}
-      })
-
-      return updatedTargets
-    }
-
-    case 'serviceSelectedChanged': {
-      const {service} = action
-      const selectedTargetIndex = state.selectedTargetIndex
-      const updatedTargets = state.targets.map((target, index) => {
-        if (index === selectedTargetIndex) {
-          return {
-            ...target,
-            receiver: {...target.receiver, selectedService: service},
-            entry: {...target.entry, address: target.receiver.addresses?.[service] ?? ''},
-          }
-        }
-
-        return {...target}
-      })
-
-      return updatedTargets
-    }
-
-    case 'addressChanged': {
-      const {address} = action
-      const selectedTargetIndex = state.selectedTargetIndex
-      const updatedTargets = state.targets.map((target, index) => {
-        if (index === selectedTargetIndex) {
-          return {...target, entry: {...target.entry, address}}
-        }
-
-        return {...target}
-      })
-
-      return updatedTargets
-    }
-
-    case 'amountChanged': {
-      const {quantity} = action
-      const selectedTargetIndex = state.selectedTargetIndex
-      const selectedTokenId = state.selectedTokenId
-      const updatedTargets = state.targets.map((target, index) => {
-        if (index === selectedTargetIndex) {
-          return {...target, entry: {...target.entry, amounts: {...target.entry.amounts, [selectedTokenId]: quantity}}}
-        }
-
-        return {...target}
-      })
-
-      return updatedTargets
-    }
-
-    case 'amountRemoved': {
-      const {tokenId} = action
-      const selectedTargetIndex = state.selectedTargetIndex
-      const updatedTargets = state.targets.map((target, index) => {
-        if (index === selectedTargetIndex) {
-          const amounts = Object.keys(target.entry.amounts).reduce((acc, key) => {
-            if (key !== tokenId) {
-              acc[key] = target.entry.amounts[key]
+        draft.targets.forEach((target, index) => {
+          if (index === selectedTargetIndex) {
+            const isDomain: boolean = isResolvableDomain(resolve)
+            const as: Resolver.Receiver['as'] = isDomain ? 'domain' : 'address'
+            const address = isDomain ? '' : resolve
+            target.receiver = {
+              resolve,
+              as,
+              selectedNameServer: undefined,
+              addressRecords: undefined,
             }
+            target.entry.address = address
+          }
+        })
+        break
+      }
 
-            return acc
-          }, {})
-          return {...target, entry: {...target.entry, amounts}}
-        }
+      case 'addressRecordsFetched': {
+        const {addressRecords} = action
+        const selectedTargetIndex = state.selectedTargetIndex
 
-        return {...target}
-      })
+        draft.targets.forEach((target, index) => {
+          if (index === selectedTargetIndex) {
+            if (addressRecords !== undefined) {
+              const keys = Object.keys(addressRecords)
+              const selectedNameServer = keys.length === 1 ? keys[0] : undefined
+              target.receiver.selectedNameServer = selectedNameServer
+            } else {
+              target.receiver.selectedNameServer = undefined
+            }
+            target.receiver.addressRecords = addressRecords
+          }
+        })
+        break
+      }
 
-      return updatedTargets
+      case 'nameServerSelectedChanged': {
+        const {nameServer} = action
+        const selectedTargetIndex = state.selectedTargetIndex
+
+        draft.targets.forEach((target, index) => {
+          if (index === selectedTargetIndex) {
+            target.receiver.selectedNameServer = nameServer
+            target.entry.address = target.receiver.addressRecords?.[nameServer] ?? ''
+          }
+        })
+        break
+      }
+
+      case 'amountChanged': {
+        const {quantity} = action
+        const selectedTargetIndex = state.selectedTargetIndex
+        const selectedTokenId = state.selectedTokenId
+
+        draft.targets.forEach((target, index) => {
+          if (index === selectedTargetIndex) {
+            target.entry.amounts[selectedTokenId] = quantity
+          }
+        })
+        break
+      }
+
+      case 'amountRemoved': {
+        const {tokenId} = action
+        const selectedTargetIndex = state.selectedTargetIndex
+
+        draft.targets.forEach((target, index) => {
+          if (index === selectedTargetIndex) {
+            delete target.entry.amounts[tokenId]
+          }
+        })
+        break
+      }
     }
-
-    default:
-      return state.targets
-  }
+  })
 }
 
 export const useSend = () => React.useContext(SendContext) || missingProvider()
@@ -289,10 +253,10 @@ export const initialState: SendState = {
   targets: [
     {
       receiver: {
-        domain: '',
-        isDomain: false,
-        selectedService: undefined,
-        addresses: undefined,
+        resolve: '',
+        as: 'address',
+        selectedNameServer: undefined,
+        addressRecords: undefined,
       },
       entry: {
         address: '',

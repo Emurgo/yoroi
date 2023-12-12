@@ -18,7 +18,8 @@ export const ReceiverInfo = ({receiver}: Props) => {
 
       <Spacer height={12} />
 
-      <Text testID="receiverAddressText">{receiver.domain}</Text>
+      {/* TODO: revisit, should receive the target not the receiver for collateral is irrelevant */}
+      <Text testID="receiverAddressText">{receiver.receiver}</Text>
     </View>
   )
 }

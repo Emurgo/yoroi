@@ -22,13 +22,13 @@ storiesOf('Send InputReceiver', module)
       },
     })
     const resolverStorage = resolverStorageMaker()
-    const resolverModule = resolverManagerMaker(resolverStorage, resolverApi)
+    const resolverManager= resolverManagerMaker(resolverStorage, resolverApi)
 
     return (
       <QueryProvider>
         <SelectedWalletProvider wallet={wallet}>
           <SendProvider>
-            <ResolverProvider resolverModule={resolverModule}>
+            <ResolverProvider resolverManager={resolverManager}>
               <Boundary>
                 {story()}
               </Boundary>

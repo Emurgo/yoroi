@@ -1,5 +1,6 @@
 import {act, renderHook} from '@testing-library/react-hooks'
 import {fireEvent, render} from '@testing-library/react-native'
+import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {TextInput} from 'react-native'
 
@@ -91,14 +92,14 @@ describe('SendContext :: hooks', () => {
     const {result} = renderHook(() => useSend(), {wrapper})
 
     act(() => {
-      result.current.domainInfoChanged({domain: 'domain123', isDomain: true})
+      result.current.domainInfoChanged({receiver: 'domain123', isDomain: true})
     })
 
-    expect(result.current.targets[0].receiver).toEqual({
-      domain: 'domain123',
+    expect(result.current.targets[0].receiver).toEqual<Resolver.Receiver>({
+      receiver: 'domain123',
       isDomain: true,
-      selectedService: undefined,
-      addresses: undefined,
+      selectedNameServer: undefined,
+      addressRecords: undefined,
     })
   })
 

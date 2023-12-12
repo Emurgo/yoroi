@@ -41,7 +41,7 @@ export const ManageCollateralScreen = () => {
   const balances = useBalances(wallet)
   const lockedAmount = useLockedAmount({wallet})
 
-  const {resetForm, addressChanged, amountChanged, tokenSelectedChanged, yoroiUnsignedTxChanged} = useSend()
+  const {resetForm, domainInfoChanged, amountChanged, tokenSelectedChanged, yoroiUnsignedTxChanged} = useSend()
   const {refetch: createUnsignedTx, isFetching: isLoadingTx} = useSendTx(
     {
       wallet,
@@ -73,9 +73,13 @@ export const ManageCollateralScreen = () => {
       tokenId: wallet.primaryTokenInfo.id,
     }
 
-    // dispatch only for confirmation screen
+    // populate for confirmation screen
     resetForm()
-    addressChanged(address)
+    domainInfoChanged({
+      receiver: address,
+      isDomain: false,
+      address,
+    })
     tokenSelectedChanged(amount.tokenId)
     amountChanged(amount.quantity)
 

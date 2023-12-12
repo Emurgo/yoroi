@@ -1,4 +1,4 @@
-import {serviceName, useResolverSetShowNotice, useResolverShowNotice} from '@yoroi/resolver'
+import {nameServerName, useResolverSetShowNotice, useResolverShowNotice} from '@yoroi/resolver'
 import {Resolver} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
@@ -19,7 +19,7 @@ export const ShowSupportedResolverServices = () => {
     setShowNotice(false)
   }, [setShowNotice])
 
-  if (!showNotice) return null
+  if (showNotice === false) return null
 
   return (
     <LinearGradient style={styles.gradient} start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={['#C6F7ED', '#E4E8F7']}>
@@ -31,25 +31,25 @@ export const ShowSupportedResolverServices = () => {
 
       <Spacer height={10} />
 
-      <Service text={serviceName[Resolver.NameServer.Handle]} />
+      <NameServer text={nameServerName[Resolver.NameServer.Handle]} />
 
-      <Service text={serviceName[Resolver.NameServer.Cns]} />
+      <NameServer text={nameServerName[Resolver.NameServer.Cns]} />
 
-      <Service text={serviceName[Resolver.NameServer.Unstoppable]} />
+      <NameServer text={nameServerName[Resolver.NameServer.Unstoppable]} />
     </LinearGradient>
   )
 }
 
-const Service = ({text}: {text: string}) => {
+const NameServer = ({text}: {text: string}) => {
   return (
-    <View style={styles.domainServiceContainer}>
+    <View style={styles.nameServerRoot}>
       <Spacer width={8} />
 
-      <Text style={styles.domainServiceText}>·</Text>
+      <Text style={styles.nameServerText}>·</Text>
 
       <Spacer width={8} />
 
-      <Text style={styles.domainServiceText}>{text}</Text>
+      <Text style={styles.nameServerText}>{text}</Text>
     </View>
   )
 }
@@ -64,13 +64,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  domainServiceContainer: {
+  nameServerRoot: {
     flexDirection: 'row',
     alignItems: 'center',
     lineHeight: 22,
     color: '#000',
   },
-  domainServiceText: {
+  nameServerText: {
     fontWeight: '400',
     fontFamily: 'Rubik-Regular',
     fontSize: 14,

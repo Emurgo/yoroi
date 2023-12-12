@@ -19,6 +19,7 @@ export const useResolverShowNotice = (
     queryKey: ['useResolverShowNotice'],
     queryFn: showNotice.read,
   })
+
   return {
     ...query,
     showNotice: query.data,

@@ -5,9 +5,9 @@ import {useResolver} from '../provider/ResolverProvider'
 
 export const useResolverCryptoAddresses = (
   {
-    receiver,
+    resolve,
     strategy = 'all',
-  }: {receiver: string; strategy?: Resolver.Strategy},
+  }: {resolve: Resolver.Receiver['resolve']; strategy?: Resolver.Strategy},
   options?: UseQueryOptions<
     Resolver.AddressesResponse,
     Error,
@@ -19,9 +19,9 @@ export const useResolverCryptoAddresses = (
 
   const query = useQuery({
     useErrorBoundary: true,
-    queryKey: ['useResolverCryptoAddresses', receiver],
+    queryKey: ['useResolverCryptoAddresses', resolve],
     ...options,
-    queryFn: () => crypto.getCardanoAddresses(receiver, strategy),
+    queryFn: () => crypto.getCardanoAddresses(resolve, strategy),
   })
 
   return {

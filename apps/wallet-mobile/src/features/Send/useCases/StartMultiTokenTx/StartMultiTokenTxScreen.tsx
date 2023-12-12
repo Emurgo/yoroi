@@ -1,4 +1,4 @@
-import {isDomain} from '@yoroi/resolver'
+import {isResolvableDomain} from '@yoroi/resolver'
 import {Resolver} from '@yoroi/types'
 import _ from 'lodash'
 import React from 'react'
@@ -38,12 +38,15 @@ export const StartMultiTokenTxScreen = () => {
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)
 
-  const {targets, selectedTargetIndex, domainInfoChanged, memo, memoChanged, addressChanged} = useSend()
+  const {targets, selectedTargetIndex, memo, memoChanged, domainInfoChanged, addressChanged} = useSend()
   const {address, amounts} = targets[selectedTargetIndex].entry
   const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
   const receiver = targets[selectedTargetIndex].receiver
   // const {resolvedAddressSelected, resolvedAddressSelectedChanged} = useResolver()
   const [succesfulResolvedAddresses, setSuccesfulResolvedAddresses] = React.useState<Resolver.AddressesResponse>([])
+
+  const handleOnChangeReceiver = (receiver: string) => {
+  }
 
   const validatorEnabled = false
   // React.useMemo(
@@ -53,19 +56,19 @@ export const StartMultiTokenTxScreen = () => {
   //   [receiver, resolvedAddressSelected?.address, succesfulResolvedAddresses.length],
   // )
 
-  const {error: addressValidationError, isLoading: isValidationLoading} = useValidAddress(
-    {wallet, receiver: receiver},
-    {
-      onSettled(address, error) {
-        if (error) {
-          addressChanged('')
-        } else {
-          addressChanged(address ?? '')
-        }
-      },
-      enabled: validatorEnabled,
-    },
-  )
+  // const {error: addressValidationError, isLoading: isValidationLoading} = useValidAddress(
+  //   {wallet, receiver: receiver},
+  //   {
+  //     onSettled(address, error) {
+  //       if (error) {
+  //         addressChanged('')
+  //       } else {
+  //         addressChanged(address ?? '')
+  //       }
+  //     },
+  //     enabled: validatorEnabled,
+  //   },
+  // )
 
   // const resolverEnabled = React.useMemo(
   //   () =>
@@ -111,10 +114,10 @@ export const StartMultiTokenTxScreen = () => {
     () =>
       isOnline &&
       !hasPendingTx &&
-      _.isEmpty(addressValidationError) &&
+      // _.isEmpty(addressValidationError) &&
       memo.length <= maxMemoLength &&
       !isEmptyString(address),
-    [address, addressValidationError, hasPendingTx, isOnline, memo.length],
+    [address, hasPendingTx, isOnline, memo.length],
   )
 
   const onNext = () => {
@@ -123,13 +126,6 @@ export const StartMultiTokenTxScreen = () => {
     } else {
       navigateTo.selectedTokens()
     }
-  }
-
-  const onChangeReceiver = (text: string) => {
-    addressChanged('')
-    receiverChanged(text)
-    // resolvedAddressSelectedChanged(null)
-    setSuccesfulResolvedAddresses([])
   }
 
   return (
@@ -160,10 +156,9 @@ export const StartMultiTokenTxScreen = () => {
           <Spacer height={16} />
 
           <ResolveAddress
-            onChangeReceiver={onChangeReceiver}
-            receiver={receiver}
-            errorMessage={addressErrorMessage}
-            isLoading={isValidationLoading}
+            receiver={receiver.receiver}
+            errorMessage=""
+            isLoading={false}
             isValid={!!isValid}
           />
 

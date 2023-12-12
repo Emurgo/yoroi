@@ -46,7 +46,7 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
 
         if (insideFeature !== 'send') resetForm()
 
-        domainInfoChanged({domain: scanAction.receiver, isDomain: isResolvableDomain(scanAction.receiver)})
+        domainInfoChanged({receiver: scanAction.receiver, isDomain: isResolvableDomain(scanAction.receiver)})
 
         if (scanAction.params) {
           if ('amount' in scanAction.params) {
@@ -69,7 +69,7 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
 
         if (insideFeature !== 'send') resetForm()
 
-        domainInfoChanged({domain: scanAction.receiver, isDomain: isResolvableDomain(scanAction.receiver)})
+        domainInfoChanged({receiver: scanAction.receiver, isDomain: isResolvableDomain(scanAction.receiver)})
         break
       }
 

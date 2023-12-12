@@ -57,13 +57,13 @@ export const resolverApiMaker = (
 
   // facade to the different crypto address resolution
   const getCardanoAddresses = async (
-    receiver: Resolver.Receiver['receiver'],
+    resolve: Resolver.Receiver['resolve'],
     strategy: Resolver.Strategy = 'all',
   ): Promise<Resolver.AddressesResponse> => {
     if (strategy === 'all')
-      return resolveAll(operationsGetCryptoAddress, receiver)
+      return resolveAll(operationsGetCryptoAddress, resolve)
 
-    return resolveFirst(operationsGetCryptoAddress, receiver)
+    return resolveFirst(operationsGetCryptoAddress, resolve)
   }
 
   return {
@@ -74,10 +74,10 @@ export const resolverApiMaker = (
 const safelyExecuteOperation = async (
   operationFn: GetCryptoAddress,
   nameServer: Resolver.NameServer,
-  receiver: Resolver.Receiver['receiver'],
+  resolve: Resolver.Receiver['resolve'],
 ): Promise<Resolver.AddressResponse> => {
   try {
-    const address = await operationFn(receiver)
+    const address = await operationFn(resolve)
     return {error: null, address, nameServer}
   } catch (error) {
     return {error: (error as Error).message, address: null, nameServer}
@@ -86,10 +86,10 @@ const safelyExecuteOperation = async (
 
 const resolveAll = async (
   operations: GetCryptoAddressOperations,
-  receiver: Resolver.Receiver['receiver'],
+  resolve: Resolver.Receiver['resolve'],
 ): Promise<Resolver.AddressesResponse> => {
   const promises = operations.map(([nameServer, operationFn]) =>
-    safelyExecuteOperation(operationFn, nameServer, receiver),
+    safelyExecuteOperation(operationFn, nameServer, resolve),
   )
   const result = await Promise.all(promises)
   return result
@@ -97,10 +97,10 @@ const resolveAll = async (
 
 const resolveFirst = async (
   operations: GetCryptoAddressOperations,
-  receiver: Resolver.Receiver['receiver'],
+  resolve: Resolver.Receiver['resolve'],
 ): Promise<Resolver.AddressesResponse> => {
   const promises = operations.map(async ([nameServer, operationFn]) => {
-    const address = await operationFn(receiver)
+    const address = await operationFn(resolve)
     return {error: null, address, nameServer}
   })
   try {
@@ -112,7 +112,7 @@ const resolveFirst = async (
 }
 
 type GetCryptoAddress = (
-  receiver: Resolver.Receiver['receiver'],
+  resolve: Resolver.Receiver['resolve'],
 ) => Promise<string>
 
 type GetCryptoAddressOperations = ReadonlyArray<

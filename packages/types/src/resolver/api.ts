@@ -2,7 +2,7 @@ import {ResolverReceiver} from './receiver'
 
 export interface ResolverApi {
   getCardanoAddresses(
-    receiver: ResolverReceiver['receiver'],
+    resolve: ResolverReceiver['resolve'],
     strategy?: ResolverStrategy,
   ): Promise<ResolverAddressesResponse>
 }

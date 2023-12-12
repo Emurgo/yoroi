@@ -25,7 +25,7 @@ describe('useResolverCryptoAddresses', () => {
 
   it('success', async () => {
     const TestResolverAddresss = () => {
-      const addresses = useResolverCryptoAddresses({receiver: domain})
+      const addresses = useResolverCryptoAddresses({resolve: domain})
       return (
         <View>
           <Text testID="addresses">{JSON.stringify(addresses.data)}</Text>

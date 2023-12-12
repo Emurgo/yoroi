@@ -1,8 +1,8 @@
 import {ResolverNameServer} from './service'
 
 export type ResolverReceiver = {
-  receiver: string
-  isDomain: boolean
+  resolve: string
+  as: 'domain' | 'address'
   selectedNameServer: ResolverNameServer | undefined
   addressRecords: {[key in ResolverNameServer]?: string} | undefined
 }

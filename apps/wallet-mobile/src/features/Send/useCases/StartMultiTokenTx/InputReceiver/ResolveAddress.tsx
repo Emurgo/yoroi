@@ -1,10 +1,11 @@
-import {serviceName} from '@yoroi/resolver'
+import {nameServerName} from '@yoroi/resolver'
 import React from 'react'
 import {StyleSheet, Text, View, ViewProps} from 'react-native'
 
 import {HelperText, Spacer} from '../../../../../components'
 import {isEmptyString} from '../../../../../utils'
 import {useStrings} from '../../../common/strings'
+import {useChangeReceiver} from '../../../common/useChangeReceiver'
 import {InputReceiver} from './InputReceiver'
 
 type ReceiverProps = ViewProps & {
@@ -14,27 +15,24 @@ type ReceiverProps = ViewProps & {
   isValid: boolean
   onChangeReceiver: (receiver: string) => void
 }
-export const ResolveAddress = ({
-  isLoading,
-  receiver,
-  errorMessage,
-  isValid,
-  onChangeReceiver,
-  style,
-  ...props
-}: ReceiverProps) => {
+export const ResolveAddress = ({isLoading, receiver, errorMessage, isValid, style, ...props}: ReceiverProps) => {
   // const {resolvedAddressSelected} = useResolver()
   const isError = errorMessage.length > 0
   // const selectedAddress = resolvedAddressSelected?.address ?? ''
   // const selectedSevice = resolvedAddressSelected?.service ?? ''
   // const isResolved = !isLoading && !isEmptyString(selectedAddress) && !isEmptyString(selectedSevice)
   const _isResolved = false
+  const [, setInputText] = React.useState(receiver)
+  const handleOnChangeText = (text: string) => {
+    setInputText(text)
+  }
+  useChangeReceiver(receiver)
 
   return (
     <View style={style} {...props}>
       <InputReceiver
         value={receiver}
-        onChangeText={onChangeReceiver}
+        onChangeText={handleOnChangeText}
         error={isError}
         errorText={errorMessage}
         isLoading={isLoading}
@@ -69,7 +67,7 @@ const _ResolvedAddress = ({address, service}: {address: string; service: string}
       <Spacer height={4} />
 
       <View style={styles.resolvedAddressContainer}>
-        <Text style={styles.resolvedAddressService} numberOfLines={1}>{`${serviceName[service]}`}</Text>
+        <Text style={styles.resolvedAddressService} numberOfLines={1}>{`${nameServerName[service]}`}</Text>
 
         <Text
           style={styles.resolvedAddress}

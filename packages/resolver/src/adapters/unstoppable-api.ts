@@ -10,14 +10,14 @@ export const unstoppableApiGetCryptoAddress = (
   {apiKey}: {apiKey: string},
   {request}: {request: FetchData} = initialDeps,
 ) => {
-  return async (receiver: Resolver.Receiver['receiver']): Promise<string> => {
-    if (!receiver.includes('.')) throw new Resolver.Errors.InvalidDomain()
+  return async (resolve: Resolver.Receiver['resolve']): Promise<string> => {
+    if (!resolve.includes('.')) throw new Resolver.Errors.InvalidDomain()
 
-    if (!isUnstoppableHandleDomain(receiver))
+    if (!isUnstoppableHandleDomain(resolve))
       throw new Resolver.Errors.UnsupportedTld()
 
     const config = {
-      url: `${unstoppableApiConfig.mainnet.getCryptoAddress}${receiver}`,
+      url: `${unstoppableApiConfig.mainnet.getCryptoAddress}${resolve}`,
       headers: {
         'Content-Type': 'application/json',
         'Bearer': apiKey,
