@@ -11,18 +11,9 @@ import {useSelectedWallet} from '../../../SelectedWallet'
 import {COLORS} from '../../../theme'
 import {CardanoMobile} from '../../../yoroi-wallets/wallets'
 import {NavigationStack, useStrings} from './common'
-import {USE_MOCKED_API} from './config'
 import {ChangeVoteScreen, ConfirmTxScreen, FailedTxScreen, HomeScreen, SuccessTxScreen} from './useCases'
 
 const Stack = NavigationStack
-
-const apiMock: GovernanceApi = {
-  getDRepById: () =>
-    Promise.resolve({
-      txId: 'txId',
-      epoch: 1,
-    }),
-}
 
 export const GovernanceNavigator = () => {
   const {networkId} = useSelectedWallet()
@@ -33,7 +24,7 @@ export const GovernanceNavigator = () => {
       governanceManagerMaker({
         walletId: wallet.id,
         networkId,
-        api: USE_MOCKED_API ? apiMock : governanceApiMaker({networkId}),
+        api: governanceApiMaker({networkId}),
         cardano: CardanoMobile,
         storage: AsyncStorage,
       }),
