@@ -15,7 +15,7 @@ const delayedResponse = <T = never>({
     setTimeout(() => resolve(data), timeout)
   })
 
-const getFrontendFees = {
+const getProtocolParams = {
   success: () => Promise.resolve(paramsMockResponse),
   delayed: (timeout?: number) =>
     delayedResponse({data: paramsMockResponse, timeout}),
@@ -27,5 +27,5 @@ const getFrontendFees = {
 }
 
 export const mockCardanoApi: CardanoApi.api = {
-  getProtocolParams: getFrontendFees.success,
+  getProtocolParams: getProtocolParams.success,
 } as const
