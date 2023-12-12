@@ -76,13 +76,20 @@ describe('createGovernanceManager', () => {
       await manager.validateDRepID(keyHash)
     })
 
-    // TODO: will be implemented in the future
-    // it('should accept bech32 address as DRep ID', async () => {
-    //   const bech32Address =
-    //     'drep1wdt7ryc567pauvc5a93rt5mnzpx6y2rh6mvtu5phehmj5lkqjgx'
-    //
-    //   await governanceManager.validateDRepID(bech32Address)
-    // })
+    it('should accept bech32 address as DRep ID', async () => {
+      const bech32Address =
+        'drep1wdt7ryc567pauvc5a93rt5mnzpx6y2rh6mvtu5phehmj5lkqjgx'
+      const fakeSuccessResponse = {
+        txId: 'tx',
+        epoch: 123,
+      }
+      const manager = governanceManagerMaker({
+        ...options,
+        api: {getDRepById: () => Promise.resolve(fakeSuccessResponse)},
+      })
+
+      await manager.validateDRepID(bech32Address)
+    })
   })
 
   describe('createDelegationCertificate', () => {

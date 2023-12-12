@@ -554,7 +554,7 @@ export class ByronWallet implements YoroiWallet {
 
   async getAllUtxosForKey() {
     return filterAddressesByStakingKey(
-      await CardanoMobile.StakeCredential.fromKeyhash(await (await this.getStakingKey()).hash()),
+      await CardanoMobile.Credential.fromKeyhash(await (await this.getStakingKey()).hash()),
       await this.getAddressedUtxos(),
       false,
     )
@@ -741,7 +741,7 @@ export class ByronWallet implements YoroiWallet {
   async createUnsignedGovernanceTx(_votingCertificate: CardanoTypes.Certificate) {
     const address = await this.getFirstPaymentAddress()
       .then((a) => a.toAddress())
-      .then((a) => a.toBech32())
+      .then((a) => a.toBech32(undefined))
 
     return this.createUnsignedTx([{address: address, amounts: {[this.primaryTokenInfo.id]: Quantities.zero}}])
   }
@@ -846,7 +846,9 @@ export class ByronWallet implements YoroiWallet {
   async getFirstPaymentAddress() {
     const externalAddress = this.externalAddresses[0]
     const addr = await Cardano.Wasm.Address.fromBech32(externalAddress)
-    return Cardano.Wasm.BaseAddress.fromAddress(addr)
+    const address = await Cardano.Wasm.BaseAddress.fromAddress(addr)
+    if (!address) throw new Error('invalid address')
+    return address
   }
 
   async ledgerSupportsCIP36(useUSB: boolean): Promise<boolean> {
@@ -900,7 +902,7 @@ export class ByronWallet implements YoroiWallet {
         .then((a) => a.toBytes())
         .then((b) => Buffer.from(b).toString('hex'))
 
-      const addressingCIP36 = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32()))
+      const addressingCIP36 = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32(undefined)))
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
@@ -919,7 +921,7 @@ export class ByronWallet implements YoroiWallet {
         supportsCIP36,
       )
 
-      const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32())
+      const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32(undefined))
 
       const votingRegistration: {
         votingPublicKey: string

@@ -253,6 +253,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
       const {internalChain, externalChain} = addressChains.restore({data})
 
+      console.log('got chains')
       const wallet = await this.commonCreate({
         id: walletMeta.id,
         storage,
@@ -264,6 +265,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         isEasyConfirmationEnabled: data.isEasyConfirmationEnabled,
         lastGeneratedAddressIndex: data.lastGeneratedAddressIndex ?? 0, // AddressManager
       })
+      console.log('wallet created')
 
       return wallet
     }
@@ -289,7 +291,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       isEasyConfirmationEnabled: boolean
       lastGeneratedAddressIndex?: number
     }) => {
+      console.log('commonCreate')
       const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, NETWORK_ID)
+      console.log('got reward address')
       const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl: API_ROOT})
       const transactionManager = await TransactionManager.create(storage.join('txs/'))
       const memosManager = await makeMemosManager(storage.join('memos/'))
@@ -469,12 +473,13 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     private async getRewardAddress() {
       const baseAddr = await this.getFirstPaymentAddress()
+      if (!baseAddr) throw new Error('invalid wallet state')
       return baseAddr.toAddress()
     }
 
     async getAllUtxosForKey() {
       return filterAddressesByStakingKey(
-        await CardanoMobile.StakeCredential.fromKeyhash(await (await this.getStakingKey()).hash()),
+        await CardanoMobile.Credential.fromKeyhash(await (await this.getStakingKey()).hash()),
         await this.getAddressedUtxos(),
         false,
       )
@@ -644,7 +649,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     async createUnsignedGovernanceTx(_votingCertificate: CardanoTypes.Certificate) {
       const address = await this.getFirstPaymentAddress()
         .then((a) => a.toAddress())
-        .then((a) => a.toBech32())
+        .then((a) => a.toBech32(undefined))
 
       return this.createUnsignedTx([{address: address, amounts: {[this.primaryTokenInfo.id]: Quantities.zero}}])
     }
@@ -744,7 +749,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     async getFirstPaymentAddress() {
       const externalAddress = this.externalAddresses[0]
       const addr = await Cardano.Wasm.Address.fromBech32(externalAddress)
-      return Cardano.Wasm.BaseAddress.fromAddress(addr)
+      const address = await Cardano.Wasm.BaseAddress.fromAddress(addr)
+      if (!address) throw new Error('invalid wallet state')
+      return address
     }
 
     async createVotingRegTx(pin: string, supportsCIP36: boolean) {
@@ -792,7 +799,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           .then((a) => a.toBytes())
           .then((b) => Buffer.from(b).toString('hex'))
 
-        const addressingCIP36 = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32()))
+        const addressingCIP36 = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32(undefined)))
 
         const unsignedTx = await Cardano.createUnsignedVotingTx(
           absSlotNumber,
@@ -811,7 +818,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           supportsCIP36,
         )
 
-        const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32())
+        const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32(undefined))
         const votingRegistration: {
           votingPublicKey: string
           stakingPublicKey: string

@@ -59,12 +59,10 @@ class Manager implements GovernanceManager {
     drepID: string,
     stakingKey: CardanoTypes.PublicKey,
   ): Promise<CardanoTypes.Certificate> {
-    const {Certificate, Ed25519KeyHash, StakeDelegation, StakeCredential} =
+    const {Certificate, Ed25519KeyHash, StakeDelegation, Credential} =
       this.config.cardano
 
-    const credential = await StakeCredential.fromKeyhash(
-      await stakingKey.hash(),
-    )
+    const credential = await Credential.fromKeyhash(await stakingKey.hash())
     return await Certificate.newStakeDelegation(
       await StakeDelegation.new(
         credential,
@@ -74,7 +72,9 @@ class Manager implements GovernanceManager {
   }
 
   async validateDRepID(drepId: string): Promise<void> {
-    const isValidBech32 = drepId.startsWith('drep1')
+    const isValidBech32 =
+      drepId.startsWith('drep1') &&
+      (await isValidDrepBech32Format(drepId, this.config.cardano))
     const isValidKeyHash = drepId.length === 56 && /^[0-9a-fA-F]+$/.test(drepId)
 
     if (!isValidBech32 && !isValidKeyHash) {
@@ -83,8 +83,9 @@ class Manager implements GovernanceManager {
       throw new Error(message)
     }
 
-    // // TODO: will be implemented in the future
-    const drepKeyHash = isValidKeyHash ? drepId : drepId
+    const drepKeyHash = isValidKeyHash
+      ? drepId
+      : await convertBech32ToKeyHash(drepId, this.config.cardano)
     const drepStatus = await this.config.api.getDRepById(drepKeyHash)
 
     if (!drepStatus || !drepStatus.epoch) {
@@ -139,6 +140,26 @@ class Manager implements GovernanceManager {
       return null
     }
   }
+}
+
+const isValidDrepBech32Format = async (
+  drepId: string,
+  cardano: CardanoTypes.Wasm,
+): Promise<boolean> => {
+  try {
+    await cardano.Ed25519KeyHash.fromBech32(drepId)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+const convertBech32ToKeyHash = async (
+  drepId: string,
+  cardano: CardanoTypes.Wasm,
+): Promise<string> => {
+  const keyHash = await cardano.Ed25519KeyHash.fromBech32(drepId)
+  return await keyHash.toHex()
 }
 
 const getGovernanceStorageLatestActionKey = (walletId: string) => {
