@@ -253,7 +253,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
       const {internalChain, externalChain} = addressChains.restore({data})
 
-      console.log('got chains')
       const wallet = await this.commonCreate({
         id: walletMeta.id,
         storage,
@@ -265,7 +264,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         isEasyConfirmationEnabled: data.isEasyConfirmationEnabled,
         lastGeneratedAddressIndex: data.lastGeneratedAddressIndex ?? 0, // AddressManager
       })
-      console.log('wallet created')
 
       return wallet
     }
@@ -291,9 +289,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       isEasyConfirmationEnabled: boolean
       lastGeneratedAddressIndex?: number
     }) => {
-      console.log('commonCreate')
       const rewardAddressHex = await deriveRewardAddressHex(accountPubKeyHex, NETWORK_ID)
-      console.log('got reward address')
       const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl: API_ROOT})
       const transactionManager = await TransactionManager.create(storage.join('txs/'))
       const memosManager = await makeMemosManager(storage.join('memos/'))

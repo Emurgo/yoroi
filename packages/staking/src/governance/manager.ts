@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {CardanoTypes} from '../types'
 import {GovernanceApi} from './api'
+import {parseDrepId} from './helpers'
 
 export type Config = {
   networkId: number
@@ -72,20 +73,7 @@ class Manager implements GovernanceManager {
   }
 
   async validateDRepID(drepId: string): Promise<void> {
-    const isValidBech32 =
-      drepId.startsWith('drep1') &&
-      (await isValidDrepBech32Format(drepId, this.config.cardano))
-    const isValidKeyHash = drepId.length === 56 && /^[0-9a-fA-F]+$/.test(drepId)
-
-    if (!isValidBech32 && !isValidKeyHash) {
-      const message =
-        'Invalid DRep ID. Must have a valid bech32 format or a valid key hash format'
-      throw new Error(message)
-    }
-
-    const drepKeyHash = isValidKeyHash
-      ? drepId
-      : await convertBech32ToKeyHash(drepId, this.config.cardano)
+    const drepKeyHash = await parseDrepId(drepId, this.config.cardano)
     const drepStatus = await this.config.api.getDRepById(drepKeyHash)
 
     if (!drepStatus || !drepStatus.epoch) {
@@ -140,26 +128,6 @@ class Manager implements GovernanceManager {
       return null
     }
   }
-}
-
-const isValidDrepBech32Format = async (
-  drepId: string,
-  cardano: CardanoTypes.Wasm,
-): Promise<boolean> => {
-  try {
-    await cardano.Ed25519KeyHash.fromBech32(drepId)
-    return true
-  } catch (e) {
-    return false
-  }
-}
-
-const convertBech32ToKeyHash = async (
-  drepId: string,
-  cardano: CardanoTypes.Wasm,
-): Promise<string> => {
-  const keyHash = await cardano.Ed25519KeyHash.fromBech32(drepId)
-  return await keyHash.toHex()
 }
 
 const getGovernanceStorageLatestActionKey = (walletId: string) => {

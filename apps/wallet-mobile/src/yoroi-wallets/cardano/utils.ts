@@ -74,24 +74,16 @@ export const verifyFromBip44Root = (request: Addressing['addressing']) => {
 }
 
 export const deriveRewardAddressHex = async (accountPubKeyHex: string, networkId: NetworkId): Promise<string> => {
-  console.log('deriveRewardAddressHex')
   const accountPubKeyPtr = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(accountPubKeyHex, 'hex'))
-  console.log('got accountPubKeyPtr')
   const stakingKey = await (
     await (await accountPubKeyPtr.derive(NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT)).derive(NUMBERS.STAKING_KEY_INDEX)
   ).toRawKey()
-  console.log('got staking key', await stakingKey.hash())
-  console.log('credential', CardanoMobile.Credential.fromKeyhash)
   const credential = await CardanoMobile.Credential.fromKeyhash(await stakingKey.hash())
-  console.log('got credential')
   const chainNetworkId = toCardanoNetworkId(networkId)
-  console.log('got chain network id')
   const rewardAddr = await CardanoMobile.RewardAddress.new(chainNetworkId, credential)
-  console.log('got reward address')
   const rewardAddrAsAddr = await rewardAddr.toAddress()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result = Buffer.from((await rewardAddrAsAddr.toBytes()) as any, 'hex').toString('hex')
-  console.log('got result')
   return result
 }
 

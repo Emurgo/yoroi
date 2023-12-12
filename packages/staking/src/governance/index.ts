@@ -9,4 +9,4 @@ export {
   useDelegationCertificate,
 } from './translators/react'
 export {governanceApiMaker, GovernanceApi} from './api'
-export {parseActionFromMetadata} from './helpers'
+export {parseActionFromMetadata, parseDrepId} from './helpers'

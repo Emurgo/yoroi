@@ -78,7 +78,7 @@ describe('createGovernanceManager', () => {
 
     it('should accept bech32 address as DRep ID', async () => {
       const bech32Address =
-        'drep1wdt7ryc567pauvc5a93rt5mnzpx6y2rh6mvtu5phehmj5lkqjgx'
+        'drep1r73ah4wa3zqhw2fpnzyyj2lnya5zwjftkakgfk094y3mkerc53c'
       const fakeSuccessResponse = {
         txId: 'tx',
         epoch: 123,
