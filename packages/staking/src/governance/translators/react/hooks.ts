@@ -22,18 +22,20 @@ export const useIsValidDRepID = (
 }
 
 export const useLatestGovernanceAction = (
+  walletId: string,
   options: UseQueryOptions<GovernanceAction | null, Error> = {},
 ) => {
   const {manager} = useGovernance()
 
   return useQuery({
-    queryKey: 'governanceLatestGovernanceAction',
+    queryKey: [walletId, 'governanceLatestGovernanceAction'],
     queryFn: async () => await manager.getLatestGovernanceAction(),
     ...options,
   })
 }
 
 export const useUpdateLatestGovernanceAction = (
+  walletId: string,
   options: UseMutationOptions<void, Error, GovernanceAction> = {},
 ) => {
   const {manager} = useGovernance()
@@ -41,7 +43,7 @@ export const useUpdateLatestGovernanceAction = (
     ...options,
     mutationFn: async (action: GovernanceAction) =>
       await manager.setLatestGovernanceAction(action),
-    invalidateQueries: ['governanceLatestGovernanceAction'],
+    invalidateQueries: [walletId, 'governanceLatestGovernanceAction'],
   })
   return {
     ...mutation,

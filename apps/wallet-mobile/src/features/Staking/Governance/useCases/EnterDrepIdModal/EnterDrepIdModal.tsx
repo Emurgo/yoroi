@@ -11,6 +11,8 @@ type Props = {
   onSubmit?: (drepId: string) => void
 }
 
+const FIND_DREPS_LINK = ''
+
 export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const strings = useStrings()
   const [drepId, setDrepId] = useState('')
@@ -22,8 +24,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
   }
 
   const onLinkPress = () => {
-    // TODO: Add link to DREPs
-    Linking.openURL('https://google.com')
+    Linking.openURL(FIND_DREPS_LINK)
   }
 
   return (
@@ -32,11 +33,15 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
 
       <Text style={styles.text}>{strings.enterDRepID}</Text>
 
-      <Spacer height={24} />
+      {FIND_DREPS_LINK.length > 0 && (
+        <>
+          <Spacer height={24} />
 
-      <Text style={[styles.text, styles.link]} onPress={onLinkPress}>
-        {strings.findDRepHere}
-      </Text>
+          <Text style={[styles.text, styles.link]} onPress={onLinkPress}>
+            {strings.findDRepHere}
+          </Text>
+        </>
+      )}
 
       <Spacer height={24} />
 
@@ -48,7 +53,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         errorText={error?.message}
       />
 
-      <Spacer height={24} />
+      <Spacer fill />
 
       <Button
         title={strings.confirm}
@@ -57,7 +62,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         onPress={onPress}
       />
 
-      <Spacer height={44} />
+      <Spacer height={24} />
     </View>
   )
 }

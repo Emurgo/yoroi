@@ -40,7 +40,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../types'
-import {asQuantity, Quantities} from '../../utils'
+import {asQuantity, isMainnetNetworkId, Quantities} from '../../utils'
 import {genTimeToSlot} from '../../utils/timeUtils'
 import {validatePassword} from '../../utils/validators'
 import {WalletMeta} from '../../walletManager'
@@ -464,7 +464,16 @@ export class ByronWallet implements YoroiWallet {
   }
 
   private getBaseNetworkConfig() {
-    return this.getNetworkConfig().BASE_CONFIG.reduce((acc, next) => Object.assign(acc, next), {})
+    type Config = {
+      PROTOCOL_MAGIC?: number
+      GENESIS_DATE?: string
+      START_AT: number
+      SLOTS_PER_EPOCH: number
+      SLOT_DURATION: number
+    }
+
+    const config: Config[] = this.getNetworkConfig().BASE_CONFIG
+    return config.reduce((acc, next) => Object.assign(acc, next), {})
   }
 
   private getBackendConfig(): BackendConfig {
@@ -1137,8 +1146,8 @@ export class ByronWallet implements YoroiWallet {
     const apiUrl = this.getBackendConfig().TOKEN_INFO_SERVICE
     if (!apiUrl) throw new Error('invalid wallet')
 
-    const isMainnet = this.networkId === 1
-    const isTestnet = this.networkId === 300
+    const isMainnet = isMainnetNetworkId(this.networkId)
+    const isTestnet = !isMainnet
 
     if ((tokenId === '' || tokenId === 'ADA') && isMainnet) {
       return primaryTokenInfo.mainnet

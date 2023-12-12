@@ -23,7 +23,7 @@ export const HomeScreen = () => {
 
   const lastVotingAction = useLatestConfirmedGovernanceAction(wallet)
 
-  const {data: lastSubmittedTx} = useLatestGovernanceAction()
+  const {data: lastSubmittedTx} = useLatestGovernanceAction(wallet.id)
 
   const isTxPending =
     isString(lastSubmittedTx?.txID) && !Object.values(txInfos).some((tx) => tx.id === lastSubmittedTx?.txID)

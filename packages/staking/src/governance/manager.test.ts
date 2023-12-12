@@ -8,6 +8,7 @@ describe('createGovernanceManager', () => {
   const cardano = init('global')
   const networkId = 1
   const options = {
+    walletId: 'walletId',
     networkId,
     cardano,
     storage: AsyncStorage,

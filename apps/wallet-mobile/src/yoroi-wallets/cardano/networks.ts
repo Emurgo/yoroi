@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {flatten} from 'lodash'
 
+import * as SANCHONET_CONFIG from '../cardano/constants/sanchonet/constants'
 import type {NetworkId} from '../types/other'
 import {NETWORK_REGISTRY, YOROI_PROVIDER_IDS} from '../types/other'
 import {NUMBERS} from './numbers'
@@ -189,6 +190,7 @@ const JORMUNGANDR = {
     ADDRESS: 'addr',
   },
 }
+
 export const NETWORKS = {
   // Deprecated
   BYRON_MAINNET,
@@ -196,6 +198,7 @@ export const NETWORKS = {
   HASKELL_SHELLEY_TESTNET,
   // Deprecated. Consider removing
   JORMUNGANDR,
+  SANCHONET: SANCHONET_CONFIG.NETWORK_CONFIG,
 }
 type NetworkConfig =
   | typeof NETWORKS.BYRON_MAINNET
@@ -209,7 +212,9 @@ type NetworkConfig =
 // TODO: perhaps rename as isJormungandrNetwork for better naming consistency
 export const isJormungandr = (networkId: NetworkId): boolean => networkId === NETWORK_REGISTRY.JORMUNGANDR
 export const isHaskellShelleyNetwork = (networkId: NetworkId): boolean =>
-  networkId === NETWORK_REGISTRY.HASKELL_SHELLEY || networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET
+  networkId === NETWORK_REGISTRY.HASKELL_SHELLEY ||
+  networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET ||
+  networkId === NETWORK_REGISTRY.SANCHONET
 export const getCardanoByronConfig = () => NETWORKS.BYRON_MAINNET
 export const getNetworkConfigById = (id: NetworkId): NetworkConfig => {
   const idx = Object.values(NETWORK_REGISTRY).indexOf(id)
@@ -221,7 +226,10 @@ export const getNetworkConfigById = (id: NetworkId): NetworkConfig => {
 
   throw new Error('invalid networkId')
 }
-export type CardanoHaskellShelleyNetwork = typeof NETWORKS.HASKELL_SHELLEY | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
+export type CardanoHaskellShelleyNetwork =
+  | typeof NETWORKS.HASKELL_SHELLEY
+  | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
+  | typeof NETWORKS.SANCHONET
 export const getCardanoNetworkConfigById = (networkId: NetworkId): CardanoHaskellShelleyNetwork => {
   switch (networkId) {
     case NETWORKS.HASKELL_SHELLEY.NETWORK_ID:
@@ -229,6 +237,9 @@ export const getCardanoNetworkConfigById = (networkId: NetworkId): CardanoHaskel
 
     case NETWORKS.HASKELL_SHELLEY_TESTNET.NETWORK_ID:
       return NETWORKS.HASKELL_SHELLEY_TESTNET
+
+    case NETWORKS.SANCHONET.NETWORK_ID:
+      return NETWORKS.SANCHONET
 
     default:
       throw new Error('network id is not a valid Haskell Shelley id')

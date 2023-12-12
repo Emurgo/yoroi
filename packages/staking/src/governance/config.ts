@@ -1,10 +1,14 @@
 export const GOVERNANCE_ENDPOINTS = {
   mainnet: {
     getDRepById:
-      'https://dev-yoroi-backend-zero-sanchonet.emurgornd.com/dreps/{{DREP_ID}}/state',
+      'https://yoroi-backend-zero-mainnet.emurgornd.com/dreps/{{DREP_ID}}/state',
   },
   preprod: {
     getDRepById:
-      'https://dev-yoroi-backend-zero-sanchonet.emurgornd.com/dreps/{{DREP_ID}}/state',
+      'https://yoroi-backend-zero-preprod.emurgornd.com/dreps/{{DREP_ID}}/state',
+  },
+  sanchonet: {
+    getDRepById:
+      'https://yoroi-backend-zero-sanchonet.emurgornd.com/dreps/{{DREP_ID}}/state',
   },
 } as const

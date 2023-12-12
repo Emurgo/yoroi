@@ -47,6 +47,7 @@ import {
   signRawTransaction,
 } from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
+import * as SANCHONET from '../constants/sanchonet/constants'
 import * as TESTNET from '../constants/testnet/constants'
 import {CardanoError} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
@@ -96,7 +97,7 @@ export type ByronWalletJSON = Omit<ShelleyWalletJSON, 'account'>
 
 export type WalletJSON = ShelleyWalletJSON | ByronWalletJSON
 
-export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET) => {
+export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | typeof SANCHONET) => {
   const {
     ACCOUNT_INDEX,
     API_ROOT,

@@ -53,7 +53,9 @@ describe('Governance Translators React', () => {
     const {wrapper, manager} = createMocks({
       getLatestGovernanceAction: jest.fn().mockResolvedValue(true),
     })
-    const {result} = renderHook(() => useLatestGovernanceAction(), {wrapper})
+    const {result} = renderHook(() => useLatestGovernanceAction('wallet-id'), {
+      wrapper,
+    })
     await waitFor(() => result.current.isSuccess)
     expect(manager.getLatestGovernanceAction).toHaveBeenCalled()
   })
@@ -62,9 +64,12 @@ describe('Governance Translators React', () => {
     const {wrapper, manager} = createMocks({
       setLatestGovernanceAction: jest.fn().mockResolvedValue(true),
     })
-    const {result} = renderHook(() => useUpdateLatestGovernanceAction(), {
-      wrapper,
-    })
+    const {result} = renderHook(
+      () => useUpdateLatestGovernanceAction('wallet-id'),
+      {
+        wrapper,
+      },
+    )
     act(() => {
       result.current.mutate({
         drepID: 'drepId',

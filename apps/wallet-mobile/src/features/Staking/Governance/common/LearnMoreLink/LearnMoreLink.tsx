@@ -5,8 +5,7 @@ import {Text} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
 import {useStrings} from '../strings'
 
-// TODO: replace with real link
-const LEARN_MORE_LINK = 'https://google.com'
+const LEARN_MORE_LINK = ''
 
 export const LearnMoreLink = () => {
   const strings = useStrings()
@@ -14,6 +13,8 @@ export const LearnMoreLink = () => {
   const onPress = () => {
     Linking.openURL(LEARN_MORE_LINK)
   }
+
+  if (LEARN_MORE_LINK.length === 0) return null
 
   return (
     <TouchableOpacity style={styles.root} onPress={onPress}>
