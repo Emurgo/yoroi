@@ -960,3 +960,86 @@ export function useHideBottomTabBar() {
     return () => navigation.getParent()?.setOptions({tabBarStyle: true, tabBarVisible: undefined})
   }, [navigation])
 }
+
+const supportedTypes = [
+  'img/png', // Yeah, someone minted that
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/gif',
+  'image/webp',
+  'image/svg+xml',
+  'image/tiff',
+]
+
+type NativeAssetImageRequest = {
+  networkId: NetworkId
+  policy: string
+  name: string
+  width: string | number
+  height: string | number
+  mediaType?: string
+  resizeMode?: 'contain' | 'cover' | 'fill' | 'inside' | 'outside'
+  kind?: 'logo' | 'metadata'
+}
+export const useNativeAssetImage = ({
+  networkId,
+  policy,
+  name,
+  width,
+  height,
+  mediaType = 'image/webp',
+  resizeMode = 'cover',
+  kind = 'metadata',
+}: NativeAssetImageRequest) => {
+  const network = networkId === 300 ? 'preprod' : 'mainnet'
+  const isMediaTypeSupported = supportedTypes.includes(mediaType.toLocaleLowerCase())
+  const query = useQuery({
+    staleTime: Infinity,
+    queryKey: ['native-asset-img', policy, name, `${width}x${height}`, resizeMode],
+    queryFn: async () => {
+      const response = await fetch(
+        `https://${network}.cardano-nativeassets-prod.emurgornd.com/${policy}/${name}?width=${width}&height=${height}&kind=${kind}&fit=${resizeMode}`,
+      )
+      if (!response.ok) {
+        throw new Error(`NativeAsset CDN response was not ok for policy=${policy} name=${name}`)
+      }
+      if (response.status === 201 || response.status === 202) {
+        throw new Error(`NativeAsset CDN still processing policy=${policy} name=${name}`)
+      }
+      return `data:image/webp;base64,${await response.text()}`
+    },
+    enabled: isMediaTypeSupported,
+  })
+
+  return {
+    ...query,
+    uri: query.data,
+  }
+}
+
+type NativeAssetInvalidationRequest = {
+  networkId: NetworkId
+  policy: string
+  name: string
+}
+export const useNativeAssetInvalidation = ({networkId, policy, name}: NativeAssetInvalidationRequest) => {
+  const network = networkId === 300 ? 'preprod' : 'mainnet'
+  const mutation = useMutationWithInvalidations({
+    invalidateQueries: [['native-asset-img', policy, name]],
+    mutationFn: async () => {
+      const response = await fetch(`https://${network}.cardano-nativeassets-prod.emurgornd.com/invalidate`, {
+        method: 'POST',
+        body: JSON.stringify({policy, name}),
+      })
+      if (!response.ok) {
+        throw new Error(`NativeAsset invalid request body for policy=${policy} name=${name}`)
+      }
+    },
+  })
+
+  return {
+    ...mutation,
+    invalidate: mutation.mutate,
+  }
+}
