@@ -42,7 +42,7 @@ describe('SendContext :: hooks', () => {
     expect(result.current.memo).toBe('Test memo')
 
     act(() => {
-      result.current.resetForm()
+      result.current.reset()
     })
 
     expect(result.current.targets).toEqual(initialState.targets)
@@ -88,29 +88,19 @@ describe('SendContext :: hooks', () => {
     expect(result.current.yoroiUnsignedTx).toBeUndefined()
   })
 
-  test('domainInfoChanged', () => {
+  test('receiverResolveChanged', () => {
     const {result} = renderHook(() => useSend(), {wrapper})
 
     act(() => {
-      result.current.domainInfoChanged({receiver: 'domain123', isDomain: true})
+      result.current.receiverResolveChanged('address')
     })
 
     expect(result.current.targets[0].receiver).toEqual<Resolver.Receiver>({
-      receiver: 'domain123',
-      isDomain: true,
+      resolve: 'address',
+      as: 'address',
       selectedNameServer: undefined,
       addressRecords: undefined,
     })
-  })
-
-  test('addressChanged', () => {
-    const {result} = renderHook(() => useSend(), {wrapper})
-
-    act(() => {
-      result.current.addressChanged('address123')
-    })
-
-    expect(result.current.targets[0].entry.address).toBe('address123')
   })
 
   test('amountChanged', () => {
@@ -157,13 +147,13 @@ describe('SendContext :: hooks', () => {
 })
 
 const ResetFormTest = () => {
-  const {memoChanged, resetForm, memo} = useSend()
+  const {memoChanged, reset, memo} = useSend()
 
   return (
     <>
       <TextInput testID="memoInput" value={memo} onChangeText={memoChanged} />
 
-      <Button title="Reset" onPress={resetForm} />
+      <Button title="Reset" onPress={reset} />
     </>
   )
 }

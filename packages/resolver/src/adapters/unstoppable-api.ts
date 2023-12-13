@@ -1,6 +1,7 @@
 import {Api, Resolver} from '@yoroi/types'
 import {fetchData, FetchData, handleApiError, isLeft} from '@yoroi/common'
 import {z} from 'zod'
+import {AxiosRequestConfig} from 'axios'
 
 import {handleZodErrors} from './zod-errors'
 
@@ -10,7 +11,10 @@ export const unstoppableApiGetCryptoAddress = (
   {apiKey}: {apiKey: string},
   {request}: {request: FetchData} = initialDeps,
 ) => {
-  return async (resolve: Resolver.Receiver['resolve']): Promise<string> => {
+  return async (
+    resolve: Resolver.Receiver['resolve'],
+    fetcherConfig?: AxiosRequestConfig,
+  ): Promise<string> => {
     if (!resolve.includes('.')) throw new Resolver.Errors.InvalidDomain()
 
     if (!isUnstoppableHandleDomain(resolve))
@@ -27,6 +31,7 @@ export const unstoppableApiGetCryptoAddress = (
     try {
       const response = await request<UnstoppableApiGetCryptoAddressResponse>(
         config,
+        fetcherConfig,
       )
 
       if (isLeft(response)) {

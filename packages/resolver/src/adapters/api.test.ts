@@ -40,7 +40,7 @@ describe('resolverApiMaker', () => {
         }
 
         const api = resolverApiMaker(mockApiConfig, deps)
-        const results = await api.getCardanoAddresses(domain)
+        const results = await api.getCardanoAddresses({resolve: domain})
 
         expect(results).toEqual([
           {address: 'handleAddress', error: null, nameServer: 'handle'},
@@ -71,7 +71,7 @@ describe('resolverApiMaker', () => {
         }
 
         const api = resolverApiMaker(mockApiConfig, deps)
-        const results = await api.getCardanoAddresses(domain)
+        const results = await api.getCardanoAddresses({resolve: domain})
 
         expect(results).toEqual([
           {address: 'handleAddress', error: null, nameServer: 'handle'},
@@ -100,7 +100,10 @@ describe('resolverApiMaker', () => {
         }
 
         const api = resolverApiMaker(mockApiConfig, deps)
-        const results = await api.getCardanoAddresses(domain, 'first')
+        const results = await api.getCardanoAddresses({
+          resolve: domain,
+          strategy: 'first',
+        })
 
         expect(results).toEqual([
           {address: 'handleAddress', error: null, nameServer: 'handle'},
@@ -125,7 +128,10 @@ describe('resolverApiMaker', () => {
         }
 
         const api = resolverApiMaker(mockApiConfig, deps)
-        const results = await api.getCardanoAddresses(domain, 'first')
+        const results = await api.getCardanoAddresses({
+          resolve: domain,
+          strategy: 'first',
+        })
 
         expect(results).toEqual([
           {address: null, error: 'Not resolved', nameServer: null},

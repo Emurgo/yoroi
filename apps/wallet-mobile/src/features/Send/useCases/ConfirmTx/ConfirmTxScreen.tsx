@@ -85,7 +85,8 @@ export const ConfirmTxScreen = () => {
         <Spacer height={16} />
 
         {targets.map((target, index) => (
-          <ReceiverInfo key={index} receiver={target.receiver.receiver} />
+          // TODO: revisit 
+          <ReceiverInfo key={index} receiver={target.receiver.resolve} />
         ))}
       </View>
 

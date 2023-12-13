@@ -31,13 +31,16 @@ describe('getCryptoAddress', () => {
 
     const result = await getCryptoAddress(domain)
 
-    expect(mockFetchData).toHaveBeenCalledWith({
-      headers: {
-        'Content-Type': 'application/json',
-        'Bearer': mockOptions.apiKey,
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Bearer': mockOptions.apiKey,
+        },
+        url: expectedUrl,
       },
-      url: expectedUrl,
-    })
+      undefined,
+    )
     expect(result).toBe(mockAddress)
   })
 
@@ -58,13 +61,16 @@ describe('getCryptoAddress', () => {
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
       Resolver.Errors.InvalidDomain,
     )
-    expect(mockFetchData).not.toHaveBeenCalledWith({
-      headers: {
-        'Content-Type': 'application/json',
-        'Bearer': mockOptions.apiKey,
+    expect(mockFetchData).not.toHaveBeenCalledWith(
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Bearer': mockOptions.apiKey,
+        },
+        url: expectedUrl,
       },
-      url: expectedUrl,
-    })
+      undefined,
+    )
   })
 
   it('should throw unsupported tlds', async () => {
@@ -84,13 +90,16 @@ describe('getCryptoAddress', () => {
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
       Resolver.Errors.UnsupportedTld,
     )
-    expect(mockFetchData).not.toHaveBeenCalledWith({
-      headers: {
-        'Content-Type': 'application/json',
-        'Bearer': mockOptions.apiKey,
+    expect(mockFetchData).not.toHaveBeenCalledWith(
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Bearer': mockOptions.apiKey,
+        },
+        url: expectedUrl,
       },
-      url: expectedUrl,
-    })
+      undefined,
+    )
   })
 
   it('should throw invalid response if the response doesnt contain the address for ada', async () => {
@@ -114,13 +123,16 @@ describe('getCryptoAddress', () => {
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
       Resolver.Errors.InvalidResponse,
     )
-    expect(mockFetchData).toHaveBeenCalledWith({
-      headers: {
-        'Content-Type': 'application/json',
-        'Bearer': mockOptions.apiKey,
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Bearer': mockOptions.apiKey,
+        },
+        url: expectedUrl,
       },
-      url: expectedUrl,
-    })
+      undefined,
+    )
   })
 
   it('should throw not found if the response doesnt contain the address for ada', async () => {
@@ -144,13 +156,16 @@ describe('getCryptoAddress', () => {
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
       Resolver.Errors.NotFound,
     )
-    expect(mockFetchData).toHaveBeenCalledWith({
-      headers: {
-        'Content-Type': 'application/json',
-        'Bearer': mockOptions.apiKey,
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Bearer': mockOptions.apiKey,
+        },
+        url: expectedUrl,
       },
-      url: expectedUrl,
-    })
+      undefined,
+    )
   })
 
   it('should throw not found if the ada handle doesnt have an owner yet', async () => {
@@ -173,13 +188,16 @@ describe('getCryptoAddress', () => {
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
       Resolver.Errors.NotFound,
     )
-    expect(mockFetchData).toHaveBeenCalledWith({
-      headers: {
-        'Content-Type': 'application/json',
-        'Bearer': mockOptions.apiKey,
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Bearer': mockOptions.apiKey,
+        },
+        url: expectedUrl,
       },
-      url: expectedUrl,
-    })
+      undefined,
+    )
   })
 
   it('should rethrow the api error if hasnt a map to a handle error', async () => {
@@ -202,13 +220,16 @@ describe('getCryptoAddress', () => {
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
       Api.Errors.TooEarly,
     )
-    expect(mockFetchData).toHaveBeenCalledWith({
-      headers: {
-        'Content-Type': 'application/json',
-        'Bearer': mockOptions.apiKey,
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Bearer': mockOptions.apiKey,
+        },
+        url: expectedUrl,
       },
-      url: expectedUrl,
-    })
+      undefined,
+    )
   })
 
   it('should build without dependencies (coverage only)', () => {

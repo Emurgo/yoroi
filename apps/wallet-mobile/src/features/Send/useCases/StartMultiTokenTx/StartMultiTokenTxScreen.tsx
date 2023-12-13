@@ -1,4 +1,4 @@
-import {isResolvableDomain} from '@yoroi/resolver'
+import {useResolverCryptoAddresses} from '@yoroi/resolver'
 import {Resolver} from '@yoroi/types'
 import _ from 'lodash'
 import React from 'react'
@@ -10,6 +10,7 @@ import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {isEmptyString} from '../../../../utils'
+import {debounceMaker} from '../../../../utils/debounceMaker'
 import {getNetworkConfigById} from '../../../../yoroi-wallets/cardano/networks'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {normalizeToAddress} from '../../../../yoroi-wallets/cardano/utils'
@@ -20,7 +21,8 @@ import {useNavigateTo} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
 import {useStrings} from '../../common/strings'
 import {InputMemo, maxMemoLength} from './InputMemo'
-import {ResolveAddress} from './InputReceiver/ResolveAddress'
+import {InputReceiver} from './InputReceiver/InputReceiver'
+// import {ResolveAddress} from './InputReceiver/ResolveAddress'
 import {MultiAddressResolutionNotice} from './MultiAddressResolutionNotice/MultiAddressResolutionNotice'
 import {ShowErrors} from './ShowErrors'
 import {ShowSupportedResolverServices} from './ShowSupportedResolverServices/ShowSupportedResolverServices'
@@ -38,17 +40,29 @@ export const StartMultiTokenTxScreen = () => {
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)
 
-  const {targets, selectedTargetIndex, memo, memoChanged, domainInfoChanged, addressChanged} = useSend()
+  const {targets, selectedTargetIndex, memo, memoChanged, receiverResolveChanged} = useSend()
   const {address, amounts} = targets[selectedTargetIndex].entry
   const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
   const receiver = targets[selectedTargetIndex].receiver
+  const {cryptoAddresses, refetch, isLoading: isResolvingAddressess, remove} = useResolverCryptoAddresses(
+    {resolve: receiver.resolve},
+    {
+      enabled: false,
+    },
+  )
+  const debouncedRefetch = React.useMemo(() => debounceMaker(refetch, 250), [refetch])
+  React.useEffect(() => {
+    
+    if (receiver.as === 'domain') debouncedRefetch.call()
+    return () => debouncedRefetch.clear()
+  }, [receiver.as, refetch, receiver.resolve, debouncedRefetch])
+
   // const {resolvedAddressSelected, resolvedAddressSelectedChanged} = useResolver()
-  const [succesfulResolvedAddresses, setSuccesfulResolvedAddresses] = React.useState<Resolver.AddressesResponse>([])
 
-  const handleOnChangeReceiver = (receiver: string) => {
-  }
+  // const handleOnChangeReceiver = (receiver: string) => {
+  // }
 
-  const validatorEnabled = false
+  // const validatorEnabled = false
   // React.useMemo(
   //   () =>
   //     (!isEmptyString(resolvedAddressSelected?.address) || !isEmptyString(receiver)) &&
@@ -128,6 +142,8 @@ export const StartMultiTokenTxScreen = () => {
     }
   }
 
+  const handleOnChangeReceiver = (text: string) => receiverResolveChanged(text)
+
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
@@ -143,24 +159,32 @@ export const StartMultiTokenTxScreen = () => {
 
           <ShowSupportedResolverServices />
 
-          {succesfulResolvedAddresses.length > 1 && (
+          {/* TODO: revisit */}
+          {[].length > 1 && (
             <>
               <Spacer height={16} />
 
               <MultiAddressResolutionNotice />
 
-              <ResolvedAddressesList list={succesfulResolvedAddresses} />
+              <ResolvedAddressesList list={[]} />
             </>
           )}
 
           <Spacer height={16} />
 
-          <ResolveAddress
-            receiver={receiver.receiver}
+          <InputReceiver
+            value={receiver.resolve}
+            onChangeText={handleOnChangeReceiver}
+            isLoading={isResolvingAddressess}
+            isValid={false}
+          />
+
+          {/* <ResolveAddress
+            receiver={receiver.resolve}
             errorMessage=""
             isLoading={false}
             isValid={!!isValid}
-          />
+          /> */}
 
           <Spacer height={16} />
 
@@ -168,13 +192,7 @@ export const StartMultiTokenTxScreen = () => {
         </ScrollView>
 
         <Actions>
-          <NextButton
-            onPress={onNext}
-            title={strings.next}
-            disabled={!isValid || isValidationLoading}
-            testID="nextButton"
-            shelleyTheme
-          />
+          <NextButton onPress={onNext} title={strings.next} disabled={!isValid} testID="nextButton" shelleyTheme />
         </Actions>
       </KeyboardAvoidingView>
     </View>
@@ -202,7 +220,7 @@ const ResolvedAddressesList = ({list}: {list: Resolver.AddressesResponse}) => {
                     // backgroundColor: address.service === resolvedAddressSelected?.service ? '#DCE0E9' : undefined,
                   },
                 ]}
-                key={address.service}
+                key={address.nameServer}
               >
                 {/* <Text style={styles.listButtonText}>{`${domainServiceName[address.service]}`}</Text> */}
               </Pressable>

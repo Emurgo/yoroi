@@ -1,4 +1,5 @@
 import {Resolver} from '@yoroi/types'
+import {AxiosRequestConfig} from 'axios'
 
 import {handleApiGetCryptoAddress} from './handle-api'
 import {unstoppableApiGetCryptoAddress} from './unstoppable-api'
@@ -55,15 +56,21 @@ export const resolverApiMaker = (
     [Resolver.NameServer.Cns, cnsApi.getCryptoAddress],
   ] as const
 
-  // facade to the different crypto address resolution
+  // facade to the different name servers
   const getCardanoAddresses = async (
-    resolve: Resolver.Receiver['resolve'],
-    strategy: Resolver.Strategy = 'all',
+    {
+      resolve,
+      strategy = 'all',
+    }: {
+      resolve: Resolver.Receiver['resolve']
+      strategy: Resolver.Strategy
+    },
+    fetcherConfig?: AxiosRequestConfig,
   ): Promise<Resolver.AddressesResponse> => {
     if (strategy === 'all')
-      return resolveAll(operationsGetCryptoAddress, resolve)
+      return resolveAll(operationsGetCryptoAddress, resolve, fetcherConfig)
 
-    return resolveFirst(operationsGetCryptoAddress, resolve)
+    return resolveFirst(operationsGetCryptoAddress, resolve, fetcherConfig)
   }
 
   return {
@@ -75,9 +82,10 @@ const safelyExecuteOperation = async (
   operationFn: GetCryptoAddress,
   nameServer: Resolver.NameServer,
   resolve: Resolver.Receiver['resolve'],
+  fetcherConfig?: AxiosRequestConfig,
 ): Promise<Resolver.AddressResponse> => {
   try {
-    const address = await operationFn(resolve)
+    const address = await operationFn(resolve, fetcherConfig)
     return {error: null, address, nameServer}
   } catch (error) {
     return {error: (error as Error).message, address: null, nameServer}
@@ -87,9 +95,10 @@ const safelyExecuteOperation = async (
 const resolveAll = async (
   operations: GetCryptoAddressOperations,
   resolve: Resolver.Receiver['resolve'],
+  fetcherConfig?: AxiosRequestConfig,
 ): Promise<Resolver.AddressesResponse> => {
   const promises = operations.map(([nameServer, operationFn]) =>
-    safelyExecuteOperation(operationFn, nameServer, resolve),
+    safelyExecuteOperation(operationFn, nameServer, resolve, fetcherConfig),
   )
   const result = await Promise.all(promises)
   return result
@@ -98,9 +107,10 @@ const resolveAll = async (
 const resolveFirst = async (
   operations: GetCryptoAddressOperations,
   resolve: Resolver.Receiver['resolve'],
+  fetcherConfig?: AxiosRequestConfig,
 ): Promise<Resolver.AddressesResponse> => {
   const promises = operations.map(async ([nameServer, operationFn]) => {
-    const address = await operationFn(resolve)
+    const address = await operationFn(resolve, fetcherConfig)
     return {error: null, address, nameServer}
   })
   try {
@@ -113,6 +123,7 @@ const resolveFirst = async (
 
 type GetCryptoAddress = (
   resolve: Resolver.Receiver['resolve'],
+  fetcherConfig?: AxiosRequestConfig,
 ) => Promise<string>
 
 type GetCryptoAddressOperations = ReadonlyArray<

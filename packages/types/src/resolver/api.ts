@@ -1,9 +1,14 @@
+import {AxiosRequestConfig} from 'axios'
+
 import {ResolverReceiver} from './receiver'
 
 export interface ResolverApi {
   getCardanoAddresses(
-    resolve: ResolverReceiver['resolve'],
-    strategy?: ResolverStrategy,
+    args: {
+      resolve: ResolverReceiver['resolve']
+      strategy?: ResolverStrategy
+    },
+    fetcherOptions?: AxiosRequestConfig,
   ): Promise<ResolverAddressesResponse>
 }
 

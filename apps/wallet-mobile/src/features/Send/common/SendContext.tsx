@@ -1,4 +1,4 @@
-import {isResolvableDomain} from '@yoroi/resolver'
+import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
 import {Balance, Resolver} from '@yoroi/types'
 import {produce} from 'immer'
 import * as React from 'react'
@@ -25,7 +25,7 @@ type TargetActions = {
   amountRemoved: (tokenId: string) => void
   // Receiver
   receiverResolveChanged: (resolve: Resolver.Receiver['resolve']) => void
-  nameServerSelectedChanged: (nameServer: Resolver.NameServer) => void
+  nameServerSelectedChanged: (nameServer: Resolver.Receiver['selectedNameServer']) => void
   addressRecordsFetched: (addressRecords: Resolver.Receiver['addressRecords']) => void
 }
 
@@ -60,7 +60,7 @@ export const SendProvider = ({children, ...props}: {initialState?: Partial<SendS
 
     receiverResolveChanged: (resolve: Resolver.Receiver['resolve']) =>
       dispatch({type: 'receiverResolveChanged', resolve}),
-    nameServerSelectedChanged: (nameServer: Resolver.NameServer) =>
+    nameServerSelectedChanged: (nameServer: Resolver.Receiver['selectedNameServer']) =>
       dispatch({type: 'nameServerSelectedChanged', nameServer}),
     addressRecordsFetched: (addressRecords: Resolver.Receiver['addressRecords']) =>
       dispatch({type: 'addressRecordsFetched', addressRecords}),
@@ -130,7 +130,7 @@ export type TargetAction =
     }
   | {
       type: 'nameServerSelectedChanged'
-      nameServer: Resolver.NameServer
+      nameServer: Resolver.Receiver['selectedNameServer']
     }
   | {
       type: 'addressRecordsFetched'
@@ -154,13 +154,13 @@ export type TargetAction =
     }
 
 const targetsReducer = (state: SendState, action: TargetAction) => {
-  return produce(state, (draft) => {
+  return produce(state.targets, (draft) => {
     switch (action.type) {
       case 'receiverResolveChanged': {
         const {resolve} = action
         const selectedTargetIndex = state.selectedTargetIndex
 
-        draft.targets.forEach((target, index) => {
+        draft.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             const isDomain: boolean = isResolvableDomain(resolve)
             const as: Resolver.Receiver['as'] = isDomain ? 'domain' : 'address'
@@ -181,10 +181,10 @@ const targetsReducer = (state: SendState, action: TargetAction) => {
         const {addressRecords} = action
         const selectedTargetIndex = state.selectedTargetIndex
 
-        draft.targets.forEach((target, index) => {
+        draft.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             if (addressRecords !== undefined) {
-              const keys = Object.keys(addressRecords)
+              const keys = Object.keys(addressRecords).filter(isNameServer)
               const selectedNameServer = keys.length === 1 ? keys[0] : undefined
               target.receiver.selectedNameServer = selectedNameServer
             } else {
@@ -200,10 +200,16 @@ const targetsReducer = (state: SendState, action: TargetAction) => {
         const {nameServer} = action
         const selectedTargetIndex = state.selectedTargetIndex
 
-        draft.targets.forEach((target, index) => {
+        draft.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             target.receiver.selectedNameServer = nameServer
-            target.entry.address = target.receiver.addressRecords?.[nameServer] ?? ''
+
+            if (nameServer !== undefined) {
+              target.entry.address = target.receiver.addressRecords?.[nameServer] ?? ''
+            } else {
+              const isDomain = target.receiver.as === 'domain'
+              if (isDomain) target.entry.address = ''
+            }
           }
         })
         break
@@ -214,7 +220,7 @@ const targetsReducer = (state: SendState, action: TargetAction) => {
         const selectedTargetIndex = state.selectedTargetIndex
         const selectedTokenId = state.selectedTokenId
 
-        draft.targets.forEach((target, index) => {
+        draft.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             target.entry.amounts[selectedTokenId] = quantity
           }
@@ -226,7 +232,7 @@ const targetsReducer = (state: SendState, action: TargetAction) => {
         const {tokenId} = action
         const selectedTargetIndex = state.selectedTargetIndex
 
-        draft.targets.forEach((target, index) => {
+        draft.forEach((target, index) => {
           if (index === selectedTargetIndex) {
             delete target.entry.amounts[tokenId]
           }
@@ -264,7 +270,7 @@ export const initialState: SendState = {
       },
     },
   ],
-}
+} 
 
 export const useTokenQuantities = (tokenId: string) => {
   const wallet = useSelectedWallet()

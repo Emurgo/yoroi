@@ -25,7 +25,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
-  const {resetForm} = useSend()
+  const {reset: resetSendState} = useSend()
   const {orderData} = useSwap()
   const {resetSwapForm} = useSwapForm()
   const {track} = useMetrics()
@@ -86,7 +86,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
   const handleOnSend = () => {
     navigateTo.send()
-    resetForm()
+    resetSendState()
   }
 
   const handleOnSwap = () => {

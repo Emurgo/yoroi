@@ -26,9 +26,12 @@ describe('getCryptoAddress', () => {
 
     const result = await getCryptoAddress(domain)
 
-    expect(mockFetchData).toHaveBeenCalledWith({
-      url: expectedUrl,
-    })
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        url: expectedUrl,
+      },
+      undefined,
+    )
     expect(result).toBe(mockAddress)
   })
 
@@ -67,9 +70,12 @@ describe('getCryptoAddress', () => {
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
       Resolver.Errors.InvalidResponse,
     )
-    expect(mockFetchData).toHaveBeenCalledWith({
-      url: expectedUrl,
-    })
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        url: expectedUrl,
+      },
+      undefined,
+    )
   })
 
   it('should throw not found if the ada handle doesnt have an owner yet', async () => {
@@ -91,9 +97,12 @@ describe('getCryptoAddress', () => {
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
       Resolver.Errors.NotFound,
     )
-    expect(mockFetchData).toHaveBeenCalledWith({
-      url: expectedUrl,
-    })
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        url: expectedUrl,
+      },
+      undefined,
+    )
   })
 
   it('should rethrow the api error if hasnt a map to a handle error', async () => {
@@ -115,9 +124,12 @@ describe('getCryptoAddress', () => {
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
       Api.Errors.TooEarly,
     )
-    expect(mockFetchData).toHaveBeenCalledWith({
-      url: expectedUrl,
-    })
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        url: expectedUrl,
+      },
+      undefined,
+    )
   })
 
   it('should build without dependencies (coverage only)', () => {

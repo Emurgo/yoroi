@@ -1,6 +1,7 @@
 import {Api, Resolver} from '@yoroi/types'
 import {fetchData, FetchData, handleApiError, isLeft} from '@yoroi/common'
 import {z} from 'zod'
+import {AxiosRequestConfig} from 'axios'
 
 import {handleZodErrors} from './zod-errors'
 
@@ -9,7 +10,10 @@ const initialDeps = {request: fetchData} as const
 export const handleApiGetCryptoAddress = ({
   request,
 }: {request: FetchData} = initialDeps) => {
-  return async (resolve: Resolver.Receiver['resolve']): Promise<string> => {
+  return async (
+    resolve: Resolver.Receiver['resolve'],
+    fetcherConfig?: AxiosRequestConfig,
+  ): Promise<string> => {
     if (!isAdaHandleDomain(resolve)) throw new Resolver.Errors.InvalidDomain()
 
     const sanitizedDomain = resolve.replace(/^\$/, '')
@@ -18,7 +22,10 @@ export const handleApiGetCryptoAddress = ({
     } as const
 
     try {
-      const response = await request<HandleApiGetCryptoAddressResponse>(config)
+      const response = await request<HandleApiGetCryptoAddressResponse>(
+        config,
+        fetcherConfig,
+      )
 
       if (isLeft(response)) {
         handleApiError(response.error)
@@ -77,7 +84,8 @@ const HandleApiResponseSchema = z.object({
     ada: z.string(),
   }),
 })
-export const isAdaHandleDomain = (value: string) => value.startsWith('$')
+export const isAdaHandleDomain = (value: string) =>
+  value.startsWith('$') && value.length > 1
 
 export const handleApiConfig = {
   mainnet: {

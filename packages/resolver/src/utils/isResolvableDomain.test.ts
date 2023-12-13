@@ -20,6 +20,7 @@ describe('isResolvableDomain', () => {
     ${'$adahandle'}     | ${true}
     ${'cns.ada'}        | ${true}
     ${'other.uk'}       | ${false}
+    ${'$'}              | ${false}
   `('should return $expected for $domain', ({receiver, expected}) => {
     expect(isResolvableDomain(receiver)).toBe(expected)
   })

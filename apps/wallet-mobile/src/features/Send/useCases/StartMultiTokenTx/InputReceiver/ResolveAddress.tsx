@@ -5,7 +5,6 @@ import {StyleSheet, Text, View, ViewProps} from 'react-native'
 import {HelperText, Spacer} from '../../../../../components'
 import {isEmptyString} from '../../../../../utils'
 import {useStrings} from '../../../common/strings'
-import {useChangeReceiver} from '../../../common/useChangeReceiver'
 import {InputReceiver} from './InputReceiver'
 
 type ReceiverProps = ViewProps & {
@@ -13,7 +12,6 @@ type ReceiverProps = ViewProps & {
   errorMessage: string
   isLoading: boolean
   isValid: boolean
-  onChangeReceiver: (receiver: string) => void
 }
 export const ResolveAddress = ({isLoading, receiver, errorMessage, isValid, style, ...props}: ReceiverProps) => {
   // const {resolvedAddressSelected} = useResolver()
@@ -23,16 +21,15 @@ export const ResolveAddress = ({isLoading, receiver, errorMessage, isValid, styl
   // const isResolved = !isLoading && !isEmptyString(selectedAddress) && !isEmptyString(selectedSevice)
   const _isResolved = false
   const [, setInputText] = React.useState(receiver)
-  const handleOnChangeText = (text: string) => {
-    setInputText(text)
-  }
-  useChangeReceiver(receiver)
+  // const handleOnChangeText = (text: string) => {
+    // setInputText(text)
+  // }
 
   return (
     <View style={style} {...props}>
       <InputReceiver
         value={receiver}
-        onChangeText={handleOnChangeText}
+        // onChangeText={handleOnChangeText}
         error={isError}
         errorText={errorMessage}
         isLoading={isLoading}

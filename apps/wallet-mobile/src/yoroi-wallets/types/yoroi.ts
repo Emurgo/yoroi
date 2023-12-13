@@ -52,7 +52,7 @@ export type YoroiMetadata = {
 }
 
 export type YoroiTarget = {
-  receiver: Resolver.Resolve
+  receiver: Resolver.Receiver
   entry: YoroiEntry
 }
 

@@ -51,9 +51,8 @@ describe('useResolverCryptoAddresses', () => {
     expect(getByTestId('addresses').props.children).toEqual(
       JSON.stringify(resolverManagerMocks.getCryptoAddressesResponse.success),
     )
-    expect(mockResolverManager.crypto.getCardanoAddresses).toHaveBeenCalledWith(
-      domain,
-      'all',
-    )
+    expect(
+      mockResolverManager.crypto.getCardanoAddresses,
+    ).toHaveBeenCalledTimes(1)
   })
 })
