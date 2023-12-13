@@ -125,7 +125,7 @@ const rampOnOffReducer = (state: RampOnOffState, action: RampOnOffAction) => {
 
         break
       default:
-        throw new Error(`swapFormReducer invalid action`)
+        throw new Error(`RampOnOffFormReducer invalid action`)
     }
   })
 }
@@ -139,7 +139,7 @@ type RampOnOffAction =
   | {type: RampOnOffActionType.AmountInputValueChanged; value: number}
   | {type: RampOnOffActionType.CanExchangeChanged; value: boolean}
 
-type RampOnOffState = {
+export type RampOnOffState = {
   actionType: TRampOnOffAction
   amount: {
     isTouched: boolean
@@ -172,7 +172,7 @@ const defaultState: RampOnOffState = Object.freeze({
 })
 
 function missingInit() {
-  console.error('[SwapFormContext] missing initialization')
+  console.error('[RampOnOffContext] missing initialization')
 }
 
 const initialSwapFormContext: RampOnOffContext = {
