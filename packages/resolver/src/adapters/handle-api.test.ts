@@ -17,9 +17,14 @@ describe('getCryptoAddress', () => {
     const sanitizedDomain = `${mockApiResponse.name}`
     const expectedUrl = `${handleApiConfig.mainnet.getCryptoAddress}${sanitizedDomain}`
 
-    const mockFetchDataResponse: Right<HandleApiGetCryptoAddressResponse> = {
+    const mockFetchDataResponse: Right<
+      Api.ResponseSuccess<HandleApiGetCryptoAddressResponse>
+    > = {
       tag: 'right',
-      value: mockApiResponse,
+      value: {
+        data: mockApiResponse,
+        status: 200,
+      },
     }
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
     const getCryptoAddress = handleApiGetCryptoAddress({request: mockFetchData})
@@ -39,9 +44,14 @@ describe('getCryptoAddress', () => {
     const sanitizedDomain = `${mockApiResponse.name}`
     const expectedUrl = `${handleApiConfig.mainnet.getCryptoAddress}${sanitizedDomain}`
 
-    const mockFetchDataResponse: Right<HandleApiGetCryptoAddressResponse> = {
+    const mockFetchDataResponse: Right<
+      Api.ResponseSuccess<HandleApiGetCryptoAddressResponse>
+    > = {
       tag: 'right',
-      value: mockApiResponse,
+      value: {
+        data: mockApiResponse,
+        status: 200,
+      },
     }
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
     const getCryptoAddress = handleApiGetCryptoAddress({request: mockFetchData})
@@ -60,9 +70,14 @@ describe('getCryptoAddress', () => {
     const expectedUrl = `${handleApiConfig.mainnet.getCryptoAddress}${sanitizedDomain}`
     const invalidApiResponse = {...mockApiResponse, resolved_addresses: {}}
 
-    const mockFetchDataResponse: Right<HandleApiGetCryptoAddressResponse> = {
+    const mockFetchDataResponse: Right<
+      Api.ResponseSuccess<HandleApiGetCryptoAddressResponse>
+    > = {
       tag: 'right',
-      value: invalidApiResponse as any,
+      value: {
+        data: invalidApiResponse as any,
+        status: 200,
+      },
     }
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
     const getCryptoAddress = handleApiGetCryptoAddress({request: mockFetchData})

@@ -38,7 +38,7 @@ export const unstoppableApiGetCryptoAddress = (
         handleApiError(response.error)
       } else {
         const parsedResponse = UnstoppableApiResponseSchema.parse(
-          response.value,
+          response.value.data,
         )
 
         const result = parsedResponse.records['crypto.ADA.address']

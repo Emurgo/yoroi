@@ -19,11 +19,15 @@ describe('getCryptoAddress', () => {
     const domain = mockApiResponse.meta.domain
     const expectedUrl = `${unstoppableApiConfig.mainnet.getCryptoAddress}${domain}`
 
-    const mockFetchDataResponse: Right<UnstoppableApiGetCryptoAddressResponse> =
-      {
-        tag: 'right',
-        value: mockApiResponse,
-      }
+    const mockFetchDataResponse: Right<
+      Api.ResponseSuccess<UnstoppableApiGetCryptoAddressResponse>
+    > = {
+      tag: 'right',
+      value: {
+        data: mockApiResponse,
+        status: 200,
+      },
+    }
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
     const getCryptoAddress = unstoppableApiGetCryptoAddress(mockOptions, {
       request: mockFetchData,
@@ -48,11 +52,15 @@ describe('getCryptoAddress', () => {
     const domain = 'not-a-valid-domain'
     const expectedUrl = `${unstoppableApiConfig.mainnet.getCryptoAddress}${domain}`
 
-    const mockFetchDataResponse: Right<UnstoppableApiGetCryptoAddressResponse> =
-      {
-        tag: 'right',
-        value: mockApiResponse,
-      }
+    const mockFetchDataResponse: Right<
+      Api.ResponseSuccess<UnstoppableApiGetCryptoAddressResponse>
+    > = {
+      tag: 'right',
+      value: {
+        data: mockApiResponse,
+        status: 200,
+      },
+    }
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
     const getCryptoAddress = unstoppableApiGetCryptoAddress(mockOptions, {
       request: mockFetchData,
@@ -77,11 +85,15 @@ describe('getCryptoAddress', () => {
     const domain = 'ud.what'
     const expectedUrl = `${unstoppableApiConfig.mainnet.getCryptoAddress}${domain}`
 
-    const mockFetchDataResponse: Right<UnstoppableApiGetCryptoAddressResponse> =
-      {
-        tag: 'right',
-        value: mockApiResponse,
-      }
+    const mockFetchDataResponse: Right<
+      Api.ResponseSuccess<UnstoppableApiGetCryptoAddressResponse>
+    > = {
+      tag: 'right',
+      value: {
+        data: mockApiResponse,
+        status: 200,
+      },
+    }
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
     const getCryptoAddress = unstoppableApiGetCryptoAddress(mockOptions, {
       request: mockFetchData,
@@ -110,11 +122,15 @@ describe('getCryptoAddress', () => {
       records: {'crypto.ADA.address': 123},
     }
 
-    const mockFetchDataResponse: Right<UnstoppableApiGetCryptoAddressResponse> =
-      {
-        tag: 'right',
-        value: invalidApiResponse as any,
-      }
+    const mockFetchDataResponse: Right<
+      Api.ResponseSuccess<UnstoppableApiGetCryptoAddressResponse>
+    > = {
+      tag: 'right',
+      value: {
+        data: invalidApiResponse as any,
+        status: 200,
+      },
+    }
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
     const getCryptoAddress = unstoppableApiGetCryptoAddress(mockOptions, {
       request: mockFetchData,
@@ -143,11 +159,15 @@ describe('getCryptoAddress', () => {
       records: {},
     }
 
-    const mockFetchDataResponse: Right<UnstoppableApiGetCryptoAddressResponse> =
-      {
-        tag: 'right',
-        value: invalidApiResponse as any,
-      }
+    const mockFetchDataResponse: Right<
+      Api.ResponseSuccess<UnstoppableApiGetCryptoAddressResponse>
+    > = {
+      tag: 'right',
+      value: {
+        data: invalidApiResponse as any,
+        status: 200,
+      },
+    }
     const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
     const getCryptoAddress = unstoppableApiGetCryptoAddress(mockOptions, {
       request: mockFetchData,

@@ -3,7 +3,7 @@ import {Resolver} from '@yoroi/types'
 import _ from 'lodash'
 import React from 'react'
 import {KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {Button, Spacer} from '../../../../components'
 import {useMetrics} from '../../../../metrics/metricsManager'
@@ -44,18 +44,28 @@ export const StartMultiTokenTxScreen = () => {
   const {address, amounts} = targets[selectedTargetIndex].entry
   const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
   const receiver = targets[selectedTargetIndex].receiver
-  const {cryptoAddresses, refetch, isLoading: isResolvingAddressess, remove} = useResolverCryptoAddresses(
+  const {
+    cryptoAddresses,
+    refetch,
+    isLoading: isResolvingAddressess,
+  } = useResolverCryptoAddresses(
     {resolve: receiver.resolve},
     {
       enabled: false,
     },
   )
-  const debouncedRefetch = React.useMemo(() => debounceMaker(refetch, 250), [refetch])
+  console.log(cryptoAddresses)
+  const debouncedRefetch = React.useMemo(() => debounceMaker(refetch, 300), [refetch])
+  const queryClient = useQueryClient()
+  const abortGetCryptoAddressess = React.useCallback(
+    () => queryClient.cancelQueries({queryKey: ['useResolverCryptoAddresses']}),
+    [queryClient],
+  )
   React.useEffect(() => {
-    
-    if (receiver.as === 'domain') debouncedRefetch.call()
+    if (receiver.as === 'domain') abortGetCryptoAddressess().then(() => debouncedRefetch.call())
+    if (receiver.as === 'address') abortGetCryptoAddressess()
     return () => debouncedRefetch.clear()
-  }, [receiver.as, refetch, receiver.resolve, debouncedRefetch])
+  }, [receiver.as, refetch, receiver.resolve, debouncedRefetch, queryClient, abortGetCryptoAddressess])
 
   // const {resolvedAddressSelected, resolvedAddressSelectedChanged} = useResolver()
 

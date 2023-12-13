@@ -43,14 +43,14 @@ describe('ResolverProvider', () => {
       result.current.showNotice.read()
       result.current.showNotice.save(true)
       result.current.showNotice.remove()
-      result.current.crypto.getCardanoAddresses('domain')
+      result.current.crypto.getCardanoAddresses({resolve: 'domain'})
     })
 
     expect(resolverManagerMock.showNotice.read).toHaveBeenCalled()
     expect(resolverManagerMock.showNotice.save).toHaveBeenCalledWith(true)
     expect(resolverManagerMock.showNotice.remove).toHaveBeenCalled()
     expect(resolverManagerMock.crypto.getCardanoAddresses).toHaveBeenCalledWith(
-      'domain',
+      {resolve: 'domain'},
     )
     expect(result.current.showNotice.key).toBe('show-notice-key')
   })

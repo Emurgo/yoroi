@@ -30,7 +30,9 @@ export const handleApiGetCryptoAddress = ({
       if (isLeft(response)) {
         handleApiError(response.error)
       } else {
-        const parsedResponse = HandleApiResponseSchema.parse(response.value)
+        const parsedResponse = HandleApiResponseSchema.parse(
+          response.value.data,
+        )
         return parsedResponse.resolved_addresses.ada
       }
     } catch (error: unknown) {
