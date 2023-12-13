@@ -54,6 +54,8 @@ const BigBanner = () => {
           shelleyTheme
           title={strings.buyADA.toLocaleUpperCase()}
           onPress={handleExchange}
+          style={styles.spaceButton}
+          textStyles={styles.spaceButtonText}
         />
       </LinearGradient>
     </View>
@@ -67,7 +69,7 @@ const getStyles = (props: {theme: Theme}) => {
   const styles = StyleSheet.create({
     root: {
       backgroundColor: theme.color['white-static'],
-      paddingVertical: 18,
+      paddingBottom: 18,
     },
     gradient: {
       opacity: 1,
@@ -75,6 +77,9 @@ const getStyles = (props: {theme: Theme}) => {
       flexDirection: 'column',
       alignItems: 'center',
       paddingBottom: 25,
+    },
+    spaceButtonText: {
+      padding: 0,
     },
     banner: {
       resizeMode: 'contain',
@@ -96,6 +101,9 @@ const getStyles = (props: {theme: Theme}) => {
       fontFamily: 'Rubik',
       textAlign: 'center',
       paddingHorizontal: 50,
+    },
+    spaceButton: {
+      paddingHorizontal: 16,
     },
   })
   return styles
