@@ -14,6 +14,7 @@ export const yoroiUnsignedTx = async ({
   addressedUtxos,
   entries,
   primaryTokenId,
+  governance,
 }: {
   unsignedTx: CardanoTypes.UnsignedTx
   networkConfig: CardanoHaskellShelleyNetwork
@@ -21,6 +22,7 @@ export const yoroiUnsignedTx = async ({
   addressedUtxos: CardanoTypes.CardanoAddressedUtxo[]
   entries?: YoroiEntry[]
   primaryTokenId: string
+  governance?: boolean
 }) => {
   const fee = toAmounts(unsignedTx.fee.values)
   const change = await toEntriesFromChange(unsignedTx.change)
@@ -61,6 +63,7 @@ export const yoroiUnsignedTx = async ({
     },
     metadata: toMetadata(unsignedTx.metadata),
     unsignedTx,
+    governance: governance ?? false,
   }
 
   return yoroiTx

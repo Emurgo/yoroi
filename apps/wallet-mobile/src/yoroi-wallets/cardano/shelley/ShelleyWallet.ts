@@ -718,7 +718,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           [votingCertificate],
         )
 
-        return yoroiUnsignedTx({unsignedTx, networkConfig: NETWORK_CONFIG, addressedUtxos, entries: [], primaryTokenId})
+        return yoroiUnsignedTx({
+          unsignedTx,
+          networkConfig: NETWORK_CONFIG,
+          addressedUtxos,
+          entries: [],
+          governance: true,
+          primaryTokenId,
+        })
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
         Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
@@ -741,7 +748,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         unsignedTx.staking.delegations ||
         unsignedTx.staking.registrations ||
         unsignedTx.staking.deregistrations ||
-        unsignedTx.staking.withdrawals
+        unsignedTx.staking.withdrawals ||
+        unsignedTx.governance
           ? [stakingPrivateKey]
           : undefined
 
