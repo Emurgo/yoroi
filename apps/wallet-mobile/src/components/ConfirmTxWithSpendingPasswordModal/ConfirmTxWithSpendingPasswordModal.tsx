@@ -16,13 +16,14 @@ import {useStrings} from './strings'
 type Props = {
   onSuccess?: (signedTx: YoroiSignedTx) => void
   unsignedTx: YoroiUnsignedTx
+  onError?: () => void
 }
 
-export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx}: Props) => {
+export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onError}: Props) => {
   const spendingPasswordRef = useRef<RNTextInput>(null)
   const wallet = useSelectedWallet()
   const {signTx, error: signError, isLoading: signIsLoading} = useSignTxWithPassword({wallet})
-  const {submitTx, error: submitError, isLoading: submitIsLoading} = useSubmitTx({wallet})
+  const {submitTx, error: submitError, isLoading: submitIsLoading} = useSubmitTx({wallet}, {onError})
   const strings = useStrings()
 
   const [spendingPassword, setSpendingPassword] = React.useState(

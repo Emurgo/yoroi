@@ -2112,7 +2112,7 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@/Users/michalszorad/Desktop/yoroi-lib":
+"@emurgo/yoroi-lib@file:../yoroi-lib":
   version "0.14.0"
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^6.0.0"
