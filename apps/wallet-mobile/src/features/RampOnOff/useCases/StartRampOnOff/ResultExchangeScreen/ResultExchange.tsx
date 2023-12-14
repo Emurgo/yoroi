@@ -13,7 +13,7 @@ import {useStrings} from '../../../common/strings'
 import WalletAssetImage from '../../../common/WalletAssetImage'
 import ContentResult from './ContentResult'
 
-type ParamsResult = {
+export type ParamsResult = {
   coin: string
   coinAmount: number
   fiat: number
@@ -78,7 +78,7 @@ const ResultExchangeScreen = () => {
           <View style={styles.boxProvider}>
             <Image style={styles.banxaLogo} source={image} />
 
-            <Text style={styles.contentValueText}>Banxa</Text>
+            <Text style={styles.contentValueText}>{strings.banxa}</Text>
           </View>
         </ContentResult>
       </View>

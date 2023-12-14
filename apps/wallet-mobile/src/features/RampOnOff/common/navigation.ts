@@ -33,3 +33,12 @@ export const useNavigateTo = () => {
       }),
   }).current
 }
+
+export type RampOnOffInitRoutes = {
+  rampOnOff: {
+    coin: string
+    coinAmount: number
+    fiat: number
+    fiatAmount: number
+  }
+}

@@ -54,16 +54,20 @@ export const RampOnOffProvider = ({
 
   const onChangeAmountQuantity = React.useCallback(
     (text: string) => {
-      const [input] = Quantities.parseFromText(text, amountTokenInfo.decimals ?? 0, numberLocale)
+      const [input, quantity] = Quantities.parseFromText(text, amountTokenInfo.decimals ?? 0, numberLocale)
+
       actions.amountInputDisplayValueChanged(text === '' ? '' : input)
-      actions.amountInputValueChanged(isNaN(parseInt(text)) ? 0 : parseInt(text))
-      actions.canExchangeChanged(text === '' || state.amount.error !== undefined ? false : true)
+      actions.amountInputValueChanged(+quantity)
       clearErrors()
     },
-    [amountTokenInfo.decimals, numberLocale, actions, state.amount.error, clearErrors],
+    [amountTokenInfo.decimals, numberLocale, actions, clearErrors],
   )
 
   const isNotEnoughBalance = new BigNumber(state.amount.value).isGreaterThan(new BigNumber(amountBalance))
+
+  React.useEffect(() => {
+    actions.canExchangeChanged(state.amount.value !== 0 && state.amount.error === undefined)
+  }, [actions, state.amount.error, state.amount.value])
 
   // amount input errors
   React.useEffect(() => {
@@ -125,7 +129,7 @@ const rampOnOffReducer = (state: RampOnOffState, action: RampOnOffAction) => {
 
         break
       default:
-        throw new Error(`swapFormReducer invalid action`)
+        throw new Error(`RampOnOffFormReducer invalid action`)
     }
   })
 }
@@ -139,7 +143,7 @@ type RampOnOffAction =
   | {type: RampOnOffActionType.AmountInputValueChanged; value: number}
   | {type: RampOnOffActionType.CanExchangeChanged; value: boolean}
 
-type RampOnOffState = {
+export type RampOnOffState = {
   actionType: TRampOnOffAction
   amount: {
     isTouched: boolean
@@ -172,7 +176,7 @@ const defaultState: RampOnOffState = Object.freeze({
 })
 
 function missingInit() {
-  console.error('[SwapFormContext] missing initialization')
+  console.error('[RampOnOffContext] missing initialization')
 }
 
 const initialSwapFormContext: RampOnOffContext = {
