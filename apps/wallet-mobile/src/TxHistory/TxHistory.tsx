@@ -15,7 +15,7 @@ import {ActionsBanner} from './ActionsBanner'
 import {AssetList} from './AssetList'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
-import {LockedDeposit} from './LockedDeposit'
+// import {LockedDeposit} from './LockedDeposit'
 import {TxHistoryList} from './TxHistoryList'
 import {useAnimatedTxHistory} from './useAnimatedTxHistory'
 import {useOnScroll} from './useOnScroll'
@@ -88,7 +88,7 @@ export const TxHistory = () => {
         <TabPanels>
           <Spacer height={4} />
 
-          <LockedDeposit />
+          {/* <LockedDeposit /> */}
 
           <Spacer height={8} />
 

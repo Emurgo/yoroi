@@ -16,7 +16,7 @@ import {useBalances, useTransactionInfos} from '../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
-import {EmptyHistory} from './EmptyHistory'
+// import {EmptyHistory} from './EmptyHistory'
 import BigBanner from './RampOnOffBanner/BigBanner'
 import SmallBanner from './RampOnOffBanner/SmallBanner'
 import {bannerRampOnOffMessages} from './RampOnOffBanner/strings'
@@ -45,17 +45,19 @@ export const TxHistoryList = (props: Props) => {
         <ActionsBanner onExport={handleExport} onSearch={handleSearch} />
       )}
 
+      <Spacer height={18} />
+
       <SectionList
         {...props}
         key={key}
         ListHeaderComponent={<HeaderTransactionList primaryAmount={primaryAmount} />}
         style={{}}
         contentContainerStyle={{
-          paddingHorizontal: 16,
+          paddingHorizontal: 18,
           flexGrow: 1,
           height: 'auto',
         }}
-        ListEmptyComponent={<EmptyHistory />}
+        // ListEmptyComponent={<EmptyHistory />}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
         ItemSeparatorComponent={() => <Spacer height={16} />}
         renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}

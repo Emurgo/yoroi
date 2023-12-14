@@ -37,15 +37,15 @@ const SmallBanner = (props: Props) => {
           <Text style={styles.title}>{strings.needMoreAda}</Text>
 
           <TouchableOpacity onPress={onClose}>
-            <Icon.Close size={26} />
+            <Icon.Close size={24} />
           </TouchableOpacity>
         </View>
 
-        <Spacer />
+        <Spacer height={8} />
 
         <Text style={styles.text}>{strings.ourTrustedPartners}</Text>
 
-        <Spacer />
+        <Spacer height={8} />
 
         <TouchableOpacity onPress={handleExchange}>
           <Text style={styles.textButton}>{strings.buyADA.toUpperCase()}</Text>
@@ -62,7 +62,7 @@ const getStyles = (props: {theme: Theme}) => {
   const styles = StyleSheet.create({
     root: {
       backgroundColor: theme.color['white-static'],
-      paddingVertical: 18,
+      paddingBottom: 18,
     },
     gradient: {
       opacity: 1,
@@ -76,23 +76,23 @@ const getStyles = (props: {theme: Theme}) => {
       width: '100%',
       alignItems: 'center',
       justifyContent: 'space-between',
+      gap: 10,
     },
     title: {
       fontSize: 16,
       fontWeight: '500',
-      fontFamily: 'Rubik',
-      width: '80%',
+      lineHeight: 24,
     },
     text: {
       fontSize: 16,
       fontWeight: '400',
-      fontFamily: 'Rubik',
+      lineHeight: 24,
     },
     textButton: {
       fontSize: 14,
       fontWeight: '500',
-      fontFamily: 'Rubik',
       color: theme.color.primary[500],
+      lineHeight: 22,
     },
   })
   return styles
