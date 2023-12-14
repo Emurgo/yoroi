@@ -54,16 +54,20 @@ export const RampOnOffProvider = ({
 
   const onChangeAmountQuantity = React.useCallback(
     (text: string) => {
-      const [input] = Quantities.parseFromText(text, amountTokenInfo.decimals ?? 0, numberLocale)
+      const [input, quantity] = Quantities.parseFromText(text, amountTokenInfo.decimals ?? 0, numberLocale)
+
       actions.amountInputDisplayValueChanged(text === '' ? '' : input)
-      actions.amountInputValueChanged(isNaN(parseInt(text)) ? 0 : parseInt(text))
-      actions.canExchangeChanged(text === '' || state.amount.error !== undefined ? false : true)
+      actions.amountInputValueChanged(+quantity)
       clearErrors()
     },
-    [amountTokenInfo.decimals, numberLocale, actions, state.amount.error, clearErrors],
+    [amountTokenInfo.decimals, numberLocale, actions, clearErrors],
   )
 
   const isNotEnoughBalance = new BigNumber(state.amount.value).isGreaterThan(new BigNumber(amountBalance))
+
+  React.useEffect(() => {
+    actions.canExchangeChanged(state.amount.value !== 0 && state.amount.error === undefined)
+  }, [actions, state.amount.error, state.amount.value])
 
   // amount input errors
   React.useEffect(() => {

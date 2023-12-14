@@ -18,13 +18,13 @@ export const mockExchangeStateDefault: RampOnOffState = {
 }
 
 export const mockExchangeStateWithNotEnoughError: RampOnOffState = {
-  actionType: actionRamp.buyAda,
+  actionType: actionRamp.sellAda,
   amount: {
     isTouched: true,
     disabled: false,
-    error: 'Not Enough Balace',
+    error: 'Not Enough Balance',
     displayValue: '3000',
-    value: 3000,
+    value: 3000 * 10 ** 6,
   },
   canExchange: false,
 }
