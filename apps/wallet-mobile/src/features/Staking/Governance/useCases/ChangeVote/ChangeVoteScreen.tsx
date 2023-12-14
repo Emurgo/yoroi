@@ -53,7 +53,7 @@ export const ChangeVoteScreen = () => {
         {drepID, stakingKey},
         {
           onSuccess: async (certificate) => {
-            const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+            const unsignedTx = await wallet.createUnsignedGovernanceTx([certificate])
             navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID}})
           },
         },
@@ -67,7 +67,7 @@ export const ChangeVoteScreen = () => {
       {vote: 'abstain', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+          const unsignedTx = await wallet.createUnsignedGovernanceTx([certificate])
           navigateTo.confirmTx({unsignedTx, vote: {kind: 'abstain'}})
         },
       },
@@ -80,7 +80,7 @@ export const ChangeVoteScreen = () => {
       {vote: 'no-confidence', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+          const unsignedTx = await wallet.createUnsignedGovernanceTx([certificate])
           navigateTo.confirmTx({unsignedTx, vote: {kind: 'no-confidence'}})
         },
       },

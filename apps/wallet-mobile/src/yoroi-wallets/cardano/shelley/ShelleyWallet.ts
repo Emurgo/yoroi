@@ -641,53 +641,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       }
     }
 
-    // TODO: This will come from yoroi lib
-    async createUnsignedGovernanceTx(votingCertificate: CardanoTypes.Certificate) {
-      // const protocolParams = {
-      //       keyDeposit: await this._wasmV4.BigNum.fromStr(config.keyDeposit),
-      //       linearFee: await this._wasmV4.LinearFee.new(
-      //         await this._wasmV4.BigNum.fromStr(config.linearFee.coefficient),
-      //         await this._wasmV4.BigNum.fromStr(config.linearFee.constant)
-      //       ),
-      //       minimumUtxoVal: await this._wasmV4.BigNum.fromStr(config.minimumUtxoVal),
-      //       coinsPerUtxoWord: await this._wasmV4.BigNum.fromStr(config.coinsPerUtxoWord),
-      //       poolDeposit: await this._wasmV4.BigNum.fromStr(config.poolDeposit),
-      //       networkId: config.networkId
-      //     };
-      //{
-      //             keyDeposit: KEY_DEPOSIT,
-      //             linearFee: {
-      //               coefficient: LINEAR_FEE.COEFFICIENT,
-      //               constant: containsDatum ? String(BigInt(LINEAR_FEE.CONSTANT) * 2n) : LINEAR_FEE.CONSTANT,
-      //             },
-      //             minimumUtxoVal: MINIMUM_UTXO_VAL,
-      //             coinsPerUtxoWord: COINS_PER_UTXO_WORD,
-      //             poolDeposit: POOL_DEPOSIT,
-      //             networkId: NETWORK_ID,
-      //           },
-      // const txBuilder = await getTxBuilder(
-      //   CardanoMobile,
-      //   await CardanoMobile.LinearFee.new(
-      //     await CardanoMobile.BigNum.fromStr(LINEAR_FEE.COEFFICIENT),
-      //     await CardanoMobile.BigNum.fromStr(LINEAR_FEE.CONSTANT),
-      //   ),
-      //   await CardanoMobile.BigNum.fromStr(POOL_DEPOSIT),
-      //   await CardanoMobile.BigNum.fromStr(KEY_DEPOSIT),
-      //   await CardanoMobile.BigNum.fromStr(MINIMUM_UTXO_VAL),
-      // )
-      //
-      // const certs = await CardanoMobile.Certificates.new()
-      //
-      // await certs.add(votingCertificate)
-      //
-      // await txBuilder.setCerts(certs)
-      //
-      // const address = await this.getFirstPaymentAddress()
-      //   .then((a) => a.toAddress())
-      //   .then((a) => a.toBech32(undefined))
-      //
-      // return this.createUnsignedTx([{address: address, amounts: {[this.primaryTokenInfo.id]: Quantities.zero}}])
-
+    async createUnsignedGovernanceTx(votingCertificates: CardanoTypes.Certificate[]) {
       const time = await this.checkServerStatus()
         .then(({serverTime}) => serverTime || Date.now())
         .catch(() => Date.now())
@@ -715,7 +669,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           },
           PRIMARY_TOKEN,
           {},
-          [votingCertificate],
+          votingCertificates,
         )
 
         return yoroiUnsignedTx({
@@ -728,7 +682,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         })
       } catch (e) {
         if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
-        Logger.error(`shelley::createUnsignedTx:: ${(e as Error).message}`, e)
+        Logger.error(`shelley::createUnsignedGovernanceTx:: ${(e as Error).message}`, e)
         throw new CardanoError((e as Error).message)
       }
     }

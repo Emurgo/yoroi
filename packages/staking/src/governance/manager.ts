@@ -44,10 +44,14 @@ export type GovernanceManager = {
     vote: VoteKind,
     stakingKey: CardanoTypes.PublicKey,
   ) => Promise<object>
+  createStakeRegistrationCertificate: (
+    stakingKey: CardanoTypes.PublicKey,
+  ) => Promise<CardanoTypes.Certificate>
 
   // latest governance action to be used only to check the "pending" transaction that is not yet confirmed on the blockchain
   setLatestGovernanceAction: (action: GovernanceAction | null) => Promise<void>
   getLatestGovernanceAction: () => Promise<GovernanceAction | null>
+
   getStakingKeyState: (stakeKeyHash: string) => Promise<StakingKeyState>
 }
 
@@ -101,6 +105,20 @@ class Manager implements GovernanceManager {
           await Ed25519KeyHash.fromBytes(Buffer.from(drepID, 'hex')),
         ),
       ),
+    )
+  }
+
+  async createStakeRegistrationCertificate(
+    stakingKey: CardanoTypes.PublicKey,
+  ): Promise<CardanoTypes.Certificate> {
+    const {Certificate, Credential, StakeRegistration} = this.config.cardano
+
+    const stakingCredential = await Credential.fromKeyhash(
+      await stakingKey.hash(),
+    )
+
+    return await Certificate.newStakeRegistration(
+      await StakeRegistration.new(stakingCredential),
     )
   }
 

@@ -21,7 +21,11 @@ export const useLatestConfirmedGovernanceAction = (wallet: YoroiWallet) => {
 
 export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {
   const stakingKeyHash = useStakingKey(wallet)
-  const {data: stakingStatus} = useStakingKeyState(stakingKeyHash, {suspense: true})
+  const {data: stakingStatus} = useStakingKeyState(stakingKeyHash, {
+    suspense: true,
+    useErrorBoundary: false,
+    retry: false,
+  })
   return stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) !== null : false
 }
 

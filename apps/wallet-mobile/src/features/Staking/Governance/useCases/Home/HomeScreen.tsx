@@ -17,6 +17,7 @@ import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
+import {useStakingInfo} from '../../../../../Dashboard/StakePoolInfos'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
@@ -147,6 +148,11 @@ const NeverParticipatedInGovernanceVariant = () => {
   const wallet = useSelectedWallet()
   const {manager} = useGovernance()
   const {openModal} = useModal()
+  const stakingInfo = useStakingInfo(wallet, {suspense: true})
+
+  // todo
+  const hasStakingKeyRegistered = stakingInfo?.data?.status !== 'not-registered'
+  useWalletEvent(wallet, 'utxos', stakingInfo.refetch)
 
   const {createCertificate: createDelegationCertificate} = useDelegationCertificate({
     useErrorBoundary: true,
@@ -173,7 +179,7 @@ const NeverParticipatedInGovernanceVariant = () => {
         {drepID, stakingKey},
         {
           onSuccess: async (certificate) => {
-            const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+            const unsignedTx = await wallet.createUnsignedGovernanceTx([certificate])
             navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID}})
           },
         },
@@ -187,7 +193,8 @@ const NeverParticipatedInGovernanceVariant = () => {
       {vote: 'abstain', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+          const stakeCert = await manager.createStakeRegistrationCertificate(stakingKey)
+          const unsignedTx = await wallet.createUnsignedGovernanceTx([stakeCert, certificate])
           navigateTo.confirmTx({unsignedTx, vote: {kind: 'abstain'}})
         },
       },
@@ -200,7 +207,7 @@ const NeverParticipatedInGovernanceVariant = () => {
       {vote: 'no-confidence', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+          const unsignedTx = await wallet.createUnsignedGovernanceTx([certificate])
           navigateTo.confirmTx({unsignedTx, vote: {kind: 'no-confidence'}})
         },
       },

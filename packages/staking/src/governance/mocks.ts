@@ -15,4 +15,6 @@ export const managerMock: GovernanceManager = {
     Promise.reject(new Error('Mock not implemented')),
   getLatestGovernanceAction: () =>
     Promise.reject(new Error('Mock not implemented')),
+  createStakeRegistrationCertificate: () =>
+    Promise.reject(new Error('Mock not implemented')),
 }

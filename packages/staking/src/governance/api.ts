@@ -48,10 +48,18 @@ class Api implements GovernanceApi {
       '{{STAKE_KEY_HASH}}',
       stakeKeyHash,
     )
-    const {drepDelegation} = await client<GetStakingKeyStateResponse>({
-      url,
-    })
-    return {drepDelegation}
+    try {
+      const {drepDelegation} = await client<GetStakingKeyStateResponse>({
+        url,
+      })
+      return {drepDelegation}
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('404')) {
+        return {}
+      }
+
+      throw error
+    }
   }
 }
 

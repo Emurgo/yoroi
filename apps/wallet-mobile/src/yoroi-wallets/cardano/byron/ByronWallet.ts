@@ -96,6 +96,7 @@ import {
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
+import {getTime} from '../getTime'
 
 type WalletState = {
   lastGeneratedAddressIndex: number
@@ -738,12 +739,51 @@ export class ByronWallet implements YoroiWallet {
   }
 
   // TODO: This will come from yoroi lib
-  async createUnsignedGovernanceTx(_votingCertificate: CardanoTypes.Certificate) {
-    const address = await this.getFirstPaymentAddress()
-      .then((a) => a.toAddress())
-      .then((a) => a.toBech32(undefined))
+  async createUnsignedGovernanceTx(votingCertificates: CardanoTypes.Certificate[]) {
+    const time = await this.checkServerStatus()
+      .then(({serverTime}) => serverTime || Date.now())
+      .catch(() => Date.now())
+    const primaryTokenId = this.primaryTokenInfo.id
+    const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
+    const changeAddr = await this.getAddressedChangeAddress()
+    const addressedUtxos = await this.getAddressedUtxos()
+    const networkConfig = this.getNetworkConfig()
 
-    return this.createUnsignedTx([{address: address, amounts: {[this.primaryTokenInfo.id]: Quantities.zero}}])
+    try {
+      const unsignedTx = await Cardano.createUnsignedTx(
+        absSlotNumber,
+        addressedUtxos,
+        [],
+        changeAddr,
+        {
+          keyDeposit: networkConfig.KEY_DEPOSIT,
+          linearFee: {
+            coefficient: networkConfig.LINEAR_FEE.COEFFICIENT,
+            constant: networkConfig.LINEAR_FEE.CONSTANT,
+          },
+          minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
+          coinsPerUtxoWord: networkConfig.COINS_PER_UTXO_WORD,
+          poolDeposit: networkConfig.POOL_DEPOSIT,
+          networkId: networkConfig.NETWORK_ID,
+        },
+        PRIMARY_TOKEN,
+        {},
+        votingCertificates,
+      )
+
+      return yoroiUnsignedTx({
+        unsignedTx,
+        networkConfig: NETWORK_CONFIG,
+        addressedUtxos,
+        entries: [],
+        governance: true,
+        primaryTokenId,
+      })
+    } catch (e) {
+      if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
+      Logger.error(`shelley::createUnsignedGovernanceTx:: ${(e as Error).message}`, e)
+      throw new CardanoError((e as Error).message)
+    }
   }
 
   async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
