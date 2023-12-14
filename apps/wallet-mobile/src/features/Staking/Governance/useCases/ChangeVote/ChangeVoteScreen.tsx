@@ -12,7 +12,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {Spacer, useModal} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
-import {mapStakingKeyStateToGovernanceAction, useLatestConfirmedGovernanceAction} from '../../common/helpers'
+import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {useStakingKey} from '../../../../../yoroi-wallets/hooks'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
@@ -22,7 +22,6 @@ export const ChangeVoteScreen = () => {
   const navigateTo = useNavigateTo()
   const stakingKeyHash = useStakingKey(wallet)
   const {data: stakingStatus} = useStakingKeyState(stakingKeyHash, {suspense: true})
-  const {createCertificate} = useVotingCertificate({useErrorBoundary: true})
   const action = stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
   const {openModal} = useModal()
   const {manager} = useGovernance()
