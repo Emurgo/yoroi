@@ -1,53 +1,70 @@
 import {isNonNullable} from '@yoroi/common'
-import {useVotingCertificate} from '@yoroi/staking'
+import {
+  GovernanceProvider,
+  useDelegationCertificate,
+  useGovernance,
+  useStakingKeyState,
+  useVotingCertificate,
+} from '@yoroi/staking'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '../../../../../components'
+import {Spacer, useModal} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
-import {useLatestConfirmedGovernanceAction} from '../../common/helpers'
+import {mapStakingKeyStateToGovernanceAction, useLatestConfirmedGovernanceAction} from '../../common/helpers'
+import {useStakingKey} from '../../../../../yoroi-wallets/hooks'
+import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
-  const lastVotingAction = useLatestConfirmedGovernanceAction(wallet)
-  const {createCertificate} = useVotingCertificate({
+  const stakingKeyHash = useStakingKey(wallet)
+  const {data: stakingStatus} = useStakingKeyState(stakingKeyHash, {suspense: true})
+  const {createCertificate} = useVotingCertificate({useErrorBoundary: true})
+  const action = stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
+  const {openModal} = useModal()
+  const {manager} = useGovernance()
+
+  const {createCertificate: createDelegationCertificate} = useDelegationCertificate({
     useErrorBoundary: true,
   })
 
-  if (!isNonNullable(lastVotingAction)) throw new Error('User has never voted')
+  const {createCertificate: createVotingCertificate} = useVotingCertificate({
+    useErrorBoundary: true,
+  })
 
-  const handleDelegate = async () => {
-    const stakingKey = await wallet.getStakingKey()
-    createCertificate(
-      {vote: 'abstain', stakingKey},
-      {
-        onSuccess: async (certificate) => {
-          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
-          navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID: ''}})
-        },
-      },
+  if (!isNonNullable(action)) throw new Error('User has never voted')
+
+  const openDRepIdModal = (onSubmit: (drepId: string) => void) => {
+    openModal(
+      strings.drepID,
+      <GovernanceProvider manager={manager}>
+        <EnterDrepIdModal onSubmit={onSubmit} />
+      </GovernanceProvider>,
+      360,
     )
   }
 
-  const handleChangeDelegation = async () => {
-    const stakingKey = await wallet.getStakingKey()
-    createCertificate(
-      {vote: 'abstain', stakingKey},
-      {
-        onSuccess: async (certificate) => {
-          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
-          navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID: ''}})
+  const handleDelegate = () => {
+    openDRepIdModal(async (drepID) => {
+      const stakingKey = await wallet.getStakingKey()
+      createDelegationCertificate(
+        {drepID, stakingKey},
+        {
+          onSuccess: async (certificate) => {
+            const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+            navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID}})
+          },
         },
-      },
-    )
+      )
+    })
   }
 
   const handleAbstain = async () => {
     const stakingKey = await wallet.getStakingKey()
-    createCertificate(
+    createVotingCertificate(
       {vote: 'abstain', stakingKey},
       {
         onSuccess: async (certificate) => {
@@ -60,7 +77,7 @@ export const ChangeVoteScreen = () => {
 
   const handleNoConfidence = async () => {
     const stakingKey = await wallet.getStakingKey()
-    createCertificate(
+    createVotingCertificate(
       {vote: 'no-confidence', stakingKey},
       {
         onSuccess: async (certificate) => {
@@ -71,7 +88,7 @@ export const ChangeVoteScreen = () => {
     )
   }
 
-  const voteKind = lastVotingAction.kind
+  const voteKind = action.kind
 
   return (
     <View style={styles.root}>
@@ -94,7 +111,7 @@ export const ChangeVoteScreen = () => {
           <Action
             title={strings.changeDRep}
             description={strings.actionDelegateToADRepDescription}
-            onPress={handleChangeDelegation}
+            onPress={handleDelegate}
           />
         )}
 

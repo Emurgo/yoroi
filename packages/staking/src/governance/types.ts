@@ -20,3 +20,18 @@ export type DRepRegistrationCertificate = {
 export type DRepCredential =
   | {variant: 'verification-key'; key: string /* Ed25519 */}
   | {variant: 'plutus-script'; plutusScriptData: string}
+
+export type StakingKeyState = {
+  drepDelegation?: DelegationBaseInfo &
+    (
+      | {action: 'no-confidence'}
+      | {action: 'abstain'}
+      | {action: 'drep'; drepID: string}
+    )
+}
+
+type DelegationBaseInfo = {
+  tx: string
+  epoch: number
+  slot: number
+}

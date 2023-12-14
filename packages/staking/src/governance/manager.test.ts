@@ -1,8 +1,20 @@
 import {governanceManagerMaker, GovernanceAction} from './manager'
 import {init} from '@emurgo/cross-csl-nodejs'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {governanceApiMaker} from './api'
+import {GovernanceApi, governanceApiMaker} from './api'
 import {fetcher} from '@yoroi/common/src'
+
+const apiMock: GovernanceApi = {
+  getDRepById: () =>
+    Promise.resolve({
+      txId: 'tx',
+      epoch: 123,
+    }),
+  getStakingKeyState: () =>
+    Promise.resolve({
+      drepDelegation: {tx: 'tx', slot: 123, epoch: 123, drep: 'abstain'},
+    }),
+}
 
 describe('createGovernanceManager', () => {
   const cardano = init('global')
@@ -49,26 +61,19 @@ describe('createGovernanceManager', () => {
 
     it('should not throw an error for a DRep id that is registered', async () => {
       const id = 'c1ba49d52822bc4ef30cbf77060251668f1a6ef15ca46d18f76cc758'
-      const fakeSuccessResponse = {
-        txId: 'tx',
-        epoch: 123,
-      }
+
       const manager = governanceManagerMaker({
         ...options,
-        api: {getDRepById: () => Promise.resolve(fakeSuccessResponse)},
+        api: apiMock,
       })
 
       await manager.validateDRepID(id)
     })
 
     it('should accept key hash as DRep ID', async () => {
-      const fakeSuccessResponse = {
-        txId: 'tx',
-        epoch: 123,
-      }
       const manager = governanceManagerMaker({
         ...options,
-        api: {getDRepById: () => Promise.resolve(fakeSuccessResponse)},
+        api: apiMock,
       })
 
       const keyHash = 'db1bc3c3f99ce68977ceaf27ab4dd917123ef9e73f85c304236eab23'
@@ -79,13 +84,9 @@ describe('createGovernanceManager', () => {
     it('should accept bech32 address as DRep ID', async () => {
       const bech32Address =
         'drep1r73ah4wa3zqhw2fpnzyyj2lnya5zwjftkakgfk094y3mkerc53c'
-      const fakeSuccessResponse = {
-        txId: 'tx',
-        epoch: 123,
-      }
       const manager = governanceManagerMaker({
         ...options,
-        api: {getDRepById: () => Promise.resolve(fakeSuccessResponse)},
+        api: apiMock,
       })
 
       await manager.validateDRepID(bech32Address)

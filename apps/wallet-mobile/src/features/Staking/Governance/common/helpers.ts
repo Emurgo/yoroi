@@ -1,10 +1,11 @@
 import {isNonNullable} from '@yoroi/common'
-import {parseActionFromMetadata} from '@yoroi/staking'
+import {parseActionFromMetadata, type StakingKeyState} from '@yoroi/staking'
 import {useMemo} from 'react'
 
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTransactionInfos} from '../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../yoroi-wallets/types'
+import {GovernanceVote} from '../types'
 
 export const getVotingActionsFromTxInfos = (txInfos: Record<string, TransactionInfo>) => {
   return Object.values(txInfos)
@@ -21,4 +22,14 @@ export const useLatestConfirmedGovernanceAction = (wallet: YoroiWallet) => {
 export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {
   const latestAction = useLatestConfirmedGovernanceAction(wallet)
   return latestAction !== null
+}
+
+export const mapStakingKeyStateToGovernanceAction = (state: StakingKeyState): GovernanceVote | null => {
+  if (!state.drepDelegation) return null
+  const vote = state.drepDelegation
+  return vote.action === 'abstain'
+    ? {kind: 'abstain'}
+    : vote.action === 'no-confidence'
+    ? {kind: 'no-confidence'}
+    : {kind: 'delegate', drepID: vote.drepID}
 }

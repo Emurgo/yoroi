@@ -5,23 +5,30 @@ import {
   useGovernance,
   useLatestGovernanceAction,
   useVotingCertificate,
+  useStakingKeyState,
 } from '@yoroi/staking'
 import React, {ReactNode} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer, useModal} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {useStakingKey, useTransactionInfos, useWalletEvent} from '../../../../../yoroi-wallets/hooks'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
-import {useLatestConfirmedGovernanceAction} from '../../common/helpers'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
+import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
   const txInfos = useTransactionInfos(wallet)
+  const stakingKeyHash = useStakingKey(wallet)
 
-  const lastVotingAction = useLatestConfirmedGovernanceAction(wallet)
+  const {data: stakingStatus, refetch: refetchStakingKeyState} = useStakingKeyState(stakingKeyHash, {
+    refetchOnMount: true,
+    suspense: true,
+  })
+
+  useWalletEvent(wallet, 'utxos', refetchStakingKeyState)
 
   const {data: lastSubmittedTx} = useLatestGovernanceAction(wallet.id)
 
@@ -44,13 +51,20 @@ export const HomeScreen = () => {
     }
   }
 
-  if (isNonNullable(lastVotingAction)) {
-    return <ParticipatingInGovernanceVariant action={lastVotingAction} isTxPending={isTxPending} />
+  const action = stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
+  if (action !== null) {
+    return <ParticipatingInGovernanceVariant action={action} />
   }
   return <NeverParticipatedInGovernanceVariant />
 }
 
-const ParticipatingInGovernanceVariant = ({action, isTxPending}: {action: GovernanceVote; isTxPending: boolean}) => {
+const ParticipatingInGovernanceVariant = ({
+  action,
+  isTxPending = false,
+}: {
+  action: GovernanceVote
+  isTxPending?: boolean
+}) => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
 

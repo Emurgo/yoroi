@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {CardanoTypes} from '../types'
 import {GovernanceApi} from './api'
 import {parseDrepId} from './helpers'
+import {StakingKeyState} from './types'
 
 export type Config = {
   networkId: number
@@ -47,6 +48,7 @@ export type GovernanceManager = {
   // latest governance action to be used only to check the "pending" transaction that is not yet confirmed on the blockchain
   setLatestGovernanceAction: (action: GovernanceAction | null) => Promise<void>
   getLatestGovernanceAction: () => Promise<GovernanceAction | null>
+  getStakingKeyState: (stakeKeyHash: string) => Promise<StakingKeyState>
 }
 
 export const governanceManagerMaker = (config: Config): GovernanceManager => {
@@ -55,6 +57,31 @@ export const governanceManagerMaker = (config: Config): GovernanceManager => {
 
 class Manager implements GovernanceManager {
   constructor(private config: Config) {}
+
+  async getStakingKeyState(stakeKeyHash: string) {
+    const {api} = this.config
+    const response = await api.getStakingKeyState(stakeKeyHash)
+    if (response.drepDelegation) {
+      if (response.drepDelegation.drep === 'no_confidence') {
+        const {tx, slot, epoch} = response.drepDelegation
+        return {
+          drepDelegation: {action: 'no-confidence', tx, slot, epoch},
+        } as const
+      }
+      if (response.drepDelegation.drep === 'abstain') {
+        const {tx, slot, epoch} = response.drepDelegation
+        return {
+          drepDelegation: {action: 'abstain', tx, slot, epoch},
+        } as const
+      }
+
+      const {tx, slot, epoch, drep} = response.drepDelegation
+      return {
+        drepDelegation: {action: 'drep', tx, slot, epoch, drepID: drep},
+      } as const
+    }
+    return {}
+  }
 
   async createDelegationCertificate(
     drepID: string,
