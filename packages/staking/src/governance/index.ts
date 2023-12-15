@@ -10,5 +10,5 @@ export {
   useStakingKeyState,
 } from './translators/react'
 export {governanceApiMaker, type GovernanceApi} from './api'
-export {parseActionFromMetadata, parseDrepId} from './helpers'
+export {parseDrepId} from './helpers'
 export type {StakingKeyState} from './types'

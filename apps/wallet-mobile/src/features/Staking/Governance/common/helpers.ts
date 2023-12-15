@@ -1,23 +1,8 @@
-import {isNonNullable} from '@yoroi/common'
-import {type StakingKeyState, parseActionFromMetadata, useStakingKeyState} from '@yoroi/staking'
-import {useMemo} from 'react'
+import {type StakingKeyState, useStakingKeyState} from '@yoroi/staking'
 
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {useStakingKey, useTransactionInfos} from '../../../../yoroi-wallets/hooks'
-import {TransactionInfo} from '../../../../yoroi-wallets/types'
+import {useStakingKey} from '../../../../yoroi-wallets/hooks'
 import {GovernanceVote} from '../types'
-
-export const getVotingActionsFromTxInfos = (txInfos: Record<string, TransactionInfo>) => {
-  return Object.values(txInfos)
-    .map((i) => parseActionFromMetadata(i.metadata))
-    .filter(isNonNullable)
-}
-
-export const useLatestConfirmedGovernanceAction = (wallet: YoroiWallet) => {
-  const txInfos = useTransactionInfos(wallet)
-  const actions = useMemo(() => getVotingActionsFromTxInfos(txInfos), [txInfos])
-  return actions.length > 0 ? actions[actions.length - 1] : null
-}
 
 export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {
   const stakingKeyHash = useStakingKey(wallet)
