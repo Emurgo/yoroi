@@ -24,7 +24,7 @@ export const unstoppableApiGetCryptoAddress = (
       url: `${unstoppableApiConfig.mainnet.getCryptoAddress}${resolve}`,
       headers: {
         'Content-Type': 'application/json',
-        'Bearer': apiKey,
+        'Authorization': `Bearer ${apiKey}`,
       },
     } as const
 

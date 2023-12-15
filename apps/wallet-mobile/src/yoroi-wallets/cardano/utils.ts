@@ -23,7 +23,6 @@ import {
   WALLET_CONFIG as HASKELL_SHELLEY,
   WALLET_CONFIG_24 as HASKELL_SHELLEY_24,
 } from './constants/mainnet/constants'
-import {NETWORK_ID as testnetId} from './constants/testnet/constants'
 import {withMinAmounts} from './getMinAmounts'
 import {MultiToken} from './MultiToken'
 import {CardanoHaskellShelleyNetwork, PRIMARY_ASSET_CONSTANTS} from './networks'
@@ -269,9 +268,8 @@ export const CATALYST = {
 
 export const toCardanoNetworkId = (networkId: number) => {
   if (networkId === mainnetId) return 1
-  if (networkId === testnetId) return 0
 
-  throw new Error('invalid network id')
+  return 0
 }
 
 export const toSendTokenList = (amounts: Balance.Amounts, primaryToken: Token): Array<SendToken> => {

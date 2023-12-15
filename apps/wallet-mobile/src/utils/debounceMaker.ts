@@ -1,4 +1,4 @@
-export const debounceMaker = <T extends (...args: never[]) => void>(callback: T, delay: number) => {
+export const debounceMaker = <T extends (...args: never[]) => unknown>(callback: T, delay: number) => {
   let timeoutId: NodeJS.Timeout | null = null
 
   const clear = () => {

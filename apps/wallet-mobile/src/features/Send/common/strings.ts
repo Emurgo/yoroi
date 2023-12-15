@@ -13,7 +13,6 @@ export const useStrings = () => {
     all: intl.formatMessage(globalMessages.all),
     amount: intl.formatMessage(txLabels.amount),
     apply: intl.formatMessage(globalMessages.apply),
-    pools: intl.formatMessage(globalMessages.pools),
     asset: intl.formatMessage(messages.asset),
     assets: (qty: number) => intl.formatMessage(globalMessages.assets, {qty}),
     assetsLabel: intl.formatMessage(globalMessages.assetsLabel),
@@ -31,12 +30,13 @@ export const useStrings = () => {
     domainUnsupportedError: intl.formatMessage(messages.domainUnsupportedError),
     errorBannerNetworkError: intl.formatMessage(messages.errorBannerNetworkError),
     errorBannerPendingOutgoingTransaction: intl.formatMessage(messages.errorBannerPendingOutgoingTransaction),
-    failedTxTitle: intl.formatMessage(messages.failedTxTitle),
-    failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
+    failedTxText: intl.formatMessage(messages.failedTxText),
+    failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     feeLabel: intl.formatMessage(messages.feeLabel),
     feeNotAvailable: intl.formatMessage(messages.feeNotAvailable),
     found: intl.formatMessage(messages.found),
+    manyNameServersWarning: intl.formatMessage(messages.manyNameServersWarning),
     max: intl.formatMessage(globalMessages.max),
     minPrimaryBalanceForTokens: intl.formatMessage(amountInputErrorMessages.minPrimaryBalanceForTokens),
     next: intl.formatMessage(globalMessages.next),
@@ -46,6 +46,7 @@ export const useStrings = () => {
     noBalance: intl.formatMessage(amountInputErrorMessages.insufficientBalance),
     ok: intl.formatMessage(globalMessages.ok),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
+    pools: intl.formatMessage(globalMessages.pools),
     receiver: intl.formatMessage(messages.receiver),
     resolvedAddress: intl.formatMessage(messages.resolvedAddress),
     resolverNoticeTitle: intl.formatMessage(messages.resolverNoticeTitle),
@@ -62,8 +63,8 @@ export const useStrings = () => {
     submittedTxTitle: intl.formatMessage(messages.submittedTxTitle),
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
     unknownAsset: intl.formatMessage(messages.unknownAsset),
-    youHave: intl.formatMessage(messages.youHave),
     walletAddress: intl.formatMessage(messages.walletAddress),
+    youHave: intl.formatMessage(messages.youHave),
   }
 }
 
@@ -275,6 +276,10 @@ export const messages = defineMessages({
   },
   resolverNoticeTitle: {
     id: 'components.send.sendscreen.resolverNoticeTitle',
-    defaultMessage: '!!!Yoroi Supports',
+    defaultMessage: '!!!Yoroi Supports Name Resolution',
+  },
+  manyNameServersWarning: {
+    id: 'send.resolver.manyNameServersWarning',
+    defaultMessage: '!!!Multiple name servers found. Please select one.',
   },
 })

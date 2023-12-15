@@ -11,6 +11,7 @@ export * from './translators/reactjs/hooks/useResolverSetShowNotice'
 export * from './translators/reactjs/hooks/useResolverShowNotice'
 export * from './translators/reactjs/provider/ResolverProvider'
 export * from './utils/isResolvableDomain'
+export * from './utils/isDomain'
 export * from './utils/isNameServer'
 
 export const mocksResolver = {

@@ -185,8 +185,11 @@ const targetsReducer = (state: SendState, action: TargetAction) => {
           if (index === selectedTargetIndex) {
             if (addressRecords !== undefined) {
               const keys = Object.keys(addressRecords).filter(isNameServer)
-              const selectedNameServer = keys.length === 1 ? keys[0] : undefined
-              target.receiver.selectedNameServer = selectedNameServer
+              const nameServer = keys.length === 1 ? keys[0] : undefined
+              target.receiver.selectedNameServer =nameServer 
+              if (nameServer !== undefined) {
+                target.entry.address = addressRecords[nameServer] ?? ''
+              }
             } else {
               target.receiver.selectedNameServer = undefined
             }

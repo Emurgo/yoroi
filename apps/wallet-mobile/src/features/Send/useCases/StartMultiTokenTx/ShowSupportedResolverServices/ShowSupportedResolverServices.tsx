@@ -19,24 +19,28 @@ export const ShowSupportedResolverServices = () => {
     setShowNotice(false)
   }, [setShowNotice])
 
-  if (showNotice === false) return null
+  // if (showNotice === false) return null
 
   return (
-    <LinearGradient style={styles.gradient} start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={['#C6F7ED', '#E4E8F7']}>
-      <View style={styles.header}>
-        <Text style={styles.title}>{strings.resolverNoticeTitle}</Text>
+    <View>
+      <LinearGradient style={styles.gradient} start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={['#C6F7ED', '#E4E8F7']}>
+        <View style={styles.header}>
+          <Text style={styles.title}>{strings.resolverNoticeTitle}</Text>
 
-        <PressableIcon icon={Icon.CrossCircle} onPress={handleOnClose} size={24} />
-      </View>
+          <PressableIcon icon={Icon.CrossCircle} onPress={handleOnClose} size={24} />
+        </View>
 
-      <Spacer height={10} />
+        <Spacer height={10} />
 
-      <NameServer text={nameServerName[Resolver.NameServer.Handle]} />
+        <NameServer text={nameServerName[Resolver.NameServer.Handle]} />
 
-      <NameServer text={nameServerName[Resolver.NameServer.Cns]} />
+        <NameServer text={nameServerName[Resolver.NameServer.Cns]} />
 
-      <NameServer text={nameServerName[Resolver.NameServer.Unstoppable]} />
-    </LinearGradient>
+        <NameServer text={nameServerName[Resolver.NameServer.Unstoppable]} />
+      </LinearGradient>
+
+      <Spacer height={16} />
+    </View>
   )
 }
 

@@ -742,7 +742,7 @@ export const useIsOnline = (
         () => true,
         () => false,
       ),
-    refetchInterval: 5000,
+    refetchInterval: 15000,
     suspense: true,
     useErrorBoundary: false,
     onSuccess: (isOnline) => {

@@ -39,7 +39,7 @@ describe('getCryptoAddress', () => {
       {
         headers: {
           'Content-Type': 'application/json',
-          'Bearer': mockOptions.apiKey,
+          'Authorization': `Bearer ${mockOptions.apiKey}`,
         },
         url: expectedUrl,
       },
@@ -143,7 +143,7 @@ describe('getCryptoAddress', () => {
       {
         headers: {
           'Content-Type': 'application/json',
-          'Bearer': mockOptions.apiKey,
+          'Authorization': `Bearer ${mockOptions.apiKey}`,
         },
         url: expectedUrl,
       },
@@ -180,7 +180,7 @@ describe('getCryptoAddress', () => {
       {
         headers: {
           'Content-Type': 'application/json',
-          'Bearer': mockOptions.apiKey,
+          'Authorization': `Bearer ${mockOptions.apiKey}`,
         },
         url: expectedUrl,
       },
@@ -212,7 +212,7 @@ describe('getCryptoAddress', () => {
       {
         headers: {
           'Content-Type': 'application/json',
-          'Bearer': mockOptions.apiKey,
+          'Authorization': `Bearer ${mockOptions.apiKey}`,
         },
         url: expectedUrl,
       },
@@ -244,7 +244,7 @@ describe('getCryptoAddress', () => {
       {
         headers: {
           'Content-Type': 'application/json',
-          'Bearer': mockOptions.apiKey,
+          'Authorization': `Bearer ${mockOptions.apiKey}`,
         },
         url: expectedUrl,
       },
