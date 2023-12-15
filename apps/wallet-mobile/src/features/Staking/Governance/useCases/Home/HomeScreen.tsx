@@ -7,7 +7,7 @@ import {
   useStakingKeyState,
   useVotingCertificate,
 } from '@yoroi/staking'
-import React, {ReactNode} from 'react'
+import React, {ReactNode, useEffect, useState} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../../components'
@@ -26,6 +26,7 @@ export const HomeScreen = () => {
   const wallet = useSelectedWallet()
   const txInfos = useTransactionInfos(wallet)
   const stakingKeyHash = useStakingKey(wallet)
+  const [isPendingRefetchAfterTxConfirmation, setIsPendingRefetchAfterTxConfirmation] = useState(false)
 
   const {data: stakingStatus, refetch: refetchStakingKeyState} = useStakingKeyState(stakingKeyHash, {
     refetchOnMount: true,
@@ -40,11 +41,20 @@ export const HomeScreen = () => {
 
   const isTxPending = isString(submittedTxId) && !isTxConfirmed(submittedTxId, txInfos)
 
+  useEffect(() => {
+    if (!isTxPending && submittedTxId !== undefined) {
+      setIsPendingRefetchAfterTxConfirmation(true)
+      refetchStakingKeyState().finally(() => setIsPendingRefetchAfterTxConfirmation(false))
+    }
+  }, [isTxPending, submittedTxId, refetchStakingKeyState, setIsPendingRefetchAfterTxConfirmation])
+
+  const txPendingDisplayed = isTxPending || isPendingRefetchAfterTxConfirmation
+
   if (wallet.isHW) {
     return <HardwareWalletSupportComingSoon />
   }
 
-  if (isTxPending && isNonNullable(lastSubmittedTx)) {
+  if (txPendingDisplayed && isNonNullable(lastSubmittedTx)) {
     if (lastSubmittedTx.kind === 'delegate-to-drep') {
       const action: GovernanceVote = {kind: 'delegate', drepID: lastSubmittedTx.drepID}
       return <ParticipatingInGovernanceVariant action={action} isTxPending />
