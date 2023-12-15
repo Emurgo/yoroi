@@ -3,8 +3,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer} from '../../../../../components'
 import {Text} from '../../../../../components'
-import {useNavigateTo, useStrings} from '../../common'
-import {FailedTxImage} from './FailedTxImage'
+import {useNavigateTo, useStrings, BrokenImage} from '../../common'
 
 export const FailedTxScreen = () => {
   const strings = useStrings()
@@ -17,7 +16,7 @@ export const FailedTxScreen = () => {
   return (
     <View style={styles.root}>
       <View style={styles.center}>
-        <FailedTxImage />
+        <BrokenImage />
 
         <Spacer height={16} />
 

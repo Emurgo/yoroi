@@ -2,7 +2,10 @@ import {GovernanceManager} from './manager'
 
 export const managerMock: GovernanceManager = {
   validateDRepID: () => Promise.reject(new Error('Mock not implemented')),
-  getStakingKeyState: () => Promise.reject(new Error('Mock not implemented')),
+  getStakingKeyState: () =>
+    Promise.resolve({
+      drepDelegation: {action: 'no-confidence', tx: 'txId', slot: 1, epoch: 1},
+    }),
   createDelegationCertificate: () =>
     Promise.reject(new Error('Mock not implemented')),
   createLedgerDelegationPayload: () =>

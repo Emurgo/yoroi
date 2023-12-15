@@ -52,6 +52,9 @@ export const useStrings = () => {
     enterPassword: intl.formatMessage(messages.enterPassword),
     continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
     fees: intl.formatMessage(txLabels.fees),
+    hardwareWalletSupportComingSoon: intl.formatMessage(messages.hardwareWalletSupportComingSoon),
+    workingOnHardwareWalletSupport: intl.formatMessage(messages.workingOnHardwareWalletSupport),
+    goToWallet: intl.formatMessage(messages.goToWallet),
   }
 }
 
@@ -209,5 +212,17 @@ const messages = defineMessages({
   enterDRepID: {
     id: 'components.governance.enterDRepID',
     defaultMessage: '!!!Enter DRep ID',
+  },
+  hardwareWalletSupportComingSoon: {
+    id: 'components.governance.hardwareWalletSupportComingSoon',
+    defaultMessage: '!!!Hardware wallet support coming soon',
+  },
+  workingOnHardwareWalletSupport: {
+    id: 'components.governance.workingOnHardwareWalletSupport',
+    defaultMessage: '!!!We are currently working on integrating hardware wallet support for Governance',
+  },
+  goToWallet: {
+    id: 'components.governance.goToWallet',
+    defaultMessage: '!!!Go to wallet',
   },
 })

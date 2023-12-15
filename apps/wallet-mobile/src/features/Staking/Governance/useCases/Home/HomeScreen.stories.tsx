@@ -5,7 +5,7 @@ import React from 'react'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
-import {TransactionInfo} from '../../../../../yoroi-wallets/types'
+
 import {mocks as governanceMocks} from '../../common'
 import {HomeScreen} from './HomeScreen'
 
@@ -13,12 +13,17 @@ storiesOf('Governance/HomeScreen', module)
   .add('Default', () => {
     const manager: GovernanceManager = {
       ...governanceMocks.governanceManager,
-      getLatestGovernanceAction: async () => {
-        return null
-      },
+      getLatestGovernanceAction: async () => null,
+      getStakingKeyState: () => Promise.resolve({}),
     }
+
+    const wallet = {
+      ...mocks.wallet,
+      getStakingInfo: () => Promise.resolve({status: 'not-registered' as const}),
+    }
+
     return (
-      <Wrapper manager={manager}>
+      <Wrapper manager={manager} wallet={wallet}>
         <HomeScreen />
       </Wrapper>
     )
@@ -44,15 +49,10 @@ storiesOf('Governance/HomeScreen', module)
     const manager: GovernanceManager = {
       ...governanceMocks.governanceManager,
       getLatestGovernanceAction: async () => null,
-    }
-    const wallet: YoroiWallet = {
-      ...mocks.wallet,
-      get transactions(): Record<string, TransactionInfo> {
-        return {[governanceMocks.votingDelegationTxInfo.id]: governanceMocks.votingDelegationTxInfo}
-      },
+      getStakingKeyState: () => Promise.resolve(governanceMocks.votedDrepStakeKeyState),
     }
     return (
-      <Wrapper manager={manager} wallet={wallet}>
+      <Wrapper manager={manager} wallet={mocks.wallet}>
         <HomeScreen />
       </Wrapper>
     )
@@ -61,15 +61,11 @@ storiesOf('Governance/HomeScreen', module)
     const manager: GovernanceManager = {
       ...governanceMocks.governanceManager,
       getLatestGovernanceAction: async () => null,
+      getStakingKeyState: () => Promise.resolve(governanceMocks.votedNoConfidenceStakeKeyState),
     }
-    const wallet: YoroiWallet = {
-      ...mocks.wallet,
-      get transactions(): Record<string, TransactionInfo> {
-        return {[governanceMocks.votingNoConfidenceTxInfo.id]: governanceMocks.votingNoConfidenceTxInfo}
-      },
-    }
+
     return (
-      <Wrapper manager={manager} wallet={wallet}>
+      <Wrapper manager={manager} wallet={mocks.wallet}>
         <HomeScreen />
       </Wrapper>
     )
@@ -79,13 +75,28 @@ storiesOf('Governance/HomeScreen', module)
     const manager: GovernanceManager = {
       ...governanceMocks.governanceManager,
       getLatestGovernanceAction: async () => null,
+      getStakingKeyState: () => Promise.resolve(governanceMocks.votedAbstainStakeKeyState),
     }
-    const wallet: YoroiWallet = {
+
+    return (
+      <Wrapper manager={manager} wallet={mocks.wallet}>
+        <HomeScreen />
+      </Wrapper>
+    )
+  })
+  .add('HW', () => {
+    const manager: GovernanceManager = {
+      ...governanceMocks.governanceManager,
+      getLatestGovernanceAction: async () => null,
+      getStakingKeyState: () => Promise.resolve({}),
+    }
+
+    const wallet = {
       ...mocks.wallet,
-      get transactions(): Record<string, TransactionInfo> {
-        return {[governanceMocks.votingAbstainTxInfo.id]: governanceMocks.votingAbstainTxInfo}
-      },
+      getStakingInfo: () => Promise.resolve({status: 'not-registered' as const}),
+      isHW: true,
     }
+
     return (
       <Wrapper manager={manager} wallet={wallet}>
         <HomeScreen />

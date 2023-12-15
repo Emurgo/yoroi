@@ -1,10 +1,13 @@
 import {GovernanceManager} from '@yoroi/staking'
 
 import {mockTransactionInfos} from '../../../../yoroi-wallets/mocks'
+import {StakingKeyState} from '@yoroi/staking/src'
 
 const governanceManager: GovernanceManager = {
   getStakingKeyState: () => {
-    return Promise.reject(new Error('mock not implemented'))
+    return Promise.resolve({
+      drepDelegation: {action: 'no-confidence', tx: 'txId', slot: 1, epoch: 1},
+    })
   },
   createStakeRegistrationCertificate: () => {
     return Promise.reject(new Error('mock not implemented'))
@@ -32,24 +35,37 @@ const governanceManager: GovernanceManager = {
   },
 }
 
-const votingDelegationTxInfo = {
-  ...mockTransactionInfos['ef147cbd5ccb0b0907a2969a697aeb06117ac83f284ddfae53a4198b03719b52'],
-  metadata: {1: {actionId: 3, drepID: 'drep1wdt7ryc567pauvc5a93rt5mnzpx6y2rh6mvtu5phehmj5lkqjgx'}},
+const votedAbstainStakeKeyState: StakingKeyState = {
+  drepDelegation: {
+    action: 'abstain',
+    tx: 'txId',
+    slot: 1,
+    epoch: 1,
+  },
 }
 
-const votingNoConfidenceTxInfo = {
-  ...mockTransactionInfos['ef147cbd5ccb0b0907a2969a697aeb06117ac83f284ddfae53a4198b03719b52'],
-  metadata: {1: {actionId: 2}},
+const votedNoConfidenceStakeKeyState: StakingKeyState = {
+  drepDelegation: {
+    action: 'no-confidence',
+    tx: 'txId',
+    slot: 1,
+    epoch: 1,
+  },
 }
 
-const votingAbstainTxInfo = {
-  ...mockTransactionInfos['ef147cbd5ccb0b0907a2969a697aeb06117ac83f284ddfae53a4198b03719b52'],
-  metadata: {1: {actionId: 1}},
+const votedDrepStakeKeyState: StakingKeyState = {
+  drepDelegation: {
+    action: 'drep',
+    tx: 'txId',
+    slot: 1,
+    epoch: 1,
+    drepID: 'drepId',
+  },
 }
 
 export const mocks = {
   governanceManager,
-  votingDelegationTxInfo,
-  votingNoConfidenceTxInfo,
-  votingAbstainTxInfo,
+  votedAbstainStakeKeyState,
+  votedNoConfidenceStakeKeyState,
+  votedDrepStakeKeyState,
 }
