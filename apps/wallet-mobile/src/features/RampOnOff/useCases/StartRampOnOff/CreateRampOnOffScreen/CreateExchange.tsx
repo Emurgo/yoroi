@@ -1,5 +1,6 @@
 import {banxaModuleMaker} from '@yoroi/banxa'
 import {BanxaReferralUrlQueryStringParams} from '@yoroi/banxa/lib/typescript/translators/module'
+import BigNumber from 'bignumber.js'
 import * as React from 'react'
 import {KeyboardAvoidingView, Linking, Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
@@ -10,6 +11,8 @@ import {useSelectedWallet} from '../../../../../../src/SelectedWallet'
 import {Theme} from '../../../../../../src/theme/types'
 import {Button} from '../../../../../components'
 import {useTheme} from '../../../../../theme'
+import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {Amounts, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../common/navigation'
 import {useRampOnOff} from '../../../common/RampOnOffProvider'
 import {useStrings} from '../../../common/strings'
@@ -28,6 +31,7 @@ const CreateExchange = () => {
   const {actionType, amount, canExchange} = useRampOnOff()
 
   const wallet = useSelectedWallet()
+  const amountTokenInfo = useTokenInfo({wallet, tokenId: ''})
 
   const {height: deviceHeight} = useWindowDimensions()
 
@@ -44,15 +48,21 @@ const CreateExchange = () => {
     const isMainnet = wallet.networkId !== 300
     const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
     const moduleOptions = {isProduction: isMainnet, partner: 'yoroi'} as const
+
+    const quantity = `${amount.value}` as `${number}`
+    const denomination = amountTokenInfo.decimals ?? 0
+    const orderAmount = +Quantities.denominated(quantity, denomination)
+
     const urlOptions = {
       orderType: actionType,
       fiatType: 'USD',
       coinType: 'ADA',
-      coinAmount: amount?.value ?? 0,
+      coinAmount: orderAmount ?? 0,
       blockchain: 'ADA',
       walletAddress,
       returnUrl,
     } as BanxaReferralUrlQueryStringParams
+
     const banxa = banxaModuleMaker(moduleOptions)
     const url = banxa.createReferralUrl(urlOptions)
     Linking.openURL(url.toString())
