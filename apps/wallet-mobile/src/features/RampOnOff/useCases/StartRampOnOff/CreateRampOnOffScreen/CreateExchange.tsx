@@ -128,7 +128,6 @@ const getStyles = (props: {theme: Theme}) => {
     },
     flex: {
       flex: 1,
-      // paddingTop: 40,
     },
     scroll: {
       paddingHorizontal: 16,

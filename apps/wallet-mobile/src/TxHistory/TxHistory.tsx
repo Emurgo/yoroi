@@ -15,7 +15,6 @@ import {ActionsBanner} from './ActionsBanner'
 import {AssetList} from './AssetList'
 import {BalanceBanner} from './BalanceBanner'
 import {CollapsibleHeader} from './CollapsibleHeader'
-// import {LockedDeposit} from './LockedDeposit'
 import {TxHistoryList} from './TxHistoryList'
 import {useAnimatedTxHistory} from './useAnimatedTxHistory'
 import {useOnScroll} from './useOnScroll'
@@ -87,8 +86,6 @@ export const TxHistory = () => {
 
         <TabPanels>
           <Spacer height={4} />
-
-          {/* <LockedDeposit /> */}
 
           <Spacer height={8} />
 
@@ -171,7 +168,6 @@ const warningBannerMessages = defineMessages({
 const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
-    // backgroundColor: COLORS.BACKGROUND_GRAY,
     backgroundColor: '#E1EAF6',
   },
   container: {

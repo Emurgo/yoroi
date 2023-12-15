@@ -133,9 +133,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 }
 
 const styles = StyleSheet.create({
-  banner: {
-    // backgroundColor: COLORS.BACKGROUND_GRAY,
-  },
+  banner: {},
   centralized: {
     alignItems: 'center',
     justifyContent: 'center',
