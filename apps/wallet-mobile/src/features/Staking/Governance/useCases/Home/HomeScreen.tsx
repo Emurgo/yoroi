@@ -153,6 +153,7 @@ const NeverParticipatedInGovernanceVariant = () => {
   // todo
   const hasStakingKeyRegistered = stakingInfo?.data?.status !== 'not-registered'
   useWalletEvent(wallet, 'utxos', stakingInfo.refetch)
+  const needsToRegisterStakingKey = !hasStakingKeyRegistered
 
   const {createCertificate: createDelegationCertificate} = useDelegationCertificate({
     useErrorBoundary: true,
@@ -179,7 +180,10 @@ const NeverParticipatedInGovernanceVariant = () => {
         {drepID, stakingKey},
         {
           onSuccess: async (certificate) => {
-            const unsignedTx = await wallet.createUnsignedGovernanceTx([certificate])
+            const stakeCert =
+              needsToRegisterStakingKey && (await manager.createStakeRegistrationCertificate(stakingKey))
+            const certs = stakeCert ? [stakeCert, certificate] : [certificate]
+            const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
             navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID}})
           },
         },
@@ -193,8 +197,9 @@ const NeverParticipatedInGovernanceVariant = () => {
       {vote: 'abstain', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const stakeCert = await manager.createStakeRegistrationCertificate(stakingKey)
-          const unsignedTx = await wallet.createUnsignedGovernanceTx([stakeCert, certificate])
+          const stakeCert = needsToRegisterStakingKey && (await manager.createStakeRegistrationCertificate(stakingKey))
+          const certs = stakeCert ? [stakeCert, certificate] : [certificate]
+          const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
           navigateTo.confirmTx({unsignedTx, vote: {kind: 'abstain'}})
         },
       },
@@ -207,7 +212,9 @@ const NeverParticipatedInGovernanceVariant = () => {
       {vote: 'no-confidence', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await wallet.createUnsignedGovernanceTx([certificate])
+          const stakeCert = needsToRegisterStakingKey && (await manager.createStakeRegistrationCertificate(stakingKey))
+          const certs = stakeCert ? [stakeCert, certificate] : [certificate]
+          const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
           navigateTo.confirmTx({unsignedTx, vote: {kind: 'no-confidence'}})
         },
       },
