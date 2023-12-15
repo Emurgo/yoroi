@@ -14,6 +14,7 @@ import {CONFIG} from '../../legacy/config'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {lightPalette} from '../../theme'
+import {isSanchoNetworkId} from '../../yoroi-wallets/utils'
 
 const MenuStack = createStackNavigator()
 
@@ -37,6 +38,7 @@ export const MenuNavigator = () => {
 export const Menu = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
+  const wallet = useSelectedWallet()
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
@@ -57,7 +59,7 @@ export const Menu = () => {
           />
         </Boundary>
 
-        {CONFIG.GOVERNANCE_CENTRE_ENABLED && (
+        {CONFIG.GOVERNANCE_CENTRE_ENABLED && isSanchoNetworkId(wallet.networkId) && (
           <>
             <Hr />
 

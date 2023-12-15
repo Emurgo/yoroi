@@ -20,7 +20,7 @@ import {isEmptyString} from '../utils/utils'
 import {getCardanoNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {getCardanoBaseConfig} from '../yoroi-wallets/cardano/utils'
 import {useBalances, useIsOnline, useSync} from '../yoroi-wallets/hooks'
-import {Amounts} from '../yoroi-wallets/utils'
+import {Amounts, isSanchoNetworkId} from '../yoroi-wallets/utils'
 import {
   genCurrentEpochLength,
   genCurrentSlotLength,
@@ -59,7 +59,7 @@ export const Dashboard = () => {
   }
 
   const onWithdraw = () => {
-    if (CONFIG.GOVERNANCE_CENTRE_ENABLED && !isParticipatingInGovernance) {
+    if (CONFIG.GOVERNANCE_CENTRE_ENABLED && isSanchoNetworkId(wallet.networkId) && !isParticipatingInGovernance) {
       openModal(
         governanceStrings.withdrawWarningTitle,
         <WithdrawWarningModal onParticipatePress={onParticipatePress} />,

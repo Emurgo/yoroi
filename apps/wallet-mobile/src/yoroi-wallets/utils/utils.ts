@@ -236,5 +236,9 @@ export const openInExplorer = async (transactionId: string, networkId: NetworkId
 }
 
 export const isMainnetNetworkId = (networkId: NetworkId) => {
-  return networkId !== 300 && networkId !== 450
+  return networkId !== 300 && !isSanchoNetworkId(networkId)
+}
+
+export const isSanchoNetworkId = (networkId: NetworkId) => {
+  return networkId === 450
 }
