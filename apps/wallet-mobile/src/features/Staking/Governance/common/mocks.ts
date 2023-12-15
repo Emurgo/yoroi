@@ -3,6 +3,12 @@ import {GovernanceManager} from '@yoroi/staking'
 import {mockTransactionInfos} from '../../../../yoroi-wallets/mocks'
 
 const governanceManager: GovernanceManager = {
+  getStakingKeyState: () => {
+    return Promise.reject(new Error('mock not implemented'))
+  },
+  createStakeRegistrationCertificate: () => {
+    return Promise.reject(new Error('mock not implemented'))
+  },
   createDelegationCertificate: () => {
     return Promise.reject(new Error('mock not implemented'))
   },

@@ -738,7 +738,6 @@ export class ByronWallet implements YoroiWallet {
     return Promise.reject(new Error('Method not implemented.'))
   }
 
-  // TODO: This will come from yoroi lib
   async createUnsignedGovernanceTx(votingCertificates: CardanoTypes.Certificate[]) {
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
@@ -773,7 +772,7 @@ export class ByronWallet implements YoroiWallet {
 
       return yoroiUnsignedTx({
         unsignedTx,
-        networkConfig: NETWORK_CONFIG,
+        networkConfig: networkConfig,
         addressedUtxos,
         entries: [],
         governance: true,

@@ -877,6 +877,7 @@ const yoroiUnsignedTx: YoroiUnsignedTx & {mock: true} = {
   voting: {},
   unsignedTx: {} as any,
   mock: true,
+  governance: false,
 }
 
 const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
@@ -893,6 +894,7 @@ const yoroiSignedTx: YoroiSignedTx & {mock: true} = {
   voting: {},
   signedTx: {id: 'tx-id', encodedTx: new Uint8Array([1, 2, 3])},
   mock: true,
+  governance: false,
 }
 
 export const nft: Balance.TokenInfo = {
