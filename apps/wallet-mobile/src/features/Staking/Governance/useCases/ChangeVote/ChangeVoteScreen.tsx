@@ -38,7 +38,7 @@ export const ChangeVoteScreen = () => {
 
   const openDRepIdModal = (onSubmit: (drepId: string) => void) => {
     openModal(
-      strings.drepID,
+      strings.enterDRepID,
       <GovernanceProvider manager={manager}>
         <EnterDrepIdModal onSubmit={onSubmit} />
       </GovernanceProvider>,

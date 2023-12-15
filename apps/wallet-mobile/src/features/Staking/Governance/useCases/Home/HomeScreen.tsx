@@ -172,7 +172,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const openDRepIdModal = (onSubmit: (drepId: string) => void) => {
     openModal(
-      strings.drepID,
+      strings.enterDRepID,
       <GovernanceProvider manager={manager}>
         <EnterDrepIdModal onSubmit={onSubmit} />
       </GovernanceProvider>,
@@ -192,7 +192,7 @@ const NeverParticipatedInGovernanceVariant = () => {
               : null
             const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
             const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-            navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID}})
+            navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID}, registerStakingKey: stakeCert !== null})
           },
         },
       )
@@ -210,7 +210,7 @@ const NeverParticipatedInGovernanceVariant = () => {
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
           const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-          navigateTo.confirmTx({unsignedTx, vote: {kind: 'abstain'}})
+          navigateTo.confirmTx({unsignedTx, vote: {kind: 'abstain'}, registerStakingKey: stakeCert !== null})
         },
       },
     )
@@ -227,7 +227,7 @@ const NeverParticipatedInGovernanceVariant = () => {
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
           const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-          navigateTo.confirmTx({unsignedTx, vote: {kind: 'no-confidence'}})
+          navigateTo.confirmTx({unsignedTx, vote: {kind: 'no-confidence'}, registerStakingKey: stakeCert !== null})
         },
       },
     )

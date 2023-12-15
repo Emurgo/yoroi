@@ -37,7 +37,7 @@ export const SuccessTxScreen = () => {
 
       <Button title={strings.goToGovernance} shelleyTheme onPress={onPress} />
 
-      <Spacer height={24} />
+      <Spacer height={6} />
     </View>
   )
 }

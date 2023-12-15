@@ -1,6 +1,7 @@
 import {useUpdateLatestGovernanceAction} from '@yoroi/staking'
-import React from 'react'
+import React, {useState} from 'react'
 import {StyleSheet, View} from 'react-native'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Button, Icon, Spacer, useModal} from '../../../../../components'
 import {Text} from '../../../../../components'
@@ -11,7 +12,6 @@ import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalan
 import {formatTokenWithText} from '../../../../../legacy/format'
 import {useUnsafeParams} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {COLORS} from '../../../../../theme'
 import {Amounts} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo, useStrings} from '../../common'
 import {Routes} from '../../common/navigation'
@@ -23,6 +23,7 @@ export const ConfirmTxScreen = () => {
   const navigateTo = useNavigateTo()
   const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(wallet.id)
   const {openModal, closeModal} = useModal()
+  const [operationsOpen, setOperationsOpen] = useState(true)
 
   const titles = {
     abstain: strings.actionAbstainTitle,
@@ -105,11 +106,11 @@ export const ConfirmTxScreen = () => {
 
   return (
     <View style={styles.root}>
-      <Text style={styles.primaryText}>{title}</Text>
+      <Text style={styles.secondaryText}>{title}</Text>
 
       <Spacer height={4} />
 
-      <Text style={styles.secondaryText}>{description}</Text>
+      <Text style={styles.normalText}>{description}</Text>
 
       <Spacer height={24} />
 
@@ -133,19 +134,33 @@ export const ConfirmTxScreen = () => {
 
       <Spacer height={24} />
 
-      <Text style={styles.primaryText}>{strings.operations}</Text>
+      <TouchableOpacity style={styles.operationsToggle} onPress={() => setOperationsOpen(!operationsOpen)}>
+        <Text style={styles.primaryText}>{strings.operations}</Text>
 
-      <Spacer height={32} />
+        <Icon.Chevron direction={operationsOpen ? 'up' : 'down'} color="#6B7384" size={24} />
+      </TouchableOpacity>
 
-      <Text style={styles.operation}>{operation}</Text>
+      {operationsOpen && (
+        <>
+          {params.registerStakingKey && (
+            <>
+              <Spacer height={32} />
+
+              <Text style={styles.normalText}>{strings.registerStakingKey}</Text>
+            </>
+          )}
+
+          <Spacer height={params.registerStakingKey ? 16 : 32} />
+
+          <Text style={styles.normalText}>{operation}</Text>
+        </>
+      )}
 
       <Spacer height={32} />
 
       <View style={styles.feesRow}>
         <View style={styles.feeLabel}>
-          <Text style={styles.primaryText}>{strings.fees}</Text>
-
-          <Icon.Info size={24} color={COLORS.BLACK} />
+          <Text style={styles.primaryText}>{strings.txFees}</Text>
         </View>
 
         <Text style={styles.feeValue}>{feeText}</Text>
@@ -159,6 +174,11 @@ export const ConfirmTxScreen = () => {
 }
 
 const styles = StyleSheet.create({
+  operationsToggle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   feeLabel: {
     flex: 1,
     flexDirection: 'row',
@@ -219,7 +239,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     opacity: 0.5,
   },
-  operation: {
+  normalText: {
     fontFamily: 'Rubik-Regular',
     fontSize: 16,
     lineHeight: 24,

@@ -1,6 +1,4 @@
 import {GovernanceManager} from '@yoroi/staking'
-
-import {mockTransactionInfos} from '../../../../yoroi-wallets/mocks'
 import {StakingKeyState} from '@yoroi/staking/src'
 
 const governanceManager: GovernanceManager = {

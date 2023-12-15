@@ -1,4 +1,4 @@
-export {governanceManagerMaker, GovernanceManager} from './manager'
+export {governanceManagerMaker, type GovernanceManager} from './manager'
 export {
   useLatestGovernanceAction,
   useGovernance,
@@ -9,6 +9,6 @@ export {
   useDelegationCertificate,
   useStakingKeyState,
 } from './translators/react'
-export {governanceApiMaker, GovernanceApi} from './api'
+export {governanceApiMaker, type GovernanceApi} from './api'
 export {parseActionFromMetadata, parseDrepId} from './helpers'
 export type {StakingKeyState} from './types'

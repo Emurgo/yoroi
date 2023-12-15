@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
 import {debugWalletInfo, features} from '../../features'
@@ -10,7 +10,7 @@ import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 import {Button} from '../Button'
 import {Spacer} from '../Spacer'
 import {Text} from '../Text'
-import {TextInput} from '../TextInput'
+import {Checkmark, TextInput} from '../TextInput'
 import {useStrings} from './strings'
 
 type Props = {
@@ -25,10 +25,20 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
   const {signTx, error: signError, isLoading: signIsLoading} = useSignTxWithPassword({wallet})
   const {submitTx, error: submitError, isLoading: submitIsLoading} = useSubmitTx({wallet}, {onError})
   const strings = useStrings()
+  const [isPasswordCorrect, setIsPasswordCorrect] = useState(false)
 
-  const [spendingPassword, setSpendingPassword] = React.useState(
-    features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
-  )
+  const [spendingPassword, setSpendingPassword] = useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
+
+  useEffect(() => {
+    let isMounted = true
+    wallet.encryptedStorage.rootKey
+      .read(spendingPassword)
+      .then(() => isMounted && setIsPasswordCorrect(true))
+      .catch(() => isMounted && setIsPasswordCorrect(false))
+    return () => {
+      isMounted = false
+    }
+  }, [spendingPassword, wallet])
 
   const onSubmit = (password: string) => {
     signTx(
@@ -55,6 +65,7 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
         value={spendingPassword}
         onChangeText={(text) => setSpendingPassword(text)}
         autoComplete="off"
+        right={isPasswordCorrect ? <Checkmark /> : null}
       />
 
       {error != null && (

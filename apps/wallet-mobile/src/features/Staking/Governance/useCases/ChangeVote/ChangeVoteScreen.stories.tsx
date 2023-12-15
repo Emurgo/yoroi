@@ -5,11 +5,12 @@ import React from 'react'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
-import {mocks as governanceMocks} from '../../common'
+import {mocks as governanceMocks, SafeArea} from '../../common'
 import {ChangeVoteScreen} from './ChangeVoteScreen'
 
 storiesOf('Governance/ChangeVoteScreen', module)
-  .add('When Delegated', () => {
+  .addDecorator((story) => <SafeArea>{story()}</SafeArea>)
+  .add('When Delegated To A Drep', () => {
     const manager = {
       ...governanceMocks.governanceManager,
       getLatestGovernanceAction: async () => null,

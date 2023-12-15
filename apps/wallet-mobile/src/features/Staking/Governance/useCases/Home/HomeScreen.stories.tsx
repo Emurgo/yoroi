@@ -5,11 +5,16 @@ import React from 'react'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks} from '../../../../../yoroi-wallets/mocks'
-
-import {mocks as governanceMocks} from '../../common'
+import {mocks as governanceMocks, SafeArea} from '../../common'
 import {HomeScreen} from './HomeScreen'
 
+const walletMock = {
+  ...mocks.wallet,
+  getStakingInfo: () => Promise.resolve({status: 'not-registered' as const}),
+}
+
 storiesOf('Governance/HomeScreen', module)
+  .addDecorator((story) => <SafeArea>{story()}</SafeArea>)
   .add('Default', () => {
     const manager: GovernanceManager = {
       ...governanceMocks.governanceManager,
@@ -17,13 +22,8 @@ storiesOf('Governance/HomeScreen', module)
       getStakingKeyState: () => Promise.resolve({}),
     }
 
-    const wallet = {
-      ...mocks.wallet,
-      getStakingInfo: () => Promise.resolve({status: 'not-registered' as const}),
-    }
-
     return (
-      <Wrapper manager={manager} wallet={wallet}>
+      <Wrapper manager={manager} wallet={walletMock}>
         <HomeScreen />
       </Wrapper>
     )
@@ -40,7 +40,7 @@ storiesOf('Governance/HomeScreen', module)
       },
     }
     return (
-      <Wrapper manager={manager}>
+      <Wrapper manager={manager} wallet={walletMock}>
         <HomeScreen />
       </Wrapper>
     )
@@ -52,7 +52,7 @@ storiesOf('Governance/HomeScreen', module)
       getStakingKeyState: () => Promise.resolve(governanceMocks.votedDrepStakeKeyState),
     }
     return (
-      <Wrapper manager={manager} wallet={mocks.wallet}>
+      <Wrapper manager={manager} wallet={walletMock}>
         <HomeScreen />
       </Wrapper>
     )
@@ -65,7 +65,7 @@ storiesOf('Governance/HomeScreen', module)
     }
 
     return (
-      <Wrapper manager={manager} wallet={mocks.wallet}>
+      <Wrapper manager={manager} wallet={walletMock}>
         <HomeScreen />
       </Wrapper>
     )
@@ -79,7 +79,7 @@ storiesOf('Governance/HomeScreen', module)
     }
 
     return (
-      <Wrapper manager={manager} wallet={mocks.wallet}>
+      <Wrapper manager={manager} wallet={walletMock}>
         <HomeScreen />
       </Wrapper>
     )
@@ -92,8 +92,7 @@ storiesOf('Governance/HomeScreen', module)
     }
 
     const wallet = {
-      ...mocks.wallet,
-      getStakingInfo: () => Promise.resolve({status: 'not-registered' as const}),
+      ...walletMock,
       isHW: true,
     }
 
@@ -107,11 +106,11 @@ storiesOf('Governance/HomeScreen', module)
 const Wrapper = ({
   children,
   manager,
-  wallet = mocks.wallet,
+  wallet,
 }: {
   children: React.ReactNode
   manager: GovernanceManager
-  wallet?: YoroiWallet
+  wallet: YoroiWallet
 }) => {
   return (
     <SelectedWalletProvider wallet={wallet}>

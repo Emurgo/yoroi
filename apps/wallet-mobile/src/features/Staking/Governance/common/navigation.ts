@@ -8,7 +8,7 @@ import {GovernanceVote} from '../types'
 export type Routes = {
   home: undefined
   'change-vote': undefined
-  'confirm-tx': {vote: GovernanceVote; unsignedTx: YoroiUnsignedTx}
+  'confirm-tx': {vote: GovernanceVote; unsignedTx: YoroiUnsignedTx; registerStakingKey?: boolean}
   'tx-success': undefined
   'tx-failed': undefined
 }

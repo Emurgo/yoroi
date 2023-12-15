@@ -42,7 +42,7 @@ describe('createGovernanceManager', () => {
       const invalidId =
         '0123456789012345678901234567890123456789012345678901234X'
       const errorMessage =
-        'Invalid DRep ID. Must have a valid bech32 format or a valid key hash format'
+        'Invalid DRep ID. Must have a valid bech32 format or a valid key hash format.'
 
       await expect(() =>
         governanceManager.validateDRepID(invalidId),

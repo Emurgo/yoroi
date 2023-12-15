@@ -27,10 +27,10 @@ import {
   YoroiUnsignedTx,
 } from '../types'
 import {WalletMeta} from '../walletManager'
+import {CardanoMobile} from '../wallets'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'
-import {CardanoMobile} from '../wallets'
 
 const walletMeta: WalletMeta = {
   id: 'wallet-id',
@@ -109,7 +109,7 @@ const wallet: YoroiWallet = {
     const pubKeyHex =
       '8e4e2f11b6ac2a269913286e26339779ab8767579d18d173cdd324929d94e2c43e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247'
     const accountPubKey = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(pubKeyHex, 'hex'))
-    return await accountPubKey
+    return accountPubKey
       .derive(CHIMERIC_ACCOUNT)
       .then((key) => key.derive(STAKING_KEY_INDEX))
       .then((key) => key.toRawKey())
