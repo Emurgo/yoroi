@@ -941,6 +941,7 @@ const supportedTypes = [
   'image/gif',
   'image/webp',
   'image/svg+xml',
+  'image/svg',
   'image/tiff',
 ]
 
