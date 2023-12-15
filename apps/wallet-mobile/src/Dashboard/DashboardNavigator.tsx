@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createStackNavigator} from '@react-navigation/stack'
+import {governanceApiMaker, governanceManagerMaker, GovernanceProvider} from '@yoroi/staking'
 import React, {useMemo} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
@@ -9,10 +11,8 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {DelegationConfirmation} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {useWalletName} from '../yoroi-wallets/hooks'
-import {Dashboard} from './Dashboard'
-import {governanceApiMaker, governanceManagerMaker, GovernanceProvider} from '@yoroi/staking'
 import {CardanoMobile} from '../yoroi-wallets/wallets'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import {Dashboard} from './Dashboard'
 
 const Stack = createStackNavigator<DashboardRoutes>()
 export const DashboardNavigator = () => {

@@ -5,8 +5,8 @@ import {Linking, StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text, TextInput} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
-import {useStrings} from '../../common'
 import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
+import {useStrings} from '../../common'
 
 type Props = {
   onSubmit?: (drepId: string) => void

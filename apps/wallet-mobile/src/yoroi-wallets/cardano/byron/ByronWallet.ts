@@ -59,6 +59,7 @@ import {
 } from '../constants/mainnet/constants'
 import {CardanoError, InvalidState} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
+import {getTime} from '../getTime'
 import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
 import {
   CardanoHaskellShelleyNetwork,
@@ -96,7 +97,6 @@ import {
 import {makeUtxoManager, UtxoManager} from '../utxoManager'
 import {utxosMaker} from '../utxoManager/utxos'
 import {makeKeys} from './makeKeys'
-import {getTime} from '../getTime'
 
 type WalletState = {
   lastGeneratedAddressIndex: number

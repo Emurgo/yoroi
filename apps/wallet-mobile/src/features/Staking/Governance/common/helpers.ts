@@ -1,5 +1,5 @@
 import {isNonNullable} from '@yoroi/common'
-import {parseActionFromMetadata, type StakingKeyState, useStakingKeyState} from '@yoroi/staking'
+import {type StakingKeyState, parseActionFromMetadata, useStakingKeyState} from '@yoroi/staking'
 import {useMemo} from 'react'
 
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
