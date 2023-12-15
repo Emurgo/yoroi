@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, Image, ImageSourcePropType, StyleSheet, View, ViewStyle} from 'react-native'
+import {ActivityIndicator, Image, ImageSourcePropType, ScrollView, StyleSheet, View, ViewStyle} from 'react-native'
 
-import {Button, ProgressStep, TextInput} from '../../components'
+import {Button, KeyboardAvoidingView, ProgressStep, TextInput} from '../../components'
 import globalMessages from '../../i18n/global-messages'
 import {spacing} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
@@ -51,42 +51,46 @@ export const WalletNameForm = ({
 
   return (
     <View style={styles.root}>
-      {progress != null && (
-        <ProgressStep currentStep={progress.currentStep} totalSteps={progress.totalSteps} displayStepNumber />
-      )}
+      <KeyboardAvoidingView style={{flex: 1}}>
+        {progress != null && (
+          <ProgressStep currentStep={progress.currentStep} totalSteps={progress.totalSteps} displayStepNumber />
+        )}
 
-      <View style={[styles.container, containerStyle]}>
-        <View style={styles.heading}>{image != null && <Image source={image} />}</View>
+        <ScrollView style={{flex: 1}} bounces={false}>
+          <View style={[styles.container, containerStyle]}>
+            <View style={styles.heading}>{image != null && <Image source={image} />}</View>
 
-        {topContent}
+            {topContent}
 
-        <TextInput
-          errorOnMount
-          autoFocus
-          label={strings.walletNameInputLabel}
-          value={name}
-          onChangeText={(walletName: string) => setName(walletName)}
-          errorText={walletNameErrorText}
-          disabled={isWaiting}
-          autoComplete="off"
-          testID="walletNameInput"
-        />
+            <TextInput
+              errorOnMount
+              autoFocus
+              label={strings.walletNameInputLabel}
+              value={name}
+              onChangeText={(walletName: string) => setName(walletName)}
+              errorText={walletNameErrorText}
+              disabled={isWaiting}
+              autoComplete="off"
+              testID="walletNameInput"
+            />
 
-        {bottomContent}
-      </View>
+            {bottomContent}
+          </View>
+        </ScrollView>
 
-      <View style={styles.buttonContainer}>
-        <Button
-          block
-          onPress={() => onSubmit({name: name.trim()})}
-          title={strings.save}
-          style={[styles.button, buttonStyle]}
-          disabled={hasErrors || isWaiting}
-          testID="saveWalletButton"
-        />
-      </View>
+        <View style={styles.buttonContainer}>
+          <Button
+            block
+            onPress={() => onSubmit({name: name.trim()})}
+            title={strings.save}
+            style={[styles.button, buttonStyle]}
+            disabled={hasErrors || isWaiting}
+            testID="saveWalletButton"
+          />
+        </View>
 
-      {isWaiting && <ActivityIndicator color="black" />}
+        {isWaiting && <ActivityIndicator color="black" />}
+      </KeyboardAvoidingView>
     </View>
   )
 }
