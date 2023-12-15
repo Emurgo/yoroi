@@ -2,10 +2,10 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
-import {useNavigateTo, useStrings} from '../../common'
-import {SuccessTxImage} from './SuccessTxImage'
 import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
+import {useNavigateTo, useStrings} from '../../common'
 import {Routes} from '../../common/navigation'
+import {SuccessTxImage} from './SuccessTxImage'
 
 export const SuccessTxScreen = () => {
   const strings = useStrings()

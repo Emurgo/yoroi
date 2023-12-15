@@ -18,9 +18,9 @@ import {useStakingKey, useTransactionInfos, useWalletEvent} from '../../../../..
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {Action, BrokenImage, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
+import {Routes} from '../../common/navigation'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
-import {Routes} from '../../common/navigation'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
