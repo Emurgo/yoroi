@@ -12,7 +12,7 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../../components'
 import {useStakingInfo} from '../../../../../Dashboard/StakePoolInfos'
-import {useWalletNavigation} from '../../../../../navigation'
+import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useStakingKey, useTransactionInfos, useWalletEvent} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
@@ -20,6 +20,7 @@ import {Action, BrokenImage, LearnMoreLink, useNavigateTo, useStrings} from '../
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
+import {Routes} from '../../common/navigation'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
@@ -39,7 +40,6 @@ export const HomeScreen = () => {
 
   const isTxPending = isString(submittedTxId) && !isTxConfirmed(submittedTxId, txInfos)
 
-  console.log('wallet.isHW', wallet.isHW)
   if (wallet.isHW) {
     return <HardwareWalletSupportComingSoon />
   }
@@ -157,6 +157,9 @@ const NeverParticipatedInGovernanceVariant = () => {
   const {manager} = useGovernance()
   const {openModal} = useModal()
   const stakingInfo = useStakingInfo(wallet, {suspense: true})
+  const params = useUnsafeParams<Routes['home']>()
+
+  const navigateToStakingOnSuccess = params?.navigateToStakingOnSuccess ?? false
 
   const hasStakingKeyRegistered = stakingInfo?.data?.status !== 'not-registered'
   useWalletEvent(wallet, 'utxos', stakingInfo.refetch)
@@ -192,7 +195,12 @@ const NeverParticipatedInGovernanceVariant = () => {
               : null
             const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
             const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-            navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID}, registerStakingKey: stakeCert !== null})
+            navigateTo.confirmTx({
+              unsignedTx,
+              vote: {kind: 'delegate', drepID},
+              registerStakingKey: stakeCert !== null,
+              navigateToStakingOnSuccess,
+            })
           },
         },
       )
@@ -210,7 +218,12 @@ const NeverParticipatedInGovernanceVariant = () => {
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
           const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-          navigateTo.confirmTx({unsignedTx, vote: {kind: 'abstain'}, registerStakingKey: stakeCert !== null})
+          navigateTo.confirmTx({
+            unsignedTx,
+            vote: {kind: 'abstain'},
+            registerStakingKey: stakeCert !== null,
+            navigateToStakingOnSuccess,
+          })
         },
       },
     )
@@ -227,7 +240,12 @@ const NeverParticipatedInGovernanceVariant = () => {
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
           const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-          navigateTo.confirmTx({unsignedTx, vote: {kind: 'no-confidence'}, registerStakingKey: stakeCert !== null})
+          navigateTo.confirmTx({
+            unsignedTx,
+            vote: {kind: 'no-confidence'},
+            registerStakingKey: stakeCert !== null,
+            navigateToStakingOnSuccess,
+          })
         },
       },
     )

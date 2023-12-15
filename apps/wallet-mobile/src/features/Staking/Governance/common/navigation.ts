@@ -6,10 +6,17 @@ import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {GovernanceVote} from '../types'
 
 export type Routes = {
-  home: undefined
+  home?: {
+    navigateToStakingOnSuccess?: boolean
+  }
   'change-vote': undefined
-  'confirm-tx': {vote: GovernanceVote; unsignedTx: YoroiUnsignedTx; registerStakingKey?: boolean}
-  'tx-success': undefined
+  'confirm-tx': {
+    vote: GovernanceVote
+    unsignedTx: YoroiUnsignedTx
+    registerStakingKey?: boolean
+    navigateToStakingOnSuccess?: boolean
+  }
+  'tx-success'?: {navigateToStaking?: boolean}
   'tx-failed': undefined
 }
 
@@ -21,7 +28,7 @@ export const useNavigateTo = () => {
     home: () => navigation.navigate('home'),
     changeVote: () => navigation.navigate('change-vote'),
     confirmTx: (params: Routes['confirm-tx']) => navigation.navigate('confirm-tx', params),
-    txSuccess: () => navigation.navigate('tx-success'),
+    txSuccess: (params?: Routes['tx-success']) => navigation.navigate('tx-success', params),
     txFailed: () => navigation.navigate('tx-failed'),
   }).current
 }

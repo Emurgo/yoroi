@@ -116,7 +116,7 @@ export type WalletStackRoutes = {
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
 export type GovernanceRoutes = {
-  center: undefined
+  home: {navigateToStakingOnSuccess?: boolean}
 }
 
 export type WalletInitRoutes = {
@@ -419,6 +419,18 @@ export const useWalletNavigation = () => {
       })
     },
 
+    navigateToStakingDashboard: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'staking-dashboard',
+          params: {
+            screen: 'staking-dashboard-main',
+          },
+        },
+      })
+    },
+
     navigateToSettings: () => {
       navigation.navigate('app-root', {
         screen: 'settings',
@@ -479,11 +491,14 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToGovernanceCentre: () => {
+    navigateToGovernanceCentre: ({navigateToStakingOnSuccess = false} = {}) => {
       navigation.navigate('app-root', {
         screen: 'governance',
         params: {
-          screen: 'center',
+          screen: 'home',
+          params: {
+            navigateToStakingOnSuccess,
+          },
         },
       })
     },

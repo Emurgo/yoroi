@@ -58,6 +58,8 @@ export const useStrings = () => {
     txFees: intl.formatMessage(messages.txFees),
     registerStakingKey: intl.formatMessage(messages.registerStakingKey),
     enterDrepIDInfo: intl.formatMessage(messages.enterDrepIDInfo),
+    goToStaking: intl.formatMessage(messages.goToStaking),
+    readyToCollectRewards: intl.formatMessage(messages.readyToCollectRewards),
   }
 }
 
@@ -239,5 +241,13 @@ const messages = defineMessages({
   enterDrepIDInfo: {
     id: 'components.governance.enterDrepIDInfo',
     defaultMessage: '!!!Identify your preferred DRep and enter their ID below to delegate your vote',
+  },
+  goToStaking: {
+    id: 'components.governance.goToStaking',
+    defaultMessage: '!!!Go to Staking',
+  },
+  readyToCollectRewards: {
+    id: 'components.governance.readyToCollectRewards',
+    defaultMessage: '!!!You are now ready to collect your rewards.',
   },
 })

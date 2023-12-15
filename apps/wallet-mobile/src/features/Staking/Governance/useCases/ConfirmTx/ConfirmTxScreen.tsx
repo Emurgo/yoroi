@@ -64,7 +64,7 @@ export const ConfirmTxScreen = () => {
       updateLatestGovernanceAction({kind: 'vote', vote: 'no-confidence', txID})
     }
 
-    navigateTo.txSuccess()
+    navigateTo.txSuccess({navigateToStaking: params.navigateToStakingOnSuccess ?? false})
   }
 
   const onSubmit = () => {
