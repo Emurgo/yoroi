@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {CardanoTypes} from '../types'
 import {GovernanceApi} from './api'
+import {parseDrepId} from './helpers'
+import {StakingKeyState} from './types'
 
 export type Config = {
   networkId: number
@@ -42,10 +44,15 @@ export type GovernanceManager = {
     vote: VoteKind,
     stakingKey: CardanoTypes.PublicKey,
   ) => Promise<object>
+  createStakeRegistrationCertificate: (
+    stakingKey: CardanoTypes.PublicKey,
+  ) => Promise<CardanoTypes.Certificate>
 
   // latest governance action to be used only to check the "pending" transaction that is not yet confirmed on the blockchain
   setLatestGovernanceAction: (action: GovernanceAction | null) => Promise<void>
   getLatestGovernanceAction: () => Promise<GovernanceAction | null>
+
+  getStakingKeyState: (stakeKeyHash: string) => Promise<StakingKeyState>
 }
 
 export const governanceManagerMaker = (config: Config): GovernanceManager => {
@@ -55,36 +62,68 @@ export const governanceManagerMaker = (config: Config): GovernanceManager => {
 class Manager implements GovernanceManager {
   constructor(private config: Config) {}
 
+  async getStakingKeyState(stakeKeyHash: string) {
+    const {api} = this.config
+    const response = await api.getStakingKeyState(stakeKeyHash)
+    if (response.drepDelegation) {
+      if (response.drepDelegation.drep === 'no_confidence') {
+        const {tx, slot, epoch} = response.drepDelegation
+        return {
+          drepDelegation: {action: 'no-confidence', tx, slot, epoch},
+        } as const
+      }
+      if (response.drepDelegation.drep === 'abstain') {
+        const {tx, slot, epoch} = response.drepDelegation
+        return {
+          drepDelegation: {action: 'abstain', tx, slot, epoch},
+        } as const
+      }
+
+      const {tx, slot, epoch, drep} = response.drepDelegation
+      return {
+        drepDelegation: {action: 'drep', tx, slot, epoch, drepID: drep},
+      } as const
+    }
+    return {}
+  }
+
   async createDelegationCertificate(
     drepID: string,
     stakingKey: CardanoTypes.PublicKey,
   ): Promise<CardanoTypes.Certificate> {
-    const {Certificate, Ed25519KeyHash, StakeDelegation, StakeCredential} =
+    const {Certificate, Ed25519KeyHash, Credential, VoteDelegation, DRep} =
       this.config.cardano
 
-    const credential = await StakeCredential.fromKeyhash(
+    const stakingCredential = await Credential.fromKeyhash(
       await stakingKey.hash(),
     )
-    return await Certificate.newStakeDelegation(
-      await StakeDelegation.new(
-        credential,
-        await Ed25519KeyHash.fromBytes(Buffer.from(drepID, 'hex')),
+
+    return await Certificate.newVoteDelegation(
+      await VoteDelegation.new(
+        stakingCredential,
+        await DRep.newKeyHash(
+          await Ed25519KeyHash.fromBytes(Buffer.from(drepID, 'hex')),
+        ),
       ),
     )
   }
 
+  async createStakeRegistrationCertificate(
+    stakingKey: CardanoTypes.PublicKey,
+  ): Promise<CardanoTypes.Certificate> {
+    const {Certificate, Credential, StakeRegistration} = this.config.cardano
+
+    const stakingCredential = await Credential.fromKeyhash(
+      await stakingKey.hash(),
+    )
+
+    return await Certificate.newStakeRegistration(
+      await StakeRegistration.new(stakingCredential),
+    )
+  }
+
   async validateDRepID(drepId: string): Promise<void> {
-    const isValidBech32 = drepId.startsWith('drep1')
-    const isValidKeyHash = drepId.length === 56 && /^[0-9a-fA-F]+$/.test(drepId)
-
-    if (!isValidBech32 && !isValidKeyHash) {
-      const message =
-        'Invalid DRep ID. Must have a valid bech32 format or a valid key hash format'
-      throw new Error(message)
-    }
-
-    // // TODO: will be implemented in the future
-    const drepKeyHash = isValidKeyHash ? drepId : drepId
+    const drepKeyHash = await parseDrepId(drepId, this.config.cardano)
     const drepStatus = await this.config.api.getDRepById(drepKeyHash)
 
     if (!drepStatus || !drepStatus.epoch) {
@@ -100,11 +139,34 @@ class Manager implements GovernanceManager {
   }
 
   async createVotingCertificate(
-    _vote: VoteKind,
-    _stakingKey: CardanoTypes.PublicKey,
+    vote: VoteKind,
+    stakingKey: CardanoTypes.PublicKey,
   ): Promise<CardanoTypes.Certificate> {
-    // TODO: will come from yoroi-lib
-    throw new Error('Not implemented')
+    const {Certificate, Credential, VoteDelegation, DRep} = this.config.cardano
+
+    const stakingCredential = await Credential.fromKeyhash(
+      await stakingKey.hash(),
+    )
+
+    if (vote === 'abstain') {
+      return await Certificate.newVoteDelegation(
+        await VoteDelegation.new(
+          stakingCredential,
+          await DRep.newAlwaysAbstain(),
+        ),
+      )
+    }
+
+    if (vote === 'no-confidence') {
+      return await Certificate.newVoteDelegation(
+        await VoteDelegation.new(
+          stakingCredential,
+          await DRep.newAlwaysNoConfidence(),
+        ),
+      )
+    }
+
+    throw new Error('Invalid vote')
   }
 
   async createLedgerVotingPayload(

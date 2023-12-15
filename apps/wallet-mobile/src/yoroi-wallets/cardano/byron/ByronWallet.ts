@@ -59,6 +59,7 @@ import {
 } from '../constants/mainnet/constants'
 import {CardanoError, InvalidState} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
+import {getTime} from '../getTime'
 import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
 import {
   CardanoHaskellShelleyNetwork,
@@ -554,7 +555,7 @@ export class ByronWallet implements YoroiWallet {
 
   async getAllUtxosForKey() {
     return filterAddressesByStakingKey(
-      await CardanoMobile.StakeCredential.fromKeyhash(await (await this.getStakingKey()).hash()),
+      await CardanoMobile.Credential.fromKeyhash(await (await this.getStakingKey()).hash()),
       await this.getAddressedUtxos(),
       false,
     )
@@ -737,13 +738,51 @@ export class ByronWallet implements YoroiWallet {
     return Promise.reject(new Error('Method not implemented.'))
   }
 
-  // TODO: This will come from yoroi lib
-  async createUnsignedGovernanceTx(_votingCertificate: CardanoTypes.Certificate) {
-    const address = await this.getFirstPaymentAddress()
-      .then((a) => a.toAddress())
-      .then((a) => a.toBech32())
+  async createUnsignedGovernanceTx(votingCertificates: CardanoTypes.Certificate[]) {
+    const time = await this.checkServerStatus()
+      .then(({serverTime}) => serverTime || Date.now())
+      .catch(() => Date.now())
+    const primaryTokenId = this.primaryTokenInfo.id
+    const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
+    const changeAddr = await this.getAddressedChangeAddress()
+    const addressedUtxos = await this.getAddressedUtxos()
+    const networkConfig = this.getNetworkConfig()
 
-    return this.createUnsignedTx([{address: address, amounts: {[this.primaryTokenInfo.id]: Quantities.zero}}])
+    try {
+      const unsignedTx = await Cardano.createUnsignedTx(
+        absSlotNumber,
+        addressedUtxos,
+        [],
+        changeAddr,
+        {
+          keyDeposit: networkConfig.KEY_DEPOSIT,
+          linearFee: {
+            coefficient: networkConfig.LINEAR_FEE.COEFFICIENT,
+            constant: networkConfig.LINEAR_FEE.CONSTANT,
+          },
+          minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
+          coinsPerUtxoWord: networkConfig.COINS_PER_UTXO_WORD,
+          poolDeposit: networkConfig.POOL_DEPOSIT,
+          networkId: networkConfig.NETWORK_ID,
+        },
+        PRIMARY_TOKEN,
+        {},
+        votingCertificates,
+      )
+
+      return yoroiUnsignedTx({
+        unsignedTx,
+        networkConfig: networkConfig,
+        addressedUtxos,
+        entries: [],
+        governance: true,
+        primaryTokenId,
+      })
+    } catch (e) {
+      if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
+      Logger.error(`shelley::createUnsignedGovernanceTx:: ${(e as Error).message}`, e)
+      throw new CardanoError((e as Error).message)
+    }
   }
 
   async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
@@ -846,7 +885,9 @@ export class ByronWallet implements YoroiWallet {
   async getFirstPaymentAddress() {
     const externalAddress = this.externalAddresses[0]
     const addr = await Cardano.Wasm.Address.fromBech32(externalAddress)
-    return Cardano.Wasm.BaseAddress.fromAddress(addr)
+    const address = await Cardano.Wasm.BaseAddress.fromAddress(addr)
+    if (!address) throw new Error('invalid address')
+    return address
   }
 
   async ledgerSupportsCIP36(useUSB: boolean): Promise<boolean> {
@@ -900,7 +941,7 @@ export class ByronWallet implements YoroiWallet {
         .then((a) => a.toBytes())
         .then((b) => Buffer.from(b).toString('hex'))
 
-      const addressingCIP36 = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32()))
+      const addressingCIP36 = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32(undefined)))
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
@@ -919,7 +960,7 @@ export class ByronWallet implements YoroiWallet {
         supportsCIP36,
       )
 
-      const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32())
+      const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32(undefined))
 
       const votingRegistration: {
         votingPublicKey: string

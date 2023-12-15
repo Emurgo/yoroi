@@ -4,24 +4,32 @@ import {
   useDelegationCertificate,
   useGovernance,
   useLatestGovernanceAction,
+  useStakingKeyState,
   useVotingCertificate,
 } from '@yoroi/staking'
 import React, {ReactNode} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer, useModal} from '../../../../../components'
+import {useStakingInfo} from '../../../../../Dashboard/StakePoolInfos'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {useStakingKey, useTransactionInfos, useWalletEvent} from '../../../../../yoroi-wallets/hooks'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
-import {useLatestConfirmedGovernanceAction} from '../../common/helpers'
+import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
   const txInfos = useTransactionInfos(wallet)
+  const stakingKeyHash = useStakingKey(wallet)
 
-  const lastVotingAction = useLatestConfirmedGovernanceAction(wallet)
+  const {data: stakingStatus, refetch: refetchStakingKeyState} = useStakingKeyState(stakingKeyHash, {
+    refetchOnMount: true,
+    suspense: true,
+  })
+
+  useWalletEvent(wallet, 'utxos', refetchStakingKeyState)
 
   const {data: lastSubmittedTx} = useLatestGovernanceAction(wallet.id)
 
@@ -44,13 +52,20 @@ export const HomeScreen = () => {
     }
   }
 
-  if (isNonNullable(lastVotingAction)) {
-    return <ParticipatingInGovernanceVariant action={lastVotingAction} isTxPending={isTxPending} />
+  const action = stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
+  if (action !== null) {
+    return <ParticipatingInGovernanceVariant action={action} />
   }
   return <NeverParticipatedInGovernanceVariant />
 }
 
-const ParticipatingInGovernanceVariant = ({action, isTxPending}: {action: GovernanceVote; isTxPending: boolean}) => {
+const ParticipatingInGovernanceVariant = ({
+  action,
+  isTxPending = false,
+}: {
+  action: GovernanceVote
+  isTxPending?: boolean
+}) => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
 
@@ -133,6 +148,11 @@ const NeverParticipatedInGovernanceVariant = () => {
   const wallet = useSelectedWallet()
   const {manager} = useGovernance()
   const {openModal} = useModal()
+  const stakingInfo = useStakingInfo(wallet, {suspense: true})
+
+  const hasStakingKeyRegistered = stakingInfo?.data?.status !== 'not-registered'
+  useWalletEvent(wallet, 'utxos', stakingInfo.refetch)
+  const needsToRegisterStakingKey = !hasStakingKeyRegistered
 
   const {createCertificate: createDelegationCertificate} = useDelegationCertificate({
     useErrorBoundary: true,
@@ -159,7 +179,11 @@ const NeverParticipatedInGovernanceVariant = () => {
         {drepID, stakingKey},
         {
           onSuccess: async (certificate) => {
-            const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+            const stakeCert = needsToRegisterStakingKey
+              ? await manager.createStakeRegistrationCertificate(stakingKey)
+              : null
+            const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
+            const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
             navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID}})
           },
         },
@@ -173,7 +197,11 @@ const NeverParticipatedInGovernanceVariant = () => {
       {vote: 'abstain', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+          const stakeCert = needsToRegisterStakingKey
+            ? await manager.createStakeRegistrationCertificate(stakingKey)
+            : null
+          const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
+          const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
           navigateTo.confirmTx({unsignedTx, vote: {kind: 'abstain'}})
         },
       },
@@ -186,7 +214,11 @@ const NeverParticipatedInGovernanceVariant = () => {
       {vote: 'no-confidence', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await wallet.createUnsignedGovernanceTx(certificate)
+          const stakeCert = needsToRegisterStakingKey
+            ? await manager.createStakeRegistrationCertificate(stakingKey)
+            : null
+          const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
+          const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
           navigateTo.confirmTx({unsignedTx, vote: {kind: 'no-confidence'}})
         },
       },

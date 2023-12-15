@@ -33,7 +33,7 @@ export namespace CardanoTypes {
   export type PublicKey = CoreTypes.PublicKey
   export type RewardAddress = CoreTypes.RewardAddress
   export type ScriptHash = CoreTypes.ScriptHash
-  export type StakeCredential = CoreTypes.StakeCredential
+  export type StakeCredential = CoreTypes.Credential
   export type TransactionBuilder = CoreTypes.TransactionBuilder
   export type Value = CoreTypes.Value
   export type TokenEntry = TokenEntryType

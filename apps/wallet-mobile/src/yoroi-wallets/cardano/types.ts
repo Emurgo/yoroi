@@ -130,7 +130,7 @@ export type YoroiWallet = {
   fetchAccountState(): Promise<AccountStates>
   fetchPoolInfo(request: StakePoolInfoRequest): Promise<StakePoolInfosAndHistories>
   getStakingKey: () => Promise<CardanoTypes.PublicKey>
-  createUnsignedGovernanceTx(votingCertificate: CardanoTypes.Certificate): Promise<YoroiUnsignedTx>
+  createUnsignedGovernanceTx(votingCertificates: CardanoTypes.Certificate[]): Promise<YoroiUnsignedTx>
 
   // Password
   encryptedStorage: WalletEncryptedStorage
@@ -296,7 +296,7 @@ export namespace CardanoTypes {
   export type PublicKey = CoreTypes.PublicKey
   export type RewardAddress = CoreTypes.RewardAddress
   export type ScriptHash = CoreTypes.ScriptHash
-  export type StakeCredential = CoreTypes.StakeCredential
+  export type StakeCredential = CoreTypes.Credential
   export type TransactionBuilder = CoreTypes.TransactionBuilder
   export type Value = CoreTypes.Value
   export type TokenEntry = TokenEntryType

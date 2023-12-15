@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {governanceApiMaker, governanceManagerMaker, GovernanceProvider} from '@yoroi/staking'
-import {GovernanceApi} from '@yoroi/staking'
 import React, {useMemo} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -11,18 +10,9 @@ import {useSelectedWallet} from '../../../SelectedWallet'
 import {COLORS} from '../../../theme'
 import {CardanoMobile} from '../../../yoroi-wallets/wallets'
 import {NavigationStack, useStrings} from './common'
-import {USE_MOCKED_API} from './config'
 import {ChangeVoteScreen, ConfirmTxScreen, FailedTxScreen, HomeScreen, SuccessTxScreen} from './useCases'
 
 const Stack = NavigationStack
-
-const apiMock: GovernanceApi = {
-  getDRepById: () =>
-    Promise.resolve({
-      txId: 'txId',
-      epoch: 1,
-    }),
-}
 
 export const GovernanceNavigator = () => {
   const {networkId} = useSelectedWallet()
@@ -33,7 +23,7 @@ export const GovernanceNavigator = () => {
       governanceManagerMaker({
         walletId: wallet.id,
         networkId,
-        api: USE_MOCKED_API ? apiMock : governanceApiMaker({networkId}),
+        api: governanceApiMaker({networkId}),
         cardano: CardanoMobile,
         storage: AsyncStorage,
       }),

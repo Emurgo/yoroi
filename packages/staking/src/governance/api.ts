@@ -4,6 +4,9 @@ import {Fetcher, fetcher} from '@yoroi/common'
 
 export type GovernanceApi = {
   getDRepById: (drepId: DRepId) => Promise<{txId: string; epoch: number} | null>
+  getStakingKeyState: (
+    stakeKeyHash: string,
+  ) => Promise<GetStakingKeyStateResponse>
 }
 
 export const governanceApiMaker = ({
@@ -37,6 +40,27 @@ class Api implements GovernanceApi {
       throw error
     }
   }
+
+  async getStakingKeyState(stakeKeyHash: string) {
+    const {networkId, client} = this.config
+    const backend = getApiConfig(networkId)
+    const url = backend.getStakeKeyState.replace(
+      '{{STAKE_KEY_HASH}}',
+      stakeKeyHash,
+    )
+    try {
+      const {drepDelegation} = await client<GetStakingKeyStateResponse>({
+        url,
+      })
+      return {drepDelegation}
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('404')) {
+        return {}
+      }
+
+      throw error
+    }
+  }
 }
 
 const getApiConfig = (networkId: number) => {
@@ -48,6 +72,15 @@ const getApiConfig = (networkId: number) => {
 type Config = {
   networkId: number
   client: Fetcher
+}
+
+type GetStakingKeyStateResponse = {
+  drepDelegation?: {
+    tx: string
+    epoch: number
+    slot: number
+    drep: 'no_confidence' | 'abstain' | string // string refers to DRepId
+  }
 }
 
 export type GetDRepByIdResponse = {

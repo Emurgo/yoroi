@@ -85,6 +85,7 @@ export const ConfirmTxScreen = () => {
         <ConfirmTxWithSpendingPasswordModal
           unsignedTx={params.unsignedTx}
           onSuccess={(signedTx) => onSuccess(signedTx.signedTx.id)}
+          onError={() => navigateTo.txFailed()}
         />,
       )
       return

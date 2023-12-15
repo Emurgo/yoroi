@@ -8,6 +8,7 @@ import {useGovernance} from './context'
 import {GovernanceAction, VoteKind} from '../../manager'
 import {useMutationWithInvalidations} from '@yoroi/common'
 import {CardanoTypes} from '../../../types'
+import {StakingKeyState} from '../../types'
 
 export const useIsValidDRepID = (
   id: string,
@@ -17,6 +18,19 @@ export const useIsValidDRepID = (
   return useQuery({
     queryKey: ['governanceIsValidDRepID', id],
     queryFn: async () => await manager.validateDRepID(id),
+    ...options,
+  })
+}
+
+export const useStakingKeyState = (
+  stakingKeyHash: string,
+  options: UseQueryOptions<StakingKeyState, Error> = {},
+) => {
+  const {manager} = useGovernance()
+  return useQuery({
+    queryKey: ['governanceStakingKeyState', stakingKeyHash],
+    queryFn: async () => await manager.getStakingKeyState(stakingKeyHash),
+    enabled: stakingKeyHash.length > 0,
     ...options,
   })
 }

@@ -469,12 +469,13 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     private async getRewardAddress() {
       const baseAddr = await this.getFirstPaymentAddress()
+      if (!baseAddr) throw new Error('invalid wallet state')
       return baseAddr.toAddress()
     }
 
     async getAllUtxosForKey() {
       return filterAddressesByStakingKey(
-        await CardanoMobile.StakeCredential.fromKeyhash(await (await this.getStakingKey()).hash()),
+        await CardanoMobile.Credential.fromKeyhash(await (await this.getStakingKey()).hash()),
         await this.getAddressedUtxos(),
         false,
       )
@@ -640,13 +641,50 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       }
     }
 
-    // TODO: This will come from yoroi lib
-    async createUnsignedGovernanceTx(_votingCertificate: CardanoTypes.Certificate) {
-      const address = await this.getFirstPaymentAddress()
-        .then((a) => a.toAddress())
-        .then((a) => a.toBech32())
+    async createUnsignedGovernanceTx(votingCertificates: CardanoTypes.Certificate[]) {
+      const time = await this.checkServerStatus()
+        .then(({serverTime}) => serverTime || Date.now())
+        .catch(() => Date.now())
+      const primaryTokenId = this.primaryTokenInfo.id
+      const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
+      const changeAddr = await this.getAddressedChangeAddress()
+      const addressedUtxos = await this.getAddressedUtxos()
 
-      return this.createUnsignedTx([{address: address, amounts: {[this.primaryTokenInfo.id]: Quantities.zero}}])
+      try {
+        const unsignedTx = await Cardano.createUnsignedTx(
+          absSlotNumber,
+          addressedUtxos,
+          [],
+          changeAddr,
+          {
+            keyDeposit: KEY_DEPOSIT,
+            linearFee: {
+              coefficient: LINEAR_FEE.COEFFICIENT,
+              constant: LINEAR_FEE.CONSTANT,
+            },
+            minimumUtxoVal: MINIMUM_UTXO_VAL,
+            coinsPerUtxoWord: COINS_PER_UTXO_WORD,
+            poolDeposit: POOL_DEPOSIT,
+            networkId: NETWORK_ID,
+          },
+          PRIMARY_TOKEN,
+          {},
+          votingCertificates,
+        )
+
+        return yoroiUnsignedTx({
+          unsignedTx,
+          networkConfig: NETWORK_CONFIG,
+          addressedUtxos,
+          entries: [],
+          governance: true,
+          primaryTokenId,
+        })
+      } catch (e) {
+        if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
+        Logger.error(`shelley::createUnsignedGovernanceTx:: ${(e as Error).message}`, e)
+        throw new CardanoError((e as Error).message)
+      }
     }
 
     async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
@@ -664,7 +702,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         unsignedTx.staking.delegations ||
         unsignedTx.staking.registrations ||
         unsignedTx.staking.deregistrations ||
-        unsignedTx.staking.withdrawals
+        unsignedTx.staking.withdrawals ||
+        unsignedTx.governance
           ? [stakingPrivateKey]
           : undefined
 
@@ -744,7 +783,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     async getFirstPaymentAddress() {
       const externalAddress = this.externalAddresses[0]
       const addr = await Cardano.Wasm.Address.fromBech32(externalAddress)
-      return Cardano.Wasm.BaseAddress.fromAddress(addr)
+      const address = await Cardano.Wasm.BaseAddress.fromAddress(addr)
+      if (!address) throw new Error('invalid wallet state')
+      return address
     }
 
     async createVotingRegTx(pin: string, supportsCIP36: boolean) {
@@ -792,7 +833,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           .then((a) => a.toBytes())
           .then((b) => Buffer.from(b).toString('hex'))
 
-        const addressingCIP36 = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32()))
+        const addressingCIP36 = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32(undefined)))
 
         const unsignedTx = await Cardano.createUnsignedVotingTx(
           absSlotNumber,
@@ -811,7 +852,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           supportsCIP36,
         )
 
-        const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32())
+        const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32(undefined))
         const votingRegistration: {
           votingPublicKey: string
           stakingPublicKey: string

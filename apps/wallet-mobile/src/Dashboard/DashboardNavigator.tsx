@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createStackNavigator} from '@react-navigation/stack'
-import React from 'react'
+import {governanceApiMaker, governanceManagerMaker, GovernanceProvider} from '@yoroi/staking'
+import React, {useMemo} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {SettingsButton} from '../components/Button'
@@ -9,6 +11,7 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {DelegationConfirmation} from '../Staking'
 import {StakingCenter} from '../Staking/StakingCenter'
 import {useWalletName} from '../yoroi-wallets/hooks'
+import {CardanoMobile} from '../yoroi-wallets/wallets'
 import {Dashboard} from './Dashboard'
 
 const Stack = createStackNavigator<DashboardRoutes>()
@@ -17,34 +20,49 @@ export const DashboardNavigator = () => {
   const walletName = useWalletName(wallet)
   const strings = useStrings()
 
+  const {networkId} = useSelectedWallet()
+  const manager = useMemo(
+    () =>
+      governanceManagerMaker({
+        walletId: wallet.id,
+        networkId,
+        api: governanceApiMaker({networkId}),
+        cardano: CardanoMobile,
+        storage: AsyncStorage,
+      }),
+    [networkId, wallet.id],
+  )
+
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...defaultStackNavigationOptions,
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-      }}
-    >
-      <Stack.Screen
-        name="staking-dashboard-main"
-        component={Dashboard}
-        options={{
-          title: walletName,
-          headerRight: () => <HeaderRight />,
+    <GovernanceProvider manager={manager}>
+      <Stack.Navigator
+        screenOptions={{
+          ...defaultStackNavigationOptions,
+          detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
         }}
-      />
+      >
+        <Stack.Screen
+          name="staking-dashboard-main"
+          component={Dashboard}
+          options={{
+            title: walletName,
+            headerRight: () => <HeaderRight />,
+          }}
+        />
 
-      <Stack.Screen //
-        name="staking-center"
-        component={StakingCenter}
-        options={{title: strings.title}}
-      />
+        <Stack.Screen //
+          name="staking-center"
+          component={StakingCenter}
+          options={{title: strings.title}}
+        />
 
-      <Stack.Screen
-        name="delegation-confirmation"
-        component={DelegationConfirmation}
-        options={{title: strings.title}}
-      />
-    </Stack.Navigator>
+        <Stack.Screen
+          name="delegation-confirmation"
+          component={DelegationConfirmation}
+          options={{title: strings.title}}
+        />
+      </Stack.Navigator>
+    </GovernanceProvider>
   )
 }
 
