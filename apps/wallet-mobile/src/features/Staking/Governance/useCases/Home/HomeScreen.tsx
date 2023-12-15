@@ -10,12 +10,15 @@ import {
 import React, {ReactNode} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Spacer, useModal} from '../../../../../components'
+import {Button, Spacer, useModal} from '../../../../../components'
 import {useStakingInfo} from '../../../../../Dashboard/StakePoolInfos'
+import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useStakingKey, useTransactionInfos, useWalletEvent} from '../../../../../yoroi-wallets/hooks'
-import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
+import {TransactionInfo} from '../../../../../yoroi-wallets/types'
+import {Action, BrokenImage, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
+import {Routes} from '../../common/navigation'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
@@ -33,8 +36,13 @@ export const HomeScreen = () => {
 
   const {data: lastSubmittedTx} = useLatestGovernanceAction(wallet.id)
 
-  const isTxPending =
-    isString(lastSubmittedTx?.txID) && !Object.values(txInfos).some((tx) => tx.id === lastSubmittedTx?.txID)
+  const submittedTxId = lastSubmittedTx?.txID
+
+  const isTxPending = isString(submittedTxId) && !isTxConfirmed(submittedTxId, txInfos)
+
+  if (wallet.isHW) {
+    return <HardwareWalletSupportComingSoon />
+  }
 
   if (isTxPending && isNonNullable(lastSubmittedTx)) {
     if (lastSubmittedTx.kind === 'delegate-to-drep') {
@@ -149,6 +157,9 @@ const NeverParticipatedInGovernanceVariant = () => {
   const {manager} = useGovernance()
   const {openModal} = useModal()
   const stakingInfo = useStakingInfo(wallet, {suspense: true})
+  const params = useUnsafeParams<Routes['home']>()
+
+  const navigateToStakingOnSuccess = params?.navigateToStakingOnSuccess ?? false
 
   const hasStakingKeyRegistered = stakingInfo?.data?.status !== 'not-registered'
   useWalletEvent(wallet, 'utxos', stakingInfo.refetch)
@@ -164,7 +175,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const openDRepIdModal = (onSubmit: (drepId: string) => void) => {
     openModal(
-      strings.drepID,
+      strings.enterDRepID,
       <GovernanceProvider manager={manager}>
         <EnterDrepIdModal onSubmit={onSubmit} />
       </GovernanceProvider>,
@@ -184,7 +195,12 @@ const NeverParticipatedInGovernanceVariant = () => {
               : null
             const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
             const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-            navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID}})
+            navigateTo.confirmTx({
+              unsignedTx,
+              vote: {kind: 'delegate', drepID},
+              registerStakingKey: stakeCert !== null,
+              navigateToStakingOnSuccess,
+            })
           },
         },
       )
@@ -202,7 +218,12 @@ const NeverParticipatedInGovernanceVariant = () => {
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
           const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-          navigateTo.confirmTx({unsignedTx, vote: {kind: 'abstain'}})
+          navigateTo.confirmTx({
+            unsignedTx,
+            vote: {kind: 'abstain'},
+            registerStakingKey: stakeCert !== null,
+            navigateToStakingOnSuccess,
+          })
         },
       },
     )
@@ -219,7 +240,12 @@ const NeverParticipatedInGovernanceVariant = () => {
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
           const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-          navigateTo.confirmTx({unsignedTx, vote: {kind: 'no-confidence'}})
+          navigateTo.confirmTx({
+            unsignedTx,
+            vote: {kind: 'no-confidence'},
+            registerStakingKey: stakeCert !== null,
+            navigateToStakingOnSuccess,
+          })
         },
       },
     )
@@ -262,7 +288,63 @@ const NeverParticipatedInGovernanceVariant = () => {
   )
 }
 
+const HardwareWalletSupportComingSoon = () => {
+  const strings = useStrings()
+  const walletNavigateTo = useWalletNavigation()
+  const onPress = () => walletNavigateTo.navigateToTxHistory()
+  return (
+    <View style={styles.supportRoot}>
+      <BrokenImage />
+
+      <View>
+        <Text style={styles.supportTitle}>{strings.hardwareWalletSupportComingSoon}</Text>
+      </View>
+
+      <Spacer height={4} />
+
+      <View>
+        <Text style={styles.supportDescription}>{strings.workingOnHardwareWalletSupport}</Text>
+      </View>
+
+      <Spacer height={16} />
+
+      <View>
+        <Button title={strings.goToWallet} textStyles={styles.button} onPress={onPress} shelleyTheme />
+      </View>
+    </View>
+  )
+}
+
+const isTxConfirmed = (txId: string, txInfos: Record<string, TransactionInfo>) => {
+  return Object.values(txInfos).some((tx) => tx.id === txId)
+}
+
 const styles = StyleSheet.create({
+  supportRoot: {
+    paddingHorizontal: 18,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    paddingHorizontal: 24,
+    paddingVertical: 15,
+  },
+  supportTitle: {
+    fontFamily: 'Rubik-Medium',
+    fontWeight: '500',
+    fontSize: 20,
+    lineHeight: 30,
+    color: '#000000',
+    textAlign: 'center',
+  },
+  supportDescription: {
+    fontFamily: 'Rubik-Regular',
+    fontSize: 14,
+    lineHeight: 22,
+    color: '#6B7384',
+    textAlign: 'center',
+  },
   root: {
     paddingHorizontal: 18,
     flex: 1,

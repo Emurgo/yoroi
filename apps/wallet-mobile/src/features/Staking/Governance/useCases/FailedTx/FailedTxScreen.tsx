@@ -1,10 +1,8 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Spacer} from '../../../../../components'
-import {Text} from '../../../../../components'
-import {useNavigateTo, useStrings} from '../../common'
-import {FailedTxImage} from './FailedTxImage'
+import {Button, Spacer, Text} from '../../../../../components'
+import {BrokenImage, useNavigateTo, useStrings} from '../../common'
 
 export const FailedTxScreen = () => {
   const strings = useStrings()
@@ -17,7 +15,7 @@ export const FailedTxScreen = () => {
   return (
     <View style={styles.root}>
       <View style={styles.center}>
-        <FailedTxImage />
+        <BrokenImage />
 
         <Spacer height={16} />
 
@@ -29,7 +27,7 @@ export const FailedTxScreen = () => {
 
         <Spacer height={16} />
 
-        <Button title={strings.tryAgain} shelleyTheme onPress={onPress} />
+        <Button title={strings.tryAgain} textStyles={styles.button} shelleyTheme onPress={onPress} />
       </View>
     </View>
   )
@@ -59,5 +57,9 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: '#6B7384',
     textAlign: 'center',
+  },
+  button: {
+    paddingHorizontal: 24,
+    paddingVertical: 15,
   },
 })

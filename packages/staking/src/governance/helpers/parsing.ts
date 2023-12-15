@@ -17,7 +17,7 @@ export const parseDrepId = async (
 
   if (!isValidBech32 && !isValidKeyHash) {
     const message =
-      'Invalid DRep ID. Must have a valid bech32 format or a valid key hash format'
+      'Invalid DRep ID. Must have a valid bech32 format or a valid key hash format.'
     throw new Error(message)
   }
 

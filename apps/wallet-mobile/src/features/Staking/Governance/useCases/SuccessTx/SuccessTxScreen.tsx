@@ -2,14 +2,24 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
+import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
 import {useNavigateTo, useStrings} from '../../common'
+import {Routes} from '../../common/navigation'
 import {SuccessTxImage} from './SuccessTxImage'
 
 export const SuccessTxScreen = () => {
   const strings = useStrings()
   const navigate = useNavigateTo()
+  const walletNavigateTo = useWalletNavigation()
+  const params = useUnsafeParams<Routes['tx-success']>()
+
+  const navigateToStaking = params?.navigateToStaking ?? false
 
   const onPress = () => {
+    if (navigateToStaking) {
+      walletNavigateTo.navigateToStakingDashboard()
+      return
+    }
     navigate.home()
   }
 
@@ -26,18 +36,24 @@ export const SuccessTxScreen = () => {
 
         <Spacer height={16} />
 
-        <Text style={styles.description}>{strings.thisTransactionCanTakeAWhile}</Text>
+        {navigateToStaking ? (
+          <Text style={styles.description}>{strings.readyToCollectRewards}</Text>
+        ) : (
+          <>
+            <Text style={styles.description}>{strings.thisTransactionCanTakeAWhile}</Text>
 
-        <Spacer height={16} />
+            <Spacer height={16} />
 
-        <Text style={styles.description}>{strings.participationBenefits}</Text>
+            <Text style={styles.description}>{strings.participationBenefits}</Text>
+          </>
+        )}
       </View>
 
       <Spacer fill />
 
-      <Button title={strings.goToGovernance} shelleyTheme onPress={onPress} />
+      <Button title={navigateToStaking ? strings.goToStaking : strings.goToGovernance} shelleyTheme onPress={onPress} />
 
-      <Spacer height={24} />
+      <Spacer height={6} />
     </View>
   )
 }

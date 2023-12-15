@@ -32,7 +32,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
     <View style={styles.root}>
       <Spacer height={8} />
 
-      <Text style={styles.text}>{strings.enterDRepID}</Text>
+      <Text style={styles.text}>{strings.enterDrepIDInfo}</Text>
 
       {FIND_DREPS_LINK.length > 0 && (
         <>
@@ -52,6 +52,8 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         multiline
         errorDelay={1000}
         errorText={error?.message}
+        label={strings.drepID}
+        focusable
       />
 
       <Spacer fill />

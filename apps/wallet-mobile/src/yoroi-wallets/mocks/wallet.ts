@@ -8,7 +8,12 @@ import BigNumber from 'bignumber.js'
 import {getTokenFingerprint} from '../../legacy/format'
 import {fallbackTokenInfo, toTokenInfo, utf8ToHex} from '../cardano/api/utils'
 import * as HASKELL_SHELLEY_TESTNET from '../cardano/constants/testnet/constants'
-import {PRIMARY_TOKEN, PRIMARY_TOKEN_INFO} from '../cardano/constants/testnet/constants'
+import {
+  CHIMERIC_ACCOUNT,
+  PRIMARY_TOKEN,
+  PRIMARY_TOKEN_INFO,
+  STAKING_KEY_INDEX,
+} from '../cardano/constants/testnet/constants'
 import {PRIMARY_ASSET_CONSTANTS} from '../cardano/networks'
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {
@@ -22,6 +27,7 @@ import {
   YoroiUnsignedTx,
 } from '../types'
 import {WalletMeta} from '../walletManager'
+import {CardanoMobile} from '../wallets'
 import {mockEncryptedStorage} from './storage'
 import {mockTransactionInfo, mockTransactionInfos} from './transaction'
 import {utxos} from './utxos'
@@ -99,8 +105,14 @@ const wallet: YoroiWallet = {
   createWithdrawalTx: () => {
     throw new Error('not implemented: createWithdrawalTx')
   },
-  getStakingKey: () => {
-    throw new Error('not implemented: getStakingKey')
+  getStakingKey: async () => {
+    const pubKeyHex =
+      '8e4e2f11b6ac2a269913286e26339779ab8767579d18d173cdd324929d94e2c43e3ec212cc8a36ed9860579dfe1e3ef4d6de778c5dbdd981623b48727cd96247'
+    const accountPubKey = await CardanoMobile.Bip32PublicKey.fromBytes(Buffer.from(pubKeyHex, 'hex'))
+    return accountPubKey
+      .derive(CHIMERIC_ACCOUNT)
+      .then((key) => key.derive(STAKING_KEY_INDEX))
+      .then((key) => key.toRawKey())
   },
   signRawTx(): Promise<Uint8Array | undefined> {
     throw new Error('not implemented: signRawTx')

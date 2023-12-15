@@ -52,6 +52,14 @@ export const useStrings = () => {
     enterPassword: intl.formatMessage(messages.enterPassword),
     continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
     fees: intl.formatMessage(txLabels.fees),
+    hardwareWalletSupportComingSoon: intl.formatMessage(messages.hardwareWalletSupportComingSoon),
+    workingOnHardwareWalletSupport: intl.formatMessage(messages.workingOnHardwareWalletSupport),
+    goToWallet: intl.formatMessage(messages.goToWallet),
+    txFees: intl.formatMessage(messages.txFees),
+    registerStakingKey: intl.formatMessage(messages.registerStakingKey),
+    enterDrepIDInfo: intl.formatMessage(messages.enterDrepIDInfo),
+    goToStaking: intl.formatMessage(messages.goToStaking),
+    readyToCollectRewards: intl.formatMessage(messages.readyToCollectRewards),
   }
 }
 
@@ -109,7 +117,7 @@ const messages = defineMessages({
   },
   delegateVotingToDRep: {
     id: 'components.governance.delegateVotingToDRep',
-    defaultMessage: '!!!Delegate voting to {drepID}',
+    defaultMessage: '!!!Delegate voting to \n{drepID}',
   },
   selectAbstain: {
     id: 'components.governance.selectAbstain',
@@ -208,6 +216,38 @@ const messages = defineMessages({
   },
   enterDRepID: {
     id: 'components.governance.enterDRepID',
-    defaultMessage: '!!!Enter DRep ID',
+    defaultMessage: '!!!Choose your Drep',
+  },
+  hardwareWalletSupportComingSoon: {
+    id: 'components.governance.hardwareWalletSupportComingSoon',
+    defaultMessage: '!!!Hardware wallet support coming soon',
+  },
+  workingOnHardwareWalletSupport: {
+    id: 'components.governance.workingOnHardwareWalletSupport',
+    defaultMessage: '!!!We are currently working on integrating hardware wallet support for Governance',
+  },
+  goToWallet: {
+    id: 'components.governance.goToWallet',
+    defaultMessage: '!!!Go to wallet',
+  },
+  txFees: {
+    id: 'components.governance.txFees',
+    defaultMessage: '!!!Transaction fee',
+  },
+  registerStakingKey: {
+    id: 'components.governance.registerStakingKey',
+    defaultMessage: '!!!Register staking key',
+  },
+  enterDrepIDInfo: {
+    id: 'components.governance.enterDrepIDInfo',
+    defaultMessage: '!!!Identify your preferred DRep and enter their ID below to delegate your vote',
+  },
+  goToStaking: {
+    id: 'components.governance.goToStaking',
+    defaultMessage: '!!!Go to Staking',
+  },
+  readyToCollectRewards: {
+    id: 'components.governance.readyToCollectRewards',
+    defaultMessage: '!!!You are now ready to collect your rewards.',
   },
 })
