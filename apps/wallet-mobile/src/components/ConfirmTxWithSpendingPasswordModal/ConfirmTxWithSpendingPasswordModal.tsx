@@ -25,20 +25,9 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
   const {signTx, error: signError, isLoading: signIsLoading} = useSignTxWithPassword({wallet})
   const {submitTx, error: submitError, isLoading: submitIsLoading} = useSubmitTx({wallet}, {onError})
   const strings = useStrings()
-  const [isPasswordCorrect, setIsPasswordCorrect] = useState(false)
 
   const [spendingPassword, setSpendingPassword] = useState(features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '')
-
-  useEffect(() => {
-    let isMounted = true
-    wallet.encryptedStorage.rootKey
-      .read(spendingPassword)
-      .then(() => isMounted && setIsPasswordCorrect(true))
-      .catch(() => isMounted && setIsPasswordCorrect(false))
-    return () => {
-      isMounted = false
-    }
-  }, [spendingPassword, wallet])
+  const isPasswordCorrect = useIsPasswordCorrect(spendingPassword)
 
   const onSubmit = (password: string) => {
     signTx(
@@ -93,6 +82,23 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
       )}
     </>
   )
+}
+
+const useIsPasswordCorrect = (password: string) => {
+  const wallet = useSelectedWallet()
+  const [isPasswordCorrect, setIsPasswordCorrect] = useState(false)
+
+  useEffect(() => {
+    let isMounted = true
+    wallet.encryptedStorage.rootKey
+      .read(password)
+      .then(() => isMounted && setIsPasswordCorrect(true))
+      .catch(() => isMounted && setIsPasswordCorrect(false))
+    return () => {
+      isMounted = false
+    }
+  }, [password, wallet])
+  return isPasswordCorrect
 }
 
 const getErrorMessage = (error: unknown, strings: Record<'wrongPasswordMessage' | 'error', string>) => {
