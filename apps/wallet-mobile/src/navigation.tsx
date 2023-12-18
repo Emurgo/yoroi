@@ -9,6 +9,7 @@ import {ScanFeature} from './features/Scan/common/types'
 import {COLORS} from './theme'
 import {HWDeviceInfo} from './yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
+import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -111,13 +112,9 @@ export type WalletStackRoutes = {
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
-  governance: NavigatorScreenParams<GovernanceRoutes>
+  governance: NavigatorScreenParams<StakingGovernanceRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
-
-export type GovernanceRoutes = {
-  home: {navigateToStakingOnSuccess?: boolean}
-}
 
 export type WalletInitRoutes = {
   'choose-create-restore': {
@@ -495,7 +492,7 @@ export const useWalletNavigation = () => {
       navigation.navigate('app-root', {
         screen: 'governance',
         params: {
-          screen: 'home',
+          screen: 'staking-gov-home',
           params: {
             navigateToStakingOnSuccess,
           },
