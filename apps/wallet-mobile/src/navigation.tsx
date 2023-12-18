@@ -6,10 +6,10 @@ import {Dimensions, Platform, TouchableOpacity} from 'react-native'
 
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
+import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
 import {COLORS} from './theme'
 import {HWDeviceInfo} from './yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
-import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
