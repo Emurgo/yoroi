@@ -1,17 +1,8 @@
 import {Balance} from '@yoroi/types'
 import * as React from 'react'
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewProps,
-} from 'react-native'
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 
-import {Button, Spacer, TextInput} from '../../../../../components'
+import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../../../components'
 import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
@@ -74,11 +65,7 @@ export const EditAmountScreen = () => {
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView
-        style={{flex: 1}}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={86}
-      >
+      <KeyboardAvoidingView style={{flex: 1}}>
         <ScrollView style={styles.scrollView} bounces={false}>
           <Spacer height={16} />
 
