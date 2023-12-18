@@ -1,14 +1,14 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {CardanoTypes} from '../types'
 import {GovernanceApi} from './api'
 import {parseDrepId} from './helpers'
 import {StakingKeyState} from './types'
+import {App} from '@yoroi/types'
 
 export type Config = {
   networkId: number
   walletId: string
   cardano: CardanoTypes.Wasm
-  storage: typeof AsyncStorage
+  storage: App.Storage
   api: GovernanceApi
 }
 
@@ -180,29 +180,19 @@ class Manager implements GovernanceManager {
     action: GovernanceAction | null,
   ): Promise<void> {
     if (!action) {
-      await this.config.storage.removeItem(
-        getGovernanceStorageLatestActionKey(this.config.walletId),
-      )
+      await this.config.storage.removeItem(LATEST_ACTION_KEY)
       return
     }
-    await this.config.storage.setItem(
-      getGovernanceStorageLatestActionKey(this.config.walletId),
-      JSON.stringify(action),
-    )
+    await this.config.storage.setItem(LATEST_ACTION_KEY, action)
   }
 
   async getLatestGovernanceAction(): Promise<GovernanceAction | null> {
     try {
-      const action = await this.config.storage.getItem(
-        getGovernanceStorageLatestActionKey(this.config.walletId),
-      )
-      return action ? JSON.parse(action) : null
+      return await this.config.storage.getItem(LATEST_ACTION_KEY)
     } catch {
       return null
     }
   }
 }
 
-const getGovernanceStorageLatestActionKey = (walletId: string) => {
-  return `${walletId}/governance-manager/latest-action`
-}
+const LATEST_ACTION_KEY = 'latest-action'

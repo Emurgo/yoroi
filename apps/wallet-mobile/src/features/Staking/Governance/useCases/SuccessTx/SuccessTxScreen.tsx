@@ -5,17 +5,17 @@ import {Button, Spacer, Text} from '../../../../../components'
 import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
 import {useNavigateTo, useStrings} from '../../common'
 import {Routes} from '../../common/navigation'
-import {SuccessTxImage} from './SuccessTxImage'
+import {SuccessTxImage} from '../../illustrations'
 
 export const SuccessTxScreen = () => {
   const strings = useStrings()
   const navigate = useNavigateTo()
   const walletNavigateTo = useWalletNavigation()
-  const params = useUnsafeParams<Routes['tx-success']>()
+  const params = useUnsafeParams<Routes['staking-gov-tx-success']>()
 
   const navigateToStaking = params?.navigateToStaking ?? false
 
-  const onPress = () => {
+  const handleOnPress = () => {
     if (navigateToStaking) {
       walletNavigateTo.navigateToStakingDashboard()
       return
@@ -51,7 +51,11 @@ export const SuccessTxScreen = () => {
 
       <Spacer fill />
 
-      <Button title={navigateToStaking ? strings.goToStaking : strings.goToGovernance} shelleyTheme onPress={onPress} />
+      <Button
+        title={navigateToStaking ? strings.goToStaking : strings.goToGovernance}
+        shelleyTheme
+        onPress={handleOnPress}
+      />
 
       <Spacer height={6} />
     </View>

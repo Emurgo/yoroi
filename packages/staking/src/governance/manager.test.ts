@@ -1,8 +1,7 @@
 import {governanceManagerMaker, GovernanceAction} from './manager'
 import {init} from '@emurgo/cross-csl-nodejs'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {GovernanceApi, governanceApiMaker} from './api'
-import {fetcher} from '@yoroi/common/src'
+import {fetcher, mountStorage} from '@yoroi/common'
 
 const apiMock: GovernanceApi = {
   getDRepById: () =>
@@ -23,7 +22,7 @@ describe('createGovernanceManager', () => {
     walletId: 'walletId',
     networkId,
     cardano,
-    storage: AsyncStorage,
+    storage: mountStorage('wallet/'),
     api: governanceApiMaker({networkId, client: fetcher}),
   }
 

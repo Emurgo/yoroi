@@ -10,14 +10,14 @@ const LEARN_MORE_LINK = ''
 export const LearnMoreLink = () => {
   const strings = useStrings()
 
-  const onPress = () => {
+  const handleOnPress = () => {
     Linking.openURL(LEARN_MORE_LINK)
   }
 
   if (LEARN_MORE_LINK.length === 0) return null
 
   return (
-    <TouchableOpacity style={styles.root} onPress={onPress}>
+    <TouchableOpacity style={styles.root} onPress={handleOnPress}>
       <Text style={styles.blueText}>{strings.learnMoreAboutGovernance}</Text>
     </TouchableOpacity>
   )

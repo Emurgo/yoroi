@@ -1,5 +1,5 @@
 import {useUpdateLatestGovernanceAction} from '@yoroi/staking'
-import React, {useState} from 'react'
+import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
@@ -19,11 +19,11 @@ import {Routes} from '../../common/navigation'
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const params = useUnsafeParams<Routes['confirm-tx']>()
+  const params = useUnsafeParams<Routes['staking-gov-confirm-tx']>()
   const navigateTo = useNavigateTo()
   const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(wallet.id)
   const {openModal, closeModal} = useModal()
-  const [operationsOpen, setOperationsOpen] = useState(true)
+  const [operationsOpen, setOperationsOpen] = React.useState(true)
 
   const titles = {
     abstain: strings.actionAbstainTitle,

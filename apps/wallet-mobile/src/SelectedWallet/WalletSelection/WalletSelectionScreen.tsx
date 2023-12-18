@@ -206,7 +206,7 @@ const OnlyNightlyShelleySanchonetButton = () => {
 
   if (!isNightly() && !__DEV__) return null
 
-  const onPress = () => {
+  const handleOnPress = () => {
     navigation.navigate('new-wallet', {
       screen: 'choose-create-restore',
       params: {
@@ -216,7 +216,7 @@ const OnlyNightlyShelleySanchonetButton = () => {
     })
   }
 
-  return <Button onPress={onPress} title={`${strings.addWalletButton} (sanchonet)`} style={styles.button} />
+  return <Button onPress={handleOnPress} title={`${strings.addWalletButton} (sanchonet)`} style={styles.button} />
 }
 
 const OnlyDevButton = () => {

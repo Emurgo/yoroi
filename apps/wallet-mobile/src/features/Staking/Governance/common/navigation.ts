@@ -6,18 +6,18 @@ import {YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {GovernanceVote} from '../types'
 
 export type Routes = {
-  home?: {
+  'staking-gov-home'?: {
     navigateToStakingOnSuccess?: boolean
   }
-  'change-vote': undefined
-  'confirm-tx': {
+  'staking-gov-change-vote': undefined
+  'staking-gov-confirm-tx': {
     vote: GovernanceVote
     unsignedTx: YoroiUnsignedTx
     registerStakingKey?: boolean
     navigateToStakingOnSuccess?: boolean
   }
-  'tx-success'?: {navigateToStaking?: boolean}
-  'tx-failed': undefined
+  'staking-gov-tx-success'?: {navigateToStaking?: boolean}
+  'staking-gov-tx-failed': undefined
 }
 
 export const NavigationStack = createStackNavigator<Routes>()
@@ -25,10 +25,10 @@ export const NavigationStack = createStackNavigator<Routes>()
 export const useNavigateTo = () => {
   const navigation = useNavigation<StackNavigationProp<Routes>>()
   return useRef({
-    home: () => navigation.navigate('home'),
-    changeVote: () => navigation.navigate('change-vote'),
-    confirmTx: (params: Routes['confirm-tx']) => navigation.navigate('confirm-tx', params),
-    txSuccess: (params?: Routes['tx-success']) => navigation.navigate('tx-success', params),
-    txFailed: () => navigation.navigate('tx-failed'),
+    home: () => navigation.navigate('staking-gov-home'),
+    changeVote: () => navigation.navigate('staking-gov-change-vote'),
+    confirmTx: (params: Routes['staking-gov-confirm-tx']) => navigation.navigate('staking-gov-confirm-tx', params),
+    txSuccess: (params?: Routes['staking-gov-tx-success']) => navigation.navigate('staking-gov-tx-success', params),
+    txFailed: () => navigation.navigate('staking-gov-tx-failed'),
   }).current
 }

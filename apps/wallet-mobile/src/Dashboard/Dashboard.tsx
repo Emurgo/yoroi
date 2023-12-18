@@ -55,7 +55,7 @@ export const Dashboard = () => {
   const isParticipatingInGovernance = useIsParticipatingInGovernance(wallet)
   const walletNavigateTo = useWalletNavigation()
 
-  const onParticipatePress = () => {
+  const handleOnParticipatePress = () => {
     walletNavigateTo.navigateToGovernanceCentre({navigateToStakingOnSuccess: true})
   }
 
@@ -63,7 +63,7 @@ export const Dashboard = () => {
     if (isGovernanceFeatureEnabled && !isParticipatingInGovernance) {
       openModal(
         governanceStrings.withdrawWarningTitle,
-        <WithdrawWarningModal onParticipatePress={onParticipatePress} />,
+        <WithdrawWarningModal onParticipatePress={handleOnParticipatePress} />,
       )
       return
     }

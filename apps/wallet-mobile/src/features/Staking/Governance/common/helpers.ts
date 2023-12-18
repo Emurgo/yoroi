@@ -1,9 +1,13 @@
-import {type StakingKeyState, useStakingKeyState} from '@yoroi/staking'
+import {useStorage} from '@yoroi/common'
+import {type StakingKeyState, governanceApiMaker, governanceManagerMaker, useStakingKeyState} from '@yoroi/staking'
+import * as React from 'react'
 
 import {CONFIG} from '../../../../legacy/config'
+import {useSelectedWallet} from '../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useStakingKey, useTipStatus} from '../../../../yoroi-wallets/hooks'
 import {isMainnetNetworkId, isSanchoNetworkId} from '../../../../yoroi-wallets/utils'
+import {CardanoMobile} from '../../../../yoroi-wallets/wallets'
 import {GovernanceVote} from '../types'
 
 export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {
@@ -40,4 +44,23 @@ export const useIsGovernanceFeatureEnabled = (wallet: YoroiWallet) => {
     : CONFIG.GOVERNANCE_ENABLED_SINCE_BLOCK.PREPROD
 
   return bestBlock.height >= enabledSince
+}
+
+export const useGovernanceManagerMaker = () => {
+  const wallet = useSelectedWallet()
+
+  const storage = useStorage()
+
+  const {networkId} = useSelectedWallet()
+  return React.useMemo(
+    () =>
+      governanceManagerMaker({
+        walletId: wallet.id,
+        networkId,
+        api: governanceApiMaker({networkId}),
+        cardano: CardanoMobile,
+        storage: storage.join(`${wallet.id}/`).join('staking-governance/'),
+      }),
+    [networkId, storage, wallet.id],
+  )
 }

@@ -1,7 +1,7 @@
 export {Action} from './Action'
-export {BrokenImage} from './BrokenImage'
 export {
   mapStakingKeyStateToGovernanceAction,
+  useGovernanceManagerMaker,
   useIsGovernanceFeatureEnabled,
   useIsParticipatingInGovernance,
 } from './helpers'

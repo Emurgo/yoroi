@@ -7,7 +7,7 @@ import {
   useStakingKeyState,
   useVotingCertificate,
 } from '@yoroi/staking'
-import React, {ReactNode, useEffect, useState} from 'react'
+import React, {type ReactNode} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../../components'
@@ -16,9 +16,10 @@ import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useStakingKey, useTransactionInfos, useWalletEvent} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
-import {Action, BrokenImage, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
+import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {Routes} from '../../common/navigation'
+import {BrokenImage} from '../../illustrations'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
@@ -26,7 +27,7 @@ export const HomeScreen = () => {
   const wallet = useSelectedWallet()
   const txInfos = useTransactionInfos(wallet)
   const stakingKeyHash = useStakingKey(wallet)
-  const [isPendingRefetchAfterTxConfirmation, setIsPendingRefetchAfterTxConfirmation] = useState(false)
+  const [isPendingRefetchAfterTxConfirmation, setIsPendingRefetchAfterTxConfirmation] = React.useState(false)
 
   const {data: stakingStatus, refetch: refetchStakingKeyState} = useStakingKeyState(stakingKeyHash, {
     refetchOnMount: true,
@@ -41,7 +42,7 @@ export const HomeScreen = () => {
 
   const isTxPending = isString(submittedTxId) && !isTxConfirmed(submittedTxId, txInfos)
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isTxPending && submittedTxId !== undefined) {
       setIsPendingRefetchAfterTxConfirmation(true)
       refetchStakingKeyState().finally(() => setIsPendingRefetchAfterTxConfirmation(false))
@@ -93,11 +94,6 @@ const ParticipatingInGovernanceVariant = ({
     'no-confidence': strings.actionNoConfidenceTitle,
   }
   const selectedActionTitle = actionTitles[action.kind]
-
-  const formattingOptions = {
-    b: (text: ReactNode) => <Text style={[styles.description, styles.bold]}>{text}</Text>,
-    textComponent: (text: ReactNode) => <Text style={styles.description}>{text}</Text>,
-  }
 
   const introduction = isTxPending
     ? strings.actionYouHaveSelectedTxPending(selectedActionTitle, formattingOptions)
@@ -160,6 +156,11 @@ const ParticipatingInGovernanceVariant = ({
   )
 }
 
+const formattingOptions = {
+  b: (text: ReactNode) => <Text style={[styles.description, styles.bold]}>{text}</Text>,
+  textComponent: (text: ReactNode) => <Text style={styles.description}>{text}</Text>,
+}
+
 const NeverParticipatedInGovernanceVariant = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
@@ -167,7 +168,7 @@ const NeverParticipatedInGovernanceVariant = () => {
   const {manager} = useGovernance()
   const {openModal} = useModal()
   const stakingInfo = useStakingInfo(wallet, {suspense: true})
-  const params = useUnsafeParams<Routes['home']>()
+  const params = useUnsafeParams<Routes['staking-gov-home']>()
 
   const navigateToStakingOnSuccess = params?.navigateToStakingOnSuccess ?? false
 
@@ -301,7 +302,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 const HardwareWalletSupportComingSoon = () => {
   const strings = useStrings()
   const walletNavigateTo = useWalletNavigation()
-  const onPress = () => walletNavigateTo.navigateToTxHistory()
+  const handleOnPress = () => walletNavigateTo.navigateToTxHistory()
   return (
     <View style={styles.supportRoot}>
       <BrokenImage />
@@ -319,7 +320,7 @@ const HardwareWalletSupportComingSoon = () => {
       <Spacer height={16} />
 
       <View>
-        <Button title={strings.goToWallet} textStyles={styles.button} onPress={onPress} shelleyTheme />
+        <Button title={strings.goToWallet} textStyles={styles.button} onPress={handleOnPress} shelleyTheme />
       </View>
     </View>
   )

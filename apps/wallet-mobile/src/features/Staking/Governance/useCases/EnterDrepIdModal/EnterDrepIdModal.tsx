@@ -1,6 +1,6 @@
 import {isNonNullable} from '@yoroi/common'
 import {parseDrepId, useIsValidDRepID} from '@yoroi/staking'
-import React, {useState} from 'react'
+import React from 'react'
 import {Linking, StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text, TextInput} from '../../../../../components'
@@ -16,15 +16,15 @@ const FIND_DREPS_LINK = ''
 
 export const EnterDrepIdModal = ({onSubmit}: Props) => {
   const strings = useStrings()
-  const [drepId, setDrepId] = useState('')
+  const [drepId, setDrepId] = React.useState('')
 
   const {error, isFetched, isFetching} = useIsValidDRepID(drepId, {retry: false, enabled: drepId.length > 0})
 
-  const onPress = () => {
+  const handleOnPress = () => {
     parseDrepId(drepId, CardanoMobile).then((parsedId) => onSubmit?.(parsedId))
   }
 
-  const onLinkPress = () => {
+  const handleOnLinkPress = () => {
     Linking.openURL(FIND_DREPS_LINK)
   }
 
@@ -38,7 +38,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         <>
           <Spacer height={24} />
 
-          <Text style={[styles.text, styles.link]} onPress={onLinkPress}>
+          <Text style={[styles.text, styles.link]} onPress={handleOnLinkPress}>
             {strings.findDRepHere}
           </Text>
         </>
@@ -62,7 +62,7 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         title={strings.confirm}
         disabled={isNonNullable(error) || drepId.length === 0 || !isFetched || isFetching}
         shelleyTheme
-        onPress={onPress}
+        onPress={handleOnPress}
       />
 
       <Spacer height={24} />

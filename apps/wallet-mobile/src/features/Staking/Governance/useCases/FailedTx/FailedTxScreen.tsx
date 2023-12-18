@@ -2,13 +2,14 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
-import {BrokenImage, useNavigateTo, useStrings} from '../../common'
+import {useNavigateTo, useStrings} from '../../common'
+import {BrokenImage} from '../../illustrations'
 
 export const FailedTxScreen = () => {
   const strings = useStrings()
   const navigate = useNavigateTo()
 
-  const onPress = () => {
+  const handleOnTryAgain = () => {
     navigate.home()
   }
 
@@ -27,7 +28,7 @@ export const FailedTxScreen = () => {
 
         <Spacer height={16} />
 
-        <Button title={strings.tryAgain} textStyles={styles.button} shelleyTheme onPress={onPress} />
+        <Button title={strings.tryAgain} textStyles={styles.button} shelleyTheme onPress={handleOnTryAgain} />
       </View>
     </View>
   )

@@ -44,7 +44,7 @@ storiesOf('Governance/ConfirmTxScreen', module)
     </NavigationRouteContext.Provider>
   ))
 
-const getContextValue = (vote: Routes['confirm-tx']['vote'], registerStakingKey = false) => ({
+const getContextValue = (vote: Routes['staking-gov-confirm-tx']['vote'], registerStakingKey = false) => ({
   key: 'key',
   name: 'name',
   params: {
