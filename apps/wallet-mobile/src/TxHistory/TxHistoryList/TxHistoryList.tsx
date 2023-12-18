@@ -3,7 +3,7 @@ import {isString} from '@yoroi/common'
 import {BalanceAmount} from '@yoroi/types/lib/balance/token'
 import BigNumber from 'bignumber.js'
 import _ from 'lodash'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
 
@@ -12,7 +12,12 @@ import {features} from '../../features'
 import {actionMessages} from '../../i18n/global-messages'
 import {formatDateRelative} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {useBalances, useTransactionInfos} from '../../yoroi-wallets/hooks'
+import {
+  useBalances,
+  useChangeTimeAppearRampOnOffSmallBanner,
+  useTimeAppearRampOnOffSmallBanner,
+  useTransactionInfos,
+} from '../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
@@ -73,7 +78,9 @@ export const TxHistoryList = (props: Props) => {
 
 const HeaderTransactionList = (props: {primaryAmount: BalanceAmount}) => {
   const {primaryAmount} = props
-  const [showSmallBanner, setShowSmallBanner] = useState(true)
+  const [showSmallBanner, setShowSmallBanner] = useState(false)
+  const timeAppearSmallBanner = useTimeAppearRampOnOffSmallBanner()
+  const {changeTimeAppear} = useChangeTimeAppearRampOnOffSmallBanner()
 
   const isNeedBuyAda = new BigNumber(5).isGreaterThan(new BigNumber(primaryAmount.quantity))
   const isAdaZero = Quantities.isZero(primaryAmount.quantity)
@@ -81,8 +88,24 @@ const HeaderTransactionList = (props: {primaryAmount: BalanceAmount}) => {
   const isShowBigBanner = isAdaZero
   const isShowSmallBanner = showSmallBanner && isNeedBuyAda
 
+  const onCloseSmallBanner = () => {
+    setShowSmallBanner(false)
+    const today = new Date().getTime()
+    const thirtyDaysInMills = 30 * 24 * 60 * 60 * 1000
+    changeTimeAppear(today + thirtyDaysInMills)
+  }
+
+  useEffect(() => {
+    if (!Number.isNaN(timeAppearSmallBanner)) {
+      const now = new Date().getTime()
+      setShowSmallBanner(now > Number(timeAppearSmallBanner))
+    } else {
+      setShowSmallBanner(true)
+    }
+  }, [timeAppearSmallBanner])
+
   if (isShowBigBanner) return <BigBanner />
-  if (isShowSmallBanner) return <SmallBanner onClose={() => setShowSmallBanner(false)} />
+  if (isShowSmallBanner) return <SmallBanner onClose={onCloseSmallBanner} />
 
   return null
 }
