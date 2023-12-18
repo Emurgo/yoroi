@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import React from 'react'
-import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {Button, Spacer} from '../../../../components'
+import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
@@ -67,12 +67,7 @@ export const StartMultiTokenTxScreen = () => {
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={86}
-        enabled={Platform.OS === 'ios'}
-      >
+      <KeyboardAvoidingView style={styles.flex}>
         <ScrollView style={styles.flex} bounces={false}>
           <ShowErrors />
 

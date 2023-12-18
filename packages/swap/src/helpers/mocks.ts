@@ -565,6 +565,39 @@ const mockedPools7: Swap.Pool[] = [
   },
 ]
 
+const mockedPools8: Swap.Pool[] = [
+  {
+    tokenA: {quantity: '1000', tokenId: 'tokenA'},
+    tokenB: {quantity: '1000', tokenId: 'tokenB'},
+    ptPriceTokenA: '0',
+    ptPriceTokenB: '0',
+    fee: '0',
+    provider: 'vyfi',
+    batcherFee: {quantity: '0', tokenId: ''},
+    deposit: {quantity: '0', tokenId: ''},
+    poolId: '0',
+    lpToken: {
+      quantity: '0',
+      tokenId: '0',
+    },
+  },
+  {
+    tokenB: {quantity: '1000', tokenId: 'tokenB'},
+    tokenA: {quantity: '1000', tokenId: 'tokenA'},
+    ptPriceTokenB: '0',
+    ptPriceTokenA: '0',
+    fee: '50',
+    provider: 'minswap',
+    batcherFee: {quantity: '0', tokenId: ''},
+    deposit: {quantity: '0', tokenId: ''},
+    poolId: '1',
+    lpToken: {
+      quantity: '0',
+      tokenId: '0',
+    },
+  },
+]
+
 const mockedOrderCalculations1: SwapOrderCalculation[] = [
   {
     order: {
@@ -630,10 +663,12 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
     prices: {
       base: '0.07214312806368332309',
       market: '0.07214312806368332309',
+      actualPrice: '0',
       withSlippage: '0.09553872731529533436',
       withFees: '0.08770455161678684826',
       withFeesAndSlippage: '0.09744950186160124105',
       difference: '21.570209070179074072',
+      priceImpact: '0.00000000000000000000',
     },
     pool: {
       tokenA: {
@@ -727,10 +762,12 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
     prices: {
       base: '0.06985537222703457584',
       market: '0.06985537222703457584',
+      actualPrice: '0',
       withSlippage: '0.07790467929805294401',
       withFees: '0.07218258055862406896',
       withFeesAndSlippage: '0.08020286733734550586',
       difference: '3.33146651058691987',
+      priceImpact: '0.00000000000000000000',
     },
     pool: {
       tokenA: {
@@ -824,10 +861,12 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
     prices: {
       base: '0.06954047650134526242',
       market: '0.06954047650134526242',
+      actualPrice: '0',
       withSlippage: '0.07749997781563135028',
       withFees: '0.0718773544083958157',
       withFeesAndSlippage: '0.07986372713900810646',
       difference: '3.360457138951796387',
+      priceImpact: '0.00000000000000000000',
     },
     pool: {
       tokenA: {
@@ -921,10 +960,12 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
     prices: {
       base: '0.06909473936707611128',
       market: '0.06909473936707611128',
+      actualPrice: '0',
       withSlippage: '0.07929922438015448031',
       withFees: '0.07354606563387783488',
       withFeesAndSlippage: '0.08171785072374919196',
       difference: '6.44235191792733844',
+      priceImpact: '0.00000000000000000000',
     },
     pool: {
       tokenA: {
@@ -1018,10 +1059,12 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
     prices: {
       base: '0.07019007391821953012',
       market: '0.07019007391821953012',
+      actualPrice: '0',
       withSlippage: '0.07898987576256697703',
       withFees: '0.07361461466459101084',
       withFeesAndSlippage: '0.08179401635213810471',
       difference: '4.878953041653028379',
+      priceImpact: '0.00000000000000000000',
     },
     pool: {
       tokenA: {
@@ -1115,10 +1158,12 @@ const mockedOrderCalculations1: SwapOrderCalculation[] = [
     prices: {
       base: '0.07101454479564951518',
       market: '0.07101454479564951518',
+      actualPrice: '0',
       withSlippage: '0.08704840223602170946',
       withFees: '0.08112475846386043214',
       withFeesAndSlippage: '0.09013862051540048015',
       difference: '14.236821058705550837',
+      priceImpact: '0.00000000000000000000',
     },
     pool: {
       tokenA: {
@@ -1209,10 +1254,12 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
     prices: {
       base: '0.07214312806368332309',
       market: '0.07214312806368332309',
+      actualPrice: '0',
       withSlippage: '0.08151081111111111111',
       withFees: '0.08285972917140270829',
       withFeesAndSlippage: '0.09206636666666666667',
       difference: '14.854638820567161388',
+      priceImpact: '0.00000000000000000000',
     },
     pool: {
       tokenA: {
@@ -1300,10 +1347,12 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
     prices: {
       base: '0.06985537222703457584',
       market: '0.06985537222703457584',
+      actualPrice: '0',
       withSlippage: '0.07785444444444444444',
       withFees: '0.08906899910931000891',
       withFeesAndSlippage: '0.09896555555555555556',
       difference: '27.50486651166910406',
+      priceImpact: '0.00000000000000000000',
     },
     pool: {
       tokenA: {
@@ -1391,10 +1440,12 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
     prices: {
       base: '0.06954047650134526242',
       market: '0.06954047650134526242',
+      actualPrice: '0',
       withSlippage: '0.07749973333333333333',
       withFees: '0.08974975910250240897',
       withFeesAndSlippage: '0.09972195555555555556',
       difference: '29.061179356121031793',
+      priceImpact: '0.00000000000000000000',
     },
     pool: {
       tokenA: {
@@ -1482,10 +1533,12 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
     prices: {
       base: '0.06909473936707611128',
       market: '0.06909473936707611128',
+      actualPrice: '0',
       withSlippage: '0.07719845555555555556',
       withFees: '0.08947860910521390895',
       withFeesAndSlippage: '0.09942067777777777778',
       difference: '29.501333856757818526',
+      priceImpact: '0.00000000000000000000',
     },
     pool: {
       tokenA: {
@@ -1573,10 +1626,12 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
     prices: {
       base: '0.07019007391821953012',
       market: '0.07019007391821953012',
+      actualPrice: '0',
       withSlippage: '0.07827764444444444444',
       withFees: '0.09544987904550120954',
       withFeesAndSlippage: '0.10605542222222222222',
       difference: '35.987716948001227979',
+      priceImpact: '0.00000000000000000000',
     },
     pool: {
       tokenA: {
@@ -1664,10 +1719,12 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
     prices: {
       base: '0.07101454479564951518',
       market: '0.07101454479564951518',
+      actualPrice: '0',
       withSlippage: '0.07952455555555555556',
       withFees: '0.09657209903427900966',
       withFeesAndSlippage: '0.10730233333333333333',
       difference: '35.989182655713084861',
+      priceImpact: '0.00000000000000000000',
     },
     pool: {
       tokenA: {
@@ -1707,6 +1764,7 @@ export const mocks = {
   mockedPools5,
   mockedPools6,
   mockedPools7,
+  mockedPools8,
 
   mockedOrderCalculations1,
   mockedOrderCalculations2,
