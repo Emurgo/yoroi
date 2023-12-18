@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {ProgressStep, Spacer, TextInput} from '../components'
+import {KeyboardAvoidingView, ProgressStep, Spacer, TextInput} from '../components'
 import {ConfirmTx} from '../components/ConfirmTx'
 import {debugWalletInfo, features} from '../features'
 import {Instructions as HWInstructions} from '../HW'
@@ -42,63 +42,65 @@ export const ConfirmVotingTx = ({
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <ProgressStep currentStep={5} totalSteps={6} />
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ProgressStep currentStep={5} totalSteps={6} />
 
-      <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
-        <Spacer height={48} />
+        <ScrollView contentContainerStyle={styles.contentContainer} bounces={false}>
+          <Spacer height={48} />
 
-        <Title>{strings.subTitle}</Title>
+          <Title>{strings.subTitle}</Title>
 
-        <Spacer height={16} />
+          <Spacer height={16} />
 
-        {wallet.isHW ? (
-          <HWInstructions useUSB={useUSB} />
-        ) : (
-          <Description>
-            {wallet.isEasyConfirmationEnabled ? strings.authOsInstructions : strings.description}
-          </Description>
-        )}
-
-        <Spacer height={48} />
-
-        <TextInput
-          value={formatTokenWithSymbol(
-            Amounts.getAmount(votingRegTx.fee, wallet.primaryToken.identifier).quantity,
-            wallet.primaryToken,
+          {wallet.isHW ? (
+            <HWInstructions useUSB={useUSB} />
+          ) : (
+            <Description>
+              {wallet.isEasyConfirmationEnabled ? strings.authOsInstructions : strings.description}
+            </Description>
           )}
-          label={strings.fees}
-          editable={false}
-          autoComplete="off"
-        />
 
-        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
+          <Spacer height={48} />
+
           <TextInput
-            secureTextEntry
-            value={password}
-            label={strings.password}
-            onChangeText={setPassword}
+            value={formatTokenWithSymbol(
+              Amounts.getAmount(votingRegTx.fee, wallet.primaryToken.identifier).quantity,
+              wallet.primaryToken,
+            )}
+            label={strings.fees}
+            editable={false}
             autoComplete="off"
           />
-        )}
-      </ScrollView>
 
-      <Spacer fill />
+          {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
+            <TextInput
+              secureTextEntry
+              value={password}
+              label={strings.password}
+              onChangeText={setPassword}
+              autoComplete="off"
+            />
+          )}
+        </ScrollView>
 
-      <Actions>
-        <ConfirmTx
-          onSuccess={() => onNext()}
-          isProvidingPassword
-          providedPassword={password}
-          setUseUSB={setUseUSB}
-          useUSB={useUSB}
-          yoroiUnsignedTx={votingRegTx}
-          biometricInstructions={[strings.authOsInstructions]}
-          chooseTransportOnConfirmation
-          onCIP36SupportChange={handleCIP36SupportChange}
-          autoConfirm={!supportsCIP36}
-          supportsCIP36={supportsCIP36}
-        />
-      </Actions>
+        <Spacer fill />
+
+        <Actions>
+          <ConfirmTx
+            onSuccess={() => onNext()}
+            isProvidingPassword
+            providedPassword={password}
+            setUseUSB={setUseUSB}
+            useUSB={useUSB}
+            yoroiUnsignedTx={votingRegTx}
+            biometricInstructions={[strings.authOsInstructions]}
+            chooseTransportOnConfirmation
+            onCIP36SupportChange={handleCIP36SupportChange}
+            autoConfirm={!supportsCIP36}
+            supportsCIP36={supportsCIP36}
+          />
+        </Actions>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }
