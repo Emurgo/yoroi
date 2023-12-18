@@ -8,7 +8,7 @@ import {Icon, Spacer} from '../../../../../components'
 import {PressableIcon} from '../../../../../components/PressableIcon/PressableIcon'
 import {useStrings} from '../../../common/strings'
 
-export const ShowSupportedResolverServices = () => {
+export const NotifySupportedNameServers = () => {
   const strings = useStrings()
   const {showNotice, refetch} = useResolverShowNotice()
 
@@ -19,7 +19,7 @@ export const ShowSupportedResolverServices = () => {
     setShowNotice(false)
   }, [setShowNotice])
 
-  // if (showNotice === false) return null
+  if (!showNotice) return null
 
   return (
     <View>

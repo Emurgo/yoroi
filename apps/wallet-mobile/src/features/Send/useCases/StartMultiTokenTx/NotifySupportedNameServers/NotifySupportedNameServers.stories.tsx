@@ -9,9 +9,9 @@ import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
 import {SendProvider} from '../../../common/SendContext'
-import {ShowSupportedResolverServices} from './ShowSupportedResolverServices'
+import {NotifySupportedNameServers} from './NotifySupportedNameServers'
 
-storiesOf('Send ShowSupportedResolverServices', module).add('initial', () => <Initial />)
+storiesOf('Send NotifySupportedNameServers', module).add('initial', () => <Initial />)
 
 const Initial = () => {
   const wallet: YoroiWallet = walletMocks.wallet
@@ -31,7 +31,7 @@ const Initial = () => {
         <SendProvider>
           <ResolverProvider resolverManager={resolverManager}>
             <Boundary>
-              <ShowSupportedResolverServices />
+              <NotifySupportedNameServers />
             </Boundary>
           </ResolverProvider>
         </SendProvider>

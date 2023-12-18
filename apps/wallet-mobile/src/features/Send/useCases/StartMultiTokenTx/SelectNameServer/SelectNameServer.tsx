@@ -9,7 +9,7 @@ import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useSend} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 
-export const SelectAddressByNameServer = () => {
+export const SelectNameServer = () => {
   const {targets, selectedTargetIndex, nameServerSelectedChanged} = useSend()
   const receiver = targets[selectedTargetIndex].receiver
   const {addressRecords} = receiver
@@ -18,7 +18,7 @@ export const SelectAddressByNameServer = () => {
 
   const shouldShow = addressRecordsEntries.length > 1
 
-  const [animatedValue] = React.useState(new Animated.Value(0)) 
+  const [animatedValue] = React.useState(new Animated.Value(0))
   const [waitAnimation, setWaitAnimation] = React.useState(false)
   React.useEffect(() => {
     animatedValue.stopAnimation()
@@ -52,6 +52,8 @@ export const SelectAddressByNameServer = () => {
           <Spacer height={4} />
 
           <ButtonGroup labels={labels} onSelect={handleOnSelectNameServer} />
+
+          <Spacer height={4} />
         </>
       )}
     </Animated.View>

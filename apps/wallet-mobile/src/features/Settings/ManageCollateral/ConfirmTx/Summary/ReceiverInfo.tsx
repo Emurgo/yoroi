@@ -1,15 +1,15 @@
-import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {View} from 'react-native'
 
 import {Spacer} from '../../../../../components/Spacer'
 import {Text} from '../../../../../components/Text'
+import {YoroiTarget} from '../../../../../yoroi-wallets/types'
 import {useStrings} from '../../../../Send/common/strings'
 
 type Props = {
-  receiver: Resolver.Receiver
+  target: YoroiTarget
 }
-export const ReceiverInfo = ({receiver}: Props) => {
+export const ReceiverInfo = ({target}: Props) => {
   const strings = useStrings()
 
   return (
@@ -18,8 +18,7 @@ export const ReceiverInfo = ({receiver}: Props) => {
 
       <Spacer height={12} />
 
-      {/* TODO: revisit, should receive the target not the receiver for collateral is irrelevant */}
-      <Text testID="receiverAddressText">{receiver.resolve}</Text>
+      <Text testID="receiverAddressText">{target.entry.address}</Text>
     </View>
   )
 }

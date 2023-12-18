@@ -1,22 +1,18 @@
+import {nameServerName} from '@yoroi/resolver'
 import * as React from 'react'
 import {View} from 'react-native'
 
 import {Spacer} from '../../../../../components/Spacer'
 import {Text} from '../../../../../components/Text'
+import {YoroiTarget} from '../../../../../yoroi-wallets/types'
 import {useStrings} from '../../../common/strings'
-// import {Service} from '../../StartMultiTokenTx/InputReceiver/ResolveAddress'
 
 type Props = {
-  receiver: string
+  target: YoroiTarget
 }
-export const ReceiverInfo = ({receiver}: Props) => {
+export const ReceiverInfo = ({target}: Props) => {
   const strings = useStrings()
-
-  // const {resolvedAddressSelected} = useResolver()
-
-  // TODO: revisit
-  const isResolved = true
-    // !isEmptyString(resolvedAddressSelected?.address) && !isEmptyString(resolvedAddressSelected?.service)
+  const {receiver, entry} = target
 
   return (
     <View>
@@ -24,14 +20,14 @@ export const ReceiverInfo = ({receiver}: Props) => {
 
       <Spacer height={12} />
 
-      {isResolved ? (
+      {target.receiver.as === 'domain' ? (
         <>
           <View style={{flexDirection: 'row'}}>
-            {/* <Text>{Service[resolvedAddressSelected?.service ?? ''] ?? ''}:</Text> */}
+            <Text>{receiver.selectedNameServer ? nameServerName[receiver.selectedNameServer] : ''}:</Text>
 
             <Spacer width={5} />
 
-            <Text>{receiver}</Text>
+            <Text>{receiver.resolve}</Text>
           </View>
 
           <Spacer height={12} />
@@ -40,10 +36,10 @@ export const ReceiverInfo = ({receiver}: Props) => {
 
           <Spacer height={12} />
 
-          {/* <Text testID="receiverAddressText">{resolvedAddressSelected?.address}</Text> */}
+          <Text testID="receiverAddressText">{entry.address}</Text>
         </>
       ) : (
-        <Text testID="receiverAddressText">{receiver}</Text>
+        <Text testID="receiverAddressText">{entry.address}</Text>
       )}
     </View>
   )

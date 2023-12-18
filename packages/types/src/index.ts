@@ -59,7 +59,7 @@ import {
   ApiErrorInvalidState,
   ApiErrorResponseMalformed,
 } from './api/errors'
-import {ResolverNameServer} from './resolver/service'
+import {ResolverNameServer} from './resolver/name-server'
 import {
   ResolverErrorInvalidDomain,
   ResolverErrorInvalidResponse,

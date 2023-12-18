@@ -63,7 +63,7 @@ export const ChangePasswordScreen = () => {
           value={newPassword}
           onChangeText={setNewPassword}
           errorText={newPasswordErrors.passwordIsWeak ? strings.passwordStrengthRequirement : undefined}
-          helperText={strings.passwordStrengthRequirement}
+          helper={strings.passwordStrengthRequirement}
           returnKeyType="next"
           onSubmitEditing={() => newPasswordConfirmationRef.current?.focus()}
           right={!newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined}

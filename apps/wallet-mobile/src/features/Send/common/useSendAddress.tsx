@@ -3,6 +3,7 @@ import {useQuery, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {normalizeToAddress, toCardanoNetworkId} from '../../../yoroi-wallets/cardano/utils'
+import {AddressErrorInvalid, AddressErrorWrongNetwork} from './errors'
 import {useSend} from './SendContext'
 
 export const useSendAddress = () => {
@@ -58,10 +59,10 @@ const useValidateAddress = (
 // NOTE: should be a wallet function from address manager
 const validateAddress = async (address: string, chainId: number) => {
   const chainAddress = await normalizeToAddress(address)
-  if (!chainAddress) throw new Error('Invalid address')
+  if (!chainAddress) throw new AddressErrorInvalid()
 
   const chainAddressChainId = await chainAddress.networkId()
-  if (chainAddressChainId !== chainId) throw new Error('Wrong network')
+  if (chainAddressChainId !== chainId) throw new AddressErrorWrongNetwork()
 
   return true
 }

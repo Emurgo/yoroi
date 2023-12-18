@@ -6,19 +6,20 @@ import {Button, Spacer} from '../../../../components'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
-import {isEmptyString} from '../../../../utils'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../yoroi-wallets/utils'
+import {memoMaxLenght} from '../../common/constants'
+import {AddressErrorWrongNetwork} from '../../common/errors'
 import {useNavigateTo} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
 import {useStrings} from '../../common/strings'
 import {useSendAddress} from '../../common/useSendAddress'
-import {useSendInputReceiver} from '../../common/useSendInputReceiver'
-import {InputMemo, maxMemoLength} from './InputMemo'
+import {useSendReceiver} from '../../common/useSendReceiver'
+import {InputMemo} from './InputMemo/InputMemo'
 import {InputReceiver} from './InputReceiver/InputReceiver'
-import {SelectAddressByNameServer} from './SelectAddressByNameServer/SelectAddressByNameServer'
+import {NotifySupportedNameServers} from './NotifySupportedNameServers/NotifySupportedNameServers'
+import {SelectNameServer} from './SelectNameServer/SelectNameServer'
 import {ShowErrors} from './ShowErrors'
-import {ShowSupportedResolverServices} from './ShowSupportedResolverServices/ShowSupportedResolverServices'
 
 export const StartMultiTokenTxScreen = () => {
   const strings = useStrings()
@@ -34,41 +35,25 @@ export const StartMultiTokenTxScreen = () => {
   const isOnline = useIsOnline(wallet)
 
   const {targets, selectedTargetIndex, memo, memoChanged, receiverResolveChanged} = useSend()
-  const {address, amounts} = targets[selectedTargetIndex].entry
+  const {amounts} = targets[selectedTargetIndex].entry
   const receiver = targets[selectedTargetIndex].receiver
   const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
 
-  const {isResolvingAddressess, receiverError} = useSendInputReceiver()
+  const {isResolvingAddressess, receiverError, isUnsupportedDomain} = useSendReceiver()
   const {isValidatingAddress, addressError, addressValidated} = useSendAddress()
 
   const isLoading = isResolvingAddressess || isValidatingAddress
-  const hasError = !isLoading && (receiverError != null || addressError != null)
-  const isValidAddress = addressValidated && !hasError
+  const {hasReceiverError, receiverErrorMessage} = useReceiverError({
+    isUnsupportedDomain,
+    isLoading,
+    receiverError,
+    addressError,
+  })
+  const isValidAddress = addressValidated && !hasReceiverError
 
-  // const addressErrorMessage = React.useMemo(
-  //   () =>
-  //     addressValidationError != null && succesfulResolvedAddresses.length < 2
-  //       ? isDomain(receiver)
-  //         ? strings.addressInputErrorInvalidDomain
-  //         : strings.addressInputErrorInvalidAddress
-  //       : '',
-  //   [
-  //     addressValidationError,
-  //     receiver,
-  //     strings.addressInputErrorInvalidAddress,
-  //     strings.addressInputErrorInvalidDomain,
-  //     succesfulResolvedAddresses.length,
-  //   ],
-  // )
-  const isValid = React.useMemo(
-    () =>
-      isOnline &&
-      !hasPendingTx &&
-      // _.isEmpty(addressValidationError) &&
-      memo.length <= maxMemoLength &&
-      !isEmptyString(address),
-    [address, hasPendingTx, isOnline, memo.length],
-  )
+  const hasMemoError = memo.length > memoMaxLenght
+
+  const canGoNext = isOnline && !hasPendingTx && isValidAddress && !hasMemoError
 
   const handleOnNext = () => {
     if (shouldOpenAddToken) {
@@ -77,8 +62,8 @@ export const StartMultiTokenTxScreen = () => {
       navigateTo.selectedTokens()
     }
   }
-
   const handleOnChangeReceiver = (text: string) => receiverResolveChanged(text)
+  const handleOnChangeMemo = (text: string) => memoChanged(text)
 
   return (
     <View style={styles.container}>
@@ -91,33 +76,29 @@ export const StartMultiTokenTxScreen = () => {
         <ScrollView style={styles.flex} bounces={false}>
           <ShowErrors />
 
-          <Spacer height={16} />
+          <NotifySupportedNameServers />
 
-          <ShowSupportedResolverServices />
-
-          <SelectAddressByNameServer />
-
-          {/* <Spacer height={16} /> */}
+          <SelectNameServer />
 
           <InputReceiver
             value={receiver.resolve}
             onChangeText={handleOnChangeReceiver}
             isLoading={isLoading}
             isValid={isValidAddress}
-            error={hasError}
-            errorText={hasError ? 'mehhhh' : ''}
+            error={hasReceiverError}
+            errorText={receiverErrorMessage}
           />
 
           <Spacer height={16} />
 
-          <InputMemo memo={memo} onChangeText={memoChanged} />
+          <InputMemo value={memo} onChangeText={handleOnChangeMemo} isValid={!hasMemoError} />
         </ScrollView>
 
         <Actions>
           <NextButton
             onPress={handleOnNext}
             title={strings.next}
-            disabled={!isValid}
+            disabled={!canGoNext}
             testID="nextButton"
             shelleyTheme
           />
@@ -129,11 +110,41 @@ export const StartMultiTokenTxScreen = () => {
 
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
 
+const useReceiverError = ({
+  isUnsupportedDomain,
+  receiverError,
+  addressError,
+  isLoading,
+}: {
+  isUnsupportedDomain: boolean
+  isLoading: boolean
+  receiverError: Error | null
+  addressError: Error | null
+}) => {
+  const strings = useStrings()
+
+  // NOTE: order matters
+  if (isLoading) return {hasReceiverError: false, receiverErrorMessage: ''}
+  if (isUnsupportedDomain)
+    return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorUnsupportedDomain}
+  if (receiverError != null)
+    return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorUnsupportedDomain}
+  if (addressError instanceof AddressErrorWrongNetwork)
+    return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorWrongNetwork}
+  if (addressError != null) return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorInvalid}
+
+  return {
+    hasReceiverError: false,
+    receiverErrorMessage: '',
+  }
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
     paddingHorizontal: 16,
+    paddingTop: 16,
   },
   flex: {
     flex: 1,

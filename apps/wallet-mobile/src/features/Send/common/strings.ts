@@ -6,8 +6,6 @@ export const useStrings = () => {
   const intl = useIntl()
 
   return {
-    addressInputErrorInvalidAddress: intl.formatMessage(messages.addressInputErrorInvalidAddress),
-    addressInputErrorInvalidDomain: intl.formatMessage(messages.addressInputErrorInvalidDomain),
     addressInputLabel: intl.formatMessage(messages.addressInputLabel),
     addressReaderQrText: intl.formatMessage(messages.addressReaderQrText),
     all: intl.formatMessage(globalMessages.all),
@@ -36,8 +34,14 @@ export const useStrings = () => {
     feeLabel: intl.formatMessage(messages.feeLabel),
     feeNotAvailable: intl.formatMessage(messages.feeNotAvailable),
     found: intl.formatMessage(messages.found),
+    helperAddressErrorInvalid: intl.formatMessage(messages.helperAddressErrorInvalid),
+    helperAddressErrorWrongNetwork: intl.formatMessage(messages.helperAddressErrorWrongNetwork),
+    helperMemoErrorTooLong: intl.formatMessage(messages.helperMemoErrorTooLong),
+    helperMemoInstructions: intl.formatMessage(messages.helperMemoInstructions),
+    helperResolverErrorUnsupportedDomain: intl.formatMessage(messages.helperResolverErrorUnsupportedDomain),
     manyNameServersWarning: intl.formatMessage(messages.manyNameServersWarning),
     max: intl.formatMessage(globalMessages.max),
+    memoLabel: intl.formatMessage(messages.memoLabel),
     minPrimaryBalanceForTokens: intl.formatMessage(amountInputErrorMessages.minPrimaryBalanceForTokens),
     next: intl.formatMessage(globalMessages.next),
     nfts: (qty: number) => intl.formatMessage(globalMessages.nfts, {qty}),
@@ -279,7 +283,31 @@ export const messages = defineMessages({
     defaultMessage: '!!!Yoroi Supports Name Resolution',
   },
   manyNameServersWarning: {
-    id: 'send.resolver.manyNameServersWarning',
+    id: 'send.warning.resolver.manyNameServers',
     defaultMessage: '!!!Multiple name servers found. Please select one.',
+  },
+  helperAddressErrorInvalid: {
+    id: 'send.helper.addressError.invalid',
+    defaultMessage: '!!!Please enter valid address',
+  },
+  helperAddressErrorWrongNetwork: {
+    id: 'send.helper.addressError.wrongNetwork',
+    defaultMessage: '!!!Please enter valid domain',
+  },
+  helperResolverErrorUnsupportedDomain: {
+    id: 'send.helper.resolverError.unsupportedDomain',
+    defaultMessage: '!!!Domain is not supported',
+  },
+  memoLabel: {
+    id: 'components.send.memofield.label',
+    defaultMessage: '!!!Memo',
+  },
+  helperMemoInstructions: {
+    id: 'components.send.memofield.message',
+    defaultMessage: '!!!(Optional) Memo is stored locally',
+  },
+  helperMemoErrorTooLong: {
+    id: 'components.send.memofield.error',
+    defaultMessage: '!!!Memo is too long',
   },
 })

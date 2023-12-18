@@ -41,7 +41,13 @@ export const ManageCollateralScreen = () => {
   const balances = useBalances(wallet)
   const lockedAmount = useLockedAmount({wallet})
 
-  const {reset: resetSendState, receiverResolveChanged, amountChanged, tokenSelectedChanged, yoroiUnsignedTxChanged} = useSend()
+  const {
+    reset: resetSendState,
+    receiverResolveChanged,
+    amountChanged,
+    tokenSelectedChanged,
+    yoroiUnsignedTxChanged,
+  } = useSend()
   const {refetch: createUnsignedTx, isFetching: isLoadingTx} = useSendTx(
     {
       wallet,

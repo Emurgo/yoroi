@@ -186,7 +186,7 @@ const targetsReducer = (state: SendState, action: TargetAction) => {
             if (addressRecords !== undefined) {
               const keys = Object.keys(addressRecords).filter(isNameServer)
               const nameServer = keys.length === 1 ? keys[0] : undefined
-              target.receiver.selectedNameServer =nameServer 
+              target.receiver.selectedNameServer = nameServer
               if (nameServer !== undefined) {
                 target.entry.address = addressRecords[nameServer] ?? ''
               }
@@ -273,7 +273,7 @@ export const initialState: SendState = {
       },
     },
   ],
-} 
+}
 
 export const useTokenQuantities = (tokenId: string) => {
   const wallet = useSelectedWallet()

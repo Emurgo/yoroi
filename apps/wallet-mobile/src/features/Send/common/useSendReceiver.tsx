@@ -1,4 +1,4 @@
-import {isNameServer, useResolverCryptoAddresses} from '@yoroi/resolver'
+import {isDomain, isNameServer, isResolvableDomain, useResolverCryptoAddresses} from '@yoroi/resolver'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {useQueryClient} from 'react-query'
@@ -6,11 +6,12 @@ import {useQueryClient} from 'react-query'
 import {debounceMaker} from '../../../utils/debounceMaker'
 import {useSend} from './SendContext'
 
-export const useSendInputReceiver = () => {
+export const useSendReceiver = () => {
   const queryClient = useQueryClient()
 
   const {targets, selectedTargetIndex, receiverResolveChanged, addressRecordsFetched} = useSend()
   const receiver = targets[selectedTargetIndex].receiver
+  const isUnsupportedDomain = !isResolvableDomain(receiver.resolve) && isDomain(receiver.resolve)
 
   const {
     error: receiverError,
@@ -59,18 +60,13 @@ export const useSendInputReceiver = () => {
         },
         undefined,
       )
-      // TODO: revisit
-      // addressRecordsFetched(records)
-      console.log(records)
-      addressRecordsFetched({
-        handle: 'addr1vxggvx6uq9mtf6e0tyda2mahg84w8azngpvkwr5808ey6qsy2ww7d',
-        cns: 'addr1qywgh46dqu7lq6mp5c6tzldpmzj6uwx335ydrpq8k7rru4q6yhkfqn5pc9f3z76e4cr64e5mf98aaeht6zwf8xl2nc9qr66sqg',
-      })
+      addressRecordsFetched(records)
     }
   }, [addressRecordsFetched, cryptoAddresses, isSuccess])
 
   return {
     isResolvingAddressess,
+    isUnsupportedDomain,
     receiverError,
   }
 }

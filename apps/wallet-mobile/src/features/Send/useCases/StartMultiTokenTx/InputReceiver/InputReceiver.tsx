@@ -5,6 +5,7 @@ import {Icon, TextInput, TextInputProps} from '../../../../../components'
 import {useNavigateTo} from '../../../common/navigation'
 import {ScannerButton} from '../../../common/ScannerButton'
 import {useStrings} from '../../../common/strings'
+import {ShowResolvedAddressSelected} from './ShowResolvedAddressSelected'
 
 export const InputReceiver = ({
   isLoading,
@@ -34,6 +35,7 @@ export const InputReceiver = ({
       showErrorOnBlur
       multiline
       blurOnSubmit
+      helper={<ShowResolvedAddressSelected />}
       {...props}
     />
   )

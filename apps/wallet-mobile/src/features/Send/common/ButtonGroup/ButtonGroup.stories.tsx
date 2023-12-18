@@ -6,8 +6,8 @@ import {StyleSheet, View} from 'react-native'
 import {ButtonGroup} from './ButtonGroup'
 
 const WithInitial = ({initial}: {initial: number}) => {
-  const handleActive = (label: string) => {
-    action(`onSelect ${label}`)
+  const handleActive = (index: number, label: string) => {
+    action(`onSelect ${index}:${label}`)
   }
   return (
     <View>
@@ -17,8 +17,8 @@ const WithInitial = ({initial}: {initial: number}) => {
 }
 
 const NoInitial = () => {
-  const handleActive = (label: string) => {
-    action(`onSelect ${label}`)
+  const handleActive = (index: number, label: string) => {
+    action(`onSelect ${index}:${label}`)
   }
   return (
     <View>

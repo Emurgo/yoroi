@@ -1,4 +1,4 @@
-import {ResolverNameServer} from './service'
+import {ResolverNameServer} from './name-server'
 
 export type ResolverReceiver = {
   resolve: string
