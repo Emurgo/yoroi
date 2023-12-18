@@ -637,12 +637,12 @@ export const useProtocolParams = (
     CardanoApi.ProtocolParamsResult,
     Error,
     CardanoApi.ProtocolParamsResult,
-    ['protocol-params']
+    [string, 'protocol-params']
   >,
 ) => {
   const query = useQuery({
     suspense: true,
-    queryKey: ['protocol-params'],
+    queryKey: [wallet.id, 'protocol-params'],
     ...options,
     queryFn: () => wallet.getProtocolParams(),
   })
