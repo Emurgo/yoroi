@@ -11,8 +11,8 @@ import {
   useIsParticipatingInGovernance,
   WithdrawWarningModal,
 } from '../features/Staking/Governance'
+import {useIsGovernanceFeatureEnabled} from '../features/Staking/Governance'
 import globalMessages from '../i18n/global-messages'
-import {CONFIG} from '../legacy/config'
 import {Modal} from '../legacy/Modal'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -20,7 +20,7 @@ import {isEmptyString} from '../utils/utils'
 import {getCardanoNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {getCardanoBaseConfig} from '../yoroi-wallets/cardano/utils'
 import {useBalances, useIsOnline, useSync} from '../yoroi-wallets/hooks'
-import {Amounts, isSanchoNetworkId} from '../yoroi-wallets/utils'
+import {Amounts} from '../yoroi-wallets/utils'
 import {
   genCurrentEpochLength,
   genCurrentSlotLength,
@@ -46,6 +46,7 @@ export const Dashboard = () => {
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, '')
   const {stakingInfo, refetch: refetchStakingInfo, error, isLoading} = useStakingInfo(wallet)
+  const isGovernanceFeatureEnabled = useIsGovernanceFeatureEnabled(wallet)
 
   const [showWithdrawalDialog, setShowWithdrawalDialog] = React.useState(false)
 
@@ -59,7 +60,7 @@ export const Dashboard = () => {
   }
 
   const onWithdraw = () => {
-    if (CONFIG.GOVERNANCE_CENTRE_ENABLED && isSanchoNetworkId(wallet.networkId) && !isParticipatingInGovernance) {
+    if (isGovernanceFeatureEnabled && !isParticipatingInGovernance) {
       openModal(
         governanceStrings.withdrawWarningTitle,
         <WithdrawWarningModal onParticipatePress={onParticipatePress} />,

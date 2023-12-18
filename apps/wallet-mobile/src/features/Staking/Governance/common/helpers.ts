@@ -1,7 +1,9 @@
 import {type StakingKeyState, useStakingKeyState} from '@yoroi/staking'
 
+import {CONFIG} from '../../../../legacy/config'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
-import {useStakingKey} from '../../../../yoroi-wallets/hooks'
+import {useStakingKey, useTipStatus} from '../../../../yoroi-wallets/hooks'
+import {isMainnetNetworkId, isSanchoNetworkId} from '../../../../yoroi-wallets/utils'
 import {GovernanceVote} from '../types'
 
 export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {
@@ -22,4 +24,20 @@ export const mapStakingKeyStateToGovernanceAction = (state: StakingKeyState): Go
     : vote.action === 'no-confidence'
     ? {kind: 'no-confidence'}
     : {kind: 'delegate', drepID: vote.drepID}
+}
+
+export const useIsGovernanceFeatureEnabled = (wallet: YoroiWallet) => {
+  const tipStatus = useTipStatus({wallet, options: {suspense: true}})
+  const {bestBlock} = tipStatus
+  const walletNetworkId = wallet.networkId
+  const isSanchonet = isSanchoNetworkId(walletNetworkId)
+  const isMainnet = isMainnetNetworkId(walletNetworkId)
+
+  const enabledSince = isSanchonet
+    ? CONFIG.GOVERNANCE_ENABLED_SINCE_BLOCK.SANCHONET
+    : isMainnet
+    ? CONFIG.GOVERNANCE_ENABLED_SINCE_BLOCK.MAINNET
+    : CONFIG.GOVERNANCE_ENABLED_SINCE_BLOCK.PREPROD
+
+  return bestBlock.height >= enabledSince
 }

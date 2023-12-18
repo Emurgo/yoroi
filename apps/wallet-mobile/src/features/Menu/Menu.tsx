@@ -10,11 +10,10 @@ import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../../components'
 import {Hr} from '../../components/Hr'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
-import {CONFIG} from '../../legacy/config'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {lightPalette} from '../../theme'
-import {isSanchoNetworkId} from '../../yoroi-wallets/utils'
+import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
 
 const MenuStack = createStackNavigator()
 
@@ -39,6 +38,7 @@ export const Menu = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
+  const isGovernanceFeatureEnabled = useIsGovernanceFeatureEnabled(wallet)
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
@@ -59,7 +59,7 @@ export const Menu = () => {
           />
         </Boundary>
 
-        {CONFIG.GOVERNANCE_CENTRE_ENABLED && isSanchoNetworkId(wallet.networkId) && (
+        {isGovernanceFeatureEnabled && (
           <>
             <Hr />
 
