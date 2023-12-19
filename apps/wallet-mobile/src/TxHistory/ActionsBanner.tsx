@@ -15,6 +15,7 @@ import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useTokenInfo} from '../yoroi-wallets/hooks'
+import {isMainnetNetworkId} from '../yoroi-wallets/utils'
 
 const ACTION_PROPS = {
   size: 32,
@@ -25,7 +26,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
-  const {resetForm} = useSend()
+  const {reset: resetSendState} = useSend()
   const {orderData} = useSwap()
   const {resetSwapForm} = useSwapForm()
   const {track} = useMetrics()
@@ -62,7 +63,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             track.walletPageExchangeBottomSheetClicked()
             // banxa doesn't support testnet for the sandbox it needs a mainnet address
             const sandboxWallet = env.getString('BANXA_TEST_WALLET')
-            const isMainnet = wallet.networkId !== 300
+            const isMainnet = isMainnetNetworkId(wallet.networkId)
             const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
             const moduleOptions = {isProduction: isMainnet, partner: 'yoroi'} as const
             const urlOptions = {
@@ -86,7 +87,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
   const handleOnSend = () => {
     navigateTo.send()
-    resetForm()
+    resetSendState()
   }
 
   const handleOnSwap = () => {

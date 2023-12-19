@@ -81,7 +81,7 @@ export const WalletForm = ({onSubmit}: Props) => {
             onChangeText={setPassword}
             errorText={passwordErrorText}
             returnKeyType="next"
-            helperText={strings.passwordStrengthRequirement({
+            helper={strings.passwordStrengthRequirement({
               requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
             })}
             right={!passwordErrors.passwordIsWeak ? <Checkmark /> : undefined}

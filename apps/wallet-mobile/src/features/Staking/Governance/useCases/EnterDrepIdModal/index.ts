@@ -1,0 +1,1 @@
+export {EnterDrepIdModal} from './EnterDrepIdModal'

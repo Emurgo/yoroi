@@ -7,10 +7,9 @@
   "workspaces": {
     "packages": [
       "packages/types",
-      "packages/openswap",
       "packages/common",
-      "packages/links",
       "packages/api",
+      "packages/openswap",
       "packages/*",
       "apps/*",
       "e2e/*"

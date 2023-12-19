@@ -94,6 +94,9 @@
     "babel.config.js",
     "jest.setup.js"
   ],
+  "dependencies": {
+    "axios": "^1.5.0"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@release-it/conventional-changelog": "^5.0.0",

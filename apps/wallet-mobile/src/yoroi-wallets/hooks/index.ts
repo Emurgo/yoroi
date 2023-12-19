@@ -2,21 +2,12 @@
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
 import {CardanoApi} from '@yoroi/api'
-import {parseBoolean, useStorage} from '@yoroi/common'
+import {parseBoolean, useMutationWithInvalidations, useStorage} from '@yoroi/common'
 import {App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
-import {
-  onlineManager,
-  QueryKey,
-  useMutation,
-  UseMutationOptions,
-  useQueries,
-  useQuery,
-  useQueryClient,
-  UseQueryOptions,
-} from 'react-query'
+import {onlineManager, useMutation, UseMutationOptions, useQueries, useQuery, UseQueryOptions} from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
 import {useWalletManager} from '../../WalletManager'
@@ -765,7 +756,7 @@ export const useIsOnline = (
         () => true,
         () => false,
       ),
-    refetchInterval: 5000,
+    refetchInterval: 15000,
     suspense: true,
     useErrorBoundary: false,
     onSuccess: (isOnline) => {
@@ -847,25 +838,6 @@ const fetchTxStatus = async (
   return {
     status: 'WAITING',
   }
-}
-
-export const useMutationWithInvalidations = <TData = unknown, TError = unknown, TVariables = void, TContext = unknown>({
-  invalidateQueries,
-  ...options
-}: UseMutationOptions<TData, TError, TVariables, TContext> & {invalidateQueries?: Array<QueryKey>} = {}) => {
-  const queryClient = useQueryClient()
-
-  return useMutation<TData, TError, TVariables, TContext>({
-    ...options,
-    onMutate: (variables) => {
-      invalidateQueries?.forEach((key) => queryClient.cancelQueries(key))
-      return options?.onMutate?.(variables)
-    },
-    onSuccess: (data, variables, context) => {
-      invalidateQueries?.forEach((key) => queryClient.invalidateQueries(key))
-      return options?.onSuccess?.(data, variables, context)
-    },
-  })
 }
 
 export const useTipStatus = ({
