@@ -618,8 +618,10 @@ export const getRequiredSigners = async (tx: CSL_TYPES.Transaction, wallet: Yoro
       allAddresses.map(async (bech32Address) => {
         const parsedAddress = await CardanoMobile.Address.fromBech32(bech32Address)
         const baseAddr = await CardanoMobile.BaseAddress.fromAddress(parsedAddress)
+        if (!baseAddr) throw new Error('Could not parse base address')
         const paymentCred = await baseAddr.paymentCred()
         const keyHash = await paymentCred.toKeyhash()
+        if (!keyHash) throw new Error('Could not parse key hash')
         const hexKeyHash = await keyHash.toBytes().then((b) => Buffer.from(b).toString('hex'))
         if (hex === hexKeyHash) {
           txRequiredAddresses.push(bech32Address)

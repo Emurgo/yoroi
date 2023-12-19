@@ -234,6 +234,10 @@ storiesOf('Icon', module).add('Gallery', () => {
         <Item icon={<Icon.Danger />} title="Danger" />
 
         <Item icon={<Icon.Share />} title="Share" />
+
+        <Item icon={<Icon.Governance />} title="Governance" />
+
+        <Item icon={<Icon.ArrowRight size={40} />} title="ArrowRight" />
       </ScrollView>
     </FilterProvider>
   )

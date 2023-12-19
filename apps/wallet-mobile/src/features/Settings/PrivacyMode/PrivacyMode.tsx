@@ -1,7 +1,5 @@
-import {parseSafe, useStorage} from '@yoroi/common'
+import {parseSafe, useMutationWithInvalidations, useStorage} from '@yoroi/common'
 import {UseMutationOptions, useQuery} from 'react-query'
-
-import {useMutationWithInvalidations} from '../../../yoroi-wallets/hooks'
 
 export const useReadPrivacyMode = () => {
   const storage = useStorage()

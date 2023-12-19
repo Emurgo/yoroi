@@ -10,6 +10,7 @@ import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
 import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
+import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
 import {WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
@@ -158,6 +159,8 @@ export const WalletNavigator = () => (
     <Stack.Screen name="voting-registration" component={VotingRegistration} />
 
     <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
+
+    <Stack.Screen name="governance" component={GovernanceNavigator} />
   </Stack.Navigator>
 )
 

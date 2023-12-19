@@ -348,6 +348,7 @@ export const NETWORK_REGISTRY = {
   // ERGO: 200,
   HASKELL_SHELLEY_TESTNET: 300,
   UNDEFINED: -1,
+  SANCHONET: 450,
 } as const
 export type NetworkId = (typeof NETWORK_REGISTRY)[keyof typeof NETWORK_REGISTRY]
 

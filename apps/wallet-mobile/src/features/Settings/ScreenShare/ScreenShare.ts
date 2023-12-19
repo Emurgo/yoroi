@@ -1,9 +1,7 @@
-import {isBoolean, useStorage} from '@yoroi/common'
+import {isBoolean, useMutationWithInvalidations, useStorage} from '@yoroi/common'
 import {useEffect, useState} from 'react'
 import {NativeModules, Platform} from 'react-native'
 import {useQuery} from 'react-query'
-
-import {useMutationWithInvalidations} from '../../../yoroi-wallets/hooks'
 
 const {FlagSecure} = NativeModules
 

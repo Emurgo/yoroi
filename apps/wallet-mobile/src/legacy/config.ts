@@ -16,6 +16,11 @@ const FORCE_CRASH_REPORTS = isNightly()
 const AGREEMENT_DATE = 1691967600000
 
 const UNSTOPPABLE_API_KEY = env.getString('UNSTOPPABLE_API_KEY')
+const GOVERNANCE_ENABLED_SINCE_BLOCK = {
+  SANCHONET: 0,
+  MAINNET: Infinity, // TODO: Add block number once known
+  PREPROD: Infinity, // TODO: Add block number once known
+}
 
 export const CONFIG = {
   SENTRY_DSN,
@@ -25,4 +30,5 @@ export const CONFIG = {
   FORCE_CRASH_REPORTS,
   AGREEMENT_DATE,
   UNSTOPPABLE_API_KEY,
+  GOVERNANCE_ENABLED_SINCE_BLOCK,
 }

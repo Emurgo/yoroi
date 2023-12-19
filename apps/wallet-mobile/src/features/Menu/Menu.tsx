@@ -13,6 +13,7 @@ import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {lightPalette} from '../../theme'
+import {useIsGovernanceFeatureEnabled} from '../Staking/Governance'
 
 const MenuStack = createStackNavigator()
 
@@ -36,6 +37,8 @@ export const MenuNavigator = () => {
 export const Menu = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
+  const wallet = useSelectedWallet()
+  const isGovernanceFeatureEnabled = useIsGovernanceFeatureEnabled(wallet)
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
@@ -55,6 +58,18 @@ export const Menu = () => {
             left={<Icon.Catalyst size={24} color={lightPalette.gray['600']} />}
           />
         </Boundary>
+
+        {isGovernanceFeatureEnabled && (
+          <>
+            <Hr />
+
+            <Governance
+              label={strings.governanceCentre}
+              onPress={navigateTo.governanceCentre}
+              left={<Icon.Governance size={24} color={lightPalette.gray['600']} />}
+            />
+          </>
+        )}
 
         <Hr />
 
@@ -133,6 +148,7 @@ const Item = ({
   )
 }
 
+const Governance = Item
 const AppSettings = Item
 const KnowledgeBase = Item
 const Catalyst = ({label, left, onPress}: {label: string; left: React.ReactElement; onPress: () => void}) => {
@@ -162,7 +178,7 @@ const SUPPORT_TICKET_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/request
 const KNOWLEDGE_BASE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/categories/4412619927695-Yoroi'
 
 const useNavigateTo = () => {
-  const {navigation, navigateToSettings} = useWalletNavigation()
+  const {navigation, navigateToSettings, navigateToGovernanceCentre} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const prefetchStakingInfo = usePrefetchStakingInfo(wallet)
 
@@ -181,6 +197,7 @@ const useNavigateTo = () => {
     settings: () => navigateToSettings(),
     support: () => Linking.openURL(SUPPORT_TICKET_LINK),
     knowledgeBase: () => Linking.openURL(KNOWLEDGE_BASE_LINK),
+    governanceCentre: () => navigateToGovernanceCentre(),
   }
 }
 
@@ -195,6 +212,7 @@ const useStrings = () => {
     knowledgeBase: intl.formatMessage(messages.knowledgeBase),
     menu: intl.formatMessage(messages.menu),
     releases: intl.formatMessage(messages.releases),
+    governanceCentre: intl.formatMessage(messages.governanceCentre),
   }
 }
 
@@ -226,6 +244,10 @@ const messages = defineMessage({
   releases: {
     id: 'menu.releases',
     defaultMessage: '!!!Releases',
+  },
+  governanceCentre: {
+    id: 'menu.governanceCentre',
+    defaultMessage: '!!!Governance centre',
   },
 })
 
