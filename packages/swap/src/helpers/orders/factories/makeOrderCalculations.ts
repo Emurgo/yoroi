@@ -70,6 +70,23 @@ export const makeOrderCalculations = ({
     const hasSupply =
       !Quantities.isGreaterThan(buy.quantity, poolSupply) && !supplyRequired
 
+    const sellQuantity = new BigNumber(sell.quantity)
+    const buyQuantity = new BigNumber(buy.quantity)
+    const marketPriceQuantity = new BigNumber(marketPrice)
+
+    const actualPriceQuantity = buyQuantity.isZero()
+      ? new BigNumber(0)
+      : sellQuantity.dividedBy(buyQuantity)
+
+    const priceImpact = Quantities.isZero(marketPrice)
+      ? Quantities.zero
+      : asQuantity(
+          actualPriceQuantity
+            .minus(marketPriceQuantity)
+            .dividedBy(marketPriceQuantity)
+            .times(100),
+        )
+
     // lf is sell side % of quantity ie. XToken 100 * 1% = 1 XToken
     const liquidityFee: Balance.Amount = getLiquidityProviderFee(pool.fee, sell)
 
@@ -78,7 +95,6 @@ export const makeOrderCalculations = ({
     const ptPriceSell = isBuyTokenA
       ? new BigNumber(pool.ptPriceTokenB)
       : new BigNumber(pool.ptPriceTokenA)
-    const sellQuantity = new BigNumber(sell.quantity)
     const sellInPtTerms = asQuantity(sellQuantity.multipliedBy(ptPriceSell))
 
     // ffee is based on PT value range + LP holding range
@@ -111,19 +127,17 @@ export const makeOrderCalculations = ({
     const priceWithSlippage = Quantities.isZero(buyAmountWithSlippage.quantity)
       ? Quantities.zero
       : asQuantity(
-          new BigNumber(sell.quantity)
-            .dividedBy(buyAmountWithSlippage.quantity)
-            .toString(),
+          sellQuantity.dividedBy(buyAmountWithSlippage.quantity).toString(),
         )
 
     // add up all that's being sold in sell terms
-    const sellWithFees = new BigNumber(sell.quantity)
+    const sellWithFees = sellQuantity
       .plus(feeInSellSideQuantities.batcherFee)
       .plus(feeInSellSideQuantities.frontendFee)
 
     const priceWithFees = Quantities.isZero(buy.quantity)
       ? new BigNumber(0)
-      : sellWithFees.dividedBy(buy.quantity)
+      : sellWithFees.dividedBy(buyQuantity)
 
     const priceWithFeesAndSlippage = Quantities.isZero(
       buyAmountWithSlippage.quantity,
@@ -193,10 +207,12 @@ export const makeOrderCalculations = ({
       prices: {
         base: priceBase,
         market: marketPrice,
+        actualPrice: asQuantity(actualPriceQuantity),
         withSlippage: priceWithSlippage,
         withFees,
         withFeesAndSlippage,
         difference,
+        priceImpact,
       },
       pool,
     } as const

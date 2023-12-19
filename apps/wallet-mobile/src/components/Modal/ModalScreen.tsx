@@ -1,22 +1,14 @@
 import {useCardAnimation} from '@react-navigation/stack'
 import React from 'react'
-import {
-  Animated,
-  GestureResponderEvent,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '..'
+import {KeyboardAvoidingView, Spacer} from '..'
+import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
 import {useModal} from './ModalContext'
 
 export const ModalScreen = () => {
   const {current} = useCardAnimation()
-  const {height, closeModal, content, isOpen} = useModal()
+  const {height, closeModal, content, isOpen, isLoading} = useModal()
   const [swipeLocationY, setSwipeLocationY] = React.useState(height)
 
   const onResponderMove = ({nativeEvent}: GestureResponderEvent) => {
@@ -33,11 +25,7 @@ export const ModalScreen = () => {
     <View style={styles.backdrop}>
       <Pressable style={styles.cancellableArea} onPress={closeModal} />
 
-      <KeyboardAvoidingView
-        style={styles.root}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        enabled={Platform.OS === 'ios'}
-      >
+      <KeyboardAvoidingView style={styles.root} keyboardVerticalOffset={0}>
         <Animated.View
           style={[
             {
@@ -55,7 +43,9 @@ export const ModalScreen = () => {
             styles.animatedView,
           ]}
         >
-          <View style={styles.sheet}>
+          <View style={[styles.rounded, styles.sheet]}>
+            <LoadingOverlay loading={isLoading} style={styles.rounded} />
+
             <Header onResponderMove={onResponderMove} onStartShouldSetResponder={() => true} />
 
             {content}
@@ -103,11 +93,13 @@ const styles = StyleSheet.create({
   animatedView: {
     alignSelf: 'stretch',
   },
+  rounded: {
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+  },
   sheet: {
     flex: 1,
     backgroundColor: 'white',
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
     alignSelf: 'stretch',
     paddingHorizontal: 16,
     paddingBottom: 16,

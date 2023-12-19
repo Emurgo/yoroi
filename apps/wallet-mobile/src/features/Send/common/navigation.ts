@@ -13,7 +13,7 @@ export const useNavigateTo = () => {
     startTx: () => navigation.navigate('send-start-tx'),
     confirmTx: () => navigation.navigate('send-confirm-tx'),
     editAmount: () => navigation.navigate('send-edit-amount'),
-    reader: () => navigation.navigate('send-read-qr-code'),
+    reader: () => navigation.navigate('scan-start', {insideFeature: 'send'}),
     submittedTx: (txId: string) => navigation.navigate('send-submitted-tx', {txId}),
     failedTx: () => navigation.navigate('send-failed-tx'),
     startTxAfterReset: () =>
