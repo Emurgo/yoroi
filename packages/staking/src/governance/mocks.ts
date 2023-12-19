@@ -1,6 +1,8 @@
 import {GovernanceManager} from './manager'
 
 export const managerMock: GovernanceManager = {
+  convertHexKeyHashToBech32Format: () =>
+    Promise.reject(new Error('Mock not implemented')),
   validateDRepID: () => Promise.reject(new Error('Mock not implemented')),
   getStakingKeyState: () =>
     Promise.resolve({

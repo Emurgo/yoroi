@@ -8,7 +8,8 @@ export {
   useVotingCertificate,
   useDelegationCertificate,
   useStakingKeyState,
+  useBech32DRepID,
 } from './translators/react'
 export {governanceApiMaker, type GovernanceApi} from './api'
-export {parseDrepId} from './helpers'
+export {parseDrepId, convertHexKeyHashToBech32Format} from './helpers'
 export type {StakingKeyState} from './types'
