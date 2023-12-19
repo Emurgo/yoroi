@@ -5,5 +5,6 @@ export {
   useUpdateLatestGovernanceAction,
   useLatestGovernanceAction,
   useStakingKeyState,
+  useBech32DRepID,
 } from './hooks'
 export {useGovernance, GovernanceProvider} from './context'

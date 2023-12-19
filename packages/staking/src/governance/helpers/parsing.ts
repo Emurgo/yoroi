@@ -43,3 +43,11 @@ const convertBech32ToKeyHash = async (
   const keyHash = await cardano.Ed25519KeyHash.fromBech32(drepId)
   return await keyHash.toHex()
 }
+
+export const convertHexKeyHashToBech32Format = async (
+  drepId: string,
+  cardano: CardanoTypes.Wasm,
+): Promise<string> => {
+  const keyHash = await cardano.Ed25519KeyHash.fromHex(drepId)
+  return await keyHash.toBech32('drep')
+}

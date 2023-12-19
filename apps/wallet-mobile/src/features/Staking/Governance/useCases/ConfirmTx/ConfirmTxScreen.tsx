@@ -1,4 +1,4 @@
-import {useUpdateLatestGovernanceAction} from '@yoroi/staking'
+import {useBech32DRepID, useUpdateLatestGovernanceAction} from '@yoroi/staking'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -25,6 +25,10 @@ export const ConfirmTxScreen = () => {
   const {openModal, closeModal} = useModal()
   const [operationsOpen, setOperationsOpen] = React.useState(true)
 
+  const {data: bech32DrepId} = useBech32DRepID(params.vote.kind === 'delegate' ? params.vote.drepID : '', {
+    enabled: params.vote.kind === 'delegate',
+  })
+
   const titles = {
     abstain: strings.actionAbstainTitle,
     'no-confidence': strings.actionNoConfidenceTitle,
@@ -40,7 +44,7 @@ export const ConfirmTxScreen = () => {
   const operations = {
     abstain: strings.selectAbstain,
     'no-confidence': strings.selectNoConfidence,
-    delegate: strings.delegateVotingToDRep(params.vote.kind === 'delegate' ? params.vote.drepID : ''),
+    delegate: strings.delegateVotingToDRep(params.vote.kind === 'delegate' ? bech32DrepId ?? params.vote.drepID : ''),
   }
 
   const title = titles[params.vote.kind]
