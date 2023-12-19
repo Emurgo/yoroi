@@ -1,7 +1,7 @@
 import {UseMutationOptions} from 'react-query'
 
 import {useSwap} from './useSwap'
-import {useMutationWithInvalidations} from '../../../utils/useMutationsWithInvalidations'
+import {useMutationWithInvalidations} from '@yoroi/common'
 import {swapStorageSlippageKey} from '../../../adapters/async-storage/storage'
 
 export const useSwapSetSlippage = (

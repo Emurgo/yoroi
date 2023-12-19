@@ -383,7 +383,7 @@ PODS:
     - react-native-config/App (= 1.5.1)
   - react-native-config/App (1.5.1):
     - React-Core
-  - react-native-haskell-shelley (5.1.3):
+  - react-native-haskell-shelley (6.0.0-alpha.2):
     - React
   - react-native-pager-view (6.2.0):
     - React-Core
@@ -900,7 +900,7 @@ SPEC CHECKSUMS:
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-ble-plx: f10240444452dfb2d2a13a0e4f58d7783e92d76e
   react-native-config: 86038147314e2e6d10ea9972022aa171e6b1d4d8
-  react-native-haskell-shelley: 92544de7277b53cda2393528d530b526c81b48a6
+  react-native-haskell-shelley: c01783e1181b8fc1fea715a288801056d70afc07
   react-native-pager-view: 0ccb8bf60e2ebd38b1f3669fa3650ecce81db2df
   react-native-quick-base64: 62290829c619fbabca4c41cfec75ae759d08fc1c
   react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729

@@ -235,6 +235,10 @@ storiesOf('Icon', module).add('Gallery', () => {
 
         <Item icon={<Icon.Share />} title="Share" />
 
+        <Item icon={<Icon.Governance />} title="Governance" />
+
+        <Item icon={<Icon.ArrowRight size={40} />} title="ArrowRight" />
+
         <Item icon={<Icon.Exchange />} title="Exchange" />
 
         <Item icon={<Icon.Close />} title="Close" />

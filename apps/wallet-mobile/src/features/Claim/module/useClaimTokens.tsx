@@ -1,6 +1,6 @@
+import {useMutationWithInvalidations} from '@yoroi/common'
 import {UseMutationOptions} from 'react-query'
 
-import {useMutationWithInvalidations} from '../../../yoroi-wallets/hooks'
 import {ScanActionClaim} from '../../Scan/common/types'
 import {useClaim} from './ClaimProvider'
 import {ClaimToken} from './types'

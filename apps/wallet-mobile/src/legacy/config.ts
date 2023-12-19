@@ -15,6 +15,12 @@ const FORCE_CRASH_REPORTS = isNightly()
 
 const AGREEMENT_DATE = 1691967600000
 
+const GOVERNANCE_ENABLED_SINCE_BLOCK = {
+  SANCHONET: 0,
+  MAINNET: Infinity, // TODO: Add block number once known
+  PREPROD: Infinity, // TODO: Add block number once known
+}
+
 export const CONFIG = {
   SENTRY_DSN,
   PIN_LENGTH: 6,
@@ -22,6 +28,7 @@ export const CONFIG = {
   COMMIT: _COMMIT,
   FORCE_CRASH_REPORTS,
   AGREEMENT_DATE,
+  GOVERNANCE_ENABLED_SINCE_BLOCK,
 }
 
 export const SCHEME_URL = 'yoroi://'

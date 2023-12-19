@@ -52,6 +52,7 @@ import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
+import {isMainnetNetworkId} from '../yoroi-wallets/utils'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
@@ -71,12 +72,12 @@ export const TxHistoryNavigator = () => {
 
   // swap
   const {frontendFees} = useFrontendFees(wallet)
-  const aggregatorTokenId = wallet.networkId !== 300 ? milkTokenId.mainnet : milkTokenId.preprod
+  const aggregatorTokenId = isMainnetNetworkId(wallet.networkId) ? milkTokenId.mainnet : milkTokenId.preprod
   const stakingKey = useStakingKey(wallet)
   const swapManager = React.useMemo(() => {
     const swapStorage = swapStorageMaker()
     const swapApi = swapApiMaker({
-      isMainnet: wallet.networkId !== 300,
+      isMainnet: isMainnetNetworkId(wallet.networkId),
       stakingKey,
       primaryTokenId: wallet.primaryTokenInfo.id,
       supportedProviders,

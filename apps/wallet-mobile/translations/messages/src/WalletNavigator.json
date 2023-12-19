@@ -19,12 +19,12 @@
     "defaultMessage": "!!!Send",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 174,
+      "line": 172,
       "column": 14,
-      "index": 5894
+      "index": 5912
     },
     "end": {
-      "line": 177,
+      "line": 175,
       "column": 3,
       "index": 5993
     }
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Receive",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 178,
+      "line": 176,
       "column": 17,
-      "index": 6012
+      "index": 6030
     },
     "end": {
-      "line": 181,
+      "line": 179,
       "column": 3,
-      "index": 6117
+      "index": 6135
     }
   },
   {
