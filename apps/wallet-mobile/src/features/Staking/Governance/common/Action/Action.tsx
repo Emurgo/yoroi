@@ -17,7 +17,7 @@ type Props = {
 export const Action = ({title, description, onPress, pending, children, showRightArrow}: Props) => {
   return (
     <TouchableOpacity onPress={onPress} disabled={pending}>
-      <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={['#E4E8F7', '#C6F7F7']} style={styles.gradient}>
+      <LinearGradient start={{x: 0, y: 0}} end={{x: 0, y: 1}} colors={['#E4E8F7', '#C6F7F7']} style={styles.gradient}>
         {pending && (
           <View style={styles.icon}>
             <ActivityIndicator color="black" size="small" />

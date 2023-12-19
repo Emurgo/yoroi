@@ -1,6 +1,7 @@
 import {isNonNullable, isString} from '@yoroi/common'
 import {
   GovernanceProvider,
+  useBech32DRepID,
   useDelegationCertificate,
   useGovernance,
   useLatestGovernanceAction,
@@ -19,7 +20,7 @@ import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {Routes} from '../../common/navigation'
-import {BrokenImage} from '../../illustrations'
+import {GovernanceImage} from '../../illustrations'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
@@ -87,6 +88,9 @@ const ParticipatingInGovernanceVariant = ({
 }) => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
+  const {data: bech32DrepId} = useBech32DRepID(action.kind === 'delegate' ? action.drepID : '', {
+    enabled: action.kind === 'delegate',
+  })
 
   const actionTitles = {
     abstain: strings.actionAbstainTitle,
@@ -120,9 +124,9 @@ const ParticipatingInGovernanceVariant = ({
             showRightArrow={!isTxPending}
             onPress={navigateToChangeVote}
           >
-            <Text style={styles.drepInfoTitle}>{strings.drepKey}</Text>
+            <Text style={styles.drepInfoTitle}>{strings.drepID}</Text>
 
-            <Text style={styles.drepInfoDescription}>{action.drepID}</Text>
+            <Text style={styles.drepInfoDescription}>{bech32DrepId ?? action.drepID}</Text>
           </Action>
         )}
 
@@ -305,7 +309,7 @@ const HardwareWalletSupportComingSoon = () => {
   const handleOnPress = () => walletNavigateTo.navigateToTxHistory()
   return (
     <View style={styles.supportRoot}>
-      <BrokenImage />
+      <GovernanceImage />
 
       <View>
         <Text style={styles.supportTitle}>{strings.hardwareWalletSupportComingSoon}</Text>

@@ -7,6 +7,9 @@ const governanceManager: GovernanceManager = {
       drepDelegation: {action: 'no-confidence', tx: 'txId', slot: 1, epoch: 1},
     })
   },
+  convertHexKeyHashToBech32Format: () => {
+    return Promise.resolve('drep1r73ah4wa3zqhw2fpnzyyj2lnya5zwjftkakgfk094y3mkerc53c')
+  },
   createStakeRegistrationCertificate: () => {
     return Promise.reject(new Error('mock not implemented'))
   },
