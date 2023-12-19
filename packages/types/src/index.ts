@@ -24,6 +24,15 @@ import {NumberLocale} from './intl/numbers'
 import {SwapAggregator} from './swap/aggregator'
 import {AppApi} from './app/api'
 import {AppFrontendFeesResponse, AppFrontendFeeTier} from './app/frontend-fees'
+import {
+  ResolverAddressResponse,
+  ResolverAddressesResponse,
+  ResolverApi,
+  ResolverStrategy,
+} from './resolver/api'
+import {ResolverManager} from './resolver/manager'
+import {ResolverReceiver} from './resolver/receiver'
+import {ResolverStorage} from './resolver/storage'
 import {LinksLink, LinksModule, LinksUriConfig} from './links/link'
 import {
   LinksErrorExtraParamsDenied,
@@ -50,6 +59,13 @@ import {
   ApiErrorInvalidState,
   ApiErrorResponseMalformed,
 } from './api/errors'
+import {ResolverNameServer} from './resolver/name-server'
+import {
+  ResolverErrorInvalidDomain,
+  ResolverErrorInvalidResponse,
+  ResolverErrorNotFound,
+  ResolverErrorUnsupportedTld,
+} from './resolver/errors'
 
 export namespace App {
   export interface Storage extends AppStorage {}
@@ -149,6 +165,29 @@ export namespace Api {
 
 export namespace Numbers {
   export type Locale = NumberLocale
+}
+
+export namespace Resolver {
+  export interface Api extends ResolverApi {}
+  export type Manager = ResolverManager
+
+  export type NameServer = ResolverNameServer
+  export const NameServer = ResolverNameServer
+  export type Receiver = ResolverReceiver
+
+  export type AddressResponse = ResolverAddressResponse
+  export type AddressesResponse = ResolverAddressesResponse
+
+  export type Strategy = ResolverStrategy
+
+  export type Storage = ResolverStorage
+
+  export namespace Errors {
+    export class InvalidResponse extends ResolverErrorInvalidResponse {}
+    export class InvalidDomain extends ResolverErrorInvalidDomain {}
+    export class NotFound extends ResolverErrorNotFound {}
+    export class UnsupportedTld extends ResolverErrorUnsupportedTld {}
+  }
 }
 
 export * from './helpers/types'

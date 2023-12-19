@@ -67,7 +67,7 @@ export const ConfirmTxScreen = () => {
         <Spacer height={16} />
 
         {targets.map((target, index) => (
-          <ReceiverInfo key={index} address={target.entry.address} receiver={target.receiver} />
+          <ReceiverInfo key={`${target.receiver.resolve}-${index}`} target={target} />
         ))}
       </View>
 
@@ -84,15 +84,13 @@ export const ConfirmTxScreen = () => {
         <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
 
         {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
-          <>
-            <ValidatedTextInput
-              secureTextEntry
-              value={password}
-              label={strings.password}
-              onChangeText={setPassword}
-              testID="spendingPasswordInput"
-            />
-          </>
+          <ValidatedTextInput
+            secureTextEntry
+            value={password}
+            label={strings.password}
+            onChangeText={setPassword}
+            testID="spendingPasswordInput"
+          />
         )}
 
         <KeyboardSpacer />

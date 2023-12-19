@@ -1,5 +1,6 @@
 import {act, renderHook} from '@testing-library/react-hooks'
 import {fireEvent, render} from '@testing-library/react-native'
+import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {TextInput} from 'react-native'
 
@@ -11,7 +12,7 @@ import {initialState, SendProvider, useSelectedSecondaryAmountsCounter, useSend}
 
 const wrapper: React.FC<React.PropsWithChildren> = ({children}) => <SendProvider>{children}</SendProvider>
 
-describe('SendContext :: ui', () => {
+describe('SendContext', () => {
   test('resetForm', () => {
     const {getByTestId, getByText} = render(
       <SendProvider>
@@ -41,7 +42,7 @@ describe('SendContext :: hooks', () => {
     expect(result.current.memo).toBe('Test memo')
 
     act(() => {
-      result.current.resetForm()
+      result.current.reset()
     })
 
     expect(result.current.targets).toEqual(initialState.targets)
@@ -87,24 +88,19 @@ describe('SendContext :: hooks', () => {
     expect(result.current.yoroiUnsignedTx).toBeUndefined()
   })
 
-  test('receiverChanged', () => {
+  test('receiverResolveChanged', () => {
     const {result} = renderHook(() => useSend(), {wrapper})
 
     act(() => {
-      result.current.receiverChanged('receiver123')
+      result.current.receiverResolveChanged('address')
     })
 
-    expect(result.current.targets[0].receiver).toBe('receiver123')
-  })
-
-  test('addressChanged', () => {
-    const {result} = renderHook(() => useSend(), {wrapper})
-
-    act(() => {
-      result.current.addressChanged('address123')
+    expect(result.current.targets[0].receiver).toEqual<Resolver.Receiver>({
+      resolve: 'address',
+      as: 'address',
+      selectedNameServer: undefined,
+      addressRecords: undefined,
     })
-
-    expect(result.current.targets[0].entry.address).toBe('address123')
   })
 
   test('amountChanged', () => {
@@ -151,13 +147,13 @@ describe('SendContext :: hooks', () => {
 })
 
 const ResetFormTest = () => {
-  const {memoChanged, resetForm, memo} = useSend()
+  const {memoChanged, reset, memo} = useSend()
 
   return (
     <>
       <TextInput testID="memoInput" value={memo} onChangeText={memoChanged} />
 
-      <Button title="Reset" onPress={resetForm} />
+      <Button title="Reset" onPress={reset} />
     </>
   )
 }

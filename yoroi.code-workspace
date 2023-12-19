@@ -25,6 +25,10 @@
       "path": "./packages/api"
     },
     {
+      "name": "@yoroi/resolver",
+      "path": "./packages/resolver"
+    },
+    {
       "name": "@yoroi/common",
       "path": "./packages/common"
     },
@@ -53,6 +57,6 @@
     "java.compile.nullAnalysis.mode": "automatic",
     "typescript.preferGoToSourceDefinition": true,
     "typescript.referencesCodeLens.enabled": true,
-    "typescript.tsserver.maxTsServerMemory": 12072
+    "typescript.tsserver.maxTsServerMemory": 12072,
   }
 }
