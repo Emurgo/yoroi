@@ -759,12 +759,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         defaults: PRIMARY_TOKEN,
       }
 
-      const {
-        coinsPerUtxoByte,
-        keyDeposit,
-        linearFee: {coefficient, constant},
-        poolDeposit,
-      } = await this.getProtocolParams()
+      const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
 
       const unsignedTx = await Cardano.createUnsignedDelegationTx(
         absSlotNumber,
@@ -778,10 +773,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         {},
         {
           keyDeposit,
-          linearFee: {
-            constant,
-            coefficient,
-          },
+          linearFee,
           minimumUtxoVal: MINIMUM_UTXO_VAL,
           coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
           poolDeposit,
@@ -823,19 +815,11 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         const stakingPublicKey = await this.getStakingKey()
         const changeAddr = await this.getAddressedChangeAddress()
 
-        const {
-          coinsPerUtxoByte,
-          keyDeposit,
-          linearFee: {coefficient, constant},
-          poolDeposit,
-        } = await this.getProtocolParams()
+        const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
 
         const config = {
           keyDeposit,
-          linearFee: {
-            coefficient,
-            constant,
-          },
+          linearFee,
           minimumUtxoVal: MINIMUM_UTXO_VAL,
           coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
           poolDeposit,
@@ -916,12 +900,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const addressedUtxos = await this.getAddressedUtxos()
       const accountState = await legacyApi.getAccountState({addresses: [this.rewardAddressHex]}, BACKEND)
 
-      const {
-        coinsPerUtxoByte,
-        keyDeposit,
-        linearFee: {coefficient, constant},
-        poolDeposit,
-      } = await this.getProtocolParams()
+      const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
 
       const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
         accountState,
@@ -937,10 +916,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         ],
         changeAddr,
         {
-          linearFee: {
-            coefficient,
-            constant,
-          },
+          linearFee,
           minimumUtxoVal: MINIMUM_UTXO_VAL,
           coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
           poolDeposit,
