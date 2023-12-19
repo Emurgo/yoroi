@@ -1,15 +1,17 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {Button, Icon, Text} from '../../../../components'
 import {
   AdaAppClosedError,
   BluetoothDisabledError,
   GeneralConnectionError,
   LedgerUserError,
   RejectedByUserError,
-} from '../../../../yoroi-wallets/hw'
-import {useStrings} from '../strings'
+} from '../../yoroi-wallets/hw'
+import {Button} from '../Button'
+import {Icon} from '../Icon'
+import {Text} from '../Text'
+import {useStrings} from './strings'
 
 type Props = {
   error: Error

@@ -1,5 +1,6 @@
 import {Ada} from './Ada'
 import {Analytics} from './Analytics'
+import {ArrowRight} from './ArrowRight'
 import {Assets} from './Assets'
 import {Bio} from './Bio'
 import {Bug} from './Bug'
@@ -35,6 +36,7 @@ import {Facebook} from './Facebook'
 import {Gear} from './Gear'
 import {Github} from './Github'
 import {Globe} from './Globe'
+import {Governance} from './Governance'
 import {HardwareWallet} from './HardwareWallet'
 import {Image} from './Image'
 import {Info} from './Info'
@@ -208,4 +210,6 @@ export const Icon = {
   SpectrumSwap,
   Danger,
   Share,
+  Governance,
+  ArrowRight,
 }

@@ -6,6 +6,7 @@ import {Dimensions, Platform, TouchableOpacity} from 'react-native'
 
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
+import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
 import {COLORS} from './theme'
 import {HWDeviceInfo} from './yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
@@ -111,6 +112,7 @@ export type WalletStackRoutes = {
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
+  governance: NavigatorScreenParams<StakingGovernanceRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
@@ -414,6 +416,18 @@ export const useWalletNavigation = () => {
       })
     },
 
+    navigateToStakingDashboard: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'staking-dashboard',
+          params: {
+            screen: 'staking-dashboard-main',
+          },
+        },
+      })
+    },
+
     navigateToSettings: () => {
       navigation.navigate('app-root', {
         screen: 'settings',
@@ -470,6 +484,18 @@ export const useWalletNavigation = () => {
         screen: 'toggle-analytics-settings',
         params: {
           screen: 'settings',
+        },
+      })
+    },
+
+    navigateToGovernanceCentre: ({navigateToStakingOnSuccess = false} = {}) => {
+      navigation.navigate('app-root', {
+        screen: 'governance',
+        params: {
+          screen: 'staking-gov-home',
+          params: {
+            navigateToStakingOnSuccess,
+          },
         },
       })
     },
