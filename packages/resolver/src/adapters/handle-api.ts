@@ -41,7 +41,7 @@ export const handleApiGetCryptoAddress = ({
   }
 }
 
-// https://github.com/koralabs/handles-public-api/blob/master/src/models/view/handle.view.model.ts
+// https://github.com/koralabs/handles-public-api/blob/fd9d9f2cf3143e317a780b81b22869a755ab6af8/src/models/view/handle.view.model.ts
 export type HandleApiGetCryptoAddressResponse = {
   hex: string
   name: string
