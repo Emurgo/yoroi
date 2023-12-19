@@ -19,7 +19,7 @@ export type TextInputProps = RNTextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {
     containerStyle?: ViewStyle
     renderComponentStyle?: ViewStyle
-    helper?: string | React.ReactNode
+    helper?: React.ReactNode
     errorText?: string
     disabled?: boolean
     errorOnMount?: boolean
