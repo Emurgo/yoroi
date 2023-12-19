@@ -6,12 +6,11 @@ export const useStrings = () => {
   const intl = useIntl()
 
   return {
-    addressInputErrorInvalidAddress: intl.formatMessage(messages.addressInputErrorInvalidAddress),
     addressInputLabel: intl.formatMessage(messages.addressInputLabel),
+    addressReaderQrText: intl.formatMessage(messages.addressReaderQrText),
     all: intl.formatMessage(globalMessages.all),
     amount: intl.formatMessage(txLabels.amount),
     apply: intl.formatMessage(globalMessages.apply),
-    pools: intl.formatMessage(globalMessages.pools),
     asset: intl.formatMessage(messages.asset),
     assets: (qty: number) => intl.formatMessage(globalMessages.assets, {qty}),
     assetsLabel: intl.formatMessage(globalMessages.assetsLabel),
@@ -29,10 +28,20 @@ export const useStrings = () => {
     domainUnsupportedError: intl.formatMessage(messages.domainUnsupportedError),
     errorBannerNetworkError: intl.formatMessage(messages.errorBannerNetworkError),
     errorBannerPendingOutgoingTransaction: intl.formatMessage(messages.errorBannerPendingOutgoingTransaction),
+    failedTxButton: intl.formatMessage(messages.failedTxButton),
+    failedTxText: intl.formatMessage(messages.failedTxText),
+    failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     feeLabel: intl.formatMessage(messages.feeLabel),
     feeNotAvailable: intl.formatMessage(messages.feeNotAvailable),
     found: intl.formatMessage(messages.found),
+    helperAddressErrorInvalid: intl.formatMessage(messages.helperAddressErrorInvalid),
+    helperAddressErrorWrongNetwork: intl.formatMessage(messages.helperAddressErrorWrongNetwork),
+    helperMemoErrorTooLong: intl.formatMessage(messages.helperMemoErrorTooLong),
+    helperMemoInstructions: intl.formatMessage(messages.helperMemoInstructions),
+    helperResolverErrorUnsupportedDomain: intl.formatMessage(messages.helperResolverErrorUnsupportedDomain),
+    manyNameServersWarning: intl.formatMessage(messages.manyNameServersWarning),
     max: intl.formatMessage(globalMessages.max),
+    memoLabel: intl.formatMessage(messages.memoLabel),
     minPrimaryBalanceForTokens: intl.formatMessage(amountInputErrorMessages.minPrimaryBalanceForTokens),
     next: intl.formatMessage(globalMessages.next),
     nfts: (qty: number) => intl.formatMessage(globalMessages.nfts, {qty}),
@@ -41,7 +50,10 @@ export const useStrings = () => {
     noBalance: intl.formatMessage(amountInputErrorMessages.insufficientBalance),
     ok: intl.formatMessage(globalMessages.ok),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
-    resolvesTo: intl.formatMessage(messages.resolvesTo),
+    pools: intl.formatMessage(globalMessages.pools),
+    receiver: intl.formatMessage(messages.receiver),
+    resolvedAddress: intl.formatMessage(messages.resolvedAddress),
+    resolverNoticeTitle: intl.formatMessage(messages.resolverNoticeTitle),
     searchTokens: intl.formatMessage(messages.searchTokens),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     sendAllContinueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
@@ -50,16 +62,13 @@ export const useStrings = () => {
     sendAllWarningAlert3: intl.formatMessage(messages.sendAllWarningAlert3),
     sendAllWarningText: intl.formatMessage(messages.sendAllWarningText),
     sendAllWarningTitle: intl.formatMessage(messages.sendAllWarningTitle),
+    submittedTxButton: intl.formatMessage(messages.submittedTxButton),
+    submittedTxText: intl.formatMessage(messages.submittedTxText),
+    submittedTxTitle: intl.formatMessage(messages.submittedTxTitle),
     tokens: (qty: number) => intl.formatMessage(globalMessages.tokens, {qty}),
     unknownAsset: intl.formatMessage(messages.unknownAsset),
+    walletAddress: intl.formatMessage(messages.walletAddress),
     youHave: intl.formatMessage(messages.youHave),
-    submittedTxTitle: intl.formatMessage(messages.submittedTxTitle),
-    submittedTxText: intl.formatMessage(messages.submittedTxText),
-    submittedTxButton: intl.formatMessage(messages.submittedTxButton),
-    failedTxTitle: intl.formatMessage(messages.failedTxTitle),
-    failedTxText: intl.formatMessage(messages.failedTxText),
-    failedTxButton: intl.formatMessage(messages.failedTxButton),
-    addressReaderQrText: intl.formatMessage(messages.addressReaderQrText),
   }
 }
 
@@ -103,6 +112,14 @@ export const amountInputErrorMessages = defineMessages({
 })
 
 export const messages = defineMessages({
+  walletAddress: {
+    id: 'components.send.sendscreen.walletAddress',
+    defaultMessage: '!!!Wallet Address',
+  },
+  receiver: {
+    id: 'components.send.sendscreen.receiver',
+    defaultMessage: '!!!Receiver',
+  },
   feeLabel: {
     id: 'components.send.sendscreen.feeLabel',
     defaultMessage: '!!!Fee',
@@ -131,9 +148,13 @@ export const messages = defineMessages({
     id: 'components.send.sendscreen.addressInputErrorInvalidAddress',
     defaultMessage: '!!!Please enter valid address',
   },
+  addressInputErrorInvalidDomain: {
+    id: 'components.send.sendscreen.addressInputErrorInvalidDomain',
+    defaultMessage: '!!!Please enter valid domain',
+  },
   addressInputLabel: {
     id: 'components.send.confirmscreen.receiver',
-    defaultMessage: '!!!Address',
+    defaultMessage: '!!!Receiver address, ADA Handle or domains',
   },
   checkboxSendAllAssets: {
     id: 'components.send.sendscreen.checkboxSendAllAssets',
@@ -157,10 +178,6 @@ export const messages = defineMessages({
     id: 'components.send.sendscreen.domainUnsupportedError',
     defaultMessage: '!!!Domain is not supported',
     description: 'some desc',
-  },
-  resolvesTo: {
-    id: 'components.send.sendscreen.resolvesTo',
-    defaultMessage: '!!!Resolves to',
   },
   searchTokens: {
     id: 'components.send.sendscreen.searchTokens',
@@ -256,5 +273,41 @@ export const messages = defineMessages({
   addressReaderQrText: {
     id: 'components.send.addressreaderqr.text',
     defaultMessage: '!!!Scan recipients QR code to add a wallet address',
+  },
+  resolvedAddress: {
+    id: 'components.send.sendscreen.resolvedAddress',
+    defaultMessage: '!!!Related Address',
+  },
+  resolverNoticeTitle: {
+    id: 'components.send.sendscreen.resolverNoticeTitle',
+    defaultMessage: '!!!Yoroi Supports Name Resolution',
+  },
+  manyNameServersWarning: {
+    id: 'send.warning.resolver.manyNameServers',
+    defaultMessage: '!!!Multiple name servers found. Please select one.',
+  },
+  helperAddressErrorInvalid: {
+    id: 'send.helper.addressError.invalid',
+    defaultMessage: '!!!Please enter valid address',
+  },
+  helperAddressErrorWrongNetwork: {
+    id: 'send.helper.addressError.wrongNetwork',
+    defaultMessage: '!!!Please enter valid domain',
+  },
+  helperResolverErrorUnsupportedDomain: {
+    id: 'send.helper.resolverError.unsupportedDomain',
+    defaultMessage: '!!!Domain is not supported',
+  },
+  memoLabel: {
+    id: 'components.send.memofield.label',
+    defaultMessage: '!!!Memo',
+  },
+  helperMemoInstructions: {
+    id: 'components.send.memofield.message',
+    defaultMessage: '!!!(Optional) Memo is stored locally',
+  },
+  helperMemoErrorTooLong: {
+    id: 'components.send.memofield.error',
+    defaultMessage: '!!!Memo is too long',
   },
 })

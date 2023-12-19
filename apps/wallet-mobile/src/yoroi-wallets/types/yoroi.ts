@@ -1,5 +1,5 @@
 import {Datum} from '@emurgo/yoroi-lib'
-import {App, Balance} from '@yoroi/types'
+import {App, Balance, Resolver} from '@yoroi/types'
 
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
@@ -53,7 +53,7 @@ export type YoroiMetadata = {
 }
 
 export type YoroiTarget = {
-  receiver: string
+  receiver: Resolver.Receiver
   entry: YoroiEntry
 }
 

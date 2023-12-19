@@ -24,6 +24,10 @@ yarn workspace @yoroi/swap add -D @yoroi/types@"$1"
 yarn workspace @yoroi/swap add @yoroi/api@"$1"
 yarn workspace @yoroi/swap add @yoroi/openswap@"$1"
 
+# resolver
+yarn workspace @yoroi/resolver add -D @yoroi/types@"$1"
+yarn workspace @yoroi/resolver add @yoroi/common@"$1"
+
 # wallet-mobile
 yarn workspace @yoroi/wallet-mobile add -D @yoroi/types@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/banxa@"$1"

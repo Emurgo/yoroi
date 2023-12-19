@@ -200,7 +200,7 @@ export const NETWORKS = {
   JORMUNGANDR,
   SANCHONET: SANCHONET_CONFIG.NETWORK_CONFIG,
 }
-type NetworkConfig =
+export type NetworkConfig =
   | typeof NETWORKS.BYRON_MAINNET
   | typeof NETWORKS.HASKELL_SHELLEY
   | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
