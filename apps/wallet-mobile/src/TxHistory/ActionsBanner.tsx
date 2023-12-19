@@ -13,7 +13,6 @@ import {TxHistoryRouteNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useTokenInfo} from '../yoroi-wallets/hooks'
-import {isMainnetNetworkId} from '../yoroi-wallets/utils'
 
 const ACTION_PROPS = {
   size: 24,

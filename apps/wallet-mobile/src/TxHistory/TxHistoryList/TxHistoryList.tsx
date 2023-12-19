@@ -82,7 +82,7 @@ const HeaderTransactionList = (props: {primaryAmount: BalanceAmount}) => {
   const timeAppearSmallBanner = useTimeAppearRampOnOffSmallBanner()
   const {changeTimeAppear} = useChangeTimeAppearRampOnOffSmallBanner()
 
-  const isNeedBuyAda = new BigNumber(5).isGreaterThan(new BigNumber(primaryAmount.quantity))
+  const isNeedBuyAda = new BigNumber(5000000).isGreaterThan(new BigNumber(primaryAmount.quantity))
   const isAdaZero = Quantities.isZero(primaryAmount.quantity)
 
   const isShowBigBanner = isAdaZero
