@@ -1,12 +1,7 @@
 import {RampOnOffState} from './RampOnOffProvider'
 
-export const actionRamp = {
-  sellAda: 'sell',
-  buyAda: 'buy',
-} as const
-
 export const mockExchangeStateDefault: RampOnOffState = {
-  actionType: actionRamp.buyAda,
+  orderType: 'buy',
   amount: {
     isTouched: true,
     disabled: false,
@@ -15,10 +10,10 @@ export const mockExchangeStateDefault: RampOnOffState = {
     value: 0,
   },
   canExchange: false,
-}
+} as const
 
 export const mockExchangeStateWithNotEnoughError: RampOnOffState = {
-  actionType: actionRamp.sellAda,
+  orderType: 'sell',
   amount: {
     isTouched: true,
     disabled: false,
@@ -27,4 +22,4 @@ export const mockExchangeStateWithNotEnoughError: RampOnOffState = {
     value: 3000 * 10 ** 6,
   },
   canExchange: false,
-}
+} as const

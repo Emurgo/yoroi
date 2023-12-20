@@ -2,20 +2,20 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
-import image from '../../../../../../assets/img/banxa.png'
-import ContentResult from '.'
+import banxaLogo from '../../../../../assets/img/banxa.png'
+import {ContentResult} from './ContentResult'
 
-storiesOf('Content Result For rampOnOff', module).add('Default', () => (
-  <View style={styles.container}>
+storiesOf('RampOnOff ShowContentResult', module)
+  .addDecorator((story) => <View style={styles.container}>{story()}</View>)
+  .add('initial', () => (
     <ContentResult title="Provider">
       <View style={styles.boxProvider}>
-        <Image style={styles.banxaLogo} source={image} />
+        <Image style={styles.banxaLogo} source={banxaLogo} />
 
         <Text style={styles.contentValueText}>Banxa</Text>
       </View>
     </ContentResult>
-  </View>
-))
+  ))
 
 const styles = StyleSheet.create({
   container: {

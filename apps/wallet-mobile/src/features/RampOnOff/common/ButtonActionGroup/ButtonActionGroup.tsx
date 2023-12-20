@@ -3,16 +3,16 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {useTheme} from '../../../../theme'
 import {Theme} from '../../../../theme/types'
-import {TRampOnOffAction} from '../RampOnOffProvider'
+import {OrderType} from '../RampOnOffProvider'
 
-interface ButtonActionGroupProps {
-  onSelect: (action: TRampOnOffAction) => void
-  selected: TRampOnOffAction
-  labels: {label: string; value: TRampOnOffAction}[]
+type ButtonActionGroupProps = {
+  onSelect: (orderType: OrderType) => void
+  selected: OrderType
+  labels: ReadonlyArray<{label: string; value: OrderType}>
 }
 
-export const ButtonActionGroup: React.FC<ButtonActionGroupProps> = ({labels, onSelect, selected}) => {
-  const handleOnPress = (actionType: TRampOnOffAction) => onSelect(actionType)
+export const ButtonActionGroup = ({labels, onSelect, selected}: ButtonActionGroupProps) => {
+  const handleOnPress = (orderType: OrderType) => onSelect(orderType)
 
   const {theme} = useTheme()
 

@@ -1,4 +1,4 @@
-import {BanxaReferralUrlQueryStringParams} from '@yoroi/banxa/lib/typescript/translators/module'
+import {Banxa} from '@yoroi/banxa'
 import BigNumber from 'bignumber.js'
 import {produce} from 'immer'
 import React from 'react'
@@ -9,7 +9,6 @@ import {useSelectedWallet} from '../../../SelectedWallet'
 import {useBalances} from '../../../yoroi-wallets/hooks'
 import {useTokenInfo} from '../../../yoroi-wallets/hooks'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
-import {actionRamp} from './mocks'
 import {useStrings} from './strings'
 
 export const useRampOnOff = () => React.useContext(RampOnOffContext)
@@ -22,6 +21,7 @@ export const RampOnOffProvider = ({
   initialState?: Partial<RampOnOffState>
 }) => {
   const wallet = useSelectedWallet()
+  const tokenId = wallet.primaryTokenInfo.id
   const {numberLocale} = useLanguage()
 
   const amountInputRef = React.useRef<TextInput | null>(null)
@@ -31,16 +31,15 @@ export const RampOnOffProvider = ({
     ...initialState,
   })
 
-  const amountTokenInfo = useTokenInfo({wallet, tokenId: ''})
+  const amountTokenInfo = useTokenInfo({wallet, tokenId})
 
   const balances = useBalances(wallet)
-  const amountBalance = Amounts.getAmount(balances, '').quantity
+  const amountBalance = Amounts.getAmount(balances, tokenId).quantity
 
   const strings = useStrings()
 
   const actions = React.useRef<RampOnOffActions>({
-    actionTypeChanged: (actionType: TRampOnOffAction) =>
-      dispatch({type: RampOnOffActionType.ActionTypeChanged, actionType}),
+    orderTypeChanged: (orderType: OrderType) => dispatch({type: RampOnOffActionType.OrderTypeChanged, orderType}),
     canExchangeChanged: (value: boolean) => dispatch({type: RampOnOffActionType.CanExchangeChanged, value}),
     amountInputDisplayValueChanged: (value: string) =>
       dispatch({type: RampOnOffActionType.AmountInputDisplayValueChanged, value}),
@@ -72,14 +71,14 @@ export const RampOnOffProvider = ({
   // amount input errors
   React.useEffect(() => {
     // no enough balance error
-    if (isNotEnoughBalance && state.amount.isTouched && state.actionType === actionRamp.sellAda) {
+    if (isNotEnoughBalance && state.amount.isTouched && state.orderType === 'sell') {
       actions.amountErrorChanged(strings.notEnoughBalance)
       return
     }
 
     if (
       (!Quantities.isZero(amountBalance) && !isNotEnoughBalance && state.amount.isTouched) ||
-      state.actionType === actionRamp.buyAda
+      state.orderType === 'buy'
     ) {
       clearErrors()
       return
@@ -90,7 +89,7 @@ export const RampOnOffProvider = ({
     amountBalance,
     isNotEnoughBalance,
     state.amount.isTouched,
-    state.actionType,
+    state.orderType,
     strings.notEnoughBalance,
     clearErrors,
   ])
@@ -111,8 +110,8 @@ export const RampOnOffProvider = ({
 const rampOnOffReducer = (state: RampOnOffState, action: RampOnOffAction) => {
   return produce(state, (draft) => {
     switch (action.type) {
-      case RampOnOffActionType.ActionTypeChanged:
-        draft.actionType = action.actionType
+      case RampOnOffActionType.OrderTypeChanged:
+        draft.orderType = action.orderType
         break
       case RampOnOffActionType.AmountInputDisplayValueChanged:
         if (state.amount.isTouched) draft.amount.displayValue = action.value
@@ -122,11 +121,9 @@ const rampOnOffReducer = (state: RampOnOffState, action: RampOnOffAction) => {
         break
       case RampOnOffActionType.AmountErrorChanged:
         draft.amount.error = action.error
-
         break
       case RampOnOffActionType.CanExchangeChanged:
         draft.canExchange = action.value
-
         break
       default:
         throw new Error(`RampOnOffFormReducer invalid action`)
@@ -134,17 +131,17 @@ const rampOnOffReducer = (state: RampOnOffState, action: RampOnOffAction) => {
   })
 }
 
-export type TRampOnOffAction = BanxaReferralUrlQueryStringParams['orderType']
+export type OrderType = Banxa.ReferralUrlQueryStringParams['orderType']
 
 type RampOnOffAction =
-  | {type: RampOnOffActionType.ActionTypeChanged; actionType: TRampOnOffAction}
+  | {type: RampOnOffActionType.OrderTypeChanged; orderType: OrderType}
   | {type: RampOnOffActionType.AmountInputDisplayValueChanged; value: string}
   | {type: RampOnOffActionType.AmountErrorChanged; error: string | undefined}
   | {type: RampOnOffActionType.AmountInputValueChanged; value: number}
   | {type: RampOnOffActionType.CanExchangeChanged; value: boolean}
 
 export type RampOnOffState = {
-  actionType: TRampOnOffAction
+  orderType: OrderType
   amount: {
     isTouched: boolean
     disabled: boolean
@@ -156,7 +153,7 @@ export type RampOnOffState = {
 }
 
 type RampOnOffActions = {
-  actionTypeChanged: (type: TRampOnOffAction) => void
+  orderTypeChanged: (type: OrderType) => void
   canExchangeChanged: (value: boolean) => void
   amountInputDisplayValueChanged: (value: string) => void
   amountErrorChanged: (error: string | undefined) => void
@@ -164,7 +161,7 @@ type RampOnOffActions = {
 }
 
 const defaultState: RampOnOffState = Object.freeze({
-  actionType: actionRamp.buyAda,
+  orderType: 'buy',
   amount: {
     isTouched: true,
     disabled: false,
@@ -181,7 +178,7 @@ function missingInit() {
 
 const initialSwapFormContext: RampOnOffContext = {
   ...defaultState,
-  actionTypeChanged: missingInit,
+  orderTypeChanged: missingInit,
   amountInputRef: undefined,
   amountInputDisplayValueChanged: missingInit,
   amountInputValueChanged: missingInit,
@@ -191,7 +188,7 @@ const initialSwapFormContext: RampOnOffContext = {
 }
 
 enum RampOnOffActionType {
-  ActionTypeChanged = 'actionTypeChanged',
+  OrderTypeChanged = 'orderTypeChanged',
   AmountInputDisplayValueChanged = 'amountInputDisplayValueChanged',
   AmountErrorChanged = 'amountErrorChanged',
   AmountInputValueChanged = 'amountInputValueChanged',

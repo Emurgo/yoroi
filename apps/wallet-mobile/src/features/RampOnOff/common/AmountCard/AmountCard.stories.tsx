@@ -6,14 +6,7 @@ import {StyleSheet, View} from 'react-native'
 import {mocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {AmountCard} from './AmountCard'
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-})
-
-storiesOf('Amount Card For rampOnOff', module)
+storiesOf('RampOnOff AmountCard', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('with label', () => (
     <AmountCard
@@ -39,3 +32,10 @@ storiesOf('Amount Card For rampOnOff', module)
       touched
     />
   ))
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+})
