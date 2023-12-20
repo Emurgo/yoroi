@@ -5,7 +5,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {useTheme} from '../../../../../theme'
 import {useStrings} from '../../../common/strings'
 
-const Disclaimer = () => {
+export const ShowDisclaimer = () => {
   const {theme} = useTheme()
   const strings = useStrings()
 
@@ -24,8 +24,6 @@ const Disclaimer = () => {
     </LinearGradient>
   )
 }
-
-export default Disclaimer
 
 const styles = StyleSheet.create({
   container: {

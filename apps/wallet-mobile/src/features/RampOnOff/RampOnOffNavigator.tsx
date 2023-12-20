@@ -9,8 +9,8 @@ import {useTheme} from '../../theme'
 import {useHideBottomTabBar} from '../../yoroi-wallets/hooks'
 import {RampOnOffProvider} from './common/RampOnOffProvider'
 import {useStrings} from './common/strings'
-import CreateExchange from './useCases/StartRampOnOff/CreateRampOnOffScreen/CreateExchange'
-import ResultExchangeScreen from './useCases/StartRampOnOff/ResultExchangeScreen/ResultExchange'
+import {CreateExchange} from './useCases/CreateExchange/CreateExchange'
+import {ShowExchangeResult} from './useCases/ShowExchangeResult/ShowExchangeResult'
 
 const Stack = createStackNavigator<RampOnOffStackRoutes>()
 
@@ -48,7 +48,7 @@ export const RampOnOffScreen = () => {
               headerShown: false,
             }}
             name="result-ramp-on-off"
-            component={ResultExchangeScreen}
+            component={ShowExchangeResult}
           />
         </Stack.Navigator>
       </RampOnOffProvider>

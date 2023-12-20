@@ -2,12 +2,12 @@ import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {SearchProvider} from '../../../../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
-import {mocks} from '../../../../../../yoroi-wallets/mocks'
-import {mockExchangeStateDefault, mockExchangeStateWithNotEnoughError} from '../../../../common/mocks'
-import {RampOnOffProvider} from '../../../../common/RampOnOffProvider'
-import EditAmount from './EditAmount'
+import {SearchProvider} from '../../../../../Search/SearchContext'
+import {SelectedWalletProvider} from '../../../../../SelectedWallet'
+import {mocks} from '../../../../../yoroi-wallets/mocks'
+import {mockExchangeStateDefault, mockExchangeStateWithNotEnoughError} from '../../../common/mocks'
+import {RampOnOffProvider} from '../../../common/RampOnOffProvider'
+import {EditAmount} from './EditAmount'
 
 storiesOf('RampOnOff Edit Amount', module)
   .add('initial - message', () => {

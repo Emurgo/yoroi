@@ -2,17 +2,16 @@ import {banxaSupportUrl} from '@yoroi/banxa'
 import React from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import {Spacer, Text} from '../../../components'
-import {useStrings} from './strings'
+import {Spacer, Text} from '../../../../components'
+import {useStrings} from '../strings'
 
-const BANXA_SUPPORT_URL = banxaSupportUrl
 const YOROI_SUPPORT_URL = 'https://yoroi-wallet.com/#/support'
 
-const DescribeAction = () => {
+export const DescribeAction = () => {
   const strings = useStrings()
 
   const handleLinkingContactBanxa = () => {
-    Linking.openURL(BANXA_SUPPORT_URL)
+    Linking.openURL(banxaSupportUrl)
   }
 
   const handleLinkingContactYoroi = () => {
@@ -43,8 +42,6 @@ const DescribeAction = () => {
     </View>
   )
 }
-
-export default DescribeAction
 
 const styles = StyleSheet.create({
   modalContent: {

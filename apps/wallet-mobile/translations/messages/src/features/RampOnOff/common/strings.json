@@ -6,12 +6,12 @@
     "start": {
       "line": 34,
       "column": 18,
-      "index": 1588
+      "index": 1592
     },
     "end": {
       "line": 37,
       "column": 3,
-      "index": 1677
+      "index": 1681
     }
   },
   {
@@ -21,12 +21,12 @@
     "start": {
       "line": 38,
       "column": 11,
-      "index": 1690
+      "index": 1694
     },
     "end": {
       "line": 41,
       "column": 3,
-      "index": 1755
+      "index": 1759
     }
   },
   {
@@ -36,12 +36,12 @@
     "start": {
       "line": 42,
       "column": 14,
-      "index": 1771
+      "index": 1775
     },
     "end": {
       "line": 45,
       "column": 3,
-      "index": 1861
+      "index": 1865
     }
   },
   {
@@ -51,42 +51,42 @@
     "start": {
       "line": 46,
       "column": 21,
-      "index": 1884
+      "index": 1888
     },
     "end": {
       "line": 50,
       "column": 3,
-      "index": 2290
+      "index": 2294
     }
   },
   {
-    "id": "rampOnOff.createRampOnOff.buyADA",
+    "id": "rampOnOff.createRampOnOff.buyCrypto",
     "defaultMessage": "!!!Buy ADA",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
       "line": 51,
-      "column": 10,
-      "index": 2302
+      "column": 13,
+      "index": 2309
     },
     "end": {
       "line": 54,
       "column": 3,
-      "index": 2385
+      "index": 2395
     }
   },
   {
-    "id": "rampOnOff.createRampOnOff.sellADA",
+    "id": "rampOnOff.createRampOnOff.sellCrypto",
     "defaultMessage": "!!!Sell ADA",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
       "line": 55,
-      "column": 11,
-      "index": 2398
+      "column": 14,
+      "index": 2411
     },
     "end": {
       "line": 58,
       "column": 3,
-      "index": 2483
+      "index": 2499
     }
   },
   {
@@ -96,12 +96,12 @@
     "start": {
       "line": 59,
       "column": 15,
-      "index": 2500
+      "index": 2516
     },
     "end": {
       "line": 62,
       "column": 3,
-      "index": 2591
+      "index": 2607
     }
   },
   {
@@ -111,12 +111,12 @@
     "start": {
       "line": 63,
       "column": 15,
-      "index": 2608
+      "index": 2624
     },
     "end": {
       "line": 66,
       "column": 3,
-      "index": 2701
+      "index": 2717
     }
   },
   {
@@ -126,12 +126,12 @@
     "start": {
       "line": 67,
       "column": 12,
-      "index": 2715
+      "index": 2731
     },
     "end": {
       "line": 70,
       "column": 3,
-      "index": 2801
+      "index": 2817
     }
   },
   {
@@ -141,12 +141,12 @@
     "start": {
       "line": 71,
       "column": 9,
-      "index": 2812
+      "index": 2828
     },
     "end": {
       "line": 74,
       "column": 3,
-      "index": 2892
+      "index": 2908
     }
   },
   {
@@ -156,12 +156,12 @@
     "start": {
       "line": 75,
       "column": 9,
-      "index": 2903
+      "index": 2919
     },
     "end": {
       "line": 78,
       "column": 3,
-      "index": 2974
+      "index": 2990
     }
   },
   {
@@ -171,12 +171,12 @@
     "start": {
       "line": 79,
       "column": 20,
-      "index": 2996
+      "index": 3012
     },
     "end": {
       "line": 82,
       "column": 3,
-      "index": 3091
+      "index": 3107
     }
   },
   {
@@ -186,27 +186,27 @@
     "start": {
       "line": 83,
       "column": 12,
-      "index": 3105
+      "index": 3121
     },
     "end": {
       "line": 86,
       "column": 3,
-      "index": 3229
+      "index": 3245
     }
   },
   {
-    "id": "rampOnOff.resultRampOnOff.ADAmountYouGet",
+    "id": "rampOnOff.resultRampOnOff.cryptoAmountYouGet",
     "defaultMessage": "!!!ADA amount you get",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
       "line": 87,
-      "column": 18,
-      "index": 3249
+      "column": 22,
+      "index": 3269
     },
     "end": {
       "line": 90,
       "column": 3,
-      "index": 3351
+      "index": 3375
     }
   },
   {
@@ -216,12 +216,12 @@
     "start": {
       "line": 91,
       "column": 20,
-      "index": 3373
+      "index": 3397
     },
     "end": {
       "line": 94,
       "column": 3,
-      "index": 3479
+      "index": 3503
     }
   },
   {
@@ -231,27 +231,27 @@
     "start": {
       "line": 95,
       "column": 20,
-      "index": 3501
+      "index": 3525
     },
     "end": {
       "line": 98,
       "column": 3,
-      "index": 3605
+      "index": 3629
     }
   },
   {
-    "id": "rampOnOff.resultRampOnOff.buySellADATransaction",
+    "id": "rampOnOff.resultRampOnOff.buySellCrypto",
     "defaultMessage": "!!!Buy ADA/Sell transaction",
     "file": "src/features/RampOnOff/common/strings.ts",
     "start": {
       "line": 99,
-      "column": 25,
-      "index": 3632
+      "column": 17,
+      "index": 3648
     },
     "end": {
       "line": 102,
       "column": 3,
-      "index": 3747
+      "index": 3755
     }
   },
   {
@@ -261,12 +261,12 @@
     "start": {
       "line": 103,
       "column": 36,
-      "index": 3785
+      "index": 3793
     },
     "end": {
       "line": 107,
       "column": 3,
-      "index": 4157
+      "index": 4165
     }
   },
   {
@@ -276,12 +276,12 @@
     "start": {
       "line": 108,
       "column": 18,
-      "index": 4177
+      "index": 4185
     },
     "end": {
       "line": 111,
       "column": 3,
-      "index": 4273
+      "index": 4281
     }
   },
   {
@@ -291,12 +291,12 @@
     "start": {
       "line": 112,
       "column": 11,
-      "index": 4286
+      "index": 4294
     },
     "end": {
       "line": 115,
       "column": 3,
-      "index": 4370
+      "index": 4378
     }
   },
   {
@@ -306,12 +306,12 @@
     "start": {
       "line": 116,
       "column": 7,
-      "index": 4379
+      "index": 4387
     },
     "end": {
       "line": 119,
       "column": 3,
-      "index": 4455
+      "index": 4463
     }
   },
   {
@@ -321,12 +321,12 @@
     "start": {
       "line": 120,
       "column": 19,
-      "index": 4476
+      "index": 4484
     },
     "end": {
       "line": 123,
       "column": 3,
-      "index": 4583
+      "index": 4591
     }
   },
   {
@@ -336,12 +336,12 @@
     "start": {
       "line": 124,
       "column": 15,
-      "index": 4600
+      "index": 4608
     },
     "end": {
       "line": 127,
       "column": 3,
-      "index": 4743
+      "index": 4751
     }
   }
 ]

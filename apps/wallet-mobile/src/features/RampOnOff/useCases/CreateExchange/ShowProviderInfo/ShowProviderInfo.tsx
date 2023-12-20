@@ -1,24 +1,24 @@
 import * as React from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
-import image from '../../../../../../assets/img/banxa.png'
-import {Spacer} from '../../../../../../components'
-import {useTheme} from '../../../../../../theme'
-import {Theme} from '../../../../../../theme/types'
-import {useStrings} from '../../../../common/strings'
+import banxaLogo from '../../../../../assets/img/banxa.png'
+import {Spacer} from '../../../../../components'
+import {useTheme} from '../../../../../theme'
+import {Theme} from '../../../../../theme/types'
+import {useStrings} from '../../../common/strings'
 
-const ProviderTransaction = () => {
+export const ShowProviderInfo = () => {
   const {theme} = useTheme()
 
   const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
   const strings = useStrings()
 
   return (
-    <View style={styles.container}>
+    <View style={styles.root}>
       <Text style={styles.label}>{strings.provider}</Text>
 
       <View style={styles.row}>
-        <Image style={styles.logo} source={image} />
+        <Image style={styles.logo} source={banxaLogo} />
 
         <Spacer width={4} />
 
@@ -28,12 +28,10 @@ const ProviderTransaction = () => {
   )
 }
 
-export default ProviderTransaction
-
 const getStyles = (props: {theme: Theme}) => {
   const {theme} = props
   const styles = StyleSheet.create({
-    container: {
+    root: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',

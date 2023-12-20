@@ -11,7 +11,7 @@ import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {useStrings} from '../strings'
 
-interface AmountCardProps {
+type AmountCardProps = {
   error?: string
   label?: string
   inputRef?: React.RefObject<TextInput>
