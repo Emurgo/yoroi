@@ -22,8 +22,6 @@ import {AppStorage, AppStorageFolderName} from './app/storage'
 import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
 import {NumberLocale} from './intl/numbers'
 import {SwapAggregator} from './swap/aggregator'
-import {AppApi} from './app/api'
-import {AppFrontendFeesResponse, AppFrontendFeeTier} from './app/frontend-fees'
 import {
   ResolverAddressResponse,
   ResolverAddressesResponse,
@@ -66,6 +64,31 @@ import {
   ResolverErrorNotFound,
   ResolverErrorUnsupportedTld,
 } from './resolver/errors'
+import {AppApi, AppFrontendFeeTier, AppFrontendFeesResponse} from './api/app'
+import {
+  ApiFtMetadata,
+  ApiFtMetadataRecord,
+  ApiFtRecords,
+  ApiFutureToken,
+  ApiFutureTokenRecords,
+  ApiMetadataFile,
+  ApiNftMetadata,
+  ApiNftMetadataRecord,
+  ApiNftRecords,
+  ApiOffChainMetadataRecord,
+  ApiOffChainMetadataRequest,
+  ApiOffChainMetadataResponse,
+  ApiOnChainMetadataRecord,
+  ApiOnChainMetadataRequest,
+  ApiOnChainMetadataResponse,
+  ApiProtocolParamsResult,
+  ApiTokenId,
+  ApiTokenIdentity,
+  ApiTokenRegistryEntry,
+  ApiTokenSupplyRecord,
+  ApiTokenSupplyResponse,
+  ApiTokeSupplyRequest,
+} from './api/cardano'
 
 export namespace App {
   export interface Storage extends AppStorage {}
@@ -161,6 +184,43 @@ export namespace Api {
 
     export class ResponseMalformed extends ApiErrorResponseMalformed {}
   }
+
+  export namespace Cardano {
+    export type OffChainMetadataRequest = ApiOffChainMetadataRequest
+    export type OnChainMetadataRecord = ApiOnChainMetadataRecord
+    export type OffChainMetadataResponse = ApiOffChainMetadataResponse
+
+    export type OnChainMetadataRequest = ApiOnChainMetadataRequest
+    export type OffChainMetadataRecord = ApiOffChainMetadataRecord
+    export type OnChainMetadataResponse = ApiOnChainMetadataResponse
+
+    export type TokenSupplyRequest = ApiTokeSupplyRequest
+    export type TokenSupplyRecord = ApiTokenSupplyRecord
+
+    export type TokenIdentity = ApiTokenIdentity
+    export type TokenSupplyResponse = ApiTokenSupplyResponse
+
+    export type FutureToken = ApiFutureToken
+    export type FutureTokenRecords = ApiFutureTokenRecords
+
+    export type FtMetadata = ApiFtMetadata
+    export type FtMetadataRecord = ApiFtMetadataRecord
+    export interface FtRecords extends ApiFtRecords {}
+    export type TokenRegistryEntry = ApiTokenRegistryEntry
+
+    export type NftMetadata = ApiNftMetadata
+    export type NftMetadataRecord = ApiNftMetadataRecord
+    export interface NftRecords extends ApiNftRecords {}
+
+    export type MetadataFile = ApiMetadataFile
+    export type TokenId = ApiTokenId
+
+    export type ProtocolParamsResult = ApiProtocolParamsResult
+
+    export interface Actions {
+      getProtocolParams: () => Promise<ProtocolParamsResult>
+    }
+  }
 }
 
 export namespace Numbers {
@@ -192,3 +252,4 @@ export namespace Resolver {
 
 export * from './helpers/types'
 export * from './helpers/storage'
+export * from './api/cardano'

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PrivateKey} from '@emurgo/cross-csl-core'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
-import {AppApi} from '@yoroi/api'
+import {AppApi, CardanoApi} from '@yoroi/api'
 import {parseSafe} from '@yoroi/common'
 import {isNonNullable} from '@yoroi/common/src'
-import {App, Balance} from '@yoroi/types'
+import {Api, App, Balance} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -32,7 +32,7 @@ import type {
   YoroiEntry,
   YoroiNftModerationStatus,
 } from '../../types'
-import {StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
+import {NETWORK_REGISTRY, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
 import {asQuantity, Quantities} from '../../utils'
 import {validatePassword} from '../../utils/validators'
 import {WalletMeta} from '../../walletManager'
@@ -102,6 +102,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     ACCOUNT_INDEX,
     API_ROOT,
     BACKEND,
+    MINIMUM_UTXO_VAL,
     BIP44_DERIVATION_LEVELS,
     CHAIN_NETWORK_ID,
     CHIMERIC_ACCOUNT,
@@ -111,13 +112,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     HARD_DERIVATION_START,
     HISTORY_REFRESH_TIME,
     IS_MAINNET,
-    KEY_DEPOSIT,
-    LINEAR_FEE,
     MAX_GENERATED_UNUSED,
-    MINIMUM_UTXO_VAL,
     NETWORK_CONFIG,
     NETWORK_ID,
-    POOL_DEPOSIT,
     PRIMARY_TOKEN,
     PRIMARY_TOKEN_INFO,
     PROTOCOL_MAGIC,
@@ -127,7 +124,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     STAKING_KEY_PATH,
     TOKEN_INFO_SERVICE,
     WALLET_IMPLEMENTATION_ID,
-    COINS_PER_UTXO_WORD,
   } = constants
 
   const addressChains = {
@@ -185,6 +181,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     private readonly transactionManager: TransactionManager
     private readonly memosManager: MemosManager
     private _collateralId = ''
+    private readonly cardanoApi: Api.Cardano.Actions
 
     // =================== create =================== //
 
@@ -293,6 +290,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl: API_ROOT})
       const transactionManager = await TransactionManager.create(storage.join('txs/'))
       const memosManager = await makeMemosManager(storage.join('memos/'))
+      const cardanoApi = CardanoApi.cardanoApiMaker({
+        network:
+          NETWORK_ID === NETWORK_REGISTRY.HASKELL_SHELLEY
+            ? 'mainnet'
+            : NETWORK_ID === NETWORK_REGISTRY.SANCHONET
+            ? 'sanchonet'
+            : 'preprod',
+      })
 
       const wallet = new ShelleyWallet({
         storage,
@@ -308,6 +313,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         lastGeneratedAddressIndex,
         transactionManager,
         memosManager,
+        cardanoApi,
       })
 
       await wallet.discoverAddresses()
@@ -334,6 +340,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       lastGeneratedAddressIndex,
       transactionManager,
       memosManager,
+      cardanoApi,
     }: {
       storage: App.Storage
       id: string
@@ -348,6 +355,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       lastGeneratedAddressIndex: number
       transactionManager: TransactionManager
       memosManager: MemosManager
+      cardanoApi: Api.Cardano.Actions
     }) {
       this.id = id
       this.storage = storage
@@ -371,6 +379,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       this.isInitialized = true
       this.isEasyConfirmationEnabled = isEasyConfirmationEnabled
       this.state = {lastGeneratedAddressIndex}
+      this.cardanoApi = cardanoApi
     }
 
     timeout: NodeJS.Timeout | null = null
@@ -612,6 +621,13 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         throw new Error('Only one datum per transaction is supported')
       }
 
+      const {
+        coinsPerUtxoByte,
+        keyDeposit,
+        linearFee: {coefficient, constant},
+        poolDeposit,
+      } = await this.getProtocolParams()
+
       try {
         const unsignedTx = await Cardano.createUnsignedTx(
           absSlotNumber,
@@ -619,14 +635,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           recipients,
           changeAddr,
           {
-            keyDeposit: KEY_DEPOSIT,
+            keyDeposit,
             linearFee: {
-              coefficient: LINEAR_FEE.COEFFICIENT,
-              constant: containsDatum ? String(BigInt(LINEAR_FEE.CONSTANT) * 2n) : LINEAR_FEE.CONSTANT,
+              coefficient,
+              constant: containsDatum ? String(BigInt(constant) * 2n) : constant,
             },
             minimumUtxoVal: MINIMUM_UTXO_VAL,
-            coinsPerUtxoWord: COINS_PER_UTXO_WORD,
-            poolDeposit: POOL_DEPOSIT,
+            coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+            poolDeposit,
             networkId: NETWORK_ID,
           },
           PRIMARY_TOKEN,
@@ -650,6 +666,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
 
+      const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
+
       try {
         const unsignedTx = await Cardano.createUnsignedTx(
           absSlotNumber,
@@ -657,14 +675,11 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           [],
           changeAddr,
           {
-            keyDeposit: KEY_DEPOSIT,
-            linearFee: {
-              coefficient: LINEAR_FEE.COEFFICIENT,
-              constant: LINEAR_FEE.CONSTANT,
-            },
+            keyDeposit,
+            linearFee,
             minimumUtxoVal: MINIMUM_UTXO_VAL,
-            coinsPerUtxoWord: COINS_PER_UTXO_WORD,
-            poolDeposit: POOL_DEPOSIT,
+            coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+            poolDeposit,
             networkId: NETWORK_ID,
           },
           PRIMARY_TOKEN,
@@ -754,6 +769,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         defaults: PRIMARY_TOKEN,
       }
 
+      const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
+
       const unsignedTx = await Cardano.createUnsignedDelegationTx(
         absSlotNumber,
         addressedUtxos,
@@ -765,14 +782,11 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         PRIMARY_TOKEN,
         {},
         {
-          keyDeposit: KEY_DEPOSIT,
-          linearFee: {
-            constant: LINEAR_FEE.CONSTANT,
-            coefficient: LINEAR_FEE.COEFFICIENT,
-          },
+          keyDeposit,
+          linearFee,
           minimumUtxoVal: MINIMUM_UTXO_VAL,
-          coinsPerUtxoWord: COINS_PER_UTXO_WORD,
-          poolDeposit: POOL_DEPOSIT,
+          coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+          poolDeposit,
           networkId: NETWORK_ID,
         },
       )
@@ -810,15 +824,15 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
           .then((key) => key.toPublic())
         const stakingPublicKey = await this.getStakingKey()
         const changeAddr = await this.getAddressedChangeAddress()
+
+        const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
+
         const config = {
-          keyDeposit: KEY_DEPOSIT,
-          linearFee: {
-            coefficient: LINEAR_FEE.COEFFICIENT,
-            constant: LINEAR_FEE.CONSTANT,
-          },
+          keyDeposit,
+          linearFee,
           minimumUtxoVal: MINIMUM_UTXO_VAL,
-          coinsPerUtxoWord: COINS_PER_UTXO_WORD,
-          poolDeposit: POOL_DEPOSIT,
+          coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+          poolDeposit,
           networkId: NETWORK_ID,
         }
         const txOptions = {}
@@ -896,6 +910,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const addressedUtxos = await this.getAddressedUtxos()
       const accountState = await legacyApi.getAccountState({addresses: [this.rewardAddressHex]}, BACKEND)
 
+      const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
+
       const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
         accountState,
         PRIMARY_TOKEN,
@@ -910,14 +926,11 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         ],
         changeAddr,
         {
-          linearFee: {
-            coefficient: LINEAR_FEE.COEFFICIENT,
-            constant: LINEAR_FEE.CONSTANT,
-          },
+          linearFee,
           minimumUtxoVal: MINIMUM_UTXO_VAL,
-          coinsPerUtxoWord: COINS_PER_UTXO_WORD,
-          poolDeposit: POOL_DEPOSIT,
-          keyDeposit: KEY_DEPOSIT,
+          coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+          poolDeposit,
+          keyDeposit,
           networkId: NETWORK_ID,
         },
         {metadata: undefined},
@@ -1016,6 +1029,10 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     async checkServerStatus() {
       return legacyApi.checkServerStatus(BACKEND)
+    }
+
+    getProtocolParams() {
+      return this.cardanoApi.getProtocolParams()
     }
 
     async submitTransaction(signedTx: string) {

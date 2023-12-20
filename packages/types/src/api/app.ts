@@ -1,6 +1,10 @@
 import {BalanceQuantity} from '../balance/token'
 import {SwapAggregator} from '../swap/aggregator'
 
+export interface AppApi {
+  getFrontendFees(): Promise<AppFrontendFeesResponse>
+}
+
 export type AppFrontendFeesResponse = Readonly<{
   [aggregator in SwapAggregator]?: ReadonlyArray<AppFrontendFeeTier>
 }>
