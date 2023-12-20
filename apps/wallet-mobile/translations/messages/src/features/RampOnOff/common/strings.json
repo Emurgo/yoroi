@@ -1,0 +1,347 @@
+[
+  {
+    "id": "swap.swapScreen.currentBalance",
+    "defaultMessage": "!!!Current Balance",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 34,
+      "column": 18,
+      "index": 1588
+    },
+    "end": {
+      "line": 37,
+      "column": 3,
+      "index": 1677
+    }
+  },
+  {
+    "id": "global.proceed",
+    "defaultMessage": "!!!PROCEED",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 38,
+      "column": 11,
+      "index": 1690
+    },
+    "end": {
+      "line": 41,
+      "column": 3,
+      "index": 1755
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.disclaimer",
+    "defaultMessage": "!!!Disclaimer",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 42,
+      "column": 14,
+      "index": 1771
+    },
+    "end": {
+      "line": 45,
+      "column": 3,
+      "index": 1861
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.contentDisclaimer",
+    "defaultMessage": "!!!\"Yoroi uses Banxa to provide direct Fiat-ADA exchange. By clicking “Proceed,” you also acknowledge that you will be redirected to our partner’s website, where you may be asked to accept their terms and conditions. Banxa may have buy and sell limitations depending on your location and your financial institution.\"",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 46,
+      "column": 21,
+      "index": 1884
+    },
+    "end": {
+      "line": 50,
+      "column": 3,
+      "index": 2290
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.buyADA",
+    "defaultMessage": "!!!Buy ADA",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 51,
+      "column": 10,
+      "index": 2302
+    },
+    "end": {
+      "line": 54,
+      "column": 3,
+      "index": 2385
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.sellADA",
+    "defaultMessage": "!!!Sell ADA",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 55,
+      "column": 11,
+      "index": 2398
+    },
+    "end": {
+      "line": 58,
+      "column": 3,
+      "index": 2483
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.amountTitle",
+    "defaultMessage": "!!!ADA amount",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 59,
+      "column": 15,
+      "index": 2500
+    },
+    "end": {
+      "line": 62,
+      "column": 3,
+      "index": 2591
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.providerFee",
+    "defaultMessage": "!!!Provider Fee",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 63,
+      "column": 15,
+      "index": 2608
+    },
+    "end": {
+      "line": 66,
+      "column": 3,
+      "index": 2701
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.provider",
+    "defaultMessage": "!!!Provider",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 67,
+      "column": 12,
+      "index": 2715
+    },
+    "end": {
+      "line": 70,
+      "column": 3,
+      "index": 2801
+    }
+  },
+  {
+    "id": "rampOnOff.createRampOnOff.banxa",
+    "defaultMessage": "!!!Banxa",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 71,
+      "column": 9,
+      "index": 2812
+    },
+    "end": {
+      "line": 74,
+      "column": 3,
+      "index": 2892
+    }
+  },
+  {
+    "id": "global.buyTitle",
+    "defaultMessage": "!!!Exchange ADA",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 75,
+      "column": 9,
+      "index": 2903
+    },
+    "end": {
+      "line": 78,
+      "column": 3,
+      "index": 2974
+    }
+  },
+  {
+    "id": "swap.swapScreen.notEnoughBalance",
+    "defaultMessage": "!!!Not Enough Balannce",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 79,
+      "column": 20,
+      "index": 2996
+    },
+    "end": {
+      "line": 82,
+      "column": 3,
+      "index": 3091
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.congrats",
+    "defaultMessage": "!!!Congrats🎉 Your ADA will come in a few minutes",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 83,
+      "column": 12,
+      "index": 3105
+    },
+    "end": {
+      "line": 86,
+      "column": 3,
+      "index": 3229
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.ADAmountYouGet",
+    "defaultMessage": "!!!ADA amount you get",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 87,
+      "column": 18,
+      "index": 3249
+    },
+    "end": {
+      "line": 90,
+      "column": 3,
+      "index": 3351
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.fiatAmountYouGet",
+    "defaultMessage": "!!!Fiat amount you sell",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 91,
+      "column": 20,
+      "index": 3373
+    },
+    "end": {
+      "line": 94,
+      "column": 3,
+      "index": 3479
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.goToTransactions",
+    "defaultMessage": "!!!GO TO TRANSACTIONS",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 95,
+      "column": 20,
+      "index": 3501
+    },
+    "end": {
+      "line": 98,
+      "column": 3,
+      "index": 3605
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.buySellADATransaction",
+    "defaultMessage": "!!!Buy ADA/Sell transaction",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 99,
+      "column": 25,
+      "index": 3632
+    },
+    "end": {
+      "line": 102,
+      "column": 3,
+      "index": 3747
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.descriptionBuySellADATransaction",
+    "defaultMessage": "!!!Normally the Buy ADA/Sell transaction takes 3-5 of minutes for the order to be fulfilled. However, there are instances where the order cannot be fulfilled instantly because the compliance team can be doing a manual verification of the KYC docs or any other issues.",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 103,
+      "column": 36,
+      "index": 3785
+    },
+    "end": {
+      "line": 107,
+      "column": 3,
+      "index": 4157
+    }
+  },
+  {
+    "id": "rampOnOff.rampOnOffScreen.rampOnOffTitle",
+    "defaultMessage": "!!!Exchange ADA",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 108,
+      "column": 18,
+      "index": 4177
+    },
+    "end": {
+      "line": 111,
+      "column": 3,
+      "index": 4273
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.contact",
+    "defaultMessage": "!!!Contact",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 112,
+      "column": 11,
+      "index": 4286
+    },
+    "end": {
+      "line": 115,
+      "column": 3,
+      "index": 4370
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.and",
+    "defaultMessage": "!!!and",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 116,
+      "column": 7,
+      "index": 4379
+    },
+    "end": {
+      "line": 119,
+      "column": 3,
+      "index": 4455
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.customerSupport",
+    "defaultMessage": "!!!Yoroi Customer Support",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 120,
+      "column": 19,
+      "index": 4476
+    },
+    "end": {
+      "line": 123,
+      "column": 3,
+      "index": 4583
+    }
+  },
+  {
+    "id": "rampOnOff.resultRampOnOff.significant",
+    "defaultMessage": "!!!if you witnessed any significant transaction delays or errors.",
+    "file": "src/features/RampOnOff/common/strings.ts",
+    "start": {
+      "line": 124,
+      "column": 15,
+      "index": 4600
+    },
+    "end": {
+      "line": 127,
+      "column": 3,
+      "index": 4743
+    }
+  }
+]

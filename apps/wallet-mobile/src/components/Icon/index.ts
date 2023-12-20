@@ -13,6 +13,7 @@ import {CheckFilled} from './CheckFilled'
 import {CheckOutlined} from './CheckOutlined'
 import {Chevron} from './Chevron'
 import {Clock} from './Clock'
+import {Close} from './Close'
 import {Coins} from './Coins'
 import {Copy} from './Copy'
 import {CopySuccess} from './CopySuccess'
@@ -28,6 +29,7 @@ import {Document} from './Document'
 import {Drag} from './Drag'
 import {Edit} from './Edit'
 import {Emurgo} from './Emurgo'
+import {Exchange} from './Exchange'
 import {Export} from './Export'
 import {ExternalLink} from './ExternalLink'
 import {EyeOff} from './EyeOff'
@@ -107,6 +109,7 @@ import {YoroiWallet} from './YoroiWallet'
 
 export const Icon = {
   Ada,
+  Exchange,
   Analytics,
   Assets,
   Bio,
@@ -212,4 +215,5 @@ export const Icon = {
   Share,
   Governance,
   ArrowRight,
+  Close,
 }

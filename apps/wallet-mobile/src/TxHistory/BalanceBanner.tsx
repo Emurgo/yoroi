@@ -63,9 +63,7 @@ const Balance = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
 const Row = ({children}: {children: React.ReactNode}) => <View style={styles.centered}>{children}</View>
 
 const styles = StyleSheet.create({
-  banner: {
-    backgroundColor: COLORS.BACKGROUND_GRAY,
-  },
+  banner: {},
   walletIcon: {
     height: 40,
     width: 40,
