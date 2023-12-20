@@ -52,7 +52,6 @@ import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../ch
 import {signRawTransaction} from '../common/signatureUtils'
 import {
   API_ROOT,
-  API_ROOT_NEW,
   HISTORY_REFRESH_TIME,
   MAX_GENERATED_UNUSED,
   PRIMARY_TOKEN,
@@ -129,11 +128,9 @@ const networkId = NETWORK_REGISTRY.HASKELL_SHELLEY
 const implementationId = WALLET_IMPLEMENTATION_REGISTRY.HASKELL_BYRON
 
 const appApi = AppApi.appApiMaker({baseUrl: API_ROOT})
-const cardanoApi = CardanoApi.cardanoApiMaker({baseUrl: API_ROOT_NEW})
 
 export class ByronWallet implements YoroiWallet {
   readonly api: App.Api = appApi
-  readonly cardanoApi: Api.Cardano.Actions = cardanoApi
   readonly primaryToken: DefaultAsset
   readonly primaryTokenInfo: Balance.TokenInfo
   readonly id: string
@@ -158,6 +155,7 @@ export class ByronWallet implements YoroiWallet {
   private readonly transactionManager: TransactionManager
   private readonly memosManager: MemosManager
   private _collateralId = ''
+  private readonly cardanoApi: Api.Cardano.Actions
 
   // =================== create =================== //
 
@@ -282,6 +280,14 @@ export class ByronWallet implements YoroiWallet {
     const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl})
     const transactionManager = await TransactionManager.create(storage.join('txs/'))
     const memosManager = await makeMemosManager(storage.join('memos/'))
+    const cardanoApi = CardanoApi.cardanoApiMaker({
+      network:
+        networkId === NETWORK_REGISTRY.HASKELL_SHELLEY
+          ? 'mainnet'
+          : networkId === NETWORK_REGISTRY.SANCHONET
+          ? 'sanchonet'
+          : 'preprod',
+    })
 
     const wallet = new ByronWallet({
       storage,
@@ -299,6 +305,7 @@ export class ByronWallet implements YoroiWallet {
       lastGeneratedAddressIndex,
       transactionManager,
       memosManager,
+      cardanoApi,
     })
 
     await wallet.discoverAddresses()
@@ -327,6 +334,7 @@ export class ByronWallet implements YoroiWallet {
     lastGeneratedAddressIndex,
     transactionManager,
     memosManager,
+    cardanoApi,
   }: {
     storage: App.Storage
     networkId: NetworkId
@@ -343,6 +351,7 @@ export class ByronWallet implements YoroiWallet {
     lastGeneratedAddressIndex: number
     transactionManager: TransactionManager
     memosManager: MemosManager
+    cardanoApi: Api.Cardano.Actions
   }) {
     this.id = id
     this.storage = storage
@@ -381,6 +390,7 @@ export class ByronWallet implements YoroiWallet {
           NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
           NUMBERS.STAKING_KEY_INDEX,
         ]
+    this.cardanoApi = cardanoApi
   }
 
   timeout: NodeJS.Timeout | null = null

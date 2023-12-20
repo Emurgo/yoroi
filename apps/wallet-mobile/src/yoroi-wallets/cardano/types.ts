@@ -99,9 +99,6 @@ export type YoroiWallet = {
   // API
   api: App.Api
 
-  // Cardano API
-  cardanoApi: Api.Cardano.Actions
-
   signRawTx(txHex: string, pKeys: PrivateKey[]): Promise<Uint8Array | undefined>
 
   // Sending

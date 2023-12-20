@@ -7,12 +7,10 @@ export * from '../common'
 
 export const NETWORK_ID = 300
 export const API_ROOT = 'https://preprod-backend.yoroiwallet.com/api'
-export const API_ROOT_NEW = 'https://yoroi-backend-zero-preprod.emurgornd.com'
 export const TOKEN_INFO_SERVICE = 'https://stage-cdn.yoroiwallet.com'
 
 export const BACKEND = {
   API_ROOT,
-  API_ROOT_NEW,
   NFT_STORAGE_URL: 'https://validated-nft-images.s3.amazonaws.com',
   TOKEN_INFO_SERVICE,
   FETCH_UTXOS_MAX_ADDRESSES: 50,

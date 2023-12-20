@@ -32,7 +32,7 @@ import type {
   YoroiEntry,
   YoroiNftModerationStatus,
 } from '../../types'
-import {StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
+import {NETWORK_REGISTRY, StakingInfo, YoroiSignedTx, YoroiUnsignedTx} from '../../types'
 import {asQuantity, Quantities} from '../../utils'
 import {validatePassword} from '../../utils/validators'
 import {WalletMeta} from '../../walletManager'
@@ -101,7 +101,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
   const {
     ACCOUNT_INDEX,
     API_ROOT,
-    API_ROOT_NEW,
     BACKEND,
     MINIMUM_UTXO_VAL,
     BIP44_DERIVATION_LEVELS,
@@ -156,11 +155,9 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
   }
 
   const appApi = AppApi.appApiMaker({baseUrl: API_ROOT})
-  const cardanoApi = CardanoApi.cardanoApiMaker({baseUrl: API_ROOT_NEW})
 
   return class ShelleyWallet implements YoroiWallet {
     readonly api: App.Api = appApi
-    readonly cardanoApi: Api.Cardano.Actions = cardanoApi
     readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
     readonly primaryTokenInfo: Balance.TokenInfo = PRIMARY_TOKEN_INFO
     readonly walletImplementationId = WALLET_IMPLEMENTATION_ID
@@ -184,6 +181,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     private readonly transactionManager: TransactionManager
     private readonly memosManager: MemosManager
     private _collateralId = ''
+    private readonly cardanoApi: Api.Cardano.Actions
 
     // =================== create =================== //
 
@@ -292,6 +290,14 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl: API_ROOT})
       const transactionManager = await TransactionManager.create(storage.join('txs/'))
       const memosManager = await makeMemosManager(storage.join('memos/'))
+      const cardanoApi = CardanoApi.cardanoApiMaker({
+        network:
+          NETWORK_ID === NETWORK_REGISTRY.HASKELL_SHELLEY
+            ? 'mainnet'
+            : NETWORK_ID === NETWORK_REGISTRY.SANCHONET
+            ? 'sanchonet'
+            : 'preprod',
+      })
 
       const wallet = new ShelleyWallet({
         storage,
@@ -307,6 +313,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
         lastGeneratedAddressIndex,
         transactionManager,
         memosManager,
+        cardanoApi,
       })
 
       await wallet.discoverAddresses()
@@ -333,6 +340,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       lastGeneratedAddressIndex,
       transactionManager,
       memosManager,
+      cardanoApi,
     }: {
       storage: App.Storage
       id: string
@@ -347,6 +355,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       lastGeneratedAddressIndex: number
       transactionManager: TransactionManager
       memosManager: MemosManager
+      cardanoApi: Api.Cardano.Actions
     }) {
       this.id = id
       this.storage = storage
@@ -370,6 +379,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       this.isInitialized = true
       this.isEasyConfirmationEnabled = isEasyConfirmationEnabled
       this.state = {lastGeneratedAddressIndex}
+      this.cardanoApi = cardanoApi
     }
 
     timeout: NodeJS.Timeout | null = null

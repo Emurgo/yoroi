@@ -3,11 +3,11 @@ import {fetcher} from '@yoroi/common'
 
 describe('cardanoApiMaker', () => {
   it('success', async () => {
-    const cardanoApi = cardanoApiMaker({baseUrl: 'https://localhost'})
+    const cardanoApi = cardanoApiMaker({network: 'mainnet'})
     expect(cardanoApi).toBeDefined()
 
     const cardanoApiWithFetcher = cardanoApiMaker({
-      baseUrl: 'https://localhost',
+      network: 'mainnet',
       request: fetcher,
     })
     expect(cardanoApiWithFetcher).toBeDefined()

@@ -39,11 +39,9 @@ export const BASE_CONFIG = {
 
 export const IS_MAINNET = true
 export const API_ROOT = 'https://api.yoroiwallet.com/api'
-export const API_ROOT_NEW = 'https://yoroi-backend-zero-mainnet.emurgornd.com'
 export const TOKEN_INFO_SERVICE = 'https://cdn.yoroiwallet.com'
 export const BACKEND = {
   API_ROOT,
-  API_ROOT_NEW,
   NFT_STORAGE_URL: 'https://fibo-validated-nft-images.s3.amazonaws.com',
   TOKEN_INFO_SERVICE,
   FETCH_UTXOS_MAX_ADDRESSES: 50,

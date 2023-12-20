@@ -49,7 +49,6 @@ const walletMeta: WalletMeta = {
 const wallet: YoroiWallet = {
   id: 'wallet-id',
   api: AppApi.mockAppApi,
-  cardanoApi: CardanoApi.mockCardanoApi,
   primaryToken: PRIMARY_TOKEN,
   primaryTokenInfo: PRIMARY_TOKEN_INFO,
   walletImplementationId: 'haskell-shelley',

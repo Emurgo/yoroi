@@ -7,8 +7,6 @@ export * from '../common'
 
 export const NETWORK_ID = 450
 export const API_ROOT = 'https://sanchonet-backend.yoroiwallet.com/api'
-
-export const API_ROOT_NEW = 'https://yoroi-backend-zero-mainnet.emurgornd.com'
 export const TOKEN_INFO_SERVICE = 'https://stage-cdn.yoroiwallet.com'
 
 export const BACKEND = {
