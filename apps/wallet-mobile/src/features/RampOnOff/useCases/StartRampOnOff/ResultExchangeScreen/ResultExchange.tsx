@@ -1,14 +1,14 @@
-import {RouteProp, useRoute} from '@react-navigation/native'
 import * as React from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import image from '../../../../../assets/img/banxa.png'
 import {Button, Icon, Spacer, Text, useModal} from '../../../../../components'
+import {useUnsafeParams} from '../../../../../navigation'
 import {useTheme} from '../../../../../theme'
 import {Theme} from '../../../../../theme/types'
 import {useHideBottomTabBar} from '../../../../../yoroi-wallets/hooks'
 import DescribeAction from '../../../common/DescribeAction'
-import {useNavigateTo} from '../../../common/navigation'
+import {RampOnOffInitRoutes, useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import WalletAssetImage from '../../../common/WalletAssetImage'
 import ContentResult from './ContentResult'
@@ -25,12 +25,9 @@ const ResultExchangeScreen = () => {
   useHideBottomTabBar()
 
   const navigateTo = useNavigateTo()
-  const route = useRoute<RouteProp<{params: ParamsResult}>>()
-
   const {theme} = useTheme()
-
   const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
-  const params = route.params
+  const params = useUnsafeParams<RampOnOffInitRoutes['rampOnOff']>()
   const {coin, coinAmount, fiat, fiatAmount} = params ?? {}
 
   const {openModal} = useModal()

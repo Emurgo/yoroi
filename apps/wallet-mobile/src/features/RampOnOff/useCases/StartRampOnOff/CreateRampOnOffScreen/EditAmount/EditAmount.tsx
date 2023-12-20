@@ -9,7 +9,8 @@ import {useStrings} from '../../../../common/strings'
 const EditAmount = () => {
   const wallet = useSelectedWallet()
 
-  const balance = useBalance({wallet, tokenId: ''})
+  const tokenId = wallet.primaryTokenInfo.id
+  const balance = useBalance({wallet, tokenId})
   const strings = useStrings()
 
   const {
@@ -27,7 +28,7 @@ const EditAmount = () => {
       inputRef={amountInputRef}
       touched={isAmountTouched}
       wallet={wallet}
-      amount={{tokenId: '', quantity: balance}}
+      amount={{tokenId, quantity: balance}}
     />
   )
 }

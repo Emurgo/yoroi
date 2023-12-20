@@ -1,10 +1,11 @@
+import {banxaSupportUrl} from '@yoroi/banxa'
 import React from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Spacer, Text} from '../../../components'
 import {useStrings} from './strings'
 
-const BANXA_SUPPORT_URL = 'https://support.banxa.com/en/support/home'
+const BANXA_SUPPORT_URL = banxaSupportUrl
 const YOROI_SUPPORT_URL = 'https://yoroi-wallet.com/#/support'
 
 const DescribeAction = () => {

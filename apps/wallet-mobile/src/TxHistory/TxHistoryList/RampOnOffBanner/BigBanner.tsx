@@ -1,14 +1,14 @@
 import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
-import {Dimensions, Image, StyleSheet, Text, View} from 'react-native'
+import {Dimensions, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import image from '../../../assets/img/banner-buy-ada.png'
 import {Button, Spacer} from '../../../components'
 import {TxHistoryRouteNavigation} from '../../../navigation'
 import {useTheme} from '../../../theme'
 import {Theme} from '../../../theme/types'
 import {useStrings} from '../TxHistoryList'
+import {IllustrationBannerBuyADA} from './Common/IllustrationBannerBuyADA'
 
 const DIMENSIONS = Dimensions.get('window')
 
@@ -36,7 +36,7 @@ const BigBanner = () => {
         colors={theme.color.gradients['green']}
       >
         <View>
-          <Image style={[styles.banner, {width: bannerWidth, height: bannerHeight}]} source={image} />
+          <IllustrationBannerBuyADA width={bannerWidth} height={bannerHeight} />
         </View>
 
         <Spacer />
@@ -80,9 +80,6 @@ const getStyles = (props: {theme: Theme}) => {
     },
     spaceButtonText: {
       padding: 0,
-    },
-    banner: {
-      resizeMode: 'contain',
     },
     label: {
       fontSize: 20,
