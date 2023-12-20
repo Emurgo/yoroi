@@ -1,6 +1,6 @@
 import {CardanoTypes} from '../types'
 import {GovernanceApi} from './api'
-import {parseDrepId} from './helpers'
+import {convertHexKeyHashToBech32Format, parseDrepId} from './helpers'
 import {StakingKeyState} from './types'
 import {App} from '@yoroi/types'
 
@@ -53,6 +53,7 @@ export type GovernanceManager = {
   getLatestGovernanceAction: () => Promise<GovernanceAction | null>
 
   getStakingKeyState: (stakeKeyHash: string) => Promise<StakingKeyState>
+  convertHexKeyHashToBech32Format: (hexKeyHash: string) => Promise<string>
 }
 
 export const governanceManagerMaker = (config: Config): GovernanceManager => {
@@ -61,6 +62,13 @@ export const governanceManagerMaker = (config: Config): GovernanceManager => {
 
 class Manager implements GovernanceManager {
   constructor(private config: Config) {}
+
+  async convertHexKeyHashToBech32Format(hexKeyHash: string): Promise<string> {
+    return await convertHexKeyHashToBech32Format(
+      hexKeyHash,
+      this.config.cardano,
+    )
+  }
 
   async getStakingKeyState(stakeKeyHash: string) {
     const {api} = this.config
