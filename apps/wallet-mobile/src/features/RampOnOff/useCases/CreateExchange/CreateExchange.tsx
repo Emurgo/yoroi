@@ -4,30 +4,31 @@ import * as React from 'react'
 import {KeyboardAvoidingView, Linking, Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../../../src/legacy/config'
-import env from '../../../../../../src/legacy/env'
-import {useSelectedWallet} from '../../../../../../src/SelectedWallet'
-import {Theme} from '../../../../../../src/theme/types'
-import {Button} from '../../../../../components'
-import {useTheme} from '../../../../../theme'
-import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
-import {useNavigateTo} from '../../../common/navigation'
-import {useRampOnOff} from '../../../common/RampOnOffProvider'
-import {useStrings} from '../../../common/strings'
-import Disclaimer from './Disclaimer'
-import EditAmount from './EditAmount/EditAmount'
-import ProviderFee from './ProviderFee/ProviderFee'
-import ProviderTransaction from './ProviderTransaction/ProviderTransaction'
-import {TopActions} from './ShowActions/TopActions'
+import {Button} from '../../../../components'
+import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../legacy/config'
+import env from '../../../../legacy/env'
+import {useSelectedWallet} from '../../../../SelectedWallet'
+import {useTheme} from '../../../../theme'
+import {Theme} from '../../../../theme/types'
+import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
+import {Quantities} from '../../../../yoroi-wallets/utils'
+import {useNavigateTo} from '../../common/navigation'
+import {useRampOnOff} from '../../common/RampOnOffProvider'
+import {useStrings} from '../../common/strings'
+import {EditAmount} from './EditAmount/EditAmount'
+import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
+import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
+import {ShowProviderFee} from './ShowProviderFee/ShowProviderFee'
+import {ShowProviderInfo} from './ShowProviderInfo/ShowProviderInfo'
 
 const BOTTOM_ACTION_SECTION = 180
 
-const CreateExchange = () => {
+export const CreateExchange = () => {
+  const strings = useStrings()
   const [contentHeight, setContentHeight] = React.useState(0)
 
   const navigateTo = useNavigateTo()
-  const {actionType, amount, canExchange} = useRampOnOff()
+  const {orderType, amount, canExchange} = useRampOnOff()
 
   const wallet = useSelectedWallet()
   const amountTokenInfo = useTokenInfo({wallet, tokenId: ''})
@@ -35,16 +36,13 @@ const CreateExchange = () => {
   const {height: deviceHeight} = useWindowDimensions()
 
   const {theme} = useTheme()
-
   const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
-
-  const strings = useStrings()
 
   const handleExchange = () => {
     // banxa doesn't support testnet for the sandbox it needs a mainnet address
     const sandboxWallet = env.getString('BANXA_TEST_WALLET')
     const returnUrl = `${SCHEME_URL}${RAMP_ON_OFF_PATH}`
-    const isMainnet = wallet.networkId !== 300
+    const isMainnet = wallet.networkId === 1
     const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
     const moduleOptions = {isProduction: isMainnet, partner: 'yoroi'} as const
 
@@ -53,7 +51,7 @@ const CreateExchange = () => {
     const orderAmount = +Quantities.denominated(quantity, denomination)
 
     const urlOptions = {
-      orderType: actionType,
+      orderType: orderType,
       fiatType: 'USD',
       coinType: 'ADA',
       coinAmount: orderAmount ?? 0,
@@ -83,15 +81,15 @@ const CreateExchange = () => {
               setContentHeight(height + BOTTOM_ACTION_SECTION)
             }}
           >
-            <TopActions />
+            <SelectBuyOrSell />
 
             <EditAmount />
 
-            <ProviderTransaction />
+            <ShowProviderInfo />
 
-            <ProviderFee />
+            <ShowProviderFee />
 
-            <Disclaimer />
+            <ShowDisclaimer />
           </View>
         </ScrollView>
 
@@ -115,8 +113,6 @@ const CreateExchange = () => {
     </View>
   )
 }
-
-export default CreateExchange
 
 const getStyles = (props: {theme: Theme}) => {
   const {theme} = props

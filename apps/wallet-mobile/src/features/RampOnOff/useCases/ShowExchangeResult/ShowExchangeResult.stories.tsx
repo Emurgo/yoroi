@@ -3,27 +3,27 @@ import {storiesOf} from '@storybook/react-native'
 import {produce} from 'immer'
 import React from 'react'
 
-import {ModalProvider} from '../../../../../components'
-import {SelectedWalletProvider} from '../../../../../SelectedWallet'
-import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks'
-import {mockExchangeStateDefault} from '../../../common/mocks'
-import {RampOnOffInitRoutes} from '../../../common/navigation'
-import {RampOnOffProvider} from '../../../common/RampOnOffProvider'
-import ResultExchangeScreen from './ResultExchange'
+import {ModalProvider} from '../../../../components'
+import {SelectedWalletProvider} from '../../../../SelectedWallet'
+import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
+import {mockExchangeStateDefault} from '../../common/mocks'
+import {RampOnOffInitRoutes} from '../../common/navigation'
+import {RampOnOffProvider} from '../../common/RampOnOffProvider'
+import {ShowExchangeResult} from './ShowExchangeResult'
 
-storiesOf('RampOnOff Result', module) //
-  .add('Initial', () => <Init />)
-  .add('With Param', () => <WithParams />)
+storiesOf('RampOnOff ShowExchangeResult', module) //
+  .add('no params', () => <Init />)
+  .add('with params', () => <WithParams />)
 
 const Init = () => {
   const initialState = produce(mockExchangeStateDefault, (draft) => {
-    draft.actionType = 'buy'
+    draft.orderType = 'buy'
   })
   return (
     <SelectedWalletProvider wallet={{...walletMocks.wallet}}>
       <ModalProvider>
         <RampOnOffProvider initialState={initialState}>
-          <ResultExchangeScreen />
+          <ShowExchangeResult />
         </RampOnOffProvider>
       </ModalProvider>
     </SelectedWalletProvider>
@@ -38,14 +38,14 @@ const WithParams = () => {
     fiatAmount: 199,
   }
   const initialState = produce(mockExchangeStateDefault, (draft) => {
-    draft.actionType = 'buy'
+    draft.orderType = 'buy'
   })
   return (
     <NavigationRouteContext.Provider value={{key: 'key', name: 'name', params}}>
       <SelectedWalletProvider wallet={{...walletMocks.wallet}}>
         <ModalProvider>
           <RampOnOffProvider initialState={initialState}>
-            <ResultExchangeScreen />
+            <ShowExchangeResult />
           </RampOnOffProvider>
         </ModalProvider>
       </SelectedWalletProvider>

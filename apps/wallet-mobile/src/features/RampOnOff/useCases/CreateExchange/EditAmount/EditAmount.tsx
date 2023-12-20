@@ -1,12 +1,12 @@
 import * as React from 'react'
 
-import {useSelectedWallet} from '../../../../../../SelectedWallet'
-import {useBalance} from '../../../../../../yoroi-wallets/hooks'
-import {AmountCard} from '../../../../common/AmountCard/AmountCard'
-import {useRampOnOff} from '../../../../common/RampOnOffProvider'
-import {useStrings} from '../../../../common/strings'
+import {useSelectedWallet} from '../../../../../SelectedWallet'
+import {useBalance} from '../../../../../yoroi-wallets/hooks'
+import {AmountCard} from '../../../common/AmountCard/AmountCard'
+import {useRampOnOff} from '../../../common/RampOnOffProvider'
+import {useStrings} from '../../../common/strings'
 
-const EditAmount = () => {
+export const EditAmount = () => {
   const wallet = useSelectedWallet()
 
   const tokenId = wallet.primaryTokenInfo.id
@@ -32,5 +32,3 @@ const EditAmount = () => {
     />
   )
 }
-
-export default EditAmount

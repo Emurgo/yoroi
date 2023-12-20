@@ -1,17 +1,17 @@
 import * as React from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 
-import image from '../../../../../assets/img/banxa.png'
-import {Button, Icon, Spacer, Text, useModal} from '../../../../../components'
-import {useUnsafeParams} from '../../../../../navigation'
-import {useTheme} from '../../../../../theme'
-import {Theme} from '../../../../../theme/types'
-import {useHideBottomTabBar} from '../../../../../yoroi-wallets/hooks'
-import DescribeAction from '../../../common/DescribeAction'
-import {RampOnOffInitRoutes, useNavigateTo} from '../../../common/navigation'
-import {useStrings} from '../../../common/strings'
-import WalletAssetImage from '../../../common/WalletAssetImage'
-import ContentResult from './ContentResult'
+import banxaLogo from '../../../../assets/img/banxa.png'
+import {Button, Icon, Spacer, Text, useModal} from '../../../../components'
+import {useUnsafeParams} from '../../../../navigation'
+import {useTheme} from '../../../../theme'
+import {Theme} from '../../../../theme/types'
+import {useHideBottomTabBar} from '../../../../yoroi-wallets/hooks'
+import {DescribeAction} from '../../common/DescribeAction/DescribeAction'
+import {RampOnOffInitRoutes, useNavigateTo} from '../../common/navigation'
+import {useStrings} from '../../common/strings'
+import {WalletAssetImage} from '../../illustrations/WalletAssetImage'
+import {ContentResult} from './ContentResult/ContentResult'
 
 export type ParamsResult = {
   coin: string
@@ -20,7 +20,7 @@ export type ParamsResult = {
   fiatAmount: number
 }
 
-const ResultExchangeScreen = () => {
+export const ShowExchangeResult = () => {
   const strings = useStrings()
   useHideBottomTabBar()
 
@@ -37,7 +37,7 @@ const ResultExchangeScreen = () => {
   }
 
   const handlePressDescribe = () => {
-    openModal(strings.buySellADATransaction, <DescribeAction />)
+    openModal(strings.buySellCrypto, <DescribeAction />)
   }
 
   return (
@@ -59,7 +59,7 @@ const ResultExchangeScreen = () => {
 
         <Spacer height={16} />
 
-        <ContentResult title={strings.ADAmountYouGet}>
+        <ContentResult title={strings.cryptoAmountYouGet}>
           <Text style={styles.contentValueText}>{`${coinAmount ?? 0} ${coin ?? ''}`}</Text>
         </ContentResult>
 
@@ -73,7 +73,7 @@ const ResultExchangeScreen = () => {
 
         <ContentResult title={strings.provider}>
           <View style={styles.boxProvider}>
-            <Image style={styles.banxaLogo} source={image} />
+            <Image style={styles.banxaLogo} source={banxaLogo} />
 
             <Text style={styles.contentValueText}>{strings.banxa}</Text>
           </View>
@@ -86,8 +86,6 @@ const ResultExchangeScreen = () => {
     </View>
   )
 }
-
-export default ResultExchangeScreen
 
 const getStyles = (props: {theme: Theme}) => {
   const {theme} = props
