@@ -12,6 +12,18 @@ export const mockMetricsManager = (): MetricsManager => {
 
   const init = () => Promise.resolve()
   const track = {
+    allWalletsPageViewed: e,
+    assetsPageViewed: e,
+    claimAdaPageViewed: e,
+    connectorPageViewed: e,
+    menuPageViewed: e,
+    receivePageViewed: e,
+    settingsPageViewed: e,
+    stakingCenterPageViewed: e,
+    transactionsPageViewed: e,
+    votingPageViewed: e,
+    walletPageViewed: e,
+
     nftGalleryDetailsTab: e,
     nftGalleryPageViewed: e,
     nftGallerySearchActivated: e,
