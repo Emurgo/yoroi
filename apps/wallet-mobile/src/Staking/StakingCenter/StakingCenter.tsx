@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
@@ -13,6 +13,7 @@ import {useLanguage} from '../../i18n'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {isNightly} from '../../legacy/config'
 import {Logger} from '../../legacy/logging'
+import {useMetrics} from '../../metrics/metricsManager'
 import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {getNetworkConfigById, NETWORKS} from '../../yoroi-wallets/cardano/networks'
@@ -25,6 +26,13 @@ export const StakingCenter = () => {
 
   const {languageCode} = useLanguage()
   const wallet = useSelectedWallet()
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.stakingCenterPageViewed()
+    }, [track]),
+  )
 
   const [selectedPoolId, setSelectedPoolId] = React.useState<string>()
 
