@@ -167,7 +167,7 @@ export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tok
       info={
         <HiddenInfo
           txId={id}
-          total={`${buyQuantity} ${buyLabel}`}
+          total={`${sellQuantity} ${sellLabel}`}
           onTxPress={() => openInExplorer(id, wallet.networkId)}
           provider={metadata.provider}
         />
@@ -189,7 +189,7 @@ export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tok
         tokenPrice={marketPrice}
         sellLabel={sellLabel}
         buyLabel={buyLabel}
-        tokenAmount={`${sellQuantity} ${sellLabel}`}
+        tokenAmount={`${buyQuantity} ${buyLabel}`}
         txTimeCreated={intl.formatDate(new Date(order.date), {
           dateStyle: 'short',
           timeStyle: 'medium',

@@ -3,11 +3,11 @@ import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, us
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {Alert, KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
+import {Alert, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import Config from 'react-native-config'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, Spacer, useModal} from '../../../../../components'
+import {Button, KeyboardAvoidingView, Spacer, useModal} from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../navigation'
 import {useDisableSearchOnBar} from '../../../../../Search/SearchContext'
@@ -16,7 +16,7 @@ import {COLORS} from '../../../../../theme'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {isMainnetNetworkId, Quantities} from '../../../../../yoroi-wallets/utils'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
@@ -123,7 +123,7 @@ export const CreateOrder = () => {
         datum,
       )
 
-      const isMainnet = wallet.networkId !== 300
+      const isMainnet = isMainnetNetworkId(wallet.networkId)
       const frontendFee = selectedPoolCalculation.cost.frontendFeeInfo.fee
       const frontendFeeDepositAddress = isMainnet
         ? Config['FRONTEND_FEE_ADDRESS_MAINNET']
@@ -250,11 +250,7 @@ export const CreateOrder = () => {
 
   return (
     <View style={styles.root}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={120}
-      >
+      <KeyboardAvoidingView style={styles.flex} keyboardVerticalOffset={120}>
         <ScrollView style={styles.scroll}>
           <View
             style={styles.container}

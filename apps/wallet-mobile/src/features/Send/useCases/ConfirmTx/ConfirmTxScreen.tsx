@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {useFocusEffect} from '@react-navigation/native'
 import React, {useEffect, useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
+import {KeyboardAvoidingView, KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
 import {assetsToSendProperties} from '../../../../metrics/helpers'
@@ -48,10 +49,11 @@ export const ConfirmTxScreen = () => {
     }
   }, [])
 
-  useEffect(() => {
-    track.sendSummaryPageViewed(assetsToSendProperties({tokens, amounts}))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  useFocusEffect(
+    React.useCallback(() => {
+      track.sendSummaryPageViewed(assetsToSendProperties({tokens, amounts}))
+    }, [amounts, tokens, track]),
+  )
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
     track.sendSummarySubmitted(assetsToSendProperties({tokens, amounts}))
@@ -73,36 +75,36 @@ export const ConfirmTxScreen = () => {
 
   return (
     <View style={styles.root}>
-      <CurrentBalance />
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <CurrentBalance />
 
-      <View style={{paddingTop: 16, paddingHorizontal: 16}}>
-        <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
+        <View style={{paddingTop: 16, paddingHorizontal: 16}}>
+          <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        <Spacer height={4} />
+          <Spacer height={4} />
 
-        <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
+          <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        <Spacer height={16} />
+          <Spacer height={16} />
 
-        {targets.map((target, index) => (
-          <ReceiverInfo key={index} address={target.entry.address} receiver={target.receiver} />
-        ))}
-      </View>
+          {targets.map((target, index) => (
+            <ReceiverInfo key={`${target.receiver.resolve}:${index}`} target={target} />
+          ))}
+        </View>
 
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{padding: 16}}
-        persistentScrollbar
-        ref={scrollViewRef}
-      >
-        <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={{padding: 16}}
+          persistentScrollbar
+          ref={scrollViewRef}
+        >
+          <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        <Spacer height={8} />
+          <Spacer height={8} />
 
-        <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
+          <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
-          <>
+          {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
             <ValidatedTextInput
               secureTextEntry
               value={password}
@@ -110,24 +112,24 @@ export const ConfirmTxScreen = () => {
               onChangeText={setPassword}
               testID="spendingPasswordInput"
             />
-          </>
-        )}
+          )}
 
-        <KeyboardSpacer />
-      </ScrollView>
+          <KeyboardSpacer />
+        </ScrollView>
 
-      <Actions>
-        <ConfirmTx
-          onSuccess={onSuccess}
-          onError={onError}
-          yoroiUnsignedTx={yoroiUnsignedTx}
-          useUSB={useUSB}
-          setUseUSB={setUseUSB}
-          isProvidingPassword
-          providedPassword={password}
-          chooseTransportOnConfirmation
-        />
-      </Actions>
+        <Actions>
+          <ConfirmTx
+            onSuccess={onSuccess}
+            onError={onError}
+            yoroiUnsignedTx={yoroiUnsignedTx}
+            useUSB={useUSB}
+            setUseUSB={setUseUSB}
+            isProvidingPassword
+            providedPassword={password}
+            chooseTransportOnConfirmation
+          />
+        </Actions>
+      </KeyboardAvoidingView>
     </View>
   )
 }

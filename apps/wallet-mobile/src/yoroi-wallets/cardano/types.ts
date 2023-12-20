@@ -11,7 +11,7 @@ import {
   TxMetadata as TxMetadataType,
   UnsignedTx as UnsignedTxType,
 } from '@emurgo/yoroi-lib'
-import {App, Balance} from '@yoroi/types'
+import {Api, App, Balance} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 
 import {HWDeviceInfo} from '../hw'
@@ -130,6 +130,7 @@ export type YoroiWallet = {
   fetchAccountState(): Promise<AccountStates>
   fetchPoolInfo(request: StakePoolInfoRequest): Promise<StakePoolInfosAndHistories>
   getStakingKey: () => Promise<CardanoTypes.PublicKey>
+  createUnsignedGovernanceTx(votingCertificates: CardanoTypes.Certificate[]): Promise<YoroiUnsignedTx>
 
   // Password
   encryptedStorage: WalletEncryptedStorage
@@ -185,6 +186,8 @@ export type YoroiWallet = {
 
   // CIP36 Payment Address
   getFirstPaymentAddress(): Promise<BaseAddress>
+
+  getProtocolParams(): Promise<Api.Cardano.ProtocolParamsResult>
 }
 
 export const isYoroiWallet = (wallet: unknown): wallet is YoroiWallet => {

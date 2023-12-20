@@ -1,8 +1,8 @@
+import {ApiTokenRegistryEntry} from '@yoroi/types'
 import {
   getOffChainMetadata,
   isTokenRegistryEntry,
 } from './token-offchain-metadata'
-import {ApiTokenRegistryEntry} from './types'
 
 describe('isTokenRegistryEntry', () => {
   it('should return true for a valid ApiTokenRegistryEntry', () => {

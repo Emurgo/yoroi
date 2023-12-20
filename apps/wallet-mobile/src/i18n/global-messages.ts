@@ -75,6 +75,10 @@ export const confirmationMessages = {
 
 // common strings used when displaying tx data
 export const txLabels = defineMessages({
+  incorrectSpendingPassword: {
+    id: 'global.txLabels.incorrectSpendingPassword',
+    defaultMessage: '!!!Incorrect spending password',
+  },
   amount: {
     id: 'global.txLabels.amount',
     defaultMessage: '!!!Amount',
@@ -115,6 +119,10 @@ export const txLabels = defineMessages({
     id: 'global.txLabels.signingTx',
     defaultMessage: '!!!Signing transaction',
   },
+  sign: {
+    id: 'global.sign',
+    defaultMessage: '!!!Sign',
+  },
   to: {
     id: 'components.walletinit.restorewallet.upgradeconfirmmodal.toLabel',
     defaultMessage: '!!!To',
@@ -130,6 +138,14 @@ export const txLabels = defineMessages({
   withdrawals: {
     id: 'global.txLabels.withdrawals',
     defaultMessage: '!!!Withdrawals',
+  },
+  enterSpendingPassword: {
+    id: 'global.enterSpendingPassword',
+    defaultMessage: '!!!Enter spending password to sign this transaction',
+  },
+  spendingPassword: {
+    id: 'global.spendingPassword',
+    defaultMessage: '!!!Spending Password',
   },
 })
 
@@ -474,6 +490,65 @@ export const assetMessages = defineMessages({
   },
 })
 
+export const apiErrors = defineMessages({
+  title: {
+    id: 'api.error.title',
+    defaultMessage: '!!!API error title',
+  },
+  badRequest: {
+    id: 'api.error.badRequest',
+    defaultMessage: '!!!Bad request',
+  },
+  unauthorized: {
+    id: 'api.error.unauthorized',
+    defaultMessage: '!!!Unauthorized',
+  },
+  forbidden: {
+    id: 'api.error.forbidden',
+    defaultMessage: '!!!Forbidden',
+  },
+  notFound: {
+    id: 'api.error.notFound',
+    defaultMessage: '!!!Not found',
+  },
+  conflict: {
+    id: 'api.error.conflict',
+    defaultMessage: '!!!Conflict',
+  },
+  gone: {
+    id: 'api.error.gone',
+    defaultMessage: '!!!Gone',
+  },
+  tooEarly: {
+    id: 'api.error.tooEarly',
+    defaultMessage: '!!!Too early',
+  },
+  tooManyRequests: {
+    id: 'api.error.tooManyRequests',
+    defaultMessage: '!!!Too many requests',
+  },
+  serverSide: {
+    id: 'api.error.serverSide',
+    defaultMessage: '!!!Server side',
+  },
+  unknown: {
+    id: 'api.error.unknown',
+    defaultMessage: '!!!Unknown',
+  },
+  network: {
+    id: 'api.error.network',
+    defaultMessage: '!!!Network',
+  },
+  invalidState: {
+    id: 'api.error.invalidState',
+    defaultMessage: '!!!Invalid state',
+  },
+  responseMalformed: {
+    id: 'api.error.responseMalformed',
+    defaultMessage: '!!!Response malformed',
+  },
+})
+
 export const actionMessages = defineMessages({
   send: {
     id: 'global.send',
@@ -507,6 +582,10 @@ export const actionMessages = defineMessages({
   soon: {
     id: 'global.comingSoon',
     defaultMessage: '!!!Coming soon',
+  },
+  exchange: {
+    id: 'global.exchange',
+    defaultMessage: '!!!Exchange',
   },
 })
 

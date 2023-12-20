@@ -1,9 +1,9 @@
 import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 
+import {ModalError} from '../../../../components/ModalError/ModalError'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {YoroiSignedTx, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
-import {ModalError} from '../../common/ModalError/ModalError'
 import {ConfirmTxWithHW} from './ConfirmTxWithHW'
 import {ConfirmTxWithPassword} from './ConfirmTxWithPassword'
 

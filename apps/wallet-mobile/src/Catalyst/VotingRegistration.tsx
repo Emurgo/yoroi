@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import cryptoRandomString from 'crypto-random-string'
 import React, {useState} from 'react'
@@ -6,6 +6,7 @@ import {useIntl} from 'react-intl'
 
 import {Boundary} from '../components'
 import globalMessages from '../i18n/global-messages'
+import {useMetrics} from '../metrics/metricsManager'
 import {
   defaultStackNavigationOptions,
   useWalletNavigation,
@@ -25,6 +26,13 @@ export const VotingRegistration = () => {
   const pin = usePin({length: 4, type: 'numeric'})
   const [votingKeyEncrypted, setVotingKeyEncrypted] = React.useState<string | undefined>(undefined)
   const [complete, setComplete] = React.useState(false)
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.votingPageViewed()
+    }, [track]),
+  )
 
   return (
     <Stack.Navigator

@@ -109,7 +109,7 @@ export class AddressGenerator {
             await CardanoMobile.Credential.fromKeyhash(await addrKey.hash()),
             await CardanoMobile.Credential.fromKeyhash(await stakingKey.hash()),
           )
-          return (await addr.toAddress()).toBech32()
+          return (await addr.toAddress()).toBech32(undefined)
         }),
       )
     }

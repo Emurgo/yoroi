@@ -6,6 +6,7 @@ import {Dimensions, Platform, TouchableOpacity} from 'react-native'
 
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
+import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
 import {COLORS} from './theme'
 import {HWDeviceInfo} from './yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
@@ -111,6 +112,7 @@ export type WalletStackRoutes = {
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
+  governance: NavigatorScreenParams<StakingGovernanceRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
@@ -198,7 +200,9 @@ export type TxHistoryRoutes = {
   'send-edit-amount': undefined
   'send-select-token-from-list': undefined
 } & SwapTokenRoutes &
-  ScanRoutes
+  ScanRoutes &
+  ClaimRoutes &
+  RampOnOffRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 type ScanStartParams = Readonly<{
@@ -208,6 +212,13 @@ export type ScanRoutes = {
   'scan-start': ScanStartParams
   'scan-claim-confirm-summary': undefined
   'scan-show-camera-permission-denied': undefined
+}
+export type ClaimRoutes = {
+  'claim-show-success': undefined
+}
+
+export type RampOnOffRoutes = {
+  'rampOnOff-start-rampOnOff': undefined
 }
 
 export type SwapTokenRoutes = {
@@ -235,6 +246,14 @@ export type SwapTabRoutes = {
   'token-swap': undefined
   orders: undefined
 }
+
+export type RampOnOffStackRoutes = {
+  'create-ramp-on-off': undefined
+  'result-ramp-on-off': undefined
+  'app-root': undefined
+}
+
+export type RampOnOffRoutesNavigation = StackNavigationProp<RampOnOffStackRoutes>
 
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
 
@@ -410,6 +429,18 @@ export const useWalletNavigation = () => {
       })
     },
 
+    navigateToStakingDashboard: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'staking-dashboard',
+          params: {
+            screen: 'staking-dashboard-main',
+          },
+        },
+      })
+    },
+
     navigateToSettings: () => {
       navigation.navigate('app-root', {
         screen: 'settings',
@@ -466,6 +497,18 @@ export const useWalletNavigation = () => {
         screen: 'toggle-analytics-settings',
         params: {
           screen: 'settings',
+        },
+      })
+    },
+
+    navigateToGovernanceCentre: ({navigateToStakingOnSuccess = false} = {}) => {
+      navigation.navigate('app-root', {
+        screen: 'governance',
+        params: {
+          screen: 'staking-gov-home',
+          params: {
+            navigateToStakingOnSuccess,
+          },
         },
       })
     },

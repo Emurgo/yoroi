@@ -1,21 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
-import {parseBoolean, useStorage} from '@yoroi/common'
-import {App, Balance} from '@yoroi/types'
+import {parseBoolean, useMutationWithInvalidations, useStorage} from '@yoroi/common'
+import {Api, App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
-import {
-  onlineManager,
-  QueryKey,
-  useMutation,
-  UseMutationOptions,
-  useQueries,
-  useQuery,
-  useQueryClient,
-  UseQueryOptions,
-} from 'react-query'
+import {onlineManager, useMutation, UseMutationOptions, useQueries, useQuery, UseQueryOptions} from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
 import {useWalletManager} from '../../WalletManager'
@@ -630,6 +621,28 @@ export const useFrontendFees = (
   }
 }
 
+export const useProtocolParams = (
+  wallet: YoroiWallet,
+  options?: UseQueryOptions<
+    Api.Cardano.ProtocolParamsResult,
+    Error,
+    Api.Cardano.ProtocolParamsResult,
+    [string, 'protocol-params']
+  >,
+) => {
+  const query = useQuery({
+    suspense: true,
+    queryKey: [wallet.id, 'protocol-params'],
+    ...options,
+    queryFn: () => wallet.getProtocolParams(),
+  })
+
+  return {
+    ...query,
+    protocolParams: query.data,
+  }
+}
+
 export const useWalletMetas = (walletManager: WalletManager, options?: UseQueryOptions<Array<WalletMeta>, Error>) => {
   const query = useQuery({
     queryKey: ['walletMetas'],
@@ -742,7 +755,7 @@ export const useIsOnline = (
         () => true,
         () => false,
       ),
-    refetchInterval: 5000,
+    refetchInterval: 15000,
     suspense: true,
     useErrorBoundary: false,
     onSuccess: (isOnline) => {
@@ -824,25 +837,6 @@ const fetchTxStatus = async (
   return {
     status: 'WAITING',
   }
-}
-
-export const useMutationWithInvalidations = <TData = unknown, TError = unknown, TVariables = void, TContext = unknown>({
-  invalidateQueries,
-  ...options
-}: UseMutationOptions<TData, TError, TVariables, TContext> & {invalidateQueries?: Array<QueryKey>} = {}) => {
-  const queryClient = useQueryClient()
-
-  return useMutation<TData, TError, TVariables, TContext>({
-    ...options,
-    onMutate: (variables) => {
-      invalidateQueries?.forEach((key) => queryClient.cancelQueries(key))
-      return options?.onMutate?.(variables)
-    },
-    onSuccess: (data, variables, context) => {
-      invalidateQueries?.forEach((key) => queryClient.invalidateQueries(key))
-      return options?.onSuccess?.(data, variables, context)
-    },
-  })
 }
 
 export const useTipStatus = ({
@@ -959,4 +953,123 @@ export function useHideBottomTabBar() {
     navigation.getParent()?.setOptions({tabBarStyle: {display: 'none'}, tabBarVisible: false})
     return () => navigation.getParent()?.setOptions({tabBarStyle: true, tabBarVisible: undefined})
   }, [navigation])
+}
+
+const supportedTypes = [
+  'img/png', // Yeah, someone minted that
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/gif',
+  'image/webp',
+  'image/svg+xml',
+  'image/svg',
+  'image/tiff',
+]
+
+type NativeAssetImageRequest = {
+  networkId: NetworkId
+  policy: string
+  name: string
+  width: string | number
+  height: string | number
+  mediaType?: string
+  resizeMode?: 'contain' | 'cover' | 'fill' | 'inside' | 'outside'
+  kind?: 'logo' | 'metadata'
+}
+export const useNativeAssetImage = ({
+  networkId,
+  policy,
+  name,
+  width,
+  height,
+  mediaType = 'image/webp',
+  resizeMode = 'cover',
+  kind = 'metadata',
+}: NativeAssetImageRequest) => {
+  const network = networkId === 300 ? 'preprod' : 'mainnet'
+  const isMediaTypeSupported = supportedTypes.includes(mediaType.toLocaleLowerCase())
+  const query = useQuery({
+    staleTime: Infinity,
+    queryKey: ['native-asset-img', policy, name, `${width}x${height}`, resizeMode],
+    queryFn: async () => {
+      const response = await fetch(
+        `https://${network}.cardano-nativeassets-prod.emurgornd.com/${policy}/${name}?width=${width}&height=${height}&kind=${kind}&fit=${resizeMode}`,
+      )
+      if (!response.ok) {
+        throw new Error(`NativeAsset CDN response was not ok for policy=${policy} name=${name}`)
+      }
+      if (response.status === 201 || response.status === 202) {
+        throw new Error(`NativeAsset CDN still processing policy=${policy} name=${name}`)
+      }
+      return `data:image/webp;base64,${await response.text()}`
+    },
+    enabled: isMediaTypeSupported,
+  })
+
+  return {
+    ...query,
+    uri: query.data,
+  }
+}
+
+type NativeAssetInvalidationRequest = {
+  networkId: NetworkId
+  policy: string
+  name: string
+}
+export const useNativeAssetInvalidation = ({networkId, policy, name}: NativeAssetInvalidationRequest) => {
+  const network = networkId === 300 ? 'preprod' : 'mainnet'
+  const mutation = useMutationWithInvalidations({
+    invalidateQueries: [['native-asset-img', policy, name]],
+    mutationFn: async () => {
+      const response = await fetch(`https://${network}.cardano-nativeassets-prod.emurgornd.com/invalidate`, {
+        method: 'POST',
+        body: JSON.stringify({policy, name}),
+      })
+      if (!response.ok) {
+        throw new Error(`NativeAsset invalid request body for policy=${policy} name=${name}`)
+      }
+    },
+  })
+
+  return {
+    ...mutation,
+    invalidate: mutation.mutate,
+  }
+}
+
+export const useTimeAppearRampOnOffSmallBanner = (
+  options?: UseQueryOptions<number | Promise<object | null>, Error>,
+) => {
+  const storage = useStorage()
+  const query = useQuery({
+    queryKey: ['timeAppearSmallBanner'],
+    queryFn: async () => {
+      const timeAppearSmallBanner = await storage.join('rampOnOff/').getItem('timeAppearSmallBanner')
+      if (!timeAppearSmallBanner) {
+        return null
+      }
+      return timeAppearSmallBanner
+    },
+    ...options,
+  })
+
+  return query.data
+}
+
+export const useChangeTimeAppearRampOnOffSmallBanner = (options: UseMutationOptions<void, Error, number> = {}) => {
+  const storage = useStorage()
+  const mutation = useMutationWithInvalidations<void, Error, number>({
+    mutationFn: async (newTimeAppear) => {
+      return storage.join('rampOnOff/').setItem('timeAppearSmallBanner', newTimeAppear)
+    },
+    invalidateQueries: ['timeAppearSmallBanner'],
+    ...options,
+  })
+
+  return {
+    changeTimeAppear: mutation.mutate,
+    ...mutation,
+  }
 }
