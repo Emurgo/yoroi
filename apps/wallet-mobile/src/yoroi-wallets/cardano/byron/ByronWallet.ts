@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PrivateKey} from '@emurgo/cross-csl-core'
+import {signRawTransaction} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {parseSafe} from '@yoroi/common'
@@ -49,7 +50,6 @@ import * as legacyApi from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
-import {signRawTransaction} from '../common/signatureUtils'
 import {
   API_ROOT,
   HISTORY_REFRESH_TIME,
@@ -706,10 +706,6 @@ export class ByronWallet implements YoroiWallet {
 
     const containsDatum = recipients.some((recipient) => recipient.datum)
 
-    if (recipients.filter((r) => r.datum).length > 1) {
-      throw new Error('Only one datum per transaction is supported')
-    }
-
     const {
       coinsPerUtxoByte,
       keyDeposit,
@@ -1196,7 +1192,7 @@ export class ByronWallet implements YoroiWallet {
   }
 
   public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
-    return signRawTransaction(txHex, pKeys)
+    return signRawTransaction(CardanoMobile, txHex, pKeys)
   }
 
   async fetchTokenInfo(tokenId: string) {
