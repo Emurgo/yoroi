@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PrivateKey} from '@emurgo/cross-csl-core'
+import {createSignedLedgerTxFromCbor, signRawTransaction} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {parseSafe} from '@yoroi/common'
@@ -41,11 +42,7 @@ import * as legacyApi from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
-import {
-  createSignedLedgerSwapCancellationTx,
-  createSwapCancellationLedgerPayload,
-  signRawTransaction,
-} from '../common/signatureUtils'
+import {createSwapCancellationLedgerPayload} from '../common/signatureUtils'
 import * as MAINNET from '../constants/mainnet/constants'
 import * as SANCHONET from '../constants/sanchonet/constants'
 import * as TESTNET from '../constants/testnet/constants'
@@ -473,7 +470,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
     }
 
     public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
-      return signRawTransaction(txHex, pKeys)
+      return signRawTransaction(CardanoMobile, txHex, pKeys)
     }
 
     private async getRewardAddress() {
@@ -616,10 +613,6 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const recipients = await toRecipients(entries, this.primaryToken)
 
       const containsDatum = recipients.some((recipient) => recipient.datum)
-
-      if (recipients.filter((r) => r.datum).length > 1) {
-        throw new Error('Only one datum per transaction is supported')
-      }
 
       const {
         coinsPerUtxoByte,
@@ -959,7 +952,8 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
       const signedLedgerTx = await signTxWithLedger(payload, this.hwDeviceInfo, useUSB)
 
-      const bytes = await createSignedLedgerSwapCancellationTx(
+      const bytes = await createSignedLedgerTxFromCbor(
+        CardanoMobile,
         cbor,
         signedLedgerTx.witnesses,
         PURPOSE,

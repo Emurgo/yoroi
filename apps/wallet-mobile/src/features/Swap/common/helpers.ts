@@ -5,10 +5,7 @@ import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {
-  convertBech32ToHex,
-  getMuesliSwapTransactionAndSigners,
-} from '../../../yoroi-wallets/cardano/common/signatureUtils'
+import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
 
@@ -25,11 +22,10 @@ export const useCancelOrderWithHw = (
       if (!collateralUtxo.utxo) throw new Error('Collateral not found')
       const collateralUtxoCBOR = await generateCIP30UtxoCbor(collateralUtxo.utxo)
       const addressHex = await convertBech32ToHex(bech32Address)
-      const originalCbor = await cancelOrder({
+      const cbor = await cancelOrder({
         utxos: {collateral: collateralUtxoCBOR, order: utxo},
         address: addressHex,
       })
-      const {cbor} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
       await wallet.signSwapCancellationWithLedger(cbor, useUSB)
     },
   })
