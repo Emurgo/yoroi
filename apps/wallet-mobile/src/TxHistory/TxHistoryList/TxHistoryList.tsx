@@ -1,7 +1,9 @@
 import {useNavigation} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
+import {BalanceAmount} from '@yoroi/types/lib/balance/token'
+import BigNumber from 'bignumber.js'
 import _ from 'lodash'
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
 
@@ -10,10 +12,18 @@ import {features} from '../../features'
 import {actionMessages} from '../../i18n/global-messages'
 import {formatDateRelative} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {useTransactionInfos} from '../../yoroi-wallets/hooks'
+import {
+  useBalances,
+  useChangeTimeAppearRampOnOffSmallBanner,
+  useTimeAppearRampOnOffSmallBanner,
+  useTransactionInfos,
+} from '../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../yoroi-wallets/types'
+import {Amounts, Quantities} from '../../yoroi-wallets/utils'
 import {ActionsBanner} from './ActionsBanner'
-import {EmptyHistory} from './EmptyHistory'
+import BigBanner from './RampOnOffBanner/BigBanner'
+import SmallBanner from './RampOnOffBanner/SmallBanner'
+import {bannerRampOnOffMessages} from './RampOnOffBanner/strings'
 import {TxHistoryListItem} from './TxHistoryListItem'
 
 type ListProps = SectionListProps<TransactionInfo>
@@ -25,6 +35,8 @@ export const TxHistoryList = (props: Props) => {
   const strings = useStrings()
   const key = useRemountOnFocusHack()
   const wallet = useSelectedWallet()
+  const balances = useBalances(wallet)
+  const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
   const transactionsInfo = useTransactionInfos(wallet)
   const groupedTransactions = getTransactionsByDate(transactionsInfo)
 
@@ -37,11 +49,18 @@ export const TxHistoryList = (props: Props) => {
         <ActionsBanner onExport={handleExport} onSearch={handleSearch} />
       )}
 
+      <Spacer height={18} />
+
       <SectionList
         {...props}
         key={key}
-        contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 8}}
-        ListEmptyComponent={<EmptyHistory />}
+        ListHeaderComponent={<HeaderTransactionList primaryAmount={primaryAmount} />}
+        style={{}}
+        contentContainerStyle={{
+          paddingHorizontal: 18,
+          flexGrow: 1,
+          height: 'auto',
+        }}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
         ItemSeparatorComponent={() => <Spacer height={16} />}
         renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
@@ -55,6 +74,40 @@ export const TxHistoryList = (props: Props) => {
       />
     </View>
   )
+}
+
+const HeaderTransactionList = (props: {primaryAmount: BalanceAmount}) => {
+  const {primaryAmount} = props
+  const [showSmallBanner, setShowSmallBanner] = useState(false)
+  const timeAppearSmallBanner = useTimeAppearRampOnOffSmallBanner()
+  const {changeTimeAppear} = useChangeTimeAppearRampOnOffSmallBanner()
+
+  const isNeedBuyAda = new BigNumber(5000000).isGreaterThan(new BigNumber(primaryAmount.quantity))
+  const isAdaZero = Quantities.isZero(primaryAmount.quantity)
+
+  const isShowBigBanner = isAdaZero
+  const isShowSmallBanner = showSmallBanner && isNeedBuyAda
+
+  const onCloseSmallBanner = () => {
+    setShowSmallBanner(false)
+    const today = new Date().getTime()
+    const thirtyDaysInMills = 30 * 24 * 60 * 60 * 1000
+    changeTimeAppear(today + thirtyDaysInMills)
+  }
+
+  useEffect(() => {
+    if (!Number.isNaN(timeAppearSmallBanner)) {
+      const now = new Date().getTime()
+      setShowSmallBanner(now > Number(timeAppearSmallBanner))
+    } else {
+      setShowSmallBanner(true)
+    }
+  }, [timeAppearSmallBanner])
+
+  if (isShowBigBanner) return <BigBanner />
+  if (isShowSmallBanner) return <SmallBanner onClose={onCloseSmallBanner} />
+
+  return null
 }
 
 // workaround for https://emurgo.atlassian.net/browse/YOMO-199
@@ -113,10 +166,14 @@ const styles = StyleSheet.create({
   },
 })
 
-const useStrings = () => {
+export const useStrings = () => {
   const intl = useIntl()
 
   return {
     soon: intl.formatMessage(actionMessages.soon),
+    buyADA: intl.formatMessage(bannerRampOnOffMessages.buyADA),
+    getFirstAda: intl.formatMessage(bannerRampOnOffMessages.getFirstAda),
+    ourTrustedPartners: intl.formatMessage(bannerRampOnOffMessages.ourTrustedPartners),
+    needMoreAda: intl.formatMessage(bannerRampOnOffMessages.needMoreAda),
   }
 }

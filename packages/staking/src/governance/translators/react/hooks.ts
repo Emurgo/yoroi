@@ -112,3 +112,16 @@ export const useVotingCertificate = (
     createCertificate: mutation.mutate,
   }
 }
+
+export const useBech32DRepID = (
+  hexId: string,
+  options: UseQueryOptions<string, Error> = {},
+) => {
+  const {manager} = useGovernance()
+
+  return useQuery({
+    queryKey: ['governanceGetBech32DRepID', hexId],
+    queryFn: async () => await manager.convertHexKeyHashToBech32Format(hexId),
+    ...options,
+  })
+}

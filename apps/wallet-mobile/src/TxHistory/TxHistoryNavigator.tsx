@@ -13,11 +13,13 @@ import {Resolver, Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
+import {Easing} from 'react-native-reanimated'
 
 import {Boundary, Icon, Spacer} from '../components'
 import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
+import {RampOnOffScreen} from '../features/RampOnOff/RampOnOffNavigator'
 import {CodeScannerButton} from '../features/Scan/common/CodeScannerButton'
 import {ScanCodeScreen} from '../features/Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '../features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
@@ -153,6 +155,16 @@ export const TxHistoryNavigator = () => {
                       shadowOpacity: 0,
                       backgroundColor: '#fff',
                     },
+                  }}
+                />
+
+                <Stack.Screen
+                  name="rampOnOff-start-rampOnOff"
+                  component={RampOnOffScreen}
+                  options={{
+                    headerShown: false,
+                    cardStyleInterpolator: rampOnOffCardStyleInterpolator,
+                    transitionSpec: rampOnOffTransitionSpec,
                   }}
                 />
 
@@ -487,3 +499,39 @@ const sendOptions = {
     backgroundColor: '#fff',
   },
 }
+
+const rampOnOffTransitionSpec = {
+  open: {
+    animation: 'spring',
+    config: {
+      stiffness: 300,
+      damping: 25,
+      mass: 1,
+      overshootClamping: false,
+      restDisplacementThreshold: 0.01,
+      restSpeedThreshold: 2,
+    },
+  },
+  close: {
+    animation: 'timing',
+    config: {
+      easing: Easing.inOut(Easing.sin),
+      duration: 300,
+    },
+  },
+} as const
+
+const rampOnOffCardStyleInterpolator = ({current, layouts}) =>
+  ({
+    cardStyle: {
+      opacity: current.progress,
+      transform: [
+        {
+          translateY: current.progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [-layouts.screen.height, 0],
+          }),
+        },
+      ],
+    },
+  } as const)

@@ -75,6 +75,10 @@ export const confirmationMessages = {
 
 // common strings used when displaying tx data
 export const txLabels = defineMessages({
+  incorrectSpendingPassword: {
+    id: 'global.txLabels.incorrectSpendingPassword',
+    defaultMessage: '!!!Incorrect spending password',
+  },
   amount: {
     id: 'global.txLabels.amount',
     defaultMessage: '!!!Amount',
@@ -578,6 +582,10 @@ export const actionMessages = defineMessages({
   soon: {
     id: 'global.comingSoon',
     defaultMessage: '!!!Coming soon',
+  },
+  exchange: {
+    id: 'global.exchange',
+    defaultMessage: '!!!Exchange',
   },
 })
 

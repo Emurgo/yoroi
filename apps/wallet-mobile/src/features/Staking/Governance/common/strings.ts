@@ -68,7 +68,7 @@ type FormattingOptions = Record<'b' | 'textComponent', (text: ReactNode[]) => Re
 const messages = defineMessages({
   governanceCentreTitle: {
     id: 'components.governance.governanceCentreTitle',
-    defaultMessage: '!!!Governance centre',
+    defaultMessage: '!!!Governance dashboard',
   },
   confirmTxTitle: {
     id: 'components.governance.confirmTxTitle',
