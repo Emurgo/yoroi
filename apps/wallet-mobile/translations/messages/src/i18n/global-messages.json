@@ -1200,7 +1200,6 @@
     }
   },
   {
-    "id": "global.actions.dialogs.notSupportedError.message",
     "defaultMessage": "!!!This feature is not yet supported. It will be enabled in a future release.",
     "file": "src/i18n/global-messages.ts",
     "start": {
@@ -1706,11 +1705,10 @@
     "end": {
       "line": 688,
       "column": 3,
-      "index": 20784
+      "index": 20722 
     }
   },
   {
-    "id": "global.currency.ADA",
     "defaultMessage": "!!!ADA",
     "file": "src/i18n/global-messages.ts",
     "start": {
@@ -1736,11 +1734,10 @@
     "end": {
       "line": 596,
       "column": 3,
-      "index": 18521
+      "index": 18459
     }
   },
   {
-    "id": "global.currency.BTC",
     "defaultMessage": "!!!BTC",
     "file": "src/i18n/global-messages.ts",
     "start": {
@@ -1931,11 +1928,10 @@
     "end": {
       "line": 651,
       "column": 3,
-      "index": 19845
+      "index": 19783
     }
   },
   {
-    "id": "global.error.walletNameAlreadyTaken",
     "defaultMessage": "!!!You already have a wallet with this name",
     "file": "src/i18n/global-messages.ts",
     "start": {
@@ -1946,11 +1942,10 @@
     "end": {
       "line": 655,
       "column": 3,
-      "index": 20001
+      "index": 19939
     }
-  },
+  },  
   {
-    "id": "global.error.walletNameMustBeFilled",
     "defaultMessage": "!!!Must be filled",
     "file": "src/i18n/global-messages.ts",
     "start": {
@@ -2011,7 +2006,6 @@
     }
   },
   {
-    "id": "global.ok",
     "defaultMessage": "!!!OK",
     "file": "src/i18n/global-messages.ts",
     "start": {
@@ -2247,7 +2241,7 @@
     "end": {
       "line": 751,
       "column": 3,
-      "index": 22485
+      "index": 22342
     }
   },
   {
@@ -2287,12 +2281,13 @@
     "start": {
       "line": 760,
       "column": 9,
-      "index": 22657
+      "index": 22514
     },
     "end": {
-      "line": 763,
+      "line": 759,
+      
       "column": 3,
-      "index": 22717
+      "index": 22574
     }
   },
   {
@@ -2371,8 +2366,8 @@
     }
   },
   {
-    "id": "global.next",
-    "defaultMessage": "!!!Next",
+    "id": "global.currency",
+    "defaultMessage": "!!!Currency",
     "file": "src/i18n/global-messages.ts",
     "start": {
       "line": 784,
