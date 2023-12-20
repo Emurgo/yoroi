@@ -583,6 +583,10 @@ export const actionMessages = defineMessages({
     id: 'global.comingSoon',
     defaultMessage: '!!!Coming soon',
   },
+  exchange: {
+    id: 'global.exchange',
+    defaultMessage: '!!!Exchange',
+  },
 })
 
 export const currencyNames = defineMessages({
