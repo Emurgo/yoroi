@@ -6,18 +6,17 @@ import {
   isRecord,
 } from '@yoroi/common'
 
-import {ApiTokenRegistryProperty} from './types'
 import {asSubject} from '../translators/transformers/asSubject'
-import {CardanoApi} from '../../index'
+import {Api, ApiTokenRegistryProperty} from '@yoroi/types'
 
 export const getOffChainMetadata = (
   baseUrl: string,
   request: Fetcher = fetcher,
 ) => {
   const getTokenRegistryRecord = (
-    tokenId: CardanoApi.TokenId,
-  ): Promise<CardanoApi.OffChainMetadataResponse> =>
-    request<CardanoApi.OffChainMetadataResponse>({
+    tokenId: Api.Cardano.TokenId,
+  ): Promise<Api.Cardano.OffChainMetadataResponse> =>
+    request<Api.Cardano.OffChainMetadataResponse>({
       url: `${baseUrl}/metadata/${asSubject(tokenId)}`,
       method: 'GET',
       headers: {'Content-Type': 'application/json'},
@@ -41,16 +40,16 @@ export const getOffChainMetadata = (
           [tokenId]: {
             tokenRegistry: response,
             isValid: false,
-          } as CardanoApi.OffChainMetadataRecord,
+          } as Api.Cardano.OffChainMetadataRecord,
         })
       })
       .catch((_e) => Promise.resolve({[tokenId]: emptyOffChainMetadataRecord}))
 
-  return (tokenIds: CardanoApi.OffChainMetadataRequest) =>
+  return (tokenIds: Api.Cardano.OffChainMetadataRequest) =>
     Promise.all(
       tokenIds.map((tokenId) => getTokenRegistryRecord(tokenId)),
     ).then((responses) => {
-      const result: CardanoApi.OffChainMetadataResponse = {}
+      const result: Api.Cardano.OffChainMetadataResponse = {}
       responses.forEach((response) => {
         Object.assign(result, response)
       })
@@ -84,7 +83,7 @@ const TokenRegistryPropertyStringSchema: z.ZodSchema<
   value: z.string().optional(),
 })
 
-const TokenRegistryEntrySchema: z.ZodSchema<CardanoApi.TokenRegistryEntry> =
+const TokenRegistryEntrySchema: z.ZodSchema<Api.Cardano.TokenRegistryEntry> =
   z.object({
     subject: z.string(),
     name: TokenRegistryPropertyStringSchema,
@@ -104,7 +103,7 @@ const parseTokenRegistryEntry = (data: unknown) => {
   return isTokenRegistryEntry(data) ? data : undefined
 }
 
-export const emptyOffChainMetadataRecord: Readonly<CardanoApi.OffChainMetadataRecord> =
+export const emptyOffChainMetadataRecord: Readonly<Api.Cardano.OffChainMetadataRecord> =
   {
     tokenRegistry: undefined,
     isValid: false,

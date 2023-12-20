@@ -1,6 +1,6 @@
 /* istanbul ignore file */
+import {Api} from '@yoroi/types'
 import {paramsMockResponse} from './protocol-params.mocks'
-import {CardanoApi} from '../../index'
 
 const loading = () => new Promise(() => {})
 const unknownError = () => Promise.reject(new Error('Unknown error'))
@@ -26,6 +26,6 @@ const getProtocolParams = {
   },
 }
 
-export const mockCardanoApi: CardanoApi.api = {
+export const mockCardanoApi: Api.Cardano.Actions = {
   getProtocolParams: getProtocolParams.success,
 } as const

@@ -5,7 +5,7 @@ import {
   getOnChainMetadatas,
 } from './token-onchain-metadata'
 import {mockGetOnChainMetadatas} from './token-onchain-metadata.mocks'
-import {ApiTokenId} from './types'
+import {Api} from '@yoroi/types'
 
 describe('getMetadataResult', () => {
   it('should return undefined for everything if the records array is empty', () => {
@@ -252,7 +252,7 @@ describe('getOnChainMetadatas', () => {
 
   it('should send a POST request to the correct URL with transformed asset ids', async () => {
     mockFetcher.mockResolvedValue({})
-    const args: ApiTokenId[] = [
+    const args: Api.Cardano.TokenId[] = [
       '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.3030',
       '9d88eef1d822a708cad279fc7c79c3936733b236011544f8567f4842.3031',
     ]

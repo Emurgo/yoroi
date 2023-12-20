@@ -2,21 +2,21 @@ import {Fetcher, fetcher, isArray, isRecord} from '@yoroi/common'
 
 import {CIP25_KEY_NFT, CIP25_V2, CIP26_KEY_FT} from './constants'
 import {parseFtMetadataRecord, parseNftMetadataRecord} from './parsers'
+import {getTokenIdentity} from '../translators/helpers/getTokenIdentity'
 import {
+  Api,
+  ApiMetadataRecord,
   ApiOnChainFtMetadataResult,
   ApiOnChainNftMetadataResult,
-  ApiMetadataRecord,
-} from './types'
-import {getTokenIdentity} from '../translators/helpers/getTokenIdentity'
-import {CardanoApi} from '../../index'
+} from '@yoroi/types'
 
 export const getOnChainMetadatas = (
   baseUrl: string,
   request: Fetcher = fetcher,
 ) => {
   return (
-    tokenIds: CardanoApi.OnChainMetadataRequest,
-  ): Promise<CardanoApi.OnChainMetadataResponse> => {
+    tokenIds: Api.Cardano.OnChainMetadataRequest,
+  ): Promise<Api.Cardano.OnChainMetadataResponse> => {
     if (tokenIds.length === 0) {
       return Promise.resolve({})
     }
@@ -28,7 +28,7 @@ export const getOnChainMetadatas = (
 
     const payload = {assets}
 
-    return request<CardanoApi.OnChainMetadataResponse>({
+    return request<Api.Cardano.OnChainMetadataResponse>({
       url: `${baseUrl}/multiAsset/metadata`,
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -37,7 +37,7 @@ export const getOnChainMetadatas = (
       if (!isRecord(response))
         return Promise.reject(new Error('Invalid asset metadatas'))
       const responseRecords = response as Record<string, unknown>
-      const result: CardanoApi.OnChainMetadataResponse = {}
+      const result: Api.Cardano.OnChainMetadataResponse = {}
 
       for (const id of tokenIds) {
         const {policyId, name, assetName} = getTokenIdentity(id)
@@ -51,7 +51,7 @@ export const getOnChainMetadatas = (
           continue
         }
 
-        const tokenIdentity: CardanoApi.TokenIdentity = {
+        const tokenIdentity: Api.Cardano.TokenIdentity = {
           policyId,
           name,
           nameHex: assetName,
@@ -66,8 +66,8 @@ export const getOnChainMetadatas = (
 
 export function getMetadataResult(
   records: Readonly<Array<unknown>>,
-  tokenIdentity: Readonly<CardanoApi.TokenIdentity>,
-): CardanoApi.OnChainMetadataRecord {
+  tokenIdentity: Readonly<Api.Cardano.TokenIdentity>,
+): Api.Cardano.OnChainMetadataRecord {
   let ftMetadataResult: ApiOnChainFtMetadataResult = {
     mintFtMetadata: undefined,
     mintFtRecordSelected: undefined,
@@ -104,8 +104,8 @@ export function getMetadataResult(
 }
 
 function getFtRecord(
-  record: Readonly<Record<string, unknown>> | CardanoApi.FtMetadataRecord,
-  tokenIdentity: Readonly<CardanoApi.TokenIdentity>,
+  record: Readonly<Record<string, unknown>> | Api.Cardano.FtMetadataRecord,
+  tokenIdentity: Readonly<Api.Cardano.TokenIdentity>,
 ): ApiOnChainFtMetadataResult {
   const possibleFtMetadataRecord = findMetadataRecord(record, tokenIdentity)
 
@@ -119,7 +119,7 @@ function getFtRecord(
     if (parsedFtMetadataRecord !== undefined) {
       return {
         // record holds original tx mint metadata is safe to cast here
-        mintFtMetadata: record as CardanoApi.FtMetadataRecord,
+        mintFtMetadata: record as Api.Cardano.FtMetadataRecord,
         mintFtRecordSelected: parsedFtMetadataRecord,
       }
     }
@@ -131,8 +131,8 @@ function getFtRecord(
 }
 
 function getNftRecord(
-  record: Readonly<Record<string, unknown>> | CardanoApi.NftMetadataRecord,
-  tokenIdentity: Readonly<CardanoApi.TokenIdentity>,
+  record: Readonly<Record<string, unknown>> | Api.Cardano.NftMetadataRecord,
+  tokenIdentity: Readonly<Api.Cardano.TokenIdentity>,
 ): ApiOnChainNftMetadataResult {
   const possibleNftMetadataRecord = findMetadataRecord(record, tokenIdentity)
 
@@ -146,7 +146,7 @@ function getNftRecord(
     if (parsedNftMetadataRecord !== undefined) {
       return {
         // record holds original tx mint metadata is safe to cast here
-        mintNftMetadata: record as CardanoApi.NftMetadataRecord,
+        mintNftMetadata: record as Api.Cardano.NftMetadataRecord,
         mintNftRecordSelected: parsedNftMetadataRecord,
       }
     }
@@ -159,7 +159,7 @@ function getNftRecord(
 
 export function findMetadataRecord(
   possibleMetadataRecord: Readonly<Record<string, unknown>>,
-  tokenIdentity: Readonly<CardanoApi.TokenIdentity>,
+  tokenIdentity: Readonly<Api.Cardano.TokenIdentity>,
 ) {
   const {policyId, name, nameHex} = tokenIdentity
   const metadataRecord = possibleMetadataRecord as Partial<ApiMetadataRecord>
@@ -176,7 +176,7 @@ export function findMetadataRecord(
   return isV2 ? assetRecords[nameHex] : assetRecords[name]
 }
 
-export const emptyOnChainMetadataRecord: Readonly<CardanoApi.OnChainMetadataRecord> =
+export const emptyOnChainMetadataRecord: Readonly<Api.Cardano.OnChainMetadataRecord> =
   {
     mintFtMetadata: undefined,
     mintFtRecordSelected: undefined,

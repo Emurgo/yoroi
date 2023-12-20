@@ -4,7 +4,7 @@ import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi, CardanoApi} from '@yoroi/api'
 import {parseSafe} from '@yoroi/common'
 import {isNonNullable} from '@yoroi/common/src'
-import {App, Balance} from '@yoroi/types'
+import {Api, App, Balance} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -160,7 +160,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
   return class ShelleyWallet implements YoroiWallet {
     readonly api: App.Api = appApi
-    readonly cardanoApi: CardanoApi.api = cardanoApi
+    readonly cardanoApi: Api.Cardano.Actions = cardanoApi
     readonly primaryToken: DefaultAsset = PRIMARY_TOKEN
     readonly primaryTokenInfo: Balance.TokenInfo = PRIMARY_TOKEN_INFO
     readonly walletImplementationId = WALLET_IMPLEMENTATION_ID

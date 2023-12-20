@@ -1,16 +1,16 @@
 import {z} from 'zod'
 import {createTypeGuardFromSchema, fetcher, Fetcher} from '@yoroi/common'
-import type {CardanoApi} from '../../index'
+import {Api} from '@yoroi/types'
 
 export const getProtocolParams =
   (baseUrl: string, request: Fetcher = fetcher) =>
-  async (): Promise<CardanoApi.ProtocolParamsResult> => {
-    return request<CardanoApi.ProtocolParamsResult>({
+  async (): Promise<Api.Cardano.ProtocolParamsResult> => {
+    return request<Api.Cardano.ProtocolParamsResult>({
       url: `${baseUrl}/protocolparameters`,
       data: undefined,
       method: 'GET',
       headers: {'Content-Type': 'application/json'},
-    }).then((response: CardanoApi.ProtocolParamsResult) => {
+    }).then((response: Api.Cardano.ProtocolParamsResult) => {
       const parsedResponse = parseFrontendProtocolParamsResponse(response)
 
       if (!parsedResponse)
@@ -20,8 +20,8 @@ export const getProtocolParams =
   }
 
 export const parseFrontendProtocolParamsResponse = (
-  data: CardanoApi.ProtocolParamsResult,
-): CardanoApi.ProtocolParamsResult | undefined => {
+  data: Api.Cardano.ProtocolParamsResult,
+): Api.Cardano.ProtocolParamsResult | undefined => {
   return isFrontendProtocolParamsResponse(data) ? data : undefined
 }
 
