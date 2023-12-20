@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {useFocusEffect} from '@react-navigation/native'
 import React, {useEffect, useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -48,10 +49,11 @@ export const ConfirmTxScreen = () => {
     }
   }, [])
 
-  useEffect(() => {
-    track.sendSummaryPageViewed(assetsToSendProperties({tokens, amounts}))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  useFocusEffect(
+    React.useCallback(() => {
+      track.sendSummaryPageViewed(assetsToSendProperties({tokens, amounts}))
+    }, [amounts, tokens, track]),
+  )
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
     track.sendSummarySubmitted(assetsToSendProperties({tokens, amounts}))

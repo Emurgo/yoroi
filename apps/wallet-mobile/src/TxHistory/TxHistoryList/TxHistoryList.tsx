@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
 import {BalanceAmount} from '@yoroi/types/lib/balance/token'
 import BigNumber from 'bignumber.js'
@@ -11,6 +11,7 @@ import {Spacer, Text} from '../../components'
 import {features} from '../../features'
 import {actionMessages} from '../../i18n/global-messages'
 import {formatDateRelative} from '../../legacy/format'
+import {useMetrics} from '../../metrics/metricsManager'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {
   useBalances,
@@ -36,6 +37,14 @@ export const TxHistoryList = (props: Props) => {
   const key = useRemountOnFocusHack()
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.transactionsPageViewed()
+    }, [track]),
+  )
+
   const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
   const transactionsInfo = useTransactionInfos(wallet)
   const groupedTransactions = getTransactionsByDate(transactionsInfo)

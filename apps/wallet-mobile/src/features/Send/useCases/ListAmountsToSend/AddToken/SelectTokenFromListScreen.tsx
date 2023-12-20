@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import {Balance} from '@yoroi/types'
 import React from 'react'
@@ -32,9 +32,13 @@ export const SelectTokenFromListScreen = () => {
   const [fungibilityFilter, setFungibilityFilter] = React.useState<FungibilityFilter>('all')
   const {targets, selectedTargetIndex} = useSend()
   const {track} = useMetrics()
-  React.useEffect(() => {
-    track.sendSelectAssetPageViewed()
-  }, [track])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.sendSelectAssetPageViewed()
+    }, [track]),
+  )
+
   const {amounts} = targets[selectedTargetIndex].entry
   const hasTokensSelected = Object.keys(amounts).length > 0
 

@@ -48,6 +48,18 @@ const mockAmpli = {
   flush: jest.fn().mockReturnValue({promise: Promise.resolve()}),
   isLoaded: false,
 
+  allWalletsPageViewed: jest.fn(),
+  assetsPageViewed: jest.fn(),
+  claimAdaPageViewed: jest.fn(),
+  connectorPageViewed: jest.fn(),
+  menuPageViewed: jest.fn(),
+  receivePageViewed: jest.fn(),
+  settingsPageViewed: jest.fn(),
+  stakingCenterPageViewed: jest.fn(),
+  transactionsPageViewed: jest.fn(),
+  votingPageViewed: jest.fn(),
+  walletPageViewed: jest.fn(),
+
   nftGalleryDetailsTab: jest.fn(),
   nftGalleryPageViewed: jest.fn(),
   nftGallerySearchActivated: jest.fn(),
