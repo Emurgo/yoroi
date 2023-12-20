@@ -1429,7 +1429,7 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Wallet%20Page%20Exchange%20Bottom%20Sheet%20Clicked)
    *
-   * This event tracks when a user clicks on the bottom sheet that appears after the user clics on Exchange on the Wallet PageThis event tracks when a user clicks on the bottom sheet in the exchange section of the wallet page
+   * This event tracks when a user clicks on "Proceed" in the bottom sheet that appears after the user clicks on "Buy" on the Wallet Page.
    *
    * @param options Amplitude event options.
    */
@@ -1444,7 +1444,7 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Wallet%20Page%20Exchange%20Clicked)
    *
-   * Event has no description in tracking plan.
+   * This event tracks when a user clicks on "Buy" on the Wallet Page.
    *
    * @param options Amplitude event options.
    */

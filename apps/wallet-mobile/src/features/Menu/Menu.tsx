@@ -1,4 +1,5 @@
 import {defineMessage} from '@formatjs/intl'
+import {useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -10,6 +11,7 @@ import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../../components'
 import {Hr} from '../../components/Hr'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
+import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {lightPalette} from '../../theme'
@@ -38,6 +40,13 @@ export const Menu = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.menuPageViewed()
+    }, [track]),
+  )
   const isGovernanceFeatureEnabled = useIsGovernanceFeatureEnabled(wallet)
 
   return (

@@ -25,7 +25,7 @@ const infoPlugin: EnrichmentPlugin = {
   type: PluginType.ENRICHMENT,
   setup: async () => Promise.resolve(),
   execute: async (event: Event) => {
-    Logger.info('[metrics-react-native]', event.event_type, event.event_properties)
+    Logger.info('[metrics-react-native]', event.event_type, event.event_properties ?? '- No properties')
     return Promise.resolve(event)
   },
 }
@@ -96,6 +96,18 @@ export const makeMetricsManager = (
       })
 
   const track = {
+    allWalletsPageViewed: metricsModule.allWalletsPageViewed.bind(metricsModule),
+    assetsPageViewed: metricsModule.assetsPageViewed.bind(metricsModule),
+    claimAdaPageViewed: metricsModule.claimAdaPageViewed.bind(metricsModule),
+    connectorPageViewed: metricsModule.connectorPageViewed.bind(metricsModule),
+    menuPageViewed: metricsModule.menuPageViewed.bind(metricsModule),
+    receivePageViewed: metricsModule.receivePageViewed.bind(metricsModule),
+    settingsPageViewed: metricsModule.settingsPageViewed.bind(metricsModule),
+    stakingCenterPageViewed: metricsModule.stakingCenterPageViewed.bind(metricsModule),
+    transactionsPageViewed: metricsModule.transactionsPageViewed.bind(metricsModule),
+    votingPageViewed: metricsModule.votingPageViewed.bind(metricsModule),
+    walletPageViewed: metricsModule.walletPageViewed.bind(metricsModule),
+
     nftGalleryDetailsTab: metricsModule.nftGalleryDetailsTab.bind(metricsModule),
     nftGalleryPageViewed: metricsModule.nftGalleryPageViewed.bind(metricsModule),
     nftGallerySearchActivated: metricsModule.nftGallerySearchActivated.bind(metricsModule),
