@@ -1,3 +1,4 @@
+import {useIsFocused} from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -26,6 +27,7 @@ export const StartMultiTokenTxScreen = () => {
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
+  const isFocused = useIsFocused()
 
   React.useEffect(() => {
     track.sendInitiated()
@@ -62,7 +64,10 @@ export const StartMultiTokenTxScreen = () => {
       navigateTo.selectedTokens()
     }
   }
-  const handleOnChangeReceiver = (text: string) => receiverResolveChanged(text)
+  const handleOnChangeReceiver = (text: string) => {
+    if (!isFocused) return // prevent weird bug: automatic call when is unfocused
+    receiverResolveChanged(text)
+  }
   const handleOnChangeMemo = (text: string) => memoChanged(text)
 
   return (
