@@ -50,8 +50,6 @@ const mockAmpli = {
 
   allWalletsPageViewed: jest.fn(),
   assetsPageViewed: jest.fn(),
-  claimAdaPageViewed: jest.fn(),
-  connectorPageViewed: jest.fn(),
   menuPageViewed: jest.fn(),
   receivePageViewed: jest.fn(),
   settingsPageViewed: jest.fn(),
