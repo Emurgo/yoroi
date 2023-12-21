@@ -95,3 +95,13 @@ export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo, wal
 
   return nameA.localeCompare(nameB, undefined, {sensitivity: 'base'})
 }
+
+export const calculatePriceImpactRisk = (priceImpact: number) => {
+  if (priceImpact >= 1 && priceImpact <= 10) {
+    return 'warning'
+  }
+  if (priceImpact > 10) {
+    return 'negative'
+  }
+  return 'positive'
+}

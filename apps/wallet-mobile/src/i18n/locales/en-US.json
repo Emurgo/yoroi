@@ -823,6 +823,8 @@
   "swap.swapScreen.notEnoughSupply": "Not enough supply in the pool",
   "swap.swapScreen.openOrders": "Open orders",
   "swap.swapScreen.ordersSwapTab": "Orders",
+  "swap.swapScreen.priceImpact": "Price Impact",
+  "swap.swapScreen.priceImpactDescription": "<b>Price impact over 10%</b> may cause a significant loss of funds. Please bear this in mind and proceed with an extra caution.",
   "swap.swapScreen.poolFee": "DEX Fee",
   "swap.swapScreen.poolVerification": "{pool} verification",
   "swap.swapScreen.poolVerificationInfo": "Cardano projects that list their own tokens can apply for an additional {pool} verification. This verification is a manual validation that {pool} team performs with the help of Cardano Foundation.",

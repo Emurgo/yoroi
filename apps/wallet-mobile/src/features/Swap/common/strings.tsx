@@ -1,6 +1,10 @@
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import {Text} from '../../../components'
 import globalMessages, {errorMessages, ledgerMessages} from '../../../i18n/global-messages'
+
+const bold = {b: (text) => <Text bold>{text}</Text>}
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -61,6 +65,8 @@ export const useStrings = () => {
     found: intl.formatMessage(messages.found),
     youHave: intl.formatMessage(messages.youHave),
     price: intl.formatMessage(messages.price),
+    priceimpact: intl.formatMessage(messages.priceimpact),
+    priceimpactDescription: intl.formatMessage(messages.priceImpactDescription, bold),
     tvl: intl.formatMessage(messages.tvl),
     poolFee: intl.formatMessage(messages.poolFee),
     batcherFee: intl.formatMessage(messages.batcherFee),
@@ -121,6 +127,7 @@ export const useStrings = () => {
     generalErrorTitle: intl.formatMessage(errorMessages.generalError.title),
     generalErrorMessage: (e) => intl.formatMessage(errorMessages.generalError.message, {message: e}),
     continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
+    continue: intl.formatMessage(messages.continue),
     cancel: intl.formatMessage(globalMessages.cancel),
     tryAgain: intl.formatMessage(globalMessages.tryAgain),
     bluetoothDisabledError: intl.formatMessage(ledgerMessages.bluetoothDisabledError),
@@ -137,6 +144,7 @@ export const useStrings = () => {
     emptyOpenOrders: intl.formatMessage(messages.emptyOpenOrders),
     emptyOpenOrdersSub: intl.formatMessage(messages.emptyOpenOrdersSub),
     emptyCompletedOrders: intl.formatMessage(messages.emptyCompletedOrders),
+    warning: intl.formatMessage(messages.warning),
   }
 }
 
@@ -572,6 +580,10 @@ export const messages = defineMessages({
     id: 'global.ledgerMessages.continueOnLedger',
     defaultMessage: '!!!Continue on Ledger',
   },
+  continue: {
+    id: 'global.actions.dialogs.commonbuttons.continueButton',
+    defaultMessage: '!!!Continue',
+  },
   slippageWarningTitle: {
     id: 'swap.slippage.slippageWarningTitle',
     defaultMessage: '!!!Slippage Warning',
@@ -600,5 +612,18 @@ export const messages = defineMessages({
   emptyCompletedOrders: {
     id: 'swap.listOrders.emptyCompletedOrders',
     defaultMessage: '!!!No orders completed yet',
+  },
+  priceimpact: {
+    id: 'swap.swapScreen.priceImpact',
+    defaultMessage: '!!!Price Impact',
+  },
+  priceImpactDescription: {
+    id: 'swap.swapScreen.priceImpactDescription',
+    defaultMessage:
+      '!!!<b>Price impact over 10%</b> may cause a significant loss of funds. Please bear this in mind and proceed with an extra caution.',
+  },
+  warning: {
+    id: 'components.txhistory.flawedwalletmodal.title',
+    defaultMessage: '!!Warning',
   },
 })
