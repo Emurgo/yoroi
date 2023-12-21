@@ -2,8 +2,8 @@ import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {priceImpactColorMap} from '../../features/Swap/common/helpers'
-import {COLORS} from '../../theme'
+import {priceImpactColorObject} from '../../features/Swap/common/helpers'
+import {COLORS, useTheme} from '../../theme'
 import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
@@ -33,6 +33,7 @@ export const AmountItem = ({
 }: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
+  const {theme} = useTheme()
 
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
   const name = tokenInfo.ticker ?? tokenInfo.name
@@ -40,8 +41,8 @@ export const AmountItem = ({
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
 
   const formattedQuantity = Quantities.format(quantity, tokenInfo.decimals ?? 0)
-
   const showSwapDetails = !isPrimary && variant === 'swap'
+  const priceImpactColor = priceImpactColorObject(theme)
 
   return (
     <View style={[style, styles.container]} testID="assetItem">
@@ -74,15 +75,12 @@ export const AmountItem = ({
       <Right>
         {tokenInfo.kind !== 'nft' && variant !== 'swap' && (
           <View style={styles.row} testID="tokenAmountText">
-            {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={priceImpactColorMap[priceImpactRisk]} />}
+            {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={priceImpactColor[priceImpactRisk]} />}
 
-            {priceImpactRisk === 'warning' && <Icon.Info size={24} color={priceImpactColorMap[priceImpactRisk]} />}
+            {priceImpactRisk === 'warning' && <Icon.Info size={24} color={priceImpactColor[priceImpactRisk]} />}
 
             <Text
-              style={[
-                styles.quantity,
-                {color: priceImpactColorMap[priceImpactRisk as keyof typeof priceImpactColorMap]},
-              ]}
+              style={[styles.quantity, {color: priceImpactColor[priceImpactRisk as keyof typeof priceImpactColor]}]}
             >
               {isPrivacyOff ? '**.*******' : formattedQuantity}
             </Text>

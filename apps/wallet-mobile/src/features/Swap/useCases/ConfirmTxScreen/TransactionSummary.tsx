@@ -7,10 +7,10 @@ import {Icon, Spacer, Text, useModal} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
 import {useSelectedWallet} from '../../../../SelectedWallet'
-import {COLORS} from '../../../../theme'
+import {COLORS, useTheme} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
-import {calculatePriceImpactRisk, priceImpactColorMap} from '../../common/helpers'
+import {calculatePriceImpactRisk, priceImpactColorObject} from '../../common/helpers'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
@@ -26,6 +26,7 @@ export const TransactionSummary = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {orderData} = useSwap()
+  const {theme} = useTheme()
   const {
     limitPrice: {displayValue: limitDisplayValue},
   } = useSwapForm()
@@ -34,8 +35,10 @@ export const TransactionSummary = () => {
 
   const priceImpact = calculations[0]?.prices.priceImpact
   const actualPrice = calculations[0]?.prices.actualPrice
+
+  const priceImpactColor = priceImpactColorObject(theme)
   const priceImpactRisk = calculatePriceImpactRisk(Number(priceImpact))
-  const warningColorHex = priceImpactColorMap[priceImpactRisk]
+  const warningColorHex = priceImpactColor[priceImpactRisk]
 
   // should never happen
   if (!calculation) throw new Error('No selected pool calculation')

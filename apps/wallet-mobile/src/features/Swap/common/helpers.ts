@@ -5,6 +5,7 @@ import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
+import {Theme} from '../../../theme/types'
 import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
@@ -106,7 +107,9 @@ export const calculatePriceImpactRisk = (priceImpact: number) => {
   return 'positive'
 }
 
-export const priceImpactColorMap = {
-  warning: '#ED8600',
-  negative: '#FF1351',
+export const priceImpactColorObject = (theme: Theme) => {
+  return {
+    warning: theme.color.yellow[500],
+    negative: theme.color.magenta[500],
+  }
 }
