@@ -14,8 +14,6 @@ export const mockMetricsManager = (): MetricsManager => {
   const track = {
     allWalletsPageViewed: e,
     assetsPageViewed: e,
-    claimAdaPageViewed: e,
-    connectorPageViewed: e,
     menuPageViewed: e,
     receivePageViewed: e,
     settingsPageViewed: e,
