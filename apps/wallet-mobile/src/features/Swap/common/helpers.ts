@@ -124,3 +124,8 @@ export const usePriceImpactRiskTheme = (risk: SwapPriceImpactRisk) => {
     background: theme.color['white-static'],
   }
 }
+
+export const priceImpactColorMap = {
+  warning: '#ED8600',
+  negative: '#FF1351',
+}
