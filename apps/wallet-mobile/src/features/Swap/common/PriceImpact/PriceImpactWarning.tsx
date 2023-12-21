@@ -2,6 +2,8 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../components'
+import {useTheme} from '../../../../theme'
+import {Theme} from '../../../../theme/types'
 import {useStrings} from '../strings'
 
 export interface Props {
@@ -12,6 +14,9 @@ export interface Props {
 export const PriceImpactWraning = ({onSubmit, isLoading}: Props) => {
   const strings = useStrings()
   const {closeModal} = useModal()
+
+  const {theme} = useTheme()
+  const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
 
   return (
     <View style={styles.container}>
@@ -42,29 +47,33 @@ export const PriceImpactWraning = ({onSubmit, isLoading}: Props) => {
   )
 }
 
-const styles = StyleSheet.create({
-  buttonContainer: {
-    flex: 1,
-  },
-  buttonContinue: {
-    flex: 1,
-    backgroundColor: '#FF1351',
-  },
-  buttonsWrapper: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    gap: 16,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  description: {
-    fontFamily: 'Rubik',
-    fontSize: 16,
-  },
-  bold: {
-    fontWeight: '500',
-  },
-})
+const getStyles = (props: {theme: Theme}) => {
+  const {theme} = props
+  const styles = StyleSheet.create({
+    buttonContainer: {
+      flex: 1,
+    },
+    buttonContinue: {
+      flex: 1,
+      backgroundColor: theme.color.magenta[500],
+    },
+    buttonsWrapper: {
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      gap: 16,
+    },
+    container: {
+      flex: 1,
+      justifyContent: 'space-between',
+    },
+    description: {
+      fontFamily: 'Rubik',
+      fontSize: 16,
+    },
+    bold: {
+      fontWeight: '500',
+    },
+  })
+  return styles
+}

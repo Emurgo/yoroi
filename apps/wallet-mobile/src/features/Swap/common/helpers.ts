@@ -113,3 +113,9 @@ export const priceImpactColorObject = (theme: Theme) => {
     negative: theme.color.magenta[500],
   }
 }
+export const priceImpactBannerColorObject = (theme: Theme) => {
+  return {
+    warning: theme.color.yellow[100],
+    negative: theme.color.magenta[100],
+  }
+}

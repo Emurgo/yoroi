@@ -10,17 +10,12 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS, useTheme} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
-import {calculatePriceImpactRisk, priceImpactColorObject} from '../../common/helpers'
+import {calculatePriceImpactRisk, priceImpactBannerColorObject, priceImpactColorObject} from '../../common/helpers'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
 import {useSwapForm} from '../../common/SwapFormProvider'
 import {SwapInfoLink} from '../../common/SwapInfoLink/SwapInfoLink'
-
-const priceImpactBannerColorMap = {
-  warning: '#FDF7E2',
-  negative: '#FFF1F5',
-}
 
 export const TransactionSummary = () => {
   const strings = useStrings()
@@ -37,6 +32,8 @@ export const TransactionSummary = () => {
   const actualPrice = calculations[0]?.prices.actualPrice
 
   const priceImpactColor = priceImpactColorObject(theme)
+  const priceImpactBannerColorMap = priceImpactBannerColorObject(theme)
+
   const priceImpactRisk = calculatePriceImpactRisk(Number(priceImpact))
   const warningColorHex = priceImpactColor[priceImpactRisk]
 
