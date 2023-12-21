@@ -65,7 +65,7 @@ export const StartMultiTokenTxScreen = () => {
     }
   }
   const handleOnChangeReceiver = (text: string) => {
-    if (!isFocused) return
+    if (!isFocused) return // prevent automatic calls. RN TextInput bug
     receiverResolveChanged(text)
   }
   const handleOnChangeMemo = (text: string) => memoChanged(text)
