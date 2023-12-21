@@ -102,28 +102,31 @@ export const TransactionSummary = () => {
     {
       label: strings.marketPrice,
       value: `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`,
-      info: strings.swapFees,
+      info: strings.marketPriceInfo,
     },
     {
       label: strings.priceimpact,
-      value: (
-        <View style={{alignItems: 'flex-end'}}>
-          <View style={styles.flex}>
-            {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={warningColorHex} />}
+      value:
+        priceImpactRisk === 'positive' ? (
+          <Text style={{color: '#08C29D'}}>&lt;1%</Text>
+        ) : (
+          <View style={{alignItems: 'flex-end'}}>
+            <View style={styles.flex}>
+              {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={warningColorHex} />}
 
-            {priceImpactRisk === 'warning' && <Icon.Info size={24} color={warningColorHex} />}
+              {priceImpactRisk === 'warning' && <Icon.Info size={24} color={warningColorHex} />}
 
-            <Text style={{color: warningColorHex}}>{Math.ceil(Number(priceImpact) * 100) / 100}%</Text>
+              <Text style={{color: warningColorHex}}>{Math.ceil(Number(priceImpact) * 100) / 100}%</Text>
+            </View>
+
+            <Text style={{color: warningColorHex}}>
+              {actualPrice}
+
+              <Text style={{color: warningColorHex}}> {`${tokenToSellName}/${tokenToBuyName}`}</Text>
+            </Text>
           </View>
-
-          <Text style={{color: warningColorHex}}>
-            {actualPrice}
-
-            <Text style={{color: warningColorHex}}> {`${tokenToSellName}/${tokenToBuyName}`}</Text>
-          </Text>
-        </View>
-      ),
-      info: strings.swapMinReceived,
+        ),
+      info: strings.priceImpactInfo,
       warning: priceImpactRisk === 'negative',
     },
   ]

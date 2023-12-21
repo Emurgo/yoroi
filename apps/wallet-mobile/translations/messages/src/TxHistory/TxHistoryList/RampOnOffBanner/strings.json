@@ -1,6 +1,6 @@
 [
   {
-    "id": "rampOnOff.createRampOnOff.buyADA",
+    "id": "rampOnOff.createRampOnOff.buyCrypto",
     "defaultMessage": "!!!Buy ADA",
     "file": "src/TxHistory/TxHistoryList/RampOnOffBanner/strings.ts",
     "start": {
@@ -11,7 +11,7 @@
     "end": {
       "line": 7,
       "column": 3,
-      "index": 192
+      "index": 195
     }
   },
   {
@@ -21,12 +21,12 @@
     "start": {
       "line": 8,
       "column": 15,
-      "index": 209
+      "index": 212
     },
     "end": {
       "line": 11,
       "column": 3,
-      "index": 341
+      "index": 344
     }
   },
   {
@@ -36,12 +36,12 @@
     "start": {
       "line": 12,
       "column": 22,
-      "index": 365
+      "index": 368
     },
     "end": {
       "line": 15,
       "column": 3,
-      "index": 505
+      "index": 508
     }
   },
   {
@@ -51,12 +51,12 @@
     "start": {
       "line": 16,
       "column": 15,
-      "index": 522
+      "index": 525
     },
     "end": {
       "line": 19,
       "column": 3,
-      "index": 637
+      "index": 640
     }
   }
 ]

@@ -2,7 +2,7 @@ import {defineMessages} from 'react-intl'
 
 export const bannerRampOnOffMessages = defineMessages({
   buyADA: {
-    id: 'rampOnOff.createRampOnOff.buyADA',
+    id: 'rampOnOff.createRampOnOff.buyCrypto',
     defaultMessage: '!!!Buy ADA',
   },
   getFirstAda: {

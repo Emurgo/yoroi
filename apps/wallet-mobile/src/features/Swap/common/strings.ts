@@ -19,6 +19,7 @@ export const useStrings = () => {
     clear: intl.formatMessage(messages.clear),
     selectToken: intl.formatMessage(messages.selectToken),
     marketPrice: intl.formatMessage(messages.marketPrice),
+    marketPriceInfo: intl.formatMessage(messages.marketPriceInfo),
     limitPrice: intl.formatMessage(messages.limitPrice),
     slippageTolerance: intl.formatMessage(messages.slippageTolerance),
     slippageToleranceInfo: intl.formatMessage(messages.slippageToleranceInfo),
@@ -64,6 +65,7 @@ export const useStrings = () => {
     priceimpact: intl.formatMessage(messages.priceimpact),
     priceImpactOver10: intl.formatMessage(messages.priceImpactOver10),
     priceimpactDescription: intl.formatMessage(messages.priceImpactDescription),
+    priceImpactInfo: intl.formatMessage(messages.priceImpactInfo),
     tvl: intl.formatMessage(messages.tvl),
     poolFee: intl.formatMessage(messages.poolFee),
     batcherFee: intl.formatMessage(messages.batcherFee),
@@ -195,6 +197,11 @@ export const messages = defineMessages({
   marketPrice: {
     id: 'swap.swapScreen.marketPrice',
     defaultMessage: '!!!Market Price',
+  },
+  marketPriceInfo: {
+    id: 'swap.swapScreen.marketPriceInfo',
+    defaultMessage:
+      '!!!Market price is the best price available on the market among several DEXes that lets you buy or sell an asset instantly.',
   },
   limitPrice: {
     id: 'swap.swapScreen.limitPrice',
@@ -623,6 +630,10 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.priceImpactDescription',
     defaultMessage:
       '!!!may cause a significant loss of funds. Please bear this in mind and proceed with an extra caution.',
+  },
+  priceImpactInfo: {
+    id: 'swap.swapScreen.priceImpactInfo',
+    defaultMessage: '!!!Price impact is a difference between the actual market price and your price due to trade size.',
   },
   warning: {
     id: 'components.txhistory.flawedwalletmodal.title',
