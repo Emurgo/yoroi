@@ -9,7 +9,7 @@ import {Theme} from '../../../../theme/types'
 import {useHideBottomTabBar} from '../../../../yoroi-wallets/hooks'
 import {DescribeAction} from '../../common/DescribeAction/DescribeAction'
 import {RampOnOffInitRoutes, useNavigateTo} from '../../common/navigation'
-import {useStrings} from '../../common/strings'
+import {useStrings} from '../../common/useStrings'
 import {WalletAssetImage} from '../../illustrations/WalletAssetImage'
 import {ContentResult} from './ContentResult/ContentResult'
 

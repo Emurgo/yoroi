@@ -9,7 +9,7 @@ import {useSelectedWallet} from '../../../SelectedWallet'
 import {useBalances} from '../../../yoroi-wallets/hooks'
 import {useTokenInfo} from '../../../yoroi-wallets/hooks'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
-import {useStrings} from './strings'
+import {useStrings} from './useStrings'
 
 export const useRampOnOff = () => React.useContext(RampOnOffContext)
 

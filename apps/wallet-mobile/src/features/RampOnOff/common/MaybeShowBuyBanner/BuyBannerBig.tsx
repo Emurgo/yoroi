@@ -3,28 +3,26 @@ import * as React from 'react'
 import {Dimensions, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button, Spacer} from '../../../components'
-import {TxHistoryRouteNavigation} from '../../../navigation'
-import {useTheme} from '../../../theme'
-import {Theme} from '../../../theme/types'
-import {useStrings} from '../TxHistoryList'
-import {IllustrationBannerBuyADA} from './Common/IllustrationBannerBuyADA'
+import {Button, Spacer} from '../../../../components'
+import {TxHistoryRouteNavigation} from '../../../../navigation'
+import {useTheme} from '../../../../theme'
+import {Theme} from '../../../../theme/types'
+import {BuyBannerIllustration} from '../../illustrations/BuyBannerIllustration'
+import {useStrings} from '../useStrings'
 
 const DIMENSIONS = Dimensions.get('window')
 
-const BigBanner = () => {
-  const {theme} = useTheme()
+export const ShowBuyBannerBig = () => {
+  const strings = useStrings()
 
+  const {theme} = useTheme()
+  const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
   const bannerWidth = DIMENSIONS.width - 16 * 2
   const bannerHeight = (bannerWidth * 174) / 512
 
-  const strings = useStrings()
-
-  const navigateTo = useNavigateTo()
-
-  const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const handleExchange = () => {
-    navigateTo.exchange()
+    navigation.navigate('rampOnOff-start-rampOnOff')
   }
 
   return (
@@ -35,13 +33,11 @@ const BigBanner = () => {
         end={{x: 1, y: 1}}
         colors={theme.color.gradients['green']}
       >
-        <View>
-          <IllustrationBannerBuyADA width={bannerWidth} height={bannerHeight} />
-        </View>
+        <BuyBannerIllustration width={bannerWidth} height={bannerHeight} />
 
         <Spacer />
 
-        <Text style={styles.label}>{strings.getFirstAda}</Text>
+        <Text style={styles.label}>{strings.getFirstCrypto}</Text>
 
         <Spacer height={4} />
 
@@ -52,7 +48,7 @@ const BigBanner = () => {
         <Button
           testID="rampOnOffButton"
           shelleyTheme
-          title={strings.buyADA.toLocaleUpperCase()}
+          title={strings.buyCrypto.toLocaleUpperCase()}
           onPress={handleExchange}
           style={styles.spaceButton}
           textStyles={styles.spaceButtonText}
@@ -61,8 +57,6 @@ const BigBanner = () => {
     </View>
   )
 }
-
-export default BigBanner
 
 const getStyles = (props: {theme: Theme}) => {
   const {theme} = props
@@ -104,12 +98,4 @@ const getStyles = (props: {theme: Theme}) => {
     },
   })
   return styles
-}
-
-export const useNavigateTo = () => {
-  const navigation = useNavigation<TxHistoryRouteNavigation>()
-
-  return {
-    exchange: () => navigation.navigate('rampOnOff-start-rampOnOff'),
-  }
 }

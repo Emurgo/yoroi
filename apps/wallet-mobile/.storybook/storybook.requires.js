@@ -118,6 +118,8 @@ const getStories = () => {
     "./src/features/RampOnOff/common/AmountCard/AmountCard.stories.tsx": require("../src/features/RampOnOff/common/AmountCard/AmountCard.stories.tsx"),
     "./src/features/RampOnOff/common/ButtonActionGroup/ButtonActionGroup.stories.tsx": require("../src/features/RampOnOff/common/ButtonActionGroup/ButtonActionGroup.stories.tsx"),
     "./src/features/RampOnOff/common/DescribeAction/DescribeAction.stories.tsx": require("../src/features/RampOnOff/common/DescribeAction/DescribeAction.stories.tsx"),
+    "./src/features/RampOnOff/common/ShowBuyBanner/ShowBuyBannerBig.stories.tsx": require("../src/features/RampOnOff/common/MaybeShowBuyBanner/BuyBannerBig.stories"),
+    "./src/features/RampOnOff/common/ShowBuyBanner/ShowBuyBannerSmall.stories.tsx": require("../src/features/RampOnOff/common/MaybeShowBuyBanner/BuyBannerSmall.stories"),
     "./src/features/RampOnOff/useCases/CreateExchange/CreateExchange.stories.tsx": require("../src/features/RampOnOff/useCases/CreateExchange/CreateExchange.stories.tsx"),
     "./src/features/RampOnOff/useCases/CreateExchange/EditAmount/EditAmount.stories.tsx": require("../src/features/RampOnOff/useCases/CreateExchange/EditAmount/EditAmount.stories.tsx"),
     "./src/features/RampOnOff/useCases/CreateExchange/SelectBuyOrSell/SelectBuyOrSell.stories.tsx": require("../src/features/RampOnOff/useCases/CreateExchange/SelectBuyOrSell/SelectBuyOrSell.stories.tsx"),

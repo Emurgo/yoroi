@@ -8,7 +8,7 @@ import {defaultStackNavigationOptions, RampOnOffStackRoutes} from '../../navigat
 import {useTheme} from '../../theme'
 import {useHideBottomTabBar} from '../../yoroi-wallets/hooks'
 import {RampOnOffProvider} from './common/RampOnOffProvider'
-import {useStrings} from './common/strings'
+import {useStrings} from './common/useStrings'
 import {CreateExchange} from './useCases/CreateExchange/CreateExchange'
 import {ShowExchangeResult} from './useCases/ShowExchangeResult/ShowExchangeResult'
 

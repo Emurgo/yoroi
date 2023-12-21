@@ -1,30 +1,17 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
-import {BalanceAmount} from '@yoroi/types/lib/balance/token'
-import BigNumber from 'bignumber.js'
 import _ from 'lodash'
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {useIntl} from 'react-intl'
-import {Alert, Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
+import {Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
 
 import {Spacer, Text} from '../../components'
-import {features} from '../../features'
-import {actionMessages} from '../../i18n/global-messages'
+import {MaybeShowBuyBanner} from '../../features/RampOnOff/common/MaybeShowBuyBanner/MaybeShowBuyBanner'
 import {formatDateRelative} from '../../legacy/format'
 import {useMetrics} from '../../metrics/metricsManager'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {
-  useBalances,
-  useChangeTimeAppearRampOnOffSmallBanner,
-  useTimeAppearRampOnOffSmallBanner,
-  useTransactionInfos,
-} from '../../yoroi-wallets/hooks'
+import {useTransactionInfos} from '../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../yoroi-wallets/types'
-import {Amounts, Quantities} from '../../yoroi-wallets/utils'
-import {ActionsBanner} from './ActionsBanner'
-import BigBanner from './RampOnOffBanner/BigBanner'
-import SmallBanner from './RampOnOffBanner/SmallBanner'
-import {bannerRampOnOffMessages} from './RampOnOffBanner/strings'
 import {TxHistoryListItem} from './TxHistoryListItem'
 
 type ListProps = SectionListProps<TransactionInfo>
@@ -33,10 +20,8 @@ type Props = Partial<ListProps> & {
   onScroll: ListProps['onScroll']
 }
 export const TxHistoryList = (props: Props) => {
-  const strings = useStrings()
   const key = useRemountOnFocusHack()
   const wallet = useSelectedWallet()
-  const balances = useBalances(wallet)
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -45,26 +30,17 @@ export const TxHistoryList = (props: Props) => {
     }, [track]),
   )
 
-  const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
   const transactionsInfo = useTransactionInfos(wallet)
   const groupedTransactions = getTransactionsByDate(transactionsInfo)
 
-  const handleExport = () => Alert.alert(strings.soon, strings.soon)
-  const handleSearch = () => Alert.alert(strings.soon, strings.soon)
-
   return (
     <View style={styles.container}>
-      {(features.txHistory.export || features.txHistory.search) && (
-        <ActionsBanner onExport={handleExport} onSearch={handleSearch} />
-      )}
-
       <Spacer height={18} />
 
       <SectionList
         {...props}
         key={key}
-        ListHeaderComponent={<HeaderTransactionList primaryAmount={primaryAmount} />}
-        style={{}}
+        ListHeaderComponent={<MaybeShowBuyBanner />}
         contentContainerStyle={{
           paddingHorizontal: 18,
           flexGrow: 1,
@@ -83,40 +59,6 @@ export const TxHistoryList = (props: Props) => {
       />
     </View>
   )
-}
-
-const HeaderTransactionList = (props: {primaryAmount: BalanceAmount}) => {
-  const {primaryAmount} = props
-  const [showSmallBanner, setShowSmallBanner] = useState(false)
-  const timeAppearSmallBanner = useTimeAppearRampOnOffSmallBanner()
-  const {changeTimeAppear} = useChangeTimeAppearRampOnOffSmallBanner()
-
-  const isNeedBuyAda = new BigNumber(5000000).isGreaterThan(new BigNumber(primaryAmount.quantity))
-  const isAdaZero = Quantities.isZero(primaryAmount.quantity)
-
-  const isShowBigBanner = isAdaZero
-  const isShowSmallBanner = showSmallBanner && isNeedBuyAda
-
-  const onCloseSmallBanner = () => {
-    setShowSmallBanner(false)
-    const today = new Date().getTime()
-    const thirtyDaysInMills = 30 * 24 * 60 * 60 * 1000
-    changeTimeAppear(today + thirtyDaysInMills)
-  }
-
-  useEffect(() => {
-    if (!Number.isNaN(timeAppearSmallBanner)) {
-      const now = new Date().getTime()
-      setShowSmallBanner(now > Number(timeAppearSmallBanner))
-    } else {
-      setShowSmallBanner(true)
-    }
-  }, [timeAppearSmallBanner])
-
-  if (isShowBigBanner) return <BigBanner />
-  if (isShowSmallBanner) return <SmallBanner onClose={onCloseSmallBanner} />
-
-  return null
 }
 
 // workaround for https://emurgo.atlassian.net/browse/YOMO-199
@@ -174,15 +116,3 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 })
-
-export const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    soon: intl.formatMessage(actionMessages.soon),
-    buyADA: intl.formatMessage(bannerRampOnOffMessages.buyADA),
-    getFirstAda: intl.formatMessage(bannerRampOnOffMessages.getFirstAda),
-    ourTrustedPartners: intl.formatMessage(bannerRampOnOffMessages.ourTrustedPartners),
-    needMoreAda: intl.formatMessage(bannerRampOnOffMessages.needMoreAda),
-  }
-}

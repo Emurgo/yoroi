@@ -7,8 +7,8 @@ import {ModalProvider} from '../../../../components'
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
 import {mockExchangeStateDefault} from '../../common/mocks'
-import {RampOnOffInitRoutes} from '../../common/navigation'
 import {RampOnOffProvider} from '../../common/RampOnOffProvider'
+import {RampOnOffInitRoutes} from '../../common/useNavigateTo'
 import {ShowExchangeResult} from './ShowExchangeResult'
 
 storiesOf('RampOnOff ShowExchangeResult', module) //
