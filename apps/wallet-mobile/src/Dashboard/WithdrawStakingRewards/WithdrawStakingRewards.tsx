@@ -1,4 +1,3 @@
-import {useFocusEffect} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet} from 'react-native'
@@ -6,7 +5,6 @@ import Markdown from 'react-native-markdown-display'
 
 import {Boundary, DangerousAction, PleaseWaitView, Spacer} from '../../components'
 import globalMessages, {ledgerMessages} from '../../i18n/global-messages'
-import {useMetrics} from '../../metrics/metricsManager'
 import {theme} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useWithdrawalTx} from '../../yoroi-wallets/hooks'
@@ -26,14 +24,6 @@ export const WithdrawStakingRewards = ({wallet, onSuccess, onCancel}: Props) => 
   const [state, setState] = React.useState<
     {step: 'form'; withdrawalTx: undefined} | {step: 'confirm'; withdrawalTx: YoroiUnsignedTx}
   >({step: 'form', withdrawalTx: undefined})
-
-  const {track} = useMetrics()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.claimAdaPageViewed()
-    }, [track]),
-  )
 
   return (
     <Boundary loading={{fallback: <PleaseWaitView title="" spinnerText={strings.pleaseWait} />}}>

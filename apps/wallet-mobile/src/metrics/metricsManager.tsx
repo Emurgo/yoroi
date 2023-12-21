@@ -98,8 +98,6 @@ export const makeMetricsManager = (
   const track = {
     allWalletsPageViewed: metricsModule.allWalletsPageViewed.bind(metricsModule),
     assetsPageViewed: metricsModule.assetsPageViewed.bind(metricsModule),
-    claimAdaPageViewed: metricsModule.claimAdaPageViewed.bind(metricsModule),
-    connectorPageViewed: metricsModule.connectorPageViewed.bind(metricsModule),
     menuPageViewed: metricsModule.menuPageViewed.bind(metricsModule),
     receivePageViewed: metricsModule.receivePageViewed.bind(metricsModule),
     settingsPageViewed: metricsModule.settingsPageViewed.bind(metricsModule),
