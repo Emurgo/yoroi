@@ -10,17 +10,32 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
+import {calculatePriceImpactRisk, priceImpactColorMap} from '../../common/helpers'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
+import {useSwapForm} from '../../common/SwapFormProvider'
 import {SwapInfoLink} from '../../common/SwapInfoLink/SwapInfoLink'
+
+const priceImpactBannerColorMap = {
+  warning: '#FDF7E2',
+  negative: '#FFF1F5',
+}
 
 export const TransactionSummary = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {orderData} = useSwap()
-  const {amounts, selectedPoolCalculation: calculation} = orderData
+  const {
+    limitPrice: {displayValue: limitDisplayValue},
+  } = useSwapForm()
+  const {amounts, selectedPoolCalculation: calculation, calculations} = orderData
   const {openModal} = useModal()
+
+  const priceImpact = calculations[0]?.prices.priceImpact
+  const actualPrice = calculations[0]?.prices.actualPrice
+  const priceImpactRisk = calculatePriceImpactRisk(Number(priceImpact))
+  const warningColorHex = priceImpactColorMap[priceImpactRisk]
 
   // should never happen
   if (!calculation) throw new Error('No selected pool calculation')
@@ -41,6 +56,9 @@ export const TransactionSummary = () => {
   const poolProviderFormatted = capitalize(pool.provider)
   const poolUrl = getPoolUrlByProvider(pool.provider)
 
+  const liqFeeQuantity = Quantities.format(cost.liquidityFee.quantity, sellTokenInfo.decimals ?? 0)
+  const liqFeeQuantityFormatted = `${liqFeeQuantity} ${tokenToSellName}`
+
   const poolIcon = <PoolIcon providerId={pool.provider} size={18} />
 
   const feesInfo = [
@@ -56,17 +74,57 @@ export const TransactionSummary = () => {
       info: strings.swapMinAda,
     },
     {
-      label: strings.swapMinReceivedTitle,
-      value: `${Quantities.format(
-        calculation.buyAmountWithSlippage.quantity,
-        buyTokenInfo.decimals ?? 0,
-      )} ${tokenToBuyName}`,
-      info: strings.swapMinReceived,
-    },
-    {
       label: strings.swapFeesTitle,
       value: formattedFeeText,
       info: strings.swapFees,
+    },
+    {
+      label: strings.swapLiqProvFee,
+      value: liqFeeQuantityFormatted,
+      info: strings.swapFees,
+    },
+    {
+      label: strings.swapMinReceivedTitle,
+      value: (
+        <View style={styles.flex}>
+          {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={warningColorHex} />}
+
+          <Text style={{color: warningColorHex}}>
+            {`${Quantities.format(
+              calculation.buyAmountWithSlippage.quantity,
+              buyTokenInfo.decimals ?? 0,
+            )} ${tokenToBuyName}`}
+          </Text>
+        </View>
+      ),
+      info: strings.swapMinReceived,
+    },
+    {
+      label: strings.marketPrice,
+      value: `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`,
+      info: strings.swapFees,
+    },
+    {
+      label: strings.priceimpact,
+      value: (
+        <View style={{alignItems: 'flex-end'}}>
+          <View style={styles.flex}>
+            {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={warningColorHex} />}
+
+            {priceImpactRisk === 'warning' && <Icon.Info size={24} color={warningColorHex} />}
+
+            <Text style={{color: warningColorHex}}>{Math.ceil(Number(priceImpact) * 100) / 100}%</Text>
+          </View>
+
+          <Text style={{color: warningColorHex}}>
+            {actualPrice}
+
+            <Text style={{color: warningColorHex}}> {`${tokenToSellName}/${tokenToBuyName}`}</Text>
+          </Text>
+        </View>
+      ),
+      info: strings.swapMinReceived,
+      warning: priceImpactRisk === 'negative',
     },
   ]
 
@@ -131,13 +189,27 @@ export const TransactionSummary = () => {
                 )}
               </View>
 
-              <Text style={styles.text}>{orderInfo.value}</Text>
+              <View style={styles.orderValueContainer}>
+                <Text style={[styles.text]}>{orderInfo.value}</Text>
+              </View>
             </View>
           </View>
         )
       })}
 
-      <Spacer height={24} />
+      <Spacer height={12} />
+
+      {(priceImpactRisk === 'warning' || priceImpactRisk === 'negative') && (
+        <View style={[styles.banner, {backgroundColor: priceImpactBannerColorMap[priceImpactRisk]}]}>
+          {priceImpactRisk === 'warning' && <Icon.Info size={24} color={warningColorHex} />}
+
+          {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={warningColorHex} />}
+
+          <Text>{strings.priceimpactDescription}</Text>
+        </View>
+      )}
+
+      <Spacer height={12} />
 
       <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
 
@@ -147,7 +219,11 @@ export const TransactionSummary = () => {
 
       <Text style={styles.amountItemLabel}>{strings.swapTo}</Text>
 
-      <AmountItem wallet={wallet} amount={{tokenId: amounts.buy.tokenId, quantity: amounts.buy.quantity}} />
+      <AmountItem
+        wallet={wallet}
+        amount={{tokenId: amounts.buy.tokenId, quantity: amounts.buy.quantity}}
+        priceImpactRisk={priceImpactRisk}
+      />
     </View>
   )
 }
@@ -177,7 +253,7 @@ const styles = StyleSheet.create({
   flexBetween: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   flex: {
     flexDirection: 'row',
@@ -208,5 +284,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: '#242838',
+  },
+  orderValueContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  banner: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    gap: 8,
   },
 })

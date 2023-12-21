@@ -216,7 +216,7 @@ export const CreateOrder = () => {
     if (orderData.selectedPoolCalculation === undefined) return
 
     if (priceImpactRisk === 'negative') {
-      openModal(strings.warning, <PriceImpactWraning onSubmit={createUnsignedSwapTx} />, 400)
+      openModal(strings.warning, <PriceImpactWraning onSubmit={createUnsignedSwapTx} isLoading={isLoading} />, 400)
       return
     }
 

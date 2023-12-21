@@ -2,6 +2,7 @@ import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
+import {priceImpactColorMap} from '../../features/Swap/common/helpers'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
@@ -18,9 +19,18 @@ export type AmountItemProps = {
   status?: string
   inWallet?: boolean
   variant?: 'swap'
+  priceImpactRisk?: string
 }
 
-export const AmountItem = ({isPrivacyOff, wallet, style, amount, inWallet, variant}: AmountItemProps) => {
+export const AmountItem = ({
+  isPrivacyOff,
+  wallet,
+  style,
+  amount,
+  inWallet,
+  variant,
+  priceImpactRisk,
+}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -63,9 +73,20 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, inWallet, varia
 
       <Right>
         {tokenInfo.kind !== 'nft' && variant !== 'swap' && (
-          <Text style={styles.quantity} testID="tokenAmountText">
-            {isPrivacyOff ? '**.*******' : formattedQuantity}
-          </Text>
+          <View style={styles.row} testID="tokenAmountText">
+            {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={priceImpactColorMap[priceImpactRisk]} />}
+
+            {priceImpactRisk === 'warning' && <Icon.Info size={24} color={priceImpactColorMap[priceImpactRisk]} />}
+
+            <Text
+              style={[
+                styles.quantity,
+                {color: priceImpactColorMap[priceImpactRisk as keyof typeof priceImpactColorMap]},
+              ]}
+            >
+              {isPrivacyOff ? '**.*******' : formattedQuantity}
+            </Text>
+          </View>
         )}
 
         {isPrimary && variant !== 'swap' && (
@@ -138,6 +159,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Rubik-Regular',
   },
   row: {
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
   },

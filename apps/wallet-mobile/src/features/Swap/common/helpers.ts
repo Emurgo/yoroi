@@ -105,3 +105,8 @@ export const calculatePriceImpactRisk = (priceImpact: number) => {
   }
   return 'positive'
 }
+
+export const priceImpactColorMap = {
+  warning: '#ED8600',
+  negative: '#FF1351',
+}

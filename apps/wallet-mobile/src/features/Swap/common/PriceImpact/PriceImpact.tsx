@@ -2,18 +2,13 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Icon} from '../../../../components'
-import {calculatePriceImpactRisk} from '../helpers'
+import {calculatePriceImpactRisk, priceImpactColorMap} from '../helpers'
 import {useStrings} from '../strings'
 
 type PriceImactProps = {
   priceImpact: number
   actualPrice: number
   pair: string
-}
-
-const colorMap = {
-  warning: '#ED8600',
-  negative: '#FF1351',
 }
 
 export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImactProps) => {
@@ -25,7 +20,7 @@ export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImactProps) =
 
   const priceImpactRisk = calculatePriceImpactRisk(priceImpact)
 
-  const warningColorHex = colorMap[priceImpactRisk]
+  const warningColorHex = priceImpactColorMap[priceImpactRisk]
 
   return (
     <View style={styles.priceImpactWrapper}>

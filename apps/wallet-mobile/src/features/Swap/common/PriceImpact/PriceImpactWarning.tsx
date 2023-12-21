@@ -6,9 +6,10 @@ import {useStrings} from '../strings'
 
 export interface Props {
   onSubmit: () => void
+  isLoading: boolean
 }
 
-export const PriceImpactWraning = ({onSubmit}: Props) => {
+export const PriceImpactWraning = ({onSubmit, isLoading}: Props) => {
   const strings = useStrings()
   const {closeModal} = useModal()
 
@@ -28,6 +29,7 @@ export const PriceImpactWraning = ({onSubmit}: Props) => {
           onPress={onSubmit}
           style={styles.buttonContinue}
           containerStyle={styles.buttonContainer}
+          disabled={isLoading}
         />
       </View>
 
