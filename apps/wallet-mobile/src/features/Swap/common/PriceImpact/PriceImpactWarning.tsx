@@ -16,7 +16,11 @@ export const PriceImpactWraning = ({onSubmit, isLoading}: Props) => {
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.description}>{strings.priceimpactDescription}</Text>
+        <Text style={styles.description}>
+          <Text style={styles.bold}>{strings.priceImpactOver10}</Text>
+
+          <Text> {strings.priceimpactDescription}</Text>
+        </Text>
       </View>
 
       <Spacer fill />
@@ -59,5 +63,8 @@ const styles = StyleSheet.create({
   description: {
     fontFamily: 'Rubik',
     fontSize: 16,
+  },
+  bold: {
+    fontWeight: '500',
   },
 })

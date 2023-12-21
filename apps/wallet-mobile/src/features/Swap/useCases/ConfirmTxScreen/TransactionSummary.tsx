@@ -205,7 +205,11 @@ export const TransactionSummary = () => {
 
           {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={warningColorHex} />}
 
-          <Text>{strings.priceimpactDescription}</Text>
+          <Text>
+            <Text style={styles.bold}>{strings.priceImpactOver10}</Text>
+
+            <Text> {strings.priceimpactDescription}</Text>
+          </Text>
         </View>
       )}
 
@@ -293,5 +297,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     gap: 8,
+  },
+  bold: {
+    fontWeight: '500',
   },
 })

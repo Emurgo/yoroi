@@ -1,10 +1,6 @@
-import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
-import {Text} from '../../../components'
 import globalMessages, {errorMessages, ledgerMessages} from '../../../i18n/global-messages'
-
-const bold = {b: (text) => <Text bold>{text}</Text>}
 
 export const useStrings = () => {
   const intl = useIntl()
@@ -66,7 +62,8 @@ export const useStrings = () => {
     youHave: intl.formatMessage(messages.youHave),
     price: intl.formatMessage(messages.price),
     priceimpact: intl.formatMessage(messages.priceimpact),
-    priceimpactDescription: intl.formatMessage(messages.priceImpactDescription, bold),
+    priceImpactOver10: intl.formatMessage(messages.priceImpactOver10),
+    priceimpactDescription: intl.formatMessage(messages.priceImpactDescription),
     tvl: intl.formatMessage(messages.tvl),
     poolFee: intl.formatMessage(messages.poolFee),
     batcherFee: intl.formatMessage(messages.batcherFee),
@@ -617,10 +614,15 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.priceImpact',
     defaultMessage: '!!!Price Impact',
   },
+
+  priceImpactOver10: {
+    id: 'swap.swapScreen.priceImpactOver10',
+    defaultMessage: '!!!<b>Price impact over 10%</b> ',
+  },
   priceImpactDescription: {
     id: 'swap.swapScreen.priceImpactDescription',
     defaultMessage:
-      '!!!<b>Price impact over 10%</b> may cause a significant loss of funds. Please bear this in mind and proceed with an extra caution.',
+      '!!!may cause a significant loss of funds. Please bear this in mind and proceed with an extra caution.',
   },
   warning: {
     id: 'components.txhistory.flawedwalletmodal.title',
