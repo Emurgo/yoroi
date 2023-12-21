@@ -65,7 +65,7 @@ export const StartMultiTokenTxScreen = () => {
     }
   }
   const handleOnChangeReceiver = (text: string) => {
-    if (!isFocused) return // prevent weird bug: automatic call when is unfocused and using domains
+    if (!isFocused) return
     receiverResolveChanged(text)
   }
   const handleOnChangeMemo = (text: string) => memoChanged(text)
