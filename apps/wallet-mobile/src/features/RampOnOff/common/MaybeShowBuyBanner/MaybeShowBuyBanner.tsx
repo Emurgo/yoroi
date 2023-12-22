@@ -5,8 +5,8 @@ import {useBalances} from '../../../../yoroi-wallets/hooks'
 import {Amounts, asQuantity, Quantities} from '../../../../yoroi-wallets/utils/utils'
 import {useResetShowBuyBannerSmall} from '../useResetShowBuyBannerSmall'
 import {useShowBuyBannerSmall} from '../useShowBuyBannerSmall'
-import {ShowBuyBannerBig} from './BuyBannerBig'
-import {ShowBuyBannerSmall} from './BuyBannerSmall'
+import {BuyBannerBig} from './BuyBannerBig'
+import {BuyBannerSmall} from './BuyBannerSmall'
 
 const minAdaThreshold = asQuantity(5_000_000)
 
@@ -26,8 +26,8 @@ export const MaybeShowBuyBanner = () => {
     resetShowBuyBannerSmall()
   }
 
-  if (hasZeroPt) return <ShowBuyBannerBig />
-  if (isShowSmallBanner) return <ShowBuyBannerSmall onClose={handleOnClose} />
+  if (hasZeroPt) return <BuyBannerBig />
+  if (isShowSmallBanner) return <BuyBannerSmall onClose={handleOnClose} />
 
   return null
 }

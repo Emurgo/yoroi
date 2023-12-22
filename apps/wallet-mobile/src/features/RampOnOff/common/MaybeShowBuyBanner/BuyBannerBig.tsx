@@ -12,7 +12,7 @@ import {useStrings} from '../useStrings'
 
 const DIMENSIONS = Dimensions.get('window')
 
-export const ShowBuyBannerBig = () => {
+export const BuyBannerBig = () => {
   const strings = useStrings()
 
   const {theme} = useTheme()

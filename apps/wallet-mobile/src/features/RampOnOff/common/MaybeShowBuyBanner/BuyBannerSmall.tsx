@@ -13,7 +13,7 @@ type SmallBannerProps = {
   onClose: () => void
 }
 
-export const ShowBuyBannerSmall = ({onClose}: SmallBannerProps) => {
+export const BuyBannerSmall = ({onClose}: SmallBannerProps) => {
   const strings = useStrings()
 
   const {theme} = useTheme()
