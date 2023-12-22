@@ -22,12 +22,12 @@ export const MaybeShowBuyBanner = () => {
 
   const isShowSmallBanner = showSmallBanner && isInThresholdToBuy && !hasZeroPt
 
-  const onCloseSmallBanner = () => {
+  const handleOnClose = () => {
     resetShowBuyBannerSmall()
   }
 
   if (hasZeroPt) return <ShowBuyBannerBig />
-  if (isShowSmallBanner) return <ShowBuyBannerSmall onClose={onCloseSmallBanner} />
+  if (isShowSmallBanner) return <ShowBuyBannerSmall onClose={handleOnClose} />
 
   return null
 }
