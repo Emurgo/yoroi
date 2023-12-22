@@ -132,7 +132,7 @@ export const makeMetricsManager = (
     walletPageExchangeClicked: metricsModule.walletPageExchangeClicked.bind(metricsModule),
     walletPageBuyBannerClicked: metricsModule.walletPageBuyBannerClicked.bind(metricsModule),
     exchangePageViewed: metricsModule.exchangePageViewed.bind(metricsModule),
-    exchangeSubmited: metricsModule.exchangeSubmitted.bind(metricsModule),
+    exchangeSubmitted: metricsModule.exchangeSubmitted.bind(metricsModule),
   } as const
 
   return {

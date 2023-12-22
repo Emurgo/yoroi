@@ -174,7 +174,7 @@ describe('makeMetricsManager', () => {
     metricsManager.track.walletPageExchangeClicked()
     metricsManager.track.walletPageBuyBannerClicked()
     metricsManager.track.exchangePageViewed()
-    metricsManager.track.exchangeSubmited({ramp_type: 'Buy', ada_amount: 222})
+    metricsManager.track.exchangeSubmitted({ramp_type: 'Buy', ada_amount: 222})
 
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
@@ -217,9 +217,9 @@ describe('makeMetricsManager', () => {
     })
 
     expect(mockAmpli.walletPageExchangeClicked).toHaveBeenCalled()
-    expect(mockAmpli.walletPageExchangeClicked).toHaveBeenCalled()
-    expect(mockAmpli.walletPageExchangeClicked).toHaveBeenCalled()
-    expect(mockAmpli.walletPageExchangeClicked).toHaveBeenCalled()
+    expect(mockAmpli.walletPageBuyBannerClicked).toHaveBeenCalled()
+    expect(mockAmpli.exchangePageViewed).toHaveBeenCalled()
+    expect(mockAmpli.exchangeSubmitted).toHaveBeenCalled()
   })
 
   test('enable should set metrics enabled to true', async () => {
