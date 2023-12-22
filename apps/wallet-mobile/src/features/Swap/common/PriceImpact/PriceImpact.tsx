@@ -13,9 +13,15 @@ type PriceImpactProps = {
 
 export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImpactProps) => {
   const strings = useStrings()
+<<<<<<< HEAD
   const priceImpactRisk = getPriceImpactRisk(priceImpact)
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
   const textColor = priceImpactRiskTheme.text
+=======
+  const priceImpactRisk = getPriceImpactStatus(priceImpact)
+  const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
+  const warningColorHex = priceImpactColor.text
+>>>>>>> 93827dfa0 (Apply suggestions from code review)
 
   if (priceImpactRisk === 'none' || actualPrice === 0 || isNaN(actualPrice)) {
     return null
