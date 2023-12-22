@@ -17,7 +17,7 @@ export const useIsValidDRepID = (
   const {manager} = useGovernance()
   return useQuery({
     queryKey: ['governanceIsValidDRepID', id],
-    queryFn: async () => await manager.validateDRepID(id),
+    queryFn: () => manager.validateDRepID(id),
     ...options,
   })
 }
@@ -29,7 +29,7 @@ export const useStakingKeyState = (
   const {manager} = useGovernance()
   return useQuery({
     queryKey: ['governanceStakingKeyState', stakingKeyHash],
-    queryFn: async () => await manager.getStakingKeyState(stakingKeyHash),
+    queryFn: () => manager.getStakingKeyState(stakingKeyHash),
     enabled: stakingKeyHash.length > 0,
     ...options,
   })
@@ -43,7 +43,7 @@ export const useLatestGovernanceAction = (
 
   return useQuery({
     queryKey: [walletId, 'governanceLatestGovernanceAction'],
-    queryFn: async () => await manager.getLatestGovernanceAction(),
+    queryFn: () => manager.getLatestGovernanceAction(),
     ...options,
   })
 }
@@ -57,7 +57,7 @@ export const useUpdateLatestGovernanceAction = (
     ...options,
     mutationFn: async (action: GovernanceAction) =>
       await manager.setLatestGovernanceAction(action),
-    invalidateQueries: [walletId, 'governanceLatestGovernanceAction'],
+    invalidateQueries: [[walletId, 'governanceLatestGovernanceAction']],
   })
   return {
     ...mutation,
@@ -121,7 +121,7 @@ export const useBech32DRepID = (
 
   return useQuery({
     queryKey: ['governanceGetBech32DRepID', hexId],
-    queryFn: async () => await manager.convertHexKeyHashToBech32Format(hexId),
+    queryFn: () => manager.convertHexKeyHashToBech32Format(hexId),
     ...options,
   })
 }

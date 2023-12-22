@@ -6,7 +6,7 @@ type Props = {
   height: number
 }
 
-export const IllustrationBannerBuyADA = (props: Props) => {
+export const BuyBannerIllustration = (props: Props) => {
   return (
     <Svg height={props.height} width={props.width} viewBox="0 0 341 116" fill="none">
       <Path

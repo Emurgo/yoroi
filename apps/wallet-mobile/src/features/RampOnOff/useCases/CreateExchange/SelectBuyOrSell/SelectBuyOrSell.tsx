@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {ButtonActionGroup} from '../../../common/ButtonActionGroup/ButtonActionGroup'
 import {OrderType, useRampOnOff} from '../../../common/RampOnOffProvider'
-import {useStrings} from '../../../common/strings'
+import {useStrings} from '../../../common/useStrings'
 
 export const SelectBuyOrSell = () => {
   const strings = useStrings()
