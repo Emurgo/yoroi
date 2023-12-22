@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {useTheme} from '../../../../../theme'
 import {Theme} from '../../../../../theme/types'
-import {useStrings} from '../../../common/strings'
+import {useStrings} from '../../../common/useStrings'
 
 export const ShowProviderFee = () => {
   const {theme} = useTheme()

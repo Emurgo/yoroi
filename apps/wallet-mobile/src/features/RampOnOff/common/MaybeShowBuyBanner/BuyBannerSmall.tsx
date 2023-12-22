@@ -1,29 +1,27 @@
+import {useNavigation} from '@react-navigation/native'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Icon, Spacer} from '../../../components'
-import {useTheme} from '../../../theme'
-import {Theme} from '../../../theme/types'
-import {useStrings} from '../TxHistoryList'
-import {useNavigateTo} from './BigBanner'
+import {Icon, Spacer} from '../../../../components'
+import {TxHistoryRouteNavigation} from '../../../../navigation'
+import {useTheme} from '../../../../theme'
+import {Theme} from '../../../../theme/types'
+import {useStrings} from '../useStrings'
 
-type Props = {
+type SmallBannerProps = {
   onClose: () => void
 }
 
-const SmallBanner = (props: Props) => {
-  const {onClose} = props
-
+export const BuyBannerSmall = ({onClose}: SmallBannerProps) => {
   const strings = useStrings()
 
   const {theme} = useTheme()
   const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
 
-  const navigateTo = useNavigateTo()
-
+  const navigation = useNavigation<TxHistoryRouteNavigation>()
   const handleExchange = () => {
-    navigateTo.exchange()
+    navigation.navigate('rampOnOff-start-rampOnOff')
   }
   return (
     <View style={styles.root}>
@@ -34,7 +32,7 @@ const SmallBanner = (props: Props) => {
         colors={theme.color.gradients['blue-green']}
       >
         <View style={styles.viewTitle}>
-          <Text style={styles.title}>{strings.needMoreAda}</Text>
+          <Text style={styles.title}>{strings.needMoreCrypto}</Text>
 
           <TouchableOpacity onPress={onClose}>
             <Icon.Close size={24} />
@@ -48,14 +46,12 @@ const SmallBanner = (props: Props) => {
         <Spacer height={8} />
 
         <TouchableOpacity onPress={handleExchange}>
-          <Text style={styles.textButton}>{strings.buyADA.toUpperCase()}</Text>
+          <Text style={styles.textButton}>{strings.buyCrypto.toLocaleUpperCase()}</Text>
         </TouchableOpacity>
       </LinearGradient>
     </View>
   )
 }
-
-export default SmallBanner
 
 const getStyles = (props: {theme: Theme}) => {
   const {theme} = props
