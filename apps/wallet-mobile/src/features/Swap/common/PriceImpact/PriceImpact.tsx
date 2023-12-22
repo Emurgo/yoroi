@@ -17,8 +17,6 @@ export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImactProps) =
   const priceImpactColor = usePriceImpactStatusTheme(priceImpactRisk ?? 'positive')
   const warningColorHex = priceImpactColor.text
 
-  console.log('priceImpactColor', priceImpactColor)
-
   if (actualPrice === 0 || isNaN(actualPrice)) {
     return null
   }
