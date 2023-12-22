@@ -14,8 +14,8 @@ type PriceImpactProps = {
 export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImpactProps) => {
   const strings = useStrings()
   const priceImpactRisk = getPriceImpactRisk(priceImpact)
-  const priceImpactColor = usePriceImpactRiskTheme(priceImpactRisk)
-  const warningColorHex = priceImpactColor.text
+  const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
+  const textColor = priceImpactRiskTheme.text
 
   if (priceImpactRisk === 'none' || actualPrice === 0 || isNaN(actualPrice)) {
     return null
@@ -27,12 +27,12 @@ export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImpactProps) 
   return (
     <View style={styles.row}>
       <View>
-        {priceImpactRisk === 'moderate' && <Icon.Info size={20} color={warningColorHex} />}
+        {priceImpactRisk === 'moderate' && <Icon.Info size={20} color={textColor} />}
 
-        {priceImpactRisk === 'high' && <Icon.Warning size={20} color={warningColorHex} />}
+        {priceImpactRisk === 'high' && <Icon.Warning size={20} color={textColor} />}
       </View>
 
-      <Text style={{color: warningColorHex}}>
+      <Text style={{color: textColor}}>
         <Text>{strings.priceImpact}</Text>
 
         <Text> = </Text>

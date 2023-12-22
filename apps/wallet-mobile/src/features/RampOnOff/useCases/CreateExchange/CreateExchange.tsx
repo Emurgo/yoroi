@@ -7,6 +7,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {Button} from '../../../../components'
 import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../legacy/config'
 import env from '../../../../legacy/env'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {useTheme} from '../../../../theme'
 import {Theme} from '../../../../theme/types'
@@ -25,6 +26,7 @@ const BOTTOM_ACTION_SECTION = 180
 
 export const CreateExchange = () => {
   const strings = useStrings()
+  const {track} = useMetrics()
   const [contentHeight, setContentHeight] = React.useState(0)
 
   const navigateTo = useNavigateTo()
@@ -37,6 +39,10 @@ export const CreateExchange = () => {
 
   const {theme} = useTheme()
   const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
+
+  React.useEffect(() => {
+    track.exchangePageViewed()
+  }, [track])
 
   const handleExchange = () => {
     // banxa doesn't support testnet for the sandbox it needs a mainnet address
@@ -63,6 +69,7 @@ export const CreateExchange = () => {
     const banxa = banxaModuleMaker(moduleOptions)
     const url = banxa.createReferralUrl(urlOptions)
     Linking.openURL(url.toString())
+    track.exchangeSubmited()
     navigateTo.rampOnOffOpenOrder()
   }
 

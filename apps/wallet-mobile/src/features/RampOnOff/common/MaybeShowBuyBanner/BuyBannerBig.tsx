@@ -4,6 +4,7 @@ import {Dimensions, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Button, Spacer} from '../../../../components'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../navigation'
 import {useTheme} from '../../../../theme'
 import {Theme} from '../../../../theme/types'
@@ -14,6 +15,7 @@ const DIMENSIONS = Dimensions.get('window')
 
 export const BuyBannerBig = () => {
   const strings = useStrings()
+  const {track} = useMetrics()
 
   const {theme} = useTheme()
   const styles = React.useMemo(() => getStyles({theme}), [theme])
@@ -22,6 +24,7 @@ export const BuyBannerBig = () => {
 
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const handleExchange = () => {
+    track.walletPageBuyBannerClicked()
     navigation.navigate('rampOnOff-start-rampOnOff')
   }
 

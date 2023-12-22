@@ -82,7 +82,9 @@ const mockAmpli = {
   swapCancelationSubmitted: jest.fn(),
 
   walletPageExchangeClicked: jest.fn(),
-  walletPageExchangeBottomSheetClicked: jest.fn(),
+  walletPageBuyBannerClicked: jest.fn(),
+  exchangePageViewed: jest.fn(),
+  exchangeSubmited: jest.fn(),
 } as unknown as Ampli
 
 const mockMetricsStorage = {
