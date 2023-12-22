@@ -1038,38 +1038,3 @@ export const useNativeAssetInvalidation = ({networkId, policy, name}: NativeAsse
     invalidate: mutation.mutate,
   }
 }
-
-export const useTimeAppearRampOnOffSmallBanner = (
-  options?: UseQueryOptions<number | Promise<object | null>, Error>,
-) => {
-  const storage = useStorage()
-  const query = useQuery({
-    queryKey: ['timeAppearSmallBanner'],
-    queryFn: async () => {
-      const timeAppearSmallBanner = await storage.join('rampOnOff/').getItem('timeAppearSmallBanner')
-      if (!timeAppearSmallBanner) {
-        return null
-      }
-      return timeAppearSmallBanner
-    },
-    ...options,
-  })
-
-  return query.data
-}
-
-export const useChangeTimeAppearRampOnOffSmallBanner = (options: UseMutationOptions<void, Error, number> = {}) => {
-  const storage = useStorage()
-  const mutation = useMutationWithInvalidations<void, Error, number>({
-    mutationFn: async (newTimeAppear) => {
-      return storage.join('rampOnOff/').setItem('timeAppearSmallBanner', newTimeAppear)
-    },
-    invalidateQueries: ['timeAppearSmallBanner'],
-    ...options,
-  })
-
-  return {
-    changeTimeAppear: mutation.mutate,
-    ...mutation,
-  }
-}

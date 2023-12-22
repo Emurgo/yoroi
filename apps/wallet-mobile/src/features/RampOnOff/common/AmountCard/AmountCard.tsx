@@ -9,7 +9,7 @@ import {Theme} from '../../../../theme/types'
 import {isEmptyString} from '../../../../utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
-import {useStrings} from '../strings'
+import {useStrings} from '../useStrings'
 
 type AmountCardProps = {
   error?: string

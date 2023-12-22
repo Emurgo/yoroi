@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {useTheme} from '../../../../../theme'
-import {useStrings} from '../../../common/strings'
+import {useStrings} from '../../../common/useStrings'
 
 export const ShowDisclaimer = () => {
   const {theme} = useTheme()

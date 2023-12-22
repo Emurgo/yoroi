@@ -47,20 +47,20 @@ export const useIsGovernanceFeatureEnabled = (wallet: YoroiWallet) => {
 }
 
 export const useGovernanceManagerMaker = () => {
-  const wallet = useSelectedWallet()
+  const {networkId, id: walletId} = useSelectedWallet()
 
   const storage = useStorage()
+  const governanceStorage = storage.join(`wallet/${walletId}/staking-governance/`)
 
-  const {networkId} = useSelectedWallet()
   return React.useMemo(
     () =>
       governanceManagerMaker({
-        walletId: wallet.id,
+        walletId,
         networkId,
         api: governanceApiMaker({networkId}),
         cardano: CardanoMobile,
-        storage: storage.join(`${wallet.id}/`).join('staking-governance/'),
+        storage: governanceStorage,
       }),
-    [networkId, storage, wallet.id],
+    [governanceStorage, networkId, walletId],
   )
 }
