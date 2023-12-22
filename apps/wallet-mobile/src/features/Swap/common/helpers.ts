@@ -107,15 +107,24 @@ export const calculatePriceImpactRisk = (priceImpact: number) => {
   return 'positive'
 }
 
-export const priceImpactColorObject = (theme: Theme) => {
-  return {
-    warning: theme.color.yellow[500],
-    negative: theme.color.magenta[500],
+export const usePriceImpactStatusTheme = (status: SwapPriceImpactStatus) {
+  const theme = useTheme()
+  
+  if (status === 'negative') {
+    return {
+      text: theme.color.magenta[500],
+      background: theme.color.magenta[100]
+    }
+  } else if (status === 'warning') {
+    return {
+      text: theme.color.yellow[500],
+      background: theme.color.yellow[100]
+    }
   }
-}
-export const priceImpactBannerColorObject = (theme: Theme) => {
+  
   return {
-    warning: theme.color.yellow[100],
-    negative: theme.color.magenta[100],
+    // TODO: fix
+    text: theme.color.yellow[500],
+    background: theme.color.yellow[100]
   }
 }
