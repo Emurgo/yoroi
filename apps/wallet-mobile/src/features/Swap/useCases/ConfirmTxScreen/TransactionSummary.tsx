@@ -29,10 +29,10 @@ export const TransactionSummary = () => {
 
   // should never happen
   if (!calculation) throw new Error('No selected pool calculation')
-  const {pool, cost} = calculation
+  const {pool, cost, prices} = calculation
 
-  const priceImpact = calculation.prices.priceImpact
-  const actualPrice = calculation.prices.actualPrice
+  const priceImpact = prices.priceImpact
+  const actualPrice = prices.actualPrice
   const priceImpactRisk = getPriceImpactRisk(Number(priceImpact))
   const priceImpactColor = usePriceImpactRiskTheme(priceImpactRisk)
   const warningColorHex = priceImpactColor.text
