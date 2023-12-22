@@ -5,7 +5,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
 
-import {Spacer, Text} from '../../components'
+import {Text} from '../../components'
 import {MaybeShowBuyBanner} from '../../features/RampOnOff/common/MaybeShowBuyBanner/MaybeShowBuyBanner'
 import {formatDateRelative} from '../../legacy/format'
 import {useMetrics} from '../../metrics/metricsManager'
