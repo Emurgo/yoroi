@@ -7,10 +7,10 @@ import {Icon, Spacer, Text, useModal} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
 import {PairedBalance} from '../../../../components/PairedBalance/PairedBalance'
 import {useSelectedWallet} from '../../../../SelectedWallet'
-import {COLORS, useTheme} from '../../../../theme'
+import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
-import {calculatePriceImpactRisk, priceImpactBannerColorObject, priceImpactColorObject} from '../../common/helpers'
+import {getPriceImpactStatus, usePriceImpactStatusTheme} from '../../common/helpers'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
@@ -21,25 +21,21 @@ export const TransactionSummary = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {orderData} = useSwap()
-  const {theme} = useTheme()
   const {
     limitPrice: {displayValue: limitDisplayValue},
   } = useSwapForm()
   const {amounts, selectedPoolCalculation: calculation, calculations} = orderData
   const {openModal} = useModal()
 
-  const priceImpact = calculations[0]?.prices.priceImpact
-  const actualPrice = calculations[0]?.prices.actualPrice
-
-  const priceImpactColor = priceImpactColorObject(theme)
-  const priceImpactBannerColorMap = priceImpactBannerColorObject(theme)
-
-  const priceImpactRisk = calculatePriceImpactRisk(Number(priceImpact))
-  const warningColorHex = priceImpactColor[priceImpactRisk]
-
   // should never happen
   if (!calculation) throw new Error('No selected pool calculation')
   const {pool, cost} = calculation
+
+  const priceImpact = calculations[0]?.prices.priceImpact
+  const actualPrice = calculations[0]?.prices.actualPrice
+  const priceImpactRisk = getPriceImpactStatus(Number(priceImpact))
+  const priceImpactColor = usePriceImpactStatusTheme(priceImpactRisk ?? 'positive')
+  const warningColorHex = priceImpactColor.text
 
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
@@ -203,13 +199,13 @@ export const TransactionSummary = () => {
       <Spacer height={12} />
 
       {(priceImpactRisk === 'warning' || priceImpactRisk === 'negative') && (
-        <View style={[styles.banner, {backgroundColor: priceImpactBannerColorMap[priceImpactRisk]}]}>
+        <View style={[styles.banner, {backgroundColor: priceImpactColor.background}]}>
           {priceImpactRisk === 'warning' && <Icon.Info size={24} color={warningColorHex} />}
 
           {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={warningColorHex} />}
 
           <Text>
-            <Text style={styles.bold}>{strings.priceImpactOver10}</Text>
+            <Text style={styles.bold}>{strings.priceImpactNegative}</Text>
 
             <Text> {strings.priceimpactDescription}</Text>
           </Text>

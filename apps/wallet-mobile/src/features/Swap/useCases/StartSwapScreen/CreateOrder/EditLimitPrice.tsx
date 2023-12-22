@@ -6,7 +6,7 @@ import {StyleSheet, Text, TextInput, View} from 'react-native'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import PriceImpact from '../../../common/PriceImpact/PriceImpact'
+import {PriceImpact} from '../../../common/PriceImpact/PriceImpact'
 import {useStrings} from '../../../common/strings'
 import {useSwapForm} from '../../../common/SwapFormProvider'
 
@@ -22,7 +22,7 @@ export const EditLimitPrice = () => {
   const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
   const disabled = orderData.type === 'market'
 
-  const prices = orderData.calculations[0]?.prices
+  const prices = orderData.selectedPoolCalculation?.prices
 
   const {
     buyQuantity: {isTouched: isBuyTouched},

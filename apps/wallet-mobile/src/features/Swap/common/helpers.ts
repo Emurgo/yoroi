@@ -5,10 +5,11 @@ import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {Theme} from '../../../theme/types'
+import {useTheme} from '../../../theme'
 import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
+import {SwapPriceImpactStatus} from './types'
 
 export const useCancelOrderWithHw = (
   {cancelOrder}: {cancelOrder: SwapApi['cancelOrder']},
@@ -98,29 +99,28 @@ export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo, wal
 }
 
 export const getPriceImpactStatus = (priceImpact: number) => {
-  if (price < 1) return 'positive'
-  if (price > 10) return 'negative'
+  if (priceImpact < 1) return 'positive'
+  if (priceImpact > 10) return 'negative'
   return 'warning'
 }
 
-export const usePriceImpactStatusTheme = (status: SwapPriceImpactStatus) {
-  const theme = useTheme()
-  
+export const usePriceImpactStatusTheme = (status: SwapPriceImpactStatus) => {
+  const {theme} = useTheme()
+
   if (status === 'negative') {
     return {
       text: theme.color.magenta[500],
-      background: theme.color.magenta[100]
+      background: theme.color.magenta[100],
     }
   } else if (status === 'warning') {
     return {
       text: theme.color.yellow[500],
-      background: theme.color.yellow[100]
+      background: theme.color.yellow[100],
     }
   }
-  
+
   return {
-    // TODO: fix
     text: theme.color.yellow[500],
-    background: theme.color.yellow[100]
+    background: theme.color.yellow[100],
   }
 }

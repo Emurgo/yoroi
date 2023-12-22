@@ -8,10 +8,9 @@ import {useStrings} from '../strings'
 
 export interface Props {
   onSubmit: () => void
-  isLoading: boolean
 }
 
-export const PriceImpactWarning = ({onSubmit, isLoading}: Props) => {
+export const PriceImpactWarning = ({onSubmit}: Props) => {
   const strings = useStrings()
   const {closeModal} = useModal()
 
@@ -22,7 +21,7 @@ export const PriceImpactWarning = ({onSubmit, isLoading}: Props) => {
     <View style={styles.container}>
       <View>
         <Text style={styles.description}>
-          <Text style={styles.bold}>{strings.priceImpactOver10}</Text>
+          <Text style={styles.bold}>{strings.priceImpactNegative}</Text>
 
           <Text> {strings.priceimpactDescription}</Text>
         </Text>
@@ -38,7 +37,6 @@ export const PriceImpactWarning = ({onSubmit, isLoading}: Props) => {
           onPress={onSubmit}
           style={styles.buttonContinue}
           containerStyle={styles.buttonContainer}
-          disabled={isLoading}
         />
       </View>
 

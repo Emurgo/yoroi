@@ -2,8 +2,7 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Icon} from '../../../../components'
-import {useTheme} from '../../../../theme'
-import {calculatePriceImpactRisk, priceImpactColorObject} from '../helpers'
+import {getPriceImpactStatus, usePriceImpactStatusTheme} from '../helpers'
 import {useStrings} from '../strings'
 
 type PriceImactProps = {
@@ -14,16 +13,15 @@ type PriceImactProps = {
 
 export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImactProps) => {
   const strings = useStrings()
-  const {theme} = useTheme()
+  const priceImpactRisk = getPriceImpactStatus(priceImpact)
+  const priceImpactColor = usePriceImpactStatusTheme(priceImpactRisk ?? 'positive')
+  const warningColorHex = priceImpactColor.text
+
+  console.log('priceImpactColor', priceImpactColor)
 
   if (actualPrice === 0 || isNaN(actualPrice)) {
     return null
   }
-
-  const priceImpactRisk = calculatePriceImpactRisk(priceImpact)
-  const priceImpactColor = priceImpactColorObject(theme)
-
-  const warningColorHex = priceImpactColor[priceImpactRisk]
 
   return (
     <View style={styles.priceImpactWrapper}>
@@ -45,7 +43,6 @@ export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImactProps) =
     </View>
   )
 }
-
 
 const styles = StyleSheet.create({
   priceImpactWrapper: {

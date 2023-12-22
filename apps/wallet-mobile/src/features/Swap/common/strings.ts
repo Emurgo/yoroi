@@ -63,7 +63,7 @@ export const useStrings = () => {
     youHave: intl.formatMessage(messages.youHave),
     price: intl.formatMessage(messages.price),
     priceimpact: intl.formatMessage(messages.priceimpact),
-    priceImpactOver10: intl.formatMessage(messages.priceImpactOver10),
+    priceImpactNegative: intl.formatMessage(messages.priceImpactNegative),
     priceimpactDescription: intl.formatMessage(messages.priceImpactDescription),
     priceImpactInfo: intl.formatMessage(messages.priceImpactInfo),
     tvl: intl.formatMessage(messages.tvl),
@@ -622,8 +622,8 @@ export const messages = defineMessages({
     defaultMessage: '!!!Price Impact',
   },
 
-  priceImpactOver10: {
-    id: 'swap.swapScreen.priceImpactOver10',
+  priceImpactNegative: {
+    id: 'swap.swapScreen.priceImpactNegative',
     defaultMessage: '!!!<b>Price impact over 10%</b> ',
   },
   priceImpactDescription: {
