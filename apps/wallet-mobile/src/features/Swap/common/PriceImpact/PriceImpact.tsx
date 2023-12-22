@@ -11,10 +11,10 @@ type PriceImpactProps = {
   pair: string
 }
 
-export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImactProps) => {
+export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImpactProps) => {
   const strings = useStrings()
   const priceImpactRisk = getPriceImpactStatus(priceImpact)
-  const priceImpactColor = usePriceImpactStatusTheme(priceImpactRisk ?? 'positive')
+  const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
   const warningColorHex = priceImpactColor.text
 
   if (actualPrice === 0 || isNaN(actualPrice)) {

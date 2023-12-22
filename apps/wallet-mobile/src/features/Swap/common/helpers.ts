@@ -98,7 +98,7 @@ export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo, wal
   return nameA.localeCompare(nameB, undefined, {sensitivity: 'base'})
 }
 
-export const getPriceImpactStatus = (priceImpact: number) => {
+export const getPriceImpactRisk = (priceImpact: number) => {
   if (priceImpact < 1) return 'none'
   if (priceImpact > 10) return 'high'
   return 'moderate'
