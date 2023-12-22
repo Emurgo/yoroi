@@ -42,7 +42,7 @@ export const AmountItem = ({
 
   const formattedQuantity = Quantities.format(quantity, tokenInfo.decimals ?? 0)
   const showSwapDetails = !isPrimary && variant === 'swap'
-  const priceImpactColor = usePriceImpactStatusTheme(priceImpactRisk ?? 'positive')
+  const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
 
   return (
     <View style={[style, styles.container]} testID="assetItem">
