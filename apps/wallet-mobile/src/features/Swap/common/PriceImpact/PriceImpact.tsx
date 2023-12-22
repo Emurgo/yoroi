@@ -46,7 +46,6 @@ export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImactProps) =
   )
 }
 
-export default PriceImpact
 
 const styles = StyleSheet.create({
   priceImpactWrapper: {
