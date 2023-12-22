@@ -219,7 +219,7 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.walletPageExchangeClicked).toHaveBeenCalled()
     expect(mockAmpli.walletPageBuyBannerClicked).toHaveBeenCalled()
     expect(mockAmpli.exchangePageViewed).toHaveBeenCalled()
-    expect(mockAmpli.exchangeSubmitted).toHaveBeenCalled()
+    expect(mockAmpli.exchangeSubmitted).toHaveBeenCalledWith({ramp_type: 'Buy', ada_amount: 222})
   })
 
   test('enable should set metrics enabled to true', async () => {
