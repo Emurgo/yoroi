@@ -11,7 +11,7 @@ export interface Props {
   isLoading: boolean
 }
 
-export const PriceImpactWraning = ({onSubmit, isLoading}: Props) => {
+export const PriceImpactWarning = ({onSubmit, isLoading}: Props) => {
   const strings = useStrings()
   const {closeModal} = useModal()
 
