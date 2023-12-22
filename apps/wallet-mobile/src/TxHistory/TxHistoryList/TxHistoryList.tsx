@@ -35,8 +35,6 @@ export const TxHistoryList = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <Spacer height={18} />
-
       <SectionList
         {...props}
         key={key}
