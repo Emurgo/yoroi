@@ -21,8 +21,11 @@ export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImpactProps) 
     return null
   }
 
+  const formattedPriceImpact = `${Math.ceil(priceImpact * 100) / 100}% `
+  const actualPricePair = `(${actualPrice} ${pair})`
+
   return (
-    <View style={styles.priceImpactWrapper}>
+    <View style={styles.row}>
       <View>
         {priceImpactRisk === 'moderate' && <Icon.Info size={20} color={warningColorHex} />}
 
@@ -34,16 +37,16 @@ export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImpactProps) 
 
         <Text> = </Text>
 
-        <Text style={{paddingRight: 10}}>{Math.ceil(priceImpact * 100) / 100}%</Text>
+        <Text style={{paddingRight: 10}}>{formattedPriceImpact}</Text>
 
-        <Text> {`(${actualPrice} ${pair})`}</Text>
+        <Text>{actualPricePair}</Text>
       </Text>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  priceImpactWrapper: {
+  row: {
     paddingTop: 4,
     display: 'flex',
     flexDirection: 'row',
