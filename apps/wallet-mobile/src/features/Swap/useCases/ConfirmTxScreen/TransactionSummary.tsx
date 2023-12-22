@@ -35,7 +35,7 @@ export const TransactionSummary = () => {
   const actualPrice = prices.actualPrice
   const priceImpactRisk = getPriceImpactRisk(Number(priceImpact))
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
-  const priceImpactTextColor = priceImpactRiskTheme.text
+  const priceImpactRiskTextColor = priceImpactRiskTheme.text
 
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
@@ -83,9 +83,9 @@ export const TransactionSummary = () => {
       label: strings.swapMinReceivedTitle,
       value: (
         <View style={styles.flex}>
-          {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactTextColor} />}
+          {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
-          <Text style={{color: priceImpactTextColor}}>
+          <Text style={{color: priceImpactRiskTextColor}}>
             {`${Quantities.format(
               calculation.buyAmountWithSlippage.quantity,
               buyTokenInfo.decimals ?? 0,
@@ -108,17 +108,17 @@ export const TransactionSummary = () => {
         ) : (
           <View style={{alignItems: 'flex-end'}}>
             <View style={styles.flex}>
-              {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactTextColor} />}
+              {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
-              {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactTextColor} />}
+              {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
-              <Text style={{color: priceImpactTextColor}}>{Math.ceil(Number(priceImpact) * 100) / 100}%</Text>
+              <Text style={{color: priceImpactRiskTextColor}}>{Math.ceil(Number(priceImpact) * 100) / 100}%</Text>
             </View>
 
-            <Text style={{color: priceImpactTextColor}}>
+            <Text style={{color: priceImpactRiskTextColor}}>
               {actualPrice}
 
-              <Text style={{color: priceImpactTextColor}}> {`${tokenToSellName}/${tokenToBuyName}`}</Text>
+              <Text style={{color: priceImpactRiskTextColor}}> {`${tokenToSellName}/${tokenToBuyName}`}</Text>
             </Text>
           </View>
         ),
@@ -200,9 +200,9 @@ export const TransactionSummary = () => {
 
       {(priceImpactRisk === 'moderate' || priceImpactRisk === 'high') && (
         <View style={[styles.banner, {backgroundColor: priceImpactRiskTheme.background}]}>
-          {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactTextColor} />}
+          {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
-          {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactTextColor} />}
+          {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
           <Text>
             <Text style={styles.bold}>{strings.priceImpactRiskHigh}</Text>
