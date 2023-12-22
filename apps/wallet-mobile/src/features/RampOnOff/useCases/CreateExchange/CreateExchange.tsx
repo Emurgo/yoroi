@@ -1,5 +1,6 @@
 import {banxaModuleMaker} from '@yoroi/banxa'
 import {BanxaReferralUrlQueryStringParams} from '@yoroi/banxa/lib/typescript/translators/module'
+import {capitalize} from 'lodash'
 import * as React from 'react'
 import {KeyboardAvoidingView, Linking, Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
@@ -69,7 +70,7 @@ export const CreateExchange = () => {
     const banxa = banxaModuleMaker(moduleOptions)
     const url = banxa.createReferralUrl(urlOptions)
     Linking.openURL(url.toString())
-    track.exchangeSubmited()
+    track.exchangeSubmited({ramp_type: capitalize(orderType), ada_amount: orderAmount})
     navigateTo.rampOnOffOpenOrder()
   }
 
