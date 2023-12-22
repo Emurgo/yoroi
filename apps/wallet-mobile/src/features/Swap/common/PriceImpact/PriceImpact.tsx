@@ -5,7 +5,7 @@ import {Icon} from '../../../../components'
 import {getPriceImpactStatus, usePriceImpactStatusTheme} from '../helpers'
 import {useStrings} from '../strings'
 
-type PriceImactProps = {
+type PriceImpactProps = {
   priceImpact: number
   actualPrice: number
   pair: string
