@@ -31,7 +31,7 @@ export const TransactionSummary = () => {
   if (!calculation) throw new Error('No selected pool calculation')
   const {pool, cost} = calculation
 
-  const priceImpact = calculations[0]?.prices.priceImpact
+  const priceImpact = calculation.pool.prices.priceImpact
   const actualPrice = calculations[0]?.prices.actualPrice
   const priceImpactRisk = getPriceImpactStatus(Number(priceImpact))
   const priceImpactColor = usePriceImpactStatusTheme(priceImpactRisk ?? 'positive')
