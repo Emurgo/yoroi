@@ -16,7 +16,7 @@ export const BuyBannerBig = () => {
   const strings = useStrings()
 
   const {theme} = useTheme()
-  const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
+  const styles = React.useMemo(() => getStyles({theme}), [theme])
   const bannerWidth = DIMENSIONS.width - 16 * 2
   const bannerHeight = (bannerWidth * 174) / 512
 
