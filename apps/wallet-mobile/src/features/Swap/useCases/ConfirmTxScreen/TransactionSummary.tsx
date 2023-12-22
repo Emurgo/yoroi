@@ -10,7 +10,7 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
-import {getPriceImpactStatus, usePriceImpactRiskTheme} from '../../common/helpers'
+import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
@@ -33,8 +33,7 @@ export const TransactionSummary = () => {
 
   const priceImpact = calculation.prices.priceImpact
   const actualPrice = calculation.prices.actualPrice
-  const priceImpactRisk = getPriceImpactStatus(Number(priceImpact))
-  console.log('priceImpactRisk', priceImpactRisk)
+  const priceImpactRisk = getPriceImpactRisk(Number(priceImpact))
   const priceImpactColor = usePriceImpactRiskTheme(priceImpactRisk)
   const warningColorHex = priceImpactColor.text
 

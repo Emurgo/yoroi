@@ -18,7 +18,7 @@ import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types'
 import {isMainnetNetworkId, Quantities} from '../../../../../yoroi-wallets/utils'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
-import {getPriceImpactStatus} from '../../../common/helpers'
+import {getPriceImpactRisk} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
 import {PriceImpactWarning} from '../../../common/PriceImpact/PriceImpactWarning'
 import {useStrings} from '../../../common/strings'
@@ -47,7 +47,7 @@ export const CreateOrder = () => {
   const {track} = useMetrics()
   const {openModal} = useModal()
   const {height: deviceHeight} = useWindowDimensions()
-  const priceImpactRisk = getPriceImpactStatus(Number(orderData.selectedPoolCalculation?.prices.priceImpact))
+  const priceImpactRisk = getPriceImpactRisk(Number(orderData.selectedPoolCalculation?.prices.priceImpact))
 
   const {
     sellQuantity: {isTouched: isSellTouched},
