@@ -2,10 +2,17 @@ import {isNumber, parseNumber, useStorage} from '@yoroi/common'
 import {useQuery, UseQueryOptions} from 'react-query'
 
 import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
+import {useBalances} from '../../../yoroi-wallets/hooks'
+import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils/utils'
 import {storageKeyShowBuyBannerSmall, storageRootRampOnOff} from './constants'
 
 export const useShowBuyBannerSmall = (options?: UseQueryOptions<boolean, Error, boolean, [string, string]>) => {
   const wallet = useSelectedWallet()
+
+  const balances = useBalances(wallet)
+  const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
+  const isInThresholdToBuy = Quantities.isGreaterThan(minAdaThreshold, primaryAmount.quantity)
+
   const storage = useStorage()
   const rampOnOffStorage = storage.join(`wallet/${wallet.id}/${storageRootRampOnOff}/`)
 
@@ -14,6 +21,8 @@ export const useShowBuyBannerSmall = (options?: UseQueryOptions<boolean, Error, 
     ...options,
     queryKey: [wallet.id, storageKeyShowBuyBannerSmall],
     queryFn: async () => {
+      if (!isInThresholdToBuy) return false
+
       const nextDateInMs = await rampOnOffStorage.getItem(storageKeyShowBuyBannerSmall)
       const parsedNextDateInMs = parseNumber(nextDateInMs)
 
@@ -25,3 +34,5 @@ export const useShowBuyBannerSmall = (options?: UseQueryOptions<boolean, Error, 
 
   return query.data
 }
+
+const minAdaThreshold = asQuantity(5_000_000)
