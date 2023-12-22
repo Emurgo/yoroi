@@ -1,1 +1,1 @@
-export type SwapPriceImpactStatus = 'negative' | 'warning' | 'positive'
+export type SwapPriceImpactRisk = 'none' | 'moderate' | 'high'

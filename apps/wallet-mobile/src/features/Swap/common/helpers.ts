@@ -9,7 +9,7 @@ import {useTheme} from '../../../theme'
 import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
-import {SwapPriceImpactStatus} from './types'
+import {SwapPriceImpactRisk} from './types'
 
 export const useCancelOrderWithHw = (
   {cancelOrder}: {cancelOrder: SwapApi['cancelOrder']},
@@ -104,15 +104,15 @@ export const getPriceImpactRisk = (priceImpact: number) => {
   return 'moderate'
 }
 
-export const usePriceImpactStatusTheme = (risk: SwapPriceImpactRisk) => {
+export const usePriceImpactRiskTheme = (risk: SwapPriceImpactRisk) => {
   const {theme} = useTheme()
 
-  if (status === 'high') {
+  if (risk === 'high') {
     return {
       text: theme.color.magenta[500],
       background: theme.color.magenta[100],
     }
-  } else if (status === 'moderate') {
+  } else if (risk === 'moderate') {
     return {
       text: theme.color.yellow[500],
       background: theme.color.yellow[100],
@@ -120,7 +120,7 @@ export const usePriceImpactStatusTheme = (risk: SwapPriceImpactRisk) => {
   }
 
   return {
-    text: theme.color.yellow[500],
+    text: theme.color['black-static'],
     background: theme.color.yellow[100],
   }
 }

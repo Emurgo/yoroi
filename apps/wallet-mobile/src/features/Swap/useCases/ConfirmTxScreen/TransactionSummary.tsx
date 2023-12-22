@@ -10,7 +10,7 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
-import {getPriceImpactStatus, usePriceImpactStatusTheme} from '../../common/helpers'
+import {getPriceImpactStatus, usePriceImpactRiskTheme} from '../../common/helpers'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../common/strings'
@@ -24,17 +24,18 @@ export const TransactionSummary = () => {
   const {
     limitPrice: {displayValue: limitDisplayValue},
   } = useSwapForm()
-  const {amounts, selectedPoolCalculation: calculation, calculations} = orderData
+  const {amounts, selectedPoolCalculation: calculation} = orderData
   const {openModal} = useModal()
 
   // should never happen
   if (!calculation) throw new Error('No selected pool calculation')
   const {pool, cost} = calculation
 
-  const priceImpact = calculation.pool.prices.priceImpact
-  const actualPrice = calculations[0]?.prices.actualPrice
+  const priceImpact = calculation.prices.priceImpact
+  const actualPrice = calculation.prices.actualPrice
   const priceImpactRisk = getPriceImpactStatus(Number(priceImpact))
-  const priceImpactColor = usePriceImpactStatusTheme(priceImpactRisk ?? 'positive')
+  console.log('priceImpactRisk', priceImpactRisk)
+  const priceImpactColor = usePriceImpactRiskTheme(priceImpactRisk)
   const warningColorHex = priceImpactColor.text
 
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
@@ -83,7 +84,7 @@ export const TransactionSummary = () => {
       label: strings.swapMinReceivedTitle,
       value: (
         <View style={styles.flex}>
-          {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={warningColorHex} />}
+          {priceImpactRisk === 'high' && <Icon.Warning size={24} color={warningColorHex} />}
 
           <Text style={{color: warningColorHex}}>
             {`${Quantities.format(
@@ -101,16 +102,16 @@ export const TransactionSummary = () => {
       info: strings.marketPriceInfo,
     },
     {
-      label: strings.priceimpact,
+      label: strings.priceImpact,
       value:
-        priceImpactRisk === 'positive' ? (
+        priceImpactRisk === 'none' ? (
           <Text style={{color: '#08C29D'}}>&lt;1%</Text>
         ) : (
           <View style={{alignItems: 'flex-end'}}>
             <View style={styles.flex}>
-              {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={warningColorHex} />}
+              {priceImpactRisk === 'high' && <Icon.Warning size={24} color={warningColorHex} />}
 
-              {priceImpactRisk === 'warning' && <Icon.Info size={24} color={warningColorHex} />}
+              {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={warningColorHex} />}
 
               <Text style={{color: warningColorHex}}>{Math.ceil(Number(priceImpact) * 100) / 100}%</Text>
             </View>
@@ -123,7 +124,7 @@ export const TransactionSummary = () => {
           </View>
         ),
       info: strings.priceImpactInfo,
-      warning: priceImpactRisk === 'negative',
+      warning: priceImpactRisk === 'high',
     },
   ]
 
@@ -198,14 +199,14 @@ export const TransactionSummary = () => {
 
       <Spacer height={12} />
 
-      {(priceImpactRisk === 'warning' || priceImpactRisk === 'negative') && (
+      {(priceImpactRisk === 'moderate' || priceImpactRisk === 'high') && (
         <View style={[styles.banner, {backgroundColor: priceImpactColor.background}]}>
-          {priceImpactRisk === 'warning' && <Icon.Info size={24} color={warningColorHex} />}
+          {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={warningColorHex} />}
 
-          {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={warningColorHex} />}
+          {priceImpactRisk === 'high' && <Icon.Warning size={24} color={warningColorHex} />}
 
           <Text>
-            <Text style={styles.bold}>{strings.priceImpactNegative}</Text>
+            <Text style={styles.bold}>{strings.priceImpactRiskHigh}</Text>
 
             <Text> {strings.priceimpactDescription}</Text>
           </Text>

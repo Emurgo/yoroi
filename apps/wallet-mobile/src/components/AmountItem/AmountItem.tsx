@@ -2,8 +2,8 @@ import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {usePriceImpactStatusTheme} from '../../features/Swap/common/helpers'
-import {SwapPriceImpactStatus} from '../../features/Swap/common/types'
+import {usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
+import {SwapPriceImpactRisk} from '../../features/Swap/common/types'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
@@ -20,7 +20,7 @@ export type AmountItemProps = {
   status?: string
   inWallet?: boolean
   variant?: 'swap'
-  priceImpactRisk?: SwapPriceImpactStatus
+  priceImpactRisk?: SwapPriceImpactRisk
 }
 
 export const AmountItem = ({
@@ -42,7 +42,7 @@ export const AmountItem = ({
 
   const formattedQuantity = Quantities.format(quantity, tokenInfo.decimals ?? 0)
   const showSwapDetails = !isPrimary && variant === 'swap'
-  const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
+  const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk ?? 'none')
 
   return (
     <View style={[style, styles.container]} testID="assetItem">
@@ -75,11 +75,11 @@ export const AmountItem = ({
       <Right>
         {tokenInfo.kind !== 'nft' && variant !== 'swap' && (
           <View style={styles.row} testID="tokenAmountText">
-            {priceImpactRisk === 'negative' && <Icon.Warning size={24} color={priceImpactColor.text} />}
+            {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTheme.text} />}
 
-            {priceImpactRisk === 'warning' && <Icon.Info size={24} color={priceImpactColor.text} />}
+            {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTheme.text} />}
 
-            <Text style={[styles.quantity, {color: priceImpactColor.text}]}>
+            <Text style={[styles.quantity, {color: priceImpactRiskTheme.text}]}>
               {isPrivacyOff ? '**.*******' : formattedQuantity}
             </Text>
           </View>

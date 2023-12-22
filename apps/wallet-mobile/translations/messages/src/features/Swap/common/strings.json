@@ -1725,7 +1725,7 @@
     }
   },
   {
-    "id": "swap.swapScreen.priceImpactNegative",
+    "id": "swap.swapScreen.priceImpactRiskHigh",
     "defaultMessage": "!!!<b>Price impact over 10%</b>",
     "file": "src/features/Swap/common/strings.ts",
     "start": {

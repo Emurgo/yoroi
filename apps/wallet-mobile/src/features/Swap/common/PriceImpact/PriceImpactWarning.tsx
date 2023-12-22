@@ -21,7 +21,7 @@ export const PriceImpactWarning = ({onContinue}: Props) => {
     <View style={styles.container}>
       <View>
         <Text style={styles.description}>
-          <Text style={styles.bold}>{strings.priceImpactNegative}</Text>
+          <Text style={styles.bold}>{strings.priceImpactRiskHigh}</Text>
 
           <Text> {strings.priceimpactDescription}</Text>
         </Text>
@@ -34,7 +34,7 @@ export const PriceImpactWarning = ({onContinue}: Props) => {
 
         <Button
           title={strings.continue}
-          onPress={onSubmit}
+          onPress={onContinue}
           style={styles.buttonContinue}
           containerStyle={styles.buttonContainer}
         />

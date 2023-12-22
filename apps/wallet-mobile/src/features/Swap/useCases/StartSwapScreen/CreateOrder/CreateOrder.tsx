@@ -215,7 +215,7 @@ export const CreateOrder = () => {
   const handleOnSwap = () => {
     if (orderData.selectedPoolCalculation === undefined) return
 
-    if (priceImpactRisk === 'negative') {
+    if (priceImpactRisk === 'high') {
       openModal(strings.warning, <PriceImpactWarning onContinue={createUnsignedSwapTx} />, 400)
       return
     }

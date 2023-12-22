@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Icon} from '../../../../components'
-import {getPriceImpactStatus, usePriceImpactStatusTheme} from '../helpers'
+import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../helpers'
 import {useStrings} from '../strings'
 
 type PriceImpactProps = {
@@ -13,24 +13,24 @@ type PriceImpactProps = {
 
 export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImpactProps) => {
   const strings = useStrings()
-  const priceImpactRisk = getPriceImpactStatus(priceImpact)
-  const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
+  const priceImpactRisk = getPriceImpactRisk(priceImpact)
+  const priceImpactColor = usePriceImpactRiskTheme(priceImpactRisk)
   const warningColorHex = priceImpactColor.text
 
-  if (actualPrice === 0 || isNaN(actualPrice)) {
+  if (priceImpactRisk === 'none' || actualPrice === 0 || isNaN(actualPrice)) {
     return null
   }
 
   return (
     <View style={styles.priceImpactWrapper}>
       <View>
-        {priceImpactRisk === 'warning' && <Icon.Info size={20} color={warningColorHex} />}
+        {priceImpactRisk === 'moderate' && <Icon.Info size={20} color={warningColorHex} />}
 
-        {priceImpactRisk === 'negative' && <Icon.Warning size={20} color={warningColorHex} />}
+        {priceImpactRisk === 'high' && <Icon.Warning size={20} color={warningColorHex} />}
       </View>
 
       <Text style={{color: warningColorHex}}>
-        <Text>{strings.priceimpact}</Text>
+        <Text>{strings.priceImpact}</Text>
 
         <Text> = </Text>
 
