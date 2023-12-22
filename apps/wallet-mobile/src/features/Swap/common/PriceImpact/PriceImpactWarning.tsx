@@ -7,10 +7,10 @@ import {Theme} from '../../../../theme/types'
 import {useStrings} from '../strings'
 
 export interface Props {
-  onSubmit: () => void
+  onContinue: () => void
 }
 
-export const PriceImpactWarning = ({onSubmit}: Props) => {
+export const PriceImpactWarning = ({onContinue}: Props) => {
   const strings = useStrings()
   const {closeModal} = useModal()
 

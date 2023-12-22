@@ -99,20 +99,20 @@ export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo, wal
 }
 
 export const getPriceImpactStatus = (priceImpact: number) => {
-  if (priceImpact < 1) return 'positive'
-  if (priceImpact > 10) return 'negative'
-  return 'warning'
+  if (priceImpact < 1) return 'none'
+  if (priceImpact > 10) return 'high'
+  return 'moderate'
 }
 
-export const usePriceImpactStatusTheme = (status: SwapPriceImpactStatus) => {
+export const usePriceImpactStatusTheme = (risk: SwapPriceImpactRisk) => {
   const {theme} = useTheme()
 
-  if (status === 'negative') {
+  if (status === 'high') {
     return {
       text: theme.color.magenta[500],
       background: theme.color.magenta[100],
     }
-  } else if (status === 'warning') {
+  } else if (status === 'moderate') {
     return {
       text: theme.color.yellow[500],
       background: theme.color.yellow[100],

@@ -826,7 +826,7 @@
   "swap.swapScreen.ordersSwapTab": "Orders",
   "swap.swapScreen.priceImpact": "Price Impact",
   "swap.swapScreen.priceImpactInfo": "Price impact is a difference between the actual market price and your price due to trade size.",
-  "swap.swapScreen.priceImpactNegative": "Price impact over 10%",
+  "swap.swapScreen.priceImpactRiskHigh": "Price impact over 10%",
   "swap.swapScreen.priceImpactDescription": "may cause a significant loss of funds. Please bear this in mind and proceed with an extra caution.",
   "swap.swapScreen.poolFee": "DEX Fee",
   "swap.swapScreen.poolVerification": "{pool} verification",
