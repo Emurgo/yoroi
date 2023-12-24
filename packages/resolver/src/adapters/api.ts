@@ -1,9 +1,10 @@
 import {Resolver} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
 import {handleApiGetCryptoAddress} from './handle-api'
 import {unstoppableApiGetCryptoAddress} from './unstoppable-api'
-import {getCnsCryptoAddress} from './cns'
+import {getCnsCryptoAddress} from './cns-api'
 
 type ApiConfig = {
   [Resolver.NameServer.Unstoppable]: {
@@ -65,12 +66,13 @@ export const resolverApiMaker = (
       resolve: Resolver.Receiver['resolve']
       strategy: Resolver.Strategy
     },
+    csl?: WasmModuleProxy,
     fetcherConfig?: AxiosRequestConfig,
   ): Promise<Resolver.AddressesResponse> => {
     if (strategy === 'all')
-      return resolveAll(operationsGetCryptoAddress, resolve, fetcherConfig)
+      return resolveAll(operationsGetCryptoAddress, resolve, fetcherConfig, csl)
 
-    return resolveFirst(operationsGetCryptoAddress, resolve, fetcherConfig)
+    return resolveFirst(operationsGetCryptoAddress, resolve, fetcherConfig, csl)
   }
 
   return {
@@ -83,9 +85,10 @@ const safelyExecuteOperation = async (
   nameServer: Resolver.NameServer,
   resolve: Resolver.Receiver['resolve'],
   fetcherConfig?: AxiosRequestConfig,
+  csl?: WasmModuleProxy,
 ): Promise<Resolver.AddressResponse> => {
   try {
-    const address = await operationFn(resolve, fetcherConfig)
+    const address = await operationFn(resolve, fetcherConfig, csl)
     return {error: null, address, nameServer}
   } catch (error) {
     return {error: (error as Error).message, address: null, nameServer}
@@ -96,9 +99,16 @@ const resolveAll = async (
   operations: GetCryptoAddressOperations,
   resolve: Resolver.Receiver['resolve'],
   fetcherConfig?: AxiosRequestConfig,
+  csl?: WasmModuleProxy,
 ): Promise<Resolver.AddressesResponse> => {
   const promises = operations.map(([nameServer, operationFn]) =>
-    safelyExecuteOperation(operationFn, nameServer, resolve, fetcherConfig),
+    safelyExecuteOperation(
+      operationFn,
+      nameServer,
+      resolve,
+      fetcherConfig,
+      csl,
+    ),
   )
   const result = await Promise.all(promises)
   return result
@@ -108,9 +118,10 @@ const resolveFirst = async (
   operations: GetCryptoAddressOperations,
   resolve: Resolver.Receiver['resolve'],
   fetcherConfig?: AxiosRequestConfig,
+  csl?: WasmModuleProxy,
 ): Promise<Resolver.AddressesResponse> => {
   const promises = operations.map(async ([nameServer, operationFn]) => {
-    const address = await operationFn(resolve, fetcherConfig)
+    const address = await operationFn(resolve, fetcherConfig, csl)
     return {error: null, address, nameServer}
   })
   try {
@@ -124,6 +135,7 @@ const resolveFirst = async (
 type GetCryptoAddress = (
   resolve: Resolver.Receiver['resolve'],
   fetcherConfig?: AxiosRequestConfig,
+  csl?: WasmModuleProxy,
 ) => Promise<string>
 
 type GetCryptoAddressOperations = ReadonlyArray<
