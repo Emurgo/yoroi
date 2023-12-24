@@ -244,6 +244,7 @@ function GalleryList<T>({
   return (
     <FlashList
       {...rest}
+      removeClippedSubviews={true}
       numColumns={2}
       renderItem={({item, index}) => (
         <View

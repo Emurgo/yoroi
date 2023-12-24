@@ -1,8 +1,9 @@
 import {isString} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
 import React from 'react'
-import {Image, ImageStyle, StyleProp, View} from 'react-native'
+import {ImageStyle, StyleProp, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
+import { Image } from 'expo-image';
 
 import placeholder from '../../assets/img/nft-placeholder.png'
 import {useSelectedWallet} from '../../SelectedWallet'
