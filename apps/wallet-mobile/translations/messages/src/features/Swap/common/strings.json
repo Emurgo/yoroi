@@ -249,7 +249,7 @@
       "index": 11780
     },
     "end": {
-      "line": 229,
+      "line": 221,
       "column": 3,
       "index": 11884
     }
@@ -274,12 +274,12 @@
     "defaultMessage": "!!!This asset is in my portfolio",
     "file": "src/features/Swap/common/strings.ts",
     "start": {
-      "line": 234,
+      "line": 226,
       "column": 12,
       "index": 12002
     },
     "end": {
-      "line": 237,
+      "line": 229,
       "column": 3,
       "index": 12099
     }
@@ -999,7 +999,7 @@
       "index": 18042
     },
     "end": {
-      "line": 434,
+      "line": 426,
       "column": 3,
       "index": 18163
     }
@@ -1029,7 +1029,7 @@
       "index": 18326
     },
     "end": {
-      "line": 442,
+      "line": 434,
       "column": 3,
       "index": 18413
     }
