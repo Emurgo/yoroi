@@ -64,6 +64,7 @@ export const EditLimitPrice = () => {
           </View>
         </View>
       </View>
+
       <PriceImpact
         priceImpact={Number(prices?.priceImpact)}
         actualPrice={Number(prices?.actualPrice)}

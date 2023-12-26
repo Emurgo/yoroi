@@ -82,7 +82,9 @@ const mockAmpli = {
   swapCancelationSubmitted: jest.fn(),
 
   walletPageExchangeClicked: jest.fn(),
-  walletPageExchangeBottomSheetClicked: jest.fn(),
+  walletPageBuyBannerClicked: jest.fn(),
+  exchangePageViewed: jest.fn(),
+  exchangeSubmitted: jest.fn(),
 } as unknown as Ampli
 
 const mockMetricsStorage = {
@@ -170,7 +172,9 @@ describe('makeMetricsManager', () => {
     })
 
     metricsManager.track.walletPageExchangeClicked()
-    metricsManager.track.walletPageExchangeBottomSheetClicked()
+    metricsManager.track.walletPageBuyBannerClicked()
+    metricsManager.track.exchangePageViewed()
+    metricsManager.track.exchangeSubmitted({ramp_type: 'Buy', ada_amount: 222})
 
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
@@ -213,7 +217,9 @@ describe('makeMetricsManager', () => {
     })
 
     expect(mockAmpli.walletPageExchangeClicked).toHaveBeenCalled()
-    expect(mockAmpli.walletPageExchangeBottomSheetClicked).toHaveBeenCalled()
+    expect(mockAmpli.walletPageBuyBannerClicked).toHaveBeenCalled()
+    expect(mockAmpli.exchangePageViewed).toHaveBeenCalled()
+    expect(mockAmpli.exchangeSubmitted).toHaveBeenCalledWith({ramp_type: 'Buy', ada_amount: 222})
   })
 
   test('enable should set metrics enabled to true', async () => {

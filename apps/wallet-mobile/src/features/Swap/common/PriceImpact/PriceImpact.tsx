@@ -14,36 +14,39 @@ type PriceImpactProps = {
 export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImpactProps) => {
   const strings = useStrings()
   const priceImpactRisk = getPriceImpactRisk(priceImpact)
-  const priceImpactColor = usePriceImpactRiskTheme(priceImpactRisk)
-  const warningColorHex = priceImpactColor.text
+  const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
+  const textColor = priceImpactRiskTheme.text
 
   if (priceImpactRisk === 'none' || actualPrice === 0 || isNaN(actualPrice)) {
     return null
   }
 
-  return (
-    <View style={styles.priceImpactWrapper}>
-      <View>
-        {priceImpactRisk === 'moderate' && <Icon.Info size={20} color={warningColorHex} />}
+  const formattedPriceImpact = `${Math.ceil(priceImpact * 100) / 100}%`
+  const actualPricePair = `(${actualPrice} ${pair})`
 
-        {priceImpactRisk === 'high' && <Icon.Warning size={20} color={warningColorHex} />}
+  return (
+    <View style={styles.row}>
+      <View>
+        {priceImpactRisk === 'moderate' && <Icon.Info size={20} color={textColor} />}
+
+        {priceImpactRisk === 'high' && <Icon.Warning size={20} color={textColor} />}
       </View>
 
-      <Text style={{color: warningColorHex}}>
+      <Text style={{color: textColor}}>
         <Text>{strings.priceImpact}</Text>
 
         <Text> = </Text>
 
-        <Text style={{paddingRight: 10}}>{Math.ceil(priceImpact * 100) / 100}%</Text>
+        <Text style={{paddingRight: 10}}>{formattedPriceImpact}</Text>
 
-        <Text> {`(${actualPrice} ${pair})`}</Text>
+        <Text> {actualPricePair}</Text>
       </Text>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  priceImpactWrapper: {
+  row: {
     paddingTop: 4,
     display: 'flex',
     flexDirection: 'row',

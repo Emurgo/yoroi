@@ -57,6 +57,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   const handleExchange = () => {
+    track.walletPageExchangeClicked()
     navigateTo.exchange()
   }
 
