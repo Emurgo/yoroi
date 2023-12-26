@@ -5,9 +5,11 @@ import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
+import {useTheme} from '../../../theme'
 import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
+import {SwapPriceImpactRisk} from './types'
 
 export const useCancelOrderWithHw = (
   {cancelOrder}: {cancelOrder: SwapApi['cancelOrder']},
@@ -94,4 +96,31 @@ export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo, wal
   }
 
   return nameA.localeCompare(nameB, undefined, {sensitivity: 'base'})
+}
+
+export const getPriceImpactRisk = (priceImpact: number) => {
+  if (priceImpact < 1) return 'none'
+  if (priceImpact > 10) return 'high'
+  return 'moderate'
+}
+
+export const usePriceImpactRiskTheme = (risk: SwapPriceImpactRisk) => {
+  const {theme} = useTheme()
+
+  if (risk === 'high') {
+    return {
+      text: theme.color.magenta[500],
+      background: theme.color.magenta[100],
+    }
+  } else if (risk === 'moderate') {
+    return {
+      text: theme.color.yellow[500],
+      background: theme.color.yellow[100],
+    }
+  }
+
+  return {
+    text: theme.color['black-static'],
+    background: theme.color.yellow[100],
+  }
 }

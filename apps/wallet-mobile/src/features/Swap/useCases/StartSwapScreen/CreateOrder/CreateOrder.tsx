@@ -18,7 +18,9 @@ import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types'
 import {isMainnetNetworkId, Quantities} from '../../../../../yoroi-wallets/utils'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
+import {getPriceImpactRisk} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
+import {PriceImpactWarning} from '../../../common/PriceImpact/PriceImpactWarning'
 import {useStrings} from '../../../common/strings'
 import {useSwapForm} from '../../../common/SwapFormProvider'
 import {useSwapTx} from '../../../common/useSwapTx'
@@ -45,6 +47,7 @@ export const CreateOrder = () => {
   const {track} = useMetrics()
   const {openModal} = useModal()
   const {height: deviceHeight} = useWindowDimensions()
+  const priceImpactRisk = getPriceImpactRisk(Number(orderData.selectedPoolCalculation?.prices.priceImpact))
 
   const {
     sellQuantity: {isTouched: isSellTouched},
@@ -211,6 +214,12 @@ export const CreateOrder = () => {
 
   const handleOnSwap = () => {
     if (orderData.selectedPoolCalculation === undefined) return
+
+    if (priceImpactRisk === 'high') {
+      openModal(strings.warning, <PriceImpactWarning onContinue={createUnsignedSwapTx} />, 400)
+      return
+    }
+
     if (orderData.type === 'limit' && orderData.limitPrice !== undefined) {
       const marketPrice = new BigNumber(orderData.selectedPoolCalculation.prices.market)
       const limitPrice = new BigNumber(orderData.limitPrice)
