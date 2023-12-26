@@ -6,6 +6,7 @@ import {StyleSheet, Text, TextInput, View} from 'react-native'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
+import {PriceImpact} from '../../../common/PriceImpact/PriceImpact'
 import {useStrings} from '../../../common/strings'
 import {useSwapForm} from '../../../common/SwapFormProvider'
 
@@ -21,6 +22,8 @@ export const EditLimitPrice = () => {
   const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
   const disabled = orderData.type === 'market'
 
+  const prices = orderData.selectedPoolCalculation?.prices
+
   const {
     buyQuantity: {isTouched: isBuyTouched},
     sellQuantity: {isTouched: isSellTouched},
@@ -33,33 +36,40 @@ export const EditLimitPrice = () => {
   const tokenToBuyName = isBuyTouched ? buyTokenInfo.ticker ?? buyTokenInfo.name : '-'
 
   return (
-    <View style={[styles.container, disabled && styles.disabled, isFocused && styles.active]}>
-      <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
+    <>
+      <View style={[styles.container, disabled && styles.disabled, isFocused && styles.active]}>
+        <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
 
-      <View style={styles.content}>
-        <TextInput
-          keyboardType="numeric"
-          autoComplete="off"
-          value={limitDisplayValue}
-          placeholder="0"
-          onChangeText={onChangeLimitPrice}
-          allowFontScaling
-          selectionColor="#242838"
-          style={styles.amountInput}
-          underlineColorAndroid="transparent"
-          editable={!disabled}
-          ref={limitInputRef}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-        />
+        <View style={styles.content}>
+          <TextInput
+            keyboardType="numeric"
+            autoComplete="off"
+            value={limitDisplayValue}
+            placeholder="0"
+            onChangeText={onChangeLimitPrice}
+            allowFontScaling
+            selectionColor="#242838"
+            style={styles.amountInput}
+            underlineColorAndroid="transparent"
+            editable={!disabled}
+            ref={limitInputRef}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
 
-        <View style={[styles.textWrapper, disabled && styles.disabled]}>
-          <Text style={styles.text}>
-            {tokenToSellName}/{tokenToBuyName}
-          </Text>
+          <View style={[styles.textWrapper, disabled && styles.disabled]}>
+            <Text style={styles.text}>
+              {tokenToSellName}/{tokenToBuyName}
+            </Text>
+          </View>
         </View>
       </View>
-    </View>
+      <PriceImpact
+        priceImpact={Number(prices?.priceImpact)}
+        actualPrice={Number(prices?.actualPrice)}
+        pair={`${tokenToSellName}/${tokenToBuyName}`}
+      />
+    </>
   )
 }
 

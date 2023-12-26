@@ -19,6 +19,7 @@ export const useStrings = () => {
     clear: intl.formatMessage(messages.clear),
     selectToken: intl.formatMessage(messages.selectToken),
     marketPrice: intl.formatMessage(messages.marketPrice),
+    marketPriceInfo: intl.formatMessage(messages.marketPriceInfo),
     limitPrice: intl.formatMessage(messages.limitPrice),
     slippageTolerance: intl.formatMessage(messages.slippageTolerance),
     slippageToleranceInfo: intl.formatMessage(messages.slippageToleranceInfo),
@@ -61,6 +62,10 @@ export const useStrings = () => {
     found: intl.formatMessage(messages.found),
     youHave: intl.formatMessage(messages.youHave),
     price: intl.formatMessage(messages.price),
+    priceImpact: intl.formatMessage(messages.priceImpact),
+    priceImpactRiskHigh: intl.formatMessage(messages.priceImpactRiskHigh),
+    priceimpactDescription: intl.formatMessage(messages.priceImpactDescription),
+    priceImpactInfo: intl.formatMessage(messages.priceImpactInfo),
     tvl: intl.formatMessage(messages.tvl),
     poolFee: intl.formatMessage(messages.poolFee),
     batcherFee: intl.formatMessage(messages.batcherFee),
@@ -121,6 +126,7 @@ export const useStrings = () => {
     generalErrorTitle: intl.formatMessage(errorMessages.generalError.title),
     generalErrorMessage: (e) => intl.formatMessage(errorMessages.generalError.message, {message: e}),
     continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
+    continue: intl.formatMessage(messages.continue),
     cancel: intl.formatMessage(globalMessages.cancel),
     tryAgain: intl.formatMessage(globalMessages.tryAgain),
     bluetoothDisabledError: intl.formatMessage(ledgerMessages.bluetoothDisabledError),
@@ -137,6 +143,7 @@ export const useStrings = () => {
     emptyOpenOrders: intl.formatMessage(messages.emptyOpenOrders),
     emptyOpenOrdersSub: intl.formatMessage(messages.emptyOpenOrdersSub),
     emptyCompletedOrders: intl.formatMessage(messages.emptyCompletedOrders),
+    warning: intl.formatMessage(messages.warning),
   }
 }
 
@@ -190,6 +197,11 @@ export const messages = defineMessages({
   marketPrice: {
     id: 'swap.swapScreen.marketPrice',
     defaultMessage: '!!!Market Price',
+  },
+  marketPriceInfo: {
+    id: 'swap.swapScreen.marketPriceInfo',
+    defaultMessage:
+      '!!!Market price is the best price available on the market among several DEXes that lets you buy or sell an asset instantly.',
   },
   limitPrice: {
     id: 'swap.swapScreen.limitPrice',
@@ -572,6 +584,10 @@ export const messages = defineMessages({
     id: 'global.ledgerMessages.continueOnLedger',
     defaultMessage: '!!!Continue on Ledger',
   },
+  continue: {
+    id: 'global.actions.dialogs.commonbuttons.continueButton',
+    defaultMessage: '!!!Continue',
+  },
   slippageWarningTitle: {
     id: 'swap.slippage.slippageWarningTitle',
     defaultMessage: '!!!Slippage Warning',
@@ -600,5 +616,27 @@ export const messages = defineMessages({
   emptyCompletedOrders: {
     id: 'swap.listOrders.emptyCompletedOrders',
     defaultMessage: '!!!No orders completed yet',
+  },
+  priceImpact: {
+    id: 'swap.swapScreen.priceImpact',
+    defaultMessage: '!!!Price Impact',
+  },
+
+  priceImpactRiskHigh: {
+    id: 'swap.swapScreen.priceImpactRiskHigh',
+    defaultMessage: '!!!<b>Price impact over 10%</b> ',
+  },
+  priceImpactDescription: {
+    id: 'swap.swapScreen.priceImpactDescription',
+    defaultMessage:
+      '!!!may cause a significant loss of funds. Please bear this in mind and proceed with an extra caution.',
+  },
+  priceImpactInfo: {
+    id: 'swap.swapScreen.priceImpactInfo',
+    defaultMessage: '!!!Price impact is a difference between the actual market price and your price due to trade size.',
+  },
+  warning: {
+    id: 'components.txhistory.flawedwalletmodal.title',
+    defaultMessage: '!!Warning',
   },
 })
