@@ -121,6 +121,6 @@ export const usePriceImpactRiskTheme = (risk: SwapPriceImpactRisk) => {
 
   return {
     text: theme.color['black-static'],
-    background: theme.color.yellow[100],
+    background: theme.color['white-static'],
   }
 }
