@@ -56,7 +56,7 @@ export const resolveDomain = async (
     )
 
     if (!metadata) return null
-    if (!validateExpiry(metadata)) throw new Resolver.Errors.ExpiredDomain()
+    if (!validateExpiry(metadata)) throw new Resolver.Errors.Expired()
 
     const address = await cnsCardanoApi.getAssetAddress(assetHex)
     if (!address) return null
@@ -81,7 +81,7 @@ const resolveUserRecord = async (
       assetName,
     )
     if (!metadata) throw new Resolver.Errors.NotFound()
-    if (!validateExpiry(metadata)) throw new Resolver.Errors.ExpiredDomain()
+    if (!validateExpiry(metadata)) throw new Resolver.Errors.Expired()
 
     const recordAssetHex = `${cnsApiConfig.recordPolicyId}${assetName}`
     const inlineDatum = await cnsCardanoApi.getAssetInlineDatum(
