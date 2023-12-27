@@ -4,12 +4,12 @@ import React from 'react'
 import {Button, StyleSheet, View} from 'react-native'
 
 import {useModal} from '../../../../../../components'
-import {useStrings} from '../../../../../../features/Swap/common/strings'
 import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../../../yoroi-wallets/mocks'
-import {SlippageWarning} from './SlippageWarning'
+import {useStrings} from '../../../../common/strings'
+import {WarnSlippage} from './WarnSlippage'
 
-storiesOf('Swap Slippage Tolerance Warning', module)
+storiesOf('Swap Warn Slippage', module)
   .addDecorator((getStory) => (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
       <SwapProvider swapManager={mockSwapManager}>
@@ -29,7 +29,7 @@ storiesOf('Swap Slippage Tolerance Warning', module)
             ? closeModal()
             : openModal(
                 strings.slippageWarningTitle,
-                <SlippageWarning slippage={10} onSubmit={closeModal} ticker="MILK" />,
+                <WarnSlippage slippage={10} onConfirm={closeModal} ticker="MILK" />,
               )
         }}
       />

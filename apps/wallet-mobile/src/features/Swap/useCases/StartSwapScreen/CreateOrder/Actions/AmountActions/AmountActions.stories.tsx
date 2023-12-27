@@ -3,20 +3,20 @@ import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {SearchProvider} from '../../../../../../Search/SearchContext'
-import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
-import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
-import {SwapFormProvider} from '../../../../common/SwapFormProvider'
-import {SwitchTokens} from './SwitchTokens'
+import {SearchProvider} from '../../../../../../../Search/SearchContext'
+import {SelectedWalletProvider} from '../../../../../../../SelectedWallet'
+import {mocks} from '../../../../../../../yoroi-wallets/mocks/wallet'
+import {SwapFormProvider} from '../../../../../common/SwapFormProvider'
+import {AmountActions} from '../AmountActions/AmountActions'
 
-storiesOf('Swap Switch Tokens', module).add('only enabled', () => {
+storiesOf('Swap Amount Actions', module).add('initial', () => {
   return (
     <SelectedWalletProvider wallet={mocks.wallet}>
       <SearchProvider>
         <SwapProvider swapManager={mockSwapManager}>
           <SwapFormProvider>
             <View style={styles.container}>
-              <SwitchTokens />
+              <AmountActions />
             </View>
           </SwapFormProvider>
         </SwapProvider>

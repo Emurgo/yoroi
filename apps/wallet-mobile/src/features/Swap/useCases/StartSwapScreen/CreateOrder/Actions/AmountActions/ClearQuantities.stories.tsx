@@ -2,7 +2,7 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {ClearQuantities} from './ClearQuantities'
+import {ClearQuantities} from '../AmountActions/ClearQuantities'
 
 storiesOf('Swap Clear Quantities', module).add('only enabled', () => {
   return (
