@@ -16,30 +16,35 @@ import {
   stringToHex,
 } from './utils'
 import {getAssetAddress, getAssetInlineDatum, getMetadata} from './fetcher'
+import {Resolver} from '@yoroi/types'
 
 export const resolveDomain = async (
   cnsName: string,
   cnsPolicyId: string,
   baseUrl: string,
-  fetcherConfig: AxiosRequestConfig,
-): Promise<string> => {
-  const assetName = stringToHex(cnsName)
-  const assetHex = `${cnsPolicyId}${assetName}`
+  fetcherConfig?: AxiosRequestConfig,
+): Promise<string | null> => {
+  try {
+    const assetName = stringToHex(cnsName)
+    const assetHex = `${cnsPolicyId}${assetName}`
 
-  const metadata = await getMetadata(
-    cnsPolicyId,
-    assetName,
-    baseUrl,
-    fetcherConfig,
-  )
+    const metadata = await getMetadata(
+      cnsPolicyId,
+      assetName,
+      baseUrl,
+      fetcherConfig,
+    )
 
-  if (!metadata) throw new Error('CNS not found')
-  if (!validateExpiry(metadata)) throw new Error('CNS expired')
+    if (!metadata) return null
+    if (!validateExpiry(metadata)) throw new Resolver.Errors.ExpiredDomain()
 
-  const address = await getAssetAddress(assetHex, baseUrl, fetcherConfig)
-  if (!address) throw new Error('CNS not found')
+    const address = await getAssetAddress(assetHex, baseUrl, fetcherConfig)
+    if (!address) return null
 
-  return address
+    return address
+  } catch (error: unknown) {
+    return Promise.reject(error)
+  }
 }
 
 const resolveUserRecord = async (
@@ -48,54 +53,59 @@ const resolveUserRecord = async (
   recordPolicyId: string,
   recordAddress: string,
   networkId: number,
-  csl: WasmModuleProxy,
   baseUrl: string,
-  fetcherConfig: AxiosRequestConfig,
+  fetcherConfig?: AxiosRequestConfig,
+  csl?: WasmModuleProxy,
 ): Promise<ParsedCNSUserRecord | string> => {
-  const assetName = stringToHex(cnsName)
+  try {
+    if (!csl) throw new Error('csl needed')
+    const assetName = stringToHex(cnsName)
 
-  const metadata = await getMetadata(
-    cnsPolicyId,
-    assetName,
-    baseUrl,
-    fetcherConfig,
-  )
-  if (!metadata) throw new Error('CNS not found')
-  if (!validateExpiry(metadata)) throw new Error('CNS expired')
+    const metadata = await getMetadata(
+      cnsPolicyId,
+      assetName,
+      baseUrl,
+      fetcherConfig,
+    )
+    if (!metadata) throw new Resolver.Errors.NotFound()
+    if (!validateExpiry(metadata)) throw new Resolver.Errors.ExpiredDomain()
 
-  const recordAssetHex = `${recordPolicyId}${assetName}`
-  const inlineDatum = await getAssetInlineDatum(
-    [recordAddress],
-    recordAssetHex,
-    baseUrl,
-    fetcherConfig,
-  )
+    const recordAssetHex = `${recordPolicyId}${assetName}`
+    const inlineDatum = await getAssetInlineDatum(
+      [recordAddress],
+      recordAssetHex,
+      baseUrl,
+      fetcherConfig,
+    )
 
-  if (!inlineDatum) throw new Error('User record not found')
-  if (!validateCNSUserRecord(inlineDatum))
-    throw new Error('Invalid user record')
-  const virtualSubdomains = await parseAssocMapAsync(
-    inlineDatum.fields[0],
-    async (item) => {
-      const itemHex = await objToHex(item, csl)
-      const bech32 = await parsePlutusAddressToBech32(itemHex, csl, networkId)
-      return bech32
-    },
-  )
+    if (!inlineDatum) throw new Resolver.Errors.NotFound()
+    if (!validateCNSUserRecord(inlineDatum))
+      throw new Resolver.Errors.InvalidResponse()
+    const virtualSubdomains = await parseAssocMapAsync(
+      inlineDatum.fields[0],
+      async (item) => {
+        const itemHex = await objToHex(item, csl)
+        const bech32 = await parsePlutusAddressToBech32(itemHex, csl, networkId)
+        return bech32
+      },
+    )
 
-  const parsedInlineDatum: ParsedCNSUserRecord = {
-    virtualSubdomains: validateVirtualSubdomainEnabled(metadata)
-      ? virtualSubdomains
-      : [],
-    socialProfiles: parseAssocMap(inlineDatum.fields[1], (item) =>
-      hexToString(item.bytes),
-    ),
-    otherRecords: parseAssocMap(inlineDatum.fields[2], (item) =>
-      hexToString(item.bytes),
-    ),
+    const parsedInlineDatum: ParsedCNSUserRecord = {
+      virtualSubdomains: validateVirtualSubdomainEnabled(metadata)
+        ? virtualSubdomains
+        : [],
+      socialProfiles: parseAssocMap(inlineDatum.fields[1], (item) =>
+        hexToString(item.bytes),
+      ),
+      otherRecords: parseAssocMap(inlineDatum.fields[2], (item) =>
+        hexToString(item.bytes),
+      ),
+    }
+
+    return parsedInlineDatum
+  } catch (error: unknown) {
+    return Promise.reject(error)
   }
-
-  return parsedInlineDatum
 }
 
 const resolveVirtualSubdomains = async (
@@ -104,22 +114,26 @@ const resolveVirtualSubdomains = async (
   recordPolicyId: string,
   recordAddress: string,
   networkId: number,
-  csl: WasmModuleProxy,
   baseUrl: string,
-  fetcherConfig: AxiosRequestConfig,
+  fetcherConfig?: AxiosRequestConfig,
+  csl?: WasmModuleProxy,
 ): Promise<string[][] | string> => {
-  const parsedUserRecord = await resolveUserRecord(
-    cnsName,
-    cnsPolicyId,
-    recordPolicyId,
-    recordAddress,
-    networkId,
-    csl,
-    baseUrl,
-    fetcherConfig,
-  )
-  if (typeof parsedUserRecord === 'string') return parsedUserRecord
-  return parsedUserRecord.virtualSubdomains
+  try {
+    const parsedUserRecord = await resolveUserRecord(
+      cnsName,
+      cnsPolicyId,
+      recordPolicyId,
+      recordAddress,
+      networkId,
+      baseUrl,
+      fetcherConfig,
+      csl,
+    )
+    if (typeof parsedUserRecord === 'string') return parsedUserRecord
+    return parsedUserRecord.virtualSubdomains
+  } catch (error: unknown) {
+    return Promise.reject(error)
+  }
 }
 
 export const resolveVirtualSubdomain = async (
@@ -128,28 +142,34 @@ export const resolveVirtualSubdomain = async (
   recordPolicyId: string,
   recordAddress: string,
   networkId: number,
-  csl: WasmModuleProxy,
   baseUrl: string,
-  fetcherConfig: AxiosRequestConfig,
+  fetcherConfig?: AxiosRequestConfig,
+  csl?: WasmModuleProxy,
 ): Promise<string | undefined> => {
-  const [target, cnsName, ext] = virtualDomain.split('.')
+  try {
+    const [target, cnsName, ext] = virtualDomain.split('.')
 
-  const virtualDomains = await resolveVirtualSubdomains(
-    `${cnsName}.${ext}`,
-    cnsPolicyId,
-    recordPolicyId,
-    recordAddress,
-    networkId,
-    csl,
-    baseUrl,
-    fetcherConfig,
-  )
-  if (typeof virtualDomains === 'string') return virtualDomains
+    const virtualDomains = await resolveVirtualSubdomains(
+      `${cnsName}.${ext}`,
+      cnsPolicyId,
+      recordPolicyId,
+      recordAddress,
+      networkId,
+      baseUrl,
+      fetcherConfig,
+      csl,
+    )
+    if (typeof virtualDomains === 'string') return virtualDomains
 
-  const resolvedVirtualDomain = virtualDomains?.find(([key]) => key === target)
-  if (!resolvedVirtualDomain) throw new Error('Virtual domain not found')
+    const resolvedVirtualDomain = virtualDomains?.find(
+      ([key]) => key === target,
+    )
+    if (!resolvedVirtualDomain) throw new Resolver.Errors.NotFound()
 
-  return resolvedVirtualDomain[1]
+    return resolvedVirtualDomain[1]
+  } catch (error: unknown) {
+    return Promise.reject(error)
+  }
 }
 
 export const resolveAddress = async (
@@ -158,28 +178,39 @@ export const resolveAddress = async (
   recordPolicyId: string,
   recordAddress: string,
   networkId: number,
-  csl: WasmModuleProxy,
   baseUrl: string,
-  fetcherConfig: AxiosRequestConfig,
-): Promise<string | undefined> => {
-  const deconstructedCns = cnsName.split('.')
+  fetcherConfig?: AxiosRequestConfig,
+  csl?: WasmModuleProxy,
+): Promise<string | null> => {
+  try {
+    let address
+    const deconstructedCns = cnsName.split('.')
 
-  if (deconstructedCns.length === 2) {
-    return await resolveDomain(cnsName, cnsPolicyId, baseUrl, fetcherConfig)
+    if (deconstructedCns.length === 2) {
+      address = await resolveDomain(
+        cnsName,
+        cnsPolicyId,
+        baseUrl,
+        fetcherConfig,
+      )
+    }
+
+    if (deconstructedCns.length === 3) {
+      address = await resolveVirtualSubdomain(
+        cnsName,
+        cnsPolicyId,
+        recordPolicyId,
+        recordAddress,
+        networkId,
+        baseUrl,
+        fetcherConfig,
+        csl,
+      )
+    }
+
+    if (!address) return null
+    return address
+  } catch (error: unknown) {
+    return Promise.reject(error)
   }
-
-  if (deconstructedCns.length === 3) {
-    return await resolveVirtualSubdomain(
-      cnsName,
-      cnsPolicyId,
-      recordPolicyId,
-      recordAddress,
-      networkId,
-      csl,
-      baseUrl,
-      fetcherConfig,
-    )
-  }
-
-  throw new Error('Invalid domain / virtual domain')
 }

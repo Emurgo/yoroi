@@ -30,7 +30,7 @@ export const cnsUserRecord = (
     ]),
   )
   const socialProfilesMap = assocMap(
-    socialProfiles.map(([socialDomain, socialDomainAddress]) => [
+    socialProfiles.map(([socialDomain, socialDomainAddress]: Array<string>) => [
       // @ts-ignore
       builtinByteString(socialDomain),
       // @ts-ignore

@@ -27,6 +27,8 @@ export const useSendReceiver = () => {
     },
   )
 
+  console.log('cryptoAddresses', cryptoAddresses)
+
   const debouncedRefetch = React.useMemo(() => debounceMaker(refetch, 300), [refetch])
 
   const cancelPendingRequests = React.useCallback(

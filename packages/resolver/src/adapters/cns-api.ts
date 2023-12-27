@@ -4,10 +4,10 @@ import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 import {resolveAddress} from './cns/resolver'
 import {handleZodErrors} from './zod-errors'
 
-export const getCnsCryptoAddress = async (
+export const cnsCryptoAddress = async (
   receiver: string,
-  fetcherConfig: AxiosRequestConfig,
-  csl: WasmModuleProxy,
+  fetcherConfig?: AxiosRequestConfig,
+  csl?: WasmModuleProxy,
 ) => {
   if (!receiver.includes('.')) throw new Resolver.Errors.InvalidDomain()
   if (!isCnsDomain(receiver))
@@ -20,11 +20,10 @@ export const getCnsCryptoAddress = async (
       cnsApiConfig.mainnet.recordPolicyId,
       cnsApiConfig.mainnet.recordAddress,
       cnsApiConfig.mainnet.networkId,
-      csl,
       cnsApiConfig.mainnet.baseUrl,
       fetcherConfig,
+      csl,
     )
-
     return address
   } catch (error: unknown) {
     return handleCnsApiError(error)

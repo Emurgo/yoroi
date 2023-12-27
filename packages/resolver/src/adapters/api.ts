@@ -4,7 +4,7 @@ import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
 import {handleApiGetCryptoAddress} from './handle-api'
 import {unstoppableApiGetCryptoAddress} from './unstoppable-api'
-import {getCnsCryptoAddress} from './cns-api'
+import {cnsCryptoAddress} from './cns-api'
 
 type ApiConfig = {
   [Resolver.NameServer.Unstoppable]: {
@@ -20,7 +20,7 @@ const initialDeps = {
     getCryptoAddress: handleApiGetCryptoAddress,
   },
   cnsApi: {
-    getCryptoAddress: getCnsCryptoAddress,
+    getCryptoAddress: cnsCryptoAddress,
   },
 } as const
 
@@ -42,7 +42,7 @@ export const resolverApiMaker = (
       getCryptoAddress: typeof handleApiGetCryptoAddress
     }
     cnsApi: {
-      getCryptoAddress: typeof getCnsCryptoAddress
+      getCryptoAddress: typeof cnsCryptoAddress
     }
   } = initialDeps,
 ): Resolver.Api => {
@@ -50,11 +50,12 @@ export const resolverApiMaker = (
   const getUnstoppableCryptoAddress = unstoppableApi.getCryptoAddress(
     apiConfig[Resolver.NameServer.Unstoppable],
   )
+  const getCnsCryptoAddress = cnsApi.getCryptoAddress
   // @ts-expect-error TODO: bugfix on TS 5.4 (readonly array of readonly array)
   const operationsGetCryptoAddress: GetCryptoAddressOperations = [
     [Resolver.NameServer.Handle, getHandleCryptoAddress],
     [Resolver.NameServer.Unstoppable, getUnstoppableCryptoAddress],
-    [Resolver.NameServer.Cns, cnsApi.getCryptoAddress],
+    [Resolver.NameServer.Cns, getCnsCryptoAddress],
   ] as const
 
   // facade to the different name servers
@@ -91,6 +92,7 @@ const safelyExecuteOperation = async (
     const address = await operationFn(resolve, fetcherConfig, csl)
     return {error: null, address, nameServer}
   } catch (error) {
+    // @ts-ignore
     return {error: (error as Error).message, address: null, nameServer}
   }
 }
