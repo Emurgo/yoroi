@@ -194,7 +194,7 @@ export const resolveAddress = async (
       )
     }
 
-    if (!address) return null
+    if (!address) throw new Resolver.Errors.InvalidDomain()
     return address
   } catch (error: unknown) {
     return Promise.reject(error)
