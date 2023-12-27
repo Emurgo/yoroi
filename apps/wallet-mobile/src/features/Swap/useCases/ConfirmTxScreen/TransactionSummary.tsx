@@ -10,6 +10,7 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
+import {PRICE_PRECISION} from '../../common/constants'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
@@ -32,7 +33,12 @@ export const TransactionSummary = () => {
   const {pool, cost, prices} = calculation
 
   const priceImpact = prices.priceImpact
-  const actualPrice = prices.actualPrice
+  const formattedActualPrice = Quantities.format(
+    prices.actualPrice ?? Quantities.zero,
+    orderData.tokens.priceDenomination,
+    PRICE_PRECISION,
+  )
+
   const priceImpactRisk = getPriceImpactRisk(Number(priceImpact))
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
   const priceImpactRiskTextColor = priceImpactRiskTheme.text
@@ -116,7 +122,7 @@ export const TransactionSummary = () => {
             </View>
 
             <Text style={{color: priceImpactRiskTextColor}}>
-              {actualPrice}
+              {formattedActualPrice}
 
               <Text style={{color: priceImpactRiskTextColor}}> {`${tokenToSellName}/${tokenToBuyName}`}</Text>
             </Text>

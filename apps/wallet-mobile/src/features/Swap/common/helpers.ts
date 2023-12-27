@@ -99,7 +99,7 @@ export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo, wal
 }
 
 export const getPriceImpactRisk = (priceImpact: number) => {
-  if (priceImpact < 1) return 'none'
+  if (priceImpact < 1 || isNaN(priceImpact)) return 'none'
   if (priceImpact > 10) return 'high'
   return 'moderate'
 }

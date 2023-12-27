@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native'
 import {ClearQuantities} from './ClearQuantities'
 import {SwitchTokens} from './SwitchTokens'
 
-export const ShowTokenActions = () => {
+export const AmountActions = () => {
   return (
     <View style={styles.container}>
       <SwitchTokens />

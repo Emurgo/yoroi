@@ -3,18 +3,18 @@ import {mockSwapManager, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
-import {mocks} from '../../../../../../yoroi-wallets/mocks/wallet'
-import {SwapFormProvider} from '../../../../common/SwapFormProvider'
-import {TopTokenActions} from './TopTokenActions'
+import {SelectedWalletProvider} from '../../../../../../../SelectedWallet'
+import {mocks} from '../../../../../../../yoroi-wallets/mocks/wallet'
+import {SwapFormProvider} from '../../../../../common/SwapFormProvider'
+import {OrderActions} from '../OrderActions/OrderActions'
 
-storiesOf('Swap Tokens Top Action', module).add('initial', () => {
+storiesOf('Swap Top Action', module).add('initial', () => {
   return (
     <SelectedWalletProvider wallet={mocks.wallet}>
       <SwapProvider swapManager={mockSwapManager}>
         <SwapFormProvider>
           <View style={styles.container}>
-            <TopTokenActions />
+            <OrderActions />
           </View>
         </SwapFormProvider>
       </SwapProvider>

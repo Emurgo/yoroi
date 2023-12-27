@@ -1,28 +1,27 @@
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Icon} from '../../../../components'
-import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../helpers'
-import {useStrings} from '../strings'
+import {Icon} from '../../../../../../components'
+import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../../../common/helpers'
+import {useStrings} from '../../../../common/strings'
 
 type PriceImpactProps = {
   priceImpact: number
-  actualPrice: number
+  formattedPrice: string
   pair: string
 }
 
-export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImpactProps) => {
+export const ShowPriceImpact = ({priceImpact, formattedPrice, pair}: PriceImpactProps) => {
   const strings = useStrings()
   const priceImpactRisk = getPriceImpactRisk(priceImpact)
+
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
   const textColor = priceImpactRiskTheme.text
 
-  if (priceImpactRisk === 'none' || actualPrice === 0 || isNaN(actualPrice)) {
-    return null
-  }
+  if (priceImpactRisk === 'none') return null
 
   const formattedPriceImpact = `${Math.ceil(priceImpact * 100) / 100}%`
-  const actualPricePair = `(${actualPrice} ${pair})`
+  const formattedPricePair = `(${formattedPrice} ${pair})`
 
   return (
     <View style={styles.row}>
@@ -39,7 +38,7 @@ export const PriceImpact = ({priceImpact, actualPrice, pair}: PriceImpactProps) 
 
         <Text style={{paddingRight: 10}}>{formattedPriceImpact}</Text>
 
-        <Text> {actualPricePair}</Text>
+        <Text> {formattedPricePair}</Text>
       </Text>
     </View>
   )
