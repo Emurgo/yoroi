@@ -83,6 +83,24 @@ export interface ExchangeSubmittedProperties {
   ramp_type: 'Buy' | 'Sell'
 }
 
+export interface GovernanceConfirmTransactionPageViewedProperties {
+  /**
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | Delegate, Abstain, No Confidence |
+   */
+  governance_selection: 'Delegate' | 'Abstain' | 'No Confidence'
+}
+
+export interface GovernanceTransactionSuccessPageViewedProperties {
+  /**
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | Delegate, Abstain, No Confidence |
+   */
+  governance_selection: 'Delegate' | 'Abstain' | 'No Confidence'
+}
+
 export interface NftGalleryDetailsTabProperties {
   /**
    * | Rule | Value |
@@ -661,6 +679,30 @@ export class ExchangeSubmitted implements BaseEvent {
   }
 }
 
+export class GovernanceChooseDrepPageViewed implements BaseEvent {
+  event_type = 'Governance Choose Drep Page Viewed'
+}
+
+export class GovernanceConfirmTransactionPageViewed implements BaseEvent {
+  event_type = 'Governance Confirm Transaction Page Viewed'
+
+  constructor(public event_properties: GovernanceConfirmTransactionPageViewedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class GovernanceDashboardPageViewed implements BaseEvent {
+  event_type = 'Governance Dashboard Page Viewed'
+}
+
+export class GovernanceTransactionSuccessPageViewed implements BaseEvent {
+  event_type = 'Governance Transaction Success Page Viewed'
+
+  constructor(public event_properties: GovernanceTransactionSuccessPageViewedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
 export class MenuPageViewed implements BaseEvent {
   event_type = 'Menu Page Viewed'
 }
@@ -1009,6 +1051,70 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new ExchangeSubmitted(properties), options);
+  }
+
+  /**
+   * Governance Choose Drep Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Governance%20Choose%20Drep%20Page%20Viewed)
+   *
+   * This event tracks when user loads the bottom sheet on mobile or the popup on extension to introduce the Drep ID. To arrive to this page the user has to click on “Delegate to a Drep” section.
+   *
+   * @param options Amplitude event options.
+   */
+  governanceChooseDrepPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new GovernanceChooseDrepPageViewed(), options);
+  }
+
+  /**
+   * Governance Confirm Transaction Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Governance%20Confirm%20Transaction%20Page%20Viewed)
+   *
+   * This event tracks when a user loads the confirm transaction page on the Governance flow. On Extension user would insert the password in that page. On extension user would do it in a bottom sheet afterwards.
+   *
+   * @param properties The event's properties (e.g. governance_selection)
+   * @param options Amplitude event options.
+   */
+  governanceConfirmTransactionPageViewed(
+    properties: GovernanceConfirmTransactionPageViewedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new GovernanceConfirmTransactionPageViewed(properties), options);
+  }
+
+  /**
+   * Governance Dashboard Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Governance%20Dashboard%20Page%20Viewed)
+   *
+   * This event tracks when a user loads the Governance Dashboard Page. The page is reached via the main navigation menu in extension and in the bottom menu icon on Extension.
+   *
+   * @param options Amplitude event options.
+   */
+  governanceDashboardPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new GovernanceDashboardPageViewed(), options);
+  }
+
+  /**
+   * Governance Transaction Success Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Governance%20Transaction%20Success%20Page%20Viewed)
+   *
+   * This event tracks when a user loads the success page at the end of the governance flow.
+   *
+   * @param properties The event's properties (e.g. governance_selection)
+   * @param options Amplitude event options.
+   */
+  governanceTransactionSuccessPageViewed(
+    properties: GovernanceTransactionSuccessPageViewedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new GovernanceTransactionSuccessPageViewed(properties), options);
   }
 
   /**

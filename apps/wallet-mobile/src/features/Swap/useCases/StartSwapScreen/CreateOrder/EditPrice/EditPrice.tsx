@@ -3,15 +3,18 @@ import {useSwap} from '@yoroi/swap'
 import * as React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {COLORS} from '../../../../../theme'
-import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {useStrings} from '../../../common/strings'
-import {useSwapForm} from '../../../common/SwapFormProvider'
+import {useSelectedWallet} from '../../../../../../SelectedWallet'
+import {COLORS} from '../../../../../../theme'
+import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
+import {Quantities} from '../../../../../../yoroi-wallets/utils/utils'
+import {PRICE_PRECISION} from '../../../../common/constants'
+import {useStrings} from '../../../../common/strings'
+import {useSwapForm} from '../../../../common/SwapFormProvider'
+import {ShowPriceImpact} from './ShowPriceImpact'
 
 const BORDER_SIZE = 1
 
-export const EditLimitPrice = () => {
+export const EditPrice = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const [isFocused, setIsFocused] = React.useState(false)
@@ -20,6 +23,13 @@ export const EditLimitPrice = () => {
   const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
   const disabled = orderData.type === 'market'
+
+  const prices = orderData.selectedPoolCalculation?.prices
+  const formattedPrice = Quantities.format(
+    orderData.selectedPoolCalculation?.prices.actualPrice ?? Quantities.zero,
+    orderData.tokens.priceDenomination,
+    PRICE_PRECISION,
+  )
 
   const {
     buyQuantity: {isTouched: isBuyTouched},
@@ -33,33 +43,41 @@ export const EditLimitPrice = () => {
   const tokenToBuyName = isBuyTouched ? buyTokenInfo.ticker ?? buyTokenInfo.name : '-'
 
   return (
-    <View style={[styles.container, disabled && styles.disabled, isFocused && styles.active]}>
-      <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
+    <>
+      <View style={[styles.container, disabled && styles.disabled, isFocused && styles.active]}>
+        <Text style={styles.label}>{disabled ? strings.marketPrice : strings.limitPrice}</Text>
 
-      <View style={styles.content}>
-        <TextInput
-          keyboardType="numeric"
-          autoComplete="off"
-          value={limitDisplayValue}
-          placeholder="0"
-          onChangeText={onChangeLimitPrice}
-          allowFontScaling
-          selectionColor="#242838"
-          style={styles.amountInput}
-          underlineColorAndroid="transparent"
-          editable={!disabled}
-          ref={limitInputRef}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-        />
+        <View style={styles.content}>
+          <TextInput
+            keyboardType="numeric"
+            autoComplete="off"
+            value={limitDisplayValue}
+            placeholder="0"
+            onChangeText={onChangeLimitPrice}
+            allowFontScaling
+            selectionColor="#242838"
+            style={styles.amountInput}
+            underlineColorAndroid="transparent"
+            editable={!disabled}
+            ref={limitInputRef}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
 
-        <View style={[styles.textWrapper, disabled && styles.disabled]}>
-          <Text style={styles.text}>
-            {tokenToSellName}/{tokenToBuyName}
-          </Text>
+          <View style={[styles.textWrapper, disabled && styles.disabled]}>
+            <Text style={styles.text}>
+              {tokenToSellName}/{tokenToBuyName}
+            </Text>
+          </View>
         </View>
       </View>
-    </View>
+
+      <ShowPriceImpact
+        priceImpact={Number(prices?.priceImpact)}
+        formattedPrice={formattedPrice}
+        pair={`${tokenToSellName}/${tokenToBuyName}`}
+      />
+    </>
   )
 }
 

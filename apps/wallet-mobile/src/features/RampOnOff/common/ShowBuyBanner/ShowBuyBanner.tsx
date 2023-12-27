@@ -8,7 +8,7 @@ import {useShowBuyBannerSmall} from '../useShowBuyBannerSmall'
 import {BuyBannerBig} from './BuyBannerBig'
 import {BuyBannerSmall} from './BuyBannerSmall'
 
-export const MaybeShowBuyBanner = () => {
+export const ShowBuyBanner = () => {
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)

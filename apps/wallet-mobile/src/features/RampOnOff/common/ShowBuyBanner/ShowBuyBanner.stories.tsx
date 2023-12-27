@@ -6,12 +6,12 @@ import {Text} from 'react-native'
 
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
-import {RampOnOffProvider} from '../../common/RampOnOffProvider'
-import {MaybeShowBuyBanner} from './MaybeShowBuyBanner'
+import {RampOnOffProvider} from '../RampOnOffProvider'
+import {ShowBuyBanner} from './ShowBuyBanner'
 
 const thirtyOneDaysInMs = 31 * 24 * 60 * 60 * 1000
 
-storiesOf('RampOnOff MaybeShowBuyBanner', module) //
+storiesOf('RampOnOff ShowBuyBanner', module) //
   // pt balance bigger than threshold PT should not display any banner
   .add('5>, no banner', () => <WithoutBanner />)
 
@@ -36,7 +36,7 @@ const WithoutBanner = () => {
       <RampOnOffProvider>
         <Text>The only thing you should be seeing is this text</Text>
 
-        <MaybeShowBuyBanner />
+        <ShowBuyBanner />
       </RampOnOffProvider>
     </SelectedWalletProvider>
   )
@@ -47,7 +47,7 @@ const WithSmallBanner = ({text}: {text: string}) => {
       <RampOnOffProvider>
         <Text>You should {text} seeing a banner (small)</Text>
 
-        <MaybeShowBuyBanner />
+        <ShowBuyBanner />
       </RampOnOffProvider>
     </SelectedWalletProvider>
   )
@@ -58,7 +58,7 @@ const WithBigBanner = () => {
       <RampOnOffProvider>
         <Text>You should be seeing a banner (big)</Text>
 
-        <MaybeShowBuyBanner />
+        <ShowBuyBanner />
       </RampOnOffProvider>
     </SelectedWalletProvider>
   )

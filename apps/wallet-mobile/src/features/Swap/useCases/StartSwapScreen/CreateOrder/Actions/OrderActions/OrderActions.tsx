@@ -2,14 +2,14 @@ import {useSwap, useSwapPoolsByPair} from '@yoroi/swap'
 import React from 'react'
 import {Animated, Keyboard, Pressable, StyleSheet, View} from 'react-native'
 
-import {Icon} from '../../../../../../components'
-import {LoadingOverlay} from '../../../../../../components/LoadingOverlay'
-import {COLORS} from '../../../../../../theme'
-import {ButtonGroup} from '../../../../common/ButtonGroup/ButtonGroup'
-import {useStrings} from '../../../../common/strings'
-import {useSwapForm} from '../../../../common/SwapFormProvider'
+import {Icon} from '../../../../../../../components'
+import {LoadingOverlay} from '../../../../../../../components/LoadingOverlay'
+import {COLORS} from '../../../../../../../theme'
+import {ButtonGroup} from '../../../../../common/ButtonGroup/ButtonGroup'
+import {useStrings} from '../../../../../common/strings'
+import {useSwapForm} from '../../../../../common/SwapFormProvider'
 
-export const TopTokenActions = () => {
+export const OrderActions = () => {
   const strings = useStrings()
   const orderTypeLabels = [strings.marketButton, strings.limitButton]
   const {orderData, orderTypeChanged, poolPairsChanged} = useSwap()

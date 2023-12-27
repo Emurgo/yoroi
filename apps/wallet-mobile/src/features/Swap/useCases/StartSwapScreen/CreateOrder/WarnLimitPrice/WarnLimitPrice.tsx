@@ -1,43 +1,62 @@
+import {SwapState} from '@yoroi/swap'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../../../components'
+import {useSelectedWallet} from '../../../../../../SelectedWallet'
+import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
+import {Quantities} from '../../../../../../yoroi-wallets/utils'
+import {PRICE_PRECISION} from '../../../../common/constants'
 import {useStrings} from '../../../../common/strings'
 
-export interface Props {
-  onSubmit: () => void
-  slippage: number
-  ticker: string
+export interface LimitPriceWarningProps {
+  onConfirm?: () => void
+  orderData: SwapState['orderData']
 }
 
-export const SlippageWarning = ({onSubmit, slippage, ticker}: Props) => {
+export const WarnLimitPrice = ({onConfirm, orderData}: LimitPriceWarningProps) => {
   const strings = useStrings()
+  const limitPrice = Quantities.format(orderData.limitPrice ?? Quantities.zero, orderData.tokens.priceDenomination)
+  const wallet = useSelectedWallet()
   const {closeModal} = useModal()
+  const tokenToSellInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
+  const tokenToBuyInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
 
-  const slippageTolerance = `${slippage}%`
-  const minReceived = `0 ${ticker}`
+  const tokenToSellName = tokenToSellInfo.ticker ?? tokenToSellInfo.name ?? '-'
+  const tokenToBuyName = tokenToBuyInfo.ticker ?? tokenToBuyInfo.name ?? '-'
+  const marketPrice = Quantities.format(
+    orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
+    orderData.tokens.priceDenomination,
+    PRICE_PRECISION,
+  )
+
+  const name = `${tokenToSellName}/${tokenToBuyName}`
 
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.description}>{strings.slippageWarningText}</Text>
+        <Text style={styles.description}>{strings.limitPriceWarningDescription}</Text>
 
         <Spacer height={16} />
 
         <View style={styles.table}>
           <View style={styles.row}>
-            <Text style={styles.label}>{strings.slippageWarningYourSlippage}</Text>
+            <Text style={styles.label}>{strings.limitPriceWarningYourPrice}</Text>
 
             <View style={styles.textWrapper}>
-              <Text style={styles.value}>{slippageTolerance}</Text>
+              <Text style={styles.value}>{limitPrice}</Text>
+
+              <Text style={styles.value}>{name}</Text>
             </View>
           </View>
 
           <View style={styles.row}>
-            <Text style={styles.label}>{strings.swapMinReceivedTitle}</Text>
+            <Text style={styles.label}>{strings.limitPriceWarningMarketPrice}</Text>
 
             <View style={styles.textWrapper}>
-              <Text style={styles.value}>{minReceived}</Text>
+              <Text style={styles.value}>{marketPrice}</Text>
+
+              <Text style={styles.value}>{name}</Text>
             </View>
           </View>
         </View>
@@ -58,7 +77,7 @@ export const SlippageWarning = ({onSubmit, slippage, ticker}: Props) => {
           testID="swapConfirmButton"
           shelleyTheme
           title={strings.limitPriceWarningConfirm}
-          onPress={onSubmit}
+          onPress={onConfirm}
           containerStyle={styles.buttonContainer}
         />
       </View>

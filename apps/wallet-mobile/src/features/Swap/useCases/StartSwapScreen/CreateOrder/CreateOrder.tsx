@@ -18,19 +18,21 @@ import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types'
 import {isMainnetNetworkId, Quantities} from '../../../../../yoroi-wallets/utils'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
+import {getPriceImpactRisk} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {useSwapForm} from '../../../common/SwapFormProvider'
 import {useSwapTx} from '../../../common/useSwapTx'
+import {AmountActions} from './Actions/AmountActions/AmountActions'
+import {OrderActions} from './Actions/OrderActions/OrderActions'
 import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
-import {EditLimitPrice} from './EditLimitPrice'
 import {ShowPoolActions} from './EditPool/ShowPoolActions'
+import {EditPrice} from './EditPrice/EditPrice'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
-import {LimitPriceWarning} from './LimitPriceWarning/LimitPriceWarning'
-import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
-import {TopTokenActions} from './ShowTokenActions/TopTokenActions'
-import {SlippageWarning} from './SlippageWarning'
+import {WarnLimitPrice} from './WarnLimitPrice/WarnLimitPrice'
+import {WarnPriceImpact} from './WarnPriceImpact/WarnPriceImpact'
+import {WarnSlippage} from './WarnSlippage/WarnSlippage'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
@@ -45,6 +47,7 @@ export const CreateOrder = () => {
   const {track} = useMetrics()
   const {openModal} = useModal()
   const {height: deviceHeight} = useWindowDimensions()
+  const priceImpactRisk = getPriceImpactRisk(Number(orderData.selectedPoolCalculation?.prices.priceImpact))
 
   const {
     sellQuantity: {isTouched: isSellTouched},
@@ -211,6 +214,12 @@ export const CreateOrder = () => {
 
   const handleOnSwap = () => {
     if (orderData.selectedPoolCalculation === undefined) return
+
+    if (priceImpactRisk === 'high') {
+      openModal(strings.warning, <WarnPriceImpact onContinue={createUnsignedSwapTx} />, 400)
+      return
+    }
+
     if (orderData.type === 'limit' && orderData.limitPrice !== undefined) {
       const marketPrice = new BigNumber(orderData.selectedPoolCalculation.prices.market)
       const limitPrice = new BigNumber(orderData.limitPrice)
@@ -218,7 +227,7 @@ export const CreateOrder = () => {
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
         openModal(
           strings.limitPriceWarningTitle,
-          <LimitPriceWarning orderData={orderData} onSubmit={createUnsignedSwapTx} />,
+          <WarnLimitPrice orderData={orderData} onConfirm={createUnsignedSwapTx} />,
           400,
         )
         return
@@ -233,8 +242,8 @@ export const CreateOrder = () => {
     if (Quantities.isZero(minReceived)) {
       openModal(
         strings.slippageWarningTitle,
-        <SlippageWarning
-          onSubmit={createUnsignedSwapTx}
+        <WarnSlippage
+          onConfirm={createUnsignedSwapTx}
           slippage={orderData.slippage}
           ticker={buyTokenInfo.ticker ?? buyTokenInfo.name ?? ''}
         />,
@@ -259,13 +268,13 @@ export const CreateOrder = () => {
               setContentHeight(height + BOTTOM_ACTION_SECTION)
             }}
           >
-            <TopTokenActions />
+            <OrderActions />
 
             <EditSellAmount />
 
             <Spacer height={16} />
 
-            <ShowTokenActions />
+            <AmountActions />
 
             <Spacer height={16} />
 
@@ -273,7 +282,7 @@ export const CreateOrder = () => {
 
             <Spacer height={20} />
 
-            <EditLimitPrice />
+            <EditPrice />
 
             <EditSlippage />
 

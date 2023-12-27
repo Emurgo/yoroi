@@ -103,6 +103,7 @@ import {Wallet} from './Wallet'
 import {WalletAccount} from './WalletAccount'
 import {Wallets} from './Wallets'
 import {WalletStack} from './WalletStack'
+import {Warning} from './Warning'
 import {WingRiders} from './WingRiders'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
@@ -216,4 +217,5 @@ export const Icon = {
   Governance,
   ArrowRight,
   Close,
+  Warning,
 }

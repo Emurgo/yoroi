@@ -7,6 +7,7 @@ import {useLanguage} from '../../../i18n'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {useBalances, useTokenInfo} from '../../../yoroi-wallets/hooks'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
+import {PRICE_PRECISION} from './constants'
 import {useStrings} from './strings'
 
 export const useSwapForm = () => React.useContext(SwapFormContext)
@@ -110,14 +111,14 @@ export const SwapFormProvider = ({
   const updateLimitPrice = React.useCallback(() => {
     if (orderData.type === 'limit' && !limitInputRef?.current?.isFocused()) {
       actions.limitPriceInputValueChanged(
-        Quantities.format(orderData.limitPrice ?? Quantities.zero, orderData.tokens.priceDenomination, PRECISION),
+        Quantities.format(orderData.limitPrice ?? Quantities.zero, orderData.tokens.priceDenomination, PRICE_PRECISION),
       )
     } else if (orderData.type === 'market') {
       actions.limitPriceInputValueChanged(
         Quantities.format(
           orderData.selectedPoolCalculation?.prices.market ?? Quantities.zero,
           orderData.tokens.priceDenomination,
-          PRECISION,
+          PRICE_PRECISION,
         ),
       )
     }
@@ -162,7 +163,7 @@ export const SwapFormProvider = ({
         text,
         orderData.tokens.priceDenomination,
         numberLocale,
-        PRECISION,
+        PRICE_PRECISION,
       )
       actions.limitPriceInputValueChanged(formattedPrice)
       limitPriceChanged(price)
@@ -432,8 +433,6 @@ const swapFormReducer = (state: SwapFormState, action: SwapFormAction) => {
     }
   })
 }
-
-const PRECISION = 14
 
 const defaultState: SwapFormState = Object.freeze({
   sellQuantity: {
