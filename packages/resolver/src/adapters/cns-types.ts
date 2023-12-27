@@ -1,3 +1,60 @@
+export interface CNSMetadata {
+  name: string
+  image: string
+  expiry: number
+  origin: string
+  cnsType: string
+  mediaType: string
+  description: string
+  virtualSubdomainLimits: number
+  virtualSubdomainEnabled: 'Enabled' | 'Disabled'
+}
+
+export type CNSUserRecord = ConStr<
+  0,
+  [
+    AssocMap<BuiltinByteString, PubKeyAddress | ScriptAddress>,
+    AssocMap<BuiltinByteString, BuiltinByteString>,
+    AssocMap<BuiltinByteString, BuiltinByteString>,
+  ]
+>
+
+export const cnsUserRecord = (
+  virtualDomains: [string, PubKeyAddress | ScriptAddress][],
+  socialProfiles: string[][],
+  otherRecords: string[][],
+): CNSUserRecord => {
+  const virtualDomainsMap = assocMap(
+    virtualDomains.map(([virtualDomain, address]) => [
+      builtinByteString(virtualDomain),
+      address,
+    ]),
+  )
+  const socialProfilesMap = assocMap(
+    socialProfiles.map(([socialDomain, socialDomainAddress]: Array<string>) => [
+      // @ts-ignore
+      builtinByteString(socialDomain),
+      // @ts-ignore
+      builtinByteString(socialDomainAddress),
+    ]),
+  )
+  const otherRecordsMap = assocMap(
+    otherRecords.map(([recordKey, recordValue]) => [
+      // @ts-ignore
+      builtinByteString(recordKey),
+      // @ts-ignore
+      builtinByteString(recordValue),
+    ]),
+  )
+  return conStr0([virtualDomainsMap, socialProfilesMap, otherRecordsMap])
+}
+
+export type ParsedCNSUserRecord = {
+  virtualSubdomains: string[][]
+  socialProfiles: string[][]
+  otherRecords: string[][]
+}
+
 export type ConStr<N extends number, T> = {constructor: N; fields: T}
 export type BuiltinByteString = {bytes: string}
 export type Integer = {int: number}
@@ -83,3 +140,13 @@ export const assocMap = <K, V>(itemsMap: [K, V][]): AssocMap<K, V> => ({
 })
 export const tuple = <K, V>(key: K, value: V): Tuple<K, V> =>
   conStr0([key, value])
+
+export type SocialRecord =
+  | 'NICKNAME'
+  | 'EMAIL'
+  | 'TELEGRAM'
+  | 'PHONE_NUMBER'
+  | 'DISCORD'
+  | 'GITHUB'
+  | 'MEDIUM'
+  | 'TWITTER'

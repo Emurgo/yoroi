@@ -1,5 +1,4 @@
 import {AxiosRequestConfig} from 'axios'
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
 import {ResolverReceiver} from './receiver'
 
@@ -9,7 +8,6 @@ export interface ResolverApi {
       resolve: ResolverReceiver['resolve']
       strategy?: ResolverStrategy
     },
-    csl?: WasmModuleProxy,
     fetcherOptions?: AxiosRequestConfig,
   ): Promise<ResolverAddressesResponse>
 }

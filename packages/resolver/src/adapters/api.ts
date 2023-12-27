@@ -27,8 +27,10 @@ const initialDeps = {
 export const resolverApiMaker = (
   {
     apiConfig,
+    csl,
   }: {
     apiConfig: Readonly<ApiConfig>
+    csl: WasmModuleProxy
   },
   {
     unstoppableApi,
@@ -50,7 +52,7 @@ export const resolverApiMaker = (
   const getUnstoppableCryptoAddress = unstoppableApi.getCryptoAddress(
     apiConfig[Resolver.NameServer.Unstoppable],
   )
-  const getCnsCryptoAddress = cnsApi.getCryptoAddress
+  const getCnsCryptoAddress = cnsApi.getCryptoAddress(csl)
   // @ts-expect-error TODO: bugfix on TS 5.4 (readonly array of readonly array)
   const operationsGetCryptoAddress: GetCryptoAddressOperations = [
     [Resolver.NameServer.Handle, getHandleCryptoAddress],
@@ -67,13 +69,12 @@ export const resolverApiMaker = (
       resolve: Resolver.Receiver['resolve']
       strategy: Resolver.Strategy
     },
-    csl?: WasmModuleProxy,
     fetcherConfig?: AxiosRequestConfig,
   ): Promise<Resolver.AddressesResponse> => {
     if (strategy === 'all')
-      return resolveAll(operationsGetCryptoAddress, resolve, fetcherConfig, csl)
+      return resolveAll(operationsGetCryptoAddress, resolve, fetcherConfig)
 
-    return resolveFirst(operationsGetCryptoAddress, resolve, fetcherConfig, csl)
+    return resolveFirst(operationsGetCryptoAddress, resolve, fetcherConfig)
   }
 
   return {
@@ -86,10 +87,9 @@ const safelyExecuteOperation = async (
   nameServer: Resolver.NameServer,
   resolve: Resolver.Receiver['resolve'],
   fetcherConfig?: AxiosRequestConfig,
-  csl?: WasmModuleProxy,
 ): Promise<Resolver.AddressResponse> => {
   try {
-    const address = await operationFn(resolve, fetcherConfig, csl)
+    const address = await operationFn(resolve, fetcherConfig)
     return {error: null, address, nameServer}
   } catch (error) {
     // @ts-ignore
@@ -101,16 +101,9 @@ const resolveAll = async (
   operations: GetCryptoAddressOperations,
   resolve: Resolver.Receiver['resolve'],
   fetcherConfig?: AxiosRequestConfig,
-  csl?: WasmModuleProxy,
 ): Promise<Resolver.AddressesResponse> => {
   const promises = operations.map(([nameServer, operationFn]) =>
-    safelyExecuteOperation(
-      operationFn,
-      nameServer,
-      resolve,
-      fetcherConfig,
-      csl,
-    ),
+    safelyExecuteOperation(operationFn, nameServer, resolve, fetcherConfig),
   )
   const result = await Promise.all(promises)
   return result
@@ -120,10 +113,9 @@ const resolveFirst = async (
   operations: GetCryptoAddressOperations,
   resolve: Resolver.Receiver['resolve'],
   fetcherConfig?: AxiosRequestConfig,
-  csl?: WasmModuleProxy,
 ): Promise<Resolver.AddressesResponse> => {
   const promises = operations.map(async ([nameServer, operationFn]) => {
-    const address = await operationFn(resolve, fetcherConfig, csl)
+    const address = await operationFn(resolve, fetcherConfig)
     return {error: null, address, nameServer}
   })
   try {
@@ -137,7 +129,6 @@ const resolveFirst = async (
 type GetCryptoAddress = (
   resolve: Resolver.Receiver['resolve'],
   fetcherConfig?: AxiosRequestConfig,
-  csl?: WasmModuleProxy,
 ) => Promise<string>
 
 type GetCryptoAddressOperations = ReadonlyArray<

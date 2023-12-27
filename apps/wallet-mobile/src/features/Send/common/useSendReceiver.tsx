@@ -1,4 +1,3 @@
-import {init} from '@emurgo/cross-csl-mobile'
 import {isDomain, isNameServer, isResolvableDomain, useResolverCryptoAddresses} from '@yoroi/resolver'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
@@ -21,13 +20,11 @@ export const useSendReceiver = () => {
     isLoading: isResolvingAddressess,
     isSuccess,
   } = useResolverCryptoAddresses(
-    {resolve: receiver.resolve, csl: init('ctx')},
+    {resolve: receiver.resolve},
     {
       enabled: false,
     },
   )
-
-  console.log('cryptoAddresses', cryptoAddresses)
 
   const debouncedRefetch = React.useMemo(() => debounceMaker(refetch, 300), [refetch])
 

@@ -1,6 +1,5 @@
 import {UseQueryOptions, useQuery} from 'react-query'
 import {Resolver} from '@yoroi/types'
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
 import {useResolver} from '../provider/ResolverProvider'
 
@@ -10,11 +9,9 @@ export const useResolverCryptoAddresses = (
   {
     resolve,
     strategy = 'all',
-    csl,
   }: {
     resolve: Resolver.Receiver['resolve']
     strategy?: Resolver.Strategy
-    csl?: WasmModuleProxy
   },
   options?: UseQueryOptions<
     Resolver.AddressesResponse,
@@ -32,7 +29,7 @@ export const useResolverCryptoAddresses = (
     cacheTime: tenSeconds,
     ...options,
     queryFn: ({signal}) =>
-      crypto.getCardanoAddresses({resolve, strategy}, csl, {signal}),
+      crypto.getCardanoAddresses({resolve, strategy}, {signal}),
   })
 
   return {

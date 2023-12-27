@@ -1,6 +1,6 @@
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
-import {AssocMap, BuiltinByteString, CNSMetadata} from './types'
-import {CNSUserRecord} from './types/cnsUserRecord'
+import {AssocMap, BuiltinByteString, CNSMetadata} from './cns-types'
+import {CNSUserRecord} from './cns-types'
 
 export const validateCNSUserRecord = (
   cnsUserRecord: CNSUserRecord,
