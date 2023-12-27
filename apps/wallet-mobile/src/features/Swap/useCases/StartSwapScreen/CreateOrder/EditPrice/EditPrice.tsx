@@ -3,16 +3,18 @@ import {useSwap} from '@yoroi/swap'
 import * as React from 'react'
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {COLORS} from '../../../../../theme'
-import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
-import {PriceImpact} from '../../../common/PriceImpact/PriceImpact'
-import {useStrings} from '../../../common/strings'
-import {useSwapForm} from '../../../common/SwapFormProvider'
+import {useSelectedWallet} from '../../../../../../SelectedWallet'
+import {COLORS} from '../../../../../../theme'
+import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
+import {Quantities} from '../../../../../../yoroi-wallets/utils/utils'
+import {PRICE_PRECISION} from '../../../../common/constants'
+import {useStrings} from '../../../../common/strings'
+import {useSwapForm} from '../../../../common/SwapFormProvider'
+import {ShowPriceImpact} from './ShowPriceImpact'
 
 const BORDER_SIZE = 1
 
-export const EditLimitPrice = () => {
+export const EditPrice = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const [isFocused, setIsFocused] = React.useState(false)
@@ -23,6 +25,11 @@ export const EditLimitPrice = () => {
   const disabled = orderData.type === 'market'
 
   const prices = orderData.selectedPoolCalculation?.prices
+  const formattedPrice = Quantities.format(
+    orderData.selectedPoolCalculation?.prices.actualPrice ?? Quantities.zero,
+    orderData.tokens.priceDenomination,
+    PRICE_PRECISION,
+  )
 
   const {
     buyQuantity: {isTouched: isBuyTouched},
@@ -65,9 +72,9 @@ export const EditLimitPrice = () => {
         </View>
       </View>
 
-      <PriceImpact
+      <ShowPriceImpact
         priceImpact={Number(prices?.priceImpact)}
-        actualPrice={Number(prices?.actualPrice)}
+        formattedPrice={formattedPrice}
         pair={`${tokenToSellName}/${tokenToBuyName}`}
       />
     </>

@@ -2,10 +2,10 @@ import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {SelectedWalletProvider} from '../../../../../SelectedWallet'
-import {mocks} from '../../../../../yoroi-wallets/mocks'
-import {SwapFormProvider} from '../../../common/SwapFormProvider'
-import {EditLimitPrice} from './EditLimitPrice'
+import {SelectedWalletProvider} from '../../../../../../SelectedWallet'
+import {mocks} from '../../../../../../yoroi-wallets/mocks'
+import {SwapFormProvider} from '../../../../common/SwapFormProvider'
+import {EditPrice} from './EditPrice'
 
 const styles = StyleSheet.create({
   container: {
@@ -22,4 +22,4 @@ storiesOf('Swap Edit Limit Price', module)
       </SwapFormProvider>
     </SelectedWalletProvider>
   ))
-  .add('Default', () => <EditLimitPrice />)
+  .add('Default', () => <EditPrice />)

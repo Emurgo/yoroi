@@ -1,16 +1,16 @@
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Button, Spacer, useModal} from '../../../../components'
-import {useTheme} from '../../../../theme'
-import {Theme} from '../../../../theme/types'
-import {useStrings} from '../strings'
+import {Button, Spacer, useModal} from '../../../../../../components'
+import {useTheme} from '../../../../../../theme'
+import {Theme} from '../../../../../../theme/types'
+import {useStrings} from '../../../../common/strings'
 
 export interface Props {
   onContinue: () => void
 }
 
-export const PriceImpactWarning = ({onContinue}: Props) => {
+export const WarnPriceImpact = ({onContinue}: Props) => {
   const strings = useStrings()
   const {closeModal} = useModal()
 
