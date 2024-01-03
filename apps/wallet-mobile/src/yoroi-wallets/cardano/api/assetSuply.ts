@@ -1,8 +1,8 @@
+import {CardanoApi} from '@yoroi/api'
 import {createTypeGuardFromSchema} from '@yoroi/common'
 import {z} from 'zod'
 
 import {BackendConfig} from '../../types'
-import {CardanoApi} from '@yoroi/api'
 
 export const fetchTokensSupplies = async (
   tokenIds: `${string}.${string}`[],
