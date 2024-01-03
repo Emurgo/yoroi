@@ -139,7 +139,7 @@ export type ApiTokeSupplyRequest = ReadonlyArray<ApiTokenId>
 export type ApiTokenSupplyResponse = {
   [tokenId: ApiTokenId]: ApiTokenSupplyRecord
 }
-export type ApiTokenSupplyRecord = number | null
+export type ApiTokenSupplyRecord = string | null
 
 export type ApiTokenIdentity = {
   policyId: string

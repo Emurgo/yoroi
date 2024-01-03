@@ -26,7 +26,7 @@ export const getTokenSupply =
     const payload = {assets: Array.from(assetsMap.values())}
 
     return request<Api.Cardano.TokenSupplyResponse>({
-      url: `${baseUrl}/multiAsset/supply`,
+      url: `${baseUrl}/multiAsset/supply?numberFormat=string`,
       data: payload,
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -56,7 +56,7 @@ type TokenSupplyResponse = {
 }
 
 const TokenSupplySchema: z.ZodSchema<TokenSupplyResponse> = z.object({
-  supplies: z.record(z.number().nullable()),
+  supplies: z.record(z.string().nullable()),
 })
 
 export const isTokenSupplyResponse =

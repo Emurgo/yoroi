@@ -42,6 +42,8 @@ export type YoroiVoting = {
 export type Address = string
 export type TokenId = string
 
+export type YoroiTokenId = `${string}.${string}`
+
 export type YoroiEntry = {
   address: Address
   amounts: Balance.Amounts
