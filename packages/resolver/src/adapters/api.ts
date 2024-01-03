@@ -91,9 +91,8 @@ const safelyExecuteOperation = async (
   try {
     const address = await operationFn(resolve, fetcherConfig)
     return {error: null, address, nameServer}
-  } catch (error) {
-    // @ts-ignore
-    return {error: (error as Error).message, address: null, nameServer}
+  } catch (error: any) {
+    return {error, address: null, nameServer}
   }
 }
 
@@ -121,8 +120,10 @@ const resolveFirst = async (
   try {
     const result = await Promise.any(promises)
     return [result]
-  } catch (error) {
-    return [{address: null, error: 'Not resolved', nameServer: null}]
+  } catch {
+    return [
+      {address: null, error: new Resolver.Errors.NotFound(), nameServer: null},
+    ]
   }
 }
 

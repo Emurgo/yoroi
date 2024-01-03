@@ -1,5 +1,6 @@
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
-import {AssocMap, BuiltinByteString, CNSMetadata} from './cns-types'
+import {Api} from '@yoroi/types'
+import {AssocMap, BuiltinByteString} from './cns-types'
 import {CNSUserRecord} from './cns-types'
 
 export const validateCNSUserRecord = (
@@ -20,39 +21,26 @@ export const validateCNSUserRecord = (
   return constructorCorrect && numberOfFieldsCorrect
 }
 
-export const validateExpiry = async (metadata: CNSMetadata) => {
+export const validateExpiry = (metadata: Api.Cardano.NftMetadata) => {
   const {expiry} = metadata
   const millisecondsNow = Date.now()
-  return expiry > millisecondsNow
+
+  return (expiry as number) > millisecondsNow
 }
 
-export const validateVirtualSubdomainEnabled = (metadata: CNSMetadata) => {
+export const validateVirtualSubdomainEnabled = (
+  metadata: Api.Cardano.NftMetadata,
+) => {
   const {virtualSubdomainEnabled} = metadata
   return virtualSubdomainEnabled === 'Enabled'
 }
 
+/* istanbul ignore next */
 export const stringToHex = (str: string) =>
   Buffer.from(str, 'utf8').toString('hex')
+/* istanbul ignore next */
 export const hexToString = (hex: string) =>
   Buffer.from(hex, 'hex').toString('utf8')
-
-export const parseAssocMap = <T>(
-  assocMapVal: AssocMap<BuiltinByteString, T>,
-  itemParser: (args0: T) => string,
-  limit = 5,
-): string[][] => {
-  const parsedAssocMap: string[][] = []
-  for (let i = 0; i < limit; i += 1) {
-    if (i >= assocMapVal.map.length) break
-    const mapItem = assocMapVal.map[i]
-    // @ts-ignore
-    const key = hexToString(mapItem.k.bytes)
-    // @ts-ignore
-    const value = itemParser(mapItem.v)
-    parsedAssocMap.push([key, value])
-  }
-  return parsedAssocMap
-}
 
 export const parseAssocMapAsync = async <T>(
   assocMapVal: AssocMap<BuiltinByteString, T>,
@@ -61,44 +49,26 @@ export const parseAssocMapAsync = async <T>(
 ): Promise<string[][]> => {
   const parsedAssocMap: string[][] = []
   const promises: Promise<string>[] = []
+
   for (let i = 0; i < limit; i += 1) {
-    if (i >= assocMapVal.map.length) break
+    if (i >= assocMapVal.map.length) continue
     const mapItem = assocMapVal.map[i]
-    // @ts-ignore
+    if (!mapItem) throw new Error('bad data')
     promises.push(itemParser(mapItem.v))
   }
+
   const valueArray = await Promise.all(promises)
   for (let i = 0; i < limit; i += 1) {
-    if (i >= assocMapVal.map.length) break
+    if (i >= assocMapVal.map.length) continue
     const mapItem = assocMapVal.map[i]
-    // @ts-ignore
+    /* istanbul ignore next */
+    if (!mapItem) throw new Error('bad data')
     const key = hexToString(mapItem.k.bytes)
     const value = valueArray[i]
-    // @ts-ignore
+    if (!value) throw new Error('bad data')
     parsedAssocMap.push([key, value])
   }
   return parsedAssocMap
-}
-
-export const parseInlineDatum = async <T>(
-  inlineDatum: string,
-  csl: WasmModuleProxy,
-): Promise<T> => {
-  const datum = await csl.PlutusData.fromHex(inlineDatum)
-  const jsonDatum = await datum.toJson(1)
-  const parsed = JSON.parse(jsonDatum)
-
-  return parsed
-}
-
-export const hexToObj = async <T>(
-  hex: string,
-  csl: WasmModuleProxy,
-): Promise<T> => {
-  const plutusData = await csl.PlutusData.fromHex(hex)
-  const plutusDataJson = await plutusData.toJson(1)
-
-  return JSON.parse(plutusDataJson)
 }
 
 export const objToHex = async <T>(
@@ -106,38 +76,14 @@ export const objToHex = async <T>(
   csl: WasmModuleProxy,
 ): Promise<string> => {
   const plutusData = await csl.PlutusData.fromJson(JSON.stringify(obj), 1)
-  const result = await plutusData?.toHex()
-
-  return result ?? ''
-}
-
-export const addrBech32ToObj = async <T>(
-  bech32: string,
-  csl: WasmModuleProxy,
-): Promise<T> => {
-  const cslAddress = await csl.Address.fromBech32(bech32)
-  const bytesAddress = await cslAddress.toBytes()
-  const plutusData = await csl.PlutusData.fromBytes(bytesAddress)
-  const plutusDataJson = await plutusData.toJson(1)
-
-  return JSON.parse(plutusDataJson)
-}
-
-export const addrBech32ToHex = async (
-  bech32: string,
-  csl: WasmModuleProxy,
-): Promise<string> => {
-  const cslAddress = await csl.Address.fromBech32(bech32)
-  const bytesAddress = await cslAddress.toBytes()
-  const plutusData = await csl.PlutusData.fromBytes(bytesAddress)
-
-  return plutusData.toHex()
+  const result = await plutusData.toHex()
+  return result
 }
 
 export const parsePlutusAddressToBech32 = async (
   plutusHex: string,
   csl: WasmModuleProxy,
-  networkId: number = 0,
+  networkId: number,
 ): Promise<string> => {
   const cslPlutusDataAddress = await csl.PlutusData.fromHex(plutusHex)
   const plutusDataAddressJson = await cslPlutusDataAddress.toJson(1)
@@ -167,6 +113,7 @@ export const parsePlutusAddressToBech32 = async (
   let bech32Addr = ''
 
   // Parsing address according to whether it has a stake key
+  /* istanbul ignore else */
   if (
     plutusDataStakeKeyObject.constructor === 0 &&
     plutusDataStakeKeyObject.fields.length !== 0
@@ -184,16 +131,15 @@ export const parsePlutusAddressToBech32 = async (
       stakeCredential,
     )
     const cslAddress = await cslBaseAddress.toAddress()
-    // @ts-ignore
-    bech32Addr = await cslAddress.toBech32()
+
+    bech32Addr = await cslAddress.toBech32(undefined)
   } else {
     const cslEnterpriseAddress = await csl.EnterpriseAddress.new(
       networkId,
       cslPaymentCredential,
     )
     const cslAddress = await cslEnterpriseAddress.toAddress()
-    // @ts-ignore
-    bech32Addr = await cslAddress.toBech32()
+    bech32Addr = await cslAddress.toBech32(undefined)
   }
 
   return bech32Addr

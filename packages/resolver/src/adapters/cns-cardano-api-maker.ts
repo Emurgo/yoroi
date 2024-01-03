@@ -1,21 +1,23 @@
-import {CNSMetadata, CNSUserRecord} from './cns-types'
-import {hexToString} from './cns-utils'
+import {CardanoApi} from '@yoroi/api'
 import {FetchData, fetchData, handleApiError, isLeft} from '@yoroi/common'
+import {Api} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
 import {z} from 'zod'
 
+import {CNSUserRecord} from './cns-types'
+
 export const makeCnsCardanoApi = (
   baseUrl: string,
-  fetcherConfig?: AxiosRequestConfig,
   request: FetchData = fetchData,
 ) => {
   const getAssetAddress = async (
     assetHex: string,
+    fetcherConfig?: AxiosRequestConfig,
   ): Promise<string | undefined> => {
     const policyId = assetHex.slice(0, 56)
     const assetName = assetHex.slice(56)
 
-    const response = await request<string>(
+    const response = await request<string | undefined>(
       {
         url: `${baseUrl}/api/asset/accounts?policy=${policyId}&asset=${assetName}`,
       },
@@ -31,41 +33,28 @@ export const makeCnsCardanoApi = (
   }
 
   const getMetadata = async (
-    policyID: string,
+    policyId: string,
     assetName: string,
-  ): Promise<CNSMetadata | null> => {
-    const assetNameString = hexToString(assetName)
-    const key = `${policyID}.${assetNameString}`
+    fetcherConfig?: AxiosRequestConfig,
+  ): Promise<Api.Cardano.NftMetadata | undefined> => {
+    const id: Api.Cardano.TokenId = `${policyId}.${assetName}`
 
-    const response = await request<CNSMetadata | null>(
-      {
-        url: `${baseUrl}/api/multiAsset/metadata`,
-        method: 'post',
-        data: {assets: [{nameHex: assetName, policy: policyID}]},
-      },
-      fetcherConfig,
-    )
+    const getOnChainMetadatas = CardanoApi.getOnChainMetadatas(`${baseUrl}/api`)
+    const response = await getOnChainMetadatas([id], fetcherConfig)
+    const validatedResponse = CNSMetadataSchema.parse(response)
 
-    if (isLeft(response)) {
-      handleApiError(response.error)
-    } else {
-      const parsedResponse = getMetadataSchema.parse(response.value.data)
-
-      if (Object.keys(parsedResponse).length === 0) return null
-
-      // @ts-ignore
-      return parsedResponse[key][0].metadata[policyID][assetNameString] ?? null
-    }
+    return validatedResponse[id]?.mintNftRecordSelected
   }
 
   const getAssetInlineDatum = async (
     assetHex: string,
     addresses: Array<string>,
-  ): Promise<CNSUserRecord> => {
+    fetcherConfig?: AxiosRequestConfig,
+  ): Promise<CNSUserRecord | undefined> => {
     const policyId = assetHex.slice(0, 56)
     const assetName = assetHex.slice(56)
 
-    const response = await request(
+    const response = await request<AssetInlineDatumResponse>(
       {
         url: `${baseUrl}/api/txs/utxoForAddresses`,
         method: 'post',
@@ -77,8 +66,11 @@ export const makeCnsCardanoApi = (
     if (isLeft(response)) {
       handleApiError(response.error)
     } else {
-      // @ts-ignore
-      return response.value.data[0].inline_datum.plutus_data
+      const parsedResponse = assetInlineDatumResponseSchema.parse(
+        response.value.data,
+      )
+
+      return parsedResponse[0]?.inline_datum?.plutus_data
     }
   }
 
@@ -89,33 +81,150 @@ export const makeCnsCardanoApi = (
   } as const
 }
 
-export type CnsCardanoApi = ReturnType<typeof makeCnsCardanoApi>
+export type AssetInlineDatumResponse = Array<{
+  inline_datum: {plutus_data: CNSUserRecord}
+}>
 
-const getAssetAddressSchema = z.array(z.string())
-
-const getMetadataSchema = z.record(
-  z.string(),
-  z.array(
+const plutusDataSchema = z.object({
+  constructor: z.literal(0),
+  fields: z.tuple([
     z.object({
-      metadata: z.object({version: z.number()}).catchall(
-        z.record(
-          z.string(),
-          z.object({
-            cnsType: z.string(),
-            description: z.string(),
-            expiry: z.number(),
-            image: z.string(),
-            mediaType: z.string(),
-            name: z.string(),
-            origin: z.string(),
-            virtualSubdomainEnabled: z.union([
-              z.literal('Enabled'),
-              z.literal('Disabled'),
-            ]),
-            virtualSubdomainLimits: z.number(),
+      map: z.array(
+        z.object({
+          k: z.object({
+            bytes: z.string(),
           }),
-        ),
+          v: z.union([
+            z.object({
+              constructor: z.literal(0),
+              fields: z.tuple([
+                z.object({
+                  constructor: z.literal(0),
+                  fields: z.tuple([
+                    z.object({
+                      bytes: z.string(),
+                    }),
+                  ]),
+                }),
+                z.union([
+                  z.object({
+                    constructor: z.literal(1),
+                    fields: z.tuple([]),
+                  }),
+                  z.object({
+                    constructor: z.literal(0),
+                    fields: z.tuple([
+                      z.object({
+                        constructor: z.literal(0),
+                        fields: z.array(
+                          z.object({
+                            constructor: z.literal(0),
+                            fields: z.array(
+                              z.object({
+                                bytes: z.string(),
+                              }),
+                            ),
+                          }),
+                        ),
+                      }),
+                    ]),
+                  }),
+                ]),
+              ]),
+            }),
+            z.object({
+              constructor: z.literal(0),
+              fields: z.tuple([
+                z.object({
+                  constructor: z.literal(1),
+                  fields: z.tuple([
+                    z.object({
+                      bytes: z.string(),
+                    }),
+                  ]),
+                }),
+                z.union([
+                  z.object({
+                    constructor: z.literal(1),
+                    fields: z.tuple([]),
+                  }),
+                  z.object({
+                    constructor: z.literal(0),
+                    fields: z.tuple([
+                      z.object({
+                        constructor: z.literal(0),
+                        fields: z.array(
+                          z.object({
+                            constructor: z.literal(0),
+                            fields: z.array(
+                              z.object({
+                                bytes: z.string(),
+                              }),
+                            ),
+                          }),
+                        ),
+                      }),
+                    ]),
+                  }),
+                ]),
+              ]),
+            }),
+          ]),
+        }),
       ),
     }),
-  ),
+    z.object({
+      map: z.array(
+        z.object({
+          k: z.object({
+            bytes: z.string(),
+          }),
+          v: z.object({
+            bytes: z.string(),
+          }),
+        }),
+      ),
+    }),
+    z.object({
+      map: z.array(
+        z.object({
+          k: z.object({
+            bytes: z.string(),
+          }),
+          v: z.object({
+            bytes: z.string(),
+          }),
+        }),
+      ),
+    }),
+  ]),
+})
+const assetInlineDatumResponseSchema = z.array(
+  z.object({
+    inline_datum: z.object({
+      plutus_data: plutusDataSchema,
+    }),
+  }),
 )
+
+const getAssetAddressSchema = z.array(z.string())
+const CNSMetadataSchema = z.record(
+  z.object({
+    mintNftRecordSelected: z.object({
+      name: z.string(),
+      image: z.string(),
+      expiry: z.number(),
+      origin: z.string(),
+      cnsType: z.string(),
+      mediaType: z.string(),
+      description: z.string(),
+      virtualSubdomainLimits: z.number(),
+      virtualSubdomainEnabled: z.union([
+        z.literal('Enabled'),
+        z.literal('Disabled'),
+      ]),
+    }),
+  }),
+)
+
+export type CnsCardanoApi = ReturnType<typeof makeCnsCardanoApi>

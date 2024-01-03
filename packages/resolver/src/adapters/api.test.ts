@@ -37,7 +37,9 @@ describe('resolverApiMaker', () => {
               .mockReturnValue(jest.fn().mockResolvedValue('handleAddress')),
           },
           cnsApi: {
-            getCryptoAddress: jest.fn().mockResolvedValue('cnsAddress'),
+            getCryptoAddress: jest
+              .fn()
+              .mockReturnValue(jest.fn().mockResolvedValue('cnsAddress')),
           },
         }
 
@@ -68,7 +70,9 @@ describe('resolverApiMaker', () => {
               .mockReturnValue(jest.fn().mockResolvedValue('handleAddress')),
           },
           cnsApi: {
-            getCryptoAddress: jest.fn().mockRejectedValue(mockError),
+            getCryptoAddress: jest
+              .fn()
+              .mockReturnValue(jest.fn().mockRejectedValue(mockError)),
           },
         }
 
@@ -77,8 +81,8 @@ describe('resolverApiMaker', () => {
 
         expect(results).toEqual([
           {address: 'handleAddress', error: null, nameServer: 'handle'},
-          {address: null, error: mockError.message, nameServer: 'unstoppable'},
-          {address: null, error: mockError.message, nameServer: 'cns'},
+          {address: null, error: mockError, nameServer: 'unstoppable'},
+          {address: null, error: mockError, nameServer: 'cns'},
         ])
       })
     })
@@ -97,7 +101,9 @@ describe('resolverApiMaker', () => {
               .mockReturnValue(jest.fn().mockResolvedValue('handleAddress')),
           },
           cnsApi: {
-            getCryptoAddress: jest.fn().mockRejectedValue(mockError),
+            getCryptoAddress: jest
+              .fn()
+              .mockReturnValue(jest.fn().mockRejectedValue(mockError)),
           },
         }
 
@@ -125,7 +131,9 @@ describe('resolverApiMaker', () => {
               .mockReturnValue(jest.fn().mockRejectedValue(mockError)),
           },
           cnsApi: {
-            getCryptoAddress: jest.fn().mockRejectedValue(mockError),
+            getCryptoAddress: jest
+              .fn()
+              .mockReturnValue(jest.fn().mockRejectedValue(mockError)),
           },
         }
 
@@ -136,7 +144,11 @@ describe('resolverApiMaker', () => {
         })
 
         expect(results).toEqual([
-          {address: null, error: 'Not resolved', nameServer: null},
+          {
+            address: null,
+            error: new Resolver.Errors.NotFound(),
+            nameServer: null,
+          },
         ])
       })
     })

@@ -1,15 +1,4 @@
-export interface CNSMetadata {
-  name: string
-  image: string
-  expiry: number
-  origin: string
-  cnsType: string
-  mediaType: string
-  description: string
-  virtualSubdomainLimits: number
-  virtualSubdomainEnabled: 'Enabled' | 'Disabled'
-}
-
+/* istanbul ignore file */
 export type CNSUserRecord = ConStr<
   0,
   [
@@ -19,40 +8,8 @@ export type CNSUserRecord = ConStr<
   ]
 >
 
-export const cnsUserRecord = (
-  virtualDomains: [string, PubKeyAddress | ScriptAddress][],
-  socialProfiles: string[][],
-  otherRecords: string[][],
-): CNSUserRecord => {
-  const virtualDomainsMap = assocMap(
-    virtualDomains.map(([virtualDomain, address]) => [
-      builtinByteString(virtualDomain),
-      address,
-    ]),
-  )
-  const socialProfilesMap = assocMap(
-    socialProfiles.map(([socialDomain, socialDomainAddress]: Array<string>) => [
-      // @ts-ignore
-      builtinByteString(socialDomain),
-      // @ts-ignore
-      builtinByteString(socialDomainAddress),
-    ]),
-  )
-  const otherRecordsMap = assocMap(
-    otherRecords.map(([recordKey, recordValue]) => [
-      // @ts-ignore
-      builtinByteString(recordKey),
-      // @ts-ignore
-      builtinByteString(recordValue),
-    ]),
-  )
-  return conStr0([virtualDomainsMap, socialProfilesMap, otherRecordsMap])
-}
-
 export type ParsedCNSUserRecord = {
   virtualSubdomains: string[][]
-  socialProfiles: string[][]
-  otherRecords: string[][]
 }
 
 export type ConStr<N extends number, T> = {constructor: N; fields: T}
@@ -101,7 +58,12 @@ export const conStr = <N extends number, T>(
 export const conStr0 = <T>(fields: T) => conStr<0, T>(0, fields)
 export const conStr1 = <T>(fields: T) => conStr<1, T>(1, fields)
 export const conStr2 = <T>(fields: T) => conStr<2, T>(2, fields)
-export const builtinByteString = (bytes: string): BuiltinByteString => ({bytes})
+export const builtinByteString = (
+  bytes: string | undefined,
+): BuiltinByteString => {
+  if (!bytes) throw new Error('Bad data')
+  return {bytes}
+}
 export const maybeStakingHash = (stakeCredential: string): MaybeStakingHash => {
   if (stakeCredential === '') {
     return conStr1<[]>([])
