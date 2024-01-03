@@ -26,7 +26,7 @@ export const getNFTs = async (ids: string[], config: BackendConfig): Promise<Bal
   ])
 
   const possibleNfts = parseNFTs(assetMetadatas, config.NFT_STORAGE_URL)
-  return possibleNfts.filter((nft) => assetSupplies[nft.id] === 1)
+  return possibleNfts.filter((nft) => assetSupplies[nft.id] === '1')
 }
 
 export const getNFT = async (id: string, config: BackendConfig): Promise<Balance.TokenInfo | null> => {
