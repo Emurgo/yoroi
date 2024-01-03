@@ -13,7 +13,7 @@ export const getTokenInfo = async (
   apiUrl: string,
   config: BackendConfig,
 ): Promise<Balance.TokenInfo> => {
-  const nftPromise = getNFT(tokenId as `${string}.${string}`, config).then((nft) => {
+  const nftPromise = getNFT(tokenId, config).then((nft) => {
     if (!nft) throw new Error('NFT not found')
     return nft
   })
