@@ -9,6 +9,7 @@ import {useTheme} from '../../../theme'
 import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
+import {PRICE_IMACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from './constants'
 import {SwapPriceImpactRisk} from './types'
 
 export const useCancelOrderWithHw = (
@@ -99,8 +100,8 @@ export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo, wal
 }
 
 export const getPriceImpactRisk = (priceImpact: number) => {
-  if (priceImpact < 1 || isNaN(priceImpact)) return 'none'
-  if (priceImpact > 10) return 'high'
+  if (priceImpact < PRICE_IMPACT_MODERATE_RISK || isNaN(priceImpact)) return 'none'
+  if (priceImpact > PRICE_IMACT_HIGH_RISK) return 'high'
   return 'moderate'
 }
 
