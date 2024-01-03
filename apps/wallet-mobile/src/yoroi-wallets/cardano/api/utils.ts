@@ -2,7 +2,7 @@ import AssetFingerprint from '@emurgo/cip14-js'
 import {Balance} from '@yoroi/types'
 import {Buffer} from 'memfs/lib/internal/buffer'
 
-import {LegacyToken} from '../../types'
+import {LegacyToken, YoroiTokenId} from '../../types'
 import {TokenRegistryEntry} from './tokenRegistry'
 
 export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
@@ -72,7 +72,13 @@ export const toAssetNameHex = (tokenIdentifier: string) => {
 }
 
 export const toTokenSubject = (tokenIdentifier: string) => tokenIdentifier.replace('.', '')
+
 export const toTokenId = (tokenIdentifier: string) => {
+  const tokenSubject = toTokenSubject(tokenIdentifier)
+  return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdentifier)}`
+}
+
+export const asTokenId = (tokenIdentifier: string): YoroiTokenId => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
   return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdentifier)}`
 }

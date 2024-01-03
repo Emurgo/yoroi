@@ -3,12 +3,14 @@ import {createTypeGuardFromSchema} from '@yoroi/common'
 import {z} from 'zod'
 
 import {BackendConfig} from '../../types'
+import {asTokenId} from './utils'
 
 export const fetchTokensSupplies = async (
-  tokenIds: `${string}.${string}`[],
+  tokenIds: string[],
   config: BackendConfig,
 ): Promise<Record<string, string | null>> => {
-  return CardanoApi.getTokenSupply(config.API_ROOT)(tokenIds)
+  const normalizedTokenIds = tokenIds.map(asTokenId)
+  return CardanoApi.getTokenSupply(config.API_ROOT)(normalizedTokenIds)
 }
 
 type AssetSupplyEntry = {

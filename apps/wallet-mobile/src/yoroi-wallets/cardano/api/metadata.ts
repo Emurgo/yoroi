@@ -22,7 +22,7 @@ export const getNFTs = async (ids: string[], config: BackendConfig): Promise<Bal
 
   const [assetMetadatas, assetSupplies] = await Promise.all([
     fetchDefault<unknown>('multiAsset/metadata', payload, config),
-    fetchTokensSupplies(ids as Array<`${string}.${string}`>, config),
+    fetchTokensSupplies(ids, config),
   ])
 
   const possibleNfts = parseNFTs(assetMetadatas, config.NFT_STORAGE_URL)
