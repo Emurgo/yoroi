@@ -10,7 +10,7 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
-import {PRICE_PRECISION} from '../../common/constants'
+import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK, PRICE_PRECISION} from '../../common/constants'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
@@ -83,7 +83,7 @@ export const TransactionSummary = () => {
     {
       label: strings.swapLiqProvFee,
       value: liqFeeQuantityFormatted,
-      info: strings.swapFees,
+      info: strings.swapLiquidityFeeInfo(pool.fee),
     },
     {
       label: strings.swapMinReceivedTitle,
@@ -121,10 +121,10 @@ export const TransactionSummary = () => {
               <Text style={{color: priceImpactRiskTextColor}}>{Math.ceil(Number(priceImpact) * 100) / 100}%</Text>
             </View>
 
-            <Text style={{color: priceImpactRiskTextColor}}>
-              {formattedActualPrice}
+            <Text>
+              <Text style={{color: priceImpactRiskTextColor}}>({formattedActualPrice}</Text>
 
-              <Text style={{color: priceImpactRiskTextColor}}> {`${tokenToSellName}/${tokenToBuyName}`}</Text>
+              <Text style={{color: priceImpactRiskTextColor}}>{`${tokenToSellName}/${tokenToBuyName}`})</Text>
             </Text>
           </View>
         ),
@@ -211,7 +211,11 @@ export const TransactionSummary = () => {
           {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
           <Text>
-            <Text style={styles.bold}>{strings.priceImpactRiskHigh}</Text>
+            <Text style={styles.bold}>
+              {strings.priceImpactRiskHigh({
+                riskValue: priceImpactRisk === 'moderate' ? PRICE_IMPACT_MODERATE_RISK : PRICE_IMPACT_HIGH_RISK,
+              })}
+            </Text>
 
             <Text> {strings.priceimpactDescription}</Text>
           </Text>

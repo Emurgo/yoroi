@@ -9,6 +9,7 @@ import {useSelectedWallet} from '../../../../../../SelectedWallet'
 import {COLORS} from '../../../../../../theme'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
+import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../../../common/helpers'
 import {useNavigateTo} from '../../../../common/navigation'
 import {PoolIcon} from '../../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../../common/strings'
@@ -175,6 +176,11 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const buyTokenName = buyTokenInfo.ticker ?? buyTokenInfo.name
   const sellTokenName = sellTokenInfo.ticker ?? sellTokenInfo.name
+  const priceImpact = calculation?.prices.priceImpact
+
+  const priceImpactRisk = getPriceImpactRisk(Number(priceImpact))
+  const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
+  const priceImpactRiskTextColor = priceImpactRiskTheme.text
 
   // should not happen
   if (!calculation) return <></>
@@ -205,7 +211,7 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
     },
     {
       label: strings.swapMinReceivedTitle,
-      value: minReceivedFormatted,
+      value: <Text style={[styles.text, {color: priceImpactRiskTextColor}]}>{minReceivedFormatted}</Text>,
       info: strings.swapMinReceived,
     },
     {
@@ -254,12 +260,12 @@ const styles = StyleSheet.create({
   between: {justifyContent: 'space-between'},
   text: {
     textAlign: 'left',
-    fontFamily: 'Rubik',
     fontWeight: '400',
     fontSize: 16,
     lineHeight: 24,
     color: '#242838',
   },
+
   modalContent: {
     flex: 1,
     justifyContent: 'space-between',
