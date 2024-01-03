@@ -6,6 +6,7 @@ import {Api, App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
+import {PixelRatio} from 'react-native'
 import {onlineManager, useMutation, UseMutationOptions, useQueries, useQuery, UseQueryOptions} from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
@@ -988,13 +989,15 @@ export const useNativeAssetImage = ({
   kind = 'metadata',
 }: NativeAssetImageRequest) => {
   const network = networkId === 300 ? 'preprod' : 'mainnet'
+  const pWidth = PixelRatio.getPixelSizeForLayoutSize(Number(width))
+  const pHeight = PixelRatio.getPixelSizeForLayoutSize(Number(height))
   const isMediaTypeSupported = supportedTypes.includes(mediaType.toLocaleLowerCase())
   const query = useQuery({
     staleTime: Infinity,
     queryKey: ['native-asset-img', policy, name, `${width}x${height}`, resizeMode],
     queryFn: async () => {
       const response = await fetch(
-        `https://${network}.cardano-nativeassets-prod.emurgornd.com/${policy}/${name}?width=${width}&height=${height}&kind=${kind}&fit=${resizeMode}`,
+        `https://${network}.cardano-nativeassets-prod.emurgornd.com/${policy}/${name}?width=${pWidth}&height=${pHeight}&kind=${kind}&fit=${resizeMode}`,
       )
       if (!response.ok) {
         throw new Error(`NativeAsset CDN response was not ok for policy=${policy} name=${name}`)
