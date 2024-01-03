@@ -5,12 +5,14 @@ import {Button, Spacer, useModal} from '../../../../../../components'
 import {useTheme} from '../../../../../../theme'
 import {Theme} from '../../../../../../theme/types'
 import {useStrings} from '../../../../common/strings'
+import {SwapPriceImpactRisk} from '../../../../common/types'
 
 export interface Props {
   onContinue: () => void
+  priceImpactRisk: SwapPriceImpactRisk
 }
 
-export const WarnPriceImpact = ({onContinue}: Props) => {
+export const WarnPriceImpact = ({onContinue, priceImpactRisk}: Props) => {
   const strings = useStrings()
   const {closeModal} = useModal()
 
@@ -21,7 +23,9 @@ export const WarnPriceImpact = ({onContinue}: Props) => {
     <View style={styles.container}>
       <View>
         <Text style={styles.description}>
-          <Text style={styles.bold}>{strings.priceImpactRiskHigh}</Text>
+          <Text style={styles.bold}>
+            {strings.priceImpactRiskHigh({riskValue: priceImpactRisk === 'moderate' ? 1 : 10})}
+          </Text>
 
           <Text> {strings.priceimpactDescription}</Text>
         </Text>

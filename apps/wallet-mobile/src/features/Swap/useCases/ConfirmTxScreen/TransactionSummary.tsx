@@ -83,7 +83,7 @@ export const TransactionSummary = () => {
     {
       label: strings.swapLiqProvFee,
       value: liqFeeQuantityFormatted,
-      info: strings.swapFees,
+      info: strings.swapLiquidityFeeInfo(pool.fee),
     },
     {
       label: strings.swapMinReceivedTitle,
@@ -121,10 +121,10 @@ export const TransactionSummary = () => {
               <Text style={{color: priceImpactRiskTextColor}}>{Math.ceil(Number(priceImpact) * 100) / 100}%</Text>
             </View>
 
-            <Text style={{color: priceImpactRiskTextColor}}>
-              {formattedActualPrice}
+            <Text>
+              <Text style={{color: priceImpactRiskTextColor}}>({formattedActualPrice}</Text>
 
-              <Text style={{color: priceImpactRiskTextColor}}> {`${tokenToSellName}/${tokenToBuyName}`}</Text>
+              <Text style={{color: priceImpactRiskTextColor}}>{`${tokenToSellName}/${tokenToBuyName}`})</Text>
             </Text>
           </View>
         ),
@@ -211,7 +211,9 @@ export const TransactionSummary = () => {
           {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
           <Text>
-            <Text style={styles.bold}>{strings.priceImpactRiskHigh}</Text>
+            <Text style={styles.bold}>
+              {strings.priceImpactRiskHigh({riskValue: priceImpactRisk === 'moderate' ? 1 : 10})}
+            </Text>
 
             <Text> {strings.priceimpactDescription}</Text>
           </Text>
