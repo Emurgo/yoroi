@@ -2,26 +2,13 @@ import {createTypeGuardFromSchema} from '@yoroi/common'
 import {z} from 'zod'
 
 import {BackendConfig} from '../../types'
-import fetchDefault from './fetch'
-import {toAssetName, toPolicyId} from './utils'
+import {CardanoApi} from '@yoroi/api'
 
 export const fetchTokensSupplies = async (
-  tokenIds: string[],
+  tokenIds: `${string}.${string}`[],
   config: BackendConfig,
-): Promise<Record<string, number | null>> => {
-  const assets = tokenIds.map((tokenId) => ({policy: toPolicyId(tokenId), name: toAssetName(tokenId) || ''}))
-  const response = await fetchDefault<unknown>('multiAsset/supply', {assets}, config)
-
-  if (!isAssetSupplyEntry(response)) {
-    return {}
-  }
-
-  const supplies = assets.map((asset) => {
-    const key = `${asset.policy}.${asset.name}`
-    return response.supplies[key] || null
-  })
-
-  return Object.fromEntries(tokenIds.map((tokenId, index) => [tokenId, supplies[index]]))
+): Promise<Record<string, string | null>> => {
+  return CardanoApi.getTokenSupply(config.API_ROOT)(tokenIds)
 }
 
 type AssetSupplyEntry = {

@@ -8,7 +8,7 @@ import {fetchTokensSupplies} from './assetSuply'
 import fetchDefault from './fetch'
 import {toAssetNameHex, toPolicyId} from './utils'
 
-export const getNFTs = async (ids: string[], config: BackendConfig): Promise<Balance.TokenInfo[]> => {
+export const getNFTs = async (ids: `${string}.${string}`[], config: BackendConfig): Promise<Balance.TokenInfo[]> => {
   if (ids.length === 0) {
     return []
   }
@@ -26,10 +26,10 @@ export const getNFTs = async (ids: string[], config: BackendConfig): Promise<Bal
   ])
 
   const possibleNfts = parseNFTs(assetMetadatas, config.NFT_STORAGE_URL)
-  return possibleNfts.filter((nft) => assetSupplies[nft.id] === 1)
+  return possibleNfts.filter((nft) => assetSupplies[nft.id] === '1')
 }
 
-export const getNFT = async (id: string, config: BackendConfig): Promise<Balance.TokenInfo | null> => {
+export const getNFT = async (id: `${string}.${string}`, config: BackendConfig): Promise<Balance.TokenInfo | null> => {
   const [nft] = await getNFTs([id], config)
   return nft || null
 }
