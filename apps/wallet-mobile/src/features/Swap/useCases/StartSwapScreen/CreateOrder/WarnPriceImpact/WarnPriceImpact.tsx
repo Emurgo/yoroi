@@ -4,7 +4,7 @@ import {StyleSheet, Text, View} from 'react-native'
 import {Button, Spacer, useModal} from '../../../../../../components'
 import {useTheme} from '../../../../../../theme'
 import {Theme} from '../../../../../../theme/types'
-import {PRICE_IMACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from '../../../../common/constants'
+import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from '../../../../common/constants'
 import {useStrings} from '../../../../common/strings'
 import {SwapPriceImpactRisk} from '../../../../common/types'
 
@@ -26,7 +26,7 @@ export const WarnPriceImpact = ({onContinue, priceImpactRisk}: Props) => {
         <Text style={styles.description}>
           <Text style={styles.bold}>
             {strings.priceImpactRiskHigh({
-              riskValue: priceImpactRisk === 'moderate' ? PRICE_IMPACT_MODERATE_RISK : PRICE_IMACT_HIGH_RISK,
+              riskValue: priceImpactRisk === 'moderate' ? PRICE_IMPACT_MODERATE_RISK : PRICE_IMPACT_HIGH_RISK,
             })}
           </Text>
 

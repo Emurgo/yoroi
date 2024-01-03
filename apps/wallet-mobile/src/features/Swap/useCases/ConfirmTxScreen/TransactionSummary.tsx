@@ -10,7 +10,7 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
-import {PRICE_IMACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK, PRICE_PRECISION} from '../../common/constants'
+import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK, PRICE_PRECISION} from '../../common/constants'
 import {getPriceImpactRisk, usePriceImpactRiskTheme} from '../../common/helpers'
 import {LiquidityPool} from '../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../common/PoolIcon/PoolIcon'
@@ -213,7 +213,7 @@ export const TransactionSummary = () => {
           <Text>
             <Text style={styles.bold}>
               {strings.priceImpactRiskHigh({
-                riskValue: priceImpactRisk === 'moderate' ? PRICE_IMPACT_MODERATE_RISK : PRICE_IMACT_HIGH_RISK,
+                riskValue: priceImpactRisk === 'moderate' ? PRICE_IMPACT_MODERATE_RISK : PRICE_IMPACT_HIGH_RISK,
               })}
             </Text>
 
