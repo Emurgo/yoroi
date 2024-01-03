@@ -35,6 +35,7 @@ storiesOf('Swap Warn Price Impact', module)
                     closeModal()
                     action('onContinue')
                   }}
+                  priceImpactRisk="high"
                 />,
               )
         }}
