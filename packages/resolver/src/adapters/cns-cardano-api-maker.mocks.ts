@@ -496,23 +496,6 @@ const parsedInlineDatum = {
   ],
 }
 
-/* const itemHex =
-  'd8799fd8799f581ca5644bcb8cd82b5e0478657e2c8feea865682a5b20db45d095807d84ffd8799fd8799fd8799f581ce40482bb4648fc54bffc06175c4a9e5f268b70da54bf6de4d6ad71dfffffffff'
-
-const bech32 =
-  'addr1qxjkgj7t3nvzkhsy0pjhuty0a65x26p2tvsdk3wsjkq8mp8yqjptk3jgl32tllqxzawy48jly69hpkj5hak7f44dw80sqfylvs'
- */
-/* const virtualSubdomains = [
-  [
-    'rice',
-    'addr1qxjkgj7t3nvzkhsy0pjhuty0a65x26p2tvsdk3wsjkq8mp8yqjptk3jgl32tllqxzawy48jly69hpkj5hak7f44dw80sqfylvs',
-  ],
-  [
-    'aaa',
-    'addr1qxjkgj7t3nvzkhsy0pjhuty0a65x26p2tvsdk3wsjkq8mp8yqjptk3jgl32tllqxzawy48jly69hpkj5hak7f44dw80sqfylvs',
-  ],
-] */
-
 export const cnsCardanoApiMock = {
   success,
   disabled,
