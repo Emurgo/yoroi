@@ -61,6 +61,7 @@ export const parseAssocMapAsync = async <T>(
   for (let i = 0; i < limit; i += 1) {
     if (i >= assocMapVal.map.length) continue
     const mapItem = assocMapVal.map[i]
+    // fixed in ts 5
     /* istanbul ignore next */
     if (!mapItem) throw new Error('bad data')
     const key = hexToString(mapItem.k.bytes)
@@ -113,34 +114,21 @@ export const parsePlutusAddressToBech32 = async (
   let bech32Addr = ''
 
   // Parsing address according to whether it has a stake key
-  /* istanbul ignore else */
-  if (
-    plutusDataStakeKeyObject.constructor === 0 &&
-    plutusDataStakeKeyObject.fields.length !== 0
-  ) {
-    const cslStakeKeyHash = await csl.Ed25519KeyHash.fromBytes(
-      Buffer.from(
-        plutusDataStakeKeyObject.fields[0].fields[0].fields[0].bytes,
-        'hex',
-      ),
-    )
-    const stakeCredential = await csl.Credential.fromKeyhash(cslStakeKeyHash)
-    const cslBaseAddress = await csl.BaseAddress.new(
-      networkId,
-      cslPaymentCredential,
-      stakeCredential,
-    )
-    const cslAddress = await cslBaseAddress.toAddress()
+  const cslStakeKeyHash = await csl.Ed25519KeyHash.fromBytes(
+    Buffer.from(
+      plutusDataStakeKeyObject.fields[0].fields[0].fields[0].bytes,
+      'hex',
+    ),
+  )
+  const stakeCredential = await csl.Credential.fromKeyhash(cslStakeKeyHash)
+  const cslBaseAddress = await csl.BaseAddress.new(
+    networkId,
+    cslPaymentCredential,
+    stakeCredential,
+  )
+  const cslAddress = await cslBaseAddress.toAddress()
 
-    bech32Addr = await cslAddress.toBech32(undefined)
-  } else {
-    const cslEnterpriseAddress = await csl.EnterpriseAddress.new(
-      networkId,
-      cslPaymentCredential,
-    )
-    const cslAddress = await cslEnterpriseAddress.toAddress()
-    bech32Addr = await cslAddress.toBech32(undefined)
-  }
+  bech32Addr = await cslAddress.toBech32(undefined)
 
   return bech32Addr
 }
