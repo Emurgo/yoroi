@@ -8,6 +8,7 @@ import {ConfirmTx} from '../../../../components/ConfirmTx'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
+import {useSetCollateralId} from '../../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
 import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {debugWalletInfo, features} from '../../..'
@@ -26,6 +27,7 @@ export const ConfirmTxScreen = () => {
   const navigateTo = useNavigateTo()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
+  const {setCollateralId} = useSetCollateralId(wallet)
 
   const {memo, yoroiUnsignedTx, targets} = useSend()
 
@@ -39,6 +41,7 @@ export const ConfirmTxScreen = () => {
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
     navigateTo.submittedTx()
+    setCollateralId(signedTx.signedTx.id)
 
     if (memo.length > 0) {
       saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})

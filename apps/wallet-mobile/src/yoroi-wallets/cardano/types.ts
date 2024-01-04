@@ -173,7 +173,12 @@ export type YoroiWallet = {
   utxos: Array<RawUtxo>
   allUtxos: Array<RawUtxo>
   get collateralId(): string
-  getCollateralInfo(): {utxo: RawUtxo | undefined; amount: Balance.Amount; collateralId: RawUtxo['utxo_id']}
+  getCollateralInfo(): {
+    utxo: RawUtxo | undefined
+    amount: Balance.Amount
+    collateralId: RawUtxo['utxo_id']
+    isConfirmed: boolean
+  }
   setCollateralId(collateralId: RawUtxo['utxo_id']): Promise<void>
 
   // Fiat

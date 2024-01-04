@@ -1061,15 +1061,19 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       return this._collateralId
     }
 
-    getCollateralInfo(): {utxo: RawUtxo | undefined; amount: Balance.Amount; collateralId: string} {
+    getCollateralInfo() {
       const utxos = utxosMaker(this._utxos)
-      const collateralUtxo = utxos.findById(this.collateralId)
+      const collateralId = this.collateralId
+      const collateralUtxo = utxos.findById(collateralId)
       const quantity = collateralUtxo?.amount !== undefined ? asQuantity(collateralUtxo?.amount) : Quantities.zero
+      const txInfos = this.transactions
+      const isConfirmed = !!collateralId && Object.values(txInfos).some((tx) => tx.id === collateralId)
 
       return {
         utxo: collateralUtxo,
         amount: {quantity, tokenId: this.primaryTokenInfo.id},
-        collateralId: this.collateralId,
+        collateralId,
+        isConfirmed,
       }
     }
 
