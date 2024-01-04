@@ -1,8 +1,8 @@
 import {FetchData} from '@yoroi/common'
 import {Left} from '@yoroi/types'
-import {makeCnsCardanoApi} from './cns-cardano-api-maker'
+import {makeCnsCardanoApi} from './cardano-api-maker'
 import {CardanoApi} from '@yoroi/api'
-import {inlineDatumMock, metadataMock} from './cns-cardano-api-maker.mocks'
+import {inlineDatumMock, metadataMock} from './cardano-api-maker.mocks'
 
 jest.mock('@yoroi/api')
 
@@ -46,6 +46,8 @@ describe('getAssetAddress', () => {
 
     try {
       await getAssetAddress(assetHex)
+
+      fail('it should crash before')
     } catch (e: any) {
       expect(e.message).toBe(error.message)
     }
@@ -146,6 +148,8 @@ describe('getAssetInlineDatum', () => {
 
     try {
       await getAssetInlineDatum(assetHex, addresses)
+
+      fail('it should crash before')
     } catch (e: any) {
       expect(e.message).toBe(error.message)
     }

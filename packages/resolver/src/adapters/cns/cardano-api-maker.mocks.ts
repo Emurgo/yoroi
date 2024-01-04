@@ -1,4 +1,4 @@
-import {AssetInlineDatumResponse, CnsCardanoApi} from './cns-cardano-api-maker'
+import {AssetInlineDatumResponse, CnsCardanoApi} from './cardano-api-maker'
 
 export const success: CnsCardanoApi = {
   getMetadata: jest.fn(() => Promise.resolve(metadataMock)),

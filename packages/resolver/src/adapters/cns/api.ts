@@ -1,16 +1,16 @@
 import {Api, Resolver} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
-import {handleZodErrors} from './zod-errors'
-import {makeCnsCardanoApi} from './cns-cardano-api-maker'
-import {resolveAddress} from './cns-api-helpers'
+import {handleZodErrors} from '../zod-errors'
+import {makeCnsCardanoApi} from './cardano-api-maker'
+import {resolveAddress} from './api-helpers'
 
 export const cnsCryptoAddress = (csl: WasmModuleProxy) => {
   return async (receiver: string, fetcherConfig?: AxiosRequestConfig) => {
-    try {
-      if (!receiver.includes('.')) throw new Resolver.Errors.InvalidDomain()
-      if (!isCnsDomain(receiver)) throw new Resolver.Errors.UnsupportedTld()
+    if (!receiver.includes('.')) throw new Resolver.Errors.InvalidDomain()
+    if (!isCnsDomain(receiver)) throw new Resolver.Errors.UnsupportedTld()
 
+    try {
       const cnsCardanoApi = makeCnsCardanoApi(cnsApiConfig.mainnet.baseUrl)
       const address = resolveAddress(
         receiver,
@@ -37,6 +37,8 @@ export const cnsApiConfig = {
     recordAddress:
       'addr1z8dyldfnnpg4w85d32lv64f5ldra02juhnzxdvlyyrpfs0leh7ahm4pdpqxx0mc0wvmu6n025jml40g7pfd0j0vf6aqsl2tlcx',
     networkId: 1,
+    domainLevels: 2,
+    virtualSubdomainLevels: 3,
   },
 } as const
 
@@ -46,6 +48,8 @@ export type CnsApiConfig = {
   recordPolicyId: string
   recordAddress: string
   networkId: number
+  domainLevels: number
+  virtualSubdomainLevels: number
 }
 
 export const handleCnsApiError = (error: unknown): never => {

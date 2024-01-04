@@ -3,7 +3,7 @@ import {fetchData, FetchData, handleApiError, isLeft} from '@yoroi/common'
 import {z} from 'zod'
 import {AxiosRequestConfig} from 'axios'
 
-import {handleZodErrors} from './zod-errors'
+import {handleZodErrors} from '../zod-errors'
 
 const initialDeps = {request: fetchData} as const
 

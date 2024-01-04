@@ -1,9 +1,10 @@
-import {Resolver} from '@yoroi/types'
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {Resolver} from '@yoroi/types'
+import {AxiosRequestConfig} from 'axios'
 
-import {CnsApiConfig} from './cns-api'
-import {CnsCardanoApi} from './cns-cardano-api-maker'
-import {ParsedCNSUserRecord} from './cns-types'
+import {CnsApiConfig} from './api'
+import {CnsCardanoApi} from './cardano-api-maker'
+import {ParsedCNSUserRecord} from './types'
 import {
   objToHex,
   parseAssocMapAsync,
@@ -12,8 +13,7 @@ import {
   validateCNSUserRecord,
   validateExpiry,
   validateVirtualSubdomainEnabled,
-} from './cns-utils'
-import {AxiosRequestConfig} from 'axios'
+} from './utils'
 
 export const resolveDomain = async (
   cnsName: string,
@@ -22,7 +22,6 @@ export const resolveDomain = async (
   fetcherConfig?: AxiosRequestConfig,
 ): Promise<string> => {
   const assetName = stringToHex(cnsName)
-  const assetHex = `${cnsApiConfig.cnsPolicyId}${assetName}`
 
   const metadata = await cnsCardanoApi.getMetadata(
     cnsApiConfig.cnsPolicyId,
@@ -33,7 +32,10 @@ export const resolveDomain = async (
   if (!metadata) throw new Resolver.Errors.NotFound()
   if (!validateExpiry(metadata)) throw new Resolver.Errors.Expired()
 
-  const address = await cnsCardanoApi.getAssetAddress(assetHex)
+  const address = await cnsCardanoApi.getAssetAddress(
+    cnsApiConfig.cnsPolicyId,
+    assetName,
+  )
   if (!address) throw new Resolver.Errors.NotFound()
 
   return address
@@ -57,9 +59,9 @@ export const resolveUserRecord = async (
   if (!metadata) throw new Resolver.Errors.NotFound()
   if (!validateExpiry(metadata)) throw new Resolver.Errors.Expired()
 
-  const recordAssetHex = `${cnsApiConfig.recordPolicyId}${assetName}`
   const inlineDatum = await cnsCardanoApi.getAssetInlineDatum(
-    recordAssetHex,
+    cnsApiConfig.recordPolicyId,
+    assetName,
     [cnsApiConfig.recordAddress],
     fetcherConfig,
   )
@@ -69,7 +71,7 @@ export const resolveUserRecord = async (
     throw new Resolver.Errors.InvalidResponse()
 
   const virtualSubdomains = await parseAssocMapAsync(
-    inlineDatum.fields[0],
+    inlineDatum.fields[0], // validated with validateCNSUserRecord
     async (item) => {
       const itemHex = await objToHex(item, csl)
 
@@ -127,9 +129,9 @@ export const resolveAddress = async (
   let address
   const deconstructedCns = cnsName.split('.')
 
-  if (deconstructedCns.length === 2) {
+  if (deconstructedCns.length === cnsApiConfig.domainLevels) {
     address = await resolveDomain(cnsName, cnsApiConfig, cnsCardanoApi)
-  } else if (deconstructedCns.length === 3) {
+  } else if (deconstructedCns.length === cnsApiConfig.virtualSubdomainLevels) {
     address = await resolveVirtualSubdomain(
       cnsName,
       cnsApiConfig,

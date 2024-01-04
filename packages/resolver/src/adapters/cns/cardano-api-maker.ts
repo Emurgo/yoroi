@@ -4,19 +4,17 @@ import {Api} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
 import {z} from 'zod'
 
-import {CNSUserRecord} from './cns-types'
+import {CNSUserRecord} from './types'
 
 export const makeCnsCardanoApi = (
   baseUrl: string,
   request: FetchData = fetchData,
 ) => {
   const getAssetAddress = async (
-    assetHex: string,
+    policyId: string,
+    assetName: string,
     fetcherConfig?: AxiosRequestConfig,
   ): Promise<string | undefined> => {
-    const policyId = assetHex.slice(0, 56)
-    const assetName = assetHex.slice(56)
-
     const response = await request<string | undefined>(
       {
         url: `${baseUrl}/api/asset/accounts?policy=${policyId}&asset=${assetName}`,
@@ -47,13 +45,11 @@ export const makeCnsCardanoApi = (
   }
 
   const getAssetInlineDatum = async (
-    assetHex: string,
+    policyId: string,
+    assetName: string,
     addresses: Array<string>,
     fetcherConfig?: AxiosRequestConfig,
   ): Promise<CNSUserRecord | undefined> => {
-    const policyId = assetHex.slice(0, 56)
-    const assetName = assetHex.slice(56)
-
     const response = await request<AssetInlineDatumResponse>(
       {
         url: `${baseUrl}/api/txs/utxoForAddresses`,

@@ -2,9 +2,9 @@ import {Resolver} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
 import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
-import {handleApiGetCryptoAddress} from './handle-api'
-import {unstoppableApiGetCryptoAddress} from './unstoppable-api'
-import {cnsCryptoAddress} from './cns-api'
+import {handleApiGetCryptoAddress} from './handle/api'
+import {unstoppableApiGetCryptoAddress} from './unstoppable/api'
+import {cnsCryptoAddress} from './cns/api'
 
 type ApiConfig = {
   [Resolver.NameServer.Unstoppable]: {

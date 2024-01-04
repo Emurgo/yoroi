@@ -1,6 +1,6 @@
 import {init} from '@emurgo/cross-csl-nodejs'
-import {cnsCardanoApiMock} from './cns-cardano-api-maker.mocks'
-import {AssocMap, BuiltinByteString, CNSUserRecord} from './cns-types'
+import {cnsCardanoApiMock} from './cardano-api-maker.mocks'
+import {AssocMap, BuiltinByteString, CNSUserRecord} from './types'
 import {
   hexToString,
   objToHex,
@@ -9,7 +9,7 @@ import {
   validateCNSUserRecord,
   validateExpiry,
   validateVirtualSubdomainEnabled,
-} from './cns-utils'
+} from './utils'
 
 describe('validateCNSUserRecord', () => {
   it('returns true when the record is correct', () => {

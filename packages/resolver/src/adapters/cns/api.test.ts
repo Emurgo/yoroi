@@ -1,12 +1,14 @@
 import {init} from '@emurgo/cross-csl-nodejs'
 import {Api, Resolver} from '@yoroi/types'
 import {ZodError, ZodIssue} from 'zod'
-import {cnsCryptoAddress, handleCnsApiError} from './cns-api'
-import {resolveAddress} from './cns-api-helpers'
+import {cnsCryptoAddress, handleCnsApiError} from './api'
+import {resolveAddress} from './api-helpers'
 
-jest.mock('./cns-api-helpers')
+jest.mock('./api-helpers')
 
 describe('cnsCryptoAddress', () => {
+  beforeEach(jest.clearAllMocks)
+
   it('should return an address for a valid receiver', async () => {
     const cls = init('ctx')
     const receiver = 'fake.ada'
@@ -26,6 +28,8 @@ describe('cnsCryptoAddress', () => {
     try {
       const getAddress = cnsCryptoAddress(cls)
       await getAddress(receiver)
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.InvalidDomain)
     }
@@ -38,8 +42,29 @@ describe('cnsCryptoAddress', () => {
     try {
       const getAddress = cnsCryptoAddress(cls)
       await getAddress(receiver)
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.UnsupportedTld)
+    }
+  })
+
+  it('should catch a resolveAddress error', async () => {
+    const cls = init('ctx')
+    const receiver = 'domain.ada'
+    const error = new Error('random')
+    // @ts-ignore
+    resolveAddress.mockImplementation(() => {
+      throw error
+    })
+
+    try {
+      const getAddress = cnsCryptoAddress(cls)
+      await getAddress(receiver)
+
+      fail('it should crash before')
+    } catch (e: any) {
+      expect(e.message).toBe(error.message)
     }
   })
 })
@@ -58,6 +83,8 @@ describe('handleCnsApiError', () => {
 
     try {
       handleCnsApiError(zodError)
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.InvalidResponse)
     }
@@ -67,6 +94,8 @@ describe('handleCnsApiError', () => {
     const notFoundError = new Api.Errors.NotFound()
     try {
       handleCnsApiError(notFoundError)
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
     }
@@ -76,6 +105,8 @@ describe('handleCnsApiError', () => {
     const unknownError = new Error('unknown error')
     try {
       handleCnsApiError(unknownError)
+
+      fail('it should crash before')
     } catch (e: any) {
       expect(e).toBeInstanceOf(Error)
       expect(e.message).toBe('unknown error')

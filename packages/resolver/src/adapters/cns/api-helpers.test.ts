@@ -1,13 +1,13 @@
 import {init} from '@emurgo/cross-csl-nodejs'
 import {Resolver} from '@yoroi/types'
-import {cnsApiConfig} from './cns-api'
+import {cnsApiConfig} from './api'
 import {
   resolveAddress,
   resolveDomain,
   resolveUserRecord,
   resolveVirtualSubdomain,
-} from './cns-api-helpers'
-import {cnsCardanoApiMock} from './cns-cardano-api-maker.mocks'
+} from './api-helpers'
+import {cnsCardanoApiMock} from './cardano-api-maker.mocks'
 
 describe('resolveDomain', () => {
   it('resolves an address', async () => {
@@ -33,6 +33,8 @@ describe('resolveDomain', () => {
         cnsApiConfig.mainnet,
         cnsCardanoApiMock.noMetadata,
       )
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
     }
@@ -47,6 +49,8 @@ describe('resolveDomain', () => {
         cnsApiConfig.mainnet,
         cnsCardanoApiMock.expiredDomain,
       )
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.Expired)
     }
@@ -61,6 +65,8 @@ describe('resolveDomain', () => {
         cnsApiConfig.mainnet,
         cnsCardanoApiMock.noAddress,
       )
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
     }
@@ -104,6 +110,8 @@ describe('resolveUserRecord', () => {
         cnsCardanoApiMock.noMetadata,
         init('ctx'),
       )
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
     }
@@ -119,6 +127,8 @@ describe('resolveUserRecord', () => {
         cnsCardanoApiMock.expiredDomain,
         init('ctx'),
       )
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.Expired)
     }
@@ -134,6 +144,8 @@ describe('resolveUserRecord', () => {
         cnsCardanoApiMock.noInlineDatum,
         init('ctx'),
       )
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
     }
@@ -149,6 +161,8 @@ describe('resolveUserRecord', () => {
         cnsCardanoApiMock.badInlineDatum,
         init('ctx'),
       )
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.InvalidResponse)
     }
@@ -181,6 +195,8 @@ describe('resolveVirtualSubdomain', () => {
         cnsCardanoApiMock.success,
         init('ctx'),
       )
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
     }
@@ -228,6 +244,8 @@ describe('resolveAddress', () => {
         cnsCardanoApiMock.success,
         init('ctx'),
       )
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.InvalidDomain)
     }
@@ -243,6 +261,8 @@ describe('resolveAddress', () => {
         cnsCardanoApiMock.success,
         init('ctx'),
       )
+
+      fail('it should crash before')
     } catch (e) {
       expect(e).toBeInstanceOf(Resolver.Errors.InvalidDomain)
     }
