@@ -81,7 +81,7 @@ export type AssetInlineDatumResponse = Array<{
   inline_datum: {plutus_data: CNSUserRecord}
 }>
 
-const plutusDataSchema = z.object({
+const cnsUserRecordSchema = z.object({
   constructor: z.literal(0),
   fields: z.tuple([
     z.object({
@@ -198,7 +198,7 @@ const plutusDataSchema = z.object({
 const assetInlineDatumResponseSchema = z.array(
   z.object({
     inline_datum: z.object({
-      plutus_data: plutusDataSchema,
+      plutus_data: cnsUserRecordSchema,
     }),
   }),
 )
