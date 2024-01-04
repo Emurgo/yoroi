@@ -8,8 +8,8 @@ jest.mock('@yoroi/api')
 
 describe('getAssetAddress', () => {
   it('returns the address', async () => {
-    const assetHex =
-      'asset-hex-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTkskskskskskskkskskskskksksk'
+    const policyId = 'asset-hex-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT'
+    const assetName = 'kskskskskskskkskskskskksksk'
 
     const responseMock = {
       tag: 'right',
@@ -21,7 +21,7 @@ describe('getAssetAddress', () => {
     const request = jest.fn(() => Promise.resolve(responseMock)) as FetchData
     const {getAssetAddress} = makeCnsCardanoApi('https://localhost', request)
 
-    const response = await getAssetAddress(assetHex)
+    const response = await getAssetAddress(policyId, assetName)
 
     expect(response).toBe('fake-address')
     expect(request).toHaveBeenCalledWith(
@@ -33,7 +33,8 @@ describe('getAssetAddress', () => {
   })
 
   it('fails', async () => {
-    const assetHex = 'asset-hex'
+    const policyId = 'asset-hex-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT'
+    const assetName = 'kskskskskskskkskskskskksksk'
 
     const error = new Error('fake-error')
 
@@ -45,7 +46,7 @@ describe('getAssetAddress', () => {
     const {getAssetAddress} = makeCnsCardanoApi('https://localhost', request)
 
     try {
-      await getAssetAddress(assetHex)
+      await getAssetAddress(policyId, assetName)
 
       fail('it should crash before')
     } catch (e: any) {
@@ -93,8 +94,8 @@ describe('getMetadata', () => {
 
 describe('getAssetInlineDatum', () => {
   it('returns the address', async () => {
-    const assetHex =
-      'asset-hex-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTkskskskskskskkskskskskksksk'
+    const policyId = 'asset-hex-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT'
+    const assetName = 'kskskskskskskkskskskskksksk'
     const addresses = ['fake-address']
 
     const responseMock = {
@@ -110,7 +111,7 @@ describe('getAssetInlineDatum', () => {
       request,
     )
 
-    const response = await getAssetInlineDatum(assetHex, addresses)
+    const response = await getAssetInlineDatum(policyId, assetName, addresses)
 
     expect(response).toStrictEqual(inlineDatumMock[0]?.inline_datum.plutus_data)
     expect(request).toHaveBeenCalledWith(
@@ -130,8 +131,8 @@ describe('getAssetInlineDatum', () => {
   })
 
   it('fails', async () => {
-    const assetHex =
-      'asset-hex-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTkskskskskskskkskskskskksksk'
+    const policyId = 'asset-hex-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT'
+    const assetName = 'kskskskskskskkskskskskksksk'
     const addresses = ['fake-address']
 
     const error = new Error('fake-error')
@@ -147,7 +148,7 @@ describe('getAssetInlineDatum', () => {
     )
 
     try {
-      await getAssetInlineDatum(assetHex, addresses)
+      await getAssetInlineDatum(policyId, assetName, addresses)
 
       fail('it should crash before')
     } catch (e: any) {
