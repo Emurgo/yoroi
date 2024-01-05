@@ -263,7 +263,7 @@ export const CreateOrder = () => {
 
   return (
     <View style={styles.root}>
-      <KeyboardAvoidingView style={styles.flex} keyboardVerticalOffset={120}>
+      <KeyboardAvoidingView style={styles.flex} keyboardVerticalOffset={140}>
         <ScrollView style={styles.scroll}>
           <View
             style={styles.container}
@@ -293,15 +293,21 @@ export const CreateOrder = () => {
             <ShowPoolActions />
           </View>
         </ScrollView>
-      </KeyboardAvoidingView>
 
-      <Actions
-        style={{
-          ...(deviceHeight < contentHeight && styles.actionBorder),
-        }}
-      >
-        <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
-      </Actions>
+        <Actions
+          style={{
+            ...(deviceHeight < contentHeight && styles.actionBorder),
+          }}
+        >
+          <Button
+            testID="swapButton"
+            shelleyTheme
+            title={strings.swapTitle}
+            onPress={handleOnSwap}
+            disabled={disabled}
+          />
+        </Actions>
+      </KeyboardAvoidingView>
     </View>
   )
 }
