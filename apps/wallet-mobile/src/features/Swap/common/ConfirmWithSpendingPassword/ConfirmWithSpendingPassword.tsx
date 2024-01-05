@@ -26,6 +26,8 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
   )
   const strings = useStrings()
 
+  const errorMessage = error ? getErrorMessage(error, strings) : null
+
   return (
     <>
       <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
@@ -43,10 +45,10 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
         autoComplete="off"
       />
 
-      {error != null && (
+      {errorMessage != null && (
         <View>
           <Text style={styles.errorMessage} numberOfLines={3}>
-            {getErrorMessage(error, strings)}
+            {errorMessage}
           </Text>
         </View>
       )}

@@ -21,11 +21,13 @@ export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) =
     authWithOs()
   }, [wallet.isEasyConfirmationEnabled, authWithOs])
 
-  if (error) {
+  const errorMessage = error ? getErrorMessage(error, strings) : null
+
+  if (errorMessage != null) {
     return (
       <View style={styles.center}>
         <Text style={styles.errorMessage} numberOfLines={3}>
-          {getErrorMessage(error, strings)}
+          {errorMessage}
         </Text>
       </View>
     )
