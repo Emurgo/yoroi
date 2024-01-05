@@ -608,7 +608,7 @@
   "global.actions.dialogs.walletSynchronizing": "Wallet is synchronizing",
   "global.actions.dialogs.wrongPinError.message": "PIN is incorrect.",
   "global.actions.dialogs.wrongPinError.title": "Invalid PIN",
-  "global.actions.dialogs.insufficientColleateral.message": "Collateral amount is insufficient. Please go back and assign collateral.",
+  "global.actions.dialogs.insufficientCollateral.message": "Collateral amount is insufficient. Please go back and assign collateral.",
   "global.all": "All",
   "global.apply": "Apply",
   "global.assets.assetLabel": "Asset",

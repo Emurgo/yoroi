@@ -255,7 +255,7 @@ export const errorMessages = {
   }),
   missingCollateral: defineMessages({
     title: {
-      id: 'global.actions.dialogs.insufficientColleateral.message',
+      id: 'global.actions.dialogs.insufficientCollateral.message',
       defaultMessage: '!!!Collateral amount is insufficient. Please assign collateral.',
     },
   }),
