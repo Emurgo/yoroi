@@ -23,12 +23,7 @@ export const DashboardNavigator = () => {
 
   return (
     <GovernanceProvider manager={manager}>
-      <Stack.Navigator
-        screenOptions={{
-          ...defaultStackNavigationOptions,
-          detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-        }}
-      >
+      <Stack.Navigator screenOptions={defaultStackNavigationOptions}>
         <Stack.Screen
           name="staking-dashboard-main"
           component={Dashboard}
