@@ -66,9 +66,8 @@ export const resolveUserRecord = async (
     fetcherConfig,
   )
 
-  if (!inlineDatum) throw new Resolver.Errors.NotFound()
-  if (!validateCNSUserRecord(inlineDatum))
-    throw new Resolver.Errors.InvalidResponse()
+  if (!inlineDatum || !validateCNSUserRecord(inlineDatum))
+    throw new Resolver.Errors.NotFound()
 
   const virtualSubdomains = await parseAssocMapAsync(
     inlineDatum.fields[0], // validated with validateCNSUserRecord

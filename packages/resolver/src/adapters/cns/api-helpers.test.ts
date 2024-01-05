@@ -164,7 +164,7 @@ describe('resolveUserRecord', () => {
 
       fail('it should crash before')
     } catch (e) {
-      expect(e).toBeInstanceOf(Resolver.Errors.InvalidResponse)
+      expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
     }
   })
 })
