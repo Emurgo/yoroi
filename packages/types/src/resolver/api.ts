@@ -16,7 +16,7 @@ export type ResolverStrategy = 'all' | 'first'
 
 export type ResolverAddressResponse = Readonly<{
   address: string | null
-  error: string | null
+  error: Error | null
   nameServer: string | null
 }>
 

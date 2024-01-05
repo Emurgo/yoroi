@@ -25,6 +25,16 @@ export const useSendReceiver = () => {
       enabled: false,
     },
   )
+
+  const isNotResolvedDomain = React.useMemo(
+    () =>
+      !isUnsupportedDomain &&
+      !isResolvingAddressess &&
+      cryptoAddresses.length > 0 &&
+      cryptoAddresses.every(({error}) => error !== null),
+    [cryptoAddresses, isResolvingAddressess, isUnsupportedDomain],
+  )
+
   const debouncedRefetch = React.useMemo(() => debounceMaker(refetch, 300), [refetch])
 
   const cancelPendingRequests = React.useCallback(
@@ -65,6 +75,7 @@ export const useSendReceiver = () => {
   }, [addressRecordsFetched, cryptoAddresses, isSuccess])
 
   return {
+    isNotResolvedDomain,
     isResolvingAddressess,
     isUnsupportedDomain,
     receiverError,

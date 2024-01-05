@@ -4,8 +4,8 @@ import {
   HandleApiGetCryptoAddressResponse,
   handleApiConfig,
   handleApiGetCryptoAddress,
-} from './handle-api'
-import {handleApiMockResponses} from './handle-api.mocks'
+} from './api'
+import {handleApiMockResponses} from './api.mocks'
 
 describe('getCryptoAddress', () => {
   const mockAddress =

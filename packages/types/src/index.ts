@@ -247,6 +247,7 @@ export namespace Resolver {
     export class InvalidDomain extends ResolverErrorInvalidDomain {}
     export class NotFound extends ResolverErrorNotFound {}
     export class UnsupportedTld extends ResolverErrorUnsupportedTld {}
+    export class Expired extends ResolverErrorUnsupportedTld {}
   }
 }
 

@@ -9,7 +9,10 @@ export const useResolverCryptoAddresses = (
   {
     resolve,
     strategy = 'all',
-  }: {resolve: Resolver.Receiver['resolve']; strategy?: Resolver.Strategy},
+  }: {
+    resolve: Resolver.Receiver['resolve']
+    strategy?: Resolver.Strategy
+  },
   options?: UseQueryOptions<
     Resolver.AddressesResponse,
     Error,

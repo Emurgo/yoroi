@@ -1,4 +1,4 @@
-import {HandleApiGetCryptoAddressResponse} from './handle-api'
+import {HandleApiGetCryptoAddressResponse} from './api'
 
 export const getCrypoAddress: HandleApiGetCryptoAddressResponse = {
   hex: '737461636b636861696e',
