@@ -8,6 +8,7 @@ import {Boundary} from '../../../../../components'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
+import {CardanoMobile} from '../../../../../yoroi-wallets/wallets'
 import {SendProvider} from '../../../common/SendContext'
 import {InputReceiver} from './InputReceiver'
 
@@ -20,6 +21,7 @@ storiesOf('Send InputReceiver', module)
           apiKey: 'apiKey',
         },
       },
+      csl: CardanoMobile,
     })
     const resolverStorage = resolverStorageMaker()
     const resolverManager = resolverManagerMaker(resolverStorage, resolverApi)

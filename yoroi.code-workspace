@@ -58,5 +58,6 @@
     "typescript.preferGoToSourceDefinition": true,
     "typescript.referencesCodeLens.enabled": true,
     "typescript.tsserver.maxTsServerMemory": 12072,
+    "typescript.tsdk": "root/node_modules/typescript/lib",
   }
 }

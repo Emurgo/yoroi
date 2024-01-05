@@ -2,9 +2,9 @@
 import {Balance} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {KeyboardAvoidingView, Text, ValidatedTextInput} from '../../components'
+import {KeyboardSpacer, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
 import {debugWalletInfo, features} from '../../features'
@@ -54,73 +54,69 @@ export const DelegationConfirmation = () => {
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView style={{flex: 1}}>
-        <ScrollView style={styles.scrollView}>
-          <View style={styles.itemBlock}>
-            <Text style={styles.itemTitle}>{strings.stakePoolName}</Text>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.itemBlock}>
+          <Text style={styles.itemTitle}>{strings.stakePoolName}</Text>
 
-            <StakePoolName stakePoolId={poolId} />
-          </View>
+          <StakePoolName stakePoolId={poolId} />
+        </View>
 
-          <View style={styles.itemBlock}>
-            <Text style={styles.itemTitle}>{strings.stakePoolHash}</Text>
+        <View style={styles.itemBlock}>
+          <Text style={styles.itemTitle}>{strings.stakePoolHash}</Text>
 
-            <Text testID="stakePoolHashText">{poolId}</Text>
-          </View>
+          <Text testID="stakePoolHashText">{poolId}</Text>
+        </View>
 
-          <View style={styles.input} testID="stakingAmount">
-            <Text small style={styles.fees}>
-              {`+ ${formatTokenAmount(yoroiUnsignedTx.fee[wallet.primaryToken.identifier], wallet.primaryToken)} ${
-                strings.ofFees
-              }`}
-            </Text>
+        <View style={styles.input} testID="stakingAmount">
+          <Text small style={styles.fees}>
+            {`+ ${formatTokenAmount(yoroiUnsignedTx.fee[wallet.primaryToken.identifier], wallet.primaryToken)} ${
+              strings.ofFees
+            }`}
+          </Text>
 
-            {/* requires a handler so we pass on a dummy function */}
+          {/* requires a handler so we pass on a dummy function */}
 
-            <ValidatedTextInput
-              onChangeText={() => undefined}
-              editable={false}
-              value={formatTokenAmount(stakingAmount.quantity, wallet.primaryToken)}
-              label={strings.amount}
-            />
-          </View>
-
-          {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
-            <View style={styles.input} testID="spendingPassword">
-              <ValidatedTextInput
-                secureTextEntry
-                value={password}
-                label={strings.password}
-                onChangeText={setPassword}
-              />
-            </View>
-          )}
-
-          <View style={styles.itemBlock}>
-            <Text style={styles.itemTitle}>{strings.rewardsExplanation}</Text>
-
-            <Text style={styles.rewards}>{formatTokenWithText(reward, wallet.primaryToken)}</Text>
-          </View>
-
-          {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
-        </ScrollView>
-
-        <Actions>
-          <ConfirmTx
-            buttonProps={{
-              shelleyTheme: true,
-              title: strings.delegateButtonLabel,
-            }}
-            isProvidingPassword
-            providedPassword={password}
-            onSuccess={onSuccess}
-            setUseUSB={setUseUSB}
-            useUSB={useUSB}
-            yoroiUnsignedTx={yoroiUnsignedTx}
-            chooseTransportOnConfirmation
+          <ValidatedTextInput
+            onChangeText={() => undefined}
+            editable={false}
+            value={formatTokenAmount(stakingAmount.quantity, wallet.primaryToken)}
+            label={strings.amount}
           />
-        </Actions>
-      </KeyboardAvoidingView>
+        </View>
+
+        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
+          <View style={styles.input} testID="spendingPassword">
+            <ValidatedTextInput secureTextEntry value={password} label={strings.password} onChangeText={setPassword} />
+          </View>
+        )}
+
+        <View style={styles.itemBlock}>
+          <Text style={styles.itemTitle}>{strings.rewardsExplanation}</Text>
+
+          <Text style={styles.rewards}>{formatTokenWithText(reward, wallet.primaryToken)}</Text>
+        </View>
+
+        {wallet.isHW && <HWInstructions useUSB={useUSB} addMargin />}
+      </ScrollView>
+
+      <Actions>
+        <ConfirmTx
+          buttonProps={{
+            shelleyTheme: true,
+            title: strings.delegateButtonLabel,
+          }}
+          isProvidingPassword
+          providedPassword={password}
+          onSuccess={onSuccess}
+          setUseUSB={setUseUSB}
+          useUSB={useUSB}
+          yoroiUnsignedTx={yoroiUnsignedTx}
+          chooseTransportOnConfirmation
+        />
+      </Actions>
+
+      {/* hack to fix weird KeyboardAvoidingView bug in THIS SCREEN */}
+      {Platform.OS === 'ios' && <KeyboardSpacer />}
     </View>
   )
 }

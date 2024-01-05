@@ -4,8 +4,8 @@ import {
   UnstoppableApiGetCryptoAddressResponse,
   unstoppableApiConfig,
   unstoppableApiGetCryptoAddress,
-} from './unstoppable-api'
-import {handleApiMockResponses} from './unstoppable-api.mocks'
+} from './api'
+import {handleApiMockResponses} from './api.mocks'
 
 describe('getCryptoAddress', () => {
   const mockAddress =
