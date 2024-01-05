@@ -1,9 +1,10 @@
 import {Resolver} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
-import {handleApiGetCryptoAddress} from './handle-api'
-import {unstoppableApiGetCryptoAddress} from './unstoppable-api'
-import {getCnsCryptoAddress} from './cns'
+import {handleApiGetCryptoAddress} from './handle/api'
+import {unstoppableApiGetCryptoAddress} from './unstoppable/api'
+import {cnsCryptoAddress} from './cns/api'
 
 type ApiConfig = {
   [Resolver.NameServer.Unstoppable]: {
@@ -19,15 +20,17 @@ const initialDeps = {
     getCryptoAddress: handleApiGetCryptoAddress,
   },
   cnsApi: {
-    getCryptoAddress: getCnsCryptoAddress,
+    getCryptoAddress: cnsCryptoAddress,
   },
 } as const
 
 export const resolverApiMaker = (
   {
     apiConfig,
+    csl,
   }: {
     apiConfig: Readonly<ApiConfig>
+    csl: WasmModuleProxy
   },
   {
     unstoppableApi,
@@ -41,7 +44,7 @@ export const resolverApiMaker = (
       getCryptoAddress: typeof handleApiGetCryptoAddress
     }
     cnsApi: {
-      getCryptoAddress: typeof getCnsCryptoAddress
+      getCryptoAddress: typeof cnsCryptoAddress
     }
   } = initialDeps,
 ): Resolver.Api => {
@@ -49,11 +52,12 @@ export const resolverApiMaker = (
   const getUnstoppableCryptoAddress = unstoppableApi.getCryptoAddress(
     apiConfig[Resolver.NameServer.Unstoppable],
   )
+  const getCnsCryptoAddress = cnsApi.getCryptoAddress(csl)
   // @ts-expect-error TODO: bugfix on TS 5.4 (readonly array of readonly array)
   const operationsGetCryptoAddress: GetCryptoAddressOperations = [
     [Resolver.NameServer.Handle, getHandleCryptoAddress],
     [Resolver.NameServer.Unstoppable, getUnstoppableCryptoAddress],
-    [Resolver.NameServer.Cns, cnsApi.getCryptoAddress],
+    [Resolver.NameServer.Cns, getCnsCryptoAddress],
   ] as const
 
   // facade to the different name servers
@@ -87,8 +91,8 @@ const safelyExecuteOperation = async (
   try {
     const address = await operationFn(resolve, fetcherConfig)
     return {error: null, address, nameServer}
-  } catch (error) {
-    return {error: (error as Error).message, address: null, nameServer}
+  } catch (error: any) {
+    return {error, address: null, nameServer}
   }
 }
 
@@ -116,8 +120,10 @@ const resolveFirst = async (
   try {
     const result = await Promise.any(promises)
     return [result]
-  } catch (error) {
-    return [{address: null, error: 'Not resolved', nameServer: null}]
+  } catch {
+    return [
+      {address: null, error: new Resolver.Errors.NotFound(), nameServer: null},
+    ]
   }
 }
 

@@ -55,6 +55,7 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
 import {isMainnetNetworkId} from '../yoroi-wallets/utils'
+import {CardanoMobile} from '../yoroi-wallets/wallets'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
@@ -96,6 +97,7 @@ export const TxHistoryNavigator = () => {
           apiKey: CONFIG.UNSTOPPABLE_API_KEY,
         },
       },
+      csl: CardanoMobile,
     })
     const resolverStorage = resolverStorageMaker()
     return resolverManagerMaker(resolverStorage, resolverApi)

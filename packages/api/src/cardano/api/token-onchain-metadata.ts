@@ -9,6 +9,7 @@ import {
   ApiOnChainFtMetadataResult,
   ApiOnChainNftMetadataResult,
 } from '@yoroi/types'
+import {AxiosRequestConfig} from 'axios'
 
 export const getOnChainMetadatas = (
   baseUrl: string,
@@ -16,6 +17,7 @@ export const getOnChainMetadatas = (
 ) => {
   return (
     tokenIds: Api.Cardano.OnChainMetadataRequest,
+    fetcherConfig?: AxiosRequestConfig,
   ): Promise<Api.Cardano.OnChainMetadataResponse> => {
     if (tokenIds.length === 0) {
       return Promise.resolve({})
@@ -29,6 +31,7 @@ export const getOnChainMetadatas = (
     const payload = {assets}
 
     return request<Api.Cardano.OnChainMetadataResponse>({
+      ...fetcherConfig,
       url: `${baseUrl}/multiAsset/metadata`,
       method: 'POST',
       headers: {'Content-Type': 'application/json'},

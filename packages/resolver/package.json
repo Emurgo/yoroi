@@ -51,7 +51,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "build": "yarn tsc && yarn lint && yarn clean && bob build",
+    "build": "yarn tsc && yarn lint && yarn test --ci --silent && yarn clean && bob build",
     "build:release": "yarn build && yarn flow",
     "clean": "del-cli lib",
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",

@@ -41,11 +41,12 @@ export const StartMultiTokenTxScreen = () => {
   const receiver = targets[selectedTargetIndex].receiver
   const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
 
-  const {isResolvingAddressess, receiverError, isUnsupportedDomain} = useSendReceiver()
+  const {isResolvingAddressess, receiverError, isUnsupportedDomain, isNotResolvedDomain} = useSendReceiver()
   const {isValidatingAddress, addressError, addressValidated} = useSendAddress()
 
   const isLoading = isResolvingAddressess || isValidatingAddress
   const {hasReceiverError, receiverErrorMessage} = useReceiverError({
+    isNotResolvedDomain,
     isUnsupportedDomain,
     isLoading,
     receiverError,
@@ -111,11 +112,13 @@ export const StartMultiTokenTxScreen = () => {
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
 
 const useReceiverError = ({
+  isNotResolvedDomain,
   isUnsupportedDomain,
   receiverError,
   addressError,
   isLoading,
 }: {
+  isNotResolvedDomain: boolean
   isUnsupportedDomain: boolean
   isLoading: boolean
   receiverError: Error | null
@@ -126,6 +129,8 @@ const useReceiverError = ({
   // NOTE: order matters
   if (isLoading) return {hasReceiverError: false, receiverErrorMessage: ''}
   if (isUnsupportedDomain)
+    return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorUnsupportedDomain}
+  if (isNotResolvedDomain)
     return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorUnsupportedDomain}
   if (receiverError != null)
     return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorUnsupportedDomain}

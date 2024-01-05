@@ -3,7 +3,7 @@ import {fetchData, FetchData, handleApiError, isLeft} from '@yoroi/common'
 import {z} from 'zod'
 import {AxiosRequestConfig} from 'axios'
 
-import {handleZodErrors} from './zod-errors'
+import {handleZodErrors} from '../zod-errors'
 
 const initialDeps = {request: fetchData} as const
 
@@ -17,7 +17,7 @@ export const unstoppableApiGetCryptoAddress = (
   ): Promise<string> => {
     if (!resolve.includes('.')) throw new Resolver.Errors.InvalidDomain()
 
-    if (!isUnstoppableHandleDomain(resolve))
+    if (!isUnstoppableDomain(resolve))
       throw new Resolver.Errors.UnsupportedTld()
 
     const config = {
@@ -92,7 +92,7 @@ export const unstoppableSupportedTlds = [
   '.com',
   '.unstoppable',
 ] as const
-export const isUnstoppableHandleDomain = (value: string) => {
+export const isUnstoppableDomain = (value: string) => {
   return unstoppableSupportedTlds.some((tld) => value.endsWith(tld))
 }
 
