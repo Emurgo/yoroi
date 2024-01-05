@@ -4,9 +4,12 @@ import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
+import {getErrorMessage} from '../errors'
+import {useStrings} from '../strings'
 
 export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) => Promise<void>}) => {
   const wallet = useSelectedWallet()
+  const strings = useStrings()
 
   const {authWithOs, error} = useAuthOsWithEasyConfirmation(
     {id: wallet.id},
@@ -22,7 +25,7 @@ export const ConfirmRawTxWithOs = ({onConfirm}: {onConfirm?: (rootKey: string) =
     return (
       <View style={styles.center}>
         <Text style={styles.errorMessage} numberOfLines={3}>
-          {error.message}
+          {getErrorMessage(error, strings)}
         </Text>
       </View>
     )

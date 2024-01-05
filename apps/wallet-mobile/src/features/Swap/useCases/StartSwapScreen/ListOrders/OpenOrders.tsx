@@ -132,12 +132,22 @@ export const OpenOrders = () => {
   }
 
   const showCollateralNotFoundAlert = () => {
+    if (isCollateralUtxoPending()) {
+      Alert.alert(strings.collateralNotFound, strings.collateralTxPending)
+      return
+    }
+
     Alert.alert(
       strings.collateralNotFound,
       strings.noActiveCollateral,
       [{text: strings.assignCollateral, onPress: navigateToCollateralSettings}],
       {cancelable: true, onDismiss: () => true},
     )
+  }
+
+  const isCollateralUtxoPending = () => {
+    const info = wallet.getCollateralInfo()
+    return !info.isConfirmed && info.collateralId.length > 0
   }
 
   const hasCollateralUtxo = () => {

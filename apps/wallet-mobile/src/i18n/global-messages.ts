@@ -253,6 +253,12 @@ export const errorMessages = {
       defaultMessage: '!!!PINs do not match.',
     },
   }),
+  missingCollateral: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.insufficientColleateral.message',
+      defaultMessage: '!!!Collateral amount is insufficient. Please assign collateral.',
+    },
+  }),
   incorrectPin: defineMessages({
     title: {
       id: 'global.actions.dialogs.incorrectPin.title',

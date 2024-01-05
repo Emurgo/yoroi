@@ -41,7 +41,7 @@ export const ConfirmTxScreen = () => {
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
     navigateTo.submittedTx()
-    setCollateralId(signedTx.signedTx.id)
+    setCollateralId(`${signedTx.signedTx.id}:0`)
 
     if (memo.length > 0) {
       saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})

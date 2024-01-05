@@ -1155,7 +1155,8 @@ export class ByronWallet implements YoroiWallet {
     const collateralUtxo = utxos.findById(collateralId)
     const quantity = collateralUtxo?.amount !== undefined ? asQuantity(collateralUtxo?.amount) : Quantities.zero
     const txInfos = this.transactions
-    const isConfirmed = !!collateralId && Object.values(txInfos).some((tx) => tx.id === collateralId)
+    const collateralTxId = collateralId ? collateralId.split(':')[0] : null
+    const isConfirmed = !!collateralTxId && Object.values(txInfos).some((tx) => tx.id === collateralTxId)
 
     return {
       utxo: collateralUtxo,
