@@ -31,7 +31,7 @@ export const useSendReceiver = () => {
       !isUnsupportedDomain &&
       !isResolvingAddressess &&
       cryptoAddresses.length > 0 &&
-      cryptoAddresses.every(({error}) => error !== null),
+      cryptoAddresses.every(({error}) => error instanceof Resolver.Errors.NotFound),
     [cryptoAddresses, isResolvingAddressess, isUnsupportedDomain],
   )
 
