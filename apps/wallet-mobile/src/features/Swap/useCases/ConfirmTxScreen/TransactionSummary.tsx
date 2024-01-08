@@ -130,6 +130,7 @@ export const TransactionSummary = () => {
         ),
       info: strings.priceImpactInfo,
       warning: priceImpactRisk === 'high',
+      hidden: orderData.type === 'limit',
     },
   ]
 
@@ -162,6 +163,9 @@ export const TransactionSummary = () => {
       <Spacer height={24} />
 
       {feesInfo.map((orderInfo) => {
+        if (orderInfo?.hidden) {
+          return null
+        }
         return (
           <View key={orderInfo.label}>
             <Spacer height={8} />
