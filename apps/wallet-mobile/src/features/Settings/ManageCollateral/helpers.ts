@@ -28,11 +28,19 @@ export const findCollateralOutputIndex = async (wallet: YoroiWallet, unsignedTx:
 
   if (!collateralAddress) return outputIndex
 
-  for (let i = 0; i < unsignedTx.unsignedTx.outputs.length; i++) {
-    const output = unsignedTx.unsignedTx.outputs[i]
-    const normalizedOutputAddress = await normalizeToAddress(output.address).then((a) => a?.toHex())
-    const outputAddressMatch = normalizedOutputAddress === collateralAddress
-    const outputValueMatch = output.value.values[0].amount.eq(collateralAmount)
+  const txBody = await unsignedTx.unsignedTx.txBuilder.build()
+  const outputs = await txBody.outputs()
+  const outputsLength = await outputs.len()
+
+  for (let i = 0; i < outputsLength; i++) {
+    const output = await outputs.get(i)
+    const outputAddressHexStr = await output.address().then((a) => a?.toHex())
+
+    const outputAmount = await output.amount()
+    const outputLovelace = await outputAmount.coin().then((c) => c.toStr())
+
+    const outputValueMatch = outputLovelace === collateralAmount
+    const outputAddressMatch = outputAddressHexStr === collateralAddress
 
     if (outputAddressMatch && outputValueMatch) {
       return i
