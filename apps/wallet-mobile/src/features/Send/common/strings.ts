@@ -39,7 +39,6 @@ export const useStrings = () => {
     helperMemoErrorTooLong: intl.formatMessage(messages.helperMemoErrorTooLong),
     helperMemoInstructions: intl.formatMessage(messages.helperMemoInstructions),
     helperResolverErrorDomainNotFound: intl.formatMessage(messages.helperResolverErrorDomainNotFound),
-    helperResolverErrorUnsupportedDomain: intl.formatMessage(messages.helperResolverErrorUnsupportedDomain),
     manyNameServersWarning: intl.formatMessage(messages.manyNameServersWarning),
     max: intl.formatMessage(globalMessages.max),
     memoLabel: intl.formatMessage(messages.memoLabel),
@@ -289,19 +288,16 @@ export const messages = defineMessages({
   },
   helperAddressErrorInvalid: {
     id: 'send.helper.addressError.invalid',
-    defaultMessage: '!!!Please enter valid address',
+    defaultMessage: '!!!Please enter a valid receiver address, ADA Handle or domain',
   },
   helperAddressErrorWrongNetwork: {
     id: 'send.helper.addressError.wrongNetwork',
     defaultMessage: '!!!Please enter valid domain',
   },
-  helperResolverErrorUnsupportedDomain: {
-    id: 'send.helper.resolverError.unsupportedDomain',
-    defaultMessage: '!!!Domain is not supported',
-  },
   helperResolverErrorDomainNotFound: {
     id: 'send.helper.resolverError.domainNotFound',
-    defaultMessage: '!!!Domain not found',
+    defaultMessage:
+      "!!!Receiver address, ADA Handle or domain you entered doesn't exist. Please double-check it and try again",
   },
 
   memoLabel: {

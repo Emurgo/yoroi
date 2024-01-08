@@ -128,12 +128,10 @@ const useReceiverError = ({
 
   // NOTE: order matters
   if (isLoading) return {hasReceiverError: false, receiverErrorMessage: ''}
-  if (isUnsupportedDomain)
-    return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorUnsupportedDomain}
+  if (isUnsupportedDomain) return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorInvalid}
   if (isNotResolvedDomain)
     return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorDomainNotFound}
-  if (receiverError != null)
-    return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorUnsupportedDomain}
+  if (receiverError != null) return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorInvalid}
   if (addressError instanceof AddressErrorWrongNetwork)
     return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorWrongNetwork}
   if (addressError != null) return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorInvalid}
