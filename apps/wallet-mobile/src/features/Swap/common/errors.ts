@@ -1,3 +1,4 @@
+import {SubmitTxInsufficientCollateralError} from '../../../yoroi-wallets/cardano/api/errors'
 import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
 
 export const getErrorMessage = (
@@ -7,7 +8,7 @@ export const getErrorMessage = (
   if (error instanceof WrongPassword) {
     return strings.wrongPasswordMessage
   }
-  if (error instanceof Error && error.message.includes('InsufficientCollateral')) {
+  if (error instanceof SubmitTxInsufficientCollateralError) {
     return strings.missingCollateral
   }
 
