@@ -43,4 +43,7 @@ yarn workspace @yoroi/wallet-mobile add @yoroi/links@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/staking@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/resolver@"$1"
 
+# storybook-wallet-mobile
+yarn workspace @yoroi/storybook-wallet-mobile add @yoroi/wallet-mobile@"$1"
+
 echo "Using new packages..."
