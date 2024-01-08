@@ -134,7 +134,7 @@ describe('resolveUserRecord', () => {
     }
   })
 
-  it('throws "not found" error: no inline datum', async () => {
+  it('throws "invalid domain" error: no inline datum', async () => {
     const domain = 'fake.domain'
 
     try {
@@ -147,11 +147,11 @@ describe('resolveUserRecord', () => {
 
       fail('it should crash before')
     } catch (e) {
-      expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
+      expect(e).toBeInstanceOf(Resolver.Errors.InvalidDomain)
     }
   })
 
-  it('throws "invalid response" error: bad inline datum', async () => {
+  it('throws "invalid domain" error: bad inline datum', async () => {
     const domain = 'fake.domain'
 
     try {
@@ -164,7 +164,7 @@ describe('resolveUserRecord', () => {
 
       fail('it should crash before')
     } catch (e) {
-      expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
+      expect(e).toBeInstanceOf(Resolver.Errors.InvalidDomain)
     }
   })
 })
