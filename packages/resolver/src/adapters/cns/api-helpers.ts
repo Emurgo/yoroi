@@ -67,7 +67,7 @@ export const resolveUserRecord = async (
   )
 
   if (!inlineDatum || !validateCNSUserRecord(inlineDatum))
-    throw new Resolver.Errors.NotFound()
+    throw new Resolver.Errors.InvalidDomain()
 
   const virtualSubdomains = await parseAssocMapAsync(
     inlineDatum.fields[0], // validated with validateCNSUserRecord
