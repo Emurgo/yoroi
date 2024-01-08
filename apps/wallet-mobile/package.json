@@ -124,7 +124,7 @@
     "@yoroi/banxa": "1.4.0",
     "@yoroi/common": "1.4.0",
     "@yoroi/links": "1.4.0",
-    "@yoroi/resolver": "1.4.0",
+    "@yoroi/resolver": "1.5.0",
     "@yoroi/staking": "1.4.0",
     "@yoroi/swap": "1.4.0",
     "add": "2.0.6",
