@@ -38,6 +38,7 @@ export const useStrings = () => {
     helperAddressErrorWrongNetwork: intl.formatMessage(messages.helperAddressErrorWrongNetwork),
     helperMemoErrorTooLong: intl.formatMessage(messages.helperMemoErrorTooLong),
     helperMemoInstructions: intl.formatMessage(messages.helperMemoInstructions),
+    helperResolverErrorDomainNotFound: intl.formatMessage(messages.helperResolverErrorDomainNotFound),
     helperResolverErrorUnsupportedDomain: intl.formatMessage(messages.helperResolverErrorUnsupportedDomain),
     manyNameServersWarning: intl.formatMessage(messages.manyNameServersWarning),
     max: intl.formatMessage(globalMessages.max),
@@ -298,6 +299,11 @@ export const messages = defineMessages({
     id: 'send.helper.resolverError.unsupportedDomain',
     defaultMessage: '!!!Domain is not supported',
   },
+  helperResolverErrorDomainNotFound: {
+    id: 'send.helper.resolverError.domainNotFound',
+    defaultMessage: '!!!Domain not found',
+  },
+
   memoLabel: {
     id: 'components.send.memofield.label',
     defaultMessage: '!!!Memo',
