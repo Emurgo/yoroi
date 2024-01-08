@@ -131,7 +131,7 @@ const useReceiverError = ({
   if (isUnsupportedDomain)
     return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorUnsupportedDomain}
   if (isNotResolvedDomain)
-    return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorUnsupportedDomain}
+    return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorDomainNotFound}
   if (receiverError != null)
     return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorUnsupportedDomain}
   if (addressError instanceof AddressErrorWrongNetwork)
