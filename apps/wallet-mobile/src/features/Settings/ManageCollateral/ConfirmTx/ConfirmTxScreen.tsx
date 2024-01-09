@@ -40,7 +40,6 @@ export const ConfirmTxScreen = () => {
   }, [])
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
-    if (!yoroiUnsignedTx) return
     navigateTo.submittedTx()
     const collateralId = `${signedTx.signedTx.id}:0`
     setCollateralId(collateralId)
