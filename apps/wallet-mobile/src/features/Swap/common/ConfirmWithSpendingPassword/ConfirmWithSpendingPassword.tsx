@@ -46,11 +46,9 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
       />
 
       {errorMessage != null && (
-        <View>
-          <Text style={styles.errorMessage} numberOfLines={3}>
-            {errorMessage}
-          </Text>
-        </View>
+        <Text style={styles.errorMessage} numberOfLines={3}>
+          {errorMessage}
+        </Text>
       )}
 
       <Spacer fill />
