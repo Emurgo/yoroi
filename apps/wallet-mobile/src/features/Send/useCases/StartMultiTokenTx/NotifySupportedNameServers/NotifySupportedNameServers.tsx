@@ -25,18 +25,20 @@ export const NotifySupportedNameServers = () => {
     <View>
       <LinearGradient style={styles.gradient} start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={['#C6F7ED', '#E4E8F7']}>
         <View style={styles.header}>
-          <Text style={styles.title}>{strings.resolverNoticeTitle}</Text>
+          <Text style={styles.title}>{`${strings.resolverNoticeTitle} `}😇</Text>
 
           <PressableIcon icon={Icon.CrossCircle} onPress={handleOnClose} size={24} />
         </View>
 
         <Spacer height={10} />
 
+        <Text style={styles.text}>{strings.resolverNoticeText}:</Text>
+
         <NameServer text={nameServerName[Resolver.NameServer.Handle]} />
 
-        <NameServer text={nameServerName[Resolver.NameServer.Cns]} />
-
         <NameServer text={nameServerName[Resolver.NameServer.Unstoppable]} />
+
+        <NameServer text={nameServerName[Resolver.NameServer.Cns]} />
       </LinearGradient>
 
       <Spacer height={16} />
@@ -75,8 +77,8 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   nameServerText: {
-    fontWeight: '400',
-    fontFamily: 'Rubik-Regular',
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
     fontSize: 14,
     lineHeight: 22,
     color: '#000',
@@ -86,5 +88,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     color: '#000',
+  },
+  text: {
+    fontFamily: 'Rubik-Regular',
+    fontSize: 14,
+    fontWeight: '400',
+    color: '#000',
+    lineHeight: 22,
   },
 })
