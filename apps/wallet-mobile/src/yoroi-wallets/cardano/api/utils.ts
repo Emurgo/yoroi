@@ -62,7 +62,7 @@ export const toPolicyId = (tokenIdentifier: string) => {
   return tokenSubject.slice(0, 56)
 }
 export const toAssetName = (tokenIdentifier: string) => {
-  return hexToUtf8(toAssetNameHex(tokenIdentifier))
+  return hexToUtf8(toAssetNameHex(tokenIdentifier).replace('000de140', ''))
 }
 
 export const toAssetNameHex = (tokenIdentifier: string) => {
