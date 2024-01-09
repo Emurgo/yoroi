@@ -13,7 +13,6 @@ import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {debugWalletInfo, features} from '../../..'
 import {useSend} from '../../../Send/common/SendContext'
-import {findCollateralOutputIndex} from '../helpers'
 import {useNavigateTo} from '../navigation'
 import {BalanceAfter} from './Summary/BalanceAfter'
 import {CurrentBalance} from './Summary/CurrentBalance'
@@ -43,14 +42,8 @@ export const ConfirmTxScreen = () => {
   const onSuccess = (signedTx: YoroiSignedTx) => {
     if (!yoroiUnsignedTx) return
     navigateTo.submittedTx()
-
-    findCollateralOutputIndex(wallet, yoroiUnsignedTx).then((index) => {
-      if (index > -1) {
-        const collateralId = `${signedTx.signedTx.id}:${index}`
-        setCollateralId(collateralId)
-      }
-    })
-
+    const collateralId = `${signedTx.signedTx.id}:0`
+    setCollateralId(collateralId)
     if (memo.length > 0) {
       saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})
     }
