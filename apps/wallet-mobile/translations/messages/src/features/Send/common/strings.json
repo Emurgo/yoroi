@@ -799,7 +799,7 @@
   },
   {
     "id": "send.helper.resolverError.domainNotFound",
-    "defaultMessage": "!!!Domain not found",
+    "defaultMessage": "!!!Receiver address, ADA Handle or domain you entered doesn't exist. Please double-check it and try again",
     "file": "src/features/Send/common/strings.ts",
     "start": {
       "line": 297,
@@ -807,9 +807,9 @@
       "index": 12708
     },
     "end": {
-      "line": 300,
+      "line": 301,
       "column": 3,
-      "index": 12808
+      "index": 12900
     }
   },
   {
@@ -817,14 +817,14 @@
     "defaultMessage": "!!!Memo",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 302,
+      "line": 303,
       "column": 13,
-      "index": 12824
+      "index": 12916
     },
     "end": {
-      "line": 305,
+      "line": 306,
       "column": 3,
-      "index": 12903
+      "index": 12995
     }
   },
   {
@@ -832,14 +832,14 @@
     "defaultMessage": "!!!(Optional) Memo is stored locally",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 306,
+      "line": 307,
       "column": 26,
-      "index": 12931
+      "index": 13023
     },
     "end": {
-      "line": 309,
+      "line": 310,
       "column": 3,
-      "index": 13041
+      "index": 13133
     }
   },
   {
@@ -847,14 +847,14 @@
     "defaultMessage": "!!!Memo is too long",
     "file": "src/features/Send/common/strings.ts",
     "start": {
-      "line": 310,
+      "line": 311,
       "column": 26,
-      "index": 13069
+      "index": 13161
     },
     "end": {
-      "line": 313,
+      "line": 314,
       "column": 3,
-      "index": 13160
+      "index": 13252
     }
   }
 ]

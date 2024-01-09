@@ -62,7 +62,7 @@ export const toPolicyId = (tokenIdentifier: string) => {
   return tokenSubject.slice(0, 56)
 }
 export const toAssetName = (tokenIdentifier: string) => {
-  return hexToUtf8(toAssetNameHex(tokenIdentifier).replace('000de140', ''))
+  return hexToUtf8(transformCIP0068AssetNameHex(toAssetNameHex(tokenIdentifier)))
 }
 
 export const toAssetNameHex = (tokenIdentifier: string) => {
@@ -124,4 +124,18 @@ export const toTokenFingerprint = ({
 }) => {
   const assetFingerprint = AssetFingerprint.fromParts(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
   return assetFingerprint.fingerprint()
+}
+
+export const transformCIP0068AssetNameHex = (assetNemHex) => {
+  const refprefix = '000643b0'
+  const usrprefix = '000de140'
+  const stringsToRemove = [refprefix, usrprefix]
+
+  let transformedAssetNameHex = assetNemHex
+
+  stringsToRemove.forEach((str) => {
+    transformedAssetNameHex = transformedAssetNameHex.replace(str, '')
+  })
+
+  return transformedAssetNameHex
 }
