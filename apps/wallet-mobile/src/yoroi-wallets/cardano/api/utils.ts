@@ -126,12 +126,12 @@ export const toTokenFingerprint = ({
   return assetFingerprint.fingerprint()
 }
 
-export const transformCIP0068AssetNameHex = (assetNemHex) => {
+export const transformCIP0068AssetNameHex = (assetNameHex) => {
   const refprefix = '000643b0'
   const usrprefix = '000de140'
   const stringsToRemove = [refprefix, usrprefix]
 
-  let transformedAssetNameHex = assetNemHex
+  let transformedAssetNameHex = assetNameHex
 
   stringsToRemove.forEach((str) => {
     transformedAssetNameHex = transformedAssetNameHex.replace(str, '')
