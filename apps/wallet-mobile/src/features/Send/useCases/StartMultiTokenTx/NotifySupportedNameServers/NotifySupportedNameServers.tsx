@@ -10,7 +10,7 @@ import {useStrings} from '../../../common/strings'
 
 export const NotifySupportedNameServers = () => {
   const strings = useStrings()
-  const {/* showNotice,  */ refetch} = useResolverShowNotice()
+  const {showNotice, refetch} = useResolverShowNotice()
 
   const {setShowNotice} = useResolverSetShowNotice({
     onSuccess: () => refetch(),
@@ -19,7 +19,7 @@ export const NotifySupportedNameServers = () => {
     setShowNotice(false)
   }, [setShowNotice])
 
-  // if (!showNotice) return null
+  if (!showNotice) return null
 
   return (
     <View>
