@@ -54,6 +54,7 @@ export const useStrings = () => {
     receiver: intl.formatMessage(messages.receiver),
     resolvedAddress: intl.formatMessage(messages.resolvedAddress),
     resolverNoticeTitle: intl.formatMessage(messages.resolverNoticeTitle),
+    resolverNoticeText: intl.formatMessage(messages.resolverNoticeText),
     searchTokens: intl.formatMessage(messages.searchTokens),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     sendAllContinueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
@@ -280,7 +281,12 @@ export const messages = defineMessages({
   },
   resolverNoticeTitle: {
     id: 'components.send.sendscreen.resolverNoticeTitle',
-    defaultMessage: '!!!Yoroi Supports Name Resolution',
+    defaultMessage: '!!!Yoroi supports more addresses',
+  },
+  resolverNoticeText: {
+    id: 'components.send.sendscreen.resolverNoticeText',
+    defaultMessage:
+      '!!!Yoroi offers a unique chance to use custom and lightning-fast alternatives to the traditional wallet address, such as',
   },
   manyNameServersWarning: {
     id: 'send.warning.resolver.manyNameServers',
