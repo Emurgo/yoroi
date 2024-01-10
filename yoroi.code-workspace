@@ -41,6 +41,10 @@
       "path": "./packages/staking"
     },
     {
+      "name": "@yoroi/theme",
+      "path": "./packages/theme"
+    },
+    {
       "name": "@yoroi/wallet-mobile",
       "path": "./apps/wallet-mobile"
     },

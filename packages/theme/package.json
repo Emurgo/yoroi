@@ -125,7 +125,9 @@
             "<rootDir>/jest.setup.ts"
         ]
     },
-    "dependencies": {},
+    "dependencies": {
+        "react-query": "^3.39.3"
+    },
     "devDependencies": {
         "@babel/preset-env": "^7.23.3",
         "@babel/preset-typescript": "^7.23.2",
