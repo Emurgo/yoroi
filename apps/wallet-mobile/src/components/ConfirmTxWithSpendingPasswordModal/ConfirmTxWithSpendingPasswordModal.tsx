@@ -42,6 +42,9 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
 
   const error = signError || submitError
   const isLoading = signIsLoading || submitIsLoading
+
+  const errorMessage = error ? getErrorMessage(error, strings) : null
+
   return (
     <>
       <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
@@ -57,12 +60,10 @@ export const ConfirmTxWithSpendingPasswordModal = ({onSuccess, unsignedTx, onErr
         right={isPasswordCorrect ? <Checkmark /> : null}
       />
 
-      {error != null && (
-        <View>
-          <Text style={styles.errorMessage} numberOfLines={3}>
-            {getErrorMessage(error, strings)}
-          </Text>
-        </View>
+      {errorMessage != null && (
+        <Text style={styles.errorMessage} numberOfLines={3}>
+          {errorMessage}
+        </Text>
       )}
 
       <Spacer fill />

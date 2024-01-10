@@ -153,6 +153,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     fontSize: 16,
     fontFamily: 'Rubik-Regular',
+    flexGrow: 1,
   },
   row: {
     display: 'flex',
