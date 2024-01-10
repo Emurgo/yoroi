@@ -5,7 +5,7 @@ import {Text} from '../../../../../components'
 import {COLORS} from '../../../../../theme'
 import {useStrings} from '../strings'
 
-const LEARN_MORE_LINK = ''
+const LEARN_MORE_LINK = 'https://emurgohelpdesk.zendesk.com/hc/en-us/sections/8582793481231-Governance'
 
 export const LearnMoreLink = () => {
   const strings = useStrings()
