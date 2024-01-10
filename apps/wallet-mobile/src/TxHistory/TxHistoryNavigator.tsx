@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
+import {useStorage} from '@yoroi/common'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
 import {
   milkTokenId,
@@ -66,6 +67,7 @@ export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
+  const storage = useStorage()
 
   // modal
   const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
@@ -98,9 +100,10 @@ export const TxHistoryNavigator = () => {
       },
       csl: CardanoMobile,
     })
-    const resolverStorage = resolverStorageMaker()
+    const walletStorage = storage.join(`wallet/${wallet.id}/`)
+    const resolverStorage = resolverStorageMaker({storage: walletStorage})
     return resolverManagerMaker(resolverStorage, resolverApi)
-  }, [])
+  }, [storage, wallet.id])
 
   // claim
   const claimApi = React.useMemo(() => {
