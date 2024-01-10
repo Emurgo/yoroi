@@ -116,6 +116,7 @@ export const useStrings = () => {
     assignCollateral: intl.formatMessage(messages.assignCollateral),
     collateralNotFound: intl.formatMessage(messages.collateralNotFound),
     noActiveCollateral: intl.formatMessage(messages.noActiveCollateral),
+    collateralTxPending: intl.formatMessage(messages.collateralTxPending),
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
@@ -147,6 +148,7 @@ export const useStrings = () => {
     emptyOpenOrdersSub: intl.formatMessage(messages.emptyOpenOrdersSub),
     emptyCompletedOrders: intl.formatMessage(messages.emptyCompletedOrders),
     warning: intl.formatMessage(messages.warning),
+    missingCollateral: intl.formatMessage(errorMessages.missingCollateral.title),
   }
 }
 
@@ -554,6 +556,10 @@ export const messages = defineMessages({
   noActiveCollateral: {
     id: 'components.send.confirmscreen.noActiveCollateral',
     defaultMessage: "!!!You don't have an active collateral utxo",
+  },
+  collateralTxPending: {
+    id: 'components.send.confirmscreen.collateralTxPending',
+    defaultMessage: '!!!Collateral transaction is pending. Try again later',
   },
   failedTxTitle: {
     id: 'components.send.sendscreen.failedTxTitle',

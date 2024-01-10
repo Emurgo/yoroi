@@ -158,6 +158,7 @@ export const SettingsScreenNavigator = () => {
           name="collateral-tx-submitted"
           options={{
             title: strings.collateral,
+            headerLeft: () => null,
           }}
           component={SubmittedTxScreen}
         />
