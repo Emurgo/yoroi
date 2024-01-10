@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet} from 'react-native'
+import {ActivityIndicator, StyleSheet, Text} from 'react-native'
 
 import {Icon, TextInput, TextInputProps} from '../../../../../components'
 import {useNavigateTo} from '../../../common/navigation'
@@ -25,7 +25,7 @@ export const InputReceiver = ({
   return (
     <TextInput
       right={rightAdornment}
-      label={strings.addressInputLabel}
+      label={<Text style={styles.label}>{strings.addressInputLabel}</Text>}
       testID="receiverInput"
       style={styles.receiver}
       autoCorrect={false}
@@ -44,5 +44,8 @@ export const InputReceiver = ({
 const styles = StyleSheet.create({
   receiver: {
     height: 120,
+  },
+  label: {
+    fontSize: 15,
   },
 })
