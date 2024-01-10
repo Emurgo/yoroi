@@ -4,8 +4,8 @@ import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'rea
 import {Button, Spacer, Text, TextInput} from '../../../../components'
 import {debugWalletInfo, features} from '../../../../features'
 import {COLORS} from '../../../../theme'
-import {WrongPassword} from '../../../../yoroi-wallets/cardano/errors'
 import {useStrings} from '../../common/strings'
+import {getErrorMessage} from '../errors'
 
 export type ErrorData = {
   errorMessage: string
@@ -26,6 +26,8 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
   )
   const strings = useStrings()
 
+  const errorMessage = error ? getErrorMessage(error, strings) : null
+
   return (
     <>
       <Text style={styles.modalText}>{strings.enterSpendingPassword}</Text>
@@ -43,12 +45,10 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
         autoComplete="off"
       />
 
-      {error != null && (
-        <View>
-          <Text style={styles.errorMessage} numberOfLines={3}>
-            {getErrorMessage(error, strings)}
-          </Text>
-        </View>
+      {errorMessage != null && (
+        <Text style={styles.errorMessage} numberOfLines={3}>
+          {errorMessage}
+        </Text>
       )}
 
       <Spacer fill />
@@ -68,17 +68,6 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
       )}
     </>
   )
-}
-
-const getErrorMessage = (error: unknown, strings: Record<'wrongPasswordMessage' | 'error', string>) => {
-  if (error instanceof WrongPassword) {
-    return strings.wrongPasswordMessage
-  }
-  if (error instanceof Error) {
-    return error.message
-  }
-
-  return strings.error
 }
 
 const styles = StyleSheet.create({

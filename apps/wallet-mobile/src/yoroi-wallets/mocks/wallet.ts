@@ -88,6 +88,7 @@ const wallet: YoroiWallet = {
       },
       amount: {quantity: '5449549', tokenId: ''},
       collateralId: '22d391c7a97559cb4784bd975214919618acce75cde573a7150a176700e76181:2',
+      isConfirmed: true,
     }
   },
   signSwapCancellationWithLedger: async () => {
