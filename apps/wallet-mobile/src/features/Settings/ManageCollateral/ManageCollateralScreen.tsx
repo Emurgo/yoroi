@@ -28,6 +28,7 @@ import {RawUtxo, YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
 import {useSend} from '../../Send/common/SendContext'
 import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
+import {createCollateralEntry} from './helpers'
 import {useNavigateTo} from './navigation'
 import {useStrings} from './strings'
 
@@ -51,12 +52,7 @@ export const ManageCollateralScreen = () => {
   const {refetch: createUnsignedTx, isFetching: isLoadingTx} = useSendTx(
     {
       wallet,
-      entry: {
-        address: wallet.externalAddresses[0],
-        amounts: {
-          [wallet.primaryTokenInfo.id]: collateralConfig.minLovelace,
-        },
-      },
+      entry: createCollateralEntry(wallet),
     },
     {
       onSuccess: (yoroiUnsignedTx) => yoroiUnsignedTxChanged(yoroiUnsignedTx),
