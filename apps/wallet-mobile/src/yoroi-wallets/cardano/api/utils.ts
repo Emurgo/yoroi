@@ -1,4 +1,5 @@
 import AssetFingerprint from '@emurgo/cip14-js'
+import {AssetNameUtils} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 import {Balance} from '@yoroi/types'
 import {Buffer} from 'memfs/lib/internal/buffer'
 
@@ -7,7 +8,7 @@ import {TokenRegistryEntry} from './tokenRegistry'
 
 export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
   const policyId = toPolicyId(entry.subject)
-  const assetName = toAssetName(entry.subject)
+  const assetName = toDisplayAssetName(entry.subject)
 
   return {
     kind: 'ft',
@@ -39,7 +40,7 @@ export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
 
 export const fallbackTokenInfo = (tokenId: string): Balance.TokenInfo => {
   const policyId = toPolicyId(tokenId)
-  const assetName = toAssetName(tokenId)
+  const assetName = toDisplayAssetName(tokenId)
 
   return {
     kind: 'ft',
@@ -61,14 +62,20 @@ export const toPolicyId = (tokenIdentifier: string) => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
   return tokenSubject.slice(0, 56)
 }
-export const toAssetName = (tokenIdentifier: string) => {
-  return hexToUtf8(transformCIP0068AssetNameHex(toAssetNameHex(tokenIdentifier)))
+export const toDisplayAssetName = (tokenIdentifier: string) => {
+  return hexToUtf8(toUntaggedAssetNameHex(tokenIdentifier))
 }
 
 export const toAssetNameHex = (tokenIdentifier: string) => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
   const maxAssetNameLengthInBytes = 32
   return tokenSubject.slice(56, 56 + maxAssetNameLengthInBytes * 2)
+}
+
+export const toUntaggedAssetNameHex = (tokenIdentifier: string) => {
+  const hexName = toAssetNameHex(tokenIdentifier)
+  const untaggedNameHex = AssetNameUtils.resolveProperties(hexName).hexName
+  return untaggedNameHex
 }
 
 export const toTokenSubject = (tokenIdentifier: string) => tokenIdentifier.replace('.', '')
@@ -88,7 +95,7 @@ export const utf8ToHex = (text: string) => Buffer.from(text, 'utf-8').toString('
 
 export const toTokenInfo = (token: LegacyToken): Balance.TokenInfo => {
   const policyId = toPolicyId(token.identifier)
-  const assetName = toAssetName(token.identifier)
+  const assetName = toDisplayAssetName(token.identifier)
 
   return {
     kind: 'ft',
@@ -124,18 +131,4 @@ export const toTokenFingerprint = ({
 }) => {
   const assetFingerprint = AssetFingerprint.fromParts(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
   return assetFingerprint.fingerprint()
-}
-
-export const transformCIP0068AssetNameHex = (assetNameHex) => {
-  const refprefix = '000643b0'
-  const usrprefix = '000de140'
-  const stringsToRemove = [refprefix, usrprefix]
-
-  let transformedAssetNameHex = assetNameHex
-
-  stringsToRemove.forEach((str) => {
-    transformedAssetNameHex = transformedAssetNameHex.replace(str, '')
-  })
-
-  return transformedAssetNameHex
 }
