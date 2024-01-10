@@ -26,7 +26,7 @@ describe('api utils', () => {
 
     const tokenIndentifier2 = policyId + '.' + taggedAssetNameHex
     expect(toPolicyId(tokenIndentifier2)).toEqual(policyId)
-    expect(toDisplayAssetName(tokenIndentifier)).toEqual(assetName)
+    expect(toDisplayAssetName(tokenIndentifier2)).toEqual(assetName)
 
     const tokenSubject = policyId + assetNameHex
     expect(toPolicyId(tokenSubject)).toEqual(policyId)
