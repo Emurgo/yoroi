@@ -67,30 +67,35 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
       <View style={styles.centralized}>
         <View style={[styles.row, disabled && styles.disabled]}>
+          <View style={styles.centralized}>
+            <TouchableOpacity
+              style={styles.actionIcon}
+              onPress={navigateTo.receive}
+              testID="receiveButton"
+              disabled={disabled}
+            >
+              <Icon.Received {...ACTION_PROPS} />
+            </TouchableOpacity>
+
+            <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
+          </View>
+
+          {!wallet.isReadOnly && <Spacer width={18} />}
+
           {!wallet.isReadOnly && (
             <View style={styles.centralized}>
               <TouchableOpacity
                 style={styles.actionIcon}
-                onPress={navigateTo.receive}
-                testID="receiveButton"
+                onPress={handleOnSend}
+                testID="sendButton"
                 disabled={disabled}
               >
-                <Icon.Received {...ACTION_PROPS} />
+                <Icon.Send {...ACTION_PROPS} />
               </TouchableOpacity>
 
-              <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
+              <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
             </View>
           )}
-
-          {!wallet.isReadOnly && <Spacer width={18} />}
-
-          <View style={styles.centralized}>
-            <TouchableOpacity style={styles.actionIcon} onPress={handleOnSend} testID="sendButton" disabled={disabled}>
-              <Icon.Send {...ACTION_PROPS} />
-            </TouchableOpacity>
-
-            <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
-          </View>
 
           {!wallet.isReadOnly && (
             <>
