@@ -5,7 +5,7 @@ import {useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import {Boundary, Button, Icon, Spacer} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
@@ -31,6 +31,7 @@ export const ListAmountsToSendScreen = () => {
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
   const {track} = useMetrics()
+  const queryClient = useQueryClient()
 
   useOverridePreviousSendTxRoute('send-start-tx')
 
@@ -81,6 +82,8 @@ export const ListAmountsToSendScreen = () => {
   }
   const onNext = () => {
     track.sendSelectAssetSelected(assetsToSendProperties({tokens, amounts}))
+    // Trigger suspense on refetch
+    queryClient.resetQueries([wallet.id, 'send-tx'])
     refetch()
   }
   const onAdd = () => {
