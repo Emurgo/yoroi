@@ -14,6 +14,7 @@ module.exports = {
     path.resolve(__dirname, "packages/swap"),
     path.resolve(__dirname, "packages/staking"),
     path.resolve(__dirname, "apps/wallet-mobile"),
+    path.resolve(__dirname, "apps/storybook-wallet-mobile"),
   ],
   resolver: {
     resolverMainFields: ["sbmodern", "react-native", "browser", "main"],

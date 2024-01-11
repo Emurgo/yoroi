@@ -45,6 +45,10 @@
       "path": "./apps/wallet-mobile"
     },
     {
+      "name": "@yoroi/storybook-wallet-mobile",
+      "path": "./apps/storybook-wallet-mobile"
+    },
+    {
       "name": "@yoroi/e2e-wallet-mobile",
       "path": "./e2e/wallet-mobile"
     }
