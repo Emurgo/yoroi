@@ -51,7 +51,7 @@ export const SelectNameServer = () => {
 
           <Spacer height={4} />
 
-          <ButtonGroup labels={labels} onSelect={handleOnSelectNameServer} />
+          <ButtonGroup initial={0} labels={labels} onSelect={handleOnSelectNameServer} />
 
           <Spacer height={4} />
         </>
