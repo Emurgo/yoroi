@@ -1,14 +1,14 @@
 import {getMarketPrice, useSwap} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Spacer} from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {COLORS} from '../../../../../theme'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {asQuantity, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../navigation'
@@ -29,6 +29,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(orderData.selectedPoolId)
   const navigate = useNavigateTo()
   const {track} = useMetrics()
+  const styles = useStyles()
 
   const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
@@ -67,7 +68,11 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
 
             <View style={[styles.shadowProp]}>
               <LinearGradient
-                colors={pool.poolId === selectedPoolId ? ['#E4E8F7', '#C6F7F7'] : [COLORS.WHITE, COLORS.WHITE]}
+                colors={
+                  pool.poolId === selectedPoolId
+                    ? (styles.gradientColor as (string | number)[])
+                    : [styles.white, styles.white]
+                }
                 style={styles.linearGradient}
               >
                 <TouchableOpacity key={pool.poolId} onPress={() => handleOnPoolSelection(pool)} style={[styles.card]}>
@@ -136,68 +141,77 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 16,
-    flexDirection: 'column',
-    backgroundColor: '#FFFFFF',
-    flex: 1,
-    paddingBottom: 30,
-  },
-  linearGradient: {
-    borderRadius: 8,
-  },
-  card: {
-    padding: 16,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-  },
-  shadowProp: {
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: {
-      width: 0,
-      height: 1,
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+
+  const styles = StyleSheet.create({
+    container: {
+      paddingHorizontal: 16,
+      flexDirection: 'column',
+      backgroundColor: color.gray.max,
+      flex: 1,
+      paddingBottom: 30,
     },
-    shadowRadius: 1.41,
-    elevation: 1.2,
-    backgroundColor: 'white',
-    borderRadius: 8,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingBottom: 8,
-    fontWeight: '500',
-    fontSize: '16',
-  },
-  icon: {
-    marginRight: 8,
-    fontSize: 24,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  infoContainer: {
-    flexDirection: 'column',
-  },
-  info: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingBottom: 4,
-  },
-  infoLabel: {
-    color: '#6B7384',
-    fontSize: 16,
-    fontFamily: 'Rubik-Regular',
-  },
-  infoValue: {
-    fontSize: 16,
-    color: '#000',
-    fontFamily: 'Rubik-Regular',
-    display: 'flex',
-    flexShrink: 1,
-    textAlign: 'right',
-  },
-})
+    linearGradient: {
+      borderRadius: 8,
+    },
+    card: {
+      padding: 16,
+      paddingHorizontal: 20,
+      borderRadius: 20,
+    },
+    shadowProp: {
+      shadowColor: color.gray.min,
+      shadowOpacity: 0.2,
+      shadowOffset: {
+        width: 0,
+        height: 1,
+      },
+      shadowRadius: 1.41,
+      elevation: 1.2,
+      backgroundColor: 'white',
+      borderRadius: 8,
+    },
+    cardHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingBottom: 8,
+      fontWeight: '500',
+      fontSize: '16',
+    },
+    icon: {
+      marginRight: 8,
+      fontSize: 24,
+    },
+    label: {
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    infoContainer: {
+      flexDirection: 'column',
+    },
+    info: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingBottom: 4,
+    },
+    infoLabel: {
+      color: color.gray[600],
+      fontSize: 16,
+      fontFamily: 'Rubik-Regular',
+    },
+    infoValue: {
+      fontSize: 16,
+      color: color.gray.min,
+      fontFamily: 'Rubik-Regular',
+      display: 'flex',
+      flexShrink: 1,
+      textAlign: 'right',
+    },
+    gradientColor: color.gradients['blue-green'] as ViewStyle,
+    white: color['white-static'],
+  })
+
+  return styles
+}

@@ -1,8 +1,7 @@
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
-import {useTheme} from '../../../../theme'
-import {Theme} from '../../../../theme/types'
 import {OrderType} from '../RampOnOffProvider'
 
 type ButtonActionGroupProps = {
@@ -13,10 +12,7 @@ type ButtonActionGroupProps = {
 
 export const ButtonActionGroup = ({labels, onSelect, selected}: ButtonActionGroupProps) => {
   const handleOnPress = (orderType: OrderType) => onSelect(orderType)
-
-  const {theme} = useTheme()
-
-  const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
+  const styles = useStyles()
 
   return (
     <View style={styles.container}>
@@ -34,8 +30,8 @@ export const ButtonActionGroup = ({labels, onSelect, selected}: ButtonActionGrou
   )
 }
 
-const getStyles = (props: {theme: Theme}) => {
-  const {theme} = props
+const useStyles = () => {
+  const {theme} = useTheme()
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',

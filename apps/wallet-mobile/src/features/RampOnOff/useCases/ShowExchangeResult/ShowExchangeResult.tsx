@@ -1,11 +1,10 @@
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import banxaLogo from '../../../../assets/img/banxa.png'
 import {Button, Icon, Spacer, Text, useModal} from '../../../../components'
 import {useUnsafeParams} from '../../../../navigation'
-import {useTheme} from '../../../../theme'
-import {Theme} from '../../../../theme/types'
 import {useHideBottomTabBar} from '../../../../yoroi-wallets/hooks'
 import {DescribeAction} from '../../common/DescribeAction/DescribeAction'
 import {RampOnOffInitRoutes, useNavigateTo} from '../../common/useNavigateTo'
@@ -23,10 +22,8 @@ export type ParamsResult = {
 export const ShowExchangeResult = () => {
   const strings = useStrings()
   useHideBottomTabBar()
-
   const navigateTo = useNavigateTo()
-  const {theme} = useTheme()
-  const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
+  const styles = useStyles()
   const params = useUnsafeParams<RampOnOffInitRoutes['rampOnOff']>()
   const {coin, coinAmount, fiat, fiatAmount} = params ?? {}
 
@@ -87,8 +84,8 @@ export const ShowExchangeResult = () => {
   )
 }
 
-const getStyles = (props: {theme: Theme}) => {
-  const {theme} = props
+const useStyles = () => {
+  const {theme} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,

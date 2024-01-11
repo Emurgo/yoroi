@@ -1,11 +1,10 @@
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 
 import {Boundary, Spacer, TokenIcon, TokenIconPlaceholder} from '../../../../components'
 import {formatTokenWithText} from '../../../../legacy/format'
-import {useTheme} from '../../../../theme'
-import {Theme} from '../../../../theme/types'
 import {isEmptyString} from '../../../../utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
@@ -50,9 +49,7 @@ export const AmountCard: React.FC<AmountCardProps> = ({
 
   const fallback = React.useCallback(() => <TokenIconPlaceholder />, [])
 
-  const {theme} = useTheme()
-
-  const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
+  const styles = useStyles()
 
   const strings = useStrings()
 
@@ -68,10 +65,10 @@ export const AmountCard: React.FC<AmountCardProps> = ({
               autoComplete="off"
               value={value}
               placeholder="0"
-              placeholderTextColor={theme.color.gray[600]}
+              placeholderTextColor={styles.placeholderColor}
               onChangeText={onChange}
               allowFontScaling
-              selectionColor={isFocused ? theme.color.gray[900] : theme.color['black-static']}
+              selectionColor={isFocused ? styles.textFocused : styles.textBlurr}
               style={[styles.amountInput, value === '0' && styles.grayText]}
               underlineColorAndroid="transparent"
               ref={inputRef}
@@ -118,8 +115,8 @@ export const AmountCard: React.FC<AmountCardProps> = ({
   )
 }
 
-const getStyles = (props: {theme: Theme}) => {
-  const {theme} = props
+const useStyles = () => {
+  const {theme} = useTheme()
   const styles = StyleSheet.create({
     container: {
       borderRadius: 8,
@@ -193,6 +190,9 @@ const getStyles = (props: {theme: Theme}) => {
       color: theme.color.magenta[500],
       fontSize: 12,
     },
+    placeholderColor: theme.color.gray[600],
+    textFocused: theme.color.gray[900],
+    textBlurr: theme.color['black-static'],
   })
   return styles
 }

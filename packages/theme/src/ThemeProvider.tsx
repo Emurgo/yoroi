@@ -1,7 +1,12 @@
 import {parseSafe, useStorage} from '@yoroi/common'
 import React from 'react'
 import {useColorScheme} from 'react-native'
-import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  useQueryClient,
+} from 'react-query'
 
 import {darkTheme} from './darkTheme'
 import {lightTheme} from './lightTheme'
@@ -14,12 +19,18 @@ export const ThemeProvider = ({children}: {children: React.ReactNode}) => {
 
   const selectColorScheme = useSaveColorScheme()
   const colorScheme = savedColorScheme ?? systemColorScheme
-  const theme = themes[isColorScheme(colorScheme) ? colorScheme : systemColorScheme]
+  const theme =
+    themes[isColorScheme(colorScheme) ? colorScheme : systemColorScheme]
 
-  return <ThemeContext.Provider value={{theme, colorScheme, selectColorScheme}}>{children}</ThemeContext.Provider>
+  return (
+    <ThemeContext.Provider value={{theme, colorScheme, selectColorScheme}}>
+      {children}
+    </ThemeContext.Provider>
+  )
 }
 
-export const useTheme = () => React.useContext(ThemeContext) || missingProvider()
+export const useTheme = () =>
+  React.useContext(ThemeContext) || missingProvider()
 
 const missingProvider = () => {
   throw new Error('ThemeProvider is missing')
@@ -29,18 +40,22 @@ const useSavedColorScheme = () => {
   const storage = useStorage()
   const query = useQuery<ColorSchemeOption | undefined>({
     queryKey: ['colorScheme'],
-    queryFn: () => storage.join('appSettings/').getItem('colorScheme', parseColorScheme),
+    queryFn: () =>
+      storage.join('appSettings/').getItem('colorScheme', parseColorScheme),
     suspense: true,
   })
 
   return query.data
 }
 
-const useSaveColorScheme = (options: UseMutationOptions<void, Error, ColorSchemeOption> = {}) => {
+const useSaveColorScheme = (
+  options: UseMutationOptions<void, Error, ColorSchemeOption> = {},
+) => {
   const queryClient = useQueryClient()
   const storage = useStorage()
   const mutation = useMutation({
-    mutationFn: async (colorScheme) => storage.join('appSettings/').setItem('colorScheme', colorScheme),
+    mutationFn: async (colorScheme) =>
+      storage.join('appSettings/').setItem('colorScheme', colorScheme),
     onSuccess: () => queryClient.invalidateQueries('colorScheme'),
     ...options,
   })
@@ -61,7 +76,8 @@ const themes: Record<'light' | 'dark', Theme> = {
   dark: darkTheme,
 }
 
-const isColorScheme = (data: unknown): data is 'light' | 'dark' => data === 'light' || data === 'dark'
+const isColorScheme = (data: unknown): data is 'light' | 'dark' =>
+  data === 'light' || data === 'dark'
 const parseColorScheme = (data: unknown) => {
   const parsed = parseSafe(data)
 
