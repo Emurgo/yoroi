@@ -9,6 +9,10 @@ import {TokenRegistryEntry} from './tokenRegistry'
 export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
   const policyId = toPolicyId(entry.subject)
   const assetName = toDisplayAssetName(entry.subject)
+<<<<<<< Updated upstream
+=======
+  const nameHex = toAssetNameHex(entry.subject)
+>>>>>>> Stashed changes
 
   return {
     kind: 'ft',
@@ -22,7 +26,7 @@ export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
     id: toTokenId(entry.subject),
     fingerprint: toTokenFingerprint({
       policyId,
-      assetNameHex: assetName ? utf8ToHex(assetName) : undefined,
+      assetNameHex: nameHex,
     }),
     symbol: undefined,
     metadatas: {
@@ -40,13 +44,17 @@ export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
 
 export const fallbackTokenInfo = (tokenId: string): Balance.TokenInfo => {
   const policyId = toPolicyId(tokenId)
+<<<<<<< Updated upstream
+=======
+  const nameHex = toAssetNameHex(tokenId)
+>>>>>>> Stashed changes
   const assetName = toDisplayAssetName(tokenId)
 
   return {
     kind: 'ft',
     id: toTokenId(tokenId),
     name: assetName,
-    fingerprint: toTokenFingerprint({policyId, assetNameHex: assetName ? utf8ToHex(assetName) : undefined}),
+    fingerprint: toTokenFingerprint({policyId, assetNameHex: nameHex}),
     description: undefined,
     group: policyId,
     decimals: 0,
@@ -63,7 +71,18 @@ export const toPolicyId = (tokenIdentifier: string) => {
   return tokenSubject.slice(0, 56)
 }
 export const toDisplayAssetName = (tokenIdentifier: string) => {
+<<<<<<< Updated upstream
   return hexToUtf8(toUntaggedAssetNameHex(tokenIdentifier))
+=======
+  return toUntaggedAssetName(tokenIdentifier)
+}
+
+export const toUntaggedAssetName = (tokenIdentifier: string) => {
+  const hexName = toAssetNameHex(tokenIdentifier)
+  const properties = AssetNameUtils.resolveProperties(hexName)
+  const untaggedName = properties.asciiName ?? properties.hexName
+  return untaggedName
+>>>>>>> Stashed changes
 }
 
 export const toAssetNameHex = (tokenIdentifier: string) => {

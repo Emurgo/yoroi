@@ -13,6 +13,7 @@ export * from './translators/reactjs/provider/ResolverProvider'
 export * from './utils/isResolvableDomain'
 export * from './utils/isDomain'
 export * from './utils/isNameServer'
+export * from './utils/domainNormalizer'
 
 export const mocksResolver = {
   storage: mockStorageMaker,

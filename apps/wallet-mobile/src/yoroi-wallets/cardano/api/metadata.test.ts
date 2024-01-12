@@ -1,55 +1,113 @@
-import {Balance} from '@yoroi/types'
+/* import {Balance} from '@yoroi/types' */
 
-import {parseNFTs} from './metadata'
+jest.mock('./metadata')
+jest.mock('../nfts')
+jest.mock('./fetch')
+jest.mock('./utils')
+jest.mock('./assetSuply')
+import {convertNft} from '../nfts'
+import {NFT_METADATA_KEY} from './metadata'
+
 const storageUrl = 'https://example.com'
-describe('parseNFTs', () => {
-  it('throws when given a value that is not an object', () => {
-    expect(() => parseNFTs(null, storageUrl)).toThrow()
-    expect(() => parseNFTs(1, storageUrl)).toThrow()
-    expect(() => parseNFTs([], storageUrl)).toThrow()
-    expect(() => parseNFTs(true, storageUrl)).toThrow()
-    expect(() => parseNFTs('hello', storageUrl)).toThrow()
-    expect(() => parseNFTs(undefined, storageUrl)).toThrow()
-  })
 
-  it('returns empty array given an object that does not have an array for a value', () => {
-    expect(parseNFTs({policyId: 1}, storageUrl)).toEqual([])
-    expect(parseNFTs({policyId: 'world'}, storageUrl)).toEqual([])
-    expect(parseNFTs({policyId: null}, storageUrl)).toEqual([])
-    expect(parseNFTs({policyId: true}, storageUrl)).toEqual([])
-    expect(parseNFTs({policyId: {}}, storageUrl)).toEqual([])
-    expect(parseNFTs({policyId: undefined}, storageUrl)).toEqual([])
-  })
+describe('parseNFT', () => {
+  it('successfully parses', () => {
+    const {parseNFT} = jest.requireActual('./metadata')
 
-  it('returns empty array if no assets have key 721', () => {
-    expect(parseNFTs({policyId: []}, storageUrl)).toEqual([])
-    expect(parseNFTs({policyId: [{}]}, storageUrl)).toEqual([])
-    expect(parseNFTs({policyId: [{key: 'hello'}]}, storageUrl)).toEqual([])
-    expect(parseNFTs({policyId: [{key: 'hello'}, {key: 'world'}]}, storageUrl)).toEqual([])
-  })
-
-  it('resolves with placeholder data if key 721 is present and metadata is not', () => {
-    const result = parseNFTs({'8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.0': [{key: '721'}]}, storageUrl)
-    const expectedValue: Partial<Balance.TokenInfo> = {
-      id: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.30',
-      name: '0',
-    }
-    expect(result[0]).toEqual(expect.objectContaining(expectedValue))
-  })
-
-  it('resolves with NFT when key and metadata are present', () => {
-    const result = parseNFTs(
-      {
-        '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.0': [
-          {key: '721', metadata: {'8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4': {0: {name: 'Name'}}}},
-        ],
+    const config = {NFT_STORAGE_URL: storageUrl}
+    const policyId = 'policy-id'
+    const nameHex = 'name-hex'
+    const nftId = 'nft-id'
+    const nft = {
+      key: NFT_METADATA_KEY,
+      metadata: {
+        [policyId]: {[nameHex]: 'foo'},
       },
-      storageUrl,
-    )
-    const expectedValue: Partial<Balance.TokenInfo> = {
-      id: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.30',
-      name: 'Name',
     }
-    expect(result[0]).toEqual(expect.objectContaining(expectedValue))
+    const parsedNft = {
+      id: nftId,
+    }
+    const assetMetadatas = [nft]
+    const assetSupplies = {[nftId]: '1'}
+    const assetSupplies2 = {[nftId]: '0'}
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    convertNft.mockImplementation(() => parsedNft)
+
+    expect(parseNFT(assetMetadatas, assetSupplies, policyId, nameHex, config)).toEqual(parsedNft)
+    expect(parseNFT(assetMetadatas, assetSupplies2, policyId, nameHex, config)).toEqual(parsedNft)
+  })
+
+  it('returns null: assetMetadatas is not an array', () => {
+    const {parseNFT} = jest.requireActual('./metadata')
+
+    const config = {NFT_STORAGE_URL: storageUrl}
+    const policyId = 'policy-id'
+    const nameHex = 'name-hex'
+    const nftId = 'nft-id'
+    const nft = {
+      key: NFT_METADATA_KEY,
+      metadata: {
+        [policyId]: {[nameHex]: 'foo'},
+      },
+    }
+    const parsedNft = {
+      id: nftId,
+    }
+    const assetMetadatas = nft
+    const assetSupplies = {[nftId]: '1'}
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    convertNft.mockImplementation(() => parsedNft)
+
+    expect(parseNFT(assetMetadatas, assetSupplies, policyId, nameHex, config)).toBe(null)
+  })
+
+  it('returns null: assetMetadatas doesnt contain any NFT', () => {
+    const {parseNFT} = jest.requireActual('./metadata')
+
+    const config = {NFT_STORAGE_URL: storageUrl}
+    const policyId = 'policy-id'
+    const nameHex = 'name-hex'
+    const nftId = 'nft-id'
+    const parsedNft = {
+      id: nftId,
+    }
+    const assetMetadatas = ['dlddkldkdkkd']
+    const assetSupplies = {[nftId]: '1'}
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    convertNft.mockImplementation(() => parsedNft)
+
+    expect(parseNFT(assetMetadatas, assetSupplies, policyId, nameHex, config)).toBe(null)
+  })
+
+  it('returns null: asset supply is different that 0 or 1', () => {
+    const {parseNFT} = jest.requireActual('./metadata')
+
+    const config = {NFT_STORAGE_URL: storageUrl}
+    const policyId = 'policy-id'
+    const nameHex = 'name-hex'
+    const nftId = 'nft-id'
+    const nft = {
+      key: NFT_METADATA_KEY,
+      metadata: {
+        [policyId]: {[nameHex]: 'foo'},
+      },
+    }
+    const parsedNft = {
+      id: nftId,
+    }
+    const assetMetadatas = [nft]
+    const assetSupplies = {[nftId]: '1123455'}
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    convertNft.mockImplementation(() => parsedNft)
+
+    expect(parseNFT(assetMetadatas, assetSupplies, policyId, nameHex, config)).toBe(null)
   })
 })
