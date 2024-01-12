@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {Dimensions, StyleSheet, Text, View, ViewStyle} from 'react-native'
+import {Dimensions, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Button, Spacer} from '../../../../components'
@@ -15,7 +15,7 @@ const DIMENSIONS = Dimensions.get('window')
 export const BuyBannerBig = () => {
   const strings = useStrings()
   const {track} = useMetrics()
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
 
   const bannerWidth = DIMENSIONS.width - 16 * 2
   const bannerHeight = (bannerWidth * 174) / 512
@@ -28,12 +28,7 @@ export const BuyBannerBig = () => {
 
   return (
     <View style={styles.root}>
-      <LinearGradient
-        style={styles.gradient}
-        start={{x: 1, y: 1}}
-        end={{x: 1, y: 1}}
-        colors={styles.gradientColor as (string | number)[]}
-      >
+      <LinearGradient style={styles.gradient} start={{x: 1, y: 1}} end={{x: 1, y: 1}} colors={colors.gradientColor}>
         <BuyBannerIllustration width={bannerWidth} height={bannerHeight} />
 
         <Spacer />
@@ -97,7 +92,9 @@ const useStyles = () => {
     spaceButton: {
       paddingHorizontal: 16,
     },
-    gradientColor: theme.color.gradients['green'] as ViewStyle,
   })
-  return styles
+  const colors = {
+    gradientColor: theme.color.gradients['green'],
+  }
+  return {styles, colors} as const
 }

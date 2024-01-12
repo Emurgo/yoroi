@@ -41,7 +41,7 @@ export const AmountCard = ({
   const strings = useStrings()
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
 
   const noTokenSelected = !touched
 
@@ -67,10 +67,10 @@ export const AmountCard = ({
               autoComplete="off"
               value={value}
               placeholder="0"
-              placeholderTextColor={styles.plceholderColor}
+              placeholderTextColor={colors.placeholder}
               onChangeText={onChange}
               allowFontScaling
-              selectionColor={isFocused ? styles.focusedColor : styles.blurrColor}
+              selectionColor={isFocused ? colors.focused : colors.blur}
               style={[styles.amountInput, value === '0' && styles.grayText]}
               underlineColorAndroid="transparent"
               ref={inputRef}
@@ -89,7 +89,7 @@ export const AmountCard = ({
               <View style={styles.sectionContainer}>
                 <Boundary loading={{fallback: <TokenIconPlaceholder />}} error={{fallback}}>
                   {noTokenSelected ? (
-                    <Icon.Coins size={24} color={styles.noSelected} />
+                    <Icon.Coins size={24} color={colors.noSelected} />
                   ) : (
                     <TokenIcon wallet={wallet} tokenId={tokenInfo.id} variant="swap" />
                   )}
@@ -222,11 +222,12 @@ const useStyles = () => {
     grayText: {
       color: color.gray[600],
     },
-    plceholderColor: theme.color.gray[600],
-    focusedColor: theme.color.gray[900],
-    blurrColor: theme.color.gray.max,
-    noSelected: theme.color.gray[400],
   })
-
-  return styles
+  const colors = {
+    placeholder: theme.color.gray[600],
+    focused: theme.color.gray[900],
+    blur: theme.color['black-static'],
+    noSelected: theme.color.gray[400],
+  }
+  return {styles, colors} as const
 }

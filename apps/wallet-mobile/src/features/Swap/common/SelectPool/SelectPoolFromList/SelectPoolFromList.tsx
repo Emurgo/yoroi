@@ -3,7 +3,7 @@ import {useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import React, {useState} from 'react'
-import {StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Spacer} from '../../../../../components'
@@ -29,7 +29,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(orderData.selectedPoolId)
   const navigate = useNavigateTo()
   const {track} = useMetrics()
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
 
   const sellTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: orderData.amounts.buy.tokenId})
@@ -68,11 +68,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
 
             <View style={[styles.shadowProp]}>
               <LinearGradient
-                colors={
-                  pool.poolId === selectedPoolId
-                    ? (styles.gradientColor as (string | number)[])
-                    : [styles.white, styles.white]
-                }
+                colors={pool.poolId === selectedPoolId ? colors.gradientColor : [colors.white, colors.white]}
                 style={styles.linearGradient}
               >
                 <TouchableOpacity key={pool.poolId} onPress={() => handleOnPoolSelection(pool)} style={[styles.card]}>
@@ -209,9 +205,11 @@ const useStyles = () => {
       flexShrink: 1,
       textAlign: 'right',
     },
-    gradientColor: color.gradients['blue-green'] as ViewStyle,
-    white: color['white-static'],
   })
+  const colors = {
+    gradientColor: color.gradients['blue-green'],
+    white: color['white-static'],
+  }
 
-  return styles
+  return {styles, colors} as const
 }

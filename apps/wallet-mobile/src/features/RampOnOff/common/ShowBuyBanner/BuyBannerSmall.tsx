@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer} from '../../../../components'
@@ -14,7 +14,7 @@ type SmallBannerProps = {
 
 export const BuyBannerSmall = ({onClose}: SmallBannerProps) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
 
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const handleExchange = () => {
@@ -22,12 +22,7 @@ export const BuyBannerSmall = ({onClose}: SmallBannerProps) => {
   }
   return (
     <View style={styles.root}>
-      <LinearGradient
-        style={styles.gradient}
-        start={{x: 1, y: 1}}
-        end={{x: 0, y: 0}}
-        colors={styles.gradientColor as (string | number)[]}
-      >
+      <LinearGradient style={styles.gradient} start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={colors.gradientColor}>
         <View style={styles.viewTitle}>
           <Text style={styles.title}>{strings.needMoreCrypto}</Text>
 
@@ -87,7 +82,9 @@ const useStyles = () => {
       color: theme.color.primary[500],
       lineHeight: 22,
     },
-    gradientColor: theme.color.gradients['blue-green'] as ViewStyle,
   })
-  return styles
+  const colors = {
+    gradientColor: theme.color.gradients['blue-green'],
+  }
+  return {styles, colors} as const
 }
