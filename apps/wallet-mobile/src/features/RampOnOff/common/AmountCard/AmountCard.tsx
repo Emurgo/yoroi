@@ -68,7 +68,7 @@ export const AmountCard: React.FC<AmountCardProps> = ({
               placeholderTextColor={colors.placeholder}
               onChangeText={onChange}
               allowFontScaling
-              selectionColor={isFocused ? colors.focused : colors.blurr}
+              selectionColor={isFocused ? colors.focused : colors.blur}
               style={[styles.amountInput, value === '0' && styles.grayText]}
               underlineColorAndroid="transparent"
               ref={inputRef}
@@ -191,5 +191,10 @@ const useStyles = () => {
       fontSize: 12,
     },
   })
-  return styles
+  const colors = {
+    placeholder: theme.color.gray[600],
+    focused: theme.color.gray[900],
+    blur: theme.color['black-static'],
+  }
+  return {styles, colors} as const
 }
