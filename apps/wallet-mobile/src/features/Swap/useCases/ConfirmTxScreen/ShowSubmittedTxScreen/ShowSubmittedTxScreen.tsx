@@ -5,11 +5,10 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {z} from 'zod'
 
 import {Button, Spacer, Text} from '../../../../../components'
-import {useBlockGoBack, useUnsafeParams} from '../../../../../navigation'
+import {useBlockGoBack, useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
 import {getNetworkConfigById} from '../../../../../yoroi-wallets/cardano/networks'
-import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {SubmittedTxImage} from './SubmittedTxImage'
 
@@ -19,8 +18,8 @@ const isParams = createTypeGuardFromSchema(schema)
 export const ShowSubmittedTxScreen = () => {
   useBlockGoBack()
   const strings = useStrings()
-  const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
+  const walletNavigate = useWalletNavigation()
 
   const unsafeParams = useUnsafeParams()
   const params = isParams(unsafeParams) ? unsafeParams : null
@@ -52,7 +51,7 @@ export const ShowSubmittedTxScreen = () => {
 
         <View style={styles.bottomFixed}>
           <Button
-            onPress={() => navigate.swapOpenOrders()}
+            onPress={() => walletNavigate.navigateToTxHistory()}
             title={strings.goToTransactions}
             style={styles.button}
             shelleyTheme

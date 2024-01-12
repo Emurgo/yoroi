@@ -29,21 +29,23 @@ import {useWalletNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {COLORS} from '../../../../../theme'
+import {SubmitTxInsufficientCollateralError} from '../../../../../yoroi-wallets/cardano/api/errors'
 import {convertBech32ToHex, getTransactionSigners} from '../../../../../yoroi-wallets/cardano/common/signatureUtils'
+import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {createRawTxSigningKey, generateCIP30UtxoCbor} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
+import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {getCollateralAmountInLovelace} from '../../../../Settings/ManageCollateral/helpers'
 import {ConfirmRawTx} from '../../../common/ConfirmRawTx/ConfirmRawTx'
 import {Counter} from '../../../common/Counter/Counter'
 import {EmptyOpenOrdersIllustration} from '../../../common/Illustrations/EmptyOpenOrdersIllustration'
 import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
+import {useNavigateTo} from '../../../common/navigation'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
 import {SwapInfoLink} from '../../../common/SwapInfoLink/SwapInfoLink'
 import {getCancellationOrderFee} from './helpers'
 import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
-import {useNavigateTo} from '../../../common/navigation'
-import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
-import {SubmitTxInsufficientCollateralError} from '../../../../../yoroi-wallets/cardano/api/errors'
 
 export const OpenOrders = () => {
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
@@ -65,7 +67,9 @@ export const OpenOrders = () => {
   )
   const navigationRef = useRef<NavigationState | null>(null)
 
-  const {closeModal, openModal} = useModal()
+  const {closeModal, openModal, isOpen: isModalOpen} = useModal()
+  const modalOpenRef = useRef(isModalOpen)
+  modalOpenRef.current = isModalOpen
 
   const {search} = useSearch()
 
@@ -120,31 +124,53 @@ export const OpenOrders = () => {
   }
 
   const onRawTxConfirm = async (rootKey: string, order: MappedOpenOrder) => {
-    const tx = await createCancellationTxAndSign(order.id, rootKey)
-    if (!tx) return
-    await wallet.submitTransaction(tx.txBase64)
-    trackCancellationSubmitted(order)
-    closeModal()
-    navigateToTxHistory()
+    try {
+      const tx = await createCancellationTxAndSign(order.id, rootKey)
+      if (!tx) return
+      await wallet.submitTransaction(tx.txBase64)
+      trackCancellationSubmitted(order)
+      closeModal()
+      navigateToTxHistory()
+    } catch (error) {
+      if (error instanceof SubmitTxInsufficientCollateralError) {
+        handleCollateralError()
+        return
+      }
+      throw error
+    }
   }
 
   const onRawTxHwConfirm = (order: MappedOpenOrder) => {
-    trackCancellationSubmitted(order)
-    closeModal()
-    navigateToTxHistory()
+    try {
+      trackCancellationSubmitted(order)
+      closeModal()
+      navigateToTxHistory()
+    } catch (error) {
+      if (error instanceof SubmitTxInsufficientCollateralError) {
+        handleCollateralError()
+        return
+      }
+      throw error
+    }
   }
 
   const showCollateralNotFoundAlert = useShowCollateralNotFoundAlert(wallet)
 
-  const hasCollateralUtxo = () => {
-    return !!wallet.getCollateralInfo().utxo
+  const hasCollateral = () => {
+    const info = wallet.getCollateralInfo()
+    const primaryTokenDecimals = wallet.primaryTokenInfo.decimals ?? 0
+    return (
+      !!info.utxo &&
+      Quantities.integer(info.amount.quantity, primaryTokenDecimals) >=
+        Quantities.integer(getCollateralAmountInLovelace(), primaryTokenDecimals)
+    )
   }
 
   const onOrderCancelConfirm = (order: MappedOpenOrder) => {
     if (!isString(order.utxo) || !isString(order.owner)) return
 
-    if (!hasCollateralUtxo()) {
-      showCollateralNotFoundAlert()
+    if (!hasCollateral()) {
+      handleCollateralError()
       return
     }
 
@@ -162,14 +188,12 @@ export const OpenOrders = () => {
     )
   }
 
-  const handleCancelError = (error: unknown) => {
-    if (error instanceof SubmitTxInsufficientCollateralError) {
+  const handleCollateralError = () => {
+    if (modalOpenRef.current) {
       closeModal()
-      showCollateralNotFoundAlert()
-      return
     }
 
-    throw error
+    showCollateralNotFoundAlert()
   }
 
   const getCollateralUtxo = async () => {
@@ -204,8 +228,12 @@ export const OpenOrders = () => {
       if (!response) return
       const hexBase64 = Buffer.from(response).toString('base64')
       return {txBase64: hexBase64}
-    } catch (e) {
-      handleCancelError(e)
+    } catch (error) {
+      if (error instanceof SubmitTxInsufficientCollateralError) {
+        handleCollateralError()
+        return
+      }
+      throw error
     }
   }
 
@@ -225,8 +253,8 @@ export const OpenOrders = () => {
 
   const openCancellationModal = async (order: MappedOpenOrder) => {
     if (order.owner === undefined || order.utxo === undefined) return
-    if (!hasCollateralUtxo()) {
-      showCollateralNotFoundAlert()
+    if (!hasCollateral()) {
+      handleCollateralError()
       return
     }
 
@@ -264,6 +292,10 @@ export const OpenOrders = () => {
       )
     } catch (error) {
       setIsLoading(false)
+      if (error instanceof SubmitTxInsufficientCollateralError) {
+        handleCollateralError()
+        return
+      }
       if (error instanceof Error) {
         Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error.message))
       } else {

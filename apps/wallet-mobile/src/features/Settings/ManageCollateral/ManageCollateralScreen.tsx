@@ -17,6 +17,7 @@ import {useMutation} from 'react-query'
 import {Button, CopyButton, Icon, Spacer, Text} from '../../../components'
 import {AmountItem} from '../../../components/AmountItem/AmountItem'
 import {ErrorPanel} from '../../../components/ErrorPanel/ErrorPanel'
+import {SettingsStackRoutes, useUnsafeParams} from '../../../navigation'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {COLORS} from '../../../theme'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
@@ -31,7 +32,6 @@ import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
 import {createCollateralEntry} from './helpers'
 import {useNavigateTo} from './navigation'
 import {useStrings} from './strings'
-import {SettingsStackRoutes, useUnsafeParams} from '../../../navigation'
 
 export const ManageCollateralScreen = () => {
   const wallet = useSelectedWallet()
