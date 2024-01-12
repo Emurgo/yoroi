@@ -694,7 +694,7 @@ const useShowCollateralNotFoundAlert = (wallet: YoroiWallet) => {
     const isCollateralUtxoPending = !info.isConfirmed && info.collateralId.length > 0
 
     if (isCollateralUtxoPending) {
-      Alert.alert(strings.collateralNotFound, strings.collateralTxPending)
+      Alert.alert(strings.collateralTxPendingTitle, strings.collateralTxPending)
       return
     }
 

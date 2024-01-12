@@ -117,6 +117,7 @@ export const useStrings = () => {
     collateralNotFound: intl.formatMessage(messages.collateralNotFound),
     noActiveCollateral: intl.formatMessage(messages.noActiveCollateral),
     collateralTxPending: intl.formatMessage(messages.collateralTxPending),
+    collateralTxPendingTitle: intl.formatMessage(messages.collateralTxPendingTitle),
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
