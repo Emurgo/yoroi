@@ -42,6 +42,8 @@ import {SwapInfoLink} from '../../../common/SwapInfoLink/SwapInfoLink'
 import {getCancellationOrderFee} from './helpers'
 import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
 import {useNavigateTo} from '../../../common/navigation'
+import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
+import {SubmitTxInsufficientCollateralError} from '../../../../../yoroi-wallets/cardano/api/errors'
 
 export const OpenOrders = () => {
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
@@ -49,9 +51,8 @@ export const OpenOrders = () => {
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
-  const {navigateToCollateralSettings, navigateToTxHistory} = useWalletNavigation()
+  const {navigateToTxHistory} = useWalletNavigation()
   const [isLoading, setIsLoading] = React.useState(false)
-  const swapNavigateTo = useNavigateTo()
 
   const orders = useSwapOrdersByStatusOpen()
   const {numberLocale} = useLanguage()
@@ -133,33 +134,7 @@ export const OpenOrders = () => {
     navigateToTxHistory()
   }
 
-  const showCollateralNotFoundAlert = () => {
-    if (isCollateralUtxoPending()) {
-      Alert.alert(strings.collateralNotFound, strings.collateralTxPending)
-      return
-    }
-
-    Alert.alert(
-      strings.collateralNotFound,
-      strings.noActiveCollateral,
-      [
-        {
-          text: strings.assignCollateral,
-          onPress: () => {
-            navigateToCollateralSettings({
-              backButton: {onPress: () => swapNavigateTo.swapOpenOrders(), content: strings.backToSwapOrders},
-            })
-          },
-        },
-      ],
-      {cancelable: true, onDismiss: () => true},
-    )
-  }
-
-  const isCollateralUtxoPending = () => {
-    const info = wallet.getCollateralInfo()
-    return !info.isConfirmed && info.collateralId.length > 0
-  }
+  const showCollateralNotFoundAlert = useShowCollateralNotFoundAlert(wallet)
 
   const hasCollateralUtxo = () => {
     return !!wallet.getCollateralInfo().utxo
@@ -187,12 +162,22 @@ export const OpenOrders = () => {
     )
   }
 
+  const handleCancelError = (error: unknown) => {
+    if (error instanceof SubmitTxInsufficientCollateralError) {
+      closeModal()
+      showCollateralNotFoundAlert()
+      return
+    }
+
+    throw error
+  }
+
   const getCollateralUtxo = async () => {
     const collateralInfo = wallet.getCollateralInfo()
     const utxo = collateralInfo.utxo
 
     if (!utxo) {
-      throw new Error('Collateral utxo not found')
+      throw new SubmitTxInsufficientCollateralError('Collateral utxo not found')
     }
 
     return generateCIP30UtxoCbor(utxo)
@@ -205,18 +190,23 @@ export const OpenOrders = () => {
     const order = normalizedOrders.find((o) => o.id === orderId)
     if (!order || order.owner === undefined || order.utxo === undefined) return
     const {utxo, owner: bech32Address} = order
-    const collateralUtxo = await getCollateralUtxo()
-    const addressHex = await convertBech32ToHex(bech32Address)
-    const cbor = await swapApiOrder.cancel({
-      utxos: {collateral: collateralUtxo, order: utxo},
-      address: addressHex,
-    })
-    const signers = await getTransactionSigners(cbor, wallet)
-    const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
-    const response = await wallet.signRawTx(cbor, keys)
-    if (!response) return
-    const hexBase64 = Buffer.from(response).toString('base64')
-    return {txBase64: hexBase64}
+
+    try {
+      const collateralUtxo = await getCollateralUtxo()
+      const addressHex = await convertBech32ToHex(bech32Address)
+      const cbor = await swapApiOrder.cancel({
+        utxos: {collateral: collateralUtxo, order: utxo},
+        address: addressHex,
+      })
+      const signers = await getTransactionSigners(cbor, wallet)
+      const keys = await Promise.all(signers.map(async (signer) => createRawTxSigningKey(rootKey, signer)))
+      const response = await wallet.signRawTx(cbor, keys)
+      if (!response) return
+      const hexBase64 = Buffer.from(response).toString('base64')
+      return {txBase64: hexBase64}
+    } catch (e) {
+      handleCancelError(e)
+    }
   }
 
   const {
@@ -660,6 +650,38 @@ const NoOrdersYet = () => {
       <Text style={styles.contentSubText}>{strings.emptyOpenOrdersSub}</Text>
     </View>
   )
+}
+
+const useShowCollateralNotFoundAlert = (wallet: YoroiWallet) => {
+  const strings = useStrings()
+  const {navigateToCollateralSettings} = useWalletNavigation()
+  const swapNavigateTo = useNavigateTo()
+
+  return () => {
+    const info = wallet.getCollateralInfo()
+    const isCollateralUtxoPending = !info.isConfirmed && info.collateralId.length > 0
+
+    if (isCollateralUtxoPending) {
+      Alert.alert(strings.collateralNotFound, strings.collateralTxPending)
+      return
+    }
+
+    Alert.alert(
+      strings.collateralNotFound,
+      strings.noActiveCollateral,
+      [
+        {
+          text: strings.assignCollateral,
+          onPress: () => {
+            navigateToCollateralSettings({
+              backButton: {onPress: () => swapNavigateTo.swapOpenOrders(), content: strings.backToSwapOrders},
+            })
+          },
+        },
+      ],
+      {cancelable: true, onDismiss: () => true},
+    )
+  }
 }
 
 const EmptySearchResult = () => {
