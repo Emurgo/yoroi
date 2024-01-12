@@ -9,10 +9,7 @@ import {TokenRegistryEntry} from './tokenRegistry'
 export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
   const policyId = toPolicyId(entry.subject)
   const assetName = toDisplayAssetName(entry.subject)
-<<<<<<< Updated upstream
-=======
   const nameHex = toAssetNameHex(entry.subject)
->>>>>>> Stashed changes
 
   return {
     kind: 'ft',
@@ -44,10 +41,7 @@ export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
 
 export const fallbackTokenInfo = (tokenId: string): Balance.TokenInfo => {
   const policyId = toPolicyId(tokenId)
-<<<<<<< Updated upstream
-=======
   const nameHex = toAssetNameHex(tokenId)
->>>>>>> Stashed changes
   const assetName = toDisplayAssetName(tokenId)
 
   return {
@@ -71,9 +65,6 @@ export const toPolicyId = (tokenIdentifier: string) => {
   return tokenSubject.slice(0, 56)
 }
 export const toDisplayAssetName = (tokenIdentifier: string) => {
-<<<<<<< Updated upstream
-  return hexToUtf8(toUntaggedAssetNameHex(tokenIdentifier))
-=======
   return toUntaggedAssetName(tokenIdentifier)
 }
 
@@ -82,19 +73,12 @@ export const toUntaggedAssetName = (tokenIdentifier: string) => {
   const properties = AssetNameUtils.resolveProperties(hexName)
   const untaggedName = properties.asciiName ?? properties.hexName
   return untaggedName
->>>>>>> Stashed changes
 }
 
 export const toAssetNameHex = (tokenIdentifier: string) => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
   const maxAssetNameLengthInBytes = 32
   return tokenSubject.slice(56, 56 + maxAssetNameLengthInBytes * 2)
-}
-
-export const toUntaggedAssetNameHex = (tokenIdentifier: string) => {
-  const hexName = toAssetNameHex(tokenIdentifier)
-  const untaggedNameHex = AssetNameUtils.resolveProperties(hexName).hexName
-  return untaggedNameHex
 }
 
 export const toTokenSubject = (tokenIdentifier: string) => tokenIdentifier.replace('.', '')

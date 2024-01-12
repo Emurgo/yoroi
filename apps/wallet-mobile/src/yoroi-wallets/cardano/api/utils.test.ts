@@ -23,13 +23,10 @@ describe('api utils', () => {
     const tokenIndentifier = policyId + '.' + assetNameHex
     expect(toPolicyId(tokenIndentifier)).toEqual(policyId)
     expect(toDisplayAssetName(tokenIndentifier)).toEqual(assetName)
-<<<<<<< Updated upstream
 
     const tokenIndentifier2 = policyId + '.' + taggedAssetNameHex
     expect(toPolicyId(tokenIndentifier2)).toEqual(policyId)
     expect(toDisplayAssetName(tokenIndentifier2)).toEqual(assetName)
-=======
->>>>>>> Stashed changes
 
     const tokenSubject = policyId + assetNameHex
     expect(toPolicyId(tokenSubject)).toEqual(policyId)
