@@ -190,9 +190,6 @@ const useStyles = () => {
       color: theme.color.magenta[500],
       fontSize: 12,
     },
-    placeholderColor: theme.color.gray[600],
-    textFocused: theme.color.gray[900],
-    textBlurr: theme.color['black-static'],
   })
   return styles
 }
