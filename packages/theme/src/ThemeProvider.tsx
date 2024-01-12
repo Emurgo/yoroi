@@ -21,9 +21,13 @@ export const ThemeProvider = ({children}: {children: React.ReactNode}) => {
   const colorScheme = savedColorScheme ?? systemColorScheme
   const theme =
     themes[isColorScheme(colorScheme) ? colorScheme : systemColorScheme]
+  const isDark = colorScheme === 'dark'
+  const isLight = colorScheme === 'light'
 
   return (
-    <ThemeContext.Provider value={{theme, colorScheme, selectColorScheme}}>
+    <ThemeContext.Provider
+      value={{theme, colorScheme, selectColorScheme, isLight, isDark}}
+    >
       {children}
     </ThemeContext.Provider>
   )
@@ -69,6 +73,8 @@ type ThemeContext = {
   theme: Theme
   colorScheme: ColorSchemeOption
   selectColorScheme: SelectColorScheme
+  isLight: boolean
+  isDark: boolean
 }
 
 const themes: Record<'light' | 'dark', Theme> = {
