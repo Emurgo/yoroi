@@ -1,5 +1,6 @@
 import {banxaModuleMaker} from '@yoroi/banxa'
 import {BanxaReferralUrlQueryStringParams} from '@yoroi/banxa/lib/typescript/translators/module'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {KeyboardAvoidingView, Linking, Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
@@ -9,8 +10,6 @@ import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../legacy/config'
 import env from '../../../../legacy/env'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
-import {useTheme} from '../../../../theme'
-import {Theme} from '../../../../theme/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useRampOnOff} from '../../common/RampOnOffProvider'
@@ -26,6 +25,7 @@ const BOTTOM_ACTION_SECTION = 180
 
 export const CreateExchange = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const {track} = useMetrics()
   const [contentHeight, setContentHeight] = React.useState(0)
 
@@ -36,9 +36,6 @@ export const CreateExchange = () => {
   const amountTokenInfo = useTokenInfo({wallet, tokenId: ''})
 
   const {height: deviceHeight} = useWindowDimensions()
-
-  const {theme} = useTheme()
-  const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
 
   React.useEffect(() => {
     track.exchangePageViewed()
@@ -121,12 +118,12 @@ export const CreateExchange = () => {
   )
 }
 
-const getStyles = (props: {theme: Theme}) => {
-  const {theme} = props
+const useStyles = () => {
+  const {theme} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.gray.min,
     },
     flex: {
       flex: 1,

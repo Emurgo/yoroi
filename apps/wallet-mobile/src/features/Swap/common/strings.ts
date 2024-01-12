@@ -117,6 +117,7 @@ export const useStrings = () => {
     collateralNotFound: intl.formatMessage(messages.collateralNotFound),
     noActiveCollateral: intl.formatMessage(messages.noActiveCollateral),
     collateralTxPending: intl.formatMessage(messages.collateralTxPending),
+    collateralTxPendingTitle: intl.formatMessage(messages.collateralTxPendingTitle),
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
@@ -149,6 +150,7 @@ export const useStrings = () => {
     emptyCompletedOrders: intl.formatMessage(messages.emptyCompletedOrders),
     warning: intl.formatMessage(messages.warning),
     missingCollateral: intl.formatMessage(errorMessages.missingCollateral.title),
+    backToSwapOrders: intl.formatMessage(messages.backToSwapOrders),
   }
 }
 
@@ -547,7 +549,7 @@ export const messages = defineMessages({
   },
   assignCollateral: {
     id: 'components.send.confirmscreen.assignCollateral',
-    defaultMessage: '!!!Assign collateral',
+    defaultMessage: '!!!Generate',
   },
   collateralNotFound: {
     id: 'components.send.confirmscreen.collateralNotFound',
@@ -555,11 +557,16 @@ export const messages = defineMessages({
   },
   noActiveCollateral: {
     id: 'components.send.confirmscreen.noActiveCollateral',
-    defaultMessage: "!!!You don't have an active collateral utxo",
+    defaultMessage: '!!!To continue with this action, you need to generate a collateral',
+  },
+  collateralTxPendingTitle: {
+    id: 'components.send.confirmscreen.collateralTxPendingTitle',
+    defaultMessage: '!!!Pending Collateral UTxO',
   },
   collateralTxPending: {
     id: 'components.send.confirmscreen.collateralTxPending',
-    defaultMessage: '!!!Collateral transaction is pending. Try again later',
+    defaultMessage:
+      "!!!The collateral UTxO transaction you've submitted is currently in the processing stage, and it may require a few minutes to complete. Please refresh your interface and attempt the action again shortly",
   },
   failedTxTitle: {
     id: 'components.send.sendscreen.failedTxTitle',
@@ -646,5 +653,9 @@ export const messages = defineMessages({
   warning: {
     id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!Warning',
+  },
+  backToSwapOrders: {
+    id: 'swap.swapScreen.backToSwapOrders',
+    defaultMessage: '!!!Back to swap orders',
   },
 })

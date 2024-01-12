@@ -1,8 +1,8 @@
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {useTheme} from '../../../../../theme'
 import {useStrings} from '../../../common/useStrings'
 
 export const ShowDisclaimer = () => {

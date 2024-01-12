@@ -1,17 +1,14 @@
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
 
 import banxaLogo from '../../../../../assets/img/banxa.png'
 import {Spacer} from '../../../../../components'
-import {useTheme} from '../../../../../theme'
-import {Theme} from '../../../../../theme/types'
 import {useStrings} from '../../../common/useStrings'
 
 export const ShowProviderInfo = () => {
-  const {theme} = useTheme()
-
-  const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
   const strings = useStrings()
+  const styles = useStyles()
 
   return (
     <View style={styles.root}>
@@ -28,8 +25,8 @@ export const ShowProviderInfo = () => {
   )
 }
 
-const getStyles = (props: {theme: Theme}) => {
-  const {theme} = props
+const useStyles = () => {
+  const {theme} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flexDirection: 'row',

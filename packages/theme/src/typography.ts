@@ -161,7 +161,7 @@ export const typography: Typography = {
     lineHeight: 22,
     textDecorationLine: 'underline',
   },
-  overline: {
+  'overline': {
     ...weight.regular,
     fontSize: 10,
     lineHeight: 18,

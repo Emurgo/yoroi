@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Dimensions, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -6,8 +7,6 @@ import LinearGradient from 'react-native-linear-gradient'
 import {Button, Spacer} from '../../../../components'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../navigation'
-import {useTheme} from '../../../../theme'
-import {Theme} from '../../../../theme/types'
 import {BuyBannerIllustration} from '../../illustrations/BuyBannerIllustration'
 import {useStrings} from '../useStrings'
 
@@ -16,9 +15,8 @@ const DIMENSIONS = Dimensions.get('window')
 export const BuyBannerBig = () => {
   const strings = useStrings()
   const {track} = useMetrics()
+  const {styles, colors} = useStyles()
 
-  const {theme} = useTheme()
-  const styles = React.useMemo(() => getStyles({theme}), [theme])
   const bannerWidth = DIMENSIONS.width - 16 * 2
   const bannerHeight = (bannerWidth * 174) / 512
 
@@ -30,12 +28,7 @@ export const BuyBannerBig = () => {
 
   return (
     <View style={styles.root}>
-      <LinearGradient
-        style={styles.gradient}
-        start={{x: 1, y: 1}}
-        end={{x: 1, y: 1}}
-        colors={theme.color.gradients['green']}
-      >
+      <LinearGradient style={styles.gradient} start={{x: 1, y: 1}} end={{x: 1, y: 1}} colors={colors.gradientColor}>
         <BuyBannerIllustration width={bannerWidth} height={bannerHeight} />
 
         <Spacer />
@@ -61,8 +54,8 @@ export const BuyBannerBig = () => {
   )
 }
 
-const getStyles = (props: {theme: Theme}) => {
-  const {theme} = props
+const useStyles = () => {
+  const {theme} = useTheme()
   const styles = StyleSheet.create({
     root: {
       backgroundColor: theme.color['white-static'],
@@ -100,5 +93,8 @@ const getStyles = (props: {theme: Theme}) => {
       paddingHorizontal: 16,
     },
   })
-  return styles
+  const colors = {
+    gradientColor: theme.color.gradients['green'],
+  }
+  return {styles, colors} as const
 }
