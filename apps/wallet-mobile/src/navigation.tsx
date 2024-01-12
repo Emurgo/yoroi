@@ -488,7 +488,7 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToCollateralSettings: (params: SettingsStackRoutes['manage-collateral']) => {
+    navigateToCollateralSettings: (params?: SettingsStackRoutes['manage-collateral']) => {
       navigation.navigate('app-root', {
         screen: 'settings',
         params: {
