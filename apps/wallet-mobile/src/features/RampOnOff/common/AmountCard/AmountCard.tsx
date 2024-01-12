@@ -49,7 +49,7 @@ export const AmountCard: React.FC<AmountCardProps> = ({
 
   const fallback = React.useCallback(() => <TokenIconPlaceholder />, [])
 
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
 
   const strings = useStrings()
 
@@ -65,10 +65,10 @@ export const AmountCard: React.FC<AmountCardProps> = ({
               autoComplete="off"
               value={value}
               placeholder="0"
-              placeholderTextColor={styles.placeholderColor}
+              placeholderTextColor={colors.placeholder}
               onChangeText={onChange}
               allowFontScaling
-              selectionColor={isFocused ? styles.textFocused : styles.textBlurr}
+              selectionColor={isFocused ? colors.focused : colors.blurr}
               style={[styles.amountInput, value === '0' && styles.grayText]}
               underlineColorAndroid="transparent"
               ref={inputRef}
