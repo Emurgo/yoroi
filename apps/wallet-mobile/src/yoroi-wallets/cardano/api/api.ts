@@ -24,7 +24,6 @@ import fetchDefault from './fetch'
 
 type Addresses = Array<string>
 
-export {fetchTokensSupplies} from './assetSuply'
 export {getNFT} from './metadata'
 export {getNFTModerationStatus} from './nftModerationStatus'
 export {getTokenInfo} from './tokenRegistry'

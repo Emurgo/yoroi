@@ -4,7 +4,6 @@ import {z} from 'zod'
 
 import {BackendConfig, NFTAsset} from '../../types'
 import {convertNft} from '../nfts'
-import {fetchTokensSupplies} from './assetSuply'
 import fetchDefault from './fetch'
 import {toAssetNameHex, toPolicyId} from './utils'
 
@@ -14,9 +13,9 @@ export const getNFT = async (id: string, config: BackendConfig): Promise<Balance
 
   const payload = {assets: [{policy: policyId, nameHex}]}
 
-  const [assetMetadatasResult, assetSupplies] = await Promise.all([
+  const [assetMetadatasResult, {supplies: assetSupplies}] = await Promise.all([
     fetchDefault<Record<string, unknown>>('multiAsset/metadata', payload, config),
-    fetchTokensSupplies([id], config),
+    fetchDefault<{supplies: Record<string, unknown>}>('multiAsset/supply?numberFormat=string', payload, config),
   ])
 
   const assetMetadatas = assetMetadatasResult[id]
@@ -44,7 +43,7 @@ export const parseNFT = (
   const metadata = nftAsset.metadata?.[policyId]?.[nameHex]
   const nft = convertNft({metadata, storageUrl: config.NFT_STORAGE_URL, policyId, nameHex})
 
-  return assetSupplies[nft.id] === '1' || assetSupplies[nft.id] === '0' ? nft : null
+  return assetSupplies[nft.id] === '1' ? nft : null
 }
 
 export const NFT_METADATA_KEY = '721'

@@ -29,14 +29,12 @@ describe('parseNFT', () => {
     }
     const assetMetadatas = [nft]
     const assetSupplies = {[nftId]: '1'}
-    const assetSupplies2 = {[nftId]: '0'}
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     convertNft.mockImplementation(() => parsedNft)
 
     expect(parseNFT(assetMetadatas, assetSupplies, policyId, nameHex, config)).toEqual(parsedNft)
-    expect(parseNFT(assetMetadatas, assetSupplies2, policyId, nameHex, config)).toEqual(parsedNft)
   })
 
   it('returns null: assetMetadatas is not an array', () => {

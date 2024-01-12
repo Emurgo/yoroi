@@ -65,13 +65,9 @@ export const toPolicyId = (tokenIdentifier: string) => {
   return tokenSubject.slice(0, 56)
 }
 export const toDisplayAssetName = (tokenIdentifier: string) => {
-  return toUntaggedAssetName(tokenIdentifier)
-}
-
-export const toUntaggedAssetName = (tokenIdentifier: string) => {
   const hexName = toAssetNameHex(tokenIdentifier)
   const properties = AssetNameUtils.resolveProperties(hexName)
-  const untaggedName = properties.asciiName ?? properties.hexName
+  const untaggedName = properties.asciiName ?? hexToUtf8(properties.hexName)
   return untaggedName
 }
 

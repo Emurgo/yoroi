@@ -92,6 +92,7 @@ export const isAdaHandleDomain = (value: string) =>
 export const handleApiConfig = {
   mainnet: {
     getCryptoAddress: 'https://api.handle.me/handles/',
+    // https://docs.adahandle.com/official-policy-ids
     policyId: 'f0ff48bbb7bbe9d59a40f1ce90e9e9d0ff5002ec48f232b49ca0fb9a',
   },
 } as const
@@ -104,14 +105,4 @@ export const handleHandleApiError = (error: unknown): never => {
   if (error instanceof Api.Errors.NotFound) throw new Resolver.Errors.NotFound()
 
   throw error
-}
-
-export const adaHandleDomainNormalizer: Record<
-  string,
-  (domain: string) => string
-> = {
-  [handleApiConfig.mainnet.policyId]: (domain: string) => {
-    if (!domain.startsWith('$')) return `$${domain}`
-    return domain
-  },
 }

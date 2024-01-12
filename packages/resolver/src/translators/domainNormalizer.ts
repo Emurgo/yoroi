@@ -1,4 +1,4 @@
-import {adaHandleDomainNormalizer} from '../adapters/handle/api'
+import {adaHandleDomainNormalizer} from './handle/adaHandleDomainNormalizer'
 
 export const domainNormalizer = (policyId: string, domain: string) => {
   const normalizers = {
