@@ -5,7 +5,8 @@ import {useLayoutEffect} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {FlatList} from 'react-native-gesture-handler'
-import {useQuery, useQueryClient, UseQueryOptions} from 'react-query'
+import {useMutation} from 'react-query'
+import {YoroiEntry} from 'src/yoroi-wallets/types'
 
 import {Boundary, Button, Icon, Spacer} from '../../../../components'
 import {AmountItem} from '../../../../components/AmountItem/AmountItem'
@@ -16,9 +17,7 @@ import {useSearch} from '../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
 import {sortTokenInfos} from '../../../../utils'
-import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
-import {YoroiEntry, YoroiUnsignedTx} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
@@ -31,7 +30,6 @@ export const ListAmountsToSendScreen = () => {
   const {clearSearch} = useSearch()
   const navigation = useNavigation()
   const {track} = useMetrics()
-  const queryClient = useQueryClient()
 
   useOverridePreviousSendTxRoute('send-start-tx')
 
@@ -50,15 +48,11 @@ export const ListAmountsToSendScreen = () => {
     tokenIds: Amounts.toArray(amounts).map(({tokenId}) => tokenId),
   })
   const tokens = sortTokenInfos({wallet, tokenInfos})
-  const {refetch} = useSendTx(
-    {wallet, entry: targets[selectedTargetIndex].entry},
-    {
-      onSuccess: (yoroiUnsignedTx) => {
-        yoroiUnsignedTxChanged(yoroiUnsignedTx)
-        navigateTo.confirmTx()
-      },
-    },
-  )
+  const {mutate: createUnsignedTx, isLoading} = useMutation({
+    mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx(entries),
+    retry: false,
+    useErrorBoundary: true,
+  })
 
   React.useEffect(() => {
     track.sendSelectAssetUpdated(assetsToSendProperties({tokens, amounts}))
@@ -82,9 +76,12 @@ export const ListAmountsToSendScreen = () => {
   }
   const onNext = () => {
     track.sendSelectAssetSelected(assetsToSendProperties({tokens, amounts}))
-    // Trigger suspense on refetch
-    queryClient.resetQueries([wallet.id, 'send-tx'])
-    refetch()
+    createUnsignedTx([targets[selectedTargetIndex].entry], {
+      onSuccess: (yoroiUnsignedTx) => {
+        yoroiUnsignedTxChanged(yoroiUnsignedTx)
+        navigateTo.confirmTx()
+      },
+    })
   }
   const onAdd = () => {
     clearSearch()
@@ -114,7 +111,12 @@ export const ListAmountsToSendScreen = () => {
 
         <Spacer height={33} />
 
-        <NextButton onPress={onNext} title={strings.next} shelleyTheme disabled={selectedTokensCounter === 0} />
+        <NextButton
+          onPress={onNext}
+          title={strings.next}
+          shelleyTheme
+          disabled={selectedTokensCounter === 0 || isLoading}
+        />
       </Actions>
     </View>
   )
@@ -164,29 +166,6 @@ const EditAmountButton = ({onPress, children}: EditAmountButtonProps) => {
       {children}
     </TouchableOpacity>
   )
-}
-
-export const useSendTx = (
-  {wallet, entry}: {wallet: YoroiWallet; entry: YoroiEntry},
-  options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'send-tx']>,
-) => {
-  const query = useQuery({
-    ...options,
-    cacheTime: 0,
-    suspense: true,
-    enabled: false,
-    retry: false,
-    retryOnMount: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    queryKey: [wallet.id, 'send-tx'],
-    queryFn: () => wallet.createUnsignedTx([entry]),
-  })
-
-  return {
-    ...query,
-    unsignedTx: query.data,
-  }
 }
 
 export const useStrings = () => {
