@@ -73,17 +73,14 @@ export const TransactionSummary = () => {
       value: `${Quantities.format(cost.deposit.quantity, wallet.primaryTokenInfo.decimals ?? 0)} ${
         wallet.primaryTokenInfo.ticker
       }`,
-      info: strings.swapMinAda,
     },
     {
       label: strings.swapFeesTitle,
       value: formattedFeeText,
-      info: strings.swapFees,
     },
     {
       label: strings.swapLiqProvFee,
       value: liqFeeQuantityFormatted,
-      info: strings.swapLiquidityFeeInfo(pool.fee),
     },
     {
       label: strings.swapMinReceivedTitle,
@@ -99,7 +96,6 @@ export const TransactionSummary = () => {
           </Text>
         </View>
       ),
-      info: strings.swapMinReceived,
     },
     {
       label: `${capitalize(type)} ${strings.price}`,
