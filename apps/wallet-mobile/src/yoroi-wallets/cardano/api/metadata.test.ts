@@ -1,5 +1,3 @@
-/* import {Balance} from '@yoroi/types' */
-
 jest.mock('./metadata')
 jest.mock('../nfts')
 jest.mock('./fetch')
