@@ -4,7 +4,6 @@ jest.mock('./metadata')
 jest.mock('../nfts')
 jest.mock('./fetch')
 jest.mock('./utils')
-jest.mock('./assetSuply')
 import {convertNft} from '../nfts'
 import {NFT_METADATA_KEY} from './metadata'
 
