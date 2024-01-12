@@ -149,6 +149,7 @@ export const useStrings = () => {
     emptyCompletedOrders: intl.formatMessage(messages.emptyCompletedOrders),
     warning: intl.formatMessage(messages.warning),
     missingCollateral: intl.formatMessage(errorMessages.missingCollateral.title),
+    backToSwapOrders: intl.formatMessage(messages.backToSwapOrders),
   }
 }
 
@@ -547,7 +548,7 @@ export const messages = defineMessages({
   },
   assignCollateral: {
     id: 'components.send.confirmscreen.assignCollateral',
-    defaultMessage: '!!!Assign collateral',
+    defaultMessage: '!!!Generate',
   },
   collateralNotFound: {
     id: 'components.send.confirmscreen.collateralNotFound',
@@ -555,7 +556,7 @@ export const messages = defineMessages({
   },
   noActiveCollateral: {
     id: 'components.send.confirmscreen.noActiveCollateral',
-    defaultMessage: "!!!You don't have an active collateral utxo",
+    defaultMessage: '!!!To continue with this action, you need to generate a collateral',
   },
   collateralTxPending: {
     id: 'components.send.confirmscreen.collateralTxPending',
@@ -646,5 +647,9 @@ export const messages = defineMessages({
   warning: {
     id: 'components.txhistory.flawedwalletmodal.title',
     defaultMessage: '!!Warning',
+  },
+  backToSwapOrders: {
+    id: 'swap.swapScreen.backToSwapOrders',
+    defaultMessage: '!!!Back to swap orders',
   },
 })

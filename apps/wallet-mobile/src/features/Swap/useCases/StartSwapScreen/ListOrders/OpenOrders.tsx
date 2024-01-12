@@ -41,6 +41,7 @@ import {useStrings} from '../../../common/strings'
 import {SwapInfoLink} from '../../../common/SwapInfoLink/SwapInfoLink'
 import {getCancellationOrderFee} from './helpers'
 import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
+import {useNavigateTo} from '../../../common/navigation'
 
 export const OpenOrders = () => {
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
@@ -50,6 +51,7 @@ export const OpenOrders = () => {
   const {order: swapApiOrder} = useSwap()
   const {navigateToCollateralSettings, navigateToTxHistory} = useWalletNavigation()
   const [isLoading, setIsLoading] = React.useState(false)
+  const swapNavigateTo = useNavigateTo()
 
   const orders = useSwapOrdersByStatusOpen()
   const {numberLocale} = useLanguage()
@@ -140,7 +142,16 @@ export const OpenOrders = () => {
     Alert.alert(
       strings.collateralNotFound,
       strings.noActiveCollateral,
-      [{text: strings.assignCollateral, onPress: navigateToCollateralSettings}],
+      [
+        {
+          text: strings.assignCollateral,
+          onPress: () => {
+            navigateToCollateralSettings({
+              backButton: {onPress: () => swapNavigateTo.swapOpenOrders(), content: strings.backToSwapOrders},
+            })
+          },
+        },
+      ],
       {cancelable: true, onDismiss: () => true},
     )
   }

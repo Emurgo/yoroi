@@ -282,7 +282,12 @@ export type SettingsStackRoutes = {
   'enable-login-with-pin': {
     onSuccess: () => void | Promise<void>
   }
-  'manage-collateral': undefined
+  'manage-collateral'?: {
+    backButton?: {
+      content: string
+      onPress: () => void
+    }
+  }
   'collateral-confirm-tx': undefined
   'collateral-tx-submitted': undefined
   'collateral-tx-failed': undefined
@@ -483,11 +488,12 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToCollateralSettings: () => {
+    navigateToCollateralSettings: (params: SettingsStackRoutes['manage-collateral']) => {
       navigation.navigate('app-root', {
         screen: 'settings',
         params: {
           screen: 'manage-collateral',
+          params,
         },
       })
     },

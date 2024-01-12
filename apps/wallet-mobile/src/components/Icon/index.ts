@@ -9,6 +9,7 @@ import {Cardano} from './Cardano'
 import {Catalyst} from './Catalyst'
 import {Categories} from './Categories'
 import {Check} from './Check'
+import {Collateral} from './Collateral'
 import {CheckFilled} from './CheckFilled'
 import {CheckOutlined} from './CheckOutlined'
 import {Chevron} from './Chevron'
@@ -218,4 +219,5 @@ export const Icon = {
   ArrowRight,
   Close,
   Warning,
+  Collateral,
 }
