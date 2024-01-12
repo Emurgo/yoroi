@@ -91,7 +91,7 @@ export const TransactionSummary = () => {
         <View style={styles.flex}>
           {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
-          <Text style={{color: priceImpactRiskTextColor}}>
+          <Text style={{...styles.text, color: priceImpactRiskTextColor}}>
             {`${Quantities.format(
               calculation.buyAmountWithSlippage.quantity,
               buyTokenInfo.decimals ?? 0,
