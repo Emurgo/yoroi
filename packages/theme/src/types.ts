@@ -1,4 +1,4 @@
-import {TextStyle} from 'react-native'
+import {ColorValue, TextStyle} from 'react-native'
 
 export type Theme = {
   color: Palette
@@ -6,73 +6,71 @@ export type Theme = {
   spacing: Spacing
 }
 
-export type HexColor = `#${string}`
-
-export type Gradient = [HexColor, HexColor]
+export type Gradient = [ColorValue, ColorValue]
 
 export type Palette = {
-  'black-static': HexColor
-  'white-static': HexColor
+  'black-static': ColorValue
+  'white-static': ColorValue
   'gray': {
-    max: HexColor
-    900: HexColor
-    800: HexColor
-    700: HexColor
-    600: HexColor
-    500: HexColor
-    400: HexColor
-    300: HexColor
-    200: HexColor
-    100: HexColor
-    50: HexColor
-    min: HexColor
+    max: ColorValue
+    900: ColorValue
+    800: ColorValue
+    700: ColorValue
+    600: ColorValue
+    500: ColorValue
+    400: ColorValue
+    300: ColorValue
+    200: ColorValue
+    100: ColorValue
+    50: ColorValue
+    min: ColorValue
   }
   'primary': {
-    900: HexColor
-    800: HexColor
-    700: HexColor
-    600: HexColor
-    500: HexColor
-    400: HexColor
-    300: HexColor
-    200: HexColor
-    100: HexColor
+    900: ColorValue
+    800: ColorValue
+    700: ColorValue
+    600: ColorValue
+    500: ColorValue
+    400: ColorValue
+    300: ColorValue
+    200: ColorValue
+    100: ColorValue
   }
   'secondary': {
-    900: HexColor
-    800: HexColor
-    700: HexColor
-    600: HexColor
-    500: HexColor
-    400: HexColor
-    300: HexColor
-    200: HexColor
-    100: HexColor
+    900: ColorValue
+    800: ColorValue
+    700: ColorValue
+    600: ColorValue
+    500: ColorValue
+    400: ColorValue
+    300: ColorValue
+    200: ColorValue
+    100: ColorValue
   }
   'magenta': {
-    700: HexColor
-    600: HexColor
-    500: HexColor
-    300: HexColor
-    100: HexColor
+    700: ColorValue
+    600: ColorValue
+    500: ColorValue
+    300: ColorValue
+    100: ColorValue
   }
   'cyan': {
-    500: HexColor
-    100: HexColor
+    500: ColorValue
+    100: ColorValue
   }
   'yellow': {
-    500: HexColor
-    100: HexColor
+    500: ColorValue
+    100: ColorValue
   }
   'gradients': {
     'blue-green': Gradient
     'green': Gradient
     'blue': Gradient
   }
-  'overlay-extension': {hex: HexColor; opacity: number}
-  'overlay-mobile': {hex: HexColor; opacity: number}
-  'sidebar-overlay': {hex: HexColor; opacity: number}
-  'sidebar-item': {hex: HexColor; opacity: number}
+  'overlay-extension': {hex: ColorValue; opacity: number}
+  'overlay-mobile': {hex: ColorValue; opacity: number}
+  'sidebar-overlay': {hex: ColorValue; opacity: number}
+  'sidebar-item': {hex: ColorValue; opacity: number}
 }
 
 type TypographyKeys =
