@@ -43,17 +43,19 @@ export const SelectNameServer = () => {
     nameServerSelectedChanged(nameServer)
   }
 
+  const initial = receiver.selectedNameServer ? labels.indexOf(nameServerName[receiver.selectedNameServer]) : 0
+
   return (
     <Animated.View style={{opacity: animatedValue}}>
       {(waitAnimation || shouldShow) && (
         <>
           <ShowManyAddressWarning />
 
-          <Spacer height={4} />
+          <Spacer height={16} />
 
-          <ButtonGroup initial={0} labels={labels} onSelect={handleOnSelectNameServer} />
+          <ButtonGroup initial={initial} labels={labels} onSelect={handleOnSelectNameServer} />
 
-          <Spacer height={4} />
+          <Spacer height={16} />
         </>
       )}
     </Animated.View>
