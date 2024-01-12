@@ -1,5 +1,4 @@
-import {nameServerName, useResolverSetShowNotice, useResolverShowNotice} from '@yoroi/resolver'
-import {Resolver} from '@yoroi/types'
+import {useResolverSetShowNotice, useResolverShowNotice} from '@yoroi/resolver'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -34,11 +33,11 @@ export const NotifySupportedNameServers = () => {
 
         <Text style={styles.text}>{strings.resolverNoticeText}:</Text>
 
-        <NameServer text={nameServerName[Resolver.NameServer.Handle]} />
+        <NameServer text="ADA Handle" />
 
-        <NameServer text={nameServerName[Resolver.NameServer.Unstoppable]} />
+        <NameServer text="Unstoppable Domains" />
 
-        <NameServer text={nameServerName[Resolver.NameServer.Cns]} />
+        <NameServer text="Cardano Name Service (CNS)" />
       </LinearGradient>
 
       <Spacer height={16} />
