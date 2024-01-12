@@ -25,7 +25,7 @@ export const TransactionSummary = () => {
   const {
     limitPrice: {displayValue: limitDisplayValue},
   } = useSwapForm()
-  const {amounts, selectedPoolCalculation: calculation} = orderData
+  const {amounts, selectedPoolCalculation: calculation, type} = orderData
   const {openModal} = useModal()
 
   // should never happen
@@ -73,17 +73,14 @@ export const TransactionSummary = () => {
       value: `${Quantities.format(cost.deposit.quantity, wallet.primaryTokenInfo.decimals ?? 0)} ${
         wallet.primaryTokenInfo.ticker
       }`,
-      info: strings.swapMinAda,
     },
     {
       label: strings.swapFeesTitle,
       value: formattedFeeText,
-      info: strings.swapFees,
     },
     {
       label: strings.swapLiqProvFee,
       value: liqFeeQuantityFormatted,
-      info: strings.swapLiquidityFeeInfo(pool.fee),
     },
     {
       label: strings.swapMinReceivedTitle,
@@ -91,7 +88,7 @@ export const TransactionSummary = () => {
         <View style={styles.flex}>
           {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
-          <Text style={{color: priceImpactRiskTextColor}}>
+          <Text style={{...styles.text, color: priceImpactRiskTextColor}}>
             {`${Quantities.format(
               calculation.buyAmountWithSlippage.quantity,
               buyTokenInfo.decimals ?? 0,
@@ -99,10 +96,9 @@ export const TransactionSummary = () => {
           </Text>
         </View>
       ),
-      info: strings.swapMinReceived,
     },
     {
-      label: strings.marketPrice,
+      label: `${capitalize(type)} ${strings.price}`,
       value: `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`,
       info: strings.marketPriceInfo,
     },

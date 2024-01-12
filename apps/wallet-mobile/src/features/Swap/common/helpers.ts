@@ -1,11 +1,11 @@
 import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {useTheme} from '../../../theme'
 import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'

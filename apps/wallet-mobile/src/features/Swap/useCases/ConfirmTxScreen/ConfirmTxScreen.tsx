@@ -2,6 +2,7 @@ import {useSwap} from '@yoroi/swap'
 import React from 'react'
 import {InteractionManager, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
@@ -18,7 +19,7 @@ import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
 import {TransactionSummary} from './TransactionSummary'
 
-const BOTTOM_ACTION_SECTION = 180
+const BOTTOM_ACTION_SECTION = 220
 
 export const ConfirmTxScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
@@ -102,8 +103,8 @@ export const ConfirmTxScreen = () => {
   const isButtonDisabled = txIsLoading || couldReceiveNoAssets
 
   return (
-    <>
-      <View style={styles.root}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
+      <View style={styles.container}>
         <KeyboardAvoidingView keyboardVerticalOffset={120}>
           <ScrollView style={styles.scroll}>
             <View
@@ -152,7 +153,7 @@ export const ConfirmTxScreen = () => {
           }}
         />
       </Actions>
-    </>
+    </SafeAreaView>
   )
 }
 
@@ -160,6 +161,9 @@ const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, 
 
 const styles = StyleSheet.create({
   root: {
+    flex: 1,
+  },
+  container: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
     paddingTop: 16,

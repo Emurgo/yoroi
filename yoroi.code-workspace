@@ -17,6 +17,10 @@
       "path": "./packages/links"
     },
     {
+      "name": "@yoroi/theme",
+      "path": "./packages/theme"
+    },
+    {
       "name": "@yoroi/banxa",
       "path": "./packages/banxa"
     },

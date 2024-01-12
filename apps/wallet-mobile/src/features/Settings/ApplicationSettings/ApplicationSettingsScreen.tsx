@@ -1,4 +1,6 @@
 import {isBoolean} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
+import {capitalize} from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
@@ -23,6 +25,7 @@ const iconProps = {
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
+  const {colorScheme} = useTheme()
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? supportedLanguages['en-US']
 
@@ -91,6 +94,15 @@ export const ApplicationSettingsScreen = () => {
             label={strings.analytics}
             onNavigate={navigateTo.analytics}
           />
+
+          {!isProduction() && (
+            <SettingsItem
+              icon={<Icon.EyeOff {...iconProps} />} // TODO
+              label={`${capitalize(colorScheme)} Theme`} // TODO
+            >
+              <ToggleThemeSwitch />
+            </SettingsItem>
+          )}
         </SettingsSection>
 
         <Spacer height={24} />
@@ -170,6 +182,24 @@ const PrivacyModeSwitch = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
   }
 
   return <Switch value={isLocalPrivacyOff} onValueChange={onTogglePrivacyMode} disabled={isTogglePrivacyModeLoading} />
+}
+
+const ToggleThemeSwitch = () => {
+  const {selectColorScheme, colorScheme} = useTheme()
+  const [theme, setTheme] = React.useState(true)
+
+  const onToggleThemeMode = () => {
+    if (colorScheme === 'light') {
+      selectColorScheme('dark')
+      setTheme(true)
+    }
+    if (colorScheme === 'dark') {
+      selectColorScheme('light')
+      setTheme(false)
+    }
+  }
+
+  return <Switch value={theme} onValueChange={onToggleThemeMode} />
 }
 
 // to avoid switch jumps

@@ -1,8 +1,6 @@
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
-
-import {useTheme} from '../../../../../theme'
-import {Theme} from '../../../../../theme/types'
 
 type ContentResultProps = {
   title: string
@@ -10,8 +8,7 @@ type ContentResultProps = {
 }
 
 export const ContentResult = ({title, children}: ContentResultProps) => {
-  const {theme} = useTheme()
-  const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
+  const styles = useStyles()
 
   return (
     <View style={styles.root}>
@@ -22,8 +19,8 @@ export const ContentResult = ({title, children}: ContentResultProps) => {
   )
 }
 
-const getStyles = (props: {theme: Theme}) => {
-  const {theme} = props
+const useStyles = () => {
+  const {theme} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flexDirection: 'row',
