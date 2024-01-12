@@ -1,12 +1,11 @@
 import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {Icon, Spacer} from '../../../../components'
 import {TxHistoryRouteNavigation} from '../../../../navigation'
-import {useTheme} from '../../../../theme'
-import {Theme} from '../../../../theme/types'
 import {useStrings} from '../useStrings'
 
 type SmallBannerProps = {
@@ -15,9 +14,7 @@ type SmallBannerProps = {
 
 export const BuyBannerSmall = ({onClose}: SmallBannerProps) => {
   const strings = useStrings()
-
-  const {theme} = useTheme()
-  const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
+  const {styles, colors} = useStyles()
 
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const handleExchange = () => {
@@ -25,12 +22,7 @@ export const BuyBannerSmall = ({onClose}: SmallBannerProps) => {
   }
   return (
     <View style={styles.root}>
-      <LinearGradient
-        style={styles.gradient}
-        start={{x: 1, y: 1}}
-        end={{x: 0, y: 0}}
-        colors={theme.color.gradients['blue-green']}
-      >
+      <LinearGradient style={styles.gradient} start={{x: 1, y: 1}} end={{x: 0, y: 0}} colors={colors.gradientColor}>
         <View style={styles.viewTitle}>
           <Text style={styles.title}>{strings.needMoreCrypto}</Text>
 
@@ -53,8 +45,8 @@ export const BuyBannerSmall = ({onClose}: SmallBannerProps) => {
   )
 }
 
-const getStyles = (props: {theme: Theme}) => {
-  const {theme} = props
+const useStyles = () => {
+  const {theme} = useTheme()
   const styles = StyleSheet.create({
     root: {
       backgroundColor: theme.color['white-static'],
@@ -91,5 +83,8 @@ const getStyles = (props: {theme: Theme}) => {
       lineHeight: 22,
     },
   })
-  return styles
+  const colors = {
+    gradientColor: theme.color.gradients['blue-green'],
+  }
+  return {styles, colors} as const
 }

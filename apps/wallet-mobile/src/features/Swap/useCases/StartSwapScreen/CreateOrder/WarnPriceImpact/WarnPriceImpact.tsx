@@ -1,9 +1,8 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../../../components'
-import {useTheme} from '../../../../../../theme'
-import {Theme} from '../../../../../../theme/types'
 import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from '../../../../common/constants'
 import {useStrings} from '../../../../common/strings'
 import {SwapPriceImpactRisk} from '../../../../common/types'
@@ -16,9 +15,7 @@ export interface Props {
 export const WarnPriceImpact = ({onContinue, priceImpactRisk}: Props) => {
   const strings = useStrings()
   const {closeModal} = useModal()
-
-  const {theme} = useTheme()
-  const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
+  const styles = useStyles()
 
   return (
     <View style={styles.container}>
@@ -52,8 +49,8 @@ export const WarnPriceImpact = ({onContinue, priceImpactRisk}: Props) => {
   )
 }
 
-const getStyles = (props: {theme: Theme}) => {
-  const {theme} = props
+const useStyles = () => {
+  const {theme} = useTheme()
   const styles = StyleSheet.create({
     buttonContainer: {
       flex: 1,

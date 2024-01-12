@@ -1,11 +1,11 @@
 import {createStackNavigator} from '@react-navigation/stack'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {StatusBar} from '../../components'
 import {defaultStackNavigationOptions, RampOnOffStackRoutes} from '../../navigation'
-import {useTheme} from '../../theme'
 import {useHideBottomTabBar} from '../../yoroi-wallets/hooks'
 import {RampOnOffProvider} from './common/RampOnOffProvider'
 import {useStrings} from './common/useStrings'

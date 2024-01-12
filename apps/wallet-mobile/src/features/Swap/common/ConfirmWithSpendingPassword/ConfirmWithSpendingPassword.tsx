@@ -1,9 +1,9 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
 import {Button, Spacer, Text, TextInput} from '../../../../components'
 import {debugWalletInfo, features} from '../../../../features'
-import {COLORS} from '../../../../theme'
 import {useStrings} from '../../common/strings'
 import {getErrorMessage} from '../errors'
 
@@ -25,6 +25,7 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
   )
   const strings = useStrings()
+  const styles = useStyles()
 
   const errorMessage = error ? getErrorMessage(error, strings) : null
 
@@ -70,22 +71,29 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
   )
 }
 
-const styles = StyleSheet.create({
-  modalText: {
-    paddingHorizontal: 70,
-    textAlign: 'center',
-    paddingBottom: 8,
-  },
-  errorMessage: {
-    color: COLORS.ERROR_TEXT_COLOR,
-    textAlign: 'center',
-  },
-  loading: {
-    position: 'absolute',
-    height: '100%',
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+
+  const styles = StyleSheet.create({
+    modalText: {
+      paddingHorizontal: 70,
+      textAlign: 'center',
+      paddingBottom: 8,
+    },
+    errorMessage: {
+      color: color.magenta[500],
+      textAlign: 'center',
+    },
+    loading: {
+      position: 'absolute',
+      height: '100%',
+      left: 0,
+      right: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  })
+
+  return styles
+}

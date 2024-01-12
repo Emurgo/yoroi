@@ -12,7 +12,7 @@ import {
   ViewProps,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useMutation} from 'react-query'
 
 import {Button, CopyButton, Icon, Spacer, Text} from '../../../components'
 import {AmountItem} from '../../../components/AmountItem/AmountItem'
@@ -24,7 +24,7 @@ import {useCollateralInfo} from '../../../yoroi-wallets/cardano/utxoManager/useC
 import {useSetCollateralId} from '../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '../../../yoroi-wallets/cardano/utxoManager/utxos'
 import {useBalances, useLockedAmount} from '../../../yoroi-wallets/hooks'
-import {RawUtxo, YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {RawUtxo, YoroiEntry} from '../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
 import {useSend} from '../../Send/common/SendContext'
 import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
@@ -49,15 +49,11 @@ export const ManageCollateralScreen = () => {
     tokenSelectedChanged,
     yoroiUnsignedTxChanged,
   } = useSend()
-  const {refetch: createUnsignedTx, isFetching: isLoadingTx} = useSendTx(
-    {
-      wallet,
-      entry: createCollateralEntry(wallet),
-    },
-    {
-      onSuccess: (yoroiUnsignedTx) => yoroiUnsignedTxChanged(yoroiUnsignedTx),
-    },
-  )
+  const {mutate: createUnsignedTx, isLoading: isLoadingTx} = useMutation({
+    mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx(entries),
+    retry: false,
+    useErrorBoundary: true,
+  })
 
   const {isLoading: isLoadingCollateral, setCollateralId} = useSetCollateralId(wallet)
   const handleRemoveCollateral = () => {
@@ -82,7 +78,13 @@ export const ManageCollateralScreen = () => {
     amountChanged(amount.quantity)
 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    Promise.resolve(createUnsignedTx()).then(() => navigateTo.confirmTx())
+
+    createUnsignedTx([createCollateralEntry(wallet)], {
+      onSuccess: (yoroiUnsignedTx) => {
+        yoroiUnsignedTxChanged(yoroiUnsignedTx)
+        navigateTo.confirmTx()
+      },
+    })
   }
 
   const isLoading = isLoadingTx || isLoadingCollateral
@@ -205,29 +207,6 @@ export const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) 
       <Icon.CrossCircle size={26} color={COLORS.BLACK} />
     </TouchableOpacity>
   )
-}
-
-export const useSendTx = (
-  {wallet, entry}: {wallet: YoroiWallet; entry: YoroiEntry},
-  options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'send-tx']>,
-) => {
-  const query = useQuery({
-    ...options,
-    cacheTime: 0,
-    suspense: true,
-    enabled: false,
-    retry: false,
-    retryOnMount: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    queryKey: [wallet.id, 'send-tx'],
-    queryFn: () => wallet.createUnsignedTx([entry]),
-  })
-
-  return {
-    ...query,
-    unsignedTx: query.data,
-  }
 }
 
 const styles = StyleSheet.create({
