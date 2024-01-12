@@ -48,6 +48,7 @@ export const TxHistoryList = (props: Props) => {
         ItemSeparatorComponent={() => <Spacer height={16} />}
         renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
         sections={groupedTransactions}
+        renderSectionFooter={() => <Spacer height={12} />}
         keyExtractor={(item) => item.id}
         stickySectionHeadersEnabled={false}
         nestedScrollEnabled={true}
@@ -109,8 +110,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   dayHeaderRoot: {
-    paddingTop: 16,
-    paddingBottom: 8,
+    paddingBottom: 4,
     paddingHorizontal: 20,
   },
 })
