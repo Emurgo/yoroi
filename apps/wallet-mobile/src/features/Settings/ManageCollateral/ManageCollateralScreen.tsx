@@ -17,6 +17,7 @@ import {useMutation} from 'react-query'
 import {Button, CopyButton, Icon, Spacer, Text} from '../../../components'
 import {AmountItem} from '../../../components/AmountItem/AmountItem'
 import {ErrorPanel} from '../../../components/ErrorPanel/ErrorPanel'
+import {SettingsStackRoutes, useUnsafeParams} from '../../../navigation'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {COLORS} from '../../../theme'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
@@ -41,6 +42,8 @@ export const ManageCollateralScreen = () => {
   const strings = useStrings()
   const balances = useBalances(wallet)
   const lockedAmount = useLockedAmount({wallet})
+
+  const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
 
   const {
     reset: resetSendState,
@@ -114,7 +117,8 @@ export const ManageCollateralScreen = () => {
     createCollateralTransaction()
   }
 
-  const shouldHideButton = !hasCollateral || didSpend
+  const shouldShowPrimaryButton = !hasCollateral || didSpend
+  const shouldShowBackButton = !shouldShowPrimaryButton && !!params?.backButton
 
   return (
     <SafeAreaView edges={['top', 'left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -156,13 +160,17 @@ export const ManageCollateralScreen = () => {
         )}
       </ScrollView>
 
-      {shouldHideButton && (
+      {shouldShowPrimaryButton && (
         <Button
           title={strings.generateCollateral}
           onPress={handleGenerateCollateral}
           shelleyTheme
           disabled={isLoading}
         />
+      )}
+
+      {shouldShowBackButton && params?.backButton && (
+        <Button title={params.backButton.content} onPress={params.backButton.onPress} shelleyTheme />
       )}
     </SafeAreaView>
   )
