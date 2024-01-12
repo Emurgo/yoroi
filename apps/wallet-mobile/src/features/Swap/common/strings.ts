@@ -558,9 +558,14 @@ export const messages = defineMessages({
     id: 'components.send.confirmscreen.noActiveCollateral',
     defaultMessage: '!!!To continue with this action, you need to generate a collateral',
   },
+  collateralTxPendingTitle: {
+    id: 'components.send.confirmscreen.collateralTxPendingTitle',
+    defaultMessage: '!!!Pending Collateral UTxO',
+  },
   collateralTxPending: {
     id: 'components.send.confirmscreen.collateralTxPending',
-    defaultMessage: '!!!Collateral transaction is pending. Try again later',
+    defaultMessage:
+      "!!!The collateral UTxO transaction you've submitted is currently in the processing stage, and it may require a few minutes to complete. Please refresh your interface and attempt the action again shortly",
   },
   failedTxTitle: {
     id: 'components.send.sendscreen.failedTxTitle',
