@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 import {ScrollView, Switch, Text as RNText, TextProps, View} from 'react-native'
@@ -12,17 +13,37 @@ const Palette = () => {
   const palette = colorScheme === 'dark' ? darkPalette : lightPalette
 
   return (
-    <ScrollView style={[{flex: 1}, colorScheme === 'dark' ? {backgroundColor: 'black'} : {backgroundColor: 'white'}]}>
-      <View style={{flex: 1, flexDirection: 'row', padding: 8, alignItems: 'center', justifyContent: 'flex-start'}}>
+    <ScrollView
+      style={[
+        {flex: 1},
+        colorScheme === 'dark'
+          ? {backgroundColor: 'black'}
+          : {backgroundColor: 'white'},
+      ]}
+    >
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          padding: 8,
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+        }}
+      >
         <Text>colorScheme: {colorScheme}</Text>
 
         <View style={{width: 8}} />
 
         <Switch
-          trackColor={{false: palette.primary[500], true: palette.secondary[500]}}
+          trackColor={{
+            false: palette.primary[500],
+            true: palette.secondary[500],
+          }}
           ios_backgroundColor={palette.primary[500]}
           value={colorScheme === 'light'}
-          onChange={() => setColorScheme(colorScheme === 'light' ? 'dark' : 'light')}
+          onChange={() =>
+            setColorScheme(colorScheme === 'light' ? 'dark' : 'light')
+          }
         />
       </View>
 
@@ -101,7 +122,7 @@ const Palette = () => {
       </Section>
 
       <Section title="Cyan">
-        <Item title="400" color={palette.cyan['400']} />
+        <Item title="400" color={palette.cyan['500']} />
 
         <Item title="100" color={palette.cyan['100']} />
       </Section>
@@ -109,15 +130,21 @@ const Palette = () => {
       <Section title="Gradients">
         <Gradient title="blue-green" colors={palette.gradients['blue-green']} />
 
-        <Gradient title="blue" colors={palette.gradients['blue']} />
+        <Gradient title="blue" colors={palette.gradients.blue} />
 
-        <Gradient title="green" colors={palette.gradients['green']} />
+        <Gradient title="green" colors={palette.gradients.green} />
       </Section>
     </ScrollView>
   )
 }
 
-const Section = ({title, children}: {title: string; children: React.ReactNode}) => {
+const Section = ({
+  title,
+  children,
+}: {
+  title: string
+  children: React.ReactNode
+}) => {
   const [colorScheme] = useColorScheme()
 
   return (
@@ -131,7 +158,16 @@ const Section = ({title, children}: {title: string; children: React.ReactNode}) 
     >
       <Text style={{fontWeight: 'bold'}}>{title}</Text>
 
-      <View style={{padding: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center'}}>{children}</View>
+      <View
+        style={{
+          padding: 4,
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}
+      >
+        {children}
+      </View>
     </View>
   )
 }
@@ -148,7 +184,13 @@ const Item = ({title, color}: {title: string; color: string}) => {
   )
 }
 
-const Gradient = ({title, colors}: {title: string; colors: [string, string]}) => {
+const Gradient = ({
+  title,
+  colors,
+}: {
+  title: string
+  colors: [string, string]
+}) => {
   return (
     <View style={{alignItems: 'center'}}>
       <Text>{title}</Text>
@@ -165,15 +207,25 @@ const Gradient = ({title, colors}: {title: string; colors: [string, string]}) =>
 const Text = (props: TextProps) => {
   const [colorScheme] = useColorScheme()
 
-  return <RNText style={[props.style, colorScheme === 'dark' ? {color: 'white'} : {color: 'black'}]} {...props} />
+  return (
+    <RNText
+      style={[
+        props.style,
+        colorScheme === 'dark' ? {color: 'white'} : {color: 'black'},
+      ]}
+      {...props}
+    />
+  )
 }
 
-const ColorSchemeContext = React.createContext<undefined | ['light' | 'dark', (colorScheme: 'light' | 'dark') => void]>(
-  undefined,
-)
+const ColorSchemeContext = React.createContext<
+  undefined | ['light' | 'dark', (colorScheme: 'light' | 'dark') => void]
+>(undefined)
 const WithColorScheme = () => {
   return (
-    <ColorSchemeContext.Provider value={React.useState<'light' | 'dark'>('light')}>
+    <ColorSchemeContext.Provider
+      value={React.useState<'light' | 'dark'>('light')}
+    >
       <Palette />
     </ColorSchemeContext.Provider>
   )

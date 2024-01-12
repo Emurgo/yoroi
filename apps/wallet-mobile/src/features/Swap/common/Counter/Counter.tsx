@@ -1,9 +1,9 @@
 export type FungibilityFilter = 'all' | 'ft' | 'nft'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {Text} from '../../../../components'
-import {COLORS} from '../../../../theme'
 
 type CounterTypes = {
   openingText?: string
@@ -13,6 +13,8 @@ type CounterTypes = {
 }
 
 export const Counter = ({openingText, counter, unitsText, closingText, style}: CounterTypes & ViewProps) => {
+  const styles = useStyles()
+
   return (
     <View style={[styles.counter, style]}>
       <Text style={styles.counterText}>{openingText}</Text>
@@ -32,20 +34,27 @@ export const Counter = ({openingText, counter, unitsText, closingText, style}: C
   )
 }
 
-const styles = StyleSheet.create({
-  counter: {
-    paddingTop: 16,
-    justifyContent: 'center',
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-  },
-  counterText: {
-    fontWeight: '400',
-    color: COLORS.SHELLEY_BLUE,
-  },
-  counterTextBold: {
-    fontWeight: '500',
-    color: COLORS.SHELLEY_BLUE,
-    fontFamily: 'Rubik-Medium',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+
+  const styles = StyleSheet.create({
+    counter: {
+      paddingTop: 16,
+      justifyContent: 'center',
+      flexDirection: 'row',
+      backgroundColor: color.gray.min,
+    },
+    counterText: {
+      fontWeight: '400',
+      color: color.primary[600],
+    },
+    counterTextBold: {
+      fontWeight: '500',
+      color: color.primary[600],
+      fontFamily: 'Rubik-Medium',
+    },
+  })
+
+  return styles
+}

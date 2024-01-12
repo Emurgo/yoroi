@@ -33,6 +33,10 @@ yarn workspace @yoroi/resolver add @yoroi/common@"$1"
 yarn workspace @yoroi/links add -D @yoroi/types@"$1"
 yarn workspace @yoroi/links add @yoroi/common@"$1"
 
+# theme 
+yarn workspace @yoroi/theme add -D @yoroi/types@"$1"
+yarn workspace @yoroi/theme add @yoroi/common@"$1"
+
 # wallet-mobile
 yarn workspace @yoroi/wallet-mobile add -D @yoroi/types@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/banxa@"$1"
@@ -42,5 +46,6 @@ yarn workspace @yoroi/wallet-mobile add @yoroi/swap@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/links@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/staking@"$1"
 yarn workspace @yoroi/wallet-mobile add @yoroi/resolver@"$1"
+yarn workspace @yoroi/wallet-mobile add @yoroi/theme@"$1"
 
 echo "Using new packages..."

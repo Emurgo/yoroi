@@ -1,16 +1,13 @@
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {useTheme} from '../../../../../theme'
-import {Theme} from '../../../../../theme/types'
 import {useStrings} from '../../../common/useStrings'
 
 export const ShowProviderFee = () => {
-  const {theme} = useTheme()
-
   const strings = useStrings()
+  const styles = useStyles()
 
-  const styles = React.useMemo(() => getStyles({theme: theme}), [theme])
   return (
     <View style={styles.root}>
       <Text style={styles.label}>{strings.providerFee}</Text>
@@ -20,8 +17,8 @@ export const ShowProviderFee = () => {
   )
 }
 
-const getStyles = (props: {theme: Theme}) => {
-  const {theme} = props
+const useStyles = () => {
+  const {theme} = useTheme()
   const styles = StyleSheet.create({
     root: {
       flexDirection: 'row',
