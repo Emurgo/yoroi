@@ -25,7 +25,7 @@ export const TransactionSummary = () => {
   const {
     limitPrice: {displayValue: limitDisplayValue},
   } = useSwapForm()
-  const {amounts, selectedPoolCalculation: calculation} = orderData
+  const {amounts, selectedPoolCalculation: calculation, type} = orderData
   const {openModal} = useModal()
 
   // should never happen
@@ -102,7 +102,7 @@ export const TransactionSummary = () => {
       info: strings.swapMinReceived,
     },
     {
-      label: strings.marketPrice,
+      label: `${capitalize(type)} ${strings.price}`,
       value: `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`,
       info: strings.marketPriceInfo,
     },
