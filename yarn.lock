@@ -2755,10 +2755,10 @@
     "@ledgerhq/logs" "^5.15.0"
     rxjs "^6.5.5"
 
-"@emurgo/yoroi-lib@^0.14.1":
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.14.1.tgz#b938ce5e0338182b7ce043d04245aa22f2884f3c"
-  integrity sha512-RuHlmHTj7kkjvBVtQpbD1VAyTiej9KkzDBdoB4tynAI8wA0PFy71FHHqTBXglHNg7ImlCs8xpMdnURxoAorN/Q==
+"@emurgo/yoroi-lib@0.14.2":
+  version "0.14.2"
+  resolved "https://registry.yarnpkg.com/@emurgo/yoroi-lib/-/yoroi-lib-0.14.2.tgz#c7bbee40cd224ad405b5e97d738e8b9704fd8c40"
+  integrity sha512-9zJObcPeiRkylOPe9gcaVmu1PnIY8Zh74HBjGYLTEeyjzwAYByaohJg6iaqsfcCAGyuys9n1njy7gqj7LDeD8w==
   dependencies:
     "@cardano-foundation/ledgerjs-hw-app-cardano" "^6.0.0"
     "@emurgo/cross-csl-core" "^4.0.0-alpha.1"
@@ -2766,6 +2766,7 @@
     axios "^0.24.0"
     bech32 "^2.0.0"
     bignumber.js "^9.0.1"
+    easy-crc "1.1.0"
 
 "@esbuild/android-arm64@0.18.12":
   version "0.18.12"
@@ -11032,6 +11033,11 @@ eastasianwidth@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/eastasianwidth/-/eastasianwidth-0.2.0.tgz#696ce2ec0aa0e6ea93a397ffcf24aa7840c827cb"
   integrity sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==
+
+easy-crc@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/easy-crc/-/easy-crc-1.1.0.tgz#fe59a33a9a33faf3ff54cf8f2ba7f13ab3730c1d"
+  integrity sha512-cvtERLTu8mYt1pOVVekJ4E0VdwyuKgL+VAfE3LY+Lw762i9M1bSEikm6fyGD2grxOdBfI0HgOmSi3HQneKr33A==
 
 easy-stack@^1.0.1:
   version "1.0.1"

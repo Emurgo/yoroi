@@ -4,6 +4,7 @@ import {resolverManagerMocks} from './translators/manager.mocks'
 
 export * from './translators/manager'
 export * from './translators/constants'
+export * from './translators/domainNormalizer'
 export * from './adapters/storage'
 export * from './adapters/api'
 export * from './translators/reactjs/hooks/useResolverCryptoAddresses'

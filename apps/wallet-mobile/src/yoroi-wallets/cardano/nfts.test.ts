@@ -1,29 +1,30 @@
 import {Balance} from '@yoroi/types'
 
 import {nft} from '../mocks'
+import {utf8ToHex} from './api'
 import {convertNft, getNftFilenameMediaType} from './nfts'
 
 describe('convertNft', () => {
   describe('id', () => {
-    it('converts id from policyId and shortName', () => {
+    it('converts id from policyId and nameHex', () => {
       const nft = convertNft({
         metadata: undefined,
         storageUrl: '',
         policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-        shortName: '2',
+        nameHex: utf8ToHex('32'),
       })
 
-      expect(nft.id).toEqual('8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.32')
+      expect(nft.id).toEqual('8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4.3332')
     })
   })
 
   describe('fingerprint', () => {
-    it('converts fingerprint from policyId and shortName', () => {
+    it('converts fingerprint from policyId and nameHex', () => {
       const nft = convertNft({
         metadata: undefined,
         storageUrl: '',
         policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-        shortName: 'Image1',
+        nameHex: utf8ToHex('Image1'),
       })
 
       expect(nft.fingerprint).toEqual('asset1a6765qk8cpk2wll3hevw6xy9xry893jrzl9ms3')
@@ -38,18 +39,18 @@ describe('convertNft', () => {
         },
         storageUrl: '',
         policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-        shortName: '',
+        nameHex: utf8ToHex(''),
       })
 
       expect(nft.name).toEqual('Name')
     })
 
-    it('converts name from shortName when medata is missing', () => {
+    it('converts name from nameHex when medata is missing', () => {
       const nft = convertNft({
         metadata: {},
         storageUrl: '',
         policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-        shortName: '2',
+        nameHex: utf8ToHex('2'),
       })
 
       expect(nft.name).toEqual('2')
@@ -64,7 +65,7 @@ describe('convertNft', () => {
         },
         storageUrl: '',
         policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-        shortName: '2',
+        nameHex: utf8ToHex('2'),
       })
 
       expect(nft.description).toEqual('Description')
@@ -77,7 +78,7 @@ describe('convertNft', () => {
         },
         storageUrl: '',
         policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-        shortName: '2',
+        nameHex: utf8ToHex('2'),
       })
 
       expect(nft.description).toEqual('Description1Description2')
@@ -92,7 +93,7 @@ describe('convertNft', () => {
         },
         storageUrl: '',
         policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-        shortName: '1',
+        nameHex: utf8ToHex('1'),
       })
 
       expect(nft.icon).toEqual('https://ipfs.io/ipfs/QmZ89agib39odneyezeyxp2ekXPLqm86NHCgEXZy9PJ1Gs')
@@ -106,7 +107,7 @@ describe('convertNft', () => {
         },
         storageUrl: '',
         policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-        shortName: '1',
+        nameHex: utf8ToHex('1'),
       })
 
       expect(nft.icon).toEqual('https://example.com/image.jpeg')
@@ -120,7 +121,7 @@ describe('convertNft', () => {
         },
         storageUrl: '',
         policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-        shortName: '1',
+        nameHex: utf8ToHex('1'),
       })
 
       expect(nft.icon).toEqual('https://example.com/image.jpeg')
@@ -134,7 +135,7 @@ describe('convertNft', () => {
         metadata: {},
         storageUrl: '',
         policyId: '8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4',
-        shortName: '1',
+        nameHex: utf8ToHex('1'),
       })
 
       expect(nft.group).toEqual('8e2c7604711faef7c84c91b286c7327d17df825b7f0c88ec0332c0b4')
@@ -151,7 +152,7 @@ describe('convertNft', () => {
         },
         storageUrl: '',
         policyId: '',
-        shortName: '1',
+        nameHex: utf8ToHex('1'),
       })
 
       expect(nft.metadatas.mintNft).toEqual({
