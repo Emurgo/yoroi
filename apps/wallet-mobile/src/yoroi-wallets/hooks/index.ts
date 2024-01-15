@@ -7,7 +7,15 @@ import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
 import {PixelRatio, Platform} from 'react-native'
-import {onlineManager, useMutation, UseMutationOptions, useQueries, useQuery, UseQueryOptions} from 'react-query'
+import {
+  onlineManager,
+  useMutation,
+  UseMutationOptions,
+  useQueries,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
 import {useWalletManager} from '../../WalletManager'
@@ -1004,13 +1012,16 @@ export const useNativeAssetImage = ({
     }),
     [mimeType, responseType],
   )
+  const queryClient = useQueryClient()
 
   const query = useQuery({
     enabled: isMediaTypeSupported,
     staleTime: Infinity,
-    queryKey: ['native-asset-img', policy, name, `${pWidth}x${pHeight}`, contentFit],
-    queryFn: async () => {
-      const requestUrl = `https://${network}.cardano-nativeassets-prod.emurgornd.com/${policy}/${name}?width=${pWidth}&height=${pHeight}&kind=${kind}&fit=${contentFit}`
+    queryKey: ['native-asset-img', policy, name, responseType, `${pWidth}x${pHeight}`, contentFit],
+    queryFn: async (context) => {
+      const count = queryClient.getQueryState(context.queryKey)?.dataUpdateCount
+      const cache = count ? `&cache=${count}` : ''
+      const requestUrl = `https://${network}.cardano-nativeassets-prod.emurgornd.com/${policy}/${name}?width=${pWidth}&height=${pHeight}&kind=${kind}&fit=${contentFit}${cache}`
 
       if (responseType === 'binary') return requestUrl
 
