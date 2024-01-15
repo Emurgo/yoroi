@@ -7156,6 +7156,16 @@
     js-yaml "^3.10.0"
     tslib "^2.4.0"
 
+"@yoroi/resolver@1.5.1-beta.1":
+  version "1.5.1-beta.1"
+  resolved "https://registry.yarnpkg.com/@yoroi/resolver/-/resolver-1.5.1-beta.1.tgz#a622f3c5b7d499d7a923f8dc4a675259dff6cd3e"
+  integrity sha512-PG5oD0fZWlZ9luL4B1vJUIlmPIYPLA8XjwLdPvcfGbb5VjHz7HqGVp/NXnH6wKrEoIR9oqw2wKnVjmlZdBWONQ==
+  dependencies:
+    "@yoroi/api" "1.5.0"
+    "@yoroi/common" "1.5.0"
+    axios "^1.5.0"
+    zod "^3.22.2"
+
 "@zkochan/js-yaml@0.0.6":
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/@zkochan/js-yaml/-/js-yaml-0.0.6.tgz#975f0b306e705e28b8068a07737fa46d3fc04826"
