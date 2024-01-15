@@ -39,8 +39,6 @@ const queryClient = new QueryClient()
 
 const metricsManager = makeMetricsManager()
 
-const themeManager = {isProduction: isProduction()}
-
 export const YoroiApp = () => {
   const migrated = useMigrations(rootStorage)
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -51,7 +49,7 @@ export const YoroiApp = () => {
           <ErrorBoundary>
             <QueryClientProvider client={queryClient}>
               <LoadingBoundary style={StyleSheet.absoluteFill}>
-                <ThemeProvider themeManager={themeManager}>
+                <ThemeProvider>
                   <LanguageProvider>
                     <CurrencyProvider>
                       <SafeAreaProvider>

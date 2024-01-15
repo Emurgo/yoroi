@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 
 import {darkTheme} from './darkTheme'
 import {lightTheme} from './lightTheme'
@@ -7,12 +7,10 @@ import {Theme} from './types'
 const ThemeContext = React.createContext<undefined | ThemeContext>(undefined)
 export const ThemeProvider = ({
   children,
-  themeManager,
 }: {
   children: React.ReactNode
   themeManager: {isProduction: boolean}
 }) => {
-  const {isProduction} = themeManager
   const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
     'light',
   )
@@ -24,12 +22,6 @@ export const ThemeProvider = ({
   const theme = themes[colorScheme]
   const isDark = colorScheme === 'dark'
   const isLight = colorScheme === 'light'
-
-  useEffect(() => {
-    if (isProduction) {
-      setColorScheme('light')
-    }
-  }, [isProduction])
 
   return (
     <ThemeContext.Provider
