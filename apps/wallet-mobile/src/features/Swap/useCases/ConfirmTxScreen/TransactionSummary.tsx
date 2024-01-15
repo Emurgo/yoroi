@@ -64,6 +64,13 @@ export const TransactionSummary = () => {
   const poolIcon = <PoolIcon providerId={pool.provider} size={18} />
 
   const priceValue = `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`
+  const minAdaInfoValue = `${Quantities.format(cost.deposit.quantity, wallet.primaryTokenInfo.decimals ?? 0)} ${
+    wallet.primaryTokenInfo.ticker
+  }`
+  const minReceivedInfoValue = `${Quantities.format(
+    calculation.buyAmountWithSlippage.quantity,
+    buyTokenInfo.decimals ?? 0,
+  )} ${tokenToBuyName}`
 
   const feesInfo = [
     {
@@ -72,12 +79,7 @@ export const TransactionSummary = () => {
     },
     {
       label: strings.swapMinAdaTitle,
-      value: (
-        <Text style={styles.text}>
-          {Quantities.format(cost.deposit.quantity, wallet.primaryTokenInfo.decimals ?? 0)} $
-          {wallet.primaryTokenInfo.ticker}
-        </Text>
-      ),
+      value: <Text style={styles.text}>{minAdaInfoValue}</Text>,
     },
     {
       label: strings.swapFeesTitle,
@@ -94,10 +96,7 @@ export const TransactionSummary = () => {
           {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
           <Text style={[styles.text, {color: priceImpactRiskTextColor}, styles.alignRight]}>
-            {`${Quantities.format(
-              calculation.buyAmountWithSlippage.quantity,
-              buyTokenInfo.decimals ?? 0,
-            )} ${tokenToBuyName}`}
+            {minReceivedInfoValue}
           </Text>
         </View>
       ),
