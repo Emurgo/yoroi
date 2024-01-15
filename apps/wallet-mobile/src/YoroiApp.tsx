@@ -43,7 +43,6 @@ const themeManager = {isProduction: isProduction()}
 
 export const YoroiApp = () => {
   const migrated = useMigrations(rootStorage)
-
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   return migrated ? (
     <StorageProvider>
@@ -54,6 +53,7 @@ export const YoroiApp = () => {
               <LoadingBoundary style={StyleSheet.absoluteFill}>
                 <ThemeProvider themeManager={themeManager}>
                   <LanguageProvider>
+                    <CurrencyProvider>
                       <SafeAreaProvider>
                         <RNP.Provider>
                           <AuthProvider>
