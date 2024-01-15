@@ -1,5 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
-import {mockSwapManager, mockSwapStateDefault, SwapProvider} from '@yoroi/swap'
+import {mockSwapManager, mockSwapStateDefault, orderMocks, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
@@ -10,23 +10,26 @@ import {ConfirmTxScreen} from './ConfirmTxScreen'
 
 storiesOf('Swap ConfirmTxScreen', module) //
   .add('swap confirm tx: with password', () => {
-    return <ConfirmTxWithPasswaordScreen />
+    return <ConfirmTxWithPasswordScreen />
   })
   .add('swap confirm tx: with os', () => {
     return <ConfirmTxWithOSScreen />
   })
   .add('swap confirm tx: with hw', () => {
-    return <ConfirmTxWithHWcreen />
+    return <ConfirmTxWithHWScreen />
   })
 
-const ConfirmTxWithPasswaordScreen = () => {
+const ConfirmTxWithPasswordScreen = () => {
   return (
     <SelectedWalletProvider wallet={{...walletMocks.wallet}}>
       <SwapProvider
         initialState={{
           ...mockSwapStateDefault,
           unsignedTx: walletMocks.yoroiUnsignedTx,
-          orderData: {...mocks.confirmTx.orderData},
+          orderData: {
+            ...mocks.confirmTx.orderData,
+            selectedPoolCalculation: calculation,
+          },
         }}
         swapManager={{
           ...mockSwapManager,
@@ -46,7 +49,10 @@ const ConfirmTxWithOSScreen = () => {
         initialState={{
           ...mockSwapStateDefault,
           unsignedTx: walletMocks.yoroiUnsignedTx,
-          orderData: {...mocks.confirmTx.orderData},
+          orderData: {
+            ...mocks.confirmTx.orderData,
+            selectedPoolCalculation: calculation,
+          },
         }}
         swapManager={{
           ...mockSwapManager,
@@ -59,14 +65,17 @@ const ConfirmTxWithOSScreen = () => {
     </SelectedWalletProvider>
   )
 }
-const ConfirmTxWithHWcreen = () => {
+const ConfirmTxWithHWScreen = () => {
   return (
     <SelectedWalletProvider wallet={{...walletMocks.wallet, isHW: true}}>
       <SwapProvider
         initialState={{
           ...mockSwapStateDefault,
           unsignedTx: walletMocks.yoroiUnsignedTx,
-          orderData: {...mocks.confirmTx.orderData},
+          orderData: {
+            ...mocks.confirmTx.orderData,
+            selectedPoolCalculation: calculation,
+          },
         }}
         swapManager={{
           ...mockSwapManager,
@@ -79,3 +88,5 @@ const ConfirmTxWithHWcreen = () => {
     </SelectedWalletProvider>
   )
 }
+
+const calculation = orderMocks.mockedOrderCalculations1[0]
