@@ -144,6 +144,7 @@
     "expo-barcode-scanner": "~12.3.2",
     "expo-camera": "^13.2.1",
     "expo-device": "^5.4.0",
+    "expo-image": "~1.0.2",
     "expo-status-bar": "~1.4.4",
     "jsc-android": "241213.1.0",
     "lodash": "^4.17.21",

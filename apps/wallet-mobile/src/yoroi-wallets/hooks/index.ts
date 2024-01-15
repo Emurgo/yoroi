@@ -6,7 +6,7 @@ import {Api, App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
-import {PixelRatio} from 'react-native'
+import {PixelRatio, Platform} from 'react-native'
 import {onlineManager, useMutation, UseMutationOptions, useQueries, useQuery, UseQueryOptions} from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
@@ -975,8 +975,9 @@ type NativeAssetImageRequest = {
   width: string | number
   height: string | number
   mediaType?: string
-  resizeMode?: 'contain' | 'cover' | 'fill' | 'inside' | 'outside'
+  contentFit?: 'contain' | 'cover' | 'fill' | 'inside' | 'outside'
   kind?: 'logo' | 'metadata'
+  responseType?: 'binary' | 'base64'
 }
 export const useNativeAssetImage = ({
   networkId,
@@ -985,34 +986,51 @@ export const useNativeAssetImage = ({
   width,
   height,
   mediaType = 'image/webp',
-  resizeMode = 'cover',
+  contentFit = 'cover',
   kind = 'metadata',
+  responseType = 'binary',
 }: NativeAssetImageRequest) => {
   const network = networkId === 300 ? 'preprod' : 'mainnet'
   const pWidth = PixelRatio.getPixelSizeForLayoutSize(Number(width))
   const pHeight = PixelRatio.getPixelSizeForLayoutSize(Number(height))
-  const isMediaTypeSupported = supportedTypes.includes(mediaType.toLocaleLowerCase())
+  const lcMediaType = mediaType.toLocaleLowerCase()
+  const isMediaTypeSupported = supportedTypes.includes(lcMediaType)
+  const needsGif = lcMediaType === 'image/gif' && Platform.OS === 'ios'
+  const mimeType = needsGif ? 'image/gif' : 'image/webp'
+  const headers = useMemo(
+    () => ({
+      Accept: responseType === 'binary' ? mimeType : 'text/plain',
+      'X-Encoded-Mimetype': mimeType,
+    }),
+    [mimeType, responseType],
+  )
+
   const query = useQuery({
+    enabled: isMediaTypeSupported,
     staleTime: Infinity,
-    queryKey: ['native-asset-img', policy, name, `${width}x${height}`, resizeMode],
+    queryKey: ['native-asset-img', policy, name, `${pWidth}x${pHeight}`, contentFit],
     queryFn: async () => {
-      const response = await fetch(
-        `https://${network}.cardano-nativeassets-prod.emurgornd.com/${policy}/${name}?width=${pWidth}&height=${pHeight}&kind=${kind}&fit=${resizeMode}`,
-      )
+      const requestUrl = `https://${network}.cardano-nativeassets-prod.emurgornd.com/${policy}/${name}?width=${pWidth}&height=${pHeight}&kind=${kind}&fit=${contentFit}`
+
+      if (responseType === 'binary') return requestUrl
+
+      const response = await fetch(requestUrl, {
+        headers,
+      })
       if (!response.ok) {
-        throw new Error(`NativeAsset CDN response was not ok for policy=${policy} name=${name}`)
+        throw new Error(`NativeAsset CDN: Not ok - ${requestUrl}`)
       }
       if (response.status === 201 || response.status === 202) {
-        throw new Error(`NativeAsset CDN still processing policy=${policy} name=${name}`)
+        throw new Error(`NativeAsset CDN: Processing - ${requestUrl}`)
       }
-      return `data:image/webp;base64,${await response.text()}`
+      return `data:${mimeType};base64,${await response.text()}`
     },
-    enabled: isMediaTypeSupported,
   })
 
   return {
     ...query,
     uri: query.data,
+    headers,
   }
 }
 

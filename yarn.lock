@@ -12106,6 +12106,11 @@ expo-image-loader@~4.1.0:
   resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-4.1.1.tgz#efadbb17de1861106864820194900f336dd641b6"
   integrity sha512-ciEHVokU0f6w0eTxdRxLCio6tskMsjxWIoV92+/ZD37qePUJYMfEphPhu1sruyvMBNR8/j5iyOvPFVGTfO8oxA==
 
+expo-image@~1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/expo-image/-/expo-image-1.0.2.tgz#11f74c89812fcdb67a467fad41625b536ddb3612"
+  integrity sha512-wDLPdtU+9xNtl57NC9SQrnEqjD6obH6ZImwoeynewSTwAZ8rppKq5Kia0189fn6Kc1zzKT5kymOrwleruqS9Qg==
+
 expo-keep-awake@~12.0.1:
   version "12.0.1"
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-12.0.1.tgz#19c5ab55391394ded3f6c262b0707c7140658a11"

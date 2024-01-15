@@ -59,7 +59,7 @@ function ConsentNftIcon({nft}: {nft: Balance.TokenInfo}) {
         height={ICON_SIZE}
         width={ICON_SIZE}
         style={styles.assetIcon}
-        resizeMode="cover"
+        contentFit="cover"
         blurRadius={20}
       />
     </View>
