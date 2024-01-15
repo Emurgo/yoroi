@@ -63,6 +63,8 @@ export const TransactionSummary = () => {
 
   const poolIcon = <PoolIcon providerId={pool.provider} size={18} />
 
+  const priceValue = `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`
+
   const feesInfo = [
     {
       label: strings.dex.toUpperCase(),
@@ -102,11 +104,7 @@ export const TransactionSummary = () => {
     },
     {
       label: `${capitalize(type)} ${strings.price}`,
-      value: (
-        <Text style={[styles.text, styles.alignRight]}>
-          {limitDisplayValue} {tokenToSellName}/{tokenToBuyName}
-        </Text>
-      ),
+      value: <Text style={[styles.text, styles.alignRight]}>{priceValue}</Text>,
       info: type === 'market' ? strings.marketPriceInfo : strings.limitPriceInfo,
     },
     {
@@ -125,12 +123,7 @@ export const TransactionSummary = () => {
             </View>
 
             <View style={{flexDirection: 'row'}}>
-              <Text
-                style={{
-                  color: priceImpactRiskTextColor,
-                  ...styles.priceImpactRiskText,
-                }}
-              >
+              <Text style={[{color: priceImpactRiskTextColor}, styles.priceImpactRiskText]}>
                 {`(${formattedActualPrice}${tokenToSellName}/${tokenToBuyName})`}
               </Text>
             </View>

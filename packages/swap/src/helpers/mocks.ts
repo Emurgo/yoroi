@@ -1756,102 +1756,6 @@ const mockedOrderCalculations2: SwapOrderCalculation[] = [
   },
 ]
 
-const mockedOrderCalculations3: SwapOrderCalculation[] = [
-  {
-    order: {
-      side: 'buy',
-      slippage: 10,
-      orderType: 'market',
-      amounts: {
-        sell: {
-          quantity: '0',
-          tokenId: 'tokenA',
-        },
-        buy: {
-          quantity: '100000001',
-          tokenId: 'tokenB',
-        },
-      },
-    },
-    sides: {
-      buy: {
-        quantity: '100000001',
-        tokenId: 'tokenB',
-      },
-      sell: {
-        quantity: '7335973',
-        tokenId: 'tokenA',
-      },
-    },
-    cost: {
-      ptTotalRequired: {
-        quantity: '2950000',
-        tokenId: '',
-      },
-      batcherFee: {
-        quantity: '950000',
-        tokenId: '',
-      },
-      deposit: {
-        quantity: '2000000',
-        tokenId: '',
-      },
-      frontendFeeInfo: {
-        fee: {
-          tokenId: '',
-          quantity: '0',
-        },
-      },
-      liquidityFee: {
-        tokenId: 'tokenA',
-        quantity: '22008',
-      },
-    },
-    buyAmountWithSlippage: {
-      quantity: '90000000',
-      tokenId: 'tokenB',
-    },
-    hasSupply: true,
-    prices: {
-      base: '0.07214312806368332309',
-      market: '0.07214312806368332309',
-      actualPrice: '0',
-      withSlippage: '0.08151081111111111111',
-      withFees: '0.08285972917140270829',
-      withFeesAndSlippage: '0.09206636666666666667',
-      difference: '14.854638820567161388',
-      priceImpact: '0.10000000000000000000',
-    },
-    pool: {
-      tokenA: {
-        quantity: '529504614',
-        tokenId: 'tokenA',
-      },
-      tokenB: {
-        quantity: '7339640354',
-        tokenId: 'tokenB',
-      },
-      ptPriceTokenA: '1',
-      ptPriceTokenB: '0.0695404765',
-      fee: '0.3',
-      provider: 'muesliswap_v2',
-      batcherFee: {
-        quantity: '950000',
-        tokenId: '',
-      },
-      deposit: {
-        quantity: '2000000',
-        tokenId: '',
-      },
-      poolId: '1',
-      lpToken: {
-        quantity: '0',
-        tokenId: '0',
-      },
-    },
-  },
-]
-
 export const mocks = {
   mockedPools1,
   mockedPools2,
@@ -1864,5 +1768,4 @@ export const mocks = {
 
   mockedOrderCalculations1,
   mockedOrderCalculations2,
-  mockedOrderCalculations3,
 }

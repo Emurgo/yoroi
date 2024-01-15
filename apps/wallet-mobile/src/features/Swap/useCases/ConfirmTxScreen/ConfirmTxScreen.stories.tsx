@@ -1,5 +1,5 @@
 import {storiesOf} from '@storybook/react-native'
-import {mockSwapManager, mockSwapStateDefault, SwapProvider, orderMocks} from '@yoroi/swap'
+import {mockSwapManager, mockSwapStateDefault, orderMocks, SwapProvider} from '@yoroi/swap'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
