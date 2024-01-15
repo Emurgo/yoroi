@@ -63,7 +63,7 @@ export const TransactionSummary = () => {
 
   const poolIcon = <PoolIcon providerId={pool.provider} size={18} />
 
-  const priceValue = `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`
+  const priceInfoValue = `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`
   const minAdaInfoValue = `${Quantities.format(cost.deposit.quantity, wallet.primaryTokenInfo.decimals ?? 0)} ${
     wallet.primaryTokenInfo.ticker
   }`
@@ -103,7 +103,7 @@ export const TransactionSummary = () => {
     },
     {
       label: `${capitalize(type)} ${strings.price}`,
-      value: <Text style={[styles.text, styles.alignRight]}>{priceValue}</Text>,
+      value: <Text style={[styles.text, styles.alignRight]}>{priceInfoValue}</Text>,
       info: type === 'market' ? strings.marketPriceInfo : strings.limitPriceInfo,
     },
     {
