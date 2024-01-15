@@ -1,8 +1,7 @@
 import {isString} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
-import {Image, ImageStyle} from 'expo-image'
-import React, {useEffect, useState} from 'react'
-import {View} from 'react-native'
+import React from 'react'
+import {Image, ImageStyle, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
@@ -19,7 +18,6 @@ type NftPreviewProps = {
   contentFit?: 'cover' | 'contain'
   blurRadius?: number
   zoom?: number
-  cachePolicy?: 'none' | 'memory' | 'disk' | 'memory-disk'
 }
 
 export const NftPreview = ({
@@ -31,11 +29,10 @@ export const NftPreview = ({
   contentFit = 'cover',
   blurRadius,
   zoom = 1,
-  cachePolicy,
 }: NftPreviewProps) => {
   const wallet = useSelectedWallet()
   const [policy, name] = nft.id.split('.')
-  const {uri, headers, isLoading, isError} = useNativeAssetImage({
+  const {uri, headers, isLoading, isError, onError, onLoad} = useNativeAssetImage({
     networkId: wallet.networkId,
     policy,
     name,
@@ -46,32 +43,24 @@ export const NftPreview = ({
     mediaType: getNftMainImageMediaType(nft),
   })
 
-  const [failed, setFailed] = useState(false)
-
-  useEffect(() => {
-    setFailed(false)
-  }, [uri])
-
-  const shouldShowPlaceholder = !isString(uri) || showPlaceholder || isError || failed
+  const shouldShowPlaceholder = !isString(uri) || showPlaceholder || isError
 
   return (
     <View style={{width, height, overflow: 'hidden'}}>
-      {isLoading ? (
+      {isLoading && (
         <SkeletonPlaceholder enabled={true}>
           <View style={{width, height}} />
         </SkeletonPlaceholder>
-      ) : (
-        <Image
-          cachePolicy={failed ? 'none' : cachePolicy}
-          source={shouldShowPlaceholder ? placeholder : {uri, headers}}
-          placeholder={placeholder}
-          placeholderContentFit="contain"
-          onError={() => setFailed(true)}
-          style={[style, {width, height}]}
-          contentFit={contentFit}
-          blurRadius={blurRadius}
-        />
       )}
+
+      <Image
+        source={shouldShowPlaceholder ? placeholder : {uri, headers}}
+        onError={onError}
+        onLoadEnd={onLoad}
+        style={[style, {width, height}]}
+        resizeMode={contentFit}
+        blurRadius={blurRadius}
+      />
     </View>
   )
 }

@@ -1014,16 +1014,25 @@ export const useNativeAssetImage = ({
   )
   const queryClient = useQueryClient()
 
+  const [isError, setError] = React.useState(false)
+  const [isLoading, setLoading] = React.useState(false)
+
+  const queryKey = ['native-asset-img', policy, name, responseType, `${pWidth}x${pHeight}`, contentFit]
+
   const query = useQuery({
     enabled: isMediaTypeSupported,
     staleTime: Infinity,
-    queryKey: ['native-asset-img', policy, name, responseType, `${pWidth}x${pHeight}`, contentFit],
+    queryKey,
     queryFn: async (context) => {
       const count = queryClient.getQueryState(context.queryKey)?.dataUpdateCount
       const cache = count ? `&cache=${count}` : ''
       const requestUrl = `https://${network}.cardano-nativeassets-prod.emurgornd.com/${policy}/${name}?width=${pWidth}&height=${pHeight}&kind=${kind}&fit=${contentFit}${cache}`
 
-      if (responseType === 'binary') return requestUrl
+      if (responseType === 'binary') {
+        setLoading(true)
+        setError(false)
+        return requestUrl
+      }
 
       const response = await fetch(requestUrl, {
         headers,
@@ -1038,10 +1047,30 @@ export const useNativeAssetImage = ({
     },
   })
 
+  const timerRef = React.useRef<any>(0)
+  React.useEffect(() => () => clearTimeout(timerRef.current), [])
+
+  const onError = useCallback(() => {
+    setError(true)
+    const count = queryClient.getQueryState(queryKey)?.dataUpdateCount
+    if (count && count < 10) {
+      timerRef.current = setTimeout(query.refetch, count * 300)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, queryClient])
+
+  const onLoad = useCallback(() => {
+    setLoading(false)
+  }, [])
+
   return {
     ...query,
     uri: query.data,
     headers,
+    isError: isError || query.isError,
+    isLoading: isLoading || query.isLoading,
+    onError,
+    onLoad,
   }
 }
 
