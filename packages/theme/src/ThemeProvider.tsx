@@ -1,5 +1,4 @@
-import React from 'react'
-import {useColorScheme} from 'react-native'
+import React, {useEffect} from 'react'
 
 import {darkTheme} from './darkTheme'
 import {lightTheme} from './lightTheme'
@@ -13,21 +12,24 @@ export const ThemeProvider = ({
   children: React.ReactNode
   themeManager: {isProduction: boolean}
 }) => {
-  const systemColorScheme = useColorScheme() ?? 'light'
   const {isProduction} = themeManager
+  const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
+    'light',
+  )
 
-  const selectColorScheme = isProduction ? 'light' : 'dark'
-  const colorScheme = isProduction ? 'light' : systemColorScheme
-  const theme =
-    themes[
-      isColorScheme(colorScheme)
-        ? colorScheme
-        : isProduction
-        ? 'light'
-        : systemColorScheme
-    ]
+  const selectColorScheme = (themeColor: 'light' | 'dark') => {
+    setColorScheme(themeColor)
+  }
+
+  const theme = themes[colorScheme]
   const isDark = colorScheme === 'dark'
   const isLight = colorScheme === 'light'
+
+  useEffect(() => {
+    if (isProduction) {
+      setColorScheme('light')
+    }
+  }, [isProduction])
 
   return (
     <ThemeContext.Provider
@@ -45,11 +47,11 @@ const missingProvider = () => {
   throw new Error('ThemeProvider is missing')
 }
 
-type ColorSchemeOption = 'light' | 'dark' | 'system'
+type ColorSchemeOption = 'light' | 'dark'
 type ThemeContext = {
   theme: Theme
   colorScheme: ColorSchemeOption
-  selectColorScheme: ColorSchemeOption
+  selectColorScheme: (colorTheme: ColorSchemeOption) => void
   isLight: boolean
   isDark: boolean
 }
@@ -58,6 +60,3 @@ const themes: Record<'light' | 'dark', Theme> = {
   light: lightTheme,
   dark: darkTheme,
 }
-
-const isColorScheme = (data: unknown): data is 'light' | 'dark' =>
-  data === 'light' || data === 'dark'

@@ -39,7 +39,7 @@ const queryClient = new QueryClient()
 
 const metricsManager = makeMetricsManager()
 
-const themeManager = {isPoduction: isProduction()}
+const themeManager = {isProduction: isProduction() ? true : false}
 
 export const YoroiApp = () => {
   const migrated = useMigrations(rootStorage)
@@ -54,7 +54,6 @@ export const YoroiApp = () => {
               <LoadingBoundary style={StyleSheet.absoluteFill}>
                 <ThemeProvider themeManager={themeManager}>
                   <LanguageProvider>
-                    <CurrencyProvider>
                       <SafeAreaProvider>
                         <RNP.Provider>
                           <AuthProvider>
