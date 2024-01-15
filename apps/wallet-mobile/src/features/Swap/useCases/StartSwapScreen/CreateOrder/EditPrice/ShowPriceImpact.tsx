@@ -25,13 +25,11 @@ export const ShowPriceImpact = ({priceImpact, formattedPrice, pair}: PriceImpact
 
   return (
     <View style={styles.row}>
-      <View>
-        {priceImpactRisk === 'moderate' && <Icon.Info size={20} color={textColor} />}
+      {priceImpactRisk === 'moderate' && <Icon.Info size={20} color={textColor} />}
 
-        {priceImpactRisk === 'high' && <Icon.Warning size={20} color={textColor} />}
-      </View>
+      {priceImpactRisk === 'high' && <Icon.Warning size={20} color={textColor} />}
 
-      <Text style={{color: textColor}}>
+      <Text style={[{color: textColor}, styles.textContent]}>
         <Text>{strings.priceImpact}</Text>
 
         <Text> = </Text>
@@ -50,6 +48,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     gap: 2,
-    alignItems: 'center',
+    alignItems: 'flex-start',
+  },
+  textContent: {
+    flexWrap: 'wrap',
+    flex: 1,
+    textAlign: 'left',
+    lineHeight: 20,
   },
 })
