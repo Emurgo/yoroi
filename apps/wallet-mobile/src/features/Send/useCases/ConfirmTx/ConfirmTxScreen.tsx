@@ -3,8 +3,9 @@ import {useFocusEffect} from '@react-navigation/native'
 import React, {useEffect, useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {KeyboardAvoidingView, KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
+import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
 import {assetsToSendProperties} from '../../../../metrics/helpers'
@@ -74,11 +75,11 @@ export const ConfirmTxScreen = () => {
   if (!yoroiUnsignedTx) throw new Error('Missing yoroiUnsignedTx')
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
       <KeyboardAvoidingView style={{flex: 1}}>
-        <CurrentBalance />
+        <ScrollView style={styles.container} persistentScrollbar ref={scrollViewRef}>
+          <CurrentBalance />
 
-        <View style={{paddingTop: 16, paddingHorizontal: 16}}>
           <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
 
           <Spacer height={4} />
@@ -90,14 +91,9 @@ export const ConfirmTxScreen = () => {
           {targets.map((target, index) => (
             <ReceiverInfo key={`${target.receiver.resolve}:${index}`} target={target} />
           ))}
-        </View>
 
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={{padding: 16}}
-          persistentScrollbar
-          ref={scrollViewRef}
-        >
+          <Spacer height={8} />
+
           <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
 
           <Spacer height={8} />
@@ -113,8 +109,6 @@ export const ConfirmTxScreen = () => {
               testID="spendingPasswordInput"
             />
           )}
-
-          <KeyboardSpacer />
         </ScrollView>
 
         <Actions>
@@ -130,7 +124,7 @@ export const ConfirmTxScreen = () => {
           />
         </Actions>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -144,6 +138,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.WHITE,
     flex: 1,
+    paddingHorizontal: 16,
   },
 })
 
