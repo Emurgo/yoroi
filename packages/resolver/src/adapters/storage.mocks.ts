@@ -16,6 +16,8 @@ const makeStorageMakerSuccess = (): Readonly<Resolver.Storage> => {
   } as const
 }
 
+const unknownError = () => Promise.reject(new Error('Unknown error'))
+
 const makeStorageMakerError = (): Readonly<Resolver.Storage> => {
   const showNotice: Resolver.Storage['showNotice'] = {
     read: unknownError,
@@ -36,5 +38,3 @@ export const mockStorageMaker = {
   success: makeStorageMakerSuccess(),
   error: makeStorageMakerError(),
 } as const
-
-const unknownError = () => Promise.reject(new Error('Unknown error'))
