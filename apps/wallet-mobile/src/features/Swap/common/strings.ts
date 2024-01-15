@@ -20,6 +20,7 @@ export const useStrings = () => {
     selectToken: intl.formatMessage(messages.selectToken),
     marketPrice: intl.formatMessage(messages.marketPrice),
     marketPriceInfo: intl.formatMessage(messages.marketPriceInfo),
+    limitPriceInfo: intl.formatMessage(messages.limitPriceInfo),
     limitPrice: intl.formatMessage(messages.limitPrice),
     slippageTolerance: intl.formatMessage(messages.slippageTolerance),
     slippageToleranceInfo: intl.formatMessage(messages.slippageToleranceInfo),
@@ -209,6 +210,11 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.marketPriceInfo',
     defaultMessage:
       '!!!Market price is the best price available on the market among several DEXes that lets you buy or sell an asset instantly.',
+  },
+  limitPriceInfo: {
+    id: 'swap.swapScreen.limitPriceInfo',
+    defaultMessage:
+      "!!!Limit price in a DEX is a specific pre-set price at which you can trade an asset. Unlike market orders, which execute immediately at the current market price, limit orders are set to execute only when the market reaches the trader's specified price.",
   },
   limitPrice: {
     id: 'swap.swapScreen.limitPrice',

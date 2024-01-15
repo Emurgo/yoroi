@@ -100,7 +100,7 @@ export const TransactionSummary = () => {
     {
       label: `${capitalize(type)} ${strings.price}`,
       value: `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`,
-      info: strings.marketPriceInfo,
+      info: type === 'market' ? strings.marketPriceInfo : strings.limitPriceInfo,
     },
     {
       label: strings.priceImpact,
