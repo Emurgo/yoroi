@@ -70,17 +70,20 @@ export const TransactionSummary = () => {
     },
     {
       label: strings.swapMinAdaTitle,
-      value: `${Quantities.format(cost.deposit.quantity, wallet.primaryTokenInfo.decimals ?? 0)} ${
-        wallet.primaryTokenInfo.ticker
-      }`,
+      value: (
+        <Text style={styles.text}>
+          {Quantities.format(cost.deposit.quantity, wallet.primaryTokenInfo.decimals ?? 0)} $
+          {wallet.primaryTokenInfo.ticker}
+        </Text>
+      ),
     },
     {
       label: strings.swapFeesTitle,
-      value: formattedFeeText,
+      value: <Text style={styles.text}>{formattedFeeText}</Text>,
     },
     {
       label: strings.swapLiqProvFee,
-      value: liqFeeQuantityFormatted,
+      value: <Text style={styles.text}>{liqFeeQuantityFormatted}</Text>,
     },
     {
       label: strings.swapMinReceivedTitle,
@@ -88,7 +91,7 @@ export const TransactionSummary = () => {
         <View style={styles.flex}>
           {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
-          <Text style={{...styles.text, color: priceImpactRiskTextColor}}>
+          <Text style={[styles.text, {color: priceImpactRiskTextColor}, styles.alignRight]}>
             {`${Quantities.format(
               calculation.buyAmountWithSlippage.quantity,
               buyTokenInfo.decimals ?? 0,
@@ -99,7 +102,11 @@ export const TransactionSummary = () => {
     },
     {
       label: `${capitalize(type)} ${strings.price}`,
-      value: `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`,
+      value: (
+        <Text style={[styles.text, styles.alignRight]}>
+          {limitDisplayValue} {tokenToSellName}/{tokenToBuyName}
+        </Text>
+      ),
       info: type === 'market' ? strings.marketPriceInfo : strings.limitPriceInfo,
     },
     {
@@ -108,7 +115,7 @@ export const TransactionSummary = () => {
         priceImpactRisk === 'none' ? (
           <Text style={{color: '#08C29D'}}>&lt;1%</Text>
         ) : (
-          <View style={{alignItems: 'flex-end'}}>
+          <View style={styles.priceImpactRiskContainer}>
             <View style={styles.flex}>
               {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
@@ -117,11 +124,16 @@ export const TransactionSummary = () => {
               <Text style={{color: priceImpactRiskTextColor}}>{Math.ceil(Number(priceImpact) * 100) / 100}%</Text>
             </View>
 
-            <Text>
-              <Text style={{color: priceImpactRiskTextColor}}>({formattedActualPrice}</Text>
-
-              <Text style={{color: priceImpactRiskTextColor}}>{`${tokenToSellName}/${tokenToBuyName}`})</Text>
-            </Text>
+            <View style={{flexDirection: 'row'}}>
+              <Text
+                style={{
+                  color: priceImpactRiskTextColor,
+                  ...styles.priceImpactRiskText,
+                }}
+              >
+                {`(${formattedActualPrice}${tokenToSellName}/${tokenToBuyName})`}
+              </Text>
+            </View>
           </View>
         ),
       info: strings.priceImpactInfo,
@@ -194,9 +206,7 @@ export const TransactionSummary = () => {
                 )}
               </View>
 
-              <View style={styles.orderValueContainer}>
-                <Text style={[styles.text]}>{orderInfo.value}</Text>
-              </View>
+              <View style={styles.orderValueContainer}>{orderInfo.value}</View>
             </View>
           </View>
         )
@@ -242,6 +252,21 @@ export const TransactionSummary = () => {
 }
 
 const styles = StyleSheet.create({
+  priceImpactRiskContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+  },
+  priceImpactRiskText: {
+    flex: 1,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    textAlign: 'right',
+  },
+  alignRight: {
+    textAlign: 'right',
+  },
   card: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -300,7 +325,10 @@ const styles = StyleSheet.create({
   },
   orderValueContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    paddingLeft: 8,
+    flex: 1,
   },
   banner: {
     paddingVertical: 12,
