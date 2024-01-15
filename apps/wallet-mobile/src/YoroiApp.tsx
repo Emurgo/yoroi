@@ -14,7 +14,7 @@ import {ErrorBoundary} from './components/ErrorBoundary'
 import {CurrencyProvider} from './features/Settings/Currency/CurrencyContext'
 import {LanguageProvider} from './i18n'
 import {InitApp} from './InitApp'
-import {CONFIG} from './legacy/config'
+import {CONFIG, isProduction} from './legacy/config'
 import {setLogLevel} from './legacy/logging'
 import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet/Context'
@@ -39,8 +39,11 @@ const queryClient = new QueryClient()
 
 const metricsManager = makeMetricsManager()
 
+const themeManager = {isPoduction: isProduction()}
+
 export const YoroiApp = () => {
   const migrated = useMigrations(rootStorage)
+
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   return migrated ? (
     <StorageProvider>
@@ -49,7 +52,7 @@ export const YoroiApp = () => {
           <ErrorBoundary>
             <QueryClientProvider client={queryClient}>
               <LoadingBoundary style={StyleSheet.absoluteFill}>
-                <ThemeProvider>
+                <ThemeProvider themeManager={themeManager}>
                   <LanguageProvider>
                     <CurrencyProvider>
                       <SafeAreaProvider>

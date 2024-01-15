@@ -13,14 +13,29 @@ import {lightTheme} from './lightTheme'
 import {Theme} from './types'
 
 const ThemeContext = React.createContext<undefined | ThemeContext>(undefined)
-export const ThemeProvider = ({children}: {children: React.ReactNode}) => {
+export const ThemeProvider = ({
+  children,
+  themeManager,
+}: {
+  children: React.ReactNode
+  themeManager: {isProduction: boolean}
+}) => {
   const systemColorScheme = useColorScheme() ?? 'light'
   const savedColorScheme = useSavedColorScheme()
+  const {isProduction} = themeManager
 
   const selectColorScheme = useSaveColorScheme()
-  const colorScheme = savedColorScheme ?? systemColorScheme
+  const colorScheme = isProduction
+    ? 'light'
+    : savedColorScheme ?? systemColorScheme
   const theme =
-    themes[isColorScheme(colorScheme) ? colorScheme : systemColorScheme]
+    themes[
+      isColorScheme(colorScheme)
+        ? colorScheme
+        : isProduction
+        ? 'light'
+        : systemColorScheme
+    ]
   const isDark = colorScheme === 'dark'
   const isLight = colorScheme === 'light'
 
