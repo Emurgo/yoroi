@@ -39,7 +39,7 @@ const queryClient = new QueryClient()
 
 const metricsManager = makeMetricsManager()
 
-const themeManager = {isProduction: isProduction() ? true : false}
+const themeManager = {isProduction: isProduction()}
 
 export const YoroiApp = () => {
   const migrated = useMigrations(rootStorage)
