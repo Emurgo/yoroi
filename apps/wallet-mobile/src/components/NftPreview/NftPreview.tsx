@@ -62,7 +62,7 @@ export const NftPreview = ({
         </SkeletonPlaceholder>
       ) : (
         <Image
-          cachePolicy={shouldShowPlaceholder ? 'none' : cachePolicy}
+          cachePolicy={failed ? 'none' : cachePolicy}
           source={shouldShowPlaceholder ? placeholder : {uri, headers}}
           placeholder={placeholder}
           placeholderContentFit="contain"
