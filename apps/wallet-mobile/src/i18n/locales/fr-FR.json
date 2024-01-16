@@ -820,6 +820,7 @@
   "swap.swapScreen.marketButton": "Market",
   "swap.swapScreen.marketPrice": "Market price",
   "swap.swapScreen.marketPriceInfo": "Market price is the best price available on the market among several DEXes that lets you buy or sell an asset instantly.",
+  "swap.swapScreen.limitPriceInfo": "Limit price in a DEX is a specific pre-set price at which you can trade an asset. Unlike market orders, which execute immediately at the current market price, limit orders are set to execute only when the market reaches the trader's specified price.",
   "swap.swapScreen.noAssetsFound": "No assets found for this pair",
   "swap.swapScreen.noAssetsFoundFor": "Aucun actif trouvé pour \"{search}\"",
   "swap.swapScreen.noPool": "This pair is not available in any liquidity pool",
