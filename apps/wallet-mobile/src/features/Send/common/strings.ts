@@ -39,7 +39,6 @@ export const useStrings = () => {
     helperMemoErrorTooLong: intl.formatMessage(messages.helperMemoErrorTooLong),
     helperMemoInstructions: intl.formatMessage(messages.helperMemoInstructions),
     helperResolverErrorDomainNotFound: intl.formatMessage(messages.helperResolverErrorDomainNotFound),
-    manyNameServersWarning: intl.formatMessage(messages.manyNameServersWarning),
     max: intl.formatMessage(globalMessages.max),
     memoLabel: intl.formatMessage(messages.memoLabel),
     minPrimaryBalanceForTokens: intl.formatMessage(amountInputErrorMessages.minPrimaryBalanceForTokens),
@@ -287,10 +286,6 @@ export const messages = defineMessages({
     id: 'components.send.sendscreen.resolverNoticeText',
     defaultMessage:
       '!!!Yoroi offers a unique chance to use custom and lightning-fast alternatives to the traditional wallet address, such as',
-  },
-  manyNameServersWarning: {
-    id: 'send.warning.resolver.manyNameServers',
-    defaultMessage: '!!!Multiple name servers found. Please select one.',
   },
   helperAddressErrorInvalid: {
     id: 'send.helper.addressError.invalid',

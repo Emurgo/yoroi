@@ -1,13 +1,14 @@
 import {isNameServer, nameServerName} from '@yoroi/resolver'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
-import {Animated, StyleSheet, Text, View} from 'react-native'
+import {defineMessages, useIntl} from 'react-intl'
+import {Animated, StyleSheet, Text as RNText, View} from 'react-native'
 
 import {Icon} from '../../../../../components/Icon'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useSend} from '../../../common/SendContext'
-import {useStrings} from '../../../common/strings'
 
 export const SelectNameServer = () => {
   const {targets, selectedTargetIndex, nameServerSelectedChanged} = useSend()
@@ -20,6 +21,7 @@ export const SelectNameServer = () => {
 
   const [animatedValue] = React.useState(new Animated.Value(0))
   const [waitAnimation, setWaitAnimation] = React.useState(false)
+
   React.useEffect(() => {
     animatedValue.stopAnimation()
     if (shouldShow) {
@@ -43,19 +45,21 @@ export const SelectNameServer = () => {
     nameServerSelectedChanged(nameServer)
   }
 
-  const initial = receiver.selectedNameServer ? labels.indexOf(nameServerName[receiver.selectedNameServer]) : 0
-
   return (
     <Animated.View style={{opacity: animatedValue}}>
+      {shouldShow && <Spacer height={16} />}
+
       {(waitAnimation || shouldShow) && (
         <>
-          <ShowManyAddressWarning />
+          <ButtonGroup labels={labels} onSelect={handleOnSelectNameServer} />
 
-          <Spacer height={16} />
+          {!receiver.selectedNameServer && shouldShow && (
+            <>
+              <Spacer height={16} />
 
-          <ButtonGroup initial={initial} labels={labels} onSelect={handleOnSelectNameServer} />
-
-          <Spacer height={16} />
+              <ShowManyAddressWarning />
+            </>
+          )}
         </>
       )}
     </Animated.View>
@@ -63,7 +67,7 @@ export const SelectNameServer = () => {
 }
 
 export const ShowManyAddressWarning = () => {
-  const strings = useStrings()
+  const localStrings = useLocalStrings()
 
   return (
     <View style={styles.notice}>
@@ -71,7 +75,7 @@ export const ShowManyAddressWarning = () => {
 
       <Spacer height={8} />
 
-      <Text style={styles.text}>{strings.manyNameServersWarning}</Text>
+      <RNText style={styles.text}>{localStrings.manyNameServersWarning}</RNText>
     </View>
   )
 }
@@ -90,9 +94,24 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   text: {
-    fontFamily: 'Rubik-Medium',
     fontSize: 14,
-    fontWeight: '500',
     lineHeight: 22,
+  },
+})
+
+const bold = {b: (text) => <Text bold>{text}</Text>}
+
+export const useLocalStrings = () => {
+  const intl = useIntl()
+
+  return {
+    manyNameServersWarning: intl.formatMessage(messages.manyNameServersWarning, bold),
+  }
+}
+
+export const messages = defineMessages({
+  manyNameServersWarning: {
+    id: 'send.warning.resolver.manyNameServers',
+    defaultMessage: '!!!There are <b>two addresses</b> for this domain. Please SELECT the desired domain.',
   },
 })

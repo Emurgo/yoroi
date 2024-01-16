@@ -1,8 +1,8 @@
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 
 import {Spacer} from '../../../../components/Spacer/Spacer'
-import {COLORS} from '../../../../theme'
 
 type ButtonGroupProps<T> = {
   labels: T[]
@@ -25,15 +25,22 @@ export const ButtonGroup = <T extends string>({
         <>
           {index > 0 && <Spacer width={8} />}
 
-          <TouchableOpacity
-            onPress={() => {
-              setSelected(index)
-              onSelect(index, label)
-            }}
-            style={[styles.button, index === selected && styles.selected]}
+          <LinearGradient
+            style={{borderRadius: 8, padding: 3}}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            colors={['#C6F7ED', '#E4E8F7']}
           >
-            <Text style={styles.label}>{label}</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setSelected(index)
+                onSelect(index, label)
+              }}
+              style={[styles.button, index !== selected && styles.selected]}
+            >
+              <Text style={styles.label}>{label}</Text>
+            </TouchableOpacity>
+          </LinearGradient>
         </>
       ))}
     </View>
@@ -47,13 +54,13 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 8,
     paddingVertical: 8,
-    borderRadius: 8,
+    borderRadius: 6,
   },
   selected: {
-    backgroundColor: COLORS.BORDER_GRAY,
+    backgroundColor: 'white',
   },
   label: {
-    color: COLORS.BLACK,
+    color: '#3154CB',
     fontFamily: 'Rubik-Medium',
     fontWeight: '500',
     lineHeight: 24,
