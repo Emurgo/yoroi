@@ -10,7 +10,7 @@ describe('cnsCryptoAddress', () => {
   beforeEach(jest.clearAllMocks)
 
   it('should return an address for a valid receiver', async () => {
-    const cls = init('ctx')
+    const cls = init
     const receiver = 'fake.ada'
     const address = 'fake-address'
 
@@ -22,7 +22,7 @@ describe('cnsCryptoAddress', () => {
   })
 
   it('should throw invalid domain error', async () => {
-    const cls = init('ctx')
+    const cls = init
     const receiver = 'fake-wrong-domain'
 
     try {
@@ -36,7 +36,7 @@ describe('cnsCryptoAddress', () => {
   })
 
   it('should throw unssupported tld error', async () => {
-    const cls = init('ctx')
+    const cls = init
     const receiver = 'fake-wrong-domain.com'
 
     try {
@@ -50,7 +50,7 @@ describe('cnsCryptoAddress', () => {
   })
 
   it('should catch a resolveAddress error', async () => {
-    const cls = init('ctx')
+    const cls = init
     const receiver = 'domain.ada'
     const error = new Error('random')
     // @ts-ignore

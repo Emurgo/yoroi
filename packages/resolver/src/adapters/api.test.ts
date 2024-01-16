@@ -9,7 +9,7 @@ const mockApiConfig = {
       apiKey: 'mock-api-key',
     },
   },
-  csl: init('ctx'),
+  cslFactory: init,
 }
 const mockError = new Error('Test Error')
 

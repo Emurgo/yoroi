@@ -1,10 +1,10 @@
 import {Resolver} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
 import {handleApiGetCryptoAddress} from './handle/api'
 import {unstoppableApiGetCryptoAddress} from './unstoppable/api'
 import {cnsCryptoAddress} from './cns/api'
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
 type ApiConfig = {
   [Resolver.NameServer.Unstoppable]: {
@@ -27,10 +27,10 @@ const initialDeps = {
 export const resolverApiMaker = (
   {
     apiConfig,
-    csl,
+    cslFactory,
   }: {
     apiConfig: Readonly<ApiConfig>
-    csl: WasmModuleProxy
+    cslFactory: (scope: string) => WasmModuleProxy
   },
   {
     unstoppableApi,
@@ -52,7 +52,7 @@ export const resolverApiMaker = (
   const getUnstoppableCryptoAddress = unstoppableApi.getCryptoAddress(
     apiConfig[Resolver.NameServer.Unstoppable],
   )
-  const getCnsCryptoAddress = cnsApi.getCryptoAddress(csl)
+  const getCnsCryptoAddress = cnsApi.getCryptoAddress(cslFactory)
   // @ts-expect-error TODO: bugfix on TS 5.4 (readonly array of readonly array)
   const operationsGetCryptoAddress: GetCryptoAddressOperations = [
     [Resolver.NameServer.Handle, getHandleCryptoAddress],
