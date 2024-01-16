@@ -1,4 +1,5 @@
 import {Balance} from '@yoroi/types'
+import {SwapOrderType} from '@yoroi/types/lib/swap/order'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
@@ -21,6 +22,7 @@ export type AmountItemProps = {
   inWallet?: boolean
   variant?: 'swap'
   priceImpactRisk?: SwapPriceImpactRisk
+  orderType?: SwapOrderType
 }
 
 export const AmountItem = ({
@@ -31,6 +33,7 @@ export const AmountItem = ({
   inWallet,
   variant,
   priceImpactRisk,
+  orderType,
 }: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
@@ -43,6 +46,7 @@ export const AmountItem = ({
   const formattedQuantity = Quantities.format(quantity, tokenInfo.decimals ?? 0)
   const showSwapDetails = !isPrimary && variant === 'swap'
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk ?? 'none')
+  const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : styles.text.color
 
   return (
     <View style={[style, styles.container]} testID="assetItem">
@@ -54,7 +58,7 @@ export const AmountItem = ({
 
       <Middle>
         <View style={styles.row}>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+          <Text numberOfLines={1} ellipsizeMode="middle" style={[styles.name, styles.text]} testID="tokenInfoText">
             {nameLabel}
           </Text>
 
@@ -75,11 +79,11 @@ export const AmountItem = ({
       <Right>
         {tokenInfo.kind !== 'nft' && variant !== 'swap' && (
           <View style={styles.row} testID="tokenAmountText">
-            {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTheme.text} />}
+            {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
-            {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTheme.text} />}
+            {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
-            <Text style={[styles.quantity, {color: priceImpactRiskTheme.text}]}>
+            <Text style={[styles.quantity, {color: priceImpactRiskTextColor}]}>
               {isPrivacyOff ? '**.*******' : formattedQuantity}
             </Text>
           </View>
@@ -159,5 +163,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  text: {
+    color: '#242838',
   },
 })

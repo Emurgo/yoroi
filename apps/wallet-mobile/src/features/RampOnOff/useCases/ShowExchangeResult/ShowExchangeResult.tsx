@@ -19,7 +19,7 @@ export type ParamsResult = {
   fiatAmount: number
 }
 
-export const ShowExchangeResult = () => {
+export const ShowExchangeResult = ({variant}: {variant?: 'noInfo'}) => {
   const strings = useStrings()
   useHideBottomTabBar()
   const navigateTo = useNavigateTo()
@@ -47,24 +47,32 @@ export const ShowExchangeResult = () => {
         <Text style={styles.congratsText}>
           {strings.congrats}
 
-          <Spacer width={4} />
+          {variant !== 'noInfo' && (
+            <>
+              <Spacer width={4} />
 
-          <TouchableOpacity style={{transform: [{translateY: 3}]}} onPress={handlePressDescribe}>
-            <Icon.Info size={26} />
-          </TouchableOpacity>
+              <TouchableOpacity style={{transform: [{translateY: 3}]}} onPress={handlePressDescribe}>
+                <Icon.Info size={26} />
+              </TouchableOpacity>
+            </>
+          )}
         </Text>
 
         <Spacer height={16} />
 
-        <ContentResult title={strings.cryptoAmountYouGet}>
-          <Text style={styles.contentValueText}>{`${coinAmount ?? 0} ${coin ?? ''}`}</Text>
-        </ContentResult>
+        {variant !== 'noInfo' && (
+          <>
+            <ContentResult title={strings.cryptoAmountYouGet}>
+              <Text style={styles.contentValueText}>{`${coinAmount ?? 0} ${coin ?? ''}`}</Text>
+            </ContentResult>
 
-        <Spacer height={16} />
+            <Spacer height={16} />
 
-        <ContentResult title={strings.fiatAmountYouGet}>
-          <Text style={styles.contentValueText}>{`${fiatAmount ?? 0} ${fiat ?? ''}`}</Text>
-        </ContentResult>
+            <ContentResult title={strings.fiatAmountYouGet}>
+              <Text style={styles.contentValueText}>{`${fiatAmount ?? 0} ${fiat ?? ''}`}</Text>
+            </ContentResult>
+          </>
+        )}
 
         <Spacer height={16} />
 

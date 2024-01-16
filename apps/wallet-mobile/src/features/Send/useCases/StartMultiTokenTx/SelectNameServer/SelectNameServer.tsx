@@ -1,10 +1,11 @@
 import {isNameServer, nameServerName} from '@yoroi/resolver'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
-import {Animated, StyleSheet, Text, View} from 'react-native'
+import {Animated, StyleSheet, Text as RNText, View} from 'react-native'
 
 import {Icon} from '../../../../../components/Icon'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
+import {Text} from '../../../../../components/Text'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useSend} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
@@ -20,6 +21,7 @@ export const SelectNameServer = () => {
 
   const [animatedValue] = React.useState(new Animated.Value(0))
   const [waitAnimation, setWaitAnimation] = React.useState(false)
+
   React.useEffect(() => {
     animatedValue.stopAnimation()
     if (shouldShow) {
@@ -43,19 +45,21 @@ export const SelectNameServer = () => {
     nameServerSelectedChanged(nameServer)
   }
 
-  const initial = receiver.selectedNameServer ? labels.indexOf(nameServerName[receiver.selectedNameServer]) : 0
-
   return (
     <Animated.View style={{opacity: animatedValue}}>
+      {shouldShow && <Spacer height={16} />}
+
       {(waitAnimation || shouldShow) && (
         <>
-          <ShowManyAddressWarning />
+          <ButtonGroup labels={labels} onSelect={handleOnSelectNameServer} />
 
-          <Spacer height={16} />
+          {!receiver.selectedNameServer && shouldShow && (
+            <>
+              <Spacer height={16} />
 
-          <ButtonGroup initial={initial} labels={labels} onSelect={handleOnSelectNameServer} />
-
-          <Spacer height={16} />
+              <ShowManyAddressWarning />
+            </>
+          )}
         </>
       )}
     </Animated.View>
@@ -71,7 +75,7 @@ export const ShowManyAddressWarning = () => {
 
       <Spacer height={8} />
 
-      <Text style={styles.text}>{strings.manyNameServersWarning}</Text>
+      <RNText style={styles.text}>{strings.manyNameServersWarning(bold)}</RNText>
     </View>
   )
 }
@@ -84,15 +88,21 @@ const toAddressRecordsEntries = (addressRecords: Resolver.Receiver['addressRecor
     return acc
   }, [] as [Resolver.NameServer, string][])
 
+const bold = {b: (text) => <Text style={styles.bold}>{text}</Text>}
+
 const styles = StyleSheet.create({
   notice: {
     backgroundColor: '#FDF7E2',
     padding: 12,
   },
   text: {
-    fontFamily: 'Rubik-Medium',
     fontSize: 14,
-    fontWeight: '500',
     lineHeight: 22,
+    fontWeight: '400',
+    fontFamily: 'Rubik-Regular',
+  },
+  bold: {
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
 })

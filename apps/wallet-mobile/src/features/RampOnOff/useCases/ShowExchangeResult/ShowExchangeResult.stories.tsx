@@ -13,6 +13,7 @@ import {ShowExchangeResult} from './ShowExchangeResult'
 
 storiesOf('RampOnOff ShowExchangeResult', module) //
   .add('no params', () => <Init />)
+  .add('no info', () => <ShowExchangeResult variant="noInfo" />)
   .add('with params', () => <WithParams />)
 
 const Init = () => {

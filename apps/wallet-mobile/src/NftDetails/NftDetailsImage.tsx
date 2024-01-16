@@ -32,7 +32,7 @@ export const NftDetailsImage = () => {
     <FadeIn style={styles.container}>
       <ViewTransformer maxScale={3} minScale={1}>
         <View style={styles.contentContainer}>
-          <NftPreview nft={nft} width={dimensions.width} height={dimensions.height} zoom={3} resizeMode="contain" />
+          <NftPreview nft={nft} width={dimensions.width} height={dimensions.height} zoom={1} contentFit="contain" />
         </View>
       </ViewTransformer>
     </FadeIn>

@@ -48,7 +48,7 @@ export const RampOnOffScreen = () => {
               headerShown: false,
             }}
             name="result-ramp-on-off"
-            component={ShowExchangeResult}
+            component={() => <ShowExchangeResult variant="noInfo" />}
           />
         </Stack.Navigator>
       </RampOnOffProvider>

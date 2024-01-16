@@ -124,7 +124,7 @@
     "@yoroi/banxa": "1.5.0",
     "@yoroi/common": "1.5.0",
     "@yoroi/links": "1.5.0",
-    "@yoroi/resolver": "1.5.0",
+    "@yoroi/resolver": "1.5.1-beta.1",
     "@yoroi/staking": "1.5.0",
     "@yoroi/swap": "1.5.0",
     "@yoroi/theme": "^1.0.0",

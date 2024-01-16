@@ -79,8 +79,6 @@ export const StartMultiTokenTxScreen = () => {
 
           <NotifySupportedNameServers />
 
-          <SelectNameServer />
-
           <InputReceiver
             value={receiver.resolve}
             onChangeText={handleOnChangeReceiver}
@@ -89,6 +87,8 @@ export const StartMultiTokenTxScreen = () => {
             error={hasReceiverError}
             errorText={receiverErrorMessage}
           />
+
+          <SelectNameServer />
 
           <Spacer height={16} />
 

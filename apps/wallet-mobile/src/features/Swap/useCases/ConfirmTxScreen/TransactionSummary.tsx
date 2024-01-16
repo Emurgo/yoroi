@@ -41,7 +41,7 @@ export const TransactionSummary = () => {
 
   const priceImpactRisk = getPriceImpactRisk(Number(priceImpact))
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
-  const priceImpactRiskTextColor = priceImpactRiskTheme.text
+  const priceImpactRiskTextColor = type === 'market' ? priceImpactRiskTheme.text : styles.text.color
 
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
@@ -63,6 +63,15 @@ export const TransactionSummary = () => {
 
   const poolIcon = <PoolIcon providerId={pool.provider} size={18} />
 
+  const priceInfoValue = `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`
+  const minAdaInfoValue = `${Quantities.format(cost.deposit.quantity, wallet.primaryTokenInfo.decimals ?? 0)} ${
+    wallet.primaryTokenInfo.ticker
+  }`
+  const minReceivedInfoValue = `${Quantities.format(
+    calculation.buyAmountWithSlippage.quantity,
+    buyTokenInfo.decimals ?? 0,
+  )} ${tokenToBuyName}`
+
   const feesInfo = [
     {
       label: strings.dex.toUpperCase(),
@@ -70,17 +79,15 @@ export const TransactionSummary = () => {
     },
     {
       label: strings.swapMinAdaTitle,
-      value: `${Quantities.format(cost.deposit.quantity, wallet.primaryTokenInfo.decimals ?? 0)} ${
-        wallet.primaryTokenInfo.ticker
-      }`,
+      value: <Text style={styles.text}>{minAdaInfoValue}</Text>,
     },
     {
       label: strings.swapFeesTitle,
-      value: formattedFeeText,
+      value: <Text style={styles.text}>{formattedFeeText}</Text>,
     },
     {
       label: strings.swapLiqProvFee,
-      value: liqFeeQuantityFormatted,
+      value: <Text style={styles.text}>{liqFeeQuantityFormatted}</Text>,
     },
     {
       label: strings.swapMinReceivedTitle,
@@ -88,19 +95,16 @@ export const TransactionSummary = () => {
         <View style={styles.flex}>
           {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
-          <Text style={{...styles.text, color: priceImpactRiskTextColor}}>
-            {`${Quantities.format(
-              calculation.buyAmountWithSlippage.quantity,
-              buyTokenInfo.decimals ?? 0,
-            )} ${tokenToBuyName}`}
+          <Text style={[styles.text, {color: priceImpactRiskTextColor}, styles.alignRight]}>
+            {minReceivedInfoValue}
           </Text>
         </View>
       ),
     },
     {
       label: `${capitalize(type)} ${strings.price}`,
-      value: `${limitDisplayValue} ${tokenToSellName}/${tokenToBuyName}`,
-      info: strings.marketPriceInfo,
+      value: <Text style={[styles.text, styles.alignRight]}>{priceInfoValue}</Text>,
+      info: type === 'market' ? strings.marketPriceInfo : strings.limitPriceInfo,
     },
     {
       label: strings.priceImpact,
@@ -108,7 +112,7 @@ export const TransactionSummary = () => {
         priceImpactRisk === 'none' ? (
           <Text style={{color: '#08C29D'}}>&lt;1%</Text>
         ) : (
-          <View style={{alignItems: 'flex-end'}}>
+          <View style={styles.priceImpactRiskContainer}>
             <View style={styles.flex}>
               {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
@@ -117,11 +121,11 @@ export const TransactionSummary = () => {
               <Text style={{color: priceImpactRiskTextColor}}>{Math.ceil(Number(priceImpact) * 100) / 100}%</Text>
             </View>
 
-            <Text>
-              <Text style={{color: priceImpactRiskTextColor}}>({formattedActualPrice}</Text>
-
-              <Text style={{color: priceImpactRiskTextColor}}>{`${tokenToSellName}/${tokenToBuyName}`})</Text>
-            </Text>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={[{color: priceImpactRiskTextColor}, styles.priceImpactRiskText]}>
+                {`(${formattedActualPrice}${tokenToSellName}/${tokenToBuyName})`}
+              </Text>
+            </View>
           </View>
         ),
       info: strings.priceImpactInfo,
@@ -194,9 +198,7 @@ export const TransactionSummary = () => {
                 )}
               </View>
 
-              <View style={styles.orderValueContainer}>
-                <Text style={[styles.text]}>{orderInfo.value}</Text>
-              </View>
+              <View style={styles.orderValueContainer}>{orderInfo.value}</View>
             </View>
           </View>
         )
@@ -204,7 +206,7 @@ export const TransactionSummary = () => {
 
       <Spacer height={12} />
 
-      {(priceImpactRisk === 'moderate' || priceImpactRisk === 'high') && (
+      {(priceImpactRisk === 'moderate' || priceImpactRisk === 'high') && type === 'market' && (
         <View style={[styles.banner, {backgroundColor: priceImpactRiskTheme.background}]}>
           {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
@@ -226,7 +228,11 @@ export const TransactionSummary = () => {
 
       <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
 
-      <AmountItem wallet={wallet} amount={{tokenId: amounts.sell.tokenId, quantity: amounts.sell.quantity}} />
+      <AmountItem
+        wallet={wallet}
+        amount={{tokenId: amounts.sell.tokenId, quantity: amounts.sell.quantity}}
+        orderType={type}
+      />
 
       <Spacer height={16} />
 
@@ -236,12 +242,28 @@ export const TransactionSummary = () => {
         wallet={wallet}
         amount={{tokenId: amounts.buy.tokenId, quantity: amounts.buy.quantity}}
         priceImpactRisk={priceImpactRisk}
+        orderType={type}
       />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  priceImpactRiskContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+  },
+  priceImpactRiskText: {
+    flex: 1,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    textAlign: 'right',
+  },
+  alignRight: {
+    textAlign: 'right',
+  },
   card: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -300,7 +322,10 @@ const styles = StyleSheet.create({
   },
   orderValueContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    paddingLeft: 8,
+    flex: 1,
   },
   banner: {
     paddingVertical: 12,
