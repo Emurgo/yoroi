@@ -1,3 +1,4 @@
+import {init} from '@emurgo/cross-csl-mobile'
 import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useStorage} from '@yoroi/common'
@@ -55,7 +56,6 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
 import {isMainnetNetworkId} from '../yoroi-wallets/utils'
-import {CardanoMobile} from '../yoroi-wallets/wallets'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
 import {TxHistory} from './TxHistory'
@@ -98,7 +98,7 @@ export const TxHistoryNavigator = () => {
           apiKey: CONFIG.UNSTOPPABLE_API_KEY,
         },
       },
-      csl: CardanoMobile,
+      cslFactory: init,
     })
     const walletStorage = storage.join(`wallet/${wallet.id}/`)
     const resolverStorage = resolverStorageMaker({storage: walletStorage})
