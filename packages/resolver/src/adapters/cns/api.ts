@@ -1,15 +1,19 @@
 import {Api, Resolver} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
-import {WasmModuleProxy} from '@emurgo/cross-csl-core'
+import {WasmModuleProxy, freeContext} from '@emurgo/cross-csl-core'
 import {handleZodErrors} from '../zod-errors'
 import {makeCnsCardanoApi} from './cardano-api-maker'
 import {resolveAddress} from './api-helpers'
 
-export const cnsCryptoAddress = (csl: WasmModuleProxy) => {
+export type WasmModuleProxyFactory = (scope: string) => WasmModuleProxy;
+
+export const cnsCryptoAddress = (cslFactory: WasmModuleProxyFactory) => {
   return async (receiver: string, fetcherConfig?: AxiosRequestConfig) => {
     if (!receiver.includes('.')) throw new Resolver.Errors.InvalidDomain()
     if (!isCnsDomain(receiver)) throw new Resolver.Errors.UnsupportedTld()
 
+    const cslScopeId = String(Math.random());
+    const csl = cslFactory(cslScopeId);
     try {
       const cnsCardanoApi = makeCnsCardanoApi(cnsApiConfig.mainnet.baseUrl)
       const address = resolveAddress(
@@ -22,6 +26,8 @@ export const cnsCryptoAddress = (csl: WasmModuleProxy) => {
       return address
     } catch (error: unknown) {
       return handleCnsApiError(error)
+    } finally {
+      await freeContext(cslScopeId);
     }
   }
 }
