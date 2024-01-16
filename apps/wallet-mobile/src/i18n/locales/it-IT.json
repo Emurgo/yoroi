@@ -773,7 +773,7 @@
   "send.helper.addressError.wrongNetwork": "Please enter an address for the current wallet network",
   "send.helper.resolver.resolvedAddress": "Resolved address",
   "send.helper.resolverError.domainNotFound": "Receiver address, ADA Handle or domain you entered doesn't exist. Please double-check it and try again",
-  "send.warning.resolver.manyNameServers": "There are more than one address for this domain. Please choose the desired name server.",
+  "send.warning.resolver.manyNameServers": "There are <b>two addresses</b> for this domain. Please SELECT the desired domain.",
   "swap.listOrders.card.buttonText": "Cancel order",
   "swap.listOrders.completed": "completed orders",
   "swap.listOrders.emptyCompletedOrders": "No orders completed yet",
