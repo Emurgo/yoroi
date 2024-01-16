@@ -41,6 +41,7 @@ const useStyles = () => {
     text: {
       fontSize: 16,
       fontFamily: 'Rubik',
+      color: theme.color.gray.max,
     },
     label: {
       fontSize: 16,

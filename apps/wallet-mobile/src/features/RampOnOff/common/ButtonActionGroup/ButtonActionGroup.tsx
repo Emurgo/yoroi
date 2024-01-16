@@ -48,7 +48,7 @@ const useStyles = () => {
       backgroundColor: theme.color.gray[200],
     },
     label: {
-      color: theme.color['black-static'],
+      color: theme.color.gray.max,
       fontFamily: 'Rubik-Medium',
       fontWeight: '500',
       lineHeight: 24,

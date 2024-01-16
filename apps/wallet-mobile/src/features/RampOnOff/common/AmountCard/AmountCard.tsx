@@ -141,7 +141,7 @@ const useStyles = () => {
       position: 'absolute',
       top: -7,
       left: 10,
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.gray.min,
       paddingHorizontal: 5,
       fontSize: 12,
       color: theme.color.gray[900],
@@ -164,7 +164,7 @@ const useStyles = () => {
       maxWidth: 200,
       height: 34,
       fontSize: 16,
-      color: theme.color['black-static'],
+      color: theme.color.gray.max,
     },
     grayText: {
       color: theme.color.gray[600],
@@ -181,6 +181,7 @@ const useStyles = () => {
     coinName: {
       fontSize: 16,
       fontWeight: '400',
+      color: theme.color.gray.max,
     },
     balanceText: {
       fontSize: 12,
