@@ -6,8 +6,16 @@ import {Api, App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
-import {PixelRatio} from 'react-native'
-import {onlineManager, useMutation, UseMutationOptions, useQueries, useQuery, UseQueryOptions} from 'react-query'
+import {PixelRatio, Platform} from 'react-native'
+import {
+  onlineManager,
+  useMutation,
+  UseMutationOptions,
+  useQueries,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
 import {useWalletManager} from '../../WalletManager'
@@ -975,8 +983,9 @@ type NativeAssetImageRequest = {
   width: string | number
   height: string | number
   mediaType?: string
-  resizeMode?: 'contain' | 'cover' | 'fill' | 'inside' | 'outside'
+  contentFit?: 'contain' | 'cover' | 'fill' | 'inside' | 'outside'
   kind?: 'logo' | 'metadata'
+  responseType?: 'binary' | 'base64'
 }
 export const useNativeAssetImage = ({
   networkId,
@@ -985,34 +994,83 @@ export const useNativeAssetImage = ({
   width,
   height,
   mediaType = 'image/webp',
-  resizeMode = 'cover',
+  contentFit = 'cover',
   kind = 'metadata',
+  responseType = 'binary',
 }: NativeAssetImageRequest) => {
   const network = networkId === 300 ? 'preprod' : 'mainnet'
   const pWidth = PixelRatio.getPixelSizeForLayoutSize(Number(width))
   const pHeight = PixelRatio.getPixelSizeForLayoutSize(Number(height))
-  const isMediaTypeSupported = supportedTypes.includes(mediaType.toLocaleLowerCase())
+  const lcMediaType = mediaType.toLocaleLowerCase()
+  const isMediaTypeSupported = supportedTypes.includes(lcMediaType)
+  const needsGif = lcMediaType === 'image/gif' && Platform.OS === 'ios'
+  const mimeType = needsGif ? 'image/gif' : 'image/webp'
+  const headers = useMemo(
+    () => ({
+      Accept: responseType === 'binary' ? mimeType : 'text/plain',
+      'X-Encoded-Mimetype': mimeType,
+    }),
+    [mimeType, responseType],
+  )
+  const queryClient = useQueryClient()
+
+  const [isError, setError] = React.useState(false)
+  const [isLoading, setLoading] = React.useState(false)
+
+  const queryKey = ['native-asset-img', policy, name, responseType, `${pWidth}x${pHeight}`, contentFit]
+
   const query = useQuery({
+    enabled: isMediaTypeSupported,
     staleTime: Infinity,
-    queryKey: ['native-asset-img', policy, name, `${width}x${height}`, resizeMode],
-    queryFn: async () => {
-      const response = await fetch(
-        `https://${network}.cardano-nativeassets-prod.emurgornd.com/${policy}/${name}?width=${pWidth}&height=${pHeight}&kind=${kind}&fit=${resizeMode}`,
-      )
+    queryKey,
+    queryFn: async (context) => {
+      const count = queryClient.getQueryState(context.queryKey)?.dataUpdateCount
+      const cache = count ? `&cache=${count}` : ''
+      const requestUrl = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=${pWidth}&height=${pHeight}&kind=${kind}&fit=${contentFit}${cache}`
+
+      if (responseType === 'binary') {
+        setLoading(true)
+        setError(false)
+        return requestUrl
+      }
+
+      const response = await fetch(requestUrl, {
+        headers,
+      })
       if (!response.ok) {
-        throw new Error(`NativeAsset CDN response was not ok for policy=${policy} name=${name}`)
+        throw new Error(`NativeAsset CDN: Not ok - ${requestUrl}`)
       }
       if (response.status === 201 || response.status === 202) {
-        throw new Error(`NativeAsset CDN still processing policy=${policy} name=${name}`)
+        throw new Error(`NativeAsset CDN: Processing - ${requestUrl}`)
       }
-      return `data:image/webp;base64,${await response.text()}`
+      return `data:${mimeType};base64,${await response.text()}`
     },
-    enabled: isMediaTypeSupported,
   })
+
+  const timerRef = React.useRef<ReturnType<typeof setTimeout>>()
+  React.useEffect(() => () => clearTimeout(timerRef.current), [])
+
+  const onError = useCallback(() => {
+    setError(true)
+    const count = queryClient.getQueryState(queryKey)?.dataUpdateCount
+    if (count && count < 10) {
+      timerRef.current = setTimeout(query.refetch, count * 300)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, queryClient])
+
+  const onLoad = useCallback(() => {
+    setLoading(false)
+  }, [])
 
   return {
     ...query,
     uri: query.data,
+    headers,
+    isError: isError || query.isError,
+    isLoading: isLoading || query.isLoading,
+    onError,
+    onLoad,
   }
 }
 
@@ -1026,7 +1084,7 @@ export const useNativeAssetInvalidation = ({networkId, policy, name}: NativeAsse
   const mutation = useMutationWithInvalidations({
     invalidateQueries: [['native-asset-img', policy, name]],
     mutationFn: async () => {
-      const response = await fetch(`https://${network}.cardano-nativeassets-prod.emurgornd.com/invalidate`, {
+      const response = await fetch(`https://${network}.processed-media.yoroiwallet.com/invalidate`, {
         method: 'POST',
         body: JSON.stringify({policy, name}),
       })

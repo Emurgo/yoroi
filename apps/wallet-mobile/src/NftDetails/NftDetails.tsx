@@ -91,7 +91,7 @@ const UnModeratedNftImage = ({nft}: {nft: Balance.TokenInfo}) => {
   const navigateTo = useNavigateTo()
   return (
     <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
-      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} resizeMode="contain" />
+      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} contentFit="contain" />
     </TouchableOpacity>
   )
 }
@@ -112,7 +112,7 @@ const ModeratedNftImage = ({nft}: {nft: Balance.TokenInfo}) => {
 
   return (
     <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
-      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} resizeMode="contain" />
+      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} contentFit="contain" />
     </TouchableOpacity>
   )
 }
