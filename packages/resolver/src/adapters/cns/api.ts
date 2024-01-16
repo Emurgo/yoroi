@@ -5,13 +5,15 @@ import {handleZodErrors} from '../zod-errors'
 import {makeCnsCardanoApi} from './cardano-api-maker'
 import {resolveAddress} from './api-helpers'
 
-export const cnsCryptoAddress = (cslFactory: (scope: string) => WasmModuleProxy) => {
+export const cnsCryptoAddress = (
+  cslFactory: (scope: string) => WasmModuleProxy,
+) => {
   return async (receiver: string, fetcherConfig?: AxiosRequestConfig) => {
     if (!receiver.includes('.')) throw new Resolver.Errors.InvalidDomain()
     if (!isCnsDomain(receiver)) throw new Resolver.Errors.UnsupportedTld()
 
-    const cslScopeId = String(Math.random());
-    const csl = cslFactory(cslScopeId);
+    const cslScopeId = String(Math.random())
+    const csl = cslFactory(cslScopeId)
     try {
       const cnsCardanoApi = makeCnsCardanoApi(cnsApiConfig.mainnet.baseUrl)
       const address = resolveAddress(
@@ -25,7 +27,7 @@ export const cnsCryptoAddress = (cslFactory: (scope: string) => WasmModuleProxy)
     } catch (error: unknown) {
       return handleCnsApiError(error)
     } finally {
-      await freeContext(cslScopeId);
+      await freeContext(cslScopeId)
     }
   }
 }

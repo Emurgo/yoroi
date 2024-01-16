@@ -4,7 +4,7 @@ import {AxiosRequestConfig} from 'axios'
 import {handleApiGetCryptoAddress} from './handle/api'
 import {unstoppableApiGetCryptoAddress} from './unstoppable/api'
 import {cnsCryptoAddress} from './cns/api'
-import {WasmModuleProxy} from "@emurgo/cross-csl-core";
+import {WasmModuleProxy} from '@emurgo/cross-csl-core'
 
 type ApiConfig = {
   [Resolver.NameServer.Unstoppable]: {
