@@ -41,7 +41,7 @@ export const TransactionSummary = () => {
 
   const priceImpactRisk = getPriceImpactRisk(Number(priceImpact))
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk)
-  const priceImpactRiskTextColor = priceImpactRiskTheme.text
+  const priceImpactRiskTextColor = type === 'market' ? priceImpactRiskTheme.text : styles.text.color
 
   const sellTokenInfo = useTokenInfo({wallet, tokenId: amounts.sell.tokenId})
   const buyTokenInfo = useTokenInfo({wallet, tokenId: amounts.buy.tokenId})
@@ -206,7 +206,7 @@ export const TransactionSummary = () => {
 
       <Spacer height={12} />
 
-      {(priceImpactRisk === 'moderate' || priceImpactRisk === 'high') && (
+      {(priceImpactRisk === 'moderate' || priceImpactRisk === 'high') && type === 'market' && (
         <View style={[styles.banner, {backgroundColor: priceImpactRiskTheme.background}]}>
           {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
@@ -228,7 +228,11 @@ export const TransactionSummary = () => {
 
       <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
 
-      <AmountItem wallet={wallet} amount={{tokenId: amounts.sell.tokenId, quantity: amounts.sell.quantity}} />
+      <AmountItem
+        wallet={wallet}
+        amount={{tokenId: amounts.sell.tokenId, quantity: amounts.sell.quantity}}
+        orderType={type}
+      />
 
       <Spacer height={16} />
 
@@ -238,6 +242,7 @@ export const TransactionSummary = () => {
         wallet={wallet}
         amount={{tokenId: amounts.buy.tokenId, quantity: amounts.buy.quantity}}
         priceImpactRisk={priceImpactRisk}
+        orderType={type}
       />
     </View>
   )

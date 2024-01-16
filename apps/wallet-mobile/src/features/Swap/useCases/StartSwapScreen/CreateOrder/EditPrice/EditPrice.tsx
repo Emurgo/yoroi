@@ -72,11 +72,13 @@ export const EditPrice = () => {
         </View>
       </View>
 
-      <ShowPriceImpact
-        priceImpact={Number(prices?.priceImpact)}
-        formattedPrice={formattedPrice}
-        pair={`${tokenToSellName}/${tokenToBuyName}`}
-      />
+      {orderData.type === 'market' && (
+        <ShowPriceImpact
+          priceImpact={Number(prices?.priceImpact)}
+          formattedPrice={formattedPrice}
+          pair={`${tokenToSellName}/${tokenToBuyName}`}
+        />
+      )}
     </>
   )
 }
