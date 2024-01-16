@@ -3,7 +3,8 @@ import {AxiosRequestConfig} from 'axios'
 
 import {handleApiGetCryptoAddress} from './handle/api'
 import {unstoppableApiGetCryptoAddress} from './unstoppable/api'
-import {cnsCryptoAddress, WasmModuleProxyFactory} from './cns/api'
+import {cnsCryptoAddress} from './cns/api'
+import {WasmModuleProxy} from "@emurgo/cross-csl-core";
 
 type ApiConfig = {
   [Resolver.NameServer.Unstoppable]: {
@@ -29,7 +30,7 @@ export const resolverApiMaker = (
     cslFactory,
   }: {
     apiConfig: Readonly<ApiConfig>
-    cslFactory: WasmModuleProxyFactory
+    cslFactory: (scope: string) => WasmModuleProxy
   },
   {
     unstoppableApi,

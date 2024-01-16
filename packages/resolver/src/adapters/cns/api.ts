@@ -5,9 +5,7 @@ import {handleZodErrors} from '../zod-errors'
 import {makeCnsCardanoApi} from './cardano-api-maker'
 import {resolveAddress} from './api-helpers'
 
-export type WasmModuleProxyFactory = (scope: string) => WasmModuleProxy;
-
-export const cnsCryptoAddress = (cslFactory: WasmModuleProxyFactory) => {
+export const cnsCryptoAddress = (cslFactory: (scope: string) => WasmModuleProxy) => {
   return async (receiver: string, fetcherConfig?: AxiosRequestConfig) => {
     if (!receiver.includes('.')) throw new Resolver.Errors.InvalidDomain()
     if (!isCnsDomain(receiver)) throw new Resolver.Errors.UnsupportedTld()
