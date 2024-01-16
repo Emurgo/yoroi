@@ -88,6 +88,8 @@ const toAddressRecordsEntries = (addressRecords: Resolver.Receiver['addressRecor
     return acc
   }, [] as [Resolver.NameServer, string][])
 
+const bold = {b: (text) => <Text style={styles.bold}>{text}</Text>}
+
 const styles = StyleSheet.create({
   notice: {
     backgroundColor: '#FDF7E2',
@@ -96,7 +98,11 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     lineHeight: 22,
+    fontWeight: '400',
+    fontFamily: 'Rubik-Regular',
+  },
+  bold: {
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
 })
-
-const bold = {b: (text) => <Text bold>{text}</Text>}
