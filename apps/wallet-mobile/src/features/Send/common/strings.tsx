@@ -39,6 +39,7 @@ export const useStrings = () => {
     helperMemoErrorTooLong: intl.formatMessage(messages.helperMemoErrorTooLong),
     helperMemoInstructions: intl.formatMessage(messages.helperMemoInstructions),
     helperResolverErrorDomainNotFound: intl.formatMessage(messages.helperResolverErrorDomainNotFound),
+    manyNameServersWarning: (options) => intl.formatMessage(messages.manyNameServersWarning, options),
     max: intl.formatMessage(globalMessages.max),
     memoLabel: intl.formatMessage(messages.memoLabel),
     minPrimaryBalanceForTokens: intl.formatMessage(amountInputErrorMessages.minPrimaryBalanceForTokens),
@@ -202,6 +203,10 @@ export const messages = defineMessages({
   youHave: {
     id: 'components.send.assetselectorscreen.youHave',
     defaultMessage: '!!!You have',
+  },
+  manyNameServersWarning: {
+    id: 'send.warning.resolver.manyNameServers',
+    defaultMessage: '!!!There are <b>two addresses</b> for this domain. Please SELECT the desired domain.',
   },
   noAssetsAddedYet: {
     id: 'components.send.assetselectorscreen.noAssetsAddedYet',

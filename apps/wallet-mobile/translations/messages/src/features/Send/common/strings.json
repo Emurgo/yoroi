@@ -2,859 +2,874 @@
   {
     "id": "components.send.sendscreen.amountInput.error.INVALID_AMOUNT",
     "defaultMessage": "!!!Please enter valid amount",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 76,
+      "line": 77,
       "column": 18,
-      "index": 4866
+      "index": 4969
     },
     "end": {
-      "line": 79,
+      "line": 80,
       "column": 3,
-      "index": 4994
+      "index": 5097
     }
   },
   {
     "id": "components.send.sendscreen.amountInput.error.TOO_MANY_DECIMAL_PLACES",
     "defaultMessage": "!!!Please enter valid amount",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 80,
+      "line": 81,
       "column": 27,
-      "index": 5023
+      "index": 5126
     },
     "end": {
-      "line": 83,
+      "line": 84,
       "column": 3,
-      "index": 5160
+      "index": 5263
     }
   },
   {
     "id": "components.send.sendscreen.amountInput.error.TOO_LARGE",
     "defaultMessage": "!!!Amount too large",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 84,
+      "line": 85,
       "column": 13,
-      "index": 5175
+      "index": 5278
     },
     "end": {
-      "line": 87,
+      "line": 88,
       "column": 3,
-      "index": 5289
+      "index": 5392
     }
   },
   {
     "id": "components.send.sendscreen.amountInput.error.TOO_LOW",
     "defaultMessage": "!!!Amount is too low",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 88,
+      "line": 89,
       "column": 11,
-      "index": 5302
+      "index": 5405
     },
     "end": {
-      "line": 91,
+      "line": 92,
       "column": 3,
-      "index": 5415
+      "index": 5518
     }
   },
   {
     "id": "components.send.sendscreen.amountInput.error.LT_MIN_UTXO",
     "defaultMessage": "!!!Cannot send less than {minUtxo} {ticker}",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 92,
+      "line": 93,
       "column": 15,
-      "index": 5432
+      "index": 5535
     },
     "end": {
-      "line": 95,
+      "line": 96,
       "column": 3,
-      "index": 5572
+      "index": 5675
     }
   },
   {
     "id": "components.send.sendscreen.amountInput.error.NEGATIVE",
     "defaultMessage": "!!!Amount must be positive",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 96,
+      "line": 97,
       "column": 12,
-      "index": 5586
+      "index": 5689
     },
     "end": {
-      "line": 99,
+      "line": 100,
       "column": 3,
-      "index": 5706
+      "index": 5809
     }
   },
   {
     "id": "components.send.sendscreen.amountInput.error.insufficientBalance",
     "defaultMessage": "!!!Not enough money to make this transaction",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 100,
+      "line": 101,
       "column": 23,
-      "index": 5731
+      "index": 5834
     },
     "end": {
-      "line": 103,
+      "line": 104,
       "column": 3,
-      "index": 5880
+      "index": 5983
     }
   },
   {
     "id": "components.send.sendscreen.amountInput.error.assetOverflow",
     "defaultMessage": "!!!!Maximum value of a token inside a UTXO exceeded (overflow).",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 104,
+      "line": 105,
       "column": 17,
-      "index": 5899
+      "index": 6002
     },
     "end": {
-      "line": 107,
+      "line": 108,
       "column": 3,
-      "index": 6061
+      "index": 6164
     }
   },
   {
     "id": "global.info.minPrimaryBalanceForTokens",
     "defaultMessage": "!!!Keep some balance for tokens",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 108,
+      "line": 109,
       "column": 30,
-      "index": 6093
+      "index": 6196
     },
     "end": {
-      "line": 111,
+      "line": 112,
       "column": 3,
-      "index": 6203
+      "index": 6306
     }
   },
   {
     "id": "components.send.sendscreen.walletAddress",
     "defaultMessage": "!!!Wallet Address",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 115,
+      "line": 116,
       "column": 17,
-      "index": 6267
+      "index": 6370
     },
     "end": {
-      "line": 118,
+      "line": 119,
       "column": 3,
-      "index": 6365
+      "index": 6468
     }
   },
   {
     "id": "components.send.sendscreen.receiver",
     "defaultMessage": "!!!Receiver",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 119,
+      "line": 120,
       "column": 12,
-      "index": 6379
+      "index": 6482
     },
     "end": {
-      "line": 122,
+      "line": 123,
       "column": 3,
-      "index": 6466
+      "index": 6569
     }
   },
   {
     "id": "components.send.sendscreen.feeLabel",
     "defaultMessage": "!!!Fee",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 123,
+      "line": 124,
       "column": 12,
-      "index": 6480
+      "index": 6583
     },
     "end": {
-      "line": 126,
+      "line": 127,
       "column": 3,
-      "index": 6562
+      "index": 6665
     }
   },
   {
     "id": "components.send.sendscreen.feeNotAvailable",
     "defaultMessage": "!!!-",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 127,
+      "line": 128,
       "column": 19,
-      "index": 6583
+      "index": 6686
     },
     "end": {
-      "line": 130,
+      "line": 131,
       "column": 3,
-      "index": 6670
+      "index": 6773
     }
   },
   {
     "id": "global.txLabels.balanceAfterTx",
     "defaultMessage": "!!!Balance after",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 131,
+      "line": 132,
       "column": 21,
-      "index": 6693
+      "index": 6796
     },
     "end": {
-      "line": 134,
+      "line": 135,
       "column": 3,
-      "index": 6780
+      "index": 6883
     }
   },
   {
     "id": "components.send.sendscreen.balanceAfterNotAvailable",
     "defaultMessage": "!!!-",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 135,
+      "line": 136,
       "column": 28,
-      "index": 6810
+      "index": 6913
     },
     "end": {
-      "line": 138,
+      "line": 139,
       "column": 3,
-      "index": 6906
+      "index": 7009
     }
   },
   {
     "id": "components.send.sendscreen.availableFundsBannerIsFetching",
     "defaultMessage": "!!!Checking balance...",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 139,
+      "line": 140,
       "column": 34,
-      "index": 6942
+      "index": 7045
     },
     "end": {
-      "line": 142,
+      "line": 143,
       "column": 3,
-      "index": 7062
+      "index": 7165
     }
   },
   {
     "id": "components.send.sendscreen.availableFundsBannerNotAvailable",
     "defaultMessage": "!!!-",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 143,
+      "line": 144,
       "column": 36,
-      "index": 7100
+      "index": 7203
     },
     "end": {
-      "line": 146,
+      "line": 147,
       "column": 3,
-      "index": 7204
+      "index": 7307
     }
   },
   {
     "id": "components.send.sendscreen.addressInputErrorInvalidAddress",
     "defaultMessage": "!!!Please enter valid address",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 147,
+      "line": 148,
       "column": 35,
-      "index": 7241
+      "index": 7344
     },
     "end": {
-      "line": 150,
+      "line": 151,
       "column": 3,
-      "index": 7369
+      "index": 7472
     }
   },
   {
     "id": "components.send.sendscreen.addressInputErrorInvalidDomain",
     "defaultMessage": "!!!Please enter valid domain",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 151,
+      "line": 152,
       "column": 34,
-      "index": 7405
+      "index": 7508
     },
     "end": {
-      "line": 154,
+      "line": 155,
       "column": 3,
-      "index": 7531
+      "index": 7634
     }
   },
   {
     "id": "components.send.confirmscreen.receiver",
     "defaultMessage": "!!!Receiver address, ADA Handle or domains",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 155,
+      "line": 156,
       "column": 21,
-      "index": 7554
+      "index": 7657
     },
     "end": {
-      "line": 158,
+      "line": 159,
       "column": 3,
-      "index": 7675
+      "index": 7778
     }
   },
   {
     "id": "components.send.sendscreen.checkboxSendAllAssets",
     "defaultMessage": "!!!Send all assets (including all tokens)",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 159,
+      "line": 160,
       "column": 25,
-      "index": 7702
+      "index": 7805
     },
     "end": {
-      "line": 162,
+      "line": 163,
       "column": 3,
-      "index": 7832
+      "index": 7935
     }
   },
   {
     "id": "components.send.sendscreen.checkboxSendAll",
     "defaultMessage": "!!!Send all {assetId}",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 163,
+      "line": 164,
       "column": 19,
-      "index": 7853
+      "index": 7956
     },
     "end": {
-      "line": 166,
+      "line": 167,
       "column": 3,
-      "index": 7957
+      "index": 8060
     }
   },
   {
     "id": "components.send.sendscreen.domainNotRegisteredError",
     "description": "some desc",
     "defaultMessage": "!!!Domain is not registered",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 167,
+      "line": 168,
       "column": 28,
-      "index": 7987
+      "index": 8090
     },
     "end": {
-      "line": 171,
+      "line": 172,
       "column": 3,
-      "index": 8136
+      "index": 8239
     }
   },
   {
     "id": "components.send.sendscreen.domainRecordNotFoundError",
     "description": "some desc",
     "defaultMessage": "!!!No Cardano record found for this domain",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 172,
+      "line": 173,
       "column": 29,
-      "index": 8167
+      "index": 8270
     },
     "end": {
-      "line": 176,
+      "line": 177,
       "column": 3,
-      "index": 8332
+      "index": 8435
     }
   },
   {
     "id": "components.send.sendscreen.domainUnsupportedError",
     "description": "some desc",
     "defaultMessage": "!!!Domain is not supported",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 177,
+      "line": 178,
       "column": 26,
-      "index": 8360
+      "index": 8463
     },
     "end": {
-      "line": 181,
+      "line": 182,
       "column": 3,
-      "index": 8506
+      "index": 8609
     }
   },
   {
     "id": "components.send.sendscreen.searchTokens",
     "defaultMessage": "!!!Search tokens",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 182,
+      "line": 183,
       "column": 16,
-      "index": 8524
+      "index": 8627
     },
     "end": {
-      "line": 185,
+      "line": 186,
       "column": 3,
-      "index": 8620
+      "index": 8723
     }
   },
   {
     "id": "components.send.selectasset.title",
     "defaultMessage": "!!!Select asset",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 186,
+      "line": 187,
       "column": 20,
-      "index": 8642
+      "index": 8745
     },
     "end": {
-      "line": 189,
+      "line": 190,
       "column": 3,
-      "index": 8731
+      "index": 8834
     }
   },
   {
     "id": "components.send.assetselectorscreen.unknownAsset",
     "defaultMessage": "!!!Unknown asset",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 190,
+      "line": 191,
       "column": 16,
-      "index": 8749
+      "index": 8852
     },
     "end": {
-      "line": 193,
+      "line": 194,
       "column": 3,
-      "index": 8854
+      "index": 8957
     }
   },
   {
     "id": "components.send.assetselectorscreen.noAssets",
     "defaultMessage": "!!!No assets found",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 194,
+      "line": 195,
       "column": 12,
-      "index": 8868
+      "index": 8971
     },
     "end": {
-      "line": 197,
+      "line": 198,
       "column": 3,
-      "index": 8971
+      "index": 9074
     }
   },
   {
     "id": "components.send.assetselectorscreen.found",
     "defaultMessage": "!!!found",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 198,
+      "line": 199,
       "column": 9,
-      "index": 8982
+      "index": 9085
     },
     "end": {
-      "line": 201,
+      "line": 202,
       "column": 3,
-      "index": 9072
+      "index": 9175
     }
   },
   {
     "id": "components.send.assetselectorscreen.youHave",
     "defaultMessage": "!!!You have",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 202,
+      "line": 203,
       "column": 11,
-      "index": 9085
+      "index": 9188
     },
     "end": {
-      "line": 205,
+      "line": 206,
       "column": 3,
-      "index": 9180
+      "index": 9283
+    }
+  },
+  {
+    "id": "send.warning.resolver.manyNameServers",
+    "defaultMessage": "!!!There are <b>two addresses</b> for this domain. Please SELECT the desired domain.",
+    "file": "src/features/Send/common/strings.tsx",
+    "start": {
+      "line": 207,
+      "column": 26,
+      "index": 9311
+    },
+    "end": {
+      "line": 210,
+      "column": 3,
+      "index": 9473
     }
   },
   {
     "id": "components.send.assetselectorscreen.noAssetsAddedYet",
     "defaultMessage": "!!!No {fungible} added yet",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 206,
+      "line": 211,
       "column": 20,
-      "index": 9202
+      "index": 9495
     },
     "end": {
-      "line": 209,
+      "line": 214,
       "column": 3,
-      "index": 9321
+      "index": 9614
     }
   },
   {
     "id": "components.send.sendscreen.sendAllWarningTitle",
     "defaultMessage": "!!!Do you really want to send all?",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 210,
+      "line": 215,
       "column": 23,
-      "index": 9346
+      "index": 9639
     },
     "end": {
-      "line": 213,
+      "line": 218,
       "column": 3,
-      "index": 9467
+      "index": 9760
     }
   },
   {
     "id": "components.send.sendscreen.sendAllWarningText",
     "defaultMessage": "!!!You have selected the send all option. Please confirm that you understand how this feature works.",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 214,
+      "line": 219,
       "column": 22,
-      "index": 9491
+      "index": 9784
     },
     "end": {
-      "line": 218,
+      "line": 223,
       "column": 3,
-      "index": 9683
+      "index": 9976
     }
   },
   {
     "id": "components.send.sendscreen.sendAllWarningAlert1",
     "defaultMessage": "!!!All you {assetNameOrId} balance will be transferred in this transaction.",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 219,
+      "line": 224,
       "column": 24,
-      "index": 9709
+      "index": 10002
     },
     "end": {
-      "line": 222,
+      "line": 227,
       "column": 3,
-      "index": 9872
+      "index": 10165
     }
   },
   {
     "id": "components.send.sendscreen.sendAllWarningAlert2",
     "defaultMessage": "!!!All your tokens, including NFTs and any other native assets in your wallet, will also be transferred in this transaction.",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 223,
+      "line": 228,
       "column": 24,
-      "index": 9898
+      "index": 10191
     },
     "end": {
-      "line": 228,
+      "line": 233,
       "column": 3,
-      "index": 10127
+      "index": 10420
     }
   },
   {
     "id": "components.send.sendscreen.sendAllWarningAlert3",
     "defaultMessage": "!!!After you confirm the transaction in the next screen, your wallet will be emptied.",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 229,
+      "line": 234,
       "column": 24,
-      "index": 10153
+      "index": 10446
     },
     "end": {
-      "line": 232,
+      "line": 237,
       "column": 3,
-      "index": 10326
+      "index": 10619
     }
   },
   {
     "id": "components.send.sendscreen.continueButton",
     "defaultMessage": "!!!Continue",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 233,
+      "line": 238,
       "column": 18,
-      "index": 10346
+      "index": 10639
     },
     "end": {
-      "line": 236,
+      "line": 241,
       "column": 3,
-      "index": 10439
+      "index": 10732
     }
   },
   {
     "id": "components.send.sendscreen.errorBannerNetworkError",
     "defaultMessage": "!!!We are experiencing issues with fetching your current balance. Click to retry.",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 237,
+      "line": 242,
       "column": 27,
-      "index": 10468
+      "index": 10761
     },
     "end": {
-      "line": 240,
+      "line": 245,
       "column": 3,
-      "index": 10640
+      "index": 10933
     }
   },
   {
     "id": "components.send.sendscreen.errorBannerPendingOutgoingTransaction",
     "defaultMessage": "!!!You cannot send a new transaction while an existing one is still pending",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 241,
+      "line": 246,
       "column": 41,
-      "index": 10683
+      "index": 10976
     },
     "end": {
-      "line": 244,
+      "line": 249,
       "column": 3,
-      "index": 10863
+      "index": 11156
     }
   },
   {
     "id": "components.send.sendscreen.submittedTxTitle",
     "defaultMessage": "!!!Transaction submitted",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 245,
+      "line": 250,
       "column": 20,
-      "index": 10885
+      "index": 11178
     },
     "end": {
-      "line": 248,
-      "column": 3,
-      "index": 10993
-    }
-  },
-  {
-    "id": "components.send.sendscreen.submittedTxText",
-    "defaultMessage": "!!!Check this transaction in the list of wallet transactions",
-    "file": "src/features/Send/common/strings.ts",
-    "start": {
-      "line": 249,
-      "column": 19,
-      "index": 11014
-    },
-    "end": {
-      "line": 252,
-      "column": 3,
-      "index": 11157
-    }
-  },
-  {
-    "id": "components.send.sendscreen.submittedTxButton",
-    "defaultMessage": "!!!Go to transactions",
-    "file": "src/features/Send/common/strings.ts",
-    "start": {
       "line": 253,
-      "column": 21,
-      "index": 11180
-    },
-    "end": {
-      "line": 256,
       "column": 3,
       "index": 11286
     }
   },
   {
-    "id": "components.send.sendscreen.failedTxTitle",
-    "defaultMessage": "!!!Transaction failed",
-    "file": "src/features/Send/common/strings.ts",
+    "id": "components.send.sendscreen.submittedTxText",
+    "defaultMessage": "!!!Check this transaction in the list of wallet transactions",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 257,
-      "column": 17,
-      "index": 11305
+      "line": 254,
+      "column": 19,
+      "index": 11307
     },
     "end": {
-      "line": 260,
+      "line": 257,
       "column": 3,
-      "index": 11407
+      "index": 11450
+    }
+  },
+  {
+    "id": "components.send.sendscreen.submittedTxButton",
+    "defaultMessage": "!!!Go to transactions",
+    "file": "src/features/Send/common/strings.tsx",
+    "start": {
+      "line": 258,
+      "column": 21,
+      "index": 11473
+    },
+    "end": {
+      "line": 261,
+      "column": 3,
+      "index": 11579
+    }
+  },
+  {
+    "id": "components.send.sendscreen.failedTxTitle",
+    "defaultMessage": "!!!Transaction failed",
+    "file": "src/features/Send/common/strings.tsx",
+    "start": {
+      "line": 262,
+      "column": 17,
+      "index": 11598
+    },
+    "end": {
+      "line": 265,
+      "column": 3,
+      "index": 11700
     }
   },
   {
     "id": "components.send.sendscreen.failedTxText",
     "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 261,
+      "line": 266,
       "column": 16,
-      "index": 11425
+      "index": 11718
     },
     "end": {
-      "line": 264,
+      "line": 269,
       "column": 3,
-      "index": 11580
+      "index": 11873
     }
   },
   {
     "id": "components.send.sendscreen.failedTxButton",
     "defaultMessage": "!!!Try again",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 265,
+      "line": 270,
       "column": 18,
-      "index": 11600
+      "index": 11893
     },
     "end": {
-      "line": 268,
+      "line": 273,
       "column": 3,
-      "index": 11694
+      "index": 11987
     }
   },
   {
     "id": "global.assets.assetLabel",
     "defaultMessage": "!!!Asset",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 269,
+      "line": 274,
       "column": 9,
-      "index": 11705
+      "index": 11998
     },
     "end": {
-      "line": 272,
+      "line": 277,
       "column": 3,
-      "index": 11778
+      "index": 12071
     }
   },
   {
     "id": "components.send.addressreaderqr.text",
     "defaultMessage": "!!!Scan recipients QR code to add a wallet address",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 273,
+      "line": 278,
       "column": 23,
-      "index": 11803
+      "index": 12096
     },
     "end": {
-      "line": 276,
+      "line": 281,
       "column": 3,
-      "index": 11930
+      "index": 12223
     }
   },
   {
     "id": "components.send.sendscreen.resolvedAddress",
     "defaultMessage": "!!!Related Address",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 277,
+      "line": 282,
       "column": 19,
-      "index": 11951
+      "index": 12244
     },
     "end": {
-      "line": 280,
+      "line": 285,
       "column": 3,
-      "index": 12052
+      "index": 12345
     }
   },
   {
     "id": "components.send.sendscreen.resolverNoticeTitle",
     "defaultMessage": "!!!Yoroi supports more addresses",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 281,
+      "line": 286,
       "column": 23,
-      "index": 12077
+      "index": 12370
     },
     "end": {
-      "line": 284,
+      "line": 289,
       "column": 3,
-      "index": 12196
+      "index": 12489
     }
   },
   {
     "id": "components.send.sendscreen.resolverNoticeText",
     "defaultMessage": "!!!Yoroi offers a unique chance to use custom and lightning-fast alternatives to the traditional wallet address, such as",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 285,
+      "line": 290,
       "column": 22,
-      "index": 12220
+      "index": 12513
     },
     "end": {
-      "line": 289,
+      "line": 294,
       "column": 3,
-      "index": 12432
+      "index": 12725
     }
   },
   {
     "id": "send.helper.addressError.invalid",
     "defaultMessage": "!!!Please enter a valid receiver address, ADA Handle or domain",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 290,
+      "line": 295,
       "column": 29,
-      "index": 12463
+      "index": 12756
     },
     "end": {
-      "line": 293,
+      "line": 298,
       "column": 3,
-      "index": 12598
+      "index": 12891
     }
   },
   {
     "id": "send.helper.addressError.wrongNetwork",
     "defaultMessage": "!!!Please enter valid domain",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 294,
+      "line": 299,
       "column": 34,
-      "index": 12634
+      "index": 12927
     },
     "end": {
-      "line": 297,
+      "line": 302,
       "column": 3,
-      "index": 12740
+      "index": 13033
     }
   },
   {
     "id": "send.helper.resolverError.domainNotFound",
     "defaultMessage": "!!!Receiver address, ADA Handle or domain you entered doesn't exist. Please double-check it and try again",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 298,
+      "line": 303,
       "column": 37,
-      "index": 12779
+      "index": 13072
     },
     "end": {
-      "line": 302,
+      "line": 307,
       "column": 3,
-      "index": 12971
+      "index": 13264
     }
   },
   {
     "id": "components.send.memofield.label",
     "defaultMessage": "!!!Memo",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 304,
+      "line": 309,
       "column": 13,
-      "index": 12987
+      "index": 13280
     },
     "end": {
-      "line": 307,
+      "line": 312,
       "column": 3,
-      "index": 13066
+      "index": 13359
     }
   },
   {
     "id": "components.send.memofield.message",
     "defaultMessage": "!!!(Optional) Memo is stored locally",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 308,
+      "line": 313,
       "column": 26,
-      "index": 13094
+      "index": 13387
     },
     "end": {
-      "line": 311,
+      "line": 316,
       "column": 3,
-      "index": 13204
+      "index": 13497
     }
   },
   {
     "id": "components.send.memofield.error",
     "defaultMessage": "!!!Memo is too long",
-    "file": "src/features/Send/common/strings.ts",
+    "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 312,
+      "line": 317,
       "column": 26,
-      "index": 13232
+      "index": 13525
     },
     "end": {
-      "line": 315,
+      "line": 320,
       "column": 3,
-      "index": 13323
+      "index": 13616
     }
   }
 ]

@@ -1,7 +1,6 @@
 import {isNameServer, nameServerName} from '@yoroi/resolver'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {Animated, StyleSheet, Text as RNText, View} from 'react-native'
 
 import {Icon} from '../../../../../components/Icon'
@@ -9,6 +8,7 @@ import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
 import {useSend} from '../../../common/SendContext'
+import {useStrings} from '../../../common/strings'
 
 export const SelectNameServer = () => {
   const {targets, selectedTargetIndex, nameServerSelectedChanged} = useSend()
@@ -67,7 +67,7 @@ export const SelectNameServer = () => {
 }
 
 export const ShowManyAddressWarning = () => {
-  const localStrings = useLocalStrings()
+  const strings = useStrings()
 
   return (
     <View style={styles.notice}>
@@ -75,7 +75,7 @@ export const ShowManyAddressWarning = () => {
 
       <Spacer height={8} />
 
-      <RNText style={styles.text}>{localStrings.manyNameServersWarning}</RNText>
+      <RNText style={styles.text}>{strings.manyNameServersWarning(bold)}</RNText>
     </View>
   )
 }
@@ -100,18 +100,3 @@ const styles = StyleSheet.create({
 })
 
 const bold = {b: (text) => <Text bold>{text}</Text>}
-
-export const useLocalStrings = () => {
-  const intl = useIntl()
-
-  return {
-    manyNameServersWarning: intl.formatMessage(messages.manyNameServersWarning, bold),
-  }
-}
-
-export const messages = defineMessages({
-  manyNameServersWarning: {
-    id: 'send.warning.resolver.manyNameServers',
-    defaultMessage: '!!!There are <b>two addresses</b> for this domain. Please SELECT the desired domain.',
-  },
-})
