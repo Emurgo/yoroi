@@ -1026,7 +1026,7 @@ export const useNativeAssetImage = ({
     queryFn: async (context) => {
       const count = queryClient.getQueryState(context.queryKey)?.dataUpdateCount
       const cache = count ? `&cache=${count}` : ''
-      const requestUrl = `https://${network}.cardano-nativeassets-prod.emurgornd.com/${policy}/${name}?width=${pWidth}&height=${pHeight}&kind=${kind}&fit=${contentFit}${cache}`
+      const requestUrl = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=${pWidth}&height=${pHeight}&kind=${kind}&fit=${contentFit}${cache}`
 
       if (responseType === 'binary') {
         setLoading(true)
@@ -1084,7 +1084,7 @@ export const useNativeAssetInvalidation = ({networkId, policy, name}: NativeAsse
   const mutation = useMutationWithInvalidations({
     invalidateQueries: [['native-asset-img', policy, name]],
     mutationFn: async () => {
-      const response = await fetch(`https://${network}.cardano-nativeassets-prod.emurgornd.com/invalidate`, {
+      const response = await fetch(`https://${network}.processed-media.yoroiwallet.com/invalidate`, {
         method: 'POST',
         body: JSON.stringify({policy, name}),
       })
