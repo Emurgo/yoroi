@@ -881,7 +881,7 @@
   "rampOnOff.createRampOnOff.provider": "Provider",
   "rampOnOff.createRampOnOff.banxa": "Banxa",
   "rampOnOff.rampOnOffScreen.rampOnOffTitle": "Exchange ADA",
-  "rampOnOff.resultRampOnOff.congrats": "Congrats🎉 Your ADA will come in a few minutes",
+  "rampOnOff.resultRampOnOff.congrats": "Congrats! 🎉 Your transaction is now in progress. You should be receiving funds soon.",
   "rampOnOff.resultRampOnOff.cryptoAmountYouGet": "ADA amount you get",
   "rampOnOff.resultRampOnOff.fiatAmountYouGet": "Fiat amount you sell",
   "rampOnOff.resultRampOnOff.goToTransactions": "GO TO TRANSACTIONS",
