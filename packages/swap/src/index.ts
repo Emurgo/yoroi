@@ -6,6 +6,7 @@ export {
 } from './manager.mocks'
 export {mockSwapStateDefault} from './translators/reactjs/state/state.mocks'
 export {apiMocks} from './adapters/openswap-api/api.mocks'
+export {mocks as orderMocks} from './helpers/mocks'
 
 // orders amounts
 export {getBuyAmount} from './helpers/orders/amounts/getBuyAmount'
@@ -43,6 +44,9 @@ export {useSwapTokensByPair} from './translators/reactjs/hooks/useSwapTokensByPa
 export {useSwapTokensOnlyVerified} from './translators/reactjs/hooks/useSwapTokensOnlyVerified'
 export {useSwap} from './translators/reactjs/hooks/useSwap'
 export {supportedProviders, milkTokenId} from './translators/constants'
+
+// types
+export {type SwapOrderCalculation} from './translators/reactjs/state/state'
 
 // factories
 export {swapApiMaker} from './adapters/openswap-api/api'
