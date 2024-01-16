@@ -1047,7 +1047,7 @@ export const useNativeAssetImage = ({
     },
   })
 
-  const timerRef = React.useRef<any>(0)
+  const timerRef = React.useRef<ReturnType<typeof setTimeout>>()
   React.useEffect(() => () => clearTimeout(timerRef.current), [])
 
   const onError = useCallback(() => {
