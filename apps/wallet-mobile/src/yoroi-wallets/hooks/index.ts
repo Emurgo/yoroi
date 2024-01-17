@@ -1022,7 +1022,7 @@ export const useNativeAssetImage = ({
   const queryClient = useQueryClient()
 
   const [isError, setError] = React.useState(false)
-  const [isLoading, setLoading] = React.useState(false)
+  const [isLoading, setLoading] = React.useState(responseType === 'binary')
 
   const queryKey = ['native-asset-img', policy, name, responseType, `${width}x${height}`, contentFit]
 
@@ -1036,7 +1036,6 @@ export const useNativeAssetImage = ({
       const requestUrl = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=${width}&height=${height}&kind=${kind}&fit=${contentFit}${cache}`
 
       if (responseType === 'binary') {
-        setLoading(true)
         setError(false)
         return requestUrl
       }
