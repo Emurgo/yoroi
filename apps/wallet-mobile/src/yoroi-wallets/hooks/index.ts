@@ -976,6 +976,13 @@ const supportedTypes = [
   'image/tiff',
 ]
 
+const supportedSizes = [64, 72, 128, 256, 480, 512, 640, 720, 1080, 1280, 1440] as const
+
+const getClosestSize = (size: string | number) => {
+  const pixels = PixelRatio.getPixelSizeForLayoutSize(Number(size))
+  return supportedSizes.find((size) => pixels <= size) ?? supportedSizes.at(-1)
+}
+
 type NativeAssetImageRequest = {
   networkId: NetworkId
   policy: string
@@ -991,19 +998,19 @@ export const useNativeAssetImage = ({
   networkId,
   policy,
   name,
-  width,
-  height,
-  mediaType = 'image/webp',
+  width: _width,
+  height: _height,
+  mediaType: _mediaType = 'image/webp',
   contentFit = 'cover',
   kind = 'metadata',
   responseType = 'binary',
 }: NativeAssetImageRequest) => {
   const network = networkId === 300 ? 'preprod' : 'mainnet'
-  const pWidth = PixelRatio.getPixelSizeForLayoutSize(Number(width))
-  const pHeight = PixelRatio.getPixelSizeForLayoutSize(Number(height))
-  const lcMediaType = mediaType.toLocaleLowerCase()
-  const isMediaTypeSupported = supportedTypes.includes(lcMediaType)
-  const needsGif = lcMediaType === 'image/gif' && Platform.OS === 'ios'
+  const width = getClosestSize(_width)
+  const height = getClosestSize(_height)
+  const mediaType = _mediaType.toLocaleLowerCase()
+  const isMediaTypeSupported = supportedTypes.includes(mediaType)
+  const needsGif = mediaType === 'image/gif' && Platform.OS === 'ios'
   const mimeType = needsGif ? 'image/gif' : 'image/webp'
   const headers = useMemo(
     () => ({
@@ -1017,7 +1024,7 @@ export const useNativeAssetImage = ({
   const [isError, setError] = React.useState(false)
   const [isLoading, setLoading] = React.useState(false)
 
-  const queryKey = ['native-asset-img', policy, name, responseType, `${pWidth}x${pHeight}`, contentFit]
+  const queryKey = ['native-asset-img', policy, name, responseType, `${width}x${height}`, contentFit]
 
   const query = useQuery({
     enabled: isMediaTypeSupported,
@@ -1026,7 +1033,7 @@ export const useNativeAssetImage = ({
     queryFn: async (context) => {
       const count = queryClient.getQueryState(context.queryKey)?.dataUpdateCount
       const cache = count ? `&cache=${count}` : ''
-      const requestUrl = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=${pWidth}&height=${pHeight}&kind=${kind}&fit=${contentFit}${cache}`
+      const requestUrl = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=${width}&height=${height}&kind=${kind}&fit=${contentFit}${cache}`
 
       if (responseType === 'binary') {
         setLoading(true)
