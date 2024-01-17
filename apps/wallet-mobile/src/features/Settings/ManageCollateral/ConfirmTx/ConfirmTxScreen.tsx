@@ -18,7 +18,6 @@ import {BalanceAfter} from './Summary/BalanceAfter'
 import {CurrentBalance} from './Summary/CurrentBalance'
 import {Fees} from './Summary/Fees'
 import {PrimaryTotal} from './Summary/PrimaryTotal'
-import {ReceiverInfo} from './Summary/ReceiverInfo'
 import {SecondaryTotals} from './Summary/SecondaryTotals'
 
 export const ConfirmTxScreen = () => {
@@ -29,7 +28,7 @@ export const ConfirmTxScreen = () => {
   const [useUSB, setUseUSB] = React.useState(false)
   const {setCollateralId} = useSetCollateralId(wallet)
 
-  const {memo, yoroiUnsignedTx, targets} = useSend()
+  const {memo, yoroiUnsignedTx} = useSend()
 
   const {saveMemo} = useSaveMemo({wallet})
 
@@ -66,12 +65,6 @@ export const ConfirmTxScreen = () => {
         <Spacer height={4} />
 
         <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
-
-        <Spacer height={16} />
-
-        {targets.map((target, index) => (
-          <ReceiverInfo key={`${target.receiver.resolve}-${index}`} target={target} />
-        ))}
       </View>
 
       <ScrollView
