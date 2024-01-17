@@ -1,6 +1,7 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
@@ -39,6 +40,7 @@ export const SettingsScreenNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
+  const {theme} = useTheme()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -50,7 +52,7 @@ export const SettingsScreenNavigator = () => {
     <SendProvider key={wallet.id}>
       <Stack.Navigator
         screenOptions={{
-          ...defaultStackNavigationOptions,
+          ...defaultStackNavigationOptions(theme),
           detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
         }}
       >

@@ -28,7 +28,6 @@ export const CreateExchange = () => {
   const styles = useStyles()
   const {track} = useMetrics()
   const [contentHeight, setContentHeight] = React.useState(0)
-  const {selectColorScheme} = useTheme()
 
   const navigateTo = useNavigateTo()
   const {orderType, amount, canExchange} = useRampOnOff()
@@ -40,7 +39,6 @@ export const CreateExchange = () => {
 
   React.useEffect(() => {
     track.exchangePageViewed()
-    selectColorScheme('dark')
   }, [track])
 
   const handleExchange = () => {
