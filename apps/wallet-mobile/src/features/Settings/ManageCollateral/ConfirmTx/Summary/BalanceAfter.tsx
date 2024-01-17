@@ -14,14 +14,7 @@ export const BalanceAfter = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedT
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
 
-  // prettier-ignore
-  const balancesAfter = Amounts.diff(
-      balances,
-      Amounts.sum([
-        Amounts.getAmountsFromEntries(yoroiUnsignedTx.entries),
-        yoroiUnsignedTx.fee,
-      ]),
-    )
+  const balancesAfter = Amounts.diff(balances, yoroiUnsignedTx.fee)
   const primaryAmountAfter = Amounts.getAmount(balancesAfter, wallet.primaryToken.identifier)
 
   return (
