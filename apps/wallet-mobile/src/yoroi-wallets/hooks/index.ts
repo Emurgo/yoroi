@@ -1036,7 +1036,7 @@ export const useNativeAssetImage = ({
       const requestUrl = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=${width}&height=${height}&kind=${kind}&fit=${contentFit}${cache}`
 
       if (responseType === 'binary') {
-        setLoading(true)
+        setError(false)
         return requestUrl
       }
 
