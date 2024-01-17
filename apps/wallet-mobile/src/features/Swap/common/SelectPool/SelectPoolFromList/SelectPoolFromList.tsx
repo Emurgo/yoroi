@@ -145,7 +145,7 @@ const useStyles = () => {
     container: {
       paddingHorizontal: 16,
       flexDirection: 'column',
-      backgroundColor: color.gray.max,
+      backgroundColor: color.gray.min,
       flex: 1,
       paddingBottom: 30,
     },
@@ -199,7 +199,7 @@ const useStyles = () => {
     },
     infoValue: {
       fontSize: 16,
-      color: color.gray.min,
+      color: color.gray.max,
       fontFamily: 'Rubik-Regular',
       display: 'flex',
       flexShrink: 1,
