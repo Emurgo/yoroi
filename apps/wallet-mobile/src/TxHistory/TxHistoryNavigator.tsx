@@ -500,6 +500,6 @@ const sendOptions = (theme: Theme) => ({
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,
-    backgroundColor: '#fff',
+    backgroundColor: theme.color.gray.min,
   },
 })
