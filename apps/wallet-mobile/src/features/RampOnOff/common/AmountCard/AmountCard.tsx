@@ -179,17 +179,17 @@ const useStyles = () => {
       alignItems: 'center',
     },
     coinName: {
-      fontSize: 16,
+      ...theme.typography['body-1-regular'],
       fontWeight: '400',
       color: theme.color.gray.max,
     },
     balanceText: {
-      fontSize: 12,
+      ...theme.typography['body-3-regular'],
       color: theme.color.gray[600],
     },
     errorText: {
       color: theme.color.magenta[500],
-      fontSize: 12,
+      ...theme.typography['body-3-regular'],
     },
   })
   const colors = {

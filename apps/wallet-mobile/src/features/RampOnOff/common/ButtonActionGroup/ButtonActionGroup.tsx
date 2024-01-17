@@ -49,10 +49,7 @@ const useStyles = () => {
     },
     label: {
       color: theme.color.gray.max,
-      fontFamily: 'Rubik-Medium',
-      fontWeight: '500',
-      lineHeight: 24,
-      fontSize: 16,
+      ...theme.typography['body-1-medium'],
     },
   })
   return styles

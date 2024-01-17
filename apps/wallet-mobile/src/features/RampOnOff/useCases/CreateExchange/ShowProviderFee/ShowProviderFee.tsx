@@ -26,14 +26,12 @@ const useStyles = () => {
       justifyContent: 'space-between',
     },
     text: {
-      fontSize: 16,
-      fontFamily: 'Rubik',
+      ...theme.typography['body-1-regular'],
       color: theme.color.gray.max,
     },
     label: {
-      fontSize: 16,
+      ...theme.typography['body-1-regular'],
       color: theme.color.gray[600],
-      fontFamily: 'Rubik',
     },
   })
   return styles

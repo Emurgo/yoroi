@@ -30,10 +30,6 @@ export const RampOnOffScreen = () => {
             ...defaultStackNavigationOptions(theme),
             detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
             gestureEnabled: true,
-            headerStyle: {
-              backgroundColor: theme.color.gray.min,
-            },
-            headerTintColor: theme.color.gray.max,
           }}
         >
           <Stack.Screen

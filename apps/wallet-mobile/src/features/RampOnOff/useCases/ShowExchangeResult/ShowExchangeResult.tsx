@@ -114,18 +114,14 @@ const useStyles = () => {
       height: 228,
     },
     congratsText: {
-      fontSize: 22,
+      ...theme.typography['heading-3-regular'],
       color: theme.color.gray[900],
-      fontFamily: 'Rubik',
-      lineHeight: 30,
       fontWeight: '500',
       textAlign: 'center',
       textAlignVertical: 'center',
     },
     contentValueText: {
-      fontSize: 16,
-      fontFamily: 'Rubik',
-      lineHeight: 24,
+      ...theme.typography['body-1-regular'],
       color: theme.color.gray.max,
     },
     boxProvider: {
