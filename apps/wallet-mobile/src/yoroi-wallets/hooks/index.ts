@@ -1036,7 +1036,7 @@ export const useNativeAssetImage = ({
       const requestUrl = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=${width}&height=${height}&kind=${kind}&fit=${contentFit}${cache}`
 
       if (responseType === 'binary') {
-        setError(false)
+        setLoading(true)
         return requestUrl
       }
 
@@ -1057,10 +1057,11 @@ export const useNativeAssetImage = ({
   React.useEffect(() => () => clearTimeout(timerRef.current), [])
 
   const onError = useCallback(() => {
-    setError(true)
     const count = queryClient.getQueryState(queryKey)?.dataUpdateCount
     if (count && count < 10) {
       timerRef.current = setTimeout(query.refetch, count * 300)
+    } else {
+      setError(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, queryClient])
