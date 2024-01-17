@@ -5,11 +5,11 @@ import {z} from 'zod'
 import {BackendConfig, NFTAsset} from '../../types'
 import {convertNft} from '../nfts'
 import fetchDefault from './fetch'
-import {toAssetNameHex, toPolicyId} from './utils'
+import {toAssetNameHex, toDisplayAssetName, toPolicyId} from './utils'
 
-export const getNFT = async (id: string, config: BackendConfig): Promise<Balance.TokenInfo | null> => {
-  const policyId = toPolicyId(id)
-  const nameHex = toAssetNameHex(id)
+export const getNFT = async (tokenId: string, config: BackendConfig): Promise<Balance.TokenInfo | null> => {
+  const policyId = toPolicyId(tokenId)
+  const nameHex = toAssetNameHex(tokenId)
 
   const payload = {assets: [{policy: policyId, nameHex}]}
 
@@ -18,16 +18,15 @@ export const getNFT = async (id: string, config: BackendConfig): Promise<Balance
     fetchDefault<{supplies: Record<string, unknown>}>('multiAsset/supply?numberFormat=string', payload, config),
   ])
 
-  const assetMetadatas = assetMetadatasResult[id]
+  const assetMetadatas = assetMetadatasResult[tokenId]
 
-  return parseNFT(assetMetadatas, assetSupplies, policyId, nameHex, config)
+  return parseNFT(assetMetadatas, assetSupplies, tokenId, config)
 }
 
 export const parseNFT = (
   assetMetadatas: unknown,
   assetSupplies: Record<string, unknown>,
-  policyId: string,
-  nameHex: string,
+  tokenId: string,
   config: BackendConfig,
 ) => {
   if (!isArray(assetMetadatas)) {
@@ -40,7 +39,12 @@ export const parseNFT = (
     return null
   }
 
-  const metadata = nftAsset.metadata?.[policyId]?.[nameHex]
+  const policyId = toPolicyId(tokenId)
+  const metadataPolicyId = nftAsset.metadata?.[policyId]
+
+  const nameHex = toAssetNameHex(tokenId)
+  const metadata = metadataPolicyId?.[nameHex] ?? metadataPolicyId?.[toDisplayAssetName(tokenId)]
+
   const nft = convertNft({metadata, storageUrl: config.NFT_STORAGE_URL, policyId, nameHex})
 
   return assetSupplies[nft.id] === '1' ? nft : null
