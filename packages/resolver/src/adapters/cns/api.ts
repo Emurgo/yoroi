@@ -62,9 +62,8 @@ export type CnsApiConfig = {
 
 export const handleCnsApiError = (error: unknown): never => {
   const zodErrorMessage = handleZodErrors(error)
-  if (zodErrorMessage) {
+  if (zodErrorMessage) 
     throw new Resolver.Errors.InvalidResponse(zodErrorMessage)
-  }
 
   if (error instanceof Api.Errors.NotFound) throw new Resolver.Errors.NotFound()
 
