@@ -7,6 +7,7 @@ import {Text, View} from 'react-native'
 import {Button} from '../Button'
 import {Spacer} from '../Spacer'
 import {CameraCodeScanner} from './CameraCodeScanner'
+import {BarCodeScannerResult} from 'expo-barcode-scanner'
 
 storiesOf('QRCodeScanner', module).add('Default', () => <Wrapper />)
 
@@ -16,7 +17,7 @@ const Wrapper = () => {
   const [path, setPath] = React.useState(null)
   const [withMask, setWithMask] = React.useState(true)
 
-  const handleOnRead = async ({data}) => {
+  const handleOnRead = async ({data}: BarCodeScannerResult) => {
     const parsedData = JSON.parse(data)
 
     setPublicKeyHex(parsedData.publicKeyHex)
@@ -61,4 +62,4 @@ const Wrapper = () => {
   )
 }
 
-const Info = ({text}) => <Text style={{color: 'white'}}>{text}</Text>
+const Info = ({text}: {text: string}) => <Text style={{color: 'white'}}>{text}</Text>

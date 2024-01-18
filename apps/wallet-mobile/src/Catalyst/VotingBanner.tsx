@@ -105,7 +105,7 @@ const useStrings = () => {
     name: intl.formatMessage(messages.name),
     attention: intl.formatMessage(globalMessages.attention),
     back: intl.formatMessage(confirmationMessages.commonButtons.backButton),
-    noBalance: ({requiredBalance, currentBalance}) =>
+    noBalance: ({requiredBalance, currentBalance}: {requiredBalance: string; currentBalance: string}) =>
       intl.formatMessage(globalMessages.insufficientBalance, {
         requiredBalance,
         currentBalance,
