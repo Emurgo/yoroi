@@ -7,6 +7,7 @@ import Config from 'react-native-config'
 import {Logger} from '../yoroi-wallets/logging'
 import {Ampli, ampli} from './ampli'
 import {mockMetricsManager} from './mocks'
+import {isKeyOf} from '@yoroi/common/src'
 
 const buildVariants = {
   NIGHTLY: 'production',
@@ -18,7 +19,7 @@ type MetricsEnv = (typeof buildVariants)[keyof typeof buildVariants]
 type BUILD_VARIANT_KEY = keyof typeof buildVariants
 
 const isBuildVariant = (variant?: string): variant is BUILD_VARIANT_KEY =>
-  typeof variant === 'string' && Object.keys(buildVariants).includes(variant)
+  typeof variant === 'string' && isKeyOf(variant, buildVariants)
 
 const currentBuildVariant = isBuildVariant(Config?.BUILD_VARIANT) ? Config.BUILD_VARIANT : 'DEV'
 const environment: MetricsEnv = Object.keys(buildVariants).includes(currentBuildVariant)
