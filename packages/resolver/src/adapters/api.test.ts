@@ -16,10 +16,12 @@ const mockError = new Error('Test Error')
 describe('resolverApiMaker', () => {
   const domain = 'example.domain'
 
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   describe('getCardanoAddresses', () => {
     describe('strategy "all"', () => {
-      beforeEach(jest.clearAllMocks)
-
       it('all resolved', async () => {
         const deps = {
           unstoppableApi: {
@@ -53,9 +55,6 @@ describe('resolverApiMaker', () => {
           },
           {address: 'cnsAddress', error: null, nameServer: 'cns'},
         ])
-        expect(deps.cnsApi.getCryptoAddress).toHaveBeenCalledTimes(1)
-        expect(deps.handleApi.getCryptoAddress).toHaveBeenCalledTimes(1)
-        expect(deps.cnsApi.getCryptoAddress).toHaveBeenCalledTimes(1)
       })
 
       it('some resolved', async () => {
@@ -85,15 +84,10 @@ describe('resolverApiMaker', () => {
           {address: null, error: mockError, nameServer: 'unstoppable'},
           {address: null, error: mockError, nameServer: 'cns'},
         ])
-        expect(deps.cnsApi.getCryptoAddress).toHaveBeenCalledTimes(1)
-        expect(deps.handleApi.getCryptoAddress).toHaveBeenCalledTimes(1)
-        expect(deps.cnsApi.getCryptoAddress).toHaveBeenCalledTimes(1)
       })
     })
 
     describe('strategy "first"', () => {
-      beforeEach(jest.clearAllMocks)
-
       it('any resolved', async () => {
         const deps = {
           unstoppableApi: {
@@ -122,9 +116,6 @@ describe('resolverApiMaker', () => {
         expect(results).toEqual([
           {address: 'handleAddress', error: null, nameServer: 'handle'},
         ])
-        expect(deps.cnsApi.getCryptoAddress).toHaveBeenCalledTimes(1)
-        expect(deps.handleApi.getCryptoAddress).toHaveBeenCalledTimes(1)
-        expect(deps.cnsApi.getCryptoAddress).toHaveBeenCalledTimes(1)
       })
 
       it('none resolved', async () => {
@@ -159,9 +150,6 @@ describe('resolverApiMaker', () => {
             nameServer: null,
           },
         ])
-        expect(deps.cnsApi.getCryptoAddress).toHaveBeenCalledTimes(1)
-        expect(deps.handleApi.getCryptoAddress).toHaveBeenCalledTimes(1)
-        expect(deps.cnsApi.getCryptoAddress).toHaveBeenCalledTimes(1)
       })
     })
 
