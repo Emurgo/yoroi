@@ -7,8 +7,8 @@ type Props = {
 }
 
 export const StatusBar = ({type}: Props) => {
-  const {colorScheme, theme} = useTheme()
+  const {theme, isDark} = useTheme()
   const backgroundColor = type === 'dark' ? theme.color['white-static'] : theme.color['black-static']
 
-  return <NativeStatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} backgroundColor={backgroundColor} />
+  return <NativeStatusBar style={isDark ? 'light' : 'dark'} backgroundColor={backgroundColor} />
 }
