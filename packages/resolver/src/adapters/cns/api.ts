@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import {Api, Resolver} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
 import {WasmModuleProxy, freeContext} from '@emurgo/cross-csl-core'
@@ -16,13 +17,14 @@ export const cnsCryptoAddress = (
     const csl = cslFactory(cslScopeId)
     try {
       const cnsCardanoApi = makeCnsCardanoApi(cnsApiConfig.mainnet.baseUrl)
-      const address = resolveAddress(
+      const address = await resolveAddress(
         receiver,
         cnsApiConfig.mainnet,
         cnsCardanoApi,
         csl,
         fetcherConfig,
       )
+
       return address
     } catch (error: unknown) {
       return handleCnsApiError(error)
@@ -60,8 +62,9 @@ export type CnsApiConfig = {
 
 export const handleCnsApiError = (error: unknown): never => {
   const zodErrorMessage = handleZodErrors(error)
-  if (zodErrorMessage)
+  if (zodErrorMessage) {
     throw new Resolver.Errors.InvalidResponse(zodErrorMessage)
+  }
 
   if (error instanceof Api.Errors.NotFound) throw new Resolver.Errors.NotFound()
 
