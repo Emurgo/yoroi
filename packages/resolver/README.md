@@ -36,15 +36,17 @@ Accepted arguments:
 
 - apiConfig: `{unstoppable: '<unstoppable api key>'}`
 - cslFactory: Cardano Serialization Library initiator
-- returns: `getCardanoAddresses`
+
+Returns: `getCardanoAddresses`
 
 
 - `getCardanoAddresses`
 
-  Accepted arguments:
+Accepted arguments:
 
 - resolve: `string`. Domain or handle to look for.
 - strategy: `all` | `first`
-- returns depending on the strategy selected: 
+
+Returns depending on the strategy selected: 
     - all:  `[{nameServer: 'cns', address: string | null, error: Error instance | null}, {nameServer: 'unstoppable', address: string | null, error: Error instance | null}, {nameServer: 'handle', address: string | null, error: Error instance | null}]`
     - first: `[{nameServer: 'cns' | 'unstoppable' | 'handle', address: string | null, error: Error instance | null}]`
