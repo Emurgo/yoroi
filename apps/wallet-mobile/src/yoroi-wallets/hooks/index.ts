@@ -1012,7 +1012,7 @@ export const useNativeAssetImage = ({
   const mimeType = needsGif ? 'image/gif' : 'image/webp'
   const headers = useMemo(
     () => ({
-      'X-Encoded-Mimetype': mimeType,
+      Accept: mimeType,
     }),
     [mimeType],
   )
