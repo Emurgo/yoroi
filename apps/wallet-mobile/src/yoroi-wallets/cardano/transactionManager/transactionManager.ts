@@ -413,7 +413,7 @@ type PerAddressCertificatesDict = Record<string, Record<string, TimestampedCertM
 
 const perAddressCertificatesSelector = (state: TransactionManagerState): PerAddressCertificatesDict => {
   const transactions = state.transactions
-  const addressToPerTxCerts = {}
+  const addressToPerTxCerts: PerAddressCertificatesDict = {}
 
   const addTxTo = (
     txId: string,
@@ -457,7 +457,7 @@ const confirmationCountsSelector = (state: TransactionManagerState) => {
       return null
     }
 
-    const getBlockNum = ({address}) =>
+    const getBlockNum = ({address}: {address: string}) =>
       perAddressSyncMetadata[address] ? perAddressSyncMetadata[address].bestBlockNum : 0
 
     const bestBlockNum: any = max([

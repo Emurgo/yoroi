@@ -189,9 +189,10 @@ const messages = defineMessages({
 })
 
 const filtersTxIO = (address: string) => {
-  const isMyReceive = (extAddrIdx) => extAddrIdx[address] != null
-  const isMyChange = (intAddrIdx) => intAddrIdx[address] != null
-  const isMyAddress = (extAddrIdx, intAddrIdx) => isMyReceive(extAddrIdx) || isMyChange(intAddrIdx)
+  const isMyReceive = (extAddrIdx: Record<string, number>) => extAddrIdx[address] != null
+  const isMyChange = (intAddrIdx: Record<string, number>) => intAddrIdx[address] != null
+  const isMyAddress = (extAddrIdx: Record<string, number>, intAddrIdx: Record<string, number>) =>
+    isMyReceive(extAddrIdx) || isMyChange(intAddrIdx)
   return {
     isMyReceive,
     isMyChange,
@@ -199,7 +200,11 @@ const filtersTxIO = (address: string) => {
   }
 }
 
-const getTxIOMyWallet = (txIO: Array<IOData>, extAddrIdx, intAddrIdx) => {
+const getTxIOMyWallet = (
+  txIO: Array<IOData>,
+  extAddrIdx: Record<string, number>,
+  intAddrIdx: Record<string, number>,
+) => {
   const io = _.uniq(txIO).map(({address, assets}) => ({
     address,
     assets,

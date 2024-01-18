@@ -171,7 +171,7 @@ const normalizeText = (text: string) => {
 const getMatchingWords = (targetWord: string) =>
   (wordlists.EN as Array<string>).filter((word) => word.startsWith(normalizeText(targetWord)))
 
-const useAutoFocus = (ref) =>
+const useAutoFocus = (ref: React.RefObject<RNTextInput>) =>
   React.useEffect(() => {
     const timeout = setTimeout(() => ref.current?.focus(), 100)
 

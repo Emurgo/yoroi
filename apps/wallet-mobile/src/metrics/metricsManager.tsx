@@ -15,7 +15,12 @@ const buildVariants = {
   DEV: 'development',
 } as const
 type MetricsEnv = (typeof buildVariants)[keyof typeof buildVariants]
-const currentBuildVariant = Config.BUILD_VARIANT ?? 'DEV'
+type BUILD_VARIANT_KEY = keyof typeof buildVariants
+
+const isBuildVariant = (variant?: string): variant is BUILD_VARIANT_KEY =>
+  typeof variant === 'string' && Object.keys(buildVariants).includes(variant)
+
+const currentBuildVariant = isBuildVariant(Config?.BUILD_VARIANT) ? Config.BUILD_VARIANT : 'DEV'
 const environment: MetricsEnv = Object.keys(buildVariants).includes(currentBuildVariant)
   ? buildVariants[currentBuildVariant]
   : buildVariants.DEV

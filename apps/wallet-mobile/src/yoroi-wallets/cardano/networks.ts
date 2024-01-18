@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {getKeys, isKeyOf} from '@yoroi/common/src'
 import {flatten} from 'lodash'
 
 import * as SANCHONET_CONFIG from '../cardano/constants/sanchonet/constants'
@@ -206,6 +207,7 @@ export type NetworkConfig =
   | typeof NETWORKS.HASKELL_SHELLEY
   | typeof NETWORKS.HASKELL_SHELLEY_TESTNET
   | typeof NETWORKS.JORMUNGANDR
+  | typeof NETWORKS.SANCHONET
 
 /**
  * queries related to blockchain/network parameters
@@ -217,11 +219,12 @@ export const isHaskellShelleyNetwork = (networkId: NetworkId): boolean =>
   networkId === NETWORK_REGISTRY.HASKELL_SHELLEY_TESTNET ||
   networkId === NETWORK_REGISTRY.SANCHONET
 export const getCardanoByronConfig = () => NETWORKS.BYRON_MAINNET
+
 export const getNetworkConfigById = (id: NetworkId): NetworkConfig => {
   const idx = Object.values(NETWORK_REGISTRY).indexOf(id)
-  const network = Object.keys(NETWORK_REGISTRY)[idx]
+  const network: string = Object.keys(NETWORK_REGISTRY)[idx]
 
-  if (network != null && network !== 'UNDEFINED' && NETWORKS[network] != null) {
+  if (network != null && network !== 'UNDEFINED' && isKeyOf(network, NETWORKS) && NETWORKS[network] != null) {
     return NETWORKS[network]
   }
 
@@ -251,7 +254,7 @@ export const PRIMARY_ASSET_CONSTANTS = {
   // JORMUNGANDR: '',
 }
 export const DEFAULT_ASSETS: Array<Record<string, any>> = flatten(
-  Object.keys(NETWORKS)
+  getKeys(NETWORKS)
     .map((key) => NETWORKS[key])
     .filter((network) => network.ENABLED)
     .map((network) => {

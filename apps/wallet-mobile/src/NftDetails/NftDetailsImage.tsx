@@ -1,5 +1,7 @@
 import React from 'react'
 import {Dimensions, StyleSheet, View} from 'react-native'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import ViewTransformer from 'react-native-easy-view-transformer'
 
 import {FadeIn} from '../components'

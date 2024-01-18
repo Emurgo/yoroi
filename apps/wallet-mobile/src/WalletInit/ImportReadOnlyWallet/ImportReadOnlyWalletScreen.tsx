@@ -86,7 +86,7 @@ const useStrings = () => {
   return {
     paragraph: intl.formatMessage(messages.paragraph),
     line1: intl.formatMessage(messages.line1),
-    line2: (options) => intl.formatMessage(messages.line2, options),
+    line2: (options: {buttonType: string}) => intl.formatMessage(messages.line2, options),
     buttonType: intl.formatMessage(messages.buttonType),
   }
 }

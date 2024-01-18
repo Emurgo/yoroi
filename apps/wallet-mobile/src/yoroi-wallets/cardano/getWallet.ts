@@ -13,7 +13,7 @@ export const getCardanoWalletFactory = ({
   networkId: number
   implementationId: string
 }): WalletFactory | undefined => {
-  const walletMap = {
+  const walletMap: Record<number, Record<string, WalletFactory>> = {
     [MAINNET.NETWORK_ID]: /* cardano mainnet */ {
       [WALLET_CONFIG.WALLET_IMPLEMENTATION_ID]: ShelleyWalletMainnet,
       [WALLET_CONFIG_24.WALLET_IMPLEMENTATION_ID]: ShelleyWalletMainnet,

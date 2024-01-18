@@ -84,7 +84,7 @@ storiesOf('MnemonicCheckScreen', module)
           walletManager={
             {
               ...walletManager,
-              createWallet: (...args) => {
+              createWallet: (...args: unknown[]) => {
                 action('create wallet')(...args)
                 throw new NetworkError()
               },

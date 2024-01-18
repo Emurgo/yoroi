@@ -86,7 +86,7 @@ const useStyles = () => {
     },
     text: {
       fontSize: 18,
-      color: color.gray['black-static'],
+      color: color['black-static'],
       textAlign: 'center',
     },
   })
