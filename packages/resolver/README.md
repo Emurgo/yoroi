@@ -30,7 +30,7 @@ Response: `[{nameServer: 'cns' | 'unstoppable' | 'handle', address: string | nul
 
 ## API Reference
 
-- `resolverApiMaker`
+⋅⋅*`resolverApiMaker`
 
 Accepted arguments:
 
@@ -40,7 +40,7 @@ Accepted arguments:
 Returns: `getCardanoAddresses`
 
 
-- `getCardanoAddresses`
+⋅⋅*`getCardanoAddresses`
 
 Accepted arguments:
 
