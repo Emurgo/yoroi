@@ -4,9 +4,9 @@ A module for resolving Cardano addresses from domains or handles.
 
 Currently, the following services are supported:
 
-- CNS (cns.space)
-- handle (handle.me)
-- Unstoppable Domains (https://unstoppabledomains.com)
+- [CNS](https://cns.space)
+- [handle](https://handle.me)
+- [Unstoppable Domains](https://unstoppabledomains.com)
 
 ## Instalation
 
