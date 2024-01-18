@@ -48,7 +48,7 @@ const tosByCode = {
   'zh-Hans': ZH_CN_TOS,
 }
 
-export const loadTOS = (languageCode: string): string => {
+export const loadTOS = (languageCode: keyof typeof tosByCode): string => {
   console.log('------------------------------')
   console.log(languageCode)
   // fetch(HU_HU_TOS).then((response) => response.text()).then((text) => console.log(text))

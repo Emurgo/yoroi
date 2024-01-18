@@ -1145,7 +1145,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     private subscriptions: Array<WalletSubscription> = []
 
-    private _onTxHistoryUpdateSubscriptions: Array<(Wallet) => void> = []
+    private _onTxHistoryUpdateSubscriptions: Array<(wallet: YoroiWallet) => void> = []
 
     private _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
       _.mapValues(perAddressTxs, (txs) => {
@@ -1298,7 +1298,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     private async discoverAddresses() {
       // last chunk gap limit check
-      const filterFn = (addrs) => legacyApi.filterUsedAddresses(addrs, BACKEND)
+      const filterFn = (addrs: Addresses) => legacyApi.filterUsedAddresses(addrs, BACKEND)
       await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
     }
 

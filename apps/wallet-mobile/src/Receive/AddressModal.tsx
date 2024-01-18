@@ -188,7 +188,7 @@ const useStrings = () => {
   }
 }
 
-const useKeyHashes = (address) => {
+const useKeyHashes = (address: string) => {
   const [spending, setSpending] = useState<string | null>(null)
   const [staking, setStaking] = useState<string | null>(null)
 

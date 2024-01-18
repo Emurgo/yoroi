@@ -1252,7 +1252,7 @@ export class ByronWallet implements YoroiWallet {
 
   private subscriptions: Array<WalletSubscription> = []
 
-  private _onTxHistoryUpdateSubscriptions: Array<(Wallet) => void> = []
+  private _onTxHistoryUpdateSubscriptions: Array<(wallet: YoroiWallet) => void> = []
 
   private _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
     _.mapValues(perAddressTxs, (txs) => {
@@ -1407,7 +1407,7 @@ export class ByronWallet implements YoroiWallet {
 
   private async discoverAddresses() {
     // last chunk gap limit check
-    const filterFn = (addrs) => legacyApi.filterUsedAddresses(addrs, this.getBackendConfig())
+    const filterFn = (addrs: Addresses) => legacyApi.filterUsedAddresses(addrs, this.getBackendConfig())
     await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
   }
 

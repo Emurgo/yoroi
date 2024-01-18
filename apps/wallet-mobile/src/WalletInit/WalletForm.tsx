@@ -163,7 +163,8 @@ const useStrings = () => {
     walletNameInputLabel: intl.formatMessage(messages.walletNameInputLabel),
     newPasswordInput: intl.formatMessage(messages.newPasswordInput),
     continueButton: intl.formatMessage(messages.continueButton),
-    passwordStrengthRequirement: (options) => intl.formatMessage(messages.passwordStrengthRequirement, options),
+    passwordStrengthRequirement: (options: {requiredPasswordLength: number}) =>
+      intl.formatMessage(messages.passwordStrengthRequirement, options),
     repeatPasswordInputLabel: intl.formatMessage(messages.repeatPasswordInputLabel),
     repeatPasswordInputError: intl.formatMessage(messages.repeatPasswordInputError),
     tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),

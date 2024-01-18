@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import React from 'react'
@@ -31,7 +33,7 @@ type State = {
   devices: Array<Device>
   deviceId?: null | DeviceId
   deviceObj?: null | DeviceObj
-  error?: any
+  error?: Error | null
   refreshing: boolean
   waiting: boolean
 }
@@ -105,7 +107,7 @@ class _LedgerConnect extends React.Component<Props, State> {
         Logger.debug('listen: subscription completed')
         this.setState({refreshing: false})
       },
-      next: (e) => {
+      next: (e: {type: string; descriptor: DeviceObj}) => {
         if (e.type === 'add') {
           Logger.debug('listen: new device detected')
           if (useUSB === true) {
@@ -120,7 +122,7 @@ class _LedgerConnect extends React.Component<Props, State> {
           }
         }
       },
-      error: (error) => {
+      error: (error: Error) => {
         this.setState({error, refreshing: false, devices: []})
       },
     })
@@ -160,6 +162,7 @@ class _LedgerConnect extends React.Component<Props, State> {
       })
       await onConnectBLE(device.id.toString())
     } catch (e) {
+      if (!(e instanceof Error)) return
       Logger.debug(e as any)
       if (e instanceof RejectedByUserError) {
         this.reload()
@@ -179,6 +182,7 @@ class _LedgerConnect extends React.Component<Props, State> {
       })
       await this.props.onConnectUSB(deviceObj)
     } catch (e) {
+      if (!(e instanceof Error)) return
       Logger.debug(e as any)
       if (e instanceof RejectedByUserError) {
         this.reload()
@@ -317,10 +321,10 @@ const messages = defineMessages({
 })
 
 const deviceAddition =
-  (device) =>
-  ({devices}) => {
+  (device: Device) =>
+  ({devices}: {devices: Device[]}) => {
     return {
-      devices: devices.some((i) => i.id === device.id) === true ? devices : devices.concat(device),
+      devices: devices.some((i) => i.id === device.id) ? devices : devices.concat(device),
     }
   }
 
