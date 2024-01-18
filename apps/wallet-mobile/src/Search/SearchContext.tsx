@@ -105,6 +105,7 @@ export const useSearchOnNavBar = ({
 }) => {
   const navigation = useNavigation()
   const {theme} = useTheme()
+  const defaultNavigationOptions = React.useCallback(() => defaultStackNavigationOptions(theme), [theme])
 
   const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
 
@@ -130,7 +131,7 @@ export const useSearchOnNavBar = ({
 
   const withSearchInput: StackNavigationOptions = React.useMemo(
     () => ({
-      ...defaultStackNavigationOptions(theme),
+      ...defaultNavigationOptions,
       headerTitle: () => <InputSearch placeholder={placeholder} />,
       headerRight: () => (search.length > 0 ? <EraseButton onPress={handleCloseSearch} /> : null),
       headerLeft: () => <BackButton onPress={handleGoBack} />,
@@ -140,19 +141,19 @@ export const useSearchOnNavBar = ({
       },
       headerBackTitleVisible: false,
     }),
-    [handleCloseSearch, handleGoBack, placeholder, search.length, theme],
+    [defaultNavigationOptions, handleCloseSearch, handleGoBack, placeholder, search.length],
   )
 
   const withSearchButton: StackNavigationOptions = React.useMemo(
     () => ({
-      ...defaultStackNavigationOptions(theme),
+      ...defaultNavigationOptions,
       headerTitle: title,
       headerRight: () => <SearchButton onPress={() => showSearch()} />,
       headerLeft: () => <BackButton onPress={handleGoBack} />,
       ...(noBack ? {headerLeft: () => null} : {}),
       headerBackTitleVisible: false,
     }),
-    [handleGoBack, noBack, showSearch, theme, title],
+    [defaultNavigationOptions, handleGoBack, noBack, showSearch, title],
   )
 
   React.useLayoutEffect(() => {
