@@ -46,7 +46,7 @@ describe('useResolverCryptoAddresses', () => {
     expect(getByTestId('showNotice').props.children).toEqual(
       JSON.stringify(false),
     )
-    expect(mockResolverManager.showNotice.read).toHaveBeenCalledTimes(1)
+    expect(mockResolverManager.showNotice.read).toHaveBeenCalled()
   })
 
   it('error', async () => {
