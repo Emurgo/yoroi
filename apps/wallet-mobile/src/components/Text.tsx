@@ -19,7 +19,7 @@ type State = {
 
 export const foo: StyleProp<TextStyle> = false
 
-const androidAdjustsFontSizeToFitFix = (width, childrenLength) => {
+const androidAdjustsFontSizeToFitFix = (width: number, childrenLength: number) => {
   return Math.floor(1.4 * (width / childrenLength))
 }
 

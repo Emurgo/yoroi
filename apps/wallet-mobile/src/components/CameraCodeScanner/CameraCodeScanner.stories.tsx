@@ -1,5 +1,6 @@
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
+import {BarCodeScannerResult} from 'expo-barcode-scanner'
 import {Camera} from 'expo-camera'
 import React from 'react'
 import {Text, View} from 'react-native'
@@ -7,7 +8,6 @@ import {Text, View} from 'react-native'
 import {Button} from '../Button'
 import {Spacer} from '../Spacer'
 import {CameraCodeScanner} from './CameraCodeScanner'
-import {BarCodeScannerResult} from 'expo-barcode-scanner'
 
 storiesOf('QRCodeScanner', module).add('Default', () => <Wrapper />)
 

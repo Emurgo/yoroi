@@ -78,18 +78,18 @@ export const TokenIconPlaceholder = ({variant}: PlaceholderProps) => (
   </View>
 )
 
-const isBase64 = (string) => {
+const isBase64 = (text: string) => {
   // https://github.com/validatorjs/validator.js/blob/491d9c0eea23f8401b5739803fb8e55c6860b32b/src/lib/isBase64.js
-  const length = string.length
-  if (length % 4 !== 0 || /[^A-Z0-9+\\/=]/i.test(string)) {
+  const length = text.length
+  if (length % 4 !== 0 || /[^A-Z0-9+\\/=]/i.test(text)) {
     return false
   }
 
-  const firstPaddingChar = string.indexOf('=')
+  const firstPaddingChar = text.indexOf('=')
   return (
     firstPaddingChar === -1 ||
     firstPaddingChar === length - 1 ||
-    (firstPaddingChar === length - 2 && string[length - 1] === '=')
+    (firstPaddingChar === length - 2 && text[length - 1] === '=')
   )
 }
 

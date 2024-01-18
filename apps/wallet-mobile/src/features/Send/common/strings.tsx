@@ -1,3 +1,4 @@
+import {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import globalMessages, {confirmationMessages, txLabels} from '../../../i18n/global-messages'
@@ -20,7 +21,7 @@ export const useStrings = () => {
     backButton: intl.formatMessage(confirmationMessages.commonButtons.backButton),
     balanceAfterLabel: intl.formatMessage(messages.balanceAfterLabel),
     balanceAfterNotAvailable: intl.formatMessage(messages.balanceAfterNotAvailable),
-    checkboxSendAll: (options) => intl.formatMessage(messages.checkboxSendAll, options),
+    checkboxSendAll: (options: {assetId: string}) => intl.formatMessage(messages.checkboxSendAll, options),
     checkboxSendAllAssets: intl.formatMessage(messages.checkboxSendAllAssets),
     continueButton: intl.formatMessage(messages.continueButton),
     domainNotRegisteredError: intl.formatMessage(messages.domainNotRegisteredError),
@@ -39,14 +40,15 @@ export const useStrings = () => {
     helperMemoErrorTooLong: intl.formatMessage(messages.helperMemoErrorTooLong),
     helperMemoInstructions: intl.formatMessage(messages.helperMemoInstructions),
     helperResolverErrorDomainNotFound: intl.formatMessage(messages.helperResolverErrorDomainNotFound),
-    manyNameServersWarning: (options) => intl.formatMessage(messages.manyNameServersWarning, options),
+    manyNameServersWarning: (options: {b: (content: ReactNode[]) => ReactNode}) =>
+      intl.formatMessage(messages.manyNameServersWarning, options),
     max: intl.formatMessage(globalMessages.max),
     memoLabel: intl.formatMessage(messages.memoLabel),
     minPrimaryBalanceForTokens: intl.formatMessage(amountInputErrorMessages.minPrimaryBalanceForTokens),
     next: intl.formatMessage(globalMessages.next),
     nfts: (qty: number) => intl.formatMessage(globalMessages.nfts, {qty}),
     noAssets: intl.formatMessage(messages.noAssets),
-    noAssetsAddedYet: (fungible) => intl.formatMessage(messages.noAssetsAddedYet, {fungible}),
+    noAssetsAddedYet: (fungible: string) => intl.formatMessage(messages.noAssetsAddedYet, {fungible}),
     noBalance: intl.formatMessage(amountInputErrorMessages.insufficientBalance),
     ok: intl.formatMessage(globalMessages.ok),
     pleaseWait: intl.formatMessage(globalMessages.pleaseWait),
@@ -58,7 +60,8 @@ export const useStrings = () => {
     searchTokens: intl.formatMessage(messages.searchTokens),
     selecteAssetTitle: intl.formatMessage(messages.selectAssetTitle),
     sendAllContinueButton: intl.formatMessage(confirmationMessages.commonButtons.continueButton),
-    sendAllWarningAlert1: (options) => intl.formatMessage(messages.sendAllWarningAlert1, options),
+    sendAllWarningAlert1: (options: {assetNameOrId: string}) =>
+      intl.formatMessage(messages.sendAllWarningAlert1, options),
     sendAllWarningAlert2: intl.formatMessage(messages.sendAllWarningAlert2),
     sendAllWarningAlert3: intl.formatMessage(messages.sendAllWarningAlert3),
     sendAllWarningText: intl.formatMessage(messages.sendAllWarningText),
