@@ -53,8 +53,7 @@ export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOpti
       backgroundColor: theme.color.gray.min,
     },
     headerTitleStyle: {
-      fontSize: 16,
-      fontFamily: 'Rubik-Medium',
+      ...theme.typography['body-1-medium'],
       width: WIDTH - 75,
       textAlign: 'center',
     },
