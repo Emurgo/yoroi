@@ -47,4 +47,4 @@ Accepted arguments:
 - strategy: `all` | `first`
 - returns depending on the strategy selected: 
     - all:  `[{nameServer: 'cns', address: string | null, error: Error instance | null}, {nameServer: 'unstoppable', address: string | null, error: Error instance | null}, {nameServer: 'handle', address: string | null, error: Error instance | null}]`
-    - first: `[{nameServer: 'cns' | 'unstoppable' | 'handle', address: string | null, error: Error instance | null}]``
+    - first: `[{nameServer: 'cns' | 'unstoppable' | 'handle', address: string | null, error: Error instance | null}]`
