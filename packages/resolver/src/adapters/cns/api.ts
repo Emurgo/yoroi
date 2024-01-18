@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import {Api, Resolver} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
 import {WasmModuleProxy, freeContext} from '@emurgo/cross-csl-core'
