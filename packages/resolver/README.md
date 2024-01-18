@@ -18,7 +18,7 @@ or
 
 ## Usage
 
-There are two options:
+There are two strategies supported to get a crypto address:
 
 - **all**: Will attempt to resolve on all services.
 
