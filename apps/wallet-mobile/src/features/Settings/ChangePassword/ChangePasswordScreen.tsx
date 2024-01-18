@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
+import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {MutationOptions, useMutation} from 'react-query'
 
@@ -107,7 +107,7 @@ export const ChangePasswordScreen = () => {
 const CurrentPasswordInput = TextInput
 const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
-const Actions = (props) => <View {...props} style={styles.actions} />
+const Actions = (props: ViewProps) => <View {...props} style={styles.actions} />
 
 const messages = defineMessages({
   oldPasswordInputLabel: {

@@ -1,7 +1,7 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
@@ -55,8 +55,8 @@ export const RestoreWalletScreen = () => {
   )
 }
 
-const Instructions = (props) => <Text {...props} style={{fontSize: 16, lineHeight: 24}} />
-const Actions = (props) => <View {...props} style={{padding: 16}} />
+const Instructions = (props: ViewProps) => <Text {...props} style={{fontSize: 16, lineHeight: 24}} />
+const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
 const messages = defineMessages({
   restoreButton: {

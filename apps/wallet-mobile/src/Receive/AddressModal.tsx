@@ -1,7 +1,7 @@
 import {fromPairs} from 'lodash'
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, View, ViewProps} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 
 import {CopyButton, Spacer, Text} from '../components'
@@ -125,8 +125,8 @@ const PathInfo = ({path}: PathInfoProps) => {
     </>
   )
 }
-const Info = (props) => <View {...props} style={styles.info} />
-const Row = (props) => <View {...props} style={styles.row} />
+const Info = (props: ViewProps) => <View {...props} style={styles.info} />
+const Row = (props: ViewProps) => <View {...props} style={styles.row} />
 
 const styles = StyleSheet.create({
   info: {

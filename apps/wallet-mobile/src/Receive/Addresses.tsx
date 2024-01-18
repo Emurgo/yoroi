@@ -1,7 +1,7 @@
 import {fromPairs} from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
 
 import {CopyButton, Icon, Spacer, Text} from '../components'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -108,11 +108,11 @@ const UnusedAddress = ({address, onPress}: {address: string; onPress: () => void
   )
 }
 
-const Header = (props) => <View {...props} style={styles.header} />
-const Row = (props) => <View {...props} style={styles.row} />
-const Address = (props) => <View {...props} style={styles.address} />
-const Actions = (props) => <View {...props} style={styles.actions} />
-const VerifyButton = (props) => (
+const Header = (props: ViewProps) => <View {...props} style={styles.header} />
+const Row = (props: ViewProps) => <View {...props} style={styles.row} />
+const Address = (props: ViewProps) => <View {...props} style={styles.address} />
+const Actions = (props: ViewProps) => <View {...props} style={styles.actions} />
+const VerifyButton = (props: TouchableOpacityProps) => (
   <TouchableOpacity {...props} testID="verifyAddressButton">
     <Icon.Verify size={20} color={COLORS.GRAY} />
   </TouchableOpacity>

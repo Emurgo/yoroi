@@ -1,7 +1,7 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../components'
@@ -95,11 +95,11 @@ export const VerifyRestoredWalletScreen = () => {
   )
 }
 
-const WalletInfo = (props) => <View {...props} />
-const Plate = (props) => <View {...props} style={styles.plate} />
-const Instructions = (props) => <View {...props} />
-const Addresses = (props) => <View {...props} />
-const Actions = (props) => <View {...props} style={styles.actions} />
+const WalletInfo = (props: ViewProps) => <View {...props} />
+const Plate = (props: ViewProps) => <View {...props} style={styles.plate} />
+const Instructions = (props: ViewProps) => <View {...props} />
+const Addresses = (props: ViewProps) => <View {...props} />
+const Actions = (props: ViewProps) => <View {...props} style={styles.actions} />
 
 const messages = defineMessages({
   checksumLabel: {
