@@ -1,6 +1,6 @@
 import {CardanoApi} from '@yoroi/api'
 import {FetchData, fetchData, handleApiError, isLeft} from '@yoroi/common'
-import {Api} from '@yoroi/types'
+import {Api, Resolver} from '@yoroi/types'
 import {AxiosRequestConfig} from 'axios'
 import {z} from 'zod'
 
@@ -25,8 +25,15 @@ export const makeCnsCardanoApi = (
     if (isLeft(response)) {
       handleApiError(response.error)
     } else {
-      const parsedResponse = getAssetAddressSchema.parse(response.value.data)
-      return parsedResponse[0]
+      const validatedResponse = getAssetAddressSchema.safeParse(
+        response.value.data,
+      )
+
+      if (validatedResponse.success) {
+        return response.value.data?.[0]
+      }
+
+      throw new Resolver.Errors.NotFound()
     }
   }
 
@@ -39,9 +46,13 @@ export const makeCnsCardanoApi = (
 
     const getOnChainMetadatas = CardanoApi.getOnChainMetadatas(`${baseUrl}/api`)
     const response = await getOnChainMetadatas([id], fetcherConfig)
-    const validatedResponse = CNSMetadataSchema.parse(response)
+    const validatedResponse = CNSMetadataSchema.safeParse(response)
 
-    return validatedResponse[id]?.mintNftRecordSelected
+    if (validatedResponse.success) {
+      return response[id]?.mintNftRecordSelected
+    }
+
+    throw new Resolver.Errors.NotFound()
   }
 
   const getAssetInlineDatum = async (
@@ -62,11 +73,15 @@ export const makeCnsCardanoApi = (
     if (isLeft(response)) {
       handleApiError(response.error)
     } else {
-      const parsedResponse = assetInlineDatumResponseSchema.parse(
+      const validatedResponse = assetInlineDatumResponseSchema.safeParse(
         response.value.data,
       )
 
-      return parsedResponse[0]?.inline_datum?.plutus_data
+      if (validatedResponse.success) {
+        return response.value.data[0]?.inline_datum?.plutus_data
+      }
+
+      throw new Resolver.Errors.NotFound()
     }
   }
 

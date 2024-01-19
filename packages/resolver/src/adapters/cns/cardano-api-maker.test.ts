@@ -1,5 +1,5 @@
 import {FetchData} from '@yoroi/common'
-import {Left} from '@yoroi/types'
+import {Left, Resolver} from '@yoroi/types'
 import {makeCnsCardanoApi} from './cardano-api-maker'
 import {CardanoApi} from '@yoroi/api'
 import {inlineDatumMock, metadataMock} from './cardano-api-maker.mocks'
@@ -32,7 +32,7 @@ describe('getAssetAddress', () => {
     )
   })
 
-  it('fails', async () => {
+  it('fails: api error', async () => {
     const policyId = 'asset-hex-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT'
     const assetName = 'kskskskskskskkskskskskksksk'
 
@@ -51,6 +51,29 @@ describe('getAssetAddress', () => {
       fail('it should crash before')
     } catch (e: any) {
       expect(e.message).toBe(error.message)
+    }
+  })
+
+  it('fails: invalid api response', async () => {
+    const policyId = 'asset-hex-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT'
+    const assetName = 'kskskskskskskkskskskskksksk'
+
+    const responseMock = {
+      tag: 'right',
+      value: {
+        data: [123455],
+        status: 200,
+      },
+    }
+    const request = jest.fn(() => Promise.resolve(responseMock)) as FetchData
+    const {getAssetAddress} = makeCnsCardanoApi('https://localhost', request)
+
+    try {
+      await getAssetAddress(policyId, assetName)
+
+      fail('it should crash before')
+    } catch (e: any) {
+      expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
     }
   })
 })
@@ -89,6 +112,27 @@ describe('getMetadata', () => {
     const result = await getMetadata(policyId, assetName)
 
     expect(result).toBe(undefined)
+  })
+
+  it('fails: invalid respoonse', async () => {
+    const policyId = 'policyId'
+    const assetName = 'assetName'
+
+    const getOnChainMetadatas = jest.fn(() =>
+      Promise.resolve({randomId: {mintNftRecordSelected: 'invalid'}}),
+    )
+
+    // @ts-ignore
+    CardanoApi.getOnChainMetadatas.mockReturnValue(getOnChainMetadatas)
+
+    const {getMetadata} = makeCnsCardanoApi('https://localhost')
+
+    try {
+      await getMetadata(policyId, assetName)
+      fail('it should crash before')
+    } catch (e: any) {
+      expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
+    }
   })
 })
 
@@ -130,7 +174,7 @@ describe('getAssetInlineDatum', () => {
     )
   })
 
-  it('fails', async () => {
+  it('fails: api error', async () => {
     const policyId = 'asset-hex-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT'
     const assetName = 'kskskskskskskkskskskskksksk'
     const addresses = ['fake-address']
@@ -153,6 +197,33 @@ describe('getAssetInlineDatum', () => {
       fail('it should crash before')
     } catch (e: any) {
       expect(e.message).toBe(error.message)
+    }
+  })
+
+  it('fails: invalid api response', async () => {
+    const policyId = 'asset-hex-TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT'
+    const assetName = 'kskskskskskskkskskskskksksk'
+    const addresses = ['fake-address']
+
+    const responseMock = {
+      tag: 'right',
+      value: {
+        data: 'invalid',
+        status: 200,
+      },
+    }
+    const request = jest.fn(() => Promise.resolve(responseMock)) as FetchData
+    const {getAssetInlineDatum} = makeCnsCardanoApi(
+      'https://localhost',
+      request,
+    )
+
+    try {
+      await getAssetInlineDatum(policyId, assetName, addresses)
+
+      fail('it should crash before')
+    } catch (e: any) {
+      expect(e).toBeInstanceOf(Resolver.Errors.NotFound)
     }
   })
 })
