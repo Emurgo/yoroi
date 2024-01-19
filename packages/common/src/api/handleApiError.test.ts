@@ -4,82 +4,82 @@ import {Api} from '@yoroi/types'
 describe('handleApiError', () => {
   it('should throw NetworkError for -1 status', () => {
     expect(() =>
-      handleApiError({status: -1, message: 'Network error'}),
+      handleApiError({status: -1, message: 'Network error', data: null}),
     ).toThrow(Api.Errors.Network)
   })
 
   it('should throw InvalidStateError for -2 status', () => {
     expect(() =>
-      handleApiError({status: -2, message: 'Invalid state'}),
+      handleApiError({status: -2, message: 'Invalid state', data: null}),
     ).toThrow(Api.Errors.InvalidState)
   })
 
   it('should throw BadRequestError for 400 status', () => {
-    expect(() => handleApiError({status: 400, message: 'Bad request'})).toThrow(
-      Api.Errors.BadRequest,
-    )
+    expect(() =>
+      handleApiError({status: 400, message: 'Bad request', data: null}),
+    ).toThrow(Api.Errors.BadRequest)
   })
 
   it('should throw UnauthorizedError for 401 status', () => {
     expect(() =>
-      handleApiError({status: 401, message: 'Unauthorized'}),
+      handleApiError({status: 401, message: 'Unauthorized', data: null}),
     ).toThrow(Api.Errors.Unauthorized)
   })
 
   it('should throw ForbiddenError for 403 status', () => {
-    expect(() => handleApiError({status: 403, message: 'Forbidden'})).toThrow(
-      Api.Errors.Forbidden,
-    )
+    expect(() =>
+      handleApiError({status: 403, message: 'Forbidden', data: null}),
+    ).toThrow(Api.Errors.Forbidden)
   })
 
   it('should throw NotFoundError for 404 status', () => {
-    expect(() => handleApiError({status: 404, message: 'Not found'})).toThrow(
-      Api.Errors.NotFound,
-    )
+    expect(() =>
+      handleApiError({status: 404, message: 'Not found', data: null}),
+    ).toThrow(Api.Errors.NotFound)
   })
 
   it('should throw ConflictError for 409 status', () => {
-    expect(() => handleApiError({status: 409, message: 'Conflict'})).toThrow(
-      Api.Errors.Conflict,
-    )
+    expect(() =>
+      handleApiError({status: 409, message: 'Conflict', data: null}),
+    ).toThrow(Api.Errors.Conflict)
   })
 
   it('should throw GoneError for 410 status', () => {
-    expect(() => handleApiError({status: 410, message: 'Gone'})).toThrow(
-      Api.Errors.Gone,
-    )
+    expect(() =>
+      handleApiError({status: 410, message: 'Gone', data: null}),
+    ).toThrow(Api.Errors.Gone)
   })
 
   it('should throw TooEarlyError for 425 status', () => {
-    expect(() => handleApiError({status: 425, message: 'Too early'})).toThrow(
-      Api.Errors.TooEarly,
-    )
+    expect(() =>
+      handleApiError({status: 425, message: 'Too early', data: null}),
+    ).toThrow(Api.Errors.TooEarly)
   })
 
   it('should throw TooManyRequestsError for 429 status', () => {
     expect(() =>
-      handleApiError({status: 429, message: 'Too many requests'}),
+      handleApiError({status: 429, message: 'Too many requests', data: null}),
     ).toThrow(Api.Errors.TooManyRequests)
   })
 
   it('should throw ServerSideError for 500 status', () => {
     expect(() =>
-      handleApiError({status: 500, message: 'Server error'}),
+      handleApiError({status: 500, message: 'Server error', data: null}),
     ).toThrow(Api.Errors.ServerSide)
   })
 
   it('should throw ServerSideError for other 5xx status codes', () => {
     expect(() =>
-      handleApiError({status: 503, message: 'Service unavailable'}),
+      handleApiError({status: 503, message: 'Service unavailable', data: null}),
     ).toThrow(Api.Errors.ServerSide)
     expect(() =>
-      handleApiError({status: 504, message: 'Gateway timeout'}),
+      handleApiError({status: 504, message: 'Gateway timeout', data: null}),
     ).toThrow(Api.Errors.ServerSide)
   })
 
   it('should throw UnknownError for unhandled status codes', () => {
     expect(() =>
-      handleApiError({status: 999, message: 'Unknown error'}),
+      handleApiError({status: 999, message: 'Unknown error', data: null}),
     ).toThrow(Api.Errors.Unknown)
   })
 })

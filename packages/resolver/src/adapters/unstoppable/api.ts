@@ -35,7 +35,12 @@ export const unstoppableApiGetCryptoAddress = (
       )
 
       if (isLeft(response)) {
-        handleApiError(response.error)
+        const error = response.error as UnstoppableApiGetCryptoAddressError
+
+        if (error.data?.message?.includes('Unsupported TLD'))
+          throw new Resolver.Errors.UnsupportedTld()
+
+        handleApiError(error)
       } else {
         const parsedResponse = UnstoppableApiResponseSchema.parse(
           response.value.data,
@@ -70,27 +75,40 @@ export type UnstoppableApiGetCryptoAddressResponse = {
   }
 }
 
+export type UnstoppableApiGetCryptoAddressError = {
+  data: {
+    message: string
+  }
+  status: number
+  message: string
+}
+
 const UnstoppableApiResponseSchema = z.object({
   records: z.object({
     'crypto.ADA.address': z.string().optional(),
   }),
 })
 
+// https://docs.unstoppabledomains.com/openapi/resolution/
 export const unstoppableSupportedTlds = [
   '.x',
-  '.crypto',
-  '.nft',
-  '.wallet',
   '.polygon',
-  '.dao',
-  '.888',
-  '.zil',
-  '.go',
+  '.nft',
+  '.crypto',
   '.blockchain',
   '.bitcoin',
+  '.dao',
+  '.888',
+  '.wallet',
+  '.binanceus',
+  '.hi',
+  '.klever',
+  '.kresus',
+  '.anime',
+  '.manga',
+  '.go',
+  '.zil',
   '.eth',
-  '.com',
-  '.unstoppable',
 ] as const
 export const isUnstoppableDomain = (value: string) => {
   return unstoppableSupportedTlds.some((tld) => value.endsWith(tld))

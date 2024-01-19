@@ -90,19 +90,25 @@ export const fetchData: FetchData = <T, D = any>(
       if (error.response) {
         const status = error.response.status
         const message = error.response.statusText
+        const data = error.response.data
+
         return {
           tag: 'left',
-          error: {status, message},
+          error: {status, message, data},
         } as const
       } else if (error.request) {
         return {
           tag: 'left',
-          error: {status: -1, message: 'Network (no response)'},
+          error: {status: -1, message: 'Network (no response)', data: null},
         } as const
       } else {
         return {
           tag: 'left',
-          error: {status: -2, message: `Invalid state: ${error.message}`},
+          error: {
+            status: -2,
+            message: `Invalid state: ${error.message}`,
+            data: null,
+          },
         } as const
       }
     })
