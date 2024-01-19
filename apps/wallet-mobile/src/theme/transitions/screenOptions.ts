@@ -1,3 +1,4 @@
+import {StackCardStyleInterpolator} from '@react-navigation/stack'
 import {Easing} from 'react-native-reanimated'
 
 /**
@@ -26,7 +27,7 @@ const topToBottomTransitionSpec = {
   },
 } as const
 
-const topToBottomCardStyleInterpolator = ({current, layouts}) =>
+const topToBottomCardStyleInterpolator: StackCardStyleInterpolator = ({current, layouts}) =>
   ({
     cardStyle: {
       opacity: current.progress,
