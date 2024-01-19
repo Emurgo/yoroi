@@ -126,6 +126,11 @@ export const TxHistoryNavigator = () => {
                 screenListeners={{}}
                 screenOptions={{
                   ...defaultStackNavigationOptions,
+                  headerStyle: {
+                    elevation: 0,
+                    shadowOpacity: 0,
+                    backgroundColor: '#E1EAF6',
+                  },
                   detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
                   gestureEnabled: true,
                 }}
