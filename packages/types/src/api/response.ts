@@ -3,7 +3,7 @@ import {Either} from '../helpers/types'
 export type ApiResponseError = {
   status: number
   message: string
-  data: unknown
+  responseData: unknown
 }
 
 export type ApiResponseSuccess<T> = {

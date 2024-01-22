@@ -37,7 +37,7 @@ export const unstoppableApiGetCryptoAddress = (
       if (isLeft(response)) {
         const error = response.error as UnstoppableApiGetCryptoAddressError
 
-        if (error.data?.message?.includes('Unsupported TLD'))
+        if (error.responseData?.message?.includes('Unsupported TLD'))
           throw new Resolver.Errors.UnsupportedTld()
 
         handleApiError(error)
@@ -76,7 +76,7 @@ export type UnstoppableApiGetCryptoAddressResponse = {
 }
 
 export type UnstoppableApiGetCryptoAddressError = {
-  data: {
+  responseData: {
     message: string
   }
   status: number
