@@ -992,7 +992,6 @@ type NativeAssetImageRequest = {
   mediaType?: string
   contentFit?: 'contain' | 'cover' | 'fill' | 'inside' | 'outside'
   kind?: 'logo' | 'metadata'
-  responseType?: 'binary' | 'base64'
 }
 export const useNativeAssetImage = ({
   networkId,
@@ -1003,7 +1002,6 @@ export const useNativeAssetImage = ({
   mediaType: _mediaType = 'image/webp',
   contentFit = 'cover',
   kind = 'metadata',
-  responseType = 'binary',
 }: NativeAssetImageRequest) => {
   const network = networkId === 300 ? 'preprod' : 'mainnet'
   const width = getClosestSize(_width)
@@ -1014,42 +1012,28 @@ export const useNativeAssetImage = ({
   const mimeType = needsGif ? 'image/gif' : 'image/webp'
   const headers = useMemo(
     () => ({
-      Accept: responseType === 'binary' ? mimeType : 'text/plain',
-      'X-Encoded-Mimetype': mimeType,
+      Accept: mimeType,
     }),
-    [mimeType, responseType],
+    [mimeType],
   )
   const queryClient = useQueryClient()
 
   const [isError, setError] = React.useState(false)
-  const [isLoading, setLoading] = React.useState(responseType === 'binary')
+  const [isLoading, setLoading] = React.useState(true)
 
-  const queryKey = ['native-asset-img', policy, name, responseType, `${width}x${height}`, contentFit]
+  const queryKey = ['native-asset-img', policy, name, `${width}x${height}`, contentFit]
 
   const query = useQuery({
     enabled: isMediaTypeSupported,
     staleTime: Infinity,
     queryKey,
-    queryFn: async (context) => {
+    queryFn: (context) => {
       const count = queryClient.getQueryState(context.queryKey)?.dataUpdateCount
       const cache = count ? `&cache=${count}` : ''
       const requestUrl = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=${width}&height=${height}&kind=${kind}&fit=${contentFit}${cache}`
 
-      if (responseType === 'binary') {
-        setLoading(true)
-        return requestUrl
-      }
-
-      const response = await fetch(requestUrl, {
-        headers,
-      })
-      if (!response.ok) {
-        throw new Error(`NativeAsset CDN: Not ok - ${requestUrl}`)
-      }
-      if (response.status === 201 || response.status === 202) {
-        throw new Error(`NativeAsset CDN: Processing - ${requestUrl}`)
-      }
-      return `data:${mimeType};base64,${await response.text()}`
+      setLoading(true)
+      return requestUrl
     },
   })
 

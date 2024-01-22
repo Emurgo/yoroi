@@ -16,13 +16,14 @@ export const cnsCryptoAddress = (
     const csl = cslFactory(cslScopeId)
     try {
       const cnsCardanoApi = makeCnsCardanoApi(cnsApiConfig.mainnet.baseUrl)
-      const address = resolveAddress(
+      const address = await resolveAddress(
         receiver,
         cnsApiConfig.mainnet,
         cnsCardanoApi,
         csl,
         fetcherConfig,
       )
+
       return address
     } catch (error: unknown) {
       return handleCnsApiError(error)
