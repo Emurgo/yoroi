@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer, StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
-import {CONFIG, isNightly, isProduction} from '../../../legacy/config'
+import {CONFIG, isDev, isNightly, isProduction} from '../../../legacy/config'
 import {lightPalette} from '../../../theme'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
@@ -40,9 +40,8 @@ export const ApplicationSettingsScreen = () => {
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
 
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
-
   const displayScreenShareSetting = Platform.OS === 'android' && !isProduction()
-  const displayToggleThemeSetting = !isNightly() || !isProduction()
+  const displayToggleThemeSetting = !isNightly() && !isProduction()
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
