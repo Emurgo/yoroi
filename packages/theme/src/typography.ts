@@ -11,20 +11,20 @@ const fontFamily: Record<string, TextStyle> = {
   },
 }
 
-const fontScale: Record<string, TextStyle> = {
-  small: {
-    fontWeight: '300',
-  },
-  normall: {
-    fontWeight: '400',
-  },
-  big: {
-    fontWeight: '500',
-  },
-  large: {
-    fontWeight: '600',
-  },
-}
+// const fontScale: Record<string, TextStyle> = {
+//   small: {
+//     fontWeight: '300',
+//   },
+//   normall: {
+//     fontWeight: '400',
+//   },
+//   big: {
+//     fontWeight: '500',
+//   },
+//   large: {
+//     fontWeight: '600',
+//   },
+// }
 
 const size: Record<string, TextStyle> = {
   h1: {
