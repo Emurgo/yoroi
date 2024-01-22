@@ -8,7 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer, StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
-import {CONFIG, isDev, isNightly, isProduction} from '../../../legacy/config'
+import {CONFIG, isNightly, isProduction} from '../../../legacy/config'
 import {lightPalette} from '../../../theme'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
