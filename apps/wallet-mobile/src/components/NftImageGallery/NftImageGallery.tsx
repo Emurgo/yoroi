@@ -49,16 +49,12 @@ export const NftImageGallery = ({
       ListEmptyComponent={ListEmptyComponent}
       withVerticalPadding={withVerticalPadding}
       renderItem={(nft) =>
-        features.moderatingNftsEnabled ? (
-          'id' in nft ? (
-            <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} disabled={readOnly} />
-          ) : (
-            <EmptyImage />
-          )
-        ) : 'id' in nft ? (
-          <UnModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} disabled={readOnly} />
-        ) : (
+        !('id' in nft) ? (
           <EmptyImage />
+        ) : features.moderatingNftsEnabled ? (
+          <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} disabled={readOnly} />
+        ) : (
+          <UnModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} disabled={readOnly} />
         )
       }
     />
