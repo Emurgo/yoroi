@@ -1,7 +1,7 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, Platform, ScrollView, StyleSheet, View} from 'react-native'
+import {Image, Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import image from '../../assets/img/ledger_1.png'
@@ -56,7 +56,7 @@ export const CheckNanoXScreen = () => {
   )
 }
 
-const Actions = (props) => <View {...props} style={styles.actions} />
+const Actions = (props: ViewProps) => <View {...props} style={styles.actions} />
 
 const messages = defineMessages({
   introline: {

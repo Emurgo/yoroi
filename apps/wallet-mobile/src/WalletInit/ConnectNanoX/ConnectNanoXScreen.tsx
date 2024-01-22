@@ -12,7 +12,7 @@ import LocalizableError from '../../i18n/LocalizableError'
 import {Logger} from '../../legacy/logging'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {getHWDeviceInfo} from '../../yoroi-wallets/cardano/hw'
-import {DeviceId, DeviceObj} from '../../yoroi-wallets/hw'
+import {DeviceId, DeviceObj, HWDeviceInfo} from '../../yoroi-wallets/hw'
 import {Device, NetworkId, WalletImplementationId} from '../../yoroi-wallets/types'
 
 export type Params = {
@@ -32,14 +32,14 @@ export const ConnectNanoXScreen = ({defaultDevices}: Props) => {
   const route = useRoute<RouteProp<WalletInitRoutes, 'connect-nano-x'>>()
   const {walletImplementationId, useUSB, networkId} = route.params
 
-  const onSuccess = (hwDeviceInfo) =>
+  const onSuccess = (hwDeviceInfo: HWDeviceInfo) =>
     navigation.navigate('save-nano-x', {
       hwDeviceInfo,
       networkId,
       walletImplementationId,
     })
 
-  const onError = (error) => {
+  const onError = (error: Error) => {
     if (error instanceof LocalizableError) {
       showErrorDialog(errorMessages.generalLocalizableError, intl, {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

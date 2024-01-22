@@ -4,12 +4,12 @@
     "defaultMessage": "!!!General",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 263,
+      "line": 264,
       "column": 11,
       "index": 9028
     },
     "end": {
-      "line": 266,
+      "line": 267,
       "column": 3,
       "index": 9138
     }
@@ -19,12 +19,12 @@
     "defaultMessage": "!!!Security & Reporting",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 267,
+      "line": 268,
       "column": 21,
       "index": 9161
     },
     "end": {
-      "line": 270,
+      "line": 271,
       "column": 3,
       "index": 9294
     }
@@ -34,12 +34,12 @@
     "defaultMessage": "!!!Language",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 271,
+      "line": 272,
       "column": 18,
       "index": 9314
     },
     "end": {
-      "line": 274,
+      "line": 275,
       "column": 3,
       "index": 9426
     }
@@ -49,12 +49,12 @@
     "defaultMessage": "!!!Fiat Currency",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 275,
+      "line": 276,
       "column": 22,
       "index": 9450
     },
     "end": {
-      "line": 278,
+      "line": 279,
       "column": 3,
       "index": 9571
     }
@@ -64,12 +64,12 @@
     "defaultMessage": "!!!About",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 279,
+      "line": 280,
       "column": 9,
       "index": 9582
     },
     "end": {
-      "line": 282,
+      "line": 283,
       "column": 3,
       "index": 9682
     }
@@ -79,12 +79,12 @@
     "defaultMessage": "!!!Terms of Service Agreement",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 283,
+      "line": 284,
       "column": 18,
       "index": 9702
     },
     "end": {
-      "line": 286,
+      "line": 287,
       "column": 3,
       "index": 9829
     }
@@ -94,12 +94,12 @@
     "defaultMessage": "!!!Change PIN",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 287,
+      "line": 288,
       "column": 13,
       "index": 9844
     },
     "end": {
-      "line": 290,
+      "line": 291,
       "column": 3,
       "index": 9953
     }
@@ -109,12 +109,12 @@
     "defaultMessage": "!!!Hide balance",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 291,
+      "line": 292,
       "column": 15,
       "index": 9970
     },
     "end": {
-      "line": 294,
+      "line": 295,
       "column": 3,
       "index": 10083
     }
@@ -124,12 +124,12 @@
     "defaultMessage": "!!!This function will be applied to all wallets in your app",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 295,
+      "line": 296,
       "column": 19,
       "index": 10104
     },
     "end": {
-      "line": 298,
+      "line": 299,
       "column": 3,
       "index": 10265
     }
@@ -139,12 +139,12 @@
     "defaultMessage": "!!!Sign in with your biometrics",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 299,
+      "line": 300,
       "column": 20,
       "index": 10287
     },
     "end": {
-      "line": 302,
+      "line": 303,
       "column": 3,
       "index": 10421
     }
@@ -154,12 +154,12 @@
     "defaultMessage": "!!!Changes to this option will be reflected after restarting the application",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 303,
+      "line": 304,
       "column": 24,
       "index": 10447
     },
     "end": {
-      "line": 306,
+      "line": 307,
       "column": 3,
       "index": 10630
     }
@@ -169,12 +169,12 @@
     "defaultMessage": "!!!Send crash report to Emurgo",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 307,
+      "line": 308,
       "column": 18,
       "index": 10650
     },
     "end": {
-      "line": 310,
+      "line": 311,
       "column": 3,
       "index": 10781
     }
@@ -184,12 +184,12 @@
     "defaultMessage": "!!!Changes to this option will be reflected after restarting the application",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 311,
+      "line": 312,
       "column": 22,
       "index": 10805
     },
     "end": {
-      "line": 314,
+      "line": 315,
       "column": 3,
       "index": 10986
     }
@@ -199,12 +199,12 @@
     "defaultMessage": "!!!Analytics",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 315,
+      "line": 316,
       "column": 13,
       "index": 11001
     },
     "end": {
-      "line": 318,
+      "line": 319,
       "column": 3,
       "index": 11109
     }
@@ -214,12 +214,12 @@
     "defaultMessage": "!!!Privacy Policy",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 319,
+      "line": 320,
       "column": 17,
       "index": 11128
     },
     "end": {
-      "line": 322,
+      "line": 323,
       "column": 3,
       "index": 11245
     }
@@ -229,12 +229,12 @@
     "defaultMessage": "!!!Enable screensharing",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 323,
+      "line": 324,
       "column": 17,
       "index": 11264
     },
     "end": {
-      "line": 326,
+      "line": 327,
       "column": 3,
       "index": 11387
     }
@@ -244,12 +244,12 @@
     "defaultMessage": "!!!Changes to this option will enable you to make screenshots as well share your screen via third party apps",
     "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
     "start": {
-      "line": 327,
+      "line": 328,
       "column": 21,
       "index": 11410
     },
     "end": {
-      "line": 331,
+      "line": 332,
       "column": 3,
       "index": 11628
     }

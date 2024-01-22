@@ -9,7 +9,7 @@ import {isTokenInfo} from '../yoroi-wallets/cardano/utils'
 import {DefaultAsset, Token} from '../yoroi-wallets/types'
 import utfSymbols from './utfSymbols'
 
-export const getTokenFingerprint = ({policyId, assetNameHex}) => {
+export const getTokenFingerprint = ({policyId, assetNameHex}: {policyId: string; assetNameHex: string}) => {
   const assetFingerprint = AssetFingerprint.fromParts(Buffer.from(policyId, 'hex'), Buffer.from(assetNameHex, 'hex'))
   return assetFingerprint.fingerprint()
 }

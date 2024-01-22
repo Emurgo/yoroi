@@ -1,6 +1,7 @@
 import {isNameServer, nameServerName} from '@yoroi/resolver'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
+import {ReactNode} from 'react'
 import {Animated, StyleSheet, Text as RNText, View} from 'react-native'
 
 import {Icon} from '../../../../../components/Icon'
@@ -88,7 +89,7 @@ const toAddressRecordsEntries = (addressRecords: Resolver.Receiver['addressRecor
     return acc
   }, [] as [Resolver.NameServer, string][])
 
-const bold = {b: (text) => <Text style={styles.bold}>{text}</Text>}
+const bold = {b: (text: ReactNode) => <Text style={styles.bold}>{text}</Text>}
 
 const styles = StyleSheet.create({
   notice: {

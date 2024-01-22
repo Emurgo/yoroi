@@ -154,7 +154,7 @@ const useStrings = () => {
     balanceLabel: intl.formatMessage(messages.balanceLabel),
     confirmButton: intl.formatMessage(confirmationMessages.commonButtons.confirmButton),
     finalBalanceLabel: intl.formatMessage(messages.finalBalanceLabel),
-    unregisterExplanation: (args) => intl.formatMessage(messages.unregisterExplanation, args),
+    unregisterExplanation: (args: {refundAmount: string}) => intl.formatMessage(messages.unregisterExplanation, args),
 
     confirmTx: intl.formatMessage(txLabels.confirmTx),
     password: intl.formatMessage(txLabels.password),

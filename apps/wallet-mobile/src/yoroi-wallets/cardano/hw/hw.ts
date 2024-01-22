@@ -8,6 +8,8 @@ import type {
   SignTransactionResponse,
 } from '@cardano-foundation/ledgerjs-hw-app-cardano'
 import AppAda, {DeviceStatusCodes} from '@cardano-foundation/ledgerjs-hw-app-cardano'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import {BleError} from 'react-native-ble-plx'

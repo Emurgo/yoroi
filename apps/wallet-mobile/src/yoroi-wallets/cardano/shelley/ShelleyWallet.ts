@@ -3,8 +3,7 @@ import {PrivateKey} from '@emurgo/cross-csl-core'
 import {createSignedLedgerTxFromCbor, signRawTransaction} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
 import {AppApi, CardanoApi} from '@yoroi/api'
-import {parseSafe} from '@yoroi/common'
-import {isNonNullable} from '@yoroi/common/src'
+import {isNonNullable, parseSafe} from '@yoroi/common'
 import {Api, App, Balance} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
@@ -1145,7 +1144,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     private subscriptions: Array<WalletSubscription> = []
 
-    private _onTxHistoryUpdateSubscriptions: Array<(Wallet) => void> = []
+    private _onTxHistoryUpdateSubscriptions: Array<(wallet: YoroiWallet) => void> = []
 
     private _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
       _.mapValues(perAddressTxs, (txs) => {
@@ -1298,7 +1297,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
 
     private async discoverAddresses() {
       // last chunk gap limit check
-      const filterFn = (addrs) => legacyApi.filterUsedAddresses(addrs, BACKEND)
+      const filterFn = (addrs: Addresses) => legacyApi.filterUsedAddresses(addrs, BACKEND)
       await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
     }
 

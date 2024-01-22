@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import appstoreBadge from '../assets/img/app-store-badge.png'
@@ -73,7 +73,7 @@ export const DownloadCatalyst = ({onNext}: Props) => {
   )
 }
 
-const Tip = (props) => <View {...props} style={styles.tip} />
+const Tip = (props: ViewProps) => <View {...props} style={styles.tip} />
 
 const PlayStoreButton = () => {
   const openPlayStore = async () => {

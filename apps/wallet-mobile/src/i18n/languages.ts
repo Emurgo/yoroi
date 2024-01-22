@@ -24,6 +24,8 @@ export const supportedLanguages = [
   {code: 'zh-Hans', label: '简体中文'},
 ] as const
 
+export const defaultLanguage = {code: 'en-US', label: 'English'} as const
+
 export const supportedLanguagesCodes = supportedLanguages.map(({code}) => code)
 
 export const LANGUAGES = {

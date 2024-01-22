@@ -2,7 +2,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Button, Spacer, StatusBar} from '../components'
 import {useMetrics} from '../metrics/metricsManager'
@@ -71,7 +71,7 @@ export const ReceiveScreen = () => {
   )
 }
 
-const Content = (props) => <View {...props} style={styles.content} />
+const Content = (props: ViewProps) => <View {...props} style={styles.content} />
 
 const messages = defineMessages({
   infoText: {

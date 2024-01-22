@@ -1,4 +1,4 @@
-import {createTypeGuardFromSchema, isArray} from '@yoroi/common'
+import {createTypeGuardFromSchema, isArray, isRecord} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
 import {z} from 'zod'
 
@@ -40,10 +40,11 @@ export const parseNFT = (
   }
 
   const policyId = toPolicyId(tokenId)
-  const metadataPolicyId = nftAsset.metadata?.[policyId]
-
   const nameHex = toAssetNameHex(tokenId)
-  const metadata = metadataPolicyId?.[nameHex] ?? metadataPolicyId?.[toDisplayAssetName(tokenId)]
+  const displayAssetName = toDisplayAssetName(tokenId)
+
+  const metadataPolicyId = isRecord(nftAsset.metadata) ? nftAsset.metadata?.[policyId] : null
+  const metadata = isRecord(metadataPolicyId) ? metadataPolicyId[nameHex] ?? metadataPolicyId[displayAssetName] : null
 
   const nft = convertNft({metadata, storageUrl: config.NFT_STORAGE_URL, policyId, nameHex})
 

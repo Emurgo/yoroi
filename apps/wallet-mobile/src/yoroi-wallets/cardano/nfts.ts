@@ -7,8 +7,7 @@ import {features} from '../../features'
 import {getAssetFingerprint} from '../../legacy/format'
 import {toDisplayAssetName} from './api'
 export const convertNft = (options: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  metadata?: any
+  metadata?: unknown
   storageUrl: string
   policyId: string
   nameHex: string

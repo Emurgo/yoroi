@@ -43,7 +43,7 @@ export const SaveReadOnlyWalletScreen = () => {
     },
   })
 
-  const onSubmit = ({name}) => {
+  const onSubmit = ({name}: {name: string}) => {
     createWallet({
       name,
       networkId,

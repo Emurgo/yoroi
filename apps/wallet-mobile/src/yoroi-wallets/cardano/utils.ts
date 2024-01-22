@@ -1,5 +1,6 @@
 /* eslint-disable no-empty */
 import {SendToken} from '@emurgo/yoroi-lib'
+import {isKeyOf} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'
@@ -202,7 +203,7 @@ export const isJormun = (id: WalletImplementationId): boolean => id === WALLET_I
 export const getWalletConfigById = (id: WalletImplementationId): WalletImplementation => {
   const idx = Object.values(WALLET_IMPLEMENTATION_REGISTRY).indexOf(id)
   const walletKey = Object.keys(WALLET_IMPLEMENTATION_REGISTRY)[idx]
-  if (walletKey != null && walletKey !== 'UNDEFINED' && WALLETS[walletKey] != null) {
+  if (walletKey != null && walletKey !== 'UNDEFINED' && isKeyOf(walletKey, WALLETS) && WALLETS[walletKey] != null) {
     return WALLETS[walletKey]
   }
   throw new Error('invalid walletImplementationId')

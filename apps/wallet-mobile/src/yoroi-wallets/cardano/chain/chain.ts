@@ -168,8 +168,8 @@ export class AddressChain {
   _blockSize: number
   _gapLimit: number
   _isInitialized = false
-  _subscriptions: Array<(Addresses) => unknown> = []
-  _addressToIdxSelector: (Addresses) => Record<string, number> = defaultMemoize(_addressToIdxSelector)
+  _subscriptions: Array<(addresses: Addresses) => unknown> = []
+  _addressToIdxSelector: (addresses: Addresses) => Record<string, number> = defaultMemoize(_addressToIdxSelector)
 
   constructor(
     addressGenerator: AddressGenerator,

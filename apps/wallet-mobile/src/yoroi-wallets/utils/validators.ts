@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import assert from 'assert'
 import {wordlists} from 'bip39'
 import _ from 'lodash'
@@ -131,7 +130,7 @@ export const validateAmount = (value: string, token: Token): AmountValidationErr
     return Object.freeze({})
   } catch (e) {
     if (e instanceof InvalidAssetAmount) {
-      return {invalidAmount: (e as any).errorCode}
+      return {invalidAmount: e.errorCode}
     }
     throw e
   }

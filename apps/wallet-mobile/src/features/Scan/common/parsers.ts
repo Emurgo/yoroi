@@ -3,7 +3,7 @@ import {Links} from '@yoroi/types'
 
 import {ScanAction, ScanErrorUnknownContent} from './types'
 
-export const parseScanAction = (codeContent): ScanAction => {
+export const parseScanAction = (codeContent: string): ScanAction => {
   const isLink = codeContent.includes(':')
 
   // NOTE: if it is a string < 256 with valid characters, it'd be consider a Yoroi Receiver (wallet address | domain name)

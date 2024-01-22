@@ -121,7 +121,13 @@ const Header = ({
   )
 }
 
-const HiddenInfo = ({id, setBottomSheetState}) => {
+type BottomSheetState = {
+  openId: string | null
+  title: string
+  content: string
+}
+
+const HiddenInfo = ({id, setBottomSheetState}: {id: string; setBottomSheetState(state: BottomSheetState): void}) => {
   return (
     <View>
       {[
