@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {getKeys, isKeyOf} from '@yoroi/common/src'
+import {getKeys, isKeyOf} from '@yoroi/common'
 import {flatten} from 'lodash'
 
 import * as SANCHONET_CONFIG from '../cardano/constants/sanchonet/constants'

@@ -1,6 +1,6 @@
 /* eslint-disable no-empty */
 import {SendToken} from '@emurgo/yoroi-lib'
-import {isKeyOf} from '@yoroi/common/src'
+import {isKeyOf} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
 import {Buffer} from 'buffer'

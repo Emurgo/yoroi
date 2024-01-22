@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Address, PublicKey} from '@emurgo/cross-csl-core'
+import {Address} from '@emurgo/cross-csl-core'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {rootStorage} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
@@ -495,4 +495,4 @@ const getBech32InternalChain = (wallet: any) => wallet.internalChain?._addressGe
 const getRewardAddress = (wallet: any) =>
   wallet.getRewardAddress().then((address: Address) => address.toBech32(undefined))
 const getWalletData = (wallet: YoroiWallet) => rootStorage.join(`${wallet.id}/`).getItem(`data`)
-const getStakingKey = (wallet: any) => wallet.getStakingKey().then((key: PublicKey) => key.toBech32())
+const getStakingKey = (wallet: YoroiWallet) => wallet.getStakingKey().then((key) => key.toBech32())
