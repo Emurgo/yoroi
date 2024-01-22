@@ -3,7 +3,7 @@ import _ from 'lodash'
 import React from 'react'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
+import {Button, KeyboardAvoidingView, Spacer, StatusBar} from '../../../../components'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
@@ -73,6 +73,8 @@ export const StartMultiTokenTxScreen = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar type="dark" />
+
       <KeyboardAvoidingView style={styles.flex}>
         <ScrollView style={styles.flex} bounces={false}>
           <ShowErrors />
