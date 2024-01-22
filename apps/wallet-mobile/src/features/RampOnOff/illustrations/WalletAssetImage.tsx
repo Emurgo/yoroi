@@ -1,9 +1,9 @@
 import * as React from 'react'
-import Svg, {Defs, Ellipse, G, LinearGradient, Path, Stop} from 'react-native-svg'
+import Svg, {Defs, Ellipse, G, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
 
-export function WalletAssetImage(props) {
+export function WalletAssetImage(props: SvgProps) {
   return (
-    <Svg width={265} height={282} viewBox="0 0 265 282" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <Svg width={265} height={282} viewBox="0 0 265 282" fill="none" {...props}>
       <G opacity={0.2} stroke="#1D45BA" strokeWidth={0.5}>
         <Path d="M90.191 279.428L264.5 184.352M23.953 232.056l162.603-88.69M80.08 132L263.7 232.027M.5 197.15L154.423 281" />
       </G>

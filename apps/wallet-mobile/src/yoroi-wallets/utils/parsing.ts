@@ -17,9 +17,8 @@ export class InvalidAssetAmount extends ExtendableError {
     NEGATIVE: 'NEGATIVE',
   }
 
-  constructor(errorCode: (typeof InvalidAssetAmount.ERROR_CODES)[keyof typeof InvalidAssetAmount.ERROR_CODES]) {
+  constructor(public errorCode: (typeof InvalidAssetAmount.ERROR_CODES)[keyof typeof InvalidAssetAmount.ERROR_CODES]) {
     super('InvalidAssetAmount')
-    ;(this as any).errorCode = errorCode
   }
 }
 

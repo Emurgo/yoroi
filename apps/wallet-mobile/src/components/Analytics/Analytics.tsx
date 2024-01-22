@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Switch, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
@@ -252,7 +252,7 @@ const list = [
   {style: styles.cross, icon: '✕', key: 'nosell'},
 ] as const
 
-const bold = {b: (text) => <Text bold>{text}</Text>}
+const bold = {b: (text: ReactNode) => <Text bold>{text}</Text>}
 
 const useStrings = () => {
   const intl = useIntl()

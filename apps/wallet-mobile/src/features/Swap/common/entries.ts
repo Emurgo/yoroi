@@ -46,7 +46,7 @@ export const createOrderEntry = (
   // create order is passing {data: cbor}
   datum: YoroiEntry['datum'],
 ): YoroiEntry => {
-  const amountEntry = {}
+  const amountEntry: Record<string, Balance.Quantity> = {}
   const sellTokenId = amounts.sell.tokenId
   const isSellPrimaryToken = sellTokenId === primaryTokenId
 

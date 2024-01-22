@@ -235,7 +235,7 @@ type AddressEntryProps = {
   address: string
   path: string
   isHighlighted: boolean
-  showModalForAddress: (string) => void
+  showModalForAddress: (text: string) => void
 }
 const AddressEntry = ({address, path, isHighlighted, showModalForAddress}: AddressEntryProps) => {
   const text = `(${path}) ${address}`
@@ -256,11 +256,11 @@ const getShownAddresses = (
   internalAddressIndex: Record<string, number>,
   externalAddressIndex: Record<string, number>,
 ) => {
-  const isMyReceive = (address) => externalAddressIndex[address] != null
-  const isMyChange = (address) => internalAddressIndex[address] != null
-  const isMyAddress = (address) => isMyReceive(address) || isMyChange(address)
+  const isMyReceive = (address: string) => externalAddressIndex[address] != null
+  const isMyChange = (address: string) => internalAddressIndex[address] != null
+  const isMyAddress = (address: string) => isMyReceive(address) || isMyChange(address)
 
-  const getPath = (address) => {
+  const getPath = (address: string) => {
     if (isMyReceive(address)) {
       return intl.formatMessage(messages.addressPrefixReceive, {
         idx: externalAddressIndex[address],
@@ -276,23 +276,23 @@ const getShownAddresses = (
 
   const {isHighlightedFrom, isHighlightedTo, filterTo} = {
     SENT: {
-      isHighlightedFrom: (_address) => false,
-      isHighlightedTo: (address) => !isMyAddress(address),
+      isHighlightedFrom: (_address: string) => false,
+      isHighlightedTo: (address: string) => !isMyAddress(address),
       filterTo: null,
     },
     RECEIVED: {
-      isHighlightedFrom: (_address) => false,
-      isHighlightedTo: (address) => isMyAddress(address),
-      filterTo: (address) => isMyAddress(address),
+      isHighlightedFrom: (_address: string) => false,
+      isHighlightedTo: (address: string) => isMyAddress(address),
+      filterTo: (address: string) => isMyAddress(address),
     },
     SELF: {
-      isHighlightedFrom: (_address) => false,
-      isHighlightedTo: (address) => !isMyChange(address),
+      isHighlightedFrom: (_address: string) => false,
+      isHighlightedTo: (address: string) => !isMyChange(address),
       filterTo: null,
     },
     MULTI: {
-      isHighlightedFrom: (address) => isMyAddress(address),
-      isHighlightedTo: (address) => isMyAddress(address),
+      isHighlightedFrom: (address: string) => isMyAddress(address),
+      isHighlightedTo: (address: string) => isMyAddress(address),
       filterTo: null,
     },
   }[transaction.direction] as any
@@ -339,8 +339,8 @@ const useStrings = () => {
     memo: intl.formatMessage(messages.memo),
     transactionId: intl.formatMessage(messages.transactionId),
     txAssuranceLevel: intl.formatMessage(messages.txAssuranceLevel),
-    confirmations: (cnt) => intl.formatMessage(messages.confirmations, {cnt}),
-    omittedCount: (cnt) => intl.formatMessage(messages.omittedCount, {cnt}),
+    confirmations: (cnt: number) => intl.formatMessage(messages.confirmations, {cnt}),
+    omittedCount: (cnt: number) => intl.formatMessage(messages.omittedCount, {cnt}),
     openInExplorer: intl.formatMessage(messages.openInExplorer),
     SENT: intl.formatMessage(txTypeMessages.SENT),
     RECEIVED: intl.formatMessage(txTypeMessages.RECEIVED),

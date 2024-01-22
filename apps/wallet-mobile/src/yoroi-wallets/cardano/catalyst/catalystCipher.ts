@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import chacha from 'chacha'
 import cryptoRandomString from 'crypto-random-string'
 import pbkdf2 from 'pbkdf2'
@@ -17,9 +19,9 @@ const PROTO_VERSION = Buffer.from('01', 'hex')
 	----------------------------------------------------------
 */
 
-const promisifyPbkdf2: (Uint8Array, Buffer) => Promise<Buffer> = (password, salt) => {
+const promisifyPbkdf2: (array: Uint8Array, buffer: Buffer) => Promise<Buffer> = (password, salt) => {
   return new Promise((resolve, reject) => {
-    pbkdf2.pbkdf2(password, salt, PBKDF_ITERATIONS, KEY_SIZE, DIGEST, (err, key) => {
+    pbkdf2.pbkdf2(password, salt, PBKDF_ITERATIONS, KEY_SIZE, DIGEST, (err: Error | null, key: Buffer) => {
       if (err) return reject(err)
       return resolve(key)
     })

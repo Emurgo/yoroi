@@ -1,9 +1,9 @@
 import * as React from 'react'
-import Svg, {Defs, G, LinearGradient, Path, Stop} from 'react-native-svg'
+import Svg, {Defs, G, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
 
-export const EmptyCompletedOrdersIllustration = (props) => {
+export const EmptyCompletedOrdersIllustration = (props: SvgProps) => {
   return (
-    <Svg width={280} height={224} viewBox="0 0 280 224" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <Svg width={280} height={224} viewBox="0 0 280 224" fill="none" {...props}>
       <Path
         d="M95.8 78.686c10.934 6.249 10.934 16.379 0 22.628-10.935 6.248-28.664 6.248-39.599 0-10.935-6.249-10.935-16.379 0-22.628 10.935-6.248 28.664-6.248 39.598 0z"
         fill="#52FCFF"

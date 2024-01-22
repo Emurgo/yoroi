@@ -5,6 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Icon, Spacer, StatusBar, YoroiLogo} from '../../../components'
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
 import {useLanguage} from '../../../i18n'
+import {defaultLanguage} from '../../../i18n/languages'
 import {COLORS} from '../../../theme'
 import {useNavigateTo, useStrings} from '../common'
 
@@ -92,7 +93,7 @@ export const InitialScreen = () => {
 
 const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
   const {languageCode, supportedLanguages} = useLanguage()
-  const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? supportedLanguages['en-US']
+  const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 
   return (
     <TouchableOpacity onPress={onPress} testID="dropDownLanguagePicker">

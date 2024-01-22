@@ -1,5 +1,5 @@
 import React, {Component, ErrorInfo, ReactNode} from 'react'
-import {BackHandler, Image, Platform, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {BackHandler, Image, Platform, ScrollView, StyleSheet, Text, View, ViewProps} from 'react-native'
 import {Divider} from 'react-native-paper'
 
 import errorImage from '../../assets/img/error.png'
@@ -88,7 +88,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-const Actions = (props) => {
+const Actions = (props: ViewProps) => {
   return <View {...props} />
 }
 

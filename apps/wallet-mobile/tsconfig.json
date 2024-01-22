@@ -5,7 +5,7 @@
     "lib": ["es2019", "dom"],
     "moduleResolution": "node",
     "strict": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "types": ["react", "react-native", "jest", "node", "chai"],
     "baseUrl": ".",
     "paths": {

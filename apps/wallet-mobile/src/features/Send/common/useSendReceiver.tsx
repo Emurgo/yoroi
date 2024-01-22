@@ -62,7 +62,7 @@ export const useSendReceiver = () => {
         (addressRecords: Resolver.Receiver['addressRecords'], {address, nameServer}) => {
           if (address !== null && nameServer !== null && isNameServer(nameServer) === true)
             if (addressRecords !== undefined) {
-              addressRecords[nameServer] = address
+              return {...addressRecords, [nameServer]: address}
             } else {
               return {[nameServer]: address}
             }

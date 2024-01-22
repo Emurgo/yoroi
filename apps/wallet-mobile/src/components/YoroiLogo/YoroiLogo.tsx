@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, View} from 'react-native'
-import {Defs, LinearGradient, Path, Stop, Svg} from 'react-native-svg'
+import {Defs, LinearGradient, Path, Stop, Svg, SvgProps} from 'react-native-svg'
 
 import {COLORS} from '../../theme'
 import {Spacer} from '../Spacer'
@@ -25,9 +25,9 @@ export const YoroiLogo = () => {
   )
 }
 
-const YoroiLogoSvg = (props) => {
+const YoroiLogoSvg = (props: SvgProps) => {
   return (
-    <Svg xmlns="http://www.w3.org/2000/svg" width={57} height={48} viewBox="0 0 57 48" fill="none" {...props}>
+    <Svg width={57} height={48} viewBox="0 0 57 48" fill="none" {...props}>
       <Path
         fillRule="evenodd"
         clipRule="evenodd"

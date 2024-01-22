@@ -364,7 +364,7 @@ export const YOROI_PROVIDER_IDS = {
 export const DERIVATION_TYPES = {
   BIP44: 'bip44',
   CIP1852: 'cip1852',
-}
+} as const
 
 // these are the different wallet implementations we have/had
 export const WALLET_IMPLEMENTATION_REGISTRY = {
@@ -436,7 +436,7 @@ export const TRANSACTION_DIRECTION = {
   SELF: 'SELF',
   // intra-wallet
   MULTI: 'MULTI', // multi-party
-}
+} as const
 export type TransactionDirection = (typeof TRANSACTION_DIRECTION)[keyof typeof TRANSACTION_DIRECTION]
 
 export const TRANSACTION_TYPE = {

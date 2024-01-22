@@ -241,7 +241,7 @@ const EpochInfo = () => {
   )
 }
 
-const Actions = (props) => <View {...props} style={styles.actions} />
+const Actions = (props: ViewProps) => <View {...props} style={styles.actions} />
 
 const messages = defineMessages({
   stakingCenterButton: {

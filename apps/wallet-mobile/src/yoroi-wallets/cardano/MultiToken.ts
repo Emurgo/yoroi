@@ -169,7 +169,7 @@ export class MultiToken {
     }))
 
   static fromArray(entries: Array<TokenEntryPlain>): MultiToken {
-    const _asTokenEntry = (value) => ({
+    const _asTokenEntry = (value: TokenEntryPlain) => ({
       identifier: value.identifier,
       networkId: value.networkId,
       amount: new BigNumber(value.amount),

@@ -16,6 +16,8 @@ import {
   parseString,
   parseNumber,
   isUrl,
+  isKeyOf,
+  getKeys,
 } from './parsers'
 
 describe('parsers', () => {
@@ -257,6 +259,28 @@ describe('parsers', () => {
       expect(isStringOrArrayOfString(null)).toBe(false)
       expect(isStringOrArrayOfString(undefined)).toBe(false)
       expect(isStringOrArrayOfString({})).toBe(false)
+    })
+  })
+
+  describe('isKeyOf', () => {
+    it('should return true if the key is in the object', () => {
+      expect(isKeyOf('a', {a: 1})).toBe(true)
+    })
+
+    it('should return false if the key is not in the object', () => {
+      expect(isKeyOf('b', {a: 1})).toBe(false)
+      expect(isKeyOf(1, {a: 1})).toBe(false)
+      expect(isKeyOf('a', {1: 1})).toBe(false)
+    })
+  })
+
+  describe('getKeys', () => {
+    it('should return the keys of the object', () => {
+      expect(getKeys({a: 1, b: 2})).toEqual(['a', 'b'])
+    })
+
+    it('should return an empty array if the object is empty', () => {
+      expect(getKeys({})).toEqual([])
     })
   })
 })

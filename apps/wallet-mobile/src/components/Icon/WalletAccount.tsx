@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import Blockies from '@emurgo/react-native-blockies-svg'
 import React from 'react'
 import {StyleSheet, View, ViewStyle} from 'react-native'
@@ -6,7 +8,7 @@ import tinycolor from 'tinycolor2'
 import {COLORS as APP_COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 
-const mkcolor = (primary, secondary, spots) => ({primary, secondary, spots})
+const mkcolor = (primary: string, secondary: string, spots: string) => ({primary, secondary, spots})
 const COLORS = [
   mkcolor('#E1F2FF', '#17D1AA', '#A80B32'),
   mkcolor('#E1F2FF', '#FA5380', '#0833B2'),
@@ -15,7 +17,7 @@ const COLORS = [
   mkcolor('#E1F2FF', '#F59F9A', '#085F48'),
 ]
 
-const saturation = (color, factor = 0) => {
+const saturation = (color: string, factor = 0) => {
   if (factor < -100 || factor > 100) {
     throw Error('Expected factor between -100 and 100 (default 0)')
   }

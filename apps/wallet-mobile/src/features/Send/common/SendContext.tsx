@@ -313,7 +313,7 @@ const getTotalUsedByOtherTargets = ({
   selectedTargetIndex: number
   selectedTokenId: string
 }) => {
-  const isNotTheSelectedTarget = (_, index) => index !== selectedTargetIndex
+  const isNotTheSelectedTarget = (_target: YoroiTarget, index: number) => index !== selectedTargetIndex
   return targets.filter(isNotTheSelectedTarget).reduce((acc, target) => {
     const quantity = Amounts.getAmount(target.entry.amounts, selectedTokenId).quantity
     return Quantities.sum([acc, quantity])

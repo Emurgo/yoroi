@@ -137,8 +137,11 @@ export const CreateOrder = () => {
 
       createUnsignedTx({entries})
     },
-    onError: (error: Error) => {
-      Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
+    onError: (error: Error | string) => {
+      Alert.alert(
+        strings.generalErrorTitle,
+        strings.generalErrorMessage(error instanceof Error ? error.message : error),
+      )
     },
   })
 

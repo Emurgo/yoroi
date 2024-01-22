@@ -12,7 +12,7 @@ const device: Device = {
 
 const doTheThing = () => new Promise((resolve) => setTimeout(resolve, 1000))
 
-const onSelect = async (device) => {
+const onSelect = async (device: Device) => {
   action('onSelect start')(device)
   await doTheThing()
   action('onSelect end')(device)

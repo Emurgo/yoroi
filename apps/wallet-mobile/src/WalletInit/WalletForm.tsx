@@ -1,6 +1,6 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
+import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
 
 import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../components'
 import {debugWalletInfo, features} from '../features'
@@ -127,7 +127,7 @@ export const WalletForm = ({onSubmit}: Props) => {
 const WalletNameInput = TextInput
 const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
-const Actions = (props) => <View {...props} style={styles.actions} />
+const Actions = (props: ViewProps) => <View {...props} style={styles.actions} />
 
 const messages = defineMessages({
   walletNameInputLabel: {
@@ -163,7 +163,8 @@ const useStrings = () => {
     walletNameInputLabel: intl.formatMessage(messages.walletNameInputLabel),
     newPasswordInput: intl.formatMessage(messages.newPasswordInput),
     continueButton: intl.formatMessage(messages.continueButton),
-    passwordStrengthRequirement: (options) => intl.formatMessage(messages.passwordStrengthRequirement, options),
+    passwordStrengthRequirement: (options: {requiredPasswordLength: number}) =>
+      intl.formatMessage(messages.passwordStrengthRequirement, options),
     repeatPasswordInputLabel: intl.formatMessage(messages.repeatPasswordInputLabel),
     repeatPasswordInputError: intl.formatMessage(messages.repeatPasswordInputError),
     tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),
