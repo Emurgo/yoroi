@@ -100,6 +100,7 @@ describe('getCryptoAddress', () => {
     const errorApiResponse: Api.ResponseError = {
       status: 404,
       message: 'Not found',
+      responseData: null,
     }
 
     const mockFetchDataResponse: Left<Api.ResponseError> = {
@@ -127,6 +128,7 @@ describe('getCryptoAddress', () => {
     const errorApiResponse: Api.ResponseError = {
       status: 425,
       message: 'Too Early',
+      responseData: null,
     }
 
     const mockFetchDataResponse: Left<Api.ResponseError> = {

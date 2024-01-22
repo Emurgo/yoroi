@@ -194,6 +194,7 @@ describe('getCryptoAddress', () => {
     const errorApiResponse: Api.ResponseError = {
       status: 404,
       message: 'Not found',
+      responseData: null,
     }
 
     const mockFetchDataResponse: Left<Api.ResponseError> = {
@@ -226,6 +227,7 @@ describe('getCryptoAddress', () => {
     const errorApiResponse: Api.ResponseError = {
       status: 425,
       message: 'Too Early',
+      responseData: null,
     }
 
     const mockFetchDataResponse: Left<Api.ResponseError> = {
@@ -239,6 +241,41 @@ describe('getCryptoAddress', () => {
 
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
       Api.Errors.TooEarly,
+    )
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${mockOptions.apiKey}`,
+        },
+        url: expectedUrl,
+      },
+      undefined,
+    )
+  })
+
+  it('should throw an "UnsupportedTld" error when the api does not support a tld', async () => {
+    const domain = mockApiResponse.meta.domain
+    const expectedUrl = `${unstoppableApiConfig.mainnet.getCryptoAddress}${domain}`
+    const errorApiResponse: Api.ResponseError = {
+      status: 425,
+      message: 'Fake Message',
+      responseData: {
+        message: 'Unsupported TLD',
+      },
+    }
+
+    const mockFetchDataResponse: Left<Api.ResponseError> = {
+      tag: 'left',
+      error: errorApiResponse,
+    }
+    const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
+    const getCryptoAddress = unstoppableApiGetCryptoAddress(mockOptions, {
+      request: mockFetchData,
+    })
+
+    await expect(() => getCryptoAddress(domain)).rejects.toThrow(
+      Resolver.Errors.UnsupportedTld,
     )
     expect(mockFetchData).toHaveBeenCalledWith(
       {
