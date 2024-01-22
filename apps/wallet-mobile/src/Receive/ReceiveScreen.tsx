@@ -1,22 +1,23 @@
-import {useFocusEffect} from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import { defineMessages, useIntl } from 'react-intl'
+import { ScrollView, StyleSheet, View } from 'react-native'
 
-import {Button, Spacer, StatusBar} from '../components'
-import {useMetrics} from '../metrics/metricsManager'
-import {useSelectedWallet} from '../SelectedWallet'
-import {COLORS} from '../theme'
-import {useReceiveAddresses} from '../yoroi-wallets/hooks'
-import {AddressDetail} from './AddressDetail'
-import {UnusedAddresses, UsedAddresses} from './Addresses'
+import { Button, Spacer, StatusBar } from '../components'
+import { useCopy } from '../legacy/useCopy'
+import { useMetrics } from '../metrics/metricsManager'
+import { useSelectedWallet } from '../SelectedWallet'
+import { COLORS,colors } from '../theme'
+import { useReceiveAddresses } from '../yoroi-wallets/hooks'
+import { AddressDetail, SkeletonAdressDetail } from './AddressDetail'
 
 export const ReceiveScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const receiveAddresses = useReceiveAddresses(wallet)
-  const addressLimitReached = wallet.canGenerateNewReceiveAddress() == false
+
+  const [isCopying, copy] = useCopy()
 
   const currentAddress = _.last(receiveAddresses)
 
@@ -24,7 +25,7 @@ export const ReceiveScreen = () => {
     wallet.generateNewReceiveAddressIfNeeded()
   }, [wallet])
 
-  const {track} = useMetrics()
+  const { track } = useMetrics()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -41,53 +42,49 @@ export const ReceiveScreen = () => {
 
         <Content>
           <View style={styles.address}>
-            {currentAddress != null ? (
-              <AddressDetail address={currentAddress} />
+            {currentAddress !== null ? (
+              <AddressDetail address={currentAddress} title={strings.addresscardTitle} />
             ) : (
-              <ActivityIndicator size="large" color="black" />
+              <SkeletonAdressDetail />
             )}
           </View>
 
-          <Spacer height={24} />
+          <Spacer height={64} />
 
           <Button
-            outlineOnLight
-            onPress={() => wallet.generateNewReceiveAddress()}
-            disabled={addressLimitReached}
-            title={!addressLimitReached ? strings.generateButton : strings.cannotGenerate}
-            testID="generateNewReceiveAddressButton"
+            outline
+            title='request specific amount'
+            textStyles={{
+              color: colors.buttonBackgroundBlue
+            }}
           />
 
           <Spacer height={24} />
 
-          <UnusedAddresses />
+          <Button
+            shelleyTheme
+            onPress={() => {
+              copy(currentAddress)
+            }}
+            disabled={currentAddress === null ? true : false}
+            testID="copyReceiveAddressButton"
+            title='Copy address'
+            iconImage={require('../../src/assets/img/copy.png')}
+            isCopying={isCopying}
+          />
 
-          <Spacer height={24} />
-
-          <UsedAddresses />
         </Content>
       </ScrollView>
     </View>
   )
 }
 
-const Content = (props: ViewProps) => <View {...props} style={styles.content} />
+const Content = (props) => <View {...props} style={styles.content} />
 
 const messages = defineMessages({
-  infoText: {
-    id: 'components.receive.receivescreen.infoText',
-    defaultMessage:
-      '!!!Share this address to receive payments. ' +
-      'To protect your privacy, new addresses are ' +
-      'generated automatically once you use them.',
-  },
-  generateButton: {
-    id: 'components.receive.receivescreen.generateButton',
-    defaultMessage: '!!!Generate another address',
-  },
-  cannotGenerate: {
-    id: 'components.receive.receivescreen.cannotGenerate',
-    defaultMessage: '!!!You have to use some of your addresses',
+  addresscardTitle: {
+    id: 'components.receive.addresscard.title',
+    defaultMessage:'!!!Wallet address',
   },
 })
 
@@ -95,9 +92,7 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    infoText: intl.formatMessage(messages.infoText),
-    generateButton: intl.formatMessage(messages.generateButton),
-    cannotGenerate: intl.formatMessage(messages.cannotGenerate),
+    addresscardTitle: intl.formatMessage(messages.addresscardTitle),
   }
 }
 
@@ -112,6 +107,8 @@ const styles = StyleSheet.create({
   address: {
     alignItems: 'center',
     justifyContent: 'center',
+    height: '100%',
     minHeight: 180,
+    maxHeight: 458,
   },
 })
