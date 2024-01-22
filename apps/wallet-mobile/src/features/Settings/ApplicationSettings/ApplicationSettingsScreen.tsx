@@ -42,7 +42,7 @@ export const ApplicationSettingsScreen = () => {
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
 
   const displayScreenShareSetting = Platform.OS === 'android' && !isProduction()
-  const displayToggleThemeSetting = !isProduction() || !isNightly()
+  const displayToggleThemeSetting = !isNightly() || !isProduction()
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
