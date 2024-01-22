@@ -31,7 +31,7 @@ export type TextInputProps = RNTextInputProps &
     selectTextOnAutoFocus?: boolean
   }
 
-const useDebounced = (callback, value, delay = 1000) => {
+const useDebounced = (callback: VoidFunction, value: unknown, delay = 1000) => {
   const first = React.useRef(true)
   React.useEffect(() => {
     if (first.current) {

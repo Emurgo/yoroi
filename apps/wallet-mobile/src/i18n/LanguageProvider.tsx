@@ -2,6 +2,8 @@ import {parseSafe, useStorage} from '@yoroi/common'
 import React, {useMemo} from 'react'
 import {IntlProvider} from 'react-intl'
 import {Text} from 'react-native'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import TimeZone from 'react-native-timezone'
 import {
   QueryKey,

@@ -10,7 +10,7 @@ it('can delay', async () => {
   expect(t2 >= t1 + DELAY).toBe(true)
 })
 
-const metafactory = (id, time, order) => () =>
+const metafactory = (id: number, time: number, order: number[]) => () =>
   Promise.resolve().then(async () => {
     order.push(id)
     await delay(time)
@@ -19,7 +19,7 @@ const metafactory = (id, time, order) => () =>
   })
 
 it('nonsynchronized are not synchronized', async () => {
-  const order = []
+  const order: number[] = []
   const factory1 = metafactory(1, 300, order)
   const factory2 = metafactory(2, 200, order)
   const factory3 = metafactory(3, 100, order)
@@ -33,7 +33,7 @@ it('nonsynchronized are not synchronized', async () => {
 })
 
 it('can synchronize promises', async () => {
-  const order = []
+  const order: number[] = []
 
   const factory1 = metafactory(1, 300, order)
   const factory2 = metafactory(2, 200, order)

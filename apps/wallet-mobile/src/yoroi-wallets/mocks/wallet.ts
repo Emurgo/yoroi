@@ -126,18 +126,18 @@ const wallet: YoroiWallet = {
   fetchNftModerationStatus() {
     throw new Error('not implemented: fetchNftModerationStatus')
   },
-  fetchPoolInfo: (...args) => {
+  fetchPoolInfo: (...args: unknown[]) => {
     action('fetchPoolInfo')(...args)
     return Promise.resolve({[stakePoolId]: poolInfoAndHistory} as StakePoolInfosAndHistories)
   },
-  getDelegationStatus: (...args) => {
+  getDelegationStatus: (...args: unknown[]) => {
     action('getDelegationStatus')(...args)
     return Promise.resolve({isRegistered: false, poolKeyHash: null})
   },
   subscribeOnTxHistoryUpdate: () => {
     return () => null
   },
-  fetchAccountState: (...args) => {
+  fetchAccountState: (...args: unknown[]) => {
     action('fetchAccountState')(...args)
     return Promise.resolve({['reward-address-hex']: {remainingAmount: '0', rewards: '0', withdrawals: ''}})
   },
@@ -150,7 +150,7 @@ const wallet: YoroiWallet = {
   signTxWithLedger: () => {
     throw new Error('Not implemented: signTxWithLedger')
   },
-  checkServerStatus: (...args) => {
+  checkServerStatus: (...args: unknown[]) => {
     action('checkServerStatus')(...args)
     return Promise.resolve({
       isServerOk: true,
@@ -159,11 +159,11 @@ const wallet: YoroiWallet = {
       isQueueOnline: true,
     })
   },
-  fetchTxStatus: async (...args) => {
+  fetchTxStatus: async (...args: unknown[]) => {
     action('fetchTxStatus')(...args)
     return {}
   },
-  fetchTipStatus: async (...args) => {
+  fetchTipStatus: async (...args: unknown[]) => {
     action('fetchTipStatus')(...args)
     return Promise.resolve({
       bestBlock: {
@@ -191,13 +191,13 @@ const wallet: YoroiWallet = {
   createVotingRegTx: () => {
     throw new Error('Not implemented: createVotingRegTx')
   },
-  subscribe: (...args) => {
+  subscribe: (...args: unknown[]) => {
     action('subscribe')(...args)
-    return (...args) => {
+    return (...args: unknown[]) => {
       action('unsubscribe')(...args)
     }
   },
-  fetchCurrentPrice: (...args) => {
+  fetchCurrentPrice: (...args: unknown[]) => {
     action('fetchCurrentPrice')(...args)
     return Promise.resolve(1.9938153154314795)
   },
@@ -208,34 +208,34 @@ const wallet: YoroiWallet = {
   isUsedAddressIndex: {},
   numReceiveAddresses: 0,
   receiveAddresses: [],
-  canGenerateNewReceiveAddress: (...args) => {
+  canGenerateNewReceiveAddress: (...args: unknown[]) => {
     action('canGenerateNewReceiveAddress')(...args)
     return true
   },
-  generateNewReceiveAddressIfNeeded: (...args) => {
+  generateNewReceiveAddressIfNeeded: (...args: unknown[]) => {
     action('generateNewReceiveAddressIfNeeded')(...args)
     return true
   },
-  generateNewReceiveAddress: (...args) => {
+  generateNewReceiveAddress: (...args: unknown[]) => {
     action('generateNewReceiveAddress')(...args)
     return true
   },
-  save: async (...args) => {
+  save: async (...args: unknown[]) => {
     action('save')(...args)
   },
-  saveMemo: async (...args) => {
+  saveMemo: async (...args: unknown[]) => {
     action('saveMemo')(...args)
   },
-  tryDoFullSync: async (...args) => {
+  tryDoFullSync: async (...args: unknown[]) => {
     action('tryDoFullSync')(...args)
   },
-  clear: async (...args) => {
+  clear: async (...args: unknown[]) => {
     action('clear')(...args)
   },
-  sync: async (...args) => {
+  sync: async (...args: unknown[]) => {
     action('sync')(...args)
   },
-  resync: async (...args) => {
+  resync: async (...args: unknown[]) => {
     action('resync')(...args)
   },
   enableEasyConfirmation: async (rootKey: string) => {
@@ -304,7 +304,7 @@ const readonlyWallet: YoroiWallet = {
 const txid = '31b1abca49857fd50c7959cc019d14c7dc5deaa754ba45372fb21748c411f210'
 
 const getTransactions = {
-  success: async (...args) => {
+  success: async (...args: unknown[]) => {
     action('getTransactions')(...args)
     const txInfo = mockTransactionInfo({id: txid})
 
@@ -313,11 +313,11 @@ const getTransactions = {
     }
   },
 
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('getTransactions')(...args)
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('getTransactions')(...args)
     return new Promise(() => null) as unknown as {[txid: string]: TransactionInfo}
   },
@@ -325,20 +325,20 @@ const getTransactions = {
 
 const fetchPoolInfo = {
   success: {
-    poolFound: async (...args) => {
+    poolFound: async (...args: unknown[]) => {
       action('fetchPoolInfo')(...args)
       return {[mocks.stakePoolId]: mocks.poolInfoAndHistory} as StakePoolInfosAndHistories
     },
-    poolNotFound: async (...args) => {
+    poolNotFound: async (...args: unknown[]) => {
       action('fetchPoolInfo')(...args)
       return {[mocks.stakePoolId]: null} as StakePoolInfosAndHistories
     },
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('fetchPoolInfo')(...args)
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('fetchPoolInfo')(...args)
     return new Promise(() => null) as unknown as StakePoolInfosAndHistories
   },
@@ -357,37 +357,37 @@ export const generateManyNfts = (): Balance.TokenInfo[] => {
 
 const fetchNftModerationStatus = {
   success: {
-    approved: async (...args): Promise<YoroiNftModerationStatus> => {
+    approved: async (...args: unknown[]): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
       return 'approved'
     },
-    consent: async (...args): Promise<YoroiNftModerationStatus> => {
+    consent: async (...args: unknown[]): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
       return 'consent'
     },
-    blocked: async (...args): Promise<YoroiNftModerationStatus> => {
+    blocked: async (...args: unknown[]): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
       return 'blocked'
     },
-    pendingReview: async (...args): Promise<YoroiNftModerationStatus> => {
+    pendingReview: async (...args: unknown[]): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
       return 'pending'
     },
-    loading: async (...args): Promise<YoroiNftModerationStatus> => {
+    loading: async (...args: unknown[]): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
       return new Promise(() => void 0) as any
     },
-    random: async (...args): Promise<YoroiNftModerationStatus> => {
+    random: async (...args: unknown[]): Promise<YoroiNftModerationStatus> => {
       action('fetchNftModerationStatus')(...args)
       const statuses = ['approved', 'consent', 'blocked', 'pending', 'manual_review'] as const
       return statuses[Math.floor(Math.random() * statuses.length)]
     },
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('fetchNftModerationStatus')(...args)
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('fetchNftModerationStatus')(...args)
     return new Promise(() => null) as unknown as YoroiNftModerationStatus
   },
@@ -395,24 +395,24 @@ const fetchNftModerationStatus = {
 
 const getDelegationStatus = {
   success: {
-    delegating: async (...args) => {
+    delegating: async (...args: unknown[]) => {
       action('getDelegationStatus')(...args)
       return {isRegistered: true, poolKeyHash: stakePoolId} as StakingStatus
     },
-    registered: async (...args) => {
+    registered: async (...args: unknown[]) => {
       action('getDelegationStatus')(...args)
       return {isRegistered: true} as StakingStatus
     },
-    notRegistered: async (...args) => {
+    notRegistered: async (...args: unknown[]) => {
       action('getDelegationStatus')(...args)
       return {isRegistered: false, poolKeyHash: null} as StakingStatus
     },
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('getDelegationStatus')(...args)
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('getDelegationStatus')(...args)
     return new Promise(() => null) as unknown as StakingStatus
   },
@@ -420,158 +420,158 @@ const getDelegationStatus = {
 
 const getStakingInfo = {
   success: {
-    registered: async (...args) => {
+    registered: async (...args: unknown[]) => {
       action('getStakingInfo')(...args)
       return {status: 'registered'} as StakingInfo
     },
-    notRegistered: async (...args) => {
+    notRegistered: async (...args: unknown[]) => {
       action('getStakingInfo')(...args)
       return {status: 'not-registered'} as StakingInfo
     },
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('getStakingInfo')(...args)
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('getStakingInfo')(...args)
     return new Promise(() => null) as unknown as StakingInfo
   },
 }
 
 const createUnsignedTx = {
-  success: async (...args) => {
+  success: async (...args: unknown[]) => {
     action('createUnsignedTx')(...args)
     return mocks.yoroiUnsignedTx
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('createUnsignedTx')(...args)
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('createUnsignedTx')(...args)
     return new Promise(() => null) as unknown as YoroiUnsignedTx
   },
 }
 
 const createDelegationTx = {
-  success: async (...args) => {
+  success: async (...args: unknown[]) => {
     action('createDelegationTx')(...args)
     return mocks.yoroiUnsignedTx
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('createDelegationTx')(...args)
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('createDelegationTx')(...args)
     return new Promise(() => null) as unknown as YoroiUnsignedTx
   },
 }
 
 const setCollateralId = {
-  success: async (...args) => {
+  success: async (...args: unknown[]) => {
     action('setCollateralId')(...args)
     return mocks.yoroiUnsignedTx
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('setCollateralId')(...args)
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('setCollateralId')(...args)
     return new Promise(() => null) as unknown as void
   },
 }
 
 const createWithdrawalTx = {
-  success: async (...args) => {
+  success: async (...args: unknown[]) => {
     action('createWithdrawalTx')(...args)
     return mocks.yoroiUnsignedTx
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('createWithdrawalTx')(...args)
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('createWithdrawalTx')(...args)
     return new Promise(() => null) as unknown as YoroiUnsignedTx
   },
 }
 
 const createVotingRegTx = {
-  success: async (...args) => {
+  success: async (...args: unknown[]) => {
     action('createVotingRegTx')(...args)
     return {
       votingRegTx: mocks.yoroiUnsignedTx,
       votingKeyEncrypted: 'votingKeyEncrypted',
     }
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('createVotingRegTx')(...args)
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('createVotingRegTx')(...args)
     return new Promise(() => null)
   },
 }
 
 const signTx = {
-  success: async (...args) => {
+  success: async (...args: unknown[]) => {
     action('signTx')(...args)
     return yoroiSignedTx
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('signTx')(...args)
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('signTx')(...args)
     return new Promise(() => null) as unknown as YoroiSignedTx
   },
 }
 const signTxWithLedger = {
-  success: async (...args) => {
+  success: async (...args: unknown[]) => {
     action('signTx')(...args)
     return yoroiSignedTx
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('signTx')(...args)
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args): Promise<YoroiSignedTx> => {
+  loading: async (...args: unknown[]): Promise<YoroiSignedTx> => {
     action('signTx')(...args)
     return new Promise(() => null)
   },
 }
 
 const submitTransaction = {
-  success: async (...args) => {
+  success: async (...args: unknown[]) => {
     action('submitTransaction')(...args)
     return [] as unknown as []
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('submitTransaction')(...args)
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('submitTransaction')(...args)
     return new Promise(() => null) as unknown as []
   },
 }
 
 const fetchCurrentPrice = {
-  success: async (...args) => {
+  success: async (...args: unknown[]) => {
     action('fetchCurrentPrice')(...args)
     return 0.123456789
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('fetchCurrentPrice')(...args)
     await new Promise((resolve) => setTimeout(resolve, 3000))
     return Promise.reject(new Error('storybook error message'))
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('fetchCurrentPrice')(...args)
     return new Promise(() => null) as unknown as number
   },
@@ -579,16 +579,16 @@ const fetchCurrentPrice = {
 
 const fetchTokenInfo = {
   success: {
-    nft: async (...args): Promise<Balance.TokenInfo> => {
+    nft: async (...args: unknown[]): Promise<Balance.TokenInfo> => {
       action('fetchTokenInfo')(...args)
       return nft
     },
-    randomNft: async (...args): Promise<Balance.TokenInfo> => {
+    randomNft: async (...args: unknown[]): Promise<Balance.TokenInfo> => {
       action('fetchTokenInfo')(...args)
       const allNfts = generateManyNfts()
       return allNfts[Math.floor(Math.random() * allNfts.length)]
     },
-    ft: async (...args): Promise<Balance.TokenInfo> => {
+    ft: async (...args: unknown[]): Promise<Balance.TokenInfo> => {
       action('fetchTokenInfo')(...args)
       return {
         kind: 'ft',
@@ -614,7 +614,7 @@ const fetchTokenInfo = {
         },
       }
     },
-    ftNoImage: async (...args): Promise<Balance.TokenInfo> => {
+    ftNoImage: async (...args: unknown[]): Promise<Balance.TokenInfo> => {
       action('fetchTokenInfo')(...args)
       return {
         kind: 'ft',
@@ -641,11 +641,11 @@ const fetchTokenInfo = {
       }
     },
   },
-  loading: async (...args) => {
+  loading: async (...args: unknown[]) => {
     action('fetchTokenInfo')(...args)
     return new Promise(() => null) as unknown as Balance.TokenInfo
   },
-  error: async (...args) => {
+  error: async (...args: unknown[]) => {
     action('fetchTokenInfo')(...args)
     return Promise.reject(new Error('storybook error message'))
   },

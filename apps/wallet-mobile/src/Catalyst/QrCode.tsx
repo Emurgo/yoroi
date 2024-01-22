@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import QRCodeSVG from 'react-native-qrcode-svg'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -80,13 +80,13 @@ export const QrCode = ({onNext, votingKeyEncrypted}: {onNext: () => void; voting
   )
 }
 
-const AlertBox = (props) => <View {...props} style={styles.alertBox} />
+const AlertBox = (props: ViewProps) => <View {...props} style={styles.alertBox} />
 const QRCode = ({text}: {text: string}) => (
   <View style={styles.qrCodeBackground}>
     <QRCodeSVG value={text} size={140} backgroundColor="white" color="black" />
   </View>
 )
-const SecretCodeBox = (props) => <View {...props} style={styles.secretCodeBox} />
+const SecretCodeBox = (props: ViewProps) => <View {...props} style={styles.secretCodeBox} />
 
 const messages = defineMessages({
   subTitle: {

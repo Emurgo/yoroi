@@ -64,7 +64,7 @@ export const useStrings = () => {
     youHave: intl.formatMessage(messages.youHave),
     price: intl.formatMessage(messages.price),
     priceImpact: intl.formatMessage(messages.priceImpact),
-    priceImpactRiskHigh: ({riskValue}) =>
+    priceImpactRiskHigh: ({riskValue}: {riskValue: number}) =>
       intl.formatMessage(messages.priceImpactRiskHigh, {
         riskValue,
       }),
@@ -130,7 +130,7 @@ export const useStrings = () => {
     notEnoughFeeBalance: intl.formatMessage(messages.notEnoughFeeBalance),
     noPool: intl.formatMessage(messages.noPool),
     generalErrorTitle: intl.formatMessage(errorMessages.generalError.title),
-    generalErrorMessage: (e) => intl.formatMessage(errorMessages.generalError.message, {message: e}),
+    generalErrorMessage: (e: string) => intl.formatMessage(errorMessages.generalError.message, {message: e}),
     continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
     continue: intl.formatMessage(messages.continue),
     cancel: intl.formatMessage(globalMessages.cancel),

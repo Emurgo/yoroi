@@ -3,7 +3,7 @@ import {BarCodeBounds, BarCodeScanner, BarCodeScannerResult} from 'expo-barcode-
 import {Camera} from 'expo-camera'
 import * as React from 'react'
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
-import {Path, Svg} from 'react-native-svg'
+import {Path, Svg, SvgProps} from 'react-native-svg'
 
 export type CameraCodeScannerMethods = {
   continueScanning: () => void
@@ -41,7 +41,7 @@ export const CameraCodeScanner = React.forwardRef<CameraCodeScannerMethods, Came
     }, [onCameraPermissionDenied, status?.granted])
 
     const handleOnBarCodeScanned = React.useCallback(
-      (event) => {
+      (event: BarCodeScannerResult & {boundingBox?: BarCodeBounds}) => {
         const scannerBounds = getScannerBounds({deviceHeight, deviceWidth})
         const isQrInsideScannerBounds =
           withMask && (event.bounds !== undefined || event.boundingBox !== undefined)
@@ -142,21 +142,13 @@ const BottomLeftCorner = () => <Corner style={styles.bottomLeftCorner} />
 
 const MaskText = ({children}: {children?: React.ReactNode}) => <Text style={styles.text}>{children}</Text>
 
-const Corner = ({style}) => {
-  return <ArcSvg style={{position: 'absolute', ...style}} />
+const Corner = ({style}: SvgProps) => {
+  return <ArcSvg style={[{position: 'absolute'}, style]} />
 }
 
-const ArcSvg = (props) => {
+const ArcSvg = (props: SvgProps) => {
   return (
-    <Svg
-      width={42}
-      height={42}
-      viewBox="0 0 42 42"
-      preserveAspectRatio="xMidYMid slice"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
+    <Svg width={42} height={42} viewBox="0 0 42 42" preserveAspectRatio="xMidYMid slice" fill="none" {...props}>
       <Path d="M0 0h15L5.5 6 0 16V0z" fill="#000" fillOpacity={0.7} />
 
       <Path
@@ -192,7 +184,7 @@ export const getScaledQrBounds = ({
   deviceWidth,
 }: {
   qrBounds: BarCodeBounds
-  qrBoundingBox: BarCodeBounds
+  qrBoundingBox?: BarCodeBounds
   deviceHeight: number
   deviceWidth: number
 }) => {
@@ -222,7 +214,7 @@ export const getIsQrInsideScannerBounds = ({
   deviceWidth,
 }: {
   qrBounds: BarCodeBounds
-  qrBoundingBox: BarCodeBounds
+  qrBoundingBox?: BarCodeBounds
   scannerBounds: ReturnType<typeof getScannerBounds>
   deviceHeight: number
   deviceWidth: number

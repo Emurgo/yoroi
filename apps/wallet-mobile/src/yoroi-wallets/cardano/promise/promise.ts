@@ -32,9 +32,9 @@ export const synchronize = <T>(mutex: Mutex, factory: () => Promise<T>): Promise
     // function
     const orig: Promise<unknown> = mutex.lock as any
 
-    let _resolve
+    let _resolve: (value: unknown) => void
 
-    let _reject
+    let _reject: (reason?: Error) => void
 
     const newLock = new Promise((resolve, reject) => {
       _resolve = resolve

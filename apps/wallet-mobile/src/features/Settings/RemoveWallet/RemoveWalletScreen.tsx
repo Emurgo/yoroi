@@ -1,6 +1,6 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {
@@ -12,6 +12,7 @@ import {
   StatusBar,
   Text,
   TextInput,
+  TextInputProps,
 } from '../../../components'
 import {useWalletNavigation} from '../../../navigation'
 import {useSelectedWallet} from '../../../SelectedWallet'
@@ -93,16 +94,16 @@ export const RemoveWalletScreen = () => {
   )
 }
 
-const Description = (props) => {
+const Description = (props: ViewProps) => {
   return <View {...props} />
 }
-const WalletInfo = (props) => {
+const WalletInfo = (props: ViewProps) => {
   return <View {...props} style={styles.descriptionContainer} />
 }
-const WalletNameInput = (props) => {
+const WalletNameInput = (props: TextInputProps) => {
   return <TextInput {...props} autoFocus enablesReturnKeyAutomatically returnKeyType="done" />
 }
-const Actions = (props) => {
+const Actions = (props: ViewProps) => {
   return <View {...props} style={styles.actions} />
 }
 

@@ -32,6 +32,14 @@ export const isBoolean = (data: unknown): data is boolean =>
 export const isString = (data: unknown): data is string =>
   typeof data === 'string'
 
+export const isKeyOf = <T extends Record<string, unknown>>(
+  key: unknown,
+  obj: T,
+): key is keyof T => isString(key) && key in obj
+
+export const getKeys = <T extends Record<string, unknown>>(obj: T) =>
+  Object.keys(obj) as (keyof T)[]
+
 export const isNonNullable = <T>(data: T | null | undefined): data is T =>
   data !== null && data !== undefined
 
