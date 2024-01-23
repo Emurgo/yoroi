@@ -20,6 +20,7 @@ import {Boundary, Icon, Spacer} from '../components'
 import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
+import { ReceiveScreenNavigator } from '../features/Receive/ReceiveNavigator'
 import {RampOnOffScreen} from '../features/RampOnOff/RampOnOffNavigator'
 import {CodeScannerButton} from '../features/Scan/common/CodeScannerButton'
 import {ScanCodeScreen} from '../features/Scan/useCases/ScanCodeScreen'
@@ -51,7 +52,6 @@ import {
   TxHistoryRoutes,
   useWalletNavigation,
 } from '../navigation'
-import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
@@ -154,7 +154,7 @@ export const TxHistoryNavigator = () => {
 
                 <Stack.Screen
                   name="receive"
-                  component={ReceiveScreen}
+                  component={ReceiveScreenNavigator}
                   options={{
                     title: strings.receiveTitle,
 
