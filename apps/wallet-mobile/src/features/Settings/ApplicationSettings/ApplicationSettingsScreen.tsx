@@ -31,7 +31,6 @@ export const ApplicationSettingsScreen = () => {
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 
   const {isTogglePrivacyModeLoading, isPrivacyOff} = usePrivacyMode()
-
   const {currency} = useCurrencyContext()
   const {enabled: crashReportEnabled} = useCrashReports()
 
