@@ -137,7 +137,7 @@
     ]
   },
   "dependencies": {
-    "@yoroi/api": "1.5.0",
+    "@yoroi/api": "1.5.1",
     "@yoroi/common": "1.5.1",
     "axios": "^1.5.0",
     "zod": "^3.22.2"
