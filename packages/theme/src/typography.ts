@@ -109,74 +109,68 @@ export const typography: Typography = {
     ...size.h5,
     textTransform: 'uppercase',
   },
-  'body-small-medium': {
+  'body-1-medium': {
     ...fontFamily.medium,
-    ...size.small,
-    // font scale addded here,
+    ...size.body1,
   },
-  'body-small-regular': {
+  'body-1-regular': {
     ...fontFamily.regular,
-    ...size.small,
-    // font scale addded here,
+    ...size.body1,
   },
-  'body-normal-medium': {
+  'body-2-medium': {
     ...fontFamily.medium,
-    ...size.normal,
-    // font scale addded here,
+    ...size.body2,
   },
-  'body-normal-regular': {
+  'body-2-regular': {
     ...fontFamily.regular,
-    ...size.normal,
-    // font scale addded here,
+    ...size.body2,
   },
-  'body-large-medium': {
+  'body-3-medium': {
     ...fontFamily.medium,
-    ...size.large,
-    // font scale addded here,
+    ...size.body3,
   },
-  'body-large-regular': {
+  'body-3-regular': {
     ...fontFamily.regular,
-    ...size.large,
-    // font scale addded here,
+    ...size.body3,
   },
-  'button-large': {
+  'button-1': {
     ...fontFamily.medium,
     fontSize: 16,
     lineHeight: 24,
     letterSpacing: 0.5,
     textTransform: 'uppercase',
   },
-  'button-normal': {
+  'button-2': {
     ...fontFamily.medium,
     fontSize: 14,
     lineHeight: 20,
     letterSpacing: 0.5,
     textTransform: 'uppercase',
   },
-  'button-small': {
+  'button-3': {
     ...fontFamily.medium,
     fontSize: 12,
     lineHeight: 19,
     letterSpacing: 0.3,
     textTransform: 'uppercase',
   },
-  'link-normal': {
+  'link-1': {
     ...fontFamily.regular,
     fontSize: 16,
     lineHeight: 22,
   },
-  'link-normal-underline': {
+  'link-1-underline': {
     ...fontFamily.regular,
     fontSize: 16,
     lineHeight: 24,
     textDecorationLine: 'underline',
   },
-  'link-small': {
+  'link-2': {
     ...fontFamily.regular,
     fontSize: 14,
     lineHeight: 20,
   },
-  'link-small-underline': {
+  'link-2-underline': {
     ...fontFamily.regular,
     fontSize: 14,
     lineHeight: 22,
