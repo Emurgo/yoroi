@@ -29,6 +29,8 @@ export const ApplicationSettingsScreen = () => {
   const {colorScheme} = useTheme()
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
+
+  const {isTogglePrivacyModeLoading, isPrivacyOff} = usePrivacyMode()
   const {currency} = useCurrencyContext()
   const {enabled: crashReportEnabled} = useCrashReports()
 
@@ -38,6 +40,7 @@ export const ApplicationSettingsScreen = () => {
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
 
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
+
   const displayScreenShareSetting = Platform.OS === 'android' && !isProduction()
   const displayToggleThemeSetting = !isNightly() && !isProduction()
 
