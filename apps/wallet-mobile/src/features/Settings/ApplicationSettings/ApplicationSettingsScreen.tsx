@@ -9,7 +9,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Icon, Spacer, StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
 import {defaultLanguage} from '../../../i18n/languages'
-import {CONFIG, isProduction} from '../../../legacy/config'
+import {CONFIG, isNightly, isProduction} from '../../../legacy/config'
 import {lightPalette} from '../../../theme'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
@@ -31,7 +31,6 @@ export const ApplicationSettingsScreen = () => {
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 
   const {isTogglePrivacyModeLoading, isPrivacyOff} = usePrivacyMode()
-
   const {currency} = useCurrencyContext()
   const {enabled: crashReportEnabled} = useCrashReports()
 
@@ -43,6 +42,7 @@ export const ApplicationSettingsScreen = () => {
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
 
   const displayScreenShareSetting = Platform.OS === 'android' && !isProduction()
+  const displayToggleThemeSetting = !isNightly() && !isProduction()
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
@@ -96,7 +96,7 @@ export const ApplicationSettingsScreen = () => {
             onNavigate={navigateTo.analytics}
           />
 
-          {!isProduction() && (
+          {displayToggleThemeSetting && (
             <SettingsItem
               icon={<Icon.EyeOff {...iconProps} />} // TODO
               label={`${capitalize(colorScheme)} Theme`} // TODO
