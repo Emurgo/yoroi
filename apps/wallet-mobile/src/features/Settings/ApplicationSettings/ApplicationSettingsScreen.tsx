@@ -8,6 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer, StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
+import {defaultLanguage} from '../../../i18n/languages'
 import {CONFIG, isNightly, isProduction} from '../../../legacy/config'
 import {lightPalette} from '../../../theme'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
@@ -27,10 +28,7 @@ export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
   const {colorScheme} = useTheme()
   const {languageCode, supportedLanguages} = useLanguage()
-  const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? supportedLanguages['en-US']
-
-  const {isTogglePrivacyModeLoading, isPrivacyOff} = usePrivacyMode()
-
+  const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
   const {currency} = useCurrencyContext()
   const {enabled: crashReportEnabled} = useCrashReports()
 
