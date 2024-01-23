@@ -3,7 +3,7 @@ import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {Theme, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Dimensions, Platform, TouchableOpacity} from 'react-native'
+import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
@@ -32,7 +32,7 @@ export const useParams = <Params, >(guard: Guard<Params>): Params => {
 
 type Guard<Params> = (params: Params | object) => params is Params
 
-export const BackButton = (props) => {
+export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
   const {theme} = useTheme()
 
   return (
