@@ -41,11 +41,13 @@ export const StartMultiTokenTxScreen = () => {
   const receiver = targets[selectedTargetIndex].receiver
   const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
 
-  const {isResolvingAddressess, receiverError, isUnsupportedDomain, isNotResolvedDomain} = useSendReceiver()
+  const {isWrongBlockchainError, isResolvingAddressess, receiverError, isUnsupportedDomain, isNotResolvedDomain} =
+    useSendReceiver()
   const {isValidatingAddress, addressError, addressValidated} = useSendAddress()
 
   const isLoading = isResolvingAddressess || isValidatingAddress
   const {hasReceiverError, receiverErrorMessage} = useReceiverError({
+    isWrongBlockchainError,
     isNotResolvedDomain,
     isUnsupportedDomain,
     isLoading,
@@ -114,12 +116,14 @@ export const StartMultiTokenTxScreen = () => {
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
 
 const useReceiverError = ({
+  isWrongBlockchainError,
   isNotResolvedDomain,
   isUnsupportedDomain,
   receiverError,
   addressError,
   isLoading,
 }: {
+  isWrongBlockchainError: boolean
   isNotResolvedDomain: boolean
   isUnsupportedDomain: boolean
   isLoading: boolean
@@ -131,6 +135,8 @@ const useReceiverError = ({
   // NOTE: order matters
   if (isLoading) return {hasReceiverError: false, receiverErrorMessage: ''}
   if (isUnsupportedDomain) return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorInvalid}
+  if (isWrongBlockchainError)
+    return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorInvalidBlockchain}
   if (isNotResolvedDomain)
     return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorDomainNotFound}
   if (receiverError != null) return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorInvalid}

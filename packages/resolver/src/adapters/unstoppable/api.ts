@@ -3,8 +3,6 @@ import {fetchData, FetchData, handleApiError, isLeft} from '@yoroi/common'
 import {z} from 'zod'
 import {AxiosRequestConfig} from 'axios'
 
-import {handleZodErrors} from '../zod-errors'
-
 const initialDeps = {request: fetchData} as const
 
 export const unstoppableApiGetCryptoAddress = (
@@ -42,13 +40,25 @@ export const unstoppableApiGetCryptoAddress = (
 
         handleApiError(error)
       } else {
-        const parsedResponse = UnstoppableApiResponseSchema.parse(
+        const safeParsedAdaResponse = UnstoppableApiAdaResponseSchema.safeParse(
           response.value.data,
         )
+        const safeParsedGeneralResponse =
+          UnstoppableApiGeneralResponseSchema.safeParse(response.value.data)
 
-        const result = parsedResponse.records['crypto.ADA.address']
-        if (!result) throw new Resolver.Errors.NotFound()
-        return result
+        if (safeParsedAdaResponse.success) {
+          const result = response.value.data.records['crypto.ADA.address']
+          return result
+        }
+
+        if (safeParsedGeneralResponse.success) {
+          if (Object.keys(response.value.data.records).length > 0)
+            throw new Resolver.Errors.InvalidBlockchain()
+
+          throw new Resolver.Errors.NotFound()
+        }
+
+        throw new Resolver.Errors.InvalidResponse()
       }
     } catch (error: unknown) {
       return handleUnstoppableApiError(error)
@@ -71,7 +81,7 @@ export type UnstoppableApiGetCryptoAddressResponse = {
     type: string
   }
   records: {
-    'crypto.ADA.address'?: string
+    'crypto.ADA.address': string
   }
 }
 
@@ -83,10 +93,14 @@ export type UnstoppableApiGetCryptoAddressError = {
   message: string
 }
 
-const UnstoppableApiResponseSchema = z.object({
+const UnstoppableApiAdaResponseSchema = z.object({
   records: z.object({
-    'crypto.ADA.address': z.string().optional(),
+    'crypto.ADA.address': z.string(),
   }),
+})
+
+const UnstoppableApiGeneralResponseSchema = z.object({
+  records: z.record(z.string(), z.string()),
 })
 
 // https://docs.unstoppabledomains.com/openapi/resolution/
@@ -121,10 +135,6 @@ export const unstoppableApiConfig = {
 } as const
 
 export const handleUnstoppableApiError = (error: unknown): never => {
-  const zodErrorMessage = handleZodErrors(error)
-  if (zodErrorMessage)
-    throw new Resolver.Errors.InvalidResponse(zodErrorMessage)
-
   if (error instanceof Api.Errors.NotFound) throw new Resolver.Errors.NotFound()
 
   throw error

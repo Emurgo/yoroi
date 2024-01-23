@@ -35,6 +35,11 @@ export const useSendReceiver = () => {
     [cryptoAddresses, isResolvingAddressess, isUnsupportedDomain],
   )
 
+  const isWrongBlockchainError = React.useMemo(
+    () => isNotResolvedDomain && cryptoAddresses.some(({error}) => error instanceof Resolver.Errors.InvalidBlockchain),
+    [cryptoAddresses, isNotResolvedDomain],
+  )
+
   const debouncedRefetch = React.useMemo(() => debounceMaker(refetch, 300), [refetch])
 
   const cancelPendingRequests = React.useCallback(
@@ -75,6 +80,7 @@ export const useSendReceiver = () => {
   }, [addressRecordsFetched, cryptoAddresses, isSuccess])
 
   return {
+    isWrongBlockchainError,
     isNotResolvedDomain,
     isResolvingAddressess,
     isUnsupportedDomain,

@@ -59,6 +59,7 @@ import {
 } from './api/errors'
 import {ResolverNameServer} from './resolver/name-server'
 import {
+  ResolverErrorInvalidBlockchain,
   ResolverErrorInvalidDomain,
   ResolverErrorInvalidResponse,
   ResolverErrorNotFound,
@@ -248,6 +249,7 @@ export namespace Resolver {
     export class NotFound extends ResolverErrorNotFound {}
     export class UnsupportedTld extends ResolverErrorUnsupportedTld {}
     export class Expired extends ResolverErrorUnsupportedTld {}
+    export class InvalidBlockchain extends ResolverErrorInvalidBlockchain {}
   }
 }
 
