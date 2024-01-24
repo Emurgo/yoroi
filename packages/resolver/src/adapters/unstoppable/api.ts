@@ -55,8 +55,7 @@ export const unstoppableApiGetCryptoAddress = (
           !hasOtherBlockchainAddress && safeParsedGeneralResponse.success
 
         if (hasCardanoAddress) {
-          const result = response.value.data.records['crypto.ADA.address']
-          return result
+          return response.value.data.records['crypto.ADA.address']
         }
 
         if (hasOtherBlockchainAddress)
