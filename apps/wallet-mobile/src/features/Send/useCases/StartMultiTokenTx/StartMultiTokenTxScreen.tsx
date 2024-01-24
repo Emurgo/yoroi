@@ -136,7 +136,7 @@ const useReceiverError = ({
   if (isLoading) return {hasReceiverError: false, receiverErrorMessage: ''}
   if (isUnsupportedDomain) return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorInvalid}
   if (isWrongBlockchainError)
-    return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorInvalidBlockchain}
+    return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorWrongBlockchain}
   if (isNotResolvedDomain)
     return {hasReceiverError: true, receiverErrorMessage: strings.helperResolverErrorDomainNotFound}
   if (receiverError != null) return {hasReceiverError: true, receiverErrorMessage: strings.helperAddressErrorInvalid}
