@@ -151,6 +151,43 @@ describe('getCryptoAddress', () => {
     )
   })
 
+  it('should throw invalid response if the response doesnt contain the address for ada 2', async () => {
+    const domain = mockApiResponse.meta.domain
+    const expectedUrl = `${unstoppableApiConfig.mainnet.getCryptoAddress}${domain}`
+    const invalidApiResponse = {
+      ...mockApiResponse,
+      records: {'crypto.ADA.address': undefined},
+    }
+
+    const mockFetchDataResponse: Right<
+      Api.ResponseSuccess<UnstoppableApiGetCryptoAddressResponse>
+    > = {
+      tag: 'right',
+      value: {
+        data: invalidApiResponse as any,
+        status: 200,
+      },
+    }
+    const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
+    const getCryptoAddress = unstoppableApiGetCryptoAddress(mockOptions, {
+      request: mockFetchData,
+    })
+
+    await expect(() => getCryptoAddress(domain)).rejects.toThrow(
+      Resolver.Errors.InvalidResponse,
+    )
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${mockOptions.apiKey}`,
+        },
+        url: expectedUrl,
+      },
+      undefined,
+    )
+  })
+
   it('should throw not found if the response doesnt contain the address for ada', async () => {
     const domain = mockApiResponse.meta.domain
     const expectedUrl = `${unstoppableApiConfig.mainnet.getCryptoAddress}${domain}`
@@ -175,6 +212,43 @@ describe('getCryptoAddress', () => {
 
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
       Resolver.Errors.NotFound,
+    )
+    expect(mockFetchData).toHaveBeenCalledWith(
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${mockOptions.apiKey}`,
+        },
+        url: expectedUrl,
+      },
+      undefined,
+    )
+  })
+
+  it('should throw invalid blockchain if the response contain the address for other blockchain', async () => {
+    const domain = mockApiResponse.meta.domain
+    const expectedUrl = `${unstoppableApiConfig.mainnet.getCryptoAddress}${domain}`
+    const invalidApiResponse = {
+      ...mockApiResponse,
+      records: {'crypto.ETH.address': 'fake-address'},
+    }
+
+    const mockFetchDataResponse: Right<
+      Api.ResponseSuccess<UnstoppableApiGetCryptoAddressResponse>
+    > = {
+      tag: 'right',
+      value: {
+        data: invalidApiResponse as any,
+        status: 200,
+      },
+    }
+    const mockFetchData = jest.fn().mockReturnValue(mockFetchDataResponse)
+    const getCryptoAddress = unstoppableApiGetCryptoAddress(mockOptions, {
+      request: mockFetchData,
+    })
+
+    await expect(() => getCryptoAddress(domain)).rejects.toThrow(
+      Resolver.Errors.WrongBlockchain,
     )
     expect(mockFetchData).toHaveBeenCalledWith(
       {
