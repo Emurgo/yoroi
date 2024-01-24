@@ -40,17 +40,21 @@ export const unstoppableApiGetCryptoAddress = (
 
         handleApiError(error)
       } else {
+        // parsing
         const safeParsedAdaResponse = UnstoppableApiAdaResponseSchema.safeParse(
           response.value.data,
         )
+        const safeParsedOtherBlockchainResponse =
+          UnstoppableApiOtherBlockchainResponseSchema.safeParse(
+            response.value.data,
+          )
         const safeParsedGeneralResponse =
           UnstoppableApiGeneralResponseSchema.safeParse(response.value.data)
 
+        // checking
         const hasCardanoAddress = safeParsedAdaResponse.success
         const hasOtherBlockchainAddress =
-          !hasCardanoAddress &&
-          safeParsedGeneralResponse.success &&
-          Object.keys(response.value.data.records).length > 0
+          !hasCardanoAddress && safeParsedOtherBlockchainResponse.success
         const hasNotAnyAddress =
           !hasOtherBlockchainAddress && safeParsedGeneralResponse.success
 
@@ -104,8 +108,18 @@ const UnstoppableApiAdaResponseSchema = z.object({
 })
 
 const UnstoppableApiGeneralResponseSchema = z.object({
+  meta: z.object({
+    blockchain: z.string(),
+  }),
   records: z.record(z.string(), z.string()),
 })
+
+const UnstoppableApiOtherBlockchainResponseSchema =
+  UnstoppableApiGeneralResponseSchema.refine(
+    ({records, meta}) =>
+      Object.keys(records).length > 0 ||
+      !['CARDANO', 'ADA'].includes(meta.blockchain),
+  )
 
 // https://docs.unstoppabledomains.com/openapi/resolution/
 export const unstoppableSupportedTlds = [
