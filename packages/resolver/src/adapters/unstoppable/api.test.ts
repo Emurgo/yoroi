@@ -211,7 +211,7 @@ describe('getCryptoAddress', () => {
     })
 
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
-      Resolver.Errors.NotFound,
+      Resolver.Errors.WrongBlockchain,
     )
     expect(mockFetchData).toHaveBeenCalledWith(
       {
@@ -225,7 +225,7 @@ describe('getCryptoAddress', () => {
     )
   })
 
-  it('should throw invalid blockchain if the response contain the address for other blockchain', async () => {
+  it('should throw wrong blockchain if the response contain the address for other blockchain', async () => {
     const domain = mockApiResponse.meta.domain
     const expectedUrl = `${unstoppableApiConfig.mainnet.getCryptoAddress}${domain}`
     const invalidApiResponse = {
