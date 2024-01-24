@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
-    "build": "yarn lint && yarn tsc",
+    "build": "yarn lint && yarn tsc && yarn test",
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "generate:barcodes": "node scripts/build-testing-codes.sh",
     "i18n:missed": "i18n-unused display-missed",
