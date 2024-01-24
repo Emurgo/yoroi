@@ -59,7 +59,7 @@ import {
 } from './api/errors'
 import {ResolverNameServer} from './resolver/name-server'
 import {
-  ResolverErrorInvalidBlockchain,
+  ResolverErrorWrongBlockchain,
   ResolverErrorInvalidDomain,
   ResolverErrorInvalidResponse,
   ResolverErrorNotFound,
