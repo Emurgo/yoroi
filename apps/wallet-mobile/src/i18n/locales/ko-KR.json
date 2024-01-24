@@ -770,6 +770,7 @@
   "scan.linksErrorUnsupportedVersion.title": "Unsupported version",
   "scan.title": "Scan the QR code",
   "send.helper.addressError.invalid": "Please enter a valid receiver address, ADA Handle or domain",
+  "send.helper.addressError.wrongBlockchain": "You are trying to resolve a domain on a different blockchain. Please double-check and try again",
   "send.helper.addressError.wrongNetwork": "Please enter an address for the current wallet network",
   "send.helper.resolver.resolvedAddress": "Resolved address",
   "send.helper.resolverError.domainNotFound": "Receiver address, ADA Handle or domain you entered doesn't exist. Please double-check it and try again",
