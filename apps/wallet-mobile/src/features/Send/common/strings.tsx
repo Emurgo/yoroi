@@ -36,7 +36,7 @@ export const useStrings = () => {
     feeNotAvailable: intl.formatMessage(messages.feeNotAvailable),
     found: intl.formatMessage(messages.found),
     helperAddressErrorInvalid: intl.formatMessage(messages.helperAddressErrorInvalid),
-    helperAddressErrorInvalidBlockchain: intl.formatMessage(messages.helperAddressErrorInvalidBlockchain),
+    helperAddressErrorWrongBlockchain: intl.formatMessage(messages.helperAddressErrorWrongBlockchain),
     helperAddressErrorWrongNetwork: intl.formatMessage(messages.helperAddressErrorWrongNetwork),
     helperMemoErrorTooLong: intl.formatMessage(messages.helperMemoErrorTooLong),
     helperMemoInstructions: intl.formatMessage(messages.helperMemoInstructions),
@@ -300,7 +300,7 @@ export const messages = defineMessages({
     id: 'send.helper.addressError.invalid',
     defaultMessage: '!!!Please enter a valid receiver address, ADA Handle or domain',
   },
-  helperAddressErrorInvalidBlockchain: {
+  helperAddressErrorWrongBlockchain: {
     id: 'send.helper.addressError.wrongBlockchain',
     defaultMessage:
       '!!!You are trying to resolve a domain on a different blockchain. Please double-check and try again',
