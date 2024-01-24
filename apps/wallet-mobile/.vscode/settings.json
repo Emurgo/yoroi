@@ -1,0 +1,4 @@
+{
+    "editor.fontFamily": "Hack, Menlo, Monaco, 'Courier New', monospace",
+    "java.compile.nullAnalysis.mode": "disabled"
+}

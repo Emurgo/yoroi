@@ -1,0 +1,47 @@
+[
+  {
+    "id": "swap.swapScreen.marketButton",
+    "defaultMessage": "!!!Market Button",
+    "file": "src/features/Swap/useCases/OrdersView/OrdersScreen.tsx",
+    "start": {
+      "line": 31,
+      "column": 16,
+      "index": 934
+    },
+    "end": {
+      "line": 34,
+      "column": 3,
+      "index": 1019
+    }
+  },
+  {
+    "id": "swap.swapScreen.limitButton",
+    "defaultMessage": "!!!Limit Button",
+    "file": "src/features/Swap/useCases/OrdersView/OrdersScreen.tsx",
+    "start": {
+      "line": 35,
+      "column": 15,
+      "index": 1036
+    },
+    "end": {
+      "line": 38,
+      "column": 3,
+      "index": 1119
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapTitle",
+    "defaultMessage": "!!!Swap",
+    "file": "src/features/Swap/useCases/OrdersView/OrdersScreen.tsx",
+    "start": {
+      "line": 39,
+      "column": 8,
+      "index": 1129
+    },
+    "end": {
+      "line": 42,
+      "column": 3,
+      "index": 1202
+    }
+  }
+]

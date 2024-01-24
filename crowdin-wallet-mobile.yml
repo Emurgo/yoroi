@@ -1,0 +1,37 @@
+preserve_hierarchy: true
+files:
+  - source: /apps/wallet-mobile/src/i18n/locales/**/en-US.json
+    translation: /apps/wallet-mobile/src/i18n/locales/**/%locale%.json
+    languages_mapping:
+      locale:
+        zh-CN: zh-Hans
+        zh-TW: zh-Hant
+        ja: ja-JP
+        ko: ko-KR
+        ru: ru-RU
+        de: de-DE
+        fr: fr-FR
+        id: id-ID
+        es: es-ES
+        pt: pt-BR
+        it: it-IT
+        nl: nl-NL
+        cz: cs-CZ
+  - source: /apps/wallet-mobile/src/i18n/locales/**/en-US.md
+    translation: /apps/wallet-mobile/src/i18n/locales/**/%locale%.md
+    languages_mapping:
+      locale:
+        zh-CN: zh-Hans
+        zh-TW: zh-Hant
+        ja: ja-JP
+        ko: ko-KR
+        ru: ru-RU
+        de: de-DE
+        fr: fr-FR
+        id: id-ID
+        es: es-ES
+        pt: pt-BR
+        it: it-IT
+        nl: nl-NL
+        cz: cs-CZ
+    content_segmentation: 0

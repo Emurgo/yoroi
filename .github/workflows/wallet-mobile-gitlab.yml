@@ -1,0 +1,17 @@
+name: wallet-mobile-gitlab
+
+on: push
+      
+jobs:
+  Build_Request:
+    name: Request building the app
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get branch name
+      run: echo "branch_name=$(echo ${GITHUB_REF_NAME})" >> $GITHUB_OUTPUT
+      id: get_branch_name
+
+    - name: Trigger GitLab CI
+      run: |
+        echo Branch name is ${{ steps.get_branch_name.outputs.branch_name }}
+        curl --request POST --form token=${{ secrets.GITLAB_TOKEN }} --form ref=main --form "variables[BUILD_BRANCH]=${{ steps.get_branch_name.outputs.branch_name }}" ${{ secrets.GITLAB_API_PIPELINE }} > response.json

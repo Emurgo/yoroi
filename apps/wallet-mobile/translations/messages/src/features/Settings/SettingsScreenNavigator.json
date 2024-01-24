@@ -1,0 +1,257 @@
+[
+  {
+    "id": "components.settings.walletsettingscreen.tabTitle",
+    "defaultMessage": "!!!Wallet",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 222,
+      "column": 18,
+      "index": 6735
+    },
+    "end": {
+      "line": 225,
+      "column": 3,
+      "index": 6833
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.tabTitle",
+    "defaultMessage": "!!!Application",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 226,
+      "column": 15,
+      "index": 6850
+    },
+    "end": {
+      "line": 229,
+      "column": 3,
+      "index": 6959
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.changePin",
+    "defaultMessage": "!!!Change PIN",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 230,
+      "column": 24,
+      "index": 6985
+    },
+    "end": {
+      "line": 233,
+      "column": 3,
+      "index": 7094
+    }
+  },
+  {
+    "id": "components.settings.changepasswordscreen.title",
+    "defaultMessage": "!!!Change spending password",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 234,
+      "column": 23,
+      "index": 7119
+    },
+    "end": {
+      "line": 237,
+      "column": 3,
+      "index": 7233
+    }
+  },
+  {
+    "id": "components.settings.removewalletscreen.title",
+    "defaultMessage": "!!!Remove wallet",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 238,
+      "column": 21,
+      "index": 7256
+    },
+    "end": {
+      "line": 241,
+      "column": 3,
+      "index": 7357
+    }
+  },
+  {
+    "id": "components.settings.termsofservicescreen.title",
+    "defaultMessage": "!!!Terms of Service Agreement",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 242,
+      "column": 23,
+      "index": 7382
+    },
+    "end": {
+      "line": 245,
+      "column": 3,
+      "index": 7498
+    }
+  },
+  {
+    "id": "components.settings.changewalletname.title",
+    "defaultMessage": "!!!Change wallet name",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 246,
+      "column": 25,
+      "index": 7525
+    },
+    "end": {
+      "line": 249,
+      "column": 3,
+      "index": 7629
+    }
+  },
+  {
+    "id": "components.settings.settingsscreen.title",
+    "defaultMessage": "!!!Support",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 250,
+      "column": 16,
+      "index": 7647
+    },
+    "end": {
+      "line": 253,
+      "column": 3,
+      "index": 7738
+    }
+  },
+  {
+    "id": "components.settings.enableeasyconfirmationscreen.title",
+    "defaultMessage": "!!!Easy confirmation",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 254,
+      "column": 31,
+      "index": 7771
+    },
+    "end": {
+      "line": 257,
+      "column": 3,
+      "index": 7886
+    }
+  },
+  {
+    "id": "components.settings.disableeasyconfirmationscreen.title",
+    "defaultMessage": "!!!Easy confirmation",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 258,
+      "column": 32,
+      "index": 7920
+    },
+    "end": {
+      "line": 261,
+      "column": 3,
+      "index": 8036
+    }
+  },
+  {
+    "id": "components.initialization.custompinscreen.title",
+    "defaultMessage": "!!!Set PIN",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 262,
+      "column": 18,
+      "index": 8056
+    },
+    "end": {
+      "line": 265,
+      "column": 3,
+      "index": 8154
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.title",
+    "defaultMessage": "!!!Settings",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 266,
+      "column": 17,
+      "index": 8173
+    },
+    "end": {
+      "line": 269,
+      "column": 3,
+      "index": 8276
+    }
+  },
+  {
+    "id": "components.settings.changelanguagescreen.title",
+    "defaultMessage": "!!!Language",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 270,
+      "column": 17,
+      "index": 8295
+    },
+    "end": {
+      "line": 273,
+      "column": 3,
+      "index": 8393
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.appSettingsTitle",
+    "defaultMessage": "!!!App settings",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 274,
+      "column": 20,
+      "index": 8415
+    },
+    "end": {
+      "line": 277,
+      "column": 3,
+      "index": 8533
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.about",
+    "defaultMessage": "!!!About",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 278,
+      "column": 14,
+      "index": 8549
+    },
+    "end": {
+      "line": 281,
+      "column": 3,
+      "index": 8649
+    }
+  },
+  {
+    "id": "components.settings.privacypolicyscreen.title",
+    "defaultMessage": "!!!Privacy Policy",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 282,
+      "column": 22,
+      "index": 8673
+    },
+    "end": {
+      "line": 285,
+      "column": 3,
+      "index": 8776
+    }
+  },
+  {
+    "id": "global.collateral",
+    "defaultMessage": "!!!Collateral",
+    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
+    "start": {
+      "line": 286,
+      "column": 14,
+      "index": 8792
+    },
+    "end": {
+      "line": 289,
+      "column": 3,
+      "index": 8863
+    }
+  }
+]

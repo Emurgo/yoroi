@@ -1,0 +1,41 @@
+{
+  "name": "yoroi",
+  "version": "1.0.0",
+  "private": true,
+  "repository": "git@github.com:Emurgo/yoroi.git",
+  "author": "EMURGO",
+  "workspaces": {
+    "packages": [
+      "packages/types",
+      "packages/common",
+      "packages/api",
+      "packages/openswap",
+      "packages/*",
+      "apps/*",
+      "e2e/*"
+    ],
+    "nohoist": [
+      "**/chokidar-cli",
+      "**/concurrently",
+      "**/rimraf",
+      "**/lerna"
+    ]
+  },
+  "scripts": {
+    "reset": "yarn clean && yarn install --frozen-lockfile && yarn wallet-mobile:reset && yarn build && yarn start",
+    "build": "yarn workspaces run build",
+    "clean": "yarn workspaces run rimraf node_modules && yarn rimraf node_modules",
+    "build:start": "yarn build && concurrently \"yarn watch\" \"yarn wallet-mobile:start\"",
+    "start": "concurrently \"yarn watch\" \"yarn wallet-mobile:start\"",
+    "wallet-mobile:start": "cd apps/wallet-mobile && yarn start",
+    "wallet-mobile:reset": "cd apps/wallet-mobile && yarn reset && cd ../..",
+    "watch": "chokidar \"packages/*/src/**/*\" -c \"yarn build:changed\"",
+    "build:changed": "lerna run build --since --ignore @yoroi/wallet-mobile"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "chokidar-cli": "^3.0.0",
+    "lerna": "^7.1.5",
+    "rimraf": "^5.0.1"
+  }
+}

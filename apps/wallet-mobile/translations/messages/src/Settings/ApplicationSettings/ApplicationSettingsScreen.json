@@ -1,0 +1,167 @@
+[
+  {
+    "id": "components.settings.applicationsettingsscreen.language",
+    "defaultMessage": "!!!Your language",
+    "file": "src/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 109,
+      "column": 12,
+      "index": 3916
+    },
+    "end": {
+      "line": 112,
+      "column": 3,
+      "index": 4027
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.currentLanguage",
+    "defaultMessage": "!!!English",
+    "file": "src/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 113,
+      "column": 19,
+      "index": 4048
+    },
+    "end": {
+      "line": 116,
+      "column": 3,
+      "index": 4160
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.security",
+    "defaultMessage": "!!!Security",
+    "file": "src/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 117,
+      "column": 12,
+      "index": 4174
+    },
+    "end": {
+      "line": 120,
+      "column": 3,
+      "index": 4280
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.changePin",
+    "defaultMessage": "!!!Change PIN",
+    "file": "src/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 121,
+      "column": 13,
+      "index": 4295
+    },
+    "end": {
+      "line": 124,
+      "column": 3,
+      "index": 4404
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.biometricsSignIn",
+    "defaultMessage": "!!!Sign in with your biometrics",
+    "file": "src/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 125,
+      "column": 20,
+      "index": 4426
+    },
+    "end": {
+      "line": 128,
+      "column": 3,
+      "index": 4560
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.crashReporting",
+    "defaultMessage": "!!!Crash reporting",
+    "file": "src/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 129,
+      "column": 18,
+      "index": 4580
+    },
+    "end": {
+      "line": 132,
+      "column": 3,
+      "index": 4699
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.crashReportingText",
+    "defaultMessage": "!!!Send crash reports to Emurgo. Changes to this option will be reflected after restarting the application.",
+    "file": "src/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 133,
+      "column": 22,
+      "index": 4723
+    },
+    "end": {
+      "line": 137,
+      "column": 3,
+      "index": 4941
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.termsOfUse",
+    "defaultMessage": "!!!Terms of Use",
+    "file": "src/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 138,
+      "column": 14,
+      "index": 4957
+    },
+    "end": {
+      "line": 141,
+      "column": 3,
+      "index": 5069
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.support",
+    "defaultMessage": "!!!Support",
+    "file": "src/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 142,
+      "column": 11,
+      "index": 5082
+    },
+    "end": {
+      "line": 145,
+      "column": 3,
+      "index": 5186
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.version",
+    "defaultMessage": "!!!Current version:",
+    "file": "src/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 146,
+      "column": 11,
+      "index": 5199
+    },
+    "end": {
+      "line": 149,
+      "column": 3,
+      "index": 5312
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.commit",
+    "defaultMessage": "!!!Commit:",
+    "file": "src/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 150,
+      "column": 10,
+      "index": 5324
+    },
+    "end": {
+      "line": 153,
+      "column": 3,
+      "index": 5427
+    }
+  }
+]

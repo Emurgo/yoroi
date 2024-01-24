@@ -1,0 +1,167 @@
+[
+  {
+    "id": "analytics.selectLanguage",
+    "defaultMessage": "!!!Select Language",
+    "file": "src/features/AgreementChanged/strings.ts",
+    "start": {
+      "line": 22,
+      "column": 18,
+      "index": 877
+    },
+    "end": {
+      "line": 25,
+      "column": 3,
+      "index": 960
+    }
+  },
+  {
+    "id": "analytics.tosIAgreeWith",
+    "defaultMessage": "!!!I agree with",
+    "file": "src/features/AgreementChanged/strings.ts",
+    "start": {
+      "line": 26,
+      "column": 17,
+      "index": 979
+    },
+    "end": {
+      "line": 29,
+      "column": 3,
+      "index": 1058
+    }
+  },
+  {
+    "id": "analytics.tosAnd",
+    "defaultMessage": "!!!and",
+    "file": "src/features/AgreementChanged/strings.ts",
+    "start": {
+      "line": 30,
+      "column": 10,
+      "index": 1070
+    },
+    "end": {
+      "line": 33,
+      "column": 3,
+      "index": 1133
+    }
+  },
+  {
+    "id": "analytics.tosPrivacyNotice",
+    "defaultMessage": "!!!Privacy Notice",
+    "file": "src/features/AgreementChanged/strings.ts",
+    "start": {
+      "line": 34,
+      "column": 20,
+      "index": 1155
+    },
+    "end": {
+      "line": 37,
+      "column": 3,
+      "index": 1239
+    }
+  },
+  {
+    "id": "analytics.tosAgreement",
+    "defaultMessage": "!!!Terms Of Service Agreement",
+    "file": "src/features/AgreementChanged/strings.ts",
+    "start": {
+      "line": 38,
+      "column": 16,
+      "index": 1257
+    },
+    "end": {
+      "line": 41,
+      "column": 3,
+      "index": 1349
+    }
+  },
+  {
+    "id": "global.continue",
+    "defaultMessage": "!!!Continue",
+    "file": "src/features/AgreementChanged/strings.ts",
+    "start": {
+      "line": 42,
+      "column": 12,
+      "index": 1363
+    },
+    "end": {
+      "line": 45,
+      "column": 3,
+      "index": 1430
+    }
+  },
+  {
+    "id": "termsOfService.agreementUpdateTitle",
+    "defaultMessage": "!!!Terms of Service Agreement update",
+    "file": "src/features/AgreementChanged/strings.ts",
+    "start": {
+      "line": 46,
+      "column": 9,
+      "index": 1441
+    },
+    "end": {
+      "line": 49,
+      "column": 3,
+      "index": 1553
+    }
+  },
+  {
+    "id": "termsOfService.agreementUpdateDescription",
+    "defaultMessage": "!!!We have updated our Terms of Service Agreement to enhance your experience. Please review and accept them to keep enjoying Yoroi.",
+    "file": "src/features/AgreementChanged/strings.ts",
+    "start": {
+      "line": 50,
+      "column": 15,
+      "index": 1570
+    },
+    "end": {
+      "line": 54,
+      "column": 3,
+      "index": 1789
+    }
+  },
+  {
+    "id": "components.initialization.acepttermsofservicescreen.title",
+    "defaultMessage": "!!!Terms of Service Agreement",
+    "file": "src/features/AgreementChanged/strings.ts",
+    "start": {
+      "line": 55,
+      "column": 20,
+      "index": 1811
+    },
+    "end": {
+      "line": 58,
+      "column": 3,
+      "index": 1938
+    }
+  },
+  {
+    "id": "components.initialization.aceptprivacypolicyscreen.title",
+    "defaultMessage": "!!!Privacy Policy",
+    "file": "src/features/AgreementChanged/strings.ts",
+    "start": {
+      "line": 59,
+      "column": 28,
+      "index": 1968
+    },
+    "end": {
+      "line": 62,
+      "column": 3,
+      "index": 2082
+    }
+  },
+  {
+    "id": "components.initialization.languagepicker.title",
+    "defaultMessage": "!!!Select Language",
+    "file": "src/features/AgreementChanged/strings.ts",
+    "start": {
+      "line": 63,
+      "column": 23,
+      "index": 2107
+    },
+    "end": {
+      "line": 66,
+      "column": 3,
+      "index": 2212
+    }
+  }
+]

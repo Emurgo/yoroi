@@ -1,0 +1,15 @@
+name: wallet-mobile-checks
+
+on: push
+
+defaults:
+  run:
+    working-directory: apps/wallet-mobile
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/wallet-mobile
+      - run: yarn workspaces run build 

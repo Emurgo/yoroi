@@ -1,0 +1,168 @@
+fastlane_require "dotenv"
+fastlane_require "semver"
+
+package = load_json(json_path: "./package.json")
+package_version = package['version']
+
+# iOS
+XC_PROJECT="./ios/yoroi.xcodeproj"
+XC_WORKSPACE="./ios/yoroi.xcworkspace"
+PLIST="yoroi/Info.plist"
+
+# Android
+GRADLE_FILE="android/app/build.gradle"
+
+before_all do |lane|
+  environment = lane_context[SharedValues::ENVIRONMENT]
+end
+
+platform :ios do
+  desc "iOS"
+
+  lane :release do
+    environment = lane_context[SharedValues::ENVIRONMENT]
+    scheme = environment == "nightly" ? "nightly" : "yoroi"
+
+    if is_ci
+      create_keychain(
+        name: ENV["CI_KEYCHAIN_NAME"],
+        password: ENV["CI_KEYCHAIN_PASSWORD"],
+        default_keychain: true,
+        unlock: true,
+        timeout: 3600,
+        lock_when_sleeps: false
+      )
+    end
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_KEY_ID"],
+      issuer_id: ENV["APP_STORE_ISSUER_ID"],
+      key_filepath: ENV["APP_STORE_KEY_PATH"],
+      duration: 1200, 
+      in_house: false
+    )
+
+    match(app_identifier: ENV["APP_STORE_BUNDLE_ID"], type: "appstore", api_key: api_key, keychain_name: ENV["CI_KEYCHAIN_NAME"], keychain_password: ENV["CI_KEYCHAIN_PASSWORD"])
+
+    set_version_ios
+
+    if is_ci
+      bump_build_ios
+    end
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: XC_PROJECT,
+      code_sign_identity: "iPhone Distribution",
+      bundle_identifier: ENV["APP_STORE_BUNDLE_ID"],
+      profile_name: "match AppStore #{ENV["APP_STORE_BUNDLE_ID"]}"
+    )
+
+    begin
+      gym(
+        scheme: scheme, 
+        workspace: XC_WORKSPACE,
+        silent: true,
+        include_bitcode: false,
+        include_symbols: true,
+        clean: true,
+        xcargs: `-UseNewBuildSystem=YES`,
+        output_directory: "./ios",
+        output_name: "yoroi.ipa",
+        sdk: "iphoneos",
+        export_options: {
+          method: "app-store",
+          signingStyle: "manual",
+          provisioningProfiles: {
+              ENV["APP_STORE_BUNDLE_ID"] => "match AppStore #{ENV["APP_STORE_BUNDLE_ID"]}"
+          }
+        },
+      )
+    rescue => e
+      xcode_log_path = "~/Library/Logs/gym/#{scheme}-#{scheme}.log"
+      p "iOS build failed -> #{xcode_log_path}"
+      sh "cat #{xcode_log_path}"
+
+      raise 'iOS build failed.'
+    end
+    enable_automatic_code_signing(path: XC_PROJECT)
+
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to App Store")
+    else
+      upload_to_testflight(api_key: api_key, app_identifier: ENV["APP_STORE_BUNDLE_ID"], skip_waiting_for_build_processing: true)
+   end
+
+  end
+
+end
+
+platform :android do
+
+  desc "Android"
+  
+  lane :release do
+    environment = lane_context[SharedValues::ENVIRONMENT]
+    build_type = environment == "nightly" ? "Nightly" : "Production"
+
+    gradle(task: "clean", project_dir: 'android/')
+
+    set_version_android
+
+    if is_ci
+      bump_build_android
+    end
+
+    gradle(
+      task: "assemble" + build_type,
+      build_type: "Release",
+      print_command: ENV["DEBUG"],
+      print_command_output: ENV["DEBUG"],
+      properties: {
+        "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_FILE"],
+        "android.injected.signing.store.password" => ENV["ANDROID_KEYSTORE_PASS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASS"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_KEYSTORE_ALIAS"],
+      },
+      project_dir: 'android/'
+    )
+
+    if ENV['DRY_RUN'] == 'true'
+      UI.message("DRY RUN: Skipping upload to Play Store")
+    else
+      upload_to_play_store(
+        track: ENV["ANDROID_TRACK"],
+        package_name: ENV["ANDROID_PACKAGE_NAME"],
+        json_key: ENV["ANDROID_SA_FILE"],
+      )
+    end
+
+  end
+
+end
+
+lane :set_version_ios do
+  increment_version_number(
+      xcodeproj: XC_PROJECT,
+      version_number: package_version
+  )
+  UI.success("iOS app version updated to #{package_version}")
+end
+
+lane :set_version_android do
+  android_set_version_name(
+    gradle_file: GRADLE_FILE,
+    version_name: package_version
+  )
+  UI.success("Android app version updated to #{package_version}")
+end
+
+lane :bump_build_ios do
+  increment_build_number(xcodeproj: XC_PROJECT)
+end
+
+lane :bump_build_android do
+  current_version = android_get_version_code(gradle_file: GRADLE_FILE)
+  new_version = current_version.to_i + 1
+  android_set_version_code(gradle_file: GRADLE_FILE, version_code: new_version)
+end

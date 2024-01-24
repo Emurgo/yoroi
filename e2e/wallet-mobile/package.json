@@ -1,0 +1,91 @@
+{
+  "name": "@yoroi/e2e-wallet-mobile",
+  "version": "1.0.0",
+  "description": "e2e tests using detox + jest",
+  "main": "index.js",
+  "author": "Emurgo",
+  "license": "MIT",
+  "scripts": {
+    "e2e:build:android:dev:debug": "detox build --configuration android.emu.dev.debug",
+    "e2e:build:android:nightly:debug": "detox build --configuration android.emu.nightly.debug",
+    "e2e:build:android:nightly:release": "detox build --configuration android.emu.nightly.release",
+    "e2e:build:ios:nightly:debug": "$npm_package_setEnvDetox && detox build --configuration ios.sim.nightly.debug",
+    "e2e:build:ios:nightly:release": "$npm_package_setEnvDetox && detox build --configuration ios.sim.nightly.release",
+    "e2e:build:ios:yoroi:debug": "$npm_package_setEnvDetox && detox build --configuration ios.sim.yoroi.debug",
+    "e2e:test:all:nightly:debug": "yarn e2e:test:android:nightly:debug & yarn e2e:test:ios:nightly:debug",
+    "e2e:test:android:dev:debug": "detox test $npm_package_e2ePath_android --configuration android.emu.dev.debug",
+    "e2e:test:android:nightly:debug": "detox test $npm_package_e2ePath_android --configuration android.emu.nightly.debug",
+    "e2e:test:android:nightly:release": "detox test $npm_package_e2ePath_android --configuration android.emu.nightly.release",
+    "e2e:test:ios:nightly:debug": "detox test $npm_package_e2ePath_ios --configuration ios.sim.nightly.debug",
+    "e2e:test:ios:nightly:release": "detox test $npm_package_e2ePath_ios --configuration ios.sim.nightly.release",
+    "e2e:test:ios:yoroi:debug": "detox test $npm_package_e2ePath_ios --configuration ios.sim.yoroi.debug",
+    "tsc": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint:fix": "yarn lint --fix",
+    "build": "yarn lint && yarn tsc"
+  },
+  "prettier": {
+    "bracketSpacing": false,
+    "quoteProps": "consistent",
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 1,
+    "trailingComma": "all",
+    "useTabs": false
+  },
+  "eslintConfig": {
+    "extends": [
+      "@react-native-community",
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "quoteProps": "consistent",
+          "bracketSpacing": false,
+          "singleQuote": true,
+          "tabWidth": 1,
+          "trailingComma": "all",
+          "useTabs": false,
+          "semi": false
+        }
+      ]
+    },
+    "root": true
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "artifacts",
+    "babel.config.js",
+    "jest.config.js",
+    "html-report"
+  ],
+  "dependencies": {
+    "detox": "^20.11.0",
+    "jest": "^29",
+    "jest-circus": "^29.5.0",
+    "jest-html-reporters": "^3.1.4"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.23.2",
+    "@types/jest": "^29.5.5",
+    "prettier": "^3.0.0",
+    "typescript": "5.0.4",
+    "eslint": "^8.46.0",
+    "eslint-config-prettier": "^8.9.0",
+    "eslint-plugin-ft-flow": "^3.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "ts-jest": "^29.1.1"
+  },
+  "e2ePath": {
+    "ios": "./tests/_ios",
+    "android": "./tests/_android"
+  },
+  "setEnvDetox": "export TARGET_DEVICE_PLATFORM_NAME=iphonesimulator",
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
+}

@@ -1,0 +1,257 @@
+[
+  {
+    "id": "components.settings.walletsettingscreen.general",
+    "defaultMessage": "!!!General",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 198,
+      "column": 11,
+      "index": 6460
+    },
+    "end": {
+      "line": 201,
+      "column": 3,
+      "index": 6558
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.actions",
+    "defaultMessage": "!!!Actions",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 202,
+      "column": 11,
+      "index": 6571
+    },
+    "end": {
+      "line": 205,
+      "column": 3,
+      "index": 6669
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.switchWallet",
+    "defaultMessage": "!!!Switch wallet",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 206,
+      "column": 16,
+      "index": 6687
+    },
+    "end": {
+      "line": 209,
+      "column": 3,
+      "index": 6796
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.logout",
+    "defaultMessage": "!!!Logout",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 210,
+      "column": 10,
+      "index": 6808
+    },
+    "end": {
+      "line": 213,
+      "column": 3,
+      "index": 6904
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.walletName",
+    "defaultMessage": "!!!Wallet name",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 214,
+      "column": 14,
+      "index": 6920
+    },
+    "end": {
+      "line": 217,
+      "column": 3,
+      "index": 7025
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.security",
+    "defaultMessage": "!!!Security",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 218,
+      "column": 12,
+      "index": 7039
+    },
+    "end": {
+      "line": 221,
+      "column": 3,
+      "index": 7139
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.changePassword",
+    "defaultMessage": "!!!Change spending password",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 222,
+      "column": 18,
+      "index": 7159
+    },
+    "end": {
+      "line": 225,
+      "column": 3,
+      "index": 7281
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.easyConfirmation",
+    "defaultMessage": "!!!Easy transaction confirmation",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 226,
+      "column": 20,
+      "index": 7303
+    },
+    "end": {
+      "line": 229,
+      "column": 3,
+      "index": 7432
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.removeWallet",
+    "defaultMessage": "!!!Remove wallet",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 230,
+      "column": 16,
+      "index": 7450
+    },
+    "end": {
+      "line": 233,
+      "column": 3,
+      "index": 7559
+    }
+  },
+  {
+    "id": "global.collateral",
+    "defaultMessage": "!!!Collateral",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 234,
+      "column": 14,
+      "index": 7575
+    },
+    "end": {
+      "line": 237,
+      "column": 3,
+      "index": 7646
+    }
+  },
+  {
+    "id": "global.network",
+    "defaultMessage": "!!!Network:",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 239,
+      "column": 11,
+      "index": 7707
+    },
+    "end": {
+      "line": 242,
+      "column": 3,
+      "index": 7773
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.walletType",
+    "defaultMessage": "!!!Wallet type:",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 243,
+      "column": 14,
+      "index": 7789
+    },
+    "end": {
+      "line": 246,
+      "column": 3,
+      "index": 7895
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.byronWallet",
+    "defaultMessage": "!!!Byron-era wallet",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 247,
+      "column": 15,
+      "index": 7912
+    },
+    "end": {
+      "line": 250,
+      "column": 3,
+      "index": 8023
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.shelleyWallet",
+    "defaultMessage": "!!!Shelley-era wallet",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 251,
+      "column": 17,
+      "index": 8042
+    },
+    "end": {
+      "line": 254,
+      "column": 3,
+      "index": 8157
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.unknownWalletType",
+    "defaultMessage": "!!!Unknown Wallet Type",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 255,
+      "column": 21,
+      "index": 8180
+    },
+    "end": {
+      "line": 258,
+      "column": 3,
+      "index": 8300
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.about",
+    "defaultMessage": "!!!About",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 259,
+      "column": 9,
+      "index": 8311
+    },
+    "end": {
+      "line": 262,
+      "column": 3,
+      "index": 8405
+    }
+  },
+  {
+    "id": "components.settings.walletsettingscreen.resyncWallet",
+    "defaultMessage": "!!!Resync",
+    "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
+    "start": {
+      "line": 263,
+      "column": 10,
+      "index": 8417
+    },
+    "end": {
+      "line": 266,
+      "column": 3,
+      "index": 8519
+    }
+  }
+]

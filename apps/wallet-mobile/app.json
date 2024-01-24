@@ -1,0 +1,7 @@
+{
+  "name": "yoroi",
+  "displayName": "Yoroi",
+  "expo": {
+    "plugins": ["sentry-expo"]
+  }
+}

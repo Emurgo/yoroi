@@ -1,0 +1,32 @@
+[
+  {
+    "id": "components.settings.disableeasyconfirmationscreen.disableHeading",
+    "defaultMessage": "!!!By disabling this option you will be able to spend your assets only with your master password.",
+    "file": "src/Settings/EasyConfirmation/DisableEasyConfirmationScreen.tsx",
+    "start": {
+      "line": 56,
+      "column": 18,
+      "index": 1824
+    },
+    "end": {
+      "line": 59,
+      "column": 3,
+      "index": 2026
+    }
+  },
+  {
+    "id": "components.settings.disableeasyconfirmationscreen.disableButton",
+    "defaultMessage": "!!!Disable",
+    "file": "src/Settings/EasyConfirmation/DisableEasyConfirmationScreen.tsx",
+    "start": {
+      "line": 60,
+      "column": 17,
+      "index": 2045
+    },
+    "end": {
+      "line": 63,
+      "column": 3,
+      "index": 2159
+    }
+  }
+]

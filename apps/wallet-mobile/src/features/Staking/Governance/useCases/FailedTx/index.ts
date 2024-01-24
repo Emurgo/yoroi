@@ -1,0 +1,1 @@
+export {FailedTxScreen} from './FailedTxScreen'

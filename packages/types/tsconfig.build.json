@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig",
+  "exclude": [
+    "example",
+    "node_modules",
+    "lib",
+    "**/*.{spec,test}.{t,j}s",
+    "scripts"
+  ],
+  "compilerOptions": {
+    "outDir": "lib",
+    "declaration": true
+  }
+}

@@ -1,0 +1,1 @@
+export {useMutationWithInvalidations} from './useMutationWithInvalidations'

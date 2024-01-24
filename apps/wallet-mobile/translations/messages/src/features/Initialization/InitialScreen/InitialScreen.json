@@ -1,0 +1,17 @@
+[
+  {
+    "id": "analytics.selectLanguage",
+    "defaultMessage": "!!!Select Language",
+    "file": "src/features/Initialization/InitialScreen/InitialScreen.tsx",
+    "start": {
+      "line": 155,
+      "column": 18,
+      "index": 4511
+    },
+    "end": {
+      "line": 158,
+      "column": 3,
+      "index": 4594
+    }
+  }
+]

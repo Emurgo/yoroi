@@ -1,0 +1,17 @@
+[
+  {
+    "id": "swap.swapScreen.selectToken",
+    "defaultMessage": "!!!Select token",
+    "file": "src/features/Swap/SwapCard/SwapCard.tsx",
+    "start": {
+      "line": 117,
+      "column": 15,
+      "index": 3661
+    },
+    "end": {
+      "line": 120,
+      "column": 3,
+      "index": 3744
+    }
+  }
+]

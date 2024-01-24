@@ -1,0 +1,1 @@
+export {ReadTermsOfServiceScreen} from './ReadTermsOfServiceScreen'

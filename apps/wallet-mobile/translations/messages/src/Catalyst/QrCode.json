@@ -1,0 +1,92 @@
+[
+  {
+    "id": "components.catalyst.step6.subTitle",
+    "defaultMessage": "!!!Backup Catalyst Code",
+    "file": "src/Catalyst/QrCode.tsx",
+    "start": {
+      "line": 92,
+      "column": 12,
+      "index": 2890
+    },
+    "end": {
+      "line": 95,
+      "column": 3,
+      "index": 2988
+    }
+  },
+  {
+    "id": "components.catalyst.step6.description",
+    "defaultMessage": "!!!Please take a screenshot of this QR code.",
+    "file": "src/Catalyst/QrCode.tsx",
+    "start": {
+      "line": 96,
+      "column": 15,
+      "index": 3005
+    },
+    "end": {
+      "line": 99,
+      "column": 3,
+      "index": 3127
+    }
+  },
+  {
+    "id": "components.catalyst.step6.description2",
+    "defaultMessage": "!!!We strongly recommend you to save your Catalyst secret code in plain text too, so that you can re-create your QR code if necessary.",
+    "file": "src/Catalyst/QrCode.tsx",
+    "start": {
+      "line": 100,
+      "column": 16,
+      "index": 3145
+    },
+    "end": {
+      "line": 105,
+      "column": 3,
+      "index": 3375
+    }
+  },
+  {
+    "id": "components.catalyst.step6.description3",
+    "defaultMessage": "!!!Then, send the QR code to an external device, as you will need toscan it with your phone using the Catalyst mobile app.",
+    "file": "src/Catalyst/QrCode.tsx",
+    "start": {
+      "line": 106,
+      "column": 16,
+      "index": 3393
+    },
+    "end": {
+      "line": 111,
+      "column": 3,
+      "index": 3611
+    }
+  },
+  {
+    "id": "components.catalyst.step6.note",
+    "defaultMessage": "!!!Keep it — you won’t be able to access this code after tapping on Complete.",
+    "file": "src/Catalyst/QrCode.tsx",
+    "start": {
+      "line": 112,
+      "column": 8,
+      "index": 3621
+    },
+    "end": {
+      "line": 115,
+      "column": 3,
+      "index": 3769
+    }
+  },
+  {
+    "id": "components.catalyst.step6.secretCode",
+    "defaultMessage": "!!!Secret Code",
+    "file": "src/Catalyst/QrCode.tsx",
+    "start": {
+      "line": 116,
+      "column": 14,
+      "index": 3785
+    },
+    "end": {
+      "line": 119,
+      "column": 3,
+      "index": 3876
+    }
+  }
+]

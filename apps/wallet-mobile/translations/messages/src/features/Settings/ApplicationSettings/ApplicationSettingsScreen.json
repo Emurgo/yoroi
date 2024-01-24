@@ -1,0 +1,257 @@
+[
+  {
+    "id": "components.settings.applicationsettingsscreen.label.general",
+    "defaultMessage": "!!!General",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 233,
+      "column": 11,
+      "index": 8119
+    },
+    "end": {
+      "line": 236,
+      "column": 3,
+      "index": 8229
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.label.securityReporting",
+    "defaultMessage": "!!!Security & Reporting",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 237,
+      "column": 21,
+      "index": 8252
+    },
+    "end": {
+      "line": 240,
+      "column": 3,
+      "index": 8385
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.selectLanguage",
+    "defaultMessage": "!!!Language",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 241,
+      "column": 18,
+      "index": 8405
+    },
+    "end": {
+      "line": 244,
+      "column": 3,
+      "index": 8517
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.selectFiatCurrency",
+    "defaultMessage": "!!!Fiat Currency",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 245,
+      "column": 22,
+      "index": 8541
+    },
+    "end": {
+      "line": 248,
+      "column": 3,
+      "index": 8662
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.about",
+    "defaultMessage": "!!!About",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 249,
+      "column": 9,
+      "index": 8673
+    },
+    "end": {
+      "line": 252,
+      "column": 3,
+      "index": 8773
+    }
+  },
+  {
+    "id": "components.initialization.acepttermsofservicescreen.title",
+    "defaultMessage": "!!!Terms of Service Agreement",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 253,
+      "column": 18,
+      "index": 8793
+    },
+    "end": {
+      "line": 256,
+      "column": 3,
+      "index": 8920
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.changePin",
+    "defaultMessage": "!!!Change PIN",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 257,
+      "column": 13,
+      "index": 8935
+    },
+    "end": {
+      "line": 260,
+      "column": 3,
+      "index": 9044
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.privacyMode",
+    "defaultMessage": "!!!Hide balance",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 261,
+      "column": 15,
+      "index": 9061
+    },
+    "end": {
+      "line": 264,
+      "column": 3,
+      "index": 9174
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.privacyModeInfo",
+    "defaultMessage": "!!!This function will be applied to all wallets in your app",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 265,
+      "column": 19,
+      "index": 9195
+    },
+    "end": {
+      "line": 268,
+      "column": 3,
+      "index": 9356
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.biometricsSignIn",
+    "defaultMessage": "!!!Sign in with your biometrics",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 269,
+      "column": 20,
+      "index": 9378
+    },
+    "end": {
+      "line": 272,
+      "column": 3,
+      "index": 9512
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.biometricsSignInInfo",
+    "defaultMessage": "!!!Changes to this option will be reflected after restarting the application",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 273,
+      "column": 24,
+      "index": 9538
+    },
+    "end": {
+      "line": 276,
+      "column": 3,
+      "index": 9721
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.crashReporting",
+    "defaultMessage": "!!!Send crash report to Emurgo",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 277,
+      "column": 18,
+      "index": 9741
+    },
+    "end": {
+      "line": 280,
+      "column": 3,
+      "index": 9872
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.crashReportingInfo",
+    "defaultMessage": "!!!Changes to this option will be reflected after restarting the application",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 281,
+      "column": 22,
+      "index": 9896
+    },
+    "end": {
+      "line": 284,
+      "column": 3,
+      "index": 10077
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.analytics",
+    "defaultMessage": "!!!Analytics",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 285,
+      "column": 13,
+      "index": 10092
+    },
+    "end": {
+      "line": 288,
+      "column": 3,
+      "index": 10200
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.privacyPolicy",
+    "defaultMessage": "!!!Privacy Policy",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 289,
+      "column": 17,
+      "index": 10219
+    },
+    "end": {
+      "line": 292,
+      "column": 3,
+      "index": 10336
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.screenSharing",
+    "defaultMessage": "!!!Enable screensharing",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 293,
+      "column": 17,
+      "index": 10355
+    },
+    "end": {
+      "line": 296,
+      "column": 3,
+      "index": 10478
+    }
+  },
+  {
+    "id": "components.settings.applicationsettingsscreen.screenSharingInfo",
+    "defaultMessage": "!!!Changes to this option will enable you to make screenshots as well share your screen via third party apps",
+    "file": "src/features/Settings/ApplicationSettings/ApplicationSettingsScreen.tsx",
+    "start": {
+      "line": 297,
+      "column": 21,
+      "index": 10501
+    },
+    "end": {
+      "line": 301,
+      "column": 3,
+      "index": 10719
+    }
+  }
+]

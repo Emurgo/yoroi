@@ -1,0 +1,62 @@
+{
+  "folders": [
+    {
+      "name": "root",
+      "path": "."
+    },
+    {
+      "name": "@yoroi/types",
+      "path": "./packages/types"
+    },
+    {
+      "name": "@yoroi/swap",
+      "path": "./packages/swap"
+    },
+    {
+      "name": "@yoroi/links",
+      "path": "./packages/links"
+    },
+    {
+      "name": "@yoroi/banxa",
+      "path": "./packages/banxa"
+    },
+    {
+      "name": "@yoroi/api",
+      "path": "./packages/api"
+    },
+    {
+      "name": "@yoroi/resolver",
+      "path": "./packages/resolver"
+    },
+    {
+      "name": "@yoroi/common",
+      "path": "./packages/common"
+    },
+    {
+      "name": "@yoroi/openswap",
+      "path": "./packages/openswap"
+    },
+    {
+      "name": "@yoroi/staking",
+      "path": "./packages/staking"
+    },
+    {
+      "name": "@yoroi/wallet-mobile",
+      "path": "./apps/wallet-mobile"
+    },
+    {
+      "name": "@yoroi/e2e-wallet-mobile",
+      "path": "./e2e/wallet-mobile"
+    }
+  ],
+
+  "settings": {
+    "jest.disabledWorkspaceFolders": ["root"],
+    "jest.pathToJest": "node_modules/.bin/jest",
+    "jest.pathToConfig": "./jest.config.js",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "typescript.preferGoToSourceDefinition": true,
+    "typescript.referencesCodeLens.enabled": true,
+    "typescript.tsserver.maxTsServerMemory": 12072,
+  }
+}

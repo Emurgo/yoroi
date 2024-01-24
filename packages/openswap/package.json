@@ -1,0 +1,81 @@
+{
+  "name": "@yoroi/openswap",
+  "version": "1.4.0",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/Emurgo/yoroi.git",
+    "directory": "packages/openswap"
+  },
+  "license": "Apache-2.0",
+  "author": "EMURGO",
+  "main": "dist/index.js",
+  "source": "src/index",
+  "scripts": {
+    "flow": ". ./scripts/flowgen.sh",
+    "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
+    "prepack": "yarn build:release",
+    "prepublish:beta": "yarn build:release",
+    "publish:beta": "npm publish --scope yoroi --tag beta --access beta",
+    "prepublish:prod": "yarn build:release",
+    "publish:prod": "npm publish --scope yoroi --access public",
+    "build": "yarn tsc && yarn lint && yarn test && yarn clean && tsc --project tsconfig.json",
+    "build:release": "yarn build && yarn flow",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "tsc": "tsc --noEmit -p tsconfig.json",
+    "clean": "rm -rf dist",
+    "test": "vitest --run"
+  },
+  "dependencies": {
+    "axios": "1.4.0"
+  },
+  "devDependencies": {
+    "dependency-cruiser": "^13.1.1",
+    "eslint": "^8.46.0",
+    "eslint-config-prettier": "^8.9.0",
+    "eslint-plugin-ft-flow": "^3.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "flowgen": "^1.21.0",
+    "jest": "^29.6.3",
+    "prettier": "^3.0.0",
+    "typescript": "5.0.4",
+    "vitest": "0.31.1"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@react-native-community",
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "quoteProps": "consistent",
+          "bracketSpacing": false,
+          "singleQuote": true,
+          "tabWidth": 2,
+          "trailingComma": "all",
+          "useTabs": false,
+          "semi": false
+        }
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "dist/",
+    "scripts/",
+    "node_modules/",
+    "lib/",
+    "babel.config.js",
+    "jest.setup.js"
+  ],
+  "prettier": {
+    "quoteProps": "consistent",
+    "bracketSpacing": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "useTabs": false,
+    "semi": false
+  }
+}
