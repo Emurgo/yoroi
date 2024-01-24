@@ -24,6 +24,7 @@ export const ReceiveScreen = () => {
     const navigate = useNavigateTo()
 
     const [isCopying, copy] = useCopy()
+    
 
     const currentAddress = _.last(receiveAddresses)
 
