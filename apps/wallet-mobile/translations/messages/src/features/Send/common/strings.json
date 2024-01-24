@@ -798,8 +798,8 @@
     }
   },
   {
-    "id": "send.helper.addressError.invalidBlockchain",
-    "defaultMessage": "!!!You are trying to resolve a domain on a different network. Please double-check and try again",
+    "id": "send.helper.addressError.wrongBlockchain",
+    "defaultMessage": "!!!You are trying to resolve a domain on a different blockchain. Please double-check and try again",
     "file": "src/features/Send/common/strings.tsx",
     "start": {
       "line": 303,
@@ -807,9 +807,9 @@
       "index": 13177
     },
     "end": {
-      "line": 306,
+      "line": 307,
       "column": 3,
-      "index": 13355
+      "index": 13362
     }
   },
   {
@@ -817,14 +817,14 @@
     "defaultMessage": "!!!Please enter valid domain",
     "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 307,
+      "line": 308,
       "column": 34,
-      "index": 13391
+      "index": 13398
     },
     "end": {
-      "line": 310,
+      "line": 311,
       "column": 3,
-      "index": 13497
+      "index": 13504
     }
   },
   {
@@ -832,14 +832,14 @@
     "defaultMessage": "!!!Receiver address, ADA Handle or domain you entered doesn't exist. Please double-check it and try again",
     "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 311,
+      "line": 312,
       "column": 37,
-      "index": 13536
+      "index": 13543
     },
     "end": {
-      "line": 315,
+      "line": 316,
       "column": 3,
-      "index": 13728
+      "index": 13735
     }
   },
   {
@@ -847,14 +847,14 @@
     "defaultMessage": "!!!Memo",
     "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 317,
+      "line": 318,
       "column": 13,
-      "index": 13744
+      "index": 13751
     },
     "end": {
-      "line": 320,
+      "line": 321,
       "column": 3,
-      "index": 13823
+      "index": 13830
     }
   },
   {
@@ -862,14 +862,14 @@
     "defaultMessage": "!!!(Optional) Memo is stored locally",
     "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 321,
+      "line": 322,
       "column": 26,
-      "index": 13851
+      "index": 13858
     },
     "end": {
-      "line": 324,
+      "line": 325,
       "column": 3,
-      "index": 13961
+      "index": 13968
     }
   },
   {
@@ -877,14 +877,14 @@
     "defaultMessage": "!!!Memo is too long",
     "file": "src/features/Send/common/strings.tsx",
     "start": {
-      "line": 325,
+      "line": 326,
       "column": 26,
-      "index": 13989
+      "index": 13996
     },
     "end": {
-      "line": 328,
+      "line": 329,
       "column": 3,
-      "index": 14080
+      "index": 14087
     }
   }
 ]

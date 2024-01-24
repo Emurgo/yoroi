@@ -301,8 +301,9 @@ export const messages = defineMessages({
     defaultMessage: '!!!Please enter a valid receiver address, ADA Handle or domain',
   },
   helperAddressErrorInvalidBlockchain: {
-    id: 'send.helper.addressError.invalidBlockchain',
-    defaultMessage: '!!!You are trying to resolve a domain on a different network. Please double-check and try again',
+    id: 'send.helper.addressError.wrongBlockchain',
+    defaultMessage:
+      '!!!You are trying to resolve a domain on a different blockchain. Please double-check and try again',
   },
   helperAddressErrorWrongNetwork: {
     id: 'send.helper.addressError.wrongNetwork',

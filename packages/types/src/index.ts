@@ -249,7 +249,7 @@ export namespace Resolver {
     export class NotFound extends ResolverErrorNotFound {}
     export class UnsupportedTld extends ResolverErrorUnsupportedTld {}
     export class Expired extends ResolverErrorUnsupportedTld {}
-    export class InvalidBlockchain extends ResolverErrorInvalidBlockchain {}
+    export class WrongBlockchain extends ResolverErrorInvalidBlockchain {}
   }
 }
 

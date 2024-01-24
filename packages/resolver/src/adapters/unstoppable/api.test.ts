@@ -248,7 +248,7 @@ describe('getCryptoAddress', () => {
     })
 
     await expect(() => getCryptoAddress(domain)).rejects.toThrow(
-      Resolver.Errors.InvalidBlockchain,
+      Resolver.Errors.WrongBlockchain,
     )
     expect(mockFetchData).toHaveBeenCalledWith(
       {

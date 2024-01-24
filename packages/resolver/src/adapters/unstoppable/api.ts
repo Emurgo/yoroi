@@ -46,15 +46,23 @@ export const unstoppableApiGetCryptoAddress = (
         const safeParsedGeneralResponse =
           UnstoppableApiGeneralResponseSchema.safeParse(response.value.data)
 
-        if (safeParsedAdaResponse.success) {
+        const hasCardanoAddress = safeParsedAdaResponse.success
+        const hasOtherBlockchainAddress =
+          !hasCardanoAddress &&
+          safeParsedGeneralResponse.success &&
+          Object.keys(response.value.data.records).length > 0
+        const hasNotAnyAddress =
+          !hasOtherBlockchainAddress && safeParsedGeneralResponse.success
+
+        if (hasCardanoAddress) {
           const result = response.value.data.records['crypto.ADA.address']
           return result
         }
 
-        if (safeParsedGeneralResponse.success) {
-          if (Object.keys(response.value.data.records).length > 0)
-            throw new Resolver.Errors.InvalidBlockchain()
+        if (hasOtherBlockchainAddress)
+          throw new Resolver.Errors.WrongBlockchain()
 
+        if (hasNotAnyAddress) {
           throw new Resolver.Errors.NotFound()
         }
 

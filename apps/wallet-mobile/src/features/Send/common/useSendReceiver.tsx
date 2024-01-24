@@ -36,7 +36,7 @@ export const useSendReceiver = () => {
   )
 
   const isWrongBlockchainError = React.useMemo(
-    () => isNotResolvedDomain && cryptoAddresses.some(({error}) => error instanceof Resolver.Errors.InvalidBlockchain),
+    () => isNotResolvedDomain && cryptoAddresses.some(({error}) => error instanceof Resolver.Errors.WrongBlockchain),
     [cryptoAddresses, isNotResolvedDomain],
   )
 
