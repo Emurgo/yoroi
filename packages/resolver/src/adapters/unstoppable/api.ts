@@ -60,8 +60,7 @@ export const unstoppableApiGetCryptoAddress = (
         if (hasOtherBlockchainAddress)
           throw new Resolver.Errors.WrongBlockchain()
 
-        if (hasNotAnyAddress)
-          throw new Resolver.Errors.NotFound()
+        if (hasNotAnyAddress) throw new Resolver.Errors.NotFound()
 
         throw new Resolver.Errors.InvalidResponse()
       }
