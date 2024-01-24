@@ -5,7 +5,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon, NftImageGallery, SkeletonGallery, Spacer} from '../components'
+import {Icon, NftImageGallery, SkeletonGallery, Spacer, StatusBar} from '../components'
 import {useMetrics} from '../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
@@ -134,6 +134,8 @@ export const Nfts = () => {
 const Wrapper = ({children}: {children: ReactNode}) => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
+      <StatusBar type="dark" />
+
       <View style={styles.container}>
         <Spacer height={16} />
 
