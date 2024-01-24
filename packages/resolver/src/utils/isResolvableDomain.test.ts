@@ -23,8 +23,8 @@ describe('isResolvableDomain', () => {
     ${'ud.eth'}         | ${true}
     ${'$adahandle'}     | ${true}
     ${'cns.ada'}        | ${true}
+    ${'ud.unstoppable'} | ${true}
     ${'ud.com'}         | ${false}
-    ${'ud.unstoppable'} | ${false}
     ${'other.uk'}       | ${false}
     ${'$'}              | ${false}
   `('should return $expected for $resolve', ({resolve, expected}) => {

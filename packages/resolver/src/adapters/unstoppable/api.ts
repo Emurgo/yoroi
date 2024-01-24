@@ -44,27 +44,18 @@ export const unstoppableApiGetCryptoAddress = (
         const safeParsedAdaResponse = UnstoppableApiAdaResponseSchema.safeParse(
           response.value.data,
         )
-        const safeParsedOtherBlockchainResponse =
-          UnstoppableApiOtherBlockchainResponseSchema.safeParse(
-            response.value.data,
-          )
         const safeParsedGeneralResponse =
           UnstoppableApiGeneralResponseSchema.safeParse(response.value.data)
 
         // checking
         const hasCardanoAddress = safeParsedAdaResponse.success
-        const hasOtherBlockchainAddress =
-          !hasCardanoAddress && safeParsedOtherBlockchainResponse.success
-        const hasNotAnyAddress =
-          !hasOtherBlockchainAddress && safeParsedGeneralResponse.success
+        const hasOtherBlockchainAddress = safeParsedGeneralResponse.success
 
         if (hasCardanoAddress)
           return response.value.data.records['crypto.ADA.address']
 
         if (hasOtherBlockchainAddress)
           throw new Resolver.Errors.WrongBlockchain()
-
-        if (hasNotAnyAddress) throw new Resolver.Errors.NotFound()
 
         throw new Resolver.Errors.InvalidResponse()
       }
@@ -114,14 +105,7 @@ const UnstoppableApiGeneralResponseSchema = z.object({
   records: z.record(z.string(), z.string()),
 })
 
-const UnstoppableApiOtherBlockchainResponseSchema =
-  UnstoppableApiGeneralResponseSchema.refine(
-    ({records, meta}) =>
-      Object.keys(records).length > 0 ||
-      !['CARDANO', 'ADA'].includes(meta.blockchain),
-  )
-
-// https://docs.unstoppabledomains.com/openapi/resolution/
+// curl https://api.unstoppabledomains.com/resolve/supported_tlds
 export const unstoppableSupportedTlds = [
   '.x',
   '.polygon',
@@ -139,6 +123,8 @@ export const unstoppableSupportedTlds = [
   '.anime',
   '.manga',
   '.go',
+  '.altimist',
+  '.unstoppable',
   '.zil',
   '.eth',
 ] as const
