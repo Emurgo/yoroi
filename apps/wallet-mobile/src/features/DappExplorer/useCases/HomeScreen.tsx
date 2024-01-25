@@ -1,11 +1,23 @@
-import {Platform, Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Platform, Share, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {WebView} from 'react-native-webview'
-import React, {useRef} from 'react'
+import React from 'react'
+import {WebViewProgressEvent} from 'react-native-webview/lib/WebViewTypes'
+import {
+  NavigationArrowLeftIcon,
+  NavigationArrowRightIcon,
+  NavigationRefreshIcon,
+  NavigationShareIcon,
+} from '../common/icons'
 
 const DAPP_URL = 'https://app.dexhunter.io/'
 
+const ENABLED_BUTTON_COLOR = '#383E54'
+const DISABLED_BUTTON_COLOR = '#8A92A3'
+
 export const HomeScreen = () => {
-  const ref = useRef<WebView | null>(null)
+  const ref = React.useRef<WebView | null>(null)
+  const [canGoBack, setCanGoBack] = React.useState(false)
+  const [canGoForward, setCanGoForward] = React.useState(false)
 
   const handleReloadPress = () => {
     ref.current?.reload()
@@ -26,23 +38,30 @@ export const HomeScreen = () => {
       Share.share({url: DAPP_URL})
     }
   }
+
+  const handleLoadProgress = (e: WebViewProgressEvent) => {
+    setCanGoBack(e.nativeEvent.canGoBack)
+    setCanGoForward(e.nativeEvent.canGoForward)
+  }
+
   return (
     <View style={styles.root}>
+      <WebView source={{uri: DAPP_URL}} ref={ref} onLoadProgress={handleLoadProgress} />
+
       <View style={styles.navigationContainer}>
-        <TouchableOpacity onPress={handleReloadPress} style={styles.navigationButton}>
-          <Text>Reload</Text>
+        <TouchableOpacity onPress={handleBackPress} style={styles.navigationButton} disabled={!canGoBack}>
+          <NavigationArrowLeftIcon color={canGoBack ? ENABLED_BUTTON_COLOR : DISABLED_BUTTON_COLOR} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleBackPress} style={styles.navigationButton}>
-          <Text>Back</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleForwardPress} style={styles.navigationButton}>
-          <Text>Forward</Text>
+        <TouchableOpacity onPress={handleForwardPress} style={styles.navigationButton} disabled={!canGoForward}>
+          <NavigationArrowRightIcon color={canGoForward ? ENABLED_BUTTON_COLOR : DISABLED_BUTTON_COLOR} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleSharePress} style={styles.navigationButton}>
-          <Text>Share</Text>
+          <NavigationShareIcon color={ENABLED_BUTTON_COLOR} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleReloadPress} style={styles.navigationButton}>
+          <NavigationRefreshIcon color={ENABLED_BUTTON_COLOR} />
         </TouchableOpacity>
       </View>
-      <WebView source={{uri: DAPP_URL}} ref={ref} />
     </View>
   )
 }
@@ -54,19 +73,16 @@ const styles = StyleSheet.create({
   navigationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    justifyContent: 'space-between',
+    height: 32,
+    paddingVertical: 16,
+    paddingHorizontal: 7,
   },
   navigationButton: {
     flex: 1,
+    width: 24,
+    height: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 100,
-    height: 50,
-    backgroundColor: '#ccc',
-    borderRadius: 10,
-    overflow: 'hidden',
   },
 })
