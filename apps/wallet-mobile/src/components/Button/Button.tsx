@@ -1,8 +1,9 @@
 import React from 'react'
-import {Image, StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
+import { Image, StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle } from 'react-native'
+import Animated, { FadeInDown, FadeOutDown, Layout } from 'react-native-reanimated'
 
-import {colors} from '../../theme'
-import {Text} from '../Text'
+import { colors } from '../../theme'
+import { Text } from '../Text'
 
 export type ButtonProps = TouchableOpacityProps & {
   title: string
@@ -15,6 +16,7 @@ export type ButtonProps = TouchableOpacityProps & {
   shelleyTheme?: boolean
   outlineShelley?: boolean
   textStyles?: TextStyle
+  isCopying?: boolean
 }
 
 export const Button = (props: ButtonProps) => {
@@ -31,11 +33,18 @@ export const Button = (props: ButtonProps) => {
     shelleyTheme,
     outlineShelley,
     textStyles,
+    isCopying,
     ...rest
   } = props
 
   return (
     <TouchableOpacity onPress={onPress} style={[block && styles.block, containerStyle]} activeOpacity={0.5} {...rest}>
+      {isCopying && (
+        <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+          <Text style={styles.textCopy}>Copied</Text>
+        </Animated.View>
+      )}
+
       <View
         style={[
           styles.button,
@@ -129,5 +138,23 @@ const styles = StyleSheet.create({
   textShelleyOutlineOnLight: {
     color: colors.buttonBackgroundBlue,
     fontWeight: '600',
+  },
+  isCopying: {
+    position: 'absolute',
+    backgroundColor: '#000',
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: -20,
+    alignSelf: 'center',
+    borderRadius: 4,
+    zIndex: 10
+  },
+  textCopy: {
+    color: 'white',
+    textAlign: 'center',
+    padding: 8,
+    fontSize: 14,
+    fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
 })
