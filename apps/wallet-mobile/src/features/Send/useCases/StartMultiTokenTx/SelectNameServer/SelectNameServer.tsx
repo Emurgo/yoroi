@@ -22,7 +22,6 @@ export const SelectNameServer = () => {
 
   const [animatedValue] = React.useState(new Animated.Value(0))
   const [waitAnimation, setWaitAnimation] = React.useState(false)
-
   React.useEffect(() => {
     animatedValue.stopAnimation()
     if (shouldShow) {
