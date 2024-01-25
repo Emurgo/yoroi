@@ -21,12 +21,13 @@ import {useSelectedWallet, WalletSelectionScreen} from './SelectedWallet'
 import {theme} from './theme'
 import {TxHistoryNavigator} from './TxHistory'
 import {isHaskellShelley} from './yoroi-wallets/cardano/utils'
+import {DappExplorerNavigator} from './features/DappExplorer'
 
 const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const initialRoute = isHaskellShelley(wallet.walletImplementationId) ? 'staking-dashboard' : 'history'
+  const initialRoute = 'history'
 
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
@@ -120,17 +121,17 @@ const WalletTabNavigator = () => {
 
         {isHaskellShelley(wallet.walletImplementationId) && (
           <Tab.Screen
-            name="staking-dashboard"
-            component={DashboardNavigator}
+            name="dapp-explorer"
+            component={DappExplorerNavigator}
             options={{
               tabBarIcon: ({focused}) => (
-                <Icon.TabStaking
+                <Icon.Compass
                   size={24}
                   color={focused ? theme.COLORS.NAVIGATION_ACTIVE : theme.COLORS.NAVIGATION_INACTIVE}
                 />
               ),
-              tabBarLabel: strings.stakingButton,
-              tabBarTestID: 'stakingTabBarButton',
+              tabBarLabel: strings.dappExplorerTabBarLabel,
+              tabBarTestID: 'dappExplorerTabBarButton',
             }}
           />
         )}
@@ -175,6 +176,8 @@ export const WalletNavigator = () => (
     <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
 
     <Stack.Screen name="governance" component={GovernanceNavigator} />
+
+    <Stack.Screen name="dapp-explorer" component={DappExplorerNavigator} />
   </Stack.Navigator>
 )
 
@@ -215,6 +218,10 @@ const messages = defineMessages({
     id: 'menu',
     defaultMessage: '!!!Menu',
   },
+  dappExplorerButton: {
+    id: 'components.common.navigation.dappExplorerButton',
+    defaultMessage: '!!!Discover',
+  },
 })
 
 const useStrings = () => {
@@ -229,5 +236,6 @@ const useStrings = () => {
     walletTabBarLabel: intl.formatMessage(messages.walletButton),
     nftsTabBarLabel: intl.formatMessage(messages.nftsButton),
     menuTabBarLabel: intl.formatMessage(messages.menuButton),
+    dappExplorerTabBarLabel: intl.formatMessage(messages.dappExplorerButton),
   }
 }

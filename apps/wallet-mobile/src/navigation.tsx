@@ -10,6 +10,7 @@ import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/c
 import {COLORS} from './theme'
 import {HWDeviceInfo} from './yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
+import {DappExplorerRoutes} from './features/DappExplorer'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {
@@ -103,6 +104,7 @@ export type WalletTabRoutes = {
   'staking-dashboard': NavigatorScreenParams<DashboardRoutes>
   nfts: NavigatorScreenParams<NftRoutes>
   menu: NavigatorScreenParams<MenuRoutes>
+  'dapp-explorer': NavigatorScreenParams<DappExplorerRoutes>
 }
 
 export type WalletStackRoutes = {
@@ -113,6 +115,7 @@ export type WalletStackRoutes = {
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
   governance: NavigatorScreenParams<StakingGovernanceRoutes>
+  'dapp-explorer': NavigatorScreenParams<DappExplorerRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
