@@ -69,7 +69,7 @@ const useStyles = () => {
     },
     title: {
       fontSize: 16,
-      color: '#000000',
+      color: theme.color['black-static'],
       fontWeight: '500',
       fontFamily: 'Rubik-Medium',
       lineHeight: 24,
@@ -78,7 +78,7 @@ const useStyles = () => {
     },
     text: {
       fontSize: 16,
-      color: '#000000',
+      color: theme.color['black-static'],
       fontWeight: '400',
       fontFamily: 'Rubik-Regular',
       lineHeight: 24,
