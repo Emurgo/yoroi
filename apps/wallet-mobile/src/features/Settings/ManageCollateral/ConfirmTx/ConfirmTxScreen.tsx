@@ -4,7 +4,7 @@ import {useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {KeyboardAvoidingView, KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
+import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -83,8 +83,6 @@ export const ConfirmTxScreen = () => {
               testID="spendingPasswordInput"
             />
           )}
-
-          <KeyboardSpacer />
         </ScrollView>
 
         <Actions>
