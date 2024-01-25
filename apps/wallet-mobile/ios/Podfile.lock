@@ -397,7 +397,8 @@ PODS:
     - React-Core
   - react-native-timezone (2.3.0):
     - React-Core
-  - react-native-webview (11.26.1):
+  - react-native-webview (13.6.4):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - React-perflogger (0.71.14)
   - React-RCTActionSheet (0.71.14):
@@ -498,6 +499,8 @@ PODS:
   - RNFlashList (1.4.3):
     - React-Core
   - RNGestureHandler (2.12.0):
+    - React-Core
+  - RNInAppBrowser (3.7.0):
     - React-Core
   - RNKeychain (7.0.0):
     - React-Core
@@ -652,6 +655,7 @@ DEPENDENCIES:
   - RNDeviceInfo (from `../../../node_modules/react-native-device-info`)
   - "RNFlashList (from `../../../node_modules/@shopify/flash-list`)"
   - RNGestureHandler (from `../../../node_modules/react-native-gesture-handler`)
+  - RNInAppBrowser (from `../../../node_modules/react-native-inappbrowser-reborn`)
   - RNKeychain (from `../../../node_modules/react-native-keychain`)
   - RNLocalize (from `../../../node_modules/react-native-localize`)
   - RNPermissions (from `../../../node_modules/react-native-permissions`)
@@ -826,6 +830,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/@shopify/flash-list"
   RNGestureHandler:
     :path: "../../../node_modules/react-native-gesture-handler"
+  RNInAppBrowser:
+    :path: "../../../node_modules/react-native-inappbrowser-reborn"
   RNKeychain:
     :path: "../../../node_modules/react-native-keychain"
   RNLocalize:
@@ -907,7 +913,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 9697629f7b2cda43cf52169bb7e0767d330648c2
   react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
   react-native-timezone: 92fa6c0a7c041efd632a372a515c957cd8ee9e72
-  react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
+  react-native-webview: 107961c73db53d66549c867a3b64eaa20d34c41f
   React-perflogger: 4987ad83731c23d11813c84263963b0d3028c966
   React-RCTActionSheet: 5ad952b2a9740d87a5bd77280c4bc23f6f89ea0c
   React-RCTAnimation: d2de22af3f536cc80bb5b3918e1a455114d1b985
@@ -929,6 +935,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: 6dd5c07a482f2a5e4a29fe8a9d99eadd4277175a
   RNFlashList: ade81b4e928ebd585dd492014d40fb8d0e848aab
   RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5
+  RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
   RNKeychain: f75b8c8b2f17d3b2aa1f25b4a0ac5b83d947ff8f
   RNLocalize: dbea38dcb344bf80ff18a1757b1becf11f70cae4
   RNPermissions: f1b49dd05fa9b83993cd05a9ee115247944d8f1a
