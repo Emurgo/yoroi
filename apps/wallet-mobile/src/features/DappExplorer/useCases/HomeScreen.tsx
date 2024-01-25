@@ -1,5 +1,5 @@
 import {Platform, Share, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {WebView} from 'react-native-webview'
+import {WebView, WebViewMessageEvent} from 'react-native-webview'
 import React from 'react'
 import {WebViewProgressEvent} from 'react-native-webview/lib/WebViewTypes'
 import {
@@ -44,9 +44,19 @@ export const HomeScreen = () => {
     setCanGoForward(e.nativeEvent.canGoForward)
   }
 
+  const handleEvent = (e: WebViewMessageEvent) => {
+    console.log(e.nativeEvent.data)
+  }
+
   return (
     <View style={styles.root}>
-      <WebView source={{uri: DAPP_URL}} ref={ref} onLoadProgress={handleLoadProgress} />
+      <WebView
+        source={{uri: DAPP_URL}}
+        ref={ref}
+        onLoadProgress={handleLoadProgress}
+        injectedJavaScript={INJECTED_JAVASCRIPT}
+        onMessage={handleEvent}
+      />
 
       <View style={styles.navigationContainer}>
         <TouchableOpacity onPress={handleBackPress} style={styles.navigationButton} disabled={!canGoBack}>
@@ -65,6 +75,11 @@ export const HomeScreen = () => {
     </View>
   )
 }
+
+const INJECTED_JAVASCRIPT = `
+  const postMessage = (obj) => window.ReactNativeWebView.postMessage(JSON.stringify(obj));
+  setTimeout(() => postMessage({message: 'hello world'}), 1000);
+`
 
 const styles = StyleSheet.create({
   root: {
