@@ -3,8 +3,6 @@ import {fetchData, FetchData, handleApiError, isLeft} from '@yoroi/common'
 import {z} from 'zod'
 import {AxiosRequestConfig} from 'axios'
 
-import {handleZodErrors} from '../zod-errors'
-
 const initialDeps = {request: fetchData} as const
 
 export const unstoppableApiGetCryptoAddress = (
@@ -42,13 +40,24 @@ export const unstoppableApiGetCryptoAddress = (
 
         handleApiError(error)
       } else {
-        const parsedResponse = UnstoppableApiResponseSchema.parse(
+        // parsing
+        const safeParsedAdaResponse = UnstoppableApiAdaResponseSchema.safeParse(
           response.value.data,
         )
+        const safeParsedGeneralResponse =
+          UnstoppableApiGeneralResponseSchema.safeParse(response.value.data)
 
-        const result = parsedResponse.records['crypto.ADA.address']
-        if (!result) throw new Resolver.Errors.NotFound()
-        return result
+        // checking
+        const hasCardanoAddress = safeParsedAdaResponse.success
+        const hasOtherBlockchainAddress = safeParsedGeneralResponse.success
+
+        if (hasCardanoAddress)
+          return response.value.data.records['crypto.ADA.address']
+
+        if (hasOtherBlockchainAddress)
+          throw new Resolver.Errors.WrongBlockchain()
+
+        throw new Resolver.Errors.InvalidResponse()
       }
     } catch (error: unknown) {
       return handleUnstoppableApiError(error)
@@ -71,7 +80,7 @@ export type UnstoppableApiGetCryptoAddressResponse = {
     type: string
   }
   records: {
-    'crypto.ADA.address'?: string
+    'crypto.ADA.address': string
   }
 }
 
@@ -83,13 +92,20 @@ export type UnstoppableApiGetCryptoAddressError = {
   message: string
 }
 
-const UnstoppableApiResponseSchema = z.object({
+const UnstoppableApiAdaResponseSchema = z.object({
   records: z.object({
-    'crypto.ADA.address': z.string().optional(),
+    'crypto.ADA.address': z.string(),
   }),
 })
 
-// https://docs.unstoppabledomains.com/openapi/resolution/
+const UnstoppableApiGeneralResponseSchema = z.object({
+  meta: z.object({
+    blockchain: z.string(),
+  }),
+  records: z.record(z.string(), z.string()),
+})
+
+// curl https://api.unstoppabledomains.com/resolve/supported_tlds
 export const unstoppableSupportedTlds = [
   '.x',
   '.polygon',
@@ -107,6 +123,8 @@ export const unstoppableSupportedTlds = [
   '.anime',
   '.manga',
   '.go',
+  '.altimist',
+  '.unstoppable',
   '.zil',
   '.eth',
 ] as const
@@ -121,10 +139,6 @@ export const unstoppableApiConfig = {
 } as const
 
 export const handleUnstoppableApiError = (error: unknown): never => {
-  const zodErrorMessage = handleZodErrors(error)
-  if (zodErrorMessage)
-    throw new Resolver.Errors.InvalidResponse(zodErrorMessage)
-
   if (error instanceof Api.Errors.NotFound) throw new Resolver.Errors.NotFound()
 
   throw error
