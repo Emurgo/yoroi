@@ -19,7 +19,7 @@ export const LiquidityPool = ({
     <View style={styles.liquidityPool}>
       {liquidityPoolIcon}
 
-      <Spacer width={8} />
+      <Spacer width={4} />
 
       <TouchableOpacity onPress={() => Linking.openURL(poolUrl)} style={styles.liquidityPoolLink}>
         <Text style={styles.liquidityPoolText}>{liquidityPoolName}</Text>

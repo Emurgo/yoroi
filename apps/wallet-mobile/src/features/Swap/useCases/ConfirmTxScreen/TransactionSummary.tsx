@@ -110,7 +110,7 @@ export const TransactionSummary = () => {
       label: strings.priceImpact,
       value:
         priceImpactRisk === 'none' ? (
-          <Text style={{color: '#08C29D'}}>&lt;1%</Text>
+          <Text style={[{color: '#08C29D'}, styles.priceImpactRiskText]}>&lt;1%</Text>
         ) : (
           <View style={styles.priceImpactRiskContainer}>
             <View style={styles.flex}>
@@ -118,12 +118,14 @@ export const TransactionSummary = () => {
 
               {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
 
-              <Text style={{color: priceImpactRiskTextColor}}>{Math.ceil(Number(priceImpact) * 100) / 100}%</Text>
+              <Text style={[{color: priceImpactRiskTextColor}, styles.priceImpactRiskText]}>
+                {Math.ceil(Number(priceImpact) * 100) / 100}%
+              </Text>
             </View>
 
             <View style={{flexDirection: 'row'}}>
               <Text style={[{color: priceImpactRiskTextColor}, styles.priceImpactRiskText]}>
-                {`(${formattedActualPrice}${tokenToSellName}/${tokenToBuyName})`}
+                {`(${formattedActualPrice} ${tokenToSellName}/${tokenToBuyName})`}
               </Text>
             </View>
           </View>
@@ -204,7 +206,7 @@ export const TransactionSummary = () => {
         )
       })}
 
-      <Spacer height={12} />
+      <Spacer height={16} />
 
       {(priceImpactRisk === 'moderate' || priceImpactRisk === 'high') && type === 'market' && (
         <View style={[styles.banner, {backgroundColor: priceImpactRiskTheme.background}]}>
@@ -212,7 +214,7 @@ export const TransactionSummary = () => {
 
           {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
-          <Text>
+          <Text style={styles.bannerText}>
             <Text style={styles.bold}>
               {strings.priceImpactRiskHigh({
                 riskValue: priceImpactRisk === 'moderate' ? PRICE_IMPACT_MODERATE_RISK : PRICE_IMPACT_HIGH_RISK,
@@ -224,7 +226,7 @@ export const TransactionSummary = () => {
         </View>
       )}
 
-      <Spacer height={12} />
+      <Spacer height={16} />
 
       <Text style={styles.amountItemLabel}>{strings.swapFrom}</Text>
 
@@ -256,10 +258,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   priceImpactRiskText: {
-    flex: 1,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    textAlign: 'right',
+    fontSize: 16,
+    lineHeight: 24,
   },
   alignRight: {
     textAlign: 'right',
@@ -330,7 +330,12 @@ const styles = StyleSheet.create({
   banner: {
     paddingVertical: 12,
     paddingHorizontal: 16,
+    borderRadius: 8,
     gap: 8,
+  },
+  bannerText: {
+    fontSize: 14,
+    lineHeight: 22,
   },
   bold: {
     fontWeight: '500',
