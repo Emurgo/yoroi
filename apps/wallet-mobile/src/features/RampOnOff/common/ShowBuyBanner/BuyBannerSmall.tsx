@@ -26,6 +26,8 @@ export const BuyBannerSmall = ({onClose}: SmallBannerProps) => {
         <View style={styles.viewTitle}>
           <Text style={styles.title}>{strings.needMoreCrypto}</Text>
 
+          <Spacer width={5} />
+
           <TouchableOpacity onPress={onClose}>
             <Icon.Close size={24} />
           </TouchableOpacity>
@@ -53,6 +55,7 @@ const useStyles = () => {
       paddingBottom: 18,
     },
     gradient: {
+      flex: 1,
       opacity: 1,
       borderRadius: 8,
       flexDirection: 'column',
@@ -61,26 +64,32 @@ const useStyles = () => {
     },
     viewTitle: {
       flexDirection: 'row',
-      width: '100%',
-      alignItems: 'center',
       justifyContent: 'space-between',
-      gap: 10,
+      flex: 1,
     },
     title: {
       fontSize: 16,
+      color: theme.color['black-static'],
       fontWeight: '500',
+      fontFamily: 'Rubik-Medium',
       lineHeight: 24,
+      flexShrink: 1,
+      flexWrap: 'wrap',
     },
     text: {
       fontSize: 16,
+      color: theme.color['black-static'],
       fontWeight: '400',
+      fontFamily: 'Rubik-Regular',
       lineHeight: 24,
     },
     textButton: {
       fontSize: 14,
       fontWeight: '500',
+      fontFamily: 'Rubik-Medium',
       color: theme.color.primary[500],
       lineHeight: 22,
+      flex: 1,
     },
   })
   const colors = {
