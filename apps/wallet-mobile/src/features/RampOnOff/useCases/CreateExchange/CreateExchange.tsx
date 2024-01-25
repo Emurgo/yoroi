@@ -2,10 +2,10 @@ import {banxaModuleMaker} from '@yoroi/banxa'
 import {BanxaReferralUrlQueryStringParams} from '@yoroi/banxa/lib/typescript/translators/module'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {KeyboardAvoidingView, Linking, Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button} from '../../../../components'
+import {Button, KeyboardAvoidingView} from '../../../../components'
 import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../legacy/config'
 import env from '../../../../legacy/env'
 import {useMetrics} from '../../../../metrics/metricsManager'
@@ -72,11 +72,7 @@ export const CreateExchange = () => {
 
   return (
     <View style={styles.root}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={120}
-      >
+      <KeyboardAvoidingView style={styles.flex}>
         <ScrollView style={styles.scroll}>
           <View
             style={styles.container}

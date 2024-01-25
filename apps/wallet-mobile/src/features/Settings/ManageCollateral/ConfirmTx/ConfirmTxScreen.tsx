@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
-import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
+import {KeyboardAvoidingView, KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -51,60 +52,55 @@ export const ConfirmTxScreen = () => {
     navigateTo.failedTx()
   }
 
-  const scrollViewRef = useFlashAndScroll()
-
   if (!yoroiUnsignedTx) throw new Error('Missing yoroiUnsignedTx')
 
   return (
-    <View style={styles.root}>
-      <CurrentBalance />
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ScrollView style={styles.container}>
+          <CurrentBalance />
 
-      <View style={{paddingTop: 16, paddingHorizontal: 16}}>
-        <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
+          <View style={{paddingTop: 16, paddingHorizontal: 16}}>
+            <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        <Spacer height={4} />
+            <Spacer height={4} />
 
-        <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
-      </View>
+            <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
+          </View>
 
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{padding: 16}}
-        persistentScrollbar
-        ref={scrollViewRef}
-      >
-        <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
+          <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        <Spacer height={8} />
+          <Spacer height={8} />
 
-        <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
+          <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
-          <ValidatedTextInput
-            secureTextEntry
-            value={password}
-            label={strings.password}
-            onChangeText={setPassword}
-            testID="spendingPasswordInput"
+          {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
+            <ValidatedTextInput
+              secureTextEntry
+              value={password}
+              label={strings.password}
+              onChangeText={setPassword}
+              testID="spendingPasswordInput"
+            />
+          )}
+
+          <KeyboardSpacer />
+        </ScrollView>
+
+        <Actions>
+          <ConfirmTx
+            onSuccess={onSuccess}
+            onError={onError}
+            yoroiUnsignedTx={yoroiUnsignedTx}
+            useUSB={useUSB}
+            setUseUSB={setUseUSB}
+            isProvidingPassword
+            providedPassword={password}
+            chooseTransportOnConfirmation
           />
-        )}
-
-        <KeyboardSpacer />
-      </ScrollView>
-
-      <Actions>
-        <ConfirmTx
-          onSuccess={onSuccess}
-          onError={onError}
-          yoroiUnsignedTx={yoroiUnsignedTx}
-          useUSB={useUSB}
-          setUseUSB={setUseUSB}
-          isProvidingPassword
-          providedPassword={password}
-          chooseTransportOnConfirmation
-        />
-      </Actions>
-    </View>
+        </Actions>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }
 
@@ -116,8 +112,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    backgroundColor: COLORS.WHITE,
     flex: 1,
+    paddingHorizontal: 16,
   },
 })
 
@@ -137,20 +133,4 @@ const useStrings = () => {
       message: intl.formatMessage(errorMessages.generalTxError.message),
     },
   }
-}
-
-const useFlashAndScroll = () => {
-  const scrollViewRef = useRef<ScrollView | null>(null)
-
-  useEffect(() => {
-    setTimeout(() => {
-      scrollViewRef.current?.flashScrollIndicators()
-    }, 500)
-
-    Keyboard.addListener('keyboardWillShow', () => {
-      scrollViewRef.current?.scrollToEnd()
-    })
-  }, [])
-
-  return scrollViewRef
 }
