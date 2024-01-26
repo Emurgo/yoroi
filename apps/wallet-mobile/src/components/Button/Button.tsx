@@ -68,7 +68,7 @@ export const Button = (props: ButtonProps) => {
 }
 
 const buttonOutline = {
-  borderWidth: 1,
+  borderWidth: 2,
   borderColor: '#fff',
   backgroundColor: 'transparent',
 }
