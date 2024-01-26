@@ -1,9 +1,6 @@
 import {mockedBackendConfig} from '../mocks'
-
 import {NFT_METADATA_KEY} from './metadata'
 import {parseNFT} from './metadata'
-
-const storageUrl = 'https://example.com'
 
 const policyId = '2a0879034f23ea48ba28dc1c15b056bd63b8cf0cab9733da92add22f'
 const nameHex = '3030'
@@ -44,7 +41,6 @@ describe('parseNFT', () => {
   })
 
   it('returns null: assetMetadatas doesnt contain any NFT', () => {
-    const config = {NFT_STORAGE_URL: storageUrl}
     const assetMetadatas = ['dlddkldkdkkd']
     const assetSupplies = {[nftId]: '1'}
 
