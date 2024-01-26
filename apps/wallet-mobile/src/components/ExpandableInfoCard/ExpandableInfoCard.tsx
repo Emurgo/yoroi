@@ -156,7 +156,7 @@ export const MainInfoWrapper = ({label, value, isLast = false}: {label: string; 
       <View style={styles.info}>
         <Text style={styles.label}>{label}</Text>
 
-        {isString(value) && <Text style={styles.value}>skskskks</Text>}
+        {isString(value) && <Text style={styles.value}>{value}</Text>}
       </View>
 
       {!isLast && <Spacer height={8} />}
