@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {isNonNullable, isString} from '@yoroi/common'
 import {
   GovernanceProvider,
@@ -13,6 +14,7 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../../components'
 import {useStakingInfo} from '../../../../../Dashboard/StakePoolInfos'
+import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useStakingKey, useTransactionInfos, useWalletEvent} from '../../../../../yoroi-wallets/hooks'
@@ -173,6 +175,13 @@ const NeverParticipatedInGovernanceVariant = () => {
   const {openModal} = useModal()
   const stakingInfo = useStakingInfo(wallet, {suspense: true})
   const params = useUnsafeParams<Routes['staking-gov-home']>()
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.governanceDashboardPageViewed()
+    }, [track]),
+  )
 
   const navigateToStakingOnSuccess = params?.navigateToStakingOnSuccess ?? false
 
@@ -189,6 +198,8 @@ const NeverParticipatedInGovernanceVariant = () => {
   })
 
   const openDRepIdModal = (onSubmit: (drepId: string) => void) => {
+    track.governanceChooseDrepPageViewed()
+
     openModal(
       strings.enterDRepID,
       <GovernanceProvider manager={manager}>
@@ -201,6 +212,7 @@ const NeverParticipatedInGovernanceVariant = () => {
   const handleDelegate = () => {
     openDRepIdModal(async (drepID) => {
       const stakingKey = await wallet.getStakingKey()
+
       createDelegationCertificate(
         {drepID, stakingKey},
         {
