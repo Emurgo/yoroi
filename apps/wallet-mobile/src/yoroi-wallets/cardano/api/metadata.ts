@@ -43,9 +43,8 @@ export const parseNFT = (
   const nameHex = toAssetNameHex(tokenId)
   const displayAssetName = toDisplayAssetName(tokenId)
 
-  const hexSupplyKey = `${policyId}.${nameHex}`
-  const nameSupplyKey = `${policyId}.${displayAssetName}`
-  const assetSupply = assetSupplies[hexSupplyKey] ?? assetSupplies[nameSupplyKey]
+  const withHexName = `${policyId}.${nameHex}`
+  const assetSupply = assetSupplies[withHexName]
 
   if (assetSupply !== '1') return null
 
