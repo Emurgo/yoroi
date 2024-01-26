@@ -15,11 +15,11 @@ export const getTokenSupply =
 
     const assetsMap = new Map<
       Api.Cardano.TokenId,
-      {policy: string; name: string}
+      {policy: string; nameHex: string}
     >(
       tokenIds.map((id) => {
-        const {policyId: policy, name} = getTokenIdentity(id)
-        return [id, {policy, name}]
+        const {policyId: policy, assetName: nameHex} = getTokenIdentity(id)
+        return [id, {policy, nameHex}]
       }),
     )
 
@@ -36,14 +36,15 @@ export const getTokenSupply =
         return Promise.reject(new Error('Invalid asset supplies'))
 
       const result: Record<Api.Cardano.TokenId, Api.Cardano.TokenSupplyRecord> =
-        {} // need any here TS issues with key indexing
+        {}
+
       const supplies: Record<
         Api.Cardano.TokenId,
         Api.Cardano.TokenSupplyRecord | undefined
       > = parsedResponse.supplies
 
-      Array.from(assetsMap.entries()).forEach(([id, {policy, name}]) => {
-        const tokenId: Api.Cardano.TokenId = `${policy}.${name}`
+      Array.from(assetsMap.entries()).forEach(([id, {policy, nameHex}]) => {
+        const tokenId: Api.Cardano.TokenId = `${policy}.${nameHex}`
         result[id] = supplies[tokenId] ?? null
       })
 
