@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {useBech32DRepID, useUpdateLatestGovernanceAction} from '@yoroi/staking'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
@@ -10,11 +11,13 @@ import {ConfirmTxWithOsModal} from '../../../../../components/ConfirmTxWithOsMod
 import {ConfirmTxWithSpendingPasswordModal} from '../../../../../components/ConfirmTxWithSpendingPasswordModal'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {formatTokenWithText} from '../../../../../legacy/format'
+import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useUnsafeParams} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {Amounts} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo, useStrings} from '../../common'
 import {Routes} from '../../common/navigation'
+import {GovernanceKindMap} from '../../types'
 
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
@@ -24,6 +27,15 @@ export const ConfirmTxScreen = () => {
   const {updateLatestGovernanceAction} = useUpdateLatestGovernanceAction(wallet.id)
   const {openModal, closeModal} = useModal()
   const [operationsOpen, setOperationsOpen] = React.useState(true)
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.governanceConfirmTransactionPageViewed({
+        governance_selection: GovernanceKindMap[params.vote.kind],
+      })
+    }, [params.vote.kind, track]),
+  )
 
   const {data: bech32DrepId} = useBech32DRepID(params.vote.kind === 'delegate' ? params.vote.drepID : '', {
     enabled: params.vote.kind === 'delegate',
@@ -68,7 +80,7 @@ export const ConfirmTxScreen = () => {
       updateLatestGovernanceAction({kind: 'vote', vote: 'no-confidence', txID})
     }
 
-    navigateTo.txSuccess({navigateToStaking: params.navigateToStakingOnSuccess ?? false})
+    navigateTo.txSuccess({navigateToStaking: params.navigateToStakingOnSuccess ?? false, kind: params.vote.kind})
   }
 
   const onSubmit = () => {

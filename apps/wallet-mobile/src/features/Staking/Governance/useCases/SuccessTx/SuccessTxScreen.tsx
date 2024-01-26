@@ -1,19 +1,30 @@
+import {useFocusEffect} from '@react-navigation/native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {Button, Spacer, Text} from '../../../../../components'
+import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
 import {useNavigateTo, useStrings} from '../../common'
 import {Routes} from '../../common/navigation'
 import {SuccessTxImage} from '../../illustrations'
+import {GovernanceKindMap} from '../../types'
 
 export const SuccessTxScreen = () => {
   const strings = useStrings()
   const navigate = useNavigateTo()
   const walletNavigateTo = useWalletNavigation()
   const params = useUnsafeParams<Routes['staking-gov-tx-success']>()
+  const {track} = useMetrics()
 
   const navigateToStaking = params?.navigateToStaking ?? false
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (!params) return
+      track.governanceTransactionSuccessPageViewed({governance_selection: GovernanceKindMap[params.kind]})
+    }, [params, track]),
+  )
 
   const handleOnPress = () => {
     if (navigateToStaking) {
