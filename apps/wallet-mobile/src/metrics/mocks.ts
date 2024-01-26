@@ -47,8 +47,14 @@ export const mockMetricsManager = (): MetricsManager => {
 
     walletPageExchangeClicked: e,
     walletPageBuyBannerClicked: e,
+
     exchangePageViewed: e,
     exchangeSubmitted: e,
+
+    governanceChooseDrepPageViewed: e,
+    governanceConfirmTransactionPageViewed: e,
+    governanceDashboardPageViewed: e,
+    governanceTransactionSuccessPageViewed: e,
   } as const
 
   return {
