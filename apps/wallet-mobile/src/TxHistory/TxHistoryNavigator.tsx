@@ -458,7 +458,7 @@ const ModalInfoIconButton = (props: TouchableOpacityProps) => {
 const SettingsIconButton = (props: TouchableOpacityProps) => {
   return (
     <TouchableOpacity {...props}>
-      <Icon.Settings size={30} color={COLORS.ACTION_GRAY} />
+      <Icon.Settings size={30} color={COLORS.BLACK} />
     </TouchableOpacity>
   )
 }
@@ -469,12 +469,12 @@ const HeaderRightHistory = React.memo(() => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
   return (
-    <Row>
+    <Row style={{backgroundColor: '#E1EAF6', paddingStart: 8}}>
       {!wallet.isReadOnly && (
         <>
           <CodeScannerButton
             onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
-            color={COLORS.ACTION_GRAY}
+            color={COLORS.BLACK}
           />
 
           <Spacer width={10} />
