@@ -109,7 +109,7 @@ const ErrorMessage = ({visible}: {visible: boolean}) => {
   const strings = useStrings()
 
   return (
-    <View style={[!visible && styles.hidden]}>
+    <View style={!visible && styles.hidden}>
       <Text style={styles.errorMessage}>{strings.mnemonicWordsInputInvalidPhrase}</Text>
     </View>
   )
