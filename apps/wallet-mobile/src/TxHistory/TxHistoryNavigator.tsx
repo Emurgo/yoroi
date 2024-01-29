@@ -466,7 +466,7 @@ const HeaderRightHistory = React.memo(() => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
   return (
-    <Row>
+    <Row style={{backgroundColor: '#E1EAF6'}}>
       {!wallet.isReadOnly && (
         <>
           <CodeScannerButton
