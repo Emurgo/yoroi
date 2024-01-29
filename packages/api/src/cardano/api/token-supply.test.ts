@@ -32,8 +32,8 @@ describe('getTokenSupply', () => {
   it('returns token supplies', async () => {
     const fetch = jest.fn().mockResolvedValue({
       supplies: {
-        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.0': '1',
-        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.1': null,
+        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.30': '1',
+        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.31': null,
       },
     })
     const tokenSupply = getTokenSupply('https://localhost', fetch)

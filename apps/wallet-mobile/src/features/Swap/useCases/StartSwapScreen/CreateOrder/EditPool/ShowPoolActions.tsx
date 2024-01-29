@@ -264,6 +264,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: '#242838',
+    flexWrap: 'wrap',
+    flex: 1,
   },
 
   modalContent: {

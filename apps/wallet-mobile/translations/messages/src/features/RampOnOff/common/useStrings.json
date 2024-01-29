@@ -346,7 +346,7 @@
   },
   {
     "id": "rampOnOff.rampOnOffScreen.getFirstCrypto",
-    "defaultMessage": "!!!Welcome to Yoroi 👋️ Get your first ADA fast & easy",
+    "defaultMessage": "!!!Welcome to Yoroi 👋️\nGet your first ADA fast & easy",
     "file": "src/features/RampOnOff/common/useStrings.tsx",
     "start": {
       "line": 133,
@@ -356,7 +356,7 @@
     "end": {
       "line": 136,
       "column": 5,
-      "index": 5375
+      "index": 5376
     }
   },
   {
@@ -366,12 +366,12 @@
     "start": {
       "line": 137,
       "column": 24,
-      "index": 5401
+      "index": 5402
     },
     "end": {
       "line": 140,
       "column": 5,
-      "index": 5547
+      "index": 5548
     }
   },
   {
@@ -381,12 +381,12 @@
     "start": {
       "line": 141,
       "column": 20,
-      "index": 5569
+      "index": 5570
     },
     "end": {
       "line": 144,
       "column": 5,
-      "index": 5693
+      "index": 5694
     }
   }
 ]

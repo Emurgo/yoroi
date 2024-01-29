@@ -132,7 +132,7 @@ export const messages = Object.freeze(
     },
     getFirstCrypto: {
       id: 'rampOnOff.rampOnOffScreen.getFirstCrypto',
-      defaultMessage: '!!!Welcome to Yoroi 👋️ Get your first ADA fast & easy',
+      defaultMessage: '!!!Welcome to Yoroi 👋️\nGet your first ADA fast & easy',
     },
     ourTrustedPartners: {
       id: 'rampOnOff.rampOnOffScreen.ourTrustedPartners',

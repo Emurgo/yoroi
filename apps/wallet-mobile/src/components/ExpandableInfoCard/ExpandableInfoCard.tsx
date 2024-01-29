@@ -126,6 +126,8 @@ export const HiddenInfoWrapper = ({
           )}
         </View>
 
+        <Spacer width={5} />
+
         {isString(value) ? (
           <View style={styles.flex}>
             {icon !== undefined && (

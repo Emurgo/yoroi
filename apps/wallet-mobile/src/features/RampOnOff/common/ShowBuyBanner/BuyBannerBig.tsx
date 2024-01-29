@@ -60,6 +60,7 @@ const useStyles = () => {
     root: {
       backgroundColor: theme.color['white-static'],
       paddingBottom: 18,
+      flex: 1,
     },
     gradient: {
       opacity: 1,
@@ -76,7 +77,6 @@ const useStyles = () => {
       color: theme.color['black-static'],
       fontWeight: '500',
       textAlign: 'center',
-      paddingHorizontal: 40,
     },
     text: {
       ...theme.typography['body-1-regular'],
