@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   },
   recoveryPhrase: {
     padding: 8,
-    minHeight: 26 * 7,
+    minHeight: 182,
     borderRadius: 8,
     borderColor: COLORS.DARK_GRAY,
     borderWidth: 1,
