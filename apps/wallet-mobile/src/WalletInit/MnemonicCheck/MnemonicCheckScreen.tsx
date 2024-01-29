@@ -11,15 +11,6 @@ import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {useCreateWallet} from '../../yoroi-wallets/hooks'
-import {NetworkId, WalletImplementationId} from '../../yoroi-wallets/types'
-
-export type Params = {
-  mnemonic: string
-  password: string
-  name: string
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
-}
 
 export const MnemonicCheckScreen = () => {
   const strings = useStrings()
@@ -61,7 +52,11 @@ export const MnemonicCheckScreen = () => {
 
       <Spacer height={24} />
 
-      <MnemonicInput onPress={removeLastEntry} userEntries={userEntries} error={isPhraseComplete && !isPhraseValid} />
+      <View>
+        <Spacer width={16} />
+        <MnemonicInput onPress={removeLastEntry} userEntries={userEntries} error={isPhraseComplete && !isPhraseValid} />
+        <Spacer width={16} />
+      </View>
 
       <Spacer height={8} />
 
@@ -111,18 +106,14 @@ const MnemonicInput = ({userEntries, error, onPress}: MnemonicInputProps) => {
 const Instructions = () => {
   const strings = useStrings()
 
-  return (
-    <View style={styles.instructions}>
-      <Text>{strings.instructions}</Text>
-    </View>
-  )
+  return <Text>{strings.instructions}</Text>
 }
 
 const ErrorMessage = ({visible}: {visible: boolean}) => {
   const strings = useStrings()
 
   return (
-    <View style={[styles.error, !visible && styles.hidden]}>
+    <View style={[!visible && styles.hidden]}>
       <Text style={styles.errorMessage}>{strings.mnemonicWordsInputInvalidPhrase}</Text>
     </View>
   )
@@ -198,16 +189,12 @@ const styles = StyleSheet.create({
   safeAreaView: {
     backgroundColor: COLORS.WHITE,
     flex: 1,
+    paddingHorizontal: 16,
   },
   scrollViewContentContainer: {
-    paddingHorizontal: 16,
     paddingBottom: 16,
   },
-  instructions: {
-    paddingHorizontal: 16,
-  },
   recoveryPhrase: {
-    marginHorizontal: 16,
     padding: 8,
     minHeight: 26 * 7,
     borderRadius: 8,
@@ -222,9 +209,6 @@ const styles = StyleSheet.create({
   recoveryPhraseError: {
     borderColor: COLORS.RED,
   },
-  error: {
-    paddingHorizontal: 16,
-  },
   errorMessage: {
     color: COLORS.ERROR_TEXT_COLOR,
   },
@@ -235,7 +219,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flexDirection: 'row',
-    padding: 16,
+    paddingVertical: 16,
   },
   confirmButton: {
     paddingLeft: 12,
