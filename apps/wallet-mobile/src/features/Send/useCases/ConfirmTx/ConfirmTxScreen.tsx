@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useFocusEffect} from '@react-navigation/native'
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
-import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
@@ -19,6 +19,7 @@ import {Amounts} from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
 import {useNavigateTo} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
+import {useFlashAndScroll} from '../../common/useFlashAndScroll'
 import {BalanceAfter} from './Summary/BalanceAfter'
 import {CurrentBalance} from './Summary/CurrentBalance'
 import {Fees} from './Summary/Fees'
@@ -158,20 +159,4 @@ const useStrings = () => {
       message: intl.formatMessage(errorMessages.generalTxError.message),
     },
   }
-}
-
-const useFlashAndScroll = () => {
-  const scrollViewRef = useRef<ScrollView | null>(null)
-
-  useEffect(() => {
-    setTimeout(() => {
-      scrollViewRef.current?.flashScrollIndicators()
-    }, 500)
-
-    Keyboard.addListener('keyboardWillShow', () => {
-      scrollViewRef.current?.scrollToEnd()
-    })
-  }, [])
-
-  return scrollViewRef
 }
