@@ -43,7 +43,7 @@ export const InputReceiver = ({
 
 const styles = StyleSheet.create({
   receiver: {
-    height: 120,
+    minHeight: 120,
   },
   label: {
     fontSize: 15,

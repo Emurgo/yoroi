@@ -210,6 +210,7 @@ const useStyles = () => {
     coinName: {
       fontSize: 16,
       fontWeight: '400',
+      color: color.gray.max,
     },
     balanceText: {
       fontSize: 12,
