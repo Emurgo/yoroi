@@ -133,6 +133,7 @@ type WordBadgesProps = {
   userEntries: Array<Entry>
   onPress: (wordEntry: Entry) => void
 }
+
 const WordBadges = ({mnemonicEntries, userEntries, onPress}: WordBadgesProps) => {
   const isWordUsed = (entryId: number) => userEntries.some((entry) => entry.id === entryId)
 
@@ -206,17 +207,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   recoveryPhrase: {
-    height: 26 * 7,
-    paddingHorizontal: 16,
-  },
-  recoveryPhraseOutline: {
-    flex: 1,
+    marginHorizontal: 16,
+    padding: 8,
+    minHeight: 26 * 7,
     borderRadius: 8,
     borderColor: COLORS.DARK_GRAY,
     borderWidth: 1,
+    overflow: 'hidden',
+  },
+  recoveryPhraseOutline: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
   },
   recoveryPhraseError: {
     borderColor: COLORS.RED,
