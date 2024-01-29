@@ -221,7 +221,7 @@ export const TransactionSummary = () => {
               })}
             </Text>
 
-            <Text> {strings.priceimpactDescription}</Text>
+            <Text> {strings.priceImpactDescription(priceImpactRisk)}</Text>
           </Text>
         </View>
       )}
