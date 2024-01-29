@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   flex: {flexDirection: 'row', alignItems: 'center'},
   between: {justifyContent: 'space-between'},
   text: {
-    textAlign: 'left',
+    textAlign: 'right',
     fontWeight: '400',
     fontSize: 16,
     lineHeight: 24,
