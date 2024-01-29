@@ -54,7 +54,9 @@ export const MnemonicCheckScreen = () => {
 
       <View>
         <Spacer width={16} />
+
         <MnemonicInput onPress={removeLastEntry} userEntries={userEntries} error={isPhraseComplete && !isPhraseValid} />
+
         <Spacer width={16} />
       </View>
 
