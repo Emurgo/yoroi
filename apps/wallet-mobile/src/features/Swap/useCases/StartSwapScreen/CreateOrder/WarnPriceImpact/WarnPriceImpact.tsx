@@ -75,6 +75,7 @@ const useStyles = () => {
     },
     bold: {
       fontWeight: '500',
+      fontFamily: 'Rubik-Medium',
     },
   })
   return styles

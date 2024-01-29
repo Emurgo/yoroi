@@ -339,5 +339,6 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
 })
