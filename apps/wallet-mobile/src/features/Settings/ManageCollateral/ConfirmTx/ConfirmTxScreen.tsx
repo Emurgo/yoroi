@@ -60,13 +60,15 @@ export const ConfirmTxScreen = () => {
         <ScrollView style={styles.container}>
           <CurrentBalance />
 
-          <View style={{paddingTop: 16, paddingHorizontal: 16}}>
-            <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
+          <Spacer height={16} />
 
-            <Spacer height={4} />
+          <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
 
-            <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
-          </View>
+          <Spacer height={4} />
+
+          <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
+
+          <Spacer height={8} />
 
           <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
 
