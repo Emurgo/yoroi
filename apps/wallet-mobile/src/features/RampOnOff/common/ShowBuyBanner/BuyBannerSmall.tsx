@@ -90,6 +90,7 @@ const useStyles = () => {
       color: theme.color.primary[500],
       lineHeight: 22,
       flex: 1,
+      borderRadius: 8,
     },
   })
   const colors = {
