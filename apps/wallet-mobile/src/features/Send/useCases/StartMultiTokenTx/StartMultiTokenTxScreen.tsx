@@ -78,7 +78,7 @@ export const StartMultiTokenTxScreen = () => {
       <StatusBar type="dark" />
 
       <KeyboardAvoidingView style={styles.flex}>
-        <ScrollView style={styles.flex} bounces={false}>
+        <ScrollView style={[styles.flex, styles.scroll]} bounces={false}>
           <ShowErrors />
 
           <NotifySupportedNameServers />
@@ -154,14 +154,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
-    paddingHorizontal: 16,
     paddingTop: 16,
   },
   flex: {
     flex: 1,
   },
   actions: {
-    paddingVertical: 16,
+    padding: 16,
+  },
+  scroll: {
+    paddingHorizontal: 16,
   },
 })
 
