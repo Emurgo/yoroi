@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     fontWeight: '400',
-    color: '#242838',
+    color: '#000',
   },
   gray: {
     color: '#6B7384',
