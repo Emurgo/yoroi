@@ -1,6 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
-import {StatusBar as StatusBarRN} from 'react-native'
+import {Platform, StatusBar as StatusBarRN} from 'react-native'
 
 type Props = {
   type: 'dark' | 'light'
@@ -13,7 +13,7 @@ export const StatusBar = ({type, overrideColor}: Props) => {
   const backgroundColor = type === 'dark' ? theme.color['white-static'] : theme.color['black-static']
 
   useFocusEffect(() => {
-    StatusBarRN.setBackgroundColor(overrideColor ?? backgroundColor)
+    if (Platform.OS === 'android') StatusBarRN.setBackgroundColor(overrideColor ?? backgroundColor)
     StatusBarRN.setBarStyle(type === 'dark' ? 'dark-content' : 'light-content')
   })
 
