@@ -15,8 +15,9 @@ export const ScrollView = ({
 
         const {height} = event.nativeEvent.layout
 
-        if (wrapperHeight > Math.trunc(height)) onScrollBarChange(true)
-        else onScrollBarChange(false)
+        const shouldChange = wrapperHeight > Math.trunc(height)
+        onScrollBarChange(shouldChange)
+        props.onLayout?.(event)
       }}
       {...props}
     >
