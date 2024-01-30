@@ -18,13 +18,14 @@ import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useStakingKey, useTransactionInfos, useWalletEvent} from '../../../../../yoroi-wallets/hooks'
-import {TransactionInfo} from '../../../../../yoroi-wallets/types'
+import {TransactionInfo, YoroiUnsignedTx} from '../../../../../yoroi-wallets/types'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
-import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
+import {mapStakingKeyStateToGovernanceAction, useCreateGovernanceTx} from '../../common/helpers'
 import {Routes} from '../../common/navigation'
 import {GovernanceImage} from '../../illustrations'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
+import {yoroiUnsignedTx} from '../../../../../yoroi-wallets/cardano/unsignedTx'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()
@@ -197,6 +198,8 @@ const NeverParticipatedInGovernanceVariant = () => {
     useErrorBoundary: true,
   })
 
+  const {createUnsignedGovernanceTx} = useCreateGovernanceTx(wallet)
+
   const openDRepIdModal = (onSubmit: (drepId: string) => void) => {
     track.governanceChooseDrepPageViewed()
 
@@ -211,6 +214,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleDelegate = () => {
     openDRepIdModal(async (drepID) => {
+      const vote = {kind: 'delegate', drepID} as const
       const stakingKey = await wallet.getStakingKey()
 
       createDelegationCertificate(
@@ -221,13 +225,8 @@ const NeverParticipatedInGovernanceVariant = () => {
               ? await manager.createStakeRegistrationCertificate(stakingKey)
               : null
             const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-            const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-            navigateTo.confirmTx({
-              unsignedTx,
-              vote: {kind: 'delegate', drepID},
-              registerStakingKey: stakeCert !== null,
-              navigateToStakingOnSuccess,
-            })
+            const unsignedTx = await createUnsignedGovernanceTx(certs)
+            navigateTo.confirmTx({unsignedTx, vote, registerStakingKey: stakeCert !== null, navigateToStakingOnSuccess})
           },
         },
       )
@@ -236,6 +235,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleAbstain = async () => {
     const stakingKey = await wallet.getStakingKey()
+    const vote = {kind: 'abstain'} as const
     createVotingCertificate(
       {vote: 'abstain', stakingKey},
       {
@@ -244,13 +244,8 @@ const NeverParticipatedInGovernanceVariant = () => {
             ? await manager.createStakeRegistrationCertificate(stakingKey)
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-          const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-          navigateTo.confirmTx({
-            unsignedTx,
-            vote: {kind: 'abstain'},
-            registerStakingKey: stakeCert !== null,
-            navigateToStakingOnSuccess,
-          })
+          const unsignedTx = await createUnsignedGovernanceTx(certs)
+          navigateTo.confirmTx({unsignedTx, vote, registerStakingKey: stakeCert !== null, navigateToStakingOnSuccess})
         },
       },
     )
@@ -258,6 +253,7 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleNoConfidence = async () => {
     const stakingKey = await wallet.getStakingKey()
+    const vote = {kind: 'no-confidence'} as const
     createVotingCertificate(
       {vote: 'no-confidence', stakingKey},
       {
@@ -266,13 +262,8 @@ const NeverParticipatedInGovernanceVariant = () => {
             ? await manager.createStakeRegistrationCertificate(stakingKey)
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-          const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-          navigateTo.confirmTx({
-            unsignedTx,
-            vote: {kind: 'no-confidence'},
-            registerStakingKey: stakeCert !== null,
-            navigateToStakingOnSuccess,
-          })
+          const unsignedTx = await createUnsignedGovernanceTx(certs)
+          navigateTo.confirmTx({unsignedTx, vote, registerStakingKey: stakeCert !== null, navigateToStakingOnSuccess})
         },
       },
     )

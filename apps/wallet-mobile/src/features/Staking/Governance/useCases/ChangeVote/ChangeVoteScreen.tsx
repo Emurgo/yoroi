@@ -13,7 +13,7 @@ import {Spacer, useModal} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useStakingKey} from '../../../../../yoroi-wallets/hooks'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
-import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
+import {mapStakingKeyStateToGovernanceAction, useCreateGovernanceTx} from '../../common/helpers'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
@@ -34,6 +34,8 @@ export const ChangeVoteScreen = () => {
     useErrorBoundary: true,
   })
 
+  const {createUnsignedGovernanceTx} = useCreateGovernanceTx(wallet)
+
   if (!isNonNullable(action)) throw new Error('User has never voted')
 
   const openDRepIdModal = (onSubmit: (drepId: string) => void) => {
@@ -49,12 +51,13 @@ export const ChangeVoteScreen = () => {
   const handleDelegate = () => {
     openDRepIdModal(async (drepID) => {
       const stakingKey = await wallet.getStakingKey()
+      const vote = {kind: 'delegate', drepID} as const
       createDelegationCertificate(
         {drepID, stakingKey},
         {
           onSuccess: async (certificate) => {
-            const unsignedTx = await wallet.createUnsignedGovernanceTx([certificate])
-            navigateTo.confirmTx({unsignedTx, vote: {kind: 'delegate', drepID}})
+            const unsignedTx = await createUnsignedGovernanceTx([certificate])
+            navigateTo.confirmTx({unsignedTx, vote})
           },
         },
       )
@@ -63,12 +66,13 @@ export const ChangeVoteScreen = () => {
 
   const handleAbstain = async () => {
     const stakingKey = await wallet.getStakingKey()
+    const vote = {kind: 'abstain'} as const
     createVotingCertificate(
       {vote: 'abstain', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await wallet.createUnsignedGovernanceTx([certificate])
-          navigateTo.confirmTx({unsignedTx, vote: {kind: 'abstain'}})
+          const unsignedTx = await createUnsignedGovernanceTx([certificate])
+          navigateTo.confirmTx({unsignedTx, vote})
         },
       },
     )
@@ -76,12 +80,13 @@ export const ChangeVoteScreen = () => {
 
   const handleNoConfidence = async () => {
     const stakingKey = await wallet.getStakingKey()
+    const vote = {kind: 'no-confidence'} as const
     createVotingCertificate(
       {vote: 'no-confidence', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await wallet.createUnsignedGovernanceTx([certificate])
-          navigateTo.confirmTx({unsignedTx, vote: {kind: 'no-confidence'}})
+          const unsignedTx = await createUnsignedGovernanceTx([certificate])
+          navigateTo.confirmTx({unsignedTx, vote})
         },
       },
     )
