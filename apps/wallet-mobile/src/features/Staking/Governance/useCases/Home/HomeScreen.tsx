@@ -17,6 +17,7 @@ import {useStakingInfo} from '../../../../../Dashboard/StakePoolInfos'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
+import {yoroiUnsignedTx} from '../../../../../yoroi-wallets/cardano/unsignedTx'
 import {useStakingKey, useTransactionInfos, useWalletEvent} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo, YoroiUnsignedTx} from '../../../../../yoroi-wallets/types'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
@@ -25,7 +26,6 @@ import {Routes} from '../../common/navigation'
 import {GovernanceImage} from '../../illustrations'
 import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
-import {yoroiUnsignedTx} from '../../../../../yoroi-wallets/cardano/unsignedTx'
 
 export const HomeScreen = () => {
   const wallet = useSelectedWallet()

@@ -1,6 +1,8 @@
+import {Certificate} from '@emurgo/cross-csl-core'
 import {useStorage} from '@yoroi/common'
 import {type StakingKeyState, governanceApiMaker, governanceManagerMaker, useStakingKeyState} from '@yoroi/staking'
 import * as React from 'react'
+import {useMutation} from 'react-query'
 
 import {CONFIG} from '../../../../legacy/config'
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -9,8 +11,6 @@ import {useStakingKey, useTipStatus} from '../../../../yoroi-wallets/hooks'
 import {isMainnetNetworkId, isSanchoNetworkId} from '../../../../yoroi-wallets/utils'
 import {CardanoMobile} from '../../../../yoroi-wallets/wallets'
 import {GovernanceVote} from '../types'
-import {Certificate} from '@emurgo/cross-csl-core'
-import {useMutation} from 'react-query'
 
 export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {
   const stakingKeyHash = useStakingKey(wallet)
