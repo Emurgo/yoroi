@@ -15,6 +15,7 @@ import {AddressErrorWrongNetwork} from '../../common/errors'
 import {useNavigateTo} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
 import {useStrings} from '../../common/strings'
+import {useFlashAndScroll} from '../../common/useFlashAndScroll'
 import {useSendAddress} from '../../common/useSendAddress'
 import {useSendReceiver} from '../../common/useSendReceiver'
 import {InputMemo} from './InputMemo/InputMemo'
@@ -75,12 +76,14 @@ export const StartMultiTokenTxScreen = () => {
   }
   const handleOnChangeMemo = (text: string) => memoChanged(text)
 
+  const scrollViewRef = useFlashAndScroll()
+
   return (
     <View style={styles.container}>
       <StatusBar type="dark" />
 
       <KeyboardAvoidingView style={styles.flex}>
-        <ScrollView style={[styles.flex, styles.scroll]} bounces={false} onScrollBarChange={setIsScrollBarShown}>
+        <ScrollView style={[styles.flex, styles.scroll]} bounces={false} ref={scrollViewRef} onScrollBarChange={setIsScrollBarShown}>>
           <ShowErrors />
 
           <NotifySupportedNameServers />
