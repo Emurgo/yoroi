@@ -14,12 +14,12 @@ export const ScrollView = ({
   return (
     <RNScrollView
       onLayout={(event) => {
-        if (!onScrollBarChange) return
+        if (onScrollBarChange) {
+          const {height} = event.nativeEvent.layout
 
-        const {height} = event.nativeEvent.layout
-
-        const shouldChange = wrapperHeight > Math.trunc(height)
-        onScrollBarChange(shouldChange)
+          const shouldChange = wrapperHeight > Math.trunc(height)
+          onScrollBarChange(shouldChange)
+        }
         props.onLayout?.(event)
       }}
       {...props}
