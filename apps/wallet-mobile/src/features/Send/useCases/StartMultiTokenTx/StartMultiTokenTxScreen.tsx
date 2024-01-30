@@ -1,9 +1,10 @@
 import {useIsFocused} from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
-import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {Button, KeyboardAvoidingView, Spacer, StatusBar} from '../../../../components'
+import {ScrollView} from '../../../../components/ScrollView/ScrollView'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
@@ -41,6 +42,7 @@ export const StartMultiTokenTxScreen = () => {
   const {amounts} = targets[selectedTargetIndex].entry
   const receiver = targets[selectedTargetIndex].receiver
   const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
+  const [isScrollBarShown, setIsScrollBarShown] = React.useState(false)
 
   const {isWrongBlockchainError, isResolvingAddressess, receiverError, isUnsupportedDomain, isNotResolvedDomain} =
     useSendReceiver()
@@ -81,7 +83,12 @@ export const StartMultiTokenTxScreen = () => {
       <StatusBar type="dark" />
 
       <KeyboardAvoidingView style={styles.flex}>
-        <ScrollView style={[styles.flex, styles.scroll]} bounces={false} ref={scrollViewRef}>
+        <ScrollView
+          ref={scrollViewRef}
+          style={[styles.flex, styles.scroll]}
+          bounces={false}
+          onScrollBarChange={setIsScrollBarShown}
+        >
           <ShowErrors />
 
           <NotifySupportedNameServers />
@@ -102,7 +109,7 @@ export const StartMultiTokenTxScreen = () => {
           <InputMemo value={memo} onChangeText={handleOnChangeMemo} isValid={!hasMemoError} />
         </ScrollView>
 
-        <Actions>
+        <Actions style={isScrollBarShown && {borderTopWidth: 1, borderTopColor: COLORS.BORDER_GRAY}}>
           <NextButton
             onPress={handleOnNext}
             title={strings.next}
