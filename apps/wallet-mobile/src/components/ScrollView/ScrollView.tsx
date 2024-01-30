@@ -5,7 +5,10 @@ export const ScrollView = ({
   children,
   onScrollBarChange,
   ...props
-}: ScrollViewProps & {onScrollBarChange?: (isScrollBarShown: boolean) => void}) => {
+}: ScrollViewProps & {
+  onScrollBarChange?: (isScrollBarShown: boolean) => void
+  ref?: React.MutableRefObject<RNScrollView | null>
+}) => {
   const [wrapperHeight, setWrapperHeight] = React.useState(0)
 
   return (

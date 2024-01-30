@@ -83,7 +83,12 @@ export const StartMultiTokenTxScreen = () => {
       <StatusBar type="dark" />
 
       <KeyboardAvoidingView style={styles.flex}>
-        <ScrollView style={[styles.flex, styles.scroll]} bounces={false} ref={scrollViewRef} onScrollBarChange={setIsScrollBarShown}>>
+        <ScrollView
+          ref={scrollViewRef}
+          style={[styles.flex, styles.scroll]}
+          bounces={false}
+          onScrollBarChange={setIsScrollBarShown}
+        >
           <ShowErrors />
 
           <NotifySupportedNameServers />
