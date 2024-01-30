@@ -1,5 +1,5 @@
 import React from 'react'
-import {Keyboard, ScrollView} from 'react-native'
+import {Keyboard, Platform, ScrollView} from 'react-native'
 
 export const useFlashAndScroll = () => {
   const scrollViewRef = React.useRef<ScrollView | null>(null)
@@ -9,7 +9,9 @@ export const useFlashAndScroll = () => {
       scrollViewRef.current?.flashScrollIndicators()
     }, 500)
 
-    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+    const event = Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow'
+
+    const showSubscription = Keyboard.addListener(event, () => {
       scrollViewRef.current?.scrollToEnd()
     })
 
