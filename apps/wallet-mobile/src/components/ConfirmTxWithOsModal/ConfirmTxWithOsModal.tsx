@@ -10,13 +10,14 @@ import {YoroiSignedTx, YoroiUnsignedTx} from '../../yoroi-wallets/types'
 type Props = {
   onSuccess?: (signedTx: YoroiSignedTx) => void
   unsignedTx: YoroiUnsignedTx
+  onError?: () => void
 }
 
-export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx}: Props) => {
+export const ConfirmTxWithOsModal = ({onSuccess, unsignedTx, onError}: Props) => {
   const wallet = useSelectedWallet()
 
   const {signTx, error: signError} = useSignTx({wallet})
-  const {submitTx, error: submitError} = useSubmitTx({wallet})
+  const {submitTx, error: submitError} = useSubmitTx({wallet}, {onError})
 
   const {authWithOs, error: authWithOsError} = useAuthOsWithEasyConfirmation(
     {id: wallet.id},
