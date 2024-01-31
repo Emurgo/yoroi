@@ -14,6 +14,7 @@ import {useSelectedWallet} from '../../../../../SelectedWallet'
 import {useCreateGovernanceTx, useStakingKey} from '../../../../../yoroi-wallets/hooks'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
+import {GovernanceVote} from '../../types'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
@@ -25,16 +26,20 @@ export const ChangeVoteScreen = () => {
   const action = stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) : null
   const {openModal} = useModal()
   const {manager} = useGovernance()
+  const [pendingVote, setPendingVote] = React.useState<GovernanceVote['kind'] | null>(null)
 
-  const {createCertificate: createDelegationCertificate} = useDelegationCertificate({
+  const {createCertificate: createDelegationCertificate, isLoading: isCreatingDelegationCertificate} =
+    useDelegationCertificate({
+      useErrorBoundary: true,
+    })
+
+  const {createCertificate: createVotingCertificate, isLoading: isCreatingVotingCertificate} = useVotingCertificate({
     useErrorBoundary: true,
   })
 
-  const {createCertificate: createVotingCertificate} = useVotingCertificate({
+  const createGovernanceTxMutation = useCreateGovernanceTx(wallet, {
     useErrorBoundary: true,
   })
-
-  const {createUnsignedGovernanceTx} = useCreateGovernanceTx(wallet)
 
   if (!isNonNullable(action)) throw new Error('User has never voted')
 
@@ -52,11 +57,13 @@ export const ChangeVoteScreen = () => {
     openDRepIdModal(async (drepID) => {
       const stakingKey = await wallet.getStakingKey()
       const vote = {kind: 'delegate', drepID} as const
+      setPendingVote(vote.kind)
+
       createDelegationCertificate(
         {drepID, stakingKey},
         {
           onSuccess: async (certificate) => {
-            const unsignedTx = await createUnsignedGovernanceTx([certificate])
+            const unsignedTx = await createGovernanceTxMutation.mutateAsync([certificate])
             navigateTo.confirmTx({unsignedTx, vote})
           },
         },
@@ -67,11 +74,13 @@ export const ChangeVoteScreen = () => {
   const handleAbstain = async () => {
     const stakingKey = await wallet.getStakingKey()
     const vote = {kind: 'abstain'} as const
+    setPendingVote(vote.kind)
+
     createVotingCertificate(
       {vote: 'abstain', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await createUnsignedGovernanceTx([certificate])
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync([certificate])
           navigateTo.confirmTx({unsignedTx, vote})
         },
       },
@@ -81,11 +90,13 @@ export const ChangeVoteScreen = () => {
   const handleNoConfidence = async () => {
     const stakingKey = await wallet.getStakingKey()
     const vote = {kind: 'no-confidence'} as const
+    setPendingVote(vote.kind)
+
     createVotingCertificate(
       {vote: 'no-confidence', stakingKey},
       {
         onSuccess: async (certificate) => {
-          const unsignedTx = await createUnsignedGovernanceTx([certificate])
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync([certificate])
           navigateTo.confirmTx({unsignedTx, vote})
         },
       },
@@ -93,6 +104,8 @@ export const ChangeVoteScreen = () => {
   }
 
   const voteKind = action.kind
+  const isCreatingTx =
+    createGovernanceTxMutation.isLoading || isCreatingVotingCertificate || isCreatingDelegationCertificate
 
   return (
     <View style={styles.root}>
@@ -108,6 +121,7 @@ export const ChangeVoteScreen = () => {
             title={strings.actionDelegateToADRepTitle}
             description={strings.actionDelegateToADRepDescription}
             onPress={handleDelegate}
+            pending={isCreatingTx && pendingVote === 'delegate'}
           />
         )}
 
@@ -116,6 +130,7 @@ export const ChangeVoteScreen = () => {
             title={strings.changeDRep}
             description={strings.actionDelegateToADRepDescription}
             onPress={handleDelegate}
+            pending={isCreatingTx && pendingVote === 'delegate'}
           />
         )}
 
@@ -124,6 +139,7 @@ export const ChangeVoteScreen = () => {
             title={strings.actionAbstainTitle}
             description={strings.actionAbstainDescription}
             onPress={handleAbstain}
+            pending={isCreatingTx && pendingVote === 'abstain'}
           />
         )}
 
@@ -132,6 +148,7 @@ export const ChangeVoteScreen = () => {
             title={strings.actionNoConfidenceTitle}
             description={strings.actionNoConfidenceDescription}
             onPress={handleNoConfidence}
+            pending={isCreatingTx && pendingVote === 'no-confidence'}
           />
         )}
       </View>

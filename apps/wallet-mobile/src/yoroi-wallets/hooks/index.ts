@@ -1092,11 +1092,14 @@ export const useNativeAssetInvalidation = ({networkId, policy, name}: NativeAsse
   }
 }
 
-export const useCreateGovernanceTx = (wallet: YoroiWallet) => {
+export const useCreateGovernanceTx = (
+  wallet: YoroiWallet,
+  options?: UseMutationOptions<YoroiUnsignedTx, Error, Certificate[]>,
+) => {
   const mutationFn = (certificates: Certificate[]) => {
     return wallet.createUnsignedGovernanceTx(certificates)
   }
 
-  const mutation = useMutation({mutationFn, useErrorBoundary: true, retry: false})
-  return {...mutation, createUnsignedGovernanceTx: mutation.mutateAsync}
+  const mutation = useMutation({mutationFn, retry: false, ...options})
+  return {...mutation, createUnsignedGovernanceTx: mutation.mutate}
 }
