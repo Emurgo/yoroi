@@ -17,10 +17,15 @@ import {useStakingInfo} from '../../../../../Dashboard/StakePoolInfos'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {useStakingKey, useTransactionInfos, useWalletEvent} from '../../../../../yoroi-wallets/hooks'
+import {
+  useCreateGovernanceTx,
+  useStakingKey,
+  useTransactionInfos,
+  useWalletEvent,
+} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
-import {mapStakingKeyStateToGovernanceAction, useCreateGovernanceTx} from '../../common/helpers'
+import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {Routes} from '../../common/navigation'
 import {GovernanceImage} from '../../illustrations'
 import {GovernanceVote} from '../../types'

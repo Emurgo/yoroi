@@ -1,8 +1,6 @@
-import {Certificate} from '@emurgo/cross-csl-core'
 import {useStorage} from '@yoroi/common'
 import {type StakingKeyState, governanceApiMaker, governanceManagerMaker, useStakingKeyState} from '@yoroi/staking'
 import * as React from 'react'
-import {useMutation} from 'react-query'
 
 import {CONFIG} from '../../../../legacy/config'
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -20,15 +18,6 @@ export const useIsParticipatingInGovernance = (wallet: YoroiWallet) => {
     retry: false,
   })
   return stakingStatus ? mapStakingKeyStateToGovernanceAction(stakingStatus) !== null : false
-}
-
-export const useCreateGovernanceTx = (wallet: YoroiWallet) => {
-  const mutationFn = (certificates: Certificate[]) => {
-    return wallet.createUnsignedGovernanceTx(certificates)
-  }
-
-  const mutation = useMutation({mutationFn, useErrorBoundary: true, retry: false})
-  return {...mutation, createUnsignedGovernanceTx: mutation.mutateAsync}
 }
 
 export const mapStakingKeyStateToGovernanceAction = (state: StakingKeyState): GovernanceVote | null => {

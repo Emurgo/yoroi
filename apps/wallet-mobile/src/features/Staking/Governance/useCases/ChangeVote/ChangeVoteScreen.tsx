@@ -11,9 +11,9 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer, useModal} from '../../../../../components'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {useStakingKey} from '../../../../../yoroi-wallets/hooks'
+import {useCreateGovernanceTx, useStakingKey} from '../../../../../yoroi-wallets/hooks'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
-import {mapStakingKeyStateToGovernanceAction, useCreateGovernanceTx} from '../../common/helpers'
+import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
 import {EnterDrepIdModal} from '../EnterDrepIdModal'
 
 export const ChangeVoteScreen = () => {
