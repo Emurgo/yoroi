@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   },
   inputWrapperStyle: {
     minHeight: 80,
+    fontSize: 16,
   },
   inputStyle: {
     minHeight: 70,
