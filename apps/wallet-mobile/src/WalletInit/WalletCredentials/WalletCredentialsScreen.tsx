@@ -22,7 +22,7 @@ export const WalletCredentialsScreen = () => {
   const intl = useIntl()
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
     onSuccess: () => {
-      track.createWalletDetailsSettled()
+      track.restoreWalletDetailsSettled()
       resetToWalletSelection()
     },
     onError: (error) => {

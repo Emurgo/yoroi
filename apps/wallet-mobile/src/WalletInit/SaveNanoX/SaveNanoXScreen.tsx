@@ -22,7 +22,7 @@ export const SaveNanoXScreen = () => {
 
   const {createWallet, isLoading} = useCreateBip44Wallet({
     onSuccess: () => {
-      track.createWalletDetailsSettled()
+      track.restoreWalletDetailsSettled()
       resetToWalletSelection()
     },
     onError: (error) => {
