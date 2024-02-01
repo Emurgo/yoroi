@@ -108,8 +108,8 @@ android {
         applicationId "com.emurgo"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 607
-        versionName "4.24.0"
+        versionCode 619
+        versionName "4.25.0"
         testBuildType System.getProperty('testBuildType', 'debug')
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
