@@ -54,7 +54,14 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         errorText={error?.message}
         label={strings.drepID}
         focusable
-        style={{height: 80, fontSize: 16}}
+        style={{height: 80}}
+        renderComponentStyle={{
+          height: 70,
+          paddingTop: 16,
+          paddingRight: 16,
+          paddingBottom: 16,
+          paddingLeft: 16,
+        }}
       />
 
       <Spacer fill />
