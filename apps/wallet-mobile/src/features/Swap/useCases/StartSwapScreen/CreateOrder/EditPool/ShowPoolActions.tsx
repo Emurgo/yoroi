@@ -205,7 +205,7 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
     },
     {
       label: strings.swapMinReceivedTitle,
-      value: <Text style={styles.text}>{minReceivedFormatted}</Text>,
+      value: minReceivedFormatted,
       info: strings.swapMinReceived,
     },
     {
