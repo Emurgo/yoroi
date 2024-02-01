@@ -91,6 +91,9 @@ const mockAmpli = {
   governanceConfirmTransactionPageViewed: jest.fn(),
   governanceDashboardPageViewed: jest.fn(),
   governanceTransactionSuccessPageViewed: jest.fn(),
+
+  createWalletDetailsSettled: jest.fn(),
+  restoreWalletDetailsSettled: jest.fn(),
 } as unknown as Ampli
 
 const mockMetricsStorage = {
