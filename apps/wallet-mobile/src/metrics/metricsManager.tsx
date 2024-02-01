@@ -144,6 +144,9 @@ export const makeMetricsManager = (
     governanceConfirmTransactionPageViewed: metricsModule.governanceConfirmTransactionPageViewed.bind(metricsModule),
     governanceDashboardPageViewed: metricsModule.governanceDashboardPageViewed.bind(metricsModule),
     governanceTransactionSuccessPageViewed: metricsModule.governanceTransactionSuccessPageViewed.bind(metricsModule),
+
+    createWalletDetailsSettled: metricsModule.createWalletDetailsSettled.bind(metricsModule),
+    restoreWalletDetailsSettled: metricsModule.restoreWalletDetailsSettled.bind(metricsModule),
   } as const
 
   return {

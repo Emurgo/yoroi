@@ -7,6 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Spacer, StatusBar, Text} from '../../components'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
+import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
@@ -17,6 +18,7 @@ export const MnemonicCheckScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-check'>>()
   const {mnemonic, password, name, networkId, walletImplementationId} = route.params
+  const {track} = useMetrics()
 
   const mnemonicEntries: Array<Entry> = mnemonic
     .split(' ')
@@ -32,7 +34,10 @@ export const MnemonicCheckScreen = () => {
 
   const intl = useIntl()
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
-    onSuccess: () => resetToWalletSelection(),
+    onSuccess: () => {
+      track.createWalletDetailsSettled()
+      resetToWalletSelection()
+    },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof NetworkError

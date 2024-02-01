@@ -192,6 +192,9 @@ describe('makeMetricsManager', () => {
     metricsManager.track.governanceTransactionSuccessPageViewed({governance_selection: 'Abstain'})
     metricsManager.track.governanceTransactionSuccessPageViewed({governance_selection: 'No Confidence'})
 
+    metricsManager.track.createWalletDetailsSettled()
+    metricsManager.track.restoreWalletDetailsSettled()
+
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
     expect(mockAmpli.nftGallerySearchActivated).toHaveBeenCalledWith({nft_search_term: 'test', nft_count: 10})
@@ -250,6 +253,9 @@ describe('makeMetricsManager', () => {
     expect(mockAmpli.governanceTransactionSuccessPageViewed).toHaveBeenCalledWith({
       governance_selection: 'No Confidence',
     })
+
+    expect(mockAmpli.createWalletDetailsSettled).toHaveBeenCalled()
+    expect(mockAmpli.restoreWalletDetailsSettled).toHaveBeenCalled()
   })
 
   test('enable should set metrics enabled to true', async () => {

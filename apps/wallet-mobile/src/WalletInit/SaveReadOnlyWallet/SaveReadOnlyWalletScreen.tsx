@@ -7,6 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
+import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
@@ -21,6 +22,7 @@ export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
+  const {track} = useMetrics()
   const route = useRoute<RouteProp<WalletInitRoutes, 'save-read-only'>>()
 
   const {publicKeyHex, path, networkId, walletImplementationId} = route.params
@@ -33,7 +35,10 @@ export const SaveReadOnlyWalletScreen = () => {
   })
 
   const {createWallet, isLoading} = useCreateBip44Wallet({
-    onSuccess: () => resetToWalletSelection(),
+    onSuccess: () => {
+      track.createWalletDetailsSettled()
+      resetToWalletSelection()
+    },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof NetworkError
