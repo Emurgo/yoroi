@@ -53,15 +53,10 @@ export const EnterDrepIdModal = ({onSubmit}: Props) => {
         errorDelay={1000}
         errorText={error?.message}
         label={strings.drepID}
+        numberOfLines={2}
         focusable
-        style={{height: 80}}
-        renderComponentStyle={{
-          height: 70,
-          paddingTop: 16,
-          paddingRight: 16,
-          paddingBottom: 16,
-          paddingLeft: 16,
-        }}
+        style={styles.inputWrapperStyle}
+        renderComponentStyle={styles.inputStyle}
       />
 
       <Spacer fill />
@@ -93,5 +88,16 @@ const styles = StyleSheet.create({
   link: {
     color: COLORS.BLUE_LIGHTER,
     textDecorationLine: 'underline',
+  },
+  inputWrapperStyle: {
+    minHeight: 80,
+  },
+  inputStyle: {
+    minHeight: 70,
+    paddingTop: 16,
+    paddingRight: 16,
+    paddingBottom: 16,
+    paddingLeft: 16,
+    // padding: 16, does not have effect
   },
 })
