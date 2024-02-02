@@ -17,6 +17,8 @@ export const WarnPriceImpact = ({onContinue, priceImpactRisk}: Props) => {
   const {closeModal} = useModal()
   const styles = useStyles()
 
+  if (priceImpactRisk === 'none') return null
+
   return (
     <View style={styles.container}>
       <View>
@@ -27,7 +29,7 @@ export const WarnPriceImpact = ({onContinue, priceImpactRisk}: Props) => {
             })}
           </Text>
 
-          <Text> {strings.priceimpactDescription}</Text>
+          <Text> {strings.priceImpactDescription(priceImpactRisk)}</Text>
         </Text>
       </View>
 
@@ -75,6 +77,7 @@ const useStyles = () => {
     },
     bold: {
       fontWeight: '500',
+      fontFamily: 'Rubik-Medium',
     },
   })
   return styles

@@ -16,7 +16,7 @@ export type Routes = {
     registerStakingKey?: boolean
     navigateToStakingOnSuccess?: boolean
   }
-  'staking-gov-tx-success'?: {navigateToStaking?: boolean}
+  'staking-gov-tx-success'?: {navigateToStaking?: boolean; kind: GovernanceVote['kind']}
   'staking-gov-tx-failed': undefined
 }
 

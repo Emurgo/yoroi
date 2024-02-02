@@ -6,6 +6,7 @@ import {InteractionManager} from 'react-native'
 import image from '../../assets/img/ledger_2.png'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
+import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {useCreateBip44Wallet} from '../../yoroi-wallets/hooks'
@@ -16,10 +17,12 @@ export const SaveNanoXScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const route = useRoute<RouteProp<WalletInitRoutes, 'save-nano-x'>>()
   const {networkId, walletImplementationId, hwDeviceInfo} = route.params
-
   const intl = useIntl()
+  const {track} = useMetrics()
+
   const {createWallet, isLoading} = useCreateBip44Wallet({
     onSuccess: () => {
+      track.restoreWalletDetailsSettled()
       resetToWalletSelection()
     },
     onError: (error) => {

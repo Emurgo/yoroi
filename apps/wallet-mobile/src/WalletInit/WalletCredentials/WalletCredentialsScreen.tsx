@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
+import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
@@ -14,12 +15,16 @@ import {WalletForm} from '../WalletForm'
 
 export const WalletCredentialsScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
+  const {track} = useMetrics()
   const route = useRoute<RouteProp<WalletInitRoutes, 'wallet-credentials'>>()
   const {phrase, networkId, walletImplementationId} = route.params
 
   const intl = useIntl()
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
-    onSuccess: () => resetToWalletSelection(),
+    onSuccess: () => {
+      track.restoreWalletDetailsSettled()
+      resetToWalletSelection()
+    },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof NetworkError

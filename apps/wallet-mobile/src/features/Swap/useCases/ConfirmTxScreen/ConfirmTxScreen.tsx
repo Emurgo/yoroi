@@ -166,7 +166,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
-    paddingTop: 16,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {Certificate} from '@emurgo/cross-csl-core'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
 import {parseBoolean, useMutationWithInvalidations, useStorage} from '@yoroi/common'
@@ -1089,4 +1090,16 @@ export const useNativeAssetInvalidation = ({networkId, policy, name}: NativeAsse
     ...mutation,
     invalidate: mutation.mutate,
   }
+}
+
+export const useCreateGovernanceTx = (
+  wallet: YoroiWallet,
+  options?: UseMutationOptions<YoroiUnsignedTx, Error, Certificate[]>,
+) => {
+  const mutationFn = (certificates: Certificate[]) => {
+    return wallet.createUnsignedGovernanceTx(certificates)
+  }
+
+  const mutation = useMutation({mutationFn, retry: false, ...options})
+  return {...mutation, createUnsignedGovernanceTx: mutation.mutate}
 }

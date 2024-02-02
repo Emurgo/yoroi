@@ -83,8 +83,17 @@ const mockAmpli = {
 
   walletPageExchangeClicked: jest.fn(),
   walletPageBuyBannerClicked: jest.fn(),
+
   exchangePageViewed: jest.fn(),
   exchangeSubmitted: jest.fn(),
+
+  governanceChooseDrepPageViewed: jest.fn(),
+  governanceConfirmTransactionPageViewed: jest.fn(),
+  governanceDashboardPageViewed: jest.fn(),
+  governanceTransactionSuccessPageViewed: jest.fn(),
+
+  createWalletDetailsSettled: jest.fn(),
+  restoreWalletDetailsSettled: jest.fn(),
 } as unknown as Ampli
 
 const mockMetricsStorage = {
@@ -173,8 +182,21 @@ describe('makeMetricsManager', () => {
 
     metricsManager.track.walletPageExchangeClicked()
     metricsManager.track.walletPageBuyBannerClicked()
+
     metricsManager.track.exchangePageViewed()
     metricsManager.track.exchangeSubmitted({ramp_type: 'Buy', ada_amount: 222})
+
+    metricsManager.track.governanceChooseDrepPageViewed()
+    metricsManager.track.governanceConfirmTransactionPageViewed({governance_selection: 'Delegate'})
+    metricsManager.track.governanceConfirmTransactionPageViewed({governance_selection: 'Abstain'})
+    metricsManager.track.governanceConfirmTransactionPageViewed({governance_selection: 'No Confidence'})
+    metricsManager.track.governanceDashboardPageViewed()
+    metricsManager.track.governanceTransactionSuccessPageViewed({governance_selection: 'Delegate'})
+    metricsManager.track.governanceTransactionSuccessPageViewed({governance_selection: 'Abstain'})
+    metricsManager.track.governanceTransactionSuccessPageViewed({governance_selection: 'No Confidence'})
+
+    metricsManager.track.createWalletDetailsSettled()
+    metricsManager.track.restoreWalletDetailsSettled()
 
     expect(mockAmpli.nftGalleryDetailsTab).toHaveBeenCalledWith({nft_tab: 'Metadata'})
     expect(mockAmpli.nftGalleryPageViewed).toHaveBeenCalledWith({nft_count: 10})
@@ -218,8 +240,25 @@ describe('makeMetricsManager', () => {
 
     expect(mockAmpli.walletPageExchangeClicked).toHaveBeenCalled()
     expect(mockAmpli.walletPageBuyBannerClicked).toHaveBeenCalled()
+
     expect(mockAmpli.exchangePageViewed).toHaveBeenCalled()
     expect(mockAmpli.exchangeSubmitted).toHaveBeenCalledWith({ramp_type: 'Buy', ada_amount: 222})
+
+    expect(mockAmpli.governanceChooseDrepPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.governanceConfirmTransactionPageViewed).toHaveBeenCalledWith({governance_selection: 'Delegate'})
+    expect(mockAmpli.governanceConfirmTransactionPageViewed).toHaveBeenCalledWith({governance_selection: 'Abstain'})
+    expect(mockAmpli.governanceConfirmTransactionPageViewed).toHaveBeenCalledWith({
+      governance_selection: 'No Confidence',
+    })
+    expect(mockAmpli.governanceDashboardPageViewed).toHaveBeenCalled()
+    expect(mockAmpli.governanceTransactionSuccessPageViewed).toHaveBeenCalledWith({governance_selection: 'Delegate'})
+    expect(mockAmpli.governanceTransactionSuccessPageViewed).toHaveBeenCalledWith({governance_selection: 'Abstain'})
+    expect(mockAmpli.governanceTransactionSuccessPageViewed).toHaveBeenCalledWith({
+      governance_selection: 'No Confidence',
+    })
+
+    expect(mockAmpli.createWalletDetailsSettled).toHaveBeenCalled()
+    expect(mockAmpli.restoreWalletDetailsSettled).toHaveBeenCalled()
   })
 
   test('enable should set metrics enabled to true', async () => {
