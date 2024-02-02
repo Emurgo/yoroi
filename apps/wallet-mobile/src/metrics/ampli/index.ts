@@ -667,6 +667,10 @@ export class AssetsPageViewed implements BaseEvent {
   event_type = 'Assets Page Viewed'
 }
 
+export class CreateWalletDetailsSettled implements BaseEvent {
+  event_type = 'Create Wallet Details Settled'
+}
+
 export class ExchangePageViewed implements BaseEvent {
   event_type = 'Exchange Page Viewed'
 }
@@ -741,6 +745,10 @@ export class NftGallerySearchActivated implements BaseEvent {
 
 export class ReceivePageViewed implements BaseEvent {
   event_type = 'Receive Page Viewed'
+}
+
+export class RestoreWalletDetailsSettled implements BaseEvent {
+  event_type = 'Restore Wallet Details Settled'
 }
 
 export class SendInitiated implements BaseEvent {
@@ -1022,6 +1030,21 @@ export class Ampli {
   }
 
   /**
+   * Create Wallet Details Settled
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Details%20Settled)
+   *
+   * When the wallet is created correctly. This event signifies the completion of the process of setting up wallet details during the creation of a new wallet
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletDetailsSettled(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletDetailsSettled(), options);
+  }
+
+  /**
    * Exchange Page Viewed
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Exchange%20Page%20Viewed)
@@ -1227,6 +1250,21 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new ReceivePageViewed(), options);
+  }
+
+  /**
+   * Restore Wallet Details Settled
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Restore%20Wallet%20Details%20Settled)
+   *
+   * This event captures the details of a wallet restoration process that has been successfully completed
+   *
+   * @param options Amplitude event options.
+   */
+  restoreWalletDetailsSettled(
+    options?: EventOptions,
+  ) {
+    return this.track(new RestoreWalletDetailsSettled(), options);
   }
 
   /**
