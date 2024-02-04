@@ -1,3 +1,4 @@
+import { useTheme } from '@yoroi/theme'
 import React from 'react'
 import { Image, StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle } from 'react-native'
 import Animated, { FadeInDown, FadeOutDown, Layout } from 'react-native-reanimated'
@@ -39,6 +40,8 @@ export const Button = (props: ButtonProps) => {
     ...rest
   } = props
 
+  const {styles} = useStyles()
+
   return (
     <TouchableOpacity onPress={onPress} style={[block && styles.block, containerStyle]} activeOpacity={0.5} {...rest}>
       {isCopying && (
@@ -79,84 +82,91 @@ export const Button = (props: ButtonProps) => {
 }
 
 const buttonOutline = {
-  borderWidth: 1,
+  borderWidth: 2,
   borderColor: '#fff',
   backgroundColor: 'transparent',
 }
 
-const styles = StyleSheet.create({
-  block: {
-    flex: 1,
-  },
-  button: {
-    backgroundColor: colors.buttonBackground,
-    minHeight: 48,
-    maxHeight: 54,
-    borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonTransparent: {
-    backgroundColor: 'transparent',
-  },
-  buttonOutline: {
-    ...buttonOutline,
-  },
-  buttonOutlineOnLight: {
-    ...buttonOutline,
-    borderColor: colors.buttonBackground,
-  },
-  buttonOutlineShelley: {
-    ...buttonOutline,
-    borderColor: colors.buttonBackgroundBlue,
-  },
-  text: {
-    color: 'white',
-    textAlign: 'center',
-    padding: 8,
-    fontSize: 14,
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-    textTransform: 'uppercase',
-  },
-  textOutlineOnLight: {
-    color: colors.buttonBackground,
-  },
-  textOutlineShelley: {
-    color: colors.buttonBackgroundBlue,
-  },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-  shelleyTheme: {
-    backgroundColor: colors.buttonBackgroundBlue,
-  },
-  shelleyOutlineOnLight: {
-    backgroundColor: 'transparent',
-    borderColor: colors.buttonBackgroundBlue,
-    borderWidth: 2,
-  },
-  textShelleyOutlineOnLight: {
-    color: colors.buttonBackgroundBlue,
-    fontWeight: '600',
-  },
-  isCopying: {
-    position: 'absolute',
-    backgroundColor: '#000',
-    alignItems: 'center',
-    justifyContent: 'center',
-    top: -20,
-    alignSelf: 'center',
-    borderRadius: 4,
-    zIndex: 10
-  },
-  textCopy: {
-    color: 'white',
-    textAlign: 'center',
-    padding: 8,
-    fontSize: 14,
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-  },
-})
+const useStyles = () => {
+
+  const theme = useTheme()
+
+  const styles = StyleSheet.create({
+    block: {
+      flex: 1,
+    },
+    button: {
+      backgroundColor: colors.buttonBackground,
+      minHeight: 48,
+      maxHeight: 54,
+      borderRadius: 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    buttonTransparent: {
+      backgroundColor: 'transparent',
+    },
+    buttonOutline: {
+      ...buttonOutline,
+    },
+    buttonOutlineOnLight: {
+      ...buttonOutline,
+      borderColor: colors.buttonBackground,
+    },
+    buttonOutlineShelley: {
+      ...buttonOutline,
+      borderColor: colors.buttonBackgroundBlue,
+    },
+    text: {
+      color: 'white',
+      textAlign: 'center',
+      padding: 8,
+      fontSize: 14,
+      fontWeight: '500',
+      fontFamily: 'Rubik-Medium',
+      textTransform: 'uppercase',
+    },
+    textOutlineOnLight: {
+      color: colors.buttonBackground,
+    },
+    textOutlineShelley: {
+      color: colors.buttonBackgroundBlue,
+    },
+    buttonDisabled: {
+      opacity: 0.5,
+    },
+    shelleyTheme: {
+      backgroundColor: colors.buttonBackgroundBlue,
+    },
+    shelleyOutlineOnLight: {
+      backgroundColor: 'transparent',
+      borderColor: colors.buttonBackgroundBlue,
+      borderWidth: 2,
+    },
+    textShelleyOutlineOnLight: {
+      color: colors.buttonBackgroundBlue,
+      fontWeight: '600',
+    },
+    isCopying: {
+      position: 'absolute',
+      backgroundColor: '#000',
+      alignItems: 'center',
+      justifyContent: 'center',
+      top: -20,
+      alignSelf: 'center',
+      borderRadius: 4,
+      zIndex: 10
+    },
+    textCopy: {
+      color: theme.theme.color['white-static'],
+      textAlign: 'center',
+      padding: 8,
+      fontSize: 14,
+      fontWeight: '500',
+      fontFamily: 'Rubik-Medium',
+    },
+  })
+
+  return { styles } as const
+}

@@ -1,10 +1,11 @@
-import React, { useRef } from 'react'
-import { Image, StyleSheet, View } from 'react-native'
+import React from 'react'
+import { StyleSheet, useWindowDimensions,View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
 
 import { Text } from '../../../../components'
 import { COLORS } from '../../../../theme'
+import { YoroiLogoIllustration } from '../../illustrations/YoroiLogo'
 
 type ShareProps = {
     address?: string
@@ -20,7 +21,10 @@ type AddressDetailsProps = {
 }
 
 export function CaptureShareQRCodeCard({ address }: ShareProps) {
-    const LogoRef = useRef();
+    const logoWidth = 35
+    const logoHeight = 37
+
+    const {styles} = useStyles()
 
     return (
         <View
@@ -33,7 +37,7 @@ export function CaptureShareQRCodeCard({ address }: ShareProps) {
                 colors={['#E4E8F7', '#C6F7F7']}
             />
 
-            <Image ref={LogoRef.current} source={require('../../../../assets/img/yoroi-logo-text.png')} style={{ height: 40, width: 40 }} />
+            <YoroiLogoIllustration height={logoHeight} width={logoWidth} />
 
             <View style={styles.addressContainer}>
                 <View style={styles.qrCode}>
@@ -46,26 +50,39 @@ export function CaptureShareQRCodeCard({ address }: ShareProps) {
     )
 }
 
-const styles = StyleSheet.create({
-    qrCode: {
-        backgroundColor: COLORS.BACKGROUND,
-        padding: 10,
-        borderRadius: 8,
-        marginBottom: 16
-    },
-    addressContainer: {
-        alignItems: 'center'
-    },
-    touchableCard: {
-        height: '100%',
-        justifyContent: 'center',
-        gap: 32,
-        alignItems: 'center',
-        marginHorizontal: 16
-    },
-    textAddress: {
-        textAlign: 'center',
-        fontWeight: '500',
-        maxWidth: 300
-    },
-})
+const useStyles = () => {
+
+    const SCREEN_WIDTH = useWindowDimensions().width
+
+    const styles = StyleSheet.create({
+        qrCode: {
+            backgroundColor: COLORS.BACKGROUND,
+            padding: 10,
+            borderRadius: 8,
+            marginBottom: 16
+        },
+        addressContainer: {
+            alignItems: 'center'
+        },
+        touchableCard: {
+            borderRadius: 10,
+            width: SCREEN_WIDTH - 34,
+            alignItems: 'center',
+            maxHeight: 458,
+            height: '100%',
+            minHeight: 394,
+            alignSelf: 'center',
+            overflow: 'hidden',
+            paddingVertical: 15,
+            gap: 32,
+            justifyContent: 'center'
+        },
+        textAddress: {
+            textAlign: 'center',
+            fontWeight: '500',
+            maxWidth: 300
+        },
+    })
+
+    return {styles} as const
+}

@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, View, ViewProps } from 'react-native'
 
 import { Button, Spacer, StatusBar } from '../../../components'
 import { useCopy } from '../../../legacy/useCopy'
@@ -49,7 +49,7 @@ export const ReceiveScreen = () => {
             <StatusBar type="dark" />
 
             <Content>
-                <ScrollView style={{ flex: 1 }}>
+                <ScrollView style={styles.root}>
                     <View style={styles.address}>
                         {currentAddress !== null ? (
                             <AddressDetailCard
@@ -101,7 +101,7 @@ export const ReceiveScreen = () => {
     )
 }
 
-const Content = (props) => <View {...props} style={styles.content} />
+const Content = (props: JSX.IntrinsicAttributes & JSX.IntrinsicClassAttributes<View> & Readonly<ViewProps>) => <View {...props} style={styles.content} />
 
 const styles = StyleSheet.create({
     root: {

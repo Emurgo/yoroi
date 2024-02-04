@@ -1,9 +1,8 @@
+import { useTheme } from '@yoroi/theme';
 import React, { useState } from 'react'
 import { Dimensions, FlatList, StyleSheet, View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 
 import { useCopy } from '../../../../legacy/useCopy';
-import { COLORS, colors } from '../../../../theme';
 import { ShareDetailsCard } from '../ShareDetailsCard/ShareDetailsCard';
 import { ShareQRCodeCard } from '../ShareQRCodeCard/ShareQRCodeCard';
 
@@ -26,6 +25,9 @@ export function AddressDetailCard({ address, title, addressDetails }: ShareProps
 
     const [isCopying, copy] = useCopy()
 
+    const { theme } = useTheme()
+    const { styles } = useStyles()
+
     const SCREEN_WIDTH = Dimensions.get('window').width;
     const itemsPerPage = 1;
 
@@ -36,13 +38,13 @@ export function AddressDetailCard({ address, title, addressDetails }: ShareProps
     const totalPages = Math.ceil(data.length / itemsPerPage);
     const circleIndex = Array.from({ length: totalPages }, (_, index) => index + 1);
 
-    const onPageChange = (event) => {
+    const onPageChange = (event: { nativeEvent: { contentOffset: { x: any; }; }; }) => {
         const offset = event.nativeEvent.contentOffset.x;
         const index = Math.floor(offset / (itemsPerPage * SCREEN_WIDTH - 64));
         setScrollPosition(index);
     };
 
-    const renderItem = ({ item }) => {
+    const renderItem = ({ item }: any) => {
         switch (item.cardType) {
             case 'QRCode':
                 return <ShareQRCodeCard
@@ -68,43 +70,35 @@ export function AddressDetailCard({ address, title, addressDetails }: ShareProps
         }
     };
 
-
     return (
         <>
             <View style={styles.container}>
-                <LinearGradient
-                    style={[StyleSheet.absoluteFill, { opacity: 1 }]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 0, y: 1 }}
-                    colors={['#E4E8F7', '#C6F7F7']}
-                />
-
                 <FlatList
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     data={data}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={(_, index) => index.toString()}
                     pagingEnabled
                     onScroll={onPageChange}
                     snapToInterval={itemsPerPage * SCREEN_WIDTH}
                     decelerationRate="fast"
                     renderItem={renderItem}
+                    contentContainerStyle={styles.contentContainer}
                 />
             </View>
 
             {
                 isSecondPage && (
-                    <View style={{ flexDirection: 'row', gap: 6, marginTop: 12 }}>
+                    <View style={styles.index}>
                         {
                             circleIndex.map((index) => (
                                 <View
                                     key={index + 'indexCard'}
-                                    style={{
-                                        width: 12,
-                                        height: 12,
-                                        borderRadius: 100,
-                                        backgroundColor: (index - 1) === scrollPosition ? colors.buttonBackgroundBlue : COLORS.GRAY,
-                                    }}
+                                    style={([styles.circle, {
+                                        backgroundColor: (index - 1) === scrollPosition ?
+                                            theme.color.primary[600] :
+                                            theme.color.gray[400]
+                                    }])}
                                 />
                             ))
                         }
@@ -115,16 +109,31 @@ export function AddressDetailCard({ address, title, addressDetails }: ShareProps
     )
 }
 
-const styles = StyleSheet.create({
-    container: {
-        borderRadius: 10,
-        width: '100%',
-        alignItems: 'center',
-        maxHeight: 458,
-        height: '100%',
-        minHeight: 394,
-        alignSelf: 'center',
-        overflow: 'hidden',
-        paddingVertical: 15
-    }
-})
+const useStyles = () => {
+
+    const styles = StyleSheet.create({
+        container: {
+            borderRadius: 10,
+            width: '100%',
+            alignItems: 'center',
+            maxHeight: 458,
+            height: '100%',
+            minHeight: 394,
+            alignSelf: 'center',
+            overflow: 'hidden',
+            paddingVertical: 15
+        },
+        index: {
+            flexDirection: 'row',
+            gap: 6,
+            marginTop: 12
+        },
+        circle: {
+            width: 12,
+            height: 12,
+            borderRadius: 100,
+        },
+        contentContainer: { gap: 10 }
+    })
+    return { styles }
+}

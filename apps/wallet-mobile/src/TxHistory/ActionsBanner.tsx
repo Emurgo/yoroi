@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import { useSwap } from '@yoroi/swap'
+import { useTheme } from '@yoroi/theme'
 import React, { ReactNode } from 'react'
 import { useIntl } from 'react-intl'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
@@ -14,15 +15,16 @@ import { actionMessages } from '../i18n/global-messages'
 import { useMetrics } from '../metrics/metricsManager'
 import { TxHistoryRouteNavigation } from '../navigation'
 import { useSelectedWallet } from '../SelectedWallet'
-import { COLORS } from '../theme'
 import { useTokenInfo } from '../yoroi-wallets/hooks'
 
-const ACTION_PROPS = {
-  size: 24,
-  color: COLORS.WHITE,
-}
-
 export const ActionsBanner = ({ disabled = false }: { disabled: boolean }) => {
+  const theme = useTheme()
+
+  const ACTION_PROPS = {
+    size: 24,
+    color: theme.theme.color['white-static'],
+  }
+
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
@@ -74,7 +76,7 @@ export const ActionsBanner = ({ disabled = false }: { disabled: boolean }) => {
         <View style={[styles.row, disabled && styles.disabled]}>
           {isCopying && (
             <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-              <Text style={styles.textCopy}>{strings.addressCopiedMsg}</Text>
+              <Text style={[styles.textCopy, { color: theme.theme.color['white-static'] }]}>{strings.addressCopiedMsg}</Text>
             </Animated.View>
           )}
 
@@ -185,7 +187,6 @@ const styles = StyleSheet.create({
     left: -25
   },
   textCopy: {
-    color: 'white',
     textAlign: 'center',
     padding: 8,
     fontSize: 14,

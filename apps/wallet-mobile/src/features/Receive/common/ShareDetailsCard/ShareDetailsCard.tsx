@@ -1,5 +1,6 @@
-import React, {  } from 'react'
-import { StyleSheet, View } from 'react-native'
+import React, { } from 'react'
+import { StyleSheet, useWindowDimensions, View } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient';
 
 import { CopyButton, Text } from '../../../../components';
 import { COLORS } from '../../../../theme';
@@ -15,8 +16,16 @@ type AddressDetailsProps = {
 export function ShareDetailsCard({ address, spendingHash, stakingHash }: AddressDetailsProps) {
     const strings = useStrings();
 
+    const { styles } = useStyles()
+
     return (
         <View style={styles.addressDetails}>
+            <LinearGradient
+                style={[StyleSheet.absoluteFill, { opacity: 1 }]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1 }}
+                colors={['#E4E8F7', '#C6F7F7']}
+            />
 
             <Text style={styles.title}>{strings.walletAddress}</Text>
 
@@ -54,29 +63,41 @@ export function ShareDetailsCard({ address, spendingHash, stakingHash }: Address
     )
 }
 
-const styles = StyleSheet.create({
-    title: {
-        fontSize: 18,
-        fontWeight: '500'
-    },
-    addressDetails: {
-        height: '100%',
-        gap: 32,
-        alignItems: 'center',
-        marginHorizontal: 16,
-        marginTop: 32,
-    },
-    textAddressDetails: {
-        fontWeight: '400',
-        maxWidth: 279
-    },
-    textSection: {
-        gap: 4,
-        maxWidth: 311,
-        width: '100%'
-    },
-    textRow: {
-        flexDirection: 'row',
-        gap: 4
-    }
-})
+const useStyles = () => {
+    const SCREEN_WIDTH = useWindowDimensions().width
+
+    const styles = StyleSheet.create({
+        title: {
+            fontSize: 18,
+            fontWeight: '500'
+        },
+        addressDetails: {
+            borderRadius: 16,
+            width: SCREEN_WIDTH - 34,
+            alignItems: 'center',
+            maxHeight: 458,
+            height: '100%',
+            minHeight: 394,
+            alignSelf: 'center',
+            overflow: 'hidden',
+            paddingVertical: 15,
+            gap: 26,
+            paddingTop: 32,
+        },
+        textAddressDetails: {
+            fontWeight: '400',
+            maxWidth: 279
+        },
+        textSection: {
+            gap: 4,
+            maxWidth: 311,
+            width: '100%'
+        },
+        textRow: {
+            flexDirection: 'row',
+            gap: 4
+        }
+    })
+
+    return { styles } as const
+}
