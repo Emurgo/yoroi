@@ -21,6 +21,14 @@ export const useStrings = () => {
         copyLinkBtn: intl.formatMessage(messages.copyLinkBtn),
         copyLinkMsg: intl.formatMessage(messages.copyLinkMsg),
         addressCopiedMsg: intl.formatMessage(messages.addressCopiedMsg),
+        unusedAddress: intl.formatMessage(messages.unusedAddress),
+        usedAddress: intl.formatMessage(messages.usedAddress),
+        generateButton: intl.formatMessage(messages.generateButton),
+        infoAddressLimit: intl.formatMessage(messages.infoAddressLimit),
+        multiplePresentation: intl.formatMessage(messages.multiplePresentation),
+        multiplePresentationDetails: intl.formatMessage(messages.multiplePresentationDetails),
+        learnAboutYoroi: intl.formatMessage(messages.learnAboutYoroi),
+        ok: intl.formatMessage(messages.ok),
     }
 }
 
@@ -92,5 +100,37 @@ export const messages = defineMessages({
     addressCopiedMsg: {
         id: 'components.receive.receivescreen.addressCopiedMsg',
         defaultMessage: '!!!Address copied',
+    },
+    unusedAddress: {
+        id: 'components.receive.receivescreen.unusedAddress',
+        defaultMessage: '!!!Unused',
+    },
+    usedAddress: {
+        id: 'components.receive.receivescreen.usedAddress',
+        defaultMessage: '!!!Used',
+    },
+    generateButton: {
+        id: 'components.receive.receivescreen.generateButton',
+        defaultMessage: '!!!Generate new address',
+    },
+    infoAddressLimit: {
+        id: 'components.receive.receivescreen.infoAddressLimit',
+        defaultMessage: '!!!You have already reached your 20 addresses limit. If you need to operate with more than 20 addresses, reach out to us via Yoroi Zendesk',
+    },
+    multiplePresentation: {
+        id: 'components.receive.receivescreen.multiplePresentation',
+        defaultMessage: '!!!Meet multiple addresses in Yoroi',
+    },
+    multiplePresentationDetails: {
+        id: 'components.receive.receivescreen.multiplePresentationDetails',
+        defaultMessage: '!!!This is an advanced mode where you can you can generate many addresses for a single wallet.',
+    },
+    learnAboutYoroi: {
+        id: 'components.receive.receivescreen.learnAboutYoroi',
+        defaultMessage: '!!!Learn more about this in Yoroi Zendesk',
+    },
+    ok: {
+        id: 'global.ok',
+        defaultMessage: '!!!OK',
     },
 })

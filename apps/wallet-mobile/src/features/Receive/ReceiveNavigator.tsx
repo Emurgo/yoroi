@@ -8,6 +8,7 @@ import { StatusBar } from '../../components'
 import { defaultStackNavigationOptions, TxHistoryRoutes } from '../../navigation'
 import { useHideBottomTabBar } from '../../yoroi-wallets/hooks'
 import { useStrings } from './common/useStrings'
+import { MultipleReceives } from './useCases/MultipleReceives'
 import { ReceiveScreen } from './useCases/ReceiveScreen'
 import { SpecificAmountScreen } from './useCases/SpecificAmountScreen'
 
@@ -18,7 +19,7 @@ export const ReceiveScreenNavigator = () => {
   const { theme } = useTheme()
   const strings = useStrings()
 
-  const {styles} = useStyles()
+  const { styles } = useStyles()
 
   return (
     <SafeAreaView
@@ -34,10 +35,20 @@ export const ReceiveScreenNavigator = () => {
           detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
           gestureEnabled: true,
         }}
+        initialRouteName='multiple-receives'
       >
+
         <Stack.Screen
           name="receive"
           component={ReceiveScreen}
+          options={{
+            title: strings.receiveTitle,
+          }}
+        />
+
+        <Stack.Screen
+          name="multiple-receives"
+          component={MultipleReceives}
           options={{
             title: strings.receiveTitle,
           }}

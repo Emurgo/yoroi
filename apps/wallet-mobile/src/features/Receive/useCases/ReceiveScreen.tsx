@@ -1,13 +1,13 @@
 import { useFocusEffect } from '@react-navigation/native'
+import { useTheme } from '@yoroi/theme'
 import _ from 'lodash'
 import React from 'react'
-import { ScrollView, StyleSheet, View, ViewProps } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 
 import { Button, Spacer, StatusBar } from '../../../components'
 import { useCopy } from '../../../legacy/useCopy'
 import { useMetrics } from '../../../metrics/metricsManager'
 import { useSelectedWallet } from '../../../SelectedWallet'
-import { COLORS, colors } from '../../../theme'
 import { useHideBottomTabBar, useReceiveAddresses } from '../../../yoroi-wallets/hooks'
 import { AddressDetailCard } from '../common/AddressDetailCard/AddressDetailCard'
 import { mocks as mockReceives } from '../common/mocks'
@@ -19,6 +19,7 @@ import { useStrings } from '../common/useStrings'
 export const ReceiveScreen = () => {
     useHideBottomTabBar()
     const strings = useStrings()
+    const {styles, colors} = useStyles()
     const wallet = useSelectedWallet()
     const receiveAddresses = useReceiveAddresses(wallet)
     const navigate = useNavigateTo()
@@ -48,7 +49,7 @@ export const ReceiveScreen = () => {
         <View style={styles.root}>
             <StatusBar type="dark" />
 
-            <Content>
+            <View style={styles.content}>
                 <ScrollView style={styles.root}>
                     <View style={styles.address}>
                         {currentAddress !== null ? (
@@ -96,25 +97,33 @@ export const ReceiveScreen = () => {
 
                 <Spacer height={6} />
 
-            </Content>
+            </View>
         </View>
     )
 }
 
-const Content = (props: JSX.IntrinsicAttributes & JSX.IntrinsicClassAttributes<View> & Readonly<ViewProps>) => <View {...props} style={styles.content} />
+const useStyles = () => {
+    const {theme} = useTheme()
 
-const styles = StyleSheet.create({
-    root: {
-        flex: 1,
-        backgroundColor: COLORS.WHITE,
-    },
-    content: {
-        padding: 16,
-        flex: 1
-    },
-    address: {
-        alignItems: 'center',
-        minHeight: 180,
-        maxHeight: 458,
-    },
-})
+    const styles = StyleSheet.create({
+        root: {
+            flex: 1,
+            backgroundColor: theme.color['white-static'],
+        },
+        content: {
+            padding: 16,
+            flex: 1
+        },
+        address: {
+            alignItems: 'center',
+            minHeight: 180,
+            maxHeight: 458,
+        },
+    })
+
+    const colors = {
+        buttonBackgroundBlue: theme.color.primary[600]
+    }
+
+    return {styles, colors} as const
+}
