@@ -1,9 +1,9 @@
 import {Balance, Swap} from '@yoroi/types'
-import {OpenSwap} from '@yoroi/openswap'
 
 import {asTokenFingerprint, transformersMaker} from './transformers'
 import {openswapMocks} from '../adapters/openswap-api/openswap.mocks'
 import {apiMocks} from '../adapters/openswap-api/api.mocks'
+import {PriceAddress, TokenAddress} from '../adapters/openswap-api/types'
 
 const primaryTokenId = ''
 const transformers = transformersMaker(primaryTokenId)
@@ -156,14 +156,14 @@ describe('asOpensawpTokenId (TokenAddress)', () => {
     const result = transformers.asOpenswapTokenId(
       '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.425249434b53',
     )
-    expect(result).toEqual<OpenSwap.TokenAddress>({
+    expect(result).toEqual<TokenAddress>({
       policyId: '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f',
       assetName: '425249434b53',
     })
   })
   it('success primary token (empty values)', () => {
     const result = transformers.asOpenswapTokenId('' as any)
-    expect(result).toEqual<OpenSwap.TokenAddress>({
+    expect(result).toEqual<TokenAddress>({
       policyId: '',
       assetName: '',
     })
@@ -175,14 +175,14 @@ describe('asOpensawpPriceTokenAddress (PriceAddress)', () => {
     const result = transformers.asOpenswapPriceTokenAddress(
       '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.425249434b53',
     )
-    expect(result).toEqual<OpenSwap.PriceAddress>({
+    expect(result).toEqual<PriceAddress>({
       policyId: '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f',
       name: '425249434b53',
     })
   })
   it('success primary token (empty values)', () => {
     const result = transformers.asOpenswapPriceTokenAddress('' as any)
-    expect(result).toEqual<OpenSwap.PriceAddress>({
+    expect(result).toEqual<PriceAddress>({
       policyId: '',
       name: '',
     })
