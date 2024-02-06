@@ -40,7 +40,6 @@ export const ApplicationSettingsScreen = () => {
   const {authWithOs} = useAuthWithOs({onSuccess: navigateTo.enableLoginWithPin})
 
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
-
   const displayScreenShareSetting = Platform.OS === 'android' && !isProduction()
   const displayToggleThemeSetting = !isNightly() && !isProduction()
 

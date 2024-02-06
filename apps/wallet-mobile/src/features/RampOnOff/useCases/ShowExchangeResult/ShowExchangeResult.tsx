@@ -80,6 +80,8 @@ export const ShowExchangeResult = ({variant}: {variant?: 'noInfo'}) => {
           <View style={styles.boxProvider}>
             <Image style={styles.banxaLogo} source={banxaLogo} />
 
+            <Spacer width={4} />
+
             <Text style={styles.contentValueText}>{strings.banxa}</Text>
           </View>
         </ContentResult>
@@ -97,7 +99,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.gray.min,
     },
     flex: {
       flex: 1,
@@ -112,19 +114,15 @@ const useStyles = () => {
       height: 228,
     },
     congratsText: {
-      fontSize: 22,
+      ...theme.typography['heading-3-regular'],
       color: theme.color.gray[900],
-      fontFamily: 'Rubik',
-      lineHeight: 30,
       fontWeight: '500',
       textAlign: 'center',
       textAlignVertical: 'center',
     },
     contentValueText: {
-      fontSize: 16,
-      fontFamily: 'Rubik',
-      lineHeight: 24,
-      color: theme.color['black-static'],
+      ...theme.typography['body-1-regular'],
+      color: theme.color.gray.max,
     },
     boxProvider: {
       flexDirection: 'row',

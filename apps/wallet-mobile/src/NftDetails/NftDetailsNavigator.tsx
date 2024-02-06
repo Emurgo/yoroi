@@ -1,4 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
@@ -12,11 +13,12 @@ const Stack = createStackNavigator<NftRoutes>()
 export const NftDetailsNavigator = () => {
   const strings = useStrings()
   const {track} = useMetrics()
+  const {theme} = useTheme()
 
   return (
     <Stack.Navigator
       screenOptions={{
-        ...defaultStackNavigationOptions,
+        ...defaultStackNavigationOptions(theme),
         headerTitleContainerStyle: {alignItems: 'center'},
       }}
       initialRouteName="nft-details"
