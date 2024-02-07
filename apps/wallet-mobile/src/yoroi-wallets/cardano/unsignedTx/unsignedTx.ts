@@ -14,6 +14,7 @@ export const yoroiUnsignedTx = async ({
   addressedUtxos,
   entries,
   primaryTokenId,
+  governance,
 }: {
   unsignedTx: CardanoTypes.UnsignedTx
   networkConfig: CardanoHaskellShelleyNetwork
@@ -21,6 +22,7 @@ export const yoroiUnsignedTx = async ({
   addressedUtxos: CardanoTypes.CardanoAddressedUtxo[]
   entries?: YoroiEntry[]
   primaryTokenId: string
+  governance?: boolean
 }) => {
   const fee = toAmounts(unsignedTx.fee.values)
   const change = await toEntriesFromChange(unsignedTx.change)
@@ -36,7 +38,7 @@ export const yoroiUnsignedTx = async ({
     change,
     staking: {
       withdrawals:
-        unsignedTx.withdrawals.hasValue() && (await unsignedTx.withdrawals.len()) > 0
+        unsignedTx.withdrawals?.hasValue() && (await unsignedTx.withdrawals.len()) > 0
           ? await Staking.toWithdrawals(unsignedTx.withdrawals, primaryTokenId)
           : undefined,
       registrations:
@@ -61,6 +63,7 @@ export const yoroiUnsignedTx = async ({
     },
     metadata: toMetadata(unsignedTx.metadata),
     unsignedTx,
+    governance: governance ?? false,
   }
 
   return yoroiTx
@@ -117,7 +120,7 @@ const Staking = {
     withdrawals: CardanoTypes.UnsignedTx['withdrawals'],
     primaryTokenId: string,
   ): Promise<YoroiEntry[]> => {
-    if (!withdrawals.hasValue()) return [] // no withdrawals
+    if (!withdrawals?.hasValue()) return [] // no withdrawals
 
     const result: YoroiEntry[] = []
     const length = await withdrawals.len()
@@ -125,7 +128,9 @@ const Staking = {
 
     for (let i = 0; i < length; i++) {
       const rewardAddress = await rewardAddresses.get(i)
-      const amount = (await withdrawals.get(rewardAddress).then((x) => x.toStr())) as Balance.Quantity
+      const amount = (await withdrawals
+        .get(rewardAddress)
+        .then((x) => x?.toStr() ?? Quantities.zero)) as Balance.Quantity
       const address = await rewardAddress
         .toAddress()
         .then((address) => address.toBytes())
@@ -231,13 +236,19 @@ export const toDisplayAddress = async (address: string) => {
     isEnterpriseAddressHex(address) ||
     isPointerAddressHex(address)
   ) {
-    return CardanoMobile.Address.fromBytes(Buffer.from(address, 'hex')).then((address) => address.toBech32())
+    return CardanoMobile.Address.fromBytes(Buffer.from(address, 'hex')).then((address) => {
+      if (!address) throw new Error('Invalid address')
+      return address.toBech32(undefined)
+    })
   }
 
   if (isByronAddressHex(address)) {
     return CardanoMobile.Address.fromBytes(Buffer.from(address, 'hex'))
       .then((address) => CardanoMobile.ByronAddress.fromAddress(address))
-      .then((address) => address.toBase58())
+      .then((address) => {
+        if (!address) throw new Error('Invalid Byron address')
+        return address.toBase58()
+      })
   }
 
   return address

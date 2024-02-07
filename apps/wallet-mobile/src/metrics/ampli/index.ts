@@ -64,6 +64,43 @@ export type LoadOptionsWithClientInstance = LoadOptionsBase & {client: {instance
 
 export type LoadOptions = LoadOptionsWithEnvironment | LoadOptionsWithApiKey | LoadOptionsWithClientInstance
 
+export interface ExchangeSubmittedProperties {
+  /**
+   * The amount of ADA that the user will be exchanging.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
+   */
+  ada_amount: number
+  /**
+   * The type of ramp selected on a given transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | Buy, Sell |
+   */
+  ramp_type: 'Buy' | 'Sell'
+}
+
+export interface GovernanceConfirmTransactionPageViewedProperties {
+  /**
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | Delegate, Abstain, No Confidence |
+   */
+  governance_selection: 'Delegate' | 'Abstain' | 'No Confidence'
+}
+
+export interface GovernanceTransactionSuccessPageViewedProperties {
+  /**
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | Delegate, Abstain, No Confidence |
+   */
+  governance_selection: 'Delegate' | 'Abstain' | 'No Confidence'
+}
+
 export interface NftGalleryDetailsTabProperties {
   /**
    * | Rule | Value |
@@ -630,12 +667,40 @@ export class AssetsPageViewed implements BaseEvent {
   event_type = 'Assets Page Viewed'
 }
 
-export class ClaimAdaPageViewed implements BaseEvent {
-  event_type = 'Claim ADA Page Viewed'
+export class ExchangePageViewed implements BaseEvent {
+  event_type = 'Exchange Page Viewed'
 }
 
-export class ConnectorPageViewed implements BaseEvent {
-  event_type = 'Connector Page Viewed'
+export class ExchangeSubmitted implements BaseEvent {
+  event_type = 'Exchange Submitted'
+
+  constructor(public event_properties: ExchangeSubmittedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class GovernanceChooseDrepPageViewed implements BaseEvent {
+  event_type = 'Governance Choose Drep Page Viewed'
+}
+
+export class GovernanceConfirmTransactionPageViewed implements BaseEvent {
+  event_type = 'Governance Confirm Transaction Page Viewed'
+
+  constructor(public event_properties: GovernanceConfirmTransactionPageViewedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class GovernanceDashboardPageViewed implements BaseEvent {
+  event_type = 'Governance Dashboard Page Viewed'
+}
+
+export class GovernanceTransactionSuccessPageViewed implements BaseEvent {
+  event_type = 'Governance Transaction Success Page Viewed'
+
+  constructor(public event_properties: GovernanceTransactionSuccessPageViewedProperties) {
+    this.event_properties = event_properties
+  }
 }
 
 export class MenuPageViewed implements BaseEvent {
@@ -802,6 +867,10 @@ export class VotingPageViewed implements BaseEvent {
   event_type = 'Voting Page Viewed'
 }
 
+export class WalletPageBuyBannerClicked implements BaseEvent {
+  event_type = 'Wallet Page Buy Banner Clicked'
+}
+
 export class WalletPageExchangeBottomSheetClicked implements BaseEvent {
   event_type = 'Wallet Page Exchange Bottom Sheet Clicked'
 }
@@ -941,7 +1010,8 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Assets%20Page%20Viewed)
    *
-   * This event tracks when a user views the Assets page. Note: only available on Yoroi Extension.
+   * This event tracks when a user views the Assets page. 
+   *  On mobile  is available on the wallet page (First item from main menu) in the assets tab.
    *
    * @param options Amplitude event options.
    */
@@ -952,35 +1022,99 @@ export class Ampli {
   }
 
   /**
-   * Claim ADA Page Viewed
+   * Exchange Page Viewed
    *
-   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Claim%20ADA%20Page%20Viewed)
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Exchange%20Page%20Viewed)
    *
-   * This event tracks when a user views the page to claim Claim /Transfer ADA page in ExtensionEvent: Claim ADA Page Viewed
-   *
-   * Description: This event tracks when a user views the page to claim ADA tokens. It provides insights into the number of users who are interested in claiming ADA tokens and can be used to analyze user engagement and conversion rates on the claim page
+   * This event tracks when a user loads the default state of the first step of the fiat on/off ramp on the new Banxa flow. That screen shows input ADA Amount, with the BUY ADA option selected by default.
    *
    * @param options Amplitude event options.
    */
-  claimAdaPageViewed(
+  exchangePageViewed(
     options?: EventOptions,
   ) {
-    return this.track(new ClaimAdaPageViewed(), options);
+    return this.track(new ExchangePageViewed(), options);
   }
 
   /**
-   * Connector Page Viewed
+   * Exchange Submitted
    *
-   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Connector%20Page%20Viewed)
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Exchange%20Submitted)
    *
-   * This event tracks when a user views the dApp Connector page.
+   * This event tracks when a user clicks on "Proceed" in the Exchange page.
+   *
+   * @param properties The event's properties (e.g. ada_amount)
+   * @param options Amplitude event options.
+   */
+  exchangeSubmitted(
+    properties: ExchangeSubmittedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new ExchangeSubmitted(properties), options);
+  }
+
+  /**
+   * Governance Choose Drep Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Governance%20Choose%20Drep%20Page%20Viewed)
+   *
+   * This event tracks when user loads the bottom sheet on mobile or the popup on extension to introduce the Drep ID. To arrive to this page the user has to click on “Delegate to a Drep” section.
    *
    * @param options Amplitude event options.
    */
-  connectorPageViewed(
+  governanceChooseDrepPageViewed(
     options?: EventOptions,
   ) {
-    return this.track(new ConnectorPageViewed(), options);
+    return this.track(new GovernanceChooseDrepPageViewed(), options);
+  }
+
+  /**
+   * Governance Confirm Transaction Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Governance%20Confirm%20Transaction%20Page%20Viewed)
+   *
+   * This event tracks when a user loads the confirm transaction page on the Governance flow. On Extension user would insert the password in that page. On extension user would do it in a bottom sheet afterwards.
+   *
+   * @param properties The event's properties (e.g. governance_selection)
+   * @param options Amplitude event options.
+   */
+  governanceConfirmTransactionPageViewed(
+    properties: GovernanceConfirmTransactionPageViewedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new GovernanceConfirmTransactionPageViewed(properties), options);
+  }
+
+  /**
+   * Governance Dashboard Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Governance%20Dashboard%20Page%20Viewed)
+   *
+   * This event tracks when a user loads the Governance Dashboard Page. The page is reached via the main navigation menu in extension and in the bottom menu icon on Extension.
+   *
+   * @param options Amplitude event options.
+   */
+  governanceDashboardPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new GovernanceDashboardPageViewed(), options);
+  }
+
+  /**
+   * Governance Transaction Success Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Governance%20Transaction%20Success%20Page%20Viewed)
+   *
+   * This event tracks when a user loads the success page at the end of the governance flow.
+   *
+   * @param properties The event's properties (e.g. governance_selection)
+   * @param options Amplitude event options.
+   */
+  governanceTransactionSuccessPageViewed(
+    properties: GovernanceTransactionSuccessPageViewedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new GovernanceTransactionSuccessPageViewed(properties), options);
   }
 
   /**
@@ -988,7 +1122,8 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Menu%20Page%20Viewed)
    *
-   * This event is triggered when a user views the menu page within the application. Only available on Mobile
+   * This event is triggered when a user views the menu page within the application. Only available on Mobile. 
+   *  The menu page is accesible via the bottom navigation page (last item on the right)
    *
    * @param options Amplitude event options.
    */
@@ -1399,7 +1534,7 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Transactions%20Page%20Viewed)
    *
-   * This event tracks when a user views the transactions page within the wallet.
+   * This event tracks when a user views the transactions page within the wallet. On mobile is available on the wallet page (First item from main navigation item) in the transactions tab.
    *
    * @param options Amplitude event options.
    */
@@ -1414,7 +1549,7 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Voting%20Page%20Viewed)
    *
-   * This event tracks when a user views the Voting page.
+   * This event tracks when a user views the Catalyst Voting page.
    *
    * @param options Amplitude event options.
    */
@@ -1425,11 +1560,28 @@ export class Ampli {
   }
 
   /**
+   * Wallet Page Buy Banner Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Wallet%20Page%20Buy%20Banner%20Clicked)
+   *
+   * This event tracks when a user clicks on "Buy Button" on the Wallet Page’s BUY ADA banner.
+   *
+   * This banner only appears for **new users** or those **users that has 0 ADA** Balance.
+   *
+   * @param options Amplitude event options.
+   */
+  walletPageBuyBannerClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new WalletPageBuyBannerClicked(), options);
+  }
+
+  /**
    * Wallet Page Exchange Bottom Sheet Clicked
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Wallet%20Page%20Exchange%20Bottom%20Sheet%20Clicked)
    *
-   * This event tracks when a user clicks on the bottom sheet that appears after the user clics on Exchange on the Wallet PageThis event tracks when a user clicks on the bottom sheet in the exchange section of the wallet page
+   * This event tracks when a user clicks on "Proceed" in the bottom sheet that appears after the user clicks on "Buy" on the Wallet Page.
    *
    * @param options Amplitude event options.
    */
@@ -1444,7 +1596,7 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Wallet%20Page%20Exchange%20Clicked)
    *
-   * Event has no description in tracking plan.
+   * This event tracks when a user clicks on "Buy" on the Wallet Page.
    *
    * @param options Amplitude event options.
    */
@@ -1459,7 +1611,7 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Wallet%20Page%20Viewed)
    *
-   * ThThis event tracks when a user views the wallet page. Wallet page is the deffault page when the user logs in to the app (Once the initial setup is done)
+   * Wallet page is the default page when the user logs into the app and selects the wallet that is going to be using (Once the initial setup is done)
    *
    * @param options Amplitude event options.
    */

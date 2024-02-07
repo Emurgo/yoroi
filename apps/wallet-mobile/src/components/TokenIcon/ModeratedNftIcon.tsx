@@ -34,14 +34,7 @@ export const ModeratedNftIcon = ({nft, status}: {nft: Balance.TokenInfo; status:
 function PlaceholderNftIcon({nft}: {nft: Balance.TokenInfo}) {
   return (
     <View style={styles.wrapper}>
-      <NftPreview
-        nft={nft}
-        height={ICON_SIZE}
-        width={ICON_SIZE}
-        style={styles.assetIcon}
-        showPlaceholder
-        resizeMode="cover"
-      />
+      <NftPreview nft={nft} height={ICON_SIZE} width={ICON_SIZE} style={styles.assetIcon} showPlaceholder />
     </View>
   )
 }
@@ -53,7 +46,7 @@ function BlockedNftIcon({nft}: {nft: Balance.TokenInfo}) {
 function ApprovedNftIcon({nft}: {nft: Balance.TokenInfo}) {
   return (
     <View style={styles.wrapper}>
-      <NftPreview nft={nft} height={ICON_SIZE} width={ICON_SIZE} style={styles.assetIcon} resizeMode="cover" />
+      <NftPreview nft={nft} height={ICON_SIZE} width={ICON_SIZE} style={styles.assetIcon} />
     </View>
   )
 }
@@ -66,7 +59,7 @@ function ConsentNftIcon({nft}: {nft: Balance.TokenInfo}) {
         height={ICON_SIZE}
         width={ICON_SIZE}
         style={styles.assetIcon}
-        resizeMode="cover"
+        contentFit="cover"
         blurRadius={20}
       />
     </View>

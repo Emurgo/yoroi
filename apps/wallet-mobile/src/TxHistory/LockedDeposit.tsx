@@ -1,6 +1,6 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
 import {Boundary, Spacer, Text} from '../components'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
@@ -43,19 +43,19 @@ const FormattedAmount = ({amount}: {amount: string}) => {
 
       <Spacer width={4} />
 
-      <Text style={{fontFamily: 'Rubik-Medium', color: '#242838', fontSize: 12}}>{amount}</Text>
+      <Text style={styles.label}>{amount}</Text>
     </Row>
   )
 }
 
 const Row = ({children}: {children: React.ReactNode}) => {
-  return <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>{children}</View>
+  return <View style={styles.root}>{children}</View>
 }
 
 const Label = () => {
   const strings = useStrings()
 
-  return <Text style={{color: '#242838'}}>{strings.lockedDeposit}:</Text>
+  return <Text style={styles.label}>{strings.lockedDeposit}:</Text>
 }
 
 const useStrings = () => {
@@ -65,3 +65,17 @@ const useStrings = () => {
     lockedDeposit: intl.formatMessage(globalMessages.lockedDeposit),
   }
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  label: {
+    color: '#6B7384',
+    fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 22,
+  },
+})

@@ -1,5 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {generateMnemonic, mnemonicToEntropy} from 'bip39'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import {randomBytes} from 'react-native-randombytes'
 
 import {CardanoMobile} from '../../wallets'

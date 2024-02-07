@@ -25,6 +25,7 @@ const goneCollateral: YoroiWallet = {
       },
       collateralId: mocks.wallet.collateralId,
       utxo: undefined,
+      isConfirmed: true,
     }
   },
 }
@@ -40,6 +41,7 @@ const noCollateral: YoroiWallet = {
       },
       collateralId: '',
       utxo: undefined,
+      isConfirmed: true,
     }
   },
 }
@@ -56,6 +58,7 @@ const noFundsWallet: YoroiWallet = {
       },
       collateralId: '',
       utxo: undefined,
+      isConfirmed: true,
     }
   },
 }

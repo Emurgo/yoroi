@@ -4,14 +4,14 @@
     "defaultMessage": "!!!No transactions to show yet",
     "file": "src/TxHistory/TxHistoryList/EmptyHistory.tsx",
     "start": {
-      "line": 43,
+      "line": 46,
       "column": 18,
-      "index": 935
+      "index": 974
     },
     "end": {
-      "line": 46,
+      "line": 49,
       "column": 3,
-      "index": 1051
+      "index": 1090
     }
   }
 ]

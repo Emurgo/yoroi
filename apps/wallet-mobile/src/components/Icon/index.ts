@@ -1,5 +1,6 @@
 import {Ada} from './Ada'
 import {Analytics} from './Analytics'
+import {ArrowRight} from './ArrowRight'
 import {Assets} from './Assets'
 import {Bio} from './Bio'
 import {Bug} from './Bug'
@@ -12,7 +13,9 @@ import {CheckFilled} from './CheckFilled'
 import {CheckOutlined} from './CheckOutlined'
 import {Chevron} from './Chevron'
 import {Clock} from './Clock'
+import {Close} from './Close'
 import {Coins} from './Coins'
+import {Collateral} from './Collateral'
 import {Copy} from './Copy'
 import {CopySuccess} from './CopySuccess'
 import {Cross} from './Cross'
@@ -27,6 +30,7 @@ import {Document} from './Document'
 import {Drag} from './Drag'
 import {Edit} from './Edit'
 import {Emurgo} from './Emurgo'
+import {Exchange} from './Exchange'
 import {Export} from './Export'
 import {ExternalLink} from './ExternalLink'
 import {EyeOff} from './EyeOff'
@@ -35,6 +39,7 @@ import {Facebook} from './Facebook'
 import {Gear} from './Gear'
 import {Github} from './Github'
 import {Globe} from './Globe'
+import {Governance} from './Governance'
 import {HardwareWallet} from './HardwareWallet'
 import {Image} from './Image'
 import {Info} from './Info'
@@ -99,12 +104,14 @@ import {Wallet} from './Wallet'
 import {WalletAccount} from './WalletAccount'
 import {Wallets} from './Wallets'
 import {WalletStack} from './WalletStack'
+import {Warning} from './Warning'
 import {WingRiders} from './WingRiders'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
 
 export const Icon = {
   Ada,
+  Exchange,
   Analytics,
   Assets,
   Bio,
@@ -208,4 +215,9 @@ export const Icon = {
   SpectrumSwap,
   Danger,
   Share,
+  Governance,
+  ArrowRight,
+  Close,
+  Warning,
+  Collateral,
 }

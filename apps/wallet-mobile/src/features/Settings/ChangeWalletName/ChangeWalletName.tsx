@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, TextInput} from '../../../components'
+import {Button, KeyboardAvoidingView, TextInput} from '../../../components'
 import globalMessages from '../../../i18n/global-messages'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {COLORS} from '../../../theme'
@@ -37,35 +37,37 @@ export const ChangeWalletName = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView} edges={['left', 'right', 'bottom']}>
-      <ScrollView
-        keyboardDismissMode="on-drag"
-        keyboardShouldPersistTaps="always"
-        contentContainerStyle={styles.scrollContentContainer}
-      >
-        <WalletNameInput
-          returnKeyType="done"
-          errorDelay={0}
-          enablesReturnKeyAutomatically
-          autoFocus
-          label={strings.walletNameInputLabel}
-          value={newWalletName}
-          onChangeText={(walletName: string) => setNewWalletName(walletName)}
-          errorText={!isEmptyString(errorText) ? errorText : undefined}
-          autoComplete="off"
-        />
-      </ScrollView>
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ScrollView
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="always"
+          contentContainerStyle={styles.scrollContentContainer}
+        >
+          <WalletNameInput
+            returnKeyType="done"
+            errorDelay={0}
+            enablesReturnKeyAutomatically
+            autoFocus
+            label={strings.walletNameInputLabel}
+            value={newWalletName}
+            onChangeText={(walletName: string) => setNewWalletName(walletName)}
+            errorText={!isEmptyString(errorText) ? errorText : undefined}
+            autoComplete="off"
+          />
+        </ScrollView>
 
-      <View style={styles.action}>
-        <Button
-          onPress={() => {
-            if (hasErrors || isEmptyString(newWalletName)) return
-            renameWallet(newWalletName.trim())
-          }}
-          title={strings.changeButton}
-          disabled={hasErrors || isLoading}
-          shelleyTheme
-        />
-      </View>
+        <View style={styles.action}>
+          <Button
+            onPress={() => {
+              if (hasErrors || isEmptyString(newWalletName)) return
+              renameWallet(newWalletName.trim())
+            }}
+            title={strings.changeButton}
+            disabled={hasErrors || isLoading}
+            shelleyTheme
+          />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   action: {
-    padding: 16,
+    paddingHorizontal: 16,
     backgroundColor: COLORS.BACKGROUND,
   },
 })

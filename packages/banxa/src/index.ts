@@ -1,4 +1,8 @@
-export {banxaDomainProduction, banxaDomainSandbox} from './translators/domains'
+export {
+  banxaDomainProduction,
+  banxaDomainSandbox,
+  banxaSupportUrl,
+} from './translators/domains'
 export {banxaModuleMaker} from './translators/module'
 export {BanxaErrorMessages} from './adapters/errors'
 

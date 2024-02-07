@@ -1,17 +1,8 @@
 import {useCardAnimation} from '@react-navigation/stack'
 import React from 'react'
-import {
-  Animated,
-  GestureResponderEvent,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '..'
+import {KeyboardAvoidingView, Spacer} from '..'
 import {LoadingOverlay} from '../LoadingOverlay/LoadingOverlay'
 import {useModal} from './ModalContext'
 
@@ -34,11 +25,7 @@ export const ModalScreen = () => {
     <View style={styles.backdrop}>
       <Pressable style={styles.cancellableArea} onPress={closeModal} />
 
-      <KeyboardAvoidingView
-        style={styles.root}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        enabled={Platform.OS === 'ios'}
-      >
+      <KeyboardAvoidingView style={styles.root} keyboardVerticalOffset={0}>
         <Animated.View
           style={[
             {

@@ -1,48 +1,71 @@
+import {nameServerName} from '@yoroi/resolver'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 
+import {Spacer} from '../../../../../components/Spacer'
 import {Text} from '../../../../../components/Text'
-import {txLabels} from '../../../../../i18n/global-messages'
+import {YoroiTarget} from '../../../../../yoroi-wallets/types'
+import {useStrings} from '../../../common/strings'
 
 type Props = {
-  receiver: string
-  address: string
+  target: YoroiTarget
 }
-export const ReceiverInfo = ({receiver, address}: Props) => {
+export const ReceiverInfo = ({target}: Props) => {
   const strings = useStrings()
-
-  const isResolved = receiver !== address
+  const {receiver, entry} = target
+  const styles = useStyles()
 
   return (
     <View>
-      <Text>{strings.receiver}</Text>
+      <Text style={styles.label}>{strings.receiver}</Text>
 
-      <Text testID="receiverAddressText">{receiver}</Text>
+      <Spacer height={2} />
 
-      {isResolved && (
-        <View>
-          <Text>{strings.resolvesTo}</Text>
+      {target.receiver.as === 'domain' ? (
+        <>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.value}>
+              {receiver.selectedNameServer ? nameServerName[receiver.selectedNameServer] : ''}:
+            </Text>
 
-          <Text testID="addressText">{address}</Text>
-        </View>
+            <Spacer width={5} />
+
+            <Text style={styles.value}>{receiver.resolve}</Text>
+          </View>
+
+          <Spacer height={12} />
+
+          <Text style={styles.label}>{strings.walletAddress}:</Text>
+
+          <Spacer height={2} />
+
+          <Text testID="receiverAddressText" style={styles.value}>
+            {entry.address}
+          </Text>
+        </>
+      ) : (
+        <Text testID="receiverAddressText" style={styles.value}>
+          {entry.address}
+        </Text>
       )}
     </View>
   )
 }
 
-const messages = defineMessages({
-  resolvesTo: {
-    id: 'components.send.sendscreen.resolvesTo',
-    defaultMessage: '!!!Resolves to',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {typography, color} = theme
+  const styles = StyleSheet.create({
+    label: {
+      ...typography['body-2-regular'],
+      color: color.gray[900],
+    },
+    value: {
+      ...typography['body-1-regular'],
+      color: color.gray[900],
+    },
+  })
 
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    receiver: intl.formatMessage(txLabels.receiver),
-    resolvesTo: intl.formatMessage(messages.resolvesTo),
-  }
+  return styles
 }

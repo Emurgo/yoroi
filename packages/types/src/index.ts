@@ -22,8 +22,15 @@ import {AppStorage, AppStorageFolderName} from './app/storage'
 import {AppMultiStorage, AppMultiStorageOptions} from './app/multi-storage'
 import {NumberLocale} from './intl/numbers'
 import {SwapAggregator} from './swap/aggregator'
-import {AppApi} from './app/api'
-import {AppFrontendFeesResponse, AppFrontendFeeTier} from './app/frontend-fees'
+import {
+  ResolverAddressResponse,
+  ResolverAddressesResponse,
+  ResolverApi,
+  ResolverStrategy,
+} from './resolver/api'
+import {ResolverManager} from './resolver/manager'
+import {ResolverReceiver} from './resolver/receiver'
+import {ResolverStorage} from './resolver/storage'
 import {LinksLink, LinksModule, LinksUriConfig} from './links/link'
 import {
   LinksErrorExtraParamsDenied,
@@ -50,6 +57,39 @@ import {
   ApiErrorInvalidState,
   ApiErrorResponseMalformed,
 } from './api/errors'
+import {ResolverNameServer} from './resolver/name-server'
+import {
+  ResolverErrorWrongBlockchain,
+  ResolverErrorInvalidDomain,
+  ResolverErrorInvalidResponse,
+  ResolverErrorNotFound,
+  ResolverErrorUnsupportedTld,
+} from './resolver/errors'
+import {AppApi, AppFrontendFeeTier, AppFrontendFeesResponse} from './api/app'
+import {
+  ApiFtMetadata,
+  ApiFtMetadataRecord,
+  ApiFtRecords,
+  ApiFutureToken,
+  ApiFutureTokenRecords,
+  ApiMetadataFile,
+  ApiNftMetadata,
+  ApiNftMetadataRecord,
+  ApiNftRecords,
+  ApiOffChainMetadataRecord,
+  ApiOffChainMetadataRequest,
+  ApiOffChainMetadataResponse,
+  ApiOnChainMetadataRecord,
+  ApiOnChainMetadataRequest,
+  ApiOnChainMetadataResponse,
+  ApiProtocolParamsResult,
+  ApiTokenId,
+  ApiTokenIdentity,
+  ApiTokenRegistryEntry,
+  ApiTokenSupplyRecord,
+  ApiTokenSupplyResponse,
+  ApiTokeSupplyRequest,
+} from './api/cardano'
 
 export namespace App {
   export interface Storage extends AppStorage {}
@@ -145,11 +185,74 @@ export namespace Api {
 
     export class ResponseMalformed extends ApiErrorResponseMalformed {}
   }
+
+  export namespace Cardano {
+    export type OffChainMetadataRequest = ApiOffChainMetadataRequest
+    export type OnChainMetadataRecord = ApiOnChainMetadataRecord
+    export type OffChainMetadataResponse = ApiOffChainMetadataResponse
+
+    export type OnChainMetadataRequest = ApiOnChainMetadataRequest
+    export type OffChainMetadataRecord = ApiOffChainMetadataRecord
+    export type OnChainMetadataResponse = ApiOnChainMetadataResponse
+
+    export type TokenSupplyRequest = ApiTokeSupplyRequest
+    export type TokenSupplyRecord = ApiTokenSupplyRecord
+
+    export type TokenIdentity = ApiTokenIdentity
+    export type TokenSupplyResponse = ApiTokenSupplyResponse
+
+    export type FutureToken = ApiFutureToken
+    export type FutureTokenRecords = ApiFutureTokenRecords
+
+    export type FtMetadata = ApiFtMetadata
+    export type FtMetadataRecord = ApiFtMetadataRecord
+    export interface FtRecords extends ApiFtRecords {}
+    export type TokenRegistryEntry = ApiTokenRegistryEntry
+
+    export type NftMetadata = ApiNftMetadata
+    export type NftMetadataRecord = ApiNftMetadataRecord
+    export interface NftRecords extends ApiNftRecords {}
+
+    export type MetadataFile = ApiMetadataFile
+    export type TokenId = ApiTokenId
+
+    export type ProtocolParamsResult = ApiProtocolParamsResult
+
+    export interface Actions {
+      getProtocolParams: () => Promise<ProtocolParamsResult>
+    }
+  }
 }
 
 export namespace Numbers {
   export type Locale = NumberLocale
 }
 
+export namespace Resolver {
+  export interface Api extends ResolverApi {}
+  export type Manager = ResolverManager
+
+  export type NameServer = ResolverNameServer
+  export const NameServer = ResolverNameServer
+  export type Receiver = ResolverReceiver
+
+  export type AddressResponse = ResolverAddressResponse
+  export type AddressesResponse = ResolverAddressesResponse
+
+  export type Strategy = ResolverStrategy
+
+  export type Storage = ResolverStorage
+
+  export namespace Errors {
+    export class InvalidResponse extends ResolverErrorInvalidResponse {}
+    export class InvalidDomain extends ResolverErrorInvalidDomain {}
+    export class NotFound extends ResolverErrorNotFound {}
+    export class UnsupportedTld extends ResolverErrorUnsupportedTld {}
+    export class Expired extends ResolverErrorUnsupportedTld {}
+    export class WrongBlockchain extends ResolverErrorWrongBlockchain {}
+  }
+}
+
 export * from './helpers/types'
 export * from './helpers/storage'
+export * from './api/cardano'

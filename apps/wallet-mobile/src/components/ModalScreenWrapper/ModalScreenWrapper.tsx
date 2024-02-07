@@ -1,17 +1,8 @@
 import {useCardAnimation} from '@react-navigation/stack'
 import React from 'react'
-import {
-  Animated,
-  GestureResponderEvent,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '..'
+import {KeyboardAvoidingView, Spacer} from '..'
 
 // This is another option for modals that will keep the context tree, it requires navigation and if you need to wrap it a fragment is a must
 // Tested and working but it will require a big refactor on the navigator to work with it
@@ -39,11 +30,7 @@ export const ModalScreenWrapper = ({height, onClose, children, title}: ModalScre
     <View style={styles.backdrop}>
       <Pressable style={styles.cancellableArea} onPress={onClose} />
 
-      <KeyboardAvoidingView
-        style={styles.root}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        enabled={Platform.OS === 'ios'}
-      >
+      <KeyboardAvoidingView style={styles.root} keyboardVerticalOffset={0}>
         <Animated.View
           style={[
             {

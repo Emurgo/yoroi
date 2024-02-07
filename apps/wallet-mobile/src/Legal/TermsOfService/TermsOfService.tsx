@@ -4,9 +4,10 @@ import Markdown from 'react-native-markdown-display'
 import {useQuery} from 'react-query'
 
 import {Spacer} from '../../components'
+import {LanguageCode} from '../../i18n/languages'
 import {loadTOS} from './loadTos'
 
-export const useTos = ({languageCode}: {languageCode: string}) => {
+export const useTos = ({languageCode}: {languageCode: LanguageCode}) => {
   const query = useQuery({
     queryKey: ['tos', languageCode],
     queryFn: () => loadTOS(languageCode),
@@ -15,7 +16,7 @@ export const useTos = ({languageCode}: {languageCode: string}) => {
   return query.data
 }
 
-export const TermsOfService = ({languageCode}: {languageCode: string}) => {
+export const TermsOfService = ({languageCode}: {languageCode: LanguageCode}) => {
   const tos = useTos({languageCode})
 
   return tos != null ? (

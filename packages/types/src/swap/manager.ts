@@ -1,4 +1,4 @@
-import {AppFrontendFeeTier} from '../app/frontend-fees'
+import {AppFrontendFeeTier} from '../api/app'
 import {BalanceToken} from '../balance/token'
 import {SwapAggregator} from './aggregator'
 import {SwapApi} from './api'

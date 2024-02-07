@@ -9,7 +9,7 @@ describe('banxaModuleMaker', () => {
     })
     const fullUrl =
       'https://checkout.banxa.com/?' +
-      'sellMode=true' +
+      'orderType=sell' +
       '&' +
       'fiatType=USD' +
       '&' +
@@ -26,7 +26,7 @@ describe('banxaModuleMaker', () => {
       'walletAddressTag=tag'
 
     const url = banxa.createReferralUrl({
-      sellMode: true,
+      orderType: 'sell',
       fiatType: 'USD',
       fiatAmount: 500,
       coinType: 'ADA',

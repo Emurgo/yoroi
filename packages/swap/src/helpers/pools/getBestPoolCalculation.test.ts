@@ -71,10 +71,12 @@ describe('getBestPoolCalculation', () => {
         prices: {
           base: '0.07101454479564951518',
           market: '0.07101454479564951518',
+          actualPrice: '0',
           withSlippage: '0.07952455555555555556',
           withFees: '0.09657209903427900966',
           withFeesAndSlippage: '0.10730233333333333333',
           difference: '35.989182655713084861',
+          priceImpact: '0',
         },
         pool: {
           tokenA: {

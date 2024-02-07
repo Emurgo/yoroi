@@ -74,7 +74,7 @@ export class AddressGenerator {
 
     // cache reward address
     const chainNetworkId = toCardanoNetworkId(this.networkId)
-    const credential = await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash())
+    const credential = await CardanoMobile.Credential.fromKeyhash(await stakingKey.hash())
     const rewardAddr = await CardanoMobile.RewardAddress.new(chainNetworkId, credential)
     const rewardAddrAsAddr = await rewardAddr.toAddress()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,10 +106,10 @@ export class AddressGenerator {
           const addrKey = await (await chainKey.derive(idx)).toRawKey()
           const addr = await CardanoMobile.BaseAddress.new(
             parseInt(chainNetworkId, 10),
-            await CardanoMobile.StakeCredential.fromKeyhash(await addrKey.hash()),
-            await CardanoMobile.StakeCredential.fromKeyhash(await stakingKey.hash()),
+            await CardanoMobile.Credential.fromKeyhash(await addrKey.hash()),
+            await CardanoMobile.Credential.fromKeyhash(await stakingKey.hash()),
           )
-          return (await addr.toAddress()).toBech32()
+          return (await addr.toAddress()).toBech32(undefined)
         }),
       )
     }
@@ -168,8 +168,8 @@ export class AddressChain {
   _blockSize: number
   _gapLimit: number
   _isInitialized = false
-  _subscriptions: Array<(Addresses) => unknown> = []
-  _addressToIdxSelector: (Addresses) => Record<string, number> = defaultMemoize(_addressToIdxSelector)
+  _subscriptions: Array<(addresses: Addresses) => unknown> = []
+  _addressToIdxSelector: (addresses: Addresses) => Record<string, number> = defaultMemoize(_addressToIdxSelector)
 
   constructor(
     addressGenerator: AddressGenerator,

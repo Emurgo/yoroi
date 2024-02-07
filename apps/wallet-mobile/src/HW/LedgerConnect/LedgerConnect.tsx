@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import TransportHID from '@emurgo/react-native-hid'
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble'
 import React from 'react'
@@ -31,7 +33,7 @@ type State = {
   devices: Array<Device>
   deviceId?: null | DeviceId
   deviceObj?: null | DeviceObj
-  error?: any
+  error?: Error | null
   refreshing: boolean
   waiting: boolean
 }
@@ -49,7 +51,7 @@ class _LedgerConnect extends React.Component<Props, State> {
 
   _subscriptions: null | {unsubscribe: () => void} = null
   _bluetoothEnabled: null | boolean = null
-  _transportLib: any = null
+  _transportLib: TransportHID | TransportBLE | null = null
   _isMounted = false
 
   componentDidMount() {
@@ -100,29 +102,35 @@ class _LedgerConnect extends React.Component<Props, State> {
   startScan = () => {
     const {useUSB} = this.props
 
+    const onComplete = () => {
+      Logger.debug('listen: subscription completed')
+      this.setState({refreshing: false})
+    }
+
+    const onError = (error: Error) => {
+      this.setState({error, refreshing: false, devices: []})
+    }
+
+    const onBLENext = (e: {type: string; descriptor: Device}) => {
+      if (e.type === 'add') {
+        Logger.debug('listen: new device detected')
+        // with bluetooth, new devices are appended in the screen
+        this.setState(deviceAddition(e.descriptor))
+      }
+    }
+
+    const onHWNext = (e: {type: string; descriptor: DeviceObj}) => {
+      if (e.type === 'add') {
+        Logger.debug('listen: new device detected')
+        // if a device is detected, save it in state immediately
+        this.setState({refreshing: false, deviceObj: e.descriptor})
+      }
+    }
+
     this._subscriptions = this._transportLib.listen({
-      complete: () => {
-        Logger.debug('listen: subscription completed')
-        this.setState({refreshing: false})
-      },
-      next: (e) => {
-        if (e.type === 'add') {
-          Logger.debug('listen: new device detected')
-          if (useUSB === true) {
-            // if a device is detected, save it in state immediately
-            this.setState({
-              refreshing: false,
-              deviceObj: e.descriptor,
-            })
-          } else {
-            // with bluetooth, new devices are appended in the screen
-            this.setState(deviceAddition(e.descriptor))
-          }
-        }
-      },
-      error: (error) => {
-        this.setState({error, refreshing: false, devices: []})
-      },
+      complete: onComplete,
+      next: useUSB ? onHWNext : onBLENext,
+      error: onError,
     })
   }
 
@@ -160,6 +168,7 @@ class _LedgerConnect extends React.Component<Props, State> {
       })
       await onConnectBLE(device.id.toString())
     } catch (e) {
+      if (!(e instanceof Error)) return
       Logger.debug(e as any)
       if (e instanceof RejectedByUserError) {
         this.reload()
@@ -179,6 +188,7 @@ class _LedgerConnect extends React.Component<Props, State> {
       })
       await this.props.onConnectUSB(deviceObj)
     } catch (e) {
+      if (!(e instanceof Error)) return
       Logger.debug(e as any)
       if (e instanceof RejectedByUserError) {
         this.reload()
@@ -317,10 +327,10 @@ const messages = defineMessages({
 })
 
 const deviceAddition =
-  (device) =>
-  ({devices}) => {
+  (device: Device) =>
+  ({devices}: {devices: Device[]}) => {
     return {
-      devices: devices.some((i) => i.id === device.id) === true ? devices : devices.concat(device),
+      devices: devices.some((i) => i.id === device.id) ? devices : devices.concat(device),
     }
   }
 

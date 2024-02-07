@@ -1,9 +1,19 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Checkbox, Checkmark, Spacer, StatusBar, Text, TextInput} from '../../../components'
+import {
+  Button,
+  Checkbox,
+  Checkmark,
+  KeyboardAvoidingView,
+  Spacer,
+  StatusBar,
+  Text,
+  TextInput,
+  TextInputProps,
+} from '../../../components'
 import {useWalletNavigation} from '../../../navigation'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {COLORS} from '../../../theme'
@@ -28,70 +38,72 @@ export const RemoveWalletScreen = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
       <StatusBar type="dark" />
 
-      <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
-        <Description>
-          {!wallet.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
+          <Description>
+            {!wallet.isHW && <Text style={styles.description}>{strings.descriptionParagraph1}</Text>}
 
-          <Spacer height={24} />
+            <Spacer height={24} />
 
-          <Text style={styles.description}>{strings.descriptionParagraph2}</Text>
-        </Description>
+            <Text style={styles.description}>{strings.descriptionParagraph2}</Text>
+          </Description>
 
-        <Spacer height={32} />
+          <Spacer height={32} />
 
-        <WalletInfo>
-          <Text style={styles.walletNameLabel}>{strings.walletName}</Text>
+          <WalletInfo>
+            <Text style={styles.walletNameLabel}>{strings.walletName}</Text>
 
-          <Spacer height={10} />
+            <Spacer height={10} />
 
-          <Text style={styles.walletName}>{walletName}</Text>
+            <Text style={styles.walletName}>{walletName}</Text>
 
-          <Spacer height={24} />
+            <Spacer height={24} />
 
-          <WalletNameInput
-            value={typedWalletName}
-            onChangeText={setTypedWalletName}
-            right={typedWalletName === walletName ? <Checkmark /> : undefined}
-            errorText={typedWalletName !== walletName ? strings.walletNameMismatchError : undefined}
-          />
-        </WalletInfo>
-      </ScrollView>
+            <WalletNameInput
+              value={typedWalletName}
+              onChangeText={setTypedWalletName}
+              right={typedWalletName === walletName ? <Checkmark /> : undefined}
+              errorText={typedWalletName !== walletName ? strings.walletNameMismatchError : undefined}
+            />
+          </WalletInfo>
+        </ScrollView>
 
-      <Actions>
-        {!wallet.isHW && (
-          <Checkbox
-            checked={hasMnemonicWrittenDown}
-            text={strings.hasWrittenDownMnemonic}
-            onChange={setHasMnemonicWrittenDown}
-          />
-        )}
+        <Actions>
+          {!wallet.isHW && (
+            <Checkbox
+              checked={hasMnemonicWrittenDown}
+              text={strings.hasWrittenDownMnemonic}
+              onChange={setHasMnemonicWrittenDown}
+            />
+          )}
 
-        <Spacer height={30} />
+          <Spacer height={30} />
 
-        <View style={styles.buttonContainer}>
-          <Button
-            onPress={() => removeWallet()}
-            title={strings.remove}
-            style={styles.removeButton}
-            disabled={disabled}
-            block
-          />
-        </View>
-      </Actions>
+          <View style={styles.buttonContainer}>
+            <Button
+              onPress={() => removeWallet()}
+              title={strings.remove}
+              style={styles.removeButton}
+              disabled={disabled}
+              block
+            />
+          </View>
+        </Actions>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }
 
-const Description = (props) => {
+const Description = (props: ViewProps) => {
   return <View {...props} />
 }
-const WalletInfo = (props) => {
+const WalletInfo = (props: ViewProps) => {
   return <View {...props} style={styles.descriptionContainer} />
 }
-const WalletNameInput = (props) => {
+const WalletNameInput = (props: TextInputProps) => {
   return <TextInput {...props} autoFocus enablesReturnKeyAutomatically returnKeyType="done" />
 }
-const Actions = (props) => {
+const Actions = (props: ViewProps) => {
   return <View {...props} style={styles.actions} />
 }
 

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Catalyst Voting Registration",
     "file": "src/Catalyst/VotingBanner.tsx",
     "start": {
-      "line": 74,
+      "line": 76,
       "column": 8,
-      "index": 2502
+      "index": 2527
     },
     "end": {
-      "line": 77,
+      "line": 79,
       "column": 3,
-      "index": 2605
+      "index": 2630
     }
   }
 ]

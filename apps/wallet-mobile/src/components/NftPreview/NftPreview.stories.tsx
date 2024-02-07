@@ -19,14 +19,6 @@ storiesOf('NftPreview', module)
       blurRadius={5}
     />
   ))
-  .add('Showing NFT thumbnail', () => (
-    <NftPreview
-      nft={{...nft, icon: 'https://www.svgrepo.com/show/501883/ice-cream.svg'}}
-      showThumbnail
-      width={200}
-      height={200}
-    />
-  ))
   .add('Showing NFT with incorrect metadata files field', () => (
     <NftPreview
       nft={{

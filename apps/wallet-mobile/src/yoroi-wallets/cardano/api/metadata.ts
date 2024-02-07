@@ -1,67 +1,60 @@
-import {createTypeGuardFromSchema, isArray, isNonNullable, isRecord} from '@yoroi/common'
+import {createTypeGuardFromSchema, isArray, isRecord} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
 import {z} from 'zod'
 
 import {BackendConfig, NFTAsset} from '../../types'
 import {convertNft} from '../nfts'
-import {fetchTokensSupplies} from './assetSuply'
 import fetchDefault from './fetch'
-import {toAssetNameHex, toPolicyId} from './utils'
+import {toAssetNameHex, toDisplayAssetName, toPolicyId} from './utils'
 
-export const getNFTs = async (ids: string[], config: BackendConfig): Promise<Balance.TokenInfo[]> => {
-  if (ids.length === 0) {
-    return []
-  }
-  const assets = ids.map((id) => {
-    const policy = toPolicyId(id)
-    const nameHex = toAssetNameHex(id)
-    return {policy, nameHex}
-  })
+export const getNFT = async (tokenId: string, config: BackendConfig): Promise<Balance.TokenInfo | null> => {
+  const policyId = toPolicyId(tokenId)
+  const nameHex = toAssetNameHex(tokenId)
 
-  const payload = {assets}
+  const payload = {assets: [{policy: policyId, nameHex}]}
 
-  const [assetMetadatas, assetSupplies] = await Promise.all([
-    fetchDefault<unknown>('multiAsset/metadata', payload, config),
-    fetchTokensSupplies(ids, config),
+  const [assetMetadatasResult, {supplies: assetSupplies}] = await Promise.all([
+    fetchDefault<Record<string, unknown>>('multiAsset/metadata', payload, config),
+    fetchDefault<{supplies: Record<string, unknown>}>('multiAsset/supply?numberFormat=string', payload, config),
   ])
 
-  const possibleNfts = parseNFTs(assetMetadatas, config.NFT_STORAGE_URL)
-  return possibleNfts.filter((nft) => assetSupplies[nft.id] === 1)
+  const assetMetadatas = assetMetadatasResult[tokenId]
+
+  return parseNFT(assetMetadatas, assetSupplies, tokenId, config)
 }
 
-export const getNFT = async (id: string, config: BackendConfig): Promise<Balance.TokenInfo | null> => {
-  const [nft] = await getNFTs([id], config)
-  return nft || null
-}
-
-export const parseNFTs = (value: unknown, storageUrl: string): Balance.TokenInfo[] => {
-  if (!isRecord(value)) {
-    throw new Error('Invalid response. Expected to receive object when parsing NFTs')
+export const parseNFT = (
+  assetMetadatas: unknown,
+  assetSupplies: Record<string, unknown>,
+  tokenId: string,
+  config: BackendConfig,
+) => {
+  if (!isArray(assetMetadatas)) {
+    return null
   }
 
-  const identifiers = Object.keys(value)
+  const nftAsset = assetMetadatas.find(isAssetNft)
 
-  const tokens: Array<Balance.TokenInfo | null> = identifiers.map((id) => {
-    const assets = value[id]
-    if (!isArray(assets)) {
-      return null
-    }
+  if (!nftAsset) {
+    return null
+  }
 
-    const nftAsset = assets.find(isAssetNft)
+  const policyId = toPolicyId(tokenId)
+  const nameHex = toAssetNameHex(tokenId)
+  const displayAssetName = toDisplayAssetName(tokenId)
 
-    if (!nftAsset) {
-      return null
-    }
+  const withHexName = `${policyId}.${nameHex}`
+  const assetSupply = assetSupplies[withHexName]
 
-    const [policyId, shortName] = id.split('.')
-    const metadata = nftAsset.metadata?.[policyId]?.[shortName]
-    return convertNft({metadata, storageUrl, policyId, shortName: shortName})
-  })
+  if (assetSupply !== '1') return null
 
-  return tokens.filter(isNonNullable)
+  const metadataPolicyId = isRecord(nftAsset.metadata) ? nftAsset.metadata?.[policyId] : null
+  const metadata = isRecord(metadataPolicyId) ? metadataPolicyId[nameHex] ?? metadataPolicyId[displayAssetName] : null
+
+  return convertNft({metadata, storageUrl: config.NFT_STORAGE_URL, policyId, nameHex})
 }
 
-const NFT_METADATA_KEY = '721'
+export const NFT_METADATA_KEY = '721'
 
 const NftAssetSchema: z.ZodSchema<NFTAsset> = z.object({
   key: z.literal(NFT_METADATA_KEY),

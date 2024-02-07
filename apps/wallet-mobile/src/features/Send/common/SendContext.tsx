@@ -1,4 +1,6 @@
-import {Balance} from '@yoroi/types'
+import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
+import {Balance, Resolver} from '@yoroi/types'
+import {produce} from 'immer'
 import * as React from 'react'
 
 import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
@@ -18,16 +20,19 @@ export type SendState = {
 }
 
 type TargetActions = {
+  // Amount
   amountChanged: (quantity: Balance.Quantity) => void
   amountRemoved: (tokenId: string) => void
-  receiverChanged: (receiver: string) => void
-  addressChanged: (address: Address) => void
+  // Receiver
+  receiverResolveChanged: (resolve: Resolver.Receiver['resolve']) => void
+  nameServerSelectedChanged: (nameServer: Resolver.Receiver['selectedNameServer']) => void
+  addressRecordsFetched: (addressRecords: Resolver.Receiver['addressRecords']) => void
 }
 
 type SendActions = {
   yoroiUnsignedTxChanged: (yoroiUnsignedTx: YoroiUnsignedTx | undefined) => void
   tokenSelectedChanged: (tokenId: string) => void
-  resetForm: () => void
+  reset: () => void
   memoChanged: (memo: string) => void
 }
 
@@ -51,10 +56,14 @@ export const SendProvider = ({children, ...props}: {initialState?: Partial<SendS
   })
 
   const actions = React.useRef<SendActions & TargetActions>({
-    resetForm: () => dispatch({type: 'resetForm'}),
+    reset: () => dispatch({type: 'reset'}),
 
-    receiverChanged: (receiver: string) => dispatch({type: 'receiverChanged', receiver}),
-    addressChanged: (address: Address) => dispatch({type: 'addressChanged', address}),
+    receiverResolveChanged: (resolve: Resolver.Receiver['resolve']) =>
+      dispatch({type: 'receiverResolveChanged', resolve}),
+    nameServerSelectedChanged: (nameServer: Resolver.Receiver['selectedNameServer']) =>
+      dispatch({type: 'nameServerSelectedChanged', nameServer}),
+    addressRecordsFetched: (addressRecords: Resolver.Receiver['addressRecords']) =>
+      dispatch({type: 'addressRecordsFetched', addressRecords}),
 
     memoChanged: (memo) => dispatch({type: 'memoChanged', memo}),
 
@@ -71,7 +80,7 @@ export const SendProvider = ({children, ...props}: {initialState?: Partial<SendS
 
 export type SendAction =
   | {
-      type: 'resetForm'
+      type: 'reset'
     }
   | {
       type: 'memoChanged'
@@ -88,7 +97,7 @@ export type SendAction =
 
 const sendReducer = (state: SendState, action: SendAction) => {
   switch (action.type) {
-    case 'resetForm':
+    case 'reset':
       return {...initialState}
 
     case 'memoChanged':
@@ -116,8 +125,16 @@ const sendReducer = (state: SendState, action: SendAction) => {
 
 export type TargetAction =
   | {
-      type: 'receiverChanged'
-      receiver: string
+      type: 'receiverResolveChanged'
+      resolve: Resolver.Receiver['resolve']
+    }
+  | {
+      type: 'nameServerSelectedChanged'
+      nameServer: Resolver.Receiver['selectedNameServer']
+    }
+  | {
+      type: 'addressRecordsFetched'
+      addressRecords: Resolver.Receiver['addressRecords']
     }
   | {
       type: 'addressChanged'
@@ -137,74 +154,96 @@ export type TargetAction =
     }
 
 const targetsReducer = (state: SendState, action: TargetAction) => {
-  switch (action.type) {
-    case 'receiverChanged': {
-      const {receiver} = action
-      const selectedTargetIndex = state.selectedTargetIndex
-      const updatedTargets = state.targets.map((target, index) => {
-        if (index === selectedTargetIndex) {
-          return {...target, receiver}
-        }
+  return produce(state.targets, (draft) => {
+    switch (action.type) {
+      case 'receiverResolveChanged': {
+        const {resolve} = action
+        const selectedTargetIndex = state.selectedTargetIndex
 
-        return {...target}
-      })
-
-      return updatedTargets
-    }
-
-    case 'addressChanged': {
-      const {address} = action
-      const selectedTargetIndex = state.selectedTargetIndex
-      const updatedTargets = state.targets.map((target, index) => {
-        if (index === selectedTargetIndex) {
-          return {...target, entry: {...target.entry, address}}
-        }
-
-        return {...target}
-      })
-
-      return updatedTargets
-    }
-
-    case 'amountChanged': {
-      const {quantity} = action
-      const selectedTargetIndex = state.selectedTargetIndex
-      const selectedTokenId = state.selectedTokenId
-      const updatedTargets = state.targets.map((target, index) => {
-        if (index === selectedTargetIndex) {
-          return {...target, entry: {...target.entry, amounts: {...target.entry.amounts, [selectedTokenId]: quantity}}}
-        }
-
-        return {...target}
-      })
-
-      return updatedTargets
-    }
-
-    case 'amountRemoved': {
-      const {tokenId} = action
-      const selectedTargetIndex = state.selectedTargetIndex
-      const updatedTargets = state.targets.map((target, index) => {
-        if (index === selectedTargetIndex) {
-          const amounts = Object.keys(target.entry.amounts).reduce((acc, key) => {
-            if (key !== tokenId) {
-              acc[key] = target.entry.amounts[key]
+        draft.forEach((target, index) => {
+          if (index === selectedTargetIndex) {
+            const isDomain: boolean = isResolvableDomain(resolve)
+            const as: Resolver.Receiver['as'] = isDomain ? 'domain' : 'address'
+            const address = isDomain ? '' : resolve
+            target.receiver = {
+              resolve,
+              as,
+              selectedNameServer: undefined,
+              addressRecords: undefined,
             }
+            target.entry.address = address
+          }
+        })
+        break
+      }
 
-            return acc
-          }, {})
-          return {...target, entry: {...target.entry, amounts}}
-        }
+      case 'addressRecordsFetched': {
+        const {addressRecords} = action
+        const selectedTargetIndex = state.selectedTargetIndex
 
-        return {...target}
-      })
+        draft.forEach((target, index) => {
+          if (index === selectedTargetIndex) {
+            if (addressRecords !== undefined) {
+              const keys = Object.keys(addressRecords).filter(isNameServer)
+              const nameServer = keys.length === 1 ? keys[0] : undefined
+              target.receiver.selectedNameServer = nameServer
+              if (nameServer !== undefined) {
+                target.entry.address = addressRecords[nameServer] ?? ''
+              }
+            } else {
+              target.receiver.selectedNameServer = undefined
+            }
+            target.receiver.addressRecords = addressRecords
+          }
+        })
+        break
+      }
 
-      return updatedTargets
+      case 'nameServerSelectedChanged': {
+        const {nameServer} = action
+        const selectedTargetIndex = state.selectedTargetIndex
+
+        draft.forEach((target, index) => {
+          if (index === selectedTargetIndex) {
+            target.receiver.selectedNameServer = nameServer
+
+            if (nameServer !== undefined) {
+              target.entry.address = target.receiver.addressRecords?.[nameServer] ?? ''
+            } else {
+              const isDomain = target.receiver.as === 'domain'
+              if (isDomain) target.entry.address = ''
+            }
+          }
+        })
+        break
+      }
+
+      case 'amountChanged': {
+        const {quantity} = action
+        const selectedTargetIndex = state.selectedTargetIndex
+        const selectedTokenId = state.selectedTokenId
+
+        draft.forEach((target, index) => {
+          if (index === selectedTargetIndex) {
+            target.entry.amounts[selectedTokenId] = quantity
+          }
+        })
+        break
+      }
+
+      case 'amountRemoved': {
+        const {tokenId} = action
+        const selectedTargetIndex = state.selectedTargetIndex
+
+        draft.forEach((target, index) => {
+          if (index === selectedTargetIndex) {
+            delete target.entry.amounts[tokenId]
+          }
+        })
+        break
+      }
     }
-
-    default:
-      return state.targets
-  }
+  })
 }
 
 export const useSend = () => React.useContext(SendContext) || missingProvider()
@@ -222,7 +261,12 @@ export const initialState: SendState = {
 
   targets: [
     {
-      receiver: '',
+      receiver: {
+        resolve: '',
+        as: 'address',
+        selectedNameServer: undefined,
+        addressRecords: undefined,
+      },
       entry: {
         address: '',
         amounts: {},
@@ -269,7 +313,7 @@ const getTotalUsedByOtherTargets = ({
   selectedTargetIndex: number
   selectedTokenId: string
 }) => {
-  const isNotTheSelectedTarget = (_, index) => index !== selectedTargetIndex
+  const isNotTheSelectedTarget = (_target: YoroiTarget, index: number) => index !== selectedTargetIndex
   return targets.filter(isNotTheSelectedTarget).reduce((acc, target) => {
     const quantity = Amounts.getAmount(target.entry.amounts, selectedTokenId).quantity
     return Quantities.sum([acc, quantity])

@@ -1,7 +1,10 @@
 import {Balance} from '@yoroi/types'
+import {SwapOrderType} from '@yoroi/types/lib/swap/order'
 import * as React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
+import {usePriceImpactRiskTheme} from '../../features/Swap/common/helpers'
+import {SwapPriceImpactRisk} from '../../features/Swap/common/types'
 import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
@@ -18,9 +21,20 @@ export type AmountItemProps = {
   status?: string
   inWallet?: boolean
   variant?: 'swap'
+  priceImpactRisk?: SwapPriceImpactRisk
+  orderType?: SwapOrderType
 }
 
-export const AmountItem = ({isPrivacyOff, wallet, style, amount, inWallet, variant}: AmountItemProps) => {
+export const AmountItem = ({
+  isPrivacyOff,
+  wallet,
+  style,
+  amount,
+  inWallet,
+  variant,
+  priceImpactRisk,
+  orderType,
+}: AmountItemProps) => {
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -30,8 +44,9 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, inWallet, varia
   const detail = isPrimary ? tokenInfo.description : tokenInfo.fingerprint
 
   const formattedQuantity = Quantities.format(quantity, tokenInfo.decimals ?? 0)
-
   const showSwapDetails = !isPrimary && variant === 'swap'
+  const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk ?? 'none')
+  const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : styles.text.color
 
   return (
     <View style={[style, styles.container]} testID="assetItem">
@@ -43,7 +58,7 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, inWallet, varia
 
       <Middle>
         <View style={styles.row}>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
+          <Text numberOfLines={1} ellipsizeMode="middle" style={[styles.name, styles.text]} testID="tokenInfoText">
             {nameLabel}
           </Text>
 
@@ -63,9 +78,15 @@ export const AmountItem = ({isPrivacyOff, wallet, style, amount, inWallet, varia
 
       <Right>
         {tokenInfo.kind !== 'nft' && variant !== 'swap' && (
-          <Text style={styles.quantity} testID="tokenAmountText">
-            {isPrivacyOff ? '**.*******' : formattedQuantity}
-          </Text>
+          <View style={styles.row} testID="tokenAmountText">
+            {priceImpactRisk === 'moderate' && <Icon.Info size={24} color={priceImpactRiskTextColor} />}
+
+            {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
+
+            <Text style={[styles.quantity, {color: priceImpactRiskTextColor}]}>
+              {isPrivacyOff ? '**.*******' : formattedQuantity}
+            </Text>
+          </View>
         )}
 
         {isPrimary && variant !== 'swap' && (
@@ -136,9 +157,14 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     fontSize: 16,
     fontFamily: 'Rubik-Regular',
+    flexGrow: 1,
   },
   row: {
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  text: {
+    color: '#242838',
   },
 })

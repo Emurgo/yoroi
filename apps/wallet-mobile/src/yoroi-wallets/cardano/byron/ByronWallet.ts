@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {PrivateKey} from '@emurgo/cross-csl-core'
+import {signRawTransaction} from '@emurgo/yoroi-lib'
 import {Datum} from '@emurgo/yoroi-lib/dist/internals/models'
-import {AppApi} from '@yoroi/api'
-import {parseSafe} from '@yoroi/common'
-import {isNonNullable} from '@yoroi/common/src'
-import {App, Balance} from '@yoroi/types'
+import {AppApi, CardanoApi} from '@yoroi/api'
+import {isNonNullable, parseSafe} from '@yoroi/common'
+import {Api, App, Balance} from '@yoroi/types'
 import assert from 'assert'
 import {BigNumber} from 'bignumber.js'
 import ExtendableError from 'es6-error'
@@ -40,7 +40,7 @@ import {
   YoroiSignedTx,
   YoroiUnsignedTx,
 } from '../../types'
-import {asQuantity, Quantities} from '../../utils'
+import {asQuantity, isMainnetNetworkId, Quantities} from '../../utils'
 import {genTimeToSlot} from '../../utils/timeUtils'
 import {validatePassword} from '../../utils/validators'
 import {WalletMeta} from '../../walletManager'
@@ -49,7 +49,6 @@ import * as legacyApi from '../api'
 import {encryptWithPassword} from '../catalyst/catalystCipher'
 import {generatePrivateKeyForCatalyst} from '../catalyst/catalystUtils'
 import {AddressChain, AddressChainJSON, Addresses, AddressGenerator} from '../chain'
-import {signRawTransaction} from '../common/signatureUtils'
 import {
   API_ROOT,
   HISTORY_REFRESH_TIME,
@@ -59,6 +58,7 @@ import {
 } from '../constants/mainnet/constants'
 import {CardanoError, InvalidState} from '../errors'
 import {ADDRESS_TYPE_TO_CHANGE} from '../formatPath'
+import {getTime} from '../getTime'
 import {doesCardanoAppVersionSupportCIP36, getCardanoAppMajorVersion, signTxWithLedger} from '../hw'
 import {
   CardanoHaskellShelleyNetwork,
@@ -154,6 +154,7 @@ export class ByronWallet implements YoroiWallet {
   private readonly transactionManager: TransactionManager
   private readonly memosManager: MemosManager
   private _collateralId = ''
+  private readonly cardanoApi: Api.Cardano.Actions
 
   // =================== create =================== //
 
@@ -278,6 +279,14 @@ export class ByronWallet implements YoroiWallet {
     const utxoManager = await makeUtxoManager({storage: storage.join('utxoManager/'), apiUrl})
     const transactionManager = await TransactionManager.create(storage.join('txs/'))
     const memosManager = await makeMemosManager(storage.join('memos/'))
+    const cardanoApi = CardanoApi.cardanoApiMaker({
+      network:
+        networkId === NETWORK_REGISTRY.HASKELL_SHELLEY
+          ? 'mainnet'
+          : networkId === NETWORK_REGISTRY.SANCHONET
+          ? 'sanchonet'
+          : 'preprod',
+    })
 
     const wallet = new ByronWallet({
       storage,
@@ -295,6 +304,7 @@ export class ByronWallet implements YoroiWallet {
       lastGeneratedAddressIndex,
       transactionManager,
       memosManager,
+      cardanoApi,
     })
 
     await wallet.discoverAddresses()
@@ -323,6 +333,7 @@ export class ByronWallet implements YoroiWallet {
     lastGeneratedAddressIndex,
     transactionManager,
     memosManager,
+    cardanoApi,
   }: {
     storage: App.Storage
     networkId: NetworkId
@@ -339,6 +350,7 @@ export class ByronWallet implements YoroiWallet {
     lastGeneratedAddressIndex: number
     transactionManager: TransactionManager
     memosManager: MemosManager
+    cardanoApi: Api.Cardano.Actions
   }) {
     this.id = id
     this.storage = storage
@@ -377,6 +389,7 @@ export class ByronWallet implements YoroiWallet {
           NUMBERS.CHAIN_DERIVATIONS.CHIMERIC_ACCOUNT,
           NUMBERS.STAKING_KEY_INDEX,
         ]
+    this.cardanoApi = cardanoApi
   }
 
   timeout: NodeJS.Timeout | null = null
@@ -464,7 +477,16 @@ export class ByronWallet implements YoroiWallet {
   }
 
   private getBaseNetworkConfig() {
-    return this.getNetworkConfig().BASE_CONFIG.reduce((acc, next) => Object.assign(acc, next), {})
+    type Config = {
+      PROTOCOL_MAGIC?: number
+      GENESIS_DATE?: string
+      START_AT: number
+      SLOTS_PER_EPOCH: number
+      SLOT_DURATION: number
+    }
+
+    const config: Config[] = this.getNetworkConfig().BASE_CONFIG
+    return config.reduce((acc, next) => Object.assign(acc, next), {})
   }
 
   private getBackendConfig(): BackendConfig {
@@ -545,7 +567,7 @@ export class ByronWallet implements YoroiWallet {
 
   async getAllUtxosForKey() {
     return filterAddressesByStakingKey(
-      await CardanoMobile.StakeCredential.fromKeyhash(await (await this.getStakingKey()).hash()),
+      await CardanoMobile.Credential.fromKeyhash(await (await this.getStakingKey()).hash()),
       await this.getAddressedUtxos(),
       false,
     )
@@ -668,7 +690,8 @@ export class ByronWallet implements YoroiWallet {
   // =================== tx building =================== //
 
   async createUnsignedTx(entries: YoroiEntry[], auxiliaryData?: Array<CardanoTypes.TxMetadata>) {
-    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
+    const networkConfig = this.getNetworkConfig()
+    const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(networkConfig))
     const time = await this.checkServerStatus()
       .then(({serverTime}) => serverTime || Date.now())
       .catch(() => Date.now())
@@ -676,16 +699,18 @@ export class ByronWallet implements YoroiWallet {
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this.getAddressedChangeAddress()
     const addressedUtxos = await this.getAddressedUtxos()
-    const networkConfig = this.getNetworkConfig()
     const primaryTokenId = this.primaryTokenInfo.id
 
     const recipients = await toRecipients(entries, this.primaryToken)
 
     const containsDatum = recipients.some((recipient) => recipient.datum)
 
-    if (recipients.filter((r) => r.datum).length > 1) {
-      throw new Error('Only one datum per transaction is supported')
-    }
+    const {
+      coinsPerUtxoByte,
+      keyDeposit,
+      linearFee: {coefficient, constant},
+      poolDeposit,
+    } = await this.getProtocolParams()
 
     try {
       const unsignedTx = await Cardano.createUnsignedTx(
@@ -694,16 +719,14 @@ export class ByronWallet implements YoroiWallet {
         recipients,
         changeAddr,
         {
-          keyDeposit: networkConfig.KEY_DEPOSIT,
+          keyDeposit,
           linearFee: {
-            coefficient: networkConfig.LINEAR_FEE.COEFFICIENT,
-            constant: containsDatum
-              ? String(BigInt(networkConfig.LINEAR_FEE.CONSTANT) * 2n)
-              : networkConfig.LINEAR_FEE.CONSTANT,
+            coefficient,
+            constant: containsDatum ? String(BigInt(constant) * 2n) : constant,
           },
           minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
-          coinsPerUtxoWord: networkConfig.COINS_PER_UTXO_WORD,
-          poolDeposit: networkConfig.POOL_DEPOSIT,
+          coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+          poolDeposit,
           networkId: networkConfig.NETWORK_ID,
         },
         this.primaryToken,
@@ -712,7 +735,7 @@ export class ByronWallet implements YoroiWallet {
 
       return yoroiUnsignedTx({
         unsignedTx,
-        networkConfig: this.getNetworkConfig(),
+        networkConfig,
         addressedUtxos,
         entries,
         primaryTokenId,
@@ -726,6 +749,52 @@ export class ByronWallet implements YoroiWallet {
 
   signSwapCancellationWithLedger(): Promise<void> {
     return Promise.reject(new Error('Method not implemented.'))
+  }
+
+  async createUnsignedGovernanceTx(votingCertificates: CardanoTypes.Certificate[]) {
+    const time = await this.checkServerStatus()
+      .then(({serverTime}) => serverTime || Date.now())
+      .catch(() => Date.now())
+    const primaryTokenId = this.primaryTokenInfo.id
+    const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
+    const changeAddr = await this.getAddressedChangeAddress()
+    const addressedUtxos = await this.getAddressedUtxos()
+    const networkConfig = this.getNetworkConfig()
+
+    const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
+
+    try {
+      const unsignedTx = await Cardano.createUnsignedTx(
+        absSlotNumber,
+        addressedUtxos,
+        [],
+        changeAddr,
+        {
+          keyDeposit,
+          linearFee,
+          minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
+          coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+          poolDeposit,
+          networkId: networkConfig.NETWORK_ID,
+        },
+        PRIMARY_TOKEN,
+        {},
+        votingCertificates,
+      )
+
+      return yoroiUnsignedTx({
+        unsignedTx,
+        networkConfig: networkConfig,
+        addressedUtxos,
+        entries: [],
+        governance: true,
+        primaryTokenId,
+      })
+    } catch (e) {
+      if (e instanceof NotEnoughMoneyToSendError || e instanceof NoOutputsError) throw e
+      Logger.error(`shelley::createUnsignedGovernanceTx:: ${(e as Error).message}`, e)
+      throw new CardanoError((e as Error).message)
+    }
   }
 
   async signTx(unsignedTx: YoroiUnsignedTx, decryptedMasterKey: string) {
@@ -794,6 +863,8 @@ export class ByronWallet implements YoroiWallet {
       defaults: this.primaryToken,
     }
 
+    const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
+
     const unsignedTx = await Cardano.createUnsignedDelegationTx(
       absSlotNumber,
       addressedUtxos,
@@ -805,14 +876,11 @@ export class ByronWallet implements YoroiWallet {
       this.primaryToken,
       {},
       {
-        keyDeposit: networkConfig.KEY_DEPOSIT,
-        linearFee: {
-          constant: networkConfig.LINEAR_FEE.CONSTANT,
-          coefficient: networkConfig.LINEAR_FEE.COEFFICIENT,
-        },
+        keyDeposit,
+        linearFee,
         minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
-        coinsPerUtxoWord: networkConfig.COINS_PER_UTXO_WORD,
-        poolDeposit: networkConfig.POOL_DEPOSIT,
+        coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+        poolDeposit,
         networkId: networkConfig.NETWORK_ID,
       },
     )
@@ -828,7 +896,9 @@ export class ByronWallet implements YoroiWallet {
   async getFirstPaymentAddress() {
     const externalAddress = this.externalAddresses[0]
     const addr = await Cardano.Wasm.Address.fromBech32(externalAddress)
-    return Cardano.Wasm.BaseAddress.fromAddress(addr)
+    const address = await Cardano.Wasm.BaseAddress.fromAddress(addr)
+    if (!address) throw new Error('invalid address')
+    return address
   }
 
   async ledgerSupportsCIP36(useUSB: boolean): Promise<boolean> {
@@ -859,15 +929,14 @@ export class ByronWallet implements YoroiWallet {
       const stakingPublicKey = await this.getStakingKey()
       const changeAddr = await this.getAddressedChangeAddress()
       const networkConfig = this.getNetworkConfig()
+      const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
+
       const config = {
-        keyDeposit: networkConfig.KEY_DEPOSIT,
-        linearFee: {
-          coefficient: networkConfig.LINEAR_FEE.COEFFICIENT,
-          constant: networkConfig.LINEAR_FEE.CONSTANT,
-        },
+        keyDeposit,
+        linearFee,
         minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
-        coinsPerUtxoWord: networkConfig.COINS_PER_UTXO_WORD,
-        poolDeposit: networkConfig.POOL_DEPOSIT,
+        coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+        poolDeposit,
         networkId: networkConfig.NETWORK_ID,
       }
       const txOptions = {}
@@ -882,7 +951,7 @@ export class ByronWallet implements YoroiWallet {
         .then((a) => a.toBytes())
         .then((b) => Buffer.from(b).toString('hex'))
 
-      const addressingCIP36 = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32()))
+      const addressingCIP36 = this.getAddressing(await baseAddr.toAddress().then((a) => a.toBech32(undefined)))
 
       const unsignedTx = await Cardano.createUnsignedVotingTx(
         absSlotNumber,
@@ -901,7 +970,7 @@ export class ByronWallet implements YoroiWallet {
         supportsCIP36,
       )
 
-      const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32())
+      const rewardAddress = await this.getRewardAddress().then((address) => address.toBech32(undefined))
 
       const votingRegistration: {
         votingPublicKey: string
@@ -936,6 +1005,7 @@ export class ByronWallet implements YoroiWallet {
   }
 
   async createWithdrawalTx(shouldDeregister: boolean): Promise<YoroiUnsignedTx> {
+    const networkConfig = this.getNetworkConfig()
     const timeToSlotFn = genTimeToSlot(getCardanoBaseConfig(this.getNetworkConfig()))
     const primaryTokenId = this.primaryTokenInfo.id
 
@@ -946,10 +1016,9 @@ export class ByronWallet implements YoroiWallet {
     const absSlotNumber = new BigNumber(timeToSlotFn({time}).slot)
     const changeAddr = await this.getAddressedChangeAddress()
     const addressedUtxos = await this.getAddressedUtxos()
-    const accountState = await legacyApi.getAccountState(
-      {addresses: [this.rewardAddressHex]},
-      this.getNetworkConfig().BACKEND,
-    )
+    const accountState = await legacyApi.getAccountState({addresses: [this.rewardAddressHex]}, networkConfig.BACKEND)
+
+    const {coinsPerUtxoByte, keyDeposit, linearFee, poolDeposit} = await this.getProtocolParams()
 
     const withdrawalTx = await Cardano.createUnsignedWithdrawalTx(
       accountState,
@@ -965,22 +1034,19 @@ export class ByronWallet implements YoroiWallet {
       ],
       changeAddr,
       {
-        linearFee: {
-          coefficient: this.getNetworkConfig().LINEAR_FEE.COEFFICIENT,
-          constant: this.getNetworkConfig().LINEAR_FEE.CONSTANT,
-        },
-        minimumUtxoVal: this.getNetworkConfig().MINIMUM_UTXO_VAL,
-        coinsPerUtxoWord: this.getNetworkConfig().COINS_PER_UTXO_WORD,
-        poolDeposit: this.getNetworkConfig().POOL_DEPOSIT,
-        keyDeposit: this.getNetworkConfig().KEY_DEPOSIT,
-        networkId: this.getNetworkConfig().NETWORK_ID,
+        keyDeposit,
+        linearFee,
+        minimumUtxoVal: networkConfig.MINIMUM_UTXO_VAL,
+        coinsPerUtxoWord: String(Number(coinsPerUtxoByte) * 8),
+        poolDeposit,
+        networkId,
       },
       {metadata: undefined},
     )
 
     return yoroiUnsignedTx({
       unsignedTx: withdrawalTx,
-      networkConfig: this.getNetworkConfig(),
+      networkConfig,
       addressedUtxos,
       primaryTokenId,
     })
@@ -1046,6 +1112,10 @@ export class ByronWallet implements YoroiWallet {
     return legacyApi.checkServerStatus(this.getBackendConfig())
   }
 
+  getProtocolParams() {
+    return this.cardanoApi.getProtocolParams()
+  }
+
   async submitTransaction(signedTx: string) {
     const response: any = await legacyApi.submitTransaction(signedTx, this.getBackendConfig())
     Logger.info(response)
@@ -1078,15 +1148,20 @@ export class ByronWallet implements YoroiWallet {
     return this._collateralId
   }
 
-  getCollateralInfo(): {utxo: RawUtxo | undefined; amount: Balance.Amount; collateralId: string} {
+  getCollateralInfo() {
     const utxos = utxosMaker(this._utxos)
-    const collateralUtxo = utxos.findById(this.collateralId)
-    const quantity = collateralUtxo?.amount !== undefined ? asQuantity(collateralUtxo?.amount) : Quantities.zero
+    const collateralId = this.collateralId
+    const collateralUtxo = utxos.findById(collateralId)
+    const quantity = collateralUtxo?.amount !== undefined ? asQuantity(collateralUtxo.amount) : Quantities.zero
+    const txInfos = this.transactions
+    const collateralTxId = collateralId ? collateralId.split(':')[0] : null
+    const isConfirmed = !!collateralTxId && Object.values(txInfos).some((tx) => tx.id === collateralTxId)
 
     return {
       utxo: collateralUtxo,
       amount: {quantity, tokenId: this.primaryTokenInfo.id},
-      collateralId: this.collateralId,
+      collateralId,
+      isConfirmed,
     }
   }
 
@@ -1121,15 +1196,15 @@ export class ByronWallet implements YoroiWallet {
   }
 
   public async signRawTx(txHex: string, pKeys: PrivateKey[]) {
-    return signRawTransaction(txHex, pKeys)
+    return signRawTransaction(CardanoMobile, txHex, pKeys)
   }
 
   async fetchTokenInfo(tokenId: string) {
     const apiUrl = this.getBackendConfig().TOKEN_INFO_SERVICE
     if (!apiUrl) throw new Error('invalid wallet')
 
-    const isMainnet = this.networkId === 1
-    const isTestnet = this.networkId === 300
+    const isMainnet = isMainnetNetworkId(this.networkId)
+    const isTestnet = !isMainnet
 
     if ((tokenId === '' || tokenId === 'ADA') && isMainnet) {
       return primaryTokenInfo.mainnet
@@ -1176,7 +1251,7 @@ export class ByronWallet implements YoroiWallet {
 
   private subscriptions: Array<WalletSubscription> = []
 
-  private _onTxHistoryUpdateSubscriptions: Array<(Wallet) => void> = []
+  private _onTxHistoryUpdateSubscriptions: Array<(wallet: YoroiWallet) => void> = []
 
   private _isUsedAddressIndexSelector = defaultMemoize((perAddressTxs) =>
     _.mapValues(perAddressTxs, (txs) => {
@@ -1331,7 +1406,7 @@ export class ByronWallet implements YoroiWallet {
 
   private async discoverAddresses() {
     // last chunk gap limit check
-    const filterFn = (addrs) => legacyApi.filterUsedAddresses(addrs, this.getBackendConfig())
+    const filterFn = (addrs: Addresses) => legacyApi.filterUsedAddresses(addrs, this.getBackendConfig())
     await Promise.all([this.internalChain.sync(filterFn), this.externalChain.sync(filterFn)])
   }
 

@@ -29,9 +29,16 @@ export const useNavigateTo = () => {
                   state: {
                     routes: [
                       {
-                        name: 'swap-start-swap',
+                        name: 'history',
                         state: {
-                          routes: [{name: 'orders'}],
+                          routes: [
+                            {
+                              name: 'swap-start-swap',
+                              state: {
+                                routes: [{name: 'orders'}],
+                              },
+                            },
+                          ],
                         },
                       },
                     ],

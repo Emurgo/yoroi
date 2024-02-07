@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {FlatList, InteractionManager, Linking, RefreshControl, StyleSheet, Text, TouchableOpacity} from 'react-native'
@@ -11,10 +11,12 @@ import {StatusBar} from '../../components/StatusBar'
 import {showErrorDialog} from '../../dialogs'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {isNightly} from '../../legacy/config'
+import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
 import {useWalletManager} from '../../WalletManager'
 import * as HASKELL_SHELLEY from '../../yoroi-wallets/cardano/constants/mainnet/constants'
+import * as SANCHONET from '../../yoroi-wallets/cardano/constants/sanchonet/constants'
 import * as HASKELL_SHELLEY_TESTNET from '../../yoroi-wallets/cardano/constants/testnet/constants'
 import {InvalidState, NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {isJormungandr} from '../../yoroi-wallets/cardano/networks'
@@ -33,6 +35,13 @@ export const WalletSelectionScreen = () => {
   const selectWalletMeta = useSetSelectedWalletMeta()
   const selectWallet = useSetSelectedWallet()
   const intl = useIntl()
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.allWalletsPageViewed()
+    }, [track]),
+  )
 
   const {openWallet, isLoading} = useOpenWallet({
     onSuccess: ([wallet, walletMeta]) => {
@@ -88,6 +97,8 @@ export const WalletSelectionScreen = () => {
       <ShelleyButton />
 
       <OnlyNightlyShelleyTestnetButton />
+
+      <OnlyNightlyShelleySanchonetButton />
 
       <OnlyDevButton />
 
@@ -195,6 +206,25 @@ const OnlyNightlyShelleyTestnetButton = () => {
       testID="addWalletPreprodShelleyButton"
     />
   )
+}
+
+const OnlyNightlyShelleySanchonetButton = () => {
+  const navigation = useNavigation()
+  const strings = useStrings()
+
+  if (!isNightly() && !__DEV__) return null
+
+  const handleOnPress = () => {
+    navigation.navigate('new-wallet', {
+      screen: 'choose-create-restore',
+      params: {
+        networkId: SANCHONET.NETWORK_ID,
+        walletImplementationId: SANCHONET.WALLET_IMPLEMENTATION_ID,
+      },
+    })
+  }
+
+  return <Button onPress={handleOnPress} title={`${strings.addWalletButton} (sanchonet)`} style={styles.button} />
 }
 
 const OnlyDevButton = () => {

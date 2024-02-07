@@ -1,0 +1,1 @@
+export {catalystManagerMaker} from './manager'

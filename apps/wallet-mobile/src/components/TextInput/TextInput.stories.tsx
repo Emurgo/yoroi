@@ -83,7 +83,7 @@ storiesOf('TextInput', module)
       autoFocus
       label="with helper text"
       onChangeText={action('onChangeText')}
-      helperText="This is what helper text looks like"
+      helper="This is what helper text looks like"
       autoComplete="off"
     />
   ))
@@ -92,7 +92,7 @@ storiesOf('TextInput', module)
       autoFocus
       label="with helper text and error text"
       onChangeText={action('onChangeText')}
-      helperText="This is what helper text looks like"
+      helper="This is what helper text looks like"
       errorText="This is what an error looks likes"
       autoComplete="off"
     />

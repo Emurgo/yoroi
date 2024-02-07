@@ -110,6 +110,7 @@ export const WalletSettingsScreen = () => {
           <ResyncButton />
 
           <SettingsCollateralItem
+            icon={<Icon.Collateral {...iconProps} />}
             label={strings.collateral}
             onNavigate={() => settingsNavigation.navigate('manage-collateral')}
           />

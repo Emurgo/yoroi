@@ -1,11 +1,11 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 
 import {Button, Spacer, Text, TextInput} from '../../../../components'
 import {debugWalletInfo, features} from '../../../../features'
-import {COLORS} from '../../../../theme'
-import {WrongPassword} from '../../../../yoroi-wallets/cardano/errors'
 import {useStrings} from '../../common/strings'
+import {getErrorMessage} from '../errors'
 
 export type ErrorData = {
   errorMessage: string
@@ -25,6 +25,9 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
     features.prefillWalletInfo ? debugWalletInfo.PASSWORD : '',
   )
   const strings = useStrings()
+  const styles = useStyles()
+
+  const errorMessage = error ? getErrorMessage(error, strings) : null
 
   return (
     <>
@@ -43,12 +46,10 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
         autoComplete="off"
       />
 
-      {error != null && (
-        <View>
-          <Text style={styles.errorMessage} numberOfLines={3}>
-            {getErrorMessage(error, strings)}
-          </Text>
-        </View>
+      {errorMessage != null && (
+        <Text style={styles.errorMessage} numberOfLines={3}>
+          {errorMessage}
+        </Text>
       )}
 
       <Spacer fill />
@@ -70,33 +71,29 @@ export const ConfirmWithSpendingPassword = ({onSubmit, isLoading, error, onPassw
   )
 }
 
-const getErrorMessage = (error: unknown, strings: Record<'wrongPasswordMessage' | 'error', string>) => {
-  if (error instanceof WrongPassword) {
-    return strings.wrongPasswordMessage
-  }
-  if (error instanceof Error) {
-    return error.message
-  }
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
 
-  return strings.error
+  const styles = StyleSheet.create({
+    modalText: {
+      paddingHorizontal: 70,
+      textAlign: 'center',
+      paddingBottom: 8,
+    },
+    errorMessage: {
+      color: color.magenta[500],
+      textAlign: 'center',
+    },
+    loading: {
+      position: 'absolute',
+      height: '100%',
+      left: 0,
+      right: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  })
+
+  return styles
 }
-
-const styles = StyleSheet.create({
-  modalText: {
-    paddingHorizontal: 70,
-    textAlign: 'center',
-    paddingBottom: 8,
-  },
-  errorMessage: {
-    color: COLORS.ERROR_TEXT_COLOR,
-    textAlign: 'center',
-  },
-  loading: {
-    position: 'absolute',
-    height: '100%',
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})

@@ -19,9 +19,9 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
   const {openModal, closeModal, startLoading, stopLoading} = useModal()
   const navigateTo = useNavigateTo()
 
-  const {receiverChanged, amountChanged, tokenSelectedChanged, resetForm, memoChanged} = useSend()
+  const {receiverResolveChanged, amountChanged, tokenSelectedChanged, reset: resetSendState, memoChanged} = useSend()
 
-  const {reset, scanActionClaimChanged, address, claimTokenChanged} = useClaim()
+  const {reset: resetClaimState, scanActionClaimChanged, address, claimTokenChanged} = useClaim()
   const claimErrorResolver = useClaimErrorResolver()
   const {claimTokens} = useClaimTokens({
     onSuccess: (claimToken) => {
@@ -43,9 +43,9 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
         navigateTo.back()
         navigateTo.send()
 
-        if (insideFeature !== 'send') resetForm()
+        if (insideFeature !== 'send') resetSendState()
 
-        receiverChanged(scanAction.receiver)
+        receiverResolveChanged(scanAction.receiver)
 
         if (scanAction.params) {
           if ('amount' in scanAction.params) {
@@ -66,15 +66,15 @@ export const useTriggerScanAction = ({insideFeature}: {insideFeature: ScanFeatur
         navigateTo.back()
         navigateTo.send()
 
-        if (insideFeature !== 'send') resetForm()
+        if (insideFeature !== 'send') resetSendState()
 
-        receiverChanged(scanAction.receiver)
+        receiverResolveChanged(scanAction.receiver)
         break
       }
 
       case 'claim': {
         navigateTo.back()
-        reset()
+        resetClaimState()
         scanActionClaimChanged(scanAction)
 
         const handleOnContinue = () => {

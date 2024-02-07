@@ -13,7 +13,10 @@ export const mocks = {
         targets: [
           {
             ...initialState.targets[0],
-            receiver: 'invalid_address',
+            receiver: {
+              ...initialState.targets[0].receiver,
+              receiver: 'invalid_address',
+            },
             entry: {
               ...initialState.targets[0].entry,
               address: 'invalid_address',

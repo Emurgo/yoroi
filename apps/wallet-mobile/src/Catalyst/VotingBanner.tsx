@@ -1,3 +1,4 @@
+import {catalystManagerMaker} from '@yoroi/staking'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -8,7 +9,6 @@ import globalMessages, {confirmationMessages} from '../i18n/global-messages'
 import {isNightly} from '../legacy/config'
 import {Logger} from '../legacy/logging'
 import {COLORS} from '../theme'
-import {isRegistrationOpen} from '../yoroi-wallets/cardano/catalyst/catalystUtils'
 import {useCanVote} from './hooks'
 import {InsufficientFundsModal} from './InsufficientFundsModal'
 
@@ -42,7 +42,9 @@ export const VotingBanner = ({onPress, disabled}: Props) => {
         }
       }
 
-      setShowCatalystBanner((canVote && isRegistrationOpen(fundInfo)) || isNightly() || __DEV__)
+      const catalyst = catalystManagerMaker()
+
+      setShowCatalystBanner((canVote && catalyst.isRegistrationOpen(fundInfo)) || isNightly() || __DEV__)
     }
 
     checkCatalystFundInfo()
@@ -103,7 +105,7 @@ const useStrings = () => {
     name: intl.formatMessage(messages.name),
     attention: intl.formatMessage(globalMessages.attention),
     back: intl.formatMessage(confirmationMessages.commonButtons.backButton),
-    noBalance: ({requiredBalance, currentBalance}) =>
+    noBalance: ({requiredBalance, currentBalance}: {requiredBalance: string; currentBalance: string}) =>
       intl.formatMessage(globalMessages.insufficientBalance, {
         requiredBalance,
         currentBalance,

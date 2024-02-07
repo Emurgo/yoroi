@@ -12,6 +12,16 @@ export const mockMetricsManager = (): MetricsManager => {
 
   const init = () => Promise.resolve()
   const track = {
+    allWalletsPageViewed: e,
+    assetsPageViewed: e,
+    menuPageViewed: e,
+    receivePageViewed: e,
+    settingsPageViewed: e,
+    stakingCenterPageViewed: e,
+    transactionsPageViewed: e,
+    votingPageViewed: e,
+    walletPageViewed: e,
+
     nftGalleryDetailsTab: e,
     nftGalleryPageViewed: e,
     nftGallerySearchActivated: e,
@@ -36,7 +46,15 @@ export const mockMetricsManager = (): MetricsManager => {
     swapCancelationSubmitted: e,
 
     walletPageExchangeClicked: e,
-    walletPageExchangeBottomSheetClicked: e,
+    walletPageBuyBannerClicked: e,
+
+    exchangePageViewed: e,
+    exchangeSubmitted: e,
+
+    governanceChooseDrepPageViewed: e,
+    governanceConfirmTransactionPageViewed: e,
+    governanceDashboardPageViewed: e,
+    governanceTransactionSuccessPageViewed: e,
   } as const
 
   return {

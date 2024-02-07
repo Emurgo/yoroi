@@ -1,5 +1,5 @@
 import {EnrichmentPlugin, Event, PluginType} from '@amplitude/analytics-types'
-import {parseBoolean, rootStorage} from '@yoroi/common'
+import {isKeyOf, parseBoolean, rootStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import * as React from 'react'
 import Config from 'react-native-config'
@@ -15,7 +15,12 @@ const buildVariants = {
   DEV: 'development',
 } as const
 type MetricsEnv = (typeof buildVariants)[keyof typeof buildVariants]
-const currentBuildVariant = Config.BUILD_VARIANT ?? 'DEV'
+type BUILD_VARIANT_KEY = keyof typeof buildVariants
+
+const isBuildVariant = (variant?: string): variant is BUILD_VARIANT_KEY =>
+  typeof variant === 'string' && isKeyOf(variant, buildVariants)
+
+const currentBuildVariant = isBuildVariant(Config?.BUILD_VARIANT) ? Config.BUILD_VARIANT : 'DEV'
 const environment: MetricsEnv = Object.keys(buildVariants).includes(currentBuildVariant)
   ? buildVariants[currentBuildVariant]
   : buildVariants.DEV
@@ -25,7 +30,7 @@ const infoPlugin: EnrichmentPlugin = {
   type: PluginType.ENRICHMENT,
   setup: async () => Promise.resolve(),
   execute: async (event: Event) => {
-    Logger.info('[metrics-react-native]', event.event_type, event.event_properties)
+    Logger.info('[metrics-react-native]', event.event_type, event.event_properties ?? '- No properties')
     return Promise.resolve(event)
   },
 }
@@ -96,6 +101,16 @@ export const makeMetricsManager = (
       })
 
   const track = {
+    allWalletsPageViewed: metricsModule.allWalletsPageViewed.bind(metricsModule),
+    assetsPageViewed: metricsModule.assetsPageViewed.bind(metricsModule),
+    menuPageViewed: metricsModule.menuPageViewed.bind(metricsModule),
+    receivePageViewed: metricsModule.receivePageViewed.bind(metricsModule),
+    settingsPageViewed: metricsModule.settingsPageViewed.bind(metricsModule),
+    stakingCenterPageViewed: metricsModule.stakingCenterPageViewed.bind(metricsModule),
+    transactionsPageViewed: metricsModule.transactionsPageViewed.bind(metricsModule),
+    votingPageViewed: metricsModule.votingPageViewed.bind(metricsModule),
+    walletPageViewed: metricsModule.walletPageViewed.bind(metricsModule),
+
     nftGalleryDetailsTab: metricsModule.nftGalleryDetailsTab.bind(metricsModule),
     nftGalleryPageViewed: metricsModule.nftGalleryPageViewed.bind(metricsModule),
     nftGallerySearchActivated: metricsModule.nftGallerySearchActivated.bind(metricsModule),
@@ -120,7 +135,15 @@ export const makeMetricsManager = (
     swapCancelationSubmitted: metricsModule.swapCancelationSubmitted.bind(metricsModule),
 
     walletPageExchangeClicked: metricsModule.walletPageExchangeClicked.bind(metricsModule),
-    walletPageExchangeBottomSheetClicked: metricsModule.walletPageExchangeBottomSheetClicked.bind(metricsModule),
+    walletPageBuyBannerClicked: metricsModule.walletPageBuyBannerClicked.bind(metricsModule),
+
+    exchangePageViewed: metricsModule.exchangePageViewed.bind(metricsModule),
+    exchangeSubmitted: metricsModule.exchangeSubmitted.bind(metricsModule),
+
+    governanceChooseDrepPageViewed: metricsModule.governanceChooseDrepPageViewed.bind(metricsModule),
+    governanceConfirmTransactionPageViewed: metricsModule.governanceConfirmTransactionPageViewed.bind(metricsModule),
+    governanceDashboardPageViewed: metricsModule.governanceDashboardPageViewed.bind(metricsModule),
+    governanceTransactionSuccessPageViewed: metricsModule.governanceTransactionSuccessPageViewed.bind(metricsModule),
   } as const
 
   return {

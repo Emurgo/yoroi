@@ -26,14 +26,13 @@ import {COLORS} from '../../../../../theme'
 import {useSync, useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
+import {PRICE_PRECISION} from '../../../common/constants'
 import {Counter} from '../../../common/Counter/Counter'
 import {parseOrderTxMetadata} from '../../../common/helpers'
 import {EmptyCompletedOrdersIllustration} from '../../../common/Illustrations/EmptyCompletedOrdersIllustration'
 import {LiquidityPool} from '../../../common/LiquidityPool/LiquidityPool'
 import {PoolIcon} from '../../../common/PoolIcon/PoolIcon'
 import {useStrings} from '../../../common/strings'
-
-const PRECISION = 10
 
 export type MappedRawOrder = {
   id: string
@@ -157,7 +156,7 @@ export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tok
   const sellQuantity = Quantities.format(metadata.sellQuantity as Balance.Quantity, sellTokenInfo?.decimals ?? 0)
   const tokenPrice = asQuantity(new BigNumber(metadata.sellQuantity).dividedBy(metadata.buyQuantity).toString())
   const denomination = (sellTokenInfo?.decimals ?? 0) - (buyTokenInfo?.decimals ?? 0)
-  const marketPrice = Quantities.format(tokenPrice ?? Quantities.zero, denomination, PRECISION)
+  const marketPrice = Quantities.format(tokenPrice ?? Quantities.zero, denomination, PRICE_PRECISION)
   const buyLabel = buyTokenInfo?.ticker ?? buyTokenInfo?.name ?? '-'
   const sellLabel = sellTokenInfo?.ticker ?? sellTokenInfo?.name ?? '-'
 
@@ -167,7 +166,7 @@ export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tok
       info={
         <HiddenInfo
           txId={id}
-          total={`${buyQuantity} ${buyLabel}`}
+          total={`${sellQuantity} ${sellLabel}`}
           onTxPress={() => openInExplorer(id, wallet.networkId)}
           provider={metadata.provider}
         />
@@ -189,7 +188,7 @@ export const ExpandableOrder = ({order, tokenInfos}: {order: MappedRawOrder; tok
         tokenPrice={marketPrice}
         sellLabel={sellLabel}
         buyLabel={buyLabel}
-        tokenAmount={`${sellQuantity} ${sellLabel}`}
+        tokenAmount={`${buyQuantity} ${buyLabel}`}
         txTimeCreated={intl.formatDate(new Date(order.date), {
           dateStyle: 'short',
           timeStyle: 'medium',

@@ -1,5 +1,5 @@
 import {Datum} from '@emurgo/yoroi-lib'
-import {App, Balance} from '@yoroi/types'
+import {App, Balance, Resolver} from '@yoroi/types'
 
 import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
@@ -20,6 +20,7 @@ export type YoroiTxInfo = {
   metadata: YoroiMetadata
   staking: YoroiStaking
   voting: YoroiVoting
+  governance: boolean
 }
 
 export type YoroiStaking = {
@@ -41,6 +42,8 @@ export type YoroiVoting = {
 export type Address = string
 export type TokenId = string
 
+export type YoroiTokenId = `${string}.${string}`
+
 export type YoroiEntry = {
   address: Address
   amounts: Balance.Amounts
@@ -52,7 +55,7 @@ export type YoroiMetadata = {
 }
 
 export type YoroiTarget = {
-  receiver: string
+  receiver: Resolver.Receiver
   entry: YoroiEntry
 }
 

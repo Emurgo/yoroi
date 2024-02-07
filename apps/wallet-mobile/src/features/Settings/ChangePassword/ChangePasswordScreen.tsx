@@ -1,11 +1,11 @@
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
+import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import {MutationOptions, useMutation} from 'react-query'
 
-import {Button, Checkmark, Spacer, TextInput} from '../../../components'
+import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
 import {errorMessages} from '../../../i18n/global-messages'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {COLORS} from '../../../theme'
@@ -37,67 +37,69 @@ export const ChangePasswordScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <ScrollView bounces={false} keyboardDismissMode="on-drag" contentContainerStyle={styles.contentContainer}>
-        <CurrentPasswordInput
-          ref={currentPasswordRef}
-          enablesReturnKeyAutomatically
-          autoFocus
-          secureTextEntry
-          label={strings.oldPasswordInputLabel}
-          value={currentPassword}
-          onChange={reset}
-          onChangeText={setCurrentPassword}
-          returnKeyType="next"
-          onSubmitEditing={() => newPasswordRef.current?.focus()}
-          errorText={isError ? strings.incorrectPassword : undefined}
-          autoComplete="off"
-        />
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ScrollView bounces={false} keyboardDismissMode="on-drag" contentContainerStyle={styles.contentContainer}>
+          <CurrentPasswordInput
+            ref={currentPasswordRef}
+            enablesReturnKeyAutomatically
+            autoFocus
+            secureTextEntry
+            label={strings.oldPasswordInputLabel}
+            value={currentPassword}
+            onChange={reset}
+            onChangeText={setCurrentPassword}
+            returnKeyType="next"
+            onSubmitEditing={() => newPasswordRef.current?.focus()}
+            errorText={isError ? strings.incorrectPassword : undefined}
+            autoComplete="off"
+          />
 
-        <Spacer />
+          <Spacer />
 
-        <PasswordInput
-          ref={newPasswordRef}
-          enablesReturnKeyAutomatically
-          secureTextEntry
-          label={strings.newPasswordInputLabel}
-          value={newPassword}
-          onChangeText={setNewPassword}
-          errorText={newPasswordErrors.passwordIsWeak ? strings.passwordStrengthRequirement : undefined}
-          helperText={strings.passwordStrengthRequirement}
-          returnKeyType="next"
-          onSubmitEditing={() => newPasswordConfirmationRef.current?.focus()}
-          right={!newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined}
-          autoComplete="off"
-        />
+          <PasswordInput
+            ref={newPasswordRef}
+            enablesReturnKeyAutomatically
+            secureTextEntry
+            label={strings.newPasswordInputLabel}
+            value={newPassword}
+            onChangeText={setNewPassword}
+            errorText={newPasswordErrors.passwordIsWeak ? strings.passwordStrengthRequirement : undefined}
+            helper={strings.passwordStrengthRequirement}
+            returnKeyType="next"
+            onSubmitEditing={() => newPasswordConfirmationRef.current?.focus()}
+            right={!newPasswordErrors.passwordIsWeak ? <Checkmark /> : undefined}
+            autoComplete="off"
+          />
 
-        <Spacer />
+          <Spacer />
 
-        <PasswordConfirmationInput
-          ref={newPasswordConfirmationRef}
-          enablesReturnKeyAutomatically
-          secureTextEntry
-          label={strings.repeatPasswordInputLabel}
-          value={newPasswordConfirmation}
-          onChangeText={setNewPasswordConfirmation}
-          errorText={newPasswordErrors.matchesConfirmation ? strings.repeatPasswordInputNotMatchError : undefined}
-          returnKeyType="done"
-          right={
-            !newPasswordErrors.matchesConfirmation && !newPasswordErrors.passwordConfirmationReq ? (
-              <Checkmark />
-            ) : undefined
-          }
-          autoComplete="off"
-        />
-      </ScrollView>
+          <PasswordConfirmationInput
+            ref={newPasswordConfirmationRef}
+            enablesReturnKeyAutomatically
+            secureTextEntry
+            label={strings.repeatPasswordInputLabel}
+            value={newPasswordConfirmation}
+            onChangeText={setNewPasswordConfirmation}
+            errorText={newPasswordErrors.matchesConfirmation ? strings.repeatPasswordInputNotMatchError : undefined}
+            returnKeyType="done"
+            right={
+              !newPasswordErrors.matchesConfirmation && !newPasswordErrors.passwordConfirmationReq ? (
+                <Checkmark />
+              ) : undefined
+            }
+            autoComplete="off"
+          />
+        </ScrollView>
 
-      <Actions>
-        <Button
-          onPress={() => changePassword({currentPassword, newPassword})}
-          disabled={hasErrors}
-          title={strings.continueButton}
-          shelleyTheme
-        />
-      </Actions>
+        <Actions>
+          <Button
+            onPress={() => changePassword({currentPassword, newPassword})}
+            disabled={hasErrors}
+            title={strings.continueButton}
+            shelleyTheme
+          />
+        </Actions>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }
@@ -105,7 +107,7 @@ export const ChangePasswordScreen = () => {
 const CurrentPasswordInput = TextInput
 const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
-const Actions = (props) => <View {...props} style={styles.actions} />
+const Actions = (props: ViewProps) => <View {...props} style={styles.actions} />
 
 const messages = defineMessages({
   oldPasswordInputLabel: {

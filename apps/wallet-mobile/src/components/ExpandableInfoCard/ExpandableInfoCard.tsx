@@ -126,6 +126,8 @@ export const HiddenInfoWrapper = ({
           )}
         </View>
 
+        <Spacer width={5} />
+
         {isString(value) ? (
           <View style={styles.flex}>
             {icon !== undefined && (
@@ -207,7 +209,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     fontWeight: '400',
-    color: '#242838',
+    color: '#000',
   },
   gray: {
     color: '#6B7384',

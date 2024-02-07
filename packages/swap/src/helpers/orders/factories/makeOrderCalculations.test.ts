@@ -120,10 +120,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0.06693552899045170664',
         market: '0.06693552899045170664',
+        actualPrice: '0.06716171329034198007',
         withSlippage: '0.06716171329034198007',
         withFees: '0.06721544266097425366',
         withFeesAndSlippage: '0.06721544266097425366',
         difference: '0.418183996965910966',
+        priceImpact: '0.33791366603308449',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -240,10 +242,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0.06693552899045170664',
         market: '0.06693552899045170664',
+        actualPrice: '0.06716171329034198007',
         withSlippage: '0.06716171329034198007',
         withFees: '0.06721544266097425366',
         withFeesAndSlippage: '0.06721544266097425366',
         difference: '0.418183996965910966',
+        priceImpact: '0.33791366603308449',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -361,10 +365,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0.06693552899045170664',
         market: '0.06693552899045170664',
+        actualPrice: '0.0671617132966569541',
         withSlippage: '0.0671617132966569541',
         withFees: '0.06721544266729427966',
         withFeesAndSlippage: '0.06721544266729427966',
         difference: '0.418184006407871156',
+        priceImpact: '0.337913675467497163',
       },
       pool: pool,
     } as SwapOrderCalculation)
@@ -482,10 +488,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0.06693552899045170664',
         market: '0.06693552899045170664',
+        actualPrice: '0.0671617132966569541',
         withSlippage: '0.0671617132966569541',
         withFees: '0.06721544266729427966',
         withFeesAndSlippage: '0.06721544266729427966',
         difference: '0.418184006407871156',
+        priceImpact: '0.337913675467497163',
       },
       pool: pool,
     } as SwapOrderCalculation)
@@ -598,10 +606,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0.99009900990099009901',
         market: '0.99009900990099009901',
+        actualPrice: '1',
         withSlippage: '2',
         withFees: '1',
         withFeesAndSlippage: '2',
         difference: '1',
+        priceImpact: '1',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -712,10 +722,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0',
         market: '0',
+        actualPrice: '0',
         withSlippage: '0',
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '0',
+        priceImpact: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -827,10 +839,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '1',
         market: '1',
+        actualPrice: '0',
         withSlippage: '0',
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '-100',
+        priceImpact: '-100',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -942,10 +956,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '1',
         market: '1',
+        actualPrice: '0.01',
         withSlippage: '0.01',
         withFees: '0.01',
         withFeesAndSlippage: '0.01',
         difference: '-99',
+        priceImpact: '-99',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1057,10 +1073,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0',
         market: '0',
+        actualPrice: '100',
         withSlippage: '100',
         withFees: '100',
         withFeesAndSlippage: '100',
         difference: '0',
+        priceImpact: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1172,10 +1190,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0',
         market: '0',
+        actualPrice: '0',
         withSlippage: '0',
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '0',
+        priceImpact: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1284,10 +1304,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0',
         market: '0',
+        actualPrice: '0',
         withSlippage: '0',
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '0',
+        priceImpact: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1399,10 +1421,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0',
         market: '0',
+        actualPrice: '0.01',
         withSlippage: '0.01',
         withFees: '0.01',
         withFeesAndSlippage: '0.01',
         difference: '0',
+        priceImpact: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1514,10 +1538,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0',
         market: '0',
+        actualPrice: '100',
         withSlippage: '100',
         withFees: '100',
         withFeesAndSlippage: '100',
         difference: '0',
+        priceImpact: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1629,10 +1655,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0',
         market: '0',
+        actualPrice: '0',
         withSlippage: '0',
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '0',
+        priceImpact: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1741,10 +1769,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0',
         market: '0',
+        actualPrice: '0',
         withSlippage: '0',
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '0',
+        priceImpact: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1856,10 +1886,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0',
         market: '0',
+        actualPrice: '0.01',
         withSlippage: '0.01',
         withFees: '0.01',
         withFeesAndSlippage: '0.01',
         difference: '0',
+        priceImpact: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -1971,10 +2003,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '2',
         market: '1',
+        actualPrice: '2',
         withSlippage: '2',
         withFees: '2',
         withFeesAndSlippage: '2',
         difference: '0',
+        priceImpact: '100',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2086,10 +2120,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '2',
         market: '1',
+        actualPrice: '2',
         withSlippage: '2',
         withFees: '2',
         withFeesAndSlippage: '2',
         difference: '0',
+        priceImpact: '100',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2201,10 +2237,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '2',
         market: '1',
+        actualPrice: '2',
         withSlippage: '2',
         withFees: '2',
         withFeesAndSlippage: '2',
         difference: '0',
+        priceImpact: '100',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2316,10 +2354,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '2',
         market: '1',
+        actualPrice: '2',
         withSlippage: '2',
         withFees: '2',
         withFeesAndSlippage: '2',
         difference: '0',
+        priceImpact: '100',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2431,10 +2471,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '1',
         market: '1',
+        actualPrice: '1',
         withSlippage: '1',
         withFees: '1',
         withFeesAndSlippage: '1',
         difference: '0',
+        priceImpact: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2557,10 +2599,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '1',
         market: '1',
+        actualPrice: '1',
         withSlippage: '1',
         withFees: '1.0105',
         withFeesAndSlippage: '1.0105',
         difference: '1.05',
+        priceImpact: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2683,10 +2727,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '1',
         market: '1',
+        actualPrice: '1',
         withSlippage: '1',
         withFees: '1.01025',
         withFeesAndSlippage: '1.01025',
         difference: '1.025',
+        priceImpact: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2809,10 +2855,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '1',
         market: '1',
+        actualPrice: '1',
         withSlippage: '1',
         withFees: '1.0102',
         withFeesAndSlippage: '1.0102',
         difference: '1.02',
+        priceImpact: '0',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -2927,10 +2975,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '1',
         market: '1',
+        actualPrice: '0',
         withSlippage: '0',
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '-100',
+        priceImpact: '-100',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -3045,10 +3095,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '1',
         market: '1',
+        actualPrice: '0',
         withSlippage: '0',
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '-100',
+        priceImpact: '-100',
       },
       pool: pools[0],
     } as SwapOrderCalculation)
@@ -3161,10 +3213,12 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0.5',
         market: '0.5',
+        actualPrice: '0',
         withSlippage: '0',
         withFees: '0',
         withFeesAndSlippage: '0',
         difference: '-100',
+        priceImpact: '-100',
       },
       pool: pool,
     }
@@ -3278,10 +3332,488 @@ describe('makeOrderCalculations', () => {
       prices: {
         base: '0.5',
         market: '0.5',
+        actualPrice: '5025.12562814070351758794',
         withSlippage: '5025.12562814070351758794',
         withFees: '5025.12562814070351758794',
         withFeesAndSlippage: '5025.12562814070351758794',
         difference: '1004925.125628140703517588',
+        priceImpact: '1004925.125628140703517588',
+      },
+      pool: pool,
+    }
+    expect(calculations[0]).toStrictEqual(expectedCalculation)
+  })
+  it('should calculate fees and amounts correctly (case 29, price impact, zero pool fee, sell)', () => {
+    const pool: Swap.Pool = mocks.mockedPools8[0]!
+    const pools = [pool]
+    const amounts = {
+      sell: {
+        quantity: '250',
+        tokenId: 'tokenB',
+      } as Balance.Amount,
+      buy: {
+        quantity: '0',
+        tokenId: 'tokenA',
+      } as Balance.Amount,
+    }
+    const slippage = 0
+    const calculations = makeOrderCalculations({
+      orderType: 'market',
+      amounts: amounts,
+      limitPrice: undefined,
+      slippage: slippage,
+      pools: pools,
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: 'tokenA',
+        },
+        priceDenomination: 0,
+      },
+      lpTokenHeld: {
+        quantity: '0',
+        tokenId: 'tokenX',
+      },
+      side: 'sell',
+      frontendFeeTiers,
+    })
+    const expectedCalculation: SwapOrderCalculation = {
+      order: {
+        side: 'sell',
+        slippage: 0,
+        orderType: 'market',
+        limitPrice: undefined,
+        amounts: {
+          sell: {
+            quantity: '250',
+            tokenId: 'tokenB',
+          },
+          buy: {
+            quantity: '0',
+            tokenId: 'tokenA',
+          },
+        },
+        lpTokenHeld: {
+          quantity: '0',
+          tokenId: 'tokenX',
+        },
+      },
+      sides: {
+        sell: {
+          quantity: '250',
+          tokenId: 'tokenB',
+        },
+        buy: {
+          quantity: '200',
+          tokenId: 'tokenA',
+        },
+      },
+      cost: {
+        batcherFee: {
+          quantity: '0',
+          tokenId: '',
+        },
+        deposit: {
+          quantity: '0',
+          tokenId: '',
+        },
+        frontendFeeInfo: {
+          discountTier: undefined,
+          fee: {
+            quantity: '0',
+            tokenId: 'tokenA',
+          },
+        },
+        liquidityFee: {
+          quantity: '0',
+          tokenId: 'tokenB',
+        },
+
+        ptTotalRequired: {
+          tokenId: 'tokenA',
+          quantity: '0',
+        },
+      },
+      buyAmountWithSlippage: {
+        quantity: '200',
+        tokenId: 'tokenA',
+      },
+      ptTotalValueSpent: undefined,
+      hasSupply: true,
+      prices: {
+        base: '1',
+        market: '1',
+        actualPrice: '1.25',
+        withSlippage: '1.25',
+        withFees: '1.25',
+        withFeesAndSlippage: '1.25',
+        difference: '25',
+        priceImpact: '25',
+      },
+      pool: pool,
+    }
+    expect(calculations[0]).toStrictEqual(expectedCalculation)
+  })
+  it('should calculate fees and amounts correctly (case 30, price impact, with pool fee, sell)', () => {
+    const pool: Swap.Pool = mocks.mockedPools8[1]!
+    const pools = [pool]
+    const amounts = {
+      sell: {
+        quantity: '500',
+        tokenId: 'tokenB',
+      } as Balance.Amount,
+      buy: {
+        quantity: '0',
+        tokenId: 'tokenA',
+      } as Balance.Amount,
+    }
+    const slippage = 0
+    const calculations = makeOrderCalculations({
+      orderType: 'market',
+      amounts: amounts,
+      limitPrice: undefined,
+      slippage: slippage,
+      pools: pools,
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: 'tokenA',
+        },
+        priceDenomination: 0,
+      },
+      lpTokenHeld: {
+        quantity: '0',
+        tokenId: 'tokenX',
+      },
+      side: 'sell',
+      frontendFeeTiers,
+    })
+    const expectedCalculation: SwapOrderCalculation = {
+      order: {
+        side: 'sell',
+        slippage: 0,
+        orderType: 'market',
+        limitPrice: undefined,
+        amounts: {
+          sell: {
+            quantity: '500',
+            tokenId: 'tokenB',
+          },
+          buy: {
+            quantity: '0',
+            tokenId: 'tokenA',
+          },
+        },
+        lpTokenHeld: {
+          quantity: '0',
+          tokenId: 'tokenX',
+        },
+      },
+      sides: {
+        sell: {
+          quantity: '500',
+          tokenId: 'tokenB',
+        },
+        buy: {
+          quantity: '200',
+          tokenId: 'tokenA',
+        },
+      },
+      cost: {
+        batcherFee: {
+          quantity: '0',
+          tokenId: '',
+        },
+        deposit: {
+          quantity: '0',
+          tokenId: '',
+        },
+        frontendFeeInfo: {
+          discountTier: undefined,
+          fee: {
+            quantity: '0',
+            tokenId: 'tokenA',
+          },
+        },
+        liquidityFee: {
+          quantity: '250',
+          tokenId: 'tokenB',
+        },
+
+        ptTotalRequired: {
+          tokenId: 'tokenA',
+          quantity: '0',
+        },
+      },
+      buyAmountWithSlippage: {
+        quantity: '200',
+        tokenId: 'tokenA',
+      },
+      ptTotalValueSpent: undefined,
+      hasSupply: true,
+      prices: {
+        base: '1',
+        market: '1',
+        actualPrice: '2.5',
+        withSlippage: '2.5',
+        withFees: '2.5',
+        withFeesAndSlippage: '2.5',
+        difference: '150',
+        priceImpact: '150',
+      },
+      pool: pool,
+    }
+    expect(calculations[0]).toStrictEqual(expectedCalculation)
+  })
+  it('should calculate fees and amounts correctly (case 31, price impact, zero pool fee, buy)', () => {
+    const pool: Swap.Pool = mocks.mockedPools8[0]!
+    const pools = [pool]
+    const amounts = {
+      sell: {
+        quantity: '0',
+        tokenId: 'tokenB',
+      } as Balance.Amount,
+      buy: {
+        quantity: '200',
+        tokenId: 'tokenA',
+      } as Balance.Amount,
+    }
+    const slippage = 0
+    const calculations = makeOrderCalculations({
+      orderType: 'market',
+      amounts: amounts,
+      limitPrice: undefined,
+      slippage: slippage,
+      pools: pools,
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: 'tokenA',
+        },
+        priceDenomination: 0,
+      },
+      lpTokenHeld: {
+        quantity: '0',
+        tokenId: 'tokenX',
+      },
+      side: 'buy',
+      frontendFeeTiers,
+    })
+    const expectedCalculation: SwapOrderCalculation = {
+      order: {
+        side: 'buy',
+        slippage: 0,
+        orderType: 'market',
+        limitPrice: undefined,
+        amounts: {
+          sell: {
+            quantity: '0',
+            tokenId: 'tokenB',
+          },
+          buy: {
+            quantity: '200',
+            tokenId: 'tokenA',
+          },
+        },
+        lpTokenHeld: {
+          quantity: '0',
+          tokenId: 'tokenX',
+        },
+      },
+      sides: {
+        sell: {
+          quantity: '251',
+          tokenId: 'tokenB',
+        },
+        buy: {
+          quantity: '200',
+          tokenId: 'tokenA',
+        },
+      },
+      cost: {
+        batcherFee: {
+          quantity: '0',
+          tokenId: '',
+        },
+        deposit: {
+          quantity: '0',
+          tokenId: '',
+        },
+        frontendFeeInfo: {
+          discountTier: undefined,
+          fee: {
+            quantity: '0',
+            tokenId: 'tokenA',
+          },
+        },
+        liquidityFee: {
+          quantity: '0',
+          tokenId: 'tokenB',
+        },
+
+        ptTotalRequired: {
+          tokenId: 'tokenA',
+          quantity: '0',
+        },
+      },
+      buyAmountWithSlippage: {
+        quantity: '200',
+        tokenId: 'tokenA',
+      },
+      ptTotalValueSpent: undefined,
+      hasSupply: true,
+      prices: {
+        base: '1',
+        market: '1',
+        actualPrice: '1.255',
+        withSlippage: '1.255',
+        withFees: '1.255',
+        withFeesAndSlippage: '1.255',
+        difference: '25.5',
+        priceImpact: '25.5',
+      },
+      pool: pool,
+    }
+    expect(calculations[0]).toStrictEqual(expectedCalculation)
+  })
+  it('should calculate fees and amounts correctly (case 32, price impact, with pool fee, buy)', () => {
+    const pool: Swap.Pool = mocks.mockedPools8[1]!
+    const pools = [pool]
+    const amounts = {
+      sell: {
+        quantity: '0',
+        tokenId: 'tokenB',
+      } as Balance.Amount,
+      buy: {
+        quantity: '200',
+        tokenId: 'tokenA',
+      } as Balance.Amount,
+    }
+    const slippage = 0
+    const calculations = makeOrderCalculations({
+      orderType: 'market',
+      amounts: amounts,
+      limitPrice: undefined,
+      slippage: slippage,
+      pools: pools,
+      tokens: {
+        sellInfo: {
+          decimals: 0,
+          id: 'tokenB',
+        },
+        buyInfo: {
+          decimals: 0,
+          id: 'tokenA',
+        },
+        ptInfo: {
+          decimals: 6,
+          id: 'tokenA',
+        },
+        priceDenomination: 0,
+      },
+      lpTokenHeld: {
+        quantity: '0',
+        tokenId: 'tokenX',
+      },
+      side: 'buy',
+      frontendFeeTiers,
+    })
+    const expectedCalculation: SwapOrderCalculation = {
+      order: {
+        side: 'buy',
+        slippage: 0,
+        orderType: 'market',
+        limitPrice: undefined,
+        amounts: {
+          sell: {
+            quantity: '0',
+            tokenId: 'tokenB',
+          },
+          buy: {
+            quantity: '200',
+            tokenId: 'tokenA',
+          },
+        },
+        lpTokenHeld: {
+          quantity: '0',
+          tokenId: 'tokenX',
+        },
+      },
+      sides: {
+        sell: {
+          quantity: '502',
+          tokenId: 'tokenB',
+        },
+        buy: {
+          quantity: '200',
+          tokenId: 'tokenA',
+        },
+      },
+      cost: {
+        batcherFee: {
+          quantity: '0',
+          tokenId: '',
+        },
+        deposit: {
+          quantity: '0',
+          tokenId: '',
+        },
+        frontendFeeInfo: {
+          discountTier: undefined,
+          fee: {
+            quantity: '0',
+            tokenId: 'tokenA',
+          },
+        },
+        liquidityFee: {
+          quantity: '251',
+          tokenId: 'tokenB',
+        },
+
+        ptTotalRequired: {
+          tokenId: 'tokenA',
+          quantity: '0',
+        },
+      },
+      buyAmountWithSlippage: {
+        quantity: '200',
+        tokenId: 'tokenA',
+      },
+      ptTotalValueSpent: undefined,
+      hasSupply: true,
+      prices: {
+        base: '1',
+        market: '1',
+        actualPrice: '2.51',
+        withSlippage: '2.51',
+        withFees: '2.51',
+        withFeesAndSlippage: '2.51',
+        difference: '151',
+        priceImpact: '151',
       },
       pool: pool,
     }

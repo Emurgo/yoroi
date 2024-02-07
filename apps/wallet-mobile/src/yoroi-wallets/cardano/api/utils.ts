@@ -1,13 +1,15 @@
 import AssetFingerprint from '@emurgo/cip14-js'
+import {AssetNameUtils} from '@emurgo/yoroi-lib/dist/internals/utils/assets'
 import {Balance} from '@yoroi/types'
 import {Buffer} from 'memfs/lib/internal/buffer'
 
-import {LegacyToken} from '../../types'
+import {LegacyToken, YoroiTokenId} from '../../types'
 import {TokenRegistryEntry} from './tokenRegistry'
 
 export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
   const policyId = toPolicyId(entry.subject)
-  const assetName = toAssetName(entry.subject)
+  const assetName = toDisplayAssetName(entry.subject)
+  const nameHex = toAssetNameHex(entry.subject)
 
   return {
     kind: 'ft',
@@ -21,7 +23,7 @@ export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
     id: toTokenId(entry.subject),
     fingerprint: toTokenFingerprint({
       policyId,
-      assetNameHex: assetName ? utf8ToHex(assetName) : undefined,
+      assetNameHex: nameHex,
     }),
     symbol: undefined,
     metadatas: {
@@ -39,13 +41,14 @@ export const tokenInfo = (entry: TokenRegistryEntry): Balance.TokenInfo => {
 
 export const fallbackTokenInfo = (tokenId: string): Balance.TokenInfo => {
   const policyId = toPolicyId(tokenId)
-  const assetName = toAssetName(tokenId)
+  const nameHex = toAssetNameHex(tokenId)
+  const assetName = toDisplayAssetName(tokenId)
 
   return {
     kind: 'ft',
     id: toTokenId(tokenId),
     name: assetName,
-    fingerprint: toTokenFingerprint({policyId, assetNameHex: assetName ? utf8ToHex(assetName) : undefined}),
+    fingerprint: toTokenFingerprint({policyId, assetNameHex: nameHex}),
     description: undefined,
     group: policyId,
     decimals: 0,
@@ -61,8 +64,11 @@ export const toPolicyId = (tokenIdentifier: string) => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
   return tokenSubject.slice(0, 56)
 }
-export const toAssetName = (tokenIdentifier: string) => {
-  return hexToUtf8(toAssetNameHex(tokenIdentifier))
+export const toDisplayAssetName = (tokenIdentifier: string) => {
+  const hexName = toAssetNameHex(tokenIdentifier)
+  const properties = AssetNameUtils.resolveProperties(hexName)
+  const untaggedName = properties.asciiName ?? properties.hexName
+  return untaggedName
 }
 
 export const toAssetNameHex = (tokenIdentifier: string) => {
@@ -72,7 +78,13 @@ export const toAssetNameHex = (tokenIdentifier: string) => {
 }
 
 export const toTokenSubject = (tokenIdentifier: string) => tokenIdentifier.replace('.', '')
+
 export const toTokenId = (tokenIdentifier: string) => {
+  const tokenSubject = toTokenSubject(tokenIdentifier)
+  return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdentifier)}`
+}
+
+export const asTokenId = (tokenIdentifier: string): YoroiTokenId => {
   const tokenSubject = toTokenSubject(tokenIdentifier)
   return `${tokenSubject.slice(0, 56)}.${toAssetNameHex(tokenIdentifier)}`
 }
@@ -82,7 +94,7 @@ export const utf8ToHex = (text: string) => Buffer.from(text, 'utf-8').toString('
 
 export const toTokenInfo = (token: LegacyToken): Balance.TokenInfo => {
   const policyId = toPolicyId(token.identifier)
-  const assetName = toAssetName(token.identifier)
+  const assetName = toDisplayAssetName(token.identifier)
 
   return {
     kind: 'ft',

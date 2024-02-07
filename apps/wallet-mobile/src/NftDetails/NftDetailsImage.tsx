@@ -1,5 +1,7 @@
 import React from 'react'
 import {Dimensions, StyleSheet, View} from 'react-native'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import ViewTransformer from 'react-native-easy-view-transformer'
 
 import {FadeIn} from '../components'
@@ -27,13 +29,12 @@ export const NftDetailsImage = () => {
   }, [nft?.id, track])
 
   const dimensions = Dimensions.get('window')
-  const imageSize = Math.min(dimensions.width, dimensions.height)
 
   return (
     <FadeIn style={styles.container}>
       <ViewTransformer maxScale={3} minScale={1}>
         <View style={styles.contentContainer}>
-          <NftPreview nft={nft} width={imageSize} height={imageSize} />
+          <NftPreview nft={nft} width={dimensions.width} height={dimensions.height} zoom={1} contentFit="contain" />
         </View>
       </ViewTransformer>
     </FadeIn>

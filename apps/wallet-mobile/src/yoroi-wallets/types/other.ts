@@ -348,6 +348,7 @@ export const NETWORK_REGISTRY = {
   // ERGO: 200,
   HASKELL_SHELLEY_TESTNET: 300,
   UNDEFINED: -1,
+  SANCHONET: 450,
 } as const
 export type NetworkId = (typeof NETWORK_REGISTRY)[keyof typeof NETWORK_REGISTRY]
 
@@ -363,7 +364,7 @@ export const YOROI_PROVIDER_IDS = {
 export const DERIVATION_TYPES = {
   BIP44: 'bip44',
   CIP1852: 'cip1852',
-}
+} as const
 
 // these are the different wallet implementations we have/had
 export const WALLET_IMPLEMENTATION_REGISTRY = {
@@ -435,7 +436,7 @@ export const TRANSACTION_DIRECTION = {
   SELF: 'SELF',
   // intra-wallet
   MULTI: 'MULTI', // multi-party
-}
+} as const
 export type TransactionDirection = (typeof TRANSACTION_DIRECTION)[keyof typeof TRANSACTION_DIRECTION]
 
 export const TRANSACTION_TYPE = {

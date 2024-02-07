@@ -48,7 +48,7 @@ storiesOf('SaveNanoXScreen', module)
         walletManager={
           {
             ...walletManager,
-            createWalletWithBip44Account: async (...args) => {
+            createWalletWithBip44Account: async (...args: unknown[]) => {
               action('createWalletWithBip44Account')(...args)
               await new Promise((resolve) => setTimeout(resolve, 1000))
               throw new NetworkError()

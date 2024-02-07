@@ -177,21 +177,22 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    createWalletButton: ({networkId}) =>
+    createWalletButton: ({networkId}: {networkId: NetworkId}) =>
       isJormungandr(networkId)
         ? intl.formatMessage(messages.createWalletButton) + ' (ITN)'
         : intl.formatMessage(messages.createWalletButton),
-    restoreWalletButton: ({networkId}) =>
+    restoreWalletButton: ({networkId}: {networkId: NetworkId}) =>
       isJormungandr(networkId)
         ? intl.formatMessage(messages.restoreWalletButton) + ' (ITN)'
         : intl.formatMessage(messages.restoreWalletButton),
-    createWalletWithLedgerButton: ({networkId}) =>
+    createWalletWithLedgerButton: ({networkId}: {networkId: NetworkId}) =>
       isJormungandr(networkId)
         ? intl.formatMessage(messages.createWalletWithLedgerButton) + ' (ITN)'
         : intl.formatMessage(messages.createWalletWithLedgerButton),
     restoreNormalWalletLabel: intl.formatMessage(messages.restoreNormalWalletLabel),
     learnMore: intl.formatMessage(globalMessages.learnMore),
-    restoreNWordWalletExplanation: (options) => intl.formatMessage(messages.restoreNWordWalletExplanation, options),
+    restoreNWordWalletExplanation: (options: {mnemonicLength: number}) =>
+      intl.formatMessage(messages.restoreNWordWalletExplanation, options),
     restore24WordWalletLabel: intl.formatMessage(messages.restore24WordWalletLabel),
     importReadOnlyWalletLabel: intl.formatMessage(messages.importReadOnlyWalletLabel),
     importReadOnlyWalletExplanation: intl.formatMessage(messages.importReadOnlyWalletExplanation),

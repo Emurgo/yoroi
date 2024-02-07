@@ -12,11 +12,12 @@ import {
   ViewProps,
 } from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import {useQuery, UseQueryOptions} from 'react-query'
+import {useMutation} from 'react-query'
 
 import {Button, CopyButton, Icon, Spacer, Text} from '../../../components'
 import {AmountItem} from '../../../components/AmountItem/AmountItem'
 import {ErrorPanel} from '../../../components/ErrorPanel/ErrorPanel'
+import {SettingsStackRoutes, useUnsafeParams} from '../../../navigation'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {COLORS} from '../../../theme'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
@@ -24,10 +25,11 @@ import {useCollateralInfo} from '../../../yoroi-wallets/cardano/utxoManager/useC
 import {useSetCollateralId} from '../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
 import {collateralConfig, utxosMaker} from '../../../yoroi-wallets/cardano/utxoManager/utxos'
 import {useBalances, useLockedAmount} from '../../../yoroi-wallets/hooks'
-import {RawUtxo, YoroiEntry, YoroiUnsignedTx} from '../../../yoroi-wallets/types'
+import {RawUtxo, YoroiEntry} from '../../../yoroi-wallets/types'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
 import {useSend} from '../../Send/common/SendContext'
 import {usePrivacyMode} from '../PrivacyMode/PrivacyMode'
+import {createCollateralEntry} from './helpers'
 import {useNavigateTo} from './navigation'
 import {useStrings} from './strings'
 
@@ -41,21 +43,20 @@ export const ManageCollateralScreen = () => {
   const balances = useBalances(wallet)
   const lockedAmount = useLockedAmount({wallet})
 
-  const {resetForm, addressChanged, amountChanged, tokenSelectedChanged, yoroiUnsignedTxChanged} = useSend()
-  const {refetch: createUnsignedTx, isFetching: isLoadingTx} = useSendTx(
-    {
-      wallet,
-      entry: {
-        address: wallet.externalAddresses[0],
-        amounts: {
-          [wallet.primaryTokenInfo.id]: collateralConfig.minLovelace,
-        },
-      },
-    },
-    {
-      onSuccess: (yoroiUnsignedTx) => yoroiUnsignedTxChanged(yoroiUnsignedTx),
-    },
-  )
+  const params = useUnsafeParams<SettingsStackRoutes['manage-collateral']>()
+
+  const {
+    reset: resetSendState,
+    receiverResolveChanged,
+    amountChanged,
+    tokenSelectedChanged,
+    yoroiUnsignedTxChanged,
+  } = useSend()
+  const {mutate: createUnsignedTx, isLoading: isLoadingTx} = useMutation({
+    mutationFn: (entries: YoroiEntry[]) => wallet.createUnsignedTx(entries),
+    retry: false,
+    useErrorBoundary: true,
+  })
 
   const {isLoading: isLoadingCollateral, setCollateralId} = useSetCollateralId(wallet)
   const handleRemoveCollateral = () => {
@@ -73,14 +74,20 @@ export const ManageCollateralScreen = () => {
       tokenId: wallet.primaryTokenInfo.id,
     }
 
-    // dispatch only for confirmation screen
-    resetForm()
-    addressChanged(address)
+    // populate for confirmation screen
+    resetSendState()
+    receiverResolveChanged(address)
     tokenSelectedChanged(amount.tokenId)
     amountChanged(amount.quantity)
 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    Promise.resolve(createUnsignedTx()).then(() => navigateTo.confirmTx())
+
+    createUnsignedTx([createCollateralEntry(wallet)], {
+      onSuccess: (yoroiUnsignedTx) => {
+        yoroiUnsignedTxChanged(yoroiUnsignedTx)
+        navigateTo.confirmTx()
+      },
+    })
   }
 
   const isLoading = isLoadingTx || isLoadingCollateral
@@ -110,7 +117,8 @@ export const ManageCollateralScreen = () => {
     createCollateralTransaction()
   }
 
-  const shouldHideButton = !hasCollateral || didSpend
+  const shouldShowPrimaryButton = !hasCollateral || didSpend
+  const shouldShowBackButton = !shouldShowPrimaryButton && !!params?.backButton
 
   return (
     <SafeAreaView edges={['top', 'left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -152,13 +160,17 @@ export const ManageCollateralScreen = () => {
         )}
       </ScrollView>
 
-      {shouldHideButton && (
+      {shouldShowPrimaryButton && (
         <Button
           title={strings.generateCollateral}
           onPress={handleGenerateCollateral}
           shelleyTheme
           disabled={isLoading}
         />
+      )}
+
+      {shouldShowBackButton && params?.backButton && (
+        <Button title={params.backButton.content} onPress={params.backButton.onPress} shelleyTheme />
       )}
     </SafeAreaView>
   )
@@ -203,29 +215,6 @@ export const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) 
       <Icon.CrossCircle size={26} color={COLORS.BLACK} />
     </TouchableOpacity>
   )
-}
-
-export const useSendTx = (
-  {wallet, entry}: {wallet: YoroiWallet; entry: YoroiEntry},
-  options?: UseQueryOptions<YoroiUnsignedTx, Error, YoroiUnsignedTx, [string, 'send-tx']>,
-) => {
-  const query = useQuery({
-    ...options,
-    cacheTime: 0,
-    suspense: true,
-    enabled: false,
-    retry: false,
-    retryOnMount: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    queryKey: [wallet.id, 'send-tx'],
-    queryFn: () => wallet.createUnsignedTx([entry]),
-  })
-
-  return {
-    ...query,
-    unsignedTx: query.data,
-  }
 }
 
 const styles = StyleSheet.create({

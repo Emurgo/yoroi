@@ -21,9 +21,9 @@ describe('isTokenSupplyResponse', () => {
   })
 
   it('requires supply value to be a number or null', () => {
-    expect(isTokenSupplyResponse({supplies: {a: 1}})).toEqual(true)
+    expect(isTokenSupplyResponse({supplies: {a: '1'}})).toEqual(true)
     expect(isTokenSupplyResponse({supplies: {a: null}})).toEqual(true)
-    expect(isTokenSupplyResponse({supplies: {a: '1'}})).toEqual(false)
+    expect(isTokenSupplyResponse({supplies: {a: 1}})).toEqual(false)
     expect(isTokenSupplyResponse({supplies: {a: true}})).toEqual(false)
   })
 })
@@ -32,8 +32,8 @@ describe('getTokenSupply', () => {
   it('returns token supplies', async () => {
     const fetch = jest.fn().mockResolvedValue({
       supplies: {
-        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.0': 1,
-        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.1': null,
+        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.30': '1',
+        '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.31': null,
       },
     })
     const tokenSupply = getTokenSupply('https://localhost', fetch)
@@ -42,7 +42,7 @@ describe('getTokenSupply', () => {
       '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.31',
     ])
     expect(result).toEqual({
-      '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.30': 1,
+      '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.30': '1',
       '1f7a58a1aa1e6b047a42109ade331ce26c9c2cce027d043ff264fb1f.31': null,
     })
   })

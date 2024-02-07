@@ -31,10 +31,12 @@ export type SwapOrderCalculation = Readonly<{
   prices: {
     base: Balance.Quantity
     market: Balance.Quantity
+    actualPrice: Balance.Quantity
     withSlippage: Balance.Quantity
     withFees: Balance.Quantity
     withFeesAndSlippage: Balance.Quantity
     difference: Balance.Quantity
+    priceImpact: Balance.Quantity
   }
   hasSupply: boolean
   buyAmountWithSlippage: Balance.Amount

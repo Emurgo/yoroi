@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
-import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
+import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
+import {useSetCollateralId} from '../../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
 import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {debugWalletInfo, features} from '../../..'
@@ -17,7 +19,6 @@ import {BalanceAfter} from './Summary/BalanceAfter'
 import {CurrentBalance} from './Summary/CurrentBalance'
 import {Fees} from './Summary/Fees'
 import {PrimaryTotal} from './Summary/PrimaryTotal'
-import {ReceiverInfo} from './Summary/ReceiverInfo'
 import {SecondaryTotals} from './Summary/SecondaryTotals'
 
 export const ConfirmTxScreen = () => {
@@ -26,8 +27,9 @@ export const ConfirmTxScreen = () => {
   const navigateTo = useNavigateTo()
   const [password, setPassword] = React.useState('')
   const [useUSB, setUseUSB] = React.useState(false)
+  const {setCollateralId} = useSetCollateralId(wallet)
 
-  const {memo, yoroiUnsignedTx, targets} = useSend()
+  const {memo, yoroiUnsignedTx} = useSend()
 
   const {saveMemo} = useSaveMemo({wallet})
 
@@ -39,7 +41,8 @@ export const ConfirmTxScreen = () => {
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
     navigateTo.submittedTx()
-
+    const collateralId = `${signedTx.signedTx.id}:0`
+    setCollateralId(collateralId)
     if (memo.length > 0) {
       saveMemo({txId: signedTx.signedTx.id, memo: memo.trim()})
     }
@@ -49,42 +52,31 @@ export const ConfirmTxScreen = () => {
     navigateTo.failedTx()
   }
 
-  const scrollViewRef = useFlashAndScroll()
-
   if (!yoroiUnsignedTx) throw new Error('Missing yoroiUnsignedTx')
 
   return (
-    <View style={styles.root}>
-      <CurrentBalance />
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ScrollView style={styles.container}>
+          <CurrentBalance />
 
-      <View style={{paddingTop: 16, paddingHorizontal: 16}}>
-        <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
+          <Spacer height={16} />
 
-        <Spacer height={4} />
+          <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
+          <Spacer height={4} />
 
-        <Spacer height={16} />
+          <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        {targets.map((target, index) => (
-          <ReceiverInfo key={index} address={target.entry.address} receiver={target.receiver} />
-        ))}
-      </View>
+          <Spacer height={8} />
 
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{padding: 16}}
-        persistentScrollbar
-        ref={scrollViewRef}
-      >
-        <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
+          <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        <Spacer height={8} />
+          <Spacer height={8} />
 
-        <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
+          <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
-          <>
+          {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
             <ValidatedTextInput
               secureTextEntry
               value={password}
@@ -92,29 +84,27 @@ export const ConfirmTxScreen = () => {
               onChangeText={setPassword}
               testID="spendingPasswordInput"
             />
-          </>
-        )}
+          )}
+        </ScrollView>
 
-        <KeyboardSpacer />
-      </ScrollView>
-
-      <Actions>
-        <ConfirmTx
-          onSuccess={onSuccess}
-          onError={onError}
-          yoroiUnsignedTx={yoroiUnsignedTx}
-          useUSB={useUSB}
-          setUseUSB={setUseUSB}
-          isProvidingPassword
-          providedPassword={password}
-          chooseTransportOnConfirmation
-        />
-      </Actions>
-    </View>
+        <Actions>
+          <ConfirmTx
+            onSuccess={onSuccess}
+            onError={onError}
+            yoroiUnsignedTx={yoroiUnsignedTx}
+            useUSB={useUSB}
+            setUseUSB={setUseUSB}
+            isProvidingPassword
+            providedPassword={password}
+            chooseTransportOnConfirmation
+          />
+        </Actions>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }
 
-const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
+const Actions = (props: ViewProps) => <View style={styles.actions} {...props} />
 
 const styles = StyleSheet.create({
   root: {
@@ -122,8 +112,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    backgroundColor: COLORS.WHITE,
     flex: 1,
+    paddingHorizontal: 16,
+  },
+  actions: {
+    paddingTop: 16,
+    paddingHorizontal: 16,
+    paddingBottom: Platform.OS === 'ios' ? 25 : 16,
   },
 })
 
@@ -143,20 +138,4 @@ const useStrings = () => {
       message: intl.formatMessage(errorMessages.generalTxError.message),
     },
   }
-}
-
-const useFlashAndScroll = () => {
-  const scrollViewRef = useRef<ScrollView | null>(null)
-
-  useEffect(() => {
-    setTimeout(() => {
-      scrollViewRef.current?.flashScrollIndicators()
-    }, 500)
-
-    Keyboard.addListener('keyboardWillShow', () => {
-      scrollViewRef.current?.scrollToEnd()
-    })
-  }, [])
-
-  return scrollViewRef
 }

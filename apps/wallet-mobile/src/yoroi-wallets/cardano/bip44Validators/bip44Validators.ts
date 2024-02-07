@@ -3,9 +3,9 @@ import assert from 'assert'
 import {CardanoMobile} from '../../wallets'
 import {NUMBERS} from '../numbers'
 
-const isString = (s) => typeof s === 'string' || s instanceof String
+const isString = (s: unknown) => typeof s === 'string' || s instanceof String
 
-const isUInt32 = (i) => Number.isInteger(i) && i >= 0 && i < 4294967296
+const isUInt32 = (i: unknown) => Number.isInteger(i) && typeof i === 'number' && i >= 0 && i < 4294967296
 
 export const isValidPath = (path: unknown): boolean => {
   if (!(Array.isArray(path) && path.length > 0 && path.length <= 5)) {

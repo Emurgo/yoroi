@@ -234,3 +234,11 @@ export const openInExplorer = async (transactionId: string, networkId: NetworkId
   const networkConfig = getNetworkConfigById(networkId)
   await Linking.openURL(networkConfig.EXPLORER_URL_FOR_TX(transactionId))
 }
+
+export const isMainnetNetworkId = (networkId: NetworkId) => {
+  return networkId !== 300 && !isSanchoNetworkId(networkId)
+}
+
+export const isSanchoNetworkId = (networkId: NetworkId) => {
+  return networkId === 450
+}

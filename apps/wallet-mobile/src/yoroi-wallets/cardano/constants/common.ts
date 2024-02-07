@@ -54,7 +54,7 @@ export const LINEAR_FEE = {
 } as const
 export const MINIMUM_UTXO_VAL = '1000000'
 
-export const HISTORY_REFRESH_TIME = 25000
+export const HISTORY_REFRESH_TIME = 35000
 
 export const COINS_PER_UTXO_WORD = '34482'
 

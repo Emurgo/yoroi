@@ -179,7 +179,7 @@ export class WalletManager {
   }
 
   // TODO(ppershing): how should we deal with race conditions?
-  async _updateMetadata(id, newMeta) {
+  async _updateMetadata(id: string, newMeta: {isEasyConfirmationEnabled: boolean}) {
     const walletMeta = await this.storage.getItem(id, parseWalletMeta)
     const merged = {...walletMeta, ...newMeta}
     return this.storage.setItem(id, merged)

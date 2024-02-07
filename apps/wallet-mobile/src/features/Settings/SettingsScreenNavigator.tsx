@@ -1,5 +1,5 @@
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -8,6 +8,7 @@ import {ChangePinScreen} from '../../auth'
 import {EnableLoginWithPin} from '../../auth/EnableLoginWithPin'
 import {Boundary} from '../../components'
 import globalMessages from '../../i18n/global-messages'
+import {useMetrics} from '../../metrics/metricsManager'
 import {
   defaultMaterialTopTabNavigationOptions,
   defaultStackNavigationOptions,
@@ -37,6 +38,13 @@ const Stack = createStackNavigator<SettingsStackRoutes>()
 export const SettingsScreenNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.settingsPageViewed()
+    }, [track]),
+  )
 
   return (
     <SendProvider key={wallet.id}>
@@ -150,6 +158,7 @@ export const SettingsScreenNavigator = () => {
           name="collateral-tx-submitted"
           options={{
             title: strings.collateral,
+            headerLeft: () => null,
           }}
           component={SubmittedTxScreen}
         />

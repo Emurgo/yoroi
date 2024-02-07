@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
-import {parseBoolean, useStorage} from '@yoroi/common'
-import {App, Balance} from '@yoroi/types'
+import {parseBoolean, useMutationWithInvalidations, useStorage} from '@yoroi/common'
+import {Api, App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
 import {useCallback, useMemo} from 'react'
+import {PixelRatio, Platform} from 'react-native'
 import {
   onlineManager,
-  QueryKey,
   useMutation,
   UseMutationOptions,
   useQueries,
@@ -630,6 +630,28 @@ export const useFrontendFees = (
   }
 }
 
+export const useProtocolParams = (
+  wallet: YoroiWallet,
+  options?: UseQueryOptions<
+    Api.Cardano.ProtocolParamsResult,
+    Error,
+    Api.Cardano.ProtocolParamsResult,
+    [string, 'protocol-params']
+  >,
+) => {
+  const query = useQuery({
+    suspense: true,
+    queryKey: [wallet.id, 'protocol-params'],
+    ...options,
+    queryFn: () => wallet.getProtocolParams(),
+  })
+
+  return {
+    ...query,
+    protocolParams: query.data,
+  }
+}
+
 export const useWalletMetas = (walletManager: WalletManager, options?: UseQueryOptions<Array<WalletMeta>, Error>) => {
   const query = useQuery({
     queryKey: ['walletMetas'],
@@ -742,7 +764,7 @@ export const useIsOnline = (
         () => true,
         () => false,
       ),
-    refetchInterval: 5000,
+    refetchInterval: 15000,
     suspense: true,
     useErrorBoundary: false,
     onSuccess: (isOnline) => {
@@ -824,25 +846,6 @@ const fetchTxStatus = async (
   return {
     status: 'WAITING',
   }
-}
-
-export const useMutationWithInvalidations = <TData = unknown, TError = unknown, TVariables = void, TContext = unknown>({
-  invalidateQueries,
-  ...options
-}: UseMutationOptions<TData, TError, TVariables, TContext> & {invalidateQueries?: Array<QueryKey>} = {}) => {
-  const queryClient = useQueryClient()
-
-  return useMutation<TData, TError, TVariables, TContext>({
-    ...options,
-    onMutate: (variables) => {
-      invalidateQueries?.forEach((key) => queryClient.cancelQueries(key))
-      return options?.onMutate?.(variables)
-    },
-    onSuccess: (data, variables, context) => {
-      invalidateQueries?.forEach((key) => queryClient.invalidateQueries(key))
-      return options?.onSuccess?.(data, variables, context)
-    },
-  })
 }
 
 export const useTipStatus = ({
@@ -959,4 +962,131 @@ export function useHideBottomTabBar() {
     navigation.getParent()?.setOptions({tabBarStyle: {display: 'none'}, tabBarVisible: false})
     return () => navigation.getParent()?.setOptions({tabBarStyle: true, tabBarVisible: undefined})
   }, [navigation])
+}
+
+const supportedTypes = [
+  'img/png', // Yeah, someone minted that
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/gif',
+  'image/webp',
+  'image/svg+xml',
+  'image/svg',
+  'image/tiff',
+]
+
+const supportedSizes = [64, 72, 128, 256, 480, 512, 640, 720, 1080, 1280, 1440] as const
+
+const getClosestSize = (size: string | number) => {
+  const pixels = PixelRatio.getPixelSizeForLayoutSize(Number(size))
+  return supportedSizes.find((size) => pixels <= size) ?? supportedSizes.at(-1)
+}
+
+type NativeAssetImageRequest = {
+  networkId: NetworkId
+  policy: string
+  name: string
+  width: string | number
+  height: string | number
+  mediaType?: string
+  contentFit?: 'contain' | 'cover' | 'fill' | 'inside' | 'outside'
+  kind?: 'logo' | 'metadata'
+}
+export const useNativeAssetImage = ({
+  networkId,
+  policy,
+  name,
+  width: _width,
+  height: _height,
+  mediaType: _mediaType = 'image/webp',
+  contentFit = 'cover',
+  kind = 'metadata',
+}: NativeAssetImageRequest) => {
+  const network = networkId === 300 ? 'preprod' : 'mainnet'
+  const width = getClosestSize(_width)
+  const height = getClosestSize(_height)
+  const mediaType = _mediaType.toLocaleLowerCase()
+  const isMediaTypeSupported = supportedTypes.includes(mediaType)
+  const needsGif = mediaType === 'image/gif' && Platform.OS === 'ios'
+  const mimeType = needsGif ? 'image/gif' : 'image/webp'
+  const headers = useMemo(
+    () => ({
+      Accept: mimeType,
+    }),
+    [mimeType],
+  )
+  const queryClient = useQueryClient()
+
+  const [isError, setError] = React.useState(false)
+  const [isLoading, setLoading] = React.useState(true)
+
+  const queryKey = ['native-asset-img', policy, name, `${width}x${height}`, contentFit]
+
+  const query = useQuery({
+    enabled: isMediaTypeSupported,
+    staleTime: Infinity,
+    queryKey,
+    queryFn: (context) => {
+      const count = queryClient.getQueryState(context.queryKey)?.dataUpdateCount
+      const cache = count ? `&cache=${count}` : ''
+      const requestUrl = `https://${network}.processed-media.yoroiwallet.com/${policy}/${name}?width=${width}&height=${height}&kind=${kind}&fit=${contentFit}${cache}`
+
+      setLoading(true)
+      return requestUrl
+    },
+  })
+
+  const timerRef = React.useRef<ReturnType<typeof setTimeout>>()
+  React.useEffect(() => () => clearTimeout(timerRef.current), [])
+
+  const onError = useCallback(() => {
+    const count = queryClient.getQueryState(queryKey)?.dataUpdateCount
+    if (count && count < 10) {
+      timerRef.current = setTimeout(query.refetch, count * 300)
+    } else {
+      setError(true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, queryClient])
+
+  const onLoad = useCallback(() => {
+    setLoading(false)
+  }, [])
+
+  return {
+    ...query,
+    uri: query.data,
+    headers,
+    isError: isError || query.isError,
+    isLoading: isLoading || query.isLoading,
+    onError,
+    onLoad,
+  }
+}
+
+type NativeAssetInvalidationRequest = {
+  networkId: NetworkId
+  policy: string
+  name: string
+}
+export const useNativeAssetInvalidation = ({networkId, policy, name}: NativeAssetInvalidationRequest) => {
+  const network = networkId === 300 ? 'preprod' : 'mainnet'
+  const mutation = useMutationWithInvalidations({
+    invalidateQueries: [['native-asset-img', policy, name]],
+    mutationFn: async () => {
+      const response = await fetch(`https://${network}.processed-media.yoroiwallet.com/invalidate`, {
+        method: 'POST',
+        body: JSON.stringify({policy, name}),
+      })
+      if (!response.ok) {
+        throw new Error(`NativeAsset invalid request body for policy=${policy} name=${name}`)
+      }
+    },
+  })
+
+  return {
+    ...mutation,
+    invalidate: mutation.mutate,
+  }
 }

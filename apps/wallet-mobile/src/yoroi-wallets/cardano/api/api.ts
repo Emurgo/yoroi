@@ -19,12 +19,12 @@ import type {
 } from '../../types'
 import {ApiError} from '../errors'
 import {ServerStatus} from '../types'
+import {handleError} from './errors'
 import fetchDefault from './fetch'
 
 type Addresses = Array<string>
 
-export {fetchTokensSupplies} from './assetSuply'
-export {getNFTs} from './metadata'
+export {getNFT} from './metadata'
 export {getNFTModerationStatus} from './nftModerationStatus'
 export {getTokenInfo} from './tokenRegistry'
 
@@ -56,8 +56,12 @@ export const filterUsedAddresses = async (addresses: Addresses, config: BackendC
   return copy.filter((addr) => used.includes(addr))
 }
 
-export const submitTransaction = (signedTx: string, config: BackendConfig) => {
-  return fetchDefault('txs/signed', {signedTx}, config)
+export const submitTransaction = async (signedTx: string, config: BackendConfig) => {
+  try {
+    await fetchDefault('txs/signed', {signedTx}, config)
+  } catch (e) {
+    throw e instanceof Error ? handleError(e) : e
+  }
 }
 
 export const getTransactions = async (

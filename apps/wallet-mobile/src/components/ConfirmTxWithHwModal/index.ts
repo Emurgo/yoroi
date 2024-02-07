@@ -1,0 +1,1 @@
+export {ConfirmTxWithHwModal} from './ConfirmTxWithHwModal'

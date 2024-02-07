@@ -82,7 +82,7 @@ const _sum = (
     new MultiToken([], getDefaultNetworkTokenEntry(defaultAsset)),
   )
 
-const _multiPartyWarningCache = {}
+const _multiPartyWarningCache: Record<string, boolean> = {}
 export const processTxHistoryData = (
   tx: Transaction,
   ownAddresses: Array<string>,

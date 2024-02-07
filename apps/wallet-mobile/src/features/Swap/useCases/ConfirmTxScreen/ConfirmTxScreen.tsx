@@ -1,9 +1,10 @@
 import {useSwap} from '@yoroi/swap'
 import React from 'react'
-import {InteractionManager, StyleSheet, View, ViewProps} from 'react-native'
+import {InteractionManager, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
+import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer} from '../../../../components'
+import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
 import {LoadingOverlay} from '../../../../components/LoadingOverlay'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {useMetrics} from '../../../../metrics/metricsManager'
@@ -18,12 +19,16 @@ import {useStrings} from '../../common/strings'
 import {ConfirmTx} from './ConfirmTx'
 import {TransactionSummary} from './TransactionSummary'
 
+const BOTTOM_ACTION_SECTION = 220
+
 export const ConfirmTxScreen = () => {
+  const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
   const {openModal, closeModal} = useModal()
+  const {height: deviceHeight} = useWindowDimensions()
   const signedTxRef = React.useRef<YoroiSignedTx | null>(null)
 
   const {unsignedTx, orderData} = useSwap()
@@ -98,10 +103,29 @@ export const ConfirmTxScreen = () => {
   const isButtonDisabled = txIsLoading || couldReceiveNoAssets
 
   return (
-    <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
-      <TransactionSummary />
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
+      <View style={styles.container}>
+        <KeyboardAvoidingView keyboardVerticalOffset={120}>
+          <ScrollView style={styles.scroll}>
+            <View
+              onLayout={(event) => {
+                const {height} = event.nativeEvent.layout
+                setContentHeight(height + BOTTOM_ACTION_SECTION)
+              }}
+            >
+              <TransactionSummary />
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
 
-      <Actions>
+        <LoadingOverlay loading={txIsLoading} />
+      </View>
+
+      <Actions
+        style={{
+          ...(deviceHeight < contentHeight && styles.actionBorder),
+        }}
+      >
         <Button
           disabled={isButtonDisabled}
           testID="swapButton"
@@ -129,8 +153,6 @@ export const ConfirmTxScreen = () => {
           }}
         />
       </Actions>
-
-      <LoadingOverlay loading={txIsLoading} />
     </SafeAreaView>
   )
 }
@@ -138,19 +160,28 @@ export const ConfirmTxScreen = () => {
 const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    flexDirection: 'column',
-    paddingHorizontal: 16,
     backgroundColor: COLORS.WHITE,
+    display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'space-between',
-    paddingTop: 16,
   },
   actions: {
-    paddingVertical: 16,
+    padding: 16,
   },
   modalContent: {
     flex: 1,
     alignSelf: 'stretch',
+  },
+  scroll: {
+    paddingHorizontal: 16,
+  },
+  actionBorder: {
+    borderTopWidth: 1,
+    borderTopColor: COLORS.BORDER_GRAY,
   },
 })

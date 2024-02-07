@@ -5,7 +5,7 @@ import {
   isString,
   isStringOrArrayOfString,
 } from '@yoroi/common'
-import {ApiFtMetadata, ApiMetadataFile, ApiNftMetadata} from './types'
+import {ApiFtMetadata, ApiMetadataFile, ApiNftMetadata} from '@yoroi/types'
 
 export function isMetadataFile(data: unknown): data is ApiMetadataFile {
   if (!isRecord(data)) return false

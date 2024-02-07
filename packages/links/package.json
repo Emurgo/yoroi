@@ -1,6 +1,6 @@
 {
   "name": "@yoroi/links",
-  "version": "1.3.0",
+  "version": "1.5.1",
   "description": "The package for managing links of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -136,8 +136,7 @@
     ]
   },
   "dependencies": {
-    "@yoroi/common": "1.3.0",
-    "@yoroi/types": "1.3.0"
+    "@yoroi/common": "1.5.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
@@ -149,7 +148,7 @@
     "@types/jest": "^28.1.2",
     "@types/react": "18.2.0",
     "@types/react-native": "0.71.6",
-    "@yoroi/types": "1.3.0",
+    "@yoroi/types": "1.5.2",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",

@@ -4,7 +4,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, StatusBar, Text, TextInput} from '../../../components'
+import {Button, KeyboardAvoidingView, StatusBar, Text, TextInput} from '../../../components'
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {showErrorDialog} from '../../../dialogs'
 import {errorMessages} from '../../../i18n/global-messages'
@@ -41,31 +41,33 @@ export const EnableEasyConfirmationScreen = () => {
     <SafeAreaView edges={['bottom']} style={styles.container}>
       <StatusBar type="dark" />
 
-      <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.heading}>{strings.enableHeading}</Text>
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
+          <Text style={styles.heading}>{strings.enableHeading}</Text>
 
-        <Text style={styles.warning}>{strings.enableWarning}</Text>
+          <Text style={styles.warning}>{strings.enableWarning}</Text>
 
-        <PasswordInput
-          autoFocus
-          enablesReturnKeyAutomatically
-          returnKeyType="done"
-          secureTextEntry
-          label={strings.enableRootPassword}
-          onChangeText={setRootPassword}
-          value={rootPassword}
-          autoComplete="off"
-        />
-      </ScrollView>
+          <PasswordInput
+            autoFocus
+            enablesReturnKeyAutomatically
+            returnKeyType="done"
+            secureTextEntry
+            label={strings.enableRootPassword}
+            onChangeText={setRootPassword}
+            value={rootPassword}
+            autoComplete="off"
+          />
+        </ScrollView>
 
-      <Actions>
-        <Button
-          title={strings.enableButton}
-          onPress={() => enableEasyConfirmation(rootPassword)}
-          disabled={isEmptyString(rootPassword) || isLoading}
-          shelleyTheme
-        />
-      </Actions>
+        <Actions>
+          <Button
+            title={strings.enableButton}
+            onPress={() => enableEasyConfirmation(rootPassword)}
+            disabled={isEmptyString(rootPassword) || isLoading}
+            shelleyTheme
+          />
+        </Actions>
+      </KeyboardAvoidingView>
 
       <LoadingOverlay loading={isLoading} />
     </SafeAreaView>

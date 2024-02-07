@@ -11,10 +11,10 @@ async function getSpendingKeyHash(
   address: CardanoTypes.Address,
 ): Promise<CardanoTypes.Ed25519KeyHash | null | undefined> {
   const baseAddr = await CardanoMobile.BaseAddress.fromAddress(address)
-  if (baseAddr.hasValue()) return baseAddr.paymentCred().then((paymentCred) => paymentCred.toKeyhash())
+  if (baseAddr?.hasValue()) return baseAddr.paymentCred().then((paymentCred) => paymentCred.toKeyhash())
 
   const rewardAddr = await CardanoMobile.RewardAddress.fromAddress(address)
-  if (rewardAddr.hasValue()) return rewardAddr.paymentCred().then((paymentCred) => paymentCred.toKeyhash())
+  if (rewardAddr?.hasValue()) return rewardAddr.paymentCred().then((paymentCred) => paymentCred.toKeyhash())
 
   return null
 }
@@ -29,7 +29,7 @@ async function getStakingKeyHash(
   address: CardanoTypes.Address,
 ): Promise<CardanoTypes.Ed25519KeyHash | null | undefined> {
   const baseAddr = await CardanoMobile.BaseAddress.fromAddress(address)
-  if (baseAddr.hasValue()) return baseAddr.stakeCred().then((paymentCred) => paymentCred.toKeyhash())
+  if (baseAddr?.hasValue()) return baseAddr.stakeCred().then((paymentCred) => paymentCred.toKeyhash())
 
   return null
 }

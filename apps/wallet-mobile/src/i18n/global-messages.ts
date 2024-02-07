@@ -75,6 +75,10 @@ export const confirmationMessages = {
 
 // common strings used when displaying tx data
 export const txLabels = defineMessages({
+  incorrectSpendingPassword: {
+    id: 'global.txLabels.incorrectSpendingPassword',
+    defaultMessage: '!!!Incorrect spending password',
+  },
   amount: {
     id: 'global.txLabels.amount',
     defaultMessage: '!!!Amount',
@@ -115,6 +119,10 @@ export const txLabels = defineMessages({
     id: 'global.txLabels.signingTx',
     defaultMessage: '!!!Signing transaction',
   },
+  sign: {
+    id: 'global.sign',
+    defaultMessage: '!!!Sign',
+  },
   to: {
     id: 'components.walletinit.restorewallet.upgradeconfirmmodal.toLabel',
     defaultMessage: '!!!To',
@@ -130,6 +138,14 @@ export const txLabels = defineMessages({
   withdrawals: {
     id: 'global.txLabels.withdrawals',
     defaultMessage: '!!!Withdrawals',
+  },
+  enterSpendingPassword: {
+    id: 'global.enterSpendingPassword',
+    defaultMessage: '!!!Enter spending password to sign this transaction',
+  },
+  spendingPassword: {
+    id: 'global.spendingPassword',
+    defaultMessage: '!!!Spending Password',
   },
 })
 
@@ -235,6 +251,12 @@ export const errorMessages = {
     message: {
       id: 'global.actions.dialogs.pinMismatch.message',
       defaultMessage: '!!!PINs do not match.',
+    },
+  }),
+  missingCollateral: defineMessages({
+    title: {
+      id: 'global.actions.dialogs.insufficientCollateral.message',
+      defaultMessage: '!!!Collateral amount is insufficient. Please assign collateral.',
     },
   }),
   incorrectPin: defineMessages({
@@ -566,6 +588,10 @@ export const actionMessages = defineMessages({
   soon: {
     id: 'global.comingSoon',
     defaultMessage: '!!!Coming soon',
+  },
+  exchange: {
+    id: 'global.exchange',
+    defaultMessage: '!!!Exchange',
   },
 })
 

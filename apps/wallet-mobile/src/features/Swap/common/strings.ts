@@ -19,6 +19,8 @@ export const useStrings = () => {
     clear: intl.formatMessage(messages.clear),
     selectToken: intl.formatMessage(messages.selectToken),
     marketPrice: intl.formatMessage(messages.marketPrice),
+    marketPriceInfo: intl.formatMessage(messages.marketPriceInfo),
+    limitPriceInfo: intl.formatMessage(messages.limitPriceInfo),
     limitPrice: intl.formatMessage(messages.limitPrice),
     slippageTolerance: intl.formatMessage(messages.slippageTolerance),
     slippageToleranceInfo: intl.formatMessage(messages.slippageToleranceInfo),
@@ -61,6 +63,16 @@ export const useStrings = () => {
     found: intl.formatMessage(messages.found),
     youHave: intl.formatMessage(messages.youHave),
     price: intl.formatMessage(messages.price),
+    priceImpact: intl.formatMessage(messages.priceImpact),
+    priceImpactRiskHigh: ({riskValue}: {riskValue: number}) =>
+      intl.formatMessage(messages.priceImpactRiskHigh, {
+        riskValue,
+      }),
+    priceImpactDescription: (risk: 'moderate' | 'high') =>
+      intl.formatMessage(
+        risk === 'moderate' ? messages.priceImpactModerateDescription : messages.priceImpactHighDescription,
+      ),
+    priceImpactInfo: intl.formatMessage(messages.priceImpactInfo),
     tvl: intl.formatMessage(messages.tvl),
     poolFee: intl.formatMessage(messages.poolFee),
     batcherFee: intl.formatMessage(messages.batcherFee),
@@ -108,6 +120,8 @@ export const useStrings = () => {
     assignCollateral: intl.formatMessage(messages.assignCollateral),
     collateralNotFound: intl.formatMessage(messages.collateralNotFound),
     noActiveCollateral: intl.formatMessage(messages.noActiveCollateral),
+    collateralTxPending: intl.formatMessage(messages.collateralTxPending),
+    collateralTxPendingTitle: intl.formatMessage(messages.collateralTxPendingTitle),
     failedTxTitle: intl.formatMessage(messages.failedTxTitle),
     failedTxText: intl.formatMessage(messages.failedTxText),
     failedTxButton: intl.formatMessage(messages.failedTxButton),
@@ -119,8 +133,9 @@ export const useStrings = () => {
     notEnoughFeeBalance: intl.formatMessage(messages.notEnoughFeeBalance),
     noPool: intl.formatMessage(messages.noPool),
     generalErrorTitle: intl.formatMessage(errorMessages.generalError.title),
-    generalErrorMessage: (e) => intl.formatMessage(errorMessages.generalError.message, {message: e}),
+    generalErrorMessage: (e: string) => intl.formatMessage(errorMessages.generalError.message, {message: e}),
     continueOnLedger: intl.formatMessage(ledgerMessages.continueOnLedger),
+    continue: intl.formatMessage(messages.continue),
     cancel: intl.formatMessage(globalMessages.cancel),
     tryAgain: intl.formatMessage(globalMessages.tryAgain),
     bluetoothDisabledError: intl.formatMessage(ledgerMessages.bluetoothDisabledError),
@@ -137,6 +152,9 @@ export const useStrings = () => {
     emptyOpenOrders: intl.formatMessage(messages.emptyOpenOrders),
     emptyOpenOrdersSub: intl.formatMessage(messages.emptyOpenOrdersSub),
     emptyCompletedOrders: intl.formatMessage(messages.emptyCompletedOrders),
+    warning: intl.formatMessage(messages.warning),
+    missingCollateral: intl.formatMessage(errorMessages.missingCollateral.title),
+    backToSwapOrders: intl.formatMessage(messages.backToSwapOrders),
   }
 }
 
@@ -190,6 +208,16 @@ export const messages = defineMessages({
   marketPrice: {
     id: 'swap.swapScreen.marketPrice',
     defaultMessage: '!!!Market Price',
+  },
+  marketPriceInfo: {
+    id: 'swap.swapScreen.marketPriceInfo',
+    defaultMessage:
+      '!!!Market price is the best price available on the market among several DEXes that lets you buy or sell an asset instantly.',
+  },
+  limitPriceInfo: {
+    id: 'swap.swapScreen.limitPriceInfo',
+    defaultMessage:
+      "!!!Limit price in a DEX is a specific pre-set price at which you can trade an asset. Unlike market orders, which execute immediately at the current market price, limit orders are set to execute only when the market reaches the trader's specified price.",
   },
   limitPrice: {
     id: 'swap.swapScreen.limitPrice',
@@ -530,7 +558,7 @@ export const messages = defineMessages({
   },
   assignCollateral: {
     id: 'components.send.confirmscreen.assignCollateral',
-    defaultMessage: '!!!Assign collateral',
+    defaultMessage: '!!!Generate',
   },
   collateralNotFound: {
     id: 'components.send.confirmscreen.collateralNotFound',
@@ -538,7 +566,16 @@ export const messages = defineMessages({
   },
   noActiveCollateral: {
     id: 'components.send.confirmscreen.noActiveCollateral',
-    defaultMessage: "!!!You don't have an active collateral utxo",
+    defaultMessage: '!!!To continue with this action, you need to generate a collateral',
+  },
+  collateralTxPendingTitle: {
+    id: 'components.send.confirmscreen.collateralTxPendingTitle',
+    defaultMessage: '!!!Pending Collateral UTxO',
+  },
+  collateralTxPending: {
+    id: 'components.send.confirmscreen.collateralTxPending',
+    defaultMessage:
+      "!!!The collateral UTxO transaction you've submitted is currently in the processing stage, and it may require a few minutes to complete. Please refresh your interface and attempt the action again shortly",
   },
   failedTxTitle: {
     id: 'components.send.sendscreen.failedTxTitle',
@@ -572,6 +609,10 @@ export const messages = defineMessages({
     id: 'global.ledgerMessages.continueOnLedger',
     defaultMessage: '!!!Continue on Ledger',
   },
+  continue: {
+    id: 'global.actions.dialogs.commonbuttons.continueButton',
+    defaultMessage: '!!!Continue',
+  },
   slippageWarningTitle: {
     id: 'swap.slippage.slippageWarningTitle',
     defaultMessage: '!!!Slippage Warning',
@@ -600,5 +641,34 @@ export const messages = defineMessages({
   emptyCompletedOrders: {
     id: 'swap.listOrders.emptyCompletedOrders',
     defaultMessage: '!!!No orders completed yet',
+  },
+  priceImpact: {
+    id: 'swap.swapScreen.priceImpact',
+    defaultMessage: '!!!Price Impact',
+  },
+  priceImpactRiskHigh: {
+    id: 'swap.swapScreen.priceImpactRiskHigh',
+    defaultMessage: '!!!Price impact over {riskValue}%',
+  },
+  priceImpactHighDescription: {
+    id: 'swap.swapScreen.priceImpactHighDescription',
+    defaultMessage:
+      '!!!may cause a significant loss of funds. Please bear this in mind and proceed with an extra caution.',
+  },
+  priceImpactModerateDescription: {
+    id: 'swap.swapScreen.priceImpactModerateDescription',
+    defaultMessage: '!!!may cause a difference in the amount you actually receive. Consider this at your own risk.',
+  },
+  priceImpactInfo: {
+    id: 'swap.swapScreen.priceImpactInfo',
+    defaultMessage: '!!!Price impact is a difference between the actual market price and your price due to trade size.',
+  },
+  warning: {
+    id: 'components.txhistory.flawedwalletmodal.title',
+    defaultMessage: '!!Warning',
+  },
+  backToSwapOrders: {
+    id: 'swap.swapScreen.backToSwapOrders',
+    defaultMessage: '!!!Back to swap orders',
   },
 })

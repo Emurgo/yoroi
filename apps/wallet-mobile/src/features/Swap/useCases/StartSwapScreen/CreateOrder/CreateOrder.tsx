@@ -3,11 +3,11 @@ import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, us
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
-import {Alert, KeyboardAvoidingView, Platform, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
+import {Alert, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import Config from 'react-native-config'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, Spacer, useModal} from '../../../../../components'
+import {Button, KeyboardAvoidingView, Spacer, useModal} from '../../../../../components'
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../navigation'
 import {useDisableSearchOnBar} from '../../../../../Search/SearchContext'
@@ -16,21 +16,23 @@ import {COLORS} from '../../../../../theme'
 import {NotEnoughMoneyToSendError} from '../../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../../yoroi-wallets/types'
-import {Quantities} from '../../../../../yoroi-wallets/utils'
+import {isMainnetNetworkId, Quantities} from '../../../../../yoroi-wallets/utils'
 import {createOrderEntry, makePossibleFrontendFeeEntry} from '../../../common/entries'
+import {getPriceImpactRisk} from '../../../common/helpers'
 import {useNavigateTo} from '../../../common/navigation'
 import {useStrings} from '../../../common/strings'
 import {useSwapForm} from '../../../common/SwapFormProvider'
 import {useSwapTx} from '../../../common/useSwapTx'
+import {AmountActions} from './Actions/AmountActions/AmountActions'
+import {OrderActions} from './Actions/OrderActions/OrderActions'
 import {EditBuyAmount} from './EditBuyAmount/EditBuyAmount'
-import {EditLimitPrice} from './EditLimitPrice'
 import {ShowPoolActions} from './EditPool/ShowPoolActions'
+import {EditPrice} from './EditPrice/EditPrice'
 import {EditSellAmount} from './EditSellAmount/EditSellAmount'
 import {EditSlippage} from './EditSlippage/EditSlippage'
-import {LimitPriceWarning} from './LimitPriceWarning/LimitPriceWarning'
-import {ShowTokenActions} from './ShowTokenActions/ShowTokenActions'
-import {TopTokenActions} from './ShowTokenActions/TopTokenActions'
-import {SlippageWarning} from './SlippageWarning'
+import {WarnLimitPrice} from './WarnLimitPrice/WarnLimitPrice'
+import {WarnPriceImpact} from './WarnPriceImpact/WarnPriceImpact'
+import {WarnSlippage} from './WarnSlippage/WarnSlippage'
 
 const LIMIT_PRICE_WARNING_THRESHOLD = 0.1 // 10%
 const BOTTOM_ACTION_SECTION = 180
@@ -45,6 +47,7 @@ export const CreateOrder = () => {
   const {track} = useMetrics()
   const {openModal} = useModal()
   const {height: deviceHeight} = useWindowDimensions()
+  const priceImpactRisk = getPriceImpactRisk(Number(orderData.selectedPoolCalculation?.prices.priceImpact))
 
   const {
     sellQuantity: {isTouched: isSellTouched},
@@ -123,7 +126,7 @@ export const CreateOrder = () => {
         datum,
       )
 
-      const isMainnet = wallet.networkId !== 300
+      const isMainnet = isMainnetNetworkId(wallet.networkId)
       const frontendFee = selectedPoolCalculation.cost.frontendFeeInfo.fee
       const frontendFeeDepositAddress = isMainnet
         ? Config['FRONTEND_FEE_ADDRESS_MAINNET']
@@ -134,8 +137,11 @@ export const CreateOrder = () => {
 
       createUnsignedTx({entries})
     },
-    onError: (error) => {
-      Alert.alert(strings.generalErrorTitle, strings.generalErrorMessage(error))
+    onError: (error: Error | string) => {
+      Alert.alert(
+        strings.generalErrorTitle,
+        strings.generalErrorMessage(error instanceof Error ? error.message : error),
+      )
     },
   })
 
@@ -211,6 +217,16 @@ export const CreateOrder = () => {
 
   const handleOnSwap = () => {
     if (orderData.selectedPoolCalculation === undefined) return
+
+    if (priceImpactRisk === 'high' && orderData.type === 'market') {
+      openModal(
+        strings.warning,
+        <WarnPriceImpact onContinue={createUnsignedSwapTx} priceImpactRisk={priceImpactRisk} />,
+        400,
+      )
+      return
+    }
+
     if (orderData.type === 'limit' && orderData.limitPrice !== undefined) {
       const marketPrice = new BigNumber(orderData.selectedPoolCalculation.prices.market)
       const limitPrice = new BigNumber(orderData.limitPrice)
@@ -218,7 +234,7 @@ export const CreateOrder = () => {
       if (limitPrice.isGreaterThan(marketPrice.times(1 + LIMIT_PRICE_WARNING_THRESHOLD))) {
         openModal(
           strings.limitPriceWarningTitle,
-          <LimitPriceWarning orderData={orderData} onSubmit={createUnsignedSwapTx} />,
+          <WarnLimitPrice orderData={orderData} onConfirm={createUnsignedSwapTx} />,
           400,
         )
         return
@@ -233,8 +249,8 @@ export const CreateOrder = () => {
     if (Quantities.isZero(minReceived)) {
       openModal(
         strings.slippageWarningTitle,
-        <SlippageWarning
-          onSubmit={createUnsignedSwapTx}
+        <WarnSlippage
+          onConfirm={createUnsignedSwapTx}
           slippage={orderData.slippage}
           ticker={buyTokenInfo.ticker ?? buyTokenInfo.name ?? ''}
         />,
@@ -250,11 +266,7 @@ export const CreateOrder = () => {
 
   return (
     <View style={styles.root}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={120}
-      >
+      <KeyboardAvoidingView style={styles.flex} keyboardVerticalOffset={140}>
         <ScrollView style={styles.scroll}>
           <View
             style={styles.container}
@@ -263,13 +275,13 @@ export const CreateOrder = () => {
               setContentHeight(height + BOTTOM_ACTION_SECTION)
             }}
           >
-            <TopTokenActions />
+            <OrderActions />
 
             <EditSellAmount />
 
             <Spacer height={16} />
 
-            <ShowTokenActions />
+            <AmountActions />
 
             <Spacer height={16} />
 
@@ -277,22 +289,28 @@ export const CreateOrder = () => {
 
             <Spacer height={20} />
 
-            <EditLimitPrice />
+            <EditPrice />
 
             <EditSlippage />
 
             <ShowPoolActions />
           </View>
         </ScrollView>
-      </KeyboardAvoidingView>
 
-      <Actions
-        style={{
-          ...(deviceHeight < contentHeight && styles.actionBorder),
-        }}
-      >
-        <Button testID="swapButton" shelleyTheme title={strings.swapTitle} onPress={handleOnSwap} disabled={disabled} />
-      </Actions>
+        <Actions
+          style={{
+            ...(deviceHeight < contentHeight && styles.actionBorder),
+          }}
+        >
+          <Button
+            testID="swapButton"
+            shelleyTheme
+            title={strings.swapTitle}
+            onPress={handleOnSwap}
+            disabled={disabled}
+          />
+        </Actions>
+      </KeyboardAvoidingView>
     </View>
   )
 }

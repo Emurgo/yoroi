@@ -1,29 +1,31 @@
 import {createTypeGuardFromSchema, isArrayOfType, isString} from '@yoroi/common'
+import {domainNormalizer} from '@yoroi/resolver'
 import {Balance} from '@yoroi/types'
 import {z} from 'zod'
 
 import {features} from '../../features'
 import {getAssetFingerprint} from '../../legacy/format'
-import {utf8ToHex} from './api/utils'
+import {toDisplayAssetName} from './api'
 export const convertNft = (options: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  metadata?: any
+  metadata?: unknown
   storageUrl: string
   policyId: string
-  shortName: string
+  nameHex: string
 }): Balance.TokenInfo => {
-  const {metadata, storageUrl, policyId, shortName} = options
-  const assetNameHex = utf8ToHex(shortName)
-  const fingerprint = getAssetFingerprint(policyId, assetNameHex)
+  const {metadata, storageUrl, policyId, nameHex} = options
+  const fingerprint = getAssetFingerprint(policyId, nameHex)
   const description = hasDescriptionProperty(metadata) ? normalizeProperty(metadata.description) : undefined
   const originalImage = hasImageProperty(metadata) ? normalizeProperty(metadata.image) : undefined
   const isIpfsImage = !!originalImage?.startsWith('ipfs://')
   const convertedImage = isIpfsImage ? originalImage?.replace('ipfs://', `https://ipfs.io/ipfs/`) : originalImage
 
-  const id = `${policyId}.${assetNameHex}`
-  const name = hasNameProperty(metadata) ? normalizeProperty(metadata.name) : shortName
+  const id = `${policyId}.${nameHex}`
+  const displayAssetName = domainNormalizer(policyId, toDisplayAssetName(id))
+
+  const name = hasNameProperty(metadata) ? normalizeProperty(metadata.name) : displayAssetName
   const image = features.moderatingNftsEnabled ? `${storageUrl}/${fingerprint}.jpeg` : convertedImage
   const thumbnail = features.moderatingNftsEnabled ? `${storageUrl}/p_${fingerprint}.jpeg` : convertedImage
+  const ticker = displayAssetName
 
   return {
     kind: 'nft',
@@ -33,7 +35,7 @@ export const convertNft = (options: {
     description,
     group: policyId,
     decimals: undefined,
-    ticker: shortName,
+    ticker,
     icon: thumbnail,
     image,
     symbol: undefined,

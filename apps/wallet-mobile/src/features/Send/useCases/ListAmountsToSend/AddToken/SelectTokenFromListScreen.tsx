@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import {Balance} from '@yoroi/types'
 import React from 'react'
@@ -32,9 +32,13 @@ export const SelectTokenFromListScreen = () => {
   const [fungibilityFilter, setFungibilityFilter] = React.useState<FungibilityFilter>('all')
   const {targets, selectedTargetIndex} = useSend()
   const {track} = useMetrics()
-  React.useEffect(() => {
-    track.sendSelectAssetPageViewed()
-  }, [track])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.sendSelectAssetPageViewed()
+    }, [track]),
+  )
+
   const {amounts} = targets[selectedTargetIndex].entry
   const hasTokensSelected = Object.keys(amounts).length > 0
 
@@ -106,7 +110,7 @@ const NftList = ({canAddAmount}: {canAddAmount: boolean}) => {
   const filteredAndSorted = nfts.filter(filterOutSelected(amountsSelected)).sort((a, b) => sortNfts(a.name, b.name))
   const counter = filteredAndSorted.length
 
-  const onSelect = (nftId) => {
+  const onSelect = (nftId: string) => {
     tokenSelectedChanged(nftId)
     closeSearch()
 
@@ -374,7 +378,7 @@ const useFilteredTokenInfos = ({
   })
 }
 
-const areAllTokensSelected = (selectedTokenIds: Array<string>, tokenInfos): boolean =>
+const areAllTokensSelected = (selectedTokenIds: Array<string>, tokenInfos: Balance.TokenInfo[]): boolean =>
   tokenInfos.every((tokenInfo) => selectedTokenIds.includes(tokenInfo.id))
 const filterOutSelected = (selectedTokenIds: Array<string>) => (token: Balance.TokenInfo) =>
   !selectedTokenIds.includes(token.id)

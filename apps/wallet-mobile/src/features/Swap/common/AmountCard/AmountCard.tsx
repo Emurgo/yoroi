@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -6,7 +7,6 @@ import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Boundary, Icon, Spacer, TokenIcon, TokenIconPlaceholder} from '../../../../components'
 import {formatTokenWithText} from '../../../../legacy/format'
-import {COLORS} from '../../../../theme'
 import {isEmptyString} from '../../../../utils'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
@@ -41,6 +41,7 @@ export const AmountCard = ({
   const strings = useStrings()
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
+  const {styles, colors} = useStyles()
 
   const noTokenSelected = !touched
 
@@ -66,10 +67,10 @@ export const AmountCard = ({
               autoComplete="off"
               value={value}
               placeholder="0"
-              placeholderTextColor="#6B7384"
+              placeholderTextColor={colors.placeholder}
               onChangeText={onChange}
               allowFontScaling
-              selectionColor={isFocused ? '#242838' : COLORS.TRANSPARENT_BLACK}
+              selectionColor={isFocused ? colors.focused : colors.blur}
               style={[styles.amountInput, value === '0' && styles.grayText]}
               underlineColorAndroid="transparent"
               ref={inputRef}
@@ -88,7 +89,7 @@ export const AmountCard = ({
               <View style={styles.sectionContainer}>
                 <Boundary loading={{fallback: <TokenIconPlaceholder />}} error={{fallback}}>
                   {noTokenSelected ? (
-                    <Icon.Coins size={24} color={COLORS.TEXT_GRAY3} />
+                    <Icon.Coins size={24} color={colors.noSelected} />
                   ) : (
                     <TokenIcon wallet={wallet} tokenId={tokenInfo.id} variant="swap" />
                   )}
@@ -144,78 +145,90 @@ const useStrings = () => {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: COLORS.TEXT_GRAY3,
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingLeft: 16,
-    paddingRight: 16,
-    padding: 10,
-    height: 86,
-  },
-  borderError: {
-    borderColor: COLORS.ALERT_TEXT_COLOR,
-    borderWidth: 2,
-  },
-  active: {
-    borderWidth: 2,
-    borderColor: '#242838',
-  },
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    container: {
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: color.gray[400],
+      paddingTop: 16,
+      paddingBottom: 16,
+      paddingLeft: 16,
+      paddingRight: 16,
+      padding: 10,
+      height: 86,
+    },
+    borderError: {
+      borderColor: color.magenta[500],
+      borderWidth: 2,
+    },
+    active: {
+      borderWidth: 2,
+      borderColor: color.gray[900],
+    },
 
-  label: {
-    position: 'absolute',
-    top: -7,
-    left: 10,
-    backgroundColor: COLORS.WHITE,
-    paddingHorizontal: 5,
-    fontSize: 12,
-    color: COLORS.ERROR_TEXT_COLOR_DARK,
-  },
-  labelError: {
-    color: COLORS.ALERT_TEXT_COLOR,
-  },
-  content: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    height: 64,
-  },
-  amountInput: {
-    paddingVertical: 0,
-    minWidth: 120,
-    maxWidth: 200,
-    height: 34,
-    fontSize: 16,
-    color: '#000000',
-  },
-  amountWrapper: {
-    flex: 1,
-  },
-  rightSection: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-  },
-  sectionContainer: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-  },
-  coinName: {
-    fontSize: 16,
-    fontWeight: '400',
-  },
-  balanceText: {
-    fontSize: 12,
-    color: COLORS.TEXT_INPUT,
-  },
-  errorText: {
-    color: COLORS.ALERT_TEXT_COLOR,
-    fontSize: 12,
-  },
-  grayText: {
-    color: '#6B7384',
-  },
-})
+    label: {
+      position: 'absolute',
+      top: -7,
+      left: 10,
+      backgroundColor: color.gray.min,
+      paddingHorizontal: 5,
+      fontSize: 12,
+      color: color.gray[900],
+    },
+    labelError: {
+      color: color.magenta[500],
+    },
+    content: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      height: 64,
+    },
+    amountInput: {
+      paddingVertical: 0,
+      minWidth: 120,
+      maxWidth: 200,
+      height: 34,
+      fontSize: 16,
+      color: color.gray.max,
+    },
+    amountWrapper: {
+      flex: 1,
+    },
+    rightSection: {
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
+    },
+    sectionContainer: {
+      flexDirection: 'row',
+      alignSelf: 'flex-end',
+      alignItems: 'center',
+    },
+    coinName: {
+      fontSize: 16,
+      fontWeight: '400',
+      color: color.gray.max,
+    },
+    balanceText: {
+      fontSize: 12,
+      color: color.gray[600],
+    },
+    errorText: {
+      color: color.magenta[500],
+      fontSize: 12,
+    },
+    grayText: {
+      color: color.gray[600],
+    },
+  })
+  const colors = {
+    placeholder: theme.color.gray[600],
+    focused: theme.color.gray[900],
+    blur: theme.color['black-static'],
+    noSelected: theme.color.gray[400],
+  }
+  return {styles, colors} as const
+}

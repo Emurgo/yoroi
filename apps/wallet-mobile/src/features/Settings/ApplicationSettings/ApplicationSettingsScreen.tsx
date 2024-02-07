@@ -1,4 +1,6 @@
 import {isBoolean} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
+import {capitalize} from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
@@ -6,7 +8,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon, Spacer, StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
-import {CONFIG, isProduction} from '../../../legacy/config'
+import {defaultLanguage} from '../../../i18n/languages'
+import {CONFIG, isNightly, isProduction} from '../../../legacy/config'
 import {lightPalette} from '../../../theme'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
@@ -23,11 +26,11 @@ const iconProps = {
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
+  const {colorScheme} = useTheme()
   const {languageCode, supportedLanguages} = useLanguage()
-  const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? supportedLanguages['en-US']
+  const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 
   const {isTogglePrivacyModeLoading, isPrivacyOff} = usePrivacyMode()
-
   const {currency} = useCurrencyContext()
   const {enabled: crashReportEnabled} = useCrashReports()
 
@@ -39,6 +42,7 @@ export const ApplicationSettingsScreen = () => {
   const {data: screenShareEnabled} = useScreenShareSettingEnabled()
 
   const displayScreenShareSetting = Platform.OS === 'android' && !isProduction()
+  const displayToggleThemeSetting = !isNightly() && !isProduction()
 
   const onToggleAuthWithOs = () => {
     if (authSetting === 'os') {
@@ -91,6 +95,15 @@ export const ApplicationSettingsScreen = () => {
             label={strings.analytics}
             onNavigate={navigateTo.analytics}
           />
+
+          {displayToggleThemeSetting && (
+            <SettingsItem
+              icon={<Icon.EyeOff {...iconProps} />} // TODO
+              label={`${capitalize(colorScheme)} Theme`} // TODO
+            >
+              <ToggleThemeSwitch />
+            </SettingsItem>
+          )}
         </SettingsSection>
 
         <Spacer height={24} />
@@ -170,6 +183,24 @@ const PrivacyModeSwitch = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
   }
 
   return <Switch value={isLocalPrivacyOff} onValueChange={onTogglePrivacyMode} disabled={isTogglePrivacyModeLoading} />
+}
+
+const ToggleThemeSwitch = () => {
+  const {selectColorScheme, colorScheme} = useTheme()
+  const [theme, setTheme] = React.useState(true)
+
+  const onToggleThemeMode = () => {
+    if (colorScheme === 'light') {
+      selectColorScheme('dark')
+      setTheme(true)
+    }
+    if (colorScheme === 'dark') {
+      selectColorScheme('light')
+      setTheme(false)
+    }
+  }
+
+  return <Switch value={theme} onValueChange={onToggleThemeMode} />
 }
 
 // to avoid switch jumps

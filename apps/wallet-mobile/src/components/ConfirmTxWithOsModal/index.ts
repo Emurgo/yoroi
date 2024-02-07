@@ -1,0 +1,1 @@
+export {ConfirmTxWithOsModal} from './ConfirmTxWithOsModal'

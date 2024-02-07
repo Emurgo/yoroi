@@ -2,9 +2,9 @@
 import {Balance} from '@yoroi/types'
 import React, {useEffect, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {Text, ValidatedTextInput} from '../../components'
+import {KeyboardSpacer, Text, ValidatedTextInput} from '../../components'
 import {ConfirmTx} from '../../components/ConfirmTx'
 import {useStakePoolInfoAndHistory} from '../../Dashboard/StakePoolInfo'
 import {debugWalletInfo, features} from '../../features'
@@ -114,6 +114,9 @@ export const DelegationConfirmation = () => {
           chooseTransportOnConfirmation
         />
       </Actions>
+
+      {/* hack to fix weird KeyboardAvoidingView bug in THIS SCREEN */}
+      {Platform.OS === 'ios' && <KeyboardSpacer />}
     </View>
   )
 }

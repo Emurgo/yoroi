@@ -1,32 +1,32 @@
 import {z} from 'zod'
 import {createTypeGuardFromSchema, fetcher, Fetcher} from '@yoroi/common'
 
-import {
-  ApiTokenId,
-  ApiTokenSupplyRecord,
-  ApiTokenSupplyResponse,
-  ApiTokeSupplyRequest,
-} from './types'
 import {getTokenIdentity} from '../translators/helpers/getTokenIdentity'
+import {Api} from '@yoroi/types'
 
 export const getTokenSupply =
   (baseUrl: string, request: Fetcher = fetcher) =>
-  async (tokenIds: ApiTokeSupplyRequest): Promise<ApiTokenSupplyResponse> => {
+  async (
+    tokenIds: Api.Cardano.TokenSupplyRequest,
+  ): Promise<Api.Cardano.TokenSupplyResponse> => {
     if (tokenIds.length === 0) {
       return Promise.resolve({})
     }
 
-    const assetsMap = new Map<ApiTokenId, {policy: string; name: string}>(
+    const assetsMap = new Map<
+      Api.Cardano.TokenId,
+      {policy: string; nameHex: string}
+    >(
       tokenIds.map((id) => {
-        const {policyId: policy, name} = getTokenIdentity(id)
-        return [id, {policy, name}]
+        const {policyId: policy, assetName: nameHex} = getTokenIdentity(id)
+        return [id, {policy, nameHex}]
       }),
     )
 
     const payload = {assets: Array.from(assetsMap.values())}
 
-    return request<ApiTokenSupplyResponse>({
-      url: `${baseUrl}/multiAsset/supply`,
+    return request<Api.Cardano.TokenSupplyResponse>({
+      url: `${baseUrl}/multiAsset/supply?numberFormat=string`,
       data: payload,
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -35,12 +35,16 @@ export const getTokenSupply =
       if (!parsedResponse)
         return Promise.reject(new Error('Invalid asset supplies'))
 
-      const result: Record<ApiTokenId, ApiTokenSupplyRecord> = {} // need any here TS issues with key indexing
-      const supplies: Record<ApiTokenId, ApiTokenSupplyRecord | undefined> =
-        parsedResponse.supplies
+      const result: Record<Api.Cardano.TokenId, Api.Cardano.TokenSupplyRecord> =
+        {}
 
-      Array.from(assetsMap.entries()).forEach(([id, {policy, name}]) => {
-        const tokenId: ApiTokenId = `${policy}.${name}`
+      const supplies: Record<
+        Api.Cardano.TokenId,
+        Api.Cardano.TokenSupplyRecord | undefined
+      > = parsedResponse.supplies
+
+      Array.from(assetsMap.entries()).forEach(([id, {policy, nameHex}]) => {
+        const tokenId: Api.Cardano.TokenId = `${policy}.${nameHex}`
         result[id] = supplies[tokenId] ?? null
       })
 
@@ -49,11 +53,11 @@ export const getTokenSupply =
   }
 
 type TokenSupplyResponse = {
-  supplies: {[key: ApiTokenId]: ApiTokenSupplyRecord}
+  supplies: {[key: Api.Cardano.TokenId]: Api.Cardano.TokenSupplyRecord}
 }
 
 const TokenSupplySchema: z.ZodSchema<TokenSupplyResponse> = z.object({
-  supplies: z.record(z.number().nullable()),
+  supplies: z.record(z.string().nullable()),
 })
 
 export const isTokenSupplyResponse =

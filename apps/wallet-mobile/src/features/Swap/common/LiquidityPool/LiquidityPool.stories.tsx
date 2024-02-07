@@ -1,6 +1,7 @@
 import {storiesOf} from '@storybook/react-native'
 import {getPoolUrlByProvider} from '@yoroi/swap'
 import {Swap} from '@yoroi/types'
+import {SwapPoolProvider} from '@yoroi/types/lib/swap/pool'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
@@ -27,7 +28,7 @@ const LiquidityDexList = () => {
   )
 }
 
-const LiquidityDex = ({provider}) => {
+const LiquidityDex = ({provider}: {provider: SwapPoolProvider}) => {
   const poolIcon = <PoolIcon providerId={provider} size={18} />
   const poolUrl = getPoolUrlByProvider(provider)
   const poolProviderFormatted = capitalize(provider)

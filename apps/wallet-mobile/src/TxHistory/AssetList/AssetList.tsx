@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {FlashList, FlashListProps} from '@shopify/flash-list'
 import {Balance} from '@yoroi/types'
 import React from 'react'
@@ -8,6 +9,7 @@ import {AmountItem, AmountItemProps} from '../../components/AmountItem/AmountIte
 import {Spacer} from '../../components/Spacer'
 import {usePrivacyMode} from '../../features/Settings/PrivacyMode/PrivacyMode'
 import globalMessages, {actionMessages} from '../../i18n/global-messages'
+import {useMetrics} from '../../metrics/metricsManager'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {sortTokenInfos} from '../../utils'
 import {getNetworkConfigById} from '../../yoroi-wallets/cardano/networks'
@@ -25,6 +27,13 @@ export const AssetList = (props: Props) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.assetsPageViewed()
+    }, [track]),
+  )
 
   const handleOnPressNFTs = () => Alert.alert(strings.soon, strings.soon)
   const handleOnPressTokens = () => Alert.alert(strings.soon, strings.soon)

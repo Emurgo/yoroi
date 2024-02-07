@@ -3,8 +3,16 @@ import {isRecord, isString} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {Dimensions, Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler'
+import {
+  Dimensions,
+  Linking,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 
 import {CopyButton, FadeIn, Icon, Spacer, Text} from '../components'
 import {NftPreview} from '../components/NftPreview'
@@ -17,57 +25,64 @@ import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {getNetworkConfigById} from '../yoroi-wallets/cardano/networks'
-import {useNft} from '../yoroi-wallets/hooks'
+import {useNativeAssetInvalidation, useNft} from '../yoroi-wallets/hooks'
 
 export const NftDetails = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const nft = useNft(wallet, {id})
+  const [policy, name] = nft.id.split('.')
   const [activeTab, setActiveTab] = useState<'overview' | 'metadata'>('overview')
   const {track} = useMetrics()
+  const {invalidate, isLoading} = useNativeAssetInvalidation({networkId: wallet.networkId, policy, name})
 
   return (
     <FadeIn style={styles.container}>
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-        {features.moderatingNftsEnabled ? <ModeratedNftImage nft={nft} /> : <UnModeratedNftImage nft={nft} />}
+      <SafeAreaView>
+        <ScrollView
+          contentContainerStyle={styles.contentContainer}
+          refreshControl={<RefreshControl onRefresh={invalidate} refreshing={isLoading} />}
+        >
+          {features.moderatingNftsEnabled ? <ModeratedNftImage nft={nft} /> : <UnModeratedNftImage nft={nft} />}
 
-        <Tabs>
-          <Tab
-            onPress={() => {
-              if (activeTab !== 'overview') {
-                setActiveTab('overview')
-                track.nftGalleryDetailsTab({nft_tab: 'Overview'})
-              }
-            }}
-            label={strings.overview}
-            active={activeTab === 'overview'}
-            testID="overview"
-          />
+          <Tabs>
+            <Tab
+              onPress={() => {
+                if (activeTab !== 'overview') {
+                  setActiveTab('overview')
+                  track.nftGalleryDetailsTab({nft_tab: 'Overview'})
+                }
+              }}
+              label={strings.overview}
+              active={activeTab === 'overview'}
+              testID="overview"
+            />
 
-          <Tab
-            onPress={() => {
-              if (activeTab !== 'metadata') {
-                setActiveTab('metadata')
-                track.nftGalleryDetailsTab({nft_tab: 'Metadata'})
-              }
-            }}
-            label={strings.metadata}
-            active={activeTab === 'metadata'}
-            testID="metadata"
-          />
-        </Tabs>
+            <Tab
+              onPress={() => {
+                if (activeTab !== 'metadata') {
+                  setActiveTab('metadata')
+                  track.nftGalleryDetailsTab({nft_tab: 'Metadata'})
+                }
+              }}
+              label={strings.metadata}
+              active={activeTab === 'metadata'}
+              testID="metadata"
+            />
+          </Tabs>
 
-        <TabPanels>
-          <TabPanel active={activeTab === 'overview'}>
-            <NftOverview nft={nft} />
-          </TabPanel>
+          <TabPanels>
+            <TabPanel active={activeTab === 'overview'}>
+              <NftOverview nft={nft} />
+            </TabPanel>
 
-          <TabPanel active={activeTab === 'metadata'}>
-            <NftMetadata nft={nft} />
-          </TabPanel>
-        </TabPanels>
-      </ScrollView>
+            <TabPanel active={activeTab === 'metadata'}>
+              <NftMetadata nft={nft} />
+            </TabPanel>
+          </TabPanels>
+        </ScrollView>
+      </SafeAreaView>
     </FadeIn>
   )
 }
@@ -76,7 +91,7 @@ const UnModeratedNftImage = ({nft}: {nft: Balance.TokenInfo}) => {
   const navigateTo = useNavigateTo()
   return (
     <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
-      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} />
+      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} contentFit="contain" />
     </TouchableOpacity>
   )
 }
@@ -97,7 +112,7 @@ const ModeratedNftImage = ({nft}: {nft: Balance.TokenInfo}) => {
 
   return (
     <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
-      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} />
+      <NftPreview nft={nft} style={styles.image} height={IMAGE_HEIGHT} width={IMAGE_WIDTH} contentFit="contain" />
     </TouchableOpacity>
   )
 }

@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Resolves to",
     "file": "src/features/Settings/ManageCollateral/ConfirmTx/Summary/ReceiverInfo.tsx",
     "start": {
-      "line": 35,
+      "line": 55,
       "column": 14,
-      "index": 772
+      "index": 1485
     },
     "end": {
-      "line": 38,
+      "line": 58,
       "column": 3,
-      "index": 864
+      "index": 1577
     }
   }
 ]

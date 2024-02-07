@@ -1,48 +1,24 @@
 import * as React from 'react'
-import {defineMessages, useIntl} from 'react-intl'
 import {View} from 'react-native'
 
+import {Spacer} from '../../../../../components/Spacer'
 import {Text} from '../../../../../components/Text'
-import {txLabels} from '../../../../../i18n/global-messages'
+import {YoroiTarget} from '../../../../../yoroi-wallets/types'
+import {useStrings} from '../../../../Send/common/strings'
 
 type Props = {
-  receiver: string
-  address: string
+  target: YoroiTarget
 }
-export const ReceiverInfo = ({receiver, address}: Props) => {
+export const ReceiverInfo = ({target}: Props) => {
   const strings = useStrings()
-
-  const isResolved = receiver !== address
 
   return (
     <View>
-      <Text>{strings.receiver}</Text>
+      <Text>{strings.receiver}:</Text>
 
-      <Text testID="receiverAddressText">{receiver}</Text>
+      <Spacer height={12} />
 
-      {isResolved && (
-        <View>
-          <Text>{strings.resolvesTo}</Text>
-
-          <Text testID="addressText">{address}</Text>
-        </View>
-      )}
+      <Text testID="receiverAddressText">{target.entry.address}</Text>
     </View>
   )
-}
-
-const messages = defineMessages({
-  resolvesTo: {
-    id: 'components.send.sendscreen.resolvesTo',
-    defaultMessage: '!!!Resolves to',
-  },
-})
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    receiver: intl.formatMessage(txLabels.receiver),
-    resolvesTo: intl.formatMessage(messages.resolvesTo),
-  }
 }

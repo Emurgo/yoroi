@@ -17,7 +17,7 @@ import {SwapInfoLink} from '../../../../common/SwapInfoLink/SwapInfoLink'
 
 export const ShowPoolActions = () => {
   const strings = useStrings()
-  const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
+  const [isExpanded, setIsExpanded] = React.useState(true)
 
   const navigateTo = useNavigateTo()
   const handleOnChangePool = () => navigateTo.selectPool()
@@ -34,9 +34,8 @@ export const ShowPoolActions = () => {
     sellQuantity: {isTouched: isSellTouched},
     selectedPool: {isTouched: isPoolTouched},
   } = useSwapForm()
-  if (!isBuyTouched || !isSellTouched || calculation === undefined) {
-    return <></>
-  }
+  if (!isBuyTouched || !isSellTouched || calculation === undefined) return null
+
   const {cost, pool} = calculation
 
   const totalFees = Quantities.format(
@@ -47,9 +46,7 @@ export const ShowPoolActions = () => {
     amounts.sell.quantity,
     sellTokenInfo.decimals ?? 0,
   )} ${sellTokenName} + ${totalFees} ${wallet.primaryTokenInfo.ticker}`
-  const id = pool.poolId
-  const isExpanded = id === hiddenInfoOpenId
-  const handleOnExpand = () => setHiddenInfoOpenId(hiddenInfoOpenId !== id ? id : null)
+  const handleOnExpand = () => setIsExpanded((state) => !state)
   const totalFeesTitle = (
     <HeaderWrapper expanded={isExpanded} onPress={handleOnExpand}>
       <Text style={styles.bold}>{titleTotalFeesFormatted}</Text>
@@ -79,7 +76,7 @@ export const ShowPoolActions = () => {
         )}
       </View>
 
-      <ExpandableInfoCard key={id} header={totalFeesTitle} info={feeBreakdown} expanded={isExpanded} />
+      <ExpandableInfoCard header={totalFeesTitle} info={feeBreakdown} expanded={isExpanded} />
     </View>
   )
 }
@@ -256,13 +253,15 @@ const styles = StyleSheet.create({
   flex: {flexDirection: 'row', alignItems: 'center'},
   between: {justifyContent: 'space-between'},
   text: {
-    textAlign: 'left',
-    fontFamily: 'Rubik',
+    textAlign: 'right',
     fontWeight: '400',
     fontSize: 16,
     lineHeight: 24,
     color: '#242838',
+    flexWrap: 'wrap',
+    flex: 1,
   },
+
   modalContent: {
     flex: 1,
     justifyContent: 'space-between',

@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {createStackNavigator} from '@react-navigation/stack'
+import {GovernanceProvider} from '@yoroi/staking'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
 import {SettingsButton} from '../components/Button'
+import {useGovernanceManagerMaker} from '../features/Staking/Governance'
 import {DashboardRoutes, defaultStackNavigationOptions, useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {DelegationConfirmation} from '../Staking'
@@ -17,34 +19,33 @@ export const DashboardNavigator = () => {
   const walletName = useWalletName(wallet)
   const strings = useStrings()
 
+  const manager = useGovernanceManagerMaker()
+
   return (
-    <Stack.Navigator
-      screenOptions={{
-        ...defaultStackNavigationOptions,
-        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-      }}
-    >
-      <Stack.Screen
-        name="staking-dashboard-main"
-        component={Dashboard}
-        options={{
-          title: walletName,
-          headerRight: () => <HeaderRight />,
-        }}
-      />
+    <GovernanceProvider manager={manager}>
+      <Stack.Navigator screenOptions={defaultStackNavigationOptions}>
+        <Stack.Screen
+          name="staking-dashboard-main"
+          component={Dashboard}
+          options={{
+            title: walletName,
+            headerRight: () => <HeaderRight />,
+          }}
+        />
 
-      <Stack.Screen //
-        name="staking-center"
-        component={StakingCenter}
-        options={{title: strings.title}}
-      />
+        <Stack.Screen //
+          name="staking-center"
+          component={StakingCenter}
+          options={{title: strings.title}}
+        />
 
-      <Stack.Screen
-        name="delegation-confirmation"
-        component={DelegationConfirmation}
-        options={{title: strings.title}}
-      />
-    </Stack.Navigator>
+        <Stack.Screen
+          name="delegation-confirmation"
+          component={DelegationConfirmation}
+          options={{title: strings.title}}
+        />
+      </Stack.Navigator>
+    </GovernanceProvider>
   )
 }
 

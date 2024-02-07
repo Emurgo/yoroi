@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, {useEffect, useRef} from 'react'
+import {useFocusEffect} from '@react-navigation/native'
+import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
-import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {KeyboardSpacer, Spacer, ValidatedTextInput} from '../../../../components'
+import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
 import {ConfirmTx} from '../../../../components/ConfirmTx'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
 import {assetsToSendProperties} from '../../../../metrics/helpers'
@@ -17,6 +19,7 @@ import {Amounts} from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
 import {useNavigateTo} from '../../common/navigation'
 import {useSend} from '../../common/SendContext'
+import {useFlashAndScroll} from '../../common/useFlashAndScroll'
 import {BalanceAfter} from './Summary/BalanceAfter'
 import {CurrentBalance} from './Summary/CurrentBalance'
 import {Fees} from './Summary/Fees'
@@ -48,10 +51,11 @@ export const ConfirmTxScreen = () => {
     }
   }, [])
 
-  useEffect(() => {
-    track.sendSummaryPageViewed(assetsToSendProperties({tokens, amounts}))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  useFocusEffect(
+    React.useCallback(() => {
+      track.sendSummaryPageViewed(assetsToSendProperties({tokens, amounts}))
+    }, [amounts, tokens, track]),
+  )
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
     track.sendSummarySubmitted(assetsToSendProperties({tokens, amounts}))
@@ -72,37 +76,32 @@ export const ConfirmTxScreen = () => {
   if (!yoroiUnsignedTx) throw new Error('Missing yoroiUnsignedTx')
 
   return (
-    <View style={styles.root}>
-      <CurrentBalance />
+    <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ScrollView style={styles.container} persistentScrollbar ref={scrollViewRef}>
+          <CurrentBalance />
 
-      <View style={{paddingTop: 16, paddingHorizontal: 16}}>
-        <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
+          <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        <Spacer height={4} />
+          <Spacer height={4} />
 
-        <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
+          <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        <Spacer height={16} />
+          <Spacer height={16} />
 
-        {targets.map((target, index) => (
-          <ReceiverInfo key={index} address={target.entry.address} receiver={target.receiver} />
-        ))}
-      </View>
+          {targets.map((target, index) => (
+            <ReceiverInfo key={`${target.receiver.resolve}:${index}`} target={target} />
+          ))}
 
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{padding: 16}}
-        persistentScrollbar
-        ref={scrollViewRef}
-      >
-        <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
+          <Spacer height={8} />
 
-        <Spacer height={8} />
+          <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
 
-        <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
+          <Spacer height={8} />
 
-        {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
-          <>
+          <SecondaryTotals yoroiUnsignedTx={yoroiUnsignedTx} />
+
+          {!wallet.isEasyConfirmationEnabled && !wallet.isHW && (
             <ValidatedTextInput
               secureTextEntry
               value={password}
@@ -110,25 +109,23 @@ export const ConfirmTxScreen = () => {
               onChangeText={setPassword}
               testID="spendingPasswordInput"
             />
-          </>
-        )}
+          )}
+        </ScrollView>
 
-        <KeyboardSpacer />
-      </ScrollView>
-
-      <Actions>
-        <ConfirmTx
-          onSuccess={onSuccess}
-          onError={onError}
-          yoroiUnsignedTx={yoroiUnsignedTx}
-          useUSB={useUSB}
-          setUseUSB={setUseUSB}
-          isProvidingPassword
-          providedPassword={password}
-          chooseTransportOnConfirmation
-        />
-      </Actions>
-    </View>
+        <Actions>
+          <ConfirmTx
+            onSuccess={onSuccess}
+            onError={onError}
+            yoroiUnsignedTx={yoroiUnsignedTx}
+            useUSB={useUSB}
+            setUseUSB={setUseUSB}
+            isProvidingPassword
+            providedPassword={password}
+            chooseTransportOnConfirmation
+          />
+        </Actions>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   )
 }
 
@@ -142,6 +139,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.WHITE,
     flex: 1,
+    paddingHorizontal: 16,
   },
 })
 
@@ -161,20 +159,4 @@ const useStrings = () => {
       message: intl.formatMessage(errorMessages.generalTxError.message),
     },
   }
-}
-
-const useFlashAndScroll = () => {
-  const scrollViewRef = useRef<ScrollView | null>(null)
-
-  useEffect(() => {
-    setTimeout(() => {
-      scrollViewRef.current?.flashScrollIndicators()
-    }, 500)
-
-    Keyboard.addListener('keyboardWillShow', () => {
-      scrollViewRef.current?.scrollToEnd()
-    })
-  }, [])
-
-  return scrollViewRef
 }

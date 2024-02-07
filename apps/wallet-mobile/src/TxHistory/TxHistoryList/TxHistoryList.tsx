@@ -1,19 +1,17 @@
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {Alert, Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
+import {Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
 
 import {Spacer, Text} from '../../components'
-import {features} from '../../features'
-import {actionMessages} from '../../i18n/global-messages'
+import {ShowBuyBanner} from '../../features/RampOnOff/common/ShowBuyBanner/ShowBuyBanner'
 import {formatDateRelative} from '../../legacy/format'
+import {useMetrics} from '../../metrics/metricsManager'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {useTransactionInfos} from '../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../yoroi-wallets/types'
-import {ActionsBanner} from './ActionsBanner'
-import {EmptyHistory} from './EmptyHistory'
 import {TxHistoryListItem} from './TxHistoryListItem'
 
 type ListProps = SectionListProps<TransactionInfo>
@@ -22,30 +20,35 @@ type Props = Partial<ListProps> & {
   onScroll: ListProps['onScroll']
 }
 export const TxHistoryList = (props: Props) => {
-  const strings = useStrings()
   const key = useRemountOnFocusHack()
   const wallet = useSelectedWallet()
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.transactionsPageViewed()
+    }, [track]),
+  )
+
   const transactionsInfo = useTransactionInfos(wallet)
   const groupedTransactions = getTransactionsByDate(transactionsInfo)
 
-  const handleExport = () => Alert.alert(strings.soon, strings.soon)
-  const handleSearch = () => Alert.alert(strings.soon, strings.soon)
-
   return (
     <View style={styles.container}>
-      {(features.txHistory.export || features.txHistory.search) && (
-        <ActionsBanner onExport={handleExport} onSearch={handleSearch} />
-      )}
-
       <SectionList
         {...props}
         key={key}
-        contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 8}}
-        ListEmptyComponent={<EmptyHistory />}
+        ListHeaderComponent={<ShowBuyBanner />}
+        contentContainerStyle={{
+          paddingHorizontal: 18,
+          flexGrow: 1,
+          height: 'auto',
+        }}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
         ItemSeparatorComponent={() => <Spacer height={16} />}
         renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
         sections={groupedTransactions}
+        renderSectionFooter={() => <Spacer height={12} />}
         keyExtractor={(item) => item.id}
         stickySectionHeadersEnabled={false}
         nestedScrollEnabled={true}
@@ -107,16 +110,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   dayHeaderRoot: {
-    paddingTop: 16,
-    paddingBottom: 8,
+    paddingBottom: 4,
     paddingHorizontal: 20,
   },
 })
-
-const useStrings = () => {
-  const intl = useIntl()
-
-  return {
-    soon: intl.formatMessage(actionMessages.soon),
-  }
-}

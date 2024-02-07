@@ -10,11 +10,15 @@ export const EmptyHistory = () => {
 
   return (
     <View style={styles.empty} testID="emptyHistoryComponent">
+      <Spacer height={20} />
+
       <Image style={styles.image} source={image} />
 
       <Spacer height={20} />
 
       <Text style={styles.emptyText}>{strings.noTransactions}</Text>
+
+      <Spacer height={20} />
     </View>
   )
 }
@@ -23,7 +27,6 @@ const styles = StyleSheet.create({
   empty: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 122,
   },
   emptyText: {
     fontSize: 16,

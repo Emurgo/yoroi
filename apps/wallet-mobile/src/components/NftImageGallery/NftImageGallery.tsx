@@ -49,7 +49,9 @@ export const NftImageGallery = ({
       ListEmptyComponent={ListEmptyComponent}
       withVerticalPadding={withVerticalPadding}
       renderItem={(nft) =>
-        features.moderatingNftsEnabled ? (
+        !('id' in nft) ? (
+          <EmptyImage />
+        ) : features.moderatingNftsEnabled ? (
           <ModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} disabled={readOnly} />
         ) : (
           <UnModeratedImage onPress={() => onSelect(nft.id)} nft={nft} key={nft.id} disabled={readOnly} />
@@ -58,6 +60,8 @@ export const NftImageGallery = ({
     />
   )
 }
+
+const EmptyImage = () => null
 
 type ModeratedImageProps = TouchableOpacityProps & {
   nft: Balance.TokenInfo
@@ -120,14 +124,7 @@ function PlaceholderNft({nft}: {nft: Balance.TokenInfo}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
-        <NftPreview
-          nft={nft}
-          showPlaceholder
-          width={IMAGE_SIZE}
-          height={IMAGE_SIZE}
-          style={styles.image}
-          resizeMode="cover"
-        />
+        <NftPreview nft={nft} showPlaceholder width={IMAGE_SIZE} height={IMAGE_SIZE} style={styles.image} />
       </View>
 
       <Spacer height={IMAGE_PADDING} />
@@ -145,14 +142,7 @@ function RequiresConsentNft({nft}: {nft: Balance.TokenInfo}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
-        <NftPreview
-          showThumbnail
-          nft={nft}
-          width={IMAGE_SIZE}
-          height={IMAGE_SIZE}
-          style={styles.image}
-          resizeMode="cover"
-        />
+        <NftPreview nft={nft} width={IMAGE_SIZE} height={IMAGE_SIZE} style={styles.image} />
 
         <View style={styles.eyeWrapper}>
           <Icon.EyeOff size={20} color="#FFFFFF" />
@@ -170,14 +160,7 @@ function ApprovedNft({nft}: {nft: Balance.TokenInfo}) {
   return (
     <View>
       <View style={styles.imageWrapper}>
-        <NftPreview
-          resizeMode="cover"
-          showThumbnail
-          nft={nft}
-          width={IMAGE_SIZE}
-          height={IMAGE_SIZE}
-          style={styles.image}
-        />
+        <NftPreview nft={nft} width={IMAGE_SIZE} height={IMAGE_SIZE} style={styles.image} />
       </View>
 
       <Spacer height={IMAGE_PADDING} />

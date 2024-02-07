@@ -1,95 +1,66 @@
 import {isString} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
-import React, {useEffect, useState} from 'react'
-import {ErrorBoundary} from 'react-error-boundary'
-import {Image, ImageResizeMode, ImageStyle, StyleProp, View} from 'react-native'
+import React from 'react'
+import {Image, ImageStyle, View} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
-import {SvgUri} from 'react-native-svg'
 
 import placeholder from '../../assets/img/nft-placeholder.png'
-import {getNftFilenameMediaType, getNftMainImageMediaType, isSvgMediaType} from '../../yoroi-wallets/cardano/nfts'
+import {useSelectedWallet} from '../../SelectedWallet'
+import {getNftMainImageMediaType} from '../../yoroi-wallets/cardano/nfts'
+import {useNativeAssetImage} from '../../yoroi-wallets/hooks'
+
+type NftPreviewProps = {
+  nft: Balance.TokenInfo
+  showPlaceholder?: boolean
+  style?: ImageStyle
+  height: number
+  width: number
+  contentFit?: 'cover' | 'contain'
+  blurRadius?: number
+  zoom?: number
+}
 
 export const NftPreview = ({
   nft,
   showPlaceholder,
-  style,
-  showThumbnail,
+  style = {},
   height,
   width,
-  resizeMode,
+  contentFit = 'cover',
   blurRadius,
-}: {
-  nft: Balance.TokenInfo
-  showPlaceholder?: boolean
-  style?: StyleProp<ImageStyle>
-  showThumbnail?: boolean
-  height: number
-  width: number
-  resizeMode?: ImageResizeMode
-  blurRadius?: number
-}) => {
-  const [error, setError] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const uri = showThumbnail ? nft.icon : nft.image
-  const isUriSvg =
-    isString(uri) &&
-    (uri.toLowerCase().endsWith('.svg') ||
-      isSvgMediaType(getNftMainImageMediaType(nft)) ||
-      isSvgMediaType(getNftFilenameMediaType(nft, uri)))
+  zoom = 1,
+}: NftPreviewProps) => {
+  const wallet = useSelectedWallet()
+  const [policy, name] = nft.id.split('.')
+  const {uri, headers, isLoading, isError, onError, onLoad} = useNativeAssetImage({
+    networkId: wallet.networkId,
+    policy,
+    name,
+    width: width * zoom,
+    height: height * zoom,
+    kind: 'metadata',
+    contentFit,
+    mediaType: getNftMainImageMediaType(nft),
+  })
 
-  const shouldShowPlaceholder = !isString(uri) || showPlaceholder || (isUriSvg && blurRadius !== undefined) || error
-
-  useEffect(() => {
-    setLoading(true)
-  }, [uri])
-
-  if (shouldShowPlaceholder) {
-    // Since SvgUri does not support blur radius, we show a placeholder
-    return <PlaceholderImage height={height} style={style} width={width} resizeMode={resizeMode} />
-  }
+  const shouldShowPlaceholder = !isString(uri) || showPlaceholder || isError
 
   return (
-    <ErrorBoundary fallback={<PlaceholderImage height={height} style={style} width={width} resizeMode={resizeMode} />}>
-      <View style={{width, height, overflow: 'hidden'}}>
-        {loading ? (
-          <SkeletonPlaceholder enabled={true}>
-            <View style={{width, height}} />
-          </SkeletonPlaceholder>
-        ) : null}
+    <View style={{width, height, overflow: 'hidden'}}>
+      {isLoading && (
+        <SkeletonPlaceholder enabled={true}>
+          <View style={{width, height}} />
+        </SkeletonPlaceholder>
+      )}
 
-        {isUriSvg ? (
-          <SvgUri
-            {...(width !== undefined ? {width} : undefined)}
-            height={height}
-            uri={uri}
-            style={style}
-            preserveAspectRatio="xMinYMin meet"
-            onError={() => setError(true)}
-            onLoad={() => setLoading(false)}
-          />
-        ) : (
-          <Image
-            blurRadius={blurRadius}
-            source={{uri}}
-            style={[style, {width, height}]}
-            resizeMode={resizeMode ?? 'contain'}
-            onError={() => setError(true)}
-            onLoadEnd={() => setLoading(false)}
-          />
-        )}
-      </View>
-    </ErrorBoundary>
+      <Image
+        source={shouldShowPlaceholder ? placeholder : {uri, headers}}
+        onError={onError}
+        onLoadEnd={onLoad}
+        style={[style, {width, height}]}
+        resizeMode={contentFit}
+        blurRadius={blurRadius}
+      />
+    </View>
   )
 }
-
-const PlaceholderImage = ({
-  style,
-  width,
-  height,
-  resizeMode,
-}: {
-  style?: StyleProp<ImageStyle>
-  height: number
-  width?: number
-  resizeMode?: ImageResizeMode
-}) => <Image source={placeholder} style={[style, {width, height}]} resizeMode={resizeMode ?? 'contain'} />

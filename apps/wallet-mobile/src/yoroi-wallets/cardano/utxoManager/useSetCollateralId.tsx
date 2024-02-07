@@ -1,6 +1,6 @@
+import {useMutationWithInvalidations} from '@yoroi/common'
 import {UseMutationOptions} from 'react-query'
 
-import {useMutationWithInvalidations} from '../../hooks'
 import {RawUtxo} from '../../types'
 import {YoroiWallet} from '../types'
 

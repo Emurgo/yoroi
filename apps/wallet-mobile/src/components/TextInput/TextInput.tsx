@@ -1,3 +1,4 @@
+import {isString} from '@yoroi/common'
 import React, {ForwardedRef} from 'react'
 import {
   StyleSheet,
@@ -18,7 +19,7 @@ export type TextInputProps = RNTextInputProps &
   Omit<React.ComponentProps<typeof RNPTextInput>, 'theme'> & {
     containerStyle?: ViewStyle
     renderComponentStyle?: ViewStyle
-    helperText?: string
+    helper?: React.ReactNode
     errorText?: string
     disabled?: boolean
     errorOnMount?: boolean
@@ -30,7 +31,7 @@ export type TextInputProps = RNTextInputProps &
     selectTextOnAutoFocus?: boolean
   }
 
-const useDebounced = (callback, value, delay = 1000) => {
+const useDebounced = (callback: VoidFunction, value: unknown, delay = 1000) => {
   const first = React.useRef(true)
   React.useEffect(() => {
     if (first.current) {
@@ -52,7 +53,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
     containerStyle,
     renderComponentStyle,
     secureTextEntry,
-    helperText,
+    helper,
     errorText,
     errorOnMount,
     errorDelay,
@@ -74,6 +75,20 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
     React.useCallback(() => setErrorTextEnabled(true), []),
     value,
     errorDelay,
+  )
+  const showError = errorTextEnabled && !isEmptyString(errorText)
+  const showHelperComponent = helper != null && !isString(helper)
+
+  const helperToShow = showError ? (
+    <HelperText type="error" visible>
+      {errorText}
+    </HelperText>
+  ) : showHelperComponent ? (
+    helper
+  ) : (
+    <HelperText type="info" visible>
+      {helper}
+    </HelperText>
   )
 
   return (
@@ -129,11 +144,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
         {...restProps}
       />
 
-      {!noHelper && (
-        <HelperText type={errorTextEnabled && !isEmptyString(errorText) ? 'error' : 'info'} visible>
-          {errorTextEnabled && !isEmptyString(errorText) ? errorText : helperText}
-        </HelperText>
-      )}
+      {!noHelper && helperToShow}
     </View>
   )
 })
@@ -151,6 +162,7 @@ export const HelperText = ({
   visible?: boolean
 }) => (
   <HelperTextRNP
+    style={{paddingHorizontal: 0}}
     theme={{
       roundness: 8,
       colors: {

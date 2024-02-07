@@ -1,9 +1,9 @@
 import * as React from 'react'
-import Svg, {Defs, G, LinearGradient, Path, Stop} from 'react-native-svg'
+import Svg, {Defs, G, LinearGradient, Path, Stop, SvgProps} from 'react-native-svg'
 
-export const FailedTxImage = (props) => {
+export const FailedTxImage = (props: SvgProps) => {
   return (
-    <Svg width={255} height={192} viewBox="0 0 255 192" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <Svg width={255} height={192} viewBox="0 0 255 192" fill="none" {...props}>
       <G opacity={0.2} stroke="#1D45BA" strokeWidth={0.5}>
         <Path d="M87.731 189.069l166.891-94.883M24.312 141.794l155.683-88.51M78.05 41.94l175.807 99.825M1.857 106.958l147.372 83.68" />
       </G>

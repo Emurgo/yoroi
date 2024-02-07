@@ -45,7 +45,7 @@ const useStrings = () => {
   const intl = useIntl()
 
   return {
-    insufficientBalance: ({requiredBalance, currentBalance}) =>
+    insufficientBalance: ({requiredBalance, currentBalance}: {requiredBalance: string; currentBalance: string}) =>
       intl.formatMessage(globalMessages.insufficientBalance, {
         requiredBalance,
         currentBalance,

@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
@@ -12,11 +13,13 @@ export const LiquidityPool = ({
   liquidityPoolName: string
   poolUrl: string
 }) => {
+  const styles = useStyles()
+
   return (
     <View style={styles.liquidityPool}>
       {liquidityPoolIcon}
 
-      <Spacer width={8} />
+      <Spacer width={4} />
 
       <TouchableOpacity onPress={() => Linking.openURL(poolUrl)} style={styles.liquidityPoolLink}>
         <Text style={styles.liquidityPoolText}>{liquidityPoolName}</Text>
@@ -25,20 +28,26 @@ export const LiquidityPool = ({
   )
 }
 
-const styles = StyleSheet.create({
-  liquidityPoolLink: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  liquidityPoolText: {
-    color: '#4B6DDE',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '500',
-    lineHeight: 22,
-  },
-  liquidityPool: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    liquidityPoolLink: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    liquidityPoolText: {
+      color: color.primary[500],
+      fontFamily: 'Rubik',
+      fontSize: 16,
+      fontWeight: '500',
+      lineHeight: 22,
+    },
+    liquidityPool: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+  })
+
+  return styles
+}

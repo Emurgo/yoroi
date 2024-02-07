@@ -1,10 +1,10 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {View} from 'react-native'
+import {View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
+import {Button, KeyboardAvoidingView, KeyboardSpacer, ScrollableView, Spacer, StatusBar, Text} from '../../components'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {isEmptyString} from '../../utils/utils'
 import {getWalletConfigById} from '../../yoroi-wallets/cardano/utils'
@@ -29,32 +29,34 @@ export const RestoreWalletScreen = () => {
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>
       <StatusBar type="dark" />
 
-      <ScrollableView bounces={false} style={{paddingHorizontal: 16}} keyboardShouldPersistTaps="always">
-        <Spacer height={24} />
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ScrollableView bounces={false} style={{paddingHorizontal: 16}} keyboardShouldPersistTaps="always">
+          <Spacer height={24} />
 
-        <Instructions>{strings.instructions({mnemonicLength})}</Instructions>
+          <Instructions>{strings.instructions({mnemonicLength})}</Instructions>
 
-        <Spacer height={16} />
+          <Spacer height={16} />
 
-        <MnemonicInput length={mnemonicLength} onDone={setPhrase} />
+          <MnemonicInput length={mnemonicLength} onDone={setPhrase} />
 
-        <KeyboardSpacer padding={100} />
-      </ScrollableView>
+          <KeyboardSpacer padding={100} />
+        </ScrollableView>
 
-      <Actions>
-        <Button
-          onPress={navigateToWalletCredentials}
-          title={strings.restoreButton}
-          disabled={isEmptyString(phrase)}
-          testID="restoreButton"
-        />
-      </Actions>
+        <Actions>
+          <Button
+            onPress={navigateToWalletCredentials}
+            title={strings.restoreButton}
+            disabled={isEmptyString(phrase)}
+            testID="restoreButton"
+          />
+        </Actions>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }
 
-const Instructions = (props) => <Text {...props} style={{fontSize: 16, lineHeight: 24}} />
-const Actions = (props) => <View {...props} style={{padding: 16}} />
+const Instructions = (props: ViewProps) => <Text {...props} style={{fontSize: 16, lineHeight: 24}} />
+const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
 
 const messages = defineMessages({
   restoreButton: {

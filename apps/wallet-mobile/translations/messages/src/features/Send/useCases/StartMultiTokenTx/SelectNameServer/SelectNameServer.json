@@ -1,0 +1,17 @@
+[
+  {
+    "id": "send.warning.resolver.manyNameServers",
+    "defaultMessage": "!!!There are <b>two addresses</b> for this domain. Please SELECT the desired domain.",
+    "file": "src/features/Send/useCases/StartMultiTokenTx/SelectNameServer/SelectNameServer.tsx",
+    "start": {
+      "line": 113,
+      "column": 26,
+      "index": 3250
+    },
+    "end": {
+      "line": 116,
+      "column": 3,
+      "index": 3412
+    }
+  }
+]

@@ -1,4 +1,4 @@
-import {parseSafe, parseString, useStorage} from '@yoroi/common'
+import {parseSafe, parseString, useMutationWithInvalidations, useStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -11,7 +11,6 @@ import {useWalletManager} from '../../WalletManager'
 import {WrongPassword} from '../cardano/errors'
 import {YoroiWallet} from '../cardano/types'
 import {decryptData, encryptData} from '../encryption'
-import {useMutationWithInvalidations} from '../hooks'
 import {parseWalletMeta} from '../migrations'
 import {AuthenticationPrompt, Keychain} from '../storage'
 

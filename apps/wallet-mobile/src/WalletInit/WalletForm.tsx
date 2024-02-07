@@ -1,8 +1,8 @@
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, TextInput as RNTextInput, View} from 'react-native'
+import {ScrollView, StyleSheet, TextInput as RNTextInput, View, ViewProps} from 'react-native'
 
-import {Button, Checkmark, Spacer, TextInput} from '../components'
+import {Button, Checkmark, KeyboardAvoidingView, Spacer, TextInput} from '../components'
 import {debugWalletInfo, features} from '../features'
 import globalMessages from '../i18n/global-messages'
 import {COLORS} from '../theme'
@@ -48,76 +48,78 @@ export const WalletForm = ({onSubmit}: Props) => {
 
   return (
     <View style={styles.safeAreaView}>
-      <ScrollView
-        keyboardShouldPersistTaps="always"
-        contentContainerStyle={styles.scrollContentContainer}
-        testID="credentialsView"
-        bounces={false}
-      >
-        <WalletNameInput
-          enablesReturnKeyAutomatically
-          autoFocus
-          label={strings.walletNameInputLabel}
-          value={name}
-          onChangeText={(walletName: string) => setName(walletName)}
-          errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
-          errorDelay={0}
-          returnKeyType="next"
-          onSubmitEditing={() => passwordRef.current?.focus()}
-          testID="walletNameInput"
-          autoComplete="off"
-          showErrorOnBlur
-        />
+      <KeyboardAvoidingView style={{flex: 1}}>
+        <ScrollView
+          keyboardShouldPersistTaps="always"
+          contentContainerStyle={styles.scrollContentContainer}
+          testID="credentialsView"
+          bounces={false}
+        >
+          <WalletNameInput
+            enablesReturnKeyAutomatically
+            autoFocus
+            label={strings.walletNameInputLabel}
+            value={name}
+            onChangeText={(walletName: string) => setName(walletName)}
+            errorText={!isEmptyString(walletNameErrorText) ? walletNameErrorText : undefined}
+            errorDelay={0}
+            returnKeyType="next"
+            onSubmitEditing={() => passwordRef.current?.focus()}
+            testID="walletNameInput"
+            autoComplete="off"
+            showErrorOnBlur
+          />
 
-        <Spacer />
+          <Spacer />
 
-        <PasswordInput
-          enablesReturnKeyAutomatically
-          ref={passwordRef}
-          secureTextEntry
-          label={strings.newPasswordInput}
-          value={password}
-          onChangeText={setPassword}
-          errorText={passwordErrorText}
-          returnKeyType="next"
-          helperText={strings.passwordStrengthRequirement({
-            requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
-          })}
-          right={!passwordErrors.passwordIsWeak ? <Checkmark /> : undefined}
-          onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
-          testID="walletPasswordInput"
-          autoComplete="off"
-          showErrorOnBlur
-        />
+          <PasswordInput
+            enablesReturnKeyAutomatically
+            ref={passwordRef}
+            secureTextEntry
+            label={strings.newPasswordInput}
+            value={password}
+            onChangeText={setPassword}
+            errorText={passwordErrorText}
+            returnKeyType="next"
+            helper={strings.passwordStrengthRequirement({
+              requiredPasswordLength: REQUIRED_PASSWORD_LENGTH,
+            })}
+            right={!passwordErrors.passwordIsWeak ? <Checkmark /> : undefined}
+            onSubmitEditing={() => passwordConfirmationRef.current?.focus()}
+            testID="walletPasswordInput"
+            autoComplete="off"
+            showErrorOnBlur
+          />
 
-        <Spacer />
+          <Spacer />
 
-        <PasswordConfirmationInput
-          enablesReturnKeyAutomatically
-          ref={passwordConfirmationRef}
-          secureTextEntry
-          returnKeyType="done"
-          label={strings.repeatPasswordInputLabel}
-          value={passwordConfirmation}
-          onChangeText={setPasswordConfirmation}
-          errorText={passwordConfirmationErrorText}
-          right={
-            !passwordErrors.matchesConfirmation && !passwordErrors.passwordConfirmationReq ? <Checkmark /> : undefined
-          }
-          testID="walletRepeatPasswordInput"
-          autoComplete="off"
-          showErrorOnBlur
-        />
-      </ScrollView>
+          <PasswordConfirmationInput
+            enablesReturnKeyAutomatically
+            ref={passwordConfirmationRef}
+            secureTextEntry
+            returnKeyType="done"
+            label={strings.repeatPasswordInputLabel}
+            value={passwordConfirmation}
+            onChangeText={setPasswordConfirmation}
+            errorText={passwordConfirmationErrorText}
+            right={
+              !passwordErrors.matchesConfirmation && !passwordErrors.passwordConfirmationReq ? <Checkmark /> : undefined
+            }
+            testID="walletRepeatPasswordInput"
+            autoComplete="off"
+            showErrorOnBlur
+          />
+        </ScrollView>
 
-      <Actions>
-        <Button
-          onPress={() => onSubmit({name: name.trim(), password})}
-          disabled={Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
-          title={strings.continueButton}
-          testID="walletFormContinueButton"
-        />
-      </Actions>
+        <Actions>
+          <Button
+            onPress={() => onSubmit({name: name.trim(), password})}
+            disabled={Object.keys(passwordErrors).length > 0 || Object.keys(nameErrors).length > 0}
+            title={strings.continueButton}
+            testID="walletFormContinueButton"
+          />
+        </Actions>
+      </KeyboardAvoidingView>
     </View>
   )
 }
@@ -125,7 +127,7 @@ export const WalletForm = ({onSubmit}: Props) => {
 const WalletNameInput = TextInput
 const PasswordInput = TextInput
 const PasswordConfirmationInput = TextInput
-const Actions = (props) => <View {...props} style={styles.actions} />
+const Actions = (props: ViewProps) => <View {...props} style={styles.actions} />
 
 const messages = defineMessages({
   walletNameInputLabel: {
@@ -161,7 +163,8 @@ const useStrings = () => {
     walletNameInputLabel: intl.formatMessage(messages.walletNameInputLabel),
     newPasswordInput: intl.formatMessage(messages.newPasswordInput),
     continueButton: intl.formatMessage(messages.continueButton),
-    passwordStrengthRequirement: (options) => intl.formatMessage(messages.passwordStrengthRequirement, options),
+    passwordStrengthRequirement: (options: {requiredPasswordLength: number}) =>
+      intl.formatMessage(messages.passwordStrengthRequirement, options),
     repeatPasswordInputLabel: intl.formatMessage(messages.repeatPasswordInputLabel),
     repeatPasswordInputError: intl.formatMessage(messages.repeatPasswordInputError),
     tooLong: intl.formatMessage(globalMessages.walletNameErrorTooLong),

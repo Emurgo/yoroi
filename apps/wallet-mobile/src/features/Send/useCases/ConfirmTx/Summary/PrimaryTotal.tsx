@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {useIntl} from 'react-intl'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet} from 'react-native'
 
 import {Text} from '../../../../../components/Text'
 import globalMessages from '../../../../../i18n/global-messages'
@@ -16,13 +16,13 @@ export const PrimaryTotal = ({yoroiUnsignedTx}: {yoroiUnsignedTx: YoroiUnsignedT
   const primaryAmount = Amounts.getAmountFromEntries(yoroiUnsignedTx.entries, wallet.primaryToken.identifier)
 
   return (
-    <View>
+    <>
       <Text>{strings.total}</Text>
 
       <Text style={styles.amount} testID="totalAmountText">
         {formatTokenWithSymbol(primaryAmount.quantity, wallet.primaryToken)}
       </Text>
-    </View>
+    </>
   )
 }
 

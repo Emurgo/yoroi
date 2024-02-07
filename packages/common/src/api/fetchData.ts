@@ -14,9 +14,10 @@ type OtherRequestConfig<D = any> = {
   headers?: Record<string, string>
 }
 
-type RequestConfig<D = any> = GetRequestConfig | OtherRequestConfig<D>
+export type RequestConfig<D = any> = GetRequestConfig | OtherRequestConfig<D>
 export type FetchData = <T, D = any>(
   config: RequestConfig<D>,
+  fetcherConfig?: AxiosRequestConfig<D>,
 ) => Promise<Api.Response<T>>
 
 /**
@@ -65,11 +66,13 @@ export type FetchData = <T, D = any>(
  */
 export const fetchData: FetchData = <T, D = any>(
   config: RequestConfig<D>,
+  fetcherConfig?: AxiosRequestConfig<D>,
 ): Promise<Api.Response<T>> => {
   const method = config.method ?? 'get'
   const isNotGet = method !== 'get'
 
-  const axiosConfig: AxiosRequestConfig = {
+  const axiosConfig: AxiosRequestConfig<D> = {
+    ...fetcherConfig,
     url: config.url,
     method: method,
     headers: config.headers ?? {'Content-Type': 'application/json'},
@@ -87,19 +90,29 @@ export const fetchData: FetchData = <T, D = any>(
       if (error.response) {
         const status = error.response.status
         const message = error.response.statusText
+        const responseData = error.response.data
+
         return {
           tag: 'left',
-          error: {status, message},
+          error: {status, message, responseData},
         } as const
       } else if (error.request) {
         return {
           tag: 'left',
-          error: {status: -1, message: 'Network (no response)'},
+          error: {
+            status: -1,
+            message: 'Network (no response)',
+            responseData: null,
+          },
         } as const
       } else {
         return {
           tag: 'left',
-          error: {status: -2, message: `Invalid state: ${error.message}`},
+          error: {
+            status: -2,
+            message: `Invalid state: ${error.message}`,
+            responseData: null,
+          },
         } as const
       }
     })

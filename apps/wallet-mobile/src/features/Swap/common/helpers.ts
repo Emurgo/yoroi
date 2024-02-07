@@ -1,16 +1,16 @@
 import {createTypeGuardFromSchema, parseSafe} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import {SwapApi} from '@yoroi/types/src/swap/api'
 import {useMutation, UseMutationOptions} from 'react-query'
 import {z} from 'zod'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {
-  convertBech32ToHex,
-  getMuesliSwapTransactionAndSigners,
-} from '../../../yoroi-wallets/cardano/common/signatureUtils'
+import {convertBech32ToHex} from '../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {generateCIP30UtxoCbor} from '../../../yoroi-wallets/cardano/utils'
+import {PRICE_IMPACT_HIGH_RISK, PRICE_IMPACT_MODERATE_RISK} from './constants'
+import {SwapPriceImpactRisk} from './types'
 
 export const useCancelOrderWithHw = (
   {cancelOrder}: {cancelOrder: SwapApi['cancelOrder']},
@@ -25,11 +25,10 @@ export const useCancelOrderWithHw = (
       if (!collateralUtxo.utxo) throw new Error('Collateral not found')
       const collateralUtxoCBOR = await generateCIP30UtxoCbor(collateralUtxo.utxo)
       const addressHex = await convertBech32ToHex(bech32Address)
-      const originalCbor = await cancelOrder({
+      const cbor = await cancelOrder({
         utxos: {collateral: collateralUtxoCBOR, order: utxo},
         address: addressHex,
       })
-      const {cbor} = await getMuesliSwapTransactionAndSigners(originalCbor, wallet)
       await wallet.signSwapCancellationWithLedger(cbor, useUSB)
     },
   })
@@ -98,4 +97,31 @@ export const sortTokensByName = (a: Balance.TokenInfo, b: Balance.TokenInfo, wal
   }
 
   return nameA.localeCompare(nameB, undefined, {sensitivity: 'base'})
+}
+
+export const getPriceImpactRisk = (priceImpact: number) => {
+  if (priceImpact < PRICE_IMPACT_MODERATE_RISK || isNaN(priceImpact)) return 'none'
+  if (priceImpact > PRICE_IMPACT_HIGH_RISK) return 'high'
+  return 'moderate'
+}
+
+export const usePriceImpactRiskTheme = (risk: SwapPriceImpactRisk) => {
+  const {theme} = useTheme()
+
+  if (risk === 'high') {
+    return {
+      text: theme.color.magenta[500],
+      background: theme.color.magenta[100],
+    }
+  } else if (risk === 'moderate') {
+    return {
+      text: theme.color.yellow[500],
+      background: theme.color.yellow[100],
+    }
+  }
+
+  return {
+    text: theme.color['black-static'],
+    background: theme.color['white-static'],
+  }
 }

@@ -51,7 +51,7 @@ export const lightPalette: Palette = {
     100: '#F2F9FF',
   },
   yellow: {
-    500: '#ECBA09',
+    500: '#ED8600',
     100: '#FDF7E2',
   },
   gradients: {

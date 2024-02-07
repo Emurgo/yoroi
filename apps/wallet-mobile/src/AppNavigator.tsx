@@ -15,7 +15,7 @@ import {ModalProvider} from './components/Modal/ModalContext'
 import {ModalScreen} from './components/Modal/ModalScreen'
 import {AgreementChangedNavigator, InitializationNavigator} from './features/Initialization'
 import {LegalAgreement, useLegalAgreement} from './features/Initialization/common'
-import {CONFIG} from './legacy/config'
+import {CONFIG, LINKING_CONFIG, LINKING_PREFIXES} from './legacy/config'
 import {DeveloperScreen} from './legacy/DeveloperScreen'
 import {AppRoutes} from './navigation'
 import {SearchProvider} from './Search/SearchContext'
@@ -28,6 +28,15 @@ const navRef = React.createRef<NavigationContainerRef<ReactNavigation.RootParamL
 
 export const AppNavigator = () => {
   const strings = useStrings()
+  const [routeName, setRouteName] = React.useState<string>()
+
+  const enableDeepLink = routeName === 'history-list'
+
+  const linking = {
+    enabled: enableDeepLink,
+    prefixes: LINKING_PREFIXES,
+    config: LINKING_CONFIG,
+  }
 
   useHideScreenInAppSwitcher()
   useAutoLogout()
@@ -62,8 +71,13 @@ export const AppNavigator = () => {
     }
   }
 
+  const handleStateChange = () => {
+    const currentRouteName = navRef.current?.getCurrentRoute()?.name
+    setRouteName(currentRouteName)
+  }
+
   return (
-    <NavigationContainer onReady={onReady} ref={navRef}>
+    <NavigationContainer onStateChange={handleStateChange} linking={linking} onReady={onReady} ref={navRef}>
       <ModalProvider>
         <Stack.Navigator
           screenOptions={{

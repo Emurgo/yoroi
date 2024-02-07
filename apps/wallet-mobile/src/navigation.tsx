@@ -2,10 +2,11 @@ import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-ta
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import React from 'react'
-import {Dimensions, Platform, TouchableOpacity} from 'react-native'
+import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
+import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
 import {COLORS} from './theme'
 import {HWDeviceInfo} from './yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
@@ -30,9 +31,9 @@ export const useParams = <Params, >(guard: Guard<Params>): Params => {
 
 type Guard<Params> = (params: Params | object) => params is Params
 
-export const BackButton = (props) => (
+export const BackButton = (props: TouchableOpacityProps & {color?: string}) => (
   <TouchableOpacity {...props} testID="buttonBack2">
-    <Icon.Chevron direction="left" color={props.color ?? '#000000'} />
+    <Icon.Chevron size={28} direction="left" color={props.color ?? '#000000'} />
   </TouchableOpacity>
 )
 
@@ -111,6 +112,7 @@ export type WalletStackRoutes = {
   settings: NavigatorScreenParams<SettingsStackRoutes>
   'voting-registration': NavigatorScreenParams<VotingRegistrationRoutes>
   'toggle-analytics-settings': NavigatorScreenParams<ToggleAnalyticsSettingsRoutes>
+  governance: NavigatorScreenParams<StakingGovernanceRoutes>
 }
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
@@ -199,7 +201,8 @@ export type TxHistoryRoutes = {
   'send-select-token-from-list': undefined
 } & SwapTokenRoutes &
   ScanRoutes &
-  ClaimRoutes
+  ClaimRoutes &
+  RampOnOffRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 type ScanStartParams = Readonly<{
@@ -212,6 +215,10 @@ export type ScanRoutes = {
 }
 export type ClaimRoutes = {
   'claim-show-success': undefined
+}
+
+export type RampOnOffRoutes = {
+  'rampOnOff-start-rampOnOff': undefined
 }
 
 export type SwapTokenRoutes = {
@@ -240,6 +247,14 @@ export type SwapTabRoutes = {
   orders: undefined
 }
 
+export type RampOnOffStackRoutes = {
+  'create-ramp-on-off': undefined
+  'result-ramp-on-off': undefined
+  'app-root': undefined
+}
+
+export type RampOnOffRoutesNavigation = StackNavigationProp<RampOnOffStackRoutes>
+
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
 
 export type SettingsTabRoutes = {
@@ -267,7 +282,12 @@ export type SettingsStackRoutes = {
   'enable-login-with-pin': {
     onSuccess: () => void | Promise<void>
   }
-  'manage-collateral': undefined
+  'manage-collateral'?: {
+    backButton?: {
+      content: string
+      onPress: () => void
+    }
+  }
   'collateral-confirm-tx': undefined
   'collateral-tx-submitted': undefined
   'collateral-tx-failed': undefined
@@ -414,6 +434,18 @@ export const useWalletNavigation = () => {
       })
     },
 
+    navigateToStakingDashboard: () => {
+      navigation.navigate('app-root', {
+        screen: 'main-wallet-routes',
+        params: {
+          screen: 'staking-dashboard',
+          params: {
+            screen: 'staking-dashboard-main',
+          },
+        },
+      })
+    },
+
     navigateToSettings: () => {
       navigation.navigate('app-root', {
         screen: 'settings',
@@ -456,11 +488,12 @@ export const useWalletNavigation = () => {
       })
     },
 
-    navigateToCollateralSettings: () => {
+    navigateToCollateralSettings: (params?: SettingsStackRoutes['manage-collateral']) => {
       navigation.navigate('app-root', {
         screen: 'settings',
         params: {
           screen: 'manage-collateral',
+          params,
         },
       })
     },
@@ -470,6 +503,18 @@ export const useWalletNavigation = () => {
         screen: 'toggle-analytics-settings',
         params: {
           screen: 'settings',
+        },
+      })
+    },
+
+    navigateToGovernanceCentre: ({navigateToStakingOnSuccess = false} = {}) => {
+      navigation.navigate('app-root', {
+        screen: 'governance',
+        params: {
+          screen: 'staking-gov-home',
+          params: {
+            navigateToStakingOnSuccess,
+          },
         },
       })
     },

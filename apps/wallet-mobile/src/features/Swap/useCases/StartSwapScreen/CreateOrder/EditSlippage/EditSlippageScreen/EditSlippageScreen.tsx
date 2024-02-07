@@ -1,19 +1,10 @@
 import {useSwap} from '@yoroi/swap'
 import BigNumber from 'bignumber.js'
 import React, {useEffect, useRef, useState} from 'react'
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button} from '../../../../../../../components'
+import {Button, KeyboardAvoidingView} from '../../../../../../../components'
 import {useLanguage} from '../../../../../../../i18n'
 import {NumberLocale} from '../../../../../../../i18n/languages'
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
@@ -96,11 +87,7 @@ export const EditSlippageScreen = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={102}
-      >
+      <KeyboardAvoidingView style={styles.flex} keyboardVerticalOffset={102}>
         <ScrollView bounces={false} style={styles.flex}>
           <Text style={styles.description}>{strings.slippageInfo}</Text>
 

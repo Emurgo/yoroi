@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Enter PIN",
     "file": "src/AppNavigator.tsx",
     "start": {
-      "line": 169,
+      "line": 183,
       "column": 17,
-      "index": 5761
+      "index": 6222
     },
     "end": {
-      "line": 172,
+      "line": 186,
       "column": 3,
-      "index": 5851
+      "index": 6312
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Set PIN",
     "file": "src/AppNavigator.tsx",
     "start": {
-      "line": 173,
+      "line": 187,
       "column": 18,
-      "index": 5871
+      "index": 6332
     },
     "end": {
-      "line": 176,
+      "line": 190,
       "column": 3,
-      "index": 5969
+      "index": 6430
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Auth with OS changes",
     "file": "src/AppNavigator.tsx",
     "start": {
-      "line": 177,
+      "line": 191,
       "column": 25,
-      "index": 5996
+      "index": 6457
     },
     "end": {
-      "line": 180,
+      "line": 194,
       "column": 3,
-      "index": 6110
+      "index": 6571
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Auth with OS changed detected",
     "file": "src/AppNavigator.tsx",
     "start": {
-      "line": 181,
+      "line": 195,
       "column": 27,
-      "index": 6139
+      "index": 6600
     },
     "end": {
-      "line": 184,
+      "line": 198,
       "column": 3,
-      "index": 6260
+      "index": 6721
     }
   }
 ]

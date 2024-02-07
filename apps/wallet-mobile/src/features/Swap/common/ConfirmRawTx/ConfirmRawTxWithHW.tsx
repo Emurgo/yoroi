@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import {SwapApi} from '@yoroi/types/lib/swap/api'
 import React, {useState} from 'react'
 import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
@@ -26,6 +27,7 @@ export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}
   const [step, setStep] = useState<Step>('select-transport')
   const wallet = useSelectedWallet()
   const strings = useStrings()
+  const styles = useStyles()
   const {cancelOrder: cancelOrderWithHw} = useCancelOrderWithHw({cancelOrder}, {onSuccess: onConfirm})
 
   const onSelectTransport = (transportType: TransportType) => {
@@ -71,16 +73,23 @@ export const ConfirmRawTxWithHW = ({onConfirm, utxo, bech32Address, cancelOrder}
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 35,
-  },
-  text: {
-    fontSize: 18,
-    color: '#000',
-    textAlign: 'center',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 35,
+    },
+    text: {
+      fontSize: 18,
+      color: color['black-static'],
+      textAlign: 'center',
+    },
+  })
+
+  return styles
+}

@@ -1,9 +1,11 @@
+import {useFocusEffect} from '@react-navigation/native'
 import _ from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
-import {ActivityIndicator, ScrollView, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Button, Spacer, StatusBar} from '../components'
+import {useMetrics} from '../metrics/metricsManager'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useReceiveAddresses} from '../yoroi-wallets/hooks'
@@ -21,6 +23,14 @@ export const ReceiveScreen = () => {
   React.useEffect(() => {
     wallet.generateNewReceiveAddressIfNeeded()
   }, [wallet])
+
+  const {track} = useMetrics()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.receivePageViewed()
+    }, [track]),
+  )
 
   return (
     <View style={styles.root}>
@@ -61,7 +71,7 @@ export const ReceiveScreen = () => {
   )
 }
 
-const Content = (props) => <View {...props} style={styles.content} />
+const Content = (props: ViewProps) => <View {...props} style={styles.content} />
 
 const messages = defineMessages({
   infoText: {
