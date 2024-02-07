@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
@@ -7,9 +8,11 @@ import {Spacer} from '../Spacer'
 type Props = {content: string}
 
 export const Warning = ({content}: Props) => {
+  const {styles, colors} = useStyles()
+
   return (
     <View style={styles.notice}>
-      <Icon.Info size={30} color="#ECBA09" />
+      <Icon.Info size={30} color={colors.yellow} />
 
       <Spacer height={8} />
 
@@ -18,15 +21,23 @@ export const Warning = ({content}: Props) => {
   )
 }
 
-const styles = StyleSheet.create({
-  notice: {
-    backgroundColor: '#FDF7E2',
-    padding: 12,
-  },
-  text: {
-    fontSize: 14,
-    lineHeight: 22,
-    fontWeight: '400',
-    fontFamily: 'Rubik-Regular',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    notice: {
+      backgroundColor: color.yellow[100],
+      padding: 12,
+    },
+    text: {
+      ...typography['body-2-medium'],
+      fontWeight: '400',
+    },
+  })
+
+  const colors = {
+    yellow: color.yellow[500],
+  }
+
+  return {colors, styles}
+}
