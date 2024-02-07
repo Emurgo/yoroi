@@ -30,8 +30,7 @@ const useStyles = () => {
       padding: 12,
     },
     text: {
-      ...typography['body-2-medium'],
-      fontWeight: '400',
+      ...typography['body-2-regular'],
     },
   })
 
