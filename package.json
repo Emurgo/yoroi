@@ -29,7 +29,7 @@
     "wallet-mobile:start": "cd apps/wallet-mobile && yarn start",
     "wallet-mobile:reset": "cd apps/wallet-mobile && yarn reset && cd ../..",
     "watch": "chokidar \"packages/*/src/**/*\" -c \"yarn build:changed\"",
-    "build:changed": "lerna run build --since --ignore @yoroi/wallet-mobile"
+    "build:changed": "lerna run build --since --ignore @yoroi/wallet-mobile --ignore @yoroi/e2e-wallet-mobile"
   },
   "devDependencies": {
     "concurrently": "^8.2.0",
