@@ -2,7 +2,7 @@ import {TextStyle} from 'react-native'
 
 import {Typography} from './types'
 
-const weight: Record<string, TextStyle> = {
+const fontFamily: Record<string, TextStyle> = {
   regular: {
     fontFamily: 'Rubik',
   },
@@ -10,6 +10,21 @@ const weight: Record<string, TextStyle> = {
     fontFamily: 'Rubik-Medium',
   },
 }
+
+// const fontScale: Record<string, TextStyle> = {
+//   small: {
+//     fontWeight: '300',
+//   },
+//   normall: {
+//     fontWeight: '400',
+//   },
+//   big: {
+//     fontWeight: '500',
+//   },
+//   large: {
+//     fontWeight: '600',
+//   },
+// }
 
 const size: Record<string, TextStyle> = {
   h1: {
@@ -33,15 +48,15 @@ const size: Record<string, TextStyle> = {
     lineHeight: 24,
     letterSpacing: 0.6,
   },
-  body1: {
+  large: {
     fontSize: 16,
     lineHeight: 24,
   },
-  body2: {
+  normal: {
     fontSize: 14,
     lineHeight: 22,
   },
-  body3: {
+  small: {
     fontSize: 12,
     lineHeight: 18,
   },
@@ -53,126 +68,126 @@ const size: Record<string, TextStyle> = {
 
 export const typography: Typography = {
   'heading-1-medium': {
-    ...weight.medium,
+    ...fontFamily.medium,
     ...size.h1,
   },
   'heading-1-regular': {
-    ...weight.regular,
+    ...fontFamily.regular,
     ...size.h1,
   },
   'heading-2-medium': {
-    ...weight.medium,
+    ...fontFamily.medium,
     ...size.h2,
   },
   'heading-2-regular': {
-    ...weight.regular,
+    ...fontFamily.regular,
     ...size.h2,
   },
   'heading-3-medium': {
-    ...weight.medium,
+    ...fontFamily.medium,
     ...size.h3,
   },
   'heading-3-regular': {
-    ...weight.regular,
+    ...fontFamily.regular,
     ...size.h3,
   },
   'heading-4-medium': {
-    ...weight.medium,
+    ...fontFamily.medium,
     ...size.h4,
   },
   'heading-4-regular': {
-    ...weight.regular,
+    ...fontFamily.regular,
     ...size.h4,
   },
   'heading-5-medium': {
-    ...weight.medium,
+    ...fontFamily.medium,
     ...size.h5,
     textTransform: 'uppercase',
   },
   'heading-5-regular': {
-    ...weight.regular,
+    ...fontFamily.regular,
     ...size.h5,
     textTransform: 'uppercase',
   },
   'body-1-medium': {
-    ...weight.medium,
+    ...fontFamily.medium,
     ...size.body1,
   },
   'body-1-regular': {
-    ...weight.regular,
+    ...fontFamily.regular,
     ...size.body1,
   },
   'body-2-medium': {
-    ...weight.medium,
+    ...fontFamily.medium,
     ...size.body2,
   },
   'body-2-regular': {
-    ...weight.regular,
+    ...fontFamily.regular,
     ...size.body2,
   },
   'body-3-medium': {
-    ...weight.medium,
+    ...fontFamily.medium,
     ...size.body3,
   },
   'body-3-regular': {
-    ...weight.regular,
+    ...fontFamily.regular,
     ...size.body3,
   },
   'button-1': {
-    ...weight.medium,
+    ...fontFamily.medium,
     fontSize: 16,
     lineHeight: 24,
     letterSpacing: 0.5,
     textTransform: 'uppercase',
   },
   'button-2': {
-    ...weight.medium,
+    ...fontFamily.medium,
     fontSize: 14,
     lineHeight: 20,
     letterSpacing: 0.5,
     textTransform: 'uppercase',
   },
   'button-3': {
-    ...weight.medium,
+    ...fontFamily.medium,
     fontSize: 12,
     lineHeight: 19,
     letterSpacing: 0.3,
     textTransform: 'uppercase',
   },
   'link-1': {
-    ...weight.regular,
+    ...fontFamily.regular,
     fontSize: 16,
     lineHeight: 22,
   },
   'link-1-underline': {
-    ...weight.regular,
+    ...fontFamily.regular,
     fontSize: 16,
     lineHeight: 24,
     textDecorationLine: 'underline',
   },
   'link-2': {
-    ...weight.regular,
+    ...fontFamily.regular,
     fontSize: 14,
     lineHeight: 20,
   },
   'link-2-underline': {
-    ...weight.regular,
+    ...fontFamily.regular,
     fontSize: 14,
     lineHeight: 22,
     textDecorationLine: 'underline',
   },
   'overline': {
-    ...weight.regular,
+    ...fontFamily.regular,
     fontSize: 10,
     lineHeight: 18,
     textTransform: 'uppercase',
   },
   'caption-medium': {
-    ...weight.medium,
+    ...fontFamily.medium,
     ...size.caption,
   },
   'caption-regular': {
-    ...weight.regular,
+    ...fontFamily.regular,
     ...size.caption,
   },
 }

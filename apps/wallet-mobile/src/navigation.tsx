@@ -1,6 +1,7 @@
 import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-tabs'
 import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
+import {Theme, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
@@ -31,41 +32,46 @@ export const useParams = <Params, >(guard: Guard<Params>): Params => {
 
 type Guard<Params> = (params: Params | object) => params is Params
 
-export const BackButton = (props: TouchableOpacityProps & {color?: string}) => (
-  <TouchableOpacity {...props} testID="buttonBack2">
-    <Icon.Chevron size={28} direction="left" color={props.color ?? '#000000'} />
-  </TouchableOpacity>
-)
+export const BackButton = (props: TouchableOpacityProps & {color?: string}) => {
+  const {theme} = useTheme()
+
+  return (
+    <TouchableOpacity {...props} testID="buttonBack2">
+      <Icon.Chevron direction="left" color={props.color ?? theme.color.gray.max} />
+    </TouchableOpacity>
+  )
+}
 
 // OPTIONS
 const WIDTH = Dimensions.get('window').width
-export const defaultStackNavigationOptions: StackNavigationOptions = {
-  headerTintColor: COLORS.ERROR_TEXT_COLOR_DARK,
-  headerStyle: {
-    elevation: 0,
-    shadowOpacity: 0,
-    backgroundColor: '#fff',
-  },
-  headerTitleStyle: {
-    fontSize: 16,
-    fontFamily: 'Rubik-Medium',
-    width: WIDTH - 75,
-    textAlign: 'center',
-  },
-  headerTitleAlign: 'center',
-  headerTitleContainerStyle: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerLeftContainerStyle: {
-    paddingLeft: 10,
-  },
-  headerRightContainerStyle: {
-    paddingRight: 10,
-  },
-  cardStyle: {backgroundColor: 'white'},
-  headerLeft: (props) => <BackButton {...props} />,
+export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOptions => {
+  return {
+    headerTintColor: theme.color.gray.max,
+    headerStyle: {
+      elevation: 0,
+      shadowOpacity: 0,
+      backgroundColor: theme.color.gray.min,
+    },
+    headerTitleStyle: {
+      ...theme.typography['body-1-medium'],
+      width: WIDTH - 75,
+      textAlign: 'center',
+    },
+    headerTitleAlign: 'center',
+    headerTitleContainerStyle: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    headerLeftContainerStyle: {
+      paddingLeft: 10,
+    },
+    headerRightContainerStyle: {
+      paddingRight: 10,
+    },
+    cardStyle: {backgroundColor: 'white'},
+    headerLeft: (props) => <BackButton {...props} />,
+  }
 }
 
 export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {

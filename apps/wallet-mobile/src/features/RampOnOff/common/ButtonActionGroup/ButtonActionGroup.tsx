@@ -48,11 +48,8 @@ const useStyles = () => {
       backgroundColor: theme.color.gray[200],
     },
     label: {
-      color: theme.color['black-static'],
-      fontFamily: 'Rubik-Medium',
-      fontWeight: '500',
-      lineHeight: 24,
-      fontSize: 16,
+      color: theme.color.gray.max,
+      ...theme.typography['body-1-medium'],
     },
   })
   return styles

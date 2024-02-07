@@ -20,17 +20,14 @@ export const RampOnOffScreen = () => {
   const strings = useStrings()
 
   return (
-    <SafeAreaView
-      edges={['bottom', 'left', 'right']}
-      style={[styles.root, {backgroundColor: theme.color['white-static']}]}
-    >
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.root, {backgroundColor: theme.color.gray.min}]}>
       <StatusBar type="dark" />
 
       <RampOnOffProvider>
         <Stack.Navigator
           screenListeners={{}}
           screenOptions={{
-            ...defaultStackNavigationOptions,
+            ...defaultStackNavigationOptions(theme),
             detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
             gestureEnabled: true,
           }}
