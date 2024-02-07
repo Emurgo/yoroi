@@ -1,14 +1,13 @@
-import {describe, expect, it, vi, Mocked} from 'vitest'
 import {getLiquidityPools, getPoolsPair} from './pools'
 import {axiosClient} from './config'
 import {LiquidityPoolResponse, PoolPairResponse} from './types'
 
-vi.mock('./config.ts')
+jest.mock('./config')
 
 describe('SwapPoolsApi', () => {
   describe('getLiquidityPools', () => {
     it('should get liquidity pools list for a given token pair', async () => {
-      const mockAxios = axiosClient as Mocked<typeof axiosClient>
+      const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
       mockAxios.get.mockImplementationOnce(() =>
         Promise.resolve({
           status: 200,
@@ -24,11 +23,11 @@ describe('SwapPoolsApi', () => {
           providers: getLiquidityPoolsParams.providers,
         },
       )
-      expect(result).to.be.of.lengthOf(1)
+      expect(result).toHaveLength(1)
     })
 
     it('should throw error for invalid response', async () => {
-      const mockAxios = axiosClient as Mocked<typeof axiosClient>
+      const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
       await expect(async () => {
         mockAxios.get.mockImplementationOnce(() =>
           Promise.resolve({status: 500}),
@@ -47,7 +46,7 @@ describe('SwapPoolsApi', () => {
 
   describe('getPoolsPair', () => {
     it('should get pools pair list for a given token pair', async () => {
-      const mockAxios = axiosClient as Mocked<typeof axiosClient>
+      const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
       mockAxios.get.mockImplementationOnce(() =>
         Promise.resolve({
           status: 200,
@@ -59,11 +58,11 @@ describe('SwapPoolsApi', () => {
         {network: 'mainnet', client: mockAxios},
         {tokenA: getPoolsPairParams.sell, tokenB: getPoolsPairParams.buy},
       )
-      expect(result).to.be.of.lengthOf(1)
+      expect(result).toHaveLength(1)
     })
 
     it('should throw error for invalid response', async () => {
-      const mockAxios = axiosClient as Mocked<typeof axiosClient>
+      const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
       await expect(async () => {
         mockAxios.get.mockImplementationOnce(() =>
           Promise.resolve({status: 500}),

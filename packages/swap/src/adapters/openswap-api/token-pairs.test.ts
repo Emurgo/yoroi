@@ -1,33 +1,32 @@
-import {expect, describe, it, vi, Mocked} from 'vitest'
 import {getTokenPairs} from './token-pairs'
 import {axiosClient} from './config'
 
-vi.mock('./config.ts')
+jest.mock('./config.ts')
 
 describe('SwapTokenPairsApi', () => {
   it('should get all tokens based pairs', async () => {
-    const mockAxios = axiosClient as Mocked<typeof axiosClient>
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
     mockAxios.get.mockImplementationOnce(() =>
       Promise.resolve({status: 200, data: mockedGetTokenPairsResponse}),
     )
 
     const result = await getTokenPairs({network: 'mainnet', client: mockAxios})
 
-    expect(result).to.be.lengthOf(1)
+    expect(result).toHaveLength(1)
   })
 
   it('should return empty list on preprod network', async () => {
-    const mockAxios = axiosClient as Mocked<typeof axiosClient>
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
 
     const result = await getTokenPairs({network: 'preprod', client: mockAxios})
 
-    expect(result).to.be.empty
+    expect(result).toHaveLength(0)
   })
 
   it('should throw error for invalid response', async () => {
-    const mockAxios = axiosClient as Mocked<typeof axiosClient>
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
     mockAxios.get.mockImplementationOnce(() => Promise.resolve({status: 500}))
-    expect(() =>
+    await expect(() =>
       getTokenPairs({network: 'mainnet', client: mockAxios}),
     ).rejects.toThrow('Failed to fetch token pairs')
   })

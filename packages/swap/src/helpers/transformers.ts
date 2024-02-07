@@ -1,11 +1,17 @@
 import AssetFingerprint from '@emurgo/cip14-js'
 import {Swap, Balance} from '@yoroi/types'
-import {OpenSwap} from '@yoroi/openswap'
 import {isString} from '@yoroi/common'
 
 import {Quantities} from '../utils/quantities'
 import {supportedProviders} from '../translators/constants'
 import {asQuantity} from '../utils/asQuantity'
+import {
+  CompletedOrder,
+  LiquidityPool,
+  ListTokensResponse,
+  OpenOrder,
+  TokenPair,
+} from '../adapters/openswap-api/types'
 
 export const transformersMaker = (
   primaryTokenId: Balance.Token['info']['id'],
@@ -57,7 +63,7 @@ export const transformersMaker = (
     } as const
   }
 
-  const asYoroiOpenOrder = (openswapOrder: OpenSwap.OpenOrder) => {
+  const asYoroiOpenOrder = (openswapOrder: OpenOrder) => {
     const {from, to, deposit, ...rest} = openswapOrder
     const [policyId, name = ''] = primaryTokenId.split('.') as [string, string?]
     return {
@@ -74,7 +80,7 @@ export const transformersMaker = (
     } as const
   }
 
-  const asYoroiCompletedOrder = (openswapOrder: OpenSwap.CompletedOrder) => {
+  const asYoroiCompletedOrder = (openswapOrder: CompletedOrder) => {
     const {txHash, fromAmount, fromToken, toAmount, toToken} = openswapOrder
     const from = {
       amount: fromAmount,
@@ -92,9 +98,7 @@ export const transformersMaker = (
     } as const
   }
 
-  const asYoroiBalanceToken = (
-    openswapTokenPair: OpenSwap.TokenPair,
-  ): Balance.Token => {
+  const asYoroiBalanceToken = (openswapTokenPair: TokenPair): Balance.Token => {
     const {info, price} = openswapTokenPair
     const balanceToken: Balance.Token = {
       info: asYoroiBalanceTokenInfo(info),
@@ -110,7 +114,7 @@ export const transformersMaker = (
   }
 
   const asYoroiBalanceTokenInfo = (
-    openswapToken: OpenSwap.TokenPair['info'],
+    openswapToken: TokenPair['info'],
   ): Balance.TokenInfo => {
     const tokenInfo: Balance.TokenInfo = {
       id: asYoroiTokenId(openswapToken.address),
@@ -133,7 +137,7 @@ export const transformersMaker = (
   }
 
   const asYoroiBalanceTokenInfos = (
-    openswapTokens: OpenSwap.ListTokensResponse,
+    openswapTokens: ListTokensResponse,
   ): Balance.TokenInfo[] => {
     if (openswapTokens.length === 0) return []
     // filters should go into manager, but since we strip out the status is here for now
@@ -143,7 +147,7 @@ export const transformersMaker = (
   }
 
   const asYoroiPool = (
-    openswapLiquidityPool: OpenSwap.LiquidityPool,
+    openswapLiquidityPool: LiquidityPool,
   ): Swap.Pool | null => {
     const {
       batcherFee,
@@ -212,7 +216,7 @@ export const transformersMaker = (
    * @returns {Swap.Pool[]}
    */
   const asYoroiPools = (
-    openswapLiquidityPools: OpenSwap.LiquidityPool[],
+    openswapLiquidityPools: LiquidityPool[],
   ): Swap.Pool[] => {
     if (openswapLiquidityPools?.length > 0)
       return openswapLiquidityPools
@@ -223,7 +227,7 @@ export const transformersMaker = (
   }
 
   const asYoroiBalanceTokens = (
-    openswapTokenPairs: OpenSwap.TokenPair[],
+    openswapTokenPairs: TokenPair[],
   ): Balance.Token[] => openswapTokenPairs.map(asYoroiBalanceToken)
 
   return {
