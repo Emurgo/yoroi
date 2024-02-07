@@ -1,9 +1,9 @@
 import {Balance, Swap} from '@yoroi/types'
 
 import {swapApiMaker} from './api-maker'
-import {openswapMocks} from './openswap.mocks'
-import {apiMocks} from './api.mocks'
-import {OpenSwapApi} from './api'
+import {openswapMocks} from './openswap-api/openswap.mocks'
+import {apiMocks} from './openswap-api/api.mocks'
+import {OpenSwapApi} from './openswap-api/api'
 
 const stakingKey = 'someStakingKey'
 const primaryTokenId = ''

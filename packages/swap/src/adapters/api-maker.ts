@@ -1,9 +1,9 @@
 import {Swap} from '@yoroi/types'
 
-import {transformersMaker} from '../../helpers/transformers'
-import {OpenSwapApi} from './api'
-import {apiMocks} from './api.mocks'
-import {CreateOrderRequest} from './types'
+import {transformersMaker} from '../helpers/transformers'
+import {OpenSwapApi} from './openswap-api/api'
+import {apiMocks} from './openswap-api/api.mocks'
+import {CreateOrderRequest} from './openswap-api/types'
 
 export const swapApiMaker = (
   {

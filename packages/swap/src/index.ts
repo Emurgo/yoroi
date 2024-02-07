@@ -49,7 +49,7 @@ export {supportedProviders, milkTokenId} from './translators/constants'
 export {type SwapOrderCalculation} from './translators/reactjs/state/state'
 
 // factories
-export {swapApiMaker} from './adapters/openswap-api/api-maker'
+export {swapApiMaker} from './adapters/api-maker'
 export {swapManagerMaker} from './manager'
 export {
   swapStorageMaker,
