@@ -6,7 +6,7 @@ export const mocks = {
     address: "addr1qxstpe4lqp9y04s094twu6p63ht2rdhu9sdd40s5n0leppecjfk0ywkc7w8rxrdxp2xvkk9tewfr39n5naexzryg3c7sxmnh0t",
     usedAddressDate: '02/02/2024, 14:32',
     yoroiZendesk: 'Yoroi Zendesk',
-    addressList: [{ isUsed: true, loading: false }, { isUsed: false, loading: false }, { isUsed: false, loading: true }, { isUsed: true, loading: true }],
+    addressList: [{ isUsed: true, loading: false }],
     isLoading: false,
     infoCardOnLimmit: false
 }

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "components.walletinit.createwallet.mnemonicbackupimportancemodal.title",
+    "defaultMessage": "!!!Recovery phrase",
+    "file": "src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.tsx",
+    "start": {
+      "line": 51,
+      "column": 9,
+      "index": 1556
+    },
+    "end": {
+      "line": 54,
+      "column": 3,
+      "index": 1685
+    }
+  },
+  {
+    "id": "components.walletinit.createwallet.mnemonicbackupimportancemodal.keysStorageCheckbox",
+    "defaultMessage": "!!!I understand that my secret keys are held securely on this device only, not on the company`s servers",
+    "file": "src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.tsx",
+    "start": {
+      "line": 55,
+      "column": 23,
+      "index": 1710
+    },
+    "end": {
+      "line": 59,
+      "column": 3,
+      "index": 1944
+    }
+  },
+  {
+    "id": "components.walletinit.createwallet.mnemonicbackupimportancemodal.newDeviceRecoveryCheckbox",
+    "defaultMessage": "!!!I understand that if this application is moved to another device or deleted, my money can be only recovered with the backup phrase that I have written down and saved in a secure place.",
+    "file": "src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.tsx",
+    "start": {
+      "line": 60,
+      "column": 29,
+      "index": 1975
+    },
+    "end": {
+      "line": 66,
+      "column": 3,
+      "index": 2321
+    }
+  },
+  {
+    "id": "components.walletinit.createwallet.mnemonicbackupimportancemodal.confirmationButton",
+    "defaultMessage": "!!!I understand",
+    "file": "src/WalletInit/MnemonicBackupModal/MnemonicBackupImportanceModal.tsx",
+    "start": {
+      "line": 67,
+      "column": 22,
+      "index": 2345
+    },
+    "end": {
+      "line": 70,
+      "column": 3,
+      "index": 2484
+    }
+  }
+]

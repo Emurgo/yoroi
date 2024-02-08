@@ -1,0 +1,17 @@
+[
+  {
+    "id": "components.walletinit.restorewallet.restorewalletscreen.invalidchecksum",
+    "defaultMessage": "!!!Please enter valid mnemonic.",
+    "file": "src/WalletInit/MnemonicInput/MnemonicInput.tsx",
+    "start": {
+      "line": 182,
+      "column": 19,
+      "index": 5680
+    },
+    "end": {
+      "line": 185,
+      "column": 3,
+      "index": 5823
+    }
+  }
+]

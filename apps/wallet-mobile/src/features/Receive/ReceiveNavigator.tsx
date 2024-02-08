@@ -1,30 +1,30 @@
-import { createStackNavigator } from '@react-navigation/stack'
-import { useTheme } from '@yoroi/theme'
+import {createStackNavigator} from '@react-navigation/stack'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import {StyleSheet} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
-import { StatusBar } from '../../components'
-import { defaultStackNavigationOptions, TxHistoryRoutes } from '../../navigation'
-import { useHideBottomTabBar } from '../../yoroi-wallets/hooks'
-import { useStrings } from './common/useStrings'
-import { MultipleReceives } from './useCases/MultipleReceives'
-import { ReceiveScreen } from './useCases/ReceiveScreen'
-import { SpecificAmountScreen } from './useCases/SpecificAmountScreen'
+import {StatusBar} from '../../components'
+import {defaultStackNavigationOptions, TxHistoryRoutes} from '../../navigation'
+import {useHideBottomTabBar} from '../../yoroi-wallets/hooks'
+import {useStrings} from './common/useStrings'
+import {MultipleReceives} from './useCases/MultipleReceives'
+import {ReceiveScreen} from './useCases/ReceiveScreen'
+import {SpecificAmountScreen} from './useCases/SpecificAmountScreen'
 
 const Stack = createStackNavigator<TxHistoryRoutes>()
 
 export const ReceiveScreenNavigator = () => {
   useHideBottomTabBar()
-  const { theme } = useTheme()
+  const {theme} = useTheme()
   const strings = useStrings()
 
-  const { styles } = useStyles()
+  const {styles} = useStyles()
 
   return (
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
-      style={[styles.root, { backgroundColor: theme.color['white-static'] }]}
+      style={[styles.root, {backgroundColor: theme.color['white-static']}]}
     >
       <StatusBar type="dark" />
 
@@ -33,11 +33,10 @@ export const ReceiveScreenNavigator = () => {
         screenOptions={{
           ...defaultStackNavigationOptions,
           detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-          gestureEnabled: true,
+          gestureEnabled: false,
         }}
-        initialRouteName='multiple-receives'
+        initialRouteName="multiple-receives"
       >
-
         <Stack.Screen
           name="receive"
           component={ReceiveScreen}
@@ -61,18 +60,16 @@ export const ReceiveScreenNavigator = () => {
             title: strings.specificAmount,
           }}
         />
-
       </Stack.Navigator>
     </SafeAreaView>
   )
 }
 
 const useStyles = () => {
-
   const styles = StyleSheet.create({
     root: {
       flex: 1,
     },
   })
-  return { styles } as const;
+  return {styles} as const
 }

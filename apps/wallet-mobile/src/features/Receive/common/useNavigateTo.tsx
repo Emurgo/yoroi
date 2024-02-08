@@ -8,6 +8,6 @@ export const useNavigateTo = () => {
 
   return useRef({
     receiceDetails: () => navigation.navigate('receive'),
-    specificAmount: () => navigation.navigate('receive-specific-amount')
+    specificAmount: () => navigation.navigate('receive-specific-amount'),
   }).current
 }

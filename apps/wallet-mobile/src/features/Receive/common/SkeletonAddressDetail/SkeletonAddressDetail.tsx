@@ -1,29 +1,29 @@
 import React from 'react'
-import { useWindowDimensions } from 'react-native'
+import {useWindowDimensions} from 'react-native'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
 export const SkeletonAdressDetail = () => {
-    const { width } = useWindowDimensions()
-    const WIDTH = width - 32;
+  const {width} = useWindowDimensions()
+  const WIDTH = width - 32
 
-    return (
-        <SkeletonPlaceholder borderRadius={10}>
-            <SkeletonPlaceholder.Item alignItems='center' justifyContent='center'>
-                <SkeletonPlaceholder.Item width={WIDTH} height="100%" maxHeight={458} />
-            </SkeletonPlaceholder.Item>
-        </SkeletonPlaceholder>
-    )
+  return (
+    <SkeletonPlaceholder borderRadius={10}>
+      <SkeletonPlaceholder.Item alignItems="center" justifyContent="center">
+        <SkeletonPlaceholder.Item width={WIDTH} height="100%" maxHeight={458} />
+      </SkeletonPlaceholder.Item>
+    </SkeletonPlaceholder>
+  )
 }
 
 export const SkeletonSmallCardAddress = () => {
-    const { width } = useWindowDimensions()
-    const WIDTH = width - 32;
+  const {width} = useWindowDimensions()
+  const WIDTH = width - 32
 
-    return (
-        <SkeletonPlaceholder borderRadius={10}>
-            <SkeletonPlaceholder.Item alignItems='center' justifyContent='center'>
-                <SkeletonPlaceholder.Item width={WIDTH} height={140} />
-            </SkeletonPlaceholder.Item>
-        </SkeletonPlaceholder>
-    )
+  return (
+    <SkeletonPlaceholder borderRadius={10}>
+      <SkeletonPlaceholder.Item alignItems="center" justifyContent="center">
+        <SkeletonPlaceholder.Item width={WIDTH} height={140} />
+      </SkeletonPlaceholder.Item>
+    </SkeletonPlaceholder>
+  )
 }

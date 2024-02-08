@@ -1,10 +1,10 @@
 import Clipboard from '@react-native-community/clipboard'
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 
 const MESSAGE_TIMEOUT = 1500
 
 export const useCopy = () => {
-  const [text, setText] = useState<string>('')
+  const [text, setText] = useState<string | undefined>('')
 
   useEffect(() => {
     const isCopying = !!text
