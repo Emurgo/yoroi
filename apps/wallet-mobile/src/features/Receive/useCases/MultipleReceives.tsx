@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native'
+import {SafeAreaView, StyleSheet, Text, useWindowDimensions, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
 import {ModalScreenWrapper} from '../../../../src/components/ModalScreenWrapper/ModalScreenWrapper'
@@ -52,7 +52,7 @@ export function MultipleReceives() {
   }
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.root}>
       <StatusBar type="dark" />
 
       {data.length === 20 && <InfoCard onLimit={true} />}
@@ -108,7 +108,7 @@ export function MultipleReceives() {
           </View>
         </ModalScreenWrapper>
       )}
-    </View>
+    </SafeAreaView>
   )
 }
 

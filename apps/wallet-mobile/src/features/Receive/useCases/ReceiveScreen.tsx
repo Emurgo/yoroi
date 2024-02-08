@@ -2,7 +2,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import React from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native'
 
 import Icon from '../../../assets/img/copy.png'
 import {Button, Spacer, StatusBar} from '../../../components'
@@ -45,7 +45,7 @@ export const ReceiveScreen = () => {
   }
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.root}>
       <StatusBar type="dark" />
 
       <View style={styles.content}>
@@ -95,7 +95,7 @@ export const ReceiveScreen = () => {
 
         <Spacer height={6} />
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 

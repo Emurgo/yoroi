@@ -2,7 +2,16 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import React, {useState} from 'react'
-import {Keyboard, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, useWindowDimensions, View} from 'react-native'
+import {
+  Keyboard,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 
 import {Button, KeyboardAvoidingView, Spacer, StatusBar, TextInput} from '../../../components'
 import {ModalScreenWrapper} from '../../../components/ModalScreenWrapper/ModalScreenWrapper'
@@ -52,7 +61,7 @@ export const SpecificAmountScreen = () => {
   )
 
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <KeyboardAvoidingView style={styles.root}>
           <StatusBar type="dark" />
@@ -63,7 +72,7 @@ export const SpecificAmountScreen = () => {
             <View style={styles.screen}>
               <Text style={styles.textAddressDetails}>{strings.specificAmountDescription}</Text>
 
-              <TextInput label={strings.ADALabel} keyboardType="numeric" onChangeText={setAmount} />
+              <TextInput label={strings.ADALabel} keyboardType="numeric" onChangeText={setAmount} maxLength={4} />
 
               <View style={styles.textSection}>
                 <Text style={[styles.textAddressDetails, {color: colors.gray}]}>{strings.address}</Text>
@@ -125,7 +134,7 @@ export const SpecificAmountScreen = () => {
           </View>
         </ModalScreenWrapper>
       )}
-    </View>
+    </SafeAreaView>
   )
 }
 

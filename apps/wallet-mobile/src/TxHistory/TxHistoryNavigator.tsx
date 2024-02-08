@@ -1,8 +1,8 @@
 import {init} from '@emurgo/cross-csl-mobile'
-import { useNavigation } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
-import { useStorage } from '@yoroi/common'
-import { resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker } from '@yoroi/resolver'
+import {useNavigation} from '@react-navigation/native'
+import {createStackNavigator} from '@react-navigation/stack'
+import {useStorage} from '@yoroi/common'
+import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
 import {
   milkTokenId,
   supportedProviders,
@@ -11,31 +11,32 @@ import {
   SwapProvider,
   swapStorageMaker,
 } from '@yoroi/swap'
-import { Resolver, Swap } from '@yoroi/types'
+import {Resolver, Swap} from '@yoroi/types'
 import React from 'react'
-import { defineMessages, useIntl } from 'react-intl'
-import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, ViewProps } from 'react-native'
-import { Easing } from 'react-native-reanimated'
+import {defineMessages, useIntl} from 'react-intl'
+import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
 
-import { Boundary, Icon, Spacer } from '../components'
-import { claimApiMaker } from '../features/Claim/module/api'
-import { ClaimProvider } from '../features/Claim/module/ClaimProvider'
-import { ShowSuccessScreen } from '../features/Claim/useCases/ShowSuccessScreen'
-import { RampOnOffScreen } from '../features/RampOnOff/RampOnOffNavigator'
-import { ReceiveScreenNavigator } from '../features/Receive/ReceiveNavigator'
-import { CodeScannerButton } from '../features/Scan/common/CodeScannerButton'
-import { ScanCodeScreen } from '../features/Scan/useCases/ScanCodeScreen'
-import { ShowCameraPermissionDeniedScreen } from '../features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
-import { SendProvider } from '../features/Send/common/SendContext'
-import { ConfirmTxScreen } from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
-import { FailedTxScreen } from '../features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
-import { SubmittedTxScreen } from '../features/Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen'
-import { ListAmountsToSendScreen } from '../features/Send/useCases/ListAmountsToSend'
-import { SelectTokenFromListScreen } from '../features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
-import { EditAmountScreen } from '../features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
-import { StartMultiTokenTxScreen } from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
-import { SwapFormProvider } from '../features/Swap/common/SwapFormProvider'
-import { SwapTabNavigator } from '../features/Swap/SwapNavigator'
+import {Boundary, Icon, Spacer} from '../components'
+import {claimApiMaker} from '../features/Claim/module/api'
+import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
+import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
+import {RampOnOffScreen} from '../features/RampOnOff/RampOnOffNavigator'
+import {MultipleReceives} from '../features/Receive/useCases/MultipleReceives'
+import {ReceiveScreen} from '../features/Receive/useCases/ReceiveScreen'
+import {SpecificAmountScreen} from '../features/Receive/useCases/SpecificAmountScreen'
+import {CodeScannerButton} from '../features/Scan/common/CodeScannerButton'
+import {ScanCodeScreen} from '../features/Scan/useCases/ScanCodeScreen'
+import {ShowCameraPermissionDeniedScreen} from '../features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
+import {SendProvider} from '../features/Send/common/SendContext'
+import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
+import {FailedTxScreen} from '../features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
+import {SubmittedTxScreen} from '../features/Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen'
+import {ListAmountsToSendScreen} from '../features/Send/useCases/ListAmountsToSend'
+import {SelectTokenFromListScreen} from '../features/Send/useCases/ListAmountsToSend/AddToken/SelectTokenFromListScreen'
+import {EditAmountScreen} from '../features/Send/useCases/ListAmountsToSend/EditAmount/EditAmountScreen'
+import {StartMultiTokenTxScreen} from '../features/Send/useCases/StartMultiTokenTx/StartMultiTokenTxScreen'
+import {SwapFormProvider} from '../features/Swap/common/SwapFormProvider'
+import {SwapTabNavigator} from '../features/Swap/SwapNavigator'
 import {
   ConfirmTxScreen as ConfirmTxSwapScreen,
   EditSlippageScreen,
@@ -43,9 +44,9 @@ import {
   ShowFailedTxScreen as FailedTxSwapScreen,
   ShowSubmittedTxScreen as SubmittedTxSwapScreen,
 } from '../features/Swap/useCases'
-import { SelectBuyTokenFromListScreen } from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
-import { SelectSellTokenFromListScreen } from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
-import { CONFIG } from '../legacy/config'
+import {SelectBuyTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditBuyAmount/SelectBuyTokenFromListScreen/SelectBuyTokenFromListScreen'
+import {SelectSellTokenFromListScreen} from '../features/Swap/useCases/StartSwapScreen/CreateOrder/EditSellAmount/SelectSellTokenFromListScreen/SelectSellTokenFromListScreen'
+import {CONFIG} from '../legacy/config'
 import {
   BackButton,
   defaultStackNavigationOptions,
@@ -53,13 +54,13 @@ import {
   TxHistoryRoutes,
   useWalletNavigation,
 } from '../navigation'
-import { useSelectedWallet } from '../SelectedWallet'
-import { COLORS } from '../theme'
-import { useFrontendFees, useStakingKey, useWalletName } from '../yoroi-wallets/hooks'
-import { isMainnetNetworkId } from '../yoroi-wallets/utils'
-import { ModalInfo } from './ModalInfo'
-import { TxDetails } from './TxDetails'
-import { TxHistory } from './TxHistory'
+import {useSelectedWallet} from '../SelectedWallet'
+import {COLORS} from '../theme'
+import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
+import {isMainnetNetworkId} from '../yoroi-wallets/utils'
+import {ModalInfo} from './ModalInfo'
+import {TxDetails} from './TxDetails'
+import {TxHistory} from './TxHistory'
 
 const aggregator: Swap.Aggregator = 'muesliswap'
 
@@ -75,7 +76,7 @@ export const TxHistoryNavigator = () => {
   const hideModalInfo = React.useCallback(() => setIsModalInfoVisible(false), [])
 
   // swap
-  const { frontendFees } = useFrontendFees(wallet)
+  const {frontendFees} = useFrontendFees(wallet)
   const aggregatorTokenId = isMainnetNetworkId(wallet.networkId) ? milkTokenId.mainnet : milkTokenId.preprod
   const stakingKey = useStakingKey(wallet)
   const swapManager = React.useMemo(() => {
@@ -87,11 +88,11 @@ export const TxHistoryNavigator = () => {
       supportedProviders,
     })
     const frontendFeeTiers = frontendFees?.[aggregator] ?? ([] as const)
-    return swapManagerMaker({ swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId })
+    return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
   }, [wallet.networkId, wallet.primaryTokenInfo.id, stakingKey, frontendFees, aggregatorTokenId])
 
-   // resolver
-    const resolverManager = React.useMemo(() => {
+  // resolver
+  const resolverManager = React.useMemo(() => {
     const resolverApi = resolverApiMaker({
       apiConfig: {
         [Resolver.NameServer.Unstoppable]: {
@@ -139,9 +140,9 @@ export const TxHistoryNavigator = () => {
                   }}
                 />
 
-                <Stack.Screen name="history-details" options={{ title: '' }}>
+                <Stack.Screen name="history-details" options={{title: ''}}>
                   {() => (
-                    <Boundary loading={{ size: 'full' }}>
+                    <Boundary loading={{size: 'full'}}>
                       <TxDetails />
                     </Boundary>
                   )}
@@ -149,10 +150,26 @@ export const TxHistoryNavigator = () => {
 
                 <Stack.Screen
                   name="receive"
-                  component={ReceiveScreenNavigator}
+                  component={ReceiveScreen}
                   options={{
                     title: strings.receiveTitle,
-                    headerShown: false
+                    gestureEnabled: false,
+                  }}
+                />
+
+                <Stack.Screen
+                  name="multiple-receives"
+                  component={MultipleReceives}
+                  options={{
+                    title: strings.receiveTitle,
+                  }}
+                />
+
+                <Stack.Screen
+                  name="receive-specific-amount"
+                  component={SpecificAmountScreen}
+                  options={{
+                    title: strings.specificAmount,
                   }}
                 />
 
@@ -161,8 +178,6 @@ export const TxHistoryNavigator = () => {
                   component={RampOnOffScreen}
                   options={{
                     headerShown: false,
-                    cardStyleInterpolator: rampOnOffCardStyleInterpolator,
-                    transitionSpec: rampOnOffTransitionSpec,
                   }}
                 />
 
@@ -217,13 +232,13 @@ export const TxHistoryNavigator = () => {
                 <Stack.Screen
                   name="swap-submitted-tx"
                   component={SubmittedTxSwapScreen}
-                  options={{ headerShown: false, gestureEnabled: false }}
+                  options={{headerShown: false, gestureEnabled: false}}
                 />
 
                 <Stack.Screen
                   name="swap-failed-tx"
                   component={FailedTxSwapScreen}
-                  options={{ headerShown: false, gestureEnabled: false }}
+                  options={{headerShown: false, gestureEnabled: false}}
                 />
 
                 <Stack.Screen
@@ -294,13 +309,13 @@ export const TxHistoryNavigator = () => {
                 <Stack.Screen
                   name="send-submitted-tx"
                   component={SubmittedTxScreen}
-                  options={{ headerShown: false, gestureEnabled: false }}
+                  options={{headerShown: false, gestureEnabled: false}}
                 />
 
                 <Stack.Screen
                   name="send-failed-tx"
                   component={FailedTxScreen}
-                  options={{ headerShown: false, gestureEnabled: false }}
+                  options={{headerShown: false, gestureEnabled: false}}
                 />
 
                 <Stack.Screen //
@@ -327,7 +342,7 @@ export const TxHistoryNavigator = () => {
                 <Stack.Screen
                   name="claim-show-success"
                   component={ShowSuccessScreen}
-                  options={{ title: strings.claimShowSuccess, headerLeft: () => null }}
+                  options={{title: strings.claimShowSuccess, headerLeft: () => null}}
                 />
               </Stack.Navigator>
 
@@ -410,6 +425,10 @@ const messages = defineMessages({
     id: 'claim.showSuccess.title',
     defaultMessage: '!!!Success',
   },
+  specificAmount: {
+    id: 'components.receive.receivescreen.specificAmount',
+    defaultMessage: '!!!Request specific amount',
+  },
 })
 
 const useStrings = () => {
@@ -432,6 +451,7 @@ const useStrings = () => {
     confirmationTransaction: intl.formatMessage(messages.confirmationTransaction),
     scanTitle: intl.formatMessage(messages.scanTitle),
     claimShowSuccess: intl.formatMessage(messages.claimShowSuccessTitle),
+    specificAmount: intl.formatMessage(messages.specificAmount),
   }
 }
 
@@ -445,7 +465,7 @@ const SettingsIconButton = (props: TouchableOpacityProps) => {
 
 const HeaderRightHistory = React.memo(() => {
   const wallet = useSelectedWallet()
-  const { navigateToSettings } = useWalletNavigation()
+  const {navigateToSettings} = useWalletNavigation()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
 
   return (
@@ -453,7 +473,7 @@ const HeaderRightHistory = React.memo(() => {
       {!wallet.isReadOnly && (
         <>
           <CodeScannerButton
-            onPress={() => navigation.navigate('scan-start', { insideFeature: 'scan' })}
+            onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
             color={COLORS.ACTION_GRAY}
           />
 
@@ -465,8 +485,8 @@ const HeaderRightHistory = React.memo(() => {
     </Row>
   )
 })
-const Row = ({ children, style, ...rest }: ViewProps) => (
-  <View style={[style, { flexDirection: 'row' }]} {...rest}>
+const Row = ({children, style, ...rest}: ViewProps) => (
+  <View style={[style, {flexDirection: 'row'}]} {...rest}>
     {children}
   </View>
 )
@@ -489,39 +509,3 @@ const sendOptions = {
     backgroundColor: '#fff',
   },
 }
-
-const rampOnOffTransitionSpec = {
-  open: {
-    animation: 'spring',
-    config: {
-      stiffness: 300,
-      damping: 25,
-      mass: 1,
-      overshootClamping: false,
-      restDisplacementThreshold: 0.01,
-      restSpeedThreshold: 2,
-    },
-  },
-  close: {
-    animation: 'timing',
-    config: {
-      easing: Easing.inOut(Easing.sin),
-      duration: 300,
-    },
-  },
-} as const
-
-const rampOnOffCardStyleInterpolator = ({ current, layouts }) =>
-({
-  cardStyle: {
-    opacity: current.progress,
-    transform: [
-      {
-        translateY: current.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [-layouts.screen.height, 0],
-        }),
-      },
-    ],
-  },
-} as const)
