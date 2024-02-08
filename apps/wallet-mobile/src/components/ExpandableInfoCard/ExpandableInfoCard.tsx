@@ -1,4 +1,5 @@
 import {isString} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -25,6 +26,8 @@ export const ExpandableInfoCard = ({
   withBoxShadow = false,
   footer,
 }: ExpandableInfoCardProps) => {
+  const styles = useStyles()
+
   return (
     <View>
       <Spacer height={8} />
