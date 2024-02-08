@@ -72,7 +72,7 @@ export const SpecificAmountScreen = () => {
             <View style={styles.screen}>
               <Text style={styles.textAddressDetails}>{strings.specificAmountDescription}</Text>
 
-              <TextInput label={strings.ADALabel} keyboardType="numeric" onChangeText={setAmount} maxLength={4} />
+              <TextInput label={strings.ADALabel} keyboardType="number-pad" onChangeText={setAmount} maxLength={4} />
 
               <View style={styles.textSection}>
                 <Text style={[styles.textAddressDetails, {color: colors.gray}]}>{strings.address}</Text>
