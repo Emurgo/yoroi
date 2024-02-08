@@ -1,4 +1,5 @@
 import {GovernanceProvider} from '@yoroi/staking'
+import {Theme, useTheme} from '@yoroi/theme'
 import React from 'react'
 
 import {StatusBar} from '../../../components'
@@ -11,12 +12,13 @@ const Stack = NavigationStack
 export const GovernanceNavigator = () => {
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
+  const {theme} = useTheme()
   return (
     <GovernanceProvider manager={manager}>
       <StatusBar type="dark" />
 
       <SafeArea>
-        <Stack.Navigator screenOptions={screenOptions}>
+        <Stack.Navigator screenOptions={screenOptions(theme)}>
           <Stack.Screen
             name="staking-gov-home"
             component={HomeScreen}
@@ -48,9 +50,8 @@ const txStatusOptions = {
   detachPreviousScreen: true,
   header: () => null,
 }
-
-const screenOptions = {
-  ...defaultStackNavigationOptions,
+const screenOptions = (theme: Theme) => ({
+  ...defaultStackNavigationOptions(theme),
   detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
   gestureEnabled: true,
-}
+})

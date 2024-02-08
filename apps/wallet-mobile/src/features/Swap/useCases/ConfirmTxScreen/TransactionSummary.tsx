@@ -93,11 +93,7 @@ export const TransactionSummary = () => {
       label: strings.swapMinReceivedTitle,
       value: (
         <View style={styles.flex}>
-          {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
-
-          <Text style={[styles.text, {color: priceImpactRiskTextColor}, styles.alignRight]}>
-            {minReceivedInfoValue}
-          </Text>
+          <Text style={[styles.text, styles.alignRight]}>{minReceivedInfoValue}</Text>
         </View>
       ),
     },
@@ -221,7 +217,7 @@ export const TransactionSummary = () => {
               })}
             </Text>
 
-            <Text> {strings.priceimpactDescription}</Text>
+            <Text> {strings.priceImpactDescription(priceImpactRisk)}</Text>
           </Text>
         </View>
       )}
@@ -339,5 +335,6 @@ const styles = StyleSheet.create({
   },
   bold: {
     fontWeight: '500',
+    fontFamily: 'Rubik-Medium',
   },
 })

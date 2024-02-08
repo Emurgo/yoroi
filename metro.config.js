@@ -10,7 +10,6 @@ module.exports = {
     path.resolve(__dirname, "packages/banxa"),
     path.resolve(__dirname, "packages/links"),
     path.resolve(__dirname, "packages/resolver"),
-    path.resolve(__dirname, "packages/openswap"),
     path.resolve(__dirname, "packages/swap"),
     path.resolve(__dirname, "packages/theme"),
     path.resolve(__dirname, "packages/staking"),

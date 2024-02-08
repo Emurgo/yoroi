@@ -137,7 +137,6 @@
     "@emurgo/cip14-js": "^3.0.1",
     "@yoroi/api": "1.5.1",
     "@yoroi/common": "1.5.1",
-    "@yoroi/openswap": "1.5.0",
     "immer": "^10.0.2"
   },
   "devDependencies": {
@@ -150,7 +149,7 @@
     "@types/jest": "^28.1.2",
     "@types/react": "18.2.0",
     "@types/react-native": "0.71.6",
-    "@yoroi/types": "1.5.1",
+    "@yoroi/types": "1.5.2",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",

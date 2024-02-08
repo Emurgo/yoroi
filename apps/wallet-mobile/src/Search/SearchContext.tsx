@@ -1,5 +1,6 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {StackNavigationOptions} from '@react-navigation/stack'
+import {useTheme} from '@yoroi/theme'
 import React, {createContext, ReactNode, useCallback, useContext, useReducer} from 'react'
 import {TextInput, TouchableOpacity, TouchableOpacityProps} from 'react-native'
 
@@ -103,6 +104,8 @@ export const useSearchOnNavBar = ({
   isChild?: boolean
 }) => {
   const navigation = useNavigation()
+  const {theme} = useTheme()
+  const defaultNavigationOptions = React.useCallback(() => defaultStackNavigationOptions(theme), [theme])
 
   const {search, visible, showSearch, hideSearch, clearSearch} = useSearch()
 
@@ -128,7 +131,7 @@ export const useSearchOnNavBar = ({
 
   const withSearchInput: StackNavigationOptions = React.useMemo(
     () => ({
-      ...defaultStackNavigationOptions,
+      ...defaultNavigationOptions,
       headerTitle: () => <InputSearch placeholder={placeholder} />,
       headerRight: () => (search.length > 0 ? <EraseButton onPress={handleCloseSearch} /> : null),
       headerLeft: () => <BackButton onPress={handleGoBack} />,
@@ -138,19 +141,19 @@ export const useSearchOnNavBar = ({
       },
       headerBackTitleVisible: false,
     }),
-    [handleCloseSearch, handleGoBack, placeholder, search.length],
+    [defaultNavigationOptions, handleCloseSearch, handleGoBack, placeholder, search.length],
   )
 
   const withSearchButton: StackNavigationOptions = React.useMemo(
     () => ({
-      ...defaultStackNavigationOptions,
+      ...defaultNavigationOptions,
       headerTitle: title,
       headerRight: () => <SearchButton onPress={() => showSearch()} />,
       headerLeft: () => <BackButton onPress={handleGoBack} />,
       ...(noBack ? {headerLeft: () => null} : {}),
       headerBackTitleVisible: false,
     }),
-    [handleGoBack, noBack, showSearch, title],
+    [defaultNavigationOptions, handleGoBack, noBack, showSearch, title],
   )
 
   React.useLayoutEffect(() => {
@@ -174,23 +177,24 @@ export const useDisableSearchOnBar = ({
   onBack?: () => void
 }) => {
   const navigation = useNavigation()
+  const {theme} = useTheme()
 
   useFocusEffect(
     React.useCallback(() => {
       if (isChild)
         navigation.getParent()?.setOptions({
-          ...defaultStackNavigationOptions,
+          ...defaultStackNavigationOptions(theme),
           headerLeft: onBack ? () => <BackButton onPress={onBack} /> : undefined,
           headerRight: undefined,
           title,
         })
-    }, [isChild, navigation, onBack, title]),
+    }, [isChild, navigation, onBack, theme, title]),
   )
 
   React.useLayoutEffect(() => {
     if (!isChild)
       navigation.setOptions({
-        ...defaultStackNavigationOptions,
+        ...defaultStackNavigationOptions(theme),
         headerLeft: onBack ? () => <BackButton onPress={onBack} /> : undefined,
         headerRight: undefined,
         title,

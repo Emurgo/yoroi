@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import {AxiosInstance} from 'axios'
 
 export type CancelOrderRequest = {

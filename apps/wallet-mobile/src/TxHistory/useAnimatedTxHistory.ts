@@ -22,24 +22,21 @@ const useAnimatedTxHistory = () => {
 
   React.useLayoutEffect(() => {
     translateYOffset.value = withSpring(0, animatedConfig)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
-  React.useEffect(() => {
-    const focusListener = navigation.addListener('focus', () => {
+    const cleanUpFocus = navigation.addListener('focus', () => {
       translateYOffset.value = withSpring(0, animatedConfig)
     })
 
-    return focusListener
-  }, [navigation, translateYOffset])
-
-  React.useEffect(() => {
-    const blurListener = navigation.addListener('blur', () => {
+    const cleanUpBlur = navigation.addListener('blur', () => {
       translateYOffset.value = withSpring(initialTranslateYOffset, animatedConfig)
     })
 
-    return blurListener
-  }, [navigation, translateYOffset])
+    return () => {
+      cleanUpFocus()
+      cleanUpBlur()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return {translateStyles}
 }

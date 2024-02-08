@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
-import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
@@ -60,13 +60,15 @@ export const ConfirmTxScreen = () => {
         <ScrollView style={styles.container}>
           <CurrentBalance />
 
-          <View style={{paddingTop: 16, paddingHorizontal: 16}}>
-            <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
+          <Spacer height={16} />
 
-            <Spacer height={4} />
+          <Fees yoroiUnsignedTx={yoroiUnsignedTx} />
 
-            <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
-          </View>
+          <Spacer height={4} />
+
+          <BalanceAfter yoroiUnsignedTx={yoroiUnsignedTx} />
+
+          <Spacer height={8} />
 
           <PrimaryTotal yoroiUnsignedTx={yoroiUnsignedTx} />
 
@@ -102,7 +104,7 @@ export const ConfirmTxScreen = () => {
   )
 }
 
-const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
+const Actions = (props: ViewProps) => <View style={styles.actions} {...props} />
 
 const styles = StyleSheet.create({
   root: {
@@ -112,6 +114,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
+  },
+  actions: {
+    paddingTop: 16,
+    paddingHorizontal: 16,
+    paddingBottom: Platform.OS === 'ios' ? 25 : 16,
   },
 })
 

@@ -136,8 +136,17 @@ export const makeMetricsManager = (
 
     walletPageExchangeClicked: metricsModule.walletPageExchangeClicked.bind(metricsModule),
     walletPageBuyBannerClicked: metricsModule.walletPageBuyBannerClicked.bind(metricsModule),
+
     exchangePageViewed: metricsModule.exchangePageViewed.bind(metricsModule),
     exchangeSubmitted: metricsModule.exchangeSubmitted.bind(metricsModule),
+
+    governanceChooseDrepPageViewed: metricsModule.governanceChooseDrepPageViewed.bind(metricsModule),
+    governanceConfirmTransactionPageViewed: metricsModule.governanceConfirmTransactionPageViewed.bind(metricsModule),
+    governanceDashboardPageViewed: metricsModule.governanceDashboardPageViewed.bind(metricsModule),
+    governanceTransactionSuccessPageViewed: metricsModule.governanceTransactionSuccessPageViewed.bind(metricsModule),
+
+    createWalletDetailsSettled: metricsModule.createWalletDetailsSettled.bind(metricsModule),
+    restoreWalletDetailsSettled: metricsModule.restoreWalletDetailsSettled.bind(metricsModule),
   } as const
 
   return {

@@ -68,7 +68,10 @@ export const useStrings = () => {
       intl.formatMessage(messages.priceImpactRiskHigh, {
         riskValue,
       }),
-    priceimpactDescription: intl.formatMessage(messages.priceImpactDescription),
+    priceImpactDescription: (risk: 'moderate' | 'high') =>
+      intl.formatMessage(
+        risk === 'moderate' ? messages.priceImpactModerateDescription : messages.priceImpactHighDescription,
+      ),
     priceImpactInfo: intl.formatMessage(messages.priceImpactInfo),
     tvl: intl.formatMessage(messages.tvl),
     poolFee: intl.formatMessage(messages.poolFee),
@@ -647,10 +650,14 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.priceImpactRiskHigh',
     defaultMessage: '!!!Price impact over {riskValue}%',
   },
-  priceImpactDescription: {
-    id: 'swap.swapScreen.priceImpactDescription',
+  priceImpactHighDescription: {
+    id: 'swap.swapScreen.priceImpactHighDescription',
     defaultMessage:
       '!!!may cause a significant loss of funds. Please bear this in mind and proceed with an extra caution.',
+  },
+  priceImpactModerateDescription: {
+    id: 'swap.swapScreen.priceImpactModerateDescription',
+    defaultMessage: '!!!may cause a difference in the amount you actually receive. Consider this at your own risk.',
   },
   priceImpactInfo: {
     id: 'swap.swapScreen.priceImpactInfo',
