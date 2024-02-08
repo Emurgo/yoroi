@@ -5,8 +5,7 @@ import * as React from 'react'
 import {Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 
-import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
-import {Warning} from '../../../../components/Warning'
+import {Button, KeyboardAvoidingView} from '../../../../components'
 import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../legacy/config'
 import env from '../../../../legacy/env'
 import {useMetrics} from '../../../../metrics/metricsManager'
@@ -89,10 +88,6 @@ export const CreateExchange = () => {
             <ShowProviderInfo />
 
             <ShowProviderFee />
-
-            <Spacer height={16} />
-
-            {orderType === 'sell' && <Warning content={strings.sellCurrencyWarning} />}
 
             <ShowDisclaimer />
           </View>

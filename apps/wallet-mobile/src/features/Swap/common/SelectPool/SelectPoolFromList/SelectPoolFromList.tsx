@@ -158,7 +158,7 @@ const useStyles = () => {
       borderRadius: 20,
     },
     shadowProp: {
-      shadowColor: color.gray.max,
+      shadowColor: color.gray.min,
       shadowOpacity: 0.2,
       shadowOffset: {
         width: 0,
