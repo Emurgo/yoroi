@@ -98,7 +98,7 @@ const useStyles = () => {
       paddingRight: 8,
     },
     disabled: {
-      backgroundColor: color.gray[400],
+      backgroundColor: color.gray[50],
     },
     active: {
       borderWidth: 2,

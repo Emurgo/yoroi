@@ -29,7 +29,6 @@ import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {COLORS} from '../../../../../theme'
 import {SubmitTxInsufficientCollateralError} from '../../../../../yoroi-wallets/cardano/api/errors'
 import {convertBech32ToHex, getTransactionSigners} from '../../../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
@@ -662,7 +661,7 @@ const ModalContentButtons = ({onBack, onConfirm}: {onBack: () => void; onConfirm
 
       <Spacer width={20} />
 
-      <Button title={strings.listOrdersSheetConfirm} onPress={onConfirm} style={{backgroundColor: '#FF1351'}} block />
+      <Button title={strings.listOrdersSheetConfirm} onPress={onConfirm} style={styles.modalButton} block />
     </View>
   )
 }
@@ -733,7 +732,7 @@ const EmptySearchResult = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -753,37 +752,25 @@ const useStyles = () => {
     },
     contentTitle: {
       color: 'red',
-      fontFamily: 'Rubik',
-      fontSize: 16,
-      fontWeight: '400',
-      lineHeight: 24,
+      ...typography['body-1-regular'],
       textAlign: 'center',
     },
     modalContentTitleText: {
-      color: '#242838',
-      fontFamily: 'Rubik',
-      fontSize: 16,
+      color: color.gray[900],
+      ...typography['body-1-regular'],
       fontWeight: '500',
-      lineHeight: 24,
       textAlign: 'center',
     },
     contentLabel: {
-      color: '#6B7384',
-      fontFamily: 'Rubik',
-      fontSize: 16,
-      fontWeight: '400',
-      lineHeight: 24,
+      color: color.gray[600],
+      ...typography['body-1-regular'],
     },
     headerLabel: {
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
+      ...typography['body-2-medium'],
     },
     contentValue: {
-      color: '#000',
-      fontFamily: 'Rubik',
-      fontSize: 16,
-      fontWeight: '400',
-      lineHeight: 24,
+      color: color.gray.max,
+      ...typography['body-1-regular'],
     },
     modalContentTitle: {
       flexDirection: 'row',
@@ -798,11 +785,8 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     txLinkText: {
-      color: '#4B6DDE',
-      fontFamily: 'Rubik',
-      fontSize: 16,
-      fontWeight: '400',
-      lineHeight: 22,
+      color: color.primary[500],
+      ...typography['body-1-regular'],
       textDecorationLine: 'underline',
     },
 
@@ -826,21 +810,16 @@ const useStyles = () => {
     contentText: {
       flex: 1,
       textAlign: 'center',
-      fontFamily: 'Rubik-Medium',
-      fontWeight: '500',
-      fontSize: 20,
-      color: '#000',
-      lineHeight: 30,
+      color: color.gray.max,
+      ...typography['heading-3-medium'],
     },
     contentSubText: {
       flex: 1,
       textAlign: 'center',
-      fontFamily: 'Rubik-Regular',
-      fontWeight: '400',
-      fontSize: 16,
-      color: '#6B7384',
-      lineHeight: 24,
+      color: color.gray[600],
+      ...typography['body-1-medium'],
     },
+    modalButton: {backgroundColor: color.magenta[500]},
   })
 
   return styles

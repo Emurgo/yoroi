@@ -48,18 +48,30 @@ const size: Record<string, TextStyle> = {
     lineHeight: 24,
     letterSpacing: 0.6,
   },
-  large: {
+  body1: {
     fontSize: 16,
     lineHeight: 24,
   },
-  normal: {
+  body2: {
     fontSize: 14,
     lineHeight: 22,
   },
-  small: {
+  body3: {
     fontSize: 12,
     lineHeight: 18,
   },
+  // large: {
+  //   fontSize: 16,
+  //   lineHeight: 24,
+  // },
+  // normal: {
+  //   fontSize: 14,
+  //   lineHeight: 22,
+  // },
+  // small: {
+  //   fontSize: 12,
+  //   lineHeight: 18,
+  // },
   caption: {
     fontSize: 10,
     lineHeight: 18,
