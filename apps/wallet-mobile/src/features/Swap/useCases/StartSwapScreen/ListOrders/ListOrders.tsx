@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
 import {StyleSheet, View} from 'react-native'
@@ -17,6 +18,7 @@ export const ListOrders = () => {
   const [orderStatusIndex, setOrderStatusIndex] = React.useState(0)
 
   const strings = useStrings()
+  const styles = useStyles()
 
   const orderStatusLabels = [strings.openOrders, strings.completedOrders]
   const handleSelectOrderStatus = (index: number) => {
@@ -57,15 +59,20 @@ export const ListOrders = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  buttonsGroup: {
-    paddingVertical: 24,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  root: {
-    flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: COLORS.WHITE,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    buttonsGroup: {
+      paddingVertical: 24,
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
+    root: {
+      flex: 1,
+      justifyContent: 'space-between',
+      backgroundColor: color.gray.min,
+    },
+  })
+  return styles
+}

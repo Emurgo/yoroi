@@ -182,6 +182,7 @@ export const TxHistoryNavigator = () => {
                   name="swap-start-swap"
                   component={SwapTabNavigator}
                   options={{
+                    ...sendOptions(theme),
                     title: strings.swapTitle,
                   }}
                 />
@@ -198,6 +199,7 @@ export const TxHistoryNavigator = () => {
                   name="swap-select-sell-token"
                   component={SelectSellTokenFromListScreen}
                   options={{
+                    ...sendOptions(theme),
                     title: strings.swapFromTitle,
                   }}
                 />
@@ -206,6 +208,7 @@ export const TxHistoryNavigator = () => {
                   name="swap-select-buy-token"
                   component={SelectBuyTokenFromListScreen}
                   options={{
+                    ...sendOptions(theme),
                     title: strings.swapToTitle,
                   }}
                 />

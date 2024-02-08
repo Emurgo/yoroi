@@ -1,5 +1,6 @@
 import {isString} from '@yoroi/common'
 import {makeLimitOrder, makePossibleMarketOrder, useSwap, useSwapCreateOrder, useSwapPoolsByPair} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import * as React from 'react'
@@ -40,6 +41,7 @@ const BOTTOM_ACTION_SECTION = 180
 export const CreateOrder = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
+  const styles = useStyles()
   const navigateTo = useNavigateTo()
   const {navigateToTxHistory} = useWalletNavigation()
   const {orderData, unsignedTxChanged, poolPairsChanged} = useSwap()
@@ -315,29 +317,37 @@ export const CreateOrder = () => {
   )
 }
 
-const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
+const Actions = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
+  return <View style={[styles.actions, style]} {...props} />
+}
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-  },
-  scroll: {
-    paddingHorizontal: 16,
-  },
-  container: {
-    flex: 1,
-    paddingTop: 10,
-  },
-  flex: {
-    flex: 1,
-  },
-  actions: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-  },
-  actionBorder: {
-    borderTopWidth: 1,
-    borderTopColor: COLORS.BORDER_GRAY,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    scroll: {
+      paddingHorizontal: 16,
+    },
+    container: {
+      flex: 1,
+      paddingTop: 10,
+    },
+    flex: {
+      flex: 1,
+    },
+    actions: {
+      paddingVertical: 16,
+      paddingHorizontal: 16,
+    },
+    actionBorder: {
+      borderTopWidth: 1,
+      borderTopColor: color.gray[200],
+    },
+  })
+  return styles
+}

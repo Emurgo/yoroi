@@ -90,17 +90,19 @@ export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = 
 }
 
 // NAVIGATOR TOP TABS OPTIONS
-export const defaultMaterialTopTabNavigationOptions: MaterialTopTabNavigationOptions = {
-  tabBarStyle: {backgroundColor: COLORS.WHITE, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
-  tabBarIndicatorStyle: {backgroundColor: COLORS.SHELLEY_BLUE, height: 2},
-  tabBarLabelStyle: {
-    textTransform: 'none',
-    fontFamily: 'Rubik-Medium',
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  tabBarActiveTintColor: COLORS.SHELLEY_BLUE,
-  tabBarInactiveTintColor: COLORS.NOT_SELECTED_TAB_TEXT,
+export const defaultMaterialTopTabNavigationOptions = (theme: Theme): MaterialTopTabNavigationOptions => {
+  return {
+    tabBarStyle: {backgroundColor: theme.color.gray.min, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
+    tabBarIndicatorStyle: {backgroundColor: COLORS.SHELLEY_BLUE, height: 2},
+    tabBarLabelStyle: {
+      textTransform: 'none',
+      fontFamily: 'Rubik-Medium',
+      fontSize: 16,
+      fontWeight: '500',
+    },
+    tabBarActiveTintColor: COLORS.SHELLEY_BLUE,
+    tabBarInactiveTintColor: COLORS.NOT_SELECTED_TAB_TEXT,
+  }
 }
 
 // ROUTES

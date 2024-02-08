@@ -40,13 +40,13 @@ const useStyles = () => {
     },
     title: {
       ...theme.typography['body-1-regular'],
-      color: theme.color.gray.max,
+      color: theme.color.gray.min,
       fontWeight: '500',
     },
     text: {
       ...theme.typography['body-2-regular'],
       marginTop: 8,
-      color: theme.color.gray.max,
+      color: theme.color.gray.min,
     },
   })
 
