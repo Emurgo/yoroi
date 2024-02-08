@@ -1,10 +1,10 @@
-import { useTheme } from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import { Image, StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle } from 'react-native'
-import Animated, { FadeInDown, FadeOutDown, Layout } from 'react-native-reanimated'
+import {Image, StyleSheet, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle} from 'react-native'
+import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
 
-import { colors } from '../../theme'
-import { Text } from '../Text'
+import {colors} from '../../theme'
+import {Text} from '../Text'
 
 export type ButtonProps = TouchableOpacityProps & {
   title: string
@@ -88,7 +88,6 @@ const buttonOutline = {
 }
 
 const useStyles = () => {
-
   const theme = useTheme()
 
   const styles = StyleSheet.create({
@@ -156,7 +155,7 @@ const useStyles = () => {
       top: -20,
       alignSelf: 'center',
       borderRadius: 4,
-      zIndex: 10
+      zIndex: 10,
     },
     textCopy: {
       color: theme.theme.color['white-static'],
@@ -168,5 +167,5 @@ const useStyles = () => {
     },
   })
 
-  return { styles } as const
+  return {styles} as const
 }

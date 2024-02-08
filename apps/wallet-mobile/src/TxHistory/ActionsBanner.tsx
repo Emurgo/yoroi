@@ -1,23 +1,23 @@
-import { useNavigation } from '@react-navigation/native'
-import { useSwap } from '@yoroi/swap'
-import { useTheme } from '@yoroi/theme'
-import React, { ReactNode } from 'react'
-import { useIntl } from 'react-intl'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import Animated, { FadeInDown, FadeOutDown, Layout } from 'react-native-reanimated'
+import {useNavigation} from '@react-navigation/native'
+import {useSwap} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
+import React, {ReactNode} from 'react'
+import {useIntl} from 'react-intl'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
 
-import { useCopy } from '../../src/legacy/useCopy'
-import { Icon, Spacer, Text } from '../components'
-import { messages as receiveMessages } from '../features/Receive/common/useStrings'
-import { useSend } from '../features/Send/common/SendContext'
-import { useSwapForm } from '../features/Swap/common/SwapFormProvider'
-import { actionMessages } from '../i18n/global-messages'
-import { useMetrics } from '../metrics/metricsManager'
-import { TxHistoryRouteNavigation } from '../navigation'
-import { useSelectedWallet } from '../SelectedWallet'
-import { useTokenInfo } from '../yoroi-wallets/hooks'
+import {useCopy} from '../../src/legacy/useCopy'
+import {Icon, Spacer, Text} from '../components'
+import {messages as receiveMessages} from '../features/Receive/common/useStrings'
+import {useSend} from '../features/Send/common/SendContext'
+import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
+import {actionMessages} from '../i18n/global-messages'
+import {useMetrics} from '../metrics/metricsManager'
+import {TxHistoryRouteNavigation} from '../navigation'
+import {useSelectedWallet} from '../SelectedWallet'
+import {useTokenInfo} from '../yoroi-wallets/hooks'
 
-export const ActionsBanner = ({ disabled = false }: { disabled: boolean }) => {
+export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const theme = useTheme()
 
   const ACTION_PROPS = {
@@ -28,10 +28,10 @@ export const ActionsBanner = ({ disabled = false }: { disabled: boolean }) => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
-  const { reset: resetSendState } = useSend()
-  const { orderData } = useSwap()
-  const { resetSwapForm } = useSwapForm()
-  const { track } = useMetrics()
+  const {reset: resetSendState} = useSend()
+  const {orderData} = useSwap()
+  const {resetSwapForm} = useSwapForm()
+  const {track} = useMetrics()
   const sellTokenInfo = useTokenInfo({
     wallet,
     tokenId: orderData.amounts.sell.tokenId,
@@ -51,9 +51,9 @@ export const ActionsBanner = ({ disabled = false }: { disabled: boolean }) => {
 
     track.swapInitiated({
       from_asset: [
-        { asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group },
+        {asset_name: sellTokenInfo.name, asset_ticker: sellTokenInfo.ticker, policy_id: sellTokenInfo.group},
       ],
-      to_asset: [{ asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group }],
+      to_asset: [{asset_name: buyTokenInfo.name, asset_ticker: buyTokenInfo.ticker, policy_id: buyTokenInfo.group}],
       order_type: orderData.type,
       slippage_tolerance: orderData.slippage,
     })
@@ -76,7 +76,9 @@ export const ActionsBanner = ({ disabled = false }: { disabled: boolean }) => {
         <View style={[styles.row, disabled && styles.disabled]}>
           {isCopying && (
             <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-              <Text style={[styles.textCopy, { color: theme.theme.color['white-static'] }]}>{strings.addressCopiedMsg}</Text>
+              <Text style={[styles.textCopy, {color: theme.theme.color['white-static']}]}>
+                {strings.addressCopiedMsg}
+              </Text>
             </Animated.View>
           )}
 
@@ -184,7 +186,7 @@ const styles = StyleSheet.create({
     top: -40,
     borderRadius: 4,
     zIndex: 10,
-    left: -25
+    left: -25,
   },
   textCopy: {
     textAlign: 'center',
@@ -192,7 +194,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     fontFamily: 'Rubik-Medium',
-  }
+  },
 })
 
 const useStrings = () => {
@@ -208,7 +210,7 @@ const useStrings = () => {
     swapLabel: intl.formatMessage(actionMessages.swap),
     messageBuy: intl.formatMessage(actionMessages.soon),
     exchange: intl.formatMessage(actionMessages.exchange),
-    addressCopiedMsg: intl.formatMessage(receiveMessages.addressCopiedMsg)
+    addressCopiedMsg: intl.formatMessage(receiveMessages.addressCopiedMsg),
   }
 }
 
