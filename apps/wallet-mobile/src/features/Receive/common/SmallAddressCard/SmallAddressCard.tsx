@@ -10,25 +10,28 @@ import {useStrings} from '../useStrings'
 
 export type SmallAddressCardProps = {
   address: string
-  isUsed: boolean
+  isUsed?: boolean
   loading: boolean
   date?: string
   onPress?: () => void
 }
 
-export function SmallAddressCard({address, isUsed, date, onPress, loading}: SmallAddressCardProps) {
+export const SmallAddressCard = ({address, isUsed, date, onPress, loading}: SmallAddressCardProps) => {
   const strings = useStrings()
   const [isCopying, copy] = useCopy()
 
   const {styles, colors} = useStyles()
 
-  return (
-    <>
-      {loading ? (
-        <View style={styles.skeleton}>
-          <SkeletonSmallCardAddress />
-        </View>
-      ) : (
+  if (loading)
+    return (
+      <View style={styles.skeleton}>
+        <SkeletonSmallCardAddress />
+      </View>
+    )
+
+  if (!loading)
+    return (
+      <>
         <Animated.View layout={Layout} entering={FadeInUp} exiting={FadeOut}>
           <TouchableOpacity
             style={styles.smallAddressCard}
@@ -56,15 +59,14 @@ export function SmallAddressCard({address, isUsed, date, onPress, loading}: Smal
             </View>
           </TouchableOpacity>
         </Animated.View>
-      )}
 
-      {isCopying && (
-        <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-          <Text style={styles.textCopy}>{strings.addressCopiedMsg}</Text>
-        </Animated.View>
-      )}
-    </>
-  )
+        {isCopying && (
+          <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+            <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
+          </Animated.View>
+        )}
+      </>
+    )
 }
 
 const useStyles = () => {
@@ -133,7 +135,7 @@ const useStyles = () => {
       lineHeight: 22,
       color: theme.color.gray[700],
     },
-    textCopy: {
+    copiedText: {
       color: theme.color['white-static'],
       textAlign: 'center',
       padding: 8,
@@ -143,7 +145,7 @@ const useStyles = () => {
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: '#000',
+      backgroundColor: theme.color['black-static'],
       alignItems: 'center',
       justifyContent: 'center',
       top: 0,

@@ -13,7 +13,7 @@ type AddressDetailsProps = {
   title?: string
 }
 
-export function ShareDetailsCard({address, spendingHash, stakingHash}: AddressDetailsProps) {
+export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDetailsProps) => {
   const strings = useStrings()
 
   const {styles, colors} = useStyles()

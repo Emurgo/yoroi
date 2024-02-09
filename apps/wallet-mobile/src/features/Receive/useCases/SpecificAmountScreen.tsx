@@ -1,16 +1,8 @@
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import * as React from 'react'
-import {
-  Keyboard,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  useWindowDimensions,
-  View,
-} from 'react-native'
+import {Keyboard, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, useWindowDimensions, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Spacer, StatusBar, TextInput} from '../../../components'
 import {ModalScreenWrapper} from '../../../components/ModalScreenWrapper/ModalScreenWrapper'
@@ -47,7 +39,7 @@ export const SpecificAmountScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.root}>
+    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <KeyboardAvoidingView style={styles.root}>
           <StatusBar type="light" />
@@ -114,7 +106,7 @@ export const SpecificAmountScreen = () => {
               title={strings.copyLinkBtn}
               iconImage={require('../../../assets/img/copy.png')}
               isCopying={isCopying}
-              copiedTxt={strings.copyLinkMsg}
+              copiedText={strings.copyLinkMsg}
               style={styles.button}
             />
 

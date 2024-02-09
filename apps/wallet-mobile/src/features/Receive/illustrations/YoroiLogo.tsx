@@ -6,7 +6,7 @@ type Props = {
   height: number
 }
 
-export function YoroiLogoIllustration(props: Props) {
+export const YoroiLogoIllustration = (props: Props) => {
   return (
     <Svg width={props.width} height={props.height} viewBox="0 0 35 37" fill="none">
       <Path

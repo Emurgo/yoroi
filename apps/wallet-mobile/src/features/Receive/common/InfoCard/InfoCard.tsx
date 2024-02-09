@@ -11,7 +11,7 @@ type InfoCardProps = {
   onLimit: boolean
 }
 
-export function InfoCard({onLimit}: InfoCardProps) {
+export const InfoCard = ({onLimit}: InfoCardProps) => {
   const strings = useStrings()
 
   const {styles, colors} = useStyles()

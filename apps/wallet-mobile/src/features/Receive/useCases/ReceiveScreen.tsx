@@ -1,14 +1,12 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import * as React from 'react'
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context'
 
 import Icon from '../../../assets/img/copy.png'
 import {Button, Spacer, StatusBar} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
-import {useMetrics} from '../../../metrics/metricsManager'
-import {useSelectedWallet} from '../../../SelectedWallet'
 import {useHideBottomTabBar} from '../../../yoroi-wallets/hooks'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
 import {mocks as mockReceives, mocks} from '../common/mocks'
@@ -20,27 +18,14 @@ export const ReceiveScreen = () => {
   useHideBottomTabBar()
   const strings = useStrings()
   const {styles, colors} = useStyles()
-  const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
 
   const [isCopying, copy] = useCopy()
 
   const currentAddress = mocks.address
 
-  React.useEffect(() => {
-    wallet.generateNewReceiveAddressIfNeeded()
-  }, [wallet])
-
-  const {track} = useMetrics()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.receivePageViewed()
-    }, [track]),
-  )
-
   return (
-    <SafeAreaView style={styles.root}>
+    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <StatusBar type="light" />
 
       <View style={styles.content}>
@@ -83,7 +68,7 @@ export const ReceiveScreen = () => {
           title={strings.copyAddressButton}
           iconImage={Icon}
           isCopying={isCopying}
-          copiedTxt={strings.addressCopiedMsg}
+          copiedText={strings.addressCopiedMsg}
           style={styles.button}
         />
 

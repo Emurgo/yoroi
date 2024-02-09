@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.receive.receivescreen.infoText",
+    "defaultMessage": "!!!Share this address to receive payments. To protect your privacy, new addresses are generated automatically once you use them.",
+    "file": "src/Receive/ReceiveScreen.tsx",
+    "start": {
+      "line": 77,
+      "column": 12,
+      "index": 2167
+    },
+    "end": {
+      "line": 83,
+      "column": 3,
+      "index": 2405
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.generateButton",
+    "defaultMessage": "!!!Generate another address",
+    "file": "src/Receive/ReceiveScreen.tsx",
+    "start": {
+      "line": 84,
+      "column": 18,
+      "index": 2425
+    },
+    "end": {
+      "line": 87,
+      "column": 3,
+      "index": 2540
+    }
+  },
+  {
+    "id": "components.receive.receivescreen.cannotGenerate",
+    "defaultMessage": "!!!You have to use some of your addresses",
+    "file": "src/Receive/ReceiveScreen.tsx",
+    "start": {
+      "line": 88,
+      "column": 18,
+      "index": 2560
+    },
+    "end": {
+      "line": 91,
+      "column": 3,
+      "index": 2689
+    }
+  }
+]

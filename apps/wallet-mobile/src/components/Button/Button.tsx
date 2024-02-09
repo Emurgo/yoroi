@@ -18,7 +18,7 @@ export type ButtonProps = TouchableOpacityProps & {
   outlineShelley?: boolean
   textStyles?: TextStyle
   isCopying?: boolean
-  copiedTxt?: string
+  copiedText?: string
 }
 
 export const Button = (props: ButtonProps) => {
@@ -36,7 +36,7 @@ export const Button = (props: ButtonProps) => {
     outlineShelley,
     textStyles,
     isCopying,
-    copiedTxt,
+    copiedText,
     ...rest
   } = props
 
@@ -46,7 +46,7 @@ export const Button = (props: ButtonProps) => {
     <TouchableOpacity onPress={onPress} style={[block && styles.block, containerStyle]} activeOpacity={0.5} {...rest}>
       {isCopying && (
         <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-          <Text style={styles.textCopy}>{copiedTxt}</Text>
+          <Text style={styles.copiedText}>{copiedText}</Text>
         </Animated.View>
       )}
 
@@ -88,7 +88,7 @@ const buttonOutline = {
 }
 
 const useStyles = () => {
-  const theme = useTheme()
+  const {theme} = useTheme()
 
   const styles = StyleSheet.create({
     block: {
@@ -157,8 +157,8 @@ const useStyles = () => {
       borderRadius: 4,
       zIndex: 10,
     },
-    textCopy: {
-      color: theme.theme.color['white-static'],
+    copiedText: {
+      color: theme.color['white-static'],
       textAlign: 'center',
       padding: 8,
       fontSize: 14,

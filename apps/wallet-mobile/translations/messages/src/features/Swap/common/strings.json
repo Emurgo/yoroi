@@ -1,0 +1,1862 @@
+[
+  {
+    "id": "global.actions.dialogs.incorrectPassword.title",
+    "defaultMessage": "!!!Incorrect password.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 164,
+      "column": 24,
+      "index": 10563
+    },
+    "end": {
+      "line": 167,
+      "column": 3,
+      "index": 10672
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapTitle",
+    "defaultMessage": "!!!Swap",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 168,
+      "column": 13,
+      "index": 10687
+    },
+    "end": {
+      "line": 171,
+      "column": 3,
+      "index": 10760
+    }
+  },
+  {
+    "id": "swap.swapScreen.tokenSwapTab",
+    "defaultMessage": "!!!Token swap",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 172,
+      "column": 13,
+      "index": 10775
+    },
+    "end": {
+      "line": 175,
+      "column": 3,
+      "index": 10857
+    }
+  },
+  {
+    "id": "swap.swapScreen.ordersSwapTab",
+    "defaultMessage": "!!!Orders",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 176,
+      "column": 13,
+      "index": 10872
+    },
+    "end": {
+      "line": 179,
+      "column": 3,
+      "index": 10951
+    }
+  },
+  {
+    "id": "swap.swapScreen.marketButton",
+    "defaultMessage": "!!!Market Button",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 180,
+      "column": 16,
+      "index": 10969
+    },
+    "end": {
+      "line": 183,
+      "column": 3,
+      "index": 11054
+    }
+  },
+  {
+    "id": "swap.swapScreen.limitButton",
+    "defaultMessage": "!!!Limit",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 184,
+      "column": 15,
+      "index": 11071
+    },
+    "end": {
+      "line": 187,
+      "column": 3,
+      "index": 11147
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapFrom",
+    "defaultMessage": "!!!Swap from",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 188,
+      "column": 12,
+      "index": 11161
+    },
+    "end": {
+      "line": 191,
+      "column": 3,
+      "index": 11238
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapTo",
+    "defaultMessage": "!!!Swap to",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 192,
+      "column": 10,
+      "index": 11250
+    },
+    "end": {
+      "line": 195,
+      "column": 3,
+      "index": 11323
+    }
+  },
+  {
+    "id": "swap.swapScreen.currentBalance",
+    "defaultMessage": "!!!Current Balance",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 196,
+      "column": 18,
+      "index": 11343
+    },
+    "end": {
+      "line": 199,
+      "column": 3,
+      "index": 11432
+    }
+  },
+  {
+    "id": "swap.swapScreen.balance",
+    "defaultMessage": "!!!Balance",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 200,
+      "column": 11,
+      "index": 11445
+    },
+    "end": {
+      "line": 203,
+      "column": 3,
+      "index": 11519
+    }
+  },
+  {
+    "id": "swap.swapScreen.selectToken",
+    "defaultMessage": "!!!Select Token",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 204,
+      "column": 15,
+      "index": 11536
+    },
+    "end": {
+      "line": 207,
+      "column": 3,
+      "index": 11619
+    }
+  },
+  {
+    "id": "swap.swapScreen.marketPrice",
+    "defaultMessage": "!!!Market Price",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 208,
+      "column": 15,
+      "index": 11636
+    },
+    "end": {
+      "line": 211,
+      "column": 3,
+      "index": 11719
+    }
+  },
+  {
+    "id": "swap.swapScreen.marketPriceInfo",
+    "defaultMessage": "!!!Market price is the best price available on the market among several DEXes that lets you buy or sell an asset instantly.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 212,
+      "column": 19,
+      "index": 11740
+    },
+    "end": {
+      "line": 216,
+      "column": 3,
+      "index": 11941
+    }
+  },
+  {
+    "id": "swap.swapScreen.limitPriceInfo",
+    "defaultMessage": "!!!Limit price in a DEX is a specific pre-set price at which you can trade an asset. Unlike market orders, which execute immediately at the current market price, limit orders are set to execute only when the market reaches the trader's specified price.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 217,
+      "column": 18,
+      "index": 11961
+    },
+    "end": {
+      "line": 221,
+      "column": 3,
+      "index": 12290
+    }
+  },
+  {
+    "id": "swap.swapScreen.limitPrice",
+    "defaultMessage": "!!!Limit Price",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 222,
+      "column": 14,
+      "index": 12306
+    },
+    "end": {
+      "line": 225,
+      "column": 3,
+      "index": 12387
+    }
+  },
+  {
+    "id": "swap.swapScreen.slippageTolerance",
+    "defaultMessage": "!!!Slippage Tolerance",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 226,
+      "column": 21,
+      "index": 12410
+    },
+    "end": {
+      "line": 229,
+      "column": 3,
+      "index": 12505
+    }
+  },
+  {
+    "id": "swap.swapScreen.slippageToleranceError",
+    "defaultMessage": "!!!Slippage must be a number between 0 and 75 and have up to 1 decimal",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 230,
+      "column": 26,
+      "index": 12533
+    },
+    "end": {
+      "line": 233,
+      "column": 3,
+      "index": 12682
+    }
+  },
+  {
+    "id": "swap.swapScreen.slippageToleranceInfo",
+    "defaultMessage": "!!!Slippage Tolerance Info",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 234,
+      "column": 25,
+      "index": 12709
+    },
+    "end": {
+      "line": 237,
+      "column": 3,
+      "index": 12813
+    }
+  },
+  {
+    "id": "swap.swapScreen.verifiedBy",
+    "defaultMessage": "!!!Verified by {pool}",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 238,
+      "column": 14,
+      "index": 12829
+    },
+    "end": {
+      "line": 241,
+      "column": 3,
+      "index": 12917
+    }
+  },
+  {
+    "id": "swap.swapScreen.assetsIn",
+    "defaultMessage": "!!!This asset is in my portfolio",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 242,
+      "column": 12,
+      "index": 12931
+    },
+    "end": {
+      "line": 245,
+      "column": 3,
+      "index": 13028
+    }
+  },
+  {
+    "id": "swap.swapScreen.slippageInfo",
+    "defaultMessage": "!!!Slippage tolerance is set as a percentage of the total swap value.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 246,
+      "column": 16,
+      "index": 13046
+    },
+    "end": {
+      "line": 249,
+      "column": 3,
+      "index": 13184
+    }
+  },
+  {
+    "id": "swap.swapScreen.autoPool",
+    "defaultMessage": "!!!(auto)",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 250,
+      "column": 12,
+      "index": 13198
+    },
+    "end": {
+      "line": 253,
+      "column": 3,
+      "index": 13272
+    }
+  },
+  {
+    "id": "swap.swapScreen.changePool",
+    "defaultMessage": "!!!change dex",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 254,
+      "column": 14,
+      "index": 13288
+    },
+    "end": {
+      "line": 257,
+      "column": 3,
+      "index": 13368
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapMinAda",
+    "defaultMessage": "!!!Min-ADA is the minimum ADA amount required to be contained when holding or sending Cardano native assets.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 258,
+      "column": 14,
+      "index": 13384
+    },
+    "end": {
+      "line": 262,
+      "column": 3,
+      "index": 13565
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapMinAdaTitle",
+    "defaultMessage": "!!!Min ADA",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 263,
+      "column": 19,
+      "index": 13586
+    },
+    "end": {
+      "line": 266,
+      "column": 3,
+      "index": 13668
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapFees",
+    "defaultMessage": "!!!Swap fees include the following:\n • Matchmaker Fee\n • Frontend Fee\n • Liquidity Provider Fee",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 267,
+      "column": 12,
+      "index": 13682
+    },
+    "end": {
+      "line": 270,
+      "column": 3,
+      "index": 13845
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapFeesTitle",
+    "defaultMessage": "!!!Fees",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 271,
+      "column": 17,
+      "index": 13864
+    },
+    "end": {
+      "line": 274,
+      "column": 3,
+      "index": 13941
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapLiquidityFee",
+    "defaultMessage": "!!!Liquidity provider fee",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 275,
+      "column": 20,
+      "index": 13963
+    },
+    "end": {
+      "line": 278,
+      "column": 3,
+      "index": 14061
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapLiqProvFee",
+    "defaultMessage": "!!!Liq. prov. fee",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 279,
+      "column": 18,
+      "index": 14081
+    },
+    "end": {
+      "line": 282,
+      "column": 3,
+      "index": 14169
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapLiquidityFeeInfo",
+    "defaultMessage": "!!!Liquidity provider fee is a fixed {fee}% operational fee from the whole transaction volume, that is taken to support DEX “liquidity” allowing traders to buy and sell assets on the decentralized Cardano network.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 283,
+      "column": 24,
+      "index": 14195
+    },
+    "end": {
+      "line": 287,
+      "column": 3,
+      "index": 14491
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapMinReceived",
+    "defaultMessage": "!!!Minimum amount of assets you can get because of the slippage tolerance.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 288,
+      "column": 19,
+      "index": 14512
+    },
+    "end": {
+      "line": 291,
+      "column": 3,
+      "index": 14658
+    }
+  },
+  {
+    "id": "swap.swapScreen.swapMinReceivedTitle",
+    "defaultMessage": "!!!Min Received",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 292,
+      "column": 24,
+      "index": 14684
+    },
+    "end": {
+      "line": 295,
+      "column": 3,
+      "index": 14776
+    }
+  },
+  {
+    "id": "swap.swapScreen.enterSlippage",
+    "defaultMessage": "!!!Enter a value from 0% to 75%. You can also enter up to 1 decimal",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 296,
+      "column": 17,
+      "index": 14795
+    },
+    "end": {
+      "line": 299,
+      "column": 3,
+      "index": 14932
+    }
+  },
+  {
+    "id": "swap.swapScreen.poolVerification",
+    "defaultMessage": "!!!{pool} verification",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 300,
+      "column": 20,
+      "index": 14954
+    },
+    "end": {
+      "line": 303,
+      "column": 3,
+      "index": 15049
+    }
+  },
+  {
+    "id": "swap.swapScreen.volume",
+    "defaultMessage": "!!!Volume, 24h",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 304,
+      "column": 10,
+      "index": 15061
+    },
+    "end": {
+      "line": 307,
+      "column": 3,
+      "index": 15138
+    }
+  },
+  {
+    "id": "swap.swapScreen.poolVerificationInfo",
+    "defaultMessage": "!!!Cardano projects that list their own tokens can apply for an additional {pool} verification. This verification is a manual validation that {pool} team performs with the help of Cardano Foundation.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 308,
+      "column": 24,
+      "index": 15164
+    },
+    "end": {
+      "line": 312,
+      "column": 3,
+      "index": 15446
+    }
+  },
+  {
+    "id": "global.price",
+    "defaultMessage": "!!! Price",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 313,
+      "column": 9,
+      "index": 15457
+    },
+    "end": {
+      "line": 316,
+      "column": 3,
+      "index": 15519
+    }
+  },
+  {
+    "id": "swap.swapScreen.noAssetsFound",
+    "defaultMessage": "!!!No assets found for this pair",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 317,
+      "column": 17,
+      "index": 15538
+    },
+    "end": {
+      "line": 320,
+      "column": 3,
+      "index": 15640
+    }
+  },
+  {
+    "id": "swap.swapScreen.noAssetsFoundFor",
+    "defaultMessage": "!!!No assets found for \"{search}\"",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 321,
+      "column": 20,
+      "index": 15662
+    },
+    "end": {
+      "line": 324,
+      "column": 3,
+      "index": 15768
+    }
+  },
+  {
+    "id": "swap.swapScreen.eachVerifiedToken",
+    "defaultMessage": "!!!Each verified tokens gets",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 325,
+      "column": 21,
+      "index": 15791
+    },
+    "end": {
+      "line": 328,
+      "column": 3,
+      "index": 15893
+    }
+  },
+  {
+    "id": "swap.swapScreen.verifiedBadge",
+    "defaultMessage": "!!!verified badge",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 329,
+      "column": 17,
+      "index": 15912
+    },
+    "end": {
+      "line": 332,
+      "column": 3,
+      "index": 15999
+    }
+  },
+  {
+    "id": "swap.swapScreen.openOrders",
+    "defaultMessage": "!!!Open orders",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 333,
+      "column": 14,
+      "index": 16015
+    },
+    "end": {
+      "line": 336,
+      "column": 3,
+      "index": 16096
+    }
+  },
+  {
+    "id": "swap.swapScreen.completedOrders",
+    "defaultMessage": "!!!Completed orders",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 337,
+      "column": 19,
+      "index": 16117
+    },
+    "end": {
+      "line": 340,
+      "column": 3,
+      "index": 16208
+    }
+  },
+  {
+    "id": "swap.swapScreen.tvl",
+    "defaultMessage": "!!!TVL",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 341,
+      "column": 7,
+      "index": 16217
+    },
+    "end": {
+      "line": 344,
+      "column": 3,
+      "index": 16283
+    }
+  },
+  {
+    "id": "swap.swapScreen.poolFee",
+    "defaultMessage": "!!! Dex Fee",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 345,
+      "column": 11,
+      "index": 16296
+    },
+    "end": {
+      "line": 348,
+      "column": 3,
+      "index": 16371
+    }
+  },
+  {
+    "id": "swap.swapScreen.batcherFee",
+    "defaultMessage": "!!! Batcher Fee",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 349,
+      "column": 14,
+      "index": 16387
+    },
+    "end": {
+      "line": 352,
+      "column": 3,
+      "index": 16469
+    }
+  },
+  {
+    "id": "swap.swapScreen.limitPriceWarningTitle",
+    "defaultMessage": "!!!Limit price",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 353,
+      "column": 26,
+      "index": 16497
+    },
+    "end": {
+      "line": 356,
+      "column": 3,
+      "index": 16590
+    }
+  },
+  {
+    "id": "swap.swapScreen.limitPriceWarningDescription",
+    "defaultMessage": "!!!Are you sure you want to proceed this order with the limit price that is 10% or more higher than the\nmarket price?",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 357,
+      "column": 32,
+      "index": 16624
+    },
+    "end": {
+      "line": 362,
+      "column": 3,
+      "index": 16844
+    }
+  },
+  {
+    "id": "swap.swapScreen.limitPriceWarningYourPrice",
+    "defaultMessage": "!!!Your limit price",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 363,
+      "column": 30,
+      "index": 16876
+    },
+    "end": {
+      "line": 366,
+      "column": 3,
+      "index": 16978
+    }
+  },
+  {
+    "id": "swap.swapScreen.limitPriceWarningMarketPrice",
+    "defaultMessage": "!!!Market price",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 367,
+      "column": 32,
+      "index": 17012
+    },
+    "end": {
+      "line": 370,
+      "column": 3,
+      "index": 17112
+    }
+  },
+  {
+    "id": "swap.swapScreen.limitPriceWarningBack",
+    "defaultMessage": "!!!Back",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 371,
+      "column": 25,
+      "index": 17139
+    },
+    "end": {
+      "line": 374,
+      "column": 3,
+      "index": 17224
+    }
+  },
+  {
+    "id": "swap.swapScreen.limitPriceWarningConfirm",
+    "defaultMessage": "!!!Swap",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 375,
+      "column": 28,
+      "index": 17254
+    },
+    "end": {
+      "line": 378,
+      "column": 3,
+      "index": 17342
+    }
+  },
+  {
+    "id": "swap.swapScreen.transactionSigned",
+    "defaultMessage": "!!!Transaction submitted",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 379,
+      "column": 21,
+      "index": 17365
+    },
+    "end": {
+      "line": 382,
+      "column": 3,
+      "index": 17463
+    }
+  },
+  {
+    "id": "swap.swapScreen.transactionDisplay",
+    "defaultMessage": "!!!Your transactions will be displayed both in the list of transaction and Open swap orders",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 383,
+      "column": 22,
+      "index": 17487
+    },
+    "end": {
+      "line": 386,
+      "column": 3,
+      "index": 17653
+    }
+  },
+  {
+    "id": "swap.swapScreen.dex",
+    "defaultMessage": "!!! dex",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 387,
+      "column": 7,
+      "index": 17662
+    },
+    "end": {
+      "line": 390,
+      "column": 3,
+      "index": 17729
+    }
+  },
+  {
+    "id": "swap.swapScreen.seeOnExplorer",
+    "defaultMessage": "!!!see on explorer",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 391,
+      "column": 17,
+      "index": 17748
+    },
+    "end": {
+      "line": 394,
+      "column": 3,
+      "index": 17836
+    }
+  },
+  {
+    "id": "global.assets.assetLabel",
+    "defaultMessage": "!!!Asset",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 395,
+      "column": 9,
+      "index": 17847
+    },
+    "end": {
+      "line": 398,
+      "column": 3,
+      "index": 17920
+    }
+  },
+  {
+    "id": "global.clear",
+    "defaultMessage": "!!!Clear",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 399,
+      "column": 9,
+      "index": 17931
+    },
+    "end": {
+      "line": 402,
+      "column": 3,
+      "index": 17992
+    }
+  },
+  {
+    "id": "global.signTransaction",
+    "defaultMessage": "!!!Sign transaction",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 403,
+      "column": 19,
+      "index": 18013
+    },
+    "end": {
+      "line": 406,
+      "column": 3,
+      "index": 18095
+    }
+  },
+  {
+    "id": "global.spendingPassword",
+    "defaultMessage": "!!!Spending Password",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 407,
+      "column": 20,
+      "index": 18117
+    },
+    "end": {
+      "line": 410,
+      "column": 3,
+      "index": 18201
+    }
+  },
+  {
+    "id": "global.enterSpendingPassword",
+    "defaultMessage": "!!!Enter spending password to sign this transaction",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 411,
+      "column": 25,
+      "index": 18228
+    },
+    "end": {
+      "line": 414,
+      "column": 3,
+      "index": 18348
+    }
+  },
+  {
+    "id": "global.sign",
+    "defaultMessage": "!!!Sign",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 415,
+      "column": 8,
+      "index": 18358
+    },
+    "end": {
+      "line": 418,
+      "column": 3,
+      "index": 18417
+    }
+  },
+  {
+    "id": "global.swap",
+    "defaultMessage": "!!!Swap",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 419,
+      "column": 14,
+      "index": 18433
+    },
+    "end": {
+      "line": 422,
+      "column": 3,
+      "index": 18492
+    }
+  },
+  {
+    "id": "swap.listOrders.completed",
+    "defaultMessage": "!!!completed orders",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 423,
+      "column": 23,
+      "index": 18517
+    },
+    "end": {
+      "line": 426,
+      "column": 3,
+      "index": 18602
+    }
+  },
+  {
+    "id": "swap.listOrders.open",
+    "defaultMessage": "!!!open orders",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 427,
+      "column": 18,
+      "index": 18622
+    },
+    "end": {
+      "line": 430,
+      "column": 3,
+      "index": 18697
+    }
+  },
+  {
+    "id": "swap.listOrders.sheet.title",
+    "defaultMessage": "!!!Confirm order cancellation",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 431,
+      "column": 24,
+      "index": 18723
+    },
+    "end": {
+      "line": 434,
+      "column": 3,
+      "index": 18820
+    }
+  },
+  {
+    "id": "swap.listOrders.card.buttonText",
+    "defaultMessage": "!!!Cancel order",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 435,
+      "column": 29,
+      "index": 18851
+    },
+    "end": {
+      "line": 438,
+      "column": 3,
+      "index": 18938
+    }
+  },
+  {
+    "id": "swap.listOrders.sheet.contentTitle",
+    "defaultMessage": "!!!Are you sure you want to cancel this order?",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 439,
+      "column": 31,
+      "index": 18971
+    },
+    "end": {
+      "line": 442,
+      "column": 3,
+      "index": 19092
+    }
+  },
+  {
+    "id": "swap.listOrders.sheet.link",
+    "defaultMessage": "!!!Learn more about swap orders in Yoroi",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 443,
+      "column": 23,
+      "index": 19117
+    },
+    "end": {
+      "line": 446,
+      "column": 3,
+      "index": 19224
+    }
+  },
+  {
+    "id": "swap.listOrders.sheet.assetPrice",
+    "defaultMessage": "!!!Asset price",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 447,
+      "column": 29,
+      "index": 19255
+    },
+    "end": {
+      "line": 450,
+      "column": 3,
+      "index": 19342
+    }
+  },
+  {
+    "id": "swap.listOrders.sheet.assetAmount",
+    "defaultMessage": "!!!Asset amount",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 451,
+      "column": 30,
+      "index": 19374
+    },
+    "end": {
+      "line": 454,
+      "column": 3,
+      "index": 19463
+    }
+  },
+  {
+    "id": "swap.listOrders.sheet.totalReturned",
+    "defaultMessage": "!!!Total returned",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 455,
+      "column": 32,
+      "index": 19497
+    },
+    "end": {
+      "line": 458,
+      "column": 3,
+      "index": 19590
+    }
+  },
+  {
+    "id": "swap.listOrders.sheet.cancellationFee",
+    "defaultMessage": "!!!Cancellation Fee",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 459,
+      "column": 34,
+      "index": 19626
+    },
+    "end": {
+      "line": 462,
+      "column": 3,
+      "index": 19723
+    }
+  },
+  {
+    "id": "swap.listOrders.sheet.confirm",
+    "defaultMessage": "!!!Confirm",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 463,
+      "column": 26,
+      "index": 19751
+    },
+    "end": {
+      "line": 466,
+      "column": 3,
+      "index": 19831
+    }
+  },
+  {
+    "id": "swap.listOrders.sheet.back",
+    "defaultMessage": "!!!Back",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 467,
+      "column": 23,
+      "index": 19856
+    },
+    "end": {
+      "line": 470,
+      "column": 3,
+      "index": 19930
+    }
+  },
+  {
+    "id": "swap.listOrders.total",
+    "defaultMessage": "!!!Total",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 471,
+      "column": 19,
+      "index": 19951
+    },
+    "end": {
+      "line": 474,
+      "column": 3,
+      "index": 20021
+    }
+  },
+  {
+    "id": "swap.listOrders.liquidityPool",
+    "defaultMessage": "!!!Liquidity Pool",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 475,
+      "column": 27,
+      "index": 20050
+    },
+    "end": {
+      "line": 478,
+      "column": 3,
+      "index": 20137
+    }
+  },
+  {
+    "id": "swap.listOrders.timeCreated",
+    "defaultMessage": "!!!Time Created",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 479,
+      "column": 25,
+      "index": 20164
+    },
+    "end": {
+      "line": 482,
+      "column": 3,
+      "index": 20247
+    }
+  },
+  {
+    "id": "swap.listOrders.timeCompleted",
+    "defaultMessage": "!!!Time Completed",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 483,
+      "column": 27,
+      "index": 20276
+    },
+    "end": {
+      "line": 486,
+      "column": 3,
+      "index": 20363
+    }
+  },
+  {
+    "id": "swap.listOrders.txId",
+    "defaultMessage": "!!!Transaction ID",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 487,
+      "column": 18,
+      "index": 20383
+    },
+    "end": {
+      "line": 490,
+      "column": 3,
+      "index": 20461
+    }
+  },
+  {
+    "id": "components.ledger.ledgertransportswitchmodal.title",
+    "defaultMessage": "!!!Choose Connection Method",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 491,
+      "column": 26,
+      "index": 20489
+    },
+    "end": {
+      "line": 494,
+      "column": 3,
+      "index": 20607
+    }
+  },
+  {
+    "id": "components.ledger.ledgertransportswitchmodal.usbExplanation",
+    "defaultMessage": "!!!Choose this option if you want to connect to a Ledger Nano model X or S using an on-the-go USB cable adaptor:",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 495,
+      "column": 18,
+      "index": 20627
+    },
+    "end": {
+      "line": 500,
+      "column": 3,
+      "index": 20856
+    }
+  },
+  {
+    "id": "components.ledger.ledgertransportswitchmodal.usbButton",
+    "defaultMessage": "!!!Connect with USB",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 501,
+      "column": 13,
+      "index": 20871
+    },
+    "end": {
+      "line": 504,
+      "column": 3,
+      "index": 20985
+    }
+  },
+  {
+    "id": "components.ledger.ledgertransportswitchmodal.usbConnectionIsBlocked",
+    "defaultMessage": "!!! USB connection is blocked by iOS devices",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 505,
+      "column": 26,
+      "index": 21013
+    },
+    "end": {
+      "line": 508,
+      "column": 3,
+      "index": 21165
+    }
+  },
+  {
+    "id": "components.ledger.ledgertransportswitchmodal.bluetoothExplanation",
+    "defaultMessage": "!!!Choose this option if you want to connect to a Ledger Nano model X through Bluetooth:",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 509,
+      "column": 24,
+      "index": 21191
+    },
+    "end": {
+      "line": 512,
+      "column": 3,
+      "index": 21385
+    }
+  },
+  {
+    "id": "components.ledger.ledgertransportswitchmodal.bluetoothButton",
+    "defaultMessage": "!!!Connect with Bluetooth",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 513,
+      "column": 19,
+      "index": 21406
+    },
+    "end": {
+      "line": 516,
+      "column": 3,
+      "index": 21532
+    }
+  },
+  {
+    "id": "global.ledgerMessages.bluetoothDisabledError",
+    "defaultMessage": "!!!Connect with Bluetooth",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 517,
+      "column": 18,
+      "index": 21552
+    },
+    "end": {
+      "line": 520,
+      "column": 3,
+      "index": 21662
+    }
+  },
+  {
+    "id": "global.error.serviceUnavailable",
+    "defaultMessage": "!!!Service unavailable",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 521,
+      "column": 22,
+      "index": 21686
+    },
+    "end": {
+      "line": 524,
+      "column": 3,
+      "index": 21780
+    }
+  },
+  {
+    "id": "global.error.serviceUnavailableInfo",
+    "defaultMessage": "!!!The server is temporarily busy due to maintenance downtime or capacity problems",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 525,
+      "column": 26,
+      "index": 21808
+    },
+    "end": {
+      "line": 528,
+      "column": 3,
+      "index": 21966
+    }
+  },
+  {
+    "id": "components.send.sendscreen.submittedTxButton",
+    "defaultMessage": "!!!GO TO transactions",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 529,
+      "column": 20,
+      "index": 21988
+    },
+    "end": {
+      "line": 532,
+      "column": 3,
+      "index": 22094
+    }
+  },
+  {
+    "id": "components.send.assetselectorscreen.youHave",
+    "defaultMessage": "!!!You have",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 535,
+      "column": 11,
+      "index": 22153
+    },
+    "end": {
+      "line": 538,
+      "column": 3,
+      "index": 22248
+    }
+  },
+  {
+    "id": "components.send.assetselectorscreen.noAssets",
+    "defaultMessage": "!!!No assets found",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 539,
+      "column": 12,
+      "index": 22262
+    },
+    "end": {
+      "line": 542,
+      "column": 3,
+      "index": 22365
+    }
+  },
+  {
+    "id": "components.send.assetselectorscreen.found",
+    "defaultMessage": "!!!found",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 543,
+      "column": 9,
+      "index": 22376
+    },
+    "end": {
+      "line": 546,
+      "column": 3,
+      "index": 22466
+    }
+  },
+  {
+    "id": "components.send.sendscreen.searchTokens",
+    "defaultMessage": "!!!Search tokens",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 547,
+      "column": 16,
+      "index": 22484
+    },
+    "end": {
+      "line": 550,
+      "column": 3,
+      "index": 22580
+    }
+  },
+  {
+    "id": "components.send.selectasset.title",
+    "defaultMessage": "!!!Select asset",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 551,
+      "column": 20,
+      "index": 22602
+    },
+    "end": {
+      "line": 554,
+      "column": 3,
+      "index": 22691
+    }
+  },
+  {
+    "id": "components.send.confirmscreen.confirmButton",
+    "defaultMessage": "!!!Confirm",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 555,
+      "column": 11,
+      "index": 22704
+    },
+    "end": {
+      "line": 558,
+      "column": 3,
+      "index": 22798
+    }
+  },
+  {
+    "id": "components.send.confirmscreen.assignCollateral",
+    "defaultMessage": "!!!Generate",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 559,
+      "column": 20,
+      "index": 22820
+    },
+    "end": {
+      "line": 562,
+      "column": 3,
+      "index": 22918
+    }
+  },
+  {
+    "id": "components.send.confirmscreen.collateralNotFound",
+    "defaultMessage": "!!!Collateral not found",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 563,
+      "column": 22,
+      "index": 22942
+    },
+    "end": {
+      "line": 566,
+      "column": 3,
+      "index": 23054
+    }
+  },
+  {
+    "id": "components.send.confirmscreen.noActiveCollateral",
+    "defaultMessage": "!!!To continue with this action, you need to generate a collateral",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 567,
+      "column": 22,
+      "index": 23078
+    },
+    "end": {
+      "line": 570,
+      "column": 3,
+      "index": 23233
+    }
+  },
+  {
+    "id": "components.send.confirmscreen.collateralTxPendingTitle",
+    "defaultMessage": "!!!Pending Collateral UTxO",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 571,
+      "column": 28,
+      "index": 23263
+    },
+    "end": {
+      "line": 574,
+      "column": 3,
+      "index": 23384
+    }
+  },
+  {
+    "id": "components.send.confirmscreen.collateralTxPending",
+    "defaultMessage": "!!!The collateral UTxO transaction you've submitted is currently in the processing stage, and it may require a few minutes to complete. Please refresh your interface and attempt the action again shortly",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 575,
+      "column": 23,
+      "index": 23409
+    },
+    "end": {
+      "line": 579,
+      "column": 3,
+      "index": 23707
+    }
+  },
+  {
+    "id": "components.send.sendscreen.failedTxTitle",
+    "defaultMessage": "!!!Transaction failed",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 580,
+      "column": 17,
+      "index": 23726
+    },
+    "end": {
+      "line": 583,
+      "column": 3,
+      "index": 23828
+    }
+  },
+  {
+    "id": "components.send.sendscreen.failedTxText",
+    "defaultMessage": "!!!Your transaction has not been processed properly due to technical issues",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 584,
+      "column": 16,
+      "index": 23846
+    },
+    "end": {
+      "line": 587,
+      "column": 3,
+      "index": 24001
+    }
+  },
+  {
+    "id": "components.send.sendscreen.failedTxButton",
+    "defaultMessage": "!!!Try again",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 588,
+      "column": 18,
+      "index": 24021
+    },
+    "end": {
+      "line": 591,
+      "column": 3,
+      "index": 24115
+    }
+  },
+  {
+    "id": "swap.swapScreen.notEnoughBalance",
+    "defaultMessage": "!!!Not enough balance",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 592,
+      "column": 20,
+      "index": 24137
+    },
+    "end": {
+      "line": 595,
+      "column": 3,
+      "index": 24231
+    }
+  },
+  {
+    "id": "swap.swapScreen.notEnoughSupply",
+    "defaultMessage": "!!!Not enough supply in the pool",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 596,
+      "column": 19,
+      "index": 24252
+    },
+    "end": {
+      "line": 599,
+      "column": 3,
+      "index": 24356
+    }
+  },
+  {
+    "id": "swap.swapScreen.notEnoughFeeBalance",
+    "defaultMessage": "!!!Not enough balance, please consider the fees",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 600,
+      "column": 23,
+      "index": 24381
+    },
+    "end": {
+      "line": 603,
+      "column": 3,
+      "index": 24504
+    }
+  },
+  {
+    "id": "swap.swapScreen.noPool",
+    "defaultMessage": "!!! This pair is not available in any liquidity pool",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 604,
+      "column": 10,
+      "index": 24516
+    },
+    "end": {
+      "line": 607,
+      "column": 3,
+      "index": 24631
+    }
+  },
+  {
+    "id": "global.ledgerMessages.continueOnLedger",
+    "defaultMessage": "!!!Continue on Ledger",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 608,
+      "column": 20,
+      "index": 24653
+    },
+    "end": {
+      "line": 611,
+      "column": 3,
+      "index": 24753
+    }
+  },
+  {
+    "id": "global.actions.dialogs.commonbuttons.continueButton",
+    "defaultMessage": "!!!Continue",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 612,
+      "column": 12,
+      "index": 24767
+    },
+    "end": {
+      "line": 615,
+      "column": 3,
+      "index": 24870
+    }
+  },
+  {
+    "id": "swap.slippage.slippageWarningTitle",
+    "defaultMessage": "!!!Slippage Warning",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 616,
+      "column": 24,
+      "index": 24896
+    },
+    "end": {
+      "line": 619,
+      "column": 3,
+      "index": 24990
+    }
+  },
+  {
+    "id": "swap.slippage.slippageWarningText",
+    "defaultMessage": "!!!Are you sure you want to proceed this order with the current slippage tolerance? It could result in receiving no assets.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 620,
+      "column": 23,
+      "index": 25015
+    },
+    "end": {
+      "line": 624,
+      "column": 3,
+      "index": 25218
+    }
+  },
+  {
+    "id": "swap.slippage.yourSlippage",
+    "defaultMessage": "!!!Your slippage tolerance",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 625,
+      "column": 31,
+      "index": 25251
+    },
+    "end": {
+      "line": 628,
+      "column": 3,
+      "index": 25344
+    }
+  },
+  {
+    "id": "swap.slippage.changeAmount",
+    "defaultMessage": "!!!Increase the amount to proceed or change slippage tolerance to 0%",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 629,
+      "column": 31,
+      "index": 25377
+    },
+    "end": {
+      "line": 632,
+      "column": 3,
+      "index": 25512
+    }
+  },
+  {
+    "id": "swap.listOrders.emptyOpenOrders",
+    "defaultMessage": "!!!No orders available yet",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 633,
+      "column": 19,
+      "index": 25533
+    },
+    "end": {
+      "line": 636,
+      "column": 3,
+      "index": 25631
+    }
+  },
+  {
+    "id": "swap.listOrders.emptyOpenOrdersSub",
+    "defaultMessage": "!!!Start doing the swap operations to your open orders here",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 637,
+      "column": 22,
+      "index": 25655
+    },
+    "end": {
+      "line": 640,
+      "column": 3,
+      "index": 25789
+    }
+  },
+  {
+    "id": "swap.listOrders.emptyCompletedOrders",
+    "defaultMessage": "!!!No orders completed yet",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 641,
+      "column": 24,
+      "index": 25815
+    },
+    "end": {
+      "line": 644,
+      "column": 3,
+      "index": 25918
+    }
+  },
+  {
+    "id": "swap.swapScreen.priceImpact",
+    "defaultMessage": "!!!Price Impact",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 645,
+      "column": 15,
+      "index": 25935
+    },
+    "end": {
+      "line": 648,
+      "column": 3,
+      "index": 26018
+    }
+  },
+  {
+    "id": "swap.swapScreen.priceImpactRiskHigh",
+    "defaultMessage": "!!!Price impact over {riskValue}%",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 649,
+      "column": 23,
+      "index": 26043
+    },
+    "end": {
+      "line": 652,
+      "column": 3,
+      "index": 26152
+    }
+  },
+  {
+    "id": "swap.swapScreen.priceImpactHighDescription",
+    "defaultMessage": "!!!may cause a significant loss of funds. Please bear this in mind and proceed with an extra caution.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 653,
+      "column": 30,
+      "index": 26184
+    },
+    "end": {
+      "line": 657,
+      "column": 3,
+      "index": 26374
+    }
+  },
+  {
+    "id": "swap.swapScreen.priceImpactModerateDescription",
+    "defaultMessage": "!!!may cause a difference in the amount you actually receive. Consider this at your own risk.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 658,
+      "column": 34,
+      "index": 26410
+    },
+    "end": {
+      "line": 661,
+      "column": 3,
+      "index": 26590
+    }
+  },
+  {
+    "id": "swap.swapScreen.priceImpactInfo",
+    "defaultMessage": "!!!Price impact is a difference between the actual market price and your price due to trade size.",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 662,
+      "column": 19,
+      "index": 26611
+    },
+    "end": {
+      "line": 665,
+      "column": 3,
+      "index": 26780
+    }
+  },
+  {
+    "id": "components.txhistory.flawedwalletmodal.title",
+    "defaultMessage": "!!Warning",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 666,
+      "column": 11,
+      "index": 26793
+    },
+    "end": {
+      "line": 669,
+      "column": 3,
+      "index": 26887
+    }
+  },
+  {
+    "id": "swap.swapScreen.backToSwapOrders",
+    "defaultMessage": "!!!Back to swap orders",
+    "file": "src/features/Swap/common/strings.ts",
+    "start": {
+      "line": 670,
+      "column": 20,
+      "index": 26909
+    },
+    "end": {
+      "line": 673,
+      "column": 3,
+      "index": 27004
+    }
+  }
+]

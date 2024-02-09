@@ -27,7 +27,7 @@ type AddressDetailsProps = {
   title?: string
 }
 
-export function ShareQRCodeCard({address, title, isCopying, onLongPress}: ShareProps) {
+export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareProps) => {
   const [isSharing, setIsSharing] = React.useState<boolean>(false)
   const strings = useStrings()
   const ref: React.RefObject<ViewShot> = React.useRef(null)
@@ -52,7 +52,7 @@ export function ShareQRCodeCard({address, title, isCopying, onLongPress}: ShareP
 
           setIsSharing(false)
           await Share.open({url: uri, filename: mocks.shareFileName, message: `${strings.address} ${address}`})
-        } catch (error) {
+        } finally {
           setIsSharing(false)
         }
       }
@@ -61,40 +61,44 @@ export function ShareQRCodeCard({address, title, isCopying, onLongPress}: ShareP
     }
   }, [address, isSharing, strings.address])
 
-  return isSharing ? (
-    <ViewShot ref={ref}>
-      <CaptureShareQRCodeCard address={address} />
-    </ViewShot>
-  ) : (
-    <View style={styles.card}>
-      <LinearGradient
-        style={[StyleSheet.absoluteFill, {opacity: 1}]}
-        start={{x: 0, y: 0}}
-        end={{x: 0, y: 1}}
-        colors={colors.bgCard}
-      />
+  if (isSharing)
+    return (
+      <ViewShot ref={ref}>
+        <CaptureShareQRCodeCard address={address} />
+      </ViewShot>
+    )
 
-      <Text style={styles.title}>{title}</Text>
+  if (!isSharing)
+    return (
+      <View style={styles.card}>
+        <LinearGradient
+          style={[StyleSheet.absoluteFill, {opacity: 1}]}
+          start={{x: 0, y: 0}}
+          end={{x: 0, y: 1}}
+          colors={colors.bgCard}
+        />
 
-      <View style={styles.addressContainer}>
-        <View style={styles.qrCode}>
-          <QRCode value={address} size={158} backgroundColor={colors.white} color={colors.black} />
+        <Text style={styles.title}>{title}</Text>
+
+        <View style={styles.addressContainer}>
+          <View style={styles.qrCode}>
+            <QRCode value={address} size={158} backgroundColor={colors.white} color={colors.black} />
+          </View>
+
+          <Text style={styles.textAddress}>{address}</Text>
         </View>
 
-        <Text style={styles.textAddress}>{address}</Text>
+        <TouchableOpacity activeOpacity={0.5} onPress={shareImage} onLongPress={onLongPress}>
+          <Text style={styles.textShareAddress}>{strings.shareLabel}</Text>
+        </TouchableOpacity>
+
+        {isCopying && (
+          <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+            <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
+          </Animated.View>
+        )}
       </View>
-
-      <TouchableOpacity activeOpacity={0.5} onPress={shareImage} onLongPress={onLongPress}>
-        <Text style={styles.textShareAddress}>{strings.shareLabel}</Text>
-      </TouchableOpacity>
-
-      {isCopying && (
-        <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-          <Text style={styles.textCopy}>{strings.addressCopiedMsg}</Text>
-        </Animated.View>
-      )}
-    </View>
-  )
+    )
 }
 
 const useStyles = () => {
@@ -110,10 +114,6 @@ const useStyles = () => {
     },
     addressContainer: {
       alignItems: 'center',
-    },
-    skeleton: {
-      width: '100%',
-      height: '100%',
     },
     card: {
       borderRadius: 16,
@@ -152,22 +152,7 @@ const useStyles = () => {
       lineHeight: 20,
       letterSpacing: 0.5,
     },
-    addressDetails: {
-      height: '100%',
-      gap: 32,
-      alignItems: 'center',
-      marginHorizontal: 16,
-      marginTop: 32,
-    },
-    textAddressDetails: {
-      fontWeight: '400',
-    },
-    textSection: {
-      gap: 4,
-      maxWidth: 300,
-      width: '100%',
-    },
-    textCopy: {
+    copiedText: {
       color: theme.color['white-static'],
       textAlign: 'center',
       padding: 8,
@@ -177,7 +162,7 @@ const useStyles = () => {
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: '#000',
+      backgroundColor: theme.color['black-static'],
       alignItems: 'center',
       justifyContent: 'center',
       bottom: 60,

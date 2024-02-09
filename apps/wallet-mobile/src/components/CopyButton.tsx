@@ -6,7 +6,7 @@ import {useCopy} from '../legacy/useCopy'
 import {COLORS} from '../theme'
 
 export type CopyButtonProps = {
-  value?: string
+  value: string
   onCopy?: () => void
   children?: React.ReactNode
   style?: StyleProp<ViewStyle>

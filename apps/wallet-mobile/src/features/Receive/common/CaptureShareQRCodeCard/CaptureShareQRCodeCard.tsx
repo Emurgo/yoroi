@@ -20,7 +20,7 @@ type AddressDetailsProps = {
   title?: string
 }
 
-export function CaptureShareQRCodeCard({address}: ShareProps) {
+export const CaptureShareQRCodeCard = ({address}: ShareProps) => {
   const logoWidth = 35
   const logoHeight = 37
 
