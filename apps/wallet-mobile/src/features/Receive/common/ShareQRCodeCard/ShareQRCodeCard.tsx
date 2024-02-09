@@ -38,7 +38,7 @@ export function ShareQRCodeCard({address, title, isCopying, onLongPress}: ShareP
     setIsSharing(true)
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isSharing) {
       const captureAndShare = async () => {
         try {
