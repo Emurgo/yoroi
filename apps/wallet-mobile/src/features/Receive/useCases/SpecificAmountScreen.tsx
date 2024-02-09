@@ -35,7 +35,7 @@ export const SpecificAmountScreen = () => {
 
   const [amount, setAmount] = useState<string>('')
 
-  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [isModalVisible, setIsModalVisible] = React.useState(false)
 
   const [isCopying, copy] = useCopy()
 
