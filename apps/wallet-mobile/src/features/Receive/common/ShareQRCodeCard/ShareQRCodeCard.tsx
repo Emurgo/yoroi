@@ -1,5 +1,5 @@
 import {useTheme} from '@yoroi/theme'
-import React, {RefObject, useEffect, useRef, useState} from 'react'
+import * as React from 'react'
 import {StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
