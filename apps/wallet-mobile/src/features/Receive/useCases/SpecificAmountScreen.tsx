@@ -33,7 +33,7 @@ export const SpecificAmountScreen = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
   const HEIGHT_MODAL = (HEIGHT_SCREEN / 100) * 80
 
-  const [amount, setAmount] = useState<string>('')
+  const [amount, setAmount] = React.useState<string>('')
 
   const [isModalVisible, setIsModalVisible] = React.useState(false)
 
