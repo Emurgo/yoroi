@@ -28,7 +28,7 @@ export function MultipleReceives() {
   const HEIGHT_SCREEN = useWindowDimensions().height
   const HEIGHT_MODAL = (HEIGHT_SCREEN / 100) * 70
 
-  const [isModalVisible, setIsModalVisible] = useState(true)
+  const [isModalVisible, setIsModalVisible] = React.useState(true)
 
   const [data, setData] = React.useState(mocks.addressList)
 
