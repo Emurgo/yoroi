@@ -28,7 +28,7 @@ type AddressDetailsProps = {
 }
 
 export function ShareQRCodeCard({address, title, isCopying, onLongPress}: ShareProps) {
-  const [isSharing, setIsSharing] = useState<boolean>(false)
+  const [isSharing, setIsSharing] = React.useState<boolean>(false)
   const strings = useStrings()
   const ref: RefObject<ViewShot> = React.useRef(null)
 
