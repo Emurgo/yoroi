@@ -55,7 +55,7 @@ export const lightPalette: Palette = {
     100: '#FDF7E2',
   },
   'gradients': {
-    'blue-green': ['#E4E8F7', '#C6F7F7'],
+    'blue-green': ['#E4E8F7', '#C6F7ED'],
     'green': ['#93F5E1', '#C6F7F7'],
     'blue': ['#244ABF', '#4B6DDE'],
   },

@@ -9,7 +9,6 @@
       "packages/types",
       "packages/common",
       "packages/api",
-      "packages/openswap",
       "packages/*",
       "apps/*",
       "e2e/*"

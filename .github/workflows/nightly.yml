@@ -87,9 +87,7 @@ jobs:
           yarn install 
           cd apps/wallet-mobile
           yarn install
-          cd ios 
-          pod install
-          cd ..
+          npx pod-install --yes
           yarn workspaces run build
       - name: Copy Apple Signing Key
         run: |

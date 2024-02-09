@@ -11,6 +11,7 @@ import {
   SwapProvider,
   swapStorageMaker,
 } from '@yoroi/swap'
+import {Theme, useTheme} from '@yoroi/theme'
 import {Resolver, Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -68,6 +69,7 @@ export const TxHistoryNavigator = () => {
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
   const storage = useStorage()
+  const {theme} = useTheme()
 
   // modal
   const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
@@ -125,6 +127,7 @@ export const TxHistoryNavigator = () => {
               <Stack.Navigator
                 screenListeners={{}}
                 screenOptions={{
+                  ...defaultStackNavigationOptions(theme),
                   ...defaultStackNavigationOptions,
                   detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
                   gestureEnabled: true,
@@ -239,7 +242,7 @@ export const TxHistoryNavigator = () => {
                   name="send-start-tx"
                   options={{
                     title: strings.sendTitle,
-                    ...sendOptions,
+                    ...sendOptions(theme),
                   }}
                 >
                   {() => (
@@ -253,7 +256,7 @@ export const TxHistoryNavigator = () => {
                   name="send-select-token-from-list"
                   options={{
                     title: strings.selectAssetTitle,
-                    ...sendOptions,
+                    ...sendOptions(theme),
                   }}
                 >
                   {() => (
@@ -267,7 +270,7 @@ export const TxHistoryNavigator = () => {
                   name="send-list-amounts-to-send"
                   options={{
                     title: strings.listAmountsToSendTitle,
-                    ...sendOptions,
+                    ...sendOptions(theme),
                   }}
                 >
                   {() => (
@@ -281,7 +284,7 @@ export const TxHistoryNavigator = () => {
                   name="send-edit-amount"
                   options={{
                     title: strings.editAmountTitle,
-                    ...sendOptions,
+                    ...sendOptions(theme),
                   }}
                 >
                   {() => (
@@ -296,7 +299,7 @@ export const TxHistoryNavigator = () => {
                   component={ConfirmTxScreen}
                   options={{
                     title: strings.confirmTitle,
-                    ...sendOptions,
+                    ...sendOptions(theme),
                   }}
                 />
 
@@ -316,7 +319,7 @@ export const TxHistoryNavigator = () => {
                   name="scan-start"
                   component={ScanCodeScreen}
                   options={{
-                    ...sendOptions,
+                    ...sendOptions(theme),
                     headerTransparent: true,
                     title: strings.scanTitle,
                     headerTintColor: COLORS.WHITE,
@@ -498,11 +501,11 @@ const styles = StyleSheet.create({
   },
 })
 
-const sendOptions = {
-  ...defaultStackNavigationOptions,
+const sendOptions = (theme: Theme) => ({
+  ...defaultStackNavigationOptions(theme),
   headerStyle: {
     elevation: 0,
     shadowOpacity: 0,
-    backgroundColor: '#fff',
+    backgroundColor: theme.color.gray.min,
   },
-}
+})

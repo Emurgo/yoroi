@@ -1,13 +1,12 @@
-import {describe, expect, it, vi, Mocked} from 'vitest'
 import {getPrice} from './price'
 import {axiosClient} from './config'
 import {PriceAddress, PriceResponse} from './types'
 
-vi.mock('./config.ts')
+jest.mock('./config')
 
 describe('SwapPoolsApi', () => {
   it('should get price for the pair token', async () => {
-    const mockAxios = axiosClient as Mocked<typeof axiosClient>
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
     mockAxios.get.mockImplementationOnce(() =>
       Promise.resolve({
         status: 200,
@@ -21,11 +20,11 @@ describe('SwapPoolsApi', () => {
         ...getPriceParams,
       },
     )
-    expect(result).to.be.equal(mockedPriceResponse)
+    expect(result).toEqual(mockedPriceResponse)
   })
 
   it('should throw error for invalid response', async () => {
-    const mockAxios = axiosClient as Mocked<typeof axiosClient>
+    const mockAxios = axiosClient as jest.Mocked<typeof axiosClient>
     await expect(async () => {
       mockAxios.get.mockImplementationOnce(() => Promise.resolve({status: 500}))
       await getPrice(

@@ -1,9 +1,8 @@
-import {describe, expect, it, vi, Mocked} from 'vitest'
-import {createOrder, cancelOrder, getOrders} from './orders'
+import {createOrder, cancelOrder, getOrders, getCompletedOrders} from './orders'
 import axios from 'axios'
 import {axiosClient} from './config'
 
-vi.mock('./config')
+jest.mock('./config')
 
 const ADA_TOKEN = {
   policyId: '',
@@ -18,7 +17,7 @@ const GENS_TOKEN = {
 describe('SwapOrdersApi', () => {
   describe('getOrders', () => {
     it('Should return orders list using staking key hash', async () => {
-      const mockAxios = axiosClient as Mocked<typeof axios>
+      const mockAxios = axiosClient as jest.Mocked<typeof axios>
       mockAxios.get.mockImplementationOnce(() =>
         Promise.resolve({
           data: mockedOrders,
@@ -32,13 +31,75 @@ describe('SwapOrdersApi', () => {
             '24fd15671a17a39268b7a31e2a6703f5893f254d4568411322baeeb7',
         },
       )
-      expect(result).to.have.lengthOf(1)
+      expect(result).toHaveLength(1)
+    })
+
+    it('Should throws an error', async () => {
+      const mockAxios = axiosClient as jest.Mocked<typeof axios>
+      mockAxios.get.mockImplementationOnce(() =>
+        Promise.resolve({
+          data: 'fake-error',
+          status: 400,
+        }),
+      )
+      await expect(() =>
+        getOrders(
+          {network: 'preprod', client: mockAxios},
+          {
+            stakeKeyHash:
+              '24fd15671a17a39268b7a31e2a6703f5893f254d4568411322baeeb7',
+          },
+        ),
+      ).rejects.toThrowError(
+        /^Failed to get orders for 24fd15671a17a39268b7a31e2a6703f5893f254d4568411322baeeb7$/,
+      )
+    })
+  })
+
+  describe('getCompletedOrders', () => {
+    it('Should return orders list using staking key hash', async () => {
+      const mockAxios = axiosClient as jest.Mocked<typeof axios>
+      mockAxios.get.mockImplementationOnce(() =>
+        Promise.resolve({
+          data: mockedCompleteOrders,
+          status: 200,
+        }),
+      )
+      const result = await getCompletedOrders(
+        {network: 'preprod', client: mockAxios},
+        {
+          stakeKeyHash:
+            '24fd15671a17a39268b7a31e2a6703f5893f254d4568411322baeeb7',
+        },
+      )
+      expect(result).toHaveLength(1)
+    })
+
+    it('Should throws an error', async () => {
+      const mockAxios = axiosClient as jest.Mocked<typeof axios>
+      mockAxios.get.mockImplementationOnce(() =>
+        Promise.resolve({
+          data: 'fake-error',
+          status: 400,
+        }),
+      )
+      await expect(() =>
+        getCompletedOrders(
+          {network: 'preprod', client: mockAxios},
+          {
+            stakeKeyHash:
+              '24fd15671a17a39268b7a31e2a6703f5893f254d4568411322baeeb7',
+          },
+        ),
+      ).rejects.toThrowError(
+        /^Failed to get orders for 24fd15671a17a39268b7a31e2a6703f5893f254d4568411322baeeb7$/,
+      )
     })
   })
 
   describe('createOrder', () => {
     it('should create order and return datum, datumHash, and contract address', async () => {
-      const mockAxios = axiosClient as Mocked<typeof axios>
+      const mockAxios = axiosClient as jest.Mocked<typeof axios>
       mockAxios.get.mockImplementationOnce(() =>
         Promise.resolve({
           status: 200,
@@ -51,24 +112,37 @@ describe('SwapOrdersApi', () => {
         createOrderParams,
       )
 
-      expect(order).to.be.equals(mockedCreateOrderResult)
+      expect(order).toEqual(mockedCreateOrderResult)
     })
 
-    it('should throw error for invalid order', async () => {
-      const mockAxios = axiosClient as Mocked<typeof axios>
+    it('should throw error for invalid order: custom message', async () => {
+      const mockAxios = axiosClient as jest.Mocked<typeof axios>
       mockAxios.get.mockImplementationOnce(() =>
         Promise.resolve({
           status: 200,
           data: {status: 'failed', reason: 'error_message'},
         }),
       )
-      expect(() =>
+      await expect(() =>
         createOrder({network: 'preprod', client: mockAxios}, createOrderParams),
       ).rejects.toThrowError(/^error_message$/)
     })
 
+    it('should throw error for invalid order: default message', async () => {
+      const mockAxios = axiosClient as jest.Mocked<typeof axios>
+      mockAxios.get.mockImplementationOnce(() =>
+        Promise.resolve({
+          status: 200,
+          data: {status: 'failed'},
+        }),
+      )
+      await expect(() =>
+        createOrder({network: 'preprod', client: mockAxios}, createOrderParams),
+      ).rejects.toThrowError(/^Unexpected error occurred$/)
+    })
+
     it('should throw generic error for invalid response', async () => {
-      const mockAxios = axiosClient as Mocked<typeof axios>
+      const mockAxios = axiosClient as jest.Mocked<typeof axios>
       await expect(async () => {
         mockAxios.get.mockImplementationOnce(() =>
           Promise.resolve({status: 400}),
@@ -83,7 +157,7 @@ describe('SwapOrdersApi', () => {
 
   describe('cancelOrder', () => {
     it('should cancel pending orders', async () => {
-      const mockAxios = axiosClient as Mocked<typeof axios>
+      const mockAxios = axiosClient as jest.Mocked<typeof axios>
       mockAxios.get.mockImplementationOnce(() =>
         Promise.resolve({
           status: 200,
@@ -101,13 +175,13 @@ describe('SwapOrdersApi', () => {
         },
       )
 
-      expect(txCbor).to.eq('tx_cbor')
+      expect(txCbor).toBe('tx_cbor')
     })
 
     it('should throw generic error for invalid response', async () => {
-      const mockAxios = axiosClient as Mocked<typeof axios>
+      const mockAxios = axiosClient as jest.Mocked<typeof axios>
       mockAxios.get.mockImplementationOnce(() => Promise.resolve({status: 400}))
-      expect(() =>
+      await expect(() =>
         cancelOrder(
           {network: 'mainnet', client: mockAxios},
           {
@@ -187,3 +261,14 @@ const cancelOrderParams = {
   address:
     'addr1qy0556dz9jssrrnhv0g3ga98uczdd465cut9jjs5a4k5qy3yl52kwxsh5wfx3darrc4xwql43ylj2n29dpq3xg46a6mska8vfz',
 } as const
+
+const mockedCompleteOrders = [
+  {
+    status: 'matched',
+    utxo: '6c4b4e55301d79128071f05a018cf05b7de86bc3f92d05b6668423e220152a86',
+    collateralUTxOs:
+      '6c4b4e55301d79128071f05a018cf05b7de86bc3f92d05b6668423e220152a86',
+    address:
+      'addr1qy0556dz9jssrrnhv0g3ga98uczdd465cut9jjs5a4k5qy3yl52kwxsh5wfx3darrc4xwql43ylj2n29dpq3xg46a6mska8vfz',
+  },
+] as const

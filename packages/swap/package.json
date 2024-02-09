@@ -137,7 +137,6 @@
     "@emurgo/cip14-js": "^3.0.1",
     "@yoroi/api": "1.5.1",
     "@yoroi/common": "1.5.1",
-    "@yoroi/openswap": "1.5.0",
     "immer": "^10.0.2"
   },
   "devDependencies": {
