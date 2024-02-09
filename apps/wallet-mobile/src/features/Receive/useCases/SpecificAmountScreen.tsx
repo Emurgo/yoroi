@@ -1,7 +1,6 @@
-import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
-import React, {useState} from 'react'
+import * as React from 'react'
 import {
   Keyboard,
   SafeAreaView,
@@ -16,7 +15,6 @@ import {
 import {Button, KeyboardAvoidingView, Spacer, StatusBar, TextInput} from '../../../components'
 import {ModalScreenWrapper} from '../../../components/ModalScreenWrapper/ModalScreenWrapper'
 import {useCopy} from '../../../legacy/useCopy'
-import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {useHideBottomTabBar, useReceiveAddresses} from '../../../yoroi-wallets/hooks'
 import {mocks} from '../common/mocks'
@@ -48,23 +46,11 @@ export const SpecificAmountScreen = () => {
     setIsModalVisible(true)
   }
 
-  React.useEffect(() => {
-    wallet.generateNewReceiveAddressIfNeeded()
-  }, [wallet])
-
-  const {track} = useMetrics()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      track.receivePageViewed()
-    }, [track]),
-  )
-
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={styles.root}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <KeyboardAvoidingView style={styles.root}>
-          <StatusBar type="dark" />
+          <StatusBar type="light" />
 
           <Spacer height={24} />
 
@@ -86,6 +72,7 @@ export const SpecificAmountScreen = () => {
               onPress={generateLink}
               disabled={amount === '' ? true : false}
               title={strings.generateLink}
+              style={styles.button}
             />
 
             <Spacer height={24} />
@@ -116,21 +103,22 @@ export const SpecificAmountScreen = () => {
               )}
 
               <Spacer height={32} />
-
-              <Button
-                shelleyTheme
-                onPress={() => {
-                  copy(mocks.specificAddressAmount)
-                }}
-                disabled={amount === '' ? true : false}
-                title={strings.copyLinkBtn}
-                iconImage={require('../../../assets/img/copy.png')}
-                isCopying={isCopying}
-                copiedTxt={strings.copyLinkMsg}
-              />
-
-              <Spacer height={64} />
             </ScrollView>
+
+            <Button
+              shelleyTheme
+              onPress={() => {
+                copy(mocks.specificAddressAmount)
+              }}
+              disabled={amount === '' ? true : false}
+              title={strings.copyLinkBtn}
+              iconImage={require('../../../assets/img/copy.png')}
+              isCopying={isCopying}
+              copiedTxt={strings.copyLinkMsg}
+              style={styles.button}
+            />
+
+            <Spacer height={16} />
           </View>
         </ModalScreenWrapper>
       )}
@@ -164,6 +152,9 @@ const useStyles = () => {
     screen: {
       gap: 16,
       flex: 2,
+    },
+    button: {
+      backgroundColor: theme.color.primary[500],
     },
   })
 

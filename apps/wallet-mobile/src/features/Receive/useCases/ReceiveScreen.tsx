@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
-import React from 'react'
+import * as React from 'react'
 import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native'
 
 import Icon from '../../../assets/img/copy.png'
@@ -9,9 +9,9 @@ import {Button, Spacer, StatusBar} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {useHideBottomTabBar, useReceiveAddresses} from '../../../yoroi-wallets/hooks'
+import {useHideBottomTabBar} from '../../../yoroi-wallets/hooks'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
-import {mocks as mockReceives} from '../common/mocks'
+import {mocks as mockReceives, mocks} from '../common/mocks'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
@@ -21,12 +21,11 @@ export const ReceiveScreen = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const wallet = useSelectedWallet()
-  const receiveAddresses = useReceiveAddresses(wallet)
   const navigate = useNavigateTo()
 
   const [isCopying, copy] = useCopy()
 
-  const currentAddress = _.last(receiveAddresses)
+  const currentAddress = mocks.address
 
   React.useEffect(() => {
     wallet.generateNewReceiveAddressIfNeeded()
@@ -40,23 +39,19 @@ export const ReceiveScreen = () => {
     }, [track]),
   )
 
-  const onRequestSpecificAmount = () => {
-    navigate.specificAmount()
-  }
-
   return (
     <SafeAreaView style={styles.root}>
-      <StatusBar type="dark" />
+      <StatusBar type="light" />
 
       <View style={styles.content}>
         <ScrollView style={styles.root}>
           <View style={styles.address}>
             {currentAddress !== null ? (
               <AddressDetailCard
-                address={currentAddress}
+                address={mockReceives.address}
                 title={strings.addresscardTitle}
                 addressDetails={{
-                  address: currentAddress,
+                  address: mockReceives.address,
                   spendingHash: mockReceives.spendinghash,
                   stakingHash: mockReceives.stakinghash,
                 }}
@@ -65,19 +60,17 @@ export const ReceiveScreen = () => {
               <SkeletonAdressDetail />
             )}
           </View>
-
-          <Spacer height={50} />
-
-          <Button
-            outline
-            title={strings.requestSpecificAmountButton}
-            textStyles={{
-              color: colors.buttonBackgroundBlue,
-            }}
-            onPress={onRequestSpecificAmount}
-            disabled={currentAddress === null}
-          />
         </ScrollView>
+
+        <Button
+          outline
+          title={strings.requestSpecificAmountButton}
+          textStyles={{
+            color: colors.buttonBackgroundBlue,
+          }}
+          onPress={() => navigate.specificAmount()}
+          disabled={currentAddress === null}
+        />
 
         <Spacer height={6} />
 
@@ -91,6 +84,7 @@ export const ReceiveScreen = () => {
           iconImage={Icon}
           isCopying={isCopying}
           copiedTxt={strings.addressCopiedMsg}
+          style={styles.button}
         />
 
         <Spacer height={6} />
@@ -115,6 +109,9 @@ const useStyles = () => {
       alignItems: 'center',
       minHeight: 180,
       maxHeight: 458,
+    },
+    button: {
+      backgroundColor: theme.color.primary[500],
     },
   })
 

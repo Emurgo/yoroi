@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react'
 const MESSAGE_TIMEOUT = 1500
 
 export const useCopy = () => {
-  const [text, setText] = useState<string | undefined>('')
+  const [text, setText] = useState<string>('')
 
   useEffect(() => {
     const isCopying = !!text

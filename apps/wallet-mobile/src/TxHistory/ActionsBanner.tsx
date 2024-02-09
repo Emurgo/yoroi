@@ -221,7 +221,7 @@ const useNavigateTo = () => {
 
   return {
     send: () => navigation.navigate('send-start-tx'),
-    receive: () => navigation.navigate('receive'),
+    receive: () => navigation.navigate('receive-multiple'),
     swap: () => navigation.navigate('swap-start-swap'),
     exchange: () => navigation.navigate('rampOnOff-start-rampOnOff'),
   }

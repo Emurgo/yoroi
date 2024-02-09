@@ -4,6 +4,7 @@ import {Dimensions, StyleSheet, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
 import {useCopy} from '../../../../legacy/useCopy'
+import {mocks} from '../mocks'
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
 import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
 
@@ -66,7 +67,7 @@ export function AddressDetailCard({address, title, addressDetails}: ShareProps) 
           <ShareQRCodeCard
             title={item.title}
             address={item.address}
-            onLongPress={() => copy(item.address)}
+            onLongPress={() => copy(mocks.address)}
             isCopying={isCopying}
           />
         )
@@ -138,7 +139,6 @@ const useStyles = () => {
       minHeight: 394,
       alignSelf: 'center',
       overflow: 'hidden',
-      paddingVertical: 15,
     },
     index: {
       flexDirection: 'row',

@@ -84,7 +84,7 @@ const useStyles = () => {
       alignSelf: 'center',
       overflow: 'hidden',
       paddingHorizontal: 16,
-      gap: 26,
+      gap: 16,
       paddingTop: 32,
     },
     textAddressDetails: {

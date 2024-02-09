@@ -161,7 +161,7 @@ export const TxHistoryNavigator = () => {
                 />
 
                 <Stack.Screen
-                  name="multiple-receives"
+                  name="receive-multiple"
                   component={MultipleReceives}
                   options={{
                     title: strings.receiveTitle,
