@@ -30,7 +30,7 @@ export function MultipleReceives() {
 
   const [isModalVisible, setIsModalVisible] = useState(true)
 
-  const [data, setData] = useState(mocks.addressList)
+  const [data, setData] = React.useState(mocks.addressList)
 
   const onRequestAddress = () => {
     navigate.receiceDetails()
