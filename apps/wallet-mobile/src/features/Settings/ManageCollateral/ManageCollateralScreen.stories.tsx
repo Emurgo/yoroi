@@ -1,4 +1,4 @@
-import {storiesOf} from '@storybook/react-native'
+/* import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
@@ -99,3 +99,4 @@ storiesOf('ManageCollateralScreen', module)
       <ManageCollateralScreen />
     </SelectedWalletProvider>
   ))
+ */

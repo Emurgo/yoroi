@@ -1,4 +1,4 @@
-import {init} from '@emurgo/cross-csl-mobile'
+/* import {init} from '@emurgo/cross-csl-mobile'
 import {storiesOf} from '@storybook/react-native'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
 import {Resolver} from '@yoroi/types'
@@ -41,3 +41,4 @@ storiesOf('Send InputReceiver', module)
   .add('loading', () => <InputReceiver isLoading isValid />)
   .add('valid', () => <InputReceiver isLoading={false} isValid />)
   .add('invalid', () => <InputReceiver isLoading={false} isValid={false} />)
+ */

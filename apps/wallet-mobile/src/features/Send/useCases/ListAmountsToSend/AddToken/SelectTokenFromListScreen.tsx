@@ -1,5 +1,6 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
+import {useTransfer} from '@yoroi/transfer'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -21,8 +22,9 @@ import {filterByFungibility} from '../../../common/filterByFungibility'
 import {filterBySearch} from '../../../common/filterBySearch'
 import {useOverridePreviousSendTxRoute} from '../../../common/navigation'
 import {NoAssetFoundImage} from '../../../common/NoAssetFoundImage'
-import {useSelectedSecondaryAmountsCounter, useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
+import {useSelectedSecondaryAmountsCounter} from '../../../common/useSelectedSecondaryAmountsCounter'
+import {useTokenQuantities} from '../../../common/useTokenQuantities'
 import {MaxAmountsPerTx} from './Show/MaxAmountsPerTx'
 
 export type FungibilityFilter = 'all' | 'ft' | 'nft'
@@ -30,7 +32,7 @@ export type FungibilityFilter = 'all' | 'ft' | 'nft'
 export const SelectTokenFromListScreen = () => {
   const strings = useStrings()
   const [fungibilityFilter, setFungibilityFilter] = React.useState<FungibilityFilter>('all')
-  const {targets, selectedTargetIndex} = useSend()
+  const {targets, selectedTargetIndex} = useTransfer()
   const {track} = useMetrics()
 
   useFocusEffect(
@@ -101,7 +103,7 @@ const List = ({fungibilityFilter, isSearching, canAddAmount}: ListProps) => {
 const NftList = ({canAddAmount}: {canAddAmount: boolean}) => {
   const wallet = useSelectedWallet()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
-  const {tokenSelectedChanged, amountChanged, targets, selectedTargetIndex} = useSend()
+  const {tokenSelectedChanged, amountChanged, targets, selectedTargetIndex} = useTransfer()
   const {closeSearch} = useSearch()
   const balances = useBalances(wallet)
   const strings = useStrings()
@@ -204,7 +206,7 @@ const Tab = ({onPress, active, tab, label}: TabProps) => (
 type SelectableAssetItemProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableAssetItem = ({tokenInfo, disabled, wallet}: SelectableAssetItemProps) => {
   const {closeSearch} = useSearch()
-  const {tokenSelectedChanged, amountChanged} = useSend()
+  const {tokenSelectedChanged, amountChanged} = useTransfer()
   const {spendable} = useTokenQuantities(tokenInfo.id)
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const balances = useBalances(wallet)
@@ -249,7 +251,7 @@ const ListEmptyComponent = ({
 }) => {
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
   const wallet = useSelectedWallet()
-  const {targets, selectedTargetIndex} = useSend()
+  const {targets, selectedTargetIndex} = useTransfer()
   const selectedTokenIds = Object.keys(targets[selectedTargetIndex].entry.amounts)
   const isSelectTokenFromListEmpty = areAllTokensSelected(selectedTokenIds, allTokenInfos)
   const strings = useStrings()
@@ -350,7 +352,7 @@ const useFilteredTokenInfos = ({
 }) => {
   const wallet = useSelectedWallet()
   const {search: assetSearchTerm, visible: isSearching} = useSearch()
-  const {targets, selectedTargetIndex} = useSend()
+  const {targets, selectedTargetIndex} = useTransfer()
   const isWalletEmpty = useIsWalletEmpty(wallet)
 
   /*

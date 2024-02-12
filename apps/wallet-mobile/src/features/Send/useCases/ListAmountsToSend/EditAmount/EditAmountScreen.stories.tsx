@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable react/jsx-curly-brace-presence */
-import {storiesOf} from '@storybook/react-native'
+/* import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
@@ -75,3 +75,4 @@ const OverSpendable = () => {
     </SelectedWalletProvider>
   )
 }
+ */

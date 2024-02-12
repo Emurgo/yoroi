@@ -1,4 +1,5 @@
 import {useIsFocused} from '@react-navigation/native'
+import {useTransfer} from '@yoroi/transfer'
 import _ from 'lodash'
 import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
@@ -13,7 +14,6 @@ import {Amounts} from '../../../../yoroi-wallets/utils'
 import {memoMaxLenght} from '../../common/constants'
 import {AddressErrorWrongNetwork} from '../../common/errors'
 import {useNavigateTo} from '../../common/navigation'
-import {useSend} from '../../common/SendContext'
 import {useStrings} from '../../common/strings'
 import {useFlashAndScroll} from '../../common/useFlashAndScroll'
 import {useSendAddress} from '../../common/useSendAddress'
@@ -38,7 +38,7 @@ export const StartMultiTokenTxScreen = () => {
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)
 
-  const {targets, selectedTargetIndex, memo, memoChanged, receiverResolveChanged} = useSend()
+  const {targets, selectedTargetIndex, memo, memoChanged, receiverResolveChanged} = useTransfer()
   const {amounts} = targets[selectedTargetIndex].entry
   const receiver = targets[selectedTargetIndex].receiver
   const shouldOpenAddToken = Amounts.toArray(amounts).length === 0

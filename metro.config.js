@@ -13,6 +13,7 @@ module.exports = {
     path.resolve(__dirname, "packages/swap"),
     path.resolve(__dirname, "packages/theme"),
     path.resolve(__dirname, "packages/staking"),
+    path.resolve(__dirname, "packages/transfer"),
     path.resolve(__dirname, "apps/wallet-mobile"),
   ],
   resolver: {

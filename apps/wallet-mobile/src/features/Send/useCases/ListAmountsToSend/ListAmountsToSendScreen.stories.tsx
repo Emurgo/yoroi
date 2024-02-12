@@ -1,4 +1,4 @@
-import {storiesOf} from '@storybook/react-native'
+/* import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {SearchProvider} from '../../../../Search/SearchContext'
@@ -17,4 +17,4 @@ storiesOf('List Amounts To Send', module).add('initial', () => {
       </SendProvider>
     </SelectedWalletProvider>
   )
-})
+}) */

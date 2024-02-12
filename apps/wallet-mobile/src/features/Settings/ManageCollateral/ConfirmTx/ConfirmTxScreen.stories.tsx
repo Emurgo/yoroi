@@ -1,4 +1,4 @@
-import {storiesOf} from '@storybook/react-native'
+/* import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
@@ -16,3 +16,4 @@ storiesOf('Confirm Tx', module).add('initial', () => {
     </SelectedWalletProvider>
   )
 })
+ */

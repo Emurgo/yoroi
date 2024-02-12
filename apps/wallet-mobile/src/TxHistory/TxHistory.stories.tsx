@@ -1,4 +1,4 @@
-import {storiesOf} from '@storybook/react-native'
+/* import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
 import {QueryProvider} from '../../.storybook/decorators'
@@ -71,3 +71,4 @@ storiesOf('V2/TxHistory', module)
   })
 
 const mockTransaction = Object.values(mocks.wallet.transactions)[0]
+ */

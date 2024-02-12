@@ -1,4 +1,4 @@
-import {storiesOf} from '@storybook/react-native'
+/* import {storiesOf} from '@storybook/react-native'
 import * as React from 'react'
 
 import {QueryProvider} from '../../../../../.storybook/decorators'
@@ -79,3 +79,4 @@ const ErrorMemoTooLong = () => {
     </QueryProvider>
   )
 }
+ */
