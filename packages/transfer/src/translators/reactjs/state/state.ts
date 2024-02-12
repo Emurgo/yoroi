@@ -1,9 +1,5 @@
 import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
-import {Balance, Resolver} from '@yoroi/types'
-import {
-  UnsignedTx as UnsignedTxType,
-  Datum as DatumType,
-} from '@emurgo/yoroi-lib'
+import {Balance, Resolver, Transfer} from '@yoroi/types'
 import {produce} from 'immer'
 
 export const combinedReducers = (
@@ -182,7 +178,7 @@ export type TransferState = {
   selectedTokenId: string
   unsignedTx: any
   memo: string
-  targets: YoroiTargets
+  targets: Transfer.Targets
 }
 
 export type TargetActions = Readonly<{
@@ -200,7 +196,7 @@ export type TargetActions = Readonly<{
 }>
 
 export type TransferActions = Readonly<{
-  unsignedTxChanged: (UnsignedTx: UnsignedTx | undefined) => void
+  unsignedTxChanged: (UnsignedTx: Transfer.UnsignedTx | undefined) => void
   tokenSelectedChanged: (tokenId: string) => void
   reset: () => void
   memoChanged: (memo: string) => void
@@ -221,7 +217,7 @@ export type TargetAction =
     }
   | {
       type: TransferActionType.AddressChanged
-      address: Address
+      address: Transfer.Address
     }
   | {
       type: TransferActionType.TokenSelectedChanged
@@ -250,7 +246,7 @@ export type TransferAction =
     }
   | {
       type: TransferActionType.UnsignedTxChanged
-      unsignedTx: UnsignedTx | undefined
+      unsignedTx: Transfer.UnsignedTx | undefined
     }
 
 export enum TransferActionType {
@@ -265,55 +261,6 @@ export enum TransferActionType {
   MemoChanged = 'memoChanged',
   UnsignedTxChanged = 'unsignedTxChanged',
 }
-
-export type UnsignedTx = TxInfo & {
-  unsignedTx: UnsignedTxType
-}
-
-export type TxInfo = {
-  entries: Entry[]
-  fee: Balance.Amounts
-  change: Entry[]
-  metadata: YoroiMetadata
-  staking: YoroiStaking
-  voting: YoroiVoting
-  governance: boolean
-}
-
-export type Entry = {
-  address: Address
-  amounts: Balance.Amounts
-  datum?: DatumType
-}
-
-export type YoroiMetadata = {
-  [label: string]: string
-}
-
-export type YoroiStaking = {
-  registrations?: Entry[]
-  deregistrations?: Entry[]
-  delegations?: Entry[]
-  withdrawals?: Entry[]
-}
-
-export type YoroiVoting = {
-  registration?: {
-    votingPublicKey: string
-    stakingPublicKey: string
-    rewardAddress: Address
-    nonce: number
-  }
-}
-
-export type YoroiTarget = {
-  receiver: Resolver.Receiver
-  entry: Entry
-}
-
-export type YoroiTargets = Readonly<Array<YoroiTarget>>
-
-export type Address = string
 
 /* istanbul ignore next */
 function missingInit() {

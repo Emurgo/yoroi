@@ -90,6 +90,17 @@ import {
   ApiTokenSupplyResponse,
   ApiTokeSupplyRequest,
 } from './api/cardano'
+import {
+  TransferAddress,
+  TransferEntry,
+  TransferMetadata,
+  TransferStaking,
+  TransferTarget,
+  TransferTargets,
+  TransferTxInfo,
+  TransferUnsignedTx,
+  TransferVoting,
+} from './transfer/state'
 
 export namespace App {
   export interface Storage extends AppStorage {}
@@ -251,6 +262,18 @@ export namespace Resolver {
     export class Expired extends ResolverErrorUnsupportedTld {}
     export class WrongBlockchain extends ResolverErrorWrongBlockchain {}
   }
+}
+
+export namespace Transfer {
+  export type UnsignedTx = TransferUnsignedTx
+  export type TxInfo = TransferTxInfo
+  export type Entry = TransferEntry
+  export type Metadata = TransferMetadata
+  export type Staking = TransferStaking
+  export type Voting = TransferVoting
+  export type Target = TransferTarget
+  export type Targets = TransferTargets
+  export type Address = TransferAddress
 }
 
 export * from './helpers/types'
