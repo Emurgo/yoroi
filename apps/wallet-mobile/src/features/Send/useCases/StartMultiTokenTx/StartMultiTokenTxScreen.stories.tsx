@@ -1,4 +1,5 @@
-/* import {storiesOf} from '@storybook/react-native'
+import {storiesOf} from '@storybook/react-native'
+import {TransferProvider} from '@yoroi/transfer'
 import * as React from 'react'
 
 import {QueryProvider} from '../../../../../.storybook/decorators'
@@ -7,7 +8,6 @@ import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks/wallet'
 import {mocks as sendMocks} from '../../common/mocks'
-import {SendProvider} from '../../common/SendContext'
 import {StartMultiTokenTxScreen} from './StartMultiTokenTxScreen'
 
 storiesOf('Start MultiToken Tx', module)
@@ -22,11 +22,11 @@ const Initial = () => {
   return (
     <QueryProvider>
       <SelectedWalletProvider wallet={wallet}>
-        <SendProvider>
+        <TransferProvider>
           <Boundary>
             <StartMultiTokenTxScreen />
           </Boundary>
-        </SendProvider>
+        </TransferProvider>
       </SelectedWalletProvider>
     </QueryProvider>
   )
@@ -38,11 +38,11 @@ const ErrorInvalidAddress = () => {
   return (
     <QueryProvider>
       <SelectedWalletProvider wallet={wallet}>
-        <SendProvider initialState={sendMocks.startTx.error.invalidAddress}>
+        <TransferProvider initialState={sendMocks.startTx.error.invalidAddress}>
           <Boundary>
             <StartMultiTokenTxScreen />
           </Boundary>
-        </SendProvider>
+        </TransferProvider>
       </SelectedWalletProvider>
     </QueryProvider>
   )
@@ -54,11 +54,11 @@ const LoadingResolveReceiver = () => {
   return (
     <QueryProvider>
       <SelectedWalletProvider wallet={wallet}>
-        <SendProvider initialState={sendMocks.startTx.loading.resolveReceiver}>
+        <TransferProvider initialState={sendMocks.startTx.loading.resolveReceiver}>
           <Boundary>
             <StartMultiTokenTxScreen />
           </Boundary>
-        </SendProvider>
+        </TransferProvider>
       </SelectedWalletProvider>
     </QueryProvider>
   )
@@ -70,13 +70,12 @@ const ErrorMemoTooLong = () => {
   return (
     <QueryProvider>
       <SelectedWalletProvider wallet={wallet}>
-        <SendProvider initialState={sendMocks.startTx.error.memoTooLong}>
+        <TransferProvider initialState={sendMocks.startTx.error.memoTooLong}>
           <Boundary>
             <StartMultiTokenTxScreen />
           </Boundary>
-        </SendProvider>
+        </TransferProvider>
       </SelectedWalletProvider>
     </QueryProvider>
   )
 }
- */

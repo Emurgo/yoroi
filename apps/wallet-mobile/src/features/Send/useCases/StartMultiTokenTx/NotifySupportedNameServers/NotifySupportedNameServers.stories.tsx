@@ -1,6 +1,7 @@
-/* import {init} from '@emurgo/cross-csl-mobile'
+import {init} from '@emurgo/cross-csl-mobile'
 import {storiesOf} from '@storybook/react-native'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
+import {TransferProvider} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 
@@ -9,7 +10,6 @@ import {Boundary} from '../../../../../components'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {SendProvider} from '../../../common/SendContext'
 import {NotifySupportedNameServers} from './NotifySupportedNameServers'
 
 storiesOf('Send NotifySupportedNameServers', module).add('initial', () => <Initial />)
@@ -30,15 +30,14 @@ const Initial = () => {
   return (
     <QueryProvider>
       <SelectedWalletProvider wallet={wallet}>
-        <SendProvider>
+        <TransferProvider>
           <ResolverProvider resolverManager={resolverManager}>
             <Boundary>
               <NotifySupportedNameServers />
             </Boundary>
           </ResolverProvider>
-        </SendProvider>
+        </TransferProvider>
       </SelectedWalletProvider>
     </QueryProvider>
   )
 }
- */

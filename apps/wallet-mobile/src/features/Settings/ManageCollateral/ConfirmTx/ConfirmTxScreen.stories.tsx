@@ -1,19 +1,18 @@
-/* import {storiesOf} from '@storybook/react-native'
+import {storiesOf} from '@storybook/react-native'
+import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 
 import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
 import {mocks as sendMocks} from '../../../Send/common/mocks'
-import {SendProvider} from '../../../Send/common/SendContext'
 import {ConfirmTxScreen} from './ConfirmTxScreen'
 
 storiesOf('Confirm Tx', module).add('initial', () => {
   return (
     <SelectedWalletProvider wallet={walletMocks.wallet}>
-      <SendProvider initialState={sendMocks.confirmTx.success}>
+      <TransferProvider initialState={sendMocks.confirmTx.success}>
         <ConfirmTxScreen />
-      </SendProvider>
+      </TransferProvider>
     </SelectedWalletProvider>
   )
 })
- */

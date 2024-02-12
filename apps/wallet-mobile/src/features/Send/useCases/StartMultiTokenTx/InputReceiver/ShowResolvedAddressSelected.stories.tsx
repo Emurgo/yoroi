@@ -1,6 +1,7 @@
-/* import {init} from '@emurgo/cross-csl-mobile'
+import {init} from '@emurgo/cross-csl-mobile'
 import {storiesOf} from '@storybook/react-native'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
+import {defaultTransferState, TransferProvider, TransferState} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 
@@ -9,7 +10,6 @@ import {Boundary} from '../../../../../components'
 import {SelectedWalletProvider} from '../../../../../SelectedWallet'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
 import {mocks as walletMocks} from '../../../../../yoroi-wallets/mocks/wallet'
-import {initialState, SendProvider, SendState} from '../../../common/SendContext'
 import {ShowResolvedAddressSelected} from './ShowResolvedAddressSelected'
 
 storiesOf('Send ShowResolvedAddressSelected', module)
@@ -26,7 +26,7 @@ storiesOf('Send ShowResolvedAddressSelected', module)
   .add('cns', () => <Wrapper ns={cns} />)
   .add('unstoppable', () => <Wrapper ns={unstoppable} />)
 
-const Wrapper = ({ns}: {ns: Partial<SendState>}) => {
+const Wrapper = ({ns}: {ns: Partial<TransferState>}) => {
   const resolverApi = resolverApiMaker({
     apiConfig: {
       [Resolver.NameServer.Unstoppable]: {
@@ -39,18 +39,18 @@ const Wrapper = ({ns}: {ns: Partial<SendState>}) => {
   const resolverManager = resolverManagerMaker(resolverStorage, resolverApi)
 
   return (
-    <SendProvider initialState={ns}>
+    <TransferProvider initialState={ns}>
       <ResolverProvider resolverManager={resolverManager}>
         <Boundary>
           <ShowResolvedAddressSelected />
         </Boundary>
       </ResolverProvider>
-    </SendProvider>
+    </TransferProvider>
   )
 }
 
-const handle: SendState = {
-  ...initialState,
+const handle: TransferState = {
+  ...defaultTransferState,
   targets: [
     {
       entry: {address: 'addr1vxggvx6uq9mtf6e0tyda2mahg84w8azngpvkwr5808ey6qsy2ww7d', amounts: {'': '1000000'}},
@@ -68,8 +68,8 @@ const handle: SendState = {
     },
   ],
 }
-const cns: SendState = {
-  ...initialState,
+const cns: TransferState = {
+  ...defaultTransferState,
   targets: [
     {
       entry: {
@@ -91,8 +91,8 @@ const cns: SendState = {
     },
   ],
 }
-const unstoppable: SendState = {
-  ...initialState,
+const unstoppable: TransferState = {
+  ...defaultTransferState,
   targets: [
     {
       entry: {
@@ -114,4 +114,3 @@ const unstoppable: SendState = {
     },
   ],
 }
- */

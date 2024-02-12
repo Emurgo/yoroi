@@ -1,11 +1,11 @@
-/* import {storiesOf} from '@storybook/react-native'
+import {storiesOf} from '@storybook/react-native'
+import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {SelectedWalletProvider} from '../../../SelectedWallet'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {mocks} from '../../../yoroi-wallets/mocks'
-import {SendProvider} from '../../Send/common/SendContext'
 import {ManageCollateralScreen} from './ManageCollateralScreen'
 
 const styles = StyleSheet.create({
@@ -70,9 +70,9 @@ const withCollateralRemoveLoading: YoroiWallet = {
 
 storiesOf('ManageCollateralScreen', module)
   .addDecorator((getStory) => (
-    <SendProvider>
+    <TransferProvider>
       <View style={styles.decorator}>{getStory()}</View>
-    </SendProvider>
+    </TransferProvider>
   ))
   .add('with collateral', () => (
     <SelectedWalletProvider wallet={mocks.wallet}>
@@ -99,4 +99,3 @@ storiesOf('ManageCollateralScreen', module)
       <ManageCollateralScreen />
     </SelectedWalletProvider>
   ))
- */
