@@ -19,11 +19,13 @@ describe('Observer', () => {
   })
 
   it('should allow multiple subscribers to subscribe', () => {
-    observer.subscribe(mockSubscriber1)
-    observer.subscribe(mockSubscriber2)
+    const unsubscribe1 = observer.subscribe(mockSubscriber1)
+    const unsubscribe2 = observer.subscribe(mockSubscriber2)
     observer.notify(42)
     expect(mockSubscriber1).toHaveBeenCalledWith(42)
     expect(mockSubscriber2).toHaveBeenCalledWith(42)
+    unsubscribe1()
+    unsubscribe2()
   })
 
   it('should allow subscribers to unsubscribe', () => {
@@ -38,11 +40,13 @@ describe('Observer', () => {
   })
 
   it('should allow destroying all subscriptions', () => {
-    observer.subscribe(mockSubscriber1)
-    observer.subscribe(mockSubscriber2)
+    const unsubscribe1 = observer.subscribe(mockSubscriber1)
+    const unsubscribe2 = observer.subscribe(mockSubscriber2)
     observer.destroy()
     observer.notify(42)
     expect(mockSubscriber1).not.toHaveBeenCalled()
     expect(mockSubscriber2).not.toHaveBeenCalled()
+    unsubscribe1()
+    unsubscribe2()
   })
 })

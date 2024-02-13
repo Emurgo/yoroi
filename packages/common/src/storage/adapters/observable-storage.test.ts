@@ -114,7 +114,7 @@ describe('observableMultiStorageMaker', () => {
 
     const observableStorage = observableMultiStorageMaker(storage)
 
-    observableStorage.onUpdate(observerCallback)
+    const unsubscribe = observableStorage.onUpdate(observerCallback)
 
     observableStorage.clear()
     expect(observerCallback).toHaveBeenCalledWith(null)
@@ -122,6 +122,7 @@ describe('observableMultiStorageMaker', () => {
     observableStorage.saveMany([{id: 'key1', value: 'value1'}])
     expect(observerCallback).toHaveBeenCalledWith(null)
 
+    unsubscribe()
     expect(storage.clear).toHaveBeenCalled()
     expect(storage.saveMany).toHaveBeenCalledWith([
       {id: 'key1', value: 'value1'},
@@ -141,7 +142,7 @@ describe('observableMultiStorageMaker', () => {
 
     const observableStorage = observableMultiStorageMaker(storage)
 
-    observableStorage.onUpdate(observerCallback)
+    const unsubscribe = observableStorage.onUpdate(observerCallback)
 
     await observableStorage.clear()
     expect(observerCallback).toHaveBeenCalledWith(null)
@@ -149,6 +150,7 @@ describe('observableMultiStorageMaker', () => {
     await observableStorage.saveMany([{id: 'key1', value: 'value1'}])
     expect(observerCallback).toHaveBeenCalledWith(null)
 
+    unsubscribe()
     expect(storage.clear).toHaveBeenCalled()
     expect(storage.saveMany).toHaveBeenCalledWith([
       {id: 'key1', value: 'value1'},
