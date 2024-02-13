@@ -44,7 +44,7 @@ export const YoroiApp = () => {
   const migrated = useMigrations(rootStorage)
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   return migrated ? (
-    <AsyncStorageProvider>
+    <AsyncStorageProvider storage={rootStorage}>
       <MetricsProvider metricsManager={metricsManager}>
         <WalletManagerProvider walletManager={walletManager}>
           <ErrorBoundary>
