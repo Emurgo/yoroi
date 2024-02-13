@@ -5,7 +5,6 @@ import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 
-import {COLORS} from '../../theme'
 import {Icon} from '../Icon'
 import {Spacer} from '../Spacer'
 
@@ -74,6 +73,7 @@ export const HeaderWrapper = ({
   expanded?: boolean
   onPress: () => void
 }) => {
+  const styles = useStyles()
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.flexBetween}>
@@ -94,6 +94,7 @@ export const Footer = ({
   onPress: () => void
   disabled?: boolean
 }) => {
+  const styles = useStyles()
   return (
     <TouchableOpacity onPress={onPress} disabled={disabled}>
       <Text style={[styles.buttonLabel, disabled && styles.footerDisabled]}>{children}</Text>
@@ -114,6 +115,7 @@ export const HiddenInfoWrapper = ({
   value: React.ReactNode
   icon?: React.ReactNode
 }) => {
+  const styles = useStyles()
   return (
     <View>
       <View style={styles.flexBetween}>
@@ -154,6 +156,7 @@ export const HiddenInfoWrapper = ({
 }
 
 export const MainInfoWrapper = ({label, value, isLast = false}: {label: string; value?: string; isLast?: boolean}) => {
+  const styles = useStyles()
   return (
     <View>
       <View style={styles.info}>
@@ -175,78 +178,74 @@ export const ExpandableInfoCardSkeleton = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: COLORS.TEXT_GRAY3,
-    padding: 16,
-    width: '100%',
-    height: 'auto',
-    backgroundColor: COLORS.WHITE,
-  },
-  shadowProp: {
-    backgroundColor: COLORS.WHITE,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: color.gray[400],
+      padding: 16,
+      width: '100%',
+      height: 'auto',
+      backgroundColor: color.gray.min,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
+    shadowProp: {
+      backgroundColor: color.gray.min,
+      shadowColor: color.gray.max,
+      shadowOffset: {
+        width: 0,
+        height: 1,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 1.41,
 
-    elevation: 2,
-    borderWidth: 0,
-  },
-  flexBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  flex: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  text: {
-    textAlign: 'left',
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '400',
-    color: '#000',
-  },
-  gray: {
-    color: '#6B7384',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '400',
-  },
-  buttonLabel: {
-    fontSize: 14,
-    paddingTop: 13,
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-  },
-  info: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  value: {
-    textAlign: 'right',
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '400',
-    color: '#242838',
-    flexShrink: 1,
-  },
-  label: {
-    color: '#6B7384',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '400',
-    paddingRight: 8,
-  },
-  footerDisabled: {
-    opacity: 0.5,
-  },
-})
+      elevation: 2,
+      borderWidth: 0,
+    },
+    flexBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    flex: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    text: {
+      textAlign: 'left',
+      ...typography['body-1-regular'],
+      color: color.gray.max,
+    },
+    gray: {
+      color: color.gray[600],
+      ...typography['body-1-regular'],
+    },
+    buttonLabel: {
+      paddingTop: 13,
+      color: color.gray.max,
+      ...typography['body-2-medium'],
+    },
+    info: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    value: {
+      textAlign: 'right',
+      flexShrink: 1,
+      ...typography['body-1-regular'],
+      color: color.gray[900],
+    },
+    label: {
+      color: color.gray[600],
+      paddingRight: 8,
+      ...typography['body-1-regular'],
+    },
+    footerDisabled: {
+      opacity: 0.5,
+    },
+  })
+
+  return styles
+}

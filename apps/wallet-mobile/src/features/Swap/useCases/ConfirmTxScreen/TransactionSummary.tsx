@@ -1,4 +1,5 @@
 import {getPoolUrlByProvider, useSwap} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
 import {capitalize} from 'lodash'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -20,6 +21,7 @@ import {SwapInfoLink} from '../../common/SwapInfoLink/SwapInfoLink'
 
 export const TransactionSummary = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const {orderData} = useSwap()
   const {
@@ -106,7 +108,7 @@ export const TransactionSummary = () => {
       label: strings.priceImpact,
       value:
         priceImpactRisk === 'none' ? (
-          <Text style={[{color: '#08C29D'}, styles.priceImpactRiskText]}>&lt;1%</Text>
+          <Text style={[styles.priceImpactRiskText]}>&lt;1%</Text>
         ) : (
           <View style={styles.priceImpactRiskContainer}>
             <View style={styles.flex}>
@@ -211,13 +213,13 @@ export const TransactionSummary = () => {
           {priceImpactRisk === 'high' && <Icon.Warning size={24} color={priceImpactRiskTextColor} />}
 
           <Text style={styles.bannerText}>
-            <Text style={styles.bold}>
+            <Text style={[styles.bannerText, styles.bold]}>
               {strings.priceImpactRiskHigh({
                 riskValue: priceImpactRisk === 'moderate' ? PRICE_IMPACT_MODERATE_RISK : PRICE_IMPACT_HIGH_RISK,
               })}
             </Text>
 
-            <Text> {strings.priceImpactDescription(priceImpactRisk)}</Text>
+            <Text style={styles.bannerText}> {strings.priceImpactDescription(priceImpactRisk)}</Text>
           </Text>
         </View>
       )}
@@ -246,95 +248,96 @@ export const TransactionSummary = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  priceImpactRiskContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
-  },
-  priceImpactRiskText: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  alignRight: {
-    textAlign: 'right',
-  },
-  card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    backgroundColor: COLORS.SHELLEY_BLUE,
-    padding: 16,
-    borderRadius: 8,
-  },
-  cardText: {
-    fontSize: 18,
-    color: COLORS.WHITE,
-  },
-  cardTextValue: {
-    fontWeight: '500',
-    textAlign: 'right',
-  },
-  cardTextUSD: {
-    fontSize: 14,
-    color: COLORS.WHITE,
-    opacity: 0.75,
-  },
-  flexBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  flex: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  text: {
-    textAlign: 'left',
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '400',
-    color: '#242838',
-  },
-  gray: {
-    color: COLORS.GRAY,
-  },
-  amountItemLabel: {
-    fontSize: 12,
-    color: '#242838',
-    paddingBottom: 8,
-  },
-  modalContent: {
-    justifyContent: 'space-between',
-    flex: 1,
-  },
-  modalText: {
-    fontFamily: 'Rubik',
-    fontWeight: '400',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#242838',
-  },
-  orderValueContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-    paddingLeft: 8,
-    flex: 1,
-  },
-  banner: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    gap: 8,
-  },
-  bannerText: {
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  bold: {
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    priceImpactRiskContainer: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
+      alignItems: 'flex-end',
+    },
+    priceImpactRiskText: {
+      ...typography['body-2-regular'],
+    },
+    alignRight: {
+      textAlign: 'right',
+    },
+    card: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      backgroundColor: color.primary[600],
+      padding: 16,
+      borderRadius: 8,
+    },
+    cardText: {
+      fontSize: 18,
+      color: color.gray.min,
+    },
+    cardTextValue: {
+      fontWeight: '500',
+      textAlign: 'right',
+    },
+    cardTextUSD: {
+      fontSize: 14,
+      color: color.gray.min,
+      opacity: 0.75,
+    },
+    flexBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+    },
+    flex: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    text: {
+      textAlign: 'left',
+      ...typography['body-1-regular'],
+      color: color.gray[900],
+    },
+    gray: {
+      color: COLORS.GRAY,
+    },
+    amountItemLabel: {
+      fontSize: 12,
+      color: color.gray[900],
+      paddingBottom: 8,
+    },
+    modalContent: {
+      justifyContent: 'space-between',
+      flex: 1,
+    },
+    modalText: {
+      ...typography['body-1-regular'],
+      color: color.gray[900],
+    },
+    orderValueContainer: {
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      justifyContent: 'flex-end',
+      paddingLeft: 8,
+      flex: 1,
+    },
+    banner: {
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      borderRadius: 8,
+      gap: 8,
+    },
+    bannerText: {
+      fontSize: 14,
+      lineHeight: 22,
+      color: color.gray[900],
+    },
+    bold: {
+      fontWeight: '500',
+      fontFamily: 'Rubik-Medium',
+    },
+  })
+
+  return styles
+}

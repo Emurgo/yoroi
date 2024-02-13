@@ -1,4 +1,5 @@
 import {useSwap} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {InteractionManager, StyleSheet, useWindowDimensions, View, ViewProps} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
@@ -9,7 +10,6 @@ import {LoadingOverlay} from '../../../../components/LoadingOverlay'
 import {useModal} from '../../../../components/Modal/ModalContext'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
-import {COLORS} from '../../../../theme'
 import {useAuthOsWithEasyConfirmation} from '../../../../yoroi-wallets/auth'
 import {useSignAndSubmitTx, useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
@@ -24,6 +24,7 @@ const BOTTOM_ACTION_SECTION = 220
 export const ConfirmTxScreen = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
   const strings = useStrings()
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()
@@ -157,31 +158,41 @@ export const ConfirmTxScreen = () => {
   )
 }
 
-const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
+const Actions = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
+  return <View style={[styles.actions, style]} {...props} />
+}
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-  actions: {
-    padding: 16,
-  },
-  modalContent: {
-    flex: 1,
-    alignSelf: 'stretch',
-  },
-  scroll: {
-    paddingHorizontal: 16,
-  },
-  actionBorder: {
-    borderTopWidth: 1,
-    borderTopColor: COLORS.BORDER_GRAY,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+    },
+    actions: {
+      padding: 16,
+      backgroundColor: color.gray.min,
+    },
+    modalContent: {
+      flex: 1,
+      alignSelf: 'stretch',
+    },
+    scroll: {
+      paddingHorizontal: 16,
+    },
+    actionBorder: {
+      borderTopWidth: 1,
+      borderTopColor: color.gray[200],
+    },
+  })
+  return styles
+}

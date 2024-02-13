@@ -1,4 +1,5 @@
 import {isString} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
 import React, {ForwardedRef} from 'react'
 import {
   StyleSheet,
@@ -11,7 +12,7 @@ import {
 } from 'react-native'
 import {HelperText as HelperTextRNP, TextInput as RNPTextInput} from 'react-native-paper'
 
-import {COLORS} from '../../theme'
+// import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {Icon} from '../Icon'
 
@@ -71,6 +72,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
 
   const [showPassword, setShowPassword] = React.useState(false)
   const [errorTextEnabled, setErrorTextEnabled] = React.useState(errorOnMount)
+  const {styles, colors} = useStyles()
   useDebounced(
     React.useCallback(() => setErrorTextEnabled(true), []),
     value,
@@ -118,10 +120,10 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
         theme={{
           roundness: 8,
           colors: {
-            background: COLORS.BACKGROUND,
-            placeholder: faded ? COLORS.GREY_6 : COLORS.TEXT_INPUT,
-            primary: faded ? COLORS.GREY_6 : COLORS.BLACK,
-            error: COLORS.ERROR_TEXT_COLOR,
+            background: colors.background,
+            placeholder: faded ? colors.gray : colors.textInput,
+            primary: faded ? colors.gray : colors.black,
+            error: colors.textError,
           },
         }}
         secureTextEntry={secureTextEntry && !showPassword}
@@ -131,7 +133,7 @@ export const TextInput = React.forwardRef((props: TextInputProps, ref: Forwarded
           <InputContainer>
             <RNTextInput
               {...inputProps}
-              style={[style, renderComponentStyle, {color: faded ? COLORS.GREY_6 : COLORS.BLACK, flex: 1}]}
+              style={[style, renderComponentStyle, {color: faded ? colors.gray : colors.text, flex: 1}]}
             />
 
             {right != null ? <AdornmentContainer style={styles.checkmarkContainer}>{right}</AdornmentContainer> : null}
@@ -160,65 +162,97 @@ export const HelperText = ({
   type?: 'info' | 'error'
   faded?: boolean
   visible?: boolean
-}) => (
-  <HelperTextRNP
-    style={{paddingHorizontal: 0}}
-    theme={{
-      roundness: 8,
-      colors: {
-        background: COLORS.BACKGROUND,
-        placeholder: faded ? COLORS.GREY_6 : COLORS.TEXT_INPUT,
-        primary: faded ? COLORS.GREY_6 : COLORS.BLACK,
-        error: COLORS.ERROR_TEXT_COLOR,
-        text: COLORS.INFO_GRAY,
-      },
-    }}
-    type={type}
-    visible={visible}
-    {...props}
-  >
-    {children}
-  </HelperTextRNP>
-)
+}) => {
+  const {colors} = useStyles()
 
-export const Checkmark = () => <Icon.Check size={24} color={COLORS.LIGHT_POSITIVE_GREEN} />
+  return (
+    <HelperTextRNP
+      style={{paddingHorizontal: 0}}
+      theme={{
+        roundness: 8,
+        colors: {
+          background: colors.background,
+          placeholder: faded ? colors.gray : colors.textInput,
+          primary: faded ? colors.gray : colors.black,
+          error: colors.textError,
+          text: colors.infoGray,
+        },
+      }}
+      type={type}
+      visible={visible}
+      {...props}
+    >
+      {children}
+    </HelperTextRNP>
+  )
+}
 
-const SecureTextEntryToggle = ({showPassword, onPress}: {showPassword: boolean; onPress: () => void}) => (
-  <AdornmentContainer style={styles.secureTextEntryToggleContainer}>
-    <TouchableOpacity onPress={onPress}>
-      {showPassword ? (
-        <Icon.EyeOff color={COLORS.ACTION_GRAY} size={30} />
-      ) : (
-        <Icon.EyeOn color={COLORS.ACTION_GRAY} size={30} />
-      )}
-    </TouchableOpacity>
-  </AdornmentContainer>
-)
+export const Checkmark = () => {
+  const {colors} = useStyles()
+  return <Icon.Check size={24} color={colors.positiveGreen} />
+}
 
-const InputContainer = ({children}: {children: React.ReactNode}) => (
-  <View style={styles.inputContainer}>{children}</View>
-)
+const SecureTextEntryToggle = ({showPassword, onPress}: {showPassword: boolean; onPress: () => void}) => {
+  const {styles, colors} = useStyles()
 
-const AdornmentContainer = ({style, children}: ViewProps) => (
-  <View style={[styles.adornmentContainer, style]}>{children}</View>
-)
+  return (
+    <AdornmentContainer style={styles.secureTextEntryToggleContainer}>
+      <TouchableOpacity onPress={onPress}>
+        {showPassword ? (
+          <Icon.EyeOff color={colors.actionGray} size={30} />
+        ) : (
+          <Icon.EyeOn color={colors.actionGray} size={30} />
+        )}
+      </TouchableOpacity>
+    </AdornmentContainer>
+  )
+}
 
-const styles = StyleSheet.create({
-  inputContainer: {
-    flexDirection: 'row',
-    flex: 1,
-  },
-  checkmarkContainer: {
-    paddingRight: 16,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    flexDirection: 'column',
-    paddingBottom: 16,
-  },
-  secureTextEntryToggleContainer: {
-    paddingRight: 16,
-  },
-  adornmentContainer: {
-    justifyContent: 'center',
-  },
-})
+const InputContainer = ({children}: {children: React.ReactNode}) => {
+  const {styles} = useStyles()
+
+  return <View style={styles.inputContainer}>{children}</View>
+}
+
+const AdornmentContainer = ({style, children}: ViewProps) => {
+  const {styles} = useStyles()
+  return <View style={[styles.adornmentContainer, style]}>{children}</View>
+}
+
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    inputContainer: {
+      flexDirection: 'row',
+      flex: 1,
+    },
+    checkmarkContainer: {
+      paddingRight: 16,
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      flexDirection: 'column',
+      paddingBottom: 16,
+    },
+    secureTextEntryToggleContainer: {
+      paddingRight: 16,
+    },
+    adornmentContainer: {
+      justifyContent: 'center',
+    },
+  })
+
+  const colors = {
+    background: color.gray.min,
+    gray: color.gray[400],
+    textInput: color.gray[600],
+    actionGray: color.gray[500],
+    black: color['black-static'],
+    text: color.gray[900],
+    textError: color.magenta[500],
+    infoGray: color.gray[700],
+    positiveGreen: color.secondary[500],
+  }
+
+  return {styles, colors}
+}

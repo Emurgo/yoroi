@@ -1,5 +1,6 @@
 import {FlashList} from '@shopify/flash-list'
 import {useSwap} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -10,7 +11,6 @@ import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'
-import {COLORS} from '../../../../../../../theme'
 import {sortTokenInfos} from '../../../../../../../utils'
 import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
 import {useAllTokenInfos, useBalance, useIsWalletEmpty} from '../../../../../../../yoroi-wallets/hooks'
@@ -24,6 +24,7 @@ import {useSwapForm} from '../../../../../common/SwapFormProvider'
 
 export const SelectSellTokenFromListScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
 
   useSearchOnNavBar({
     placeholder: strings.searchTokens,
@@ -44,6 +45,7 @@ const TokenList = () => {
   const tokenInfos = useAllTokenInfos({wallet})
   const filteredTokenInfos = useFilteredTokenInfos({tokenInfos})
   const strings = useStrings()
+  const styles = useStyles()
 
   return (
     <View style={styles.list}>
@@ -87,6 +89,7 @@ const TokenList = () => {
 
 type SelectableTokenProps = {disabled?: boolean; tokenInfo: Balance.TokenInfo; wallet: YoroiWallet}
 const SelectableToken = ({tokenInfo, wallet}: SelectableTokenProps) => {
+  const styles = useStyles()
   const {closeSearch} = useSearch()
   const {sellTokenInfoChanged, orderData, resetQuantities} = useSwap()
   const {
@@ -168,6 +171,7 @@ const EmptyList = ({
 
 const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
   const strings = useStrings()
+  const styles = useStyles()
   return (
     <View style={styles.imageContainer}>
       <Spacer height={50} />
@@ -183,59 +187,65 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
   )
 }
 
-const styles = StyleSheet.create({
-  label: {
-    fontFamily: 'Rubik',
-    fontSize: 12,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 18,
-  },
-  labels: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    display: 'flex',
-    justifyContent: 'flex-start',
-  },
-  ph: {
-    paddingHorizontal: 16,
-  },
-  item: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  line: {
-    height: 1,
-    backgroundColor: COLORS.BORDER_GRAY,
-  },
-  list: {
-    paddingTop: 16,
-    flex: 1,
-  },
-  image: {
-    flex: 1,
-    alignSelf: 'center',
-    width: 200,
-    height: 228,
-  },
-  imageContainer: {
-    flex: 1,
-    textAlign: 'center',
-  },
-  contentText: {
-    flex: 1,
-    textAlign: 'center',
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-    fontSize: 20,
-    color: '#000',
-    paddingTop: 4,
-  },
-  counter: {
-    paddingVertical: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    label: {
+      fontFamily: 'Rubik',
+      fontSize: 12,
+      fontStyle: 'normal',
+      fontWeight: '400',
+      lineHeight: 18,
+    },
+    labels: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+      display: 'flex',
+      justifyContent: 'flex-start',
+    },
+    ph: {
+      paddingHorizontal: 16,
+    },
+    item: {
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+    },
+    line: {
+      height: 1,
+      backgroundColor: color.gray[200],
+    },
+    list: {
+      paddingTop: 16,
+      flex: 1,
+    },
+    image: {
+      flex: 1,
+      alignSelf: 'center',
+      width: 200,
+      height: 228,
+    },
+    imageContainer: {
+      flex: 1,
+      textAlign: 'center',
+    },
+    contentText: {
+      flex: 1,
+      textAlign: 'center',
+      fontWeight: '500',
+      fontFamily: 'Rubik-Medium',
+      fontSize: 20,
+      color: '#000',
+      paddingTop: 4,
+    },
+    counter: {
+      paddingVertical: 16,
+    },
+  })
+
+  return styles
+}

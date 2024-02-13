@@ -1,4 +1,5 @@
 import {SwapState} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
@@ -16,6 +17,7 @@ export interface LimitPriceWarningProps {
 
 export const WarnLimitPrice = ({onConfirm, orderData}: LimitPriceWarningProps) => {
   const strings = useStrings()
+  const styles = useStyles()
   const limitPrice = Quantities.format(orderData.limitPrice ?? Quantities.zero, orderData.tokens.priceDenomination)
   const wallet = useSelectedWallet()
   const {closeModal} = useModal()
@@ -87,55 +89,54 @@ export const WarnLimitPrice = ({onConfirm, orderData}: LimitPriceWarningProps) =
   )
 }
 
-const styles = StyleSheet.create({
-  buttonContainer: {
-    flex: 1,
-  },
-  buttonsWrapper: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    gap: 16,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  label: {
-    fontSize: 16,
-    color: '#6B7384',
-    lineHeight: 24,
-    fontFamily: 'Rubik-Regular',
-  },
-  value: {
-    fontSize: 16,
-    color: '#000000',
-    lineHeight: 24,
-    fontFamily: 'Rubik-Regular',
-    textAlign: 'right',
-  },
-  textWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
-    flex: 1,
-    flexWrap: 'wrap',
-    gap: 4,
-  },
-  table: {
-    flexDirection: 'column',
-    gap: 8,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
-  },
-  description: {
-    fontFamily: 'Rubik',
-    fontWeight: '400',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#242838',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    buttonContainer: {
+      flex: 1,
+    },
+    buttonsWrapper: {
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      gap: 16,
+    },
+    container: {
+      flex: 1,
+      justifyContent: 'space-between',
+    },
+    label: {
+      color: color.gray[600],
+      ...typography['body-1-regular'],
+    },
+    value: {
+      color: color.gray.max,
+      ...typography['body-1-regular'],
+      textAlign: 'right',
+    },
+    textWrapper: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'flex-end',
+      flex: 1,
+      flexWrap: 'wrap',
+      gap: 4,
+    },
+    table: {
+      flexDirection: 'column',
+      gap: 8,
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      gap: 10,
+    },
+    description: {
+      ...typography['body-1-regular'],
+      color: color.gray[900],
+    },
+  })
+
+  return styles
+}

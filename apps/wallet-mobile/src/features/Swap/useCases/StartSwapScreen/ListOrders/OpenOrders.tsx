@@ -766,6 +766,7 @@ const useStyles = () => {
       ...typography['body-1-regular'],
     },
     headerLabel: {
+      color: color.gray.max,
       ...typography['body-2-medium'],
     },
     contentValue: {

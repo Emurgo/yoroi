@@ -14,8 +14,8 @@ export interface Props {
 
 export const WarnPriceImpact = ({onContinue, priceImpactRisk}: Props) => {
   const strings = useStrings()
-  const {closeModal} = useModal()
   const styles = useStyles()
+  const {closeModal} = useModal()
 
   if (priceImpactRisk === 'none') return null
 
@@ -53,13 +53,14 @@ export const WarnPriceImpact = ({onContinue, priceImpactRisk}: Props) => {
 
 const useStyles = () => {
   const {theme} = useTheme()
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     buttonContainer: {
       flex: 1,
     },
     buttonContinue: {
       flex: 1,
-      backgroundColor: theme.color.magenta[500],
+      backgroundColor: color.magenta[500],
     },
     buttonsWrapper: {
       alignItems: 'center',
@@ -72,12 +73,12 @@ const useStyles = () => {
       justifyContent: 'space-between',
     },
     description: {
-      fontFamily: 'Rubik',
-      fontSize: 16,
+      color: color.gray[900],
+      ...typography['body-1-regular'],
+      lineHeight: 21,
     },
     bold: {
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
+      ...typography['body-1-medium'],
     },
   })
   return styles
