@@ -1,4 +1,4 @@
-import {rootStorage, StorageProvider} from '@yoroi/common'
+import {AsyncStorageProvider} from '@yoroi/common'
 import {ThemeProvider} from '@yoroi/theme'
 import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
@@ -20,6 +20,7 @@ import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet/Context'
 import {WalletManagerProvider} from './WalletManager'
 import {useMigrations} from './yoroi-wallets/migrations'
+import {rootStorage} from './yoroi-wallets/storage/rootStorage'
 import {walletManager} from './yoroi-wallets/walletManager'
 
 enableScreens()
@@ -43,7 +44,7 @@ export const YoroiApp = () => {
   const migrated = useMigrations(rootStorage)
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   return migrated ? (
-    <StorageProvider>
+    <AsyncStorageProvider storage={rootStorage}>
       <MetricsProvider metricsManager={metricsManager}>
         <WalletManagerProvider walletManager={walletManager}>
           <ErrorBoundary>
@@ -71,6 +72,6 @@ export const YoroiApp = () => {
           </ErrorBoundary>
         </WalletManagerProvider>
       </MetricsProvider>
-    </StorageProvider>
+    </AsyncStorageProvider>
   ) : null
 }

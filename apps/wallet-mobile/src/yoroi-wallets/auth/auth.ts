@@ -1,4 +1,4 @@
-import {parseSafe, parseString, useMutationWithInvalidations, useStorage} from '@yoroi/common'
+import {parseSafe, parseString, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -39,7 +39,7 @@ export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {
 }
 
 export const useEnableAuthWithOs = (options?: UseMutationOptions<void, Error>) => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const queryClient = useQueryClient()
   const {authWithOs: enable, ...mutation} = useAuthWithOs({
     ...options,
@@ -132,7 +132,7 @@ export const useDisableAllEasyConfirmation = (
   options?: UseMutationOptions<void, Error>,
 ) => {
   const walletManager = useWalletManager()
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const mutation = useMutationWithInvalidations({
     mutationFn: async () => {
       await disableAllEasyConfirmation(storage)
@@ -169,7 +169,7 @@ export const disableAllEasyConfirmation = async (storage: App.Storage) => {
 }
 
 export const useCreatePin = (options: UseMutationOptions<void, Error, string>) => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const appSettingsStorage = storage.join('appSettings/')
   const mutation = useMutationWithInvalidations({
     invalidateQueries: [['authSetting']],
@@ -191,7 +191,7 @@ export const useCreatePin = (options: UseMutationOptions<void, Error, string>) =
 const toHex = (text: string) => Buffer.from(text, 'utf8').toString('hex')
 
 export const useCheckPin = (options: UseMutationOptions<boolean, Error, string> = {}) => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const mutation = useMutation({
     mutationFn: async (pin) => {
       const encryptedPinHash = await storage.join('appSettings/').getItem('customPinHash', parseString)
@@ -216,7 +216,7 @@ export const useCheckPin = (options: UseMutationOptions<boolean, Error, string> 
 }
 
 export const useAuthSetting = (options?: UseQueryOptions<AuthSetting, Error>) => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const query = useQuery({
     suspense: true,
     queryKey: ['authSetting'],
