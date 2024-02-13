@@ -260,7 +260,7 @@ const useStyles = () => {
     between: {justifyContent: 'space-between'},
     text: {
       textAlign: 'right',
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       color: color.gray[900],
       flexWrap: 'wrap',
       flex: 1,
@@ -273,11 +273,11 @@ const useStyles = () => {
     change: {color: color.primary[600], fontWeight: '600', textTransform: 'uppercase'},
     bold: {
       color: color.gray.max,
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
     },
     bolder: {
       color: color.gray.max,
-      ...typography['body-1-medium'],
+      ...typography['body-1-l-medium'],
     },
   })
 

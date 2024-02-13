@@ -215,17 +215,17 @@ const useStyles = () => {
     },
     text: {
       textAlign: 'left',
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       color: color.gray.max,
     },
     gray: {
       color: color.gray[600],
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
     },
     buttonLabel: {
       paddingTop: 13,
       color: color.gray.max,
-      ...typography['body-2-medium'],
+      ...typography['body-2-m-medium'],
     },
     info: {
       flexDirection: 'row',
@@ -234,13 +234,13 @@ const useStyles = () => {
     value: {
       textAlign: 'right',
       flexShrink: 1,
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       color: color.gray[900],
     },
     label: {
       color: color.gray[600],
       paddingRight: 8,
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
     },
     footerDisabled: {
       opacity: 0.5,

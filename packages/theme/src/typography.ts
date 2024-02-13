@@ -111,95 +111,70 @@ export const typography: Typography = {
     ...fontFamily.regular,
     ...size.h4,
   },
-  'heading-5-medium': {
-    ...fontFamily.medium,
-    ...size.h5,
-    textTransform: 'uppercase',
-  },
-  'heading-5-regular': {
-    ...fontFamily.regular,
-    ...size.h5,
-    textTransform: 'uppercase',
-  },
-  'body-1-medium': {
+  'body-1-l-medium': {
     ...fontFamily.medium,
     ...size.body1,
   },
-  'body-1-regular': {
+  'body-1-l-regular': {
     ...fontFamily.regular,
     ...size.body1,
   },
-  'body-2-medium': {
+  'body-2-m-medium': {
     ...fontFamily.medium,
     ...size.body2,
   },
-  'body-2-regular': {
+  'body-2-m-regular': {
     ...fontFamily.regular,
     ...size.body2,
   },
-  'body-3-medium': {
+  'body-3-s-medium': {
     ...fontFamily.medium,
     ...size.body3,
   },
-  'body-3-regular': {
+  'body-3-s-regular': {
     ...fontFamily.regular,
     ...size.body3,
   },
-  'button-1': {
+  'button-1-l': {
     ...fontFamily.medium,
     fontSize: 16,
     lineHeight: 24,
     letterSpacing: 0.5,
     textTransform: 'uppercase',
   },
-  'button-2': {
+  'button-2-m': {
     ...fontFamily.medium,
     fontSize: 14,
     lineHeight: 20,
     letterSpacing: 0.5,
     textTransform: 'uppercase',
   },
-  'button-3': {
-    ...fontFamily.medium,
-    fontSize: 12,
-    lineHeight: 19,
-    letterSpacing: 0.3,
-    textTransform: 'uppercase',
-  },
-  'link-1': {
+  'link-1-l': {
     ...fontFamily.regular,
     fontSize: 16,
     lineHeight: 22,
   },
-  'link-1-underline': {
+  'link-1-l-underline': {
     ...fontFamily.regular,
     fontSize: 16,
     lineHeight: 24,
     textDecorationLine: 'underline',
   },
-  'link-2': {
+  'link-2-m': {
     ...fontFamily.regular,
     fontSize: 14,
     lineHeight: 20,
   },
-  'link-2-underline': {
+  'link-2-m-underline': {
     ...fontFamily.regular,
     fontSize: 14,
     lineHeight: 22,
     textDecorationLine: 'underline',
   },
-  'overline': {
+  'navbar': {
     ...fontFamily.regular,
     fontSize: 10,
     lineHeight: 18,
     textTransform: 'uppercase',
-  },
-  'caption-medium': {
-    ...fontFamily.medium,
-    ...size.caption,
-  },
-  'caption-regular': {
-    ...fontFamily.regular,
-    ...size.caption,
   },
 }

@@ -381,7 +381,7 @@ const useStyles = () => {
     },
     txLinkText: {
       color: color.primary[400],
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       textDecorationLine: 'underline',
     },
     label: {
@@ -390,7 +390,7 @@ const useStyles = () => {
     },
     headerLabel: {
       color: color.gray.max,
-      ...typography['body-2-medium'],
+      ...typography['body-2-m-medium'],
     },
     counter: {
       paddingVertical: 16,
@@ -408,7 +408,7 @@ const useStyles = () => {
     contentText: {
       flex: 1,
       textAlign: 'center',
-      ...typography['body-2-medium'],
+      ...typography['body-2-m-medium'],
       color: color.gray.max,
       fontSize: 20,
     },

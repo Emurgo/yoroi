@@ -752,26 +752,26 @@ const useStyles = () => {
     },
     contentTitle: {
       color: 'red',
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       textAlign: 'center',
     },
     modalContentTitleText: {
       color: color.gray[900],
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       fontWeight: '500',
       textAlign: 'center',
     },
     contentLabel: {
       color: color.gray[600],
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
     },
     headerLabel: {
       color: color.gray.max,
-      ...typography['body-2-medium'],
+      ...typography['body-2-m-medium'],
     },
     contentValue: {
       color: color.gray.max,
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
     },
     modalContentTitle: {
       flexDirection: 'row',
@@ -787,7 +787,7 @@ const useStyles = () => {
     },
     txLinkText: {
       color: color.primary[500],
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       textDecorationLine: 'underline',
     },
 
@@ -818,7 +818,7 @@ const useStyles = () => {
       flex: 1,
       textAlign: 'center',
       color: color.gray[600],
-      ...typography['body-1-medium'],
+      ...typography['body-1-l-medium'],
     },
     modalButton: {backgroundColor: color.magenta[500]},
   })

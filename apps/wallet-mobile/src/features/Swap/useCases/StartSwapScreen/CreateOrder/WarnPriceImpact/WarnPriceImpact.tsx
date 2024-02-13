@@ -74,11 +74,11 @@ const useStyles = () => {
     },
     description: {
       color: color.gray[900],
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       lineHeight: 21,
     },
     bold: {
-      ...typography['body-1-medium'],
+      ...typography['body-1-l-medium'],
     },
   })
   return styles

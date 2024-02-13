@@ -159,7 +159,7 @@ const useStyles = () => {
     },
     quantity: {
       color: color.gray[900],
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       textAlign: 'right',
       flexGrow: 1,
     },

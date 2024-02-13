@@ -108,11 +108,11 @@ const useStyles = () => {
     },
     label: {
       color: color.gray[600],
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
     },
     value: {
       color: color.gray.max,
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       textAlign: 'right',
     },
     textWrapper: {
@@ -133,7 +133,7 @@ const useStyles = () => {
       gap: 10,
     },
     description: {
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       color: color.gray[900],
     },
   })

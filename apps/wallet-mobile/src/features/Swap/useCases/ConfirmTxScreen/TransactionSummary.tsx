@@ -259,7 +259,7 @@ const useStyles = () => {
       alignItems: 'flex-end',
     },
     priceImpactRiskText: {
-      ...typography['body-2-regular'],
+      ...typography['body-2-m-regular'],
     },
     alignRight: {
       textAlign: 'right',
@@ -296,7 +296,7 @@ const useStyles = () => {
     },
     text: {
       textAlign: 'left',
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       color: color.gray[900],
     },
     gray: {
@@ -312,7 +312,7 @@ const useStyles = () => {
       flex: 1,
     },
     modalText: {
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       color: color.gray[900],
     },
     orderValueContainer: {

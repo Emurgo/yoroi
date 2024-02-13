@@ -121,7 +121,7 @@ const useStyles = () => {
       textAlignVertical: 'center',
     },
     contentValueText: {
-      ...theme.typography['body-1-regular'],
+      ...theme.typography['body-1-l-regular'],
       color: theme.color.gray.max,
     },
     boxProvider: {

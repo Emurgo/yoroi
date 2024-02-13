@@ -26,7 +26,7 @@ import {useSwapForm} from '../../../../../common/SwapFormProvider'
 
 export const SelectBuyTokenFromListScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
 
   const loading = React.useMemo(
     () => ({
@@ -66,7 +66,7 @@ export const SelectBuyTokenFromListScreen = () => {
 
 const TokenList = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
   const wallet = useSelectedWallet()
   const {onlyVerifiedTokens} = useSwapTokensOnlyVerified()
   const {search: assetSearchTerm} = useSearch()
@@ -120,7 +120,7 @@ const TokenList = () => {
 
       {someInWallet && (
         <View style={[styles.row, styles.ph]}>
-          <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
+          <Icon.Portfolio size={20} color={colors.lightGreen} />
 
           <Spacer width={8} />
 
@@ -144,7 +144,7 @@ type SelectableTokenProps = {
   tokenInfo: Balance.TokenInfo
 }
 const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenProps) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   const {id, name, ticker, group, decimals} = tokenInfo
   const balanceAvailable = useBalance({wallet, tokenId: id})
   const {closeSearch} = useSearch()
@@ -208,7 +208,7 @@ const EmptyList = ({filteredTokensForList}: {filteredTokensForList: Array<Balanc
 
 const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <View style={styles.imageContainer}>
       <Spacer height={50} />
@@ -263,7 +263,7 @@ const useStyles = () => {
     },
     legend: {
       color: color.gray[900],
-      ...typography['body-2-regular'],
+      ...typography['body-2-m-regular'],
     },
     image: {
       flex: 1,
@@ -289,5 +289,9 @@ const useStyles = () => {
     },
   })
 
-  return styles
+  const colors = {
+    lightGreen: theme.color.secondary[600],
+  }
+
+  return {styles, colors}
 }

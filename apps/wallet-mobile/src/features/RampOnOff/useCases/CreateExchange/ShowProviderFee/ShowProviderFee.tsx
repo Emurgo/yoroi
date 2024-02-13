@@ -26,11 +26,11 @@ const useStyles = () => {
       justifyContent: 'space-between',
     },
     text: {
-      ...theme.typography['body-1-regular'],
+      ...theme.typography['body-1-l-regular'],
       color: theme.color.gray.max,
     },
     label: {
-      ...theme.typography['body-1-regular'],
+      ...theme.typography['body-1-l-regular'],
       color: theme.color.gray[600],
     },
   })

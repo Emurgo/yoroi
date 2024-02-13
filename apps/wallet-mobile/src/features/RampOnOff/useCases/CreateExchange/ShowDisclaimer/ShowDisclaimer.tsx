@@ -39,12 +39,12 @@ const useStyles = () => {
       marginTop: 24,
     },
     title: {
-      ...theme.typography['body-1-regular'],
+      ...theme.typography['body-1-l-regular'],
       color: theme.color.gray.min,
       fontWeight: '500',
     },
     text: {
-      ...theme.typography['body-2-regular'],
+      ...theme.typography['body-2-m-regular'],
       marginTop: 8,
       color: theme.color.gray.min,
     },
