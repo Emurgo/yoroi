@@ -198,6 +198,8 @@ export type TxHistoryRoutes = {
     id: string
   }
   receive: undefined
+  'receive-specific-amount': undefined
+  'receive-multiple': undefined
   'send-start-tx': undefined
   'send-confirm-tx': undefined
   'send-submitted-tx': {txId: string}
