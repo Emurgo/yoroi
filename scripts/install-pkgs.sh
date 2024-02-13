@@ -22,7 +22,6 @@ yarn workspace @yoroi/api add @yoroi/common@"$1"
 # swap
 yarn workspace @yoroi/swap add -D @yoroi/types@"$1"
 yarn workspace @yoroi/swap add @yoroi/api@"$1"
-yarn workspace @yoroi/swap add @yoroi/openswap@"$1"
 yarn workspace @yoroi/swap add @yoroi/common@"$1"
 
 # resolver

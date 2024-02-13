@@ -21,12 +21,14 @@ export const useStrings = () => {
     fiatAmountYouGet: intl.formatMessage(messages.fiatAmountYouGet),
     goToTransactions: intl.formatMessage(messages.goToTransactions),
     notEnoughBalance: intl.formatMessage(messages.notEnoughBalance),
+    minAdaRequired: intl.formatMessage(messages.minAdaRequired),
     proceed: intl.formatMessage(messages.proceed),
     provider: intl.formatMessage(messages.provider),
     providerFee: intl.formatMessage(messages.providerFee),
     rampOnOffTitle: intl.formatMessage(messages.rampOnOffTitle),
     sellCrypto: intl.formatMessage(messages.sellCrypto),
     significant: intl.formatMessage(messages.significant),
+    sellCurrencyWarning: intl.formatMessage(messages.sellCurrencyWarning),
     title: intl.formatMessage(messages.title),
     getFirstCrypto: intl.formatMessage(messages.getFirstCrypto),
     ourTrustedPartners: intl.formatMessage(messages.ourTrustedPartners),
@@ -84,6 +86,14 @@ export const messages = Object.freeze(
     notEnoughBalance: {
       id: 'swap.swapScreen.notEnoughBalance',
       defaultMessage: '!!!Not Enough Balannce',
+    },
+    minAdaRequired: {
+      id: 'rampOnOff.createRampOnOff.minAdaRequired',
+      defaultMessage: '!!!Minimum required is 100 ADA',
+    },
+    sellCurrencyWarning: {
+      id: 'rampOnOff.createRampOnOff.sellCurrencyWarning',
+      defaultMessage: '!!!You can currently sell only to USD using ACH.',
     },
     congrats: {
       id: 'rampOnOff.resultRampOnOff.congrats',

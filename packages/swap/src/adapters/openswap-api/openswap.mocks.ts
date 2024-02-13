@@ -1,6 +1,13 @@
-import {OpenSwap} from '@yoroi/openswap'
+import {
+  CompletedOrder,
+  LiquidityPool,
+  ListTokensResponse,
+  OpenOrder,
+  PriceResponse,
+  TokenPairsResponse,
+} from './types'
 
-const getTokens: OpenSwap.ListTokensResponse = [
+const getTokens: ListTokensResponse = [
   {
     supply: {
       total: '10000000',
@@ -75,7 +82,7 @@ const getTokens: OpenSwap.ListTokensResponse = [
   },
 ]
 
-const getTokenPairs: OpenSwap.TokenPairsResponse = [
+const getTokenPairs: TokenPairsResponse = [
   {
     info: {
       supply: {
@@ -317,7 +324,7 @@ const getTokenPairs: OpenSwap.TokenPairsResponse = [
   },
 ]
 
-const getCompletedOrders: OpenSwap.CompletedOrder[] = [
+const getCompletedOrders: CompletedOrder[] = [
   {
     toToken: {
       address: {
@@ -347,7 +354,7 @@ const getCompletedOrders: OpenSwap.CompletedOrder[] = [
   },
 ]
 
-const getOpenOrders: OpenSwap.OpenOrder[] = [
+const getOpenOrders: OpenOrder[] = [
   {
     from: {
       amount: '1000000',
@@ -385,7 +392,7 @@ const getOpenOrders: OpenSwap.OpenOrder[] = [
   },
 ]
 
-const getLiquidityPools: OpenSwap.LiquidityPool[] = [
+const getLiquidityPools: LiquidityPool[] = [
   {
     provider: 'minswap',
     poolFee: '0.3',
@@ -600,7 +607,7 @@ const getLiquidityPools: OpenSwap.LiquidityPool[] = [
   },
 ]
 
-const getPrice: OpenSwap.PriceResponse = {
+const getPrice: PriceResponse = {
   baseDecimalPlaces: 6,
   quoteDecimalPlaces: 6,
   baseAddress: {
