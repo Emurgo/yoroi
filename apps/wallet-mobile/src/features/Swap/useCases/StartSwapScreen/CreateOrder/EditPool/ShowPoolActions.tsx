@@ -152,7 +152,7 @@ const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
         return (
           <HiddenInfoWrapper
             key={fee.label}
-            value={fee.value}
+            value={<Text style={styles.text}>{fee.value}</Text>}
             label={fee.label}
             info={fee.info}
             onPress={handleOpenModal}
@@ -238,7 +238,7 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
         return (
           <HiddenInfoWrapper
             key={fee.label}
-            value={fee.value}
+            value={<Text style={styles.text}>{fee.value}</Text>}
             label={fee.label}
             info={fee.info}
             onPress={handleOpenModal}
