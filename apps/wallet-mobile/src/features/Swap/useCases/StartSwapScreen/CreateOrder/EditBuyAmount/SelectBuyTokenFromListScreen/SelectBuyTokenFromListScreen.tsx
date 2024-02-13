@@ -12,7 +12,6 @@ import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'
-import {COLORS} from '../../../../../../../theme'
 import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
 import {useBalance, useBalances} from '../../../../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../../../../yoroi-wallets/utils'
