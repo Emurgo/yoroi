@@ -152,7 +152,7 @@ const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
         return (
           <HiddenInfoWrapper
             key={fee.label}
-            value={fee.value}
+            value={<Text style={styles.text}>{fee.value}</Text>}
             label={fee.label}
             info={fee.info}
             onPress={handleOpenModal}
@@ -195,23 +195,23 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const feeStructure = [
     {
       label: strings.swapMinAdaTitle,
-      value: <Text style={styles.text}>{depositFormatted}</Text>,
+      value: depositFormatted,
       info: strings.swapMinAda,
     },
     {
       label: strings.swapFeesTitle,
-      value: <Text style={styles.text}>{totalFeesFormatted}</Text>,
+      value: totalFeesFormatted,
       info: strings.swapFees,
     },
     {
       label: strings.swapMinReceivedTitle,
-      value: <Text style={styles.text}>{minReceivedFormatted}</Text>,
+      value: minReceivedFormatted,
       info: strings.swapMinReceived,
     },
     {
       label: strings.swapLiqProvFee,
       title: strings.swapLiquidityFee,
-      value: <Text style={styles.text}>{liqFeeQuantityFormatted}</Text>,
+      value: liqFeeQuantityFormatted,
       info: liqFeePercFormatted,
     },
   ]
@@ -238,7 +238,7 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
         return (
           <HiddenInfoWrapper
             key={fee.label}
-            value={fee.value}
+            value={<Text style={styles.text}>{fee.value}</Text>}
             label={fee.label}
             info={fee.info}
             onPress={handleOpenModal}
