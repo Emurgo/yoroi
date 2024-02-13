@@ -1,10 +1,11 @@
 import {EnrichmentPlugin, Event, PluginType} from '@amplitude/analytics-types'
-import {isKeyOf, parseBoolean, rootStorage} from '@yoroi/common'
+import {isKeyOf, parseBoolean} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import * as React from 'react'
 import Config from 'react-native-config'
 
 import {Logger} from '../yoroi-wallets/logging'
+import {rootStorage} from '../yoroi-wallets/storage/rootStorage'
 import {Ampli, ampli} from './ampli'
 import {mockMetricsManager} from './mocks'
 

@@ -101,6 +101,7 @@
     "@commitlint/config-conventional": "^17.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
     "@testing-library/react-hooks": "^8.0.1",
+    "@types/jest": "^29.5.12",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
@@ -111,7 +112,7 @@
     "jest": "^28.1.1",
     "prettier": "^2.0.5",
     "release-it": "^15.0.0",
-    "typescript": "^4.5.2"
+    "typescript": "^5.3.3"
   },
   "packageManager": "yarn@1.22.21",
   "engines": {

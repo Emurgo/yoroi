@@ -1,20 +1,22 @@
 import React from 'react'
 import renderer from 'react-test-renderer'
 
-import {StorageProvider, useStorage} from './storage-reactjs' // Update with the actual module path
-import {rootStorage} from '../adapters/rootStorage'
+import {SyncStorageProvider, useSyncStorage} from './sync-storage-reactjs' // Update with the actual module path
+import {mountMMKVStorage} from '../adapters/mmkv-storage'
 
-describe('StorageProvider and useStorage Tests', () => {
-  test('StorageProvider provides storage context', () => {
+const rootStorage = mountMMKVStorage('/')
+
+describe('SyncStorageProvider and useSyncStorage Tests', () => {
+  test('SyncStorageProvider provides storage context', () => {
     const TestComponent = () => {
-      const storage = useStorage()
+      const storage = useSyncStorage()
       return <div>{storage ? 'Storage Available' : 'Storage Unavailable'}</div>
     }
 
     const tree = renderer.create(
-      <StorageProvider storage={rootStorage}>
+      <SyncStorageProvider storage={rootStorage}>
         <TestComponent />
-      </StorageProvider>,
+      </SyncStorageProvider>,
     )
 
     const treeInstance = tree.root
@@ -22,16 +24,16 @@ describe('StorageProvider and useStorage Tests', () => {
     expect(textElement.props.children).toBe('Storage Available')
   })
 
-  test('StorageProvider provides the default rootStorage context', () => {
+  test('SyncStorageProvider provides the default rootStorage context', () => {
     const TestComponent = () => {
-      const storage = useStorage()
+      const storage = useSyncStorage()
       return <div>{storage ? 'Storage Available' : 'Storage Unavailable'}</div>
     }
 
     const tree = renderer.create(
-      <StorageProvider>
+      <SyncStorageProvider>
         <TestComponent />
-      </StorageProvider>,
+      </SyncStorageProvider>,
     )
 
     const treeInstance = tree.root
@@ -39,9 +41,9 @@ describe('StorageProvider and useStorage Tests', () => {
     expect(textElement.props.children).toBe('Storage Available')
   })
 
-  test('useStorage throws error without StorageProvider', () => {
+  test('useSyncStorage throws error without SyncStorageProvider', () => {
     const InvalidComponent = () => {
-      useStorage()
+      useSyncStorage()
       return <div>Invalid Component</div>
     }
 
@@ -50,7 +52,7 @@ describe('StorageProvider and useStorage Tests', () => {
     console.error = jest.fn()
 
     expect(() => renderer.create(<InvalidComponent />)).toThrow(
-      'Missing StorageProvider',
+      'Missing SyncStorageProvider',
     )
 
     console.error = originalError
