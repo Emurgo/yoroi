@@ -43,7 +43,7 @@ export const BuyBannerBig = () => {
 
         <Button
           testID="rampOnOffButton"
-          shelleyTheme
+          mainTheme
           title={strings.buyCrypto.toLocaleUpperCase()}
           onPress={handleExchange}
           style={styles.spaceButton}
