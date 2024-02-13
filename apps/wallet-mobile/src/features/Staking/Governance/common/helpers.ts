@@ -1,4 +1,4 @@
-import {useStorage} from '@yoroi/common'
+import {useAsyncStorage} from '@yoroi/common'
 import {type StakingKeyState, governanceApiMaker, governanceManagerMaker, useStakingKeyState} from '@yoroi/staking'
 import * as React from 'react'
 
@@ -49,7 +49,7 @@ export const useIsGovernanceFeatureEnabled = (wallet: YoroiWallet) => {
 export const useGovernanceManagerMaker = () => {
   const {networkId, id: walletId} = useSelectedWallet()
 
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const governanceStorage = storage.join(`wallet/${walletId}/staking-governance/`)
 
   return React.useMemo(
