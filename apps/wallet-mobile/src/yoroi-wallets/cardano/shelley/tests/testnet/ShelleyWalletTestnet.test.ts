@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Address} from '@emurgo/cross-csl-core'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {rootStorage} from '@yoroi/common'
 import {Balance} from '@yoroi/types'
 
 import {HWDeviceInfo} from '../../../../hw'
 import {EncryptedStorage, EncryptedStorageKeys} from '../../../../storage'
+import {rootStorage} from '../../../../storage/rootStorage'
 import {DefaultAsset} from '../../../../types'
 import {WalletMeta} from '../../../../walletManager'
 import {ShelleyAddressGeneratorJSON} from '../../../chain'

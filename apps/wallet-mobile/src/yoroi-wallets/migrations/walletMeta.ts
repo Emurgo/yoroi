@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {parseSafe, rootStorage} from '@yoroi/common'
+import {parseSafe} from '@yoroi/common'
 
 import {Logger} from '../../legacy/logging'
 import {CardanoTypes, legacyWalletChecksum, walletChecksum} from '../cardano/types'
 import {WALLETS} from '../cardano/utils'
+import {rootStorage} from '../storage/rootStorage'
 import type {NetworkId, WalletImplementationId} from '../types/other'
 import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../types/other'
 import {WalletMeta} from '../walletManager'

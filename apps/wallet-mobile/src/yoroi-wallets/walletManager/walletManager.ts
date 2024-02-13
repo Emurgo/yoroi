@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {parseSafe, rootStorage} from '@yoroi/common'
+import {parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import ExtendableError from 'es6-error'
 import uuid from 'uuid'
@@ -11,6 +11,7 @@ import {Logger} from '../logging'
 import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../migrations/walletMeta'
 import {makeWalletEncryptedStorage} from '../storage'
 import {Keychain} from '../storage/Keychain'
+import {rootStorage} from '../storage/rootStorage'
 import {NetworkId, WalletImplementationId} from '../types'
 
 export class WalletClosed extends ExtendableError {}

@@ -1,4 +1,4 @@
-import {parseSafe, useStorage} from '@yoroi/common'
+import {parseSafe, useAsyncStorage} from '@yoroi/common'
 import React from 'react'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient} from 'react-query'
 
@@ -33,7 +33,7 @@ const missingProvider = () => {
 }
 
 const useCurrency = () => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const query = useQuery<CurrencySymbol, Error>({
     queryKey: ['currencySymbol'],
     queryFn: async () => {
@@ -56,10 +56,10 @@ const useCurrency = () => {
 
 const useSaveCurrency = ({onSuccess, ...options}: UseMutationOptions<void, Error, CurrencySymbol> = {}) => {
   const queryClient = useQueryClient()
-  const storage = useStorage()
+  const storage = useAsyncStorage()
 
   const mutation = useMutation({
-    mutationFn: async (currencySymbol) => storage.join('appSettings/').setItem('currencySymbol', currencySymbol),
+    mutationFn: (currencySymbol) => storage.join('appSettings/').setItem('currencySymbol', currencySymbol),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries('currencySymbol')
       onSuccess?.(data, variables, context)

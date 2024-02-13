@@ -1,4 +1,4 @@
-import {isString, useStorage} from '@yoroi/common'
+import {isString, useAsyncStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import React, {useEffect, useRef} from 'react'
 import {Platform, UIManager} from 'react-native'
@@ -29,7 +29,7 @@ export const InitApp = () => {
 
 const useInitApp = () => {
   const [loaded, setLoaded] = React.useState(false)
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const crashReportsEnabled = useCrashReportsEnabled()
 
   const {initialised: screenShareInitialized} = useInitScreenShare()
