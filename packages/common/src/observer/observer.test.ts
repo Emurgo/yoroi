@@ -1,7 +1,8 @@
-import {Observer, observerMaker} from './observer'
+import {App} from '@yoroi/types'
+import {observerMaker} from './observer'
 
 describe('Observer', () => {
-  let observer: Observer<number>
+  let observer: App.Observer<number>
   let mockSubscriber1: jest.Mock
   let mockSubscriber2: jest.Mock
 
