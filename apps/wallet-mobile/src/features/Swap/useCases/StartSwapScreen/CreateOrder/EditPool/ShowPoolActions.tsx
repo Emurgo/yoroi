@@ -195,23 +195,23 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const feeStructure = [
     {
       label: strings.swapMinAdaTitle,
-      value: depositFormatted,
+      value: <Text style={styles.text}>{depositFormatted}</Text>,
       info: strings.swapMinAda,
     },
     {
       label: strings.swapFeesTitle,
-      value: totalFeesFormatted,
+      value: <Text style={styles.text}>{totalFeesFormatted}</Text>,
       info: strings.swapFees,
     },
     {
       label: strings.swapMinReceivedTitle,
-      value: minReceivedFormatted,
+      value: <Text style={styles.text}>{minReceivedFormatted}</Text>,
       info: strings.swapMinReceived,
     },
     {
       label: strings.swapLiqProvFee,
       title: strings.swapLiquidityFee,
-      value: liqFeeQuantityFormatted,
+      value: <Text style={styles.text}>{liqFeeQuantityFormatted}</Text>,
       info: liqFeePercFormatted,
     },
   ]
