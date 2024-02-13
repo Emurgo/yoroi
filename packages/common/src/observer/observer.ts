@@ -1,16 +1,16 @@
-type Subscriber<T> = (data: T) => void
+import {App} from '@yoroi/types'
 
-export const observerMaker = <T>(): Readonly<Observer<T>> => {
-  const subscribers: Set<Subscriber<T>> = new Set()
+export const observerMaker = <T>(): App.Observer<T> => {
+  const subscribers: Set<App.Subscriber<T>> = new Set()
 
   return {
-    subscribe: (callback: Subscriber<T>) => {
+    subscribe: (callback: App.Subscriber<T>) => {
       subscribers.add(callback)
       return () => {
         subscribers.delete(callback)
       }
     },
-    unsubscribe(subscriber: Subscriber<T>) {
+    unsubscribe(subscriber: App.Subscriber<T>) {
       subscribers.delete(subscriber)
     },
     notify: (data: T) => {
@@ -20,11 +20,4 @@ export const observerMaker = <T>(): Readonly<Observer<T>> => {
       subscribers.clear()
     },
   } as const
-}
-
-export type Observer<T> = {
-  subscribe: (subscriber: Subscriber<T>) => () => void
-  unsubscribe: (subscriber: Subscriber<T>) => void
-  notify: (data: T) => void
-  destroy: () => void
 }
