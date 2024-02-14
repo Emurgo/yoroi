@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {parseSafe, rootStorage} from '@yoroi/common'
+import {parseSafe} from '@yoroi/common'
 
 import {disableAllEasyConfirmation, enableAuthWithOs} from '../yoroi-wallets/auth'
+import {rootStorage} from '../yoroi-wallets/storage/rootStorage'
 import {WalletMeta} from '../yoroi-wallets/walletManager'
 
 describe('enableAuthWithOs', () => {

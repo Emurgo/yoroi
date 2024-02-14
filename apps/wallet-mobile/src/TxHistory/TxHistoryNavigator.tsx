@@ -1,7 +1,7 @@
 import {init} from '@emurgo/cross-csl-mobile'
 import {useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
-import {useStorage} from '@yoroi/common'
+import {useAsyncStorage} from '@yoroi/common'
 import {resolverApiMaker, resolverManagerMaker, ResolverProvider, resolverStorageMaker} from '@yoroi/resolver'
 import {
   milkTokenId,
@@ -70,7 +70,7 @@ export const TxHistoryNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const walletName = useWalletName(wallet)
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const {theme} = useTheme()
 
   // modal

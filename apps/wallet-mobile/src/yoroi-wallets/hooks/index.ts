@@ -2,7 +2,7 @@
 import {Certificate} from '@emurgo/cross-csl-core'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
-import {parseBoolean, useMutationWithInvalidations, useStorage} from '@yoroi/common'
+import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {Api, App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
@@ -175,7 +175,7 @@ export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, 
 }
 
 export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<string, Error>) => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const query = useQuery({
     queryKey: [wallet.id, 'name'],
     queryFn: async () => {
@@ -191,7 +191,7 @@ export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<str
 }
 
 export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOptions<void, Error, string> = {}) => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const mutation = useMutationWithInvalidations<void, Error, string>({
     mutationFn: async (newName) => {
       const walletMeta = await storage.join('wallet/').getItem(wallet.id, parseWalletMeta)
