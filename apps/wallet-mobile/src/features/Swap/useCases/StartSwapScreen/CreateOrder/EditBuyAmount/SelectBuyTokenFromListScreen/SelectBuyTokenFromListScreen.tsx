@@ -1,5 +1,6 @@
 import {FlashList} from '@shopify/flash-list'
 import {useSwap, useSwapTokensOnlyVerified} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {ErrorBoundary} from 'react-error-boundary'
@@ -11,7 +12,6 @@ import {AmountItem, AmountItemPlaceholder} from '../../../../../../../components
 import {useMetrics} from '../../../../../../../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../../../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../../../SelectedWallet'
-import {COLORS} from '../../../../../../../theme'
 import {YoroiWallet} from '../../../../../../../yoroi-wallets/cardano/types'
 import {useBalance, useBalances} from '../../../../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../../../../yoroi-wallets/utils'
@@ -26,6 +26,7 @@ import {useSwapForm} from '../../../../../common/SwapFormProvider'
 
 export const SelectBuyTokenFromListScreen = () => {
   const strings = useStrings()
+  const {styles} = useStyles()
 
   const loading = React.useMemo(
     () => ({
@@ -42,7 +43,7 @@ export const SelectBuyTokenFromListScreen = () => {
         </View>
       ),
     }),
-    [],
+    [styles.item],
   )
 
   useSearchOnNavBar({
@@ -65,6 +66,7 @@ export const SelectBuyTokenFromListScreen = () => {
 
 const TokenList = () => {
   const strings = useStrings()
+  const {styles, colors} = useStyles()
   const wallet = useSelectedWallet()
   const {onlyVerifiedTokens} = useSwapTokensOnlyVerified()
   const {search: assetSearchTerm} = useSearch()
@@ -118,7 +120,7 @@ const TokenList = () => {
 
       {someInWallet && (
         <View style={[styles.row, styles.ph]}>
-          <Icon.Portfolio size={20} color={COLORS.LIGHT_GREEN} />
+          <Icon.Portfolio size={20} color={colors.lightGreen} />
 
           <Spacer width={8} />
 
@@ -142,6 +144,7 @@ type SelectableTokenProps = {
   tokenInfo: Balance.TokenInfo
 }
 const SelectableToken = ({wallet, tokenInfo, walletTokenIds}: SelectableTokenProps) => {
+  const {styles} = useStyles()
   const {id, name, ticker, group, decimals} = tokenInfo
   const balanceAvailable = useBalance({wallet, tokenId: id})
   const {closeSearch} = useSearch()
@@ -205,6 +208,7 @@ const EmptyList = ({filteredTokensForList}: {filteredTokensForList: Array<Balanc
 
 const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
   const strings = useStrings()
+  const {styles} = useStyles()
   return (
     <View style={styles.imageContainer}>
       <Spacer height={50} />
@@ -220,65 +224,74 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  ph: {
-    paddingHorizontal: 16,
-  },
-  item: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  label: {
-    fontFamily: 'Rubik',
-    fontSize: 12,
-    fontStyle: 'normal',
-    fontWeight: '400',
-    lineHeight: 18,
-  },
-  labels: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  list: {
-    flex: 1,
-  },
-  line: {
-    height: 1,
-    backgroundColor: COLORS.BORDER_GRAY,
-  },
-  row: {
-    flexDirection: 'row',
-    alignSelf: 'center',
-  },
-  legend: {
-    fontSize: 14,
-    fontWeight: '400',
-    fontFamily: 'Rubik',
-  },
-  image: {
-    flex: 1,
-    alignSelf: 'center',
-    width: 200,
-    height: 228,
-  },
-  imageContainer: {
-    flex: 1,
-    textAlign: 'center',
-  },
-  contentText: {
-    flex: 1,
-    textAlign: 'center',
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-    fontSize: 20,
-    color: '#000',
-    paddingTop: 4,
-  },
-  counter: {
-    paddingVertical: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    ph: {
+      paddingHorizontal: 16,
+    },
+    item: {
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+    },
+    label: {
+      fontFamily: 'Rubik',
+      fontSize: 12,
+      fontStyle: 'normal',
+      fontWeight: '400',
+      lineHeight: 18,
+    },
+    labels: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    list: {
+      flex: 1,
+    },
+    line: {
+      height: 1,
+      backgroundColor: color.gray[200],
+    },
+    row: {
+      flexDirection: 'row',
+      alignSelf: 'center',
+    },
+    legend: {
+      color: color.gray[900],
+      ...typography['body-2-m-regular'],
+    },
+    image: {
+      flex: 1,
+      alignSelf: 'center',
+      width: 200,
+      height: 228,
+    },
+    imageContainer: {
+      flex: 1,
+      textAlign: 'center',
+    },
+    contentText: {
+      flex: 1,
+      textAlign: 'center',
+      fontWeight: '500',
+      fontFamily: 'Rubik-Medium',
+      fontSize: 20,
+      color: color.gray.max,
+      paddingTop: 4,
+    },
+    counter: {
+      paddingVertical: 16,
+    },
+  })
+
+  const colors = {
+    lightGreen: theme.color.secondary[600],
+  }
+
+  return {styles, colors}
+}

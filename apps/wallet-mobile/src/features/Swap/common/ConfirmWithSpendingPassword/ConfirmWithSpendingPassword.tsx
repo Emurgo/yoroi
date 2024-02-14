@@ -80,6 +80,7 @@ const useStyles = () => {
       paddingHorizontal: 70,
       textAlign: 'center',
       paddingBottom: 8,
+      color: color.gray[900],
     },
     errorMessage: {
       color: color.magenta[500],

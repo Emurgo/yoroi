@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -5,7 +6,6 @@ import {StyleSheet, Text, TextStyle} from 'react-native'
 
 import {useCurrencyContext} from '../../features/Settings/Currency'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {COLORS} from '../../theme'
 import {useExchangeRate} from '../../yoroi-wallets/hooks'
 import {CurrencySymbol} from '../../yoroi-wallets/types'
 import {Quantities} from '../../yoroi-wallets/utils'
@@ -39,6 +39,7 @@ export const PairedBalance = React.forwardRef<ResetErrorRef, Props>(({isPrivacyO
 const hiddenPairedTotal = '*.**'
 const Amount = ({isPrivacyOff, amount, textStyle}: Props) => {
   const wallet = useSelectedWallet()
+  const styles = useStyles()
   const {currency, config} = useCurrencyContext()
   const rate = useExchangeRate({wallet, to: currency})
 
@@ -73,6 +74,7 @@ const Amount = ({isPrivacyOff, amount, textStyle}: Props) => {
 
 const BalanceError = ({textStyle}: {textStyle?: TextStyle}) => {
   const strings = useStrings()
+  const styles = useStyles()
   const {currency} = useCurrencyContext()
 
   return (
@@ -97,12 +99,18 @@ const useStrings = () => {
   }
 }
 
-const styles = StyleSheet.create({
-  pairedBalanceText: {
-    fontSize: 12,
-    lineHeight: 24,
-    fontFamily: 'Rubik-Regular',
-    color: COLORS.TEXT_INPUT,
-    textAlign: 'right',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    pairedBalanceText: {
+      fontSize: 12,
+      lineHeight: 24,
+      fontFamily: 'Rubik-Regular',
+      color: color.gray[600],
+      textAlign: 'right',
+    },
+  })
+
+  return styles
+}

@@ -30,7 +30,7 @@ const useStyles = () => {
       padding: 12,
     },
     text: {
-      ...typography['body-2-regular'],
+      ...typography['body-2-m-regular'],
     },
   })
 

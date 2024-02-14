@@ -49,7 +49,7 @@ const useStyles = () => {
     },
     label: {
       color: theme.color.gray.max,
-      ...theme.typography['body-1-medium'],
+      ...theme.typography['body-1-l-medium'],
     },
   })
   return styles
