@@ -31,6 +31,7 @@ const useStyles = () => {
     },
     text: {
       ...typography['body-2-m-regular'],
+      color: theme.color.gray.max,
     },
   })
 
