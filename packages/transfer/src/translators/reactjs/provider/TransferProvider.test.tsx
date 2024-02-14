@@ -10,7 +10,7 @@ const wrapper: React.FC<React.PropsWithChildren> = ({children}) => (
   <TransferProvider>{children}</TransferProvider>
 )
 
-describe('SendContext :: hooks', () => {
+describe('TransferContext :: hooks', () => {
   test('resetForm', () => {
     const {result} = renderHook(() => useTransfer(), {wrapper})
 

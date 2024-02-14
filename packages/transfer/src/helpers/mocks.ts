@@ -45,14 +45,14 @@ export const mocks = {
   editingAmount: {
     adding: {
       ...defaultTransferState,
-      selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
+      selectedTokenId: '',
       targets: [
         {
           ...defaultTransferState.targets[0],
           entry: {
             ...defaultTransferState.targets[0]?.entry,
             amounts: {
-              [walletMocks.wallet.primaryTokenInfo.id]: Quantities.zero,
+              '': '0',
             },
           },
         },
@@ -60,7 +60,7 @@ export const mocks = {
     },
     initialQuantity: {
       ...defaultTransferState,
-      selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
+      selectedTokenId: '',
       targets: [
         {
           ...defaultTransferState.targets[0],
@@ -108,17 +108,14 @@ export const mocks = {
     },
     overSpendable: {
       ...defaultTransferState,
-      selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
+      selectedTokenId: '',
       targets: [
         {
           ...defaultTransferState.targets[0],
           entry: {
             ...defaultTransferState.targets[0]?.entry,
             amounts: {
-              [walletMocks.wallet.primaryTokenInfo.id]: Quantities.sum([
-                primaryAmount.quantity,
-                asQuantity(1000),
-              ]),
+              '': Quantities.sum([primaryAmount.quantity, asQuantity(1000)]),
             },
           },
         },
@@ -136,7 +133,7 @@ export const mocks = {
           entry: {
             ...defaultTransferState.targets[0]?.entry,
             amounts: {
-              [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(
+              '': asQuantity(
                 walletMocks.yoroiUnsignedTx.entries[0].amounts[
                   walletMocks.wallet.primaryTokenInfo.id
                 ],
@@ -156,7 +153,7 @@ export const mocks = {
           entry: {
             ...defaultTransferState.targets[0]?.entry,
             amounts: {
-              [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(50000),
+              '': asQuantity(50000),
             },
           },
         },
@@ -190,7 +187,7 @@ export const mocks = {
               ['other.01']: asQuantity(2),
               ['another.02']: asQuantity(3),
               ['more.03']: asQuantity(4),
-              [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(50000),
+              '': asQuantity(50000),
             },
           },
         },
