@@ -22,11 +22,17 @@
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
-#if DEBUG
+  return [self getBundleURL];
+}
+
+
+- (NSURL *)getBundleURL
+{
+//#if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
-#else
-  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-#endif
+//#else
+//  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+//#endif
 }
 
 /// This method controls whether the `concurrentRoot`feature of React18 is turned on or off.
