@@ -9,7 +9,7 @@ import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
 import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
 
 type ShareProps = {
-  address?: string
+  address: string
   title?: string
   addressDetails?: AddressDetailsProps
 }
@@ -21,7 +21,7 @@ type AddressDetailsProps = {
   title?: string
 }
 
-interface Item {
+type Item = {
   cardType: string
   title?: string
   address?: string
@@ -41,7 +41,13 @@ export function AddressDetailCard({address, title, addressDetails}: ShareProps) 
   const itemsPerPage = 1
 
   const data = [
-    {cardType: 'QRCode', title, address},
+    {
+      cardType: 'QRCode',
+      title,
+      address: address,
+      stakingHash: addressDetails?.stakingHash,
+      spendingHash: addressDetails?.spendingHash,
+    },
     {
       cardType: 'Details',
       address: addressDetails?.address,

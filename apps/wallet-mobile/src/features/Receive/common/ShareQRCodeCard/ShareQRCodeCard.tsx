@@ -1,4 +1,5 @@
 import {useTheme} from '@yoroi/theme'
+import _ from 'lodash'
 import * as React from 'react'
 import {StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -40,21 +41,23 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
 
   React.useEffect(() => {
     if (isSharing) {
-      const captureAndShare = async () => {
-        try {
-          await new Promise((resolve) => setTimeout(resolve, 50))
+      const captureAndShare = () => {
+        _.delay(async () => {
+          try {
+            await new Promise((resolve) => setTimeout(resolve, 50))
 
-          const uri = await captureRef(ref, {
-            format: 'png',
-            quality: 1,
-            fileName: mocks.shareFileName,
-          })
+            const uri = await captureRef(ref, {
+              format: 'png',
+              quality: 1,
+              fileName: mocks.shareFileName,
+            })
 
-          setIsSharing(false)
-          await Share.open({url: uri, filename: mocks.shareFileName, message: `${strings.address} ${address}`})
-        } finally {
-          setIsSharing(false)
-        }
+            setIsSharing(false)
+            await Share.open({url: uri, filename: mocks.shareFileName, message: `${strings.address} ${address}`})
+          } finally {
+            setIsSharing(false)
+          }
+        }, 50)
       }
 
       captureAndShare()

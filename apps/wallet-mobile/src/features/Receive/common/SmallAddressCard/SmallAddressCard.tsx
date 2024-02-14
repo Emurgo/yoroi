@@ -11,7 +11,7 @@ import {useStrings} from '../useStrings'
 export type SmallAddressCardProps = {
   address: string
   isUsed?: boolean
-  loading: boolean
+  loading?: boolean
   date?: string
   onPress?: () => void
 }
@@ -75,8 +75,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     smallAddressCard: {
       borderRadius: 8,
-      width: '100%',
-      alignItems: 'center',
+      alignItems: 'stretch',
       justifyContent: 'space-between',
       height: 140,
       alignSelf: 'center',
@@ -92,7 +91,6 @@ const useStyles = () => {
       color: theme.color['black-static'],
     },
     footer: {
-      width: '100%',
       justifyContent: 'space-between',
       flexDirection: 'row',
     },

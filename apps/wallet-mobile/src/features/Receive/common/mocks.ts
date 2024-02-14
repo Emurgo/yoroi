@@ -12,4 +12,5 @@ export const mocks = Object.freeze({
   addressList: [{isUsed: true, loading: false}],
   isLoading: false,
   infoCardOnLimmit: false,
+  cardAddressDetailTitle: 'Wallet address details',
 })

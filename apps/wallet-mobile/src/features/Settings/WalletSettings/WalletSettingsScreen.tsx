@@ -125,11 +125,7 @@ export const WalletSettingsScreen = () => {
             info={strings.multipleAddressesInfo}
             disabled={false}
           >
-            <Switch
-              value={false}
-              onValueChange={onToggleMultipleAddresses}
-              disabled={false}
-            />
+            <Switch value={false} onValueChange={onToggleMultipleAddresses} disabled={false} />
           </SettingsItem>
         </SettingsSection>
 
