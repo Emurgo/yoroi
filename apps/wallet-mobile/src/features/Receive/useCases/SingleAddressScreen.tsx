@@ -14,7 +14,7 @@ import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddr
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
 
-export const ReceiveScreen = () => {
+export const SingleAddressScreen = () => {
   useHideBottomTabBar()
   const strings = useStrings()
   const {styles, colors} = useStyles()

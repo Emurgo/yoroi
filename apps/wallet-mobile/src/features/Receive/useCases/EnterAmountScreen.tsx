@@ -14,7 +14,7 @@ import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../common/useStrings'
 
-export const SpecificAmountScreen = () => {
+export const EnterAmountScreen = () => {
   useHideBottomTabBar()
   const strings = useStrings()
   const wallet = useSelectedWallet()

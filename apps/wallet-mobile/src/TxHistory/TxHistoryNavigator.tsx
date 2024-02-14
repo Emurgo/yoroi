@@ -22,9 +22,9 @@ import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
 import {RampOnOffScreen} from '../features/RampOnOff/RampOnOffNavigator'
-import {MultipleReceives} from '../features/Receive/useCases/MultipleReceives'
-import {ReceiveScreen} from '../features/Receive/useCases/ReceiveScreen'
-import {SpecificAmountScreen} from '../features/Receive/useCases/SpecificAmountScreen'
+import {EnterAmountScreen} from '../features/Receive/useCases/EnterAmountScreen'
+import {MultipleAddressesScreen} from '../features/Receive/useCases/MultipleAddressesScreen'
+import {SingleAddressScreen} from '../features/Receive/useCases/SingleAddressScreen'
 import {CodeScannerButton} from '../features/Scan/common/CodeScannerButton'
 import {ScanCodeScreen} from '../features/Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '../features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
@@ -153,7 +153,7 @@ export const TxHistoryNavigator = () => {
 
                 <Stack.Screen
                   name="receive"
-                  component={ReceiveScreen}
+                  component={SingleAddressScreen}
                   options={{
                     title: strings.receiveTitle,
                     gestureEnabled: false,
@@ -162,7 +162,7 @@ export const TxHistoryNavigator = () => {
 
                 <Stack.Screen
                   name="receive-multiple"
-                  component={MultipleReceives}
+                  component={MultipleAddressesScreen}
                   options={{
                     title: strings.receiveTitle,
                   }}
@@ -170,7 +170,7 @@ export const TxHistoryNavigator = () => {
 
                 <Stack.Screen
                   name="receive-specific-amount"
-                  component={SpecificAmountScreen}
+                  component={EnterAmountScreen}
                   options={{
                     title: strings.specificAmount,
                   }}

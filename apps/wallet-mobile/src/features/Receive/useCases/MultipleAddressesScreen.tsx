@@ -4,8 +4,8 @@ import {ScrollView, StyleSheet, Text, useWindowDimensions, View} from 'react-nat
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {ModalScreenWrapper} from '../../../../src/components/ModalScreenWrapper/ModalScreenWrapper'
 import {Button, Spacer, StatusBar} from '../../../components'
+import {ModalScreenWrapper} from '../../../components/ModalScreenWrapper/ModalScreenWrapper'
 import {useHideBottomTabBar} from '../../../yoroi-wallets/hooks'
 import {InfoCard} from '../common/InfoCard/InfoCard'
 import {mocks} from '../common/mocks'
@@ -19,7 +19,7 @@ type Item = {
   loading: boolean
 }
 
-export const MultipleReceives = () => {
+export const MultipleAddressesScreen = () => {
   useHideBottomTabBar()
   const strings = useStrings()
   const {styles, colors} = useStyles()
