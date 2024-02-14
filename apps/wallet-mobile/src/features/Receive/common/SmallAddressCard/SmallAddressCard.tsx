@@ -5,6 +5,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import Animated, {FadeInDown, FadeInUp, FadeOut, FadeOutDown, Layout} from 'react-native-reanimated'
 
 import {useCopy} from '../../../../../src/legacy/useCopy'
+import {Spacer} from '../../../../components'
 import {SkeletonSmallCardAddress} from '../SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../useStrings'
 
@@ -24,8 +25,10 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading}: Smal
 
   if (loading)
     return (
-      <View style={styles.skeleton}>
+      <View>
         <SkeletonSmallCardAddress />
+
+        <Spacer height={16} />
       </View>
     )
 
@@ -60,6 +63,8 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading}: Smal
           </TouchableOpacity>
         </Animated.View>
 
+        <Spacer height={16} />
+
         {isCopying && (
           <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
             <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
@@ -82,7 +87,6 @@ const useStyles = () => {
       alignSelf: 'center',
       overflow: 'hidden',
       padding: 16,
-      marginBottom: 16,
     },
     textAddress: {
       fontWeight: '400',
@@ -152,9 +156,6 @@ const useStyles = () => {
       alignSelf: 'center',
       borderRadius: 4,
       zIndex: 10,
-    },
-    skeleton: {
-      marginBottom: 16,
     },
   })
 

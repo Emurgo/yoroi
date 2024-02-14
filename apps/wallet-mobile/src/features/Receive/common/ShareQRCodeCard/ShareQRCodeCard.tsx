@@ -7,7 +7,7 @@ import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated
 import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
-import {Text} from '../../../../components'
+import {Spacer, Text} from '../../../../components'
 import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 import {mocks} from '../mocks'
 import {useStrings} from '../useStrings'
@@ -85,6 +85,8 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
             <QRCode value={address} size={158} backgroundColor={colors.white} color={colors.black} />
           </View>
 
+          <Spacer height={16} />
+
           <Text style={styles.textAddress}>{address}</Text>
         </View>
 
@@ -110,7 +112,6 @@ const useStyles = () => {
       backgroundColor: theme.color['white-static'],
       padding: 10,
       borderRadius: 8,
-      marginBottom: 16,
     },
     addressContainer: {
       alignItems: 'center',
