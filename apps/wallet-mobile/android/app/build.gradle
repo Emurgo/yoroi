@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
 project.ext.envConfigFiles = [
@@ -24,29 +25,10 @@ react {
     //   The folder where the react-native NPM package is. Default is ../node_modules/react-native
     reactNativeDir = file("../../../../node_modules/react-native")
     //   The folder where the react-native Codegen package is. Default is ../node_modules/react-native-codegen
-    codegenDir = file("../../../../node_modules/react-native-codegen")
+    codegenDir = file("../../../../node_modules/@react-native/codegen")
     //   The cli.js file which is the React Native CLI entrypoint. Default is ../node_modules/react-native/cli.js
     cliFile = file("../../../../node_modules/react-native/cli.js")
 
-    /* Variants */
-    //   The list of variants to that are debuggable. For those we're going to
-    //   skip the bundling of the JS bundle and the assets. By default is just 'debug'.
-    //   If you add flavors like lite, prod, etc. you'll have to list your debuggableVariants.
-    // debuggableVariants = ["liteDebug", "prodDebug"]
-
-    /* Bundling */
-    //   A list containing the node command and its flags. Default is just 'node'.
-    // nodeExecutableAndArgs = ["node"]
-    //
-    //   The command to run when bundling. By default is 'bundle'
-    // bundleCommand = "ram-bundle"
-    //
-    //   The path to the CLI configuration file. Default is empty.
-    // bundleConfig = file(../rn-cli.config.js)
-    //
-    //   The name of the generated asset file containing your JS bundle
-    // bundleAssetName = "MyApplication.android.bundle"
-    //
     //   The entry file for bundle generation. Default is 'index.android.js' or 'index.js'
     entryFile = file("../../index.js")
     //
@@ -56,19 +38,11 @@ react {
 
     /* Hermes Commands */
     //   The hermes compiler command to run. By default it is 'hermesc'
-    hermesCommand = file("../../../../node_modules/react-native/sdks/hermesc/%OS-BIN%/hermesc").toString()
+    // hermesCommand = file("../../../../node_modules/react-native/sdks/hermesc/%OS-BIN%/hermesc").toString()
     //
     //   The list of flags to pass to the Hermes compiler. By default is "-O", "-output-source-map"
     // hermesFlags = ["-O", "-output-source-map"]
 }
-
-/**
- * Set this to true to create four separate APKs instead of one,
- * one for each native architecture. This is useful if you don't
- * use App Bundles (https://developer.android.com/guide/app-bundle/)
- * and want to have separate APKs to upload to the Play Store.
- */
-def enableSeparateBuildPerCPUArchitecture = false
 
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
@@ -88,19 +62,9 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc-intl:+'
 
-/**
- * Private function to get the list of Native Architectures you want to build.
- * This reads the value from reactNativeArchitectures in your gradle.properties
- * file and works together with the --active-arch-only flag of react-native run-android.
- */
-def reactNativeArchitectures() {
-    def value = project.getProperties().get("reactNativeArchitectures")
-    return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
-}
-
 android {
     ndkVersion rootProject.ext.ndkVersion
-
+    buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     namespace "com.emurgo"
@@ -186,15 +150,12 @@ android {
 
 dependencies {
 
-    androidTestImplementation('com.wix:detox:+')
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
+
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
-
-   // implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
+    implementation("com.facebook.react:flipper-integration")
 
     // If your app supports Android versions before Ice Cream Sandwich (API level 14)
     implementation('com.facebook.fresco:animated-base-support:1.3.0')
@@ -204,20 +165,11 @@ dependencies {
 
     // For WebP support, including animated WebP
     implementation ('com.facebook.fresco:animated-webp:2.5.0')
-    implementation 'com.facebook.fresco:webpsupport:2.5.0'
-
-    // For WebP support, without animations
     implementation ('com.facebook.fresco:webpsupport:2.5.0')
 
     // react-native-bootsplash
     implementation("androidx.core:core-splashscreen:1.0.0")
 
-    debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
-    debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
-        exclude group:'com.squareup.okhttp3', module:'okhttp'
-    }
-
-    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
@@ -226,8 +178,8 @@ dependencies {
       
 }
 
-configurations.implementation {
-exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
-}
+// configurations.implementation {
+// exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+// }
 
 apply from: file("../../../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
