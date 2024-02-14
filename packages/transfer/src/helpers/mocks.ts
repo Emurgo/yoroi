@@ -1,9 +1,9 @@
+/* istanbul ignore file */
 import {defaultTransferState} from '../translators/reactjs/state/state'
 
 const secondaryTokenId =
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950'
-const secondaryAmount = '12345'
-const primaryAmount = '3214'
+
 export const mocks = {
   startTx: {
     error: {
@@ -67,7 +67,7 @@ export const mocks = {
           entry: {
             ...defaultTransferState.targets[0]?.entry,
             amounts: {
-              '': asQuantity(50000),
+              '': '50000',
             },
           },
         },
@@ -82,10 +82,7 @@ export const mocks = {
           entry: {
             ...defaultTransferState.targets[0]?.entry,
             amounts: {
-              [secondaryTokenId]: Quantities.sum([
-                secondaryAmount.quantity,
-                asQuantity(1000),
-              ]),
+              [secondaryTokenId]: '12344',
             },
           },
         },
@@ -100,7 +97,7 @@ export const mocks = {
           entry: {
             ...defaultTransferState.targets[0]?.entry,
             amounts: {
-              [secondaryTokenId]: secondaryAmount.quantity,
+              [secondaryTokenId]: '12344',
             },
           },
         },
@@ -115,7 +112,7 @@ export const mocks = {
           entry: {
             ...defaultTransferState.targets[0]?.entry,
             amounts: {
-              '': Quantities.sum([primaryAmount.quantity, asQuantity(1000)]),
+              '': '2727363744849',
             },
           },
         },
@@ -125,19 +122,46 @@ export const mocks = {
   confirmTx: {
     success: {
       ...defaultTransferState,
-      yoroiUnsignedTx: walletMocks.yoroiUnsignedTx,
-      selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
+      yoroiUnsignedTx: {
+        entries: [
+          {
+            address: 'address1',
+            amounts: {
+              '': '99999',
+            },
+          },
+        ],
+        fee: {
+          '': '12345',
+        },
+        metadata: {},
+        change: [
+          {
+            address: 'change_address',
+            amounts: {
+              '': '1',
+            },
+          },
+        ],
+        staking: {
+          registrations: [],
+          deregistrations: [],
+          delegations: [],
+          withdrawals: [],
+        },
+        voting: {},
+        unsignedTx: {},
+        mock: true,
+        governance: false,
+      },
+      selectedTokenId: '',
       targets: [
         {
           ...defaultTransferState.targets[0],
           entry: {
             ...defaultTransferState.targets[0]?.entry,
             amounts: {
-              '': asQuantity(
-                walletMocks.yoroiUnsignedTx.entries[0].amounts[
-                  walletMocks.wallet.primaryTokenInfo.id
-                ],
-              ),
+              '': '99999',
             },
           },
         },
@@ -153,7 +177,7 @@ export const mocks = {
           entry: {
             ...defaultTransferState.targets[0]?.entry,
             amounts: {
-              '': asQuantity(50000),
+              '': '50000',
             },
           },
         },
@@ -167,9 +191,9 @@ export const mocks = {
           entry: {
             ...defaultTransferState.targets[0]?.entry,
             amounts: {
-              [secondaryTokenId]: asQuantity(1),
-              ['other.01']: asQuantity(2),
-              ['another.02']: asQuantity(3),
+              [secondaryTokenId]: '1',
+              ['other.01']: '2',
+              ['another.02']: '3',
             },
           },
         },
@@ -183,11 +207,11 @@ export const mocks = {
           entry: {
             ...defaultTransferState.targets[0]?.entry,
             amounts: {
-              [secondaryTokenId]: asQuantity(1),
-              ['other.01']: asQuantity(2),
-              ['another.02']: asQuantity(3),
-              ['more.03']: asQuantity(4),
-              '': asQuantity(50000),
+              [secondaryTokenId]: '1',
+              ['other.01']: '2',
+              ['another.02']: '3',
+              ['more.03']: '4',
+              '': '50000',
             },
           },
         },

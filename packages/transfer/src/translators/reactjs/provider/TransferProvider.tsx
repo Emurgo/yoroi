@@ -58,10 +58,8 @@ export const TransferProvider = ({
     memoChanged: (memo) =>
       dispatch({type: TransferActionType.MemoChanged, memo}),
 
-    unsignedTxChanged: (unsignedTx) => {
-      console.log('unsignedTxChanged')
-      dispatch({type: TransferActionType.UnsignedTxChanged, unsignedTx})
-    },
+    unsignedTxChanged: (unsignedTx) =>
+      dispatch({type: TransferActionType.UnsignedTxChanged, unsignedTx}),
     tokenSelectedChanged: (tokenId: string) =>
       dispatch({type: TransferActionType.TokenSelectedChanged, tokenId}),
     amountChanged: (quantity: Balance.Quantity) =>

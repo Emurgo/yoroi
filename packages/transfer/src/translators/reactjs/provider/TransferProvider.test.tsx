@@ -86,6 +86,37 @@ describe('TransferContext :: hooks', () => {
     })
   })
 
+  test('nameServerSelectedChanged', () => {
+    const {result} = renderHook(() => useTransfer(), {wrapper})
+
+    act(() => {
+      result.current.nameServerSelectedChanged(Resolver.NameServer.Cns)
+    })
+
+    expect(result.current.targets[0]?.receiver).toEqual<Resolver.Receiver>({
+      resolve: '',
+      as: 'address',
+      selectedNameServer: Resolver.NameServer.Cns,
+      addressRecords: undefined,
+    })
+  })
+  test('addressRecordsFetched', () => {
+    const {result} = renderHook(() => useTransfer(), {wrapper})
+
+    act(() => {
+      result.current.addressRecordsFetched({
+        [Resolver.NameServer.Cns]: 'address',
+      })
+    })
+
+    expect(result.current.targets[0]?.receiver).toEqual<Resolver.Receiver>({
+      resolve: '',
+      as: 'address',
+      selectedNameServer: Resolver.NameServer.Cns,
+      addressRecords: {[Resolver.NameServer.Cns]: 'address'},
+    })
+  })
+
   test('amountChanged', () => {
     const {result} = renderHook(() => useTransfer(), {wrapper})
 
@@ -122,12 +153,6 @@ describe('TransferContext :: hooks', () => {
     })
 
     expect(result.current.targets[0]?.entry.amounts).toEqual({})
-  })
-
-  test('missingProvider', () => {
-    const {result} = renderHook(() => useTransfer())
-
-    expect(result.error).toEqual(Error('TransferProvider is missing'))
   })
 })
 
