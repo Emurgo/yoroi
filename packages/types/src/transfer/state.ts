@@ -49,6 +49,6 @@ export type TransferTarget = {
   entry: TransferEntry
 }
 
-export type TransferTargets = Readonly<Array<TransferTarget>>
+export type TransferTargets = Array<TransferTarget>
 
 export type TransferAddress = string

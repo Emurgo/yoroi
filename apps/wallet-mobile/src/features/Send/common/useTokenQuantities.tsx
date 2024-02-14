@@ -1,4 +1,5 @@
-import {useTransfer, YoroiTarget, YoroiTargets} from '@yoroi/transfer'
+import {useTransfer} from '@yoroi/transfer'
+import {Transfer} from '@yoroi/types'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {useBalance, useLockedAmount} from '../../../yoroi-wallets/hooks'
@@ -38,11 +39,11 @@ const getTotalUsedByOtherTargets = ({
   selectedTargetIndex,
   selectedTokenId,
 }: {
-  targets: YoroiTargets
+  targets: Transfer.Targets
   selectedTargetIndex: number
   selectedTokenId: string
 }) => {
-  const isNotTheSelectedTarget = (_target: YoroiTarget, index: number) => index !== selectedTargetIndex
+  const isNotTheSelectedTarget = (_target: Transfer.Target, index: number) => index !== selectedTargetIndex
   return targets.filter(isNotTheSelectedTarget).reduce((acc, target) => {
     const quantity = Amounts.getAmount(target.entry.amounts, selectedTokenId).quantity
     return Quantities.sum([acc, quantity])

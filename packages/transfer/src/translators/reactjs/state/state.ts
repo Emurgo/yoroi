@@ -1,6 +1,6 @@
 import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
 import {Balance, Resolver, Transfer} from '@yoroi/types'
-import {produce} from 'immer'
+import {castDraft, produce} from 'immer'
 
 export const combinedReducers = (
   state: TransferState,
@@ -21,7 +21,7 @@ const transferReducer = (state: TransferState, action: TransferAction) => {
   return produce(state, (draft) => {
     switch (action.type) {
       case TransferActionType.UnsignedTxChanged:
-        draft.unsignedTx = action.unsignedTx
+        draft.unsignedTx = castDraft(action.unsignedTx)
         break
       case TransferActionType.MemoChanged:
         draft.memo = action.memo
@@ -32,7 +32,7 @@ const transferReducer = (state: TransferState, action: TransferAction) => {
       case TransferActionType.Reset:
         draft.selectedTokenId = defaultTransferState.selectedTokenId
         draft.memo = defaultTransferState.memo
-        draft.unsignedTx = defaultTransferState.unsignedTx
+        draft.unsignedTx = castDraft(defaultTransferState.unsignedTx)
         break
     }
   })
@@ -173,13 +173,13 @@ export const defaultTransferActions = {
   ...defaultStateActions,
 } as const
 
-export type TransferState = {
+export type TransferState = Readonly<{
   selectedTargetIndex: number
   selectedTokenId: string
-  unsignedTx: any
+  unsignedTx: Transfer.UnsignedTx | undefined
   memo: string
   targets: Transfer.Targets
-}
+}>
 
 export type TargetActions = Readonly<{
   // Amount
@@ -202,7 +202,7 @@ export type TransferActions = Readonly<{
   memoChanged: (memo: string) => void
 }>
 
-export type TargetAction =
+export type TargetAction = Readonly<
   | {
       type: TransferActionType.ReceiverResolveChanged
       resolve: Resolver.Receiver['resolve']
@@ -231,8 +231,9 @@ export type TargetAction =
       type: TransferActionType.AmountRemoved
       tokenId: string
     }
+>
 
-export type TransferAction =
+export type TransferAction = Readonly<
   | {
       type: TransferActionType.Reset
     }
@@ -248,6 +249,7 @@ export type TransferAction =
       type: TransferActionType.UnsignedTxChanged
       unsignedTx: Transfer.UnsignedTx | undefined
     }
+>
 
 export enum TransferActionType {
   ReceiverResolveChanged = 'receiverResolveChanged',
