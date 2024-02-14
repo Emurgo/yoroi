@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {rootStorage} from '@yoroi/common'
 import assert from 'assert'
 import {expect} from 'chai'
 
 import {WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../cardano/constants/mainnet/constants'
 import {WALLETS} from '../cardano/utils'
+import {rootStorage} from '../storage/rootStorage'
 import {NETWORK_REGISTRY} from '../types'
 import {WalletMeta} from '../walletManager'
 import {migrateWalletMetas} from './walletMeta'

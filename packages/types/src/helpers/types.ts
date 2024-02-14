@@ -17,3 +17,7 @@ export type Right<T> = {
 }
 
 export type Either<E, T> = Left<E> | Right<T>
+
+export type MaybePromise<T, IsAsync extends boolean> = IsAsync extends true
+  ? Promise<T>
+  : T
