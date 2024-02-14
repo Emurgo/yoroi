@@ -106,10 +106,10 @@ export const AddressDetailCard = ({address, title, addressDetails}: ShareProps) 
         />
       </View>
 
+      <Spacer height={12} />
+
       {isSecondPage && (
         <View style={styles.index}>
-          <Spacer height={12} />
-
           {circleIndex.map((index) => (
             <View
               key={index + 'indexCard'}

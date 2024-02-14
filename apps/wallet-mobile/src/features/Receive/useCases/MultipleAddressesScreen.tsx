@@ -4,7 +4,7 @@ import {ScrollView, StyleSheet, Text, useWindowDimensions, View} from 'react-nat
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, StatusBar} from '../../../components'
+import {Button, Spacer} from '../../../components'
 import {ModalScreenWrapper} from '../../../components/ModalScreenWrapper/ModalScreenWrapper'
 import {useHideBottomTabBar} from '../../../yoroi-wallets/hooks'
 import {InfoCard} from '../common/InfoCard/InfoCard'
@@ -50,8 +50,6 @@ export const MultipleAddressesScreen = () => {
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <StatusBar type="light" />
-
       {addressList.length === 20 && <InfoCard onLimit={true} />}
 
       <Animated.FlatList

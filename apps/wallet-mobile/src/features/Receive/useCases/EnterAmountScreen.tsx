@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Keyboard, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, useWindowDimensions, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, Spacer, StatusBar, TextInput} from '../../../components'
+import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
 import {ModalScreenWrapper} from '../../../components/ModalScreenWrapper/ModalScreenWrapper'
 import {useCopy} from '../../../legacy/useCopy'
 import {useSelectedWallet} from '../../../SelectedWallet'
@@ -42,8 +42,6 @@ export const EnterAmountScreen = () => {
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <KeyboardAvoidingView style={styles.root}>
-          <StatusBar type="light" />
-
           <Spacer height={24} />
 
           <View style={styles.content}>

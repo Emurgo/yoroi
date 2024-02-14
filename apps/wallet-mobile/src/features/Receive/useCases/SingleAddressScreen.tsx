@@ -5,9 +5,8 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import Icon from '../../../assets/img/copy.png'
-import {Button, Spacer, StatusBar} from '../../../components'
+import {Button, Spacer} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
-import {useHideBottomTabBar} from '../../../yoroi-wallets/hooks'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
 import {mocks as mockReceives, mocks} from '../common/mocks'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
@@ -15,7 +14,6 @@ import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
 
 export const SingleAddressScreen = () => {
-  useHideBottomTabBar()
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const navigate = useNavigateTo()
@@ -26,8 +24,6 @@ export const SingleAddressScreen = () => {
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <StatusBar type="light" />
-
       <View style={styles.content}>
         <ScrollView style={styles.root}>
           <View style={styles.address}>
