@@ -13,6 +13,7 @@ export type ButtonProps = TouchableOpacityProps & {
   iconImage?: number
   withoutBackground?: boolean
   shelleyTheme?: boolean
+  mainTheme?: boolean
   outlineShelley?: boolean
   textStyles?: TextStyle
 }
@@ -29,6 +30,7 @@ export const Button = (props: ButtonProps) => {
     iconImage,
     withoutBackground,
     shelleyTheme,
+    mainTheme,
     outlineShelley,
     textStyles,
     ...rest
@@ -45,6 +47,7 @@ export const Button = (props: ButtonProps) => {
           withoutBackground && styles.buttonTransparent,
           outlineShelley && styles.buttonOutlineShelley,
           shelleyTheme && styles.shelleyTheme,
+          mainTheme && styles.mainTheme,
           outlineOnLight && shelleyTheme && styles.shelleyOutlineOnLight,
           style,
         ]}
@@ -120,6 +123,9 @@ const styles = StyleSheet.create({
   },
   shelleyTheme: {
     backgroundColor: colors.buttonBackgroundBlue,
+  },
+  mainTheme: {
+    backgroundColor: colors.buttonBackgroundMain,
   },
   shelleyOutlineOnLight: {
     backgroundColor: 'transparent',
