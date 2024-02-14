@@ -36,7 +36,6 @@ export const ReceiveScreen = () => {
                 address={mockReceives.address}
                 title={strings.addresscardTitle}
                 addressDetails={{
-                  address: mockReceives.address,
                   spendingHash: mockReceives.spendinghash,
                   stakingHash: mockReceives.stakinghash,
                 }}

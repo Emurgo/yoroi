@@ -1,3 +1,4 @@
+import {isString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
@@ -7,7 +8,7 @@ import {CopyButton, Text} from '../../../../components'
 import {useStrings} from '../useStrings'
 
 type AddressDetailsProps = {
-  address?: string
+  address: string
   stakingHash?: string
   spendingHash?: string
   title?: string
@@ -39,25 +40,29 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
         </View>
       </View>
 
-      <View style={styles.textSection}>
-        <Text style={[styles.textAddress, {color: colors.grayText}]}>{strings.stakingKeyHash}</Text>
+      {isString(stakingHash) && stakingHash?.length > 0 && (
+        <View style={styles.textSection}>
+          <Text style={[styles.textAddress, {color: colors.grayText}]}>{strings.stakingKeyHash}</Text>
 
-        <View style={styles.textRow}>
-          <Text style={styles.textAddressDetails}>{stakingHash}</Text>
+          <View style={styles.textRow}>
+            <Text style={styles.textAddressDetails}>{stakingHash}</Text>
 
-          <CopyButton value={stakingHash} />
+            <CopyButton value={stakingHash} />
+          </View>
         </View>
-      </View>
+      )}
 
-      <View style={styles.textSection}>
-        <Text style={[styles.textAddress, {color: colors.grayText}]}>{strings.spendingKeyHash}</Text>
+      {isString(spendingHash) && spendingHash?.length > 0 && (
+        <View style={styles.textSection}>
+          <Text style={[styles.textAddress, {color: colors.grayText}]}>{strings.spendingKeyHash}</Text>
 
-        <View style={styles.textRow}>
-          <Text style={styles.textAddressDetails}>{spendingHash}</Text>
+          <View style={styles.textRow}>
+            <Text style={styles.textAddressDetails}>{spendingHash}</Text>
 
-          <CopyButton value={spendingHash} />
+            <CopyButton value={spendingHash} />
+          </View>
         </View>
-      </View>
+      )}
     </View>
   )
 }

@@ -3,33 +3,34 @@ import React, {useState} from 'react'
 import {Dimensions, StyleSheet, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
+import {Spacer} from '../../../../components'
 import {useCopy} from '../../../../legacy/useCopy'
 import {mocks} from '../mocks'
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
 import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
 
 type ShareProps = {
-  address?: string
-  title?: string
+  address: string
+  title: string
   addressDetails?: AddressDetailsProps
 }
 
 type AddressDetailsProps = {
-  address?: string
-  stakingHash?: string
-  spendingHash?: string
-  title?: string
-}
-
-interface Item {
-  cardType: string
-  title?: string
-  address?: string
   stakingHash?: string
   spendingHash?: string
 }
 
-export function AddressDetailCard({address, title, addressDetails}: ShareProps) {
+type CardItem = {
+  title: ShareProps['title']
+  address: ShareProps['address']
+} & (
+  | {
+      cardType: 'QRCode'
+    }
+  | ({cardType: 'Details'} & AddressDetailsProps)
+)
+
+export const AddressDetailCard = ({address, title, addressDetails}: ShareProps) => {
   const [scrollPosition, setScrollPosition] = useState(0)
   const [isSecondPage, setIsSecondPage] = useState(false)
 
@@ -40,18 +41,18 @@ export function AddressDetailCard({address, title, addressDetails}: ShareProps) 
   const SCREEN_WIDTH = Dimensions.get('window').width
   const itemsPerPage = 1
 
-  const data = [
+  const cards: ReadonlyArray<CardItem> = [
     {cardType: 'QRCode', title, address},
     {
       cardType: 'Details',
-      address: addressDetails?.address,
+      address: address,
       stakingHash: addressDetails?.stakingHash,
       spendingHash: addressDetails?.spendingHash,
       title,
     },
-  ]
+  ] as const
 
-  const totalPages = Math.ceil(data.length / itemsPerPage)
+  const totalPages = Math.ceil(cards.length / itemsPerPage)
   const circleIndex = Array.from({length: totalPages}, (_, index) => index + 1)
 
   const onPageChange = (event: {nativeEvent: {contentOffset: {x: number}}}) => {
@@ -60,7 +61,7 @@ export function AddressDetailCard({address, title, addressDetails}: ShareProps) 
     setScrollPosition(index)
   }
 
-  const renderItem = ({item}: {item: Item}) => {
+  const renderItem = ({item}: {item: CardItem}) => {
     switch (item.cardType) {
       case 'QRCode':
         return (
@@ -82,12 +83,9 @@ export function AddressDetailCard({address, title, addressDetails}: ShareProps) 
               title={item.title}
             />
           )
-        } else {
-          return null
         }
-      default:
-        return null
     }
+    return null
   }
 
   return (
@@ -97,7 +95,7 @@ export function AddressDetailCard({address, title, addressDetails}: ShareProps) 
           layout={Layout}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          data={data}
+          data={cards}
           keyExtractor={(_) => _.cardType}
           pagingEnabled
           onScroll={onPageChange}
@@ -110,6 +108,8 @@ export function AddressDetailCard({address, title, addressDetails}: ShareProps) 
 
       {isSecondPage && (
         <View style={styles.index}>
+          <Spacer height={12} />
+
           {circleIndex.map((index) => (
             <View
               key={index + 'indexCard'}
@@ -143,7 +143,6 @@ const useStyles = () => {
     index: {
       flexDirection: 'row',
       gap: 6,
-      marginTop: 12,
     },
     circle: {
       width: 12,
