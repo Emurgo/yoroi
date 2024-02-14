@@ -135,7 +135,7 @@ const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
       {feeStructure.map((fee) => {
         const modalContent = (
           <View style={styles.modalContent}>
-            <Text style={styles.text}>{fee.info}</Text>
+            <Text style={styles.modalText}>{fee.info}</Text>
 
             <Spacer fill />
 
@@ -221,7 +221,7 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
       {feeStructure.map((fee) => {
         const modalContent = (
           <View style={styles.modalContent}>
-            <Text style={styles.text}>{fee.info}</Text>
+            <Text style={styles.modalText}>{fee.info}</Text>
 
             <Spacer fill />
 
@@ -252,6 +252,15 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
 const styles = StyleSheet.create({
   flex: {flexDirection: 'row', alignItems: 'center'},
   between: {justifyContent: 'space-between'},
+  modalText: {
+    textAlign: 'left',
+    fontWeight: '400',
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#242838',
+    flexWrap: 'wrap',
+    flex: 1,
+  },
   text: {
     textAlign: 'right',
     fontWeight: '400',
