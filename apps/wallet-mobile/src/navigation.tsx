@@ -53,7 +53,7 @@ export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOpti
       backgroundColor: theme.color.gray.min,
     },
     headerTitleStyle: {
-      ...theme.typography['body-1-l-l-medium'],
+      ...theme.typography['body-1-l-medium'],
       width: WIDTH - 75,
       textAlign: 'center',
     },
