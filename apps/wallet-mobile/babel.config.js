@@ -1,7 +1,7 @@
 module.exports = (api) => {
   api.cache(true)
 
-  const presets = ['module:metro-react-native-babel-preset']
+  const presets = ['module:@react-native/babel-preset']
   const plugins = [
     [
       'react-intl',
