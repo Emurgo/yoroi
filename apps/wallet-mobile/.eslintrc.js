@@ -30,6 +30,7 @@ module.exports = {
     },
   ],
   extends: [
+    // '@react-native', after 73
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
