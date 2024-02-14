@@ -43,7 +43,7 @@ export const SelectBuyTokenFromListScreen = () => {
         </View>
       ),
     }),
-    [],
+    [styles.item],
   )
 
   useSearchOnNavBar({
