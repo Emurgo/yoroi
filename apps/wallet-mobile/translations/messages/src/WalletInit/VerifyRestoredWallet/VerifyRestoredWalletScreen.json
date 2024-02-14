@@ -1,0 +1,107 @@
+[
+  {
+    "id": "components.walletinit.verifyrestoredwallet.checksumLabel",
+    "defaultMessage": "!!!Checksum label",
+    "file": "src/WalletInit/VerifyRestoredWallet/VerifyRestoredWalletScreen.tsx",
+    "start": {
+      "line": 105,
+      "column": 17,
+      "index": 3854
+    },
+    "end": {
+      "line": 108,
+      "column": 3,
+      "index": 3968
+    }
+  },
+  {
+    "id": "components.walletinit.verifyrestoredwallet.instructionLabel",
+    "defaultMessage": "!!!Be careful about wallet restoration:",
+    "file": "src/WalletInit/VerifyRestoredWallet/VerifyRestoredWalletScreen.tsx",
+    "start": {
+      "line": 109,
+      "column": 20,
+      "index": 3990
+    },
+    "end": {
+      "line": 112,
+      "column": 3,
+      "index": 4129
+    }
+  },
+  {
+    "id": "components.walletinit.verifyrestoredwallet.instructionLabel-1",
+    "defaultMessage": "!!!Make sure your wallet account checksum and icon match what you remember.",
+    "file": "src/WalletInit/VerifyRestoredWallet/VerifyRestoredWalletScreen.tsx",
+    "start": {
+      "line": 113,
+      "column": 17,
+      "index": 4148
+    },
+    "end": {
+      "line": 116,
+      "column": 3,
+      "index": 4325
+    }
+  },
+  {
+    "id": "components.walletinit.verifyrestoredwallet.instructionLabel-2",
+    "defaultMessage": "!!!Make sure the address(es) match what you remember",
+    "file": "src/WalletInit/VerifyRestoredWallet/VerifyRestoredWalletScreen.tsx",
+    "start": {
+      "line": 117,
+      "column": 17,
+      "index": 4344
+    },
+    "end": {
+      "line": 120,
+      "column": 3,
+      "index": 4498
+    }
+  },
+  {
+    "id": "components.walletinit.verifyrestoredwallet.instructionLabel-3",
+    "defaultMessage": "!!!If you’ve entered wrong mnemonics you will just open another empty wallet with wrong account checksum and wrong addresses.",
+    "file": "src/WalletInit/VerifyRestoredWallet/VerifyRestoredWalletScreen.tsx",
+    "start": {
+      "line": 121,
+      "column": 17,
+      "index": 4517
+    },
+    "end": {
+      "line": 126,
+      "column": 3,
+      "index": 4761
+    }
+  },
+  {
+    "id": "components.walletinit.verifyrestoredwallet.walletAddressLabel",
+    "defaultMessage": "!!!Wallet Address(es):",
+    "file": "src/WalletInit/VerifyRestoredWallet/VerifyRestoredWalletScreen.tsx",
+    "start": {
+      "line": 127,
+      "column": 22,
+      "index": 4785
+    },
+    "end": {
+      "line": 130,
+      "column": 3,
+      "index": 4909
+    }
+  },
+  {
+    "id": "components.walletinit.verifyrestoredwallet.buttonText",
+    "defaultMessage": "!!!Continue",
+    "file": "src/WalletInit/VerifyRestoredWallet/VerifyRestoredWalletScreen.tsx",
+    "start": {
+      "line": 131,
+      "column": 14,
+      "index": 4925
+    },
+    "end": {
+      "line": 134,
+      "column": 3,
+      "index": 5030
+    }
+  }
+]

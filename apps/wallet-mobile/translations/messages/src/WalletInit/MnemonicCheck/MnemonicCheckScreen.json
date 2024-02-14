@@ -1,0 +1,47 @@
+[
+  {
+    "id": "components.walletinit.createwallet.mnemoniccheckscreen.instructions",
+    "defaultMessage": "!!!Tap each word in the correct order to verify your recovery phrase",
+    "file": "src/WalletInit/MnemonicCheck/MnemonicCheckScreen.tsx",
+    "start": {
+      "line": 165,
+      "column": 16,
+      "index": 5509
+    },
+    "end": {
+      "line": 168,
+      "column": 3,
+      "index": 5685
+    }
+  },
+  {
+    "id": "components.walletinit.createwallet.mnemoniccheckscreen.confirmButton",
+    "defaultMessage": "!!!Confirm",
+    "file": "src/WalletInit/MnemonicCheck/MnemonicCheckScreen.tsx",
+    "start": {
+      "line": 169,
+      "column": 17,
+      "index": 5704
+    },
+    "end": {
+      "line": 172,
+      "column": 3,
+      "index": 5823
+    }
+  },
+  {
+    "id": "components.walletinit.createwallet.mnemoniccheckscreen.mnemonicWordsInputInvalidPhrase",
+    "defaultMessage": "!!!Recovery phrase does not match",
+    "file": "src/WalletInit/MnemonicCheck/MnemonicCheckScreen.tsx",
+    "start": {
+      "line": 173,
+      "column": 35,
+      "index": 5860
+    },
+    "end": {
+      "line": 176,
+      "column": 3,
+      "index": 6020
+    }
+  }
+]
