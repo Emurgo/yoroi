@@ -1,5 +1,6 @@
 import {act, renderHook} from '@testing-library/react-hooks'
 import {fireEvent, render} from '@testing-library/react-native'
+import {ThemeProvider} from '@yoroi/theme'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {TextInput} from 'react-native'
@@ -15,9 +16,11 @@ const wrapper: React.FC<React.PropsWithChildren> = ({children}) => <SendProvider
 describe('SendContext', () => {
   test('resetForm', () => {
     const {getByTestId, getByText} = render(
-      <SendProvider>
-        <ResetFormTest />
-      </SendProvider>,
+      <ThemeProvider>
+        <SendProvider>
+          <ResetFormTest />
+        </SendProvider>
+      </ThemeProvider>,
     )
 
     const memoInput = getByTestId('memoInput')
