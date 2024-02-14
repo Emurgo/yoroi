@@ -55,7 +55,7 @@ export const AddressDetailCard = ({address, title, addressDetails}: ShareProps) 
   const totalPages = Math.ceil(cards.length / itemsPerPage)
   const circleIndex = Array.from({length: totalPages}, (_, index) => index + 1)
 
-  const onPageChange = (event: {nativeEvent: {contentOffset: {x: number}}}) => {
+  const handleOnPageChange = (event: {nativeEvent: {contentOffset: {x: number}}}) => {
     const offset = event.nativeEvent.contentOffset.x
     const index = Math.floor(offset / (itemsPerPage * SCREEN_WIDTH - 64))
     setScrollPosition(index)
@@ -98,7 +98,7 @@ export const AddressDetailCard = ({address, title, addressDetails}: ShareProps) 
           data={cards}
           keyExtractor={(_) => _.cardType}
           pagingEnabled
-          onScroll={onPageChange}
+          onScroll={handleOnPageChange}
           snapToInterval={itemsPerPage * SCREEN_WIDTH}
           decelerationRate="fast"
           renderItem={renderItem}
@@ -135,7 +135,7 @@ const useStyles = () => {
       width: '100%',
       alignItems: 'center',
       maxHeight: 458,
-      height: '100%',
+      flex: 1,
       minHeight: 394,
       alignSelf: 'center',
       overflow: 'hidden',

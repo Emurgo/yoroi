@@ -84,7 +84,7 @@ const useStyles = () => {
       borderRadius: 16,
       width: SCREEN_WIDTH - 34,
       alignItems: 'center',
-      height: '100%',
+      flex: 1,
       minHeight: 394,
       alignSelf: 'center',
       overflow: 'hidden',
