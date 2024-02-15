@@ -105,35 +105,38 @@ const Middle = ({style, ...props}: ViewProps) => (
 )
 const Right = ({style, ...props}: ViewProps) => <View style={style} {...props} />
 
-export const AmountItemPlaceholder = ({style}: ViewProps) => (
-  <View
-    style={[
-      style,
-      {
-        display: 'flex',
-        flexDirection: 'row',
-        gap: 12,
-        height: 56,
-      },
-    ]}
-  >
+export const AmountItemPlaceholder = ({style}: ViewProps) => {
+  const {colors} = useStyles()
+  return (
     <View
-      style={{
-        backgroundColor: COLORS.BACKGROUND_GRAY,
-        borderRadius: 8,
-        flexGrow: 3,
-      }}
-    />
+      style={[
+        style,
+        {
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 12,
+          height: 56,
+        },
+      ]}
+    >
+      <View
+        style={{
+          backgroundColor: colors.background,
+          borderRadius: 8,
+          flexGrow: 3,
+        }}
+      />
 
-    <View
-      style={{
-        backgroundColor: COLORS.BACKGROUND_GRAY,
-        borderRadius: 8,
-        flexGrow: 1,
-      }}
-    />
-  </View>
-)
+      <View
+        style={{
+          backgroundColor: colors.background,
+          borderRadius: 8,
+          flexGrow: 1,
+        }}
+      />
+    </View>
+  )
+}
 
 const useStyles = () => {
   const {theme} = useTheme()
@@ -172,6 +175,7 @@ const useStyles = () => {
 
   const colors = {
     text: color.gray[900],
+    background: color.gray[200],
   }
 
   return {styles, colors}

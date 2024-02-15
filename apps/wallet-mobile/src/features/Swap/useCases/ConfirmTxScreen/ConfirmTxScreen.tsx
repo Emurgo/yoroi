@@ -170,6 +170,7 @@ const useStyles = () => {
     root: {
       flex: 1,
       backgroundColor: color.gray.min,
+      paddingTop: 16,
     },
     container: {
       flex: 1,
