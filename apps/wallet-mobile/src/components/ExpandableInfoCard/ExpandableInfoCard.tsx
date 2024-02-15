@@ -171,8 +171,9 @@ export const MainInfoWrapper = ({label, value, isLast = false}: {label: string; 
 }
 
 export const ExpandableInfoCardSkeleton = () => {
+  const {theme} = useTheme()
   return (
-    <SkeletonPlaceholder>
+    <SkeletonPlaceholder backgroundColor={theme.color.gray[200]}>
       <View style={{height: 160, borderRadius: 8}}></View>
     </SkeletonPlaceholder>
   )

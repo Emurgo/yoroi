@@ -146,6 +146,7 @@ const useStyles = () => {
       color: theme.color.gray.max,
     },
     textShareAddress: {
+      color: theme.color.gray.max,
       fontWeight: '500',
       padding: 4,
       textTransform: 'uppercase',
