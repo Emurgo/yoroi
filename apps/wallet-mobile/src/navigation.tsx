@@ -1,9 +1,15 @@
 import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-tabs'
-import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
+import {
+  getFocusedRouteNameFromRoute,
+  NavigatorScreenParams,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {Theme, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps} from 'react-native'
+import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
 
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
@@ -530,3 +536,10 @@ export const useWalletNavigation = () => {
     },
   } as const).current
 }
+
+export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history'>): ViewStyle | undefined =>
+  getFocusedRouteNameFromRoute(route)?.startsWith('scan') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('receive')
+    ? {display: 'none'}
+    : undefined

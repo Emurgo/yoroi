@@ -6,7 +6,6 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer} from '../../../components'
 import {ModalScreenWrapper} from '../../../components/ModalScreenWrapper/ModalScreenWrapper'
-import {useHideBottomTabBar} from '../../../yoroi-wallets/hooks'
 import {InfoCard} from '../common/InfoCard/InfoCard'
 import {mocks} from '../common/mocks'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
@@ -20,7 +19,6 @@ type Item = {
 }
 
 export const MultipleAddressesScreen = () => {
-  useHideBottomTabBar()
   const strings = useStrings()
   const {styles, colors} = useStyles()
 

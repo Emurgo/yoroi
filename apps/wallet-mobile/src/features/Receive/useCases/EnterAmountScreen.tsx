@@ -8,14 +8,13 @@ import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../componen
 import {ModalScreenWrapper} from '../../../components/ModalScreenWrapper/ModalScreenWrapper'
 import {useCopy} from '../../../legacy/useCopy'
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {useHideBottomTabBar, useReceiveAddresses} from '../../../yoroi-wallets/hooks'
+import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
 import {mocks} from '../common/mocks'
 import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../common/useStrings'
 
 export const EnterAmountScreen = () => {
-  useHideBottomTabBar()
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const receiveAddresses = useReceiveAddresses(wallet)
