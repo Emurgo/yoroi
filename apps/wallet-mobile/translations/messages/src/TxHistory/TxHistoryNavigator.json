@@ -6,12 +6,12 @@
     "start": {
       "line": 372,
       "column": 16,
-      "index": 14023
+      "index": 13491
     },
     "end": {
       "line": 375,
       "column": 3,
-      "index": 14112
+      "index": 13580
     }
   },
   {
@@ -21,12 +21,12 @@
     "start": {
       "line": 376,
       "column": 13,
-      "index": 14127
+      "index": 13595
     },
     "end": {
       "line": 379,
       "column": 3,
-      "index": 14200
+      "index": 13668
     }
   },
   {
@@ -36,12 +36,12 @@
     "start": {
       "line": 380,
       "column": 17,
-      "index": 14219
+      "index": 13687
     },
     "end": {
       "line": 383,
       "column": 3,
-      "index": 14296
+      "index": 13764
     }
   },
   {
@@ -51,12 +51,12 @@
     "start": {
       "line": 384,
       "column": 15,
-      "index": 14313
+      "index": 13781
     },
     "end": {
       "line": 387,
       "column": 3,
-      "index": 14386
+      "index": 13854
     }
   },
   {
@@ -66,12 +66,12 @@
     "start": {
       "line": 388,
       "column": 21,
-      "index": 14409
+      "index": 13877
     },
     "end": {
       "line": 391,
       "column": 3,
-      "index": 14504
+      "index": 13972
     }
   },
   {
@@ -81,12 +81,12 @@
     "start": {
       "line": 392,
       "column": 14,
-      "index": 14520
+      "index": 13988
     },
     "end": {
       "line": 395,
       "column": 3,
-      "index": 14601
+      "index": 14069
     }
   },
   {
@@ -96,12 +96,12 @@
     "start": {
       "line": 396,
       "column": 13,
-      "index": 14616
+      "index": 14084
     },
     "end": {
       "line": 399,
       "column": 3,
-      "index": 14696
+      "index": 14164
     }
   },
   {
@@ -111,12 +111,12 @@
     "start": {
       "line": 400,
       "column": 18,
-      "index": 14716
+      "index": 14184
     },
     "end": {
       "line": 403,
       "column": 3,
-      "index": 14817
+      "index": 14285
     }
   },
   {
@@ -126,12 +126,12 @@
     "start": {
       "line": 404,
       "column": 20,
-      "index": 14839
+      "index": 14307
     },
     "end": {
       "line": 407,
       "column": 3,
-      "index": 14928
+      "index": 14396
     }
   },
   {
@@ -141,12 +141,12 @@
     "start": {
       "line": 408,
       "column": 26,
-      "index": 14956
+      "index": 14424
     },
     "end": {
       "line": 411,
       "column": 3,
-      "index": 15060
+      "index": 14528
     }
   },
   {
@@ -156,12 +156,12 @@
     "start": {
       "line": 412,
       "column": 19,
-      "index": 15081
+      "index": 14549
     },
     "end": {
       "line": 415,
       "column": 3,
-      "index": 15174
+      "index": 14642
     }
   },
   {
@@ -171,12 +171,12 @@
     "start": {
       "line": 416,
       "column": 16,
-      "index": 15192
+      "index": 14660
     },
     "end": {
       "line": 419,
       "column": 3,
-      "index": 15278
+      "index": 14746
     }
   },
   {
@@ -186,12 +186,12 @@
     "start": {
       "line": 420,
       "column": 19,
-      "index": 15299
+      "index": 14767
     },
     "end": {
       "line": 426,
       "column": 3,
-      "index": 15537
+      "index": 15005
     }
   },
   {
@@ -201,12 +201,12 @@
     "start": {
       "line": 427,
       "column": 27,
-      "index": 15566
+      "index": 15034
     },
     "end": {
       "line": 430,
       "column": 3,
-      "index": 15659
+      "index": 15127
     }
   },
   {
@@ -216,12 +216,12 @@
     "start": {
       "line": 431,
       "column": 13,
-      "index": 15674
+      "index": 15142
     },
     "end": {
       "line": 434,
       "column": 3,
-      "index": 15749
+      "index": 15217
     }
   },
   {
@@ -231,27 +231,12 @@
     "start": {
       "line": 435,
       "column": 25,
-      "index": 15776
+      "index": 15244
     },
     "end": {
       "line": 438,
       "column": 3,
-      "index": 15850
-    }
-  },
-  {
-    "id": "components.receive.receivescreen.specificAmount",
-    "defaultMessage": "!!!Request specific amount",
-    "file": "src/TxHistory/TxHistoryNavigator.tsx",
-    "start": {
-      "line": 439,
-      "column": 18,
-      "index": 15870
-    },
-    "end": {
-      "line": 442,
-      "column": 3,
-      "index": 15984
+      "index": 15318
     }
   }
 ]

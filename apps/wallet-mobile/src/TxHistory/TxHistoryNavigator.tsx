@@ -12,6 +12,7 @@ import {
   swapStorageMaker,
 } from '@yoroi/swap'
 import {Theme, useTheme} from '@yoroi/theme'
+import {TransferProvider} from '@yoroi/transfer'
 import {Resolver, Swap} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -28,7 +29,6 @@ import {SingleAddressScreen} from '../features/Receive/useCases/SingleAddressScr
 import {CodeScannerButton} from '../features/Scan/common/CodeScannerButton'
 import {ScanCodeScreen} from '../features/Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '../features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
-import {SendProvider} from '../features/Send/common/SendContext'
 import {ConfirmTxScreen} from '../features/Send/useCases/ConfirmTx/ConfirmTxScreen'
 import {FailedTxScreen} from '../features/Send/useCases/ConfirmTx/FailedTx/FailedTxScreen'
 import {SubmittedTxScreen} from '../features/Send/useCases/ConfirmTx/SubmittedTx/SubmittedTxScreen'
@@ -120,7 +120,7 @@ export const TxHistoryNavigator = () => {
   const headerRightHistory = React.useCallback(() => <HeaderRightHistory />, [])
 
   return (
-    <SendProvider key={wallet.id}>
+    <TransferProvider key={wallet.id}>
       <SwapProvider key={wallet.id} swapManager={swapManager}>
         <SwapFormProvider>
           <ResolverProvider resolverManager={resolverManager}>
@@ -364,7 +364,7 @@ export const TxHistoryNavigator = () => {
           </ResolverProvider>
         </SwapFormProvider>
       </SwapProvider>
-    </SendProvider>
+    </TransferProvider>
   )
 }
 

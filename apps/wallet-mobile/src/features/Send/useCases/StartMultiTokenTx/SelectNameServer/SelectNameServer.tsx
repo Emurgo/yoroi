@@ -1,4 +1,5 @@
 import {isNameServer, nameServerName} from '@yoroi/resolver'
+import {useTransfer} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {ReactNode} from 'react'
@@ -8,12 +9,11 @@ import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
 import {Warning} from '../../../../../components/Warning'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
-import {useSend} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 
 export const SelectNameServer = () => {
   const strings = useStrings()
-  const {targets, selectedTargetIndex, nameServerSelectedChanged} = useSend()
+  const {targets, selectedTargetIndex, nameServerSelectedChanged} = useTransfer()
   const receiver = targets[selectedTargetIndex].receiver
   const {addressRecords} = receiver
   const addressRecordsEntries = toAddressRecordsEntries(addressRecords)
@@ -55,7 +55,7 @@ export const SelectNameServer = () => {
         <>
           <ButtonGroup labels={labels} onSelect={handleOnSelectNameServer} />
 
-          {!receiver.selectedNameServer && shouldShow && (
+          {receiver.selectedNameServer === undefined && shouldShow && (
             <>
               <Spacer height={16} />
 

@@ -6,27 +6,23 @@
     "start": {
       "line": 226,
       "column": 18,
-      "index": 6881
+      "index": 6846
     },
     "end": {
       "line": 229,
       "column": 3,
-      "index": 6979
+      "index": 6944
     }
   },
   {
-    "id": "components.settings.applicationsettingsscreen.tabTitle",
-    "defaultMessage": "!!!Application",
-    "file": "src/features/Settings/SettingsScreenNavigator.tsx",
     "start": {
-      "line": 230,
       "column": 15,
-      "index": 6996
+      "index": 6961
     },
     "end": {
       "line": 233,
       "column": 3,
-      "index": 7105
+      "index": 7070
     }
   },
   {
@@ -36,12 +32,12 @@
     "start": {
       "line": 234,
       "column": 24,
-      "index": 7131
+      "index": 7096
     },
     "end": {
       "line": 237,
       "column": 3,
-      "index": 7240
+      "index": 7205
     }
   },
   {
@@ -51,12 +47,12 @@
     "start": {
       "line": 238,
       "column": 23,
-      "index": 7265
+      "index": 7230
     },
     "end": {
       "line": 241,
       "column": 3,
-      "index": 7379
+      "index": 7344
     }
   },
   {
@@ -66,12 +62,12 @@
     "start": {
       "line": 242,
       "column": 21,
-      "index": 7402
+      "index": 7367
     },
     "end": {
       "line": 245,
       "column": 3,
-      "index": 7503
+      "index": 7468
     }
   },
   {
@@ -81,12 +77,12 @@
     "start": {
       "line": 246,
       "column": 23,
-      "index": 7528
+      "index": 7493
     },
     "end": {
       "line": 249,
       "column": 3,
-      "index": 7644
+      "index": 7609
     }
   },
   {
@@ -96,12 +92,12 @@
     "start": {
       "line": 250,
       "column": 25,
-      "index": 7671
+      "index": 7636
     },
     "end": {
       "line": 253,
       "column": 3,
-      "index": 7775
+      "index": 7740
     }
   },
   {
@@ -111,12 +107,12 @@
     "start": {
       "line": 254,
       "column": 16,
-      "index": 7793
+      "index": 7758
     },
     "end": {
       "line": 257,
       "column": 3,
-      "index": 7884
+      "index": 7849
     }
   },
   {
@@ -126,12 +122,12 @@
     "start": {
       "line": 258,
       "column": 31,
-      "index": 7917
+      "index": 7882
     },
     "end": {
       "line": 261,
       "column": 3,
-      "index": 8032
+      "index": 7997
     }
   },
   {
@@ -141,12 +137,12 @@
     "start": {
       "line": 262,
       "column": 32,
-      "index": 8066
+      "index": 8031
     },
     "end": {
       "line": 265,
       "column": 3,
-      "index": 8182
+      "index": 8147
     }
   },
   {
@@ -156,12 +152,12 @@
     "start": {
       "line": 266,
       "column": 18,
-      "index": 8202
+      "index": 8167
     },
     "end": {
       "line": 269,
       "column": 3,
-      "index": 8300
+      "index": 8265
     }
   },
   {
@@ -171,12 +167,12 @@
     "start": {
       "line": 270,
       "column": 17,
-      "index": 8319
+      "index": 8284
     },
     "end": {
       "line": 273,
       "column": 3,
-      "index": 8422
+      "index": 8387
     }
   },
   {
@@ -186,12 +182,12 @@
     "start": {
       "line": 274,
       "column": 17,
-      "index": 8441
+      "index": 8406
     },
     "end": {
       "line": 277,
       "column": 3,
-      "index": 8539
+      "index": 8504
     }
   },
   {
@@ -201,12 +197,12 @@
     "start": {
       "line": 278,
       "column": 20,
-      "index": 8561
+      "index": 8526
     },
     "end": {
       "line": 281,
       "column": 3,
-      "index": 8679
+      "index": 8644
     }
   },
   {
@@ -216,12 +212,12 @@
     "start": {
       "line": 282,
       "column": 14,
-      "index": 8695
+      "index": 8660
     },
     "end": {
       "line": 285,
       "column": 3,
-      "index": 8795
+      "index": 8760
     }
   },
   {
@@ -231,12 +227,12 @@
     "start": {
       "line": 286,
       "column": 22,
-      "index": 8819
+      "index": 8784
     },
     "end": {
       "line": 289,
       "column": 3,
-      "index": 8922
+      "index": 8887
     }
   },
   {
@@ -246,12 +242,12 @@
     "start": {
       "line": 290,
       "column": 14,
-      "index": 8938
+      "index": 8903
     },
     "end": {
       "line": 293,
       "column": 3,
-      "index": 9009
+      "index": 8974
     }
   }
 ]
