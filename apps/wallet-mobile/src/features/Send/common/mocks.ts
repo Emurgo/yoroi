@@ -1,6 +1,7 @@
+import {defaultTransferState} from '@yoroi/transfer'
+
 import {mocks as walletMocks} from '../../../yoroi-wallets/mocks/wallet'
 import {Amounts, asQuantity, Quantities} from '../../../yoroi-wallets/utils'
-import {initialState} from './SendContext'
 
 const secondaryTokenId = '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950'
 const secondaryAmount = Amounts.getAmount(walletMocks.balances, secondaryTokenId)
@@ -9,34 +10,34 @@ export const mocks = {
   startTx: {
     error: {
       invalidAddress: {
-        ...initialState,
+        ...defaultTransferState,
         targets: [
           {
-            ...initialState.targets[0],
+            ...defaultTransferState.targets[0],
             receiver: {
-              ...initialState.targets[0].receiver,
+              ...defaultTransferState.targets[0].receiver,
               receiver: 'invalid_address',
             },
             entry: {
-              ...initialState.targets[0].entry,
+              ...defaultTransferState.targets[0].entry,
               address: 'invalid_address',
             },
           },
         ],
       },
       memoTooLong: {
-        ...initialState,
+        ...defaultTransferState,
         memo: new Array(500).fill('a').join(''),
       },
     },
     loading: {
       resolveReceiver: {
-        ...initialState,
+        ...defaultTransferState,
         targets: [
           {
-            ...initialState.targets[0],
+            ...defaultTransferState.targets[0],
             entry: {
-              ...initialState.targets[0].entry,
+              ...defaultTransferState.targets[0].entry,
             },
           },
         ],
@@ -45,13 +46,13 @@ export const mocks = {
   },
   editingAmount: {
     adding: {
-      ...initialState,
+      ...defaultTransferState,
       selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
       targets: [
         {
-          ...initialState.targets[0],
+          ...defaultTransferState.targets[0],
           entry: {
-            ...initialState.targets[0].entry,
+            ...defaultTransferState.targets[0].entry,
             amounts: {
               [walletMocks.wallet.primaryTokenInfo.id]: Quantities.zero,
             },
@@ -60,13 +61,13 @@ export const mocks = {
       ],
     },
     initialQuantity: {
-      ...initialState,
+      ...defaultTransferState,
       selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
       targets: [
         {
-          ...initialState.targets[0],
+          ...defaultTransferState.targets[0],
           entry: {
-            ...initialState.targets[0].entry,
+            ...defaultTransferState.targets[0].entry,
             amounts: {
               [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(50000),
             },
@@ -75,13 +76,13 @@ export const mocks = {
       ],
     },
     insuficientBalance: {
-      ...initialState,
+      ...defaultTransferState,
       selectedTokenId: secondaryTokenId,
       targets: [
         {
-          ...initialState.targets[0],
+          ...defaultTransferState.targets[0],
           entry: {
-            ...initialState.targets[0].entry,
+            ...defaultTransferState.targets[0].entry,
             amounts: {
               [secondaryTokenId]: Quantities.sum([secondaryAmount.quantity, asQuantity(1000)]),
             },
@@ -90,13 +91,13 @@ export const mocks = {
       ],
     },
     secondaryToken: {
-      ...initialState,
+      ...defaultTransferState,
       selectedTokenId: secondaryTokenId,
       targets: [
         {
-          ...initialState.targets[0],
+          ...defaultTransferState.targets[0],
           entry: {
-            ...initialState.targets[0].entry,
+            ...defaultTransferState.targets[0].entry,
             amounts: {
               [secondaryTokenId]: secondaryAmount.quantity,
             },
@@ -105,13 +106,13 @@ export const mocks = {
       ],
     },
     overSpendable: {
-      ...initialState,
+      ...defaultTransferState,
       selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
       targets: [
         {
-          ...initialState.targets[0],
+          ...defaultTransferState.targets[0],
           entry: {
-            ...initialState.targets[0].entry,
+            ...defaultTransferState.targets[0].entry,
             amounts: {
               [walletMocks.wallet.primaryTokenInfo.id]: Quantities.sum([primaryAmount.quantity, asQuantity(1000)]),
             },
@@ -122,14 +123,14 @@ export const mocks = {
   },
   confirmTx: {
     success: {
-      ...initialState,
+      ...defaultTransferState,
       yoroiUnsignedTx: walletMocks.yoroiUnsignedTx,
       selectedTokenId: walletMocks.wallet.primaryTokenInfo.id,
       targets: [
         {
-          ...initialState.targets[0],
+          ...defaultTransferState.targets[0],
           entry: {
-            ...initialState.targets[0].entry,
+            ...defaultTransferState.targets[0].entry,
             amounts: {
               [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(
                 walletMocks.yoroiUnsignedTx.entries[0].amounts[walletMocks.wallet.primaryTokenInfo.id],
@@ -142,12 +143,12 @@ export const mocks = {
   },
   counters: {
     onlyPrimary: {
-      ...initialState,
+      ...defaultTransferState,
       targets: [
         {
-          ...initialState.targets[0],
+          ...defaultTransferState.targets[0],
           entry: {
-            ...initialState.targets[0].entry,
+            ...defaultTransferState.targets[0].entry,
             amounts: {
               [walletMocks.wallet.primaryTokenInfo.id]: asQuantity(50000),
             },
@@ -156,12 +157,12 @@ export const mocks = {
       ],
     },
     onlySecondary: {
-      ...initialState,
+      ...defaultTransferState,
       targets: [
         {
-          ...initialState.targets[0],
+          ...defaultTransferState.targets[0],
           entry: {
-            ...initialState.targets[0].entry,
+            ...defaultTransferState.targets[0].entry,
             amounts: {
               [secondaryTokenId]: asQuantity(1),
               ['other.01']: asQuantity(2),
@@ -172,12 +173,12 @@ export const mocks = {
       ],
     },
     both: {
-      ...initialState,
+      ...defaultTransferState,
       targets: [
         {
-          ...initialState.targets[0],
+          ...defaultTransferState.targets[0],
           entry: {
-            ...initialState.targets[0].entry,
+            ...defaultTransferState.targets[0].entry,
             amounts: {
               [secondaryTokenId]: asQuantity(1),
               ['other.01']: asQuantity(2),

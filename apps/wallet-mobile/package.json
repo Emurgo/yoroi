@@ -130,6 +130,7 @@
     "@yoroi/staking": "1.5.1",
     "@yoroi/swap": "1.5.1",
     "@yoroi/theme": "^1.0.0",
+    "@yoroi/transfer": "1.0.0",
     "add": "2.0.6",
     "assert": "^2.0.0",
     "base-64": "^1.0.0",

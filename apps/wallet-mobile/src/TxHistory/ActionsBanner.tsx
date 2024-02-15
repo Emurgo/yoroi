@@ -1,11 +1,11 @@
 import {useNavigation} from '@react-navigation/native'
 import {useSwap} from '@yoroi/swap'
+import {useTransfer} from '@yoroi/transfer'
 import React, {ReactNode} from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {Icon, Spacer, Text} from '../components'
-import {useSend} from '../features/Send/common/SendContext'
 import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
 import {actionMessages} from '../i18n/global-messages'
 import {useMetrics} from '../metrics/metricsManager'
@@ -23,7 +23,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
-  const {reset: resetSendState} = useSend()
+  const {reset: resetSendState} = useTransfer()
   const {orderData} = useSwap()
   const {resetSwapForm} = useSwapForm()
   const {track} = useMetrics()

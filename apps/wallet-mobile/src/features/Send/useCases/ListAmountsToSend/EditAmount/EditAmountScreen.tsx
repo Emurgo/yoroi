@@ -1,3 +1,4 @@
+import {useTransfer} from '@yoroi/transfer'
 import {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
@@ -12,15 +13,15 @@ import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../yoroi-wallets/logging'
 import {asQuantity, editedFormatter, pastedFormatter, Quantities} from '../../../../../yoroi-wallets/utils'
 import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../../common/navigation'
-import {useSend, useTokenQuantities} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
+import {useTokenQuantities} from '../../../common/useTokenQuantities'
 import {NoBalance} from './ShowError/NoBalance'
 import {UnableToSpend} from './ShowError/UnableToSpend'
 
 export const EditAmountScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
-  const {selectedTokenId, amountChanged} = useSend()
+  const {selectedTokenId, amountChanged} = useTransfer()
   const {available, spendable, initialQuantity} = useTokenQuantities(selectedTokenId)
 
   const wallet = useSelectedWallet()

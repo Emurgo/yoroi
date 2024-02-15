@@ -2,6 +2,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {useTheme} from '@yoroi/theme'
+import {TransferProvider} from '@yoroi/transfer'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
@@ -17,7 +18,6 @@ import {
   SettingsTabRoutes,
 } from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {SendProvider} from '../Send/common/SendContext'
 import {About} from './About'
 import {ApplicationSettingsScreen} from './ApplicationSettings'
 import {ChangeLanguageScreen} from './ChangeLanguage'
@@ -49,7 +49,7 @@ export const SettingsScreenNavigator = () => {
   )
 
   return (
-    <SendProvider key={wallet.id}>
+    <TransferProvider key={wallet.id}>
       <Stack.Navigator
         screenOptions={{
           ...defaultStackNavigationOptions(theme),
@@ -179,7 +179,7 @@ export const SettingsScreenNavigator = () => {
           component={EnableLoginWithPinWrapper}
         />
       </Stack.Navigator>
-    </SendProvider>
+    </TransferProvider>
   )
 }
 

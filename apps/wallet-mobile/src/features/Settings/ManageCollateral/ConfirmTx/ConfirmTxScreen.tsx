@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {useTransfer} from '@yoroi/transfer'
 import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -13,7 +14,6 @@ import {useSetCollateralId} from '../../../../yoroi-wallets/cardano/utxoManager/
 import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {debugWalletInfo, features} from '../../..'
-import {useSend} from '../../../Send/common/SendContext'
 import {useNavigateTo} from '../navigation'
 import {BalanceAfter} from './Summary/BalanceAfter'
 import {CurrentBalance} from './Summary/CurrentBalance'
@@ -29,7 +29,7 @@ export const ConfirmTxScreen = () => {
   const [useUSB, setUseUSB] = React.useState(false)
   const {setCollateralId} = useSetCollateralId(wallet)
 
-  const {memo, yoroiUnsignedTx} = useSend()
+  const {memo, unsignedTx: yoroiUnsignedTx} = useTransfer()
 
   const {saveMemo} = useSaveMemo({wallet})
 
@@ -52,7 +52,7 @@ export const ConfirmTxScreen = () => {
     navigateTo.failedTx()
   }
 
-  if (!yoroiUnsignedTx) throw new Error('Missing yoroiUnsignedTx')
+  if (yoroiUnsignedTx === undefined) throw new Error('Missing yoroiUnsignedTx')
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>

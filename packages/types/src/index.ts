@@ -90,12 +90,23 @@ import {
   ApiTokenSupplyResponse,
   ApiTokeSupplyRequest,
 } from './api/cardano'
+import {TransferEntry, TransferTarget, TransferTargets} from './transfer/state'
 import {
   AppObservableMultiStorage,
   AppObservableStorage,
 } from './app/observable-storage'
 import {AppCacheInfo, AppCacheRecord, AppCacheRow} from './app/cache'
 import {AppObserver, AppSubscriber} from './app/simple-observer'
+import {
+  CardanoAddress,
+  CardanoMetadata,
+  CardanoSignedTx,
+  CardanoStaking,
+  CardanoTokenId,
+  CardanoTxInfo,
+  CardanoUnsignedTx,
+  CardanoVoting,
+} from './chain/cardano'
 
 export namespace App {
   export interface Storage<IsAsync extends boolean = true>
@@ -276,6 +287,25 @@ export namespace Resolver {
     export class UnsupportedTld extends ResolverErrorUnsupportedTld {}
     export class Expired extends ResolverErrorUnsupportedTld {}
     export class WrongBlockchain extends ResolverErrorWrongBlockchain {}
+  }
+}
+
+export namespace Transfer {
+  export type Entry = TransferEntry
+  export type Target = TransferTarget
+  export type Targets = TransferTargets
+}
+
+export namespace Chain {
+  export namespace Cardano {
+    export type UnsignedTx = CardanoUnsignedTx
+    export type SignedTx = CardanoSignedTx
+    export type TxInfo = CardanoTxInfo
+    export type Metadata = CardanoMetadata
+    export type Staking = CardanoStaking
+    export type Voting = CardanoVoting
+    export type Address = CardanoAddress
+    export type TokenId = CardanoTokenId
   }
 }
 
