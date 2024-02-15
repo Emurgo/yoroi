@@ -2,7 +2,6 @@ import {isString, useAsyncStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import React, {useEffect, useRef} from 'react'
 import {Platform, UIManager} from 'react-native'
-import {enableScreens} from 'react-native-screens'
 import * as Sentry from 'sentry-expo'
 import uuid from 'uuid'
 
@@ -11,8 +10,6 @@ import {useInitScreenShare} from './features/Settings/ScreenShare'
 import {CONFIG, isProduction} from './legacy/config'
 import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
 import {walletManager} from './yoroi-wallets/walletManager'
-
-enableScreens()
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental != null) {
