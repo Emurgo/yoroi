@@ -4,7 +4,7 @@ import {defaultTransferState} from '../translators/reactjs/state/state'
 const secondaryTokenId =
   '698a6ea0ca99f315034072af31eaac6ec11fe8558d3f48e9775aab9d.7444524950'
 
-export const mocks = {
+export const mocks = Object.freeze({
   startTx: {
     error: {
       invalidAddress: {
@@ -218,4 +218,4 @@ export const mocks = {
       ],
     },
   },
-}
+})

@@ -1,4 +1,4 @@
-import {Resolver, Transfer} from '@yoroi/types'
+import {Chain, Resolver} from '@yoroi/types'
 import {
   TargetAction,
   TransferAction,
@@ -742,7 +742,7 @@ describe('State Actions', () => {
   })
 })
 
-const unsignedTx: Transfer.UnsignedTx & {mock: true} = {
+const unsignedTx: Chain.Cardano.UnsignedTx & {mock: true} = {
   entries: [
     {
       address: 'address1',

@@ -84,7 +84,6 @@ export const ListAmountsToSendScreen = () => {
     track.sendSelectAssetSelected(assetsToSendProperties({tokens, amounts}))
     createUnsignedTx([targets[selectedTargetIndex].entry], {
       onSuccess: (yoroiUnsignedTx) => {
-        console.log('aaa')
         yoroiUnsignedTxChanged(yoroiUnsignedTx)
         navigateTo.confirmTx()
       },

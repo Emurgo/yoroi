@@ -90,23 +90,23 @@ import {
   ApiTokenSupplyResponse,
   ApiTokeSupplyRequest,
 } from './api/cardano'
-import {
-  TransferAddress,
-  TransferEntry,
-  TransferMetadata,
-  TransferStaking,
-  TransferTarget,
-  TransferTargets,
-  TransferTxInfo,
-  TransferUnsignedTx,
-  TransferVoting,
-} from './transfer/state'
+import {TransferEntry, TransferTarget, TransferTargets} from './transfer/state'
 import {
   AppObservableMultiStorage,
   AppObservableStorage,
 } from './app/observable-storage'
 import {AppCacheInfo, AppCacheRecord, AppCacheRow} from './app/cache'
 import {AppObserver, AppSubscriber} from './app/simple-observer'
+import {
+  CardanoAddress,
+  CardanoMetadata,
+  CardanoSignedTx,
+  CardanoStaking,
+  CardanoTokenId,
+  CardanoTxInfo,
+  CardanoUnsignedTx,
+  CardanoVoting,
+} from './chain/cardano'
 
 export namespace App {
   export interface Storage<IsAsync extends boolean = true>
@@ -291,15 +291,22 @@ export namespace Resolver {
 }
 
 export namespace Transfer {
-  export type UnsignedTx = TransferUnsignedTx
-  export type TxInfo = TransferTxInfo
   export type Entry = TransferEntry
-  export type Metadata = TransferMetadata
-  export type Staking = TransferStaking
-  export type Voting = TransferVoting
   export type Target = TransferTarget
   export type Targets = TransferTargets
-  export type Address = TransferAddress
+}
+
+export namespace Chain {
+  export namespace Cardano {
+    export type UnsignedTx = CardanoUnsignedTx
+    export type SignedTx = CardanoSignedTx
+    export type TxInfo = CardanoTxInfo
+    export type Metadata = CardanoMetadata
+    export type Staking = CardanoStaking
+    export type Voting = CardanoVoting
+    export type Address = CardanoAddress
+    export type TokenId = CardanoTokenId
+  }
 }
 
 export * from './helpers/types'

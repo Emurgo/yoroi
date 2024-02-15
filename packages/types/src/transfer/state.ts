@@ -1,54 +1,18 @@
-import {Balance, Resolver} from '../index'
-import {
-  UnsignedTx as UnsignedTxType,
-  Datum as DatumType,
-} from '@emurgo/yoroi-lib'
+import {Datum as DatumType} from '@emurgo/yoroi-lib'
+import {BalanceAmounts} from '../balance/token'
+import {ResolverReceiver} from '../resolver/receiver'
 
-export type TransferUnsignedTx = TransferTxInfo & {
-  unsignedTx: UnsignedTxType
-}
-
-export type TransferTxInfo = {
-  entries: TransferEntry[]
-  fee: Balance.Amounts
-  change: TransferEntry[]
-  metadata: TransferMetadata
-  staking: TransferStaking
-  voting: TransferVoting
-  governance: boolean
-}
+export type TransferAddress = string
 
 export type TransferEntry = {
   address: TransferAddress
-  amounts: Balance.Amounts
+  amounts: BalanceAmounts
   datum?: DatumType
 }
 
-export type TransferMetadata = {
-  [label: string]: string
-}
-
-export type TransferStaking = {
-  registrations?: TransferEntry[]
-  deregistrations?: TransferEntry[]
-  delegations?: TransferEntry[]
-  withdrawals?: TransferEntry[]
-}
-
-export type TransferVoting = {
-  registration?: {
-    votingPublicKey: string
-    stakingPublicKey: string
-    rewardAddress: TransferAddress
-    nonce: number
-  }
-}
-
 export type TransferTarget = {
-  receiver: Resolver.Receiver
+  receiver: ResolverReceiver
   entry: TransferEntry
 }
 
 export type TransferTargets = Array<TransferTarget>
-
-export type TransferAddress = string

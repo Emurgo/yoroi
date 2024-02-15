@@ -20,16 +20,6 @@
   },
   "license": "Apache-2.0",
   "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",
-  "contributors": [
-    {
-      "name": "Juliano Lazzarotto",
-      "email": "30806844+stackchain@users.noreply.github.com"
-    },
-    {
-      "name": "Javier Bueno",
-      "email": "105349292+banklesss@users.noreply.github.com"
-    }
-  ],
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "source": "src/index",
@@ -148,7 +138,6 @@
     "@testing-library/react-native": "^12.3.0",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.55",
-    "@types/react-native": "0.71.6",
     "@types/react-test-renderer": "^18.0.7",
     "@yoroi/types": "1.5.2",
     "commitlint": "^17.0.2",

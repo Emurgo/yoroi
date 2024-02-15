@@ -1,5 +1,5 @@
 import {act, renderHook} from '@testing-library/react-hooks'
-import {Resolver, Transfer} from '@yoroi/types'
+import {Chain, Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {useTransfer} from '../hooks/useTransfer'
 import {defaultTransferState} from '../state/state'
@@ -100,6 +100,7 @@ describe('TransferContext :: hooks', () => {
       addressRecords: undefined,
     })
   })
+
   test('addressRecordsFetched', () => {
     const {result} = renderHook(() => useTransfer(), {wrapper})
 
@@ -156,7 +157,7 @@ describe('TransferContext :: hooks', () => {
   })
 })
 
-const yoroiUnsignedTx: Transfer.UnsignedTx & {mock: true} = {
+const yoroiUnsignedTx: Chain.Cardano.UnsignedTx & {mock: true} = {
   entries: [
     {
       address: 'address1',

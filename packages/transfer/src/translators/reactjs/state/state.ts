@@ -1,5 +1,5 @@
 import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
-import {Balance, Resolver, Transfer} from '@yoroi/types'
+import {Balance, Chain, Resolver, Transfer} from '@yoroi/types'
 import {castDraft, produce} from 'immer'
 
 export const combinedReducers = (
@@ -176,7 +176,7 @@ export const defaultTransferActions = {
 export type TransferState = Readonly<{
   selectedTargetIndex: number
   selectedTokenId: string
-  unsignedTx: Transfer.UnsignedTx | undefined
+  unsignedTx: Chain.Cardano.UnsignedTx | undefined
   memo: string
   targets: Transfer.Targets
 }>
@@ -196,7 +196,7 @@ export type TargetActions = Readonly<{
 }>
 
 export type TransferActions = Readonly<{
-  unsignedTxChanged: (UnsignedTx: Transfer.UnsignedTx | undefined) => void
+  unsignedTxChanged: (UnsignedTx: Chain.Cardano.UnsignedTx | undefined) => void
   tokenSelectedChanged: (tokenId: string) => void
   reset: () => void
   memoChanged: (memo: string) => void
@@ -217,7 +217,7 @@ export type TargetAction = Readonly<
     }
   | {
       type: TransferActionType.AddressChanged
-      address: Transfer.Address
+      address: Chain.Cardano.Address
     }
   | {
       type: TransferActionType.TokenSelectedChanged
@@ -247,7 +247,7 @@ export type TransferAction = Readonly<
     }
   | {
       type: TransferActionType.UnsignedTxChanged
-      unsignedTx: Transfer.UnsignedTx | undefined
+      unsignedTx: Chain.Cardano.UnsignedTx | undefined
     }
 >
 
