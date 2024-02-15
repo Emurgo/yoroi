@@ -4,8 +4,7 @@ import * as React from 'react'
 import {Keyboard, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, useWindowDimensions, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../components'
-import {ModalScreenWrapper} from '../../../components/ModalScreenWrapper/ModalScreenWrapper'
+import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
@@ -24,7 +23,7 @@ export const EnterAmountScreen = () => {
 
   const [amount, setAmount] = React.useState<string>('')
 
-  const [isModalVisible, setIsModalVisible] = React.useState(false)
+  const {openModal} = useModal()
 
   const [isCopying, copy] = useCopy()
 
@@ -34,7 +33,42 @@ export const EnterAmountScreen = () => {
 
   const generateLink = () => {
     Keyboard.dismiss()
-    setIsModalVisible(true)
+    openModal(
+      strings.multipleAdress,
+      <View style={styles.root}>
+        <ScrollView>
+          {mocks.specificAddressAmount !== null ? (
+            <ShareQRCodeCard
+              title={`${amount} ADA`}
+              address={mocks.specificAddressAmount}
+              onLongPress={() => copy(mocks.specificAddressAmount)}
+            />
+          ) : (
+            <View style={styles.root}>
+              <SkeletonAdressDetail />
+            </View>
+          )}
+
+          <Spacer height={32} />
+        </ScrollView>
+
+        <Button
+          shelleyTheme
+          onPress={() => {
+            copy(mocks.specificAddressAmount)
+          }}
+          disabled={amount === '' ? true : false}
+          title={strings.copyLinkBtn}
+          iconImage={require('../../../assets/img/copy.png')}
+          isCopying={isCopying}
+          copiedText={strings.copyLinkMsg}
+          style={styles.button}
+        />
+
+        <Spacer height={16} />
+      </View>,
+      HEIGHT_MODAL,
+    )
   }
 
   return (
@@ -68,49 +102,6 @@ export const EnterAmountScreen = () => {
           </View>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
-
-      {isModalVisible && (
-        <ModalScreenWrapper
-          title={strings.multipleAdress}
-          height={HEIGHT_MODAL}
-          onClose={() => {
-            setIsModalVisible(false)
-          }}
-        >
-          <View style={styles.root}>
-            <ScrollView>
-              {mocks.specificAddressAmount !== null ? (
-                <ShareQRCodeCard
-                  title={`${amount} ADA`}
-                  address={mocks.specificAddressAmount}
-                  onLongPress={() => copy(mocks.specificAddressAmount)}
-                />
-              ) : (
-                <View style={styles.root}>
-                  <SkeletonAdressDetail />
-                </View>
-              )}
-
-              <Spacer height={32} />
-            </ScrollView>
-
-            <Button
-              shelleyTheme
-              onPress={() => {
-                copy(mocks.specificAddressAmount)
-              }}
-              disabled={amount === '' ? true : false}
-              title={strings.copyLinkBtn}
-              iconImage={require('../../../assets/img/copy.png')}
-              isCopying={isCopying}
-              copiedText={strings.copyLinkMsg}
-              style={styles.button}
-            />
-
-            <Spacer height={16} />
-          </View>
-        </ModalScreenWrapper>
-      )}
     </SafeAreaView>
   )
 }

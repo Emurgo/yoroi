@@ -4,8 +4,7 @@ import {ScrollView, StyleSheet, Text, useWindowDimensions, View} from 'react-nat
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer} from '../../../components'
-import {ModalScreenWrapper} from '../../../components/ModalScreenWrapper/ModalScreenWrapper'
+import {Button, Spacer, useModal} from '../../../components'
 import {InfoCard} from '../common/InfoCard/InfoCard'
 import {mocks} from '../common/mocks'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
@@ -27,9 +26,63 @@ export const MultipleAddressesScreen = () => {
   const HEIGHT_SCREEN = useWindowDimensions().height
   const HEIGHT_MODAL = (HEIGHT_SCREEN / 100) * 60
 
-  const [isModalVisible, setIsModalVisible] = React.useState(true)
-
   const [addressList, setAddressList] = React.useState(mocks.addressList)
+
+  const {openModal, closeModal} = useModal()
+  const [shown, setShown] = React.useState(false)
+
+  React.useEffect(() => {
+    if (!shown) {
+      openModal(
+        strings.multiplePresentation,
+        <>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.modalContent}>
+              <QRs />
+
+              <Text style={[styles.details, {color: colors.details}]}>
+                {strings.multiplePresentationDetails}
+
+                <Text style={[styles.details, {color: colors.learnMore}]}>{strings.learnAboutYoroi}</Text>
+              </Text>
+
+              <Spacer height={64} />
+            </View>
+          </ScrollView>
+
+          <View style={styles.buttonContainer}>
+            <Button
+              shelleyTheme
+              title={strings.ok}
+              disabled={mocks.isLoading}
+              onPress={closeModal}
+              style={styles.button}
+            />
+          </View>
+
+          <Spacer height={16} />
+        </>,
+        HEIGHT_MODAL,
+      )
+
+      setShown(true)
+    }
+  }, [
+    HEIGHT_MODAL,
+    closeModal,
+    colors.details,
+    colors.learnMore,
+    openModal,
+    shown,
+    strings.learnAboutYoroi,
+    strings.multiplePresentation,
+    strings.multiplePresentationDetails,
+    strings.ok,
+    styles.button,
+    styles.buttonContainer,
+    styles.details,
+    styles.modalContent,
+  ])
 
   const renderItem = ({item}: {item: Item}) => (
     <SmallAddressCard
@@ -67,44 +120,6 @@ export const MultipleAddressesScreen = () => {
           style={styles.button}
         />
       </Animated.View>
-
-      {isModalVisible && (
-        <ModalScreenWrapper
-          title={strings.multiplePresentation}
-          height={HEIGHT_MODAL}
-          onClose={() => {
-            setIsModalVisible(false)
-          }}
-        >
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles.modalContent}>
-              <QRs />
-
-              <Text style={[styles.details, {color: colors.details}]}>
-                {strings.multiplePresentationDetails}
-
-                <Text style={[styles.details, {color: colors.learnMore}]}>{strings.learnAboutYoroi}</Text>
-              </Text>
-
-              <Spacer height={64} />
-            </View>
-          </ScrollView>
-
-          <View style={styles.buttonContainer}>
-            <Button
-              shelleyTheme
-              title={strings.ok}
-              disabled={mocks.isLoading}
-              onPress={() => {
-                setIsModalVisible(false)
-              }}
-              style={styles.button}
-            />
-          </View>
-
-          <Spacer height={16} />
-        </ModalScreenWrapper>
-      )}
     </SafeAreaView>
   )
 }
