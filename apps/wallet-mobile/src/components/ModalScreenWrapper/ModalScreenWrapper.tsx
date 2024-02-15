@@ -1,4 +1,5 @@
 import {useCardAnimation} from '@react-navigation/stack'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Animated, GestureResponderEvent, Pressable, StyleSheet, Text, View} from 'react-native'
 
@@ -13,6 +14,7 @@ type ModalScreenProps = {
   children?: Exclude<React.ReactNode, number | string | boolean>
 }
 export const ModalScreenWrapper = ({height, onClose, children, title}: ModalScreenProps) => {
+  const styles = useStyles()
   const {current} = useCardAnimation()
   const [swipeLocationY, setSwipeLocationY] = React.useState(height)
 
@@ -67,6 +69,7 @@ const Header = ({
   onStartShouldSetResponder?: () => boolean
   title: string
 }) => {
+  const styles = useStyles()
   return (
     <View style={styles.header} {...props}>
       <Spacer height={8} />
@@ -80,49 +83,58 @@ const Header = ({
   )
 }
 
-const SliderIndicator = () => <View style={styles.slider} />
+const SliderIndicator = () => {
+  const styles = useStyles()
+  return <View style={styles.slider} />
+}
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    alignSelf: 'stretch',
-  },
-  cancellableArea: {
-    flexGrow: 1,
-  },
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  animatedView: {
-    alignSelf: 'stretch',
-  },
-  sheet: {
-    flex: 1,
-    backgroundColor: 'white',
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    alignSelf: 'stretch',
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  title: {
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-    fontSize: 20,
-    padding: 16,
-    color: '#000',
-  },
-  header: {
-    alignItems: 'center',
-    alignSelf: 'stretch',
-  },
-  slider: {
-    height: 4,
-    backgroundColor: 'black',
-    width: 32,
-    borderRadius: 10,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      alignSelf: 'stretch',
+    },
+    cancellableArea: {
+      flexGrow: 1,
+    },
+    backdrop: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    animatedView: {
+      alignSelf: 'stretch',
+    },
+    sheet: {
+      flex: 1,
+      backgroundColor: color['bottom-sheet-background'],
+      borderTopRightRadius: 20,
+      borderTopLeftRadius: 20,
+      alignSelf: 'stretch',
+      paddingHorizontal: 16,
+      paddingBottom: 16,
+    },
+    title: {
+      fontWeight: '500',
+      fontFamily: 'Rubik-Medium',
+      fontSize: 20,
+      padding: 16,
+      color: color.gray.max,
+    },
+    header: {
+      alignItems: 'center',
+      alignSelf: 'stretch',
+    },
+    slider: {
+      height: 4,
+      backgroundColor: color.gray.max,
+      width: 32,
+      borderRadius: 10,
+    },
+  })
+
+  return styles
+}

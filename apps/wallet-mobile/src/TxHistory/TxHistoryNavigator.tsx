@@ -140,6 +140,11 @@ export const TxHistoryNavigator = () => {
                   options={{
                     title: walletName ?? '',
                     headerRight: headerRightHistory,
+                    headerStyle: {
+                      elevation: 0,
+                      shadowOpacity: 0,
+                      backgroundColor: '#E1EAF6',
+                    },
                   }}
                 />
 

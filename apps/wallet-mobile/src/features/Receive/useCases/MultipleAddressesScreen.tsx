@@ -117,17 +117,17 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.gray.min,
       padding: 16,
     },
     modalContent: {
       flex: 1,
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color['bottom-sheet-background'],
       justifyContent: 'center',
       alignItems: 'center',
     },
     footer: {
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.gray.min,
       paddingTop: 16,
     },
     details: {
@@ -137,7 +137,7 @@ const useStyles = () => {
       fontWeight: '400',
     },
     buttonContainer: {
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.gray.min,
     },
     button: {
       backgroundColor: theme.color.primary[500],

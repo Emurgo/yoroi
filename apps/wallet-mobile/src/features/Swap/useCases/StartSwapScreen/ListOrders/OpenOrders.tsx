@@ -617,7 +617,7 @@ const ModalContentHeader = ({
 
         <Spacer width={5} />
 
-        <Text>/</Text>
+        <Text style={styles.modalContentTitleText}>/</Text>
 
         <Spacer width={5} />
 

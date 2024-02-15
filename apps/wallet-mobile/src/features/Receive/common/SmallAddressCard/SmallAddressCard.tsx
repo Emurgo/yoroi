@@ -93,7 +93,7 @@ const useStyles = () => {
       fontSize: 16,
       lineHeight: 24,
       fontFamily: 'Rubik-Regular',
-      color: theme.color['black-static'],
+      color: theme.color.gray.max,
     },
     footer: {
       width: '100%',
@@ -109,7 +109,7 @@ const useStyles = () => {
       justifyContent: 'center',
     },
     statusUnusedText: {
-      color: theme.color['white-static'],
+      color: theme.color.gray.min,
       fontFamily: 'Rubik-Regular',
       fontWeight: '400',
       lineHeight: 16,
@@ -118,7 +118,7 @@ const useStyles = () => {
     },
     statusUsed: {
       borderRadius: 20,
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.gray.min,
       paddingVertical: 6,
       paddingHorizontal: 10,
       alignItems: 'center',
@@ -130,7 +130,7 @@ const useStyles = () => {
       lineHeight: 16,
       fontSize: 12,
       letterSpacing: 0.2,
-      color: theme.color['black-static'],
+      color: theme.color.gray.max,
     },
     date: {
       fontFamily: 'Rubik-Regular',
@@ -140,7 +140,7 @@ const useStyles = () => {
       color: theme.color.gray[700],
     },
     copiedText: {
-      color: theme.color['white-static'],
+      color: theme.color.gray.min,
       textAlign: 'center',
       padding: 8,
       fontSize: 14,
@@ -149,7 +149,7 @@ const useStyles = () => {
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: theme.color['black-static'],
+      backgroundColor: theme.color.gray.max,
       alignItems: 'center',
       justifyContent: 'center',
       top: 0,

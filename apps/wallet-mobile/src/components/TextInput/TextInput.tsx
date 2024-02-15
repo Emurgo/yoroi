@@ -247,7 +247,7 @@ const useStyles = () => {
     gray: color.gray[400],
     textInput: color.gray[600],
     actionGray: color.gray[500],
-    black: color['black-static'],
+    black: color.gray.max,
     text: color.gray[900],
     textError: color.magenta[500],
     infoGray: color.gray[700],

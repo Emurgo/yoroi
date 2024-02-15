@@ -97,6 +97,7 @@ const useStyles = () => {
       textAlign: 'left',
       flex: 1,
       fontFamily: 'Rubik-Regular',
+      color: theme.color.gray[900],
     },
     textAddress: {
       fontWeight: '400',

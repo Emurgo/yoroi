@@ -79,7 +79,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.gray.min,
     },
     content: {
       padding: 16,

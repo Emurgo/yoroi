@@ -109,7 +109,7 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     qrCode: {
-      backgroundColor: theme.color['white-static'],
+      backgroundColor: theme.color.gray.min,
       padding: 10,
       borderRadius: 8,
     },
@@ -134,6 +134,7 @@ const useStyles = () => {
       fontWeight: '500',
       fontFamily: 'Rubik-Medium',
       lineHeight: 30,
+      color: theme.color.gray.max,
     },
     textAddress: {
       textAlign: 'center',
@@ -142,7 +143,7 @@ const useStyles = () => {
       fontFamily: 'Rubik-Medium',
       fontSize: 14,
       lineHeight: 22,
-      color: theme.color['black-static'],
+      color: theme.color.gray.max,
     },
     textShareAddress: {
       fontWeight: '500',
@@ -154,7 +155,7 @@ const useStyles = () => {
       letterSpacing: 0.5,
     },
     copiedText: {
-      color: theme.color['white-static'],
+      color: theme.color.gray.min,
       textAlign: 'center',
       padding: 8,
       fontSize: 14,
@@ -163,7 +164,7 @@ const useStyles = () => {
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: theme.color['black-static'],
+      backgroundColor: theme.color.gray.max,
       alignItems: 'center',
       justifyContent: 'center',
       bottom: 60,
@@ -175,8 +176,8 @@ const useStyles = () => {
 
   const colors = {
     bgCard: theme.color.gradients['blue-green'],
-    white: theme.color['white-static'],
-    black: theme.color['black-static'],
+    white: theme.color.gray.min,
+    black: theme.color.gray.max,
   }
 
   return {styles, colors} as const
