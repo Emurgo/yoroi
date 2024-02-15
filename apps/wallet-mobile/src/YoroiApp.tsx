@@ -5,7 +5,7 @@ import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
 import Config from 'react-native-config'
 import * as RNP from 'react-native-paper'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {enableScreens} from 'react-native-screens'
+import {enableFreeze, enableScreens} from 'react-native-screens'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {AuthProvider} from './auth/AuthProvider'
@@ -23,7 +23,8 @@ import {useMigrations} from './yoroi-wallets/migrations'
 import {rootStorage} from './yoroi-wallets/storage/rootStorage'
 import {walletManager} from './yoroi-wallets/walletManager'
 
-enableScreens()
+enableScreens(true)
+enableFreeze(true)
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental != null) {
