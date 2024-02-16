@@ -72,7 +72,7 @@ export const WarnSlippage = ({onConfirm, slippage, ticker}: Props) => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     buttonContainer: {
       flex: 1,
@@ -118,10 +118,7 @@ const useStyles = () => {
       gap: 10,
     },
     description: {
-      fontFamily: 'Rubik',
-      fontWeight: '400',
-      fontSize: 16,
-      lineHeight: 24,
+      ...typography['body-1-l-regular'],
       color: color.gray[900],
     },
   })

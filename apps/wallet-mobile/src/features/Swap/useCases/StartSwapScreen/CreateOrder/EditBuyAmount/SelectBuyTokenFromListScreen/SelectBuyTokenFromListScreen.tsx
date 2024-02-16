@@ -241,10 +241,7 @@ const useStyles = () => {
     },
     label: {
       fontFamily: 'Rubik',
-      fontSize: 12,
-      fontStyle: 'normal',
-      fontWeight: '400',
-      lineHeight: 18,
+      ...typography['body-3-s-regular'],
     },
     labels: {
       flexDirection: 'row',
@@ -277,9 +274,8 @@ const useStyles = () => {
     },
     contentText: {
       flex: 1,
-      textAlign: 'center',
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
+
+      ...typography['heading-3-regular'],
       fontSize: 20,
       color: color.gray.max,
       paddingTop: 4,

@@ -277,7 +277,8 @@ const useStyles = () => {
       color: color.gray.min,
     },
     cardTextValue: {
-      fontWeight: '500',
+      ...typography['heading-4-medium'],
+      lineHeight: 22,
       textAlign: 'right',
     },
     cardTextUSD: {
@@ -334,8 +335,7 @@ const useStyles = () => {
       color: color.gray[900],
     },
     bold: {
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
+      ...typography['body-2-m-medium'],
     },
   })
 

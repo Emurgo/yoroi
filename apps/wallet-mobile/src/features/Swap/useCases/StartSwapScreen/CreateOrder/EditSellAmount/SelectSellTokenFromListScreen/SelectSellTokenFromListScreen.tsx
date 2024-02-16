@@ -189,14 +189,11 @@ const EmptySearchResult = ({assetSearchTerm}: {assetSearchTerm: string}) => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     label: {
       fontFamily: 'Rubik',
-      fontSize: 12,
-      fontStyle: 'normal',
-      fontWeight: '400',
-      lineHeight: 18,
+      ...typography['body-3-s-regular'],
     },
     labels: {
       flexDirection: 'row',
@@ -235,11 +232,8 @@ const useStyles = () => {
     },
     contentText: {
       flex: 1,
-      textAlign: 'center',
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
-      fontSize: 20,
-      color: '#000',
+      ...typography['heading-4-medium'],
+      color: color.gray.max,
       paddingTop: 4,
     },
     counter: {

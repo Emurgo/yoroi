@@ -270,7 +270,7 @@ const useStyles = () => {
       flex: 1,
       justifyContent: 'space-between',
     },
-    change: {color: color.primary[600], fontWeight: '600', textTransform: 'uppercase'},
+    change: {color: color.primary[500], ...typography['body-2-m-medium'], textTransform: 'uppercase'},
     bold: {
       color: color.gray.max,
       ...typography['body-1-l-regular'],

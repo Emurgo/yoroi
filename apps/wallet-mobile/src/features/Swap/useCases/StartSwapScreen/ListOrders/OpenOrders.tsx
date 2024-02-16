@@ -757,8 +757,7 @@ const useStyles = () => {
     },
     modalContentTitleText: {
       color: color.gray[900],
-      ...typography['body-1-l-regular'],
-      fontWeight: '500',
+      ...typography['body-1-l-medium'],
       textAlign: 'center',
     },
     contentLabel: {
