@@ -16,7 +16,9 @@ export const InfoCard = ({onLimit}: InfoCardProps) => {
 
   const {styles, colors} = useStyles()
 
-  return onLimit ? (
+  if (!onLimit) return null
+
+  return (
     <Animated.View layout={Layout} entering={FadeInUp} exiting={FadeOut} style={styles.smallAddressCard}>
       <Icon.Info size={24} color={colors.icon} />
 
@@ -26,7 +28,7 @@ export const InfoCard = ({onLimit}: InfoCardProps) => {
         <Text style={[styles.text, {color: colors.yoroiZendesk}]}>{mocks.yoroiZendesk}</Text>
       </Text>
     </Animated.View>
-  ) : null
+  )
 }
 
 const useStyles = () => {
@@ -34,14 +36,12 @@ const useStyles = () => {
 
   const styles = StyleSheet.create({
     smallAddressCard: {
+      alignSelf: 'stretch',
       borderRadius: 8,
-      width: '100%',
       alignItems: 'flex-start',
-      alignSelf: 'center',
-      overflow: 'hidden',
-      padding: 16,
-      marginBottom: 16,
+      justifyContent: 'space-between',
       gap: 12,
+      padding: 16,
       backgroundColor: theme.color.cyan[100],
     },
     text: {

@@ -24,51 +24,49 @@ export const SingleAddressScreen = () => {
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      <View style={styles.content}>
-        <ScrollView style={styles.root}>
-          <View style={styles.address}>
-            {currentAddress !== null ? (
-              <AddressDetailCard
-                address={mockReceives.address}
-                title={strings.addresscardTitle}
-                addressDetails={{
-                  spendingHash: mockReceives.spendinghash,
-                  stakingHash: mockReceives.stakinghash,
-                }}
-              />
-            ) : (
-              <SkeletonAdressDetail />
-            )}
-          </View>
-        </ScrollView>
+      <ScrollView style={{flex: 1}}>
+        <View style={styles.address}>
+          {currentAddress !== null ? (
+            <AddressDetailCard
+              address={mockReceives.address}
+              title={strings.addresscardTitle}
+              addressDetails={{
+                spendingHash: mockReceives.spendinghash,
+                stakingHash: mockReceives.stakinghash,
+              }}
+            />
+          ) : (
+            <SkeletonAdressDetail />
+          )}
+        </View>
+      </ScrollView>
 
-        <Button
-          outline
-          title={strings.requestSpecificAmountButton}
-          textStyles={{
-            color: colors.buttonBackgroundBlue,
-          }}
-          onPress={() => navigate.specificAmount()}
-          disabled={currentAddress === null}
-        />
+      <Button
+        outline
+        title={strings.requestSpecificAmountButton}
+        textStyles={{
+          color: colors.buttonBackgroundBlue,
+        }}
+        onPress={() => navigate.specificAmount()}
+        disabled={currentAddress === null}
+      />
 
-        <Spacer height={6} />
+      <Spacer height={6} />
 
-        <Button
-          shelleyTheme
-          onPress={() => {
-            copy(currentAddress)
-          }}
-          disabled={currentAddress === null}
-          title={strings.copyAddressButton}
-          iconImage={Icon}
-          isCopying={isCopying}
-          copiedText={strings.addressCopiedMsg}
-          style={styles.button}
-        />
+      <Button
+        shelleyTheme
+        onPress={() => {
+          copy(currentAddress)
+        }}
+        disabled={currentAddress === null}
+        title={strings.copyAddressButton}
+        iconImage={Icon}
+        isCopying={isCopying}
+        copiedText={strings.addressCopiedMsg}
+        style={styles.button}
+      />
 
-        <Spacer height={6} />
-      </View>
+      <Spacer height={6} />
     </SafeAreaView>
   )
 }
@@ -80,15 +78,11 @@ const useStyles = () => {
     root: {
       flex: 1,
       backgroundColor: theme.color.gray.min,
-    },
-    content: {
       padding: 16,
-      flex: 1,
     },
     address: {
+      flex: 1,
       alignItems: 'center',
-      minHeight: 180,
-      maxHeight: 458,
     },
     button: {
       backgroundColor: theme.color.primary[500],

@@ -132,13 +132,8 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       borderRadius: 10,
-      width: '100%',
-      alignItems: 'center',
-      maxHeight: 458,
       flex: 1,
-      minHeight: 394,
       alignSelf: 'center',
-      overflow: 'hidden',
     },
     index: {
       flexDirection: 'row',

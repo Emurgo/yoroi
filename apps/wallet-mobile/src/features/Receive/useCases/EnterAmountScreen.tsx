@@ -25,51 +25,15 @@ export const EnterAmountScreen = () => {
 
   const {openModal} = useModal()
 
-  const [isCopying, copy] = useCopy()
-
   const {colors, styles} = useStyles()
 
   const currentAddress = _.last(receiveAddresses)
 
-  const generateLink = () => {
+  const generateLink = React.useCallback(() => {
     Keyboard.dismiss()
-    openModal(
-      strings.multipleAdress,
-      <View style={styles.root}>
-        <ScrollView>
-          {mocks.specificAddressAmount !== null ? (
-            <ShareQRCodeCard
-              title={`${amount} ADA`}
-              address={mocks.specificAddressAmount}
-              onLongPress={() => copy(mocks.specificAddressAmount)}
-            />
-          ) : (
-            <View style={styles.root}>
-              <SkeletonAdressDetail />
-            </View>
-          )}
 
-          <Spacer height={32} />
-        </ScrollView>
-
-        <Button
-          shelleyTheme
-          onPress={() => {
-            copy(mocks.specificAddressAmount)
-          }}
-          disabled={amount === '' ? true : false}
-          title={strings.copyLinkBtn}
-          iconImage={require('../../../assets/img/copy.png')}
-          isCopying={isCopying}
-          copiedText={strings.copyLinkMsg}
-          style={styles.button}
-        />
-
-        <Spacer height={16} />
-      </View>,
-      HEIGHT_MODAL,
-    )
-  }
+    openModal(strings.multipleAdress, <Modal amount={amount} />, HEIGHT_MODAL)
+  }, [HEIGHT_MODAL, amount, openModal, strings.multipleAdress])
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
@@ -103,6 +67,47 @@ export const EnterAmountScreen = () => {
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </SafeAreaView>
+  )
+}
+
+const Modal = ({amount}: {amount: string}) => {
+  const strings = useStrings()
+  const {styles} = useStyles()
+  const [isCopying, copy] = useCopy()
+
+  return (
+    <View style={styles.root}>
+      <ScrollView>
+        {mocks.specificAddressAmount !== null ? (
+          <ShareQRCodeCard
+            title={`${amount} ADA`}
+            address={mocks.specificAddressAmount}
+            onLongPress={() => copy(mocks.specificAddressAmount)}
+          />
+        ) : (
+          <View style={styles.root}>
+            <SkeletonAdressDetail />
+          </View>
+        )}
+
+        <Spacer height={32} />
+      </ScrollView>
+
+      <Button
+        shelleyTheme
+        onPress={() => {
+          copy(mocks.specificAddressAmount)
+        }}
+        disabled={amount === '' ? true : false}
+        title={strings.copyLinkBtn}
+        iconImage={require('../../../assets/img/copy.png')}
+        isCopying={isCopying}
+        copiedText={strings.copyLinkMsg}
+        style={styles.button}
+      />
+
+      <Spacer height={16} />
+    </View>
   )
 }
 

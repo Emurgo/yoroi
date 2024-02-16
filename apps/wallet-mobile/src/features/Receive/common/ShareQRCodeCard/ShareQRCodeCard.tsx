@@ -68,39 +68,38 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
       </ViewShot>
     )
 
-  if (!isSharing)
-    return (
-      <View style={styles.card}>
-        <LinearGradient
-          style={[StyleSheet.absoluteFill, {opacity: 1}]}
-          start={{x: 0, y: 0}}
-          end={{x: 0, y: 1}}
-          colors={colors.bgCard}
-        />
+  return (
+    <View style={styles.card}>
+      <LinearGradient
+        style={[StyleSheet.absoluteFill, {opacity: 1}]}
+        start={{x: 0, y: 0}}
+        end={{x: 0, y: 1}}
+        colors={colors.bgCard}
+      />
 
-        <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title}>{title}</Text>
 
-        <View style={styles.addressContainer}>
-          <View style={styles.qrCode}>
-            <QRCode value={address} size={158} backgroundColor={colors.white} color={colors.black} />
-          </View>
-
-          <Spacer height={16} />
-
-          <Text style={styles.textAddress}>{address}</Text>
+      <View style={styles.addressContainer}>
+        <View style={styles.qrCode}>
+          <QRCode value={address} size={158} backgroundColor={colors.white} color={colors.black} />
         </View>
 
-        <TouchableOpacity activeOpacity={0.5} onPress={shareImage} onLongPress={onLongPress}>
-          <Text style={styles.textShareAddress}>{strings.shareLabel}</Text>
-        </TouchableOpacity>
+        <Spacer height={16} />
 
-        {isCopying && (
-          <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-            <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
-          </Animated.View>
-        )}
+        <Text style={styles.textAddress}>{address}</Text>
       </View>
-    )
+
+      <TouchableOpacity activeOpacity={0.5} onPress={shareImage} onLongPress={onLongPress}>
+        <Text style={styles.textShareAddress}>{strings.shareLabel}</Text>
+      </TouchableOpacity>
+
+      {isCopying && (
+        <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+          <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
+        </Animated.View>
+      )}
+    </View>
+  )
 }
 
 const useStyles = () => {

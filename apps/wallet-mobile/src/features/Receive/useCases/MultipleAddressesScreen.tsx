@@ -19,7 +19,7 @@ type Item = {
 
 export const MultipleAddressesScreen = () => {
   const strings = useStrings()
-  const {styles, colors} = useStyles()
+  const {styles} = useStyles()
 
   const navigate = useNavigateTo()
 
@@ -28,80 +28,42 @@ export const MultipleAddressesScreen = () => {
 
   const [addressList, setAddressList] = React.useState(mocks.addressList)
 
-  const {openModal, closeModal} = useModal()
+  const {openModal} = useModal()
   const [shown, setShown] = React.useState(false)
 
-  React.useEffect(() => {
-    if (!shown) {
-      openModal(
-        strings.multiplePresentation,
-        <>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles.modalContent}>
-              <QRs />
+  if (!shown) {
+    openModal(strings.multiplePresentation, <Modal />, HEIGHT_MODAL)
 
-              <Text style={[styles.details, {color: colors.details}]}>
-                {strings.multiplePresentationDetails}
+    setShown(true)
+  }
 
-                <Text style={[styles.details, {color: colors.learnMore}]}>{strings.learnAboutYoroi}</Text>
-              </Text>
-
-              <Spacer height={64} />
-            </View>
-          </ScrollView>
-
-          <View style={styles.buttonContainer}>
-            <Button
-              shelleyTheme
-              title={strings.ok}
-              disabled={mocks.isLoading}
-              onPress={closeModal}
-              style={styles.button}
-            />
-          </View>
-
-          <Spacer height={16} />
-        </>,
-        HEIGHT_MODAL,
-      )
-
-      setShown(true)
-    }
-  }, [
-    HEIGHT_MODAL,
-    closeModal,
-    colors.details,
-    colors.learnMore,
-    openModal,
-    shown,
-    strings.learnAboutYoroi,
-    strings.multiplePresentation,
-    strings.multiplePresentationDetails,
-    strings.ok,
-    styles.button,
-    styles.buttonContainer,
-    styles.details,
-    styles.modalContent,
-  ])
-
-  const renderItem = ({item}: {item: Item}) => (
-    <SmallAddressCard
-      address={mocks.address}
-      isUsed={item.isUsed}
-      date={mocks.usedAddressDate}
-      onPress={() => navigate.receiceDetails()}
-      loading={item.loading}
-    />
+  const renderItem = React.useCallback(
+    ({item}: {item: Item}) => (
+      <SmallAddressCard
+        address={mocks.address}
+        isUsed={item.isUsed}
+        date={mocks.usedAddressDate}
+        onPress={() => navigate.receiceDetails()}
+        loading={item.loading}
+      />
+    ),
+    [navigate],
   )
 
-  const addMockData = () => {
+  const addMockData = React.useCallback(() => {
     const novoDadoMockado = {isUsed: false, loading: false}
     setAddressList([novoDadoMockado, ...addressList])
-  }
+  }, [addressList])
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      {addressList.length === 20 && <InfoCard onLimit={true} />}
+      {addressList.length === 20 && (
+        <>
+          <InfoCard onLimit={true} />
+
+          <Spacer height={16} />
+        </>
+      )}
 
       <Animated.FlatList
         data={addressList}
@@ -124,6 +86,34 @@ export const MultipleAddressesScreen = () => {
   )
 }
 
+const Modal = () => {
+  const {styles, colors} = useStyles()
+  const strings = useStrings()
+  const {closeModal} = useModal()
+
+  return (
+    <View style={styles.modal}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.modalContent}>
+          <QRs />
+
+          <Text style={[styles.details, {color: colors.details}]}>
+            {strings.multiplePresentationDetails}
+
+            <Text style={[styles.details, {color: colors.learnMore}]}>{strings.learnAboutYoroi}</Text>
+          </Text>
+
+          <Spacer height={64} />
+        </View>
+      </ScrollView>
+
+      <View style={styles.buttonContainer}>
+        <Button shelleyTheme title={strings.ok} disabled={mocks.isLoading} onPress={closeModal} style={styles.button} />
+      </View>
+    </View>
+  )
+}
+
 const useStyles = () => {
   const {theme} = useTheme()
 
@@ -132,6 +122,11 @@ const useStyles = () => {
       flex: 1,
       backgroundColor: theme.color.gray.min,
       padding: 16,
+    },
+    modal: {
+      flex: 1,
+      backgroundColor: theme.color.gray.min,
+      justifyContent: 'space-between',
     },
     modalContent: {
       flex: 1,
