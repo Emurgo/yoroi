@@ -14,7 +14,7 @@ import {QRs} from '../illustrations/QRs'
 
 type Item = {
   isUsed?: boolean
-  loading: boolean
+  loading?: boolean
 }
 
 export const MultipleAddressesScreen = () => {
