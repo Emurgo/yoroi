@@ -12,7 +12,7 @@ import {useStrings} from '../useStrings'
 export type SmallAddressCardProps = {
   address: string
   isUsed?: boolean
-  loading: boolean
+  loading?: boolean
   date?: string
   onPress?: () => void
 }
