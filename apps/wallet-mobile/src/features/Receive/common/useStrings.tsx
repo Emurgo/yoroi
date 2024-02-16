@@ -27,7 +27,6 @@ export const useStrings = () => {
     infoAddressLimit: intl.formatMessage(messages.infoAddressLimit),
     multiplePresentation: intl.formatMessage(messages.multiplePresentation),
     multiplePresentationDetails: intl.formatMessage(messages.multiplePresentationDetails),
-    learnAboutYoroi: intl.formatMessage(messages.learnAboutYoroi),
     ok: intl.formatMessage(messages.ok),
   }
 }
@@ -124,11 +123,8 @@ export const messages = defineMessages({
   },
   multiplePresentationDetails: {
     id: 'components.receive.receivescreen.multiplePresentationDetails',
-    defaultMessage: '!!!This is an advanced mode where you can you can generate many addresses for a single wallet.',
-  },
-  learnAboutYoroi: {
-    id: 'components.receive.receivescreen.learnAboutYoroi',
-    defaultMessage: '!!!Learn more about this in Yoroi Zendesk',
+    defaultMessage:
+      '!!!Enables Yoroi to manage various addresses in one place, enhancing privacy and providing organisational benefits.',
   },
   ok: {
     id: 'global.ok',

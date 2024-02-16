@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {ScrollView, StyleSheet, Text, useWindowDimensions, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -23,16 +23,13 @@ export const MultipleAddressesScreen = () => {
 
   const navigate = useNavigateTo()
 
-  const HEIGHT_SCREEN = useWindowDimensions().height
-  const HEIGHT_MODAL = (HEIGHT_SCREEN / 100) * 60
-
   const [addressList, setAddressList] = React.useState(mocks.addressList)
 
   const {openModal} = useModal()
   const [shown, setShown] = React.useState(false)
 
   if (!shown) {
-    openModal(strings.multiplePresentation, <Modal />, HEIGHT_MODAL)
+    openModal(strings.multiplePresentation, <Modal />, modalHeight)
 
     setShown(true)
   }
@@ -86,6 +83,7 @@ export const MultipleAddressesScreen = () => {
   )
 }
 
+const modalHeight = 520
 const Modal = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
@@ -93,19 +91,11 @@ const Modal = () => {
 
   return (
     <View style={styles.modal}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.modalContent}>
-          <QRs />
+      <QRs />
 
-          <Text style={[styles.details, {color: colors.details}]}>
-            {strings.multiplePresentationDetails}
+      <Text style={[styles.details, {color: colors.details}]}>{strings.multiplePresentationDetails}</Text>
 
-            <Text style={[styles.details, {color: colors.learnMore}]}>{strings.learnAboutYoroi}</Text>
-          </Text>
-
-          <Spacer height={64} />
-        </View>
-      </ScrollView>
+      <Spacer fill />
 
       <View style={styles.buttonContainer}>
         <Button shelleyTheme title={strings.ok} disabled={mocks.isLoading} onPress={closeModal} style={styles.button} />
@@ -125,14 +115,9 @@ const useStyles = () => {
     },
     modal: {
       flex: 1,
-      backgroundColor: theme.color.gray.min,
-      justifyContent: 'space-between',
-    },
-    modalContent: {
-      flex: 1,
       backgroundColor: theme.color['bottom-sheet-background'],
-      justifyContent: 'center',
       alignItems: 'center',
+      justifyContent: 'space-between',
     },
     footer: {
       backgroundColor: theme.color.gray.min,
@@ -142,6 +127,7 @@ const useStyles = () => {
       ...theme.typography['body-1-l-regular'],
     },
     buttonContainer: {
+      alignSelf: 'stretch',
       backgroundColor: theme.color.gray.min,
     },
     button: {
