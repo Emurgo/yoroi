@@ -76,6 +76,7 @@ export const SmallAddressCard = ({address, isUsed, date, onPress, loading}: Smal
 
 const useStyles = () => {
   const {theme} = useTheme()
+  const {color, typography} = theme
 
   const styles = StyleSheet.create({
     smallAddressCard: {
@@ -89,11 +90,8 @@ const useStyles = () => {
       padding: 16,
     },
     textAddress: {
-      fontWeight: '400',
-      fontSize: 16,
-      lineHeight: 24,
-      fontFamily: 'Rubik-Regular',
-      color: theme.color.gray.max,
+      ...typography['body-1-l-regular'],
+      color: color.gray.max,
     },
     footer: {
       width: '100%',
@@ -102,54 +100,44 @@ const useStyles = () => {
     },
     statusUnused: {
       borderRadius: 20,
-      backgroundColor: theme.color.secondary[600],
+      backgroundColor: color.secondary[600],
       paddingVertical: 6,
       paddingHorizontal: 10,
       alignItems: 'center',
       justifyContent: 'center',
     },
     statusUnusedText: {
-      color: theme.color.gray.min,
-      fontFamily: 'Rubik-Regular',
-      fontWeight: '400',
-      lineHeight: 16,
-      fontSize: 12,
+      color: color.gray.min,
+      ...typography['body-3-s-regular'],
       letterSpacing: 0.2,
     },
     statusUsed: {
       borderRadius: 20,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.gray.min,
       paddingVertical: 6,
       paddingHorizontal: 10,
       alignItems: 'center',
       justifyContent: 'center',
     },
     statusUsedText: {
-      fontFamily: 'Rubik-Regular',
-      fontWeight: '400',
+      ...typography['body-3-s-regular'],
       lineHeight: 16,
-      fontSize: 12,
       letterSpacing: 0.2,
-      color: theme.color.gray.max,
+      color: color.gray.max,
     },
     date: {
-      fontFamily: 'Rubik-Regular',
-      fontWeight: '400',
-      fontSize: 14,
-      lineHeight: 22,
-      color: theme.color.gray[700],
+      ...typography['body-2-m-regular'],
+      color: color.gray[700],
     },
     copiedText: {
-      color: theme.color.gray.min,
+      color: color.gray.min,
       textAlign: 'center',
       padding: 8,
-      fontSize: 14,
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
+      ...typography['body-2-m-medium'],
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: theme.color.gray.max,
+      backgroundColor: color.gray.max,
       alignItems: 'center',
       justifyContent: 'center',
       top: 0,
@@ -160,7 +148,7 @@ const useStyles = () => {
   })
 
   const colors = {
-    bgCard: theme.color.gradients['blue-green'],
+    bgCard: color.gradients['blue-green'],
   }
 
   return {styles, colors} as const

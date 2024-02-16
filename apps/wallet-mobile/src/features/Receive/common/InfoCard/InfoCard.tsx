@@ -45,11 +45,8 @@ const useStyles = () => {
       backgroundColor: theme.color.cyan[100],
     },
     text: {
-      fontWeight: '400',
-      fontSize: 14,
-      lineHeight: 22,
-      fontFamily: 'Rubik',
-      color: theme.color['black-static'],
+      ...theme.typography['body-2-m-regular'],
+      color: theme.color.gray.max,
     },
   })
 

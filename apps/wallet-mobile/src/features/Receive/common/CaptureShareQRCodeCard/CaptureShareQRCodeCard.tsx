@@ -78,8 +78,8 @@ const useStyles = () => {
     },
     textAddress: {
       textAlign: 'center',
-      fontWeight: '500',
       maxWidth: 300,
+      ...theme.typography['body-1-l-regular'],
     },
   })
 

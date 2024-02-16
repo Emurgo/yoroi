@@ -106,6 +106,7 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
 const useStyles = () => {
   const SCREEN_WIDTH = useWindowDimensions().width
   const {theme} = useTheme()
+  const {color, typography} = theme
 
   const styles = StyleSheet.create({
     qrCode: {
@@ -130,42 +131,30 @@ const useStyles = () => {
       paddingTop: 32,
     },
     title: {
-      fontSize: 20,
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
-      lineHeight: 30,
-      color: theme.color.gray.max,
+      ...typography['heading-3-medium'],
+      color: color.gray.max,
     },
     textAddress: {
       textAlign: 'center',
-      fontWeight: '500',
       paddingHorizontal: 16,
-      fontFamily: 'Rubik-Medium',
-      fontSize: 14,
-      lineHeight: 22,
-      color: theme.color.gray.max,
+      ...typography['body-2-m-medium'],
+      color: color.gray.max,
     },
     textShareAddress: {
-      color: theme.color.gray.max,
-      fontWeight: '500',
-      padding: 4,
+      color: color.gray.max,
+      ...typography['body-2-m-medium'],
       textTransform: 'uppercase',
-      fontFamily: 'Rubik-Medium',
-      fontSize: 14,
-      lineHeight: 20,
       letterSpacing: 0.5,
     },
     copiedText: {
-      color: theme.color.gray.min,
+      color: color.gray.min,
       textAlign: 'center',
       padding: 8,
-      fontSize: 14,
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
+      ...typography['body-2-m-medium'],
     },
     isCopying: {
       position: 'absolute',
-      backgroundColor: theme.color.gray.max,
+      backgroundColor: color.gray.max,
       alignItems: 'center',
       justifyContent: 'center',
       bottom: 60,
@@ -176,9 +165,9 @@ const useStyles = () => {
   })
 
   const colors = {
-    bgCard: theme.color.gradients['blue-green'],
-    white: theme.color.gray.min,
-    black: theme.color.gray.max,
+    bgCard: color.gradients['blue-green'],
+    white: color.gray.min,
+    black: color.gray.max,
   }
 
   return {styles, colors} as const

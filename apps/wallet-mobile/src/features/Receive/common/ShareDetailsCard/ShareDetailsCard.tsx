@@ -69,16 +69,13 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
 
 const useStyles = () => {
   const SCREEN_WIDTH = useWindowDimensions().width
-
   const {theme} = useTheme()
+  const {color, typography} = theme
 
   const styles = StyleSheet.create({
     title: {
-      fontSize: 20,
-      fontWeight: '500',
-      fontFamily: 'Rubik-Medium',
-      lineHeight: 30,
-      color: theme.color.gray.max,
+      ...typography['heading-3-medium'],
+      color: color.gray.max,
     },
     addressDetails: {
       borderRadius: 16,
@@ -93,19 +90,16 @@ const useStyles = () => {
       paddingTop: 32,
     },
     textAddressDetails: {
-      fontWeight: '400',
+      ...typography['body-2-m-regular'],
+      lineHeight: 18,
       textAlign: 'left',
       flex: 1,
-      fontFamily: 'Rubik-Regular',
-      color: theme.color.gray[900],
+      color: color.gray[900],
     },
     textAddress: {
-      fontWeight: '400',
+      ...typography['body-2-m-regular'],
+      color: color.gray[600],
       textAlign: 'left',
-      fontSize: 14,
-      lineHeight: 22,
-      fontFamily: 'Rubik-Regular',
-      color: theme.color.gray[600],
     },
     textSection: {
       gap: 4,
@@ -118,8 +112,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    grayText: theme.color.gray[600],
-    backgroundGradientCard: theme.color.gradients['blue-green'],
+    grayText: color.gray[600],
+    backgroundGradientCard: color.gradients['blue-green'],
   }
 
   return {styles, colors} as const

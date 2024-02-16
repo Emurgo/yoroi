@@ -108,22 +108,20 @@ export const EnterAmountScreen = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
+  const {color, typography} = theme
 
   const styles = StyleSheet.create({
     root: {
       flex: 1,
-      backgroundColor: theme.color.gray.min,
+      backgroundColor: color.gray.min,
     },
     content: {
       paddingHorizontal: 16,
       flex: 1,
     },
     textAddressDetails: {
-      fontWeight: '400',
-      fontSize: 16,
-      lineHeight: 24,
-      fontFamily: 'Rubik-Regular',
-      color: theme.color.gray[900],
+      ...typography['body-1-l-regular'],
+      color: color.gray[900],
     },
     textSection: {
       gap: 4,
@@ -134,12 +132,12 @@ const useStyles = () => {
       flex: 2,
     },
     button: {
-      backgroundColor: theme.color.primary[500],
+      backgroundColor: color.primary[500],
     },
   })
 
   const colors = {
-    gray: theme.color.gray[600],
+    gray: color.gray[600],
   }
 
   return {styles, colors} as const

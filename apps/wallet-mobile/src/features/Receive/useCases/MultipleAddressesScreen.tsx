@@ -144,10 +144,7 @@ const useStyles = () => {
       paddingTop: 16,
     },
     details: {
-      fontFamily: 'Rubik-Regular',
-      fontSize: 16,
-      lineHeight: 24,
-      fontWeight: '400',
+      ...theme.typography['body-1-l-regular'],
     },
     buttonContainer: {
       backgroundColor: theme.color.gray.min,
