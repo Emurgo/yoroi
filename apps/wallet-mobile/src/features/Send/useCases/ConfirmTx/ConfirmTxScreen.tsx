@@ -51,14 +51,17 @@ export const ConfirmTxScreen = () => {
     }
   }, [])
 
+  const sendProperties = React.useMemo(() => assetsToSendProperties({tokens, amounts}), [amounts, tokens])
+
   useFocusEffect(
     React.useCallback(() => {
-      track.sendSummaryPageViewed(assetsToSendProperties({tokens, amounts}))
-    }, [amounts, tokens, track]),
+      track.sendSummaryPageViewed(sendProperties)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [track]),
   )
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
-    track.sendSummarySubmitted(assetsToSendProperties({tokens, amounts}))
+    track.sendSummarySubmitted(sendProperties)
     navigateTo.submittedTx(signedTx.signedTx.id)
 
     if (memo.length > 0) {
@@ -67,7 +70,7 @@ export const ConfirmTxScreen = () => {
   }
 
   const onError = () => {
-    track.sendSummarySubmitted(assetsToSendProperties({tokens, amounts}))
+    track.sendSummarySubmitted(sendProperties)
     navigateTo.failedTx()
   }
 
