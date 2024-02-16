@@ -28,6 +28,7 @@ export const MultipleAddressesScreen = () => {
   const {openModal} = useModal()
   const [shown, setShown] = React.useState(false)
 
+  // only need to be shown once
   if (!shown) {
     openModal(strings.multiplePresentation, <Modal />, modalHeight)
 
