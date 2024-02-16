@@ -26,14 +26,10 @@ export const MultipleAddressesScreen = () => {
   const [addressList, setAddressList] = React.useState(mocks.addressList)
 
   const {openModal} = useModal()
-  const [shown, setShown] = React.useState(false)
 
-  // only need to be shown once
-  if (!shown) {
+  React.useEffect(() => {
     openModal(strings.multiplePresentation, <Modal />, modalHeight)
-
-    setShown(true)
-  }
+  }, [openModal, strings.multiplePresentation])
 
   const renderItem = React.useCallback(
     ({item}: {item: Item}) => (
