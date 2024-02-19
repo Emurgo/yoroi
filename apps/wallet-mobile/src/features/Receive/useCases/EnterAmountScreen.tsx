@@ -57,7 +57,7 @@ export const EnterAmountScreen = () => {
             <Button
               shelleyTheme
               onPress={generateLink}
-              disabled={amount === '' ? true : false}
+              disabled={amount === ''}
               title={strings.generateLink}
               style={styles.button}
             />
@@ -73,6 +73,7 @@ export const EnterAmountScreen = () => {
 const Modal = ({amount}: {amount: string}) => {
   const strings = useStrings()
   const {styles} = useStyles()
+  const wallet = useSelectedWallet()
   const [isCopying, copy] = useCopy()
 
   return (
@@ -80,7 +81,7 @@ const Modal = ({amount}: {amount: string}) => {
       <ScrollView>
         {mocks.specificAddressAmount !== null ? (
           <ShareQRCodeCard
-            title={`${amount} ADA`}
+            title={`${amount} ${wallet.primaryTokenInfo.ticker?.toUpperCase()}`}
             address={mocks.specificAddressAmount}
             onLongPress={() => copy(mocks.specificAddressAmount)}
           />

@@ -18,11 +18,11 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {useTokenInfo} from '../yoroi-wallets/hooks'
 
 export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
-  const theme = useTheme()
+  const {styles, colors} = useStyles()
 
   const ACTION_PROPS = {
     size: 24,
-    color: theme.theme.color['white-static'],
+    color: String(colors.actionColor),
   }
 
   const strings = useStrings()
@@ -76,9 +76,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
         <View style={[styles.row, disabled && styles.disabled]}>
           {isCopying && (
             <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-              <Text style={[styles.textCopy, {color: theme.theme.color['white-static']}]}>
-                {strings.addressCopiedMsg}
-              </Text>
+              <Text style={styles.textCopy}>{strings.addressCopiedMsg}</Text>
             </Animated.View>
           )}
 
@@ -89,7 +87,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
                 onPress={navigateTo.receive}
                 testID="receiveButton"
                 disabled={disabled}
-                onLongPress={() => copy('[PUT ADDRESS VALUE HERE]')} // [PUT ADDRESS VALUE HERE]
+                onLongPress={() => copy('[PUT ADDRESS VALUE HERE]')} // TODO [PUT ADDRESS VALUE HERE]
               >
                 <Icon.Received {...ACTION_PROPS} />
               </TouchableOpacity>
@@ -149,53 +147,63 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   )
 }
 
-const styles = StyleSheet.create({
-  banner: {},
-  centralized: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  actionIcon: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 56,
-    width: 56,
-    borderRadius: 28,
-    backgroundColor: '#4B6DDE',
-  },
-  actionLabel: {
-    paddingTop: 8,
-    fontSize: 12,
-    color: '#000000',
-    fontFamily: 'Rubik-Regular',
-    fontWeight: '500',
-    lineHeight: 18,
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-  isCopying: {
-    position: 'absolute',
-    backgroundColor: '#000',
-    alignItems: 'center',
-    justifyContent: 'center',
-    top: -40,
-    borderRadius: 4,
-    zIndex: 10,
-    left: -25,
-  },
-  textCopy: {
-    textAlign: 'center',
-    padding: 8,
-    fontSize: 14,
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    banner: {},
+    centralized: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
+    actionIcon: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 56,
+      width: 56,
+      borderRadius: 28,
+      backgroundColor: color.primary[500],
+    },
+    actionLabel: {
+      paddingTop: 8,
+      fontSize: 12,
+      color: color.gray.max,
+      fontFamily: 'Rubik-Regular',
+      fontWeight: '500',
+      lineHeight: 18,
+    },
+    disabled: {
+      opacity: 0.5,
+    },
+    isCopying: {
+      position: 'absolute',
+      backgroundColor: color.gray.max,
+      alignItems: 'center',
+      justifyContent: 'center',
+      top: -40,
+      borderRadius: 4,
+      zIndex: 10,
+      left: -25,
+    },
+    textCopy: {
+      textAlign: 'center',
+      padding: 8,
+      fontSize: 14,
+      fontWeight: '500',
+      fontFamily: 'Rubik-Medium',
+      color: color.gray.min,
+    },
+  })
+
+  const colors = {
+    actionColor: theme.color.gray.min,
+  }
+  return {styles, colors}
+}
 
 const useStrings = () => {
   const intl = useIntl()

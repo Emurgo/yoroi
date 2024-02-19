@@ -12,7 +12,6 @@ import {
 } from 'react-native'
 import {HelperText as HelperTextRNP, TextInput as RNPTextInput} from 'react-native-paper'
 
-// import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 import {Icon} from '../Icon'
 

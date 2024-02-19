@@ -25,7 +25,7 @@ export const ExpandableInfoCard = ({
   withBoxShadow = false,
   footer,
 }: ExpandableInfoCardProps) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
 
   return (
     <View>
@@ -73,7 +73,7 @@ export const HeaderWrapper = ({
   expanded?: boolean
   onPress: () => void
 }) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.flexBetween}>
@@ -94,7 +94,7 @@ export const Footer = ({
   onPress: () => void
   disabled?: boolean
 }) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <TouchableOpacity onPress={onPress} disabled={disabled}>
       <Text style={[styles.buttonLabel, disabled && styles.footerDisabled]}>{children}</Text>
@@ -115,7 +115,7 @@ export const HiddenInfoWrapper = ({
   value: React.ReactNode
   icon?: React.ReactNode
 }) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <View>
       <View style={styles.flexBetween}>
@@ -156,7 +156,7 @@ export const HiddenInfoWrapper = ({
 }
 
 export const MainInfoWrapper = ({label, value, isLast = false}: {label: string; value?: string; isLast?: boolean}) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return (
     <View>
       <View style={styles.info}>
@@ -171,9 +171,10 @@ export const MainInfoWrapper = ({label, value, isLast = false}: {label: string; 
 }
 
 export const ExpandableInfoCardSkeleton = () => {
-  const {theme} = useTheme()
+  const {colors} = useStyles()
+
   return (
-    <SkeletonPlaceholder backgroundColor={theme.color.gray[200]}>
+    <SkeletonPlaceholder backgroundColor={colors.skeletonBackground}>
       <View style={{height: 160, borderRadius: 8}}></View>
     </SkeletonPlaceholder>
   )
@@ -248,5 +249,9 @@ const useStyles = () => {
     },
   })
 
-  return styles
+  const colors = {
+    skeletonBackground: theme.color.gray[200],
+  }
+
+  return {styles, colors}
 }

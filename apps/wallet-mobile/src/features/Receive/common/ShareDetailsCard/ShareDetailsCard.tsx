@@ -103,7 +103,7 @@ const useStyles = () => {
     },
     textSection: {
       gap: 4,
-      width: '100%',
+      alignSelf: 'stretch',
     },
     textRow: {
       flexDirection: 'row',

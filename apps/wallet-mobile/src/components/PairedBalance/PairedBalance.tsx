@@ -101,14 +101,11 @@ const useStrings = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     pairedBalanceText: {
-      fontSize: 12,
-      lineHeight: 24,
-      fontFamily: 'Rubik-Regular',
       color: color.gray[600],
-      textAlign: 'right',
+      ...typography['body-3-s-regular'],
     },
   })
 

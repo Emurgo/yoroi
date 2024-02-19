@@ -41,23 +41,17 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
 
   React.useEffect(() => {
     if (isSharing) {
-      const captureAndShare = () => {
-        _.delay(async () => {
-          try {
-            await new Promise((resolve) => setTimeout(resolve, 50))
+      const captureAndShare = async () => {
+        await new Promise((resolve) => setTimeout(resolve, 10))
 
-            const uri = await captureRef(ref, {
-              format: 'png',
-              quality: 1,
-              fileName: mocks.shareFileName,
-            })
+        const uri = await captureRef(ref, {
+          format: 'png',
+          quality: 1,
+          fileName: mocks.shareFileName,
+        })
 
-            setIsSharing(false)
-            await Share.open({url: uri, filename: mocks.shareFileName, message: `${strings.address} ${address}`})
-          } finally {
-            setIsSharing(false)
-          }
-        }, 50)
+        setIsSharing(false)
+        await Share.open({url: uri, filename: mocks.shareFileName, message: `${strings.address} ${address}`})
       }
 
       captureAndShare()
