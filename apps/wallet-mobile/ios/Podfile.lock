@@ -403,6 +403,8 @@ PODS:
     - React-Core
   - react-native-timezone (2.3.0):
     - React-Core
+  - react-native-view-shot (3.8.0):
+    - React-Core
   - react-native-webview (11.26.1):
     - React-Core
   - React-perflogger (0.71.14)
@@ -546,6 +548,8 @@ PODS:
   - RNSentry (5.8.0):
     - React-Core
     - Sentry/HybridSDK (= 8.9.3)
+  - RNShare (10.0.2):
+    - React-Core
   - RNSVG (13.8.0):
     - React-Core
   - Sentry/HybridSDK (8.9.3):
@@ -637,6 +641,7 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../../../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../../../node_modules/@react-native-community/slider`)"
   - react-native-timezone (from `../../../node_modules/react-native-timezone`)
+  - react-native-view-shot (from `../../../node_modules/react-native-view-shot`)
   - react-native-webview (from `../../../node_modules/react-native-webview`)
   - React-perflogger (from `../../../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../../../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -665,6 +670,7 @@ DEPENDENCIES:
   - RNReanimated (from `../../../node_modules/react-native-reanimated`)
   - RNScreens (from `../../../node_modules/react-native-screens`)
   - "RNSentry (from `../../../node_modules/@sentry/react-native`)"
+  - RNShare (from `../../../node_modules/react-native-share`)
   - RNSVG (from `../../../node_modules/react-native-svg`)
   - Yoga (from `../../../node_modules/react-native/ReactCommon/yoga`)
 
@@ -793,6 +799,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/@react-native-community/slider"
   react-native-timezone:
     :path: "../../../node_modules/react-native-timezone"
+  react-native-view-shot:
+    :path: "../../../node_modules/react-native-view-shot"
   react-native-webview:
     :path: "../../../node_modules/react-native-webview"
   React-perflogger:
@@ -849,6 +857,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-screens"
   RNSentry:
     :path: "../../../node_modules/@sentry/react-native"
+  RNShare:
+    :path: "../../../node_modules/react-native-share"
   RNSVG:
     :path: "../../../node_modules/react-native-svg"
   Yoga:
@@ -921,6 +931,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 9697629f7b2cda43cf52169bb7e0767d330648c2
   react-native-slider: 33b8d190b59d4f67a541061bb91775d53d617d9d
   react-native-timezone: 92fa6c0a7c041efd632a372a515c957cd8ee9e72
+  react-native-view-shot: 6b7ed61d77d88580fed10954d45fad0eb2d47688
   react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
   React-perflogger: 4987ad83731c23d11813c84263963b0d3028c966
   React-RCTActionSheet: 5ad952b2a9740d87a5bd77280c4bc23f6f89ea0c
@@ -949,6 +960,7 @@ SPEC CHECKSUMS:
   RNReanimated: d6b4b867b6d1ee0798f5fb372708fa4bb8d66029
   RNScreens: 50ffe2fa2342eabb2d0afbe19f7c1af286bc7fb3
   RNSentry: f9e637773502a61c7b455c4ce65bc7008ce22a6e
+  RNShare: 859ff710211285676b0bcedd156c12437ea1d564
   RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
   Sentry: 97161cac725da1ecbe77d1445bf8a61c1e5667f1
   SentryPrivate: 9a76def09fb08f9501997b8df946e8097947b94f
@@ -959,4 +971,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 4045625f1556b4d232075df8dbd22524a7010c3f
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.12.1

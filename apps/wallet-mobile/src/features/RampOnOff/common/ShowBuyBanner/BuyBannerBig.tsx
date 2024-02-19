@@ -79,7 +79,7 @@ const useStyles = () => {
       textAlign: 'center',
     },
     text: {
-      ...theme.typography['body-1-regular'],
+      ...theme.typography['body-1-l-regular'],
       color: theme.color['black-static'],
       fontWeight: '400',
       textAlign: 'center',

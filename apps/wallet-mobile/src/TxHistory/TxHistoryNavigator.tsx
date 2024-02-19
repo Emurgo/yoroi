@@ -23,6 +23,9 @@ import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
 import {RampOnOffScreen} from '../features/RampOnOff/RampOnOffNavigator'
+import {EnterAmountScreen} from '../features/Receive/useCases/EnterAmountScreen'
+import {MultipleAddressesScreen} from '../features/Receive/useCases/MultipleAddressesScreen'
+import {SingleAddressScreen} from '../features/Receive/useCases/SingleAddressScreen'
 import {CodeScannerButton} from '../features/Scan/common/CodeScannerButton'
 import {ScanCodeScreen} from '../features/Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '../features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
@@ -52,7 +55,6 @@ import {
   TxHistoryRoutes,
   useWalletNavigation,
 } from '../navigation'
-import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
@@ -73,7 +75,6 @@ export const TxHistoryNavigator = () => {
 
   // modal
   const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
-  const showModalInfo = React.useCallback(() => setIsModalInfoVisible(true), [])
   const hideModalInfo = React.useCallback(() => setIsModalInfoVisible(false), [])
 
   // swap
@@ -157,16 +158,26 @@ export const TxHistoryNavigator = () => {
 
                 <Stack.Screen
                   name="receive"
-                  component={ReceiveScreen}
+                  component={SingleAddressScreen}
                   options={{
                     title: strings.receiveTitle,
+                    gestureEnabled: false,
+                  }}
+                />
 
-                    headerRight: () => <ModalInfoIconButton onPress={showModalInfo} />,
-                    headerStyle: {
-                      elevation: 0,
-                      shadowOpacity: 0,
-                      backgroundColor: '#fff',
-                    },
+                <Stack.Screen
+                  name="receive-multiple"
+                  component={MultipleAddressesScreen}
+                  options={{
+                    title: strings.receiveTitle,
+                  }}
+                />
+
+                <Stack.Screen
+                  name="receive-specific-amount"
+                  component={EnterAmountScreen}
+                  options={{
+                    title: strings.specificAmount,
                   }}
                 />
 
@@ -182,6 +193,7 @@ export const TxHistoryNavigator = () => {
                   name="swap-start-swap"
                   component={SwapTabNavigator}
                   options={{
+                    ...sendOptions(theme),
                     title: strings.swapTitle,
                   }}
                 />
@@ -198,6 +210,7 @@ export const TxHistoryNavigator = () => {
                   name="swap-select-sell-token"
                   component={SelectSellTokenFromListScreen}
                   options={{
+                    ...sendOptions(theme),
                     title: strings.swapFromTitle,
                   }}
                 />
@@ -206,6 +219,7 @@ export const TxHistoryNavigator = () => {
                   name="swap-select-buy-token"
                   component={SelectBuyTokenFromListScreen}
                   options={{
+                    ...sendOptions(theme),
                     title: strings.swapToTitle,
                   }}
                 />
@@ -422,6 +436,10 @@ const messages = defineMessages({
     id: 'claim.showSuccess.title',
     defaultMessage: '!!!Success',
   },
+  specificAmount: {
+    id: 'components.receive.receivescreen.specificAmount',
+    defaultMessage: '!!!Request specific amount',
+  },
 })
 
 const useStrings = () => {
@@ -444,15 +462,8 @@ const useStrings = () => {
     confirmationTransaction: intl.formatMessage(messages.confirmationTransaction),
     scanTitle: intl.formatMessage(messages.scanTitle),
     claimShowSuccess: intl.formatMessage(messages.claimShowSuccessTitle),
+    specificAmount: intl.formatMessage(messages.specificAmount),
   }
-}
-
-const ModalInfoIconButton = (props: TouchableOpacityProps) => {
-  return (
-    <TouchableOpacity {...props}>
-      <Icon.Info size={25} color={COLORS.ACTION_GRAY} />
-    </TouchableOpacity>
-  )
 }
 
 const SettingsIconButton = (props: TouchableOpacityProps) => {

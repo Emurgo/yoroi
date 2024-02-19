@@ -50,6 +50,10 @@ export const WalletSettingsScreen = () => {
     }
   }
 
+  const onToggleMultipleAddresses = () => {
+    return
+  }
+
   const onSwitchWallet = () => {
     resetToWalletSelection()
   }
@@ -114,6 +118,15 @@ export const WalletSettingsScreen = () => {
             label={strings.collateral}
             onNavigate={() => settingsNavigation.navigate('manage-collateral')}
           />
+
+          <SettingsItem
+            icon={<Icon.Qr {...iconProps} />}
+            label={strings.multipleAddresses}
+            info={strings.multipleAddressesInfo}
+            disabled={false}
+          >
+            <Switch value={false} onValueChange={onToggleMultipleAddresses} disabled={false} />
+          </SettingsItem>
         </SettingsSection>
 
         <Spacer height={24} />
@@ -236,6 +249,14 @@ const messages = defineMessages({
     id: 'global.collateral',
     defaultMessage: '!!!Collateral',
   },
+  multipleAddresses: {
+    id: 'global.multipleAddresses',
+    defaultMessage: '!!!Multiple addresses',
+  },
+  multipleAddressesInfo: {
+    id: 'global.multipleAddressesInfo',
+    defaultMessage: '!!!By enabling this you can operate with more wallet addresses',
+  },
   // note: moved here from application settings
   network: {
     id: 'global.network',
@@ -288,6 +309,8 @@ const useStrings = () => {
     about: intl.formatMessage(messages.about),
     resync: intl.formatMessage(messages.resync),
     collateral: intl.formatMessage(messages.collateral),
+    multipleAddresses: intl.formatMessage(messages.multipleAddresses),
+    multipleAddressesInfo: intl.formatMessage(messages.multipleAddressesInfo),
   }
 }
 

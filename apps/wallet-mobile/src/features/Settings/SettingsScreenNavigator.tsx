@@ -186,11 +186,12 @@ export const SettingsScreenNavigator = () => {
 const Tab = createMaterialTopTabNavigator<SettingsTabRoutes>()
 const SettingsTabNavigator = () => {
   const strings = useStrings()
+  const {theme} = useTheme()
 
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
-        ...defaultMaterialTopTabNavigationOptions,
+        ...defaultMaterialTopTabNavigationOptions(theme),
         tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,
       })}
     >
