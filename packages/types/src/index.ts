@@ -116,6 +116,26 @@ import {ExchangeReferralUrlQueryStringParams} from './exchange/params'
 import {ExchangeUnknownError, ExchangeValidationError} from './exchange/errors'
 import {ExchangeOrderType} from './exchange/order'
 import {ExchangeProvider} from './exchange/provider'
+import {
+  PortfolioTokenId,
+  PortfolioTokenType,
+  PortfolioTokenPropertyType,
+  PortfolioTokenApplication,
+  PortfolioTokenSource,
+  PortfolioTokenNature,
+  PortfolioTokenStatus,
+} from './portfolio/token'
+import {PortfolioTokenDiscovery} from './portfolio/discovery'
+import {PortfolioTokenInfo} from './portfolio/info'
+import {
+  PortfolioAmount,
+  PortfolioAmounts,
+  PortfolioBalance,
+  PortfolioBalancePrimaryBreakdown,
+  PortfolioBalancePrimaryRecord,
+  PortfolioQuantity,
+} from './portfolio/balance'
+import {PortfolioPrice, PortfolioTokenPrice} from './portfolio/price'
 
 export namespace App {
   export interface Storage<IsAsync extends boolean = true>
@@ -303,6 +323,43 @@ export namespace Transfer {
   export type Entry = TransferEntry
   export type Target = TransferTarget
   export type Targets = TransferTargets
+}
+
+export namespace Portfolio {
+  export type Balance = PortfolioBalance
+  export type Quantity = PortfolioQuantity
+  export type Amount = PortfolioAmount
+  export type Amounts = PortfolioAmounts
+  export type Price = PortfolioPrice
+  export type BalancePrimaryRecord = PortfolioBalancePrimaryRecord
+  export type BalancePrimaryBreakdown = PortfolioBalancePrimaryBreakdown
+
+  export namespace Token {
+    export type Id = PortfolioTokenId
+
+    export type Type = PortfolioTokenType
+    export const Type = PortfolioTokenType
+
+    export type PropertyType = PortfolioTokenPropertyType
+    export const PropertyType = PortfolioTokenPropertyType
+
+    export type Application = PortfolioTokenApplication
+    export const Application = PortfolioTokenApplication
+
+    export type Source = PortfolioTokenSource
+    export const Source = PortfolioTokenSource
+
+    export type Nature = PortfolioTokenNature
+    export const Nature = PortfolioTokenNature
+
+    export type Status = PortfolioTokenStatus
+    export const Status = PortfolioTokenStatus
+
+    export type Info = PortfolioTokenInfo
+    export type Discovery = PortfolioTokenDiscovery
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    export type Price = PortfolioTokenPrice
+  }
 }
 
 export namespace Chain {
