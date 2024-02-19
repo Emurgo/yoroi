@@ -19,6 +19,10 @@ yarn workspace @yoroi/common add -D @yoroi/types@"$1"
 yarn workspace @yoroi/api add -D @yoroi/types@"$1"
 yarn workspace @yoroi/api add @yoroi/common@"$1"
 
+# portfolio 
+yarn workspace @yoroi/portfolio add -D @yoroi/types@"$1"
+yarn workspace @yoroi/portfolio add @yoroi/common@"$1"
+
 # swap
 yarn workspace @yoroi/swap add -D @yoroi/types@"$1"
 yarn workspace @yoroi/swap add @yoroi/api@"$1"

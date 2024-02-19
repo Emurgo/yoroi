@@ -45,6 +45,10 @@
       "path": "./packages/staking"
     },
     {
+      "name": "@yoroi/portfolio",
+      "path": "./packages/portfolio"
+    },
+    {
       "name": "@yoroi/wallet-mobile",
       "path": "./apps/wallet-mobile"
     },
