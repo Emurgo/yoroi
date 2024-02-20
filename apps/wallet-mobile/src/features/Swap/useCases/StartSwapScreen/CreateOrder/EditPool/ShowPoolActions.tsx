@@ -137,7 +137,7 @@ const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
       {feeStructure.map((fee) => {
         const modalContent = (
           <View style={styles.modalContent}>
-            <Text style={styles.text}>{fee.info}</Text>
+            <Text style={styles.modalText}>{fee.info}</Text>
 
             <Spacer fill />
 
@@ -170,6 +170,7 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const styles = useStyles()
   const wallet = useSelectedWallet()
   const {openModal} = useModal()
+  const bold = useBold()
 
   const {orderData} = useSwap()
   const {selectedPoolCalculation: calculation, amounts} = orderData
@@ -193,7 +194,7 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const totalFeesFormatted = `${totalFees} ${wallet.primaryTokenInfo.ticker}`
   const minReceivedFormatted = `${minReceived} ${buyTokenName}`
   const liqFeeQuantityFormatted = `${liqFeeQuantity} ${sellTokenName}`
-  const liqFeePercFormatted = strings.swapLiquidityFeeInfo(liqFeePerc)
+  const liqFeePercFormatted = strings.swapLiquidityFeeInfo(liqFeePerc, bold)
 
   const feeStructure = [
     {
@@ -224,7 +225,7 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
       {feeStructure.map((fee) => {
         const modalContent = (
           <View style={styles.modalContent}>
-            <Text style={styles.text}>{fee.info}</Text>
+            <Text style={styles.modalText}>{fee.info}</Text>
 
             <Spacer fill />
 
@@ -252,12 +253,25 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   )
 }
 
+const useBold = () => {
+  const styles = useStyles()
+
+  return {
+    b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
+  }
+}
+
 const useStyles = () => {
   const {theme} = useTheme()
   const {color, typography} = theme
   const styles = StyleSheet.create({
     flex: {flexDirection: 'row', alignItems: 'center'},
     between: {justifyContent: 'space-between'},
+    modalText: {
+      textAlign: 'left',
+      ...typography['body-1-l-regular'],
+      color: color.gray[900],
+    },
     text: {
       textAlign: 'right',
       ...typography['body-1-l-regular'],

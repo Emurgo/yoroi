@@ -876,7 +876,7 @@
   "swap.swapScreen.swapFrom": "Swap from",
   "swap.swapScreen.swapLiqProvFee": "Liq. prov. fee",
   "swap.swapScreen.swapLiquidityFee": "Liquidity provider fee",
-  "swap.swapScreen.swapLiquidityFeeInfo": "Liquidity provider fee is a fixed {fee}% operational fee from the whole transaction volume, that is taken to support DEX “liquidity” allowing traders to buy and sell assets on the decentralized Cardano network.",
+  "swap.swapScreen.swapLiquidityFeeInfo": "Liquidity provider fee is a fixed <b>{fee}%<b> operational fee from the whole transaction volume, that is taken to support DEX “liquidity” allowing traders to buy and sell assets on the decentralized Cardano network.",
   "swap.swapScreen.swapMinAda": "Min-ADA is the minimum ADA amount required to be contained when holding or sending Cardano native assets.",
   "swap.swapScreen.swapMinAdaTitle": "Min ADA",
   "swap.swapScreen.swapMinReceived": "Minimum amount of assets you can get because of the slippage tolerance.",
