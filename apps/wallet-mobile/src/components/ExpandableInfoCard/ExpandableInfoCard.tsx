@@ -209,7 +209,7 @@ const useStyles = () => {
     flexBetween: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'flex-start',
     },
     flex: {
       flexDirection: 'row',
