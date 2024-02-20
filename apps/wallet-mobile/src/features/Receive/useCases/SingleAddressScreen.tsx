@@ -7,8 +7,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import Icon from '../../../assets/img/copy.png'
 import {Button, Spacer} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
-import {useAddresses} from '../../../Receive/Addresses'
-import {useKeyHashes} from '../../../yoroi-wallets/hooks'
+import {useSelectedWallet} from '../../../SelectedWallet'
+import {useKeyHashes, useReceiveAddresses} from '../../../yoroi-wallets/hooks'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useNavigateTo} from '../common/useNavigateTo'
@@ -18,12 +18,16 @@ export const SingleAddressScreen = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const navigate = useNavigateTo()
-  const addresses = useAddresses()
+  const wallet = useSelectedWallet()
+  const receiveAddresses = useReceiveAddresses(wallet)
+
+  const currentAddress = _.last(receiveAddresses)
+
+  console.log('currentAddress', currentAddress)
 
   const [isCopying, copy] = useCopy()
 
-  const currentAddress = addresses.used.length > 0 ? addresses.used[0] : addresses.unused[0]
-  const keyHashes = useKeyHashes(currentAddress)
+  const keyHashes = useKeyHashes(currentAddress != null ? currentAddress : '')
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
@@ -31,7 +35,7 @@ export const SingleAddressScreen = () => {
         <View style={styles.address}>
           {currentAddress !== null ? (
             <AddressDetailCard
-              address={currentAddress}
+              address={currentAddress != null ? currentAddress : ''}
               title={strings.addresscardTitle}
               addressDetails={{
                 spendingHash: keyHashes?.spending !== null ? keyHashes?.spending : '',
@@ -59,7 +63,7 @@ export const SingleAddressScreen = () => {
       <Button
         shelleyTheme
         onPress={() => {
-          copy(currentAddress)
+          copy(currentAddress != null ? currentAddress : '')
         }}
         disabled={currentAddress === null}
         title={strings.copyAddressButton}

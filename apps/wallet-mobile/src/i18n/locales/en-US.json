@@ -648,6 +648,7 @@
   "global.close": "close",
   "global.collateral": "Collateral",
   "global.multipleAddresses": "Multiple addresses",
+  "global.singleAddress": "Single addresses",
   "global.multipleAddressesInfo": "By enabling this you can operate with more wallet addresses",
   "global.comingSoon": "Coming soon",
   "global.commit": "Commit",

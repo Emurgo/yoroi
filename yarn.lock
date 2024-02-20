@@ -19004,6 +19004,11 @@ pod-install@^0.1.0, pod-install@^0.1.38:
   resolved "https://registry.yarnpkg.com/pod-install/-/pod-install-0.1.38.tgz#1c16a800a5fc1abea0cafcc0e190f376368c76ab"
   integrity sha512-NeDWGigjJRriOIKBOvpW2/tK2tYLfyUT7ia6C6L+oarCAhBNP+IGODWdU+GEAqvfsseqOApcFclpXAJTL0UPzA==
 
+pods@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/pods/-/pods-2.0.0.tgz#212173c7855eb3104cc753159f8b45187ae945c2"
+  integrity sha512-whEUYBUxuc2Sbi2g6zQj5l6IAi4iyU4cF/p1IV2JxdumDlzEFdLX4AJQFrOc7Tl78VwcXAR0NzmgvBiEZFul8w==
+
 polished@^4.2.2:
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/polished/-/polished-4.2.2.tgz#2529bb7c3198945373c52e34618c8fe7b1aa84d1"

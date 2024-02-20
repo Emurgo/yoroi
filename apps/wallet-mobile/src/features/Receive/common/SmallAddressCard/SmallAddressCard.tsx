@@ -20,7 +20,6 @@ export type SmallAddressCardProps = {
 export const SmallAddressCard = ({address, isUsed, date, onPress, loading}: SmallAddressCardProps) => {
   const strings = useStrings()
   const [isCopying, copy] = useCopy()
-
   const {styles, colors} = useStyles()
 
   if (loading)

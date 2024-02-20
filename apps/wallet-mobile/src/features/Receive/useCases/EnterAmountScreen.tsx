@@ -8,7 +8,7 @@ import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../.
 import {useCopy} from '../../../legacy/useCopy'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
-import {mocks} from '../common/mocks'
+import {useMultipleAddresses} from '../../Settings/MultipleAddresses/MultipleAddresses'
 import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../common/useStrings'
@@ -17,6 +17,7 @@ export const EnterAmountScreen = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const receiveAddresses = useReceiveAddresses(wallet)
+  const {isSingleAddress} = useMultipleAddresses()
 
   const HEIGHT_SCREEN = useWindowDimensions().height
   const HEIGHT_MODAL = (HEIGHT_SCREEN / 100) * 80
@@ -32,8 +33,12 @@ export const EnterAmountScreen = () => {
   const generateLink = React.useCallback(() => {
     Keyboard.dismiss()
 
-    openModal(strings.multipleAdress, <Modal amount={amount} />, HEIGHT_MODAL)
-  }, [HEIGHT_MODAL, amount, openModal, strings.multipleAdress])
+    openModal(
+      isSingleAddress ? strings.singleAddress : strings.multipleAdress,
+      <Modal amount={amount} address={currentAddress} />,
+      HEIGHT_MODAL,
+    )
+  }, [HEIGHT_MODAL, amount, currentAddress, isSingleAddress, openModal, strings.multipleAdress, strings.singleAddress])
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
@@ -70,7 +75,7 @@ export const EnterAmountScreen = () => {
   )
 }
 
-const Modal = ({amount}: {amount: string}) => {
+const Modal = ({amount, address}: {amount: string; address?: string}) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const wallet = useSelectedWallet()
@@ -79,11 +84,11 @@ const Modal = ({amount}: {amount: string}) => {
   return (
     <View style={styles.root}>
       <ScrollView>
-        {mocks.specificAddressAmount !== null ? (
+        {address !== null ? (
           <ShareQRCodeCard
             title={`${amount} ${wallet.primaryTokenInfo.ticker?.toUpperCase()}`}
-            address={mocks.specificAddressAmount}
-            onLongPress={() => copy(mocks.specificAddressAmount)}
+            address={address}
+            onLongPress={() => copy(String(address))}
           />
         ) : (
           <View style={styles.root}>
@@ -97,7 +102,7 @@ const Modal = ({amount}: {amount: string}) => {
       <Button
         shelleyTheme
         onPress={() => {
-          copy(mocks.specificAddressAmount)
+          copy(String(address))
         }}
         disabled={amount === '' ? true : false}
         title={strings.copyLinkBtn}

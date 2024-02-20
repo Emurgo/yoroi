@@ -5,6 +5,8 @@ import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../components'
+import {useAddresses} from '../../../Receive/Addresses'
+import {useSelectedWallet} from '../../../SelectedWallet'
 import {InfoCard} from '../common/InfoCard/InfoCard'
 import {mocks} from '../common/mocks'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
@@ -12,18 +14,24 @@ import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
 import {QRs} from '../illustrations/QRs'
 
-type Item = {
-  isUsed?: boolean
-  loading?: boolean
+type AddressInfo = {
+  isUsed: boolean
+  address: string
 }
 
 export const MultipleAddressesScreen = () => {
   const strings = useStrings()
   const {styles} = useStyles()
+  const addresses = useAddresses()
+  const wallet = useSelectedWallet()
+
+  console.log('addresses1', mapAddresses(addresses))
+
+  const mappedAddresses = mapAddresses(addresses)
 
   const navigate = useNavigateTo()
 
-  const [addressList, setAddressList] = React.useState(mocks.addressList)
+  const [addressList, _] = React.useState(mocks.addressList)
 
   const {openModal} = useModal()
 
@@ -32,26 +40,20 @@ export const MultipleAddressesScreen = () => {
   }, [openModal, strings.multiplePresentation])
 
   const renderItem = React.useCallback(
-    ({item}: {item: Item}) => (
+    ({item}: {item: AddressInfo}) => (
       <SmallAddressCard
-        address={mocks.address}
+        address={item.address}
         isUsed={item.isUsed}
-        date={mocks.usedAddressDate}
         onPress={() => navigate.receiceDetails()}
-        loading={item.loading}
+        // date={mocks.usedAddressDate}  // TODO don't have the date
       />
     ),
     [navigate],
   )
 
-  const addMockData = React.useCallback(() => {
-    const novoDadoMockado = {isUsed: false, loading: false}
-    setAddressList([novoDadoMockado, ...addressList])
-  }, [addressList])
-
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      {addressList.length === 20 && (
+      {mappedAddresses.length === 20 && (
         <>
           <InfoCard onLimit={true} />
 
@@ -60,7 +62,7 @@ export const MultipleAddressesScreen = () => {
       )}
 
       <Animated.FlatList
-        data={addressList}
+        data={mappedAddresses}
         keyExtractor={(_, i) => String(i)}
         renderItem={renderItem}
         layout={Layout}
@@ -72,7 +74,7 @@ export const MultipleAddressesScreen = () => {
           shelleyTheme
           title={strings.generateButton}
           disabled={addressList.length === 20 ? true : false}
-          onPress={addMockData}
+          onPress={() => wallet.generateNewReceiveAddress()}
           style={styles.button}
         />
       </Animated.View>
@@ -139,4 +141,18 @@ const useStyles = () => {
   }
 
   return {styles, colors} as const
+}
+
+const mapAddresses = (data: {unused: string[]; used: string[]}): AddressInfo[] => {
+  const unusedAddresses = data.unused.map((address) => ({
+    address,
+    isUsed: false,
+  }))
+
+  const usedAddresses = data.used.map((address) => ({
+    address,
+    isUsed: true,
+  }))
+
+  return [...unusedAddresses, ...usedAddresses]
 }

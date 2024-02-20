@@ -18,6 +18,7 @@ export const useStrings = () => {
     ADALabel: intl.formatMessage(messages.ADALabel),
     generateLink: intl.formatMessage(messages.generateLink),
     multipleAdress: intl.formatMessage(messages.multipleAdress),
+    singleAddress: intl.formatMessage(messages.singleAddress),
     copyLinkBtn: intl.formatMessage(messages.copyLinkBtn),
     copyLinkMsg: intl.formatMessage(messages.copyLinkMsg),
     addressCopiedMsg: intl.formatMessage(messages.addressCopiedMsg),
@@ -87,6 +88,10 @@ export const messages = defineMessages({
   multipleAdress: {
     id: 'components.receive.receivescreen.multipleAdress',
     defaultMessage: '!!!Multiple address',
+  },
+  singleAddress: {
+    id: 'global.singleAddress',
+    defaultMessage: '!!!Single address',
   },
   copyLinkBtn: {
     id: 'components.receive.receivescreen.copyLinkBtn',
