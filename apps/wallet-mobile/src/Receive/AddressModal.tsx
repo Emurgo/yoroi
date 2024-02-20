@@ -1,5 +1,5 @@
 import {fromPairs} from 'lodash'
-import React, {useState} from 'react'
+import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View, ViewProps} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
@@ -7,8 +7,8 @@ import QRCode from 'react-native-qrcode-svg'
 import {CopyButton, Spacer, Text} from '../components'
 import {Modal} from '../legacy/Modal'
 import {useSelectedWallet} from '../SelectedWallet'
-import {getSpendingKey, getStakingKey} from '../yoroi-wallets/cardano/addressInfo'
 import {AddressType, formatPath} from '../yoroi-wallets/cardano/formatPath'
+import {useKeyHashes} from '../yoroi-wallets/hooks'
 
 type Path = {
   account: number
@@ -185,20 +185,5 @@ const useStrings = () => {
     staking: intl.formatMessage(messages.staking),
     title: intl.formatMessage(messages.title),
     verifyLabel: intl.formatMessage(messages.verifyLabel),
-  }
-}
-
-const useKeyHashes = (address: string) => {
-  const [spending, setSpending] = useState<string | null>(null)
-  const [staking, setStaking] = useState<string | null>(null)
-
-  React.useEffect(() => {
-    getSpendingKey(address).then(setSpending)
-    getStakingKey(address).then(setStaking)
-  }, [address])
-
-  return {
-    spending,
-    staking,
   }
 }

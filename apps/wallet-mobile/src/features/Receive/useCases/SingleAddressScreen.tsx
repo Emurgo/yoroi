@@ -7,8 +7,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import Icon from '../../../assets/img/copy.png'
 import {Button, Spacer} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
+import {useAddresses} from '../../../Receive/Addresses'
+import {useKeyHashes} from '../../../yoroi-wallets/hooks'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
-import {mocks as mockReceives, mocks} from '../common/mocks'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
@@ -17,10 +18,12 @@ export const SingleAddressScreen = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const navigate = useNavigateTo()
+  const addresses = useAddresses()
 
   const [isCopying, copy] = useCopy()
 
-  const currentAddress = mocks.address
+  const currentAddress = addresses.used.length > 0 ? addresses.used[0] : addresses.unused[0]
+  const keyHashes = useKeyHashes(currentAddress)
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
@@ -28,11 +31,11 @@ export const SingleAddressScreen = () => {
         <View style={styles.address}>
           {currentAddress !== null ? (
             <AddressDetailCard
-              address={mockReceives.address}
+              address={currentAddress}
               title={strings.addresscardTitle}
               addressDetails={{
-                spendingHash: mockReceives.spendinghash,
-                stakingHash: mockReceives.stakinghash,
+                spendingHash: keyHashes?.spending !== null ? keyHashes?.spending : '',
+                stakingHash: keyHashes?.staking !== null ? keyHashes?.staking : '',
               }}
             />
           ) : (
