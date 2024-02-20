@@ -136,6 +136,7 @@ import {
   PortfolioQuantity,
 } from './portfolio/balance'
 import {PortfolioPrice, PortfolioTokenPrice} from './portfolio/price'
+import {ChainNetwork} from './chain/network'
 
 export namespace App {
   export interface Storage<IsAsync extends boolean = true>
@@ -363,6 +364,9 @@ export namespace Portfolio {
 }
 
 export namespace Chain {
+  export type Network = ChainNetwork
+  export const Network = ChainNetwork
+
   export namespace Cardano {
     export type UnsignedTx = CardanoUnsignedTx
     export type SignedTx = CardanoSignedTx
