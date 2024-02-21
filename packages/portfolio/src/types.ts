@@ -2,10 +2,10 @@ import {Chain, Portfolio} from '@yoroi/types'
 
 // check to use Cache-Control (replacement for MaxAge)
 export type AppApiResponseWithCache<T> =
-  | [StatusCode: 200, T, ETag: string, MaxAge: number]
+  | [StatusCode: 200, Record: T, ETag: string, MaxAge: number]
   | [StatusCode: 304, MaxAge: number]
 
-export type AppApiRequestWithCache<T> = [T, ETag: string]
+export type AppApiRequestWithCache<T> = [Record: T, ETag: string]
 
 export type PortfolioApiTokenInfosResponse = Readonly<{
   [key: Portfolio.Token.Id]: AppApiResponseWithCache<Portfolio.Token.Discovery>
@@ -15,7 +15,7 @@ export type PortfolioApiTokenDiscoveriesResponse = Readonly<{
   [key: Portfolio.Token.Id]: AppApiResponseWithCache<Portfolio.Token.Discovery>
 }>
 
-export type PortfolioApi = {
+export type PortfolioApi = Readonly<{
   tokenInfos(
     tokenIdsWithCache: ReadonlyArray<
       AppApiRequestWithCache<Portfolio.Token.Id>
@@ -26,7 +26,7 @@ export type PortfolioApi = {
       AppApiRequestWithCache<Portfolio.Token.Id>
     >,
   ): Promise<PortfolioApiTokenDiscoveriesResponse>
-}
+}>
 
 type ApiEndpoints = Readonly<{
   [K in keyof PortfolioApi]: string
@@ -34,4 +34,8 @@ type ApiEndpoints = Readonly<{
 
 export type ApiConfig = Readonly<{
   [K in Chain.Network]: ApiEndpoints
+}>
+
+export type PortfolioManager = Readonly<{
+  hydrate(): Promise<void>
 }>
