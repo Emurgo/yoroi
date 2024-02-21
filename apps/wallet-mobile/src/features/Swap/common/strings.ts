@@ -37,7 +37,8 @@ export const useStrings = () => {
     swapFeesTitle: intl.formatMessage(messages.swapFeesTitle),
     swapLiquidityFee: intl.formatMessage(messages.swapLiquidityFee),
     swapLiqProvFee: intl.formatMessage(messages.swapLiqProvFee),
-    swapLiquidityFeeInfo: (fee: string) => intl.formatMessage(messages.swapLiquidityFeeInfo, {fee}),
+    swapLiquidityFeeInfo: (fee: string, options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.swapLiquidityFeeInfo, {fee, ...options}),
     swapFees: intl.formatMessage(messages.swapFees),
     poolVerification: (pool: string) => intl.formatMessage(messages.poolVerification, {pool}),
     poolVerificationInfo: (pool: string) => intl.formatMessage(messages.poolVerificationInfo, {pool}),
@@ -283,7 +284,7 @@ export const messages = defineMessages({
   swapLiquidityFeeInfo: {
     id: 'swap.swapScreen.swapLiquidityFeeInfo',
     defaultMessage:
-      '!!!Liquidity provider fee is a fixed {fee}% operational fee from the whole transaction volume, that is taken to support DEX “liquidity” allowing traders to buy and sell assets on the decentralized Cardano network.',
+      '!!!Liquidity provider fee is a fixed <b>{fee}%</b> operational fee from the whole transaction volume, that is taken to support DEX “liquidity” allowing traders to buy and sell assets on the decentralized Cardano network.',
   },
   swapMinReceived: {
     id: 'swap.swapScreen.swapMinReceived',
