@@ -8,7 +8,6 @@ import {Button, Spacer, useModal} from '../../../components'
 import {useAddresses} from '../../../Receive/Addresses'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {InfoCard} from '../common/InfoCard/InfoCard'
-import {mocks} from '../common/mocks'
 import {useReceive} from '../common/ReceiveProvider'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
 import {useNavigateTo} from '../common/useNavigateTo'
@@ -27,13 +26,8 @@ export const MultipleAddressesScreen = () => {
   const {selectCurrentAddress} = useReceive()
   const wallet = useSelectedWallet()
 
-  console.log('addresses1', mapAddresses(addresses))
-
   const mappedAddresses = mapAddresses(addresses)
-
   const navigate = useNavigateTo()
-
-  const [addressList, _] = React.useState(mocks.addressList)
 
   const {openModal} = useModal()
 
@@ -59,7 +53,7 @@ export const MultipleAddressesScreen = () => {
   return (
     <ThemeProvider>
       <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-        {mappedAddresses.length === 20 && (
+        {mappedAddresses.length > 20 && (
           <>
             <InfoCard onLimit={true} />
 
@@ -75,11 +69,14 @@ export const MultipleAddressesScreen = () => {
           showsVerticalScrollIndicator={false}
         />
 
-        <Animated.View style={[styles.footer, {display: addressList.length === 20 ? 'none' : 'flex'}]} layout={Layout}>
+        <Animated.View
+          style={[styles.footer, {display: mappedAddresses.length > 20 ? 'none' : 'flex'}]}
+          layout={Layout}
+        >
           <Button
             shelleyTheme
             title={strings.generateButton}
-            disabled={addressList.length === 20 ? true : false}
+            disabled={mappedAddresses.length > 20 ? true : false}
             onPress={() => wallet.generateNewReceiveAddress()}
             style={styles.button}
           />
@@ -104,7 +101,7 @@ const Modal = () => {
       <Spacer fill />
 
       <View style={styles.buttonContainer}>
-        <Button shelleyTheme title={strings.ok} disabled={mocks.isLoading} onPress={closeModal} style={styles.button} />
+        <Button shelleyTheme title={strings.ok} onPress={closeModal} style={styles.button} />
       </View>
 
       <Spacer height={24} />

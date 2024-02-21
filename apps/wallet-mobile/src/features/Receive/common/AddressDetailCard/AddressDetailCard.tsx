@@ -6,7 +6,6 @@ import Animated, {Layout} from 'react-native-reanimated'
 import {Spacer} from '../../../../components'
 import {useCopy} from '../../../../legacy/useCopy'
 import {useKeyHashes} from '../../../../yoroi-wallets/hooks'
-import {mocks} from '../mocks'
 import {useReceive} from '../ReceiveProvider'
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
 import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
@@ -78,7 +77,7 @@ export const AddressDetailCard = ({title}: ShareProps) => {
             <ShareQRCodeCard
               title={item.title}
               address={item.address}
-              onLongPress={() => copy(mocks.address)}
+              onLongPress={() => copy(item.address)}
               isCopying={isCopying}
             />
           )

@@ -4,12 +4,12 @@
     "defaultMessage": "!!!Receive",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 35,
+      "line": 36,
       "column": 16,
       "index": 1828
     },
     "end": {
-      "line": 38,
+      "line": 39,
       "column": 3,
       "index": 1917
     }
@@ -19,12 +19,12 @@
     "defaultMessage": "!!!Wallet address",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 39,
+      "line": 40,
       "column": 20,
       "index": 1939
     },
     "end": {
-      "line": 42,
+      "line": 43,
       "column": 3,
       "index": 2033
     }
@@ -34,12 +34,12 @@
     "defaultMessage": "!!!Share address",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 43,
+      "line": 44,
       "column": 14,
       "index": 2049
     },
     "end": {
-      "line": 46,
+      "line": 47,
       "column": 3,
       "index": 2147
     }
@@ -49,12 +49,12 @@
     "defaultMessage": "!!!Wallet address details",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 47,
+      "line": 48,
       "column": 17,
       "index": 2166
     },
     "end": {
-      "line": 50,
+      "line": 51,
       "column": 3,
       "index": 2276
     }
@@ -64,12 +64,12 @@
     "defaultMessage": "!!!Spending key hash",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 51,
+      "line": 52,
       "column": 19,
       "index": 2297
     },
     "end": {
-      "line": 54,
+      "line": 55,
       "column": 3,
       "index": 2404
     }
@@ -79,12 +79,12 @@
     "defaultMessage": "!!!Staking key hash",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 55,
+      "line": 56,
       "column": 18,
       "index": 2424
     },
     "end": {
-      "line": 58,
+      "line": 59,
       "column": 3,
       "index": 2529
     }
@@ -94,12 +94,12 @@
     "defaultMessage": "!!!Address",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 59,
+      "line": 60,
       "column": 11,
       "index": 2542
     },
     "end": {
-      "line": 62,
+      "line": 63,
       "column": 3,
       "index": 2631
     }
@@ -109,12 +109,12 @@
     "defaultMessage": "!!!Copy address",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 63,
+      "line": 64,
       "column": 21,
       "index": 2654
     },
     "end": {
-      "line": 66,
+      "line": 67,
       "column": 3,
       "index": 2753
     }
@@ -124,12 +124,12 @@
     "defaultMessage": "!!!Request specific amount",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 67,
+      "line": 68,
       "column": 31,
       "index": 2786
     },
     "end": {
-      "line": 70,
+      "line": 71,
       "column": 3,
       "index": 2913
     }
@@ -139,12 +139,12 @@
     "defaultMessage": "!!!Request specific amount",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 71,
+      "line": 72,
       "column": 18,
       "index": 2933
     },
     "end": {
-      "line": 74,
+      "line": 75,
       "column": 3,
       "index": 3047
     }
@@ -154,12 +154,12 @@
     "defaultMessage": "!!!Generate a unique wallet address for requesting a specific amount of ADA from another wallet.",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 75,
+      "line": 76,
       "column": 29,
       "index": 3078
     },
     "end": {
-      "line": 78,
+      "line": 79,
       "column": 3,
       "index": 3273
     }
@@ -169,12 +169,12 @@
     "defaultMessage": "!!!ADA Amount",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 79,
+      "line": 80,
       "column": 12,
       "index": 3287
     },
     "end": {
-      "line": 82,
+      "line": 83,
       "column": 3,
       "index": 3382
     }
@@ -184,12 +184,12 @@
     "defaultMessage": "!!!Generate link",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 83,
+      "line": 84,
       "column": 16,
       "index": 3400
     },
     "end": {
-      "line": 86,
+      "line": 87,
       "column": 3,
       "index": 3502
     }
@@ -199,12 +199,12 @@
     "defaultMessage": "!!!Multiple address",
     "file": "src/features/Receive/common/useStrings.tsx",
     "start": {
-      "line": 87,
+      "line": 88,
       "column": 18,
       "index": 3522
     },
     "end": {
-      "line": 90,
+      "line": 91,
       "column": 3,
       "index": 3629
     }
