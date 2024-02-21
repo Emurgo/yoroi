@@ -1,4 +1,4 @@
-import {ThemeProvider, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
@@ -8,9 +8,9 @@ import {Button, Spacer, useModal} from '../../../components'
 import {useAddresses} from '../../../Receive/Addresses'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {InfoCard} from '../common/InfoCard/InfoCard'
+import {useMultipleAddresses} from '../common/multipleAddressesModal'
 import {useReceive} from '../common/ReceiveProvider'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
-import {useMultipleAddressesModalInfo, useReadMultipleAddressesModal} from '../common/useMultipleAddressesModalInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
 import {QRs} from '../illustrations/QRs'
@@ -27,18 +27,15 @@ export const MultipleAddressesScreen = () => {
   const {selectCurrentAddress} = useReceive()
   const wallet = useSelectedWallet()
 
-  const data = useReadMultipleAddressesModal()
-
-  console.log('data', data)
-
+  const {modalInfo} = useMultipleAddresses()
   const mappedAddresses = mapAddresses(addresses)
   const navigate = useNavigateTo()
 
   const {openModal} = useModal()
 
   React.useEffect(() => {
-    data !== undefined && openModal(strings.multiplePresentation, <Modal />, modalHeight)
-  }, [data, openModal, strings.multiplePresentation])
+    modalInfo === false && openModal(strings.multiplePresentation, <Modal />, modalHeight)
+  }, [modalInfo, openModal, strings.multiplePresentation])
 
   const renderItem = React.useCallback(
     ({item}: {item: AddressInfo}) => (
@@ -56,38 +53,33 @@ export const MultipleAddressesScreen = () => {
   )
 
   return (
-    <ThemeProvider>
-      <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-        {mappedAddresses.length > 20 && (
-          <>
-            <InfoCard onLimit={true} />
+    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
+      {mappedAddresses.length > 20 && (
+        <>
+          <InfoCard onLimit={true} />
 
-            <Spacer height={16} />
-          </>
-        )}
+          <Spacer height={16} />
+        </>
+      )}
 
-        <Animated.FlatList
-          data={mappedAddresses}
-          keyExtractor={(_, i) => String(i)}
-          renderItem={renderItem}
-          layout={Layout}
-          showsVerticalScrollIndicator={false}
+      <Animated.FlatList
+        data={mappedAddresses}
+        keyExtractor={(_, i) => String(i)}
+        renderItem={renderItem}
+        layout={Layout}
+        showsVerticalScrollIndicator={false}
+      />
+
+      <Animated.View style={[styles.footer, {display: mappedAddresses.length > 20 ? 'none' : 'flex'}]} layout={Layout}>
+        <Button
+          shelleyTheme
+          title={strings.generateButton}
+          disabled={mappedAddresses.length > 20 ? true : false}
+          onPress={() => wallet.generateNewReceiveAddress()}
+          style={styles.button}
         />
-
-        <Animated.View
-          style={[styles.footer, {display: mappedAddresses.length > 20 ? 'none' : 'flex'}]}
-          layout={Layout}
-        >
-          <Button
-            shelleyTheme
-            title={strings.generateButton}
-            disabled={mappedAddresses.length > 20 ? true : false}
-            onPress={() => wallet.generateNewReceiveAddress()}
-            style={styles.button}
-          />
-        </Animated.View>
-      </SafeAreaView>
-    </ThemeProvider>
+      </Animated.View>
+    </SafeAreaView>
   )
 }
 
@@ -95,7 +87,7 @@ const modalHeight = 520
 const Modal = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
-  const {hideMultipeAddressesModal} = useMultipleAddressesModalInfo()
+  const {hideMultipleAddressesModal} = useMultipleAddresses()
   const {closeModal} = useModal()
 
   return (
@@ -111,7 +103,7 @@ const Modal = () => {
           shelleyTheme
           title={strings.ok}
           onPress={() => {
-            hideMultipeAddressesModal()
+            hideMultipleAddressesModal()
             closeModal()
           }}
           style={styles.button}
