@@ -122,12 +122,12 @@ export const TxHistoryNavigator = () => {
   const headerRightHistory = React.useCallback(() => <HeaderRightHistory />, [])
 
   return (
-    <TransferProvider key={wallet.id}>
-      <SwapProvider key={wallet.id} swapManager={swapManager}>
-        <SwapFormProvider>
-          <ResolverProvider resolverManager={resolverManager}>
-            <ClaimProvider key={wallet.id} claimApi={claimApi}>
-              <ReceiveProvider>
+    <ReceiveProvider key={wallet.id}>
+      <TransferProvider key={wallet.id}>
+        <SwapProvider key={wallet.id} swapManager={swapManager}>
+          <SwapFormProvider>
+            <ResolverProvider resolverManager={resolverManager}>
+              <ClaimProvider key={wallet.id} claimApi={claimApi}>
                 <Stack.Navigator
                   screenListeners={{}}
                   screenOptions={{
@@ -160,7 +160,7 @@ export const TxHistoryNavigator = () => {
                   </Stack.Screen>
 
                   <Stack.Screen
-                    name="receive"
+                    name="receive-single"
                     component={SingleAddressScreen}
                     options={{
                       title: strings.receiveTitle,
@@ -372,12 +372,12 @@ export const TxHistoryNavigator = () => {
                 <ModalInfo hideModalInfo={hideModalInfo} visible={isModalInfoVisible}>
                   <Text style={styles.receiveInfoText}>{strings.receiveInfoText}</Text>
                 </ModalInfo>
-              </ReceiveProvider>
-            </ClaimProvider>
-          </ResolverProvider>
-        </SwapFormProvider>
-      </SwapProvider>
-    </TransferProvider>
+              </ClaimProvider>
+            </ResolverProvider>
+          </SwapFormProvider>
+        </SwapProvider>
+      </TransferProvider>
+    </ReceiveProvider>
   )
 }
 

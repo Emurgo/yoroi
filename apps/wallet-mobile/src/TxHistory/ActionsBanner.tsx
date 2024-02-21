@@ -9,6 +9,7 @@ import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated
 
 import {useCopy} from '../../src/legacy/useCopy'
 import {Icon, Spacer, Text} from '../components'
+import {useReceive} from '../features/Receive/common/ReceiveProvider'
 import {messages as receiveMessages} from '../features/Receive/common/useStrings'
 import {useMultipleAddresses} from '../features/Settings/MultipleAddresses/MultipleAddresses'
 import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
@@ -19,7 +20,6 @@ import {useSelectedWallet} from '../SelectedWallet'
 import {useTokenInfo} from '../yoroi-wallets/hooks'
 
 export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
-  const {isSingleAddress} = useMultipleAddresses()
   const {styles, colors} = useStyles()
 
   const ACTION_PROPS = {
@@ -28,12 +28,15 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   const strings = useStrings()
+  const {isSingleAddress} = useMultipleAddresses()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
   const {reset: resetSendState} = useTransfer()
   const {orderData} = useSwap()
   const {resetSwapForm} = useSwapForm()
   const {track} = useMetrics()
+
+  const {defaultAddress} = useReceive()
   const sellTokenInfo = useTokenInfo({
     wallet,
     tokenId: orderData.amounts.sell.tokenId,
@@ -89,7 +92,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
                 onPress={isSingleAddress ? navigateTo.receiveSingleAddress : navigateTo.receiveMultipleAddresses}
                 testID="receiveButton"
                 disabled={disabled}
-                onLongPress={() => copy('[PUT ADDRESS VALUE HERE]')} // TODO [PUT ADDRESS VALUE HERE]
+                onLongPress={() => copy(defaultAddress ?? '')}
               >
                 <Icon.Received {...ACTION_PROPS} />
               </TouchableOpacity>
@@ -231,7 +234,7 @@ const useNavigateTo = () => {
 
   return {
     send: () => navigation.navigate('send-start-tx'),
-    receiveSingleAddress: () => navigation.navigate('receive'),
+    receiveSingleAddress: () => navigation.navigate('receive-single'),
     receiveMultipleAddresses: () => navigation.navigate('receive-multiple'),
     swap: () => navigation.navigate('swap-start-swap'),
     exchange: () => navigation.navigate('rampOnOff-start-rampOnOff'),

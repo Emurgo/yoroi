@@ -1,11 +1,9 @@
 import {produce} from 'immer'
+import _ from 'lodash'
 import React from 'react'
-// import {TextInput} from 'react-native'
 
-// import {useLanguage} from '../../../i18n'
-// import {useSelectedWallet} from '../../../SelectedWallet'
-// import {useBalances} from '../../../yoroi-wallets/hooks'
-// import {useStrings} from './useStrings'
+import {useSelectedWallet} from '../../../SelectedWallet'
+import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
 
 export const useReceive = () => React.useContext(ReceiveContext)
 
@@ -16,23 +14,17 @@ export const ReceiveProvider = ({
   children: React.ReactNode
   initialState?: Partial<ReceiveState>
 }) => {
-  // const wallet = useSelectedWallet()
-  // const {numberLocale} = useLanguage()
-
-  // const amountInputRef = React.useRef<TextInput | null>(null)
-
   const [state, dispatch] = React.useReducer(receiveReducer, {
     ...defaultState,
     ...initialState,
   })
-
-  // const balances = useBalances(wallet)
-
-  // const strings = useStrings()
+  const wallet = useSelectedWallet()
+  const receiveAddresses = useReceiveAddresses(wallet)
+  const currentAddress = _.last(receiveAddresses)
+  state.defaultAddress = currentAddress ?? ''
 
   const actions = React.useRef<ReceiveActions>({
-    receiveTypeChanged: (receiveType: ReceiveType) =>
-      dispatch({type: ReceiveActionType.ReceiveTypeChanged, receiveType}),
+    selectCurrentAddress: (address: string) => dispatch({type: ReceiveActionType.SelectCurrentAddress, address}),
   }).current
 
   const context = React.useMemo(
@@ -49,45 +41,32 @@ export const ReceiveProvider = ({
 const receiveReducer = (state: ReceiveState, action: ReceiveAction) => {
   return produce(state, (draft) => {
     switch (action.type) {
-      case ReceiveActionType.ReceiveTypeChanged:
-        draft.receiveType = action.receiveType
+      case ReceiveActionType.SelectCurrentAddress:
+        draft.selectedAddress = action.address
         break
 
-      // TODO add form validation and logic in provider
       default:
-        throw new Error(`RequestFormReducer invalid action`)
+        throw new Error(`invalid action`)
     }
   })
 }
 
 export type ReceiveType = 'single' | 'multiple'
 
-type ReceiveAction = {type: ReceiveActionType.ReceiveTypeChanged; receiveType: ReceiveType}
+type ReceiveAction = {type: ReceiveActionType.SelectCurrentAddress; address: string}
 
 export type ReceiveState = {
-  receiveType: ReceiveType
-  addressDetails: {
-    currentAddress: string
-    spendingHash: string
-    stakingHash: string
-    error: string | undefined
-  }
-  canRequestAmount: boolean
+  selectedAddress: null | string
+  defaultAddress: null | string
 }
 
 type ReceiveActions = {
-  receiveTypeChanged: (type: ReceiveType) => void
+  selectCurrentAddress: (address: string) => void
 }
 
 const defaultState: ReceiveState = Object.freeze({
-  receiveType: 'single',
-  addressDetails: {
-    currentAddress: '',
-    spendingHash: '',
-    stakingHash: '',
-    error: undefined,
-  },
-  canRequestAmount: false,
+  selectedAddress: null,
+  defaultAddress: null,
 })
 
 function missingInit() {
@@ -96,11 +75,11 @@ function missingInit() {
 
 const initialReceiveFormContext: ReceiveContext = {
   ...defaultState,
-  receiveTypeChanged: missingInit,
+  selectCurrentAddress: missingInit,
 }
 
 enum ReceiveActionType {
-  ReceiveTypeChanged = 'receiveTypeChanged',
+  SelectCurrentAddress = 'selectCurrentAddress',
 }
 
 type ReceiveContext = ReceiveState & ReceiveActions

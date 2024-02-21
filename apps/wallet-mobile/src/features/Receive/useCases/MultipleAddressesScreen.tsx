@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {ThemeProvider, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
@@ -9,6 +9,7 @@ import {useAddresses} from '../../../Receive/Addresses'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {InfoCard} from '../common/InfoCard/InfoCard'
 import {mocks} from '../common/mocks'
+import {useReceive} from '../common/ReceiveProvider'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
@@ -23,6 +24,7 @@ export const MultipleAddressesScreen = () => {
   const strings = useStrings()
   const {styles} = useStyles()
   const addresses = useAddresses()
+  const {selectCurrentAddress} = useReceive()
   const wallet = useSelectedWallet()
 
   console.log('addresses1', mapAddresses(addresses))
@@ -44,41 +46,46 @@ export const MultipleAddressesScreen = () => {
       <SmallAddressCard
         address={item.address}
         isUsed={item.isUsed}
-        onPress={() => navigate.receiceDetails()}
-        // date={mocks.usedAddressDate}  // TODO don't have the date
+        onPress={() => {
+          selectCurrentAddress(item?.address)
+          navigate.receiceDetails()
+        }}
+        // date={mocks.usedAddressDate}  // TODO don't have the date??
       />
     ),
-    [navigate],
+    [navigate, selectCurrentAddress],
   )
 
   return (
-    <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      {mappedAddresses.length === 20 && (
-        <>
-          <InfoCard onLimit={true} />
+    <ThemeProvider>
+      <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
+        {mappedAddresses.length === 20 && (
+          <>
+            <InfoCard onLimit={true} />
 
-          <Spacer height={16} />
-        </>
-      )}
+            <Spacer height={16} />
+          </>
+        )}
 
-      <Animated.FlatList
-        data={mappedAddresses}
-        keyExtractor={(_, i) => String(i)}
-        renderItem={renderItem}
-        layout={Layout}
-        showsVerticalScrollIndicator={false}
-      />
-
-      <Animated.View style={[styles.footer, {display: addressList.length === 20 ? 'none' : 'flex'}]} layout={Layout}>
-        <Button
-          shelleyTheme
-          title={strings.generateButton}
-          disabled={addressList.length === 20 ? true : false}
-          onPress={() => wallet.generateNewReceiveAddress()}
-          style={styles.button}
+        <Animated.FlatList
+          data={mappedAddresses}
+          keyExtractor={(_, i) => String(i)}
+          renderItem={renderItem}
+          layout={Layout}
+          showsVerticalScrollIndicator={false}
         />
-      </Animated.View>
-    </SafeAreaView>
+
+        <Animated.View style={[styles.footer, {display: addressList.length === 20 ? 'none' : 'flex'}]} layout={Layout}>
+          <Button
+            shelleyTheme
+            title={strings.generateButton}
+            disabled={addressList.length === 20 ? true : false}
+            onPress={() => wallet.generateNewReceiveAddress()}
+            style={styles.button}
+          />
+        </Animated.View>
+      </SafeAreaView>
+    </ThemeProvider>
   )
 }
 
@@ -99,6 +106,8 @@ const Modal = () => {
       <View style={styles.buttonContainer}>
         <Button shelleyTheme title={strings.ok} disabled={mocks.isLoading} onPress={closeModal} style={styles.button} />
       </View>
+
+      <Spacer height={24} />
     </View>
   )
 }

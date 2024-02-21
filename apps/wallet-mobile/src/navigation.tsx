@@ -205,7 +205,7 @@ export type TxHistoryRoutes = {
   'history-details': {
     id: string
   }
-  receive: undefined
+  'receive-single': undefined
   'receive-specific-amount': undefined
   'receive-multiple': undefined
   'send-start-tx': undefined

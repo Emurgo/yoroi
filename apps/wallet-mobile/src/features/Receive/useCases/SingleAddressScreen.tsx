@@ -8,8 +8,10 @@ import Icon from '../../../assets/img/copy.png'
 import {Button, Spacer} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {useKeyHashes, useReceiveAddresses} from '../../../yoroi-wallets/hooks'
+import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
+import {useMultipleAddresses} from '../../Settings/MultipleAddresses/MultipleAddresses'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
+import {useReceive} from '../common/ReceiveProvider'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
@@ -19,28 +21,26 @@ export const SingleAddressScreen = () => {
   const {styles, colors} = useStyles()
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
+  const {selectCurrentAddress, selectedAddress} = useReceive()
   const receiveAddresses = useReceiveAddresses(wallet)
+  const {isSingleAddress} = useMultipleAddresses()
 
   const currentAddress = _.last(receiveAddresses)
 
-  console.log('currentAddress', currentAddress)
+  if (isSingleAddress) {
+    selectCurrentAddress(currentAddress ?? '')
+  }
 
   const [isCopying, copy] = useCopy()
-
-  const keyHashes = useKeyHashes(currentAddress != null ? currentAddress : '')
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <ScrollView style={{flex: 1}}>
         <View style={styles.address}>
-          {currentAddress !== null ? (
+          {selectedAddress !== null ? (
             <AddressDetailCard
-              address={currentAddress != null ? currentAddress : ''}
+              address={selectedAddress != null ? selectedAddress : ''}
               title={strings.addresscardTitle}
-              addressDetails={{
-                spendingHash: keyHashes?.spending !== null ? keyHashes?.spending : '',
-                stakingHash: keyHashes?.staking !== null ? keyHashes?.staking : '',
-              }}
             />
           ) : (
             <SkeletonAdressDetail />

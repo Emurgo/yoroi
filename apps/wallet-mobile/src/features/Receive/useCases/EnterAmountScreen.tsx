@@ -88,7 +88,7 @@ const Modal = ({amount, address}: {amount: string; address?: string}) => {
           <ShareQRCodeCard
             title={`${amount} ${wallet.primaryTokenInfo.ticker?.toUpperCase()}`}
             address={address}
-            onLongPress={() => copy(String(address))}
+            onLongPress={() => copy(address ?? '')}
           />
         ) : (
           <View style={styles.root}>
@@ -102,7 +102,7 @@ const Modal = ({amount, address}: {amount: string; address?: string}) => {
       <Button
         shelleyTheme
         onPress={() => {
-          copy(String(address))
+          copy(address ?? '')
         }}
         disabled={amount === '' ? true : false}
         title={strings.copyLinkBtn}

@@ -5,14 +5,15 @@ import Animated, {Layout} from 'react-native-reanimated'
 
 import {Spacer} from '../../../../components'
 import {useCopy} from '../../../../legacy/useCopy'
+import {useKeyHashes} from '../../../../yoroi-wallets/hooks'
 import {mocks} from '../mocks'
+import {useReceive} from '../ReceiveProvider'
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
 import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
 
 type ShareProps = {
   address: string
   title: string
-  addressDetails?: AddressDetailsProps
 }
 
 type AddressDetailsProps = {
@@ -30,9 +31,11 @@ type CardItem = {
   | ({cardType: 'Details'} & AddressDetailsProps)
 )
 
-export const AddressDetailCard = ({address, title, addressDetails}: ShareProps) => {
+export const AddressDetailCard = ({title}: ShareProps) => {
   const [scrollPosition, setScrollPosition] = useState(0)
   const [isSecondPage, setIsSecondPage] = useState(false)
+
+  const {selectedAddress} = useReceive()
 
   const [isCopying, copy] = useCopy()
 
@@ -41,13 +44,15 @@ export const AddressDetailCard = ({address, title, addressDetails}: ShareProps) 
   const SCREEN_WIDTH = Dimensions.get('window').width
   const itemsPerPage = 1
 
+  const keyHashes = useKeyHashes(selectedAddress != null ? selectedAddress : '')
+
   const cards: ReadonlyArray<CardItem> = [
-    {cardType: 'QRCode', title, address},
+    {cardType: 'QRCode', title, address: selectedAddress ?? ''},
     {
       cardType: 'Details',
-      address: address,
-      stakingHash: addressDetails?.stakingHash,
-      spendingHash: addressDetails?.spendingHash,
+      address: selectedAddress ?? '',
+      stakingHash: keyHashes?.staking ?? '',
+      spendingHash: keyHashes?.spending ?? '',
       title,
     },
   ] as const
@@ -61,17 +66,24 @@ export const AddressDetailCard = ({address, title, addressDetails}: ShareProps) 
     setScrollPosition(index)
   }
 
+  if (selectedAddress === undefined) {
+    return
+  }
+
   const renderItem = ({item}: {item: CardItem}) => {
     switch (item.cardType) {
       case 'QRCode':
-        return (
-          <ShareQRCodeCard
-            title={item.title}
-            address={item.address}
-            onLongPress={() => copy(mocks.address)}
-            isCopying={isCopying}
-          />
-        )
+        if (selectedAddress !== undefined) {
+          return (
+            <ShareQRCodeCard
+              title={item.title}
+              address={item.address}
+              onLongPress={() => copy(mocks.address)}
+              isCopying={isCopying}
+            />
+          )
+        }
+        return <></>
       case 'Details':
         if (Boolean(item.address) && Boolean(item.stakingHash) && Boolean(item.spendingHash) && Boolean(item.title)) {
           setIsSecondPage(true)
