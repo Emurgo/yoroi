@@ -1,3 +1,4 @@
+import {configCardanoLegacyTransfer, linksCardanoModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import * as React from 'react'
@@ -80,6 +81,15 @@ const Modal = ({amount, address}: {amount: string; address?: string}) => {
   const {styles} = useStyles()
   const wallet = useSelectedWallet()
   const [isCopying, copy] = useCopy()
+  const cardanoLinks = linksCardanoModuleMaker()
+
+  const requestData = cardanoLinks.create({
+    config: configCardanoLegacyTransfer,
+    params: {
+      address: address,
+      amount: Number(amount),
+    },
+  })
 
   return (
     <View style={styles.root}>
@@ -87,7 +97,7 @@ const Modal = ({amount, address}: {amount: string; address?: string}) => {
         {address !== null ? (
           <ShareQRCodeCard
             title={`${amount} ${wallet.primaryTokenInfo.ticker?.toUpperCase()}`}
-            address={address}
+            address={amount !== undefined ? requestData?.link : address}
             onLongPress={() => copy(address ?? '')}
             amount={amount}
           />

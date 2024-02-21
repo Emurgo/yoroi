@@ -38,7 +38,7 @@ export const WalletSettingsScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
-  const {isSingleAddress} = useMultipleAddresses()
+  const {isSingleAddress, isToggleReceiveTypeLoading} = useMultipleAddresses()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
@@ -122,7 +122,7 @@ export const WalletSettingsScreen = () => {
             icon={<Icon.Qr {...iconProps} />}
             label={isSingleAddress ? strings.singleAddress : strings.multipleAddresses}
             info={strings.multipleAddressesInfo}
-            disabled={false}
+            disabled={isToggleReceiveTypeLoading}
           >
             <ReceiveMultipleAddresseSwitch isMultipleAddressesOff={isSingleAddress} />
           </SettingsItem>
