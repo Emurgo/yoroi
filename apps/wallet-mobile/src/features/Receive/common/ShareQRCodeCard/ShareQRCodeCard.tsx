@@ -19,6 +19,7 @@ type ShareProps = {
   addressDetails?: AddressDetailsProps
   isCopying?: boolean
   onLongPress?: () => void
+  amount?: string
 }
 
 type AddressDetailsProps = {
@@ -28,11 +29,11 @@ type AddressDetailsProps = {
   title?: string
 }
 
-export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareProps) => {
+export const ShareQRCodeCard = ({address, title, isCopying, onLongPress, amount}: ShareProps) => {
   const [isSharing, setIsSharing] = React.useState<boolean>(false)
   const strings = useStrings()
   const ref: React.RefObject<ViewShot> = React.useRef(null)
-
+  const formatedAddress = `${address}?amount=${amount}` // TODO need to add lovelaces probabily??
   const {styles, colors} = useStyles()
 
   const shareImage = () => {
@@ -61,7 +62,7 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
   if (isSharing)
     return (
       <ViewShot ref={ref}>
-        <CaptureShareQRCodeCard address={address} />
+        <CaptureShareQRCodeCard address={amount !== undefined ? formatedAddress : address} />
       </ViewShot>
     )
 
@@ -83,7 +84,7 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
 
         <Spacer height={16} />
 
-        <Text style={styles.textAddress}>{address}</Text>
+        <Text style={styles.textAddress}>{amount !== undefined ? formatedAddress : address}</Text>
       </View>
 
       <TouchableOpacity activeOpacity={0.5} onPress={shareImage} onLongPress={onLongPress}>

@@ -89,6 +89,7 @@ const Modal = ({amount, address}: {amount: string; address?: string}) => {
             title={`${amount} ${wallet.primaryTokenInfo.ticker?.toUpperCase()}`}
             address={address}
             onLongPress={() => copy(address ?? '')}
+            amount={amount}
           />
         ) : (
           <View style={styles.root}>
