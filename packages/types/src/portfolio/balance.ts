@@ -4,7 +4,7 @@ import {PortfolioTokenId, PortfolioTokenNature} from './token'
 export type PortfolioQuantity = `${string}` // BigInt - not serializable
 
 export type PortfolioAmounts = {
-  [tokenId: PortfolioTokenId]: PortfolioQuantity
+  [key: PortfolioTokenId]: PortfolioQuantity
 }
 
 export type PortfolioAmount = {
@@ -12,7 +12,7 @@ export type PortfolioAmount = {
   quantity: PortfolioQuantity
 }
 
-export type PortfolioBalance = {
+export type PortfolioTokenBalance = {
   info: PortfolioTokenInfo
   // remote
   balance: PortfolioQuantity

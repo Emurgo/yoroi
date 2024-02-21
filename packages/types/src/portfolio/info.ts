@@ -19,7 +19,8 @@ type CommonTokenInfo = {
   application: PortfolioTokenApplication // Backend meta (based on policyId)
 
   tag: string
-  reference: string // Reference NFT = policyId. + tag100 + untagged name
+  reference: string // output
+  fingerprint: string
 
   website: string // Full link with protocol URI
   coverBanner: string // CDN - base link to image or base64 or hex color - (discovery logic)

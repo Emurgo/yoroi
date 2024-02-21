@@ -130,30 +130,41 @@ import {PortfolioTokenInfo} from './portfolio/info'
 import {
   PortfolioAmount,
   PortfolioAmounts,
-  PortfolioBalance,
   PortfolioBalancePrimaryBreakdown,
   PortfolioBalancePrimaryRecord,
   PortfolioQuantity,
+  PortfolioTokenBalance,
 } from './portfolio/balance'
 import {PortfolioPrice, PortfolioTokenPrice} from './portfolio/price'
 import {ChainNetwork} from './chain/network'
 
 export namespace App {
-  export interface Storage<IsAsync extends boolean = true>
-    extends AppStorage<IsAsync> {}
+  export interface Storage<
+    IsAsync extends boolean = true,
+    K extends string = string,
+  > extends AppStorage<IsAsync, K> {}
   export type StorageFolderName = AppStorageFolderName
-  export interface MultiStorage<T, IsAsync extends boolean = true>
-    extends AppMultiStorage<T, IsAsync> {}
+  export interface MultiStorage<
+    T,
+    IsAsync extends boolean = true,
+    K extends string = string,
+  > extends AppMultiStorage<T, IsAsync, K> {}
 
-  export interface ObservableStorage<IsAsync extends boolean = true>
-    extends AppObservableStorage<IsAsync> {}
-  export interface ObservableMultiStorage<T, IsAsync extends boolean = true>
-    extends AppObservableMultiStorage<T, IsAsync> {}
+  export interface ObservableStorage<
+    IsAsync extends boolean = true,
+    K extends string = string,
+  > extends AppObservableStorage<IsAsync, K> {}
+  export interface ObservableMultiStorage<
+    T,
+    IsAsync extends boolean = true,
+    K extends string = string,
+  > extends AppObservableMultiStorage<T, IsAsync, K> {}
 
   export type MultiStorageOptions<
     T,
     IsAsync extends boolean = true,
-  > = AppMultiStorageOptions<T, IsAsync>
+    K extends string = string,
+  > = AppMultiStorageOptions<T, IsAsync, K>
 
   export type Observer<T> = AppObserver<T>
   export type Subscriber<T> = AppSubscriber<T>
@@ -327,7 +338,6 @@ export namespace Transfer {
 }
 
 export namespace Portfolio {
-  export type Balance = PortfolioBalance
   export type Quantity = PortfolioQuantity
   export type Amount = PortfolioAmount
   export type Amounts = PortfolioAmounts
@@ -358,6 +368,7 @@ export namespace Portfolio {
 
     export type Info = PortfolioTokenInfo
     export type Discovery = PortfolioTokenDiscovery
+    export type Balance = PortfolioTokenBalance
     // eslint-disable-next-line @typescript-eslint/no-shadow
     export type Price = PortfolioTokenPrice
   }
