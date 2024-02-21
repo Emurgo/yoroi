@@ -30,6 +30,7 @@
     }
   },
   {
+    "id": "swap.swapScreen.swapFrom",
     "defaultMessage": "!!!Swap from",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
     "start": {
@@ -38,6 +39,7 @@
       "index": 15147
     },
     "end": {
+      "line": 396,
       "column": 3,
       "index": 15224
     }
@@ -46,6 +48,7 @@
     "id": "swap.swapScreen.swapTo",
     "defaultMessage": "!!!Swap to",
     "file": "src/TxHistory/TxHistoryNavigator.tsx",
+    "start": {
       "line": 397,
       "column": 15,
       "index": 15241
