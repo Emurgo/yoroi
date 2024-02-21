@@ -3,19 +3,15 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {mocks} from '../mocks'
+import {ReceiveProvider} from '../ReceiveProvider'
 import {AddressDetailCard} from './AddressDetailCard'
 
 storiesOf('Receive AddressDetailCard', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
   .add('default', () => (
-    <AddressDetailCard
-      address={mocks.address}
-      title="Test Title"
-      addressDetails={{
-        spendingHash: mocks.spendinghash,
-        stakingHash: mocks.stakinghash,
-      }}
-    />
+    <ReceiveProvider>
+      <AddressDetailCard address={mocks.address} title="Test Title" />
+    </ReceiveProvider>
   ))
 
 const styles = StyleSheet.create({
