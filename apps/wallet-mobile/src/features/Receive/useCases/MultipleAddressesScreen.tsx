@@ -10,6 +10,7 @@ import {useSelectedWallet} from '../../../SelectedWallet'
 import {InfoCard} from '../common/InfoCard/InfoCard'
 import {useReceive} from '../common/ReceiveProvider'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
+import {useMultipleAddressesModalInfo, useReadMultipleAddressesModal} from '../common/useMultipleAddressesModalInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
 import {QRs} from '../illustrations/QRs'
@@ -26,14 +27,18 @@ export const MultipleAddressesScreen = () => {
   const {selectCurrentAddress} = useReceive()
   const wallet = useSelectedWallet()
 
+  const data = useReadMultipleAddressesModal()
+
+  console.log('data', data)
+
   const mappedAddresses = mapAddresses(addresses)
   const navigate = useNavigateTo()
 
   const {openModal} = useModal()
 
   React.useEffect(() => {
-    openModal(strings.multiplePresentation, <Modal />, modalHeight)
-  }, [openModal, strings.multiplePresentation])
+    data !== undefined && openModal(strings.multiplePresentation, <Modal />, modalHeight)
+  }, [data, openModal, strings.multiplePresentation])
 
   const renderItem = React.useCallback(
     ({item}: {item: AddressInfo}) => (
@@ -90,6 +95,7 @@ const modalHeight = 520
 const Modal = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
+  const {hideMultipeAddressesModal} = useMultipleAddressesModalInfo()
   const {closeModal} = useModal()
 
   return (
@@ -101,7 +107,15 @@ const Modal = () => {
       <Spacer fill />
 
       <View style={styles.buttonContainer}>
-        <Button shelleyTheme title={strings.ok} onPress={closeModal} style={styles.button} />
+        <Button
+          shelleyTheme
+          title={strings.ok}
+          onPress={() => {
+            hideMultipeAddressesModal()
+            closeModal()
+          }}
+          style={styles.button}
+        />
       </View>
 
       <Spacer height={24} />

@@ -29,7 +29,7 @@ type AddressDetailsProps = {
   title?: string
 }
 
-export const ShareQRCodeCard = ({address, title, isCopying, onLongPress, amount}: ShareProps) => {
+export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareProps) => {
   const [isSharing, setIsSharing] = React.useState<boolean>(false)
   const strings = useStrings()
   const ref: React.RefObject<ViewShot> = React.useRef(null)

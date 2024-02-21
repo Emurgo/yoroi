@@ -98,7 +98,7 @@ const Modal = ({amount, address}: {amount: string; address?: string}) => {
           <ShareQRCodeCard
             title={`${amount} ${wallet.primaryTokenInfo.ticker?.toUpperCase()}`}
             address={amount !== undefined ? requestData?.link : address}
-            onLongPress={() => copy(address ?? '')}
+            onLongPress={() => copy(amount !== undefined ? requestData?.link : address ?? '')}
             amount={amount}
           />
         ) : (
@@ -113,7 +113,7 @@ const Modal = ({amount, address}: {amount: string; address?: string}) => {
       <Button
         shelleyTheme
         onPress={() => {
-          copy(address ?? '')
+          copy(amount !== undefined ? requestData?.link : address ?? '')
         }}
         disabled={amount === '' ? true : false}
         title={strings.copyLinkBtn}
