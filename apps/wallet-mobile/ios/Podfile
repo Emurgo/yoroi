@@ -1,6 +1,6 @@
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
 
-# new version run node 
+# new version run node
 # require Pod::Executable.execute_command('node', ['-p',
 #   'require.resolve(
 #     "react-native/scripts/react_native_pods.rb",
@@ -70,7 +70,7 @@ target 'yoroi' do
     inherit! :complete
     # Pods for testing
   end
-  
+
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
@@ -101,14 +101,14 @@ target 'yoroi' do
         'Release' => '$(PODS_ROOT)/../../.env',
       },
     }
-  
+
     project.targets.each do |target|
       target.build_configurations.each do |config|
         puts "Set development team for target #{target.name} #{dev_team_id}"
         if dev_team_id.empty? and !config.build_settings['DEVELOPMENT_TEAM'].nil?
           dev_team_id = config.build_settings['DEVELOPMENT_TEAM']
         end
-        
+
         envfile = ENVFILES[target.name][config.name]
         if envfile
           puts "Set the enviroment file to #{envfile} for target #{target.name} and config #{config.name}"
@@ -125,11 +125,12 @@ target 'yoroi' do
           config.build_settings['CODE_SIGN_IDENTITY'] = 'Apple Distribution';
           config.build_settings['CODE_SIGN_STYLE'] = 'Manual';
         end if
-
-        config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+        #temp workaround need to specify IPHONEOS_DEPLOYMENT_TARGET globally
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.4';
+       #config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
       end
     end
-    
+
     # * https://github.com/facebook/react-native/issues/31941
     installer.aggregate_targets.each do |aggregate_target|
       aggregate_target.user_project.native_targets.each do |target|

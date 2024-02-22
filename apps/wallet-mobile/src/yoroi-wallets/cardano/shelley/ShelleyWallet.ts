@@ -602,7 +602,7 @@ export const makeShelleyWallet = (constants: typeof MAINNET | typeof TESTNET | t
       const absSlotNumber = new BigNumber(getTime(time).absoluteSlot)
       const changeAddr = await this.getAddressedChangeAddress()
       const addressedUtxos = await this.getAddressedUtxos()
-
+      Logger.warn('addressedUtxos: ' + addressedUtxos.length)
       const recipients = await toRecipients(entries, this.primaryToken)
 
       const containsDatum = recipients.some((recipient) => recipient.datum)
