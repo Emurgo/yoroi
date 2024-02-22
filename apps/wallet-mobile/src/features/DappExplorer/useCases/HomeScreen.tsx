@@ -14,8 +14,8 @@ import {NavigationContainer, useFocusEffect} from '@react-navigation/native'
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 
 // const DAPP_URL = 'https://www.jpg.store/'
-const DAPP_URL = 'https://muesliswap.com/swap'
-// const DAPP_URL = 'https://app.dexhunter.io/'
+// const DAPP_URL = 'https://muesliswap.com/swap'
+const DAPP_URL = 'https://app.dexhunter.io/'
 
 const ENABLED_BUTTON_COLOR = '#383E54'
 const DISABLED_BUTTON_COLOR = '#8A92A3'
@@ -77,6 +77,7 @@ function TabScreen({route: {params}}: any) {
 
   const [canGoBack, setCanGoBack] = React.useState(false)
   const [canGoForward, setCanGoForward] = React.useState(false)
+  const [currentUrl, setCurrentUrl] = React.useState('')
 
   const [isFocused, setIsFocused] = useState(false)
 
@@ -105,16 +106,25 @@ function TabScreen({route: {params}}: any) {
       Share.share({url: DAPP_URL})
     }
   }
+  const isDexHunter = currentUrl.includes('dexhunter')
+
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 1}}>
         {isFocused && (
           <WebView
-            source={{uri: DAPP_URL}}
+            source={isDexHunter ? {html: '<h1><script>alert(1)</script>Test</h1>'} : {uri: DAPP_URL}}
             ref={ref}
             injectedJavaScript={initScript}
             onMessage={handleEvent}
             id={wallet.id}
+            onNavigationStateChange={(e) => {
+              // if (e.url.includes('dexhunter')) {
+              //   console.log('dexhunter')
+              // }
+              setCurrentUrl(e.url)
+              console.log(e.url, e.loading, e.mainDocumentURL)
+            }}
             nativeID={wallet.id}
             sharedCookiesEnabled={false}
             thirdPartyCookiesEnabled={false}
