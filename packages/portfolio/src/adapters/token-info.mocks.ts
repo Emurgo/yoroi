@@ -1,6 +1,6 @@
 import {Portfolio} from '@yoroi/types'
 
-export const primaryETH: Portfolio.Token.Info = {
+const primaryETH: Portfolio.Token.Info = {
   decimals: 18,
   ticker: 'ETH',
   name: 'Ethereum',
@@ -19,7 +19,7 @@ export const primaryETH: Portfolio.Token.Info = {
   type: Portfolio.Token.Type.FT,
 } as const
 
-export const nftCryptoKitty: Portfolio.Token.Info = {
+const nftCryptoKitty: Portfolio.Token.Info = {
   decimals: 0,
   ticker: 'CryptoKitty',
   name: 'CryptoKitty #1234',
@@ -38,3 +38,8 @@ export const nftCryptoKitty: Portfolio.Token.Info = {
   nature: Portfolio.Token.Nature.Secondary,
   type: Portfolio.Token.Type.NFT,
 } as const
+
+export const tokenInfoMocks = {
+  primaryETH,
+  nftCryptoKitty,
+}

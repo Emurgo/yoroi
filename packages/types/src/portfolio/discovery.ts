@@ -17,9 +17,9 @@ export type PortfolioTokenDiscovery = {
   }
 
   originalMetadata: {
-    filteredMintMetadatum: Record<string, unknown>
-    referenceDatum: Record<string, unknown>
-    tokenRegistry: Record<string, unknown>
+    filteredMintMetadatum: null | Record<string, unknown>
+    referenceDatum: null | Record<string, unknown>
+    tokenRegistry: null | Record<string, unknown>
   }
 
   counters: {

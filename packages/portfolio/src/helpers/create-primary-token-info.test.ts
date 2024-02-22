@@ -11,6 +11,7 @@ describe('createPrimaryTokenInfo', () => {
       symbol: '₳',
       decimals: 6,
       application: Portfolio.Token.Application.Token,
+      fingerprint: '0x1234567890abcdef',
       coverBanner: '',
       image: '',
       originalImage: '',

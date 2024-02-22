@@ -33,12 +33,12 @@ export const portfolioStorageMaker = ({
   const discoveries = {
     save: (
       entries: ReadonlyArray<
-        [Portfolio.Token.Id, App.CacheRecord<Portfolio.Token.Info>]
+        [Portfolio.Token.Id, App.CacheRecord<Portfolio.Token.Discovery>]
       >,
     ) =>
-      tokenDiscoveryStorage.multiSet<App.CacheRecord<Portfolio.Token.Info>>(
-        entries,
-      ),
+      tokenDiscoveryStorage.multiSet<
+        App.CacheRecord<Portfolio.Token.Discovery>
+      >(entries),
     read: (keys: ReadonlyArray<Portfolio.Token.Id>) =>
       tokenDiscoveryStorage.multiGet<
         App.CacheRecord<Portfolio.Token.Discovery>
@@ -46,7 +46,9 @@ export const portfolioStorageMaker = ({
   } as const
 
   const clear = () => {
-    // await Promise.all([storage.removeItem()])
+    tokenDiscoveryStorage.clear()
+    tokenInfoStorage.clear()
+    walletStorage.clear()
   }
 
   return {

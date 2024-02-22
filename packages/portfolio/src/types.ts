@@ -1,4 +1,5 @@
 import {Chain, Portfolio} from '@yoroi/types'
+import {portfolioStorageMaker} from './adapters/mmkv-storage'
 
 // check to use Cache-Control (replacement for MaxAge)
 export type AppApiResponseWithCache<T> =
@@ -39,3 +40,6 @@ export type ApiConfig = Readonly<{
 export type PortfolioManager = Readonly<{
   hydrate(): Promise<void>
 }>
+
+// TODO: type it
+export type PortfolioStorage = ReturnType<typeof portfolioStorageMaker>
