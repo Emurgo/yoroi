@@ -51,7 +51,7 @@ describe('prefixed storage', () => {
   it('getAllKeys, multiSet, multiGet, multiRemove', async () => {
     const storage = rootStorage.join('prefix/')
 
-    storage.multiSet([
+    storage.multiSet<any>([
       ['item1', item1],
       ['item2', item2],
     ])

@@ -53,7 +53,7 @@ describe('prefixed storage', () => {
     const rootStorage = mountAsyncStorage('/')
     const storage = rootStorage.join('prefix/')
 
-    await storage.multiSet([
+    await storage.multiSet<any>([
       ['item1', item1],
       ['item2', item2],
     ])
@@ -156,7 +156,7 @@ describe('prefixed storage', () => {
         ['item2', item2],
       ]
 
-      await storage.multiSet(tuples, (data: unknown) => {
+      await storage.multiSet<any>(tuples, (data: unknown) => {
         expect([item1, item2]).toContain(data)
         return `${data}-modified`
       }) // overrides JSON.stringify

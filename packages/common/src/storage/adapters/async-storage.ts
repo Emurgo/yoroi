@@ -51,9 +51,9 @@ export const mountAsyncStorage = (path: App.StorageFolderName): App.Storage => {
       const item = stringify(value)
       await AsyncStorage.setItem(withPath(key), item)
     },
-    multiSet: async (
-      tuples: ReadonlyArray<[key: string, value: unknown]>,
-      stringify: (data: unknown) => string = JSON.stringify,
+    multiSet: async <T = unknown>(
+      tuples: ReadonlyArray<[key: string, value: T]>,
+      stringify: (data: T) => string = JSON.stringify,
     ) => {
       const items: Array<[string, string]> = tuples.map(([key, value]) => [
         withPath(key),
