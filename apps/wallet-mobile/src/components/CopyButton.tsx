@@ -1,4 +1,4 @@
-import {useTheme} from '@yoroi/theme'
+import {ThemeProvider, useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleProp, TouchableOpacity, ViewStyle} from 'react-native'
 
@@ -16,16 +16,18 @@ export const CopyButton = ({value, onCopy, children, style}: CopyButtonProps) =>
   const [isCopying, copy] = useCopy()
 
   return (
-    <AnimatedCopyButton
-      style={style}
-      isCopying={isCopying}
-      onCopy={() => {
-        copy(value)
-        onCopy?.()
-      }}
-    >
-      {children}
-    </AnimatedCopyButton>
+    <ThemeProvider>
+      <AnimatedCopyButton
+        style={style}
+        isCopying={isCopying}
+        onCopy={() => {
+          copy(value)
+          onCopy?.()
+        }}
+      >
+        {children}
+      </AnimatedCopyButton>
+    </ThemeProvider>
   )
 }
 
@@ -35,17 +37,24 @@ const AnimatedCopyButton = ({
   style,
   isCopying,
 }: Omit<CopyButtonProps, 'value'> & {isCopying: boolean}) => {
-  const {theme} = useTheme()
+  const {colors} = useStyles()
 
   return (
     <TouchableOpacity onPress={onCopy} disabled={isCopying} testID="copyButton" style={style}>
-      {isCopying ? (
-        <Icon.CopySuccess size={26} color={theme.color.gray[900]} />
-      ) : (
-        <Icon.Copy size={26} color={theme.color.gray[900]} />
-      )}
+      {isCopying ? <Icon.CopySuccess size={26} color={colors.gray} /> : <Icon.Copy size={26} color={colors.gray} />}
 
       {children}
     </TouchableOpacity>
   )
+}
+
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+
+  const colors = {
+    gray: color.gray[900],
+  }
+
+  return {colors} as const
 }

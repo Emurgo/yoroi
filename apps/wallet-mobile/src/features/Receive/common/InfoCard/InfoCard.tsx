@@ -32,7 +32,7 @@ export const InfoCard = ({onLimit}: InfoCardProps) => {
             Linking.openURL(YoroiZendeskLink)
           }}
         >
-          {strings.yoroiZendesk}
+          <Text style={{color: colors.yoroiZendesk}}>{strings.yoroiZendesk}</Text>
         </TouchableOpacity>
       </Text>
     </Animated.View>
