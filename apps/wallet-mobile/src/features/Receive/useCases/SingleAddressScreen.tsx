@@ -24,8 +24,11 @@ export const SingleAddressScreen = () => {
   const {selectCurrentAddress, selectedAddress} = useReceive()
   const receiveAddresses = useReceiveAddresses(wallet)
   const {isSingleAddress} = useMultipleAddresses()
-
   const currentAddress = _.last(receiveAddresses)
+
+  React.useEffect(() => {
+    wallet.generateNewReceiveAddressIfNeeded()
+  }, [wallet])
 
   if (isSingleAddress) {
     selectCurrentAddress(currentAddress ?? '')

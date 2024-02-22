@@ -21,7 +21,10 @@ export const ReceiveProvider = ({
   const wallet = useSelectedWallet()
   const receiveAddresses = useReceiveAddresses(wallet)
   const currentAddress = _.last(receiveAddresses)
-  state.defaultAddress = currentAddress ?? ''
+
+  React.useEffect(() => {
+    state.defaultAddress = currentAddress ?? ''
+  }, [currentAddress, state])
 
   const actions = React.useRef<ReceiveActions>({
     selectCurrentAddress: (address: string) => dispatch({type: ReceiveActionType.SelectCurrentAddress, address}),

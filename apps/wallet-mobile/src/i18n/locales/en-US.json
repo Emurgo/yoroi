@@ -744,6 +744,7 @@
   "global.txLabels.submittingTx": "Submitting transaction",
   "global.txLabels.transactions": "Transactions",
   "global.txLabels.withdrawals": "Withdrawals",
+  "global.yoroiZendesk": "Yoroi Zendesk",
   "menu.allWallets": "All Wallets",
   "menu.appSettings": "App Settings",
   "menu.catalystVoting": "Catalyst Voting",

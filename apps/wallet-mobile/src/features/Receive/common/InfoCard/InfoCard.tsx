@@ -1,10 +1,11 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, Text} from 'react-native'
+import {Linking, StyleSheet, Text} from 'react-native'
+import {TouchableOpacity} from 'react-native-gesture-handler'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
 import {Icon} from '../../../../../src/components'
-import {mocks} from '../mocks'
+import {YoroiZendeskLink} from '../contants'
 import {useStrings} from '../useStrings'
 
 type InfoCardProps = {
@@ -25,7 +26,14 @@ export const InfoCard = ({onLimit}: InfoCardProps) => {
       <Text style={styles.text}>
         {strings.infoAddressLimit}
 
-        <Text style={[styles.text, {color: colors.yoroiZendesk}]}>{mocks.yoroiZendesk}</Text>
+        <TouchableOpacity
+          style={[styles.text, {color: colors.yoroiZendesk}]}
+          onPress={() => {
+            Linking.openURL(YoroiZendeskLink)
+          }}
+        >
+          {strings.yoroiZendesk}
+        </TouchableOpacity>
       </Text>
     </Animated.View>
   )

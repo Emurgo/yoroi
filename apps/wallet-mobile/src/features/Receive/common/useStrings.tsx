@@ -28,6 +28,7 @@ export const useStrings = () => {
     infoAddressLimit: intl.formatMessage(messages.infoAddressLimit),
     multiplePresentation: intl.formatMessage(messages.multiplePresentation),
     multiplePresentationDetails: intl.formatMessage(messages.multiplePresentationDetails),
+    yoroiZendesk: intl.formatMessage(messages.yoroiZendesk),
     ok: intl.formatMessage(messages.ok),
   }
 }
@@ -134,5 +135,9 @@ export const messages = defineMessages({
   ok: {
     id: 'global.ok',
     defaultMessage: '!!!OK',
+  },
+  yoroiZendesk: {
+    id: 'global.yoroiZendesk',
+    defaultMessage: '!!!Yoroi Zendesk',
   },
 })
