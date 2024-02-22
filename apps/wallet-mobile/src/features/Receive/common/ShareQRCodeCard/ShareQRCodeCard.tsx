@@ -10,7 +10,6 @@ import ViewShot, {captureRef} from 'react-native-view-shot'
 
 import {Spacer, Text} from '../../../../components'
 import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
-import {mocks} from '../mocks'
 import {useStrings} from '../useStrings'
 
 type ShareProps = {
@@ -47,16 +46,16 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
         const uri = await captureRef(ref, {
           format: 'png',
           quality: 1,
-          fileName: mocks.shareFileName,
+          fileName: strings.shareLabel,
         })
 
         setIsSharing(false)
-        await Share.open({url: uri, filename: mocks.shareFileName, message: `${strings.address} ${address}`})
+        await Share.open({url: uri, filename: strings.shareLabel, message: `${strings.address} ${address}`})
       }
 
       captureAndShare()
     }
-  }, [address, isSharing, strings.address])
+  }, [address, isSharing, strings.address, strings.shareLabel])
 
   if (isSharing)
     return (

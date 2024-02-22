@@ -56,7 +56,6 @@ import {
   TxHistoryRoutes,
   useWalletNavigation,
 } from '../navigation'
-// import {ReceiveScreen} from '../Receive/ReceiveScreen'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
 import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
@@ -132,7 +131,6 @@ export const TxHistoryNavigator = () => {
                   screenListeners={{}}
                   screenOptions={{
                     ...defaultStackNavigationOptions(theme),
-                    ...defaultStackNavigationOptions,
                     detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
                     gestureEnabled: true,
                   }}
@@ -167,15 +165,6 @@ export const TxHistoryNavigator = () => {
                       gestureEnabled: false,
                     }}
                   />
-
-                  {/* <Stack.Screen
-                    name="receive"
-                    component={ReceiveScreen}
-                    options={{
-                      title: strings.receiveTitle,
-                      gestureEnabled: false,
-                    }}
-                  /> */}
 
                   <Stack.Screen
                     name="receive-multiple"

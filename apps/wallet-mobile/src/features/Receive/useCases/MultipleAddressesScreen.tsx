@@ -7,9 +7,9 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Spacer, useModal} from '../../../components'
 import {useAddresses} from '../../../Receive/Addresses'
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {InfoCard} from '../common/InfoCard/InfoCard'
 import {useMultipleAddresses} from '../common/multipleAddressesModal'
 import {useReceive} from '../common/ReceiveProvider'
+import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
@@ -24,7 +24,7 @@ export const MultipleAddressesScreen = () => {
   const strings = useStrings()
   const {styles} = useStyles()
   const addresses = useAddresses()
-  const {selectCurrentAddress} = useReceive()
+  const {currentAddressChanged} = useReceive()
   const wallet = useSelectedWallet()
 
   const {modalInfo} = useMultipleAddresses()
@@ -43,20 +43,20 @@ export const MultipleAddressesScreen = () => {
         address={item.address}
         isUsed={item.isUsed}
         onPress={() => {
-          selectCurrentAddress(item?.address)
+          currentAddressChanged(item?.address)
           navigate.receiceDetails()
         }}
         // date={mocks.usedAddressDate}  // TODO don't have the date??
       />
     ),
-    [navigate, selectCurrentAddress],
+    [navigate, currentAddressChanged],
   )
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       {mappedAddresses.length > 20 && (
         <>
-          <InfoCard onLimit={true} />
+          <ShowAddressLimitInfo onLimit={true} />
 
           <Spacer height={16} />
         </>

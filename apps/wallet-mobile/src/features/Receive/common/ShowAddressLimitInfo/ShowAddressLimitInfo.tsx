@@ -4,15 +4,15 @@ import {Linking, StyleSheet, Text} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
-import {Icon} from '../../../../../src/components'
+import {Icon} from '../../../../components'
 import {YoroiZendeskLink} from '../contants'
 import {useStrings} from '../useStrings'
 
-type InfoCardProps = {
+type ShowAddressLimitInfoProps = {
   onLimit: boolean
 }
 
-export const InfoCard = ({onLimit}: InfoCardProps) => {
+export const ShowAddressLimitInfo = ({onLimit}: ShowAddressLimitInfoProps) => {
   const strings = useStrings()
 
   const {styles, colors} = useStyles()

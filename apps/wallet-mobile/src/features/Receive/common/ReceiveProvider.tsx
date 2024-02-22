@@ -27,7 +27,7 @@ export const ReceiveProvider = ({
   }, [currentAddress, state])
 
   const actions = React.useRef<ReceiveActions>({
-    selectCurrentAddress: (address: string) => dispatch({type: ReceiveActionType.SelectCurrentAddress, address}),
+    currentAddressChanged: (address: string) => dispatch({type: ReceiveActionType.CurrentAddressChanged, address}),
   }).current
 
   const context = React.useMemo(
@@ -44,7 +44,7 @@ export const ReceiveProvider = ({
 const receiveReducer = (state: ReceiveState, action: ReceiveAction) => {
   return produce(state, (draft) => {
     switch (action.type) {
-      case ReceiveActionType.SelectCurrentAddress:
+      case ReceiveActionType.CurrentAddressChanged:
         draft.selectedAddress = action.address
         break
 
@@ -56,7 +56,7 @@ const receiveReducer = (state: ReceiveState, action: ReceiveAction) => {
 
 export type ReceiveType = 'single' | 'multiple'
 
-type ReceiveAction = {type: ReceiveActionType.SelectCurrentAddress; address: string}
+type ReceiveAction = {type: ReceiveActionType.CurrentAddressChanged; address: string}
 
 export type ReceiveState = {
   selectedAddress: null | string
@@ -64,7 +64,7 @@ export type ReceiveState = {
 }
 
 type ReceiveActions = {
-  selectCurrentAddress: (address: string) => void
+  currentAddressChanged: (address: string) => void
 }
 
 const defaultState: ReceiveState = Object.freeze({
@@ -78,11 +78,11 @@ function missingInit() {
 
 const initialReceiveFormContext: ReceiveContext = {
   ...defaultState,
-  selectCurrentAddress: missingInit,
+  currentAddressChanged: missingInit,
 }
 
 enum ReceiveActionType {
-  SelectCurrentAddress = 'selectCurrentAddress',
+  CurrentAddressChanged = 'currentAddressChanged',
 }
 
 type ReceiveContext = ReceiveState & ReceiveActions

@@ -21,7 +21,7 @@ export const SingleAddressScreen = () => {
   const {styles, colors} = useStyles()
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
-  const {selectCurrentAddress, selectedAddress} = useReceive()
+  const {currentAddressChanged, selectedAddress} = useReceive()
   const receiveAddresses = useReceiveAddresses(wallet)
   const {isSingleAddress} = useMultipleAddresses()
   const currentAddress = _.last(receiveAddresses)
@@ -31,7 +31,7 @@ export const SingleAddressScreen = () => {
   }, [wallet])
 
   if (isSingleAddress) {
-    selectCurrentAddress(currentAddress ?? '')
+    currentAddressChanged(currentAddress ?? '')
   }
 
   const [isCopying, copy] = useCopy()

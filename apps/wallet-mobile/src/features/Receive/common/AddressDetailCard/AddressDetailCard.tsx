@@ -72,17 +72,14 @@ export const AddressDetailCard = ({title}: ShareProps) => {
   const renderItem = ({item}: {item: CardItem}) => {
     switch (item.cardType) {
       case 'QRCode':
-        if (selectedAddress !== undefined) {
-          return (
-            <ShareQRCodeCard
-              title={item.title}
-              address={item.address}
-              onLongPress={() => copy(item.address)}
-              isCopying={isCopying}
-            />
-          )
-        }
-        return <></>
+        return (
+          <ShareQRCodeCard
+            title={item.title}
+            address={item.address}
+            onLongPress={() => copy(item.address)}
+            isCopying={isCopying}
+          />
+        )
       case 'Details':
         if (Boolean(item.address) && Boolean(item.stakingHash) && Boolean(item.spendingHash) && Boolean(item.title)) {
           setIsSecondPage(true)
