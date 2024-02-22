@@ -1,4 +1,5 @@
 import {Portfolio} from '@yoroi/types'
+import {freeze} from 'immer'
 
 const primaryETH: Portfolio.Token.Discovery = {
   id: '.',
@@ -20,7 +21,7 @@ const primaryETH: Portfolio.Token.Discovery = {
     symbol: Portfolio.Token.Source.Metadata,
     ticker: Portfolio.Token.Source.Metadata,
   },
-} as const
+}
 
 const nftCryptoKitty: Portfolio.Token.Discovery = {
   id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.43554259',
@@ -53,9 +54,9 @@ const nftCryptoKitty: Portfolio.Token.Discovery = {
     symbol: Portfolio.Token.Source.Metadata,
     ticker: Portfolio.Token.Source.Metadata,
   },
-} as const
+}
 
-export const tokenDiscoveryMocks = {
+export const tokenDiscoveryMocks = freeze({
   primaryETH,
   nftCryptoKitty,
-}
+})

@@ -17,6 +17,7 @@ describe('portfolioApiMaker', () => {
       request: mockRequest,
     })
 
+    expect(Object.isFrozen(api)).toBe(true)
     expect(api).toBeDefined()
     expect(api).toHaveProperty('tokenDiscoveries')
     expect(api).toHaveProperty('tokenInfos')

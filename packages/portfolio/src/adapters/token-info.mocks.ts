@@ -1,4 +1,5 @@
 import {Portfolio} from '@yoroi/types'
+import {freeze} from 'immer'
 
 const primaryETH: Portfolio.Token.Info = {
   decimals: 18,
@@ -17,7 +18,7 @@ const primaryETH: Portfolio.Token.Info = {
   id: '.',
   nature: Portfolio.Token.Nature.Primary,
   type: Portfolio.Token.Type.FT,
-} as const
+}
 
 const nftCryptoKitty: Portfolio.Token.Info = {
   decimals: 0,
@@ -37,9 +38,9 @@ const nftCryptoKitty: Portfolio.Token.Info = {
   fingerprint: 'asset1s7nlt45cc82upqewvjtgu7g97l7eg483c6wu75',
   nature: Portfolio.Token.Nature.Secondary,
   type: Portfolio.Token.Type.NFT,
-} as const
+}
 
-export const tokenInfoMocks = {
+export const tokenInfoMocks = freeze({
   primaryETH,
   nftCryptoKitty,
-}
+})

@@ -1,4 +1,5 @@
 import {App, Portfolio} from '@yoroi/types'
+import {freeze} from 'immer'
 
 /**
  * Creates a portfolio storage maker.
@@ -16,7 +17,6 @@ export const portfolioStorageMaker = ({
   tokenDiscoveryStorage: App.ObservableStorage<false, Portfolio.Token.Id>
   walletStorage: App.ObservableStorage<false>
 }) => {
-  console.log('rootStorage', tokenInfoStorage)
   console.log('walletStorage', walletStorage)
 
   const infos = {
@@ -28,7 +28,7 @@ export const portfolioStorageMaker = ({
       tokenInfoStorage.multiSet<App.CacheRecord<Portfolio.Token.Info>>(entries),
     read: (keys: ReadonlyArray<Portfolio.Token.Id>) =>
       tokenInfoStorage.multiGet<App.CacheRecord<Portfolio.Token.Info>>(keys),
-  } as const
+  }
 
   const discoveries = {
     save: (
@@ -43,7 +43,7 @@ export const portfolioStorageMaker = ({
       tokenDiscoveryStorage.multiGet<
         App.CacheRecord<Portfolio.Token.Discovery>
       >(keys),
-  } as const
+  }
 
   const clear = () => {
     tokenDiscoveryStorage.clear()
@@ -51,11 +51,14 @@ export const portfolioStorageMaker = ({
     walletStorage.clear()
   }
 
-  return {
-    token: {
-      infos,
-      discoveries,
+  return freeze(
+    {
+      token: {
+        infos,
+        discoveries,
+      },
+      clear,
     },
-    clear,
-  } as const
+    true,
+  )
 }

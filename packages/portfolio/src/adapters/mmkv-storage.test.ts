@@ -21,6 +21,17 @@ describe('portfolioStorageMaker', () => {
     jest.clearAllMocks()
   })
 
+  it('should instantiate storage', () => {
+    const storage = portfolioStorageMaker({
+      tokenInfoStorage,
+      tokenDiscoveryStorage,
+      walletStorage,
+    })
+
+    expect(storage).toBeDefined()
+    expect(Object.isFrozen(storage)).toBe(true)
+  })
+
   it('should save token info entries', () => {
     const nftCryptoKitty = tokenMocks.nftCryptoKitty.info
     const primaryETH = tokenMocks.primaryETH.info
