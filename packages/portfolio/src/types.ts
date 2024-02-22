@@ -1,5 +1,5 @@
 import {Chain, Portfolio} from '@yoroi/types'
-import {portfolioStorageMaker} from './adapters/mmkv-storage'
+import {portfolioStorageMaker} from './adapters/mmkv-storage/mmkv-storage'
 
 // check to use Cache-Control (replacement for MaxAge)
 export type AppApiResponseWithCache<T> =

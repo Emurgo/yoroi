@@ -1,8 +1,8 @@
 import {cacheRecordMaker} from '@yoroi/common'
 import {App, Portfolio} from '@yoroi/types'
 
-import {portfolioStorageMaker} from './mmkv-storage' // Adjust the path accordingly
-import {tokenMocks} from './token.mocks'
+import {portfolioStorageMaker} from '../mmkv-storage/mmkv-storage' // Adjust the path accordingly
+import {tokenMocks} from '../token.mocks'
 
 describe('portfolioStorageMaker', () => {
   let tokenInfoStorage: App.ObservableStorage<false, Portfolio.Token.Id>
