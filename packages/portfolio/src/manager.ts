@@ -1,26 +1,24 @@
-// import {App, Chain, Portfolio} from '@yoroi/types'
-// import {PortfolioApi, PortfolioManager} from './types'
+import {Chain, Portfolio} from '@yoroi/types'
+import {freeze} from 'immer'
 
-// export const portfolioManagerMaker = ({
-//   network,
-//   api,
-//   balanceStorage,
-// }: {
-//   network: Chain.Network
-//   api: PortfolioApi
-//   balanceStorage: App.ObservableMultiStorage<Portfolio.Token.Balance, false>
-// }): PortfolioManager => {
-//   const balances = new Map<Portfolio.Token.Id, Portfolio.Quantity>()
+import {PortfolioApi, PortfolioManager, PortfolioStorage} from './types'
 
-//   return Object.freeze({
-//     async hydrate() {
-//       balances.clear()
-//       balanceStorage.readAll()
-//       // .forEach(([tokenId, quantity]) => balances.set(tokenId, quantity))
+export const portfolioManagerMaker = ({
+  network,
+  api,
+  storage,
+}: {
+  network: Chain.Network
+  api: PortfolioApi
+  storage: PortfolioStorage
+}): PortfolioManager => {
+  const balances = new Map<Portfolio.Token.Id, Portfolio.Quantity>()
+  console.log('balances', balances)
+  console.log('network', network)
+  console.log('api', api)
+  console.log('storage', storage)
 
-//       console.log('load - balances', network, api)
-//     },
-//   })
-// }
-
-export const x = 1
+  return freeze({
+    async hydrate() {},
+  })
+}

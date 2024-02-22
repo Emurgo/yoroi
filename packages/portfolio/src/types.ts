@@ -9,7 +9,7 @@ export type AppApiResponseWithCache<T> =
 export type AppApiRequestWithCache<T> = [Record: T, ETag: string]
 
 export type PortfolioApiTokenInfosResponse = Readonly<{
-  [key: Portfolio.Token.Id]: AppApiResponseWithCache<Portfolio.Token.Discovery>
+  [key: Portfolio.Token.Id]: AppApiResponseWithCache<Portfolio.Token.Info>
 }>
 
 export type PortfolioApiTokenDiscoveriesResponse = Readonly<{

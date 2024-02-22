@@ -13,6 +13,18 @@ export const tokenMocks = freeze(
       info: infos.tokenInfoMocks.primaryETH,
       discovery: discoveries.tokenDiscoveryMocks.primaryETH,
     },
+    rnftWhatever: {
+      info: infos.tokenInfoMocks.rnftWhatever,
+      discovery: discoveries.tokenDiscoveryMocks.rnftWhatever,
+    },
+    apiResponse: {
+      tokenInfos: infos.tokenInfoMocks.apiResponseResult,
+      tokenDiscoveries: discoveries.tokenDiscoveryMocks.apiResponseResult,
+    },
+    apiRequest: {
+      tokenInfos: infos.tokenInfoMocks.apiRequestArgs,
+      tokenDiscoveries: discoveries.tokenDiscoveryMocks.apiRequestArgs,
+    },
   },
   true,
 )
