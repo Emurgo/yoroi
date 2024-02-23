@@ -4,12 +4,13 @@ import {UseMutationOptions, useQuery} from 'react-query'
 import {useSelectedWallet} from '../../../SelectedWallet'
 
 const queryKey = 'showMultipleAddressesModal'
+const storageKey = 'multipleAddressesModal'
 
 export const useSetMultipleAddressesModal = ({...options}: UseMutationOptions<void, Error> = {}) => {
   const storage = useAsyncStorage()
   const wallet = useSelectedWallet()
   const mutation = useMutationWithInvalidations({
-    mutationFn: () => storage.join(`wallet/${wallet.id}/`).setItem(queryKey, true),
+    mutationFn: () => storage.join(`wallet/${wallet.id}/`).setItem(storageKey, true),
     invalidateQueries: [[queryKey]],
     ...options,
   })
@@ -24,7 +25,7 @@ export const useReadMultipleAddressesModal = () => {
   const query = useQuery({
     queryKey: [queryKey],
     queryFn: async () => {
-      const storedStorage = await storage.join(`wallet/${wallet.id}/`).getItem(queryKey)
+      const storedStorage = await storage.join(`wallet/${wallet.id}/`).getItem(storageKey)
 
       return parseSafe(storedStorage)
     },
