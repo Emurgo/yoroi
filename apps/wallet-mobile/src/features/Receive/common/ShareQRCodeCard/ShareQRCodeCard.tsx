@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import * as React from 'react'
-import {StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
 import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
@@ -65,36 +65,40 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
     )
 
   return (
-    <View style={styles.card}>
-      <LinearGradient
-        style={[StyleSheet.absoluteFill, {opacity: 1}]}
-        start={{x: 0, y: 0}}
-        end={{x: 0, y: 1}}
-        colors={colors.bgCard}
-      />
+    <TouchableWithoutFeedback onLongPress={onLongPress}>
+      <View>
+        <View style={styles.card}>
+          <LinearGradient
+            style={[StyleSheet.absoluteFill, {opacity: 1}]}
+            start={{x: 0, y: 0}}
+            end={{x: 0, y: 1}}
+            colors={colors.bgCard}
+          />
 
-      <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title}>{title}</Text>
 
-      <View style={styles.addressContainer}>
-        <View style={styles.qrCode}>
-          <QRCode value={address} size={158} backgroundColor={colors.white} color={colors.black} />
+          <View style={styles.addressContainer}>
+            <View style={styles.qrCode}>
+              <QRCode value={address} size={158} backgroundColor={colors.white} color={colors.black} />
+            </View>
+
+            <Spacer height={16} />
+
+            <Text style={styles.textAddress}>{address}</Text>
+          </View>
+
+          <TouchableOpacity activeOpacity={0.5} onPress={shareImage} onLongPress={onLongPress}>
+            <Text style={styles.textShareAddress}>{strings.shareLabel}</Text>
+          </TouchableOpacity>
         </View>
 
-        <Spacer height={16} />
-
-        <Text style={styles.textAddress}>{address}</Text>
+        {isCopying && (
+          <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+            <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
+          </Animated.View>
+        )}
       </View>
-
-      <TouchableOpacity activeOpacity={0.5} onPress={shareImage} onLongPress={onLongPress}>
-        <Text style={styles.textShareAddress}>{strings.shareLabel}</Text>
-      </TouchableOpacity>
-
-      {isCopying && (
-        <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-          <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
-        </Animated.View>
-      )}
-    </View>
+    </TouchableWithoutFeedback>
   )
 }
 

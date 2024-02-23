@@ -120,7 +120,7 @@ export const WalletSettingsScreen = () => {
 
           <SettingsItem
             icon={<Icon.Qr {...iconProps} />}
-            label={isSingleAddress ? strings.singleAddress : strings.multipleAddresses}
+            label={strings.multipleAddresses}
             info={strings.multipleAddressesInfo}
             disabled={isToggleReceiveTypeLoading}
           >
