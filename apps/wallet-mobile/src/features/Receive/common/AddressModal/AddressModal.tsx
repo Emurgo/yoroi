@@ -25,7 +25,7 @@ type Props = {
 
 export const AddressModal = ({address, visible, onRequestClose, path}: Props) => {
   const strings = useStrings()
-  const keyHashes = useKeyHashes(address)
+  const keyHashes = useKeyHashes({address})
 
   return (
     <Modal visible={visible} onRequestClose={onRequestClose} showCloseIcon>

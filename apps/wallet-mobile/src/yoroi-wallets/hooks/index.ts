@@ -130,19 +130,26 @@ export const useStakingKey = (wallet: YoroiWallet) => {
   return result.data
 }
 
-export const useKeyHashes = (address: string) => {
-  const [spending, setSpending] = React.useState<string | null>(null)
-  const [staking, setStaking] = React.useState<string | null>(null)
-
-  React.useEffect(() => {
-    getSpendingKey(address).then(setSpending)
-    getStakingKey(address).then(setStaking)
-  }, [address])
-
-  return {
-    spending,
-    staking,
-  }
+export const useKeyHashes = ({address}: {address: string}) => {
+  const [spendingData, stakingData] = useQueries([
+    {
+      suspense: true,
+      queryKey: [address, 'spendingKeyHash'],
+      queryFn: () =>
+        getSpendingKey(address).then((spending) => {
+          return {spending}
+        }),
+    },
+    {
+      suspense: true,
+      queryKey: [address, 'stakingkeyHash'],
+      queryFn: () =>
+        getStakingKey(address).then((staking) => {
+          return {staking}
+        }),
+    },
+  ])
+  return {spending: spendingData.data?.spending, staking: stakingData.data?.staking}
 }
 
 export const useAssetIds = (wallet: YoroiWallet): string[] => {
