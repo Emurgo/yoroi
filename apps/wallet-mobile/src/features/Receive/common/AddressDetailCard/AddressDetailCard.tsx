@@ -1,6 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import React, {useState} from 'react'
-import {Dimensions, StyleSheet, View} from 'react-native'
+import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
 import {Spacer} from '../../../../components'
@@ -40,7 +40,7 @@ export const AddressDetailCard = ({title}: ShareProps) => {
 
   const {styles, colors} = useStyles()
 
-  const SCREEN_WIDTH = Dimensions.get('window').width
+  const SCREEN_WIDTH = useWindowDimensions().width
   const itemsPerPage = 1
 
   const keyHashes = useKeyHashes(selectedAddress ?? '')

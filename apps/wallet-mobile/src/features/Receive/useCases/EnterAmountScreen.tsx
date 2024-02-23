@@ -8,6 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
 import {useSelectedWallet} from '../../../SelectedWallet'
+import {editedFormatter} from '../../../yoroi-wallets/utils'
 import {useMultipleAddresses} from '../../Settings/MultipleAddresses/MultipleAddresses'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
@@ -38,6 +39,10 @@ export const EnterAmountScreen = () => {
     )
   }, [HEIGHT_MODAL, amount, isSingleAddress, openModal, selectedAddress, strings.multipleAdress, strings.singleAddress])
 
+  const onSetRequestAmount = (amount: string) => {
+    setAmount(editedFormatter(amount))
+  }
+
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -48,7 +53,12 @@ export const EnterAmountScreen = () => {
             <View style={styles.screen}>
               <Text style={styles.textAddressDetails}>{strings.specificAmountDescription}</Text>
 
-              <TextInput label={strings.ADALabel} keyboardType="numeric" onChangeText={setAmount} maxLength={4} />
+              <TextInput
+                label={strings.ADALabel}
+                keyboardType="numeric"
+                onChangeText={onSetRequestAmount}
+                value={amount}
+              />
 
               <View style={styles.textSection}>
                 <Text style={[styles.textAddressDetails, {color: colors.gray}]}>{strings.address}</Text>
