@@ -5,7 +5,7 @@ import {useSelectedWallet} from '../../../SelectedWallet'
 
 const queryKey = 'showMultipleAddressesModal'
 
-export const useWriteMultipleAddressesModal = ({...options}: UseMutationOptions<void, Error> = {}) => {
+export const useSetMultipleAddressesModal = ({...options}: UseMutationOptions<void, Error> = {}) => {
   const storage = useAsyncStorage()
   const wallet = useSelectedWallet()
   const mutation = useMutationWithInvalidations({
@@ -36,7 +36,7 @@ export const useReadMultipleAddressesModal = () => {
 
 export const useMultipleAddressesModal = () => {
   const readModalInfo = useReadMultipleAddressesModal()
-  const writeModalInfo = useWriteMultipleAddressesModal()
+  const writeModalInfo = useSetMultipleAddressesModal()
 
   return {
     hideMultipleAddressesModal: () => writeModalInfo(),
