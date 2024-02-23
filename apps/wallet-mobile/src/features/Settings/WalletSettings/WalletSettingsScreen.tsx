@@ -190,10 +190,10 @@ const ResyncButton = () => {
 
 const ReceiveMultipleAddresseSwitch = ({isMultipleAddressesOff}: {isMultipleAddressesOff: boolean}) => {
   const {setMultipleAddressesOn, setMultipleAddressesOff, isToggleReceiveTypeLoading} = useMultipleAddresses()
-  const [isLocalMultipleOff, setIsLocalMultipleOff] = React.useState(isMultipleAddressesOff)
+  const [isLocalMultipleAddressOff, setIsLocalMultipleAddressesOff] = React.useState(isMultipleAddressesOff)
 
   const onToggleMultipleAddressesMode = () => {
-    setIsLocalMultipleOff((prevState) => {
+    setIsLocalMultipleAddressesOff((prevState) => {
       if (prevState) {
         setMultipleAddressesOn()
       } else {
@@ -206,7 +206,7 @@ const ReceiveMultipleAddresseSwitch = ({isMultipleAddressesOff}: {isMultipleAddr
 
   return (
     <Switch
-      value={!isLocalMultipleOff}
+      value={!isLocalMultipleAddressOff}
       onValueChange={onToggleMultipleAddressesMode}
       disabled={isToggleReceiveTypeLoading}
     />
