@@ -54,7 +54,7 @@ export const MultipleAddressesScreen = () => {
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      {mappedAddresses.length > 20 && (
+      {mappedAddresses.length >= 20 && (
         <>
           <ShowAddressLimitInfo onLimit={true} />
 
@@ -70,11 +70,11 @@ export const MultipleAddressesScreen = () => {
         showsVerticalScrollIndicator={false}
       />
 
-      <Animated.View style={[styles.footer, {display: mappedAddresses.length > 20 ? 'none' : 'flex'}]} layout={Layout}>
+      <Animated.View style={[styles.footer, {display: mappedAddresses.length >= 20 ? 'none' : 'flex'}]} layout={Layout}>
         <Button
           shelleyTheme
           title={strings.generateButton}
-          disabled={mappedAddresses.length > 20 ? true : false}
+          disabled={mappedAddresses.length >= 20 ? true : false}
           onPress={() => wallet.generateNewReceiveAddress()}
           style={styles.button}
         />

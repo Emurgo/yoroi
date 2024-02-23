@@ -1,12 +1,18 @@
 import {parseSafe, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {UseMutationOptions, useQuery} from 'react-query'
 
+import {useSelectedWallet} from '../../../SelectedWallet'
+
 export const useReadMultipleAddresses = () => {
   const storage = useAsyncStorage()
+  const wallet = useSelectedWallet()
+
   const query = useQuery<ReceiveType, Error>({
     queryKey: ['addressDerivationType'],
     queryFn: async () => {
-      const storedStorageReceiveType = await storage.join('wallet/').getItem('addressDerivationType', parseReceiveType)
+      const storedStorageReceiveType = await storage
+        .join(`wallet/${wallet.id}/`)
+        .getItem('addressDerivationType', parseReceiveType)
 
       return storedStorageReceiveType ?? defaultReceiveType
     },
@@ -21,8 +27,10 @@ export const useReadMultipleAddresses = () => {
 
 export const useWriteReceiveType = ({...options}: UseMutationOptions<void, Error, ReceiveType> = {}) => {
   const storage = useAsyncStorage()
+  const wallet = useSelectedWallet()
+
   const mutation = useMutationWithInvalidations({
-    mutationFn: (receiveType) => storage.join('wallet/').setItem('addressDerivationType', receiveType),
+    mutationFn: (receiveType) => storage.join(`wallet/${wallet.id}/`).setItem('addressDerivationType', receiveType),
     invalidateQueries: [['addressDerivationType']],
     ...options,
   })
@@ -33,10 +41,13 @@ export const useWriteReceiveType = ({...options}: UseMutationOptions<void, Error
 export const useToogleReceiveType = ({...options}: UseMutationOptions<void, Error, void> = {}) => {
   const storage = useAsyncStorage()
   const receiveType = useReadMultipleAddresses()
+  const wallet = useSelectedWallet()
 
   const mutation = useMutationWithInvalidations({
     mutationFn: () =>
-      storage.join('wallet/').setItem('addressDerivationType', receiveType === 'SINGLE' ? 'MULTIPLE' : 'SINGLE'),
+      storage
+        .join(`wallet/${wallet.id}/`)
+        .setItem('addressDerivationType', receiveType === 'SINGLE' ? 'MULTIPLE' : 'SINGLE'),
     invalidateQueries: [['addressDerivationType']],
     ...options,
   })
