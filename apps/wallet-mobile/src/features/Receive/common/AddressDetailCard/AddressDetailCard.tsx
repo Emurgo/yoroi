@@ -43,7 +43,7 @@ export const AddressDetailCard = ({title}: ShareProps) => {
   const SCREEN_WIDTH = Dimensions.get('window').width
   const itemsPerPage = 1
 
-  const keyHashes = useKeyHashes(selectedAddress != null ? selectedAddress : '')
+  const keyHashes = useKeyHashes(selectedAddress ?? '')
 
   const cards: ReadonlyArray<CardItem> = [
     {cardType: 'QRCode', title, address: selectedAddress ?? ''},
