@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../components'
 import {useSelectedWallet} from '../../../SelectedWallet'
+import {BIP32_HD_GAP_LIMIT} from '../common/contants'
 import {useMultipleAddresses} from '../common/multipleAddressesModal'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
@@ -54,7 +55,7 @@ export const MultipleAddressesScreen = () => {
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      {mappedAddresses.length >= 20 && (
+      {mappedAddresses.length >= BIP32_HD_GAP_LIMIT && (
         <>
           <ShowAddressLimitInfo onLimit={true} />
 
@@ -70,11 +71,14 @@ export const MultipleAddressesScreen = () => {
         showsVerticalScrollIndicator={false}
       />
 
-      <Animated.View style={[styles.footer, {display: mappedAddresses.length >= 20 ? 'none' : 'flex'}]} layout={Layout}>
+      <Animated.View
+        style={[styles.footer, {display: mappedAddresses.length >= BIP32_HD_GAP_LIMIT ? 'none' : 'flex'}]}
+        layout={Layout}
+      >
         <Button
           shelleyTheme
           title={strings.generateButton}
-          disabled={mappedAddresses.length >= 20 ? true : false}
+          disabled={mappedAddresses.length >= BIP32_HD_GAP_LIMIT ? true : false}
           onPress={() => wallet.generateNewReceiveAddress()}
           style={styles.button}
         />
@@ -155,13 +159,13 @@ const useStyles = () => {
   return {styles, colors} as const
 }
 
-const mapAddresses = (data: {unused: string[]; used: string[]}): AddressInfo[] => {
-  const unusedAddresses = data.unused.map((address) => ({
+const mapAddresses = (addresses: {unused: string[]; used: string[]}): AddressInfo[] => {
+  const unusedAddresses = addresses.unused.map((address) => ({
     address,
     isUsed: false,
   }))
 
-  const usedAddresses = data.used.map((address) => ({
+  const usedAddresses = addresses.used.map((address) => ({
     address,
     isUsed: true,
   }))
