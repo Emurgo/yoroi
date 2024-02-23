@@ -1,7 +1,7 @@
 import {Nullable} from '../helpers/types'
 import {PortfolioTokenId} from './token'
 
-export type PortfolioPrice = `${string}` // BigNumber - bad for serialization
+export type PortfolioPrice = `${number}` // BigNumber
 
 export type PortfolioTokenPrice = {
   id: PortfolioTokenId

@@ -1,7 +1,7 @@
 import {PortfolioTokenInfo} from './info'
 import {PortfolioTokenId, PortfolioTokenNature} from './token'
 
-export type PortfolioQuantity = `${string}` // BigInt - not serializable
+export type PortfolioQuantity = `${number}` // BigInt - not serializable
 
 export type PortfolioAmounts = {
   [key: PortfolioTokenId]: PortfolioQuantity
