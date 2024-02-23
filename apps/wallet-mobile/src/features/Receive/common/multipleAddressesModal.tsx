@@ -34,7 +34,7 @@ export const useReadMultipleAddressesModal = () => {
   return query.data
 }
 
-export const useMultipleAddresses = () => {
+export const useMultipleAddressesModal = () => {
   const readModalInfo = useReadMultipleAddressesModal()
   const writeModalInfo = useWriteMultipleAddressesModal()
 

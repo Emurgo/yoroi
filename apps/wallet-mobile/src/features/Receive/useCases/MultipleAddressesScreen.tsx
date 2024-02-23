@@ -7,7 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Spacer, useModal} from '../../../components'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
-import {useMultipleAddresses} from '../common/multipleAddressesModal'
+import {useMultipleAddressesModal} from '../common/multipleAddressesModal'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
@@ -28,7 +28,7 @@ export const MultipleAddressesScreen = () => {
   const {currentAddressChanged} = useReceive()
   const wallet = useSelectedWallet()
 
-  const {modalInfo} = useMultipleAddresses()
+  const {modalInfo} = useMultipleAddressesModal()
   const mappedAddresses = mapAddresses(addresses)
   const navigate = useNavigateTo()
 
@@ -91,7 +91,7 @@ const modalHeight = 520
 const Modal = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
-  const {hideMultipleAddressesModal} = useMultipleAddresses()
+  const {hideMultipleAddressesModal} = useMultipleAddressesModal()
   const {closeModal} = useModal()
 
   return (
