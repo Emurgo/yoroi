@@ -8,17 +8,16 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
 import {useMultipleAddresses} from '../../Settings/MultipleAddresses/MultipleAddresses'
+import {useReceive} from '../common/ReceiveProvider'
 import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../common/useStrings'
 
 export const EnterAmountScreen = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const receiveAddresses = useReceiveAddresses(wallet)
   const {isSingleAddress} = useMultipleAddresses()
+  const {selectedAddress} = useReceive()
 
   const HEIGHT_SCREEN = useWindowDimensions().height
   const HEIGHT_MODAL = (HEIGHT_SCREEN / 100) * 80
@@ -29,17 +28,15 @@ export const EnterAmountScreen = () => {
 
   const {colors, styles} = useStyles()
 
-  const currentAddress = _.last(receiveAddresses)
-
   const generateLink = React.useCallback(() => {
     Keyboard.dismiss()
 
     openModal(
       isSingleAddress ? strings.singleAddress : strings.multipleAdress,
-      <Modal amount={amount} address={currentAddress} />,
+      <Modal amount={amount} address={selectedAddress ?? ''} />,
       HEIGHT_MODAL,
     )
-  }, [HEIGHT_MODAL, amount, currentAddress, isSingleAddress, openModal, strings.multipleAdress, strings.singleAddress])
+  }, [HEIGHT_MODAL, amount, isSingleAddress, openModal, selectedAddress, strings.multipleAdress, strings.singleAddress])
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
@@ -56,7 +53,7 @@ export const EnterAmountScreen = () => {
               <View style={styles.textSection}>
                 <Text style={[styles.textAddressDetails, {color: colors.gray}]}>{strings.address}</Text>
 
-                <Text style={styles.textAddressDetails}>{currentAddress}</Text>
+                <Text style={styles.textAddressDetails}>{selectedAddress}</Text>
               </View>
             </View>
 

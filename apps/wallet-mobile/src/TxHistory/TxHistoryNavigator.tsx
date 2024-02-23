@@ -14,6 +14,7 @@ import {
 import {Theme, useTheme} from '@yoroi/theme'
 import {TransferProvider} from '@yoroi/transfer'
 import {Resolver, Swap} from '@yoroi/types'
+import _ from 'lodash'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View, ViewProps} from 'react-native'
@@ -58,7 +59,7 @@ import {
 } from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
+import {useFrontendFees, useReceiveAddresses, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
 import {isMainnetNetworkId} from '../yoroi-wallets/utils'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
@@ -73,6 +74,10 @@ export const TxHistoryNavigator = () => {
   const walletName = useWalletName(wallet)
   const storage = useAsyncStorage()
   const {theme} = useTheme()
+
+  // receive
+  const receiveAddresses = useReceiveAddresses(wallet)
+  const currentAddress = _.last(receiveAddresses)
 
   // modal
   const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
@@ -121,7 +126,7 @@ export const TxHistoryNavigator = () => {
   const headerRightHistory = React.useCallback(() => <HeaderRightHistory />, [])
 
   return (
-    <ReceiveProvider key={wallet.id}>
+    <ReceiveProvider key={wallet.id} initialCurrentAddress={currentAddress}>
       <TransferProvider key={wallet.id}>
         <SwapProvider key={wallet.id} swapManager={swapManager}>
           <SwapFormProvider>

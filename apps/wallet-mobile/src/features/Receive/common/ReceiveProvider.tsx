@@ -2,29 +2,21 @@ import {produce} from 'immer'
 import _ from 'lodash'
 import React from 'react'
 
-import {useSelectedWallet} from '../../../SelectedWallet'
-import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
-
 export const useReceive = () => React.useContext(ReceiveContext)
 
 export const ReceiveProvider = ({
   children,
   initialState,
+  initialCurrentAddress,
 }: {
   children: React.ReactNode
   initialState?: Partial<ReceiveState>
+  initialCurrentAddress?: string
 }) => {
   const [state, dispatch] = React.useReducer(receiveReducer, {
     ...defaultState,
     ...initialState,
   })
-  const wallet = useSelectedWallet()
-  const receiveAddresses = useReceiveAddresses(wallet)
-  const currentAddress = _.last(receiveAddresses)
-
-  React.useEffect(() => {
-    state.defaultAddress = currentAddress ?? ''
-  }, [currentAddress, state])
 
   const actions = React.useRef<ReceiveActions>({
     currentAddressChanged: (address: string) => dispatch({type: ReceiveActionType.CurrentAddressChanged, address}),
@@ -34,8 +26,9 @@ export const ReceiveProvider = ({
     () => ({
       ...state,
       ...actions,
+      defaultAddress: initialCurrentAddress ?? '',
     }),
-    [state, actions],
+    [state, actions, initialCurrentAddress],
   )
 
   return <ReceiveContext.Provider value={context}>{children}</ReceiveContext.Provider>

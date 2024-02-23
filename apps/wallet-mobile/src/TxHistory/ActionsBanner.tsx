@@ -35,8 +35,8 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {orderData} = useSwap()
   const {resetSwapForm} = useSwapForm()
   const {track} = useMetrics()
+  const {defaultAddress, selectedAddress} = useReceive()
 
-  const {defaultAddress} = useReceive()
   const sellTokenInfo = useTokenInfo({
     wallet,
     tokenId: orderData.amounts.sell.tokenId,
@@ -92,7 +92,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
                 onPress={isSingleAddress ? navigateTo.receiveSingleAddress : navigateTo.receiveMultipleAddresses}
                 testID="receiveButton"
                 disabled={disabled}
-                onLongPress={() => copy(defaultAddress ?? '')}
+                onLongPress={() => copy(isSingleAddress ? defaultAddress ?? '' : selectedAddress ?? '')}
               >
                 <Icon.Received {...ACTION_PROPS} />
               </TouchableOpacity>
