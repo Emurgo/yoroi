@@ -1,7 +1,6 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Linking, StyleSheet, Text} from 'react-native'
-import {TouchableOpacity} from 'react-native-gesture-handler'
+import {Linking, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
 import {Icon} from '../../../../components'
@@ -26,14 +25,14 @@ export const ShowAddressLimitInfo = ({onLimit}: ShowAddressLimitInfoProps) => {
       <Text style={styles.text}>
         {strings.infoAddressLimit}
 
-        <TouchableOpacity
+        <TouchableWithoutFeedback
           style={[styles.text, {color: colors.yoroiZendesk}]}
           onPress={() => {
             Linking.openURL(YoroiZendeskLink)
           }}
         >
-          <Text style={{color: colors.yoroiZendesk}}>{strings.yoroiZendesk}</Text>
-        </TouchableOpacity>
+          <Text style={{color: colors.yoroiZendesk, borderWidth: 1}}>{strings.yoroiZendesk}</Text>
+        </TouchableWithoutFeedback>
       </Text>
     </Animated.View>
   )
