@@ -137,6 +137,7 @@ import {
 } from './portfolio/balance'
 import {PortfolioPrice, PortfolioTokenPrice} from './portfolio/price'
 import {ChainNetwork} from './chain/network'
+import {PortfolioErrorInvalidQuantity} from './portfolio/errors'
 
 export namespace App {
   export interface Storage<
@@ -344,6 +345,10 @@ export namespace Portfolio {
   export type Price = PortfolioPrice
   export type BalancePrimaryRecord = PortfolioBalancePrimaryRecord
   export type BalancePrimaryBreakdown = PortfolioBalancePrimaryBreakdown
+
+  export namespace Errors {
+    export class InvalidQuantity extends PortfolioErrorInvalidQuantity {}
+  }
 
   export namespace Token {
     export type Id = PortfolioTokenId
