@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 
-export const storageStringify = (anything: unknown) => {
+export const storageStringify = (toStringify: unknown) => {
   const replacer = (_: unknown, value: unknown) => {
     if (typeof value === 'bigint' || BigNumber.isBigNumber(value)) {
       return value.toString()
@@ -8,5 +8,5 @@ export const storageStringify = (anything: unknown) => {
     return value
   }
 
-  return JSON.stringify(anything, replacer)
+  return JSON.stringify(toStringify, replacer)
 }
