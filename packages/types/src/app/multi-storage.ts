@@ -1,5 +1,5 @@
 import {AppStorage, AppStorageFolderName} from './storage'
-import {MaybePromise, Nullable} from '../helpers/types'
+import {MaybePromise, Maybe} from '../helpers/types'
 
 export interface AppMultiStorage<
   T,
@@ -9,10 +9,10 @@ export interface AppMultiStorage<
   getAllKeys: () => MaybePromise<ReadonlyArray<K>, IsAsync>
   clear: () => MaybePromise<void, IsAsync>
   saveMany: (data: ReadonlyArray<NonNullable<T>>) => MaybePromise<void, IsAsync>
-  readAll: () => MaybePromise<ReadonlyArray<[K, Nullable<T>]>, IsAsync>
+  readAll: () => MaybePromise<ReadonlyArray<[K, Maybe<T>]>, IsAsync>
   readMany: (
     keys: ReadonlyArray<K>,
-  ) => MaybePromise<ReadonlyArray<[K, Nullable<T>]>, IsAsync>
+  ) => MaybePromise<ReadonlyArray<[K, Maybe<T>]>, IsAsync>
   removeMany: (keys: ReadonlyArray<K>) => MaybePromise<void, IsAsync>
 }
 
@@ -25,5 +25,5 @@ export type AppMultiStorageOptions<
   dataFolder: AppStorageFolderName
   keyExtractor: keyof T | ((data: NonNullable<T>) => K)
   serializer?: (data: NonNullable<T>) => string
-  deserializer?: (data: string | null) => Nullable<T>
+  deserializer?: (data: string | null) => Maybe<T>
 }

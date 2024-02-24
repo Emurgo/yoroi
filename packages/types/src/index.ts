@@ -137,7 +137,8 @@ import {
 } from './portfolio/balance'
 import {PortfolioPrice, PortfolioTokenPrice} from './portfolio/price'
 import {ChainNetwork} from './chain/network'
-import {PortfolioErrorInvalidQuantity} from './portfolio/errors'
+import {NumbersErrorInvalidAtomicValue} from './numbers/errors'
+import {NumbersAtomicValue} from './numbers/atomic-value'
 
 export namespace App {
   export interface Storage<
@@ -305,6 +306,11 @@ export namespace Api {
 
 export namespace Numbers {
   export type Locale = NumberLocale
+  export type AtomicValue = NumbersAtomicValue
+
+  export namespace Errors {
+    export class InvalidAtomicValue extends NumbersErrorInvalidAtomicValue {}
+  }
 }
 
 export namespace Resolver {
@@ -345,10 +351,6 @@ export namespace Portfolio {
   export type Price = PortfolioPrice
   export type BalancePrimaryRecord = PortfolioBalancePrimaryRecord
   export type BalancePrimaryBreakdown = PortfolioBalancePrimaryBreakdown
-
-  export namespace Errors {
-    export class InvalidQuantity extends PortfolioErrorInvalidQuantity {}
-  }
 
   export namespace Token {
     export type Id = PortfolioTokenId
