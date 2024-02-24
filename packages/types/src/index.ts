@@ -132,10 +132,9 @@ import {
   PortfolioAmounts,
   PortfolioBalancePrimaryBreakdown,
   PortfolioBalancePrimaryRecord,
-  PortfolioQuantity,
   PortfolioTokenBalance,
 } from './portfolio/balance'
-import {PortfolioPrice, PortfolioTokenPrice} from './portfolio/price'
+import {PortfolioTokenPrice} from './portfolio/price'
 import {ChainNetwork} from './chain/network'
 import {NumbersErrorInvalidAtomicValue} from './numbers/errors'
 import {NumbersAtomicValue} from './numbers/atomic-value'
@@ -345,10 +344,8 @@ export namespace Transfer {
 }
 
 export namespace Portfolio {
-  export type Quantity = PortfolioQuantity
   export type Amount = PortfolioAmount
   export type Amounts = PortfolioAmounts
-  export type Price = PortfolioPrice
   export type BalancePrimaryRecord = PortfolioBalancePrimaryRecord
   export type BalancePrimaryBreakdown = PortfolioBalancePrimaryBreakdown
 
@@ -376,7 +373,6 @@ export namespace Portfolio {
     export type Info = PortfolioTokenInfo
     export type Discovery = PortfolioTokenDiscovery
     export type Balance = PortfolioTokenBalance
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     export type Price = PortfolioTokenPrice
   }
 }

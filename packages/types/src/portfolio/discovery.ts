@@ -1,4 +1,3 @@
-import {PortfolioQuantity} from './balance'
 import {
   PortfolioTokenId,
   PortfolioTokenPropertyType,
@@ -23,7 +22,7 @@ export type PortfolioTokenDiscovery = {
   }
 
   counters: {
-    supply: PortfolioQuantity
+    supply: BigInt
     items: number
     totalItems: number
   }

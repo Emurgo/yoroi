@@ -1,36 +1,34 @@
 import {PortfolioTokenInfo} from './info'
 import {PortfolioTokenId, PortfolioTokenNature} from './token'
 
-export type PortfolioQuantity = `${number}` // BigInt - not serializable
-
 export type PortfolioAmounts = {
-  [key: PortfolioTokenId]: PortfolioQuantity
+  [key: PortfolioTokenId]: BigInt
 }
 
 export type PortfolioAmount = {
   id: PortfolioTokenId
-  quantity: PortfolioQuantity
+  quantity: BigInt
 }
 
 export type PortfolioTokenBalance = {
   info: PortfolioTokenInfo
   // remote
-  balance: PortfolioQuantity
+  balance: BigInt
   // local - dynamic per transactions
-  lockedInBuiltTx: PortfolioQuantity // built txs - not submitted
+  lockedInBuiltTx: BigInt // built txs - not submitted
 } & PortfolioTokenInfo['nature'] extends PortfolioTokenNature.Primary
   ? PortfolioBalancePrimaryBreakdown
   : never
 
 export type PortfolioBalancePrimaryRecord = {
   source: 'rewards' | 'deposit'
-  quantity: PortfolioQuantity
+  quantity: BigInt
   redeemableAfter: number // 0 means anytime with withdrawal, epoch or infinity means anytime with reverse tx
 }
 
 export type PortfolioBalancePrimaryBreakdown = {
   // local - dynamic per epoch
-  minRequiredByTokens: PortfolioQuantity // required on utxos to keep tokens (storage cost)
+  minRequiredByTokens: BigInt // required on utxos to keep tokens (storage cost)
   // remote - dynamic per epoch
   records: ReadonlyArray<PortfolioBalancePrimaryRecord>
 }
