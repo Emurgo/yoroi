@@ -5,20 +5,18 @@ import {freeze} from 'immer'
  * Creates a portfolio storage maker.
  * @param {Object} options - The options for creating the portfolio storage.
  * @param {App.ObservableStorage<false, Portfolio.Token.Id>} options.sharedStorage - The shared storage for the portfolio.
- * @param {App.ObservableStorage<false>} options.walletStorage - The wallet storage for the portfolio.
+ * @param {App.ObservableStorage<false>} options.balanceStorage - The wallet storage for the portfolio.
  * @returns {Object} - The portfolio storage maker.
  */
 export const portfolioStorageMaker = ({
   tokenInfoStorage,
   tokenDiscoveryStorage,
-  walletStorage,
+  balanceStorage,
 }: {
   tokenInfoStorage: App.ObservableStorage<false, Portfolio.Token.Id>
   tokenDiscoveryStorage: App.ObservableStorage<false, Portfolio.Token.Id>
-  walletStorage: App.ObservableStorage<false>
+  balanceStorage: App.ObservableStorage<false, Portfolio.Token.Id>
 }) => {
-  console.log('walletStorage', walletStorage)
-
   const infos = {
     save: (
       entries: ReadonlyArray<
@@ -45,10 +43,17 @@ export const portfolioStorageMaker = ({
       >(keys),
   }
 
+  const balances = {
+    save: (entries: ReadonlyArray<[Portfolio.Token.Id, Portfolio.Amount]>) =>
+      tokenDiscoveryStorage.multiSet<Portfolio.Amount>(entries),
+    read: (keys: ReadonlyArray<Portfolio.Token.Id>) =>
+      tokenDiscoveryStorage.multiGet<Portfolio.Amount>(keys),
+  }
+
   const clear = () => {
     tokenDiscoveryStorage.clear()
     tokenInfoStorage.clear()
-    walletStorage.clear()
+    balanceStorage.clear()
   }
 
   return freeze(
@@ -57,6 +62,7 @@ export const portfolioStorageMaker = ({
         infos,
         discoveries,
       },
+      balances,
       clear,
     },
     true,

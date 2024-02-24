@@ -18,6 +18,12 @@ export const portfolioManagerMaker = ({
   console.log('api', api)
   console.log('storage', storage)
 
+  const hydrate = async () => {
+    // storage.
+  }
+
+  console.log('hydrate', hydrate)
+
   return freeze({
     async hydrate() {},
   })

@@ -5,6 +5,10 @@ import {PortfolioStorage} from '../types'
 export const portfolioStorageMock: PortfolioStorage = freeze(
   {
     clear: () => {},
+    balances: {
+      read: (..._args) => [],
+      save: (..._args) => {},
+    },
     token: {
       discoveries: {
         read: (..._args) => [],

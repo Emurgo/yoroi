@@ -3,20 +3,21 @@ import {App, Portfolio} from '@yoroi/types'
 
 import {portfolioStorageMaker} from '../mmkv-storage/mmkv-storage' // Adjust the path accordingly
 import {tokenMocks} from '../token.mocks'
+import {balanceMocks} from '../balance.mocks'
 
 describe('portfolioStorageMaker', () => {
   let tokenInfoStorage: App.ObservableStorage<false, Portfolio.Token.Id>
   let tokenDiscoveryStorage: App.ObservableStorage<false, Portfolio.Token.Id>
-  let walletStorage: App.ObservableStorage<false, string>
+  let balanceStorage: App.ObservableStorage<false, Portfolio.Token.Id>
 
   beforeEach(() => {
     tokenInfoStorage = createMockStorage('/tokenInfo/')
     tokenDiscoveryStorage = createMockStorage('/tokenDiscovery/')
-    walletStorage = createMockStorage('/wallet/')
+    balanceStorage = createMockStorage('/wallet/')
 
     tokenInfoStorage.clear()
     tokenDiscoveryStorage.clear()
-    walletStorage.clear()
+    balanceStorage.clear()
 
     jest.clearAllMocks()
   })
@@ -25,7 +26,7 @@ describe('portfolioStorageMaker', () => {
     const storage = portfolioStorageMaker({
       tokenInfoStorage,
       tokenDiscoveryStorage,
-      walletStorage,
+      balanceStorage,
     })
 
     expect(storage).toBeDefined()
@@ -39,7 +40,7 @@ describe('portfolioStorageMaker', () => {
     const {token} = portfolioStorageMaker({
       tokenInfoStorage,
       tokenDiscoveryStorage,
-      walletStorage,
+      balanceStorage,
     })
 
     const entries: ReadonlyArray<
@@ -64,7 +65,7 @@ describe('portfolioStorageMaker', () => {
     const {token} = portfolioStorageMaker({
       tokenInfoStorage,
       tokenDiscoveryStorage,
-      walletStorage,
+      balanceStorage,
     })
 
     const entries: ReadonlyArray<
@@ -93,7 +94,7 @@ describe('portfolioStorageMaker', () => {
     const {token} = portfolioStorageMaker({
       tokenInfoStorage,
       tokenDiscoveryStorage,
-      walletStorage,
+      balanceStorage,
     })
 
     const entries: ReadonlyArray<
@@ -111,6 +112,50 @@ describe('portfolioStorageMaker', () => {
     expect(tokenDiscoveryStorage.multiSet).toHaveBeenCalledWith(entries)
   })
 
+  it('should save balances entries', () => {
+    const nftCryptoKitty = tokenMocks.nftCryptoKitty.info
+    const primaryETH = tokenMocks.primaryETH.info
+
+    const {balances} = portfolioStorageMaker({
+      tokenInfoStorage,
+      tokenDiscoveryStorage,
+      balanceStorage,
+    })
+
+    const entries: ReadonlyArray<[Portfolio.Token.Id, Portfolio.Token.Info]> = [
+      [nftCryptoKitty.id, balanceMocks.tokens1[nftCryptoKitty.id]],
+      [primaryETH.id, balanceMocks[primaryETH.id]],
+    ] as const
+
+    balances.save(entries)
+
+    expect(balanceStorage.multiSet).toHaveBeenCalledWith(entries)
+  })
+
+  it('should read balances entries', () => {
+    const nftCryptoKitty = tokenMocks.nftCryptoKitty.info
+    const primaryETH = tokenMocks.primaryETH.info
+
+    const {balances} = portfolioStorageMaker({
+      tokenInfoStorage,
+      tokenDiscoveryStorage,
+      balanceStorage,
+    })
+
+    const entries: ReadonlyArray<[Portfolio.Token.Id, Portfolio.Token.Info]> = [
+      [nftCryptoKitty.id, nftCryptoKitty],
+      [primaryETH.id, primaryETH],
+    ] as const
+
+    balances.save(entries)
+
+    const keys = [nftCryptoKitty.id, primaryETH.id]
+    const result = balances.read(keys)
+
+    expect(result).toEqual(entries)
+    expect(balanceStorage.multiGet).toHaveBeenCalledWith(keys)
+  })
+
   it('should read token discovery entries', () => {
     const nftCryptoKitty = tokenMocks.nftCryptoKitty.discovery
     const primaryETH = tokenMocks.primaryETH.discovery
@@ -118,7 +163,7 @@ describe('portfolioStorageMaker', () => {
     const {token} = portfolioStorageMaker({
       tokenInfoStorage,
       tokenDiscoveryStorage,
-      walletStorage,
+      balanceStorage,
     })
 
     const entries: ReadonlyArray<
@@ -146,7 +191,7 @@ describe('portfolioStorageMaker', () => {
     const {token, clear} = portfolioStorageMaker({
       tokenInfoStorage,
       tokenDiscoveryStorage,
-      walletStorage,
+      balanceStorage,
     })
 
     const discoveryEntries: ReadonlyArray<
