@@ -16,6 +16,8 @@ export * from './helpers/monads'
 export * from './helpers/parsers'
 export * from './helpers/strings'
 
+export * from './numbers/as-atomic-value'
+
 export * from './observer/observer'
 
 export * from './storage/adapters/async-storage'

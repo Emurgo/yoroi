@@ -1,5 +1,5 @@
 import {MMKV} from 'react-native-mmkv'
-import {App, Nullable} from '@yoroi/types'
+import {App, Maybe} from '@yoroi/types'
 
 import {parseSafe} from '../../helpers/parsers'
 import {isFolderKey} from '../helpers/is-folder-key'
@@ -137,7 +137,7 @@ export const mountMMKVMultiStorage = <T = unknown>(
     dataFolder,
     keyExtractor,
     serializer = JSON.stringify,
-    deserializer = parseSafe as (item: string | null) => Nullable<T>,
+    deserializer = parseSafe as (item: string | null) => Maybe<T>,
   } = options
   const dataStorage = storage.join(dataFolder)
   const {getAllKeys, multiSet, multiGet} = dataStorage
@@ -153,9 +153,9 @@ export const mountMMKVMultiStorage = <T = unknown>(
     const entriesWithKeys = entries.filter(([key]) => key != null && key !== '')
     return multiSet(entriesWithKeys, serializer as (item: unknown) => string)
   }
-  const readAll = () => multiGet<Nullable<T>>(getAllKeys(), deserializer)
+  const readAll = () => multiGet<Maybe<T>>(getAllKeys(), deserializer)
   const readMany = (keys: ReadonlyArray<string>) =>
-    multiGet<Nullable<T>>(keys, deserializer)
+    multiGet<Maybe<T>>(keys, deserializer)
   const removeMany = (keys: ReadonlyArray<string>) =>
     dataStorage.multiRemove(keys)
 

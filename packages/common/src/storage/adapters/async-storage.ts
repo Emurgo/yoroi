@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {App, Nullable} from '@yoroi/types'
+import {App, Maybe} from '@yoroi/types'
 
 import {parseSafe} from '../../helpers/parsers'
 import {isFolderKey} from '../helpers/is-folder-key'
@@ -102,7 +102,7 @@ export const mountAsyncMultiStorage = <T = unknown>(
     dataFolder,
     keyExtractor,
     serializer = JSON.stringify,
-    deserializer = parseSafe as (item: string | null) => Nullable<T>,
+    deserializer = parseSafe as (item: string | null) => Maybe<T>,
   } = options
   const dataStorage = storage.join(dataFolder)
   const {getAllKeys: getAllKeysStorage, multiSet, multiGet} = dataStorage
@@ -120,10 +120,10 @@ export const mountAsyncMultiStorage = <T = unknown>(
   }
   const readAll = () =>
     getAllKeys().then((keysToRead) =>
-      multiGet<Nullable<T>>(keysToRead, deserializer),
+      multiGet<Maybe<T>>(keysToRead, deserializer),
     )
   const readMany = (keysToRead: ReadonlyArray<string>) =>
-    dataStorage.multiGet<Nullable<T>>(keysToRead, deserializer)
+    dataStorage.multiGet<Maybe<T>>(keysToRead, deserializer)
   const removeMany = (keysToRead: ReadonlyArray<string>) =>
     dataStorage.multiRemove(keysToRead)
   const getAllKeys = () => getAllKeysStorage().then((keys) => keys)
