@@ -113,41 +113,25 @@ describe('portfolioStorageMaker', () => {
   })
 
   it('should save balances entries', () => {
-    const nftCryptoKitty = tokenMocks.nftCryptoKitty.info
-    const primaryETH = tokenMocks.primaryETH.info
-
     const {balances} = portfolioStorageMaker({
       tokenInfoStorage,
       tokenDiscoveryStorage,
       balanceStorage,
     })
 
-    const entries: ReadonlyArray<[Portfolio.Token.Id, Portfolio.Token.Info]> = [
-      [nftCryptoKitty.id, balanceMocks.tokens1[nftCryptoKitty.id]],
-      [primaryETH.id, balanceMocks[primaryETH.id]],
-    ] as const
+    balances.save(balanceMocks.tokens1)
 
-    balances.save(entries)
-
-    expect(balanceStorage.multiSet).toHaveBeenCalledWith(entries)
+    expect(balanceStorage.multiSet).toHaveBeenCalledWith(balanceMocks.tokens1)
   })
 
   it('should read balances entries', () => {
-    const nftCryptoKitty = tokenMocks.nftCryptoKitty.info
-    const primaryETH = tokenMocks.primaryETH.info
-
     const {balances} = portfolioStorageMaker({
       tokenInfoStorage,
       tokenDiscoveryStorage,
       balanceStorage,
     })
 
-    const entries: ReadonlyArray<[Portfolio.Token.Id, Portfolio.Token.Info]> = [
-      [nftCryptoKitty.id, nftCryptoKitty],
-      [primaryETH.id, primaryETH],
-    ] as const
-
-    balances.save(entries)
+    balances.save(balanceMocks.tokens1)
 
     const keys = [nftCryptoKitty.id, primaryETH.id]
     const result = balances.read(keys)

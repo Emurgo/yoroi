@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {App, Maybe} from '@yoroi/types'
 
-import {parseSafe} from '../../helpers/parsers'
+import {parseSafe} from '../../utils/parsers'
 import {isFolderKey} from '../helpers/is-folder-key'
 import {isFileKey} from '../helpers/is-file-key'
 

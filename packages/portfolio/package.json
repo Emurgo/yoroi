@@ -135,8 +135,7 @@
   },
   "dependencies": {
     "@yoroi/api": "1.5.1",
-    "@yoroi/common": "1.5.1",
-    "immer": "^10.0.3"
+    "@yoroi/common": "1.5.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
@@ -171,6 +170,8 @@
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "^1.19.3",
+    "bignumber.js": "^9.0.1",
+    "immer": "^10.0.3",
     "react": ">= 16.8.0 <= 19.0.0",
     "react-native-mmkv": "^2.11.0",
     "react-query": "^3.39.3"

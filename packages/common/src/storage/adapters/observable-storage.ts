@@ -1,7 +1,7 @@
 import {App} from '@yoroi/types'
 import {observerMaker} from '../../observer/observer'
-import {isString} from '../../helpers/parsers'
-import {intersection} from '../../helpers/arrays'
+import {isString} from '../../utils/parsers'
+import {intersection} from '../../utils/arrays'
 
 export const observableStorageMaker = <IsAsync extends boolean>(
   storage: App.Storage<IsAsync>,

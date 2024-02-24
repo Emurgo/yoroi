@@ -1,6 +1,6 @@
 import {App} from '@yoroi/types'
 
-import {parseSafe} from '../../helpers/parsers'
+import {parseSafe} from '../../utils/parsers'
 import {mountMMKVMultiStorage, mountMMKVStorage} from './mmkv-storage'
 import {MMKV} from 'react-native-mmkv'
 

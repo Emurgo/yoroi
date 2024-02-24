@@ -11,10 +11,10 @@ export * from './fixtures/ErrorBoundary'
 export * from './fixtures/query-client'
 export * from './fixtures/SuspenseBoundary'
 
-export * from './helpers/arrays'
-export * from './helpers/monads'
-export * from './helpers/parsers'
-export * from './helpers/strings'
+export * from './utils/arrays'
+export * from './utils/monads'
+export * from './utils/parsers'
+export * from './utils/strings'
 
 export * from './numbers/as-atomic-value'
 
@@ -24,5 +24,6 @@ export * from './storage/adapters/async-storage'
 export * from './storage/adapters/mmkv-storage'
 export * from './storage/translators/async-storage-reactjs'
 export * from './storage/translators/sync-storage-reactjs'
+export * from './storage/helpers/storage-stringify'
 
 export * from './translators/reactjs/hooks/useMutationWithInvalidations'

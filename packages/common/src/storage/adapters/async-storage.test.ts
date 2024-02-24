@@ -2,7 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {App} from '@yoroi/types'
 
-import {parseSafe} from '../../helpers/parsers'
+import {parseSafe} from '../../utils/parsers'
 import {mountAsyncMultiStorage, mountAsyncStorage} from './async-storage'
 
 describe('prefixed storage', () => {
