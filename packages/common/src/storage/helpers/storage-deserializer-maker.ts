@@ -8,7 +8,7 @@ export type StorageReviverMapping = {
   [propertyName: string]: StorageReviverType
 }
 
-export const storageDeserializer = (mapping: StorageReviverMapping) => {
+export const storageDeserializerMaker = (mapping: StorageReviverMapping) => {
   const reviver = (key: string, value: any) => {
     switch (mapping[key]) {
       case StorageReviverType.AsBigInt:
@@ -32,7 +32,8 @@ export const storageDeserializer = (mapping: StorageReviverMapping) => {
     }
   }
 
-  return (jsonString: string) => {
+  return (jsonString: string | null) => {
+    if (jsonString == null) return null
     try {
       const parsed = JSON.parse(jsonString, (key, value) => {
         if (key && mapping[key]) {

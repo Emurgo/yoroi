@@ -9,9 +9,15 @@
             "name": "portfolio-debug",
             "request": "launch",
             "args": [
-                "--maxWorkers=1",
+                "test",
+                "--",
+                // "--maxWorkers=1",
+                "--runInBand",
                 "--watchAll=false",
+                "--testNamePattern",
+                "${jest.testNamePattern}",
                 "--runTestsByPath",
+                "${jest.testFile}"
             ],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
@@ -21,6 +27,6 @@
             "windows": {
                 "program": "${workspaceFolder}/node_modules/jest/bin/jest"
             }
-        }
+        },
     ]
 }

@@ -25,6 +25,6 @@ export * from './storage/adapters/mmkv-storage'
 export * from './storage/translators/async-storage-reactjs'
 export * from './storage/translators/sync-storage-reactjs'
 export * from './storage/helpers/storage-serializer'
-export * from './storage/helpers/storage-deserializer'
+export * from './storage/helpers/storage-deserializer-maker'
 
 export * from './translators/reactjs/hooks/useMutationWithInvalidations'

@@ -10,7 +10,7 @@ const primaryETH: Portfolio.Token.Discovery = {
   counters: {
     items: 1,
     totalItems: 1,
-    supply: 0n,
+    supply: 45_000_000_000_000n,
   },
   originalMetadata: {
     filteredMintMetadatum: null,

@@ -6,7 +6,7 @@ export * from './adapters/mmkv-storage/storage-maker'
 export * from './adapters/mmkv-storage/storage-maker.mocks'
 export * from './adapters/balance.mocks'
 export * from './adapters/token.mocks'
+export * from './adapters/mmkv-storage/transformers'
 
-export * from './constants'
 export * from './manager'
 export * from './types'

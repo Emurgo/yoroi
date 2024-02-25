@@ -1,13 +1,16 @@
 import BigNumber from 'bignumber.js'
 
-import {StorageReviverType, storageDeserializer} from './storage-deserializer'
+import {
+  StorageReviverType,
+  storageDeserializerMaker,
+} from './storage-deserializer-maker'
 
-describe('storageDeserializer', () => {
+describe('storageDeserializerMaker', () => {
   const mapping = {
     age: StorageReviverType.AsBigInt,
     balance: StorageReviverType.AsBigNumber,
   }
-  const deserializer = storageDeserializer(mapping)
+  const deserializer = storageDeserializerMaker(mapping)
 
   it('should parse JSON string and convert properties', () => {
     const whatever = JSON.stringify({
@@ -48,9 +51,9 @@ describe('storageDeserializer', () => {
     const empty = undefined
     const invalid = '{x:'
 
-    const nullResult = storageDeserializer(mapping)(nullable)
-    const emptyResult = storageDeserializer(mapping)(empty as any)
-    const invalidResult = storageDeserializer(mapping)(invalid as any)
+    const nullResult = storageDeserializerMaker(mapping)(nullable)
+    const emptyResult = storageDeserializerMaker(mapping)(empty as any)
+    const invalidResult = storageDeserializerMaker(mapping)(invalid as any)
 
     expect(nullResult).toBeNull()
     expect(emptyResult).toBeNull()

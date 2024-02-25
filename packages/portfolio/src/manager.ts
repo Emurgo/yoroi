@@ -13,18 +13,23 @@ export const portfolioManagerMaker = ({
   storage: PortfolioStorage
 }): PortfolioManager => {
   const balances = new Map<Portfolio.Token.Id, BigInt>()
-  console.log('balances', balances)
-  console.log('network', network)
-  console.log('api', api)
-  console.log('storage', storage)
 
   const hydrate = async () => {
-    // storage.
+    const x = {
+      balances,
+      network,
+      api,
+      storage,
+    }
+    if (x) {
+      return Promise.resolve()
+    }
   }
 
-  console.log('hydrate', hydrate)
-
-  return freeze({
-    async hydrate() {},
-  })
+  return freeze(
+    {
+      hydrate,
+    },
+    true,
+  )
 }

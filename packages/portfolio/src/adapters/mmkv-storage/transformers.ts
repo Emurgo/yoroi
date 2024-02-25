@@ -1,12 +1,12 @@
 import {
   StorageReviverMapping,
   StorageReviverType,
-  storageDeserializer,
+  storageDeserializerMaker,
 } from '@yoroi/common'
 import {freeze} from 'immer'
 
 export const balanceStorageReviverMapping: StorageReviverMapping = {
-  balance: StorageReviverType.AsBigInt,
+  quantity: StorageReviverType.AsBigInt,
 }
 
 export const tokenDiscoveryStorageReviverMapping: StorageReviverMapping = {
@@ -15,8 +15,10 @@ export const tokenDiscoveryStorageReviverMapping: StorageReviverMapping = {
 
 export const storageDeserializers = freeze(
   {
-    balance: storageDeserializer(balanceStorageReviverMapping),
-    tokenDiscovery: storageDeserializer(tokenDiscoveryStorageReviverMapping),
+    balance: storageDeserializerMaker(balanceStorageReviverMapping),
+    tokenDiscovery: storageDeserializerMaker(
+      tokenDiscoveryStorageReviverMapping,
+    ),
   },
   true,
 )

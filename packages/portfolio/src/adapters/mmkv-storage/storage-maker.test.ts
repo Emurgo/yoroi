@@ -1,16 +1,10 @@
-import {
-  StorageReviverMapping,
-  StorageReviverType,
-  cacheRecordMaker,
-  storageDeserializer,
-  storageSerializer,
-} from '@yoroi/common'
+import {cacheRecordMaker, storageSerializer} from '@yoroi/common'
 import {App, Portfolio} from '@yoroi/types'
 
 import {portfolioStorageMaker} from './storage-maker' // Adjust the path accordingly
 import {tokenMocks} from '../token.mocks'
 import {balanceMocks} from '../balance.mocks'
-import {storageDeserializers} from '../../constants'
+import {storageDeserializers} from './transformers'
 
 describe('portfolioStorageMaker', () => {
   let tokenInfoStorage: App.ObservableStorage<false, Portfolio.Token.Id>
@@ -151,10 +145,6 @@ describe('portfolioStorageMaker', () => {
     const primaryETH = tokenMocks.primaryETH.info
     const rnftWhatever = tokenMocks.rnftWhatever.info
 
-    const mapping: StorageReviverMapping = {
-      quantity: StorageReviverType.AsBigInt,
-    }
-
     const {balances} = portfolioStorageMaker({
       tokenInfoStorage,
       tokenDiscoveryStorage,
@@ -166,12 +156,11 @@ describe('portfolioStorageMaker', () => {
     const keys = [primaryETH.id, nftCryptoKitty.id, rnftWhatever.id]
     const result = balances.read(keys)
 
-    const revivedBalances = storageDeserializer(mapping)(
-      storageSerializer(balanceMocks.entries1),
+    expect(result).toEqual(balanceMocks.entries1)
+    expect(balanceStorage.multiGet).toHaveBeenCalledWith(
+      keys,
+      storageDeserializers.balance,
     )
-
-    expect(result).toEqual(revivedBalances)
-    expect(balanceStorage.multiGet).toHaveBeenCalledWith(keys)
   })
 
   it('should read token discovery entries', () => {
@@ -200,7 +189,10 @@ describe('portfolioStorageMaker', () => {
     const result = token.discoveries.read(keys)
 
     expect(result).toEqual(entries)
-    expect(tokenDiscoveryStorage.multiGet).toHaveBeenCalledWith(keys)
+    expect(tokenDiscoveryStorage.multiGet).toHaveBeenCalledWith(
+      keys,
+      storageDeserializers.tokenDiscovery,
+    )
   })
 
   it('should clear all portfolio records', () => {

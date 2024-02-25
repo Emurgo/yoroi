@@ -1,14 +1,8 @@
 import {storageSerializer} from '@yoroi/common'
 import {App, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
+import {storageDeserializers} from './transformers'
 
-/**
- * Creates a portfolio storage maker.
- * @param {Object} options - The options for creating the portfolio storage.
- * @param {App.ObservableStorage<false, Portfolio.Token.Id>} options.sharedStorage - The shared storage for the portfolio.
- * @param {App.ObservableStorage<false>} options.balanceStorage - The wallet storage for the portfolio.
- * @returns {Object} - The portfolio storage maker.
- */
 export const portfolioStorageMaker = ({
   tokenInfoStorage,
   tokenDiscoveryStorage,
@@ -44,14 +38,17 @@ export const portfolioStorageMaker = ({
     read: (keys: ReadonlyArray<Portfolio.Token.Id>) =>
       tokenDiscoveryStorage.multiGet<
         App.CacheRecord<Portfolio.Token.Discovery>
-      >(keys),
+      >(keys, storageDeserializers.tokenDiscovery),
   }
 
   const balances = {
     save: (entries: ReadonlyArray<[Portfolio.Token.Id, Portfolio.Amount]>) =>
       balanceStorage.multiSet<Portfolio.Amount>(entries, storageSerializer),
     read: (keys: ReadonlyArray<Portfolio.Token.Id>) =>
-      balanceStorage.multiGet<Portfolio.Amount>(keys),
+      balanceStorage.multiGet<Portfolio.Amount>(
+        keys,
+        storageDeserializers.balance,
+      ),
   }
 
   const clear = () => {
