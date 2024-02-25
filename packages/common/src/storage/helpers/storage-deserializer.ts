@@ -10,8 +10,8 @@ export type StorageReviverMapping = {
   [propertyName: string]: StorageReviverType
 }
 
-export const storageParse = (mapping: StorageReviverMapping) => {
-  return (jsonString: unknown) => {
+export const storageDeserializer = (mapping: StorageReviverMapping) => {
+  return (jsonString: string) => {
     const parsed = parseSafe(jsonString)
     if (parsed === undefined) return null
 

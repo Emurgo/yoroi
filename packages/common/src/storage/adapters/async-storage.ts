@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {App, Maybe} from '@yoroi/types'
+import {App, Nullable} from '@yoroi/types'
 
 import {parseSafe} from '../../utils/parsers'
 import {isFolderKey} from '../helpers/is-folder-key'
@@ -83,7 +83,10 @@ export const mountAsyncStorage = (path: App.StorageFolderName): App.Storage => {
         .then((keys) =>
           keys.filter((key) => key.startsWith(path) && isFileKey({key, path})),
         )
-        .then((filteredKeys) => filteredKeys.map(withoutPath))
+        .then(
+          // temporary any until async interface is migrated to receive keys for multi storage
+          (filteredKeys) => filteredKeys.map(withoutPath) as ReadonlyArray<any>,
+        )
     },
     clear: async () => {
       const keys = await AsyncStorage.getAllKeys()
@@ -102,7 +105,7 @@ export const mountAsyncMultiStorage = <T = unknown>(
     dataFolder,
     keyExtractor,
     serializer = JSON.stringify,
-    deserializer = parseSafe as (item: string | null) => Maybe<T>,
+    deserializer = parseSafe as (item: string | null) => Nullable<T>,
   } = options
   const dataStorage = storage.join(dataFolder)
   const {getAllKeys: getAllKeysStorage, multiSet, multiGet} = dataStorage
@@ -120,10 +123,10 @@ export const mountAsyncMultiStorage = <T = unknown>(
   }
   const readAll = () =>
     getAllKeys().then((keysToRead) =>
-      multiGet<Maybe<T>>(keysToRead, deserializer),
+      multiGet<Nullable<T>>(keysToRead, deserializer),
     )
   const readMany = (keysToRead: ReadonlyArray<string>) =>
-    dataStorage.multiGet<Maybe<T>>(keysToRead, deserializer)
+    dataStorage.multiGet<Nullable<T>>(keysToRead, deserializer)
   const removeMany = (keysToRead: ReadonlyArray<string>) =>
     dataStorage.multiRemove(keysToRead)
   const getAllKeys = () => getAllKeysStorage().then((keys) => keys)

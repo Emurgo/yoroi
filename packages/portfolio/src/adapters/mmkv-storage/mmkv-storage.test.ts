@@ -1,4 +1,9 @@
-import {cacheRecordMaker, storageStringify} from '@yoroi/common'
+import {
+  StorageReviverType,
+  cacheRecordMaker,
+  storageDeserializer,
+  storageSerializer,
+} from '@yoroi/common'
 import {App, Portfolio} from '@yoroi/types'
 
 import {portfolioStorageMaker} from '../mmkv-storage/mmkv-storage' // Adjust the path accordingly
@@ -57,7 +62,7 @@ describe('portfolioStorageMaker', () => {
 
     expect(tokenInfoStorage.multiSet).toHaveBeenCalledWith(
       entries,
-      storageStringify,
+      storageSerializer,
     )
   })
 
@@ -114,7 +119,7 @@ describe('portfolioStorageMaker', () => {
 
     expect(tokenDiscoveryStorage.multiSet).toHaveBeenCalledWith(
       entries,
-      storageStringify,
+      storageSerializer,
     )
   })
 
@@ -129,13 +134,14 @@ describe('portfolioStorageMaker', () => {
 
     expect(balanceStorage.multiSet).toHaveBeenCalledWith(
       balanceMocks.entries1,
-      storageStringify,
+      storageSerializer,
     )
   })
 
   it('should read balances entries', () => {
     const nftCryptoKitty = tokenMocks.nftCryptoKitty.info
     const primaryETH = tokenMocks.primaryETH.info
+    const rnftWhatever = tokenMocks.rnftWhatever.info
 
     const {balances} = portfolioStorageMaker({
       tokenInfoStorage,
@@ -145,10 +151,14 @@ describe('portfolioStorageMaker', () => {
 
     balances.save(balanceMocks.entries1)
 
-    const keys = [nftCryptoKitty.id, primaryETH.id]
+    const keys = [nftCryptoKitty.id, primaryETH.id, rnftWhatever.id]
     const result = balances.read(keys)
 
-    expect(result).toEqual(balanceMocks.entries1)
+    const revivedBalances = storageDeserializer({
+      quantity: StorageReviverType.AsBigInt,
+    })(storageSerializer(balanceMocks.entries1))
+
+    expect(result).toEqual(revivedBalances)
     expect(balanceStorage.multiGet).toHaveBeenCalledWith(keys)
   })
 
@@ -271,26 +281,37 @@ function createMockStorage<K extends string = string>(
   path: App.StorageFolderName = '/',
   storage = new Map(),
   subscriptions = new Set(),
+  deserializer = JSON.parse,
+  serializer = JSON.stringify,
 ): App.ObservableStorage<false, K> {
   const withPath = (key: string) => `${path}${key}`
 
   return {
     join: jest.fn((folderName: App.StorageFolderName) =>
-      createMockStorage(`${path}${folderName}`, storage, subscriptions),
+      createMockStorage(
+        `${path}${folderName}`,
+        storage,
+        subscriptions,
+        deserializer,
+        serializer,
+      ),
     ),
-    getItem: jest.fn((key, parse = JSON.parse as any) => {
+    getItem: jest.fn((key, parser = deserializer as any) => {
       const item = storage.get(withPath(key)) ?? null
-      return parse(item)
+      return parser(item)
     }),
-    multiGet: jest.fn((keys, parse = JSON.parse as any) => {
-      return keys.map((key) => [key, parse(storage.get(withPath(key)) ?? null)])
+    multiGet: jest.fn((keys, parser = deserializer as any) => {
+      return keys.map((key) => [
+        key,
+        parser(storage.get(withPath(key)) ?? null),
+      ])
     }),
-    setItem: jest.fn((key, value, stringify = JSON.stringify) => {
-      storage.set(withPath(key), stringify(value))
+    setItem: jest.fn((key, value, stringifier = serializer) => {
+      storage.set(withPath(key), stringifier(value))
     }),
-    multiSet: jest.fn((tuples, stringify = JSON.stringify) => {
+    multiSet: jest.fn((tuples, stringifier = serializer) => {
       tuples.forEach(([key, value]) => {
-        storage.set(withPath(key), stringify(value))
+        storage.set(withPath(key), stringifier(value))
       })
     }),
     removeItem: jest.fn((key) => {
@@ -311,7 +332,7 @@ function createMockStorage<K extends string = string>(
         absolutePath.slice(path.length)
       return [...storage.keys()]
         .filter((key) => key.startsWith(path))
-        .map((key) => withoutPath(key))
+        .map((key) => withoutPath(key)) as unknown as ReadonlyArray<any>
     }),
     clear: jest.fn(() => {
       storage.clear()

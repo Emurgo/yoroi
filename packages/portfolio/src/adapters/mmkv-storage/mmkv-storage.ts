@@ -1,4 +1,4 @@
-import {storageStringify} from '@yoroi/common'
+import {storageSerializer} from '@yoroi/common'
 import {App, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 
@@ -26,7 +26,7 @@ export const portfolioStorageMaker = ({
     ) =>
       tokenInfoStorage.multiSet<App.CacheRecord<Portfolio.Token.Info>>(
         entries,
-        storageStringify,
+        storageSerializer,
       ),
     read: (keys: ReadonlyArray<Portfolio.Token.Id>) =>
       tokenInfoStorage.multiGet<App.CacheRecord<Portfolio.Token.Info>>(keys),
@@ -40,7 +40,7 @@ export const portfolioStorageMaker = ({
     ) =>
       tokenDiscoveryStorage.multiSet<
         App.CacheRecord<Portfolio.Token.Discovery>
-      >(entries, storageStringify),
+      >(entries, storageSerializer),
     read: (keys: ReadonlyArray<Portfolio.Token.Id>) =>
       tokenDiscoveryStorage.multiGet<
         App.CacheRecord<Portfolio.Token.Discovery>
@@ -49,7 +49,7 @@ export const portfolioStorageMaker = ({
 
   const balances = {
     save: (entries: ReadonlyArray<[Portfolio.Token.Id, Portfolio.Amount]>) =>
-      balanceStorage.multiSet<Portfolio.Amount>(entries, storageStringify),
+      balanceStorage.multiSet<Portfolio.Amount>(entries, storageSerializer),
     read: (keys: ReadonlyArray<Portfolio.Token.Id>) =>
       balanceStorage.multiGet<Portfolio.Amount>(keys),
   }

@@ -1,5 +1,6 @@
 import {MMKV} from 'react-native-mmkv'
-import {App, Maybe} from '@yoroi/types'
+import {App, Nullable} from '@yoroi/types'
+import {freeze} from 'immer'
 
 import {parseSafe} from '../../utils/parsers'
 import {isFolderKey} from '../helpers/is-folder-key'
@@ -7,11 +8,11 @@ import {isFileKey} from '../helpers/is-file-key'
 
 // -------
 // FACTORY
-export const mountMMKVStorage = (
+export const mountMMKVStorage = <Key extends string = string>(
   path: App.StorageFolderName,
   id: string = 'default.mmkv',
   instance?: MMKV,
-): App.Storage<false> => {
+): App.Storage<false, Key> => {
   // mmkv uses id as file and the path is irrelevant if sharing content amongst app (iOS)
   // therefore the client needs to know all the ids to delete all data
   // which means that it works differently than AsyncStorage
@@ -20,66 +21,75 @@ export const mountMMKVStorage = (
 
   const withPath = (key: string) =>
     `${path}${key}` as `${App.StorageFolderName}${string}`
-  const withoutPath = (absolutePath: string) => absolutePath.slice(path.length)
+  const withoutPath = <K extends string = Key>(absolutePath: string): K =>
+    absolutePath.slice(path.length) as K
 
   function join(folderToJoin: App.StorageFolderName) {
-    return mountMMKVStorage(`${path}${folderToJoin}`, id, storage)
+    return mountMMKVStorage<Key>(`${path}${folderToJoin}`, id, storage)
   }
 
-  function getItem<T>(key: string, parse: (item: string | null) => T): T
-  function getItem<T = unknown>(key: string): T
-  function getItem(key: string, parse = parseSafe) {
+  function getItem<T, K extends string = Key>(
+    key: K,
+    deserializer: (item: string | null) => Nullable<T>,
+  ): Nullable<T>
+  function getItem<T = unknown, K extends string = Key>(key: K): Nullable<T>
+  function getItem<K extends string = Key>(key: K, deserializer = parseSafe) {
     const item = storage.getString(withPath(key)) ?? null
-    return parse(item)
+    return deserializer(item)
   }
 
-  function multiGet<T>(
-    keys: ReadonlyArray<string>,
-    parse: (item: string | null) => T,
-  ): ReadonlyArray<[string, T]>
-  function multiGet<T = unknown>(
-    keys: ReadonlyArray<string>,
-  ): ReadonlyArray<[string, T]>
-  function multiGet(keys: ReadonlyArray<string>, parse = parseSafe) {
+  function multiGet<T, K extends string = Key>(
+    keys: ReadonlyArray<K>,
+    deserializer: (item: string | null) => Nullable<T>,
+  ): ReadonlyArray<[K, Nullable<T>]>
+  function multiGet<T = unknown, K extends string = Key>(
+    keys: ReadonlyArray<K>,
+  ): ReadonlyArray<[K, Nullable<T>]>
+  function multiGet<K extends string = Key>(
+    keys: ReadonlyArray<K>,
+    deserializer = parseSafe,
+  ) {
     const absolutePaths = keys.map((key) => withPath(key))
     return Object.freeze(
       absolutePaths.map((key) => [
-        withoutPath(key),
-        parse(storage.getString(key) ?? null),
+        withoutPath<K>(key),
+        deserializer(storage.getString(key) ?? null),
       ]),
     )
   }
 
-  function setItem<T = unknown>(key: string, value: T): void
-  function setItem<T = unknown>(
-    key: string,
+  function setItem<T = unknown, K extends string = Key>(key: K, value: T): void
+  function setItem<T = unknown, K extends string = Key>(
+    key: K,
     value: T,
-    stringify: (data: T) => string,
+    serializer: (data: T) => string,
   ): void
-  function setItem<T = unknown>(
-    key: string,
+  function setItem<T = unknown, K extends string = Key>(
+    key: K,
     value: T,
-    stringify: (data: T) => string = JSON.stringify,
+    serializer: (data: T) => string = JSON.stringify,
   ) {
-    const item = stringify(value)
+    const item = serializer(value)
     storage.set(withPath(key), item)
   }
 
-  function multiSet(tuples: ReadonlyArray<[key: string, value: unknown]>): void
-  function multiSet(
-    tuples: ReadonlyArray<[key: string, value: unknown]>,
-    stringify: (data: unknown) => string,
+  function multiSet<T = unknown, K extends string = Key>(
+    tuples: ReadonlyArray<[key: K, value: T]>,
   ): void
-  function multiSet(
-    tuples: ReadonlyArray<[key: string, value: unknown]>,
-    stringify: (data: unknown) => string = JSON.stringify,
+  function multiSet<T = unknown, K extends string = Key>(
+    tuples: ReadonlyArray<[key: K, value: T]>,
+    serializer: (data: T) => string,
+  ): void
+  function multiSet<T = unknown, K extends string = Key>(
+    tuples: ReadonlyArray<[key: K, value: T]>,
+    serializer: (data: T) => string = JSON.stringify,
   ) {
     tuples.forEach(([key, value]) =>
-      storage.set(withPath(key), stringify(value)),
+      storage.set(withPath(key), serializer(value)),
     )
   }
 
-  function removeItem(key: string) {
+  function removeItem<K extends string = Key>(key: K) {
     storage.delete(withPath(key))
   }
 
@@ -94,17 +104,17 @@ export const mountMMKVStorage = (
     filteredKeys.forEach((key) => storage.delete(key))
   }
 
-  function multiRemove(keys: ReadonlyArray<string>) {
+  function multiRemove<K extends string = Key>(keys: ReadonlyArray<K>) {
     const absolutePaths = keys.map((key) => withPath(key))
     absolutePaths.forEach((key) => storage.delete(key))
   }
 
-  function getAllKeys() {
+  function getAllKeys<K extends string = Key>() {
     return Object.freeze(
       storage
         .getAllKeys()
         .filter((key) => key.startsWith(path) && isFileKey({key, path}))
-        .map(withoutPath),
+        .map(withoutPath<K>),
     )
   }
 
@@ -115,56 +125,59 @@ export const mountMMKVStorage = (
     filteredKeys.forEach((key) => storage.delete(key))
   }
 
-  return {
-    join,
-    getItem,
-    multiGet,
-    setItem,
-    multiSet,
-    removeItem,
-    removeFolder,
-    multiRemove,
-    getAllKeys,
-    clear,
-  } as const
+  return freeze(
+    {
+      join,
+      getItem,
+      multiGet,
+      setItem,
+      multiSet,
+      removeItem,
+      removeFolder,
+      multiRemove,
+      getAllKeys,
+      clear,
+    },
+    true,
+  )
 }
-
-export const mountMMKVMultiStorage = <T = unknown>(
-  options: App.MultiStorageOptions<T, false>,
-): Readonly<App.MultiStorage<T, false>> => {
+export const mountMMKVMultiStorage = <T = unknown, K extends string = string>(
+  options: App.MultiStorageOptions<T, false, K>,
+): Readonly<App.MultiStorage<T, false, K>> => {
   const {
     storage,
     dataFolder,
     keyExtractor,
     serializer = JSON.stringify,
-    deserializer = parseSafe as (item: string | null) => Maybe<T>,
+    deserializer = parseSafe as (item: unknown) => Nullable<T>,
   } = options
   const dataStorage = storage.join(dataFolder)
   const {getAllKeys, multiSet, multiGet} = dataStorage
 
   const clear = () => storage.removeFolder(dataFolder)
   const saveMany = (items: ReadonlyArray<NonNullable<T>>) => {
-    const entries: [string, T][] = items.map((item) => {
+    const entries: [K, T][] = items.map((item) => {
       if (typeof keyExtractor === 'function') {
-        return [keyExtractor(item), item]
+        return [keyExtractor(item) as K, item]
       }
-      return [String(item[keyExtractor]), item]
+      return [String(item[keyExtractor]) as K, item]
     })
     const entriesWithKeys = entries.filter(([key]) => key != null && key !== '')
     return multiSet(entriesWithKeys, serializer as (item: unknown) => string)
   }
-  const readAll = () => multiGet<Maybe<T>>(getAllKeys(), deserializer)
-  const readMany = (keys: ReadonlyArray<string>) =>
-    multiGet<Maybe<T>>(keys, deserializer)
-  const removeMany = (keys: ReadonlyArray<string>) =>
-    dataStorage.multiRemove(keys)
+  const readAll = () => multiGet(getAllKeys(), deserializer)
+  const readMany = (keys: ReadonlyArray<K>) => multiGet(keys, deserializer)
+  const removeMany = (keys: ReadonlyArray<K>) => dataStorage.multiRemove(keys)
 
-  return {
-    getAllKeys,
-    clear,
-    readAll,
-    saveMany,
-    readMany,
-    removeMany,
-  } as const
+  return freeze(
+    {
+      getAllKeys,
+      clear,
+      readAll,
+      saveMany,
+      readMany,
+      removeMany,
+    },
+    true,
+  )
 }

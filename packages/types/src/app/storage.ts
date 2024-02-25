@@ -31,6 +31,9 @@ export interface AppStorage<
   multiRemove: <K extends string = Key>(
     keys: ReadonlyArray<K>,
   ) => MaybePromise<void, IsAsync>
-  getAllKeys: () => MaybePromise<ReadonlyArray<string>, IsAsync>
+  getAllKeys: <K extends string = Key>() => MaybePromise<
+    ReadonlyArray<K>,
+    IsAsync
+  >
   clear: () => MaybePromise<void, IsAsync>
 }
