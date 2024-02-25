@@ -10,32 +10,31 @@ export type StorageReviverMapping = {
   [propertyName: string]: StorageReviverType
 }
 
-export const storageParse = (
-  jsonString: unknown,
-  mapping: StorageReviverMapping,
-) => {
-  const parsed = parseSafe(jsonString)
-  if (parsed === undefined) return null
+export const storageParse = (mapping: StorageReviverMapping) => {
+  return (jsonString: unknown) => {
+    const parsed = parseSafe(jsonString)
+    if (parsed === undefined) return null
 
-  const reviver = (key: string, value: any) => {
-    switch (mapping[key]) {
-      case StorageReviverType.AsBigInt:
-        return BigInt(value)
-      case StorageReviverType.AsBigNumber:
-        return new BigNumber(value)
-      default:
-        return value
+    const reviver = (key: string, value: any) => {
+      switch (mapping[key]) {
+        case StorageReviverType.AsBigInt:
+          return BigInt(value)
+        case StorageReviverType.AsBigNumber:
+          return new BigNumber(value)
+        default:
+          return value
+      }
     }
-  }
 
-  const convertProperties = (obj: any): unknown => {
-    if (obj !== null && typeof obj === 'object') {
-      Object.keys(obj).forEach((key) => {
-        obj[key] = reviver(key, obj[key])
-      })
+    const convertProperties = (obj: any): unknown => {
+      if (obj !== null && typeof obj === 'object') {
+        Object.keys(obj).forEach((key) => {
+          obj[key] = reviver(key, obj[key])
+        })
+      }
+      return obj
     }
-    return obj
-  }
 
-  return convertProperties(parsed)
+    return convertProperties(parsed)
+  }
 }

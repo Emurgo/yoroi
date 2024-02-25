@@ -7,11 +7,12 @@ describe('storageParse', () => {
     age: StorageReviverType.AsBigInt,
     balance: StorageReviverType.AsBigNumber,
   }
+  const jsonParse = storageParse(mapping)
 
   it('should parse JSON string and convert properties', () => {
     const whatever = '{"name": "John", "age": "25", "balance": "100"}'
 
-    const result = storageParse(whatever, mapping)
+    const result = jsonParse(whatever)
 
     expect(result).toEqual({
       name: 'John',
@@ -24,8 +25,8 @@ describe('storageParse', () => {
     const nullable = null
     const empty = undefined
 
-    const nullResult = storageParse(nullable, mapping)
-    const emptyResult = storageParse(empty, mapping)
+    const nullResult = storageParse(mapping)(nullable)
+    const emptyResult = storageParse(mapping)(empty)
 
     expect(nullResult).toBeNull()
     expect(emptyResult).toBeNull()
