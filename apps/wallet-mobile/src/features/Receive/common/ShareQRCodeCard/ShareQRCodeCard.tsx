@@ -1,7 +1,7 @@
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import * as React from 'react'
-import {StyleSheet, TouchableOpacity, useWindowDimensions, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
 import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated'
@@ -10,7 +10,6 @@ import ViewShot, {captureRef} from 'react-native-view-shot'
 
 import {Spacer, Text} from '../../../../components'
 import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
-import {mocks} from '../mocks'
 import {useStrings} from '../useStrings'
 
 type ShareProps = {
@@ -19,6 +18,7 @@ type ShareProps = {
   addressDetails?: AddressDetailsProps
   isCopying?: boolean
   onLongPress?: () => void
+  amount?: string
 }
 
 type AddressDetailsProps = {
@@ -32,7 +32,6 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
   const [isSharing, setIsSharing] = React.useState<boolean>(false)
   const strings = useStrings()
   const ref: React.RefObject<ViewShot> = React.useRef(null)
-
   const {styles, colors} = useStyles()
 
   const shareImage = () => {
@@ -47,16 +46,16 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
         const uri = await captureRef(ref, {
           format: 'png',
           quality: 1,
-          fileName: mocks.shareFileName,
+          fileName: strings.shareLabel,
         })
 
         setIsSharing(false)
-        await Share.open({url: uri, filename: mocks.shareFileName, message: `${strings.address} ${address}`})
+        await Share.open({url: uri, filename: strings.shareLabel, message: `${strings.address} ${address}`})
       }
 
       captureAndShare()
     }
-  }, [address, isSharing, strings.address])
+  }, [address, isSharing, strings.address, strings.shareLabel])
 
   if (isSharing)
     return (
@@ -66,36 +65,40 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
     )
 
   return (
-    <View style={styles.card}>
-      <LinearGradient
-        style={[StyleSheet.absoluteFill, {opacity: 1}]}
-        start={{x: 0, y: 0}}
-        end={{x: 0, y: 1}}
-        colors={colors.bgCard}
-      />
+    <TouchableWithoutFeedback onLongPress={onLongPress}>
+      <View>
+        <View style={styles.card}>
+          <LinearGradient
+            style={[StyleSheet.absoluteFill, {opacity: 1}]}
+            start={{x: 0, y: 0}}
+            end={{x: 0, y: 1}}
+            colors={colors.bgCard}
+          />
 
-      <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title}>{title}</Text>
 
-      <View style={styles.addressContainer}>
-        <View style={styles.qrCode}>
-          <QRCode value={address} size={158} backgroundColor={colors.white} color={colors.black} />
+          <View style={styles.addressContainer}>
+            <View style={styles.qrCode}>
+              <QRCode value={address} size={158} backgroundColor={colors.white} color={colors.black} />
+            </View>
+
+            <Spacer height={16} />
+
+            <Text style={styles.textAddress}>{address}</Text>
+          </View>
+
+          <TouchableOpacity activeOpacity={0.5} onPress={shareImage} onLongPress={onLongPress}>
+            <Text style={styles.textShareAddress}>{strings.shareLabel}</Text>
+          </TouchableOpacity>
         </View>
 
-        <Spacer height={16} />
-
-        <Text style={styles.textAddress}>{address}</Text>
+        {isCopying && (
+          <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
+            <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
+          </Animated.View>
+        )}
       </View>
-
-      <TouchableOpacity activeOpacity={0.5} onPress={shareImage} onLongPress={onLongPress}>
-        <Text style={styles.textShareAddress}>{strings.shareLabel}</Text>
-      </TouchableOpacity>
-
-      {isCopying && (
-        <Animated.View layout={Layout} entering={FadeInDown} exiting={FadeOutDown} style={styles.isCopying}>
-          <Text style={styles.copiedText}>{strings.addressCopiedMsg}</Text>
-        </Animated.View>
-      )}
-    </View>
+    </TouchableWithoutFeedback>
   )
 }
 

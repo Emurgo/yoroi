@@ -18,6 +18,7 @@ import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
 import {useNavigateTo} from '../common/navigation'
+import {useMultipleAddresses} from '../MultipleAddresses/MultipleAddresses'
 import {
   NavigatedSettingsItem,
   SettingsBuildItem,
@@ -37,6 +38,8 @@ export const WalletSettingsScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
+  const {isSingleAddress, isToggleReceiveTypeLoading} = useMultipleAddresses()
+
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
@@ -48,10 +51,6 @@ export const WalletSettingsScreen = () => {
     } else {
       navigateTo.enableEasyConfirmation()
     }
-  }
-
-  const onToggleMultipleAddresses = () => {
-    return
   }
 
   const onSwitchWallet = () => {
@@ -123,9 +122,9 @@ export const WalletSettingsScreen = () => {
             icon={<Icon.Qr {...iconProps} />}
             label={strings.multipleAddresses}
             info={strings.multipleAddressesInfo}
-            disabled={false}
+            disabled={isToggleReceiveTypeLoading}
           >
-            <Switch value={false} onValueChange={onToggleMultipleAddresses} disabled={false} />
+            <ReceiveMultipleAddresseSwitch isMultipleAddressesOff={isSingleAddress} />
           </SettingsItem>
         </SettingsSection>
 
@@ -185,6 +184,31 @@ const ResyncButton = () => {
       label={strings.resync}
       onNavigate={onResync}
       disabled={isLoading}
+    />
+  )
+}
+
+const ReceiveMultipleAddresseSwitch = ({isMultipleAddressesOff}: {isMultipleAddressesOff: boolean}) => {
+  const {setMultipleAddressesOn, setMultipleAddressesOff, isToggleReceiveTypeLoading} = useMultipleAddresses()
+  const [isLocalMultipleAddressOff, setIsLocalMultipleAddressesOff] = React.useState(isMultipleAddressesOff)
+
+  const onToggleMultipleAddressesMode = () => {
+    setIsLocalMultipleAddressesOff((prevState) => {
+      if (prevState) {
+        setMultipleAddressesOn()
+      } else {
+        setMultipleAddressesOff()
+      }
+
+      return !prevState
+    })
+  }
+
+  return (
+    <Switch
+      value={!isLocalMultipleAddressOff}
+      onValueChange={onToggleMultipleAddressesMode}
+      disabled={isToggleReceiveTypeLoading}
     />
   )
 }
@@ -253,6 +277,10 @@ const messages = defineMessages({
     id: 'global.multipleAddresses',
     defaultMessage: '!!!Multiple addresses',
   },
+  singleAddress: {
+    id: 'global.singleAddress',
+    defaultMessage: '!!!Single addresses',
+  },
   multipleAddressesInfo: {
     id: 'global.multipleAddressesInfo',
     defaultMessage: '!!!By enabling this you can operate with more wallet addresses',
@@ -310,6 +338,7 @@ const useStrings = () => {
     resync: intl.formatMessage(messages.resync),
     collateral: intl.formatMessage(messages.collateral),
     multipleAddresses: intl.formatMessage(messages.multipleAddresses),
+    singleAddress: intl.formatMessage(messages.singleAddress),
     multipleAddressesInfo: intl.formatMessage(messages.multipleAddressesInfo),
   }
 }

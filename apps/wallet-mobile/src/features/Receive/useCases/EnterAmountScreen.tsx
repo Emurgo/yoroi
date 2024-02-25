@@ -1,3 +1,4 @@
+import {configCardanoLegacyTransfer, linksCardanoModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import * as React from 'react'
@@ -7,16 +8,17 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
-import {mocks} from '../common/mocks'
+import {editedFormatter} from '../../../yoroi-wallets/utils'
+import {useMultipleAddresses} from '../../Settings/MultipleAddresses/MultipleAddresses'
+import {useReceive} from '../common/ReceiveProvider'
 import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useStrings} from '../common/useStrings'
 
 export const EnterAmountScreen = () => {
   const strings = useStrings()
-  const wallet = useSelectedWallet()
-  const receiveAddresses = useReceiveAddresses(wallet)
+  const {isSingleAddress} = useMultipleAddresses()
+  const {selectedAddress} = useReceive()
 
   const HEIGHT_SCREEN = useWindowDimensions().height
   const HEIGHT_MODAL = (HEIGHT_SCREEN / 100) * 80
@@ -27,13 +29,19 @@ export const EnterAmountScreen = () => {
 
   const {colors, styles} = useStyles()
 
-  const currentAddress = _.last(receiveAddresses)
-
   const generateLink = React.useCallback(() => {
     Keyboard.dismiss()
 
-    openModal(strings.multipleAdress, <Modal amount={amount} />, HEIGHT_MODAL)
-  }, [HEIGHT_MODAL, amount, openModal, strings.multipleAdress])
+    openModal(
+      isSingleAddress ? strings.singleAddress : strings.multipleAdress,
+      <Modal amount={amount} address={selectedAddress ?? ''} />,
+      HEIGHT_MODAL,
+    )
+  }, [HEIGHT_MODAL, amount, isSingleAddress, openModal, selectedAddress, strings.multipleAdress, strings.singleAddress])
+
+  const onSetRequestAmount = (amount: string) => {
+    setAmount(editedFormatter(amount))
+  }
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
@@ -45,12 +53,17 @@ export const EnterAmountScreen = () => {
             <View style={styles.screen}>
               <Text style={styles.textAddressDetails}>{strings.specificAmountDescription}</Text>
 
-              <TextInput label={strings.ADALabel} keyboardType="number-pad" onChangeText={setAmount} maxLength={4} />
+              <TextInput
+                label={strings.ADALabel}
+                keyboardType="numeric"
+                onChangeText={onSetRequestAmount}
+                value={amount}
+              />
 
               <View style={styles.textSection}>
                 <Text style={[styles.textAddressDetails, {color: colors.gray}]}>{strings.address}</Text>
 
-                <Text style={styles.textAddressDetails}>{currentAddress}</Text>
+                <Text style={styles.textAddressDetails}>{selectedAddress}</Text>
               </View>
             </View>
 
@@ -70,20 +83,30 @@ export const EnterAmountScreen = () => {
   )
 }
 
-const Modal = ({amount}: {amount: string}) => {
+const Modal = ({amount, address}: {amount: string; address?: string}) => {
   const strings = useStrings()
   const {styles} = useStyles()
   const wallet = useSelectedWallet()
   const [isCopying, copy] = useCopy()
+  const cardanoLinks = linksCardanoModuleMaker()
+
+  const requestData = cardanoLinks.create({
+    config: configCardanoLegacyTransfer,
+    params: {
+      address: address,
+      amount: Number(amount),
+    },
+  })
 
   return (
     <View style={styles.root}>
       <ScrollView>
-        {mocks.specificAddressAmount !== null ? (
+        {address !== null ? (
           <ShareQRCodeCard
             title={`${amount} ${wallet.primaryTokenInfo.ticker?.toUpperCase()}`}
-            address={mocks.specificAddressAmount}
-            onLongPress={() => copy(mocks.specificAddressAmount)}
+            address={amount !== undefined ? requestData?.link : address}
+            onLongPress={() => copy(amount !== undefined ? requestData?.link : address ?? '')}
+            amount={amount}
           />
         ) : (
           <View style={styles.root}>
@@ -97,7 +120,7 @@ const Modal = ({amount}: {amount: string}) => {
       <Button
         shelleyTheme
         onPress={() => {
-          copy(mocks.specificAddressAmount)
+          copy(amount !== undefined ? requestData?.link : address ?? '')
         }}
         disabled={amount === '' ? true : false}
         title={strings.copyLinkBtn}

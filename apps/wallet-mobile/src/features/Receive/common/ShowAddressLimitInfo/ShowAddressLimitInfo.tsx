@@ -1,17 +1,17 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {StyleSheet, Text} from 'react-native'
+import {Linking, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native'
 import Animated, {FadeInUp, FadeOut, Layout} from 'react-native-reanimated'
 
-import {Icon} from '../../../../../src/components'
-import {mocks} from '../mocks'
+import {Icon} from '../../../../components'
+import {YoroiZendeskLink} from '../contants'
 import {useStrings} from '../useStrings'
 
-type InfoCardProps = {
+type ShowAddressLimitInfoProps = {
   onLimit: boolean
 }
 
-export const InfoCard = ({onLimit}: InfoCardProps) => {
+export const ShowAddressLimitInfo = ({onLimit}: ShowAddressLimitInfoProps) => {
   const strings = useStrings()
 
   const {styles, colors} = useStyles()
@@ -25,7 +25,14 @@ export const InfoCard = ({onLimit}: InfoCardProps) => {
       <Text style={styles.text}>
         {strings.infoAddressLimit}
 
-        <Text style={[styles.text, {color: colors.yoroiZendesk}]}>{mocks.yoroiZendesk}</Text>
+        <TouchableWithoutFeedback
+          style={[styles.text, {color: colors.yoroiZendesk}]}
+          onPress={() => {
+            Linking.openURL(YoroiZendeskLink)
+          }}
+        >
+          <Text style={{color: colors.yoroiZendesk, borderWidth: 1}}>{strings.yoroiZendesk}</Text>
+        </TouchableWithoutFeedback>
       </Text>
     </Animated.View>
   )

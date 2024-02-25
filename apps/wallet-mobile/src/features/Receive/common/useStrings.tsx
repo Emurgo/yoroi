@@ -18,6 +18,7 @@ export const useStrings = () => {
     ADALabel: intl.formatMessage(messages.ADALabel),
     generateLink: intl.formatMessage(messages.generateLink),
     multipleAdress: intl.formatMessage(messages.multipleAdress),
+    singleAddress: intl.formatMessage(messages.singleAddress),
     copyLinkBtn: intl.formatMessage(messages.copyLinkBtn),
     copyLinkMsg: intl.formatMessage(messages.copyLinkMsg),
     addressCopiedMsg: intl.formatMessage(messages.addressCopiedMsg),
@@ -27,6 +28,7 @@ export const useStrings = () => {
     infoAddressLimit: intl.formatMessage(messages.infoAddressLimit),
     multiplePresentation: intl.formatMessage(messages.multiplePresentation),
     multiplePresentationDetails: intl.formatMessage(messages.multiplePresentationDetails),
+    yoroiZendesk: intl.formatMessage(messages.yoroiZendesk),
     ok: intl.formatMessage(messages.ok),
   }
 }
@@ -88,6 +90,10 @@ export const messages = defineMessages({
     id: 'components.receive.receivescreen.multipleAdress',
     defaultMessage: '!!!Multiple address',
   },
+  singleAddress: {
+    id: 'global.singleAddress',
+    defaultMessage: '!!!Single address',
+  },
   copyLinkBtn: {
     id: 'components.receive.receivescreen.copyLinkBtn',
     defaultMessage: '!!!Copy link',
@@ -129,5 +135,9 @@ export const messages = defineMessages({
   ok: {
     id: 'global.ok',
     defaultMessage: '!!!OK',
+  },
+  yoroiZendesk: {
+    id: 'global.yoroiZendesk',
+    defaultMessage: '!!!Yoroi Zendesk',
   },
 })

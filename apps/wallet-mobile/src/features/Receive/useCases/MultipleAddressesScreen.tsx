@@ -5,74 +5,81 @@ import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../components'
-import {InfoCard} from '../common/InfoCard/InfoCard'
-import {mocks} from '../common/mocks'
+import {useSelectedWallet} from '../../../SelectedWallet'
+import {BIP32_HD_GAP_LIMIT} from '../common/contants'
+import {useMultipleAddressesModal} from '../common/multipleAddressesModal'
+import {useReceive} from '../common/ReceiveProvider'
+import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
+import {useAddresses} from '../common/useAddresses'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
 import {QRs} from '../illustrations/QRs'
 
-type Item = {
-  isUsed?: boolean
-  loading?: boolean
+type AddressInfo = {
+  isUsed: boolean
+  address: string
 }
 
 export const MultipleAddressesScreen = () => {
   const strings = useStrings()
   const {styles} = useStyles()
+  const addresses = useAddresses()
+  const {currentAddressChanged} = useReceive()
+  const wallet = useSelectedWallet()
 
+  const {modalInfo} = useMultipleAddressesModal()
+  const mappedAddresses = mapAddresses(addresses)
   const navigate = useNavigateTo()
-
-  const [addressList, setAddressList] = React.useState(mocks.addressList)
 
   const {openModal} = useModal()
 
   React.useEffect(() => {
-    openModal(strings.multiplePresentation, <Modal />, modalHeight)
-  }, [openModal, strings.multiplePresentation])
+    modalInfo === false && openModal(strings.multiplePresentation, <Modal />, modalHeight)
+  }, [modalInfo, openModal, strings.multiplePresentation])
 
   const renderItem = React.useCallback(
-    ({item}: {item: Item}) => (
+    ({item}: {item: AddressInfo}) => (
       <SmallAddressCard
-        address={mocks.address}
+        address={item.address}
         isUsed={item.isUsed}
-        date={mocks.usedAddressDate}
-        onPress={() => navigate.receiceDetails()}
-        loading={item.loading}
+        onPress={() => {
+          currentAddressChanged(item?.address)
+          navigate.receiceDetails()
+        }}
+        // date={mocks.usedAddressDate}  // TODO don't have the date??
       />
     ),
-    [navigate],
+    [navigate, currentAddressChanged],
   )
-
-  const addMockData = React.useCallback(() => {
-    const novoDadoMockado = {isUsed: false, loading: false}
-    setAddressList([novoDadoMockado, ...addressList])
-  }, [addressList])
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      {addressList.length === 20 && (
+      {mappedAddresses.length >= BIP32_HD_GAP_LIMIT && (
         <>
-          <InfoCard onLimit={true} />
+          <ShowAddressLimitInfo onLimit={true} />
 
           <Spacer height={16} />
         </>
       )}
 
       <Animated.FlatList
-        data={addressList}
+        data={mappedAddresses}
         keyExtractor={(_, i) => String(i)}
         renderItem={renderItem}
         layout={Layout}
         showsVerticalScrollIndicator={false}
       />
 
-      <Animated.View style={[styles.footer, {display: addressList.length === 20 ? 'none' : 'flex'}]} layout={Layout}>
+      <Animated.View
+        style={[styles.footer, {display: mappedAddresses.length >= BIP32_HD_GAP_LIMIT ? 'none' : 'flex'}]}
+        layout={Layout}
+      >
         <Button
           shelleyTheme
           title={strings.generateButton}
-          disabled={addressList.length === 20 ? true : false}
-          onPress={addMockData}
+          disabled={mappedAddresses.length >= BIP32_HD_GAP_LIMIT}
+          onPress={() => wallet.generateNewReceiveAddress()}
           style={styles.button}
         />
       </Animated.View>
@@ -84,6 +91,7 @@ const modalHeight = 520
 const Modal = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
+  const {hideMultipleAddressesModal} = useMultipleAddressesModal()
   const {closeModal} = useModal()
 
   return (
@@ -95,8 +103,18 @@ const Modal = () => {
       <Spacer fill />
 
       <View style={styles.buttonContainer}>
-        <Button shelleyTheme title={strings.ok} disabled={mocks.isLoading} onPress={closeModal} style={styles.button} />
+        <Button
+          shelleyTheme
+          title={strings.ok}
+          onPress={() => {
+            hideMultipleAddressesModal()
+            closeModal()
+          }}
+          style={styles.button}
+        />
       </View>
+
+      <Spacer height={24} />
     </View>
   )
 }
@@ -139,4 +157,18 @@ const useStyles = () => {
   }
 
   return {styles, colors} as const
+}
+
+const mapAddresses = (addresses: {unused: string[]; used: string[]}): AddressInfo[] => {
+  const unusedAddresses = addresses.unused.map((address) => ({
+    address,
+    isUsed: false,
+  }))
+
+  const usedAddresses = addresses.used.map((address) => ({
+    address,
+    isUsed: true,
+  }))
+
+  return [...unusedAddresses, ...usedAddresses]
 }

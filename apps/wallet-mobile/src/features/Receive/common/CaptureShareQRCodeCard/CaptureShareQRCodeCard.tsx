@@ -35,6 +35,8 @@ export const CaptureShareQRCodeCard = ({address}: ShareProps) => {
         colors={colors.backgroundGradientCard}
       />
 
+      <Spacer height={16} />
+
       <YoroiLogoIllustration height={logoHeight} width={logoWidth} />
 
       <View style={styles.addressContainer}>
@@ -67,7 +69,7 @@ const useStyles = () => {
       borderRadius: 10,
       width: SCREEN_WIDTH - 34,
       alignItems: 'center',
-      maxHeight: 458,
+      maxHeight: 308,
       flex: 1,
       minHeight: 394,
       alignSelf: 'center',

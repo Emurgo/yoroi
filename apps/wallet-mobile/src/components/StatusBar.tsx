@@ -14,7 +14,7 @@ export const StatusBar = ({overrideColor}: Props) => {
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') StatusBarRN.setBackgroundColor(overrideColor ?? backgroundColor)
-    StatusBarRN.setBarStyle(isDark ? 'dark-content' : 'light-content')
+    StatusBarRN.setBarStyle(isDark ? 'light-content' : 'dark-content')
   })
 
   return null

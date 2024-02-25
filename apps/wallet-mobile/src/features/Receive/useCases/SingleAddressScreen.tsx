@@ -7,8 +7,11 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import Icon from '../../../assets/img/copy.png'
 import {Button, Spacer} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
+import {useSelectedWallet} from '../../../SelectedWallet'
+import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
+import {useMultipleAddresses} from '../../Settings/MultipleAddresses/MultipleAddresses'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
-import {mocks as mockReceives, mocks} from '../common/mocks'
+import {useReceive} from '../common/ReceiveProvider'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useStrings} from '../common/useStrings'
@@ -17,23 +20,30 @@ export const SingleAddressScreen = () => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
   const navigate = useNavigateTo()
+  const wallet = useSelectedWallet()
+  const {currentAddressChanged, selectedAddress} = useReceive()
+  const receiveAddresses = useReceiveAddresses(wallet)
+  const {isSingleAddress} = useMultipleAddresses()
+  const currentAddress = _.last(receiveAddresses)
+
+  React.useEffect(() => {
+    wallet.generateNewReceiveAddressIfNeeded()
+  }, [wallet])
+
+  if (isSingleAddress) {
+    currentAddressChanged(currentAddress ?? '')
+  }
 
   const [isCopying, copy] = useCopy()
-
-  const currentAddress = mocks.address
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <ScrollView style={{flex: 1}}>
         <View style={styles.address}>
-          {currentAddress !== null ? (
+          {selectedAddress !== null ? (
             <AddressDetailCard
-              address={mockReceives.address}
+              address={selectedAddress != null ? selectedAddress : ''}
               title={strings.addresscardTitle}
-              addressDetails={{
-                spendingHash: mockReceives.spendinghash,
-                stakingHash: mockReceives.stakinghash,
-              }}
             />
           ) : (
             <SkeletonAdressDetail />
@@ -56,7 +66,7 @@ export const SingleAddressScreen = () => {
       <Button
         shelleyTheme
         onPress={() => {
-          copy(currentAddress)
+          copy(currentAddress != null ? currentAddress : '')
         }}
         disabled={currentAddress === null}
         title={strings.copyAddressButton}
