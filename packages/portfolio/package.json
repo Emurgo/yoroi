@@ -59,8 +59,8 @@
     "prepublish:prod": "yarn build:release",
     "publish:prod": "npm publish --scope yoroi --access public",
     "release": "release-it",
-    "test": "jest --passWithNoTests",
-    "test:watch": "jest --watch",
+    "test": "jest --maxWorkers=1",
+    "test:watch": "jest --watch --maxWorkers=1",
     "tsc": "tsc --noEmit -p tsconfig.json"
   },
   "commitlint": {

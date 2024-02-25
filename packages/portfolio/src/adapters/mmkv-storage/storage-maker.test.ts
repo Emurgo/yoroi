@@ -1,4 +1,5 @@
 import {
+  StorageReviverMapping,
   StorageReviverType,
   cacheRecordMaker,
   storageDeserializer,
@@ -6,9 +7,10 @@ import {
 } from '@yoroi/common'
 import {App, Portfolio} from '@yoroi/types'
 
-import {portfolioStorageMaker} from '../mmkv-storage/mmkv-storage' // Adjust the path accordingly
+import {portfolioStorageMaker} from './storage-maker' // Adjust the path accordingly
 import {tokenMocks} from '../token.mocks'
 import {balanceMocks} from '../balance.mocks'
+import {storageDeserializers} from '../../constants'
 
 describe('portfolioStorageMaker', () => {
   let tokenInfoStorage: App.ObservableStorage<false, Portfolio.Token.Id>
@@ -16,9 +18,15 @@ describe('portfolioStorageMaker', () => {
   let balanceStorage: App.ObservableStorage<false, Portfolio.Token.Id>
 
   beforeEach(() => {
-    tokenInfoStorage = createMockStorage('/tokenInfo/')
-    tokenDiscoveryStorage = createMockStorage('/tokenDiscovery/')
-    balanceStorage = createMockStorage('/wallet/')
+    tokenInfoStorage = createMockStorage('v2/mainnet/token-info/')
+    tokenDiscoveryStorage = createMockStorage(
+      'v2/mainnet/token-discovery/',
+      storageDeserializers.tokenDiscovery,
+    )
+    balanceStorage = createMockStorage(
+      'v2/wallets/id/balance/',
+      storageDeserializers.balance,
+    )
 
     tokenInfoStorage.clear()
     tokenDiscoveryStorage.clear()
@@ -143,6 +151,10 @@ describe('portfolioStorageMaker', () => {
     const primaryETH = tokenMocks.primaryETH.info
     const rnftWhatever = tokenMocks.rnftWhatever.info
 
+    const mapping: StorageReviverMapping = {
+      quantity: StorageReviverType.AsBigInt,
+    }
+
     const {balances} = portfolioStorageMaker({
       tokenInfoStorage,
       tokenDiscoveryStorage,
@@ -151,12 +163,12 @@ describe('portfolioStorageMaker', () => {
 
     balances.save(balanceMocks.entries1)
 
-    const keys = [nftCryptoKitty.id, primaryETH.id, rnftWhatever.id]
+    const keys = [primaryETH.id, nftCryptoKitty.id, rnftWhatever.id]
     const result = balances.read(keys)
 
-    const revivedBalances = storageDeserializer({
-      quantity: StorageReviverType.AsBigInt,
-    })(storageSerializer(balanceMocks.entries1))
+    const revivedBalances = storageDeserializer(mapping)(
+      storageSerializer(balanceMocks.entries1),
+    )
 
     expect(result).toEqual(revivedBalances)
     expect(balanceStorage.multiGet).toHaveBeenCalledWith(keys)
@@ -279,10 +291,10 @@ describe('portfolioStorageMaker', () => {
 // NOTE: considering exporting from common as mocked storage
 function createMockStorage<K extends string = string>(
   path: App.StorageFolderName = '/',
+  deserializer = JSON.parse,
+  serializer = storageSerializer,
   storage = new Map(),
   subscriptions = new Set(),
-  deserializer = JSON.parse,
-  serializer = JSON.stringify,
 ): App.ObservableStorage<false, K> {
   const withPath = (key: string) => `${path}${key}`
 
@@ -290,10 +302,10 @@ function createMockStorage<K extends string = string>(
     join: jest.fn((folderName: App.StorageFolderName) =>
       createMockStorage(
         `${path}${folderName}`,
-        storage,
-        subscriptions,
         deserializer,
         serializer,
+        storage,
+        subscriptions,
       ),
     ),
     getItem: jest.fn((key, parser = deserializer as any) => {

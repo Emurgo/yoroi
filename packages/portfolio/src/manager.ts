@@ -12,7 +12,7 @@ export const portfolioManagerMaker = ({
   api: PortfolioApi
   storage: PortfolioStorage
 }): PortfolioManager => {
-  const balances = new Map<Portfolio.Token.Id, Portfolio.Quantity>()
+  const balances = new Map<Portfolio.Token.Id, BigInt>()
   console.log('balances', balances)
   console.log('network', network)
   console.log('api', api)

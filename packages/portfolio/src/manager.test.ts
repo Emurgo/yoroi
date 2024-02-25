@@ -1,8 +1,8 @@
 import {Chain} from '@yoroi/types'
 
 import {portfolioManagerMaker} from './manager'
-import {portfolioApiMock} from './adapters/api-maker.mocks'
-import {portfolioStorageMock} from './adapters/storage-maker.mocks'
+import {portfolioApiMock} from './adapters/dulahan-api/api-maker.mocks'
+import {portfolioStorageMock} from './adapters/mmkv-storage/storage-maker.mocks'
 
 describe('portfolioManagerMaker', () => {
   it('should be instantiated', () => {

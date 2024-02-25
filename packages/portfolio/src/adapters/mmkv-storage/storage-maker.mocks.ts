@@ -1,6 +1,6 @@
 import {freeze} from 'immer'
 
-import {PortfolioStorage} from '../types'
+import {PortfolioStorage} from '../../types'
 
 export const portfolioStorageMock: PortfolioStorage = freeze(
   {

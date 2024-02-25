@@ -1,8 +1,8 @@
 import {freeze} from 'immer'
 import {asyncBehavior} from '@yoroi/common'
 
-import {tokenMocks} from './token.mocks'
-import {PortfolioApi, PortfolioApiTokenDiscoveriesResponse} from '../types'
+import {tokenMocks} from '../token.mocks'
+import {PortfolioApi, PortfolioApiTokenDiscoveriesResponse} from '../../types'
 
 export const responseTokenDiscoveriesMocks =
   asyncBehavior.maker<PortfolioApiTokenDiscoveriesResponse>({

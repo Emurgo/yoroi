@@ -1,7 +1,7 @@
 import {Chain, Portfolio} from '@yoroi/types'
 
 import {apiConfig, portfolioApiMaker} from './api-maker'
-import {AppApiRequestWithCache} from '../types'
+import {AppApiRequestWithCache} from '../../types'
 
 describe('portfolioApiMaker', () => {
   const mockNetwork: Chain.Network = Chain.Network.Main

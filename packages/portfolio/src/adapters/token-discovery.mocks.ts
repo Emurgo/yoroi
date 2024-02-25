@@ -10,7 +10,7 @@ const primaryETH: Portfolio.Token.Discovery = {
   counters: {
     items: 1,
     totalItems: 1,
-    supply: '0',
+    supply: 0n,
   },
   originalMetadata: {
     filteredMintMetadatum: null,
@@ -32,7 +32,7 @@ const nftCryptoKitty: Portfolio.Token.Discovery = {
   counters: {
     items: 1,
     totalItems: 1,
-    supply: '0',
+    supply: 0n,
   },
   originalMetadata: {
     filteredMintMetadatum: null,
@@ -65,7 +65,7 @@ const rnftWhatever: Portfolio.Token.Discovery = {
   counters: {
     items: 1,
     totalItems: 1,
-    supply: '0',
+    supply: 0n,
   },
   originalMetadata: {
     filteredMintMetadatum: null,

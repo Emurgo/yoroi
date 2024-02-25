@@ -8,7 +8,7 @@ import {
   PortfolioApi,
   PortfolioApiTokenDiscoveriesResponse,
   PortfolioApiTokenInfosResponse,
-} from '../types'
+} from '../../types'
 
 export const portfolioApiMaker = ({
   network,

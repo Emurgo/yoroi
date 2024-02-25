@@ -54,14 +54,11 @@ const rnftWhatever: Portfolio.Token.Info = {
   type: Portfolio.Token.Type.NFT,
 }
 
-const apiResponseTokenInfos: PortfolioApiTokenInfosResponse = freeze(
-  {
-    [primaryETH.id]: [200, primaryETH, 'hash1', 3600],
-    [nftCryptoKitty.id]: [200, nftCryptoKitty, 'hash2', 10],
-    [rnftWhatever.id]: [304, 0],
-  },
-  true,
-)
+const apiResponseTokenInfos: PortfolioApiTokenInfosResponse = {
+  [primaryETH.id]: [200, primaryETH, 'hash1', 3600],
+  [nftCryptoKitty.id]: [200, nftCryptoKitty, 'hash2', 10],
+  [rnftWhatever.id]: [304, 0],
+}
 
 const apiRequestTokenInfos: ReadonlyArray<
   AppApiRequestWithCache<Portfolio.Token.Id>
