@@ -78,7 +78,7 @@ export const MultipleAddressesScreen = () => {
         <Button
           shelleyTheme
           title={strings.generateButton}
-          disabled={mappedAddresses.length >= BIP32_HD_GAP_LIMIT ? true : false}
+          disabled={mappedAddresses.length >= BIP32_HD_GAP_LIMIT}
           onPress={() => wallet.generateNewReceiveAddress()}
           style={styles.button}
         />
