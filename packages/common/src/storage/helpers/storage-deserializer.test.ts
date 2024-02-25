@@ -18,6 +18,10 @@ describe('storageDeserializer', () => {
         balance: '111',
         age: '10',
         data: [{age: '1'}],
+        nullable: {
+          balance: null,
+          age: null,
+        },
       },
     })
 
@@ -31,6 +35,10 @@ describe('storageDeserializer', () => {
         balance: new BigNumber('111'),
         age: 10n,
         data: [{age: 1n}],
+        nullable: {
+          balance: null,
+          age: null,
+        },
       },
     })
   })
