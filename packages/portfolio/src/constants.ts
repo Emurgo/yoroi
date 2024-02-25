@@ -9,14 +9,14 @@ export const balanceStorageReviverMapping: StorageReviverMapping = {
   balance: StorageReviverType.AsBigInt,
 }
 
-export const tokenDiscoveryReviverStorageMapping: StorageReviverMapping = {
+export const tokenDiscoveryStorageReviverMapping: StorageReviverMapping = {
   supply: StorageReviverType.AsBigInt,
 }
 
 export const storageDeserializers = freeze(
   {
     balance: storageDeserializer(balanceStorageReviverMapping),
-    tokenDiscovery: storageDeserializer(tokenDiscoveryReviverStorageMapping),
+    tokenDiscovery: storageDeserializer(tokenDiscoveryStorageReviverMapping),
   },
   true,
 )
