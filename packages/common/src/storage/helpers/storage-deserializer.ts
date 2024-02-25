@@ -1,7 +1,5 @@
 import BigNumber from 'bignumber.js'
 
-import {parseSafe} from '../../utils/parsers'
-
 export enum StorageReviverType {
   AsBigInt = 'AsBigInt',
   AsBigNumber = 'AsBigNumber',
@@ -11,30 +9,40 @@ export type StorageReviverMapping = {
 }
 
 export const storageDeserializer = (mapping: StorageReviverMapping) => {
-  return (jsonString: string) => {
-    const parsed = parseSafe(jsonString)
-    if (parsed === undefined) return null
-
-    const reviver = (key: string, value: any) => {
-      switch (mapping[key]) {
-        case StorageReviverType.AsBigInt:
-          return BigInt(value)
-        case StorageReviverType.AsBigNumber:
-          return new BigNumber(value)
-        default:
-          return value
-      }
+  const reviver = (key: string, value: any) => {
+    switch (mapping[key]) {
+      case StorageReviverType.AsBigInt:
+        return BigInt(value)
+      case StorageReviverType.AsBigNumber:
+      default:
+        return new BigNumber(value)
     }
+  }
 
-    const convertProperties = (obj: any): unknown => {
-      if (obj !== null && typeof obj === 'object') {
-        Object.keys(obj).forEach((key) => {
-          obj[key] = reviver(key, obj[key])
-        })
-      }
+  const convertProperties = (obj: any): unknown => {
+    if (Array.isArray(obj)) {
+      return obj.map((item) => convertProperties(item))
+    } else if (obj !== null && typeof obj === 'object') {
+      Object.keys(obj).forEach((key) => {
+        obj[key] = convertProperties(obj[key])
+      })
+      return obj
+    } else {
       return obj
     }
+  }
 
-    return convertProperties(parsed)
+  return (jsonString: string) => {
+    try {
+      const parsed = JSON.parse(jsonString, (key, value) => {
+        if (key && mapping[key]) {
+          return reviver(key, value)
+        }
+        return value
+      })
+      return convertProperties(parsed)
+    } catch (e) {
+      return null
+    }
   }
 }

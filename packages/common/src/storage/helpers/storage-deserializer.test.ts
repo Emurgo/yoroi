@@ -16,6 +16,8 @@ describe('storageDeserializer', () => {
       balance: '100',
       nested: {
         balance: '111',
+        age: '10',
+        data: [{age: '1'}],
       },
     })
 
@@ -23,22 +25,27 @@ describe('storageDeserializer', () => {
 
     expect(result).toEqual({
       name: 'John',
-      age: BigInt(25),
+      age: 25n,
       balance: new BigNumber('100'),
       nested: {
         balance: new BigNumber('111'),
+        age: 10n,
+        data: [{age: 1n}],
       },
     })
   })
 
   it('should return null if jsonString is null', () => {
     const nullable = JSON.stringify(null)
-    const empty = JSON.stringify(undefined)
+    const empty = undefined
+    const invalid = '{x:'
 
     const nullResult = storageDeserializer(mapping)(nullable)
-    const emptyResult = storageDeserializer(mapping)(empty)
+    const emptyResult = storageDeserializer(mapping)(empty as any)
+    const invalidResult = storageDeserializer(mapping)(invalid as any)
 
     expect(nullResult).toBeNull()
     expect(emptyResult).toBeNull()
+    expect(invalidResult).toBeNull()
   })
 })
