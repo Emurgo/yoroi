@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 
-import {StorageReviverType, storageParse} from './storage-parser'
+import {StorageReviverType, storageParse} from './storage-parse'
 
 describe('storageParse', () => {
   const mapping = {
