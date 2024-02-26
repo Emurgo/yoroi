@@ -9,15 +9,15 @@ import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../.
 import {useCopy} from '../../../legacy/useCopy'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {editedFormatter} from '../../../yoroi-wallets/utils'
-import {useMultipleAddresses} from '../../Settings/MultipleAddresses/MultipleAddresses'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
+import {useAddressDerivationManager} from '../common/useAddressDerivationManager'
 import {useStrings} from '../common/useStrings'
 
 export const EnterAmountScreen = () => {
   const strings = useStrings()
-  const {isSingleAddress} = useMultipleAddresses()
+  const {isSingle} = useAddressDerivationManager()
   const {selectedAddress} = useReceive()
 
   const HEIGHT_SCREEN = useWindowDimensions().height
@@ -33,11 +33,11 @@ export const EnterAmountScreen = () => {
     Keyboard.dismiss()
 
     openModal(
-      isSingleAddress ? strings.singleAddress : strings.multipleAdress,
+      isSingle ? strings.singleAddress : strings.multipleAdress,
       <Modal amount={amount} address={selectedAddress ?? ''} />,
       HEIGHT_MODAL,
     )
-  }, [HEIGHT_MODAL, amount, isSingleAddress, openModal, selectedAddress, strings.multipleAdress, strings.singleAddress])
+  }, [HEIGHT_MODAL, amount, isSingle, openModal, selectedAddress, strings.multipleAdress, strings.singleAddress])
 
   const onSetRequestAmount = (amount: string) => {
     setAmount(editedFormatter(amount))

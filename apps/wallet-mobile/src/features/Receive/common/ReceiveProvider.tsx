@@ -47,8 +47,6 @@ const receiveReducer = (state: ReceiveState, action: ReceiveAction) => {
   })
 }
 
-export type ReceiveType = 'single' | 'multiple'
-
 type ReceiveAction = {type: ReceiveActionType.CurrentAddressChanged; address: string}
 
 export type ReceiveState = {
@@ -69,7 +67,7 @@ function missingInit() {
   console.error('[ReceiveContext] missing initialization')
 }
 
-const initialReceiveFormContext: ReceiveContext = {
+const initialReceiveContext: ReceiveContext = {
   ...defaultState,
   currentAddressChanged: missingInit,
 }
@@ -80,4 +78,4 @@ enum ReceiveActionType {
 
 type ReceiveContext = ReceiveState & ReceiveActions
 
-const ReceiveContext = React.createContext<ReceiveContext>(initialReceiveFormContext)
+const ReceiveContext = React.createContext<ReceiveContext>(initialReceiveContext)
