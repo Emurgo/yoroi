@@ -7,13 +7,12 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Spacer, useModal} from '../../../components'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
+import {useMultipleAddressesModal} from '../common/multipleAddressesModal'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
-import {useAddressDerivationManager} from '../common/useAddressDerivationManager'
-import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
+import {useAddresses} from '../common/useAddresses'
 import {useNavigateTo} from '../common/useNavigateTo'
-import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
 import {QRs} from '../illustrations/QRs'
 
@@ -25,22 +24,19 @@ type AddressInfo = {
 export const MultipleAddressesScreen = () => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const {addressDerivation} = useAddressDerivationManager()
-  const addresses = useReceiveAddressesStatus(addressDerivation)
+  const addresses = useAddresses()
   const {currentAddressChanged} = useReceive()
   const wallet = useSelectedWallet()
 
-  const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
-  const addressInfos = toAddressInfos(addresses)
+  const {modalInfo} = useMultipleAddressesModal()
+  const mappedAddresses = mapAddresses(addresses)
   const navigate = useNavigateTo()
 
   const {openModal} = useModal()
 
-  const hasReachedGapLimit = addresses.unused.length >= BIP32_HD_GAP_LIMIT
-
   React.useEffect(() => {
-    isShowingMultipleAddressInfo && openModal(strings.multiplePresentation, <Modal />, modalHeight)
-  }, [isShowingMultipleAddressInfo, openModal, strings.multiplePresentation])
+    modalInfo === false && openModal(strings.multiplePresentation, <Modal />, modalHeight)
+  }, [modalInfo, openModal, strings.multiplePresentation])
 
   const renderItem = React.useCallback(
     ({item}: {item: AddressInfo}) => (
@@ -59,27 +55,30 @@ export const MultipleAddressesScreen = () => {
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      {hasReachedGapLimit && (
+      {mappedAddresses.length >= BIP32_HD_GAP_LIMIT && (
         <>
-          <ShowAddressLimitInfo />
+          <ShowAddressLimitInfo onLimit={true} />
 
           <Spacer height={16} />
         </>
       )}
 
       <Animated.FlatList
-        data={addressInfos}
-        keyExtractor={(addressInfo) => addressInfo.address}
+        data={mappedAddresses}
+        keyExtractor={(_, i) => String(i)}
         renderItem={renderItem}
         layout={Layout}
         showsVerticalScrollIndicator={false}
       />
 
-      <Animated.View style={[styles.footer, {display: hasReachedGapLimit ? 'none' : 'flex'}]} layout={Layout}>
+      <Animated.View
+        style={[styles.footer, {display: mappedAddresses.length >= BIP32_HD_GAP_LIMIT ? 'none' : 'flex'}]}
+        layout={Layout}
+      >
         <Button
           shelleyTheme
           title={strings.generateButton}
-          disabled={hasReachedGapLimit}
+          disabled={mappedAddresses.length >= BIP32_HD_GAP_LIMIT}
           onPress={() => wallet.generateNewReceiveAddress()}
           style={styles.button}
         />
@@ -92,13 +91,8 @@ const modalHeight = 520
 const Modal = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
-  const {hideMultipleAddressesInfo} = useMultipleAddressesInfo()
+  const {hideMultipleAddressesModal} = useMultipleAddressesModal()
   const {closeModal} = useModal()
-
-  const handleOnCloseModal = () => {
-    hideMultipleAddressesInfo()
-    closeModal()
-  }
 
   return (
     <View style={styles.modal}>
@@ -109,7 +103,15 @@ const Modal = () => {
       <Spacer fill />
 
       <View style={styles.buttonContainer}>
-        <Button shelleyTheme title={strings.ok} onPress={handleOnCloseModal} style={styles.button} />
+        <Button
+          shelleyTheme
+          title={strings.ok}
+          onPress={() => {
+            hideMultipleAddressesModal()
+            closeModal()
+          }}
+          style={styles.button}
+        />
       </View>
 
       <Spacer height={24} />
@@ -157,7 +159,7 @@ const useStyles = () => {
   return {styles, colors} as const
 }
 
-const toAddressInfos = (addresses: {unused: string[]; used: string[]}): AddressInfo[] => {
+const mapAddresses = (addresses: {unused: string[]; used: string[]}): AddressInfo[] => {
   const unusedAddresses = addresses.unused.map((address) => ({
     address,
     isUsed: false,

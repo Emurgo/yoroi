@@ -8,11 +8,12 @@ import Icon from '../../../assets/img/copy.png'
 import {Button, Spacer} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
 import {useSelectedWallet} from '../../../SelectedWallet'
+import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
+import {useMultipleAddresses} from '../../Settings/MultipleAddresses/MultipleAddresses'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
+import {useReceive} from '../common/ReceiveProvider'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
-import {useAddressDerivationManager} from '../common/useAddressDerivationManager'
 import {useNavigateTo} from '../common/useNavigateTo'
-import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
 
 export const SingleAddressScreen = () => {
@@ -20,13 +21,18 @@ export const SingleAddressScreen = () => {
   const {styles, colors} = useStyles()
   const navigate = useNavigateTo()
   const wallet = useSelectedWallet()
-
-  const addressDerivationManager = useAddressDerivationManager()
-  const {next: receiveAddress} = useReceiveAddressesStatus(addressDerivationManager.addressDerivation)
+  const {currentAddressChanged, selectedAddress} = useReceive()
+  const receiveAddresses = useReceiveAddresses(wallet)
+  const {isSingleAddress} = useMultipleAddresses()
+  const currentAddress = _.last(receiveAddresses)
 
   React.useEffect(() => {
     wallet.generateNewReceiveAddressIfNeeded()
   }, [wallet])
+
+  if (isSingleAddress) {
+    currentAddressChanged(currentAddress ?? '')
+  }
 
   const [isCopying, copy] = useCopy()
 
@@ -34,8 +40,11 @@ export const SingleAddressScreen = () => {
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <ScrollView style={{flex: 1}}>
         <View style={styles.address}>
-          {receiveAddress != '' ? (
-            <AddressDetailCard address={receiveAddress} title={strings.addresscardTitle} />
+          {selectedAddress !== null ? (
+            <AddressDetailCard
+              address={selectedAddress != null ? selectedAddress : ''}
+              title={strings.addresscardTitle}
+            />
           ) : (
             <SkeletonAdressDetail />
           )}
@@ -49,7 +58,7 @@ export const SingleAddressScreen = () => {
           color: colors.buttonBackgroundBlue,
         }}
         onPress={() => navigate.specificAmount()}
-        disabled={receiveAddress === ''}
+        disabled={currentAddress === null}
       />
 
       <Spacer height={6} />
@@ -57,9 +66,9 @@ export const SingleAddressScreen = () => {
       <Button
         shelleyTheme
         onPress={() => {
-          copy(receiveAddress)
+          copy(currentAddress != null ? currentAddress : '')
         }}
-        disabled={receiveAddress === ''}
+        disabled={currentAddress === null}
         title={strings.copyAddressButton}
         iconImage={Icon}
         isCopying={isCopying}

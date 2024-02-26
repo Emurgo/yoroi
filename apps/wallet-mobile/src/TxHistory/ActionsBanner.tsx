@@ -9,9 +9,9 @@ import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated
 
 import {useCopy} from '../../src/legacy/useCopy'
 import {Icon, Spacer, Text} from '../components'
-import {useAddressDerivationManager} from '../features/Receive/common/useAddressDerivationManager'
-import {useReceiveAddressesStatus} from '../features/Receive/common/useReceiveAddressesStatus'
+import {useReceive} from '../features/Receive/common/ReceiveProvider'
 import {messages as receiveMessages} from '../features/Receive/common/useStrings'
+import {useMultipleAddresses} from '../features/Settings/MultipleAddresses/MultipleAddresses'
 import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
 import {actionMessages} from '../i18n/global-messages'
 import {useMetrics} from '../metrics/metricsManager'
@@ -21,20 +21,22 @@ import {useTokenInfo} from '../yoroi-wallets/hooks'
 
 export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const {styles, colors} = useStyles()
+
+  const ACTION_PROPS = {
+    size: 24,
+    color: String(colors.actionColor),
+  }
+
   const strings = useStrings()
+  const {isSingleAddress} = useMultipleAddresses()
   const navigateTo = useNavigateTo()
-
-  const {isSingle, addressDerivation} = useAddressDerivationManager()
-  const {next: nextReceiveAddress} = useReceiveAddressesStatus(addressDerivation)
-  const [isCopying, copy] = useCopy()
-
+  const wallet = useSelectedWallet()
   const {reset: resetSendState} = useTransfer()
   const {orderData} = useSwap()
   const {resetSwapForm} = useSwapForm()
-
   const {track} = useMetrics()
+  const {defaultAddress, selectedAddress} = useReceive()
 
-  const wallet = useSelectedWallet()
   const sellTokenInfo = useTokenInfo({
     wallet,
     tokenId: orderData.amounts.sell.tokenId,
@@ -64,27 +66,12 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
     navigateTo.swap()
   }
 
-  const handleOnExchange = () => {
+  const handleExchange = () => {
     track.walletPageExchangeClicked()
     navigateTo.exchange()
   }
 
-  const handleOnPressReceive = () => {
-    if (isSingle) {
-      navigateTo.receiveSingleAddress()
-    } else {
-      navigateTo.receiveMultipleAddresses()
-    }
-  }
-
-  const handleOnLongPressReceive = () => {
-    copy(nextReceiveAddress)
-  }
-
-  const iconProps = {
-    size: 24,
-    color: colors.actionColor,
-  }
+  const [isCopying, copy] = useCopy()
 
   return (
     <View style={styles.banner}>
@@ -102,12 +89,12 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
             <View style={styles.centralized}>
               <TouchableOpacity
                 style={styles.actionIcon}
-                onPress={handleOnPressReceive}
+                onPress={isSingleAddress ? navigateTo.receiveSingleAddress : navigateTo.receiveMultipleAddresses}
                 testID="receiveButton"
                 disabled={disabled}
-                onLongPress={handleOnLongPressReceive}
+                onLongPress={() => copy(isSingleAddress ? defaultAddress ?? '' : selectedAddress ?? '')}
               >
-                <Icon.Received {...iconProps} />
+                <Icon.Received {...ACTION_PROPS} />
               </TouchableOpacity>
 
               <Text style={styles.actionLabel}>{strings.receiveLabel}</Text>
@@ -118,7 +105,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
           <View style={styles.centralized}>
             <TouchableOpacity style={styles.actionIcon} onPress={handleOnSend} testID="sendButton" disabled={disabled}>
-              <Icon.Send {...iconProps} />
+              <Icon.Send {...ACTION_PROPS} />
             </TouchableOpacity>
 
             <Text style={styles.actionLabel}>{strings.sendLabel}</Text>
@@ -135,7 +122,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
                   testID="swapButton"
                   disabled={disabled}
                 >
-                  <Icon.Swap {...iconProps} />
+                  <Icon.Swap {...ACTION_PROPS} />
                 </TouchableOpacity>
 
                 <Text style={styles.actionLabel}>{strings.swapLabel}</Text>
@@ -146,11 +133,11 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
               <View style={styles.centralized}>
                 <TouchableOpacity
                   style={styles.actionIcon}
-                  onPress={handleOnExchange}
+                  onPress={handleExchange}
                   testID="buyButton"
                   disabled={disabled}
                 >
-                  <Icon.Exchange {...iconProps} />
+                  <Icon.Exchange {...ACTION_PROPS} />
                 </TouchableOpacity>
 
                 <Text style={styles.actionLabel}>{strings.exchange}</Text>
