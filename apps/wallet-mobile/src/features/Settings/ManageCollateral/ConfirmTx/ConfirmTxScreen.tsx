@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
@@ -9,7 +10,6 @@ import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../comp
 import {ConfirmTx} from '../../../../components/ConfirmTx'
 import globalMessages, {confirmationMessages, errorMessages, txLabels} from '../../../../i18n/global-messages'
 import {useSelectedWallet} from '../../../../SelectedWallet'
-import {COLORS} from '../../../../theme'
 import {useSetCollateralId} from '../../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
 import {useSaveMemo} from '../../../../yoroi-wallets/hooks'
 import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
@@ -23,6 +23,7 @@ import {SecondaryTotals} from './Summary/SecondaryTotals'
 
 export const ConfirmTxScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const [password, setPassword] = React.useState('')
@@ -104,23 +105,31 @@ export const ConfirmTxScreen = () => {
   )
 }
 
-const Actions = (props: ViewProps) => <View style={styles.actions} {...props} />
+const Actions = (props: ViewProps) => {
+  const styles = useStyles()
+  return <View style={styles.actions} {...props} />
+}
 
-const styles = StyleSheet.create({
-  root: {
-    backgroundColor: COLORS.WHITE,
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  actions: {
-    paddingTop: 16,
-    paddingHorizontal: 16,
-    paddingBottom: Platform.OS === 'ios' ? 25 : 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    root: {
+      backgroundColor: color.gray.min,
+      flex: 1,
+    },
+    container: {
+      flex: 1,
+      paddingHorizontal: 16,
+    },
+    actions: {
+      paddingTop: 16,
+      paddingHorizontal: 16,
+      paddingBottom: Platform.OS === 'ios' ? 25 : 16,
+    },
+  })
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()

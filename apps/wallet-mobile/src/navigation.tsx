@@ -99,15 +99,13 @@ export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = 
 export const defaultMaterialTopTabNavigationOptions = (theme: Theme): MaterialTopTabNavigationOptions => {
   return {
     tabBarStyle: {backgroundColor: theme.color.gray.min, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
-    tabBarIndicatorStyle: {backgroundColor: COLORS.SHELLEY_BLUE, height: 2},
+    tabBarIndicatorStyle: {backgroundColor: theme.color.primary[600], height: 2},
     tabBarLabelStyle: {
       textTransform: 'none',
-      fontFamily: 'Rubik-Medium',
-      fontSize: 16,
-      fontWeight: '500',
+      ...theme.typography['body-1-l-medium'],
     },
-    tabBarActiveTintColor: COLORS.SHELLEY_BLUE,
-    tabBarInactiveTintColor: COLORS.NOT_SELECTED_TAB_TEXT,
+    tabBarActiveTintColor: theme.color.primary[600],
+    tabBarInactiveTintColor: theme.color.gray[600],
   }
 }
 

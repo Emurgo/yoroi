@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -35,6 +36,7 @@ const iconProps = {
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
+  const styles = useStyles()
   const {resetToWalletSelection} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
@@ -343,13 +345,18 @@ const useStrings = () => {
   }
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  settings: {
-    flex: 1,
-    padding: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    settings: {
+      flex: 1,
+      padding: 16,
+    },
+  })
+  return styles
+}
