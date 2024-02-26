@@ -1,6 +1,6 @@
 import {isNameServer, isResolvableDomain} from '@yoroi/resolver'
 import {Balance, Chain, Resolver, Transfer} from '@yoroi/types'
-import {castDraft, freeze, produce} from 'immer'
+import {castDraft, produce} from 'immer'
 
 export const combinedReducers = (
   state: TransferState,
@@ -33,8 +33,6 @@ const transferReducer = (state: TransferState, action: TransferAction) => {
         draft.selectedTokenId = defaultTransferState.selectedTokenId
         draft.memo = defaultTransferState.memo
         draft.unsignedTx = castDraft(defaultTransferState.unsignedTx)
-        draft.selectedTargetIndex = defaultTransferState.selectedTargetIndex
-        draft.targets = defaultTransferState.targets
         break
     }
   })
@@ -134,29 +132,26 @@ const targetsReducer = (state: TransferState, action: TargetAction) => {
   })
 }
 
-export const defaultTransferState: TransferState = freeze(
-  {
-    selectedTargetIndex: 0,
-    selectedTokenId: '',
-    unsignedTx: undefined,
-    memo: '',
-    targets: [
-      {
-        receiver: {
-          resolve: '',
-          as: 'address',
-          selectedNameServer: undefined,
-          addressRecords: undefined,
-        },
-        entry: {
-          address: '',
-          amounts: {},
-        },
+export const defaultTransferState: TransferState = {
+  selectedTargetIndex: 0,
+  selectedTokenId: '',
+  unsignedTx: undefined,
+  memo: '',
+  targets: [
+    {
+      receiver: {
+        resolve: '',
+        as: 'address',
+        selectedNameServer: undefined,
+        addressRecords: undefined,
       },
-    ],
-  },
-  true,
-)
+      entry: {
+        address: '',
+        amounts: {},
+      },
+    },
+  ],
+} as const
 
 const defaultTargetActions: TargetActions = {
   amountChanged: missingInit,
