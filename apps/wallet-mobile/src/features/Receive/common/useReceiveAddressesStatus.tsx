@@ -9,7 +9,7 @@ type ReceiveAddressesStatus = {
   unused: string[]
   next: string
 }
-export const useReceiveAddressesStatus = (addressDerivation: AddressDerivation): ReceiveAddressesStatus => {
+export const useReceiveAddressesStatus = (addressDerivation: AddressDerivation): Readonly<ReceiveAddressesStatus> => {
   const wallet = useSelectedWallet()
   const receiveAddresses = useReceiveAddresses(wallet)
 

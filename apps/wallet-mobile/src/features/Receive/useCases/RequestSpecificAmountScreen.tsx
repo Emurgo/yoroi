@@ -29,7 +29,7 @@ export const RequestSpecificAmountScreen = () => {
   const {openModal} = useModal()
   const modalTitle = isSingle ? strings.singleAddress : strings.multipleAdress
 
-  const generateLink = React.useCallback(() => {
+  const handleOnGenerateLink = React.useCallback(() => {
     Keyboard.dismiss()
 
     openModal(modalTitle, <Modal amount={amount} address={selectedAddress} />, modalHeight)
@@ -65,7 +65,7 @@ export const RequestSpecificAmountScreen = () => {
 
             <Button
               shelleyTheme
-              onPress={generateLink}
+              onPress={handleOnGenerateLink}
               disabled={!hasAmount}
               title={strings.generateLink}
               style={styles.button}
@@ -82,10 +82,8 @@ export const RequestSpecificAmountScreen = () => {
 const Modal = ({amount, address}: {amount: string; address: string}) => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const wallet = useSelectedWallet()
-  const [isCopying, copy] = useCopy()
-  const cardanoLinks = linksCardanoModuleMaker()
 
+  const cardanoLinks = linksCardanoModuleMaker()
   const requestData = cardanoLinks.create({
     config: configCardanoLegacyTransfer,
     params: {
@@ -94,16 +92,19 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
     },
   })
 
-  const hasAmount = amount.length > 0
+  const {primaryTokenInfo} = useSelectedWallet()
+  const hasAmount = !isEmptyString(amount)
+  const hasAddress = !isEmptyString(address)
   const content = hasAmount ? requestData.link : address
-  const title = hasAmount ? `${amount} ${wallet.primaryTokenInfo.ticker?.toLocaleUpperCase()}` : ''
+  const title = hasAmount ? `${amount} ${primaryTokenInfo.ticker?.toLocaleUpperCase()}` : ''
 
+  const [isCopying, copy] = useCopy()
   const handOnCopy = () => copy(content)
 
   return (
     <View style={styles.root}>
       <ScrollView>
-        {address.length > 0 ? (
+        {hasAddress ? (
           <ShareQRCodeCard title={title} content={content} onLongPress={handOnCopy} />
         ) : (
           <View style={styles.root}>
@@ -117,7 +118,7 @@ const Modal = ({amount, address}: {amount: string; address: string}) => {
       <Button
         shelleyTheme
         onPress={handOnCopy}
-        disabled={amount === ''}
+        disabled={!hasAmount}
         title={strings.copyLinkBtn}
         iconImage={require('../../../assets/img/copy.png')}
         isCopying={isCopying}
