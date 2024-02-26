@@ -12,32 +12,24 @@ import {Spacer, Text} from '../../../../components'
 import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 import {useStrings} from '../useStrings'
 
-type ShareProps = {
-  address?: string
-  title?: string
-  addressDetails?: AddressDetailsProps
+type ShareQRCodeCardProps = {
+  content: string
+  title: string
   isCopying?: boolean
-  onLongPress?: () => void
-  amount?: string
+  onLongPress: () => void
 }
 
-type AddressDetailsProps = {
-  address: string
-  stakingHash?: string
-  spendingHash?: string
-  title?: string
-}
-
-export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareProps) => {
-  const [isSharing, setIsSharing] = React.useState<boolean>(false)
+export const ShareQRCodeCard = ({content, title, isCopying, onLongPress}: ShareQRCodeCardProps) => {
   const strings = useStrings()
-  const ref: React.RefObject<ViewShot> = React.useRef(null)
   const {styles, colors} = useStyles()
 
-  const shareImage = () => {
+  const [isSharing, setIsSharing] = React.useState(false)
+  const ref: React.RefObject<ViewShot> = React.useRef(null)
+
+  const handleOnPressShare = () => {
     setIsSharing(true)
   }
-
+  const message = `${strings.address} ${content}`
   React.useEffect(() => {
     if (isSharing) {
       const captureAndShare = async () => {
@@ -50,17 +42,17 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
         })
 
         setIsSharing(false)
-        await Share.open({url: uri, filename: strings.shareLabel, message: `${strings.address} ${address}`})
+        await Share.open({url: uri, filename: strings.shareLabel, message})
       }
 
       captureAndShare()
     }
-  }, [address, isSharing, strings.address, strings.shareLabel])
+  }, [isSharing, strings.address, strings.shareLabel, content, message])
 
   if (isSharing)
     return (
       <ViewShot ref={ref}>
-        <CaptureShareQRCodeCard address={address} />
+        <CaptureShareQRCodeCard content={content} />
       </ViewShot>
     )
 
@@ -79,15 +71,15 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
 
           <View style={styles.addressContainer}>
             <View style={styles.qrCode}>
-              <QRCode value={address} size={158} backgroundColor={colors.white} color={colors.black} />
+              <QRCode value={content} size={158} backgroundColor={colors.white} color={colors.black} />
             </View>
 
             <Spacer height={16} />
 
-            <Text style={styles.textAddress}>{address}</Text>
+            <Text style={styles.textAddress}>{content}</Text>
           </View>
 
-          <TouchableOpacity activeOpacity={0.5} onPress={shareImage} onLongPress={onLongPress}>
+          <TouchableOpacity activeOpacity={0.5} onPress={handleOnPressShare} onLongPress={onLongPress}>
             <Text style={styles.textShareAddress}>{strings.shareLabel}</Text>
           </TouchableOpacity>
         </View>
@@ -103,7 +95,7 @@ export const ShareQRCodeCard = ({address, title, isCopying, onLongPress}: ShareP
 }
 
 const useStyles = () => {
-  const SCREEN_WIDTH = useWindowDimensions().width
+  const screenWidth = useWindowDimensions().width
   const {theme} = useTheme()
   const {color, typography} = theme
 
@@ -118,7 +110,7 @@ const useStyles = () => {
     },
     card: {
       borderRadius: 16,
-      width: SCREEN_WIDTH - 34,
+      width: screenWidth - 34,
       alignItems: 'center',
       maxHeight: 458,
       flex: 1,

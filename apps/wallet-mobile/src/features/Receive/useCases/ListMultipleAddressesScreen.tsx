@@ -7,78 +7,81 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Spacer, useModal} from '../../../components'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
-import {useMultipleAddressesModal} from '../common/multipleAddressesModal'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
-import {useAddresses} from '../common/useAddresses'
+import {useAddressDerivationManager} from '../common/useAddressDerivationManager'
+import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
+import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
 import {useStrings} from '../common/useStrings'
 import {QRs} from '../illustrations/QRs'
 
 type AddressInfo = {
-  isUsed: boolean
+  isUsed?: boolean
   address: string
 }
 
-export const MultipleAddressesScreen = () => {
+export const ListMultipleAddressesScreen = () => {
   const strings = useStrings()
   const {styles} = useStyles()
-  const addresses = useAddresses()
-  const {currentAddressChanged} = useReceive()
   const wallet = useSelectedWallet()
-
-  const {modalInfo} = useMultipleAddressesModal()
-  const mappedAddresses = mapAddresses(addresses)
   const navigate = useNavigateTo()
 
-  const {openModal} = useModal()
-
+  const {addressDerivation} = useAddressDerivationManager()
+  const addresses = useReceiveAddressesStatus(addressDerivation)
+  const {selectedAddressChanged} = useReceive()
   React.useEffect(() => {
-    modalInfo === false && openModal(strings.multiplePresentation, <Modal />, modalHeight)
-  }, [modalInfo, openModal, strings.multiplePresentation])
+    wallet.generateNewReceiveAddressIfNeeded()
+  }, [wallet])
 
-  const renderItem = React.useCallback(
+  const {openModal} = useModal()
+  const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
+  React.useEffect(() => {
+    isShowingMultipleAddressInfo && openModal(strings.multiplePresentation, <Modal />, modalHeight)
+  }, [isShowingMultipleAddressInfo, openModal, strings.multiplePresentation])
+
+  const addressInfos = toAddressInfos(addresses)
+  const hasReachedGapLimit = addresses.unused.length >= BIP32_HD_GAP_LIMIT
+
+  const renderAddressInfo = React.useCallback(
     ({item}: {item: AddressInfo}) => (
       <SmallAddressCard
         address={item.address}
         isUsed={item.isUsed}
         onPress={() => {
-          currentAddressChanged(item?.address)
-          navigate.receiceDetails()
+          selectedAddressChanged(item.address)
+          navigate.receiveDetails()
         }}
-        // date={mocks.usedAddressDate}  // TODO don't have the date??
+        // date={}  // TODO define with project
       />
     ),
-    [navigate, currentAddressChanged],
+    [navigate, selectedAddressChanged],
   )
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      {mappedAddresses.length >= BIP32_HD_GAP_LIMIT && (
+      {hasReachedGapLimit && (
         <>
-          <ShowAddressLimitInfo onLimit={true} />
+          <ShowAddressLimitInfo />
 
           <Spacer height={16} />
         </>
       )}
 
       <Animated.FlatList
-        data={mappedAddresses}
-        keyExtractor={(_, i) => String(i)}
-        renderItem={renderItem}
+        data={addressInfos}
+        keyExtractor={(addressInfo) => addressInfo.address}
+        renderItem={renderAddressInfo}
         layout={Layout}
         showsVerticalScrollIndicator={false}
       />
 
-      <Animated.View
-        style={[styles.footer, {display: mappedAddresses.length >= BIP32_HD_GAP_LIMIT ? 'none' : 'flex'}]}
-        layout={Layout}
-      >
+      <Animated.View style={[styles.footer, {display: hasReachedGapLimit ? 'none' : 'flex'}]} layout={Layout}>
         <Button
           shelleyTheme
           title={strings.generateButton}
-          disabled={mappedAddresses.length >= BIP32_HD_GAP_LIMIT}
+          disabled={hasReachedGapLimit}
           onPress={() => wallet.generateNewReceiveAddress()}
           style={styles.button}
         />
@@ -91,8 +94,14 @@ const modalHeight = 520
 const Modal = () => {
   const {styles, colors} = useStyles()
   const strings = useStrings()
-  const {hideMultipleAddressesModal} = useMultipleAddressesModal()
+
+  const {hideMultipleAddressesInfo} = useMultipleAddressesInfo()
+
   const {closeModal} = useModal()
+  const handleOnCloseModal = () => {
+    hideMultipleAddressesInfo()
+    closeModal()
+  }
 
   return (
     <View style={styles.modal}>
@@ -103,15 +112,7 @@ const Modal = () => {
       <Spacer fill />
 
       <View style={styles.buttonContainer}>
-        <Button
-          shelleyTheme
-          title={strings.ok}
-          onPress={() => {
-            hideMultipleAddressesModal()
-            closeModal()
-          }}
-          style={styles.button}
-        />
+        <Button shelleyTheme title={strings.ok} onPress={handleOnCloseModal} style={styles.button} />
       </View>
 
       <Spacer height={24} />
@@ -159,7 +160,7 @@ const useStyles = () => {
   return {styles, colors} as const
 }
 
-const mapAddresses = (addresses: {unused: string[]; used: string[]}): AddressInfo[] => {
+const toAddressInfos = (addresses: {unused: string[]; used: string[]}): AddressInfo[] => {
   const unusedAddresses = addresses.unused.map((address) => ({
     address,
     isUsed: false,
