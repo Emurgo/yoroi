@@ -9,7 +9,8 @@ import Animated, {FadeInDown, FadeOutDown, Layout} from 'react-native-reanimated
 
 import {useCopy} from '../../src/legacy/useCopy'
 import {Icon, Spacer, Text} from '../components'
-import {useAddressDerivationManager} from '../features/Receive/common/useAddressDerivationManager'
+import {useReceive} from '../features/Receive/common/ReceiveProvider'
+import {useAddressModeManager} from '../features/Receive/common/useAddressModeManager'
 import {useReceiveAddressesStatus} from '../features/Receive/common/useReceiveAddressesStatus'
 import {messages as receiveMessages} from '../features/Receive/common/useStrings'
 import {useSwapForm} from '../features/Swap/common/SwapFormProvider'
@@ -24,8 +25,9 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
 
-  const {isSingle, addressDerivation} = useAddressDerivationManager()
-  const {next: nextReceiveAddress} = useReceiveAddressesStatus(addressDerivation)
+  const {isSingle, addressMode} = useAddressModeManager()
+  const {next: nextReceiveAddress} = useReceiveAddressesStatus(addressMode)
+  const {selectedAddressChanged} = useReceive()
   const [isCopying, copy] = useCopy()
 
   const {reset: resetSendState} = useTransfer()
@@ -71,6 +73,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
 
   const handleOnPressReceive = () => {
     if (isSingle) {
+      selectedAddressChanged(nextReceiveAddress)
       navigateTo.receiveSingleAddress()
     } else {
       navigateTo.receiveMultipleAddresses()

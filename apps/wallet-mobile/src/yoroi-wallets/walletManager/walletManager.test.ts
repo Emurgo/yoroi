@@ -22,8 +22,16 @@ describe('walletMananger', () => {
     ].join(' ')
     const networkId = 300
     const walletImplementationId = 'haskell-shelley'
+    const addressMode = 'single'
 
-    const wallet = await walletManager.createWallet(name, mnemonic, 'password', networkId, walletImplementationId)
+    const wallet = await walletManager.createWallet(
+      name,
+      mnemonic,
+      'password',
+      networkId,
+      walletImplementationId,
+      addressMode,
+    )
     expect(isYoroiWallet(wallet)).toBe(true)
 
     before: {
@@ -86,6 +94,7 @@ describe('walletMananger', () => {
       '1ba2332dca14d6f1f5a5282512e725852a34d3aee1cc26057e9cfb2c2730f1665934fa0b0fa42e16ded504fa81198e45dc22d10dab69398e730542a198dcbfcf'
     const networkId = 300
     const walletImplementationId = 'haskell-shelley'
+    const addressMode = 'single'
 
     const wallet = await walletManager.createWalletWithBip44Account(
       name,
@@ -94,6 +103,7 @@ describe('walletMananger', () => {
       walletImplementationId,
       null,
       true,
+      addressMode,
     )
     expect(isYoroiWallet(wallet)).toBe(true)
 
@@ -127,6 +137,7 @@ describe('walletMananger', () => {
         vendor: 'ledger.com',
       },
     }
+    const addressMode = 'single'
 
     const wallet = await walletManager.createWalletWithBip44Account(
       name,
@@ -135,6 +146,7 @@ describe('walletMananger', () => {
       walletImplementationId,
       hwDeviceInfo,
       true,
+      addressMode,
     )
     expect(isYoroiWallet(wallet)).toBe(true)
 

@@ -12,7 +12,7 @@ import {BIP32_HD_GAP_LIMIT} from '../common/contants'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShowAddressLimitInfo} from '../common/ShowAddressLimitInfo/ShowAddressLimitInfo'
 import {SmallAddressCard} from '../common/SmallAddressCard/SmallAddressCard'
-import {useAddressDerivationManager} from '../common/useAddressDerivationManager'
+import {useAddressModeManager} from '../common/useAddressModeManager'
 import {useMultipleAddressesInfo} from '../common/useMultipleAddressesInfo'
 import {useNavigateTo} from '../common/useNavigateTo'
 import {useReceiveAddressesStatus} from '../common/useReceiveAddressesStatus'
@@ -31,8 +31,8 @@ export const ListMultipleAddressesScreen = () => {
   const navigate = useNavigateTo()
   const {track} = useMetrics()
 
-  const {addressDerivation} = useAddressDerivationManager()
-  const addresses = useReceiveAddressesStatus(addressDerivation)
+  const {addressMode} = useAddressModeManager()
+  const addresses = useReceiveAddressesStatus(addressMode)
   const {selectedAddressChanged} = useReceive()
 
   React.useEffect(() => {

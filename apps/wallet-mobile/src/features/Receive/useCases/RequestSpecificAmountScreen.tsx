@@ -14,7 +14,7 @@ import {editedFormatter} from '../../../yoroi-wallets/utils'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
-import {useAddressDerivationManager} from '../common/useAddressDerivationManager'
+import {useAddressModeManager} from '../common/useAddressModeManager'
 import {useStrings} from '../common/useStrings'
 
 export const RequestSpecificAmountScreen = () => {
@@ -25,7 +25,7 @@ export const RequestSpecificAmountScreen = () => {
   const hasAmount = !isEmptyString(amount)
 
   const {selectedAddress} = useReceive()
-  const {isSingle} = useAddressDerivationManager()
+  const {isSingle} = useAddressModeManager()
 
   const screenHeight = useWindowDimensions().height
   const modalHeight = (screenHeight / 100) * 80

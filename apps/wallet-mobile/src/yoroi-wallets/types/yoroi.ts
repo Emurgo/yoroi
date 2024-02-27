@@ -5,6 +5,8 @@ import {CardanoTypes, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
 import {WalletMeta} from '../walletManager'
 
+export type AddressMode = 'single' | 'multiple'
+
 export type YoroiUnsignedTx = YoroiTxInfo & {
   unsignedTx: CardanoTypes.UnsignedTx
 }

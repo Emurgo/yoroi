@@ -135,6 +135,7 @@ export const DeveloperScreen = () => {
               networkId: Number(config['WALLET_1_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
+              addressMode: 'multiple',
             })
           }
           testID="btnRestoreWallet1"
@@ -151,6 +152,7 @@ export const DeveloperScreen = () => {
               networkId: Number(config['WALLET_2_NETWORK_ID'] ?? 300) as NetworkId,
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
+              addressMode: 'multiple',
             })
           }
           testID="btnRestoreWallet2"
@@ -167,6 +169,7 @@ export const DeveloperScreen = () => {
               networkId: 1,
               password: '1234567890',
               walletImplementationId: 'haskell-shelley',
+              addressMode: 'single',
             })
           }
           title="RO Mainnet For Forced Addresses"

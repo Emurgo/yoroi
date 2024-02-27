@@ -27,6 +27,7 @@ import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
 import {parseWalletMeta} from '../migrations/walletMeta'
 import {
+  AddressMode,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   YoroiNftModerationStatus,
@@ -727,12 +728,13 @@ type CreateBip44WalletInfo = {
   implementationId: WalletImplementationId
   hwDeviceInfo?: null | HWDeviceInfo
   readOnly: boolean
+  addressMode: AddressMode
 }
 
 export const useCreateBip44Wallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateBip44WalletInfo>) => {
   const walletManager = useWalletManager()
   const mutation = useMutationWithInvalidations<YoroiWallet, Error, CreateBip44WalletInfo>({
-    mutationFn: ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly}) =>
+    mutationFn: ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly, addressMode}) =>
       walletManager.createWalletWithBip44Account(
         name,
         bip44AccountPublic,
@@ -740,6 +742,7 @@ export const useCreateBip44Wallet = (options?: UseMutationOptions<YoroiWallet, E
         implementationId,
         hwDeviceInfo || null,
         readOnly,
+        addressMode,
       ),
     invalidateQueries: [['walletMetas']],
     ...options,
@@ -757,13 +760,14 @@ export type CreateWalletInfo = {
   password: string
   networkId: NetworkId
   walletImplementationId: WalletImplementationId
+  addressMode: AddressMode
 }
 
 export const useCreateWallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateWalletInfo>) => {
   const walletManager = useWalletManager()
   const mutation = useMutationWithInvalidations({
-    mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId}) =>
-      walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId),
+    mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId, addressMode}) =>
+      walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId, addressMode),
     invalidateQueries: [['walletMetas']],
     ...options,
   })

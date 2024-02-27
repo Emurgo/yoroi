@@ -12,7 +12,10 @@ import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {useCreateWallet} from '../../yoroi-wallets/hooks'
+import {AddressMode} from '../../yoroi-wallets/types/yoroi'
 
+// when creating, later will be part of the onboarding
+const addressMode: AddressMode = 'single'
 export const MnemonicCheckScreen = () => {
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
@@ -70,7 +73,9 @@ export const MnemonicCheckScreen = () => {
       <View style={styles.buttons}>
         <Button
           block
-          onPress={() => createWallet({name, mnemonicPhrase: mnemonic, password, networkId, walletImplementationId})}
+          onPress={() =>
+            createWallet({name, mnemonicPhrase: mnemonic, password, networkId, walletImplementationId, addressMode})
+          }
           disabled={!isPhraseComplete || !isPhraseValid || isLoading || isSuccess}
           title={strings.confirmButton}
           style={styles.confirmButton}

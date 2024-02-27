@@ -4,6 +4,7 @@ import {App} from '@yoroi/types'
 import ExtendableError from 'es6-error'
 import uuid from 'uuid'
 
+import {saveAddressMode} from '../../features/Receive/common/storage'
 import {getCardanoWalletFactory} from '../cardano/getWallet'
 import {CardanoTypes, isYoroiWallet, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
@@ -12,7 +13,7 @@ import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../migrations/w
 import {makeWalletEncryptedStorage} from '../storage'
 import {Keychain} from '../storage/Keychain'
 import {rootStorage} from '../storage/rootStorage'
-import {NetworkId, WalletImplementationId} from '../types'
+import {AddressMode, NetworkId, WalletImplementationId} from '../types'
 
 export class WalletClosed extends ExtendableError {}
 
@@ -198,16 +199,21 @@ export class WalletManager {
     password: string,
     networkId: NetworkId,
     implementationId: WalletImplementationId,
+    addressMode: AddressMode,
   ) {
     const walletFactory = getWalletFactory({networkId, implementationId})
     const id = uuid.v4()
+    const storage = this.storage.join(`${id}/`)
 
     const wallet = await walletFactory.create({
-      storage: this.storage.join(`${id}/`),
+      storage,
       id,
       mnemonic,
       password,
     })
+
+    // created new wallets default to single address mode
+    await saveAddressMode(storage)(addressMode)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId)
   }
@@ -219,19 +225,22 @@ export class WalletManager {
     implementationId: WalletImplementationId,
     hwDeviceInfo: null | HWDeviceInfo,
     isReadOnly: boolean,
+    addressMode: AddressMode,
   ) {
     const walletFactory = getWalletFactory({networkId, implementationId})
     const id = uuid.v4()
+    const storage = this.storage.join(`${id}/`)
 
     const wallet = await walletFactory.createBip44({
-      storage: this.storage.join(`${id}/`),
+      storage,
       id,
       accountPubKeyHex,
       hwDeviceInfo,
       isReadOnly,
     })
 
-    Logger.debug('creating wallet...', wallet)
+    // created new wallets default to single address mode
+    await saveAddressMode(storage)(addressMode)
 
     return this.saveWallet(id, name, wallet, networkId, implementationId)
   }

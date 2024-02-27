@@ -11,8 +11,11 @@ import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {useCreateWallet} from '../../yoroi-wallets/hooks'
+import {AddressMode} from '../../yoroi-wallets/types/yoroi'
 import {WalletForm} from '../WalletForm'
 
+// when restoring, later will be part of the onboarding
+const addressMode: AddressMode = 'multiple'
 export const WalletCredentialsScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const {track} = useMetrics()
@@ -41,7 +44,7 @@ export const WalletCredentialsScreen = () => {
           isLoading || isSuccess
             ? NOOP
             : ({name, password}) =>
-                createWallet({name, password, mnemonicPhrase: phrase, networkId, walletImplementationId})
+                createWallet({name, password, mnemonicPhrase: phrase, networkId, walletImplementationId, addressMode})
         }
       />
 

@@ -2,18 +2,18 @@ import * as React from 'react'
 
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {useReceiveAddresses} from '../../../yoroi-wallets/hooks'
-import {AddressDerivation} from './useAddressDerivationManager'
+import {AddressMode} from '../../../yoroi-wallets/types/yoroi'
 
 type ReceiveAddressesStatus = {
   used: string[]
   unused: string[]
   next: string
 }
-export const useReceiveAddressesStatus = (addressDerivation: AddressDerivation): Readonly<ReceiveAddressesStatus> => {
+export const useReceiveAddressesStatus = (addressMode: AddressMode): Readonly<ReceiveAddressesStatus> => {
   const wallet = useSelectedWallet()
   const receiveAddresses = useReceiveAddresses(wallet)
 
-  const isSingle = addressDerivation === 'single'
+  const isSingle = addressMode === 'single'
   const singleAddress = receiveAddresses[0]
 
   return React.useMemo(() => {

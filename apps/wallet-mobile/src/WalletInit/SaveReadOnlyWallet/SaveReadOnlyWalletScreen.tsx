@@ -14,10 +14,12 @@ import {isEmptyString} from '../../utils/utils'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {NUMBERS} from '../../yoroi-wallets/cardano/numbers'
 import {useCreateBip44Wallet, usePlate} from '../../yoroi-wallets/hooks'
-import {NetworkId} from '../../yoroi-wallets/types'
+import {AddressMode, NetworkId} from '../../yoroi-wallets/types'
 import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
 
+// when ro, later will be part of the onboarding
+const addressMode: AddressMode = 'multiple'
 export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
@@ -55,6 +57,7 @@ export const SaveReadOnlyWalletScreen = () => {
       implementationId: walletImplementationId,
       bip44AccountPublic: publicKeyHex,
       readOnly: true,
+      addressMode,
     })
   }
 
