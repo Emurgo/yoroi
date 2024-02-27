@@ -21,6 +21,12 @@
   },
   "license": "Apache-2.0",
   "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",
+  "contributors": [
+    {
+      "name": "Juliano Lazzarotto",
+      "email": "30806844+stackchain@users.noreply.github.com"
+    }
+  ],
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "source": "src/index",
