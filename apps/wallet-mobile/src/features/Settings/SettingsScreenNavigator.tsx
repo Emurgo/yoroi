@@ -190,6 +190,7 @@ const SettingsTabNavigator = () => {
 
   return (
     <Tab.Navigator
+      style={{backgroundColor: theme.color.gray.min}}
       screenOptions={({route}) => ({
         ...defaultMaterialTopTabNavigationOptions(theme),
         tabBarLabel: route.name === 'wallet-settings' ? strings.walletTabTitle : strings.appTabTitle,

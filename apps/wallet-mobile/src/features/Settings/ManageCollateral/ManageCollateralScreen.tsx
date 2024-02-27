@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Balance} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
@@ -20,7 +21,6 @@ import {AmountItem} from '../../../components/AmountItem/AmountItem'
 import {ErrorPanel} from '../../../components/ErrorPanel/ErrorPanel'
 import {SettingsStackRoutes, useUnsafeParams} from '../../../navigation'
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {COLORS} from '../../../theme'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useCollateralInfo} from '../../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 import {useSetCollateralId} from '../../../yoroi-wallets/cardano/utxoManager/useSetCollateralId'
@@ -34,6 +34,7 @@ import {useNavigateTo} from './navigation'
 import {useStrings} from './strings'
 
 export const ManageCollateralScreen = () => {
+  const {styles} = useStyles()
   const wallet = useSelectedWallet()
   const {amount, collateralId, utxo} = useCollateralInfo(wallet)
   const hasCollateral = collateralId !== '' && utxo !== undefined
@@ -184,6 +185,7 @@ type ActionableAmountProps = {
   disabled?: boolean
 }
 const ActionableAmount = ({amount, onRemove, wallet, collateralId, disabled}: ActionableAmountProps) => {
+  const {styles} = useStyles()
   const {isPrivacyOff} = usePrivacyMode()
 
   const handleRemove = () => onRemove()
@@ -210,27 +212,38 @@ const Row = ({style, ...props}: ViewProps) => (
 )
 
 export const RemoveAmountButton = ({disabled, ...props}: TouchableOpacityProps) => {
+  const {colors} = useStyles()
+
   return (
     <TouchableOpacity testID="removeAmountButton" {...props} disabled={disabled} style={{opacity: disabled ? 0.5 : 1}}>
-      <Icon.CrossCircle size={26} color={COLORS.BLACK} />
+      <Icon.CrossCircle size={26} color={colors.iconColor} />
     </TouchableOpacity>
   )
 }
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    backgroundColor: '#fff',
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  amountItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  heading: {
-    flex: 1,
-    alignSelf: 'center',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      backgroundColor: color.gray.min,
+      flex: 1,
+      paddingHorizontal: 16,
+      paddingBottom: 16,
+    },
+    amountItem: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    heading: {
+      flex: 1,
+      alignSelf: 'center',
+    },
+  })
+  const colors = {
+    iconColor: color.gray.max,
+  }
+
+  return {styles, colors}
+}

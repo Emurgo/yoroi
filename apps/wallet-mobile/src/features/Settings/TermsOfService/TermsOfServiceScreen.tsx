@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -7,6 +8,7 @@ import {useLanguage} from '../../../i18n'
 import {TermsOfService} from '../../../Legal/TermsOfService'
 
 export const TermsOfServiceScreen = () => {
+  const styles = useStyles()
   const {languageCode} = useLanguage()
 
   return (
@@ -19,12 +21,18 @@ export const TermsOfServiceScreen = () => {
     </SafeAreaView>
   )
 }
-const styles = StyleSheet.create({
-  safeAreaView: {
-    backgroundColor: '#fff',
-    flex: 1,
-  },
-  contentContainer: {
-    padding: 16,
-  },
-})
+
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      backgroundColor: color.gray.min,
+      flex: 1,
+    },
+    contentContainer: {
+      padding: 16,
+    },
+  })
+  return styles
+}

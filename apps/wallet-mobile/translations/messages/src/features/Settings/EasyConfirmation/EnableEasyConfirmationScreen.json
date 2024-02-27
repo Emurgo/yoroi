@@ -4,14 +4,14 @@
     "defaultMessage": "!!!This option will allow you to send transactions from your wallet just by confirming with fingerprint or face recognition with standard system fallback option. This makes your wallet less secure. This is a compromise between UX and security!",
     "file": "src/features/Settings/EasyConfirmation/EnableEasyConfirmationScreen.tsx",
     "start": {
-      "line": 93,
+      "line": 97,
       "column": 17,
-      "index": 3284
+      "index": 3355
     },
     "end": {
-      "line": 101,
+      "line": 105,
       "column": 3,
-      "index": 3680
+      "index": 3751
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Please remember your master password, as you may need it in case your biometrics data are removed from the device.",
     "file": "src/features/Settings/EasyConfirmation/EnableEasyConfirmationScreen.tsx",
     "start": {
-      "line": 102,
+      "line": 106,
       "column": 17,
-      "index": 3699
+      "index": 3770
     },
     "end": {
-      "line": 107,
+      "line": 111,
       "column": 3,
-      "index": 3936
+      "index": 4007
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Master password",
     "file": "src/features/Settings/EasyConfirmation/EnableEasyConfirmationScreen.tsx",
     "start": {
-      "line": 108,
+      "line": 112,
       "column": 22,
-      "index": 3960
+      "index": 4031
     },
     "end": {
-      "line": 111,
+      "line": 115,
       "column": 3,
-      "index": 4088
+      "index": 4159
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Enable",
     "file": "src/features/Settings/EasyConfirmation/EnableEasyConfirmationScreen.tsx",
     "start": {
-      "line": 112,
+      "line": 116,
       "column": 16,
-      "index": 4106
+      "index": 4177
     },
     "end": {
-      "line": 115,
+      "line": 119,
       "column": 3,
-      "index": 4217
+      "index": 4288
     }
   }
 ]
