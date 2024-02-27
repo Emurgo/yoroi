@@ -1,5 +1,5 @@
-import {banxaModuleMaker} from '@yoroi/banxa'
-import {BanxaReferralUrlQueryStringParams} from '@yoroi/banxa/lib/typescript/translators/module'
+import {banxaModuleMaker} from '@yoroi/exchange'
+import {BanxaReferralUrlQueryStringParams} from '@yoroi/exchange/lib/typescript/translators/banxa/module'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Linking, StyleSheet, useWindowDimensions, View} from 'react-native'

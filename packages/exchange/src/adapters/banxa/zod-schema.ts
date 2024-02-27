@@ -1,11 +1,11 @@
 import {z} from 'zod'
 
-import {banxaIsCoinType} from '../helpers/coin-types'
-import {banxaIsFiatType} from '../helpers/fiat-types'
-import {banxaIsPossibleCardanoAddress} from '../helpers/wallet-address'
-import {banxaIsBlockchainCode} from '../helpers/blockchain-code'
-import {banxaIsOrderType} from '../helpers/order-types'
-import {banxaIsTheme} from '../helpers/theme'
+import {banxaIsCoinType} from '../../helpers/banxa/coin-types'
+import {banxaIsFiatType} from '../../helpers/banxa/fiat-types'
+import {banxaIsPossibleCardanoAddress} from '../../helpers/banxa/wallet-address'
+import {banxaIsBlockchainCode} from '../../helpers/banxa/blockchain-code'
+import {banxaIsOrderType} from '../../helpers/banxa/order-types'
+import {banxaIsTheme} from '../../helpers/banxa/theme'
 
 export const BanxaUrlReferralQueryStringParamsSchema = z
   .object({

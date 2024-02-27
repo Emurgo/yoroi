@@ -1,4 +1,4 @@
-import {BanxaUnknownError, BanxaValidationError} from './errors'
+import {BanxaUnknownError, BanxaValidationError} from './banxa/errors'
 import {ZodError} from 'zod'
 
 /**

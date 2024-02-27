@@ -1,4 +1,4 @@
-import {banxaSupportUrl} from '@yoroi/banxa'
+import {banxaSupportUrl} from '@yoroi/exchange'
 import React from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 
