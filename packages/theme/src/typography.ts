@@ -60,18 +60,6 @@ const size: Record<string, TextStyle> = {
     fontSize: 12,
     lineHeight: 18,
   },
-  // large: {
-  //   fontSize: 16,
-  //   lineHeight: 24,
-  // },
-  // normal: {
-  //   fontSize: 14,
-  //   lineHeight: 22,
-  // },
-  // small: {
-  //   fontSize: 12,
-  //   lineHeight: 18,
-  // },
   caption: {
     fontSize: 10,
     lineHeight: 18,
