@@ -148,7 +148,6 @@ const useStyles = () => {
       color: color.gray['500'],
     },
     sectionText: {
-      fontSize: 14,
       color: color.gray['900'],
       ...typography['body-2-m-regular'],
     },

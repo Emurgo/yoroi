@@ -72,15 +72,14 @@ const messages = defineMessages({
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: color.gray.min,
     },
     heading: {
-      fontSize: 16,
-      lineHeight: 24,
+      ...typography['body-1-l-regular'],
     },
     disableSection: {
       flex: 1,

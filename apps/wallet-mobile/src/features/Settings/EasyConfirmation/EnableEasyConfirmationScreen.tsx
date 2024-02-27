@@ -121,7 +121,7 @@ const messages = defineMessages({
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -131,14 +131,12 @@ const useStyles = () => {
       padding: 16,
     },
     heading: {
-      fontSize: 16,
-      lineHeight: 24,
+      ...typography['body-1-l-regular'],
       paddingBottom: 20,
     },
     warning: {
       color: color.magenta[500],
-      fontSize: 14,
-      lineHeight: 20,
+      ...typography['body-2-m-regular'],
       paddingBottom: 20,
     },
     actions: {

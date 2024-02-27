@@ -64,7 +64,7 @@ const Subtitle = ({children}: {children: React.ReactNode}) => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     row: {
       flexDirection: 'row',
@@ -82,15 +82,12 @@ const useStyles = () => {
       flexDirection: 'column',
     },
     bodyMedium: {
-      fontFamily: 'Rubik-Medium',
       color: color.gray[900],
-      fontSize: 16,
-      lineHeight: 24,
+      ...typography['body-1-l-medium'],
     },
     bodyRegular: {
       color: color.gray[900],
-      fontSize: 12,
-      lineHeight: 18,
+      ...typography['body-3-s-regular'],
     },
   })
   const colors = {
