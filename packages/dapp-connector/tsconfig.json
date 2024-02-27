@@ -17,11 +17,12 @@
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitAny": true,
-    "alwaysStrict": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "esnext"
-  }
+    "target": "esnext",
+    "noImplicitAny": true,
+    "useUnknownInCatchVariables": true
+  },
+  "exclude": ["node_modules"]
 }
