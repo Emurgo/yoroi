@@ -86,7 +86,7 @@
       "<rootDir>/jestSetup.ts"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?(@react-native|react-native|react-native-iphone-x-helper|react-native-color-picker)/)"
+      "node_modules/(?!(jest-)?(@react-native|react-native|react-native-iphone-x-helper|react-native-color-picker|react-native-reanimated)/)"
     ]
   },
   "dependencies": {
@@ -130,6 +130,7 @@
     "@yoroi/staking": "1.5.1",
     "@yoroi/swap": "1.5.1",
     "@yoroi/theme": "^1.0.0",
+    "@yoroi/transfer": "1.0.0",
     "add": "2.0.6",
     "assert": "^2.0.0",
     "base-64": "^1.0.0",
@@ -175,11 +176,13 @@
     "react-native-reanimated": "^3.1.0",
     "react-native-safe-area-context": "^4.5.1",
     "react-native-screens": "^3.20.0",
+    "react-native-share": "^10.0.2",
     "react-native-skeleton-placeholder": "^5.2.0",
     "react-native-svg": "13.8.0",
     "react-native-tab-view": "^3.1.1",
     "react-native-timezone": "^2.3.0",
     "react-native-url-polyfill": "^2.0.0",
+    "react-native-view-shot": "^3.8.0",
     "react-native-webview": "^13.6.4",
     "react-query": "^3.39.3",
     "reselect": "^4.0.0",

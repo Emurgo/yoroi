@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useTransfer} from '@yoroi/transfer'
 import type {Balance} from '@yoroi/types'
 import * as React from 'react'
 import {useLayoutEffect} from 'react'
@@ -20,7 +21,6 @@ import {useTokenInfo, useTokenInfos} from '../../../../yoroi-wallets/hooks'
 import {YoroiEntry} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {useNavigateTo, useOverridePreviousSendTxRoute} from '../../common/navigation'
-import {useSend} from '../../common/SendContext'
 import {AddTokenButton} from './AddToken/AddToken'
 import {RemoveAmountButton} from './RemoveAmount'
 
@@ -37,7 +37,13 @@ export const ListAmountsToSendScreen = () => {
     navigation.setOptions({headerLeft: () => <ListAmountsNavigateBackButton />})
   }, [navigation])
 
-  const {targets, selectedTargetIndex, tokenSelectedChanged, amountRemoved, yoroiUnsignedTxChanged} = useSend()
+  const {
+    targets,
+    selectedTargetIndex,
+    tokenSelectedChanged,
+    amountRemoved,
+    unsignedTxChanged: yoroiUnsignedTxChanged,
+  } = useTransfer()
   const {amounts} = targets[selectedTargetIndex].entry
 
   const selectedTokensCounter = Amounts.toArray(amounts).length

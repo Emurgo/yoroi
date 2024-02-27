@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import React, {ReactElement} from 'react'
 import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
@@ -5,7 +6,6 @@ import {StyleSheet, TouchableOpacity, TouchableOpacityProps, View} from 'react-n
 import {Hr, Icon, Spacer, Text} from '../../components'
 import {formatTokenWithSymbol} from '../../legacy/format'
 import {useSelectedWallet} from '../../SelectedWallet'
-import {COLORS} from '../../theme'
 import {lightPalette} from '../../theme'
 import {useCollateralInfo} from '../../yoroi-wallets/cardano/utxoManager/useCollateralInfo'
 
@@ -16,23 +16,24 @@ type SettingsSectionProps = {
   children: React.ReactNode
 }
 
-export const SettingsSection = ({title, children}: SettingsSectionProps) => (
-  <View>
-    {title != null && (
-      <>
-        <Text style={{fontFamily: 'Rubik-Regular', color: lightPalette.gray['600'], fontSize: 14, lineHeight: 22}}>
-          {title}
-        </Text>
+export const SettingsSection = ({title, children}: SettingsSectionProps) => {
+  const {styles} = useStyles()
+  return (
+    <View>
+      {title != null && (
+        <>
+          <Text style={styles.sectionText}>{title}</Text>
 
-        <Spacer height={5} />
+          <Spacer height={5} />
 
-        <Hr />
-      </>
-    )}
+          <Hr />
+        </>
+      )}
 
-    <View>{children}</View>
-  </View>
-)
+      <View>{children}</View>
+    </View>
+  )
+}
 
 type SettingsItemProps = {
   label: string
@@ -42,48 +43,35 @@ type SettingsItemProps = {
   info?: string
 }
 
-export const SettingsItem = ({label, children, disabled, icon, info}: SettingsItemProps) => (
-  <View>
-    <View style={styles.itemInner}>
-      <View style={styles.itemMainContent}>
-        {icon}
+export const SettingsItem = ({label, children, disabled, icon, info}: SettingsItemProps) => {
+  const {styles} = useStyles()
 
-        {icon && <Spacer width={10} />}
+  return (
+    <View>
+      <View style={styles.itemInner}>
+        <View style={styles.itemMainContent}>
+          {icon}
 
-        <Text
-          style={[
-            styles.label,
-            {fontFamily: 'Rubik-Medium', color: lightPalette.gray['900'], fontSize: 16, lineHeight: 24},
-            disabled && styles.disabled,
-          ]}
-        >
-          {label}
-        </Text>
+          {icon && <Spacer width={10} />}
 
-        <View>{children}</View>
+          <Text style={[styles.label, styles.itemText, disabled && styles.disabled]}>{label}</Text>
+
+          <View>{children}</View>
+        </View>
+
+        {!_.isNil(info) && (
+          <>
+            <Spacer height={12} />
+
+            <Text style={styles.itemTextIsNil}>{info}</Text>
+          </>
+        )}
       </View>
 
-      {!_.isNil(info) && (
-        <>
-          <Spacer height={12} />
-
-          <Text
-            style={{
-              fontFamily: 'Rubik-Regular',
-              color: lightPalette.gray['600'],
-              fontSize: 12,
-              lineHeight: 18,
-            }}
-          >
-            {info}
-          </Text>
-        </>
-      )}
+      <Hr />
     </View>
-
-    <Hr />
-  </View>
-)
+  )
+}
 type NavigatedSettingsItemProps = {
   label: string
   onNavigate: () => void
@@ -93,22 +81,12 @@ type NavigatedSettingsItemProps = {
 }
 
 export const NavigatedSettingsItem = ({label, onNavigate, icon, disabled, selected}: NavigatedSettingsItemProps) => {
+  const {styles} = useStyles()
   return (
     <Touchable onPress={onNavigate} disabled={disabled}>
       <SettingsItem icon={icon} label={label} disabled={disabled}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          {!_.isNil(selected) && (
-            <Text
-              style={{
-                fontFamily: 'Rubik-Regular',
-                color: lightPalette.gray['500'],
-                fontSize: 16,
-                lineHeight: 24,
-              }}
-            >
-              {selected}
-            </Text>
-          )}
+          {!_.isNil(selected) && <Text style={styles.navigationItem}>{selected}</Text>}
 
           <Spacer width={16} />
 
@@ -131,6 +109,7 @@ export const SettingsBuildItem = ({label, value}: SettingsBuildItemProps) => (
 )
 
 export const SettingsCollateralItem = ({label, onNavigate, icon, disabled}: NavigatedSettingsItemProps) => {
+  const {styles, colors} = useStyles()
   const wallet = useSelectedWallet()
   const {amount} = useCollateralInfo(wallet)
 
@@ -139,29 +118,56 @@ export const SettingsCollateralItem = ({label, onNavigate, icon, disabled}: Navi
   return (
     <Touchable onPress={onNavigate} disabled={disabled}>
       <SettingsItem label={label} icon={icon}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={styles.row}>
           <Text secondary>{formattedAmount}</Text>
 
-          <Icon.Chevron direction="right" size={28} color={lightPalette.gray['600']} />
+          <Icon.Chevron direction="right" size={28} color={colors.iconColor} />
         </View>
       </SettingsItem>
     </Touchable>
   )
 }
 
-const styles = StyleSheet.create({
-  itemInner: {
-    paddingVertical: 16,
-  },
-  itemMainContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  label: {
-    flex: 1,
-  },
-  disabled: {
-    color: COLORS.DISABLED,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+
+  const styles = StyleSheet.create({
+    itemInner: {
+      paddingVertical: 16,
+    },
+    itemMainContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    label: {
+      flex: 1,
+    },
+    disabled: {
+      color: color.gray['500'],
+    },
+    sectionText: {
+      color: color.gray['900'],
+      ...typography['body-2-m-regular'],
+    },
+    itemText: {
+      color: color.gray['900'],
+      ...typography['body-1-l-medium'],
+    },
+    itemTextIsNil: {
+      color: color.gray['600'],
+      ...typography['body-3-s-regular'],
+    },
+    navigationItem: {
+      color: color.gray['500'],
+      ...typography['body-1-l-regular'],
+    },
+    row: {flexDirection: 'row', alignItems: 'center'},
+  })
+
+  const colors = {
+    iconColor: color.gray['600'],
+  }
+  return {styles, colors}
+}

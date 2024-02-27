@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
@@ -9,7 +10,6 @@ import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {showErrorDialog} from '../../../dialogs'
 import {errorMessages} from '../../../i18n/global-messages'
 import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../SelectedWallet'
-import {COLORS} from '../../../theme'
 import {isEmptyString} from '../../../utils/utils'
 import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
 import {useEnableEasyConfirmation} from '../../../yoroi-wallets/hooks'
@@ -17,6 +17,7 @@ import {useEnableEasyConfirmation} from '../../../yoroi-wallets/hooks'
 export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
+  const styles = useStyles()
   const navigation = useNavigation()
   const [rootPassword, setRootPassword] = React.useState('')
   const walletMeta = useSelectedWalletMeta()
@@ -76,7 +77,10 @@ export const EnableEasyConfirmationScreen = () => {
 
 const PasswordInput = TextInput
 
-const Actions = ({children}: ViewProps) => <View style={styles.actions}>{children}</View>
+const Actions = ({children}: ViewProps) => {
+  const styles = useStyles()
+  return <View style={styles.actions}>{children}</View>
+}
 
 const useStrings = () => {
   const intl = useIntl()
@@ -115,27 +119,31 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  contentContainer: {
-    padding: 16,
-  },
-  heading: {
-    fontSize: 16,
-    lineHeight: 24,
-    paddingBottom: 20,
-  },
-  warning: {
-    color: COLORS.RED,
-    fontSize: 14,
-    lineHeight: 20,
-    paddingBottom: 20,
-  },
-  actions: {
-    paddingBottom: 16,
-    paddingHorizontal: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    contentContainer: {
+      padding: 16,
+    },
+    heading: {
+      ...typography['body-1-l-regular'],
+      paddingBottom: 20,
+    },
+    warning: {
+      color: color.magenta[500],
+      ...typography['body-2-m-regular'],
+      paddingBottom: 20,
+    },
+    actions: {
+      paddingBottom: 16,
+      paddingHorizontal: 16,
+    },
+  })
+
+  return styles
+}

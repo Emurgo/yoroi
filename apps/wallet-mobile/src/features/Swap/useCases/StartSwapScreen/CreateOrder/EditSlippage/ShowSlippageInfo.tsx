@@ -1,13 +1,14 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 
 import {Icon, Spacer, useModal} from '../../../../../../components'
-import {COLORS} from '../../../../../../theme'
 import {useStrings} from '../../../../common/strings'
 
 export const ShowSlippageInfo = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const {openModal} = useModal()
 
   return (
@@ -27,21 +28,23 @@ export const ShowSlippageInfo = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  label: {
-    fontSize: 16,
-    color: COLORS.TEXT_INPUT,
-    fontFamily: 'Rubik',
-  },
-  sheetContent: {
-    fontFamily: 'Rubik',
-    fontWeight: '400',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#242838',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    label: {
+      ...typography['body-1-l-regular'],
+      color: color.gray[600],
+    },
+    sheetContent: {
+      ...typography['body-1-l-regular'],
+      color: color.gray[900],
+    },
+  })
+
+  return styles
+}

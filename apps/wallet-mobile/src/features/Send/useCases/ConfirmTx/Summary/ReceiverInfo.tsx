@@ -58,11 +58,11 @@ const useStyles = () => {
   const {typography, color} = theme
   const styles = StyleSheet.create({
     label: {
-      ...typography['body-2-regular'],
+      ...typography['body-2-m-regular'],
       color: color.gray[900],
     },
     value: {
-      ...typography['body-1-regular'],
+      ...typography['body-1-l-regular'],
       color: color.gray[900],
     },
   })

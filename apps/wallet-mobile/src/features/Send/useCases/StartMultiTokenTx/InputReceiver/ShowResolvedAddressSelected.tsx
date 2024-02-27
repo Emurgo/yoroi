@@ -1,14 +1,14 @@
 import {nameServerName} from '@yoroi/resolver'
+import {useTransfer} from '@yoroi/transfer'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Spacer} from '../../../../../components'
-import {useSend} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 
 export const ShowResolvedAddressSelected = () => {
   const strings = useStrings()
-  const {targets, selectedTargetIndex} = useSend()
+  const {targets, selectedTargetIndex} = useTransfer()
   const {selectedNameServer} = targets[selectedTargetIndex].receiver
   const {address} = targets[selectedTargetIndex].entry
 

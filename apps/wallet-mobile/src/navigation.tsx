@@ -1,9 +1,15 @@
 import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-tabs'
-import {NavigatorScreenParams, useNavigation, useRoute} from '@react-navigation/native'
+import {
+  getFocusedRouteNameFromRoute,
+  NavigatorScreenParams,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native'
 import {StackNavigationOptions, StackNavigationProp} from '@react-navigation/stack'
 import {Theme, useTheme} from '@yoroi/theme'
 import React from 'react'
-import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps} from 'react-native'
+import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
 
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
@@ -54,7 +60,7 @@ export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOpti
       backgroundColor: theme.color.gray.min,
     },
     headerTitleStyle: {
-      ...theme.typography['body-1-medium'],
+      ...theme.typography['body-1-l-medium'],
       width: WIDTH - 75,
       textAlign: 'center',
     },
@@ -91,17 +97,17 @@ export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = 
 }
 
 // NAVIGATOR TOP TABS OPTIONS
-export const defaultMaterialTopTabNavigationOptions: MaterialTopTabNavigationOptions = {
-  tabBarStyle: {backgroundColor: COLORS.WHITE, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
-  tabBarIndicatorStyle: {backgroundColor: COLORS.SHELLEY_BLUE, height: 2},
-  tabBarLabelStyle: {
-    textTransform: 'none',
-    fontFamily: 'Rubik-Medium',
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  tabBarActiveTintColor: COLORS.SHELLEY_BLUE,
-  tabBarInactiveTintColor: COLORS.NOT_SELECTED_TAB_TEXT,
+export const defaultMaterialTopTabNavigationOptions = (theme: Theme): MaterialTopTabNavigationOptions => {
+  return {
+    tabBarStyle: {backgroundColor: theme.color.gray.min, elevation: 0, shadowOpacity: 0, marginHorizontal: 16},
+    tabBarIndicatorStyle: {backgroundColor: theme.color.primary[600], height: 2},
+    tabBarLabelStyle: {
+      textTransform: 'none',
+      ...theme.typography['body-1-l-medium'],
+    },
+    tabBarActiveTintColor: theme.color.primary[600],
+    tabBarInactiveTintColor: theme.color.gray[600],
+  }
 }
 
 // ROUTES
@@ -200,7 +206,9 @@ export type TxHistoryRoutes = {
   'history-details': {
     id: string
   }
-  receive: undefined
+  'receive-single': undefined
+  'receive-specific-amount': undefined
+  'receive-multiple': undefined
   'send-start-tx': undefined
   'send-confirm-tx': undefined
   'send-submitted-tx': {txId: string}
@@ -529,3 +537,10 @@ export const useWalletNavigation = () => {
     },
   } as const).current
 }
+
+export const hideTabBarForRoutes = (route: RouteProp<WalletTabRoutes, 'history'>): ViewStyle | undefined =>
+  getFocusedRouteNameFromRoute(route)?.startsWith('scan') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('swap') ||
+  getFocusedRouteNameFromRoute(route)?.startsWith('receive')
+    ? {display: 'none'}
+    : undefined

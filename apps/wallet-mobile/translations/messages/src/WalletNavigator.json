@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Transactions",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 185,
+      "line": 178,
       "column": 22,
-      "index": 6192
+      "index": 5976
     },
     "end": {
-      "line": 188,
+      "line": 181,
       "column": 3,
-      "index": 6295
+      "index": 6079
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Send",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 189,
+      "line": 182,
       "column": 14,
-      "index": 6311
+      "index": 6095
     },
     "end": {
-      "line": 192,
+      "line": 185,
       "column": 3,
-      "index": 6410
+      "index": 6194
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Receive",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 193,
+      "line": 186,
       "column": 17,
-      "index": 6429
+      "index": 6213
     },
     "end": {
-      "line": 196,
+      "line": 189,
       "column": 3,
-      "index": 6534
+      "index": 6318
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Dashboard",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 197,
+      "line": 190,
       "column": 19,
-      "index": 6555
+      "index": 6339
     },
     "end": {
-      "line": 200,
+      "line": 193,
       "column": 3,
-      "index": 6652
+      "index": 6436
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Delegate",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 201,
+      "line": 194,
       "column": 18,
-      "index": 6672
+      "index": 6456
     },
     "end": {
-      "line": 204,
+      "line": 197,
       "column": 3,
-      "index": 6767
+      "index": 6551
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Wallet",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 205,
+      "line": 198,
       "column": 16,
-      "index": 6785
+      "index": 6569
     },
     "end": {
-      "line": 208,
+      "line": 201,
       "column": 3,
-      "index": 6883
+      "index": 6667
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!Staking",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 209,
+      "line": 202,
       "column": 17,
-      "index": 6902
+      "index": 6686
     },
     "end": {
-      "line": 212,
+      "line": 205,
       "column": 3,
-      "index": 6967
+      "index": 6751
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!NFT Gallery",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 213,
+      "line": 206,
       "column": 14,
-      "index": 6983
+      "index": 6767
     },
     "end": {
-      "line": 216,
+      "line": 209,
       "column": 3,
-      "index": 7077
+      "index": 6861
     }
   },
   {
@@ -124,29 +124,14 @@
     "defaultMessage": "!!!Menu",
     "file": "src/WalletNavigator.tsx",
     "start": {
-      "line": 217,
+      "line": 210,
       "column": 14,
-      "index": 7093
+      "index": 6877
     },
     "end": {
-      "line": 220,
+      "line": 213,
       "column": 3,
-      "index": 7145
-    }
-  },
-  {
-    "id": "components.common.navigation.dappExplorerButton",
-    "defaultMessage": "!!!Discover",
-    "file": "src/WalletNavigator.tsx",
-    "start": {
-      "line": 221,
-      "column": 22,
-      "index": 7169
-    },
-    "end": {
-      "line": 224,
-      "column": 3,
-      "index": 7268
+      "index": 6929
     }
   }
 ]

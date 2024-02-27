@@ -20,6 +20,7 @@ import {
 
 import {CONFIG} from '../../legacy/config'
 import {useWalletManager} from '../../WalletManager'
+import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {calcLockedDeposit} from '../cardano/assetUtils'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
@@ -127,6 +128,28 @@ export const useStakingKey = (wallet: YoroiWallet) => {
   const result = useQuery([wallet.id, 'stakingKey'], getPublicKeyHex, {suspense: true})
   if (!result.data) throw new Error('invalid state')
   return result.data
+}
+
+export const useKeyHashes = ({address}: {address: string}) => {
+  const [spendingData, stakingData] = useQueries([
+    {
+      suspense: true,
+      queryKey: [address, 'spendingKeyHash'],
+      queryFn: () =>
+        getSpendingKey(address).then((spending) => {
+          return {spending}
+        }),
+    },
+    {
+      suspense: true,
+      queryKey: [address, 'stakingkeyHash'],
+      queryFn: () =>
+        getStakingKey(address).then((staking) => {
+          return {staking}
+        }),
+    },
+  ])
+  return {spending: spendingData.data?.spending, staking: stakingData.data?.staking}
 }
 
 export const useAssetIds = (wallet: YoroiWallet): string[] => {

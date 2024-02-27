@@ -26,6 +26,7 @@ const iconProps = {
 
 export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const {colorScheme} = useTheme()
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
@@ -331,13 +332,19 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  settings: {
-    flex: 1,
-    padding: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    settings: {
+      flex: 1,
+      padding: 16,
+    },
+  })
+
+  return styles
+}

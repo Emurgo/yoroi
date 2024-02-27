@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import {SwapOrderType} from '@yoroi/types/lib/swap/order'
 import * as React from 'react'
@@ -35,6 +36,7 @@ export const AmountItem = ({
   priceImpactRisk,
   orderType,
 }: AmountItemProps) => {
+  const {styles, colors} = useStyles()
   const {quantity, tokenId} = amount
   const tokenInfo = useTokenInfo({wallet, tokenId})
 
@@ -46,7 +48,7 @@ export const AmountItem = ({
   const formattedQuantity = Quantities.format(quantity, tokenInfo.decimals ?? 0)
   const showSwapDetails = !isPrimary && variant === 'swap'
   const priceImpactRiskTheme = usePriceImpactRiskTheme(priceImpactRisk ?? 'none')
-  const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : styles.text.color
+  const priceImpactRiskTextColor = orderType === 'market' ? priceImpactRiskTheme.text : colors.text
 
   return (
     <View style={[style, styles.container]} testID="assetItem">
@@ -58,7 +60,7 @@ export const AmountItem = ({
 
       <Middle>
         <View style={styles.row}>
-          <Text numberOfLines={1} ellipsizeMode="middle" style={[styles.name, styles.text]} testID="tokenInfoText">
+          <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name} testID="tokenInfoText">
             {nameLabel}
           </Text>
 
@@ -103,68 +105,78 @@ const Middle = ({style, ...props}: ViewProps) => (
 )
 const Right = ({style, ...props}: ViewProps) => <View style={style} {...props} />
 
-export const AmountItemPlaceholder = ({style}: ViewProps) => (
-  <View
-    style={[
-      style,
-      {
-        display: 'flex',
-        flexDirection: 'row',
-        gap: 12,
-        height: 56,
-      },
-    ]}
-  >
+export const AmountItemPlaceholder = ({style}: ViewProps) => {
+  const {colors} = useStyles()
+  return (
     <View
-      style={{
-        backgroundColor: COLORS.BACKGROUND_GRAY,
-        borderRadius: 8,
-        flexGrow: 3,
-      }}
-    />
+      style={[
+        style,
+        {
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 12,
+          height: 56,
+        },
+      ]}
+    >
+      <View
+        style={{
+          backgroundColor: colors.background,
+          borderRadius: 8,
+          flexGrow: 3,
+        }}
+      />
 
-    <View
-      style={{
-        backgroundColor: COLORS.BACKGROUND_GRAY,
-        borderRadius: 8,
-        flexGrow: 1,
-      }}
-    />
-  </View>
-)
+      <View
+        style={{
+          backgroundColor: colors.background,
+          borderRadius: 8,
+          flexGrow: 1,
+        }}
+      />
+    </View>
+  )
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  name: {
-    color: COLORS.DARK_TEXT,
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-  },
-  detail: {
-    color: COLORS.TEXT_INPUT,
-    fontSize: 12,
-    lineHeight: 18,
-    maxWidth: 140,
-  },
-  quantity: {
-    color: COLORS.DARK_TEXT,
-    textAlign: 'right',
-    fontSize: 16,
-    fontFamily: 'Rubik-Regular',
-    flexGrow: 1,
-  },
-  row: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  text: {
-    color: '#242838',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    name: {
+      color: color.gray[900],
+      fontSize: 16,
+      lineHeight: 22,
+      fontWeight: '500',
+      fontFamily: 'Rubik-Medium',
+    },
+    detail: {
+      color: color.gray[600],
+      fontSize: 12,
+      lineHeight: 18,
+      maxWidth: 140,
+    },
+    quantity: {
+      color: color.gray[900],
+      ...typography['body-1-l-regular'],
+      textAlign: 'right',
+      flexGrow: 1,
+    },
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+  })
+
+  const colors = {
+    text: color.gray[900],
+    background: color.gray[200],
+  }
+
+  return {styles, colors}
+}

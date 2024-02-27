@@ -8,13 +8,13 @@ type Props = {
 }
 
 // TODO: it should be a hook
-export const StatusBar = ({type, overrideColor}: Props) => {
-  const {theme} = useTheme()
-  const backgroundColor = type === 'dark' ? theme.color['white-static'] : theme.color['black-static']
+export const StatusBar = ({overrideColor}: Props) => {
+  const {theme, isDark} = useTheme()
+  const backgroundColor = isDark ? theme.color['white-static'] : theme.color['black-static']
 
   useFocusEffect(() => {
     if (Platform.OS === 'android') StatusBarRN.setBackgroundColor(overrideColor ?? backgroundColor)
-    StatusBarRN.setBarStyle(type === 'dark' ? 'dark-content' : 'light-content')
+    StatusBarRN.setBarStyle(isDark ? 'light-content' : 'dark-content')
   })
 
   return null

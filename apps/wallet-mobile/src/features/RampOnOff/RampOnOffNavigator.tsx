@@ -18,9 +18,10 @@ export const RampOnOffScreen = () => {
   useHideBottomTabBar()
   const {theme} = useTheme()
   const strings = useStrings()
+  const styles = useStyles()
 
   return (
-    <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.root, {backgroundColor: theme.color.gray.min}]}>
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.root]}>
       <StatusBar type="dark" />
 
       <RampOnOffProvider>
@@ -53,8 +54,14 @@ export const RampOnOffScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: theme.color.gray.min,
+    },
+  })
+
+  return styles
+}

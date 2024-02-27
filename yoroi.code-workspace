@@ -25,6 +25,10 @@
       "path": "./packages/banxa"
     },
     {
+      "name": "@yoroi/transfer",
+      "path": "./packages/transfer"
+    },
+    {
       "name": "@yoroi/api",
       "path": "./packages/api"
     },

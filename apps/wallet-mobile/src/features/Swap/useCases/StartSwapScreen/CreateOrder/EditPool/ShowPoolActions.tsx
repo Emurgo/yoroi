@@ -1,4 +1,5 @@
 import {useSwap} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
 import {Swap} from '@yoroi/types'
 import {capitalize} from 'lodash'
 import React from 'react'
@@ -6,7 +7,6 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {ExpandableInfoCard, HeaderWrapper, HiddenInfoWrapper, Spacer, useModal} from '../../../../../../components'
 import {useSelectedWallet} from '../../../../../../SelectedWallet'
-import {COLORS} from '../../../../../../theme'
 import {useTokenInfo} from '../../../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../../../yoroi-wallets/utils'
 import {useNavigateTo} from '../../../../common/navigation'
@@ -17,6 +17,7 @@ import {SwapInfoLink} from '../../../../common/SwapInfoLink/SwapInfoLink'
 
 export const ShowPoolActions = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const [isExpanded, setIsExpanded] = React.useState(true)
 
   const navigateTo = useNavigateTo()
@@ -91,6 +92,7 @@ const FeeBreakdown = ({totalFees, orderType}: {totalFees: string; orderType: Swa
 
 const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const strings = useStrings()
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const {openModal} = useModal()
 
@@ -135,7 +137,7 @@ const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
       {feeStructure.map((fee) => {
         const modalContent = (
           <View style={styles.modalContent}>
-            <Text style={styles.text}>{fee.info}</Text>
+            <Text style={styles.modalText}>{fee.info}</Text>
 
             <Spacer fill />
 
@@ -165,8 +167,10 @@ const ShowLimitOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
 
 const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const strings = useStrings()
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const {openModal} = useModal()
+  const bold = useBold()
 
   const {orderData} = useSwap()
   const {selectedPoolCalculation: calculation, amounts} = orderData
@@ -190,7 +194,7 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   const totalFeesFormatted = `${totalFees} ${wallet.primaryTokenInfo.ticker}`
   const minReceivedFormatted = `${minReceived} ${buyTokenName}`
   const liqFeeQuantityFormatted = `${liqFeeQuantity} ${sellTokenName}`
-  const liqFeePercFormatted = strings.swapLiquidityFeeInfo(liqFeePerc)
+  const liqFeePercFormatted = strings.swapLiquidityFeeInfo(liqFeePerc, bold)
 
   const feeStructure = [
     {
@@ -221,7 +225,7 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
       {feeStructure.map((fee) => {
         const modalContent = (
           <View style={styles.modalContent}>
-            <Text style={styles.text}>{fee.info}</Text>
+            <Text style={styles.modalText}>{fee.info}</Text>
 
             <Spacer fill />
 
@@ -249,36 +253,47 @@ const ShowMarketOrderFeeBreakdown = ({totalFees}: {totalFees: string}) => {
   )
 }
 
-const styles = StyleSheet.create({
-  flex: {flexDirection: 'row', alignItems: 'center'},
-  between: {justifyContent: 'space-between'},
-  text: {
-    textAlign: 'right',
-    fontWeight: '400',
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#242838',
-    flexWrap: 'wrap',
-    flex: 1,
-  },
+const useBold = () => {
+  const styles = useStyles()
 
-  modalContent: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  change: {color: COLORS.SHELLEY_BLUE, fontWeight: '600', textTransform: 'uppercase'},
-  bold: {
-    color: COLORS.BLACK,
-    fontWeight: '400',
-    fontFamily: 'Rubik-Regular',
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  bolder: {
-    color: COLORS.BLACK,
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-    fontSize: 16,
-    lineHeight: 24,
-  },
-})
+  return {
+    b: (text: React.ReactNode) => <Text style={styles.bolder}>{text}</Text>,
+  }
+}
+
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    flex: {flexDirection: 'row', alignItems: 'center'},
+    between: {justifyContent: 'space-between'},
+    modalText: {
+      textAlign: 'left',
+      ...typography['body-1-l-regular'],
+      color: color.gray[900],
+    },
+    text: {
+      textAlign: 'right',
+      ...typography['body-1-l-regular'],
+      color: color.gray[900],
+      flexWrap: 'wrap',
+      flex: 1,
+    },
+
+    modalContent: {
+      flex: 1,
+      justifyContent: 'space-between',
+    },
+    change: {color: color.primary[500], ...typography['body-2-m-medium'], textTransform: 'uppercase'},
+    bold: {
+      color: color.gray.max,
+      ...typography['body-1-l-regular'],
+    },
+    bolder: {
+      color: color.gray.max,
+      ...typography['body-1-l-medium'],
+    },
+  })
+
+  return styles
+}

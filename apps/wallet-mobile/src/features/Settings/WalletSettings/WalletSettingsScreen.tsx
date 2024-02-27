@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import type {MessageDescriptor} from 'react-intl'
 import {defineMessages, useIntl} from 'react-intl'
@@ -17,6 +18,7 @@ import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
+import {useAddressDerivationManager} from '../../Receive/common/useAddressDerivationManager'
 import {useNavigateTo} from '../common/navigation'
 import {
   NavigatedSettingsItem,
@@ -34,9 +36,12 @@ const iconProps = {
 export const WalletSettingsScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
+  const styles = useStyles()
   const {resetToWalletSelection} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
+  const addressDerivation = useAddressDerivationManager()
+
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
   const easyConfirmationEnabled = useEasyConfirmationEnabled(wallet)
@@ -114,6 +119,15 @@ export const WalletSettingsScreen = () => {
             label={strings.collateral}
             onNavigate={() => settingsNavigation.navigate('manage-collateral')}
           />
+
+          <SettingsItem
+            icon={<Icon.Qr {...iconProps} />}
+            label={strings.multipleAddresses}
+            info={strings.multipleAddressesInfo}
+            disabled={addressDerivation.isToggleLoading}
+          >
+            <AddresseDerivationSwitcher isSingle={addressDerivation.isSingle} />
+          </SettingsItem>
         </SettingsSection>
 
         <Spacer height={24} />
@@ -172,6 +186,31 @@ const ResyncButton = () => {
       label={strings.resync}
       onNavigate={onResync}
       disabled={isLoading}
+    />
+  )
+}
+
+const AddresseDerivationSwitcher = (props: {isSingle: boolean}) => {
+  const addressDerivation = useAddressDerivationManager()
+  const [isSingleLocal, setIsSingleLocal] = React.useState(props.isSingle)
+
+  const handleOnSwitchAddressDerivation = () => {
+    setIsSingleLocal((prevState) => {
+      if (prevState) {
+        addressDerivation.enableMultipleMode()
+      } else {
+        addressDerivation.enableSingleMode()
+      }
+
+      return !prevState
+    })
+  }
+
+  return (
+    <Switch
+      value={!isSingleLocal}
+      onValueChange={handleOnSwitchAddressDerivation}
+      disabled={addressDerivation.isToggleLoading}
     />
   )
 }
@@ -236,6 +275,18 @@ const messages = defineMessages({
     id: 'global.collateral',
     defaultMessage: '!!!Collateral',
   },
+  multipleAddresses: {
+    id: 'global.multipleAddresses',
+    defaultMessage: '!!!Multiple addresses',
+  },
+  singleAddress: {
+    id: 'global.singleAddress',
+    defaultMessage: '!!!Single addresses',
+  },
+  multipleAddressesInfo: {
+    id: 'global.multipleAddressesInfo',
+    defaultMessage: '!!!By enabling this you can operate with more wallet addresses',
+  },
   // note: moved here from application settings
   network: {
     id: 'global.network',
@@ -288,16 +339,24 @@ const useStrings = () => {
     about: intl.formatMessage(messages.about),
     resync: intl.formatMessage(messages.resync),
     collateral: intl.formatMessage(messages.collateral),
+    multipleAddresses: intl.formatMessage(messages.multipleAddresses),
+    singleAddress: intl.formatMessage(messages.singleAddress),
+    multipleAddressesInfo: intl.formatMessage(messages.multipleAddressesInfo),
   }
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  settings: {
-    flex: 1,
-    padding: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    settings: {
+      flex: 1,
+      padding: 16,
+    },
+  })
+  return styles
+}
