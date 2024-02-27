@@ -1,5 +1,6 @@
 import {RouteProp, useRoute} from '@react-navigation/native'
 import {isRecord, isString} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React, {ReactNode, useState} from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -14,7 +15,7 @@ import {
   View,
 } from 'react-native'
 
-import {CopyButton, FadeIn, Icon, Spacer, Text} from '../components'
+import {CopyButton, FadeIn, Spacer, Text} from '../components'
 import {NftPreview} from '../components/NftPreview'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {features} from '../features'
@@ -23,13 +24,13 @@ import {NftRoutes} from '../navigation'
 import {useModeratedNftImage} from '../Nfts/hooks'
 import {useNavigateTo} from '../Nfts/navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {COLORS} from '../theme'
 import {getNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {useNativeAssetInvalidation, useNft} from '../yoroi-wallets/hooks'
 
 export const NftDetails = () => {
   const {id} = useRoute<RouteProp<NftRoutes, 'nft-details'>>().params
   const strings = useStrings()
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const nft = useNft(wallet, {id})
   const [policy, name] = nft.id.split('.')
@@ -88,6 +89,7 @@ export const NftDetails = () => {
 }
 
 const UnModeratedNftImage = ({nft}: {nft: Balance.TokenInfo}) => {
+  const styles = useStyles()
   const navigateTo = useNavigateTo()
   return (
     <TouchableOpacity onPress={() => navigateTo.nftZoom(nft.id)} style={styles.imageWrapper}>
@@ -97,6 +99,7 @@ const UnModeratedNftImage = ({nft}: {nft: Balance.TokenInfo}) => {
 }
 
 const ModeratedNftImage = ({nft}: {nft: Balance.TokenInfo}) => {
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const navigateTo = useNavigateTo()
   const {status} = useModeratedNftImage({wallet, fingerprint: nft.fingerprint})
@@ -118,6 +121,7 @@ const ModeratedNftImage = ({nft}: {nft: Balance.TokenInfo}) => {
 }
 
 const MetadataRow = ({title, copyText, children}: {title: string; children: ReactNode; copyText?: string}) => {
+  const styles = useStyles()
   return (
     <View style={styles.rowContainer}>
       <View style={styles.rowTitleContainer}>
@@ -126,7 +130,7 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
         {copyText !== undefined ? <CopyButton value={copyText} /> : null}
       </View>
 
-      <Spacer height={2} />
+      <Spacer height={4} />
 
       {children}
     </View>
@@ -134,6 +138,7 @@ const MetadataRow = ({title, copyText, children}: {title: string; children: Reac
 }
 
 const NftOverview = ({nft}: {nft: Balance.TokenInfo}) => {
+  const styles = useStyles()
   const strings = useStrings()
   const wallet = useSelectedWallet()
   const config = getNetworkConfigById(wallet.networkId)
@@ -141,57 +146,50 @@ const NftOverview = ({nft}: {nft: Balance.TokenInfo}) => {
   return (
     <View>
       <MetadataRow title={strings.nftName}>
-        <Text secondary>{nft.name}</Text>
+        <Text style={styles.name}>{nft.name}</Text>
       </MetadataRow>
-
-      <HR />
 
       <MetadataRow title={strings.description}>
-        <Text secondary>{normalizeMetadataString(nft.description)}</Text>
+        <Text style={styles.name}>{normalizeMetadataString(nft.description)}</Text>
       </MetadataRow>
-
-      <HR />
 
       {isRecord(nft.metadatas.mintNft) && (
         <MetadataRow title={strings.author}>
-          <Text secondary>{normalizeMetadataString(nft.metadatas.mintNft.author)}</Text>
+          <Text style={styles.name}>{normalizeMetadataString(nft.metadatas.mintNft.author)}</Text>
         </MetadataRow>
       )}
 
-      <HR />
-
       <MetadataRow title={strings.fingerprint} copyText={nft.fingerprint}>
-        <Text secondary>{nft.fingerprint}</Text>
+        <Text style={styles.name}>{nft.fingerprint}</Text>
       </MetadataRow>
-
-      <HR />
 
       <MetadataRow title={strings.policyId} copyText={nft.group}>
-        <Text secondary>{nft.group}</Text>
+        <Text style={styles.name}>{nft.group}</Text>
       </MetadataRow>
 
-      <HR />
-
       <MetadataRow title={strings.detailsLinks}>
-        <TouchableOpacity onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(nft.id))}>
-          <View style={styles.linkContent}>
-            <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+          }}
+        >
+          <TouchableOpacity onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TOKEN(nft.id))} style={{flex: 2}}>
+            <View style={styles.linkContent}>
+              <Spacer width={2} />
 
-            <Spacer width={2} />
+              <Text style={styles.linkText}>Cardanoscan</Text>
+            </View>
+          </TouchableOpacity>
 
-            <Text style={styles.linkText}>Cardanoscan</Text>
-          </View>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => Linking.openURL(config.CEXPLORER_URL_FOR_TOKEN(nft.id))} style={{flex: 4}}>
+            <View style={styles.linkContent}>
+              <Spacer width={2} />
 
-        <TouchableOpacity onPress={() => Linking.openURL(config.CEXPLORER_URL_FOR_TOKEN(nft.id))}>
-          <View style={styles.linkContent}>
-            <Icon.ExternalLink size={12} color={COLORS.SHELLEY_BLUE} />
-
-            <Spacer width={2} />
-
-            <Text style={styles.linkText}>Cexplorer</Text>
-          </View>
-        </TouchableOpacity>
+              <Text style={styles.linkText}>Cexplorer</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </MetadataRow>
 
       <HR />
@@ -215,6 +213,7 @@ const HR = () => (
 )
 
 const NftMetadata = ({nft}: {nft: Balance.TokenInfo}) => {
+  const styles = useStyles()
   const strings = useStrings()
   const stringifiedMetadata = JSON.stringify(nft.metadatas.mintNft, undefined, 2)
 
@@ -237,63 +236,71 @@ const IMAGE_HEIGHT = 380
 const IMAGE_PADDING = 16
 const IMAGE_WIDTH = Dimensions.get('window').width - IMAGE_PADDING * 2
 
-const styles = StyleSheet.create({
-  copyButton: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  linkContent: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  linkText: {
-    flex: 1,
-    fontWeight: 'bold',
-    textDecorationLine: 'none',
-    color: COLORS.SHELLEY_BLUE,
-  },
-  copyText: {
-    fontWeight: 'bold',
-    color: '#242838',
-    textTransform: 'uppercase',
-  },
-  container: {
-    flex: 1,
-  },
-  image: {
-    flexGrow: 1,
-  },
-  contentContainer: {
-    paddingHorizontal: IMAGE_PADDING,
-  },
-  rowContainer: {
-    paddingVertical: IMAGE_PADDING,
-  },
-  rowTitleContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'nowrap',
-    justifyContent: 'space-between',
-  },
-  copyMetadata: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  imageWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  title: {
-    fontWeight: 'bold',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    copyButton: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+    },
+    linkContent: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+    },
+    linkText: {
+      color: color.primary[500],
+      ...typography['body-1-l-regular'],
+      flex: 1,
+      textDecorationLine: 'underline',
+    },
+    copyText: {
+      color: color.gray[900],
+      ...typography['body-2-m-medium'],
+      textTransform: 'uppercase',
+    },
+    container: {
+      flex: 1,
+    },
+    image: {
+      flexGrow: 1,
+    },
+    contentContainer: {
+      paddingHorizontal: IMAGE_PADDING,
+    },
+    rowContainer: {
+      paddingVertical: IMAGE_PADDING,
+    },
+    rowTitleContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      flexWrap: 'nowrap',
+      justifyContent: 'space-between',
+    },
+    copyMetadata: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    imageWrapper: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    title: {
+      ...typography['body-1-l-medium'],
+    },
+    name: {
+      color: color.gray[600],
+      ...typography['body-2-m-regular'],
+    },
+  })
+  return styles
+}
 
 const messages = defineMessages({
   title: {
