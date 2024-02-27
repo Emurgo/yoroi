@@ -14,18 +14,25 @@ export const useConnectWalletToWebView = (
   sessionId: string,
 ) => {
   const sendMessageToWebView = (id: number, result: unknown, error?: Error) => {
+    if (error) {
+      Logger.info('DappConnector', 'sending error to webview', error)
+    } else {
+      Logger.info('DappConnector', 'sending result to webview', result)
+    }
     webViewRef.current?.injectJavaScript(getInjectableMessage({id, result, error: error?.message || null}))
   }
 
   const handleEvent = (e: WebViewMessageEvent) => {
     const {data} = e.nativeEvent
+    const webViewUrl = e.nativeEvent.url
+    const webViewOrigin = new URL(webViewUrl).origin
     try {
       const {id, method, params} = JSON.parse(data)
-      handleMethod(method, params, {origin: 'https://muesliswap.com', walletId: wallet.id})
+      handleMethod(method, params, {origin: webViewOrigin, walletId: wallet.id})
         .then((result) => method !== 'log_message' && sendMessageToWebView(id, result))
         .catch((error) => method !== 'log_message' && sendMessageToWebView(id, null, error))
     } catch (e) {
-      Logger.error('DappExplorer', 'handleEvent::error', e)
+      Logger.error('DappConnector', 'handleEvent::error', e)
     }
   }
 
