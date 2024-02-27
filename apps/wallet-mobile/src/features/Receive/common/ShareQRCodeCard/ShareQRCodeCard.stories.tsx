@@ -1,3 +1,4 @@
+import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
@@ -7,7 +8,9 @@ import {ShareQRCodeCard} from './ShareQRCodeCard'
 
 storiesOf('Receive ShareQRCodeCard', module)
   .addDecorator((story) => <View style={styles.container}>{story()}</View>)
-  .add('default', () => <ShareQRCodeCard address={mocks.address} />)
+  .add('with content', () => (
+    <ShareQRCodeCard content={mocks.address} onLongPress={action('onLongPress')} title="Title" />
+  ))
 
 const styles = StyleSheet.create({
   container: {
