@@ -1,17 +1,17 @@
 import {useTheme} from '@yoroi/theme'
-import React, {useState} from 'react'
+import * as React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 
 import {Spacer} from '../../../../components'
 import {useCopy} from '../../../../legacy/useCopy'
+import {isEmptyString} from '../../../../utils/utils'
 import {useKeyHashes} from '../../../../yoroi-wallets/hooks'
 import {useReceive} from '../ReceiveProvider'
 import {ShareDetailsCard} from '../ShareDetailsCard/ShareDetailsCard'
 import {ShareQRCodeCard} from '../ShareQRCodeCard/ShareQRCodeCard'
 
-type ShareProps = {
-  address: string
+type AddressDetailCardProps = {
   title: string
 }
 
@@ -21,8 +21,8 @@ type AddressDetailsProps = {
 }
 
 type CardItem = {
-  title: ShareProps['title']
-  address: ShareProps['address']
+  title: AddressDetailCardProps['title']
+  address: string
 } & (
   | {
       cardType: 'QRCode'
@@ -30,43 +30,38 @@ type CardItem = {
   | ({cardType: 'Details'} & AddressDetailsProps)
 )
 
-export const AddressDetailCard = ({title}: ShareProps) => {
-  const [scrollPosition, setScrollPosition] = useState(0)
-  const [isSecondPage, setIsSecondPage] = useState(false)
-
-  const {selectedAddress} = useReceive()
-
+export const AddressDetailCard = ({title}: AddressDetailCardProps) => {
+  const {styles, colors} = useStyles()
   const [isCopying, copy] = useCopy()
 
-  const {styles, colors} = useStyles()
+  const {selectedAddress: address} = useReceive()
+  const {spending, staking} = useKeyHashes({address})
+  const stakingHash = staking ?? ''
+  const spendingHash = spending ?? ''
 
-  const SCREEN_WIDTH = useWindowDimensions().width
-  const itemsPerPage = 1
-
-  const keyHashes = useKeyHashes({address: selectedAddress ?? ''})
-
+  const [scrollPosition, setScrollPosition] = React.useState(0)
   const cards: ReadonlyArray<CardItem> = [
-    {cardType: 'QRCode', title, address: selectedAddress ?? ''},
+    {cardType: 'QRCode', title, address},
     {
       cardType: 'Details',
-      address: selectedAddress ?? '',
-      stakingHash: keyHashes?.staking ?? '',
-      spendingHash: keyHashes?.spending ?? '',
+      address,
+      stakingHash,
+      spendingHash,
       title,
     },
   ] as const
-
+  const screenWidth = useWindowDimensions().width
+  const itemsPerPage = 1
+  const minToSwitchPage = 64
   const totalPages = Math.ceil(cards.length / itemsPerPage)
-  const circleIndex = Array.from({length: totalPages}, (_, index) => index + 1)
+  const cardIndicators = Array.from({length: totalPages}, (_, index) => index)
+
+  if (isEmptyString(address)) return
 
   const handleOnPageChange = (event: {nativeEvent: {contentOffset: {x: number}}}) => {
     const offset = event.nativeEvent.contentOffset.x
-    const index = Math.floor(offset / (itemsPerPage * SCREEN_WIDTH - 64))
-    setScrollPosition(index)
-  }
-
-  if (selectedAddress === undefined) {
-    return
+    const index = Math.floor(offset / (itemsPerPage * screenWidth - minToSwitchPage))
+    setScrollPosition(Math.max(index, 0))
   }
 
   const renderItem = ({item}: {item: CardItem}) => {
@@ -75,25 +70,18 @@ export const AddressDetailCard = ({title}: ShareProps) => {
         return (
           <ShareQRCodeCard
             title={item.title}
-            address={item.address}
+            content={item.address}
             onLongPress={() => copy(item.address)}
             isCopying={isCopying}
           />
         )
       case 'Details':
-        if (Boolean(item.address) && Boolean(item.stakingHash) && Boolean(item.spendingHash) && Boolean(item.title)) {
-          setIsSecondPage(true)
-          return (
-            <ShareDetailsCard
-              address={item.address}
-              stakingHash={item.stakingHash}
-              spendingHash={item.spendingHash}
-              title={item.title}
-            />
-          )
-        }
+        return (
+          <ShareDetailsCard address={item.address} stakingHash={item.stakingHash} spendingHash={item.spendingHash} />
+        )
+      default:
+        return null
     }
-    return null
   }
 
   return (
@@ -107,7 +95,7 @@ export const AddressDetailCard = ({title}: ShareProps) => {
           keyExtractor={(_) => _.cardType}
           pagingEnabled
           onScroll={handleOnPageChange}
-          snapToInterval={itemsPerPage * SCREEN_WIDTH}
+          snapToInterval={itemsPerPage * screenWidth}
           decelerationRate="fast"
           renderItem={renderItem}
           contentContainerStyle={styles.contentContainer}
@@ -116,21 +104,19 @@ export const AddressDetailCard = ({title}: ShareProps) => {
 
       <Spacer height={12} />
 
-      {isSecondPage && (
-        <View style={styles.index}>
-          {circleIndex.map((index) => (
-            <View
-              key={index + 'indexCard'}
-              style={[
-                styles.circle,
-                {
-                  backgroundColor: index - 1 === scrollPosition ? colors.indexActive : colors.indexInactive,
-                },
-              ]}
-            />
-          ))}
-        </View>
-      )}
+      <View style={styles.index}>
+        {cardIndicators.map((index) => (
+          <View
+            key={index + '-indicator'}
+            style={[
+              styles.circle,
+              {
+                backgroundColor: index === scrollPosition ? colors.active : colors.inactive,
+              },
+            ]}
+          />
+        ))}
+      </View>
     </>
   )
 }
@@ -156,8 +142,8 @@ const useStyles = () => {
   })
 
   const colors = {
-    indexActive: theme.color.primary[600],
-    indexInactive: theme.color.gray[400],
+    active: theme.color.primary[600],
+    inactive: theme.color.gray[400],
   }
   return {styles, colors}
 }
