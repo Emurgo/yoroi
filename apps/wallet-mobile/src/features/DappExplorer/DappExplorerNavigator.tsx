@@ -1,11 +1,12 @@
 import React from 'react'
-import {SafeArea} from './common/SafeArea'
+
 import {StatusBar} from '../../components'
-import {HomeScreen} from './useCases/HomeScreen'
 import {defaultStackNavigationOptions} from '../../navigation'
-import {NavigationStack} from './common/navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
 import {useWalletName} from '../../yoroi-wallets/hooks'
+import {NavigationStack} from './common/navigation'
+import {SafeArea} from './common/SafeArea'
+import {HomeScreen} from './useCases/HomeScreen'
 
 const Stack = NavigationStack
 
@@ -16,6 +17,7 @@ export const DappExplorerNavigator = () => {
   return (
     <SafeArea>
       <StatusBar type="dark" />
+
       <Stack.Navigator screenOptions={screenOptions}>
         <Stack.Screen name="dapp-explorer-home" component={HomeScreen} options={{title: walletName}} />
       </Stack.Navigator>

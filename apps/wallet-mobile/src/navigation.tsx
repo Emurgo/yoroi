@@ -12,12 +12,12 @@ import React from 'react'
 import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native'
 
 import {Icon} from './components'
+import {DappExplorerRoutes} from './features/DappExplorer'
 import {ScanFeature} from './features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
 import {COLORS} from './theme'
 import {HWDeviceInfo} from './yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
-import {DappExplorerRoutes} from './features/DappExplorer'
 
 // prettier-ignore
 export const useUnsafeParams = <Params, >() => {

@@ -1,10 +1,12 @@
-import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
-import {WebView, WebViewMessageEvent} from 'react-native-webview'
+import {isKeyOf} from '@yoroi/common'
 import {useEffect} from 'react'
+import {WebView, WebViewMessageEvent} from 'react-native-webview'
+
+import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {Logger} from '../../../yoroi-wallets/logging'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import {connectWallet} from './connector'
-import {isKeyOf} from '@yoroi/common'
 
 export const useConnectWalletToWebView = (
   wallet: YoroiWallet,
@@ -12,9 +14,6 @@ export const useConnectWalletToWebView = (
   sessionId: string,
 ) => {
   const sendMessageToWebView = (id: number, result: unknown, error?: Error) => {
-    console.log('sending data to webview', {id, result, error: error?.message || null})
-    // TODO: check if webView.postMessage() works
-    // webView?.postMessage(JSON.stringify({data: {id, result, error: error?.message || null}}))
     webViewRef.current?.injectJavaScript(getInjectableMessage({id, result, error: error?.message || null}))
   }
 
@@ -31,10 +30,8 @@ export const useConnectWalletToWebView = (
   }
 
   useEffect(() => {
-    console.log('connecting')
-    console.log(getInitScript(sessionId))
     webViewRef.current?.injectJavaScript(getInitScript(sessionId))
-  }, [wallet, webViewRef])
+  }, [wallet, webViewRef, sessionId])
 
   return {handleEvent, initScript: getInitScript(sessionId)}
 }
@@ -44,9 +41,9 @@ const getInjectableMessage = (message: unknown) => {
 }
 
 const assertOriginsMatch = (context: Context) => {
-  // if (context.browserOrigin !== context.trustedOrigin) {
-  //   throw new Error(`Origins do not match: ${context.browserOrigin} !== ${context.trustedOrigin}`)
-  // }
+  if (context.browserOrigin !== context.trustedOrigin) {
+    throw new Error(`Origins do not match: ${context.browserOrigin} !== ${context.trustedOrigin}`)
+  }
 }
 
 const mockedData = {
@@ -228,57 +225,80 @@ const assertWalletAcceptedConnection = (context: Context) => {
   }
 }
 
-const resolver = {
-  logMessage: (params: unknown, context: Context) => console.log('Log From WebView:', params),
-  enable: async (params: unknown, context: Context) => {
-    console.log('enable', context)
-    assertOriginsMatch(context)
-    return hasWalletAcceptedConnection(context.walletId)
-  },
-  isEnabled: async (params: unknown, context: Context) => {
-    console.log('is_enabled', params, context)
-    assertOriginsMatch(context)
-    return hasWalletAcceptedConnection(context.walletId)
-  },
-  api: {
-    getBalance: (params: unknown, context: Context) => {
-      assertWalletAcceptedConnection(context)
-      assertOriginsMatch(context)
-      return (mockedData as any)[context.walletId]?.balance
-    },
-    getChangeAddresses: (params: unknown, context: Context) => {
-      assertOriginsMatch(context)
-      assertWalletAcceptedConnection(context)
-      ;(mockedData as any)[context.walletId]?.changeAddresses
-    },
-    getNetworkId: (params: unknown, context: Context) => {
-      assertOriginsMatch(context)
-      assertWalletAcceptedConnection(context)
-      return (mockedData as any)[context.walletId]?.networkId
-    },
-    getRewardAddresses: (params: unknown, context: Context) => {
-      assertOriginsMatch(context)
-      assertWalletAcceptedConnection(context)
-      return (mockedData as any)[context.walletId]?.rewardAddresses
-    },
-    getUsedAddresses: (params: unknown, context: Context) => {
-      assertOriginsMatch(context)
-      assertWalletAcceptedConnection(context)
-      return (mockedData as any)[context.walletId]?.usedAddresses
-    },
-  },
-} as const
-
 type Context = {
   browserOrigin: string
   walletId: string
   trustedOrigin: string
 }
 
-const handleMethod = async (method: string, params: unknown, trustedContext: {walletId: string; origin: string}) => {
-  const {
-    browserContext: {origin: browserOrigin},
-  } = params as any
+type ResolvableMethod<T> = (params: unknown, context: Context) => Promise<T>
+
+type Resolver = {
+  logMessage: ResolvableMethod<void>
+  enable: ResolvableMethod<boolean>
+  isEnabled: ResolvableMethod<boolean>
+  api: {
+    getBalance: ResolvableMethod<number>
+    getChangeAddresses: ResolvableMethod<string[]>
+    getNetworkId: ResolvableMethod<number>
+    getRewardAddresses: ResolvableMethod<string[]>
+    getUsedAddresses: ResolvableMethod<string[]>
+  }
+}
+
+const resolver: Resolver = {
+  // eslint-disable-next-line @typescript-eslint/require-await
+  logMessage: async (params, context) => console.log('Log From WebView:', params, context),
+  // eslint-disable-next-line @typescript-eslint/require-await
+  enable: async (params: unknown, context: Context) => {
+    assertOriginsMatch(context)
+    return hasWalletAcceptedConnection(context.walletId)
+  },
+  // eslint-disable-next-line @typescript-eslint/require-await
+  isEnabled: async (params: unknown, context: Context) => {
+    assertOriginsMatch(context)
+    return hasWalletAcceptedConnection(context.walletId)
+  },
+  api: {
+    getBalance: (params: unknown, context: Context) => {
+      assertOriginsMatch(context)
+      assertWalletAcceptedConnection(context)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (mockedData as any)[context.walletId]?.balance
+    },
+    getChangeAddresses: (params: unknown, context: Context) => {
+      assertOriginsMatch(context)
+      assertWalletAcceptedConnection(context)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (mockedData as any)[context.walletId]?.changeAddresses
+    },
+    getNetworkId: (params: unknown, context: Context) => {
+      assertOriginsMatch(context)
+      assertWalletAcceptedConnection(context)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (mockedData as any)[context.walletId]?.networkId
+    },
+    getRewardAddresses: (params: unknown, context: Context) => {
+      assertOriginsMatch(context)
+      assertWalletAcceptedConnection(context)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (mockedData as any)[context.walletId]?.rewardAddresses
+    },
+    getUsedAddresses: (params: unknown, context: Context) => {
+      assertOriginsMatch(context)
+      assertWalletAcceptedConnection(context)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (mockedData as any)[context.walletId]?.usedAddresses
+    },
+  },
+} as const
+
+const handleMethod = async (
+  method: string,
+  params: {browserContext?: {origin?: unknown}},
+  trustedContext: {walletId: string; origin: string},
+) => {
+  const browserOrigin = String(params?.browserContext?.origin || '')
 
   const context: Context = {
     browserOrigin,
@@ -287,7 +307,6 @@ const handleMethod = async (method: string, params: unknown, trustedContext: {wa
   }
 
   if (method === 'cardano_enable') {
-    // ASK user to confirm connection depending on params and website origin
     return resolver.enable(params, context)
   }
 
@@ -296,8 +315,7 @@ const handleMethod = async (method: string, params: unknown, trustedContext: {wa
   }
 
   if (method === 'log_message') {
-    resolver.logMessage(params, context)
-    return true
+    return resolver.logMessage(params, context)
   }
 
   if (method.startsWith('api.')) {

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 export const connectWallet = (props) => {
   return `(${connectWallet2.toString()})(${JSON.stringify(props)})`
 }
@@ -12,7 +14,6 @@ const connectWallet2 = ({iconUrl, apiVersion, walletName, supportedExtensions, s
 
   const postMessage = (data) => window.ReactNativeWebView.postMessage(JSON.stringify(data))
   const promisesMap = new Map()
-  let isEnabledCache = false
 
   const callExternalMethod = (method, params) => {
     const requestId = Math.random().toString(36).substr(2, 9) // id needs to be unique
@@ -58,7 +59,6 @@ const connectWallet2 = ({iconUrl, apiVersion, walletName, supportedExtensions, s
   })
 
   const createApi = (cardanoEnableResponse) => {
-    // alert('api created' + JSON.stringify(cardanoEnableResponse))
     callExternalMethod('log_message', 'cardanoEnableResponse:' + JSON.stringify(cardanoEnableResponse))
     if (!cardanoEnableResponse) {
       alert('not enabled wallet')
@@ -67,8 +67,6 @@ const connectWallet2 = ({iconUrl, apiVersion, walletName, supportedExtensions, s
     localStorage.setItem('yoroi-session-id', sessionId)
 
     enabling = false
-    isEnabledCache = true
-    // alert('enabled wallet')
     return {
       getBalance: (...args) => callExternalMethod('api.getBalance', {args, browserContext: getContext()}),
       getChangeAddress: (...args) => callExternalMethod('api.getChangeAddress', {args, browserContext: getContext()}),
@@ -88,8 +86,6 @@ const connectWallet2 = ({iconUrl, apiVersion, walletName, supportedExtensions, s
   let enabling = false
   const isEnabled = () => {
     if (localStorage.getItem('yoroi-session-id') !== sessionId) {
-      // alert('Account Change')
-      isEnabledCache = false
       enabling = true
       throw {code: -4, info: 'Account Change'}
     }
@@ -97,22 +93,16 @@ const connectWallet2 = ({iconUrl, apiVersion, walletName, supportedExtensions, s
     if (enabling) {
       return false
     }
-    // throw {code: -4, info: 'Account Change'}
-    // return false
+
     return callExternalMethod('cardano_is_enabled', {browserContext: getContext()})
   }
 
   const enable = () => {
-    // alert('calling enable')
     enabling = true
     localStorage.setItem('yoroi-session-id', sessionId)
-    // throw {code: -3, info: 'User Rejected'}
     return callExternalMethod('cardano_enable', {browserContext: getContext()})
       .then(createApi)
-      .catch((e) => {
-        alert('error' + JSON.stringify(e))
-        return handleError(e)
-      })
+      .catch((e) => handleError(e))
   }
 
   const handleError = (error) => {

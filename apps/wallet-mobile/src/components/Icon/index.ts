@@ -16,6 +16,7 @@ import {Clock} from './Clock'
 import {Close} from './Close'
 import {Coins} from './Coins'
 import {Collateral} from './Collateral'
+import {Compass} from './Compass'
 import {Copy} from './Copy'
 import {CopySuccess} from './CopySuccess'
 import {Cross} from './Cross'
@@ -108,7 +109,6 @@ import {Warning} from './Warning'
 import {WingRiders} from './WingRiders'
 import {YoroiNightly} from './YoroiNightly'
 import {YoroiWallet} from './YoroiWallet'
-import {Compass} from './Compass'
 
 export const Icon = {
   Ada,

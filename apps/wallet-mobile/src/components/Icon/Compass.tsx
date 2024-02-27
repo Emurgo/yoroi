@@ -15,6 +15,7 @@ export const Compass = ({size = 36, color = 'black'}: Props) => {
         d="M15.33 6.294a1 1 0 00-1.249-1.25l-6.12 1.88a1 1 0 00-.662.662l-1.88 6.12a1 1 0 001.25 1.25l6.12-1.88a1 1 0 00.662-.662l1.88-6.12zM7.886 12.49l1.17-3.81 3.81-1.17-1.17 3.81-3.81 1.17z"
         fill={color}
       />
+
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
