@@ -7,16 +7,9 @@ import {Icon} from '../../../../components'
 import {YoroiZendeskLink} from '../contants'
 import {useStrings} from '../useStrings'
 
-type ShowAddressLimitInfoProps = {
-  onLimit: boolean
-}
-
-export const ShowAddressLimitInfo = ({onLimit}: ShowAddressLimitInfoProps) => {
+export const ShowAddressLimitInfo = () => {
   const strings = useStrings()
-
   const {styles, colors} = useStyles()
-
-  if (!onLimit) return null
 
   return (
     <Animated.View layout={Layout} entering={FadeInUp} exiting={FadeOut} style={styles.smallAddressCard}>
@@ -26,12 +19,12 @@ export const ShowAddressLimitInfo = ({onLimit}: ShowAddressLimitInfoProps) => {
         {strings.infoAddressLimit}
 
         <TouchableWithoutFeedback
-          style={[styles.text, {color: colors.yoroiZendesk}]}
+          style={[styles.text, {color: colors.zendeskLink}]}
           onPress={() => {
             Linking.openURL(YoroiZendeskLink)
           }}
         >
-          <Text style={{color: colors.yoroiZendesk, borderWidth: 1}}>{strings.yoroiZendesk}</Text>
+          <Text style={{color: colors.zendeskLink, borderWidth: 1}}>{strings.yoroiZendesk}</Text>
         </TouchableWithoutFeedback>
       </Text>
     </Animated.View>
@@ -59,7 +52,7 @@ const useStyles = () => {
 
   const colors = {
     icon: theme.color.primary[500],
-    yoroiZendesk: theme.color.primary[500],
+    zendeskLink: theme.color.primary[500],
   }
 
   return {styles, colors} as const

@@ -25,9 +25,9 @@ import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
 import {RampOnOffScreen} from '../features/RampOnOff/RampOnOffNavigator'
 import {ReceiveProvider} from '../features/Receive/common/ReceiveProvider'
-import {EnterAmountScreen} from '../features/Receive/useCases/EnterAmountScreen'
-import {MultipleAddressesScreen} from '../features/Receive/useCases/MultipleAddressesScreen'
-import {SingleAddressScreen} from '../features/Receive/useCases/SingleAddressScreen'
+import {DescribeSelectedAddressScreen} from '../features/Receive/useCases/DescribeSelectedAddressScreen'
+import {ListMultipleAddressesScreen} from '../features/Receive/useCases/ListMultipleAddressesScreen'
+import {RequestSpecificAmountScreen} from '../features/Receive/useCases/RequestSpecificAmountScreen'
 import {CodeScannerButton} from '../features/Scan/common/CodeScannerButton'
 import {ScanCodeScreen} from '../features/Scan/useCases/ScanCodeScreen'
 import {ShowCameraPermissionDeniedScreen} from '../features/Scan/useCases/ShowCameraPermissionDeniedScreen/ShowCameraPermissionDeniedScreen'
@@ -59,7 +59,7 @@ import {
 } from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
 import {COLORS} from '../theme'
-import {useFrontendFees, useReceiveAddresses, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
+import {useFrontendFees, useStakingKey, useWalletName} from '../yoroi-wallets/hooks'
 import {isMainnetNetworkId} from '../yoroi-wallets/utils'
 import {ModalInfo} from './ModalInfo'
 import {TxDetails} from './TxDetails'
@@ -75,19 +75,15 @@ export const TxHistoryNavigator = () => {
   const storage = useAsyncStorage()
   const {theme} = useTheme()
 
-  // receive
-  const receiveAddresses = useReceiveAddresses(wallet)
-  const currentAddress = _.last(receiveAddresses)
-
   // modal
   const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
   const hideModalInfo = React.useCallback(() => setIsModalInfoVisible(false), [])
 
   // swap
   const {frontendFees} = useFrontendFees(wallet)
-  const aggregatorTokenId = isMainnetNetworkId(wallet.networkId) ? milkTokenId.mainnet : milkTokenId.preprod
   const stakingKey = useStakingKey(wallet)
   const swapManager = React.useMemo(() => {
+    const aggregatorTokenId = isMainnetNetworkId(wallet.networkId) ? milkTokenId.mainnet : milkTokenId.preprod
     const swapStorage = swapStorageMaker()
     const swapApi = swapApiMaker({
       isMainnet: isMainnetNetworkId(wallet.networkId),
@@ -97,7 +93,7 @@ export const TxHistoryNavigator = () => {
     })
     const frontendFeeTiers = frontendFees?.[aggregator] ?? ([] as const)
     return swapManagerMaker({swapStorage, swapApi, frontendFeeTiers, aggregator, aggregatorTokenId})
-  }, [wallet.networkId, wallet.primaryTokenInfo.id, stakingKey, frontendFees, aggregatorTokenId])
+  }, [wallet.networkId, wallet.primaryTokenInfo.id, stakingKey, frontendFees])
 
   // resolver
   const resolverManager = React.useMemo(() => {
@@ -126,7 +122,7 @@ export const TxHistoryNavigator = () => {
   const headerRightHistory = React.useCallback(() => <HeaderRightHistory />, [])
 
   return (
-    <ReceiveProvider key={wallet.id} initialCurrentAddress={currentAddress}>
+    <ReceiveProvider key={wallet.id}>
       <TransferProvider key={wallet.id}>
         <SwapProvider key={wallet.id} swapManager={swapManager}>
           <SwapFormProvider>
@@ -164,7 +160,7 @@ export const TxHistoryNavigator = () => {
 
                   <Stack.Screen
                     name="receive-single"
-                    component={SingleAddressScreen}
+                    component={DescribeSelectedAddressScreen}
                     options={{
                       title: strings.receiveTitle,
                       gestureEnabled: false,
@@ -173,7 +169,7 @@ export const TxHistoryNavigator = () => {
 
                   <Stack.Screen
                     name="receive-multiple"
-                    component={MultipleAddressesScreen}
+                    component={ListMultipleAddressesScreen}
                     options={{
                       title: strings.receiveTitle,
                     }}
@@ -181,7 +177,7 @@ export const TxHistoryNavigator = () => {
 
                   <Stack.Screen
                     name="receive-specific-amount"
-                    component={EnterAmountScreen}
+                    component={RequestSpecificAmountScreen}
                     options={{
                       title: strings.specificAmount,
                     }}

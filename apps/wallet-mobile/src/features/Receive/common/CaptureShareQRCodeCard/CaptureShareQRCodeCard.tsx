@@ -8,26 +8,14 @@ import {Spacer, Text} from '../../../../components'
 import {YoroiLogoIllustration} from '../../illustrations/YoroiLogo'
 
 type ShareProps = {
-  address?: string
-  title?: string
-  addressDetails?: AddressDetailsProps
+  content: string
 }
 
-type AddressDetailsProps = {
-  address: string
-  stakingHash?: string
-  spendingHash?: string
-  title?: string
-}
-
-export const CaptureShareQRCodeCard = ({address}: ShareProps) => {
-  const logoWidth = 35
-  const logoHeight = 37
-
+export const CaptureShareQRCodeCard = ({content}: ShareProps) => {
   const {styles, colors} = useStyles()
 
   return (
-    <View style={[styles.touchableCard]}>
+    <View style={styles.touchableCard}>
       <LinearGradient
         style={[StyleSheet.absoluteFill, {opacity: 1}]}
         start={{x: 0, y: 0}}
@@ -37,23 +25,23 @@ export const CaptureShareQRCodeCard = ({address}: ShareProps) => {
 
       <Spacer height={16} />
 
-      <YoroiLogoIllustration height={logoHeight} width={logoWidth} />
+      <YoroiLogoIllustration height={37} width={35} />
 
       <View style={styles.addressContainer}>
         <View style={styles.qrCode}>
-          <QRCode value={address} size={158} color={colors.black} />
+          <QRCode value={content} size={158} color={colors.black} />
         </View>
 
         <Spacer height={16} />
 
-        <Text style={[styles.textAddress, {color: colors.transparent}]}>{address}</Text>
+        <Text style={[styles.content, {color: colors.transparent}]}>{content}</Text>
       </View>
     </View>
   )
 }
 
 const useStyles = () => {
-  const SCREEN_WIDTH = useWindowDimensions().width
+  const screenWidth = useWindowDimensions().width
   const {theme} = useTheme()
 
   const styles = StyleSheet.create({
@@ -67,7 +55,7 @@ const useStyles = () => {
     },
     touchableCard: {
       borderRadius: 10,
-      width: SCREEN_WIDTH - 34,
+      width: screenWidth - 34,
       alignItems: 'center',
       maxHeight: 308,
       flex: 1,
@@ -78,7 +66,7 @@ const useStyles = () => {
       gap: 32,
       justifyContent: 'center',
     },
-    textAddress: {
+    content: {
       textAlign: 'center',
       maxWidth: 300,
       ...theme.typography['body-1-l-regular'],

@@ -1,23 +1,24 @@
-import {isString} from '@yoroi/common'
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {CopyButton, Text} from '../../../../components'
+import {isEmptyString} from '../../../../utils/utils'
 import {useStrings} from '../useStrings'
 
 type AddressDetailsProps = {
   address: string
   stakingHash?: string
   spendingHash?: string
-  title?: string
 }
 
 export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDetailsProps) => {
   const strings = useStrings()
-
   const {styles, colors} = useStyles()
+
+  const hasStakingHash = !isEmptyString(stakingHash)
+  const hasSpendingHash = !isEmptyString(spendingHash)
 
   return (
     <View style={styles.addressDetails}>
@@ -40,7 +41,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
         </View>
       </View>
 
-      {isString(stakingHash) && stakingHash?.length > 0 && (
+      {hasStakingHash && (
         <View style={styles.textSection}>
           <Text style={[styles.textAddress, {color: colors.grayText}]}>{strings.stakingKeyHash}</Text>
 
@@ -52,7 +53,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
         </View>
       )}
 
-      {isString(spendingHash) && spendingHash?.length > 0 && (
+      {hasSpendingHash && (
         <View style={styles.textSection}>
           <Text style={[styles.textAddress, {color: colors.grayText}]}>{strings.spendingKeyHash}</Text>
 
@@ -68,7 +69,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
 }
 
 const useStyles = () => {
-  const SCREEN_WIDTH = useWindowDimensions().width
+  const screenWidth = useWindowDimensions().width
   const {theme} = useTheme()
   const {color, typography} = theme
 
@@ -79,7 +80,7 @@ const useStyles = () => {
     },
     addressDetails: {
       borderRadius: 16,
-      width: SCREEN_WIDTH - 34,
+      width: screenWidth - 34,
       alignItems: 'center',
       flex: 1,
       minHeight: 394,

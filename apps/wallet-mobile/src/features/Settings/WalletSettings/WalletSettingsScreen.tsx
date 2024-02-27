@@ -18,8 +18,8 @@ import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
+import {useAddressDerivationManager} from '../../Receive/common/useAddressDerivationManager'
 import {useNavigateTo} from '../common/navigation'
-import {useMultipleAddresses} from '../MultipleAddresses/MultipleAddresses'
 import {
   NavigatedSettingsItem,
   SettingsBuildItem,
@@ -40,7 +40,7 @@ export const WalletSettingsScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
-  const {isSingleAddress, isToggleReceiveTypeLoading} = useMultipleAddresses()
+  const addressDerivation = useAddressDerivationManager()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
@@ -124,9 +124,9 @@ export const WalletSettingsScreen = () => {
             icon={<Icon.Qr {...iconProps} />}
             label={strings.multipleAddresses}
             info={strings.multipleAddressesInfo}
-            disabled={isToggleReceiveTypeLoading}
+            disabled={addressDerivation.isToggleLoading}
           >
-            <ReceiveMultipleAddresseSwitch isMultipleAddressesOff={isSingleAddress} />
+            <AddresseDerivationSwitcher isSingle={addressDerivation.isSingle} />
           </SettingsItem>
         </SettingsSection>
 
@@ -190,16 +190,16 @@ const ResyncButton = () => {
   )
 }
 
-const ReceiveMultipleAddresseSwitch = ({isMultipleAddressesOff}: {isMultipleAddressesOff: boolean}) => {
-  const {setMultipleAddressesOn, setMultipleAddressesOff, isToggleReceiveTypeLoading} = useMultipleAddresses()
-  const [isLocalMultipleAddressOff, setIsLocalMultipleAddressesOff] = React.useState(isMultipleAddressesOff)
+const AddresseDerivationSwitcher = (props: {isSingle: boolean}) => {
+  const addressDerivation = useAddressDerivationManager()
+  const [isSingleLocal, setIsSingleLocal] = React.useState(props.isSingle)
 
-  const onToggleMultipleAddressesMode = () => {
-    setIsLocalMultipleAddressesOff((prevState) => {
+  const handleOnSwitchAddressDerivation = () => {
+    setIsSingleLocal((prevState) => {
       if (prevState) {
-        setMultipleAddressesOn()
+        addressDerivation.enableMultipleMode()
       } else {
-        setMultipleAddressesOff()
+        addressDerivation.enableSingleMode()
       }
 
       return !prevState
@@ -208,9 +208,9 @@ const ReceiveMultipleAddresseSwitch = ({isMultipleAddressesOff}: {isMultipleAddr
 
   return (
     <Switch
-      value={!isLocalMultipleAddressOff}
-      onValueChange={onToggleMultipleAddressesMode}
-      disabled={isToggleReceiveTypeLoading}
+      value={!isSingleLocal}
+      onValueChange={handleOnSwitchAddressDerivation}
+      disabled={addressDerivation.isToggleLoading}
     />
   )
 }

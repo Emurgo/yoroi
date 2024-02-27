@@ -7,11 +7,9 @@ export const useReceive = () => React.useContext(ReceiveContext)
 export const ReceiveProvider = ({
   children,
   initialState,
-  initialCurrentAddress,
 }: {
   children: React.ReactNode
   initialState?: Partial<ReceiveState>
-  initialCurrentAddress?: string
 }) => {
   const [state, dispatch] = React.useReducer(receiveReducer, {
     ...defaultState,
@@ -19,16 +17,15 @@ export const ReceiveProvider = ({
   })
 
   const actions = React.useRef<ReceiveActions>({
-    currentAddressChanged: (address: string) => dispatch({type: ReceiveActionType.CurrentAddressChanged, address}),
+    selectedAddressChanged: (address: string) => dispatch({type: ReceiveActionType.SelectedAddressChanged, address}),
   }).current
 
   const context = React.useMemo(
     () => ({
       ...state,
       ...actions,
-      defaultAddress: initialCurrentAddress ?? '',
     }),
-    [state, actions, initialCurrentAddress],
+    [state, actions],
   )
 
   return <ReceiveContext.Provider value={context}>{children}</ReceiveContext.Provider>
@@ -37,47 +34,45 @@ export const ReceiveProvider = ({
 const receiveReducer = (state: ReceiveState, action: ReceiveAction) => {
   return produce(state, (draft) => {
     switch (action.type) {
-      case ReceiveActionType.CurrentAddressChanged:
+      case ReceiveActionType.SelectedAddressChanged:
         draft.selectedAddress = action.address
         break
 
       default:
-        throw new Error(`invalid action`)
+        throw new Error('[ReceiverContext] invalid action')
     }
   })
 }
 
-export type ReceiveType = 'single' | 'multiple'
-
-type ReceiveAction = {type: ReceiveActionType.CurrentAddressChanged; address: string}
+type ReceiveAction = {type: ReceiveActionType.SelectedAddressChanged; address: string}
 
 export type ReceiveState = {
-  selectedAddress: null | string
-  defaultAddress: null | string
+  selectedAddress: string
+  defaultAddress: string
 }
 
 type ReceiveActions = {
-  currentAddressChanged: (address: string) => void
+  selectedAddressChanged: (address: string) => void
 }
 
 const defaultState: ReceiveState = Object.freeze({
-  selectedAddress: null,
-  defaultAddress: null,
+  selectedAddress: '',
+  defaultAddress: '',
 })
 
 function missingInit() {
   console.error('[ReceiveContext] missing initialization')
 }
 
-const initialReceiveFormContext: ReceiveContext = {
+const initialReceiveContext: ReceiveContext = {
   ...defaultState,
-  currentAddressChanged: missingInit,
+  selectedAddressChanged: missingInit,
 }
 
 enum ReceiveActionType {
-  CurrentAddressChanged = 'currentAddressChanged',
+  SelectedAddressChanged = 'selectedAddressChanged',
 }
 
 type ReceiveContext = ReceiveState & ReceiveActions
 
-const ReceiveContext = React.createContext<ReceiveContext>(initialReceiveFormContext)
+const ReceiveContext = React.createContext<ReceiveContext>(initialReceiveContext)
