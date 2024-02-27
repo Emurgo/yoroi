@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, TextProps, View, ViewProps} from 'react-native'
@@ -14,6 +15,7 @@ const version = DeviceInfo.getVersion()
 
 export const About = () => {
   const strings = useStrings()
+  const styles = useStyles()
 
   const wallet = useSelectedWallet()
   const network = getNetworkConfigById(wallet.networkId).MARKETING_NAME
@@ -48,38 +50,56 @@ export const About = () => {
   )
 }
 
-const Row = ({style, ...props}: ViewProps) => <View {...props} style={[styles.row, style]} />
+const Row = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
+  return <View {...props} style={[styles.row, style]} />
+}
 
-const LabelText = ({style, children, ...props}: TextProps) => (
-  <Text
-    {...props}
-    style={[{fontFamily: 'Rubik-Medium', color: lightPalette.gray['900'], fontSize: 16, lineHeight: 24}, style]}
-  >
-    {children}
-  </Text>
-)
+const LabelText = ({style, children, ...props}: TextProps) => {
+  const styles = useStyles()
 
-const ValueText = ({style, children, ...props}: TextProps) => (
-  <Text
-    {...props}
-    style={[{fontFamily: 'Rubik-Regular', fontSize: 16, lineHeight: 24, color: lightPalette.gray['500']}, style]}
-  >
-    {children}
-  </Text>
-)
+  return (
+    <Text {...props} style={[styles.labelText, style]}>
+      {children}
+    </Text>
+  )
+}
 
-const styles = StyleSheet.create({
-  about: {
-    flex: 1,
-    backgroundColor: 'white',
-    padding: 16,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 16,
-  },
-})
+const ValueText = ({style, children, ...props}: TextProps) => {
+  const styles = useStyles()
+
+  return (
+    <Text {...props} style={[styles.valueText, style]}>
+      {children}
+    </Text>
+  )
+}
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    about: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+      padding: 16,
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingVertical: 16,
+    },
+    labelText: {
+      color: lightPalette.gray['900'],
+      ...typography['body-1-l-medium'],
+    },
+    valueText: {
+      color: lightPalette.gray['500'],
+      ...typography['body-1-l-regular'],
+    },
+  })
+
+  return styles
+}
 
 const useStrings = () => {
   const intl = useIntl()
