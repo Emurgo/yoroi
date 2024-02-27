@@ -1,12 +1,10 @@
 import {isKeyOf} from '@yoroi/common'
+import {getWalletConnectorJS} from '@yoroi/dapp-connector'
 import {useEffect} from 'react'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {Logger} from '../../../yoroi-wallets/logging'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import {connectWallet} from './connector'
 
 export const useConnectWalletToWebView = (
   wallet: YoroiWallet,
@@ -344,21 +342,13 @@ const ICON_URL =
 const SUPPORTED_EXTENSIONS = [{cip: 95}]
 
 const getInitScript = (sessionId: string) => {
-  return getWalletConnectorJS({
+  const initScript = getWalletConnectorJS({
     iconUrl: ICON_URL,
     apiVersion: API_VERSION,
     walletName: WALLET_NAME,
     supportedExtensions: SUPPORTED_EXTENSIONS,
     sessionId,
   })
-}
-
-const getWalletConnectorJS = (props: {
-  iconUrl: string
-  apiVersion: string
-  walletName: string
-  supportedExtensions: {cip: number}[]
-  sessionId: string
-}) => {
-  return connectWallet(props)
+  console.log('initScript', initScript)
+  return initScript
 }

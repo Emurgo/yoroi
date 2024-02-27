@@ -249,6 +249,7 @@
     "babel-plugin-inline-import": "^3.0.0",
     "babel-plugin-react-intl": "^3.0.1",
     "babel-plugin-require-context-hook": "^1.0.0",
+    "babel-plugin-show-source": "^0.2.1",
     "chai": "^4.3.7",
     "dependency-cruiser": "^13.1.1",
     "eslint": "^8.19.0",

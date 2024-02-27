@@ -4,6 +4,7 @@
     "baseUrl": "./src",
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "allowJs": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
