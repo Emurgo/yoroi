@@ -1,5 +1,4 @@
-import {banxaModuleMaker} from '@yoroi/exchange'
-import {BanxaReferralUrlQueryStringParams} from '@yoroi/exchange/lib/typescript/translators/banxa/module'
+import {Banxa, banxaModuleMaker} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
@@ -62,7 +61,7 @@ export const CreateExchange = () => {
       blockchain: 'ADA',
       walletAddress,
       returnUrl,
-    } as BanxaReferralUrlQueryStringParams
+    } as Banxa.ReferralUrlQueryStringParams
 
     const banxa = banxaModuleMaker(moduleOptions)
     const url = banxa.createReferralUrl(urlOptions)
