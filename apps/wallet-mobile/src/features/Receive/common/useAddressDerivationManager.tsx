@@ -84,7 +84,7 @@ export const useAddressDerivationManager = () => {
     isToggleLoading,
     addressDerivation,
     toggle,
-    singleMode: () => setAddressDerivationMode('single'),
-    multipleMode: () => setAddressDerivationMode('multiple'),
+    enableSingleMode: () => setAddressDerivationMode('single'),
+    enableMultipleMode: () => setAddressDerivationMode('multiple'),
   }
 }

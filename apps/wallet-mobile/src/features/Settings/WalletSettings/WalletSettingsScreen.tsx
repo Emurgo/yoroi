@@ -195,9 +195,9 @@ const AddresseDerivationSwitcher = (props: {isSingle: boolean}) => {
   const handleOnSwitchAddressDerivation = () => {
     setIsSingleLocal((prevState) => {
       if (prevState) {
-        addressDerivation.multipleMode()
+        addressDerivation.enableMultipleMode()
       } else {
-        addressDerivation.singleMode()
+        addressDerivation.enableSingleMode()
       }
 
       return !prevState
