@@ -20,7 +20,7 @@ describe('4_26_0 migrations', () => {
   })
 
   it('should migrate address mode for wallet metas', async () => {
-    const walletMeta1 = {
+    const pwdWalletMeta = {
       id: '1',
       name: 'Wallet 1',
       networkId: 1,
@@ -30,7 +30,7 @@ describe('4_26_0 migrations', () => {
       walletImplementationId: 'haskell-shelley',
     }
 
-    const walletMeta2 = {
+    const hwWalletMeta = {
       id: '2',
       name: 'Wallet 2',
       networkId: 2,
@@ -40,7 +40,7 @@ describe('4_26_0 migrations', () => {
       walletImplementationId: 'haskell-shelley',
     }
 
-    const walletMeta3 = {
+    const bioAuthWalletMeta = {
       id: '3',
       name: 'Wallet 3',
       networkId: 3,
@@ -50,7 +50,7 @@ describe('4_26_0 migrations', () => {
       walletImplementationId: 'haskell-shelley',
     }
 
-    const walletMetas = [walletMeta1, walletMeta2, walletMeta3]
+    const walletMetas = [pwdWalletMeta, hwWalletMeta, bioAuthWalletMeta]
 
     jest.spyOn(storage, 'getAllKeys').mockResolvedValue(walletMetas.map((meta) => meta.id))
     jest.spyOn(storage, 'multiGet').mockResolvedValue(walletMetas.map((meta) => [meta.id, meta]))
@@ -63,15 +63,15 @@ describe('4_26_0 migrations', () => {
     expect(storage.removeItem).toHaveBeenCalledWith('deletedWalletIds')
     expect(storage.setItem).toHaveBeenCalledTimes(3)
     expect(storage.setItem).toHaveBeenCalledWith('1', {
-      ...walletMeta1,
+      ...pwdWalletMeta,
       addressMode: 'multiple',
     })
     expect(storage.setItem).toHaveBeenCalledWith('2', {
-      ...walletMeta2,
+      ...hwWalletMeta,
       addressMode: 'multiple',
     })
     expect(storage.setItem).toHaveBeenCalledWith('3', {
-      ...walletMeta3,
+      ...bioAuthWalletMeta,
       addressMode: 'multiple',
     })
   })
