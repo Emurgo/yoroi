@@ -1,4 +1,4 @@
-import {handleZodErrors} from './zod-errors'
+import {handleZodErrors} from '../zod-errors'
 import {BanxaUnknownError, BanxaValidationError} from './errors'
 import {z} from 'zod'
 
