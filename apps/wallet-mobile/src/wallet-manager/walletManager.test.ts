@@ -2,7 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {parseSafe} from '@yoroi/common'
 
-import {isYoroiWallet} from '../cardano/types'
+import {isYoroiWallet} from '../yoroi-wallets/cardano/types'
 import {WalletManager} from './walletManager'
 
 // ! Actually hitting the API
@@ -57,6 +57,7 @@ describe('walletMananger', () => {
           name: 'name',
           networkId: 300,
           walletImplementationId: 'haskell-shelley',
+          addressMode: 'single',
         },
       ])
     }
@@ -115,6 +116,7 @@ describe('walletMananger', () => {
     expect(walletMeta.networkId).toEqual(networkId)
     expect(walletMeta.walletImplementationId).toEqual(walletImplementationId)
     expect(walletMeta.isHW).toEqual(false)
+    expect(walletMeta.addressMode).toEqual(addressMode)
   })
 
   it('creates a hw wallet', async () => {
@@ -158,6 +160,7 @@ describe('walletMananger', () => {
     expect(walletMeta.networkId).toEqual(networkId)
     expect(walletMeta.walletImplementationId).toEqual(walletImplementationId)
     expect(walletMeta.isHW).toEqual(true)
+    expect(walletMeta.addressMode).toEqual(addressMode)
   })
 })
 

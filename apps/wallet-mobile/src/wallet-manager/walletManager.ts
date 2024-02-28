@@ -1,39 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import ExtendableError from 'es6-error'
 import uuid from 'uuid'
 
-import {saveAddressMode} from '../../features/Receive/common/storage'
-import {getCardanoWalletFactory} from '../cardano/getWallet'
-import {CardanoTypes, isYoroiWallet, YoroiWallet} from '../cardano/types'
-import {HWDeviceInfo} from '../hw'
-import {Logger} from '../logging'
-import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../migrations/walletMeta'
-import {makeWalletEncryptedStorage} from '../storage'
-import {Keychain} from '../storage/Keychain'
-import {rootStorage} from '../storage/rootStorage'
-import {AddressMode, NetworkId, WalletImplementationId} from '../types'
-
-export class WalletClosed extends ExtendableError {}
-
-export type WalletMeta = {
-  id: string
-  name: string
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
-  isHW: boolean
-  isShelley?: boolean | null | undefined
-  // legacy jormungandr
-  isEasyConfirmationEnabled: boolean
-  checksum: CardanoTypes.WalletChecksum
-}
-
-export type WalletManagerEvent =
-  | {type: 'easy-confirmation'; enabled: boolean}
-  | {type: 'hw-device-info'; hwDeviceInfo: HWDeviceInfo}
-
-export type WalletManagerSubscription = (event: WalletManagerEvent) => void
+import {getCardanoWalletFactory} from '../yoroi-wallets/cardano/getWallet'
+import {isYoroiWallet, YoroiWallet} from '../yoroi-wallets/cardano/types'
+import {HWDeviceInfo} from '../yoroi-wallets/hw'
+import {Logger} from '../yoroi-wallets/logging'
+import {migrateWalletMetas} from '../yoroi-wallets/migrations/walletMeta'
+import {makeWalletEncryptedStorage} from '../yoroi-wallets/storage'
+import {Keychain} from '../yoroi-wallets/storage/Keychain'
+import {rootStorage} from '../yoroi-wallets/storage/rootStorage'
+import {NetworkId, WalletImplementationId} from '../yoroi-wallets/types'
+import {AddressMode, WalletManagerEvent, WalletManagerSubscription, WalletMeta} from './types'
+import {isWalletMeta, parseWalletMeta} from './validators'
 
 export class WalletManager {
   private subscriptions: Array<WalletManagerSubscription> = []
@@ -136,6 +115,7 @@ export class WalletManager {
     wallet: YoroiWallet,
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
+    addressMode: AddressMode,
   ) {
     await wallet.save()
     if (!wallet.checksum) throw new Error('invalid wallet')
@@ -144,6 +124,7 @@ export class WalletManager {
       name,
       networkId,
       walletImplementationId,
+      addressMode,
       isHW: wallet.isHW,
       checksum: wallet.checksum,
       isEasyConfirmationEnabled: false,
@@ -169,7 +150,7 @@ export class WalletManager {
       walletMeta,
     })
 
-    wallet.subscribe((event) => this._notify(event as any))
+    wallet.subscribe((event) => this._notify(event as never))
     wallet.startSync()
 
     return wallet
@@ -212,10 +193,7 @@ export class WalletManager {
       password,
     })
 
-    // created new wallets default to single address mode
-    await saveAddressMode(storage)(addressMode)
-
-    return this.saveWallet(id, name, wallet, networkId, implementationId)
+    return this.saveWallet(id, name, wallet, networkId, implementationId, addressMode)
   }
 
   async createWalletWithBip44Account(
@@ -239,10 +217,7 @@ export class WalletManager {
       isReadOnly,
     })
 
-    // created new wallets default to single address mode
-    await saveAddressMode(storage)(addressMode)
-
-    return this.saveWallet(id, name, wallet, networkId, implementationId)
+    return this.saveWallet(id, name, wallet, networkId, implementationId, addressMode)
   }
 }
 

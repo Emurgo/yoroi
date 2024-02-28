@@ -8,9 +8,9 @@ import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
+import {AddressMode} from '../../wallet-manager/types'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {useCreateBip44Wallet} from '../../yoroi-wallets/hooks'
-import {AddressMode} from '../../yoroi-wallets/types/yoroi'
 import {WalletNameForm} from '../WalletNameForm'
 
 // when hw, later will be part of the onboarding

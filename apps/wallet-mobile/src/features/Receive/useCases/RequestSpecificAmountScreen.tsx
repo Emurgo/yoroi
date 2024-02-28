@@ -10,11 +10,11 @@ import {useCopy} from '../../../legacy/useCopy'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {isEmptyString} from '../../../utils'
+import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {editedFormatter} from '../../../yoroi-wallets/utils'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
 import {SkeletonAdressDetail} from '../common/SkeletonAddressDetail/SkeletonAddressDetail'
-import {useAddressModeManager} from '../common/useAddressModeManager'
 import {useStrings} from '../common/useStrings'
 
 export const RequestSpecificAmountScreen = () => {

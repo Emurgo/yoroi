@@ -8,8 +8,8 @@ import uuid from 'uuid'
 import {AppNavigator} from './AppNavigator'
 import {useInitScreenShare} from './features/Settings/ScreenShare'
 import {CONFIG, isProduction} from './legacy/config'
+import {walletManager} from './wallet-manager/walletManager'
 import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
-import {walletManager} from './yoroi-wallets/walletManager'
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental != null) {

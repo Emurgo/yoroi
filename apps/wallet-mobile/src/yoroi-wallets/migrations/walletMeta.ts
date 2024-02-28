@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-import {parseSafe} from '@yoroi/common'
-
 import {Logger} from '../../legacy/logging'
+import {WalletMeta} from '../../wallet-manager/types'
+import {isWalletMeta} from '../../wallet-manager/validators'
 import {CardanoTypes, legacyWalletChecksum, walletChecksum} from '../cardano/types'
 import {WALLETS} from '../cardano/utils'
 import {rootStorage} from '../storage/rootStorage'
 import type {NetworkId, WalletImplementationId} from '../types/other'
-import {NETWORK_REGISTRY, WALLET_IMPLEMENTATION_REGISTRY} from '../types/other'
-import {WalletMeta} from '../walletManager'
+import {NETWORK_REGISTRY} from '../types/other'
 
 async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Promise<WalletMeta> {
   if (!currentWalletMeta.id) throw new Error(`Wallet meta stored is corrupted. ${JSON.stringify(currentWalletMeta)}`)
@@ -90,6 +88,12 @@ async function toShelleyWalletMeta(currentWalletMeta: Partial<WalletMeta>): Prom
     await migrateAttribute('isEasyConfirmationEnabled', walletMetaUpdate)
   }
 
+  // missing addressMode
+  if (!('addressMode' in currentWalletMeta)) {
+    walletMetaUpdate.addressMode = 'multiple'
+    await migrateAttribute('addressMode', walletMetaUpdate)
+  }
+
   if (isWalletMeta(walletMetaUpdate)) return walletMetaUpdate as WalletMeta
 
   Logger.error(`Invalid wallet meta `, JSON.stringify(walletMetaUpdate))
@@ -105,38 +109,4 @@ function migrateAttribute(attr: keyof WalletMeta, walletMetaUpdated: Partial<Wal
   if (id == null) throw new Error('invalid wallet id')
   Logger.warn(`migrateAttribute::${attr} of wallet ${id}`)
   return rootStorage.join('wallet/').setItem(id, walletMetaUpdated)
-}
-
-export const parseWalletMeta = (data: unknown) => {
-  const parsed = parseSafe(data)
-
-  return isWalletMeta(parsed) ? parsed : undefined
-}
-
-export function isWalletMeta(walletMeta: any): walletMeta is WalletMeta {
-  return (
-    // prettier-ignore
-    !!walletMeta &&
-    'id' in walletMeta
-      && typeof walletMeta.id === 'string' &&
-    'name' in walletMeta
-      && typeof walletMeta.name === 'string' &&
-    'networkId' in walletMeta
-      && typeof walletMeta.networkId === 'number' &&
-    'isHW' in walletMeta
-      && typeof walletMeta.isHW === 'boolean' &&
-    'isEasyConfirmationEnabled' in walletMeta
-      && typeof walletMeta.isEasyConfirmationEnabled === 'boolean' &&
-    'checksum' in walletMeta
-      && typeof walletMeta.checksum === 'object' &&
-    ('provider' in walletMeta
-      && typeof walletMeta.provider === 'string'
-      || !('provider' in walletMeta)) &&
-    'walletImplementationId' in walletMeta
-      && typeof walletMeta.walletImplementationId === 'string'
-      && Object.values(WALLET_IMPLEMENTATION_REGISTRY).includes(walletMeta?.walletImplementationId) &&
-    ('isShelley' in walletMeta
-      && typeof walletMeta.isShelley === 'boolean'
-      || !('isShelley' in walletMeta))
-  )
 }

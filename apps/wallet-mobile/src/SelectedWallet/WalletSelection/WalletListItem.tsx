@@ -3,8 +3,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../components'
 import {brand, COLORS} from '../../theme'
+import {WalletMeta} from '../../wallet-manager/types'
 import {isByron, isHaskellShelley, isJormun} from '../../yoroi-wallets/cardano/utils'
-import {WalletMeta} from '../../yoroi-wallets/walletManager'
 
 type Props = {
   wallet: WalletMeta

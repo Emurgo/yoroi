@@ -4,11 +4,11 @@ import {useIntl} from 'react-intl'
 import {Boundary, TwoActionView} from '../../../components'
 import {LedgerConnect, LedgerTransportSwitch} from '../../../HW'
 import {confirmationMessages, txLabels} from '../../../i18n/global-messages'
+import {walletManager} from '../../../wallet-manager/walletManager'
 import {YoroiWallet} from '../../../yoroi-wallets/cardano/types'
 import {useSignWithHwAndSubmitTx} from '../../../yoroi-wallets/hooks'
 import {DeviceId, DeviceObj, withBLE, withUSB} from '../../../yoroi-wallets/hw'
 import {YoroiUnsignedTx} from '../../../yoroi-wallets/types'
-import {walletManager} from '../../../yoroi-wallets/walletManager'
 import {TransferSummary} from '../TransferSummary'
 
 type Props = {

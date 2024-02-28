@@ -18,10 +18,10 @@ import {CONFIG} from './legacy/config'
 import {setLogLevel} from './legacy/logging'
 import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet/Context'
-import {WalletManagerProvider} from './WalletManager'
+import {walletManager} from './wallet-manager/walletManager'
+import {WalletManagerProvider} from './wallet-manager/WalletManagerContext'
 import {useMigrations} from './yoroi-wallets/migrations'
 import {rootStorage} from './yoroi-wallets/storage/rootStorage'
-import {walletManager} from './yoroi-wallets/walletManager'
 
 enableScreens(true)
 enableFreeze(true)

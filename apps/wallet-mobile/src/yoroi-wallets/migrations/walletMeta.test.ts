@@ -2,11 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import assert from 'assert'
 import {expect} from 'chai'
 
+import {WalletMeta} from '../../wallet-manager/types'
 import {WALLET_CONFIG_24 as HASKELL_SHELLEY_24} from '../cardano/constants/mainnet/constants'
 import {WALLETS} from '../cardano/utils'
 import {rootStorage} from '../storage/rootStorage'
 import {NETWORK_REGISTRY} from '../types'
-import {WalletMeta} from '../walletManager'
 import {migrateWalletMetas} from './walletMeta'
 
 describe('migrateWalletMetas()', () => {
@@ -304,6 +304,19 @@ describe('migrateWalletMetas()', () => {
         expect(result).to.be.eql(expected)
       })
     })
+
+    describe(`when addressMode is missing`, () => {
+      it(`should set addressMode to multiple`, async () => {
+        const {addressMode: _, ...meta} = mockedWalletMeta
+        await rootStorage.join('wallet/').setItem(meta.id, meta)
+        const walletMetas = [meta]
+        const expected = [mockedWalletMeta]
+
+        const result = await migrateWalletMetas(walletMetas)
+
+        expect(result).to.be.eql(expected)
+      })
+    })
   })
 })
 
@@ -320,6 +333,7 @@ const mockedWalletMeta: WalletMeta = {
       'b04dc22991594170974bbbb5908cc50b48f236d680a9ebfe6c1d00f52f8f4813341943eb66dec48cfe7f3be5beec705b91300a07641e668ff19dfa2fbeccbfba',
   },
   walletImplementationId: HASKELL_SHELLEY_24.WALLET_IMPLEMENTATION_ID,
+  addressMode: 'multiple',
 }
 
 // legacy wallet data is any

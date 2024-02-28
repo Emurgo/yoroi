@@ -19,15 +19,16 @@ import {
 } from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
-import {useWalletManager} from '../../WalletManager'
+import {AddressMode, WalletMeta} from '../../wallet-manager/types'
+import {parseWalletMeta} from '../../wallet-manager/validators'
+import {WalletManager} from '../../wallet-manager/walletManager'
+import {useWalletManager} from '../../wallet-manager/WalletManagerContext'
 import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {calcLockedDeposit} from '../cardano/assetUtils'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
-import {parseWalletMeta} from '../migrations/walletMeta'
 import {
-  AddressMode,
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
   YoroiNftModerationStatus,
@@ -37,7 +38,6 @@ import {
 import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus, WalletImplementationId} from '../types/other'
 import {delay} from '../utils/timeUtils'
 import {Amounts, Quantities, Utxos} from '../utils/utils'
-import {WalletManager, WalletMeta} from '../walletManager'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
