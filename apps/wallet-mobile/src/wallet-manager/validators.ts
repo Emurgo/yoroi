@@ -11,7 +11,8 @@ export const parseWalletMeta = (data: unknown) => {
 
 const addressModes: ReadonlyArray<AddressMode> = ['single', 'multiple'] as const
 export function isWalletMeta(walletMeta: unknown): walletMeta is WalletMeta {
-  if (typeof walletMeta !== 'object' || walletMeta === null) return false
+  if (walletMeta == null) return false
+  if (typeof walletMeta !== 'object') return false
   return (
     // prettier-ignore
     !!walletMeta &&

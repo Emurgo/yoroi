@@ -17,10 +17,10 @@ import {InitApp} from './InitApp'
 import {CONFIG} from './legacy/config'
 import {setLogLevel} from './legacy/logging'
 import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
+import {useMigrations} from './migrations/useMigrations'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet/Context'
 import {walletManager} from './wallet-manager/walletManager'
 import {WalletManagerProvider} from './wallet-manager/WalletManagerContext'
-import {useMigrations} from './yoroi-wallets/migrations'
 import {rootStorage} from './yoroi-wallets/storage/rootStorage'
 
 enableScreens(true)
@@ -43,8 +43,10 @@ const metricsManager = makeMetricsManager()
 
 export const YoroiApp = () => {
   const migrated = useMigrations(rootStorage)
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  return migrated ? (
+
+  if (!migrated) return null
+
+  return (
     <AsyncStorageProvider storage={rootStorage}>
       <MetricsProvider metricsManager={metricsManager}>
         <WalletManagerProvider walletManager={walletManager}>
@@ -74,5 +76,5 @@ export const YoroiApp = () => {
         </WalletManagerProvider>
       </MetricsProvider>
     </AsyncStorageProvider>
-  ) : null
+  )
 }

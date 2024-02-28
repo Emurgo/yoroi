@@ -8,19 +8,20 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 import {Alert, InteractionManager, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 import config from 'react-native-config'
-import * as Keychain from 'react-native-keychain'
 
 import {useAuth} from '../auth/AuthProvider'
 import {Button, StatusBar, Text, TextInput} from '../components'
 import {showErrorDialog} from '../dialogs'
 import {useLegalAgreement, useResetLegalAgreement} from '../features/Initialization/common'
 import {errorMessages} from '../i18n/global-messages'
+import {storageVersionMaker} from '../migrations/storageVersion'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
 import {isEmptyString} from '../utils/utils'
 import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
 import {useCreateWallet} from '../yoroi-wallets/hooks'
+import {rootStorage} from '../yoroi-wallets/storage/rootStorage'
 import {NetworkId} from '../yoroi-wallets/types'
 import {CONFIG} from './config'
 
@@ -101,9 +102,9 @@ export const DeveloperScreen = () => {
         </TouchableOpacity>
 
         <Button
-          title="All kc"
+          title="reset storage version"
           style={styles.button}
-          onPress={() => Keychain.getAllGenericPasswordServices().then(console.log)}
+          onPress={() => storageVersionMaker(rootStorage).remove()}
         />
 
         <Button
