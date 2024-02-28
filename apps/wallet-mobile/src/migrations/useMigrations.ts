@@ -3,6 +3,7 @@ import * as React from 'react'
 
 import {to4_9_0} from './4_9_0'
 import {to4_26_0} from './4_26_0'
+import {ErrorMigrationVersion} from './errors'
 import {storageVersionMaker} from './storageVersion'
 
 export const useMigrations = (storage: App.Storage) => {
@@ -23,8 +24,9 @@ export const useMigrations = (storage: App.Storage) => {
         await storageVersion.save(2)
       }
 
-      // ATTENTION: when creating a new migration
-      // remember setting the storageVersion.lastStorageVersion equals your last migration
+      const savedVersion = await storageVersion.read()
+      if (savedVersion != storageVersion.current) throw new ErrorMigrationVersion()
+
       setDone(true)
     }
     runMigrations()
