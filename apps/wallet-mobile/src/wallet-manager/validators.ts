@@ -9,6 +9,7 @@ export const parseWalletMeta = (data: unknown) => {
   return isWalletMeta(parsed) ? parsed : undefined
 }
 
+const addressModes: ReadonlyArray<AddressMode> = ['single', 'multiple'] as const
 export function isWalletMeta(walletMeta: unknown): walletMeta is WalletMeta {
   if (typeof walletMeta !== 'object' || walletMeta === null) return false
   return (
@@ -37,7 +38,7 @@ export function isWalletMeta(walletMeta: unknown): walletMeta is WalletMeta {
         || !('isShelley' in walletMeta)) && 
       ('addressMode' in walletMeta 
         && typeof walletMeta.addressMode === 'string' 
-        && ['single', 'multiple'].includes(walletMeta.addressMode))
+        && addressModes.includes(walletMeta.addressMode as never))
   )
 }
 
