@@ -11,7 +11,6 @@ describe('walletMananger', () => {
 
   it('creates a wallet', async () => {
     const walletManager = new WalletManager()
-    await walletManager.initialize()
     await expect(walletManager.listWallets()).resolves.toEqual([])
 
     const name = 'name'
@@ -71,7 +70,7 @@ describe('walletMananger', () => {
       const walletManager = new WalletManager()
       expect(await walletManager.listWallets()).toEqual([])
 
-      await walletManager.initialize()
+      await walletManager.removeDeletedWallets()
 
       const shot = await snapshot()
       const walletMeta = getWalletMeta(wallet.id, shot)
@@ -87,7 +86,6 @@ describe('walletMananger', () => {
 
   it('creates a readonly wallet', async () => {
     const walletManager = new WalletManager()
-    await walletManager.initialize()
     await expect(walletManager.listWallets()).resolves.toEqual([])
 
     const name = 'name'
@@ -121,7 +119,6 @@ describe('walletMananger', () => {
 
   it('creates a hw wallet', async () => {
     const walletManager = new WalletManager()
-    await walletManager.initialize()
     await expect(walletManager.listWallets()).resolves.toEqual([])
 
     const name = 'name'

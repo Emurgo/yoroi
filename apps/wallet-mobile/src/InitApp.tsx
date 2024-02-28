@@ -59,7 +59,7 @@ const initInstallationId = async (storage: App.Storage) => {
 
 export const initApp = async (storage: App.Storage) => {
   await initInstallationId(storage)
-  await walletManager.initialize()
+  await walletManager.removeDeletedWallets()
 }
 
 const useInitSentry = (options: {enabled: boolean}) => {

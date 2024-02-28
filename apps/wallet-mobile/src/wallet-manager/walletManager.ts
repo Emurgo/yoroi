@@ -36,23 +36,13 @@ export class WalletManager {
     return walletMetas
   }
 
-  // note(v-almonacid): This method retrieves all the wallets' metadata from
-  // storage. Unfortunately, as new metadata is added over time (eg. networkId),
-  // we need to infer some values for wallets created in older versions,
-  // which may induce errors and leave us with this ugly method.
-  // The responsibility to check data consistency is left to the each wallet
-  // implementation.
-  async initialize() {
-    await this.removeDeletedWallets()
-  }
-
   async deletedWalletIds() {
     const ids = await this.rootStorage.getItem('deletedWalletIds', parseDeletedWalletIds)
 
     return ids ?? []
   }
 
-  private async removeDeletedWallets() {
+  async removeDeletedWallets() {
     const deletedWalletsIds = await this.deletedWalletIds()
     if (!deletedWalletsIds) return
 
