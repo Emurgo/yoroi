@@ -1,6 +1,6 @@
 {
-  "name": "@yoroi/banxa",
-  "version": "1.5.0",
+  "name": "@yoroi/exchange",
+  "version": "1.0.0",
   "description": "The Banxa integration package of Yoroi SDK",
   "keywords": [
     "yoroi",
@@ -10,23 +10,17 @@
     "react",
     "react-native"
   ],
-  "homepage": "https://github.com/Emurgo/yoroi/packages/banxa#readme",
+  "homepage": "https://github.com/Emurgo/yoroi/packages/exchange#readme",
   "bugs": {
     "url": "https://github.com/Emurgo/yoroi/issues"
   },
   "repository": {
     "type": "github",
     "url": "https://github.com/Emurgo/yoroi.git",
-    "directory": "packages/banxa"
+    "directory": "packages/exchange"
   },
   "license": "Apache-2.0",
   "author": "EMURGO Fintech <support@emurgo.com> (https://github.com/Emurgo/yoroi)",
-  "contributors": [
-    {
-      "name": "Juliano Lazzarotto",
-      "email": "30806844+stackchain@users.noreply.github.com"
-    }
-  ],
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "source": "src/index",

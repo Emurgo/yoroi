@@ -1,10 +1,10 @@
-import {BanxaUnknownError} from '../adapters/errors'
-import {BanxaCoinType} from '../helpers/coin-types'
+import {BanxaUnknownError} from '../../adapters/banxa/errors'
+import {BanxaCoinType} from '../../helpers/banxa/coin-types'
 import {banxaDomainProduction, banxaDomainSandbox} from './domains'
-import {BanxaFiatType} from '../helpers/fiat-types'
-import {handleZodErrors} from '../adapters/zod-errors'
-import {BanxaUrlReferralQueryStringParamsSchema} from '../adapters/zod-schema'
-import {BanxaBlockchainCode} from '../helpers/blockchain-code'
+import {BanxaFiatType} from '../../helpers/banxa/fiat-types'
+import {handleZodErrors} from '../../adapters/zod-errors'
+import {BanxaUrlReferralQueryStringParamsSchema} from '../../adapters/banxa/zod-schema'
+import {BanxaBlockchainCode} from '../../helpers/banxa/blockchain-code'
 
 // -------
 // FACTORY

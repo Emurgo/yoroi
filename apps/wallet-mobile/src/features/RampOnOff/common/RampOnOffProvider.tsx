@@ -1,4 +1,4 @@
-import {Banxa} from '@yoroi/banxa'
+import {Banxa} from '@yoroi/exchange'
 import BigNumber from 'bignumber.js'
 import {produce} from 'immer'
 import React from 'react'

@@ -1,23 +1,23 @@
-# Yoroi Banxa Module
+# Yoroi Exchange Module
 
-The Yoroi Banxa package is a utility for interacting with Banxa resources/APIs.
+The Yoroi Exchange package is a utility for interacting with exchanges resources/APIs.
 
 ## Installation
 
 Install the package using npm or yarn :
 
 ```bash
-npm install @yoroi/banxa --save
+npm install @yoroi/exchange --save
 ```
 ```bash
-yarn add @yoroi/banxa --save
+yarn add @yoroi/exchange --save
 ```
 
 ## Usage
 
-### Generating a referral URL to redirect/open
+### Generating a Banxa referral URL to redirect/open
 ```typescript
-import { Banxa, banxaModuleMaker } from '@yoroi/banxa';
+import { Banxa, banxaModuleMaker } from '@yoroi/exchange';
 
 const options: Banxa.ReferralUrlBuilderOptions = {
     isProduction: true,

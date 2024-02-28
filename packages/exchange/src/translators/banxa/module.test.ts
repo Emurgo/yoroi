@@ -1,4 +1,7 @@
-import {BanxaUnknownError, BanxaValidationError} from '../adapters/errors'
+import {
+  BanxaUnknownError,
+  BanxaValidationError,
+} from '../../adapters/banxa/errors'
 import {banxaModuleMaker} from './module'
 
 describe('banxaModuleMaker', () => {

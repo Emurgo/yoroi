@@ -2,19 +2,19 @@ export {
   banxaDomainProduction,
   banxaDomainSandbox,
   banxaSupportUrl,
-} from './translators/domains'
-export {banxaModuleMaker} from './translators/module'
-export {BanxaErrorMessages} from './adapters/errors'
+} from './translators/banxa/domains'
+export {banxaModuleMaker} from './translators/banxa/module'
+export {BanxaErrorMessages} from './adapters/banxa/errors'
 
-import type {BanxaFiatType} from './helpers/fiat-types'
-import type {BanxaCoinType} from './helpers/coin-types'
+import type {BanxaFiatType} from './helpers/banxa/fiat-types'
+import type {BanxaCoinType} from './helpers/banxa/coin-types'
 
 import type {
   BanxaModule,
   BanxaReferralUrlBuilderOptions,
   BanxaReferralUrlQueryStringParams,
-} from './translators/module'
-import {BanxaUnknownError, BanxaValidationError} from './adapters/errors'
+} from './translators/banxa/module'
+import {BanxaUnknownError, BanxaValidationError} from './adapters/banxa/errors'
 
 export namespace Banxa {
   export type CoinType = BanxaCoinType
