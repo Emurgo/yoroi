@@ -1,5 +1,5 @@
-nodejs 16.19.0
+nodejs 18.0.0
 rust 1.69.0
-java adoptopenjdk-11.0.18+10
+java adoptopenjdk-17.0.10+7
 ruby 3.2.2
 python 3.11.3

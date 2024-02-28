@@ -13,12 +13,12 @@ import {confirmationMessages} from '../../../i18n/global-messages'
 import {SettingsRouteNavigation, useWalletNavigation} from '../../../navigation'
 import {useSelectedWallet, useSetSelectedWallet, useSetSelectedWalletMeta} from '../../../SelectedWallet'
 import {lightPalette} from '../../../theme'
+import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {useAuthSetting} from '../../../yoroi-wallets/auth'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
 import {isByron, isHaskellShelley} from '../../../yoroi-wallets/cardano/utils'
 import {useEasyConfirmationEnabled, useResync} from '../../../yoroi-wallets/hooks'
 import {NetworkId, WalletImplementationId} from '../../../yoroi-wallets/types'
-import {useAddressDerivationManager} from '../../Receive/common/useAddressDerivationManager'
 import {useNavigateTo} from '../common/navigation'
 import {
   NavigatedSettingsItem,
@@ -40,7 +40,7 @@ export const WalletSettingsScreen = () => {
   const {resetToWalletSelection} = useWalletNavigation()
   const wallet = useSelectedWallet()
   const authSetting = useAuthSetting()
-  const addressDerivation = useAddressDerivationManager()
+  const addressMode = useAddressModeManager()
 
   const logout = useLogout()
   const settingsNavigation = useNavigation<SettingsRouteNavigation>()
@@ -124,9 +124,9 @@ export const WalletSettingsScreen = () => {
             icon={<Icon.Qr {...iconProps} />}
             label={strings.multipleAddresses}
             info={strings.multipleAddressesInfo}
-            disabled={addressDerivation.isToggleLoading}
+            disabled={addressMode.isToggleLoading}
           >
-            <AddresseDerivationSwitcher isSingle={addressDerivation.isSingle} />
+            <AddressModeSwitcher isSingle={addressMode.isSingle} />
           </SettingsItem>
         </SettingsSection>
 
@@ -190,16 +190,16 @@ const ResyncButton = () => {
   )
 }
 
-const AddresseDerivationSwitcher = (props: {isSingle: boolean}) => {
-  const addressDerivation = useAddressDerivationManager()
+const AddressModeSwitcher = (props: {isSingle: boolean}) => {
+  const addressMode = useAddressModeManager()
   const [isSingleLocal, setIsSingleLocal] = React.useState(props.isSingle)
 
-  const handleOnSwitchAddressDerivation = () => {
+  const handleOnSwitchAddressMode = () => {
     setIsSingleLocal((prevState) => {
       if (prevState) {
-        addressDerivation.enableMultipleMode()
+        addressMode.enableMultipleMode()
       } else {
-        addressDerivation.enableSingleMode()
+        addressMode.enableSingleMode()
       }
 
       return !prevState
@@ -207,11 +207,7 @@ const AddresseDerivationSwitcher = (props: {isSingle: boolean}) => {
   }
 
   return (
-    <Switch
-      value={!isSingleLocal}
-      onValueChange={handleOnSwitchAddressDerivation}
-      disabled={addressDerivation.isToggleLoading}
-    />
+    <Switch value={!isSingleLocal} onValueChange={handleOnSwitchAddressMode} disabled={addressMode.isToggleLoading} />
   )
 }
 

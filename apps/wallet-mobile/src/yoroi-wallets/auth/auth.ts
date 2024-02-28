@@ -7,11 +7,11 @@ import RNKeychain from 'react-native-keychain'
 import {useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions} from 'react-query'
 
 import globalMessages from '../../i18n/global-messages'
-import {useWalletManager} from '../../WalletManager'
+import {parseWalletMeta} from '../../wallet-manager/validators'
+import {useWalletManager} from '../../wallet-manager/WalletManagerContext'
 import {WrongPassword} from '../cardano/errors'
 import {YoroiWallet} from '../cardano/types'
 import {decryptData, encryptData} from '../encryption'
-import {parseWalletMeta} from '../migrations'
 import {AuthenticationPrompt, Keychain} from '../storage'
 
 export const useAuthOsEnabled = (options?: UseQueryOptions<boolean, Error>) => {

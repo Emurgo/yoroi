@@ -2,7 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {parseSafe} from '@yoroi/common'
 
-import {isYoroiWallet} from '../cardano/types'
+import {isYoroiWallet} from '../yoroi-wallets/cardano/types'
 import {WalletManager} from './walletManager'
 
 // ! Actually hitting the API
@@ -11,7 +11,6 @@ describe('walletMananger', () => {
 
   it('creates a wallet', async () => {
     const walletManager = new WalletManager()
-    await walletManager.initialize()
     await expect(walletManager.listWallets()).resolves.toEqual([])
 
     const name = 'name'
@@ -22,8 +21,16 @@ describe('walletMananger', () => {
     ].join(' ')
     const networkId = 300
     const walletImplementationId = 'haskell-shelley'
+    const addressMode = 'single'
 
-    const wallet = await walletManager.createWallet(name, mnemonic, 'password', networkId, walletImplementationId)
+    const wallet = await walletManager.createWallet(
+      name,
+      mnemonic,
+      'password',
+      networkId,
+      walletImplementationId,
+      addressMode,
+    )
     expect(isYoroiWallet(wallet)).toBe(true)
 
     before: {
@@ -49,6 +56,7 @@ describe('walletMananger', () => {
           name: 'name',
           networkId: 300,
           walletImplementationId: 'haskell-shelley',
+          addressMode: 'single',
         },
       ])
     }
@@ -62,7 +70,7 @@ describe('walletMananger', () => {
       const walletManager = new WalletManager()
       expect(await walletManager.listWallets()).toEqual([])
 
-      await walletManager.initialize()
+      await walletManager.removeDeletedWallets()
 
       const shot = await snapshot()
       const walletMeta = getWalletMeta(wallet.id, shot)
@@ -78,7 +86,6 @@ describe('walletMananger', () => {
 
   it('creates a readonly wallet', async () => {
     const walletManager = new WalletManager()
-    await walletManager.initialize()
     await expect(walletManager.listWallets()).resolves.toEqual([])
 
     const name = 'name'
@@ -86,6 +93,7 @@ describe('walletMananger', () => {
       '1ba2332dca14d6f1f5a5282512e725852a34d3aee1cc26057e9cfb2c2730f1665934fa0b0fa42e16ded504fa81198e45dc22d10dab69398e730542a198dcbfcf'
     const networkId = 300
     const walletImplementationId = 'haskell-shelley'
+    const addressMode = 'single'
 
     const wallet = await walletManager.createWalletWithBip44Account(
       name,
@@ -94,6 +102,7 @@ describe('walletMananger', () => {
       walletImplementationId,
       null,
       true,
+      addressMode,
     )
     expect(isYoroiWallet(wallet)).toBe(true)
 
@@ -105,11 +114,11 @@ describe('walletMananger', () => {
     expect(walletMeta.networkId).toEqual(networkId)
     expect(walletMeta.walletImplementationId).toEqual(walletImplementationId)
     expect(walletMeta.isHW).toEqual(false)
+    expect(walletMeta.addressMode).toEqual(addressMode)
   })
 
   it('creates a hw wallet', async () => {
     const walletManager = new WalletManager()
-    await walletManager.initialize()
     await expect(walletManager.listWallets()).resolves.toEqual([])
 
     const name = 'name'
@@ -127,6 +136,7 @@ describe('walletMananger', () => {
         vendor: 'ledger.com',
       },
     }
+    const addressMode = 'single'
 
     const wallet = await walletManager.createWalletWithBip44Account(
       name,
@@ -135,6 +145,7 @@ describe('walletMananger', () => {
       walletImplementationId,
       hwDeviceInfo,
       true,
+      addressMode,
     )
     expect(isYoroiWallet(wallet)).toBe(true)
 
@@ -146,6 +157,7 @@ describe('walletMananger', () => {
     expect(walletMeta.networkId).toEqual(networkId)
     expect(walletMeta.walletImplementationId).toEqual(walletImplementationId)
     expect(walletMeta.isHW).toEqual(true)
+    expect(walletMeta.addressMode).toEqual(addressMode)
   })
 })
 

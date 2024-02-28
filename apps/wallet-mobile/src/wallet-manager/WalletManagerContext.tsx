@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {WalletManager} from '../yoroi-wallets/walletManager'
+import {WalletManager} from './walletManager'
 
 const WalletManagerContext = React.createContext<WalletManager | undefined>(undefined)
 
@@ -12,8 +12,6 @@ export const WalletManagerProvider: React.FC<React.PropsWithChildren<{walletMana
 }
 
 export const useWalletManager = () => React.useContext(WalletManagerContext) || missingProvider()
-
-// //////////////////////////////////////////////////////////////
 
 const missingProvider = () => {
   throw new Error('WalletManagerProvider is missing')
