@@ -18,7 +18,7 @@ export const migrateAddressMode = async (rootStorage: App.Storage) => {
 
   const metasToMigrate = walletMetas.filter(isWalletMetaV1)
   const migrations = metasToMigrate.map(addAddressMode)
-  return Promise.all(migrations)
+  await Promise.all(migrations)
 }
 
 const addAddressModeWrapper = (walletsRootStorage: App.Storage) => async (walletMetaToMigrate: WalletMeta) => {
