@@ -36,6 +36,9 @@ export const MnemonicCheckScreen = () => {
   const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
   const intl = useIntl()
+  const handleOnCreateWallet = () => {
+    createWallet({name, mnemonicPhrase: mnemonic, password, networkId, walletImplementationId, addressMode})
+  }
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
     onSuccess: () => {
       track.createWalletDetailsSettled()
@@ -49,6 +52,7 @@ export const MnemonicCheckScreen = () => {
       })
     },
   })
+  const disabled = !isPhraseComplete || !isPhraseValid || isLoading || isSuccess
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -73,10 +77,8 @@ export const MnemonicCheckScreen = () => {
       <View style={styles.buttons}>
         <Button
           block
-          onPress={() =>
-            createWallet({name, mnemonicPhrase: mnemonic, password, networkId, walletImplementationId, addressMode})
-          }
-          disabled={!isPhraseComplete || !isPhraseValid || isLoading || isSuccess}
+          onPress={handleOnCreateWallet}
+          disabled={disabled}
           title={strings.confirmButton}
           style={styles.confirmButton}
           testID="mnemonicCheckScreen::confirm"
