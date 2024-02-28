@@ -771,7 +771,7 @@ SPEC CHECKSUMS:
   amplitude-react-native: 1ea3d5e1f80ccc357dd178c55c29e51c89f1cd11
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
-  DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
+  DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
   EXBarCodeScanner: 8e23fae8d267dbef9f04817833a494200f1fce35
   EXCamera: 0fbfa338a3776af2722d626a3437abe33f708aad
@@ -787,7 +787,7 @@ SPEC CHECKSUMS:
   FBLazyVector: 12ea01e587c9594e7b144e1bfc86ac4d9ac28fde
   FBReactNativeSpec: faca7d16c37626ca5780a87adef703817722fe61
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
+  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   hermes-engine: d7cc127932c89c53374452d6f93473f1970d8e88
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   MMKV: f902fb6719da13c2ab0965233d8963a59416f911
