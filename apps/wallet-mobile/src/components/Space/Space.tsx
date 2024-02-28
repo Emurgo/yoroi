@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, ViewStyle} from 'react-native'
 
-// TODO import this form theme dirrectly is is approved
+// TODO import this from theme dirrectly if is approved
 type SpacingKey = 'none' | 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl'
 const baseSpace: Record<SpacingKey, number> = {
   none: 0,
