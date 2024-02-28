@@ -1,51 +1,34 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {parseSafe} from '@yoroi/common'
 import {App} from '@yoroi/types'
-import ExtendableError from 'es6-error'
 import uuid from 'uuid'
 
-import {getCardanoWalletFactory} from '../cardano/getWallet'
-import {CardanoTypes, isYoroiWallet, YoroiWallet} from '../cardano/types'
-import {HWDeviceInfo} from '../hw'
-import {Logger} from '../logging'
-import {isWalletMeta, migrateWalletMetas, parseWalletMeta} from '../migrations/walletMeta'
-import {makeWalletEncryptedStorage} from '../storage'
-import {Keychain} from '../storage/Keychain'
-import {rootStorage} from '../storage/rootStorage'
-import {NetworkId, WalletImplementationId} from '../types'
-
-export class WalletClosed extends ExtendableError {}
-
-export type WalletMeta = {
-  id: string
-  name: string
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
-  isHW: boolean
-  isShelley?: boolean | null | undefined
-  // legacy jormungandr
-  isEasyConfirmationEnabled: boolean
-  checksum: CardanoTypes.WalletChecksum
-}
-
-export type WalletManagerEvent =
-  | {type: 'easy-confirmation'; enabled: boolean}
-  | {type: 'hw-device-info'; hwDeviceInfo: HWDeviceInfo}
-
-export type WalletManagerSubscription = (event: WalletManagerEvent) => void
+import {getCardanoWalletFactory} from '../yoroi-wallets/cardano/getWallet'
+import {isYoroiWallet, YoroiWallet} from '../yoroi-wallets/cardano/types'
+import {HWDeviceInfo} from '../yoroi-wallets/hw'
+import {Logger} from '../yoroi-wallets/logging'
+import {makeWalletEncryptedStorage} from '../yoroi-wallets/storage'
+import {Keychain} from '../yoroi-wallets/storage/Keychain'
+import {rootStorage} from '../yoroi-wallets/storage/rootStorage'
+import {NetworkId, WalletImplementationId} from '../yoroi-wallets/types'
+import {AddressMode, WalletManagerEvent, WalletManagerSubscription, WalletMeta} from './types'
+import {isWalletMeta, parseWalletMeta} from './validators'
 
 export class WalletManager {
   private subscriptions: Array<WalletManagerSubscription> = []
-  storage: App.Storage
+  walletsRootStorage: App.Storage
+  rootStorage: App.Storage
 
   constructor() {
-    this.storage = rootStorage.join('wallet/')
+    this.walletsRootStorage = rootStorage.join('wallet/')
+    this.rootStorage = rootStorage
   }
 
   async listWallets() {
     const deletedWalletIds = await this.deletedWalletIds()
-    const walletIds = await this.storage.getAllKeys().then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
-    const walletMetas = await this.storage
+    const walletIds = await this.walletsRootStorage
+      .getAllKeys()
+      .then((ids) => ids.filter((id) => !deletedWalletIds.includes(id)))
+    const walletMetas = await this.walletsRootStorage
       .multiGet(walletIds, parseWalletMeta)
       .then((tuples) => tuples.map(([_, walletMeta]) => walletMeta))
       .then((walletMetas) => walletMetas.filter(isWalletMeta)) // filter corrupted wallet metas)
@@ -53,25 +36,13 @@ export class WalletManager {
     return walletMetas
   }
 
-  // note(v-almonacid): This method retrieves all the wallets' metadata from
-  // storage. Unfortunately, as new metadata is added over time (eg. networkId),
-  // we need to infer some values for wallets created in older versions,
-  // which may induce errors and leave us with this ugly method.
-  // The responsibility to check data consistency is left to the each wallet
-  // implementation.
-  async initialize() {
-    await this.removeDeletedWallets()
-    const _storedWalletMetas = await this.listWallets()
-    return migrateWalletMetas(_storedWalletMetas)
-  }
-
   async deletedWalletIds() {
-    const ids = await this.storage.getItem('deletedWalletIds', parseDeletedWalletIds)
+    const ids = await this.rootStorage.getItem('deletedWalletIds', parseDeletedWalletIds)
 
     return ids ?? []
   }
 
-  private async removeDeletedWallets() {
+  async removeDeletedWallets() {
     const deletedWalletsIds = await this.deletedWalletIds()
     if (!deletedWalletsIds) return
 
@@ -79,14 +50,14 @@ export class WalletManager {
       deletedWalletsIds.map(async (id) => {
         const encryptedStorage = makeWalletEncryptedStorage(id)
 
-        await this.storage.removeItem(id) // remove wallet meta
-        await this.storage.removeFolder(`${id}/`) // remove wallet folder
+        await this.walletsRootStorage.removeItem(id) // remove wallet meta
+        await this.walletsRootStorage.removeFolder(`${id}/`) // remove wallet folder
         await encryptedStorage.rootKey.remove() // remove auth with password
         await Keychain.removeWalletKey(id) // remove auth with os
       }),
     )
 
-    await this.storage.setItem('deletedWalletIds', [])
+    await this.rootStorage.setItem('deletedWalletIds', [])
   }
 
   // Note(ppershing): needs 'this' to be bound
@@ -135,6 +106,7 @@ export class WalletManager {
     wallet: YoroiWallet,
     networkId: NetworkId,
     walletImplementationId: WalletImplementationId,
+    addressMode: AddressMode,
   ) {
     await wallet.save()
     if (!wallet.checksum) throw new Error('invalid wallet')
@@ -143,12 +115,13 @@ export class WalletManager {
       name,
       networkId,
       walletImplementationId,
+      addressMode,
       isHW: wallet.isHW,
       checksum: wallet.checksum,
       isEasyConfirmationEnabled: false,
     }
 
-    await this.storage.setItem(id, walletMeta)
+    await this.walletsRootStorage.setItem(id, walletMeta)
 
     Logger.debug('WalletManager::saveWallet::wallet', wallet)
 
@@ -164,11 +137,11 @@ export class WalletManager {
     const walletFactory = getWalletFactory({networkId, implementationId: walletImplementationId})
 
     const wallet = await walletFactory.restore({
-      storage: this.storage.join(`${id}/`),
+      storage: this.walletsRootStorage.join(`${id}/`),
       walletMeta,
     })
 
-    wallet.subscribe((event) => this._notify(event as any))
+    wallet.subscribe((event) => this._notify(event as never))
     wallet.startSync()
 
     return wallet
@@ -176,14 +149,14 @@ export class WalletManager {
 
   async removeWallet(id: string) {
     const deletedWalletIds = await this.deletedWalletIds()
-    await this.storage.setItem('deletedWalletIds', [...deletedWalletIds, id])
+    await this.rootStorage.setItem('deletedWalletIds', [...deletedWalletIds, id])
   }
 
   // TODO(ppershing): how should we deal with race conditions?
   async _updateMetadata(id: string, newMeta: {isEasyConfirmationEnabled: boolean}) {
-    const walletMeta = await this.storage.getItem(id, parseWalletMeta)
+    const walletMeta = await this.walletsRootStorage.getItem(id, parseWalletMeta)
     const merged = {...walletMeta, ...newMeta}
-    return this.storage.setItem(id, merged)
+    return this.walletsRootStorage.setItem(id, merged)
   }
 
   async updateHWDeviceInfo(wallet: YoroiWallet, hwDeviceInfo: HWDeviceInfo) {
@@ -198,18 +171,20 @@ export class WalletManager {
     password: string,
     networkId: NetworkId,
     implementationId: WalletImplementationId,
+    addressMode: AddressMode,
   ) {
     const walletFactory = getWalletFactory({networkId, implementationId})
     const id = uuid.v4()
+    const storage = this.walletsRootStorage.join(`${id}/`)
 
     const wallet = await walletFactory.create({
-      storage: this.storage.join(`${id}/`),
+      storage,
       id,
       mnemonic,
       password,
     })
 
-    return this.saveWallet(id, name, wallet, networkId, implementationId)
+    return this.saveWallet(id, name, wallet, networkId, implementationId, addressMode)
   }
 
   async createWalletWithBip44Account(
@@ -219,21 +194,21 @@ export class WalletManager {
     implementationId: WalletImplementationId,
     hwDeviceInfo: null | HWDeviceInfo,
     isReadOnly: boolean,
+    addressMode: AddressMode,
   ) {
     const walletFactory = getWalletFactory({networkId, implementationId})
     const id = uuid.v4()
+    const storage = this.walletsRootStorage.join(`${id}/`)
 
     const wallet = await walletFactory.createBip44({
-      storage: this.storage.join(`${id}/`),
+      storage,
       id,
       accountPubKeyHex,
       hwDeviceInfo,
       isReadOnly,
     })
 
-    Logger.debug('creating wallet...', wallet)
-
-    return this.saveWallet(id, name, wallet, networkId, implementationId)
+    return this.saveWallet(id, name, wallet, networkId, implementationId, addressMode)
   }
 }
 

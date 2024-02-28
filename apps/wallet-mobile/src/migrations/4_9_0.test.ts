@@ -1,4 +1,4 @@
-import {rootStorage} from '../storage/rootStorage'
+import {rootStorage} from '../yoroi-wallets/storage/rootStorage'
 import {migrateAuthSetting, OLD_OS_AUTH_KEY} from './4_9_0'
 describe('migrateAuthSetting', () => {
   const installationId = 'uuidv4'

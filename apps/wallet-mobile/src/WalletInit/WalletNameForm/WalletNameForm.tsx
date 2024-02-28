@@ -6,7 +6,7 @@ import {ActivityIndicator, Image, ImageSourcePropType, ScrollView, StyleSheet, V
 import {Button, KeyboardAvoidingView, ProgressStep, TextInput} from '../../components'
 import globalMessages from '../../i18n/global-messages'
 import {spacing} from '../../theme'
-import {useWalletManager} from '../../WalletManager'
+import {useWalletManager} from '../../wallet-manager/WalletManagerContext'
 import {useWalletNames} from '../../yoroi-wallets/hooks'
 import {getWalletNameError, validateWalletName} from '../../yoroi-wallets/utils/validators'
 

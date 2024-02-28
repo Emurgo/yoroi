@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {parseSafe} from '@yoroi/common'
 
+import {WalletMeta} from '../wallet-manager/types'
 import {disableAllEasyConfirmation, enableAuthWithOs} from '../yoroi-wallets/auth'
 import {rootStorage} from '../yoroi-wallets/storage/rootStorage'
-import {WalletMeta} from '../yoroi-wallets/walletManager'
 
 describe('enableAuthWithOs', () => {
   beforeEach(() => AsyncStorage.clear())
@@ -72,6 +72,7 @@ describe('disableAllEasyConfirmations', () => {
         name: 'my-wallet',
         networkId: 1,
         walletImplementationId: 'haskell-shelley-24',
+        addressMode: 'multiple',
       },
 
       '/wallet/1/data': {
@@ -91,6 +92,7 @@ describe('disableAllEasyConfirmations', () => {
         name: 'my-wallet',
         networkId: 1,
         walletImplementationId: 'haskell-shelley-24',
+        addressMode: 'multiple',
       },
 
       '/wallet/2/data': {
@@ -121,6 +123,7 @@ const mockWalletMeta: WalletMeta = {
       'b04dc22991594170974bbbb5908cc50b48f236d680a9ebfe6c1d00f52f8f4813341943eb66dec48cfe7f3be5beec705b91300a07641e668ff19dfa2fbeccbfba',
   },
   walletImplementationId: 'haskell-shelley-24',
+  addressMode: 'multiple',
 }
 
 const mockWalletJSON = {isEasyConfirmationEnabled: true}
