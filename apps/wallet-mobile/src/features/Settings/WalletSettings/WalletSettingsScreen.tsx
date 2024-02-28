@@ -126,7 +126,7 @@ export const WalletSettingsScreen = () => {
             info={strings.multipleAddressesInfo}
             disabled={addressMode.isToggleLoading}
           >
-            <AddresseModeSwitcher isSingle={addressMode.isSingle} />
+            <AddressModeSwitcher isSingle={addressMode.isSingle} />
           </SettingsItem>
         </SettingsSection>
 
@@ -190,7 +190,7 @@ const ResyncButton = () => {
   )
 }
 
-const AddresseModeSwitcher = (props: {isSingle: boolean}) => {
+const AddressModeSwitcher = (props: {isSingle: boolean}) => {
   const addressMode = useAddressModeManager()
   const [isSingleLocal, setIsSingleLocal] = React.useState(props.isSingle)
 
