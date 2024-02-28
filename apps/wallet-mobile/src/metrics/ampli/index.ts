@@ -1375,7 +1375,7 @@ export class Ampli {
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Receive%20Page%20Viewed)
    *
-   * This event tracks when a user views the Receive page of the Wallet menu.
+   * When user loads the Receive funds screen, where user can see their wallet address with a QR Code
    *
    * @param options Amplitude event options.
    */

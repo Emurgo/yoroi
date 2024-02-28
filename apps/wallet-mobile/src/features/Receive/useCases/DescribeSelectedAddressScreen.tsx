@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import * as React from 'react'
@@ -29,6 +30,12 @@ export const DescribeSelectedAddressScreen = () => {
     track.receiveCopyAddressClicked({copy_address_location: 'CTA Copy Address'})
     copy(selectedAddress)
   }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.receivePageViewed()
+    }, [track]),
+  )
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
