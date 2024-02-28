@@ -11,44 +11,58 @@ export const baseSpace: Record<SpacingSize, number> = {
   xxl: 32,
 }
 
-function getSpacing(
-  value: `${Direction}-${SpacingSize}` | 'none',
+function getPadding(
+  value: `${Direction}-${SpacingSize}` | SpacingSize | 'none',
 ): Record<string, number> {
-  // Check for 'none' case and return padding: 0
+  // Directly return padding: 0 for 'none'
   if (value === 'none') {
     return {padding: 0}
   }
 
-  // handle directional and size specific padding
-  const [direction, size] = value.split('-') as [Direction, SpacingSize]
-  const pixelValue = baseSpace[size] ?? 0
+  // Split the value to check if it includes a direction
+  const parts = value.split('-')
+  let pixelValue
 
-  switch (direction) {
-    case 'x':
-      return {paddingHorizontal: pixelValue}
-    case 'y':
-      return {paddingVertical: pixelValue}
-    case 't':
-      return {paddingTop: pixelValue}
-    case 'b':
-      return {paddingBottom: pixelValue}
-    case 'l':
-      return {paddingLeft: pixelValue}
-    case 'r':
-      return {paddingRight: pixelValue}
-    default:
-      return {}
+  // Check if a direction is provided
+  if (parts.length === 1) {
+    const size = parts[0] as SpacingSize
+    pixelValue = baseSpace[size] ?? 0
+    return {
+      padding: pixelValue,
+    }
+  } else {
+    const [direction, size] = parts as [Direction, SpacingSize]
+    pixelValue = baseSpace[size] ?? 0
+
+    switch (direction) {
+      case 'x':
+        return {paddingHorizontal: pixelValue}
+      case 'y':
+        return {paddingVertical: pixelValue}
+      case 't':
+        return {paddingTop: pixelValue}
+      case 'b':
+        return {paddingBottom: pixelValue}
+      case 'l':
+        return {paddingLeft: pixelValue}
+      case 'r':
+        return {paddingRight: pixelValue}
+      default:
+        return {}
+    }
   }
 }
 
-export const space = new Proxy<Record<string, Record<string, number>>>(
+export const padding = new Proxy<Record<string, Record<string, number>>>(
   {},
   {
     get: function (
       _: Record<string, Record<string, number>>,
       prop: string,
     ): Record<string, number> {
-      return getSpacing(prop as `${Direction}-${SpacingSize}` | 'none')
+      return getPadding(
+        prop as `${Direction}-${SpacingSize}` | SpacingSize | 'none',
+      )
     },
   },
 )

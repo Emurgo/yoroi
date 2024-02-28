@@ -3,7 +3,7 @@ import {TextStyle} from 'react-native'
 export type Theme = {
   color: Palette
   typography: Typography
-  space: Spacing
+  padding: Spacing
 }
 
 export type HexColor = `#${string}`
@@ -103,6 +103,7 @@ export type Typography = Record<TypographyKeys, TextStyle>
 
 export type Direction = 'x' | 'y' | 't' | 'b' | 'l' | 'r'
 export type SpacingSize = 'none' | 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl'
+type SpacingKeys = `${Direction}-${SpacingSize}` | SpacingSize | 'none'
 export type Spacing = {
-  [key: string]: Record<string, number>
+  [key in SpacingKeys]?: Record<string, number>
 }

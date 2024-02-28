@@ -56,22 +56,22 @@ export const BuyBannerBig = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color, typography, space} = theme
+  const {color, typography, padding} = theme
   const styles = StyleSheet.create({
     root: {
-      ...space['b-m'],
+      ...padding['b-m'],
       backgroundColor: color.gray.min,
       flex: 1,
     },
     gradient: {
-      ...space['b-xl'],
+      ...padding['b-xl'],
       opacity: 1,
       borderRadius: 8,
       flexDirection: 'column',
       alignItems: 'center',
     },
     spaceButtonText: {
-      ...space['none'],
+      ...padding['none'],
     },
     label: {
       ...typography['heading-3-medium'],
@@ -80,12 +80,12 @@ const useStyles = () => {
     },
     text: {
       ...typography['body-1-l-regular'],
-      ...space['x-xxl'],
+      ...padding['x-xxl'],
       color: color.gray.max,
       textAlign: 'center',
     },
     spaceButton: {
-      ...space['x-l'],
+      ...padding['x-l'],
     },
   })
   const colors = {
