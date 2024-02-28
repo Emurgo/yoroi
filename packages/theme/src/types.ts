@@ -103,7 +103,6 @@ export type Typography = Record<TypographyKeys, TextStyle>
 
 export type Direction = 'x' | 'y' | 't' | 'b' | 'l' | 'r'
 export type SpacingSize = 'none' | 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl'
-export type SpacingFunction = () => Record<string, number>
 export type Spacing = {
-  [key: string]: SpacingFunction
+  [key: string]: Record<string, number>
 }

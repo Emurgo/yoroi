@@ -41,17 +41,14 @@ function getSpacing(
   }
 }
 
-export const space = new Proxy<Record<string, () => Record<string, number>>>(
+export const space = new Proxy<Record<string, Record<string, number>>>(
   {},
   {
     get: function (
-      _: Record<string, () => Record<string, number>>,
-      prop: PropertyKey,
-    ): () => Record<string, number> {
-      if (typeof prop === 'string') {
-        return () => getSpacing(prop as `${Direction}-${SpacingSize}` | 'none')
-      }
-      return () => ({})
+      _: Record<string, Record<string, number>>,
+      prop: string,
+    ): Record<string, number> {
+      return getSpacing(prop as `${Direction}-${SpacingSize}` | 'none')
     },
   },
 )

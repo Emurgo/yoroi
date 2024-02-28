@@ -60,7 +60,7 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     root: {
       ...space['b-m'],
-      backgroundColor: color['white-static'],
+      backgroundColor: color.gray.min,
       flex: 1,
     },
     gradient: {
@@ -75,13 +75,13 @@ const useStyles = () => {
     },
     label: {
       ...typography['heading-3-medium'],
-      color: color['black-static'],
+      color: color.gray.max,
       textAlign: 'center',
     },
     text: {
       ...typography['body-1-l-regular'],
       ...space['x-xxl'],
-      color: color['black-static'],
+      color: color.gray.max,
       textAlign: 'center',
     },
     spaceButton: {
