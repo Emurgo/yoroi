@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import * as React from 'react'
@@ -7,6 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import Icon from '../../../assets/img/copy.png'
 import {Button, Spacer} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
+import {useMetrics} from '../../../metrics/metricsManager'
 import {isEmptyString} from '../../../utils'
 import {AddressDetailCard} from '../common/AddressDetailCard/AddressDetailCard'
 import {useReceive} from '../common/ReceiveProvider'
@@ -19,10 +21,21 @@ export const DescribeSelectedAddressScreen = () => {
   const {styles, colors} = useStyles()
   const navigate = useNavigateTo()
   const {selectedAddress} = useReceive()
+  const {track} = useMetrics()
 
   const [isCopying, copy] = useCopy()
   const hasAddress = !isEmptyString(selectedAddress)
-  const handleOnPressCopy = () => copy(selectedAddress)
+
+  const handleOnPressCopy = () => {
+    track.receiveCopyAddressClicked({copy_address_location: 'CTA Copy Address'})
+    copy(selectedAddress)
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.receivePageViewed()
+    }, [track]),
+  )
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>

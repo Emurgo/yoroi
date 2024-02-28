@@ -105,7 +105,6 @@ export const makeMetricsManager = (
     allWalletsPageViewed: metricsModule.allWalletsPageViewed.bind(metricsModule),
     assetsPageViewed: metricsModule.assetsPageViewed.bind(metricsModule),
     menuPageViewed: metricsModule.menuPageViewed.bind(metricsModule),
-    receivePageViewed: metricsModule.receivePageViewed.bind(metricsModule),
     settingsPageViewed: metricsModule.settingsPageViewed.bind(metricsModule),
     stakingCenterPageViewed: metricsModule.stakingCenterPageViewed.bind(metricsModule),
     transactionsPageViewed: metricsModule.transactionsPageViewed.bind(metricsModule),
@@ -148,6 +147,14 @@ export const makeMetricsManager = (
 
     createWalletDetailsSettled: metricsModule.createWalletDetailsSettled.bind(metricsModule),
     restoreWalletDetailsSettled: metricsModule.restoreWalletDetailsSettled.bind(metricsModule),
+
+    receiveAmountGeneratedPageViewed: metricsModule.receiveAmountGeneratedPageViewed.bind(metricsModule),
+    receiveAmountPageViewed: metricsModule.receiveAmountPageViewed.bind(metricsModule),
+    receiveCopyAddressClicked: metricsModule.receiveCopyAddressClicked.bind(metricsModule),
+    receiveGenerateNewAddressClicked: metricsModule.receiveGenerateNewAddressClicked.bind(metricsModule),
+    receivePageListViewed: metricsModule.receivePageListViewed.bind(metricsModule),
+    receiveShareAddressClicked: metricsModule.receiveShareAddressClicked.bind(metricsModule),
+    receivePageViewed: metricsModule.receivePageViewed.bind(metricsModule),
   } as const
 
   return {
