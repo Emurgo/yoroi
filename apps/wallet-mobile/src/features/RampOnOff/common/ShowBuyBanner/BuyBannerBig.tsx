@@ -4,7 +4,7 @@ import * as React from 'react'
 import {Dimensions, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button, Spacer} from '../../../../components'
+import {Button, Space} from '../../../../components'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../navigation'
 import {BuyBannerIllustration} from '../../illustrations/BuyBannerIllustration'
@@ -31,15 +31,15 @@ export const BuyBannerBig = () => {
       <LinearGradient style={styles.gradient} start={{x: 1, y: 1}} end={{x: 1, y: 1}} colors={colors.gradientColor}>
         <BuyBannerIllustration width={bannerWidth} height={bannerHeight} />
 
-        <Spacer />
+        <Space />
 
         <Text style={styles.label}>{strings.getFirstCrypto}</Text>
 
-        <Spacer height={4} />
+        <Space height="xl" />
 
         <Text style={styles.text}>{strings.ourTrustedPartners}</Text>
 
-        <Spacer />
+        <Space />
 
         <Button
           testID="rampOnOffButton"
@@ -56,41 +56,40 @@ export const BuyBannerBig = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
+  const {color, typography, space} = theme
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: theme.color['white-static'],
-      paddingBottom: 18,
+      ...space['b-m'],
+      backgroundColor: color['white-static'],
       flex: 1,
     },
     gradient: {
+      ...space['b-xl'],
       opacity: 1,
       borderRadius: 8,
       flexDirection: 'column',
       alignItems: 'center',
-      paddingBottom: 25,
     },
     spaceButtonText: {
-      padding: 0,
+      ...space['none'],
     },
     label: {
-      ...theme.typography['heading-3-regular'],
-      color: theme.color['black-static'],
-      fontWeight: '500',
+      ...typography['heading-3-medium'],
+      color: color['black-static'],
       textAlign: 'center',
     },
     text: {
-      ...theme.typography['body-1-l-regular'],
-      color: theme.color['black-static'],
-      fontWeight: '400',
+      ...typography['body-1-l-regular'],
+      ...space['x-xxl'],
+      color: color['black-static'],
       textAlign: 'center',
-      paddingHorizontal: 50,
     },
     spaceButton: {
-      paddingHorizontal: 16,
+      ...space['x-l'],
     },
   })
   const colors = {
-    gradientColor: theme.color.gradients['green'],
+    gradientColor: color.gradients['green'],
   }
   return {styles, colors} as const
 }
