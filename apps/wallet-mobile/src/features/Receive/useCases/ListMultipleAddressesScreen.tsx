@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
@@ -5,6 +6,7 @@ import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../components'
+import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {BIP32_HD_GAP_LIMIT} from '../common/contants'
 import {useReceive} from '../common/ReceiveProvider'
@@ -27,16 +29,19 @@ export const ListMultipleAddressesScreen = () => {
   const {styles} = useStyles()
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
+  const {track} = useMetrics()
 
   const {addressDerivation} = useAddressDerivationManager()
   const addresses = useReceiveAddressesStatus(addressDerivation)
   const {selectedAddressChanged} = useReceive()
+
   React.useEffect(() => {
     wallet.generateNewReceiveAddressIfNeeded()
   }, [wallet])
 
   const {openModal} = useModal()
   const {isShowingMultipleAddressInfo} = useMultipleAddressesInfo()
+
   React.useEffect(() => {
     isShowingMultipleAddressInfo && openModal(strings.multiplePresentation, <Modal />, modalHeight)
   }, [isShowingMultipleAddressInfo, openModal, strings.multiplePresentation])
@@ -57,6 +62,17 @@ export const ListMultipleAddressesScreen = () => {
       />
     ),
     [navigate, selectedAddressChanged],
+  )
+
+  const handleOnGenerateNewReceiveAddress = () => {
+    track.receiveGenerateNewAddressClicked()
+    wallet.generateNewReceiveAddress()
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.receivePageListViewed()
+    }, [track]),
   )
 
   return (
@@ -82,7 +98,7 @@ export const ListMultipleAddressesScreen = () => {
           shelleyTheme
           title={strings.generateButton}
           disabled={hasReachedGapLimit}
-          onPress={() => wallet.generateNewReceiveAddress()}
+          onPress={handleOnGenerateNewReceiveAddress}
           style={styles.button}
         />
       </Animated.View>

@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {configCardanoLegacyTransfer, linksCardanoModuleMaker} from '@yoroi/links'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
@@ -6,6 +7,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, KeyboardAvoidingView, Spacer, TextInput, useModal} from '../../../components'
 import {useCopy} from '../../../legacy/useCopy'
+import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {isEmptyString} from '../../../utils'
 import {editedFormatter} from '../../../yoroi-wallets/utils'
@@ -19,6 +21,7 @@ export const RequestSpecificAmountScreen = () => {
   const strings = useStrings()
   const {colors, styles} = useStyles()
   const [amount, setAmount] = React.useState('')
+  const {track} = useMetrics()
   const hasAmount = !isEmptyString(amount)
 
   const {selectedAddress} = useReceive()
@@ -32,12 +35,19 @@ export const RequestSpecificAmountScreen = () => {
   const handleOnGenerateLink = React.useCallback(() => {
     Keyboard.dismiss()
 
+    track.receiveAmountGeneratedPageViewed({ada_amount: Number(amount)})
     openModal(modalTitle, <Modal amount={amount} address={selectedAddress} />, modalHeight)
-  }, [openModal, modalTitle, amount, selectedAddress, modalHeight])
+  }, [track, amount, openModal, modalTitle, selectedAddress, modalHeight])
 
   const handleOnChangeAmount = (amount: string) => {
     setAmount(editedFormatter(amount))
   }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.receiveAmountPageViewed()
+    }, [track]),
+  )
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>

@@ -9,6 +9,7 @@ import Share from 'react-native-share'
 import ViewShot, {captureRef} from 'react-native-view-shot'
 
 import {Spacer, Text} from '../../../../components'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {CaptureShareQRCodeCard} from '../CaptureShareQRCodeCard/CaptureShareQRCodeCard'
 import {useStrings} from '../useStrings'
 
@@ -22,11 +23,13 @@ type ShareQRCodeCardProps = {
 export const ShareQRCodeCard = ({content, title, isCopying, onLongPress}: ShareQRCodeCardProps) => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
+  const {track} = useMetrics()
 
   const [isSharing, setIsSharing] = React.useState(false)
   const ref: React.RefObject<ViewShot> = React.useRef(null)
 
   const handleOnPressShare = () => {
+    track.receiveShareAddressClicked()
     setIsSharing(true)
   }
   const message = `${strings.address} ${content}`

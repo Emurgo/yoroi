@@ -4,6 +4,7 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {CopyButton, Text} from '../../../../components'
+import {useMetrics} from '../../../../metrics/metricsManager'
 import {isEmptyString} from '../../../../utils/utils'
 import {useStrings} from '../useStrings'
 
@@ -16,9 +17,14 @@ type AddressDetailsProps = {
 export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDetailsProps) => {
   const strings = useStrings()
   const {styles, colors} = useStyles()
+  const {track} = useMetrics()
 
   const hasStakingHash = !isEmptyString(stakingHash)
   const hasSpendingHash = !isEmptyString(spendingHash)
+
+  const handleAddressOnCopy = () => {
+    track.receiveCopyAddressClicked({copy_address_location: 'Tap Address Details'})
+  }
 
   return (
     <View style={styles.addressDetails}>
@@ -37,7 +43,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
         <View style={styles.textRow}>
           <Text style={styles.textAddressDetails}>{address}</Text>
 
-          <CopyButton value={address} />
+          <CopyButton value={address} onCopy={handleAddressOnCopy} />
         </View>
       </View>
 
