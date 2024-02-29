@@ -30,26 +30,25 @@ function getPadding(
     return {
       padding: pixelValue,
     }
-  } else {
-    const [direction, size] = parts as [Direction, SpacingSize]
-    pixelValue = baseSpace[size] ?? 0
+  }
+  const [direction, size] = parts as [Direction, SpacingSize]
+  pixelValue = baseSpace[size] ?? 0
 
-    switch (direction) {
-      case 'x':
-        return {paddingHorizontal: pixelValue}
-      case 'y':
-        return {paddingVertical: pixelValue}
-      case 't':
-        return {paddingTop: pixelValue}
-      case 'b':
-        return {paddingBottom: pixelValue}
-      case 'l':
-        return {paddingLeft: pixelValue}
-      case 'r':
-        return {paddingRight: pixelValue}
-      default:
-        return {}
-    }
+  switch (direction) {
+    case 'x':
+      return {paddingHorizontal: pixelValue}
+    case 'y':
+      return {paddingVertical: pixelValue}
+    case 't':
+      return {paddingTop: pixelValue}
+    case 'b':
+      return {paddingBottom: pixelValue}
+    case 'l':
+      return {paddingLeft: pixelValue}
+    case 'r':
+      return {paddingRight: pixelValue}
+    default:
+      return {}
   }
 }
 
