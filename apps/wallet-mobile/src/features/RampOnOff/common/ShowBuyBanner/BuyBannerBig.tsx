@@ -4,7 +4,8 @@ import * as React from 'react'
 import {Dimensions, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button, Space} from '../../../../components'
+import {Button} from '../../../../components'
+import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../navigation'
 import {BuyBannerIllustration} from '../../illustrations/BuyBannerIllustration'
@@ -35,7 +36,7 @@ export const BuyBannerBig = () => {
 
         <Text style={styles.label}>{strings.getFirstCrypto}</Text>
 
-        <Space height="xl" />
+        <Space height="xs" />
 
         <Text style={styles.text}>{strings.ourTrustedPartners}</Text>
 
