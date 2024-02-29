@@ -199,8 +199,7 @@ const useStyles = () => {
       paddingHorizontal: 16,
     },
     text: {
-      fontSize: 16,
-      lineHeight: 22,
+      ...typography['body-1-l-regular'],
     },
     list: {
       flex: 1,
