@@ -38,6 +38,12 @@ const url = banxa.createReferralUrl(params);
 console.log(url.toString())
 ```
 
+### Return URL
+
+The return url must have the following prefix:
+
+`yoroi://<url>/<params>`
+
 ### Error handling
 ```typescript
 try {
