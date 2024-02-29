@@ -8,6 +8,13 @@ export type StorageReviverMapping = {
   [propertyName: string]: StorageReviverType
 }
 
+/**
+ * Creates a storage deserializer function based on the provided mapping.
+ * Since BigInt and BigNumber are not supported by JSON.parse, it stores as strings and revive as BigInt or BigNumber.
+ *
+ * @param mapping - The mapping of keys to reviver types.
+ * @returns JSON object revived according to the mapping, string -> BigInt or BigNumber.
+ */
 export const storageDeserializerMaker = (mapping: StorageReviverMapping) => {
   const reviver = (key: string, value: any) => {
     switch (mapping[key]) {
