@@ -1,5 +1,4 @@
-import {PortfolioTokenInfo} from './info'
-import {PortfolioTokenId, PortfolioTokenNature} from './token'
+import {PortfolioTokenId} from './token'
 
 export type PortfolioAmounts = {
   [key: PortfolioTokenId]: BigInt
@@ -11,14 +10,12 @@ export type PortfolioAmount = {
 }
 
 export type PortfolioTokenBalance = {
-  info: PortfolioTokenInfo
+  id: PortfolioTokenId
   // remote
   balance: BigInt
   // local - dynamic per transactions
   lockedInBuiltTx: BigInt // built txs - not submitted
-} & PortfolioTokenInfo['nature'] extends PortfolioTokenNature.Primary
-  ? PortfolioBalancePrimaryBreakdown
-  : never
+}
 
 export type PortfolioBalancePrimaryRecord = {
   source: 'rewards' | 'deposit'

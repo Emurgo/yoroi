@@ -4,7 +4,7 @@ import {App, Portfolio} from '@yoroi/types'
 import {portfolioStorageMaker} from './storage-maker' // Adjust the path accordingly
 import {tokenMocks} from '../token.mocks'
 import {balanceMocks} from '../balance.mocks'
-import {storageDeserializers} from './transformers'
+import {storageDeserializers} from '../../transformers/transformers'
 
 describe('portfolioStorageMaker', () => {
   let tokenInfoStorage: App.ObservableStorage<false, Portfolio.Token.Id>
