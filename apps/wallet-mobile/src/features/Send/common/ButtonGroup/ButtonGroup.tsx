@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View, ViewProps} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -18,6 +19,7 @@ export const ButtonGroup = <T extends string>({
   ...props
 }: ButtonGroupProps<T> & ViewProps) => {
   const [selected, setSelected] = React.useState(initial)
+  const styles = useStyles()
 
   return (
     <View style={[styles.root, style]} {...props}>
@@ -47,23 +49,26 @@ export const ButtonGroup = <T extends string>({
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flexDirection: 'row',
-  },
-  button: {
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    borderRadius: 6,
-  },
-  selected: {
-    backgroundColor: 'white',
-  },
-  label: {
-    color: '#3154CB',
-    fontFamily: 'Rubik-Medium',
-    fontWeight: '500',
-    lineHeight: 24,
-    fontSize: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    root: {
+      flexDirection: 'row',
+    },
+    button: {
+      paddingHorizontal: 8,
+      paddingVertical: 8,
+      borderRadius: 6,
+    },
+    selected: {
+      backgroundColor: color.gray.min,
+    },
+    label: {
+      color: color.primary[600],
+      ...typography['body-1-l-medium'],
+    },
+  })
+
+  return styles
+}
