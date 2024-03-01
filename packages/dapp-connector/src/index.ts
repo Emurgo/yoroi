@@ -1,4 +1,5 @@
 import {connectWallet} from './connector.js'
+export {handleEvent} from './resolver'
 
 export const getWalletConnectorJS = (props: {
   iconUrl: string

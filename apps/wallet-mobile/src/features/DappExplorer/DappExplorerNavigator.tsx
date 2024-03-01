@@ -7,6 +7,7 @@ import {useWalletName} from '../../yoroi-wallets/hooks'
 import {NavigationStack} from './common/navigation'
 import {SafeArea} from './common/SafeArea'
 import {HomeScreen} from './useCases/HomeScreen'
+import {WebBrowserScreen} from './useCases/WebBrowserScreen'
 
 const Stack = NavigationStack
 
@@ -18,8 +19,10 @@ export const DappExplorerNavigator = () => {
     <SafeArea>
       <StatusBar type="dark" />
 
-      <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Navigator screenOptions={screenOptions} initialRouteName="dapp-explorer-home">
         <Stack.Screen name="dapp-explorer-home" component={HomeScreen} options={{title: walletName}} />
+
+        <Stack.Screen name="dapp-explorer-web-browser" component={WebBrowserScreen} options={{title: walletName}} />
       </Stack.Navigator>
     </SafeArea>
   )

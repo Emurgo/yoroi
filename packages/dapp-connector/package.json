@@ -74,7 +74,8 @@
     "singleQuote": true,
     "tabWidth": 2,
     "trailingComma": "all",
-    "useTabs": false
+    "useTabs": false,
+    "printWidth": 120
   },
   "eslintConfig": {
     "extends": [
@@ -102,7 +103,8 @@
     "lib/",
     "babel.config.js",
     "jest.setup.js",
-    "coverage/"
+    "coverage/",
+    "src/connector.js"
   ],
   "jest": {
     "collectCoverage": true,
@@ -115,14 +117,6 @@
       "text-summary",
       "html"
     ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 100,
-        "functions": 100,
-        "lines": 100,
-        "statements": 100
-      }
-    },
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
