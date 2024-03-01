@@ -5,16 +5,13 @@ describe('createPrimaryTokenInfo', () => {
   it('should create primary token info with additional properties', () => {
     const cardanoPtMainnet: Omit<
       Portfolio.Token.Info,
-      'id' | 'nature' | 'type'
+      'id' | 'nature' | 'type' | 'application' | 'fingerprint' | 'status'
     > = {
       name: 'Cardano',
       symbol: '₳',
       decimals: 6,
-      application: Portfolio.Token.Application.Token,
-      fingerprint: '0x1234567890abcdef',
       originalImage: '',
       reference: '',
-      status: Portfolio.Token.Status.Normal,
       tag: '',
       ticker: 'ADA',
       website: 'https://cardano.org/',
@@ -24,6 +21,9 @@ describe('createPrimaryTokenInfo', () => {
       id: '.',
       nature: Portfolio.Token.Nature.Primary,
       type: Portfolio.Token.Type.FT,
+      application: Portfolio.Token.Application.Token,
+      fingerprint: '',
+      status: Portfolio.Token.Status.Normal,
       ...cardanoPtMainnet,
     }
 

@@ -1,3 +1,4 @@
+import {PortfolioTokenInfo} from './info'
 import {PortfolioTokenId} from './token'
 
 export type PortfolioAmounts = {
@@ -10,7 +11,7 @@ export type PortfolioAmount = {
 }
 
 export type PortfolioTokenBalance = {
-  id: PortfolioTokenId
+  info: PortfolioTokenInfo
   // remote
   balance: BigInt
   // local - dynamic per transactions

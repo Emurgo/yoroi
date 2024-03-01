@@ -7,7 +7,7 @@ export type AppApiResponseWithCache<T> =
   | [StatusCode: 200, Record: T, ETag: string, MaxAge: number]
   | [StatusCode: 304, MaxAge: number]
 
-export type AppApiRequestWithCache<T> = [Record: T, ETag: string]
+export type AppApiRequestRecordWithCache<T> = [Record: T, ETag: string]
 
 export type PortfolioApiTokenInfosResponse = Readonly<{
   [key: Portfolio.Token.Id]: AppApiResponseWithCache<Portfolio.Token.Info>
@@ -19,13 +19,13 @@ export type PortfolioApiTokenDiscoveriesResponse = Readonly<{
 
 export type PortfolioApi = Readonly<{
   tokenInfos(
-    tokenIdsWithCache: ReadonlyArray<
-      AppApiRequestWithCache<Portfolio.Token.Id>
+    idsWithETag: ReadonlyArray<
+      AppApiRequestRecordWithCache<Portfolio.Token.Id>
     >,
   ): Promise<PortfolioApiTokenInfosResponse>
   tokenDiscoveries(
-    tokenIdsWithCache: ReadonlyArray<
-      AppApiRequestWithCache<Portfolio.Token.Id>
+    idsWithETag: ReadonlyArray<
+      AppApiRequestRecordWithCache<Portfolio.Token.Id>
     >,
   ): Promise<PortfolioApiTokenDiscoveriesResponse>
 }>
@@ -39,7 +39,8 @@ export type ApiConfig = Readonly<{
 }>
 
 export type PortfolioManager = Readonly<{
-  hydrate(): Promise<void>
+  hydrate(): void
+  sync(amounts: Readonly<Map<Portfolio.Token.Id, BigInt>>): Promise<void>
 }>
 
 // TODO: type it

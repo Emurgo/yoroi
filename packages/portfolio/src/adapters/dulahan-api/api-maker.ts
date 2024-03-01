@@ -4,7 +4,7 @@ import {freeze} from 'immer'
 
 import {
   ApiConfig,
-  AppApiRequestWithCache,
+  AppApiRequestRecordWithCache,
   PortfolioApi,
   PortfolioApiTokenDiscoveriesResponse,
   PortfolioApiTokenInfosResponse,
@@ -20,24 +20,24 @@ export const portfolioApiMaker = ({
   const config = apiConfig[network]
   return freeze(
     {
-      tokenDiscoveries(tokenIdsWithCache) {
+      tokenDiscoveries(ids) {
         return request<
           PortfolioApiTokenDiscoveriesResponse,
-          ReadonlyArray<AppApiRequestWithCache<Portfolio.Token.Id>>
+          ReadonlyArray<AppApiRequestRecordWithCache<Portfolio.Token.Id>>
         >({
           method: 'post',
           url: config.tokenDiscoveries,
-          data: tokenIdsWithCache,
+          data: ids,
         })
       },
-      tokenInfos(tokenIdsWithCache) {
+      tokenInfos(ids) {
         return request<
           PortfolioApiTokenInfosResponse,
-          ReadonlyArray<AppApiRequestWithCache<Portfolio.Token.Id>>
+          ReadonlyArray<AppApiRequestRecordWithCache<Portfolio.Token.Id>>
         >({
           method: 'post',
           url: config.tokenInfos,
-          data: tokenIdsWithCache,
+          data: ids,
         })
       },
     },
