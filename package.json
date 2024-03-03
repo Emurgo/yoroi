@@ -22,7 +22,7 @@
     ]
   },
   "scripts": {
-    "reset": "yarn clean && yarn install --frozen-lockfile && yarn temp-fix && yarn wallet-mobile:reset && yarn build && yarn start",
+    "reset": "yarn clean && yarn install --frozen-lockfile && yarn wallet-mobile:reset && yarn temp-fix && yarn build && yarn start",
     "build": "yarn workspaces run build",
     "clean": "yarn workspaces run rimraf node_modules && yarn rimraf node_modules",
     "temp-fix": "cp ./brdige_fix_build.gradle ./node_modules/@emurgo/csl-mobile-bridge/android/build.gradle",

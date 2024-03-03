@@ -2,6 +2,6 @@
   "name": "yoroi",
   "displayName": "Yoroi",
   "expo": {
-    "plugins": ["sentry-expo"]
+    "plugins": ["@sentry/react-native"]
   }
 }

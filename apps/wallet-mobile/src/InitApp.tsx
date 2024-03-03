@@ -71,7 +71,6 @@ const useInitSentry = (options: {enabled: boolean}) => {
     Sentry.init({
       dsn: CONFIG.SENTRY_DSN,
       patchGlobalPromise: true,
-      enableInExpoDevelopment: true,
       tracesSampleRate: isProduction() ? 0.25 : 1,
       beforeSend(event) {
         // https://github.com/getsentry/sentry-javascript/issues/2039

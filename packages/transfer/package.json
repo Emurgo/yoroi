@@ -153,7 +153,7 @@
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
     "react": "18.2.0",
-    "react-native": "~0.71.0",
+    "react-native": "~0.73.4",
     "react-native-builder-bob": "^0.23.2",
     "react-query": "^3.39.3",
     "react-test-renderer": "^18.2.0",

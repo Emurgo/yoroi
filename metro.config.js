@@ -1,7 +1,11 @@
 const path = require("path");
+const {mergeConfig} = require('@react-native/metro-config');
+const { getSentryExpoConfig } = require('@sentry/react-native/metro');
 
-module.exports = {
-  projectRoot: path.resolve(__dirname, "apps/wallet-mobile"),
+projectRoot = path.resolve(__dirname, "apps/wallet-mobile");
+
+config = {
+  projectRoot: projectRoot,
   watchFolders: [
     path.resolve(__dirname, "node_modules"),
     path.resolve(__dirname, "packages/types"),
@@ -18,7 +22,7 @@ module.exports = {
   ],
   resolver: {
     resolverMainFields: ["sbmodern", "react-native", "browser", "main"],
-    sourceExts: ["js", "jsx", "ts", "tsx", "json", "md"],
+    sourceExts: ["js", "jsx", "ts", "tsx", "json", "md", "svg", "mjs"],
     assetExts: ["png", "jpg", "jpeg", "ttf", "otf", "woff", "woff2"],
     extraNodeModules: {
       crypto: require.resolve("react-native-crypto"),
@@ -27,6 +31,7 @@ module.exports = {
       util: require.resolve("util"),
       vm: require.resolve("vm-browserify"),
     },
+    unstable_enableSymlinks: true
   },
   transformer: {
     getTransformOptions: async () => ({
@@ -37,3 +42,5 @@ module.exports = {
     }),
   },
 };
+
+module.exports = mergeConfig(getSentryExpoConfig(projectRoot), config);
