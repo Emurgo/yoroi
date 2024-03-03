@@ -2,6 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import {AboutRecoveryPhrase} from '../features/AddWallet/useCases/CreateWallet/AboutRecoveryPhrase'
 import {defaultStackNavigationOptions, DEPRECATED_defaultStackNavigationOptions, WalletInitRoutes} from '../navigation'
 import {CheckNanoXScreen} from './CheckNanoX'
 import {ConnectNanoXScreen} from './ConnectNanoX/ConnectNanoXScreen'
@@ -15,7 +16,7 @@ import {SaveReadOnlyWalletScreen} from './SaveReadOnlyWallet'
 import {VerifyRestoredWalletScreen} from './VerifyRestoredWallet'
 import {WalletCredentialsScreen} from './WalletCredentials'
 import {WalletFreshInitScreen} from './WalletFreshInit'
-import {WalletInitScreen} from './WalletInit'
+// import { WalletInitScreen } from './WalletInit'
 
 const Stack = createStackNavigator<WalletInitRoutes>()
 export const WalletInitNavigator = () => {
@@ -38,7 +39,7 @@ export const WalletInitNavigator = () => {
 
       <Stack.Screen
         name="choose-create-restore"
-        component={WalletInitScreen}
+        component={AboutRecoveryPhrase}
         options={{...DEPRECATED_defaultStackNavigationOptions, title: strings.addWalletTitle}}
       />
 

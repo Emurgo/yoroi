@@ -70,11 +70,11 @@ export const defaultStackNavigationOptions: StackNavigationOptions = {
 
 export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {
   headerStyle: {
-    backgroundColor: COLORS.BACKGROUND_BLUE,
+    // backgroundColor: COLORS.BACKGROUND_BLUE,
     elevation: 0,
     shadowOpacity: 0,
   },
-  headerTintColor: '#fff',
+  headerTintColor: '#000000',
   headerBackTitleVisible: false,
   headerTitleAlign: 'center',
   headerLeftContainerStyle: {
