@@ -1,4 +1,4 @@
-import Clipboard from '@react-native-community/clipboard'
+import Clipboard from '@react-native-clipboard/clipboard'
 import {useEffect, useState} from 'react'
 
 const MESSAGE_TIMEOUT = 1500
