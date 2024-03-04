@@ -637,7 +637,7 @@ export const messages = defineMessages({
   },
   emptyOpenOrdersSub: {
     id: 'swap.listOrders.emptyOpenOrdersSub',
-    defaultMessage: '!!!Start doing the swap operations to your open orders here',
+    defaultMessage: '!!!Start doing the swap operations to see/view your open orders here',
   },
   emptyCompletedOrders: {
     id: 'swap.listOrders.emptyCompletedOrders',

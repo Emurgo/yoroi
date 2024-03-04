@@ -274,11 +274,11 @@ const useStyles = () => {
     },
     contentText: {
       flex: 1,
-
       ...typography['heading-3-regular'],
       fontSize: 20,
       color: color.gray.max,
       paddingTop: 4,
+      textAlign: 'center',
     },
     counter: {
       paddingVertical: 16,
