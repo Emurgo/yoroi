@@ -3,6 +3,7 @@ export * from './api/fetcher'
 export * from './api/handleApiError'
 
 export * from './cache/cache-record-maker'
+export * from './cache/is-expired'
 
 export * from './errors/errors'
 
