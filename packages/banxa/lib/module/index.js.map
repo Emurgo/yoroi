@@ -1,0 +1,1 @@
+{"version":3,"names":["banxaDomainProduction","banxaDomainSandbox","banxaSupportUrl","banxaModuleMaker","BanxaErrorMessages","Banxa","_Banxa"],"sourceRoot":"../../src","sources":["index.ts"],"mappings":"AAAA,SACEA,qBAAqB,EACrBC,kBAAkB,EAClBC,eAAe,QACV,uBAAuB;AAC9B,SAAQC,gBAAgB,QAAO,sBAAsB;AACrD,SAAQC,kBAAkB,QAAO,mBAAmB;AAYpD,WAAAC,KAAA;AAWC,WAAAC,MAAA,MAXgBD,KAAK,KAALA,KAAK"}

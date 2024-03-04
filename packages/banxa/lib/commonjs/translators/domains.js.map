@@ -1,0 +1,1 @@
+{"version":3,"names":["banxaDomainProduction","exports","banxaDomainSandbox","banxaSupportUrl"],"sourceRoot":"../../../src","sources":["translators/domains.ts"],"mappings":";;;;;;AAAO,MAAMA,qBAAqB,GAAG,WAAW;AAAAC,OAAA,CAAAD,qBAAA,GAAAA,qBAAA;AACzC,MAAME,kBAAkB,GAAG,mBAAmB;AAAAD,OAAA,CAAAC,kBAAA,GAAAA,kBAAA;AAC9C,MAAMC,eAAe,GAAG,4BAA4B;AAAAF,OAAA,CAAAE,eAAA,GAAAA,eAAA"}
