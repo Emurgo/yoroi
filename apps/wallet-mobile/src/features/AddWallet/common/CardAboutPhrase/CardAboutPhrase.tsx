@@ -5,19 +5,23 @@ import LinearGradient from 'react-native-linear-gradient'
 
 type CardAboutPhraseProps = {
   items: string[]
+  background?: boolean
+  padding?: boolean
 }
 
-export const CardAboutPhrase = ({items}: CardAboutPhraseProps) => {
-  const {styles, colors} = useStyles()
+export const CardAboutPhrase = ({items, background, padding}: CardAboutPhraseProps) => {
+  const {styles, colors} = useStyles(padding)
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        style={[StyleSheet.absoluteFill, {opacity: 1}]}
-        start={{x: 0, y: 0}}
-        end={{x: 0, y: 1}}
-        colors={colors.gradientBlueGreen}
-      />
+      {background && (
+        <LinearGradient
+          style={[StyleSheet.absoluteFill, {opacity: 1}]}
+          start={{x: 1, y: 0}}
+          end={{x: 0, y: 0}}
+          colors={colors.gradientBlueGreen}
+        />
+      )}
 
       {items?.map((item, i) => (
         <View key={i + '_ITEM_CARD'} style={styles.itemContainer}>
@@ -32,12 +36,13 @@ export const CardAboutPhrase = ({items}: CardAboutPhraseProps) => {
   )
 }
 
-const useStyles = () => {
+const useStyles = (padding?: boolean) => {
   const {theme} = useTheme()
+  const typography = theme.typography
   const styles = StyleSheet.create({
     container: {
       borderRadius: 8,
-      padding: 16,
+      padding: padding ? 16 : 0,
       overflow: 'hidden',
     },
     itemContainer: {
@@ -53,8 +58,7 @@ const useStyles = () => {
     },
     item: {
       flex: 1,
-      fontFamily: 'Rubik',
-      fontWeight: '400',
+      ...typography['body-1-regular'],
       fontSize: 16,
       lineHeight: 24,
       color: theme.color.primary[600],

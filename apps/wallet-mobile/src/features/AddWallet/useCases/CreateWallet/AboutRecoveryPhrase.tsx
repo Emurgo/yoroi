@@ -23,6 +23,7 @@ export const AboutRecoveryPhrase = () => {
         <Text style={styles.title}>Read this information carefully before saving your recovery phrase: </Text>
 
         <CardAboutPhrase
+          background
           items={[
             'Recovery phrase is a unique combination of words',
             'Recovery phrase is the only way to access your wallet',
