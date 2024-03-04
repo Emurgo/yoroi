@@ -271,7 +271,6 @@ const useStyles = () => {
     imageContainer: {
       flex: 1,
       textAlign: 'center',
-      justifyContent: 'center',
     },
     contentText: {
       flex: 1,
