@@ -59,8 +59,6 @@ const useStyles = (padding?: boolean) => {
     item: {
       flex: 1,
       ...typography['body-1-regular'],
-      fontSize: 16,
-      lineHeight: 24,
       color: theme.color.primary[600],
     },
   })
