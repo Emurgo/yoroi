@@ -271,14 +271,15 @@ const useStyles = () => {
     imageContainer: {
       flex: 1,
       textAlign: 'center',
+      justifyContent: 'center',
     },
     contentText: {
       flex: 1,
-
       ...typography['heading-3-regular'],
       fontSize: 20,
       color: color.gray.max,
       paddingTop: 4,
+      textAlign: 'center',
     },
     counter: {
       paddingVertical: 16,

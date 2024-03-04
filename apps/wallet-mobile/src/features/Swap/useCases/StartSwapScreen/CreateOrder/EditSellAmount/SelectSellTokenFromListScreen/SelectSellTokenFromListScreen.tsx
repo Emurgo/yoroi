@@ -235,6 +235,7 @@ const useStyles = () => {
       ...typography['heading-4-medium'],
       color: color.gray.max,
       paddingTop: 4,
+      textAlign: 'center',
     },
     counter: {
       paddingVertical: 16,
