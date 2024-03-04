@@ -52,6 +52,7 @@
     "dev": "yarn clean && bob build",
     "dgraph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg",
     "flow": ". ./scripts/flowgen.sh",
+    "generate-dexhunter-api": "swagger-typescript-api --union-enums --api-class-name DexHunter -p ./src/adapters/dexhunter-api/swagger.json -o ./src/adapters/dexhunter-api -n dexhunter.ts",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepack": "yarn build:release",
     "prepublish:beta": "yarn build:release",
@@ -83,6 +84,7 @@
       "prettier"
     ],
     "rules": {
+      "eslint-comments/no-unlimited-disable": "off",
       "prettier/prettier": [
         "error",
         {
@@ -111,6 +113,9 @@
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts",
       "!src/**/*.mocks.{js,jsx,ts,tsx}"
+    ],
+    "coveragePathIgnorePatterns": [
+      "dexhunter-api"
     ],
     "coverageReporters": [
       "text-summary",
@@ -168,6 +173,7 @@
     "react-query": "^3.39.3",
     "react-test-renderer": "^18.2.0",
     "release-it": "^15.0.0",
+    "swagger-typescript-api": "^13.0.3",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {

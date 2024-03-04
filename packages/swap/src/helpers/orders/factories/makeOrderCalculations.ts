@@ -1,9 +1,5 @@
 import {App, Balance, Swap} from '@yoroi/types'
 import {BigNumber} from 'bignumber.js'
-import {
-  SwapOrderCalculation,
-  SwapState,
-} from '../../../translators/reactjs/state/state'
 import {getQuantityWithSlippage} from '../amounts/getQuantityWithSlippage'
 import {getLiquidityProviderFee} from '../costs/getLiquidityProviderFee'
 import {getFrontendFee} from '../costs/getFrontendFee'
@@ -13,6 +9,87 @@ import {getSellAmount} from '../amounts/getSellAmount'
 import {asQuantity} from '../../../utils/asQuantity'
 import {Quantities} from '../../../utils/quantities'
 
+export type SimpleTokenInfo = {
+  id: Balance.TokenInfo['id']
+  decimals: Exclude<Balance.TokenInfo['decimals'], undefined>
+}
+
+export type SwapOrderCalculation = Readonly<{
+  order: {
+    side?: 'buy' | 'sell'
+    slippage: number
+    orderType: Swap.OrderType
+    limitPrice?: Balance.Quantity
+    amounts: {
+      sell: Balance.Amount
+      buy: Balance.Amount
+    }
+    lpTokenHeld?: Balance.Amount
+  }
+  sides: {
+    sell: Balance.Amount
+    buy: Balance.Amount
+  }
+  pool: Swap.Pool
+  prices: {
+    base: Balance.Quantity
+    market: Balance.Quantity
+    actualPrice: Balance.Quantity
+    withSlippage: Balance.Quantity
+    withFees: Balance.Quantity
+    withFeesAndSlippage: Balance.Quantity
+    difference: Balance.Quantity
+    priceImpact: Balance.Quantity
+  }
+  hasSupply: boolean
+  buyAmountWithSlippage: Balance.Amount
+  ptTotalValueSpent?: Balance.Amount
+  cost: {
+    liquidityFee: Balance.Amount
+    deposit: Balance.Amount
+    batcherFee: Balance.Amount
+    frontendFeeInfo: {
+      discountTier?: App.FrontendFeeTier
+      fee: Balance.Amount
+    }
+    ptTotalRequired: Balance.Amount
+  }
+}>
+
+export type SwapState = Readonly<{
+  orderData: {
+    // user inputs
+    amounts: {
+      sell: Balance.Amount
+      buy: Balance.Amount
+    }
+    type: Swap.OrderType
+    limitPrice?: Balance.Quantity
+    slippage: number
+    // when limit can manually select a pool
+    selectedPoolId?: string
+    selectedPoolCalculation?: SwapOrderCalculation
+
+    // state from wallet
+    lpTokenHeld?: Balance.Amount
+    tokens: {
+      sellInfo: SimpleTokenInfo
+      buyInfo: SimpleTokenInfo
+      ptInfo: SimpleTokenInfo
+      // diff sell - buy decimals
+      priceDenomination: number
+    }
+    frontendFeeTiers: ReadonlyArray<App.FrontendFeeTier>
+
+    // state from swap api
+    pools: ReadonlyArray<Swap.Pool>
+
+    // derivaded data
+    calculations: ReadonlyArray<SwapOrderCalculation>
+    bestPoolCalculation?: SwapOrderCalculation
+  }
+  unsignedTx: any
+}>
 export const makeOrderCalculations = ({
   orderType,
   amounts,

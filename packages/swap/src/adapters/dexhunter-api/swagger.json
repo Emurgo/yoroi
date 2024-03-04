@@ -1,0 +1,2807 @@
+{
+  "schemes": ["https"],
+  "swagger": "2.0",
+  "info": {
+    "description": "This is the DexHunter API. All endpoints are encoded: Please generate a partnerCode through the Partner create endpoint and use the partner_header provided as X-Partner-Id on each and every request.",
+    "title": "DexHunter API",
+    "contact": {},
+    "version": "1.0"
+  },
+  "host": "dexhunter.sbase.ch",
+  "basePath": "/",
+  "paths": {
+    "/basket/create": {
+      "post": {
+        "description": "Creates a basket",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["basket"],
+        "summary": "Creates a basket",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/basket.CreateBasketRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "basketID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/basket/delete": {
+      "delete": {
+        "description": "Deletes a basket",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["basket"],
+        "summary": "Deletes a basket",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/basket.DeleteBasketRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/basket/estimate": {
+      "post": {
+        "description": "Estimates a basket",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["basket"],
+        "summary": "Estimates a basket",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/basket.BasketEstimateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/basket.BasketEstimateResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/basket/get": {
+      "post": {
+        "description": "Gets baskets",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["basket"],
+        "summary": "Gets baskets",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/basket.GetBasketsRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/basket.GetBasketsResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/basket/get/{basketId}": {
+      "get": {
+        "description": "Gets a basket",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["basket"],
+        "summary": "Gets a basket",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "basketId",
+            "name": "basketId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/basket.Basket"
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/basket/swap": {
+      "post": {
+        "description": "Swaps a basket",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["basket"],
+        "summary": "Swaps a basket",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/basket.TokenBasketSwapRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/swaputils.BulkBuyResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/basket/{basketId}/balance/{address}": {
+      "get": {
+        "description": "Gets the balance of a user for a specific basket",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["basket"],
+        "summary": "Gets the balance of a user for a specific basket",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "basketId",
+            "name": "basketId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "address",
+            "name": "address",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/custom-swap": {
+      "post": {
+        "description": "Performs a Swap",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Performs a Swap",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/swaputils.CustomSwapObject"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/swaputils.SwapResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "402": {
+            "description": "Insufficient Funds",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/dexHunter/limit": {
+      "post": {
+        "description": "Limit Order",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["dexHunter"],
+        "summary": "Limit Order",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dexhunter.LimitOrderRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dexhunter.LimitOrderResponse"
+            }
+          }
+        }
+      }
+    },
+    "/limit/estimate": {
+      "post": {
+        "description": "Estimate a limit order",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["LimitOrder"],
+        "summary": "Estimate a limit order",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dexhunter.LimitOrderRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dexhunter.LimitOrderEstimate"
+            }
+          }
+        }
+      }
+    },
+    "/partners/create": {
+      "post": {
+        "description": "Create Partner",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Partners"],
+        "summary": "Create Partner",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/partners.CreatePartnerRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/models.PartnerDeal"
+            }
+          }
+        }
+      }
+    },
+    "/partners/{partner}": {
+      "get": {
+        "description": "Returns payouts, and various stats for a partner",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Partners"],
+        "summary": "Get Partner",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "partner",
+            "name": "partner",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/partners.PartnerInfos"
+            }
+          }
+        }
+      }
+    },
+    "/partners/{partner}/chart/{period}": {
+      "get": {
+        "description": "Returns a chart of the fees paid to a partner",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Partners"],
+        "summary": "Get Partners chart",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "partner",
+            "name": "partner",
+            "in": "path",
+            "required": true
+          },
+          {
+            "enum": ["1d", "7d", "30d"],
+            "type": "string",
+            "description": "period",
+            "name": "period",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/stoploss": {
+      "post": {
+        "description": "Creates a stoploss",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["StopLoss"],
+        "summary": "Create a StopLoss",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/stoploss.StopLossCreationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/stoploss.StopLossResponse"
+            }
+          }
+        }
+      }
+    },
+    "/stoploss/cancel": {
+      "post": {
+        "description": "Cancels a stoploss, it is preferred to use the cancel endpoint",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["StopLoss"],
+        "summary": "Cancel a StopLoss",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/stoploss.CancelStopLossBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/swap": {
+      "post": {
+        "description": "Performs a Swap",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Performs a Swap",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/swaputils.SwapObject"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/swaputils.SwapResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "402": {
+            "description": "Insufficient Funds",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/adaValue": {
+      "get": {
+        "description": "Get ADA value",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Swap"],
+        "summary": "Get ADA value",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/averagePrice/{tokenIn}/{tokenOut}": {
+      "get": {
+        "description": "Returns the average price for a token pair",
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Returns the average price for a token pair",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f534e454b",
+            "name": "tokenIn",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f534e454b",
+            "name": "tokenOut",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/bulk": {
+      "post": {
+        "description": "Bulk swap",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["Swap"],
+        "summary": "Bulk swap",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dexhunter.BulkBuyBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/swaputils.BulkBuyResponse"
+            }
+          }
+        }
+      }
+    },
+    "/swap/bulkcancel": {
+      "post": {
+        "description": "Performs a bulk cancel",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["cancel"],
+        "summary": "Performs a bulk cancel",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dexhunter.BulkCancelRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dexhunter.CancelResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/cancel": {
+      "post": {
+        "description": "Performs a cancel",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["cancel"],
+        "summary": "Performs a cancel",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dexhunter.CancelRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dexhunter.CancelResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/estimate": {
+      "post": {
+        "description": "Performs an Estimate",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["estimate"],
+        "summary": "Performs an Estimate",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/swaputils.EstimationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/swaputils.EstimationResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/globalOrders": {
+      "post": {
+        "description": "Returns orders filtered and sorted",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Returns orders filtered and sorted",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/models.GlobalOrdersRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dexhunter.OrdersByPair"
+            }
+          }
+        }
+      }
+    },
+    "/swap/orders/{userAddress}": {
+      "post": {
+        "description": "Returns orders filtered and sorted",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Returns orders filtered and sorted",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "addr1qxajla3qcrwckzkur8n0lt02rg2sepw3kgkstckmzrz4ccfm3j9pqrqkea3tns46e3qy2w42vl8dvvue8u45amzm3rjqvv2nxh",
+            "name": "userAddress",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/models.OrderRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.Order"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/swap/ordersByPair/{tokenIn}/{tokenOut}": {
+      "get": {
+        "description": "Returns orders filtered and sorted",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Returns orders filtered and sorted",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "tokenIn",
+            "name": "tokenIn",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "tokenOut",
+            "name": "tokenOut",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dexhunter.OrdersByPair"
+            }
+          }
+        }
+      }
+    },
+    "/swap/pairStats/{tokenIn}/{tokenOut}": {
+      "get": {
+        "description": "Returns stats for a token pair",
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Returns stats for a token pair",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f534e454b",
+            "name": "tokenIn",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f534e454b",
+            "name": "tokenOut",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/swaputils.PairStats"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/pendingOrders/{address}": {
+      "get": {
+        "description": "Returns the number of pending orders for a user",
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Returns the number of pending orders for a user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "addr1qxajla3qcrwckzkur8n0lt02rg2sepw3kgkstckmzrz4ccfm3j9pqrqkea3tns46e3qy2w42vl8dvvue8u45amzm3rjqvv2nxh",
+            "name": "address",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/reverseEstimate": {
+      "post": {
+        "description": "Performs an Estimate",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["estimate"],
+        "summary": "Performs an Estimate",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/swaputils.ReverseEstimationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/swaputils.EstimationResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/sign": {
+      "post": {
+        "description": "Signs a transaction",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Signs a transaction",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/swaputils.SubmissionModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dexhunter.SignatureResponse"
+            }
+          },
+          "422": {
+            "description": "transaction is required",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "500": {
+            "description": "invalid transaction",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/supportedDexes": {
+      "get": {
+        "description": "Returns all supported dexes",
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Returns all supported dexes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/swap/token/{tokenId}": {
+      "get": {
+        "description": "Returns a token",
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Returns a token",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f534e454b",
+            "name": "tokenId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/models.Token"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/token/{tokenId}/image": {
+      "get": {
+        "description": "Returns a token image",
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Returns a token image",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f534e454b",
+            "name": "tokenId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/tokens": {
+      "get": {
+        "description": "Returns all tokens",
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Returns all tokens",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.TokenInfo"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/swap/trending": {
+      "post": {
+        "description": "Returns trending tokens",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Returns trending tokens",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dexhunter.TrendingTokensRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dexhunter.TrendingTokensResponse"
+            }
+          }
+        }
+      }
+    },
+    "/swap/userBalance/{address}": {
+      "get": {
+        "description": "Returns the balance for a user",
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Returns the balance for a user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "addr1qxajla3qcrwckzkur8n0lt02rg2sepw3kgkstckmzrz4ccfm3j9pqrqkea3tns46e3qy2w42vl8dvvue8u45amzm3rjqvv2nxh",
+            "name": "address",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/userTokens/{address}": {
+      "get": {
+        "description": "Returns all tokens for a user",
+        "produces": ["application/json"],
+        "tags": ["swap"],
+        "summary": "Returns all tokens for a user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "addr1qxajla3qcrwckzkur8n0lt02rg2sepw3kgkstckmzrz4ccfm3j9pqrqkea3tns46e3qy2w42vl8dvvue8u45amzm3rjqvv2nxh",
+            "name": "address",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.UserToken"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swap/wallet": {
+      "post": {
+        "description": "Returns the wallet info",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["wallet"],
+        "summary": "Returns the wallet info",
+        "parameters": [
+          {
+            "description": "body",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dexhunter.WalletInfo"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dexhunter.WalletInfoResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "basket.Basket": {
+      "type": "object",
+      "properties": {
+        "creator": {
+          "type": "string"
+        },
+        "description": {
+          "description": "Description is the description of the basket",
+          "type": "string"
+        },
+        "id": {
+          "description": "ID is the unique identifier of the basket",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name is the name of the basket",
+          "type": "string"
+        },
+        "tokens": {
+          "description": "Tokens is the list of tokens in the basket",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/basket.BasketPart"
+          }
+        }
+      }
+    },
+    "basket.BasketEstimateRequest": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "amount_in": {
+          "description": "Amount is the amount of the basket",
+          "type": "number"
+        },
+        "basket_id": {
+          "description": "ID is the unique identifier of the basket",
+          "type": "string"
+        },
+        "slippage": {
+          "type": "number"
+        },
+        "tx_type": {
+          "$ref": "#/definitions/basket.BasketTxType"
+        }
+      }
+    },
+    "basket.BasketEstimateResponse": {
+      "type": "object",
+      "properties": {
+        "dex_hunter_fee": {
+          "type": "integer"
+        },
+        "expected_output": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "fee": {
+          "description": "Amount is the amount of the basket\nAmount int64 `json:\"amount_in\" bson:\"amount_in\"`\nFee is the fee of the basket",
+          "type": "integer"
+        },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "pcts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "basket.BasketFilter": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "description": "Field is the field to filter",
+          "allOf": [
+            {
+              "$ref": "#/definitions/basket.BasketFilterType"
+            }
+          ]
+        },
+        "value": {
+          "description": "Value is the value to filter",
+          "type": "string"
+        }
+      }
+    },
+    "basket.BasketFilterType": {
+      "type": "string",
+      "enum": ["creator"],
+      "x-enum-varnames": ["BasketFilterByCreator"]
+    },
+    "basket.BasketPart": {
+      "type": "object",
+      "properties": {
+        "pct": {
+          "description": "Pct is the percentage of the token in the basket",
+          "type": "number"
+        },
+        "tokenId": {
+          "description": "TokenId is the unique identifier of the token",
+          "type": "string"
+        }
+      }
+    },
+    "basket.BasketTxType": {
+      "type": "string",
+      "enum": ["buy", "sell"],
+      "x-enum-varnames": ["BasketTxTypeBuy", "BasketTxTypeSell"]
+    },
+    "basket.CreateBasketRequest": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "description": {
+          "description": "Description is the description of the basket",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name is the name of the basket",
+          "type": "string"
+        },
+        "tokens": {
+          "description": "Tokens is the list of tokens in the basket",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/basket.BasketPart"
+          }
+        }
+      }
+    },
+    "basket.DeleteBasketRequest": {
+      "type": "object",
+      "properties": {
+        "basket_id": {
+          "description": "ID is the unique identifier of the basket",
+          "type": "string"
+        }
+      }
+    },
+    "basket.GetBasketsRequest": {
+      "type": "object",
+      "properties": {
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/basket.BasketFilter"
+          }
+        },
+        "page": {
+          "description": "Page is the page number",
+          "type": "integer"
+        },
+        "per_page": {
+          "description": "PerPage is the number of items per page",
+          "type": "integer"
+        }
+      }
+    },
+    "basket.GetBasketsResponse": {
+      "type": "object",
+      "properties": {
+        "baskets": {
+          "description": "Baskets is the list of baskets",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/basket.Basket"
+          }
+        }
+      }
+    },
+    "basket.TokenBasketSwapRequest": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "amount_in": {
+          "description": "Amount is the amount of the basket",
+          "type": "number"
+        },
+        "basket_id": {
+          "description": "ID is the unique identifier of the basket",
+          "type": "string"
+        },
+        "slippage": {
+          "type": "number"
+        },
+        "tx_type": {
+          "$ref": "#/definitions/basket.BasketTxType"
+        }
+      }
+    },
+    "batchers.PartnerPayout": {
+      "type": "object",
+      "properties": {
+        "fees": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "is_confirmed": {
+          "type": "boolean"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "total_lovelace": {
+          "type": "integer"
+        },
+        "total_lovelace_for_dh": {
+          "type": "integer"
+        },
+        "total_lovelace_for_partner": {
+          "type": "integer"
+        },
+        "tx_hash": {
+          "type": "string"
+        }
+      }
+    },
+    "dexhunter.BulkBuyBody": {
+      "type": "object",
+      "properties": {
+        "buyer_address": {
+          "type": "string"
+        },
+        "trades": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/swaputils.Trade"
+          }
+        }
+      }
+    },
+    "dexhunter.BulkCancelRequest": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "order_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dexhunter.CancelRequest": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "order_id": {
+          "type": "string"
+        }
+      }
+    },
+    "dexhunter.CancelResponse": {
+      "type": "object",
+      "properties": {
+        "additional_cancellation_fee": {
+          "type": "integer"
+        },
+        "cbor": {
+          "type": "string"
+        }
+      }
+    },
+    "dexhunter.LimitOrderEstimate": {
+      "type": "object",
+      "properties": {
+        "batcher_fee": {
+          "type": "number"
+        },
+        "blacklisted_dexes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.DexName"
+          }
+        },
+        "deposits": {
+          "type": "number"
+        },
+        "dexhunter_fee": {
+          "type": "integer"
+        },
+        "net_price": {
+          "type": "number"
+        },
+        "possible_routes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "splits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dexhunter.LimitSplit"
+          }
+        },
+        "total_fee": {
+          "type": "number"
+        },
+        "total_input": {
+          "type": "number"
+        },
+        "total_output": {
+          "type": "number"
+        }
+      }
+    },
+    "dexhunter.LimitOrderRequest": {
+      "type": "object",
+      "properties": {
+        "amount_in": {
+          "type": "number"
+        },
+        "blacklisted_dexes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.DexName"
+          }
+        },
+        "buyer_address": {
+          "type": "string"
+        },
+        "dex": {
+          "$ref": "#/definitions/models.DexName"
+        },
+        "multiples": {
+          "type": "integer"
+        },
+        "token_in": {
+          "type": "string"
+        },
+        "token_out": {
+          "type": "string"
+        },
+        "wanted_price": {
+          "type": "number"
+        }
+      }
+    },
+    "dexhunter.LimitOrderResponse": {
+      "type": "object",
+      "properties": {
+        "batcher_fee": {
+          "type": "number"
+        },
+        "cbor": {
+          "type": "string"
+        },
+        "deposits": {
+          "type": "number"
+        },
+        "dexhunter_fee": {
+          "type": "integer"
+        },
+        "possible_routes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "splits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dexhunter.LimitSplit"
+          }
+        },
+        "totalFee": {
+          "type": "number"
+        },
+        "total_input": {
+          "type": "number"
+        },
+        "total_output": {
+          "type": "number"
+        }
+      }
+    },
+    "dexhunter.LimitSplit": {
+      "type": "object",
+      "properties": {
+        "amount_in": {
+          "type": "number"
+        },
+        "batcher_fee": {
+          "type": "number"
+        },
+        "deposits": {
+          "type": "number"
+        },
+        "dex": {
+          "$ref": "#/definitions/models.DexName"
+        },
+        "expected_output_without_slippage": {
+          "type": "number"
+        },
+        "fee": {
+          "type": "number"
+        }
+      }
+    },
+    "dexhunter.OrdersByPair": {
+      "type": "object",
+      "properties": {
+        "orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.Order"
+          }
+        }
+      }
+    },
+    "dexhunter.Period": {
+      "type": "string",
+      "enum": ["1m", "2m", "3m", "5m", "10m", "15m", "30m", "1h", "4h", "12h", "1d", "1w", "1M"],
+      "x-enum-varnames": [
+        "OneMinute",
+        "TwoMinutes",
+        "ThreeMinutes",
+        "FiveMinutes",
+        "TenMinutes",
+        "FifteenMinutes",
+        "ThirtyMinutes",
+        "OneHour",
+        "FourHours",
+        "TwelveHours",
+        "OneDay",
+        "OneWeek",
+        "OneMonth"
+      ]
+    },
+    "dexhunter.SignatureResponse": {
+      "type": "object",
+      "properties": {
+        "cbor": {
+          "type": "string"
+        }
+      }
+    },
+    "dexhunter.TTSort": {
+      "type": "string",
+      "enum": ["VOLUME_AMOUNT", "VOLUME_CHANGE"],
+      "x-enum-varnames": ["VOLUME_AMOUNT", "VOLUME_CHANGE"]
+    },
+    "dexhunter.TrendingToken": {
+      "type": "object",
+      "properties": {
+        "amount_buys": {
+          "type": "integer"
+        },
+        "amount_sales": {
+          "type": "integer"
+        },
+        "current_closing_price": {
+          "type": "number"
+        },
+        "current_period_vol": {
+          "type": "number"
+        },
+        "previous_closing_price": {
+          "type": "number"
+        },
+        "previous_period_vol": {
+          "type": "number"
+        },
+        "price_change_percentage": {
+          "type": "number"
+        },
+        "token_id": {
+          "type": "string"
+        },
+        "token_name": {
+          "type": "string"
+        },
+        "token_symbol": {
+          "type": "string"
+        },
+        "volume_change_percentage": {
+          "type": "number"
+        }
+      }
+    },
+    "dexhunter.TrendingTokensRequest": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer"
+        },
+        "perPage": {
+          "type": "integer"
+        },
+        "period": {
+          "$ref": "#/definitions/dexhunter.Period"
+        },
+        "sort": {
+          "$ref": "#/definitions/dexhunter.TTSort"
+        }
+      }
+    },
+    "dexhunter.TrendingTokensResponse": {
+      "type": "object",
+      "properties": {
+        "tokens": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dexhunter.TrendingToken"
+          }
+        }
+      }
+    },
+    "dexhunter.WalletInfo": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dexhunter.WalletInfoResponse": {
+      "type": "object",
+      "properties": {
+        "cardano": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "tokens": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.UserToken"
+          }
+        }
+      }
+    },
+    "models.DexName": {
+      "type": "string",
+      "enum": ["MINSWAP", "VYFI", "WINGRIDER", "SUNDAESWAP", "SPECTRUM", "MUESLISWAP", "CROSSCHAIN", "TEDDY"],
+      "x-enum-varnames": ["MINSWAP", "VYFI", "WINGRIDER", "SUNDAESWAP", "SPECTRUM", "MUESLISWAP", "CROSSCHAIN", "TEDDY"]
+    },
+    "models.GlobalOrdersRequest": {
+      "type": "object",
+      "properties": {
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.OrderFilter"
+          }
+        },
+        "orderSorts": {
+          "$ref": "#/definitions/models.OrderSorts"
+        },
+        "page": {
+          "type": "integer"
+        },
+        "perPage": {
+          "type": "integer"
+        },
+        "sortDirection": {
+          "$ref": "#/definitions/models.SortDirection"
+        }
+      }
+    },
+    "models.Order": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "actual_out_amount": {
+          "type": "number"
+        },
+        "amount_in": {
+          "type": "number"
+        },
+        "batcher_fee": {
+          "type": "number"
+        },
+        "deposit": {
+          "type": "number"
+        },
+        "dex": {
+          "$ref": "#/definitions/models.DexName"
+        },
+        "dexhunter_fee": {
+          "type": "number"
+        },
+        "expected_out_amount": {
+          "type": "number"
+        },
+        "is_dexhunter": {
+          "type": "boolean"
+        },
+        "is_stop_loss": {
+          "type": "boolean"
+        },
+        "last_update": {
+          "type": "string"
+        },
+        "plutus_data": {
+          "type": "string"
+        },
+        "pool_id": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/models.OrderStatus"
+        },
+        "stop_loss_chunks": {
+          "type": "integer"
+        },
+        "submission_time": {
+          "type": "string"
+        },
+        "token_id_in": {
+          "type": "string"
+        },
+        "token_id_out": {
+          "type": "string"
+        },
+        "tx_hash": {
+          "type": "string"
+        },
+        "tx_output_index": {
+          "type": "integer"
+        },
+        "update_tx_hash": {
+          "type": "string"
+        },
+        "user_address": {
+          "type": "string"
+        },
+        "user_stake": {
+          "type": "string"
+        }
+      }
+    },
+    "models.OrderFilter": {
+      "type": "object",
+      "properties": {
+        "filterType": {
+          "$ref": "#/definitions/models.OrderFilterType"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "models.OrderFilterType": {
+      "type": "string",
+      "enum": [
+        "TOKENID",
+        "STATUS",
+        "TXTYPE",
+        "TIMESTART",
+        "TIMEEND",
+        "DEXNAME",
+        "SEARCH",
+        "ADDRESS",
+        "MINAMOUNT",
+        "MAXAMOUNT",
+        "TXHASH",
+        "OWNED"
+      ],
+      "x-enum-varnames": [
+        "TOKENID",
+        "STATUS",
+        "TXTYPE",
+        "TIMESTART",
+        "TIMEEND",
+        "DEXNAME",
+        "SEARCH",
+        "ADDRESS",
+        "MINAMOUNT",
+        "MAXAMOUNT",
+        "TXHASH",
+        "OWNED"
+      ]
+    },
+    "models.OrderRequest": {
+      "type": "object",
+      "properties": {
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.OrderFilter"
+          }
+        },
+        "orderSorts": {
+          "$ref": "#/definitions/models.OrderSorts"
+        },
+        "page": {
+          "type": "integer"
+        },
+        "perPage": {
+          "type": "integer"
+        },
+        "sortDirection": {
+          "$ref": "#/definitions/models.SortDirection"
+        }
+      }
+    },
+    "models.OrderSorts": {
+      "type": "string",
+      "enum": ["AMOUNTIN", "DATE"],
+      "x-enum-varnames": ["AMOUNTIN", "DATE"]
+    },
+    "models.OrderStatus": {
+      "type": "string",
+      "enum": ["PENDING", "COMPLETED", "CANCELLED", "BATCHING", "EXPIRED", "LIMIT", "STOPLOSS"],
+      "x-enum-varnames": ["PENDING", "COMPLETED", "CANCELLED", "BATCHING", "EXPIRED", "LIMIT", "STOPLOSS"]
+    },
+    "models.PartnerDeal": {
+      "type": "object",
+      "properties": {
+        "has_minimum": {
+          "type": "boolean"
+        },
+        "is_laddered": {
+          "type": "boolean"
+        },
+        "min_trade_size": {
+          "type": "integer"
+        },
+        "partner": {
+          "type": "string"
+        },
+        "partner_header": {
+          "type": "string"
+        },
+        "partner_pct": {
+          "type": "number"
+        },
+        "partner_receiving_address": {
+          "type": "string"
+        },
+        "settings": {},
+        "skip_extra_cancellation_fee": {
+          "type": "boolean"
+        },
+        "split_pct": {
+          "type": "number"
+        }
+      }
+    },
+    "models.SortDirection": {
+      "type": "string",
+      "enum": ["ASC", "DESC"],
+      "x-enum-varnames": ["ASC", "DESC"]
+    },
+    "models.Token": {
+      "type": "object",
+      "properties": {
+        "icon": {
+          "type": "string"
+        },
+        "is_verified": {
+          "type": "boolean"
+        },
+        "supply": {
+          "type": "string"
+        },
+        "ticker": {
+          "type": "string"
+        },
+        "token_ascii": {
+          "type": "string"
+        },
+        "token_decimals": {
+          "type": "string"
+        },
+        "token_id": {
+          "type": "string"
+        },
+        "token_policy": {
+          "type": "string"
+        }
+      }
+    },
+    "models.TokenInfo": {
+      "type": "object",
+      "properties": {
+        "icon": {
+          "type": "string"
+        },
+        "is_verified": {
+          "type": "boolean"
+        },
+        "price": {
+          "type": "number"
+        },
+        "supply": {
+          "type": "string"
+        },
+        "ticker": {
+          "type": "string"
+        },
+        "token1_amt": {
+          "type": "string"
+        },
+        "token2_amt": {
+          "type": "string"
+        },
+        "token_ascii": {
+          "type": "string"
+        },
+        "token_decimals": {
+          "type": "string"
+        },
+        "token_id": {
+          "type": "string"
+        },
+        "token_policy": {
+          "type": "string"
+        }
+      }
+    },
+    "models.UserToken": {
+      "type": "object",
+      "properties": {
+        "ada_value": {
+          "type": "number"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "ticker": {
+          "type": "string"
+        },
+        "token_ascii": {
+          "type": "string"
+        },
+        "token_id": {
+          "type": "string"
+        }
+      }
+    },
+    "partners.CreatePartnerRequest": {
+      "type": "object",
+      "properties": {
+        "creator_key": {
+          "type": "string"
+        },
+        "partner_name": {
+          "type": "string"
+        },
+        "partner_pct": {
+          "type": "number"
+        },
+        "partner_receiving_address": {
+          "type": "string"
+        }
+      }
+    },
+    "partners.PartnerInfos": {
+      "type": "object",
+      "properties": {
+        "partner_deal": {
+          "$ref": "#/definitions/models.PartnerDeal"
+        },
+        "payouts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/batchers.PartnerPayout"
+          }
+        },
+        "total_completed_fees": {
+          "type": "number"
+        },
+        "total_payouts_for_partner": {
+          "type": "number"
+        },
+        "total_payouts_for_provider": {
+          "type": "number"
+        },
+        "total_payouts_overall": {
+          "type": "number"
+        },
+        "total_pending_fees": {
+          "type": "number"
+        },
+        "total_ready_for_payout_fees": {
+          "type": "number"
+        },
+        "total_txs": {
+          "type": "integer"
+        }
+      }
+    },
+    "stoploss.CancelStopLossBody": {
+      "type": "object",
+      "properties": {
+        "stop_loss_id": {
+          "type": "string"
+        },
+        "user_address": {
+          "type": "string"
+        }
+      }
+    },
+    "stoploss.StopLossCreationRequest": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number"
+        },
+        "chunks": {
+          "type": "integer"
+        },
+        "max_price_change": {
+          "type": "number"
+        },
+        "price": {
+          "type": "number"
+        },
+        "token_in": {
+          "type": "string"
+        },
+        "user_address": {
+          "type": "string"
+        }
+      }
+    },
+    "stoploss.StopLossResponse": {
+      "type": "object",
+      "properties": {
+        "cbor": {
+          "type": "string"
+        },
+        "dex": {
+          "$ref": "#/definitions/models.DexName"
+        },
+        "expected_output": {
+          "type": "number"
+        },
+        "expected_output_without_slippage": {
+          "type": "number"
+        },
+        "total_dex_fees": {
+          "type": "number"
+        },
+        "total_dexhunter_fees": {
+          "type": "number"
+        },
+        "total_input": {
+          "type": "number"
+        }
+      }
+    },
+    "swaputils.BulkBuyResponse": {
+      "type": "object",
+      "properties": {
+        "batcher_fee": {
+          "type": "number"
+        },
+        "cbor": {
+          "type": "string"
+        },
+        "deposits": {
+          "type": "number"
+        },
+        "dexhunter_fee": {
+          "type": "integer"
+        },
+        "total_fee": {
+          "type": "integer"
+        },
+        "trades": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "average_price": {
+                "type": "number"
+              },
+              "batcher_fee": {
+                "type": "number"
+              },
+              "deposits": {
+                "type": "number"
+              },
+              "dexhunter_fee": {
+                "type": "integer"
+              },
+              "possible_routes": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number"
+                }
+              },
+              "price_ab": {
+                "type": "number"
+              },
+              "price_ba": {
+                "type": "number"
+              },
+              "splits": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/swaputils.Split"
+                }
+              },
+              "total_fee": {
+                "type": "integer"
+              },
+              "total_output": {
+                "type": "number"
+              },
+              "total_output_without_slippage": {
+                "type": "number"
+              },
+              "trade": {
+                "$ref": "#/definitions/swaputils.Trade"
+              }
+            }
+          }
+        }
+      }
+    },
+    "swaputils.CustomSwapObject": {
+      "type": "object",
+      "required": [
+        "amount_in",
+        "change_receiver_address",
+        "input_address",
+        "slippage",
+        "swap_receiver_address",
+        "token_in",
+        "token_out"
+      ],
+      "properties": {
+        "amount_in": {
+          "type": "number",
+          "example": 1
+        },
+        "blacklisted_dexes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.DexName"
+          },
+          "example": [""]
+        },
+        "change_receiver_address": {
+          "type": "string",
+          "example": "addr1qxajla3qcrwckzkur8n0lt02rg2sepw3kgkstckmzrz4ccfm3j9pqrqkea3tns46e3qy2w42vl8dvvue8u45amzm3rjqvv2nxh"
+        },
+        "input_address": {
+          "type": "string",
+          "example": "addr1qxajla3qcrwckzkur8n0lt02rg2sepw3kgkstckmzrz4ccfm3j9pqrqkea3tns46e3qy2w42vl8dvvue8u45amzm3rjqvv2nxh"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [""]
+        },
+        "single_preferred_dex": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/models.DexName"
+            }
+          ],
+          "example": ""
+        },
+        "slippage": {
+          "type": "number",
+          "example": 2
+        },
+        "swap_receiver_address": {
+          "type": "string",
+          "example": "addr1qxajla3qcrwckzkur8n0lt02rg2sepw3kgkstckmzrz4ccfm3j9pqrqkea3tns46e3qy2w42vl8dvvue8u45amzm3rjqvv2nxh"
+        },
+        "token_in": {
+          "type": "string",
+          "example": ""
+        },
+        "token_out": {
+          "type": "string",
+          "example": "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f534e454b"
+        }
+      }
+    },
+    "swaputils.EstimationRequest": {
+      "type": "object",
+      "required": ["amount_in", "slippage", "token_in", "token_out"],
+      "properties": {
+        "amount_in": {
+          "type": "number",
+          "example": 1
+        },
+        "blacklisted_dexes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.DexName"
+          },
+          "example": [""]
+        },
+        "buyer_address": {
+          "type": "string",
+          "example": "addr1qxajla3qcrwckzkur8n0lt02rg2sepw3kgkstckmzrz4ccfm3j9pqrqkea3tns46e3qy2w42vl8dvvue8u45amzm3rjqvv2nxh"
+        },
+        "is_optimized": {
+          "type": "boolean",
+          "example": false
+        },
+        "referrer": {
+          "type": "string",
+          "example": ""
+        },
+        "single_preferred_dex": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/models.DexName"
+            }
+          ],
+          "example": ""
+        },
+        "slippage": {
+          "type": "number",
+          "example": 2
+        },
+        "token_in": {
+          "type": "string",
+          "example": ""
+        },
+        "token_out": {
+          "type": "string",
+          "example": "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f534e454b"
+        }
+      }
+    },
+    "swaputils.EstimationResponse": {
+      "type": "object",
+      "properties": {
+        "average_price": {
+          "type": "number"
+        },
+        "batcher_fee": {
+          "type": "number"
+        },
+        "deposits": {
+          "type": "number"
+        },
+        "dexhunter_fee": {
+          "type": "number"
+        },
+        "net_price": {
+          "type": "number"
+        },
+        "net_price_reverse": {
+          "type": "number"
+        },
+        "partner_fee": {
+          "type": "number"
+        },
+        "possible_routes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "price_ab": {
+          "type": "number"
+        },
+        "price_ba": {
+          "type": "number"
+        },
+        "splits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/swaputils.Split"
+          }
+        },
+        "total_fee": {
+          "type": "integer"
+        },
+        "total_input": {
+          "type": "number"
+        },
+        "total_input_without_slippage": {
+          "type": "number"
+        },
+        "total_output": {
+          "type": "number"
+        },
+        "total_output_without_slippage": {
+          "type": "number"
+        }
+      }
+    },
+    "swaputils.PairStats": {
+      "type": "object",
+      "properties": {
+        "dailyBuysCount": {
+          "type": "integer"
+        },
+        "dailySalesCount": {
+          "type": "integer"
+        },
+        "dailyTxAmount": {
+          "type": "integer"
+        },
+        "dailyVolume": {
+          "type": "number"
+        },
+        "pools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/swaputils.PoolStat"
+          }
+        },
+        "poolsAmount": {
+          "type": "integer"
+        },
+        "priceChangeDay": {
+          "type": "number"
+        },
+        "priceChangeHour": {
+          "type": "number"
+        },
+        "priceChangeMonth": {
+          "type": "number"
+        },
+        "priceChangeWeek": {
+          "type": "number"
+        },
+        "token1Amount": {
+          "type": "number"
+        },
+        "token2Amount": {
+          "type": "number"
+        }
+      }
+    },
+    "swaputils.PoolStat": {
+      "type": "object",
+      "properties": {
+        "dailyBuysCount": {
+          "type": "integer"
+        },
+        "dailySalesCount": {
+          "type": "integer"
+        },
+        "dailyTxAmount": {
+          "type": "integer"
+        },
+        "dailyVolume": {
+          "type": "number"
+        },
+        "dexName": {
+          "$ref": "#/definitions/models.DexName"
+        },
+        "priceChangeDay": {
+          "type": "number"
+        },
+        "priceChangeHour": {
+          "type": "number"
+        },
+        "priceChangeMonth": {
+          "type": "number"
+        },
+        "priceChangeWeek": {
+          "type": "number"
+        },
+        "token1Amount": {
+          "type": "number"
+        },
+        "token2Amount": {
+          "type": "number"
+        }
+      }
+    },
+    "swaputils.ReverseEstimationRequest": {
+      "type": "object",
+      "required": ["slippage", "token_in", "token_out"],
+      "properties": {
+        "amount_out": {
+          "type": "number",
+          "example": 2
+        },
+        "blacklisted_dexes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.DexName"
+          },
+          "example": [""]
+        },
+        "buyer_address": {
+          "type": "string",
+          "example": "addr1qxajla3qcrwckzkur8n0lt02rg2sepw3kgkstckmzrz4ccfm3j9pqrqkea3tns46e3qy2w42vl8dvvue8u45amzm3rjqvv2nxh"
+        },
+        "extra_fee_pct": {
+          "type": "number",
+          "example": 1
+        },
+        "extra_fee_receiver": {
+          "type": "string",
+          "example": ""
+        },
+        "is_optimized": {
+          "type": "boolean",
+          "example": false
+        },
+        "single_preferred_dex": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/models.DexName"
+            }
+          ],
+          "example": ""
+        },
+        "slippage": {
+          "type": "number",
+          "example": 2
+        },
+        "token_in": {
+          "type": "string",
+          "example": ""
+        },
+        "token_out": {
+          "type": "string",
+          "example": "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f534e454b"
+        }
+      }
+    },
+    "swaputils.Split": {
+      "type": "object",
+      "properties": {
+        "amount_in": {
+          "type": "number"
+        },
+        "batcher_fee": {
+          "type": "number"
+        },
+        "deposits": {
+          "type": "number"
+        },
+        "dex": {
+          "$ref": "#/definitions/models.DexName"
+        },
+        "expected_output": {
+          "type": "number"
+        },
+        "expected_output_without_slippage": {
+          "type": "number"
+        },
+        "fee": {
+          "type": "integer"
+        },
+        "final_price": {
+          "type": "number"
+        },
+        "initial_price": {
+          "type": "number"
+        },
+        "pool_fee": {
+          "type": "number"
+        },
+        "pool_id": {
+          "type": "string"
+        },
+        "price_distortion": {
+          "type": "number"
+        },
+        "price_impact": {
+          "type": "number"
+        },
+        "t1_amt": {
+          "type": "integer"
+        },
+        "t2_amt": {
+          "type": "integer"
+        }
+      }
+    },
+    "swaputils.SubmissionModel": {
+      "type": "object",
+      "properties": {
+        "Signatures": {
+          "type": "string"
+        },
+        "txCbor": {
+          "type": "string"
+        }
+      }
+    },
+    "swaputils.SwapObject": {
+      "type": "object",
+      "required": ["amount_in", "buyer_address", "slippage", "token_in", "token_out"],
+      "properties": {
+        "amount_in": {
+          "type": "number",
+          "example": 1
+        },
+        "blacklisted_dexes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.DexName"
+          },
+          "example": [""]
+        },
+        "buyer_address": {
+          "type": "string",
+          "example": "addr1qxajla3qcrwckzkur8n0lt02rg2sepw3kgkstckmzrz4ccfm3j9pqrqkea3tns46e3qy2w42vl8dvvue8u45amzm3rjqvv2nxh"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": [""]
+        },
+        "is_optimized": {
+          "type": "boolean",
+          "example": false
+        },
+        "referrer": {
+          "type": "string",
+          "example": ""
+        },
+        "single_preferred_dex": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/models.DexName"
+            }
+          ],
+          "example": ""
+        },
+        "slippage": {
+          "type": "number",
+          "example": 2
+        },
+        "token_in": {
+          "type": "string",
+          "example": ""
+        },
+        "token_out": {
+          "type": "string",
+          "example": "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f534e454b"
+        }
+      }
+    },
+    "swaputils.SwapResponse": {
+      "type": "object",
+      "properties": {
+        "average_price": {
+          "type": "number"
+        },
+        "batcher_fee": {
+          "type": "number"
+        },
+        "cbor": {
+          "type": "string"
+        },
+        "deposits": {
+          "type": "number"
+        },
+        "dexhunter_fee": {
+          "type": "integer"
+        },
+        "partner_fee": {
+          "type": "number"
+        },
+        "possible_routes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "price_ab": {
+          "type": "number"
+        },
+        "price_ba": {
+          "type": "number"
+        },
+        "splits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/swaputils.Split"
+          }
+        },
+        "total_fee": {
+          "type": "integer"
+        },
+        "total_output": {
+          "type": "number"
+        },
+        "total_output_without_slippage": {
+          "type": "number"
+        }
+      }
+    },
+    "swaputils.Trade": {
+      "type": "object",
+      "required": ["amount_in", "blacklisted_dexes", "slippage", "token_in", "token_out"],
+      "properties": {
+        "amount_in": {
+          "type": "number",
+          "example": 1
+        },
+        "blacklisted_dexes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.DexName"
+          },
+          "example": ["2"]
+        },
+        "slippage": {
+          "type": "number",
+          "example": 2
+        },
+        "token_in": {
+          "type": "string",
+          "example": ""
+        },
+        "token_out": {
+          "type": "string",
+          "example": "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f534e454b"
+        }
+      }
+    }
+  }
+}
