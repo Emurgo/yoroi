@@ -3,6 +3,7 @@ import {NavigationState, useFocusEffect} from '@react-navigation/native'
 import {FlashList} from '@shopify/flash-list'
 import {isString} from '@yoroi/common'
 import {useSwap, useSwapOrdersByStatusOpen} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
 import {Buffer} from 'buffer'
 import _ from 'lodash'
 import React, {useRef} from 'react'
@@ -28,7 +29,6 @@ import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useWalletNavigation} from '../../../../../navigation'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {COLORS} from '../../../../../theme'
 import {SubmitTxInsufficientCollateralError} from '../../../../../yoroi-wallets/cardano/api/errors'
 import {convertBech32ToHex, getTransactionSigners} from '../../../../../yoroi-wallets/cardano/common/signatureUtils'
 import {YoroiWallet} from '../../../../../yoroi-wallets/cardano/types'
@@ -50,6 +50,7 @@ import {mapOpenOrders, MappedOpenOrder} from './mapOrders'
 export const OpenOrders = () => {
   const [hiddenInfoOpenId, setHiddenInfoOpenId] = React.useState<string | null>(null)
   const strings = useStrings()
+  const styles = useStyles()
   const intl = useIntl()
   const wallet = useSelectedWallet()
   const {order: swapApiOrder} = useSwap()
@@ -402,6 +403,7 @@ const Header = ({
   expanded?: boolean
   onPress: () => void
 }) => {
+  const styles = useStyles()
   return (
     <HeaderWrapper expanded={expanded} onPress={onPress}>
       <View style={styles.label}>
@@ -493,6 +495,7 @@ const MainInfo = ({tokenPrice, tokenAmount, date}: {tokenPrice: string; tokenAmo
 }
 
 const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {
+  const styles = useStyles()
   return (
     <TouchableOpacity onPress={() => Linking.openURL(txLink)} style={styles.txLink}>
       <Text style={styles.txLinkText}>{txId}</Text>
@@ -500,19 +503,22 @@ const TxLink = ({txLink, txId}: {txLink: string; txId: string}) => {
   )
 }
 
-export const OpenOrdersSkeleton = () => (
-  <View style={styles.container}>
-    <View style={styles.content}>
-      {[0, 1, 2, 3].map((index) => (
-        <React.Fragment key={index}>
-          <ExpandableInfoCardSkeleton />
+export const OpenOrdersSkeleton = () => {
+  const styles = useStyles()
+  return (
+    <View style={styles.container}>
+      <View style={styles.content}>
+        {[0, 1, 2, 3].map((index) => (
+          <React.Fragment key={index}>
+            <ExpandableInfoCardSkeleton />
 
-          <Spacer height={20} />
-        </React.Fragment>
-      ))}
+            <Spacer height={20} />
+          </React.Fragment>
+        ))}
+      </View>
     </View>
-  </View>
-)
+  )
+}
 
 const ModalContent = ({
   onConfirm,
@@ -593,6 +599,7 @@ const ModalContentHeader = ({
   assetToLabel: string
 }) => {
   const strings = useStrings()
+  const styles = useStyles()
   return (
     <>
       <Text style={styles.contentTitle}>{strings.listOrdersSheetContentTitle}</Text>
@@ -610,7 +617,7 @@ const ModalContentHeader = ({
 
         <Spacer width={5} />
 
-        <Text>/</Text>
+        <Text style={styles.modalContentTitleText}>/</Text>
 
         <Spacer width={5} />
 
@@ -627,6 +634,7 @@ const ModalContentHeader = ({
 }
 
 const ModalContentRow = ({label, value}: {label: string; value: string}) => {
+  const styles = useStyles()
   return (
     <View style={styles.contentRow}>
       <Text style={styles.contentLabel}>{label}</Text>
@@ -638,6 +646,7 @@ const ModalContentRow = ({label, value}: {label: string; value: string}) => {
 
 const ModalContentButtons = ({onBack, onConfirm}: {onBack: () => void; onConfirm: () => void}) => {
   const strings = useStrings()
+  const styles = useStyles()
   return (
     <View style={styles.buttons}>
       <Button
@@ -652,7 +661,7 @@ const ModalContentButtons = ({onBack, onConfirm}: {onBack: () => void; onConfirm
 
       <Spacer width={20} />
 
-      <Button title={strings.listOrdersSheetConfirm} onPress={onConfirm} style={{backgroundColor: '#FF1351'}} block />
+      <Button title={strings.listOrdersSheetConfirm} onPress={onConfirm} style={styles.modalButton} block />
     </View>
   )
 }
@@ -667,6 +676,7 @@ const ListEmptyComponent = ({openOrders}: {openOrders: Array<MappedOpenOrder>}) 
 
 const NoOrdersYet = () => {
   const strings = useStrings()
+  const styles = useStyles()
   return (
     <View style={styles.notOrdersYetContainer}>
       <Spacer height={80} />
@@ -720,111 +730,97 @@ const EmptySearchResult = () => {
   return null
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-    paddingTop: 10,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  list: {
-    paddingHorizontal: 16,
-  },
-  contentRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  contentTitle: {
-    color: '#242838',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '400',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  modalContentTitleText: {
-    color: '#242838',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '500',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  contentLabel: {
-    color: '#6B7384',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '400',
-    lineHeight: 24,
-  },
-  headerLabel: {
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-  },
-  contentValue: {
-    color: '#000',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '400',
-    lineHeight: 24,
-  },
-  modalContentTitle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  txLink: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  txLinkText: {
-    color: '#4B6DDE',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '400',
-    lineHeight: 22,
-    textDecorationLine: 'underline',
-  },
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+      paddingTop: 10,
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: 16,
+    },
+    list: {
+      paddingHorizontal: 16,
+    },
+    contentRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    contentTitle: {
+      color: 'red',
+      ...typography['body-1-l-regular'],
+      textAlign: 'center',
+    },
+    modalContentTitleText: {
+      color: color.gray[900],
+      ...typography['body-1-l-medium'],
+      textAlign: 'center',
+    },
+    contentLabel: {
+      color: color.gray[600],
+      ...typography['body-1-l-regular'],
+    },
+    headerLabel: {
+      color: color.gray.max,
+      ...typography['body-2-m-medium'],
+    },
+    contentValue: {
+      color: color.gray.max,
+      ...typography['body-1-l-regular'],
+    },
+    modalContentTitle: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    buttons: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    txLink: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    txLinkText: {
+      color: color.primary[500],
+      ...typography['body-1-l-regular'],
+      textDecorationLine: 'underline',
+    },
 
-  label: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  counter: {
-    paddingVertical: 16,
-  },
-  illustration: {
-    flex: 1,
-    alignSelf: 'center',
-    width: 280,
-    height: 224,
-  },
-  notOrdersYetContainer: {
-    flex: 1,
-    textAlign: 'center',
-  },
-  contentText: {
-    flex: 1,
-    textAlign: 'center',
-    fontFamily: 'Rubik-Medium',
-    fontWeight: '500',
-    fontSize: 20,
-    color: '#000',
-    lineHeight: 30,
-  },
-  contentSubText: {
-    flex: 1,
-    textAlign: 'center',
-    fontFamily: 'Rubik-Regular',
-    fontWeight: '400',
-    fontSize: 16,
-    color: '#6B7384',
-    lineHeight: 24,
-  },
-})
+    label: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    counter: {
+      paddingVertical: 16,
+    },
+    illustration: {
+      flex: 1,
+      alignSelf: 'center',
+      width: 280,
+      height: 224,
+    },
+    notOrdersYetContainer: {
+      flex: 1,
+      textAlign: 'center',
+    },
+    contentText: {
+      flex: 1,
+      textAlign: 'center',
+      color: color.gray.max,
+      ...typography['heading-3-medium'],
+    },
+    contentSubText: {
+      flex: 1,
+      textAlign: 'center',
+      color: color.gray[600],
+      ...typography['body-1-l-medium'],
+    },
+    modalButton: {backgroundColor: color.magenta[500]},
+  })
+
+  return styles
+}

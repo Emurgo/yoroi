@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
-import {rootStorage, StorageProvider} from '@yoroi/common'
+import {AsyncStorageProvider} from '@yoroi/common'
 import React from 'react'
 
+import {rootStorage} from '../../yoroi-wallets/storage/rootStorage'
 import {CheckPinInput} from './CheckPinInput'
 
 storiesOf('CheckPinInput', module).add('Default', () => (
-  <StorageProvider
+  <AsyncStorageProvider
     storage={{
       ...rootStorage,
       getItem: async (key) => {
@@ -17,7 +18,7 @@ storiesOf('CheckPinInput', module).add('Default', () => (
     }}
   >
     <CheckPinInput onValid={action('onValid')} />
-  </StorageProvider>
+  </AsyncStorageProvider>
 ))
 
 // PIN = 111111

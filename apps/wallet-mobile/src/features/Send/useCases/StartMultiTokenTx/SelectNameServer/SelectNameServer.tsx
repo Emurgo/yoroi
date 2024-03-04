@@ -1,18 +1,19 @@
 import {isNameServer, nameServerName} from '@yoroi/resolver'
+import {useTransfer} from '@yoroi/transfer'
 import {Resolver} from '@yoroi/types'
 import * as React from 'react'
 import {ReactNode} from 'react'
-import {Animated, StyleSheet, Text as RNText, View} from 'react-native'
+import {Animated, StyleSheet} from 'react-native'
 
-import {Icon} from '../../../../../components/Icon'
 import {Spacer} from '../../../../../components/Spacer/Spacer'
 import {Text} from '../../../../../components/Text'
+import {Warning} from '../../../../../components/Warning'
 import {ButtonGroup} from '../../../common/ButtonGroup/ButtonGroup'
-import {useSend} from '../../../common/SendContext'
 import {useStrings} from '../../../common/strings'
 
 export const SelectNameServer = () => {
-  const {targets, selectedTargetIndex, nameServerSelectedChanged} = useSend()
+  const strings = useStrings()
+  const {targets, selectedTargetIndex, nameServerSelectedChanged} = useTransfer()
   const receiver = targets[selectedTargetIndex].receiver
   const {addressRecords} = receiver
   const addressRecordsEntries = toAddressRecordsEntries(addressRecords)
@@ -54,30 +55,16 @@ export const SelectNameServer = () => {
         <>
           <ButtonGroup labels={labels} onSelect={handleOnSelectNameServer} />
 
-          {!receiver.selectedNameServer && shouldShow && (
+          {receiver.selectedNameServer === undefined && shouldShow && (
             <>
               <Spacer height={16} />
 
-              <ShowManyAddressWarning />
+              <Warning content={String(strings.manyNameServersWarning(bold))} />
             </>
           )}
         </>
       )}
     </Animated.View>
-  )
-}
-
-export const ShowManyAddressWarning = () => {
-  const strings = useStrings()
-
-  return (
-    <View style={styles.notice}>
-      <Icon.Info size={30} color="#ECBA09" />
-
-      <Spacer height={8} />
-
-      <RNText style={styles.text}>{strings.manyNameServersWarning(bold)}</RNText>
-    </View>
   )
 }
 
@@ -92,16 +79,6 @@ const toAddressRecordsEntries = (addressRecords: Resolver.Receiver['addressRecor
 const bold = {b: (text: ReactNode) => <Text style={styles.bold}>{text}</Text>}
 
 const styles = StyleSheet.create({
-  notice: {
-    backgroundColor: '#FDF7E2',
-    padding: 12,
-  },
-  text: {
-    fontSize: 14,
-    lineHeight: 22,
-    fontWeight: '400',
-    fontFamily: 'Rubik-Regular',
-  },
   bold: {
     fontWeight: '500',
     fontFamily: 'Rubik-Medium',

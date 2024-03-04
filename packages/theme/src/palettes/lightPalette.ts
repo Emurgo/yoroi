@@ -55,10 +55,11 @@ export const lightPalette: Palette = {
     100: '#FDF7E2',
   },
   'gradients': {
-    'blue-green': ['#E4E8F7', '#C6F7F7'],
+    'blue-green': ['#E4E8F7', '#C6F7ED'],
     'green': ['#93F5E1', '#C6F7F7'],
     'blue': ['#244ABF', '#4B6DDE'],
   },
+  'bottom-sheet-background': '#ffffff',
   'overlay-extension': {hex: '#121f4d', opacity: 0.7},
   'overlay-mobile': {hex: '#000000', opacity: 0.4},
   'sidebar-overlay': {hex: '#000000', opacity: 0.16},

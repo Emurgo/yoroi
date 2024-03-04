@@ -147,7 +147,7 @@ const useStrings = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     container: {
       borderRadius: 8,
@@ -208,8 +208,8 @@ const useStyles = () => {
       alignItems: 'center',
     },
     coinName: {
-      fontSize: 16,
-      fontWeight: '400',
+      ...typography['body-1-l-regular'],
+      color: color.gray.max,
     },
     balanceText: {
       fontSize: 12,

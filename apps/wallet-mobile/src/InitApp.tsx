@@ -1,18 +1,16 @@
-import {isString, useStorage} from '@yoroi/common'
+import {isString, useAsyncStorage} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import React, {useEffect, useRef} from 'react'
 import {Platform, UIManager} from 'react-native'
-import {enableScreens} from 'react-native-screens'
 import * as Sentry from 'sentry-expo'
 import uuid from 'uuid'
 
 import {AppNavigator} from './AppNavigator'
 import {useInitScreenShare} from './features/Settings/ScreenShare'
 import {CONFIG, isProduction} from './legacy/config'
+import {storageVersionMaker} from './migrations/storageVersion'
+import {walletManager} from './wallet-manager/walletManager'
 import {useCrashReportsEnabled} from './yoroi-wallets/hooks'
-import {walletManager} from './yoroi-wallets/walletManager'
-
-enableScreens()
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental != null) {
@@ -29,7 +27,7 @@ export const InitApp = () => {
 
 const useInitApp = () => {
   const [loaded, setLoaded] = React.useState(false)
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const crashReportsEnabled = useCrashReportsEnabled()
 
   const {initialised: screenShareInitialized} = useInitScreenShare()
@@ -54,11 +52,14 @@ const initInstallationId = async (storage: App.Storage) => {
 
   const newInstallationId = uuid.v4()
   await storage.setItem('appSettings/installationId', newInstallationId, () => newInstallationId) // LEGACY: installationId is not serialized
+
+  // new installation set the storage version to the current version
+  await storageVersionMaker(storage).newInstallation()
 }
 
 export const initApp = async (storage: App.Storage) => {
   await initInstallationId(storage)
-  await walletManager.initialize()
+  await walletManager.removeDeletedWallets()
 }
 
 const useInitSentry = (options: {enabled: boolean}) => {

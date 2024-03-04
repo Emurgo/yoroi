@@ -27,7 +27,6 @@ export const InputReceiver = ({
       right={rightAdornment}
       label={<Text style={styles.label}>{strings.addressInputLabel}</Text>}
       testID="receiverInput"
-      style={styles.receiver}
       autoCorrect={false}
       focusable
       autoFocus
@@ -36,15 +35,15 @@ export const InputReceiver = ({
       multiline
       blurOnSubmit
       helper={<ShowResolvedAddressSelected />}
+      renderComponentStyle={{
+        minHeight: 120,
+      }}
       {...props}
     />
   )
 }
 
 const styles = StyleSheet.create({
-  receiver: {
-    height: 120,
-  },
   label: {
     fontSize: 15,
   },

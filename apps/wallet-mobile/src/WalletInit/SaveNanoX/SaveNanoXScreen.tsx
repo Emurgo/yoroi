@@ -6,20 +6,26 @@ import {InteractionManager} from 'react-native'
 import image from '../../assets/img/ledger_2.png'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
+import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
+import {AddressMode} from '../../wallet-manager/types'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {useCreateBip44Wallet} from '../../yoroi-wallets/hooks'
 import {WalletNameForm} from '../WalletNameForm'
 
+// when hw, later will be part of the onboarding
+const addressMode: AddressMode = 'multiple'
 export const SaveNanoXScreen = () => {
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
   const route = useRoute<RouteProp<WalletInitRoutes, 'save-nano-x'>>()
   const {networkId, walletImplementationId, hwDeviceInfo} = route.params
-
   const intl = useIntl()
+  const {track} = useMetrics()
+
   const {createWallet, isLoading} = useCreateBip44Wallet({
     onSuccess: () => {
+      track.restoreWalletDetailsSettled()
       resetToWalletSelection()
     },
     onError: (error) => {
@@ -41,6 +47,7 @@ export const SaveNanoXScreen = () => {
           implementationId: walletImplementationId,
           hwDeviceInfo,
           readOnly: false,
+          addressMode,
         })
       }
       defaultWalletName={strings.ledgerWalletNameSuggestion}

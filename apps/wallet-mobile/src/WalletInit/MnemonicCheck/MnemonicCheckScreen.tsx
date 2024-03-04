@@ -7,25 +7,21 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button, Spacer, StatusBar, Text} from '../../components'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
+import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
+import {AddressMode} from '../../wallet-manager/types'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {useCreateWallet} from '../../yoroi-wallets/hooks'
-import {NetworkId, WalletImplementationId} from '../../yoroi-wallets/types'
 
-export type Params = {
-  mnemonic: string
-  password: string
-  name: string
-  networkId: NetworkId
-  walletImplementationId: WalletImplementationId
-}
-
+// when creating, later will be part of the onboarding
+const addressMode: AddressMode = 'single'
 export const MnemonicCheckScreen = () => {
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
   const route = useRoute<RouteProp<WalletInitRoutes, 'mnemonic-check'>>()
   const {mnemonic, password, name, networkId, walletImplementationId} = route.params
+  const {track} = useMetrics()
 
   const mnemonicEntries: Array<Entry> = mnemonic
     .split(' ')
@@ -40,8 +36,14 @@ export const MnemonicCheckScreen = () => {
   const isPhraseValid = userEntries.map((entry) => entry.word).join(' ') === mnemonic
 
   const intl = useIntl()
+  const handleOnCreateWallet = () => {
+    createWallet({name, mnemonicPhrase: mnemonic, password, networkId, walletImplementationId, addressMode})
+  }
   const {createWallet, isLoading, isSuccess} = useCreateWallet({
-    onSuccess: () => resetToWalletSelection(),
+    onSuccess: () => {
+      track.createWalletDetailsSettled()
+      resetToWalletSelection()
+    },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof NetworkError
@@ -50,6 +52,7 @@ export const MnemonicCheckScreen = () => {
       })
     },
   })
+  const disabled = !isPhraseComplete || !isPhraseValid || isLoading || isSuccess
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
@@ -74,8 +77,8 @@ export const MnemonicCheckScreen = () => {
       <View style={styles.buttons}>
         <Button
           block
-          onPress={() => createWallet({name, mnemonicPhrase: mnemonic, password, networkId, walletImplementationId})}
-          disabled={!isPhraseComplete || !isPhraseValid || isLoading || isSuccess}
+          onPress={handleOnCreateWallet}
+          disabled={disabled}
           title={strings.confirmButton}
           style={styles.confirmButton}
           testID="mnemonicCheckScreen::confirm"
@@ -111,18 +114,14 @@ const MnemonicInput = ({userEntries, error, onPress}: MnemonicInputProps) => {
 const Instructions = () => {
   const strings = useStrings()
 
-  return (
-    <View style={styles.instructions}>
-      <Text>{strings.instructions}</Text>
-    </View>
-  )
+  return <Text>{strings.instructions}</Text>
 }
 
 const ErrorMessage = ({visible}: {visible: boolean}) => {
   const strings = useStrings()
 
   return (
-    <View style={[styles.error, !visible && styles.hidden]}>
+    <View style={!visible && styles.hidden}>
       <Text style={styles.errorMessage}>{strings.mnemonicWordsInputInvalidPhrase}</Text>
     </View>
   )
@@ -133,6 +132,7 @@ type WordBadgesProps = {
   userEntries: Array<Entry>
   onPress: (wordEntry: Entry) => void
 }
+
 const WordBadges = ({mnemonicEntries, userEntries, onPress}: WordBadgesProps) => {
   const isWordUsed = (entryId: number) => userEntries.some((entry) => entry.id === entryId)
 
@@ -197,32 +197,25 @@ const styles = StyleSheet.create({
   safeAreaView: {
     backgroundColor: COLORS.WHITE,
     flex: 1,
+    paddingHorizontal: 16,
   },
   scrollViewContentContainer: {
-    paddingHorizontal: 16,
     paddingBottom: 16,
   },
-  instructions: {
-    paddingHorizontal: 16,
-  },
   recoveryPhrase: {
-    height: 26 * 7,
-    paddingHorizontal: 16,
-  },
-  recoveryPhraseOutline: {
-    flex: 1,
+    padding: 8,
+    minHeight: 182,
     borderRadius: 8,
     borderColor: COLORS.DARK_GRAY,
     borderWidth: 1,
+    overflow: 'hidden',
+  },
+  recoveryPhraseOutline: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
   },
   recoveryPhraseError: {
     borderColor: COLORS.RED,
-  },
-  error: {
-    paddingHorizontal: 16,
   },
   errorMessage: {
     color: COLORS.ERROR_TEXT_COLOR,
@@ -234,7 +227,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flexDirection: 'row',
-    padding: 16,
+    paddingVertical: 16,
   },
   confirmButton: {
     paddingLeft: 12,

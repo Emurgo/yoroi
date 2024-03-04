@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native'
 import {isNonNullable, isString} from '@yoroi/common'
 import {
   GovernanceProvider,
@@ -13,9 +14,15 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {Button, Spacer, useModal} from '../../../../../components'
 import {useStakingInfo} from '../../../../../Dashboard/StakePoolInfos'
+import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useUnsafeParams, useWalletNavigation} from '../../../../../navigation'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {useStakingKey, useTransactionInfos, useWalletEvent} from '../../../../../yoroi-wallets/hooks'
+import {
+  useCreateGovernanceTx,
+  useStakingKey,
+  useTransactionInfos,
+  useWalletEvent,
+} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo} from '../../../../../yoroi-wallets/types'
 import {Action, LearnMoreLink, useNavigateTo, useStrings} from '../../common'
 import {mapStakingKeyStateToGovernanceAction} from '../../common/helpers'
@@ -173,6 +180,14 @@ const NeverParticipatedInGovernanceVariant = () => {
   const {openModal} = useModal()
   const stakingInfo = useStakingInfo(wallet, {suspense: true})
   const params = useUnsafeParams<Routes['staking-gov-home']>()
+  const {track} = useMetrics()
+  const [pendingVote, setPendingVote] = React.useState<GovernanceVote['kind'] | null>(null)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      track.governanceDashboardPageViewed()
+    }, [track]),
+  )
 
   const navigateToStakingOnSuccess = params?.navigateToStakingOnSuccess ?? false
 
@@ -180,15 +195,22 @@ const NeverParticipatedInGovernanceVariant = () => {
   useWalletEvent(wallet, 'utxos', stakingInfo.refetch)
   const needsToRegisterStakingKey = !hasStakingKeyRegistered
 
-  const {createCertificate: createDelegationCertificate} = useDelegationCertificate({
+  const {createCertificate: createDelegationCertificate, isLoading: isCreatingDelegationCertificate} =
+    useDelegationCertificate({
+      useErrorBoundary: true,
+    })
+
+  const {createCertificate: createVotingCertificate, isLoading: isCreatingVotingCertificate} = useVotingCertificate({
     useErrorBoundary: true,
   })
 
-  const {createCertificate: createVotingCertificate} = useVotingCertificate({
+  const createGovernanceTxMutation = useCreateGovernanceTx(wallet, {
     useErrorBoundary: true,
   })
 
   const openDRepIdModal = (onSubmit: (drepId: string) => void) => {
+    track.governanceChooseDrepPageViewed()
+
     openModal(
       strings.enterDRepID,
       <GovernanceProvider manager={manager}>
@@ -200,7 +222,10 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleDelegate = () => {
     openDRepIdModal(async (drepID) => {
+      const vote = {kind: 'delegate', drepID} as const
       const stakingKey = await wallet.getStakingKey()
+      setPendingVote(vote.kind)
+
       createDelegationCertificate(
         {drepID, stakingKey},
         {
@@ -209,13 +234,8 @@ const NeverParticipatedInGovernanceVariant = () => {
               ? await manager.createStakeRegistrationCertificate(stakingKey)
               : null
             const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-            const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-            navigateTo.confirmTx({
-              unsignedTx,
-              vote: {kind: 'delegate', drepID},
-              registerStakingKey: stakeCert !== null,
-              navigateToStakingOnSuccess,
-            })
+            const unsignedTx = await createGovernanceTxMutation.mutateAsync(certs)
+            navigateTo.confirmTx({unsignedTx, vote, registerStakingKey: stakeCert !== null, navigateToStakingOnSuccess})
           },
         },
       )
@@ -224,6 +244,9 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleAbstain = async () => {
     const stakingKey = await wallet.getStakingKey()
+    const vote = {kind: 'abstain'} as const
+    setPendingVote(vote.kind)
+
     createVotingCertificate(
       {vote: 'abstain', stakingKey},
       {
@@ -232,13 +255,8 @@ const NeverParticipatedInGovernanceVariant = () => {
             ? await manager.createStakeRegistrationCertificate(stakingKey)
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-          const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-          navigateTo.confirmTx({
-            unsignedTx,
-            vote: {kind: 'abstain'},
-            registerStakingKey: stakeCert !== null,
-            navigateToStakingOnSuccess,
-          })
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync(certs)
+          navigateTo.confirmTx({unsignedTx, vote, registerStakingKey: stakeCert !== null, navigateToStakingOnSuccess})
         },
       },
     )
@@ -246,6 +264,9 @@ const NeverParticipatedInGovernanceVariant = () => {
 
   const handleNoConfidence = async () => {
     const stakingKey = await wallet.getStakingKey()
+    const vote = {kind: 'no-confidence'} as const
+    setPendingVote(vote.kind)
+
     createVotingCertificate(
       {vote: 'no-confidence', stakingKey},
       {
@@ -254,17 +275,15 @@ const NeverParticipatedInGovernanceVariant = () => {
             ? await manager.createStakeRegistrationCertificate(stakingKey)
             : null
           const certs = stakeCert !== null ? [stakeCert, certificate] : [certificate]
-          const unsignedTx = await wallet.createUnsignedGovernanceTx(certs)
-          navigateTo.confirmTx({
-            unsignedTx,
-            vote: {kind: 'no-confidence'},
-            registerStakingKey: stakeCert !== null,
-            navigateToStakingOnSuccess,
-          })
+          const unsignedTx = await createGovernanceTxMutation.mutateAsync(certs)
+          navigateTo.confirmTx({unsignedTx, vote, registerStakingKey: stakeCert !== null, navigateToStakingOnSuccess})
         },
       },
     )
   }
+
+  const isCreatingTx =
+    createGovernanceTxMutation.isLoading || isCreatingDelegationCertificate || isCreatingVotingCertificate
 
   return (
     <View style={styles.root}>
@@ -279,18 +298,21 @@ const NeverParticipatedInGovernanceVariant = () => {
           title={strings.actionDelegateToADRepTitle}
           description={strings.actionDelegateToADRepDescription}
           onPress={handleDelegate}
+          pending={isCreatingTx && pendingVote === 'delegate'}
         />
 
         <Action
           title={strings.actionAbstainTitle}
           description={strings.actionAbstainDescription}
           onPress={handleAbstain}
+          pending={isCreatingTx && pendingVote === 'abstain'}
         />
 
         <Action
           title={strings.actionNoConfidenceTitle}
           description={strings.actionNoConfidenceDescription}
           onPress={handleNoConfidence}
+          pending={isCreatingTx && pendingVote === 'no-confidence'}
         />
       </View>
 

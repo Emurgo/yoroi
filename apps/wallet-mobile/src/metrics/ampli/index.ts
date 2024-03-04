@@ -136,6 +136,28 @@ export interface NftGallerySearchActivatedProperties {
   nft_search_term: string
 }
 
+export interface ReceiveAmountGeneratedPageViewedProperties {
+  /**
+   * The amount of ADA that the user will be exchanging.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | number |
+   */
+  ada_amount: number
+}
+
+export interface ReceiveCopyAddressClickedProperties {
+  /**
+   * Indicates the location of cop CTA
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Enum Values | CTA Copy Address, Tap Address Details, Long Press wallet Address |
+   */
+  copy_address_location: 'CTA Copy Address' | 'Tap Address Details' | 'Long Press wallet Address'
+}
+
 export interface SendSelectAssetSelectedProperties {
   /**
    * Total numbers of assets to be send
@@ -667,6 +689,10 @@ export class AssetsPageViewed implements BaseEvent {
   event_type = 'Assets Page Viewed'
 }
 
+export class CreateWalletDetailsSettled implements BaseEvent {
+  event_type = 'Create Wallet Details Settled'
+}
+
 export class ExchangePageViewed implements BaseEvent {
   event_type = 'Exchange Page Viewed'
 }
@@ -739,8 +765,44 @@ export class NftGallerySearchActivated implements BaseEvent {
   }
 }
 
+export class ReceiveAmountGeneratedPageViewed implements BaseEvent {
+  event_type = 'Receive Amount Generated Page Viewed'
+
+  constructor(public event_properties: ReceiveAmountGeneratedPageViewedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class ReceiveAmountPageViewed implements BaseEvent {
+  event_type = 'Receive Amount Page Viewed'
+}
+
+export class ReceiveCopyAddressClicked implements BaseEvent {
+  event_type = 'Receive Copy Address Clicked'
+
+  constructor(public event_properties: ReceiveCopyAddressClickedProperties) {
+    this.event_properties = event_properties
+  }
+}
+
+export class ReceiveGenerateNewAddressClicked implements BaseEvent {
+  event_type = 'Receive Generate New Address Clicked'
+}
+
+export class ReceivePageListViewed implements BaseEvent {
+  event_type = 'Receive Page List Viewed'
+}
+
 export class ReceivePageViewed implements BaseEvent {
   event_type = 'Receive Page Viewed'
+}
+
+export class ReceiveShareAddressClicked implements BaseEvent {
+  event_type = 'Receive Share Address Clicked'
+}
+
+export class RestoreWalletDetailsSettled implements BaseEvent {
+  event_type = 'Restore Wallet Details Settled'
 }
 
 export class SendInitiated implements BaseEvent {
@@ -1022,6 +1084,21 @@ export class Ampli {
   }
 
   /**
+   * Create Wallet Details Settled
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Create%20Wallet%20Details%20Settled)
+   *
+   * When the wallet is created correctly. This event signifies the completion of the process of setting up wallet details during the creation of a new wallet
+   *
+   * @param options Amplitude event options.
+   */
+  createWalletDetailsSettled(
+    options?: EventOptions,
+  ) {
+    return this.track(new CreateWalletDetailsSettled(), options);
+  }
+
+  /**
    * Exchange Page Viewed
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Exchange%20Page%20Viewed)
@@ -1215,11 +1292,90 @@ export class Ampli {
   }
 
   /**
+   * Receive Amount Generated Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Receive%20Amount%20Generated%20Page%20Viewed)
+   *
+   * When the bottom sheet or popup with a generated address with an specific amount is loaded
+   *
+   * @param properties The event's properties (e.g. ada_amount)
+   * @param options Amplitude event options.
+   */
+  receiveAmountGeneratedPageViewed(
+    properties: ReceiveAmountGeneratedPageViewedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new ReceiveAmountGeneratedPageViewed(properties), options);
+  }
+
+  /**
+   * Receive Amount Page Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Receive%20Amount%20Page%20Viewed)
+   *
+   * When a user visit the page to insert specific amount of ADA that would be needed to generate a wallet address with that specific details.
+   *
+   * @param options Amplitude event options.
+   */
+  receiveAmountPageViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new ReceiveAmountPageViewed(), options);
+  }
+
+  /**
+   * Receive Copy Address Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Receive%20Copy%20Address%20Clicked)
+   *
+   * When a user click on the any CTA to copy their address
+   *
+   * @param properties The event's properties (e.g. copy_address_location)
+   * @param options Amplitude event options.
+   */
+  receiveCopyAddressClicked(
+    properties: ReceiveCopyAddressClickedProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new ReceiveCopyAddressClicked(properties), options);
+  }
+
+  /**
+   * Receive Generate New Address Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Receive%20Generate%20New%20Address%20Clicked)
+   *
+   * When a user click on the Generate new address button on the main receive page on the multiple address flow.
+   *
+   * @param options Amplitude event options.
+   */
+  receiveGenerateNewAddressClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new ReceiveGenerateNewAddressClicked(), options);
+  }
+
+  /**
+   * Receive Page List Viewed
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Receive%20Page%20List%20Viewed)
+   *
+   * When user has enabled multiple addresses and goes to the page where he can see the list of generated wallet addresses
+   *
+   * @param options Amplitude event options.
+   */
+  receivePageListViewed(
+    options?: EventOptions,
+  ) {
+    return this.track(new ReceivePageListViewed(), options);
+  }
+
+  /**
    * Receive Page Viewed
    *
    * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Receive%20Page%20Viewed)
    *
-   * This event tracks when a user views the Receive page of the Wallet menu.
+   * When user loads the Receive funds screen, where user can see their wallet address with a QR Code
    *
    * @param options Amplitude event options.
    */
@@ -1227,6 +1383,36 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new ReceivePageViewed(), options);
+  }
+
+  /**
+   * Receive Share Address Clicked
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Receive%20Share%20Address%20Clicked)
+   *
+   * When a user click on the link to share the address
+   *
+   * @param options Amplitude event options.
+   */
+  receiveShareAddressClicked(
+    options?: EventOptions,
+  ) {
+    return this.track(new ReceiveShareAddressClicked(), options);
+  }
+
+  /**
+   * Restore Wallet Details Settled
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/emurgo/Yoroi/events/main/latest/Restore%20Wallet%20Details%20Settled)
+   *
+   * This event captures the details of a wallet restoration process that has been successfully completed
+   *
+   * @param options Amplitude event options.
+   */
+  restoreWalletDetailsSettled(
+    options?: EventOptions,
+  ) {
+    return this.track(new RestoreWalletDetailsSettled(), options);
   }
 
   /**

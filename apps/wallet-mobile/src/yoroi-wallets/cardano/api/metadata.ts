@@ -43,12 +43,15 @@ export const parseNFT = (
   const nameHex = toAssetNameHex(tokenId)
   const displayAssetName = toDisplayAssetName(tokenId)
 
+  const withHexName = `${policyId}.${nameHex}`
+  const assetSupply = assetSupplies[withHexName]
+
+  if (assetSupply !== '1') return null
+
   const metadataPolicyId = isRecord(nftAsset.metadata) ? nftAsset.metadata?.[policyId] : null
   const metadata = isRecord(metadataPolicyId) ? metadataPolicyId[nameHex] ?? metadataPolicyId[displayAssetName] : null
 
-  const nft = convertNft({metadata, storageUrl: config.NFT_STORAGE_URL, policyId, nameHex})
-
-  return assetSupplies[nft.id] === '1' ? nft : null
+  return convertNft({metadata, storageUrl: config.NFT_STORAGE_URL, policyId, nameHex})
 }
 
 export const NFT_METADATA_KEY = '721'

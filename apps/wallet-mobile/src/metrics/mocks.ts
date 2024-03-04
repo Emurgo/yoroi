@@ -15,7 +15,6 @@ export const mockMetricsManager = (): MetricsManager => {
     allWalletsPageViewed: e,
     assetsPageViewed: e,
     menuPageViewed: e,
-    receivePageViewed: e,
     settingsPageViewed: e,
     stakingCenterPageViewed: e,
     transactionsPageViewed: e,
@@ -47,8 +46,25 @@ export const mockMetricsManager = (): MetricsManager => {
 
     walletPageExchangeClicked: e,
     walletPageBuyBannerClicked: e,
+
     exchangePageViewed: e,
     exchangeSubmitted: e,
+
+    governanceChooseDrepPageViewed: e,
+    governanceConfirmTransactionPageViewed: e,
+    governanceDashboardPageViewed: e,
+    governanceTransactionSuccessPageViewed: e,
+
+    createWalletDetailsSettled: e,
+    restoreWalletDetailsSettled: e,
+
+    receiveAmountGeneratedPageViewed: e,
+    receiveAmountPageViewed: e,
+    receiveCopyAddressClicked: e,
+    receiveGenerateNewAddressClicked: e,
+    receivePageListViewed: e,
+    receiveShareAddressClicked: e,
+    receivePageViewed: e,
   } as const
 
   return {

@@ -139,7 +139,7 @@ export const SelectPoolFromList = ({pools = []}: Props) => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
 
   const styles = StyleSheet.create({
     container: {
@@ -158,7 +158,7 @@ const useStyles = () => {
       borderRadius: 20,
     },
     shadowProp: {
-      shadowColor: color.gray.min,
+      shadowColor: color.gray.max,
       shadowOpacity: 0.2,
       shadowOffset: {
         width: 0,
@@ -173,8 +173,6 @@ const useStyles = () => {
       flexDirection: 'row',
       alignItems: 'center',
       paddingBottom: 8,
-      fontWeight: '500',
-      fontSize: '16',
     },
     icon: {
       marginRight: 8,
@@ -182,7 +180,7 @@ const useStyles = () => {
     },
     label: {
       fontSize: 16,
-      fontWeight: 'bold',
+      ...typography['body-1-l-medium'],
     },
     infoContainer: {
       flexDirection: 'column',

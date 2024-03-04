@@ -1,0 +1,1 @@
+{"version":3,"file":"errors.d.ts","sourceRoot":"","sources":["../../../src/adapters/errors.ts"],"names":[],"mappings":"AAAA,eAAO,MAAM,kBAAkB;;;CAG9B,CAAA;AAED,qBAAa,oBAAqB,SAAQ,KAAK;gBACjC,OAAO,EAAE,MAAM;CAI5B;AAED,qBAAa,iBAAkB,SAAQ,KAAK;gBAC9B,OAAO,EAAE,MAAM;CAI5B"}

@@ -4,7 +4,8 @@ import * as React from 'react'
 import {Dimensions, StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button, Spacer} from '../../../../components'
+import {Button} from '../../../../components'
+import {Space} from '../../../../components/Space/Space'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {TxHistoryRouteNavigation} from '../../../../navigation'
 import {BuyBannerIllustration} from '../../illustrations/BuyBannerIllustration'
@@ -31,19 +32,19 @@ export const BuyBannerBig = () => {
       <LinearGradient style={styles.gradient} start={{x: 1, y: 1}} end={{x: 1, y: 1}} colors={colors.gradientColor}>
         <BuyBannerIllustration width={bannerWidth} height={bannerHeight} />
 
-        <Spacer />
+        <Space />
 
         <Text style={styles.label}>{strings.getFirstCrypto}</Text>
 
-        <Spacer height={4} />
+        <Space height="xs" />
 
         <Text style={styles.text}>{strings.ourTrustedPartners}</Text>
 
-        <Spacer />
+        <Space />
 
         <Button
           testID="rampOnOffButton"
-          shelleyTheme
+          mainTheme
           title={strings.buyCrypto.toLocaleUpperCase()}
           onPress={handleExchange}
           style={styles.spaceButton}
@@ -56,45 +57,40 @@ export const BuyBannerBig = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
+  const {color, typography, padding} = theme
   const styles = StyleSheet.create({
     root: {
-      backgroundColor: theme.color['white-static'],
-      paddingBottom: 18,
+      ...padding['b-m'],
+      backgroundColor: color.gray.min,
       flex: 1,
     },
     gradient: {
+      ...padding['b-xl'],
       opacity: 1,
       borderRadius: 8,
       flexDirection: 'column',
       alignItems: 'center',
-      paddingBottom: 25,
     },
     spaceButtonText: {
-      padding: 0,
+      ...padding['none'],
     },
     label: {
-      fontSize: 20,
-      lineHeight: 30,
-      fontWeight: '500',
-      color: theme.color['black-static'],
-      fontFamily: 'Rubik-Medium',
+      ...typography['heading-3-medium'],
+      color: color.gray.max,
       textAlign: 'center',
     },
     text: {
-      fontSize: 15,
-      lineHeight: 24,
-      fontWeight: '400',
-      color: theme.color['black-static'],
-      fontFamily: 'Rubik-Regular',
+      ...typography['body-1-l-regular'],
+      ...padding['x-xxl'],
+      color: color.gray.max,
       textAlign: 'center',
-      paddingHorizontal: 50,
     },
     spaceButton: {
-      paddingHorizontal: 16,
+      ...padding['x-l'],
     },
   })
   const colors = {
-    gradientColor: theme.color.gradients['green'],
+    gradientColor: color.gradients['green'],
   }
   return {styles, colors} as const
 }

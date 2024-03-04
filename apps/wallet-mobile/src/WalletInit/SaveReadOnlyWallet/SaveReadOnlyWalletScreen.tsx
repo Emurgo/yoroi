@@ -7,9 +7,11 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Boundary, Icon, Line, StatusBar, Text} from '../../components'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
+import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {theme} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
+import {AddressMode} from '../../wallet-manager/types'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {NUMBERS} from '../../yoroi-wallets/cardano/numbers'
 import {useCreateBip44Wallet, usePlate} from '../../yoroi-wallets/hooks'
@@ -17,10 +19,13 @@ import {NetworkId} from '../../yoroi-wallets/types'
 import {WalletAddress} from '../WalletAddress'
 import {WalletNameForm} from '../WalletNameForm'
 
+// when ro, later will be part of the onboarding
+const addressMode: AddressMode = 'multiple'
 export const SaveReadOnlyWalletScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const {resetToWalletSelection} = useWalletNavigation()
+  const {track} = useMetrics()
   const route = useRoute<RouteProp<WalletInitRoutes, 'save-read-only'>>()
 
   const {publicKeyHex, path, networkId, walletImplementationId} = route.params
@@ -33,7 +38,10 @@ export const SaveReadOnlyWalletScreen = () => {
   })
 
   const {createWallet, isLoading} = useCreateBip44Wallet({
-    onSuccess: () => resetToWalletSelection(),
+    onSuccess: () => {
+      track.restoreWalletDetailsSettled()
+      resetToWalletSelection()
+    },
     onError: (error) => {
       InteractionManager.runAfterInteractions(() => {
         return error instanceof NetworkError
@@ -50,6 +58,7 @@ export const SaveReadOnlyWalletScreen = () => {
       implementationId: walletImplementationId,
       bip44AccountPublic: publicKeyHex,
       readOnly: true,
+      addressMode,
     })
   }
 

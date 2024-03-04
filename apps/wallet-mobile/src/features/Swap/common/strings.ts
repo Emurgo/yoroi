@@ -37,7 +37,8 @@ export const useStrings = () => {
     swapFeesTitle: intl.formatMessage(messages.swapFeesTitle),
     swapLiquidityFee: intl.formatMessage(messages.swapLiquidityFee),
     swapLiqProvFee: intl.formatMessage(messages.swapLiqProvFee),
-    swapLiquidityFeeInfo: (fee: string) => intl.formatMessage(messages.swapLiquidityFeeInfo, {fee}),
+    swapLiquidityFeeInfo: (fee: string, options: {b: (content: React.ReactNode[]) => React.ReactNode}) =>
+      intl.formatMessage(messages.swapLiquidityFeeInfo, {fee, ...options}),
     swapFees: intl.formatMessage(messages.swapFees),
     poolVerification: (pool: string) => intl.formatMessage(messages.poolVerification, {pool}),
     poolVerificationInfo: (pool: string) => intl.formatMessage(messages.poolVerificationInfo, {pool}),
@@ -68,7 +69,10 @@ export const useStrings = () => {
       intl.formatMessage(messages.priceImpactRiskHigh, {
         riskValue,
       }),
-    priceimpactDescription: intl.formatMessage(messages.priceImpactDescription),
+    priceImpactDescription: (risk: 'moderate' | 'high') =>
+      intl.formatMessage(
+        risk === 'moderate' ? messages.priceImpactModerateDescription : messages.priceImpactHighDescription,
+      ),
     priceImpactInfo: intl.formatMessage(messages.priceImpactInfo),
     tvl: intl.formatMessage(messages.tvl),
     poolFee: intl.formatMessage(messages.poolFee),
@@ -280,7 +284,7 @@ export const messages = defineMessages({
   swapLiquidityFeeInfo: {
     id: 'swap.swapScreen.swapLiquidityFeeInfo',
     defaultMessage:
-      '!!!Liquidity provider fee is a fixed {fee}% operational fee from the whole transaction volume, that is taken to support DEX “liquidity” allowing traders to buy and sell assets on the decentralized Cardano network.',
+      '!!!Liquidity provider fee is a fixed <b>{fee}%</b> operational fee from the whole transaction volume, that is taken to support DEX “liquidity” allowing traders to buy and sell assets on the decentralized Cardano network.',
   },
   swapMinReceived: {
     id: 'swap.swapScreen.swapMinReceived',
@@ -633,7 +637,7 @@ export const messages = defineMessages({
   },
   emptyOpenOrdersSub: {
     id: 'swap.listOrders.emptyOpenOrdersSub',
-    defaultMessage: '!!!Start doing the swap operations to your open orders here',
+    defaultMessage: '!!!Start doing the swap operations to see/view your open orders here',
   },
   emptyCompletedOrders: {
     id: 'swap.listOrders.emptyCompletedOrders',
@@ -647,10 +651,14 @@ export const messages = defineMessages({
     id: 'swap.swapScreen.priceImpactRiskHigh',
     defaultMessage: '!!!Price impact over {riskValue}%',
   },
-  priceImpactDescription: {
-    id: 'swap.swapScreen.priceImpactDescription',
+  priceImpactHighDescription: {
+    id: 'swap.swapScreen.priceImpactHighDescription',
     defaultMessage:
       '!!!may cause a significant loss of funds. Please bear this in mind and proceed with an extra caution.',
+  },
+  priceImpactModerateDescription: {
+    id: 'swap.swapScreen.priceImpactModerateDescription',
+    defaultMessage: '!!!may cause a difference in the amount you actually receive. Consider this at your own risk.',
   },
   priceImpactInfo: {
     id: 'swap.swapScreen.priceImpactInfo',

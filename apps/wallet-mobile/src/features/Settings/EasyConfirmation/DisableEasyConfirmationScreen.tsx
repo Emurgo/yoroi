@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View} from 'react-native'
@@ -11,6 +12,7 @@ import {useDisableEasyConfirmation} from '../../../yoroi-wallets/hooks'
 
 export const DisableEasyConfirmationScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigation = useNavigation()
   const wallet = useSelectedWallet()
   const walletMeta = useSelectedWalletMeta()
@@ -68,22 +70,26 @@ const messages = defineMessages({
   },
 })
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  heading: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  disableSection: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  actions: {
-    paddingBottom: 16,
-    paddingHorizontal: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    heading: {
+      ...typography['body-1-l-regular'],
+    },
+    disableSection: {
+      flex: 1,
+      justifyContent: 'center',
+      padding: 20,
+    },
+    actions: {
+      paddingBottom: 16,
+      paddingHorizontal: 16,
+    },
+  })
+  return styles
+}

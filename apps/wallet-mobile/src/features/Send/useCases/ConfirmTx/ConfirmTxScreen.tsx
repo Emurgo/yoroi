@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useFocusEffect} from '@react-navigation/native'
-import React, {useEffect, useRef} from 'react'
+import {useTransfer} from '@yoroi/transfer'
+import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
-import {Keyboard, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {KeyboardAvoidingView, Spacer, ValidatedTextInput} from '../../../../components'
@@ -18,7 +19,7 @@ import {YoroiSignedTx} from '../../../../yoroi-wallets/types'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {debugWalletInfo, features} from '../../..'
 import {useNavigateTo} from '../../common/navigation'
-import {useSend} from '../../common/SendContext'
+import {useFlashAndScroll} from '../../common/useFlashAndScroll'
 import {BalanceAfter} from './Summary/BalanceAfter'
 import {CurrentBalance} from './Summary/CurrentBalance'
 import {Fees} from './Summary/Fees'
@@ -34,7 +35,7 @@ export const ConfirmTxScreen = () => {
   const [useUSB, setUseUSB] = React.useState(false)
   const {track} = useMetrics()
 
-  const {memo, selectedTargetIndex, yoroiUnsignedTx, targets} = useSend()
+  const {memo, selectedTargetIndex, unsignedTx: yoroiUnsignedTx, targets} = useTransfer()
   const {amounts} = targets[selectedTargetIndex].entry
   const tokenInfos = useTokenInfos({
     wallet,
@@ -50,14 +51,17 @@ export const ConfirmTxScreen = () => {
     }
   }, [])
 
+  const sendProperties = React.useMemo(() => assetsToSendProperties({tokens, amounts}), [amounts, tokens])
+
   useFocusEffect(
     React.useCallback(() => {
-      track.sendSummaryPageViewed(assetsToSendProperties({tokens, amounts}))
-    }, [amounts, tokens, track]),
+      track.sendSummaryPageViewed(sendProperties)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [track]),
   )
 
   const onSuccess = (signedTx: YoroiSignedTx) => {
-    track.sendSummarySubmitted(assetsToSendProperties({tokens, amounts}))
+    track.sendSummarySubmitted(sendProperties)
     navigateTo.submittedTx(signedTx.signedTx.id)
 
     if (memo.length > 0) {
@@ -66,13 +70,13 @@ export const ConfirmTxScreen = () => {
   }
 
   const onError = () => {
-    track.sendSummarySubmitted(assetsToSendProperties({tokens, amounts}))
+    track.sendSummarySubmitted(sendProperties)
     navigateTo.failedTx()
   }
 
   const scrollViewRef = useFlashAndScroll()
 
-  if (!yoroiUnsignedTx) throw new Error('Missing yoroiUnsignedTx')
+  if (yoroiUnsignedTx === undefined) throw new Error('Missing yoroiUnsignedTx')
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.root}>
@@ -158,20 +162,4 @@ const useStrings = () => {
       message: intl.formatMessage(errorMessages.generalTxError.message),
     },
   }
-}
-
-const useFlashAndScroll = () => {
-  const scrollViewRef = useRef<ScrollView | null>(null)
-
-  useEffect(() => {
-    setTimeout(() => {
-      scrollViewRef.current?.flashScrollIndicators()
-    }, 500)
-
-    Keyboard.addListener('keyboardWillShow', () => {
-      scrollViewRef.current?.scrollToEnd()
-    })
-  }, [])
-
-  return scrollViewRef
 }

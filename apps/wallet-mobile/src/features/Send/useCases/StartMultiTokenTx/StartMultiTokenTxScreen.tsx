@@ -1,9 +1,11 @@
 import {useIsFocused} from '@react-navigation/native'
+import {useTransfer} from '@yoroi/transfer'
 import _ from 'lodash'
 import React from 'react'
-import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
+import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {Button, KeyboardAvoidingView, Spacer, StatusBar} from '../../../../components'
+import {ScrollView} from '../../../../components/ScrollView/ScrollView'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
@@ -12,8 +14,8 @@ import {Amounts} from '../../../../yoroi-wallets/utils'
 import {memoMaxLenght} from '../../common/constants'
 import {AddressErrorWrongNetwork} from '../../common/errors'
 import {useNavigateTo} from '../../common/navigation'
-import {useSend} from '../../common/SendContext'
 import {useStrings} from '../../common/strings'
+import {useFlashAndScroll} from '../../common/useFlashAndScroll'
 import {useSendAddress} from '../../common/useSendAddress'
 import {useSendReceiver} from '../../common/useSendReceiver'
 import {InputMemo} from './InputMemo/InputMemo'
@@ -36,10 +38,11 @@ export const StartMultiTokenTxScreen = () => {
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)
 
-  const {targets, selectedTargetIndex, memo, memoChanged, receiverResolveChanged} = useSend()
+  const {targets, selectedTargetIndex, memo, memoChanged, receiverResolveChanged} = useTransfer()
   const {amounts} = targets[selectedTargetIndex].entry
   const receiver = targets[selectedTargetIndex].receiver
   const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
+  const [isScrollBarShown, setIsScrollBarShown] = React.useState(false)
 
   const {isWrongBlockchainError, isResolvingAddressess, receiverError, isUnsupportedDomain, isNotResolvedDomain} =
     useSendReceiver()
@@ -73,12 +76,19 @@ export const StartMultiTokenTxScreen = () => {
   }
   const handleOnChangeMemo = (text: string) => memoChanged(text)
 
+  const scrollViewRef = useFlashAndScroll()
+
   return (
     <View style={styles.container}>
       <StatusBar type="dark" />
 
       <KeyboardAvoidingView style={styles.flex}>
-        <ScrollView style={styles.flex} bounces={false}>
+        <ScrollView
+          ref={scrollViewRef}
+          style={[styles.flex, styles.scroll]}
+          bounces={false}
+          onScrollBarChange={setIsScrollBarShown}
+        >
           <ShowErrors />
 
           <NotifySupportedNameServers />
@@ -99,7 +109,7 @@ export const StartMultiTokenTxScreen = () => {
           <InputMemo value={memo} onChangeText={handleOnChangeMemo} isValid={!hasMemoError} />
         </ScrollView>
 
-        <Actions>
+        <Actions style={isScrollBarShown && {borderTopWidth: 1, borderTopColor: COLORS.BORDER_GRAY}}>
           <NextButton
             onPress={handleOnNext}
             title={strings.next}
@@ -154,14 +164,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.WHITE,
-    paddingHorizontal: 16,
     paddingTop: 16,
   },
   flex: {
     flex: 1,
   },
   actions: {
-    paddingVertical: 16,
+    padding: 16,
+  },
+  scroll: {
+    paddingHorizontal: 16,
   },
 })
 

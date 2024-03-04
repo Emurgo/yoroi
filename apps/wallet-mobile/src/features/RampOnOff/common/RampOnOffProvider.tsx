@@ -1,4 +1,4 @@
-import {Banxa} from '@yoroi/banxa'
+import {Banxa} from '@yoroi/exchange'
 import BigNumber from 'bignumber.js'
 import {produce} from 'immer'
 import React from 'react'
@@ -10,6 +10,8 @@ import {useBalances} from '../../../yoroi-wallets/hooks'
 import {useTokenInfo} from '../../../yoroi-wallets/hooks'
 import {Amounts, Quantities} from '../../../yoroi-wallets/utils'
 import {useStrings} from './useStrings'
+
+const MIN_ADA_LIMIT = 100000000
 
 export const useRampOnOff = () => React.useContext(RampOnOffContext)
 
@@ -65,7 +67,7 @@ export const RampOnOffProvider = ({
   const isNotEnoughBalance = new BigNumber(state.amount.value).isGreaterThan(new BigNumber(amountBalance))
 
   React.useEffect(() => {
-    actions.canExchangeChanged(state.amount.value !== 0 && state.amount.error === undefined)
+    actions.canExchangeChanged(state.amount.value >= MIN_ADA_LIMIT && state.amount.error === undefined)
   }, [actions, state.amount.error, state.amount.value])
 
   // amount input errors
@@ -73,6 +75,11 @@ export const RampOnOffProvider = ({
     // no enough balance error
     if (isNotEnoughBalance && state.amount.isTouched && state.orderType === 'sell') {
       actions.amountErrorChanged(strings.notEnoughBalance)
+      return
+    }
+
+    if (state.amount.value > 0 && state.amount.value < MIN_ADA_LIMIT && state.orderType === 'buy') {
+      actions.amountErrorChanged(strings.minAdaRequired)
       return
     }
 
@@ -92,6 +99,8 @@ export const RampOnOffProvider = ({
     state.orderType,
     strings.notEnoughBalance,
     clearErrors,
+    state.amount.value,
+    strings.minAdaRequired,
   ])
 
   const context = React.useMemo(

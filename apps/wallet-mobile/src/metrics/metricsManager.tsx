@@ -1,10 +1,11 @@
 import {EnrichmentPlugin, Event, PluginType} from '@amplitude/analytics-types'
-import {isKeyOf, parseBoolean, rootStorage} from '@yoroi/common'
+import {isKeyOf, parseBoolean} from '@yoroi/common'
 import {App} from '@yoroi/types'
 import * as React from 'react'
 import Config from 'react-native-config'
 
 import {Logger} from '../yoroi-wallets/logging'
+import {rootStorage} from '../yoroi-wallets/storage/rootStorage'
 import {Ampli, ampli} from './ampli'
 import {mockMetricsManager} from './mocks'
 
@@ -104,7 +105,6 @@ export const makeMetricsManager = (
     allWalletsPageViewed: metricsModule.allWalletsPageViewed.bind(metricsModule),
     assetsPageViewed: metricsModule.assetsPageViewed.bind(metricsModule),
     menuPageViewed: metricsModule.menuPageViewed.bind(metricsModule),
-    receivePageViewed: metricsModule.receivePageViewed.bind(metricsModule),
     settingsPageViewed: metricsModule.settingsPageViewed.bind(metricsModule),
     stakingCenterPageViewed: metricsModule.stakingCenterPageViewed.bind(metricsModule),
     transactionsPageViewed: metricsModule.transactionsPageViewed.bind(metricsModule),
@@ -136,8 +136,25 @@ export const makeMetricsManager = (
 
     walletPageExchangeClicked: metricsModule.walletPageExchangeClicked.bind(metricsModule),
     walletPageBuyBannerClicked: metricsModule.walletPageBuyBannerClicked.bind(metricsModule),
+
     exchangePageViewed: metricsModule.exchangePageViewed.bind(metricsModule),
     exchangeSubmitted: metricsModule.exchangeSubmitted.bind(metricsModule),
+
+    governanceChooseDrepPageViewed: metricsModule.governanceChooseDrepPageViewed.bind(metricsModule),
+    governanceConfirmTransactionPageViewed: metricsModule.governanceConfirmTransactionPageViewed.bind(metricsModule),
+    governanceDashboardPageViewed: metricsModule.governanceDashboardPageViewed.bind(metricsModule),
+    governanceTransactionSuccessPageViewed: metricsModule.governanceTransactionSuccessPageViewed.bind(metricsModule),
+
+    createWalletDetailsSettled: metricsModule.createWalletDetailsSettled.bind(metricsModule),
+    restoreWalletDetailsSettled: metricsModule.restoreWalletDetailsSettled.bind(metricsModule),
+
+    receiveAmountGeneratedPageViewed: metricsModule.receiveAmountGeneratedPageViewed.bind(metricsModule),
+    receiveAmountPageViewed: metricsModule.receiveAmountPageViewed.bind(metricsModule),
+    receiveCopyAddressClicked: metricsModule.receiveCopyAddressClicked.bind(metricsModule),
+    receiveGenerateNewAddressClicked: metricsModule.receiveGenerateNewAddressClicked.bind(metricsModule),
+    receivePageListViewed: metricsModule.receivePageListViewed.bind(metricsModule),
+    receiveShareAddressClicked: metricsModule.receiveShareAddressClicked.bind(metricsModule),
+    receivePageViewed: metricsModule.receivePageViewed.bind(metricsModule),
   } as const
 
   return {

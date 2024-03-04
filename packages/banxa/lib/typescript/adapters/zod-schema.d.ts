@@ -1,0 +1,78 @@
+import { z } from 'zod';
+export declare const BanxaUrlReferralQueryStringParamsSchema: z.ZodEffects<z.ZodObject<{
+    orderType: z.ZodOptional<z.ZodEffects<z.ZodString, import("../helpers/order-types").BanxaOrderType, string>>;
+    fiatType: z.ZodEffects<z.ZodString, import("../helpers/fiat-types").BanxaFiatType, string>;
+    fiatAmount: z.ZodOptional<z.ZodNumber>;
+    coinType: z.ZodEffects<z.ZodString, "ADA", string>;
+    coinAmount: z.ZodOptional<z.ZodNumber>;
+    blockchain: z.ZodOptional<z.ZodEffects<z.ZodString, "ADA", string>>;
+    walletAddress: z.ZodString;
+    walletAddressTag: z.ZodOptional<z.ZodString>;
+    backgroundColor: z.ZodOptional<z.ZodString>;
+    primaryColor: z.ZodOptional<z.ZodString>;
+    secondaryColor: z.ZodOptional<z.ZodString>;
+    textColor: z.ZodOptional<z.ZodString>;
+    theme: z.ZodOptional<z.ZodEffects<z.ZodString, import("../helpers/theme").BanxaTheme, string>>;
+    returnUrl: z.ZodOptional<z.ZodString>;
+}, "strip", z.ZodTypeAny, {
+    fiatType: "USD" | "EUR";
+    coinType: "ADA";
+    walletAddress: string;
+    orderType?: import("../helpers/order-types").BanxaOrderType | undefined;
+    fiatAmount?: number | undefined;
+    coinAmount?: number | undefined;
+    blockchain?: "ADA" | undefined;
+    walletAddressTag?: string | undefined;
+    backgroundColor?: string | undefined;
+    primaryColor?: string | undefined;
+    secondaryColor?: string | undefined;
+    textColor?: string | undefined;
+    theme?: import("../helpers/theme").BanxaTheme | undefined;
+    returnUrl?: string | undefined;
+}, {
+    fiatType: string;
+    coinType: string;
+    walletAddress: string;
+    orderType?: string | undefined;
+    fiatAmount?: number | undefined;
+    coinAmount?: number | undefined;
+    blockchain?: string | undefined;
+    walletAddressTag?: string | undefined;
+    backgroundColor?: string | undefined;
+    primaryColor?: string | undefined;
+    secondaryColor?: string | undefined;
+    textColor?: string | undefined;
+    theme?: string | undefined;
+    returnUrl?: string | undefined;
+}>, {
+    fiatType: "USD" | "EUR";
+    coinType: "ADA";
+    walletAddress: string;
+    orderType?: import("../helpers/order-types").BanxaOrderType | undefined;
+    fiatAmount?: number | undefined;
+    coinAmount?: number | undefined;
+    blockchain?: "ADA" | undefined;
+    walletAddressTag?: string | undefined;
+    backgroundColor?: string | undefined;
+    primaryColor?: string | undefined;
+    secondaryColor?: string | undefined;
+    textColor?: string | undefined;
+    theme?: import("../helpers/theme").BanxaTheme | undefined;
+    returnUrl?: string | undefined;
+}, {
+    fiatType: string;
+    coinType: string;
+    walletAddress: string;
+    orderType?: string | undefined;
+    fiatAmount?: number | undefined;
+    coinAmount?: number | undefined;
+    blockchain?: string | undefined;
+    walletAddressTag?: string | undefined;
+    backgroundColor?: string | undefined;
+    primaryColor?: string | undefined;
+    secondaryColor?: string | undefined;
+    textColor?: string | undefined;
+    theme?: string | undefined;
+    returnUrl?: string | undefined;
+}>;
+//# sourceMappingURL=zod-schema.d.ts.map

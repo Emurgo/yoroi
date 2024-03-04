@@ -18,19 +18,17 @@ export const RampOnOffScreen = () => {
   useHideBottomTabBar()
   const {theme} = useTheme()
   const strings = useStrings()
+  const styles = useStyles()
 
   return (
-    <SafeAreaView
-      edges={['bottom', 'left', 'right']}
-      style={[styles.root, {backgroundColor: theme.color['white-static']}]}
-    >
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.root]}>
       <StatusBar type="dark" />
 
       <RampOnOffProvider>
         <Stack.Navigator
           screenListeners={{}}
           screenOptions={{
-            ...defaultStackNavigationOptions,
+            ...defaultStackNavigationOptions(theme),
             detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
             gestureEnabled: true,
           }}
@@ -56,8 +54,14 @@ export const RampOnOffScreen = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: theme.color.gray.min,
+    },
+  })
+
+  return styles
+}

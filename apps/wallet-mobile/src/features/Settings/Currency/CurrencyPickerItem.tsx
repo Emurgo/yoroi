@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
@@ -16,6 +17,7 @@ type Props = {
 
 export const CurrencyPickerItem = ({nativeName, symbol, selectCurrency, isSelected}: Props) => {
   const strings = useStrings()
+  const {colors} = useStyles()
 
   const title = strings.translatedName(symbol)
   const subtitle = `${nativeName} (${symbol})`
@@ -33,46 +35,66 @@ export const CurrencyPickerItem = ({nativeName, symbol, selectCurrency, isSelect
           <Subtitle>{subtitle}</Subtitle>
         </Description>
 
-        <Selected>{isSelected && <Icon.Check size={24} color="#3154CB" />}</Selected>
+        <Selected>{isSelected && <Icon.Check size={24} color={colors.checkIcon} />}</Selected>
       </Row>
     </TouchableOpacity>
   )
 }
 
-const Row = ({children}: {children: React.ReactNode}) => <View style={styles.row}>{children}</View>
-const Description = ({children}: {children: React.ReactNode}) => <View style={styles.description}>{children}</View>
-const Selected = ({children}: {children: React.ReactNode}) => <View style={styles.flag}>{children}</View>
-const Title = ({children}: {children: React.ReactNode}) => <Text style={styles.bodyMedium}>{children}</Text>
-const Subtitle = ({children}: {children: React.ReactNode}) => <Text style={styles.bodyRegular}>{children}</Text>
+const Row = ({children}: {children: React.ReactNode}) => {
+  const {styles} = useStyles()
+  return <View style={styles.row}>{children}</View>
+}
+const Description = ({children}: {children: React.ReactNode}) => {
+  const {styles} = useStyles()
+  return <View style={styles.description}>{children}</View>
+}
+const Selected = ({children}: {children: React.ReactNode}) => {
+  const {styles} = useStyles()
+  return <View style={styles.flag}>{children}</View>
+}
+const Title = ({children}: {children: React.ReactNode}) => {
+  const {styles} = useStyles()
+  return <Text style={styles.bodyMedium}>{children}</Text>
+}
+const Subtitle = ({children}: {children: React.ReactNode}) => {
+  const {styles} = useStyles()
+  return <Text style={styles.bodyRegular}>{children}</Text>
+}
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    borderBottomColor: '#DCE0E9',
-    borderBottomWidth: 1,
-    paddingVertical: 8,
-  },
-  flag: {
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    flex: 2,
-  },
-  description: {
-    flex: 8,
-    flexDirection: 'column',
-  },
-  bodyMedium: {
-    fontFamily: 'Rubik-Medium',
-    color: '#242838',
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  bodyRegular: {
-    color: '#242838',
-    fontSize: 12,
-    lineHeight: 18,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    row: {
+      flexDirection: 'row',
+      borderBottomColor: color.gray[200],
+      borderBottomWidth: 1,
+      paddingVertical: 8,
+    },
+    flag: {
+      alignItems: 'flex-end',
+      justifyContent: 'center',
+      flex: 2,
+    },
+    description: {
+      flex: 8,
+      flexDirection: 'column',
+    },
+    bodyMedium: {
+      color: color.gray[900],
+      ...typography['body-1-l-medium'],
+    },
+    bodyRegular: {
+      color: color.gray[900],
+      ...typography['body-3-s-regular'],
+    },
+  })
+  const colors = {
+    checkIcon: color.primary[600],
+  }
+  return {styles, colors}
+}
 
 const useStrings = () => {
   const intl = useIntl()

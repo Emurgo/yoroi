@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {Certificate} from '@emurgo/cross-csl-core'
 import AsyncStorage, {AsyncStorageStatic} from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
-import {parseBoolean, useMutationWithInvalidations, useStorage} from '@yoroi/common'
+import {parseBoolean, useAsyncStorage, useMutationWithInvalidations} from '@yoroi/common'
 import {Api, App, Balance} from '@yoroi/types'
 import {Buffer} from 'buffer'
 import * as React from 'react'
@@ -18,12 +19,15 @@ import {
 } from 'react-query'
 
 import {CONFIG} from '../../legacy/config'
-import {useWalletManager} from '../../WalletManager'
+import {AddressMode, WalletMeta} from '../../wallet-manager/types'
+import {parseWalletMeta} from '../../wallet-manager/validators'
+import {WalletManager} from '../../wallet-manager/walletManager'
+import {useWalletManager} from '../../wallet-manager/WalletManagerContext'
+import {getSpendingKey, getStakingKey} from '../cardano/addressInfo/addressInfo'
 import {calcLockedDeposit} from '../cardano/assetUtils'
 import {generateShelleyPlateFromKey} from '../cardano/shelley/plate'
 import {WalletEvent, YoroiWallet} from '../cardano/types'
 import {HWDeviceInfo} from '../hw'
-import {parseWalletMeta} from '../migrations/walletMeta'
 import {
   TRANSACTION_DIRECTION,
   TRANSACTION_STATUS,
@@ -34,7 +38,6 @@ import {
 import {CurrencySymbol, NetworkId, TipStatusResponse, TxSubmissionStatus, WalletImplementationId} from '../types/other'
 import {delay} from '../utils/timeUtils'
 import {Amounts, Quantities, Utxos} from '../utils/utils'
-import {WalletManager, WalletMeta} from '../walletManager'
 
 const crashReportsStorageKey = 'sendCrashReports'
 
@@ -128,6 +131,28 @@ export const useStakingKey = (wallet: YoroiWallet) => {
   return result.data
 }
 
+export const useKeyHashes = ({address}: {address: string}) => {
+  const [spendingData, stakingData] = useQueries([
+    {
+      suspense: true,
+      queryKey: [address, 'spendingKeyHash'],
+      queryFn: () =>
+        getSpendingKey(address).then((spending) => {
+          return {spending}
+        }),
+    },
+    {
+      suspense: true,
+      queryKey: [address, 'stakingkeyHash'],
+      queryFn: () =>
+        getStakingKey(address).then((staking) => {
+          return {staking}
+        }),
+    },
+  ])
+  return {spending: spendingData.data?.spending, staking: stakingData.data?.staking}
+}
+
 export const useAssetIds = (wallet: YoroiWallet): string[] => {
   const balances = useBalances(wallet)
   return Object.keys(balances).filter((id) => wallet.primaryTokenInfo.id !== id)
@@ -174,7 +199,7 @@ export const useSync = (wallet: YoroiWallet, options?: UseMutationOptions<void, 
 }
 
 export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<string, Error>) => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const query = useQuery({
     queryKey: [wallet.id, 'name'],
     queryFn: async () => {
@@ -190,7 +215,7 @@ export const useWalletName = (wallet: YoroiWallet, options?: UseQueryOptions<str
 }
 
 export const useChangeWalletName = (wallet: YoroiWallet, options: UseMutationOptions<void, Error, string> = {}) => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const mutation = useMutationWithInvalidations<void, Error, string>({
     mutationFn: async (newName) => {
       const walletMeta = await storage.join('wallet/').getItem(wallet.id, parseWalletMeta)
@@ -703,12 +728,13 @@ type CreateBip44WalletInfo = {
   implementationId: WalletImplementationId
   hwDeviceInfo?: null | HWDeviceInfo
   readOnly: boolean
+  addressMode: AddressMode
 }
 
 export const useCreateBip44Wallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateBip44WalletInfo>) => {
   const walletManager = useWalletManager()
   const mutation = useMutationWithInvalidations<YoroiWallet, Error, CreateBip44WalletInfo>({
-    mutationFn: ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly}) =>
+    mutationFn: ({name, bip44AccountPublic, networkId, implementationId, hwDeviceInfo, readOnly, addressMode}) =>
       walletManager.createWalletWithBip44Account(
         name,
         bip44AccountPublic,
@@ -716,6 +742,7 @@ export const useCreateBip44Wallet = (options?: UseMutationOptions<YoroiWallet, E
         implementationId,
         hwDeviceInfo || null,
         readOnly,
+        addressMode,
       ),
     invalidateQueries: [['walletMetas']],
     ...options,
@@ -733,13 +760,14 @@ export type CreateWalletInfo = {
   password: string
   networkId: NetworkId
   walletImplementationId: WalletImplementationId
+  addressMode: AddressMode
 }
 
 export const useCreateWallet = (options?: UseMutationOptions<YoroiWallet, Error, CreateWalletInfo>) => {
   const walletManager = useWalletManager()
   const mutation = useMutationWithInvalidations({
-    mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId}) =>
-      walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId),
+    mutationFn: ({name, mnemonicPhrase, password, networkId, walletImplementationId, addressMode}) =>
+      walletManager.createWallet(name, mnemonicPhrase, password, networkId, walletImplementationId, addressMode),
     invalidateQueries: [['walletMetas']],
     ...options,
   })
@@ -1089,4 +1117,16 @@ export const useNativeAssetInvalidation = ({networkId, policy, name}: NativeAsse
     ...mutation,
     invalidate: mutation.mutate,
   }
+}
+
+export const useCreateGovernanceTx = (
+  wallet: YoroiWallet,
+  options?: UseMutationOptions<YoroiUnsignedTx, Error, Certificate[]>,
+) => {
+  const mutationFn = (certificates: Certificate[]) => {
+    return wallet.createUnsignedGovernanceTx(certificates)
+  }
+
+  const mutation = useMutation({mutationFn, retry: false, ...options})
+  return {...mutation, createUnsignedGovernanceTx: mutation.mutate}
 }

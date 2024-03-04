@@ -90,18 +90,55 @@ import {
   ApiTokenSupplyResponse,
   ApiTokeSupplyRequest,
 } from './api/cardano'
+import {TransferEntry, TransferTarget, TransferTargets} from './transfer/state'
+import {
+  AppObservableMultiStorage,
+  AppObservableStorage,
+} from './app/observable-storage'
+import {AppCacheInfo, AppCacheRecord, AppCacheRow} from './app/cache'
+import {AppObserver, AppSubscriber} from './app/simple-observer'
+import {
+  CardanoAddress,
+  CardanoMetadata,
+  CardanoSignedTx,
+  CardanoStaking,
+  CardanoTokenId,
+  CardanoTxInfo,
+  CardanoUnsignedTx,
+  CardanoVoting,
+} from './chain/cardano'
 
 export namespace App {
-  export interface Storage extends AppStorage {}
+  export interface Storage<IsAsync extends boolean = true>
+    extends AppStorage<IsAsync> {}
   export type StorageFolderName = AppStorageFolderName
-  export interface MultiStorage<T> extends AppMultiStorage<T> {}
-  export type MultiStorageOptions<T> = AppMultiStorageOptions<T>
+  export interface MultiStorage<T, IsAsync extends boolean = true>
+    extends AppMultiStorage<T, IsAsync> {}
+
+  export interface ObservableStorage<IsAsync extends boolean = true>
+    extends AppObservableStorage<IsAsync> {}
+  export interface ObservableMultiStorage<T, IsAsync extends boolean = true>
+    extends AppObservableMultiStorage<T, IsAsync> {}
+
+  export type MultiStorageOptions<
+    T,
+    IsAsync extends boolean = true,
+  > = AppMultiStorageOptions<T, IsAsync>
+
+  export type Observer<T> = AppObserver<T>
+  export type Subscriber<T> = AppSubscriber<T>
+
+  export type CacheInfo = AppCacheInfo
+  export interface CacheRecord<T> extends AppCacheRecord<T> {}
+  export interface CacheRow<T, K extends string = string>
+    extends AppCacheRow<T, K> {}
 
   export interface Api extends AppApi {}
 
   export type FrontendFeeTier = AppFrontendFeeTier
   export type FrontendFeesResponse = AppFrontendFeesResponse
 }
+
 export namespace Swap {
   export interface Api extends SwapApi {}
   export type Manager = SwapManager
@@ -250,6 +287,25 @@ export namespace Resolver {
     export class UnsupportedTld extends ResolverErrorUnsupportedTld {}
     export class Expired extends ResolverErrorUnsupportedTld {}
     export class WrongBlockchain extends ResolverErrorWrongBlockchain {}
+  }
+}
+
+export namespace Transfer {
+  export type Entry = TransferEntry
+  export type Target = TransferTarget
+  export type Targets = TransferTargets
+}
+
+export namespace Chain {
+  export namespace Cardano {
+    export type UnsignedTx = CardanoUnsignedTx
+    export type SignedTx = CardanoSignedTx
+    export type TxInfo = CardanoTxInfo
+    export type Metadata = CardanoMetadata
+    export type Staking = CardanoStaking
+    export type Voting = CardanoVoting
+    export type Address = CardanoAddress
+    export type TokenId = CardanoTokenId
   }
 }
 

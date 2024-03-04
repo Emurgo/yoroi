@@ -1,5 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {getPoolUrlByProvider} from '@yoroi/swap'
+import {useTheme} from '@yoroi/theme'
 import {Balance, Swap} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import _ from 'lodash'
@@ -22,7 +23,6 @@ import {
 import {useMetrics} from '../../../../../metrics/metricsManager'
 import {useSearch} from '../../../../../Search/SearchContext'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {COLORS} from '../../../../../theme'
 import {useSync, useTokenInfos, useTransactionInfos} from '../../../../../yoroi-wallets/hooks'
 import {TransactionInfo, TxMetadataInfo} from '../../../../../yoroi-wallets/types'
 import {asQuantity, openInExplorer, Quantities} from '../../../../../yoroi-wallets/utils'
@@ -79,6 +79,7 @@ const findCompletedOrderTx = (transactions: TransactionInfo[]): MappedRawOrder[]
 
 export const CompletedOrders = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const {sync} = useSync(wallet)
 
@@ -214,6 +215,7 @@ const Header = ({
   expanded?: boolean
   onPress: () => void
 }) => {
+  const styles = useStyles()
   return (
     <HeaderWrapper expanded={expanded} onPress={onPress}>
       <View style={styles.label}>
@@ -308,21 +310,25 @@ const MainInfo = ({
   )
 }
 
-export const CompletedOrdersSkeleton = () => (
-  <View style={styles.container}>
-    <View style={styles.flex}>
-      {[0, 1, 2, 3].map((index) => (
-        <React.Fragment key={index}>
-          <ExpandableInfoCardSkeleton />
+export const CompletedOrdersSkeleton = () => {
+  const styles = useStyles()
+  return (
+    <View style={styles.container}>
+      <View style={styles.flex}>
+        {[0, 1, 2, 3].map((index) => (
+          <React.Fragment key={index}>
+            <ExpandableInfoCardSkeleton />
 
-          <Spacer height={20} />
-        </React.Fragment>
-      ))}
+            <Spacer height={20} />
+          </React.Fragment>
+        ))}
+      </View>
     </View>
-  </View>
-)
+  )
+}
 
 const TxLink = ({onTxPress, txId}: {onTxPress: () => void; txId: string}) => {
+  const styles = useStyles()
   return (
     <TouchableOpacity onPress={onTxPress} style={styles.txLink}>
       <Text style={styles.txLinkText}>{txId}</Text>
@@ -340,6 +346,7 @@ const ListEmptyComponent = ({completedOrders}: {completedOrders: Array<MappedRaw
 
 const NoOrdersYet = () => {
   const strings = useStrings()
+  const styles = useStyles()
   return (
     <View style={styles.notOrdersYetContainer}>
       <Spacer height={80} />
@@ -357,54 +364,54 @@ const EmptySearchResult = () => {
   return null
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-  },
-  flex: {
-    flex: 1,
-  },
-  txLink: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  txLinkText: {
-    color: '#4B6DDE',
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    fontWeight: '400',
-    lineHeight: 22,
-    textDecorationLine: 'underline',
-  },
-  label: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerLabel: {
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-  },
-  counter: {
-    paddingVertical: 16,
-  },
-  illustration: {
-    flex: 1,
-    alignSelf: 'center',
-    width: 280,
-    height: 224,
-  },
-  notOrdersYetContainer: {
-    flex: 1,
-    textAlign: 'center',
-  },
-  contentText: {
-    flex: 1,
-    textAlign: 'center',
-    fontFamily: 'Rubik-Medium',
-    fontWeight: '500',
-    fontSize: 20,
-    color: '#000',
-    lineHeight: 30,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    flex: {
+      flex: 1,
+    },
+    txLink: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    txLinkText: {
+      color: color.primary[400],
+      ...typography['body-1-l-regular'],
+      textDecorationLine: 'underline',
+    },
+    label: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    headerLabel: {
+      color: color.gray.max,
+      ...typography['body-2-m-medium'],
+    },
+    counter: {
+      paddingVertical: 16,
+    },
+    illustration: {
+      flex: 1,
+      alignSelf: 'center',
+      width: 280,
+      height: 224,
+    },
+    notOrdersYetContainer: {
+      flex: 1,
+      textAlign: 'center',
+    },
+    contentText: {
+      flex: 1,
+      textAlign: 'center',
+      ...typography['body-2-m-medium'],
+      color: color.gray.max,
+      fontSize: 20,
+    },
+  })
+  return styles
+}

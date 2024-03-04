@@ -1,11 +1,11 @@
-import {rootStorage, StorageProvider} from '@yoroi/common'
+import {AsyncStorageProvider} from '@yoroi/common'
 import {ThemeProvider} from '@yoroi/theme'
 import React from 'react'
 import {LogBox, Platform, StyleSheet, UIManager} from 'react-native'
 import Config from 'react-native-config'
 import * as RNP from 'react-native-paper'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {enableScreens} from 'react-native-screens'
+import {enableFreeze, enableScreens} from 'react-native-screens'
 import {QueryClient, QueryClientProvider} from 'react-query'
 
 import {AuthProvider} from './auth/AuthProvider'
@@ -17,12 +17,14 @@ import {InitApp} from './InitApp'
 import {CONFIG} from './legacy/config'
 import {setLogLevel} from './legacy/logging'
 import {makeMetricsManager, MetricsProvider} from './metrics/metricsManager'
+import {useMigrations} from './migrations/useMigrations'
 import {SelectedWalletMetaProvider, SelectedWalletProvider} from './SelectedWallet/Context'
-import {WalletManagerProvider} from './WalletManager'
-import {useMigrations} from './yoroi-wallets/migrations'
-import {walletManager} from './yoroi-wallets/walletManager'
+import {walletManager} from './wallet-manager/walletManager'
+import {WalletManagerProvider} from './wallet-manager/WalletManagerContext'
+import {rootStorage} from './yoroi-wallets/storage/rootStorage'
 
-enableScreens()
+enableScreens(true)
+enableFreeze(true)
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental != null) {
@@ -41,9 +43,11 @@ const metricsManager = makeMetricsManager()
 
 export const YoroiApp = () => {
   const migrated = useMigrations(rootStorage)
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  return migrated ? (
-    <StorageProvider>
+
+  if (!migrated) return null
+
+  return (
+    <AsyncStorageProvider storage={rootStorage}>
       <MetricsProvider metricsManager={metricsManager}>
         <WalletManagerProvider walletManager={walletManager}>
           <ErrorBoundary>
@@ -71,6 +75,6 @@ export const YoroiApp = () => {
           </ErrorBoundary>
         </WalletManagerProvider>
       </MetricsProvider>
-    </StorageProvider>
-  ) : null
+    </AsyncStorageProvider>
+  )
 }

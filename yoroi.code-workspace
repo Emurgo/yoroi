@@ -21,8 +21,12 @@
       "path": "./packages/theme"
     },
     {
-      "name": "@yoroi/banxa",
-      "path": "./packages/banxa"
+      "name": "@yoroi/exchange",
+      "path": "./packages/exchange"
+    },
+    {
+      "name": "@yoroi/transfer",
+      "path": "./packages/transfer"
     },
     {
       "name": "@yoroi/api",
@@ -35,10 +39,6 @@
     {
       "name": "@yoroi/common",
       "path": "./packages/common"
-    },
-    {
-      "name": "@yoroi/openswap",
-      "path": "./packages/openswap"
     },
     {
       "name": "@yoroi/staking",

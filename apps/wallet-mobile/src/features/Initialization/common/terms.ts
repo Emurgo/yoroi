@@ -1,4 +1,4 @@
-import {useStorage} from '@yoroi/common'
+import {useAsyncStorage} from '@yoroi/common'
 import {useCallback} from 'react'
 import {useMutation, useQuery, useQueryClient} from 'react-query'
 
@@ -11,10 +11,10 @@ export type LegalAgreement = {
 const queryKey = 'legalAgreement'
 
 export const useLegalAgreement = () => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const query = useQuery({
     queryKey: [queryKey],
-    queryFn: async () => storage.join('appSettings/').getItem<LegalAgreement>(queryKey),
+    queryFn: () => storage.join('appSettings/').getItem<LegalAgreement>(queryKey),
     suspense: true,
   })
 
@@ -22,7 +22,7 @@ export const useLegalAgreement = () => {
 }
 
 export const useAgreeWithLegal = () => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const queryClient = useQueryClient()
 
   const mutationFn = useCallback(async () => {
@@ -41,7 +41,7 @@ export const useAgreeWithLegal = () => {
   }
 }
 export const useResetLegalAgreement = () => {
-  const storage = useStorage()
+  const storage = useAsyncStorage()
   const queryClient = useQueryClient()
 
   const mutationFn = useCallback(async () => {

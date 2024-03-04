@@ -3,9 +3,9 @@ import {action} from '@storybook/addon-actions'
 import {storiesOf} from '@storybook/react-native'
 import React from 'react'
 
-import {WalletManagerProvider} from '../../WalletManager'
+import {WalletManager, walletManager} from '../../wallet-manager/walletManager'
+import {WalletManagerProvider} from '../../wallet-manager/WalletManagerContext'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
-import {WalletManager, walletManager} from '../../yoroi-wallets/walletManager'
 import {SaveReadOnlyWalletScreen} from './SaveReadOnlyWalletScreen'
 
 storiesOf('SaveReadOnlyWalletScreen', module)

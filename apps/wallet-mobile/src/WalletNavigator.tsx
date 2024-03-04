@@ -1,5 +1,5 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import {getFocusedRouteNameFromRoute, useFocusEffect} from '@react-navigation/native'
+import {RouteProp, useFocusEffect} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -13,7 +13,7 @@ import {SettingsScreenNavigator} from './features/Settings'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
 import {useMetrics} from './metrics/metricsManager'
-import {WalletStackRoutes, WalletTabRoutes} from './navigation'
+import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
@@ -75,7 +75,7 @@ const WalletTabNavigator = () => {
       >
         <Tab.Screen
           name="history"
-          options={(route) => ({
+          options={({route}: {route: RouteProp<WalletTabRoutes, 'history'>}) => ({
             tabBarIcon: ({focused}) => (
               <Icon.TabWallet
                 size={24}
@@ -84,11 +84,7 @@ const WalletTabNavigator = () => {
             ),
             tabBarLabel: strings.walletTabBarLabel,
             tabBarTestID: 'walletTabBarButton',
-            tabBarStyle:
-              getFocusedRouteNameFromRoute(route.route) === 'send-read-qr-code' ||
-              getFocusedRouteNameFromRoute(route.route)?.startsWith('scan-')
-                ? {display: 'none'}
-                : {},
+            tabBarStyle: hideTabBarForRoutes(route),
           })}
         >
           {() => (
