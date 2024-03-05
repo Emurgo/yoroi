@@ -30,7 +30,7 @@ export const RequestSpecificAmountScreen = () => {
   const screenHeight = useWindowDimensions().height
   const modalHeight = (screenHeight / 100) * 80
   const {openModal} = useModal()
-  const modalTitle = isSingle ? strings.singleAddress : strings.multipleAdress
+  const modalTitle = isSingle ? strings.singleAddress : strings.multipleAddress
 
   const handleOnGenerateLink = React.useCallback(() => {
     Keyboard.dismiss()
