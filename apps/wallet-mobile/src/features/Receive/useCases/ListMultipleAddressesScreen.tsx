@@ -125,7 +125,7 @@ const Modal = () => {
 
       <Text style={[styles.details, {color: colors.details}]}>{strings.multiplePresentationDetails}</Text>
 
-      <Spacer fill />
+      <Spacer fill height={24} />
 
       <View style={styles.buttonContainer}>
         <Button shelleyTheme title={strings.ok} onPress={handleOnCloseModal} style={styles.button} />
