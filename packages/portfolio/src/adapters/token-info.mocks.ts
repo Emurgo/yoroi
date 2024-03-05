@@ -1,7 +1,10 @@
 import {Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
 
-import {AppApiRequestWithCache, PortfolioApiTokenInfosResponse} from '../types'
+import {
+  AppApiRequestRecordWithCache,
+  PortfolioApiTokenInfosResponse,
+} from '../types'
 
 const primaryETH: Portfolio.Token.Info = {
   decimals: 18,
@@ -61,7 +64,7 @@ const apiResponseTokenInfos: PortfolioApiTokenInfosResponse = {
 }
 
 const apiRequestTokenInfos: ReadonlyArray<
-  AppApiRequestWithCache<Portfolio.Token.Id>
+  AppApiRequestRecordWithCache<Portfolio.Token.Id>
 > = [
   [primaryETH.id, 'hash1'],
   [nftCryptoKitty.id, 'hash2'],

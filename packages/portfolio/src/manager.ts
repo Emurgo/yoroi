@@ -1,8 +1,13 @@
-import {Chain, Portfolio} from '@yoroi/types'
+import {Api, App, Chain, Portfolio} from '@yoroi/types'
+import {isExpired} from '@yoroi/common'
 import {freeze} from 'immer'
 
-import {PortfolioApi, PortfolioManager, PortfolioStorage} from './types'
-import {difference} from '@yoroi/common'
+import {
+  AppApiRequestRecordWithCache,
+  PortfolioApi,
+  PortfolioManager,
+  PortfolioStorage,
+} from './types'
 import {recordWithETag} from './transformers/record-with-etag'
 
 export const portfolioManagerMaker = ({
@@ -18,35 +23,61 @@ export const portfolioManagerMaker = ({
 }): PortfolioManager => {
   let isHydrated = false
   let balances: Readonly<Map<Portfolio.Token.Id, Portfolio.Token.Balance>>
-  let balanceIds: Readonly<Set<Portfolio.Token.Id>>
+  let cachedInfos: Readonly<Map<Portfolio.Token.Id, App.CacheInfo>>
   // let tokenInfoIds: Readonly<Set<Portfolio.Token.Id>>
   // let tokenDiscoveryKeys: ReadonlyArray<Portfolio.Token.Id>
 
   const hydrate = () => {
     balances = freeze(new Map(storage.balances.all()), true)
-    balanceIds = freeze(new Set(balances.keys()), true)
+    cachedInfos = freeze(
+      new Map(
+        storage.token.infos
+          .all()
+          .map(([key, {expires, hash}]) => [key, {expires, hash}] as const),
+      ),
+      true,
+    )
 
     isHydrated = true
   }
 
-  const sync = async ({
-    balances,
-    lockedInTxs,
-  }: {
-    balances: {
-      secondaryAmounts: Readonly<Map<Portfolio.Token.Id, BigInt>>
-      primaryBalance: Readonly<
-        Map<Portfolio.Token.Id, Portfolio.BalancePrimaryBreakdown>
-      >
-    }
-  }) => {
+  const sync = async (
+    amounts: {
+      primary: {
+        totalBalance: BigInt
+        totalLockedInTxs: BigInt
+        breakdown: Readonly<Portfolio.BalancePrimaryBreakdown>
+      }
+      secondary: {
+        balance: Readonly<Map<Portfolio.Token.Id, BigInt>>
+        lockedInTxs: Readonly<Map<Portfolio.Token.Id, BigInt>>
+      }
+    },
+    toCache: Readonly<Set<Portfolio.Token.Id>>,
+  ) => {
     if (!isHydrated) hydrate()
-    const unknownIds = difference([...balanceIds], [...secondaryAmounts.keys()])
-    const idsToFetch = unknownIds.map((id) => recordWithETag(id))
+    const {primary, secondary} = amounts
 
-    const tokenInfos = await api.tokenInfos(idsToFetch)
+    const recordsToFetch = getRecordsToFetch({
+      newIds: [...secondary.balance.keys()],
+      cachedInfos,
+    })
 
-    console.log(tokenInfos)
+    const tokenInfosResponse = await api.tokenInfos(recordsToFetch)
+
+    recordsToFetch.forEach(([id]) => {
+      const record = tokenInfosResponse[id]
+      if (!record) throw new Api.Errors.ResponseMalformed()
+
+      const [statusCode, tokenInfo, eTag, maxAge] = record
+
+      if (statusCode === 304) {
+        // keep the current record, but update the expires with the now() + maxAge
+        return
+      }
+
+      // otherwise, update the record
+    })
   }
 
   return freeze(
@@ -56,4 +87,28 @@ export const portfolioManagerMaker = ({
     },
     true,
   )
+}
+
+export const getRecordsToFetch = ({
+  newIds,
+  cachedInfos,
+}: {
+  newIds: ReadonlyArray<Portfolio.Token.Id>
+  cachedInfos: Readonly<Map<Portfolio.Token.Id, App.CacheInfo>>
+}) => {
+  const toFetch: Array<AppApiRequestRecordWithCache<Portfolio.Token.Id>> = []
+  const fromCache: Array<Portfolio.Token.Id> = []
+  newIds.forEach((id) => {
+    const cachedRecord = cachedInfos.get(id)
+    if (cachedRecord) {
+      if (isExpired(cachedRecord)) {
+        toFetch.push(recordWithETag(id, cachedRecord.hash))
+      } else {
+        fromCache.push(id)
+      }
+    } else {
+      toFetch.push(recordWithETag(id))
+    }
+  })
+  return {toFetch, fromCache}
 }

@@ -1,4 +1,4 @@
-import {recordWithETag} from './recordWithETag'
+import {recordWithETag} from './record-with-etag'
 
 describe('recordWithETag', () => {
   it('should return an array with the provided value and etag', () => {
