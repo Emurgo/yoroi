@@ -3,7 +3,7 @@ import {ExchangeCoin} from './coin'
 import {ExchangeFiat} from './fiat'
 
 export type ExchangeReferralUrlQueryStringParams = {
-  /** Can be used to indicate whether the customer wants to sell by passing through a value of sell. The customer will be shown the Sell Order Form when they are redirected to Banxa. If this parameter is not passed, then the order will default to buy */
+  /** Can be used to indicate whether the customer wants to sell by passing through a value of sell. The customer will be shown the Sell Order Form when they are redirected to teh Exchange. If this parameter is not passed, then the order will default to buy */
   orderType?: 'sell' | 'buy'
 
   /** Fiat currency code that the customer wants to exchange e.g USD */
