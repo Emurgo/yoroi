@@ -1,11 +1,12 @@
-import {BanxaOrderType, banxaIsOrderType} from './order-types'
+import {Exchange} from '@yoroi/types'
+import {isOrderType} from './order-types'
 
-describe('banxaIsOrderType', () => {
+describe('isOrderType', () => {
   it('should return true for valid order types', () => {
-    const validOrderTypes: BanxaOrderType[] = ['buy', 'sell']
+    const validOrderTypes: Exchange.OrderType[] = ['buy', 'sell']
 
     validOrderTypes.forEach((orderType) => {
-      expect(banxaIsOrderType(orderType)).toBe(true)
+      expect(isOrderType(orderType)).toBe(true)
     })
   })
 
@@ -21,7 +22,7 @@ describe('banxaIsOrderType', () => {
     ]
 
     invalidOrderTypes.forEach((orderType) => {
-      expect(banxaIsOrderType(orderType)).toBe(false)
+      expect(isOrderType(orderType)).toBe(false)
     })
   })
 })

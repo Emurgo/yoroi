@@ -107,6 +107,17 @@ import {
   CardanoUnsignedTx,
   CardanoVoting,
 } from './chain/cardano'
+import {ExchangeModule} from './exchange/module'
+import {ExchangeBlockchainCode} from './exchange/blockchain'
+import {ExchangeReferralUrlBuilderOptions} from './exchange/build'
+import {ExchangeCoin} from './exchange/coin'
+import {ExchangeFiat} from './exchange/fiat'
+import {ExchangeReferralUrlQueryStringParams} from './exchange/params'
+import {ExchangeUnknownError, ExchangeValidationError} from './exchange/error'
+import {ExchangeOrderType} from './exchange/order'
+import {ExchangeProvider} from './exchange/provider'
+
+export {ExchangeProviders} from './exchange/provider'
 
 export namespace App {
   export interface Storage<IsAsync extends boolean = true>
@@ -306,6 +317,22 @@ export namespace Chain {
     export type Voting = CardanoVoting
     export type Address = CardanoAddress
     export type TokenId = CardanoTokenId
+  }
+}
+
+export namespace Exchange {
+  export type Module = ExchangeModule
+  export type BlockchainCode = ExchangeBlockchainCode
+  export type ReferralUrlBuilderOptions = ExchangeReferralUrlBuilderOptions
+  export type Coin = ExchangeCoin
+  export type Fiat = ExchangeFiat
+  export type OrderType = ExchangeOrderType
+  export type Provider = ExchangeProvider
+  export type ReferralUrlQueryStringParams =
+    ExchangeReferralUrlQueryStringParams
+  export namespace Errors {
+    export class ValidationError extends ExchangeValidationError {}
+    export class UnknownError extends ExchangeUnknownError {}
   }
 }
 
