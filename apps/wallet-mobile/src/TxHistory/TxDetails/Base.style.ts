@@ -1,17 +1,16 @@
 import {useTheme} from '@yoroi/theme'
 import {StyleSheet} from 'react-native'
 
-import {brand} from '../../theme'
-
 export const useBaseStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
 
   const styles = StyleSheet.create({
     assetHeading: {
       color: color.gray.min,
       opacity: 0.5,
       fontSize: 10,
+      backgroundColor: 'red',
     },
     assetMeta: {
       color: color.gray.min,
@@ -33,14 +32,12 @@ export const useBaseStyles = () => {
       justifyContent: 'flex-start',
     },
     assetName: {
-      fontFamily: brand.defaultFont,
-      fontSize: 14,
+      ...typography['body-2-m-regular'],
       color: color.gray.min,
       marginBottom: 2,
     },
     assetBalance: {
-      fontFamily: brand.defaultFont,
-      fontSize: 14,
+      ...typography['body-2-m-regular'],
       color: color.gray.min,
     },
     py5: {

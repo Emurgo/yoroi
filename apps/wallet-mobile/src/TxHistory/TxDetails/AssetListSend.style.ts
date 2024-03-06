@@ -1,19 +1,17 @@
 import {useTheme} from '@yoroi/theme'
 import {StyleSheet} from 'react-native'
 
-import {brand, COLORS} from '../../theme'
-
 export const useSendStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, typography} = theme
   const styles = StyleSheet.create({
     assetHeading: {
-      color: COLORS.BLACK,
+      color: color.gray.max,
       opacity: 0.5,
       fontSize: 12,
     },
     assetMeta: {
-      color: COLORS.TEXT_GRAY2,
+      color: color.gray[500],
       opacity: 1,
       fontSize: 14,
     },
@@ -22,6 +20,7 @@ export const useSendStyles = () => {
       justifyContent: 'space-between',
       borderBottomWidth: 1,
       borderColor: 'rgba(173, 174, 182, 0.3)',
+      backgroundColor: 'red',
     },
     assetTitle: {
       flexDirection: 'row',
@@ -29,15 +28,14 @@ export const useSendStyles = () => {
       marginBottom: 10,
       paddingHorizontal: 16,
       paddingVertical: 12,
-      backgroundColor: '#fff',
+      backgroundColor: color.gray.min,
       borderTopWidth: 1,
       borderBottomWidth: 2,
       borderColor: 'rgba(173, 174, 182, 0.3)',
     },
     assetName: {
-      fontFamily: brand.defaultFont,
-      fontSize: 14,
-      color: COLORS.TEXT_GRAY,
+      ...typography['body-2-m-regular'],
+      color: color.gray[900],
       marginBottom: 2,
     },
     assetBalanceView: {
@@ -46,9 +44,8 @@ export const useSendStyles = () => {
       justifyContent: 'flex-start',
     },
     assetBalance: {
-      fontFamily: brand.defaultFont,
-      fontSize: 14,
-      color: COLORS.BLACK,
+      ...typography['body-2-m-regular'],
+      color: color.gray.max,
     },
     py5: {
       paddingVertical: 10,
@@ -60,7 +57,7 @@ export const useSendStyles = () => {
       backgroundColor: 'transparent',
     },
     rowColor2: {
-      backgroundColor: '#FAFAFC',
+      backgroundColor: color.primary[100],
     },
     tokenMetaView: {
       flex: 2,
