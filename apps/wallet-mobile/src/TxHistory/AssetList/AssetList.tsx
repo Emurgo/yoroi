@@ -1,5 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {FlashList, FlashListProps} from '@shopify/flash-list'
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
@@ -25,6 +26,7 @@ type Props = Partial<ListProps> & {
 }
 export const AssetList = (props: Props) => {
   const strings = useStrings()
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
   const {track} = useMetrics()
@@ -79,6 +81,7 @@ type ExplorableAssetItemProps = AmountItemProps & {
   onPress(): void
 }
 const ExplorableAssetItem = ({wallet, amount, onPress}: ExplorableAssetItemProps) => {
+  const styles = useStyles()
   const {isPrivacyOff} = usePrivacyMode()
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} testID="assetSelectorItem">
@@ -87,20 +90,25 @@ const ExplorableAssetItem = ({wallet, amount, onPress}: ExplorableAssetItemProps
   )
 }
 
-const styles = StyleSheet.create({
-  assetList: {flex: 1},
-  button: {
-    backgroundColor: '#fff',
-    shadowColor: '#181a1e',
-    borderRadius: 8,
-    elevation: 2,
-    shadowOffset: {width: 0, height: -2},
-    shadowRadius: 10,
-    shadowOpacity: 0.08,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding} = theme
+  const styles = StyleSheet.create({
+    assetList: {flex: 1},
+    button: {
+      backgroundColor: color.gray.min,
+      ...padding['m'],
+      shadowColor: color.gray[100],
+      borderRadius: 8,
+      elevation: 2,
+      shadowOffset: {width: 0, height: -2},
+      shadowRadius: 10,
+      shadowOpacity: 0.08,
+    },
+  })
+
+  return styles
+}
 
 const messages = defineMessages({
   unknownAsset: {

@@ -1,4 +1,5 @@
 import {useResolverSetShowNotice, useResolverShowNotice} from '@yoroi/resolver'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -9,6 +10,7 @@ import {useStrings} from '../../../common/strings'
 
 export const NotifySupportedNameServers = () => {
   const strings = useStrings()
+  const {styles, colors} = useStyles()
   const {showNotice, refetch} = useResolverShowNotice()
 
   const {setShowNotice} = useResolverSetShowNotice({
@@ -22,7 +24,12 @@ export const NotifySupportedNameServers = () => {
 
   return (
     <View>
-      <LinearGradient style={styles.gradient} start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={['#C6F7ED', '#E4E8F7']}>
+      <LinearGradient
+        style={styles.gradient}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 1}}
+        colors={[colors.lightGreen, colors.lightBlue]}
+      >
         <View style={styles.header}>
           <Text style={styles.title}>{`${strings.resolverNoticeTitle} `}😇</Text>
 
@@ -46,6 +53,7 @@ export const NotifySupportedNameServers = () => {
 }
 
 const NameServer = ({text}: {text: string}) => {
+  const {styles} = useStyles()
   return (
     <View style={styles.nameServerRoot}>
       <Spacer width={8} />
@@ -59,40 +67,43 @@ const NameServer = ({text}: {text: string}) => {
   )
 }
 
-const styles = StyleSheet.create({
-  gradient: {
-    borderRadius: 8,
-    padding: 12,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  nameServerRoot: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    lineHeight: 22,
-    color: '#000',
-  },
-  nameServerText: {
-    fontWeight: '500',
-    fontFamily: 'Rubik-Medium',
-    fontSize: 14,
-    lineHeight: 22,
-    color: '#000',
-  },
-  title: {
-    fontFamily: 'Rubik-Medium',
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#000',
-  },
-  text: {
-    fontFamily: 'Rubik-Regular',
-    fontSize: 14,
-    fontWeight: '400',
-    color: '#000',
-    lineHeight: 22,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    gradient: {
+      borderRadius: 8,
+      ...padding['m'],
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    nameServerRoot: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      lineHeight: 22,
+      color: color.gray.max,
+    },
+    nameServerText: {
+      ...typography['body-2-m-medium'],
+      color: color.gray.max,
+    },
+    title: {
+      ...typography['body-1-l-medium'],
+      color: color.gray.max,
+    },
+    text: {
+      ...typography['body-2-m-regular'],
+      color: color.gray.max,
+    },
+  })
+
+  const colors = {
+    lightGreen: color.secondary[200],
+    lightBlue: color.primary[100],
+  }
+
+  return {styles, colors}
+}

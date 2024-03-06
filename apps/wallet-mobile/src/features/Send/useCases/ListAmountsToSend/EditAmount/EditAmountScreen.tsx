@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import {useTransfer} from '@yoroi/transfer'
 import {Balance} from '@yoroi/types'
 import * as React from 'react'
@@ -20,6 +21,7 @@ import {UnableToSpend} from './ShowError/UnableToSpend'
 
 export const EditAmountScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigateTo = useNavigateTo()
   const {selectedTokenId, amountChanged} = useTransfer()
   const {available, spendable, initialQuantity} = useTokenQuantities(selectedTokenId)
@@ -106,11 +108,18 @@ export const EditAmountScreen = () => {
   )
 }
 
-const Center = ({style, ...props}: ViewProps) => <View style={[style, styles.center]} {...props} />
-const Actions = ({style, ...props}: ViewProps) => <View style={[style, styles.actions]} {...props} />
+const Center = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
+  return <View style={[style, styles.center]} {...props} />
+}
+const Actions = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
+  return <View style={[style, styles.actions]} {...props} />
+}
 
 const MaxBalanceButton = ({onPress}: {onPress(): void}) => {
   const strings = useStrings()
+  const styles = useStyles()
 
   return (
     <TouchableOpacity onPress={onPress}>
@@ -125,6 +134,8 @@ type AmountInputProps = {
   ticker: string | undefined
 }
 const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
+  const styles = useStyles()
+
   const onChangeText = (text: string) => {
     const shorterStringLength = Math.min(text.length, value.length)
     const wasPasted =
@@ -155,46 +166,53 @@ const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
     />
   )
 }
-const Ticker = ({ticker}: {ticker?: string}) => <Text style={styles.ticker}>{ticker}</Text>
+const Ticker = ({ticker}: {ticker?: string}) => {
+  const styles = useStyles()
+  return <Text style={styles.ticker}>{ticker}</Text>
+}
 
 const HR = () => {
+  const styles = useStyles()
   return <View style={styles.hr} />
 }
 
-const styles = StyleSheet.create({
-  center: {
-    alignItems: 'center',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-  },
-  scrollView: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  hr: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: COLORS.BORDER_GRAY,
-  },
-  actions: {
-    padding: 16,
-  },
-  maxBalance: {
-    fontFamily: 'Rubik-Medium',
-    color: COLORS.SHELLEY_BLUE,
-  },
-  amount: {
-    fontSize: 24,
-    lineHeight: 32,
-    borderWidth: 0,
-    textAlign: 'right',
-    backgroundColor: COLORS.WHITE,
-  },
-  ticker: {
-    fontSize: 24,
-    lineHeight: 32,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    center: {
+      alignItems: 'center',
+    },
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+    },
+    scrollView: {
+      flex: 1,
+      ...padding['x-l'],
+    },
+    hr: {
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: color.gray[200],
+    },
+    actions: {
+      padding: 16,
+    },
+    maxBalance: {
+      color: COLORS.SHELLEY_BLUE,
+      ...typography['body-1-l-medium'],
+    },
+    amount: {
+      ...typography['heading-2-regular'],
+      backgroundColor: color.gray.min,
+      borderWidth: 0,
+      textAlign: 'right',
+    },
+    ticker: {
+      ...typography['heading-2-regular'],
+    },
+  })
+  return styles
+}
 
 const ApplyButton = Button

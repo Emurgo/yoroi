@@ -51,14 +51,13 @@ export const ButtonGroup = <T extends string>({
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, typography, padding} = theme
   const styles = StyleSheet.create({
     root: {
       flexDirection: 'row',
     },
     button: {
-      paddingHorizontal: 8,
-      paddingVertical: 8,
+      ...padding['s'],
       borderRadius: 6,
     },
     selected: {
