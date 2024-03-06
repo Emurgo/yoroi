@@ -1,6 +1,6 @@
 export const API_ENDPOINTS = {
   mainnet: {
-    root: 'https://yoroi-backend-zero-mainnet.emurgornd.com',
+    root: 'https://zero.yoroiwallet.com',
   },
   preprod: {
     root: 'https://yoroi-backend-zero-preprod.emurgornd.com',
