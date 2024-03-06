@@ -27,7 +27,7 @@ export const RestoreWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1, backgroundColor: 'white'}}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <KeyboardAvoidingView style={{flex: 1}}>
         <ScrollableView bounces={false} style={{paddingHorizontal: 16}} keyboardShouldPersistTaps="always">

@@ -30,7 +30,7 @@ export const DisableEasyConfirmationScreen = () => {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <View style={[styles.disableSection]}>
         <Text style={styles.heading}>{strings.disableHeading}</Text>

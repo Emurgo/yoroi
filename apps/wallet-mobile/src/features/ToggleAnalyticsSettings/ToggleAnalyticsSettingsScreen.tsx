@@ -11,7 +11,7 @@ export const ToggleAnalyticsSettingsScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <Analytics type="settings" onReadMore={onReadMore} />
     </SafeAreaView>

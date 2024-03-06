@@ -37,7 +37,7 @@ export const RemoveWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <KeyboardAvoidingView style={{flex: 1}}>
         <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>

@@ -56,7 +56,7 @@ export const MnemonicCheckScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <Spacer height={24} />
 
