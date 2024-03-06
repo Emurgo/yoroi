@@ -149,7 +149,7 @@ const warningBannerMessages = defineMessages({
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, padding} = theme
   const styles = StyleSheet.create({
     scrollView: {
       flex: 1,
@@ -173,7 +173,7 @@ const useStyles = () => {
     tab: {
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 16,
+      ...padding['l'],
       flex: 1,
     },
   })

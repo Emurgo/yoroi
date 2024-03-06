@@ -45,6 +45,7 @@ const useStyles = () => {
       flexDirection: 'row',
       paddingBottom: 2,
       alignItems: 'center',
+      backgroundColor: 'red',
     },
   })
   const colors = {

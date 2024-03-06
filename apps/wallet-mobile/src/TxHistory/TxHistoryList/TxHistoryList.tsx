@@ -1,5 +1,6 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -20,6 +21,7 @@ type Props = Partial<ListProps> & {
   onScroll: ListProps['onScroll']
 }
 export const TxHistoryList = (props: Props) => {
+  const styles = useStyles()
   const key = useRemountOnFocusHack()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
@@ -87,6 +89,7 @@ type DayHeaderProps = {
 
 const DayHeader = ({ts}: DayHeaderProps) => {
   const intl = useIntl()
+  const styles = useStyles()
 
   return (
     <View style={styles.dayHeaderRoot}>
@@ -105,12 +108,18 @@ const getTransactionsByDate = (transactions: Record<string, TransactionInfo>) =>
     .map((data) => ({data}))
     .value()
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  dayHeaderRoot: {
-    paddingBottom: 4,
-    paddingHorizontal: 20,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {padding} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    dayHeaderRoot: {
+      ...padding['b-xs'],
+      ...padding['x-l'],
+    },
+  })
+
+  return styles
+}
