@@ -165,14 +165,19 @@ export const useAssetIds = (wallet: YoroiWallet): string[] => {
  */
 export const useLockedAmount = (
   {wallet}: {wallet: YoroiWallet},
-  options?: UseQueryOptions<Balance.Quantity, Error, Balance.Quantity, [string, 'lockedAmount']>,
+  options?: UseQueryOptions<Balance.Quantity, Error, Balance.Quantity, [string, string, 'lockedAmount']>,
 ) => {
+  const {protocolParams} = useProtocolParams(wallet, {suspense: true})
+  const coinsPerUtxoByte = protocolParams?.coinsPerUtxoByte ?? ''
+
   const query = useQuery({
     ...options,
     suspense: true,
-    queryKey: [wallet.id, 'lockedAmount'],
+    queryKey: [wallet.id, coinsPerUtxoByte, 'lockedAmount'],
     queryFn: () =>
-      calcLockedDeposit(wallet.utxos, wallet.networkId).then((amount) => amount.toString() as Balance.Quantity),
+      calcLockedDeposit(wallet.utxos, wallet.receiveAddresses[0], coinsPerUtxoByte).then(
+        (amount) => amount.toString() as Balance.Quantity,
+      ),
   })
 
   React.useEffect(() => {
