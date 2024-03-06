@@ -7,7 +7,7 @@ import {LanguagePicker, StatusBar} from '../../../components'
 export const LanguagePickerScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <LanguagePicker />
     </SafeAreaView>

@@ -43,7 +43,7 @@ export const InitialScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView bounces={false} contentContainerStyle={styles.scrollableContentContainer}>
-        <StatusBar type="dark" />
+        <StatusBar />
 
         <YoroiLogo />
 

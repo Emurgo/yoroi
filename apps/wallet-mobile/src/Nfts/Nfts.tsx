@@ -137,7 +137,7 @@ const Wrapper = ({children}: {children: ReactNode}) => {
   const styles = useStyles()
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <View style={styles.container}>
         <Spacer height={16} />
