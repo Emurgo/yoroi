@@ -40,7 +40,7 @@ export const MnemonicShowScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <View style={styles.content}>
         <ScrollView contentContainerStyle={styles.scrollViewContentContainer} bounces={false}>

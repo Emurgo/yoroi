@@ -11,7 +11,7 @@ export const ChangePinScreen = ({onDone}: {onDone: () => void}) => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       {step === 'checkPin' ? <CheckPinInput onValid={() => setStep('newPin')} /> : <CreatePinInput onDone={onDone} />}
     </SafeAreaView>

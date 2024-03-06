@@ -8,7 +8,7 @@ import {CreatePinInput} from '../CreatePinInput'
 export const CreatePinScreen = ({onDone}: {onDone: () => void}) => {
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <CreatePinInput onDone={onDone} />
     </SafeAreaView>
