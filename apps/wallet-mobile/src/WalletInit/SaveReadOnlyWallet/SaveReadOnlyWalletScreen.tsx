@@ -64,7 +64,7 @@ export const SaveReadOnlyWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.container} testID="saveReadOnlyWalletContainer">
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <WalletNameForm
         onSubmit={onSubmit}

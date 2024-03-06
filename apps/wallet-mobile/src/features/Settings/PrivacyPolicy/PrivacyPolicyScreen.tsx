@@ -13,7 +13,7 @@ export const PrivacyPolicyScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <PrivacyPolicy languageCode={languageCode} />

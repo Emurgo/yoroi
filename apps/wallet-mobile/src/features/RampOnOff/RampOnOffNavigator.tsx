@@ -22,7 +22,7 @@ export const RampOnOffScreen = () => {
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.root]}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <RampOnOffProvider>
         <Stack.Navigator
