@@ -157,11 +157,11 @@ const useStyles = () => {
     root: {
       flex: 1,
       backgroundColor: theme.color.gray.min,
-      paddingTop: 16,
+      ...theme.padding['t-l'],
     },
     content: {
       flex: 1,
-      paddingHorizontal: 16,
+      ...theme.padding['x-l'],
     },
     modal: {
       flex: 1,
@@ -172,7 +172,7 @@ const useStyles = () => {
     footer: {
       backgroundColor: theme.color.gray.min,
       borderColor: theme.color.gray[200],
-      padding: 16,
+      ...theme.padding['l'],
     },
     details: {
       ...theme.typography['body-1-l-regular'],
