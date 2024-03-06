@@ -1,9 +1,9 @@
 import {z} from 'zod'
-import {isOrderType} from '../helpers/order-types'
-import {isFiatType} from '../helpers/fiat-types'
-import {isCoinType} from '../helpers/coin-types'
-import {isBlockchainCode} from '../helpers/blockchain-code'
-import {isPossibleCardanoAddress} from '../helpers/wallet-address'
+import {isOrderType} from '../validators/order-types'
+import {isFiatType} from '../validators/fiat-types'
+import {isCoinType} from '../validators/coin-types'
+import {isBlockchainCode} from '../validators/blockchain-code'
+import {isPossibleCardanoAddress} from '../validators/wallet-address'
 
 export const urlReferralQueryStringParamsSchema = z
   .object({

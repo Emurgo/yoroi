@@ -15,7 +15,7 @@ export function handleZodErrors(error: ZodError | any) {
     const errorMessage = `Invalid data: ${errorDetails
       .map((e) => `${e.field}: ${e.message}`)
       .join(', ')}`
-    throw new Exchange.Errors.ValidationError(errorMessage)
+    throw new Exchange.Errors.Validation(errorMessage)
   }
-  throw new Exchange.Errors.UnknownError(JSON.stringify(error))
+  throw new Exchange.Errors.Unknown(JSON.stringify(error))
 }

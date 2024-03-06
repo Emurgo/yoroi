@@ -26,7 +26,7 @@ describe('handleZodErrors', () => {
       } catch (e: any) {
         handledError = e
 
-        expect(handledError).toBeInstanceOf(Exchange.Errors.ValidationError)
+        expect(handledError).toBeInstanceOf(Exchange.Errors.Validation)
         expect(handledError?.message).toBe(
           'Invalid data: name: Expected string, received number, age: Expected number, received string',
         )
@@ -44,6 +44,6 @@ describe('handleZodErrors', () => {
       handledError = e
     }
 
-    expect(handledError).toBeInstanceOf(Exchange.Errors.UnknownError)
+    expect(handledError).toBeInstanceOf(Exchange.Errors.Unknown)
   })
 })

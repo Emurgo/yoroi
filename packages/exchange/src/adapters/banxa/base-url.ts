@@ -5,7 +5,7 @@ import {
 } from '../../translators/banxa/domains'
 
 export const generateBanxaBaseUrl = (
-  isProduction: Exchange.ReferralUrlBuilderOptions['isProduction'],
+  isProduction: Exchange.ManagerOptions['isProduction'],
   partner: string,
 ) => {
   const domain = isProduction ? banxaDomainProduction : banxaDomainSandbox

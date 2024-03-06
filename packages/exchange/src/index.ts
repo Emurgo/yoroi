@@ -3,4 +3,4 @@ export {
   banxaDomainSandbox,
   banxaSupportUrl,
 } from './translators/banxa/domains'
-export {exchangeModuleMaker} from './translators/module'
+export {exchangeManagerMaker} from './translators/module'

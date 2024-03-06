@@ -1,7 +1,7 @@
 import {ExchangeReferralUrlQueryStringParams} from './params'
 import {ExchangeProvider} from './provider'
 
-export type ExchangeModule = {
+export type ExchangeManager = {
   /**
    * Generates a Banxa referral link based on the provided query parameters.
    *

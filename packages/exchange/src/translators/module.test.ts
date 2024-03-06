@@ -1,9 +1,9 @@
 import {Exchange} from '@yoroi/types'
-import {exchangeModuleMaker} from './module'
+import {exchangeManagerMaker} from './module'
 
-describe('exchangeModuleMaker', () => {
+describe('exchangeManagerMaker', () => {
   test('should generate a correct referral link with all parameters', () => {
-    const module = exchangeModuleMaker({
+    const module = exchangeManagerMaker({
       partner: 'checkout',
       isProduction: true,
     })
@@ -23,7 +23,7 @@ describe('exchangeModuleMaker', () => {
       '&' +
       'walletAddress=addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf'
 
-    const url = module.createReferralUrl('banxa', {
+    const url = module.createReferralUrl(Exchange.Provider.Banxa, {
       orderType: 'sell',
       fiatType: 'USD',
       fiatAmount: 500,
@@ -38,19 +38,22 @@ describe('exchangeModuleMaker', () => {
   })
 
   test('should generate a correct referral link with mandatory parameters only', () => {
-    const module = exchangeModuleMaker({
+    const module = exchangeManagerMaker({
       partner: 'checkout',
       isProduction: true,
     })
     const fullUrl =
       'https://checkout.banxa.com/?' +
+      'orderType=sell' +
+      '&' +
       'fiatType=USD' +
       '&' +
       'coinType=ADA' +
       '&' +
       'walletAddress=addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf'
 
-    const url = module.createReferralUrl('banxa', {
+    const url = module.createReferralUrl(Exchange.Provider.Banxa, {
+      orderType: 'sell',
       fiatType: 'USD',
       coinType: 'ADA',
       walletAddress:
@@ -61,19 +64,22 @@ describe('exchangeModuleMaker', () => {
   })
 
   test('should generate a correct sandbox referral link', () => {
-    const module = exchangeModuleMaker({
+    const module = exchangeManagerMaker({
       partner: 'checkout',
       isProduction: false,
     })
     const fullUrl =
       'https://checkout.banxa-sandbox.com/?' +
+      'orderType=sell' +
+      '&' +
       'fiatType=USD' +
       '&' +
       'coinType=ADA' +
       '&' +
       'walletAddress=addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf'
 
-    const url = module.createReferralUrl('banxa', {
+    const url = module.createReferralUrl(Exchange.Provider.Banxa, {
+      orderType: 'sell',
       fiatType: 'USD',
       coinType: 'ADA',
       walletAddress:
@@ -84,11 +90,12 @@ describe('exchangeModuleMaker', () => {
   })
 
   test('should not include undefined optional parameters in the referral link', () => {
-    const module = exchangeModuleMaker({
+    const module = exchangeManagerMaker({
       partner: 'checkout',
       isProduction: true,
     })
-    const url = module.createReferralUrl('banxa', {
+    const url = module.createReferralUrl(Exchange.Provider.Banxa, {
+      orderType: 'sell',
       fiatType: 'USD',
       coinType: 'ADA',
       walletAddress:
@@ -103,7 +110,7 @@ describe('exchangeModuleMaker', () => {
   })
 
   test('should throw an BanxaValidationError when schema is invalid', () => {
-    const module = exchangeModuleMaker({
+    const module = exchangeManagerMaker({
       partner: 'checkout',
       isProduction: true,
     })
@@ -116,12 +123,12 @@ describe('exchangeModuleMaker', () => {
     }
 
     expect(() => {
-      module.createReferralUrl('banxa', invalidQueries as any)
-    }).toThrow(Exchange.Errors.ValidationError)
+      module.createReferralUrl(Exchange.Provider.Banxa, invalidQueries as any)
+    }).toThrow(Exchange.Errors.Validation)
   })
 
   test('should throw an error when ADA walletAddress is not a possible Cardano address', () => {
-    const module = exchangeModuleMaker({
+    const module = exchangeManagerMaker({
       partner: 'checkout',
       isProduction: true,
     })
@@ -133,12 +140,12 @@ describe('exchangeModuleMaker', () => {
     }
 
     expect(() => {
-      module.createReferralUrl('banxa', invalidQueries as any)
-    }).toThrow(Exchange.Errors.ValidationError)
+      module.createReferralUrl(Exchange.Provider.Banxa, invalidQueries as any)
+    }).toThrow(Exchange.Errors.Validation)
   })
 
   test('should throw BanxaUnknownError if is not a BanxaValidationError', () => {
-    const module = exchangeModuleMaker(
+    const module = exchangeManagerMaker(
       {
         partner: 'checkout',
         isProduction: true,
@@ -153,7 +160,7 @@ describe('exchangeModuleMaker', () => {
     }
 
     expect(() => {
-      module.createReferralUrl('banxa', invalidQueries as any)
-    }).toThrow(Exchange.Errors.UnknownError)
+      module.createReferralUrl(Exchange.Provider.Banxa, invalidQueries as any)
+    }).toThrow(Exchange.Errors.Unknown)
   })
 })

@@ -1,18 +1,18 @@
-import {Exchange, ExchangeProviders} from '@yoroi/types'
+import {Exchange} from '@yoroi/types'
 import {handleZodErrors} from '../adapters/zod-errors'
 import {urlReferralQueryStringParamsSchema} from '../adapters/zod-schema'
-import {generateBanxaBaseUrl} from '../adapters/banxa/baseUrl'
+import {generateBanxaBaseUrl} from '../adapters/banxa/base-url'
 
-export const exchangeModuleMaker = (
-  {partner, isProduction}: Exchange.ReferralUrlBuilderOptions,
+export const exchangeManagerMaker = (
+  {partner, isProduction}: Exchange.ManagerOptions,
   {zodErrorTranslator = handleZodErrors} = {},
-): Exchange.Module => {
+): Exchange.Manager => {
   const createReferralUrl = (
     provider: Exchange.Provider,
     queries: Exchange.ReferralUrlQueryStringParams,
   ) => {
     const baseUrlGenerators = {
-      [ExchangeProviders.BANXA]: generateBanxaBaseUrl,
+      [Exchange.Provider.Banxa]: generateBanxaBaseUrl,
     }
 
     try {
@@ -29,7 +29,7 @@ export const exchangeModuleMaker = (
       return url
     } catch (error) {
       zodErrorTranslator(error)
-      throw new Exchange.Errors.UnknownError(JSON.stringify(error)) // TS doesn't know that zodErrorTranslator will throw
+      throw new Exchange.Errors.Unknown(JSON.stringify(error)) // TS doesn't know that zodErrorTranslator will throw
     }
   }
 
