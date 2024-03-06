@@ -166,7 +166,7 @@
   },
   {
     "id": "global.singleAddress",
-    "defaultMessage": "!!!Single addresses",
+    "defaultMessage": "!!!Single address",
     "file": "src/features/Settings/WalletSettings/WalletSettingsScreen.tsx",
     "start": {
       "line": 278,
@@ -176,7 +176,7 @@
     "end": {
       "line": 281,
       "column": 3,
-      "index": 8995
+      "index": 8993
     }
   },
   {
@@ -186,12 +186,12 @@
     "start": {
       "line": 282,
       "column": 25,
-      "index": 9022
+      "index": 9020
     },
     "end": {
       "line": 285,
       "column": 3,
-      "index": 9153
+      "index": 9151
     }
   },
   {
@@ -201,12 +201,12 @@
     "start": {
       "line": 287,
       "column": 11,
-      "index": 9214
+      "index": 9212
     },
     "end": {
       "line": 290,
       "column": 3,
-      "index": 9280
+      "index": 9278
     }
   },
   {
@@ -216,12 +216,12 @@
     "start": {
       "line": 291,
       "column": 14,
-      "index": 9296
+      "index": 9294
     },
     "end": {
       "line": 294,
       "column": 3,
-      "index": 9402
+      "index": 9400
     }
   },
   {
@@ -231,12 +231,12 @@
     "start": {
       "line": 295,
       "column": 15,
-      "index": 9419
+      "index": 9417
     },
     "end": {
       "line": 298,
       "column": 3,
-      "index": 9530
+      "index": 9528
     }
   },
   {
@@ -246,12 +246,12 @@
     "start": {
       "line": 299,
       "column": 17,
-      "index": 9549
+      "index": 9547
     },
     "end": {
       "line": 302,
       "column": 3,
-      "index": 9664
+      "index": 9662
     }
   },
   {
@@ -261,12 +261,12 @@
     "start": {
       "line": 303,
       "column": 21,
-      "index": 9687
+      "index": 9685
     },
     "end": {
       "line": 306,
       "column": 3,
-      "index": 9807
+      "index": 9805
     }
   },
   {
@@ -276,12 +276,12 @@
     "start": {
       "line": 307,
       "column": 9,
-      "index": 9818
+      "index": 9816
     },
     "end": {
       "line": 310,
       "column": 3,
-      "index": 9912
+      "index": 9910
     }
   },
   {
@@ -291,12 +291,12 @@
     "start": {
       "line": 311,
       "column": 10,
-      "index": 9924
+      "index": 9922
     },
     "end": {
       "line": 314,
       "column": 3,
-      "index": 10026
+      "index": 10024
     }
   }
 ]

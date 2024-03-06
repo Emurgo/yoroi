@@ -277,7 +277,7 @@ const messages = defineMessages({
   },
   singleAddress: {
     id: 'global.singleAddress',
-    defaultMessage: '!!!Single addresses',
+    defaultMessage: '!!!Single address',
   },
   multipleAddressesInfo: {
     id: 'global.multipleAddressesInfo',

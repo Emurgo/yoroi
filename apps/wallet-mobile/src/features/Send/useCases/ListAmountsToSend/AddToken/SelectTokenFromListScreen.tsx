@@ -451,7 +451,7 @@ const useStyles = () => {
       textAlign: 'center',
     },
     contentText: {
-      ...typography['body-3-s-medium'],
+      ...typography['heading-3-medium'],
       color: color.gray.max,
       flex: 1,
       textAlign: 'center',
