@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
-import {StyleSheet, Text, View} from 'react-native'
+import {StyleSheet, Text, View, ViewToken} from 'react-native'
 import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
@@ -25,6 +25,7 @@ type AddressInfo = {
 }
 
 export const ListMultipleAddressesScreen = () => {
+  const inView = React.useRef(0)
   const strings = useStrings()
   const {styles} = useStyles()
   const wallet = useSelectedWallet()
@@ -48,6 +49,10 @@ export const ListMultipleAddressesScreen = () => {
 
   const addressInfos = toAddressInfos(addresses)
   const hasReachedGapLimit = addresses.unused.length >= BIP32_HD_GAP_LIMIT
+
+  const onViewableItemsChanged = React.useCallback(({viewableItems}: {viewableItems: ViewToken[]}) => {
+    inView.current = viewableItems.length
+  }, [])
 
   const renderAddressInfo = React.useCallback(
     ({item}: {item: AddressInfo}) => (
@@ -77,23 +82,32 @@ export const ListMultipleAddressesScreen = () => {
 
   return (
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
-      {hasReachedGapLimit && (
-        <>
-          <ShowAddressLimitInfo />
+      <View style={styles.content}>
+        {hasReachedGapLimit && (
+          <>
+            <ShowAddressLimitInfo />
 
-          <Spacer height={16} />
-        </>
-      )}
+            <Spacer height={16} />
+          </>
+        )}
 
-      <Animated.FlatList
-        data={addressInfos}
-        keyExtractor={(addressInfo) => addressInfo.address}
-        renderItem={renderAddressInfo}
+        <Animated.FlatList
+          data={addressInfos}
+          keyExtractor={(addressInfo) => addressInfo.address}
+          renderItem={renderAddressInfo}
+          layout={Layout}
+          showsVerticalScrollIndicator={false}
+          onViewableItemsChanged={onViewableItemsChanged}
+        />
+      </View>
+
+      <Animated.View
+        style={[
+          styles.footer,
+          {display: hasReachedGapLimit ? 'none' : 'flex', borderTopWidth: inView.current < addressInfos.length ? 1 : 0},
+        ]}
         layout={Layout}
-        showsVerticalScrollIndicator={false}
-      />
-
-      <Animated.View style={[styles.footer, {display: hasReachedGapLimit ? 'none' : 'flex'}]} layout={Layout}>
+      >
         <Button
           shelleyTheme
           title={strings.generateButton}
@@ -143,7 +157,11 @@ const useStyles = () => {
     root: {
       flex: 1,
       backgroundColor: theme.color.gray.min,
-      padding: 16,
+      paddingTop: 16,
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: 16,
     },
     modal: {
       flex: 1,
@@ -153,7 +171,8 @@ const useStyles = () => {
     },
     footer: {
       backgroundColor: theme.color.gray.min,
-      paddingTop: 16,
+      borderColor: theme.color.gray[200],
+      padding: 16,
     },
     details: {
       ...theme.typography['body-1-l-regular'],
