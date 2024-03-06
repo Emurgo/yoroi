@@ -56,7 +56,7 @@ export const TxHistory = () => {
 
   return (
     <View style={styles.scrollView}>
-      <StatusBar type="dark" overrideColor="#E1EAF6" />
+      <StatusBar />
 
       <Animated.View style={[styles.container, translateStyles]}>
         <CollapsibleHeader expanded={expanded}>

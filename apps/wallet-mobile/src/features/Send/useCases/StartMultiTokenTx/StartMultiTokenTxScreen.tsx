@@ -82,7 +82,7 @@ export const StartMultiTokenTxScreen = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <KeyboardAvoidingView style={styles.flex}>
         <ScrollView

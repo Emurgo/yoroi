@@ -17,7 +17,7 @@ export const AnalyticsChangedScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <Analytics type="notice" onClose={handleClose} onReadMore={onReadMore} />
     </SafeAreaView>

@@ -29,7 +29,7 @@ export const PinLoginScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={{flex: 1}}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <PinInput
         ref={pinInputRef}

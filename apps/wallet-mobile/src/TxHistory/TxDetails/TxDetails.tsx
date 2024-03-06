@@ -64,7 +64,7 @@ export const TxDetails = () => {
 
   return (
     <FadeIn style={styles.container}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Banner label={strings[transaction.direction]}>
