@@ -2,19 +2,26 @@ import {Chain, Portfolio} from '@yoroi/types'
 
 import {portfolioStorageMaker} from './adapters/mmkv-storage/storage-maker'
 
+export enum HttpStatusCode {
+  Ok = 200,
+  NotModified = 304,
+}
+
 // check to use Cache-Control (replacement for MaxAge)
-export type AppApiResponseWithCache<T> =
-  | [StatusCode: 200, Record: T, ETag: string, MaxAge: number]
-  | [StatusCode: 304, MaxAge: number]
+export type AppApiResponseRecordWithCache<T> =
+  | [StatusCode: HttpStatusCode.Ok, Record: T, ETag: string, MaxAge: number]
+  | [StatusCode: HttpStatusCode.NotModified, MaxAge: number]
 
 export type AppApiRequestRecordWithCache<T> = [Record: T, ETag: string]
 
 export type PortfolioApiTokenInfosResponse = Readonly<{
-  [key: Portfolio.Token.Id]: AppApiResponseWithCache<Portfolio.Token.Info>
+  [key: Portfolio.Token.Id]: AppApiResponseRecordWithCache<Portfolio.Token.Info>
 }>
 
 export type PortfolioApiTokenDiscoveriesResponse = Readonly<{
-  [key: Portfolio.Token.Id]: AppApiResponseWithCache<Portfolio.Token.Discovery>
+  [
+    key: Portfolio.Token.Id
+  ]: AppApiResponseRecordWithCache<Portfolio.Token.Discovery>
 }>
 
 export type PortfolioApi = Readonly<{

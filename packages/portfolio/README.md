@@ -1,1 +1,1 @@
-# Transfer package for Yoroi
+# Portfolio package for Yoroi

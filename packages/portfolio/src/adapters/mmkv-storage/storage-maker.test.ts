@@ -10,6 +10,7 @@ describe('portfolioStorageMaker', () => {
   let tokenInfoStorage: App.ObservableStorage<false, Portfolio.Token.Id>
   let tokenDiscoveryStorage: App.ObservableStorage<false, Portfolio.Token.Id>
   let balanceStorage: App.ObservableStorage<false, Portfolio.Token.Id>
+  let primaryBreakdownStorage: App.ObservableStorage<false, Portfolio.Token.Id>
 
   beforeEach(() => {
     tokenInfoStorage = createMockStorage('v2/mainnet/token-info/')
@@ -21,10 +22,15 @@ describe('portfolioStorageMaker', () => {
       'v2/wallets/id/balance/',
       storageDeserializers.balance,
     )
+    primaryBreakdownStorage = createMockStorage(
+      'v2/wallets/id/primary-breakdown/',
+      storageDeserializers.balance,
+    )
 
     tokenInfoStorage.clear()
     tokenDiscoveryStorage.clear()
     balanceStorage.clear()
+    primaryBreakdownStorage.clear()
 
     jest.clearAllMocks()
   })
@@ -34,6 +40,7 @@ describe('portfolioStorageMaker', () => {
       tokenInfoStorage,
       tokenDiscoveryStorage,
       balanceStorage,
+      primaryBreakdownStorage,
     })
 
     expect(storage).toBeDefined()
@@ -48,6 +55,7 @@ describe('portfolioStorageMaker', () => {
       tokenInfoStorage,
       tokenDiscoveryStorage,
       balanceStorage,
+      primaryBreakdownStorage,
     })
 
     const entries: ReadonlyArray<
@@ -76,6 +84,7 @@ describe('portfolioStorageMaker', () => {
       tokenInfoStorage,
       tokenDiscoveryStorage,
       balanceStorage,
+      primaryBreakdownStorage,
     })
 
     const entries: ReadonlyArray<
@@ -105,6 +114,7 @@ describe('portfolioStorageMaker', () => {
       tokenInfoStorage,
       tokenDiscoveryStorage,
       balanceStorage,
+      primaryBreakdownStorage,
     })
 
     const entries: ReadonlyArray<
@@ -130,6 +140,7 @@ describe('portfolioStorageMaker', () => {
       tokenInfoStorage,
       tokenDiscoveryStorage,
       balanceStorage,
+      primaryBreakdownStorage,
     })
 
     balances.save(balanceMocks.entries1)
@@ -149,6 +160,7 @@ describe('portfolioStorageMaker', () => {
       tokenInfoStorage,
       tokenDiscoveryStorage,
       balanceStorage,
+      primaryBreakdownStorage,
     })
 
     balances.save(balanceMocks.entries1)
@@ -171,6 +183,7 @@ describe('portfolioStorageMaker', () => {
       tokenInfoStorage,
       tokenDiscoveryStorage,
       balanceStorage,
+      primaryBreakdownStorage,
     })
 
     const entries: ReadonlyArray<
@@ -202,6 +215,7 @@ describe('portfolioStorageMaker', () => {
       tokenInfoStorage,
       tokenDiscoveryStorage,
       balanceStorage,
+      primaryBreakdownStorage,
     })
 
     const discoveryEntries: ReadonlyArray<

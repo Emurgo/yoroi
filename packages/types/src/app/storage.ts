@@ -1,4 +1,4 @@
-import {MaybePromise} from '../helpers/types'
+import {MaybePromise, Nullable} from '../helpers/types'
 
 export type AppStorageFolderName = `${string}/`
 
@@ -9,12 +9,12 @@ export interface AppStorage<
   join: (folderName: AppStorageFolderName) => AppStorage<IsAsync, Key>
   getItem: <T = unknown, K extends string = Key>(
     key: K,
-    parse?: (item: string | null) => T,
-  ) => MaybePromise<T, IsAsync>
+    parse?: (item: string | null) => Nullable<T>,
+  ) => MaybePromise<Nullable<T>, IsAsync>
   multiGet: <T = unknown, K extends string = Key>(
     keys: ReadonlyArray<K>,
-    parse?: (item: string | null) => T,
-  ) => MaybePromise<ReadonlyArray<[K, T]>, IsAsync>
+    parse?: (item: string | null) => Nullable<T>,
+  ) => MaybePromise<ReadonlyArray<[K, Nullable<T>]>, IsAsync>
   setItem: <T = unknown, K extends string = Key>(
     key: K,
     value: T,

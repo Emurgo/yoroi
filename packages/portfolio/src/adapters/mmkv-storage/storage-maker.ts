@@ -7,10 +7,12 @@ export const portfolioStorageMaker = ({
   tokenInfoStorage,
   tokenDiscoveryStorage,
   balanceStorage,
+  primaryBreakdownStorage,
 }: {
   tokenInfoStorage: App.ObservableStorage<false, Portfolio.Token.Id>
   tokenDiscoveryStorage: App.ObservableStorage<false, Portfolio.Token.Id>
   balanceStorage: App.ObservableStorage<false, Portfolio.Token.Id>
+  primaryBreakdownStorage: App.ObservableStorage<false, Portfolio.Token.Id>
 }) => {
   const infos = {
     save: (
@@ -29,6 +31,7 @@ export const portfolioStorageMaker = ({
         tokenInfoStorage.getAllKeys(),
       ),
     keys: () => tokenInfoStorage.getAllKeys(),
+    clear: () => tokenInfoStorage.clear(),
   }
 
   const discoveries = {
@@ -50,6 +53,7 @@ export const portfolioStorageMaker = ({
         App.CacheRecord<Portfolio.Token.Discovery>
       >(tokenDiscoveryStorage.getAllKeys()),
     keys: () => tokenDiscoveryStorage.getAllKeys(),
+    clear: () => tokenDiscoveryStorage.clear(),
   }
 
   const balances = {
@@ -71,12 +75,29 @@ export const portfolioStorageMaker = ({
         balanceStorage.getAllKeys(),
       ),
     keys: () => balanceStorage.getAllKeys(),
+    clear: () => balanceStorage.clear(),
+  }
+
+  const primaryBalanceBreakdown = {
+    save: (breakdown: Readonly<Portfolio.BalancePrimaryBreakdown>) =>
+      primaryBreakdownStorage.setItem(
+        breakdown.info.id,
+        breakdown,
+        storageSerializer,
+      ),
+    read: (key: Portfolio.Token.Id) =>
+      primaryBreakdownStorage.getItem<Portfolio.BalancePrimaryBreakdown>(
+        key,
+        storageDeserializers.balance as any,
+      ),
+    clear: () => primaryBreakdownStorage.clear(),
   }
 
   const clear = () => {
     tokenDiscoveryStorage.clear()
     tokenInfoStorage.clear()
     balanceStorage.clear()
+    primaryBreakdownStorage.clear()
   }
 
   return freeze(
@@ -86,6 +107,7 @@ export const portfolioStorageMaker = ({
         discoveries,
       },
       balances,
+      primaryBalanceBreakdown,
       clear,
     },
     true,

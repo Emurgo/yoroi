@@ -138,8 +138,13 @@ import {PortfolioTokenPrice} from './portfolio/price'
 import {ChainNetwork} from './chain/network'
 import {NumbersErrorInvalidAtomicValue} from './numbers/errors'
 import {NumbersAtomicValue} from './numbers/atomic-value'
+import {AppErrorInvalidState} from './app/errors'
 
 export namespace App {
+  export namespace Errors {
+    export class InvalidState extends AppErrorInvalidState {}
+  }
+
   export interface Storage<
     IsAsync extends boolean = true,
     K extends string = string,

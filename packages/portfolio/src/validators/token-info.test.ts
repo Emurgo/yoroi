@@ -3,7 +3,9 @@ import {
   isPrimaryTokenInfo,
   isSecondaryTokenInfo,
   isTokenInfo,
+  isTokenInfoResponseWithCacheRecord,
   parseTokenInfo,
+  parseTokenInfoResponseWithCacheRecord,
 } from './token-info'
 
 describe('isPrimaryTokenInfo', () => {
@@ -60,6 +62,40 @@ describe('parseTokenInfo', () => {
   it('should return undefined for invalid input', () => {
     const invalidTokenInfo = {foo: 'bar'}
     const result = parseTokenInfo(invalidTokenInfo)
+    expect(result).toBeUndefined()
+  })
+})
+
+describe('isTokenInfoResponseWithCacheRecord', () => {
+  it('should return true for valid token info response with cache record', () => {
+    const validResponse = [200, tokenInfoMocks.nftCryptoKitty, 'hash', 100]
+    const result = isTokenInfoResponseWithCacheRecord(validResponse)
+    expect(result).toBe(true)
+  })
+
+  it('should return false for invalid token info response with cache record', () => {
+    const invalidResponse = {
+      data: {foo: 'bar'},
+      cache: 'some-cache-value',
+    }
+    const result = isTokenInfoResponseWithCacheRecord(invalidResponse)
+    expect(result).toBe(false)
+  })
+})
+
+describe('parseTokenInfoResponseWithCacheRecord', () => {
+  it('should return token info for valid token info response with cache record', () => {
+    const validResponse = [200, tokenInfoMocks.nftCryptoKitty, 'hash', 100]
+    const result = parseTokenInfoResponseWithCacheRecord(validResponse)
+    expect(result).toEqual(validResponse)
+  })
+
+  it('should return undefined for invalid token info response with cache record', () => {
+    const invalidResponse = {
+      data: {foo: 'bar'},
+      cache: 'some-cache-value',
+    }
+    const result = parseTokenInfoResponseWithCacheRecord(invalidResponse)
     expect(result).toBeUndefined()
   })
 })

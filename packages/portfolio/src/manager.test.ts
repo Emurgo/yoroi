@@ -27,10 +27,10 @@ describe('portfolioManagerMaker', () => {
     expect(portfolioManager).toBeDefined()
   })
 })
-import {getRecordsToFetch} from './manager'
+import {getRecordsSource} from './manager'
 import {tokenInfoMocks} from './adapters/token-info.mocks'
 
-describe('getRecordsToFetch', () => {
+describe('getRecordsSource', () => {
   it('should return an empty array when newIds is empty', () => {
     const newIds: Portfolio.Token.Id[] = []
     const cachedInfos = new Map<Portfolio.Token.Id, App.CacheInfo>([
@@ -40,7 +40,7 @@ describe('getRecordsToFetch', () => {
       ],
     ])
 
-    const {toFetch, fromCache} = getRecordsToFetch({newIds, cachedInfos})
+    const {toFetch, fromCache} = getRecordsSource({newIds, cachedInfos})
 
     expect(toFetch).toEqual([])
     expect(fromCache).toEqual([])
@@ -51,7 +51,7 @@ describe('getRecordsToFetch', () => {
     const newIds: Portfolio.Token.Id[] = [nftCryptoKitty.id, rnftWhatever.id]
     const cachedInfos = new Map<Portfolio.Token.Id, App.CacheInfo>()
 
-    const {toFetch, fromCache} = getRecordsToFetch({newIds, cachedInfos})
+    const {toFetch, fromCache} = getRecordsSource({newIds, cachedInfos})
 
     expect(toFetch).toEqual([
       [nftCryptoKitty.id, ''],
@@ -70,7 +70,7 @@ describe('getRecordsToFetch', () => {
       [rnftWhatever.id, {expires: future, hash: 'hash2'}],
     ])
 
-    const {toFetch, fromCache} = getRecordsToFetch({newIds, cachedInfos})
+    const {toFetch, fromCache} = getRecordsSource({newIds, cachedInfos})
 
     expect(toFetch).toEqual([[nftCryptoKitty.id, 'hash1']])
     expect(fromCache).toEqual([rnftWhatever.id])
@@ -85,7 +85,7 @@ describe('getRecordsToFetch', () => {
       [rnftWhatever.id, {expires: future, hash: 'hash2'}],
     ])
 
-    const {toFetch, fromCache} = getRecordsToFetch({newIds, cachedInfos})
+    const {toFetch, fromCache} = getRecordsSource({newIds, cachedInfos})
 
     expect(toFetch).toEqual([])
     expect(fromCache).toEqual([nftCryptoKitty.id, rnftWhatever.id])
