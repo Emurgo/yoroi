@@ -1,0 +1,27 @@
+[
+  {
+    "_id": "65cc947169d7335514bd7bdb",
+    "amount_in": 1,
+    "token_id_in": "f66d78b4a3cb3d37afa0ec36461e51ecbde00f26c8f0a68f94b6988069555344",
+    "token_id_out": "000000000000000000000000000000000000000000000000000000006c6f76656c616365",
+    "dex": "MUESLISWAP",
+    "pool_id": "000000000000000000000000000000000000000000000000000000006c6f76656c616365f66d78b4a3cb3d37afa0ec36461e51ecbde00f26c8f0a68f94b6988069555344MUESLISWAP",
+    "user_address": "addr1qyqjzx3tq8k3urnh3ay4x75m8hl2z9xrnjxmpd94ejexdw66ur70njt65a48f77lapzp878ynhu8as8k9jmtxu8jmtjq69hnqg",
+    "user_stake": "stake1u9dwpl8ee9a2w6n5l007s3qnlrjfm7r7crmzed4nwred4eqc3eq59",
+    "status": "PENDING",
+    "dexhunter_fee": 0,
+    "plutus_data": "d8799fd8799fd8799fd8799f581c01211a2b01ed1e0e778f49537a9b3dfea114c39c8db0b4b5ccb266bbffd8799fd8799fd8799f581c5ae0fcf9c97aa76a74fbdfe84413f8e49df87ec0f62cb6b370f2dae4ffffffff4040581cf66d78b4a3cb3d37afa0ec36461e51ecbde00f26c8f0a68f94b6988044695553441a3af3b490d879801a00286f90ffff",
+    "tx_hash": "0b85c622a4e867f2dc3c6a6a57b5bd3480eee3cde4cfc885ca9f7954ec9802b5",
+    "tx_output_index": 0,
+    "last_update": "2024-02-14T10:22:41.506Z",
+    "submission_time": "2024-02-14T10:22:41Z",
+    "expected_out_amount": 989.05,
+    "actual_out_amount": 0,
+    "update_tx_hash": "",
+    "batcher_fee": 1.5,
+    "deposit": 1.15,
+    "is_dexhunter": false,
+    "is_stop_loss": false,
+    "stop_loss_chunks": 0
+  }
+]

@@ -1,7 +1,17 @@
 import {Quantities} from './quantities'
 import {asQuantity} from './asQuantity'
 import {Balance} from '@yoroi/types'
-import {mockNumberLocale} from '../adapters/intl/number-locale.mocks'
+
+const mockNumberLocale = {
+  decimalSeparator: '.',
+  fractionGroupSeparator: ' ',
+  fractionGroupSize: 0,
+  groupSeparator: ',',
+  groupSize: 3,
+  prefix: '',
+  secondaryGroupSize: 0,
+  suffix: '',
+} as const
 
 describe('Quantities', () => {
   describe('sum', () => {

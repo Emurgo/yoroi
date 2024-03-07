@@ -1,0 +1,70 @@
+fetch(
+  'https://api.muesliswap.com/orders/v2?stake-key-hash=5ae0fcf9c97aa76a74fbdfe84413f8e49df87ec0f62cb6b370f2dae4&canceled=n&open=y&matched=n&v2_only=n',
+  {
+    headers: {
+      'accept': '*/*',
+      'accept-language': 'en-US,en;q=0.9',
+      'cache-control': 'no-cache',
+      'pragma': 'no-cache',
+      'sec-ch-ua': '"Not(A:Brand";v="24", "Chromium";v="122"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Linux"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'same-site',
+    },
+    referrer: 'https://muesliswap.com/',
+    referrerPolicy: 'strict-origin-when-cross-origin',
+    body: null,
+    method: 'GET',
+    mode: 'cors',
+    credentials: 'omit',
+  },
+)
+
+const response = [
+  {
+    attachedLvl: '2650000',
+    finalizedAt: null,
+    fromAmount: '1000000',
+    fromToken: {
+      website: 'https://indigoprotocol.io',
+      symbol: 'iUSD',
+      decimalPlaces: 6,
+      image:
+        'https://tokens.muesliswap.com/static/img/tokens/f66d78b4a3cb3d37afa0ec36461e51ecbde00f26c8f0a68f94b69880.69555344_scaled_100.webp',
+      description:
+        'Decentralized and overcollateralized Cardano native stablecoin powered by Indigo synthetics',
+      address: {
+        policyId: 'f66d78b4a3cb3d37afa0ec36461e51ecbde00f26c8f0a68f94b69880',
+        name: '69555344',
+      },
+      categories: ['1', '2'],
+      supply: {total: '19818132021823', circulating: '19818132021823'},
+      status: 'verified',
+    },
+    outputIdx: 0,
+    paidAmount: '0',
+    placedAt: 1707906161,
+    pubKeyHash: '01211a2b01ed1e0e778f49537a9b3dfea114c39c8db0b4b5ccb266bb',
+    receivedAmount: '1250000',
+    scriptVersion: 'v4',
+    status: 'in_progress',
+    toAmount: '990000000',
+    toToken: {
+      address: {policyId: '', name: ''},
+      symbol: 'ADA',
+      description: 'The token of the Cardano Blockchain',
+      image: 'https://static.muesliswap.com/images/tokens/ada.png',
+      website: 'https://cardano.org/',
+      decimalPlaces: 6,
+      sign: '₳',
+      categories: [],
+      supply: {total: '45000000000', circulating: '34277702082'},
+      status: 'verified',
+    },
+    txHash: '0b85c622a4e867f2dc3c6a6a57b5bd3480eee3cde4cfc885ca9f7954ec9802b5',
+    feeField: 2650000,
+    allowPartial: false,
+  },
+]
