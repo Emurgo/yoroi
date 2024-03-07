@@ -140,6 +140,7 @@
     "immer": "^10.0.2"
   },
   "devDependencies": {
+    "@emurgo/yoroi-lib": ">= 0.15.0",
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/eslint-config": "^3.0.2",
@@ -171,6 +172,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
+    "@emurgo/yoroi-lib": ">= 0.15.0",
     "@react-native-async-storage/async-storage": ">= 1.19.3 <= 1.20.0",
     "react": ">= 16.8.0 <= 19.0.0",
     "react-query": "^3.39.3"
