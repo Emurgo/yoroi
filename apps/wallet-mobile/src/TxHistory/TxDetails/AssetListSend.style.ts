@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native'
 
 export const useSendStyles = () => {
   const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, typography, padding} = theme
   const styles = StyleSheet.create({
     assetHeading: {
       color: color.gray.max,
@@ -26,8 +26,8 @@ export const useSendStyles = () => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 10,
-      paddingHorizontal: 16,
-      paddingVertical: 12,
+      ...padding['x-l'],
+      ...padding['y-m'],
       backgroundColor: color.gray.min,
       borderTopWidth: 1,
       borderBottomWidth: 2,
@@ -48,10 +48,10 @@ export const useSendStyles = () => {
       color: color.gray.max,
     },
     py5: {
-      paddingVertical: 10,
+      ...padding['y-s'],
     },
     px5: {
-      paddingHorizontal: 16,
+      ...padding['x-l'],
     },
     rowColor1: {
       backgroundColor: 'transparent',

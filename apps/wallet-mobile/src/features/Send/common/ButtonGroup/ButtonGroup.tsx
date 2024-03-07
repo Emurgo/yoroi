@@ -19,7 +19,7 @@ export const ButtonGroup = <T extends string>({
   ...props
 }: ButtonGroupProps<T> & ViewProps) => {
   const [selected, setSelected] = React.useState(initial)
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
 
   return (
     <View style={[styles.root, style]} {...props}>
@@ -27,12 +27,7 @@ export const ButtonGroup = <T extends string>({
         <>
           {index > 0 && <Spacer width={8} />}
 
-          <LinearGradient
-            style={{borderRadius: 8, padding: 3}}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
-            colors={['#C6F7ED', '#E4E8F7']}
-          >
+          <LinearGradient style={styles.gradient} start={{x: 0, y: 0}} end={{x: 1, y: 1}} colors={colors.gradientColor}>
             <TouchableOpacity
               onPress={() => {
                 setSelected(index)
@@ -67,7 +62,12 @@ const useStyles = () => {
       color: color.primary[600],
       ...typography['body-1-l-medium'],
     },
+    gradient: {borderRadius: 8, padding: 3},
   })
 
-  return styles
+  const colors = {
+    gradientColor: color.gradients.light,
+  }
+
+  return {colors, styles}
 }

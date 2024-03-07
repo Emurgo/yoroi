@@ -36,14 +36,14 @@ export const ActionsBanner = (props: Props) => {
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, padding} = theme
   const styles = StyleSheet.create({
     actionsRoot: {
       display: 'flex',
-      paddingHorizontal: 20,
+      ...padding['x-l'],
+      ...padding['b-xxs'],
       justifyContent: 'space-between',
       flexDirection: 'row',
-      paddingBottom: 2,
       alignItems: 'center',
       backgroundColor: 'red',
     },

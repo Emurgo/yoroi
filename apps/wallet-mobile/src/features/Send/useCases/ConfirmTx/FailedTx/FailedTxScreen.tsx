@@ -42,7 +42,7 @@ const useStyles = () => {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      padding: 16,
+      ...padding['l'],
     },
     title: {
       color: color.gray.max,

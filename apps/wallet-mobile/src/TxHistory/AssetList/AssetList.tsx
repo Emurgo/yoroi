@@ -69,7 +69,7 @@ export const AssetList = (props: Props) => {
           />
         )}
         ItemSeparatorComponent={() => <Spacer height={16} />}
-        contentContainerStyle={{paddingTop: 16, paddingHorizontal: 16, paddingBottom: 8}}
+        contentContainerStyle={styles.content}
         keyExtractor={(_, index) => index.toString()}
         estimatedItemSize={78}
       />
@@ -94,10 +94,15 @@ const useStyles = () => {
   const {theme} = useTheme()
   const {color, padding} = theme
   const styles = StyleSheet.create({
+    content: {
+      ...padding['t-l'],
+      ...padding['x-l'],
+      ...padding['b-s'],
+    },
     assetList: {flex: 1},
     button: {
-      backgroundColor: color.gray.min,
       ...padding['m'],
+      backgroundColor: color.gray.min,
       shadowColor: color.gray[100],
       borderRadius: 8,
       elevation: 2,

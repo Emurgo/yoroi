@@ -196,7 +196,7 @@ const useStyles = () => {
       backgroundColor: color.gray[200],
     },
     actions: {
-      padding: 16,
+      ...padding['l'],
     },
     maxBalance: {
       color: COLORS.SHELLEY_BLUE,

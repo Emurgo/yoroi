@@ -41,11 +41,7 @@ export const TxHistoryList = (props: Props) => {
         {...props}
         key={key}
         ListHeaderComponent={<ShowBuyBanner />}
-        contentContainerStyle={{
-          paddingHorizontal: 18,
-          flexGrow: 1,
-          height: 'auto',
-        }}
+        contentContainerStyle={styles.content}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
         ItemSeparatorComponent={() => <Spacer height={16} />}
         renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
@@ -114,6 +110,11 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
+    },
+    content: {
+      ...padding['x-l'],
+      flexGrow: 1,
+      height: 'auto',
     },
     dayHeaderRoot: {
       ...padding['b-xs'],

@@ -133,7 +133,10 @@ export const ConfirmTxScreen = () => {
   )
 }
 
-const Actions = (props: ViewProps) => <View {...props} style={{padding: 16}} />
+const Actions = (props: ViewProps) => {
+  const styles = useStyles()
+  return <View {...props} style={styles.actions} />
+}
 
 const useStyles = () => {
   const {theme} = useTheme()
@@ -148,6 +151,9 @@ const useStyles = () => {
       backgroundColor: color.gray.min,
       flex: 1,
       ...padding['x-l'],
+    },
+    actions: {
+      ...padding['l'],
     },
   })
   return styles

@@ -38,11 +38,11 @@ const messages = defineMessages({
 
 const useStyles = () => {
   const {theme} = useTheme()
-  const {color} = theme
+  const {color, padding} = theme
   const styles = StyleSheet.create({
     infoIcon: {
       alignSelf: 'center',
-      padding: 2,
+      ...padding['xxs'],
     },
   })
   const colors = {
