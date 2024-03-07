@@ -12,6 +12,7 @@ import {
   OpenOrder,
   TokenPair,
 } from '../adapters/openswap-api/types'
+import { AssetNameUtils } from '@emurgo/yoroi-lib/dist/internals/utils/assets';
 
 export const transformersMaker = (
   primaryTokenId: Balance.Token['info']['id'],
@@ -123,7 +124,7 @@ export const transformersMaker = (
         policyId: openswapToken.address.policyId,
         assetNameHex: openswapToken.address.name,
       }),
-      name: asUtf8(openswapToken.address.name),
+      name: asAsciiIfValid(openswapToken.address.name),
       decimals: openswapToken.decimalPlaces,
       description: openswapToken.description,
       image: openswapToken.image,
@@ -267,6 +268,12 @@ export const asTokenFingerprint = ({
 }
 
 export const asUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
+
+export const asAsciiIfValid = (hex: string) => {
+  const { asciiName, hexName, cip67Tag } =
+    AssetNameUtils.resolveProperties(hex);
+  return asciiName ?? hexName;
+}
 
 function isSupportedProvider(
   provider: string,
