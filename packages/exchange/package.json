@@ -1,7 +1,7 @@
 {
   "name": "@yoroi/exchange",
   "version": "2.0.0",
-  "description": "The Banxa integration package of Yoroi SDK",
+  "description": "The Exchange package of Yoroi SDK",
   "keywords": [
     "yoroi",
     "cardano",
