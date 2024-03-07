@@ -267,10 +267,8 @@ export const asTokenFingerprint = ({
   return assetFingerprint.fingerprint()
 }
 
-export const asUtf8 = (hex: string) => Buffer.from(hex, 'hex').toString('utf-8')
-
 export const asAsciiIfValid = (hex: string) => {
-  const { asciiName, hexName, cip67Tag } =
+  const { asciiName, hexName } =
     AssetNameUtils.resolveProperties(hex);
   return asciiName ?? hexName;
 }
