@@ -8,12 +8,12 @@ export const useSendStyles = () => {
     assetHeading: {
       color: color.gray.max,
       opacity: 0.5,
-      fontSize: 12,
+      ...typography['body-3-s-regular'],
     },
     assetMeta: {
       color: color.gray[500],
       opacity: 1,
-      fontSize: 14,
+      ...typography['body-2-m-regular'],
     },
     assetRow: {
       flexDirection: 'row',

@@ -19,7 +19,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const {isPrivacyOff, togglePrivacyMode} = usePrivacyMode()
 
   return (
-    <View style={styles.banner}>
+    <View>
       <Spacer height={14} />
 
       <Row>
@@ -71,7 +71,6 @@ const useStyles = () => {
   const {theme} = useTheme()
   const {color, typography} = theme
   const styles = StyleSheet.create({
-    banner: {},
     walletIcon: {
       height: 40,
       width: 40,

@@ -8,7 +8,6 @@ import {Button, KeyboardAvoidingView, Spacer, TextInput} from '../../../../../co
 import {AmountItem} from '../../../../../components/AmountItem/AmountItem'
 import {PairedBalance} from '../../../../../components/PairedBalance/PairedBalance'
 import {useSelectedWallet} from '../../../../../SelectedWallet'
-import {COLORS} from '../../../../../theme'
 import {selectFtOrThrow} from '../../../../../yoroi-wallets/cardano/utils'
 import {useTokenInfo} from '../../../../../yoroi-wallets/hooks'
 import {Logger} from '../../../../../yoroi-wallets/logging'
@@ -21,7 +20,7 @@ import {UnableToSpend} from './ShowError/UnableToSpend'
 
 export const EditAmountScreen = () => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
   const navigateTo = useNavigateTo()
   const {selectedTokenId, amountChanged} = useTransfer()
   const {available, spendable, initialQuantity} = useTokenQuantities(selectedTokenId)
@@ -109,17 +108,17 @@ export const EditAmountScreen = () => {
 }
 
 const Center = ({style, ...props}: ViewProps) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return <View style={[style, styles.center]} {...props} />
 }
 const Actions = ({style, ...props}: ViewProps) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return <View style={[style, styles.actions]} {...props} />
 }
 
 const MaxBalanceButton = ({onPress}: {onPress(): void}) => {
   const strings = useStrings()
-  const styles = useStyles()
+  const {styles} = useStyles()
 
   return (
     <TouchableOpacity onPress={onPress}>
@@ -134,7 +133,7 @@ type AmountInputProps = {
   ticker: string | undefined
 }
 const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
-  const styles = useStyles()
+  const {styles, colors} = useStyles()
 
   const onChangeText = (text: string) => {
     const shorterStringLength = Math.min(text.length, value.length)
@@ -158,7 +157,7 @@ const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
       onChangeText={onChangeText}
       selectTextOnAutoFocus
       allowFontScaling
-      selectionColor={COLORS.TRANSPARENT_BLACK}
+      selectionColor={colors.black}
       right={<Ticker ticker={ticker} />}
       style={styles.amount}
       underlineColor="transparent"
@@ -167,12 +166,12 @@ const AmountInput = ({onChange, value, ticker}: AmountInputProps) => {
   )
 }
 const Ticker = ({ticker}: {ticker?: string}) => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return <Text style={styles.ticker}>{ticker}</Text>
 }
 
 const HR = () => {
-  const styles = useStyles()
+  const {styles} = useStyles()
   return <View style={styles.hr} />
 }
 
@@ -199,7 +198,7 @@ const useStyles = () => {
       ...padding['l'],
     },
     maxBalance: {
-      color: COLORS.SHELLEY_BLUE,
+      color: color.primary[600],
       ...typography['body-1-l-medium'],
     },
     amount: {
@@ -212,7 +211,11 @@ const useStyles = () => {
       ...typography['heading-2-regular'],
     },
   })
-  return styles
+
+  const colors = {
+    black: color.gray.max,
+  }
+  return {styles, colors}
 }
 
 const ApplyButton = Button

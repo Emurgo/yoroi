@@ -8,14 +8,13 @@ export const useBaseStyles = () => {
   const styles = StyleSheet.create({
     assetHeading: {
       color: color.gray.min,
+      ...typography['body-3-s-regular'],
       opacity: 0.5,
-      fontSize: 10,
-      backgroundColor: 'red',
     },
     assetMeta: {
       color: color.gray.min,
+      ...typography['body-2-m-regular'],
       opacity: 0.5,
-      fontSize: 14,
     },
     assetRow: {
       flexDirection: 'row',

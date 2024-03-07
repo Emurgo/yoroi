@@ -91,7 +91,7 @@ export const ActionsBanner = ({disabled = false}: {disabled: boolean}) => {
   }
 
   return (
-    <View style={styles.banner}>
+    <View>
       <Spacer height={16} />
 
       <View style={styles.centralized}>
@@ -173,7 +173,6 @@ const useStyles = () => {
   const {theme} = useTheme()
   const {color, padding, typography} = theme
   const styles = StyleSheet.create({
-    banner: {},
     centralized: {
       alignItems: 'center',
       justifyContent: 'center',
