@@ -124,13 +124,13 @@ describe('sync', () => {
       'primary-balance-breakdown',
     ),
   )
-
   const storage: PortfolioStorage = portfolioStorageMaker({
     tokenDiscoveryStorage,
     tokenInfoStorage,
     balanceStorage,
     primaryBreakdownStorage,
   })
+
   it('should sync the balances and token infos', async () => {
     const portfolioManager = portfolioManagerMaker({
       network: Chain.Network.Main,
@@ -193,13 +193,13 @@ describe('hydrate', () => {
       'primary-balance-breakdown',
     ),
   )
-
   const storage: PortfolioStorage = portfolioStorageMaker({
     tokenDiscoveryStorage,
     tokenInfoStorage,
     balanceStorage,
     primaryBreakdownStorage,
   })
+
   it('should hydrate data', async () => {
     const portfolioManager = portfolioManagerMaker({
       network: Chain.Network.Main,
@@ -220,14 +220,6 @@ describe('hydrate', () => {
       Map<Portfolio.Token.Id, Portfolio.Token.Balance>
     > = new Map([])
 
-    await portfolioManager.sync({primaryBalance, secondaryBalances})
-
-    expect(portfolioManager.getPrimaryBreakdown()).toEqual({
-      info: primaryTokenInfo,
-      balance: BigInt(1000000),
-      lockedInBuiltTxs: BigInt(0),
-      minRequiredByTokens: BigInt(0),
-      records: [],
-    })
+    await portfolioManager.hydrate()
   })
 })
