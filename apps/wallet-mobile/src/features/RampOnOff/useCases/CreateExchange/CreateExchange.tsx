@@ -1,5 +1,6 @@
-import {Banxa, banxaModuleMaker} from '@yoroi/exchange'
+import {exchangeManagerMaker} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
+import {Exchange} from '@yoroi/types'
 import * as React from 'react'
 import {Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
@@ -53,7 +54,7 @@ export const CreateExchange = () => {
     const denomination = amountTokenInfo.decimals ?? 0
     const orderAmount = +Quantities.denominated(quantity, denomination)
 
-    const urlOptions = {
+    const urlOptions: Exchange.ReferralUrlQueryStringParams = {
       orderType: orderType,
       fiatType: 'USD',
       coinType: 'ADA',
@@ -61,11 +62,11 @@ export const CreateExchange = () => {
       blockchain: 'ADA',
       walletAddress,
       returnUrl,
-    } as Banxa.ReferralUrlQueryStringParams
+    }
 
-    const banxa = banxaModuleMaker(moduleOptions)
-    const url = banxa.createReferralUrl(urlOptions)
-    Linking.openURL(url.toString())
+    const exchange = exchangeManagerMaker(moduleOptions)
+    const banxaUrl = exchange.createReferralUrl(Exchange.Provider.Banxa, urlOptions)
+    Linking.openURL(banxaUrl.toString())
     track.exchangeSubmitted({ramp_type: orderType === 'sell' ? 'Sell' : 'Buy', ada_amount: orderAmount})
     navigateTo.rampOnOffOpenOrder()
   }

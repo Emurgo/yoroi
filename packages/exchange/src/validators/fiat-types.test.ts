@@ -1,11 +1,12 @@
-import {banxaIsFiatType, BanxaFiatType} from './fiat-types'
+import {Exchange} from '@yoroi/types'
+import {isFiatType} from './fiat-types'
 
-describe('banxaIsFiatType', () => {
+describe('isFiatType', () => {
   it('should return true for valid fiat types', () => {
-    const validFiatTypes: BanxaFiatType[] = ['USD', 'EUR']
+    const validFiatTypes: Exchange.Fiat[] = ['USD', 'EUR']
 
     validFiatTypes.forEach((fiatType) => {
-      expect(banxaIsFiatType(fiatType)).toBe(true)
+      expect(isFiatType(fiatType)).toBe(true)
     })
   })
 
@@ -13,7 +14,7 @@ describe('banxaIsFiatType', () => {
     const invalidFiatTypes = ['GBP', 'JPY', 'AUD', '', undefined, null, 123]
 
     invalidFiatTypes.forEach((fiatType) => {
-      expect(banxaIsFiatType(fiatType)).toBe(false)
+      expect(isFiatType(fiatType)).toBe(false)
     })
   })
 })

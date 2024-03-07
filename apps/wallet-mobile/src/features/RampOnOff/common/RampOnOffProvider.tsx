@@ -1,4 +1,4 @@
-import {Banxa} from '@yoroi/exchange'
+import {Exchange} from '@yoroi/types'
 import BigNumber from 'bignumber.js'
 import {produce} from 'immer'
 import React from 'react'
@@ -140,7 +140,7 @@ const rampOnOffReducer = (state: RampOnOffState, action: RampOnOffAction) => {
   })
 }
 
-export type OrderType = Banxa.ReferralUrlQueryStringParams['orderType']
+export type OrderType = Exchange.ReferralUrlQueryStringParams['orderType']
 
 type RampOnOffAction =
   | {type: RampOnOffActionType.OrderTypeChanged; orderType: OrderType}

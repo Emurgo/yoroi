@@ -1,11 +1,12 @@
-import {banxaIsCoinType, BanxaCoinType} from './coin-types'
+import {Exchange} from '@yoroi/types'
+import {isCoinType} from './coin-types'
 
-describe('banxaIsCoinType', () => {
+describe('isCoinType', () => {
   it('should return true for valid coin types', () => {
-    const validCoinTypes: BanxaCoinType[] = ['ADA']
+    const validCoinTypes: Exchange.Coin[] = ['ADA']
 
     validCoinTypes.forEach((coinType) => {
-      expect(banxaIsCoinType(coinType)).toBe(true)
+      expect(isCoinType(coinType)).toBe(true)
     })
   })
 
@@ -13,7 +14,7 @@ describe('banxaIsCoinType', () => {
     const invalidCoinTypes = ['XRP', 'DOGE', '', undefined, null, 123]
 
     invalidCoinTypes.forEach((coinType) => {
-      expect(banxaIsCoinType(coinType)).toBe(false)
+      expect(isCoinType(coinType)).toBe(false)
     })
   })
 })

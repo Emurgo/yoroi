@@ -44,7 +44,7 @@ export const OsAuthScreen = ({
   return (
     <ScreenBackground style={styles.container}>
       <SafeAreaView style={{flex: 1}}>
-        <StatusBar type="dark" />
+        <StatusBar />
 
         <View style={[styles.main, onGoBack ? null : styles.mainPadded]}>
           {onGoBack && (

@@ -1,3 +1,4 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
@@ -7,18 +8,18 @@ import {PairedBalance} from '../components/PairedBalance/PairedBalance'
 import {usePrivacyMode} from '../features/Settings/PrivacyMode/PrivacyMode'
 import {formatTokenWithText, formatTokenWithTextWhenHidden} from '../legacy/format'
 import {useSelectedWallet} from '../SelectedWallet'
-import {COLORS} from '../theme'
 import {useBalances} from '../yoroi-wallets/hooks'
 import {Amounts} from '../yoroi-wallets/utils'
 
 export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
   const wallet = useSelectedWallet()
+  const styles = useStyles()
   const balances = useBalances(wallet)
   const primaryAmount = Amounts.getAmount(balances, wallet.primaryTokenInfo.id)
   const {isPrivacyOff, togglePrivacyMode} = usePrivacyMode()
 
   return (
-    <View style={styles.banner}>
+    <View>
       <Spacer height={14} />
 
       <Row>
@@ -44,6 +45,7 @@ export const BalanceBanner = React.forwardRef<ResetErrorRef>((_, ref) => {
 
 const hiddenBalance = '*.******'
 const Balance = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
+  const styles = useStyles()
   const wallet = useSelectedWallet()
   const balances = useBalances(wallet)
 
@@ -60,28 +62,34 @@ const Balance = ({isPrivacyOff}: {isPrivacyOff: boolean}) => {
   )
 }
 
-const Row = ({children}: {children: React.ReactNode}) => <View style={styles.centered}>{children}</View>
+const Row = ({children}: {children: React.ReactNode}) => {
+  const styles = useStyles()
+  return <View style={styles.centered}>{children}</View>
+}
 
-const styles = StyleSheet.create({
-  banner: {},
-  walletIcon: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-  },
-  button: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  balanceText: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontFamily: 'Rubik-Medium',
-    color: COLORS.ERROR_TEXT_COLOR_DARK,
-  },
-  centered: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    walletIcon: {
+      height: 40,
+      width: 40,
+      borderRadius: 20,
+    },
+    button: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    balanceText: {
+      ...typography['body-1-l-medium'],
+      color: color.gray[900],
+    },
+    centered: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  })
+
+  return styles
+}
