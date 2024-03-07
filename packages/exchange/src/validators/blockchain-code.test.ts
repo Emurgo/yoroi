@@ -1,11 +1,12 @@
-import {banxaIsBlockchainCode, BanxaBlockchainCode} from './blockchain-code'
+import {Exchange} from '@yoroi/types'
+import {isBlockchainCode} from './blockchain-code'
 
-describe('banxaIsBlockchainCode', () => {
+describe('isBlockchainCode', () => {
   it('should return true for valid blockchain codes', () => {
-    const validCoinTypes: BanxaBlockchainCode[] = ['ADA']
+    const validCoinTypes: Exchange.BlockchainCode[] = ['ADA']
 
     validCoinTypes.forEach((coinType) => {
-      expect(banxaIsBlockchainCode(coinType)).toBe(true)
+      expect(isBlockchainCode(coinType)).toBe(true)
     })
   })
 
@@ -13,7 +14,7 @@ describe('banxaIsBlockchainCode', () => {
     const invalidCoinTypes = ['XRP', 'DOGE', '', undefined, null, 123]
 
     invalidCoinTypes.forEach((coinType) => {
-      expect(banxaIsBlockchainCode(coinType)).toBe(false)
+      expect(isBlockchainCode(coinType)).toBe(false)
     })
   })
 })
