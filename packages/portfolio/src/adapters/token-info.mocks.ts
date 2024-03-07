@@ -57,6 +57,40 @@ const rnftWhatever: Portfolio.Token.Info = {
   type: Portfolio.Token.Type.NFT,
 }
 
+const ftNoTicker: Portfolio.Token.Info = {
+  decimals: 0,
+  ticker: '',
+  name: 'ZZZZZ',
+  symbol: 'WTH',
+  status: Portfolio.Token.Status.Normal,
+  application: Portfolio.Token.Application.Music,
+  tag: '222',
+  reference: 'transactionId#1',
+  website: 'https://www.whaha.co',
+  originalImage: 'https://cdn.whatha.com/ck-original1234.png',
+  id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3031',
+  fingerprint: 'asset1s7nlt45cc82upqewvjtgu7g97l7eg483c6wu75',
+  nature: Portfolio.Token.Nature.Secondary,
+  type: Portfolio.Token.Type.FT,
+}
+
+const ftNameless: Portfolio.Token.Info = {
+  decimals: 0,
+  ticker: 'zz',
+  name: '',
+  symbol: 'WTH',
+  status: Portfolio.Token.Status.Normal,
+  application: Portfolio.Token.Application.Music,
+  tag: '222',
+  reference: 'transactionId#1',
+  website: 'https://www.whaha.co',
+  originalImage: 'https://cdn.whatha.com/ck-original1234.png',
+  id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3031',
+  fingerprint: 'asset1s7nlt45cc82upqewvjtgu7g97l7eg483c6wu75',
+  nature: Portfolio.Token.Nature.Secondary,
+  type: Portfolio.Token.Type.FT,
+}
+
 const apiResponseTokenInfos: PortfolioApiTokenInfosResponse = {
   [primaryETH.id]: [200, primaryETH, 'hash1', 3600],
   [nftCryptoKitty.id]: [200, nftCryptoKitty, 'hash2', 10],
@@ -75,6 +109,8 @@ export const tokenInfoMocks = freeze({
   primaryETH,
   nftCryptoKitty,
   rnftWhatever,
+  ftNoTicker,
+  ftNameless,
 
   apiResponseResult: apiResponseTokenInfos,
   apiRequestArgs: apiRequestTokenInfos,

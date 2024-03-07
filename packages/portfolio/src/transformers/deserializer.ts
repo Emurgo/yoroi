@@ -13,12 +13,18 @@ export const tokenDiscoveryStorageReviverMapping: StorageReviverMapping = {
   supply: StorageReviverType.AsBigInt,
 }
 
-export const storageDeserializers = freeze(
+export const tokenBalanceReviverMapping: StorageReviverMapping = {
+  balance: StorageReviverType.AsBigInt,
+  lockedInBuiltTxs: StorageReviverType.AsBigInt,
+}
+
+export const deserializer = freeze(
   {
     balance: storageDeserializerMaker(balanceStorageReviverMapping),
     tokenDiscovery: storageDeserializerMaker(
       tokenDiscoveryStorageReviverMapping,
     ),
+    tokenBalance: storageDeserializerMaker(tokenBalanceReviverMapping),
   },
   true,
 )

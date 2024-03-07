@@ -1,6 +1,5 @@
 import {MMKV} from 'react-native-mmkv'
 import {App, Nullable} from '@yoroi/types'
-import {freeze} from 'immer'
 
 import {parseSafe} from '../../utils/parsers'
 import {isFolderKey} from '../helpers/is-folder-key'
@@ -125,21 +124,18 @@ export const mountMMKVStorage = <Key extends string = string>(
     filteredKeys.forEach((key) => storage.delete(key))
   }
 
-  return freeze(
-    {
-      join,
-      getItem,
-      multiGet,
-      setItem,
-      multiSet,
-      removeItem,
-      removeFolder,
-      multiRemove,
-      getAllKeys,
-      clear,
-    },
-    true,
-  )
+  return {
+    join,
+    getItem,
+    multiGet,
+    setItem,
+    multiSet,
+    removeItem,
+    removeFolder,
+    multiRemove,
+    getAllKeys,
+    clear,
+  } as const
 }
 export const mountMMKVMultiStorage = <T = unknown, K extends string = string>(
   options: App.MultiStorageOptions<T, false, K>,
@@ -169,15 +165,12 @@ export const mountMMKVMultiStorage = <T = unknown, K extends string = string>(
   const readMany = (keys: ReadonlyArray<K>) => multiGet(keys, deserializer)
   const removeMany = (keys: ReadonlyArray<K>) => dataStorage.multiRemove(keys)
 
-  return freeze(
-    {
-      getAllKeys,
-      clear,
-      readAll,
-      saveMany,
-      readMany,
-      removeMany,
-    },
-    true,
-  )
+  return {
+    getAllKeys,
+    clear,
+    readAll,
+    saveMany,
+    readMany,
+    removeMany,
+  } as const
 }

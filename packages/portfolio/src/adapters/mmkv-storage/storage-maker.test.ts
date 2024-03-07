@@ -4,7 +4,7 @@ import {App, Portfolio} from '@yoroi/types'
 import {portfolioStorageMaker} from './storage-maker' // Adjust the path accordingly
 import {tokenMocks} from '../token.mocks'
 import {balanceMocks} from '../balance.mocks'
-import {storageDeserializers} from '../../transformers/storageDeserializers'
+import {deserializer} from '../../transformers/deserializer'
 
 describe('portfolioStorageMaker', () => {
   let tokenInfoStorage: App.ObservableStorage<false, Portfolio.Token.Id>
@@ -16,15 +16,15 @@ describe('portfolioStorageMaker', () => {
     tokenInfoStorage = createMockStorage('v2/mainnet/token-info/')
     tokenDiscoveryStorage = createMockStorage(
       'v2/mainnet/token-discovery/',
-      storageDeserializers.tokenDiscovery,
+      deserializer.tokenDiscovery,
     )
     balanceStorage = createMockStorage(
       'v2/wallets/id/balance/',
-      storageDeserializers.balance,
+      deserializer.balance,
     )
     primaryBreakdownStorage = createMockStorage(
       'v2/wallets/id/primary-breakdown/',
-      storageDeserializers.balance,
+      deserializer.balance,
     )
 
     tokenInfoStorage.clear()
@@ -171,7 +171,7 @@ describe('portfolioStorageMaker', () => {
     expect(result).toEqual(balanceMocks.entries1)
     expect(balanceStorage.multiGet).toHaveBeenCalledWith(
       keys,
-      storageDeserializers.balance,
+      deserializer.balance,
     )
   })
 
@@ -204,7 +204,7 @@ describe('portfolioStorageMaker', () => {
     expect(result).toEqual(entries)
     expect(tokenDiscoveryStorage.multiGet).toHaveBeenCalledWith(
       keys,
-      storageDeserializers.tokenDiscovery,
+      deserializer.tokenDiscovery,
     )
   })
 

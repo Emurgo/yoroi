@@ -26,6 +26,7 @@ export const portfolioManagerMaker = ({
   let balances: Readonly<
     Map<Portfolio.Token.Id, Nullable<Portfolio.Token.Balance>>
   > = freeze(new Map())
+  let sortedBalances: ReadonlyArray<Portfolio.Token.Balance> = freeze([])
   let cachedInfos: Readonly<Map<Portfolio.Token.Id, App.CacheInfo>> = freeze(
     new Map(),
   )
@@ -168,16 +169,30 @@ export const portfolioManagerMaker = ({
     storage.balances.save([...newBalances.entries()])
     balances = freeze(newBalances, true)
 
+    sortedBalances = freeze(
+      [...balances.values()].filter(
+        (v): v is Portfolio.Token.Balance => v != null,
+      ),
+      true,
+    )
     observer.notify('sync')
+  }
+
+  function getPrimaryBreakdown() {
+    return freeze(primaryBreakdown, true)
+  }
+
+  function getBalances() {
+    return freeze(sortedBalances, true)
   }
 
   return freeze(
     {
       hydrate,
       sync,
-      primaryBreakdown,
-      balances,
       observer,
+      getPrimaryBreakdown,
+      getBalances,
     },
     true,
   )

@@ -23,6 +23,7 @@ export * from './observer/observer'
 
 export * from './storage/adapters/async-storage'
 export * from './storage/adapters/mmkv-storage'
+export * from './storage/adapters/observable-storage'
 export * from './storage/translators/async-storage-reactjs'
 export * from './storage/translators/sync-storage-reactjs'
 export * from './storage/helpers/storage-serializer'

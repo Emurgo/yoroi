@@ -1,9 +1,13 @@
 import {App, Chain, Portfolio} from '@yoroi/types'
 
-import {portfolioManagerMaker} from './manager'
+import {getRecordsSource, portfolioManagerMaker} from './manager'
 import {portfolioApiMock} from './adapters/dulahan-api/api-maker.mocks'
 import {portfolioStorageMock} from './adapters/mmkv-storage/storage-maker.mocks'
 import {createPrimaryTokenInfo} from './helpers/create-primary-token-info'
+import {tokenInfoMocks} from './adapters/token-info.mocks'
+import {portfolioStorageMaker} from './adapters/mmkv-storage/storage-maker'
+import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
+import {PortfolioStorage} from './types'
 
 describe('portfolioManagerMaker', () => {
   const primaryTokenInfo = createPrimaryTokenInfo({
@@ -27,8 +31,6 @@ describe('portfolioManagerMaker', () => {
     expect(portfolioManager).toBeDefined()
   })
 })
-import {getRecordsSource} from './manager'
-import {tokenInfoMocks} from './adapters/token-info.mocks'
 
 describe('getRecordsSource', () => {
   it('should return an empty array when newIds is empty', () => {
@@ -89,5 +91,73 @@ describe('getRecordsSource', () => {
 
     expect(toFetch).toEqual([])
     expect(fromCache).toEqual([nftCryptoKitty.id, rnftWhatever.id])
+  })
+})
+
+describe('sync', () => {
+  const tokenDiscoveryStorage = observableStorageMaker(
+    mountMMKVStorage<Portfolio.Token.Id>(
+      '/tmp/token-discovery/',
+      'token-discovery',
+    ),
+  )
+  const tokenInfoStorage = observableStorageMaker(
+    mountMMKVStorage<Portfolio.Token.Id>('/tmp/token-info/', 'token-info'),
+  )
+  const balanceStorage = observableStorageMaker(
+    mountMMKVStorage<Portfolio.Token.Id>('/tmp/balance/', 'balance'),
+  )
+  const primaryBreakdownStorage = observableStorageMaker(
+    mountMMKVStorage<Portfolio.Token.Id>(
+      '/tmp/primary-balance-breakdown/',
+      'primary-balance-breakdown',
+    ),
+  )
+
+  const storage: PortfolioStorage = portfolioStorageMaker({
+    tokenDiscoveryStorage,
+    tokenInfoStorage,
+    balanceStorage,
+    primaryBreakdownStorage,
+  })
+  it('should sync the balances and token infos', async () => {
+    const primaryTokenInfo = createPrimaryTokenInfo({
+      decimals: 6,
+      name: 'Cardano',
+      reference: 'ADA',
+      originalImage: 'https://example.com/ada.png',
+      symbol: 'ADA',
+      tag: '',
+      ticker: 'ADA',
+      website: 'https://example.com',
+    })
+    const portfolioManager = portfolioManagerMaker({
+      network: Chain.Network.Main,
+      api: portfolioApiMock.success,
+      storage,
+      primaryTokenInfo,
+    })
+
+    const primaryBalance: Readonly<
+      Omit<Portfolio.BalancePrimaryBreakdown, 'info'>
+    > = {
+      balance: BigInt(1000000),
+      lockedInBuiltTxs: BigInt(0),
+      minRequiredByTokens: BigInt(0),
+      records: [],
+    }
+    const secondaryBalances: Readonly<
+      Map<Portfolio.Token.Id, Portfolio.Token.Balance>
+    > = new Map([])
+
+    await portfolioManager.sync({primaryBalance, secondaryBalances})
+
+    expect(portfolioManager.getPrimaryBreakdown()).toEqual({
+      info: primaryTokenInfo,
+      balance: BigInt(1000000),
+      lockedInBuiltTxs: BigInt(0),
+      minRequiredByTokens: BigInt(0),
+      records: [],
+    })
   })
 })

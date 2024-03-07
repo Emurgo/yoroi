@@ -8,15 +8,29 @@ export const portfolioStorageMock: PortfolioStorage = freeze(
     balances: {
       read: (..._args) => [],
       save: (..._args) => {},
+      all: () => [],
+      clear: () => {},
+      keys: () => [],
+    },
+    primaryBalanceBreakdown: {
+      read: (..._args) => null,
+      save: (..._args) => {},
+      clear: () => {},
     },
     token: {
       discoveries: {
         read: (..._args) => [],
         save: (..._args) => {},
+        all: () => [],
+        clear: () => {},
+        keys: () => [],
       },
       infos: {
         read: (..._args) => [],
         save: (..._args) => {},
+        all: () => [],
+        clear: () => {},
+        keys: () => [],
       },
     },
   },
