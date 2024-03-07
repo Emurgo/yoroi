@@ -25,7 +25,7 @@ type AddressInfo = {
 }
 
 export const ListMultipleAddressesScreen = () => {
-  const inView = React.useRef(0)
+  const inView = React.useRef(Number.MAX_SAFE_INTEGER)
   const strings = useStrings()
   const {styles} = useStyles()
   const wallet = useSelectedWallet()
