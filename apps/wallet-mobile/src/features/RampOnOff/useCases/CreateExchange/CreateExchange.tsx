@@ -17,7 +17,7 @@ import {useRampOnOff} from '../../common/RampOnOffProvider'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
 import {EditAmount} from './EditAmount/EditAmount'
-import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
+// import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
 import {ShowProviderFee} from './ShowProviderFee/ShowProviderFee'
 import {ShowProviderInfo} from './ShowProviderInfo/ShowProviderInfo'
@@ -82,7 +82,7 @@ export const CreateExchange = () => {
               setContentHeight(height + BOTTOM_ACTION_SECTION)
             }}
           >
-            <SelectBuyOrSell />
+            {/* <SelectBuyOrSell /> */}
 
             <EditAmount />
 
