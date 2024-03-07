@@ -10,6 +10,7 @@ import {
 } from './types'
 import {recordWithETag} from './transformers/record-with-etag'
 import {parseTokenInfoResponseWithCacheRecord} from './validators/token-info'
+import {sortTokenBalances} from './helpers/sorting'
 
 export const portfolioManagerMaker = ({
   // network,
@@ -40,12 +41,11 @@ export const portfolioManagerMaker = ({
     },
     true,
   )
-  let observer = freeze(observerMaker<'sync'>(), true)
+  let observer = freeze(observerMaker<PortfolioManagerEvents>(), true)
   // let tokenInfoIds: Readonly<Set<Portfolio.Token.Id>>
   // let tokenDiscoveryKeys: ReadonlyArray<Portfolio.Token.Id>
 
   const hydrate = () => {
-    balances = freeze(new Map(storage.balances.all()), true)
     cachedInfos = freeze(
       new Map(
         storage.token.infos
@@ -69,8 +69,17 @@ export const portfolioManagerMaker = ({
     if (cachedPrimaryBreakdown) {
       primaryBreakdown = cachedPrimaryBreakdown
     }
-
+    balances = freeze(
+      new Map(storage.balances.all()).set(primaryTokenInfo.id, {
+        info: primaryTokenInfo,
+        balance: primaryBreakdown.balance,
+        lockedInBuiltTxs: primaryBreakdown.lockedInBuiltTxs,
+      }),
+      true,
+    )
     isHydrated = true
+
+    observer.notify({event: PortfolioManagerEvent.Hydrate})
   }
 
   const sync = async ({
@@ -167,15 +176,27 @@ export const portfolioManagerMaker = ({
     })
     storage.balances.clear()
     storage.balances.save([...newBalances.entries()])
+
+    // memory has primary balance
+    newBalances.set(primaryTokenInfo.id, {
+      info: primaryTokenInfo,
+      balance: primaryBalance.balance,
+      lockedInBuiltTxs: primaryBalance.lockedInBuiltTxs,
+    })
+
     balances = freeze(newBalances, true)
 
     sortedBalances = freeze(
-      [...balances.values()].filter(
-        (v): v is Portfolio.Token.Balance => v != null,
-      ),
+      sortTokenBalances({
+        tokenBalances: [...balances.values()].filter(
+          (v): v is Portfolio.Token.Balance => v != null,
+        ),
+        primaryTokenInfo,
+      }),
       true,
     )
-    observer.notify('sync')
+
+    observer.notify({event: PortfolioManagerEvent.Sync})
   }
 
   function getPrimaryBreakdown() {
@@ -221,3 +242,16 @@ export const getRecordsSource = ({
   })
   return {toFetch, fromCache}
 }
+
+export enum PortfolioManagerEvent {
+  Sync = 'sync',
+  Hydrate = 'hydrate',
+}
+
+export type PortfolioManagerEvents =
+  | {
+      event: 'sync'
+    }
+  | {
+      event: 'hydrate'
+    }

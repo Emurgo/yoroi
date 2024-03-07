@@ -95,6 +95,17 @@ describe('getRecordsSource', () => {
 })
 
 describe('sync', () => {
+  const primaryTokenInfo = createPrimaryTokenInfo({
+    decimals: 6,
+    name: 'Cardano',
+    reference: 'ADA',
+    originalImage: 'https://example.com/ada.png',
+    symbol: 'ADA',
+    tag: '',
+    ticker: 'ADA',
+    website: 'https://example.com',
+  })
+
   const tokenDiscoveryStorage = observableStorageMaker(
     mountMMKVStorage<Portfolio.Token.Id>(
       '/tmp/token-discovery/',
@@ -121,16 +132,75 @@ describe('sync', () => {
     primaryBreakdownStorage,
   })
   it('should sync the balances and token infos', async () => {
-    const primaryTokenInfo = createPrimaryTokenInfo({
-      decimals: 6,
-      name: 'Cardano',
-      reference: 'ADA',
-      originalImage: 'https://example.com/ada.png',
-      symbol: 'ADA',
-      tag: '',
-      ticker: 'ADA',
-      website: 'https://example.com',
+    const portfolioManager = portfolioManagerMaker({
+      network: Chain.Network.Main,
+      api: portfolioApiMock.success,
+      storage,
+      primaryTokenInfo,
     })
+
+    const primaryBalance: Readonly<
+      Omit<Portfolio.BalancePrimaryBreakdown, 'info'>
+    > = {
+      balance: BigInt(1000000),
+      lockedInBuiltTxs: BigInt(0),
+      minRequiredByTokens: BigInt(0),
+      records: [],
+    }
+    const secondaryBalances: Readonly<
+      Map<Portfolio.Token.Id, Portfolio.Token.Balance>
+    > = new Map([])
+
+    await portfolioManager.sync({primaryBalance, secondaryBalances})
+
+    expect(portfolioManager.getPrimaryBreakdown()).toEqual({
+      info: primaryTokenInfo,
+      balance: BigInt(1000000),
+      lockedInBuiltTxs: BigInt(0),
+      minRequiredByTokens: BigInt(0),
+      records: [],
+    })
+  })
+})
+
+describe('hydrate', () => {
+  const primaryTokenInfo = createPrimaryTokenInfo({
+    decimals: 6,
+    name: 'Cardano',
+    reference: 'ADA',
+    originalImage: 'https://example.com/ada.png',
+    symbol: 'ADA',
+    tag: '',
+    ticker: 'ADA',
+    website: 'https://example.com',
+  })
+
+  const tokenDiscoveryStorage = observableStorageMaker(
+    mountMMKVStorage<Portfolio.Token.Id>(
+      '/tmp/token-discovery/',
+      'token-discovery',
+    ),
+  )
+  const tokenInfoStorage = observableStorageMaker(
+    mountMMKVStorage<Portfolio.Token.Id>('/tmp/token-info/', 'token-info'),
+  )
+  const balanceStorage = observableStorageMaker(
+    mountMMKVStorage<Portfolio.Token.Id>('/tmp/balance/', 'balance'),
+  )
+  const primaryBreakdownStorage = observableStorageMaker(
+    mountMMKVStorage<Portfolio.Token.Id>(
+      '/tmp/primary-balance-breakdown/',
+      'primary-balance-breakdown',
+    ),
+  )
+
+  const storage: PortfolioStorage = portfolioStorageMaker({
+    tokenDiscoveryStorage,
+    tokenInfoStorage,
+    balanceStorage,
+    primaryBreakdownStorage,
+  })
+  it('should hydrate data', async () => {
     const portfolioManager = portfolioManagerMaker({
       network: Chain.Network.Main,
       api: portfolioApiMock.success,
