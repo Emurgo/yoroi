@@ -6,6 +6,8 @@ import {
   AppApiRequestRecordWithCache,
   HttpStatusCode,
   PortfolioApi,
+  PortfolioManagerEvent,
+  PortfolioManagerEvents,
   PortfolioStorage,
 } from './types'
 import {recordWithETag} from './transformers/record-with-etag'
@@ -242,16 +244,3 @@ export const getRecordsSource = ({
   })
   return {toFetch, fromCache}
 }
-
-export enum PortfolioManagerEvent {
-  Sync = 'sync',
-  Hydrate = 'hydrate',
-}
-
-export type PortfolioManagerEvents =
-  | {
-      event: 'sync'
-    }
-  | {
-      event: 'hydrate'
-    }

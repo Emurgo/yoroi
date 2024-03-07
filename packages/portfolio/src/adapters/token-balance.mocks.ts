@@ -33,10 +33,21 @@ const ftNameless: Portfolio.Token.Balance = {
   lockedInBuiltTxs: BigInt(0),
 }
 
+const tokenBalanceStorage: ReadonlyArray<
+  [Portfolio.Token.Id, Portfolio.Token.Balance]
+> = [
+  [nftCryptoKitty.info.id, nftCryptoKitty],
+  [rnftWhatever.info.id, rnftWhatever],
+  [ftNoTicker.info.id, ftNoTicker],
+  [ftNameless.info.id, ftNameless],
+]
+
 export const tokenBalanceMocks = freeze({
   primaryETH,
   nftCryptoKitty,
   rnftWhatever,
   ftNoTicker,
   ftNameless,
+
+  tokenBalanceStorage,
 })

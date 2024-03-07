@@ -50,5 +50,18 @@ export type PortfolioManager = Readonly<{
   sync(amounts: Readonly<Map<Portfolio.Token.Id, BigInt>>): Promise<void>
 }>
 
+export enum PortfolioManagerEvent {
+  Sync = 'sync',
+  Hydrate = 'hydrate',
+}
+
+export type PortfolioManagerEvents =
+  | {
+      event: 'sync'
+    }
+  | {
+      event: 'hydrate'
+    }
+
 // TODO: type it
 export type PortfolioStorage = ReturnType<typeof portfolioStorageMaker>

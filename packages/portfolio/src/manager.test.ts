@@ -8,6 +8,7 @@ import {tokenInfoMocks} from './adapters/token-info.mocks'
 import {portfolioStorageMaker} from './adapters/mmkv-storage/storage-maker'
 import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
 import {PortfolioStorage} from './types'
+import {tokenBalanceMocks} from './adapters/token-balance.mocks'
 
 describe('portfolioManagerMaker', () => {
   const primaryTokenInfo = createPrimaryTokenInfo({
@@ -131,6 +132,10 @@ describe('sync', () => {
     primaryBreakdownStorage,
   })
 
+  afterEach(() => {
+    storage.clear()
+  })
+
   it('should sync the balances and token infos', async () => {
     const portfolioManager = portfolioManagerMaker({
       network: Chain.Network.Main,
@@ -200,6 +205,22 @@ describe('hydrate', () => {
     primaryBreakdownStorage,
   })
 
+  afterEach(() => {
+    storage.clear()
+  })
+
+  const primaryBalance: Readonly<Portfolio.BalancePrimaryBreakdown> = {
+    info: primaryTokenInfo,
+    balance: BigInt(1000000),
+    lockedInBuiltTxs: BigInt(0),
+    minRequiredByTokens: BigInt(0),
+    records: [],
+  }
+
+  storage.primaryBalanceBreakdown.save(primaryBalance)
+  storage.token.infos.save(tokenInfoMocks.tokenInfoStorage)
+  storage.balances.save(tokenBalanceMocks.tokenBalanceStorage)
+
   it('should hydrate data', async () => {
     const portfolioManager = portfolioManagerMaker({
       network: Chain.Network.Main,
@@ -207,19 +228,16 @@ describe('hydrate', () => {
       storage,
       primaryTokenInfo,
     })
+    const subscriber = jest.fn()
+    portfolioManager.observer.subscribe(subscriber)
 
-    const primaryBalance: Readonly<
-      Omit<Portfolio.BalancePrimaryBreakdown, 'info'>
-    > = {
-      balance: BigInt(1000000),
-      lockedInBuiltTxs: BigInt(0),
-      minRequiredByTokens: BigInt(0),
-      records: [],
-    }
-    const secondaryBalances: Readonly<
-      Map<Portfolio.Token.Id, Portfolio.Token.Balance>
-    > = new Map([])
+    portfolioManager.hydrate()
 
-    await portfolioManager.hydrate()
+    expect(portfolioManager.getPrimaryBreakdown()).toEqual(primaryBalance)
+    expect(portfolioManager.getBalances()).toEqual(
+      new Map(tokenBalanceMocks.tokenBalanceStorage),
+    )
+
+    expect(subscriber).toHaveBeenCalledTimes(1)
   })
 })
