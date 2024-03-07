@@ -70,10 +70,10 @@ export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOpti
       justifyContent: 'center',
     },
     headerLeftContainerStyle: {
-      paddingLeft: 10,
+      ...theme.padding['l-s'],
     },
     headerRightContainerStyle: {
-      paddingRight: 10,
+      ...theme.padding['r-s'],
     },
     cardStyle: {backgroundColor: 'white'},
     headerLeft: (props) => <BackButton {...props} />,

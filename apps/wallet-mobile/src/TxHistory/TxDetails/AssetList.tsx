@@ -10,9 +10,6 @@ import {isEmptyString} from '../../utils'
 import {CardanoTypes} from '../../yoroi-wallets/cardano/types'
 import {useTokenInfo} from '../../yoroi-wallets/hooks'
 import {asQuantity} from '../../yoroi-wallets/utils'
-import assetListSendStyle from './AssetListSend.style'
-import assetListTransactionStyle from './AssetListTransaction.style'
-import baseStyle from './Base.style'
 
 type AssetListProps = {
   assets: Array<CardanoTypes.TokenEntry>
@@ -53,7 +50,9 @@ export const AssetList = ({assets, styles, onSelect, isPrivacyOff}: AssetListPro
   )
 }
 
-type NodeStyle = typeof baseStyle | typeof assetListTransactionStyle | typeof assetListSendStyle
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type NodeStyle = any
+
 type AssetRowProps = {
   styles: NodeStyle
   entry: CardanoTypes.TokenEntry

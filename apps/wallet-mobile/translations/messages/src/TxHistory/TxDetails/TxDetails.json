@@ -4,12 +4,12 @@
     "defaultMessage": "!!!Sent funds",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 354,
+      "line": 363,
       "column": 8,
       "index": 12304
     },
     "end": {
-      "line": 357,
+      "line": 366,
       "column": 3,
       "index": 12399
     }
@@ -19,12 +19,12 @@
     "defaultMessage": "!!!Received funds",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 358,
+      "line": 367,
       "column": 12,
       "index": 12413
     },
     "end": {
-      "line": 361,
+      "line": 370,
       "column": 3,
       "index": 12516
     }
@@ -34,12 +34,12 @@
     "defaultMessage": "!!!Intrawallet transaction",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 362,
+      "line": 371,
       "column": 8,
       "index": 12526
     },
     "end": {
-      "line": 365,
+      "line": 374,
       "column": 3,
       "index": 12634
     }
@@ -49,12 +49,12 @@
     "defaultMessage": "!!!Multi-party transaction",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 366,
+      "line": 375,
       "column": 9,
       "index": 12645
     },
     "end": {
-      "line": 369,
+      "line": 378,
       "column": 3,
       "index": 12754
     }
@@ -64,12 +64,12 @@
     "defaultMessage": "!!!/{idx}",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 373,
+      "line": 382,
       "column": 24,
       "index": 12818
     },
     "end": {
-      "line": 376,
+      "line": 385,
       "column": 3,
       "index": 12919
     }
@@ -79,12 +79,12 @@
     "defaultMessage": "!!!/change",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 377,
+      "line": 386,
       "column": 23,
       "index": 12944
     },
     "end": {
-      "line": 380,
+      "line": 389,
       "column": 3,
       "index": 13045
     }
@@ -94,12 +94,12 @@
     "defaultMessage": "!!!not mine",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 381,
+      "line": 390,
       "column": 24,
       "index": 13071
     },
     "end": {
-      "line": 384,
+      "line": 393,
       "column": 3,
       "index": 13174
     }
@@ -109,12 +109,12 @@
     "defaultMessage": "!!!Fee:",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 385,
+      "line": 394,
       "column": 7,
       "index": 13183
     },
     "end": {
-      "line": 388,
+      "line": 397,
       "column": 3,
       "index": 13266
     }
@@ -124,12 +124,12 @@
     "defaultMessage": "!!!From Addresses",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 389,
+      "line": 398,
       "column": 17,
       "index": 13285
     },
     "end": {
-      "line": 392,
+      "line": 401,
       "column": 3,
       "index": 13387
     }
@@ -139,12 +139,12 @@
     "defaultMessage": "!!!To Addresses",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 393,
+      "line": 402,
       "column": 15,
       "index": 13404
     },
     "end": {
-      "line": 396,
+      "line": 405,
       "column": 3,
       "index": 13502
     }
@@ -154,12 +154,12 @@
     "defaultMessage": "!!!Memo",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 397,
+      "line": 406,
       "column": 8,
       "index": 13512
     },
     "end": {
-      "line": 400,
+      "line": 409,
       "column": 3,
       "index": 13595
     }
@@ -169,12 +169,12 @@
     "defaultMessage": "!!!Transaction ID",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 401,
+      "line": 410,
       "column": 17,
       "index": 13614
     },
     "end": {
-      "line": 404,
+      "line": 413,
       "column": 3,
       "index": 13716
     }
@@ -184,12 +184,12 @@
     "defaultMessage": "!!!Transaction assurance level",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 405,
+      "line": 414,
       "column": 20,
       "index": 13738
     },
     "end": {
-      "line": 408,
+      "line": 417,
       "column": 3,
       "index": 13856
     }
@@ -199,12 +199,12 @@
     "defaultMessage": "!!!{cnt} {cnt, plural, one {CONFIRMATION} other {CONFIRMATIONS}}",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 409,
+      "line": 418,
       "column": 17,
       "index": 13875
     },
     "end": {
-      "line": 412,
+      "line": 421,
       "column": 3,
       "index": 14024
     }
@@ -214,12 +214,12 @@
     "defaultMessage": "!!!+ {cnt} omitted {cnt, plural, one {address} other {addresses}}",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 413,
+      "line": 422,
       "column": 16,
       "index": 14042
     },
     "end": {
-      "line": 416,
+      "line": 425,
       "column": 3,
       "index": 14191
     }
@@ -229,12 +229,12 @@
     "defaultMessage": "!!!Open in explorer",
     "file": "src/TxHistory/TxDetails/TxDetails.tsx",
     "start": {
-      "line": 417,
+      "line": 426,
       "column": 18,
       "index": 14211
     },
     "end": {
-      "line": 420,
+      "line": 429,
       "column": 3,
       "index": 14292
     }

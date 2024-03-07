@@ -57,6 +57,7 @@ export const darkPalette: Palette = {
   gradients: {
     'blue-green': ['#E4E8F7', '#C6F7F7'],
     green: ['#93F5E1', '#C6F7F7'],
+    light: ['#C6F7ED', '#E4E8F7'],
     blue: ['#244ABF', '#4B6DDE'],
   },
   'bottom-sheet-background': '#15171F',
