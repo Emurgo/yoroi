@@ -122,7 +122,7 @@ export const messages = Object.freeze(
     },
     rampOnOffTitle: {
       id: 'rampOnOff.rampOnOffScreen.rampOnOffTitle',
-      defaultMessage: '!!!Exchange ADA',
+      defaultMessage: '!!!Buy ADA',
     },
     contact: {
       id: 'rampOnOff.resultRampOnOff.contact',
