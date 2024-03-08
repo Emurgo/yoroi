@@ -72,7 +72,7 @@ export const Dashboard = () => {
 
   return (
     <View style={styles.root}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <View style={styles.container}>
         {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />}

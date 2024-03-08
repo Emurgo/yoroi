@@ -1,5 +1,6 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {isString} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
 import _ from 'lodash'
 import React from 'react'
 import {useIntl} from 'react-intl'
@@ -20,6 +21,7 @@ type Props = Partial<ListProps> & {
   onScroll: ListProps['onScroll']
 }
 export const TxHistoryList = (props: Props) => {
+  const styles = useStyles()
   const key = useRemountOnFocusHack()
   const wallet = useSelectedWallet()
   const {track} = useMetrics()
@@ -39,11 +41,7 @@ export const TxHistoryList = (props: Props) => {
         {...props}
         key={key}
         ListHeaderComponent={<ShowBuyBanner />}
-        contentContainerStyle={{
-          paddingHorizontal: 18,
-          flexGrow: 1,
-          height: 'auto',
-        }}
+        contentContainerStyle={styles.content}
         renderItem={({item}) => <TxHistoryListItem transaction={item} />}
         ItemSeparatorComponent={() => <Spacer height={16} />}
         renderSectionHeader={({section: {data}}) => <DayHeader ts={data[0].submittedAt} />}
@@ -87,6 +85,7 @@ type DayHeaderProps = {
 
 const DayHeader = ({ts}: DayHeaderProps) => {
   const intl = useIntl()
+  const styles = useStyles()
 
   return (
     <View style={styles.dayHeaderRoot}>
@@ -105,12 +104,23 @@ const getTransactionsByDate = (transactions: Record<string, TransactionInfo>) =>
     .map((data) => ({data}))
     .value()
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  dayHeaderRoot: {
-    paddingBottom: 4,
-    paddingHorizontal: 20,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {padding} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    content: {
+      ...padding['x-l'],
+      flexGrow: 1,
+      height: 'auto',
+    },
+    dayHeaderRoot: {
+      ...padding['b-xs'],
+      ...padding['x-l'],
+    },
+  })
+
+  return styles
+}

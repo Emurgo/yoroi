@@ -34,7 +34,7 @@ export const VerifyRestoredWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <WalletInfo>

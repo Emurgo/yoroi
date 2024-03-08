@@ -13,7 +13,7 @@ export const TermsOfServiceScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar type="dark" />
+      <StatusBar />
 
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <TermsOfService languageCode={languageCode} />

@@ -62,7 +62,7 @@ export const WalletSettingsScreen = () => {
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
       <ScrollView bounces={false} style={styles.settings}>
-        <StatusBar type="dark" />
+        <StatusBar />
 
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem
@@ -277,7 +277,7 @@ const messages = defineMessages({
   },
   singleAddress: {
     id: 'global.singleAddress',
-    defaultMessage: '!!!Single addresses',
+    defaultMessage: '!!!Single address',
   },
   multipleAddressesInfo: {
     id: 'global.multipleAddressesInfo',
