@@ -14,7 +14,6 @@ import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, ViewStyle
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
-import {COLORS} from './theme'
 import {HWDeviceInfo} from './yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
 
@@ -129,10 +128,11 @@ export type WalletStackRoutes = {
 export type WalletStackRouteNavigation = StackNavigationProp<WalletStackRoutes>
 
 export type WalletInitRoutes = {
-  'choose-create-restore': {
-    networkId: NetworkId
-    walletImplementationId: WalletImplementationId
-  }
+  'biometrics-screen': undefined
+  'choose-create-restore': undefined
+  'about-recovery-phrase': undefined
+  'save-recovery-phrase': undefined
+  'verify-recovery-phrase': undefined
   'initial-choose-create-restore': undefined
   'create-wallet-form': {
     networkId: NetworkId

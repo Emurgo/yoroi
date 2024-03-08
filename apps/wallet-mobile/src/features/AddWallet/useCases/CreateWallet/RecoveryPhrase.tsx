@@ -1,38 +1,62 @@
+import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
+import {BlurView} from 'expo-blur'
 import * as React from 'react'
-import {Keyboard, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions} from 'react-native'
+import {
+  Keyboard,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, StatusBar, useModal} from '../../../../components'
-import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
-import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
-import InfoIcon from '../../illustrations/InfoIcon'
+import {Button, StatusBar, useModal} from '../../../../components'
+import {Space} from '../../../../components/Space/Space'
 import {CardAboutPhrase} from '../../common/CardAboutPhrase/CardAboutPhrase'
-// import {useStrings} from '../common/useStrings'
+import {LearnMoreButton} from '../../common/LearnMoreButton/LearnMoreButton'
+import {mockAddWallet} from '../../common/mocks'
+import {StepperProgress} from '../../common/StepperProgress/StepperProgress'
+import {useStrings} from '../../common/useStrings'
+import EyeClosedIcon from '../../illustrations/EyeClosed'
+import EyeOpenIcon from '../../illustrations/EyeOpen'
+import InfoIcon from '../../illustrations/InfoIcon'
 
 export const RecoveryPhrase = () => {
-  const {styles} = useStyles()
-  const {openModal} = useModal()
+  const {styles, colors} = useStyles()
+  const {openModal, closeModal} = useModal()
+  const [isBlur, setIsBlur] = React.useState(true)
+
+  const navigation = useNavigation()
+
   const HEIGHT_SCREEN = useWindowDimensions().height
-  const HEIGHT_MODAL = (HEIGHT_SCREEN / 100) * 75
-  //   const strings = useStrings()
+  const PERCENTAGE = HEIGHT_SCREEN >= 900 ? 48 : HEIGHT_SCREEN >= 800 ? 55 : 75
+  const HEIGHT_MODAL = (HEIGHT_SCREEN / 100) * PERCENTAGE
+
+  const strings = useStrings()
 
   const showModal = () => {
     Keyboard.dismiss()
     openModal(
-      'Tips',
+      strings.recoveryPhraseModalTitle,
       <View style={styles.modal}>
         <ScrollView>
-          <View style={{gap: 16}}>
+          <View style={styles.content}>
             <CardAboutPhrase
+              title={strings.recoveryPhraseCardTitle}
               items={[
-                'Make sure no one is looking at your screen.',
-                'DO NOT take a screenshot.',
-                'Write the recovery phrase on a piece of paper and store in a secure location like a safety deposit box.',
-                'It is recommended to have 2 or 3 copies of the recovery phrase in different secure locations.',
-                'DO NOT share the recovery phrase as this will allow anyone to access your assets and wallet.',
+                strings.recoveryPhraseCardFirstItem,
+                strings.recoveryPhraseCardSecondItem,
+                strings.recoveryPhraseCardThirdItem,
+                strings.recoveryPhraseCardFourthItem,
+                strings.recoveryPhraseCardFifthItem,
               ]}
             />
+
             <LearnMoreButton
               onPress={() => {
                 ;('')
@@ -41,9 +65,11 @@ export const RecoveryPhrase = () => {
           </View>
         </ScrollView>
 
-        <Spacer height={8} />
-        <Button title="next" style={styles.button} />
-        <Spacer height={8} />
+        <Space height="s" />
+
+        <Button title={strings.continueButton} style={styles.button} onPress={closeModal} />
+
+        <Space height="l" />
       </View>,
       HEIGHT_MODAL,
     )
@@ -54,20 +80,58 @@ export const RecoveryPhrase = () => {
       <StatusBar type="light" />
 
       <View style={styles.content}>
-        <StepperProgress currentStep={2} currentStepTitle="Recovery phrase" totalSteps={4} displayStepNumber />
+        <StepperProgress currentStep={2} currentStepTitle={strings.recoveryStepper} totalSteps={4} displayStepNumber />
 
         <Text style={styles.title}>
-          {` Click “Show recovery phrase” below to reveal and save it. `}
+          {strings.recoveryPhraseTitle}
+
           <Pressable onPress={showModal}>
             <InfoIcon />
           </Pressable>
         </Text>
+
+        <View style={styles.mnemonicWords}>
+          <BlurView intensity={isBlur ? 14 : 0} style={styles.blurView} />
+
+          {mockAddWallet.mnemonic.split(' ').map((word, index) => (
+            <View key={`mnemonic-${index}`} testID={`mnemonic-${index}`} style={styles.mnemonicTextContainer}>
+              <LinearGradient
+                style={[StyleSheet.absoluteFill, {opacity: 1}]}
+                start={{x: 1, y: 0}}
+                end={{x: 0, y: 0}}
+                colors={colors.gradientBlueGreen}
+              />
+
+              <Text style={styles.mnemonicText}>
+                <Text style={styles.mnemonicText}>{index + 1}. </Text>
+
+                {word}
+              </Text>
+            </View>
+          ))}
+        </View>
+
+        <TouchableOpacity activeOpacity={0.5} style={styles.blurViewButton} onPress={() => setIsBlur(!isBlur)}>
+          {isBlur ? <EyeOpenIcon /> : <EyeClosedIcon />}
+
+          <Text style={styles.blurViewTextButton}>
+            {!isBlur ? strings.hideRecoveryPhraseButton : strings.showRecoveryPhraseButton}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <View>
-        <Button title="next" style={styles.button} onPress={showModal} />
+        <Button
+          title={strings.nextButton}
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate('new-wallet', {
+              screen: 'verify-recovery-phrase',
+            })
+          }
+        />
 
-        <Spacer height={7} />
+        <Space height="s" />
       </View>
     </SafeAreaView>
   )
@@ -78,27 +142,62 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      paddingHorizontal: 16,
+      ...theme.padding['x-l'],
       justifyContent: 'space-between',
+      backgroundColor: theme.color['white-static'],
     },
     modal: {
       flex: 1,
     },
     title: {
-      fontFamily: 'Rubik',
-      fontWeight: '500',
-      fontSize: 16,
-      lineHeight: 24,
+      ...theme.typography['body-1-l-regular'],
       color: theme.color.gray[900],
     },
     content: {
       gap: 16,
     },
     button: {backgroundColor: theme.color.primary[500]},
+    mnemonicWords: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 8,
+      ...theme.padding['y-s'],
+    },
+    mnemonicTextContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      borderRadius: 8,
+      overflow: 'hidden',
+      ...theme.padding['x-l'],
+      ...theme.padding['y-s'],
+    },
+    mnemonicText: {
+      ...theme.typography['body-1-l-regular'],
+      color: theme.color.primary['600'],
+    },
+    blurView: {
+      position: 'absolute',
+      ...theme.padding['xxl'],
+      left: -8,
+      right: -8,
+      bottom: 0,
+      top: 0,
+      zIndex: 1,
+    },
+    blurViewButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+    blurViewTextButton: {
+      ...theme.typography['button-2-m'],
+      color: theme.color.primary[500],
+    },
   })
 
   const colors = {
     gray900: theme.color.gray[900],
+    gradientBlueGreen: theme.color.gradients['blue-green'],
   }
 
   return {styles, colors} as const

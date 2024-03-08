@@ -10,7 +10,7 @@ import {ButtonCard} from '../common/ButtonCard/ButtonCard'
 import {LogoBanner} from '../common/LogoBanner/LogoBanner'
 import {useStrings} from '../common/useStrings'
 
-export const WalletInitScreen = () => {
+export const NewWalletScreenNighlty = () => {
   const {styles} = useStyles()
   const strings = useStrings()
 
@@ -29,11 +29,11 @@ export const WalletInitScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           <ButtonCard
-            title={strings.createWalletButtonCard}
-            icon="create"
+            title={strings.cardanoMainnet}
+            subTitle={strings.cardanoMainnetDescription}
             onPress={() =>
               navigation.navigate('new-wallet', {
-                screen: 'choose-create-restore',
+                screen: 'about-recovery-phrase',
               })
             }
           />
@@ -41,8 +41,8 @@ export const WalletInitScreen = () => {
           <Space height="l" />
 
           <ButtonCard
-            title={strings.restoreWalletButtonCard}
-            icon="restore"
+            title={strings.cardanoTestnet}
+            subTitle={strings.cardanoTestnetDescription}
             onPress={() => {
               ;('')
             }}
@@ -51,8 +51,8 @@ export const WalletInitScreen = () => {
           <Space height="l" />
 
           <ButtonCard
-            title={strings.connectWalletButtonCard}
-            icon="hardware"
+            title={strings.cardanoSanchonet}
+            subTitle={strings.cardanoSanchonetDescription}
             onPress={() => {
               ;('')
             }}

@@ -1,38 +1,49 @@
+import {useNavigation} from '@react-navigation/native'
 import {useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, Spacer, StatusBar} from '../../../components'
+import {Button, StatusBar} from '../../../components'
+import {Space} from '../../../components/Space/Space'
+import {useStrings} from '../common/useStrings'
 import Biometric from '../illustrations/Biometric'
-// import {useStrings} from '../common/useStrings'
 
 export const BiometricScreen = () => {
   const {styles} = useStyles()
-  //   const strings = useStrings()
+  const strings = useStrings()
+
+  const navigation = useNavigation()
 
   return (
     <SafeAreaView edges={['left', 'right', 'top', 'bottom']} style={styles.container}>
       <StatusBar type="light" />
 
-      <View>
+      <View style={styles.content}>
         <View style={styles.logo}>
           <Biometric />
         </View>
 
-        <Spacer height={16} />
+        <Space height="l" />
 
-        <Text style={styles.title}>
-          Use your device biometrics for a more convenient access to your Yoroi wallet and transaction confirmation
-        </Text>
+        <Text style={styles.title}>{strings.biometricDescription}</Text>
       </View>
 
-      <View style={styles.buttonContainer}>
-        <Button title="not now" outline textStyles={styles.textOutlineButton} />
+      <View>
+        <Button
+          title={strings.ignoreButton}
+          outline
+          textStyles={styles.textOutlineButton}
+          onPress={() =>
+            navigation.navigate('new-wallet', {
+              screen: 'initial-choose-create-restore',
+            })
+          }
+        />
 
-        <Button title="eneble biometrics" style={styles.button} />
+        <Button title={strings.enableButton} style={styles.button} />
 
-        <Spacer height={7} />
+        <Space height="s" />
       </View>
     </SafeAreaView>
   )
@@ -43,22 +54,22 @@ const useStyles = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      paddingHorizontal: 16,
-      justifyContent: 'space-between',
+      backgroundColor: theme.color['white-static'],
+      ...theme.padding['x-l'],
+    },
+    content: {
+      flex: 1,
+      justifyContent: 'center',
     },
     logo: {
       alignItems: 'center',
     },
     title: {
-      fontFamily: 'Rubik',
-      fontWeight: '500',
-      fontSize: 20,
-      lineHeight: 30,
+      ...theme.typography['heading-3-medium'],
       color: theme.color.gray.max,
       textAlign: 'center',
-      paddingHorizontal: 16,
+      ...theme.padding['x-l'],
     },
-    buttonContainer: {},
     textOutlineButton: {color: theme.color.gray[900]},
     button: {backgroundColor: theme.color.primary[500]},
   })

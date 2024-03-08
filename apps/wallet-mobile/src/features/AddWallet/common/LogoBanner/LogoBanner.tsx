@@ -2,21 +2,23 @@ import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 
-import {Spacer} from '../../../../components'
+import {Space} from '../../../../components/Space/Space'
 import YoroiLogo from '../../illustrations/YoroiLogo'
+import {useStrings} from '../useStrings'
 
 export const LogoBanner = () => {
+  const strings = useStrings()
   const {styles} = useStyles()
 
   return (
     <View style={styles.logoArea}>
       <YoroiLogo />
 
-      <Text style={styles.logoName}>Yoroi</Text>
+      <Text style={styles.logoName}>{strings.logoTitle}</Text>
 
-      <Spacer height={8} />
+      <Space height="s" />
 
-      <Text style={styles.descriptionText}>Light wallet for Cardano assets</Text>
+      <Text style={styles.descriptionText}>{strings.logoSubtitle}</Text>
     </View>
   )
 }
@@ -29,19 +31,13 @@ const useStyles = () => {
     },
     logoName: {
       color: theme.color.primary[500],
-      fontFamily: 'Rubik',
-      fontWeight: '500',
-      fontSize: 30,
-      lineHeight: 38,
       textAlign: 'center',
+      ...theme.typography['heading-1-medium'],
     },
     descriptionText: {
       color: theme.color.gray[900],
-      fontFamily: 'Rubik',
-      fontWeight: '400',
-      fontSize: 14,
-      lineHeight: 22,
       textAlign: 'center',
+      ...theme.typography['body-2-m-regular'],
     },
   })
 

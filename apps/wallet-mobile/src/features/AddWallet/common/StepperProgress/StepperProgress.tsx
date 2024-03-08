@@ -18,7 +18,12 @@ const Step = ({currentStep, currentStepTitle, displayStepNumber, todoStep, pastS
     <>
       <Animated.View
         layout={Layout}
-        style={[styles.step, todoStep && styles.todoStep, displayStepNumber === true && styles.markedStep]}
+        style={[
+          styles.step,
+          todoStep && styles.todoStep,
+          pastStep && styles.pastStep,
+          displayStepNumber === true && styles.markedStep,
+        ]}
       >
         {displayStepNumber === true && !pastStep ? (
           <Animated.Text style={[styles.stepNumber, todoStep && styles.todoStepNumber]}>{currentStep}</Animated.Text>
@@ -29,7 +34,7 @@ const Step = ({currentStep, currentStepTitle, displayStepNumber, todoStep, pastS
 
       {!todoStep && !pastStep && currentStepTitle !== undefined && (
         <Animated.Text layout={Layout} style={[styles.stepText]}>
-          About recovery phrase
+          {currentStepTitle}
         </Animated.Text>
       )}
     </>
@@ -68,10 +73,9 @@ const useStyles = () => {
   const {theme} = useTheme()
   const styles = StyleSheet.create({
     bar: {
-      backgroundColor: theme.color['white-static'],
       flexDirection: 'row',
       gap: 16,
-      marginVertical: 16,
+      ...theme.padding['y-l'],
     },
     step: {
       backgroundColor: theme.color.primary[600],
@@ -88,6 +92,9 @@ const useStyles = () => {
       backgroundColor: theme.color['white-static'],
       borderWidth: 2,
       borderColor: theme.color.gray[400],
+    },
+    pastStep: {
+      backgroundColor: theme.color.primary[300],
     },
     stepNumber: {
       fontSize: 14,
