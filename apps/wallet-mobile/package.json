@@ -124,7 +124,7 @@
     "@types/pbkdf2": "^3.1.2",
     "@yoroi/api": "1.5.1",
     "@yoroi/common": "1.5.1",
-    "@yoroi/exchange": "1.0.0",
+    "@yoroi/exchange": "2.0.0",
     "@yoroi/links": "1.5.1",
     "@yoroi/resolver": "2.0.4",
     "@yoroi/staking": "1.5.1",
