@@ -3,32 +3,45 @@ import {
   StorageReviverType,
   storageDeserializerMaker,
 } from '@yoroi/common'
-import {Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
+import {parseTokenBalance} from '../validators/token-balance'
 
-export const balanceStorageReviverMapping: StorageReviverMapping<Portfolio.Amount> =
-  {
-    quantity: StorageReviverType.AsBigInt,
-  }
+export const balanceStorageReviverMapping: StorageReviverMapping = {
+  quantity: StorageReviverType.AsBigInt,
+}
 
-export const tokenDiscoveryStorageReviverMapping: StorageReviverMapping<Portfolio.Token.Discovery> =
-  {
-    supply: StorageReviverType.AsBigInt,
-  }
+export const tokenDiscoveryReviverMapping: StorageReviverMapping = {
+  supply: StorageReviverType.AsBigInt,
+}
 
-export const tokenBalanceReviverMapping: StorageReviverMapping<Portfolio.Token.Balance> =
-  {
-    balance: StorageReviverType.AsBigInt,
-    lockedInBuiltTxs: StorageReviverType.AsBigInt,
-  }
+export const tokenBalanceReviverMapping: StorageReviverMapping = {
+  balance: StorageReviverType.AsBigInt,
+  lockedInBuiltTxs: StorageReviverType.AsBigInt,
+}
+
+const tokenBalanceDeserializer = (jsonString: string | null) => {
+  if (jsonString == null) return null
+  const record = storageDeserializerMaker(tokenBalanceReviverMapping)(
+    jsonString,
+  )
+  const parsed = parseTokenBalance(record)
+  return !parsed ? null : parsed
+}
+
+// TODO: revisit -> discoveryWithCache
+const tokenDiscoveryDeserializer = (jsonString: string | null) => {
+  if (jsonString == null) return null
+  const record = storageDeserializerMaker(tokenDiscoveryReviverMapping)(
+    jsonString,
+  )
+  const parsed = parseTokenBalance(record)
+  return !parsed ? null : parsed
+}
 
 export const deserializer = freeze(
   {
-    balance: storageDeserializerMaker(balanceStorageReviverMapping),
-    tokenDiscovery: storageDeserializerMaker(
-      tokenDiscoveryStorageReviverMapping,
-    ),
-    tokenBalance: storageDeserializerMaker(tokenBalanceReviverMapping),
+    tokenDiscovery: tokenDiscoveryDeserializer,
+    tokenBalance: tokenBalanceDeserializer,
   },
   true,
 )

@@ -5,12 +5,8 @@ export enum StorageReviverType {
   AsBigNumber = 'AsBigNumber',
 }
 
-type FlattenKeys<T> = T extends Record<string, unknown>
-  ? keyof T | FlattenKeys<T[keyof T]>
-  : never
-
-export type StorageReviverMapping<T> = {
-  [K in FlattenKeys<T>]?: StorageReviverType
+export type StorageReviverMapping = {
+  [key: string]: StorageReviverType
 }
 
 /**
@@ -20,10 +16,8 @@ export type StorageReviverMapping<T> = {
  * @param mapping - The mapping of keys to reviver types.
  * @returns JSON object revived according to the mapping, string -> BigInt or BigNumber.
  */
-export const storageDeserializerMaker = <T extends Record<string, unknown>>(
-  mapping: StorageReviverMapping<T>,
-) => {
-  const reviver = (key: keyof StorageReviverMapping<T>, value: any) => {
+export const storageDeserializerMaker = (mapping: StorageReviverMapping) => {
+  const reviver = (key: string, value: any) => {
     switch (mapping[key]) {
       case StorageReviverType.AsBigInt:
         return value == null ? value : BigInt(value)
@@ -50,7 +44,7 @@ export const storageDeserializerMaker = <T extends Record<string, unknown>>(
     if (jsonString == null) return null
     try {
       const parsed = JSON.parse(jsonString, (key, value) => {
-        if (key && mapping[key as keyof StorageReviverMapping<T>]) {
+        if (key && mapping[key]) {
           return reviver(key as any, value)
         }
         return value

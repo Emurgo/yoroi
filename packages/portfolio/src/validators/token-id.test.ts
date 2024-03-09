@@ -4,7 +4,7 @@ import {isTokenId, parseTokenId} from './token-id'
 
 describe('isTokenId', () => {
   it('should return true for valid token id', () => {
-    const tokenId: Portfolio.Token.Id = 'token1.asset1'
+    const tokenId: Portfolio.Token.Id = 'dead.'
     expect(isTokenId(tokenId)).toBe(true)
   })
 
@@ -21,7 +21,7 @@ describe('isTokenId', () => {
 
 describe('parseTokenId', () => {
   it('should return token id for valid input', () => {
-    const tokenId: unknown = 'token1.asset1'
+    const tokenId: unknown = 'dead.'
     expect(parseTokenId(tokenId)).toBe(tokenId)
   })
 

@@ -1,7 +1,8 @@
 import {Portfolio} from '@yoroi/types'
 import {z} from 'zod'
 
-export const TokenIdSchema = z.string().regex(/^[\w-]+\.[\w-]+$/)
+const regexId = /^(?:[a-fA-F0-9]+\.?[a-fA-F0-9]*|\.)$/
+export const TokenIdSchema = z.string().regex(regexId)
 
 export const isTokenId = (data: unknown): data is Portfolio.Token.Id => {
   return TokenIdSchema.safeParse(data).success

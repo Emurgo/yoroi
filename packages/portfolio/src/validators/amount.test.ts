@@ -4,7 +4,7 @@ import {isAmount, parseAmount} from './amount'
 describe('isAmount', () => {
   it('should return true for valid amount', () => {
     const amount: Portfolio.Amount = {
-      id: 'token.id',
+      id: 'dead.',
       quantity: BigInt(100),
     }
 
@@ -15,7 +15,7 @@ describe('isAmount', () => {
 
   it('should return false for invalid amount', () => {
     const amount = {
-      id: 'token-id',
+      id: 'dead.',
       quantity: '100',
     }
 
@@ -28,7 +28,7 @@ describe('isAmount', () => {
 describe('parseAmount', () => {
   it('should return parsed amount for valid data', () => {
     const data = {
-      id: 'token.id',
+      id: 'dead.',
       quantity: BigInt(100),
     }
 
@@ -40,7 +40,7 @@ describe('parseAmount', () => {
 
   it('should return undefined for invalid data', () => {
     const data = {
-      id: 'token.id',
+      id: 'dead.',
       quantity: '100',
     }
 

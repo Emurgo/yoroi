@@ -1,12 +1,12 @@
 import {Portfolio} from '@yoroi/types'
 import {z} from 'zod'
 
-import {TokenIdSchema} from './token-id'
+import {TokenInfoSchema} from './token-info'
 
 export const TokenBalanceSchema = z.object({
-  id: TokenIdSchema,
+  info: TokenInfoSchema,
   balance: z.bigint(),
-  lockedInBuiltTx: z.bigint(),
+  lockedInBuiltTxs: z.bigint(),
 })
 
 export const isTokenBalance = (
@@ -15,7 +15,7 @@ export const isTokenBalance = (
   return TokenBalanceSchema.safeParse(data).success
 }
 
-export const parseAmount = (
+export const parseTokenBalance = (
   data: unknown,
 ): Portfolio.Token.Balance | undefined => {
   return isTokenBalance(data) ? data : undefined
