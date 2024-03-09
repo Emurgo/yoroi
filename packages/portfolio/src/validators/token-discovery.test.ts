@@ -3,7 +3,7 @@ import {
   parseTokenDiscovery,
   TokenDiscoveryResponseWithCacheRecordSchema,
   isTokenDiscoveryResponseWithCacheRecord,
-  parseTokenInfoResponseWithCacheRecord,
+  parseTokenDiscoveryResponseWithCacheRecord,
 } from './token-discovery'
 import {tokenDiscoveryMocks} from '../adapters/token-discovery.mocks'
 import {AppApiResponseRecordWithCache} from '../types'
@@ -102,12 +102,12 @@ describe('isTokenDiscoveryResponseWithCacheRecord', () => {
   })
 })
 
-describe('parseTokenInfoResponseWithCacheRecord', () => {
+describe('parseTokenDiscoveryResponseWithCacheRecord', () => {
   it('should return a valid token discovery response with cache record', () => {
     const validResponse: AppApiResponseRecordWithCache<Portfolio.Token.Discovery> =
       [200, tokenDiscoveryMocks.nftCryptoKitty, 'hash', 100]
 
-    const result = parseTokenInfoResponseWithCacheRecord(validResponse)
+    const result = parseTokenDiscoveryResponseWithCacheRecord(validResponse)
 
     expect(result).toEqual(validResponse)
   })
@@ -120,7 +120,7 @@ describe('parseTokenInfoResponseWithCacheRecord', () => {
 
     const invalidResponse = [200, invalidTokenDiscovery, 'hash', 100]
 
-    const result = parseTokenInfoResponseWithCacheRecord(invalidResponse)
+    const result = parseTokenDiscoveryResponseWithCacheRecord(invalidResponse)
 
     expect(result).toBeUndefined()
   })

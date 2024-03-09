@@ -5,6 +5,7 @@ import {
 } from '@yoroi/common'
 import {freeze} from 'immer'
 import {parseTokenBalance} from '../validators/token-balance'
+import {parseTokenDiscovery} from '../validators/token-discovery'
 
 export const balanceStorageReviverMapping: StorageReviverMapping = {
   quantity: StorageReviverType.AsBigInt,
@@ -34,7 +35,7 @@ const tokenDiscoveryDeserializer = (jsonString: string | null) => {
   const record = storageDeserializerMaker(tokenDiscoveryReviverMapping)(
     jsonString,
   )
-  const parsed = parseTokenBalance(record)
+  const parsed = parseTokenDiscovery(record)
   return !parsed ? null : parsed
 }
 

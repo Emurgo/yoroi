@@ -1,4 +1,4 @@
-import {Portfolio} from '@yoroi/types'
+import {App, Portfolio} from '@yoroi/types'
 import {z} from 'zod'
 
 import {responseRecordWithCacheSchemaMaker} from './response-record-with-cache-schema-maker'
@@ -62,8 +62,19 @@ export const isTokenDiscoveryResponseWithCacheRecord = (
 ): data is AppApiResponseRecordWithCache<Portfolio.Token.Discovery> =>
   TokenDiscoveryResponseWithCacheRecordSchema.safeParse(data).success
 
-export const parseTokenInfoResponseWithCacheRecord = (
+export const parseTokenDiscoveryResponseWithCacheRecord = (
   data: unknown,
 ): AppApiResponseRecordWithCache<Portfolio.Token.Discovery> | undefined => {
   return isTokenDiscoveryResponseWithCacheRecord(data) ? data : undefined
+}
+
+export const isTokenDiscoveryWithCacheRecord = (
+  data: unknown,
+): data is App.CacheRecord<Portfolio.Token.Discovery> =>
+  TokenDiscoveryResponseWithCacheRecordSchema.safeParse(data).success
+
+export const parseTokenDiscoveryWithCacheRecord = (
+  data: unknown,
+): App.CacheRecord<Portfolio.Token.Discovery> | undefined => {
+  return isTokenDiscoveryWithCacheRecord(data) ? data : undefined
 }
