@@ -1,11 +1,14 @@
+import {App, Portfolio} from '@yoroi/types'
 import {tokenInfoMocks} from '../adapters/token-info.mocks'
 import {
   isPrimaryTokenInfo,
   isSecondaryTokenInfo,
   isTokenInfo,
   isTokenInfoResponseWithCacheRecord,
+  isTokenInfoWithCacheRecord,
   parseTokenInfo,
   parseTokenInfoResponseWithCacheRecord,
+  parseTokenInfoWithCacheRecord,
 } from './token-info'
 
 describe('isPrimaryTokenInfo', () => {
@@ -96,6 +99,53 @@ describe('parseTokenInfoResponseWithCacheRecord', () => {
       cache: 'some-cache-value',
     }
     const result = parseTokenInfoResponseWithCacheRecord(invalidResponse)
+    expect(result).toBeUndefined()
+  })
+})
+
+describe('isTokenInfoWithCacheRecord', () => {
+  it('should return true for valid token info with cache record', () => {
+    const validRecord: App.CacheRecord<Portfolio.Token.Info> = {
+      record: tokenInfoMocks.nftCryptoKitty,
+      expires: 100,
+      hash: 'hash',
+    }
+    const result = isTokenInfoWithCacheRecord(validRecord)
+    expect(result).toBe(true)
+  })
+
+  it('should return false for invalid token info with cache record', () => {
+    const invalidRecord: App.CacheRecord<Portfolio.Token.Info> = {
+      record: tokenInfoMocks.nftCryptoKitty,
+      expires: -100,
+      hash: 'hash',
+    }
+
+    const result = isTokenInfoWithCacheRecord(invalidRecord)
+    expect(result).toBe(false)
+  })
+})
+
+describe('parseTokenInfoWithCacheRecord', () => {
+  it('should return token info for valid token info with cache record', () => {
+    const validRecord: App.CacheRecord<Portfolio.Token.Info> = {
+      record: tokenInfoMocks.nftCryptoKitty,
+      expires: 100,
+      hash: 'hash',
+    }
+
+    const result = parseTokenInfoWithCacheRecord(validRecord)
+    expect(result).toEqual(validRecord)
+  })
+
+  it('should return undefined for invalid token info with cache record', () => {
+    const invalidRecord: App.CacheRecord<Portfolio.Token.Info> = {
+      record: tokenInfoMocks.nftCryptoKitty,
+      expires: -100,
+      hash: 'hash',
+    }
+
+    const result = parseTokenInfoWithCacheRecord(invalidRecord)
     expect(result).toBeUndefined()
   })
 })

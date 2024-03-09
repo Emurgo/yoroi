@@ -1,4 +1,4 @@
-import {Portfolio} from '@yoroi/types'
+import {App, Portfolio} from '@yoroi/types'
 import {z} from 'zod'
 
 import {TokenStatusSchema} from './token-status'
@@ -7,6 +7,7 @@ import {TokenIdSchema} from './token-id'
 import {TokenTypeSchema} from './token-type'
 import {responseRecordWithCacheSchemaMaker} from './response-record-with-cache-schema-maker'
 import {AppApiResponseRecordWithCache} from '../types'
+import {cacheRecordSchemaMaker} from '@yoroi/common'
 
 export const CommonTokenInfoSchema = z.object({
   decimals: z.number().nonnegative(),
@@ -74,4 +75,18 @@ export const parseTokenInfoResponseWithCacheRecord = (
   data: unknown,
 ): AppApiResponseRecordWithCache<Portfolio.Token.Info> | undefined => {
   return isTokenInfoResponseWithCacheRecord(data) ? data : undefined
+}
+
+export const TokenInfoWithCacheRecordSchema =
+  cacheRecordSchemaMaker(TokenInfoSchema)
+
+export const isTokenInfoWithCacheRecord = (
+  data: unknown,
+): data is App.CacheRecord<Portfolio.Token.Info> =>
+  TokenInfoWithCacheRecordSchema.safeParse(data).success
+
+export const parseTokenInfoWithCacheRecord = (
+  data: unknown,
+): App.CacheRecord<Portfolio.Token.Info> | undefined => {
+  return isTokenInfoWithCacheRecord(data) ? data : undefined
 }
