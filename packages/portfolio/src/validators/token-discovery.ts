@@ -6,6 +6,7 @@ import {TokenSourceSchema} from './token-source'
 import {TokenPropertyTypeSchema} from './token-property-type'
 import {TokenIdSchema} from './token-id'
 import {AppApiResponseRecordWithCache} from '../types'
+import {cacheRecordSchemaMaker} from '@yoroi/common'
 
 const DiscoverySourceSchema = z.object({
   name: TokenSourceSchema,
@@ -28,13 +29,14 @@ const DiscoveryCountersSchema = z.object({
 })
 
 const DiscoveryPropertiesSchema = z.record(
-  z
-    .object({
+  z.union([
+    z.object({
       rarity: z.number(),
       detectedType: TokenPropertyTypeSchema,
       value: z.unknown(),
-    })
-    .optional(),
+    }),
+    z.object({}),
+  ]),
 )
 
 export const TokenDiscoverySchema = z.object({
@@ -68,10 +70,14 @@ export const parseTokenDiscoveryResponseWithCacheRecord = (
   return isTokenDiscoveryResponseWithCacheRecord(data) ? data : undefined
 }
 
+export const TokenDiscoveryWithCacheRecordSchema =
+  // zod doesn't work with string templates yet, check TokenIdSchema for more info
+  cacheRecordSchemaMaker<Portfolio.Token.Discovery>(TokenDiscoverySchema as any)
+
 export const isTokenDiscoveryWithCacheRecord = (
   data: unknown,
 ): data is App.CacheRecord<Portfolio.Token.Discovery> =>
-  TokenDiscoveryResponseWithCacheRecordSchema.safeParse(data).success
+  TokenDiscoveryWithCacheRecordSchema.safeParse(data).success
 
 export const parseTokenDiscoveryWithCacheRecord = (
   data: unknown,

@@ -4,10 +4,12 @@ import {
   TokenDiscoveryResponseWithCacheRecordSchema,
   isTokenDiscoveryResponseWithCacheRecord,
   parseTokenDiscoveryResponseWithCacheRecord,
+  parseTokenDiscoveryWithCacheRecord,
+  isTokenDiscoveryWithCacheRecord,
 } from './token-discovery'
 import {tokenDiscoveryMocks} from '../adapters/token-discovery.mocks'
 import {AppApiResponseRecordWithCache} from '../types'
-import {Portfolio} from '@yoroi/types'
+import {App, Portfolio} from '@yoroi/types'
 
 describe('isTokenDiscovery', () => {
   it('should return true for a valid token discovery', () => {
@@ -123,5 +125,69 @@ describe('parseTokenDiscoveryResponseWithCacheRecord', () => {
     const result = parseTokenDiscoveryResponseWithCacheRecord(invalidResponse)
 
     expect(result).toBeUndefined()
+  })
+})
+
+describe('parseTokenDiscoveryWithCacheRecord', () => {
+  it('should return a valid token discovery with cache record', () => {
+    const validTokenDiscovery: Portfolio.Token.Discovery =
+      tokenDiscoveryMocks.nftCryptoKitty
+    const validCache: App.CacheRecord<Portfolio.Token.Discovery> = {
+      hash: 'hash',
+      expires: 100,
+      record: validTokenDiscovery,
+    }
+
+    const result = parseTokenDiscoveryWithCacheRecord(validCache)
+
+    expect(result).toBe(validCache)
+  })
+
+  it('should return undefined for an invalid token discovery with cache record', () => {
+    const invalidTokenDiscovery = {
+      ...tokenDiscoveryMocks.primaryETH,
+      id: 'invalid',
+    }
+    const invalidCache: App.CacheRecord<Portfolio.Token.Discovery> = {
+      hash: 'hash',
+      expires: 100,
+      record: invalidTokenDiscovery as any,
+    }
+
+    const result = parseTokenDiscoveryWithCacheRecord(invalidCache)
+
+    expect(result).toBeUndefined()
+  })
+})
+
+describe('isTokenDiscoveryWithCacheRecord', () => {
+  it('should return true for a valid token discovery with cache record', () => {
+    const validTokenDiscovery: Portfolio.Token.Discovery =
+      tokenDiscoveryMocks.nftCryptoKitty
+    const validCache: App.CacheRecord<Portfolio.Token.Discovery> = {
+      hash: 'hash',
+      expires: 100,
+      record: validTokenDiscovery,
+    }
+
+    const result = isTokenDiscoveryWithCacheRecord(validCache)
+
+    expect(result).toBe(true)
+  })
+
+  it('should return false for an invalid token discovery with cache record', () => {
+    const invalidTokenDiscovery = {
+      ...tokenDiscoveryMocks.primaryETH,
+      id: 'invalid',
+    }
+    const invalidCache: App.CacheRecord<Portfolio.Token.Discovery> = {
+      hash: 'hash',
+      expires: 100,
+      record: invalidTokenDiscovery as any,
+    }
+
+    const result = isTokenDiscoveryWithCacheRecord(invalidCache)
+
+    expect(result).toBe(false)
   })
 })

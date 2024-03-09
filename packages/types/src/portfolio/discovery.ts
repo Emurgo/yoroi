@@ -27,11 +27,13 @@ export type PortfolioTokenDiscovery = {
     totalItems: number
   }
 
-  properties: {
-    [property: string]: {
-      rarity: number
-      detectedType: PortfolioTokenPropertyType
-      value: any
-    }
-  }
+  properties:
+    | {
+        [property: string]: {
+          rarity: number
+          detectedType: PortfolioTokenPropertyType
+          value: any
+        }
+      }
+    | {}
 }
