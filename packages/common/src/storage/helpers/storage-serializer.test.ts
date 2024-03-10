@@ -24,8 +24,8 @@ describe('storageSerializer', () => {
   })
 
   it('should stringify arrays correctly', () => {
-    const input = [1, 2n, 3]
-    const expected = '[1,"2",3]'
+    const input = {a: [1, 2n, 3]}
+    const expected = '{"a":[1,"2",3]}'
     const result = storageSerializer(input)
     expect(result).toEqual(expected)
   })
