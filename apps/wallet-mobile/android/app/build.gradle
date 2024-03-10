@@ -167,9 +167,6 @@ dependencies {
     implementation ('com.facebook.fresco:animated-webp:2.5.0')
     implementation ('com.facebook.fresco:webpsupport:2.5.0')
 
-    // react-native-bootsplash
-    implementation("androidx.core:core-splashscreen:1.0.0")
-
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
