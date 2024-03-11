@@ -209,6 +209,7 @@
   "components.receive.addressverifymodal.afterConfirm": "Akonáhle potvrdíte, zvalidujte adresu na svojej Ledger peňaženke a uistite sa, že cesta a adresa sa zhodujú s:",
   "components.receive.addressverifymodal.title": "Overte adresu na Ledger",
   "components.receive.addressview.verifyAddressLabel": "Verify address",
+  "components.receive.specificamountscreen.title": "Amount to receive",
   "components.receive.receivescreen.cannotGenerate": "Musíte použiť niektorú z vašich adries",
   "components.receive.receivescreen.freshAddresses": "Nové adresy",
   "components.receive.receivescreen.generateButton": "Generate new address",
