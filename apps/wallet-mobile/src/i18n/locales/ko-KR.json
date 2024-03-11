@@ -209,6 +209,7 @@
   "components.receive.addressverifymodal.afterConfirm": "확인 버튼을 탭하면 Ledger 기기의 주소 검증을 시작합니다.  주소와 경로가 아래 보여지는 것과 일치하는지 확인하십시오.",
   "components.receive.addressverifymodal.title": "Ledger에서 주소 검증하기",
   "components.receive.addressview.verifyAddressLabel": "Verify address",
+  "components.receive.specificamountscreen.title": "Amount to receive",
   "components.receive.receivescreen.cannotGenerate": "기존의 주소들 중 하나를 사용해야 합니다.",
   "components.receive.receivescreen.freshAddresses": "주소 새로고침",
   "components.receive.receivescreen.generateButton": "Generate new address",
