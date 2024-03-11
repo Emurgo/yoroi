@@ -209,6 +209,7 @@
   "components.receive.addressverifymodal.afterConfirm": "Una volta attivata la conferma, convalidare l'indirizzo sul dispositivo Ledger, accertandosi che sia il percorso che l'indirizzo corrispondano a quanto indicato di seguito:",
   "components.receive.addressverifymodal.title": "Verifica indirizzo su Ledger",
   "components.receive.addressview.verifyAddressLabel": "Verifica indirizzo",
+  "components.receive.specificamountscreen.title": "Amount to receive",
   "components.receive.receivescreen.cannotGenerate": "Devi usare alcuni dei tuoi indirizzi",
   "components.receive.receivescreen.freshAddresses": "Nuovo indirizzo",
   "components.receive.receivescreen.generateButton": "Genera nuovo indirizzo",
