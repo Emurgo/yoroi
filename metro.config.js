@@ -1,6 +1,6 @@
 const path = require("path");
-const {mergeConfig} = require('@react-native/metro-config');
-const { getSentryExpoConfig } = require('@sentry/react-native/metro');
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const { withSentryConfig } = require('@sentry/react-native/metro');
 
 projectRoot = path.resolve(__dirname, "apps/wallet-mobile");
 
@@ -43,4 +43,6 @@ config = {
   },
 };
 
-module.exports = mergeConfig(getSentryExpoConfig(projectRoot), config);
+
+const defaultConfig = getDefaultConfig(projectRoot);
+module.exports = withSentryConfig(mergeConfig(defaultConfig, config));
