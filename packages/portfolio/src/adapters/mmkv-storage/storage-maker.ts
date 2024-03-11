@@ -71,6 +71,7 @@ export const portfolioStorageMaker = ({
     all: () =>
       balanceStorage.multiGet<Portfolio.Token.Balance>(
         balanceStorage.getAllKeys(),
+        deserializers.tokenBalance,
       ),
     keys: () => balanceStorage.getAllKeys(),
     clear: () => balanceStorage.clear(),

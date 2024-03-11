@@ -47,12 +47,22 @@ const ftNameless: Portfolio.Token.Balance = {
 
 const storage: {
   entries1: ReadonlyArray<[Portfolio.Token.Id, Portfolio.Token.Balance]>
+  entries1WithPrimary: ReadonlyArray<
+    [Portfolio.Token.Id, Portfolio.Token.Balance]
+  >
 } = {
   entries1: [
     [nftCryptoKitty.info.id, nftCryptoKitty],
     [rnftWhatever.info.id, rnftWhatever],
     [ftNoTicker.info.id, ftNoTicker],
     [ftNameless.info.id, ftNameless],
+  ],
+  entries1WithPrimary: [
+    [nftCryptoKitty.info.id, nftCryptoKitty],
+    [rnftWhatever.info.id, rnftWhatever],
+    [ftNoTicker.info.id, ftNoTicker],
+    [ftNameless.info.id, ftNameless],
+    [primaryETH.info.id, primaryETH],
   ],
 }
 

@@ -10,6 +10,7 @@ import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
 import {PortfolioStorage} from './types'
 import {tokenBalanceMocks} from './adapters/token-balance.mocks'
 import {tokenDiscoveryMocks} from './adapters/token-discovery.mocks'
+import {sortTokenBalances} from './helpers/sorting'
 
 describe('portfolioManagerMaker', () => {
   const primaryTokenInfo = createPrimaryTokenInfo({
@@ -228,17 +229,21 @@ describe('hydrate', () => {
       network: Chain.Network.Main,
       api: portfolioApiMock.success,
       storage,
-      primaryTokenInfo,
+      primaryTokenInfo: tokenInfoMocks.primaryETH,
     })
     const subscriber = jest.fn()
     portfolioManager.observer.subscribe(subscriber)
+    const sortedBalances = sortTokenBalances({
+      primaryTokenInfo,
+      tokenBalances: [
+        ...new Map(tokenBalanceMocks.storage.entries1WithPrimary).values(),
+      ],
+    })
 
     portfolioManager.hydrate()
 
     expect(portfolioManager.getPrimaryBreakdown()).toEqual(primaryBalance)
-    expect(portfolioManager.getBalances()).toEqual(
-      tokenBalanceMocks.storage.entries1,
-    )
+    expect(portfolioManager.getBalances()).toEqual(sortedBalances)
 
     expect(subscriber).toHaveBeenCalledTimes(1)
   })
