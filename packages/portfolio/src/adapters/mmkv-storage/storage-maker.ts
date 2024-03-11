@@ -1,7 +1,7 @@
 import {storageSerializer} from '@yoroi/common'
 import {App, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
-import {deserializer} from '../../transformers/deserializer'
+import {deserializers} from '../../transformers/deserializers'
 
 export const portfolioStorageMaker = ({
   tokenInfoStorage,
@@ -46,7 +46,7 @@ export const portfolioStorageMaker = ({
     read: (keys: ReadonlyArray<Portfolio.Token.Id>) =>
       tokenDiscoveryStorage.multiGet<
         App.CacheRecord<Portfolio.Token.Discovery>
-      >(keys, deserializer.tokenDiscoveryWithCache),
+      >(keys, deserializers.tokenDiscoveryWithCache),
     all: () =>
       tokenDiscoveryStorage.multiGet<
         App.CacheRecord<Portfolio.Token.Discovery>
@@ -66,7 +66,7 @@ export const portfolioStorageMaker = ({
     read: (keys: ReadonlyArray<Portfolio.Token.Id>) =>
       balanceStorage.multiGet<Portfolio.Token.Balance>(
         keys,
-        deserializer.tokenBalance,
+        deserializers.tokenBalance,
       ),
     all: () =>
       balanceStorage.multiGet<Portfolio.Token.Balance>(
@@ -86,7 +86,7 @@ export const portfolioStorageMaker = ({
     read: (key: Portfolio.Token.Id) =>
       primaryBreakdownStorage.getItem<Portfolio.BalancePrimaryBreakdown>(
         key,
-        deserializer.primaryBreakdown,
+        deserializers.primaryBreakdown,
       ),
     clear: () => primaryBreakdownStorage.clear(),
   }

@@ -51,7 +51,7 @@ const primaryBalanceBreakdownDeserializer = (jsonString: string | null) => {
   return parsed ?? null
 }
 
-export const deserializer = freeze(
+export const deserializers = freeze(
   {
     tokenDiscoveryWithCache: tokenDiscoveryWithCacheDeserializer,
     tokenBalance: tokenBalanceDeserializer,

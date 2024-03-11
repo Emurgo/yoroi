@@ -11,7 +11,7 @@ export * from './adapters/token-discovery.mocks'
 export * from './adapters/token-info.mocks'
 export * from './adapters/token-balance.mocks'
 
-export * from './transformers/deserializer'
+export * from './transformers/deserializers'
 export * from './transformers/record-with-etag'
 
 export * from './validators/amount'
