@@ -209,6 +209,7 @@
   "components.receive.addressverifymodal.afterConfirm": "Sobald Du auf \"Bestätigen\" tippst, validierst Du die Adresse auf Deinem Ledger-Gerät und stellst sicher, dass sowohl der Pfad als auch die Adresse mit den unten angezeigten Angaben übereinstimmen:",
   "components.receive.addressverifymodal.title": "Verifiziere die Adresse auf dem Ledger",
   "components.receive.addressview.verifyAddressLabel": "Adressprüfung",
+  "components.receive.specificamountscreen.title": "Amount to receive",
   "components.receive.receivescreen.cannotGenerate": "Du musst einige deiner Adressen verwenden",
   "components.receive.receivescreen.freshAddresses": "Frische Adressen",
   "components.receive.receivescreen.generateButton": "Neue Adresse erzeugen",
