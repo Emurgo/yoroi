@@ -10,7 +10,6 @@ import {useCopy} from '../../../legacy/useCopy'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {isEmptyString} from '../../../utils'
-import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
 import {editedFormatter} from '../../../yoroi-wallets/utils'
 import {useReceive} from '../common/ReceiveProvider'
 import {ShareQRCodeCard} from '../common/ShareQRCodeCard/ShareQRCodeCard'
@@ -25,19 +24,17 @@ export const RequestSpecificAmountScreen = () => {
   const hasAmount = !isEmptyString(amount)
 
   const {selectedAddress} = useReceive()
-  const {isSingle} = useAddressModeManager()
 
   const screenHeight = useWindowDimensions().height
   const modalHeight = (screenHeight / 100) * 80
   const {openModal} = useModal()
-  const modalTitle = isSingle ? strings.singleAddress : strings.multipleAddress
 
   const handleOnGenerateLink = React.useCallback(() => {
     Keyboard.dismiss()
 
     track.receiveAmountGeneratedPageViewed({ada_amount: Number(amount)})
-    openModal(modalTitle, <Modal amount={amount} address={selectedAddress} />, modalHeight)
-  }, [track, amount, openModal, modalTitle, selectedAddress, modalHeight])
+    openModal(strings.amountToReceive, <Modal amount={amount} address={selectedAddress} />, modalHeight)
+  }, [track, amount, openModal, strings.amountToReceive, selectedAddress, modalHeight])
 
   const handleOnChangeAmount = (amount: string) => {
     setAmount(editedFormatter(amount))
