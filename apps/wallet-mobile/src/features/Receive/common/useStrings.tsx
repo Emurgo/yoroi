@@ -4,6 +4,7 @@ export const useStrings = () => {
   const intl = useIntl()
 
   return {
+    amountToReceive: intl.formatMessage(messages.amountToReceive),
     receiveTitle: intl.formatMessage(messages.receiveTitle),
     addresscardTitle: intl.formatMessage(messages.addresscardTitle),
     shareLabel: intl.formatMessage(messages.shareLabel),
@@ -34,6 +35,10 @@ export const useStrings = () => {
 }
 
 export const messages = defineMessages({
+  amountToReceive: {
+    id: 'components.receive.specificamountscreen.title',
+    defaultMessage: '!!!Amount to receive',
+  },
   receiveTitle: {
     id: 'components.receive.receivescreen.title',
     defaultMessage: '!!!Receive',
