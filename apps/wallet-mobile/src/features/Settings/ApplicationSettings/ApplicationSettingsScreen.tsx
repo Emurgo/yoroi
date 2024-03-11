@@ -6,11 +6,12 @@ import {defineMessages, useIntl} from 'react-intl'
 import {Platform, ScrollView, StyleSheet, Switch} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon, Spacer, StatusBar} from '../../../components'
+import {Icon, Spacer} from '../../../components'
 import {useLanguage} from '../../../i18n'
 import {defaultLanguage} from '../../../i18n/languages'
 import {CONFIG, isNightly, isProduction} from '../../../legacy/config'
 import {lightPalette} from '../../../theme'
+import {useStatusBar} from '../../../theme/hooks'
 import {useAuthOsEnabled, useAuthSetting, useAuthWithOs} from '../../../yoroi-wallets/auth'
 import {useCrashReports} from '../../../yoroi-wallets/hooks'
 import {usePrivacyMode} from '../../Settings/PrivacyMode/PrivacyMode'
@@ -28,6 +29,7 @@ export const ApplicationSettingsScreen = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {colorScheme} = useTheme()
+  useStatusBar()
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 
@@ -55,8 +57,6 @@ export const ApplicationSettingsScreen = () => {
   return (
     <SafeAreaView edges={['bottom', 'right', 'left']} style={styles.root}>
       <ScrollView bounces={false} style={styles.settings}>
-        <StatusBar />
-
         <SettingsSection title={strings.general}>
           <NavigatedSettingsItem
             icon={<Icon.Globe {...iconProps} />}

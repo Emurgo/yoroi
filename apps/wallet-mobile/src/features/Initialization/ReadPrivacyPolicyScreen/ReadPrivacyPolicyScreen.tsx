@@ -2,17 +2,16 @@ import React from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {StatusBar} from '../../../components'
 import {useLanguage} from '../../../i18n'
 import {PrivacyPolicy} from '../../../Legal'
+import {useStatusBar} from '../../../theme/hooks'
 
 export const ReadPrivacyPolicyScreen = () => {
   const {languageCode} = useLanguage()
+  useStatusBar()
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar />
-
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <PrivacyPolicy languageCode={languageCode} />
       </ScrollView>

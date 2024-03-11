@@ -6,10 +6,11 @@ import {LayoutAnimation, StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 
 import infoIcon from '../assets/img/icon/info-light-green.png'
-import {Boundary, ResetErrorRef, Spacer, StatusBar} from '../components'
+import {Boundary, ResetErrorRef, Spacer} from '../components'
 import {Tab, TabPanel, TabPanels, Tabs} from '../components/Tabs'
 import {assetMessages, txLabels} from '../i18n/global-messages'
 import {useSelectedWallet} from '../SelectedWallet'
+import {useStatusBar} from '../theme/hooks'
 import {isByron} from '../yoroi-wallets/cardano/utils'
 import {useSync} from '../yoroi-wallets/hooks'
 import {ActionsBanner} from './ActionsBanner'
@@ -56,8 +57,6 @@ export const TxHistory = () => {
 
   return (
     <View style={styles.scrollView}>
-      <StatusBar />
-
       <Animated.View style={[styles.container, translateStyles]}>
         <CollapsibleHeader expanded={expanded}>
           <BalanceBanner ref={resetErrorRef} />
@@ -150,6 +149,8 @@ const warningBannerMessages = defineMessages({
 const useStyles = () => {
   const {theme} = useTheme()
   const {color, padding} = theme
+  useStatusBar(color.primary[100])
+
   const styles = StyleSheet.create({
     scrollView: {
       flex: 1,
