@@ -209,6 +209,7 @@
   "components.receive.addressverifymodal.afterConfirm": "確認をタップすると、Ledgerデバイス上のアドレスが有効化され、パスとアドレスが以下と一致するようになります。",
   "components.receive.addressverifymodal.title": "Ledgerのアドレスを確認",
   "components.receive.addressview.verifyAddressLabel": "Verify address",
+  "components.receive.specificamountscreen.title": "Amount to receive",
   "components.receive.receivescreen.cannotGenerate": "アドレスをいくつか使用する必要があります。",
   "components.receive.receivescreen.freshAddresses": "新しいアドレス",
   "components.receive.receivescreen.generateButton": "Generate new address",
