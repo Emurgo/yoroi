@@ -26,10 +26,10 @@ const opaqueColor = (color: HexColor) => {
   }
 }
 
-export const useStatusBar = (baseColor?: HexColor, legacyModal?: boolean) => {
+export const useStatusBar = (pageColor?: HexColor, legacyModal?: boolean) => {
   const {theme, isDark} = useTheme()
   const {isOpen} = useModal()
-  const color = baseColor ?? (isDark ? theme.color['black-static'] : theme.color['white-static'])
+  const color = pageColor ?? (isDark ? theme.color['black-static'] : theme.color['white-static'])
   const bgColor = isOpen || legacyModal ? opaqueColor(color) : color
 
   const effect = () => {
