@@ -47,6 +47,18 @@ export const portfolioManagerMaker = ({
   // let tokenInfoIds: Readonly<Set<Portfolio.Token.Id>>
   // let tokenDiscoveryKeys: ReadonlyArray<Portfolio.Token.Id>
 
+  const sort = () => {
+    sortedBalances = freeze(
+      sortTokenBalances({
+        tokenBalances: [...balances.values()].filter(
+          (v): v is Portfolio.Token.Balance => v != null,
+        ),
+        primaryTokenInfo,
+      }),
+      true,
+    )
+  }
+
   const hydrate = () => {
     cachedInfos = freeze(
       new Map(
@@ -79,6 +91,7 @@ export const portfolioManagerMaker = ({
       }),
       true,
     )
+    sort()
     isHydrated = true
 
     observer.notify({event: PortfolioManagerEvent.Hydrate})
@@ -178,25 +191,14 @@ export const portfolioManagerMaker = ({
     })
     storage.balances.clear()
     storage.balances.save([...newBalances.entries()])
-
     // memory has primary balance
     newBalances.set(primaryTokenInfo.id, {
       info: primaryTokenInfo,
       balance: primaryBalance.balance,
       lockedInBuiltTxs: primaryBalance.lockedInBuiltTxs,
     })
-
     balances = freeze(newBalances, true)
-
-    sortedBalances = freeze(
-      sortTokenBalances({
-        tokenBalances: [...balances.values()].filter(
-          (v): v is Portfolio.Token.Balance => v != null,
-        ),
-        primaryTokenInfo,
-      }),
-      true,
-    )
+    sort()
 
     observer.notify({event: PortfolioManagerEvent.Sync})
   }

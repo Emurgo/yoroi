@@ -9,6 +9,7 @@ import {portfolioStorageMaker} from './adapters/mmkv-storage/storage-maker'
 import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
 import {PortfolioStorage} from './types'
 import {tokenBalanceMocks} from './adapters/token-balance.mocks'
+import {tokenDiscoveryMocks} from './adapters/token-discovery.mocks'
 
 describe('portfolioManagerMaker', () => {
   const primaryTokenInfo = createPrimaryTokenInfo({
@@ -218,8 +219,9 @@ describe('hydrate', () => {
   }
 
   storage.primaryBalanceBreakdown.save(primaryBalance)
-  storage.token.infos.save(tokenInfoMocks.tokenInfoStorage)
-  storage.balances.save(tokenBalanceMocks.tokenBalanceStorage)
+  storage.token.infos.save(tokenInfoMocks.storage.entries1)
+  storage.token.discoveries.save(tokenDiscoveryMocks.storage.entries1)
+  storage.balances.save(tokenBalanceMocks.storage.entries1)
 
   it('should hydrate data', async () => {
     const portfolioManager = portfolioManagerMaker({
@@ -235,7 +237,7 @@ describe('hydrate', () => {
 
     expect(portfolioManager.getPrimaryBreakdown()).toEqual(primaryBalance)
     expect(portfolioManager.getBalances()).toEqual(
-      new Map(tokenBalanceMocks.tokenBalanceStorage),
+      tokenBalanceMocks.storage.entries1,
     )
 
     expect(subscriber).toHaveBeenCalledTimes(1)
