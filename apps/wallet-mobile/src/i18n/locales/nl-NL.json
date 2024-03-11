@@ -209,6 +209,7 @@
   "components.receive.addressverifymodal.afterConfirm": "Zodra u op bevestigen hebt geklikt, valideert u het adres op uw Ledger-apparaat en zorgt u ervoor dat zowel het pad als het adres overeenkomen met wat hieronder wordt weergegeven:",
   "components.receive.addressverifymodal.title": "Controleer adres op de \"Ledger\", het grootboek",
   "components.receive.addressview.verifyAddressLabel": "Controleer adres",
+  "components.receive.specificamountscreen.title": "Amount to receive",
   "components.receive.receivescreen.cannotGenerate": "U dient een aantal van uw adressen te gebruiken",
   "components.receive.receivescreen.freshAddresses": "Ververst adres",
   "components.receive.receivescreen.generateButton": "Maak een nieuw adres aan",
