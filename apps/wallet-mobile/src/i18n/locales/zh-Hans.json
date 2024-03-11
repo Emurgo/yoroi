@@ -209,6 +209,7 @@
   "components.receive.addressverifymodal.afterConfirm": "点击确认后，验证Ledger设备上的地址，确保路径和地址均与下面显示的内容匹配",
   "components.receive.addressverifymodal.title": "在ledger上确认地址",
   "components.receive.addressview.verifyAddressLabel": "校验地址",
+  "components.receive.specificamountscreen.title": "Amount to receive",
   "components.receive.receivescreen.cannotGenerate": "您必须使用一些已生成的地址",
   "components.receive.receivescreen.freshAddresses": "未使用的地址",
   "components.receive.receivescreen.generateButton": "生成新地址",
