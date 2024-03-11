@@ -70,7 +70,7 @@ const ftNoTicker: Portfolio.Token.Info = {
   reference: 'transactionId#1',
   website: 'https://www.whaha.co',
   originalImage: 'https://cdn.whatha.com/ck-original1234.png',
-  id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3031',
+  id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3032',
   fingerprint: 'asset1s7nlt45cc82upqewvjtgu7g97l7eg483c6wu75',
   nature: Portfolio.Token.Nature.Secondary,
   type: Portfolio.Token.Type.FT,
@@ -87,7 +87,7 @@ const ftNameless: Portfolio.Token.Info = {
   reference: 'transactionId#1',
   website: 'https://www.whaha.co',
   originalImage: 'https://cdn.whatha.com/ck-original1234.png',
-  id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3031',
+  id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3033',
   fingerprint: 'asset1s7nlt45cc82upqewvjtgu7g97l7eg483c6wu75',
   nature: Portfolio.Token.Nature.Secondary,
   type: Portfolio.Token.Type.FT,
@@ -107,32 +107,42 @@ const apiRequestTokenInfos: ReadonlyArray<
   [rnftWhatever.id, 'hash3'],
 ]
 
-const tokenInfoStorage: ReadonlyArray<
-  [Portfolio.Token.Id, AppCacheRecord<Portfolio.Token.Info>]
-> = [
-  [
-    nftCryptoKitty.id,
-    cacheRecordMaker(
-      {expires: Date.now() + 60_000, hash: 'hash2'},
-      nftCryptoKitty,
-    ),
+const storage: {
+  entries1: ReadonlyArray<
+    [Portfolio.Token.Id, AppCacheRecord<Portfolio.Token.Info>]
+  >
+} = {
+  entries1: [
+    [
+      nftCryptoKitty.id,
+      cacheRecordMaker(
+        {expires: new Date().getTime(), hash: 'hash2'},
+        nftCryptoKitty,
+      ),
+    ],
+    [
+      rnftWhatever.id,
+      cacheRecordMaker(
+        {expires: new Date().getTime(), hash: 'hash3'},
+        rnftWhatever,
+      ),
+    ],
+    [
+      ftNoTicker.id,
+      cacheRecordMaker(
+        {expires: Date.now() - 60_000, hash: 'hash4'},
+        ftNoTicker,
+      ),
+    ],
+    [
+      ftNameless.id,
+      cacheRecordMaker(
+        {expires: Date.now() + 60_000, hash: 'hash5'},
+        ftNameless,
+      ),
+    ],
   ],
-  [
-    rnftWhatever.id,
-    cacheRecordMaker(
-      {expires: Date.now() + 60_000, hash: 'hash3'},
-      rnftWhatever,
-    ),
-  ],
-  [
-    ftNoTicker.id,
-    cacheRecordMaker({expires: Date.now() - 60_000, hash: 'hash4'}, ftNoTicker),
-  ],
-  [
-    ftNameless.id,
-    cacheRecordMaker({expires: Date.now() + 60_000, hash: 'hash5'}, ftNameless),
-  ],
-]
+}
 
 export const tokenInfoMocks = freeze({
   primaryETH,
@@ -141,7 +151,7 @@ export const tokenInfoMocks = freeze({
   ftNoTicker,
   ftNameless,
 
-  tokenInfoStorage,
+  storage,
 
   apiResponseResult: apiResponseTokenInfos,
   apiRequestArgs: apiRequestTokenInfos,

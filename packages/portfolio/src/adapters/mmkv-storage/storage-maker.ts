@@ -46,7 +46,7 @@ export const portfolioStorageMaker = ({
     read: (keys: ReadonlyArray<Portfolio.Token.Id>) =>
       tokenDiscoveryStorage.multiGet<
         App.CacheRecord<Portfolio.Token.Discovery>
-      >(keys, deserializer.tokenDiscovery),
+      >(keys, deserializer.tokenDiscoveryWithCache),
     all: () =>
       tokenDiscoveryStorage.multiGet<
         App.CacheRecord<Portfolio.Token.Discovery>
@@ -86,7 +86,7 @@ export const portfolioStorageMaker = ({
     read: (key: Portfolio.Token.Id) =>
       primaryBreakdownStorage.getItem<Portfolio.BalancePrimaryBreakdown>(
         key,
-        deserializer.balance as any,
+        deserializer.primaryBreakdown,
       ),
     clear: () => primaryBreakdownStorage.clear(),
   }

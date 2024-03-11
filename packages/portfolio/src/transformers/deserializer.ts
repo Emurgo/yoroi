@@ -6,6 +6,7 @@ import {
 import {freeze} from 'immer'
 import {parseTokenBalance} from '../validators/token-balance'
 import {parseTokenDiscoveryWithCacheRecord} from '../validators/token-discovery'
+import {parsePrimaryBalanceBreakdown} from '../validators/primary-balance-breakdown'
 
 export const tokenDiscoveryReviverMapping: StorageReviverMapping = {
   supply: StorageReviverType.AsBigInt,
@@ -14,6 +15,13 @@ export const tokenDiscoveryReviverMapping: StorageReviverMapping = {
 export const tokenBalanceReviverMapping: StorageReviverMapping = {
   balance: StorageReviverType.AsBigInt,
   lockedInBuiltTxs: StorageReviverType.AsBigInt,
+}
+
+export const primaryBalanceBreakdownReviverMapping: StorageReviverMapping = {
+  balance: StorageReviverType.AsBigInt,
+  lockedInBuiltTxs: StorageReviverType.AsBigInt,
+  minRequiredByTokens: StorageReviverType.AsBigInt,
+  quantity: StorageReviverType.AsBigInt,
 }
 
 const tokenBalanceDeserializer = (jsonString: string | null) => {
@@ -25,7 +33,7 @@ const tokenBalanceDeserializer = (jsonString: string | null) => {
   return parsed ?? null
 }
 
-const tokenDiscoveryDeserializer = (jsonString: string | null) => {
+const tokenDiscoveryWithCacheDeserializer = (jsonString: string | null) => {
   if (jsonString == null) return null
   const record = storageDeserializerMaker(tokenDiscoveryReviverMapping)(
     jsonString,
@@ -34,10 +42,20 @@ const tokenDiscoveryDeserializer = (jsonString: string | null) => {
   return parsed ?? null
 }
 
+const primaryBalanceBreakdownDeserializer = (jsonString: string | null) => {
+  if (jsonString == null) return null
+  const record = storageDeserializerMaker(
+    primaryBalanceBreakdownReviverMapping,
+  )(jsonString)
+  const parsed = parsePrimaryBalanceBreakdown(record)
+  return parsed ?? null
+}
+
 export const deserializer = freeze(
   {
-    tokenDiscovery: tokenDiscoveryDeserializer,
+    tokenDiscoveryWithCache: tokenDiscoveryWithCacheDeserializer,
     tokenBalance: tokenBalanceDeserializer,
+    primaryBreakdown: primaryBalanceBreakdownDeserializer,
   },
   true,
 )

@@ -3,8 +3,9 @@ import {App, Portfolio} from '@yoroi/types'
 
 import {portfolioStorageMaker} from './storage-maker' // Adjust the path accordingly
 import {tokenMocks} from '../token.mocks'
-import {balanceMocks} from '../balance.mocks'
 import {deserializer} from '../../transformers/deserializer'
+import {tokenBalanceMocks} from '../token-balance.mocks'
+import {tokenDiscoveryMocks} from '../token-discovery.mocks'
 
 describe('portfolioStorageMaker', () => {
   let tokenInfoStorage: App.ObservableStorage<false, Portfolio.Token.Id>
@@ -16,15 +17,15 @@ describe('portfolioStorageMaker', () => {
     tokenInfoStorage = createMockStorage('v2/mainnet/token-info/')
     tokenDiscoveryStorage = createMockStorage(
       'v2/mainnet/token-discovery/',
-      deserializer.tokenDiscovery,
+      deserializer.tokenDiscoveryWithCache,
     )
     balanceStorage = createMockStorage(
       'v2/wallets/id/balance/',
-      deserializer.balance,
+      deserializer.tokenBalance,
     )
     primaryBreakdownStorage = createMockStorage(
       'v2/wallets/id/primary-breakdown/',
-      deserializer.balance,
+      deserializer.primaryBreakdown,
     )
 
     tokenInfoStorage.clear()
@@ -143,17 +144,16 @@ describe('portfolioStorageMaker', () => {
       primaryBreakdownStorage,
     })
 
-    balances.save(balanceMocks.entries1)
+    balances.save(tokenBalanceMocks.storage.entries1)
 
     expect(balanceStorage.multiSet).toHaveBeenCalledWith(
-      balanceMocks.entries1,
+      tokenBalanceMocks.storage.entries1,
       storageSerializer,
     )
   })
 
   it('should read balances entries', () => {
     const nftCryptoKitty = tokenMocks.nftCryptoKitty.info
-    const primaryETH = tokenMocks.primaryETH.info
     const rnftWhatever = tokenMocks.rnftWhatever.info
 
     const {balances} = portfolioStorageMaker({
@@ -163,21 +163,25 @@ describe('portfolioStorageMaker', () => {
       primaryBreakdownStorage,
     })
 
-    balances.save(balanceMocks.entries1)
+    balances.save(tokenBalanceMocks.storage.entries1)
 
-    const keys = [primaryETH.id, nftCryptoKitty.id, rnftWhatever.id]
+    const keys = [nftCryptoKitty.id, rnftWhatever.id]
     const result = balances.read(keys)
 
-    expect(result).toEqual(balanceMocks.entries1)
+    expect(result).toEqual([
+      [nftCryptoKitty.id, tokenBalanceMocks.nftCryptoKitty],
+      [rnftWhatever.id, tokenBalanceMocks.rnftWhatever],
+    ])
     expect(balanceStorage.multiGet).toHaveBeenCalledWith(
       keys,
-      deserializer.balance,
+      deserializer.tokenBalance,
     )
   })
 
   it('should read token discovery entries', () => {
     const nftCryptoKitty = tokenMocks.nftCryptoKitty.discovery
     const primaryETH = tokenMocks.primaryETH.discovery
+    const rnftWhatever = tokenMocks.rnftWhatever.discovery
 
     const {token} = portfolioStorageMaker({
       tokenInfoStorage,
@@ -186,25 +190,15 @@ describe('portfolioStorageMaker', () => {
       primaryBreakdownStorage,
     })
 
-    const entries: ReadonlyArray<
-      [Portfolio.Token.Id, App.CacheRecord<Portfolio.Token.Discovery>]
-    > = [
-      [
-        nftCryptoKitty.id,
-        cacheRecordMaker({expires: 0, hash: ''}, nftCryptoKitty),
-      ],
-      [primaryETH.id, cacheRecordMaker({expires: 0, hash: ''}, primaryETH)],
-    ] as const
+    token.discoveries.save(tokenDiscoveryMocks.storage.entries1)
 
-    token.discoveries.save(entries)
-
-    const keys = [nftCryptoKitty.id, primaryETH.id]
+    const keys = [primaryETH.id, nftCryptoKitty.id, rnftWhatever.id]
     const result = token.discoveries.read(keys)
 
-    expect(result).toEqual(entries)
+    expect(result).toEqual(tokenDiscoveryMocks.storage.entries1)
     expect(tokenDiscoveryStorage.multiGet).toHaveBeenCalledWith(
       keys,
-      deserializer.tokenDiscovery,
+      deserializer.tokenDiscoveryWithCache,
     )
   })
 
@@ -218,20 +212,7 @@ describe('portfolioStorageMaker', () => {
       primaryBreakdownStorage,
     })
 
-    const discoveryEntries: ReadonlyArray<
-      [Portfolio.Token.Id, App.CacheRecord<Portfolio.Token.Discovery>]
-    > = [
-      [
-        nftCryptoKitty.discovery.id,
-        cacheRecordMaker({expires: 0, hash: ''}, nftCryptoKitty.discovery),
-      ],
-      [
-        primaryETH.discovery.id,
-        cacheRecordMaker({expires: 0, hash: ''}, primaryETH.discovery),
-      ],
-    ] as const
-
-    token.discoveries.save(discoveryEntries)
+    token.discoveries.save(tokenDiscoveryMocks.storage.entries1)
 
     const infoEntries: ReadonlyArray<
       [Portfolio.Token.Id, App.CacheRecord<Portfolio.Token.Info>]
@@ -251,8 +232,8 @@ describe('portfolioStorageMaker', () => {
     const balanceEntries: ReadonlyArray<
       [Portfolio.Token.Id, Portfolio.Amount]
     > = [
-      [nftCryptoKitty.info.id, balanceMocks.amounts.nftCryptoKitty],
-      [primaryETH.info.id, balanceMocks.amounts.primaryETH],
+      [nftCryptoKitty.info.id, amountMocks.amounts.nftCryptoKitty],
+      [primaryETH.info.id, amountMocks.amounts.primaryETH],
     ] as const
 
     balances.save(balanceEntries)

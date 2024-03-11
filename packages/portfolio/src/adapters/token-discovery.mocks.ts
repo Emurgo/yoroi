@@ -1,9 +1,12 @@
-import {Portfolio} from '@yoroi/types'
+import {App, Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
+import {cacheRecordMaker} from '@yoroi/common'
+
 import {
   AppApiRequestRecordWithCache,
   PortfolioApiTokenDiscoveriesResponse,
 } from '../types'
+import {tokenInfoMocks} from './token-info.mocks'
 
 const primaryETH: Portfolio.Token.Discovery = {
   id: '.',
@@ -28,7 +31,7 @@ const primaryETH: Portfolio.Token.Discovery = {
 }
 
 const nftCryptoKitty: Portfolio.Token.Discovery = {
-  id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.43554259',
+  id: tokenInfoMocks.nftCryptoKitty.id,
   counters: {
     items: 1,
     totalItems: 1,
@@ -61,7 +64,7 @@ const nftCryptoKitty: Portfolio.Token.Discovery = {
 }
 
 const rnftWhatever: Portfolio.Token.Discovery = {
-  id: '14696a4676909f4e3cb1f2e60e2e08e5abed70caf5c02699be971139.3031',
+  id: tokenInfoMocks.rnftWhatever.id,
   counters: {
     items: 1,
     totalItems: 1,
@@ -96,7 +99,6 @@ const rnftWhatever: Portfolio.Token.Discovery = {
 const apiResponseTokenDiscoveries: PortfolioApiTokenDiscoveriesResponse =
   freeze(
     {
-      [primaryETH.id]: [200, primaryETH, 'hash1', 3600],
       [nftCryptoKitty.id]: [200, nftCryptoKitty, 'hash2', 10],
       [rnftWhatever.id]: [304, 0],
     },
@@ -106,10 +108,48 @@ const apiResponseTokenDiscoveries: PortfolioApiTokenDiscoveriesResponse =
 const apiRequestTokenDiscoveries: ReadonlyArray<
   AppApiRequestRecordWithCache<Portfolio.Token.Id>
 > = [
-  [primaryETH.id, 'hash1'],
   [nftCryptoKitty.id, 'hash2'],
   [rnftWhatever.id, 'hash3'],
 ]
+
+const storage: {
+  entries1: ReadonlyArray<
+    [Portfolio.Token.Id, App.CacheRecord<Portfolio.Token.Discovery>]
+  >
+} = {
+  entries1: [
+    [
+      primaryETH.id,
+      cacheRecordMaker(
+        {
+          expires: new Date().getTime(),
+          hash: 'hash1',
+        },
+        primaryETH,
+      ),
+    ],
+    [
+      nftCryptoKitty.id,
+      cacheRecordMaker(
+        {
+          expires: new Date().getTime(),
+          hash: 'hash2',
+        },
+        nftCryptoKitty,
+      ),
+    ],
+    [
+      rnftWhatever.id,
+      cacheRecordMaker(
+        {
+          expires: new Date().getTime(),
+          hash: 'hash3',
+        },
+        rnftWhatever,
+      ),
+    ],
+  ],
+}
 
 export const tokenDiscoveryMocks = freeze({
   primaryETH,
@@ -118,4 +158,6 @@ export const tokenDiscoveryMocks = freeze({
 
   apiResponseResult: apiResponseTokenDiscoveries,
   apiRequestArgs: apiRequestTokenDiscoveries,
+
+  storage,
 })

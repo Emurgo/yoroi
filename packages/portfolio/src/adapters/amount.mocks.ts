@@ -24,7 +24,7 @@ const entries1: [Portfolio.Token.Id, Portfolio.Amount][] = [
   [tokenInfoMocks.rnftWhatever.id, amounts.rnftWhatever],
 ]
 
-export const balanceMocks = freeze({
+export const amountMocks = freeze({
   amounts1,
   amounts,
   entries1,
