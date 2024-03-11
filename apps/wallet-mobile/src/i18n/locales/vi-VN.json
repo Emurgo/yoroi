@@ -209,6 +209,7 @@
   "components.receive.addressverifymodal.afterConfirm": "Khi bạn nhấn vào xác nhận, hãy xác thực địa chỉ trên thiết bị Ledger của bạn, đảm bảo cả đường dẫn và địa chỉ khớp với những gì được hiển thị bên dưới:",
   "components.receive.addressverifymodal.title": "Xác minh địa chỉ trên Ledger",
   "components.receive.addressview.verifyAddressLabel": "Xác minh địa chỉ",
+  "components.receive.specificamountscreen.title": "Amount to receive",
   "components.receive.receivescreen.cannotGenerate": "Bạn phải sử dụng một số địa chỉ của bạn",
   "components.receive.receivescreen.freshAddresses": "Làm mới các địa chỉ",
   "components.receive.receivescreen.generateButton": "Tạo địa chỉ mới",
