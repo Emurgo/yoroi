@@ -251,6 +251,34 @@ describe('portfolioStorageMaker', () => {
     expect(balanceStorage.clear).toHaveBeenCalled()
     expect(primaryBreakdownStorage.clear).toHaveBeenCalled()
   })
+
+  it('should return all keys', () => {
+    const {token, balances, primaryBalanceBreakdown} = portfolioStorageMaker({
+      tokenInfoStorage,
+      tokenDiscoveryStorage,
+      balanceStorage,
+      primaryBreakdownStorage,
+    })
+
+    token.discoveries.save(tokenDiscoveryMocks.storage.entries1)
+    token.infos.save(tokenInfoMocks.storage.entries1)
+    balances.save(tokenBalanceMocks.storage.entries1)
+    primaryBalanceBreakdown.save(tokenBalanceMocks.primaryETHBreakdown)
+
+    let infoResult = token.infos.keys()
+    let dicoveryResult = token.discoveries.keys()
+    let balanceResult = balances.keys()
+
+    expect(infoResult).toEqual([
+      ...new Map(tokenInfoMocks.storage.entries1).keys(),
+    ])
+    expect(dicoveryResult).toEqual([
+      ...new Map(tokenDiscoveryMocks.storage.entries1).keys(),
+    ])
+    expect(balanceResult).toEqual([
+      ...new Map(tokenBalanceMocks.storage.entries1).keys(),
+    ])
+  })
 })
 
 // NOTE: considering exporting from common as mocked storage
