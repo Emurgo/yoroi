@@ -806,7 +806,7 @@
   "swap.listOrders.completed": "completed orders",
   "swap.listOrders.emptyCompletedOrders": "No orders completed yet",
   "swap.listOrders.emptyOpenOrders": "No orders available yet",
-  "swap.listOrders.emptyOpenOrdersSub": "Start doing the swap operations to see/view your open orders here",
+  "swap.listOrders.emptyOpenOrdersSub": "Start doing SWAP to see your open orders here",
   "swap.listOrders.liquidityPool": "Liquidity Pool",
   "swap.listOrders.open": "open orders",
   "swap.listOrders.sheet.assetAmount": "Asset amount",
