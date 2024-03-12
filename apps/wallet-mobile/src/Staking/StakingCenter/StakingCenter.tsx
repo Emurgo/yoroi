@@ -16,6 +16,7 @@ import {Logger} from '../../legacy/logging'
 import {useMetrics} from '../../metrics/metricsManager'
 import {StakingCenterRouteNavigation} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {useStatusBar} from '../../theme/hooks'
 import {getNetworkConfigById, NETWORKS} from '../../yoroi-wallets/cardano/networks'
 import {NotEnoughMoneyToSendError} from '../../yoroi-wallets/cardano/types'
 import {PoolDetailScreen} from '../PoolDetails'
@@ -59,6 +60,8 @@ export const StakingCenter = () => {
       },
     },
   )
+
+  useStatusBar(undefined, isLoading)
 
   const handleOnMessage = async (event: WebViewMessageEvent) => {
     const selectedPoolHashes = JSON.parse(decodeURI(event.nativeEvent.data))
