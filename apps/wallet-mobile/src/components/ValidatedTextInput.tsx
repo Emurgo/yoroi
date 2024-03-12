@@ -1,7 +1,7 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Platform, StyleSheet, TextInput, TextInputProps, TouchableOpacity, View, ViewStyle} from 'react-native'
 
-import {COLORS} from '../theme'
 import {isEmptyString} from '../utils/utils'
 import {Icon} from './Icon'
 import {Text} from './Text'
@@ -20,6 +20,7 @@ type Props = TextInputProps & {
 export const ValidatedTextInput = ({label, error, style, secureTextEntry, keyboardType, ...restProps}: Props) => {
   const [showPassword, setShowPassword] = React.useState(false)
   const toggleShowPassword = () => setShowPassword(!showPassword)
+  const {styles, colors} = useStyles()
 
   return (
     <View style={styles.container}>
@@ -47,7 +48,11 @@ export const ValidatedTextInput = ({label, error, style, secureTextEntry, keyboa
 
       {secureTextEntry === true && (
         <TouchableOpacity style={styles.showPasswordContainer} onPress={toggleShowPassword}>
-          {showPassword ? <Icon.EyeOn size={40} color={COLORS.GRAY} /> : <Icon.EyeOff size={40} color={COLORS.GRAY} />}
+          {showPassword ? (
+            <Icon.EyeOn size={40} color={colors.iconColor} />
+          ) : (
+            <Icon.EyeOff size={40} color={colors.iconColor} />
+          )}
         </TouchableOpacity>
       )}
 
@@ -56,48 +61,57 @@ export const ValidatedTextInput = ({label, error, style, secureTextEntry, keyboa
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 16,
-    marginBottom: 8,
-  },
-  input: {
-    borderColor: '#4A4A4A',
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: 1,
-    height: 48,
-    fontSize: 16,
-    paddingLeft: 16,
-    paddingRight: 50,
-    paddingVertical: 12,
-  },
-  inputError: {
-    borderColor: '#FF1351',
-  },
-  labelWrap: {
-    backgroundColor: '#fff',
-    marginLeft: 12,
-    top: 8,
-    paddingHorizontal: 4,
-    position: 'absolute',
-  },
-  label: {
-    color: '#4A4A4A',
-  },
-  labelError: {
-    color: '#FF1351',
-  },
-  error: {
-    color: '#FF1351',
-    paddingHorizontal: 16,
-    lineHeight: 24,
-  },
-  showPasswordContainer: {
-    height: 40,
-    position: 'absolute',
-    top: 20,
-    right: 10,
-    justifyContent: 'center',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography, padding} = theme
+  const styles = StyleSheet.create({
+    container: {
+      paddingTop: 16,
+      marginBottom: 8,
+    },
+    input: {
+      borderColor: color.gray[500],
+      backgroundColor: color.gray.min,
+      borderRadius: 8,
+      borderWidth: 1,
+      ...typography['body-1-l-regular'],
+      ...padding['l-l'],
+      ...padding['y-m'],
+      paddingRight: 50,
+    },
+    inputError: {
+      borderColor: color.magenta[500],
+    },
+    labelWrap: {
+      backgroundColor: color.gray.min,
+      marginLeft: 12,
+      top: 8,
+      ...padding['x-xs'],
+      position: 'absolute',
+    },
+    label: {
+      color: color.gray[900],
+    },
+    labelError: {
+      color: color.magenta[500],
+    },
+    error: {
+      color: color.magenta[500],
+      ...padding['x-l'],
+      lineHeight: 24,
+    },
+    showPasswordContainer: {
+      height: 40,
+      position: 'absolute',
+      top: 20,
+      right: 10,
+      justifyContent: 'center',
+    },
+  })
+
+  const colors = {
+    iconColor: color.gray[800],
+  }
+
+  return {styles, colors}
+}

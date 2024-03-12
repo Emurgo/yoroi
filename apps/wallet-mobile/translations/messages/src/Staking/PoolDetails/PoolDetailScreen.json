@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Delegate",
     "file": "src/Staking/PoolDetails/PoolDetailScreen.tsx",
     "start": {
-      "line": 76,
+      "line": 82,
       "column": 12,
-      "index": 1748
+      "index": 1898
     },
     "end": {
-      "line": 79,
+      "line": 85,
       "column": 3,
-      "index": 1862
+      "index": 2012
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Nightly delegation",
     "file": "src/Staking/PoolDetails/PoolDetailScreen.tsx",
     "start": {
-      "line": 80,
+      "line": 86,
       "column": 9,
-      "index": 1873
+      "index": 2023
     },
     "end": {
-      "line": 83,
+      "line": 89,
       "column": 3,
-      "index": 1982
+      "index": 2132
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Stake pool hash",
     "file": "src/Staking/PoolDetails/PoolDetailScreen.tsx",
     "start": {
-      "line": 84,
+      "line": 90,
       "column": 12,
-      "index": 1996
+      "index": 2146
     },
     "end": {
-      "line": 87,
+      "line": 93,
       "column": 3,
-      "index": 2083
+      "index": 2233
     }
   }
 ]

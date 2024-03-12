@@ -14,7 +14,6 @@ import {Dimensions, Platform, TouchableOpacity, TouchableOpacityProps, ViewStyle
 import {Icon} from './components'
 import {ScanFeature} from './features/Scan/common/types'
 import {Routes as StakingGovernanceRoutes} from './features/Staking/Governance/common/navigation'
-import {COLORS} from './theme'
 import {HWDeviceInfo} from './yoroi-wallets/hw'
 import {NetworkId, WalletImplementationId, YoroiUnsignedTx} from './yoroi-wallets/types'
 
@@ -82,7 +81,7 @@ export const defaultStackNavigationOptions = (theme: Theme): StackNavigationOpti
 
 export const DEPRECATED_defaultStackNavigationOptions: StackNavigationOptions = {
   headerStyle: {
-    backgroundColor: COLORS.BACKGROUND_BLUE,
+    backgroundColor: '#254BC9',
     elevation: 0,
     shadowOpacity: 0,
   },
