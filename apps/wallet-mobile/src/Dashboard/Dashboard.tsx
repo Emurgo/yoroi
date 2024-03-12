@@ -5,7 +5,7 @@ import React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
-import {Banner, Button, StatusBar, useModal} from '../components'
+import {Banner, Button, useModal} from '../components'
 import {
   useGovernanceStrings,
   useIsParticipatingInGovernance,
@@ -16,6 +16,7 @@ import globalMessages from '../i18n/global-messages'
 import {Modal} from '../legacy/Modal'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
+import {useStatusBar} from '../theme/hooks'
 import {isEmptyString} from '../utils/utils'
 import {getCardanoNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {getCardanoBaseConfig} from '../yoroi-wallets/cardano/utils'
@@ -55,6 +56,8 @@ export const Dashboard = () => {
   const isParticipatingInGovernance = useIsParticipatingInGovernance(wallet)
   const walletNavigateTo = useWalletNavigation()
 
+  useStatusBar()
+
   const handleOnParticipatePress = () => {
     walletNavigateTo.navigateToGovernanceCentre({navigateToStakingOnSuccess: true})
   }
@@ -72,8 +75,6 @@ export const Dashboard = () => {
 
   return (
     <View style={styles.root}>
-      <StatusBar />
-
       <View style={styles.container}>
         {isOnline && error && <SyncErrorBanner showRefresh={!(isLoading || isSyncing)} />}
 

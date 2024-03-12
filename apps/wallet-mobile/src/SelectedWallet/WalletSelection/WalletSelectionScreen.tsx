@@ -7,13 +7,14 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {Button} from '../../components/Button'
 import {Icon} from '../../components/Icon'
 import {PleaseWaitModal} from '../../components/PleaseWaitModal'
-import {StatusBar} from '../../components/StatusBar'
 import {showErrorDialog} from '../../dialogs'
 import globalMessages, {errorMessages} from '../../i18n/global-messages'
 import {isNightly} from '../../legacy/config'
 import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
+import {useStatusBar} from '../../theme/hooks'
+import {HexColor} from '../../theme/types'
 import {WalletMeta} from '../../wallet-manager/types'
 import {useWalletManager} from '../../wallet-manager/WalletManagerContext'
 import * as HASKELL_SHELLEY from '../../yoroi-wallets/cardano/constants/mainnet/constants'
@@ -67,6 +68,8 @@ export const WalletSelectionScreen = () => {
     },
   })
 
+  useStatusBar(COLORS.BACKGROUND_BLUE as HexColor, isLoading)
+
   const onSelect = async (walletMeta: WalletMeta) => {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (walletMeta.isShelley || isJormungandr(walletMeta.networkId)) {
@@ -79,8 +82,6 @@ export const WalletSelectionScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <StatusBar />
-
       <Text style={styles.title}>{strings.header}</Text>
 
       <FlatList
