@@ -4,9 +4,10 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {BulletPointItem, Button, Icon, Spacer, StatusBar, Text} from '../../components'
+import {BulletPointItem, Button, Icon, Spacer, Text} from '../../components'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
+import {useStatusBar} from '../../theme/hooks'
 import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron/plate'
 import {
   WALLET_CONFIG as HASKELL_SHELLEY,
@@ -19,6 +20,7 @@ import {WalletAddress} from '../WalletAddress'
 
 export const VerifyRestoredWalletScreen = () => {
   const strings = useStrings()
+  useStatusBar()
   const navigation = useNavigation<WalletInitRouteNavigation>()
   const route = useRoute<RouteProp<WalletInitRoutes, 'wallet-credentials'>>()
   const {phrase, networkId, walletImplementationId} = route.params
@@ -34,8 +36,6 @@ export const VerifyRestoredWalletScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar />
-
       <ScrollView bounces={false} contentContainerStyle={styles.contentContainer}>
         <WalletInfo>
           <Text style={styles.checksumLabel}>{strings.checksumLabel}</Text>

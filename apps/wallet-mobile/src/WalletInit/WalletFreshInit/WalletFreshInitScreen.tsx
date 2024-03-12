@@ -4,10 +4,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, ButtonProps, Spacer, StatusBar} from '../../components'
+import {Button, ButtonProps, Spacer} from '../../components'
 import {isNightly} from '../../legacy/config'
 import {WalletInitRouteNavigation} from '../../navigation'
 import {COLORS} from '../../theme'
+import {useStatusBar} from '../../theme/hooks'
 import * as HASKELL_SHELLEY from '../../yoroi-wallets/cardano/constants/mainnet/constants'
 import * as HASKELL_SHELLEY_TESTNET from '../../yoroi-wallets/cardano/constants/testnet/constants'
 import {NetworkId, WALLET_IMPLEMENTATION_REGISTRY, WalletImplementationId} from '../../yoroi-wallets/types'
@@ -16,11 +17,10 @@ import {WalletDescription} from '../WalletDescription'
 export const WalletFreshInitScreen = () => {
   const strings = useStrings()
   const navigateTo = useNavigateTo()
+  useStatusBar()
 
   return (
     <SafeAreaView edges={['left', 'right', 'top', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar />
-
       <View style={styles.banner}>
         <WalletDescription />
       </View>

@@ -6,10 +6,11 @@ import {defineMessages, useIntl} from 'react-intl'
 import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Icon, NftImageGallery, SkeletonGallery, Spacer, StatusBar} from '../components'
+import {Icon, NftImageGallery, SkeletonGallery, Spacer} from '../components'
 import {useMetrics} from '../metrics/metricsManager'
 import {useSearch, useSearchOnNavBar} from '../Search/SearchContext'
 import {useSelectedWallet} from '../SelectedWallet'
+import {useStatusBar} from '../theme/hooks'
 import {useNfts} from '../yoroi-wallets/hooks'
 import {filterNfts, useTrackNftGallerySearchActivated} from './filterNfts'
 import {useNavigateTo} from './navigation'
@@ -20,6 +21,7 @@ export const Nfts = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {track} = useMetrics()
+  useStatusBar()
 
   // use case: search nfts
   useSearchOnNavBar({
@@ -137,8 +139,6 @@ const Wrapper = ({children}: {children: ReactNode}) => {
   const styles = useStyles()
   return (
     <SafeAreaView edges={['left', 'right', 'bottom']} style={styles.safeAreaView}>
-      <StatusBar />
-
       <View style={styles.container}>
         <Spacer height={16} />
 

@@ -5,9 +5,9 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {StatusBar} from '../../components'
 import {defaultMaterialTopTabNavigationOptions, SwapTabRoutes} from '../../navigation'
 import {useSelectedWallet} from '../../SelectedWallet'
+import {useStatusBar} from '../../theme/hooks'
 import {useBalance} from '../../yoroi-wallets/hooks'
 import {useStrings} from './common/strings'
 import {CreateOrder} from './useCases/StartSwapScreen/CreateOrder/CreateOrder'
@@ -18,6 +18,7 @@ export const SwapTabNavigator = () => {
   const strings = useStrings()
   const styles = useStyles()
   const {theme} = useTheme()
+  useStatusBar()
 
   // state data
   const wallet = useSelectedWallet()
@@ -64,8 +65,6 @@ export const SwapTabNavigator = () => {
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      <StatusBar />
-
       <Tab.Navigator
         screenOptions={({route}) => ({
           ...defaultMaterialTopTabNavigationOptions(theme),

@@ -5,11 +5,12 @@ import _ from 'lodash'
 import React from 'react'
 import {StyleSheet, View, ViewProps} from 'react-native'
 
-import {Button, KeyboardAvoidingView, Spacer, StatusBar} from '../../../../components'
+import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
 import {ScrollView} from '../../../../components/ScrollView/ScrollView'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
+import {useStatusBar} from '../../../../theme/hooks'
 import {useHasPendingTx, useIsOnline} from '../../../../yoroi-wallets/hooks'
 import {Amounts} from '../../../../yoroi-wallets/utils'
 import {memoMaxLenght} from '../../common/constants'
@@ -36,6 +37,8 @@ export const StartMultiTokenTxScreen = () => {
   React.useEffect(() => {
     track.sendInitiated()
   }, [track])
+
+  useStatusBar()
 
   const hasPendingTx = useHasPendingTx(wallet)
   const isOnline = useIsOnline(wallet)
@@ -82,8 +85,6 @@ export const StartMultiTokenTxScreen = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar />
-
       <KeyboardAvoidingView style={styles.flex}>
         <ScrollView
           ref={scrollViewRef}

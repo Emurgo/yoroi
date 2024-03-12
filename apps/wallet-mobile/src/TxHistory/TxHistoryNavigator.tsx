@@ -74,6 +74,7 @@ export const TxHistoryNavigator = () => {
   const walletName = useWalletName(wallet)
   const storage = useAsyncStorage()
   const {theme} = useTheme()
+  const {styles} = useStyles()
 
   // modal
   const [isModalInfoVisible, setIsModalInfoVisible] = React.useState(false)
@@ -145,7 +146,7 @@ export const TxHistoryNavigator = () => {
                       headerStyle: {
                         elevation: 0,
                         shadowOpacity: 0,
-                        backgroundColor: '#E1EAF6',
+                        backgroundColor: theme.color.primary['100'],
                       },
                     }}
                   />
@@ -481,15 +482,13 @@ const HeaderRightHistory = React.memo(() => {
   const wallet = useSelectedWallet()
   const {navigateToSettings} = useWalletNavigation()
   const navigation = useNavigation<TxHistoryRouteNavigation>()
+  const {styles, color} = useStyles()
 
   return (
-    <Row style={{backgroundColor: '#E1EAF6', paddingStart: 8}}>
+    <Row style={styles.row}>
       {!wallet.isReadOnly && (
         <>
-          <CodeScannerButton
-            onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})}
-            color={COLORS.BLACK}
-          />
+          <CodeScannerButton onPress={() => navigation.navigate('scan-start', {insideFeature: 'scan'})} color={color} />
 
           <Spacer width={10} />
         </>
@@ -505,15 +504,24 @@ const Row = ({children, style, ...rest}: ViewProps) => (
   </View>
 )
 
-const styles = StyleSheet.create({
-  receiveInfoText: {
-    lineHeight: 24,
-    fontSize: 16,
-  },
-  settingIconButton: {
-    width: 40,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+
+  const styles = StyleSheet.create({
+    receiveInfoText: {
+      lineHeight: 24,
+      fontSize: 16,
+    },
+    settingIconButton: {
+      width: 40,
+    },
+    row: {
+      backgroundColor: theme.color.primary['100'],
+      paddingStart: 8,
+    },
+  })
+  return {styles, backgroundColor: theme.color.primary['100'], color: theme.color.gray.max}
+}
 
 const sendOptions = (theme: Theme) => ({
   ...defaultStackNavigationOptions(theme),

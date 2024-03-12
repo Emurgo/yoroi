@@ -2,11 +2,13 @@ import * as React from 'react'
 import {Linking, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Analytics, StatusBar} from '../../../components'
+import {Analytics} from '../../../components'
+import {useStatusBar} from '../../../theme/hooks'
 import {useAgreeWithLegal} from '../common'
 
 export const AnalyticsChangedScreen = () => {
   const {agree} = useAgreeWithLegal()
+  useStatusBar()
   const onReadMore = () => {
     Linking.openURL('https://emurgohelpdesk.zendesk.com/hc/en-us/articles/7594394140303-What-s-user-insights-')
   }
@@ -17,8 +19,6 @@ export const AnalyticsChangedScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar />
-
       <Analytics type="notice" onClose={handleClose} onReadMore={onReadMore} />
     </SafeAreaView>
   )

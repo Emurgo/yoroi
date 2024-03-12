@@ -4,8 +4,8 @@ import * as React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {StatusBar} from '../../components'
 import {defaultStackNavigationOptions, RampOnOffStackRoutes} from '../../navigation'
+import {useStatusBar} from '../../theme/hooks'
 import {useHideBottomTabBar} from '../../yoroi-wallets/hooks'
 import {RampOnOffProvider} from './common/RampOnOffProvider'
 import {useStrings} from './common/useStrings'
@@ -19,11 +19,10 @@ export const RampOnOffScreen = () => {
   const {theme} = useTheme()
   const strings = useStrings()
   const styles = useStyles()
+  useStatusBar()
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.root]}>
-      <StatusBar />
-
       <RampOnOffProvider>
         <Stack.Navigator
           screenListeners={{}}
