@@ -5,11 +5,12 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, StatusBar, Text, TextInput} from '../../../components'
+import {Button, KeyboardAvoidingView, Text, TextInput} from '../../../components'
 import {LoadingOverlay} from '../../../components/LoadingOverlay'
 import {showErrorDialog} from '../../../dialogs'
 import {errorMessages} from '../../../i18n/global-messages'
 import {useSelectedWallet, useSelectedWalletMeta, useSetSelectedWalletMeta} from '../../../SelectedWallet'
+import {useStatusBar} from '../../../theme/hooks'
 import {isEmptyString} from '../../../utils/utils'
 import {WrongPassword} from '../../../yoroi-wallets/cardano/errors'
 import {useEnableEasyConfirmation} from '../../../yoroi-wallets/hooks'
@@ -18,6 +19,7 @@ export const EnableEasyConfirmationScreen = () => {
   const intl = useIntl()
   const strings = useStrings()
   const styles = useStyles()
+  useStatusBar()
   const navigation = useNavigation()
   const [rootPassword, setRootPassword] = React.useState('')
   const walletMeta = useSelectedWalletMeta()
@@ -40,8 +42,6 @@ export const EnableEasyConfirmationScreen = () => {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.container}>
-      <StatusBar />
-
       <KeyboardAvoidingView style={{flex: 1}}>
         <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
           <Text style={styles.heading}>{strings.enableHeading}</Text>

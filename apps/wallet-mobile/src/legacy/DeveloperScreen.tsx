@@ -10,13 +10,14 @@ import {Alert, InteractionManager, SafeAreaView, ScrollView, StyleSheet, Touchab
 import config from 'react-native-config'
 
 import {useAuth} from '../auth/AuthProvider'
-import {Button, StatusBar, Text, TextInput} from '../components'
+import {Button, Text, TextInput} from '../components'
 import {showErrorDialog} from '../dialogs'
 import {useLegalAgreement, useResetLegalAgreement} from '../features/Initialization/common'
 import {errorMessages} from '../i18n/global-messages'
 import {storageVersionMaker} from '../migrations/storageVersion'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
+import {useStatusBar} from '../theme/hooks'
 import {isEmptyString} from '../utils/utils'
 import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
@@ -60,6 +61,7 @@ export const DeveloperScreen = () => {
   const navigation = useNavigation()
   const {logout} = useAuth()
   const {resetToWalletSelection} = useWalletNavigation()
+  useStatusBar()
   const intl = useIntl()
   const {createWallet, isLoading} = useCreateWallet({
     onSuccess: () => resetToWalletSelection(),
@@ -79,8 +81,6 @@ export const DeveloperScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <StatusBar />
-
       <ScrollView style={styles.container}>
         {routes.map((route) => (
           <Button

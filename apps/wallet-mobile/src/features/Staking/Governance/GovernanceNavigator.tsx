@@ -2,8 +2,8 @@ import {GovernanceProvider} from '@yoroi/staking'
 import {Theme, useTheme} from '@yoroi/theme'
 import React from 'react'
 
-import {StatusBar} from '../../../components'
 import {defaultStackNavigationOptions} from '../../../navigation'
+import {useStatusBar} from '../../../theme/hooks'
 import {NavigationStack, SafeArea, useGovernanceManagerMaker, useStrings} from './common'
 import {ChangeVoteScreen, ConfirmTxScreen, FailedTxScreen, HomeScreen, SuccessTxScreen} from './useCases'
 
@@ -13,10 +13,10 @@ export const GovernanceNavigator = () => {
   const strings = useStrings()
   const manager = useGovernanceManagerMaker()
   const {theme} = useTheme()
+  useStatusBar()
+
   return (
     <GovernanceProvider manager={manager}>
-      <StatusBar />
-
       <SafeArea>
         <Stack.Navigator screenOptions={screenOptions(theme)}>
           <Stack.Screen
