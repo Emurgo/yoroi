@@ -5,12 +5,12 @@ import {InteractionManager, ScrollView, StyleSheet, TouchableOpacity, View} from
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, Text} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {showErrorDialog} from '../../dialogs'
 import {errorMessages} from '../../i18n/global-messages'
 import {useMetrics} from '../../metrics/metricsManager'
 import {useWalletNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {useStatusBar} from '../../theme/hooks'
 import {AddressMode} from '../../wallet-manager/types'
 import {NetworkError} from '../../yoroi-wallets/cardano/errors'
 import {useCreateWallet} from '../../yoroi-wallets/hooks'

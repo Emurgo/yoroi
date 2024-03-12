@@ -6,6 +6,7 @@ import {defineMessages, useIntl} from 'react-intl'
 import {ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 
 import {Banner, Button, useModal} from '../components'
+import {useStatusBar} from '../components/hooks/useStatusBar'
 import {
   useGovernanceStrings,
   useIsParticipatingInGovernance,
@@ -16,7 +17,6 @@ import globalMessages from '../i18n/global-messages'
 import {Modal} from '../legacy/Modal'
 import {useWalletNavigation} from '../navigation'
 import {useSelectedWallet} from '../SelectedWallet'
-import {useStatusBar} from '../theme/hooks'
 import {isEmptyString} from '../utils/utils'
 import {getCardanoNetworkConfigById} from '../yoroi-wallets/cardano/networks'
 import {getCardanoBaseConfig} from '../yoroi-wallets/cardano/utils'

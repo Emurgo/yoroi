@@ -5,8 +5,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import fingerprintImage from '../../assets/img/fingerprint.png'
 import {Icon, ScreenBackground, Text} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {COLORS} from '../../theme'
-import {useStatusBar} from '../../theme/hooks'
 import {supportsAndroidFingerprintOverlay} from '../biometrics'
 
 type Props = {

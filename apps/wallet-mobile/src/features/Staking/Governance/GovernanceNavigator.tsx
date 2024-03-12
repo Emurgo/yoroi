@@ -2,8 +2,8 @@ import {GovernanceProvider} from '@yoroi/staking'
 import {Theme, useTheme} from '@yoroi/theme'
 import React from 'react'
 
+import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {defaultStackNavigationOptions} from '../../../navigation'
-import {useStatusBar} from '../../../theme/hooks'
 import {NavigationStack, SafeArea, useGovernanceManagerMaker, useStrings} from './common'
 import {ChangeVoteScreen, ConfirmTxScreen, FailedTxScreen, HomeScreen, SuccessTxScreen} from './useCases'
 
