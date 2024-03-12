@@ -3,7 +3,7 @@ import {Linking, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Analytics} from '../../../components'
-import {useStatusBar} from '../../../theme/hooks'
+import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useAgreeWithLegal, useNavigateTo} from '../common'
 
 export const AnalyticsNoticeScreen = () => {

@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {useStatusBar} from '../../theme/hooks'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {CreatePinInput} from '../CreatePinInput'
 
 export const CreatePinScreen = ({onDone}: {onDone: () => void}) => {

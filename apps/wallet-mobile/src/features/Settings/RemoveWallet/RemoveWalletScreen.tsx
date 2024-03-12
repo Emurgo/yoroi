@@ -14,9 +14,9 @@ import {
   TextInput,
   TextInputProps,
 } from '../../../components'
+import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useWalletNavigation} from '../../../navigation'
 import {useSelectedWallet} from '../../../SelectedWallet'
-import {useStatusBar} from '../../../theme/hooks'
 import {useRemoveWallet, useWalletName} from '../../../yoroi-wallets/hooks'
 
 export const RemoveWalletScreen = () => {

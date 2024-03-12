@@ -5,9 +5,9 @@ import {ActivityIndicator, ScrollView, StyleSheet, View, ViewProps} from 'react-
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {BulletPointItem, Button, Icon, Spacer, Text} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
 import {COLORS} from '../../theme'
-import {useStatusBar} from '../../theme/hooks'
 import {generateByronPlateFromMnemonics} from '../../yoroi-wallets/cardano/byron/plate'
 import {
   WALLET_CONFIG as HASKELL_SHELLEY,

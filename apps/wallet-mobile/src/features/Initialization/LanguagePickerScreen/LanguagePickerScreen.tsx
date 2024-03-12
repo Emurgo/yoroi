@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {LanguagePicker} from '../../../components'
-import {useStatusBar} from '../../../theme/hooks'
+import {useStatusBar} from '../../../components/hooks/useStatusBar'
 
 export const LanguagePickerScreen = () => {
   useStatusBar()
