@@ -12,6 +12,6 @@ export const responseRecordWithCacheSchemaMaker = <T>(
       z.string(),
       z.number().nonnegative(),
     ]),
-    z.tuple([z.literal(HttpStatusCode.NotModified), z.number().positive()]),
+    z.tuple([z.literal(HttpStatusCode.NotModified), z.number().nonnegative()]),
   ])
 }

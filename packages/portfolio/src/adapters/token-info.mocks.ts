@@ -93,18 +93,22 @@ const ftNameless: Portfolio.Token.Info = {
   type: Portfolio.Token.Type.FT,
 }
 
+// NOTE: If you marked a record as not modified 304, remember to add to the intiial state
+// otherwise the tests will throw cuz it will be expected the record to exist in the cache
 const apiResponseTokenInfos: PortfolioApiTokenInfosResponse = {
-  [primaryETH.id]: [200, primaryETH, 'hash1', 3600],
   [nftCryptoKitty.id]: [200, nftCryptoKitty, 'hash2', 10],
   [rnftWhatever.id]: [304, 0],
+  [ftNoTicker.id]: [200, ftNoTicker, 'hash4', 10],
+  [ftNameless.id]: [200, ftNameless, 'hash5', 10],
 }
 
 const apiRequestTokenInfos: ReadonlyArray<
   AppApiRequestRecordWithCache<Portfolio.Token.Id>
 > = [
-  [primaryETH.id, 'hash1'],
   [nftCryptoKitty.id, 'hash2'],
   [rnftWhatever.id, 'hash3'],
+  [ftNoTicker.id, 'hash4'],
+  [ftNameless.id, 'hash5'],
 ]
 
 const storage: {

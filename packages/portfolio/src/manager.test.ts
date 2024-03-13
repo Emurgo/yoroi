@@ -215,4 +215,60 @@ describe('hydrate', () => {
 
     expect(subscriber).toHaveBeenCalledTimes(1)
   })
+
+  describe('sync', () => {
+    it('should sync', async () => {
+      storage.token.infos.save([tokenInfoMocks.storage.entries1[1]])
+
+      const portfolioManager = portfolioManagerMaker({
+        network: Chain.Network.Main,
+        api: portfolioApiMock.success,
+        storage,
+        primaryToken: tokenMocks.managerMaker.primaryTokenWithCacheV1,
+      })
+
+      const subscriber = jest.fn()
+      portfolioManager.observer.subscribe(subscriber)
+
+      await portfolioManager.sync({
+        primaryBalance: tokenBalanceMocks.primaryETHBreakdown,
+        secondaryBalances: new Map(tokenBalanceMocks.storage.entries1),
+      })
+
+      // one for hydrate, another for the sync (it wasnt hydrated)
+      expect(subscriber).toHaveBeenCalledTimes(2)
+    })
+
+    it('should throw error when sync missed a supposed cached record', async () => {
+      const portfolioManager = portfolioManagerMaker({
+        network: Chain.Network.Main,
+        api: portfolioApiMock.success,
+        storage,
+        primaryToken: tokenMocks.managerMaker.primaryTokenWithCacheV1,
+      })
+
+      await expect(() =>
+        portfolioManager.sync({
+          primaryBalance: tokenBalanceMocks.primaryETHBreakdown,
+          secondaryBalances: new Map(tokenBalanceMocks.storage.entries1),
+        }),
+      ).rejects.toThrow()
+    })
+
+    it('should throw error when syncing and api return the wrong data', async () => {
+      const portfolioManager = portfolioManagerMaker({
+        network: Chain.Network.Main,
+        api: portfolioApiMock.success,
+        storage,
+        primaryToken: tokenMocks.managerMaker.primaryTokenWithCacheV1,
+      })
+
+      await expect(() =>
+        portfolioManager.sync({
+          primaryBalance: tokenBalanceMocks.primaryETHBreakdown,
+          secondaryBalances: new Map(tokenBalanceMocks.storage.entries1),
+        }),
+      ).rejects.toThrow()
+    })
+  })
 })

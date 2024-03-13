@@ -20,24 +20,24 @@ export const portfolioApiMaker = ({
   const config = apiConfig[network]
   return freeze(
     {
-      tokenDiscoveries(ids) {
+      tokenDiscoveries(idsWithCache) {
         return request<
           PortfolioApiTokenDiscoveriesResponse,
           ReadonlyArray<AppApiRequestRecordWithCache<Portfolio.Token.Id>>
         >({
           method: 'post',
           url: config.tokenDiscoveries,
-          data: ids,
+          data: idsWithCache,
         })
       },
-      tokenInfos(ids) {
+      tokenInfos(idsWithCache) {
         return request<
           PortfolioApiTokenInfosResponse,
           ReadonlyArray<AppApiRequestRecordWithCache<Portfolio.Token.Id>>
         >({
           method: 'post',
           url: config.tokenInfos,
-          data: ids,
+          data: idsWithCache,
         })
       },
     },

@@ -1,7 +1,7 @@
 import {Chain, Portfolio} from '@yoroi/types'
 
 import {apiConfig, portfolioApiMaker} from './api-maker'
-import {AppApiRequestWithCache} from '../../types'
+import {AppApiRequestRecordWithCache} from '../../types'
 
 describe('portfolioApiMaker', () => {
   const mockNetwork: Chain.Network = Chain.Network.Main
@@ -40,7 +40,7 @@ describe('portfolioApiMaker', () => {
       request: mockRequest,
     })
     const mockTokenIdsWithCache: ReadonlyArray<
-      AppApiRequestWithCache<Portfolio.Token.Id>
+      AppApiRequestRecordWithCache<Portfolio.Token.Id>
     > = [['token.id', 'etag-hash']]
 
     await api.tokenDiscoveries(mockTokenIdsWithCache)

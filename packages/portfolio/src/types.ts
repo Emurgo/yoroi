@@ -37,6 +37,7 @@ export type PortfolioApi = Readonly<{
   ): Promise<PortfolioApiTokenDiscoveriesResponse>
 }>
 
+// TODO: type it
 type ApiEndpoints = Readonly<{
   [K in keyof PortfolioApi]: string
 }>
