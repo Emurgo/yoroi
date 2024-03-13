@@ -18,6 +18,10 @@ const useAnimatedTxHistory = () => {
   }))
 
   React.useLayoutEffect(() => {
+    if (translateYOffset.value !== 0) {
+      translateYOffset.value = withSpring(0, animatedConfig)
+    }
+
     const cleanUpFocus = navigation.addListener('focus', () => {
       translateYOffset.value = withSpring(0, animatedConfig)
     })
