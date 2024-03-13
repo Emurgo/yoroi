@@ -60,11 +60,7 @@ export const RequestSpecificAmountScreen = () => {
     <SafeAreaView style={styles.root} edges={['left', 'right', 'bottom']}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <KeyboardAvoidingView style={styles.root}>
-          <ScrollView
-            ref={scrollViewRef}
-            style={[styles.content, {paddingHorizontal: 16}]}
-            onScrollBarChange={setIsScrollBarShown}
-          >
+          <ScrollView ref={scrollViewRef} style={styles.content} onScrollBarChange={setIsScrollBarShown}>
             <Spacer height={24} />
 
             <View style={styles.screen}>
@@ -85,7 +81,7 @@ export const RequestSpecificAmountScreen = () => {
             </View>
           </ScrollView>
 
-          <View style={[{padding: 16}, isScrollBarShown && {borderTopWidth: 1, borderTopColor: colors.lightGray}]}>
+          <View style={[styles.actions, isScrollBarShown && {borderTopWidth: 1, borderTopColor: colors.lightGray}]}>
             <Button
               shelleyTheme
               onPress={handleOnGenerateLink}
@@ -163,6 +159,7 @@ const useStyles = () => {
     },
     content: {
       flex: 1,
+      paddingHorizontal: 16,
     },
     textAddressDetails: {
       ...typography['body-1-l-regular'],
@@ -178,6 +175,9 @@ const useStyles = () => {
     },
     button: {
       backgroundColor: color.primary[500],
+    },
+    actions: {
+      padding: 16,
     },
   })
 
