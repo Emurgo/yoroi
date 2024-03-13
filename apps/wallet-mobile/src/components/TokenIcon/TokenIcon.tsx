@@ -1,9 +1,9 @@
 import {isString} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Image, StyleSheet, View} from 'react-native'
 
 import {features} from '../../features'
-import {COLORS} from '../../theme'
 import {YoroiWallet} from '../../yoroi-wallets/cardano/types'
 import {useNft, useNftImageModerated, useTokenInfo} from '../../yoroi-wallets/hooks'
 import {Boundary} from '../Boundary'
@@ -11,6 +11,7 @@ import {Icon} from '../Icon'
 import {ModeratedNftIcon} from './ModeratedNftIcon'
 
 export const TokenIcon = ({wallet, tokenId, variant}: {wallet: YoroiWallet; tokenId: string; variant?: 'swap'}) => {
+  const {styles} = useStyles()
   const tokenInfo = useTokenInfo({wallet, tokenId})
   const isPrimary = tokenInfo.id === wallet.primaryTokenInfo.id
 
@@ -40,11 +41,14 @@ type PrimaryIconProps = {
   variant?: 'swap'
 }
 
-const PrimaryIcon = ({variant}: PrimaryIconProps) => (
-  <View style={[variant === 'swap' ? styles.iconSmall : styles.icon, styles.primary]}>
-    <Icon.Cardano color="white" height={variant === 'swap' ? 20 : 35} width={variant === 'swap' ? 20 : 35} />
-  </View>
-)
+const PrimaryIcon = ({variant}: PrimaryIconProps) => {
+  const {styles} = useStyles()
+  return (
+    <View style={[variant === 'swap' ? styles.iconSmall : styles.icon, styles.primary]}>
+      <Icon.Cardano color="white" height={variant === 'swap' ? 20 : 35} width={variant === 'swap' ? 20 : 35} />
+    </View>
+  )
+}
 
 const NftIcon = ({tokenId, wallet}: {tokenId: string; wallet: YoroiWallet}) => {
   return features.moderatingNftsEnabled ? (
@@ -72,11 +76,14 @@ type PlaceholderProps = {
   variant?: 'swap'
 }
 
-export const TokenIconPlaceholder = ({variant}: PlaceholderProps) => (
-  <View style={[styles.icon, styles.placeholder, variant === 'swap' && styles.placeholderSmall]}>
-    <Icon.Tokens color={COLORS.TEXT_INPUT} size={35} />
-  </View>
-)
+export const TokenIconPlaceholder = ({variant}: PlaceholderProps) => {
+  const {styles, colors} = useStyles()
+  return (
+    <View style={[styles.icon, styles.placeholder, variant === 'swap' && styles.placeholderSmall]}>
+      <Icon.Tokens color={colors.iconColor} size={35} />
+    </View>
+  )
+}
 
 const isBase64 = (text: string) => {
   // https://github.com/validatorjs/validator.js/blob/491d9c0eea23f8401b5739803fb8e55c6860b32b/src/lib/isBase64.js
@@ -93,31 +100,41 @@ const isBase64 = (text: string) => {
   )
 }
 
-const styles = StyleSheet.create({
-  primary: {
-    backgroundColor: COLORS.SHELLEY_BLUE,
-  },
-  icon: {
-    backgroundColor: 'transparent',
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconSmall: {
-    backgroundColor: 'transparent',
-    width: 24,
-    height: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  placeholder: {
-    backgroundColor: COLORS.BACKGROUND_GRAY,
-  },
-  placeholderSmall: {
-    width: 24,
-    height: 24,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color} = theme
+  const styles = StyleSheet.create({
+    primary: {
+      backgroundColor: color.primary[600],
+    },
+    icon: {
+      backgroundColor: 'transparent',
+      width: 40,
+      height: 40,
+      borderRadius: 8,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    iconSmall: {
+      backgroundColor: 'transparent',
+      width: 24,
+      height: 24,
+      borderRadius: 8,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    placeholder: {
+      backgroundColor: color.gray[100],
+    },
+    placeholderSmall: {
+      width: 24,
+      height: 24,
+    },
+  })
+
+  const colors = {
+    iconColor: color.gray[600],
+  }
+
+  return {styles, colors}
+}
