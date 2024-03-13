@@ -4,7 +4,7 @@ import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Boundary} from '../../../components'
-import {useStatusBar} from '../../../theme/hooks'
+import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {CurrencyPickerList} from './CurrencyPickerList'
 
 export const ChangeCurrencyScreen = () => {

@@ -7,8 +7,8 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 
 import recoveryPhrase from '../../assets/img/recovery_phrase.png'
 import {Button, Text} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {WalletInitRouteNavigation, WalletInitRoutes} from '../../navigation'
-import {useStatusBar} from '../../theme/hooks'
 import {isEmptyString} from '../../utils/utils'
 import {MnemonicBackupImportanceModal} from '../MnemonicBackupModal'
 

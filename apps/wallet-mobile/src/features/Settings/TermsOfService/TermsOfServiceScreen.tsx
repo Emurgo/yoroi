@@ -3,9 +3,9 @@ import React from 'react'
 import {ScrollView, StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
+import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useLanguage} from '../../../i18n'
 import {TermsOfService} from '../../../Legal/TermsOfService'
-import {useStatusBar} from '../../../theme/hooks'
 
 export const TermsOfServiceScreen = () => {
   const styles = useStyles()
