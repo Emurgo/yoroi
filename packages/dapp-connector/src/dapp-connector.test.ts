@@ -7,7 +7,6 @@ describe('DappConnector', () => {
         iconUrl: 'iconUrl',
         apiVersion: 'apiVersion',
         walletName: 'walletName',
-        supportedExtensions: [{cip: 1}],
         sessionId: 'sessionId',
       }),
     ).toBeTruthy()

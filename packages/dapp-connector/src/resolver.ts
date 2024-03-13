@@ -1,10 +1,12 @@
 import {isKeyOf, isRecord} from '@yoroi/common'
 import {mockedData} from './mocks'
+import {Storage} from './storage'
 
 type Context = {
   browserOrigin: string
-  walletId: string
+  wallet: Wallet
   trustedOrigin: string
+  storage: Storage
 }
 
 type ResolvableMethod<T> = (params: unknown, context: Context) => Promise<T>
@@ -30,37 +32,41 @@ export const resolver: Resolver = {
   },
   enable: async (_params: unknown, context: Context) => {
     assertOriginsMatch(context)
-    return hasWalletAcceptedConnection(context.walletId)
+    if (await hasWalletAcceptedConnection(context)) return true
+    const manualAccept = await context.wallet.confirmConnection(context.trustedOrigin)
+    if (!manualAccept) return false
+    await context.storage.addConnection({walletId: context.wallet.id, dappOrigin: context.trustedOrigin})
+    return true
   },
   isEnabled: async (_params: unknown, context: Context) => {
     assertOriginsMatch(context)
-    return hasWalletAcceptedConnection(context.walletId)
+    return hasWalletAcceptedConnection(context)
   },
   api: {
-    getBalance: (_params: unknown, context: Context) => {
+    getBalance: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
-      assertWalletAcceptedConnection(context)
-      return (mockedData as any)[context.walletId]?.balance
+      await assertWalletAcceptedConnection(context)
+      return (mockedData as any)[context.wallet.id]?.balance
     },
-    getChangeAddresses: (_params: unknown, context: Context) => {
+    getChangeAddresses: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
-      assertWalletAcceptedConnection(context)
-      return (mockedData as any)[context.walletId]?.changeAddresses
+      await assertWalletAcceptedConnection(context)
+      return (mockedData as any)[context.wallet.id]?.changeAddresses
     },
-    getNetworkId: (_params: unknown, context: Context) => {
+    getNetworkId: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
-      assertWalletAcceptedConnection(context)
-      return (mockedData as any)[context.walletId]?.networkId
+      await assertWalletAcceptedConnection(context)
+      return context.wallet.networkId
     },
-    getRewardAddresses: (_params: unknown, context: Context) => {
+    getRewardAddresses: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
-      assertWalletAcceptedConnection(context)
-      return (mockedData as any)[context.walletId]?.rewardAddresses
+      await assertWalletAcceptedConnection(context)
+      return (mockedData as any)[context.wallet.id]?.rewardAddresses
     },
-    getUsedAddresses: (_params: unknown, context: Context) => {
+    getUsedAddresses: async (_params: unknown, context: Context) => {
       assertOriginsMatch(context)
-      assertWalletAcceptedConnection(context)
-      return (mockedData as any)[context.walletId]?.usedAddresses
+      await assertWalletAcceptedConnection(context)
+      return (mockedData as any)[context.wallet.id]?.usedAddresses
     },
   },
 } as const
@@ -71,25 +77,32 @@ const assertOriginsMatch = (context: Context) => {
   }
 }
 
-const assertWalletAcceptedConnection = (context: Context) => {
-  if (!hasWalletAcceptedConnection(context.walletId)) {
-    throw new Error(`Wallet ${context.walletId} has not accepted the connection`)
+const assertWalletAcceptedConnection = async (context: Context) => {
+  if (!(await hasWalletAcceptedConnection(context))) {
+    throw new Error(`Wallet ${context.wallet.id} has not accepted the connection to ${context.trustedOrigin}`)
   }
 }
 
-const hasWalletAcceptedConnection = (walletId: string) => walletId in mockedData
+const hasWalletAcceptedConnection = async (context: Context) => {
+  const connections = await context.storage.listConnections()
+  const requestedConnection = {walletId: context.wallet.id, dappOrigin: context.trustedOrigin}
+  return connections.some(
+    (c) => c.walletId === requestedConnection.walletId && c.dappOrigin === requestedConnection.dappOrigin,
+  )
+}
 
 const handleMethod = async (
   method: string,
   params: {browserContext?: {origin?: unknown}},
-  trustedContext: {walletId: string; origin: string},
+  trustedContext: {wallet: Wallet; origin: string; storage: Storage},
 ) => {
   const browserOrigin = String(params?.browserContext?.origin || '')
 
   const context: Context = {
     browserOrigin,
-    walletId: trustedContext.walletId,
+    wallet: trustedContext.wallet,
     trustedOrigin: trustedContext.origin,
+    storage: trustedContext.storage,
   }
 
   if (method === 'cardano_enable') {
@@ -100,7 +113,7 @@ const handleMethod = async (
     return resolver.isEnabled(params, context)
   }
 
-  if (method === 'log_message') {
+  if (method === LOG_MESSAGE_EVENT) {
     return resolver.logMessage(params, context)
   }
 
@@ -119,13 +132,22 @@ const handleMethod = async (
 export const handleEvent = async (
   eventData: string,
   trustedUrl: string,
-  walletId: string,
+  wallet: Wallet,
   sendMessage: (id: string, result: unknown, error?: Error) => void,
+  storage: Storage,
 ) => {
   const trustedOrigin = new URL(trustedUrl).origin
 
   const {id, method, params} = JSON.parse(eventData)
-  handleMethod(method, params, {origin: trustedOrigin, walletId})
-    .then((result) => method !== 'log_message' && sendMessage(id, result))
-    .catch((error) => method !== 'log_message' && sendMessage(id, null, error))
+  handleMethod(method, params, {origin: trustedOrigin, wallet, storage})
+    .then((result) => method !== LOG_MESSAGE_EVENT && sendMessage(id, result))
+    .catch((error) => method !== LOG_MESSAGE_EVENT && sendMessage(id, null, error))
 }
+
+type Wallet = {
+  id: string
+  networkId: number
+  confirmConnection: (dappOrigin: string) => Promise<boolean>
+}
+
+const LOG_MESSAGE_EVENT = 'log_message'
