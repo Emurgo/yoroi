@@ -63,10 +63,10 @@ export type PortfolioManagerEvents =
       event: 'hydrate'
     }
 
-export type PrimaryTokenWithCache = App.CacheRecord<{
+export type PrimaryToken = {
   info: Portfolio.Token.Info
   discovery: Portfolio.Token.Discovery
-}>
+}
 
 // TODO: type it
 export type PortfolioStorage = ReturnType<typeof portfolioStorageMaker>

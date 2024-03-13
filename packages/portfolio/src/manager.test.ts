@@ -3,7 +3,6 @@ import {App, Chain, Portfolio} from '@yoroi/types'
 import {resolveTokenInfoSources, portfolioManagerMaker} from './manager'
 import {portfolioApiMock} from './adapters/dulahan-api/api-maker.mocks'
 import {portfolioStorageMock} from './adapters/mmkv-storage/storage-maker.mocks'
-import {createPrimaryTokenInfo} from './helpers/create-primary-token-info'
 import {tokenInfoMocks} from './adapters/token-info.mocks'
 import {portfolioStorageMaker} from './adapters/mmkv-storage/storage-maker'
 import {mountMMKVStorage, observableStorageMaker} from '@yoroi/common'
@@ -141,7 +140,7 @@ describe('sync', () => {
     await portfolioManager.sync({primaryBalance, secondaryBalances})
 
     expect(portfolioManager.getPrimaryBreakdown()).toEqual({
-      info: tokenMocks.managerMaker.primaryTokenWithCacheV1.record.info,
+      info: tokenMocks.managerMaker.primaryTokenWithCacheV1.info,
       balance: BigInt(1000000),
       lockedInBuiltTxs: BigInt(0),
       minRequiredByTokens: BigInt(0),
@@ -181,7 +180,7 @@ describe('hydrate', () => {
   })
 
   const primaryBalance: Readonly<Portfolio.BalancePrimaryBreakdown> = {
-    info: tokenMocks.managerMaker.primaryTokenWithCacheV1.record.info,
+    info: tokenMocks.managerMaker.primaryTokenWithCacheV1.info,
     balance: BigInt(1000000),
     lockedInBuiltTxs: BigInt(0),
     minRequiredByTokens: BigInt(0),
@@ -203,8 +202,7 @@ describe('hydrate', () => {
     const subscriber = jest.fn()
     portfolioManager.observer.subscribe(subscriber)
     const sortedBalances = sortTokenBalances({
-      primaryTokenInfo:
-        tokenMocks.managerMaker.primaryTokenWithCacheV1.record.info,
+      primaryTokenInfo: tokenMocks.managerMaker.primaryTokenWithCacheV1.info,
       tokenBalances: [
         ...new Map(tokenBalanceMocks.storage.entries1WithPrimary).values(),
       ],

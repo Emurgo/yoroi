@@ -279,9 +279,27 @@ describe('portfolioStorageMaker', () => {
       ...new Map(tokenBalanceMocks.storage.entries1).keys(),
     ])
   })
+
+  it('should call clear', () => {
+    const {token, balances, primaryBalanceBreakdown} = portfolioStorageMaker({
+      tokenInfoStorage,
+      tokenDiscoveryStorage,
+      balanceStorage,
+      primaryBreakdownStorage,
+    })
+
+    token.discoveries.clear()
+    token.infos.clear()
+    balances.clear()
+    primaryBalanceBreakdown.clear()
+
+    expect(tokenDiscoveryStorage.clear).toHaveBeenCalled()
+    expect(tokenInfoStorage.clear).toHaveBeenCalled()
+    expect(balanceStorage.clear).toHaveBeenCalled()
+    expect(primaryBreakdownStorage.clear).toHaveBeenCalled()
+  })
 })
 
-// NOTE: considering exporting from common as mocked storage
 function createMockStorage<K extends string = string>(
   path: App.StorageFolderName = '/',
   deserializer = JSON.parse,

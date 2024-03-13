@@ -9,7 +9,7 @@ import {
   PortfolioManagerEvent,
   PortfolioManagerEvents,
   PortfolioStorage,
-  PrimaryTokenWithCache,
+  PrimaryToken,
 } from './types'
 import {recordWithETag} from './transformers/record-with-etag'
 import {parseTokenInfoResponseWithCacheRecord} from './validators/token-info'
@@ -24,7 +24,7 @@ export const portfolioManagerMaker = ({
   network: Chain.Network
   api: Readonly<PortfolioApi>
   storage: Readonly<PortfolioStorage>
-  primaryToken: Readonly<PrimaryTokenWithCache>
+  primaryToken: Readonly<PrimaryToken>
 }) => {
   let isHydrated = false
   let balances: Readonly<
@@ -36,7 +36,7 @@ export const portfolioManagerMaker = ({
   )
   let primaryBreakdown: Readonly<Portfolio.BalancePrimaryBreakdown> = freeze(
     {
-      info: primaryToken.record.info,
+      info: primaryToken.info,
       balance: BigInt(0),
       lockedInBuiltTxs: BigInt(0),
       minRequiredByTokens: BigInt(0),
@@ -54,7 +54,7 @@ export const portfolioManagerMaker = ({
         tokenBalances: [...balances.values()].filter(
           (v): v is Portfolio.Token.Balance => v != null,
         ),
-        primaryTokenInfo: primaryToken.record.info,
+        primaryTokenInfo: primaryToken.info,
       }),
       true,
     )
@@ -78,15 +78,15 @@ export const portfolioManagerMaker = ({
       true,
     )
     const cachedPrimaryBreakdown = freeze(
-      storage.primaryBalanceBreakdown.read(primaryToken.record.info.id),
+      storage.primaryBalanceBreakdown.read(primaryToken.info.id),
       true,
     )
     if (cachedPrimaryBreakdown) {
       primaryBreakdown = cachedPrimaryBreakdown
     }
     balances = freeze(
-      new Map(storage.balances.all()).set(primaryToken.record.info.id, {
-        info: primaryToken.record.info,
+      new Map(storage.balances.all()).set(primaryToken.info.id, {
+        info: primaryToken.info,
         balance: primaryBreakdown.balance,
         lockedInBuiltTxs: primaryBreakdown.lockedInBuiltTxs,
       }),
@@ -169,7 +169,7 @@ export const portfolioManagerMaker = ({
     const newPrimaryBreakdown: Readonly<Portfolio.BalancePrimaryBreakdown> =
       freeze(
         {
-          info: primaryToken.record.info,
+          info: primaryToken.info,
           ...primaryBalance,
         },
         true,
@@ -192,9 +192,9 @@ export const portfolioManagerMaker = ({
     })
     storage.balances.clear()
     storage.balances.save([...newBalances.entries()])
-    // memory has primary balance
-    newBalances.set(primaryToken.record.info.id, {
-      info: primaryToken.record.info,
+
+    newBalances.set(primaryToken.info.id, {
+      info: primaryToken.info,
       balance: primaryBalance.balance,
       lockedInBuiltTxs: primaryBalance.lockedInBuiltTxs,
     })

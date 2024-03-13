@@ -3,23 +3,11 @@ import {freeze} from 'immer'
 import * as infos from './token-info.mocks'
 import * as discoveries from './token-discovery.mocks'
 import * as balances from './token-balance.mocks'
-import {PrimaryTokenWithCache} from '../types'
+import {PrimaryToken} from '../types'
 
-const primaryTokenWithCacheV1: Readonly<PrimaryTokenWithCache> = freeze({
-  expires: Infinity,
-  hash: 'version-1',
-  record: {
-    info: infos.tokenInfoMocks.primaryETH,
-    discovery: discoveries.tokenDiscoveryMocks.primaryETH,
-  },
-})
-const primaryTokenWithCacheV2: Readonly<PrimaryTokenWithCache> = freeze({
-  expires: Infinity,
-  hash: 'version-2',
-  record: {
-    info: infos.tokenInfoMocks.primaryETH,
-    discovery: discoveries.tokenDiscoveryMocks.primaryETH,
-  },
+const primaryTokenWithCacheV1: Readonly<PrimaryToken> = freeze({
+  info: infos.tokenInfoMocks.primaryETH,
+  discovery: discoveries.tokenDiscoveryMocks.primaryETH,
 })
 
 export const tokenMocks = freeze(
@@ -50,7 +38,6 @@ export const tokenMocks = freeze(
     },
     managerMaker: {
       primaryTokenWithCacheV1,
-      primaryTokenWithCacheV2,
     },
   },
   true,
