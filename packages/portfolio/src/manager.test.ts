@@ -1,6 +1,6 @@
 import {App, Chain, Portfolio} from '@yoroi/types'
 
-import {getRecordsSource, portfolioManagerMaker} from './manager'
+import {resolveTokenInfoSources, portfolioManagerMaker} from './manager'
 import {portfolioApiMock} from './adapters/dulahan-api/api-maker.mocks'
 import {portfolioStorageMock} from './adapters/mmkv-storage/storage-maker.mocks'
 import {createPrimaryTokenInfo} from './helpers/create-primary-token-info'
@@ -11,33 +11,24 @@ import {PortfolioStorage} from './types'
 import {tokenBalanceMocks} from './adapters/token-balance.mocks'
 import {tokenDiscoveryMocks} from './adapters/token-discovery.mocks'
 import {sortTokenBalances} from './helpers/sorting'
+import {tokenMocks} from './adapters/token.mocks'
 
 describe('portfolioManagerMaker', () => {
-  const primaryTokenInfo = createPrimaryTokenInfo({
-    decimals: 6,
-    name: 'Cardano',
-    reference: 'ADA',
-    originalImage: 'https://example.com/ada.png',
-    symbol: 'ADA',
-    tag: '',
-    ticker: 'ADA',
-    website: 'https://example.com',
-  })
   it('should be instantiated', () => {
     const portfolioManager = portfolioManagerMaker({
       network: Chain.Network.Main,
       api: portfolioApiMock.success,
       storage: portfolioStorageMock,
-      primaryTokenInfo,
+      primaryToken: tokenMocks.managerMaker.primaryTokenWithCacheV1,
     })
 
     expect(portfolioManager).toBeDefined()
   })
 })
 
-describe('getRecordsSource', () => {
-  it('should return an empty array when newIds is empty', () => {
-    const newIds: Portfolio.Token.Id[] = []
+describe('resolveTokenInfoSources', () => {
+  it('should return an empty array when ids is empty', () => {
+    const ids: Portfolio.Token.Id[] = []
     const cachedInfos = new Map<Portfolio.Token.Id, App.CacheInfo>([
       [
         tokenInfoMocks.nftCryptoKitty.id,
@@ -45,18 +36,18 @@ describe('getRecordsSource', () => {
       ],
     ])
 
-    const {toFetch, fromCache} = getRecordsSource({newIds, cachedInfos})
+    const {toFetch, fromCache} = resolveTokenInfoSources({ids, cachedInfos})
 
     expect(toFetch).toEqual([])
     expect(fromCache).toEqual([])
   })
 
-  it('should return an array of records to fetch when newIds are not cached', () => {
+  it('should return an array of records to fetch when ids are not cached', () => {
     const {nftCryptoKitty, rnftWhatever} = tokenInfoMocks
-    const newIds: Portfolio.Token.Id[] = [nftCryptoKitty.id, rnftWhatever.id]
+    const ids: Portfolio.Token.Id[] = [nftCryptoKitty.id, rnftWhatever.id]
     const cachedInfos = new Map<Portfolio.Token.Id, App.CacheInfo>()
 
-    const {toFetch, fromCache} = getRecordsSource({newIds, cachedInfos})
+    const {toFetch, fromCache} = resolveTokenInfoSources({ids, cachedInfos})
 
     expect(toFetch).toEqual([
       [nftCryptoKitty.id, ''],
@@ -65,9 +56,9 @@ describe('getRecordsSource', () => {
     expect(fromCache).toEqual([])
   })
 
-  it('should return an array of records to fetch when newIds are expired', () => {
+  it('should return an array of records to fetch when ids are expired', () => {
     const {nftCryptoKitty, rnftWhatever} = tokenInfoMocks
-    const newIds: Portfolio.Token.Id[] = [nftCryptoKitty.id, rnftWhatever.id]
+    const ids: Portfolio.Token.Id[] = [nftCryptoKitty.id, rnftWhatever.id]
     const past = Date.now() - 1000000
     const future = Date.now() + 1000000
     const cachedInfos = new Map<Portfolio.Token.Id, App.CacheInfo>([
@@ -75,22 +66,22 @@ describe('getRecordsSource', () => {
       [rnftWhatever.id, {expires: future, hash: 'hash2'}],
     ])
 
-    const {toFetch, fromCache} = getRecordsSource({newIds, cachedInfos})
+    const {toFetch, fromCache} = resolveTokenInfoSources({ids, cachedInfos})
 
     expect(toFetch).toEqual([[nftCryptoKitty.id, 'hash1']])
     expect(fromCache).toEqual([rnftWhatever.id])
   })
 
-  it('should return an empty array when all newIds are not expired', () => {
+  it('should return an empty array when all ids are not expired', () => {
     const {nftCryptoKitty, rnftWhatever} = tokenInfoMocks
-    const newIds: Portfolio.Token.Id[] = [nftCryptoKitty.id, rnftWhatever.id]
+    const ids: Portfolio.Token.Id[] = [nftCryptoKitty.id, rnftWhatever.id]
     const future = Date.now() + 1000000
     const cachedInfos = new Map<Portfolio.Token.Id, App.CacheInfo>([
       [nftCryptoKitty.id, {expires: future, hash: 'hash1'}],
       [rnftWhatever.id, {expires: future, hash: 'hash2'}],
     ])
 
-    const {toFetch, fromCache} = getRecordsSource({newIds, cachedInfos})
+    const {toFetch, fromCache} = resolveTokenInfoSources({ids, cachedInfos})
 
     expect(toFetch).toEqual([])
     expect(fromCache).toEqual([nftCryptoKitty.id, rnftWhatever.id])
@@ -98,17 +89,6 @@ describe('getRecordsSource', () => {
 })
 
 describe('sync', () => {
-  const primaryTokenInfo = createPrimaryTokenInfo({
-    decimals: 6,
-    name: 'Cardano',
-    reference: 'ADA',
-    originalImage: 'https://example.com/ada.png',
-    symbol: 'ADA',
-    tag: '',
-    ticker: 'ADA',
-    website: 'https://example.com',
-  })
-
   const tokenDiscoveryStorage = observableStorageMaker(
     mountMMKVStorage<Portfolio.Token.Id>(
       '/tmp/token-discovery/',
@@ -143,7 +123,7 @@ describe('sync', () => {
       network: Chain.Network.Main,
       api: portfolioApiMock.success,
       storage,
-      primaryTokenInfo,
+      primaryToken: tokenMocks.managerMaker.primaryTokenWithCacheV1,
     })
 
     const primaryBalance: Readonly<
@@ -161,7 +141,7 @@ describe('sync', () => {
     await portfolioManager.sync({primaryBalance, secondaryBalances})
 
     expect(portfolioManager.getPrimaryBreakdown()).toEqual({
-      info: primaryTokenInfo,
+      info: tokenMocks.managerMaker.primaryTokenWithCacheV1.record.info,
       balance: BigInt(1000000),
       lockedInBuiltTxs: BigInt(0),
       minRequiredByTokens: BigInt(0),
@@ -171,17 +151,6 @@ describe('sync', () => {
 })
 
 describe('hydrate', () => {
-  const primaryTokenInfo = createPrimaryTokenInfo({
-    decimals: 6,
-    name: 'Cardano',
-    reference: 'ADA',
-    originalImage: 'https://example.com/ada.png',
-    symbol: 'ADA',
-    tag: '',
-    ticker: 'ADA',
-    website: 'https://example.com',
-  })
-
   const tokenDiscoveryStorage = observableStorageMaker(
     mountMMKVStorage<Portfolio.Token.Id>(
       '/tmp/token-discovery/',
@@ -212,7 +181,7 @@ describe('hydrate', () => {
   })
 
   const primaryBalance: Readonly<Portfolio.BalancePrimaryBreakdown> = {
-    info: primaryTokenInfo,
+    info: tokenMocks.managerMaker.primaryTokenWithCacheV1.record.info,
     balance: BigInt(1000000),
     lockedInBuiltTxs: BigInt(0),
     minRequiredByTokens: BigInt(0),
@@ -229,12 +198,13 @@ describe('hydrate', () => {
       network: Chain.Network.Main,
       api: portfolioApiMock.success,
       storage,
-      primaryTokenInfo: tokenInfoMocks.primaryETH,
+      primaryToken: tokenMocks.managerMaker.primaryTokenWithCacheV1,
     })
     const subscriber = jest.fn()
     portfolioManager.observer.subscribe(subscriber)
     const sortedBalances = sortTokenBalances({
-      primaryTokenInfo,
+      primaryTokenInfo:
+        tokenMocks.managerMaker.primaryTokenWithCacheV1.record.info,
       tokenBalances: [
         ...new Map(tokenBalanceMocks.storage.entries1WithPrimary).values(),
       ],

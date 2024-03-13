@@ -9,6 +9,7 @@ import {
   PortfolioManagerEvent,
   PortfolioManagerEvents,
   PortfolioStorage,
+  PrimaryTokenWithCache,
 } from './types'
 import {recordWithETag} from './transformers/record-with-etag'
 import {parseTokenInfoResponseWithCacheRecord} from './validators/token-info'
@@ -17,13 +18,13 @@ import {sortTokenBalances} from './helpers/sorting'
 export const portfolioManagerMaker = ({
   // network,
   api,
-  primaryTokenInfo,
+  primaryToken,
   storage,
 }: {
   network: Chain.Network
   api: Readonly<PortfolioApi>
   storage: Readonly<PortfolioStorage>
-  primaryTokenInfo: Readonly<Portfolio.Token.Info>
+  primaryToken: Readonly<PrimaryTokenWithCache>
 }) => {
   let isHydrated = false
   let balances: Readonly<
@@ -35,7 +36,7 @@ export const portfolioManagerMaker = ({
   )
   let primaryBreakdown: Readonly<Portfolio.BalancePrimaryBreakdown> = freeze(
     {
-      info: primaryTokenInfo,
+      info: primaryToken.record.info,
       balance: BigInt(0),
       lockedInBuiltTxs: BigInt(0),
       minRequiredByTokens: BigInt(0),
@@ -53,7 +54,7 @@ export const portfolioManagerMaker = ({
         tokenBalances: [...balances.values()].filter(
           (v): v is Portfolio.Token.Balance => v != null,
         ),
-        primaryTokenInfo,
+        primaryTokenInfo: primaryToken.record.info,
       }),
       true,
     )
@@ -77,15 +78,15 @@ export const portfolioManagerMaker = ({
       true,
     )
     const cachedPrimaryBreakdown = freeze(
-      storage.primaryBalanceBreakdown.read(primaryTokenInfo.id),
+      storage.primaryBalanceBreakdown.read(primaryToken.record.info.id),
       true,
     )
     if (cachedPrimaryBreakdown) {
       primaryBreakdown = cachedPrimaryBreakdown
     }
     balances = freeze(
-      new Map(storage.balances.all()).set(primaryTokenInfo.id, {
-        info: primaryTokenInfo,
+      new Map(storage.balances.all()).set(primaryToken.record.info.id, {
+        info: primaryToken.record.info,
         balance: primaryBreakdown.balance,
         lockedInBuiltTxs: primaryBreakdown.lockedInBuiltTxs,
       }),
@@ -108,8 +109,8 @@ export const portfolioManagerMaker = ({
   }) => {
     if (!isHydrated) hydrate()
 
-    const {toFetch, fromCache} = getRecordsSource({
-      newIds: [...secondaryBalances.keys()],
+    const {toFetch, fromCache} = resolveTokenInfoSources({
+      ids: [...secondaryBalances.keys()],
       cachedInfos,
     })
 
@@ -168,7 +169,7 @@ export const portfolioManagerMaker = ({
     const newPrimaryBreakdown: Readonly<Portfolio.BalancePrimaryBreakdown> =
       freeze(
         {
-          info: primaryTokenInfo,
+          info: primaryToken.record.info,
           ...primaryBalance,
         },
         true,
@@ -192,8 +193,8 @@ export const portfolioManagerMaker = ({
     storage.balances.clear()
     storage.balances.save([...newBalances.entries()])
     // memory has primary balance
-    newBalances.set(primaryTokenInfo.id, {
-      info: primaryTokenInfo,
+    newBalances.set(primaryToken.record.info.id, {
+      info: primaryToken.record.info,
       balance: primaryBalance.balance,
       lockedInBuiltTxs: primaryBalance.lockedInBuiltTxs,
     })
@@ -223,16 +224,16 @@ export const portfolioManagerMaker = ({
   )
 }
 
-export const getRecordsSource = ({
-  newIds,
+export const resolveTokenInfoSources = ({
+  ids,
   cachedInfos,
 }: {
-  newIds: ReadonlyArray<Portfolio.Token.Id>
+  ids: ReadonlyArray<Portfolio.Token.Id>
   cachedInfos: Readonly<Map<Portfolio.Token.Id, App.CacheInfo>>
 }) => {
   const toFetch: Array<AppApiRequestRecordWithCache<Portfolio.Token.Id>> = []
   const fromCache: Array<Portfolio.Token.Id> = []
-  newIds.forEach((id) => {
+  ids.forEach((id) => {
     const cachedRecord = cachedInfos.get(id)
     if (cachedRecord) {
       if (isExpired(cachedRecord)) {

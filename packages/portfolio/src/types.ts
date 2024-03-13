@@ -1,4 +1,4 @@
-import {Chain, Portfolio} from '@yoroi/types'
+import {App, Chain, Portfolio} from '@yoroi/types'
 
 import {portfolioStorageMaker} from './adapters/mmkv-storage/storage-maker'
 
@@ -62,6 +62,11 @@ export type PortfolioManagerEvents =
   | {
       event: 'hydrate'
     }
+
+export type PrimaryTokenWithCache = App.CacheRecord<{
+  info: Portfolio.Token.Info
+  discovery: Portfolio.Token.Discovery
+}>
 
 // TODO: type it
 export type PortfolioStorage = ReturnType<typeof portfolioStorageMaker>
