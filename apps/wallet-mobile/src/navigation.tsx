@@ -258,7 +258,7 @@ export type SwapTabRoutes = {
 }
 
 export type ExchangeRoutes = {
-  'exchange-create': undefined
+  'exchange-create-order': undefined
   'exchange-result': undefined
   'app-root': undefined
 }

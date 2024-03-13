@@ -6,9 +6,9 @@ import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
 import {ExchangeProvider} from '../../common/ExchangeProvider'
 import {mockExchangeStateDefault} from '../../common/mocks'
-import {CreateExchange} from './CreateExchange'
+import {CreateExchangeOrder} from './CreateExchangeOrder'
 
-storiesOf('Exchange CreateExchange', module) //
+storiesOf('Exchange CreateExchangeOrder', module) //
   .addDecorator((story) => <SelectedWalletProvider wallet={walletMocks.wallet}>{story()}</SelectedWalletProvider>)
   .add('initial', () => <Initial />)
   .add('buy', () => <BuyAda />)
@@ -17,7 +17,7 @@ storiesOf('Exchange CreateExchange', module) //
 const Initial = () => {
   return (
     <ExchangeProvider>
-      <CreateExchange />
+      <CreateExchangeOrder />
     </ExchangeProvider>
   )
 }
@@ -28,7 +28,7 @@ const BuyAda = () => {
   })
   return (
     <ExchangeProvider initialState={initialState}>
-      <CreateExchange />
+      <CreateExchangeOrder />
     </ExchangeProvider>
   )
 }
@@ -39,7 +39,7 @@ const SellAda = () => {
   })
   return (
     <ExchangeProvider initialState={initialState}>
-      <CreateExchange />
+      <CreateExchangeOrder />
     </ExchangeProvider>
   )
 }

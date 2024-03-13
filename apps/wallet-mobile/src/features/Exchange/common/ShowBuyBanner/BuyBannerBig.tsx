@@ -24,7 +24,7 @@ export const BuyBannerBig = () => {
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const handleExchange = () => {
     track.walletPageBuyBannerClicked()
-    navigation.navigate('exchange-create')
+    navigation.navigate('exchange-create-order')
   }
 
   return (

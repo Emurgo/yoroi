@@ -26,7 +26,7 @@ import {ShowProviderInfo} from './ShowProviderInfo/ShowProviderInfo'
 
 const BOTTOM_ACTION_SECTION = 180
 
-export const CreateExchange = () => {
+export const CreateExchangeOrder = () => {
   useStatusBar()
   const strings = useStrings()
   const styles = useStyles()

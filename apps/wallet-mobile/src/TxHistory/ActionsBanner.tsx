@@ -248,6 +248,6 @@ const useNavigateTo = () => {
     receiveSingleAddress: () => navigation.navigate('receive-single'),
     receiveMultipleAddresses: () => navigation.navigate('receive-multiple'),
     swap: () => navigation.navigate('swap-start-swap'),
-    exchange: () => navigation.navigate('exchange-create'),
+    exchange: () => navigation.navigate('exchange-create-order'),
   }
 }

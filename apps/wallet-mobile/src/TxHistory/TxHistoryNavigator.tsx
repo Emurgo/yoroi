@@ -24,8 +24,8 @@ import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
 import {ExchangeProvider} from '../features/Exchange/common/ExchangeProvider'
-import {CreateExchange} from '../features/Exchange/useCases/CreateExchange/CreateExchange'
-import {ShowExchangeResult} from '../features/Exchange/useCases/ShowExchangeResult/ShowExchangeResult'
+import {CreateExchangeOrder} from '../features/Exchange/useCases/CreateExchangeOrder/CreateExchangeOrder'
+import {ShowExchangeResultOrder} from '../features/Exchange/useCases/ShowExchangeResultOrder/ShowExchangeResultOrder'
 import {ReceiveProvider} from '../features/Receive/common/ReceiveProvider'
 import {DescribeSelectedAddressScreen} from '../features/Receive/useCases/DescribeSelectedAddressScreen'
 import {ListMultipleAddressesScreen} from '../features/Receive/useCases/ListMultipleAddressesScreen'
@@ -189,8 +189,8 @@ export const TxHistoryNavigator = () => {
                     />
 
                     <Stack.Screen
-                      name="exchange-create"
-                      component={CreateExchange}
+                      name="exchange-create-order"
+                      component={CreateExchangeOrder}
                       options={{
                         title: strings.rampOnOffTitle,
                       }}
@@ -202,7 +202,7 @@ export const TxHistoryNavigator = () => {
                       }}
                       name="exchange-result"
                     >
-                      {() => <ShowExchangeResult variant="noInfo" />}
+                      {() => <ShowExchangeResultOrder variant="noInfo" />}
                     </Stack.Screen>
 
                     <Stack.Screen

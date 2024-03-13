@@ -21,7 +21,7 @@ export type ParamsResult = {
   fiatAmount: number
 }
 
-export const ShowExchangeResult = ({variant}: {variant?: 'noInfo'}) => {
+export const ShowExchangeResultOrder = ({variant}: {variant?: 'noInfo'}) => {
   const strings = useStrings()
   useHideBottomTabBar()
   useStatusBar()

@@ -18,7 +18,7 @@ export const BuyBannerSmall = ({onClose}: SmallBannerProps) => {
 
   const navigation = useNavigation<TxHistoryRouteNavigation>()
   const handleExchange = () => {
-    navigation.navigate('exchange-create')
+    navigation.navigate('exchange-create-order')
   }
   return (
     <View style={styles.root}>

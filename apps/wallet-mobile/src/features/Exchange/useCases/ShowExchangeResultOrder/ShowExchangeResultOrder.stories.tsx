@@ -9,11 +9,11 @@ import {mocks as walletMocks} from '../../../../yoroi-wallets/mocks'
 import {ExchangeProvider} from '../../common/ExchangeProvider'
 import {mockExchangeStateDefault} from '../../common/mocks'
 import {ExchangeInitRoutes} from '../../common/useNavigateTo'
-import {ShowExchangeResult} from './ShowExchangeResult'
+import {ShowExchangeResultOrder} from './ShowExchangeResultOrder'
 
-storiesOf('Exchange ShowExchangeResult', module) //
+storiesOf('Exchange ShowExchangeResultOrder', module) //
   .add('no params', () => <Init />)
-  .add('no info', () => <ShowExchangeResult variant="noInfo" />)
+  .add('no info', () => <ShowExchangeResultOrder variant="noInfo" />)
   .add('with params', () => <WithParams />)
 
 const Init = () => {
@@ -24,7 +24,7 @@ const Init = () => {
     <SelectedWalletProvider wallet={{...walletMocks.wallet}}>
       <ModalProvider>
         <ExchangeProvider initialState={initialState}>
-          <ShowExchangeResult />
+          <ShowExchangeResultOrder />
         </ExchangeProvider>
       </ModalProvider>
     </SelectedWalletProvider>
@@ -46,7 +46,7 @@ const WithParams = () => {
       <SelectedWalletProvider wallet={{...walletMocks.wallet}}>
         <ModalProvider>
           <ExchangeProvider initialState={initialState}>
-            <ShowExchangeResult />
+            <ShowExchangeResultOrder />
           </ExchangeProvider>
         </ModalProvider>
       </SelectedWalletProvider>
