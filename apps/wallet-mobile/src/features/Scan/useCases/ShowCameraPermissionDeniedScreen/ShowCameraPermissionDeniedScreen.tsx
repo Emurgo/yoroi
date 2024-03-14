@@ -1,17 +1,19 @@
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {ScrollView, StyleSheet, View, ViewProps} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, Text} from '../../../../components'
 import {useBlockGoBack, useWalletNavigation} from '../../../../navigation'
-import {COLORS} from '../../../../theme'
 import {useStrings} from '../../common/useStrings'
 import {CameraPermissionDeniedIllustration} from '../../illustrations/CameraPermissionDeniedIlustration'
 import {OpenDeviceAppSettingsButton} from './OpenDeviceAppSettingsButton'
 
 export const ShowCameraPermissionDeniedScreen = () => {
-  useBlockGoBack()
+  const styles = useStyles()
+
   const strings = useStrings()
+  useBlockGoBack()
   const {resetToTxHistory} = useWalletNavigation()
 
   return (
@@ -35,38 +37,42 @@ export const ShowCameraPermissionDeniedScreen = () => {
   )
 }
 
-const Actions = ({style, ...props}: ViewProps) => <View style={[styles.actions, style]} {...props} />
+const Actions = ({style, ...props}: ViewProps) => {
+  const styles = useStyles()
+  return <View style={[styles.actions, style]} {...props} />
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE,
-    paddingHorizontal: 16,
-  },
-  scroll: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    color: COLORS.BLACK,
-    fontWeight: 'bold',
-    fontSize: 20,
-    padding: 4,
-    textAlign: 'center',
-    lineHeight: 30,
-  },
-  help: {
-    color: COLORS.TEXT_INPUT,
-    fontSize: 14,
-    fontWeight: '400',
-    lineHeight: 22,
-    textAlign: 'center',
-    maxWidth: 330,
-  },
-  actions: {
-    paddingVertical: 16,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: color.gray.min,
+      ...padding['x-l'],
+    },
+    scroll: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    title: {
+      color: color.gray.max,
+      ...typography['heading-3-medium'],
+      ...padding['xs'],
+      textAlign: 'center',
+    },
+    help: {
+      color: color.gray[600],
+      ...typography['body-2-m-regular'],
+      textAlign: 'center',
+      maxWidth: 330,
+    },
+    actions: {
+      ...padding['y-l'],
+    },
+  })
+  return styles
+}
 
 const ContinueButton = Button

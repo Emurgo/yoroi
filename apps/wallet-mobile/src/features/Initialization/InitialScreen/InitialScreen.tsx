@@ -1,3 +1,4 @@
+import {padding, useTheme} from '@yoroi/theme'
 import * as React from 'react'
 import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
@@ -6,11 +7,11 @@ import {Button, Icon, Spacer, StatusBar, YoroiLogo} from '../../../components'
 import {BlueCheckbox} from '../../../components/BlueCheckbox'
 import {useLanguage} from '../../../i18n'
 import {defaultLanguage} from '../../../i18n/languages'
-import {COLORS} from '../../../theme'
 import {useNavigateTo, useStrings} from '../common'
 
 export const InitialScreen = () => {
   const strings = useStrings()
+  const styles = useStyles()
   const navigateTo = useNavigateTo()
   const [tosAccepted, setTosAccepted] = React.useState(false)
 
@@ -92,6 +93,7 @@ export const InitialScreen = () => {
 }
 
 const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
+  const styles = useStyles()
   const {languageCode, supportedLanguages} = useLanguage()
   const language = supportedLanguages.find((lang) => lang.code === languageCode) ?? defaultLanguage
 
@@ -105,55 +107,57 @@ const LanguagePickRow = ({onPress}: {onPress: () => void}) => {
     </TouchableOpacity>
   )
 }
-const styles = StyleSheet.create({
-  scrollableContentContainer: {
-    flexGrow: 1,
-  },
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '500',
-    fontFamily: 'Rubik-Bold',
-    lineHeight: 30,
-    textAlign: 'center',
-    color: '#242838',
-  },
-  input: {
-    color: '#6B7384',
-    fontWeight: '400',
-    paddingLeft: 16,
-    justifyContent: 'center',
-    borderColor: '#A7AFC0',
-    borderWidth: 1,
-    borderRadius: 8,
-    height: 56,
-    fontSize: 16,
-  },
-  inputIcon: {
-    position: 'absolute',
-    right: 0,
-    paddingRight: 16,
-    paddingTop: 8,
-  },
-  checkboxText: {
-    fontFamily: 'Rubik',
-    fontSize: 16,
-    color: '#000000',
-  },
-  checkboxLink: {
-    color: COLORS.DARK_BLUE,
-    textDecorationLine: 'underline',
-  },
-  checkbox: {
-    alignItems: 'flex-start',
-  },
-  checkboxRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-})
+
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, typography} = theme
+  const styles = StyleSheet.create({
+    scrollableContentContainer: {
+      flexGrow: 1,
+    },
+    container: {
+      flex: 1,
+      ...padding['l'],
+      backgroundColor: color.gray.min,
+    },
+    title: {
+      ...typography['heading-3-medium'],
+      textAlign: 'center',
+      color: color.gray[900],
+    },
+    input: {
+      color: color.gray[600],
+      ...padding['l-l'],
+      ...typography['body-1-l-regular'],
+      justifyContent: 'center',
+      borderColor: color.gray[400],
+      borderWidth: 1,
+      borderRadius: 8,
+      height: 56,
+    },
+    inputIcon: {
+      position: 'absolute',
+      right: 0,
+      ...padding['r-l'],
+      ...padding['t-s'],
+    },
+    checkboxText: {
+      ...typography['body-1-l-regular'],
+      color: color.gray.max,
+    },
+    checkboxLink: {
+      color: color.primary[800],
+      textDecorationLine: 'underline',
+    },
+    checkbox: {
+      alignItems: 'flex-start',
+    },
+    checkboxRow: {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+  })
+
+  return styles
+}
