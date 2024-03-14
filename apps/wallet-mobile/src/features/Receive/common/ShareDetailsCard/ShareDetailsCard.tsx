@@ -1,10 +1,12 @@
 import {useTheme} from '@yoroi/theme'
-import React from 'react'
+import React, {useMemo} from 'react'
+import {useIntl} from 'react-intl'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {CopyButton, Text} from '../../../../components'
 import {useMetrics} from '../../../../metrics/metricsManager'
+import {useSelectedWallet} from '../../../../SelectedWallet'
 import {isEmptyString} from '../../../../utils/utils'
 import {useStrings} from '../useStrings'
 
@@ -16,8 +18,22 @@ type AddressDetailsProps = {
 
 export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDetailsProps) => {
   const strings = useStrings()
+  const intl = useIntl()
   const {styles, colors} = useStyles()
   const {track} = useMetrics()
+  const wallet = useSelectedWallet()
+  const lastUsed = useMemo(
+    () =>
+      Object.values(wallet.transactions).reduce((currentLast, tx) => {
+        const {inputs, outputs} = tx
+        const isRelevant = inputs.some((v) => address === v.address) || outputs.some((v) => address === v.address)
+        if (!isRelevant) return currentLast
+        const lastUpdatedAt = new Date(tx.lastUpdatedAt).getTime()
+        console.log('>> ', tx.lastUpdatedAt)
+        return Math.max(currentLast, lastUpdatedAt)
+      }, 0),
+    [address, wallet.transactions],
+  )
 
   const hasStakingHash = !isEmptyString(stakingHash)
   const hasSpendingHash = !isEmptyString(spendingHash)
@@ -70,6 +86,22 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
           </View>
         </View>
       )}
+
+      {Boolean(lastUsed) && (
+        <View style={styles.textSection}>
+          <Text style={[styles.textAddress, {color: colors.grayText}]}>{strings.lastUsed}</Text>
+
+          <View style={styles.textRow}>
+            <Text style={styles.textAddressDetails}>
+              {intl.formatDate(new Date(lastUsed), {
+                dateStyle: 'short',
+                timeStyle: 'short',
+                hour12: false,
+              })}
+            </Text>
+          </View>
+        </View>
+      )}
     </View>
   )
 }
@@ -93,12 +125,12 @@ const useStyles = () => {
       alignSelf: 'center',
       overflow: 'hidden',
       paddingHorizontal: 16,
+      paddingVertical: 32,
       gap: 16,
-      paddingTop: 32,
     },
     textAddressDetails: {
-      ...typography['body-2-m-regular'],
-      lineHeight: 18,
+      ...typography['body-1-l-regular'],
+      lineHeight: 24,
       textAlign: 'left',
       flex: 1,
       color: color.gray[900],
@@ -109,7 +141,6 @@ const useStyles = () => {
       textAlign: 'left',
     },
     textSection: {
-      gap: 4,
       alignSelf: 'stretch',
     },
     textRow: {
