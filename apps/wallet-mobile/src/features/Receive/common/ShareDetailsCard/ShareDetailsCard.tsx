@@ -29,7 +29,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
         const isRelevant = inputs.some((v) => address === v.address) || outputs.some((v) => address === v.address)
         if (!isRelevant) return currentLast
         const lastUpdatedAt = new Date(tx.lastUpdatedAt).getTime()
-        console.log('>> ', tx.lastUpdatedAt)
+
         return Math.max(currentLast, lastUpdatedAt)
       }, 0),
     [address, wallet.transactions],
