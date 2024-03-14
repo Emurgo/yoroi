@@ -187,7 +187,6 @@ const useStyles = () => {
       backgroundColor: color.gray.min,
     },
     scrollView: {
-      paddingHorizontal: 16,
       ...padding['x-l'],
       ...padding['b-xl'],
       flex: 1,
