@@ -6,6 +6,7 @@ import {View} from 'react-native'
 import {WebView, WebViewMessageEvent} from 'react-native-webview'
 
 import {PleaseWaitModal, Spacer} from '../../components'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {useStakingTx} from '../../Dashboard/StakePoolInfos'
 import {showErrorDialog} from '../../dialogs'
 import {features} from '../../features'
@@ -59,6 +60,8 @@ export const StakingCenter = () => {
       },
     },
   )
+
+  useStatusBar(undefined, isLoading)
 
   const handleOnMessage = async (event: WebViewMessageEvent) => {
     const selectedPoolHashes = JSON.parse(decodeURI(event.nativeEvent.data))

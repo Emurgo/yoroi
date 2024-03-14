@@ -6,6 +6,7 @@ import Animated, {Layout} from 'react-native-reanimated'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Button, Spacer, useModal} from '../../../components'
+import {useStatusBar} from '../../../components/hooks/useStatusBar'
 import {useMetrics} from '../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../SelectedWallet'
 import {useAddressModeManager} from '../../../wallet-manager/useAddressModeManager'
@@ -28,6 +29,7 @@ export const ListMultipleAddressesScreen = () => {
   const inView = React.useRef(Number.MAX_SAFE_INTEGER)
   const strings = useStrings()
   const {styles} = useStyles()
+  useStatusBar()
   const wallet = useSelectedWallet()
   const navigate = useNavigateTo()
   const {track} = useMetrics()

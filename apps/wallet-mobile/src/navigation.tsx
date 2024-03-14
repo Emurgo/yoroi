@@ -215,7 +215,7 @@ export type TxHistoryRoutes = {
 } & SwapTokenRoutes &
   ScanRoutes &
   ClaimRoutes &
-  RampOnOffRoutes
+  ExchangeRoutes
 export type TxHistoryRouteNavigation = StackNavigationProp<TxHistoryRoutes>
 
 type ScanStartParams = Readonly<{
@@ -228,10 +228,6 @@ export type ScanRoutes = {
 }
 export type ClaimRoutes = {
   'claim-show-success': undefined
-}
-
-export type RampOnOffRoutes = {
-  'rampOnOff-start-rampOnOff': undefined
 }
 
 export type SwapTokenRoutes = {
@@ -260,13 +256,13 @@ export type SwapTabRoutes = {
   orders: undefined
 }
 
-export type RampOnOffStackRoutes = {
-  'create-ramp-on-off': undefined
-  'result-ramp-on-off': undefined
+export type ExchangeRoutes = {
+  'exchange-create-order': undefined
+  'exchange-result': undefined
   'app-root': undefined
 }
 
-export type RampOnOffRoutesNavigation = StackNavigationProp<RampOnOffStackRoutes>
+export type ExchangeRoutesNavigation = StackNavigationProp<ExchangeRoutes>
 
 export type StakingCenterRouteNavigation = StackNavigationProp<StakingCenterRoutes>
 

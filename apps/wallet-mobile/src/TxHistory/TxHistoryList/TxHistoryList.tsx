@@ -7,7 +7,7 @@ import {useIntl} from 'react-intl'
 import {Platform, SectionList, SectionListProps, StyleSheet, View} from 'react-native'
 
 import {Spacer, Text} from '../../components'
-import {ShowBuyBanner} from '../../features/RampOnOff/common/ShowBuyBanner/ShowBuyBanner'
+import {ShowBuyBanner} from '../../features/Exchange/common/ShowBuyBanner/ShowBuyBanner'
 import {formatDateRelative} from '../../legacy/format'
 import {useMetrics} from '../../metrics/metricsManager'
 import {useSelectedWallet} from '../../SelectedWallet'

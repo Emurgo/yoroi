@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Welcome Back",
     "file": "src/auth/OsAuthScreen/OsAuthScreen.tsx",
     "start": {
-      "line": 103,
+      "line": 104,
       "column": 18,
-      "index": 3123
+      "index": 3172
     },
     "end": {
-      "line": 106,
+      "line": 107,
       "column": 3,
-      "index": 3233
+      "index": 3282
     }
   }
 ]
