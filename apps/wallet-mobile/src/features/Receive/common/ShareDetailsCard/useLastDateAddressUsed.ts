@@ -4,7 +4,7 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 
 export const useLastDateAddressUsed = (address: string) => {
   const wallet = useSelectedWallet()
-  const lastUsed = useMemo(
+  return useMemo(
     () =>
       Object.values(wallet.transactions).reduce((currentLast, tx) => {
         const {inputs, outputs} = tx
@@ -16,5 +16,4 @@ export const useLastDateAddressUsed = (address: string) => {
       }, 0),
     [address, wallet.transactions],
   )
-  return lastUsed
 }
