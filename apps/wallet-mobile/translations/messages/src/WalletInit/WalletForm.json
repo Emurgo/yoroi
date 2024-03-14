@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Wallet name",
     "file": "src/WalletInit/WalletForm.tsx",
     "start": {
-      "line": 133,
+      "line": 135,
       "column": 24,
-      "index": 5014
+      "index": 5093
     },
     "end": {
-      "line": 136,
+      "line": 138,
       "column": 3,
-      "index": 5122
+      "index": 5201
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!Spending password",
     "file": "src/WalletInit/WalletForm.tsx",
     "start": {
-      "line": 137,
+      "line": 139,
       "column": 20,
-      "index": 5144
+      "index": 5223
     },
     "end": {
-      "line": 140,
+      "line": 142,
       "column": 3,
-      "index": 5254
+      "index": 5333
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Continue",
     "file": "src/WalletInit/WalletForm.tsx",
     "start": {
-      "line": 141,
+      "line": 143,
       "column": 18,
-      "index": 5274
+      "index": 5353
     },
     "end": {
-      "line": 144,
+      "line": 146,
       "column": 3,
-      "index": 5373
+      "index": 5452
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Minimum characters",
     "file": "src/WalletInit/WalletForm.tsx",
     "start": {
-      "line": 145,
+      "line": 147,
       "column": 31,
-      "index": 5406
+      "index": 5485
     },
     "end": {
-      "line": 148,
+      "line": 150,
       "column": 3,
-      "index": 5547
+      "index": 5626
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Repeat password",
     "file": "src/WalletInit/WalletForm.tsx",
     "start": {
-      "line": 149,
+      "line": 151,
       "column": 28,
-      "index": 5577
+      "index": 5656
     },
     "end": {
-      "line": 152,
+      "line": 154,
       "column": 3,
-      "index": 5693
+      "index": 5772
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Passwords do not match",
     "file": "src/WalletInit/WalletForm.tsx",
     "start": {
-      "line": 153,
+      "line": 155,
       "column": 28,
-      "index": 5723
+      "index": 5802
     },
     "end": {
-      "line": 156,
+      "line": 158,
       "column": 3,
-      "index": 5846
+      "index": 5925
     }
   }
 ]
