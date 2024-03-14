@@ -21,6 +21,12 @@ const primaryETHBreakdown: Portfolio.BalancePrimaryBreakdown = {
   ],
 }
 
+const missingToken: Portfolio.Token.Balance = {
+  info: {...tokenInfoMocks.ftNameless, id: 'dead.fee'},
+  balance: BigInt(0),
+  lockedInBuiltTxs: BigInt(0),
+}
+
 const nftCryptoKitty: Portfolio.Token.Balance = {
   info: tokenInfoMocks.nftCryptoKitty,
   balance: BigInt(1_000_001),
@@ -50,6 +56,9 @@ const storage: {
   entries1WithPrimary: ReadonlyArray<
     [Portfolio.Token.Id, Portfolio.Token.Balance]
   >
+  missingInApiResponse: ReadonlyArray<
+    [Portfolio.Token.Id, Portfolio.Token.Balance]
+  >
 } = {
   entries1: [
     [nftCryptoKitty.info.id, nftCryptoKitty],
@@ -64,6 +73,7 @@ const storage: {
     [ftNameless.info.id, ftNameless],
     [primaryETH.info.id, primaryETH],
   ],
+  missingInApiResponse: [[missingToken.info.id, missingToken]],
 }
 
 export const tokenBalanceMocks = freeze({

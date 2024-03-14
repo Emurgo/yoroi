@@ -1,12 +1,12 @@
 import {Portfolio} from '@yoroi/types'
 import {freeze} from 'immer'
+import {App} from '@yoroi/types'
+import {cacheRecordMaker} from '@yoroi/common'
 
 import {
   AppApiRequestRecordWithCache,
   PortfolioApiTokenInfosResponse,
 } from '../types'
-import {cacheRecordMaker} from '@yoroi/common'
-import {AppCacheRecord} from '@yoroi/types/lib/app/cache'
 
 const primaryETH: Portfolio.Token.Info = {
   decimals: 18,
@@ -113,21 +113,21 @@ const apiRequestTokenInfos: ReadonlyArray<
 
 const storage: {
   entries1: ReadonlyArray<
-    [Portfolio.Token.Id, AppCacheRecord<Portfolio.Token.Info>]
+    [Portfolio.Token.Id, App.CacheRecord<Portfolio.Token.Info>]
   >
 } = {
   entries1: [
     [
       nftCryptoKitty.id,
       cacheRecordMaker(
-        {expires: new Date().getTime(), hash: 'hash2'},
+        {expires: Date.now() - 60_000, hash: 'hash2'},
         nftCryptoKitty,
       ),
     ],
     [
       rnftWhatever.id,
       cacheRecordMaker(
-        {expires: new Date().getTime(), hash: 'hash3'},
+        {expires: Date.now() + 60_000, hash: 'hash3'},
         rnftWhatever,
       ),
     ],

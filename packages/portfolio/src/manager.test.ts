@@ -229,10 +229,13 @@ describe('hydrate', () => {
 
       const subscriber = jest.fn()
       portfolioManager.observer.subscribe(subscriber)
+      const secondaryBalances = new Map(
+        tokenBalanceMocks.storage.entries1.slice(0, -1),
+      )
 
       await portfolioManager.sync({
         primaryBalance: tokenBalanceMocks.primaryETHBreakdown,
-        secondaryBalances: new Map(tokenBalanceMocks.storage.entries1),
+        secondaryBalances,
       })
 
       // one for hydrate, another for the sync (it wasnt hydrated)
@@ -255,10 +258,12 @@ describe('hydrate', () => {
       ).rejects.toThrow()
     })
 
-    it('should throw error when syncing and api return the wrong data', async () => {
+    it('should throw error when syncing and api didnt return a requested id', async () => {
+      storage.token.infos.save([tokenInfoMocks.storage.entries1[1]])
+
       const portfolioManager = portfolioManagerMaker({
         network: Chain.Network.Main,
-        api: portfolioApiMock.success,
+        api: portfolioApiMock.error,
         storage,
         primaryToken: tokenMocks.managerMaker.primaryTokenWithCacheV1,
       })
@@ -266,7 +271,9 @@ describe('hydrate', () => {
       await expect(() =>
         portfolioManager.sync({
           primaryBalance: tokenBalanceMocks.primaryETHBreakdown,
-          secondaryBalances: new Map(tokenBalanceMocks.storage.entries1),
+          secondaryBalances: new Map(
+            tokenBalanceMocks.storage.missingInApiResponse,
+          ),
         }),
       ).rejects.toThrow()
     })
