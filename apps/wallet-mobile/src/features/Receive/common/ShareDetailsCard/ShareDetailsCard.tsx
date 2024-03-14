@@ -1,14 +1,14 @@
 import {useTheme} from '@yoroi/theme'
-import React, {useMemo} from 'react'
+import React from 'react'
 import {useIntl} from 'react-intl'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {CopyButton, Text} from '../../../../components'
 import {useMetrics} from '../../../../metrics/metricsManager'
-import {useSelectedWallet} from '../../../../SelectedWallet'
 import {isEmptyString} from '../../../../utils/utils'
 import {useStrings} from '../useStrings'
+import {useLastDateAddressUsed} from './useLastDateAddressUsed'
 
 type AddressDetailsProps = {
   address: string
@@ -21,19 +21,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
   const intl = useIntl()
   const {styles, colors} = useStyles()
   const {track} = useMetrics()
-  const wallet = useSelectedWallet()
-  const lastUsed = useMemo(
-    () =>
-      Object.values(wallet.transactions).reduce((currentLast, tx) => {
-        const {inputs, outputs} = tx
-        const isRelevant = inputs.some((v) => address === v.address) || outputs.some((v) => address === v.address)
-        if (!isRelevant) return currentLast
-        const lastUpdatedAt = new Date(tx.lastUpdatedAt).getTime()
-
-        return Math.max(currentLast, lastUpdatedAt)
-      }, 0),
-    [address, wallet.transactions],
-  )
+  const lastUsed = useLastDateAddressUsed(address)
 
   const hasStakingHash = !isEmptyString(stakingHash)
   const hasSpendingHash = !isEmptyString(spendingHash)
