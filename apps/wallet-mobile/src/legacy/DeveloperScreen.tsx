@@ -38,10 +38,9 @@ const crash = () => {
 
 export const DeveloperScreen = () => {
   const navigation = useNavigation()
-  const {styles, color} = useStyles()
+  const {styles} = useStyles()
   const {logout} = useAuth()
   const {resetToWalletSelection} = useWalletNavigation()
-  useStatusBar(color)
   const intl = useIntl()
   const {createWallet, isLoading} = useCreateWallet({
     onSuccess: () => resetToWalletSelection(),
@@ -219,6 +218,8 @@ export const DeveloperScreen = () => {
 
 const useStyles = () => {
   const {theme} = useTheme()
+  useStatusBar(theme.color.gray.min)
+
   const styles = StyleSheet.create({
     safeAreaView: {
       flex: 1,
@@ -242,7 +243,7 @@ const useStyles = () => {
     },
   })
 
-  return {styles, color: theme.color.gray.min}
+  return {styles}
 }
 
 export class StorageError extends ExtendableError {}
