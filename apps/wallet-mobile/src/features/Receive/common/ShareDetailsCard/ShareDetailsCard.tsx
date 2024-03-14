@@ -1,6 +1,5 @@
 import {useTheme} from '@yoroi/theme'
 import React from 'react'
-import {useIntl} from 'react-intl'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -18,7 +17,6 @@ type AddressDetailsProps = {
 
 export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDetailsProps) => {
   const strings = useStrings()
-  const intl = useIntl()
   const {styles, colors} = useStyles()
   const {track} = useMetrics()
   const lastUsed = useLastDateAddressUsed(address)
@@ -80,13 +78,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
           <Text style={[styles.textAddress, {color: colors.grayText}]}>{strings.lastUsed}</Text>
 
           <View style={styles.textRow}>
-            <Text style={styles.textAddressDetails}>
-              {intl.formatDate(new Date(lastUsed), {
-                dateStyle: 'short',
-                timeStyle: 'short',
-                hour12: false,
-              })}
-            </Text>
+            <Text style={styles.textAddressDetails}>{lastUsed}</Text>
           </View>
         </View>
       )}
