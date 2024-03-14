@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import assert from 'assert'
 import ExtendableError from 'es6-error'
 import _ from 'lodash'
@@ -18,8 +19,6 @@ import {errorMessages} from '../i18n/global-messages'
 import {storageVersionMaker} from '../migrations/storageVersion'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
-import {COLORS} from '../theme'
-import {HexColor} from '../theme/types'
 import {isEmptyString} from '../utils/utils'
 import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
@@ -33,38 +32,16 @@ const routes: Array<{label: string; path: keyof AppRoutes}> = [
   {label: 'Skip to wallet list', path: 'app-root'},
 ]
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    paddingTop: 50,
-    backgroundColor: COLORS.BACKGROUND_LIGHT_GRAY,
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  button: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-  },
-  link: {
-    height: 32,
-    fontSize: 16,
-    textAlign: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-})
-
 const crash = () => {
   return Promise.reject(new Error('Forced crash'))
 }
 
 export const DeveloperScreen = () => {
   const navigation = useNavigation()
+  const {styles, color} = useStyles()
   const {logout} = useAuth()
   const {resetToWalletSelection} = useWalletNavigation()
-  useStatusBar(COLORS.BACKGROUND_LIGHT_GRAY as HexColor)
+  useStatusBar(color)
   const intl = useIntl()
   const {createWallet, isLoading} = useCreateWallet({
     onSuccess: () => resetToWalletSelection(),
@@ -238,6 +215,34 @@ export const DeveloperScreen = () => {
       </ScrollView>
     </SafeAreaView>
   )
+}
+
+const useStyles = () => {
+  const {theme} = useTheme()
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      flex: 1,
+      paddingTop: 50,
+      backgroundColor: theme.color.gray.min,
+    },
+    container: {
+      flex: 1,
+      paddingHorizontal: 16,
+    },
+    button: {
+      marginHorizontal: 16,
+      marginVertical: 8,
+    },
+    link: {
+      height: 32,
+      fontSize: 16,
+      textAlign: 'center',
+      alignItems: 'center',
+      marginTop: 8,
+    },
+  })
+
+  return {styles, color: theme.color.gray.min}
 }
 
 export class StorageError extends ExtendableError {}
