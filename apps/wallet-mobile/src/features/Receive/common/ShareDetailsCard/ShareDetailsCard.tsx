@@ -109,7 +109,7 @@ export const ShareDetailsCard = ({address, spendingHash, stakingHash}: AddressDe
 const useStyles = () => {
   const screenWidth = useWindowDimensions().width
   const {theme} = useTheme()
-  const {color, typography} = theme
+  const {color, typography, padding} = theme
 
   const styles = StyleSheet.create({
     title: {
@@ -124,8 +124,8 @@ const useStyles = () => {
       minHeight: 394,
       alignSelf: 'center',
       overflow: 'hidden',
-      paddingHorizontal: 16,
-      paddingVertical: 32,
+      ...padding['x-l'],
+      ...padding['y-xxl'],
       gap: 16,
     },
     textAddressDetails: {
