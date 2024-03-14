@@ -84,7 +84,7 @@ const assertWalletAcceptedConnection = async (context: Context) => {
 }
 
 const hasWalletAcceptedConnection = async (context: Context) => {
-  const connections = await context.storage.listConnections()
+  const connections = await context.storage.listAllConnections()
   const requestedConnection = {walletId: context.wallet.id, dappOrigin: context.trustedOrigin}
   return connections.some(
     (c) => c.walletId === requestedConnection.walletId && c.dappOrigin === requestedConnection.dappOrigin,
@@ -137,9 +137,8 @@ export const handleEvent = async (
   storage: Storage,
 ) => {
   const trustedOrigin = new URL(trustedUrl).origin
-
   const {id, method, params} = JSON.parse(eventData)
-  handleMethod(method, params, {origin: trustedOrigin, wallet, storage})
+  await handleMethod(method, params, {origin: trustedOrigin, wallet, storage})
     .then((result) => method !== LOG_MESSAGE_EVENT && sendMessage(id, result))
     .catch((error) => method !== LOG_MESSAGE_EVENT && sendMessage(id, null, error))
 }

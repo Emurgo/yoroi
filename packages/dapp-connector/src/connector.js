@@ -1,8 +1,4 @@
-export const connectWallet = (props) => {
-  return `(${connectWallet2.toString()})(${JSON.stringify(props)})`
-}
-
-const connectWallet2 = ({iconUrl, apiVersion, walletName, supportedExtensions, sessionId}) => {
+const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessionId}) => {
   // https://github.com/facebook/hermes/issues/114
   // https://github.com/facebook/hermes/issues/612
   'show source please'
@@ -131,4 +127,10 @@ const connectWallet2 = ({iconUrl, apiVersion, walletName, supportedExtensions, s
   window.cardano[walletName] = walletObj
 
   logMessage('Wallet connected')
+}
+
+const connectWalletBody = initWallet.toString()
+
+export const connectWallet = (props) => {
+  return `(${connectWalletBody})(${JSON.stringify(props)})`
 }

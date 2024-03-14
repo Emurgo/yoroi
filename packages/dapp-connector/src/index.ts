@@ -1,18 +1,7 @@
-import {connectWallet} from './connector.js'
-export {handleEvent} from './resolver'
-export {connectionStorageMaker} from './storage'
+import {connectionStorageMaker, type Storage} from './storage'
+import {DappConnector} from './dapp-connector'
+export {connectionStorageMaker, type Storage, DappConnector}
 
-type SupportedExtension = {
-  cip: number
-}
-
-const supportedExtensions: SupportedExtension[] = [{cip: 95}]
-
-export const getWalletConnectorJS = (props: {
-  iconUrl: string
-  apiVersion: string
-  walletName: string
-  sessionId: string
-}) => {
-  return connectWallet({...props, supportedExtensions})
+export const dappConnectorMaker = (storage: Storage): DappConnector => {
+  return new DappConnector(storage)
 }
