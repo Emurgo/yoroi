@@ -40,7 +40,6 @@ export const MenuNavigator = () => {
 
 export const Menu = () => {
   const strings = useStrings()
-  useStatusBar()
   const styles = useStyles()
   const navigateTo = useNavigateTo()
   const wallet = useSelectedWallet()
@@ -258,6 +257,7 @@ const messages = defineMessage({
 })
 
 const useStyles = () => {
+  useStatusBar()
   const {theme} = useTheme()
   const {color, padding} = theme
 
