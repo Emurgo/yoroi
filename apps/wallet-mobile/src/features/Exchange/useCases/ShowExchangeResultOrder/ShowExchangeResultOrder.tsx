@@ -27,13 +27,13 @@ export const ShowExchangeResultOrder = ({variant}: {variant?: 'noInfo'}) => {
   useStatusBar()
   const navigateTo = useNavigateTo()
   const styles = useStyles()
-  const params = useUnsafeParams<ExchangeInitRoutes['rampOnOff']>()
+  const params = useUnsafeParams<ExchangeInitRoutes['exchange']>()
   const {coin, coinAmount, fiat, fiatAmount} = params ?? {}
 
   const {openModal} = useModal()
 
   const handleDirectTransaction = () => {
-    navigateTo.rampOnOffOpenOrder()
+    navigateTo.exchangeOpenOrder()
   }
 
   const handlePressDescribe = () => {

@@ -25,6 +25,7 @@ import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
 import {ExchangeProvider} from '../features/Exchange/common/ExchangeProvider'
 import {CreateExchangeOrder} from '../features/Exchange/useCases/CreateExchangeOrder/CreateExchangeOrder'
+import {SelectProvider} from '../features/Exchange/useCases/SelectProvider/SelectProvider'
 import {ShowExchangeResultOrder} from '../features/Exchange/useCases/ShowExchangeResultOrder/ShowExchangeResultOrder'
 import {ReceiveProvider} from '../features/Receive/common/ReceiveProvider'
 import {DescribeSelectedAddressScreen} from '../features/Receive/useCases/DescribeSelectedAddressScreen'
@@ -192,7 +193,15 @@ export const TxHistoryNavigator = () => {
                       name="exchange-create-order"
                       component={CreateExchangeOrder}
                       options={{
-                        title: strings.rampOnOffTitle,
+                        title: strings.exchangeCreateOrderTitle,
+                      }}
+                    />
+
+                    <Stack.Screen
+                      name="exchange-select-provider"
+                      component={SelectProvider}
+                      options={{
+                        title: strings.exchangeSelectProvider,
                       }}
                     />
 
@@ -458,9 +467,13 @@ const messages = defineMessages({
     id: 'components.receive.receivescreen.specificAmount',
     defaultMessage: '!!!Request specific amount',
   },
-  rampOnOffTitle: {
+  exchangeCreateOrderTitle: {
     id: 'rampOnOff.rampOnOffScreen.rampOnOffTitle',
     defaultMessage: '!!!Buy ADA',
+  },
+  exchangeSelectProvider: {
+    id: 'rampOnOff.rampOnOffScreen.exchangeSelectProvider',
+    defaultMessage: '!!!Buy/Sell provider',
   },
 })
 
@@ -485,7 +498,8 @@ const useStrings = () => {
     scanTitle: intl.formatMessage(messages.scanTitle),
     claimShowSuccess: intl.formatMessage(messages.claimShowSuccessTitle),
     specificAmount: intl.formatMessage(messages.specificAmount),
-    rampOnOffTitle: intl.formatMessage(messages.rampOnOffTitle),
+    exchangeCreateOrderTitle: intl.formatMessage(messages.exchangeCreateOrderTitle),
+    exchangeSelectProvider: intl.formatMessage(messages.exchangeSelectProvider),
   }
 }
 

@@ -1,3 +1,5 @@
+import {Exchange} from '@yoroi/types'
+
 import {ExchangeState} from './ExchangeProvider'
 
 export const mockExchangeStateDefault: ExchangeState = {
@@ -10,6 +12,7 @@ export const mockExchangeStateDefault: ExchangeState = {
     value: 0,
   },
   canExchange: false,
+  provider: Exchange.Provider.Banxa,
 } as const
 
 export const mockExchangeStateWithNotEnoughError: ExchangeState = {
@@ -22,4 +25,5 @@ export const mockExchangeStateWithNotEnoughError: ExchangeState = {
     value: 3000 * 10 ** 6,
   },
   canExchange: false,
+  provider: Exchange.Provider.Banxa,
 } as const

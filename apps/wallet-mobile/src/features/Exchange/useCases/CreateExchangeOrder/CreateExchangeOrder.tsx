@@ -1,4 +1,4 @@
-import {exchangeManagerMaker} from '@yoroi/exchange'
+import {exchangeManagerMaker, Providers} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
 import * as React from 'react'
@@ -6,8 +6,9 @@ import {Linking, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
+import {Button, Icon, KeyboardAvoidingView} from '../../../../components'
 import {useStatusBar} from '../../../../components/hooks/useStatusBar'
+import {Space} from '../../../../components/Space/Space'
 import {Warning} from '../../../../components/Warning'
 import {RAMP_ON_OFF_PATH, SCHEME_URL} from '../../../../legacy/config'
 import env from '../../../../legacy/env'
@@ -16,13 +17,12 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 import {useTokenInfo} from '../../../../yoroi-wallets/hooks'
 import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useExchange} from '../../common/ExchangeProvider'
+import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
 import {EditAmount} from './EditAmount/EditAmount'
-// import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
+import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
 import {ShowDisclaimer} from './ShowDisclaimer/ShowDisclaimer'
-import {ShowProviderFee} from './ShowProviderFee/ShowProviderFee'
-import {ShowProviderInfo} from './ShowProviderInfo/ShowProviderInfo'
 
 const BOTTOM_ACTION_SECTION = 180
 
@@ -34,7 +34,8 @@ export const CreateExchangeOrder = () => {
   const [contentHeight, setContentHeight] = React.useState(0)
 
   const navigateTo = useNavigateTo()
-  const {orderType, amount, canExchange} = useExchange()
+  const {orderType, amount, canExchange, provider: providerSelected} = useExchange()
+  const providerFeatures: Exchange.ProviderFeatures = Providers[providerSelected]
 
   const wallet = useSelectedWallet()
   const amountTokenInfo = useTokenInfo({wallet, tokenId: ''})
@@ -68,10 +69,10 @@ export const CreateExchangeOrder = () => {
     }
 
     const exchange = exchangeManagerMaker(moduleOptions)
-    const banxaUrl = exchange.createReferralUrl(Exchange.Provider.Banxa, urlOptions)
-    Linking.openURL(banxaUrl.toString())
+    const url = exchange.createReferralUrl(providerSelected, urlOptions)
+    Linking.openURL(url.toString())
     track.exchangeSubmitted({ramp_type: orderType === 'sell' ? 'Sell' : 'Buy', ada_amount: orderAmount})
-    navigateTo.rampOnOffOpenOrder()
+    navigateTo.exchangeOpenOrder()
   }
 
   return (
@@ -85,17 +86,28 @@ export const CreateExchangeOrder = () => {
               setContentHeight(height + BOTTOM_ACTION_SECTION)
             }}
           >
-            {/* <SelectBuyOrSell /> */}
+            <SelectBuyOrSell />
 
             <EditAmount />
 
-            <ShowProviderInfo />
+            <Space height="l" />
 
-            <ShowProviderFee />
+            <ProviderItem
+              provider={providerSelected}
+              fee={orderType === 'buy' ? providerFeatures.buy?.fee ?? 0 : providerFeatures.sell?.fee ?? 0}
+              icon={<Icon.Chevron direction="right" />}
+              onPress={navigateTo.exchangeSelectProvider}
+            />
 
-            <Spacer height={16} />
+            <Space height="l" />
 
-            {orderType === 'sell' && <Warning content={strings.sellCurrencyWarning} />}
+            {orderType === 'sell' && providerSelected === Exchange.Provider.Banxa && (
+              <>
+                <Warning content={strings.sellCurrencyWarning} />
+
+                <Space height="l" />
+              </>
+            )}
 
             <ShowDisclaimer />
           </View>

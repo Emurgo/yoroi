@@ -591,7 +591,7 @@ export const actionMessages = defineMessages({
   },
   exchange: {
     id: 'global.exchange',
-    defaultMessage: '!!!Buy ADA',
+    defaultMessage: '!!!Buy/Sell ADA',
   },
 })
 

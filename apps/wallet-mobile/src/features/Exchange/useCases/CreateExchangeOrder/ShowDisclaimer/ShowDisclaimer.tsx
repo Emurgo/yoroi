@@ -36,7 +36,6 @@ const useStyles = () => {
     gradient: {
       opacity: 1,
       borderRadius: 8,
-      marginTop: 24,
     },
     title: {
       ...theme.typography['body-1-l-regular'],

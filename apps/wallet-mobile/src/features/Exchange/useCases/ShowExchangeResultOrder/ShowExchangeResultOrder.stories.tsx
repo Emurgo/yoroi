@@ -32,7 +32,7 @@ const Init = () => {
 }
 
 const WithParams = () => {
-  const params: RouteProp<ExchangeInitRoutes, 'rampOnOff'>['params'] = {
+  const params: RouteProp<ExchangeInitRoutes, 'exchange'>['params'] = {
     coin: 'ADA',
     coinAmount: 100,
     fiat: 990,

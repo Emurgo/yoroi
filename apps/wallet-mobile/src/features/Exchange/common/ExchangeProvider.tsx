@@ -47,6 +47,7 @@ export const ExchangeProvider = ({
       dispatch({type: ExchangeActionType.AmountInputDisplayValueChanged, value}),
     amountInputValueChanged: (value: number) => dispatch({type: ExchangeActionType.AmountInputValueChanged, value}),
     amountErrorChanged: (error: string | undefined) => dispatch({type: ExchangeActionType.AmountErrorChanged, error}),
+    providerChanged: (provider: Exchange.Provider) => dispatch({type: ExchangeActionType.ProviderChanged, provider}),
   }).current
 
   const clearErrors = React.useCallback(() => {
@@ -134,6 +135,9 @@ const exchangeReducer = (state: ExchangeState, action: ExchangeAction) => {
       case ExchangeActionType.CanExchangeChanged:
         draft.canExchange = action.value
         break
+      case ExchangeActionType.ProviderChanged:
+        draft.provider = action.provider
+        break
       default:
         throw new Error(`ExchangeFormReducer invalid action`)
     }
@@ -148,6 +152,7 @@ type ExchangeAction =
   | {type: ExchangeActionType.AmountErrorChanged; error: string | undefined}
   | {type: ExchangeActionType.AmountInputValueChanged; value: number}
   | {type: ExchangeActionType.CanExchangeChanged; value: boolean}
+  | {type: ExchangeActionType.ProviderChanged; provider: Exchange.Provider}
 
 export type ExchangeState = {
   orderType: OrderType
@@ -159,6 +164,7 @@ export type ExchangeState = {
     value: number
   }
   canExchange: boolean
+  provider: Exchange.Provider
 }
 
 type ExchangeActions = {
@@ -167,6 +173,7 @@ type ExchangeActions = {
   amountInputDisplayValueChanged: (value: string) => void
   amountErrorChanged: (error: string | undefined) => void
   amountInputValueChanged: (value: number) => void
+  providerChanged: (provider: Exchange.Provider) => void
 }
 
 const defaultState: ExchangeState = Object.freeze({
@@ -179,6 +186,7 @@ const defaultState: ExchangeState = Object.freeze({
     value: 0,
   },
   canExchange: false,
+  provider: Exchange.Provider.Banxa,
 })
 
 function missingInit() {
@@ -194,6 +202,7 @@ const initialExchangeFormContext: ExchangeContext = {
   amountErrorChanged: missingInit,
   onChangeAmountQuantity: missingInit,
   canExchangeChanged: missingInit,
+  providerChanged: missingInit,
 }
 
 enum ExchangeActionType {
@@ -202,6 +211,7 @@ enum ExchangeActionType {
   AmountErrorChanged = 'amountErrorChanged',
   AmountInputValueChanged = 'amountInputValueChanged',
   CanExchangeChanged = 'canExchangeChanged',
+  ProviderChanged = 'providerChanged',
 }
 
 type ExchangeContext = ExchangeState &

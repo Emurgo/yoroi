@@ -115,7 +115,11 @@ import {ExchangeFiat} from './exchange/fiat'
 import {ExchangeReferralUrlQueryStringParams} from './exchange/params'
 import {ExchangeUnknownError, ExchangeValidationError} from './exchange/errors'
 import {ExchangeOrderType} from './exchange/order'
-import {ExchangeProvider} from './exchange/provider'
+import {
+  ExchangeProvider,
+  ExchangeProviderFeatures,
+  ExchangeProviders,
+} from './exchange/provider'
 
 export namespace App {
   export interface Storage<IsAsync extends boolean = true>
@@ -327,6 +331,8 @@ export namespace Exchange {
   export type OrderType = ExchangeOrderType
   export type Provider = ExchangeProvider
   export const Provider = ExchangeProvider
+  export type Providers = ExchangeProviders
+  export type ProviderFeatures = ExchangeProviderFeatures
   export type ReferralUrlQueryStringParams =
     ExchangeReferralUrlQueryStringParams
   export namespace Errors {

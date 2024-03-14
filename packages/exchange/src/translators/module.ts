@@ -13,6 +13,7 @@ export const exchangeManagerMaker = (
   ) => {
     const baseUrlGenerators = {
       [Exchange.Provider.Banxa]: generateBanxaBaseUrl,
+      [Exchange.Provider.Encryptus]: generateBanxaBaseUrl,
     }
 
     try {
