@@ -469,7 +469,7 @@ const messages = defineMessages({
   },
   exchangeCreateOrderTitle: {
     id: 'rampOnOff.rampOnOffScreen.rampOnOffTitle',
-    defaultMessage: '!!!Buy ADA',
+    defaultMessage: '!!!Buy/Sell ADA',
   },
   exchangeSelectProvider: {
     id: 'rampOnOff.rampOnOffScreen.exchangeSelectProvider',
