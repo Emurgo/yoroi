@@ -11,17 +11,18 @@ type Props = {
   provider: Exchange.Provider
   fee: number
   icon: React.ReactNode
-  onPress?: () => void
+  onPress: () => void
+  disabled?: boolean
 }
 
-export const ProviderItem = ({provider, onPress, fee, icon}: Props) => {
+export const ProviderItem = ({provider, onPress, fee, icon, disabled = false}: Props) => {
   const styles = useStyles()
   const strings = useStrings()
   const Logo = ProviderLogo[provider]
   const providerSelected = ProviderLabel[provider]
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.item}>
+    <TouchableOpacity onPress={onPress} style={styles.item} disabled={disabled}>
       <Logo size={40} />
 
       <Space width="m" />
@@ -32,7 +33,7 @@ export const ProviderItem = ({provider, onPress, fee, icon}: Props) => {
         <Text style={styles.fee}>{`${fee}% ${strings.fee}`}</Text>
       </View>
 
-      {icon}
+      {disabled ? null : icon}
     </TouchableOpacity>
   )
 }

@@ -1,19 +1,20 @@
-import {Providers} from '@yoroi/exchange'
-import {lightPalette, useTheme} from '@yoroi/theme'
+import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
 import * as React from 'react'
-import {FlatList, StyleSheet} from 'react-native'
+import {FlatList, StyleSheet, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
 import {Icon} from '../../../../components'
 import {Space} from '../../../../components/Space/Space'
 import {useExchange} from '../../common/ExchangeProvider'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
+import {useProviders} from '../../common/useProviders'
 
 export const SelectProvider = () => {
   const styles = useStyles()
   const {orderType, provider: selectedProvider, orderTypeChanged, providerChanged} = useExchange()
-  const providers = React.useMemo(() => Object.entries(Providers), []) as Entries<Exchange.Providers>
+
+  const providers = useProviders()
 
   const onPress = React.useCallback(
     (provider: Exchange.Provider, features: Exchange.ProviderFeatures) => {
@@ -35,7 +36,7 @@ export const SelectProvider = () => {
             <ProviderItem
               provider={provider}
               fee={orderType === 'buy' ? features.buy?.fee ?? 0 : features.sell?.fee ?? 0}
-              icon={selectedProvider === provider && <Icon.Check size={35} color={lightPalette.primary[600]} />}
+              icon={selectedProvider === provider && <Check />}
               onPress={() => onPress(provider, features)}
             />
           )
@@ -47,11 +48,16 @@ export const SelectProvider = () => {
   )
 }
 
-type Entries<T> = Array<
-  {
-    [K in keyof T]: [K, T[K]]
-  }[keyof T]
->
+const Check = () => {
+  const {theme} = useTheme()
+  return (
+    <View>
+      <Icon.Check size={24} color={theme.color.primary[600]} />
+
+      <Space fill />
+    </View>
+  )
+}
 
 const useStyles = () => {
   const {theme} = useTheme()

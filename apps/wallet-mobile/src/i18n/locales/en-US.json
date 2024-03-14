@@ -926,5 +926,6 @@
   "rampOnOff.rampOnOffScreen.getFirstCrypto": "Welcome to Yoroi 👋️\nGet your first ADA fast & easy",
   "rampOnOff.rampOnOffScreen.needMoreCrypto": "Need more ADA for staking or swap?",
   "rampOnOff.rampOnOffScreen.ourTrustedPartners": "Top up your wallet safely using our trusted partners",
-  "rampOnOff.rampOnOffScreen.exchangeSelectProvider": "Buy/Sell provider"
+  "rampOnOff.rampOnOffScreen.exchangeSelectProvider.buy": "Buy provider",
+  "rampOnOff.rampOnOffScreen.exchangeSelectProvider.sell": "Sell provider"
 }

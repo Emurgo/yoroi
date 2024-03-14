@@ -19,6 +19,7 @@ import {Quantities} from '../../../../yoroi-wallets/utils'
 import {useExchange} from '../../common/ExchangeProvider'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 import {useNavigateTo} from '../../common/useNavigateTo'
+import {useProviders} from '../../common/useProviders'
 import {useStrings} from '../../common/useStrings'
 import {EditAmount} from './EditAmount/EditAmount'
 import {SelectBuyOrSell} from './SelectBuyOrSell/SelectBuyOrSell'
@@ -32,6 +33,9 @@ export const CreateExchangeOrder = () => {
   const styles = useStyles()
   const {track} = useMetrics()
   const [contentHeight, setContentHeight] = React.useState(0)
+  const providers = useProviders()
+
+  const providerSelectionDisabled = providers.length === 1
 
   const navigateTo = useNavigateTo()
   const {orderType, amount, canExchange, provider: providerSelected} = useExchange()
@@ -46,7 +50,7 @@ export const CreateExchangeOrder = () => {
     track.exchangePageViewed()
   }, [track])
 
-  const handleExchange = () => {
+  const handleExchange = React.useCallback(() => {
     // banxa doesn't support testnet for the sandbox it needs a mainnet address
     const sandboxWallet = env.getString('BANXA_TEST_WALLET')
     const returnUrl = `${SCHEME_URL}${RAMP_ON_OFF_PATH}`
@@ -73,65 +77,84 @@ export const CreateExchangeOrder = () => {
     Linking.openURL(url.toString())
     track.exchangeSubmitted({ramp_type: orderType === 'sell' ? 'Sell' : 'Buy', ada_amount: orderAmount})
     navigateTo.exchangeOpenOrder()
+  }, [
+    amount.value,
+    amountTokenInfo.decimals,
+    navigateTo,
+    orderType,
+    providerSelected,
+    track,
+    wallet.externalAddresses,
+    wallet.networkId,
+  ])
+
+  const handleOnPressSelectProvider = () => {
+    if (orderType === 'sell') {
+      navigateTo.exchangeSelectSellProvider()
+      return
+    }
+
+    navigateTo.exchangeSelectBuyProvider()
   }
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-        <KeyboardAvoidingView style={styles.flex}>
-          <ScrollView style={styles.scroll}>
-            <View
-              style={styles.container}
-              onLayout={(event) => {
-                const {height} = event.nativeEvent.layout
-                setContentHeight(height + BOTTOM_ACTION_SECTION)
-              }}
-            >
-              <SelectBuyOrSell />
-
-              <EditAmount />
-
-              <Space height="l" />
-
-              <ProviderItem
-                provider={providerSelected}
-                fee={orderType === 'buy' ? providerFeatures.buy?.fee ?? 0 : providerFeatures.sell?.fee ?? 0}
-                icon={<Icon.Chevron direction="right" />}
-                onPress={navigateTo.exchangeSelectProvider}
-              />
-
-              <Space height="l" />
-
-              {orderType === 'sell' && providerSelected === Exchange.Provider.Banxa && (
-                <>
-                  <Warning content={strings.sellCurrencyWarning} />
-
-                  <Space height="l" />
-                </>
-              )}
-
-              <ShowDisclaimer />
-            </View>
-          </ScrollView>
-
+      <KeyboardAvoidingView style={styles.flex}>
+        <ScrollView style={styles.scroll}>
           <View
-            style={[
-              styles.actions,
-              {
-                ...(deviceHeight < contentHeight && styles.actionBorder),
-              },
-            ]}
+            style={styles.container}
+            onLayout={(event) => {
+              const {height} = event.nativeEvent.layout
+              setContentHeight(height + BOTTOM_ACTION_SECTION)
+            }}
           >
-            <Button
-              testID="rampOnOffButton"
-              shelleyTheme
-              title={strings.proceed.toLocaleUpperCase()}
-              onPress={handleExchange}
-              disabled={!canExchange}
+            <SelectBuyOrSell />
+
+            <Space height="xl" />
+
+            <EditAmount />
+
+            <Space height="xl" />
+
+            <ProviderItem
+              provider={providerSelected}
+              fee={orderType === 'buy' ? providerFeatures.buy?.fee ?? 0 : providerFeatures.sell?.fee ?? 0}
+              icon={<Icon.Chevron direction="right" />}
+              onPress={handleOnPressSelectProvider}
+              disabled={providerSelectionDisabled}
             />
+
+            <Space height="xl" />
+
+            {orderType === 'sell' && providerSelected === Exchange.Provider.Banxa && (
+              <>
+                <Warning content={strings.sellCurrencyWarning} />
+
+                <Space height="xl" />
+              </>
+            )}
+
+            <ShowDisclaimer />
           </View>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+        </ScrollView>
+
+        <View
+          style={[
+            styles.actions,
+            {
+              ...(deviceHeight < contentHeight && styles.actionBorder),
+            },
+          ]}
+        >
+          <Button
+            testID="rampOnOffButton"
+            shelleyTheme
+            title={strings.proceed.toLocaleUpperCase()}
+            onPress={handleExchange}
+            disabled={!canExchange}
+          />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   )
 }

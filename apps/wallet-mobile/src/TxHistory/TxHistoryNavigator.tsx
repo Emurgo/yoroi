@@ -198,10 +198,18 @@ export const TxHistoryNavigator = () => {
                     />
 
                     <Stack.Screen
-                      name="exchange-select-provider"
+                      name="exchange-select-buy-provider"
                       component={SelectProvider}
                       options={{
-                        title: strings.exchangeSelectProvider,
+                        title: strings.exchangeSelectBuyProvider,
+                      }}
+                    />
+
+                    <Stack.Screen
+                      name="exchange-select-sell-provider"
+                      component={SelectProvider}
+                      options={{
+                        title: strings.exchangeSelectSellProvider,
                       }}
                     />
 
@@ -471,9 +479,13 @@ const messages = defineMessages({
     id: 'rampOnOff.rampOnOffScreen.rampOnOffTitle',
     defaultMessage: '!!!Buy/Sell ADA',
   },
-  exchangeSelectProvider: {
-    id: 'rampOnOff.rampOnOffScreen.exchangeSelectProvider',
-    defaultMessage: '!!!Buy/Sell provider',
+  exchangeSelectBuyProvider: {
+    id: 'rampOnOff.rampOnOffScreen.exchangeSelectProvider.buy',
+    defaultMessage: '!!!Buy provider',
+  },
+  exchangeSelectSellProvider: {
+    id: 'rampOnOff.rampOnOffScreen.exchangeSelectProvider.sell',
+    defaultMessage: '!!!Sell provider',
   },
 })
 
@@ -499,7 +511,8 @@ const useStrings = () => {
     claimShowSuccess: intl.formatMessage(messages.claimShowSuccessTitle),
     specificAmount: intl.formatMessage(messages.specificAmount),
     exchangeCreateOrderTitle: intl.formatMessage(messages.exchangeCreateOrderTitle),
-    exchangeSelectProvider: intl.formatMessage(messages.exchangeSelectProvider),
+    exchangeSelectBuyProvider: intl.formatMessage(messages.exchangeSelectBuyProvider),
+    exchangeSelectSellProvider: intl.formatMessage(messages.exchangeSelectSellProvider),
   }
 }
 

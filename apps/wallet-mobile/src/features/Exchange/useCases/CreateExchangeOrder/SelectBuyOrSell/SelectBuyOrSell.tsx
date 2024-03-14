@@ -36,7 +36,6 @@ export const SelectBuyOrSell = () => {
 
 const styles = StyleSheet.create({
   buttonsGroup: {
-    paddingBottom: 30,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
