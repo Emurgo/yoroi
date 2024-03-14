@@ -108,7 +108,7 @@ export const StartMultiTokenTxScreen = () => {
           <InputMemo value={memo} onChangeText={handleOnChangeMemo} isValid={!hasMemoError} />
         </ScrollView>
 
-        <Actions style={isScrollBarShown && styles.actionsScroll}>
+        <Actions style={Boolean(isScrollBarShown) && styles.actionsScroll}>
           <NextButton
             onPress={handleOnNext}
             title={strings.next}

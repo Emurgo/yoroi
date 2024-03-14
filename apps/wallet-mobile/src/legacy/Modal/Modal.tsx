@@ -12,11 +12,11 @@
  * on iOS. See https://github.com/facebook/react-native/issues/10471
  */
 import {NavigationProp, useNavigation} from '@react-navigation/native'
+import {useTheme} from '@yoroi/theme'
 import React from 'react'
 import {Modal as RNModal, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {Icon} from '../../components'
-import {COLORS} from '../../theme'
 import {isEmptyString} from '../../utils/utils'
 
 type Props = {
@@ -34,58 +34,51 @@ type NavigationHookProp = {
   navigation: NavigationProp<any, any, any, any, any>
 }
 
-type State = {
-  isFocused: boolean
-}
-
 // Note(ppershing): we need to hide the modal when navigating
 // from this screen as modals are shown over react-navigation
 // Warning: This means that children components are unmounted
 // while on different screen and therefore should not keep any
 // important state!
 // eslint-disable-next-line react-prefer-function-component/react-prefer-function-component
-class ModalClassComponent extends React.Component<Props & NavigationHookProp, State> {
-  state = {
-    isFocused: true,
-  }
+function ModalClassComponent({
+  navigation,
+  visible,
+  showCloseIcon,
+  onRequestClose,
+  noPadding,
+  children,
+  title,
+}: Props & NavigationHookProp) {
+  const [isFocused, setIsFocused] = React.useState<boolean>(true)
+  const {styles, colors} = useStyles()
 
-  _subscriptions: Array<() => void> = []
+  React.useEffect(() => {
+    const focusSubscription = navigation.addListener('focus', () => setIsFocused(true))
+    const blurSubscription = navigation.addListener('blur', () => setIsFocused(false))
 
-  componentDidMount = () => {
-    const {navigation} = this.props
-    this._subscriptions.push(navigation.addListener('focus', () => this.handleWillFocus()))
-    this._subscriptions.push(navigation.addListener('blur', () => this.handleWillBlur()))
-  }
+    return () => {
+      focusSubscription()
+      blurSubscription()
+    }
+  }, [navigation])
 
-  componentWillUnmount = () => {
-    this._subscriptions.forEach((unsubscribeFn) => unsubscribeFn())
-  }
+  return (
+    <RNModal transparent animationType="fade" visible={visible && isFocused} onRequestClose={onRequestClose}>
+      <View style={styles.backdrop}>
+        <View style={[styles.container, noPadding && styles.noPadding, !isEmptyString(title) && styles.withTitle]}>
+          {!isEmptyString(title) && <Text style={styles.title}>{title}</Text>}
 
-  handleWillBlur = () => this.setState({isFocused: false})
-  handleWillFocus = () => this.setState({isFocused: true})
+          {showCloseIcon && (
+            <TouchableOpacity style={styles.close} onPress={onRequestClose}>
+              <Icon.Cross size={26} color={colors.iconColor} />
+            </TouchableOpacity>
+          )}
 
-  render() {
-    const {visible, showCloseIcon, onRequestClose, noPadding, children, title} = this.props
-    const {isFocused} = this.state
-
-    return (
-      <RNModal transparent animationType="fade" visible={visible && isFocused} onRequestClose={onRequestClose}>
-        <View style={styles.backdrop}>
-          <View style={[styles.container, noPadding && styles.noPadding, !isEmptyString(title) && styles.withTitle]}>
-            {!isEmptyString(title) && <Text style={styles.title}>{title}</Text>}
-
-            {showCloseIcon && (
-              <TouchableOpacity style={styles.close} onPress={onRequestClose}>
-                <Icon.Cross size={26} color={COLORS.TEXT_GRAY3} />
-              </TouchableOpacity>
-            )}
-
-            <View style={[styles.content, noPadding === true && styles.noPadding]}>{children}</View>
-          </View>
+          <View style={[styles.content, noPadding === true && styles.noPadding]}>{children}</View>
         </View>
-      </RNModal>
-    )
-  }
+      </View>
+    </RNModal>
+  )
 }
 
 export const Modal = (props: Props) => {
@@ -93,42 +86,49 @@ export const Modal = (props: Props) => {
   return <ModalClassComponent {...props} navigation={navigation} />
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    alignItems: 'stretch',
-    justifyContent: 'center',
-    padding: 24,
-    backgroundColor: 'rgba(0, 0, 0, .5)',
-  },
-  noPadding: {
-    padding: 0,
-    marginTop: 0,
-  },
-  container: {
-    backgroundColor: '#fff',
-    borderRadius: 4,
-    padding: 24,
-  },
-  close: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    padding: 16,
-  },
-  content: {
-    marginTop: 15,
-  },
-  withTitle: {
-    paddingTop: 0,
-    marginTop: 0,
-  },
-  title: {
-    fontSize: 20,
-    fontFamily: 'Rubik-Medium',
-    lineHeight: 30,
-    color: COLORS.MODAL_HEADING,
-    alignSelf: 'center',
-    paddingTop: 8,
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    backdrop: {
+      flex: 1,
+      alignItems: 'stretch',
+      justifyContent: 'center',
+      ...padding['xl'],
+      backgroundColor: 'rgba(0, 0, 0, .5)',
+    },
+    noPadding: {
+      padding: 0,
+      marginTop: 0,
+    },
+    container: {
+      backgroundColor: color.gray.min,
+      borderRadius: 4,
+      ...padding['xl'],
+    },
+    close: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      ...padding['l'],
+    },
+    content: {
+      marginTop: 15,
+    },
+    withTitle: {
+      paddingTop: 0,
+      marginTop: 0,
+    },
+    title: {
+      ...typography['heading-3-medium'],
+      color: color.gray[600],
+      alignSelf: 'center',
+      ...padding['t-s'],
+    },
+  })
+
+  const colors = {
+    iconColor: color.gray[400],
+  }
+  return {styles, colors}
+}

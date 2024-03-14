@@ -1,4 +1,5 @@
 import {invalid} from '@yoroi/common'
+import {useTheme} from '@yoroi/theme'
 import {Balance} from '@yoroi/types'
 import React from 'react'
 import {FlatList, Linking, Platform, StyleSheet, Text, TextProps, View, ViewProps} from 'react-native'
@@ -10,7 +11,6 @@ import {Button} from '../../../components/Button/Button'
 import {PressableIcon} from '../../../components/PressableIcon/PressableIcon'
 import {Spacer} from '../../../components/Spacer/Spacer'
 import {useSelectedWallet} from '../../../SelectedWallet/Context/SelectedWalletContext'
-import {COLORS} from '../../../theme/config'
 import {sortTokenInfos} from '../../../utils/sorting'
 import {isEmptyString} from '../../../utils/utils'
 import {getNetworkConfigById} from '../../../yoroi-wallets/cardano/networks'
@@ -68,8 +68,12 @@ export const ShowSuccessScreen = () => {
 }
 
 const Actions = ({style, ...props}: ViewProps) => <View style={[style, {paddingHorizontal: 16}]} {...props} />
-const Header = ({style, ...props}: ViewProps) => <View style={[styles.header, style]} {...props} />
+const Header = ({style, ...props}: ViewProps) => {
+  const {styles} = useStyles()
+  return <View style={[styles.header, style]} {...props} />
+}
 const Status = ({status, style, ...props}: TextProps & {status: ClaimStatus}) => {
+  const {styles} = useStyles()
   const dialogs = useDialogs()
   const dialog: Record<ClaimStatus, {message: string; title: string}> = {
     ['processing']: dialogs.processing,
@@ -92,6 +96,7 @@ const Status = ({status, style, ...props}: TextProps & {status: ClaimStatus}) =>
 const TxHash = ({txHash}: {txHash: string}) => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
+  const {styles, colors} = useStyles()
   const config = getNetworkConfigById(wallet.networkId)
 
   return (
@@ -112,7 +117,7 @@ const TxHash = ({txHash}: {txHash: string}) => {
         <PressableIcon
           icon={Icon.ExternalLink}
           onPress={() => Linking.openURL(config.EXPLORER_URL_FOR_TX(txHash))}
-          color={COLORS.GRAY}
+          color={colors.iconColor}
           size={16}
         />
       </View>
@@ -141,45 +146,49 @@ export const AmountList = ({amounts}: {amounts: Balance.Amounts}) => {
   )
 }
 
-const styles = StyleSheet.create({
-  header: {
-    alignItems: 'center',
-    paddingHorizontal: 16,
-  },
-  title: {
-    color: COLORS.BLACK,
-    fontWeight: '600',
-    fontSize: 20,
-    padding: 4,
-    textAlign: 'center',
-    lineHeight: 30,
-    fontFamily: 'Rubik-Medium',
-  },
-  message: {
-    color: COLORS.TEXT_INPUT,
-    fontSize: 14,
-    lineHeight: 22,
-    textAlign: 'center',
-    maxWidth: 300,
-  },
-  txLabel: {
-    fontSize: 16,
-    lineHeight: 18,
-    paddingRight: 8,
-  },
-  monospace: {
-    fontSize: 16,
-    lineHeight: 18,
-    color: COLORS.TEXT_INPUT,
-    ...Platform.select({
-      ios: {fontFamily: 'Menlo'},
-      android: {fontFamily: 'monospace'},
-    }),
-    paddingRight: 8,
-    flex: 1,
-  },
-  txRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-})
+const useStyles = () => {
+  const {theme} = useTheme()
+  const {color, padding, typography} = theme
+  const styles = StyleSheet.create({
+    header: {
+      alignItems: 'center',
+      ...padding['x-l'],
+    },
+    title: {
+      color: color.gray.max,
+      ...typography['heading-3-medium'],
+      ...padding['xs'],
+      textAlign: 'center',
+    },
+    message: {
+      color: color.gray[600],
+      ...typography['body-3-s-regular'],
+      textAlign: 'center',
+      maxWidth: 300,
+    },
+    txLabel: {
+      ...typography['body-1-l-regular'],
+      ...padding['r-s'],
+    },
+    monospace: {
+      ...typography['body-1-l-regular'],
+      color: color.gray[600],
+      ...Platform.select({
+        ios: {fontFamily: 'Menlo'},
+        android: {fontFamily: 'monospace'},
+      }),
+      ...padding['r-s'],
+      flex: 1,
+    },
+    txRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+  })
+
+  const colors = {
+    iconColor: color.gray[500],
+  }
+
+  return {styles, colors}
+}
