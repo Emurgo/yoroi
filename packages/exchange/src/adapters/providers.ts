@@ -11,14 +11,14 @@ export const Providers = {
   },
   [Exchange.Provider.Encryptus]: {
     sell: {
-      fee: 2,
-      min: 2,
-      max: 2,
+      fee: 2.5,
+      min: 2.5,
+      max: 2.5,
     },
     buy: {
-      fee: 2,
-      min: 2,
-      max: 2,
+      fee: 2.5,
+      min: 2.5,
+      max: 2.5,
     },
   },
 }
