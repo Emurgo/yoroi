@@ -7,7 +7,7 @@ import {StyleSheet, View, ViewProps} from 'react-native'
 
 import {Button, KeyboardAvoidingView, Spacer} from '../../../../components'
 import {useStatusBar} from '../../../../components/hooks/useStatusBar'
-import {ScrollView} from '../../../../components/ScrollView/ScrollView'
+import {ScrollView, useScrollView} from '../../../../components/ScrollView/ScrollView'
 import {useMetrics} from '../../../../metrics/metricsManager'
 import {useSelectedWallet} from '../../../../SelectedWallet'
 import {COLORS} from '../../../../theme'
@@ -17,7 +17,6 @@ import {memoMaxLenght} from '../../common/constants'
 import {AddressErrorWrongNetwork} from '../../common/errors'
 import {useNavigateTo} from '../../common/navigation'
 import {useStrings} from '../../common/strings'
-import {useFlashAndScroll} from '../../common/useFlashAndScroll'
 import {useSendAddress} from '../../common/useSendAddress'
 import {useSendReceiver} from '../../common/useSendReceiver'
 import {InputMemo} from './InputMemo/InputMemo'
@@ -47,7 +46,7 @@ export const StartMultiTokenTxScreen = () => {
   const {amounts} = targets[selectedTargetIndex].entry
   const receiver = targets[selectedTargetIndex].receiver
   const shouldOpenAddToken = Amounts.toArray(amounts).length === 0
-  const [isScrollBarShown, setIsScrollBarShown] = React.useState(false)
+  const {isScrollBarShown, setIsScrollBarShown, scrollViewRef} = useScrollView()
 
   const {isWrongBlockchainError, isResolvingAddressess, receiverError, isUnsupportedDomain, isNotResolvedDomain} =
     useSendReceiver()
@@ -80,8 +79,6 @@ export const StartMultiTokenTxScreen = () => {
     receiverResolveChanged(text)
   }
   const handleOnChangeMemo = (text: string) => memoChanged(text)
-
-  const scrollViewRef = useFlashAndScroll()
 
   return (
     <View style={styles.container}>

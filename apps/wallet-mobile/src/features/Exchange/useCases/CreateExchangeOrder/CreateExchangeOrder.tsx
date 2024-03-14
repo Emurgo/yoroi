@@ -77,59 +77,61 @@ export const CreateExchangeOrder = () => {
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
-      <KeyboardAvoidingView style={styles.flex}>
-        <ScrollView style={styles.scroll}>
+      <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
+        <KeyboardAvoidingView style={styles.flex}>
+          <ScrollView style={styles.scroll}>
+            <View
+              style={styles.container}
+              onLayout={(event) => {
+                const {height} = event.nativeEvent.layout
+                setContentHeight(height + BOTTOM_ACTION_SECTION)
+              }}
+            >
+              <SelectBuyOrSell />
+
+              <EditAmount />
+
+              <Space height="l" />
+
+              <ProviderItem
+                provider={providerSelected}
+                fee={orderType === 'buy' ? providerFeatures.buy?.fee ?? 0 : providerFeatures.sell?.fee ?? 0}
+                icon={<Icon.Chevron direction="right" />}
+                onPress={navigateTo.exchangeSelectProvider}
+              />
+
+              <Space height="l" />
+
+              {orderType === 'sell' && providerSelected === Exchange.Provider.Banxa && (
+                <>
+                  <Warning content={strings.sellCurrencyWarning} />
+
+                  <Space height="l" />
+                </>
+              )}
+
+              <ShowDisclaimer />
+            </View>
+          </ScrollView>
+
           <View
-            style={styles.container}
-            onLayout={(event) => {
-              const {height} = event.nativeEvent.layout
-              setContentHeight(height + BOTTOM_ACTION_SECTION)
-            }}
+            style={[
+              styles.actions,
+              {
+                ...(deviceHeight < contentHeight && styles.actionBorder),
+              },
+            ]}
           >
-            <SelectBuyOrSell />
-
-            <EditAmount />
-
-            <Space height="l" />
-
-            <ProviderItem
-              provider={providerSelected}
-              fee={orderType === 'buy' ? providerFeatures.buy?.fee ?? 0 : providerFeatures.sell?.fee ?? 0}
-              icon={<Icon.Chevron direction="right" />}
-              onPress={navigateTo.exchangeSelectProvider}
+            <Button
+              testID="rampOnOffButton"
+              shelleyTheme
+              title={strings.proceed.toLocaleUpperCase()}
+              onPress={handleExchange}
+              disabled={!canExchange}
             />
-
-            <Space height="l" />
-
-            {orderType === 'sell' && providerSelected === Exchange.Provider.Banxa && (
-              <>
-                <Warning content={strings.sellCurrencyWarning} />
-
-                <Space height="l" />
-              </>
-            )}
-
-            <ShowDisclaimer />
           </View>
-        </ScrollView>
-
-        <View
-          style={[
-            styles.actions,
-            {
-              ...(deviceHeight < contentHeight && styles.actionBorder),
-            },
-          ]}
-        >
-          <Button
-            testID="rampOnOffButton"
-            shelleyTheme
-            title={strings.proceed.toLocaleUpperCase()}
-            onPress={handleExchange}
-            disabled={!canExchange}
-          />
-        </View>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </SafeAreaView>
   )
 }
