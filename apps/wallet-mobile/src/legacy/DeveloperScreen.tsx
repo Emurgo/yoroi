@@ -18,6 +18,8 @@ import {errorMessages} from '../i18n/global-messages'
 import {storageVersionMaker} from '../migrations/storageVersion'
 import {AppRoutes, useWalletNavigation} from '../navigation'
 import {useSelectedWalletContext} from '../SelectedWallet'
+import {COLORS} from '../theme'
+import {HexColor} from '../theme/types'
 import {isEmptyString} from '../utils/utils'
 import {NetworkError} from '../yoroi-wallets/cardano/errors'
 import {generateAdaMnemonic} from '../yoroi-wallets/cardano/mnemonic'
@@ -35,6 +37,7 @@ const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
     paddingTop: 50,
+    backgroundColor: COLORS.BACKGROUND_LIGHT_GRAY,
   },
   container: {
     flex: 1,
@@ -61,7 +64,7 @@ export const DeveloperScreen = () => {
   const navigation = useNavigation()
   const {logout} = useAuth()
   const {resetToWalletSelection} = useWalletNavigation()
-  useStatusBar()
+  useStatusBar(COLORS.BACKGROUND_LIGHT_GRAY as HexColor)
   const intl = useIntl()
   const {createWallet, isLoading} = useCreateWallet({
     onSuccess: () => resetToWalletSelection(),
