@@ -234,6 +234,7 @@
   "components.receive.receivescreen.copyLinkBtn": "Copy link",
   "components.receive.receivescreen.copyLinkMsg": "Link copied",
   "components.receive.receivescreen.addressCopiedMsg": "Address copied",
+  "components.receive.receivescreen.lastUsed": "Last used",
   "components.receive.receivescreen.unusedAddress": "Unused",
   "components.receive.receivescreen.usedAddress": "Used",
   "components.receive.receivescreen.multiplePresentation": "Meet multiple addresses in Yoroi",
