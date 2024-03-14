@@ -10,7 +10,7 @@ import {SafeAreaView} from 'react-native-safe-area-context'
 import {useCanVote} from '../../Catalyst/hooks'
 import {InsufficientFundsModal} from '../../Catalyst/InsufficientFundsModal'
 import {Boundary, Icon, Spacer, Text} from '../../components'
-import {Hr} from '../../components/Hr'
+import {useStatusBar} from '../../components/hooks/useStatusBar'
 import {usePrefetchStakingInfo} from '../../Dashboard/StakePoolInfos'
 import {useMetrics} from '../../metrics/metricsManager'
 import {defaultStackNavigationOptions, useWalletNavigation} from '../../navigation'
@@ -61,8 +61,6 @@ export const Menu = () => {
           left={<Icon.Gear size={24} color={lightPalette.gray['600']} />}
         />
 
-        <Hr />
-
         <Boundary loading={{size: 'small', style: {padding: 16}}} error={{size: 'inline'}}>
           <Catalyst //
             label={strings.catalystVoting}
@@ -72,26 +70,18 @@ export const Menu = () => {
         </Boundary>
 
         {isGovernanceFeatureEnabled && (
-          <>
-            <Hr />
-
-            <Governance
-              label={strings.governanceCentre}
-              onPress={navigateTo.governanceCentre}
-              left={<Icon.Governance size={24} color={lightPalette.gray['600']} />}
-            />
-          </>
+          <Governance
+            label={strings.governanceCentre}
+            onPress={navigateTo.governanceCentre}
+            left={<Icon.Governance size={24} color={lightPalette.gray['600']} />}
+          />
         )}
-
-        <Hr />
 
         <KnowledgeBase //
           label={strings.knowledgeBase}
           onPress={navigateTo.knowledgeBase}
           left={<Icon.Info size={24} color={lightPalette.gray['600']} />}
         />
-
-        <Hr />
 
         <Spacer fill />
 
@@ -267,6 +257,7 @@ const messages = defineMessage({
 })
 
 const useStyles = () => {
+  useStatusBar()
   const {theme} = useTheme()
   const {color, padding} = theme
 
@@ -276,10 +267,12 @@ const useStyles = () => {
       backgroundColor: color.gray.min,
     },
     item: {
-      ...padding['x-l'],
+      ...padding['y-l'],
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: color.gray[200],
     },
     scrollViewContent: {
       flex: 1,

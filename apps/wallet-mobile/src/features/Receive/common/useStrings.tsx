@@ -23,6 +23,7 @@ export const useStrings = () => {
     copyLinkBtn: intl.formatMessage(messages.copyLinkBtn),
     copyLinkMsg: intl.formatMessage(messages.copyLinkMsg),
     addressCopiedMsg: intl.formatMessage(messages.addressCopiedMsg),
+    lastUsed: intl.formatMessage(messages.lastUsed),
     unusedAddress: intl.formatMessage(messages.unusedAddress),
     usedAddress: intl.formatMessage(messages.usedAddress),
     generateButton: intl.formatMessage(messages.generateButton),
@@ -110,6 +111,10 @@ export const messages = defineMessages({
   addressCopiedMsg: {
     id: 'components.receive.receivescreen.addressCopiedMsg',
     defaultMessage: '!!!Address copied',
+  },
+  lastUsed: {
+    id: 'components.receive.receivescreen.lastUsed',
+    defaultMessage: '!!!Last used',
   },
   unusedAddress: {
     id: 'components.receive.receivescreen.unusedAddress',
