@@ -41,7 +41,7 @@ export const SelectProvider = () => {
           )
         }}
         ItemSeparatorComponent={() => <Space height="l" />}
-        keyExtractor={(item) => item[0]}
+        keyExtractor={([provider]) => provider}
       ></FlatList>
     </SafeAreaView>
   )
