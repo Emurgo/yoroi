@@ -102,7 +102,8 @@ const useStyles = () => {
   const {theme} = useTheme()
   const {color, typography} = theme
 
-  const cardSpacing = screenHeight > 800 ? 32 : 16
+  const heightBreakpointLarge = 800
+  const cardSpacing = screenHeight > heightBreakpointLarge ? 32 : 16
 
   const styles = StyleSheet.create({
     qrCode: {
