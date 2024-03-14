@@ -1,4 +1,4 @@
-import {useMemo} from 'react'
+import * as React from 'react'
 import {useIntl} from 'react-intl'
 
 import {useSelectedWallet} from '../../../../SelectedWallet'
@@ -6,7 +6,7 @@ import {useSelectedWallet} from '../../../../SelectedWallet'
 export const useLastDateAddressUsed = (address: string) => {
   const wallet = useSelectedWallet()
   const intl = useIntl()
-  return useMemo(() => {
+  return React.useMemo(() => {
     const lastUsed = Object.values(wallet.transactions).reduce((currentLast, tx) => {
       const {inputs, outputs} = tx
       const isRelevant = inputs.some((v) => address === v.address) || outputs.some((v) => address === v.address)
