@@ -31,7 +31,6 @@ export const useCreateReferralLink = (
   >,
 ) => {
   const query = useQuery({
-    useErrorBoundary: true,
     queryKey: ['useCreateReferralLink', queries, provider],
     ...options,
     queryFn: async ({signal}) => {
