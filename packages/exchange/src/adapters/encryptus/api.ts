@@ -48,7 +48,6 @@ export type EncryptusApiResponse = {
   status: number
   data: {
     link: string
-    message: string
   }
 }
 

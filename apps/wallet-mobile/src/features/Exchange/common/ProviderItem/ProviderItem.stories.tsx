@@ -14,7 +14,7 @@ storiesOf('Exchange ProviderItem', module)
     <ProviderItem
       provider={Exchange.Provider.Banxa}
       fee={5}
-      icon={<Icon.Check color={lightPalette.primary[600]} />}
+      rightAdornment={<Icon.Check color={lightPalette.primary[600]} />}
       onPress={action('Provider Item Pressed')}
     />
   ))

@@ -10,13 +10,13 @@ import {useExchange} from '../../common/ExchangeProvider'
 import {getProvidersByOrderType} from '../../common/getProvidersByOrderType'
 import {ProviderItem} from '../../common/ProviderItem/ProviderItem'
 
-export const SelectProvider = () => {
+export const SelectProviderFromList = () => {
   const styles = useStyles()
   const {orderType, provider: selectedProvider, orderTypeChanged, providerChanged} = useExchange()
 
   const providers = getProvidersByOrderType(orderType)
 
-  const onPress = React.useCallback(
+  const handleOnSelectProvider = React.useCallback(
     (provider: Exchange.Provider, features: Exchange.ProviderFeatures) => {
       if (orderType === 'buy' && !features.buy) orderTypeChanged('sell')
       else if (orderType === 'sell' && !features.sell) orderTypeChanged('buy')
@@ -36,8 +36,8 @@ export const SelectProvider = () => {
             <ProviderItem
               provider={provider}
               fee={orderType === 'buy' ? features.buy?.fee ?? 0 : features.sell?.fee ?? 0}
-              icon={selectedProvider === provider && <Check />}
-              onPress={() => onPress(provider, features)}
+              rightAdornment={selectedProvider === provider && <Check />}
+              onPress={() => handleOnSelectProvider(provider, features)}
             />
           )
         }}

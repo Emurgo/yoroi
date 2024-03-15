@@ -5,7 +5,7 @@ import {useCreateReferralLink} from './useCreateReferralLink'
 import {Exchange} from '@yoroi/types'
 import {wrapperFixture} from '../../../fixtures/wrapper'
 import {QueryClient} from 'react-query'
-import {queryClientFixture} from '../../../fixtures/query-client'
+import {queryClientFixture} from '@yoroi/common'
 
 describe('useCreateReferralLink', () => {
   let queryClient: QueryClient
@@ -20,9 +20,7 @@ describe('useCreateReferralLink', () => {
 
   it('success', async () => {
     const TestReferralLing = () => {
-      const getBaseUrl = jest.fn(
-        () => 'base-url',
-      ) as unknown as Exchange.Api['getBaseUrl']
+      const provider = Exchange.Provider.Banxa
       const createReferralUrl = jest.fn(() => 'referral-url') as unknown as (
         baseUrl: string,
         queries: Exchange.ReferralUrlQueryStringParams,
@@ -37,7 +35,7 @@ describe('useCreateReferralLink', () => {
       }
 
       const {referralLink} = useCreateReferralLink({
-        getBaseUrl,
+        provider,
         createReferralUrl,
         isProduction,
         partner,

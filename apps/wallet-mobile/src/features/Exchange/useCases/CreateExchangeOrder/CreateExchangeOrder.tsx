@@ -1,4 +1,4 @@
-import {createReferralUrl, exchangeApiMaker, Providers, useCreateReferralLink} from '@yoroi/exchange'
+import {createReferralUrl, Providers, useCreateReferralLink} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
 import * as React from 'react'
@@ -90,7 +90,7 @@ export const CreateExchangeOrder = () => {
             <ProviderItem
               provider={providerSelected}
               fee={orderType === 'buy' ? providerFeatures.buy?.fee ?? 0 : providerFeatures.sell?.fee ?? 0}
-              icon={<Icon.Chevron direction="right" />}
+              rightAdornment={<Icon.Chevron direction="right" />}
               onPress={handleOnPressSelectProvider}
               disabled={true}
             />
@@ -131,7 +131,7 @@ export const CreateExchangeOrder = () => {
 }
 
 const useReferralLink = ({wallet}: {wallet: YoroiWallet}) => {
-  const amountTokenInfo = useTokenInfo({wallet, tokenId: ''})
+  const amountTokenInfo = useTokenInfo({wallet, tokenId: wallet.primaryTokenInfo.id})
   const {orderType, amount, provider} = useExchange()
 
   const isMainnet = wallet.networkId === 1
@@ -152,13 +152,11 @@ const useReferralLink = ({wallet}: {wallet: YoroiWallet}) => {
     returnUrl,
   }
 
-  const {getBaseUrl} = React.useMemo(() => exchangeApiMaker({provider}), [provider])
-
   const {referralLink, isLoading} = useCreateReferralLink({
     isProduction: isMainnet,
     partner: 'yoroi',
     queries: urlOptions,
-    getBaseUrl,
+    provider,
     createReferralUrl,
   })
 

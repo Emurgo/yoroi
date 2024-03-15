@@ -35,5 +35,5 @@ export const exchangeApiMaker = (
 
   const getBaseUrl = operationsGetBaseUrl[provider]
 
-  return {getBaseUrl}
+  return {getBaseUrl} as const
 }

@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import {Exchange} from '@yoroi/types'
 
 export const Providers: Exchange.Providers = {
@@ -14,4 +13,4 @@ export const Providers: Exchange.Providers = {
       min: 1,
     },
   },
-}
+} as const

@@ -10,12 +10,12 @@ import {useStrings} from '../useStrings'
 type Props = {
   provider: Exchange.Provider
   fee: number
-  icon: React.ReactNode
+  rightAdornment: React.ReactNode
   onPress: () => void
   disabled?: boolean
 }
 
-export const ProviderItem = ({provider, onPress, fee, icon, disabled = false}: Props) => {
+export const ProviderItem = ({provider, onPress, fee, rightAdornment, disabled}: Props) => {
   const styles = useStyles()
   const strings = useStrings()
   const Logo = ProviderLogo[provider]
@@ -33,7 +33,7 @@ export const ProviderItem = ({provider, onPress, fee, icon, disabled = false}: P
         <Text style={styles.fee}>{`${fee}% ${strings.fee}`}</Text>
       </View>
 
-      {disabled ? null : icon}
+      {!disabled && rightAdornment}
     </TouchableOpacity>
   )
 }

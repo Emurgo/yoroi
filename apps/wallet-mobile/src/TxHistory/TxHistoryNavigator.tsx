@@ -26,7 +26,7 @@ import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
 import {ExchangeProvider} from '../features/Exchange/common/ExchangeProvider'
 import {useNavigateTo} from '../features/Exchange/common/useNavigateTo'
 import {CreateExchangeOrder} from '../features/Exchange/useCases/CreateExchangeOrder/CreateExchangeOrder'
-import {SelectProvider} from '../features/Exchange/useCases/SelectProvider/SelectProvider'
+import {SelectProviderFromList} from '../features/Exchange/useCases/SelectProviderFromList/SelectProviderFromList'
 import {ShowExchangeResultOrder} from '../features/Exchange/useCases/ShowExchangeResultOrder/ShowExchangeResultOrder'
 import {ReceiveProvider} from '../features/Receive/common/ReceiveProvider'
 import {DescribeSelectedAddressScreen} from '../features/Receive/useCases/DescribeSelectedAddressScreen'
@@ -213,7 +213,7 @@ export const TxHistoryNavigator = () => {
                     >
                       {() => (
                         <Boundary>
-                          <SelectProvider />
+                          <SelectProviderFromList />
                         </Boundary>
                       )}
                     </Stack.Screen>
@@ -226,7 +226,7 @@ export const TxHistoryNavigator = () => {
                     >
                       {() => (
                         <Boundary>
-                          <SelectProvider />
+                          <SelectProviderFromList />
                         </Boundary>
                       )}
                     </Stack.Screen>

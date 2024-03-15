@@ -6,14 +6,14 @@ import {SelectedWalletProvider} from '../../../../SelectedWallet'
 import {mocks} from '../../../../yoroi-wallets/mocks'
 import {ExchangeProvider} from '../../common/ExchangeProvider'
 import {mockExchangeStateDefault} from '../../common/mocks'
-import {SelectProvider} from './SelectProvider'
+import {SelectProviderFromList} from './SelectProviderFromList'
 
 storiesOf('Exchange SelectProvidert', module).add('Default', () => {
   return (
     <SelectedWalletProvider wallet={mocks.wallet}>
       <ExchangeProvider initialState={mockExchangeStateDefault}>
         <View style={styles.container}>
-          <SelectProvider />
+          <SelectProviderFromList />
         </View>
       </ExchangeProvider>
     </SelectedWalletProvider>

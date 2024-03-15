@@ -1,15 +1,16 @@
 import {Exchange} from '@yoroi/types'
 import {UseQueryOptions, useQuery} from 'react-query'
+import {exchangeApiMaker} from '../../../adapters/api'
 
 export const useCreateReferralLink = (
   {
-    getBaseUrl,
+    provider,
     createReferralUrl,
     isProduction,
     partner,
     queries,
   }: {
-    getBaseUrl: Exchange.Api['getBaseUrl']
+    provider: Exchange.Provider
     createReferralUrl: (
       baseUrl: string,
       queries: Exchange.ReferralUrlQueryStringParams,
@@ -23,17 +24,18 @@ export const useCreateReferralLink = (
     Error,
     URL,
     [
-      'useGetBaseUrl',
+      'useCreateReferralLink',
       Exchange.ReferralUrlQueryStringParams,
-      Exchange.Api['getBaseUrl'],
+      Exchange.Provider,
     ]
   >,
 ) => {
   const query = useQuery({
     useErrorBoundary: true,
-    queryKey: ['useGetBaseUrl', queries, getBaseUrl],
+    queryKey: ['useCreateReferralLink', queries, provider],
     ...options,
     queryFn: async ({signal}) => {
+      const {getBaseUrl} = exchangeApiMaker({provider})
       const baseUrl = await getBaseUrl({
         isProduction,
         partner,
