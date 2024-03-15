@@ -47,7 +47,7 @@ export const CreateExchangeOrder = () => {
 
   const {height: deviceHeight} = useWindowDimensions()
 
-  const {referralLink} = useReferralLink({wallet})
+  const {referralLink, isLoading} = useReferralLink({wallet})
 
   React.useEffect(() => {
     track.exchangePageViewed()
@@ -64,6 +64,8 @@ export const CreateExchangeOrder = () => {
   }, [amount.value, amountTokenInfo.decimals, navigateTo, orderType, referralLink, track])
 
   const handleOnPressSelectProvider = () => {
+    if (isLoading) return
+
     if (orderType === 'sell') {
       navigateTo.exchangeSelectSellProvider()
       return
@@ -159,7 +161,7 @@ const useReferralLink = ({wallet}: {wallet: YoroiWallet}) => {
   const {getBaseUrl} = React.useMemo(() => exchangeApiMaker({provider}), [provider])
   const {createReferralUrl} = React.useMemo(() => exchangeManagerMaker(), [])
 
-  const {referralLink, refetch} = useCreateReferralLink(
+  const {referralLink, refetch, isLoading} = useCreateReferralLink(
     {
       isProduction: isMainnet,
       partner: 'yoroi',
@@ -174,7 +176,7 @@ const useReferralLink = ({wallet}: {wallet: YoroiWallet}) => {
     refetch()
   }, [refetch, provider])
 
-  return {referralLink}
+  return {referralLink, isLoading}
 }
 
 const useStyles = () => {
