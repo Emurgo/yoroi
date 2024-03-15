@@ -169,8 +169,6 @@ const useReferralLink = ({wallet}: {wallet: YoroiWallet}) => {
     {enabled: false},
   )
 
-  console.log('referralLink', referralLink)
-
   React.useEffect(() => {
     refetch()
   }, [refetch, provider])
