@@ -14,8 +14,6 @@ import {
   NavigationShareIcon,
 } from '../common/icons'
 
-// const DAPP_URL = 'https://www.jpg.store/'
-// const DAPP_URL = 'https://muesliswap.com/swap'
 const DAPP_URL = 'https://app.dexhunter.io/'
 
 const ENABLED_BUTTON_COLOR = '#383E54'
