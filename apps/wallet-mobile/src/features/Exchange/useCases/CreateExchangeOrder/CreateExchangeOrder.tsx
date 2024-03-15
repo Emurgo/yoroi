@@ -64,8 +64,6 @@ export const CreateExchangeOrder = () => {
   }, [amount.value, amountTokenInfo.decimals, navigateTo, orderType, referralLink, track])
 
   const handleOnPressSelectProvider = () => {
-    if (isLoading) return
-
     if (orderType === 'sell') {
       navigateTo.exchangeSelectSellProvider()
       return
@@ -128,7 +126,7 @@ export const CreateExchangeOrder = () => {
             shelleyTheme
             title={strings.proceed.toLocaleUpperCase()}
             onPress={handleExchange}
-            disabled={!canExchange}
+            disabled={!canExchange || isLoading}
           />
         </View>
       </KeyboardAvoidingView>
