@@ -4,14 +4,14 @@
     "defaultMessage": "!!!Current Balance",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 41,
+      "line": 44,
       "column": 20,
-      "index": 1985
+      "index": 2098
     },
     "end": {
-      "line": 44,
+      "line": 47,
       "column": 5,
-      "index": 2080
+      "index": 2193
     }
   },
   {
@@ -19,14 +19,14 @@
     "defaultMessage": "!!!PROCEED",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 45,
+      "line": 48,
       "column": 13,
-      "index": 2095
+      "index": 2208
     },
     "end": {
-      "line": 48,
+      "line": 51,
       "column": 5,
-      "index": 2166
+      "index": 2279
     }
   },
   {
@@ -34,14 +34,14 @@
     "defaultMessage": "!!!Disclaimer",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 49,
+      "line": 52,
       "column": 16,
-      "index": 2184
+      "index": 2297
     },
     "end": {
-      "line": 52,
+      "line": 55,
       "column": 5,
-      "index": 2280
+      "index": 2393
     }
   },
   {
@@ -49,14 +49,14 @@
     "defaultMessage": "!!!Yoroi uses third party web3 on-and-off ramp solution to provide direct Fiat-ADA exchange. By clicking \"Proceed\", you also acknowledge that you will be redirected to our partner's website, where you may be asked to accept their terms and conditions. The third party web3 on-and-off ramp solution may have a certain limitation that will vary depending on your location and your financial institution.",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 53,
+      "line": 56,
       "column": 23,
-      "index": 2305
+      "index": 2418
     },
     "end": {
-      "line": 57,
+      "line": 60,
       "column": 5,
-      "index": 2805
+      "index": 2918
     }
   },
   {
@@ -64,14 +64,14 @@
     "defaultMessage": "!!!Buy ADA",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 58,
+      "line": 61,
       "column": 15,
-      "index": 2822
+      "index": 2935
     },
     "end": {
-      "line": 61,
+      "line": 64,
       "column": 5,
-      "index": 2914
+      "index": 3027
     }
   },
   {
@@ -79,14 +79,14 @@
     "defaultMessage": "!!!Sell ADA",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 62,
+      "line": 65,
       "column": 16,
-      "index": 2932
+      "index": 3045
     },
     "end": {
-      "line": 65,
+      "line": 68,
       "column": 5,
-      "index": 3026
+      "index": 3139
     }
   },
   {
@@ -94,14 +94,14 @@
     "defaultMessage": "!!!ADA amount",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 66,
+      "line": 69,
       "column": 17,
-      "index": 3045
+      "index": 3158
     },
     "end": {
-      "line": 69,
+      "line": 72,
       "column": 5,
-      "index": 3142
+      "index": 3255
     }
   },
   {
@@ -109,14 +109,14 @@
     "defaultMessage": "!!!Provider Fee",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 70,
+      "line": 73,
       "column": 17,
-      "index": 3161
+      "index": 3274
     },
     "end": {
-      "line": 73,
+      "line": 76,
       "column": 5,
-      "index": 3260
+      "index": 3373
     }
   },
   {
@@ -124,14 +124,14 @@
     "defaultMessage": "!!!Provider",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 74,
+      "line": 77,
       "column": 14,
-      "index": 3276
+      "index": 3389
     },
     "end": {
-      "line": 77,
+      "line": 80,
       "column": 5,
-      "index": 3368
+      "index": 3481
     }
   },
   {
@@ -139,14 +139,14 @@
     "defaultMessage": "!!!Banxa",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 78,
+      "line": 81,
       "column": 11,
-      "index": 3381
+      "index": 3494
     },
     "end": {
-      "line": 81,
+      "line": 84,
       "column": 5,
-      "index": 3467
+      "index": 3580
     }
   },
   {
@@ -154,14 +154,14 @@
     "defaultMessage": "!!!Exchange ADA",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 82,
+      "line": 85,
       "column": 11,
-      "index": 3480
+      "index": 3593
     },
     "end": {
-      "line": 85,
+      "line": 88,
       "column": 5,
-      "index": 3557
+      "index": 3670
     }
   },
   {
@@ -169,14 +169,14 @@
     "defaultMessage": "!!!Not Enough Balannce",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 86,
+      "line": 89,
       "column": 22,
-      "index": 3581
+      "index": 3694
     },
     "end": {
-      "line": 89,
+      "line": 92,
       "column": 5,
-      "index": 3682
+      "index": 3795
     }
   },
   {
@@ -184,14 +184,14 @@
     "defaultMessage": "!!!Minimum required is 100 ADA",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 90,
+      "line": 93,
       "column": 20,
-      "index": 3704
+      "index": 3817
     },
     "end": {
-      "line": 93,
+      "line": 96,
       "column": 5,
-      "index": 3821
+      "index": 3934
     }
   },
   {
@@ -199,14 +199,14 @@
     "defaultMessage": "!!!You can currently sell only to USD using ACH.",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 94,
+      "line": 97,
       "column": 25,
-      "index": 3848
+      "index": 3961
     },
     "end": {
-      "line": 97,
+      "line": 100,
       "column": 5,
-      "index": 3988
+      "index": 4101
     }
   },
   {
@@ -214,14 +214,14 @@
     "defaultMessage": "!!!Congrats🎉 Your ADA will come in a few minutes",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 98,
+      "line": 101,
       "column": 14,
-      "index": 4004
+      "index": 4117
     },
     "end": {
-      "line": 101,
+      "line": 104,
       "column": 5,
-      "index": 4134
+      "index": 4247
     }
   },
   {
@@ -229,14 +229,14 @@
     "defaultMessage": "!!!ADA amount you get",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 102,
+      "line": 105,
       "column": 24,
-      "index": 4160
+      "index": 4273
     },
     "end": {
-      "line": 105,
+      "line": 108,
       "column": 5,
-      "index": 4272
+      "index": 4385
     }
   },
   {
@@ -244,14 +244,14 @@
     "defaultMessage": "!!!Fiat amount you sell",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 106,
+      "line": 109,
       "column": 22,
-      "index": 4296
+      "index": 4409
     },
     "end": {
-      "line": 109,
+      "line": 112,
       "column": 5,
-      "index": 4408
+      "index": 4521
     }
   },
   {
@@ -259,14 +259,14 @@
     "defaultMessage": "!!!GO TO TRANSACTIONS",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 110,
+      "line": 113,
       "column": 22,
-      "index": 4432
+      "index": 4545
     },
     "end": {
-      "line": 113,
+      "line": 116,
       "column": 5,
-      "index": 4542
+      "index": 4655
     }
   },
   {
@@ -274,14 +274,14 @@
     "defaultMessage": "!!!Buy ADA/Sell transaction",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 114,
+      "line": 117,
       "column": 19,
-      "index": 4563
+      "index": 4676
     },
     "end": {
-      "line": 117,
+      "line": 120,
       "column": 5,
-      "index": 4676
+      "index": 4789
     }
   },
   {
@@ -289,14 +289,14 @@
     "defaultMessage": "!!!Normally the Buy ADA/Sell transaction takes 3-5 of minutes for the order to be fulfilled. However, there are instances where the order cannot be fulfilled instantly because the compliance team can be doing a manual verification of the KYC docs or any other issues.",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 118,
+      "line": 121,
       "column": 38,
-      "index": 4716
+      "index": 4829
     },
     "end": {
-      "line": 122,
+      "line": 125,
       "column": 5,
-      "index": 5096
+      "index": 5209
     }
   },
   {
@@ -304,14 +304,14 @@
     "defaultMessage": "!!!Contact",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 123,
+      "line": 126,
       "column": 13,
-      "index": 5111
+      "index": 5224
     },
     "end": {
-      "line": 126,
+      "line": 129,
       "column": 5,
-      "index": 5201
+      "index": 5314
     }
   },
   {
@@ -319,14 +319,14 @@
     "defaultMessage": "!!!and",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 127,
+      "line": 130,
       "column": 9,
-      "index": 5212
+      "index": 5325
     },
     "end": {
-      "line": 130,
+      "line": 133,
       "column": 5,
-      "index": 5294
+      "index": 5407
     }
   },
   {
@@ -334,14 +334,14 @@
     "defaultMessage": "!!!Yoroi Customer Support",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 131,
+      "line": 134,
       "column": 21,
-      "index": 5317
+      "index": 5430
     },
     "end": {
-      "line": 134,
+      "line": 137,
       "column": 5,
-      "index": 5430
+      "index": 5543
     }
   },
   {
@@ -349,14 +349,14 @@
     "defaultMessage": "!!!if you witnessed any significant transaction delays or errors.",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 135,
+      "line": 138,
       "column": 17,
-      "index": 5449
+      "index": 5562
     },
     "end": {
-      "line": 138,
+      "line": 141,
       "column": 5,
-      "index": 5598
+      "index": 5711
     }
   },
   {
@@ -364,14 +364,14 @@
     "defaultMessage": "!!!Welcome to Yoroi 👋️\nGet your first ADA fast & easy",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 139,
+      "line": 142,
       "column": 20,
-      "index": 5620
+      "index": 5733
     },
     "end": {
-      "line": 142,
+      "line": 145,
       "column": 5,
-      "index": 5762
+      "index": 5875
     }
   },
   {
@@ -379,14 +379,14 @@
     "defaultMessage": "!!!Top up your wallet safely using our trusted partners",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 143,
+      "line": 146,
       "column": 24,
-      "index": 5788
+      "index": 5901
     },
     "end": {
-      "line": 146,
+      "line": 149,
       "column": 5,
-      "index": 5934
+      "index": 6047
     }
   },
   {
@@ -394,14 +394,14 @@
     "defaultMessage": "!!!Need more ADA for staking or swap?",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 147,
+      "line": 150,
       "column": 20,
-      "index": 5956
+      "index": 6069
     },
     "end": {
-      "line": 150,
+      "line": 153,
       "column": 5,
-      "index": 6080
+      "index": 6193
     }
   },
   {
@@ -409,14 +409,14 @@
     "defaultMessage": "!!!fee",
     "file": "src/features/Exchange/common/useStrings.tsx",
     "start": {
-      "line": 151,
+      "line": 154,
       "column": 9,
-      "index": 6091
+      "index": 6204
     },
     "end": {
-      "line": 154,
+      "line": 157,
       "column": 5,
-      "index": 6173
+      "index": 6286
     }
   }
 ]

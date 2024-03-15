@@ -8,12 +8,14 @@ import {Keyboard, Platform} from 'react-native'
 import {VotingRegistration} from './Catalyst'
 import {Icon, OfflineBanner} from './components'
 import {DashboardNavigator} from './Dashboard'
+import {ShowExchangeResultOrder} from './features/Exchange/useCases/ShowExchangeResultOrder/ShowExchangeResultOrder'
 import {MenuNavigator} from './features/Menu'
 import {SettingsScreenNavigator} from './features/Settings'
 import {GovernanceNavigator} from './features/Staking/Governance'
 import {ToggleAnalyticsSettingsNavigator} from './features/ToggleAnalyticsSettings'
+import {useInitialLink} from './IntialLinkManagerProvider'
 import {useMetrics} from './metrics/metricsManager'
-import {hideTabBarForRoutes, WalletStackRoutes, WalletTabRoutes} from './navigation'
+import {hideTabBarForRoutes, useWalletNavigation, WalletStackRoutes, WalletTabRoutes} from './navigation'
 import {NftDetailsNavigator} from './NftDetails/NftDetailsNavigator'
 import {NftsNavigator} from './Nfts/NftsNavigator'
 import {SearchProvider} from './Search/SearchContext'
@@ -151,28 +153,37 @@ const WalletTabNavigator = () => {
 }
 
 const Stack = createStackNavigator<WalletStackRoutes>()
-export const WalletNavigator = () => (
-  <Stack.Navigator
-    screenOptions={{
-      headerShown: false /* used only for transition */,
-      detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
-    }}
-  >
-    <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
+export const WalletNavigator = () => {
+  const {initialUrl} = useInitialLink()
+  const {resetToWalletSelection} = useWalletNavigation()
+  return (
+    <Stack.Navigator
+      initialRouteName={initialUrl !== null ? 'exchange-result' : 'wallet-selection'}
+      screenOptions={{
+        headerShown: false /* used only for transition */,
+        detachPreviousScreen: false /* https://github.com/react-navigation/react-navigation/issues/9883 */,
+      }}
+    >
+      <Stack.Screen name="exchange-result">
+        {() => <ShowExchangeResultOrder onClose={resetToWalletSelection} />}
+      </Stack.Screen>
 
-    <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
+      <Stack.Screen name="wallet-selection" component={WalletSelectionScreen} />
 
-    <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />
+      <Stack.Screen name="main-wallet-routes" component={WalletTabNavigator} />
 
-    <Stack.Screen name="settings" component={SettingsScreenNavigator} />
+      <Stack.Screen name="nft-details-routes" component={NftDetailsNavigator} />
 
-    <Stack.Screen name="voting-registration" component={VotingRegistration} />
+      <Stack.Screen name="settings" component={SettingsScreenNavigator} />
 
-    <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
+      <Stack.Screen name="voting-registration" component={VotingRegistration} />
 
-    <Stack.Screen name="governance" component={GovernanceNavigator} />
-  </Stack.Navigator>
-)
+      <Stack.Screen name="toggle-analytics-settings" component={ToggleAnalyticsSettingsNavigator} />
+
+      <Stack.Screen name="governance" component={GovernanceNavigator} />
+    </Stack.Navigator>
+  )
+}
 
 const messages = defineMessages({
   transactionsButton: {

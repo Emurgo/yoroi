@@ -1,6 +1,8 @@
 import * as React from 'react'
 import {defineMessages, useIntl} from 'react-intl'
 
+import globalMessages from '../../../i18n/global-messages'
+
 export const useStrings = () => {
   const intl = useIntl()
 
@@ -33,6 +35,7 @@ export const useStrings = () => {
     ourTrustedPartners: intl.formatMessage(messages.ourTrustedPartners),
     needMoreCrypto: intl.formatMessage(messages.needMoreCrypto),
     fee: intl.formatMessage(messages.fee),
+    close: intl.formatMessage(globalMessages.close),
   }).current
 }
 

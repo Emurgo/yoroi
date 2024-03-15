@@ -1,44 +1,57 @@
 import {useTheme} from '@yoroi/theme'
+import {Exchange} from '@yoroi/types'
 import * as React from 'react'
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 
-import banxaLogo from '../../../../assets/img/banxa.png'
 import {Button, Icon, Spacer, Text, useModal} from '../../../../components'
 import {useStatusBar} from '../../../../components/hooks/useStatusBar'
-import {useUnsafeParams} from '../../../../navigation'
-import {useHideBottomTabBar} from '../../../../yoroi-wallets/hooks'
+import {useInitialLink} from '../../../../IntialLinkManagerProvider'
+import {ProviderLabel, ProviderLogo} from '../../common/constants'
 import {DescribeAction} from '../../common/DescribeAction/DescribeAction'
-import {ExchangeInitRoutes, useNavigateTo} from '../../common/useNavigateTo'
 import {useStrings} from '../../common/useStrings'
 import {WalletAssetImage} from '../../illustrations/WalletAssetImage'
 import {ContentResult} from './ContentResult/ContentResult'
 
-export type ParamsResult = {
-  coin: string
-  coinAmount: number
-  fiat: number
-  fiatAmount: number
-}
-
-export const ShowExchangeResultOrder = ({variant}: {variant?: 'noInfo'}) => {
+export const ShowExchangeResultOrder = ({onClose}: {onClose: () => void}) => {
   const strings = useStrings()
-  useHideBottomTabBar()
+  const {setInitialUrl, initialUrl} = useInitialLink()
   useStatusBar()
-  const navigateTo = useNavigateTo()
   const styles = useStyles()
-  const params = useUnsafeParams<ExchangeInitRoutes['exchange']>()
-  const {coin, coinAmount, fiat, fiatAmount} = params ?? {}
+
+  const urlSearchParams = initialUrl !== null ? new URLSearchParams(initialUrl) : null
+  const params =
+    urlSearchParams !== null
+      ? {
+          coin: urlSearchParams.get('coin'),
+          coinAmount: urlSearchParams.get('coinAmount'),
+          fiat: urlSearchParams.get('fiat'),
+          fiatAmount: urlSearchParams.get('fiatAmount'),
+          provider: urlSearchParams.get('provider'),
+          status: urlSearchParams.get('status'),
+        }
+      : null
+
+  const hasMinimunParams =
+    params !== null &&
+    params.coin !== null &&
+    params.coinAmount !== null &&
+    params.fiat !== null &&
+    params.fiatAmount !== null
 
   const {openModal} = useModal()
 
   const handleDirectTransaction = () => {
-    navigateTo.exchangeOpenOrder()
+    setInitialUrl(null)
+    onClose()
   }
 
   const handlePressDescribe = () => {
     openModal(strings.buySellCrypto, <DescribeAction />)
   }
+
+  const Logo = params?.provider != null ? ProviderLogo[params.provider as Exchange.Provider] : null
+  const label = params?.provider != null ? ProviderLabel[params.provider as Exchange.Provider] : null
 
   return (
     <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.root}>
@@ -50,7 +63,7 @@ export const ShowExchangeResultOrder = ({variant}: {variant?: 'noInfo'}) => {
         <Text style={styles.congratsText}>
           {strings.congrats}
 
-          {variant !== 'noInfo' && (
+          {hasMinimunParams && (
             <>
               <Spacer width={4} />
 
@@ -63,35 +76,39 @@ export const ShowExchangeResultOrder = ({variant}: {variant?: 'noInfo'}) => {
 
         <Spacer height={16} />
 
-        {variant !== 'noInfo' && (
+        {hasMinimunParams && (
           <>
             <ContentResult title={strings.cryptoAmountYouGet}>
-              <Text style={styles.contentValueText}>{`${coinAmount ?? 0} ${coin ?? ''}`}</Text>
+              <Text style={styles.contentValueText}>{`${params.coinAmount ?? 0} ${params.coin ?? ''}`}</Text>
             </ContentResult>
 
             <Spacer height={16} />
 
             <ContentResult title={strings.fiatAmountYouGet}>
-              <Text style={styles.contentValueText}>{`${fiatAmount ?? 0} ${fiat ?? ''}`}</Text>
+              <Text style={styles.contentValueText}>{`${params.fiatAmount ?? 0} ${params.fiat ?? ''}`}</Text>
             </ContentResult>
           </>
         )}
 
-        <Spacer height={16} />
+        {Logo !== null && label !== null && (
+          <>
+            <Spacer height={16} />
 
-        <ContentResult title={strings.provider}>
-          <View style={styles.boxProvider}>
-            <Image style={styles.banxaLogo} source={banxaLogo} />
+            <ContentResult title={strings.provider}>
+              <View style={styles.boxProvider}>
+                <Logo size={24} />
 
-            <Spacer width={4} />
+                <Spacer width={4} />
 
-            <Text style={styles.contentValueText}>{strings.banxa}</Text>
-          </View>
-        </ContentResult>
+                <Text style={styles.contentValueText}>{label}</Text>
+              </View>
+            </ContentResult>
+          </>
+        )}
       </View>
 
       <View style={styles.actions}>
-        <Button shelleyTheme onPress={handleDirectTransaction} title={strings.goToTransactions} />
+        <Button shelleyTheme onPress={handleDirectTransaction} title={strings.close} />
       </View>
     </SafeAreaView>
   )
@@ -130,10 +147,6 @@ const useStyles = () => {
     boxProvider: {
       flexDirection: 'row',
       alignItems: 'center',
-    },
-    banxaLogo: {
-      width: 24,
-      height: 24,
     },
     actions: {
       padding: 16,

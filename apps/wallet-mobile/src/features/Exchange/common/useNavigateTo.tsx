@@ -42,5 +42,6 @@ export type ExchangeInitRoutes = {
     coinAmount: number
     fiat: number
     fiatAmount: number
+    status: string
   }
 }

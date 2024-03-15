@@ -24,6 +24,7 @@ import {claimApiMaker} from '../features/Claim/module/api'
 import {ClaimProvider} from '../features/Claim/module/ClaimProvider'
 import {ShowSuccessScreen} from '../features/Claim/useCases/ShowSuccessScreen'
 import {ExchangeProvider} from '../features/Exchange/common/ExchangeProvider'
+import {useNavigateTo} from '../features/Exchange/common/useNavigateTo'
 import {CreateExchangeOrder} from '../features/Exchange/useCases/CreateExchangeOrder/CreateExchangeOrder'
 import {SelectProvider} from '../features/Exchange/useCases/SelectProvider/SelectProvider'
 import {ShowExchangeResultOrder} from '../features/Exchange/useCases/ShowExchangeResultOrder/ShowExchangeResultOrder'
@@ -124,6 +125,8 @@ export const TxHistoryNavigator = () => {
 
   // navigator components
   const headerRightHistory = React.useCallback(() => <HeaderRightHistory />, [])
+
+  const navigateTo = useNavigateTo()
 
   return (
     <ReceiveProvider key={wallet.id}>
@@ -234,7 +237,7 @@ export const TxHistoryNavigator = () => {
                       }}
                       name="exchange-result"
                     >
-                      {() => <ShowExchangeResultOrder variant="noInfo" />}
+                      {() => <ShowExchangeResultOrder onClose={navigateTo.exchangeOpenOrder} />}
                     </Stack.Screen>
 
                     <Stack.Screen
