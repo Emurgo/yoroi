@@ -3,7 +3,7 @@ import {storageMock} from './storage.mocks'
 import {mockedData} from './mocks'
 
 const getDappConnector = () => {
-  const storage = connectionStorageMaker({...storageMock})
+  const storage = connectionStorageMaker(storageMock)
   return dappConnectorMaker(storage)
 }
 
