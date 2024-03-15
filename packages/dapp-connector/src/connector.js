@@ -1,23 +1,30 @@
 const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessionId}) => {
   // https://github.com/facebook/hermes/issues/114
   // https://github.com/facebook/hermes/issues/612
-  'show source please'
+  'babel plugin show source'
   if (typeof iconUrl !== 'string') throw new Error('iconUrl must be a string')
   if (typeof apiVersion !== 'string') throw new Error('apiVersion must be a string')
   if (typeof walletName !== 'string') throw new Error('walletName must be a string')
   if (!Array.isArray(supportedExtensions)) throw new Error('supportedExtensions must be an array')
 
-  const postMessage = (data) => window.ReactNativeWebView.postMessage(JSON.stringify(data))
+  if (window.cardano && window.cardano[walletName]) return
+
+  const postMessage = (data) => {
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(JSON.stringify(data))
+      return
+    }
+    window.postMessage(JSON.stringify(data))
+  }
   const promisesMap = new Map()
 
+  const getRandomId = () => Math.random().toString(36).substr(2, 9)
+
   const callExternalMethod = (method, args, options = {}) => {
-    const requestId = Math.random().toString(36).substr(2, 9) // id needs to be unique
+    const requestId = getRandomId()
+
     if (options?.doNotWaitForResponse) {
-      postMessage({
-        id: requestId,
-        method,
-        params: {args, browserContext: getContext()},
-      })
+      postMessage({id: requestId, method, params: {args, browserContext: getContext()}})
       return Promise.resolve()
     }
     const promise = new Promise((resolve, reject) => {
@@ -33,11 +40,11 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   }
 
   window.addEventListener('error', (event) => {
-    logMessage('WebView unhandled error:' + serializeError(event.error))
+    logMessage('Unhandled error:' + serializeError(event.error))
   })
 
   window.addEventListener('unhandledrejection', (event) => {
-    logMessage('WebView unhandled rejection:' + serializeError(event.reason))
+    logMessage('Unhandled rejection:' + serializeError(event.reason))
   })
 
   const serializeError = (error) => {
@@ -48,7 +55,7 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   }
 
   window.addEventListener('message', (event) => {
-    logMessage('WebView received message' + JSON.stringify(event.data))
+    logMessage('Received message' + JSON.stringify(event.data))
     const {id, result, error} = event.data
     const promise = promisesMap.get(id)
     if (!promise) return
@@ -61,7 +68,6 @@ const initWallet = ({iconUrl, apiVersion, walletName, supportedExtensions, sessi
   })
 
   const createApi = (cardanoEnableResponse) => {
-    logMessage('cardanoEnableResponse:' + JSON.stringify(cardanoEnableResponse))
     if (!cardanoEnableResponse) {
       logMessage('User Rejected')
       throw {code: -3, info: 'User Rejected'}

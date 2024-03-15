@@ -6,13 +6,13 @@ import {WebView} from 'react-native-webview'
 
 import {TextInput} from '../../../components'
 import {useSelectedWallet} from '../../../SelectedWallet'
+import {useConnectWalletToWebView} from '../common/hooks'
 import {
   NavigationArrowLeftIcon,
   NavigationArrowRightIcon,
   NavigationRefreshIcon,
   NavigationShareIcon,
 } from '../common/icons'
-import {useConnectWalletToWebView} from '../WebViewConnector/hooks'
 
 // const DAPP_URL = 'https://www.jpg.store/'
 // const DAPP_URL = 'https://muesliswap.com/swap'

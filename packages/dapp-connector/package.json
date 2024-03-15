@@ -108,7 +108,9 @@
   ],
   "jest": {
     "collectCoverage": true,
-    "coveragePathIgnorePatterns": ["connector.js"],
+    "coveragePathIgnorePatterns": [
+      "connector.js"
+    ],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
@@ -153,7 +155,6 @@
     "@types/react-test-renderer": "^18.0.7",
     "@yoroi/types": "1.5.2",
     "axios-mock-adapter": "^1.21.5",
-    "babel-plugin-show-source": "^0.2.1",
     "commitlint": "^17.0.2",
     "del-cli": "^5.0.0",
     "dependency-cruiser": "^13.1.1",
