@@ -18,11 +18,20 @@ export const useCreateReferralLink = (
     partner: string
     queries: Exchange.ReferralUrlQueryStringParams
   },
-  options?: UseQueryOptions<URL, Error, URL, ['useGetBaseUrl']>,
+  options?: UseQueryOptions<
+    URL,
+    Error,
+    URL,
+    [
+      'useGetBaseUrl',
+      Exchange.ReferralUrlQueryStringParams,
+      Exchange.Api['getBaseUrl'],
+    ]
+  >,
 ) => {
   const query = useQuery({
     useErrorBoundary: true,
-    queryKey: ['useGetBaseUrl'],
+    queryKey: ['useGetBaseUrl', queries, getBaseUrl],
     ...options,
     queryFn: async ({signal}) => {
       const baseUrl = await getBaseUrl({
