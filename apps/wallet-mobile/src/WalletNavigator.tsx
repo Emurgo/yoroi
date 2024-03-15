@@ -28,7 +28,11 @@ const Tab = createBottomTabNavigator<WalletTabRoutes>()
 const WalletTabNavigator = () => {
   const strings = useStrings()
   const wallet = useSelectedWallet()
-  const initialRoute = 'history'
+  const initialRoute = CONFIG.DAPP_EXPLORER_ENABLED
+    ? 'history'
+    : isHaskellShelley(wallet.walletImplementationId)
+    ? 'staking-dashboard'
+    : 'history'
 
   const [isKeyboardOpen, setIsKeyboardOpen] = React.useState(false)
 
