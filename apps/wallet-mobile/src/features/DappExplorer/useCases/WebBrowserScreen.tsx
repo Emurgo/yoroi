@@ -1,5 +1,4 @@
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
-import {NavigationContainer, useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
 import React, {useState} from 'react'
 import {Platform, Share, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {WebView} from 'react-native-webview'
@@ -18,27 +17,13 @@ const DAPP_URL = 'https://app.dexhunter.io/'
 
 const ENABLED_BUTTON_COLOR = '#383E54'
 const DISABLED_BUTTON_COLOR = '#8A92A3'
-const Tab = createMaterialTopTabNavigator()
 
 export const WebBrowserScreen = () => {
   const [sessionId] = useState(() => Math.random().toString(36).substring(7))
 
-  const [tabs] = React.useState([
-    {
-      name: 'tab-1',
-      component: TabScreen,
-    },
-  ])
-
   return (
     <View style={styles.root}>
-      <NavigationContainer independent={true}>
-        <Tab.Navigator>
-          {tabs.map((tab) => (
-            <Tab.Screen key={tab.name} name={tab.name} initialParams={{sessionId}} component={tab.component} />
-          ))}
-        </Tab.Navigator>
-      </NavigationContainer>
+      <TabScreen sessionId={sessionId} />
     </View>
   )
 }
@@ -64,8 +49,7 @@ const styles = StyleSheet.create({
   },
 })
 
-function TabScreen({route}: {route: {params?: {sessionId?: string}}}) {
-  const sessionId = route?.params?.sessionId ?? ''
+function TabScreen({sessionId}: {sessionId: string}) {
   const ref = React.useRef<WebView | null>(null)
   const wallet = useSelectedWallet()
   const {handleEvent, initScript} = useConnectWalletToWebView(wallet, ref, sessionId)
@@ -122,9 +106,7 @@ function TabScreen({route}: {route: {params?: {sessionId?: string}}}) {
         multiline={false}
         value={inputUrl}
         onChangeText={(text) => setInputUrl(text)}
-        onSubmitEditing={(e) => {
-          handleUrlSubmit(e.nativeEvent.text)
-        }}
+        onSubmitEditing={(e) => handleUrlSubmit(e.nativeEvent.text)}
       />
 
       <View style={{flex: 1}}>
