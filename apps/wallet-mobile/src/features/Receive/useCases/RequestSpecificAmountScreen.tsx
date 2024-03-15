@@ -47,7 +47,10 @@ export const RequestSpecificAmountScreen = () => {
   }, [track, amount, openModal, strings.amountToReceive, selectedAddress, modalHeight])
 
   const handleOnChangeAmount = (amount: string) => {
-    setAmount(editedFormatter(amount))
+    const edited = editedFormatter(amount)
+    if (Number(edited.replace(',', '.')) <= Number.MAX_SAFE_INTEGER) {
+      setAmount(edited)
+    }
   }
 
   useFocusEffect(
