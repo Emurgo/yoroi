@@ -1,4 +1,4 @@
-import {exchangeApiMaker, exchangeManagerMaker, Providers, useCreateReferralLink} from '@yoroi/exchange'
+import {createReferralUrl, exchangeApiMaker, Providers, useCreateReferralLink} from '@yoroi/exchange'
 import {useTheme} from '@yoroi/theme'
 import {Exchange} from '@yoroi/types'
 import * as React from 'react'
@@ -157,7 +157,6 @@ const useReferralLink = ({wallet}: {wallet: YoroiWallet}) => {
   }
 
   const {getBaseUrl} = React.useMemo(() => exchangeApiMaker({provider}), [provider])
-  const {createReferralUrl} = React.useMemo(() => exchangeManagerMaker(), [])
 
   const {referralLink, refetch, isLoading} = useCreateReferralLink(
     {
@@ -169,6 +168,8 @@ const useReferralLink = ({wallet}: {wallet: YoroiWallet}) => {
     },
     {enabled: false},
   )
+
+  console.log('referralLink', referralLink)
 
   React.useEffect(() => {
     refetch()

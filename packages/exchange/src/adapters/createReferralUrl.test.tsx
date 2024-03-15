@@ -1,10 +1,9 @@
 import {Exchange} from '@yoroi/types'
-import {exchangeManagerMaker} from './manager'
+import {createReferralUrl} from './createReferralUrl'
 
-describe('exchangeManagerMaker', () => {
+describe('createReferralUrl', () => {
   test('should generate a correct referral link with all parameters', () => {
     const baseUrl = 'https://checkout.banxa.com/?'
-    const module = exchangeManagerMaker()
     const fullUrl =
       baseUrl +
       'orderType=sell' +
@@ -21,7 +20,7 @@ describe('exchangeManagerMaker', () => {
       '&' +
       'walletAddress=addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf'
 
-    const url = module.createReferralUrl(baseUrl, {
+    const url = createReferralUrl(baseUrl, {
       orderType: 'sell',
       fiatType: 'USD',
       fiatAmount: 500,
@@ -37,7 +36,6 @@ describe('exchangeManagerMaker', () => {
 
   test('should generate a correct referral link with mandatory parameters only', () => {
     const baseUrl = 'https://checkout.banxa.com/?'
-    const module = exchangeManagerMaker()
     const fullUrl =
       baseUrl +
       'orderType=sell' +
@@ -48,7 +46,7 @@ describe('exchangeManagerMaker', () => {
       '&' +
       'walletAddress=addr1q9v8dvht2mv847gwarl7r4p49yzys8r7zlep7c8t2hqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqquvupf'
 
-    const url = module.createReferralUrl(baseUrl, {
+    const url = createReferralUrl(baseUrl, {
       orderType: 'sell',
       fiatType: 'USD',
       coinType: 'ADA',
@@ -61,8 +59,7 @@ describe('exchangeManagerMaker', () => {
 
   test('should not include undefined optional parameters in the referral link', () => {
     const baseUrl = 'https://checkout.banxa.com/?'
-    const module = exchangeManagerMaker()
-    const url = module.createReferralUrl(baseUrl, {
+    const url = createReferralUrl(baseUrl, {
       orderType: 'sell',
       fiatType: 'USD',
       coinType: 'ADA',
@@ -79,7 +76,6 @@ describe('exchangeManagerMaker', () => {
 
   test('should throw an BanxaValidationError when schema is invalid', () => {
     const baseUrl = 'https://checkout.banxa.com/?'
-    const module = exchangeManagerMaker()
 
     const invalidQueries = {
       fiatType: 'ABC', // Invalid fiatType
@@ -89,13 +85,12 @@ describe('exchangeManagerMaker', () => {
     }
 
     expect(() => {
-      module.createReferralUrl(baseUrl, invalidQueries as any)
+      createReferralUrl(baseUrl, invalidQueries as any)
     }).toThrow(Exchange.Errors.Validation)
   })
 
   test('should throw an error when ADA walletAddress is not a possible Cardano address', () => {
     const baseUrl = 'https://checkout.banxa.com/?'
-    const module = exchangeManagerMaker()
 
     const invalidQueries = {
       fiatType: 'USD',
@@ -104,22 +99,7 @@ describe('exchangeManagerMaker', () => {
     }
 
     expect(() => {
-      module.createReferralUrl(baseUrl, invalidQueries as any)
+      createReferralUrl(baseUrl, invalidQueries as any)
     }).toThrow(Exchange.Errors.Validation)
-  })
-
-  test('should throw BanxaUnknownError if is not a BanxaValidationError', () => {
-    const baseUrl = 'https://checkout.banxa.com/?'
-    const module = exchangeManagerMaker({zodErrorTranslator: () => {}})
-
-    const invalidQueries = {
-      fiatType: 'XXX',
-      coinType: 'XXX',
-      walletAddress: 'XXX',
-    }
-
-    expect(() => {
-      module.createReferralUrl(baseUrl, invalidQueries as any)
-    }).toThrow(Exchange.Errors.Unknown)
   })
 })

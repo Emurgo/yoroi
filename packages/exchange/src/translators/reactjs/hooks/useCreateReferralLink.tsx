@@ -10,7 +10,10 @@ export const useCreateReferralLink = (
     queries,
   }: {
     getBaseUrl: Exchange.Api['getBaseUrl']
-    createReferralUrl: Exchange.Manager['createReferralUrl']
+    createReferralUrl: (
+      baseUrl: string,
+      queries: Exchange.ReferralUrlQueryStringParams,
+    ) => URL
     isProduction: boolean
     partner: string
     queries: Exchange.ReferralUrlQueryStringParams

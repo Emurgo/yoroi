@@ -23,9 +23,10 @@ describe('useCreateReferralLink', () => {
       const getBaseUrl = jest.fn(
         () => 'base-url',
       ) as unknown as Exchange.Api['getBaseUrl']
-      const createReferralUrl = jest.fn(
-        () => 'referral-url',
-      ) as unknown as Exchange.Manager['createReferralUrl']
+      const createReferralUrl = jest.fn(() => 'referral-url') as unknown as (
+        baseUrl: string,
+        queries: Exchange.ReferralUrlQueryStringParams,
+      ) => URL
       const isProduction = true
       const partner = 'yoroi'
       const queries: Exchange.ReferralUrlQueryStringParams = {

@@ -107,7 +107,6 @@ import {
   CardanoUnsignedTx,
   CardanoVoting,
 } from './chain/cardano'
-import {ExchangeManager} from './exchange/module'
 import {ExchangeBlockchainCode} from './exchange/blockchain'
 import {ExchangeManagerOptions} from './exchange/build'
 import {ExchangeCoin} from './exchange/coin'
@@ -324,7 +323,6 @@ export namespace Chain {
 }
 
 export namespace Exchange {
-  export type Manager = ExchangeManager
   export type BlockchainCode = ExchangeBlockchainCode
   export type ManagerOptions = ExchangeManagerOptions
   export type Coin = ExchangeCoin

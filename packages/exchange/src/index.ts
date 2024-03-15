@@ -1,5 +1,5 @@
 export {exchangeApiMaker} from './adapters/api'
 export {useCreateReferralLink} from './translators/reactjs/hooks/useCreateReferralLink'
 export {Providers} from './adapters/providers'
-export {exchangeManagerMaker} from './translators/manager'
+export {createReferralUrl} from './adapters/createReferralUrl'
 export {banxaSupportUrl} from './translators/banxa/domains'
