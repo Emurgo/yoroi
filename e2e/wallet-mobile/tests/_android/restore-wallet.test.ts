@@ -16,7 +16,6 @@ describe('Restore a wallet', () => {
  })
 
  it('should be able to initiate the "restore wallet" process from home screen', async () => {
-  await utils.takeScreenshot('Home Screen')
   await myWalletsScreen.addWalletTestnetButton().tap()
   await myWalletsScreen.restoreWalletButton().tap()
   await restoreWalletFlow.restoreNormalWalletButton().tap()
@@ -27,7 +26,6 @@ describe('Restore a wallet', () => {
    constants.normal_15_Word_Wallet.phrase,
    platform,
   )
-  await utils.takeScreenshot('Recovery Phrase entered')
   await restoreWalletFlow.mnemonicRestoreWalletButton().tap()
 
   await expect(restoreWalletFlow.walletChecksumText()).toBeVisible()
@@ -55,6 +53,5 @@ describe('Restore a wallet', () => {
   await expect(
    myWalletsScreen.walletByNameButton(constants.normal_15_Word_Wallet.name),
   ).toBeVisible()
-  await utils.takeScreenshot(`Wallet "${constants.wallet_Name} is added.`)
  })
 })

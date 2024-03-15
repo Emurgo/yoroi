@@ -52,9 +52,9 @@ export const checkAttributeNftAndroid = async (nftLabel: string, max = 10) => {
 
 export const countNftsDisplayedIos = async () => {
  let count = 0
- await expect(element(by.id(/^card_nft_[a-zA-Z0-9_ ]+$/))).toExist()
+ await expect(element(by.id(/^card_nft_[a-zA-Z0-9_.$ ]+$/))).toExist()
  const nftAttributes = await element(
-  by.id(/^card_nft_[a-zA-Z0-9_ ]+$/),
+  by.id(/^card_nft_[a-zA-Z0-9_.$ ]+$/),
  ).getAttributes()
  if ('elements' in nftAttributes) {
   count = nftAttributes.elements.length

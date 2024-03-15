@@ -14,7 +14,6 @@ describe('Create a wallet', () => {
  })
 
  it('should be able to initiate the "create wallet" process form the home screen', async () => {
-  await utils.takeScreenshot('Home Screen')
   await myWalletsScreen.addWalletTestnetButton().tap()
   await myWalletsScreen.createWalletButton().tap()
  })
@@ -33,7 +32,6 @@ describe('Create a wallet', () => {
    .repeatSpendingPasswordInput()
    .typeText(`${constants.spending_Password}\n`)
   await device.enableSynchronization()
-  await utils.takeScreenshot('Set the spending password')
 
   await createWalletFlow.credentialsFormContinueButton().tap()
   await expect(createWalletFlow.mnemonicExplanationModal()).toBeVisible()
@@ -42,7 +40,6 @@ describe('Create a wallet', () => {
 
  it('should be able to capture the menmoic displayed and proceed', async () => {
   seedPhraseText = await utils.getSeedPhrase()
-  await utils.takeScreenshot('Seed Phrase')
   await createWalletFlow.mnemonicShowScreenConfirmButton().tap()
   await expect(createWalletFlow.mnemonicWarningModalCheckbox1()).toBeVisible()
   await createWalletFlow.mnemonicWarningModalCheckbox1().tap()
@@ -56,6 +53,5 @@ describe('Create a wallet', () => {
   await expect(
    myWalletsScreen.walletByNameButton(constants.wallet_Name),
   ).toBeVisible()
-  await utils.takeScreenshot(`Wallet "${constants.wallet_Name} is added.`)
  })
 })

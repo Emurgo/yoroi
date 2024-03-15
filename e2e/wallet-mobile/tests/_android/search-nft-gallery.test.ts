@@ -18,7 +18,6 @@ describe('Search for an NFT from gallery and verify', () => {
  })
 
  it('should be able to add the "default Wallet 2" from dev options', async () => {
-  await utils.takeScreenshot('My Wallets')
   await myWalletsScreen.buttonDeveloperOptions().tap()
   await expect(devOptionsScreen.buttonRestoreWallet2()).toBeVisible()
   await devOptionsScreen.buttonRestoreWallet2().tap()
@@ -26,13 +25,11 @@ describe('Search for an NFT from gallery and verify', () => {
   await waitFor(myWalletsScreen.tabWallet('Wallet 2'))
    .toBeVisible()
    .withTimeout(10000)
-  await utils.takeScreenshot('Wallet 2 is added')
  })
 
  it('should be able to open "Wallet 2"', async () => {
   await myWalletsScreen.tabWallet('Wallet 2').tap()
   await expect(walletMenuScreen.menuNFTGallery()).toBeVisible()
-  await utils.takeScreenshot('Wallet 2 Home screen')
  })
 
  it('should be able to open "NFT Gallery" and verify the total count of NFTs displayed', async () => {
@@ -40,9 +37,6 @@ describe('Search for an NFT from gallery and verify', () => {
   await waitFor(nftGalleryScreen.iconSearch()).toBeVisible().withTimeout(10000)
 
   const nftCount = await nftGalleryScreen.countNftsDisplayedAndroid()
-  await utils.takeScreenshot(
-   `NFT Gallery !! Total number of NFTs : ${nftCount}`,
-  )
   jestExpect(
    await nftGalleryScreen.verifyNftCount(
     nftGalleryScreen.txtNftCount(),
@@ -63,7 +57,6 @@ describe('Search for an NFT from gallery and verify', () => {
   jestExpect(await nftGalleryScreen.checkAttributeNftAndroid(nftToSearch)).toBe(
    true,
   )
-  await utils.takeScreenshot(`Search results for keyword : "${nftToSearch}"`)
  })
 
  it('should be able to search for a keyword that reutrns "multiple" matching NFTs', async () => {
@@ -79,7 +72,6 @@ describe('Search for an NFT from gallery and verify', () => {
   jestExpect(await nftGalleryScreen.checkAttributeNftAndroid(nftToSearch)).toBe(
    true,
   )
-  await utils.takeScreenshot(`Search results for keyword : "${nftToSearch}"`)
  })
 
  it('should be able to search for a keyword that reutrns "no" matching NFTs', async () => {
@@ -89,6 +81,5 @@ describe('Search for an NFT from gallery and verify', () => {
   await nftGalleryScreen.inputSearch().tap()
   await nftGalleryScreen.inputSearch().typeText(nftToSearch)
   await expect(nftGalleryScreen.txtNoNftFound()).toBeVisible()
-  await utils.takeScreenshot(`Search results for keyword : "${nftToSearch}"`)
  })
 })
