@@ -145,8 +145,7 @@ const useReferralLink = ({wallet}: {wallet: YoroiWallet}) => {
   const sandboxWallet = env.getString('BANXA_TEST_WALLET')
   const returnUrl = `${SCHEME_URL}${RAMP_ON_OFF_PATH}`
   const walletAddress = isMainnet ? wallet.externalAddresses[0] : sandboxWallet
-  const {getBaseUrl} = React.useMemo(() => exchangeApiMaker({provider}), [provider])
-  const {createReferralUrl} = React.useMemo(() => exchangeManagerMaker(), [])
+
   const urlOptions: Exchange.ReferralUrlQueryStringParams = {
     orderType: orderType,
     fiatType: 'USD',
@@ -156,6 +155,9 @@ const useReferralLink = ({wallet}: {wallet: YoroiWallet}) => {
     walletAddress,
     returnUrl,
   }
+
+  const {getBaseUrl} = React.useMemo(() => exchangeApiMaker({provider}), [provider])
+  const {createReferralUrl} = React.useMemo(() => exchangeManagerMaker(), [])
 
   const {referralLink, refetch} = useCreateReferralLink(
     {
